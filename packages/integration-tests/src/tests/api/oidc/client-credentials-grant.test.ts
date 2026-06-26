@@ -29,7 +29,7 @@ import { assignScopesToRole, createRole as createRoleApi, deleteRole } from '#sr
 import { createScope as createScopeApi } from '#src/api/scope.js';
 import { logtoUrl } from '#src/constants.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
-import { devFeatureTest, randomString } from '#src/utils.js';
+import { devFeatureDisabledTest, devFeatureTest, randomString } from '#src/utils.js';
 
 type TokenResponse = {
   access_token: string;
@@ -321,6 +321,23 @@ describe('client credentials grant', () => {
       await expectError({ resource: resource.indicator }, 400, {
         error: 'access_denied',
       });
+    });
+  });
+
+  devFeatureDisabledTest.describe('custom jwt error handling (dev features disabled)', () => {
+    it('should keep fail-open when script throws and blocking is enabled', async () => {
+      const resource = await createResource();
+
+      await upsertJwtCustomizer('client-credentials', {
+        script: `const getCustomJwtClaims = async () => {
+  throw new Error('boom');
+};`,
+        blockIssuanceOnError: true,
+      });
+
+      const { access_token: accessToken } = await post({ resource: resource.indicator });
+      const verified = await jwtVerify(accessToken, jwkSet, { audience: resource.indicator });
+      expect(verified.payload.client_id).toBe(client.id);
     });
   });
 });

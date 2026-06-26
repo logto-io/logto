@@ -4,6 +4,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import DelayedSuspenseFallback from '@/components/DelayedSuspenseFallback';
 import RedirectToAccountCenter from '@/components/RedirectToAccountCenter';
 import { EnterpriseSubscriptionTabs } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import ProtectedRoutes from '@/containers/ProtectedRoutes';
 import { GlobalAnonymousRoute, GlobalRoute } from '@/contexts/TenantsProvider';
 import { OnboardingApp } from '@/onboarding';
@@ -48,7 +49,9 @@ function AppRoutes() {
               element={<CheckoutSuccessCallback />}
             />
             <Route path={GlobalRoute.Onboarding + '/*'} element={<OnboardingApp />} />
-            <Route path={GlobalRoute.DeleteAccount} element={<DeleteAccount />} />
+            {isDevFeaturesEnabled && (
+              <Route path={GlobalRoute.DeleteAccount} element={<DeleteAccount />} />
+            )}
             <Route index element={<Main />} />
             <Route
               path={`${GlobalRoute.EnterpriseSubscription}/:logtoEnterpriseId`}

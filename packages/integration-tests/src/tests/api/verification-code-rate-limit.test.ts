@@ -8,12 +8,11 @@ import {
   setSmsConnector,
 } from '#src/helpers/connector.js';
 import { expectRejects } from '#src/helpers/index.js';
-import { devFeatureTest, generateEmail, generatePhone } from '#src/utils.js';
+import { generateEmail, generatePhone } from '#src/utils.js';
 
 const { maxSendsPerRecipient } = defaultMessageRateLimitPolicy;
 
-// The message rate guard is gated behind dev features, so only assert its behavior when enabled.
-devFeatureTest.describe('Management verification code send rate limit', () => {
+describe('Management verification code send rate limit', () => {
   beforeAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
     await setEmailConnector();

@@ -3,6 +3,7 @@ import { createMockUtils } from '@logto/shared/esm';
 import { z } from 'zod';
 
 import { mockUser } from '#src/__mocks__/user.js';
+import { EnvSet } from '#src/env-set/index.js';
 
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
@@ -92,6 +93,8 @@ const { default: totpVerificationRoutes } = await import('./totp-verification.js
 const { default: backupCodeVerificationRoutes } = await import('./backup-code-verification.js');
 const { default: webAuthnVerificationRoute } = await import('./web-authn-verification.js');
 
+const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+
 const createRouter = (): RouterLike => ({
   post: jest.fn<void, [string, ...unknown[]]>(),
 });
@@ -118,6 +121,14 @@ describe('MFA verification routes sentinel guard', () => {
     totpVerificationRecord.verifyUserExistingTotp.mockImplementation(resolveVoid);
     backupCodeVerificationRecord.verify.mockImplementation(resolveVoid);
     webAuthnVerificationRecord.verifyWebAuthnAuthentication.mockImplementation(resolveVoid);
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = false;
+  });
+
+  afterEach(() => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
+      originalIsDevFeaturesEnabled;
   });
 
   it('applies sentinel to TOTP MFA verification even when dev features are disabled', async () => {

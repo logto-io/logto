@@ -27,6 +27,14 @@ const methodToVerb = Object.freeze({
 
 type RouteDictionary = Record<`${OpenAPIV3.HttpMethods} ${string}`, string>;
 
+const devFeatureCustomRoutes: Readonly<RouteDictionary> = Object.freeze({
+  'get /configs/inline-hooks': 'ListInlineHooks',
+  'put /configs/inline-hooks/:hookType': 'UpsertInlineHook',
+  'patch /configs/inline-hooks/:hookType': 'UpdateInlineHook',
+  'get /configs/inline-hooks/:hookType': 'GetInlineHook',
+  'delete /configs/inline-hooks/:hookType': 'DeleteInlineHook',
+});
+
 export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   // Authn
   'get /authn/hasura': 'GetHasuraAuth',
@@ -107,20 +115,8 @@ export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   'get /configs/oidc/session': 'GetOidcSessionConfig',
   'patch /configs/oidc/session': 'UpdateOidcSessionConfig',
   // Inline hooks
-  'get /configs/inline-hooks': 'ListInlineHooks',
-  'put /configs/inline-hooks/:hookType': 'UpsertInlineHook',
-  'patch /configs/inline-hooks/:hookType': 'UpdateInlineHook',
-  'get /configs/inline-hooks/:hookType': 'GetInlineHook',
-  'delete /configs/inline-hooks/:hookType': 'DeleteInlineHook',
+  ...(EnvSet.values.isDevFeaturesEnabled ? devFeatureCustomRoutes : {}),
 } satisfies RouteDictionary); // Key assertion doesn't work without `satisfies`
-
-const devFeatureCustomRoutes = new Set<string>([
-  'get /configs/inline-hooks',
-  'put /configs/inline-hooks/:hookType',
-  'patch /configs/inline-hooks/:hookType',
-  'get /configs/inline-hooks/:hookType',
-  'delete /configs/inline-hooks/:hookType',
-]);
 
 /**
  * Given a set of built custom routes, throws an error if there are any differences between the
@@ -133,7 +129,7 @@ export const throwByDifference = (builtCustomRoutes: Set<string>) => {
   }
 
   const expectedRoutes = Object.entries(customRoutes).filter(
-    ([path]) => EnvSet.values.isDevFeaturesEnabled || !devFeatureCustomRoutes.has(path)
+    ([path]) => EnvSet.values.isDevFeaturesEnabled || !(path in devFeatureCustomRoutes)
   );
 
   if (shouldThrow() && builtCustomRoutes.size !== expectedRoutes.length) {

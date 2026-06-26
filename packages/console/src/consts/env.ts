@@ -12,7 +12,6 @@ export const isProtectedAppLocalDevEnabled =
 export const isProtectedAppEnabled = isCloud || isProtectedAppLocalDevEnabled;
 export const adminEndpoint = normalizeEnv(import.meta.env.ADMIN_ENDPOINT);
 
-// eslint-disable-next-line import/no-unused-modules
 export const isDevFeaturesEnabled =
   !isProduction ||
   yes(normalizeEnv(import.meta.env.DEV_FEATURES_ENABLED)) ||

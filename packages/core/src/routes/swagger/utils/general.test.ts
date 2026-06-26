@@ -5,6 +5,14 @@ import { type DeepPartial } from '#src/test-utils/tenant.js';
 
 import { devFeatureSchemaExtension, removeUnnecessaryOperations } from './general.js';
 
+const originalIsCloud = EnvSet.values.isCloud;
+const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+
+const setDevFeaturesEnabled = (isDevFeaturesEnabled: boolean) => {
+  // eslint-disable-next-line @silverhand/fp/no-mutation -- Tests need to cover both dev-feature states.
+  (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = isDevFeaturesEnabled;
+};
+
 const createDevFeatureBooleanSchema = () =>
   ({
     type: 'boolean',
@@ -62,15 +70,45 @@ const createDevFeatureOperationDocument = (): DeepPartial<OpenAPIV3.Document> =>
 });
 
 describe('swagger general utils', () => {
-  const originalIsCloud = EnvSet.values.isCloud;
-  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-
   afterEach(() => {
     Reflect.set(EnvSet.values, 'isCloud', originalIsCloud);
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
+    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
   });
 
-  it('should keep dev feature schema properties without exposing the internal marker', () => {
+  it('should remove dev feature schema properties when dev features are disabled', () => {
+    setDevFeaturesEnabled(false);
+
+    const document = removeUnnecessaryOperations(createDocument());
+
+    expect(document).toMatchObject({
+      paths: {
+        '/api/mock': {
+          patch: {
+            requestBody: {
+              content: {
+                'application/json': {
+                  schema: {
+                    required: ['name'],
+                    properties: {
+                      name: {
+                        type: 'string',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+    expect(JSON.stringify(document)).not.toContain('beta');
+    expect(JSON.stringify(document)).not.toContain(devFeatureSchemaExtension);
+  });
+
+  it('should keep dev feature schema properties without exposing the internal marker when dev features are enabled', () => {
+    setDevFeaturesEnabled(true);
+
     const document = removeUnnecessaryOperations(createDocument());
 
     expect(document).toMatchObject({

@@ -11,7 +11,7 @@ import { successfullySendVerificationCode } from '#src/helpers/experience/verifi
 import { WebHookApiTest } from '#src/helpers/hook.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { enableAllVerificationCodeSignInMethods } from '#src/helpers/sign-in-experience.js';
-import { devFeatureTest, generateEmail } from '#src/utils.js';
+import { generateEmail } from '#src/utils.js';
 
 import WebhookMockServer from './WebhookMockServer.js';
 import { assertHookLogResult } from './utils.js';
@@ -22,9 +22,7 @@ const webHookMockServer = new WebhookMockServer(9999);
 const webHookApi = new WebHookApiTest();
 const hookName = 'messageRateLimitedHookEventListener';
 
-// The send rate guard (and thus the `Message.RateLimited` exception hook) is gated behind dev
-// features, so only assert it when enabled.
-devFeatureTest.describe('trigger `Message.RateLimited` exception hook', () => {
+describe('trigger `Message.RateLimited` exception hook', () => {
   beforeAll(async () => {
     // Provision the mock email connector (so codes can be sent and read) and allow email
     // verification-code sign-in, then register a listener for the exception hook event.

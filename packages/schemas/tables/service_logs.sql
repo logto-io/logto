@@ -10,7 +10,7 @@ create table service_logs (
 create index service_logs__id
   on service_logs (id);
 
-create index service_logs__tenant_id__type
-  on service_logs (tenant_id, type);
+create index service_logs__tenant_id__type__created_at
+  on service_logs (tenant_id, type, created_at);
 
 /* no_after_each */

@@ -90,6 +90,7 @@ const signInExperienceRequester = createRequester({
   authedRoutes: signInExperiencesRoutes,
   tenantContext,
 });
+const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
 const originalIsCloud = EnvSet.values.isCloud;
 const originalIsProduction = EnvSet.values.isProduction;
 
@@ -99,6 +100,7 @@ const createDevFeaturesDisabledRequester = async () => {
   await mockEsmWithActual('#src/env-set/index.js', () => ({
     EnvSet: {
       values: {
+        isDevFeaturesEnabled: false,
         isCloud: false,
         isProduction: false,
         isUnitTest: true,
@@ -172,7 +174,13 @@ const createSignUpProfileFieldsRequester = (
   return { requester, updateDefaultSignInExperience, normalizeProfileFields };
 };
 
-const createCustomUiCspRequester = async ({ isCloud = true, isProduction = false } = {}) => {
+const createCustomUiCspRequester = async ({
+  isDevFeaturesEnabled = true,
+  isCloud = true,
+  isProduction = false,
+} = {}) => {
+  // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet in this route test without reloading mocked modules.
+  (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = isDevFeaturesEnabled;
   // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet in this route test without reloading mocked modules.
   (EnvSet.values as { isCloud: boolean }).isCloud = isCloud;
   // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet in this route test without reloading mocked modules.
@@ -868,6 +876,9 @@ describe('PATCH /sign-in-exp signUpProfileFields', () => {
 describe('PATCH /sign-in-exp customUiCsp', () => {
   afterEach(() => {
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after each feature-gate test.
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
+      originalIsDevFeaturesEnabled;
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after each feature-gate test.
     (EnvSet.values as { isCloud: boolean }).isCloud = originalIsCloud;
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after each feature-gate test.
     (EnvSet.values as { isProduction: boolean }).isProduction = originalIsProduction;
@@ -944,7 +955,7 @@ describe('PATCH /sign-in-exp customUiCsp', () => {
 
   it('should allow non-empty Custom UI CSP updates when dev features are disabled', async () => {
     const { requester, updateDefaultSignInExperience, guardTenantUsageByKey } =
-      await createCustomUiCspRequester();
+      await createCustomUiCspRequester({ isDevFeaturesEnabled: false });
 
     const response = await requester.patch('/sign-in-exp').send({
       customUiCsp: {
@@ -978,7 +989,7 @@ describe('PATCH /sign-in-exp customUiCsp', () => {
 
   it('should allow clearing Custom UI CSP config without checking quota', async () => {
     const { requester, updateDefaultSignInExperience, guardTenantUsageByKey } =
-      await createCustomUiCspRequester();
+      await createCustomUiCspRequester({ isDevFeaturesEnabled: false });
 
     const response = await requester.patch('/sign-in-exp').send({
       customUiCsp: {
