@@ -23,17 +23,20 @@ const inlineHookConfigsGuard = z.object({
 
 const inlineHookResponseErrorGuard = z.object({
   message: z.string(),
-  error: z.unknown().optional(),
 });
 
 const parseInlineHookResponseError = async (error: ResponseError) => {
   const responseBody: unknown = await error.response.json();
   const errorResponseResult = inlineHookResponseErrorGuard.safeParse(responseBody);
 
-  return errorResponseResult.success
-    ? errorResponseResult.data
-    : { message: error.message, error: responseBody };
+  return {
+    message: errorResponseResult.success ? errorResponseResult.data.message : error.message,
+    error: responseBody,
+  };
 };
+
+const getInlineHookResponseErrorStatus = (status: number) =>
+  status === 400 || status === 403 || status === 422 ? status : 422;
 
 export default function logtoConfigInlineHookRoutes<T extends ManagementApiRouter>(
   ...[router, { queries, logtoConfigs, libraries }]: RouterInitArgs<T>
@@ -78,7 +81,10 @@ export default function logtoConfigInlineHookRoutes<T extends ManagementApiRoute
           const { message, error: originalError } = responseBody;
 
           throw new RequestError(
-            { code: 'session.verification_failed', status: 422 },
+            {
+              code: 'session.verification_failed',
+              status: getInlineHookResponseErrorStatus(error.response.status),
+            },
             { message, error: originalError }
           );
         }
