@@ -42,6 +42,7 @@ describe('isChinaNumber()', () => {
     expect(isChinaNumber('+8613812345678')).toBe(true);
 
     // Invalid cases
+    expect(isChinaNumber('85268326366')).toBe(false); // Hong Kong number
     expect(isChinaNumber('1381234567')).toBe(false); // Too short
     expect(isChinaNumber('138123456789')).toBe(false); // Too long
     expect(isChinaNumber('abcdefghijk')).toBe(false); // Non-numeric
@@ -56,6 +57,7 @@ describe('isChinaNumber()', () => {
 
     // Invalid cases
     expect(isChinaNumber('13812345678', true)).toBe(false); // Missing region code
+    expect(isChinaNumber('85268326366', true)).toBe(false); // Hong Kong number
     expect(isChinaNumber('1381234567', true)).toBe(false); // Too short
     expect(isChinaNumber('138123456789', true)).toBe(false); // Too long
     expect(isChinaNumber('abcdefghijk', true)).toBe(false); // Non-numeric

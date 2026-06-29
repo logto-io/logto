@@ -63,11 +63,15 @@ export const request = async (
   });
 };
 
+const chinaMobileNumber = '1\\d{10}';
+const chinaNumberRegExp = new RegExp(`^(?:\\+86|0086|86)?${chinaMobileNumber}$`);
+const strictChinaNumberRegExp = new RegExp(`^(?:\\+86|0086|86)${chinaMobileNumber}$`);
+
 // When `isStrictOnRegionNumber` is true, it means the mobile phone number area code needs to be strictly matched; the default is false, for backward compatibility, as some old phone numbers do not have region codes, which would cause the method to make mistakes on validation.
 export const isChinaNumber = (to: string, isStrictOnRegionNumber?: boolean) => {
   if (isStrictOnRegionNumber) {
-    return /^(\+86|0086|86)\d{11}$/.test(to);
+    return strictChinaNumberRegExp.test(to);
   }
 
-  return /^(\+86|0086|86)?\d{11}$/.test(to);
+  return chinaNumberRegExp.test(to);
 };
