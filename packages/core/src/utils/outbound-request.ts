@@ -26,8 +26,24 @@ type IpBlock = {
   readonly type: IpVersion;
 };
 
-const throwEndpointNotAllowed = () => {
+const throwEndpointNotAllowed = (): never => {
   throw new RequestError({ code: 'hook.endpoint_not_allowed', status: 422 });
+};
+
+const parseUrl = (url: string): URL => {
+  try {
+    return new URL(url);
+  } catch {
+    return throwEndpointNotAllowed();
+  }
+};
+
+const resolveSafeUrlAddresses = async (url: URL): Promise<string[]> => {
+  try {
+    return await resolveUrlAddresses(url);
+  } catch {
+    return throwEndpointNotAllowed();
+  }
 };
 
 const metadataIpBlocks: readonly IpBlock[] = [
@@ -141,13 +157,13 @@ export const assertSafeOutboundRequestUrl = async (
     allowPrivateIp = EnvSet.values.allowPrivateOutboundRequests,
   }: AssertSafeOutboundRequestUrlOptions = {}
 ) => {
-  const parsedUrl = new URL(url);
+  const parsedUrl = parseUrl(url);
 
   if (!allowedProtocols.has(parsedUrl.protocol)) {
     throwEndpointNotAllowed();
   }
 
-  const addresses = await resolveUrlAddresses(parsedUrl);
+  const addresses = await resolveSafeUrlAddresses(parsedUrl);
 
   if (addresses.some((address) => isMetadataIpAddress(address))) {
     throwEndpointNotAllowed();

@@ -8,7 +8,7 @@ type HookCreationPayload = Pick<Hook, 'name' | 'events'> & {
 
 export const getHookCreationPayload = (
   event: HookEvent,
-  url = 'not_work_url'
+  url = 'https://example.com/webhook'
 ): HookCreationPayload => ({
   name: 'hook_name',
   events: [event],

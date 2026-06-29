@@ -75,6 +75,20 @@ describe('assertSafeOutboundRequestUrl', () => {
     );
   });
 
+  it('rejects invalid endpoint URLs', async () => {
+    await expect(assertSafeOutboundRequestUrl('not_work_url')).rejects.toMatchError(
+      new RequestError({ code: 'hook.endpoint_not_allowed', status: 422 })
+    );
+  });
+
+  it('rejects endpoints that can not be resolved', async () => {
+    lookup.mockRejectedValueOnce(new Error('getaddrinfo ENOTFOUND missing.example.com'));
+
+    await expect(
+      assertSafeOutboundRequestUrl('https://missing.example.com/webhook')
+    ).rejects.toMatchError(new RequestError({ code: 'hook.endpoint_not_allowed', status: 422 }));
+  });
+
   it.each([
     'http://localhost:3000',
     'http://127.0.0.1:3000',

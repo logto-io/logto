@@ -10,6 +10,7 @@ import {
 import { authenticator } from 'otplib';
 
 import { createUserMfaVerification, deleteUser } from '#src/api/admin-user.js';
+import { authedAdminApi } from '#src/api/index.js';
 import { getWebhookRecentLogs } from '#src/api/logs.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { SsoConnectorApi } from '#src/api/sso-connector.js';
@@ -83,31 +84,21 @@ afterAll(async () => {
 afterEach(async () => {
   await Promise.all([organizationApi.cleanUp(), ssoConnectorApi.cleanUp()]);
 });
-describe('trigger invalid hook', () => {
-  beforeAll(async () => {
-    await webHookApi.create({
-      name: 'invalidHookEventListener',
-      events: [InteractionHookEvent.PostSignIn],
-      config: { url: 'not_work_url' },
-    });
-  });
-
-  it('should log invalid hook url error', async () => {
-    await signInWithPassword({
-      identifier: {
-        type: SignInIdentifier.Username,
-        value: username,
-      },
-      password,
-    });
-
-    const hook = webHookApi.hooks.get('invalidHookEventListener')!;
-    await assertHookLogResult(hook, InteractionHookEvent.PostSignIn, {
-      errorMessage: 'Failed to parse URL from not_work_url',
-    });
-  });
-  afterAll(async () => {
-    await webHookApi.cleanUp();
+describe('invalid hook endpoint', () => {
+  it('should reject invalid hook url', async () => {
+    await expectRejects(
+      authedAdminApi.post('hooks', {
+        json: {
+          name: 'invalidHookEventListener',
+          events: [InteractionHookEvent.PostSignIn],
+          config: { url: 'not_work_url' },
+        },
+      }),
+      {
+        code: 'hook.endpoint_not_allowed',
+        status: 422,
+      }
+    );
   });
 });
 

@@ -30,7 +30,7 @@ describe('hooks', () => {
     const payload = {
       event: InteractionHookEvent.PostRegister,
       config: {
-        url: 'not_work_url',
+        url: 'https://example.com/webhook',
         retries: 2,
       },
     };

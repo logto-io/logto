@@ -52,7 +52,7 @@ describe('webhooks', () => {
 
     await expect(page).toClick('div[class$=main] div[class$=headline] > button');
     await expect(page).toFill('input[name=name]', 'hook_name');
-    await expect(page).toFill('input[name=url]', 'https://localhost/webhook');
+    await expect(page).toFill('input[name=url]', 'https://example.com/webhook');
     await expect(page).toClick('button[type=submit]');
     await expect(page).toMatchElement('.ReactModalPortal div[class$=errorMessage]', {
       text: 'You have to select at least one event.',
@@ -66,7 +66,7 @@ describe('webhooks', () => {
     await expect(page).toClick('span[class$=label]', { text: 'PostRegister' });
     await expect(page).toClick('span[class$=label]', { text: 'User.Create' });
     await expect(page).toFill('input[name=name]', 'hook_name');
-    await expect(page).toFill('input[name=url]', 'http://localhost/webhook');
+    await expect(page).toFill('input[name=url]', 'http://example.com/webhook');
     await expect(page).toClick('button[type=submit]');
     await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=name]', {
       text: 'hook_name',
@@ -79,7 +79,7 @@ describe('webhooks', () => {
     await expectToCreateWebhook(page);
 
     await expect(page).toFill('input[name=name]', 'hook_name_updated');
-    await expect(page).toFill('input[name=url]', 'https://localhost/new-webhook');
+    await expect(page).toFill('input[name=url]', 'https://example.com/new-webhook');
 
     await expectToSaveChanges(page);
     await waitForToast(page, { text: 'Saved' });

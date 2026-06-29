@@ -58,7 +58,7 @@ describe('hook testing', () => {
     );
   });
 
-  it('should return 422 if the hook endpoint is not working', async () => {
+  it('should return 422 if the hook endpoint is not allowed', async () => {
     const payload = getHookCreationPayload(InteractionHookEvent.PostRegister);
     const created = await authedAdminApi.post('hooks', { json: payload }).json<Hook>();
     await expectRejects(
@@ -66,7 +66,7 @@ describe('hook testing', () => {
         json: { events: [InteractionHookEvent.PostSignIn], config: { url: 'not_work_url' } },
       }),
       {
-        code: 'hook.send_test_payload_failed',
+        code: 'hook.endpoint_not_allowed',
         status: 422,
       }
     );

@@ -44,6 +44,8 @@ jobs:
       # Key encryption key (KEK) for the secret vault used in integration tests
       SECRET_VAULT_KEK: DtPWS09unRXGuRScB60qXqCSsrjd22dUlXt/0oZgxSo=
       DB_URL: postgres://postgres:postgres@localhost:5432/postgres
+      # Integration tests use local mock webhook endpoints.
+      ALLOW_PRIVATE_OUTBOUND_REQUESTS: true
       # Mock key for authorized status API access during integration tests
       STATUS_API_KEY: test-status-api-key
 
