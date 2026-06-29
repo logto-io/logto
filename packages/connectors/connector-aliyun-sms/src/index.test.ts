@@ -70,5 +70,19 @@ describe('sendMessage()', () => {
       }),
       mockedConnectorConfig.accessKeySecret
     );
+
+    sendSms.mockClear();
+
+    await connector.sendMessage({
+      to: '85268326366',
+      type: TemplateType.Register,
+      payload: { code: codeTest },
+    });
+    expect(sendSms).toHaveBeenCalledWith(
+      expect.objectContaining({
+        TemplateCode: 'TemplateCode2',
+      }),
+      mockedConnectorConfig.accessKeySecret
+    );
   });
 });
