@@ -100,7 +100,7 @@ const baseProviderMock = {
 };
 
 const findUserById = jest.fn().mockResolvedValue(mockUser);
-// The message rate guard runs when dev features are enabled; provide a permissive activity store.
+// Provide a permissive activity store so the message rate guard allows sends by default.
 const countActivities = jest.fn().mockResolvedValue(0);
 const insertActivity = jest.fn();
 const tenantContext = new MockTenant(

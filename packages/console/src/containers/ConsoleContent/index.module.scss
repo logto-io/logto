@@ -1,4 +1,5 @@
 @use '@/scss/underscore' as _;
+@use './dev-status-spacing' as devStatusSpacing;
 
 .content {
   flex-grow: 1;
@@ -24,6 +25,13 @@
   [class='appInsightsWrapper'] > :not(svg) {
     @include _.main-content-width;
   }
+}
+
+.devStatus {
+  color: var(--color-text-secondary);
+  position: absolute;
+  bottom: devStatusSpacing.$dev-status-bottom-offset;
+  inset-inline-start: _.unit(4);
 }
 
 .daisy {

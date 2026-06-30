@@ -4,6 +4,7 @@ import { useState } from 'react';
 import BookIcon from '@/assets/icons/book.svg?react';
 import FlaskIcon from '@/assets/icons/conical-flask.svg?react';
 import ErrorHandlingIcon from '@/assets/icons/error-handling.svg?react';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import { type Action } from '@/pages/CustomizeJwt/utils/type';
 
@@ -23,7 +24,11 @@ type Props = {
 
 function SettingsSection({ action }: Props) {
   const [activeTab, setActiveTab] = useState<Tab>(Tab.DataSource);
-  const tabs = [Tab.DataSource, Tab.Test, Tab.ErrorHandling] as const;
+  const tabs = [
+    Tab.DataSource,
+    Tab.Test,
+    ...(isDevFeaturesEnabled ? [Tab.ErrorHandling] : []),
+  ] as const;
 
   const tabIcons = {
     [Tab.DataSource]: <BookIcon />,
@@ -52,11 +57,13 @@ function SettingsSection({ action }: Props) {
         section={InstructionTabSection.DataSource}
       />
       <TestTab isActive={activeTab === Tab.Test} />
-      <InstructionTab
-        isActive={activeTab === Tab.ErrorHandling}
-        section={InstructionTabSection.ErrorHandling}
-        action={action}
-      />
+      {isDevFeaturesEnabled && (
+        <InstructionTab
+          isActive={activeTab === Tab.ErrorHandling}
+          section={InstructionTabSection.ErrorHandling}
+          action={action}
+        />
+      )}
     </div>
   );
 }

@@ -65,7 +65,9 @@ export type VerificationCodeIdentifier<
 export const verificationCodeIdentifierGuard = z.discriminatedUnion('type', [
   z.object({
     type: z.literal(SignInIdentifier.Email),
-    value: z.string().regex(emailRegEx),
+    // `.max(256)` caps the input length as defense-in-depth for downstream email processing
+    // (a valid address is at most 254 chars per RFC 5321).
+    value: z.string().max(256).regex(emailRegEx),
   }),
   z.object({
     type: z.literal(SignInIdentifier.Phone),

@@ -9,7 +9,7 @@ import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { InlineHookLibrary, isAccessDeniedError } from '#src/libraries/inline-hook.js';
+import { InlineHookLibrary } from '#src/libraries/inline-hook.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { koaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
@@ -23,23 +23,20 @@ const inlineHookConfigsGuard = z.object({
 
 const inlineHookResponseErrorGuard = z.object({
   message: z.string(),
-  error: z.unknown().optional(),
 });
 
 const parseInlineHookResponseError = async (error: ResponseError) => {
   const responseBody: unknown = await error.response.json();
-
-  if (isAccessDeniedError(responseBody)) {
-    return {
-      message: responseBody.message,
-      error: responseBody,
-    };
-  }
-
   const errorResponseResult = inlineHookResponseErrorGuard.safeParse(responseBody);
 
-  return errorResponseResult.success ? errorResponseResult.data : { message: error.message };
+  return {
+    message: errorResponseResult.success ? errorResponseResult.data.message : error.message,
+    error: responseBody,
+  };
 };
+
+const getInlineHookResponseErrorStatus = (status: number) =>
+  status === 400 || status === 403 || status === 422 ? status : 422;
 
 export default function logtoConfigInlineHookRoutes<T extends ManagementApiRouter>(
   ...[router, { queries, logtoConfigs, libraries }]: RouterInitArgs<T>
@@ -82,10 +79,12 @@ export default function logtoConfigInlineHookRoutes<T extends ManagementApiRoute
         if (error instanceof ResponseError) {
           const responseBody = await parseInlineHookResponseError(error);
           const { message, error: originalError } = responseBody;
-          const status = isAccessDeniedError(originalError) ? 403 : 422;
 
           throw new RequestError(
-            { code: 'session.hook_denied_access', status },
+            {
+              code: 'inline_hook.general',
+              status: getInlineHookResponseErrorStatus(error.response.status),
+            },
             { message, error: originalError }
           );
         }

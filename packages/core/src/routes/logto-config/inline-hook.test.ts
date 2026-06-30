@@ -5,6 +5,7 @@ import {
 } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 import { pick } from '@silverhand/essentials';
+import { ResponseError } from '@withtyped/client';
 
 import {
   mockInlineHookConfigForPostFirstFactorVerification,
@@ -12,6 +13,9 @@ import {
   mockLogtoConfigRows,
 } from '#src/__mocks__/index.js';
 import { EnvSet } from '#src/env-set/index.js';
+import { InlineHookLibrary } from '#src/libraries/inline-hook.js';
+import koaErrorHandler from '#src/middleware/koa-error-handler.js';
+import koaI18next from '#src/middleware/koa-i18next.js';
 import { mockLogtoConfigsLibrary } from '#src/test-utils/mock-libraries.js';
 import { createMockQuotaLibrary } from '#src/test-utils/quota.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -23,6 +27,24 @@ const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
 
 const setDevFeaturesEnabled = (isDevFeaturesEnabled: boolean) => {
   Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', isDevFeaturesEnabled);
+};
+
+const createResponseError = (status: number, body: Record<string, unknown>) =>
+  new ResponseError(
+    new Response(JSON.stringify(body), {
+      status,
+      headers: { 'content-type': 'application/json' },
+    })
+  );
+
+const inlineHookTestPayload: InlineHookTestRequestBody = {
+  hookType: LogtoInlineHookKey.PostSignIn,
+  script: `
+    const runInlineHook = () => ({ action: 'continue' });
+  `,
+  event: {
+    key: LogtoInlineHookKey.PostSignIn,
+  },
 };
 
 const logtoConfigQueries = {
@@ -49,8 +71,14 @@ describe('configs inline hook routes', () => {
     authedRoutes: settingRoutes,
     tenantContext,
   });
+  const routeRequesterWithErrorHandler = createRequester({
+    authedRoutes: settingRoutes,
+    middlewares: [koaI18next(), koaErrorHandler()],
+    tenantContext,
+  });
 
   afterEach(() => {
+    jest.restoreAllMocks();
     jest.clearAllMocks();
     setDevFeaturesEnabled(true);
   });
@@ -218,20 +246,6 @@ describe('configs inline hook routes', () => {
     expect(mockQuotaLibrary.guardTenantUsageByKey).toHaveBeenCalledWith('inlineHooksEnabled');
   });
 
-  it('POST /configs/inline-hooks/test should map AccessDenied errors to 403', async () => {
-    const payload: InlineHookTestRequestBody = {
-      hookType: LogtoInlineHookKey.PostSignIn,
-      script: `const runInlineHook = ({ api }) => api.denyAccess('Nope');`,
-      event: {
-        key: LogtoInlineHookKey.PostSignIn,
-      },
-    };
-
-    const response = await routeRequester.post('/configs/inline-hooks/test').send(payload);
-
-    expect(response.status).toEqual(403);
-  });
-
   it('POST /configs/inline-hooks/test should map general execution errors to 422', async () => {
     const payload: InlineHookTestRequestBody = {
       hookType: LogtoInlineHookKey.PostSignIn,
@@ -250,6 +264,53 @@ describe('configs inline hook routes', () => {
     expect(response.status).toEqual(422);
   });
 
+  it('POST /configs/inline-hooks/test should preserve the full ResponseError body as error details', async () => {
+    const errorBody = {
+      message: 'Script failed',
+      stack: 'Error: Script failed',
+      errors: [{ path: 'event.user', code: 'invalid_type' }],
+    };
+
+    jest
+      .spyOn(InlineHookLibrary, 'runScriptInLocalVm')
+      .mockRejectedValueOnce(createResponseError(422, errorBody));
+
+    const response = await routeRequesterWithErrorHandler
+      .post('/configs/inline-hooks/test')
+      .send(inlineHookTestPayload);
+
+    expect(response.status).toEqual(422);
+    expect(response.body.code).toEqual('inline_hook.general');
+    expect(response.body.data).toEqual({
+      message: 'Script failed',
+      error: errorBody,
+    });
+  });
+
+  it.each([
+    [400, 400],
+    [403, 403],
+    [422, 422],
+    [500, 422],
+  ])(
+    'POST /configs/inline-hooks/test should map ResponseError status %i to %i',
+    async (responseErrorStatus, expectedStatus) => {
+      jest.spyOn(InlineHookLibrary, 'runScriptInLocalVm').mockRejectedValueOnce(
+        createResponseError(responseErrorStatus, {
+          message: 'Remote runner failed',
+          error: { reason: 'blocked' },
+        })
+      );
+
+      const response = await routeRequesterWithErrorHandler
+        .post('/configs/inline-hooks/test')
+        .send(inlineHookTestPayload);
+
+      expect(response.status).toEqual(expectedStatus);
+      expect(response.body.code).toEqual('inline_hook.general');
+    }
+  );
+
   it('should not register inline hook routes when dev features are disabled', async () => {
     setDevFeaturesEnabled(false);
 
@@ -264,13 +325,7 @@ describe('configs inline hook routes', () => {
       ),
     });
 
-    const response = await requester.post('/configs/inline-hooks/test').send({
-      hookType: LogtoInlineHookKey.PostSignIn,
-      script: `const runInlineHook = () => ({ action: 'updateUser' });`,
-      event: {
-        key: LogtoInlineHookKey.PostSignIn,
-      },
-    } satisfies InlineHookTestRequestBody);
+    const response = await requester.get('/configs/inline-hooks');
 
     expect(response.status).toEqual(404);
   });

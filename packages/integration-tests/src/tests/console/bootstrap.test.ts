@@ -5,6 +5,7 @@ import { authedAdminTenantApi } from '#src/api/api.js';
 import {
   consolePassword,
   consoleUsername,
+  isDevFeaturesEnabled,
   logtoConsoleUrl as logtoConsoleUrlString,
 } from '#src/constants.js';
 import { switchToLanguage } from '#src/ui-helpers/switch-language.js';
@@ -83,7 +84,7 @@ describe('smoke testing for console admin account creation and sign-in', () => {
 
     const getStartedUrl = new URL('console/get-started', logtoConsoleUrl).href;
     const onboardingUrl = new URL('console/onboarding', logtoConsoleUrl).href;
-    const expectedUrls = [onboardingUrl, getStartedUrl];
+    const expectedUrls = isDevFeaturesEnabled ? [onboardingUrl, getStartedUrl] : [getStartedUrl];
     await page.waitForFunction(
       (expectedUrls) => expectedUrls.includes(window.location.href),
       {},
@@ -173,5 +174,11 @@ describe('smoke testing for console admin account creation and sign-in', () => {
       })
     );
     await expect(page).toMatchElement(activeSelector, { text: 'Dashboard', visible: true });
+  });
+
+  it(`should ${isDevFeaturesEnabled ? '' : 'not '}show the dev features label`, async () => {
+    await (isDevFeaturesEnabled
+      ? expect(page).toMatchElement('div', { text: 'Dev features enabled' })
+      : expect(page).not.toMatchElement('div', { text: 'Dev features enabled' }));
   });
 });

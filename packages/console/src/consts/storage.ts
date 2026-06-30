@@ -21,6 +21,7 @@ export const storageKeys = Object.freeze({
   /** The react-router redirect location after sign in. The value should be a stringified Location object. */
   redirectAfterSignIn: getStorageKey('redirect_after_sign_in'),
   webhookTestResult: getStorageKey('webhook_test_result'),
+  /** Whether the under-development features are enabled. */
   isDevFeaturesEnabled: getStorageKey('is_dev_features_enabled'),
   /** The local expiry timestamp for dismissing the OSS sidebar cloud upsell card. */
   ossSidebarCloudUpsellDismissedUntil: getStorageKey('oss_sidebar_cloud_upsell_dismissed_until'),

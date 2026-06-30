@@ -346,7 +346,6 @@ export const defaultUserTokenContextData = {
   grant: defaultGrantContext,
   interaction: defaultUserInteractionContext,
   application: defaultApplicationContext,
-
   organization: defaultOrganizationContext,
 };
 

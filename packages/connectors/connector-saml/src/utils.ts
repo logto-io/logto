@@ -99,7 +99,6 @@ export const samlAssertionHandler = async (
     await setSession({
       extractedRawProfile: {
         ...(Boolean(assertionResult.extract.nameID) && {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           id: assertionResult.extract.nameID,
         }),
         ...assertionResult.extract.attributes,

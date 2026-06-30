@@ -356,6 +356,12 @@
                   },
                   "contextSample": {
                     "description": "The sample context for inline hook script testing."
+                  },
+                  "enabled": {
+                    "description": "Whether the inline hook is enabled."
+                  },
+                  "onExecutionError": {
+                    "description": "The inline hook execution error handling policy."
                   }
                 }
               }
@@ -401,6 +407,12 @@
                   },
                   "contextSample": {
                     "description": "The sample context for inline hook script testing."
+                  },
+                  "enabled": {
+                    "description": "Whether the inline hook is enabled."
+                  },
+                  "onExecutionError": {
+                    "description": "The inline hook execution error handling policy."
                   }
                 }
               }
@@ -476,18 +488,14 @@
                   "hookType": {
                     "description": "The inline hook type to test."
                   },
-                  "payload": {
-                    "properties": {
-                      "script": {
-                        "description": "The inline hook script to test."
-                      },
-                      "environmentVariables": {
-                        "description": "The environment variables for the inline hook script."
-                      },
-                      "contextSample": {
-                        "description": "The sample context for inline hook script testing."
-                      }
-                    }
+                  "script": {
+                    "description": "The inline hook script to test."
+                  },
+                  "event": {
+                    "description": "The sample event for inline hook script testing."
+                  },
+                  "environmentVariables": {
+                    "description": "The environment variables for the inline hook script."
                   }
                 }
               }

@@ -138,9 +138,12 @@ export const validateEmailAgainstBlocklistPolicy = async (
 
   // Guard email subaddressing if enabled
   if (blockSubaddressing) {
-    const subaddressingRegex = new RegExp(`^.*\\+.*@${domain}$`);
+    // Subaddressing puts a `+` in the local part (e.g. `user+tag@example.com`). Check the local
+    // part directly instead of building a `RegExp` from the user-controlled domain — a plain
+    // string check is simpler and avoids interpreting user input as a pattern.
+    const localPart = email.split('@')[0] ?? '';
     assertThat(
-      !subaddressingRegex.test(email),
+      !localPart.includes('+'),
       new RequestError({
         code: 'session.email_blocklist.email_subaddressing_not_allowed',
         status: 422,

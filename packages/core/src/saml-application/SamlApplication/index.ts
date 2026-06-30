@@ -200,8 +200,7 @@ export class SamlApplication {
   }> => {
     const optionalRelayState = conditional(relayState);
     // TODO: fix binding method
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const { context, entityEndpoint } = await this.idp.createLoginResponse(
+    const loginResponse = await this.idp.createLoginResponse(
       this.sp,
       // @ts-expect-error --fix request object later
       null,
@@ -212,8 +211,19 @@ export class SamlApplication {
       optionalRelayState
     );
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    return { context, entityEndpoint, relayState: optionalRelayState };
+    // The `post` binding yields a `PostBindingContext`, which carries `entityEndpoint`; samlify
+    // only types the union of binding contexts. Assert it rather than silently defaulting, so a
+    // samlify contract change surfaces instead of producing an empty ACS endpoint.
+    assertThat(
+      'entityEndpoint' in loginResponse,
+      new Error('Expected a POST binding context from `createLoginResponse`.')
+    );
+
+    return {
+      context: loginResponse.context,
+      entityEndpoint: loginResponse.entityEndpoint,
+      relayState: optionalRelayState,
+    };
   };
 
   // Helper functions for SAML callback
@@ -425,9 +435,13 @@ export class SamlApplication {
       sessionExpiresAt: Optional<string>;
     }) =>
     (template: string) => {
-      const assertionConsumerServiceUrl = this.sp.entityMeta.getAssertionConsumerService(
+      const rawAssertionConsumerServiceUrl = this.sp.entityMeta.getAssertionConsumerService(
         saml.Constants.wording.binding.post
       );
+      // The `samlify` type models this as `string | string[]`; a SP has a single POST ACS URL.
+      const assertionConsumerServiceUrl = Array.isArray(rawAssertionConsumerServiceUrl)
+        ? (rawAssertionConsumerServiceUrl[0] ?? '')
+        : rawAssertionConsumerServiceUrl;
 
       const { nameIDFormat } = this.idp.entitySetting;
       assertThat(nameIDFormat, 'application.saml.name_id_format_required');
