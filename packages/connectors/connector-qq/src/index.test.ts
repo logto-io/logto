@@ -25,6 +25,7 @@ describe('getAuthorizationUri', () => {
 
   it('should get a valid uri by redirectUri and state', async () => {
     const connector = await createConnector({ getConfig });
+    const setSession = vi.fn();
     const authorizationUri = await connector.getAuthorizationUri(
       {
         state: 'some_state',
@@ -34,15 +35,17 @@ describe('getAuthorizationUri', () => {
         jti: 'some_jti',
         headers: {},
       },
-      vi.fn()
+      setSession
     );
     expect(authorizationUri).toEqual(
       `${authorizationEndpoint}?response_type=code&client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&state=some_state&scope=get_user_info`
     );
+    expect(setSession).toHaveBeenCalledWith({ redirectUri: 'http://localhost:3000/callback' });
   });
 
   it('should get a valid uri with custom scope', async () => {
     const connector = await createConnector({ getConfig });
+    const setSession = vi.fn();
     const authorizationUri = await connector.getAuthorizationUri(
       {
         state: 'some_state',
@@ -53,11 +56,12 @@ describe('getAuthorizationUri', () => {
         jti: 'some_jti',
         headers: {},
       },
-      vi.fn()
+      setSession
     );
     expect(authorizationUri).toEqual(
       `${authorizationEndpoint}?response_type=code&client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&state=some_state&scope=custom_scope`
     );
+    expect(setSession).toHaveBeenCalledWith({ redirectUri: 'http://localhost:3000/callback' });
   });
 });
 
@@ -117,6 +121,28 @@ describe('getUserInfo', () => {
       vi.fn()
     );
 
+    expect(socialUserInfo).toStrictEqual({
+      id: 'unionid',
+      avatar: 'https://example.com/example.jpg',
+      name: 'nickname',
+      rawData: mockedUserInfoResponse,
+    });
+  });
+
+  it('should get valid SocialUserInfo with redirectUri from connector session', async () => {
+    nock(userInfoEndpoint).get('').query(true).reply(200, mockedUserInfoResponse);
+
+    const getSession = vi.fn().mockResolvedValue({ redirectUri: 'http://localhost:3000/callback' });
+    const connector = await createConnector({ getConfig });
+    const socialUserInfo = await connector.getUserInfo(
+      {
+        code: 'valid_code',
+        state: 'some_state',
+      },
+      getSession
+    );
+
+    expect(getSession).toHaveBeenCalledTimes(1);
     expect(socialUserInfo).toStrictEqual({
       id: 'unionid',
       avatar: 'https://example.com/example.jpg',
