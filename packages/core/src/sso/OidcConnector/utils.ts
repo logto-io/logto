@@ -27,11 +27,9 @@ import {
  * @returns The full-list of OIDC config
  */
 export const fetchOidcConfigRaw = async (issuer: string) => {
-  const { body } = await got.get(`${issuer}/.well-known/openid-configuration`, {
-    responseType: 'json',
-  });
+  const { body } = await got.get(`${issuer}/.well-known/openid-configuration`);
 
-  return camelcaseKeys(oidcConfigResponseGuard.parse(body));
+  return camelcaseKeys(oidcConfigResponseGuard.parse(parseJson(body)));
 };
 
 export const fetchOidcConfig = async (

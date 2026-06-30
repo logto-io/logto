@@ -69,9 +69,7 @@ describe('fetchOidcConfig', () => {
         error: 'invalid endpoint',
       })
     );
-    expect(getMock).toBeCalledWith(`${issuer}/.well-known/openid-configuration`, {
-      responseType: 'json',
-    });
+    expect(getMock).toBeCalledWith(`${issuer}/.well-known/openid-configuration`);
   });
 
   it('should throw connector error if the discovery endpoint returns invalid config', async () => {
@@ -80,7 +78,7 @@ describe('fetchOidcConfig', () => {
     };
 
     getMock.mockResolvedValueOnce({
-      body,
+      body: JSON.stringify(body),
     });
 
     const result = oidcConfigResponseGuard.safeParse(body);
@@ -100,7 +98,7 @@ describe('fetchOidcConfig', () => {
 
   it('should return the config if the discovery endpoint returns valid config', async () => {
     getMock.mockResolvedValueOnce({
-      body: oidcConfigResponse,
+      body: JSON.stringify(oidcConfigResponse),
     });
 
     await expect(fetchOidcConfig(issuer)).resolves.toEqual(oidcConfigResponseCamelCase);
