@@ -1,3 +1,5 @@
+import { TemplateType } from '@logto/connector-kit';
+import { VerificationType } from '@logto/schemas';
 import type { MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 
@@ -5,6 +7,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import {
   verificationRecordDataGuard,
   buildVerificationRecord,
+  type VerificationRecord,
 } from '#src/routes/experience/classes/verifications/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -15,9 +18,28 @@ import { verificationRecordIdHeader } from './constants.js';
 import { type WithAuthContext } from './types.js';
 import { extractBearerTokenFromHeaders } from './utils.js';
 
+const isUserPermissionVerificationRecord = (record: VerificationRecord) => {
+  if (!record.isVerified) {
+    return false;
+  }
+
+  switch (record.type) {
+    case VerificationType.Password: {
+      return true;
+    }
+    case VerificationType.EmailVerificationCode:
+    case VerificationType.PhoneVerificationCode: {
+      return record.templateType === TemplateType.UserPermissionValidation;
+    }
+    default: {
+      return false;
+    }
+  }
+};
+
 /**
- * Builds a verification record by its id.
- * The `userId` is optional and is only used for user sensitive permission verifications.
+ * Checks whether the verification record exists, belongs to the given user, and can be used for
+ * user permission verification.
  */
 const getVerificationRecordResultById = async ({
   id,
@@ -45,7 +67,7 @@ const getVerificationRecordResultById = async ({
   }
 
   const instance = buildVerificationRecord(libraries, queries, result.data);
-  return instance.isVerified;
+  return isUserPermissionVerificationRecord(instance);
 };
 
 /**
