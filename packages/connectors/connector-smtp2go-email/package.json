@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-smtp2go-email",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "SMTP2GO Email Service connector implementation.",
   "author": "Fabio Lorenzo <fabio.lorenzo@lomus.ch>",
   "dependencies": {
