@@ -2,6 +2,6 @@
 "@logto/core": patch
 ---
 
-fix organization role creation rollback when scope assignment fails
+make organization role creation transactional when assigning initial scopes
 
-When creating an organization role with initial organization scopes or resource scopes, invalid scope IDs no longer leave a partially created role.
+When creating an organization role with initial organization scopes or resource scopes, Logto now saves the role and its scope assignments in a single transaction. If any provided scope ID is invalid, the whole request fails without leaving a partially created role.
