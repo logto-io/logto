@@ -31,9 +31,10 @@ const tenantContext = new MockTenant(undefined, {
   },
 });
 
-const { validateTotpToken } = mockEsm(
+const { getTotpTokenTimeStep, validateTotpToken } = mockEsm(
   '#src/libraries/verification-helpers/totp-validation.js',
   () => ({
+    getTotpTokenTimeStep: jest.fn().mockReturnValue(100),
     validateTotpToken: jest.fn().mockReturnValue(true),
   })
 );
@@ -60,6 +61,14 @@ mockEsm('@simplewebauthn/server/helpers', () => ({
 const { bindMfaPayloadVerification, verifyMfaPayloadVerification } = await import(
   './mfa-payload-verification.js'
 );
+
+const verifyTotpPayload = async () =>
+  verifyMfaPayloadVerification(
+    tenantContext,
+    { type: MfaFactor.TOTP, code: '123456' },
+    { event: InteractionEvent.SignIn },
+    { rpId: 'rpId', origin: 'origin', accountId: 'accountId' }
+  );
 
 const additionalParameters = {
   rpId: 'logto.io',
@@ -227,64 +236,53 @@ describe('bindMfaPayloadVerification', () => {
 
 describe('verifyMfaPayloadVerification', () => {
   describe('totp', () => {
+    beforeEach(() => {
+      getTotpTokenTimeStep.mockReturnValue(100);
+    });
+
     it('should return result of VerifyMfaResult', async () => {
       findUserById.mockResolvedValueOnce({
         mfaVerifications: [{ type: MfaFactor.TOTP, key: 'key', id: 'id' }],
       });
 
-      await expect(
-        verifyMfaPayloadVerification(
-          tenantContext,
-          {
-            type: MfaFactor.TOTP,
-            code: '123456',
-          },
-          { event: InteractionEvent.SignIn },
-          { rpId: 'rpId', origin: 'origin', accountId: 'accountId' }
-        )
-      ).resolves.toMatchObject({
+      await expect(verifyTotpPayload()).resolves.toMatchObject({
         type: MfaFactor.TOTP,
         id: 'id',
       });
 
       expect(findUserById).toHaveBeenCalled();
-      expect(validateTotpToken).toHaveBeenCalled();
+      expect(getTotpTokenTimeStep).toHaveBeenCalled();
     });
 
     it('should reject when totp can not be found in user mfaVerifications', async () => {
       findUserById.mockResolvedValueOnce({
         mfaVerifications: [],
       });
-      await expect(
-        verifyMfaPayloadVerification(
-          tenantContext,
-          {
-            type: MfaFactor.TOTP,
-            code: '123456',
-          },
-          { event: InteractionEvent.SignIn },
-          { rpId: 'rpId', origin: 'origin', accountId: 'accountId' }
-        )
-      ).rejects.toEqual(new RequestError('session.mfa.invalid_totp_code'));
+
+      await expect(verifyTotpPayload()).rejects.toEqual(
+        new RequestError('session.mfa.invalid_totp_code')
+      );
     });
 
     it('should reject when code is invalid', async () => {
       findUserById.mockResolvedValueOnce({
         mfaVerifications: [{ type: MfaFactor.TOTP, key: 'key', id: 'id' }],
       });
-      validateTotpToken.mockReturnValueOnce(false);
+      getTotpTokenTimeStep.mockReset();
 
-      await expect(
-        verifyMfaPayloadVerification(
-          tenantContext,
-          {
-            type: MfaFactor.TOTP,
-            code: '123456',
-          },
-          { event: InteractionEvent.SignIn },
-          { rpId: 'rpId', origin: 'origin', accountId: 'accountId' }
-        )
-      ).rejects.toEqual(new RequestError('session.mfa.invalid_totp_code'));
+      await expect(verifyTotpPayload()).rejects.toEqual(
+        new RequestError('session.mfa.invalid_totp_code')
+      );
+    });
+
+    it('should reject when TOTP code time step is already used', async () => {
+      findUserById.mockResolvedValueOnce({
+        mfaVerifications: [{ type: MfaFactor.TOTP, key: 'key', id: 'id', lastUsedTimeStep: 100 }],
+      });
+
+      await expect(verifyTotpPayload()).rejects.toEqual(
+        new RequestError('session.mfa.invalid_totp_code')
+      );
     });
   });
 

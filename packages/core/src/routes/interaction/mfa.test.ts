@@ -66,6 +66,7 @@ const baseProviderMock = {
 };
 
 const updateUserById = jest.fn();
+const updateUserTotpMfaVerificationLastUsed = jest.fn().mockResolvedValue({});
 const findDefaultSignInExperience = jest.fn().mockResolvedValue(mockSignInExperience);
 
 const tenantContext = new MockTenant(
@@ -77,6 +78,7 @@ const tenantContext = new MockTenant(
     users: {
       findUserById: jest.fn().mockResolvedValue(mockUserWithMfaVerifications),
       updateUserById,
+      updateUserTotpMfaVerificationLastUsed,
     },
   }
 );
@@ -224,6 +226,7 @@ describe('interaction routes (MFA verification)', () => {
       verifyMfaPayloadVerification.mockResolvedValue({
         type: MfaFactor.TOTP,
         id: 'id',
+        usedTimeStep: 100,
       });
 
       const body = {
@@ -235,7 +238,8 @@ describe('interaction routes (MFA verification)', () => {
       expect(response.status).toEqual(204);
       expect(getInteractionStorage).toBeCalled();
       expect(verifyMfaPayloadVerification).toBeCalled();
-      expect(updateUserById).toBeCalled();
+      expect(updateUserTotpMfaVerificationLastUsed).toBeCalledWith('accountId', 'id', 100);
+      expect(updateUserById).not.toBeCalled();
       expect(storeInteractionResult).toBeCalledWith(
         {
           verifiedMfa: {
@@ -247,6 +251,30 @@ describe('interaction routes (MFA verification)', () => {
         expect.anything(),
         expect.anything()
       );
+    });
+
+    it('should reject when the used TOTP time step fails to persist atomically', async () => {
+      getInteractionStorage.mockReturnValue({
+        event: InteractionEvent.SignIn,
+      });
+      verifyIdentifier.mockResolvedValue({
+        event: InteractionEvent.SignIn,
+        accountId: 'accountId',
+      });
+      verifyMfaPayloadVerification.mockResolvedValue({
+        type: MfaFactor.TOTP,
+        id: 'id',
+        usedTimeStep: 100,
+      });
+      updateUserTotpMfaVerificationLastUsed.mockResolvedValueOnce(null);
+
+      const response = await sessionRequest.put(path).send({
+        type: MfaFactor.TOTP,
+        code: '123456',
+      });
+
+      expect(response.status).toEqual(400);
+      expect(storeInteractionResult).not.toBeCalled();
     });
   });
 

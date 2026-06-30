@@ -14,6 +14,7 @@ import qrcode from 'qrcode';
 
 import {
   generateTotpSecret,
+  getTotpTokenTimeStep,
   validateTotpToken,
 } from '#src/libraries/verification-helpers/totp-validation.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
@@ -124,7 +125,7 @@ export class TotpVerification implements MfaVerificationRecord<VerificationType.
    */
   async verifyUserExistingTotp(code: string) {
     const {
-      users: { findUserById, updateUserById },
+      users: { findUserById, updateUserTotpMfaVerificationLastUsed },
     } = this.queries;
 
     const { mfaVerifications } = await findUserById(this.userId);
@@ -135,23 +136,23 @@ export class TotpVerification implements MfaVerificationRecord<VerificationType.
     // Can not found totp verification, this is an invalid request, throw invalid code error anyway for security reason
     assertThat(totpVerification, 'session.mfa.invalid_totp_code');
 
-    assertThat(validateTotpToken(totpVerification.key, code), 'session.mfa.invalid_totp_code');
+    const usedTimeStep = getTotpTokenTimeStep(totpVerification.key, code);
+
+    assertThat(usedTimeStep !== undefined, 'session.mfa.invalid_totp_code');
+    assertThat(
+      totpVerification.lastUsedTimeStep === undefined ||
+        usedTimeStep > totpVerification.lastUsedTimeStep,
+      'session.mfa.invalid_totp_code'
+    );
+
+    const updatedUser = await updateUserTotpMfaVerificationLastUsed(
+      this.userId,
+      totpVerification.id,
+      usedTimeStep
+    );
+    assertThat(updatedUser, 'session.mfa.invalid_totp_code');
 
     this.verified = true;
-
-    // Update last used time
-    await updateUserById(this.userId, {
-      mfaVerifications: mfaVerifications.map((mfa) => {
-        if (mfa.id !== totpVerification.id) {
-          return mfa;
-        }
-
-        return {
-          ...mfa,
-          lastUsedAt: new Date().toISOString(),
-        };
-      }),
-    });
   }
 
   toBindMfa(): BindTotp {
