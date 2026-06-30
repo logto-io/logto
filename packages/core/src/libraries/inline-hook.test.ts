@@ -53,12 +53,12 @@ describe('InlineHookLibrary', () => {
         NAME_SUFFIX: ' updated',
       },
       script: `
-        const runInlineHook = (payload) => ({
+        const runInlineHook = ({ event, environmentVariables, api }) => ({
           action: 'updateUser',
           user: {
-            name: payload.event.user.name + payload.environmentVariables.NAME_SUFFIX,
+            name: event.user.name + environmentVariables.NAME_SUFFIX,
           },
-          hasApi: Object.hasOwn(payload, 'api'),
+          apiType: typeof api,
         });
       `,
     });
@@ -80,7 +80,7 @@ describe('InlineHookLibrary', () => {
       user: {
         name: 'Foo updated',
       },
-      hasApi: false,
+      apiType: 'undefined',
     });
 
     expect(getInlineHook).toHaveBeenCalledWith(LogtoInlineHookKey.PostSignIn);
@@ -241,6 +241,27 @@ describe('InlineHookLibrary', () => {
       message: 'Inline hook failed with [redacted]',
     });
     expect((trackedError as Error).stack).not.toContain(password);
+  });
+
+  it('throws an inline hook error when the remote runner is not configured', async () => {
+    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get').mockReturnValue('');
+    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue('');
+
+    await expect(
+      library.runScriptRemotely({
+        hookType: LogtoInlineHookKey.PostSignIn,
+        script: 'const runInlineHook = () => ({ action: "continue" });',
+        event: {
+          key: LogtoInlineHookKey.PostSignIn,
+        },
+      })
+    ).rejects.toMatchObject({
+      code: 'inline_hook.general',
+      status: 422,
+      data: {
+        message: 'Remote inline hook runner is not configured.',
+      },
+    });
   });
 
   it('blocks PostSignIn execution errors with the owning flow failure by default', async () => {

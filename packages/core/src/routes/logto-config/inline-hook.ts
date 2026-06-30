@@ -1,7 +1,17 @@
-import { LogtoInlineHookKey, inlineHookGuard } from '@logto/schemas';
+import {
+  LogtoInlineHookKey,
+  inlineHookGuard,
+  inlineHookTestRequestBodyGuard,
+  jsonGuard,
+} from '@logto/schemas';
+import { ResponseError } from '@withtyped/client';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import { InlineHookLibrary } from '#src/libraries/inline-hook.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import { koaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
@@ -11,8 +21,25 @@ const inlineHookConfigsGuard = z.object({
   value: inlineHookGuard,
 });
 
+const inlineHookResponseErrorGuard = z.object({
+  message: z.string(),
+});
+
+const parseInlineHookResponseError = async (error: ResponseError) => {
+  const responseBody: unknown = await error.response.json();
+  const errorResponseResult = inlineHookResponseErrorGuard.safeParse(responseBody);
+
+  return {
+    message: errorResponseResult.success ? errorResponseResult.data.message : error.message,
+    error: responseBody,
+  };
+};
+
+const getInlineHookResponseErrorStatus = (status: number) =>
+  status === 400 || status === 403 || status === 422 ? status : 422;
+
 export default function logtoConfigInlineHookRoutes<T extends ManagementApiRouter>(
-  ...[router, { queries, logtoConfigs }]: RouterInitArgs<T>
+  ...[router, { queries, logtoConfigs, libraries }]: RouterInitArgs<T>
 ) {
   const { getRowsByKeys, deleteInlineHook } = queries.logtoConfigs;
   const { upsertInlineHook, getInlineHook, getInlineHooks, updateInlineHook } = logtoConfigs;
@@ -28,6 +55,43 @@ export default function logtoConfigInlineHookRoutes<T extends ManagementApiRoute
       ctx.body = Object.values(LogtoInlineHookKey)
         .filter((key) => inlineHooks[key])
         .map((key) => ({ key, value: inlineHooks[key] }));
+      return next();
+    }
+  );
+
+  router.post(
+    '/configs/inline-hooks/test',
+    koaGuard({
+      body: inlineHookTestRequestBodyGuard,
+      response: jsonGuard.optional(),
+      status: [200, 400, 403, 422],
+    }),
+    koaQuotaGuard({ key: 'inlineHooksEnabled', quota: libraries.quota }),
+    async (ctx, next) => {
+      const { body } = ctx.guard;
+
+      try {
+        ctx.body = EnvSet.values.isCloud
+          ? await libraries.inlineHooks.runScriptRemotely(body)
+          : await InlineHookLibrary.runScriptInLocalVm(body);
+        ctx.status = 200;
+      } catch (error: unknown) {
+        if (error instanceof ResponseError) {
+          const responseBody = await parseInlineHookResponseError(error);
+          const { message, error: originalError } = responseBody;
+
+          throw new RequestError(
+            {
+              code: 'inline_hook.general',
+              status: getInlineHookResponseErrorStatus(error.response.status),
+            },
+            { message, error: originalError }
+          );
+        }
+
+        throw error;
+      }
+
       return next();
     }
   );

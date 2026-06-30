@@ -475,6 +475,49 @@
         }
       }
     },
+    "/api/configs/inline-hooks/test": {
+      "post": {
+        "summary": "Test inline hook",
+        "description": "Test an inline hook script with a sample context.",
+        "tags": ["Dev feature"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "hookType": {
+                    "description": "The inline hook type to test."
+                  },
+                  "script": {
+                    "description": "The inline hook script to test."
+                  },
+                  "event": {
+                    "description": "The sample event for inline hook script testing."
+                  },
+                  "environmentVariables": {
+                    "description": "The environment variables for the inline hook script."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The result of the inline hook script testing."
+          },
+          "400": {
+            "description": "The request body or response body is invalid."
+          },
+          "403": {
+            "description": "The tenant's subscription plan does not support this feature."
+          },
+          "422": {
+            "description": "The inline hook script failed to execute."
+          }
+        }
+      }
+    },
     "/api/configs/id-token": {
       "get": {
         "summary": "Get ID token claims configuration",
