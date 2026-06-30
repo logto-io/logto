@@ -197,7 +197,7 @@ export class InlineHookLibrary {
 
     if (!this.isRegionalAzureFunctionAppConfigured) {
       throw new RequestError(
-        { code: 'session.verification_failed', status: 422 },
+        { code: 'inline_hook.general', status: 422 },
         { message: 'Remote inline hook runner is not configured.' }
       );
     }

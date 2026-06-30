@@ -270,6 +270,7 @@ describe('configs inline hook routes', () => {
       .send(inlineHookTestPayload);
 
     expect(response.status).toEqual(422);
+    expect(response.body.code).toEqual('inline_hook.general');
     expect(response.body.data).toEqual({
       message: 'Script failed',
       error: errorBody,
@@ -296,6 +297,7 @@ describe('configs inline hook routes', () => {
         .send(inlineHookTestPayload);
 
       expect(response.status).toEqual(expectedStatus);
+      expect(response.body.code).toEqual('inline_hook.general');
     }
   );
 

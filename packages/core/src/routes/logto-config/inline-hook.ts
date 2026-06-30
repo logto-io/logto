@@ -82,7 +82,7 @@ export default function logtoConfigInlineHookRoutes<T extends ManagementApiRoute
 
           throw new RequestError(
             {
-              code: 'session.verification_failed',
+              code: 'inline_hook.general',
               status: getInlineHookResponseErrorStatus(error.response.status),
             },
             { message, error: originalError }
