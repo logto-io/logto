@@ -354,8 +354,8 @@ describe('user query', () => {
           case
             when item->>'id' = $1 and item->>'type' = $2
               then item || jsonb_build_object(
-                'lastUsedAt', $3,
-                'lastUsedTimeStep', $4
+                'lastUsedAt', $3::text,
+                'lastUsedTimeStep', $4::integer
               )
             else item
           end
@@ -373,7 +373,7 @@ describe('user query', () => {
               not (item ? 'lastUsedTimeStep')
               or case
                 when jsonb_typeof(item->'lastUsedTimeStep') = 'number'
-                  then (item->>'lastUsedTimeStep')::numeric < $8
+                  then (item->>'lastUsedTimeStep')::integer < $8::integer
                 else false
               end
             )

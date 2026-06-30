@@ -418,8 +418,8 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
           case
             when item->>'id' = ${mfaVerificationId} and item->>'type' = ${MfaFactor.TOTP}
               then item || jsonb_build_object(
-                'lastUsedAt', ${lastUsedAt},
-                'lastUsedTimeStep', ${usedTimeStep}
+                'lastUsedAt', ${lastUsedAt}::text,
+                'lastUsedTimeStep', ${usedTimeStep}::integer
               )
             else item
           end
@@ -437,7 +437,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
               not (item ? 'lastUsedTimeStep')
               or case
                 when jsonb_typeof(item->'lastUsedTimeStep') = 'number'
-                  then (item->>'lastUsedTimeStep')::numeric < ${usedTimeStep}
+                  then (item->>'lastUsedTimeStep')::integer < ${usedTimeStep}::integer
                 else false
               end
             )
