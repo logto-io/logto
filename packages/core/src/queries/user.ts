@@ -405,6 +405,46 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     });
   };
 
+  const updateUserTotpMfaVerificationLastUsed = async (
+    id: string,
+    mfaVerificationId: string,
+    usedTimeStep: number,
+    lastUsedAt = new Date().toISOString()
+  ) =>
+    pool.maybeOne<User>(sql`
+      update ${table}
+      set ${fields.mfaVerifications} = (
+        select jsonb_agg(
+          case
+            when item->>'id' = ${mfaVerificationId} and item->>'type' = ${MfaFactor.TOTP}
+              then item || jsonb_build_object(
+                'lastUsedAt', ${lastUsedAt},
+                'lastUsedTimeStep', ${usedTimeStep}
+              )
+            else item
+          end
+          order by ordinal
+        )
+        from jsonb_array_elements(${fields.mfaVerifications}::jsonb) with ordinality as mfa(item, ordinal)
+      )
+      where ${fields.id} = ${id}
+        and exists (
+          select 1
+          from jsonb_array_elements(${fields.mfaVerifications}::jsonb) as mfa(item)
+          where item->>'id' = ${mfaVerificationId}
+            and item->>'type' = ${MfaFactor.TOTP}
+            and (
+              not (item ? 'lastUsedTimeStep')
+              or case
+                when jsonb_typeof(item->'lastUsedTimeStep') = 'number'
+                  then (item->>'lastUsedTimeStep')::numeric < ${usedTimeStep}
+                else false
+              end
+            )
+        )
+      returning *
+    `);
+
   const insertUserQuery = buildInsertIntoWithPool(pool)(Users, {
     returning: true,
   });
@@ -483,6 +523,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     findUsers,
     findUsersByIds,
     updateUserById,
+    updateUserTotpMfaVerificationLastUsed,
     insertUser,
     deleteUserById,
     deleteUserIdentity,

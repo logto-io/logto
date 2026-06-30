@@ -19,14 +19,15 @@ const { TotpVerification } = await import('./totp-verification.js');
 describe('TotpVerification', () => {
   const userId = 'userId';
   const findUserById = jest.fn();
-  const updateUserById = jest.fn();
+  const updateUserTotpMfaVerificationLastUsed = jest.fn();
   const tenant = new MockTenant(undefined, {
-    users: { findUserById, updateUserById },
+    users: { findUserById, updateUserTotpMfaVerificationLastUsed },
   });
 
   beforeEach(() => {
     jest.clearAllMocks();
     getTotpTokenTimeStep.mockReturnValue(100);
+    updateUserTotpMfaVerificationLastUsed.mockResolvedValue({});
   });
 
   const createVerification = () =>
@@ -54,14 +55,7 @@ describe('TotpVerification', () => {
     await verification.verifyUserExistingTotp('123456');
 
     expect(verification.isVerified).toBe(true);
-    expect(updateUserById).toHaveBeenCalledWith(userId, {
-      mfaVerifications: [
-        expect.objectContaining({
-          id: 'totpId',
-          lastUsedTimeStep: 100,
-        }),
-      ],
-    });
+    expect(updateUserTotpMfaVerificationLastUsed).toHaveBeenCalledWith(userId, 'totpId', 100);
   });
 
   it('should reject a TOTP code whose time step was already used', async () => {
@@ -82,6 +76,27 @@ describe('TotpVerification', () => {
     await expect(verification.verifyUserExistingTotp('123456')).rejects.toEqual(
       new RequestError('session.mfa.invalid_totp_code')
     );
-    expect(updateUserById).not.toHaveBeenCalled();
+    expect(updateUserTotpMfaVerificationLastUsed).not.toHaveBeenCalled();
+  });
+
+  it('should reject when the used time step fails to persist atomically', async () => {
+    findUserById.mockResolvedValueOnce({
+      mfaVerifications: [
+        {
+          id: 'totpId',
+          type: MfaFactor.TOTP,
+          key: 'key',
+          createdAt: '2024-01-01T00:00:00.000Z',
+        },
+      ],
+    });
+    updateUserTotpMfaVerificationLastUsed.mockResolvedValueOnce(null);
+
+    const verification = createVerification();
+
+    await expect(verification.verifyUserExistingTotp('123456')).rejects.toEqual(
+      new RequestError('session.mfa.invalid_totp_code')
+    );
+    expect(verification.isVerified).toBe(false);
   });
 });

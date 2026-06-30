@@ -76,7 +76,7 @@ export const mfaVerificationTotp = z.object({
   type: z.literal(MfaFactor.TOTP),
   ...baseMfaVerification,
   key: z.string(),
-  lastUsedTimeStep: z.number().optional(),
+  lastUsedTimeStep: z.number().int().nonnegative().optional(),
 });
 
 export type MfaVerificationTotp = z.infer<typeof mfaVerificationTotp>;

@@ -30,6 +30,7 @@ const {
   hasUserWithIdentity,
   hasUserWithPhone,
   updateUserById,
+  updateUserTotpMfaVerificationLastUsed,
   deleteUserById,
   deleteUserIdentity,
 } = createUserQueries(pool);
@@ -339,6 +340,66 @@ describe('user query', () => {
     });
 
     await expect(updateUserById(id, { username })).resolves.toEqual(databaseValue);
+  });
+
+  it('updateUserTotpMfaVerificationLastUsed', async () => {
+    const id = 'foo';
+    const mfaVerificationId = 'totp-id';
+    const usedTimeStep = 100;
+    const lastUsedAt = '2024-01-01T00:00:00.000Z';
+    const expectSql = sql`
+      update ${table}
+      set ${fields.mfaVerifications} = (
+        select jsonb_agg(
+          case
+            when item->>'id' = $1 and item->>'type' = $2
+              then item || jsonb_build_object(
+                'lastUsedAt', $3,
+                'lastUsedTimeStep', $4
+              )
+            else item
+          end
+          order by ordinal
+        )
+        from jsonb_array_elements(${fields.mfaVerifications}::jsonb) with ordinality as mfa(item, ordinal)
+      )
+      where ${fields.id} = $5
+        and exists (
+          select 1
+          from jsonb_array_elements(${fields.mfaVerifications}::jsonb) as mfa(item)
+          where item->>'id' = $6
+            and item->>'type' = $7
+            and (
+              not (item ? 'lastUsedTimeStep')
+              or case
+                when jsonb_typeof(item->'lastUsedTimeStep') = 'number'
+                  then (item->>'lastUsedTimeStep')::numeric < $8
+                else false
+              end
+            )
+        )
+      returning *
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([
+        mfaVerificationId,
+        MfaFactor.TOTP,
+        lastUsedAt,
+        usedTimeStep,
+        id,
+        mfaVerificationId,
+        MfaFactor.TOTP,
+        usedTimeStep,
+      ]);
+
+      return createMockQueryResult([databaseValue]);
+    });
+
+    await expect(
+      updateUserTotpMfaVerificationLastUsed(id, mfaVerificationId, usedTimeStep, lastUsedAt)
+    ).resolves.toEqual(databaseValue);
   });
 
   it('deleteUserById', async () => {
