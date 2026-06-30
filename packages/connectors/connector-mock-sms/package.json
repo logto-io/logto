@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-mock-sms",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Mock SMS connector implementation for integration tests only.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {

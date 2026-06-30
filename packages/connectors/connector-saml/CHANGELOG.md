@@ -1,5 +1,14 @@
 # @logto/connector-saml
 
+## 1.3.6
+
+### Patch Changes
+
+- 9097054860: upgrade `samlify` to `^2.13.0`, which consistently XML-escapes attribute values in generated SAML assertions, and adapt the SAML application and SSO connector call sites to its stricter return types (`getAssertionConsumerService`, `getX509Certificate`, and the `createLoginResponse` binding-context union)
+- Updated dependencies [e7b6e9de1]
+- Updated dependencies [b7386a5113]
+  - @logto/connector-kit@5.1.0
+
 ## 1.3.5
 
 ### Patch Changes

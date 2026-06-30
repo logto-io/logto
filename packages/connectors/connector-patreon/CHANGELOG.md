@@ -1,5 +1,14 @@
 # @logto/connector-patreon
 
+## 1.2.7
+
+### Patch Changes
+
+- Updated dependencies [e7b6e9de1]
+- Updated dependencies [b7386a5113]
+  - @logto/connector-kit@5.1.0
+  - @logto/connector-oauth@1.7.7
+
 ## 1.2.6
 
 ### Patch Changes

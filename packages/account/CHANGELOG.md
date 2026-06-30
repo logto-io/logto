@@ -1,5 +1,31 @@
 # @logto/account
 
+## 0.5.0
+
+### Minor Changes
+
+- 3d38ae2074: add account center session management
+
+  Users can now configure and use the account center Sessions page to review active sessions and connected third-party applications.
+
+- c1ff0c114: release account center profile page, custom profile fields at sign-up, and experience/account avatar upload from dev feature gates
+
+  The collect-user-profile sign-up flow now respects the explicit `signUpProfileFields` list instead of always showing the full catalog. The account center profile page and avatar upload endpoints are no longer gated behind a dev feature flag.
+
+- bcd517bacf: add independent Account Center passkey controls for passkey sign-in
+
+  Admins can now configure passkey visibility separately from MFA in Account Center, and users can manage passkeys plus their passkey sign-in prompt preference when passkey sign-in is enabled.
+
+- 67b99bba85: apply the tenant username policy in sign-in experience and account center username forms
+
+  Usernames entered during sign-up, profile fulfillment, and account center editing are validated against the tenant username policy with localized inline errors. The dedicated username pages (continue flow and account center) state the policy requirements in their page description, and the sign-up identifier form surfaces the full requirements sentence when an entered username violates the policy.
+
+### Patch Changes
+
+- 72820ac41e: prevent theme flash in sign-in experience and account center
+
+  Sign-in experience and account center now apply tenant theme, platform, and brand color before the app hydrates, reducing flashes of the wrong theme during initial page load.
+
 ## 0.4.1
 
 ### Patch Changes
