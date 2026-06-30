@@ -151,30 +151,47 @@ describe('koaOidcAuth middleware', () => {
     expect(ctx.auth.identityVerified).toBe(true);
   });
 
-  it('should set identityVerified with a verified user permission code verification record', async () => {
-    ctx.request = {
-      ...ctx.request,
-      headers: {
-        authorization: 'Bearer access_token',
-        [verificationRecordIdHeader]: 'verification-record-id',
+  it.each([
+    {
+      name: 'email',
+      type: VerificationType.EmailVerificationCode,
+      identifier: {
+        type: SignInIdentifier.Email,
+        value: 'foo@example.com',
       },
-    };
-    Sinon.stub(provider.AccessToken, 'find').resolves(mockAccessToken);
-
-    await koaOidcAuth(
-      createTenantWithVerificationRecord({
-        type: VerificationType.EmailVerificationCode,
-        identifier: {
-          type: SignInIdentifier.Email,
-          value: 'foo@example.com',
+    },
+    {
+      name: 'phone',
+      type: VerificationType.PhoneVerificationCode,
+      identifier: {
+        type: SignInIdentifier.Phone,
+        value: '+1234567890',
+      },
+    },
+  ])(
+    'should set identityVerified with a verified user permission $name code verification record',
+    async ({ type, identifier }) => {
+      ctx.request = {
+        ...ctx.request,
+        headers: {
+          authorization: 'Bearer access_token',
+          [verificationRecordIdHeader]: 'verification-record-id',
         },
-        templateType: TemplateType.UserPermissionValidation,
-        verified: true,
-      })
-    )(ctx, next);
+      };
+      Sinon.stub(provider.AccessToken, 'find').resolves(mockAccessToken);
 
-    expect(ctx.auth.identityVerified).toBe(true);
-  });
+      await koaOidcAuth(
+        createTenantWithVerificationRecord({
+          type,
+          identifier,
+          templateType: TemplateType.UserPermissionValidation,
+          verified: true,
+        })
+      )(ctx, next);
+
+      expect(ctx.auth.identityVerified).toBe(true);
+    }
+  );
 
   it('should not set identityVerified with a verified MFA binding code verification record', async () => {
     ctx.request = {

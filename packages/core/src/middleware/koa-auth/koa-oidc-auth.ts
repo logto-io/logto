@@ -38,8 +38,8 @@ const isUserPermissionVerificationRecord = (record: VerificationRecord) => {
 };
 
 /**
- * Builds a verification record by its id.
- * The `userId` is optional and is only used for user sensitive permission verifications.
+ * Checks whether the verification record exists, belongs to the given user, and can be used for
+ * user permission verification.
  */
 const getVerificationRecordResultById = async ({
   id,
