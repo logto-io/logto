@@ -53,6 +53,23 @@ describe('validateEmailAgainstBlocklistPolicy', () => {
     );
   });
 
+  it('blocks subaddressing regardless of regex metacharacters in the address', async () => {
+    // The local part contains `+`, so it is blocked as subaddressing no matter what other
+    // characters appear in the address; the check treats the address as plain text, not a pattern,
+    // so it stays linear-time.
+    const complexEmail = 'x+y@(a+)+$@' + 'a'.repeat(40) + '.com';
+    const start = Date.now();
+    await expect(
+      validateEmailAgainstBlocklistPolicy(emailBlocklistPolicy, complexEmail)
+    ).rejects.toMatchError(
+      new RequestError({
+        code: 'session.email_blocklist.email_subaddressing_not_allowed',
+        status: 422,
+      })
+    );
+    expect(Date.now() - start).toBeLessThan(1000);
+  });
+
   it('should throw if the email domain is in the custom blocklist', async () => {
     const emails = ['test@foo.com', 'bar@foo.com'];
 
