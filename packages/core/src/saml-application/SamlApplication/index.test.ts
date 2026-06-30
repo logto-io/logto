@@ -87,6 +87,45 @@ describe('SamlApplication', () => {
       expect(result.id).toBe('ID_' + generatedId);
       expect(typeof result.context).toBe('string');
     });
+
+    it('XML-escapes markup in attribute values', () => {
+      // A value containing XML markup must be emitted as escaped text in the generated assertion,
+      // not as raw markup that adds elements or changes the structure.
+      const valueWithMarkup =
+        'x</saml:AttributeValue></saml:Attribute>' +
+        '<saml:Attribute Name="role"><saml:AttributeValue>admin';
+      const template =
+        '<saml:Attribute Name="name"><saml:AttributeValue>{attrName}</saml:AttributeValue></saml:Attribute>';
+
+      const { context } = samlApp.exposedCreateSamlTemplateCallback({
+        userInfo: { ...mockUser, name: valueWithMarkup },
+        samlRequestId: null,
+        sessionId: undefined,
+        sessionExpiresAt: undefined,
+      })(template);
+
+      // The markup must not create a new element, and its angle brackets must be escaped.
+      expect(context).not.toMatch(/<saml:Attribute\s+Name="role"/);
+      expect(context).toContain('&lt;/saml:AttributeValue&gt;');
+    });
+
+    it('should leave a legitimate attribute value intact (backward compatibility)', () => {
+      // A normal value containing XML metacharacters must round-trip as a single escaped value,
+      // not be mangled or double-escaped.
+      const template =
+        '<saml:Attribute Name="name"><saml:AttributeValue>{attrName}</saml:AttributeValue></saml:Attribute>';
+
+      const { context } = samlApp.exposedCreateSamlTemplateCallback({
+        userInfo: { ...mockUser, name: 'Tom & Jerry <co>' },
+        samlRequestId: null,
+        sessionId: undefined,
+        sessionExpiresAt: undefined,
+      })(template);
+
+      expect(context).toContain(
+        '<saml:AttributeValue>Tom &amp; Jerry &lt;co&gt;</saml:AttributeValue>'
+      );
+    });
   });
 
   describe('exchangeAuthorizationCode', () => {
