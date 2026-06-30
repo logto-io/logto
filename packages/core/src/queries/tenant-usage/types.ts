@@ -42,6 +42,9 @@ export type QuotaUsageKey = Exclude<
   | 'tokenLimit'
   // Exclude tenantMembersLimit as it is checked in Cloud, not in core.
   | 'tenantMembersLimit'
+  // Exclude the hosted-email caps as they are enforced at the Cloud `/mails` guard, not in core.
+  | 'hostedEmailLimit'
+  | 'hostedEmailDailyLimit'
 >;
 
 /**
