@@ -43,6 +43,59 @@ const indexContentType = 'text/html; charset=utf-8';
 const noCache = 'no-cache, no-store, must-revalidate';
 const maxAgeSevenDays = 'max-age=604_800_000';
 
+export const getSafeStaticFilePath = (staticPath: string, requestUrl: string) => {
+  const [pathname = ''] = requestUrl.split(/[#?]/);
+  const decodedPathname = trySafe(() => decodeURIComponent(pathname));
+
+  if (!decodedPathname || decodedPathname.includes('\\')) {
+    return;
+  }
+
+  const staticRoot = path.resolve(staticPath);
+  const requestPath = decodedPathname.replace(/^\/+/, '');
+  const resolvedPath = path.resolve(staticRoot, requestPath);
+  const relativePath = path.relative(staticRoot, resolvedPath);
+
+  if (relativePath.startsWith('..') || path.isAbsolute(relativePath)) {
+    return;
+  }
+
+  return resolvedPath;
+};
+
+const readFile = async (requestPath: string, start?: number, end?: number) => {
+  const fileHandle = await fs.open(requestPath, 'r');
+  const { size } = await fileHandle.stat();
+  const readStart = start ?? 0;
+  const readEnd = end ?? Math.max(size - 1, 0);
+  const buffer = Buffer.alloc(readEnd - readStart + 1);
+  await fileHandle.read(buffer, 0, buffer.length, readStart);
+  await fileHandle.close();
+  return { buffer, totalFileSize: size };
+};
+
+const setRangeHeaders = (response: http.ServerResponse, range: string, totalFileSize: number) => {
+  if (range) {
+    const { start, end } = parseRange(range);
+    const readStart = start ?? 0;
+    const readEnd = end ?? totalFileSize - 1;
+    response.setHeader('Accept-Ranges', 'bytes');
+    response.setHeader('Content-Range', `bytes ${readStart}-${readEnd}/${totalFileSize}`);
+  }
+};
+
+const isStaticFileProxyMethod = (method?: string) => method === 'HEAD' || method === 'GET';
+
+const getStaticFileRequestPath = (
+  staticPath: string,
+  requestUrl: string,
+  fallBackToIndex: boolean
+) =>
+  fallBackToIndex ? path.resolve(staticPath, index) : getSafeStaticFilePath(staticPath, requestUrl);
+
+const getStaticFileErrorStatusCode = (errorMessage: string, requestPath: string) =>
+  errorMessage === 'Range not satisfiable.' ? 416 : existsSync(requestPath) ? 500 : 404;
+
 export const createStaticFileProxy =
   (staticPath: string) => async (request: http.IncomingMessage, response: http.ServerResponse) => {
     if (!request.url) {
@@ -50,56 +103,36 @@ export const createStaticFileProxy =
       return;
     }
 
-    if (request.method === 'HEAD' || request.method === 'GET') {
-      const fallBackToIndex = !isFileAssetPath(request.url);
-      const requestPath = path.join(staticPath, fallBackToIndex ? index : request.url);
-      const { range = '' } = request.headers;
+    if (!isStaticFileProxyMethod(request.method)) {
+      return;
+    }
 
-      const readFile = async (requestPath: string, start?: number, end?: number) => {
-        const fileHandle = await fs.open(requestPath, 'r');
-        const { size } = await fileHandle.stat();
-        const readStart = start ?? 0;
-        const readEnd = end ?? Math.max(size - 1, 0);
-        const buffer = Buffer.alloc(readEnd - readStart + 1);
-        await fileHandle.read(buffer, 0, buffer.length, readStart);
-        await fileHandle.close();
-        return { buffer, totalFileSize: size };
-      };
+    const fallBackToIndex = !isFileAssetPath(request.url);
+    const requestPath = getStaticFileRequestPath(staticPath, request.url, fallBackToIndex);
+    const { range = '' } = request.headers;
 
-      const setRangeHeaders = (
-        response: http.ServerResponse,
-        range: string,
-        totalFileSize: number
-      ) => {
-        if (range) {
-          const { start, end } = parseRange(range);
-          const readStart = start ?? 0;
-          const readEnd = end ?? totalFileSize - 1;
-          response.setHeader('Accept-Ranges', 'bytes');
-          response.setHeader('Content-Range', `bytes ${readStart}-${readEnd}/${totalFileSize}`);
-        }
-      };
+    if (!requestPath) {
+      response.writeHead(404).end();
+      return;
+    }
 
-      try {
-        const { start, end } = parseRange(range);
-        const { buffer, totalFileSize } = await readFile(requestPath, start, end);
-        response.setHeader('cache-control', fallBackToIndex ? noCache : maxAgeSevenDays);
-        response.setHeader('content-type', getMimeType(request.url));
-        setRangeHeaders(response, range, totalFileSize);
+    try {
+      const { start, end } = parseRange(range);
+      const { buffer, totalFileSize } = await readFile(requestPath, start, end);
+      response.setHeader('cache-control', fallBackToIndex ? noCache : maxAgeSevenDays);
+      response.setHeader('content-type', getMimeType(request.url));
+      setRangeHeaders(response, range, totalFileSize);
 
-        response.setHeader('content-length', String(buffer.length));
-        response.writeHead(range ? 206 : 200);
-        response.end(buffer);
-      } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : String(error);
-        consoleLog.error(chalk.red(errorMessage));
+      response.setHeader('content-length', String(buffer.length));
+      response.writeHead(range ? 206 : 200);
+      response.end(buffer);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      consoleLog.error(chalk.red(errorMessage));
 
-        response.setHeader('content-type', getMimeType(request.url));
-        const statusCode =
-          errorMessage === 'Range not satisfiable.' ? 416 : existsSync(request.url) ? 500 : 404;
-        response.writeHead(statusCode);
-        response.end();
-      }
+      response.setHeader('content-type', getMimeType(request.url));
+      response.writeHead(getStaticFileErrorStatusCode(errorMessage, requestPath));
+      response.end();
     }
   };
 
