@@ -5,6 +5,7 @@ import {
   ConnectorError,
   ConnectorErrorCodes,
   type GetAuthorizationUri,
+  type GetSession,
   type GetUserInfo,
   type SocialConnector,
   type CreateConnector,
@@ -70,9 +71,11 @@ const authorizationCallbackHandler = async (parameterObject: unknown) => {
  */
 const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
-  async ({ state, redirectUri, scope: customScope }) => {
+  async ({ state, redirectUri, scope: customScope }, setSession) => {
     const config = await getConfig(defaultMetadata.id);
     validateConfig(config, qqConfigGuard);
+
+    await setSession({ redirectUri });
 
     const { clientId, scope } = config;
     const queryParameters = new URLSearchParams({
@@ -85,6 +88,22 @@ const getAuthorizationUri =
 
     return `${authorizationEndpoint}?${queryParameters.toString()}`;
   };
+
+const getRedirectUri = async (redirectUri: string | undefined, getSession: GetSession) => {
+  if (redirectUri) {
+    return redirectUri;
+  }
+
+  const { redirectUri: redirectUriFromSession } = await getSession();
+
+  if (!redirectUriFromSession) {
+    throw new ConnectorError(ConnectorErrorCodes.General, {
+      message: 'Cannot find `redirectUri` from connector session.',
+    });
+  }
+
+  return redirectUriFromSession;
+};
 
 /**
  * Obtains the QQ access token using the authorization code.
@@ -201,14 +220,18 @@ const getOpenIdAndUnionId = async (accessToken: string) => {
  */
 const getUserInfo =
   (getConfig: GetConnectorConfig): GetUserInfo =>
-  async (data) => {
+  async (data, getSession) => {
     const { code, redirectUri } = await authorizationCallbackHandler(data);
 
     const config = await getConfig(defaultMetadata.id);
     validateConfig(config, qqConfigGuard);
 
     const { clientId } = config;
-    const { accessToken } = await getAccessToken(config, code, redirectUri);
+    const { accessToken } = await getAccessToken(
+      config,
+      code,
+      await getRedirectUri(redirectUri, getSession)
+    );
     const { unionid, openid } = await getOpenIdAndUnionId(accessToken);
 
     try {

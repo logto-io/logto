@@ -55,7 +55,7 @@ export const authorizationCallbackErrorGuard = z.object({
   error_description: z.string(),
 });
 
-export const authResponseGuard = z.object({ code: z.string(), redirectUri: z.string() });
+export const authResponseGuard = z.object({ code: z.string(), redirectUri: z.string().optional() });
 
 export const getUserInfoErrorGuard = z.object({
   ret: z.number(),
