@@ -10,3 +10,11 @@
     flex-shrink: 0;
   }
 }
+
+.separator {
+  color: var(--color-text-secondary);
+}
+
+.overLimit {
+  color: var(--color-error);
+}
