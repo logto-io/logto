@@ -31,22 +31,46 @@ describe('Regular expressions should work as expected', () => {
       expect(domainRegEx.test('foo.bar@')).toBe(false);
       expect(domainRegEx.test('foo.bar@com')).toBe(false);
       expect(emailOrEmailDomainRegEx.test('foo.bar@.com')).toBe(false);
+      expect(emailOrEmailDomainRegEx.test('foo@example')).toBe(false);
+      expect(emailOrEmailDomainRegEx.test('foo@-example.com')).toBe(false);
+      expect(emailOrEmailDomainRegEx.test('foo@example-.com')).toBe(false);
+      expect(emailOrEmailDomainRegEx.test('foo@example..com')).toBe(false);
+      expect(emailOrEmailDomainRegEx.test('foo@example_.com')).toBe(false);
     });
 
     it('should allow full email address', () => {
       expect(emailOrEmailDomainRegEx.test('bar@example.com')).toBe(true);
       expect(emailOrEmailDomainRegEx.test('foo.bar@example.com')).toBe(true);
       expect(emailOrEmailDomainRegEx.test('foo.bar@example-bar.com')).toBe(true);
+      expect(emailOrEmailDomainRegEx.test('foo+bar@example.com')).toBe(true);
+      expect(emailOrEmailDomainRegEx.test('foo@example.c')).toBe(true);
+    });
+
+    it('should not allow partial full email address matches', () => {
+      expect(emailOrEmailDomainRegEx.test('foo@example.com extra')).toBe(false);
+      expect(emailOrEmailDomainRegEx.test('foo@example.com,extra')).toBe(false);
+      expect(emailOrEmailDomainRegEx.test('foo@example.com\n')).toBe(false);
     });
 
     it('should not allow partial email domain without @ mark', () => {
       expect(emailOrEmailDomainRegEx.test('foo.com')).toBe(false);
       expect(emailOrEmailDomainRegEx.test('foo.bar.com')).toBe(false);
+      expect(emailOrEmailDomainRegEx.test('example')).toBe(false);
     });
 
     it('should allow email domain with @ mark', () => {
       expect(emailOrEmailDomainRegEx.test('@example.com')).toBe(true);
       expect(emailOrEmailDomainRegEx.test('@foo.bar.com')).toBe(true);
+      expect(emailOrEmailDomainRegEx.test('@example-bar.com')).toBe(true);
+    });
+
+    it('should not allow invalid email domain with @ mark', () => {
+      expect(emailOrEmailDomainRegEx.test('@example')).toBe(false);
+      expect(emailOrEmailDomainRegEx.test('@-example.com')).toBe(false);
+      expect(emailOrEmailDomainRegEx.test('@example-.com')).toBe(false);
+      expect(emailOrEmailDomainRegEx.test('@example..com')).toBe(false);
+      expect(emailOrEmailDomainRegEx.test('@example_.com')).toBe(false);
+      expect(emailOrEmailDomainRegEx.test('@example.com extra')).toBe(false);
     });
   });
 });
