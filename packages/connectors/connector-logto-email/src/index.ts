@@ -51,8 +51,10 @@ const sendMessage =
         },
       });
     } catch (error: unknown) {
-      if (error instanceof HTTPError) {
-        console.log('error');
+      // The hosted email service returns 429 once the tenant's usage limit is reached. Convert it to
+      // a ConnectorError so the middleware maps it to a 429 for the caller instead of an opaque 500.
+      if (error instanceof HTTPError && error.response.statusCode === 429) {
+        throw new ConnectorError(ConnectorErrorCodes.RateLimitExceeded);
       }
 
       throw error;
