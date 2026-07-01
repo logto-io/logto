@@ -36,6 +36,13 @@ const connector_details = {
     total_email_sent: '總發送郵件數：{{value, number}}',
     total_email_sent_tip:
       '在 Logto 中，使用 SendGrid 進行安全、穩定的內建郵件發送。完全免費使用。<a>了解更多</a>',
+    hosted_email_usage: {
+      daily: '每日 <value>{{usage, number}}</value> / {{limit, number}}',
+      daily_unlimited: '每日 <value>{{usage, number}}</value>',
+      monthly: '每月 <value>{{usage, number}}</value> / {{limit, number}}',
+      monthly_unlimited: '每月 <value>{{usage, number}}</value>',
+      tip: 'Free 和 Development 方案包含每日和每月的內建郵件限額。',
+    },
     email_template_title: '郵件模板',
     template_description:
       '內置郵件使用默認模板實現無縫交付驗證郵件。無需配置，您可以自定義基本品牌信息。',

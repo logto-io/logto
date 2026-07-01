@@ -38,6 +38,13 @@ const connector_details = {
     total_email_sent: 'Total de e-mails enviados: {{value, number}}',
     total_email_sent_tip:
       'Logto utiliza SendGrid para envio seguro e estável de e-mails integrados. É completamente gratuito para uso. <a>Saiba mais</a>',
+    hosted_email_usage: {
+      daily: 'Diário <value>{{usage, number}}</value> / {{limit, number}}',
+      daily_unlimited: 'Diário <value>{{usage, number}}</value>',
+      monthly: 'Mensal <value>{{usage, number}}</value> / {{limit, number}}',
+      monthly_unlimited: 'Mensal <value>{{usage, number}}</value>',
+      tip: 'Os planos Free e Development incluem limites diários e mensais de e-mail integrado.',
+    },
     email_template_title: 'Modelo de e-mail',
     template_description:
       'O e-mail integrado usa modelos padrão para entrega perfeita de e-mails de verificação. Nenhuma configuração é necessária e você pode personalizar informações básicas da marca.',

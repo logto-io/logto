@@ -36,6 +36,13 @@ const connector_details = {
     total_email_sent: '已发送邮件总数: {{value, number}}',
     total_email_sent_tip:
       'Logto 使用 SendGrid 进行安全稳定的内置电子邮件功能。此功能完全免费使用。<a>了解更多</a>',
+    hosted_email_usage: {
+      daily: '每日 <value>{{usage, number}}</value> / {{limit, number}}',
+      daily_unlimited: '每日 <value>{{usage, number}}</value>',
+      monthly: '每月 <value>{{usage, number}}</value> / {{limit, number}}',
+      monthly_unlimited: '每月 <value>{{usage, number}}</value>',
+      tip: 'Free 和 Development 方案包含每日和每月的内置电子邮件限额。',
+    },
     email_template_title: '电子邮件模板',
     template_description:
       '内置电子邮件使用默认模板，无需配置即可无缝发送验证电子邮件。您可以自定义基本品牌信息。',

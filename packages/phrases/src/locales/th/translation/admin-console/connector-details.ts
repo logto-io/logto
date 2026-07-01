@@ -38,6 +38,13 @@ const connector_details = {
     total_email_sent: 'อีเมลที่ส่งทั้งหมด: {{value, number}}',
     total_email_sent_tip:
       'Logto ใช้ SendGrid เพื่อความปลอดภัยและเสถียรภาพในการส่งอีเมลที่ติดตั้งมาในตัว ใช้งานได้ฟรี <a>เรียนรู้เพิ่มเติม</a>',
+    hosted_email_usage: {
+      daily: 'รายวัน <value>{{usage, number}}</value> / {{limit, number}}',
+      daily_unlimited: 'รายวัน <value>{{usage, number}}</value>',
+      monthly: 'รายเดือน <value>{{usage, number}}</value> / {{limit, number}}',
+      monthly_unlimited: 'รายเดือน <value>{{usage, number}}</value>',
+      tip: 'แผน Free และ Development มีขีดจำกัดอีเมลในตัวรายวันและรายเดือน',
+    },
     email_template_title: 'แม่แบบอีเมล',
     template_description:
       'อีเมลในตัวจะใช้แม่แบบเริ่มต้นเพื่อส่งอีเมลยืนยันอย่างราบรื่น ไม่ต้องกำหนดค่าใด ๆ และคุณสามารถปรับแต่งข้อมูลแบรนด์พื้นฐานได้',
