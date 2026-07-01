@@ -510,7 +510,7 @@
             "description": "The request body or response body is invalid."
           },
           "403": {
-            "description": "The tenant's subscription plan does not support this feature."
+            "description": "Cloud connection does not have enough permission to perform the action or the tenant's subscription plan does not support this feature."
           },
           "422": {
             "description": "The inline hook script failed to execute."

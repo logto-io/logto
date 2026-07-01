@@ -17,6 +17,7 @@ import { InlineHookLibrary } from '#src/libraries/inline-hook.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
 import { mockLogtoConfigsLibrary } from '#src/test-utils/mock-libraries.js';
+import { createMockQuotaLibrary } from '#src/test-utils/quota.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -51,6 +52,8 @@ const logtoConfigQueries = {
   deleteInlineHook: jest.fn(),
 };
 
+const mockQuotaLibrary = createMockQuotaLibrary();
+
 setDevFeaturesEnabled(true);
 
 const settingRoutes = await pickDefault(import('./index.js'));
@@ -60,7 +63,7 @@ describe('configs inline hook routes', () => {
     undefined,
     { logtoConfigs: logtoConfigQueries },
     undefined,
-    undefined,
+    { quota: mockQuotaLibrary },
     mockLogtoConfigsLibrary
   );
 
@@ -98,6 +101,7 @@ describe('configs inline hook routes', () => {
       pick(mockInlineHookConfigForPostFirstFactorVerification, 'key', 'value'),
       pick(mockInlineHookConfigForPostSignIn, 'key', 'value'),
     ]);
+    expect(mockQuotaLibrary.guardTenantUsageByKey).not.toHaveBeenCalled();
   });
 
   it('GET /configs/inline-hooks/:hookType should return the record', async () => {
@@ -114,6 +118,7 @@ describe('configs inline hook routes', () => {
     );
     expect(response.status).toEqual(200);
     expect(response.body).toEqual(mockInlineHookConfigForPostSignIn.value);
+    expect(mockQuotaLibrary.guardTenantUsageByKey).not.toHaveBeenCalled();
   });
 
   it('PUT /configs/inline-hooks/:hookType should add a record successfully', async () => {
@@ -137,6 +142,7 @@ describe('configs inline hook routes', () => {
     );
     expect(response.status).toEqual(201);
     expect(response.body).toEqual(mockInlineHookConfigForPostSignIn.value);
+    expect(mockQuotaLibrary.guardTenantUsageByKey).toHaveBeenCalledWith('inlineHooksEnabled');
   });
 
   it('PUT /configs/inline-hooks/:hookType should update a record successfully', async () => {
@@ -159,6 +165,7 @@ describe('configs inline hook routes', () => {
     );
     expect(response.status).toEqual(200);
     expect(response.body).toEqual(mockInlineHookConfigForPostSignIn.value);
+    expect(mockQuotaLibrary.guardTenantUsageByKey).toHaveBeenCalledWith('inlineHooksEnabled');
   });
 
   it('PATCH /configs/inline-hooks/:hookType should partially update a record successfully', async () => {
@@ -183,6 +190,7 @@ describe('configs inline hook routes', () => {
     );
     expect(response.status).toEqual(200);
     expect(response.body).toEqual(updatedConfig);
+    expect(mockQuotaLibrary.guardTenantUsageByKey).toHaveBeenCalledWith('inlineHooksEnabled');
   });
 
   it('DELETE /configs/inline-hooks/:hookType should delete the record', async () => {
@@ -194,6 +202,7 @@ describe('configs inline hook routes', () => {
       LogtoInlineHookKey.PostFirstFactorVerification
     );
     expect(response.status).toEqual(204);
+    expect(mockQuotaLibrary.guardTenantUsageByKey).not.toHaveBeenCalled();
   });
 
   it('POST /configs/inline-hooks/test should run an inline hook script successfully', async () => {
@@ -234,6 +243,7 @@ describe('configs inline hook routes', () => {
         },
       },
     });
+    expect(mockQuotaLibrary.guardTenantUsageByKey).toHaveBeenCalledWith('inlineHooksEnabled');
   });
 
   it('POST /configs/inline-hooks/test should map general execution errors to 422', async () => {
@@ -310,7 +320,7 @@ describe('configs inline hook routes', () => {
         undefined,
         { logtoConfigs: logtoConfigQueries },
         undefined,
-        undefined,
+        { quota: mockQuotaLibrary },
         mockLogtoConfigsLibrary
       ),
     });
