@@ -117,6 +117,29 @@ const isPasskeySkipped = (logtoConfig: JsonObject): boolean => {
   return parsed.success ? parsed.data[userPasskeySignInDataKey].skipped === true : false;
 };
 
+/**
+ * Remove verification-code factors whose identifier is already on the user's profile.
+ *
+ * A `PhoneVerificationCode` / `EmailVerificationCode` factor can only be bound if the user
+ * does NOT already have that identifier on their profile — `profile-validator` rejects an
+ * already-present identifier with `{phone,email}_exists_in_profile`. So when the user already
+ * has a `primaryPhone`/`primaryEmail` (e.g. because it is a sign-up identifier), offering that
+ * factor as an `availableFactors` option is a dead end: the user picks it, verifies the OTP,
+ * and the bind fails — leaving a mandatory-MFA gate permanently unsatisfiable (an unrecoverable
+ * enrollment loop). Filtering it out at the offer layer keeps the offered set consistent with
+ * what can actually be bound.
+ */
+const filterOutProfileLinkedFactors = (factors: MfaFactor[], user: User): MfaFactor[] =>
+  factors.filter((factor) => {
+    if (factor === MfaFactor.PhoneVerificationCode && user.primaryPhone) {
+      return false;
+    }
+    if (factor === MfaFactor.EmailVerificationCode && user.primaryEmail) {
+      return false;
+    }
+    return true;
+  });
+
 type SubmitMfaValidationContext = {
   mfaSettings: MfaSettings;
   user: User;
@@ -511,7 +534,14 @@ export class Mfa {
     }
 
     // Use configured factors for policy fulfillment; backup code is asserted separately below.
-    const configuredFactors = await this.signInExperienceValidator.getConfiguredMfaFactors();
+    // Drop any verification-code factor whose identifier is already on the user's profile:
+    // such a factor can never be bound (`profile-validator` rejects it with
+    // `{email,phone}_exists_in_profile`), so offering it in `availableFactors` dead-locks
+    // a mandatory-MFA gate in an unrecoverable loop.
+    const configuredFactors = filterOutProfileLinkedFactors(
+      await this.signInExperienceValidator.getConfiguredMfaFactors(),
+      identifiedUser
+    );
 
     const { userFactors: factorsInUser } = submitMfaValidationContext;
     const factorsInBind = this.bindMfaFactorsArray.map(({ type }) => type);
