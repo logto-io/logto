@@ -326,6 +326,52 @@ export default class OrganizationQueries extends SchemaQueries<
     super(pool, Organizations);
   }
 
+  async createRoleWithScopes(
+    data: CreateOrganizationRole,
+    organizationScopeIds: readonly string[],
+    resourceScopeIds: readonly string[]
+  ): Promise<Readonly<OrganizationRole>> {
+    return this.pool.transaction(async (transaction) => {
+      const roles = new OrganizationRolesQueries(transaction, OrganizationRoles, {
+        field: 'name',
+        order: 'asc',
+      });
+      const rolesScopes = new TwoRelationsQueries(
+        transaction,
+        OrganizationRoleScopeRelations.table,
+        OrganizationRoles,
+        OrganizationScopes
+      );
+      const rolesResourceScopes = new TwoRelationsQueries(
+        transaction,
+        OrganizationRoleResourceScopeRelations.table,
+        OrganizationRoles,
+        Scopes
+      );
+      const role = await roles.insert(data);
+
+      if (organizationScopeIds.length > 0) {
+        await rolesScopes.insert(
+          ...organizationScopeIds.map((id) => ({
+            organizationRoleId: role.id,
+            organizationScopeId: id,
+          }))
+        );
+      }
+
+      if (resourceScopeIds.length > 0) {
+        await rolesResourceScopes.insert(
+          ...resourceScopeIds.map((id) => ({
+            organizationRoleId: role.id,
+            scopeId: id,
+          }))
+        );
+      }
+
+      return role;
+    });
+  }
+
   /**
    * Get the multi-factor authentication (MFA) status for the given organization and user.
    *

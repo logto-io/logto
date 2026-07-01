@@ -128,23 +128,33 @@ export default function mfaRoutes<T extends IRouterParamContext>(
         interactionStorage,
         { accountId, rpId: hostname, origin }
       );
+      const { usedTimeStep, ...verifiedMfaResult } = verifiedMfa;
 
       // Update last used time
-      const user = await queries.users.findUserById(accountId);
-      await queries.users.updateUserById(accountId, {
-        mfaVerifications: user.mfaVerifications.map((mfa) => {
-          if (mfa.id !== verifiedMfa.id) {
-            return mfa;
-          }
+      if (usedTimeStep === undefined) {
+        const user = await queries.users.findUserById(accountId);
+        await queries.users.updateUserById(accountId, {
+          mfaVerifications: user.mfaVerifications.map((mfa) => {
+            if (mfa.id !== verifiedMfa.id) {
+              return mfa;
+            }
 
-          return {
-            ...mfa,
-            lastUsedAt: new Date().toISOString(),
-          };
-        }),
-      });
+            return {
+              ...mfa,
+              lastUsedAt: new Date().toISOString(),
+            };
+          }),
+        });
+      } else {
+        const updatedUser = await queries.users.updateUserTotpMfaVerificationLastUsed(
+          accountId,
+          verifiedMfa.id,
+          usedTimeStep
+        );
+        assertThat(updatedUser, 'session.mfa.invalid_totp_code');
+      }
 
-      await storeInteractionResult({ verifiedMfa }, ctx, provider, true);
+      await storeInteractionResult({ verifiedMfa: verifiedMfaResult }, ctx, provider, true);
 
       ctx.status = 204;
 

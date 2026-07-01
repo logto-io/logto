@@ -123,7 +123,7 @@ export default function logtoConfigInlineHookRoutes<T extends ManagementApiRoute
       }),
       body: inlineHookGuard,
       response: inlineHookGuard,
-      status: [200, 201, 400],
+      status: [200, 201, 400, 403],
     }),
     koaQuotaGuard({ key: 'inlineHooksEnabled', quota: libraries.quota }),
     async (ctx, next) => {
@@ -152,7 +152,7 @@ export default function logtoConfigInlineHookRoutes<T extends ManagementApiRoute
       }),
       body: inlineHookGuard.partial(),
       response: inlineHookGuard,
-      status: [200, 400, 404],
+      status: [200, 400, 403, 404],
     }),
     koaQuotaGuard({ key: 'inlineHooksEnabled', quota: libraries.quota }),
     async (ctx, next) => {

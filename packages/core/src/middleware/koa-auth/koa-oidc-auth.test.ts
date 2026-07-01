@@ -1,3 +1,5 @@
+import { TemplateType } from '@logto/connector-kit';
+import { AdditionalIdentifier, SignInIdentifier, VerificationType } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 import type { Context } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
@@ -5,10 +7,13 @@ import { Provider } from 'oidc-provider';
 import Sinon from 'sinon';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import type Queries from '#src/tenants/Queries.js';
+import { type Partial2 } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import { MockTenant } from '../../test-utils/tenant.js';
 
+import { verificationRecordIdHeader } from './constants.js';
 import type { WithAuthContext } from './index.js';
 
 const { jest } = import.meta;
@@ -23,6 +28,21 @@ const mockAccessToken = {
 };
 
 const koaOidcAuth = await pickDefault(import('./koa-oidc-auth.js'));
+
+const createTenantWithVerificationRecord = (
+  data: Record<string, unknown>,
+  userId: string | undefined = mockAccessToken.accountId
+) =>
+  new MockTenant(provider, {
+    verificationRecords: {
+      findActiveVerificationRecordById: jest.fn(async (id: string) => ({
+        id,
+        userId,
+        data,
+        expiresAt: Date.now() + 60_000,
+      })),
+    },
+  } as unknown as Partial2<Queries>);
 
 afterEach(() => {
   Sinon.restore();
@@ -105,6 +125,120 @@ describe('koaOidcAuth middleware', () => {
       clientId: mockAccessToken.clientId,
       sessionUid: 'fooSessionUid',
     });
+  });
+
+  it('should set identityVerified with a verified password verification record', async () => {
+    ctx.request = {
+      ...ctx.request,
+      headers: {
+        authorization: 'Bearer access_token',
+        [verificationRecordIdHeader]: 'verification-record-id',
+      },
+    };
+    Sinon.stub(provider.AccessToken, 'find').resolves(mockAccessToken);
+
+    await koaOidcAuth(
+      createTenantWithVerificationRecord({
+        type: VerificationType.Password,
+        identifier: {
+          type: AdditionalIdentifier.UserId,
+          value: mockAccessToken.accountId,
+        },
+        verified: true,
+      })
+    )(ctx, next);
+
+    expect(ctx.auth.identityVerified).toBe(true);
+  });
+
+  it.each([
+    {
+      name: 'email',
+      type: VerificationType.EmailVerificationCode,
+      identifier: {
+        type: SignInIdentifier.Email,
+        value: 'foo@example.com',
+      },
+    },
+    {
+      name: 'phone',
+      type: VerificationType.PhoneVerificationCode,
+      identifier: {
+        type: SignInIdentifier.Phone,
+        value: '+1234567890',
+      },
+    },
+  ])(
+    'should set identityVerified with a verified user permission $name code verification record',
+    async ({ type, identifier }) => {
+      ctx.request = {
+        ...ctx.request,
+        headers: {
+          authorization: 'Bearer access_token',
+          [verificationRecordIdHeader]: 'verification-record-id',
+        },
+      };
+      Sinon.stub(provider.AccessToken, 'find').resolves(mockAccessToken);
+
+      await koaOidcAuth(
+        createTenantWithVerificationRecord({
+          type,
+          identifier,
+          templateType: TemplateType.UserPermissionValidation,
+          verified: true,
+        })
+      )(ctx, next);
+
+      expect(ctx.auth.identityVerified).toBe(true);
+    }
+  );
+
+  it('should not set identityVerified with a verified MFA binding code verification record', async () => {
+    ctx.request = {
+      ...ctx.request,
+      headers: {
+        authorization: 'Bearer access_token',
+        [verificationRecordIdHeader]: 'verification-record-id',
+      },
+    };
+    Sinon.stub(provider.AccessToken, 'find').resolves(mockAccessToken);
+
+    await koaOidcAuth(
+      createTenantWithVerificationRecord({
+        type: VerificationType.EmailVerificationCode,
+        identifier: {
+          type: SignInIdentifier.Email,
+          value: 'foo@example.com',
+        },
+        templateType: TemplateType.BindMfa,
+        verified: true,
+      })
+    )(ctx, next);
+
+    expect(ctx.auth.identityVerified).toBe(false);
+  });
+
+  it('should not set identityVerified with a verified WebAuthn registration record', async () => {
+    ctx.request = {
+      ...ctx.request,
+      headers: {
+        authorization: 'Bearer access_token',
+        [verificationRecordIdHeader]: 'verification-record-id',
+      },
+    };
+    Sinon.stub(provider.AccessToken, 'find').resolves(mockAccessToken);
+
+    await koaOidcAuth(
+      createTenantWithVerificationRecord({
+        type: VerificationType.WebAuthn,
+        userId: mockAccessToken.accountId,
+        verified: true,
+        registrationChallenge: 'challenge',
+        registrationRpId: 'logto.test',
+      })
+    )(ctx, next);
+
+    expect(ctx.auth.identityVerified).toBe(false);
   });
 
   it('expect to throw if authorization header is missing', async () => {

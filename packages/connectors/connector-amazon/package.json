@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-amazon",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "Amazon web connector implementation.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {

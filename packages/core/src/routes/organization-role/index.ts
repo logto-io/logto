@@ -30,16 +30,16 @@ export default function organizationRoleRoutes<T extends ManagementApiRouter>(
     originalRouter,
     {
       id: tenantId,
-      queries: {
-        organizations: {
-          roles,
-          relations: { rolesScopes, rolesResourceScopes },
-        },
-      },
+      queries: { organizations },
       libraries: { quota },
     },
   ]: RouterInitArgs<T>
 ) {
+  const {
+    roles,
+    relations: { rolesScopes, rolesResourceScopes },
+  } = organizations;
+
   const router = new SchemaRouter<
     OrganizationRoleKeys,
     CreateOrganizationRole,
@@ -108,25 +108,11 @@ export default function organizationRoleRoutes<T extends ManagementApiRouter>(
           : 'organizationUserRolesLimit'
       );
 
-      const role = await roles.insert({ id: generateStandardId(), ...data });
-
-      if (organizationScopeIds.length > 0) {
-        await rolesScopes.insert(
-          ...organizationScopeIds.map((id) => ({
-            organizationRoleId: role.id,
-            organizationScopeId: id,
-          }))
-        );
-      }
-
-      if (resourceScopeIds.length > 0) {
-        await rolesResourceScopes.insert(
-          ...resourceScopeIds.map((id) => ({
-            organizationRoleId: role.id,
-            scopeId: id,
-          }))
-        );
-      }
+      const role = await organizations.createRoleWithScopes(
+        { id: generateStandardId(), ...data },
+        organizationScopeIds,
+        resourceScopeIds
+      );
 
       ctx.body = role;
       ctx.status = 201;

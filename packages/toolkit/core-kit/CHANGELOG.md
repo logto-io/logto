@@ -1,5 +1,17 @@
 # Change Log
 
+## 2.11.0
+
+### Minor Changes
+
+- e1fadfb1a: add a shared username policy type, Zod guard, and default value
+- a88413689: add a shared username policy validator
+
+### Patch Changes
+
+- Updated dependencies [67b99bba85]
+  - @logto/shared@3.4.1
+
 ## 2.10.0
 
 ### Minor Changes

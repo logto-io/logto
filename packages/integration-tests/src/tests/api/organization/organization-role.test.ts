@@ -128,6 +128,50 @@ describe('organization role APIs', () => {
       }
     });
 
+    it('should not create the organization role when an initial organization scope does not exist', async () => {
+      const name = 'test' + randomId();
+      const response = await roleApi
+        .create({
+          name,
+          organizationScopeIds: [generateStandardId()],
+        })
+        .catch((error: unknown) => error);
+
+      assert(response instanceof HTTPError);
+      expect(response.response.status).toBe(422);
+      expect(await response.response.json()).toMatchObject(
+        expect.objectContaining({
+          code: 'entity.relation_foreign_key_not_found',
+        })
+      );
+
+      const roles = await roleApi.getList(new URLSearchParams({ q: name }));
+      expect(roles).toHaveLength(0);
+    });
+
+    it('should roll back the organization role when an initial resource scope does not exist', async () => {
+      const name = 'test' + randomId();
+      const scope = await scopeApi.create({ name: 'test' + randomId() });
+      const response = await roleApi
+        .create({
+          name,
+          organizationScopeIds: [scope.id],
+          resourceScopeIds: [generateStandardId()],
+        })
+        .catch((error: unknown) => error);
+
+      assert(response instanceof HTTPError);
+      expect(response.response.status).toBe(422);
+      expect(await response.response.json()).toMatchObject(
+        expect.objectContaining({
+          code: 'entity.relation_foreign_key_not_found',
+        })
+      );
+
+      const roles = await roleApi.getList(new URLSearchParams({ q: name }));
+      expect(roles).toHaveLength(0);
+    });
+
     it('should fail when try to get an organization role that does not exist', async () => {
       const response = await roleApi.get('0').catch((error: unknown) => error);
 

@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-wechat-web",
-  "version": "1.6.4",
+  "version": "1.6.5",
   "description": "Wechat Web connector implementation.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {
