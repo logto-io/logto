@@ -1,6 +1,7 @@
 import { type EmailBlocklistPolicy } from '@logto/schemas';
 import { deduplicate } from '@silverhand/essentials';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 
 import {
@@ -11,8 +12,17 @@ import {
 
 const invalidCustomBlockList = ['bar', 'bar@foo', '@foo', '@foo.', 'bar@foo.'];
 const validCustomBlockList = ['bar@foo.com', '@foo.com', 'abc.bar@foo.xyz', 'bar@foo.com'];
+const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+
+const setDevFeaturesEnabled = (isDevFeaturesEnabled: boolean) => {
+  Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', isDevFeaturesEnabled);
+};
 
 describe('parseEmailBlocklistPolicy', () => {
+  afterEach(() => {
+    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
+  });
+
   it.each(invalidCustomBlockList)(
     'should throw error for invalid custom block list item: %s',
     (item) => {
@@ -32,6 +42,29 @@ describe('parseEmailBlocklistPolicy', () => {
   it('should pass the validation with valid format and deduplicate items', () => {
     const parsed = parseEmailBlocklistPolicy({ customBlocklist: validCustomBlockList });
     expect(parsed).toEqual({ customBlocklist: deduplicate(validCustomBlockList) });
+  });
+
+  it('should reject wildcard items when dev features are disabled', () => {
+    setDevFeaturesEnabled(false);
+
+    expect(() => {
+      parseEmailBlocklistPolicy({ customBlocklist: ['foo*@bar.com'] });
+    }).toMatchError(
+      new RequestError({
+        code: 'sign_in_experiences.invalid_custom_email_blocklist_format',
+        items: ['foo*@bar.com'],
+        status: 400,
+      })
+    );
+  });
+
+  it('should allow wildcard items when dev features are enabled', () => {
+    setDevFeaturesEnabled(true);
+
+    const customBlocklist = ['foo*@bar.com', '*@example.com', '@foo.*', '@*.example.com'];
+    const parsed = parseEmailBlocklistPolicy({ customBlocklist });
+
+    expect(parsed).toEqual({ customBlocklist });
   });
 });
 
@@ -98,6 +131,24 @@ describe('validateEmailAgainstBlocklistPolicy', () => {
         email,
       })
     );
+  });
+
+  it('should throw if the email address matches a wildcard custom blocklist item', async () => {
+    const policy: EmailBlocklistPolicy = {
+      customBlocklist: ['foo*@bar.com', '@*.example.com'],
+    };
+    const emails = ['FooBar@bar.com', 'test@Foo.example.com'];
+
+    for (const email of emails) {
+      // eslint-disable-next-line no-await-in-loop -- each assertion needs the current email in the expected error
+      await expect(validateEmailAgainstBlocklistPolicy(policy, email)).rejects.toMatchError(
+        new RequestError({
+          code: 'session.email_blocklist.email_not_allowed',
+          status: 422,
+          email,
+        })
+      );
+    }
   });
 
   it('should pass the blocklist policy validation', async () => {
