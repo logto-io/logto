@@ -1,7 +1,7 @@
 import { got } from 'got';
 import nock from 'nock';
 
-import { TemplateType } from '@logto/connector-kit';
+import { ConnectorErrorCodes, TemplateType } from '@logto/connector-kit';
 
 import { emailEndpoint, usageEndpoint } from './constant.js';
 import createConnector from './index.js';
@@ -40,6 +40,19 @@ describe('sendMessage()', () => {
         payload: { code: '1234' },
       })
     ).resolves.not.toThrow();
+  });
+
+  it('should throw a rate-limit ConnectorError when the service usage limit is reached', async () => {
+    const url = buildUrl(emailEndpoint, endpoint);
+    nock(url.origin).post(url.pathname).reply(429, { message: 'Service usage limit reached.' });
+    const { sendMessage } = await createConnector({ getConfig, getCloudServiceClient });
+    await expect(
+      sendMessage({
+        to: 'wangsijie94@gmail.com',
+        type: TemplateType.SignIn,
+        payload: { code: '1234' },
+      })
+    ).rejects.toMatchObject({ code: ConnectorErrorCodes.RateLimitExceeded });
   });
 
   it('should get usage successfully', async () => {
