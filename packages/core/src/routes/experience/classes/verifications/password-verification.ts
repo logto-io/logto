@@ -38,6 +38,7 @@ export class PasswordVerification
   readonly identifier: VerificationIdentifier;
   readonly id: string;
   private verified: boolean;
+  private userId?: string;
 
   /**
    * The constructor method is intended to be used internally by the interaction class
@@ -50,16 +51,22 @@ export class PasswordVerification
     private readonly queries: Queries,
     data: PasswordVerificationRecordData
   ) {
-    const { id, identifier, verified } = data;
+    const { id, identifier, verified, userId } = data;
 
     this.id = id;
     this.identifier = identifier;
     this.verified = verified;
+    this.userId = userId;
   }
 
-  /** Returns true if a userId is set */
+  /** Returns true if the password record is verified */
   get isVerified() {
     return this.verified;
+  }
+
+  markAsVerifiedWithUserId(userId: string) {
+    this.verified = true;
+    this.userId = userId;
   }
 
   /**
@@ -90,14 +97,18 @@ export class PasswordVerification
       new RequestError({ code: 'session.verification_failed', status: 400 })
     );
 
-    const user = await findUserByIdentifier(this.queries, this.identifier);
+    const { userId } = this;
+    const user =
+      userId === undefined
+        ? await findUserByIdentifier(this.queries, this.identifier)
+        : await this.queries.users.findUserById(userId);
 
     assertThat(
       user,
       new RequestError(
         { code: 'user.user_not_exist', status: 404 },
         {
-          identifier: this.identifier.value,
+          identifier: userId ?? this.identifier.value,
         }
       )
     );
@@ -106,14 +117,15 @@ export class PasswordVerification
   }
 
   toJson(): PasswordVerificationRecordData {
-    const { id, type, identifier, verified } = this;
-
-    return {
-      id,
-      type,
-      identifier,
-      verified,
+    const { userId } = this;
+    const data: PasswordVerificationRecordData = {
+      id: this.id,
+      type: this.type,
+      identifier: this.identifier,
+      verified: this.verified,
     };
+
+    return userId === undefined ? data : { ...data, userId };
   }
 
   toSanitizedJson(): PasswordVerificationRecordData {
