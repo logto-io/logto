@@ -11,6 +11,8 @@ import {
   SignInIdentifier,
   SignInMode,
   type User,
+  userMfaDataKey,
+  userPasskeySignInDataKey,
   VerificationType,
 } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
@@ -348,6 +350,45 @@ describe('ExperienceInteraction class', () => {
       await experienceInteraction.submit();
 
       expect(updateUser).toHaveBeenCalledWith(mockUser.id, { name: 'Jane Doe' });
+    });
+
+    it('preserves inline hook logtoConfig data when submit updates MFA config', async () => {
+      const user = {
+        ...mockUser,
+        logtoConfig: {
+          inlineHook: {
+            p1Synced: true,
+          },
+        },
+      };
+      const { experienceInteraction, signInUserQueries } = createSignInInteraction({
+        user,
+        interactionResult: {
+          mfa: {
+            mfaSkipped: true,
+            passkeySkipped: true,
+          },
+        },
+      });
+
+      await experienceInteraction.submit();
+
+      expect(signInUserQueries.updateUserById).toHaveBeenCalledWith(
+        mockUser.id,
+        expect.objectContaining({
+          logtoConfig: {
+            inlineHook: {
+              p1Synced: true,
+            },
+            [userMfaDataKey]: {
+              skipped: true,
+            },
+            [userPasskeySignInDataKey]: {
+              skipped: true,
+            },
+          },
+        })
+      );
     });
 
     it.each([undefined, null, {}, { action: 'updateUser' }])(
