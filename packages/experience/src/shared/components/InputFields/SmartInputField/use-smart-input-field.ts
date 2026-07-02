@@ -2,7 +2,7 @@ import { SignInIdentifier } from '@logto/schemas';
 import { useState, useCallback, useMemo } from 'react';
 import type { ChangeEventHandler } from 'react';
 
-import { getDefaultCountryCallingCode } from '@/utils/country-code';
+import { getDefaultCountryCallingCode, parsePhoneNumber } from '@/utils/country-code';
 import { parseIdentifierValue } from '@/utils/form';
 
 import { detectIdentifierType } from './utils';
@@ -70,12 +70,24 @@ const useSmartInputField = ({ defaultValue, enabledTypes }: Props) => {
   const onInputValueChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
     ({ target: { value } }) => {
       const trimValue = value.trim();
+
+      if (enabledTypeSet.has(SignInIdentifier.Phone) && trimValue.startsWith('+')) {
+        const phoneNumber = parsePhoneNumber(trimValue);
+
+        if (phoneNumber?.nationalNumber) {
+          setCountryCode(phoneNumber.countryCallingCode);
+          setInputValue(phoneNumber.nationalNumber);
+          setCurrentType(SignInIdentifier.Phone);
+          return;
+        }
+      }
+
       setInputValue(trimValue);
 
       const type = detectInputType(trimValue);
       setCurrentType(type);
     },
-    [detectInputType]
+    [detectInputType, enabledTypeSet]
   );
 
   const onInputValueClear = useCallback(() => {
