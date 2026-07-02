@@ -6,6 +6,7 @@ import {
 import { ZodError } from 'zod';
 
 import {
+  appendPasswordPayloadToInlineHookProvisioningProfile,
   mergeInlineHookProvisioningProfileUserData,
   mergeInlineHookUserData,
   toHookProvisioningProfile,
@@ -33,8 +34,6 @@ describe('toHookProvisioningProfile', () => {
           acceptedTerms: true,
         },
       },
-      passwordEncrypted: 'hashed-password',
-      passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
     });
 
     expect(provisioningProfile).toEqual({
@@ -57,8 +56,6 @@ describe('toHookProvisioningProfile', () => {
           acceptedTerms: true,
         },
       },
-      passwordEncrypted: 'hashed-password',
-      passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
     });
   });
 
@@ -72,6 +69,22 @@ describe('toHookProvisioningProfile', () => {
         identities: {},
         mfaVerifications: [],
         lastSignInAt: Date.now(),
+        passwordDigest: 'password-digest',
+        passwordAlgorithm: UsersPasswordEncryptionMethod.Argon2i,
+      })
+    ).toThrow(ZodError);
+  });
+
+  it('rejects script-supplied password hash fields', () => {
+    expect(() =>
+      toHookProvisioningProfile({
+        passwordEncrypted: 'hashed-password',
+        passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+      })
+    ).toThrow(ZodError);
+
+    expect(() =>
+      toHookProvisioningProfile({
         passwordDigest: 'password-digest',
         passwordAlgorithm: UsersPasswordEncryptionMethod.Argon2i,
       })
@@ -145,19 +158,30 @@ describe('toHookProvisioningProfile', () => {
       })
     ).toThrow(ZodError);
   });
+});
 
-  it('requires password fields to be provided together', () => {
-    expect(() =>
-      toHookProvisioningProfile({
-        passwordEncrypted: 'hashed-password',
-      })
-    ).toThrow(ZodError);
+describe('appendPasswordPayloadToInlineHookProvisioningProfile', () => {
+  it('appends a Logto-generated Argon2i password hash to the provisioning profile', async () => {
+    const provisioningProfile = {
+      primaryEmail: 'jane@example.com',
+      customData: {
+        inlineHook: {
+          plan: 'pro',
+        },
+      },
+    };
 
-    expect(() =>
-      toHookProvisioningProfile({
-        passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
-      })
-    ).toThrow(ZodError);
+    const result = await appendPasswordPayloadToInlineHookProvisioningProfile(
+      provisioningProfile,
+      'P@ssw0rd'
+    );
+
+    expect(result).toMatchObject({
+      ...provisioningProfile,
+      passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+    });
+    expect(result.passwordEncrypted).toContain('argon2');
+    expect(result.passwordEncrypted).not.toBe('P@ssw0rd');
   });
 });
 

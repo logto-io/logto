@@ -8,12 +8,28 @@ import {
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
+import { encryptUserPassword } from '#src/libraries/user.utils.js';
+
 import { type InteractionProfile } from '../../types.js';
 
 export const toHookProvisioningProfile = (user: unknown): HookProvisioningProfile =>
   hookProvisioningProfileGuard.parse(user);
 
-export type InlineHookCreateUserProfile = HookProvisioningProfile &
+type InlineHookPasswordPayload = Awaited<ReturnType<typeof encryptUserPassword>>;
+
+type InlineHookProvisioningProfileWithPassword = HookProvisioningProfile &
+  InlineHookPasswordPayload;
+
+export type InlineHookProvisioningProfile = HookProvisioningProfile &
+  (
+    | InlineHookPasswordPayload
+    | {
+        passwordEncrypted?: never;
+        passwordEncryptionMethod?: never;
+      }
+  );
+
+export type InlineHookCreateUserProfile = InlineHookProvisioningProfile &
   Partial<
     Pick<
       InteractionProfile,
@@ -27,10 +43,18 @@ export type InlineHookCreateUserProfile = HookProvisioningProfile &
   >;
 
 type HookProvisioningProfileWithMergedUserData = Omit<
-  HookProvisioningProfile,
+  InlineHookProvisioningProfile,
   'customData' | 'logtoConfig'
 > &
   Partial<Pick<User, 'customData' | 'logtoConfig'>>;
+
+export const appendPasswordPayloadToInlineHookProvisioningProfile = async (
+  provisioningProfile: HookProvisioningProfile,
+  password: string
+): Promise<InlineHookProvisioningProfileWithPassword> => ({
+  ...provisioningProfile,
+  ...(await encryptUserPassword(password)),
+});
 
 const hasInlineHookUserData = (
   data: InlineHookUserData | undefined
@@ -77,7 +101,7 @@ export const getProfileIdentifierCollisionPayload = ({
 
 export const mergeInlineHookProvisioningProfileUserData = (
   existingUserData: Pick<User, 'customData' | 'logtoConfig'>,
-  provisioningProfile: HookProvisioningProfile
+  provisioningProfile: InlineHookProvisioningProfile
 ): HookProvisioningProfileWithMergedUserData => {
   const { customData, logtoConfig, ...profile } = provisioningProfile;
 
