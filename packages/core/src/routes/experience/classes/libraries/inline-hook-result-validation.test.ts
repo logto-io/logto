@@ -1,4 +1,4 @@
-import { type HookUser } from '@logto/schemas';
+import { type HookUser, UsersPasswordEncryptionMethod } from '@logto/schemas';
 
 import { mockUser } from '#src/__mocks__/user.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -28,6 +28,24 @@ describe('validatePostFirstFactorVerificationHookResult', () => {
     { action: 'createUser', passwordVerified: true },
     { action: 'createUser', passwordVerified: false, user: { name: 'Jane Doe' } },
     { action: 'updateUser', passwordVerified: true, user: { id: 'not-allowed' } },
+    {
+      action: 'createUser',
+      passwordVerified: true,
+      user: {
+        name: 'Jane Doe',
+        passwordEncrypted: 'script-supplied-hash',
+        passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+      },
+    },
+    {
+      action: 'createUser',
+      passwordVerified: true,
+      user: {
+        name: 'Jane Doe',
+        passwordDigest: 'script-supplied-hash',
+        passwordAlgorithm: UsersPasswordEncryptionMethod.Argon2i,
+      },
+    },
     { action: 'deleteUser', passwordVerified: true, user: { name: 'Jane Doe' } },
   ])('returns invalid-credentials rejection for invalid result %#', (result) => {
     expect(
@@ -166,6 +184,22 @@ describe('validatePostSignInHookResult', () => {
     { user: { name: 'Jane Doe' } },
     { action: 'updateUser', user: null },
     { action: 'updateUser', user: { id: 'not-allowed' } },
+    {
+      action: 'updateUser',
+      user: {
+        name: 'Jane Doe',
+        passwordEncrypted: 'script-supplied-hash',
+        passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+      },
+    },
+    {
+      action: 'updateUser',
+      user: {
+        name: 'Jane Doe',
+        passwordDigest: 'script-supplied-hash',
+        passwordAlgorithm: UsersPasswordEncryptionMethod.Argon2i,
+      },
+    },
   ])('throws verification failure for invalid result %#', (result) => {
     expect(() =>
       validatePostSignInHookResult({

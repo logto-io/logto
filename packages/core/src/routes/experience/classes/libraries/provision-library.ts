@@ -13,7 +13,6 @@ import {
   SignInMode,
   TenantRole,
   type JsonObject,
-  type HookProvisioningProfile,
   userMfaDataKey,
   userOnboardingDataKey,
   type User,
@@ -35,6 +34,7 @@ import { toUserSocialIdentityData } from '../utils.js';
 import {
   getProfileIdentifierCollisionPayload,
   type InlineHookCreateUserProfile,
+  type InlineHookProvisioningProfile,
   mergeInlineHookCreateUserCustomData,
   mergeInlineHookProvisioningProfileUserData,
 } from './inline-hook-provisioning-profile.js';
@@ -80,7 +80,7 @@ export class ProvisionLibrary {
     );
   }
 
-  async updateUser(userId: string, profile: HookProvisioningProfile) {
+  async updateUser(userId: string, profile: InlineHookProvisioningProfile) {
     const { queries, libraries } = this.tenantContext;
 
     const existingUser = await queries.users.findUserById(userId);

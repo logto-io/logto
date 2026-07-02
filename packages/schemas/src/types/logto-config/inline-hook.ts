@@ -70,8 +70,6 @@ type HookProvisioningProfileBase = Partial<
     | 'profile'
     | 'customData'
     | 'logtoConfig'
-    | 'passwordEncrypted'
-    | 'passwordEncryptionMethod'
   >
 >;
 
@@ -93,8 +91,6 @@ const hookProvisioningProfileBaseGuard = Users.createGuard
     profile: true,
     customData: true,
     logtoConfig: true,
-    passwordEncrypted: true,
-    passwordEncryptionMethod: true,
   })
   .extend({
     profile: userProfileGuard.optional(),
@@ -103,19 +99,8 @@ const hookProvisioningProfileBaseGuard = Users.createGuard
   })
   .strict();
 
-export const hookProvisioningProfileGuard = hookProvisioningProfileBaseGuard.superRefine(
-  ({ passwordEncrypted, passwordEncryptionMethod }, context) => {
-    if (Boolean(passwordEncrypted) === Boolean(passwordEncryptionMethod)) {
-      return;
-    }
-
-    context.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: '`passwordEncrypted` and `passwordEncryptionMethod` must be provided together.',
-      path: passwordEncrypted ? ['passwordEncryptionMethod'] : ['passwordEncrypted'],
-    });
-  }
-) satisfies z.ZodType<HookProvisioningProfile>;
+export const hookProvisioningProfileGuard =
+  hookProvisioningProfileBaseGuard satisfies z.ZodType<HookProvisioningProfile>;
 
 export type HookUserPatch = HookProvisioningProfile;
 
