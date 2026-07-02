@@ -11,6 +11,7 @@ import {
   OrganizationInvitationStatus,
   SignInMode,
   TenantRole,
+  type JsonObject,
   userMfaDataKey,
   userOnboardingDataKey,
   type User,
@@ -29,19 +30,21 @@ import { getTenantId } from '#src/utils/tenant.js';
 import { type InteractionProfile, type WithHooksAndLogsContext } from '../../types.js';
 import { toUserSocialIdentityData } from '../utils.js';
 
+import {
+  getProfileIdentifierCollisionPayload,
+  type InlineHookCreateUserProfile,
+  mergeInlineHookCreateUserCustomData,
+} from './inline-hook-provisioning-profile.js';
+
 type OrganizationProvisionPayload =
-  | {
-      userId: string;
-      email: string;
-    }
-  | {
-      userId: string;
-      ssoConnectorId: string;
-    }
-  | {
-      userId: string;
-      organizationIds: string[];
-    };
+  | { userId: string; email: string }
+  | { userId: string; ssoConnectorId: string }
+  | { userId: string; organizationIds: string[] };
+
+type CreateUserOptions = {
+  checkIdentifierCollision?: boolean;
+  skipFirstAdminProvisioning?: boolean;
+};
 
 export class ProvisionLibrary {
   constructor(
@@ -56,9 +59,72 @@ export class ProvisionLibrary {
    * - Assign the first user to the admin role and the default tenant organization membership. [OSS only]
    */
   async createUser(profile: InteractionProfile) {
+    return this.createUserWithOptions(profile);
+  }
+
+  async createUserForInlineHook(profile: InlineHookCreateUserProfile) {
+    const { logtoConfig: _logtoConfig, customData, ...createUserProfile } = profile;
+
+    return this.createUserWithOptions(
+      {
+        ...createUserProfile,
+        ...conditional(customData && { customData }),
+      },
+      {
+        checkIdentifierCollision: true,
+        skipFirstAdminProvisioning: true,
+      }
+    );
+  }
+
+  async addSsoIdentityToUser(
+    userId: string,
+    enterpriseSsoIdentity: Required<InteractionProfile>['enterpriseSsoIdentity']
+  ) {
+    const {
+      queries: { userSsoIdentities: userSsoIdentitiesQueries },
+    } = this.tenantContext;
+
+    await userSsoIdentitiesQueries.insert({
+      id: generateStandardId(),
+      userId,
+      ...enterpriseSsoIdentity,
+    });
+
+    await this.provisionNewUserJitOrganizations(userId, { enterpriseSsoIdentity });
+  }
+
+  /**
+   * Add the user to the specified organizations. This function is called when an existing
+   * user is invited to organization(s) by admin through one-time token (e.g. Magic link).
+   */
+  async provisionJitOrganization(payload: OrganizationProvisionPayload) {
+    const {
+      libraries: { users: usersLibraries },
+    } = this.tenantContext;
+
+    const provisionedOrganizations = await usersLibraries.provisionOrganizations(payload);
+
+    for (const { organizationId } of provisionedOrganizations) {
+      this.ctx.appendDataHookContext('Organization.Membership.Updated', {
+        organizationId,
+        ...truncateMembershipDelta({ addedUserIds: [payload.userId] }),
+      });
+    }
+
+    return provisionedOrganizations;
+  }
+
+  private async createUserWithOptions(
+    profile: InteractionProfile,
+    {
+      checkIdentifierCollision: shouldCheckIdentifierCollision = false,
+      skipFirstAdminProvisioning = false,
+    }: CreateUserOptions = {}
+  ) {
     const {
       libraries: {
-        users: { generateUserId, insertUser },
+        users: { checkIdentifierCollision, generateUserId, insertUser },
         socials: { upsertSocialTokenSetSecret },
         ssoConnectors: { upsertEnterpriseSsoTokenSetSecret },
       },
@@ -76,23 +142,27 @@ export class ProvisionLibrary {
       ...rest
     } = profile;
 
+    if (shouldCheckIdentifierCollision) {
+      await checkIdentifierCollision(getProfileIdentifierCollisionPayload(profile));
+    }
+
     const { isCreatingFirstAdminUser, initialUserRoles, customData } =
-      await this.getUserProvisionContext(profile);
+      await this.getUserProvisionContext(profile, { skipFirstAdminProvisioning });
+    const customDataForInsert = skipFirstAdminProvisioning
+      ? mergeInlineHookCreateUserCustomData(customData, profile.customData)
+      : customData;
+    const passwordPayload =
+      passwordEncrypted && passwordEncryptionMethod
+        ? buildUserPasswordPayload({ passwordEncrypted, passwordEncryptionMethod })
+        : {};
 
     const [user] = await insertUser(
       {
         id: await generateUserId(),
         ...rest,
-        ...conditional(
-          passwordEncrypted &&
-            passwordEncryptionMethod &&
-            buildUserPasswordPayload({
-              passwordEncrypted,
-              passwordEncryptionMethod,
-            })
-        ),
+        ...passwordPayload,
         ...conditional(socialIdentity && { identities: toUserSocialIdentityData(socialIdentity) }),
-        ...conditional(customData && { customData }),
+        ...conditional(customDataForInsert && { customData: customDataForInsert }),
         logtoConfig: {
           [userMfaDataKey]: { enabled: false },
         },
@@ -135,55 +205,22 @@ export class ProvisionLibrary {
     return user;
   }
 
-  async addSsoIdentityToUser(
-    userId: string,
-    enterpriseSsoIdentity: Required<InteractionProfile>['enterpriseSsoIdentity']
-  ) {
-    const {
-      queries: { userSsoIdentities: userSsoIdentitiesQueries },
-    } = this.tenantContext;
-
-    await userSsoIdentitiesQueries.insert({
-      id: generateStandardId(),
-      userId,
-      ...enterpriseSsoIdentity,
-    });
-
-    await this.provisionNewUserJitOrganizations(userId, { enterpriseSsoIdentity });
-  }
-
-  /**
-   * Add the user to the specified organizations. This function is called when an existing
-   * user is invited to organization(s) by admin through one-time token (e.g. Magic link).
-   */
-  async provisionJitOrganization(payload: OrganizationProvisionPayload) {
-    const {
-      libraries: { users: usersLibraries },
-    } = this.tenantContext;
-
-    const provisionedOrganizations = await usersLibraries.provisionOrganizations(payload);
-
-    for (const { organizationId } of provisionedOrganizations) {
-      this.ctx.appendDataHookContext('Organization.Membership.Updated', {
-        organizationId,
-        ...truncateMembershipDelta({ addedUserIds: [payload.userId] }),
-      });
-    }
-
-    return provisionedOrganizations;
-  }
-
   /**
    * This method is used to get the provision context for a new user registration.
    * It will return the provision context based on the current tenant and the request context.
    */
-  private async getUserProvisionContext(profile: InteractionProfile): Promise<{
+  private async getUserProvisionContext(
+    profile: InteractionProfile,
+    options?: {
+      skipFirstAdminProvisioning?: boolean;
+    }
+  ): Promise<{
     /** Admin user provisioning flag */
     isCreatingFirstAdminUser: boolean;
     /** Initial user roles for admin tenant users */
     initialUserRoles: string[];
     /** Skip onboarding flow if the new user has pending Cloud invitations */
-    customData?: { [userOnboardingDataKey]: UserOnboardingData };
+    customData?: JsonObject;
   }> {
     const {
       provider,
@@ -218,6 +255,7 @@ export class ProvisionLibrary {
      * - there are no active users in the tenant
      */
     const isCreatingFirstAdminUser =
+      !options?.skipFirstAdminProvisioning &&
       (!isCloud || isIntegrationTest) &&
       isAdminTenant &&
       isAdminConsoleApp &&
