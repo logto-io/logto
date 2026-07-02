@@ -104,6 +104,19 @@ describe('Experience - suggest additional MFA after email registration', () => {
     // Click on TOTP factor button to proceed with binding
     await experience.toClick('button', 'Authenticator app OTP');
     await experience.waitForPathname('mfa-binding/Totp');
+
+    await experience.toClickSwitchFactorsLink({ isBinding: true });
+    await experience.waitForPathname('mfa-binding');
+
+    const emailFactorButton = await expect(experience.page).toMatchElement('button', {
+      text: 'Email verification code',
+    });
+    expect(
+      await emailFactorButton.evaluate((element) => (element as HTMLButtonElement).disabled)
+    ).toBe(true);
+
+    await experience.toClick('button', 'Authenticator app OTP');
+    await experience.waitForPathname('mfa-binding/Totp');
     await experience.toBindTotp();
     const userId = await experience.getUserIdFromDemoAppPage();
     await experience.verifyThenEnd();
