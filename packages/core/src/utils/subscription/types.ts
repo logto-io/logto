@@ -113,6 +113,8 @@ const logtoSkuQuotaGuard = z.object({
   collectUserProfileEnabled: z.boolean(),
   passkeySignInEnabled: z.boolean(),
   tokenLimit: z.number().nullable(),
+  hostedEmailLimit: z.number().nullable(),
+  hostedEmailDailyLimit: z.number().nullable(),
   machineToMachineLimit: z.number().nullable(),
   resourcesLimit: z.number().nullable(),
   enterpriseSsoLimit: z.number().nullable(),
