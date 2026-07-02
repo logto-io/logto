@@ -1,8 +1,8 @@
-import { jsonGuard } from '@logto/connector-kit';
+import { jsonGuard, jsonObjectGuard } from '@logto/connector-kit';
 import { z } from 'zod';
 
 import { type User, Users } from '../../db-entries/index.js';
-import { type Json, userProfileGuard } from '../../foundations/index.js';
+import { type Json, type JsonObject, userProfileGuard } from '../../foundations/index.js';
 import type { InteractionEvent, InteractionIdentifier } from '../interactions.js';
 import type { UserInfo } from '../user.js';
 
@@ -49,7 +49,17 @@ export type HookUser = Pick<
   'id' | 'username' | 'primaryEmail' | 'primaryPhone' | 'name' | 'avatar' | 'customData' | 'profile'
 >;
 
-export type HookProvisioningProfile = Partial<
+export const inlineHookUserDataNamespaceKey = 'inlineHook';
+
+export type InlineHookUserData = Partial<Record<typeof inlineHookUserDataNamespaceKey, JsonObject>>;
+
+export const inlineHookUserDataGuard = z
+  .object({
+    [inlineHookUserDataNamespaceKey]: jsonObjectGuard.optional(),
+  })
+  .strict() satisfies z.ZodType<InlineHookUserData>;
+
+type HookProvisioningProfileBase = Partial<
   Pick<
     User,
     | 'name'
@@ -64,6 +74,14 @@ export type HookProvisioningProfile = Partial<
     | 'passwordEncryptionMethod'
   >
 >;
+
+export type HookProvisioningProfile = Omit<
+  HookProvisioningProfileBase,
+  'customData' | 'logtoConfig'
+> & {
+  customData?: InlineHookUserData;
+  logtoConfig?: InlineHookUserData;
+};
 
 const hookProvisioningProfileBaseGuard = Users.createGuard
   .pick({
@@ -80,6 +98,8 @@ const hookProvisioningProfileBaseGuard = Users.createGuard
   })
   .extend({
     profile: userProfileGuard.optional(),
+    customData: inlineHookUserDataGuard.optional(),
+    logtoConfig: inlineHookUserDataGuard.optional(),
   })
   .strict();
 
