@@ -1,6 +1,7 @@
 import {
   InteractionEvent,
   LogtoInlineHookKey,
+  SentinelActivityAction,
   SignInIdentifier,
   UsersPasswordEncryptionMethod,
   VerificationType,
@@ -106,6 +107,16 @@ const getRouteHandler = (router: RouterLike): RouteHandler => {
   }
 
   return handler as RouteHandler;
+};
+
+const getSentinelPromise = async () => {
+  const sentinelPromise = withSentinel.mock.calls[0]?.[1];
+
+  if (!sentinelPromise) {
+    throw new TypeError('Sentinel promise was not captured');
+  }
+
+  return sentinelPromise;
 };
 
 const runHook = jest.fn();
@@ -282,6 +293,65 @@ describe('password verification route PostFirstFactorVerification fallback', () 
     expect(ctx.experienceInteraction.setVerificationRecord).toHaveBeenCalledWith(
       passwordVerificationRecord
     );
+  });
+
+  it('wraps local failure and hook-created user success in one Sentinel promise', async () => {
+    const handler = registerRoute();
+    const ctx = createContext();
+
+    passwordVerificationRecord.verify.mockRejectedValueOnce(invalidCredentialsError);
+    runHook.mockResolvedValueOnce({
+      action: 'createUser',
+      passwordVerified: true,
+      user: {
+        primaryEmail: identifier.value,
+      },
+    });
+
+    await handler(ctx, jest.fn().mockImplementation(resolveVoid));
+
+    expect(withSentinel).toHaveBeenCalledTimes(1);
+    expect(withSentinel).toHaveBeenCalledWith(
+      expect.objectContaining({
+        action: SentinelActivityAction.Password,
+        identifier,
+        payload: {
+          event: InteractionEvent.SignIn,
+          verificationId: passwordVerificationRecord.id,
+        },
+      }),
+      expect.any(Promise)
+    );
+    await expect(getSentinelPromise()).resolves.toBe(createdUser);
+    expect(passwordVerificationRecord.markAsVerifiedWithUserId).toHaveBeenCalledWith(
+      createdUser.id
+    );
+    expect(passwordVerificationRecord.verifyPasswordExpiration).toHaveBeenCalledWith(createdUser);
+    expect(ctx.experienceInteraction.setVerificationRecord).toHaveBeenCalledWith(
+      passwordVerificationRecord
+    );
+    expect(ctx.experienceInteraction.save).toHaveBeenCalled();
+  });
+
+  it('wraps local failure and hook-declined invalid credentials in one Sentinel promise', async () => {
+    const handler = registerRoute();
+    const ctx = createContext();
+
+    passwordVerificationRecord.verify.mockRejectedValueOnce(invalidCredentialsError);
+    runHook.mockResolvedValueOnce({
+      action: 'rejectInvalidCredentials',
+    });
+
+    await expect(handler(ctx, jest.fn().mockImplementation(resolveVoid))).rejects.toBe(
+      invalidCredentialsError
+    );
+
+    expect(withSentinel).toHaveBeenCalledTimes(1);
+    await expect(getSentinelPromise()).rejects.toBe(invalidCredentialsError);
+    expect(passwordVerificationRecord.markAsVerifiedWithUserId).not.toHaveBeenCalled();
+    expect(passwordVerificationRecord.verifyPasswordExpiration).not.toHaveBeenCalled();
+    expect(ctx.experienceInteraction.setVerificationRecord).not.toHaveBeenCalled();
+    expect(ctx.experienceInteraction.save).not.toHaveBeenCalled();
   });
 
   it('updates the existing user from a validated hook result when local password is wrong', async () => {
