@@ -93,6 +93,7 @@ function EmailUsage({ usage, isCompact }: Props) {
   );
 
   if (isHostedEmailUsageEnabled) {
+    // Intentionally render nothing (not the lifetime count) while windowed usage loads or fails.
     if (!windowedUsage) {
       return null;
     }
