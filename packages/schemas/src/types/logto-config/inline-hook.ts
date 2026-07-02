@@ -1,7 +1,8 @@
 import { jsonGuard } from '@logto/connector-kit';
 import { z } from 'zod';
 
-import type { Json } from '../../foundations/index.js';
+import { type User, Users } from '../../db-entries/index.js';
+import { type Json, userProfileGuard } from '../../foundations/index.js';
 import type { InteractionEvent, InteractionIdentifier } from '../interactions.js';
 import type { UserInfo } from '../user.js';
 
@@ -45,19 +46,58 @@ export type InlineHookTestRequestBody = z.infer<typeof inlineHookTestRequestBody
 
 export type HookUser = Pick<
   UserInfo,
-  | 'id'
-  | 'username'
-  | 'primaryEmail'
-  | 'primaryPhone'
-  | 'name'
-  | 'avatar'
-  | 'customData'
-  | 'profile'
-  | 'applicationId'
-  | 'isSuspended'
+  'id' | 'username' | 'primaryEmail' | 'primaryPhone' | 'name' | 'avatar' | 'customData' | 'profile'
 >;
 
-export type HookUserPatch = Partial<Omit<HookUser, 'id'>>;
+export type HookProvisioningProfile = Partial<
+  Pick<
+    User,
+    | 'name'
+    | 'avatar'
+    | 'username'
+    | 'primaryEmail'
+    | 'primaryPhone'
+    | 'profile'
+    | 'customData'
+    | 'logtoConfig'
+    | 'passwordEncrypted'
+    | 'passwordEncryptionMethod'
+  >
+>;
+
+const hookProvisioningProfileBaseGuard = Users.createGuard
+  .pick({
+    name: true,
+    avatar: true,
+    username: true,
+    primaryEmail: true,
+    primaryPhone: true,
+    profile: true,
+    customData: true,
+    logtoConfig: true,
+    passwordEncrypted: true,
+    passwordEncryptionMethod: true,
+  })
+  .extend({
+    profile: userProfileGuard.optional(),
+  })
+  .strict();
+
+export const hookProvisioningProfileGuard = hookProvisioningProfileBaseGuard.superRefine(
+  ({ passwordEncrypted, passwordEncryptionMethod }, context) => {
+    if (Boolean(passwordEncrypted) === Boolean(passwordEncryptionMethod)) {
+      return;
+    }
+
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: '`passwordEncrypted` and `passwordEncryptionMethod` must be provided together.',
+      path: passwordEncrypted ? ['passwordEncryptionMethod'] : ['passwordEncrypted'],
+    });
+  }
+) satisfies z.ZodType<HookProvisioningProfile>;
+
+export type HookUserPatch = HookProvisioningProfile;
 
 export type PostFirstFactorVerificationEvent = {
   key: LogtoInlineHookKey.PostFirstFactorVerification;
