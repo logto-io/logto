@@ -9,28 +9,10 @@ const emailSeparator = '@';
 const domainSeparator = '.';
 const whitespaceRegEx = /\s/u;
 const wildcardOnlyDomainRegEx = /^[*.]+$/u;
-const regexMetaCharacters = new Set([
-  '\\',
-  '^',
-  '$',
-  '+',
-  '?',
-  '.',
-  '(',
-  ')',
-  '|',
-  '[',
-  ']',
-  '{',
-  '}',
-]);
 
 const hasWildcard = (value: string) => value.includes(wildcard);
 
-const escapeRegExp = (value: string) =>
-  [...value]
-    .map((character) => (regexMetaCharacters.has(character) ? `\\${character}` : character))
-    .join('');
+const escapeRegExp = (value: string) => value.replaceAll(/[.+?^${}()|[\]\\]/gu, '\\$&');
 
 const buildWildcardRegExp = (pattern: string) =>
   new RegExp(`^${escapeRegExp(pattern).replaceAll(wildcard, '.*')}$`, 'u');
