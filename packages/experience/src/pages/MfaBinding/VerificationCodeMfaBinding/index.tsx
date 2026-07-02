@@ -106,7 +106,7 @@ const VerificationCodeMfaBinding = ({
       {availableFactors.length > 1 && (
         <SwitchMfaFactorsLink
           flow={UserMfaFlow.MfaBinding}
-          flowState={{ availableFactors, skippable }}
+          flowState={mfaFlowState}
           className={styles.switchLink}
         />
       )}
