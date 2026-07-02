@@ -111,13 +111,13 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
   );
 
   const updateUsage = useCallback(() => {
-    if (connectorData.usage === undefined) {
-      return;
-    }
-    onConnectorUpdated();
-    // A hosted-email test send also consumes the daily/monthly quota, so refresh that display too.
+    // A hosted-email test send consumes the daily/monthly quota; refresh that display even when the
+    // lifetime count is unavailable (core wraps `getUsage` in `trySafe`, so `usage` may be undefined).
     if (isCloud && isDevFeaturesEnabled && isEmailServiceConnector && currentTenantId) {
       void mutate(getHostedEmailUsageKey(currentTenantId));
+    }
+    if (connectorData.usage !== undefined) {
+      onConnectorUpdated();
     }
   }, [connectorData, onConnectorUpdated, isEmailServiceConnector, currentTenantId, mutate]);
 
