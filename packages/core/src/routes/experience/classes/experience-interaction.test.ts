@@ -18,6 +18,7 @@ import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import { mockUser, mockUserWithMfaVerifications } from '#src/__mocks__/user.js';
 import { EnvSet } from '#src/env-set/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import { type InsertUserResult } from '#src/libraries/user.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
@@ -349,15 +350,57 @@ describe('ExperienceInteraction class', () => {
       expect(updateUser).toHaveBeenCalledWith(mockUser.id, { name: 'Jane Doe' });
     });
 
-    it('does not update user when PostSignIn inline hook returns no-op', async () => {
-      const { experienceInteraction, runHook } = createSignInInteraction();
-      const updateUser = jest.spyOn(experienceInteraction.provisionLibrary, 'updateUser');
+    it.each([undefined, null, {}, { action: 'updateUser' }])(
+      'does not update user and proceeds when PostSignIn inline hook returns no-op result %#',
+      async (result) => {
+        const { experienceInteraction, provider, runHook } = createSignInInteraction();
+        const updateUser = jest.spyOn(experienceInteraction.provisionLibrary, 'updateUser');
 
-      runHook.mockResolvedValueOnce(null);
+        runHook.mockResolvedValueOnce(result);
 
-      await experienceInteraction.submit();
+        await experienceInteraction.submit();
 
-      expect(updateUser).not.toHaveBeenCalled();
+        expect(updateUser).not.toHaveBeenCalled();
+        expect(provider.interactionResult).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.anything(),
+          expect.objectContaining({
+            login: { accountId: mockUser.id },
+          })
+        );
+      }
+    );
+
+    it.each([
+      { action: 'createUser', user: { name: 'Jane Doe' } },
+      { action: 'rejectInvalidCredentials' },
+      { action: 'denyAccess', user: { name: 'Jane Doe' } },
+      { action: 'continue' },
+      { user: { name: 'Jane Doe' } },
+    ])('blocks sign-in when PostSignIn inline hook returns invalid result %#', async (result) => {
+      const { experienceInteraction, provider, runHook } = createSignInInteraction();
+
+      runHook.mockResolvedValueOnce(result);
+
+      await expect(experienceInteraction.submit()).rejects.toMatchError(
+        new RequestError({ code: 'session.verification_failed', status: 400 })
+      );
+
+      expect(provider.interactionResult).not.toHaveBeenCalled();
+    });
+
+    it('blocks sign-in when PostSignIn inline hook execution fails in block mode', async () => {
+      const { experienceInteraction, provider, runHook } = createSignInInteraction();
+
+      runHook.mockRejectedValueOnce(
+        new RequestError({ code: 'session.verification_failed', status: 400 })
+      );
+
+      await expect(experienceInteraction.submit()).rejects.toMatchError(
+        new RequestError({ code: 'session.verification_failed', status: 400 })
+      );
+
+      expect(provider.interactionResult).not.toHaveBeenCalled();
     });
 
     it('should record geo context when dev features are disabled', async () => {
