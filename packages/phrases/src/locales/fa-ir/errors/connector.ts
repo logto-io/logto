@@ -13,6 +13,7 @@ const connector = {
   template_not_found: 'قالب صحیح در پیکربندی اتصال‌دهنده یافت نشد.',
   template_not_supported: 'اتصال‌دهنده از این نوع قالب پشتیبانی نمی‌کند.',
   rate_limit_exceeded: 'محدودیت نرخ ماشه. لطفاً بعداً دوباره تلاش کنید.',
+  usage_limit_exceeded: 'محدودیت استفاده از سرویس به پایان رسیده است.',
   not_implemented: '{{method}}: هنوز پیاده‌سازی نشده است.',
   social_invalid_access_token: 'توکن دسترسی اتصال‌دهنده نامعتبر است.',
   invalid_auth_code: 'کد auth اتصال‌دهنده نامعتبر است.',

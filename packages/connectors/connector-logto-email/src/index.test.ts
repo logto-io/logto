@@ -52,7 +52,7 @@ describe('sendMessage()', () => {
     ).resolves.not.toThrow();
   });
 
-  it('should throw a rate-limit ConnectorError when the service usage limit is reached', async () => {
+  it('should throw a usage-limit ConnectorError when the service usage cap is reached', async () => {
     // The cloud client rejects with an error carrying a numeric `status` on 429 (not a Got
     // HTTPError), so exercise the connector's structural status check with that shape.
     const { sendMessage } = await createConnector({
@@ -69,7 +69,7 @@ describe('sendMessage()', () => {
         type: TemplateType.SignIn,
         payload: { code: '1234' },
       })
-    ).rejects.toMatchObject({ code: ConnectorErrorCodes.RateLimitExceeded });
+    ).rejects.toMatchObject({ code: ConnectorErrorCodes.UsageLimitExceeded });
   });
 
   it('should get usage successfully', async () => {

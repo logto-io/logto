@@ -17,6 +17,12 @@ export enum ConnectorErrorCodes {
    */
   TemplateNotSupported = 'template_not_supported',
   RateLimitExceeded = 'rate_limit_exceeded',
+  /**
+   * The connector's underlying service usage/quota limit has been reached. Unlike
+   * {@link ConnectorErrorCodes.RateLimitExceeded} (a transient per-interval throttle), this signals
+   * an exhausted usage cap that persists until the quota resets or is raised.
+   */
+  UsageLimitExceeded = 'usage_limit_exceeded',
   NotImplemented = 'not_implemented',
   SocialAuthCodeInvalid = 'social_auth_code_invalid',
   SocialAccessTokenInvalid = 'social_invalid_access_token',

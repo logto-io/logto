@@ -13,6 +13,7 @@ const connector = {
   template_not_found: '无法从连接器配置中找到对应的模板',
   template_not_supported: '连接器不支持此模板类型。',
   rate_limit_exceeded: '触发速率限制。请稍后再试。',
+  usage_limit_exceeded: '已达到服务使用上限。',
   not_implemented: '方法 {{method}} 尚未实现',
   social_invalid_access_token: '当前连接器的 access_token 无效',
   invalid_auth_code: '当前连接器的授权码无效',
