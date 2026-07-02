@@ -162,7 +162,7 @@ describe('validatePostFirstFactorVerificationHookResult', () => {
 });
 
 describe('validatePostSignInHookResult', () => {
-  it.each([undefined, null, {}, { action: 'updateUser' }, { ignored: true }])(
+  it.each([undefined, null, {}, { action: 'updateUser' }])(
     'returns continue for no-op result %#',
     (result) => {
       expect(
@@ -176,7 +176,7 @@ describe('validatePostSignInHookResult', () => {
     }
   );
 
-  it('accepts updateUser with a provisioning profile', () => {
+  it('accepts updateUser with a sanitized provisioning profile', () => {
     expect(
       validatePostSignInHookResult({
         event: {
@@ -186,6 +186,21 @@ describe('validatePostSignInHookResult', () => {
           action: 'updateUser',
           user: {
             name: 'Jane Doe',
+            profile: {
+              givenName: 'Jane',
+              familyName: 'Doe',
+              ignored: 'not persisted',
+            },
+            customData: {
+              inlineHook: {
+                plan: 'pro',
+              },
+            },
+            logtoConfig: {
+              inlineHook: {
+                syncedAt: 1_234_567,
+              },
+            },
           },
         },
       })
@@ -194,6 +209,20 @@ describe('validatePostSignInHookResult', () => {
       userId: hookUser.id,
       user: {
         name: 'Jane Doe',
+        profile: {
+          givenName: 'Jane',
+          familyName: 'Doe',
+        },
+        customData: {
+          inlineHook: {
+            plan: 'pro',
+          },
+        },
+        logtoConfig: {
+          inlineHook: {
+            syncedAt: 1_234_567,
+          },
+        },
       },
     });
   });
@@ -202,6 +231,12 @@ describe('validatePostSignInHookResult', () => {
     [],
     { action: 'createUser' },
     { action: 'createUser', user: { name: 'Jane Doe' } },
+    { action: 'rejectInvalidCredentials' },
+    { action: 'rejectInvalidCredentials', user: { name: 'Jane Doe' } },
+    { action: 'denyAccess' },
+    { action: 'denyAccess', user: { name: 'Jane Doe' } },
+    { action: 'continue' },
+    { action: 'continue', user: { name: 'Jane Doe' } },
     { user: { name: 'Jane Doe' } },
     { action: 'updateUser', user: null },
     { action: 'updateUser', user: { id: 'not-allowed' } },
