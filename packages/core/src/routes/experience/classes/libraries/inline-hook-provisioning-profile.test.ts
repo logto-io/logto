@@ -1,7 +1,15 @@
-import { UsersPasswordEncryptionMethod } from '@logto/schemas';
+import {
+  UsersPasswordEncryptionMethod,
+  userMfaDataKey,
+  userPasskeySignInDataKey,
+} from '@logto/schemas';
 import { ZodError } from 'zod';
 
-import { toHookProvisioningProfile } from './inline-hook-provisioning-profile.js';
+import {
+  mergeInlineHookProvisioningProfileUserData,
+  mergeInlineHookUserData,
+  toHookProvisioningProfile,
+} from './inline-hook-provisioning-profile.js';
 
 describe('toHookProvisioningProfile', () => {
   it('returns the hook provisioning profile with whitelisted fields', () => {
@@ -80,6 +88,64 @@ describe('toHookProvisioningProfile', () => {
     ).toThrow(ZodError);
   });
 
+  it('rejects customData and logtoConfig writes outside the inlineHook namespace', () => {
+    expect(() =>
+      toHookProvisioningProfile({
+        customData: {
+          plan: 'pro',
+        },
+      })
+    ).toThrow(ZodError);
+
+    expect(() =>
+      toHookProvisioningProfile({
+        logtoConfig: {
+          theme: 'dark',
+        },
+      })
+    ).toThrow(ZodError);
+  });
+
+  it('rejects reserved internal logtoConfig keys', () => {
+    expect(() =>
+      toHookProvisioningProfile({
+        logtoConfig: {
+          [userMfaDataKey]: {
+            enabled: true,
+          },
+        },
+      })
+    ).toThrow(ZodError);
+
+    expect(() =>
+      toHookProvisioningProfile({
+        logtoConfig: {
+          [userPasskeySignInDataKey]: {
+            skipped: true,
+          },
+        },
+      })
+    ).toThrow(ZodError);
+  });
+
+  it('requires inlineHook namespace data to be an object', () => {
+    expect(() =>
+      toHookProvisioningProfile({
+        customData: {
+          inlineHook: true,
+        },
+      })
+    ).toThrow(ZodError);
+
+    expect(() =>
+      toHookProvisioningProfile({
+        logtoConfig: {
+          inlineHook: null,
+        },
+      })
+    ).toThrow(ZodError);
+  });
+
   it('requires password fields to be provided together', () => {
     expect(() =>
       toHookProvisioningProfile({
@@ -92,5 +158,122 @@ describe('toHookProvisioningProfile', () => {
         passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
       })
     ).toThrow(ZodError);
+  });
+});
+
+describe('mergeInlineHookUserData', () => {
+  it('merges only the inlineHook namespace into existing data', () => {
+    expect(
+      mergeInlineHookUserData(
+        {
+          source: 'registration',
+          inlineHook: {
+            oldPlan: 'free',
+          },
+        },
+        {
+          inlineHook: {
+            plan: 'pro',
+          },
+        }
+      )
+    ).toEqual({
+      source: 'registration',
+      inlineHook: {
+        plan: 'pro',
+      },
+    });
+  });
+
+  it('returns existing data when hook data does not include inlineHook', () => {
+    const existingData = {
+      source: 'registration',
+    };
+
+    expect(mergeInlineHookUserData(existingData, {})).toBe(existingData);
+  });
+});
+
+describe('mergeInlineHookProvisioningProfileUserData', () => {
+  it('merges only inlineHook namespaced data and preserves existing top-level keys', () => {
+    const mergedProfile = mergeInlineHookProvisioningProfileUserData(
+      {
+        customData: {
+          source: 'registration',
+          inlineHook: {
+            oldPlan: 'free',
+          },
+        },
+        logtoConfig: {
+          [userMfaDataKey]: {
+            enabled: true,
+          },
+          [userPasskeySignInDataKey]: {
+            skipped: true,
+          },
+          inlineHook: {
+            oldFlag: true,
+          },
+        },
+      },
+      {
+        name: 'Jane Doe',
+        customData: {
+          inlineHook: {
+            plan: 'pro',
+          },
+        },
+        logtoConfig: {
+          inlineHook: {
+            acceptedTerms: true,
+          },
+        },
+      }
+    );
+
+    expect(mergedProfile).toEqual({
+      name: 'Jane Doe',
+      customData: {
+        source: 'registration',
+        inlineHook: {
+          plan: 'pro',
+        },
+      },
+      logtoConfig: {
+        [userMfaDataKey]: {
+          enabled: true,
+        },
+        [userPasskeySignInDataKey]: {
+          skipped: true,
+        },
+        inlineHook: {
+          acceptedTerms: true,
+        },
+      },
+    });
+  });
+
+  it('leaves user data fields out when hook data does not include inlineHook', () => {
+    const mergedProfile = mergeInlineHookProvisioningProfileUserData(
+      {
+        customData: {
+          source: 'registration',
+        },
+        logtoConfig: {
+          [userMfaDataKey]: {
+            enabled: true,
+          },
+        },
+      },
+      {
+        username: 'jane',
+        customData: {},
+        logtoConfig: {},
+      }
+    );
+
+    expect(mergedProfile).toEqual({
+      username: 'jane',
+    });
   });
 });
