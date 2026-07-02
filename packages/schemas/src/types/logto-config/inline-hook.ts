@@ -5,6 +5,7 @@ import { type User, Users } from '../../db-entries/index.js';
 import { type Json, type JsonObject, userProfileGuard } from '../../foundations/index.js';
 import type { InteractionEvent, InteractionIdentifier } from '../interactions.js';
 import type { UserInfo } from '../user.js';
+import { type VerificationType } from '../verification-records/index.js';
 
 export enum LogtoInlineHookKey {
   PostFirstFactorVerification = 'inlineHook.postFirstFactorVerification',
@@ -107,6 +108,7 @@ export type HookUserPatch = HookProvisioningProfile;
 export type PostFirstFactorVerificationEvent = {
   key: LogtoInlineHookKey.PostFirstFactorVerification;
   interactionEvent: InteractionEvent.SignIn;
+  verificationType: VerificationType.Password;
   identifier: InteractionIdentifier;
   user: HookUser | null;
   /** Sensitive credential provided for inline hook controlled password verification. */
