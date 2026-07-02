@@ -4,6 +4,7 @@ import {
   type SignInExperience,
   type User,
   type VerificationIdentifier,
+  VerificationType,
 } from '@logto/schemas';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
@@ -19,6 +20,7 @@ describe('PasswordVerification', () => {
   const password = 'Password123!';
   const now = new Date('2026-01-10T00:00:00.000Z');
   const dayInMs = 24 * 60 * 60 * 1000;
+  const verificationId = 'password_verification_id';
 
   const findUserById = jest.fn();
   const findUserByUsername = jest.fn();
@@ -53,6 +55,17 @@ describe('PasswordVerification', () => {
         value: mockUser.username ?? 'username',
       }
     );
+
+  const createVerifiedVerification = (identifier?: VerificationIdentifier) =>
+    new PasswordVerification(tenant.libraries, tenant.queries, {
+      id: verificationId,
+      type: VerificationType.Password,
+      identifier: identifier ?? {
+        type: SignInIdentifier.Username,
+        value: mockUser.username ?? 'username',
+      },
+      verified: true,
+    });
 
   beforeEach(() => {
     jest.useFakeTimers().setSystemTime(now);
@@ -164,5 +177,57 @@ describe('PasswordVerification', () => {
       })
     );
     expect(findUserById).toHaveBeenCalledWith(mockUser.id);
+  });
+
+  it('should identify user by the stored userId when present', async () => {
+    const resolvedUserId = 'resolved_user_id';
+    const resolvedUser = {
+      ...mockUser,
+      id: resolvedUserId,
+    } satisfies User;
+    const verification = createVerification({
+      type: SignInIdentifier.Username,
+      value: 'original_username',
+    });
+
+    findUserById.mockResolvedValueOnce(resolvedUser);
+
+    verification.markAsVerifiedWithUserId(resolvedUserId);
+
+    await expect(verification.identifyUser()).resolves.toEqual(resolvedUser);
+    expect(findUserById).toHaveBeenCalledWith(resolvedUserId);
+    expect(findUserByUsername).not.toHaveBeenCalled();
+  });
+
+  it('should identify normal password verification by identifier', async () => {
+    const username = mockUser.username ?? 'username';
+    const verification = createVerifiedVerification({
+      type: SignInIdentifier.Username,
+      value: username,
+    });
+
+    await expect(verification.identifyUser()).resolves.toEqual(mockUser);
+    expect(findUserByUsername).toHaveBeenCalledWith(username, true);
+    expect(findUserById).not.toHaveBeenCalled();
+  });
+
+  it('should serialize userId only when present', () => {
+    const resolvedUserId = 'resolved_user_id';
+    const verification = createVerifiedVerification();
+
+    expect(verification.toJson()).not.toHaveProperty('userId');
+
+    verification.markAsVerifiedWithUserId(resolvedUserId);
+
+    expect(verification.toJson()).toEqual({
+      id: verificationId,
+      type: VerificationType.Password,
+      identifier: {
+        type: SignInIdentifier.Username,
+        value: mockUser.username ?? 'username',
+      },
+      verified: true,
+      userId: resolvedUserId,
+    });
   });
 });
