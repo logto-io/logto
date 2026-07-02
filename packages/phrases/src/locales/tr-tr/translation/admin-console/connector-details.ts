@@ -44,6 +44,12 @@ const connector_details = {
       monthly: 'Aylık <value>{{usage, number}}</value> / {{limit, number}}',
       monthly_unlimited: 'Aylık <value>{{usage, number}}</value>',
       tip: 'Free ve Development planları, günlük ve aylık dahili e-posta limitleri içerir.',
+      banner: {
+        approaching:
+          'Logto dahili e-posta gönderim sınırınıza yaklaşıyorsunuz. Logto dahili e-postayı kullanmaya devam etmek için <provider>kendi e-posta sağlayıcınızı bağlayın</provider> veya <upgrade>planınızı yükseltin</upgrade>.',
+        reached:
+          'Logto dahili e-posta gönderim sınırınıza ulaştınız, bu da oturum açma e-postalarını kesintiye uğratabilir. Logto dahili e-postayı kullanmaya devam etmek için <provider>kendi e-posta sağlayıcınızı bağlayın</provider> veya <upgrade>planınızı yükseltin</upgrade>.',
+      },
     },
     email_template_title: 'E-posta Şablonu',
     template_description:

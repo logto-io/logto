@@ -44,6 +44,12 @@ const connector_details = {
       monthly: 'شهري <value>{{usage, number}}</value> / {{limit, number}}',
       monthly_unlimited: 'شهري <value>{{usage, number}}</value>',
       tip: 'تتضمن خطتا Free و Development حدودًا يومية وشهرية للبريد الإلكتروني المدمج.',
+      banner: {
+        approaching:
+          'أنت تقترب من حد إرسال البريد الإلكتروني المدمج من Logto. <provider>قم بتوصيل مزود البريد الإلكتروني الخاص بك</provider> أو <upgrade>قم بترقية خطتك</upgrade> لمواصلة استخدام البريد الإلكتروني المدمج من Logto.',
+        reached:
+          'لقد وصلت إلى حد إرسال البريد الإلكتروني المدمج من Logto، مما قد يعطل رسائل تسجيل الدخول. <provider>قم بتوصيل مزود البريد الإلكتروني الخاص بك</provider> أو <upgrade>قم بترقية خطتك</upgrade> لمواصلة استخدام البريد الإلكتروني المدمج من Logto.',
+      },
     },
     email_template_title: 'قالب البريد الإلكتروني',
     template_description:

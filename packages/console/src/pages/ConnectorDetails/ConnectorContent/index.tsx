@@ -26,7 +26,7 @@ import { convertResponseToForm } from '@/utils/connector-form';
 import { trySubmitSafe } from '@/utils/form';
 import { removeFalsyValues } from '@/utils/object';
 
-import { getHostedEmailUsageKey } from '../EmailUsage';
+import { getHostedEmailUsageKey } from '../EmailUsage/use-hosted-email-usage';
 
 import EmailServiceConnectorForm from './EmailServiceConnectorForm';
 

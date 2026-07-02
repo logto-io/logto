@@ -4,6 +4,7 @@ import { Navigate, Outlet, useParams } from 'react-router-dom';
 
 import { type SubscriptionCountBasedUsage } from '@/cloud/types/router';
 import AppLoading from '@/components/AppLoading';
+import HostedEmailCapBanner from '@/components/HostedEmailCapBanner';
 import Topbar from '@/components/Topbar';
 import { isCloud } from '@/consts/env';
 import SubscriptionDataProvider from '@/contexts/SubscriptionDataProvider';
@@ -81,7 +82,11 @@ export default function AppContent() {
         <Topbar className={conditional(scrollTop && styles.topbarShadow)} />
         {isTenantSuspended && <TenantSuspendedPage />}
         {!isTenantSuspended && (
-          <Outlet context={{ scrollableContent } satisfies AppContentOutletContext} />
+          <>
+            {/* Key by tenant so the banner's per-session dismissal state resets on tenant switch. */}
+            <HostedEmailCapBanner key={currentTenant.id} />
+            <Outlet context={{ scrollableContent } satisfies AppContentOutletContext} />
+          </>
         )}
       </div>
       <TenantNotificationContainer />

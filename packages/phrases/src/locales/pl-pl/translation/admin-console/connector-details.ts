@@ -44,6 +44,12 @@ const connector_details = {
       monthly: 'Miesięcznie <value>{{usage, number}}</value> / {{limit, number}}',
       monthly_unlimited: 'Miesięcznie <value>{{usage, number}}</value>',
       tip: 'Plany Free i Development obejmują dzienne i miesięczne limity wbudowanej poczty e-mail.',
+      banner: {
+        approaching:
+          'Zbliżasz się do limitu wysyłki wbudowanej poczty e-mail Logto. <provider>Podłącz własnego dostawcę poczty e-mail</provider> lub <upgrade>ulepsz swój plan</upgrade>, aby nadal korzystać z wbudowanej poczty e-mail Logto.',
+        reached:
+          'Osiągnięto limit wysyłki wbudowanej poczty e-mail Logto, co może przerwać e-maile logowania. <provider>Podłącz własnego dostawcę poczty e-mail</provider> lub <upgrade>ulepsz swój plan</upgrade>, aby nadal korzystać z wbudowanej poczty e-mail Logto.',
+      },
     },
     email_template_title: 'Szablon e-maila',
     template_description:
