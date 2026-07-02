@@ -98,6 +98,7 @@ export type PostFirstFactorVerificationEvent = {
   key: LogtoInlineHookKey.PostFirstFactorVerification;
   interactionEvent: InteractionEvent.SignIn;
   identifier: InteractionIdentifier;
+  user: HookUser | null;
   /** Sensitive credential provided for inline hook controlled password verification. */
   password: string;
 };
