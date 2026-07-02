@@ -9,6 +9,7 @@ import EmailSentIconLight from '@/assets/icons/email-sent.svg?react';
 import Tip from '@/assets/icons/tip.svg?react';
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { builtInEmailService } from '@/consts/external-links';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import IconButton from '@/ds-components/IconButton';
@@ -18,9 +19,6 @@ import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTheme from '@/hooks/use-theme';
 
 import styles from './index.module.scss';
-
-const logtoEmailServiceDocumentLink =
-  'docs/recipes/configure-connectors/email-connector/configure-logto-email-service';
 
 /**
  * SWR cache key for the per-tenant hosted-email usage endpoint. Exported so the connector test
@@ -83,7 +81,7 @@ function EmailUsage({ usage, isCompact }: Props) {
       components={{
         a: (
           <TextLink
-            href={getDocumentationUrl(logtoEmailServiceDocumentLink)}
+            href={getDocumentationUrl(builtInEmailService)}
             targetBlank="noopener"
             onClick={closeTipHandler}
           />
