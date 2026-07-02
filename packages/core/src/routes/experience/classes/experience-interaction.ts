@@ -4,13 +4,16 @@ import { appInsights } from '@logto/app-insights/node';
 import {
   InteractionEvent,
   InteractionHookEvent,
+  LogtoInlineHookKey,
   MfaFactor,
+  type PostSignInEvent,
   VerificationType,
   type User,
 } from '@logto/schemas';
 import { maskEmail, maskPhone } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { buildUserPasswordPayload } from '#src/libraries/user.utils.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
@@ -36,6 +39,7 @@ import {
 import { AdaptiveMfaValidator } from './libraries/adaptive-mfa-validator/index.js';
 import { type AdaptiveMfaResult } from './libraries/adaptive-mfa-validator/types.js';
 import { CaptchaValidator } from './libraries/captcha-validator.js';
+import { validatePostSignInHookResult } from './libraries/inline-hook-result-validation.js';
 import { MfaValidator } from './libraries/mfa-validator.js';
 import { ProvisionLibrary } from './libraries/provision-library.js';
 import { SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
@@ -629,6 +633,8 @@ export default class ExperienceInteraction {
       });
     }
 
+    await this.triggerPostSignInInlineHook(user.id);
+
     const { provider } = this.tenant;
 
     const redirectTo = await provider.interactionResult(this.ctx.req, this.ctx.res, {
@@ -698,6 +704,32 @@ export default class ExperienceInteraction {
       payload: { adaptiveMfaResult },
       userId,
     });
+  }
+
+  private async triggerPostSignInInlineHook(userId: string) {
+    if (this.#interactionEvent !== InteractionEvent.SignIn || !EnvSet.values.isDevFeaturesEnabled) {
+      return;
+    }
+
+    const {
+      libraries: { inlineHooks, jwtCustomizers },
+    } = this.tenant;
+    const event: PostSignInEvent = {
+      key: LogtoInlineHookKey.PostSignIn,
+      interactionEvent: InteractionEvent.SignIn,
+      user: await jwtCustomizers.getUserContext(userId),
+    };
+    const hookResult = validatePostSignInHookResult({
+      event,
+      result: await inlineHooks.runHook({
+        key: LogtoInlineHookKey.PostSignIn,
+        event,
+      }),
+    });
+
+    if (hookResult.action === 'updateUser') {
+      await this.provisionLibrary.updateUser(hookResult.userId, hookResult.user);
+    }
   }
 
   private get verificationRecordsArray() {
