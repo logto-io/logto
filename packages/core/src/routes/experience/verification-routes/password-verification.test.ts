@@ -282,7 +282,7 @@ describe('password verification route PostFirstFactorVerification fallback', () 
     expect(updateUser).not.toHaveBeenCalled();
   });
 
-  it('wraps local failure and hook-created user success in one Sentinel promise', async () => {
+  it('runs the inline hook create path when the local user is missing', async () => {
     const handler = registerRoute();
     const ctx = createContext();
 
@@ -299,6 +299,7 @@ describe('password verification route PostFirstFactorVerification fallback', () 
     await expect(getSentinelPromise()).resolves.toEqual(
       expect.objectContaining({ hookResult: { action: 'createUser', user: {} } })
     );
+    expect(findUserByEmail).toHaveBeenCalledWith(identifier.value);
     expect(appendPasswordPayloadToInlineHookProvisioningProfile).toHaveBeenCalledWith(
       {
         primaryEmail: identifier.value,
@@ -350,12 +351,13 @@ describe('password verification route PostFirstFactorVerification fallback', () 
     expect(passwordVerificationRecord.markAsVerified).not.toHaveBeenCalled();
   });
 
-  it('updates the existing user from a validated hook result when local password is wrong', async () => {
+  it('runs the inline hook update path for an existing non-suspended wrong-password user', async () => {
     const handler = registerRoute();
     const ctx = createContext();
+    const activeUser = { ...mockUser, isSuspended: false };
 
     passwordVerificationRecord.verify.mockRejectedValueOnce(invalidCredentialsError);
-    findUserByEmail.mockResolvedValueOnce(mockUser);
+    findUserByEmail.mockResolvedValueOnce(activeUser);
     runHook.mockResolvedValueOnce({
       action: 'updateUser',
       passwordVerified: true,
@@ -366,6 +368,7 @@ describe('password verification route PostFirstFactorVerification fallback', () 
 
     await handler(ctx, jest.fn().mockImplementation(resolveVoid));
 
+    expect(findUserByEmail).toHaveBeenCalledWith(identifier.value);
     expect(runHook).toHaveBeenCalledWith({
       key: LogtoInlineHookKey.PostFirstFactorVerification,
       event: {
@@ -374,14 +377,14 @@ describe('password verification route PostFirstFactorVerification fallback', () 
         verificationType: VerificationType.Password,
         identifier,
         user: {
-          id: mockUser.id,
-          username: mockUser.username,
-          primaryEmail: mockUser.primaryEmail,
-          primaryPhone: mockUser.primaryPhone,
-          name: mockUser.name,
-          avatar: mockUser.avatar,
-          customData: mockUser.customData,
-          profile: mockUser.profile,
+          id: activeUser.id,
+          username: activeUser.username,
+          primaryEmail: activeUser.primaryEmail,
+          primaryPhone: activeUser.primaryPhone,
+          name: activeUser.name,
+          avatar: activeUser.avatar,
+          customData: activeUser.customData,
+          profile: activeUser.profile,
         },
         password,
       },
@@ -394,7 +397,7 @@ describe('password verification route PostFirstFactorVerification fallback', () 
     );
     expect(createUser).not.toHaveBeenCalled();
     expect(updateUser).toHaveBeenCalledWith(
-      mockUser.id,
+      activeUser.id,
       {
         name: 'Jane Doe',
         ...passwordHashPayload,
@@ -427,22 +430,26 @@ describe('password verification route PostFirstFactorVerification fallback', () 
     expect(updateUser).not.toHaveBeenCalled();
   });
 
-  it('does not run the inline hook fallback for suspended users', async () => {
+  it('skips the inline hook and provisioning for existing suspended wrong-password users', async () => {
     const handler = registerRoute();
     const ctx = createContext();
+    const suspendedUser = { ...mockUser, isSuspended: true };
 
     passwordVerificationRecord.verify.mockRejectedValueOnce(invalidCredentialsError);
-    findUserByEmail.mockResolvedValueOnce({
-      ...mockUser,
-      isSuspended: true,
-    });
+    findUserByEmail.mockResolvedValueOnce(suspendedUser);
 
     await expect(handler(ctx, jest.fn().mockImplementation(resolveVoid))).rejects.toBe(
       invalidCredentialsError
     );
 
+    expect(findUserByEmail).toHaveBeenCalledWith(identifier.value);
     expect(runHook).not.toHaveBeenCalled();
+    expect(appendPasswordPayloadToInlineHookProvisioningProfile).not.toHaveBeenCalled();
     expect(createUser).not.toHaveBeenCalled();
     expect(updateUser).not.toHaveBeenCalled();
+    expect(passwordVerificationRecord.markAsVerified).not.toHaveBeenCalled();
+    expect(passwordVerificationRecord.verifyPasswordExpiration).not.toHaveBeenCalled();
+    expect(ctx.experienceInteraction.setVerificationRecord).not.toHaveBeenCalled();
+    expect(ctx.experienceInteraction.save).not.toHaveBeenCalled();
   });
 });
