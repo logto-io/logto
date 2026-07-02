@@ -44,6 +44,12 @@ const connector_details = {
       monthly: 'Monthly <value>{{usage, number}}</value> / {{limit, number}}',
       monthly_unlimited: 'Monthly <value>{{usage, number}}</value>',
       tip: 'Free and Development plans include daily and monthly hosted email limits.',
+      banner: {
+        approaching:
+          "You're approaching your Logto hosted email sending limit. <provider>Connect your own email provider</provider>, or <upgrade>upgrade your plan</upgrade> to keep using Logto hosted email.",
+        reached:
+          "You've reached your Logto hosted email sending limit, which may interrupt sign-in emails. <provider>Connect your own email provider</provider>, or <upgrade>upgrade your plan</upgrade> to keep using Logto hosted email.",
+      },
     },
     email_template_title: 'Email Template',
     template_description:
