@@ -1,7 +1,11 @@
 import { UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { ZodError } from 'zod';
 
-import { toHookProvisioningProfile } from './inline-hook-provisioning-profile.js';
+import {
+  mergeCustomData,
+  mergeInlineHookProvisioningProfileUserData,
+  toHookProvisioningProfile,
+} from './inline-hook-provisioning-profile.js';
 
 describe('toHookProvisioningProfile', () => {
   it('returns the hook provisioning profile with whitelisted fields', () => {
@@ -67,6 +71,22 @@ describe('toHookProvisioningProfile', () => {
     ).toThrow(ZodError);
   });
 
+  it('allows arbitrary customData fields', () => {
+    expect(
+      toHookProvisioningProfile({
+        customData: {
+          plan: 'pro',
+          campaign: 'spring',
+        },
+      })
+    ).toEqual({
+      customData: {
+        plan: 'pro',
+        campaign: 'spring',
+      },
+    });
+  });
+
   it('requires password fields to be provided together', () => {
     expect(() =>
       toHookProvisioningProfile({
@@ -90,6 +110,83 @@ describe('toHookProvisioningProfile', () => {
   it('accepts partial hook provisioning profiles', () => {
     expect(toHookProvisioningProfile({ name: 'Jane Doe' })).toEqual({
       name: 'Jane Doe',
+    });
+  });
+});
+
+describe('mergeCustomData', () => {
+  it('shallow-merges customData into existing data', () => {
+    expect(
+      mergeCustomData(
+        {
+          source: 'registration',
+          plan: 'free',
+        },
+        {
+          plan: 'pro',
+          upstreamId: 'user-1',
+        }
+      )
+    ).toEqual({
+      source: 'registration',
+      plan: 'pro',
+      upstreamId: 'user-1',
+    });
+  });
+
+  it('returns existing data when customData is missing or empty', () => {
+    const existingData = {
+      source: 'registration',
+    };
+
+    expect(mergeCustomData(existingData)).toBe(existingData);
+    expect(mergeCustomData(existingData, {})).toBe(existingData);
+  });
+});
+
+describe('mergeInlineHookProvisioningProfileUserData', () => {
+  it('shallow-merges customData into existing user data', () => {
+    const mergedProfile = mergeInlineHookProvisioningProfileUserData(
+      {
+        customData: {
+          source: 'registration',
+          plan: 'free',
+        },
+      },
+      {
+        name: 'Jane Doe',
+        customData: {
+          plan: 'pro',
+          upstreamId: 'user-1',
+        },
+      }
+    );
+
+    expect(mergedProfile).toEqual({
+      name: 'Jane Doe',
+      customData: {
+        source: 'registration',
+        plan: 'pro',
+        upstreamId: 'user-1',
+      },
+    });
+  });
+
+  it('leaves customData out when hook data has no effective patch', () => {
+    const mergedProfile = mergeInlineHookProvisioningProfileUserData(
+      {
+        customData: {
+          source: 'registration',
+        },
+      },
+      {
+        username: 'jane',
+        customData: {},
+      }
+    );
+
+    expect(mergedProfile).toEqual({
+      username: 'jane',
     });
   });
 });
