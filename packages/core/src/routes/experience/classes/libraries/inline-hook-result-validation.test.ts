@@ -1,4 +1,9 @@
-import { SignInIdentifier, type HookUser } from '@logto/schemas';
+import {
+  SignInIdentifier,
+  type HookUser,
+  type JwtCustomizerUserContext,
+  UsersPasswordEncryptionMethod,
+} from '@logto/schemas';
 
 import { mockUser } from '#src/__mocks__/user.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -10,7 +15,6 @@ import {
   validatePostSignInHookResult,
 } from './inline-hook-result-validation.js';
 
-const hookUser: HookUser = mockUser;
 const signInIdentifier = {
   type: SignInIdentifier.Email,
   value: 'jane@example.com',
@@ -22,6 +26,28 @@ const p1Event = (
   user,
   identifier: signInIdentifier,
 });
+const hookUser: JwtCustomizerUserContext = {
+  id: mockUser.id,
+  username: mockUser.username,
+  primaryEmail: mockUser.primaryEmail,
+  primaryPhone: mockUser.primaryPhone,
+  name: mockUser.name,
+  avatar: mockUser.avatar,
+  customData: mockUser.customData,
+  identities: mockUser.identities,
+  lastSignInAt: mockUser.lastSignInAt,
+  createdAt: mockUser.createdAt,
+  updatedAt: mockUser.updatedAt,
+  profile: mockUser.profile,
+  applicationId: mockUser.applicationId,
+  isSuspended: mockUser.isSuspended,
+  hasPassword: true,
+  ssoIdentities: [],
+  mfaVerificationFactors: [],
+  roles: [],
+  organizations: [],
+  organizationRoles: [],
+};
 const invalidCredentialsResult: ValidatedPostFirstFactorVerificationHookResult = {
   action: 'rejectInvalidCredentials',
 };
