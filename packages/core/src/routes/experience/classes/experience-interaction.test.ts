@@ -350,6 +350,41 @@ describe('ExperienceInteraction class', () => {
       expect(updateUser).toHaveBeenCalledWith(mockUser.id, { name: 'Jane Doe' });
     });
 
+    it('preserves existing customData when PostSignIn inline hook writes customData', async () => {
+      const user = {
+        ...mockUser,
+        customData: {
+          p1Synced: true,
+          source: 'p1',
+        },
+      };
+      const { experienceInteraction, runHook, signInUserQueries } = createSignInInteraction({
+        user,
+      });
+
+      runHook.mockResolvedValueOnce({
+        action: 'updateUser',
+        user: {
+          customData: {
+            p2Synced: true,
+          },
+        },
+      });
+
+      await experienceInteraction.submit();
+
+      expect(signInUserQueries.updateUserById).toHaveBeenCalledWith(
+        mockUser.id,
+        expect.objectContaining({
+          customData: {
+            p1Synced: true,
+            p2Synced: true,
+            source: 'p1',
+          },
+        })
+      );
+    });
+
     it.each([undefined, null, {}, { action: 'updateUser' }])(
       'does not update user and proceeds when PostSignIn inline hook returns no-op result %#',
       async (result) => {
