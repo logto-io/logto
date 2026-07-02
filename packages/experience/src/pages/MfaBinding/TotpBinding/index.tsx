@@ -12,7 +12,7 @@ import useSkipMfa from '@/hooks/use-skip-mfa';
 import useSkipOptionalMfa from '@/hooks/use-skip-optional-mfa';
 import ErrorPage from '@/pages/ErrorPage';
 import { UserMfaFlow } from '@/types';
-import { totpBindingStateGuard } from '@/types/guard';
+import { type MfaFlowState, totpBindingStateGuard } from '@/types/guard';
 
 import SecretSection from './SecretSection';
 import VerificationSection from './VerificationSection';
@@ -31,7 +31,20 @@ const TotpBinding = () => {
     return <ErrorPage title="error.invalid_session" />;
   }
 
-  const { availableFactors, skippable, suggestion } = totpBindingState;
+  const {
+    availableFactors,
+    skippable,
+    suggestion,
+    maskedIdentifiers,
+    isWebAuthnUsedAsSignInPasskey,
+  } = totpBindingState;
+  const mfaFlowState: MfaFlowState = {
+    availableFactors,
+    skippable,
+    suggestion,
+    maskedIdentifiers,
+    isWebAuthnUsedAsSignInPasskey,
+  };
 
   return (
     <SecondaryPageLayout
@@ -47,7 +60,7 @@ const TotpBinding = () => {
             <Divider />
             <SwitchMfaFactorsLink
               flow={UserMfaFlow.MfaBinding}
-              flowState={{ availableFactors, skippable }}
+              flowState={mfaFlowState}
               className={styles.switchLink}
             />
           </>
