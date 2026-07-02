@@ -227,6 +227,10 @@ export class InlineHookLibrary {
     key: LogtoInlineHookKey;
     event: Event;
   }): Promise<unknown> {
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return;
+    }
+
     const inlineHook = await this.findEnabledInlineHook(key);
 
     if (!inlineHook) {

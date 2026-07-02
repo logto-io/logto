@@ -1,9 +1,12 @@
+/* eslint-disable max-lines */
 import { TemplateType } from '@logto/connector-kit';
 import {
   adminConsoleApplicationId,
   adminTenantId,
   type CreateUser,
   InteractionEvent,
+  LogtoInlineHookKey,
+  type JwtCustomizerUserContext,
   type SignInExperience,
   SignInIdentifier,
   SignInMode,
@@ -43,6 +46,7 @@ const userQueries = {
   updateUserById: jest.fn().mockResolvedValue(mockUser),
 };
 const userLibraries = {
+  checkIdentifierCollision: jest.fn().mockResolvedValue(null),
   generateUserId: jest.fn().mockResolvedValue('uid'),
   insertUser: jest.fn(async (user: CreateUser): Promise<InsertUserResult> => [user as User]),
   provisionOrganizations: jest.fn().mockResolvedValue([]),
@@ -65,6 +69,28 @@ const signInExperiences = {
 const mockProviderInteractionDetails = jest
   .fn()
   .mockResolvedValue({ params: { client_id: adminConsoleApplicationId } });
+const mockJwtCustomizerUserContext: JwtCustomizerUserContext = {
+  id: mockUser.id,
+  username: mockUser.username,
+  primaryEmail: mockUser.primaryEmail,
+  primaryPhone: mockUser.primaryPhone,
+  name: mockUser.name,
+  avatar: mockUser.avatar,
+  customData: mockUser.customData,
+  identities: mockUser.identities,
+  lastSignInAt: mockUser.lastSignInAt,
+  createdAt: mockUser.createdAt,
+  updatedAt: mockUser.updatedAt,
+  profile: mockUser.profile,
+  applicationId: mockUser.applicationId,
+  isSuspended: mockUser.isSuspended,
+  hasPassword: true,
+  ssoIdentities: [],
+  mfaVerificationFactors: [],
+  roles: [],
+  organizations: [],
+  organizationRoles: [],
+};
 
 const ExperienceInteraction = await pickDefault(import('./experience-interaction.js'));
 
@@ -105,8 +131,14 @@ const createSignInInteraction = ({
     findUserById: jest.fn().mockResolvedValue(user),
     updateUserById: jest.fn().mockResolvedValue(user),
   };
+  const runHook = jest.fn(
+    async <Event>({ event, key }: { event: Event; key: LogtoInlineHookKey }): Promise<unknown> =>
+      undefined
+  );
+  const getUserContext = jest.fn().mockResolvedValue(mockJwtCustomizerUserContext);
+  const provider = createMockProvider();
   const signInTenant = new MockTenant(
-    createMockProvider(),
+    provider,
     {
       users: signInUserQueries,
       signInExperiences: signInExperiencesWithAdaptiveMfa,
@@ -114,7 +146,12 @@ const createSignInInteraction = ({
       userSignInCountries,
     },
     undefined,
-    { users: userLibraries, ssoConnectors }
+    {
+      users: userLibraries,
+      ssoConnectors,
+      inlineHooks: { runHook },
+      jwtCustomizers: { getUserContext },
+    }
   );
   const logContext = createMockLogContext();
   const baseContext = createContextWithRouteParameters(
@@ -153,6 +190,10 @@ const createSignInInteraction = ({
 
   return {
     experienceInteraction,
+    provider,
+    runHook,
+    getUserContext,
+    signInUserQueries,
     userGeoLocations,
     userSignInCountries,
     createLog: logContext.createLog,
@@ -240,6 +281,85 @@ describe('ExperienceInteraction class', () => {
   });
 
   describe('sign-in submission', () => {
+    it('runs PostSignIn inline hook before provider interaction result', async () => {
+      const { experienceInteraction, provider, runHook, getUserContext } =
+        createSignInInteraction();
+
+      await experienceInteraction.submit();
+
+      expect(getUserContext).toHaveBeenCalledWith(mockUser.id);
+      expect(runHook).toHaveBeenCalledWith({
+        key: LogtoInlineHookKey.PostSignIn,
+        event: {
+          key: LogtoInlineHookKey.PostSignIn,
+          interactionEvent: InteractionEvent.SignIn,
+          user: mockJwtCustomizerUserContext,
+        },
+      });
+      expect(runHook.mock.invocationCallOrder[0]).toBeLessThan(
+        (provider.interactionResult as jest.Mock).mock.invocationCallOrder[0]!
+      );
+    });
+
+    it('does not include password in the PostSignIn inline hook event', async () => {
+      const { experienceInteraction, runHook } = createSignInInteraction();
+
+      await experienceInteraction.submit();
+
+      const [{ event }] = runHook.mock.calls[0]!;
+
+      expect(event).not.toHaveProperty('password');
+      expect(JSON.stringify(event)).not.toContain(mockUser.passwordEncrypted);
+    });
+
+    it('does not run PostSignIn inline hook for register interactions', async () => {
+      const { experienceInteraction, runHook, getUserContext } = createSignInInteraction({
+        interactionEvent: InteractionEvent.Register,
+      });
+
+      await experienceInteraction.submit();
+
+      expect(getUserContext).not.toHaveBeenCalled();
+      expect(runHook).not.toHaveBeenCalled();
+    });
+
+    it('does not run PostSignIn inline hook when dev features are disabled', async () => {
+      setDevFeaturesEnabled(false);
+      const { experienceInteraction, runHook, getUserContext } = createSignInInteraction();
+
+      await experienceInteraction.submit();
+
+      expect(getUserContext).not.toHaveBeenCalled();
+      expect(runHook).not.toHaveBeenCalled();
+    });
+
+    it('updates user when PostSignIn inline hook returns updateUser', async () => {
+      const { experienceInteraction, runHook } = createSignInInteraction();
+      const updateUser = jest.spyOn(experienceInteraction.provisionLibrary, 'updateUser');
+
+      runHook.mockResolvedValueOnce({
+        action: 'updateUser',
+        user: {
+          name: 'Jane Doe',
+        },
+      });
+
+      await experienceInteraction.submit();
+
+      expect(updateUser).toHaveBeenCalledWith(mockUser.id, { name: 'Jane Doe' });
+    });
+
+    it('does not update user when PostSignIn inline hook returns no-op', async () => {
+      const { experienceInteraction, runHook } = createSignInInteraction();
+      const updateUser = jest.spyOn(experienceInteraction.provisionLibrary, 'updateUser');
+
+      runHook.mockResolvedValueOnce(null);
+
+      await experienceInteraction.submit();
+
+      expect(updateUser).not.toHaveBeenCalled();
+    });
+
     it('should record geo context when dev features are disabled', async () => {
       setDevFeaturesEnabled(false);
       const { experienceInteraction, userGeoLocations, userSignInCountries } =
@@ -451,3 +571,5 @@ describe('ExperienceInteraction class', () => {
     });
   });
 });
+
+/* eslint-enable max-lines */
