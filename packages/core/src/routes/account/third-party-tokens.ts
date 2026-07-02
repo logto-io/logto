@@ -1,3 +1,4 @@
+import { UserScope } from '@logto/core-kit';
 import {
   type EnterpriseSsoTokenSetSecret,
   getThirdPartyAccessTokenResponseGuard,
@@ -105,12 +106,16 @@ export default function thirdPartyTokensRoutes<T extends UserRouter>(
       params: z.object({
         target: z.string().min(1),
       }),
-      status: [200, 404, 401, 422],
+      status: [200, 404, 403, 401, 422],
       response: getThirdPartyAccessTokenResponseGuard,
     }),
     async (ctx, next) => {
-      const { id: userId } = ctx.auth;
+      const { id: userId, scopes } = ctx.auth;
       const { target } = ctx.guard.params;
+
+      // Stored provider tokens are identity data; require the same `identities` scope as the
+      // other social/SSO identity endpoints.
+      assertThat(scopes.has(UserScope.Identities), 'auth.forbidden', 403);
 
       const tokenSetSecret = await secretsQueries.findSocialTokenSetSecretByUserIdAndTarget(
         userId,
@@ -136,12 +141,16 @@ export default function thirdPartyTokensRoutes<T extends UserRouter>(
       params: z.object({
         connectorId: z.string().min(1),
       }),
-      status: [200, 404, 401],
+      status: [200, 404, 403, 401],
       response: getThirdPartyAccessTokenResponseGuard,
     }),
     async (ctx, next) => {
-      const { id: userId } = ctx.auth;
+      const { id: userId, scopes } = ctx.auth;
       const { connectorId } = ctx.guard.params;
+
+      // Stored provider tokens are identity data; require the same `identities` scope as the
+      // other social/SSO identity endpoints.
+      assertThat(scopes.has(UserScope.Identities), 'auth.forbidden', 403);
 
       const tokenSetSecret =
         await secretsQueries.findEnterpriseSsoTokenSetSecretByUserIdAndConnectorId(
@@ -171,13 +180,17 @@ export default function thirdPartyTokensRoutes<T extends UserRouter>(
       body: z.object({
         verificationRecordId: z.string().min(1),
       }),
-      status: [200, 401, 422],
+      status: [200, 403, 401, 422],
       response: getThirdPartyAccessTokenResponseGuard,
     }),
     async (ctx, next) => {
-      const { id: userId } = ctx.auth;
+      const { id: userId, scopes } = ctx.auth;
       const { target } = ctx.guard.params;
       const { verificationRecordId } = ctx.guard.body;
+
+      // Stored provider tokens are identity data; require the same `identities` scope as the
+      // other social/SSO identity endpoints.
+      assertThat(scopes.has(UserScope.Identities), 'auth.forbidden', 403);
 
       const socialVerificationRecord = await buildVerificationRecordByIdAndType({
         type: VerificationType.Social,
