@@ -104,6 +104,57 @@ describe('SmartInputField Component', () => {
         value: `${newCountryCode}12315`,
       });
     });
+
+    test('should parse pasted full international phone number', () => {
+      const { container, getByText } = renderInputField({
+        enabledTypes: [SignInIdentifier.Phone],
+      });
+      const input = container.querySelector('input');
+      assert(input, new Error('input should not be null'));
+
+      fireEvent.change(input, { target: { value: '+79370000000' } });
+
+      expect(getByText('+7')).not.toBeNull();
+      expect(input.value).toBe('9370000000');
+      expect(onChange).toHaveBeenLastCalledWith({
+        type: SignInIdentifier.Phone,
+        value: '79370000000',
+      });
+    });
+
+    test('should update country code when pasting an international phone number', () => {
+      const { container, getByText } = renderInputField({
+        defaultValue: '+79370000000',
+        enabledTypes: [SignInIdentifier.Phone],
+      });
+      const input = container.querySelector('input');
+      assert(input, new Error('input should not be null'));
+
+      expect(getByText('+7')).not.toBeNull();
+      expect(input.value).toBe('9370000000');
+
+      fireEvent.change(input, { target: { value: '+16502530000' } });
+
+      expect(getByText('+1')).not.toBeNull();
+      expect(input.value).toBe('6502530000');
+      expect(onChange).toHaveBeenLastCalledWith({
+        type: SignInIdentifier.Phone,
+        value: '16502530000',
+      });
+    });
+
+    test('should keep partial international phone input as raw value', () => {
+      const { container, getByText } = renderInputField({
+        enabledTypes: [SignInIdentifier.Phone],
+      });
+      const input = container.querySelector('input');
+      assert(input, new Error('input should not be null'));
+
+      fireEvent.change(input, { target: { value: '+7' } });
+
+      expect(getByText(`+${defaultCountryCallingCode}`)).not.toBeNull();
+      expect(input.value).toBe('+7');
+    });
   });
 
   describe('username with email', () => {
@@ -279,6 +330,27 @@ describe('SmartInputField Component', () => {
       expect(onChange).toBeCalledWith({
         type: SignInIdentifier.Email,
         value: `11@`,
+      });
+    });
+
+    test('should parse pasted phone number and keep email detection working', () => {
+      const { container, getByText } = renderInputField(config);
+      const input = container.querySelector('input');
+
+      assert(input, new Error('Input field not found'));
+
+      fireEvent.change(input, { target: { value: '+79370000000' } });
+      expect(getByText('+7')).not.toBeNull();
+      expect(input.value).toBe('9370000000');
+      expect(onChange).toHaveBeenLastCalledWith({
+        type: SignInIdentifier.Phone,
+        value: '79370000000',
+      });
+
+      fireEvent.change(input, { target: { value: 'foo@' } });
+      expect(onChange).toHaveBeenLastCalledWith({
+        type: SignInIdentifier.Email,
+        value: 'foo@',
       });
     });
   });
