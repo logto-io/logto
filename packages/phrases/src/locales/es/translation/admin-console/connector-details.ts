@@ -44,6 +44,12 @@ const connector_details = {
       monthly: 'Mensual <value>{{usage, number}}</value> / {{limit, number}}',
       monthly_unlimited: 'Mensual <value>{{usage, number}}</value>',
       tip: 'Los planes Free y Development incluyen límites diarios y mensuales de correo electrónico integrado.',
+      banner: {
+        approaching:
+          'Estás alcanzando el límite de envío de tu correo electrónico integrado de Logto. <provider>Conecta tu propio proveedor de correo</provider> o <upgrade>mejora tu plan</upgrade> para seguir usando el correo integrado de Logto.',
+        reached:
+          'Has alcanzado el límite de envío de tu correo electrónico integrado de Logto, lo que puede interrumpir los correos de inicio de sesión. <provider>Conecta tu propio proveedor de correo</provider> o <upgrade>mejora tu plan</upgrade> para seguir usando el correo integrado de Logto.',
+      },
     },
     email_template_title: 'Plantilla de correo electrónico',
     template_description:

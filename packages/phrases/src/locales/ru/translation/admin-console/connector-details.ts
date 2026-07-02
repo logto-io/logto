@@ -44,6 +44,12 @@ const connector_details = {
       monthly: 'Ежемесячно <value>{{usage, number}}</value> / {{limit, number}}',
       monthly_unlimited: 'Ежемесячно <value>{{usage, number}}</value>',
       tip: 'Планы Free и Development включают ежедневные и ежемесячные лимиты встроенной электронной почты.',
+      banner: {
+        approaching:
+          'Вы приближаетесь к лимиту отправки встроенной почты Logto. <provider>Подключите собственного почтового провайдера</provider> или <upgrade>обновите тариф</upgrade>, чтобы продолжить использовать встроенную почту Logto.',
+        reached:
+          'Вы достигли лимита отправки встроенной почты Logto, что может прервать письма для входа. <provider>Подключите собственного почтового провайдера</provider> или <upgrade>обновите тариф</upgrade>, чтобы продолжить использовать встроенную почту Logto.',
+      },
     },
     email_template_title: 'Шаблон электронной почты',
     template_description:

@@ -1,15 +1,10 @@
 import { Theme } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import useSWR from 'swr';
 
 import EmailSentIconDark from '@/assets/icons/email-sent-dark.svg?react';
 import EmailSentIconLight from '@/assets/icons/email-sent.svg?react';
 import Tip from '@/assets/icons/tip.svg?react';
-import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
-import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import IconButton from '@/ds-components/IconButton';
 import TextLink from '@/ds-components/TextLink';
@@ -18,16 +13,10 @@ import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTheme from '@/hooks/use-theme';
 
 import styles from './index.module.scss';
+import useHostedEmailUsage from './use-hosted-email-usage';
 
 const logtoEmailServiceDocumentLink =
   'docs/recipes/configure-connectors/email-connector/configure-logto-email-service';
-
-/**
- * SWR cache key for the per-tenant hosted-email usage endpoint. Exported so the connector test
- * can revalidate it after a send consumes quota.
- */
-export const getHostedEmailUsageKey = (tenantId: string) =>
-  `/api/tenants/${tenantId}/subscription/hosted-email-usage`;
 
 type UsageWindowProps = {
   readonly windowKey: 'daily' | 'monthly';
@@ -62,17 +51,7 @@ function EmailUsage({ usage, isCompact }: Props) {
   const theme = useTheme();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
-  const { currentTenantId } = useContext(TenantsContext);
-  const cloudApi = useCloudApi({ hideErrorToast: true });
-
-  const isHostedEmailUsageEnabled = isCloud && isDevFeaturesEnabled;
-  const { data: windowedUsage } = useSWR(
-    isHostedEmailUsageEnabled && currentTenantId && getHostedEmailUsageKey(currentTenantId),
-    async () =>
-      cloudApi.get('/api/tenants/:tenantId/subscription/hosted-email-usage', {
-        params: { tenantId: currentTenantId },
-      })
-  );
+  const { isEnabled: isHostedEmailUsageEnabled, data: windowedUsage } = useHostedEmailUsage();
 
   const icon = theme === Theme.Light ? <EmailSentIconLight /> : <EmailSentIconDark />;
   const tipPhraseKey = isHostedEmailUsageEnabled

@@ -44,6 +44,12 @@ const connector_details = {
       monthly: 'ماهانه <value>{{usage, number}}</value> / {{limit, number}}',
       monthly_unlimited: 'ماهانه <value>{{usage, number}}</value>',
       tip: 'طرح‌های Free و Development شامل محدودیت‌های روزانه و ماهانه ایمیل داخلی هستند.',
+      banner: {
+        approaching:
+          'شما به حد ارسال ایمیل داخلی Logto نزدیک می‌شوید. برای ادامه استفاده از ایمیل داخلی Logto، <provider>ارائه‌دهنده ایمیل خود را متصل کنید</provider> یا <upgrade>طرح خود را ارتقا دهید</upgrade>.',
+        reached:
+          'به حد ارسال ایمیل داخلی Logto رسیده‌اید که ممکن است ایمیل‌های ورود را مختل کند. برای ادامه استفاده از ایمیل داخلی Logto، <provider>ارائه‌دهنده ایمیل خود را متصل کنید</provider> یا <upgrade>طرح خود را ارتقا دهید</upgrade>.',
+      },
     },
     email_template_title: 'قالب ایمیل',
     template_description:
