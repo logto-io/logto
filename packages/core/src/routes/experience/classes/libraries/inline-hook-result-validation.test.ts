@@ -1,9 +1,4 @@
-import {
-  SignInIdentifier,
-  type HookUser,
-  type JwtCustomizerUserContext,
-  UsersPasswordEncryptionMethod,
-} from '@logto/schemas';
+import { SignInIdentifier, type HookUser, type JwtCustomizerUserContext } from '@logto/schemas';
 
 import { mockUser } from '#src/__mocks__/user.js';
 import RequestError from '#src/errors/RequestError/index.js';

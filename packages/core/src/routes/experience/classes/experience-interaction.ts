@@ -728,7 +728,9 @@ export default class ExperienceInteraction {
     });
 
     if (hookResult.action === 'updateUser') {
-      await this.provisionLibrary.updateUser(hookResult.userId, hookResult.user);
+      await this.provisionLibrary.updateUser(hookResult.userId, hookResult.user, {
+        mergeCustomData: true,
+      });
     }
   }
 
