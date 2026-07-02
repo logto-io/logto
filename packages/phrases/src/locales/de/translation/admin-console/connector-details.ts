@@ -44,6 +44,12 @@ const connector_details = {
       monthly: 'Monatlich <value>{{usage, number}}</value> / {{limit, number}}',
       monthly_unlimited: 'Monatlich <value>{{usage, number}}</value>',
       tip: 'Die Tarife Free und Development enthalten tägliche und monatliche Limits für den integrierten E-Mail-Versand.',
+      banner: {
+        approaching:
+          'Sie nähern sich dem Sendelimit Ihres integrierten Logto-E-Mail-Versands. <provider>Verbinden Sie Ihren eigenen E-Mail-Anbieter</provider> oder <upgrade>aktualisieren Sie Ihren Tarif</upgrade>, um den integrierten Logto-E-Mail-Versand weiter zu nutzen.',
+        reached:
+          'Sie haben das Sendelimit Ihres integrierten Logto-E-Mail-Versands erreicht, was Anmelde-E-Mails unterbrechen kann. <provider>Verbinden Sie Ihren eigenen E-Mail-Anbieter</provider> oder <upgrade>aktualisieren Sie Ihren Tarif</upgrade>, um den integrierten Logto-E-Mail-Versand weiter zu nutzen.',
+      },
     },
     email_template_title: 'E-Mail-Vorlage',
     template_description:

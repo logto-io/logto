@@ -42,6 +42,12 @@ const connector_details = {
       monthly: '每月 <value>{{usage, number}}</value> / {{limit, number}}',
       monthly_unlimited: '每月 <value>{{usage, number}}</value>',
       tip: 'Free 和 Development 方案包含每日和每月的内置电子邮件限额。',
+      banner: {
+        approaching:
+          '您即将达到 Logto 内置电子邮件的发送上限。<provider>连接您自己的电子邮件服务商</provider>，或<upgrade>升级您的方案</upgrade>以继续使用 Logto 内置电子邮件。',
+        reached:
+          '您已达到 Logto 内置电子邮件的发送上限，这可能会中断登录邮件。<provider>连接您自己的电子邮件服务商</provider>，或<upgrade>升级您的方案</upgrade>以继续使用 Logto 内置电子邮件。',
+      },
     },
     email_template_title: '电子邮件模板',
     template_description:
