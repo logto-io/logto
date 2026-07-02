@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { Component, CoreEvent, getEventName } from '@logto/app-insights/custom-event';
 import { appInsights } from '@logto/app-insights/node';
 import {
@@ -12,6 +13,7 @@ import {
   SignInMode,
   TenantRole,
   type JsonObject,
+  type HookProvisioningProfile,
   userMfaDataKey,
   userOnboardingDataKey,
   type User,
@@ -34,6 +36,7 @@ import {
   getProfileIdentifierCollisionPayload,
   type InlineHookCreateUserProfile,
   mergeInlineHookCreateUserCustomData,
+  mergeInlineHookProvisioningProfileUserData,
 } from './inline-hook-provisioning-profile.js';
 
 type OrganizationProvisionPayload =
@@ -75,6 +78,33 @@ export class ProvisionLibrary {
         skipFirstAdminProvisioning: true,
       }
     );
+  }
+
+  async updateUser(userId: string, profile: HookProvisioningProfile) {
+    const { queries, libraries } = this.tenantContext;
+
+    const existingUser = await queries.users.findUserById(userId);
+
+    await libraries.users.checkIdentifierCollision(
+      getProfileIdentifierCollisionPayload(profile),
+      userId
+    );
+
+    const { passwordEncrypted, passwordEncryptionMethod, ...updateProfile } =
+      mergeInlineHookProvisioningProfileUserData(existingUser, profile);
+    const passwordPayload =
+      passwordEncrypted && passwordEncryptionMethod
+        ? buildUserPasswordPayload({ passwordEncrypted, passwordEncryptionMethod })
+        : {};
+
+    const user = await queries.users.updateUserById(userId, {
+      ...updateProfile,
+      ...passwordPayload,
+    });
+
+    this.ctx.appendDataHookContext('User.Data.Updated', { user });
+
+    return user;
   }
 
   async addSsoIdentityToUser(
@@ -375,3 +405,4 @@ export class ProvisionLibrary {
     });
   };
 }
+/* eslint-enable max-lines */

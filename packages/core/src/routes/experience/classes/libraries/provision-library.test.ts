@@ -7,9 +7,11 @@ import {
   UsersPasswordEncryptionMethod,
   userMfaDataKey,
   userOnboardingDataKey,
+  userPasskeySignInDataKey,
 } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
+import { mockUser } from '#src/__mocks__/user.js';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type InsertUserResult } from '#src/libraries/user.js';
@@ -38,10 +40,20 @@ const encryptedTokenSet = {
 
 const createProvisionLibrary = ({
   invitations = [],
+  user = mockUser,
 }: {
   invitations?: Array<{ status: OrganizationInvitationStatus }>;
+  user?: User;
 } = {}) => {
   const hasActiveUsers = jest.fn().mockResolvedValue(false);
+  const findUserById = jest.fn(async (): Promise<User> => user);
+  const updateUserById = jest.fn(
+    async (userId: string, payload: Partial<CreateUser>): Promise<User> => ({
+      ...user,
+      ...payload,
+      id: userId,
+    })
+  );
   const checkIdentifierCollision = jest.fn();
   const generateUserId = jest.fn().mockResolvedValue('uid');
   const insertUser = jest.fn(async (user: CreateUser): Promise<InsertUserResult> => [user as User]);
@@ -57,7 +69,9 @@ const createProvisionLibrary = ({
     ),
     {
       users: {
+        findUserById,
         hasActiveUsers,
+        updateUserById,
       },
       signInExperiences: {
         updateDefaultSignInExperience,
@@ -97,7 +111,9 @@ const createProvisionLibrary = ({
   return {
     provisionLibrary: new ProvisionLibrary(tenant, ctx),
     ctx,
+    findUserById,
     hasActiveUsers,
+    updateUserById,
     checkIdentifierCollision,
     insertUser,
     provisionOrganizations,
@@ -322,6 +338,105 @@ describe('ProvisionLibrary', () => {
       ).rejects.toBe(error);
 
       expect(insertUser).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('updateUser', () => {
+    it('checks identifiers, merges inline hook user data, updates the user, and appends data hook context', async () => {
+      const existingCustomData = { source: 'registration', inlineHook: { oldPlan: 'free' } };
+      const inlineHookCustomData = { inlineHook: { plan: 'pro' } };
+      const existingLogtoConfig = {
+        [userMfaDataKey]: { enabled: true },
+        [userPasskeySignInDataKey]: { skipped: true },
+        inlineHook: { oldFlag: true },
+      };
+      const inlineHookLogtoConfig = { inlineHook: { acceptedTerms: true } };
+      const profile = { givenName: 'Jane' };
+      const { provisionLibrary, ctx, findUserById, updateUserById, checkIdentifierCollision } =
+        createProvisionLibrary({
+          user: {
+            ...mockUser,
+            id: 'user-id',
+            customData: existingCustomData,
+            logtoConfig: existingLogtoConfig,
+          },
+        });
+
+      const updatedUser = await provisionLibrary.updateUser('user-id', {
+        name: 'Jane Doe',
+        username: 'jane',
+        primaryEmail: 'jane@example.com',
+        primaryPhone: '+1234567890',
+        profile,
+        customData: inlineHookCustomData,
+        logtoConfig: inlineHookLogtoConfig,
+        passwordEncrypted: 'hashed-password',
+        passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+      });
+
+      expect(findUserById).toHaveBeenCalledWith('user-id');
+      expect(checkIdentifierCollision).toHaveBeenCalledWith(
+        {
+          username: 'jane',
+          primaryEmail: 'jane@example.com',
+          primaryPhone: '+1234567890',
+        },
+        'user-id'
+      );
+      expect(Number(checkIdentifierCollision.mock.invocationCallOrder[0])).toBeLessThan(
+        Number(updateUserById.mock.invocationCallOrder[0])
+      );
+
+      expect(updateUserById).toHaveBeenCalledWith(
+        'user-id',
+        expect.objectContaining({
+          name: 'Jane Doe',
+          username: 'jane',
+          primaryEmail: 'jane@example.com',
+          primaryPhone: '+1234567890',
+          profile,
+          customData: {
+            source: 'registration',
+            inlineHook: inlineHookCustomData.inlineHook,
+          },
+          logtoConfig: {
+            [userMfaDataKey]: existingLogtoConfig[userMfaDataKey],
+            [userPasskeySignInDataKey]: existingLogtoConfig[userPasskeySignInDataKey],
+            inlineHook: inlineHookLogtoConfig.inlineHook,
+          },
+          passwordEncrypted: 'hashed-password',
+          passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+          isPasswordExpired: false,
+        })
+      );
+      expect(updateUserById.mock.calls[0]?.[1]).toHaveProperty(
+        'passwordUpdatedAt',
+        expect.any(Number)
+      );
+      expect(updateUserById.mock.calls[0]?.[1]).not.toHaveProperty('id');
+      expect(ctx.appendDataHookContext).toHaveBeenCalledWith('User.Data.Updated', {
+        user: updatedUser,
+      });
+
+      updateUserById.mockClear();
+      await provisionLibrary.updateUser('user-id', { name: 'Jane Doe' });
+
+      expect(updateUserById).toHaveBeenCalledWith('user-id', { name: 'Jane Doe' });
+    });
+
+    it('propagates identifier collision errors without updating the user', async () => {
+      const error = new RequestError({ code: 'user.email_already_in_use', status: 422 });
+      const { provisionLibrary, ctx, checkIdentifierCollision, updateUserById } =
+        createProvisionLibrary();
+
+      checkIdentifierCollision.mockRejectedValueOnce(error);
+
+      await expect(
+        provisionLibrary.updateUser('user-id', { primaryEmail: 'jane@example.com' })
+      ).rejects.toBe(error);
+
+      expect(updateUserById).not.toHaveBeenCalled();
+      expect(ctx.appendDataHookContext).not.toHaveBeenCalled();
     });
   });
 });
