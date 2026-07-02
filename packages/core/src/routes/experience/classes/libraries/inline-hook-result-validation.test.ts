@@ -1,4 +1,9 @@
-import { type JwtCustomizerUserContext, UsersPasswordEncryptionMethod } from '@logto/schemas';
+import {
+  type JwtCustomizerUserContext,
+  UsersPasswordEncryptionMethod,
+  userMfaDataKey,
+  userPasskeySignInDataKey,
+} from '@logto/schemas';
 
 import { mockUser } from '#src/__mocks__/user.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -254,6 +259,26 @@ describe('validatePostSignInHookResult', () => {
         name: 'Jane Doe',
         passwordDigest: 'script-supplied-hash',
         passwordAlgorithm: UsersPasswordEncryptionMethod.Argon2i,
+      },
+    },
+    {
+      action: 'updateUser',
+      user: {
+        logtoConfig: {
+          [userMfaDataKey]: {
+            skipped: true,
+          },
+        },
+      },
+    },
+    {
+      action: 'updateUser',
+      user: {
+        logtoConfig: {
+          [userPasskeySignInDataKey]: {
+            skipped: true,
+          },
+        },
       },
     },
   ])('throws verification failure for invalid result %#', (result) => {
