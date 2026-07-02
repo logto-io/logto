@@ -1,7 +1,7 @@
 import { jsonGuard } from '@logto/connector-kit';
 import { z } from 'zod';
 
-import { type User, Users } from '../../db-entries/index.js';
+import { Users } from '../../db-entries/index.js';
 import { type Json, userProfileGuard } from '../../foundations/index.js';
 import type { InteractionEvent, InteractionIdentifier } from '../interactions.js';
 import type { UserInfo } from '../user.js';
@@ -56,10 +56,9 @@ export type HookUserPatch = Partial<
   >
 >;
 
-export type HookProvisioningProfile = HookUserPatch &
-  Partial<Pick<User, 'passwordEncrypted' | 'passwordEncryptionMethod'>>;
+export type HookProvisioningProfile = HookUserPatch;
 
-const hookProvisioningProfileBaseGuard = Users.createGuard
+export const hookProvisioningProfileGuard = Users.createGuard
   .pick({
     name: true,
     avatar: true,
@@ -68,31 +67,12 @@ const hookProvisioningProfileBaseGuard = Users.createGuard
     primaryPhone: true,
     profile: true,
     customData: true,
-    passwordEncrypted: true,
-    passwordEncryptionMethod: true,
   })
   .extend({
     profile: userProfileGuard.optional(),
   })
   .partial()
-  .strict();
-
-export const hookProvisioningProfileGuard = hookProvisioningProfileBaseGuard.superRefine(
-  ({ passwordEncrypted, passwordEncryptionMethod }, context) => {
-    const hasPasswordEncrypted = passwordEncrypted !== undefined;
-    const hasPasswordEncryptionMethod = passwordEncryptionMethod !== undefined;
-
-    if (hasPasswordEncrypted === hasPasswordEncryptionMethod) {
-      return;
-    }
-
-    context.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: '`passwordEncrypted` and `passwordEncryptionMethod` must be provided together.',
-      path: hasPasswordEncrypted ? ['passwordEncryptionMethod'] : ['passwordEncrypted'],
-    });
-  }
-) satisfies z.ZodType<HookProvisioningProfile>;
+  .strict() satisfies z.ZodType<HookProvisioningProfile>;
 
 export type PostFirstFactorVerificationEvent = {
   key: LogtoInlineHookKey.PostFirstFactorVerification;
