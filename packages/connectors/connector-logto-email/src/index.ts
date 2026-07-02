@@ -1,5 +1,4 @@
 import { assert, conditional } from '@silverhand/essentials';
-import { HTTPError } from 'got';
 
 import type router from '@logto/cloud/routes';
 import type {
@@ -51,9 +50,11 @@ const sendMessage =
         },
       });
     } catch (error: unknown) {
-      // The hosted email service returns 429 once the tenant's usage limit is reached. Convert it to
-      // a ConnectorError so the middleware maps it to a 429 for the caller instead of an opaque 500.
-      if (error instanceof HTTPError && error.response.statusCode === 429) {
+      // The hosted email service returns 429 once the tenant's usage limit is reached. Its cloud
+      // client throws an error carrying a numeric HTTP `status`; detect that structurally (rather
+      // than coupling to the client's error class) and convert it to a ConnectorError, so the
+      // middleware maps it back to a 429 for the caller instead of an opaque 500.
+      if (error instanceof Error && 'status' in error && error.status === 429) {
         throw new ConnectorError(ConnectorErrorCodes.RateLimitExceeded);
       }
 

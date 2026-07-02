@@ -6,6 +6,16 @@ import { ConnectorErrorCodes, TemplateType } from '@logto/connector-kit';
 import { emailEndpoint, usageEndpoint } from './constant.js';
 import createConnector from './index.js';
 
+/** Mimics the cloud client's `ResponseError`: an `Error` carrying a numeric HTTP `status`. */
+class StatusError extends Error {
+  status: number;
+
+  constructor(status: number) {
+    super('Service usage limit reached.');
+    this.status = status;
+  }
+}
+
 const endpoint = 'http://localhost:3003';
 
 const api = got.extend({ prefixUrl: endpoint });
@@ -43,9 +53,16 @@ describe('sendMessage()', () => {
   });
 
   it('should throw a rate-limit ConnectorError when the service usage limit is reached', async () => {
-    const url = buildUrl(emailEndpoint, endpoint);
-    nock(url.origin).post(url.pathname).reply(429, { message: 'Service usage limit reached.' });
-    const { sendMessage } = await createConnector({ getConfig, getCloudServiceClient });
+    // The cloud client rejects with an error carrying a numeric `status` on 429 (not a Got
+    // HTTPError), so exercise the connector's structural status check with that shape.
+    const { sendMessage } = await createConnector({
+      getConfig,
+      getCloudServiceClient: vi.fn().mockResolvedValue({
+        post: async () => {
+          throw new StatusError(429);
+        },
+      }),
+    });
     await expect(
       sendMessage({
         to: 'wangsijie94@gmail.com',
