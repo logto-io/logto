@@ -215,8 +215,8 @@ export class RedisClusterCache extends RedisCacheBase {
       useReplicas: true,
       defaults: {
         socket: this.getSocketOptions(connectionUrl),
-        username: connectionUrl.username,
-        password: connectionUrl.password,
+        username: connectionUrl.username ? decodeURIComponent(connectionUrl.username) : undefined,
+        password: connectionUrl.password ? decodeURIComponent(connectionUrl.password) : undefined,
       },
     });
 
