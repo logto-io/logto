@@ -120,7 +120,7 @@ describe('ProvisionLibrary', () => {
       originalIsIntegrationTest;
   });
 
-  describe('createUserFromProvisioningProfile', () => {
+  describe('createUser', () => {
     it('checks identifiers and preserves create side effects', async () => {
       // eslint-disable-next-line @silverhand/fp/no-mutation
       (EnvSet.values as { isCloud: boolean; isIntegrationTest: boolean }).isCloud = false;
@@ -139,48 +139,48 @@ describe('ProvisionLibrary', () => {
         updateDefaultSignInExperience,
       } = createProvisionLibrary();
 
-      await provisionLibrary.createUserFromProvisioningProfile({
-        name: 'Jane Doe',
-        username: 'jane',
-        primaryEmail: 'jane@example.com',
-        primaryPhone: '+1234567890',
-        customData: {
-          inlineHook: {
+      await provisionLibrary.createUser(
+        {
+          name: 'Jane Doe',
+          username: 'jane',
+          primaryEmail: 'jane@example.com',
+          primaryPhone: '+1234567890',
+          customData: {
             plan: 'pro',
+            upstreamId: 'user-1',
           },
-        },
-        logtoConfig: {
-          inlineHook: {
-            acceptedTerms: true,
-          },
-        },
-        passwordEncrypted: 'hashed-password',
-        passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
-        socialIdentity: {
-          target: 'google',
-          userInfo: {
-            id: 'google-user-id',
-            email: 'jane@example.com',
-          },
-        },
-        jitOrganizationIds: ['jit-organization-id'],
-        socialConnectorTokenSetSecret: {
-          encryptedTokenSet,
-          socialConnectorRelationPayload: {
-            connectorId: 'google',
+          passwordEncrypted: 'hashed-password',
+          passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+          socialIdentity: {
             target: 'google',
-            identityId: 'google-user-id',
+            userInfo: {
+              id: 'google-user-id',
+              email: 'jane@example.com',
+            },
+          },
+          jitOrganizationIds: ['jit-organization-id'],
+          socialConnectorTokenSetSecret: {
+            encryptedTokenSet,
+            socialConnectorRelationPayload: {
+              connectorId: 'google',
+              target: 'google',
+              identityId: 'google-user-id',
+            },
+          },
+          enterpriseSsoConnectorTokenSetSecret: {
+            encryptedTokenSet,
+            enterpriseSsoConnectorRelationPayload: {
+              ssoConnectorId: 'sso-connector-id',
+              issuer: 'https://sso.example.com',
+              identityId: 'sso-user-id',
+            },
           },
         },
-        enterpriseSsoConnectorTokenSetSecret: {
-          encryptedTokenSet,
-          enterpriseSsoConnectorRelationPayload: {
-            ssoConnectorId: 'sso-connector-id',
-            issuer: 'https://sso.example.com',
-            identityId: 'sso-user-id',
-          },
+        {
+          checkIdentifierCollision: true,
+          mergeCustomData: true,
         },
-      });
+      );
 
       expect(checkIdentifierCollision).toHaveBeenCalledWith({
         username: 'jane',
@@ -203,9 +203,8 @@ describe('ProvisionLibrary', () => {
           primaryEmail: 'jane@example.com',
           primaryPhone: '+1234567890',
           customData: {
-            inlineHook: {
-              plan: 'pro',
-            },
+            plan: 'pro',
+            upstreamId: 'user-1',
           },
           identities: {
             google: {
@@ -230,7 +229,6 @@ describe('ProvisionLibrary', () => {
           isInteractive: true,
         }
       );
-      expect(insertUser.mock.calls[0]?.[0]).not.toHaveProperty('logtoConfig.inlineHook');
 
       expect(hasActiveUsers).toHaveBeenCalled();
       expect(updateDefaultSignInExperience).not.toHaveBeenCalled();
@@ -269,7 +267,7 @@ describe('ProvisionLibrary', () => {
       });
     });
 
-    it('merges inline hook customData with internally generated onboarding data', async () => {
+    it('merges hook customData with internally generated onboarding customData', async () => {
       // eslint-disable-next-line @silverhand/fp/no-mutation
       (EnvSet.values as { isCloud: boolean }).isCloud = true;
 
@@ -277,14 +275,19 @@ describe('ProvisionLibrary', () => {
         invitations: [{ status: OrganizationInvitationStatus.Pending }],
       });
 
-      await provisionLibrary.createUserFromProvisioningProfile({
-        primaryEmail: 'jane@example.com',
-        customData: {
-          inlineHook: {
+      await provisionLibrary.createUser(
+        {
+          primaryEmail: 'jane@example.com',
+          customData: {
             plan: 'pro',
+            upstreamId: 'user-1',
           },
         },
-      });
+        {
+          checkIdentifierCollision: true,
+          mergeCustomData: true,
+        }
+      );
 
       expect(findEntities).toHaveBeenCalledWith({
         invitee: 'jane@example.com',
@@ -295,9 +298,8 @@ describe('ProvisionLibrary', () => {
             [userOnboardingDataKey]: {
               isOnboardingDone: true,
             },
-            inlineHook: {
-              plan: 'pro',
-            },
+            plan: 'pro',
+            upstreamId: 'user-1',
           },
           logtoConfig: {
             [userMfaDataKey]: {
@@ -316,9 +318,15 @@ describe('ProvisionLibrary', () => {
       checkIdentifierCollision.mockRejectedValueOnce(error);
 
       await expect(
-        provisionLibrary.createUserFromProvisioningProfile({
-          primaryEmail: 'jane@example.com',
-        })
+        provisionLibrary.createUser(
+          {
+            primaryEmail: 'jane@example.com',
+          },
+          {
+            checkIdentifierCollision: true,
+            mergeCustomData: true,
+          }
+        )
       ).rejects.toBe(error);
 
       expect(insertUser).not.toHaveBeenCalled();
