@@ -12,7 +12,6 @@ import {
   OrganizationInvitationStatus,
   SignInMode,
   TenantRole,
-  type HookProvisioningProfile,
   type JsonObject,
   userMfaDataKey,
   userOnboardingDataKey,
@@ -29,7 +28,11 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 import { getTenantId } from '#src/utils/tenant.js';
 
-import { type InteractionProfile, type WithHooksAndLogsContext } from '../../types.js';
+import {
+  type InteractionProfile,
+  type InteractionUserProvisioningProfile,
+  type WithHooksAndLogsContext,
+} from '../../types.js';
 import { toUserSocialIdentityData } from '../utils.js';
 
 import { getProfileIdentifierCollisionPayload } from './provisioning-profile.js';
@@ -186,7 +189,7 @@ export class ProvisionLibrary {
     return user;
   }
 
-  async updateUser(userId: string, profile: HookProvisioningProfile) {
+  async updateUser(userId: string, profile: InteractionUserProvisioningProfile) {
     const { queries, libraries } = this.tenantContext;
 
     await libraries.users.checkIdentifierCollision(

@@ -1,13 +1,16 @@
 import { conditional } from '@silverhand/essentials';
 
-import { type InteractionProfile } from '../../types.js';
+import { type InteractionProfile, type InteractionUserProvisioningProfile } from '../../types.js';
+
+type IdentifierCollisionProfile = InteractionUserProvisioningProfile &
+  Partial<Pick<InteractionProfile, 'socialIdentity'>>;
 
 export const getProfileIdentifierCollisionPayload = ({
   socialIdentity,
   username,
   primaryEmail,
   primaryPhone,
-}: InteractionProfile) => ({
+}: IdentifierCollisionProfile) => ({
   username,
   primaryEmail,
   primaryPhone,
