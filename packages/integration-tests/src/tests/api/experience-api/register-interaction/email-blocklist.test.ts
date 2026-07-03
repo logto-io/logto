@@ -15,13 +15,19 @@ import {
   successfullyVerifySocialAuthorization,
 } from '#src/helpers/experience/social-verification.js';
 import { expectRejects } from '#src/helpers/index.js';
-import { generateEmail } from '#src/utils.js';
+import { devFeatureTest, generateEmail } from '#src/utils.js';
+
+const emailNotAllowedError = {
+  code: 'session.email_blocklist.email_not_allowed',
+  status: 422,
+} as const;
 
 describe('should reject the email registration if the email is in the blocklist', () => {
   const ssoConnectorApi = new SsoConnectorApi();
   const ssoDomain = 'sso.com';
   const blockDomain = 'block.com';
-  const ssoEmail = generateEmail(ssoDomain);
+  const exactBlocklistEmail = `ExactBlocked@${ssoDomain}`;
+  const exactBlockedEmail = exactBlocklistEmail.toLowerCase();
   const blockEmail = generateEmail(blockDomain);
 
   afterAll(async () => {
@@ -36,7 +42,7 @@ describe('should reject the email registration if the email is in the blocklist'
       signUp: { identifiers: [SignInIdentifier.Email], password: false, verify: true },
       emailBlocklistPolicy: {
         blockSubaddressing: true,
-        customBlocklist: [`@${blockDomain}`, ssoEmail],
+        customBlocklist: [`@${blockDomain.toUpperCase()}`, exactBlocklistEmail],
       },
     });
   });
@@ -69,7 +75,24 @@ describe('should reject the email registration if the email is in the blocklist'
       value: blockEmail,
     });
 
-    const errorCode = 'session.email_blocklist.email_not_allowed';
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.Register,
+    });
+
+    await expectRejects(
+      client.sendVerificationCode({
+        identifier,
+        interactionEvent: InteractionEvent.Register,
+      }),
+      emailNotAllowedError
+    );
+  });
+
+  it('should reject email with exact address in the custom blocklist case-insensitively', async () => {
+    const identifier = Object.freeze({
+      type: SignInIdentifier.Email,
+      value: exactBlockedEmail,
+    });
 
     const client = await initExperienceClient({
       interactionEvent: InteractionEvent.Register,
@@ -80,10 +103,7 @@ describe('should reject the email registration if the email is in the blocklist'
         identifier,
         interactionEvent: InteractionEvent.Register,
       }),
-      {
-        code: errorCode,
-        status: 422,
-      }
+      emailNotAllowedError
     );
   });
 
@@ -124,11 +144,74 @@ describe('should reject the email registration if the email is in the blocklist'
         client.identifyUser({
           verificationId,
         }),
-        {
-          code: 'session.email_blocklist.email_not_allowed',
-          status: 422,
-        }
+        emailNotAllowedError
       );
+    });
+  });
+
+  devFeatureTest.describe('wildcard email blocklist entries', () => {
+    beforeAll(async () => {
+      await updateSignInExperience({
+        emailBlocklistPolicy: {
+          blockSubaddressing: true,
+          customBlocklist: [
+            `@${blockDomain.toUpperCase()}`,
+            exactBlocklistEmail,
+            'foo*@example.com',
+            '@foo.*',
+          ],
+        },
+      });
+    });
+
+    it('should reject email matched by a wildcard local part blocklist entry', async () => {
+      const client = await initExperienceClient({
+        interactionEvent: InteractionEvent.Register,
+      });
+
+      await expectRejects(
+        client.sendVerificationCode({
+          identifier: {
+            type: SignInIdentifier.Email,
+            value: 'foobar@example.com',
+          },
+          interactionEvent: InteractionEvent.Register,
+        }),
+        emailNotAllowedError
+      );
+    });
+
+    it('should reject email matched by a wildcard domain blocklist entry', async () => {
+      const client = await initExperienceClient({
+        interactionEvent: InteractionEvent.Register,
+      });
+
+      await expectRejects(
+        client.sendVerificationCode({
+          identifier: {
+            type: SignInIdentifier.Email,
+            value: 'bar@foo.dev',
+          },
+          interactionEvent: InteractionEvent.Register,
+        }),
+        emailNotAllowedError
+      );
+    });
+
+    it('should allow email that does not match any wildcard blocklist entry', async () => {
+      const client = await initExperienceClient({
+        interactionEvent: InteractionEvent.Register,
+      });
+
+      await expect(
+        client.sendVerificationCode({
+          identifier: {
+            type: SignInIdentifier.Email,
+            value: 'bar@example.com',
+          },
+          interactionEvent: InteractionEvent.Register,
+        })
+      ).resolves.toHaveProperty('verificationId');
     });
   });
 });
