@@ -83,6 +83,21 @@ export type InteractionProfile = {
   | 'customData'
 >;
 
+export type InteractionUserProvisioningProfile = Pick<
+  InteractionProfile,
+  | 'avatar'
+  | 'name'
+  | 'username'
+  | 'primaryEmail'
+  | 'primaryPhone'
+  | 'passwordEncrypted'
+  | 'passwordEncryptionMethod'
+  | 'profile'
+  | 'customData'
+>;
+
+export type HookProvisioningProfile = InteractionUserProvisioningProfile;
+
 const interactionProfileGuard = Users.createGuard
   .pick({
     avatar: true,

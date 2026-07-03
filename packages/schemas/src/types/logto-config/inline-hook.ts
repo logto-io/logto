@@ -1,8 +1,7 @@
 import { jsonGuard } from '@logto/connector-kit';
 import { z } from 'zod';
 
-import { type User, Users, UsersPasswordEncryptionMethod } from '../../db-entries/index.js';
-import { type Json, userProfileGuard } from '../../foundations/index.js';
+import type { Json } from '../../foundations/index.js';
 import type { InteractionEvent, InteractionIdentifier } from '../interactions.js';
 import type { UserInfo } from '../user.js';
 
@@ -55,46 +54,6 @@ export type HookUserPatch = Partial<
     'username' | 'primaryEmail' | 'primaryPhone' | 'name' | 'avatar' | 'customData' | 'profile'
   >
 >;
-
-export type HookProvisioningProfile = HookUserPatch &
-  Partial<Pick<User, 'passwordEncrypted' | 'passwordEncryptionMethod'>>;
-
-const hookProvisioningProfileBaseGuard = Users.createGuard
-  .pick({
-    name: true,
-    avatar: true,
-    username: true,
-    primaryEmail: true,
-    primaryPhone: true,
-    profile: true,
-    customData: true,
-    passwordEncrypted: true,
-    passwordEncryptionMethod: true,
-  })
-  .extend({
-    profile: userProfileGuard.optional(),
-    passwordEncrypted: z.string().max(256).optional(),
-    passwordEncryptionMethod: z.nativeEnum(UsersPasswordEncryptionMethod).optional(),
-  })
-  .partial()
-  .strict();
-
-export const hookProvisioningProfileGuard = hookProvisioningProfileBaseGuard.superRefine(
-  ({ passwordEncrypted, passwordEncryptionMethod }, context) => {
-    const hasPasswordEncrypted = passwordEncrypted !== undefined;
-    const hasPasswordEncryptionMethod = passwordEncryptionMethod !== undefined;
-
-    if (hasPasswordEncrypted === hasPasswordEncryptionMethod) {
-      return;
-    }
-
-    context.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: '`passwordEncrypted` and `passwordEncryptionMethod` must be provided together.',
-      path: hasPasswordEncrypted ? ['passwordEncryptionMethod'] : ['passwordEncrypted'],
-    });
-  }
-) satisfies z.ZodType<HookProvisioningProfile>;
 
 export type PostFirstFactorVerificationEvent = {
   key: LogtoInlineHookKey.PostFirstFactorVerification;
