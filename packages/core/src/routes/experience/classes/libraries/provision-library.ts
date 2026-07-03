@@ -30,20 +30,42 @@ import { getTenantId } from '#src/utils/tenant.js';
 import { type InteractionProfile, type WithHooksAndLogsContext } from '../../types.js';
 import { toUserSocialIdentityData } from '../utils.js';
 
-import {
-  getProfileIdentifierCollisionPayload,
-  type InlineHookCreateUserProfile,
-  mergeInlineHookCreateUserCustomData,
-} from './inline-hook-provisioning-profile.js';
+import { getProfileIdentifierCollisionPayload } from './inline-hook-provisioning-profile.js';
 
 type OrganizationProvisionPayload =
-  | { userId: string; email: string }
-  | { userId: string; ssoConnectorId: string }
-  | { userId: string; organizationIds: string[] };
+  | {
+      userId: string;
+      email: string;
+    }
+  | {
+      userId: string;
+      ssoConnectorId: string;
+    }
+  | {
+      userId: string;
+      organizationIds: string[];
+    };
 
 type CreateUserOptions = {
   checkIdentifierCollision?: boolean;
-  mergeInlineHookCustomData?: boolean;
+  mergeCustomData?: boolean;
+};
+
+const mergeCreateUserCustomData = (
+  existingCustomData: JsonObject | undefined,
+  customData: JsonObject | undefined
+): JsonObject | undefined => {
+  const mergedCustomData =
+    customData && Object.keys(customData).length > 0
+      ? {
+          ...existingCustomData,
+          ...customData,
+        }
+      : existingCustomData;
+
+  return mergedCustomData && Object.keys(mergedCustomData).length > 0
+    ? mergedCustomData
+    : undefined;
 };
 
 export class ProvisionLibrary {
@@ -58,68 +80,11 @@ export class ProvisionLibrary {
    * - Provision all JIT organizations for the user if necessary.
    * - Assign the first user to the admin role and the default tenant organization membership. [OSS only]
    */
-  async createUser(profile: InteractionProfile) {
-    return this.createUserWithOptions(profile);
-  }
-
-  async createUserFromProvisioningProfile(profile: InlineHookCreateUserProfile) {
-    const { logtoConfig: _logtoConfig, customData, ...createUserProfile } = profile;
-
-    return this.createUserWithOptions(
-      {
-        ...createUserProfile,
-        ...conditional(customData && { customData }),
-      },
-      {
-        checkIdentifierCollision: true,
-        mergeInlineHookCustomData: true,
-      }
-    );
-  }
-
-  async addSsoIdentityToUser(
-    userId: string,
-    enterpriseSsoIdentity: Required<InteractionProfile>['enterpriseSsoIdentity']
-  ) {
-    const {
-      queries: { userSsoIdentities: userSsoIdentitiesQueries },
-    } = this.tenantContext;
-
-    await userSsoIdentitiesQueries.insert({
-      id: generateStandardId(),
-      userId,
-      ...enterpriseSsoIdentity,
-    });
-
-    await this.provisionNewUserJitOrganizations(userId, { enterpriseSsoIdentity });
-  }
-
-  /**
-   * Add the user to the specified organizations. This function is called when an existing
-   * user is invited to organization(s) by admin through one-time token (e.g. Magic link).
-   */
-  async provisionJitOrganization(payload: OrganizationProvisionPayload) {
-    const {
-      libraries: { users: usersLibraries },
-    } = this.tenantContext;
-
-    const provisionedOrganizations = await usersLibraries.provisionOrganizations(payload);
-
-    for (const { organizationId } of provisionedOrganizations) {
-      this.ctx.appendDataHookContext('Organization.Membership.Updated', {
-        organizationId,
-        ...truncateMembershipDelta({ addedUserIds: [payload.userId] }),
-      });
-    }
-
-    return provisionedOrganizations;
-  }
-
-  private async createUserWithOptions(
+  async createUser(
     profile: InteractionProfile,
     {
       checkIdentifierCollision: shouldCheckIdentifierCollision = false,
-      mergeInlineHookCustomData = false,
+      mergeCustomData: shouldMergeCustomData = false,
     }: CreateUserOptions = {}
   ) {
     const {
@@ -148,19 +113,22 @@ export class ProvisionLibrary {
 
     const { isCreatingFirstAdminUser, initialUserRoles, customData } =
       await this.getUserProvisionContext(profile);
-    const customDataForInsert = mergeInlineHookCustomData
-      ? mergeInlineHookCreateUserCustomData(customData, profile.customData)
+    const customDataForInsert = shouldMergeCustomData
+      ? mergeCreateUserCustomData(customData, profile.customData)
       : customData;
-    const passwordPayload =
-      passwordEncrypted && passwordEncryptionMethod
-        ? buildUserPasswordPayload({ passwordEncrypted, passwordEncryptionMethod })
-        : {};
 
     const [user] = await insertUser(
       {
         id: await generateUserId(),
         ...rest,
-        ...passwordPayload,
+        ...conditional(
+          passwordEncrypted &&
+            passwordEncryptionMethod &&
+            buildUserPasswordPayload({
+              passwordEncrypted,
+              passwordEncryptionMethod,
+            })
+        ),
         ...conditional(socialIdentity && { identities: toUserSocialIdentityData(socialIdentity) }),
         ...conditional(customDataForInsert && { customData: customDataForInsert }),
         logtoConfig: {
@@ -203,6 +171,44 @@ export class ProvisionLibrary {
     this.triggerAnalyticReports(user);
 
     return user;
+  }
+
+  async addSsoIdentityToUser(
+    userId: string,
+    enterpriseSsoIdentity: Required<InteractionProfile>['enterpriseSsoIdentity']
+  ) {
+    const {
+      queries: { userSsoIdentities: userSsoIdentitiesQueries },
+    } = this.tenantContext;
+
+    await userSsoIdentitiesQueries.insert({
+      id: generateStandardId(),
+      userId,
+      ...enterpriseSsoIdentity,
+    });
+
+    await this.provisionNewUserJitOrganizations(userId, { enterpriseSsoIdentity });
+  }
+
+  /**
+   * Add the user to the specified organizations. This function is called when an existing
+   * user is invited to organization(s) by admin through one-time token (e.g. Magic link).
+   */
+  async provisionJitOrganization(payload: OrganizationProvisionPayload) {
+    const {
+      libraries: { users: usersLibraries },
+    } = this.tenantContext;
+
+    const provisionedOrganizations = await usersLibraries.provisionOrganizations(payload);
+
+    for (const { organizationId } of provisionedOrganizations) {
+      this.ctx.appendDataHookContext('Organization.Membership.Updated', {
+        organizationId,
+        ...truncateMembershipDelta({ addedUserIds: [payload.userId] }),
+      });
+    }
+
+    return provisionedOrganizations;
   }
 
   /**
