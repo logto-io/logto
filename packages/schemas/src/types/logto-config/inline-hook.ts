@@ -81,18 +81,22 @@ const hookProvisioningProfileBaseGuard = Users.createGuard
   .extend({
     profile: userProfileGuard.optional(),
   })
+  .partial()
   .strict();
 
 export const hookProvisioningProfileGuard = hookProvisioningProfileBaseGuard.superRefine(
   ({ passwordEncrypted, passwordEncryptionMethod }, context) => {
-    if (Boolean(passwordEncrypted) === Boolean(passwordEncryptionMethod)) {
+    const hasPasswordEncrypted = passwordEncrypted !== undefined;
+    const hasPasswordEncryptionMethod = passwordEncryptionMethod !== undefined;
+
+    if (hasPasswordEncrypted === hasPasswordEncryptionMethod) {
       return;
     }
 
     context.addIssue({
       code: z.ZodIssueCode.custom,
       message: '`passwordEncrypted` and `passwordEncryptionMethod` must be provided together.',
-      path: passwordEncrypted ? ['passwordEncryptionMethod'] : ['passwordEncrypted'],
+      path: hasPasswordEncrypted ? ['passwordEncryptionMethod'] : ['passwordEncrypted'],
     });
   }
 ) satisfies z.ZodType<HookProvisioningProfile>;
