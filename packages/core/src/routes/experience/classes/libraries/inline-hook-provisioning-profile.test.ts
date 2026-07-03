@@ -93,6 +93,13 @@ describe('toHookProvisioningProfile', () => {
         passwordEncryptionMethod: null,
       })
     ).toThrow(ZodError);
+
+    expect(() =>
+      toHookProvisioningProfile({
+        passwordEncrypted: '',
+        passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+      })
+    ).toThrow(ZodError);
   });
 
   it('accepts partial hook provisioning profiles', () => {

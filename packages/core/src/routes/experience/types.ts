@@ -83,7 +83,7 @@ export type InteractionProfile = {
   | 'customData'
 >;
 
-export type InteractionUserProvisioningProfile = Pick<
+type InteractionUserProvisioningProfile = Pick<
   InteractionProfile,
   | 'avatar'
   | 'name'
