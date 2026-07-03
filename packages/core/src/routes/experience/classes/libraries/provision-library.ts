@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { Component, CoreEvent, getEventName } from '@logto/app-insights/custom-event';
 import { appInsights } from '@logto/app-insights/node';
 import {
@@ -11,6 +12,7 @@ import {
   OrganizationInvitationStatus,
   SignInMode,
   TenantRole,
+  type HookProvisioningProfile,
   type JsonObject,
   userMfaDataKey,
   userOnboardingDataKey,
@@ -67,6 +69,17 @@ const mergeCreateUserCustomData = (
     ? mergedCustomData
     : undefined;
 };
+
+const mergeUpdateUserCustomData = (
+  existingCustomData: JsonObject | undefined,
+  customData: JsonObject | undefined
+): JsonObject | undefined =>
+  customData && Object.keys(customData).length > 0
+    ? {
+        ...existingCustomData,
+        ...customData,
+      }
+    : undefined;
 
 export class ProvisionLibrary {
   constructor(
@@ -169,6 +182,39 @@ export class ProvisionLibrary {
     this.ctx.appendDataHookContext('User.Created', { user });
 
     this.triggerAnalyticReports(user);
+
+    return user;
+  }
+
+  async updateUser(userId: string, profile: HookProvisioningProfile) {
+    const { queries, libraries } = this.tenantContext;
+
+    await libraries.users.checkIdentifierCollision(
+      getProfileIdentifierCollisionPayload(profile),
+      userId
+    );
+
+    const { passwordEncrypted, passwordEncryptionMethod, customData, ...updateProfile } = profile;
+    const existingUser =
+      customData && Object.keys(customData).length > 0
+        ? await queries.users.findUserById(userId)
+        : undefined;
+    const mergedCustomData = mergeUpdateUserCustomData(existingUser?.customData, customData);
+
+    const user = await queries.users.updateUserById(userId, {
+      ...updateProfile,
+      ...conditional(mergedCustomData && { customData: mergedCustomData }),
+      ...conditional(
+        passwordEncrypted &&
+          passwordEncryptionMethod &&
+          buildUserPasswordPayload({
+            passwordEncrypted,
+            passwordEncryptionMethod,
+          })
+      ),
+    });
+
+    this.ctx.appendDataHookContext('User.Data.Updated', { user });
 
     return user;
   }
@@ -375,3 +421,4 @@ export class ProvisionLibrary {
     });
   };
 }
+/* eslint-enable max-lines */
