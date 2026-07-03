@@ -62,7 +62,7 @@ export class ProvisionLibrary {
     return this.createUserWithOptions(profile);
   }
 
-  async createUserForInlineHook(profile: InlineHookCreateUserProfile) {
+  async createUserFromProvisioningProfile(profile: InlineHookCreateUserProfile) {
     const { logtoConfig: _logtoConfig, customData, ...createUserProfile } = profile;
 
     return this.createUserWithOptions(
