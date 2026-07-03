@@ -71,10 +71,10 @@ describe('validateEmailAgainstBlocklistPolicy', () => {
   });
 
   it('should throw if the email domain is in the custom blocklist', async () => {
-    const emails = ['test@foo.com', 'bar@foo.com'];
+    const emails = ['test@foo.com', 'bar@Foo.com'];
 
     for (const email of emails) {
-      // eslint-disable-next-line no-await-in-loop
+      // eslint-disable-next-line no-await-in-loop -- each assertion needs the current email in the expected error
       await expect(
         validateEmailAgainstBlocklistPolicy(emailBlocklistPolicy, email)
       ).rejects.toMatchError(
@@ -88,7 +88,7 @@ describe('validateEmailAgainstBlocklistPolicy', () => {
   });
 
   it('should throw if the email address is in the custom blocklist', async () => {
-    const email = 'foo@bar.com';
+    const email = 'Foo@Bar.com';
     await expect(
       validateEmailAgainstBlocklistPolicy(emailBlocklistPolicy, email)
     ).rejects.toMatchError(

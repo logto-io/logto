@@ -153,13 +153,17 @@ export const validateEmailAgainstBlocklistPolicy = async (
 
   // Guard custom email address/domain if provided
   if (customBlocklist) {
+    const normalizedEmail = email.toLowerCase();
+    const normalizedDomain = domain.toLowerCase();
     const isCustomBlocklisted = customBlocklist.some((item) => {
+      const normalizedItem = item.toLowerCase();
+
       // Guard email domain
-      if (item.startsWith('@')) {
-        return domain === item.slice(1);
+      if (normalizedItem.startsWith('@')) {
+        return normalizedDomain === normalizedItem.slice(1);
       }
 
-      return email === item;
+      return normalizedEmail === normalizedItem;
     });
 
     assertThat(
