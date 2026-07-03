@@ -31,7 +31,15 @@ describe('should reject the email registration if the email is in the blocklist'
   const blockEmail = generateEmail(blockDomain);
 
   afterAll(async () => {
-    await ssoConnectorApi.cleanUp();
+    await Promise.all([
+      ssoConnectorApi.cleanUp(),
+      updateSignInExperience({
+        emailBlocklistPolicy: {
+          blockSubaddressing: false,
+          customBlocklist: [],
+        },
+      }),
+    ]);
   });
 
   beforeAll(async () => {
