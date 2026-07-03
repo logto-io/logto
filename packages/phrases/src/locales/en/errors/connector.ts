@@ -14,6 +14,7 @@ const connector = {
   template_not_found: 'Unable to find correct template in connector config.',
   template_not_supported: 'The connector does not support this template type.',
   rate_limit_exceeded: 'Trigger rate limit. Please try again later.',
+  usage_limit_exceeded: 'The service usage limit has been reached.',
   not_implemented: '{{method}}: has not been implemented yet.',
   social_invalid_access_token: "The connector's access token is invalid.",
   invalid_auth_code: "The connector's auth code is invalid.",

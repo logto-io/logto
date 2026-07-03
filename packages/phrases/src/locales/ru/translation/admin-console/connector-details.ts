@@ -38,6 +38,19 @@ const connector_details = {
     total_email_sent: 'Всего отправлено электронных писем: {{value, number}}',
     total_email_sent_tip:
       'Logto использует SendGrid для безопасной и стабильной встроенной электронной почты. Полностью бесплатно. <a>Узнать больше</a>',
+    hosted_email_usage: {
+      daily: 'Ежедневно <value>{{usage, number}}</value> / {{limit, number}}',
+      daily_unlimited: 'Ежедневно <value>{{usage, number}}</value>',
+      monthly: 'Ежемесячно <value>{{usage, number}}</value> / {{limit, number}}',
+      monthly_unlimited: 'Ежемесячно <value>{{usage, number}}</value>',
+      tip: 'Планы Free и Development включают ежедневные и ежемесячные лимиты встроенной электронной почты.',
+      banner: {
+        approaching:
+          'Вы приближаетесь к лимиту отправки встроенной почты Logto. <provider>Подключите собственного почтового провайдера</provider> или <upgrade>обновите тариф</upgrade>, чтобы продолжить использовать встроенную почту Logto.',
+        reached:
+          'Вы достигли лимита отправки встроенной почты Logto, что может прервать письма для входа. <provider>Подключите собственного почтового провайдера</provider> или <upgrade>обновите тариф</upgrade>, чтобы продолжить использовать встроенную почту Logto.',
+      },
+    },
     email_template_title: 'Шаблон электронной почты',
     template_description:
       'Встроенная электронная почта использует шаблоны по умолчанию для безшовной доставки писем с подтверждением. Никакой дополнительной настройки не требуется, и вы можете настроить базовую информацию о бренде.',

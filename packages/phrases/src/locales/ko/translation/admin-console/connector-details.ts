@@ -37,6 +37,19 @@ const connector_details = {
     total_email_sent: '전체 이메일 발송: {{value, number}}',
     total_email_sent_tip:
       'Logto 에서 안전하고 안정적인 내장형 이메일을 위해 SendGrid 를 사용합니다. 완전 무료로 사용할 수 있습니다. <a>자세히 알아보기</a>',
+    hosted_email_usage: {
+      daily: '일일 <value>{{usage, number}}</value> / {{limit, number}}',
+      daily_unlimited: '일일 <value>{{usage, number}}</value>',
+      monthly: '월간 <value>{{usage, number}}</value> / {{limit, number}}',
+      monthly_unlimited: '월간 <value>{{usage, number}}</value>',
+      tip: 'Free 및 Development 요금제에는 일일 및 월간 내장형 이메일 한도가 포함됩니다.',
+      banner: {
+        approaching:
+          'Logto 내장형 이메일 발송 한도에 근접하고 있습니다. Logto 내장형 이메일을 계속 사용하려면 <provider>자체 이메일 공급자를 연결</provider>하거나 <upgrade>요금제를 업그레이드</upgrade>하세요.',
+        reached:
+          'Logto 내장형 이메일 발송 한도에 도달하여 로그인 이메일이 중단될 수 있습니다. Logto 내장형 이메일을 계속 사용하려면 <provider>자체 이메일 공급자를 연결</provider>하거나 <upgrade>요금제를 업그레이드</upgrade>하세요.',
+      },
+    },
     email_template_title: '이메일 템플릿',
     template_description:
       '내장형 이메일은 기본 템플릿을 사용하여 검증 이메일을 원활하게 전달합니다. 구성이 필요하지 않으며, 기본 브랜드 정보를 사용자 정의할 수 있습니다.',

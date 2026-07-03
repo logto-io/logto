@@ -13,6 +13,7 @@ const connector = {
   template_not_found: 'تعذر العثور على القالب الصحيح في تكوين الموصل.',
   template_not_supported: 'الموصل لا يدعم نوع القالب هذا.',
   rate_limit_exceeded: 'تم تجاوز حد معدل التشغيل. يرجى المحاولة مرة أخرى لاحقًا.',
+  usage_limit_exceeded: 'تم بلوغ الحد الأقصى لاستخدام الخدمة.',
   not_implemented: '{{method}}: لم يتم تنفيذه بعد.',
   social_invalid_access_token: 'رمز الوصول للموصل غير صالح.',
   invalid_auth_code: 'رمز المصادقة للموصل غير صالح.',

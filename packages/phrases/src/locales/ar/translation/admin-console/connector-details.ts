@@ -38,6 +38,19 @@ const connector_details = {
     total_email_sent: 'إجمالي البريد الإلكتروني المرسل: {{value, number}}',
     total_email_sent_tip:
       'يستخدم Logto SendGrid للبريد الإلكتروني المدمج الآمن والمستقر. إنه مجاني تمامًا للاستخدام. <a>تعرف على المزيد</a>',
+    hosted_email_usage: {
+      daily: 'يومي <value>{{usage, number}}</value> / {{limit, number}}',
+      daily_unlimited: 'يومي <value>{{usage, number}}</value>',
+      monthly: 'شهري <value>{{usage, number}}</value> / {{limit, number}}',
+      monthly_unlimited: 'شهري <value>{{usage, number}}</value>',
+      tip: 'تتضمن خطتا Free و Development حدودًا يومية وشهرية للبريد الإلكتروني المدمج.',
+      banner: {
+        approaching:
+          'أنت تقترب من حد إرسال البريد الإلكتروني المدمج من Logto. <provider>قم بتوصيل مزود البريد الإلكتروني الخاص بك</provider> أو <upgrade>قم بترقية خطتك</upgrade> لمواصلة استخدام البريد الإلكتروني المدمج من Logto.',
+        reached:
+          'لقد وصلت إلى حد إرسال البريد الإلكتروني المدمج من Logto، مما قد يعطل رسائل تسجيل الدخول. <provider>قم بتوصيل مزود البريد الإلكتروني الخاص بك</provider> أو <upgrade>قم بترقية خطتك</upgrade> لمواصلة استخدام البريد الإلكتروني المدمج من Logto.',
+      },
+    },
     email_template_title: 'قالب البريد الإلكتروني',
     template_description:
       'يستخدم البريد الإلكتروني المدمج قوالب افتراضية لتسليم سلس لرسائل التحقق. لا يلزم أي تكوين ، ويمكنك تخصيص معلومات العلامة التجارية الأساسية.',

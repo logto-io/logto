@@ -14,6 +14,7 @@ const connector = {
   template_not_found: 'Não foi possível encontrar o modelo correto na configuração do conector.',
   template_not_supported: 'O conector não suporta esse tipo de modelo.',
   rate_limit_exceeded: 'Limite de taxa de acionamento. Tente novamente mais tarde.',
+  usage_limit_exceeded: 'O limite de uso do serviço foi atingido.',
   not_implemented: '{{method}}: ainda não foi implementado.',
   social_invalid_access_token: 'O token de acesso do conector é inválido.',
   invalid_auth_code: 'O código de autenticação do conector é inválido.',

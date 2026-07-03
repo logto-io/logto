@@ -8,11 +8,12 @@ import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
 import useSkipMfa from '@/hooks/use-skip-mfa';
+import useSkipOptionalMfa from '@/hooks/use-skip-optional-mfa';
 import useWebAuthnOperation from '@/hooks/use-webauthn-operation';
 import ErrorPage from '@/pages/ErrorPage';
 import Button from '@/shared/components/Button';
 import { UserMfaFlow } from '@/types';
-import { webAuthnStateGuard } from '@/types/guard';
+import { type MfaFlowState, webAuthnStateGuard } from '@/types/guard';
 import { isWebAuthnOptions } from '@/utils/webauthn';
 
 import styles from './index.module.scss';
@@ -25,13 +26,28 @@ const WebAuthnBinding = () => {
 
   const handleWebAuthn = useWebAuthnOperation();
   const skipMfa = useSkipMfa();
+  const skipOptionalMfa = useSkipOptionalMfa();
   const [isCreatingPasskey, setIsCreatingPasskey] = useState(false);
 
   if (!webAuthnState || !verificationId) {
     return <ErrorPage title="error.invalid_session" />;
   }
 
-  const { options, availableFactors, skippable } = webAuthnState;
+  const {
+    options,
+    availableFactors,
+    skippable,
+    suggestion,
+    maskedIdentifiers,
+    isWebAuthnUsedAsSignInPasskey,
+  } = webAuthnState;
+  const mfaFlowState: MfaFlowState = {
+    availableFactors,
+    skippable,
+    suggestion,
+    maskedIdentifiers,
+    isWebAuthnUsedAsSignInPasskey,
+  };
 
   if (!isWebAuthnOptions(options)) {
     return <ErrorPage title="error.invalid_session" />;
@@ -41,7 +57,7 @@ const WebAuthnBinding = () => {
     <SecondaryPageLayout
       title="mfa.create_a_passkey"
       description="mfa.create_passkey_description"
-      onSkip={conditional(skippable && skipMfa)}
+      onSkip={conditional(skippable && (suggestion ? skipOptionalMfa : skipMfa))}
     >
       <Button
         title="mfa.create_a_passkey"
@@ -54,7 +70,7 @@ const WebAuthnBinding = () => {
       />
       <SwitchMfaFactorsLink
         flow={UserMfaFlow.MfaBinding}
-        flowState={{ availableFactors, skippable }}
+        flowState={mfaFlowState}
         className={styles.switchLink}
       />
     </SecondaryPageLayout>

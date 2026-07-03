@@ -38,6 +38,19 @@ const connector_details = {
     total_email_sent: 'Total email sent: {{value, number}}',
     total_email_sent_tip:
       'Logto utilizes SendGrid for secure and stable built-in email. It’s completely free to use. <a>Learn more</a>',
+    hosted_email_usage: {
+      daily: 'Daily <value>{{usage, number}}</value> / {{limit, number}}',
+      daily_unlimited: 'Daily <value>{{usage, number}}</value>',
+      monthly: 'Monthly <value>{{usage, number}}</value> / {{limit, number}}',
+      monthly_unlimited: 'Monthly <value>{{usage, number}}</value>',
+      tip: 'Free and Development plans include daily and monthly hosted email limits.',
+      banner: {
+        approaching:
+          "You're approaching your Logto hosted email sending limit. <provider>Connect your own email provider</provider>, or <upgrade>upgrade your plan</upgrade> to keep using Logto hosted email.",
+        reached:
+          "You've reached your Logto hosted email sending limit, which may interrupt sign-in emails. <provider>Connect your own email provider</provider>, or <upgrade>upgrade your plan</upgrade> to keep using Logto hosted email.",
+      },
+    },
     email_template_title: 'Email Template',
     template_description:
       'Built-in email uses default templates for seamless delivery of verification emails. No configuration is required, and you can customize basic brand information.',

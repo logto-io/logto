@@ -58,6 +58,7 @@ export const collectUserProfile = '/end-user-flows/collect-user-profile';
 export const connectors = '/connectors';
 export const socialConnectors = '/connectors/social-connectors';
 export const emailConnectors = '/connectors/email-connectors';
+export const builtInEmailService = '/connectors/email-connectors/built-in-email-service';
 export const enterpriseSso = '/connectors/enterprise-connectors';
 export const security = '/security';
 export const captcha = '/security/captcha';

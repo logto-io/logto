@@ -135,7 +135,7 @@ function ConnectorDetails() {
               }
             )}
             additionalCustomElement={conditional(
-              data.type === ConnectorType.Email && data.usage !== undefined && (
+              data.type === ConnectorType.Email && data.connectorId === ServiceConnector.Email && (
                 <EmailUsage usage={data.usage} />
               )
             )}

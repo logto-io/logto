@@ -38,6 +38,19 @@ const connector_details = {
     total_email_sent: 'Gesamtanzahl gesendeter E-Mails: {{value, number}}',
     total_email_sent_tip:
       'Logto verwendet SendGrid für sicheren und stabilen integrierten E-Mail-Versand. Es ist komplett kostenlos. <a>Weitere Informationen</a>',
+    hosted_email_usage: {
+      daily: 'Täglich <value>{{usage, number}}</value> / {{limit, number}}',
+      daily_unlimited: 'Täglich <value>{{usage, number}}</value>',
+      monthly: 'Monatlich <value>{{usage, number}}</value> / {{limit, number}}',
+      monthly_unlimited: 'Monatlich <value>{{usage, number}}</value>',
+      tip: 'Die Tarife Free und Development enthalten tägliche und monatliche Limits für den integrierten E-Mail-Versand.',
+      banner: {
+        approaching:
+          'Sie nähern sich dem Sendelimit Ihres integrierten Logto-E-Mail-Versands. <provider>Verbinden Sie Ihren eigenen E-Mail-Anbieter</provider> oder <upgrade>aktualisieren Sie Ihren Tarif</upgrade>, um den integrierten Logto-E-Mail-Versand weiter zu nutzen.',
+        reached:
+          'Sie haben das Sendelimit Ihres integrierten Logto-E-Mail-Versands erreicht, was Anmelde-E-Mails unterbrechen kann. <provider>Verbinden Sie Ihren eigenen E-Mail-Anbieter</provider> oder <upgrade>aktualisieren Sie Ihren Tarif</upgrade>, um den integrierten Logto-E-Mail-Versand weiter zu nutzen.',
+      },
+    },
     email_template_title: 'E-Mail-Vorlage',
     template_description:
       'Der integrierte E-Mail-Versand verwendet Standardvorlagen für eine nahtlose Zustellung von Verifizierungs-E-Mails. Es ist keine Konfiguration erforderlich, und Sie können grundlegende Markeninformationen anpassen.',

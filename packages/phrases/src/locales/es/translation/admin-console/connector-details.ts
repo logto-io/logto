@@ -38,6 +38,19 @@ const connector_details = {
     total_email_sent: 'Total de correos electrónicos enviados: {{value, number}}',
     total_email_sent_tip:
       'Logto utiliza SendGrid para correo electrónico integrado seguro y estable. Es completamente gratuito de usar. <a>Más información</a>',
+    hosted_email_usage: {
+      daily: 'Diario <value>{{usage, number}}</value> / {{limit, number}}',
+      daily_unlimited: 'Diario <value>{{usage, number}}</value>',
+      monthly: 'Mensual <value>{{usage, number}}</value> / {{limit, number}}',
+      monthly_unlimited: 'Mensual <value>{{usage, number}}</value>',
+      tip: 'Los planes Free y Development incluyen límites diarios y mensuales de correo electrónico integrado.',
+      banner: {
+        approaching:
+          'Estás alcanzando el límite de envío de tu correo electrónico integrado de Logto. <provider>Conecta tu propio proveedor de correo</provider> o <upgrade>mejora tu plan</upgrade> para seguir usando el correo integrado de Logto.',
+        reached:
+          'Has alcanzado el límite de envío de tu correo electrónico integrado de Logto, lo que puede interrumpir los correos de inicio de sesión. <provider>Conecta tu propio proveedor de correo</provider> o <upgrade>mejora tu plan</upgrade> para seguir usando el correo integrado de Logto.',
+      },
+    },
     email_template_title: 'Plantilla de correo electrónico',
     template_description:
       'El correo electrónico integrado utiliza plantillas predeterminadas para la entrega sin problemas de correos electrónicos de verificación. No se requiere configuración, y puede personalizar la información básica de la marca.',

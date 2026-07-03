@@ -1,5 +1,4 @@
 import { assert, conditional } from '@silverhand/essentials';
-import { HTTPError } from 'got';
 
 import type router from '@logto/cloud/routes';
 import type {
@@ -51,8 +50,13 @@ const sendMessage =
         },
       });
     } catch (error: unknown) {
-      if (error instanceof HTTPError) {
-        console.log('error');
+      // The hosted email service returns 429 once the tenant's usage cap is reached. Its cloud
+      // client throws an error carrying a numeric HTTP `status`; detect that structurally (rather
+      // than coupling to the client's error class) and convert it to a dedicated usage-limit
+      // ConnectorError, so the middleware maps it back to a 429 for the caller instead of an opaque
+      // 500. This is distinct from a rate limit — the cap persists until the quota resets or is raised.
+      if (error instanceof Error && 'status' in error && error.status === 429) {
+        throw new ConnectorError(ConnectorErrorCodes.UsageLimitExceeded);
       }
 
       throw error;

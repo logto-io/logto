@@ -38,6 +38,19 @@ const connector_details = {
     total_email_sent: 'Toplam e-posta gönderildi: {{value, number}}',
     total_email_sent_tip:
       'Logto dahili e-posta için güvenli ve stabil SendGrid kullanır. Tamamen ücretsizdir. <a>Daha fazla bilgi edinin</a>',
+    hosted_email_usage: {
+      daily: 'Günlük <value>{{usage, number}}</value> / {{limit, number}}',
+      daily_unlimited: 'Günlük <value>{{usage, number}}</value>',
+      monthly: 'Aylık <value>{{usage, number}}</value> / {{limit, number}}',
+      monthly_unlimited: 'Aylık <value>{{usage, number}}</value>',
+      tip: 'Free ve Development planları, günlük ve aylık dahili e-posta limitleri içerir.',
+      banner: {
+        approaching:
+          'Logto dahili e-posta gönderim sınırınıza yaklaşıyorsunuz. Logto dahili e-postayı kullanmaya devam etmek için <provider>kendi e-posta sağlayıcınızı bağlayın</provider> veya <upgrade>planınızı yükseltin</upgrade>.',
+        reached:
+          'Logto dahili e-posta gönderim sınırınıza ulaştınız, bu da oturum açma e-postalarını kesintiye uğratabilir. Logto dahili e-postayı kullanmaya devam etmek için <provider>kendi e-posta sağlayıcınızı bağlayın</provider> veya <upgrade>planınızı yükseltin</upgrade>.',
+      },
+    },
     email_template_title: 'E-posta Şablonu',
     template_description:
       'Yerleşik e-posta, doğrulama e-postalarının sorunsuz teslimi için varsayılan şablonları kullanır. Herhangi bir yapılandırma gerektirmez ve temel marka bilgilerini özelleştirebilirsiniz.',
