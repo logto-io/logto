@@ -41,7 +41,7 @@ const createProvisionLibrary = ({
 }: {
   invitations?: Array<{ status: OrganizationInvitationStatus }>;
 } = {}) => {
-  const hasActiveUsers = jest.fn().mockResolvedValue(false);
+  const hasActiveUsers = jest.fn().mockResolvedValue(true);
   const checkIdentifierCollision = jest.fn();
   const generateUserId = jest.fn().mockResolvedValue('uid');
   const insertUser = jest.fn(async (user: CreateUser): Promise<InsertUserResult> => [user as User]);
@@ -121,7 +121,7 @@ describe('ProvisionLibrary', () => {
   });
 
   describe('createUserFromProvisioningProfile', () => {
-    it('checks identifiers, skips first admin provisioning, and preserves create side effects', async () => {
+    it('checks identifiers and preserves create side effects', async () => {
       // eslint-disable-next-line @silverhand/fp/no-mutation
       (EnvSet.values as { isCloud: boolean; isIntegrationTest: boolean }).isCloud = false;
       // eslint-disable-next-line @silverhand/fp/no-mutation
@@ -232,7 +232,7 @@ describe('ProvisionLibrary', () => {
       );
       expect(insertUser.mock.calls[0]?.[0]).not.toHaveProperty('logtoConfig.inlineHook');
 
-      expect(hasActiveUsers).not.toHaveBeenCalled();
+      expect(hasActiveUsers).toHaveBeenCalled();
       expect(updateDefaultSignInExperience).not.toHaveBeenCalled();
       expect(provisionOrganizations).toHaveBeenCalledWith({
         userId: 'uid',
