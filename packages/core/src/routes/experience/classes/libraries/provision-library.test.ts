@@ -120,7 +120,7 @@ describe('ProvisionLibrary', () => {
       originalIsIntegrationTest;
   });
 
-  describe('createUserForInlineHook', () => {
+  describe('createUserFromProvisioningProfile', () => {
     it('checks identifiers, skips first admin provisioning, and preserves create side effects', async () => {
       // eslint-disable-next-line @silverhand/fp/no-mutation
       (EnvSet.values as { isCloud: boolean; isIntegrationTest: boolean }).isCloud = false;
@@ -139,7 +139,7 @@ describe('ProvisionLibrary', () => {
         updateDefaultSignInExperience,
       } = createProvisionLibrary();
 
-      await provisionLibrary.createUserForInlineHook({
+      await provisionLibrary.createUserFromProvisioningProfile({
         name: 'Jane Doe',
         username: 'jane',
         primaryEmail: 'jane@example.com',
@@ -277,7 +277,7 @@ describe('ProvisionLibrary', () => {
         invitations: [{ status: OrganizationInvitationStatus.Pending }],
       });
 
-      await provisionLibrary.createUserForInlineHook({
+      await provisionLibrary.createUserFromProvisioningProfile({
         primaryEmail: 'jane@example.com',
         customData: {
           inlineHook: {
@@ -316,7 +316,7 @@ describe('ProvisionLibrary', () => {
       checkIdentifierCollision.mockRejectedValueOnce(error);
 
       await expect(
-        provisionLibrary.createUserForInlineHook({
+        provisionLibrary.createUserFromProvisioningProfile({
           primaryEmail: 'jane@example.com',
         })
       ).rejects.toBe(error);
