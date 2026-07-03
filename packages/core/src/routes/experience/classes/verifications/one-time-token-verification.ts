@@ -1,5 +1,6 @@
 import {
   type InteractionIdentifier,
+  type InteractionEvent,
   type OneTimeTokenContext,
   type SignInIdentifier,
   type User,
@@ -76,10 +77,11 @@ export class OneTimeTokenVerification
   /**
    * Verifies if the one-time token matches the record in database with the provided email.
    */
-  async verify(token: string) {
+  async verify(token: string, expectedInteractionEvent?: InteractionEvent) {
     const tokenRecord = await this.libraries.oneTimeTokens.verifyOneTimeToken(
       token,
-      this.identifier.value
+      this.identifier.value,
+      expectedInteractionEvent
     );
     this.verified = true;
     this.context = tokenRecord.context;

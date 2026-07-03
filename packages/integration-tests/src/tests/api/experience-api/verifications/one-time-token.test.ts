@@ -1,6 +1,10 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { InteractionEvent, OneTimeTokenStatus, SignInIdentifier } from '@logto/schemas';
 
-import { createOneTimeToken } from '#src/api/one-time-token.js';
+import {
+  createOneTimeToken,
+  deleteOneTimeTokenById,
+  getOneTimeTokenById,
+} from '#src/api/one-time-token.js';
 import { initExperienceClient } from '#src/helpers/client.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { waitFor } from '#src/utils.js';
@@ -117,5 +121,40 @@ describe('One-time token verification APIs', () => {
         status: 400,
       }
     );
+  });
+
+  it('should throw interaction_event_mismatch error when token context does not match current interaction event', async () => {
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.SignIn,
+    });
+
+    const oneTimeToken = await createOneTimeToken({
+      email: 'foo@logto.io',
+      context: {
+        interactionEvent: InteractionEvent.ForgotPassword,
+      },
+    });
+
+    try {
+      await expectRejects(
+        client.verifyOneTimeToken({
+          token: oneTimeToken.token,
+          identifier: {
+            type: SignInIdentifier.Email,
+            value: 'foo@logto.io',
+          },
+        }),
+        {
+          code: 'one_time_token.interaction_event_mismatch',
+          status: 400,
+        }
+      );
+
+      await expect(getOneTimeTokenById(oneTimeToken.id)).resolves.toMatchObject({
+        status: OneTimeTokenStatus.Active,
+      });
+    } finally {
+      await deleteOneTimeTokenById(oneTimeToken.id);
+    }
   });
 });

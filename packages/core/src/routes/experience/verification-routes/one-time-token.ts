@@ -59,7 +59,7 @@ export default function oneTimeTokenVerificationRoutes<
             verificationId: oneTimeTokenVerificationRecord.id,
           },
         },
-        oneTimeTokenVerificationRecord.verify(token)
+        oneTimeTokenVerificationRecord.verify(token, experienceInteraction.interactionEvent)
       );
 
       // Skip CAPTCHA for one-time token flow
