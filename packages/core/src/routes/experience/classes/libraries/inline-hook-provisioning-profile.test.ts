@@ -82,7 +82,15 @@ describe('toHookProvisioningProfile', () => {
 
     expect(() =>
       toHookProvisioningProfile({
-        passwordEncrypted: '',
+        passwordEncrypted: null,
+        passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+      })
+    ).toThrow(ZodError);
+
+    expect(() =>
+      toHookProvisioningProfile({
+        passwordEncrypted: 'hashed-password',
+        passwordEncryptionMethod: null,
       })
     ).toThrow(ZodError);
   });

@@ -1,7 +1,7 @@
 import { jsonGuard } from '@logto/connector-kit';
 import { z } from 'zod';
 
-import { type User, Users } from '../../db-entries/index.js';
+import { type User, Users, UsersPasswordEncryptionMethod } from '../../db-entries/index.js';
 import { type Json, userProfileGuard } from '../../foundations/index.js';
 import type { InteractionEvent, InteractionIdentifier } from '../interactions.js';
 import type { UserInfo } from '../user.js';
@@ -73,6 +73,8 @@ const hookProvisioningProfileBaseGuard = Users.createGuard
   })
   .extend({
     profile: userProfileGuard.optional(),
+    passwordEncrypted: z.string().max(256).optional(),
+    passwordEncryptionMethod: z.nativeEnum(UsersPasswordEncryptionMethod).optional(),
   })
   .partial()
   .strict();
