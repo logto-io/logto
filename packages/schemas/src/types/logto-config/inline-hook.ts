@@ -49,21 +49,15 @@ export type HookUser = Pick<
   'id' | 'username' | 'primaryEmail' | 'primaryPhone' | 'name' | 'avatar' | 'customData' | 'profile'
 >;
 
-export type HookProvisioningProfile = Partial<
+export type HookUserPatch = Partial<
   Pick<
-    User,
-    | 'name'
-    | 'avatar'
-    | 'username'
-    | 'primaryEmail'
-    | 'primaryPhone'
-    | 'profile'
-    | 'customData'
-    | 'logtoConfig'
-    | 'passwordEncrypted'
-    | 'passwordEncryptionMethod'
+    UserInfo,
+    'username' | 'primaryEmail' | 'primaryPhone' | 'name' | 'avatar' | 'customData' | 'profile'
   >
 >;
+
+export type HookProvisioningProfile = HookUserPatch &
+  Partial<Pick<User, 'passwordEncrypted' | 'passwordEncryptionMethod'>>;
 
 const hookProvisioningProfileBaseGuard = Users.createGuard
   .pick({
@@ -74,7 +68,6 @@ const hookProvisioningProfileBaseGuard = Users.createGuard
     primaryPhone: true,
     profile: true,
     customData: true,
-    logtoConfig: true,
     passwordEncrypted: true,
     passwordEncryptionMethod: true,
   })
@@ -100,8 +93,6 @@ export const hookProvisioningProfileGuard = hookProvisioningProfileBaseGuard.sup
     });
   }
 ) satisfies z.ZodType<HookProvisioningProfile>;
-
-export type HookUserPatch = HookProvisioningProfile;
 
 export type PostFirstFactorVerificationEvent = {
   key: LogtoInlineHookKey.PostFirstFactorVerification;

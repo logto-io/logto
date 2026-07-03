@@ -16,14 +16,7 @@ describe('toHookProvisioningProfile', () => {
         familyName: 'Doe',
       },
       customData: {
-        inlineHook: {
-          plan: 'pro',
-        },
-      },
-      logtoConfig: {
-        inlineHook: {
-          acceptedTerms: true,
-        },
+        plan: 'pro',
       },
       passwordEncrypted: 'hashed-password',
       passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
@@ -40,14 +33,7 @@ describe('toHookProvisioningProfile', () => {
         familyName: 'Doe',
       },
       customData: {
-        inlineHook: {
-          plan: 'pro',
-        },
-      },
-      logtoConfig: {
-        inlineHook: {
-          acceptedTerms: true,
-        },
+        plan: 'pro',
       },
       passwordEncrypted: 'hashed-password',
       passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
@@ -64,6 +50,7 @@ describe('toHookProvisioningProfile', () => {
         identities: {},
         mfaVerifications: [],
         lastSignInAt: Date.now(),
+        logtoConfig: {},
         passwordDigest: 'password-digest',
         passwordAlgorithm: UsersPasswordEncryptionMethod.Argon2i,
       })
