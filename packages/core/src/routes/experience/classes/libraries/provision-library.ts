@@ -43,7 +43,7 @@ type OrganizationProvisionPayload =
 
 type CreateUserOptions = {
   checkIdentifierCollision?: boolean;
-  skipFirstAdminProvisioning?: boolean;
+  mergeInlineHookCustomData?: boolean;
 };
 
 export class ProvisionLibrary {
@@ -72,7 +72,7 @@ export class ProvisionLibrary {
       },
       {
         checkIdentifierCollision: true,
-        skipFirstAdminProvisioning: true,
+        mergeInlineHookCustomData: true,
       }
     );
   }
@@ -119,7 +119,7 @@ export class ProvisionLibrary {
     profile: InteractionProfile,
     {
       checkIdentifierCollision: shouldCheckIdentifierCollision = false,
-      skipFirstAdminProvisioning = false,
+      mergeInlineHookCustomData = false,
     }: CreateUserOptions = {}
   ) {
     const {
@@ -147,8 +147,8 @@ export class ProvisionLibrary {
     }
 
     const { isCreatingFirstAdminUser, initialUserRoles, customData } =
-      await this.getUserProvisionContext(profile, { skipFirstAdminProvisioning });
-    const customDataForInsert = skipFirstAdminProvisioning
+      await this.getUserProvisionContext(profile);
+    const customDataForInsert = mergeInlineHookCustomData
       ? mergeInlineHookCreateUserCustomData(customData, profile.customData)
       : customData;
     const passwordPayload =
@@ -209,12 +209,7 @@ export class ProvisionLibrary {
    * This method is used to get the provision context for a new user registration.
    * It will return the provision context based on the current tenant and the request context.
    */
-  private async getUserProvisionContext(
-    profile: InteractionProfile,
-    options?: {
-      skipFirstAdminProvisioning?: boolean;
-    }
-  ): Promise<{
+  private async getUserProvisionContext(profile: InteractionProfile): Promise<{
     /** Admin user provisioning flag */
     isCreatingFirstAdminUser: boolean;
     /** Initial user roles for admin tenant users */
@@ -255,7 +250,6 @@ export class ProvisionLibrary {
      * - there are no active users in the tenant
      */
     const isCreatingFirstAdminUser =
-      !options?.skipFirstAdminProvisioning &&
       (!isCloud || isIntegrationTest) &&
       isAdminTenant &&
       isAdminConsoleApp &&
