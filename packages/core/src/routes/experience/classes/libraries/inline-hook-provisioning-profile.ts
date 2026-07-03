@@ -1,8 +1,7 @@
 import { Users, UsersPasswordEncryptionMethod, userProfileGuard } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { type HookProvisioningProfile, type InteractionProfile } from '../../types.js';
+import { type HookProvisioningProfile } from '../../types.js';
 
 const hookProvisioningProfileBaseGuard = Users.createGuard
   .pick({
@@ -24,7 +23,7 @@ const hookProvisioningProfileBaseGuard = Users.createGuard
   .partial()
   .strict();
 
-export const hookProvisioningProfileGuard = hookProvisioningProfileBaseGuard.superRefine(
+const hookProvisioningProfileGuard = hookProvisioningProfileBaseGuard.superRefine(
   ({ passwordEncrypted, passwordEncryptionMethod }, context) => {
     const hasPasswordEncrypted = passwordEncrypted !== undefined;
     const hasPasswordEncryptionMethod = passwordEncryptionMethod !== undefined;
@@ -43,22 +42,3 @@ export const hookProvisioningProfileGuard = hookProvisioningProfileBaseGuard.sup
 
 export const toHookProvisioningProfile = (user: unknown): HookProvisioningProfile =>
   hookProvisioningProfileGuard.parse(user);
-
-export const getProfileIdentifierCollisionPayload = ({
-  socialIdentity,
-  username,
-  primaryEmail,
-  primaryPhone,
-}: InteractionProfile) => ({
-  username,
-  primaryEmail,
-  primaryPhone,
-  ...conditional(
-    socialIdentity && {
-      identity: {
-        target: socialIdentity.target,
-        id: socialIdentity.userInfo.id,
-      },
-    }
-  ),
-});

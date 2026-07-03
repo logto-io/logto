@@ -30,7 +30,7 @@ import { getTenantId } from '#src/utils/tenant.js';
 import { type InteractionProfile, type WithHooksAndLogsContext } from '../../types.js';
 import { toUserSocialIdentityData } from '../utils.js';
 
-import { getProfileIdentifierCollisionPayload } from './inline-hook-provisioning-profile.js';
+import { getProfileIdentifierCollisionPayload } from './provisioning-profile.js';
 
 type OrganizationProvisionPayload =
   | {
