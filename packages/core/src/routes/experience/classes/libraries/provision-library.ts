@@ -30,7 +30,10 @@ import { getTenantId } from '#src/utils/tenant.js';
 import { type InteractionProfile, type WithHooksAndLogsContext } from '../../types.js';
 import { toUserSocialIdentityData } from '../utils.js';
 
-import { getProfileIdentifierCollisionPayload } from './provisioning-profile.js';
+import {
+  assertEnterpriseSsoIdentityAvailable,
+  getProfileIdentifierCollisionPayload,
+} from './provisioning-profile.js';
 
 type OrganizationProvisionPayload =
   | {
@@ -58,8 +61,8 @@ const mergeCreateUserCustomData = (
   const mergedCustomData =
     customData && Object.keys(customData).length > 0
       ? {
-          ...existingCustomData,
           ...customData,
+          ...existingCustomData,
         }
       : existingCustomData;
 
@@ -109,6 +112,10 @@ export class ProvisionLibrary {
 
     if (shouldCheckIdentifierCollision) {
       await checkIdentifierCollision(getProfileIdentifierCollisionPayload(profile));
+      await assertEnterpriseSsoIdentityAvailable(
+        this.tenantContext.queries.userSsoIdentities,
+        enterpriseSsoIdentity
+      );
     }
 
     const { isCreatingFirstAdminUser, initialUserRoles, customData } =
