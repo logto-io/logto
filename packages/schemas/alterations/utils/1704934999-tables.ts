@@ -2,12 +2,33 @@ import { type CommonQueryMethods, sql } from '@silverhand/slonik';
 
 const getId = (value: string) => sql.identifier([value]);
 
+/**
+ * Returns the suffix used in the base Logto role name for the current database
+ * (`logto_tenant_<suffix>`).
+ *
+ * Historically the suffix was the raw database name (which may contain hyphens). A later
+ * convention normalised it by replacing hyphens with underscores. To remain compatible with
+ * both conventions we probe `pg_roles` for the normalised name first and fall back to the
+ * raw database name for legacy installations.
+ */
 const getDatabaseName = async (pool: CommonQueryMethods) => {
   const { currentDatabase } = await pool.one<{ currentDatabase: string }>(sql`
     select current_database();
   `);
 
-  return currentDatabase.replaceAll('-', '_');
+  const normalized = currentDatabase.replaceAll('-', '_');
+
+  if (normalized === currentDatabase) {
+    return currentDatabase;
+  }
+
+  const { exists } = await pool.one<{ exists: boolean }>(sql`
+    select exists(
+      select 1 from pg_roles where rolname = ${'logto_tenant_' + normalized}
+    ) as exists;
+  `);
+
+  return exists ? normalized : currentDatabase;
 };
 
 /**
