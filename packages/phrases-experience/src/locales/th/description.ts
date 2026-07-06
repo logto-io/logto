@@ -36,6 +36,8 @@ const description = {
   reset_password: 'รีเซ็ตรหัสผ่าน',
   reset_password_description:
     'กรอก {{types, list(type: disjunction;)}} ที่เชื่อมโยงกับบัญชีของคุณ แล้วเราจะส่งรหัสยืนยันเพื่อรีเซ็ตรหัสผ่าน',
+  reset_password_magic_link_description:
+    'ป้อนที่อยู่อีเมลที่เชื่อมโยงกับบัญชีของคุณเพื่อดำเนินการรีเซ็ตรหัสผ่านต่อ',
   new_password: 'รหัสผ่านใหม่',
   set_password: 'ตั้งรหัสผ่าน',
   password_changed: 'เปลี่ยนรหัสผ่านแล้ว',

@@ -36,6 +36,8 @@ const description = {
   reset_password: 'Obnovit heslo',
   reset_password_description:
     'Zadej {{types, list(type: disjunction;)}} propojené s tvým účtem a pošleme ti ověřovací kód pro obnovení hesla.',
+  reset_password_magic_link_description:
+    'Zadejte e-mailovou adresu přiřazenou k vašemu účtu, abyste mohli pokračovat v resetování hesla.',
   new_password: 'Nové heslo',
   set_password: 'Nastavit heslo',
   password_changed: 'Heslo bylo změněno',

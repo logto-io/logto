@@ -1,13 +1,15 @@
-import { experience } from '@logto/schemas';
+import { experience, ExtraParamsKey } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useSearchParams } from 'react-router-dom';
 
 import FocusedAuthPageLayout from '@/Layout/FocusedAuthPageLayout';
+import { isDevFeaturesEnabled } from '@/constants/env';
 import usePrefilledIdentifier from '@/hooks/use-prefilled-identifier';
 import { identifierInputDescriptionMap } from '@/utils/form';
 
 import ForgotPasswordForm from '../ForgotPassword/ForgotPasswordForm';
 
+import OneTimeTokenForm from './OneTimeTokenForm';
 import { useResetPasswordMethods } from './use-reset-password-methods';
 
 /**
@@ -32,11 +34,32 @@ import { useResetPasswordMethods } from './use-reset-password-methods';
  */
 const ResetPasswordLanding = () => {
   const { t } = useTranslation();
+  const [params] = useSearchParams();
+  const oneTimeToken = params.get(ExtraParamsKey.OneTimeToken);
+  const loginHint = params.get(ExtraParamsKey.LoginHint) ?? undefined;
   const enabledMethods = useResetPasswordMethods();
   const { value: prefilledValue } = usePrefilledIdentifier({
     enabledIdentifiers: enabledMethods,
     isForgotPassword: true,
   });
+
+  if (isDevFeaturesEnabled && oneTimeToken) {
+    return (
+      <FocusedAuthPageLayout
+        pageMeta={{
+          titleKey: 'description.reset_password',
+        }}
+        title="description.reset_password"
+        description="description.reset_password_magic_link_description"
+        authOptionsLink={{
+          to: `/${experience.routes.signIn}`,
+          text: 'description.back_to_sign_in',
+        }}
+      >
+        <OneTimeTokenForm token={oneTimeToken} loginHint={loginHint} />
+      </FocusedAuthPageLayout>
+    );
+  }
 
   // Fallback to sign-in page
   if (enabledMethods.length === 0) {

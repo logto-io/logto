@@ -32,6 +32,7 @@ const description = {
   skip_social_linking: '跳过链接现有帐户？',
   reset_password: '忘记密码',
   reset_password_description: '输入{{types, list(type: disjunction;)}}，获取验证码以重设密码。',
+  reset_password_magic_link_description: '输入与你的账号关联的邮箱地址以继续重设密码。',
   new_password: '新密码',
   set_password: '设置密码',
   password_changed: '已重置密码！',

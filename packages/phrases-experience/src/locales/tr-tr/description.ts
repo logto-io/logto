@@ -35,6 +35,8 @@ const description = {
   reset_password: 'Parolanızı mı unuttunuz',
   reset_password_description:
     'Hesabınızla ilişkili {{types, list(type: disjunction;)}} girin, şifrenizi sıfırlamanız için size doğrulama kodunu göndereceğiz.',
+  reset_password_magic_link_description:
+    'Parolanızı sıfırlamaya devam etmek için hesabınızla ilişkili e-posta adresini girin.',
   new_password: 'Yeni Şifre',
   set_password: 'Şifreyi belirle',
   password_changed: 'Şifre değişti',

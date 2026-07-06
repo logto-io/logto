@@ -37,6 +37,8 @@ const description = {
   reset_password: 'Mot de passe oublié',
   reset_password_description:
     'Entrez le {{types, list(type: disjunction;)}} associé à votre compte et nous vous enverrons le code de vérification pour réinitialiser votre mot de passe.',
+  reset_password_magic_link_description:
+    'Saisis l’adresse e-mail associée à ton compte pour continuer la réinitialisation de ton mot de passe.',
   new_password: 'Nouveau mot de passe',
   set_password: 'Définir un mot de passe',
   password_changed: 'Mot de passe modifié',
