@@ -1,5 +1,24 @@
 @use '@/scss/underscore' as _;
 
 .container {
-  padding: _.unit(4) _.unit(6);
+  display: flex;
+  padding-block: _.unit(4);
+}
+
+.sidebarPlaceholder {
+  // Matches the console sidebar width (see ConsoleContent/Sidebar/index.module.scss) so the banner
+  // starts at the page content's left edge.
+  width: 248px;
+  flex-shrink: 0;
+}
+
+.content {
+  // Mirror ConsoleContent's `.main`: fill the space right of the sidebar with the same inline padding
+  // and content-width cap, so the banner sits exactly over the page content column.
+  flex-grow: 1;
+  padding-inline: _.unit(2) _.unit(6);
+
+  > * {
+    @include _.main-content-width;
+  }
 }
