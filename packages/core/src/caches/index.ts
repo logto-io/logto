@@ -137,7 +137,7 @@ abstract class RedisCacheBase implements CacheStore {
 
     return {
       rejectUnauthorized: yes(url?.searchParams.get('reject_unauthorized')),
-      tls: url?.protocol === 'rediss',
+      tls: url?.protocol === 'rediss:',
       cert: certFile ? fs.readFileSync(certFile).toString() : undefined,
       key: keyFile ? fs.readFileSync(keyFile).toString() : undefined,
       ca: caFile ? fs.readFileSync(caFile).toString() : undefined,
