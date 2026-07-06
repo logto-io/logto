@@ -9,6 +9,8 @@ on:
 jobs:
   rerun:
     runs-on: ubuntu-latest
+    permissions:
+      actions: write
     steps:
       - name: rerun ${{ inputs.run_id }}
         env:

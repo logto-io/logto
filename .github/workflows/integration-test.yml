@@ -61,6 +61,8 @@ jobs:
     needs: run-logto
     if: failure() && fromJSON(github.run_attempt) < 3
     runs-on: ubuntu-22.04
+    permissions:
+      actions: write
     steps:
       - env:
           GH_REPO: ${{ github.repository }}
