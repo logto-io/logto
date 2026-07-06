@@ -1,20 +1,24 @@
 import { Prompt } from '@logto/js';
-import { experience, ExtraParamsKey } from '@logto/schemas';
+import { experience, ExtraParamsKey, FirstScreen } from '@logto/schemas';
 import { NotFoundError } from '@silverhand/slonik';
 import { type MiddlewareType } from 'koa';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-const buildExperienceUrl = (route: string, token: string, loginHint: string) => {
-  const searchParams = new URLSearchParams({
-    [ExtraParamsKey.LoginHint]: loginHint,
-    [ExtraParamsKey.OneTimeToken]: token,
-  });
+const buildExperienceUrl = (route: string, token: string, loginHint?: string) => {
+  const searchParams = new URLSearchParams();
+
+  if (loginHint) {
+    searchParams.append(ExtraParamsKey.LoginHint, loginHint);
+  }
+
+  searchParams.append(ExtraParamsKey.OneTimeToken, token);
 
   return `${route}?${searchParams.toString()}`;
 };
@@ -42,6 +46,25 @@ const getOneTimeTokenParams = ({
   }
 
   return { token, loginHint, prompt };
+};
+
+const getOneTimeToken = ({ one_time_token: token }: { one_time_token?: unknown }) =>
+  token && typeof token === 'string' ? token : undefined;
+
+const getLoginHint = ({ login_hint: loginHint }: { login_hint?: unknown }) =>
+  loginHint && typeof loginHint === 'string' ? loginHint : undefined;
+
+const isResetPasswordFirstScreen = ({ first_screen: firstScreen }: { first_screen?: unknown }) =>
+  firstScreen === FirstScreen.ResetPassword;
+
+const getResetPasswordOneTimeToken = (
+  params: Parameters<typeof getOneTimeToken>[0] & Parameters<typeof isResetPasswordFirstScreen>[0]
+) => {
+  if (!EnvSet.values.isDevFeaturesEnabled || !isResetPasswordFirstScreen(params)) {
+    return;
+  }
+
+  return getOneTimeToken(params);
 };
 
 const lastSubmittedLoginGuard = z.object({
@@ -115,12 +138,24 @@ export default function koaConsentGuard<
     assertThat(session, new RequestError({ code: 'session.not_found' }));
 
     const oneTimeTokenParams = getOneTimeTokenParams(params);
+    const resetPasswordToken = getResetPasswordOneTimeToken(params);
+
+    if (resetPasswordToken) {
+      ctx.redirect(
+        buildExperienceUrl(
+          experience.routes.resetPassword,
+          resetPasswordToken,
+          getLoginHint(params)
+        )
+      );
+      return;
+    }
 
     if (!oneTimeTokenParams) {
       return next();
     }
 
-    const { token, loginHint, prompt } = oneTimeTokenParams;
+    const { token: signInOneTimeToken, loginHint, prompt } = oneTimeTokenParams;
     const getPrimaryEmailByUserId = async (userId: string) => {
       const { primaryEmail } = await queries.users.findUserById(userId);
 
@@ -136,12 +171,14 @@ export default function koaConsentGuard<
     });
 
     if (primaryEmail !== loginHint && !hasLoginPrompt(prompt) && !hasMatchingLastSubmittedLogin) {
-      ctx.redirect(buildExperienceUrl(experience.routes.switchAccount, token, loginHint));
+      ctx.redirect(
+        buildExperienceUrl(experience.routes.switchAccount, signInOneTimeToken, loginHint)
+      );
       return;
     }
 
     try {
-      await libraries.oneTimeTokens.checkOneTimeToken(token, loginHint);
+      await libraries.oneTimeTokens.checkOneTimeToken(signInOneTimeToken, loginHint);
     } catch (error: unknown) {
       if (error instanceof RequestError) {
         if (
@@ -160,6 +197,6 @@ export default function koaConsentGuard<
       throw error;
     }
 
-    ctx.redirect(buildExperienceUrl(experience.routes.oneTimeToken, token, loginHint));
+    ctx.redirect(buildExperienceUrl(experience.routes.oneTimeToken, signInOneTimeToken, loginHint));
   };
 }
