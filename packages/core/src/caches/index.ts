@@ -22,9 +22,9 @@ const timeoutSentinel = Symbol('redis-cache-timeout');
  *
  * `new URL()` percent-encodes reserved characters (e.g. `^` becomes `%5E`)
  * so the raw values must be decoded before being passed to Redis `AUTH`.
- * However, `decodeURIComponent` throw `URIError` if the string contains a literal `%`
- * `safeDecode` decode only maximal runs of valid `%XX` sequences and leave any stray `%` untouched.
- * Takes into account multi-byte UTF-8 sequences like `%C3%A9`
+ * However, `decodeURIComponent` throws a `URIError` if the string contains a literal `%`
+ * `safeDecode` decodes only maximal runs of valid `%XX` sequences and leaves any stray `%` untouched.
+ * It also takes into account multi-byte UTF-8 sequences like `%C3%A9`
  */
 const safeDecode = (value: string): string =>
   value.replaceAll(
