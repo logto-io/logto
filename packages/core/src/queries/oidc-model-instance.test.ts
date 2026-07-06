@@ -330,7 +330,7 @@ describe('oidc-model-instance query', () => {
     expect(mockQuery).toHaveBeenCalledTimes(2);
   });
 
-  it('revokeInstanceByGrantId should continue until no rows are deleted', async () => {
+  it('revokeInstanceByGrantId should continue while batches are full', async () => {
     const grantId = 'grant';
     const batchSize = 1000;
 
@@ -352,7 +352,7 @@ describe('oidc-model-instance query', () => {
         expectSqlAssert(sql, expectSql.sql);
         expect(values).toEqual([instance.modelName, grantId, batchSize]);
 
-        return { rowCount: 500 };
+        return { rowCount: 1000 };
       })
       // @ts-expect-error - mock delete query
       .mockImplementationOnce(async (sql, values) => {
@@ -360,17 +360,11 @@ describe('oidc-model-instance query', () => {
         expect(values).toEqual([instance.modelName, grantId, batchSize]);
 
         return { rowCount: 200 };
-      })
-      // @ts-expect-error - mock delete query
-      .mockImplementationOnce(async (sql, values) => {
-        expectSqlAssert(sql, expectSql.sql);
-        expect(values).toEqual([instance.modelName, grantId, batchSize]);
-
-        return { rowCount: 0 };
       });
 
+    // Stops after the partial batch without issuing a trailing empty query.
     await revokeInstanceByGrantId(instance.modelName, grantId);
-    expect(mockQuery).toHaveBeenCalledTimes(3);
+    expect(mockQuery).toHaveBeenCalledTimes(2);
   });
 
   it('findUserActiveApplicationGrants with thirdparty', async () => {

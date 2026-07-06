@@ -182,7 +182,8 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
   };
 
   const revokeInstanceByGrantId = async (modelName: string, grantId: string) => {
-    // Keep deleting bounded batches until the revoke query no longer finds matches.
+    // Keep deleting bounded batches until a batch comes back not full, which means
+    // every matching row has been drained.
     for (;;) {
       // Revocation batches must run serially to keep each delete bounded.
       // eslint-disable-next-line no-await-in-loop
@@ -198,7 +199,9 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
         )
       `);
 
-      if (rowCount === 0) {
+      // A batch smaller than the limit means no more matching rows remain (the subquery
+      // and delete share one snapshot), so we can stop without a trailing empty query.
+      if (rowCount < revokeInstanceBatchSize) {
         return;
       }
     }
