@@ -394,6 +394,21 @@ describe('buildLoginPromptUrl', () => {
     expect(
       buildLoginPromptUrl({ one_time_token: 'token_value', login_hint: 'user@mail.com' })
     ).toBe('sign-in?one_time_token=token_value&login_hint=user%40mail.com');
+
+    expect(
+      buildLoginPromptUrl({
+        first_screen: FirstScreen.ResetPassword,
+        one_time_token: 'token_value',
+      })
+    ).toBe('reset-password?one_time_token=token_value');
+
+    expect(
+      buildLoginPromptUrl({
+        first_screen: FirstScreen.ResetPassword,
+        one_time_token: 'token_value',
+        login_hint: 'user@mail.com',
+      })
+    ).toBe('reset-password?one_time_token=token_value&login_hint=user%40mail.com');
   });
 
   it('should append shared experience params to the url', () => {
