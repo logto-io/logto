@@ -1,5 +1,6 @@
 export * from './utils/index.js';
 export * from './custom-ui-csp.js';
+export * from './email-blocklist.js';
 export * from './regex.js';
 export * from './openid.js';
 export * from './models/index.js';

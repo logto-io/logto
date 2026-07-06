@@ -257,3 +257,37 @@ describe('RedisCache', () => {
     }
   }, 8000);
 });
+
+describe('TLS socket options derived from the URL protocol', () => {
+  it('enables TLS for a standalone client when the protocol is rediss', () => {
+    jest.clearAllMocks();
+    const cache = new RedisCache('rediss://url');
+
+    expect(cache.client).toBeTruthy();
+    expect(createClient.mock.calls[0]?.[0]?.socket?.tls).toBe(true);
+  });
+
+  it('does not enable TLS for a standalone client when the protocol is redis', () => {
+    jest.clearAllMocks();
+    const cache = new RedisCache('redis://url');
+
+    expect(cache.client).toBeTruthy();
+    expect(createClient.mock.calls[0]?.[0]?.socket?.tls).toBe(false);
+  });
+
+  it('enables TLS on the cluster node defaults when the protocol is rediss', () => {
+    jest.clearAllMocks();
+    const cache = new RedisClusterCache(new URL('rediss://url?cluster=1'));
+
+    expect(cache.client).toBeTruthy();
+    expect(createCluster.mock.calls[0]?.[0]?.defaults?.socket?.tls).toBe(true);
+  });
+
+  it('does not enable TLS on the cluster node defaults when the protocol is redis', () => {
+    jest.clearAllMocks();
+    const cache = new RedisClusterCache(new URL('redis://url?cluster=1'));
+
+    expect(cache.client).toBeTruthy();
+    expect(createCluster.mock.calls[0]?.[0]?.defaults?.socket?.tls).toBe(false);
+  });
+});

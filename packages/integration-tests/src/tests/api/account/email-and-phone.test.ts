@@ -26,7 +26,51 @@ import {
   signInAndGetUserApi,
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
-import { generateEmail, generatePhone, generateNationalPhoneNumber } from '#src/utils.js';
+import {
+  devFeatureTest,
+  generateEmail,
+  generatePhone,
+  generateNationalPhoneNumber,
+} from '#src/utils.js';
+
+const expectPrimaryEmailUpdateRejectedByBlocklist = async (
+  email: string,
+  customBlocklist: string[]
+) => {
+  await updateSignInExperience({
+    emailBlocklistPolicy: {
+      customBlocklist,
+    },
+  });
+
+  const { user, username, password } = await createDefaultTenantUserWithPassword();
+  const api = await signInAndGetUserApi(username, password, {
+    scopes: [UserScope.Profile, UserScope.Email],
+  });
+
+  try {
+    const verificationRecordId = await createVerificationRecordByPassword(api, password);
+    const newVerificationRecordId = await createAndVerifyVerificationCode(api, {
+      type: SignInIdentifier.Email,
+      value: email,
+    });
+
+    await expectRejects(
+      updatePrimaryEmail(api, email, verificationRecordId, newVerificationRecordId),
+      {
+        code: 'session.email_blocklist.email_not_allowed',
+        status: 422,
+      }
+    );
+  } finally {
+    await updateSignInExperience({
+      emailBlocklistPolicy: {
+        customBlocklist: [],
+      },
+    });
+    await deleteDefaultTenantUser(user.id);
+  }
+};
 
 describe('account (email and phone)', () => {
   beforeAll(async () => {
@@ -144,33 +188,24 @@ describe('account (email and phone)', () => {
 
     it('should reject the email if the email is in the blocklist', async () => {
       const email = generateEmail();
-      await updateSignInExperience({
-        emailBlocklistPolicy: {
-          customBlocklist: [email],
-        },
-      });
 
-      const { user, username, password } = await createDefaultTenantUserWithPassword();
-      const api = await signInAndGetUserApi(username, password, {
-        scopes: [UserScope.Profile, UserScope.Email],
-      });
-
-      const verificationRecordId = await createVerificationRecordByPassword(api, password);
-      const newVerificationRecordId = await createAndVerifyVerificationCode(api, {
-        type: SignInIdentifier.Email,
-        value: email,
-      });
-
-      await expectRejects(
-        updatePrimaryEmail(api, email, verificationRecordId, newVerificationRecordId),
-        {
-          code: 'session.email_blocklist.email_not_allowed',
-          status: 422,
-        }
-      );
-
-      await deleteDefaultTenantUser(user.id);
+      await expectPrimaryEmailUpdateRejectedByBlocklist(email, [email]);
     });
+
+    it('should reject the email if the exact blocklist entry uses different casing', async () => {
+      const email = generateEmail('account-blocklist.com');
+
+      await expectPrimaryEmailUpdateRejectedByBlocklist(email, [email.toUpperCase()]);
+    });
+
+    devFeatureTest.it(
+      'should reject the email if the wildcard blocklist entry uses different casing',
+      async () => {
+        const email = `foo-${generateEmail('account-wildcard.com')}`;
+
+        await expectPrimaryEmailUpdateRejectedByBlocklist(email, ['FOO*@ACCOUNT-WILDCARD.COM']);
+      }
+    );
   });
 
   describe('DELETE /my-account/primary-email', () => {
