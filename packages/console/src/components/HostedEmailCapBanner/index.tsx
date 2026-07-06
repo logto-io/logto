@@ -52,7 +52,8 @@ function HostedEmailCapBanner() {
   return (
     <div className={styles.container}>
       <InlineNotification
-        severity={situation === 'reached' ? 'error' : 'alert'}
+        // A cap notice is a warning, not an error — use the alert (amber) severity for both states.
+        severity="alert"
         action="general.got_it"
         onClick={() => {
           setDismissedSituation(situation);
