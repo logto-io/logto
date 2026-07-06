@@ -51,22 +51,27 @@ function HostedEmailCapBanner() {
 
   return (
     <div className={styles.container}>
-      <InlineNotification
-        severity={situation === 'reached' ? 'error' : 'alert'}
-        action="general.got_it"
-        onClick={() => {
-          setDismissedSituation(situation);
-        }}
-      >
-        <Trans
-          components={{
-            provider: <TextLink to={connectorsPasswordlessPage} />,
-            upgrade: <TextLink to={tenantSettingsPage} />,
+      {/* Empty placeholder matching the sidebar so the banner aligns with the page content column. */}
+      <div className={styles.sidebarPlaceholder} />
+      <div className={styles.content}>
+        <InlineNotification
+          // A cap notice is a warning, not an error — use the alert (amber) severity for both states.
+          severity="alert"
+          action="general.got_it"
+          onClick={() => {
+            setDismissedSituation(situation);
           }}
         >
-          {t(`connector_details.logto_email.hosted_email_usage.banner.${situation}`)}
-        </Trans>
-      </InlineNotification>
+          <Trans
+            components={{
+              provider: <TextLink to={connectorsPasswordlessPage} />,
+              upgrade: <TextLink to={tenantSettingsPage} />,
+            }}
+          >
+            {t(`connector_details.logto_email.hosted_email_usage.banner.${situation}`)}
+          </Trans>
+        </InlineNotification>
+      </div>
     </div>
   );
 }
