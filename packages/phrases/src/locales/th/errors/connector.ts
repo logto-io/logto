@@ -14,7 +14,7 @@ const connector = {
   template_not_found: 'ไม่พบเทมเพลตที่ถูกต้องในตั้งค่าคอนเนคเตอร์',
   template_not_supported: 'คอนเนคเตอร์นี้ไม่รองรับประเภทเทมเพลตนี้',
   rate_limit_exceeded: 'เกินขีดจำกัดการใช้งาน กรุณาลองใหม่ในภายหลัง',
-  usage_limit_exceeded: 'ถึงขีดจำกัดการใช้งานบริการแล้ว',
+  usage_limit_exceeded: 'ถึงขีดจำกัดการใช้งานบริการอีเมลแล้ว',
   not_implemented: '{{method}}: ยังไม่ได้รับการพัฒนา',
   social_invalid_access_token: 'แอคเซสโทเคนของคอนเนคเตอร์นี้ไม่ถูกต้อง',
   invalid_auth_code: 'โค้ดยืนยันตัวตนของคอนเนคเตอร์นี้ไม่ถูกต้อง',

@@ -15,7 +15,7 @@ const connector = {
   template_not_found: 'Nie można znaleźć poprawnego szablonu w konfiguracji łącznika.',
   template_not_supported: 'Łącznik nie obsługuje tego typu szablonu.',
   rate_limit_exceeded: 'Ograniczenie szybkości wywołań. Spróbuj ponownie później.',
-  usage_limit_exceeded: 'Osiągnięto limit użycia usługi.',
+  usage_limit_exceeded: 'Osiągnięto limit użycia usługi e-mail.',
   not_implemented: '{{method}}: jeszcze nie zaimplementowano.',
   social_invalid_access_token: 'Token dostępu łącznika jest nieprawidłowy.',
   invalid_auth_code: 'Kod autoryzacji łącznika jest nieprawidłowy.',

@@ -34,6 +34,7 @@ const error = {
   invalid_link: 'Link invalido',
   invalid_link_description: 'Il tuo token monouso potrebbe essere scaduto o non è più valido.',
   captcha_verification_failed: 'Errore durante la verifica del captcha.',
+  send_verification_code_failed: 'Invio del codice di verifica non riuscito. Riprova più tardi.',
   terms_acceptance_required: 'Accettazione dei termini richiesta',
   terms_acceptance_required_description: 'Devi accettare i termini per continuare.',
   something_went_wrong: 'Qualcosa è andato storto',

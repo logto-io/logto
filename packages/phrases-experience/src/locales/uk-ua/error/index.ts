@@ -33,6 +33,8 @@ const error = {
   invalid_link: 'Недійсне посилання',
   invalid_link_description: 'Ваш одноразовий токен міг спливти або більше не є дійсним.',
   captcha_verification_failed: 'Не вдалося пройти перевірку капчі.',
+  send_verification_code_failed:
+    'Не вдалося надіслати код підтвердження. Спробуйте ще раз пізніше.',
   terms_acceptance_required: 'Потрібно прийняти умови',
   terms_acceptance_required_description:
     'Ви повинні погодитися з умовами, щоб продовжити. Будь ласка, спробуйте ще раз.',

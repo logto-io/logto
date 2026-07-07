@@ -15,7 +15,7 @@ const connector = {
     'No se puede encontrar la plantilla correcta en la configuración del conector.',
   template_not_supported: 'El conector no admite este tipo de plantilla.',
   rate_limit_exceeded: 'Límite de frecuencia activado. Por favor, inténtalo de nuevo más tarde.',
-  usage_limit_exceeded: 'Se ha alcanzado el límite de uso del servicio.',
+  usage_limit_exceeded: 'Se ha alcanzado el límite de uso del servicio de correo electrónico.',
   not_implemented: '{{method}}: aún no se ha implementado.',
   social_invalid_access_token: 'El token de acceso del conector es inválido.',
   invalid_auth_code: 'El código de autenticación del conector es inválido.',

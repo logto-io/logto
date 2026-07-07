@@ -14,7 +14,7 @@ const connector = {
   template_not_found: 'コネクタ構成から正しいテンプレートを見つけることができませんでした。',
   template_not_supported: 'コネクタはこのテンプレートタイプをサポートしていません。',
   rate_limit_exceeded: 'トリガーレート制限。後でもう一度お試しください。',
-  usage_limit_exceeded: 'サービスの利用上限に達しました。',
+  usage_limit_exceeded: '電子メールサービスの利用上限に達しました。',
   not_implemented: '{{method}}：まだ実装されていません。',
   social_invalid_access_token: 'コネクタのアクセストークンが無効です。',
   invalid_auth_code: 'コネクタの認証コードが無効です。',
