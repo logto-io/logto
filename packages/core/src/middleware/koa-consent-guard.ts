@@ -32,39 +32,50 @@ const buildOneTimeTokenErrorUrl = (message: string) => {
 const hasLoginPrompt = (prompt: unknown) =>
   typeof prompt === 'string' && prompt.split(' ').includes(Prompt.Login);
 
-const getOneTimeTokenParams = ({
-  one_time_token: token,
-  login_hint: loginHint,
-  prompt,
-}: {
-  one_time_token?: unknown;
-  login_hint?: unknown;
-  prompt?: unknown;
-}) => {
-  if (!token || !loginHint || typeof token !== 'string' || typeof loginHint !== 'string') {
+const nonEmptyStringGuard = z.string().min(1);
+const optionalNonEmptyStringGuard = z.preprocess(
+  (value) => (value === '' ? undefined : value),
+  nonEmptyStringGuard.optional()
+);
+
+const oneTimeTokenParamsGuard = z.object({
+  one_time_token: nonEmptyStringGuard,
+  login_hint: nonEmptyStringGuard,
+  prompt: z.unknown().optional(),
+});
+
+const getOneTimeTokenParams = (params: unknown) => {
+  const result = oneTimeTokenParamsGuard.safeParse(params);
+
+  if (!result.success) {
     return;
   }
+
+  const { one_time_token: token, login_hint: loginHint, prompt } = result.data;
 
   return { token, loginHint, prompt };
 };
 
-const getOneTimeToken = ({ one_time_token: token }: { one_time_token?: unknown }) =>
-  token && typeof token === 'string' ? token : undefined;
+const resetPasswordOneTimeTokenParamsGuard = z.object({
+  first_screen: z.literal(FirstScreen.ResetPassword),
+  one_time_token: nonEmptyStringGuard,
+  login_hint: optionalNonEmptyStringGuard,
+});
 
-const getLoginHint = ({ login_hint: loginHint }: { login_hint?: unknown }) =>
-  loginHint && typeof loginHint === 'string' ? loginHint : undefined;
-
-const isResetPasswordFirstScreen = ({ first_screen: firstScreen }: { first_screen?: unknown }) =>
-  firstScreen === FirstScreen.ResetPassword;
-
-const getResetPasswordOneTimeToken = (
-  params: Parameters<typeof getOneTimeToken>[0] & Parameters<typeof isResetPasswordFirstScreen>[0]
-) => {
-  if (!EnvSet.values.isDevFeaturesEnabled || !isResetPasswordFirstScreen(params)) {
+const getResetPasswordOneTimeTokenParams = (params: unknown) => {
+  if (!EnvSet.values.isDevFeaturesEnabled) {
     return;
   }
 
-  return getOneTimeToken(params);
+  const result = resetPasswordOneTimeTokenParamsGuard.safeParse(params);
+
+  if (!result.success) {
+    return;
+  }
+
+  const { one_time_token: token, login_hint: loginHint } = result.data;
+
+  return { token, loginHint };
 };
 
 const lastSubmittedLoginGuard = z.object({
@@ -138,16 +149,12 @@ export default function koaConsentGuard<
     assertThat(session, new RequestError({ code: 'session.not_found' }));
 
     const oneTimeTokenParams = getOneTimeTokenParams(params);
-    const resetPasswordToken = getResetPasswordOneTimeToken(params);
+    const resetPasswordOneTimeTokenParams = getResetPasswordOneTimeTokenParams(params);
 
-    if (resetPasswordToken) {
-      ctx.redirect(
-        buildExperienceUrl(
-          experience.routes.resetPassword,
-          resetPasswordToken,
-          getLoginHint(params)
-        )
-      );
+    if (resetPasswordOneTimeTokenParams) {
+      const { token, loginHint } = resetPasswordOneTimeTokenParams;
+
+      ctx.redirect(buildExperienceUrl(experience.routes.resetPassword, token, loginHint));
       return;
     }
 
