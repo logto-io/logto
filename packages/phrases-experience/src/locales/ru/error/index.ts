@@ -35,6 +35,7 @@ const error = {
   invalid_link_description:
     'Ваш одноразовый токен мог истечь или больше не является действительным.',
   captcha_verification_failed: 'Не удалось проверить капчу.',
+  send_verification_code_failed: 'Не удалось отправить код подтверждения. Попробуйте позже.',
   terms_acceptance_required: 'Требуется согласие с условиями',
   terms_acceptance_required_description:
     'Вы должны согласиться с условиями, чтобы продолжить. Пожалуйста, попробуйте снова.',

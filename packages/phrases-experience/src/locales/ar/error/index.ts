@@ -33,6 +33,7 @@ const error = {
   invalid_link: 'رابط غير صالح',
   invalid_link_description: 'ربما يكون رمز الدخول المؤقت قد انتهى أو لم يعد صالحًا.',
   captcha_verification_failed: 'فشل التحقق من رمز التحقق.',
+  send_verification_code_failed: 'فشل إرسال رمز التحقق. يرجى المحاولة لاحقًا.',
   terms_acceptance_required: 'مطلوب قبول الشروط',
   terms_acceptance_required_description:
     'يجب أن توافق على الشروط للمتابعة. يرجى المحاولة مرة أخرى.',

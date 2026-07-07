@@ -13,7 +13,7 @@ const connector = {
   template_not_found: '연동 예제 설정을 찾을 수 없어요.',
   template_not_supported: '연동이 이 템플릿 타입을 지원하지 않아요.',
   rate_limit_exceeded: '트리거 주기 제한. 나중에 다시 시도하세요.',
-  usage_limit_exceeded: '서비스 사용 한도에 도달했습니다.',
+  usage_limit_exceeded: '이메일 서비스 사용 한도에 도달했습니다.',
   not_implemented: '{{method}}은 아직 구현되지 않았어요.',
   social_invalid_access_token: '연동 서비스의 Access 토큰이 유효하지 않아요.',
   invalid_auth_code: '연동 서비스의 Auth 코드가 유효하지 않아요.',
