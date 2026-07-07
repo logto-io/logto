@@ -3,13 +3,13 @@ import classNames from 'classnames';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { identifyForgotPasswordWithOneTimeToken } from '@/apis/experience';
 import { SmartInputField } from '@/components/InputFields';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import Button from '@/shared/components/Button';
 import ErrorMessage from '@/shared/components/ErrorMessage';
 import { UserFlow } from '@/types';
@@ -35,8 +35,9 @@ const emailIdentifier = [SignInIdentifier.Email];
 const OneTimeTokenForm = ({ className, token, loginHint = '' }: Props) => {
   const { t } = useTranslation();
   const [errorMessage, setErrorMessage] = useState<string>();
+  const [isAutoSubmitting, setIsAutoSubmitting] = useState(false);
   const isAutoSubmitted = useRef(false);
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
   const handleError = useErrorHandler();
   const asyncIdentifyForgotPasswordWithOneTimeToken = useApi(
     identifyForgotPasswordWithOneTimeToken
@@ -108,14 +109,25 @@ const OneTimeTokenForm = ({ className, token, loginHint = '' }: Props) => {
 
     // eslint-disable-next-line @silverhand/fp/no-mutation -- React ref guards one-time auto submit
     isAutoSubmitted.current = true;
-    void submit({
-      token,
-      identifier: { type: SignInIdentifier.Email, value: loginHint },
-    });
+    setIsAutoSubmitting(true);
+    void (async () => {
+      try {
+        await submit({
+          token,
+          identifier: { type: SignInIdentifier.Email, value: loginHint },
+        });
+      } finally {
+        setIsAutoSubmitting(false);
+      }
+    })();
   }, [loginHint, submit, token]);
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
+      if (isAutoSubmitting) {
+        return;
+      }
+
       await handleSubmit(async ({ identifier: { type, value } }) => {
         if (!type) {
           return;
@@ -127,8 +139,10 @@ const OneTimeTokenForm = ({ className, token, loginHint = '' }: Props) => {
         });
       })(event);
     },
-    [handleSubmit, submit, token]
+    [handleSubmit, isAutoSubmitting, submit, token]
   );
+
+  const isVerificationPending = isSubmitting || isAutoSubmitting;
 
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
@@ -160,6 +174,7 @@ const OneTimeTokenForm = ({ className, token, loginHint = '' }: Props) => {
             className={styles.inputField}
             {...field}
             defaultValue={defaultValues?.identifier?.value}
+            disabled={isVerificationPending}
             isDanger={!!errors.identifier}
             errorMessage={errors.identifier?.message}
             enabledTypes={emailIdentifier}
@@ -169,9 +184,9 @@ const OneTimeTokenForm = ({ className, token, loginHint = '' }: Props) => {
 
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 
-      <Button title="action.continue" htmlType="submit" isLoading={isSubmitting} />
+      <Button title="action.continue" htmlType="submit" isLoading={isVerificationPending} />
 
-      <input hidden type="submit" />
+      <input hidden disabled={isVerificationPending} type="submit" />
     </form>
   );
 };

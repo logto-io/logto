@@ -73,6 +73,42 @@ describe('ResetPasswordLanding', () => {
     });
   });
 
+  it('keeps the form disabled while auto verifying one-time token', async () => {
+    mockedIdentifyForgotPasswordWithOneTimeToken.mockImplementationOnce(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 100);
+      });
+
+      return { verificationId: '123' };
+    });
+
+    const { container, queryByText } = renderPage(
+      '/reset-password?one_time_token=token&login_hint=foo%40logto.io',
+      { email: false, phone: false }
+    );
+
+    await waitFor(() => {
+      expect(mockedIdentifyForgotPasswordWithOneTimeToken).toBeCalledTimes(1);
+    });
+
+    const identifierInput = container.querySelector<HTMLInputElement>('input[name="identifier"]');
+    const submitButton = container.querySelector<HTMLButtonElement>('button[type="submit"]');
+
+    assert(identifierInput, new Error('identifier input should not be null'));
+    assert(submitButton, new Error('submit button should not be null'));
+
+    expect(identifierInput.disabled).toBe(true);
+    expect(submitButton.disabled).toBe(true);
+
+    fireEvent.click(submitButton);
+
+    expect(mockedIdentifyForgotPasswordWithOneTimeToken).toBeCalledTimes(1);
+
+    await waitFor(() => {
+      expect(queryByText('set password page')).not.toBeNull();
+    });
+  });
+
   it('asks for email before verifying one-time token when login_hint is missing', async () => {
     const { container, getByText, queryByText } = renderPage(
       '/reset-password?one_time_token=token',
