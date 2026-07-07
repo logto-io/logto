@@ -37,6 +37,8 @@ const description = {
   reset_password: 'パスワードを再設定する',
   reset_password_description:
     'アカウントに関連する{{types, list(type: disjunction;)}}を入力すると、パスワードの再設定に必要な確認コードが送信されます。',
+  reset_password_magic_link_description:
+    'パスワードのリセットを続行するには、アカウントに関連付けられたメールアドレスを入力してください。',
   new_password: '新しいパスワード',
   set_password: 'パスワードを設定する',
   password_changed: 'パスワードが変更されました',

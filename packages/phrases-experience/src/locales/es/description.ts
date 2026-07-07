@@ -37,6 +37,8 @@ const description = {
   reset_password: 'Restablecer contraseña',
   reset_password_description:
     'Ingrese los {{types, lista(type: disyunción;)}} asociados a su cuenta, y le enviaremos el código de verificación para restablecer su contraseña.',
+  reset_password_magic_link_description:
+    'Ingresa la dirección de correo electrónico asociada con tu cuenta para continuar restableciendo tu contraseña.',
   new_password: 'Nueva contraseña',
   set_password: 'Establecer contraseña',
   password_changed: 'Contraseña cambiada',

@@ -36,6 +36,8 @@ const description = {
   reset_password: 'بازنشانی رمز عبور',
   reset_password_description:
     '{{types, list(type: disjunction;)}} مرتبط با حساب خود را وارد کنید تا کد تأیید برای بازنشانی رمز عبور ارسال شود.',
+  reset_password_magic_link_description:
+    'برای ادامه بازنشانی گذرواژه، آدرس ایمیل مرتبط با حساب خود را وارد کنید.',
   new_password: 'رمز عبور جدید',
   set_password: 'تنظیم رمز عبور',
   password_changed: 'رمز عبور تغییر یافت',

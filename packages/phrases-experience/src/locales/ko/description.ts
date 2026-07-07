@@ -34,6 +34,8 @@ const description = {
   reset_password: '비밀번호를 잊으셨나요',
   reset_password_description:
     '귀하의 계정과 연결된 {{types, list(type: disjunction;)}}를 입력하면 비밀번호 재설정을 위한 인증 코드를 보내드립니다.',
+  reset_password_magic_link_description:
+    '비밀번호 재설정을 계속하려면 계정에 연결된 이메일 주소를 입력하세요.',
   new_password: '새 비밀번호',
   set_password: '비밀번호 설정',
   password_changed: '비밀번호 변경됨',

@@ -36,6 +36,8 @@ const description = {
   reset_password: 'Zresetuj hasło',
   reset_password_description:
     'Wpisz {{types, lista(type: złączonych;)}} związanego z twoim kontem, a wyślemy ci kod weryfikacyjny do zresetowania hasła.',
+  reset_password_magic_link_description:
+    'Wpisz adres e-mail powiązany z kontem, aby kontynuować resetowanie hasła.',
   new_password: 'Nowe hasło',
   set_password: 'Ustaw hasło',
   password_changed: 'Hasło zmienione',

@@ -37,6 +37,8 @@ const description = {
   reset_password: 'Passwort vergessen',
   reset_password_description:
     'Gib die {{types, list(type: disjunction;)}} deines Kontos ein und wir senden dir einen Bestätigungscode um dein Passwort zurückzusetzen.',
+  reset_password_magic_link_description:
+    'Gib die mit deinem Konto verknüpfte E-Mail-Adresse ein, um mit dem Zurücksetzen deines Passworts fortzufahren.',
   new_password: 'Neues Passwort',
   set_password: 'Passwort setzen',
   password_changed: 'Passwort geändert',
