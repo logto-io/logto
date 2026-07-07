@@ -8,29 +8,33 @@ const { mockEsm } = createMockUtils(jest);
 
 const mockFunction = jest.fn();
 
+const createClient = jest.fn((_config?: { socket?: { tls?: boolean } }) => ({
+  // Standalone clients report readiness via `isReady`; default to ready so commands run.
+  isReady: true,
+  set: mockFunction,
+  get: mockFunction,
+  del: mockFunction,
+  ping: async () => 'PONG',
+  connect: mockFunction,
+  disconnect: mockFunction,
+  on: mockFunction,
+}));
+
+const createCluster = jest.fn((_config?: { defaults?: { socket?: { tls?: boolean } } }) => ({
+  // The cluster client only exposes `isOpen`; default to open so commands run.
+  isOpen: true,
+  set: mockFunction,
+  get: mockFunction,
+  del: mockFunction,
+  sendCommand: async () => 'PONG',
+  connect: mockFunction,
+  disconnect: mockFunction,
+  on: mockFunction,
+}));
+
 mockEsm('redis', () => ({
-  createClient: () => ({
-    // Standalone clients report readiness via `isReady`; default to ready so commands run.
-    isReady: true,
-    set: mockFunction,
-    get: mockFunction,
-    del: mockFunction,
-    ping: async () => 'PONG',
-    connect: mockFunction,
-    disconnect: mockFunction,
-    on: mockFunction,
-  }),
-  createCluster: () => ({
-    // The cluster client only exposes `isOpen`; default to open so commands run.
-    isOpen: true,
-    set: mockFunction,
-    get: mockFunction,
-    del: mockFunction,
-    sendCommand: async () => 'PONG',
-    connect: mockFunction,
-    disconnect: mockFunction,
-    on: mockFunction,
-  }),
+  createClient,
+  createCluster,
 }));
 
 const { RedisCache, RedisClusterCache, redisCacheFactory } = await import('./index.js');
@@ -176,4 +180,38 @@ describe('RedisCache', () => {
       warnSpy.mockRestore();
     }
   }, 8000);
+});
+
+describe('TLS socket options derived from the URL protocol', () => {
+  it('enables TLS for a standalone client when the protocol is rediss', () => {
+    jest.clearAllMocks();
+    const cache = new RedisCache('rediss://url');
+
+    expect(cache.client).toBeTruthy();
+    expect(createClient.mock.calls[0]?.[0]?.socket?.tls).toBe(true);
+  });
+
+  it('does not enable TLS for a standalone client when the protocol is redis', () => {
+    jest.clearAllMocks();
+    const cache = new RedisCache('redis://url');
+
+    expect(cache.client).toBeTruthy();
+    expect(createClient.mock.calls[0]?.[0]?.socket?.tls).toBe(false);
+  });
+
+  it('enables TLS on the cluster node defaults when the protocol is rediss', () => {
+    jest.clearAllMocks();
+    const cache = new RedisClusterCache(new URL('rediss://url?cluster=1'));
+
+    expect(cache.client).toBeTruthy();
+    expect(createCluster.mock.calls[0]?.[0]?.defaults?.socket?.tls).toBe(true);
+  });
+
+  it('does not enable TLS on the cluster node defaults when the protocol is redis', () => {
+    jest.clearAllMocks();
+    const cache = new RedisClusterCache(new URL('redis://url?cluster=1'));
+
+    expect(cache.client).toBeTruthy();
+    expect(createCluster.mock.calls[0]?.[0]?.defaults?.socket?.tls).toBe(false);
+  });
 });

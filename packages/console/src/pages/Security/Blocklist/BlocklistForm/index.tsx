@@ -1,4 +1,4 @@
-import { emailOrEmailDomainRegEx } from '@logto/core-kit';
+import { isEmailBlocklistItem } from '@logto/core-kit';
 import { type SignInExperience, type EmailBlocklistPolicy } from '@logto/schemas';
 import { useContext } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -12,7 +12,7 @@ import FormCard from '@/components/FormCard';
 import MultiOptionInput from '@/components/MultiOptionInput';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { emailBlocklist } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import FormField from '@/ds-components/FormField';
@@ -133,7 +133,7 @@ function BlocklistForm({ formData }: Props) {
                       return t('blocklist.custom_email_address.duplicate_error');
                     }
 
-                    if (!emailOrEmailDomainRegEx.test(input)) {
+                    if (!isEmailBlocklistItem(input, { allowWildcard: isDevFeaturesEnabled })) {
                       return t('blocklist.custom_email_address.invalid_format_error');
                     }
 
