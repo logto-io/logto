@@ -18,6 +18,21 @@ const redisCacheWriteTimeout = 5000;
 const timeoutSentinel = Symbol('redis-cache-timeout');
 
 /**
+ * Safely decode URL-encoded strings from new URL()
+ *
+ * `new URL()` percent-encodes reserved characters (e.g. `^` becomes `%5E`)
+ * so the raw values must be decoded before being passed to Redis `AUTH`.
+ * However, `decodeURIComponent` throws a `URIError` if the string contains a literal `%`
+ * `safeDecode` decodes only maximal runs of valid `%XX` sequences and leaves any stray `%` untouched.
+ * It also takes into account multi-byte UTF-8 sequences like `%C3%A9`
+ */
+const safeDecode = (value: string): string =>
+  value.replaceAll(
+    /(?:%[\dA-Fa-f]{2})+/g,
+    (sequence) => trySafe(() => decodeURIComponent(sequence)) ?? sequence
+  );
+
+/**
  * Race a Redis command against a deadline so cache I/O can never block a request indefinitely.
  * On timeout, logs a warning and resolves to `undefined` so callers degrade to a cache miss.
  * Errors from the underlying Redis command are not caught here — they still reject as usual,
@@ -215,8 +230,8 @@ export class RedisClusterCache extends RedisCacheBase {
       useReplicas: true,
       defaults: {
         socket: this.getSocketOptions(connectionUrl),
-        username: connectionUrl.username,
-        password: connectionUrl.password,
+        username: connectionUrl.username ? safeDecode(connectionUrl.username) : undefined,
+        password: connectionUrl.password ? safeDecode(connectionUrl.password) : undefined,
       },
     });
 
