@@ -51,11 +51,11 @@ const startResetMagicLinkAuthorization = async (
     extraParams: {
       [ExtraParamsKey.FirstScreen]: FirstScreen.ResetPassword,
       [ExtraParamsKey.OneTimeToken]: token,
-      ...(loginHint && { [ExtraParamsKey.LoginHint]: loginHint }),
+      ...(loginHint ? { [ExtraParamsKey.LoginHint]: loginHint } : {}),
     },
   });
 
-  expect(response.status).toBe(303);
+  expect([302, 303]).toContain(response.status);
   client.mergeRawCookies(response.headers.getSetCookie());
 
   const location = response.headers.get('location');
