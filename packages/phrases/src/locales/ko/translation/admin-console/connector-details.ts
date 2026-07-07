@@ -42,12 +42,12 @@ const connector_details = {
       daily_unlimited: '일일 <value>{{usage, number}}</value>',
       monthly: '월간 <value>{{usage, number}}</value> / {{limit, number}}',
       monthly_unlimited: '월간 <value>{{usage, number}}</value>',
-      tip: 'Free 및 Development 요금제에는 일일 및 월간 내장형 이메일 한도가 포함됩니다.',
+      tip: 'Free 및 Development 요금제에는 일일 및 월간 기본 이메일 서비스 한도가 포함됩니다.',
       banner: {
         approaching:
-          'Logto 내장형 이메일 발송 한도에 근접하고 있습니다. Logto 내장형 이메일을 계속 사용하려면 <provider>자체 이메일 공급자를 연결</provider>하거나 <upgrade>요금제를 업그레이드</upgrade>하세요.',
+          'Logto 기본 이메일 서비스 발송 한도에 근접하고 있습니다. Logto 기본 이메일 서비스를 계속 사용하려면 <provider>자체 이메일 공급자를 연결</provider>하거나 <upgrade>요금제를 업그레이드</upgrade>하세요.',
         reached:
-          'Logto 내장형 이메일 발송 한도에 도달하여 로그인 이메일이 중단될 수 있습니다. Logto 내장형 이메일을 계속 사용하려면 <provider>자체 이메일 공급자를 연결</provider>하거나 <upgrade>요금제를 업그레이드</upgrade>하세요.',
+          'Logto 기본 이메일 서비스 발송 한도에 도달하여 로그인 이메일이 중단될 수 있습니다. Logto 기본 이메일 서비스를 계속 사용하려면 <provider>자체 이메일 공급자를 연결</provider>하거나 <upgrade>요금제를 업그레이드</upgrade>하세요.',
       },
     },
     email_template_title: '이메일 템플릿',

@@ -43,12 +43,12 @@ const connector_details = {
       daily_unlimited: '日次 <value>{{usage, number}}</value>',
       monthly: '月次 <value>{{usage, number}}</value> / {{limit, number}}',
       monthly_unlimited: '月次 <value>{{usage, number}}</value>',
-      tip: 'Free および Development プランには、組み込みメールの日次および月次の上限が含まれます。',
+      tip: 'Free および Development プランには、組み込みメールサービスの日次および月次の上限が含まれます。',
       banner: {
         approaching:
-          'Logto の組み込みメールの送信上限に近づいています。Logto の組み込みメールを引き続き使用するには、<provider>独自のメールプロバイダーを接続</provider>するか、<upgrade>プランをアップグレード</upgrade>してください。',
+          'Logto の組み込みメールサービスの送信上限に近づいています。Logto の組み込みメールサービスを引き続き使用するには、<provider>独自のメールプロバイダーを接続</provider>するか、<upgrade>プランをアップグレード</upgrade>してください。',
         reached:
-          'Logto の組み込みメールの送信上限に達しました。サインインメールが中断される可能性があります。Logto の組み込みメールを引き続き使用するには、<provider>独自のメールプロバイダーを接続</provider>するか、<upgrade>プランをアップグレード</upgrade>してください。',
+          'Logto の組み込みメールサービスの送信上限に達しました。サインインメールが中断される可能性があります。Logto の組み込みメールサービスを引き続き使用するには、<provider>独自のメールプロバイダーを接続</provider>するか、<upgrade>プランをアップグレード</upgrade>してください。',
       },
     },
     email_template_title: 'メールテンプレート',

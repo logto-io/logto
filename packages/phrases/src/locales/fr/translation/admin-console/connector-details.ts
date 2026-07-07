@@ -43,12 +43,12 @@ const connector_details = {
       daily_unlimited: 'Quotidien <value>{{usage, number}}</value>',
       monthly: 'Mensuel <value>{{usage, number}}</value> / {{limit, number}}',
       monthly_unlimited: 'Mensuel <value>{{usage, number}}</value>',
-      tip: 'Les forfaits Free et Development incluent des limites quotidiennes et mensuelles pour les emails intégrés.',
+      tip: "Les forfaits Free et Development incluent des limites quotidiennes et mensuelles pour le service d'e-mail intégré.",
       banner: {
         approaching:
-          "Vous approchez de la limite d'envoi de vos emails intégrés Logto. <provider>Connectez votre propre fournisseur d'email</provider> ou <upgrade>mettez à niveau votre forfait</upgrade> pour continuer à utiliser les emails intégrés Logto.",
+          "Vous approchez de la limite d'envoi de votre service d'e-mail intégré Logto. <provider>Connectez votre propre fournisseur d'email</provider> ou <upgrade>mettez à niveau votre forfait</upgrade> pour continuer à utiliser le service d'e-mail intégré Logto.",
         reached:
-          "Vous avez atteint la limite d'envoi de vos emails intégrés Logto, ce qui peut interrompre les emails de connexion. <provider>Connectez votre propre fournisseur d'email</provider> ou <upgrade>mettez à niveau votre forfait</upgrade> pour continuer à utiliser les emails intégrés Logto.",
+          "Vous avez atteint la limite d'envoi de votre service d'e-mail intégré Logto, ce qui peut interrompre les emails de connexion. <provider>Connectez votre propre fournisseur d'email</provider> ou <upgrade>mettez à niveau votre forfait</upgrade> pour continuer à utiliser le service d'e-mail intégré Logto.",
       },
     },
     email_template_title: 'Modèle d’email',
