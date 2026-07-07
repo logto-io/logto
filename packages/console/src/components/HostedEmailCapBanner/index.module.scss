@@ -1,5 +1,7 @@
 @use '@/scss/underscore' as _;
 
 .container {
-  padding: _.unit(4) _.unit(6) 0;
+  // A direct child of ConsoleContent's `.main`, so it inherits that column's content-width cap and
+  // centering; only vertical spacing is added here so it doesn't sit flush against the page content.
+  padding-block: _.unit(4);
 }

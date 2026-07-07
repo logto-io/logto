@@ -61,6 +61,8 @@ const createProvisionLibrary = ({
   const upsertSocialTokenSetSecret = jest.fn();
   const upsertEnterpriseSsoTokenSetSecret = jest.fn();
   const findEntities = jest.fn().mockResolvedValue(invitations);
+  const findUserSsoIdentityBySsoIdentityId = jest.fn().mockResolvedValue(null);
+  const insertUserSsoIdentity = jest.fn();
   const updateDefaultSignInExperience = jest.fn();
 
   const tenant = new MockTenant(
@@ -79,6 +81,10 @@ const createProvisionLibrary = ({
       organizations: {
         // @ts-expect-error -- only `findEntities` is needed by these tests.
         invitations: { findEntities },
+      },
+      userSsoIdentities: {
+        findUserSsoIdentityBySsoIdentityId,
+        insert: insertUserSsoIdentity,
       },
     },
     undefined,
@@ -120,6 +126,7 @@ const createProvisionLibrary = ({
     upsertSocialTokenSetSecret,
     upsertEnterpriseSsoTokenSetSecret,
     findEntities,
+    findUserSsoIdentityBySsoIdentityId,
     updateDefaultSignInExperience,
   };
 };
@@ -311,11 +318,11 @@ describe('ProvisionLibrary', () => {
       expect(insertUser).toHaveBeenCalledWith(
         expect.objectContaining({
           customData: {
+            plan: 'pro',
+            upstreamId: 'user-1',
             [userOnboardingDataKey]: {
               isOnboardingDone: true,
             },
-            plan: 'pro',
-            upstreamId: 'user-1',
           },
           logtoConfig: {
             [userMfaDataKey]: {
@@ -325,6 +332,102 @@ describe('ProvisionLibrary', () => {
         }),
         expect.anything()
       );
+    });
+
+    it('preserves internally generated onboarding customData when hook customData conflicts', async () => {
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      (EnvSet.values as { isCloud: boolean }).isCloud = true;
+
+      const { provisionLibrary, insertUser } = createProvisionLibrary({
+        invitations: [{ status: OrganizationInvitationStatus.Pending }],
+      });
+
+      await provisionLibrary.createUser(
+        {
+          primaryEmail: 'jane@example.com',
+          customData: {
+            [userOnboardingDataKey]: {
+              isOnboardingDone: false,
+            },
+          },
+        },
+        {
+          mergeCustomData: true,
+        }
+      );
+
+      expect(insertUser).toHaveBeenCalledWith(
+        expect.objectContaining({
+          customData: {
+            [userOnboardingDataKey]: {
+              isOnboardingDone: true,
+            },
+          },
+        }),
+        expect.anything()
+      );
+    });
+
+    it('checks enterprise SSO identity collision before inserting the user', async () => {
+      const {
+        provisionLibrary,
+        checkIdentifierCollision,
+        findUserSsoIdentityBySsoIdentityId,
+        insertUser,
+      } = createProvisionLibrary();
+
+      await provisionLibrary.createUser(
+        {
+          enterpriseSsoIdentity: {
+            ssoConnectorId: 'sso-connector-id',
+            issuer: 'https://sso.example.com',
+            identityId: 'sso-user-id',
+            detail: {},
+          },
+        },
+        {
+          checkIdentifierCollision: true,
+        }
+      );
+
+      expect(checkIdentifierCollision).toHaveBeenCalled();
+      expect(findUserSsoIdentityBySsoIdentityId).toHaveBeenCalledWith(
+        'https://sso.example.com',
+        'sso-user-id'
+      );
+      expect(Number(findUserSsoIdentityBySsoIdentityId.mock.invocationCallOrder[0])).toBeLessThan(
+        Number(insertUser.mock.invocationCallOrder[0])
+      );
+    });
+
+    it('propagates enterprise SSO identity collision errors without inserting the user', async () => {
+      const { provisionLibrary, findUserSsoIdentityBySsoIdentityId, insertUser } =
+        createProvisionLibrary();
+
+      findUserSsoIdentityBySsoIdentityId.mockResolvedValueOnce({
+        id: 'existing-sso-identity-id',
+      });
+
+      await expect(
+        provisionLibrary.createUser(
+          {
+            enterpriseSsoIdentity: {
+              ssoConnectorId: 'sso-connector-id',
+              issuer: 'https://sso.example.com',
+              identityId: 'sso-user-id',
+              detail: {},
+            },
+          },
+          {
+            checkIdentifierCollision: true,
+          }
+        )
+      ).rejects.toMatchObject({
+        code: 'user.identity_already_in_use',
+        status: 422,
+      });
+
+      expect(insertUser).not.toHaveBeenCalled();
     });
 
     it('propagates identifier collision errors without inserting the user', async () => {
