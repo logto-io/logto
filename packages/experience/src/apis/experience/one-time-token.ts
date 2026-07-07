@@ -3,7 +3,7 @@ import { InteractionEvent, type OneTimeTokenVerificationVerifyPayload } from '@l
 import api from '../api';
 
 import { experienceApiRoutes, type VerificationResponse } from './const';
-import { initInteraction } from './interaction';
+import { identifyUser, initInteraction } from './interaction';
 
 export const signInWithOneTimeToken = async (payload: OneTimeTokenVerificationVerifyPayload) => {
   await initInteraction(InteractionEvent.SignIn);
@@ -13,4 +13,20 @@ export const signInWithOneTimeToken = async (payload: OneTimeTokenVerificationVe
       json: payload,
     })
     .json<VerificationResponse>();
+};
+
+export const identifyForgotPasswordWithOneTimeToken = async (
+  payload: OneTimeTokenVerificationVerifyPayload
+) => {
+  await initInteraction(InteractionEvent.ForgotPassword);
+
+  const { verificationId } = await api
+    .post(`${experienceApiRoutes.verification}/one-time-token/verify`, {
+      json: payload,
+    })
+    .json<VerificationResponse>();
+
+  await identifyUser({ verificationId });
+
+  return { verificationId };
 };
