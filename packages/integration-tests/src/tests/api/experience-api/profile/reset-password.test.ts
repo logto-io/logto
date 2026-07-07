@@ -1,12 +1,22 @@
 import {
   ConnectorType,
+  ExtraParamsKey,
+  FirstScreen,
   ForgotPasswordMethod,
   InteractionEvent,
+  OneTimeTokenStatus,
   SignInIdentifier,
 } from '@logto/schemas';
 
+import {
+  createOneTimeToken,
+  deleteOneTimeTokenById,
+  getOneTimeTokenById,
+  updateOneTimeTokenStatus,
+} from '#src/api/one-time-token.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
-import { type ExperienceClient } from '#src/client/experience/index.js';
+import { ExperienceClient } from '#src/client/experience/index.js';
+import { demoAppRedirectUri } from '#src/constants.js';
 import { initExperienceClient } from '#src/helpers/client.js';
 import { clearConnectorsByTypes, setEmailConnector } from '#src/helpers/connector.js';
 import { signInWithPassword } from '#src/helpers/experience/index.js';
@@ -17,7 +27,7 @@ import {
 import { expectRejects } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { generatePassword } from '#src/utils.js';
+import { generateEmail, generatePassword, waitFor } from '#src/utils.js';
 
 const identifyForgotPasswordInteraction = async (client: ExperienceClient, email: string) => {
   const { verificationId, code } = await successfullySendVerificationCode(client, {
@@ -30,6 +40,74 @@ const identifyForgotPasswordInteraction = async (client: ExperienceClient, email
     code,
   });
   await client.identifyUser({ verificationId });
+};
+
+const startResetMagicLinkAuthorization = async (
+  client: ExperienceClient,
+  token: string,
+  loginHint?: string
+) => {
+  const response = await client.startAuthorization(demoAppRedirectUri, {
+    extraParams: {
+      [ExtraParamsKey.FirstScreen]: FirstScreen.ResetPassword,
+      [ExtraParamsKey.OneTimeToken]: token,
+      ...(loginHint && { [ExtraParamsKey.LoginHint]: loginHint }),
+    },
+  });
+
+  expect(response.status).toBe(303);
+  client.mergeRawCookies(response.headers.getSetCookie());
+
+  const location = response.headers.get('location');
+  expect(location).toBeTruthy();
+
+  if (!location) {
+    throw new Error('Missing reset magic link redirect location');
+  }
+
+  const url = new URL(location, 'http://localhost');
+
+  expect(url.pathname).toBe('/reset-password');
+  expect(url.searchParams.get(ExtraParamsKey.OneTimeToken)).toBe(token);
+  expect(url.searchParams.get(ExtraParamsKey.LoginHint)).toBe(loginHint ?? null);
+};
+
+const identifyForgotPasswordInteractionWithOneTimeToken = async (
+  client: ExperienceClient,
+  email: string,
+  token: string
+) => {
+  await client.initInteraction({ interactionEvent: InteractionEvent.ForgotPassword });
+
+  const { verificationId } = await client.verifyOneTimeToken({
+    token,
+    identifier: { type: SignInIdentifier.Email, value: email },
+  });
+
+  await client.identifyUser({ verificationId });
+};
+
+const expectOneTimeTokenForgotPasswordRejected = async (
+  token: string,
+  email: string,
+  expectedError: { code: string; status: number }
+) => {
+  const client = await initExperienceClient({
+    interactionEvent: InteractionEvent.ForgotPassword,
+  });
+
+  await expectRejects(
+    client.verifyOneTimeToken({
+      token,
+      identifier: { type: SignInIdentifier.Email, value: email },
+    }),
+    expectedError
+  );
+
+  await expectRejects(client.resetPassword({ password: generatePassword() }), {
+    status: 404,
+    code: 'session.identifier_not_found',
+  });
 };
 
 describe('Reset Password', () => {
@@ -164,5 +242,173 @@ describe('Reset Password', () => {
       identifier: { type: SignInIdentifier.Email, value: primaryEmail },
       password: newPassword,
     });
+  });
+
+  it('should reset password with an admin-issued magic link containing login_hint', async () => {
+    const { primaryEmail, password } = generateNewUserProfile({
+      primaryEmail: true,
+      password: true,
+    });
+    await userApi.create({ primaryEmail, password });
+
+    const newPassword = generatePassword();
+    const client = new ExperienceClient();
+    const oneTimeToken = await createOneTimeToken({ email: primaryEmail });
+
+    try {
+      await startResetMagicLinkAuthorization(client, oneTimeToken.token, primaryEmail);
+      await identifyForgotPasswordInteractionWithOneTimeToken(
+        client,
+        primaryEmail,
+        oneTimeToken.token
+      );
+
+      await client.resetPassword({ password: newPassword });
+      await client.submitInteraction();
+
+      await expect(getOneTimeTokenById(oneTimeToken.id)).resolves.toMatchObject({
+        status: OneTimeTokenStatus.Consumed,
+      });
+      await signInWithPassword({
+        identifier: { type: SignInIdentifier.Email, value: primaryEmail },
+        password: newPassword,
+      });
+    } finally {
+      await deleteOneTimeTokenById(oneTimeToken.id);
+    }
+  });
+
+  it('should reset password with an admin-issued magic link after the user enters email', async () => {
+    const { primaryEmail, password } = generateNewUserProfile({
+      primaryEmail: true,
+      password: true,
+    });
+    await userApi.create({ primaryEmail, password });
+
+    const newPassword = generatePassword();
+    const client = new ExperienceClient();
+    const oneTimeToken = await createOneTimeToken({ email: primaryEmail });
+
+    try {
+      await startResetMagicLinkAuthorization(client, oneTimeToken.token);
+      await identifyForgotPasswordInteractionWithOneTimeToken(
+        client,
+        primaryEmail,
+        oneTimeToken.token
+      );
+
+      await client.resetPassword({ password: newPassword });
+      await client.submitInteraction();
+
+      await expect(getOneTimeTokenById(oneTimeToken.id)).resolves.toMatchObject({
+        status: OneTimeTokenStatus.Consumed,
+      });
+      await signInWithPassword({
+        identifier: { type: SignInIdentifier.Email, value: primaryEmail },
+        password: newPassword,
+      });
+    } finally {
+      await deleteOneTimeTokenById(oneTimeToken.id);
+    }
+  });
+
+  it('should not consume the one-time token or identify the forgot-password interaction if email mismatches', async () => {
+    const email = generateEmail();
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.ForgotPassword,
+    });
+    const oneTimeToken = await createOneTimeToken({ email });
+
+    try {
+      await expectRejects(
+        client.verifyOneTimeToken({
+          token: oneTimeToken.token,
+          identifier: { type: SignInIdentifier.Email, value: generateEmail() },
+        }),
+        {
+          status: 400,
+          code: 'one_time_token.email_mismatch',
+        }
+      );
+
+      await expect(getOneTimeTokenById(oneTimeToken.id)).resolves.toMatchObject({
+        status: OneTimeTokenStatus.Active,
+      });
+
+      const interactionData = await client.getInteractionData();
+
+      expect(interactionData.interactionEvent).toBe(InteractionEvent.ForgotPassword);
+      expect(interactionData.userId).toBeUndefined();
+      await expectRejects(client.resetPassword({ password: generatePassword() }), {
+        status: 404,
+        code: 'session.identifier_not_found',
+      });
+    } finally {
+      await deleteOneTimeTokenById(oneTimeToken.id);
+    }
+  });
+
+  it('should reject forgot-password one-time-token verification with invalid token', async () => {
+    await expectOneTimeTokenForgotPasswordRejected('invalid_token', generateEmail(), {
+      status: 404,
+      code: 'one_time_token.token_not_found',
+    });
+  });
+
+  it('should reject forgot-password one-time-token verification with expired token', async () => {
+    const email = generateEmail();
+    const oneTimeToken = await createOneTimeToken({
+      email,
+      expiresIn: 1,
+    });
+
+    try {
+      await waitFor(1001);
+
+      await expectOneTimeTokenForgotPasswordRejected(oneTimeToken.token, email, {
+        status: 400,
+        code: 'one_time_token.token_expired',
+      });
+    } finally {
+      await deleteOneTimeTokenById(oneTimeToken.id);
+    }
+  });
+
+  it('should reject forgot-password one-time-token verification with consumed token', async () => {
+    const email = generateEmail();
+    const oneTimeToken = await createOneTimeToken({ email });
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.ForgotPassword,
+    });
+
+    try {
+      await client.verifyOneTimeToken({
+        token: oneTimeToken.token,
+        identifier: { type: SignInIdentifier.Email, value: email },
+      });
+
+      await expectOneTimeTokenForgotPasswordRejected(oneTimeToken.token, email, {
+        status: 400,
+        code: 'one_time_token.token_consumed',
+      });
+    } finally {
+      await deleteOneTimeTokenById(oneTimeToken.id);
+    }
+  });
+
+  it('should reject forgot-password one-time-token verification with revoked token', async () => {
+    const email = generateEmail();
+    const oneTimeToken = await createOneTimeToken({ email });
+
+    try {
+      await updateOneTimeTokenStatus(oneTimeToken.id, OneTimeTokenStatus.Revoked);
+
+      await expectOneTimeTokenForgotPasswordRejected(oneTimeToken.token, email, {
+        status: 400,
+        code: 'one_time_token.token_revoked',
+      });
+    } finally {
+      await deleteOneTimeTokenById(oneTimeToken.id);
+    }
   });
 });
