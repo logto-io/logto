@@ -1,3 +1,5 @@
+import { ServiceConnector } from '@logto/connector-kit';
+import { type ConnectorResponse } from '@logto/schemas';
 import { useContext } from 'react';
 import useSWR from 'swr';
 
@@ -16,14 +18,27 @@ export const getHostedEmailUsageKey = (tenantId: string) =>
  * Fetches the per-tenant daily and monthly hosted-email usage and limits (Cloud + dev-features
  * only). Shared by the Connector Details usage card and the cap notices — SWR dedupes the request
  * so both consumers hit the endpoint once.
+ *
+ * The cap only applies to Logto's built-in email connector, so the usage request is skipped for
+ * tenants on their own email provider — leaving `data` undefined, which also hides the cap notices.
  */
 const useHostedEmailUsage = () => {
   const { currentTenantId } = useContext(TenantsContext);
   const cloudApi = useCloudApi({ hideErrorToast: true });
 
   const isEnabled = isCloud && isDevFeaturesEnabled;
+
+  // Only tenants using the built-in email connector are subject to the cap. Read it from the shared
+  // `api/connectors` SWR cache (fetched only while the feature is enabled).
+  const { data: connectors } = useSWR<ConnectorResponse[]>(isEnabled && 'api/connectors');
+  const isLogtoEmailConnectorInUse =
+    connectors?.some((connector) => connector.connectorId === ServiceConnector.Email) ?? false;
+
   const { data } = useSWR(
-    isEnabled && currentTenantId && getHostedEmailUsageKey(currentTenantId),
+    isEnabled &&
+      isLogtoEmailConnectorInUse &&
+      currentTenantId &&
+      getHostedEmailUsageKey(currentTenantId),
     async () =>
       cloudApi.get('/api/tenants/:tenantId/subscription/hosted-email-usage', {
         params: { tenantId: currentTenantId },
