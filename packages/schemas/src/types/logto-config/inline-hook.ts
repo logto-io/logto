@@ -45,19 +45,15 @@ export type InlineHookTestRequestBody = z.infer<typeof inlineHookTestRequestBody
 
 export type HookUser = Pick<
   UserInfo,
-  | 'id'
-  | 'username'
-  | 'primaryEmail'
-  | 'primaryPhone'
-  | 'name'
-  | 'avatar'
-  | 'customData'
-  | 'profile'
-  | 'applicationId'
-  | 'isSuspended'
+  'id' | 'username' | 'primaryEmail' | 'primaryPhone' | 'name' | 'avatar' | 'customData' | 'profile'
 >;
 
-export type HookUserPatch = Partial<Omit<HookUser, 'id'>>;
+export type HookUserPatch = Partial<
+  Pick<
+    UserInfo,
+    'username' | 'primaryEmail' | 'primaryPhone' | 'name' | 'avatar' | 'customData' | 'profile'
+  >
+>;
 
 export type PostFirstFactorVerificationEvent = {
   key: LogtoInlineHookKey.PostFirstFactorVerification;
