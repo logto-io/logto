@@ -11,6 +11,7 @@ import {
   OrganizationInvitationStatus,
   SignInMode,
   TenantRole,
+  type JsonObject,
   userMfaDataKey,
   userOnboardingDataKey,
   type User,
@@ -29,6 +30,11 @@ import { getTenantId } from '#src/utils/tenant.js';
 import { type InteractionProfile, type WithHooksAndLogsContext } from '../../types.js';
 import { toUserSocialIdentityData } from '../utils.js';
 
+import {
+  assertEnterpriseSsoIdentityAvailable,
+  getProfileIdentifierCollisionPayload,
+} from './provisioning-profile.js';
+
 type OrganizationProvisionPayload =
   | {
       userId: string;
@@ -43,6 +49,28 @@ type OrganizationProvisionPayload =
       organizationIds: string[];
     };
 
+type CreateUserOptions = {
+  checkIdentifierCollision?: boolean;
+  mergeCustomData?: boolean;
+};
+
+const mergeCreateUserCustomData = (
+  existingCustomData: JsonObject | undefined,
+  customData: JsonObject | undefined
+): JsonObject | undefined => {
+  const mergedCustomData =
+    customData && Object.keys(customData).length > 0
+      ? {
+          ...customData,
+          ...existingCustomData,
+        }
+      : existingCustomData;
+
+  return mergedCustomData && Object.keys(mergedCustomData).length > 0
+    ? mergedCustomData
+    : undefined;
+};
+
 export class ProvisionLibrary {
   constructor(
     private readonly tenantContext: TenantContext,
@@ -55,10 +83,16 @@ export class ProvisionLibrary {
    * - Provision all JIT organizations for the user if necessary.
    * - Assign the first user to the admin role and the default tenant organization membership. [OSS only]
    */
-  async createUser(profile: InteractionProfile) {
+  async createUser(
+    profile: InteractionProfile,
+    {
+      checkIdentifierCollision: shouldCheckIdentifierCollision = false,
+      mergeCustomData: shouldMergeCustomData = false,
+    }: CreateUserOptions = {}
+  ) {
     const {
       libraries: {
-        users: { generateUserId, insertUser },
+        users: { checkIdentifierCollision, generateUserId, insertUser },
         socials: { upsertSocialTokenSetSecret },
         ssoConnectors: { upsertEnterpriseSsoTokenSetSecret },
       },
@@ -76,8 +110,19 @@ export class ProvisionLibrary {
       ...rest
     } = profile;
 
+    if (shouldCheckIdentifierCollision) {
+      await checkIdentifierCollision(getProfileIdentifierCollisionPayload(profile));
+      await assertEnterpriseSsoIdentityAvailable(
+        this.tenantContext.queries.userSsoIdentities,
+        enterpriseSsoIdentity
+      );
+    }
+
     const { isCreatingFirstAdminUser, initialUserRoles, customData } =
       await this.getUserProvisionContext(profile);
+    const customDataForInsert = shouldMergeCustomData
+      ? mergeCreateUserCustomData(customData, profile.customData)
+      : customData;
 
     const [user] = await insertUser(
       {
@@ -92,7 +137,7 @@ export class ProvisionLibrary {
             })
         ),
         ...conditional(socialIdentity && { identities: toUserSocialIdentityData(socialIdentity) }),
-        ...conditional(customData && { customData }),
+        ...conditional(customDataForInsert && { customData: customDataForInsert }),
         logtoConfig: {
           [userMfaDataKey]: { enabled: false },
         },
@@ -183,7 +228,7 @@ export class ProvisionLibrary {
     /** Initial user roles for admin tenant users */
     initialUserRoles: string[];
     /** Skip onboarding flow if the new user has pending Cloud invitations */
-    customData?: { [userOnboardingDataKey]: UserOnboardingData };
+    customData?: JsonObject;
   }> {
     const {
       provider,
