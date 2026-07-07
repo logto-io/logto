@@ -43,6 +43,9 @@ describe('one-time-token experience APIs', () => {
     await expect(signInWithOneTimeToken(payload)).resolves.toEqual(response);
 
     expect(mockedInitInteraction).toBeCalledWith(InteractionEvent.SignIn);
+    expect(mockedInitInteraction.mock.invocationCallOrder[0]).toBeLessThan(
+      mockedApiPost.mock.invocationCallOrder[0]!
+    );
     expect(mockedApiPost).toBeCalledWith(
       `${experienceApiRoutes.verification}/one-time-token/verify`,
       {

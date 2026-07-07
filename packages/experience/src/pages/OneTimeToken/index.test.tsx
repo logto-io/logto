@@ -32,7 +32,10 @@ jest.mock('@/apis/experience', () => ({
   signInWithOneTimeToken: jest.fn().mockResolvedValue({ verificationId: 'verification-id' }),
 }));
 
-jest.mock('@/hooks/use-global-redirect-to', () => mockUseGlobalRedirectTo);
+jest.mock('@/hooks/use-global-redirect-to', () => ({
+  __esModule: true,
+  default: mockUseGlobalRedirectTo,
+}));
 
 const mockedIdentifyAndSubmitInteraction = identifyAndSubmitInteraction as jest.MockedFunction<
   typeof identifyAndSubmitInteraction
