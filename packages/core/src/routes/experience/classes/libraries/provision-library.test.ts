@@ -472,16 +472,22 @@ describe('ProvisionLibrary', () => {
           },
         });
 
-      const updatedUser = await provisionLibrary.updateUser('user-id', {
-        name: 'Jane Doe',
-        username: 'jane',
-        primaryEmail: 'jane@example.com',
-        primaryPhone: '+1234567890',
-        profile,
-        customData,
-        passwordEncrypted: 'hashed-password',
-        passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
-      });
+      const updatedUser = await provisionLibrary.updateUser(
+        'user-id',
+        {
+          name: 'Jane Doe',
+          username: 'jane',
+          primaryEmail: 'jane@example.com',
+          primaryPhone: '+1234567890',
+          profile,
+          customData,
+          passwordEncrypted: 'hashed-password',
+          passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+        },
+        {
+          mergeCustomData: true,
+        }
+      );
 
       expect(checkIdentifierCollision).toHaveBeenCalledWith(
         {
@@ -530,6 +536,33 @@ describe('ProvisionLibrary', () => {
 
       expect(findUserById).not.toHaveBeenCalled();
       expect(updateUserById).toHaveBeenCalledWith('user-id', { name: 'Jane Doe' });
+    });
+
+    it('replaces customData without reading the existing user when mergeCustomData is false', async () => {
+      const customData = {
+        plan: 'pro',
+        upstreamId: 'user-1',
+      };
+      const { provisionLibrary, findUserById, updateUserById } = createProvisionLibrary({
+        user: {
+          ...mockUser,
+          id: 'user-id',
+          customData: {
+            source: 'registration',
+            plan: 'free',
+          },
+        },
+      });
+
+      await provisionLibrary.updateUser('user-id', { customData });
+
+      expect(findUserById).not.toHaveBeenCalled();
+      expect(updateUserById).toHaveBeenCalledWith(
+        'user-id',
+        expect.objectContaining({
+          customData,
+        })
+      );
     });
 
     it('propagates identifier collision errors without updating the user', async () => {

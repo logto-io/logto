@@ -54,10 +54,15 @@ type OrganizationProvisionPayload =
       organizationIds: string[];
     };
 
-type CreateUserOptions = {
-  checkIdentifierCollision?: boolean;
+type ProvisioningCustomDataOptions = {
   mergeCustomData?: boolean;
 };
+
+type CreateUserOptions = {
+  checkIdentifierCollision?: boolean;
+} & ProvisioningCustomDataOptions;
+
+type UpdateUserOptions = ProvisioningCustomDataOptions;
 
 const mergeCreateUserCustomData = (
   existingCustomData: JsonObject | undefined,
@@ -196,7 +201,11 @@ export class ProvisionLibrary {
     return user;
   }
 
-  async updateUser(userId: string, profile: InteractionUserProvisioningProfile) {
+  async updateUser(
+    userId: string,
+    profile: InteractionUserProvisioningProfile,
+    { mergeCustomData: shouldMergeCustomData = false }: UpdateUserOptions = {}
+  ) {
     const { queries, libraries } = this.tenantContext;
 
     await libraries.users.checkIdentifierCollision(
@@ -205,15 +214,15 @@ export class ProvisionLibrary {
     );
 
     const { passwordEncrypted, passwordEncryptionMethod, customData, ...updateProfile } = profile;
-    const existingUser =
-      customData && Object.keys(customData).length > 0
-        ? await queries.users.findUserById(userId)
-        : undefined;
-    const mergedCustomData = mergeUpdateUserCustomData(existingUser?.customData, customData);
+    const customDataForUpdate = await this.resolveCustomDataForUpdate(
+      userId,
+      customData,
+      shouldMergeCustomData
+    );
 
     const user = await queries.users.updateUserById(userId, {
       ...updateProfile,
-      ...conditional(mergedCustomData && { customData: mergedCustomData }),
+      ...conditional(customDataForUpdate !== undefined && { customData: customDataForUpdate }),
       ...conditional(
         passwordEncrypted &&
           passwordEncryptionMethod &&
@@ -271,6 +280,28 @@ export class ProvisionLibrary {
    * This method is used to get the provision context for a new user registration.
    * It will return the provision context based on the current tenant and the request context.
    */
+  private async resolveCustomDataForUpdate(
+    userId: string,
+    customData: JsonObject | undefined,
+    shouldMergeCustomData: boolean
+  ): Promise<JsonObject | undefined> {
+    if (customData === undefined) {
+      return undefined;
+    }
+
+    if (!shouldMergeCustomData) {
+      return customData;
+    }
+
+    if (Object.keys(customData).length === 0) {
+      return undefined;
+    }
+
+    const existingUser = await this.tenantContext.queries.users.findUserById(userId);
+
+    return mergeUpdateUserCustomData(existingUser.customData, customData);
+  }
+
   private async getUserProvisionContext(profile: InteractionProfile): Promise<{
     /** Admin user provisioning flag */
     isCreatingFirstAdminUser: boolean;
