@@ -9,7 +9,7 @@ import CaptchaContext from '@/Providers/CaptchaContextProvider/CaptchaContext';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { sendVerificationCodeApi } from '@/apis/utils';
 import useApi from '@/hooks/use-api';
-import useErrorHandler from '@/hooks/use-error-handler';
+import useErrorHandler, { type ErrorHandlers } from '@/hooks/use-error-handler';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import useToast from '@/hooks/use-toast';
 import {
@@ -40,7 +40,11 @@ const useSendVerificationCode = (flow: UserFlow, replaceCurrentPage?: boolean) =
   }, []);
 
   const onSubmit = useCallback(
-    async ({ identifier, value }: Payload, interactionEvent?: ContinueFlowInteractionEvent) => {
+    async (
+      { identifier, value }: Payload,
+      interactionEvent?: ContinueFlowInteractionEvent,
+      errorHandlers?: ErrorHandlers
+    ) => {
       const captchaToken = await executeCaptcha();
 
       const [error, result] = await asyncSendVerificationCode(
@@ -71,6 +75,9 @@ const useSendVerificationCode = (flow: UserFlow, replaceCurrentPage?: boolean) =
           'connector.usage_limit_exceeded': () => {
             setToast(t('error.send_verification_code_failed'));
           },
+          // Per-call overrides win over the defaults above, so a caller can react to a specific
+          // failure differently (e.g. sign-in falls back to the password page on a cap hit).
+          ...errorHandlers,
         });
 
         return;

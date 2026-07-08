@@ -1,6 +1,8 @@
 import type { SignIn } from '@logto/schemas';
 import { SignInIdentifier } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { useCallback, useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import useCheckSingleSignOn from '@/hooks/use-check-single-sign-on';
@@ -8,10 +10,13 @@ import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-pres
 import useSendVerificationCode from '@/hooks/use-send-verification-code';
 import { useSieMethods } from '@/hooks/use-sie';
 import useStartIdentifierPasskeySignInProcessing from '@/hooks/use-start-identifier-passkey-sign-in-processing';
+import useToast from '@/hooks/use-toast';
 import { UserFlow } from '@/types';
 
 const useOnSubmit = (signInMethods: SignIn['methods']) => {
   const navigate = useNavigateWithPreservedSearchParams();
+  const { setToast } = useToast();
+  const { t } = useTranslation();
   const { ssoConnectors, passkeySignIn } = useSieMethods();
   const { onSubmit: checkSingleSignOn } = useCheckSingleSignOn();
   const { setIdentifierInputValue } = useContext(UserInteractionContext);
@@ -80,7 +85,21 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
       }
 
       if (verificationCode) {
-        await sendVerificationCode({ identifier, value });
+        await sendVerificationCode(
+          { identifier, value },
+          undefined,
+          // The email service usage cap blocks the code send. If this method also allows password
+          // sign-in, route to the password page instead of stranding the user on the identifier
+          // page with no way forward.
+          conditional(
+            password && {
+              'connector.usage_limit_exceeded': () => {
+                setToast(t('error.send_verification_code_failed_use_password'));
+                navigateToPasswordPage();
+              },
+            }
+          )
+        );
       }
     },
     [
@@ -92,6 +111,8 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
       startIdentifierPasskeySignInProcessing,
       navigateToPasswordPage,
       sendVerificationCode,
+      setToast,
+      t,
     ]
   );
 

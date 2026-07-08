@@ -34,6 +34,8 @@ const error = {
   invalid_link_description: 'โทเค็นใช้ครั้งเดียวของคุณอาจหมดอายุหรือไม่ถูกต้องอีกต่อไป',
   captcha_verification_failed: 'การตรวจสอบ captcha ล้มเหลว',
   send_verification_code_failed: 'ส่งรหัสยืนยันไม่สำเร็จ โปรดลองอีกครั้งในภายหลัง',
+  send_verification_code_failed_use_password:
+    'ส่งรหัสยืนยันไม่สำเร็จ โปรดเข้าสู่ระบบด้วยรหัสผ่านแทน',
   terms_acceptance_required: 'จำเป็นต้องยอมรับเงื่อนไข',
   terms_acceptance_required_description: 'คุณต้องยอมรับเงื่อนไขเพื่อดำเนินการต่อ',
   something_went_wrong: 'เกิดข้อผิดพลาดบางอย่าง',

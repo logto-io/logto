@@ -2,6 +2,7 @@ import type { SignIn, SsoConnectorMetadata } from '@logto/schemas';
 import { SignInIdentifier, experience } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { fireEvent, act, waitFor } from '@testing-library/react';
+import { HTTPError } from 'ky';
 
 import SingleSignOnFormModeContextProvider from '@/Providers/SingleSignOnFormModeContextProvider';
 import UserInteractionContextProvider from '@/Providers/UserInteractionContextProvider';
@@ -26,9 +27,15 @@ jest.mock('i18next', () => ({
 
 const mockedNavigate = jest.fn();
 const getSingleSignOnConnectorsMock = jest.fn();
+const mockedSetToast = jest.fn();
 
 jest.mock('@/apis/utils', () => ({
   sendVerificationCodeApi: jest.fn(),
+}));
+
+jest.mock('@/hooks/use-toast', () => ({
+  __esModule: true,
+  default: () => ({ toast: '', setToast: mockedSetToast }),
 }));
 
 jest.mock('react-router-dom', () => ({
@@ -59,6 +66,22 @@ const renderForm = (signInMethods: SignIn['methods'], ssoConnectors: SsoConnecto
       </UserInteractionContextProvider>
     </SettingsProvider>
   );
+
+const renderFormAndSubmitEmail = (signInMethods: SignIn['methods']) => {
+  const { getByText, container } = renderForm(signInMethods);
+  const inputField = container.querySelector('input[name="identifier"]');
+  const submitButton = getByText('action.sign_in');
+
+  assert(inputField, new Error('identifier input should exist'));
+
+  act(() => {
+    fireEvent.change(inputField, { target: { value: email } });
+  });
+
+  act(() => {
+    fireEvent.submit(submitButton);
+  });
+};
 
 describe('IdentifierSignInForm', () => {
   afterEach(() => {
@@ -299,6 +322,47 @@ describe('IdentifierSignInForm', () => {
           undefined
         );
       });
+    });
+  });
+
+  describe('email service usage cap fallback', () => {
+    const usageLimitExceededError = new HTTPError(
+      {
+        json: async () => ({
+          code: 'connector.usage_limit_exceeded',
+          message: 'connector.usage_limit_exceeded',
+        }),
+      } as Response,
+      {} as Request,
+      {} as never
+    );
+
+    it('falls back to the password page when the cap is hit and password is configured', async () => {
+      (sendVerificationCodeApi as jest.Mock).mockRejectedValueOnce(usageLimitExceededError);
+
+      // Fixture [1]'s email method allows password + verification code (code primary), so the
+      // password fallback is available.
+      renderFormAndSubmitEmail(mockSignInMethodSettingsTestCases[1]!);
+
+      await waitFor(() => {
+        expect(sendVerificationCodeApi).toBeCalled();
+        expect(mockedSetToast).toBeCalledWith('error.send_verification_code_failed_use_password');
+        expect(mockedNavigate).toBeCalledWith({ pathname: '/sign-in/password' }, undefined);
+      });
+    });
+
+    it('shows the generic error and stays put when the cap is hit but no password is configured', async () => {
+      (sendVerificationCodeApi as jest.Mock).mockRejectedValueOnce(usageLimitExceededError);
+
+      // Fixture [2]'s email method allows verification code only, so there is no password fallback.
+      renderFormAndSubmitEmail(mockSignInMethodSettingsTestCases[2]!);
+
+      await waitFor(() => {
+        expect(sendVerificationCodeApi).toBeCalled();
+        expect(mockedSetToast).toBeCalledWith('error.send_verification_code_failed');
+      });
+
+      expect(mockedNavigate).not.toBeCalled();
     });
   });
 });
