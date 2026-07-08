@@ -248,7 +248,7 @@ export class ProvisionLibrary {
     const user = await queries.users.updateUserById(
       userId,
       updatePayload,
-      customDataForUpdate !== undefined ? 'replace' : 'merge'
+      customDataForUpdate === undefined ? 'merge' : 'replace'
     );
 
     this.ctx.appendDataHookContext('User.Data.Updated', { user });
