@@ -175,6 +175,15 @@ const security = {
       invalid_format_error:
         '유효한 이메일 주소(bar@example.com) 또는 도메인(@example.com)이어야 합니다',
     },
+    custom_email_address_with_wildcards: {
+      description:
+        '특정 이메일 도메인, 이메일 주소 또는 와일드카드 이메일 주소 패턴이 UI를 통해 등록되거나 연결되지 않도록 차단하는 규칙을 추가합니다.',
+      placeholder:
+        '차단할 이메일 주소, 도메인 또는 와일드카드 이메일 주소 패턴을 입력하세요 (예: bar@example.com, @example.com, foo*@example.com, *@example.com)',
+      duplicate_error: '이메일 주소, 도메인 또는 와일드카드 이메일 주소 패턴이 이미 추가되었습니다',
+      invalid_format_error:
+        '유효한 이메일 주소(bar@example.com), 도메인(@example.com) 또는 와일드카드 이메일 주소 패턴(foo*@example.com, *@example.com)이어야 합니다',
+    },
   },
 };
 

@@ -180,6 +180,16 @@ const security = {
       invalid_format_error:
         'يجب أن يكون عنوان بريد إلكتروني صالح (bar@example.com) أو نطاق (@example.com)',
     },
+    custom_email_address_with_wildcards: {
+      description:
+        'أضف قواعد لحظر نطاقات بريد إلكتروني محددة أو عناوين بريد إلكتروني أو أنماط عناوين بريد إلكتروني بأحرف بدل من التسجيل أو الارتباط عبر واجهة المستخدم.',
+      placeholder:
+        'أدخل عنوان البريد الإلكتروني أو النطاق أو نمط عنوان البريد الإلكتروني بأحرف بدل المحظور (مثل، bar@example.com، @example.com، foo*@example.com، *@example.com)',
+      duplicate_error:
+        'تمت إضافة عنوان البريد الإلكتروني أو النطاق أو نمط عنوان البريد الإلكتروني بأحرف بدل بالفعل',
+      invalid_format_error:
+        'يجب أن يكون عنوان بريد إلكتروني صالحًا (bar@example.com) أو نطاقًا (@example.com) أو نمط عنوان بريد إلكتروني بأحرف بدل (foo*@example.com، *@example.com)',
+    },
   },
 };
 

@@ -179,6 +179,15 @@ const security = {
       duplicate_error: 'آدرس یا دامنه ایمیل از قبل اضافه شده است',
       invalid_format_error: 'باید آدرس ایمیل معتبر (bar@example.com) یا دامنه (@example.com) باشد',
     },
+    custom_email_address_with_wildcards: {
+      description:
+        'قوانینی اضافه کنید تا دامنه‌های ایمیل، آدرس‌های ایمیل یا الگوهای آدرس ایمیل با وایلدکارد از ثبت‌نام یا اتصال از طریق رابط کاربری مسدود شوند.',
+      placeholder:
+        'آدرس ایمیل، دامنه یا الگوی آدرس ایمیل با وایلدکارد مسدود را وارد کنید (مثلاً bar@example.com، @example.com، foo*@example.com، *@example.com)',
+      duplicate_error: 'آدرس ایمیل، دامنه یا الگوی آدرس ایمیل با وایلدکارد از قبل اضافه شده است',
+      invalid_format_error:
+        'باید آدرس ایمیل معتبر (bar@example.com)، دامنه (@example.com) یا الگوی آدرس ایمیل با وایلدکارد (foo*@example.com، *@example.com) باشد',
+    },
   },
 };
 

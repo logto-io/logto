@@ -180,6 +180,16 @@ const security = {
       invalid_format_error:
         '有効なメールアドレス（bar@example.com）またはドメイン（@example.com）である必要があります',
     },
+    custom_email_address_with_wildcards: {
+      description:
+        '特定のメールドメイン、メールアドレス、またはワイルドカード付きメールアドレスパターンが UI を介して登録またはリンクできないようにブロックするルールを追加します。',
+      placeholder:
+        'ブロックするメールアドレス、ドメイン、またはワイルドカード付きメールアドレスパターンを入力してください（例：bar@example.com、@example.com、foo*@example.com、*@example.com）',
+      duplicate_error:
+        'メールアドレス、ドメイン、またはワイルドカード付きメールアドレスパターンは既に追加されています',
+      invalid_format_error:
+        '有効なメールアドレス（bar@example.com）、ドメイン（@example.com）、またはワイルドカード付きメールアドレスパターン（foo*@example.com、*@example.com）である必要があります',
+    },
   },
 };
 

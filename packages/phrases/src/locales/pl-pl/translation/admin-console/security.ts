@@ -185,6 +185,16 @@ const security = {
       invalid_format_error:
         'Musi być ważnym adresem email(bar@example.com) lub domeną(@example.com)',
     },
+    custom_email_address_with_wildcards: {
+      description:
+        'Dodaj reguły blokujące określone domeny email, adresy email lub wzorce adresów email z symbolami wieloznacznymi przed rejestracją lub powiązaniem przez UI.',
+      placeholder:
+        'Wprowadź zablokowany adres email, domenę lub wzorzec adresu email z symbolem wieloznacznym (np. bar@example.com, @example.com, foo*@example.com, *@example.com)',
+      duplicate_error:
+        'Adres email, domena lub wzorzec adresu email z symbolem wieloznacznym już dodany',
+      invalid_format_error:
+        'Musi być ważnym adresem email (bar@example.com), domeną (@example.com) lub wzorcem adresu email z symbolem wieloznacznym (foo*@example.com, *@example.com)',
+    },
   },
 };
 

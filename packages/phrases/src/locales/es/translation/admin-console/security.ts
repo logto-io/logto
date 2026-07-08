@@ -189,6 +189,16 @@ const security = {
       invalid_format_error:
         'Debe ser una dirección de correo electrónico válida (bar@example.com) o un dominio (@example.com)',
     },
+    custom_email_address_with_wildcards: {
+      description:
+        'Agrega reglas para bloquear dominios de correo específicos, direcciones de correo electrónico o patrones de direcciones de correo con comodines para que no puedan registrarse o vincularse a través de la interfaz de usuario.',
+      placeholder:
+        'Ingresa la dirección de correo electrónico, dominio o patrón de dirección de correo con comodín bloqueado (por ejemplo, bar@example.com, @example.com, foo*@example.com, *@example.com)',
+      duplicate_error:
+        'La dirección de correo electrónico, el dominio o el patrón de dirección de correo con comodín ya fue agregado',
+      invalid_format_error:
+        'Debe ser una dirección de correo electrónico válida (bar@example.com), un dominio (@example.com) o un patrón de dirección de correo con comodín (foo*@example.com, *@example.com)',
+    },
   },
 };
 
