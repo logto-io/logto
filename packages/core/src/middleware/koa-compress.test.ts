@@ -4,10 +4,10 @@ import request from 'supertest';
 
 /**
  * Regression net for the `koa-compress` version we ship (found during the Koa 3 upgrade):
- * `koa-compress@5.2.2` turns a request whose `Accept-Encoding` rules out every supported
- * encoding (e.g. `identity;q=0`) into a 500 by writing an `undefined` `Content-Encoding`,
- * while 5.1.x answers 406. We stay on `~5.1.1` until upstream fixes the negotiation path;
- * these tests keep a future bump from silently regressing public endpoints.
+ * every 5.2.x release turns a request whose `Accept-Encoding` rules out all supported
+ * encodings (e.g. `identity;q=0`) into a 500 by writing an `undefined` `Content-Encoding`,
+ * while 5.1.x answers 406. We stay on 5.1.1 until upstream fixes the negotiation path;
+ * these tests fail loudly if a broken version ever gets resolved, whatever the route.
  */
 const createApp = () => {
   const app = new Koa();
