@@ -26,6 +26,12 @@ Changeset text should use this format:
 - Write changeset text for the user-facing changelog. Describe the final product capability or behavior users can use.
 - Do not describe the release mechanics or implementation process, such as releasing a feature, removing a feature flag, or enabling an already-built feature.
 
+## Dev features
+
+When asked to remove `isDevFeaturesEnabled`, treat the request as scoped to one specific feature. Never remove all `isDevFeaturesEnabled` usage globally unless explicitly instructed otherwise.
+
+When adding `isDevFeaturesEnabled` for a new feature, include a comment that identifies the guarded feature at a high level. Prefer naming the broader feature area rather than a narrow implementation detail so the guard can be found and removed together when the feature is released.
+
 ## Commit Hook Discipline
 
 Never bypass commit hooks.
