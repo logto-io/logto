@@ -1,6 +1,7 @@
 const one_time_token = {
   token_not_found: 'توکن {{token}} یافت نشد.',
   email_mismatch: 'ایمیل با توکن داده‌شده مطابقت ندارد.',
+  interaction_event_mismatch: 'نمی‌توان از این توکن برای این تعامل استفاده کرد.',
   token_expired: 'توکن منقضی شده است.',
   token_consumed: 'توکن مصرف شده است.',
   token_revoked: 'توکن لغو شده است.',
