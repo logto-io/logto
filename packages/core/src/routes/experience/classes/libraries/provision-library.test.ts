@@ -565,6 +565,24 @@ describe('ProvisionLibrary', () => {
       );
     });
 
+    it('returns the existing user without updating when the profile is empty', async () => {
+      const { provisionLibrary, ctx, findUserById, updateUserById, checkIdentifierCollision } =
+        createProvisionLibrary({
+          user: {
+            ...mockUser,
+            id: 'user-id',
+          },
+        });
+
+      const user = await provisionLibrary.updateUser('user-id', {});
+
+      expect(checkIdentifierCollision).toHaveBeenCalledWith({}, 'user-id');
+      expect(findUserById).toHaveBeenCalledWith('user-id');
+      expect(updateUserById).not.toHaveBeenCalled();
+      expect(ctx.appendDataHookContext).not.toHaveBeenCalled();
+      expect(user).toEqual(expect.objectContaining({ id: 'user-id' }));
+    });
+
     it('propagates identifier collision errors without updating the user', async () => {
       const error = new RequestError({ code: 'user.email_already_in_use', status: 422 });
       const { provisionLibrary, ctx, findUserById, checkIdentifierCollision, updateUserById } =

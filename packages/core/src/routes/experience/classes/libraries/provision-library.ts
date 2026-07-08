@@ -219,8 +219,7 @@ export class ProvisionLibrary {
       customData,
       shouldMergeCustomData
     );
-
-    const user = await queries.users.updateUserById(userId, {
+    const updatePayload = {
       ...updateProfile,
       ...conditional(customDataForUpdate !== undefined && { customData: customDataForUpdate }),
       ...conditional(
@@ -231,7 +230,13 @@ export class ProvisionLibrary {
             passwordEncryptionMethod,
           })
       ),
-    });
+    };
+
+    if (Object.keys(updatePayload).length === 0) {
+      return queries.users.findUserById(userId);
+    }
+
+    const user = await queries.users.updateUserById(userId, updatePayload);
 
     this.ctx.appendDataHookContext('User.Data.Updated', { user });
 
