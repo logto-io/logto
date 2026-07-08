@@ -1,4 +1,3 @@
-import type { Json } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
 import type { Context, MiddlewareType } from 'koa';
 import { errors } from 'oidc-provider';
@@ -7,8 +6,7 @@ import type Queries from '#src/tenants/Queries.js';
 
 const noVSCHAR = /[^\u0020-\u007E]/;
 
-/** Narrow a parsed JSON request body down to a plain object. */
-const isJsonObject = (value: unknown): value is Record<string, Json> =>
+const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
 
 function decodeAuthToken(token: string) {
@@ -140,7 +138,7 @@ export default function koaAppSecretTranspilation<StateT, ContextT, ResponseBody
        * `getCredentialsFromParams()` extracted a string `client_secret` from it. The check
        * exists solely to narrow the JSON body type from koa-body.
        */
-      if (isJsonObject(ctx.request.body)) {
+      if (isRecord(ctx.request.body)) {
         ctx.request.body.client_secret = result.originalSecret;
       }
     } else {
