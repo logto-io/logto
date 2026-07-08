@@ -4212,8 +4212,8 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0
       koa-compress:
-        specifier: ^5.2.2
-        version: 5.2.2
+        specifier: ~5.1.1
+        version: 5.1.1
       koa-logger:
         specifier: ^4.0.0
         version: 4.0.0
@@ -4332,6 +4332,9 @@ importers:
       '@types/koa-compose':
         specifier: ^3.2.5
         version: 3.2.5
+      '@types/koa-compress':
+        specifier: ^4.0.3
+        version: 4.0.7
       '@types/koa-logger':
         specifier: ^3.1.1
         version: 3.1.2
@@ -8542,6 +8545,9 @@ packages:
   '@types/koa-compose@3.2.5':
     resolution: {integrity: sha512-B8nG/OoE1ORZqCkBVsup/AKcvjdgoHnfi4pZMn5UwAPCbhk/96xyv284eBYW8JlQbQ7zDmnpFr68I/40mFoIBQ==}
 
+  '@types/koa-compress@4.0.7':
+    resolution: {integrity: sha512-NqP9qCBfXCu2+RYkGzEENBkqXWExOPeBEsvj3F0xtVxKDwwdfRRtVdpxJeTRAq2Ml3qlUnDbK8bKHWwe6V1kkg==}
+
   '@types/koa-logger@3.1.2':
     resolution: {integrity: sha512-sioTA1xlKYiIgryANWPRHBkG3XGbWftw9slWADUPC+qvPIY/yRLSrhvX7zkJwMrntub5dPO0GuAoyGGf0yitfQ==}
 
@@ -12389,8 +12395,8 @@ packages:
   koa-compose@4.1.0:
     resolution: {integrity: sha512-8ODW8TrDuMYvXRwra/Kh7/rJo9BtOfPc6qO8eAfC80CnCvSjSl0bkRM24X6/XBBEyj0v1nRUQ1LyOy3dbqOWXw==}
 
-  koa-compress@5.2.2:
-    resolution: {integrity: sha512-jpKxmIveX6qdrKaolhvgo2YKl+/uETTHzeVsLWTvJk551HWViWt1hDMO7c+D/P/GEjOVzVK5F7lsrcyOgfhUqg==}
+  koa-compress@5.1.1:
+    resolution: {integrity: sha512-UgMIN7ZoEP2DuoSQmD6CYvFSLt0NReGlc2qSY4bO4Oq0L56OiD9pDG41Kj/zFmVY/A3Wvmn4BqKcfq5H30LGIg==}
     engines: {node: '>= 12'}
 
   koa-convert@2.0.0:
@@ -13254,10 +13260,6 @@ packages:
 
   negotiator@0.6.3:
     resolution: {integrity: sha512-+EUsqGPLsM+j/zdChZjsnX51g4XrHFOIXwfnCVPGlQk/k5giakcKsuxCObBRu6DSm9opw/O6slWbJdghQM4bBg==}
-    engines: {node: '>= 0.6'}
-
-  negotiator@1.0.0:
-    resolution: {integrity: sha512-8Ofs/AUQh8MaEcrlq5xOX0CQ9ypTF5dl78mjlMNfOK08fzpgTHQRQPBxcPlEtIw0yRpws+Zo/3r+5WRby7u3Gg==}
     engines: {node: '>= 0.6'}
 
   netmask@2.0.2:
@@ -17868,7 +17870,7 @@ snapshots:
 
   '@koa/router@13.1.0':
     dependencies:
-      http-errors: 2.0.0
+      http-errors: 2.0.1
       koa-compose: 4.1.0
       path-to-regexp: 6.3.0
 
@@ -20105,6 +20107,11 @@ snapshots:
     dependencies:
       '@types/koa': 3.0.3
 
+  '@types/koa-compress@4.0.7':
+    dependencies:
+      '@types/koa': 3.0.3
+      '@types/node': 22.14.1
+
   '@types/koa-logger@3.1.2':
     dependencies:
       '@types/koa': 3.0.3
@@ -21857,7 +21864,7 @@ snapshots:
 
   compressible@2.0.18:
     dependencies:
-      mime-db: 1.52.0
+      mime-db: 1.54.0
 
   concat-map@0.0.1: {}
 
@@ -25047,13 +25054,12 @@ snapshots:
 
   koa-compose@4.1.0: {}
 
-  koa-compress@5.2.2:
+  koa-compress@5.1.1:
     dependencies:
       bytes: 3.1.2
       compressible: 2.0.18
-      http-errors: 2.0.1
+      http-errors: 1.8.1
       koa-is-json: 1.0.0
-      negotiator: 1.0.0
 
   koa-convert@2.0.0:
     dependencies:
@@ -26345,8 +26351,6 @@ snapshots:
   natural-compare@1.4.0: {}
 
   negotiator@0.6.3: {}
-
-  negotiator@1.0.0: {}
 
   netmask@2.0.2: {}
 
