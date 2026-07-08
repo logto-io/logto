@@ -567,6 +567,54 @@ describe('ProvisionLibrary', () => {
       );
     });
 
+    it('ignores empty customData when mergeCustomData is false', async () => {
+      const { provisionLibrary, ctx, findUserById, updateUserById } = createProvisionLibrary({
+        user: {
+          ...mockUser,
+          id: 'user-id',
+          customData: {
+            plan: 'free',
+          },
+        },
+      });
+
+      await provisionLibrary.updateUser('user-id', { customData: {} });
+
+      expect(updateUserById).not.toHaveBeenCalled();
+      expect(findUserById).toHaveBeenCalledWith('user-id');
+      expect(ctx.appendDataHookContext).not.toHaveBeenCalled();
+    });
+
+    it('ignores empty profile when updating customData in replace mode', async () => {
+      const customData = {
+        plan: 'pro',
+      };
+      const { provisionLibrary, updateUserById } = createProvisionLibrary({
+        user: {
+          ...mockUser,
+          id: 'user-id',
+          profile: {
+            givenName: 'Jane',
+            familyName: 'Doe',
+          },
+          customData: {
+            plan: 'free',
+          },
+        },
+      });
+
+      await provisionLibrary.updateUser('user-id', { profile: {}, customData });
+
+      expect(updateUserById).toHaveBeenCalledWith(
+        'user-id',
+        expect.objectContaining({
+          customData,
+        }),
+        'replace'
+      );
+      expect(updateUserById.mock.calls[0]?.[1]).not.toHaveProperty('profile');
+    });
+
     it('returns the existing user without updating when the profile is empty', async () => {
       const { provisionLibrary, ctx, findUserById, updateUserById, checkIdentifierCollision } =
         createProvisionLibrary({
