@@ -59,11 +59,7 @@ const createUserUpdateLibrary = ({ user = mockUser }: { user?: User } = {}) => {
 };
 
 describe('UserUpdateLibrary', () => {
-  it('checks identifiers, merges customData, updates the user, and appends data hook context', async () => {
-    const existingCustomData = {
-      source: 'registration',
-      plan: 'free',
-    };
+  it('checks identifiers, atomically merges customData, updates the user, and appends data hook context', async () => {
     const customData = {
       plan: 'pro',
       upstreamId: 'user-1',
@@ -74,7 +70,10 @@ describe('UserUpdateLibrary', () => {
         user: {
           ...mockUser,
           id: 'user-id',
-          customData: existingCustomData,
+          customData: {
+            source: 'registration',
+            plan: 'free',
+          },
         },
       });
 
@@ -103,7 +102,7 @@ describe('UserUpdateLibrary', () => {
       },
       'user-id'
     );
-    expect(findUserById).toHaveBeenCalledWith('user-id');
+    expect(findUserById).not.toHaveBeenCalled();
     expect(Number(checkIdentifierCollision.mock.invocationCallOrder[0])).toBeLessThan(
       Number(updateUserById.mock.invocationCallOrder[0])
     );
@@ -116,16 +115,12 @@ describe('UserUpdateLibrary', () => {
         primaryEmail: 'jane@example.com',
         primaryPhone: '+1234567890',
         profile,
-        customData: {
-          source: 'registration',
-          plan: 'pro',
-          upstreamId: 'user-1',
-        },
+        customData,
         passwordEncrypted: 'hashed-password',
         passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
         isPasswordExpired: false,
       }),
-      'replace'
+      'merge'
     );
     expect(updateUserById.mock.calls[0]?.[1]).toHaveProperty(
       'passwordUpdatedAt',
@@ -143,6 +138,45 @@ describe('UserUpdateLibrary', () => {
 
     expect(findUserById).not.toHaveBeenCalled();
     expect(updateUserById).toHaveBeenCalledWith('user-id', { name: 'Jane Doe' }, 'merge');
+  });
+
+  it('preserves existing profile values when replacing customData with a profile patch', async () => {
+    const customData = {
+      plan: 'pro',
+    };
+    const { userUpdateLibrary, findUserById, updateUserById } = createUserUpdateLibrary({
+      user: {
+        ...mockUser,
+        id: 'user-id',
+        profile: {
+          givenName: 'Jane',
+          familyName: 'Doe',
+        },
+        customData: {
+          plan: 'free',
+        },
+      },
+    });
+
+    await userUpdateLibrary.updateUser('user-id', {
+      profile: {
+        givenName: 'Janet',
+      },
+      customData,
+    });
+
+    expect(findUserById).toHaveBeenCalledWith('user-id');
+    expect(updateUserById).toHaveBeenCalledWith(
+      'user-id',
+      expect.objectContaining({
+        profile: {
+          givenName: 'Janet',
+          familyName: 'Doe',
+        },
+        customData,
+      }),
+      'replace'
+    );
   });
 
   it('replaces customData without reading the existing user when mergeCustomData is false', async () => {
