@@ -62,6 +62,10 @@ export class PasswordVerification
     return this.verified;
   }
 
+  markAsVerified() {
+    this.verified = true;
+  }
+
   /**
    * Verifies the password against the current identifier and returns the authenticated user.
    *
