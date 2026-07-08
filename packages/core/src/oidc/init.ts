@@ -518,12 +518,13 @@ export default function initOidc(
         ctx.request.body = trySafe(() => JSON.parse(body) as Json);
       } else if (ctx.is(formUrlEncodedContentType)) {
         /**
-         * `querystring.parse()` returns only string/string[] values at runtime, but its
-         * `ParsedUrlQuery` index signature includes `undefined`, which `Request.body`
-         * (typed as JSON by koa-body) does not accept — hence the double assertion.
+         * `querystring.parse()` only produces string/string[] values at runtime — its
+         * `ParsedUrlQuery` return type marks values as possibly `undefined` merely by the
+         * index-signature convention. Narrow that away so the JSON-typed `Request.body`
+         * (from koa-body) accepts the assignment.
          */
         // eslint-disable-next-line no-restricted-syntax
-        ctx.request.body = querystring.parse(body) as unknown as Json;
+        ctx.request.body = querystring.parse(body) as Record<string, string | string[]>;
       }
     }
 
