@@ -1,9 +1,12 @@
-import { Users, UsersPasswordEncryptionMethod, userProfileGuard } from '@logto/schemas';
+import { Users, userProfileGuard } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { type HookProvisioningProfile } from '../../types.js';
+import { encryptUserPassword } from '#src/libraries/user.utils.js';
 
-const hookProvisioningProfileBaseGuard = Users.createGuard
+import { type HookProvisioningProfile, type InteractionProfile } from '../../types.js';
+
+const hookProvisioningProfileGuard = Users.createGuard
   .pick({
     name: true,
     avatar: true,
@@ -12,31 +15,52 @@ const hookProvisioningProfileBaseGuard = Users.createGuard
     primaryPhone: true,
     profile: true,
     customData: true,
-    passwordEncrypted: true,
-    passwordEncryptionMethod: true,
   })
   .extend({
     profile: userProfileGuard.optional(),
-    passwordEncrypted: z.string().min(1).max(256).optional(),
-    passwordEncryptionMethod: z.nativeEnum(UsersPasswordEncryptionMethod).optional(),
   })
   .partial()
-  .strict();
-
-const hookProvisioningProfileGuard = hookProvisioningProfileBaseGuard.superRefine(
-  ({ passwordEncrypted, passwordEncryptionMethod }, context) => {
-    const hasPasswordEncrypted = passwordEncrypted !== undefined;
-    const hasPasswordEncryptionMethod = passwordEncryptionMethod !== undefined;
-
-    if (hasPasswordEncrypted !== hasPasswordEncryptionMethod) {
-      context.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: '`passwordEncrypted` and `passwordEncryptionMethod` must be provided together.',
-        path: hasPasswordEncrypted ? ['passwordEncryptionMethod'] : ['passwordEncrypted'],
-      });
-    }
-  }
-) satisfies z.ZodType<HookProvisioningProfile>;
+  .strict() satisfies z.ZodType<HookProvisioningProfile>;
 
 export const toHookProvisioningProfile = (user: unknown): HookProvisioningProfile =>
   hookProvisioningProfileGuard.parse(user);
+
+type InlineHookPasswordPayload = Awaited<ReturnType<typeof encryptUserPassword>>;
+
+type InlineHookProvisioningProfileWithPassword = HookProvisioningProfile & InlineHookPasswordPayload;
+
+export type InlineHookProvisioningProfile = HookProvisioningProfile &
+  (
+    | InlineHookPasswordPayload
+    | {
+        passwordEncrypted?: never;
+        passwordEncryptionMethod?: never;
+      }
+  );
+
+export const appendPasswordPayloadToInlineHookProvisioningProfile = async (
+  provisioningProfile: HookProvisioningProfile,
+  password: string
+): Promise<InlineHookProvisioningProfileWithPassword> => ({
+  ...provisioningProfile,
+  ...(await encryptUserPassword(password)),
+});
+
+export const getProfileIdentifierCollisionPayload = ({
+  socialIdentity,
+  username,
+  primaryEmail,
+  primaryPhone,
+}: InteractionProfile) => ({
+  username,
+  primaryEmail,
+  primaryPhone,
+  ...conditional(
+    socialIdentity && {
+      identity: {
+        target: socialIdentity.target,
+        id: socialIdentity.userInfo.id,
+      },
+    }
+  ),
+});
