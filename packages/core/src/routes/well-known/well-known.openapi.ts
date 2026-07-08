@@ -33,7 +33,7 @@ export default function openapiRoutes<T extends AnonymousRouter, R extends Unkno
     const supplementDocuments = await getSupplementDocuments('routes', {
       excludeDirectories: ['experience', 'interaction', 'account', 'verification'],
     });
-    const baseDocument = buildManagementApiBaseDocument(pathMap, tags, ctx.request.origin);
+    const baseDocument = buildManagementApiBaseDocument(pathMap, tags, ctx.URL.origin);
 
     const data = assembleSwaggerDocument(supplementDocuments, baseDocument, ctx);
 
@@ -53,7 +53,7 @@ export default function openapiRoutes<T extends AnonymousRouter, R extends Unkno
     const supplementDocuments = await getSupplementDocuments('routes', {
       includeDirectories: ['experience'],
     });
-    const baseDocument = buildExperienceApiBaseDocument(pathMap, tags, ctx.request.origin);
+    const baseDocument = buildExperienceApiBaseDocument(pathMap, tags, ctx.URL.origin);
 
     const data = assembleSwaggerDocument(supplementDocuments, baseDocument, ctx);
 
@@ -73,7 +73,7 @@ export default function openapiRoutes<T extends AnonymousRouter, R extends Unkno
     const supplementDocuments = await getSupplementDocuments('routes', {
       includeDirectories: ['account', 'verification'],
     });
-    const baseDocument = buildUserApiBaseDocument(pathMap, tags, ctx.request.origin);
+    const baseDocument = buildUserApiBaseDocument(pathMap, tags, ctx.URL.origin);
 
     const data = assembleSwaggerDocument(supplementDocuments, baseDocument, ctx);
 

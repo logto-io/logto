@@ -35,7 +35,7 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
     const baseDocument: OpenAPIV3.Document = buildManagementApiBaseDocument(
       pathMap,
       tags,
-      ctx.request.origin
+      ctx.URL.origin
     );
 
     const data = assembleSwaggerDocument(supplementDocuments, baseDocument, ctx);

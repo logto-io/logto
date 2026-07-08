@@ -1,7 +1,7 @@
 import { buildLink } from './pagination.js';
 
 const request = {
-  origin: 'https://logto.dev',
+  URL: new URL('https://logto.dev/users?order=desc&page=3'),
   path: '/users',
   query: { order: 'desc', page: '3' },
 };

@@ -14,6 +14,7 @@ import {
   inSeconds,
   logtoCookieKey,
   ExtraParamsKey,
+  type Json,
 } from '@logto/schemas';
 import { trySafe, tryThat } from '@silverhand/essentials';
 import { type i18n } from 'i18next';
@@ -344,9 +345,13 @@ export default function initOidc(
       },
     },
     // https://github.com/panva/node-oidc-provider/blob/main/recipes/client_based_origins.md
+    /**
+     * Use `ctx.URL.origin` (`protocol://host`) instead of `ctx.request.origin` — in Koa 3 the
+     * latter returns the request's `Origin` header, which would degenerate this check into
+     * allow-all. `ctx.URL.origin` behaves identically on both Koa majors.
+     */
     clientBasedCORS: (ctx, origin, client) =>
-      ctx.request.origin === origin ||
-      isOriginAllowed(origin, client.metadata(), client.redirectUris),
+      ctx.URL.origin === origin || isOriginAllowed(origin, client.metadata(), client.redirectUris),
     // https://github.com/panva/node-oidc-provider/blob/main/recipes/claim_configuration.md
     // Note node-provider will append `claims` here to the default claims instead of overriding
     claims: userClaims,
@@ -510,9 +515,15 @@ export default function initOidc(
       if (ctx.is(jsonContentType)) {
         ctx.headers['content-type'] = formUrlEncodedContentType;
         // eslint-disable-next-line no-restricted-syntax
-        ctx.request.body = trySafe(() => JSON.parse(body) as unknown);
+        ctx.request.body = trySafe(() => JSON.parse(body) as Json);
       } else if (ctx.is(formUrlEncodedContentType)) {
-        ctx.request.body = querystring.parse(body);
+        /**
+         * `querystring.parse()` returns only string/string[] values at runtime, but its
+         * `ParsedUrlQuery` index signature includes `undefined`, which `Request.body`
+         * (typed as JSON by koa-body) does not accept — hence the double assertion.
+         */
+        // eslint-disable-next-line no-restricted-syntax
+        ctx.request.body = querystring.parse(body) as unknown as Json;
       }
     }
 
