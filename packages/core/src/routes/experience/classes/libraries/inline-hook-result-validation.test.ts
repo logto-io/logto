@@ -15,7 +15,10 @@ const signInIdentifier = {
   type: SignInIdentifier.Email,
   value: 'jane@example.com',
 } as const;
-const p1Event = (user: HookUser | null) => ({
+const p1Event = (
+  // eslint-disable-next-line @typescript-eslint/ban-types -- matches PostFirstFactorVerificationEvent.user
+  user: HookUser | null
+) => ({
   user,
   identifier: signInIdentifier,
 });
