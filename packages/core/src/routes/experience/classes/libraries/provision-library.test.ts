@@ -518,7 +518,8 @@ describe('ProvisionLibrary', () => {
           passwordEncrypted: 'hashed-password',
           passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
           isPasswordExpired: false,
-        })
+        }),
+        'replace'
       );
       expect(updateUserById.mock.calls[0]?.[1]).toHaveProperty(
         'passwordUpdatedAt',
@@ -535,7 +536,7 @@ describe('ProvisionLibrary', () => {
       await provisionLibrary.updateUser('user-id', { name: 'Jane Doe' });
 
       expect(findUserById).not.toHaveBeenCalled();
-      expect(updateUserById).toHaveBeenCalledWith('user-id', { name: 'Jane Doe' });
+      expect(updateUserById).toHaveBeenCalledWith('user-id', { name: 'Jane Doe' }, 'merge');
     });
 
     it('replaces customData without reading the existing user when mergeCustomData is false', async () => {
@@ -561,7 +562,8 @@ describe('ProvisionLibrary', () => {
         'user-id',
         expect.objectContaining({
           customData,
-        })
+        }),
+        'replace'
       );
     });
 

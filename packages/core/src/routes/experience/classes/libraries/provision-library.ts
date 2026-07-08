@@ -203,24 +203,33 @@ export class ProvisionLibrary {
 
   async updateUser(
     userId: string,
-    profile: InteractionUserProvisioningProfile,
+    provisioningProfile: InteractionUserProvisioningProfile,
     { mergeCustomData: shouldMergeCustomData = false }: UpdateUserOptions = {}
   ) {
     const { queries, libraries } = this.tenantContext;
 
     await libraries.users.checkIdentifierCollision(
-      getProfileIdentifierCollisionPayload(profile),
+      getProfileIdentifierCollisionPayload(provisioningProfile),
       userId
     );
 
-    const { passwordEncrypted, passwordEncryptionMethod, customData, ...updateProfile } = profile;
-    const customDataForUpdate = await this.resolveCustomDataForUpdate(
+    const { passwordEncrypted, passwordEncryptionMethod, customData, profile, ...updateProfile } =
+      provisioningProfile;
+    const { customDataForUpdate, existingUser } = await this.resolveCustomDataForUpdate(
       userId,
       customData,
       shouldMergeCustomData
     );
+    const profileForUpdate =
+      customDataForUpdate !== undefined && profile !== undefined && Object.keys(profile).length > 0
+        ? {
+            ...(existingUser ?? (await queries.users.findUserById(userId))).profile,
+            ...profile,
+          }
+        : profile;
     const updatePayload = {
       ...updateProfile,
+      ...conditional(profileForUpdate !== undefined && { profile: profileForUpdate }),
       ...conditional(customDataForUpdate !== undefined && { customData: customDataForUpdate }),
       ...conditional(
         passwordEncrypted &&
@@ -236,7 +245,11 @@ export class ProvisionLibrary {
       return queries.users.findUserById(userId);
     }
 
-    const user = await queries.users.updateUserById(userId, updatePayload);
+    const user = await queries.users.updateUserById(
+      userId,
+      updatePayload,
+      customDataForUpdate !== undefined ? 'replace' : 'merge'
+    );
 
     this.ctx.appendDataHookContext('User.Data.Updated', { user });
 
@@ -289,22 +302,25 @@ export class ProvisionLibrary {
     userId: string,
     customData: JsonObject | undefined,
     shouldMergeCustomData: boolean
-  ): Promise<JsonObject | undefined> {
+  ): Promise<{ customDataForUpdate: JsonObject | undefined; existingUser?: User }> {
     if (customData === undefined) {
-      return undefined;
+      return { customDataForUpdate: undefined };
     }
 
     if (!shouldMergeCustomData) {
-      return customData;
+      return { customDataForUpdate: customData };
     }
 
     if (Object.keys(customData).length === 0) {
-      return undefined;
+      return { customDataForUpdate: undefined };
     }
 
     const existingUser = await this.tenantContext.queries.users.findUserById(userId);
 
-    return mergeUpdateUserCustomData(existingUser.customData, customData);
+    return {
+      customDataForUpdate: mergeUpdateUserCustomData(existingUser.customData, customData),
+      existingUser,
+    };
   }
 
   private async getUserProvisionContext(profile: InteractionProfile): Promise<{
