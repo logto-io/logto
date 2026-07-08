@@ -143,7 +143,7 @@ describe('SmartInputField Component', () => {
       });
     });
 
-    test('should keep partial international phone input as raw value', () => {
+    test('should strip the leading "+" from partial international phone input', () => {
       const { container, getByText } = renderInputField({
         enabledTypes: [SignInIdentifier.Phone],
       });
@@ -152,8 +152,14 @@ describe('SmartInputField Component', () => {
 
       fireEvent.change(input, { target: { value: '+7' } });
 
+      // The `+` is represented by the country code selector, so it should not be kept in the input
+      // value, otherwise `SmartInputField` would emit a malformed value like `${countryCode}+7`.
       expect(getByText(`+${defaultCountryCallingCode}`)).not.toBeNull();
-      expect(input.value).toBe('+7');
+      expect(input.value).toBe('7');
+      expect(onChange).toHaveBeenLastCalledWith({
+        type: SignInIdentifier.Phone,
+        value: `${defaultCountryCallingCode}7`,
+      });
     });
   });
 

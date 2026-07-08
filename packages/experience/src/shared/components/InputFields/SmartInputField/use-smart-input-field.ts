@@ -80,6 +80,18 @@ const useSmartInputField = ({ defaultValue, enabledTypes }: Props) => {
           setCurrentType(SignInIdentifier.Phone);
           return;
         }
+
+        /**
+         * When phone is the only enabled type, the value is always treated as a phone number and
+         * the country calling code is prepended to it. A leading `+` that does not yet parse into a
+         * full number (e.g. `+7`) would otherwise produce a malformed value like `86+7`, so strip
+         * it here since the `+` is already represented by the country code selector.
+         */
+        if (enabledTypeSet.size === 1) {
+          setInputValue(trimValue.slice(1));
+          setCurrentType(SignInIdentifier.Phone);
+          return;
+        }
       }
 
       setInputValue(trimValue);
