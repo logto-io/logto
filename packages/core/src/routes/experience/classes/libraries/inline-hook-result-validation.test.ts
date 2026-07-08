@@ -1,4 +1,4 @@
-import { type HookUser } from '@logto/schemas';
+import { SignInIdentifier, type HookUser } from '@logto/schemas';
 
 import { mockUser } from '#src/__mocks__/user.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -11,6 +11,14 @@ import {
 } from './inline-hook-result-validation.js';
 
 const hookUser: HookUser = mockUser;
+const signInIdentifier = {
+  type: SignInIdentifier.Email,
+  value: 'jane@example.com',
+} as const;
+const p1Event = (user: HookUser | null) => ({
+  user,
+  identifier: signInIdentifier,
+});
 const invalidCredentialsResult: ValidatedPostFirstFactorVerificationHookResult = {
   action: 'rejectInvalidCredentials',
 };
@@ -32,9 +40,7 @@ describe('validatePostFirstFactorVerificationHookResult', () => {
   ])('returns invalid-credentials rejection for invalid result %#', (result) => {
     expect(
       validatePostFirstFactorVerificationHookResult({
-        event: {
-          user: null,
-        },
+        event: p1Event(null),
         result,
       })
     ).toEqual(invalidCredentialsResult);
@@ -43,9 +49,7 @@ describe('validatePostFirstFactorVerificationHookResult', () => {
   it('accepts createUser when the event user is null', () => {
     expect(
       validatePostFirstFactorVerificationHookResult({
-        event: {
-          user: null,
-        },
+        event: p1Event(null),
         result: {
           action: 'createUser',
           passwordVerified: true,
@@ -67,9 +71,7 @@ describe('validatePostFirstFactorVerificationHookResult', () => {
   it('accepts updateUser when the event user exists', () => {
     expect(
       validatePostFirstFactorVerificationHookResult({
-        event: {
-          user: hookUser,
-        },
+        event: p1Event(hookUser),
         result: {
           action: 'updateUser',
           passwordVerified: true,
@@ -90,9 +92,7 @@ describe('validatePostFirstFactorVerificationHookResult', () => {
   it('throws identity conflict when createUser is returned for an existing event user', () => {
     expect(() =>
       validatePostFirstFactorVerificationHookResult({
-        event: {
-          user: hookUser,
-        },
+        event: p1Event(hookUser),
         result: {
           action: 'createUser',
           passwordVerified: true,
@@ -107,9 +107,7 @@ describe('validatePostFirstFactorVerificationHookResult', () => {
   it('throws identity conflict when updateUser is returned for a missing event user', () => {
     expect(() =>
       validatePostFirstFactorVerificationHookResult({
-        event: {
-          user: null,
-        },
+        event: p1Event(null),
         result: {
           action: 'updateUser',
           passwordVerified: true,
@@ -119,6 +117,46 @@ describe('validatePostFirstFactorVerificationHookResult', () => {
         },
       })
     ).toMatchError(new RequestError({ code: 'session.identity_conflict', status: 409 }));
+  });
+
+  it('allows omitting the anchor identifier field', () => {
+    expect(
+      validatePostFirstFactorVerificationHookResult({
+        event: p1Event(null),
+        result: {
+          action: 'createUser',
+          passwordVerified: true,
+          user: {
+            name: 'Jane Doe',
+          },
+        },
+      })
+    ).toEqual({
+      action: 'createUser',
+      user: {
+        name: 'Jane Doe',
+      },
+    });
+  });
+
+  it('rejects changing the anchor identifier value', () => {
+    expect(() =>
+      validatePostFirstFactorVerificationHookResult({
+        event: p1Event(null),
+        result: {
+          action: 'createUser',
+          passwordVerified: true,
+          user: {
+            primaryEmail: 'other@example.com',
+          },
+        },
+      })
+    ).toMatchError(
+      new RequestError(
+        { code: 'inline_hook.sign_in_identifier_changed', status: 422 },
+        { identifierType: SignInIdentifier.Email }
+      )
+    );
   });
 });
 

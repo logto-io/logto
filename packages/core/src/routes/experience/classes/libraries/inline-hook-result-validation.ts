@@ -1,12 +1,17 @@
 import {
-  hookProvisioningProfileGuard,
-  type HookProvisioningProfile,
   type PostFirstFactorVerificationEvent,
   type PostSignInEvent,
+  SignInIdentifier,
+  type HookUserPatch,
+  type InteractionIdentifier,
 } from '@logto/schemas';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
+
+import { type HookProvisioningProfile } from '../../types.js';
+
+import { toHookProvisioningProfile } from './inline-hook-provisioning-profile.js';
 
 type InlineHookResultObject = {
   action?: unknown;
@@ -57,17 +62,41 @@ const identityConflictError = () =>
 const verificationFailedError = () =>
   new RequestError({ code: 'session.verification_failed', status: 400 });
 
-const toHookProvisioningProfile = (user: unknown) => {
-  const result = hookProvisioningProfileGuard.safeParse(user);
+const toHookProvisioningProfileSafe = (user: unknown) => {
+  try {
+    return toHookProvisioningProfile(user);
+  } catch {
+    return undefined;
+  }
+};
 
-  return result.success ? result.data : undefined;
+const signInIdentifierToUserField = {
+  [SignInIdentifier.Email]: 'primaryEmail',
+  [SignInIdentifier.Phone]: 'primaryPhone',
+  [SignInIdentifier.Username]: 'username',
+} as const satisfies Record<SignInIdentifier, keyof HookUserPatch>;
+
+const assertHookPreservesSignInIdentifier = (
+  identifier: InteractionIdentifier,
+  userPatch: HookUserPatch
+) => {
+  const field = signInIdentifierToUserField[identifier.type];
+  const returned = userPatch[field];
+
+  assertThat(
+    returned === undefined || returned === identifier.value,
+    new RequestError(
+      { code: 'inline_hook.sign_in_identifier_changed', status: 422 },
+      { identifierType: identifier.type }
+    )
+  );
 };
 
 export const validatePostFirstFactorVerificationHookResult = ({
   event,
   result,
 }: {
-  event: Pick<PostFirstFactorVerificationEvent, 'user'>;
+  event: Pick<PostFirstFactorVerificationEvent, 'user' | 'identifier'>;
   result: unknown;
 }): ValidatedPostFirstFactorVerificationHookResult => {
   if (!isInlineHookResultObject(result)) {
@@ -84,11 +113,13 @@ export const validatePostFirstFactorVerificationHookResult = ({
     return invalidCredentialsResult();
   }
 
-  const profile = toHookProvisioningProfile(user);
+  const profile = toHookProvisioningProfileSafe(user);
 
   if (!profile) {
     return invalidCredentialsResult();
   }
+
+  assertHookPreservesSignInIdentifier(event.identifier, profile);
 
   if (action === 'createUser') {
     assertThat(event.user === null, identityConflictError());
@@ -133,7 +164,7 @@ export const validatePostSignInHookResult = ({
     return continueResult();
   }
 
-  const profile = toHookProvisioningProfile(user);
+  const profile = toHookProvisioningProfileSafe(user);
 
   assertThat(profile, verificationFailedError());
 
