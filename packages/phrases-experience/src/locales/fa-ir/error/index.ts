@@ -33,6 +33,7 @@ const error = {
   invalid_link: 'لینک نامعتبر است',
   invalid_link_description: 'توکن یک‌بار مصرف شما ممکن است منقضی شده یا دیگر معتبر نباشد.',
   captcha_verification_failed: 'تأیید کپچا ناموفق بود.',
+  send_verification_code_failed: 'ارسال کد تأیید ناموفق بود. لطفاً بعداً دوباره تلاش کنید.',
   terms_acceptance_required: 'پذیرش شرایط الزامی است',
   terms_acceptance_required_description: 'برای ادامه باید با شرایط موافقت کنید.',
   something_went_wrong: 'مشکلی پیش آمد',

@@ -15,7 +15,7 @@ const connector = {
     'Impossibile trovare il modello corretto nella configurazione del connettore.',
   template_not_supported: 'Il connettore non supporta questo tipo di modello.',
   rate_limit_exceeded: 'Limite di frequenza attivato. Riprova più tardi.',
-  usage_limit_exceeded: 'È stato raggiunto il limite di utilizzo del servizio.',
+  usage_limit_exceeded: 'È stato raggiunto il limite di utilizzo del servizio email.',
   not_implemented: '{{method}}: non è stato ancora implementato.',
   social_invalid_access_token: 'Il token di accesso del connettore non è valido.',
   invalid_auth_code: 'Il codice di autenticazione del connettore non è valido.',

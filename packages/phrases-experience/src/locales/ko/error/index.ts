@@ -33,6 +33,7 @@ const error = {
   invalid_link: '유효하지 않은 링크',
   invalid_link_description: '일회성 토큰이 만료되었거나 더 이상 유효하지 않을 수 있어요.',
   captcha_verification_failed: '캡차 검증에 실패했어요.',
+  send_verification_code_failed: '인증 코드를 보내지 못했습니다. 잠시 후 다시 시도해주세요.',
   terms_acceptance_required: '약관 동의가 필요해요',
   terms_acceptance_required_description: '계속하려면 약관에 동의해야 해요.',
   something_went_wrong: '문제가 발생했어요',

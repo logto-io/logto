@@ -35,6 +35,8 @@ const error = {
   invalid_link: '無効なリンク',
   invalid_link_description: 'ワンタイムトークンの有効期限が切れているか、無効になっています。',
   captcha_verification_failed: 'キャプチャーの検証に失敗しました。',
+  send_verification_code_failed:
+    '認証コードの送信に失敗しました。しばらくしてからもう一度お試しください。',
   terms_acceptance_required: '利用規約の同意が必要です',
   terms_acceptance_required_description:
     '続行するには利用規約に同意する必要があります。もう一度お試しください。',

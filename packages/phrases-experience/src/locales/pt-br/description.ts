@@ -36,6 +36,8 @@ const description = {
   reset_password: 'Esqueceu a senha',
   reset_password_description:
     'Digite o {{types, list(type: disjunction;)}} à sua conta e enviaremos a você o código de verificação para redefinir sua senha.',
+  reset_password_magic_link_description:
+    'Insira o endereço de e-mail associado à sua conta para continuar redefinindo sua senha.',
   new_password: 'Nova senha',
   set_password: 'Configurar senha',
   password_changed: 'Senha alterada',

@@ -35,6 +35,8 @@ const description = {
   reset_password: 'إعادة تعيين كلمة المرور',
   reset_password_description:
     'أدخل {{types, list(type: disjunction;)}} المرتبطة بحسابك، وسنرسل لك رمز التحقق لإعادة تعيين كلمة المرور.',
+  reset_password_magic_link_description:
+    'أدخل عنوان البريد الإلكتروني المرتبط بحسابك لمتابعة إعادة تعيين كلمة المرور.',
   new_password: 'كلمة المرور الجديدة',
   set_password: 'تعيين كلمة المرور',
   password_changed: 'تم تغيير كلمة المرور',

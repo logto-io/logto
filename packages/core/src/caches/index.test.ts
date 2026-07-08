@@ -20,17 +20,21 @@ const createClient = jest.fn((_config?: { socket?: { tls?: boolean } }) => ({
   on: mockFunction,
 }));
 
-const createCluster = jest.fn((_config?: { defaults?: { socket?: { tls?: boolean } } }) => ({
-  // The cluster client only exposes `isOpen`; default to open so commands run.
-  isOpen: true,
-  set: mockFunction,
-  get: mockFunction,
-  del: mockFunction,
-  sendCommand: async () => 'PONG',
-  connect: mockFunction,
-  disconnect: mockFunction,
-  on: mockFunction,
-}));
+const createCluster = jest.fn(
+  (_config?: {
+    defaults?: { username?: string; password?: string; socket?: { tls?: boolean } };
+  }) => ({
+    // The cluster client only exposes `isOpen`; default to open so commands run.
+    isOpen: true,
+    set: mockFunction,
+    get: mockFunction,
+    del: mockFunction,
+    sendCommand: async () => 'PONG',
+    connect: mockFunction,
+    disconnect: mockFunction,
+    on: mockFunction,
+  })
+);
 
 mockEsm('redis', () => ({
   createClient,
@@ -111,6 +115,78 @@ describe('RedisCache', () => {
 
       // Do sanity check only
       expect(mockFunction).toBeCalledTimes(6);
+      stub.restore();
+    }
+  });
+
+  it('should decode percent-encoded credentials for the cluster client', () => {
+    jest.clearAllMocks();
+    const stub = Sinon.stub(EnvSet, 'values').value({
+      ...EnvSet.values,
+      redisUrl: 'rediss://user:p%40ss%2Fword@redis.example:6379?cluster=1',
+    });
+
+    try {
+      redisCacheFactory();
+
+      const options = createCluster.mock.calls[0]?.[0];
+      expect(options?.defaults?.username).toBe('user');
+      expect(options?.defaults?.password).toBe('p@ss/word'); // `%40`->`@`, `%2F`->`/`
+    } finally {
+      stub.restore();
+    }
+  });
+
+  it('should not throw and decode selectively when credentials mix literal `%` with encoded chars', () => {
+    jest.clearAllMocks();
+    const stub = Sinon.stub(EnvSet, 'values').value({
+      ...EnvSet.values,
+      redisUrl: 'rediss://user:pa%s^s@redis.example:6379?cluster=1', // `pa%s^s` parses to `pa%s%5Es`
+    });
+
+    try {
+      redisCacheFactory();
+
+      const options = createCluster.mock.calls[0]?.[0];
+      expect(options?.defaults?.username).toBe('user');
+      expect(options?.defaults?.password).toBe('pa%s^s'); // `%s` kept literal, `%5E`->`^`
+    } finally {
+      stub.restore();
+    }
+  });
+
+  it('should decode multi-byte UTF-8 sequences in credentials', () => {
+    jest.clearAllMocks();
+    const stub = Sinon.stub(EnvSet, 'values').value({
+      ...EnvSet.values,
+      // `café`/`你好` -> `caf%C3%A9`/`%E4%BD%A0%E5%A5%BD`
+      redisUrl: 'rediss://caf%C3%A9:%E4%BD%A0%E5%A5%BD@redis.example:6379?cluster=1',
+    });
+
+    try {
+      redisCacheFactory();
+
+      const options = createCluster.mock.calls[0]?.[0];
+      expect(options?.defaults?.username).toBe('café');
+      expect(options?.defaults?.password).toBe('你好');
+    } finally {
+      stub.restore();
+    }
+  });
+
+  it('should pass undefined cluster credentials when the URL has none', () => {
+    jest.clearAllMocks();
+    const stub = Sinon.stub(EnvSet, 'values').value({
+      ...EnvSet.values,
+      redisUrl: 'rediss://redis.example:6379?cluster=1',
+    });
+
+    try {
+      redisCacheFactory();
+      const options = createCluster.mock.calls[0]?.[0];
+      expect(options?.defaults?.username).toBeUndefined();
+      expect(options?.defaults?.password).toBeUndefined();
+    } finally {
       stub.restore();
     }
   });

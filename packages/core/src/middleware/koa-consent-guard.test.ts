@@ -1,4 +1,4 @@
-import { OneTimeTokenStatus } from '@logto/schemas';
+import { FirstScreen, OneTimeTokenStatus } from '@logto/schemas';
 import { NotFoundError } from '@silverhand/slonik';
 import { Provider } from 'oidc-provider';
 
@@ -91,6 +91,47 @@ describe('koaConsentGuard middleware', () => {
     await guard(ctx, next);
     expect(mockTenant.queries.users.findUserById).not.toHaveBeenCalled();
     expect(next).toHaveBeenCalled();
+  });
+
+  it('should redirect reset-password one-time token flow to reset-password page without login_hint', async () => {
+    const ctx = createContext({
+      params: {
+        first_screen: FirstScreen.ResetPassword,
+        one_time_token: 'token_value',
+      },
+      // @ts-expect-error -- Only accountId is needed by this middleware.
+      session: { accountId: 'foo' },
+    });
+    const guard = koaConsentGuard(mockTenant.libraries, mockTenant.queries);
+
+    await guard(ctx, next);
+
+    expect(mockTenant.queries.users.findUserById).not.toHaveBeenCalled();
+    expect(checkOneTimeToken).not.toHaveBeenCalled();
+    expect(ctx.redirect).toHaveBeenCalledWith('reset-password?one_time_token=token_value');
+    expect(next).not.toHaveBeenCalled();
+  });
+
+  it('should redirect reset-password one-time token flow to reset-password page with login_hint', async () => {
+    const ctx = createContext({
+      params: {
+        first_screen: FirstScreen.ResetPassword,
+        one_time_token: 'token_value',
+        login_hint: 'foo@example.com',
+      },
+      // @ts-expect-error -- Only accountId is needed by this middleware.
+      session: { accountId: 'foo' },
+    });
+    const guard = koaConsentGuard(mockTenant.libraries, mockTenant.queries);
+
+    await guard(ctx, next);
+
+    expect(mockTenant.queries.users.findUserById).not.toHaveBeenCalled();
+    expect(checkOneTimeToken).not.toHaveBeenCalled();
+    expect(ctx.redirect).toHaveBeenCalledWith(
+      'reset-password?login_hint=foo%40example.com&one_time_token=token_value'
+    );
+    expect(next).not.toHaveBeenCalled();
   });
 
   it('should redirect to switch account page if email does not match', async () => {

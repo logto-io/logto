@@ -35,6 +35,8 @@ const error = {
   invalid_link_description:
     'Dein einmaliger Token ist möglicherweise abgelaufen oder nicht mehr gültig.',
   captcha_verification_failed: 'Fehler beim Captcha-Verifizierung.',
+  send_verification_code_failed:
+    'Bestätigungscode konnte nicht gesendet werden. Bitte versuche es später noch einmal.',
   terms_acceptance_required: 'Zustimmung zu den Bedingungen erforderlich',
   terms_acceptance_required_description: 'Du musst den Bedingungen zustimmen, um fortzufahren.',
   something_went_wrong: 'Etwas ist schiefgegangen',

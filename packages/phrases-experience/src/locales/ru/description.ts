@@ -36,6 +36,8 @@ const description = {
   reset_password: 'Забыли пароль',
   reset_password_description:
     'Введите {{types, list(type: disjunction;)}} от вашей учетной записи, и мы вышлем вам код для восстановления пароля.',
+  reset_password_magic_link_description:
+    'Введите адрес электронной почты, связанный с вашей учетной записью, чтобы продолжить сброс пароля.',
   new_password: 'Новый пароль',
   set_password: 'Задать пароль',
   password_changed: 'Пароль изменен',

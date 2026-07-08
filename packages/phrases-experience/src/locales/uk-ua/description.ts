@@ -36,6 +36,8 @@ const description = {
   reset_password: 'Скинути пароль',
   reset_password_description:
     'Введіть {{types, list(type: disjunction;)}}, пов’язаний з вашим обліковим записом, і ми надішлемо вам код підтвердження для скидання пароля.',
+  reset_password_magic_link_description:
+    'Введіть адресу електронної пошти, пов’язану з вашим обліковим записом, щоб продовжити скидання пароля.',
   new_password: 'Новий пароль',
   set_password: 'Встановити пароль',
   password_changed: 'Пароль змінено',

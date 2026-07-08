@@ -1,20 +1,24 @@
 import { Prompt } from '@logto/js';
-import { experience, ExtraParamsKey } from '@logto/schemas';
+import { experience, ExtraParamsKey, FirstScreen } from '@logto/schemas';
 import { NotFoundError } from '@silverhand/slonik';
 import { type MiddlewareType } from 'koa';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-const buildExperienceUrl = (route: string, token: string, loginHint: string) => {
-  const searchParams = new URLSearchParams({
-    [ExtraParamsKey.LoginHint]: loginHint,
-    [ExtraParamsKey.OneTimeToken]: token,
-  });
+const buildExperienceUrl = (route: string, token: string, loginHint?: string) => {
+  const searchParams = new URLSearchParams();
+
+  if (loginHint) {
+    searchParams.append(ExtraParamsKey.LoginHint, loginHint);
+  }
+
+  searchParams.append(ExtraParamsKey.OneTimeToken, token);
 
   return `${route}?${searchParams.toString()}`;
 };
@@ -28,20 +32,50 @@ const buildOneTimeTokenErrorUrl = (message: string) => {
 const hasLoginPrompt = (prompt: unknown) =>
   typeof prompt === 'string' && prompt.split(' ').includes(Prompt.Login);
 
-const getOneTimeTokenParams = ({
-  one_time_token: token,
-  login_hint: loginHint,
-  prompt,
-}: {
-  one_time_token?: unknown;
-  login_hint?: unknown;
-  prompt?: unknown;
-}) => {
-  if (!token || !loginHint || typeof token !== 'string' || typeof loginHint !== 'string') {
+const nonEmptyStringGuard = z.string().min(1);
+const optionalNonEmptyStringGuard = z.preprocess(
+  (value) => (value === '' ? undefined : value),
+  nonEmptyStringGuard.optional()
+);
+
+const oneTimeTokenParamsGuard = z.object({
+  one_time_token: nonEmptyStringGuard,
+  login_hint: nonEmptyStringGuard,
+  prompt: z.unknown().optional(),
+});
+
+const getOneTimeTokenParams = (params: unknown) => {
+  const result = oneTimeTokenParamsGuard.safeParse(params);
+
+  if (!result.success) {
     return;
   }
 
+  const { one_time_token: token, login_hint: loginHint, prompt } = result.data;
+
   return { token, loginHint, prompt };
+};
+
+const resetPasswordOneTimeTokenParamsGuard = z.object({
+  first_screen: z.literal(FirstScreen.ResetPassword),
+  one_time_token: nonEmptyStringGuard,
+  login_hint: optionalNonEmptyStringGuard,
+});
+
+const getResetPasswordOneTimeTokenParams = (params: unknown) => {
+  if (!EnvSet.values.isDevFeaturesEnabled) {
+    return;
+  }
+
+  const result = resetPasswordOneTimeTokenParamsGuard.safeParse(params);
+
+  if (!result.success) {
+    return;
+  }
+
+  const { one_time_token: token, login_hint: loginHint } = result.data;
+
+  return { token, loginHint };
 };
 
 const lastSubmittedLoginGuard = z.object({
@@ -115,12 +149,20 @@ export default function koaConsentGuard<
     assertThat(session, new RequestError({ code: 'session.not_found' }));
 
     const oneTimeTokenParams = getOneTimeTokenParams(params);
+    const resetPasswordOneTimeTokenParams = getResetPasswordOneTimeTokenParams(params);
+
+    if (resetPasswordOneTimeTokenParams) {
+      const { token, loginHint } = resetPasswordOneTimeTokenParams;
+
+      ctx.redirect(buildExperienceUrl(experience.routes.resetPassword, token, loginHint));
+      return;
+    }
 
     if (!oneTimeTokenParams) {
       return next();
     }
 
-    const { token, loginHint, prompt } = oneTimeTokenParams;
+    const { token: signInOneTimeToken, loginHint, prompt } = oneTimeTokenParams;
     const getPrimaryEmailByUserId = async (userId: string) => {
       const { primaryEmail } = await queries.users.findUserById(userId);
 
@@ -136,12 +178,14 @@ export default function koaConsentGuard<
     });
 
     if (primaryEmail !== loginHint && !hasLoginPrompt(prompt) && !hasMatchingLastSubmittedLogin) {
-      ctx.redirect(buildExperienceUrl(experience.routes.switchAccount, token, loginHint));
+      ctx.redirect(
+        buildExperienceUrl(experience.routes.switchAccount, signInOneTimeToken, loginHint)
+      );
       return;
     }
 
     try {
-      await libraries.oneTimeTokens.checkOneTimeToken(token, loginHint);
+      await libraries.oneTimeTokens.checkOneTimeToken(signInOneTimeToken, loginHint);
     } catch (error: unknown) {
       if (error instanceof RequestError) {
         if (
@@ -160,6 +204,6 @@ export default function koaConsentGuard<
       throw error;
     }
 
-    ctx.redirect(buildExperienceUrl(experience.routes.oneTimeToken, token, loginHint));
+    ctx.redirect(buildExperienceUrl(experience.routes.oneTimeToken, signInOneTimeToken, loginHint));
   };
 }
