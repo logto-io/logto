@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import {
   adminConsoleApplicationId,
   adminTenantId,
@@ -10,6 +11,7 @@ import {
 } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
+import { mockUser } from '#src/__mocks__/user.js';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type InsertUserResult } from '#src/libraries/user.js';
@@ -38,10 +40,20 @@ const encryptedTokenSet = {
 
 const createProvisionLibrary = ({
   invitations = [],
+  user = mockUser,
 }: {
   invitations?: Array<{ status: OrganizationInvitationStatus }>;
+  user?: User;
 } = {}) => {
   const hasActiveUsers = jest.fn().mockResolvedValue(true);
+  const findUserById = jest.fn(async (): Promise<User> => user);
+  const updateUserById = jest.fn(
+    async (userId: string, payload: Partial<CreateUser>): Promise<User> => ({
+      ...user,
+      ...payload,
+      id: userId,
+    })
+  );
   const checkIdentifierCollision = jest.fn();
   const generateUserId = jest.fn().mockResolvedValue('uid');
   const insertUser = jest.fn(async (user: CreateUser): Promise<InsertUserResult> => [user as User]);
@@ -59,7 +71,9 @@ const createProvisionLibrary = ({
     ),
     {
       users: {
+        findUserById,
         hasActiveUsers,
+        updateUserById,
       },
       signInExperiences: {
         updateDefaultSignInExperience,
@@ -103,7 +117,9 @@ const createProvisionLibrary = ({
   return {
     provisionLibrary: new ProvisionLibrary(tenant, ctx),
     ctx,
+    findUserById,
     hasActiveUsers,
+    updateUserById,
     checkIdentifierCollision,
     insertUser,
     provisionOrganizations,
@@ -436,3 +452,4 @@ describe('ProvisionLibrary', () => {
     });
   });
 });
+/* eslint-enable max-lines */
