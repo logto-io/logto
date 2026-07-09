@@ -79,14 +79,31 @@ export const getGeneralIdentifierErrorMessage = (
   return t(code, data);
 };
 
+/**
+ * Try to interpret a value as a full international phone number (e.g. a pasted or stored
+ * E.164 number like `+8613800138000`), splitting it into the country calling code and the
+ * national number. Returns `undefined` when the value does not parse into a national number,
+ * so callers can fall back to treating it as a plain input value.
+ */
+export const parsePhoneIdentifier = (value: string) => {
+  const phoneNumber = parsePhoneNumber(value);
+
+  if (phoneNumber?.nationalNumber) {
+    return {
+      countryCode: phoneNumber.countryCallingCode,
+      inputValue: phoneNumber.nationalNumber,
+    };
+  }
+};
+
 export const parseIdentifierValue = (type?: IdentifierInputType, value?: string) => {
   if (type === SignInIdentifier.Phone && value) {
-    const validPhoneNumber = parsePhoneNumber(value);
+    const phoneIdentifier = parsePhoneIdentifier(value);
 
-    if (validPhoneNumber) {
+    if (phoneIdentifier) {
       return {
-        countryCode: validPhoneNumber.countryCallingCode,
-        inputValue: validPhoneNumber.nationalNumber,
+        countryCode: phoneIdentifier.countryCode,
+        inputValue: phoneIdentifier.inputValue,
       };
     }
   }

@@ -13,7 +13,7 @@ import {
   updatePrimaryPhone,
   updateUser,
 } from '#src/api/my-account.js';
-import { updateSignInExperience } from '#src/api/sign-in-experience.js';
+import { getSignInExperience, updateSignInExperience } from '#src/api/sign-in-experience.js';
 import {
   createAndVerifyVerificationCode,
   createVerificationRecordByPassword,
@@ -37,12 +37,7 @@ const expectPrimaryEmailUpdateRejectedByBlocklist = async (
   email: string,
   customBlocklist: string[]
 ) => {
-  await updateSignInExperience({
-    emailBlocklistPolicy: {
-      customBlocklist,
-    },
-  });
-
+  const { emailBlocklistPolicy } = await getSignInExperience();
   const { user, username, password } = await createDefaultTenantUserWithPassword();
   const api = await signInAndGetUserApi(username, password, {
     scopes: [UserScope.Profile, UserScope.Email],
@@ -54,6 +49,12 @@ const expectPrimaryEmailUpdateRejectedByBlocklist = async (
       type: SignInIdentifier.Email,
       value: email,
     });
+    await updateSignInExperience({
+      emailBlocklistPolicy: {
+        ...emailBlocklistPolicy,
+        customBlocklist: [...(emailBlocklistPolicy.customBlocklist ?? []), ...customBlocklist],
+      },
+    });
 
     await expectRejects(
       updatePrimaryEmail(api, email, verificationRecordId, newVerificationRecordId),
@@ -64,9 +65,7 @@ const expectPrimaryEmailUpdateRejectedByBlocklist = async (
     );
   } finally {
     await updateSignInExperience({
-      emailBlocklistPolicy: {
-        customBlocklist: [],
-      },
+      emailBlocklistPolicy,
     });
     await deleteDefaultTenantUser(user.id);
   }
@@ -184,6 +183,44 @@ describe('account (email and phone)', () => {
       expect(userInfo).toHaveProperty('primaryEmail', newEmail);
 
       await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should reject sending verification code to a blocklisted new email', async () => {
+      const email = generateEmail();
+      const { emailBlocklistPolicy } = await getSignInExperience();
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Email],
+      });
+
+      try {
+        await updateSignInExperience({
+          emailBlocklistPolicy: {
+            ...emailBlocklistPolicy,
+            customBlocklist: [...(emailBlocklistPolicy.customBlocklist ?? []), email],
+          },
+        });
+
+        await expectRejects(
+          api.post('api/verifications/verification-code', {
+            json: {
+              identifier: {
+                type: SignInIdentifier.Email,
+                value: email,
+              },
+            },
+          }),
+          {
+            code: 'session.email_blocklist.email_not_allowed',
+            status: 422,
+          }
+        );
+      } finally {
+        await updateSignInExperience({
+          emailBlocklistPolicy,
+        });
+        await deleteDefaultTenantUser(user.id);
+      }
     });
 
     it('should reject the email if the email is in the blocklist', async () => {

@@ -1,4 +1,4 @@
-import { OneTimeTokenStatus } from '@logto/schemas';
+import { OneTimeTokenStatus, type InteractionEvent } from '@logto/schemas';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -22,7 +22,11 @@ export const createOneTimeTokenLibrary = (queries: Queries) => {
     return updateOneTimeTokenStatusQuery(token, status);
   };
 
-  const checkOneTimeToken = async (token: string, email: string) => {
+  const checkOneTimeToken = async (
+    token: string,
+    email: string,
+    expectedInteractionEvent?: InteractionEvent
+  ) => {
     const oneTimeToken = await getOneTimeTokenByToken(token);
 
     assertThat(oneTimeToken.email === email, 'one_time_token.email_mismatch');
@@ -42,12 +46,22 @@ export const createOneTimeTokenLibrary = (queries: Queries) => {
       'one_time_token.token_consumed'
     );
     assertThat(oneTimeToken.status !== OneTimeTokenStatus.Revoked, 'one_time_token.token_revoked');
+    assertThat(
+      !expectedInteractionEvent ||
+        !oneTimeToken.context.interactionEvent ||
+        oneTimeToken.context.interactionEvent === expectedInteractionEvent,
+      'one_time_token.interaction_event_mismatch'
+    );
 
     return oneTimeToken;
   };
 
-  const verifyOneTimeToken = async (token: string, email: string) => {
-    await checkOneTimeToken(token, email);
+  const verifyOneTimeToken = async (
+    token: string,
+    email: string,
+    expectedInteractionEvent?: InteractionEvent
+  ) => {
+    await checkOneTimeToken(token, email, expectedInteractionEvent);
 
     return updateOneTimeTokenStatus(token, OneTimeTokenStatus.Consumed);
   };

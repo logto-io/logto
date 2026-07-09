@@ -34,6 +34,7 @@ const error = {
   invalid_link_description: '你的一次性令牌可能已過期或失效。',
   captcha_verification_failed: '驗證碼驗證失敗。',
   send_verification_code_failed: '驗證碼傳送失敗，請稍後再試。',
+  send_verification_code_failed_use_password: '驗證碼傳送失敗，請改用密碼登錄。',
   terms_acceptance_required: '需要同意條款',
   terms_acceptance_required_description: '必須同意條款後才能繼續。',
   something_went_wrong: '出錯了',

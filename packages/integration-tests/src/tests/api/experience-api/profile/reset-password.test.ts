@@ -253,7 +253,12 @@ describe('Reset Password', () => {
 
     const newPassword = generatePassword();
     const client = new ExperienceClient();
-    const oneTimeToken = await createOneTimeToken({ email: primaryEmail });
+    const oneTimeToken = await createOneTimeToken({
+      email: primaryEmail,
+      context: {
+        interactionEvent: InteractionEvent.ForgotPassword,
+      },
+    });
 
     try {
       await startResetMagicLinkAuthorization(client, oneTimeToken.token, primaryEmail);
@@ -287,7 +292,12 @@ describe('Reset Password', () => {
 
     const newPassword = generatePassword();
     const client = new ExperienceClient();
-    const oneTimeToken = await createOneTimeToken({ email: primaryEmail });
+    const oneTimeToken = await createOneTimeToken({
+      email: primaryEmail,
+      context: {
+        interactionEvent: InteractionEvent.ForgotPassword,
+      },
+    });
 
     try {
       await startResetMagicLinkAuthorization(client, oneTimeToken.token);
@@ -328,6 +338,47 @@ describe('Reset Password', () => {
         {
           status: 400,
           code: 'one_time_token.email_mismatch',
+        }
+      );
+
+      await expect(getOneTimeTokenById(oneTimeToken.id)).resolves.toMatchObject({
+        status: OneTimeTokenStatus.Active,
+      });
+
+      const interactionData = await client.getInteractionData();
+
+      expect(interactionData.interactionEvent).toBe(InteractionEvent.ForgotPassword);
+      expect(interactionData.userId).toBeUndefined();
+      await expectRejects(client.resetPassword({ password: generatePassword() }), {
+        status: 404,
+        code: 'session.identifier_not_found',
+      });
+    } finally {
+      await deleteOneTimeTokenById(oneTimeToken.id);
+    }
+  });
+
+  it('should not consume the one-time token or identify the user if the token scope mismatches', async () => {
+    const email = generateEmail();
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.ForgotPassword,
+    });
+    const oneTimeToken = await createOneTimeToken({
+      email,
+      context: {
+        interactionEvent: InteractionEvent.SignIn,
+      },
+    });
+
+    try {
+      await expectRejects(
+        client.verifyOneTimeToken({
+          token: oneTimeToken.token,
+          identifier: { type: SignInIdentifier.Email, value: email },
+        }),
+        {
+          status: 400,
+          code: 'one_time_token.interaction_event_mismatch',
         }
       );
 

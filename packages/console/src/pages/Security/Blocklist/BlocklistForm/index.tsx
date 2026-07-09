@@ -42,6 +42,18 @@ function BlocklistForm({ formData }: Props) {
   const { t: globalT } = useTranslation(undefined, {
     keyPrefix: 'admin_console',
   });
+  const customEmailAddressDescription = isDevFeaturesEnabled
+    ? t('blocklist.custom_email_address_with_wildcards.description')
+    : t('blocklist.custom_email_address.description');
+  const customEmailAddressPlaceholder = isDevFeaturesEnabled
+    ? t('blocklist.custom_email_address_with_wildcards.placeholder')
+    : t('blocklist.custom_email_address.placeholder');
+  const customEmailAddressDuplicateError = isDevFeaturesEnabled
+    ? t('blocklist.custom_email_address_with_wildcards.duplicate_error')
+    : t('blocklist.custom_email_address.duplicate_error');
+  const customEmailAddressInvalidFormatError = isDevFeaturesEnabled
+    ? t('blocklist.custom_email_address_with_wildcards.invalid_format_error')
+    : t('blocklist.custom_email_address.invalid_format_error');
 
   const {
     reset,
@@ -116,9 +128,7 @@ function BlocklistForm({ formData }: Props) {
             />
           </FormField>
           <FormField title="security.blocklist.custom_email_address.title">
-            <div className={styles.fieldDescription}>
-              {t('blocklist.custom_email_address.description')}
-            </div>
+            <div className={styles.fieldDescription}>{customEmailAddressDescription}</div>
             <Controller
               name="customBlocklist"
               control={control}
@@ -126,15 +136,15 @@ function BlocklistForm({ formData }: Props) {
                 <MultiOptionInput
                   disabled={isFreeTenant}
                   values={value}
-                  placeholder={t('blocklist.custom_email_address.placeholder')}
+                  placeholder={customEmailAddressPlaceholder}
                   renderValue={(value) => value}
                   validateInput={(input) => {
                     if (value.includes(input)) {
-                      return t('blocklist.custom_email_address.duplicate_error');
+                      return customEmailAddressDuplicateError;
                     }
 
                     if (!isEmailBlocklistItem(input, { allowWildcard: isDevFeaturesEnabled })) {
-                      return t('blocklist.custom_email_address.invalid_format_error');
+                      return customEmailAddressInvalidFormatError;
                     }
 
                     return { value: input };
