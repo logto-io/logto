@@ -2,7 +2,6 @@ import { appInsights } from '@logto/app-insights/node';
 import type { RequestErrorBody } from '@logto/schemas';
 import { isHttpError } from 'http-errors';
 import type { Middleware } from 'koa';
-import { HttpError } from 'koa';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -41,8 +40,12 @@ export default function koaErrorHandler<
         return;
       }
 
-      // Koa will handle `HttpError` with a built-in manner.
-      if (error instanceof HttpError || isHttpError(error)) {
+      /**
+       * Koa handles `HttpError` natively. Use the duck-typed `isHttpError` instead of
+       * `instanceof HttpError` — with multiple `http-errors` majors in the dependency tree, an
+       * `instanceof` check against the wrong copy silently fails.
+       */
+      if (isHttpError(error)) {
         return;
       }
 

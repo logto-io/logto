@@ -22,7 +22,11 @@ const createContext = (query: Record<string, string>): WithPaginationContext<Con
     ...baseContext,
     request: {
       ...baseContext.request,
-      origin: '',
+      /**
+       * `URL` is a prototype getter on the Koa request, so it does not survive the object
+       * spread above — provide it explicitly for `buildLink()`.
+       */
+      URL: new URL('http://test.com'),
       path: '',
       query,
     },
@@ -112,8 +116,8 @@ describe('response', () => {
       await koaPagination({ defaultPageSize: 20 })(ctx, async () => {
         ctx.pagination.totalCount = 10;
       });
-      expect(links.has('<?page=1>; rel="first"')).toBeTruthy();
-      expect(links.has('<?page=1>; rel="last"')).toBeTruthy();
+      expect(links.has('<http://test.com?page=1>; rel="first"')).toBeTruthy();
+      expect(links.has('<http://test.com?page=1>; rel="last"')).toBeTruthy();
     });
 
     it('should append `first`, `next`, `last` in 1 of 2', async () => {
@@ -121,9 +125,9 @@ describe('response', () => {
       await koaPagination({ defaultPageSize: 20 })(ctx, async () => {
         ctx.pagination.totalCount = 30;
       });
-      expect(links.has('<?page=1>; rel="first"')).toBeTruthy();
-      expect(links.has('<?page=2>; rel="next"')).toBeTruthy();
-      expect(links.has('<?page=2>; rel="last"')).toBeTruthy();
+      expect(links.has('<http://test.com?page=1>; rel="first"')).toBeTruthy();
+      expect(links.has('<http://test.com?page=2>; rel="next"')).toBeTruthy();
+      expect(links.has('<http://test.com?page=2>; rel="last"')).toBeTruthy();
     });
 
     it('should append `first`, `prev`, `last` in 2 of 2', async () => {
@@ -131,9 +135,9 @@ describe('response', () => {
       await koaPagination({ defaultPageSize: 20 })(ctx, async () => {
         ctx.pagination.totalCount = 30;
       });
-      expect(links.has('<?page=1>; rel="first"')).toBeTruthy();
-      expect(links.has('<?page=1>; rel="prev"')).toBeTruthy();
-      expect(links.has('<?page=2>; rel="last"')).toBeTruthy();
+      expect(links.has('<http://test.com?page=1>; rel="first"')).toBeTruthy();
+      expect(links.has('<http://test.com?page=1>; rel="prev"')).toBeTruthy();
+      expect(links.has('<http://test.com?page=2>; rel="last"')).toBeTruthy();
     });
 
     it('should append `first`, `prev`, `next`, `last` in 2 of 3', async () => {
@@ -141,10 +145,10 @@ describe('response', () => {
       await koaPagination({ defaultPageSize: 20 })(ctx, async () => {
         ctx.pagination.totalCount = 50;
       });
-      expect(links.has('<?page=1>; rel="first"')).toBeTruthy();
-      expect(links.has('<?page=1>; rel="prev"')).toBeTruthy();
-      expect(links.has('<?page=3>; rel="next"')).toBeTruthy();
-      expect(links.has('<?page=3>; rel="last"')).toBeTruthy();
+      expect(links.has('<http://test.com?page=1>; rel="first"')).toBeTruthy();
+      expect(links.has('<http://test.com?page=1>; rel="prev"')).toBeTruthy();
+      expect(links.has('<http://test.com?page=3>; rel="next"')).toBeTruthy();
+      expect(links.has('<http://test.com?page=3>; rel="last"')).toBeTruthy();
     });
   });
 });
@@ -161,7 +165,7 @@ describe('capped totalCount', () => {
     });
     expect(setHeader).toHaveBeenCalledWith('Total-Number', '10001');
     expect(setHeader).toHaveBeenCalledWith('Total-Number-Is-Capped', 'true');
-    expect(links.has('<?page=1>; rel="first"')).toBeTruthy();
+    expect(links.has('<http://test.com?page=1>; rel="first"')).toBeTruthy();
     expect([...links].some((link) => link.includes('rel="last"'))).toBeFalsy();
     expect([...links].some((link) => link.includes('rel="next"'))).toBeFalsy();
   });
@@ -172,7 +176,7 @@ describe('capped totalCount', () => {
       ctx.pagination.totalCount = 10_001;
       ctx.pagination.totalCountIsCapped = true;
     });
-    expect(links.has('<?page=2>; rel="prev"')).toBeTruthy();
+    expect(links.has('<http://test.com?page=2>; rel="prev"')).toBeTruthy();
   });
 
   it('keeps full Link set when totalCountIsCapped is false', async () => {
@@ -182,7 +186,7 @@ describe('capped totalCount', () => {
       ctx.pagination.totalCountIsCapped = false;
     });
     expect(setHeader).not.toHaveBeenCalledWith('Total-Number-Is-Capped', 'true');
-    expect(links.has('<?page=2>; rel="last"')).toBeTruthy();
+    expect(links.has('<http://test.com?page=2>; rel="last"')).toBeTruthy();
   });
 
   it('keeps full Link set when totalCountIsCapped is undefined', async () => {
@@ -191,6 +195,6 @@ describe('capped totalCount', () => {
       ctx.pagination.totalCount = 30;
     });
     expect(setHeader).not.toHaveBeenCalledWith('Total-Number-Is-Capped', 'true');
-    expect(links.has('<?page=2>; rel="last"')).toBeTruthy();
+    expect(links.has('<http://test.com?page=2>; rel="last"')).toBeTruthy();
   });
 });
