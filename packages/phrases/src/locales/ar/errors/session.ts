@@ -60,6 +60,10 @@ const session = {
     email_subaddressing_not_allowed: 'لا يُسمح بتوجيه البريد الإلكتروني الإضافي.',
     email_not_allowed: 'عنوان البريد الإلكتروني "{{email}}" مقيد. يرجى اختيار عنوان آخر.',
   },
+  email_allowlist: {
+    email_not_allowed:
+      'The email address "{{email}}" is not allowed. Please use an allowed email address.',
+  },
   google_one_tap: {
     cookie_mismatch: 'عدم تطابق ملف تعريف الارتباط لخدمة Google One Tap.',
     invalid_id_token: 'رمز معرف Google غير صالح.',

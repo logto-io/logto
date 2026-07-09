@@ -54,6 +54,10 @@ const session = {
     email_subaddressing_not_allowed: '不允许电子邮件子地址。',
     email_not_allowed: '电子邮件地址 "{{email}}" 受限。请选择其他地址。',
   },
+  email_allowlist: {
+    email_not_allowed:
+      'The email address "{{email}}" is not allowed. Please use an allowed email address.',
+  },
   google_one_tap: {
     cookie_mismatch: 'Google One Tap cookie 不匹配。',
     invalid_id_token: '无效的 Google ID Token。',

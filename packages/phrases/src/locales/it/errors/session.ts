@@ -69,6 +69,10 @@ const session = {
     email_not_allowed:
       'L\'indirizzo email "{{email}}" è ristretto. Si prega di sceglierne un altro.',
   },
+  email_allowlist: {
+    email_not_allowed:
+      'The email address "{{email}}" is not allowed. Please use an allowed email address.',
+  },
   google_one_tap: {
     cookie_mismatch: 'Discrepanza dei cookie di Google One Tap.',
     invalid_id_token: 'Token ID Google non valido.',

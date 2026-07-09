@@ -2,6 +2,7 @@ import {
   findBlockedAllowlistItems,
   isEmailBlocklistItem,
   isEmailListItem,
+  matchesEmailListItem,
   matchesEmailBlocklistItem,
 } from '@logto/core-kit';
 import { type EmailAllowlistPolicy, type EmailBlocklistPolicy } from '@logto/schemas';
@@ -233,6 +234,36 @@ export const validateEmailAgainstBlocklistPolicy = async (
   if (blockDisposableAddresses) {
     await validateDisposableEmailDomain(email);
   }
+};
+
+/**
+ * Guard the email address against the sign-in experience access policies.
+ *
+ * @remarks
+ * - if custom allowlist is non-empty, the email must match at least one allowlist entry
+ * - then apply the existing blocklist rules
+ */
+export const validateEmailAgainstAccessPolicy = async (
+  emailAllowlistPolicy: EmailAllowlistPolicy,
+  emailBlocklistPolicy: EmailBlocklistPolicy,
+  email: string
+) => {
+  const { customAllowlist } = emailAllowlistPolicy;
+
+  if (customAllowlist && customAllowlist.length > 0) {
+    const isAllowed = customAllowlist.some((item) => matchesEmailListItem(item, email));
+
+    assertThat(
+      isAllowed,
+      new RequestError({
+        code: 'session.email_allowlist.email_not_allowed',
+        status: 422,
+        email,
+      })
+    );
+  }
+
+  await validateEmailAgainstBlocklistPolicy(emailBlocklistPolicy, email);
 };
 
 export const isEmailBlocklistPolicyEnabled = (emailBlockListPolicy: EmailBlocklistPolicy) => {

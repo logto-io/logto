@@ -69,6 +69,10 @@ const session = {
     email_not_allowed:
       'Адрес электронной почты "{{email}}" ограничен. Пожалуйста, выберите другой.',
   },
+  email_allowlist: {
+    email_not_allowed:
+      'The email address "{{email}}" is not allowed. Please use an allowed email address.',
+  },
   google_one_tap: {
     cookie_mismatch: 'Несоответствие cookie Google One Tap.',
     invalid_id_token: 'Недействительный токен Google ID.',

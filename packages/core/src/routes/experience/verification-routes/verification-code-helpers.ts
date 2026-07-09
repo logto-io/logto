@@ -142,12 +142,12 @@ export const sendCode = async ({
 
   const codeVerification = createVerificationRecord();
 
-  // Pre-validate email against blocklist for registration
+  // Pre-validate email against access policies for registration
   if (
     interactionEvent === InteractionEvent.Register &&
     identifier.type === SignInIdentifier.Email
   ) {
-    await experienceInteraction.signInExperienceValidator.guardEmailBlocklist(codeVerification);
+    await experienceInteraction.signInExperienceValidator.guardEmailAccessPolicy(codeVerification);
   }
 
   const skipDelivery = await shouldSkipDelivery(

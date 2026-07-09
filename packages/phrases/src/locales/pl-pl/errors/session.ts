@@ -68,6 +68,10 @@ const session = {
     email_subaddressing_not_allowed: 'Dodawanie subadresów do emaila nie jest dozwolone.',
     email_not_allowed: 'Adres email "{{email}}" jest zastrzeżony. Proszę wybrać inny.',
   },
+  email_allowlist: {
+    email_not_allowed:
+      'The email address "{{email}}" is not allowed. Please use an allowed email address.',
+  },
   google_one_tap: {
     cookie_mismatch: 'Nieprawidłowe dopasowanie ciasteczek Google One Tap.',
     invalid_id_token: 'Nieprawidłowy token ID Google.',

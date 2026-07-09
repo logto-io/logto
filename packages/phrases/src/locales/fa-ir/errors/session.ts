@@ -61,6 +61,10 @@ const session = {
     email_subaddressing_not_allowed: 'زیرآدرس ایمیل مجاز نیست.',
     email_not_allowed: 'آدرس ایمیل «{{email}}» محدود شده است. لطفاً آدرس دیگری انتخاب کنید.',
   },
+  email_allowlist: {
+    email_not_allowed:
+      'The email address "{{email}}" is not allowed. Please use an allowed email address.',
+  },
   google_one_tap: {
     cookie_mismatch: 'عدم تطابق کوکی Google One Tap.',
     invalid_id_token: 'توکن شناسایی Google نامعتبر است.',

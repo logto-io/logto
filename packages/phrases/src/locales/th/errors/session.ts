@@ -60,6 +60,10 @@ const session = {
     email_subaddressing_not_allowed: 'ไม่อนุญาตให้ใช้อีเมลแบบ subaddressing',
     email_not_allowed: 'อีเมล "{{email}}" ถูกจำกัด กรุณาเลือกอีเมลอื่น',
   },
+  email_allowlist: {
+    email_not_allowed:
+      'The email address "{{email}}" is not allowed. Please use an allowed email address.',
+  },
   google_one_tap: {
     cookie_mismatch: 'คุกกี้ Google One Tap ไม่ตรงกัน',
     invalid_id_token: 'Google ID Token ไม่ถูกต้อง',

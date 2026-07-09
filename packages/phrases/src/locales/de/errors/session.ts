@@ -70,6 +70,10 @@ const session = {
     email_subaddressing_not_allowed: 'E-Mail-Subadressierung ist nicht erlaubt.',
     email_not_allowed: 'Die E-Mail-Adresse "{{email}}" ist eingeschränkt. Bitte wähle eine andere.',
   },
+  email_allowlist: {
+    email_not_allowed:
+      'The email address "{{email}}" is not allowed. Please use an allowed email address.',
+  },
   google_one_tap: {
     cookie_mismatch: 'Google One Tap Cookie-Störung.',
     invalid_id_token: 'Ungültiges Google-ID-Token.',

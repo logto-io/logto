@@ -12,7 +12,7 @@ import {
 } from '@logto/schemas';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { validateEmailAgainstBlocklistPolicy } from '#src/libraries/sign-in-experience/index.js';
+import { validateEmailAgainstAccessPolicy } from '#src/libraries/sign-in-experience/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -372,22 +372,27 @@ export class SignInExperienceValidator {
   }
 
   /**
-   * Guard the email address is not in the blocklist.
+   * Guard the email address against the allowlist and blocklist access policies.
    *
    * @remarks
-   * Use this method to guard the email address or domain is not in the blocklist.
+   * Use this method to guard the email address against sign-in experience email access policies.
+   * - guard custom email allowlist if provided
    * - guard disposable email domain if enabled
    * - guard email subaddessing if enabled
    * - guard custom email address/domain if provided
    */
-  public async guardEmailBlocklist(verificationRecord: VerificationRecord) {
+  public async guardEmailAccessPolicy(verificationRecord: VerificationRecord) {
     const email = getEmailIdentifierFromVerificationRecord(verificationRecord);
     if (!email) {
       return;
     }
 
-    const { emailBlocklistPolicy } = await this.getSignInExperienceData();
-    await validateEmailAgainstBlocklistPolicy(emailBlocklistPolicy, email);
+    const { emailAllowlistPolicy, emailBlocklistPolicy } = await this.getSignInExperienceData();
+    await validateEmailAgainstAccessPolicy(emailAllowlistPolicy, emailBlocklistPolicy, email);
+  }
+
+  public async guardEmailBlocklist(verificationRecord: VerificationRecord) {
+    await this.guardEmailAccessPolicy(verificationRecord);
   }
 
   /**

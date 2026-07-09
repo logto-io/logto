@@ -6,7 +6,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import { assertUserHasRemainingIdentifier } from '#src/utils/user.js';
 
 import RequestError from '../../errors/RequestError/index.js';
-import { validateEmailAgainstBlocklistPolicy } from '../../libraries/sign-in-experience/email-blocklist-policy.js';
+import { validateEmailAgainstAccessPolicy } from '../../libraries/sign-in-experience/email-blocklist-policy.js';
 import { buildVerificationRecordByIdAndType } from '../../libraries/verification.js';
 import assertThat from '../../utils/assert-that.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
@@ -49,9 +49,9 @@ export default function emailAndPhoneRoutes<T extends UserRouter>(...args: Route
 
       assertThat(scopes.has(UserScope.Email), 'auth.unauthorized');
 
-      // Validate email blocklist policy
-      const { emailBlocklistPolicy } = await findDefaultSignInExperience();
-      await validateEmailAgainstBlocklistPolicy(emailBlocklistPolicy, email);
+      // Validate email access policy
+      const { emailAllowlistPolicy, emailBlocklistPolicy } = await findDefaultSignInExperience();
+      await validateEmailAgainstAccessPolicy(emailAllowlistPolicy, emailBlocklistPolicy, email);
 
       // Check new identifier
       const newVerificationRecord = await buildVerificationRecordByIdAndType({

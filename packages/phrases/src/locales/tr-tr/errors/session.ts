@@ -66,6 +66,10 @@ const session = {
     email_subaddressing_not_allowed: 'E-posta alt adreslemesine izin verilmiyor.',
     email_not_allowed: 'Kısıtlanmış e-posta adresi "{{email}}". Lütfen farklı bir tane seçiniz.',
   },
+  email_allowlist: {
+    email_not_allowed:
+      'The email address "{{email}}" is not allowed. Please use an allowed email address.',
+  },
   google_one_tap: {
     cookie_mismatch: 'Google One Tap çerezleri uyuşmuyor.',
     invalid_id_token: 'Geçersiz Google Kimliği Jetonu.',

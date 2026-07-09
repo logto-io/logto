@@ -67,6 +67,10 @@ const session = {
     email_not_allowed:
       'メールアドレス "{{email}}" は制限されています。別のものを選択してください。',
   },
+  email_allowlist: {
+    email_not_allowed:
+      'The email address "{{email}}" is not allowed. Please use an allowed email address.',
+  },
   google_one_tap: {
     cookie_mismatch: 'Google One Tap クッキーが一致しません。',
     invalid_id_token: '無効な Google ID トークン。',

@@ -6,6 +6,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import {
   parseEmailAllowlistPolicy,
   parseEmailBlocklistPolicy,
+  validateEmailAgainstAccessPolicy,
   validateEmailAgainstBlocklistPolicy,
   isEmailBlocklistPolicyEnabled,
   isEmailAllowlistPolicyEnabled,
@@ -196,6 +197,52 @@ describe('validateEmailAgainstBlocklistPolicy', () => {
     await expect(
       validateEmailAgainstBlocklistPolicy(emailBlocklistPolicy, 'test@bar.com')
     ).resolves.not.toThrow();
+  });
+});
+
+describe('validateEmailAgainstAccessPolicy', () => {
+  it('should pass when allowlist is empty', async () => {
+    await expect(validateEmailAgainstAccessPolicy({}, {}, 'test@bar.com')).resolves.not.toThrow();
+  });
+
+  it('should pass when email matches allowlist entry', async () => {
+    await expect(
+      validateEmailAgainstAccessPolicy(
+        { customAllowlist: ['foo*@bar.com', '@example.com'] },
+        {},
+        'FooBar@bar.com'
+      )
+    ).resolves.not.toThrow();
+  });
+
+  it('should throw if email does not match the allowlist', async () => {
+    const email = 'test@bar.com';
+    await expect(
+      validateEmailAgainstAccessPolicy({ customAllowlist: ['@example.com'] }, {}, email)
+    ).rejects.toMatchError(
+      new RequestError({
+        code: 'session.email_allowlist.email_not_allowed',
+        status: 422,
+        email,
+      })
+    );
+  });
+
+  it('should still apply blocklist after allowlist passes', async () => {
+    const email = 'foo@bar.com';
+    await expect(
+      validateEmailAgainstAccessPolicy(
+        { customAllowlist: ['@bar.com'] },
+        { customBlocklist: ['foo@bar.com'] },
+        email
+      )
+    ).rejects.toMatchError(
+      new RequestError({
+        code: 'session.email_blocklist.email_not_allowed',
+        status: 422,
+        email,
+      })
+    );
   });
 });
 

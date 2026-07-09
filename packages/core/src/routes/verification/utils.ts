@@ -1,6 +1,6 @@
 import { SignInIdentifier, type VerificationCodeIdentifier } from '@logto/schemas';
 
-import { validateEmailAgainstBlocklistPolicy } from '#src/libraries/sign-in-experience/email-blocklist-policy.js';
+import { validateEmailAgainstAccessPolicy } from '#src/libraries/sign-in-experience/email-blocklist-policy.js';
 import type Queries from '#src/tenants/Queries.js';
 
 export const guardNewIdentifierEmailBlocklist = async (
@@ -12,6 +12,11 @@ export const guardNewIdentifierEmailBlocklist = async (
     return;
   }
 
-  const { emailBlocklistPolicy } = await queries.signInExperiences.findDefaultSignInExperience();
-  await validateEmailAgainstBlocklistPolicy(emailBlocklistPolicy, identifier.value);
+  const { emailAllowlistPolicy, emailBlocklistPolicy } =
+    await queries.signInExperiences.findDefaultSignInExperience();
+  await validateEmailAgainstAccessPolicy(
+    emailAllowlistPolicy,
+    emailBlocklistPolicy,
+    identifier.value
+  );
 };

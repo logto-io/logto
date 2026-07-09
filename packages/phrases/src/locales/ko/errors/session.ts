@@ -63,6 +63,10 @@ const session = {
     email_subaddressing_not_allowed: '이메일 서브어드레싱은 허용되지 않아요.',
     email_not_allowed: '이메일 주소 "{{email}}" 는 제한되어 있어요. 다른 주소를 선택해 주세요.',
   },
+  email_allowlist: {
+    email_not_allowed:
+      'The email address "{{email}}" is not allowed. Please use an allowed email address.',
+  },
   google_one_tap: {
     cookie_mismatch: 'Google One Tap 쿠키가 일치하지 않아요.',
     invalid_id_token: '유효하지 않은 Google ID 토큰이에요.',
