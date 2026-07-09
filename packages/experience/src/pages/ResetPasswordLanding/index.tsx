@@ -1,9 +1,10 @@
-import { experience, ExtraParamsKey } from '@logto/schemas';
+import { experience } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
-import { Navigate, useSearchParams } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 import FocusedAuthPageLayout from '@/Layout/FocusedAuthPageLayout';
 import { isDevFeaturesEnabled } from '@/constants/env';
+import useConsumeOneTimeTokenParameters from '@/hooks/use-consume-one-time-token-parameters';
 import usePrefilledIdentifier from '@/hooks/use-prefilled-identifier';
 import { identifierInputDescriptionMap } from '@/utils/form';
 
@@ -34,9 +35,7 @@ import { useResetPasswordMethods } from './use-reset-password-methods';
  */
 const ResetPasswordLanding = () => {
   const { t } = useTranslation();
-  const [params] = useSearchParams();
-  const oneTimeToken = params.get(ExtraParamsKey.OneTimeToken);
-  const loginHint = params.get(ExtraParamsKey.LoginHint) ?? undefined;
+  const { oneTimeToken, loginHint } = useConsumeOneTimeTokenParameters();
   const enabledMethods = useResetPasswordMethods();
   const { value: prefilledValue } = usePrefilledIdentifier({
     enabledIdentifiers: enabledMethods,
