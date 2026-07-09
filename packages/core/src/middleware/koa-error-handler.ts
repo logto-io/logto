@@ -41,9 +41,9 @@ export default function koaErrorHandler<
       }
 
       /**
-       * Koa will handle `HttpError` with a built-in manner. Use the duck-typed `isHttpError`
-       * instead of `instanceof HttpError` — with multiple `http-errors` majors in the
-       * dependency tree, an `instanceof` check against the wrong copy silently fails.
+       * Koa handles `HttpError` natively. Use the duck-typed `isHttpError` instead of
+       * `instanceof HttpError` — with multiple `http-errors` majors in the dependency tree, an
+       * `instanceof` check against the wrong copy silently fails.
        */
       if (isHttpError(error)) {
         return;
