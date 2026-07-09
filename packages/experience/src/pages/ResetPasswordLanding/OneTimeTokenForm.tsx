@@ -1,5 +1,10 @@
-import { SignInIdentifier, type OneTimeTokenVerificationVerifyPayload } from '@logto/schemas';
+import {
+  SignInIdentifier,
+  type OneTimeTokenVerificationVerifyPayload,
+  type RequestErrorBody,
+} from '@logto/schemas';
 import classNames from 'classnames';
+import { HTTPError, TimeoutError } from 'ky';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -8,19 +13,21 @@ import UserInteractionContext from '@/Providers/UserInteractionContextProvider/U
 import { identifyForgotPasswordWithOneTimeToken } from '@/apis/experience';
 import { SmartInputField } from '@/components/InputFields';
 import useApi from '@/hooks/use-api';
-import useErrorHandler from '@/hooks/use-error-handler';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import Button from '@/shared/components/Button';
-import ErrorMessage from '@/shared/components/ErrorMessage';
+import LoadingLayer from '@/shared/components/LoadingLayer';
 import { UserFlow } from '@/types';
 import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';
 
 import styles from '../ForgotPassword/ForgotPasswordForm/index.module.scss';
 
+import type { ResetPasswordMagicLinkError } from './types';
+
 type Props = {
   readonly className?: string;
   readonly token: string;
   readonly loginHint?: string;
+  readonly onError: (error: ResetPasswordMagicLinkError) => void;
 };
 
 type FormState = {
@@ -32,13 +39,11 @@ type FormState = {
 
 const emailIdentifier = [SignInIdentifier.Email];
 
-const OneTimeTokenForm = ({ className, token, loginHint = '' }: Props) => {
+const OneTimeTokenForm = ({ className, token, loginHint = '', onError }: Props) => {
   const { t } = useTranslation();
-  const [errorMessage, setErrorMessage] = useState<string>();
   const [isAutoSubmitting, setIsAutoSubmitting] = useState(false);
   const isAutoSubmitted = useRef(false);
   const navigate = useNavigateWithPreservedSearchParams();
-  const handleError = useErrorHandler();
   const asyncIdentifyForgotPasswordWithOneTimeToken = useApi(
     identifyForgotPasswordWithOneTimeToken
   );
@@ -47,7 +52,7 @@ const OneTimeTokenForm = ({ className, token, loginHint = '' }: Props) => {
   const {
     handleSubmit,
     control,
-    formState: { errors, isValid, isSubmitting },
+    formState: { errors, isSubmitting },
   } = useForm<FormState>({
     reValidateMode: 'onBlur',
     defaultValues: {
@@ -57,27 +62,29 @@ const OneTimeTokenForm = ({ className, token, loginHint = '' }: Props) => {
     },
   });
 
-  useEffect(() => {
-    if (!isValid) {
-      setErrorMessage(undefined);
-    }
-  }, [isValid]);
-
   const submit = useCallback(
     async (payload: OneTimeTokenVerificationVerifyPayload) => {
-      setErrorMessage(undefined);
-
       const [error] = await asyncIdentifyForgotPasswordWithOneTimeToken(payload);
 
       if (error) {
-        await handleError(error, {
-          'guard.invalid_input': () => {
-            setErrorMessage(t('error.invalid_email'));
-          },
-          global: (error) => {
-            setErrorMessage(error.message);
-          },
-        });
+        if (error instanceof HTTPError) {
+          try {
+            const { code, message } = await error.response.json<RequestErrorBody>();
+
+            onError(
+              code === 'guard.invalid_input'
+                ? { message: 'error.invalid_email' }
+                : { rawMessage: message }
+            );
+          } catch {
+            onError({ message: 'error.unknown' });
+          }
+        } else if (error instanceof TimeoutError) {
+          onError({ message: 'error.timeout' });
+        } else {
+          onError({ message: 'error.unknown' });
+        }
+
         return;
       }
 
@@ -87,10 +94,9 @@ const OneTimeTokenForm = ({ className, token, loginHint = '' }: Props) => {
     },
     [
       asyncIdentifyForgotPasswordWithOneTimeToken,
-      handleError,
       navigate,
+      onError,
       setForgotPasswordIdentifierInputValue,
-      t,
     ]
   );
 
@@ -100,10 +106,6 @@ const OneTimeTokenForm = ({ className, token, loginHint = '' }: Props) => {
     }
 
     if (loginHint.length === 0) {
-      return;
-    }
-
-    if (validateIdentifierField(SignInIdentifier.Email, loginHint)) {
       return;
     }
 
@@ -144,6 +146,10 @@ const OneTimeTokenForm = ({ className, token, loginHint = '' }: Props) => {
 
   const isVerificationPending = isSubmitting || isAutoSubmitting;
 
+  if (loginHint) {
+    return <LoadingLayer />;
+  }
+
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
       <Controller
@@ -181,8 +187,6 @@ const OneTimeTokenForm = ({ className, token, loginHint = '' }: Props) => {
           />
         )}
       />
-
-      {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 
       <Button title="action.continue" htmlType="submit" isLoading={isVerificationPending} />
 

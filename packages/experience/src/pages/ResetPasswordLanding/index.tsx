@@ -1,4 +1,5 @@
 import { experience } from '@logto/schemas';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate } from 'react-router-dom';
 
@@ -6,11 +7,13 @@ import FocusedAuthPageLayout from '@/Layout/FocusedAuthPageLayout';
 import { isDevFeaturesEnabled } from '@/constants/env';
 import useConsumeOneTimeTokenParameters from '@/hooks/use-consume-one-time-token-parameters';
 import usePrefilledIdentifier from '@/hooks/use-prefilled-identifier';
+import ErrorPage from '@/pages/ErrorPage';
 import { identifierInputDescriptionMap } from '@/utils/form';
 
 import ForgotPasswordForm from '../ForgotPassword/ForgotPasswordForm';
 
 import OneTimeTokenForm from './OneTimeTokenForm';
+import type { ResetPasswordMagicLinkError } from './types';
 import { useResetPasswordMethods } from './use-reset-password-methods';
 
 /**
@@ -36,11 +39,23 @@ import { useResetPasswordMethods } from './use-reset-password-methods';
 const ResetPasswordLanding = () => {
   const { t } = useTranslation();
   const { oneTimeToken, loginHint } = useConsumeOneTimeTokenParameters();
+  const [magicLinkError, setMagicLinkError] = useState<ResetPasswordMagicLinkError>();
   const enabledMethods = useResetPasswordMethods();
   const { value: prefilledValue } = usePrefilledIdentifier({
     enabledIdentifiers: enabledMethods,
     isForgotPassword: true,
   });
+
+  if (magicLinkError) {
+    return (
+      <ErrorPage
+        isNavbarHidden
+        title="error.invalid_link"
+        message={magicLinkError.message ?? 'error.invalid_link_description'}
+        rawMessage={magicLinkError.rawMessage}
+      />
+    );
+  }
 
   if (isDevFeaturesEnabled && oneTimeToken) {
     return (
@@ -55,7 +70,7 @@ const ResetPasswordLanding = () => {
           text: 'description.back_to_sign_in',
         }}
       >
-        <OneTimeTokenForm token={oneTimeToken} loginHint={loginHint} />
+        <OneTimeTokenForm token={oneTimeToken} loginHint={loginHint} onError={setMagicLinkError} />
       </FocusedAuthPageLayout>
     );
   }

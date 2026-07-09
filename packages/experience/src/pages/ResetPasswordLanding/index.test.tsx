@@ -1,6 +1,7 @@
 import { SignInIdentifier } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { fireEvent, render, waitFor } from '@testing-library/react';
+import { HTTPError } from 'ky';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import PageContextProvider from '@/Providers/PageContextProvider';
@@ -32,6 +33,16 @@ jest.mock('react-i18next', () => ({
 jest.mock('@/apis/experience', () => ({
   identifyForgotPasswordWithOneTimeToken: jest.fn().mockResolvedValue({ verificationId: '123' }),
 }));
+
+const createRequestError = (code: string, message = code) => {
+  const response = {
+    status: 400,
+    statusText: 'Bad Request',
+    json: async () => ({ code, message }),
+  } as unknown as Response;
+
+  return new HTTPError(response, {} as Request, {} as never);
+};
 
 describe('ResetPasswordLanding', () => {
   const renderPage = (
@@ -87,7 +98,7 @@ describe('ResetPasswordLanding', () => {
     });
   });
 
-  it('keeps the form disabled while auto verifying one-time token', async () => {
+  it('shows loading instead of the email form while auto verifying one-time token', async () => {
     mockedIdentifyForgotPasswordWithOneTimeToken.mockImplementationOnce(async () => {
       await new Promise((resolve) => {
         setTimeout(resolve, 100);
@@ -108,19 +119,49 @@ describe('ResetPasswordLanding', () => {
     const identifierInput = container.querySelector<HTMLInputElement>('input[name="identifier"]');
     const submitButton = container.querySelector<HTMLButtonElement>('button[type="submit"]');
 
-    assert(identifierInput, new Error('identifier input should not be null'));
-    assert(submitButton, new Error('submit button should not be null'));
-
-    expect(identifierInput.disabled).toBe(true);
-    expect(submitButton.disabled).toBe(true);
-
-    fireEvent.click(submitButton);
-
+    expect(identifierInput).toBeNull();
+    expect(submitButton).toBeNull();
     expect(mockedIdentifyForgotPasswordWithOneTimeToken).toBeCalledTimes(1);
 
     await waitFor(() => {
       expect(queryByText('set password page')).not.toBeNull();
     });
+  });
+
+  it('shows the reset-password error page when magic-link verification fails', async () => {
+    mockedIdentifyForgotPasswordWithOneTimeToken.mockRejectedValueOnce(
+      createRequestError('session.verification_failed', 'Verification failed')
+    );
+
+    const { container, queryByText } = renderPage(
+      '/reset-password?one_time_token=token&login_hint=foo%40logto.io',
+      { email: false, phone: false }
+    );
+
+    await waitFor(() => {
+      expect(mockedIdentifyForgotPasswordWithOneTimeToken).toBeCalledTimes(1);
+      expect(window.location.pathname).toBe('/reset-password');
+      expect(queryByText('Verification failed')).not.toBeNull();
+    });
+
+    expect(container.querySelector<HTMLInputElement>('input[name="identifier"]')).toBeNull();
+  });
+
+  it('shows the reset-password error page when magic-link verification fails with a non-HTTP error', async () => {
+    mockedIdentifyForgotPasswordWithOneTimeToken.mockRejectedValueOnce(new Error('Network down'));
+
+    const { container, queryByText } = renderPage(
+      '/reset-password?one_time_token=token&login_hint=foo%40logto.io',
+      { email: false, phone: false }
+    );
+
+    await waitFor(() => {
+      expect(mockedIdentifyForgotPasswordWithOneTimeToken).toBeCalledTimes(1);
+      expect(window.location.pathname).toBe('/reset-password');
+      expect(queryByText('error.unknown')).not.toBeNull();
+    });
+
+    expect(container.querySelector<HTMLInputElement>('input[name="identifier"]')).toBeNull();
   });
 
   it('asks for email before verifying one-time token when login_hint is missing', async () => {
