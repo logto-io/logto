@@ -1,6 +1,8 @@
 import type Router from 'koa-router';
 import { type OpenAPIV3 } from 'openapi-types';
 
+import { getRequestOrigin } from '#src/utils/request.js';
+
 import type { AnonymousRouter } from '../types.js';
 
 import {
@@ -35,7 +37,7 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
     const baseDocument: OpenAPIV3.Document = buildManagementApiBaseDocument(
       pathMap,
       tags,
-      ctx.URL.origin
+      getRequestOrigin(ctx.request)
     );
 
     const data = assembleSwaggerDocument(supplementDocuments, baseDocument, ctx);

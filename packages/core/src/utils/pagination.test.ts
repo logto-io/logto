@@ -26,4 +26,10 @@ describe('buildLink()', () => {
     const link = buildLink(request, 10, 'last');
     expect(link).toEqual('<https://logto.dev/users?order=desc&page=10>; rel="last"');
   });
+
+  it('build a relative link when the request URL cannot be parsed', () => {
+    /** Koa memoizes a null-prototype object when the request URL cannot be parsed. */
+    const link = buildLink({ ...request, URL: Object.create(null) as URL }, 1, 'first');
+    expect(link).toEqual('</users?order=desc&page=1>; rel="first"');
+  });
 });
