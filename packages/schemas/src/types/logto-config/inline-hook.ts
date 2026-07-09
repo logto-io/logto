@@ -4,7 +4,7 @@ import { z } from 'zod';
 import type { Json } from '../../foundations/index.js';
 import type { InteractionEvent, InteractionIdentifier } from '../interactions.js';
 import type { UserInfo } from '../user.js';
-import { VerificationType } from '../verification-records/index.js';
+import type { VerificationType } from '../verification-records/index.js';
 
 export enum LogtoInlineHookKey {
   PostFirstFactorVerification = 'inlineHook.postFirstFactorVerification',
