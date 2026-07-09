@@ -131,6 +131,7 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const { token, email } = ctx.guard.body;
 
+      // Management API is an admin-level raw token verifier and does not bind the token to an Experience interaction.
       ctx.body = await verifyOneTimeToken(token, email);
       ctx.status = 200;
       return next();

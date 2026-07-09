@@ -1,6 +1,7 @@
 const one_time_token = {
   token_not_found: 'Token {{token}} bulunamadı.',
   email_mismatch: 'E-posta, sağlanan token ile eşleşmiyor.',
+  interaction_event_mismatch: 'Token bu etkileşim için kullanılamaz.',
   token_expired: "Token'ın süresi doldu.",
   token_consumed: 'Token zaten kullanılmış.',
   token_revoked: 'Token iptal edilmiş.',
