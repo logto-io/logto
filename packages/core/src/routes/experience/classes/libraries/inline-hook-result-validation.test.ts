@@ -161,6 +161,56 @@ describe('validatePostFirstFactorVerificationHookResult', () => {
       )
     );
   });
+
+  it('allows the same email with different casing', () => {
+    expect(
+      validatePostFirstFactorVerificationHookResult({
+        event: p1Event(null),
+        result: {
+          action: 'createUser',
+          passwordVerified: true,
+          user: {
+            primaryEmail: 'Jane@Example.com',
+            name: 'Jane Doe',
+          },
+        },
+      })
+    ).toEqual({
+      action: 'createUser',
+      user: {
+        primaryEmail: 'Jane@Example.com',
+        name: 'Jane Doe',
+      },
+    });
+  });
+
+  it('allows the same phone in a different format', () => {
+    expect(
+      validatePostFirstFactorVerificationHookResult({
+        event: {
+          user: null,
+          identifier: {
+            type: SignInIdentifier.Phone,
+            value: '12025550123',
+          },
+        },
+        result: {
+          action: 'createUser',
+          passwordVerified: true,
+          user: {
+            primaryPhone: '+1 (202) 555-0123',
+            name: 'Jane Doe',
+          },
+        },
+      })
+    ).toEqual({
+      action: 'createUser',
+      user: {
+        primaryPhone: '+1 (202) 555-0123',
+        name: 'Jane Doe',
+      },
+    });
+  });
 });
 
 describe('validatePostSignInHookResult', () => {
