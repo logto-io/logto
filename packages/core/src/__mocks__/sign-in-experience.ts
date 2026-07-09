@@ -121,6 +121,7 @@ export const mockSignInExperience: SignInExperience = {
   sentinelPolicy: {},
   verificationCodePolicy: {},
   emailBlocklistPolicy: {},
+  emailAllowlistPolicy: {},
   forgotPasswordMethods: null,
   passkeySignIn: {
     enabled: false,

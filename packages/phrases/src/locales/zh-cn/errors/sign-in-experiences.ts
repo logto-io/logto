@@ -28,6 +28,10 @@ const sign_in_experiences = {
   missing_sign_up_identifiers: '主要的注册标识符不能为空。',
   invalid_custom_email_blocklist_format:
     '无效的自定义电子邮件黑名单项目：{{items, list(type:conjunction)}}。每个项目必须是有效的电子邮件地址或电子邮件域，例如，foo@example.com 或 @example.com。',
+  invalid_custom_email_allowlist_format:
+    'Invalid custom email allowlist items: {{items, list(type:conjunction)}}. Each item must be a valid email address or email domain, e.g., foo@example.com or @example.com.',
+  email_allowlist_entries_blocked:
+    'Some email allowlist entries are fully blocked by email blocklist rules: {{items, list(type:conjunction)}}. Remove the conflicting block rules or allowlist entries.',
   forgot_password_method_requires_connector: '忘记密码方法需要配置相应的 {{method}} 连接器。',
   password_expiration_requires_forgot_password:
     '密码过期需要至少配置一种带有有效连接器的忘记密码方式。',

@@ -37,6 +37,10 @@ const sign_in_experiences = {
   missing_sign_up_identifiers: 'El identificador de registro principal no puede estar vacío.',
   invalid_custom_email_blocklist_format:
     'Elementos no válidos de la lista de bloqueo de correos electrónicos personalizados: {{items, list(type:conjunction)}}. Cada elemento debe ser una dirección de correo electrónico o dominio de correo electrónico válido, por ejemplo, foo@ejemplo.com o @ejemplo.com.',
+  invalid_custom_email_allowlist_format:
+    'Invalid custom email allowlist items: {{items, list(type:conjunction)}}. Each item must be a valid email address or email domain, e.g., foo@example.com or @example.com.',
+  email_allowlist_entries_blocked:
+    'Some email allowlist entries are fully blocked by email blocklist rules: {{items, list(type:conjunction)}}. Remove the conflicting block rules or allowlist entries.',
   forgot_password_method_requires_connector:
     'El método de recuperación de contraseña requiere que se configure un conector {{method}} correspondiente.',
   password_expiration_requires_forgot_password:

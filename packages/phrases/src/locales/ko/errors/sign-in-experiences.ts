@@ -34,6 +34,10 @@ const sign_in_experiences = {
   missing_sign_up_identifiers: '기본 회원가입 식별자는 비워 둘 수 없습니다.',
   invalid_custom_email_blocklist_format:
     '잘못된 사용자 정의 이메일 차단 목록 항목: {{items, list(type:conjunction)}}. 각 항목은 유효한 이메일 주소 또는 이메일 도메인이어야 합니다. 예: foo@example.com 또는 @example.com.',
+  invalid_custom_email_allowlist_format:
+    'Invalid custom email allowlist items: {{items, list(type:conjunction)}}. Each item must be a valid email address or email domain, e.g., foo@example.com or @example.com.',
+  email_allowlist_entries_blocked:
+    'Some email allowlist entries are fully blocked by email blocklist rules: {{items, list(type:conjunction)}}. Remove the conflicting block rules or allowlist entries.',
   forgot_password_method_requires_connector:
     '비밀번호 찾기 방법은 해당 {{method}} 커넥터를 구성해야 합니다.',
   password_expiration_requires_forgot_password:

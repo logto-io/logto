@@ -36,6 +36,10 @@ const sign_in_experiences = {
   missing_sign_up_identifiers: 'ตัวระบุสมัครสมาชิกหลักต้องไม่เว้นว่าง',
   invalid_custom_email_blocklist_format:
     'รายการบล็อคอีเมลแบบกำหนดเองไม่ถูกต้อง: {{items, list(type:conjunction)}} แต่ละรายการต้องเป็นอีเมลหรือโดเมนอีเมลที่ถูกต้อง เช่น foo@example.com หรือ @example.com',
+  invalid_custom_email_allowlist_format:
+    'Invalid custom email allowlist items: {{items, list(type:conjunction)}}. Each item must be a valid email address or email domain, e.g., foo@example.com or @example.com.',
+  email_allowlist_entries_blocked:
+    'Some email allowlist entries are fully blocked by email blocklist rules: {{items, list(type:conjunction)}}. Remove the conflicting block rules or allowlist entries.',
   forgot_password_method_requires_connector:
     'วิธีกู้คืนรหัสผ่านต้องมีตัวเชื่อมต่อ {{method}} ที่เกี่ยวข้องกำหนดค่าไว้',
   password_expiration_requires_forgot_password:

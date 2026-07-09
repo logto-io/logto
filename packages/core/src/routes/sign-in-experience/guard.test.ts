@@ -7,6 +7,7 @@ import { MockTenant } from '#src/test-utils/tenant.js';
 const { jest } = import.meta;
 
 const validateLanguageInfo = jest.fn();
+const findDefaultSignInExperience = jest.fn().mockResolvedValue(mockSignInExperience);
 
 const tenantContext = new MockTenant(
   undefined,
@@ -18,7 +19,7 @@ const tenantContext = new MockTenant(
         ...mockSignInExperience,
         ...data,
       }),
-      findDefaultSignInExperience: jest.fn().mockResolvedValue(mockSignInExperience),
+      findDefaultSignInExperience,
     },
   },
   undefined,
@@ -49,6 +50,7 @@ const invalidBooleans = [undefined, null, 0, 1, '0', '1', 'true', 'false'];
 
 beforeEach(() => {
   jest.clearAllMocks();
+  findDefaultSignInExperience.mockResolvedValue(mockSignInExperience);
 });
 
 describe('terms of use url', () => {
@@ -136,6 +138,62 @@ describe('socialSignInConnectorTargets', () => {
       );
     }
   );
+});
+
+describe('emailAllowlistPolicy', () => {
+  it('should allow wildcard entries', async () => {
+    await expectPatchResponseStatus(
+      {
+        emailAllowlistPolicy: {
+          customAllowlist: ['foo*@bar.com', '@*.example.com'],
+        },
+      },
+      200
+    );
+  });
+
+  it('should reject invalid entries', async () => {
+    await expectPatchResponseStatus(
+      {
+        emailAllowlistPolicy: {
+          customAllowlist: ['foo@bar'],
+        },
+      },
+      400
+    );
+  });
+
+  it('should reject allowlist entries fully covered by requested blocklist rules', async () => {
+    await expectPatchResponseStatus(
+      {
+        emailAllowlistPolicy: {
+          customAllowlist: ['foo@bar.com'],
+        },
+        emailBlocklistPolicy: {
+          customBlocklist: ['@bar.com'],
+        },
+      },
+      422
+    );
+  });
+
+  it('should reject current allowlist entries fully covered by requested blocklist rules', async () => {
+    findDefaultSignInExperience.mockResolvedValueOnce({
+      ...mockSignInExperience,
+      emailAllowlistPolicy: {
+        customAllowlist: ['foo@bar.com'],
+      },
+    });
+
+    await expectPatchResponseStatus(
+      {
+        emailBlocklistPolicy: {
+          customBlocklist: ['@bar.com'],
+        },
+      },
+      422
+    );
+  });
 });
 
 describe('password expiration policy', () => {

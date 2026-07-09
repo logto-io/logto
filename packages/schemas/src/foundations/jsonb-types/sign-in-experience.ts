@@ -350,6 +350,24 @@ export const emailBlocklistPolicyGuard = z.object({
   customBlocklist: z.string().array().optional(),
 }) satisfies ToZodObject<EmailBlocklistPolicy>;
 
+export type EmailAllowlistPolicy = {
+  /**
+   * Custom allowlist of email addresses or domains. When provided and non-empty, only matching
+   * email addresses are accepted.
+   *
+   * @example
+   * Email address: abc@xyx.com
+   *
+   * @example
+   * Domain name: @xyz.com
+   */
+  customAllowlist?: string[];
+};
+
+export const emailAllowlistPolicyGuard = z.object({
+  customAllowlist: z.string().array().optional(),
+}) satisfies ToZodObject<EmailAllowlistPolicy>;
+
 export enum ForgotPasswordMethod {
   EmailVerificationCode = 'EmailVerificationCode',
   PhoneVerificationCode = 'PhoneVerificationCode',

@@ -37,6 +37,10 @@ const sign_in_experiences = {
   missing_sign_up_identifiers: '主要なサインアップ識別子を空にすることはできません。',
   invalid_custom_email_blocklist_format:
     '無効なカスタムメールブロックリスト項目: {{items, list(type:conjunction)}} 。各項目は有効なメールアドレスまたはメールドメインである必要があります。例: foo@example.com または @example.com 。',
+  invalid_custom_email_allowlist_format:
+    'Invalid custom email allowlist items: {{items, list(type:conjunction)}}. Each item must be a valid email address or email domain, e.g., foo@example.com or @example.com.',
+  email_allowlist_entries_blocked:
+    'Some email allowlist entries are fully blocked by email blocklist rules: {{items, list(type:conjunction)}}. Remove the conflicting block rules or allowlist entries.',
   forgot_password_method_requires_connector:
     'パスワード忘れの方法には、対応する {{method}} コネクタの構成が必要です。',
   password_expiration_requires_forgot_password:

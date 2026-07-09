@@ -38,6 +38,10 @@ const sign_in_experiences = {
   missing_sign_up_identifiers: 'Primäre Anmeldekennung darf nicht leer sein.',
   invalid_custom_email_blocklist_format:
     'Ungültige benutzerdefinierte E-Mail-Sperrlistenpunkte: {{items, list(type:conjunction)}}. Jedes Element muss eine gültige E-Mail-Adresse oder Domain sein, z. B. foo@example.com oder @example.com.',
+  invalid_custom_email_allowlist_format:
+    'Invalid custom email allowlist items: {{items, list(type:conjunction)}}. Each item must be a valid email address or email domain, e.g., foo@example.com or @example.com.',
+  email_allowlist_entries_blocked:
+    'Some email allowlist entries are fully blocked by email blocklist rules: {{items, list(type:conjunction)}}. Remove the conflicting block rules or allowlist entries.',
   forgot_password_method_requires_connector:
     'Die Methode zum Zurücksetzen des Passworts erfordert einen entsprechenden {{method}} Connector.',
   password_expiration_requires_forgot_password:

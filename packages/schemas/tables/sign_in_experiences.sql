@@ -32,6 +32,7 @@ create table sign_in_experiences (
   captcha_policy jsonb /* @use CaptchaPolicy */ not null default '{}'::jsonb,
   sentinel_policy jsonb /* @use SentinelPolicy */ not null default '{}'::jsonb,
   email_blocklist_policy jsonb /* @use EmailBlocklistPolicy */ not null default '{}'::jsonb,
+  email_allowlist_policy jsonb /* @use EmailAllowlistPolicy */ not null default '{}'::jsonb,
   verification_code_policy jsonb /* @use VerificationCodePolicy */ not null default '{}'::jsonb,
   forgot_password_methods jsonb /* @use ForgotPasswordMethods */ default '[]'::jsonb,
   passkey_sign_in jsonb /* @use PasskeySignIn */ not null default '{}'::jsonb,

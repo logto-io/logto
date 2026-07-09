@@ -1,5 +1,10 @@
-import { isEmailBlocklistItem, matchesEmailBlocklistItem } from '@logto/core-kit';
-import { type EmailBlocklistPolicy } from '@logto/schemas';
+import {
+  findBlockedAllowlistItems,
+  isEmailBlocklistItem,
+  isEmailListItem,
+  matchesEmailBlocklistItem,
+} from '@logto/core-kit';
+import { type EmailAllowlistPolicy, type EmailBlocklistPolicy } from '@logto/schemas';
 import { conditional, deduplicate } from '@silverhand/essentials';
 import { got } from 'got';
 import { z } from 'zod';
@@ -35,6 +40,21 @@ const parseCustomBlocklist = (customBlocklist: string[]) => {
   return deduplicated;
 };
 
+const parseCustomAllowlist = (customAllowlist: string[]) => {
+  const deduplicated = deduplicate(customAllowlist);
+  const invalidItems = deduplicated.filter((item) => !isEmailListItem(item));
+
+  if (invalidItems.length > 0) {
+    throw new RequestError({
+      code: 'sign_in_experiences.invalid_custom_email_allowlist_format',
+      items: invalidItems,
+      status: 400,
+    });
+  }
+
+  return deduplicated;
+};
+
 /**
  * This function will deduplicate the custom blocklist (if not undefined) and validate the format of each item.
  * If any item is invalid, it throws a RequestError with the details of the invalid items.
@@ -59,6 +79,48 @@ export const parseEmailBlocklistPolicy = (
     ...rest,
     ...conditional(customBlocklist && { customBlocklist: parseCustomBlocklist(customBlocklist) }),
   };
+};
+
+/**
+ * Validates that custom allowlist entries are not made unusable by the effective block rules.
+ */
+export const validateEmailAllowlistAgainstBlocklistPolicy = (
+  emailAllowlistPolicy: EmailAllowlistPolicy,
+  emailBlocklistPolicy: EmailBlocklistPolicy
+) => {
+  const { customAllowlist } = emailAllowlistPolicy;
+
+  if (!customAllowlist || customAllowlist.length === 0) {
+    return;
+  }
+
+  const blockedItems = findBlockedAllowlistItems(customAllowlist, emailBlocklistPolicy);
+
+  if (blockedItems.length > 0) {
+    throw new RequestError({
+      code: 'sign_in_experiences.email_allowlist_entries_blocked',
+      blockedItems,
+      items: blockedItems.map(({ allowItem, blockedBy }) => `${allowItem} blocked by ${blockedBy}`),
+      status: 422,
+    });
+  }
+};
+
+/**
+ * Deduplicates and validates the custom allowlist. Wildcards are supported for allowlist entries.
+ */
+export const parseEmailAllowlistPolicy = (
+  emailAllowlistPolicy: EmailAllowlistPolicy,
+  emailBlocklistPolicy: EmailBlocklistPolicy
+): EmailAllowlistPolicy => {
+  const { customAllowlist } = emailAllowlistPolicy;
+  const parsedPolicy = {
+    ...conditional(customAllowlist && { customAllowlist: parseCustomAllowlist(customAllowlist) }),
+  };
+
+  validateEmailAllowlistAgainstBlocklistPolicy(parsedPolicy, emailBlocklistPolicy);
+
+  return parsedPolicy;
 };
 
 const disposableEmailDomainValidationResponseGuard = z.object({
@@ -184,3 +246,6 @@ export const isEmailBlocklistPolicyEnabled = (emailBlockListPolicy: EmailBlockli
   );
   /* eslint-enable @typescript-eslint/prefer-nullish-coalescing */
 };
+
+export const isEmailAllowlistPolicyEnabled = (emailAllowlistPolicy: EmailAllowlistPolicy) =>
+  Boolean(emailAllowlistPolicy.customAllowlist && emailAllowlistPolicy.customAllowlist.length > 0);

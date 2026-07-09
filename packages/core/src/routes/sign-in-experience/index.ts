@@ -21,6 +21,9 @@ import {
   validateSignIn,
   parseEmailBlocklistPolicy,
   isEmailBlocklistPolicyEnabled,
+  isEmailAllowlistPolicyEnabled,
+  parseEmailAllowlistPolicy,
+  validateEmailAllowlistAgainstBlocklistPolicy,
 } from '#src/libraries/sign-in-experience/index.js';
 import { validateMfa } from '#src/libraries/sign-in-experience/mfa.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -114,6 +117,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         body: {
           socialSignInConnectorTargets,
           emailBlocklistPolicy,
+          emailAllowlistPolicy,
           signUpProfileFields,
           customUiCsp,
           usernamePolicy,
@@ -147,6 +151,23 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         getLogtoConnectors(),
         findDefaultSignInExperience(),
       ]);
+
+      const parsedEmailBlocklistPolicy = conditional(
+        emailBlocklistPolicy && parseEmailBlocklistPolicy(emailBlocklistPolicy)
+      );
+      const effectiveEmailBlocklistPolicy =
+        parsedEmailBlocklistPolicy ?? currentSettings.emailBlocklistPolicy;
+      const parsedEmailAllowlistPolicy = conditional(
+        emailAllowlistPolicy &&
+          parseEmailAllowlistPolicy(emailAllowlistPolicy, effectiveEmailBlocklistPolicy)
+      );
+
+      if (emailBlocklistPolicy && !emailAllowlistPolicy) {
+        validateEmailAllowlistAgainstBlocklistPolicy(
+          currentSettings.emailAllowlistPolicy,
+          effectiveEmailBlocklistPolicy
+        );
+      }
 
       // Flipping usernames to case-insensitive would merge accounts that differ only by case, so
       // reject the flip while such conflicts exist. Only the actual case-sensitive ->
@@ -324,9 +345,11 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
       // - sentinelPolicy: if sentinelPolicy is not empty object, security features are guarded
       // - captchaPolicy: if captchaPolicy is enabled, security features are guarded
       // - emailBlocklistPolicy: if any of the blocklist policies are enabled, security features are guarded
+      // - emailAllowlistPolicy: if custom allowlist is non-empty, security features are guarded
       if (
         (sentinelPolicy && Object.keys(sentinelPolicy).length > 0) ||
         (emailBlocklistPolicy && isEmailBlocklistPolicyEnabled(emailBlocklistPolicy)) ||
+        (emailAllowlistPolicy && isEmailAllowlistPolicyEnabled(emailAllowlistPolicy)) ||
         captchaPolicy?.enabled
       ) {
         await quota.guardTenantUsageByKey('securityFeaturesEnabled');
@@ -384,8 +407,13 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
           }
         ),
         ...conditional(
-          emailBlocklistPolicy && {
-            emailBlocklistPolicy: parseEmailBlocklistPolicy(emailBlocklistPolicy),
+          parsedEmailBlocklistPolicy && {
+            emailBlocklistPolicy: parsedEmailBlocklistPolicy,
+          }
+        ),
+        ...conditional(
+          parsedEmailAllowlistPolicy && {
+            emailAllowlistPolicy: parsedEmailAllowlistPolicy,
           }
         ),
         ...conditional(
@@ -407,7 +435,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
 
       void quota.reportSubscriptionUpdatesUsage('mfaEnabled');
 
-      if (sentinelPolicy ?? captchaPolicy ?? emailBlocklistPolicy) {
+      if (sentinelPolicy ?? captchaPolicy ?? emailBlocklistPolicy ?? emailAllowlistPolicy) {
         void quota.reportSubscriptionUpdatesUsage('securityFeaturesEnabled');
       }
 

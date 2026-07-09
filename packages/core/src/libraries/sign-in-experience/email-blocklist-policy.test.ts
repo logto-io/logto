@@ -4,9 +4,12 @@ import { deduplicate } from '@silverhand/essentials';
 import RequestError from '#src/errors/RequestError/index.js';
 
 import {
+  parseEmailAllowlistPolicy,
   parseEmailBlocklistPolicy,
   validateEmailAgainstBlocklistPolicy,
   isEmailBlocklistPolicyEnabled,
+  isEmailAllowlistPolicyEnabled,
+  validateEmailAllowlistAgainstBlocklistPolicy,
 } from './email-blocklist-policy.js';
 
 const invalidCustomBlockList = ['bar', 'bar@foo', '@foo', '@foo.', 'bar@foo.'];
@@ -39,6 +42,70 @@ describe('parseEmailBlocklistPolicy', () => {
     const parsed = parseEmailBlocklistPolicy({ customBlocklist });
 
     expect(parsed).toEqual({ customBlocklist });
+  });
+});
+
+describe('parseEmailAllowlistPolicy', () => {
+  const invalidCustomAllowList = invalidCustomBlockList;
+  const validCustomAllowList = [
+    'bar@foo.com',
+    '@foo.com',
+    'abc.bar@foo.xyz',
+    'bar@foo.com',
+    'foo*@example.com',
+  ];
+
+  it.each(invalidCustomAllowList)(
+    'should throw error for invalid custom allow list item: %s',
+    (item) => {
+      const emailAllowlistPolicy = { customAllowlist: [item] };
+      expect(() => {
+        parseEmailAllowlistPolicy(emailAllowlistPolicy, {});
+      }).toMatchError(
+        new RequestError({
+          code: 'sign_in_experiences.invalid_custom_email_allowlist_format',
+          items: Array.from([item]),
+          status: 400,
+        })
+      );
+    }
+  );
+
+  it('should pass the validation with valid format, wildcard items, and deduplicate items', () => {
+    const parsed = parseEmailAllowlistPolicy({ customAllowlist: validCustomAllowList }, {});
+    expect(parsed).toEqual({ customAllowlist: deduplicate(validCustomAllowList) });
+  });
+
+  it('should reject entries fully covered by custom blocklist rules', () => {
+    expect(() => {
+      parseEmailAllowlistPolicy(
+        { customAllowlist: ['foo@email.com', 'bar@email.com'] },
+        { customBlocklist: ['f*@email.com'] }
+      );
+    }).toMatchError(
+      new RequestError({
+        code: 'sign_in_experiences.email_allowlist_entries_blocked',
+        blockedItems: [{ allowItem: 'foo@email.com', blockedBy: 'f*@email.com' }],
+        items: ['foo@email.com blocked by f*@email.com'],
+        status: 422,
+      })
+    );
+  });
+
+  it('should reject entries fully covered by subaddressing block rule', () => {
+    expect(() => {
+      validateEmailAllowlistAgainstBlocklistPolicy(
+        { customAllowlist: ['foo+bar@email.com'] },
+        { blockSubaddressing: true }
+      );
+    }).toMatchError(
+      new RequestError({
+        code: 'sign_in_experiences.email_allowlist_entries_blocked',
+        blockedItems: [{ allowItem: 'foo+bar@email.com', blockedBy: 'blockSubaddressing' }],
+        items: ['foo+bar@email.com blocked by blockSubaddressing'],
+        status: 422,
+      })
+    );
   });
 });
 
@@ -170,5 +237,13 @@ describe('isEmailBlocklistPolicyEnabled', () => {
     };
 
     expect(isEmailBlocklistPolicyEnabled(emailBlocklistPolicy)).toBe(false);
+  });
+});
+
+describe('isEmailAllowlistPolicyEnabled', () => {
+  it('returns true only when custom allowlist is non-empty', () => {
+    expect(isEmailAllowlistPolicyEnabled({ customAllowlist: ['@bar.com'] })).toBe(true);
+    expect(isEmailAllowlistPolicyEnabled({ customAllowlist: [] })).toBe(false);
+    expect(isEmailAllowlistPolicyEnabled({})).toBe(false);
   });
 });

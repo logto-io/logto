@@ -2,7 +2,7 @@ import { appInsights } from '@logto/app-insights/node';
 import type { Optional } from '@silverhand/essentials';
 import { has } from '@silverhand/essentials';
 import type { MiddlewareType } from 'koa';
-import { koaBody, type ScalarOrArrayFiles } from 'koa-body';
+import { koaBody } from 'koa-body';
 import type { IMiddleware, IRouterParamContext } from 'koa-router';
 import type { ZodType, ZodTypeDef } from 'zod';
 
@@ -11,6 +11,8 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { ResponseBodyError, StatusCodeError } from '#src/errors/ServerError/index.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
+
+type ScalarOrArrayFiles = Record<string, unknown | unknown[]>;
 
 /** Configure what and how to guard. */
 export type GuardConfig<QueryT, BodyT, ParametersT, ResponseT, FilesT> = {
