@@ -1,10 +1,9 @@
 import { Users, userProfileGuard } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
-import { z } from 'zod';
+import { type z } from 'zod';
 
 import { encryptUserPassword } from '#src/libraries/user.utils.js';
 
-import { type HookProvisioningProfile, type InteractionProfile } from '../../types.js';
+import { type HookProvisioningProfile } from '../../types.js';
 
 const hookProvisioningProfileGuard = Users.createGuard
   .pick({
@@ -27,40 +26,15 @@ export const toHookProvisioningProfile = (user: unknown): HookProvisioningProfil
 
 type InlineHookPasswordPayload = Awaited<ReturnType<typeof encryptUserPassword>>;
 
-type InlineHookProvisioningProfileWithPassword = HookProvisioningProfile & InlineHookPasswordPayload;
-
-export type InlineHookProvisioningProfile = HookProvisioningProfile &
-  (
-    | InlineHookPasswordPayload
-    | {
-        passwordEncrypted?: never;
-        passwordEncryptionMethod?: never;
-      }
-  );
-
+/**
+ * Appends Logto-generated Argon2i password fields to a hook provisioning profile.
+ * Script-supplied password hash fields are rejected by {@link toHookProvisioningProfile};
+ * only this helper may introduce them for create/update provisioning.
+ */
 export const appendPasswordPayloadToInlineHookProvisioningProfile = async (
   provisioningProfile: HookProvisioningProfile,
   password: string
-): Promise<InlineHookProvisioningProfileWithPassword> => ({
+): Promise<HookProvisioningProfile & InlineHookPasswordPayload> => ({
   ...provisioningProfile,
   ...(await encryptUserPassword(password)),
-});
-
-export const getProfileIdentifierCollisionPayload = ({
-  socialIdentity,
-  username,
-  primaryEmail,
-  primaryPhone,
-}: InteractionProfile) => ({
-  username,
-  primaryEmail,
-  primaryPhone,
-  ...conditional(
-    socialIdentity && {
-      identity: {
-        target: socialIdentity.target,
-        id: socialIdentity.userInfo.id,
-      },
-    }
-  ),
 });
