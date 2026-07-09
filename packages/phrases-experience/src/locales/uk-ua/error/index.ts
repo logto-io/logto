@@ -35,6 +35,8 @@ const error = {
   captcha_verification_failed: 'Не вдалося пройти перевірку капчі.',
   send_verification_code_failed:
     'Не вдалося надіслати код підтвердження. Спробуйте ще раз пізніше.',
+  send_verification_code_failed_use_password:
+    'Не вдалося надіслати код підтвердження. Натомість увійдіть за допомогою пароля.',
   terms_acceptance_required: 'Потрібно прийняти умови',
   terms_acceptance_required_description:
     'Ви повинні погодитися з умовами, щоб продовжити. Будь ласка, спробуйте ще раз.',

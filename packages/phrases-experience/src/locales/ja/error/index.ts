@@ -37,6 +37,8 @@ const error = {
   captcha_verification_failed: 'キャプチャーの検証に失敗しました。',
   send_verification_code_failed:
     '認証コードの送信に失敗しました。しばらくしてからもう一度お試しください。',
+  send_verification_code_failed_use_password:
+    '認証コードの送信に失敗しました。代わりにパスワードでサインインしてください。',
   terms_acceptance_required: '利用規約の同意が必要です',
   terms_acceptance_required_description:
     '続行するには利用規約に同意する必要があります。もう一度お試しください。',
