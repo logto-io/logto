@@ -190,6 +190,16 @@ const security = {
       invalid_format_error:
         'Doit être une adresse e-mail valide (bar@example.com) ou un domaine (@example.com)',
     },
+    custom_email_address_with_wildcards: {
+      description:
+        "Ajoutez des règles pour bloquer des domaines d'e-mail, des adresses e-mail ou des modèles d'adresse e-mail avec joker spécifiques afin qu'ils ne puissent pas s'inscrire ou se lier via l'interface utilisateur.",
+      placeholder:
+        "Entrez l'adresse e-mail, le domaine ou le modèle d'adresse e-mail avec joker bloqué (ex. : bar@example.com, @example.com, foo*@example.com, *@example.com)",
+      duplicate_error:
+        "L'adresse e-mail, le domaine ou le modèle d'adresse e-mail avec joker a déjà été ajouté",
+      invalid_format_error:
+        "Doit être une adresse e-mail valide (bar@example.com), un domaine (@example.com) ou un modèle d'adresse e-mail avec joker (foo*@example.com, *@example.com)",
+    },
   },
 };
 
