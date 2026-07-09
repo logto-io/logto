@@ -63,7 +63,7 @@ const toHookProvisioningProfileSafe = (user: unknown) => {
   try {
     return toHookProvisioningProfile(user);
   } catch {
-    // eslint-disable-next-line unicorn/no-useless-undefined
+    // eslint-disable-next-line unicorn/no-useless-undefined -- explicit undefined; bare `return` trips no-useless-return
     return undefined;
   }
 };

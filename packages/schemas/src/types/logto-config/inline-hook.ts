@@ -77,7 +77,7 @@ export type PostSignInEvent = {
   user: HookUser;
 };
 
-// Nested `user` uses passthrough so password fields can reach `toHookProvisioningProfile`.
+// Nested `user` uses passthrough so password fields survive structural parsing.
 export const postFirstFactorVerificationResultGuard = z.discriminatedUnion('action', [
   z.object({
     action: z.literal('createUser'),
@@ -95,7 +95,7 @@ export type PostFirstFactorVerificationResult = z.infer<
   typeof postFirstFactorVerificationResultGuard
 >;
 
-// Nested `user` uses passthrough so password fields can reach `toHookProvisioningProfile`.
+// Nested `user` uses passthrough so password fields survive structural parsing.
 export const postSignInResultGuard = z.discriminatedUnion('action', [
   z.object({
     action: z.literal('updateUser'),
