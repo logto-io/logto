@@ -26,12 +26,7 @@ import {
   signInAndGetUserApi,
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
-import {
-  devFeatureTest,
-  generateEmail,
-  generatePhone,
-  generateNationalPhoneNumber,
-} from '#src/utils.js';
+import { generateEmail, generatePhone, generateNationalPhoneNumber } from '#src/utils.js';
 
 const expectPrimaryEmailUpdateRejectedByBlocklist = async (
   email: string,
@@ -198,14 +193,11 @@ describe('account (email and phone)', () => {
       await expectPrimaryEmailUpdateRejectedByBlocklist(email, [email.toUpperCase()]);
     });
 
-    devFeatureTest.it(
-      'should reject the email if the wildcard blocklist entry uses different casing',
-      async () => {
-        const email = `foo-${generateEmail('account-wildcard.com')}`;
+    it('should reject the email if the wildcard blocklist entry uses different casing', async () => {
+      const email = `foo-${generateEmail('account-wildcard.com')}`;
 
-        await expectPrimaryEmailUpdateRejectedByBlocklist(email, ['FOO*@ACCOUNT-WILDCARD.COM']);
-      }
-    );
+      await expectPrimaryEmailUpdateRejectedByBlocklist(email, ['FOO*@ACCOUNT-WILDCARD.COM']);
+    });
   });
 
   describe('DELETE /my-account/primary-email', () => {

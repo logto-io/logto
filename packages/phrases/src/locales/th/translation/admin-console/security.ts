@@ -168,12 +168,6 @@ const security = {
     },
     custom_email_address: {
       title: 'บล็อกอีเมลกำหนดเอง',
-      description: 'เพิ่มโดเมนหรืออีเมลที่เฉพาะเจาะจงที่ไม่สามารถลงทะเบียนหรือลิงก์ผ่าน UI ได้',
-      placeholder: 'ป้อนอีเมลหรือโดเมนที่ต้องการบล็อก (เช่น bar@example.com, @example.com)',
-      duplicate_error: 'เพิ่มอีเมลหรือโดเมนนี้แล้ว',
-      invalid_format_error: 'ต้องเป็นอีเมล(bar@example.com) หรือโดเมน(@example.com) ที่ถูกต้อง',
-    },
-    custom_email_address_with_wildcards: {
       description:
         'เพิ่มกฎเพื่อบล็อกโดเมนอีเมล อีเมล หรือรูปแบบที่อยู่อีเมลที่ใช้ไวลด์การ์ดไม่ให้ลงทะเบียนหรือลิงก์ผ่าน UI',
       placeholder:

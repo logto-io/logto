@@ -183,15 +183,6 @@ const security = {
     custom_email_address: {
       title: 'Bloquer les adresses e-mail personnalisées',
       description:
-        "Ajoutez des domaines ou des adresses e-mail spécifiques qui ne peuvent pas s'inscrire ou se lier via l'interface utilisateur.",
-      placeholder:
-        "Entrez l'adresse email ou le domaine bloqué (ex. : bar@example.com, @example.com)",
-      duplicate_error: 'Adresse e-mail ou domaine déjà ajouté',
-      invalid_format_error:
-        'Doit être une adresse e-mail valide (bar@example.com) ou un domaine (@example.com)',
-    },
-    custom_email_address_with_wildcards: {
-      description:
         "Ajoutez des règles pour bloquer des domaines d'e-mail, des adresses e-mail ou des modèles d'adresse e-mail avec joker spécifiques afin qu'ils ne puissent pas s'inscrire ou se lier via l'interface utilisateur.",
       placeholder:
         "Entrez l'adresse e-mail, le domaine ou le modèle d'adresse e-mail avec joker bloqué (ex. : bar@example.com, @example.com, foo*@example.com, *@example.com)",

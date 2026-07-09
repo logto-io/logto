@@ -178,15 +178,6 @@ const security = {
     custom_email_address: {
       title: 'Zablokuj niestandardowe adresy email',
       description:
-        'Dodaj określone domeny email lub adresy email, które nie mogą się rejestrować lub powiązać przez UI.',
-      placeholder:
-        'Wprowadź zablokowany adres email lub domenę (np. bar@example.com, @example.com)',
-      duplicate_error: 'Adres email lub domena już dodana',
-      invalid_format_error:
-        'Musi być ważnym adresem email(bar@example.com) lub domeną(@example.com)',
-    },
-    custom_email_address_with_wildcards: {
-      description:
         'Dodaj reguły blokujące określone domeny email, adresy email lub wzorce adresów email z symbolami wieloznacznymi przed rejestracją lub powiązaniem przez UI.',
       placeholder:
         'Wprowadź zablokowany adres email, domenę lub wzorzec adresu email z symbolem wieloznacznym (np. bar@example.com, @example.com, foo*@example.com, *@example.com)',
