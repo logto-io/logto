@@ -1,5 +1,5 @@
 import { type JsonObject } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
+import { conditional, removeUndefinedKeys } from '@silverhand/essentials';
 
 import { buildUserPasswordPayload } from '#src/libraries/user.utils.js';
 import { createUserQueries } from '#src/queries/user.js';
@@ -114,7 +114,7 @@ export class UserUpdateLibrary {
     passwordEncrypted: InteractionUserProvisioningProfile['passwordEncrypted'];
     passwordEncryptionMethod: InteractionUserProvisioningProfile['passwordEncryptionMethod'];
   }) {
-    return {
+    return removeUndefinedKeys({
       ...updateProfile,
       ...conditional(profileForUpdate !== undefined && { profile: profileForUpdate }),
       ...conditional(customDataForUpdate !== undefined && { customData: customDataForUpdate }),
@@ -126,7 +126,7 @@ export class UserUpdateLibrary {
             passwordEncryptionMethod,
           })
       ),
-    };
+    });
   }
 
   private resolveCustomDataForUpdate(customData: JsonObject | undefined) {

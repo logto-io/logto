@@ -306,6 +306,24 @@ describe('UserUpdateLibrary', () => {
     expect(user).toEqual(expect.objectContaining({ id: 'user-id' }));
   });
 
+  it('ignores undefined profile fields instead of issuing an empty update', async () => {
+    const { userUpdateLibrary, ctx, findUserById, updateUserById } = createUserUpdateLibrary({
+      user: {
+        ...mockUser,
+        id: 'user-id',
+      },
+    });
+
+    await userUpdateLibrary.updateUser('user-id', {
+      name: undefined,
+      username: undefined,
+    });
+
+    expect(updateUserById).not.toHaveBeenCalled();
+    expect(findUserById).toHaveBeenCalledWith('user-id');
+    expect(ctx.appendDataHookContext).not.toHaveBeenCalled();
+  });
+
   it('propagates identifier collision errors without updating the user', async () => {
     const error = new RequestError({ code: 'user.email_already_in_use', status: 422 });
     const { userUpdateLibrary, ctx, findUserById, checkIdentifierCollision, updateUserById } =
