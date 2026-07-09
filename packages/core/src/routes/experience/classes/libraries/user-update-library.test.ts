@@ -140,9 +140,12 @@ describe('UserUpdateLibrary', () => {
     expect(updateUserById).toHaveBeenCalledWith('user-id', { name: 'Jane Doe' }, 'merge');
   });
 
-  it('preserves existing profile values when replacing customData with a profile patch', async () => {
+  it('merges profile at the SQL layer then replaces customData without a read-modify-write', async () => {
     const customData = {
       plan: 'pro',
+    };
+    const profile = {
+      givenName: 'Janet',
     };
     const { userUpdateLibrary, findUserById, updateUserById } = createUserUpdateLibrary({
       user: {
@@ -159,24 +162,21 @@ describe('UserUpdateLibrary', () => {
     });
 
     await userUpdateLibrary.updateUser('user-id', {
-      profile: {
-        givenName: 'Janet',
-      },
+      profile,
       customData,
     });
 
-    expect(findUserById).toHaveBeenCalledWith('user-id');
-    expect(updateUserById).toHaveBeenCalledWith(
+    expect(findUserById).not.toHaveBeenCalled();
+    expect(updateUserById).toHaveBeenNthCalledWith(
+      1,
       'user-id',
       expect.objectContaining({
-        profile: {
-          givenName: 'Janet',
-          familyName: 'Doe',
-        },
-        customData,
+        profile,
       }),
-      'replace'
+      'merge'
     );
+    expect(updateUserById.mock.calls[0]?.[1]).not.toHaveProperty('customData');
+    expect(updateUserById).toHaveBeenNthCalledWith(2, 'user-id', { customData }, 'replace');
   });
 
   it('replaces customData without reading the existing user when mergeCustomData is false', async () => {
@@ -198,13 +198,8 @@ describe('UserUpdateLibrary', () => {
     await userUpdateLibrary.updateUser('user-id', { customData });
 
     expect(findUserById).not.toHaveBeenCalled();
-    expect(updateUserById).toHaveBeenCalledWith(
-      'user-id',
-      expect.objectContaining({
-        customData,
-      }),
-      'replace'
-    );
+    expect(updateUserById).toHaveBeenCalledTimes(1);
+    expect(updateUserById).toHaveBeenCalledWith('user-id', { customData }, 'replace');
   });
 
   it('ignores empty customData when mergeCustomData is false', async () => {

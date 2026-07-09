@@ -12,6 +12,11 @@ import {
 import { getProfileIdentifierCollisionPayload } from './provisioning-profile.js';
 
 type UpdateUserOptions = {
+  /**
+   * When true, shallow-merge `customData` at the SQL layer (Postgres `jsonb ||`).
+   * Nested objects are replaced wholesale, not deep-merged.
+   * When false (default), replace the entire `customData` object.
+   */
   mergeCustomData?: boolean;
 };
 
@@ -36,46 +41,52 @@ export class UserUpdateLibrary {
     const { passwordEncrypted, passwordEncryptionMethod, customData, profile, ...updateProfile } =
       provisioningProfile;
     const customDataForUpdate = this.resolveCustomDataForUpdate(customData);
-    const jsonbMode =
-      customDataForUpdate === undefined || shouldMergeCustomData ? 'merge' : 'replace';
-    const profileForUpdate = await this.resolveProfileForUpdate(userId, profile, jsonbMode);
+    const profileForUpdate = this.resolveProfileForUpdate(profile);
+    const shouldReplaceCustomData = customDataForUpdate !== undefined && !shouldMergeCustomData;
     const updatePayload = this.buildUpdateUserPayload({
       updateProfile,
       profileForUpdate,
-      customDataForUpdate,
+      // Keep customData out of the merge payload when it must be replaced atomically.
+      customDataForUpdate: shouldReplaceCustomData ? undefined : customDataForUpdate,
       passwordEncrypted,
       passwordEncryptionMethod,
     });
 
-    if (Object.keys(updatePayload).length === 0) {
-      return queries.users.findUserById(userId);
+    if (!shouldReplaceCustomData) {
+      if (Object.keys(updatePayload).length === 0) {
+        return queries.users.findUserById(userId);
+      }
+
+      const user = await queries.users.updateUserById(userId, updatePayload, 'merge');
+
+      this.ctx.appendDataHookContext('User.Data.Updated', { user });
+
+      return user;
     }
 
-    const user = await queries.users.updateUserById(userId, updatePayload, jsonbMode);
+    // Profile (and other fields) use SQL-layer jsonb merge so concurrent profile
+    // patches are not clobbered; customData is replaced in a separate update.
+    if (Object.keys(updatePayload).length > 0) {
+      await queries.users.updateUserById(userId, updatePayload, 'merge');
+    }
+
+    const user = await queries.users.updateUserById(
+      userId,
+      { customData: customDataForUpdate },
+      'replace'
+    );
 
     this.ctx.appendDataHookContext('User.Data.Updated', { user });
 
     return user;
   }
 
-  private async resolveProfileForUpdate(
-    userId: string,
-    profile: InteractionUserProvisioningProfile['profile'],
-    jsonbMode: 'replace' | 'merge'
-  ) {
-    const profilePatch =
-      profile !== undefined && Object.keys(profile).length > 0 ? profile : undefined;
-
-    if (profilePatch === undefined || jsonbMode === 'merge') {
-      return profilePatch;
+  private resolveProfileForUpdate(profile: InteractionUserProvisioningProfile['profile']) {
+    if (profile === undefined || Object.keys(profile).length === 0) {
+      return;
     }
 
-    const user = await this.tenantContext.queries.users.findUserById(userId);
-
-    return {
-      ...user.profile,
-      ...profilePatch,
-    };
+    return profile;
   }
 
   private buildUpdateUserPayload({
