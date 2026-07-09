@@ -2,6 +2,7 @@ import { type JsonObject } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
 import { buildUserPasswordPayload } from '#src/libraries/user.utils.js';
+import { createUserQueries } from '#src/queries/user.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
 import {
@@ -16,6 +17,7 @@ type UpdateUserOptions = {
    * When true, shallow-merge `customData` at the SQL layer (Postgres `jsonb ||`).
    * Nested objects are replaced wholesale, not deep-merged.
    * When false (default), replace the entire `customData` object.
+   * An empty `customData` object (`{}`) is ignored and does not clear stored data.
    */
   mergeCustomData?: boolean;
 };
@@ -66,15 +68,22 @@ export class UserUpdateLibrary {
 
     // Profile (and other fields) use SQL-layer jsonb merge so concurrent profile
     // patches are not clobbered; customData is replaced in a separate update.
-    if (Object.keys(updatePayload).length > 0) {
-      await queries.users.updateUserById(userId, updatePayload, 'merge');
-    }
+    // Run both statements in one transaction so a failed replace cannot leave a
+    // partial merge committed.
+    const user =
+      Object.keys(updatePayload).length === 0
+        ? await queries.users.updateUserById(userId, { customData: customDataForUpdate }, 'replace')
+        : await queries.pool.transaction(async (connection) => {
+            const userQueries = createUserQueries(connection);
 
-    const user = await queries.users.updateUserById(
-      userId,
-      { customData: customDataForUpdate },
-      'replace'
-    );
+            await userQueries.updateUserById(userId, updatePayload, 'merge');
+
+            return userQueries.updateUserById(
+              userId,
+              { customData: customDataForUpdate },
+              'replace'
+            );
+          });
 
     this.ctx.appendDataHookContext('User.Data.Updated', { user });
 

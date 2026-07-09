@@ -1,4 +1,6 @@
 import { type CreateUser, type User, UsersPasswordEncryptionMethod } from '@logto/schemas';
+import { createMockUtils } from '@logto/shared/esm';
+import { type CommonQueryMethods } from '@silverhand/slonik';
 
 import { mockUser } from '#src/__mocks__/user.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -9,18 +11,34 @@ import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 import { type WithHooksAndLogsContext } from '../../types.js';
 
 const { jest } = import.meta;
+const { mockEsmWithActual } = createMockUtils(jest);
+
+const findUserById = jest.fn(async (): Promise<User> => mockUser);
+const updateUserById = jest.fn(
+  async (userId: string, payload: Partial<CreateUser>): Promise<User> => ({
+    ...mockUser,
+    ...payload,
+    id: userId,
+  })
+);
+const createUserQueries = jest.fn(() => ({ findUserById, updateUserById }));
+
+await mockEsmWithActual('#src/queries/user.js', () => ({
+  createUserQueries,
+}));
 
 const { UserUpdateLibrary } = await import('./user-update-library.js');
 
 const createUserUpdateLibrary = ({ user = mockUser }: { user?: User } = {}) => {
-  const findUserById = jest.fn(async (): Promise<User> => user);
-  const updateUserById = jest.fn(
+  findUserById.mockImplementation(async (): Promise<User> => user);
+  updateUserById.mockImplementation(
     async (userId: string, payload: Partial<CreateUser>): Promise<User> => ({
       ...user,
       ...payload,
       id: userId,
     })
   );
+
   const checkIdentifierCollision = jest.fn();
 
   const tenant = new MockTenant(
@@ -39,6 +57,13 @@ const createUserUpdateLibrary = ({ user = mockUser }: { user?: User } = {}) => {
     }
   );
 
+  const transaction = jest.fn(async (handler: (connection: CommonQueryMethods) => Promise<User>) =>
+    handler(tenant.queries.pool)
+  );
+  // MockQueries pool methods are writable at runtime; cast for the readonly DatabasePool type.
+  // eslint-disable-next-line @silverhand/fp/no-mutation
+  (tenant.queries.pool as unknown as { transaction: typeof transaction }).transaction = transaction;
+
   // @ts-expect-error -- mock test context
   const ctx: WithHooksAndLogsContext = {
     assignReleaseOnSuccessInteractionHookResult: jest.fn(),
@@ -55,10 +80,16 @@ const createUserUpdateLibrary = ({ user = mockUser }: { user?: User } = {}) => {
     findUserById,
     updateUserById,
     checkIdentifierCollision,
+    createUserQueries,
+    transaction,
   };
 };
 
 describe('UserUpdateLibrary', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('checks identifiers, atomically merges customData, updates the user, and appends data hook context', async () => {
     const customData = {
       plan: 'pro',
@@ -140,26 +171,27 @@ describe('UserUpdateLibrary', () => {
     expect(updateUserById).toHaveBeenCalledWith('user-id', { name: 'Jane Doe' }, 'merge');
   });
 
-  it('merges profile at the SQL layer then replaces customData without a read-modify-write', async () => {
+  it('merges profile then replaces customData in a transaction without a read-modify-write', async () => {
     const customData = {
       plan: 'pro',
     };
     const profile = {
       givenName: 'Janet',
     };
-    const { userUpdateLibrary, findUserById, updateUserById } = createUserUpdateLibrary({
-      user: {
-        ...mockUser,
-        id: 'user-id',
-        profile: {
-          givenName: 'Jane',
-          familyName: 'Doe',
+    const { userUpdateLibrary, findUserById, updateUserById, transaction, createUserQueries } =
+      createUserUpdateLibrary({
+        user: {
+          ...mockUser,
+          id: 'user-id',
+          profile: {
+            givenName: 'Jane',
+            familyName: 'Doe',
+          },
+          customData: {
+            plan: 'free',
+          },
         },
-        customData: {
-          plan: 'free',
-        },
-      },
-    });
+      });
 
     await userUpdateLibrary.updateUser('user-id', {
       profile,
@@ -167,6 +199,8 @@ describe('UserUpdateLibrary', () => {
     });
 
     expect(findUserById).not.toHaveBeenCalled();
+    expect(transaction).toHaveBeenCalledTimes(1);
+    expect(createUserQueries).toHaveBeenCalledTimes(1);
     expect(updateUserById).toHaveBeenNthCalledWith(
       1,
       'user-id',
@@ -179,25 +213,28 @@ describe('UserUpdateLibrary', () => {
     expect(updateUserById).toHaveBeenNthCalledWith(2, 'user-id', { customData }, 'replace');
   });
 
-  it('replaces customData without reading the existing user when mergeCustomData is false', async () => {
+  it('replaces customData without a transaction when there is no merge payload', async () => {
     const customData = {
       plan: 'pro',
       upstreamId: 'user-1',
     };
-    const { userUpdateLibrary, findUserById, updateUserById } = createUserUpdateLibrary({
-      user: {
-        ...mockUser,
-        id: 'user-id',
-        customData: {
-          source: 'registration',
-          plan: 'free',
+    const { userUpdateLibrary, findUserById, updateUserById, transaction, createUserQueries } =
+      createUserUpdateLibrary({
+        user: {
+          ...mockUser,
+          id: 'user-id',
+          customData: {
+            source: 'registration',
+            plan: 'free',
+          },
         },
-      },
-    });
+      });
 
     await userUpdateLibrary.updateUser('user-id', { customData });
 
     expect(findUserById).not.toHaveBeenCalled();
+    expect(transaction).not.toHaveBeenCalled();
+    expect(createUserQueries).not.toHaveBeenCalled();
     expect(updateUserById).toHaveBeenCalledTimes(1);
     expect(updateUserById).toHaveBeenCalledWith('user-id', { customData }, 'replace');
   });
@@ -224,7 +261,7 @@ describe('UserUpdateLibrary', () => {
     const customData = {
       plan: 'pro',
     };
-    const { userUpdateLibrary, updateUserById } = createUserUpdateLibrary({
+    const { userUpdateLibrary, updateUserById, transaction } = createUserUpdateLibrary({
       user: {
         ...mockUser,
         id: 'user-id',
@@ -240,6 +277,7 @@ describe('UserUpdateLibrary', () => {
 
     await userUpdateLibrary.updateUser('user-id', { profile: {}, customData });
 
+    expect(transaction).not.toHaveBeenCalled();
     expect(updateUserById).toHaveBeenCalledWith(
       'user-id',
       expect.objectContaining({
