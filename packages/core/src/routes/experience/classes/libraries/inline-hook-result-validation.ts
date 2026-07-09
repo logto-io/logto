@@ -175,7 +175,9 @@ export const validatePostSignInHookResult = ({
     return continueResult();
   }
 
-  assertThat(isInlineHookResultObject(result), verificationFailedError());
+  if (!isInlineHookResultObject(result)) {
+    throw verificationFailedError();
+  }
 
   const { action, user } = result;
 
