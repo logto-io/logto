@@ -87,6 +87,9 @@
               }
             }
           },
+          "422": {
+            "description": "The email address is restricted by the email blocklist policy."
+          },
           "501": {
             "description": "The connector for sending the verification code is not configured."
           }
