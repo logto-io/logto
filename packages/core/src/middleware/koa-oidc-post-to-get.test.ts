@@ -64,6 +64,44 @@ describe('koaOidcPostToGet()', () => {
     expect(next).toHaveBeenCalledTimes(1);
   });
 
+  it('should serialize scalar body values the way a form submission would', async () => {
+    const ctx = createMockContext({
+      url: '/auth',
+      method: 'POST',
+      headers: formHeaders,
+      /** A JSON body (its content type is rewritten to form by the OIDC body parser) may carry scalars. */
+      requestBody: { client_id: 'client-id', max_age: 300, require_consent: false },
+    });
+    const downstream = jest.fn(async () => {
+      expect(ctx.method).toBe('GET');
+      expect(ctx.request.query).toEqual({
+        client_id: 'client-id',
+        max_age: '300',
+        require_consent: 'false',
+      });
+    });
+
+    await koaOidcPostToGet()(ctx, downstream);
+
+    expect(downstream).toHaveBeenCalledTimes(1);
+  });
+
+  it('should leave a POST with a non-forwardable body unchanged', async () => {
+    const ctx = createMockContext({
+      url: '/auth',
+      method: 'POST',
+      headers: formHeaders,
+      /** Nested objects cannot be expressed by a form submission. */
+      requestBody: { client_id: 'client-id', claims: { userinfo: {} } },
+    });
+
+    await koaOidcPostToGet()(ctx, next);
+
+    expect(ctx.method).toBe('POST');
+    expect(ctx.request.query).toEqual({});
+    expect(next).toHaveBeenCalledTimes(1);
+  });
+
   it('should leave a non-form POST unchanged', async () => {
     const ctx = createMockContext({
       url: '/auth',

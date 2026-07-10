@@ -67,6 +67,22 @@ describe('POST authorization and logout endpoints', () => {
     });
   });
 
+  it('should forward a JSON POST with scalar values like the equivalent GET request', async () => {
+    const searchParams = new URLSearchParams(authorizationParameters);
+    searchParams.set('max_age', '300');
+
+    const [getResponse, jsonResponse] = await Promise.all([
+      requestApi.get('auth', { searchParams }),
+      requestApi.post('auth', {
+        json: { ...Object.fromEntries(authorizationParameters), max_age: 300 },
+      }),
+    ]);
+
+    expect(getResponse.status).toBe(303);
+    expect(jsonResponse.status).toBe(303);
+    expect(getRedirectPath(jsonResponse)).toBe(getRedirectPath(getResponse));
+  });
+
   it('should render the same logout confirmation for GET and form POST and keep confirm POST working', async () => {
     const profile = generateNewUserProfile({ username: true, password: true });
     await userApi.create(profile);

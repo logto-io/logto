@@ -1,19 +1,43 @@
 import { type ParsedUrlQuery } from 'node:querystring';
 
+import { type Optional } from '@silverhand/essentials';
 import type { MiddlewareType } from 'koa';
 
 const formUrlEncodedContentType = 'application/x-www-form-urlencoded';
 const postCompatiblePaths = new Set(['/auth', '/session/end']);
 
-const isStringOrStringArray = (value: unknown): value is string | string[] =>
-  typeof value === 'string' ||
-  (Array.isArray(value) && value.every((item) => typeof item === 'string'));
+const isScalar = (value: unknown): value is string | number | boolean =>
+  typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean';
 
-const isParsedUrlQuery = (value: unknown): value is ParsedUrlQuery =>
-  typeof value === 'object' &&
-  value !== null &&
-  !Array.isArray(value) &&
-  Object.values(value).every((item) => isStringOrStringArray(item));
+const toQueryValue = (value: unknown): Optional<string | string[]> => {
+  if (isScalar(value)) {
+    return String(value);
+  }
+
+  if (Array.isArray(value) && value.every((item) => isScalar(item))) {
+    return value.map(String);
+  }
+};
+
+/**
+ * Converts the parsed request body into query-compatible parameters, serializing scalar values
+ * the way a form submission would express them (e.g. `300` from a JSON body becomes `'300'`).
+ * Returns `undefined` when the body carries values a form cannot express (nested objects, `null`,
+ * non-scalar array items), in which case the request should be left untouched.
+ */
+const toQueryParams = (body: unknown): Optional<ParsedUrlQuery> => {
+  if (typeof body !== 'object' || body === null || Array.isArray(body)) {
+    return;
+  }
+
+  const entries = Object.entries(body).map(([key, value]) => [key, toQueryValue(value)] as const);
+
+  if (entries.some(([, value]) => value === undefined)) {
+    return;
+  }
+
+  return Object.fromEntries(entries);
+};
 
 /**
  * Forwards form POST requests for the authorization and logout endpoints to their GET handlers by
@@ -31,16 +55,16 @@ export default function koaOidcPostToGet<StateT, ContextT, ResponseBodyT>(): Mid
   ResponseBodyT
 > {
   return async (ctx, next) => {
-    const { body } = ctx.request;
-
-    if (
+    const query =
       ctx.method === 'POST' &&
       postCompatiblePaths.has(ctx.path) &&
-      ctx.is(formUrlEncodedContentType) &&
-      isParsedUrlQuery(body)
-    ) {
+      ctx.is(formUrlEncodedContentType)
+        ? toQueryParams(ctx.request.body)
+        : undefined;
+
+    if (query) {
       const originalQuerystring = ctx.querystring;
-      ctx.request.query = body;
+      ctx.request.query = query;
       ctx.method = 'GET';
 
       try {
