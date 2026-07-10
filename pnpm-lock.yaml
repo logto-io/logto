@@ -4916,6 +4916,9 @@ importers:
       '@silverhand/essentials':
         specifier: ^2.9.1
         version: 2.9.2
+      '@silverhand/slonik':
+        specifier: 31.0.0-beta.2
+        version: 31.0.0-beta.2
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.5.3)
