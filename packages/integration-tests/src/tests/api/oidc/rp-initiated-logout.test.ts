@@ -39,7 +39,7 @@ describe('RP-initiated logout pages', () => {
     const endSessionUrl = new URL('/oidc/session/end', logtoUrl);
     const confirmationResponse = await ky.get(endSessionUrl, {
       headers: {
-        'accept-language': 'zh-CN',
+        'accept-language': 'en',
         cookie: client.getCookieHeader(endSessionUrl.pathname),
       },
       redirect: 'manual',
@@ -77,12 +77,12 @@ describe('RP-initiated logout pages', () => {
     assert(successLocation, new Error('Missing post-logout success page location'));
 
     const successResponse = await ky.get(new URL(successLocation, logtoUrl), {
-      headers: { 'accept-language': 'zh-CN' },
+      headers: { 'accept-language': 'en' },
     });
     const successPage = await successResponse.text();
 
     expect(successResponse.status).toBe(200);
     expect(successPage).toContain('<title>Sign Out</title>');
-    expect(successPage).toContain('你已经成功登出。');
+    expect(successPage).toContain('You have successfully signed out.');
   });
 });
