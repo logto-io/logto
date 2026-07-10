@@ -15,7 +15,7 @@ import {
   successfullyVerifySocialAuthorization,
 } from '#src/helpers/experience/social-verification.js';
 import { expectRejects } from '#src/helpers/index.js';
-import { devFeatureTest, generateEmail } from '#src/utils.js';
+import { generateEmail } from '#src/utils.js';
 
 const emailNotAllowedError = {
   code: 'session.email_blocklist.email_not_allowed',
@@ -157,7 +157,7 @@ describe('should reject the email registration if the email is in the blocklist'
     });
   });
 
-  devFeatureTest.describe('wildcard email blocklist entries', () => {
+  describe('wildcard email blocklist entries', () => {
     beforeAll(async () => {
       await updateSignInExperience({
         emailBlocklistPolicy: {

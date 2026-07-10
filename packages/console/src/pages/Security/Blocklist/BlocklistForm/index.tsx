@@ -12,7 +12,7 @@ import FormCard from '@/components/FormCard';
 import MultiOptionInput from '@/components/MultiOptionInput';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { emailBlocklist } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import FormField from '@/ds-components/FormField';
@@ -42,18 +42,6 @@ function BlocklistForm({ formData }: Props) {
   const { t: globalT } = useTranslation(undefined, {
     keyPrefix: 'admin_console',
   });
-  const customEmailAddressDescription = isDevFeaturesEnabled
-    ? t('blocklist.custom_email_address_with_wildcards.description')
-    : t('blocklist.custom_email_address.description');
-  const customEmailAddressPlaceholder = isDevFeaturesEnabled
-    ? t('blocklist.custom_email_address_with_wildcards.placeholder')
-    : t('blocklist.custom_email_address.placeholder');
-  const customEmailAddressDuplicateError = isDevFeaturesEnabled
-    ? t('blocklist.custom_email_address_with_wildcards.duplicate_error')
-    : t('blocklist.custom_email_address.duplicate_error');
-  const customEmailAddressInvalidFormatError = isDevFeaturesEnabled
-    ? t('blocklist.custom_email_address_with_wildcards.invalid_format_error')
-    : t('blocklist.custom_email_address.invalid_format_error');
 
   const {
     reset,
@@ -128,7 +116,9 @@ function BlocklistForm({ formData }: Props) {
             />
           </FormField>
           <FormField title="security.blocklist.custom_email_address.title">
-            <div className={styles.fieldDescription}>{customEmailAddressDescription}</div>
+            <div className={styles.fieldDescription}>
+              {t('blocklist.custom_email_address.description')}
+            </div>
             <Controller
               name="customBlocklist"
               control={control}
@@ -136,15 +126,15 @@ function BlocklistForm({ formData }: Props) {
                 <MultiOptionInput
                   disabled={isFreeTenant}
                   values={value}
-                  placeholder={customEmailAddressPlaceholder}
+                  placeholder={t('blocklist.custom_email_address.placeholder')}
                   renderValue={(value) => value}
                   validateInput={(input) => {
                     if (value.includes(input)) {
-                      return customEmailAddressDuplicateError;
+                      return t('blocklist.custom_email_address.duplicate_error');
                     }
 
-                    if (!isEmailBlocklistItem(input, { allowWildcard: isDevFeaturesEnabled })) {
-                      return customEmailAddressInvalidFormatError;
+                    if (!isEmailBlocklistItem(input)) {
+                      return t('blocklist.custom_email_address.invalid_format_error');
                     }
 
                     return { value: input };

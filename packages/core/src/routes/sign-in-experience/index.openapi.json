@@ -105,7 +105,7 @@
                           "description": "Whether to block sub-addresses. (E.g., example+shopping@test.com)"
                         },
                         "customBlocklist": {
-                          "description": "Custom blocklist of email addresses or domains."
+                          "description": "Custom blocklist of email addresses, domains, or wildcard email address patterns. Examples: `bar@example.com`, `@example.com`, `foo*@example.com`, `@*.example.com`."
                         }
                       }
                     }
@@ -219,7 +219,7 @@
                         "description": "Whether to block sub-addresses. (E.g., example+shopping@test.com)"
                       },
                       "customBlocklist": {
-                        "description": "Custom blocklist of email addresses or domains."
+                        "description": "Custom blocklist of email addresses, domains, or wildcard email address patterns. Examples: `bar@example.com`, `@example.com`, `foo*@example.com`, `@*.example.com`."
                       }
                     }
                   }

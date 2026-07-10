@@ -160,12 +160,6 @@ const security = {
     },
     custom_email_address: {
       title: '封鎖自定義電子郵件地址',
-      description: '添加不能通過 UI 註冊或連結的特定電子郵件域或地址。',
-      placeholder: '輸入被封鎖的電子郵件地址或域（例如 bar@example.com, @example.com）',
-      duplicate_error: '電子郵件地址或域已添加',
-      invalid_format_error: '必須是有效的電子郵件地址(bar@example.com)或域(@example.com)',
-    },
-    custom_email_address_with_wildcards: {
       description:
         '添加規則，以封鎖特定電子郵件域、電子郵件地址或通配符電子郵件地址模式通過 UI 註冊或連結。',
       placeholder:

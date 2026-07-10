@@ -182,15 +182,6 @@ const security = {
     custom_email_address: {
       title: 'Bloquear endereços de email personalizados',
       description:
-        'Adicione domínios de email específicos ou endereços de email que não podem se registrar ou vincular via UI.',
-      placeholder:
-        'Digite o endereço de email ou domínio bloqueado (por exemplo, bar@example.com, @example.com)',
-      duplicate_error: 'Endereço de email ou domínio já adicionado',
-      invalid_format_error:
-        'Deve ser um endereço de email válido (bar@example.com) ou domínio (@example.com)',
-    },
-    custom_email_address_with_wildcards: {
-      description:
         'Adicione regras para bloquear domínios de email específicos, endereços de email ou padrões de endereço de email com curinga de se registrar ou vincular via UI.',
       placeholder:
         'Digite o endereço de email, domínio ou padrão de endereço de email com curinga bloqueado (por exemplo, bar@example.com, @example.com, foo*@example.com, *@example.com)',

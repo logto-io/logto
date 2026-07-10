@@ -1,9 +1,5 @@
 import { emailOrEmailDomainRegEx } from './regex.js';
 
-type EmailBlocklistItemOptions = Readonly<{
-  allowWildcard?: boolean;
-}>;
-
 const wildcard = '*';
 const emailSeparator = '@';
 const domainSeparator = '.';
@@ -34,18 +30,15 @@ const isValidWildcardDomain = (domain: string) =>
  * Validates an email blocklist item.
  *
  * An item can be either a full email address (`foo@example.com`) or a domain entry
- * prefixed with `@` (`@example.com`). When `allowWildcard` is enabled, `*` can be
- * used inside the local part or domain while keeping the same email/domain shapes.
+ * prefixed with `@` (`@example.com`). `*` can be used inside the local part or
+ * domain while keeping the same email/domain shapes.
  */
-export const isEmailBlocklistItem = (
-  value: string,
-  { allowWildcard = false }: EmailBlocklistItemOptions = {}
-) => {
+export const isEmailBlocklistItem = (value: string) => {
   if (!hasWildcard(value)) {
     return emailOrEmailDomainRegEx.test(value);
   }
 
-  if (!allowWildcard || whitespaceRegEx.test(value)) {
+  if (whitespaceRegEx.test(value)) {
     return false;
   }
 

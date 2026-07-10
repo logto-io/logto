@@ -327,13 +327,19 @@ export type EmailBlocklistPolicy = {
   blockDisposableAddresses?: boolean;
   blockSubaddressing?: boolean;
   /**
-   * Custom blocklist of email addresses or domains.
+   * Custom blocklist of email addresses, domains, or wildcard email address patterns.
    *
    * @example
    * Email address: abc@xyx.com
    *
    * @example
    * Domain name: @xyz.com
+   *
+   * @example
+   * Wildcard email address pattern: foo*@example.com
+   *
+   * @example
+   * Wildcard domain pattern: @*.example.com
    */
   customBlocklist?: string[];
 };
