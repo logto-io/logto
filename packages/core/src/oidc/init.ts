@@ -29,7 +29,7 @@ import koaAppSecretTranspilation from '#src/middleware/koa-app-secret-transpilat
 import koaAuditLog, { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import koaJwksCacheControl from '#src/middleware/koa-jwks-cache-control.js';
-import koaOidcPostParams from '#src/middleware/koa-oidc-post-params.js';
+import koaOidcPostToGet from '#src/middleware/koa-oidc-post-to-get.js';
 import koaResourceParam from '#src/middleware/koa-resource-param.js';
 import postgresAdapter from '#src/oidc/adapter.js';
 import {
@@ -526,7 +526,12 @@ export default function initOidc(
     return next();
   });
 
-  oidc.use(koaOidcPostParams());
+  /**
+   * Register before `koaOidcPostToGet()` so it observes the restored POST method and keeps
+   * ETag/304 semantics off forwarded POST requests — they only apply to real GET requests.
+   */
+  oidc.use(koaBodyEtag());
+  oidc.use(koaOidcPostToGet());
   /**
    * Check if the request URL contains comma separated `resource` query parameter. If yes, split the values and
    * reconstruct the URL with multiple `resource` query parameters.
@@ -536,7 +541,6 @@ export default function initOidc(
 
   oidc.use(koaAppSecretTranspilation(queries));
   oidc.use(koaJwksCacheControl());
-  oidc.use(koaBodyEtag());
 
   if (EnvSet.values.isCloud) {
     oidc.use(koaTokenUsageGuard(subscription));

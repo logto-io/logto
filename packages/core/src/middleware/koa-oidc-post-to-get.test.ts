@@ -1,6 +1,6 @@
 import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-context.js';
 
-import koaOidcPostParams from './koa-oidc-post-params.js';
+import koaOidcPostToGet from './koa-oidc-post-to-get.js';
 
 const { jest } = import.meta;
 
@@ -13,7 +13,7 @@ const requestBody = {
   resource: ['https://api.example.com/1', 'https://api.example.com/2'],
 };
 
-describe('koaOidcPostParams()', () => {
+describe('koaOidcPostToGet()', () => {
   const next = jest.fn();
 
   afterEach(() => {
@@ -37,7 +37,7 @@ describe('koaOidcPostParams()', () => {
         );
       });
 
-      await koaOidcPostParams()(ctx, downstream);
+      await koaOidcPostToGet()(ctx, downstream);
 
       expect(ctx.method).toBe('POST');
       expect(ctx.querystring).toBe('original=true');
@@ -57,7 +57,7 @@ describe('koaOidcPostParams()', () => {
       requestBody,
     });
 
-    await koaOidcPostParams()(ctx, next);
+    await koaOidcPostToGet()(ctx, next);
 
     expect(ctx.method).toBe(method);
     expect(ctx.request.query).toEqual({});
@@ -72,7 +72,7 @@ describe('koaOidcPostParams()', () => {
       requestBody,
     });
 
-    await koaOidcPostParams()(ctx, next);
+    await koaOidcPostToGet()(ctx, next);
 
     expect(ctx.method).toBe('POST');
     expect(ctx.request.query).toEqual({});
@@ -89,7 +89,7 @@ describe('koaOidcPostParams()', () => {
     const error = new Error('downstream error');
 
     await expect(
-      koaOidcPostParams()(ctx, async () => {
+      koaOidcPostToGet()(ctx, async () => {
         expect(ctx.method).toBe('GET');
         throw error;
       })

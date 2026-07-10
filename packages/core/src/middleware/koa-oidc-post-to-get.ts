@@ -16,11 +16,16 @@ const isParsedUrlQuery = (value: unknown): value is ParsedUrlQuery =>
   Object.values(value).every((item) => isStringOrStringArray(item));
 
 /**
- * Keeps form POST requests working for the authorization and logout endpoints after
- * `oidc-provider` routes them as GET-only. The request body is parsed before this middleware runs,
- * so it can be forwarded as query parameters to the provider's GET handlers.
+ * Forwards form POST requests for the authorization and logout endpoints to their GET handlers by
+ * moving the parsed request body into the query string and rewriting the method to `GET`.
+ *
+ * `oidc-provider` v9 removes the default POST routes for these endpoints, and enabling its
+ * built-in POST support requires `SameSite=None` session cookies while Logto intentionally uses
+ * `SameSite=Lax`. The request body is parsed before this middleware runs, so it can be forwarded
+ * as query parameters instead. The original method and query string are restored after downstream
+ * processing, so upstream middleware and access logs observe the actual request.
  */
-export default function koaOidcPostParams<StateT, ContextT, ResponseBodyT>(): MiddlewareType<
+export default function koaOidcPostToGet<StateT, ContextT, ResponseBodyT>(): MiddlewareType<
   StateT,
   ContextT,
   ResponseBodyT

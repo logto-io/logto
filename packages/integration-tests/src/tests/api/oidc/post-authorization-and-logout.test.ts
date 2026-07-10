@@ -94,6 +94,9 @@ describe('POST authorization and logout endpoints', () => {
     expect(getResponse.status).toBe(200);
     expect(postResponse.status).toBe(200);
     expect(normalizeLogoutPage(postBody)).toBe(normalizeLogoutPage(getBody));
+    /** ETag semantics apply to real GET requests only, not to forwarded POST requests. */
+    expect(getResponse.headers.get('etag')).not.toBeNull();
+    expect(postResponse.headers.get('etag')).toBeNull();
 
     const xsrf = /name="xsrf" value="([^"]+)"/.exec(postBody)?.[1];
     assert(xsrf, new Error('Logout XSRF token is missing'));
