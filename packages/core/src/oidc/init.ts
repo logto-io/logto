@@ -29,6 +29,7 @@ import koaAppSecretTranspilation from '#src/middleware/koa-app-secret-transpilat
 import koaAuditLog, { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import koaJwksCacheControl from '#src/middleware/koa-jwks-cache-control.js';
+import koaOidcPostParams from '#src/middleware/koa-oidc-post-params.js';
 import koaResourceParam from '#src/middleware/koa-resource-param.js';
 import postgresAdapter from '#src/oidc/adapter.js';
 import {
@@ -471,12 +472,6 @@ export default function initOidc(
   // Provide audit log context for event listeners
   oidc.use(koaAuditLog(queries));
   /**
-   * Check if the request URL contains comma separated `resource` query parameter. If yes, split the values and
-   * reconstruct the URL with multiple `resource` query parameters.
-   * E.g. `?resource=foo,bar` => `?resource=foo&resource=bar`
-   */
-  oidc.use(koaResourceParam());
-  /**
    * `oidc-provider` [strictly checks](https://github.com/panva/node-oidc-provider/blob/6a0bcbcd35ed3e6179e81f0ab97a45f5e4e58f48/lib/shared/selective_body.js#L11)
    * the `content-type` header for further processing.
    *
@@ -530,6 +525,14 @@ export default function initOidc(
 
     return next();
   });
+
+  oidc.use(koaOidcPostParams());
+  /**
+   * Check if the request URL contains comma separated `resource` query parameter. If yes, split the values and
+   * reconstruct the URL with multiple `resource` query parameters.
+   * E.g. `?resource=foo,bar` => `?resource=foo&resource=bar`
+   */
+  oidc.use(koaResourceParam());
 
   oidc.use(koaAppSecretTranspilation(queries));
   oidc.use(koaJwksCacheControl());
