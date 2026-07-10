@@ -134,6 +134,23 @@ describe('opaque user token lifecycle', () => {
     });
 
     expect(logoutResponse.status).toBe(303);
+
+    /**
+     * The `offline_access` refresh token is not session-bound (the default `expiresWithSession`
+     * policy only binds tokens whose scope lacks `offline_access`), so server-side logout must
+     * leave it usable. Pin this before v9 revisits artifact destruction on logout.
+     */
+    const postLogoutTokenResponse = await oidcApi
+      .post('token', {
+        headers: { Authorization: getAuthorizationHeader(application) },
+        body: new URLSearchParams({
+          grant_type: 'refresh_token',
+          refresh_token: refreshToken,
+        }),
+      })
+      .json<{ access_token: string }>();
+    expect(postLogoutTokenResponse.access_token).not.toContain('.');
+
     await logoutClient(client);
   });
 
@@ -150,28 +167,18 @@ describe('opaque user token lifecycle', () => {
 
       const introspection = await introspectToken(application, opaqueAccessToken, 'access_token');
 
-      expect(Object.keys(introspection).toSorted()).toEqual([
-        'active',
-        'client_id',
-        'exp',
-        'iat',
-        'iss',
-        'scope',
-        'sub',
-        'token_type',
-      ]);
+      /* eslint-disable @typescript-eslint/no-unsafe-assignment -- jest `expect.any` is typed as `any` */
       expect(introspection).toEqual({
         active: true,
         client_id: application.id,
-        exp: introspection.exp,
-        iat: introspection.iat,
+        exp: expect.any(Number),
+        iat: expect.any(Number),
         iss: `${logtoUrl}/oidc`,
         scope: 'openid offline_access profile',
         sub: userId,
         token_type: 'Bearer',
       });
-      expect(typeof introspection.exp).toBe('number');
-      expect(typeof introspection.iat).toBe('number');
+      /* eslint-enable @typescript-eslint/no-unsafe-assignment */
       await expect(introspectToken(application, jwtAccessToken, 'access_token')).resolves.toEqual({
         active: false,
       });
@@ -229,8 +236,14 @@ describe('opaque client-credentials revocation', () => {
       kind: 'ClientCredentials',
     };
 
-    // Logto issues M2M API tokens as JWTs. Seed oidc-provider's opaque ClientCredentials model
-    // shape directly so its revocation behavior can still be exercised through the public endpoint.
+    /**
+     * Logto issues M2M API tokens as JWTs, so opaque ClientCredentials tokens cannot be minted
+     * through the public endpoints. Seed the model shape directly instead, mirroring what the
+     * opaque format persists in v8: `iat` and `exp` plus the defined `IN_PAYLOAD` fields (`jti`,
+     * `kind`, `clientId`; `aud`/`scope`/`extra` are omitted when undefined). If this test fails
+     * after the v9 switch, first diff this seed against the new `IN_PAYLOAD` list — a mismatch
+     * there is a seeding-shape issue, not a revocation semantics change.
+     */
     await pool.query(sql`
       insert into oidc_model_instances (tenant_id, model_name, id, payload, expires_at)
       values

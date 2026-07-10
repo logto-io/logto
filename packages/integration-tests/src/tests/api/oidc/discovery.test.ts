@@ -21,6 +21,11 @@ const normalizeEndpoint = (value: unknown): unknown => {
 };
 
 describe('OIDC discovery', () => {
+  /**
+   * The snapshot assumes the default database seed, which generates an EC signing key and thus
+   * advertises `ES384`. An instance seeded with an RSA signing key reports different
+   * `id_token_signing_alg_values_supported` and fails this snapshot.
+   */
   it('exposes the reviewed provider metadata', async () => {
     const discovery = await ky.get(discoveryUrl).json();
 
