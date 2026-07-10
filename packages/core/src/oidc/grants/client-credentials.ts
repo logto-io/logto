@@ -22,10 +22,9 @@
 import { cond } from '@silverhand/essentials';
 import type { Provider } from 'oidc-provider';
 import { errors } from 'oidc-provider';
-import instance from 'oidc-provider/lib/helpers/weak_cache.js';
-import checkResource from 'oidc-provider/lib/shared/check_resource.js';
 
 import { type EnvSet } from '#src/env-set/index.js';
+import { checkResource, getProviderConfiguration } from '#src/oidc/oidc-provider-internals.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -57,7 +56,7 @@ export const buildHandler: (
       mTLS: { getCertificate },
     },
     scopes: statics,
-  } = instance(ctx.oidc.provider).configuration();
+  } = getProviderConfiguration(ctx.oidc.provider);
 
   /* === RFC 0006 === */
   // The value type is `unknown`, which will swallow other type inferences. So we have to cast it
