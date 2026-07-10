@@ -34,14 +34,20 @@ export default function koaOidcPostParams<StateT, ContextT, ResponseBodyT>(): Mi
       ctx.is(formUrlEncodedContentType) &&
       isParsedUrlQuery(body)
     ) {
+      const originalQuerystring = ctx.querystring;
       ctx.request.query = body;
       ctx.method = 'GET';
 
       try {
         await next();
       } finally {
-        // Keep access logs and upstream middleware aligned with the actual request method.
+        /**
+         * Keep access logs and upstream middleware aligned with the actual request. Restoring the
+         * query string also removes the forwarded body parameters (which may carry tokens such as
+         * `id_token_hint`) from the request URL, so upstream code never observes them there.
+         */
         ctx.method = 'POST';
+        ctx.querystring = originalQuerystring;
       }
 
       return;

@@ -24,7 +24,7 @@ describe('koaOidcPostParams()', () => {
     'should forward form POST parameters to the GET handler for %s',
     async (path) => {
       const ctx = createMockContext({
-        url: path,
+        url: `${path}?original=true`,
         method: 'POST',
         headers: formHeaders,
         requestBody,
@@ -40,6 +40,7 @@ describe('koaOidcPostParams()', () => {
       await koaOidcPostParams()(ctx, downstream);
 
       expect(ctx.method).toBe('POST');
+      expect(ctx.querystring).toBe('original=true');
       expect(downstream).toHaveBeenCalledTimes(1);
     }
   );
@@ -78,7 +79,7 @@ describe('koaOidcPostParams()', () => {
     expect(next).toHaveBeenCalledTimes(1);
   });
 
-  it('should restore the POST method when downstream middleware throws', async () => {
+  it('should restore the POST method and query string when downstream middleware throws', async () => {
     const ctx = createMockContext({
       url: '/auth',
       method: 'POST',
@@ -95,5 +96,6 @@ describe('koaOidcPostParams()', () => {
     ).rejects.toBe(error);
 
     expect(ctx.method).toBe('POST');
+    expect(ctx.querystring).toBe('');
   });
 });
