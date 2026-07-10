@@ -87,6 +87,16 @@ const {
   new WellKnownCache('foo', new TtlCache())
 );
 
+const getPublicSignInExperience = (signInExperience: SignInExperience) => {
+  const {
+    emailBlocklistPolicy: _emailBlocklistPolicy,
+    forgotPasswordMethods: _forgotPasswordMethods,
+    ...publicSignInExperience
+  } = signInExperience;
+
+  return publicSignInExperience;
+};
+
 beforeEach(() => {
   jest.clearAllMocks();
 });
@@ -188,7 +198,7 @@ describe('getFullSignInExperience()', () => {
     const connectorFactory = ssoConnectorFactories[wellConfiguredSsoConnector.providerName];
 
     expect(fullSignInExperience).toStrictEqual({
-      ...mockSignInExperience,
+      ...getPublicSignInExperience(mockSignInExperience),
       socialConnectors: [],
       socialSignInConnectorTargets: ['github', 'facebook', 'wechat'],
       ssoConnectors: [
@@ -209,6 +219,7 @@ describe('getFullSignInExperience()', () => {
         phone: false,
       },
     });
+    expect(fullSignInExperience).not.toHaveProperty('emailBlocklistPolicy');
   });
 
   it('should return full sign-in experience with google one tap', async () => {
@@ -226,7 +237,7 @@ describe('getFullSignInExperience()', () => {
     const connectorFactory = ssoConnectorFactories[wellConfiguredSsoConnector.providerName];
 
     expect(fullSignInExperience).toStrictEqual({
-      ...mockSignInExperience,
+      ...getPublicSignInExperience(mockSignInExperience),
       socialConnectors: [
         { ...mockGithubConnector.metadata, id: mockGithubConnector.dbEntry.id },
         { ...mockGoogleConnector.metadata, id: mockGoogleConnector.dbEntry.id },
