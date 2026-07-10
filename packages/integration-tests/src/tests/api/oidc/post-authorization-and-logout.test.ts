@@ -74,6 +74,8 @@ describe('POST authorization and logout endpoints', () => {
     const [getResponse, jsonResponse] = await Promise.all([
       requestApi.get('auth', { searchParams }),
       requestApi.post('auth', {
+        /** Override the form content type inherited from `oidcApi` so the body is sent as JSON. */
+        headers: { 'content-type': 'application/json' },
         json: { ...Object.fromEntries(authorizationParameters), max_age: 300 },
       }),
     ]);
