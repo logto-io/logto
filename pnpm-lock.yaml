@@ -872,8 +872,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       jose:
-        specifier: ^5.6.3
-        version: 5.9.6
+        specifier: ^6.2.3
+        version: 6.2.3
       snakecase-keys:
         specifier: ^8.0.1
         version: 8.0.1
@@ -1420,9 +1420,6 @@ importers:
       '@silverhand/essentials':
         specifier: ^2.9.1
         version: 2.9.2
-      jose:
-        specifier: ^5.6.3
-        version: 5.9.6
       ky:
         specifier: ^1.2.3
         version: 1.2.3
@@ -1488,8 +1485,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       jose:
-        specifier: ^5.6.3
-        version: 5.9.6
+        specifier: ^6.2.3
+        version: 6.2.3
       snakecase-keys:
         specifier: ^8.0.1
         version: 8.0.1
@@ -2474,8 +2471,8 @@ importers:
         specifier: ^2.9.1
         version: 2.9.2
       jose:
-        specifier: ^5.6.3
-        version: 5.9.6
+        specifier: ^6.2.3
+        version: 6.2.3
       ky:
         specifier: ^1.2.3
         version: 1.2.3
@@ -2544,8 +2541,8 @@ importers:
         specifier: ^2.9.1
         version: 2.9.2
       jose:
-        specifier: ^5.6.3
-        version: 5.9.6
+        specifier: ^6.2.3
+        version: 6.2.3
       ky:
         specifier: ^1.2.3
         version: 1.2.3
