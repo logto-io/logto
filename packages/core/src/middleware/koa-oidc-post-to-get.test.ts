@@ -86,13 +86,21 @@ describe('koaOidcPostToGet()', () => {
     expect(downstream).toHaveBeenCalledTimes(1);
   });
 
-  it('should leave a POST with a non-forwardable body unchanged', async () => {
+  it.each([
+    /** Nested objects cannot be expressed by a form submission. */
+    ['a nested object', { client_id: 'client-id', claims: { userinfo: {} } }],
+    /**
+     * Empty and single-item arrays cannot round-trip through the query string: forwarding them
+     * would bypass the provider's duplicate-parameter rejection.
+     */
+    ['an empty array', { client_id: 'client-id', resource: [] }],
+    ['a single-item array', { client_id: ['client-id'] }],
+  ])('should leave a POST whose body carries %s unchanged', async (_, body) => {
     const ctx = createMockContext({
       url: '/auth',
       method: 'POST',
       headers: formHeaders,
-      /** Nested objects cannot be expressed by a form submission. */
-      requestBody: { client_id: 'client-id', claims: { userinfo: {} } },
+      requestBody: body,
     });
 
     await koaOidcPostToGet()(ctx, next);

@@ -14,7 +14,13 @@ const toQueryValue = (value: unknown): Optional<string | string[]> => {
     return String(value);
   }
 
-  if (Array.isArray(value) && value.every((item) => isScalar(item))) {
+  /**
+   * Arrays round-trip through the query string as repeated keys only when they contain at least
+   * two items: an empty array disappears and a single-item array collapses into a scalar, which
+   * would change the duplicate-parameter semantics the provider validates (`rejectDupes` treats
+   * any array-valued parameter as a duplicate).
+   */
+  if (Array.isArray(value) && value.length >= 2 && value.every((item) => isScalar(item))) {
     return value.map(String);
   }
 };
@@ -23,7 +29,8 @@ const toQueryValue = (value: unknown): Optional<string | string[]> => {
  * Converts the parsed request body into query-compatible parameters, serializing scalar values
  * the way a form submission would express them (e.g. `300` from a JSON body becomes `'300'`).
  * Returns `undefined` when the body carries values a form cannot express (nested objects, `null`,
- * non-scalar array items), in which case the request should be left untouched.
+ * non-scalar array items, arrays with fewer than two items), in which case the request should be
+ * left untouched.
  */
 const toQueryParams = (body: unknown): Optional<ParsedUrlQuery> => {
   if (typeof body !== 'object' || body === null || Array.isArray(body)) {
