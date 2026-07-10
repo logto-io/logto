@@ -1,5 +1,5 @@
 import { trySafe } from '@silverhand/essentials';
-import { type JWSHeaderParameters, type FlattenedJWSInput, type KeyLike, jwtVerify } from 'jose';
+import { type CryptoKey, type JWSHeaderParameters, type FlattenedJWSInput, jwtVerify } from 'jose';
 import { type Provider, errors } from 'oidc-provider';
 
 import type Queries from '#src/tenants/Queries.js';
@@ -20,7 +20,7 @@ type ValidateSubjectTokenParams = {
     localJWKSet: (
       protectedHeader: JWSHeaderParameters,
       token: FlattenedJWSInput
-    ) => Promise<KeyLike | Uint8Array>;
+    ) => Promise<CryptoKey>;
     issuer: string;
   };
 };
