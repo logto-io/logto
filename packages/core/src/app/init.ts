@@ -12,6 +12,7 @@ import { nanoid } from 'nanoid';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { TenantNotFoundError, tenantPool } from '#src/tenants/index.js';
+import { getConsoleLogFromContext } from '#src/utils/console.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 import { getTenantId } from '#src/utils/tenant.js';
 
@@ -68,6 +69,7 @@ export default async function initApp(app: Koa): Promise<void> {
 
     const tenant = await trySafe(tenantPool.get(tenantId, customEndpoint), (error) => {
       ctx.status = error instanceof TenantNotFoundError ? 404 : 500;
+      getConsoleLogFromContext(ctx).error(error);
       void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));
     });
 
