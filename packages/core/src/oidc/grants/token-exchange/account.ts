@@ -1,5 +1,5 @@
 import { trySafe } from '@silverhand/essentials';
-import { type CryptoKey, type JWSHeaderParameters, type FlattenedJWSInput, jwtVerify } from 'jose';
+import { type JWTVerifyGetKey, jwtVerify } from 'jose';
 import { type Provider, errors } from 'oidc-provider';
 
 import type Queries from '#src/tenants/Queries.js';
@@ -17,10 +17,7 @@ type ValidateSubjectTokenParams = {
   AccessToken: Provider['AccessToken'];
   /** For JWT access token verification. */
   jwtVerificationOptions?: {
-    localJWKSet: (
-      protectedHeader: JWSHeaderParameters,
-      token: FlattenedJWSInput
-    ) => Promise<CryptoKey>;
+    localJWKSet: JWTVerifyGetKey;
     issuer: string;
   };
 };

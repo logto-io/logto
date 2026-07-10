@@ -5,7 +5,7 @@
 
 import { createHash } from 'node:crypto';
 
-import { type CryptoKey, type JWK, type KeyObject, exportJWK as joseExportJWK } from 'jose';
+import { type JWK, exportJWK as joseExportJWK } from 'jose';
 
 const getCalculateKidComponents = (jwk: JWK) => {
   switch (jwk.kty) {
@@ -43,7 +43,7 @@ const calculateKid = (jwk: JWK) => {
   return createHash('sha256').update(JSON.stringify(components)).digest().toString('base64url');
 };
 
-export const exportJWK = async (key: CryptoKey | KeyObject | Uint8Array): Promise<JWK> => {
+export const exportJWK = async (key: Parameters<typeof joseExportJWK>[0]): Promise<JWK> => {
   const jwk = await joseExportJWK(key);
 
   return {
