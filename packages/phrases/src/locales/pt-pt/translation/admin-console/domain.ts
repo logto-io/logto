@@ -44,6 +44,25 @@ const domain = {
     },
     config_custom_domain_description:
       'Configure domínios personalizados para configurar os seguintes recursos: aplicações, conectores sociais e conectores empresariais.',
+    verification_files: {
+      title: 'Ficheiros de verificação de domínio',
+      description:
+        'Disponibilize pequenos ficheiros de texto ou JSON neste domínio personalizado para verificar a propriedade do domínio junto de serviços de terceiros.',
+      add: 'Adicionar ficheiro de verificação',
+      empty: 'Não existem ficheiros de verificação configurados.',
+      path: 'Caminho do ficheiro',
+      content_type: 'Tipo de conteúdo',
+      content_type_text: 'Texto simples',
+      content_type_json: 'JSON',
+      content: 'Conteúdo do ficheiro',
+      content_placeholder: 'Cole o conteúdo exato do ficheiro de verificação',
+      required: 'Este campo é obrigatório.',
+      invalid_path:
+        'Utilize um caminho de ficheiro na raiz do domínio ou em /.well-known/. Apenas são permitidos letras, números, pontos, hífenes e sublinhados.',
+      duplicate_path: 'Já existe um ficheiro de verificação com este caminho.',
+      content_too_long: 'O conteúdo do ficheiro não pode exceder 16 384 caracteres.',
+      invalid_json: 'Introduza conteúdo JSON válido.',
+    },
   },
   default: {
     default_domain: 'Domínio predefinido',

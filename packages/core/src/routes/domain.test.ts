@@ -2,7 +2,6 @@ import { type Domain, DomainVerificationFileContentType } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
 import { mockDomain, mockDomainResponse } from '#src/__mocks__/domain.js';
-import { EnvSet } from '#src/env-set/index.js';
 import { createMockQuotaLibrary } from '#src/test-utils/quota.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
@@ -68,18 +67,12 @@ const mockLibraries = {
 const tenantContext = new MockTenant(undefined, { domains }, undefined, mockLibraries);
 
 const domainRoutes = await pickDefault(import('./domain.js'));
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
 
 describe('domain routes', () => {
   const domainRequest = createRequester({ authedRoutes: domainRoutes, tenantContext });
 
   afterEach(() => {
     jest.clearAllMocks();
-  });
-
-  afterAll(() => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
   });
 
   it('GET /domains', async () => {

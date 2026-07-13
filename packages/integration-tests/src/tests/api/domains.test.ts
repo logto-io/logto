@@ -1,7 +1,15 @@
+import { DomainVerificationFileContentType } from '@logto/schemas';
 import { HTTPError } from 'ky';
 
-import { createDomain, deleteDomain, getDomain, getDomains } from '#src/api/domain.js';
-import { generateDomain } from '#src/utils.js';
+import {
+  createDomain,
+  deleteDomain,
+  getDomain,
+  getDomains,
+  getDomainVerificationFiles,
+  updateDomainVerificationFiles,
+} from '#src/api/domain.js';
+import { devFeatureTest, generateDomain } from '#src/utils.js';
 
 describe('domains', () => {
   afterEach(async () => {
@@ -59,5 +67,42 @@ describe('domains', () => {
 
     const response = await getDomain(domain.id).catch((error: unknown) => error);
     expect(response instanceof HTTPError && response.response.status).toBe(404);
+  });
+
+  devFeatureTest.describe('domain verification files', () => {
+    it('should get and update domain verification files', async () => {
+      const domain = await createDomain();
+      const verificationFiles = [
+        {
+          path: '/MP_verify_example.txt',
+          content: 'verification-content',
+          contentType: DomainVerificationFileContentType.Text,
+        },
+        {
+          path: '/.well-known/example.json',
+          content: '{"verified":true}',
+          contentType: DomainVerificationFileContentType.Json,
+        },
+      ];
+
+      await expect(getDomainVerificationFiles(domain.id)).resolves.toEqual([]);
+      await expect(updateDomainVerificationFiles(domain.id, verificationFiles)).resolves.toEqual(
+        verificationFiles
+      );
+      await expect(getDomainVerificationFiles(domain.id)).resolves.toEqual(verificationFiles);
+    });
+
+    it('should reject invalid verification file paths', async () => {
+      const domain = await createDomain();
+      const response = await updateDomainVerificationFiles(domain.id, [
+        {
+          path: '/nested/verify.txt',
+          content: 'verification-content',
+          contentType: DomainVerificationFileContentType.Text,
+        },
+      ]).catch((error: unknown) => error);
+
+      expect(response instanceof HTTPError && response.response.status).toBe(400);
+    });
   });
 });

@@ -43,6 +43,25 @@ const domain = {
     },
     config_custom_domain_description:
       '다음 기능을 설정하려면 사용자 지정 도메인을 구성하세요: 애플리케이션, 소셜 커넥터, 엔터프라이즈 커넥터.',
+    verification_files: {
+      title: '도메인 확인 파일',
+      description:
+        '이 사용자 지정 도메인에서 작은 텍스트 또는 JSON 파일을 제공하여 타사 서비스에 도메인 소유권을 확인합니다.',
+      add: '확인 파일 추가',
+      empty: '구성된 확인 파일이 없습니다.',
+      path: '파일 경로',
+      content_type: '콘텐츠 유형',
+      content_type_text: '일반 텍스트',
+      content_type_json: 'JSON',
+      content: '파일 내용',
+      content_placeholder: '확인 파일의 정확한 내용을 붙여넣으세요',
+      required: '필수 항목입니다.',
+      invalid_path:
+        '도메인 루트 또는 /.well-known/ 아래의 파일 경로를 사용하세요. 문자, 숫자, 마침표, 하이픈 및 밑줄만 지원됩니다.',
+      duplicate_path: '이 경로를 사용하는 확인 파일이 이미 있습니다.',
+      content_too_long: '파일 내용은 16,384자를 초과할 수 없습니다.',
+      invalid_json: '유효한 JSON 내용을 입력하세요.',
+    },
   },
   default: {
     default_domain: '기본 도메인',

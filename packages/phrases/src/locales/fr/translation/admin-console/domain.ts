@@ -44,6 +44,25 @@ const domain = {
     },
     config_custom_domain_description:
       'Configurez des domaines personnalisés pour mettre en place les fonctionnalités suivantes : applications, connecteurs sociaux et connecteurs d’entreprise.',
+    verification_files: {
+      title: 'Fichiers de vérification du domaine',
+      description:
+        'Servez de petits fichiers texte ou JSON depuis ce domaine personnalisé afin de vérifier la propriété du domaine auprès de services tiers.',
+      add: 'Ajouter un fichier de vérification',
+      empty: 'Aucun fichier de vérification configuré.',
+      path: 'Chemin du fichier',
+      content_type: 'Type de contenu',
+      content_type_text: 'Texte brut',
+      content_type_json: 'JSON',
+      content: 'Contenu du fichier',
+      content_placeholder: 'Collez le contenu exact du fichier de vérification',
+      required: 'Ce champ est obligatoire.',
+      invalid_path:
+        'Utilisez un chemin de fichier à la racine du domaine ou sous /.well-known/. Seuls les lettres, chiffres, points, tirets et traits de soulignement sont pris en charge.',
+      duplicate_path: 'Un fichier de vérification utilise déjà ce chemin.',
+      content_too_long: 'Le contenu du fichier ne doit pas dépasser 16 384 caractères.',
+      invalid_json: 'Saisissez un contenu JSON valide.',
+    },
   },
   default: {
     default_domain: 'Domaine par défaut',
