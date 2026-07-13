@@ -1,7 +1,6 @@
 import {
   AgreeToTermsPolicy,
   experience,
-  ExtraParamsKey,
   InteractionEvent,
   SignInIdentifier,
   type RequestErrorBody,
@@ -16,6 +15,7 @@ import {
   signInWithOneTimeToken,
 } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
+import useConsumeOneTimeTokenParameters from '@/hooks/use-consume-one-time-token-parameters';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
@@ -25,6 +25,7 @@ import LoadingLayer from '@/shared/components/LoadingLayer';
 
 const OneTimeToken = () => {
   const [params] = useSearchParams();
+  const { oneTimeToken, loginHint } = useConsumeOneTimeTokenParameters();
   const navigate = useNavigateWithPreservedSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const hasTermsAgreed = useRef(false);
@@ -120,8 +121,6 @@ const OneTimeToken = () => {
   // Single effect: validate params, run terms gating once, then proceed to submission with idempotency
   useEffect(() => {
     (async () => {
-      const token = params.get(ExtraParamsKey.OneTimeToken);
-      const email = params.get(ExtraParamsKey.LoginHint);
       const errorMessage = params.get('errorMessage');
 
       if (errorMessage) {
@@ -132,7 +131,7 @@ const OneTimeToken = () => {
         return;
       }
 
-      if (!token || !email) {
+      if (!oneTimeToken || !loginHint) {
         navigate(`/${experience.routes.oneTimeToken}/error`, { replace: true });
         return;
       }
@@ -166,8 +165,8 @@ const OneTimeToken = () => {
 
       setIsLoading(true);
       const [error, result] = await asyncSignInWithOneTimeToken({
-        token,
-        identifier: { type: SignInIdentifier.Email, value: email },
+        token: oneTimeToken,
+        identifier: { type: SignInIdentifier.Email, value: loginHint },
       });
 
       if (error) {
@@ -190,7 +189,7 @@ const OneTimeToken = () => {
 
       // Set email identifier to the <HiddenIdentifierInput />, so that when being asked for fulfilling
       // the password later, the browser password manager can pick up both the email and the password.
-      setIdentifierInputValue({ type: SignInIdentifier.Email, value: email });
+      setIdentifierInputValue({ type: SignInIdentifier.Email, value: loginHint });
 
       await submit(result.verificationId);
       setIsLoading(false);
@@ -200,7 +199,9 @@ const OneTimeToken = () => {
     params,
     asyncSignInWithOneTimeToken,
     handleError,
+    loginHint,
     navigate,
+    oneTimeToken,
     setIdentifierInputValue,
     submit,
     termsValidation,

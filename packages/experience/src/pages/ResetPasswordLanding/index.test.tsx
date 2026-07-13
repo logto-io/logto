@@ -1,10 +1,10 @@
 import { SignInIdentifier } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
-import { fireEvent, waitFor } from '@testing-library/react';
-import { Route, Routes } from 'react-router-dom';
+import { fireEvent, render, waitFor } from '@testing-library/react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
+import PageContextProvider from '@/Providers/PageContextProvider';
 import UserInteractionContextProvider from '@/Providers/UserInteractionContextProvider';
-import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { mockSignInExperienceSettings } from '@/__mocks__/logto';
 import { identifyForgotPasswordWithOneTimeToken } from '@/apis/experience';
@@ -37,37 +37,44 @@ describe('ResetPasswordLanding', () => {
   const renderPage = (
     initialEntry: string,
     forgotPassword?: SignInExperienceResponse['forgotPassword']
-  ) =>
-    renderWithPageContext(
-      <SettingsProvider
-        settings={{
-          ...mockSignInExperienceSettings,
-          forgotPassword: {
-            ...mockSignInExperienceSettings.forgotPassword,
-            ...forgotPassword,
-          },
-        }}
-      >
-        <UserInteractionContextProvider>
-          <Routes>
-            <Route path="/reset-password" element={<ResetPasswordLanding />} />
-            <Route path="/forgot-password/reset" element={<div>set password page</div>} />
-            <Route path="/sign-in" element={<div>sign in page</div>} />
-          </Routes>
-        </UserInteractionContextProvider>
-      </SettingsProvider>,
-      { initialEntries: [initialEntry] }
+  ) => {
+    window.history.pushState(window.history.state, '', initialEntry);
+
+    return render(
+      <BrowserRouter>
+        <PageContextProvider>
+          <SettingsProvider
+            settings={{
+              ...mockSignInExperienceSettings,
+              forgotPassword: {
+                ...mockSignInExperienceSettings.forgotPassword,
+                ...forgotPassword,
+              },
+            }}
+          >
+            <UserInteractionContextProvider>
+              <Routes>
+                <Route path="/reset-password" element={<ResetPasswordLanding />} />
+                <Route path="/forgot-password/reset" element={<div>set password page</div>} />
+                <Route path="/sign-in" element={<div>sign in page</div>} />
+              </Routes>
+            </UserInteractionContextProvider>
+          </SettingsProvider>
+        </PageContextProvider>
+      </BrowserRouter>
     );
+  };
 
   afterEach(() => {
     jest.clearAllMocks();
+    jest.restoreAllMocks();
+    window.history.replaceState(window.history.state, '', '/');
   });
 
   it('auto verifies one-time token when login_hint is provided', async () => {
-    const { queryByText } = renderPage(
-      '/reset-password?one_time_token=token&login_hint=foo%40logto.io',
-      { email: false, phone: false }
-    );
+    const initialEntry = '/reset-password?one_time_token=token&login_hint=foo%40logto.io&foo=bar';
+
+    const { queryByText } = renderPage(initialEntry, { email: false, phone: false });
 
     expect(queryByText(mockResetPasswordMagicLinkDescription)).not.toBeNull();
 
@@ -137,6 +144,18 @@ describe('ResetPasswordLanding', () => {
         identifier: { type: SignInIdentifier.Email, value: 'foo@logto.io' },
       });
       expect(queryByText('set password page')).not.toBeNull();
+    });
+  });
+
+  it('removes login_hint even when one-time token is missing', async () => {
+    renderPage('/reset-password?login_hint=foo%40logto.io&foo=bar', {
+      email: true,
+      phone: false,
+    });
+
+    await waitFor(() => {
+      expect(window.location.pathname).toBe('/reset-password');
+      expect(window.location.search).toBe('?foo=bar');
     });
   });
 

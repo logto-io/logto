@@ -20,6 +20,19 @@ export const searchKeys = Object.freeze({
   uiLocales: 'ui_locales',
 } satisfies Record<SearchKeysCamelCase, string>);
 
+const replaceSearchParameters = (parameters: URLSearchParams) => {
+  const parameterString = parameters.toString();
+  const conditionalParamString = condString(parameterString && `?${parameterString}`);
+
+  // Preserve the existing history state (e.g. React Router's location state) to avoid
+  // losing in-progress flow data (like Continue page's interactionEvent) on page refresh.
+  window.history.replaceState(
+    window.history.state,
+    '',
+    window.location.pathname + conditionalParamString + window.location.hash
+  );
+};
+
 export const handleSearchParametersData = () => {
   const { search } = window.location;
 
@@ -44,13 +57,26 @@ export const handleSearchParametersData = () => {
     }
   }
 
-  const conditionalParamString = condString(parameters.size > 0 && `?${parameters.toString()}`);
+  replaceSearchParameters(parameters);
+};
 
-  // Preserve the existing history state (e.g. React Router's location state) to avoid
-  // losing in-progress flow data (like Continue page's interactionEvent) on page refresh.
-  window.history.replaceState(
-    window.history.state,
-    '',
-    window.location.pathname + conditionalParamString
-  );
+export const removeSearchParameters = (keys: readonly string[]) => {
+  const { search } = window.location;
+
+  if (!search) {
+    return;
+  }
+
+  const parameters = new URLSearchParams(search);
+  const hasTargetParameter = keys.some((key) => parameters.has(key));
+
+  if (!hasTargetParameter) {
+    return;
+  }
+
+  for (const key of keys) {
+    parameters.delete(key);
+  }
+
+  replaceSearchParameters(parameters);
 };
