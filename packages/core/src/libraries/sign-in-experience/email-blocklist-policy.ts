@@ -8,7 +8,7 @@ import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
-const validateCustomBlockListFormat = (list: string[]) => {
+const validateCustomEmailListFormat = (list: string[]) => {
   const invalidItems = new Set<string>();
 
   for (const item of list) {
@@ -20,9 +20,9 @@ const validateCustomBlockListFormat = (list: string[]) => {
   return invalidItems;
 };
 
-const parseCustomBlocklist = (customBlocklist: string[]) => {
-  const deduplicated = deduplicate(customBlocklist);
-  const invalidItems = validateCustomBlockListFormat(deduplicated);
+const parseCustomEmailList = (list: string[]) => {
+  const deduplicated = deduplicate(list);
+  const invalidItems = validateCustomEmailListFormat(deduplicated);
 
   if (invalidItems.size > 0) {
     throw new RequestError({
@@ -36,13 +36,13 @@ const parseCustomBlocklist = (customBlocklist: string[]) => {
 };
 
 /**
- * This function will deduplicate the custom blocklist (if not undefined) and validate the format of each item.
+ * This function will deduplicate the custom blocklist and allowlist (if not undefined) and validate the format of each item.
  * If any item is invalid, it throws a RequestError with the details of the invalid items.
  */
 export const parseEmailBlocklistPolicy = (
   emailBlocklistPolicy: EmailBlocklistPolicy
 ): EmailBlocklistPolicy => {
-  const { customBlocklist, ...rest } = emailBlocklistPolicy;
+  const { customAllowlist, customBlocklist, ...rest } = emailBlocklistPolicy;
 
   // BlockDisposableAddresses is not supported for OSS.
   if (rest.blockDisposableAddresses) {
@@ -57,7 +57,8 @@ export const parseEmailBlocklistPolicy = (
 
   return {
     ...rest,
-    ...conditional(customBlocklist && { customBlocklist: parseCustomBlocklist(customBlocklist) }),
+    ...conditional(customAllowlist && { customAllowlist: parseCustomEmailList(customAllowlist) }),
+    ...conditional(customBlocklist && { customBlocklist: parseCustomEmailList(customBlocklist) }),
   };
 };
 
@@ -174,13 +175,13 @@ export const validateEmailAgainstBlocklistPolicy = async (
 };
 
 export const isEmailBlocklistPolicyEnabled = (emailBlockListPolicy: EmailBlocklistPolicy) => {
-  const { blockDisposableAddresses, blockSubaddressing, customBlocklist } = emailBlockListPolicy;
+  const { blockDisposableAddresses, blockSubaddressing, customAllowlist, customBlocklist } =
+    emailBlockListPolicy;
 
-  /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
-  return (
-    blockDisposableAddresses ||
-    blockSubaddressing ||
-    (customBlocklist && customBlocklist.length > 0)
-  );
-  /* eslint-enable @typescript-eslint/prefer-nullish-coalescing */
+  return [
+    blockDisposableAddresses === true,
+    blockSubaddressing === true,
+    (customAllowlist?.length ?? 0) > 0,
+    (customBlocklist?.length ?? 0) > 0,
+  ].some(Boolean);
 };

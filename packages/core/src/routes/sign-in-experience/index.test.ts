@@ -94,7 +94,9 @@ const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
 const originalIsCloud = EnvSet.values.isCloud;
 const originalIsProduction = EnvSet.values.isProduction;
 
-const createDevFeaturesDisabledRequester = async () => {
+const createDevFeaturesDisabledRequester = async (
+  signInExperience: SignInExperience = mockSignInExperience
+) => {
   jest.resetModules();
 
   await mockEsmWithActual('#src/env-set/index.js', () => ({
@@ -110,7 +112,7 @@ const createDevFeaturesDisabledRequester = async () => {
 
   const updateDefaultSignInExperience = jest.fn(
     async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
-      ...mockSignInExperience,
+      ...signInExperience,
       ...data,
     })
   );
@@ -120,7 +122,7 @@ const createDevFeaturesDisabledRequester = async () => {
     {
       signInExperiences: {
         updateDefaultSignInExperience,
-        findDefaultSignInExperience: jest.fn().mockResolvedValue(mockSignInExperience),
+        findDefaultSignInExperience: jest.fn().mockResolvedValue(signInExperience),
       },
       customPhrases: { findAllCustomLanguageTags: async () => [] },
     },
@@ -721,6 +723,28 @@ describe('PATCH /sign-in-exp', () => {
     });
   });
 
+  it('should accept custom allowlist in email blocklist policy', async () => {
+    const emailBlocklistPolicy = {
+      customAllowlist: ['foo@bar.com', '@example.com', 'foo@bar.com'],
+      customBlocklist: ['@blocked.com'],
+    };
+
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
+      emailBlocklistPolicy,
+    });
+
+    expect(response).toMatchObject({
+      status: 200,
+      body: {
+        ...mockSignInExperience,
+        emailBlocklistPolicy: {
+          customAllowlist: ['foo@bar.com', '@example.com'],
+          customBlocklist: ['@blocked.com'],
+        },
+      },
+    });
+  });
+
   it('should reject phone forgot password method when phone connector is not available', async () => {
     mockGetLogtoConnectors.mockResolvedValueOnce([]);
 
@@ -814,6 +838,37 @@ describe('sign-in experience routes with dev features disabled', () => {
       adaptiveMfa,
       mfa,
     });
+  });
+
+  it('should omit custom allowlist from GET response', async () => {
+    const emailBlocklistPolicy = {
+      customAllowlist: ['@allowed.com'],
+      customBlocklist: ['@blocked.com'],
+    };
+    const { requester } = await createDevFeaturesDisabledRequester({
+      ...mockSignInExperience,
+      emailBlocklistPolicy,
+    });
+
+    const response = await requester.get('/sign-in-exp');
+
+    expect(response.status).toEqual(200);
+    expect(response.body.emailBlocklistPolicy).toEqual({
+      customBlocklist: emailBlocklistPolicy.customBlocklist,
+    });
+  });
+
+  it('should reject custom allowlist updates', async () => {
+    const { requester, updateDefaultSignInExperience } = await createDevFeaturesDisabledRequester();
+
+    const response = await requester.patch('/sign-in-exp').send({
+      emailBlocklistPolicy: {
+        customAllowlist: ['@allowed.com'],
+      },
+    });
+
+    expect(response.status).toEqual(400);
+    expect(updateDefaultSignInExperience).not.toHaveBeenCalled();
   });
 });
 

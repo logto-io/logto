@@ -327,6 +327,12 @@ export type EmailBlocklistPolicy = {
   blockDisposableAddresses?: boolean;
   blockSubaddressing?: boolean;
   /**
+   * Custom allowlist of email addresses, domains, or wildcard email address patterns.
+   *
+   * The matching semantics are the same as {@link customBlocklist}.
+   */
+  customAllowlist?: string[];
+  /**
    * Custom blocklist of email addresses, domains, or wildcard email address patterns.
    *
    * @example
@@ -347,6 +353,7 @@ export type EmailBlocklistPolicy = {
 export const emailBlocklistPolicyGuard = z.object({
   blockDisposableAddresses: z.boolean().optional(),
   blockSubaddressing: z.boolean().optional(),
+  customAllowlist: z.string().array().optional(),
   customBlocklist: z.string().array().optional(),
 }) satisfies ToZodObject<EmailBlocklistPolicy>;
 

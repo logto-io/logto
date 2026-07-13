@@ -43,6 +43,30 @@ const isNonSkippableMfaPromptPolicy = (policy: MfaPolicy) =>
     policy
   );
 
+// Dev feature guard for the custom email allowlist configuration.
+const hasCustomAllowlistProperty = (
+  emailBlocklistPolicy: Optional<SignInExperience['emailBlocklistPolicy']>
+) => Boolean(emailBlocklistPolicy && 'customAllowlist' in emailBlocklistPolicy);
+
+const omitDevFeatureEmailBlocklistPolicyProperties = (
+  signInExperience: SignInExperience
+): SignInExperience => {
+  if (
+    EnvSet.values.isDevFeaturesEnabled ||
+    !hasCustomAllowlistProperty(signInExperience.emailBlocklistPolicy)
+  ) {
+    return signInExperience;
+  }
+
+  const { customAllowlist: _customAllowlist, ...emailBlocklistPolicy } =
+    signInExperience.emailBlocklistPolicy;
+
+  return {
+    ...signInExperience,
+    emailBlocklistPolicy,
+  };
+};
+
 const signInExperienceResponseGuard = SignInExperiences.guard;
 const signInExperienceCreateGuard = SignInExperiences.createGuard;
 
@@ -71,7 +95,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
       status: [200, 404],
     }),
     async (ctx, next) => {
-      ctx.body = await findDefaultSignInExperience();
+      ctx.body = omitDevFeatureEmailBlocklistPolicyProperties(await findDefaultSignInExperience());
 
       return next();
     }
@@ -147,6 +171,16 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         getLogtoConnectors(),
         findDefaultSignInExperience(),
       ]);
+
+      if (hasCustomAllowlistProperty(emailBlocklistPolicy)) {
+        assertThat(
+          EnvSet.values.isDevFeaturesEnabled,
+          new RequestError({
+            code: 'request.invalid_input',
+            details: 'Email allowlist configuration is not available',
+          })
+        );
+      }
 
       // Flipping usernames to case-insensitive would merge accounts that differ only by case, so
       // reject the flip while such conflicts exist. Only the actual case-sensitive ->
@@ -403,7 +437,9 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         ...conditional(verificationCodePolicy && { verificationCodePolicy }),
       };
 
-      ctx.body = await updateDefaultSignInExperience(payload);
+      ctx.body = omitDevFeatureEmailBlocklistPolicyProperties(
+        await updateDefaultSignInExperience(payload)
+      );
 
       void quota.reportSubscriptionUpdatesUsage('mfaEnabled');
 
