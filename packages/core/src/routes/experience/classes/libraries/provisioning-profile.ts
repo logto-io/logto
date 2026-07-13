@@ -14,9 +14,9 @@ export const getProfileIdentifierCollisionPayload = ({
   primaryEmail,
   primaryPhone,
 }: IdentifierCollisionProfile) => ({
-  username,
-  primaryEmail,
-  primaryPhone,
+  ...conditional(username !== undefined && { username }),
+  ...conditional(primaryEmail !== undefined && { primaryEmail }),
+  ...conditional(primaryPhone !== undefined && { primaryPhone }),
   ...conditional(
     socialIdentity && {
       identity: {

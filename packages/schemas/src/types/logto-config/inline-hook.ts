@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import type { Json } from '../../foundations/index.js';
 import type { InteractionEvent, InteractionIdentifier } from '../interactions.js';
-import type { UserInfo } from '../user.js';
+import { userInfoGuard, type UserInfo } from '../user.js';
 
 export enum LogtoInlineHookKey {
   PostFirstFactorVerification = 'inlineHook.postFirstFactorVerification',
@@ -48,17 +48,25 @@ export type HookUser = Pick<
   'id' | 'username' | 'primaryEmail' | 'primaryPhone' | 'name' | 'avatar' | 'customData' | 'profile'
 >;
 
-export type HookUserPatch = Partial<
-  Pick<
-    UserInfo,
-    'username' | 'primaryEmail' | 'primaryPhone' | 'name' | 'avatar' | 'customData' | 'profile'
-  >
->;
+export const hookUserPatchGuard = userInfoGuard
+  .pick({
+    username: true,
+    primaryEmail: true,
+    primaryPhone: true,
+    name: true,
+    avatar: true,
+    customData: true,
+    profile: true,
+  })
+  .partial();
+
+export type HookUserPatch = z.infer<typeof hookUserPatchGuard>;
 
 export type PostFirstFactorVerificationEvent = {
   key: LogtoInlineHookKey.PostFirstFactorVerification;
   interactionEvent: InteractionEvent.SignIn;
   identifier: InteractionIdentifier;
+  user: HookUser | null;
   /** Sensitive credential provided for inline hook controlled password verification. */
   password: string;
 };
@@ -69,13 +77,30 @@ export type PostSignInEvent = {
   user: HookUser;
 };
 
-export type PostFirstFactorVerificationResult = {
-  action: 'createUser' | 'updateUser';
-  user: HookUserPatch;
-  passwordVerified: true;
-};
+// Nested `user` uses passthrough so password fields survive structural parsing.
+export const postFirstFactorVerificationResultGuard = z.discriminatedUnion('action', [
+  z.object({
+    action: z.literal('createUser'),
+    user: hookUserPatchGuard.passthrough(),
+    passwordVerified: z.literal(true),
+  }),
+  z.object({
+    action: z.literal('updateUser'),
+    user: hookUserPatchGuard.passthrough(),
+    passwordVerified: z.literal(true),
+  }),
+]);
 
-export type PostSignInResult = {
-  action: 'updateUser';
-  user?: HookUserPatch;
-};
+export type PostFirstFactorVerificationResult = z.infer<
+  typeof postFirstFactorVerificationResultGuard
+>;
+
+// Nested `user` uses passthrough so password fields survive structural parsing.
+export const postSignInResultGuard = z.discriminatedUnion('action', [
+  z.object({
+    action: z.literal('updateUser'),
+    user: hookUserPatchGuard.passthrough().optional(),
+  }),
+]);
+
+export type PostSignInResult = z.infer<typeof postSignInResultGuard>;

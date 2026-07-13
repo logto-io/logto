@@ -451,5 +451,203 @@ describe('ProvisionLibrary', () => {
       expect(insertUser).not.toHaveBeenCalled();
     });
   });
+
+  describe('updateUser', () => {
+    it('checks identifiers, merges customData, updates the user, and appends data hook context', async () => {
+      const existingCustomData = {
+        source: 'registration',
+        plan: 'free',
+      };
+      const customData = {
+        plan: 'pro',
+        upstreamId: 'user-1',
+      };
+      const profile = { givenName: 'Jane' };
+      const { provisionLibrary, ctx, findUserById, updateUserById, checkIdentifierCollision } =
+        createProvisionLibrary({
+          user: {
+            ...mockUser,
+            id: 'user-id',
+            customData: existingCustomData,
+          },
+        });
+
+      const updatedUser = await provisionLibrary.updateUser(
+        'user-id',
+        {
+          name: 'Jane Doe',
+          username: 'jane',
+          primaryEmail: 'jane@example.com',
+          primaryPhone: '+1234567890',
+          profile,
+          customData,
+          passwordEncrypted: 'hashed-password',
+          passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+        },
+        {
+          mergeCustomData: true,
+        }
+      );
+
+      expect(checkIdentifierCollision).toHaveBeenCalledWith(
+        {
+          username: 'jane',
+          primaryEmail: 'jane@example.com',
+          primaryPhone: '+1234567890',
+        },
+        'user-id'
+      );
+      expect(findUserById).toHaveBeenCalledWith('user-id');
+      expect(Number(checkIdentifierCollision.mock.invocationCallOrder[0])).toBeLessThan(
+        Number(updateUserById.mock.invocationCallOrder[0])
+      );
+
+      expect(updateUserById).toHaveBeenCalledWith(
+        'user-id',
+        expect.objectContaining({
+          name: 'Jane Doe',
+          username: 'jane',
+          primaryEmail: 'jane@example.com',
+          primaryPhone: '+1234567890',
+          profile,
+          customData: {
+            source: 'registration',
+            plan: 'pro',
+            upstreamId: 'user-1',
+          },
+          passwordEncrypted: 'hashed-password',
+          passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+          isPasswordExpired: false,
+        }),
+        'replace'
+      );
+      expect(updateUserById.mock.calls[0]?.[1]).toHaveProperty(
+        'passwordUpdatedAt',
+        expect.any(Number)
+      );
+      expect(updateUserById.mock.calls[0]?.[1]).not.toHaveProperty('id');
+      expect(updateUserById.mock.calls[0]?.[1]).not.toHaveProperty('logtoConfig');
+      expect(ctx.appendDataHookContext).toHaveBeenCalledWith('User.Data.Updated', {
+        user: updatedUser,
+      });
+
+      findUserById.mockClear();
+      updateUserById.mockClear();
+      await provisionLibrary.updateUser('user-id', { name: 'Jane Doe' });
+
+      expect(findUserById).not.toHaveBeenCalled();
+      expect(updateUserById).toHaveBeenCalledWith('user-id', { name: 'Jane Doe' }, 'merge');
+    });
+
+    it('replaces customData without reading the existing user when mergeCustomData is false', async () => {
+      const customData = {
+        plan: 'pro',
+        upstreamId: 'user-1',
+      };
+      const { provisionLibrary, findUserById, updateUserById } = createProvisionLibrary({
+        user: {
+          ...mockUser,
+          id: 'user-id',
+          customData: {
+            source: 'registration',
+            plan: 'free',
+          },
+        },
+      });
+
+      await provisionLibrary.updateUser('user-id', { customData });
+
+      expect(findUserById).not.toHaveBeenCalled();
+      expect(updateUserById).toHaveBeenCalledWith(
+        'user-id',
+        expect.objectContaining({
+          customData,
+        }),
+        'replace'
+      );
+    });
+
+    it('ignores empty customData when mergeCustomData is false', async () => {
+      const { provisionLibrary, ctx, findUserById, updateUserById } = createProvisionLibrary({
+        user: {
+          ...mockUser,
+          id: 'user-id',
+          customData: {
+            plan: 'free',
+          },
+        },
+      });
+
+      await provisionLibrary.updateUser('user-id', { customData: {} });
+
+      expect(updateUserById).not.toHaveBeenCalled();
+      expect(findUserById).toHaveBeenCalledWith('user-id');
+      expect(ctx.appendDataHookContext).not.toHaveBeenCalled();
+    });
+
+    it('ignores empty profile when updating customData in replace mode', async () => {
+      const customData = {
+        plan: 'pro',
+      };
+      const { provisionLibrary, updateUserById } = createProvisionLibrary({
+        user: {
+          ...mockUser,
+          id: 'user-id',
+          profile: {
+            givenName: 'Jane',
+            familyName: 'Doe',
+          },
+          customData: {
+            plan: 'free',
+          },
+        },
+      });
+
+      await provisionLibrary.updateUser('user-id', { profile: {}, customData });
+
+      expect(updateUserById).toHaveBeenCalledWith(
+        'user-id',
+        expect.objectContaining({
+          customData,
+        }),
+        'replace'
+      );
+      expect(updateUserById.mock.calls[0]?.[1]).not.toHaveProperty('profile');
+    });
+
+    it('returns the existing user without updating when the profile is empty', async () => {
+      const { provisionLibrary, ctx, findUserById, updateUserById, checkIdentifierCollision } =
+        createProvisionLibrary({
+          user: {
+            ...mockUser,
+            id: 'user-id',
+          },
+        });
+
+      const user = await provisionLibrary.updateUser('user-id', {});
+
+      expect(checkIdentifierCollision).toHaveBeenCalledWith({}, 'user-id');
+      expect(findUserById).toHaveBeenCalledWith('user-id');
+      expect(updateUserById).not.toHaveBeenCalled();
+      expect(ctx.appendDataHookContext).not.toHaveBeenCalled();
+      expect(user).toEqual(expect.objectContaining({ id: 'user-id' }));
+    });
+
+    it('propagates identifier collision errors without updating the user', async () => {
+      const error = new RequestError({ code: 'user.email_already_in_use', status: 422 });
+      const { provisionLibrary, ctx, findUserById, checkIdentifierCollision, updateUserById } =
+        createProvisionLibrary();
+
+      checkIdentifierCollision.mockRejectedValueOnce(error);
+
+      await expect(
+        provisionLibrary.updateUser('user-id', { primaryEmail: 'jane@example.com' })
+      ).rejects.toBe(error);
+
+      expect(findUserById).not.toHaveBeenCalled();
+      expect(updateUserById).not.toHaveBeenCalled();
+      expect(ctx.appendDataHookContext).not.toHaveBeenCalled();
+    });
+  });
 });
 /* eslint-enable max-lines */
