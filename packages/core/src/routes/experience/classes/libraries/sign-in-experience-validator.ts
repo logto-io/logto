@@ -372,15 +372,16 @@ export class SignInExperienceValidator {
   }
 
   /**
-   * Guard the email address is not in the blocklist.
+   * Guard the email address with the email access policy.
    *
    * @remarks
-   * Use this method to guard the email address or domain is not in the blocklist.
+   * Use this method to guard the email address or domain with the configured email access policy.
+   * - guard custom allowlist if provided
    * - guard disposable email domain if enabled
-   * - guard email subaddessing if enabled
+   * - guard email subaddressing if enabled
    * - guard custom email address/domain if provided
    */
-  public async guardEmailBlocklist(verificationRecord: VerificationRecord) {
+  public async guardEmailAccessPolicy(verificationRecord: VerificationRecord) {
     const email = getEmailIdentifierFromVerificationRecord(verificationRecord);
     if (!email) {
       return;

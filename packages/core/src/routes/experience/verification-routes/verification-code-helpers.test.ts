@@ -17,7 +17,7 @@ type MockExperienceInteraction = {
   setVerificationRecord: jest.MockedFunction<() => Promise<void>>;
   save: jest.MockedFunction<() => Promise<void>>;
   signInExperienceValidator: {
-    guardEmailBlocklist: jest.MockedFunction<() => Promise<void>>;
+    guardEmailAccessPolicy: jest.MockedFunction<() => Promise<void>>;
     isRegistrationDisabled: jest.MockedFunction<() => Promise<boolean>>;
   };
 };
@@ -55,7 +55,7 @@ describe('sendCode parameter passing', () => {
     setVerificationRecord: jest.fn().mockImplementation(resolveVoid),
     save: jest.fn().mockImplementation(resolveVoid),
     signInExperienceValidator: {
-      guardEmailBlocklist: jest.fn().mockImplementation(resolveVoid),
+      guardEmailAccessPolicy: jest.fn().mockImplementation(resolveVoid),
       // Default: registration is enabled, so delivery is never suppressed for sign-in.
       isRegistrationDisabled: jest.fn().mockResolvedValue(false),
     },
