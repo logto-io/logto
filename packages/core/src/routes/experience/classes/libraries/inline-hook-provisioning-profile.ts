@@ -1,9 +1,11 @@
-import { Users, UsersPasswordEncryptionMethod, userProfileGuard } from '@logto/schemas';
-import { z } from 'zod';
+import { Users, userProfileGuard } from '@logto/schemas';
+import { type z } from 'zod';
+
+import { encryptUserPassword } from '#src/libraries/user.utils.js';
 
 import { type HookProvisioningProfile } from '../../types.js';
 
-const hookProvisioningProfileBaseGuard = Users.createGuard
+const hookProvisioningProfileGuard = Users.createGuard
   .pick({
     name: true,
     avatar: true,
@@ -12,31 +14,27 @@ const hookProvisioningProfileBaseGuard = Users.createGuard
     primaryPhone: true,
     profile: true,
     customData: true,
-    passwordEncrypted: true,
-    passwordEncryptionMethod: true,
   })
   .extend({
     profile: userProfileGuard.optional(),
-    passwordEncrypted: z.string().min(1).max(256).optional(),
-    passwordEncryptionMethod: z.nativeEnum(UsersPasswordEncryptionMethod).optional(),
   })
   .partial()
-  .strict();
-
-const hookProvisioningProfileGuard = hookProvisioningProfileBaseGuard.superRefine(
-  ({ passwordEncrypted, passwordEncryptionMethod }, context) => {
-    const hasPasswordEncrypted = passwordEncrypted !== undefined;
-    const hasPasswordEncryptionMethod = passwordEncryptionMethod !== undefined;
-
-    if (hasPasswordEncrypted !== hasPasswordEncryptionMethod) {
-      context.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: '`passwordEncrypted` and `passwordEncryptionMethod` must be provided together.',
-        path: hasPasswordEncrypted ? ['passwordEncryptionMethod'] : ['passwordEncrypted'],
-      });
-    }
-  }
-) satisfies z.ZodType<HookProvisioningProfile>;
+  .strict() satisfies z.ZodType<HookProvisioningProfile>;
 
 export const toHookProvisioningProfile = (user: unknown): HookProvisioningProfile =>
   hookProvisioningProfileGuard.parse(user);
+
+type InlineHookPasswordPayload = Awaited<ReturnType<typeof encryptUserPassword>>;
+
+/**
+ * Appends Logto-generated Argon2i password fields to a hook provisioning profile.
+ * Script-supplied password hash fields are rejected by {@link toHookProvisioningProfile};
+ * only this helper may introduce them for create/update provisioning.
+ */
+export const appendPasswordPayloadToInlineHookProvisioningProfile = async (
+  provisioningProfile: HookProvisioningProfile,
+  password: string
+): Promise<HookProvisioningProfile & InlineHookPasswordPayload> => ({
+  ...provisioningProfile,
+  ...(await encryptUserPassword(password)),
+});

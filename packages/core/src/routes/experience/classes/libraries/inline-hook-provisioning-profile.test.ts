@@ -1,7 +1,10 @@
 import { UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { ZodError } from 'zod';
 
-import { toHookProvisioningProfile } from './inline-hook-provisioning-profile.js';
+import {
+  appendPasswordPayloadToInlineHookProvisioningProfile,
+  toHookProvisioningProfile,
+} from './inline-hook-provisioning-profile.js';
 
 describe('toHookProvisioningProfile', () => {
   it('returns the hook provisioning profile with whitelisted fields', () => {
@@ -18,8 +21,6 @@ describe('toHookProvisioningProfile', () => {
       customData: {
         plan: 'pro',
       },
-      passwordEncrypted: 'hashed-password',
-      passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
     });
 
     expect(provisioningProfile).toEqual({
@@ -35,8 +36,6 @@ describe('toHookProvisioningProfile', () => {
       customData: {
         plan: 'pro',
       },
-      passwordEncrypted: 'hashed-password',
-      passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
     });
   });
 
@@ -57,6 +56,27 @@ describe('toHookProvisioningProfile', () => {
     ).toThrow(ZodError);
   });
 
+  it('rejects script-supplied password hash fields', () => {
+    expect(() =>
+      toHookProvisioningProfile({
+        passwordEncrypted: 'hashed-password',
+        passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+      })
+    ).toThrow(ZodError);
+
+    expect(() =>
+      toHookProvisioningProfile({
+        passwordEncrypted: 'hashed-password',
+      })
+    ).toThrow(ZodError);
+
+    expect(() =>
+      toHookProvisioningProfile({
+        passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+      })
+    ).toThrow(ZodError);
+  });
+
   it('validates the profile field with userProfileGuard', () => {
     expect(() =>
       toHookProvisioningProfile({
@@ -67,44 +87,32 @@ describe('toHookProvisioningProfile', () => {
     ).toThrow(ZodError);
   });
 
-  it('requires password fields to be provided together', () => {
-    expect(() =>
-      toHookProvisioningProfile({
-        passwordEncrypted: 'hashed-password',
-      })
-    ).toThrow(ZodError);
-
-    expect(() =>
-      toHookProvisioningProfile({
-        passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
-      })
-    ).toThrow(ZodError);
-
-    expect(() =>
-      toHookProvisioningProfile({
-        passwordEncrypted: null,
-        passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
-      })
-    ).toThrow(ZodError);
-
-    expect(() =>
-      toHookProvisioningProfile({
-        passwordEncrypted: 'hashed-password',
-        passwordEncryptionMethod: null,
-      })
-    ).toThrow(ZodError);
-
-    expect(() =>
-      toHookProvisioningProfile({
-        passwordEncrypted: '',
-        passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
-      })
-    ).toThrow(ZodError);
-  });
-
   it('accepts partial hook provisioning profiles', () => {
     expect(toHookProvisioningProfile({ name: 'Jane Doe' })).toEqual({
       name: 'Jane Doe',
     });
+  });
+});
+
+describe('appendPasswordPayloadToInlineHookProvisioningProfile', () => {
+  it('appends a Logto-generated Argon2i password hash to the provisioning profile', async () => {
+    const provisioningProfile = {
+      primaryEmail: 'jane@example.com',
+      customData: {
+        plan: 'pro',
+      },
+    };
+
+    const result = await appendPasswordPayloadToInlineHookProvisioningProfile(
+      provisioningProfile,
+      'P@ssw0rd'
+    );
+
+    expect(result).toMatchObject({
+      ...provisioningProfile,
+      passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+    });
+    expect(result.passwordEncrypted).toContain('argon2');
+    expect(result.passwordEncrypted).not.toBe('P@ssw0rd');
   });
 });
