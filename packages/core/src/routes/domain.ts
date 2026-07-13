@@ -1,4 +1,10 @@
-import { Domains, ProductEvent, domainResponseGuard, domainSelectFields } from '@logto/schemas';
+import {
+  Domains,
+  ProductEvent,
+  domainResponseGuard,
+  domainSelectFields,
+  domainVerificationFilesGuard,
+} from '@logto/schemas';
 import { pick, trySafe } from '@silverhand/essentials';
 import { z } from 'zod';
 
@@ -16,7 +22,7 @@ export default function domainRoutes<T extends ManagementApiRouter>(
   ...[router, { id: tenantId, queries, libraries }]: RouterInitArgs<T>
 ) {
   const {
-    domains: { findAllDomains, findDomainById, findDomain },
+    domains: { findAllDomains, findDomainById, findDomain, updateDomainById },
   } = queries;
   const {
     domains: { syncDomainStatus, addDomain, deleteDomain, cleanupDomains },
@@ -101,6 +107,49 @@ export default function domainRoutes<T extends ManagementApiRouter>(
       return next();
     }
   );
+
+  // Custom domain verification files are an unreleased feature and should be removed from this
+  // guard together when the feature is ready for release.
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    const verificationFilesPath = '/domains/:id/verification-files';
+
+    router.get(
+      verificationFilesPath,
+      koaGuard({
+        params: z.object({ id: z.string() }),
+        response: domainVerificationFilesGuard,
+        status: [200, 404],
+      }),
+      async (ctx, next) => {
+        const domain = await findDomainById(ctx.guard.params.id);
+
+        ctx.body = domain.verificationFiles;
+
+        return next();
+      }
+    );
+
+    router.put(
+      verificationFilesPath,
+      koaGuard({
+        params: z.object({ id: z.string() }),
+        body: z.object({ verificationFiles: domainVerificationFilesGuard }),
+        response: domainVerificationFilesGuard,
+        status: [200, 400, 404],
+      }),
+      async (ctx, next) => {
+        const { id } = ctx.guard.params;
+        const { verificationFiles } = ctx.guard.body;
+
+        await findDomainById(id);
+        const domain = await updateDomainById(id, { verificationFiles });
+
+        ctx.body = domain.verificationFiles;
+
+        return next();
+      }
+    );
+  }
 
   router.post(
     '/domains',

@@ -1,7 +1,8 @@
-import { type Domain } from '@logto/schemas';
+import { type Domain, DomainVerificationFileContentType } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
 import { mockDomain, mockDomainResponse } from '#src/__mocks__/domain.js';
+import { EnvSet } from '#src/env-set/index.js';
 import { createMockQuotaLibrary } from '#src/test-utils/quota.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
@@ -29,6 +30,13 @@ const domains = {
   findDomain: jest.fn(async (domain: string) => {
     return [mockDomain].find((item) => item.domain === domain) ?? null;
   }),
+  updateDomainById: jest.fn(
+    async (id: string, data: Partial<Domain>): Promise<Domain> => ({
+      ...mockDomain,
+      ...data,
+      id,
+    })
+  ),
 };
 
 const syncDomainStatus = jest.fn(async (domain: Domain): Promise<Domain> => domain);
@@ -60,12 +68,18 @@ const mockLibraries = {
 const tenantContext = new MockTenant(undefined, { domains }, undefined, mockLibraries);
 
 const domainRoutes = await pickDefault(import('./domain.js'));
+const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
 
 describe('domain routes', () => {
   const domainRequest = createRequester({ authedRoutes: domainRoutes, tenantContext });
 
   afterEach(() => {
     jest.clearAllMocks();
+  });
+
+  afterAll(() => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
   });
 
   it('GET /domains', async () => {
@@ -128,6 +142,45 @@ describe('domain routes', () => {
       skippedActiveCount: 2,
       failedCount: 0,
     });
+  });
+
+  it('GET /domains/:id/verification-files', async () => {
+    const response = await domainRequest.get(`/domains/${mockDomain.id}/verification-files`);
+
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual([]);
+  });
+
+  it('PUT /domains/:id/verification-files', async () => {
+    const verificationFiles = [
+      {
+        path: '/verify.txt',
+        content: 'verification-content',
+        contentType: DomainVerificationFileContentType.Text,
+      },
+    ];
+    const response = await domainRequest
+      .put(`/domains/${mockDomain.id}/verification-files`)
+      .send({ verificationFiles });
+
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual(verificationFiles);
+    expect(domains.updateDomainById).toHaveBeenCalledWith(mockDomain.id, { verificationFiles });
+  });
+
+  it('PUT /domains/:id/verification-files rejects invalid paths', async () => {
+    const response = await domainRequest.put(`/domains/${mockDomain.id}/verification-files`).send({
+      verificationFiles: [
+        {
+          path: '/nested/verify.txt',
+          content: 'verification-content',
+          contentType: DomainVerificationFileContentType.Text,
+        },
+      ],
+    });
+
+    expect(response.status).toEqual(400);
+    expect(domains.updateDomainById).not.toHaveBeenCalled();
   });
 
   it('DELETE /domains/:id', async () => {

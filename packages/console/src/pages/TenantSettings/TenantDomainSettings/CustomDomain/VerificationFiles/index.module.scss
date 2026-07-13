@@ -1,0 +1,97 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  border-top: 1px solid var(--color-divider);
+  padding: _.unit(5) _.unit(6);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: _.unit(4);
+}
+
+.title {
+  font: var(--font-title-3);
+}
+
+.description,
+.empty,
+.contentType {
+  color: var(--color-text-secondary);
+  font: var(--font-body-2);
+}
+
+.description {
+  margin-top: _.unit(1);
+}
+
+.spinner {
+  margin: _.unit(5) auto 0;
+}
+
+.fileList {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(2);
+  margin-top: _.unit(4);
+}
+
+.empty {
+  padding: _.unit(3) 0;
+}
+
+.fileItem {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: _.unit(2) _.unit(3);
+  border-radius: 8px;
+  background: var(--color-layer-light);
+}
+
+.fileInfo {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: _.unit(1);
+}
+
+.path {
+  overflow: hidden;
+  color: var(--color-text);
+  font-family: 'Roboto Mono', monospace;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  gap: _.unit(1);
+  margin-left: _.unit(3);
+  color: var(--color-text-secondary);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(4);
+  margin-top: _.unit(4);
+  padding: _.unit(4);
+  border: 1px solid var(--color-divider);
+  border-radius: 8px;
+}
+
+.label {
+  display: block;
+  margin-bottom: _.unit(2);
+  font: var(--font-label-2);
+}
+
+.formActions {
+  display: flex;
+  gap: _.unit(2);
+}

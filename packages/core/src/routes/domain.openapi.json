@@ -92,6 +92,50 @@
           }
         }
       }
+    },
+    "/api/domains/{id}/verification-files": {
+      "get": {
+        "summary": "Get domain verification files",
+        "description": "Get the verification files served from the custom domain.",
+        "tags": ["Dev feature"],
+        "responses": {
+          "200": {
+            "description": "The configured domain verification files."
+          },
+          "404": {
+            "description": "The domain with the specified ID was not found."
+          }
+        }
+      },
+      "put": {
+        "summary": "Replace domain verification files",
+        "description": "Replace the verification files served from the custom domain.",
+        "tags": ["Dev feature"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "verificationFiles": {
+                    "description": "Up to 10 text or JSON verification files served at the domain root or under `/.well-known/`."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The domain verification files were replaced successfully."
+          },
+          "400": {
+            "description": "Validation error. Please check the request body."
+          },
+          "404": {
+            "description": "The domain with the specified ID was not found."
+          }
+        }
+      }
     }
   }
 }
