@@ -70,7 +70,7 @@ describe('domains', () => {
   });
 
   devFeatureTest.describe('domain verification files', () => {
-    it('should get and update domain verification files', async () => {
+    it('should get, update, and delete domain verification files', async () => {
       const domain = await createDomain();
       const verificationFiles = [
         {
@@ -90,6 +90,18 @@ describe('domains', () => {
         verificationFiles
       );
       await expect(getDomainVerificationFiles(domain.id)).resolves.toEqual(verificationFiles);
+
+      const remainingVerificationFiles = verificationFiles.slice(1);
+
+      await expect(
+        updateDomainVerificationFiles(domain.id, remainingVerificationFiles)
+      ).resolves.toEqual(remainingVerificationFiles);
+      await expect(getDomainVerificationFiles(domain.id)).resolves.toEqual(
+        remainingVerificationFiles
+      );
+
+      await expect(updateDomainVerificationFiles(domain.id, [])).resolves.toEqual([]);
+      await expect(getDomainVerificationFiles(domain.id)).resolves.toEqual([]);
     });
 
     it('should reject invalid verification file paths', async () => {
