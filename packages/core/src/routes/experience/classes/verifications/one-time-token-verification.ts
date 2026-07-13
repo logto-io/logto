@@ -99,8 +99,14 @@ export class OneTimeTokenVerification
     assertThat(
       user,
       new RequestError(
-        { code: 'user.user_not_exist', status: 404 },
-        { identifier: this.identifier }
+        {
+          code: 'user.user_not_exist',
+          status: 404,
+          identifier: this.identifier.value,
+        },
+        {
+          identifier: this.identifier.value,
+        }
       )
     );
 
