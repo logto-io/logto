@@ -1,6 +1,7 @@
 const one_time_token = {
   token_not_found: '令牌 {{token}} 未找到。',
   email_mismatch: '电子邮件与给定令牌不匹配。',
+  interaction_event_mismatch: '该令牌不能用于此次交互。',
   token_expired: '令牌已过期。',
   token_consumed: '令牌已被使用。',
   token_revoked: '令牌已被撤销。',

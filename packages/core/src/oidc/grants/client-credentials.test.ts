@@ -6,18 +6,16 @@ import { MockTenant } from '#src/test-utils/tenant.js';
 
 const { jest } = import.meta;
 
-jest.unstable_mockModule('oidc-provider/lib/shared/check_resource.js', () => ({
-  default: jest.fn(),
-}));
-
-jest.unstable_mockModule('oidc-provider/lib/helpers/weak_cache.js', () => ({
-  default: jest.fn().mockReturnValue({
-    configuration: jest.fn().mockReturnValue({
-      features: {
-        mTLS: { getCertificate: jest.fn() },
-      },
-      scopes: new Set(['foo', 'bar']),
-    }),
+jest.unstable_mockModule('#src/oidc/oidc-provider-internals.js', () => ({
+  certificateThumbprint: jest.fn(),
+  checkResource: jest.fn(),
+  dpopValidate: jest.fn(),
+  epochTime: jest.fn(),
+  getProviderConfiguration: jest.fn().mockReturnValue({
+    features: {
+      mTLS: { getCertificate: jest.fn() },
+    },
+    scopes: new Set(['foo', 'bar']),
   }),
 }));
 

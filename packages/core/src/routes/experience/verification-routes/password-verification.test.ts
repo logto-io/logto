@@ -252,9 +252,7 @@ describe('password verification route PostFirstFactorVerification fallback', () 
     runHook.mockResolvedValueOnce({
       action: 'createUser',
       passwordVerified: true,
-      user: {
-        primaryEmail: identifier.value,
-      },
+      user: {},
     });
 
     await handler(ctx, jest.fn().mockImplementation(resolveVoid));
@@ -326,10 +324,14 @@ describe('password verification route PostFirstFactorVerification fallback', () 
       password
     );
     expect(createUser).not.toHaveBeenCalled();
-    expect(updateUser).toHaveBeenCalledWith(mockUser.id, {
-      name: 'Jane Doe',
-      ...passwordHashPayload,
-    });
+    expect(updateUser).toHaveBeenCalledWith(
+      mockUser.id,
+      {
+        name: 'Jane Doe',
+        ...passwordHashPayload,
+      },
+      { mergeCustomData: true }
+    );
     expect(passwordVerificationRecord.markAsVerified).toHaveBeenCalled();
   });
 

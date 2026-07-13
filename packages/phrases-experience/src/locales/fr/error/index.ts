@@ -41,6 +41,8 @@ const error = {
   captcha_verification_failed: 'Erreur lors de la vérification du captcha.',
   send_verification_code_failed:
     "Échec de l'envoi du code de vérification. Veuillez réessayer plus tard.",
+  send_verification_code_failed_use_password:
+    "Échec de l'envoi du code de vérification. Veuillez plutôt vous connecter avec votre mot de passe.",
   terms_acceptance_required: 'Acceptation des conditions requise',
   terms_acceptance_required_description: 'Vous devez accepter les conditions pour continuer.',
   something_went_wrong: 'Quelque chose a mal tourné',

@@ -254,5 +254,30 @@ describe('koaGuardMiddleware', () => {
       await koaGuard({ body: z.object({ foo: z.string().optional() }) })(ctx, next);
       expect(ctx.guard.body).toEqual({});
     });
+
+    it('should normalize a scalar single file back to an array', async () => {
+      /**
+       * `koa-body@8` unwraps single-element file arrays into scalars, while our file guards
+       * expect one array per field — `koaGuard` re-wraps scalars before parsing.
+       */
+      const file = { size: 100, filepath: '/tmp/upload' };
+      const ctx = {
+        ...baseCtx,
+        request: {
+          ...baseCtx.request,
+          files: { file },
+        },
+        params: {},
+        guard: {
+          ...defaultGuard,
+        },
+      };
+
+      await koaGuard({
+        files: z.object({ file: z.object({ size: z.number() }).array().min(1).max(1) }),
+        // @ts-expect-error mimic koa-body@8's scalar file output; the guard only reads `size`
+      })(ctx, next);
+      expect(ctx.guard.files).toEqual({ file: [{ size: 100 }] });
+    });
   });
 });

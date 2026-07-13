@@ -4,24 +4,23 @@ import { isEmailBlocklistItem, matchesEmailBlocklistItem } from './email-blockli
 
 describe('email blocklist helpers', () => {
   describe('isEmailBlocklistItem', () => {
-    it('validates exact email and domain items without wildcard support', () => {
+    it('validates exact email and domain items', () => {
       expect(isEmailBlocklistItem('foo@example.com')).toBe(true);
       expect(isEmailBlocklistItem('@example.com')).toBe(true);
-      expect(isEmailBlocklistItem('foo*@example.com')).toBe(false);
     });
 
-    it('validates wildcard email and domain items when wildcard support is enabled', () => {
-      expect(isEmailBlocklistItem('foo*@example.com', { allowWildcard: true })).toBe(true);
-      expect(isEmailBlocklistItem('*@example.com', { allowWildcard: true })).toBe(true);
-      expect(isEmailBlocklistItem('foo@*.example.com', { allowWildcard: true })).toBe(true);
-      expect(isEmailBlocklistItem('@foo.*', { allowWildcard: true })).toBe(true);
-      expect(isEmailBlocklistItem('@*.example.com', { allowWildcard: true })).toBe(true);
+    it('validates wildcard email and domain items', () => {
+      expect(isEmailBlocklistItem('foo*@example.com')).toBe(true);
+      expect(isEmailBlocklistItem('*@example.com')).toBe(true);
+      expect(isEmailBlocklistItem('foo@*.example.com')).toBe(true);
+      expect(isEmailBlocklistItem('@foo.*')).toBe(true);
+      expect(isEmailBlocklistItem('@*.example.com')).toBe(true);
     });
 
     it.each(['foo*', '@*', 'foo@*', 'foo@example', '@example', '*@*.*'])(
       'rejects malformed wildcard item: %s',
       (item) => {
-        expect(isEmailBlocklistItem(item, { allowWildcard: true })).toBe(false);
+        expect(isEmailBlocklistItem(item)).toBe(false);
       }
     );
   });

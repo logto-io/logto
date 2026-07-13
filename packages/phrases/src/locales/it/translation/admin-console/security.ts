@@ -181,12 +181,13 @@ const security = {
     custom_email_address: {
       title: 'Blocca indirizzi email personalizzati',
       description:
-        "Aggiungi domini email specifici o indirizzi email che non possono registrarsi o collegarsi tramite l'UI.",
+        "Aggiungi regole per bloccare domini email specifici, indirizzi email o modelli di indirizzi email con caratteri jolly dalla registrazione o dal collegamento tramite l'UI.",
       placeholder:
-        "Inserisci l'indirizzo email o il dominio bloccato (ad es., bar@example.com, @example.com)",
-      duplicate_error: 'Indirizzo email o dominio già aggiunto',
+        "Inserisci l'indirizzo email, il dominio o il modello di indirizzo email con caratteri jolly bloccato (ad es., bar@example.com, @example.com, foo*@example.com, *@example.com)",
+      duplicate_error:
+        'Indirizzo email, dominio o modello di indirizzo email con caratteri jolly già aggiunto',
       invalid_format_error:
-        'Deve essere un indirizzo email valido (bar@example.com) o un dominio (@example.com)',
+        'Deve essere un indirizzo email valido (bar@example.com), un dominio (@example.com) o un modello di indirizzo email con caratteri jolly (foo*@example.com, *@example.com)',
     },
   },
 };

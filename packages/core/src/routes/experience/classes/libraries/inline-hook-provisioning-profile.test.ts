@@ -69,6 +69,12 @@ describe('toHookProvisioningProfile', () => {
         passwordEncrypted: '',
       })
     ).toThrow(ZodError);
+
+    expect(() =>
+      toHookProvisioningProfile({
+        passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+      })
+    ).toThrow(ZodError);
   });
 
   it('validates the profile field with userProfileGuard', () => {

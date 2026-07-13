@@ -1,3 +1,4 @@
+import { type JsonObject } from '@logto/schemas';
 import { type Context } from 'koa';
 import { type IRouterParamContext } from 'koa-router';
 
@@ -60,12 +61,13 @@ describe('koaAppSecretTranspilation middleware', () => {
     const ctx = createContextWithRouteParameters();
 
     ctx.method = 'POST';
-    for (const body of [
+    const bodies: JsonObject[] = [
       {},
       { client_id: 1 },
       { client_secret: 1 },
       { client_id: '1', client_secret: 1 },
-    ]) {
+    ];
+    for (const body of bodies) {
       ctx.request.body = body;
       // eslint-disable-next-line no-await-in-loop
       await koaAppSecretTranspilation(queries)(ctx, next);

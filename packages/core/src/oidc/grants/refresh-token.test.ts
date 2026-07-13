@@ -4,6 +4,7 @@ import Sinon from 'sinon';
 
 import { mockApplication } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { getProviderConfiguration } from '#src/oidc/oidc-provider-internals.js';
 import { createOidcContext } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
@@ -129,7 +130,7 @@ const stubGrant = (
 };
 
 const stubAccount = (ctx: KoaContextWithOIDC, overrideAccountId = accountId) => {
-  return Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves({
+  return Sinon.stub(getProviderConfiguration(ctx.oidc.provider), 'findAccount').resolves({
     accountId: overrideAccountId,
   });
 };
@@ -251,7 +252,10 @@ describe('refresh token grant', () => {
     const ctx = createOidcContext(validOidcContext);
     stubRefreshToken(ctx);
     const stubbedGrant = stubGrant(ctx);
-    const stubFindAccount = Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves();
+    const stubFindAccount = Sinon.stub(
+      getProviderConfiguration(ctx.oidc.provider),
+      'findAccount'
+    ).resolves();
     await expect(mockHandler()(ctx, noop)).rejects.toThrow(errors.InvalidGrant);
 
     stubbedGrant.resolves({ ...validGrant, accountId: 'some_other_id' });

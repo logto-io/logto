@@ -18,9 +18,14 @@ import {
   createApplicationSecret,
   deleteApplication,
 } from '#src/api/application.js';
-import { getAuditLogs } from '#src/api/index.js';
+import { deleteUser, getAuditLogs } from '#src/api/index.js';
 import { createResource } from '#src/api/resource.js';
-import { randomString, waitFor } from '#src/utils.js';
+import { demoAppRedirectUri } from '#src/constants.js';
+import { initExperienceClient, processSession } from '#src/helpers/client.js';
+import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
+import { createUserByAdmin } from '#src/helpers/index.js';
+import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
+import { generatePassword, generateUsername, randomString, waitFor } from '#src/utils.js';
 
 type TokenResponse = {
   access_token: string;
@@ -34,10 +39,12 @@ const [application, resource] = await Promise.all([
   createResource(),
 ]);
 
-const getLogs = async () =>
+const getLogs = async (
+  exchangeByType: token.ExchangeByType = token.ExchangeByType.ClientCredentials
+) =>
   getAuditLogs(
     new URLSearchParams({
-      logKey: `${token.Type.ExchangeTokenBy}.${token.ExchangeByType.ClientCredentials}`,
+      logKey: `${token.Type.ExchangeTokenBy}.${exchangeByType}`,
     })
   );
 
@@ -238,5 +245,62 @@ describe('client authentication', () => {
     const logs = await getLogs();
     expect(logs).toContainEqual(expectLog(application.id, secret.name));
     await deleteApplication(application.id);
+  });
+
+  it('should log the application secret for authorization code and refresh token grants', async () => {
+    const username = generateUsername();
+    const password = generatePassword();
+    const [application, user] = await Promise.all([
+      createApplication('application', ApplicationType.Traditional, {
+        oidcClientMetadata: {
+          redirectUris: [demoAppRedirectUri],
+          postLogoutRedirectUris: [],
+        },
+        customClientMetadata: { alwaysIssueRefreshToken: true },
+      }),
+      createUserByAdmin({ username, password }),
+      enableAllPasswordSignInMethods(),
+    ]);
+    const secret = await createApplicationSecret({
+      applicationId: application.id,
+      name: randomString(),
+    });
+
+    try {
+      const [authorizationCodeLogs, refreshTokenLogs] = await Promise.all([
+        getLogs(token.ExchangeByType.AuthorizationCode),
+        getLogs(token.ExchangeByType.RefreshToken),
+      ]);
+
+      expect(authorizationCodeLogs).not.toContainEqual(expectLog(application.id, secret.name));
+      expect(refreshTokenLogs).not.toContainEqual(expectLog(application.id, secret.name));
+
+      const client = await initExperienceClient({
+        config: {
+          appId: application.id,
+          appSecret: secret.value,
+        },
+        redirectUri: demoAppRedirectUri,
+      });
+      await identifyUserWithUsernamePassword(client, username, password);
+      const { redirectTo } = await client.submitInteraction();
+      await processSession(client, redirectTo);
+
+      await expect(getLogs(token.ExchangeByType.AuthorizationCode)).resolves.toContainEqual(
+        expectLog(application.id, secret.name)
+      );
+
+      await client.clearAccessToken();
+      await expect(client.getAccessToken()).resolves.toEqual(expect.any(String));
+
+      await expect(getLogs(token.ExchangeByType.RefreshToken)).resolves.toContainEqual(
+        expectLog(application.id, secret.name)
+      );
+    } finally {
+      await Promise.all([
+        deleteApplication(application.id).catch(noop),
+        deleteUser(user.id).catch(noop),
+      ]);
+    }
   });
 });

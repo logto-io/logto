@@ -34,6 +34,8 @@ const error = {
   invalid_link_description: 'Tvůj jednorázový kód mohl vypršet nebo již není platný.',
   captcha_verification_failed: 'Ověření, že nejsi robot, se nezdařilo.',
   send_verification_code_failed: 'Odeslání ověřovacího kódu se nezdařilo. Zkus to prosím později.',
+  send_verification_code_failed_use_password:
+    'Odeslání ověřovacího kódu se nezdařilo. Přihlas se prosím pomocí hesla.',
   terms_acceptance_required: 'Je nutné souhlasit s podmínkami',
   terms_acceptance_required_description: 'Pro pokračování je nutné souhlasit s podmínkami.',
   something_went_wrong: 'Něco se pokazilo.',

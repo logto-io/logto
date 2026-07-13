@@ -6,6 +6,9 @@ import type Queries from '#src/tenants/Queries.js';
 
 const noVSCHAR = /[^\u0020-\u007E]/;
 
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value);
+
 function decodeAuthToken(token: string) {
   const authToken = decodeURIComponent(token.replaceAll('+', '%20'));
   if (noVSCHAR.test(authToken)) {
@@ -130,7 +133,14 @@ export default function koaAppSecretTranspilation<StateT, ContextT, ResponseBody
         `${clientId}:${result.originalSecret}`
       ).toString('base64')}`;
     } else if (ctx.method === 'POST') {
-      ctx.request.body.client_secret = result.originalSecret;
+      /**
+       * The body is guaranteed to be an object here — this branch is only reachable when
+       * `getCredentialsFromParams()` extracted a string `client_secret` from it. The check
+       * exists solely to narrow the JSON body type from koa-body.
+       */
+      if (isRecord(ctx.request.body)) {
+        ctx.request.body.client_secret = result.originalSecret;
+      }
     } else {
       ctx.query.client_secret = result.originalSecret;
     }

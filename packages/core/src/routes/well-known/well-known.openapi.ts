@@ -11,6 +11,7 @@ import {
   type UnknownRouter,
 } from '#src/routes/swagger/utils/operation.js';
 import { type AnonymousRouter } from '#src/routes/types.js';
+import { getRequestOrigin } from '#src/utils/request.js';
 
 type OpenApiRouters<R> = {
   managementRouters: R[];
@@ -33,7 +34,11 @@ export default function openapiRoutes<T extends AnonymousRouter, R extends Unkno
     const supplementDocuments = await getSupplementDocuments('routes', {
       excludeDirectories: ['experience', 'interaction', 'account', 'verification'],
     });
-    const baseDocument = buildManagementApiBaseDocument(pathMap, tags, ctx.request.origin);
+    const baseDocument = buildManagementApiBaseDocument(
+      pathMap,
+      tags,
+      getRequestOrigin(ctx.request)
+    );
 
     const data = assembleSwaggerDocument(supplementDocuments, baseDocument, ctx);
 
@@ -53,7 +58,11 @@ export default function openapiRoutes<T extends AnonymousRouter, R extends Unkno
     const supplementDocuments = await getSupplementDocuments('routes', {
       includeDirectories: ['experience'],
     });
-    const baseDocument = buildExperienceApiBaseDocument(pathMap, tags, ctx.request.origin);
+    const baseDocument = buildExperienceApiBaseDocument(
+      pathMap,
+      tags,
+      getRequestOrigin(ctx.request)
+    );
 
     const data = assembleSwaggerDocument(supplementDocuments, baseDocument, ctx);
 
@@ -73,7 +82,7 @@ export default function openapiRoutes<T extends AnonymousRouter, R extends Unkno
     const supplementDocuments = await getSupplementDocuments('routes', {
       includeDirectories: ['account', 'verification'],
     });
-    const baseDocument = buildUserApiBaseDocument(pathMap, tags, ctx.request.origin);
+    const baseDocument = buildUserApiBaseDocument(pathMap, tags, getRequestOrigin(ctx.request));
 
     const data = assembleSwaggerDocument(supplementDocuments, baseDocument, ctx);
 

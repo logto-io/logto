@@ -182,12 +182,13 @@ const security = {
     custom_email_address: {
       title: 'Bloquear endereços de email personalizados',
       description:
-        'Adicionar domínios de email ou endereços de email específicos que não possam se registar ou vincular via a IU.',
+        'Adicionar regras para bloquear domínios de email específicos, endereços de email ou padrões de endereço de email com caracteres universais de se registar ou vincular via a IU.',
       placeholder:
-        'Insira o endereço de email ou domínio bloqueado (por exemplo, bar@example.com, @example.com)',
-      duplicate_error: 'Endereço de email ou domínio já adicionado',
+        'Insira o endereço de email, domínio ou padrão de endereço de email com caracteres universais bloqueado (por exemplo, bar@example.com, @example.com, foo*@example.com, *@example.com)',
+      duplicate_error:
+        'Endereço de email, domínio ou padrão de endereço de email com caracteres universais já adicionado',
       invalid_format_error:
-        'Deve ser um endereço de email válido(bar@example.com) ou domínio(@example.com)',
+        'Deve ser um endereço de email válido (bar@example.com), domínio (@example.com) ou padrão de endereço de email com caracteres universais (foo*@example.com, *@example.com)',
     },
   },
 };

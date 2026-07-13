@@ -12,7 +12,7 @@ import FormCard from '@/components/FormCard';
 import MultiOptionInput from '@/components/MultiOptionInput';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { emailBlocklist } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import FormField from '@/ds-components/FormField';
@@ -133,7 +133,7 @@ function BlocklistForm({ formData }: Props) {
                       return t('blocklist.custom_email_address.duplicate_error');
                     }
 
-                    if (!isEmailBlocklistItem(input, { allowWildcard: isDevFeaturesEnabled })) {
+                    if (!isEmailBlocklistItem(input)) {
                       return t('blocklist.custom_email_address.invalid_format_error');
                     }
 

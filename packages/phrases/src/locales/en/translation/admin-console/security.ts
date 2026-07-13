@@ -178,12 +178,12 @@ const security = {
     custom_email_address: {
       title: 'Block custom email addresses',
       description:
-        'Add specific email domains or email address which cannot register or link via the UI.',
+        'Add rules to block specific email domains, email addresses, or wildcard email address patterns from registering or linking via the UI.',
       placeholder:
-        'Enter the blocked email address or domain (e.g., bar@example.com, @example.com)',
-      duplicate_error: 'Email address or domain already added',
+        'Enter the blocked email address, domain, or wildcard email address pattern (e.g., bar@example.com, @example.com, foo*@example.com, *@example.com)',
+      duplicate_error: 'Email address, domain, or wildcard email address pattern already added',
       invalid_format_error:
-        'Must be a valid email address(bar@example.com) or domain(@example.com)',
+        'Must be a valid email address (bar@example.com), domain (@example.com), or wildcard email address pattern (foo*@example.com, *@example.com)',
     },
   },
 };

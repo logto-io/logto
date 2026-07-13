@@ -23,15 +23,17 @@ import { UserScope } from '@logto/core-kit';
 import { isKeyInObject } from '@silverhand/essentials';
 import type { Provider } from 'oidc-provider';
 import { errors } from 'oidc-provider';
-import difference from 'oidc-provider/lib/helpers/_/difference.js';
-import filterClaims from 'oidc-provider/lib/helpers/filter_claims.js';
-import resolveResource from 'oidc-provider/lib/helpers/resolve_resource.js';
-import revoke from 'oidc-provider/lib/helpers/revoke.js';
-import validatePresence from 'oidc-provider/lib/helpers/validate_presence.js';
-import instance from 'oidc-provider/lib/helpers/weak_cache.js';
 
 import { type EnvSet } from '#src/env-set/index.js';
 import { assertUserHasApplicationAccessForOidc } from '#src/oidc/application-access-control.js';
+import {
+  difference,
+  filterClaims,
+  getProviderConfiguration,
+  resolveResource,
+  revoke,
+  validatePresence,
+} from '#src/oidc/oidc-provider-internals.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -74,19 +76,18 @@ type Handler = (
 
 export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx, next) => {
   const { client, params, requestParamScopes, provider } = ctx.oidc;
-  const { RefreshToken, Account, AccessToken, Grant, IdToken } = provider;
+  const { RefreshToken, AccessToken, Grant, IdToken } = provider;
 
   assertThat(params, new InvalidGrant('parameters must be available'));
   assertThat(client, new InvalidClient('client must be available'));
 
   validatePresence(ctx, ...requiredParameters);
 
-  const providerInstance = instance(provider);
   const {
     rotateRefreshToken,
     conformIdTokenClaims,
     features: { userinfo, resourceIndicators },
-  } = providerInstance.configuration();
+  } = getProviderConfiguration(provider);
 
   // @gao: I believe the presence of the param is validated by required parameters of this grant.
   // Add `String` to make TS happy.
@@ -144,9 +145,13 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx,
   ctx.oidc.entity('RefreshToken', refreshToken);
   ctx.oidc.entity('Grant', grant);
 
-  // @ts-expect-error -- code from oidc-provider. the original type definition does not include
-  // `RefreshToken` but it's actually available.
-  const account = await Account.findAccount(ctx, refreshToken.accountId, refreshToken);
+  const account = await getProviderConfiguration(provider).findAccount(
+    ctx,
+    refreshToken.accountId,
+    // @ts-expect-error -- code from oidc-provider. the original type definition does not include
+    // `RefreshToken` but it's actually available.
+    refreshToken
+  );
 
   if (!account) {
     throw new InvalidGrant('refresh token invalid (referenced account not found)');

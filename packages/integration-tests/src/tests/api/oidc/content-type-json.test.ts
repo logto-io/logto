@@ -110,4 +110,20 @@ describe('content-type: application/json compatibility', () => {
       })
     ).resolves.toBeDefined();
   });
+
+  it('should return the current error response for an unknown OIDC route', async () => {
+    await trySafe(api.get('nonexistent'), async (error) => {
+      if (!(error instanceof HTTPError)) {
+        throw new TypeError('Error is not a HTTPError instance.');
+      }
+
+      expect(error.response.status).toBe(404);
+      expect(await error.response.json()).toEqual({
+        code: 'oidc.invalid_request',
+        error: 'invalid_request',
+        error_description: 'unrecognized route or not allowed method (GET on /nonexistent)',
+        message: 'Request is invalid.',
+      });
+    });
+  });
 });

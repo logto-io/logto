@@ -19,7 +19,7 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 import { appendPasswordPayloadToInlineHookProvisioningProfile } from '../classes/libraries/inline-hook-provisioning-profile.js';
 import { validatePostFirstFactorVerificationHookResult } from '../classes/libraries/inline-hook-result-validation.js';
 import { withSentinel } from '../classes/libraries/sentinel-guard.js';
-import { findUserByIdentifier } from '../classes/utils.js';
+import { findUserByIdentifier, interactionIdentifierToUserProfile } from '../classes/utils.js';
 import { PasswordVerification } from '../classes/verifications/password-verification.js';
 import { experienceRoutes } from '../const.js';
 import koaExperienceVerificationsAuditLog from '../middleware/koa-experience-verifications-audit-log.js';
@@ -129,8 +129,15 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
             throw error;
           }
 
+          const hookUserProfile =
+            hookResult.action === 'createUser'
+              ? {
+                  ...interactionIdentifierToUserProfile(identifier),
+                  ...hookResult.user,
+                }
+              : hookResult.user;
           const userProfile = await appendPasswordPayloadToInlineHookProvisioningProfile(
-            hookResult.user,
+            hookUserProfile,
             password
           );
           const user =
@@ -141,7 +148,8 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
                 })
               : await experienceInteraction.provisionLibrary.updateUser(
                   hookResult.userId,
-                  userProfile
+                  userProfile,
+                  { mergeCustomData: true }
                 );
 
           passwordVerification.markAsVerified();

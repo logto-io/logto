@@ -37,6 +37,8 @@ const error = {
   captcha_verification_failed: 'Falha na verificação do captcha.',
   send_verification_code_failed:
     'Falha ao enviar o código de verificação. Tente novamente mais tarde.',
+  send_verification_code_failed_use_password:
+    'Falha ao enviar o código de verificação. Em vez disso, inicie sessão com a sua palavra-passe.',
   terms_acceptance_required: 'Aceitação dos termos necessária',
   terms_acceptance_required_description:
     'Deves aceitar os termos para continuar. Por favor, tenta novamente.',
