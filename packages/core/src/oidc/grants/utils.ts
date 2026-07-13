@@ -23,6 +23,19 @@ import {
 const { InvalidGrant, InvalidClient, AccessDenied } = errors;
 
 /**
+ * The `ReplayDetection` model class with its static `unique` method. `@types/oidc-provider`
+ * declares `unique` only as an instance method, but the runtime implements it as a static method
+ * of the class. Do not declare the missing static via module augmentation: the typings export the
+ * model classes with `export type` on purpose, and a value declaration would make
+ * `import { ReplayDetection } from 'oidc-provider'` pass type checking while failing at runtime.
+ *
+ * See https://github.com/logto-io/node-oidc-provider/blob/5570006785b44e0f125ee4cb6bf540338721b1f3/lib/models/replay_detection.js
+ */
+type ReplayDetectionClass = Provider['ReplayDetection'] & {
+  unique: (iss: string, jti: string, exp?: number) => Promise<boolean>;
+};
+
+/**
  * Handle DPoP bound access tokens.
  */
 export const handleDPoP = async (
@@ -36,9 +49,9 @@ export const handleDPoP = async (
   const dPoP = await dpopValidate(ctx);
 
   if (dPoP) {
-    // @ts-expect-error -- code from oidc-provider
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    const unique: unknown = await ReplayDetection.unique(
+    const { ReplayDetection } = ctx.oidc.provider;
+    // eslint-disable-next-line no-restricted-syntax -- widen with the static method missing from the typings, see `ReplayDetectionClass`
+    const unique = await (ReplayDetection as ReplayDetectionClass).unique(
       client.clientId,
       dPoP.jti,
       epochTime() + 300

@@ -5,5 +5,5 @@ declare module 'oidc-provider/lib/helpers/validate_dpop.js' {
 
   export default function dpopValidate(
     ctx: KoaContextWithOIDC
-  ): Promise<Optional<{ thumbprint: string; jti?: string; iat?: string }>>;
+  ): Promise<Optional<{ thumbprint: string; jti: string; iat: number }>>;
 }
