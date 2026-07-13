@@ -2,10 +2,10 @@ import assert from 'node:assert';
 
 import { GrantType, type Scope } from '@logto/schemas';
 import { errors, type KoaContextWithOIDC } from 'oidc-provider';
-import instance from 'oidc-provider/lib/helpers/weak_cache.js';
 
 import { mockResource } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { getProviderConfiguration } from '#src/oidc/oidc-provider-internals.js';
 import { mockEnvSet } from '#src/test-utils/env-set.js';
 import { createOidcContext } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -34,7 +34,7 @@ const buildScope = (id: string, name: string): Scope => ({
 });
 
 const getResourceServerInfo = async (ctx: KoaContextWithOIDC, indicator: string) => {
-  const configuration = instance(ctx.oidc.provider).configuration();
+  const configuration = getProviderConfiguration(ctx.oidc.provider);
   assert(ctx.oidc.client);
   return configuration.features.resourceIndicators.getResourceServerInfo(
     ctx,
@@ -108,7 +108,7 @@ describe('oidc provider init', () => {
   it('should allow missing application access control client metadata', async () => {
     const tenant = new MockTenant();
     const provider = createProvider(tenant);
-    const configuration = instance(provider).configuration();
+    const configuration = getProviderConfiguration(provider);
     const ctx = createOidcContext({ provider });
 
     expect(() =>
@@ -124,7 +124,7 @@ describe('oidc provider init', () => {
   it('should reject invalid application access control client metadata', async () => {
     const tenant = new MockTenant();
     const provider = createProvider(tenant);
-    const configuration = instance(provider).configuration();
+    const configuration = getProviderConfiguration(provider);
     const ctx = createOidcContext({ provider });
 
     expect(() =>
@@ -229,7 +229,7 @@ describe('oidc provider init', () => {
     });
 
     const provider = createProvider(tenant);
-    const configuration = instance(provider).configuration();
+    const configuration = getProviderConfiguration(provider);
     const ctx = createOidcContext({
       provider,
       account: { accountId },
@@ -251,7 +251,7 @@ describe('oidc provider init', () => {
 
     const provider = createProvider(tenant);
     const findGrant = mockGrantFound(provider);
-    const configuration = instance(provider).configuration();
+    const configuration = getProviderConfiguration(provider);
     const ctx = createOidcContext({
       provider,
       account: { accountId, claims: async () => ({ sub: accountId }) },
@@ -275,7 +275,7 @@ describe('oidc provider init', () => {
 
     const provider = createProvider(tenant);
     const findGrant = mockGrantFound(provider);
-    const configuration = instance(provider).configuration();
+    const configuration = getProviderConfiguration(provider);
     const ctx = createOidcContext({
       provider,
       account: { accountId, claims: async () => ({ sub: accountId }) },
@@ -302,7 +302,7 @@ describe('oidc provider init', () => {
 
     const provider = createProvider(tenant);
     const findGrant = mockGrantFound(provider);
-    const configuration = instance(provider).configuration();
+    const configuration = getProviderConfiguration(provider);
     const ctx = createOidcContext({
       provider,
       account: { accountId, claims: async () => ({ sub: accountId }) },
@@ -327,7 +327,7 @@ describe('oidc provider init', () => {
     });
 
     const provider = createProvider(tenant);
-    const configuration = instance(provider).configuration();
+    const configuration = getProviderConfiguration(provider);
     const ctx = createOidcContext({
       provider,
       account: { accountId },

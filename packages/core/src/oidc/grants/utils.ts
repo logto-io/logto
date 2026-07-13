@@ -2,12 +2,14 @@ import { buildOrganizationUrn } from '@logto/core-kit';
 import { cond } from '@silverhand/essentials';
 import { errors } from 'oidc-provider';
 import type { Provider, Account, KoaContextWithOIDC } from 'oidc-provider';
-import certificateThumbprint from 'oidc-provider/lib/helpers/certificate_thumbprint.js';
-import epochTime from 'oidc-provider/lib/helpers/epoch_time.js';
-import dpopValidate from 'oidc-provider/lib/helpers/validate_dpop.js';
-import instance from 'oidc-provider/lib/helpers/weak_cache.js';
 
 import { type EnvSet } from '#src/env-set/index.js';
+import {
+  certificateThumbprint,
+  dpopValidate,
+  epochTime,
+  getProviderConfiguration,
+} from '#src/oidc/oidc-provider-internals.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -67,12 +69,11 @@ export const handleClientCertificate = async (
   const { client, provider } = ctx.oidc;
   assertThat(client, new InvalidClient('client must be available'));
 
-  const providerInstance = instance(provider);
   const {
     features: {
       mTLS: { getCertificate },
     },
-  } = providerInstance.configuration();
+  } = getProviderConfiguration(provider);
 
   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   if (client.tlsClientCertificateBoundAccessTokens || originalToken?.['x5t#S256']) {
