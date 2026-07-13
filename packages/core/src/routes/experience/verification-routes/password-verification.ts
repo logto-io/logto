@@ -58,7 +58,7 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
     `${experienceRoutes.verification}/password`,
     koaGuard({
       body: passwordVerificationPayloadGuard,
-      status: [200, 400, 401, 422],
+      status: [200, 400, 401, 409, 422],
       response: z.object({
         verificationId: z.string(),
       }),
@@ -80,7 +80,7 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
 
       const passwordVerification = PasswordVerification.create(libraries, queries, identifier);
 
-      const verifiedUser = await withSentinel(
+      const verificationResult = await withSentinel(
         {
           ctx,
           sentinel,
@@ -91,72 +91,85 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
             verificationId: passwordVerification.id,
           },
         },
-        passwordVerification.verify(password).catch(async (error: unknown) => {
-          if (!isInvalidCredentialsError(error)) {
-            throw error;
-          }
+        passwordVerification
+          .verify(password)
+          .then((user) => ({ user }))
+          .catch(async (error: unknown) => {
+            if (!isInvalidCredentialsError(error)) {
+              throw error;
+            }
 
-          const { interactionEvent } = experienceInteraction;
+            const { interactionEvent } = experienceInteraction;
 
-          if (interactionEvent !== InteractionEvent.SignIn) {
-            throw error;
-          }
+            if (interactionEvent !== InteractionEvent.SignIn) {
+              throw error;
+            }
 
-          const existingUser = await findUserByIdentifier(queries, identifier);
+            const existingUser = await findUserByIdentifier(queries, identifier);
 
-          if (existingUser?.isSuspended) {
-            throw error;
-          }
+            if (existingUser?.isSuspended) {
+              throw error;
+            }
 
-          const event: PostFirstFactorVerificationEvent = {
-            key: LogtoInlineHookKey.PostFirstFactorVerification,
-            interactionEvent,
-            verificationType: VerificationType.Password,
-            identifier,
-            user: existingUser ? toHookUser(existingUser) : null,
-            password,
-          };
-
-          const hookResult = validatePostFirstFactorVerificationHookResult({
-            event,
-            result: await libraries.inlineHooks.runHook({
+            const event: PostFirstFactorVerificationEvent = {
               key: LogtoInlineHookKey.PostFirstFactorVerification,
+              interactionEvent,
+              verificationType: VerificationType.Password,
+              identifier,
+              user: existingUser ? toHookUser(existingUser) : null,
+              password,
+            };
+
+            const hookResult = validatePostFirstFactorVerificationHookResult({
               event,
-            }),
-          });
+              result: await libraries.inlineHooks.runHook({
+                key: LogtoInlineHookKey.PostFirstFactorVerification,
+                event,
+              }),
+            });
 
-          if (hookResult.action === 'rejectInvalidCredentials') {
-            throw error;
-          }
+            if (hookResult.action === 'rejectInvalidCredentials') {
+              throw error;
+            }
 
-          const hookUserProfile =
-            hookResult.action === 'createUser'
-              ? {
-                  ...interactionIdentifierToUserProfile(identifier),
-                  ...hookResult.user,
-                }
-              : hookResult.user;
-          const userProfile = await appendPasswordPayloadToInlineHookProvisioningProfile(
-            hookUserProfile,
-            password
-          );
-          const user =
-            hookResult.action === 'createUser'
-              ? await experienceInteraction.provisionLibrary.createUser(userProfile, {
-                  checkIdentifierCollision: true,
-                  mergeCustomData: true,
-                })
-              : await experienceInteraction.provisionLibrary.updateUser(
-                  hookResult.userId,
-                  userProfile,
-                  { mergeCustomData: true }
-                );
+            const hookUserProfile =
+              hookResult.action === 'createUser'
+                ? {
+                    ...interactionIdentifierToUserProfile(identifier),
+                    ...hookResult.user,
+                  }
+                : hookResult.user;
+            const userProfile = await appendPasswordPayloadToInlineHookProvisioningProfile(
+              hookUserProfile,
+              password
+            );
 
-          passwordVerification.markAsVerified();
-
-          return user;
-        })
+            return { hookResult, userProfile };
+          })
       );
+
+      const verifiedUser = await (async (): Promise<User> => {
+        if (!('hookResult' in verificationResult)) {
+          return verificationResult.user;
+        }
+
+        const { hookResult, userProfile } = verificationResult;
+        const user =
+          hookResult.action === 'createUser'
+            ? await experienceInteraction.provisionLibrary.createUser(userProfile, {
+                checkIdentifierCollision: true,
+                mergeCustomData: true,
+              })
+            : await experienceInteraction.provisionLibrary.updateUser(
+                hookResult.userId,
+                userProfile,
+                { mergeCustomData: true }
+              );
+
+        passwordVerification.markAsVerified();
+
+        return user;
+      })();
 
       await passwordVerification.verifyPasswordExpiration(verifiedUser);
 

@@ -24,12 +24,14 @@ async function resolveVoid(): Promise<void> {
   await Promise.resolve();
 }
 
+const koaGuard = jest.fn(() => passThroughMiddleware);
+
 const withSentinel = jest.fn(
   async (_options: unknown, verificationPromise: Promise<unknown>) => verificationPromise
 );
 
 mockEsm('#src/middleware/koa-guard.js', () => ({
-  default: () => passThroughMiddleware,
+  default: koaGuard,
 }));
 
 mockEsm('../middleware/koa-experience-verifications-audit-log.js', () => ({
@@ -201,6 +203,14 @@ describe('password verification route PostFirstFactorVerification fallback', () 
     updateUser.mockResolvedValue(updatedUser);
   });
 
+  it('allows the identity conflict response status', () => {
+    registerRoute();
+
+    expect(koaGuard).toHaveBeenCalledWith(
+      expect.objectContaining({ status: [200, 400, 401, 409, 422] })
+    );
+  });
+
   it('does not run the inline hook when local password verification succeeds', async () => {
     const handler = registerRoute();
     const ctx = createContext();
@@ -244,6 +254,22 @@ describe('password verification route PostFirstFactorVerification fallback', () 
     expect(ctx.experienceInteraction.setVerificationRecord).not.toHaveBeenCalled();
   });
 
+  it('does not run the inline hook fallback outside sign-in', async () => {
+    const handler = registerRoute();
+    const ctx = createContext(InteractionEvent.Register);
+
+    passwordVerificationRecord.verify.mockRejectedValueOnce(invalidCredentialsError);
+
+    await expect(handler(ctx, jest.fn().mockImplementation(resolveVoid))).rejects.toBe(
+      invalidCredentialsError
+    );
+
+    expect(runHook).not.toHaveBeenCalled();
+    expect(findUserByEmail).not.toHaveBeenCalled();
+    expect(createUser).not.toHaveBeenCalled();
+    expect(updateUser).not.toHaveBeenCalled();
+  });
+
   it('creates a user from a validated hook result when the local user is missing', async () => {
     const handler = registerRoute();
     const ctx = createContext();
@@ -279,6 +305,33 @@ describe('password verification route PostFirstFactorVerification fallback', () 
     expect(ctx.experienceInteraction.setVerificationRecord).toHaveBeenCalledWith(
       passwordVerificationRecord
     );
+  });
+
+  it('does not provision before sentinel accepts the hook fallback', async () => {
+    const handler = registerRoute();
+    const ctx = createContext();
+    const sentinelError = new RequestError({
+      code: 'session.verification_blocked_too_many_attempts',
+    });
+
+    passwordVerificationRecord.verify.mockRejectedValueOnce(invalidCredentialsError);
+    runHook.mockResolvedValueOnce({
+      action: 'createUser',
+      passwordVerified: true,
+      user: {},
+    });
+    withSentinel.mockImplementationOnce(async (_options, verificationPromise) => {
+      await verificationPromise;
+      throw sentinelError;
+    });
+
+    await expect(handler(ctx, jest.fn().mockImplementation(resolveVoid))).rejects.toBe(
+      sentinelError
+    );
+
+    expect(createUser).not.toHaveBeenCalled();
+    expect(updateUser).not.toHaveBeenCalled();
+    expect(passwordVerificationRecord.markAsVerified).not.toHaveBeenCalled();
   });
 
   it('updates the existing user from a validated hook result when local password is wrong', async () => {
