@@ -66,7 +66,7 @@ describe('toHookProvisioningProfile', () => {
 
     expect(() =>
       toHookProvisioningProfile({
-        passwordEncrypted: '',
+        passwordEncrypted: 'hashed-password',
       })
     ).toThrow(ZodError);
 

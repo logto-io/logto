@@ -1,10 +1,10 @@
 import { experience, SignInIdentifier } from '@logto/schemas';
-import { waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { HTTPError } from 'ky';
-import { Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
+import PageContextProvider from '@/Providers/PageContextProvider';
 import UserInteractionContextProvider from '@/Providers/UserInteractionContextProvider';
-import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import {
   identifyAndSubmitInteraction,
@@ -58,34 +58,46 @@ const createRequestError = (code: string) => {
 };
 
 describe('OneTimeToken', () => {
-  const renderPage = (initialEntry: string) =>
-    renderWithPageContext(
-      <SettingsProvider>
-        <UserInteractionContextProvider>
-          <Routes>
-            <Route path={`/${experience.routes.oneTimeToken}`} element={<OneTimeToken />} />
-            <Route
-              path={`/${experience.routes.oneTimeToken}/error`}
-              element={<OneTimeTokenError />}
-            />
-          </Routes>
-        </UserInteractionContextProvider>
-      </SettingsProvider>,
-      { initialEntries: [initialEntry] }
+  const renderPage = (initialEntry: string) => {
+    window.history.pushState(window.history.state, '', initialEntry);
+
+    return render(
+      <BrowserRouter>
+        <PageContextProvider>
+          <SettingsProvider>
+            <UserInteractionContextProvider>
+              <Routes>
+                <Route path={`/${experience.routes.oneTimeToken}`} element={<OneTimeToken />} />
+                <Route
+                  path={`/${experience.routes.oneTimeToken}/error`}
+                  element={<OneTimeTokenError />}
+                />
+              </Routes>
+            </UserInteractionContextProvider>
+          </SettingsProvider>
+        </PageContextProvider>
+      </BrowserRouter>
     );
+  };
 
   afterEach(() => {
     jest.clearAllMocks();
+    jest.restoreAllMocks();
+    window.history.replaceState(window.history.state, '', '/');
   });
 
   it('submits an existing one-time token with the sign-in interaction', async () => {
-    renderPage('/one-time-token?one_time_token=token&login_hint=foo%40logto.io');
+    const initialEntry = '/one-time-token?one_time_token=token&login_hint=foo%40logto.io&foo=bar';
+
+    renderPage(initialEntry);
 
     await waitFor(() => {
       expect(mockedSignInWithOneTimeToken).toBeCalledWith({
         token: 'token',
         identifier: { type: SignInIdentifier.Email, value: 'foo@logto.io' },
       });
+      expect(window.location.href).not.toContain('one_time_token');
+      expect(window.location.href).not.toContain('login_hint');
       expect(mockedIdentifyAndSubmitInteraction).toBeCalledWith({
         verificationId: 'verification-id',
       });

@@ -271,6 +271,10 @@ export default class MockClient {
     return this.logto.getIdTokenClaims();
   }
 
+  public async getIdToken() {
+    return this.storage.getItem(PersistKey.IdToken);
+  }
+
   public assignCookie(cookie: string) {
     this.rawCookies = cookie.split(';').map((value) => value.trim());
   }
