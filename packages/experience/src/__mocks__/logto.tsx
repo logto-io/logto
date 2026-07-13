@@ -179,7 +179,6 @@ export const mockSignInExperienceSettings: SignInExperienceResponse = {
   adaptiveMfa: {},
   sentinelPolicy: {},
   verificationCodePolicy: {},
-  emailBlocklistPolicy: {},
   passkeySignIn: {},
   signUpProfileFields: null,
   usernamePolicy: defaultUsernamePolicy,

@@ -323,14 +323,17 @@ export const createSignInExperienceLibrary = (
       signInExperience.signUpProfileFields
     );
 
+    const {
+      emailBlocklistPolicy: _emailBlocklistPolicy,
+      forgotPasswordMethods: _forgotPasswordMethods,
+      ...publicSignInExperience
+    } = deepmerge<SignInExperience, SignInExperienceOverride>(
+      deepmerge<SignInExperience, SignInExperienceOverride>(signInExperience, appSignInExperience),
+      organizationOverride
+    );
+
     return {
-      ...deepmerge<SignInExperience, SignInExperienceOverride>(
-        deepmerge<SignInExperience, SignInExperienceOverride>(
-          signInExperience,
-          appSignInExperience
-        ),
-        organizationOverride
-      ),
+      ...publicSignInExperience,
       socialConnectors,
       ssoConnectors,
       forgotPassword: getForgotPassword(),

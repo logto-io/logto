@@ -31,7 +31,10 @@ export type ExperienceSocialConnector = Omit<
   'description' | 'configTemplate' | 'formItems' | 'readme' | 'customData'
 >;
 
-export type FullSignInExperience = Omit<SignInExperience, 'forgotPasswordMethods'> & {
+export type FullSignInExperience = Omit<
+  SignInExperience,
+  'emailBlocklistPolicy' | 'forgotPasswordMethods'
+> & {
   socialConnectors: ExperienceSocialConnector[];
   ssoConnectors: SsoConnectorMetadata[];
   forgotPassword: ForgotPassword;
@@ -63,7 +66,7 @@ export type FullSignInExperience = Omit<SignInExperience, 'forgotPasswordMethods
 };
 
 export const fullSignInExperienceGuard = SignInExperiences.guard
-  .omit({ forgotPasswordMethods: true })
+  .omit({ emailBlocklistPolicy: true, forgotPasswordMethods: true })
   .extend({
     socialConnectors: connectorMetadataGuard
       .omit({
