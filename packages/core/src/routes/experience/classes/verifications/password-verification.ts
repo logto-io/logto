@@ -57,9 +57,13 @@ export class PasswordVerification
     this.verified = verified;
   }
 
-  /** Returns true if a userId is set */
+  /** Returns whether the password verification has succeeded. */
   get isVerified() {
     return this.verified;
+  }
+
+  markAsVerified(): void {
+    this.verified = true;
   }
 
   /**

@@ -4,6 +4,7 @@ import { z } from 'zod';
 import type { Json } from '../../foundations/index.js';
 import type { InteractionEvent, InteractionIdentifier } from '../interactions.js';
 import { userInfoGuard, type UserInfo } from '../user.js';
+import type { VerificationType } from '../verification-records/index.js';
 
 export enum LogtoInlineHookKey {
   PostFirstFactorVerification = 'inlineHook.postFirstFactorVerification',
@@ -65,6 +66,7 @@ export type HookUserPatch = z.infer<typeof hookUserPatchGuard>;
 export type PostFirstFactorVerificationEvent = {
   key: LogtoInlineHookKey.PostFirstFactorVerification;
   interactionEvent: InteractionEvent.SignIn;
+  verificationType: VerificationType.Password;
   identifier: InteractionIdentifier;
   user: HookUser | null;
   /** Sensitive credential provided for inline hook controlled password verification. */
