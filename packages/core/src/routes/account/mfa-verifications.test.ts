@@ -17,10 +17,20 @@ const { mockEsmWithActual } = createMockUtils(jest);
 
 const mockValidateTotpSecret = jest.fn();
 const mockValidateTotpToken = jest.fn();
+const { id, createdAt, ...mockWebAuthnBindMfa } = mockUserWebAuthnMfaVerification;
+
+const mockBuildVerificationRecordByIdAndType = jest.fn(async () => ({
+  isVerified: true,
+  toBindMfa: () => mockWebAuthnBindMfa,
+}));
 
 await mockEsmWithActual('#src/libraries/verification-helpers/totp-validation.js', () => ({
   validateTotpSecret: mockValidateTotpSecret,
   validateTotpToken: mockValidateTotpToken,
+}));
+
+await mockEsmWithActual('#src/libraries/verification.js', () => ({
+  buildVerificationRecordByIdAndType: mockBuildVerificationRecordByIdAndType,
 }));
 
 const mockedQueries = {
@@ -46,6 +56,13 @@ const { findUserById, updateUserById } = mockedQueries.users;
 const { findDefaultSignInExperience } = mockedQueries.signInExperiences;
 
 const accountMfaRoutes = await pickDefault(import('./mfa-verifications.js'));
+
+const getLastUpdatePayload = () => updateUserById.mock.calls.at(-1)?.[1];
+
+const expectUpdatedMfaEnabled = (enabled: boolean) => {
+  const updatePayload = getLastUpdatePayload();
+  expect(updatePayload?.logtoConfig).toMatchObject({ mfa: { enabled } });
+};
 
 describe('account mfa verification routes', () => {
   const tenantContext = new MockTenant(undefined, mockedQueries);
@@ -115,6 +132,7 @@ describe('account mfa verification routes', () => {
           mfaVerifications: [expect.any(Object)],
         })
       );
+      expectUpdatedMfaEnabled(true);
       expect(replacedTotpVerification).toEqual(
         expect.objectContaining({
           type: MfaFactor.TOTP,
@@ -148,6 +166,7 @@ describe('account mfa verification routes', () => {
           ],
         })
       );
+      expectUpdatedMfaEnabled(true);
     });
 
     it('should return 400 for an invalid totp secret', async () => {
@@ -190,10 +209,9 @@ describe('account mfa verification routes', () => {
         newIdentifierVerificationRecordId: 'fake_record_id',
       });
 
-      // Binding check passed — findDefaultSignInExperience was reached
+      expect(response.status).toBe(204);
       expect(findDefaultSignInExperience).toHaveBeenCalled();
-      // Error is from verification record lookup, not binding check
-      expect(response.body).not.toHaveProperty('code', 'session.mfa.mfa_factor_not_enabled');
+      expect(getLastUpdatePayload()).not.toHaveProperty('logtoConfig');
     });
 
     it('should reject WebAuthn binding when both mfa.factors and passkeySignIn.enabled are off', async () => {
@@ -249,10 +267,10 @@ describe('account mfa verification routes', () => {
         newIdentifierVerificationRecordId: 'fake_record_id',
       });
 
-      // Permission check passed — findDefaultSignInExperience was reached
+      expect(response.status).toBe(204);
+      expectUpdatedMfaEnabled(true);
+      // Permission check passed, and WebAuthn is treated as MFA when enabled in MFA factors.
       expect(findDefaultSignInExperience).toHaveBeenCalled();
-      // Error is from verification record lookup, not permission check
-      expect(response.body).not.toHaveProperty('code', 'account_center.field_not_editable');
     });
 
     it('should fall back to fields.mfa for non-WebAuthn types', async () => {
@@ -263,6 +281,7 @@ describe('account mfa verification routes', () => {
 
       // Uses fields.mfa which is Edit, so permission passes; TOTP is in factors
       expect(response.status).toBe(204);
+      expectUpdatedMfaEnabled(true);
     });
   });
 
@@ -393,6 +412,13 @@ describe('account mfa verification routes', () => {
 
       // Fields.mfa = Edit, so should pass
       expect(response.status).toBe(204);
+      expect(updateUserById).toHaveBeenCalledWith(
+        mockUser.id,
+        expect.objectContaining({
+          mfaVerifications: [],
+        })
+      );
+      expect(getLastUpdatePayload()).not.toHaveProperty('logtoConfig');
     });
 
     it('should reject WebAuthn deletion when passkey field is not editable', async () => {

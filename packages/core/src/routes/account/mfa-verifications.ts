@@ -7,9 +7,11 @@ import {
   userMfaVerificationResponseGuard,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
+import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { buildUpdatedUserLogtoConfig } from '#src/libraries/user-logto-config.js';
 import {
   generateBackupCodes,
   validateBackupCodes,
@@ -140,16 +142,18 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
             );
           }
 
+          const mfaVerifications = [
+            ...user.mfaVerifications,
+            {
+              id: generateStandardId(),
+              createdAt: new Date().toISOString(),
+              type: MfaFactor.TOTP as const,
+              key: secret,
+            },
+          ];
           const updatedUser = await updateUserById(userId, {
-            mfaVerifications: [
-              ...user.mfaVerifications,
-              {
-                id: generateStandardId(),
-                createdAt: new Date().toISOString(),
-                type: MfaFactor.TOTP,
-                key: secret,
-              },
-            ],
+            mfaVerifications,
+            logtoConfig: buildUpdatedUserLogtoConfig(user, { mfa: { enabled: true } }),
           });
 
           ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
@@ -184,16 +188,18 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
             })
           );
           const { codes } = ctx.guard.body;
+          const mfaVerifications = [
+            ...user.mfaVerifications,
+            {
+              id: generateStandardId(),
+              createdAt: new Date().toISOString(),
+              type: MfaFactor.BackupCode as const,
+              codes: codes.map((code) => ({ code })),
+            },
+          ];
           const updatedUser = await updateUserById(userId, {
-            mfaVerifications: [
-              ...user.mfaVerifications,
-              {
-                id: generateStandardId(),
-                createdAt: new Date().toISOString(),
-                type: MfaFactor.BackupCode,
-                codes: codes.map((code) => ({ code })),
-              },
-            ],
+            mfaVerifications,
+            logtoConfig: buildUpdatedUserLogtoConfig(user, { mfa: { enabled: true } }),
           });
 
           ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
@@ -213,16 +219,22 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
 
           const bindMfa = newVerificationRecord.toBindMfa();
 
+          const mfaVerifications = [
+            ...user.mfaVerifications,
+            {
+              ...bindMfa,
+              id: generateStandardId(),
+              createdAt: new Date().toISOString(),
+              name,
+            },
+          ];
           const updatedUser = await updateUserById(userId, {
-            mfaVerifications: [
-              ...user.mfaVerifications,
-              {
-                ...bindMfa,
-                id: generateStandardId(),
-                createdAt: new Date().toISOString(),
-                name,
-              },
-            ],
+            mfaVerifications,
+            ...conditional(
+              mfa.factors.includes(MfaFactor.WebAuthn) && {
+                logtoConfig: buildUpdatedUserLogtoConfig(user, { mfa: { enabled: true } }),
+              }
+            ),
           });
 
           ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
@@ -291,14 +303,15 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
         ({ type }) => type === MfaFactor.TOTP
       );
 
+      const mfaVerifications = existingTotpVerification
+        ? user.mfaVerifications.map((mfaVerification) =>
+            mfaVerification.id === existingTotpVerification.id ? totpVerification : mfaVerification
+          )
+        : [...user.mfaVerifications, totpVerification];
+
       const updatedUser = await updateUserById(userId, {
-        mfaVerifications: existingTotpVerification
-          ? user.mfaVerifications.map((mfaVerification) =>
-              mfaVerification.id === existingTotpVerification.id
-                ? totpVerification
-                : mfaVerification
-            )
-          : [...user.mfaVerifications, totpVerification],
+        mfaVerifications,
+        logtoConfig: buildUpdatedUserLogtoConfig(user, { mfa: { enabled: true } }),
       });
 
       ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
@@ -463,10 +476,11 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
         'account_center.field_not_editable'
       );
 
+      const mfaVerifications = user.mfaVerifications.filter(
+        (mfaVerification) => mfaVerification.id !== ctx.guard.params.verificationId
+      );
       const updatedUser = await updateUserById(userId, {
-        mfaVerifications: user.mfaVerifications.filter(
-          (mfaVerification) => mfaVerification.id !== ctx.guard.params.verificationId
-        ),
+        mfaVerifications,
       });
 
       ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
