@@ -4,7 +4,10 @@ import {
   SignInIdentifier,
   type HookUserPatch,
   type InteractionIdentifier,
+  postFirstFactorVerificationResultGuard,
+  postSignInResultGuard,
 } from '@logto/schemas';
+import { PhoneNumberParser } from '@logto/shared/universal';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -12,12 +15,6 @@ import assertThat from '#src/utils/assert-that.js';
 import { type HookProvisioningProfile } from '../../types.js';
 
 import { toHookProvisioningProfile } from './inline-hook-provisioning-profile.js';
-
-type InlineHookResultObject = {
-  action?: unknown;
-  passwordVerified?: unknown;
-  user?: unknown;
-};
 
 type InlineHookRejectInvalidCredentialsResult = {
   action: 'rejectInvalidCredentials';
@@ -45,7 +42,7 @@ export type ValidatedPostSignInHookResult =
       user: HookProvisioningProfile;
     };
 
-const isInlineHookResultObject = (result: unknown): result is InlineHookResultObject =>
+const isInlineHookResultObject = (result: unknown): result is Record<string, unknown> =>
   typeof result === 'object' && result !== null && !Array.isArray(result);
 
 const invalidCredentialsResult = (): InlineHookRejectInvalidCredentialsResult => ({
@@ -66,7 +63,7 @@ const toHookProvisioningProfileSafe = (user: unknown) => {
   try {
     return toHookProvisioningProfile(user);
   } catch {
-    // eslint-disable-next-line unicorn/no-useless-undefined
+    // eslint-disable-next-line unicorn/no-useless-undefined -- explicit undefined; bare `return` trips no-useless-return
     return undefined;
   }
 };
@@ -77,6 +74,36 @@ const signInIdentifierToUserField = {
   [SignInIdentifier.Username]: 'username',
 } as const satisfies Record<SignInIdentifier, keyof HookUserPatch>;
 
+const isSameSignInIdentifierValue = (
+  type: SignInIdentifier,
+  submitted: string,
+  returned: string
+): boolean => {
+  switch (type) {
+    case SignInIdentifier.Email: {
+      return submitted.toLowerCase() === returned.toLowerCase();
+    }
+    case SignInIdentifier.Phone: {
+      const submittedPhone = new PhoneNumberParser(submitted);
+      const returnedPhone = new PhoneNumberParser(returned);
+
+      if (
+        submittedPhone.isValid &&
+        returnedPhone.isValid &&
+        submittedPhone.internationalNumber &&
+        returnedPhone.internationalNumber
+      ) {
+        return submittedPhone.internationalNumber === returnedPhone.internationalNumber;
+      }
+
+      return submitted === returned;
+    }
+    case SignInIdentifier.Username: {
+      return submitted === returned;
+    }
+  }
+};
+
 const assertHookPreservesSignInIdentifier = (
   identifier: InteractionIdentifier,
   userPatch: HookUserPatch
@@ -85,7 +112,9 @@ const assertHookPreservesSignInIdentifier = (
   const returned = userPatch[field];
 
   assertThat(
-    returned === undefined || returned === identifier.value,
+    returned === undefined ||
+      (typeof returned === 'string' &&
+        isSameSignInIdentifierValue(identifier.type, identifier.value, returned)),
     new RequestError(
       { code: 'inline_hook.sign_in_identifier_changed', status: 422 },
       { identifierType: identifier.type }
@@ -100,21 +129,13 @@ export const validatePostFirstFactorVerificationHookResult = ({
   event: Pick<PostFirstFactorVerificationEvent, 'user' | 'identifier'>;
   result: unknown;
 }): ValidatedPostFirstFactorVerificationHookResult => {
-  if (!isInlineHookResultObject(result)) {
+  const parsed = postFirstFactorVerificationResultGuard.safeParse(result);
+
+  if (!parsed.success) {
     return invalidCredentialsResult();
   }
 
-  const { action, passwordVerified, user } = result;
-
-  if (
-    (action !== 'createUser' && action !== 'updateUser') ||
-    user === undefined ||
-    passwordVerified !== true
-  ) {
-    return invalidCredentialsResult();
-  }
-
-  const profile = toHookProvisioningProfileSafe(user);
+  const profile = toHookProvisioningProfileSafe(parsed.data.user);
 
   if (!profile) {
     return invalidCredentialsResult();
@@ -122,22 +143,25 @@ export const validatePostFirstFactorVerificationHookResult = ({
 
   assertHookPreservesSignInIdentifier(event.identifier, profile);
 
-  if (action === 'createUser') {
-    assertThat(event.user === null, identityConflictError());
+  switch (parsed.data.action) {
+    case 'createUser': {
+      assertThat(event.user === null, identityConflictError());
 
-    return {
-      action,
-      user: profile,
-    };
+      return {
+        action: 'createUser',
+        user: profile,
+      };
+    }
+    case 'updateUser': {
+      assertThat(event.user, identityConflictError());
+
+      return {
+        action: 'updateUser',
+        userId: event.user.id,
+        user: profile,
+      };
+    }
   }
-
-  assertThat(event.user, identityConflictError());
-
-  return {
-    action,
-    userId: event.user.id,
-    user: profile,
-  };
 };
 
 export const validatePostSignInHookResult = ({
@@ -151,7 +175,9 @@ export const validatePostSignInHookResult = ({
     return continueResult();
   }
 
-  assertThat(isInlineHookResultObject(result), verificationFailedError());
+  if (!isInlineHookResultObject(result)) {
+    throw verificationFailedError();
+  }
 
   const { action, user } = result;
 
@@ -159,19 +185,25 @@ export const validatePostSignInHookResult = ({
     return continueResult();
   }
 
-  assertThat(action === 'updateUser', verificationFailedError());
+  const parsed = postSignInResultGuard.safeParse(result);
 
-  if (user === undefined) {
-    return continueResult();
+  assertThat(parsed.success, verificationFailedError());
+
+  switch (parsed.data.action) {
+    case 'updateUser': {
+      if (parsed.data.user === undefined) {
+        return continueResult();
+      }
+
+      const profile = toHookProvisioningProfileSafe(parsed.data.user);
+
+      assertThat(profile, verificationFailedError());
+
+      return {
+        action: 'updateUser',
+        userId: event.user.id,
+        user: profile,
+      };
+    }
   }
-
-  const profile = toHookProvisioningProfileSafe(user);
-
-  assertThat(profile, verificationFailedError());
-
-  return {
-    action,
-    userId: event.user.id,
-    user: profile,
-  };
 };

@@ -8,11 +8,11 @@ import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
-const validateCustomBlockListFormat = (list: string[], allowWildcard: boolean) => {
+const validateCustomBlockListFormat = (list: string[]) => {
   const invalidItems = new Set<string>();
 
   for (const item of list) {
-    if (!isEmailBlocklistItem(item, { allowWildcard })) {
+    if (!isEmailBlocklistItem(item)) {
       invalidItems.add(item);
     }
   }
@@ -22,10 +22,7 @@ const validateCustomBlockListFormat = (list: string[], allowWildcard: boolean) =
 
 const parseCustomBlocklist = (customBlocklist: string[]) => {
   const deduplicated = deduplicate(customBlocklist);
-  const invalidItems = validateCustomBlockListFormat(
-    deduplicated,
-    EnvSet.values.isDevFeaturesEnabled
-  );
+  const invalidItems = validateCustomBlockListFormat(deduplicated);
 
   if (invalidItems.size > 0) {
     throw new RequestError({

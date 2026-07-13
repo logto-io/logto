@@ -11,6 +11,7 @@ import {
 } from '../foundations/index.js';
 import { type ToZodObject } from '../utils/zod.js';
 
+import { InteractionEvent } from './interaction-event.js';
 import type {
   EmailVerificationCodePayload,
   PhoneVerificationCodePayload,
@@ -20,15 +21,7 @@ import {
   phoneVerificationCodePayloadGuard,
 } from './verification-code.js';
 
-/**
- * User interaction events defined in Logto RFC 0004.
- * @see {@link https://github.com/logto-io/rfcs | Logto RFCs} for more information.
- */
-export enum InteractionEvent {
-  SignIn = 'SignIn',
-  Register = 'Register',
-  ForgotPassword = 'ForgotPassword',
-}
+export { eventGuard, InteractionEvent } from './interaction-event.js';
 
 export type VerificationIdentifier = {
   type: SignInIdentifier | AdditionalIdentifier;
@@ -270,8 +263,6 @@ export const socialPhonePayloadGuard = z.object({
 });
 
 export type SocialPhonePayload = z.infer<typeof socialPhonePayloadGuard>;
-
-export const eventGuard = z.nativeEnum(InteractionEvent);
 
 export const identifierPayloadGuard = z.union([
   usernamePasswordPayloadGuard,

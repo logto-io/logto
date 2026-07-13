@@ -50,7 +50,7 @@ const ResetPasswordLanding = () => {
           titleKey: 'description.reset_password',
         }}
         title="description.reset_password"
-        description="description.reset_password_magic_link_description"
+        description={t('description.reset_password_magic_link_description')}
         authOptionsLink={{
           to: `/${experience.routes.signIn}`,
           text: 'description.back_to_sign_in',

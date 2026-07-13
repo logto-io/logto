@@ -182,12 +182,13 @@ const security = {
     custom_email_address: {
       title: 'Bloquear direcciones de correo electrónico personalizadas',
       description:
-        'Agrega dominios de correo específicos o direcciones de correo electrónico que no pueden registrarse o vincularse a través de la interfaz de usuario.',
+        'Agrega reglas para bloquear dominios de correo específicos, direcciones de correo electrónico o patrones de direcciones de correo con comodines para que no puedan registrarse o vincularse a través de la interfaz de usuario.',
       placeholder:
-        'Ingresa la dirección de correo electrónico o dominio bloqueado (por ejemplo, bar@example.com, @example.com)',
-      duplicate_error: 'La dirección de correo electrónico o el dominio ya fue agregado',
+        'Ingresa la dirección de correo electrónico, dominio o patrón de dirección de correo con comodín bloqueado (por ejemplo, bar@example.com, @example.com, foo*@example.com, *@example.com)',
+      duplicate_error:
+        'La dirección de correo electrónico, el dominio o el patrón de dirección de correo con comodín ya fue agregado',
       invalid_format_error:
-        'Debe ser una dirección de correo electrónico válida (bar@example.com) o un dominio (@example.com)',
+        'Debe ser una dirección de correo electrónico válida (bar@example.com), un dominio (@example.com) o un patrón de dirección de correo con comodín (foo*@example.com, *@example.com)',
     },
   },
 };

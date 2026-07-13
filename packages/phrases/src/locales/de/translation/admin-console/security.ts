@@ -181,12 +181,13 @@ const security = {
     custom_email_address: {
       title: 'Benutzerdefinierte E-Mail-Adressen blockieren',
       description:
-        'Fügen Sie spezifische E-Mail-Domains oder E-Mail-Adressen hinzu, die nicht registrieren oder über die Benutzeroberfläche verknüpfen können.',
+        'Fügen Sie Regeln hinzu, um spezifische E-Mail-Domains, E-Mail-Adressen oder E-Mail-Adressmuster mit Platzhaltern an der Registrierung oder Verknüpfung über die Benutzeroberfläche zu hindern.',
       placeholder:
-        'Geben Sie die blockierte E-Mail-Adresse oder Domain ein (zum Beispiel, bar@example.com, @example.com)',
-      duplicate_error: 'E-Mail-Adresse oder Domain bereits hinzugefügt',
+        'Geben Sie die blockierte E-Mail-Adresse, Domain oder das E-Mail-Adressmuster mit Platzhalter ein (zum Beispiel, bar@example.com, @example.com, foo*@example.com, *@example.com)',
+      duplicate_error:
+        'E-Mail-Adresse, Domain oder E-Mail-Adressmuster mit Platzhalter bereits hinzugefügt',
       invalid_format_error:
-        'Muss eine gültige E-Mail-Adresse (bar@example.com) oder Domain (@example.com) sein',
+        'Muss eine gültige E-Mail-Adresse (bar@example.com), Domain (@example.com) oder ein E-Mail-Adressmuster mit Platzhalter (foo*@example.com, *@example.com) sein',
     },
   },
 };

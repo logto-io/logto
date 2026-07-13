@@ -160,10 +160,13 @@ const security = {
     },
     custom_email_address: {
       title: '阻止自定义电子邮件地址',
-      description: '添加特定电子邮件域或电子邮件地址，无法通过 UI 注册或链接。',
-      placeholder: '输入被阻止的电子邮件地址或域名（例如，bar@example.com，@example.com）',
-      duplicate_error: '电子邮件地址或域名已添加',
-      invalid_format_error: '必须是有效的电子邮件地址（bar@example.com）或域（@example.com）',
+      description:
+        '添加规则，以阻止特定电子邮件域、电子邮件地址或通配符电子邮件地址模式通过 UI 注册或链接。',
+      placeholder:
+        '输入被阻止的电子邮件地址、域名或通配符电子邮件地址模式（例如，bar@example.com，@example.com，foo*@example.com，*@example.com）',
+      duplicate_error: '电子邮件地址、域名或通配符电子邮件地址模式已添加',
+      invalid_format_error:
+        '必须是有效的电子邮件地址（bar@example.com）、域（@example.com）或通配符电子邮件地址模式（foo*@example.com，*@example.com）',
     },
   },
 };

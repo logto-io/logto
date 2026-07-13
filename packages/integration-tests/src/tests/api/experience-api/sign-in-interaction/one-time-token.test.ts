@@ -256,6 +256,38 @@ describe('Sign-in interaction with one-time token', () => {
     );
   });
 
+  it('should not consume a forgot-password scoped one-time token for sign-in', async () => {
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.SignIn,
+    });
+
+    const oneTimeToken = await createOneTimeToken({
+      email: userProfile.primaryEmail,
+      context: {
+        interactionEvent: InteractionEvent.ForgotPassword,
+      },
+    });
+
+    try {
+      await expectRejects(
+        client.verifyOneTimeToken({
+          token: oneTimeToken.token,
+          identifier: { type: SignInIdentifier.Email, value: userProfile.primaryEmail },
+        }),
+        {
+          code: 'one_time_token.interaction_event_mismatch',
+          status: 400,
+        }
+      );
+
+      await expect(getOneTimeTokenById(oneTimeToken.id)).resolves.toMatchObject({
+        status: OneTimeTokenStatus.Active,
+      });
+    } finally {
+      await deleteOneTimeTokenById(oneTimeToken.id);
+    }
+  });
+
   it('should fail to sign-in with an expired one-time token', async () => {
     const client = await initExperienceClient({
       interactionEvent: InteractionEvent.SignIn,

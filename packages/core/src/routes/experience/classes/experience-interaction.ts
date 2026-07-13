@@ -39,6 +39,7 @@ import { CaptchaValidator } from './libraries/captcha-validator.js';
 import { MfaValidator } from './libraries/mfa-validator.js';
 import { ProvisionLibrary } from './libraries/provision-library.js';
 import { SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
+import { UserUpdateLibrary } from './libraries/user-update-library.js';
 import { Mfa } from './mfa.js';
 import { Profile } from './profile.js';
 import { toUserSocialIdentityData } from './utils.js';
@@ -58,6 +59,7 @@ import { VerificationRecordsMap } from './verifications/verification-records-map
 export default class ExperienceInteraction {
   public readonly signInExperienceValidator: SignInExperienceValidator;
   public readonly provisionLibrary: ProvisionLibrary;
+  public readonly userUpdateLibrary: UserUpdateLibrary;
   /** The user provided profile data in the current interaction that needs to be stored to database. */
   readonly profile: Profile;
   /** The user linked MFA data in the current interaction that needs to be stored to database. */
@@ -100,6 +102,7 @@ export default class ExperienceInteraction {
 
     this.signInExperienceValidator = new SignInExperienceValidator(libraries, queries);
     this.provisionLibrary = new ProvisionLibrary(tenant, ctx);
+    this.userUpdateLibrary = new UserUpdateLibrary(tenant, ctx);
 
     const interactionContext: InteractionContext = {
       getInteractionEvent: () => this.#interactionEvent,

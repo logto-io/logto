@@ -11,7 +11,7 @@ import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 
-const { mockEsmWithActual, mockEsmDefault } = createMockUtils(jest);
+const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
 
 const newPrivateKey = {
   id: generateStandardId(),
@@ -42,8 +42,18 @@ const { generateOidcPrivateKey } = await mockEsmWithActual(
   })
 );
 
-mockEsmDefault('node:crypto', () => ({
-  createPrivateKey: jest.fn((value) => value),
+/**
+ * Mock only `createPrivateKey` (the real one rejects the fake test keys) while keeping the
+ * rest of `node:crypto` intact — `formidable` (pulled in via `koa-body`) imports `createHash`
+ * by name, so the mock must preserve the module's named exports.
+ */
+const actualCrypto = await import('node:crypto');
+mockEsm('node:crypto', () => ({
+  ...actualCrypto,
+  default: {
+    ...actualCrypto.default,
+    createPrivateKey: jest.fn((value) => value),
+  },
 }));
 
 const logtoConfigQueries = {

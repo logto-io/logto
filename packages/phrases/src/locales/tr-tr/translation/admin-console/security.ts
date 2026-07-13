@@ -177,12 +177,13 @@ const security = {
     custom_email_address: {
       title: 'Özel e-posta adreslerini engelle',
       description:
-        'Belirli e-posta alan adlarını veya kullanıcı arayüzü aracılığıyla kaydolamayacak veya bağlantı kuramayacak e-posta adreslerini ekleyin.',
+        'Belirli e-posta alan adlarının, e-posta adreslerinin veya joker karakterli e-posta adresi kalıplarının kullanıcı arayüzü aracılığıyla kaydolmasını veya bağlantı kurmasını engelleyen kurallar ekleyin.',
       placeholder:
-        'Engellenen e-posta adresini veya alan adını girin (örn., bar@example.com, @example.com)',
-      duplicate_error: 'E-posta adresi veya alan adı zaten eklendi',
+        'Engellenen e-posta adresini, alan adını veya joker karakterli e-posta adresi kalıbını girin (örn., bar@example.com, @example.com, foo*@example.com, *@example.com)',
+      duplicate_error:
+        'E-posta adresi, alan adı veya joker karakterli e-posta adresi kalıbı zaten eklendi',
       invalid_format_error:
-        'Geçerli bir e-posta adresi (bar@example.com) veya alan adı (@example.com) olmalıdır',
+        'Geçerli bir e-posta adresi (bar@example.com), alan adı (@example.com) veya joker karakterli e-posta adresi kalıbı (foo*@example.com, *@example.com) olmalıdır',
     },
   },
 };

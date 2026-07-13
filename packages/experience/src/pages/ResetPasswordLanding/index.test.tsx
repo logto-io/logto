@@ -16,10 +16,17 @@ const mockedIdentifyForgotPasswordWithOneTimeToken =
   identifyForgotPasswordWithOneTimeToken as jest.MockedFunction<
     typeof identifyForgotPasswordWithOneTimeToken
   >;
+const mockResetPasswordMagicLinkDescription =
+  'Enter the email address associated with your account to continue resetting your password.';
 
-jest.mock('i18next', () => ({
-  language: 'en',
-  t: (key: string) => key,
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) =>
+      key === 'description.reset_password_magic_link_description'
+        ? mockResetPasswordMagicLinkDescription
+        : key,
+    i18n: { dir: () => 'ltr' },
+  }),
 }));
 
 jest.mock('@/apis/experience', () => ({
@@ -62,7 +69,7 @@ describe('ResetPasswordLanding', () => {
       { email: false, phone: false }
     );
 
-    expect(queryByText('description.reset_password_magic_link_description')).not.toBeNull();
+    expect(queryByText(mockResetPasswordMagicLinkDescription)).not.toBeNull();
 
     await waitFor(() => {
       expect(mockedIdentifyForgotPasswordWithOneTimeToken).toBeCalledWith({
@@ -115,7 +122,7 @@ describe('ResetPasswordLanding', () => {
       { email: false, phone: false }
     );
 
-    expect(queryByText('description.reset_password_magic_link_description')).not.toBeNull();
+    expect(queryByText(mockResetPasswordMagicLinkDescription)).not.toBeNull();
     expect(mockedIdentifyForgotPasswordWithOneTimeToken).not.toBeCalled();
 
     const identifierInput = container.querySelector('input[name="identifier"]');
@@ -137,6 +144,6 @@ describe('ResetPasswordLanding', () => {
     const { queryByText } = renderPage('/reset-password', { email: false, phone: false });
 
     expect(queryByText('sign in page')).not.toBeNull();
-    expect(queryByText('description.reset_password_magic_link_description')).toBeNull();
+    expect(queryByText(mockResetPasswordMagicLinkDescription)).toBeNull();
   });
 });

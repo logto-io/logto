@@ -104,6 +104,63 @@ describe('SmartInputField Component', () => {
         value: `${newCountryCode}12315`,
       });
     });
+
+    test('should parse pasted full international phone number', () => {
+      const { container, getByText } = renderInputField({
+        enabledTypes: [SignInIdentifier.Phone],
+      });
+      const input = container.querySelector('input');
+      assert(input, new Error('input should not be null'));
+
+      fireEvent.change(input, { target: { value: '+79370000000' } });
+
+      expect(getByText('+7')).not.toBeNull();
+      expect(input.value).toBe('9370000000');
+      expect(onChange).toHaveBeenLastCalledWith({
+        type: SignInIdentifier.Phone,
+        value: '79370000000',
+      });
+    });
+
+    test('should update country code when pasting an international phone number', () => {
+      const { container, getByText } = renderInputField({
+        defaultValue: '+79370000000',
+        enabledTypes: [SignInIdentifier.Phone],
+      });
+      const input = container.querySelector('input');
+      assert(input, new Error('input should not be null'));
+
+      expect(getByText('+7')).not.toBeNull();
+      expect(input.value).toBe('9370000000');
+
+      fireEvent.change(input, { target: { value: '+16502530000' } });
+
+      expect(getByText('+1')).not.toBeNull();
+      expect(input.value).toBe('6502530000');
+      expect(onChange).toHaveBeenLastCalledWith({
+        type: SignInIdentifier.Phone,
+        value: '16502530000',
+      });
+    });
+
+    test('should strip the leading "+" from partial international phone input', () => {
+      const { container, getByText } = renderInputField({
+        enabledTypes: [SignInIdentifier.Phone],
+      });
+      const input = container.querySelector('input');
+      assert(input, new Error('input should not be null'));
+
+      fireEvent.change(input, { target: { value: '+7' } });
+
+      // The `+` is represented by the country code selector, so it should not be kept in the input
+      // value, otherwise `SmartInputField` would emit a malformed value like `${countryCode}+7`.
+      expect(getByText(`+${defaultCountryCallingCode}`)).not.toBeNull();
+      expect(input.value).toBe('7');
+      expect(onChange).toHaveBeenLastCalledWith({
+        type: SignInIdentifier.Phone,
+        value: `${defaultCountryCallingCode}7`,
+      });
+    });
   });
 
   describe('username with email', () => {
@@ -279,6 +336,27 @@ describe('SmartInputField Component', () => {
       expect(onChange).toBeCalledWith({
         type: SignInIdentifier.Email,
         value: `11@`,
+      });
+    });
+
+    test('should parse pasted phone number and keep email detection working', () => {
+      const { container, getByText } = renderInputField(config);
+      const input = container.querySelector('input');
+
+      assert(input, new Error('Input field not found'));
+
+      fireEvent.change(input, { target: { value: '+79370000000' } });
+      expect(getByText('+7')).not.toBeNull();
+      expect(input.value).toBe('9370000000');
+      expect(onChange).toHaveBeenLastCalledWith({
+        type: SignInIdentifier.Phone,
+        value: '79370000000',
+      });
+
+      fireEvent.change(input, { target: { value: 'foo@' } });
+      expect(onChange).toHaveBeenLastCalledWith({
+        type: SignInIdentifier.Email,
+        value: 'foo@',
       });
     });
   });
