@@ -9,12 +9,14 @@ import { GrantType } from '@logto/schemas';
 import { nanoid } from 'nanoid';
 import type { Provider } from 'oidc-provider';
 import { errors } from 'oidc-provider';
-import resolveResource from 'oidc-provider/lib/helpers/resolve_resource.js';
-import validatePresence from 'oidc-provider/lib/helpers/validate_presence.js';
-import instance from 'oidc-provider/lib/helpers/weak_cache.js';
 
 import { type EnvSet } from '#src/env-set/index.js';
 import { assertUserHasApplicationAccessForOidc } from '#src/oidc/application-access-control.js';
+import {
+  getProviderConfiguration,
+  resolveResource,
+  validatePresence,
+} from '#src/oidc/oidc-provider-internals.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -64,7 +66,7 @@ type Handler = (
 
 export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx, next) => {
   const { client, params, requestParamScopes, provider } = ctx.oidc;
-  const { Account, AccessToken, Grant } = provider;
+  const { AccessToken, Grant } = provider;
 
   assertThat(params, new InvalidGrant('parameters must be available'));
   assertThat(client, new InvalidClient('client must be available'));
@@ -73,11 +75,10 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx,
 
   validatePresence(ctx, ...requiredParameters);
 
-  const providerInstance = instance(provider);
   const {
     features: { userinfo, resourceIndicators },
     scopes: oidcScopes,
-  } = providerInstance.configuration();
+  } = getProviderConfiguration(provider);
 
   const { userId, subjectTokenId } = await validateSubjectToken({
     queries,
@@ -90,7 +91,7 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx,
     },
   });
 
-  const account = await Account.findAccount(ctx, userId);
+  const account = await getProviderConfiguration(provider).findAccount(ctx, userId);
 
   if (!account) {
     throw new InvalidGrant('subject token invalid (referenced account not found)');

@@ -1,8 +1,8 @@
 import { GrantType } from '@logto/schemas';
 import type { Provider } from 'oidc-provider';
-import instance from 'oidc-provider/lib/helpers/weak_cache.js';
 
 import { type EnvSet } from '#src/env-set/index.js';
+import { getProviderConfiguration } from '#src/oidc/oidc-provider-internals.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 
@@ -18,7 +18,7 @@ export const registerGrants = (
 ) => {
   const {
     features: { resourceIndicators },
-  } = instance(oidc).configuration();
+  } = getProviderConfiguration(oidc);
 
   // If resource indicators are enabled, append `resource` to the parameters and allow it to
   // be duplicated

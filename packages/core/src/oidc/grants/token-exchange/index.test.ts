@@ -3,6 +3,7 @@ import { type KoaContextWithOIDC, errors } from 'oidc-provider';
 import Sinon from 'sinon';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { getProviderConfiguration } from '#src/oidc/oidc-provider-internals.js';
 import { createOidcContext } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
@@ -156,14 +157,14 @@ describe('token exchange', () => {
   it('should throw when account cannot be found', async () => {
     const ctx = createOidcContext(validOidcContext);
     findSubjectToken.mockResolvedValueOnce(createValidSubjectToken());
-    Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves();
+    Sinon.stub(getProviderConfiguration(ctx.oidc.provider), 'findAccount').resolves();
     await expect(mockHandler()(ctx, noop)).rejects.toThrow(errors.InvalidGrant);
   });
 
   it('should throw before creating token continuation when the user has no application access', async () => {
     const ctx = createPreparedContext();
     findSubjectToken.mockResolvedValueOnce(createValidSubjectToken());
-    Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves({ accountId });
+    Sinon.stub(getProviderConfiguration(ctx.oidc.provider), 'findAccount').resolves({ accountId });
     const tenant = new MockTenant(undefined, mockQueries);
     const accessError = new RequestError('oidc.access_denied');
     assertUserHasApplicationAccess.mockRejectedValueOnce(accessError);
@@ -182,7 +183,7 @@ describe('token exchange', () => {
   it('should not explode when everything looks fine', async () => {
     const ctx = createPreparedContext();
     findSubjectToken.mockResolvedValueOnce(createValidSubjectToken());
-    Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves({ accountId });
+    Sinon.stub(getProviderConfiguration(ctx.oidc.provider), 'findAccount').resolves({ accountId });
 
     const entityStub = Sinon.stub(ctx.oidc, 'entity');
     const noopStub = Sinon.stub().resolves();
@@ -205,7 +206,9 @@ describe('token exchange', () => {
     it('should throw if the user is not a member of the organization', async () => {
       const ctx = createPreparedOrganizationContext();
       findSubjectToken.mockResolvedValueOnce(createValidSubjectToken());
-      Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves({ accountId });
+      Sinon.stub(getProviderConfiguration(ctx.oidc.provider), 'findAccount').resolves({
+        accountId,
+      });
 
       const tenant = new MockTenant(undefined, mockQueries);
       Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(false);
@@ -217,7 +220,9 @@ describe('token exchange', () => {
     it('should throw if the organization requires MFA but the user has not configured it', async () => {
       const ctx = createPreparedOrganizationContext();
       findSubjectToken.mockResolvedValueOnce(createValidSubjectToken());
-      Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves({ accountId });
+      Sinon.stub(getProviderConfiguration(ctx.oidc.provider), 'findAccount').resolves({
+        accountId,
+      });
 
       const tenant = new MockTenant(undefined, mockQueries);
       Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(true);
@@ -233,7 +238,9 @@ describe('token exchange', () => {
     it('should not explode when everything looks fine', async () => {
       const ctx = createPreparedOrganizationContext();
       findSubjectToken.mockResolvedValueOnce(createValidSubjectToken());
-      Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves({ accountId });
+      Sinon.stub(getProviderConfiguration(ctx.oidc.provider), 'findAccount').resolves({
+        accountId,
+      });
 
       const tenant = new MockTenant(undefined, mockQueries);
       Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(true);
@@ -308,14 +315,16 @@ describe('token exchange', () => {
     it('should throw when account cannot be found', async () => {
       const ctx = createPreparedJwtContext();
       mockJwtVerify.mockResolvedValueOnce({ payload: { sub: accountId } });
-      Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves();
+      Sinon.stub(getProviderConfiguration(ctx.oidc.provider), 'findAccount').resolves();
       await expect(mockHandler()(ctx, noop)).rejects.toThrow(errors.InvalidGrant);
     });
 
     it('should not consume the token (allow multiple exchanges)', async () => {
       const ctx = createPreparedJwtContext();
       mockJwtVerify.mockResolvedValueOnce({ payload: { sub: accountId } });
-      Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves({ accountId });
+      Sinon.stub(getProviderConfiguration(ctx.oidc.provider), 'findAccount').resolves({
+        accountId,
+      });
 
       const entityStub = Sinon.stub(ctx.oidc, 'entity');
       const noopStub = Sinon.stub().resolves();
@@ -360,7 +369,9 @@ describe('token exchange', () => {
         accountId,
         isExpired: false,
       });
-      Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves({ accountId });
+      Sinon.stub(getProviderConfiguration(ctx.oidc.provider), 'findAccount').resolves({
+        accountId,
+      });
 
       const entityStub = Sinon.stub(ctx.oidc, 'entity');
       const noopStub = Sinon.stub().resolves();
@@ -398,7 +409,9 @@ describe('token exchange', () => {
       Sinon.stub(ctx.oidc.provider.AccessToken, 'find').resolves();
       // Mock jwtVerify to succeed
       mockJwtVerify.mockResolvedValueOnce({ payload: { sub: accountId } });
-      Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves({ accountId });
+      Sinon.stub(getProviderConfiguration(ctx.oidc.provider), 'findAccount').resolves({
+        accountId,
+      });
 
       const entityStub = Sinon.stub(ctx.oidc, 'entity');
       const noopStub = Sinon.stub().resolves();
@@ -438,7 +451,9 @@ describe('token exchange', () => {
     it('should validate impersonation token with explicit type', async () => {
       const ctx = createPreparedImpersonationContext();
       findSubjectToken.mockResolvedValueOnce(createValidSubjectToken());
-      Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves({ accountId });
+      Sinon.stub(getProviderConfiguration(ctx.oidc.provider), 'findAccount').resolves({
+        accountId,
+      });
 
       const entityStub = Sinon.stub(ctx.oidc, 'entity');
       const noopStub = Sinon.stub().resolves();
