@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { Navigate } from 'react-router-dom';
 
 import FocusedAuthPageLayout from '@/Layout/FocusedAuthPageLayout';
-import { isDevFeaturesEnabled } from '@/constants/env';
 import useConsumeOneTimeTokenParameters from '@/hooks/use-consume-one-time-token-parameters';
 import usePrefilledIdentifier from '@/hooks/use-prefilled-identifier';
 import ErrorPage from '@/pages/ErrorPage';
@@ -57,7 +56,7 @@ const ResetPasswordLanding = () => {
     );
   }
 
-  if (isDevFeaturesEnabled && oneTimeToken) {
+  if (oneTimeToken) {
     return (
       <FocusedAuthPageLayout
         pageMeta={{
