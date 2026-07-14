@@ -210,15 +210,36 @@ describe('opaque user token lifecycle', () => {
       await expect(
         introspectToken(application, opaqueAccessToken, 'access_token')
       ).resolves.toEqual({ active: false });
-      await expect(
-        oidcApi.post('token', {
+
+      /**
+       * Since oidc-provider v9, revoking an access token also revokes the sibling tokens of
+       * the same grant (RFC 7009 §2.1: the server "MAY revoke the respective refresh token"),
+       * so the sibling refresh token becomes unusable. The previous version only cascaded when
+       * a refresh token was revoked. Logto SDKs only revoke refresh tokens on sign-out, so no
+       * client flow relies on the old behavior.
+       */
+      const refreshAfterRevocationError = await oidcApi
+        .post('token', {
           headers: { Authorization: getAuthorizationHeader(application) },
           body: new URLSearchParams({
             grant_type: 'refresh_token',
             refresh_token: refreshToken,
           }),
         })
-      ).resolves.toBeDefined();
+        .then(
+          () => {
+            throw new Error('Expected the sibling refresh token to be revoked');
+          },
+          (error: unknown) => error
+        );
+      assert(
+        refreshAfterRevocationError instanceof HTTPError,
+        new Error('Expected the refresh token grant to fail with an HTTP error')
+      );
+      expect(refreshAfterRevocationError.response.status).toBe(400);
+      expect(await refreshAfterRevocationError.response.json()).toMatchObject({
+        error: 'invalid_grant',
+      });
     } finally {
       await deleteResource(resource.id);
     }
