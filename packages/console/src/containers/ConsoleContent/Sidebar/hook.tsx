@@ -9,6 +9,7 @@ import Connection from '@/assets/icons/connection.svg?react';
 import Gear from '@/assets/icons/gear.svg?react';
 import Hook from '@/assets/icons/hook.svg?react';
 import JwtClaims from '@/assets/icons/jwt-claims.svg?react';
+import Lightening from '@/assets/icons/lightening.svg?react';
 import List from '@/assets/icons/list.svg?react';
 import OrganizationTemplate from '@/assets/icons/organization-template-feature.svg?react';
 import Organization from '@/assets/icons/organization.svg?react';
@@ -19,6 +20,7 @@ import SecurityLock from '@/assets/icons/security-lock.svg?react';
 import Security from '@/assets/icons/security.svg?react';
 import EnterpriseSso from '@/assets/icons/single-sign-on.svg?react';
 import Web from '@/assets/icons/web.svg?react';
+import { isDevFeaturesEnabled } from '@/consts/env';
 
 type SidebarItem = {
   Icon: FC;
@@ -127,6 +129,13 @@ export const useSidebarMenuItems = (): {
     {
       title: 'developer',
       items: [
+        {
+          Icon: Lightening,
+          title: 'inline_hooks',
+          path: 'inline-hooks',
+          // Inline hooks are still under development and should be released as one feature.
+          isHidden: !isDevFeaturesEnabled,
+        },
         {
           Icon: JwtClaims,
           title: 'customize_jwt',
