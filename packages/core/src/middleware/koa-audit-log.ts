@@ -112,6 +112,16 @@ export type WithLogContext<ContextT extends IRouterParamContext = IRouterParamCo
   ContextT & LogContext;
 
 /**
+ * Runtime `typeof` expectation for every {@link LogContext} member. The `satisfies` constraint is
+ * exhaustive over `keyof LogContext`, so extending {@link LogContext} fails compilation here until
+ * the new member is covered by {@link assertLogContext} as well.
+ */
+const logContextShape = Object.freeze({
+  createLog: 'function',
+  prependAllLogEntries: 'function',
+} as const satisfies Record<keyof LogContext, 'function'>);
+
+/**
  * Assert that the context has been enriched with {@link LogContext} by the audit log middleware.
  * Useful where a context is statically typed without {@link LogContext} but is known to run
  * downstream of the middleware, e.g. `oidc-provider` event listeners, whose contexts are emitted
@@ -120,8 +130,7 @@ export type WithLogContext<ContextT extends IRouterParamContext = IRouterParamCo
 export function assertLogContext<ContextT>(ctx: ContextT): asserts ctx is ContextT & LogContext {
   if (
     !isRecord(ctx) ||
-    typeof ctx.createLog !== 'function' ||
-    typeof ctx.prependAllLogEntries !== 'function'
+    Object.entries(logContextShape).some(([key, expectedType]) => typeof ctx[key] !== expectedType)
   ) {
     throw new TypeError('The context has not been enriched by the audit log middleware.');
   }
