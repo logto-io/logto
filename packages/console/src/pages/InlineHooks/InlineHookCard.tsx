@@ -1,4 +1,4 @@
-import Lightening from '@/assets/icons/lightening.svg?react';
+import Code from '@/assets/icons/code.svg?react';
 import DynamicT from '@/ds-components/DynamicT';
 import Tag from '@/ds-components/Tag';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
@@ -31,7 +31,7 @@ function InlineHookCard({ hookType, name, description, config }: Props) {
       }}
     >
       <div className={styles.iconContainer}>
-        <Lightening className={styles.icon} />
+        <Code className={styles.icon} />
       </div>
       <div className={styles.cardContent}>
         <div className={styles.cardHeader}>

@@ -1,4 +1,5 @@
 const tabs = {
+  inline_hooks: 'Hooks inline',
   get_started: 'Começar',
   dashboard: 'Painel',
   applications: 'Aplicações',

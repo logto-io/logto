@@ -5,11 +5,11 @@ import type { FC, ReactNode } from 'react';
 import BarGraph from '@/assets/icons/bar-graph.svg?react';
 import Bolt from '@/assets/icons/bolt.svg?react';
 import Box from '@/assets/icons/box.svg?react';
+import Code from '@/assets/icons/code.svg?react';
 import Connection from '@/assets/icons/connection.svg?react';
 import Gear from '@/assets/icons/gear.svg?react';
 import Hook from '@/assets/icons/hook.svg?react';
 import JwtClaims from '@/assets/icons/jwt-claims.svg?react';
-import Lightening from '@/assets/icons/lightening.svg?react';
 import List from '@/assets/icons/list.svg?react';
 import OrganizationTemplate from '@/assets/icons/organization-template-feature.svg?react';
 import Organization from '@/assets/icons/organization.svg?react';
@@ -130,7 +130,7 @@ export const useSidebarMenuItems = (): {
       title: 'developer',
       items: [
         {
-          Icon: Lightening,
+          Icon: Code,
           title: 'inline_hooks',
           path: 'inline-hooks',
           // Inline hooks are still under development and should be released as one feature.
