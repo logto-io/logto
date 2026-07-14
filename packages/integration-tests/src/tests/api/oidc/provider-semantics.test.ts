@@ -39,6 +39,16 @@ const revokeToken = async (application: Application, token: string, tokenType: s
     body: new URLSearchParams({ token, token_type_hint: tokenType }),
   });
 
+const expectOidcError = async (
+  request: Promise<unknown>,
+  expected: { error: string; error_description?: string }
+) => {
+  const error = await request.catch((error: unknown) => error);
+  assert(error instanceof HTTPError, new Error('Expected an OIDC HTTP error'));
+  expect(error.response.status).toBe(400);
+  await expect(error.response.json()).resolves.toMatchObject(expected);
+};
+
 const getHtmlAttribute = (element: string, attribute: string) =>
   new RegExp(`\\b${attribute}=["']([^"']*)["']`, 'i').exec(element)?.[1];
 
@@ -184,22 +194,7 @@ describe('opaque user token lifecycle', () => {
        * endpoint with `unsupported_token_type` instead of resolving to `{ active: false }` —
        * JWT access tokens are meant to be verified locally against the JWKS.
        */
-      const jwtIntrospectionError = await introspectToken(
-        application,
-        jwtAccessToken,
-        'access_token'
-      ).then(
-        () => {
-          throw new Error('Expected JWT introspection to fail');
-        },
-        (error: unknown) => error
-      );
-      assert(
-        jwtIntrospectionError instanceof HTTPError,
-        new Error('Expected JWT introspection to fail with an HTTP error')
-      );
-      expect(jwtIntrospectionError.response.status).toBe(400);
-      expect(await jwtIntrospectionError.response.json()).toMatchObject({
+      await expectOidcError(introspectToken(application, jwtAccessToken, 'access_token'), {
         error: 'unsupported_token_type',
         error_description:
           'Structured JWT Tokens cannot be introspected via the introspection_endpoint',
@@ -218,28 +213,16 @@ describe('opaque user token lifecycle', () => {
        * a refresh token was revoked. Logto SDKs only revoke refresh tokens on sign-out, so no
        * client flow relies on the old behavior.
        */
-      const refreshAfterRevocationError = await oidcApi
-        .post('token', {
+      await expectOidcError(
+        oidcApi.post('token', {
           headers: { Authorization: getAuthorizationHeader(application) },
           body: new URLSearchParams({
             grant_type: 'refresh_token',
             refresh_token: refreshToken,
           }),
-        })
-        .then(
-          () => {
-            throw new Error('Expected the sibling refresh token to be revoked');
-          },
-          (error: unknown) => error
-        );
-      assert(
-        refreshAfterRevocationError instanceof HTTPError,
-        new Error('Expected the refresh token grant to fail with an HTTP error')
+        }),
+        { error: 'invalid_grant' }
       );
-      expect(refreshAfterRevocationError.response.status).toBe(400);
-      expect(await refreshAfterRevocationError.response.json()).toMatchObject({
-        error: 'invalid_grant',
-      });
     } finally {
       await deleteResource(resource.id);
     }

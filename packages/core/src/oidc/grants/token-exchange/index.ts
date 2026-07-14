@@ -7,13 +7,13 @@
 import { buildOrganizationUrn } from '@logto/core-kit';
 import { GrantType } from '@logto/schemas';
 import { nanoid } from 'nanoid';
-import type { KoaContextWithOIDC } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 
 import { type EnvSet } from '#src/env-set/index.js';
 import { assertUserHasApplicationAccessForOidc } from '#src/oidc/application-access-control.js';
 import {
   getProviderConfiguration,
+  type GrantTypeHandler,
   resolveResource,
   validatePresence,
 } from '#src/oidc/oidc-provider-internals.js';
@@ -58,16 +58,11 @@ const requiredParameters = Object.freeze([
 ] as const) satisfies ReadonlyArray<(typeof parameters)[number]>;
 
 /* eslint-disable @silverhand/fp/no-mutation, @typescript-eslint/no-unsafe-assignment */
-/**
- * Since oidc-provider v9, grant handlers are invoked as the final step of the token endpoint
- * without a `next` callback (`@types/oidc-provider` still declares the outdated two-parameter
- * signature), so the handler only receives the context.
- */
 type Handler = (
   envSet: EnvSet,
   queries: Queries,
   applicationAccessControl: Libraries['applicationAccessControl']
-) => (ctx: KoaContextWithOIDC) => Promise<void>;
+) => GrantTypeHandler;
 
 export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx) => {
   const { client, params, requestParamScopes, provider } = ctx.oidc;

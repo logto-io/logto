@@ -21,7 +21,6 @@
 
 import { UserScope } from '@logto/core-kit';
 import { isKeyInObject } from '@silverhand/essentials';
-import type { KoaContextWithOIDC } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 
 import { type EnvSet } from '#src/env-set/index.js';
@@ -30,6 +29,7 @@ import {
   difference,
   filterClaims,
   getProviderConfiguration,
+  type GrantTypeHandler,
   resolveResource,
   revoke,
   validatePresence,
@@ -68,16 +68,11 @@ const requiredParameters = Object.freeze(['refresh_token']) satisfies ReadonlyAr
 // We have to disable the rules because the original implementation is written in JavaScript and
 // uses mutable variables.
 /* eslint-disable complexity, @silverhand/fp/no-let, @typescript-eslint/no-non-null-assertion, @silverhand/fp/no-mutation, unicorn/no-array-method-this-argument */
-/**
- * Since oidc-provider v9, grant handlers are invoked as the final step of the token endpoint
- * without a `next` callback (`@types/oidc-provider` still declares the outdated two-parameter
- * signature), so the handler only receives the context.
- */
 type Handler = (
   envSet: EnvSet,
   queries: Queries,
   applicationAccessControl: Libraries['applicationAccessControl']
-) => (ctx: KoaContextWithOIDC) => Promise<void>;
+) => GrantTypeHandler;
 
 export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx) => {
   const { client, params, requestParamScopes, provider } = ctx.oidc;
