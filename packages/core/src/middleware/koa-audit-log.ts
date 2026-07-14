@@ -119,11 +119,8 @@ export type WithLogContext<ContextT extends IRouterParamContext = IRouterParamCo
  */
 export function assertLogContext<ContextT>(ctx: ContextT): asserts ctx is ContextT & LogContext {
   if (
-    typeof ctx !== 'object' ||
-    ctx === null ||
-    !('createLog' in ctx) ||
+    !isRecord(ctx) ||
     typeof ctx.createLog !== 'function' ||
-    !('prependAllLogEntries' in ctx) ||
     typeof ctx.prependAllLogEntries !== 'function'
   ) {
     throw new TypeError('The context has not been enriched by the audit log middleware.');
