@@ -1,5 +1,6 @@
 import { appInsights } from '@logto/app-insights/node';
 import { LogtoInlineHookKey } from '@logto/schemas';
+import nock from 'nock';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -40,6 +41,7 @@ describe('InlineHookLibrary', () => {
   });
 
   afterEach(() => {
+    nock.cleanAll();
     jest.restoreAllMocks();
     jest.clearAllMocks();
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after quota tests.
@@ -262,6 +264,32 @@ describe('InlineHookLibrary', () => {
         message: 'Remote inline hook runner is not configured.',
       },
     });
+  });
+
+  it('runs the script through the regional untrusted runner endpoint', async () => {
+    const endpoint = 'https://untrusted.example.com';
+    const functionKey = 'function-key';
+    const payload = {
+      hookType: LogtoInlineHookKey.PostSignIn,
+      script: 'const runInlineHook = () => ({ action: "continue" });',
+      event: {
+        key: LogtoInlineHookKey.PostSignIn,
+      },
+    };
+    const executionResult = { action: 'continue' };
+    const remoteRunner = nock(endpoint, {
+      reqheaders: {
+        'x-functions-key': functionKey,
+      },
+    })
+      .post('/api/inline-hooks', payload)
+      .reply(200, executionResult);
+
+    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue(endpoint);
+    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get').mockReturnValue(functionKey);
+
+    await expect(library.runScriptRemotely(payload)).resolves.toEqual(executionResult);
+    expect(remoteRunner.isDone()).toBe(true);
   });
 
   it('blocks PostSignIn execution errors with the owning flow failure by default', async () => {
