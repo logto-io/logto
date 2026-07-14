@@ -9,36 +9,49 @@ import {
   isEmailBlocklistPolicyEnabled,
 } from './email-blocklist-policy.js';
 
-const invalidCustomBlockList = ['bar', 'bar@foo', '@foo', '@foo.', 'bar@foo.'];
-const validCustomBlockList = ['bar@foo.com', '@foo.com', 'abc.bar@foo.xyz', 'bar@foo.com'];
+const customListKeys = ['customAllowlist', 'customBlocklist'] as const;
+const invalidCustomEmailList = ['bar', 'bar@foo', '@foo', '@foo.', 'bar@foo.'];
+const validCustomEmailList = ['bar@foo.com', '@foo.com', 'abc.bar@foo.xyz', 'bar@foo.com'];
+
+const buildPolicyWithCustomList = (
+  key: (typeof customListKeys)[number],
+  list: string[]
+): EmailBlocklistPolicy => ({
+  [key]: list,
+});
 
 describe('parseEmailBlocklistPolicy', () => {
-  it.each(invalidCustomBlockList)(
-    'should throw error for invalid custom block list item: %s',
-    (item) => {
-      const emailBlocklistPolicy = { customBlocklist: [item] };
-      expect(() => {
-        parseEmailBlocklistPolicy(emailBlocklistPolicy);
-      }).toMatchError(
-        new RequestError({
-          code: 'sign_in_experiences.invalid_custom_email_blocklist_format',
-          items: Array.from([item]),
-          status: 400,
-        })
+  it.each(customListKeys)('should throw error for invalid %s item', (key) => {
+    const emailBlocklistPolicy = buildPolicyWithCustomList(key, invalidCustomEmailList);
+
+    expect(() => {
+      parseEmailBlocklistPolicy(emailBlocklistPolicy);
+    }).toMatchError(
+      new RequestError({
+        code: 'sign_in_experiences.invalid_custom_email_blocklist_format',
+        items: invalidCustomEmailList,
+        status: 400,
+      })
+    );
+  });
+
+  it.each(customListKeys)(
+    'should pass the validation with valid %s format and deduplicate items',
+    (key) => {
+      const parsed = parseEmailBlocklistPolicy(
+        buildPolicyWithCustomList(key, validCustomEmailList)
       );
+
+      expect(parsed).toEqual({ [key]: deduplicate(validCustomEmailList) });
     }
   );
 
-  it('should pass the validation with valid format and deduplicate items', () => {
-    const parsed = parseEmailBlocklistPolicy({ customBlocklist: validCustomBlockList });
-    expect(parsed).toEqual({ customBlocklist: deduplicate(validCustomBlockList) });
-  });
-
   it('should allow wildcard items', () => {
-    const customBlocklist = ['foo*@bar.com', '*@example.com', '@foo.*', '@*.example.com'];
-    const parsed = parseEmailBlocklistPolicy({ customBlocklist });
+    const customAllowlist = ['foo*@bar.com', '*@example.com', '@foo.*', '@*.example.com'];
+    const customBlocklist = ['foo*@bar.com', '@*.example.com'];
+    const parsed = parseEmailBlocklistPolicy({ customAllowlist, customBlocklist });
 
-    expect(parsed).toEqual({ customBlocklist });
+    expect(parsed).toEqual({ customAllowlist, customBlocklist });
   });
 });
 
@@ -157,6 +170,13 @@ describe('isEmailBlocklistPolicyEnabled', () => {
     expect(
       isEmailBlocklistPolicyEnabled({
         ...emailBlocklistPolicy,
+        customAllowlist: ['@bar.com'],
+      })
+    ).toBe(true);
+
+    expect(
+      isEmailBlocklistPolicyEnabled({
+        ...emailBlocklistPolicy,
         customBlocklist: ['@bar.com'],
       })
     ).toBe(true);
@@ -166,9 +186,14 @@ describe('isEmailBlocklistPolicyEnabled', () => {
     const emailBlocklistPolicy: EmailBlocklistPolicy = {
       blockDisposableAddresses: false,
       blockSubaddressing: false,
+      customAllowlist: [],
       customBlocklist: [],
     };
 
     expect(isEmailBlocklistPolicyEnabled(emailBlocklistPolicy)).toBe(false);
+  });
+
+  it('isEmailBlocklistPolicyEnabled should return false for an empty policy', () => {
+    expect(isEmailBlocklistPolicyEnabled({})).toBe(false);
   });
 });
