@@ -93,9 +93,12 @@ function VerificationFiles({ domain, domainId, isReadonly }: Props) {
       return t('domain.custom.verification_files.content_too_long');
     }
 
+    const result = domainVerificationFileGuard.safeParse(draft);
+
     if (
       draft.contentType === DomainVerificationFileContentType.Json &&
-      !domainVerificationFileGuard.safeParse(draft).success
+      !result.success &&
+      result.error.issues.some(({ path }) => path[0] === 'content')
     ) {
       return t('domain.custom.verification_files.invalid_json');
     }

@@ -8,9 +8,13 @@ import {
 describe('domainVerificationFilesGuard', () => {
   it.each([
     '/MP_verify_abc123.txt',
+    '/_domainconnect.txt',
+    '/-verification.txt',
     '/google-site-verification.html',
     '/.well-known/apple-developer-merchantid-domain-association',
     '/.well-known/acme-challenge/token_123',
+    '/.well-known/acme-challenge/-token_123',
+    '/.well-known/acme-challenge/_token_123',
   ])('accepts verification file path %s', (path) => {
     expect(
       domainVerificationFilesGuard.safeParse([

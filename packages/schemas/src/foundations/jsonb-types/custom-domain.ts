@@ -11,8 +11,8 @@ export const domainVerificationFilePathGuard = z
   .max(256)
   .refine(
     (value) =>
-      /^\/[\dA-Za-z][\w.-]*\.[\dA-Za-z][\w.-]*$/.test(value) ||
-      /^\/\.well-known(?:\/[\dA-Za-z][\w.-]*)+$/.test(value),
+      /^\/[\w-][\w.-]*\.[\w-][\w.-]*$/.test(value) ||
+      /^\/\.well-known(?:\/[\w-][\w.-]*)+$/.test(value),
     'The path must point to a file at the domain root or under /.well-known/.'
   );
 
