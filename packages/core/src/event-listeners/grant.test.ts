@@ -33,6 +33,7 @@ const testGrantListener = (
   const ctx = {
     ...createContextWithRouteParameters(),
     createLog: log.createLog,
+    prependAllLogEntries: log.prependAllLogEntries,
     oidc: { entities, params: parameters },
     body,
   };
@@ -166,6 +167,7 @@ describe('grantRevocationListener', () => {
     const ctx = {
       ...createContextWithRouteParameters(),
       createLog: log.createLog,
+      prependAllLogEntries: log.prependAllLogEntries,
       oidc: {
         entities: { Client: client, AccessToken: accessToken },
         params: parameters,
@@ -189,6 +191,7 @@ describe('grantRevocationListener', () => {
     const ctx = {
       ...createContextWithRouteParameters(),
       createLog: log.createLog,
+      prependAllLogEntries: log.prependAllLogEntries,
       oidc: {
         entities: {
           Client: client,

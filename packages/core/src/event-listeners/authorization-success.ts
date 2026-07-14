@@ -5,8 +5,7 @@ import type { KoaContextWithOIDC, Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { createSessionLibrary } from '#src/libraries/session/index.js';
-import { type WithAppSecretContext } from '#src/middleware/koa-app-secret-transpilation.js';
-import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
+import { assertLogContext, type LogContext } from '#src/middleware/koa-audit-log.js';
 import type Queries from '#src/tenants/Queries.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 import { stringifyError } from '#src/utils/format.js';
@@ -54,7 +53,7 @@ const getGrantIdsToRevokeForMaxAllowedGrants = ({
 };
 
 const enforceMaxAllowedGrantsRevocation = async (
-  ctx: KoaContextWithOIDC & WithLogContext & WithAppSecretContext,
+  ctx: KoaContextWithOIDC & LogContext,
   provider: Provider,
   queries: Queries
 ) => {
@@ -145,7 +144,8 @@ const enforceMaxAllowedGrantsRevocation = async (
 };
 
 export const createAuthorizationSuccessListener = (provider: Provider, queries: Queries) => {
-  return async (ctx: KoaContextWithOIDC & WithLogContext & WithAppSecretContext) => {
+  return async (ctx: KoaContextWithOIDC) => {
+    assertLogContext(ctx);
     await enforceMaxAllowedGrantsRevocation(ctx, provider, queries);
   };
 };

@@ -1,8 +1,8 @@
 import { GrantType, LogResult, token } from '@logto/schemas';
 import type { errors, KoaContextWithOIDC } from 'oidc-provider';
+import { z } from 'zod';
 
-import { type WithAppSecretContext } from '#src/middleware/koa-app-secret-transpilation.js';
-import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
+import { assertLogContext } from '#src/middleware/koa-audit-log.js';
 
 import { stringifyError } from '../utils/format.js';
 import { isEnum } from '../utils/type.js';
@@ -13,17 +13,19 @@ import { extractInteractionContext } from './utils.js';
  * @see {@link https://github.com/panva/node-oidc-provider/blob/v7.x/lib/actions/token.js#L71 Success event emission}
  * @see {@link https://github.com/panva/node-oidc-provider/blob/v7.x/lib/shared/error_handler.js OIDC Provider error handler}
  */
-export const grantListener = (
-  ctx: KoaContextWithOIDC & WithLogContext & WithAppSecretContext & { body: GrantBody },
-  error?: errors.OIDCProviderError
-) => {
+export const grantListener = (ctx: KoaContextWithOIDC, error?: errors.OIDCProviderError) => {
+  assertLogContext(ctx);
+
   const { params } = ctx.oidc;
 
   const log = ctx.createLog(
     `${token.Type.ExchangeTokenBy}.${getExchangeByType(params?.grant_type)}`
   );
 
-  const { access_token, refresh_token, id_token, scope } = ctx.body;
+  const parsedBody = grantBodyGuard.safeParse(ctx.body);
+  const { access_token, refresh_token, id_token, scope } = parsedBody.success
+    ? parsedBody.data
+    : emptyGrantBody;
   const tokenTypes = [
     access_token && token.TokenType.AccessToken,
     refresh_token && token.TokenType.RefreshToken,
@@ -40,10 +42,9 @@ export const grantListener = (
 };
 
 // The grant.revoked event is emitted at https://github.com/panva/node-oidc-provider/blob/v7.x/lib/helpers/revoke.js#L25
-export const grantRevocationListener = (
-  ctx: KoaContextWithOIDC & WithLogContext,
-  grantId: string
-) => {
+export const grantRevocationListener = (ctx: KoaContextWithOIDC, grantId: string) => {
+  assertLogContext(ctx);
+
   const {
     entities: { AccessToken, RefreshToken },
   } = ctx.oidc;
@@ -57,14 +58,20 @@ export const grantRevocationListener = (
 };
 
 /**
+ * The grant response body. Only the log-relevant fields are guarded; on the `grant.error` event
+ * the body carries an error payload instead, hence the tolerant fallback.
+ *
  * @see {@link https://github.com/panva/node-oidc-provider/tree/v7.x/lib/actions/grants grants source code} for predefined grant implementations and types.
  */
-type GrantBody = {
-  access_token?: string;
-  refresh_token?: string;
-  id_token?: string;
-  scope?: string; // AccessToken.scope
-};
+const grantBodyGuard = z.object({
+  access_token: z.string().optional(),
+  refresh_token: z.string().optional(),
+  id_token: z.string().optional(),
+  /** `AccessToken.scope` */
+  scope: z.string().optional(),
+});
+
+const emptyGrantBody: z.infer<typeof grantBodyGuard> = {};
 
 const grantTypeToExchangeByType: Record<GrantType, token.ExchangeByType> = {
   [GrantType.AuthorizationCode]: token.ExchangeByType.AuthorizationCode,
