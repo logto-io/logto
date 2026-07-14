@@ -112,6 +112,25 @@ export type WithLogContext<ContextT extends IRouterParamContext = IRouterParamCo
   ContextT & LogContext;
 
 /**
+ * Assert that the context has been enriched with {@link LogContext} by the audit log middleware.
+ * Useful where a context is statically typed without {@link LogContext} but is known to run
+ * downstream of the middleware, e.g. `oidc-provider` event listeners, whose contexts are emitted
+ * from within the middleware chain.
+ */
+export function assertLogContext<ContextT>(ctx: ContextT): asserts ctx is ContextT & LogContext {
+  if (
+    typeof ctx !== 'object' ||
+    ctx === null ||
+    !('createLog' in ctx) ||
+    typeof ctx.createLog !== 'function' ||
+    !('prependAllLogEntries' in ctx) ||
+    typeof ctx.prependAllLogEntries !== 'function'
+  ) {
+    throw new TypeError('The context has not been enriched by the audit log middleware.');
+  }
+}
+
+/**
  * The factory to create a new audit log middleware function.
  * It will inject a `createLog` function the context to enable audit logging.
  *

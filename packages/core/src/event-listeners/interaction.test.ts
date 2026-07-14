@@ -39,6 +39,7 @@ const testInteractionListener = (
   const ctx = {
     ...createContextWithRouteParameters(),
     createLog: log.createLog,
+    prependAllLogEntries: log.prependAllLogEntries,
     oidc: { entities, params: parameters },
   };
 
