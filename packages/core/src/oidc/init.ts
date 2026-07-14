@@ -473,6 +473,30 @@ export default function initOidc(
   addOidcEventListeners(tenantId, oidc, queries);
   registerGrants(oidc, envSet, queries, libraries);
 
+  /**
+   * Logto mounts the provider into its own Koa apps via `koa-mount`, which reuses the context
+   * created by the outermost Koa app, so `ctx.cookies` is bound to that app's (unset) `keys`.
+   *
+   * Before v9, oidc-provider created its own cookies instance carrying the configured
+   * `cookies.keys` for every cookie operation, so mounting worked out of the box. Since v9 it
+   * reads and writes through `ctx.cookies` directly and signed cookies would fail with
+   * ".keys required for signed cookies". Rebind `ctx.cookies` to a context created by the
+   * provider itself (a Koa app whose `keys` come from the `cookies.keys` configuration above)
+   * to restore the previous behavior.
+   */
+  oidc.use(async (ctx, next) => {
+    const { cookies } = oidc.createContext(ctx.req, ctx.res);
+    /**
+     * Match the cookie `secure` flag upgrade of the previous oidc-provider version: the provider
+     * itself may not be aware of TLS offloading while the outer app is (e.g., `trust proxy`).
+     */
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    cookies.secure ||= ctx.secure;
+    ctx.cookies = cookies;
+
+    return next();
+  });
+
   // Provide audit log context for event listeners
   oidc.use(koaAuditLog(queries));
   /**
