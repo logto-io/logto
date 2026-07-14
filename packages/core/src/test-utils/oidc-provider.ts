@@ -59,7 +59,11 @@ export const createMockProvider = (
  */
 export const createOidcContext = (override?: Partial<KoaContextWithOIDC['oidc']>) => {
   const issuer = 'https://mock-issuer.com';
-  const provider = new Provider(issuer);
+  /**
+   * Mirror the production configuration: oidc-provider v9 enables DPoP by default, and the DPoP
+   * validation helper reads headers via `ctx.get()`, which the mock context does not implement.
+   */
+  const provider = new Provider(issuer, { features: { dPoP: { enabled: false } } });
   const context: KoaContextWithOIDC = {
     ...createMockContext(),
     oidc: {

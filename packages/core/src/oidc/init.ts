@@ -178,6 +178,11 @@ export default function initOidc(
       introspection: { enabled: true },
       devInteractions: { enabled: false },
       clientCredentials: { enabled: true },
+      /**
+       * The upstream enables DPoP by default since v9. Keep it off to preserve the behavior of
+       * the previous oidc-provider version until Logto officially supports DPoP.
+       */
+      dPoP: { enabled: false },
       backchannelLogout: { enabled: true },
       deviceFlow: deviceFlowConfig,
       rpInitiatedLogout: {

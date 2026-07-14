@@ -20,7 +20,7 @@
  */
 
 import { cond } from '@silverhand/essentials';
-import type { Provider } from 'oidc-provider';
+import type { KoaContextWithOIDC } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 
 import { type EnvSet } from '#src/env-set/index.js';
@@ -41,11 +41,16 @@ export const parameters = Object.freeze(['scope', 'organization_id']);
 // We have to disable the rules because the original implementation is written in JavaScript and
 // uses mutable variables.
 /* eslint-disable @silverhand/fp/no-mutation, @typescript-eslint/no-non-null-assertion */
+/**
+ * Since oidc-provider v9, grant handlers are invoked as the final step of the token endpoint
+ * without a `next` callback (`@types/oidc-provider` still declares the outdated two-parameter
+ * signature), so the handler only receives the context.
+ */
 export const buildHandler: (
   envSet: EnvSet,
   queries: Queries
   // eslint-disable-next-line complexity
-) => Parameters<Provider['registerGrantType']>[1] = (envSet, queries) => async (ctx, next) => {
+) => (ctx: KoaContextWithOIDC) => Promise<void> = (envSet, queries) => async (ctx) => {
   const { client, params } = ctx.oidc;
   const { ClientCredentials } = ctx.oidc.provider;
 
@@ -163,7 +168,5 @@ export const buildHandler: (
     token_type: token.tokenType,
     scope: token.scope,
   };
-
-  await next();
 };
 /* eslint-enable @silverhand/fp/no-mutation, @typescript-eslint/no-non-null-assertion */
