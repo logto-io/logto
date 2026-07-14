@@ -204,7 +204,7 @@ export class InlineHookLibrary {
 
     try {
       return await got
-        .post(new URL('/api/inline-hooks/test', azureFunctionUntrustedAppEndpoint), {
+        .post(new URL('/api/inline-hooks', azureFunctionUntrustedAppEndpoint), {
           json: payload,
           headers: {
             'x-functions-key': azureFunctionUntrustedAppKey,
