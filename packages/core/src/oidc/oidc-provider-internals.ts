@@ -16,4 +16,4 @@ export { default as dpopValidate } from 'oidc-provider/lib/helpers/validate_dpop
 export { default as validatePresence } from 'oidc-provider/lib/helpers/validate_presence.js';
 export { default as checkResource } from 'oidc-provider/lib/shared/check_resource.js';
 
-export const getProviderConfiguration = (provider: Provider) => instance(provider).configuration();
+export const getProviderConfiguration = (provider: Provider) => instance(provider).configuration;

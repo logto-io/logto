@@ -462,7 +462,6 @@ export default function initOidc(
       required: (ctx, client) => {
         return client.clientAuthMethod !== 'client_secret_basic';
       },
-      methods: ['S256'],
     },
   });
 

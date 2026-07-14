@@ -14,6 +14,6 @@ declare module 'oidc-provider/lib/helpers/weak_cache.js' {
   };
 
   export default function instance(ctx: Provider): {
-    configuration: () => RequiredConfiguration;
+    configuration: RequiredConfiguration;
   };
 }
