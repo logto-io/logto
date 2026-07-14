@@ -111,6 +111,16 @@ const getRouteHandler = (router: RouterLike): RouteHandler => {
   return handler as RouteHandler;
 };
 
+const getSentinelPromise = async () => {
+  const sentinelPromise = withSentinel.mock.calls[0]?.[1];
+
+  if (!sentinelPromise) {
+    throw new TypeError('Sentinel promise was not captured');
+  }
+
+  return sentinelPromise;
+};
+
 const runHook = jest.fn();
 const findUserByEmail = jest.fn();
 const createUser = jest.fn();
@@ -228,7 +238,7 @@ describe('password verification route PostFirstFactorVerification fallback', () 
     expect(ctx.status).toBe(200);
   });
 
-  it('preserves invalid credentials when the hook runtime returns no result', async () => {
+  it('wraps local failure and hook-declined invalid credentials in one Sentinel promise', async () => {
     const handler = registerRoute();
     const ctx = createContext();
 
@@ -238,6 +248,8 @@ describe('password verification route PostFirstFactorVerification fallback', () 
       invalidCredentialsError
     );
 
+    expect(withSentinel).toHaveBeenCalledTimes(1);
+    await expect(getSentinelPromise()).rejects.toBe(invalidCredentialsError);
     expect(runHook).toHaveBeenCalledWith({
       key: LogtoInlineHookKey.PostFirstFactorVerification,
       event: {
@@ -270,7 +282,7 @@ describe('password verification route PostFirstFactorVerification fallback', () 
     expect(updateUser).not.toHaveBeenCalled();
   });
 
-  it('creates a user from a validated hook result when the local user is missing', async () => {
+  it('wraps local failure and hook-created user success in one Sentinel promise', async () => {
     const handler = registerRoute();
     const ctx = createContext();
 
@@ -283,6 +295,10 @@ describe('password verification route PostFirstFactorVerification fallback', () 
 
     await handler(ctx, jest.fn().mockImplementation(resolveVoid));
 
+    expect(withSentinel).toHaveBeenCalledTimes(1);
+    await expect(getSentinelPromise()).resolves.toEqual(
+      expect.objectContaining({ hookResult: { action: 'createUser', user: {} } })
+    );
     expect(appendPasswordPayloadToInlineHookProvisioningProfile).toHaveBeenCalledWith(
       {
         primaryEmail: identifier.value,
