@@ -69,6 +69,7 @@ import {
   filterResourceScopesForTheThirdPartyApplication,
 } from './resource.js';
 import { getAcceptedUserClaims, getUserClaimsData } from './scope.js';
+import { installWildcardRedirectUriMatching } from './wildcard-redirect-uri.js';
 
 // Temporarily removed 'EdDSA' since it's not supported by browser yet
 const supportedSigningAlgs = Object.freeze(['RS256', 'PS256', 'ES256', 'ES384', 'ES512'] as const);
@@ -171,7 +172,19 @@ export default function initOidc(
       introspectionSigningAlgValues: [...supportedSigningAlgs],
     },
     conformIdTokenClaims: false,
-    allowWildcardRedirectUris: true,
+    /**
+     * Oidc-provider v9 injects an SSRF-protecting undici dispatcher into outgoing requests
+     * (backchannel logout, client `jwks_uri`, `sector_identifier_uri`, ...) that destroys
+     * connections resolving to special-use addresses such as loopback and private ranges.
+     * The previous version placed no such restriction, and self-hosted Logto deployments
+     * commonly reach RPs on private networks — drop the dispatcher to keep the outgoing
+     * request behavior unchanged. Revisit if we want the hardening for cloud.
+     */
+    fetch: async (input, init) => {
+      // eslint-disable-next-line no-restricted-syntax -- The `dispatcher` key is an undici extension absent from `RequestInit`
+      const { dispatcher, ...safeInit } = (init ?? {}) as RequestInit & { dispatcher?: unknown };
+      return fetch(input, safeInit);
+    },
     features: {
       userinfo: { enabled: true },
       revocation: { enabled: true },
@@ -470,6 +483,7 @@ export default function initOidc(
     },
   });
 
+  installWildcardRedirectUriMatching(oidc);
   addOidcEventListeners(tenantId, oidc, queries);
   registerGrants(oidc, envSet, queries, libraries);
 
@@ -573,6 +587,25 @@ export default function initOidc(
   if (EnvSet.values.isCloud) {
     oidc.use(koaTokenUsageGuard(subscription));
   }
+
+  /**
+   * Restore the pre-v9 behavior for unrecognized provider routes. Until v9, oidc-provider
+   * installed a global catcher that turned router misses into an `InvalidRequest` JSON error;
+   * v9 lets them fall through the koa-mount to the outer app, which renders a plain-text 404.
+   *
+   * Registered last so `Provider.use()` splices it directly around the internal router, where
+   * `ctx.path` is still the mount-relative path the original error message carried.
+   */
+  oidc.use(async (ctx, next) => {
+    await next();
+
+    if (ctx.status === 404 && ctx.message === 'Not Found') {
+      throw new errors.InvalidRequest(
+        `unrecognized route or not allowed method (${ctx.method} on ${ctx.path})`,
+        404
+      );
+    }
+  });
 
   return oidc;
 }

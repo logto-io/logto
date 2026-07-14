@@ -93,7 +93,6 @@ describe('OIDC discovery', () => {
         "issuer": "<logto-url>/oidc",
         "jwks_uri": "<logto-url>/oidc/jwks",
         "pushed_authorization_request_endpoint": "<logto-url>/oidc/request",
-        "request_parameter_supported": false,
         "request_uri_parameter_supported": false,
         "response_modes_supported": [
           "form_post",
@@ -137,6 +136,7 @@ describe('OIDC discovery', () => {
           "RS256",
           "PS256",
           "ES256",
+          "Ed25519",
           "EdDSA",
         ],
         "userinfo_endpoint": "<logto-url>/oidc/me",

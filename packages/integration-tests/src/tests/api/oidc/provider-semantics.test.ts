@@ -4,7 +4,7 @@ import { ApplicationType, type Application, defaultTenantId } from '@logto/schem
 import { formUrlEncodedHeaders } from '@logto/shared';
 import { assert, assertEnv, noop } from '@silverhand/essentials';
 import { createInterceptorsPreset, createPool, sql, type DatabasePool } from '@silverhand/slonik';
-import ky from 'ky';
+import ky, { HTTPError } from 'ky';
 
 import { oidcApi } from '#src/api/api.js';
 import { createApplication, deleteApplication } from '#src/api/application.js';
@@ -179,8 +179,30 @@ describe('opaque user token lifecycle', () => {
         token_type: 'Bearer',
       });
       /* eslint-enable @typescript-eslint/no-unsafe-assignment */
-      await expect(introspectToken(application, jwtAccessToken, 'access_token')).resolves.toEqual({
-        active: false,
+      /**
+       * Since oidc-provider v9 (9.3.0), structured JWTs are rejected at the introspection
+       * endpoint with `unsupported_token_type` instead of resolving to `{ active: false }` —
+       * JWT access tokens are meant to be verified locally against the JWKS.
+       */
+      const jwtIntrospectionError = await introspectToken(
+        application,
+        jwtAccessToken,
+        'access_token'
+      ).then(
+        () => {
+          throw new Error('Expected JWT introspection to fail');
+        },
+        (error: unknown) => error
+      );
+      assert(
+        jwtIntrospectionError instanceof HTTPError,
+        new Error('Expected JWT introspection to fail with an HTTP error')
+      );
+      expect(jwtIntrospectionError.response.status).toBe(400);
+      expect(await jwtIntrospectionError.response.json()).toMatchObject({
+        error: 'unsupported_token_type',
+        error_description:
+          'Structured JWT Tokens cannot be introspected via the introspection_endpoint',
       });
 
       await revokeToken(application, opaqueAccessToken, 'access_token');
