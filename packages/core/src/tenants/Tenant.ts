@@ -144,7 +144,6 @@ export default class Tenant implements TenantContext {
     const provider = initOidc(id, envSet, queries, libraries, logtoConfigs, subscription);
 
     app.use(koaDeviceFlowShortcut());
-    // Since oidc-provider v9, the Provider instance is the Koa app itself (`.app` is deprecated).
     app.use(mount('/oidc', provider));
 
     const tenantContext: TenantContext = {

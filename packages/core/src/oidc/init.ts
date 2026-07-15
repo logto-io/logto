@@ -29,7 +29,9 @@ import koaAppSecretTranspilation from '#src/middleware/koa-app-secret-transpilat
 import koaAuditLog, { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import koaJwksCacheControl from '#src/middleware/koa-jwks-cache-control.js';
+import koaOidcCookies from '#src/middleware/koa-oidc-cookies.js';
 import koaOidcPostToGet from '#src/middleware/koa-oidc-post-to-get.js';
+import koaOidcUnrecognizedRoute from '#src/middleware/koa-oidc-unrecognized-route.js';
 import koaResourceParam from '#src/middleware/koa-resource-param.js';
 import postgresAdapter from '#src/oidc/adapter.js';
 import {
@@ -60,6 +62,7 @@ import {
   getExtraTokenClaimsForOrganizationApiResource,
   getExtraTokenClaimsForTokenExchange,
 } from './extra-token-claims.js';
+import fetchWithoutSsrfDispatcher from './fetch.js';
 import { registerGrants } from './grants/index.js';
 import {
   findResource,
@@ -172,19 +175,7 @@ export default function initOidc(
       introspectionSigningAlgValues: [...supportedSigningAlgs],
     },
     conformIdTokenClaims: false,
-    /**
-     * Oidc-provider v9 injects an SSRF-protecting undici dispatcher into outgoing requests
-     * (backchannel logout, client `jwks_uri`, `sector_identifier_uri`, ...) that destroys
-     * connections resolving to special-use addresses such as loopback and private ranges.
-     * The previous version placed no such restriction, and self-hosted Logto deployments
-     * commonly reach RPs on private networks — drop the dispatcher to keep the outgoing
-     * request behavior unchanged. Revisit if we want the hardening for cloud.
-     */
-    fetch: async (input, init) => {
-      // eslint-disable-next-line no-restricted-syntax -- The `dispatcher` key is an undici extension absent from `RequestInit`
-      const { dispatcher, ...safeInit } = (init ?? {}) as RequestInit & { dispatcher?: unknown };
-      return fetch(input, safeInit);
-    },
+    fetch: fetchWithoutSsrfDispatcher,
     features: {
       userinfo: { enabled: true },
       revocation: { enabled: true },
@@ -487,29 +478,8 @@ export default function initOidc(
   addOidcEventListeners(tenantId, oidc, queries);
   registerGrants(oidc, envSet, queries, libraries);
 
-  /**
-   * Logto mounts the provider into its own Koa apps via `koa-mount`, which reuses the context
-   * created by the outermost Koa app, so `ctx.cookies` is bound to that app's (unset) `keys`.
-   *
-   * Before v9, oidc-provider created its own cookies instance carrying the configured
-   * `cookies.keys` for every cookie operation, so mounting worked out of the box. Since v9 it
-   * reads and writes through `ctx.cookies` directly and signed cookies would fail with
-   * ".keys required for signed cookies". Rebind `ctx.cookies` to a context created by the
-   * provider itself (a Koa app whose `keys` come from the `cookies.keys` configuration above)
-   * to restore the previous behavior.
-   */
-  oidc.use(async (ctx, next) => {
-    const { cookies } = oidc.createContext(ctx.req, ctx.res);
-    /**
-     * Match the cookie `secure` flag upgrade of the previous oidc-provider version: the provider
-     * itself may not be aware of TLS offloading while the outer app is (e.g., `trust proxy`).
-     */
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    cookies.secure ||= ctx.secure;
-    ctx.cookies = cookies;
-
-    return next();
-  });
+  // Register first so all downstream cookie operations go through the rebound instance
+  oidc.use(koaOidcCookies(oidc));
 
   // Provide audit log context for event listeners
   oidc.use(koaAuditLog(queries));
@@ -588,24 +558,8 @@ export default function initOidc(
     oidc.use(koaTokenUsageGuard(subscription));
   }
 
-  /**
-   * Restore the pre-v9 behavior for unrecognized provider routes. Until v9, oidc-provider
-   * installed a global catcher that turned router misses into an `InvalidRequest` JSON error;
-   * v9 lets them fall through the koa-mount to the outer app, which renders a plain-text 404.
-   *
-   * Registered last so `Provider.use()` splices it directly around the internal router, where
-   * `ctx.path` is still the mount-relative path the original error message carried.
-   */
-  oidc.use(async (ctx, next) => {
-    await next();
-
-    if (ctx.status === 404 && ctx.message === 'Not Found') {
-      throw new errors.InvalidRequest(
-        `unrecognized route or not allowed method (${ctx.method} on ${ctx.path})`,
-        404
-      );
-    }
-  });
+  // Register last so it splices directly around the provider's internal router
+  oidc.use(koaOidcUnrecognizedRoute());
 
   return oidc;
 }
