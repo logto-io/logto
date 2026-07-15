@@ -22,8 +22,12 @@ import useGlobalRedirectTo from './use-global-redirect-to';
 import useSubmitInteractionErrorHandler from './use-submit-interaction-error-handler';
 
 const usePasswordSignIn = () => {
-  const [errorMessage, setErrorMessage] = useState<string>();
-  const { onSubmit: checkSingleSignOn } = useCheckSingleSignOn();
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState<string>();
+  const {
+    onSubmit: checkSingleSignOn,
+    errorMessage: singleSignOnErrorMessage,
+    clearErrorMessage: clearSingleSignOnErrorMessage,
+  } = useCheckSingleSignOn();
   const redirectTo = useGlobalRedirectTo();
   const { executeCaptcha } = useContext(CaptchaContext);
 
@@ -36,8 +40,9 @@ const usePasswordSignIn = () => {
     useContext(UserInteractionContext);
 
   const clearErrorMessage = useCallback(() => {
-    setErrorMessage('');
-  }, []);
+    setPasswordErrorMessage('');
+    clearSingleSignOnErrorMessage();
+  }, [clearSingleSignOnErrorMessage]);
 
   const handleError = useErrorHandler();
   const asyncSignIn = useApi(signInWithPasswordIdentifier);
@@ -54,7 +59,7 @@ const usePasswordSignIn = () => {
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
       'session.invalid_credentials': (error) => {
-        setErrorMessage(error.message);
+        setPasswordErrorMessage(error.message);
       },
       ...conditional(
         isForgotPasswordEnabled && {
@@ -107,7 +112,8 @@ const usePasswordSignIn = () => {
   );
 
   return {
-    errorMessage,
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    errorMessage: singleSignOnErrorMessage || passwordErrorMessage,
     clearErrorMessage,
     onSubmit,
   };

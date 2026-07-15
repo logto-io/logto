@@ -1,6 +1,6 @@
 import { AgreeToTermsPolicy, type SignIn } from '@logto/schemas';
 import classNames from 'classnames';
-import { useCallback, useContext, useEffect, useMemo } from 'react';
+import { useCallback, useContext, useMemo } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -11,7 +11,6 @@ import { SmartInputField } from '@/components/InputFields';
 import CaptchaBox from '@/containers/CaptchaBox';
 import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
 import usePrefilledIdentifier from '@/hooks/use-prefilled-identifier';
-import useSignInFormError from '@/hooks/use-sign-in-form-error';
 import useSingleSignOnWatch from '@/hooks/use-single-sign-on-watch';
 import useTerms from '@/hooks/use-terms';
 import Button from '@/shared/components/Button';
@@ -36,8 +35,6 @@ type FormState = {
 const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
   const { t } = useTranslation();
   const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit(signInMethods);
-  const { errorMessage: callbackErrorMessage, clearErrorMessage: clearCallbackErrorMessage } =
-    useSignInFormError();
   const { termsValidation, agreeToTermsPolicy } = useTerms();
   const { setIdentifierInputValue } = useContext(UserInteractionContext);
   const { isPasskeyFlowProcessing } = useContext(WebAuthnContext);
@@ -55,7 +52,7 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
     watch,
     handleSubmit,
     control,
-    formState: { errors, isDirty, isValid, isSubmitting },
+    formState: { errors, isSubmitting },
   } = useForm<FormState>({
     reValidateMode: 'onBlur',
     defaultValues: {
@@ -68,18 +65,6 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
     watch('identifier')
   );
 
-  useEffect(() => {
-    if (isDirty) {
-      clearCallbackErrorMessage();
-    }
-  }, [clearCallbackErrorMessage, isDirty]);
-
-  useEffect(() => {
-    if (!isValid) {
-      clearErrorMessage();
-    }
-  }, [clearErrorMessage, isValid]);
-
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
       if (isPasskeyFlowProcessing) {
@@ -87,7 +72,6 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
       }
 
       clearErrorMessage();
-      clearCallbackErrorMessage();
 
       void handleSubmit(async ({ identifier: { type, value } }) => {
         if (!type) {
@@ -111,7 +95,6 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
     },
     [
       agreeToTermsPolicy,
-      clearCallbackErrorMessage,
       clearErrorMessage,
       handleSubmit,
       navigateToSingleSignOn,
@@ -124,7 +107,11 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
   );
 
   return (
-    <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
+    <form
+      className={classNames(styles.form, className)}
+      onChange={clearErrorMessage}
+      onSubmit={onSubmitHandler}
+    >
       <Controller
         control={control}
         name="identifier"
@@ -154,11 +141,7 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
         )}
       />
 
-      {(callbackErrorMessage ?? errorMessage) && (
-        <ErrorMessage className={styles.formErrors}>
-          {callbackErrorMessage ?? errorMessage}
-        </ErrorMessage>
-      )}
+      {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 
       {showSingleSignOnForm && (
         <div className={styles.message}>{t('description.single_sign_on_enabled')}</div>

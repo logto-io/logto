@@ -1,6 +1,6 @@
 import { AgreeToTermsPolicy, type SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
-import { useCallback, useContext, useEffect } from 'react';
+import { useCallback, useContext } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -14,7 +14,6 @@ import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
 import usePasswordSignIn from '@/hooks/use-password-sign-in';
 import usePrefilledIdentifier from '@/hooks/use-prefilled-identifier';
 import { useForgotPasswordSettings } from '@/hooks/use-sie';
-import useSignInFormError from '@/hooks/use-sign-in-form-error';
 import useSingleSignOnWatch from '@/hooks/use-single-sign-on-watch';
 import useTerms from '@/hooks/use-terms';
 import Button from '@/shared/components/Button';
@@ -40,8 +39,6 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
   const { t } = useTranslation();
 
   const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn();
-  const { errorMessage: callbackErrorMessage, clearErrorMessage: clearCallbackErrorMessage } =
-    useSignInFormError();
   const { isForgotPasswordEnabled } = useForgotPasswordSettings();
   const { termsValidation, agreeToTermsPolicy } = useTerms();
   const { setIdentifierInputValue } = useContext(UserInteractionContext);
@@ -53,7 +50,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
     register,
     handleSubmit,
     control,
-    formState: { errors, isDirty, isValid, isSubmitting },
+    formState: { errors, isSubmitting },
   } = useForm<FormState>({
     reValidateMode: 'onBlur',
     defaultValues: {
@@ -66,12 +63,6 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
     watch('identifier')
   );
 
-  useEffect(() => {
-    if (isDirty) {
-      clearCallbackErrorMessage();
-    }
-  }, [clearCallbackErrorMessage, isDirty]);
-
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
       if (isPasskeyFlowProcessing) {
@@ -79,7 +70,6 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
       }
 
       clearErrorMessage();
-      clearCallbackErrorMessage();
 
       await handleSubmit(async ({ identifier: { type, value }, password }) => {
         if (!type) {
@@ -106,7 +96,6 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
     },
     [
       agreeToTermsPolicy,
-      clearCallbackErrorMessage,
       clearErrorMessage,
       handleSubmit,
       navigateToSingleSignOn,
@@ -118,14 +107,12 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
     ]
   );
 
-  useEffect(() => {
-    if (!isValid) {
-      clearErrorMessage();
-    }
-  }, [clearErrorMessage, isValid]);
-
   return (
-    <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
+    <form
+      className={classNames(styles.form, className)}
+      onChange={clearErrorMessage}
+      onSubmit={onSubmitHandler}
+    >
       <Controller
         control={control}
         name="identifier"
@@ -167,11 +154,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
         />
       )}
 
-      {(callbackErrorMessage ?? errorMessage) && (
-        <ErrorMessage className={styles.formErrors}>
-          {callbackErrorMessage ?? errorMessage}
-        </ErrorMessage>
-      )}
+      {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 
       {isForgotPasswordEnabled && !showSingleSignOnForm && (
         <ForgotPasswordLink

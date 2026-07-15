@@ -18,7 +18,11 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
   const { setToast } = useToast();
   const { t } = useTranslation();
   const { ssoConnectors, passkeySignIn } = useSieMethods();
-  const { onSubmit: checkSingleSignOn } = useCheckSingleSignOn();
+  const {
+    onSubmit: checkSingleSignOn,
+    errorMessage: singleSignOnErrorMessage,
+    clearErrorMessage: clearSingleSignOnErrorMessage,
+  } = useCheckSingleSignOn();
   const { setIdentifierInputValue } = useContext(UserInteractionContext);
   const { startProcessing: startIdentifierPasskeySignInProcessing } =
     useStartIdentifierPasskeySignInProcessing({
@@ -32,10 +36,15 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
   }, [navigate]);
 
   const {
-    errorMessage,
-    clearErrorMessage,
+    errorMessage: sendVerificationCodeErrorMessage,
+    clearErrorMessage: clearSendVerificationCodeErrorMessage,
     onSubmit: sendVerificationCode,
   } = useSendVerificationCode(UserFlow.SignIn);
+
+  const clearErrorMessage = useCallback(() => {
+    clearSingleSignOnErrorMessage();
+    clearSendVerificationCodeErrorMessage();
+  }, [clearSendVerificationCodeErrorMessage, clearSingleSignOnErrorMessage]);
 
   const onSubmit = useCallback(
     async (identifier: SignInIdentifier, value: string) => {
@@ -117,7 +126,8 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
   );
 
   return {
-    errorMessage,
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    errorMessage: singleSignOnErrorMessage || sendVerificationCodeErrorMessage,
     clearErrorMessage,
     onSubmit,
   };

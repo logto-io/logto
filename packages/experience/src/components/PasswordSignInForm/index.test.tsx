@@ -12,7 +12,6 @@ import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider
 import { mockSignInExperienceSettings, mockSsoConnectors } from '@/__mocks__/logto';
 import { signInWithPasswordIdentifier } from '@/apis/experience';
 import useSessionStorage, { StorageKeys } from '@/hooks/use-session-storages';
-import { getSignInFormErrorState } from '@/hooks/use-sign-in-form-error';
 import type { SignInExperienceResponse } from '@/types';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
@@ -82,7 +81,7 @@ describe('UsernamePasswordSignInForm', () => {
         initialEntries: [
           {
             pathname: `/${experience.routes.signIn}`,
-            state: getSignInFormErrorState(errorMessage),
+            state: { errorMessage },
           },
         ],
       }

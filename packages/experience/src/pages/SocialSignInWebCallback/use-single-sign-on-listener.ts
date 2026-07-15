@@ -11,7 +11,6 @@ import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import useRedirectCallbackValidation from '@/hooks/use-redirect-callback-validation';
 import { useSieMethods } from '@/hooks/use-sie';
-import { getSignInFormErrorState } from '@/hooks/use-sign-in-form-error';
 import useTerms from '@/hooks/use-terms';
 import useToast from '@/hooks/use-toast';
 import { parseQueryParameters } from '@/utils';
@@ -108,7 +107,7 @@ const useSingleSignOnListener = (connectorId: string) => {
         await handleError(error, {
           'user.suspended': async (error) => {
             navigate('/' + experience.routes.signIn, {
-              state: getSignInFormErrorState(error.message),
+              state: { errorMessage: error.message },
             });
           },
           'user.sso_identity_not_exist': async (error) => {
