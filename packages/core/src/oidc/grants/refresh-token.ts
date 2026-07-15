@@ -229,7 +229,6 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx)
     throw new InvalidRequest('authorization_details is unsupported for this refresh token');
   }
 
-  /* === RFC 0001 === */
   await assertUserHasApplicationAccessForOidc(
     appAccess,
     client.clientId,
@@ -237,6 +236,7 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx)
     client.metadata().appLevelAccessControlEnabled
   );
 
+  /* === RFC 0001 === */
   const { organizationId } = await checkOrganizationAccess(ctx, queries, account);
 
   if (

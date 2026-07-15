@@ -10,7 +10,6 @@ export { default as difference } from 'oidc-provider/lib/helpers/_/difference.js
 export { default as certificateThumbprint } from 'oidc-provider/lib/helpers/certificate_thumbprint.js';
 export { checkAttestBinding } from 'oidc-provider/lib/helpers/check_attest_binding.js';
 export { default as epochTime } from 'oidc-provider/lib/helpers/epoch_time.js';
-export { default as filterClaims } from 'oidc-provider/lib/helpers/filter_claims.js';
 export { pluralize } from 'oidc-provider/lib/helpers/formatters.js';
 export {
   applyMtlsBinding,
