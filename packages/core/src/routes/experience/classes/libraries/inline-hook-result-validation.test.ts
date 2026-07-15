@@ -240,9 +240,7 @@ describe('validatePostSignInHookResult', () => {
     (result) => {
       expect(
         validatePostSignInHookResult({
-          event: {
-            user: hookUser,
-          },
+          userId: hookUser.id,
           result,
         })
       ).toEqual(continueResult);
@@ -252,9 +250,7 @@ describe('validatePostSignInHookResult', () => {
   it('accepts updateUser with a sanitized provisioning profile', () => {
     expect(
       validatePostSignInHookResult({
-        event: {
-          user: hookUser,
-        },
+        userId: hookUser.id,
         result: {
           action: 'updateUser',
           user: {
@@ -296,15 +292,14 @@ describe('validatePostSignInHookResult', () => {
     { action: 'denyAccess', user: { name: 'Jane Doe' } },
     { action: 'continue' },
     { action: 'continue', user: { name: 'Jane Doe' } },
+    { ignored: true },
     { user: { name: 'Jane Doe' } },
     { action: 'updateUser', user: null },
     { action: 'updateUser', user: { id: 'not-allowed' } },
   ])('throws verification failure for invalid result %#', (result) => {
     expect(() =>
       validatePostSignInHookResult({
-        event: {
-          user: hookUser,
-        },
+        userId: hookUser.id,
         result,
       })
     ).toMatchError(new RequestError({ code: 'session.verification_failed', status: 400 }));
