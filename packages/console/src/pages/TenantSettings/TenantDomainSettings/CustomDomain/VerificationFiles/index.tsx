@@ -110,7 +110,7 @@ function VerificationFiles({ domain, domainId, isReadonly }: Props) {
     const updatedFiles = await api
       .put(endpoint, { json: { verificationFiles: nextFiles } })
       .json<DomainVerificationFile[]>();
-    await mutate(updatedFiles, false);
+    await mutate(updatedFiles, { revalidate: false });
   };
 
   const handleSave = async () => {
