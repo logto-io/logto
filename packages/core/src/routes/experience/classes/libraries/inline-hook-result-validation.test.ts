@@ -2,6 +2,7 @@ import { SignInIdentifier, type HookUser, type JwtCustomizerUserContext } from '
 
 import { mockUser } from '#src/__mocks__/user.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { runScriptFunctionInLocalVm } from '#src/utils/local-vm/index.js';
 
 import {
   type ValidatedPostFirstFactorVerificationHookResult,
@@ -247,6 +248,17 @@ describe('validatePostSignInHookResult', () => {
     }
   );
 
+  it('accepts an empty plain object returned from a separate VM realm as a no-op', async () => {
+    const result = await runScriptFunctionInLocalVm(
+      'const runInlineHook = () => ({})',
+      'runInlineHook',
+      {}
+    );
+
+    expect(result).toEqual({});
+    expect(validatePostSignInHookResult({ userId: hookUser.id, result })).toEqual(continueResult);
+  });
+
   it('accepts updateUser with a sanitized provisioning profile', () => {
     expect(
       validatePostSignInHookResult({
@@ -292,6 +304,13 @@ describe('validatePostSignInHookResult', () => {
     { action: 'denyAccess', user: { name: 'Jane Doe' } },
     { action: 'continue' },
     { action: 'continue', user: { name: 'Jane Doe' } },
+    new Date(),
+    new Map(),
+    new (class {
+      isInvalidResult() {
+        return true;
+      }
+    })(),
     { ignored: true },
     { user: { name: 'Jane Doe' } },
     { action: 'updateUser', user: null },
