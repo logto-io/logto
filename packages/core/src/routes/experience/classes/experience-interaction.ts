@@ -290,7 +290,7 @@ export default class ExperienceInteraction {
       if (verificationRecord.type !== VerificationType.EnterpriseSso) {
         await this.signInExperienceValidator.guardSsoOnlyEmailIdentifier(verificationRecord);
       }
-      await this.signInExperienceValidator.guardEmailBlocklist(verificationRecord);
+      await this.signInExperienceValidator.guardEmailAccessPolicy(verificationRecord);
 
       const identifierProfile = await getNewUserProfileFromVerificationRecord(verificationRecord);
 

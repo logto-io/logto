@@ -138,6 +138,72 @@ describe('validateEmailAgainstBlocklistPolicy', () => {
     }
   });
 
+  it('should keep existing behavior when the custom allowlist is disabled', async () => {
+    await expect(
+      validateEmailAgainstBlocklistPolicy({ customAllowlist: [] }, 'foo@bar.com')
+    ).resolves.not.toThrow();
+  });
+
+  it('should throw if the email address does not match the custom allowlist', async () => {
+    const email = 'foo@bar.com';
+
+    await expect(
+      validateEmailAgainstBlocklistPolicy({ customAllowlist: ['@allowed.com'] }, email)
+    ).rejects.toMatchError(
+      new RequestError({
+        code: 'session.email_blocklist.email_not_allowed',
+        status: 422,
+        email,
+      })
+    );
+  });
+
+  it.each([
+    { customAllowlist: ['Foo@Bar.com'], email: 'foo@bar.com' },
+    { customAllowlist: ['@bar.com'], email: 'foo@Bar.com' },
+    { customAllowlist: ['foo*@bar.com'], email: 'FooBar@bar.com' },
+    { customAllowlist: ['@*.example.com'], email: 'test@Foo.example.com' },
+  ])('should pass if the email address matches the custom allowlist: %p', async (policy) => {
+    await expect(validateEmailAgainstBlocklistPolicy(policy, policy.email)).resolves.not.toThrow();
+  });
+
+  it('should still apply custom blocklist after the email address matches the custom allowlist', async () => {
+    const email = 'foo@bar.com';
+
+    await expect(
+      validateEmailAgainstBlocklistPolicy(
+        {
+          customAllowlist: ['@bar.com'],
+          customBlocklist: ['foo@bar.com'],
+        },
+        email
+      )
+    ).rejects.toMatchError(
+      new RequestError({
+        code: 'session.email_blocklist.email_not_allowed',
+        status: 422,
+        email,
+      })
+    );
+  });
+
+  it('should still apply subaddressing block after the email address matches the custom allowlist', async () => {
+    await expect(
+      validateEmailAgainstBlocklistPolicy(
+        {
+          blockSubaddressing: true,
+          customAllowlist: ['@bar.com'],
+        },
+        'foo+tag@bar.com'
+      )
+    ).rejects.toMatchError(
+      new RequestError({
+        code: 'session.email_blocklist.email_subaddressing_not_allowed',
+        status: 422,
+      })
+    );
+  });
+
   it('should pass the blocklist policy validation', async () => {
     await expect(
       validateEmailAgainstBlocklistPolicy(emailBlocklistPolicy, 'test@bar.com')

@@ -118,7 +118,7 @@ export class Profile {
     // Guard SSO only email identifier in verification record  (EmailVerificationCode, Social)
     await this.signInExperienceValidator.guardSsoOnlyEmailIdentifier(verificationRecord);
 
-    await this.signInExperienceValidator.guardEmailBlocklist(verificationRecord);
+    await this.signInExperienceValidator.guardEmailAccessPolicy(verificationRecord);
 
     log?.append({
       verification: verificationRecord.toJson(),

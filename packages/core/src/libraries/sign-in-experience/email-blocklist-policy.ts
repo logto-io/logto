@@ -116,11 +116,12 @@ const validateDisposableEmailDomain = async (email: string) => {
 };
 
 /**
- * Guard the email address is not in the sign-in experience blocklist. *
+ * Guard the email address with the sign-in experience email access policy.
  *
  * @remarks
+ * - guard custom allowlist if provided
  * - guard disposable email domain if enabled
- * - guard email subaddessing if enabled
+ * - guard email subaddressing if enabled
  * - guard custom email address/domain if provided
  *
  * @remarks
@@ -132,10 +133,27 @@ export const validateEmailAgainstBlocklistPolicy = async (
   emailBlocklistPolicy: EmailBlocklistPolicy,
   email: string
 ) => {
-  const { customBlocklist, blockDisposableAddresses, blockSubaddressing } = emailBlocklistPolicy;
+  const { customAllowlist, customBlocklist, blockDisposableAddresses, blockSubaddressing } =
+    emailBlocklistPolicy;
   const domain = email.split('@')[1];
 
   assertThat(domain, new RequestError('session.email_blocklist.invalid_email'));
+
+  // Guard custom allowlist if provided
+  if (customAllowlist?.length) {
+    const isCustomAllowlisted = customAllowlist.some((item) =>
+      matchesEmailBlocklistItem(item, email)
+    );
+
+    assertThat(
+      isCustomAllowlisted,
+      new RequestError({
+        code: 'session.email_blocklist.email_not_allowed',
+        status: 422,
+        email,
+      })
+    );
+  }
 
   // Guard email subaddressing if enabled
   if (blockSubaddressing) {
