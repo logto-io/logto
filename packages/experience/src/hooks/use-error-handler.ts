@@ -4,6 +4,7 @@ import { HTTPError, TimeoutError } from 'ky';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import useNavigateWithPreservedSearchParams from './use-navigate-with-preserved-search-params';
 import useToast from './use-toast';
 
 export type ErrorHandlers = {
@@ -13,9 +14,24 @@ export type ErrorHandlers = {
   global?: (error: RequestErrorBody) => void | Promise<void>;
 };
 
+/**
+ * Built-in handlers for terminal error codes that should land on a dedicated page
+ * instead of a transient toast. Specific per-call handlers still take precedence;
+ * these only run when the caller did not handle the code and before falling back
+ * to `global` / toast.
+ */
+const getTerminalErrorPath = (code: string): string | undefined => {
+  if (code === 'user.suspended') {
+    return '/account-suspended';
+  }
+
+  return undefined;
+};
+
 const useErrorHandler = () => {
   const { t } = useTranslation();
   const { setToast } = useToast();
+  const navigate = useNavigateWithPreservedSearchParams();
 
   const handleError = useCallback(
     async (error: unknown, errorHandlers?: ErrorHandlers) => {
@@ -24,8 +40,15 @@ const useErrorHandler = () => {
           const logtoError = await error.response.json<RequestErrorBody>();
 
           const { code, message } = logtoError;
+          const terminalPath = getTerminalErrorPath(code);
 
-          const handler = errorHandlers?.[code] ?? errorHandlers?.global;
+          const handler =
+            errorHandlers?.[code] ??
+            (terminalPath
+              ? () => {
+                  navigate(terminalPath, { replace: true });
+                }
+              : errorHandlers?.global);
 
           if (handler) {
             await handler(logtoError);
@@ -51,7 +74,7 @@ const useErrorHandler = () => {
       setToast(t('error.unknown'));
       console.error(error);
     },
-    [setToast, t]
+    [navigate, setToast, t]
   );
 
   return handleError;

@@ -42,6 +42,9 @@ const error = {
   terms_acceptance_required_description:
     'Вы должны согласиться с условиями, чтобы продолжить. Пожалуйста, попробуйте снова.',
   something_went_wrong: 'Что-то пошло не так',
+  account_suspended: 'Аккаунт заблокирован',
+  account_suspended_description:
+    'Этот аккаунт заблокирован. Обратитесь к администратору за помощью.',
   access_denied: 'Доступ запрещен',
   application_access_denied:
     'У вас нет прав на доступ к этому приложению.\nОбратитесь к администратору за помощью.',

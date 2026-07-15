@@ -39,6 +39,8 @@ const error = {
   terms_acceptance_required: 'Je nutné souhlasit s podmínkami',
   terms_acceptance_required_description: 'Pro pokračování je nutné souhlasit s podmínkami.',
   something_went_wrong: 'Něco se pokazilo.',
+  account_suspended: 'Účet pozastaven',
+  account_suspended_description: 'Tento účet byl pozastaven. Kontaktujte prosím administrátora.',
   access_denied: 'Přístup odepřen',
   application_access_denied:
     'Nemáš oprávnění k přístupu k této aplikaci.\nKontaktuj prosím svého administrátora pro pomoc.',

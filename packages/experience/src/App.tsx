@@ -90,6 +90,21 @@ const App = () => {
                         path="unknown-session"
                         element={<ErrorPage message="error.invalid_session" />}
                       />
+                      <Route
+                        path="account-suspended"
+                        element={
+                          <ErrorPage
+                            isNavbarHidden
+                            title="error.account_suspended"
+                            message="error.account_suspended_description"
+                            primaryAction={{
+                              title: 'description.back_to_sign_in',
+                              to: `/${experience.routes.signIn}`,
+                              replace: true,
+                            }}
+                          />
+                        }
+                      />
 
                       {/* Sign-in */}
                       <Route path={experience.routes.signIn}>
