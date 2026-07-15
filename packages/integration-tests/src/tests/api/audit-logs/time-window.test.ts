@@ -31,11 +31,11 @@ describe('GET /logs start_time / end_time params', () => {
       expect(response instanceof HTTPError && response.response.status).toBe(400);
     });
 
-    it('returns 400 when start_time equals end_time', async () => {
+    it('succeeds when start_time equals end_time (inclusive bounds)', async () => {
       const response = await getAuditLogsResponse(
         new URLSearchParams({ start_time: '1000', end_time: '1000' })
-      ).catch((error: unknown) => error);
-      expect(response instanceof HTTPError && response.response.status).toBe(400);
+      );
+      expect(response.status).toBe(200);
     });
 
     it('returns 400 when start_time is not a finite number', async () => {
@@ -87,7 +87,7 @@ describe('GET /logs start_time / end_time params', () => {
       const nonOverlappingWindow = await getAuditLogs(
         new URLSearchParams({
           logKey: `${interaction.prefix}.${interaction.Action.Create}`,
-          end_time: String(beforeStart),
+          end_time: String(beforeStart - 1),
         })
       );
       expect(

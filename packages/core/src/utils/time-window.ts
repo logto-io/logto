@@ -19,11 +19,11 @@ export const parseTimestampParam = (
 };
 
 /**
- * Validate a parsed time window: when both bounds are present, `start` must be
- * strictly less than `end`. Throws 400 with `log.invalid_time_window` otherwise.
+ * Validate a parsed time window: when both bounds are present, `start` must not
+ * exceed `end`. Throws 400 with `log.invalid_time_window` otherwise.
  */
 export const validateTimeWindow = (start: number | undefined, end: number | undefined): void => {
-  if (start !== undefined && end !== undefined && start >= end) {
+  if (start !== undefined && end !== undefined && start > end) {
     throw new RequestError({ code: 'log.invalid_time_window', status: 400 });
   }
 };

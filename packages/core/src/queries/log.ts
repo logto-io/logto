@@ -21,9 +21,9 @@ type AllowedKeyPrefix = AuditLogPrefix | WebhookLogPrefix;
 type LogCondition = {
   logKey?: string;
   payload?: { applicationId?: string; userId?: string; hookId?: string };
-  /** Exclusive lower bound on `createdAt`, in unix milliseconds. */
+  /** Inclusive lower bound on `createdAt`, in unix milliseconds. */
   startTime?: number;
-  /** Exclusive upper bound on `createdAt`, in unix milliseconds. */
+  /** Inclusive upper bound on `createdAt`, in unix milliseconds. */
   endTime?: number;
   includeKeyPrefix?: AllowedKeyPrefix[];
 };
@@ -60,15 +60,12 @@ const buildLogConditionSql = (logCondition: LogCondition) =>
           )
       ),
       conditionalSql(logKey, (logKey) => sql`${fields.key}=${logKey}`),
-      // Use `!== undefined` (not `conditionalSql`) so a legitimate `start_time=0`
-      // or `end_time=0` window still applies — `conditionalSql` treats `0` as
-      // falsy and would silently drop the filter.
       startTime === undefined
         ? sql``
-        : sql`${fields.createdAt} > to_timestamp(${startTime}::double precision / 1000)`,
+        : sql`${fields.createdAt} >= to_timestamp(${startTime}::double precision / 1000)`,
       endTime === undefined
         ? sql``
-        : sql`${fields.createdAt} < to_timestamp(${endTime}::double precision / 1000)`,
+        : sql`${fields.createdAt} <= to_timestamp(${endTime}::double precision / 1000)`,
     ].filter(({ sql }) => sql);
 
     return subConditions.length > 0 ? sql`where ${sql.join(subConditions, sql` and `)}` : sql``;
