@@ -29,7 +29,7 @@
           {
             "name": "start_time",
             "in": "query",
-            "description": "Inclusive lower bound on `createdAt`, in unix milliseconds. When set, returns only logs where `createdAt >= start_time`."
+            "description": "Inclusive lower bound on `createdAt`, in unix milliseconds. When set, returns only logs where `createdAt >= start_time`. Recommended for clients paginating across very large log ranges to keep query latency consistent."
           },
           {
             "name": "end_time",
