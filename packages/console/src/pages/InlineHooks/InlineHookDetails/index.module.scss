@@ -3,14 +3,14 @@
 .container {
   position: relative;
 
-  .header {
-    flex-shrink: 0;
-    margin-bottom: _.unit(4);
-  }
-
   .hidden {
     display: none;
   }
+}
+
+.header {
+  flex-shrink: 0;
+  margin-bottom: _.unit(4);
 }
 
 .warning {

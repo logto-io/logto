@@ -100,37 +100,39 @@ function Content({ hookType, action }: ContentProps) {
       {!isLoading && !shouldShowNotFound && (
         <CodeEditorLoadingContext.Provider value={codeEditorContextValue}>
           <div className={isMonacoLoaded ? undefined : styles.hidden}>
-            <DetailsPageHeader
-              title={<DynamicT forKey={titleKey} />}
-              subtitle={subtitleKey ? <DynamicT forKey={subtitleKey} /> : undefined}
-              statusTag={
-                data
-                  ? {
-                      status: data.enabled ? 'success' : 'info',
-                      text: data.enabled
-                        ? 'inline_hooks.status.enabled'
-                        : 'inline_hooks.status.disabled',
-                    }
-                  : {
-                      status: 'info',
-                      text: 'inline_hooks.status.not_configured',
-                    }
-              }
-              actionMenuItems={
-                action === InlineHookAction.Edit
-                  ? [
-                      {
-                        type: 'danger',
-                        title: 'general.delete',
-                        icon: <Delete />,
-                        onClick: () => {
-                          void handleDelete();
+            <div className={styles.header}>
+              <DetailsPageHeader
+                title={<DynamicT forKey={titleKey} />}
+                subtitle={subtitleKey ? <DynamicT forKey={subtitleKey} /> : undefined}
+                statusTag={
+                  data
+                    ? {
+                        status: data.enabled ? 'success' : 'info',
+                        text: data.enabled
+                          ? 'inline_hooks.status.enabled'
+                          : 'inline_hooks.status.disabled',
+                      }
+                    : {
+                        status: 'info',
+                        text: 'inline_hooks.status.not_configured',
+                      }
+                }
+                actionMenuItems={
+                  action === InlineHookAction.Edit
+                    ? [
+                        {
+                          type: 'danger',
+                          title: 'general.delete',
+                          icon: <Delete />,
+                          onClick: () => {
+                            void handleDelete();
+                          },
                         },
-                      },
-                    ]
-                  : undefined
-              }
-            />
+                      ]
+                    : undefined
+                }
+              />
+            </div>
             {shouldShowSecurityWarning && (
               <InlineNotification hasIcon severity="alert" className={styles.warning}>
                 <div className={styles.warningTitle}>
