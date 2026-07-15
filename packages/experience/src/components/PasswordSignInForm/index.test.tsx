@@ -11,6 +11,7 @@ import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { mockSignInExperienceSettings, mockSsoConnectors } from '@/__mocks__/logto';
 import { signInWithPasswordIdentifier } from '@/apis/experience';
+import { getSignInFormErrorState } from '@/hooks/use-sign-in-form-error';
 import type { SignInExperienceResponse } from '@/types';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
@@ -48,7 +49,8 @@ describe('UsernamePasswordSignInForm', () => {
 
   const renderPasswordSignInForm = (
     signInMethods = [SignInIdentifier.Username, SignInIdentifier.Email, SignInIdentifier.Phone],
-    settings?: Partial<SignInExperienceResponse>
+    settings?: Partial<SignInExperienceResponse>,
+    routerProps?: Parameters<typeof renderWithPageContext>[1]
   ) =>
     renderWithPageContext(
       <SettingsProvider settings={{ ...mockSignInExperienceSettings, ...settings }}>
@@ -59,8 +61,34 @@ describe('UsernamePasswordSignInForm', () => {
             </SingleSignOnFormModeContextProvider>
           </UserInteractionContextProvider>
         </ConfirmModalProvider>
-      </SettingsProvider>
+      </SettingsProvider>,
+      routerProps
     );
+
+  test('keeps the SSO callback error in the form until the identifier changes', () => {
+    const errorMessage = 'This account is suspended.';
+    const { getByText, queryByText, container } = renderPasswordSignInForm(
+      [SignInIdentifier.Email],
+      undefined,
+      {
+        initialEntries: [
+          {
+            pathname: `/${experience.routes.signIn}`,
+            state: getSignInFormErrorState(errorMessage),
+          },
+        ],
+      }
+    );
+
+    expect(getByText(errorMessage)).not.toBeNull();
+
+    const identifierInput = container.querySelector('input[name="identifier"]');
+    assert(identifierInput, new Error('identifier input should exist'));
+
+    fireEvent.change(identifierInput, { target: { value: 'another@logto.io' } });
+
+    expect(queryByText(errorMessage)).toBeNull();
+  });
 
   test.each([
     [SignInIdentifier.Username],

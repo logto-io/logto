@@ -11,6 +11,7 @@ import { SmartInputField } from '@/components/InputFields';
 import CaptchaBox from '@/containers/CaptchaBox';
 import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
 import usePrefilledIdentifier from '@/hooks/use-prefilled-identifier';
+import useSignInFormError from '@/hooks/use-sign-in-form-error';
 import useSingleSignOnWatch from '@/hooks/use-single-sign-on-watch';
 import useTerms from '@/hooks/use-terms';
 import Button from '@/shared/components/Button';
@@ -35,6 +36,8 @@ type FormState = {
 const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
   const { t } = useTranslation();
   const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit(signInMethods);
+  const { errorMessage: callbackErrorMessage, clearErrorMessage: clearCallbackErrorMessage } =
+    useSignInFormError();
   const { termsValidation, agreeToTermsPolicy } = useTerms();
   const { setIdentifierInputValue } = useContext(UserInteractionContext);
   const { isPasskeyFlowProcessing } = useContext(WebAuthnContext);
@@ -66,6 +69,16 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
   );
 
   useEffect(() => {
+    const subscription = watch(() => {
+      clearCallbackErrorMessage();
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [clearCallbackErrorMessage, watch]);
+
+  useEffect(() => {
     if (!isValid) {
       clearErrorMessage();
     }
@@ -78,6 +91,7 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
       }
 
       clearErrorMessage();
+      clearCallbackErrorMessage();
 
       void handleSubmit(async ({ identifier: { type, value } }) => {
         if (!type) {
@@ -101,6 +115,7 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
     },
     [
       agreeToTermsPolicy,
+      clearCallbackErrorMessage,
       clearErrorMessage,
       handleSubmit,
       navigateToSingleSignOn,
@@ -143,7 +158,11 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
         )}
       />
 
-      {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
+      {(callbackErrorMessage ?? errorMessage) && (
+        <ErrorMessage className={styles.formErrors}>
+          {callbackErrorMessage ?? errorMessage}
+        </ErrorMessage>
+      )}
 
       {showSingleSignOnForm && (
         <div className={styles.message}>{t('description.single_sign_on_enabled')}</div>
