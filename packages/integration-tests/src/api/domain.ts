@@ -1,4 +1,4 @@
-import type { DomainResponse } from '@logto/schemas';
+import type { DomainResponse, DomainVerificationFile } from '@logto/schemas';
 
 import { generateDomain } from '#src/utils.js';
 
@@ -20,3 +20,14 @@ export const getDomain = async (domainId: string) =>
 
 export const deleteDomain = async (domainId: string) =>
   authedAdminApi.delete(`domains/${domainId}`);
+
+export const getDomainVerificationFiles = async (domainId: string) =>
+  authedAdminApi.get(`domains/${domainId}/verification-files`).json<DomainVerificationFile[]>();
+
+export const updateDomainVerificationFiles = async (
+  domainId: string,
+  verificationFiles: DomainVerificationFile[]
+) =>
+  authedAdminApi
+    .put(`domains/${domainId}/verification-files`, { json: { verificationFiles } })
+    .json<DomainVerificationFile[]>();

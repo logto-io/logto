@@ -23,6 +23,7 @@ export const mockDomainResponse: DomainResponse = {
 export const mockDomain: Domain = {
   ...mockDomainResponse,
   tenantId: mockTenantIdForHook,
+  verificationFiles: [],
   cloudflareData: null,
   updatedAt: mockCreatedAtForDomain,
   createdAt: mockCreatedAtForDomain,

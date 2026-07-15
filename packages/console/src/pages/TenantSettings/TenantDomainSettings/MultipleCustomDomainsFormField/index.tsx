@@ -92,6 +92,7 @@ function MultipleCustomDomainsFormField() {
             <CustomDomain
               key={domain.id}
               hasExtraTipsOnDelete
+              domainId={domain.id}
               className={styles.domainItem}
               isReadonly={!canManageTenant}
               customDomain={domain}

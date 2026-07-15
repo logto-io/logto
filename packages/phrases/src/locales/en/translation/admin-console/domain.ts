@@ -44,6 +44,25 @@ const domain = {
     },
     config_custom_domain_description:
       'Configure custom domains to set up the following features: applications, social connectors, and enterprise connectors.',
+    verification_files: {
+      title: 'Domain verification files',
+      description:
+        'Serve small text or JSON files from this custom domain to verify domain ownership with third-party services.',
+      add: 'Add verification file',
+      empty: 'No verification files configured.',
+      path: 'File path',
+      content_type: 'Content type',
+      content_type_text: 'Plain text',
+      content_type_json: 'JSON',
+      content: 'File content',
+      content_placeholder: 'Paste the exact verification file content',
+      required: 'This field is required.',
+      invalid_path:
+        'Use a filename with an extension at the domain root, or a path under /.well-known/. Only letters, numbers, dots, hyphens, and underscores are supported.',
+      duplicate_path: 'A verification file already uses this path.',
+      content_too_long: 'File content must not exceed 16,384 characters.',
+      invalid_json: 'Enter valid JSON content.',
+    },
   },
   default: {
     default_domain: 'Default domain',

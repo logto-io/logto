@@ -44,6 +44,25 @@ const domain = {
     },
     config_custom_domain_description:
       'Aşağıdaki özellikleri ayarlamak için özel alan adları yapılandırın: uygulamalar, sosyal bağlayıcılar ve kurumsal bağlayıcılar.',
+    verification_files: {
+      title: 'Alan adı doğrulama dosyaları',
+      description:
+        'Üçüncü taraf hizmetlerde alan adı sahipliğini doğrulamak için bu özel alan adından küçük metin veya JSON dosyaları sunun.',
+      add: 'Doğrulama dosyası ekle',
+      empty: 'Yapılandırılmış doğrulama dosyası yok.',
+      path: 'Dosya yolu',
+      content_type: 'İçerik türü',
+      content_type_text: 'Düz metin',
+      content_type_json: 'JSON',
+      content: 'Dosya içeriği',
+      content_placeholder: 'Doğrulama dosyasının tam içeriğini yapıştırın',
+      required: 'Bu alan zorunludur.',
+      invalid_path:
+        'Alan adının kökünde uzantılı bir dosya adı veya /.well-known/ altında bir yol kullanın. Yalnızca harfler, sayılar, noktalar, kısa çizgiler ve alt çizgiler desteklenir.',
+      duplicate_path: 'Bu yolu kullanan bir doğrulama dosyası zaten var.',
+      content_too_long: 'Dosya içeriği 16.384 karakteri aşmamalıdır.',
+      invalid_json: 'Geçerli JSON içeriği girin.',
+    },
   },
   default: {
     default_domain: 'Varsayılan Alan Adı',

@@ -39,6 +39,24 @@ const domain = {
     },
     config_custom_domain_description:
       '配置自定义域名以设置以下功能：应用、社交连接器和企业连接器。',
+    verification_files: {
+      title: '域名验证文件',
+      description: '通过此自定义域名提供小型文本或 JSON 文件，用于向第三方服务验证域名所有权。',
+      add: '添加验证文件',
+      empty: '尚未配置验证文件。',
+      path: '文件路径',
+      content_type: '内容类型',
+      content_type_text: '纯文本',
+      content_type_json: 'JSON',
+      content: '文件内容',
+      content_placeholder: '粘贴验证文件的准确内容',
+      required: '此字段为必填项。',
+      invalid_path:
+        '请在域名根目录使用带扩展名的文件名，或使用 /.well-known/ 下的路径。仅支持字母、数字、点、连字符和下划线。',
+      duplicate_path: '已有验证文件使用此路径。',
+      content_too_long: '文件内容不得超过 16,384 个字符。',
+      invalid_json: '请输入有效的 JSON 内容。',
+    },
   },
   default: {
     default_domain: '默认域名',

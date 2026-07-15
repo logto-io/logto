@@ -43,6 +43,25 @@ const domain = {
     },
     config_custom_domain_description:
       'アプリケーション、ソーシャルコネクタ、エンタープライズコネクタを設定するために、カスタムドメインを構成します。',
+    verification_files: {
+      title: 'ドメイン検証ファイル',
+      description:
+        'このカスタムドメインから小さなテキストまたは JSON ファイルを配信し、サードパーティサービスでドメインの所有権を検証します。',
+      add: '検証ファイルを追加',
+      empty: '検証ファイルは設定されていません。',
+      path: 'ファイルパス',
+      content_type: 'コンテンツタイプ',
+      content_type_text: 'プレーンテキスト',
+      content_type_json: 'JSON',
+      content: 'ファイル内容',
+      content_placeholder: '検証ファイルの正確な内容を貼り付けてください',
+      required: 'この項目は必須です。',
+      invalid_path:
+        'ドメインのルートでは拡張子付きのファイル名を、/.well-known/ 配下ではファイルパスを使用してください。英字、数字、ピリオド、ハイフン、アンダースコアのみ使用できます。',
+      duplicate_path: 'このパスは別の検証ファイルで既に使用されています。',
+      content_too_long: 'ファイル内容は 16,384 文字以内で入力してください。',
+      invalid_json: '有効な JSON 内容を入力してください。',
+    },
   },
   default: {
     default_domain: 'デフォルトドメイン',
