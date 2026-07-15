@@ -194,7 +194,10 @@ function VerificationFiles({ domain, domainId, isReadonly }: Props) {
                 >
                   {file.path}
                 </a>
-                <span className={styles.contentType}>{file.contentType}</span>
+                <span className={styles.contentType}>
+                  {contentTypeOptions.find(({ value }) => value === file.contentType)?.title ??
+                    file.contentType}
+                </span>
               </div>
               {!isReadonly && (
                 <div className={styles.actions}>
