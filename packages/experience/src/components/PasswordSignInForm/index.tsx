@@ -1,6 +1,6 @@
 import { AgreeToTermsPolicy, type SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
-import { useCallback, useContext, useEffect } from 'react';
+import { useCallback, useContext, useEffect, useRef } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -11,6 +11,7 @@ import { SmartInputField, PasswordInputField } from '@/components/InputFields';
 import CaptchaBox from '@/containers/CaptchaBox';
 import ForgotPasswordLink from '@/containers/ForgotPasswordLink';
 import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
+import useLocationErrorMessage from '@/hooks/use-location-error-message';
 import usePasswordSignIn from '@/hooks/use-password-sign-in';
 import usePrefilledIdentifier from '@/hooks/use-prefilled-identifier';
 import { useForgotPasswordSettings } from '@/hooks/use-sie';
@@ -38,12 +39,25 @@ export type FormState = {
 const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
   const { t } = useTranslation();
 
-  const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn();
+  const {
+    errorMessage: submitErrorMessage,
+    clearErrorMessage: clearSubmitErrorMessage,
+    onSubmit,
+  } = usePasswordSignIn();
+  const { errorMessage: locationErrorMessage, clearErrorMessage: clearLocationErrorMessage } =
+    useLocationErrorMessage();
   const { isForgotPasswordEnabled } = useForgotPasswordSettings();
   const { termsValidation, agreeToTermsPolicy } = useTerms();
   const { setIdentifierInputValue } = useContext(UserInteractionContext);
   const { isPasskeyFlowProcessing } = useContext(WebAuthnContext);
   const prefilledIdentifier = usePrefilledIdentifier({ enabledIdentifiers: signInMethods });
+
+  const errorMessage = submitErrorMessage ?? locationErrorMessage;
+
+  const clearErrorMessage = useCallback(() => {
+    clearSubmitErrorMessage();
+    clearLocationErrorMessage();
+  }, [clearLocationErrorMessage, clearSubmitErrorMessage]);
 
   const {
     watch,
@@ -107,10 +121,16 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
     ]
   );
 
+  // Clear persistent errors when the form becomes invalid after it was valid
+  // (e.g. user edits the identifier). Skip the initial mount so location-state
+  // errors from SSO callbacks are not wiped before SSO form mode activates.
+  const wasValid = useRef(isValid);
   useEffect(() => {
-    if (!isValid) {
+    if (wasValid.current && !isValid) {
       clearErrorMessage();
     }
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    wasValid.current = isValid;
   }, [clearErrorMessage, isValid]);
 
   return (

@@ -115,6 +115,16 @@ const useSingleSignOnListener = (connectorId: string) => {
 
             await registerSingleSignOnIdentity(verificationId);
           },
+          /**
+           * Suspended users should see a persistent form error after returning to sign-in,
+           * not only a short-lived toast (see PasswordSignInForm / IdentifierSignInForm).
+           */
+          'user.suspended': async (error) => {
+            setToast(error.message);
+            navigate('/' + experience.routes.signIn, {
+              state: { errorMessage: error.message },
+            });
+          },
           // Redirect to sign-in page if error is not handled by the error handlers
           global: async (error) => {
             setToast(error.message);

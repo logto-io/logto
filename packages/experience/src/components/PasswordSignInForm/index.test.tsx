@@ -40,7 +40,6 @@ jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockedNavigate,
 }));
-
 describe('UsernamePasswordSignInForm', () => {
   afterEach(() => {
     jest.clearAllMocks();

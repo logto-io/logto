@@ -1,6 +1,6 @@
 import { AgreeToTermsPolicy, type SignIn } from '@logto/schemas';
 import classNames from 'classnames';
-import { useCallback, useContext, useEffect, useMemo } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -10,6 +10,7 @@ import LockIcon from '@/assets/icons/lock.svg?react';
 import { SmartInputField } from '@/components/InputFields';
 import CaptchaBox from '@/containers/CaptchaBox';
 import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
+import useLocationErrorMessage from '@/hooks/use-location-error-message';
 import usePrefilledIdentifier from '@/hooks/use-prefilled-identifier';
 import useSingleSignOnWatch from '@/hooks/use-single-sign-on-watch';
 import useTerms from '@/hooks/use-terms';
@@ -34,10 +35,23 @@ type FormState = {
 
 const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
   const { t } = useTranslation();
-  const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit(signInMethods);
+  const {
+    errorMessage: submitErrorMessage,
+    clearErrorMessage: clearSubmitErrorMessage,
+    onSubmit,
+  } = useOnSubmit(signInMethods);
+  const { errorMessage: locationErrorMessage, clearErrorMessage: clearLocationErrorMessage } =
+    useLocationErrorMessage();
   const { termsValidation, agreeToTermsPolicy } = useTerms();
   const { setIdentifierInputValue } = useContext(UserInteractionContext);
   const { isPasskeyFlowProcessing } = useContext(WebAuthnContext);
+
+  const errorMessage = submitErrorMessage ?? locationErrorMessage;
+
+  const clearErrorMessage = useCallback(() => {
+    clearSubmitErrorMessage();
+    clearLocationErrorMessage();
+  }, [clearLocationErrorMessage, clearSubmitErrorMessage]);
 
   const enabledSignInMethods = useMemo(
     () => signInMethods.map(({ identifier }) => identifier),
@@ -65,10 +79,16 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
     watch('identifier')
   );
 
+  // Clear persistent errors when the form becomes invalid after it was valid
+  // (e.g. user edits the identifier). Skip the initial mount so location-state
+  // errors from SSO callbacks are not wiped before the form settles.
+  const wasValid = useRef(isValid);
   useEffect(() => {
-    if (!isValid) {
+    if (wasValid.current && !isValid) {
       clearErrorMessage();
     }
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    wasValid.current = isValid;
   }, [clearErrorMessage, isValid]);
 
   const onSubmitHandler = useCallback(
