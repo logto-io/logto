@@ -1,6 +1,6 @@
 import { SignInIdentifier, experience } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
-import { fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, renderHook, waitFor } from '@testing-library/react';
 import { HTTPError } from 'ky';
 import { act } from 'react-dom/test-utils';
 
@@ -11,6 +11,7 @@ import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { mockSignInExperienceSettings, mockSsoConnectors } from '@/__mocks__/logto';
 import { signInWithPasswordIdentifier } from '@/apis/experience';
+import useSessionStorage, { StorageKeys } from '@/hooks/use-session-storages';
 import { getSignInFormErrorState } from '@/hooks/use-sign-in-form-error';
 import type { SignInExperienceResponse } from '@/types';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
@@ -43,8 +44,12 @@ jest.mock('react-router-dom', () => ({
 }));
 
 describe('UsernamePasswordSignInForm', () => {
+  const { result } = renderHook(() => useSessionStorage());
+  const { set, remove } = result.current;
+
   afterEach(() => {
     jest.clearAllMocks();
+    remove(StorageKeys.IdentifierInputValue);
   });
 
   const renderPasswordSignInForm = (
@@ -67,6 +72,9 @@ describe('UsernamePasswordSignInForm', () => {
 
   test('keeps the SSO callback error in the form until the identifier changes', () => {
     const errorMessage = 'This account is suspended.';
+    const email = 'suspended@suspended.example.com';
+    set(StorageKeys.IdentifierInputValue, { type: SignInIdentifier.Email, value: email });
+
     const { getByText, queryByText, container } = renderPasswordSignInForm(
       [SignInIdentifier.Email],
       undefined,
@@ -82,8 +90,9 @@ describe('UsernamePasswordSignInForm', () => {
 
     expect(getByText(errorMessage)).not.toBeNull();
 
-    const identifierInput = container.querySelector('input[name="identifier"]');
+    const identifierInput = container.querySelector<HTMLInputElement>('input[name="identifier"]');
     assert(identifierInput, new Error('identifier input should exist'));
+    expect(identifierInput.value).toBe(email);
 
     fireEvent.change(identifierInput, { target: { value: 'another@logto.io' } });
 

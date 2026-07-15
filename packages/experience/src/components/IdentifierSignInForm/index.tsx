@@ -55,7 +55,7 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
     watch,
     handleSubmit,
     control,
-    formState: { errors, isValid, isSubmitting },
+    formState: { errors, isDirty, isValid, isSubmitting },
   } = useForm<FormState>({
     reValidateMode: 'onBlur',
     defaultValues: {
@@ -69,14 +69,10 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
   );
 
   useEffect(() => {
-    const subscription = watch(() => {
+    if (isDirty) {
       clearCallbackErrorMessage();
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [clearCallbackErrorMessage, watch]);
+    }
+  }, [clearCallbackErrorMessage, isDirty]);
 
   useEffect(() => {
     if (!isValid) {

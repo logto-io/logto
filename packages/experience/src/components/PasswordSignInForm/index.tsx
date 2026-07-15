@@ -53,7 +53,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
     register,
     handleSubmit,
     control,
-    formState: { errors, isValid, isSubmitting },
+    formState: { errors, isDirty, isValid, isSubmitting },
   } = useForm<FormState>({
     reValidateMode: 'onBlur',
     defaultValues: {
@@ -67,14 +67,10 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
   );
 
   useEffect(() => {
-    const subscription = watch(() => {
+    if (isDirty) {
       clearCallbackErrorMessage();
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [clearCallbackErrorMessage, watch]);
+    }
+  }, [clearCallbackErrorMessage, isDirty]);
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
