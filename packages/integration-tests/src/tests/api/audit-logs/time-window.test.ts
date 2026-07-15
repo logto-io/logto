@@ -24,7 +24,7 @@ describe('GET /logs start_time / end_time params', () => {
   });
 
   describe('validation', () => {
-    it('returns 400 when start_time >= end_time', async () => {
+    it('returns 400 when start_time > end_time', async () => {
       const response = await getAuditLogsResponse(
         new URLSearchParams({ start_time: '2000', end_time: '1000' })
       ).catch((error: unknown) => error);
