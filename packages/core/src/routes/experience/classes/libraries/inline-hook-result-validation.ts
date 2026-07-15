@@ -7,6 +7,7 @@ import {
   postSignInResultGuard,
 } from '@logto/schemas';
 import { PhoneNumberParser } from '@logto/shared/universal';
+import { isPlainObject } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -42,7 +43,7 @@ export type ValidatedPostSignInHookResult =
     };
 
 const isInlineHookResultObject = (result: unknown): result is Record<string, unknown> =>
-  typeof result === 'object' && result !== null && !Array.isArray(result);
+  isPlainObject(result);
 
 const invalidCredentialsResult = (): InlineHookRejectInvalidCredentialsResult => ({
   action: 'rejectInvalidCredentials',
