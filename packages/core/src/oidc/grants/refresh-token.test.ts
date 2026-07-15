@@ -359,6 +359,42 @@ describe('refresh token grant', () => {
     );
   });
 
+  it('should query account claims with the effective scope when the request narrows it', async () => {
+    const requestScope = ['openid', ...requestScopes].join(' ');
+    const claims = jest.fn().mockResolvedValue({ sub: accountId });
+    const ctx = createOidcContext({
+      ...validOidcContext,
+      requestParamScopes: new Set(['openid', ...requestScopes]),
+      // No `organization_id`: this exercises the plain refresh path with an ID token.
+      params: { refresh_token: 'some_refresh_token', scope: requestScope },
+      // The mocked `entity()` does not populate `ctx.oidc.account`, so provide it directly for
+      // the ID token issuance path.
+      account: { accountId, claims },
+    });
+    stubRefreshToken(ctx, {
+      scope: ['openid', 'extra', ...requestScopes].join(' '),
+      scopes: new Set(['openid', 'extra', ...requestScopes]),
+    });
+    stubGrant(ctx, { getRejectedOIDCClaims: jest.fn().mockReturnValue([]) });
+    stubAccount(ctx);
+    /** The real `IdToken` constructor rejects the mocked plain-object client. */
+    class StubIdToken {
+      scope?: string;
+      mask?: unknown;
+      rejected?: unknown;
+      set = jest.fn();
+      issue = jest.fn().mockResolvedValue('stub_id_token');
+    }
+    Sinon.stub(ctx.oidc.provider, 'IdToken').value(StubIdToken);
+    const tenant = new MockTenant();
+
+    await expect(mockHandler(tenant)(ctx)).resolves.toBeUndefined();
+
+    expect(claims).toHaveBeenCalledTimes(1);
+    expect(claims.mock.calls[0][0]).toBe('id_token');
+    expect(claims.mock.calls[0][1]).toBe(requestScope);
+  });
+
   it('should not explode when everything looks fine', async () => {
     const ctx = createPreparedContext();
     const tenant = new MockTenant();
