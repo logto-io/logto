@@ -1,4 +1,5 @@
 import { AgreeToTermsPolicy, type SignIn } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useCallback, useContext, useEffect, useMemo } from 'react';
 import { useForm, Controller } from 'react-hook-form';
@@ -10,6 +11,7 @@ import LockIcon from '@/assets/icons/lock.svg?react';
 import { SmartInputField } from '@/components/InputFields';
 import CaptchaBox from '@/containers/CaptchaBox';
 import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
+import useLocationErrorMessage from '@/hooks/use-location-error-message';
 import usePrefilledIdentifier from '@/hooks/use-prefilled-identifier';
 import useSingleSignOnWatch from '@/hooks/use-single-sign-on-watch';
 import useTerms from '@/hooks/use-terms';
@@ -35,6 +37,10 @@ type FormState = {
 const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
   const { t } = useTranslation();
   const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit(signInMethods);
+  // Persistent error message passed via the navigation state (e.g. suspended user error from
+  // the enterprise SSO callback). Follows the same clearing rules as the form's own error message.
+  const { errorMessage: locationErrorMessage, clearErrorMessage: clearLocationErrorMessage } =
+    useLocationErrorMessage();
   const { termsValidation, agreeToTermsPolicy } = useTerms();
   const { setIdentifierInputValue } = useContext(UserInteractionContext);
   const { isPasskeyFlowProcessing } = useContext(WebAuthnContext);
@@ -65,6 +71,21 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
     watch('identifier')
   );
 
+  // The submission error message takes precedence over the persistent one from the navigation
+  // state. `conditional` is needed since the cleared error message is an empty string.
+  const displayErrorMessage = conditional(errorMessage) ?? locationErrorMessage;
+
+  const { value: identifierValue } = watch('identifier');
+
+  useEffect(() => {
+    // Clear the persistent error message from the navigation state once the user modifies
+    // the identifier input. Can not rely on the `isValid`/`isDirty` form state since the
+    // identifier input emits an initial change event on mount.
+    if (identifierValue !== prefilledIdentifier.value) {
+      clearLocationErrorMessage();
+    }
+  }, [clearLocationErrorMessage, identifierValue, prefilledIdentifier.value]);
+
   useEffect(() => {
     if (!isValid) {
       clearErrorMessage();
@@ -78,6 +99,7 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
       }
 
       clearErrorMessage();
+      clearLocationErrorMessage();
 
       void handleSubmit(async ({ identifier: { type, value } }) => {
         if (!type) {
@@ -102,6 +124,7 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
     [
       agreeToTermsPolicy,
       clearErrorMessage,
+      clearLocationErrorMessage,
       handleSubmit,
       navigateToSingleSignOn,
       onSubmit,
@@ -135,7 +158,7 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
             autoFocus={autoFocus}
             className={styles.inputField}
             {...field}
-            isDanger={!!errors.identifier || !!errorMessage}
+            isDanger={!!errors.identifier || !!displayErrorMessage}
             errorMessage={errors.identifier?.message}
             enabledTypes={enabledSignInMethods}
             defaultValue={defaultValues?.identifier?.value}
@@ -143,7 +166,9 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
         )}
       />
 
-      {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
+      {displayErrorMessage && (
+        <ErrorMessage className={styles.formErrors}>{displayErrorMessage}</ErrorMessage>
+      )}
 
       {showSingleSignOnForm && (
         <div className={styles.message}>{t('description.single_sign_on_enabled')}</div>

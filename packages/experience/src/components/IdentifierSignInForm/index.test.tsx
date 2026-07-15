@@ -51,7 +51,11 @@ const username = 'foo';
 const email = 'foo@email.com';
 const phone = '8573333333';
 
-const renderForm = (signInMethods: SignIn['methods'], ssoConnectors: SsoConnectorMetadata[] = []) =>
+const renderForm = (
+  signInMethods: SignIn['methods'],
+  ssoConnectors: SsoConnectorMetadata[] = [],
+  memoryRouterProps?: Parameters<typeof renderWithPageContext>[1]
+) =>
   renderWithPageContext(
     <SettingsProvider
       settings={{
@@ -64,7 +68,8 @@ const renderForm = (signInMethods: SignIn['methods'], ssoConnectors: SsoConnecto
           <IdentifierSignInForm signInMethods={signInMethods} />
         </SingleSignOnFormModeContextProvider>
       </UserInteractionContextProvider>
-    </SettingsProvider>
+    </SettingsProvider>,
+    memoryRouterProps
   );
 
 const renderFormAndSubmitEmail = (signInMethods: SignIn['methods']) => {
@@ -192,6 +197,63 @@ describe('IdentifierSignInForm', () => {
       });
     }
   );
+
+  describe('persistent error message from the navigation state', () => {
+    const suspendedMessage = 'This account is suspended.';
+    const memoryRouterProps = {
+      initialEntries: [{ pathname: '/sign-in', state: { errorMessage: suspendedMessage } }],
+    };
+
+    beforeEach(() => {
+      // Clear the cached identifier input value from previous tests so the
+      // identifier input is not prefilled
+      sessionStorage.clear();
+    });
+
+    test('should display the error message and clear it on resubmission', async () => {
+      const { getByText, queryByText, container } = renderForm(
+        mockSignInMethodSettingsTestCases[0]!,
+        undefined,
+        memoryRouterProps
+      );
+
+      expect(queryByText(suspendedMessage)).not.toBeNull();
+
+      const inputField = container.querySelector('input[name="identifier"]');
+      assert(inputField, new Error('identifier input should exist'));
+
+      fireEvent.change(inputField, { target: { value: username } });
+
+      act(() => {
+        fireEvent.submit(getByText('action.sign_in'));
+      });
+
+      await waitFor(() => {
+        expect(queryByText(suspendedMessage)).toBeNull();
+      });
+    });
+
+    test('should clear the error message when the identifier input is modified', async () => {
+      const { queryByText, container } = renderForm(
+        mockSignInMethodSettingsTestCases[0]!,
+        undefined,
+        memoryRouterProps
+      );
+
+      expect(queryByText(suspendedMessage)).not.toBeNull();
+
+      const inputField = container.querySelector('input[name="identifier"]');
+      assert(inputField, new Error('identifier input should exist'));
+
+      act(() => {
+        fireEvent.change(inputField, { target: { value: username } });
+      });
+
+      await waitFor(() => {
+        expect(queryByText(suspendedMessage)).toBeNull();
+      });
+    });
+  });
 
   describe('email single sign-on tests', () => {
     it('should not call check single sign-on connector when the identifier is not email', async () => {

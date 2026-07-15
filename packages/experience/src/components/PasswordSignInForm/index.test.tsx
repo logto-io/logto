@@ -48,7 +48,8 @@ describe('UsernamePasswordSignInForm', () => {
 
   const renderPasswordSignInForm = (
     signInMethods = [SignInIdentifier.Username, SignInIdentifier.Email, SignInIdentifier.Phone],
-    settings?: Partial<SignInExperienceResponse>
+    settings?: Partial<SignInExperienceResponse>,
+    memoryRouterProps?: Parameters<typeof renderWithPageContext>[1]
   ) =>
     renderWithPageContext(
       <SettingsProvider settings={{ ...mockSignInExperienceSettings, ...settings }}>
@@ -59,7 +60,8 @@ describe('UsernamePasswordSignInForm', () => {
             </SingleSignOnFormModeContextProvider>
           </UserInteractionContextProvider>
         </ConfirmModalProvider>
-      </SettingsProvider>
+      </SettingsProvider>,
+      memoryRouterProps
     );
 
   test.each([
@@ -293,6 +295,68 @@ describe('UsernamePasswordSignInForm', () => {
     expect(mockedNavigate).not.toHaveBeenCalled();
     expect(queryByText('description.password_expired')).toBeNull();
     expect(queryByText('description.password_expiration_reset')).toBeNull();
+  });
+
+  describe('persistent error message from the navigation state', () => {
+    const suspendedMessage = 'This account is suspended.';
+    const memoryRouterProps = {
+      initialEntries: [{ pathname: '/sign-in', state: { errorMessage: suspendedMessage } }],
+    };
+
+    beforeEach(() => {
+      // Clear the cached identifier input value from previous tests so the
+      // identifier input is not prefilled
+      sessionStorage.clear();
+    });
+
+    test('should display the error message and clear it on resubmission', async () => {
+      const { getByText, queryByText, container } = renderPasswordSignInForm(
+        [SignInIdentifier.Username],
+        undefined,
+        memoryRouterProps
+      );
+
+      expect(queryByText(suspendedMessage)).not.toBeNull();
+
+      const identifierInput = container.querySelector('input[name="identifier"]');
+      const passwordInput = container.querySelector('input[name="password"]');
+
+      assert(identifierInput, new Error('identifier input should exist'));
+      assert(passwordInput, new Error('password input should exist'));
+
+      fireEvent.change(identifierInput, { target: { value: 'username' } });
+      fireEvent.change(passwordInput, { target: { value: 'password' } });
+
+      act(() => {
+        fireEvent.submit(getByText('action.sign_in'));
+      });
+
+      await waitFor(() => {
+        expect(queryByText(suspendedMessage)).toBeNull();
+        expect(signInWithPasswordIdentifier).toBeCalled();
+      });
+    });
+
+    test('should clear the error message when the identifier input is modified', async () => {
+      const { queryByText, container } = renderPasswordSignInForm(
+        [SignInIdentifier.Username],
+        undefined,
+        memoryRouterProps
+      );
+
+      expect(queryByText(suspendedMessage)).not.toBeNull();
+
+      const identifierInput = container.querySelector('input[name="identifier"]');
+      assert(identifierInput, new Error('identifier input should exist'));
+
+      act(() => {
+        fireEvent.change(identifierInput, { target: { value: 'modified-username' } });
+      });
+
+      await waitFor(() => {
+        expect(queryByText(suspendedMessage)).toBeNull();
+      });
+    });
   });
 
   test('should switch to single sign on form when single sign on is enabled for a give email', async () => {

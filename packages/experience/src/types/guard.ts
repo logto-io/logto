@@ -146,6 +146,18 @@ export const identifierInputValueGuard: s.Describe<IdentifierInputValue> = s.obj
  */
 export const identifierSearchParamGuard = s.array(identifierEnumGuard);
 
+/**
+ * Type guard for the navigation state that carries a persistent error message to display
+ * on the sign-in form. E.g. used when redirecting back to the sign-in page after the
+ * enterprise SSO callback fails with a terminal error (suspended user), so the error
+ * remains visible after the global toast disappears.
+ */
+export const persistentErrorMessageStateGuard = s.type({
+  errorMessage: s.string(),
+});
+
+export type PersistentErrorMessageState = s.Infer<typeof persistentErrorMessageStateGuard>;
+
 /* Identifier-based passkey sign-in state - only contains WebAuthn options.
  * Identifier and available methods are read from UserInteractionContext and useSieMethods(). */
 export const identifierPasskeyStateGuard = s.object({

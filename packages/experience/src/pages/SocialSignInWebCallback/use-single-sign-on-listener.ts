@@ -13,6 +13,7 @@ import useRedirectCallbackValidation from '@/hooks/use-redirect-callback-validat
 import { useSieMethods } from '@/hooks/use-sie';
 import useTerms from '@/hooks/use-terms';
 import useToast from '@/hooks/use-toast';
+import { type PersistentErrorMessageState } from '@/types/guard';
 import { parseQueryParameters } from '@/utils';
 
 const useSingleSignOnRegister = () => {
@@ -114,6 +115,14 @@ const useSingleSignOnListener = (connectorId: string) => {
             }
 
             await registerSingleSignOnIdentity(verificationId);
+          },
+          'user.suspended': async (error) => {
+            setToast(error.message);
+            // The toast auto-dismisses after a few seconds. Persist the error message on the
+            // sign-in form via the navigation state so the user can still see why the sign-in failed.
+            navigate('/' + experience.routes.signIn, {
+              state: { errorMessage: error.message } satisfies PersistentErrorMessageState,
+            });
           },
           // Redirect to sign-in page if error is not handled by the error handlers
           global: async (error) => {

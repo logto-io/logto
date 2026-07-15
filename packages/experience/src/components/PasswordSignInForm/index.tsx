@@ -1,4 +1,5 @@
 import { AgreeToTermsPolicy, type SignInIdentifier } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useCallback, useContext, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
@@ -11,6 +12,7 @@ import { SmartInputField, PasswordInputField } from '@/components/InputFields';
 import CaptchaBox from '@/containers/CaptchaBox';
 import ForgotPasswordLink from '@/containers/ForgotPasswordLink';
 import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
+import useLocationErrorMessage from '@/hooks/use-location-error-message';
 import usePasswordSignIn from '@/hooks/use-password-sign-in';
 import usePrefilledIdentifier from '@/hooks/use-prefilled-identifier';
 import { useForgotPasswordSettings } from '@/hooks/use-sie';
@@ -39,6 +41,10 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
   const { t } = useTranslation();
 
   const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn();
+  // Persistent error message passed via the navigation state (e.g. suspended user error from
+  // the enterprise SSO callback). Follows the same clearing rules as the form's own error message.
+  const { errorMessage: locationErrorMessage, clearErrorMessage: clearLocationErrorMessage } =
+    useLocationErrorMessage();
   const { isForgotPasswordEnabled } = useForgotPasswordSettings();
   const { termsValidation, agreeToTermsPolicy } = useTerms();
   const { setIdentifierInputValue } = useContext(UserInteractionContext);
@@ -63,6 +69,21 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
     watch('identifier')
   );
 
+  // The submission error message takes precedence over the persistent one from the navigation
+  // state. `conditional` is needed since the cleared error message is an empty string.
+  const displayErrorMessage = conditional(errorMessage) ?? locationErrorMessage;
+
+  const { value: identifierValue } = watch('identifier');
+
+  useEffect(() => {
+    // Clear the persistent error message from the navigation state once the user modifies
+    // the identifier input. Can not rely on the `isValid`/`isDirty` form state since the
+    // identifier input emits an initial change event on mount.
+    if (identifierValue !== prefilledIdentifier.value) {
+      clearLocationErrorMessage();
+    }
+  }, [clearLocationErrorMessage, identifierValue, prefilledIdentifier.value]);
+
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
       if (isPasskeyFlowProcessing) {
@@ -70,6 +91,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
       }
 
       clearErrorMessage();
+      clearLocationErrorMessage();
 
       await handleSubmit(async ({ identifier: { type, value }, password }) => {
         if (!type) {
@@ -97,6 +119,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
     [
       agreeToTermsPolicy,
       clearErrorMessage,
+      clearLocationErrorMessage,
       handleSubmit,
       navigateToSingleSignOn,
       onSubmit,
@@ -156,7 +179,9 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
         />
       )}
 
-      {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
+      {displayErrorMessage && (
+        <ErrorMessage className={styles.formErrors}>{displayErrorMessage}</ErrorMessage>
+      )}
 
       {isForgotPasswordEnabled && !showSingleSignOnForm && (
         <ForgotPasswordLink
