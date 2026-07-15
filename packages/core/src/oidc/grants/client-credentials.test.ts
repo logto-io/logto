@@ -8,12 +8,10 @@ const { jest } = import.meta;
 
 jest.unstable_mockModule('#src/oidc/oidc-provider-internals.js', () => ({
   applyDpopBinding: jest.fn(),
-  certificateThumbprint: jest.fn(),
   checkDpopRequired: jest.fn(),
   checkMtlsCert: jest.fn(),
   checkResource: jest.fn(),
   dpopValidate: jest.fn(),
-  epochTime: jest.fn(),
   getProviderConfiguration: jest.fn().mockReturnValue({
     features: {
       mTLS: { getCertificate: jest.fn() },
