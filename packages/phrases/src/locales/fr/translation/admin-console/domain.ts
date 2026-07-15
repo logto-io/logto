@@ -58,7 +58,7 @@ const domain = {
       content_placeholder: 'Collez le contenu exact du fichier de vérification',
       required: 'Ce champ est obligatoire.',
       invalid_path:
-        'Utilisez un chemin de fichier à la racine du domaine ou sous /.well-known/. Seuls les lettres, chiffres, points, tirets et traits de soulignement sont pris en charge.',
+        'Utilisez un nom de fichier avec une extension à la racine du domaine, ou un chemin sous /.well-known/. Seuls les lettres, chiffres, points, tirets et traits de soulignement sont pris en charge.',
       duplicate_path: 'Un fichier de vérification utilise déjà ce chemin.',
       content_too_long: 'Le contenu du fichier ne doit pas dépasser 16 384 caractères.',
       invalid_json: 'Saisissez un contenu JSON valide.',

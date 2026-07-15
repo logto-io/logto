@@ -58,7 +58,7 @@ const domain = {
       content_placeholder: 'Paste the exact verification file content',
       required: 'This field is required.',
       invalid_path:
-        'Use a file path at the domain root or under /.well-known/. Only letters, numbers, dots, hyphens, and underscores are supported.',
+        'Use a filename with an extension at the domain root, or a path under /.well-known/. Only letters, numbers, dots, hyphens, and underscores are supported.',
       duplicate_path: 'A verification file already uses this path.',
       content_too_long: 'File content must not exceed 16,384 characters.',
       invalid_json: 'Enter valid JSON content.',

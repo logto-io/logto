@@ -117,7 +117,7 @@
               "schema": {
                 "properties": {
                   "verificationFiles": {
-                    "description": "Up to 10 text or JSON verification files served at the domain root or under `/.well-known/`."
+                    "description": "Up to 10 text or JSON verification files served as filenames with extensions at the domain root, or at paths under `/.well-known/`."
                   }
                 }
               }

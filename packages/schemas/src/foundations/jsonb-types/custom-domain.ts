@@ -13,7 +13,7 @@ export const domainVerificationFilePathGuard = z
     (value) =>
       /^\/[\w-][\w.-]*\.[\w-][\w.-]*$/.test(value) ||
       /^\/\.well-known(?:\/[\w-][\w.-]*)+$/.test(value),
-    'The path must point to a file at the domain root or under /.well-known/.'
+    'The path must point to a file with an extension at the domain root or to a path under /.well-known/.'
   );
 
 export const domainVerificationFileGuard = z

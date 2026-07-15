@@ -52,7 +52,7 @@ const domain = {
       content_placeholder: '粘贴验证文件的准确内容',
       required: '此字段为必填项。',
       invalid_path:
-        '请使用域名根目录或 /.well-known/ 下的文件路径。仅支持字母、数字、点、连字符和下划线。',
+        '请在域名根目录使用带扩展名的文件名，或使用 /.well-known/ 下的路径。仅支持字母、数字、点、连字符和下划线。',
       duplicate_path: '已有验证文件使用此路径。',
       content_too_long: '文件内容不得超过 16,384 个字符。',
       invalid_json: '请输入有效的 JSON 内容。',

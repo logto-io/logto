@@ -58,7 +58,7 @@ const domain = {
       content_placeholder: 'Fügen Sie den exakten Inhalt der Verifizierungsdatei ein',
       required: 'Dieses Feld ist erforderlich.',
       invalid_path:
-        'Verwenden Sie einen Dateipfad im Stammverzeichnis der Domain oder unter /.well-known/. Nur Buchstaben, Zahlen, Punkte, Bindestriche und Unterstriche werden unterstützt.',
+        'Verwenden Sie im Stammverzeichnis der Domain einen Dateinamen mit Erweiterung oder einen Pfad unter /.well-known/. Nur Buchstaben, Zahlen, Punkte, Bindestriche und Unterstriche werden unterstützt.',
       duplicate_path: 'Eine Verifizierungsdatei verwendet diesen Pfad bereits.',
       content_too_long: 'Der Dateiinhalt darf 16.384 Zeichen nicht überschreiten.',
       invalid_json: 'Geben Sie gültigen JSON-Inhalt ein.',

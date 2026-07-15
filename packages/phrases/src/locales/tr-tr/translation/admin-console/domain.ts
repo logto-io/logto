@@ -58,7 +58,7 @@ const domain = {
       content_placeholder: 'Doğrulama dosyasının tam içeriğini yapıştırın',
       required: 'Bu alan zorunludur.',
       invalid_path:
-        'Alan adının kökünde veya /.well-known/ altında bir dosya yolu kullanın. Yalnızca harfler, sayılar, noktalar, kısa çizgiler ve alt çizgiler desteklenir.',
+        'Alan adının kökünde uzantılı bir dosya adı veya /.well-known/ altında bir yol kullanın. Yalnızca harfler, sayılar, noktalar, kısa çizgiler ve alt çizgiler desteklenir.',
       duplicate_path: 'Bu yolu kullanan bir doğrulama dosyası zaten var.',
       content_too_long: 'Dosya içeriği 16.384 karakteri aşmamalıdır.',
       invalid_json: 'Geçerli JSON içeriği girin.',

@@ -52,7 +52,7 @@ const domain = {
       content_placeholder: '貼上驗證檔案的確切內容',
       required: '此欄位為必填。',
       invalid_path:
-        '請使用網域根目錄或 /.well-known/ 下的檔案路徑。僅支援英文字母、數字、句點、連字號及底線。',
+        '請在網域根目錄使用帶副檔名的檔案名稱，或使用 /.well-known/ 下的路徑。僅支援英文字母、數字、句點、連字號及底線。',
       duplicate_path: '已有驗證檔案使用此路徑。',
       content_too_long: '檔案內容不得超過 16,384 個字元。',
       invalid_json: '請輸入有效的 JSON 內容。',

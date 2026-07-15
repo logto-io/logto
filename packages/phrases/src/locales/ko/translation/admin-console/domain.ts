@@ -57,7 +57,7 @@ const domain = {
       content_placeholder: '확인 파일의 정확한 내용을 붙여넣으세요',
       required: '필수 항목입니다.',
       invalid_path:
-        '도메인 루트 또는 /.well-known/ 아래의 파일 경로를 사용하세요. 문자, 숫자, 마침표, 하이픈 및 밑줄만 지원됩니다.',
+        '도메인 루트에서는 확장자가 있는 파일 이름을 사용하거나 /.well-known/ 아래의 경로를 사용하세요. 문자, 숫자, 마침표, 하이픈 및 밑줄만 지원됩니다.',
       duplicate_path: '이 경로를 사용하는 확인 파일이 이미 있습니다.',
       content_too_long: '파일 내용은 16,384자를 초과할 수 없습니다.',
       invalid_json: '유효한 JSON 내용을 입력하세요.',

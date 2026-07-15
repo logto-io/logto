@@ -58,7 +58,7 @@ const domain = {
       content_placeholder: 'Wklej dokładną zawartość pliku weryfikacyjnego',
       required: 'To pole jest wymagane.',
       invalid_path:
-        'Użyj ścieżki pliku w katalogu głównym domeny lub w /.well-known/. Obsługiwane są tylko litery, cyfry, kropki, łączniki i podkreślenia.',
+        'Użyj nazwy pliku z rozszerzeniem w katalogu głównym domeny lub ścieżki w /.well-known/. Obsługiwane są tylko litery, cyfry, kropki, łączniki i podkreślenia.',
       duplicate_path: 'Plik weryfikacyjny używa już tej ścieżki.',
       content_too_long: 'Zawartość pliku nie może przekraczać 16 384 znaków.',
       invalid_json: 'Wprowadź prawidłową zawartość JSON.',

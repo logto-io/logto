@@ -58,7 +58,7 @@ const domain = {
       content_placeholder: 'Cole o conteúdo exato do ficheiro de verificação',
       required: 'Este campo é obrigatório.',
       invalid_path:
-        'Utilize um caminho de ficheiro na raiz do domínio ou em /.well-known/. Apenas são permitidos letras, números, pontos, hífenes e sublinhados.',
+        'Utilize um nome de ficheiro com extensão na raiz do domínio ou um caminho em /.well-known/. Apenas são permitidos letras, números, pontos, hífenes e sublinhados.',
       duplicate_path: 'Já existe um ficheiro de verificação com este caminho.',
       content_too_long: 'O conteúdo do ficheiro não pode exceder 16 384 caracteres.',
       invalid_json: 'Introduza conteúdo JSON válido.',

@@ -58,7 +58,7 @@ const domain = {
       content_placeholder: 'Pegue el contenido exacto del archivo de verificación',
       required: 'Este campo es obligatorio.',
       invalid_path:
-        'Use una ruta de archivo en la raíz del dominio o en /.well-known/. Solo se admiten letras, números, puntos, guiones y guiones bajos.',
+        'Use un nombre de archivo con extensión en la raíz del dominio o una ruta bajo /.well-known/. Solo se admiten letras, números, puntos, guiones y guiones bajos.',
       duplicate_path: 'Ya existe un archivo de verificación con esta ruta.',
       content_too_long: 'El contenido del archivo no debe superar los 16.384 caracteres.',
       invalid_json: 'Introduzca contenido JSON válido.',
