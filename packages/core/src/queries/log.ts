@@ -60,6 +60,9 @@ const buildLogConditionSql = (logCondition: LogCondition) =>
           )
       ),
       conditionalSql(logKey, (logKey) => sql`${fields.key}=${logKey}`),
+      // Use `!== undefined` (not `conditionalSql`) so a legitimate `start_time=0`
+      // or `end_time=0` window still applies — `conditionalSql` treats `0` as
+      // falsy and would silently drop the filter.
       startTime === undefined
         ? sql``
         : sql`${fields.createdAt} >= to_timestamp(${startTime}::double precision / 1000)`,
