@@ -4,7 +4,7 @@ import { ApplicationType, type Application, defaultTenantId } from '@logto/schem
 import { formUrlEncodedHeaders } from '@logto/shared';
 import { assert, assertEnv, noop } from '@silverhand/essentials';
 import { createInterceptorsPreset, createPool, sql, type DatabasePool } from '@silverhand/slonik';
-import ky from 'ky';
+import ky, { HTTPError } from 'ky';
 
 import { oidcApi } from '#src/api/api.js';
 import { createApplication, deleteApplication } from '#src/api/application.js';
@@ -38,6 +38,16 @@ const revokeToken = async (application: Application, token: string, tokenType: s
     headers: { Authorization: getAuthorizationHeader(application) },
     body: new URLSearchParams({ token, token_type_hint: tokenType }),
   });
+
+const expectOidcError = async (
+  request: Promise<unknown>,
+  expected: { error: string; error_description?: string }
+) => {
+  const error = await request.catch((error: unknown) => error);
+  assert(error instanceof HTTPError, new Error('Expected an OIDC HTTP error'));
+  expect(error.response.status).toBe(400);
+  await expect(error.response.json()).resolves.toMatchObject(expected);
+};
 
 const getHtmlAttribute = (element: string, attribute: string) =>
   new RegExp(`\\b${attribute}=["']([^"']*)["']`, 'i').exec(element)?.[1];
@@ -179,8 +189,15 @@ describe('opaque user token lifecycle', () => {
         token_type: 'Bearer',
       });
       /* eslint-enable @typescript-eslint/no-unsafe-assignment */
-      await expect(introspectToken(application, jwtAccessToken, 'access_token')).resolves.toEqual({
-        active: false,
+      /**
+       * Since oidc-provider v9 (9.3.0), structured JWTs are rejected at the introspection
+       * endpoint with `unsupported_token_type` instead of resolving to `{ active: false }` —
+       * JWT access tokens are meant to be verified locally against the JWKS.
+       */
+      await expectOidcError(introspectToken(application, jwtAccessToken, 'access_token'), {
+        error: 'unsupported_token_type',
+        error_description:
+          'Structured JWT Tokens cannot be introspected via the introspection_endpoint',
       });
 
       await revokeToken(application, opaqueAccessToken, 'access_token');
@@ -188,15 +205,24 @@ describe('opaque user token lifecycle', () => {
       await expect(
         introspectToken(application, opaqueAccessToken, 'access_token')
       ).resolves.toEqual({ active: false });
-      await expect(
+
+      /**
+       * Since oidc-provider v9, revoking an access token also revokes the sibling tokens of
+       * the same grant (RFC 7009 §2.1: the server "MAY revoke the respective refresh token"),
+       * so the sibling refresh token becomes unusable. The previous version only cascaded when
+       * a refresh token was revoked. Logto SDKs only revoke refresh tokens on sign-out, so no
+       * client flow relies on the old behavior.
+       */
+      await expectOidcError(
         oidcApi.post('token', {
           headers: { Authorization: getAuthorizationHeader(application) },
           body: new URLSearchParams({
             grant_type: 'refresh_token',
             refresh_token: refreshToken,
           }),
-        })
-      ).resolves.toBeDefined();
+        }),
+        { error: 'invalid_grant' }
+      );
     } finally {
       await deleteResource(resource.id);
     }

@@ -7,13 +7,13 @@
 import { buildOrganizationUrn } from '@logto/core-kit';
 import { GrantType } from '@logto/schemas';
 import { nanoid } from 'nanoid';
-import type { Provider } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 
 import { type EnvSet } from '#src/env-set/index.js';
 import { assertUserHasApplicationAccessForOidc } from '#src/oidc/application-access-control.js';
 import {
   getProviderConfiguration,
+  type GrantTypeHandler,
   resolveResource,
   validatePresence,
 } from '#src/oidc/oidc-provider-internals.js';
@@ -62,9 +62,9 @@ type Handler = (
   envSet: EnvSet,
   queries: Queries,
   applicationAccessControl: Libraries['applicationAccessControl']
-) => Parameters<Provider['registerGrantType']>[1];
+) => GrantTypeHandler;
 
-export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx, next) => {
+export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx) => {
   const { client, params, requestParamScopes, provider } = ctx.oidc;
   const { AccessToken, Grant } = provider;
 
@@ -233,7 +233,5 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx,
     scope: accessToken.scope,
     token_type: accessToken.tokenType,
   };
-
-  await next();
 };
 /* eslint-enable @silverhand/fp/no-mutation, @typescript-eslint/no-unsafe-assignment */

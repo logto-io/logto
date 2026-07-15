@@ -12,8 +12,6 @@ import { buildHandler } from './refresh-token.js';
 
 const { jest } = import.meta;
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const noop = async () => {};
 const assertUserHasApplicationAccess = jest.fn(async () => {
   await Promise.resolve();
 });
@@ -96,8 +94,15 @@ const validOidcContext: Partial<KoaContextWithOIDC['oidc']> = {
 const validGrant: Grant = {
   jti: '',
   kind: '',
+  iat: 0,
   clientId,
   accountId,
+  scopes: new Set<string>(),
+  ttlPercentagePassed: jest.fn(),
+  isValid: false,
+  isExpired: false,
+  remainingTTL: 0,
+  expiration: 0,
   adapter: mockAdapter,
   addOIDCScope: jest.fn(),
   rejectOIDCScope: jest.fn(),
@@ -170,12 +175,12 @@ describe('refresh token grant', () => {
 
   it('should throw when client is not available', async () => {
     const ctx = createOidcContext({ ...validOidcContext, client: undefined });
-    await expect(mockHandler()(ctx, noop)).rejects.toThrow(errors.InvalidClient);
+    await expect(mockHandler()(ctx)).rejects.toThrow(errors.InvalidClient);
   });
 
   it('should throw when refresh token is not available', async () => {
     const ctx = createOidcContext(validOidcContext);
-    await expect(mockHandler()(ctx, noop)).rejects.toMatchError(
+    await expect(mockHandler()(ctx)).rejects.toMatchError(
       new errors.InvalidGrant('refresh token not found')
     );
   });
@@ -185,7 +190,7 @@ describe('refresh token grant', () => {
     stubRefreshToken(ctx, {
       clientId: 'some_other_id',
     });
-    await expect(mockHandler()(ctx, noop)).rejects.toMatchError(
+    await expect(mockHandler()(ctx)).rejects.toMatchError(
       new errors.InvalidGrant('client mismatch')
     );
   });
@@ -195,7 +200,7 @@ describe('refresh token grant', () => {
     stubRefreshToken(ctx, {
       isExpired: true,
     });
-    await expect(mockHandler()(ctx, noop)).rejects.toMatchError(
+    await expect(mockHandler()(ctx)).rejects.toMatchError(
       new errors.InvalidGrant('refresh token is expired')
     );
   });
@@ -205,13 +210,13 @@ describe('refresh token grant', () => {
     const findRefreshToken = stubRefreshToken(ctx, {
       grantId: undefined,
     });
-    await expect(mockHandler()(ctx, noop)).rejects.toMatchError(
+    await expect(mockHandler()(ctx)).rejects.toMatchError(
       new errors.InvalidGrant('grantId not found')
     );
 
     findRefreshToken.resolves(validRefreshToken);
     Sinon.stub(ctx.oidc.provider.Grant, 'find').resolves();
-    await expect(mockHandler()(ctx, noop)).rejects.toMatchError(
+    await expect(mockHandler()(ctx)).rejects.toMatchError(
       new errors.InvalidGrant('grant not found')
     );
   });
@@ -222,7 +227,7 @@ describe('refresh token grant', () => {
     stubGrant(ctx, {
       isExpired: true,
     });
-    await expect(mockHandler()(ctx, noop)).rejects.toMatchError(
+    await expect(mockHandler()(ctx)).rejects.toMatchError(
       new errors.InvalidGrant('grant is expired')
     );
   });
@@ -233,7 +238,7 @@ describe('refresh token grant', () => {
     stubGrant(ctx, {
       clientId: 'some_other_id',
     });
-    await expect(mockHandler()(ctx, noop)).rejects.toMatchError(
+    await expect(mockHandler()(ctx)).rejects.toMatchError(
       new errors.InvalidGrant('client mismatch')
     );
   });
@@ -245,7 +250,7 @@ describe('refresh token grant', () => {
       scopes: new Set([UserScope.Organizations]),
     });
     stubGrant(ctx);
-    await expect(mockHandler()(ctx, noop)).rejects.toThrow(errors.InvalidScope);
+    await expect(mockHandler()(ctx)).rejects.toThrow(errors.InvalidScope);
   });
 
   it('should throw when account cannot be found or account id mismatch', async () => {
@@ -256,11 +261,11 @@ describe('refresh token grant', () => {
       getProviderConfiguration(ctx.oidc.provider),
       'findAccount'
     ).resolves();
-    await expect(mockHandler()(ctx, noop)).rejects.toThrow(errors.InvalidGrant);
+    await expect(mockHandler()(ctx)).rejects.toThrow(errors.InvalidGrant);
 
     stubbedGrant.resolves({ ...validGrant, accountId: 'some_other_id' });
     stubFindAccount.resolves({ accountId });
-    await expect(mockHandler()(ctx, noop)).rejects.toMatchError(
+    await expect(mockHandler()(ctx)).rejects.toMatchError(
       new errors.InvalidGrant('accountId mismatch')
     );
   });
@@ -272,7 +277,7 @@ describe('refresh token grant', () => {
     });
     stubGrant(ctx);
     stubAccount(ctx);
-    await expect(mockHandler()(ctx, noop)).rejects.toThrow(errors.InvalidGrant);
+    await expect(mockHandler()(ctx)).rejects.toThrow(errors.InvalidGrant);
   });
 
   it('should throw before refresh token rotation when the user has no application access', async () => {
@@ -281,7 +286,7 @@ describe('refresh token grant', () => {
     const accessError = new RequestError('oidc.access_denied');
     assertUserHasApplicationAccess.mockRejectedValueOnce(accessError);
 
-    await expect(mockHandler(tenant)(ctx, noop)).rejects.toThrow(errors.AccessDenied);
+    await expect(mockHandler(tenant)(ctx)).rejects.toThrow(errors.AccessDenied);
 
     expect(validRefreshToken.consume).not.toHaveBeenCalled();
   });
@@ -290,7 +295,7 @@ describe('refresh token grant', () => {
     const ctx = createPreparedContext();
     const tenant = new MockTenant();
     Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(false);
-    await expect(mockHandler(tenant)(ctx, noop)).rejects.toThrow(
+    await expect(mockHandler(tenant)(ctx)).rejects.toThrow(
       createAccessDeniedError('user is not a member of the organization', 403)
     );
   });
@@ -304,7 +309,7 @@ describe('refresh token grant', () => {
       isThirdParty: true,
     });
     Sinon.stub(tenant.queries.applications.userConsentOrganizations, 'exists').resolves(false);
-    await expect(mockHandler(tenant)(ctx, noop)).rejects.toThrow(
+    await expect(mockHandler(tenant)(ctx)).rejects.toThrow(
       createAccessDeniedError('organization access is not granted to the application', 403)
     );
   });
@@ -319,7 +324,7 @@ describe('refresh token grant', () => {
       isMfaRequired: true,
       hasMfaConfigured: false,
     });
-    await expect(mockHandler(tenant)(ctx, noop)).rejects.toThrow(
+    await expect(mockHandler(tenant)(ctx)).rejects.toThrow(
       createAccessDeniedError('organization requires MFA but user has no MFA configured', 403)
     );
   });
@@ -349,7 +354,7 @@ describe('refresh token grant', () => {
       hasMfaConfigured: false,
     });
 
-    await expect(mockHandler(tenant)(ctx, noop)).rejects.toMatchError(
+    await expect(mockHandler(tenant)(ctx)).rejects.toMatchError(
       new errors.InsufficientScope('refresh token missing required scope', UserScope.Organizations)
     );
   });
@@ -371,10 +376,7 @@ describe('refresh token grant', () => {
     });
 
     const entityStub = Sinon.stub(ctx.oidc, 'entity');
-    const noopStub = Sinon.stub().resolves();
-
-    await expect(mockHandler(tenant)(ctx, noopStub)).resolves.toBeUndefined();
-    expect(noopStub.callCount).toBe(1);
+    await expect(mockHandler(tenant)(ctx)).resolves.toBeUndefined();
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const [key, value] = entityStub.lastCall.args;

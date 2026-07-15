@@ -19,8 +19,6 @@ jest.unstable_mockModule('jose', () => ({
 
 const { buildHandler } = await import('./index.js');
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const noop = async () => {};
 const findSubjectToken = jest.fn();
 const updateSubjectTokenById = jest.fn();
 
@@ -112,7 +110,7 @@ describe('token exchange', () => {
 
   it('should throw when client is not available', async () => {
     const ctx = createOidcContext({ ...validOidcContext, client: undefined });
-    await expect(mockHandler()(ctx, noop)).rejects.toThrow(errors.InvalidClient);
+    await expect(mockHandler()(ctx)).rejects.toThrow(errors.InvalidClient);
   });
 
   it('should throw when subject token type is incorrect', async () => {
@@ -120,14 +118,14 @@ describe('token exchange', () => {
       ...validOidcContext,
       params: { ...validOidcContext.params, subject_token_type: 'invalid' },
     });
-    await expect(mockHandler()(ctx, noop)).rejects.toMatchError(
+    await expect(mockHandler()(ctx)).rejects.toMatchError(
       new errors.InvalidGrant('unsupported subject token type')
     );
   });
 
   it('should throw when subject token is not available', async () => {
     const ctx = createOidcContext(validOidcContext);
-    await expect(mockHandler()(ctx, noop)).rejects.toMatchError(
+    await expect(mockHandler()(ctx)).rejects.toMatchError(
       new errors.InvalidGrant('subject token not found')
     );
   });
@@ -138,7 +136,7 @@ describe('token exchange', () => {
       ...createValidSubjectToken(),
       expiresAt: Date.now() - 1000,
     });
-    await expect(mockHandler()(ctx, noop)).rejects.toMatchError(
+    await expect(mockHandler()(ctx)).rejects.toMatchError(
       new errors.InvalidGrant('subject token is expired')
     );
   });
@@ -149,7 +147,7 @@ describe('token exchange', () => {
       ...createValidSubjectToken(),
       consumedAt: Date.now() - 1000,
     });
-    await expect(mockHandler()(ctx, noop)).rejects.toMatchError(
+    await expect(mockHandler()(ctx)).rejects.toMatchError(
       new errors.InvalidGrant('subject token is already consumed')
     );
   });
@@ -158,7 +156,7 @@ describe('token exchange', () => {
     const ctx = createOidcContext(validOidcContext);
     findSubjectToken.mockResolvedValueOnce(createValidSubjectToken());
     Sinon.stub(getProviderConfiguration(ctx.oidc.provider), 'findAccount').resolves();
-    await expect(mockHandler()(ctx, noop)).rejects.toThrow(errors.InvalidGrant);
+    await expect(mockHandler()(ctx)).rejects.toThrow(errors.InvalidGrant);
   });
 
   it('should throw before creating token continuation when the user has no application access', async () => {
@@ -168,12 +166,9 @@ describe('token exchange', () => {
     const tenant = new MockTenant(undefined, mockQueries);
     const accessError = new RequestError('oidc.access_denied');
     assertUserHasApplicationAccess.mockRejectedValueOnce(accessError);
-    const noopStub = Sinon.stub().resolves();
-
-    await expect(mockHandler(tenant)(ctx, noopStub)).rejects.toThrow(errors.AccessDenied);
+    await expect(mockHandler(tenant)(ctx)).rejects.toThrow(errors.AccessDenied);
 
     expect(updateSubjectTokenById).not.toHaveBeenCalled();
-    expect(noopStub.callCount).toBe(0);
   });
 
   // The handler returns void so we cannot check the return value, and it's also not
@@ -186,10 +181,7 @@ describe('token exchange', () => {
     Sinon.stub(getProviderConfiguration(ctx.oidc.provider), 'findAccount').resolves({ accountId });
 
     const entityStub = Sinon.stub(ctx.oidc, 'entity');
-    const noopStub = Sinon.stub().resolves();
-
-    await expect(mockHandler(mockTenant)(ctx, noopStub)).resolves.toBeUndefined();
-    expect(noopStub.callCount).toBe(1);
+    await expect(mockHandler(mockTenant)(ctx)).resolves.toBeUndefined();
     expect(updateSubjectTokenById).toHaveBeenCalled();
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -212,7 +204,7 @@ describe('token exchange', () => {
 
       const tenant = new MockTenant(undefined, mockQueries);
       Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(false);
-      await expect(mockHandler(tenant)(ctx, noop)).rejects.toThrow(
+      await expect(mockHandler(tenant)(ctx)).rejects.toThrow(
         createAccessDeniedError('user is not a member of the organization', 403)
       );
     });
@@ -230,7 +222,7 @@ describe('token exchange', () => {
         isMfaRequired: true,
         hasMfaConfigured: false,
       });
-      await expect(mockHandler(tenant)(ctx, noop)).rejects.toThrow(
+      await expect(mockHandler(tenant)(ctx)).rejects.toThrow(
         createAccessDeniedError('organization requires MFA but user has no MFA configured', 403)
       );
     });
@@ -255,10 +247,7 @@ describe('token exchange', () => {
       });
 
       const entityStub = Sinon.stub(ctx.oidc, 'entity');
-      const noopStub = Sinon.stub().resolves();
-
-      await expect(mockHandler(tenant)(ctx, noopStub)).resolves.toBeUndefined();
-      expect(noopStub.callCount).toBe(1);
+      await expect(mockHandler(tenant)(ctx)).resolves.toBeUndefined();
       expect(updateSubjectTokenById).toHaveBeenCalled();
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -299,7 +288,7 @@ describe('token exchange', () => {
     it('should throw when JWT verification fails', async () => {
       const ctx = createPreparedJwtContext();
       mockJwtVerify.mockRejectedValueOnce(new Error('invalid signature'));
-      await expect(mockHandler()(ctx, noop)).rejects.toMatchError(
+      await expect(mockHandler()(ctx)).rejects.toMatchError(
         new errors.InvalidGrant('invalid subject token')
       );
     });
@@ -307,7 +296,7 @@ describe('token exchange', () => {
     it('should throw when JWT does not contain sub claim', async () => {
       const ctx = createPreparedJwtContext();
       mockJwtVerify.mockResolvedValueOnce({ payload: {} });
-      await expect(mockHandler()(ctx, noop)).rejects.toMatchError(
+      await expect(mockHandler()(ctx)).rejects.toMatchError(
         new errors.InvalidGrant('subject token does not contain a valid `sub` claim')
       );
     });
@@ -316,7 +305,7 @@ describe('token exchange', () => {
       const ctx = createPreparedJwtContext();
       mockJwtVerify.mockResolvedValueOnce({ payload: { sub: accountId } });
       Sinon.stub(getProviderConfiguration(ctx.oidc.provider), 'findAccount').resolves();
-      await expect(mockHandler()(ctx, noop)).rejects.toThrow(errors.InvalidGrant);
+      await expect(mockHandler()(ctx)).rejects.toThrow(errors.InvalidGrant);
     });
 
     it('should not consume the token (allow multiple exchanges)', async () => {
@@ -327,10 +316,7 @@ describe('token exchange', () => {
       });
 
       const entityStub = Sinon.stub(ctx.oidc, 'entity');
-      const noopStub = Sinon.stub().resolves();
-
-      await expect(mockHandler(mockTenant)(ctx, noopStub)).resolves.toBeUndefined();
-      expect(noopStub.callCount).toBe(1);
+      await expect(mockHandler(mockTenant)(ctx)).resolves.toBeUndefined();
       // JWT tokens should NOT be consumption-tracked
       expect(updateSubjectTokenById).not.toHaveBeenCalled();
 
@@ -374,10 +360,7 @@ describe('token exchange', () => {
       });
 
       const entityStub = Sinon.stub(ctx.oidc, 'entity');
-      const noopStub = Sinon.stub().resolves();
-
-      await expect(mockHandler(mockTenant)(ctx, noopStub)).resolves.toBeUndefined();
-      expect(noopStub.callCount).toBe(1);
+      await expect(mockHandler(mockTenant)(ctx)).resolves.toBeUndefined();
       // Opaque tokens should NOT be consumption-tracked
       expect(updateSubjectTokenById).not.toHaveBeenCalled();
 
@@ -398,7 +381,7 @@ describe('token exchange', () => {
         isExpired: true,
       });
 
-      await expect(mockHandler()(ctx, noop)).rejects.toMatchError(
+      await expect(mockHandler()(ctx)).rejects.toMatchError(
         new errors.InvalidGrant('subject token is expired')
       );
     });
@@ -414,10 +397,7 @@ describe('token exchange', () => {
       });
 
       const entityStub = Sinon.stub(ctx.oidc, 'entity');
-      const noopStub = Sinon.stub().resolves();
-
-      await expect(mockHandler(mockTenant)(ctx, noopStub)).resolves.toBeUndefined();
-      expect(noopStub.callCount).toBe(1);
+      await expect(mockHandler(mockTenant)(ctx)).resolves.toBeUndefined();
       expect(mockJwtVerify).toHaveBeenCalled();
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -456,10 +436,7 @@ describe('token exchange', () => {
       });
 
       const entityStub = Sinon.stub(ctx.oidc, 'entity');
-      const noopStub = Sinon.stub().resolves();
-
-      await expect(mockHandler(mockTenant)(ctx, noopStub)).resolves.toBeUndefined();
-      expect(noopStub.callCount).toBe(1);
+      await expect(mockHandler(mockTenant)(ctx)).resolves.toBeUndefined();
       expect(updateSubjectTokenById).toHaveBeenCalled();
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

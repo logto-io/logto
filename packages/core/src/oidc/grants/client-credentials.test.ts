@@ -19,9 +19,6 @@ jest.unstable_mockModule('#src/oidc/oidc-provider-internals.js', () => ({
   }),
 }));
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const noop = async () => {};
-
 const clientId = 'some_client_id';
 const requestScopes = ['foo', 'bar'];
 
@@ -89,7 +86,7 @@ const mockHandler = (tenant = new MockTenant()) => {
 describe('client credentials grant', () => {
   it('should throw an error if the client is not available', async () => {
     const ctx = createOidcContext({ ...validOidcContext, client: undefined });
-    await expect(mockHandler()(ctx, noop)).rejects.toThrow(errors.InvalidClient);
+    await expect(mockHandler()(ctx)).rejects.toThrow(errors.InvalidClient);
   });
 
   it('should throw an error if the requested scope is not allowed', async () => {
@@ -109,7 +106,7 @@ describe('client credentials grant', () => {
             },
           },
         })
-      )(ctx, noop)
+      )(ctx)
     ).rejects.toThrow(errors.InvalidScope);
   });
 
@@ -127,7 +124,7 @@ describe('client credentials grant', () => {
             },
           },
         })
-      )(ctx, noop)
+      )(ctx)
     ).rejects.toThrow(errors.AccessDenied);
   });
 
@@ -147,7 +144,7 @@ describe('client credentials grant', () => {
             },
           },
         })
-      )(ctx, noop)
+      )(ctx)
     ).resolves.toBeUndefined();
 
     expect(isKeyInObject(ctx.body, 'scope') && ctx.body.scope).toBe('foo');

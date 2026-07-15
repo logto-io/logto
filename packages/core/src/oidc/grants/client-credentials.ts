@@ -20,11 +20,14 @@
  */
 
 import { cond } from '@silverhand/essentials';
-import type { Provider } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 
 import { type EnvSet } from '#src/env-set/index.js';
-import { checkResource, getProviderConfiguration } from '#src/oidc/oidc-provider-internals.js';
+import {
+  checkResource,
+  getProviderConfiguration,
+  type GrantTypeHandler,
+} from '#src/oidc/oidc-provider-internals.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -45,7 +48,7 @@ export const buildHandler: (
   envSet: EnvSet,
   queries: Queries
   // eslint-disable-next-line complexity
-) => Parameters<Provider['registerGrantType']>[1] = (envSet, queries) => async (ctx, next) => {
+) => GrantTypeHandler = (envSet, queries) => async (ctx) => {
   const { client, params } = ctx.oidc;
   const { ClientCredentials } = ctx.oidc.provider;
 
@@ -163,7 +166,5 @@ export const buildHandler: (
     token_type: token.tokenType,
     scope: token.scope,
   };
-
-  await next();
 };
 /* eslint-enable @silverhand/fp/no-mutation, @typescript-eslint/no-non-null-assertion */

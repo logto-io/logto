@@ -21,7 +21,6 @@
 
 import { UserScope } from '@logto/core-kit';
 import { isKeyInObject } from '@silverhand/essentials';
-import type { Provider } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 
 import { type EnvSet } from '#src/env-set/index.js';
@@ -30,6 +29,7 @@ import {
   difference,
   filterClaims,
   getProviderConfiguration,
+  type GrantTypeHandler,
   resolveResource,
   revoke,
   validatePresence,
@@ -72,9 +72,9 @@ type Handler = (
   envSet: EnvSet,
   queries: Queries,
   applicationAccessControl: Libraries['applicationAccessControl']
-) => Parameters<Provider['registerGrantType']>[1];
+) => GrantTypeHandler;
 
-export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx, next) => {
+export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx) => {
   const { client, params, requestParamScopes, provider } = ctx.oidc;
   const { RefreshToken, AccessToken, Grant, IdToken } = provider;
 
@@ -335,7 +335,5 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx,
     scope: at.scope,
     token_type: at.tokenType,
   };
-
-  await next();
 };
 /* eslint-enable complexity, @silverhand/fp/no-let, @typescript-eslint/no-non-null-assertion, @silverhand/fp/no-mutation, unicorn/no-array-method-this-argument */
