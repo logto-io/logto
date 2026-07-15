@@ -1,4 +1,5 @@
 const tabs = {
+  inline_hooks: '內聯掛鉤',
   get_started: '開始上手',
   dashboard: '儀表板',
   applications: '全部應用',

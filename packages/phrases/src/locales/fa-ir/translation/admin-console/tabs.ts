@@ -1,4 +1,5 @@
 const tabs = {
+  inline_hooks: 'هوک‌های درون‌خطی',
   get_started: 'شروع کنید',
   dashboard: 'داشبورد',
   applications: 'برنامه‌ها',
