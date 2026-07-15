@@ -714,16 +714,15 @@ export default class ExperienceInteraction {
     const {
       libraries: { inlineHooks, jwtCustomizers },
     } = this.tenant;
-    const event: PostSignInEvent = {
-      key: LogtoInlineHookKey.PostSignIn,
-      interactionEvent: InteractionEvent.SignIn,
-      user: await jwtCustomizers.getUserContext(userId),
-    };
     const hookResult = validatePostSignInHookResult({
-      event,
+      userId,
       result: await inlineHooks.runHook({
         key: LogtoInlineHookKey.PostSignIn,
-        event,
+        getEvent: async (): Promise<PostSignInEvent> => ({
+          key: LogtoInlineHookKey.PostSignIn,
+          interactionEvent: InteractionEvent.SignIn,
+          user: await jwtCustomizers.getUserContext(userId),
+        }),
       }),
     });
 

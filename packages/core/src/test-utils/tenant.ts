@@ -3,7 +3,6 @@ import { TtlCache } from '@logto/shared';
 import { createMockPool, createMockQueryResult } from '@silverhand/slonik';
 
 import { WellKnownCache } from '#src/caches/well-known.js';
-import RequestError from '#src/errors/RequestError/index.js';
 import type { CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 import { createCloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
@@ -92,20 +91,8 @@ export class MockTenant implements TenantContext {
     this.wellKnownCache = new MockWellKnownCache();
     this.queries = new MockQueries(queriesOverride, this.wellKnownCache);
 
-    const baseLogtoConfigs = createLogtoConfigLibrary(this.queries);
-    const maybeBaseLogtoConfigs: Partial<LogtoConfigLibrary> = baseLogtoConfigs;
     this.logtoConfigs = {
-      ...baseLogtoConfigs,
-      ...(typeof maybeBaseLogtoConfigs.getInlineHook === 'function'
-        ? {}
-        : {
-            getInlineHook: async () => {
-              throw new RequestError({
-                code: 'entity.not_exists_with_id',
-                status: 404,
-              });
-            },
-          }),
+      ...createLogtoConfigLibrary(this.queries),
       ...logtoConfigsOverride,
     };
     this.cloudConnection = createCloudConnectionLibrary(this.logtoConfigs);

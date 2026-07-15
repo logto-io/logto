@@ -53,6 +53,14 @@ describe('InlineHookLibrary', () => {
   });
 
   it('loads hook config and runs enabled inline hook script in local VM', async () => {
+    const getEvent = jest.fn().mockResolvedValue({
+      key: LogtoInlineHookKey.PostSignIn,
+      interactionEvent: 'SignIn',
+      user: {
+        id: 'foo',
+        name: 'Foo',
+      },
+    });
     getInlineHook.mockResolvedValueOnce({
       enabled: true,
       environmentVariables: {
@@ -72,14 +80,7 @@ describe('InlineHookLibrary', () => {
     await expect(
       library.runHook({
         key: LogtoInlineHookKey.PostSignIn,
-        event: {
-          key: LogtoInlineHookKey.PostSignIn,
-          interactionEvent: 'SignIn',
-          user: {
-            id: 'foo',
-            name: 'Foo',
-          },
-        },
+        getEvent,
       })
     ).resolves.toEqual({
       action: 'updateUser',
@@ -90,6 +91,7 @@ describe('InlineHookLibrary', () => {
     });
 
     expect(getInlineHook).toHaveBeenCalledWith(LogtoInlineHookKey.PostSignIn);
+    expect(getEvent).toHaveBeenCalledTimes(1);
   });
 
   it('does not load or run hooks when dev features are disabled', async () => {
@@ -126,6 +128,7 @@ describe('InlineHookLibrary', () => {
   });
 
   it('does not run when inline hook config is missing', async () => {
+    const getEvent = jest.fn().mockResolvedValue({});
     getInlineHook.mockRejectedValueOnce(
       new RequestError({
         code: 'entity.not_exists_with_id',
@@ -136,9 +139,11 @@ describe('InlineHookLibrary', () => {
     await expect(
       library.runHook({
         key: LogtoInlineHookKey.PostSignIn,
-        event: {},
+        getEvent,
       })
     ).resolves.toBeUndefined();
+
+    expect(getEvent).not.toHaveBeenCalled();
   });
 
   it('rethrows non-404 errors when loading inline hook config', async () => {
@@ -157,6 +162,7 @@ describe('InlineHookLibrary', () => {
   });
 
   it('does not run when inline hooks quota is disabled', async () => {
+    const getEvent = jest.fn().mockResolvedValue({});
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for cloud quota test.
     (EnvSet.values as { isCloud: boolean }).isCloud = true;
     getSubscriptionData.mockResolvedValueOnce({
@@ -176,9 +182,11 @@ describe('InlineHookLibrary', () => {
     await expect(
       library.runHook({
         key: LogtoInlineHookKey.PostSignIn,
-        event: {},
+        getEvent,
       })
     ).resolves.toBeUndefined();
+
+    expect(getEvent).not.toHaveBeenCalled();
   });
 
   it('allows PostSignIn execution errors to continue without hook enrichment', async () => {
