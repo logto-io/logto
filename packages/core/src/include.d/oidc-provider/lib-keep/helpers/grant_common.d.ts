@@ -1,4 +1,4 @@
-// https://github.com/logto-io/node-oidc-provider/blob/d60ae9bd6d089e69f3a243119c6d87db25e837ce/lib/helpers/grant_common.js
+// https://github.com/logto-io/node-oidc-provider/blob/7722ac95d77cd62a41528aec4eb711b3d12589d4/lib/helpers/grant_common.js
 declare module 'oidc-provider/lib/helpers/grant_common.js' {
   import { type X509Certificate } from 'node:crypto';
 
@@ -15,6 +15,15 @@ declare module 'oidc-provider/lib/helpers/grant_common.js' {
     rar?: unknown;
     setThumbprint(name: 'jkt' | 'x5t', input: string | X509Certificate): void;
   };
+
+  /**
+   * Returns the client certificate when the client requires mTLS-bound access tokens and throws
+   * `InvalidGrant` when the certificate is missing; returns `undefined` for other clients.
+   */
+  export function checkMtlsCert(
+    ctx: KoaContextWithOIDC,
+    getCertificate: (ctx: KoaContextWithOIDC) => X509Certificate | string | undefined
+  ): X509Certificate | string | undefined;
 
   /** Throws `InvalidGrant` when the client requires DPoP-bound access tokens but no proof is given. */
   export function checkDpopRequired(ctx: KoaContextWithOIDC, dPoP: unknown): void;
@@ -61,6 +70,17 @@ declare module 'oidc-provider/lib/helpers/grant_common.js' {
 
   /** Sets the `x5t` thumbprint on the access token when a client certificate is present. */
   export function applyMtlsBinding(at: WidenedAccessToken, cert?: string | X509Certificate): void;
+
+  /**
+   * Binds the token to the DPoP proof key when a proof is present: runs replay detection
+   * (unless `allowReplay` is enabled) and sets the `jkt` thumbprint.
+   */
+  export function applyDpopBinding(
+    ctx: KoaContextWithOIDC,
+    dPoP: { jti: string; thumbprint: string } | undefined,
+    at: { setThumbprint(name: 'jkt', input: string): void },
+    allowReplay: boolean
+  ): Promise<void>;
 
   /**
    * Issues the ID token when the effective scope contains `openid`; returns `undefined`

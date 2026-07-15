@@ -12,10 +12,12 @@ export { checkAttestBinding } from 'oidc-provider/lib/helpers/check_attest_bindi
 export { default as epochTime } from 'oidc-provider/lib/helpers/epoch_time.js';
 export { pluralize } from 'oidc-provider/lib/helpers/formatters.js';
 export {
+  applyDpopBinding,
   applyMtlsBinding,
   buildTokenResponse,
   checkAccountMismatch,
   checkDpopRequired,
+  checkMtlsCert,
   createAccessToken,
   issueIdToken,
   validateAccount,
