@@ -1,0 +1,23 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  position: relative;
+
+  .header {
+    flex-shrink: 0;
+    margin-bottom: _.unit(4);
+  }
+
+  .hidden {
+    display: none;
+  }
+}
+
+.warning {
+  margin-bottom: _.unit(4);
+}
+
+.warningTitle {
+  font: var(--font-label-2);
+  margin-bottom: _.unit(1);
+}

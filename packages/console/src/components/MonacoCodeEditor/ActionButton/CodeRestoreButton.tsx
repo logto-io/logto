@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import { useTranslation } from 'react-i18next';
 
 import RedoIcon from '@/assets/icons/redo.svg?react';
 
@@ -8,17 +7,17 @@ import styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;
+  readonly actionTip: string;
+  readonly actionSuccessTip: string;
   readonly onClick: () => void;
 };
 
-function CodeRestoreButton({ className, onClick }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-
+function CodeRestoreButton({ className, actionTip, actionSuccessTip, onClick }: Props) {
   return (
     <ActionButton
       className={classNames(className, styles.actionButton)}
-      actionTip={t('jwt_claims.restore')}
-      actionSuccessTip={t('jwt_claims.restored')}
+      actionTip={actionTip}
+      actionSuccessTip={actionSuccessTip}
       icon={<RedoIcon />}
       onClick={onClick}
     />

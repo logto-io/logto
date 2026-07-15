@@ -1,0 +1,66 @@
+@use '@/scss/underscore' as _;
+
+.settingsSection {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(4);
+  overflow: auto;
+  min-height: 0;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(4);
+}
+
+.cardTitle {
+  font: var(--font-label-2);
+  color: var(--color-text);
+}
+
+.cardDescription {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(3);
+}
+
+.sampleCode {
+  :global {
+    /* stylelint-disable-next-line selector-class-pattern */
+    .monaco-editor {
+      border-radius: 8px;
+
+      /* stylelint-disable-next-line selector-class-pattern */
+      .overflow-guard {
+        border-radius: 8px;
+      }
+
+      /* stylelint-disable-next-line selector-class-pattern */
+      .lines-content {
+        padding: 0 16px;
+      }
+    }
+  }
+}
+
+.envVariablesField {
+  margin-bottom: _.unit(2);
+}
+
+.contextSampleEditor {
+  min-height: 240px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.error {
+  font: var(--font-body-2);
+  color: var(--color-error);
+}

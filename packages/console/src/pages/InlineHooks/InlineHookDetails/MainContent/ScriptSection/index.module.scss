@@ -1,0 +1,18 @@
+@use '@/scss/underscore' as _;
+
+.scriptSection {
+  position: relative;
+  min-width: 50%;
+
+  .fixHeightWrapper {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .codeEditor {
+    min-height: 400px;
+    flex-grow: 1;
+  }
+}
