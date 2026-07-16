@@ -3,6 +3,7 @@ const inline_hooks = {
   title: 'Hook inline',
   subtitle:
     'Esegui codice personalizzato in punti specifici del flusso di autenticazione per estendere il comportamento di Logto.',
+  details_page_title: '{{name}}',
   status: {
     not_configured: 'Non configurato',
     configured: 'Configurato',
@@ -21,6 +22,70 @@ const inline_hooks = {
         'Esegui logica personalizzata dopo che un utente ha effettuato correttamente l’accesso.',
     },
   },
+  data_source_tab: 'Origine dati',
+  test_tab: 'Contesto di test',
+  settings_tab: 'Impostazioni',
+  event_data: {
+    title: 'Payload dell’evento',
+    subtitle: 'Usa il parametro di input `event` per i dati dell’evento di autenticazione.',
+  },
+  result_data: {
+    title: 'Risultato dell’hook',
+    subtitle: 'Restituisci un oggetto risultato che Logto comprende per questo tipo di hook.',
+  },
+  environment_variables: {
+    title: 'Imposta le variabili d’ambiente',
+    subtitle: 'Usa le variabili d’ambiente per archiviare informazioni sensibili.',
+    input_field_title: 'Aggiungi variabili d’ambiente',
+    sample_code: 'Accesso alle variabili d’ambiente nel gestore dell’hook inline. Esempio:',
+  },
+  fetch_external_data: {
+    title: 'Recupera dati esterni',
+    subtitle: 'Chiama API esterne dallo script dell’hook.',
+    description:
+      'Usa la funzione `fetch` per chiamare le tue API esterne e includere i dati nel risultato dell’hook. Esempio:',
+  },
+  settings: {
+    title: 'Impostazioni',
+    subtitle: 'Controlla se l’hook è attivo e come vengono gestiti gli errori di runtime.',
+    enabled: {
+      title: 'Abilita hook',
+      description: 'Esegui questo script quando viene attivato l’evento di autenticazione.',
+    },
+    on_execution_error: {
+      title: 'In caso di errore dello script',
+      description: 'Scegli come deve comportarsi Logto quando lo script fallisce a runtime.',
+      block: 'Blocca il flusso di autenticazione',
+      allow: 'Consenti al flusso di autenticazione di continuare',
+    },
+  },
+  test_context: {
+    subtitle: 'Regola il payload dell’evento simulato usato durante i test.',
+    input_field_title: 'JSON di esempio dell’evento',
+  },
+  script: {
+    title: 'Script',
+    restore: 'Ripristina i valori predefiniti',
+    restored: 'Ripristinato',
+  },
+  tester: {
+    run_button: 'Esegui test',
+    result_title: 'Risultato del test',
+  },
+  form_error: {
+    invalid_json: 'Formato JSON non valido',
+  },
+  security_warning: {
+    title: 'Avviso di sicurezza',
+    description:
+      'Gli utenti provisionati da questo hook aggirano le protezioni riservate alla registrazione, inclusa la blocklist email, il dominio solo SSO, la modalità registrazione disabilitata e i controlli del profilo obbligatorio in registrazione. Anche le scritture di profilo e password degli utenti esistenti avvengono prima del completamento della MFA.',
+  },
+  delete_modal_title: 'Elimina hook inline',
+  delete_modal_content:
+    'Vuoi davvero eliminare questo hook inline? Il flusso di autenticazione non eseguirà più questo script.',
+  deleted: 'Hook inline eliminato',
+  created: 'Hook inline creato',
+  saved: 'Hook inline salvato',
 };
 
 export default Object.freeze(inline_hooks);
