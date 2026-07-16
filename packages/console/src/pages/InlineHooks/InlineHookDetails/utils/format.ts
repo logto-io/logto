@@ -10,12 +10,14 @@ import { type InlineHookForm } from '../type';
 
 import { getDefaultContextSample, getDefaultScript } from './config';
 
-const formatEnvVariablesResponseToFormData = (enVariables?: InlineHook['environmentVariables']) => {
-  if (!enVariables) {
+const formatEnvVariablesResponseToFormData = (
+  envVariables?: InlineHook['environmentVariables']
+) => {
+  if (!envVariables) {
     return;
   }
 
-  return Object.entries(enVariables).map(([key, value]) => ({ key, value }));
+  return Object.entries(envVariables).map(([key, value]) => ({ key, value }));
 };
 
 const formatEnvVariablesFormDataToRequest = (

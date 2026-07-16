@@ -3,7 +3,6 @@ const inline_hooks = {
   title: 'Hooki inline',
   subtitle:
     'Uruchamiaj niestandardowy kod w określonych punktach procesu uwierzytelniania, aby rozszerzyć działanie Logto.',
-  details_page_title: '{{name}}',
   status: {
     not_configured: 'Nieskonfigurowany',
     configured: 'Skonfigurowany',

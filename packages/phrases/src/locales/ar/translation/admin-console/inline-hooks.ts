@@ -2,7 +2,6 @@ const inline_hooks = {
   page_title: 'الخطافات المضمّنة',
   title: 'الخطافات المضمّنة',
   subtitle: 'شغّل تعليمات برمجية مخصصة في نقاط محددة من تدفق المصادقة لتوسيع سلوك Logto.',
-  details_page_title: '{{name}}',
   status: {
     not_configured: 'غير مكوّن',
     configured: 'مكوّن',

@@ -2,7 +2,6 @@ const inline_hooks = {
   page_title: '인라인 훅',
   title: '인라인 훅',
   subtitle: '인증 흐름의 특정 지점에서 사용자 지정 코드를 실행하여 Logto 동작을 확장합니다.',
-  details_page_title: '{{name}}',
   status: {
     not_configured: '구성되지 않음',
     configured: '구성됨',

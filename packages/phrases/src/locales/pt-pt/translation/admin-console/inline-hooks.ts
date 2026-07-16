@@ -3,7 +3,6 @@ const inline_hooks = {
   title: 'Hooks inline',
   subtitle:
     'Execute código personalizado em pontos específicos do fluxo de autenticação para expandir o comportamento do Logto.',
-  details_page_title: '{{name}}',
   status: {
     not_configured: 'Não configurado',
     configured: 'Configurado',

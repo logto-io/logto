@@ -3,7 +3,6 @@ const inline_hooks = {
   title: 'ฮุกแบบอินไลน์',
   subtitle:
     'เรียกใช้โค้ดที่กำหนดเอง ณ จุดที่ระบุในขั้นตอนการยืนยันตัวตน เพื่อขยายการทำงานของ Logto',
-  details_page_title: '{{name}}',
   status: {
     not_configured: 'ยังไม่ได้กำหนดค่า',
     configured: 'กำหนดค่าแล้ว',

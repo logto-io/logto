@@ -22,10 +22,18 @@ export type TestResultData = {
 const useTestHandler = () => {
   const [testResult, setTestResult] = useState<TestResultData>();
   const [isLoading, setIsLoading] = useState(false);
-  const { getValues } = useFormContext<InlineHookForm>();
+  const { getValues, trigger } = useFormContext<InlineHookForm>();
   const api = useApi({ hideErrorToast: true });
 
   const onTestHandler = useCallback(async () => {
+    // Dry-run should use the same field rules as save, otherwise invalid JSON /
+    // incomplete env rows can still be posted after silent formatting.
+    const isValid = await trigger(['contextSample', 'environmentVariables']);
+
+    if (!isValid) {
+      return;
+    }
+
     const payload = getValues();
     setIsLoading(true);
 
@@ -84,7 +92,7 @@ const useTestHandler = () => {
     if (result) {
       setTestResult({ payload: JSON.stringify(result, null, 2) });
     }
-  }, [api, getValues]);
+  }, [api, getValues, trigger]);
 
   return { testResult, isLoading, onTestHandler, setTestResult };
 };

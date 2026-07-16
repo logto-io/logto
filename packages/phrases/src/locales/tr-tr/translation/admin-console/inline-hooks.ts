@@ -3,7 +3,6 @@ const inline_hooks = {
   title: 'Satır içi kancalar',
   subtitle:
     'Logto davranışını genişletmek için kimlik doğrulama akışının belirli noktalarında özel kod çalıştırın.',
-  details_page_title: '{{name}}',
   status: {
     not_configured: 'Yapılandırılmadı',
     configured: 'Yapılandırıldı',

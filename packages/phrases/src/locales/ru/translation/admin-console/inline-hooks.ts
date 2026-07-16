@@ -3,7 +3,6 @@ const inline_hooks = {
   title: 'Inline-хуки',
   subtitle:
     'Запускайте пользовательский код в определённых точках процесса аутентификации, чтобы расширить поведение Logto.',
-  details_page_title: '{{name}}',
   status: {
     not_configured: 'Не настроено',
     configured: 'Настроено',

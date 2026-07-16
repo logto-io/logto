@@ -41,7 +41,7 @@ type Props = {
  * Monaco code editor component.
  * @param {Props} prop
  * @param {string} [prop.className] - The class name of the component.
- * @param {ActionButtonType[]} prop.enabledActions - The enabled action buttons, available values are 'clear', 'restore', 'copy'.
+ * @param {ActionButtonType[]} prop.enabledActions - The enabled action buttons, available values are 'restore', 'copy'.
  * @param {ModelSettings[]} prop.models - The static model settings (all tabs) for the code editor.
  * @param {string} prop.activeModelName - The active model name.
  * @param {(name: string) => void} prop.setActiveModel - The callback function to set the active model. Used to switch between tabs.
@@ -77,7 +77,7 @@ function MonacoCodeEditor({
     [activeModelName, models]
   );
 
-  const isMultiModals = useMemo(() => models.length > 1, [models]);
+  const isMultiModels = useMemo(() => models.length > 1, [models]);
 
   // Get the container ref and the editor height
   const { containerRef, editorHeight } = useEditorHeight();
@@ -159,10 +159,10 @@ function MonacoCodeEditor({
               key={name}
               className={classNames(
                 styles.tab,
-                isMultiModals && styles.tabButton,
+                isMultiModels && styles.tabButton,
                 name === activeModelName && styles.active
               )}
-              {...(isMultiModals && {
+              {...(isMultiModels && {
                 role: 'button',
                 tabIndex: 0,
                 onClick: () => {

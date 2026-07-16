@@ -3,7 +3,6 @@ const inline_hooks = {
   title: 'هوک‌های درون‌خطی',
   subtitle:
     'کد سفارشی را در نقاط مشخصی از جریان احراز هویت اجرا کنید تا رفتار Logto را گسترش دهید.',
-  details_page_title: '{{name}}',
   status: {
     not_configured: 'پیکربندی نشده',
     configured: 'پیکربندی شده',

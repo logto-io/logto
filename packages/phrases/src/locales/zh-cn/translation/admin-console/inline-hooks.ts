@@ -2,7 +2,6 @@ const inline_hooks = {
   page_title: '内联钩子',
   title: '内联钩子',
   subtitle: '在身份验证流程的特定节点运行自定义代码，以扩展 Logto 的行为。',
-  details_page_title: '{{name}}',
   status: {
     not_configured: '未配置',
     configured: '已配置',

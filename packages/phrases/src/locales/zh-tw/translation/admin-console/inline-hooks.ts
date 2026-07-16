@@ -2,7 +2,6 @@ const inline_hooks = {
   page_title: '內聯掛鉤',
   title: '內聯掛鉤',
   subtitle: '在驗證流程的特定節點執行自訂程式碼，以擴充 Logto 的行為。',
-  details_page_title: '{{name}}',
   status: {
     not_configured: '未設定',
     configured: '已設定',

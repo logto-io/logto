@@ -2,7 +2,6 @@ const inline_hooks = {
   page_title: 'インラインフック',
   title: 'インラインフック',
   subtitle: '認証フローの特定のポイントでカスタムコードを実行し、Logto の動作を拡張します。',
-  details_page_title: '{{name}}',
   status: {
     not_configured: '未設定',
     configured: '設定済み',

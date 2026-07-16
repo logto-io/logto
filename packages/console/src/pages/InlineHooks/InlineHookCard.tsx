@@ -43,7 +43,15 @@ function InlineHookCard({ hookType, name, description, config, onDelete }: Props
       tabIndex={0}
       className={styles.card}
       onClick={goToDetail}
-      onKeyDown={onKeyDownHandler(goToDetail)}
+      onKeyDown={(event) => {
+        // Nested controls (e.g. Delete) also bubble Space/Enter; only activate the
+        // card when it is the event target so child buttons keep their own keys.
+        if (event.target !== event.currentTarget) {
+          return;
+        }
+
+        onKeyDownHandler(goToDetail)(event);
+      }}
     >
       <div className={styles.iconContainer}>
         <Code className={styles.icon} />
