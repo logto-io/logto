@@ -143,4 +143,18 @@ describe('OIDC discovery', () => {
       }
     `);
   });
+
+  /**
+   * Since oidc-provider 9.2.0 the RFC 8414 `/.well-known/oauth-authorization-server` route is
+   * registered unconditionally, relative to the provider mount and backed by the same discovery
+   * handler as `/.well-known/openid-configuration`.
+   */
+  it('serves the same document at the RFC 8414 oauth-authorization-server route', async () => {
+    const [openidConfiguration, authorizationServerMetadata] = await Promise.all([
+      ky.get(discoveryUrl).json(),
+      ky.get(`${logtoUrl}/oidc/.well-known/oauth-authorization-server`).json(),
+    ]);
+
+    expect(authorizationServerMetadata).toEqual(openidConfiguration);
+  });
 });

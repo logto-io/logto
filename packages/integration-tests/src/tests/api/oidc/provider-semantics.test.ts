@@ -4,6 +4,7 @@ import { ApplicationType, type Application, defaultTenantId } from '@logto/schem
 import { formUrlEncodedHeaders } from '@logto/shared';
 import { assert, assertEnv, noop } from '@silverhand/essentials';
 import { createInterceptorsPreset, createPool, sql, type DatabasePool } from '@silverhand/slonik';
+import { decodeJwt } from 'jose';
 import ky, { HTTPError } from 'ky';
 
 import { oidcApi } from '#src/api/api.js';
@@ -15,7 +16,7 @@ import { initExperienceClient, logoutClient, processSession } from '#src/helpers
 import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
-import { generatePassword, generateUsername } from '#src/utils.js';
+import { generatePassword, generateUsername, waitFor } from '#src/utils.js';
 
 type IntrospectionResponse = {
   [key: string]: unknown;
@@ -57,13 +58,14 @@ describe('opaque user token lifecycle', () => {
   const password = generatePassword();
   /* eslint-disable @silverhand/fp/no-let */
   let application: Application;
+  let publicApplication: Application;
   let userId = '';
   /* eslint-enable @silverhand/fp/no-let */
 
   beforeAll(async () => {
     await deleteJwtCustomizer('access-token').catch(noop);
 
-    const [createdApplication, user] = await Promise.all([
+    const [createdApplication, createdPublicApplication, user] = await Promise.all([
       createApplication('OIDC provider semantics', ApplicationType.Traditional, {
         oidcClientMetadata: {
           redirectUris: [demoAppRedirectUri],
@@ -71,18 +73,31 @@ describe('opaque user token lifecycle', () => {
         },
         customClientMetadata: { alwaysIssueRefreshToken: true },
       }),
+      /**
+       * The provider re-validates client metadata every time it loads a client, and an
+       * authorization-code client must carry at least one redirect URI to pass the schema —
+       * even when the client only ever calls the revocation endpoint.
+       */
+      createApplication('OIDC provider semantics public', ApplicationType.SPA, {
+        oidcClientMetadata: { redirectUris: [demoAppRedirectUri], postLogoutRedirectUris: [] },
+      }),
       createUserByAdmin({ username, password }),
       enableAllPasswordSignInMethods(),
     ]);
 
     /* eslint-disable @silverhand/fp/no-mutation */
     application = createdApplication;
+    publicApplication = createdPublicApplication;
     userId = user.id;
     /* eslint-enable @silverhand/fp/no-mutation */
   });
 
   afterAll(async () => {
-    await Promise.all([deleteApplication(application.id), deleteUser(userId)]);
+    await Promise.all([
+      deleteApplication(application.id),
+      deleteApplication(publicApplication.id),
+      deleteUser(userId),
+    ]);
   });
 
   const signIn = async (resources?: string[]) => {
@@ -200,6 +215,32 @@ describe('opaque user token lifecycle', () => {
           'Structured JWT Tokens cannot be introspected via the introspection_endpoint',
       });
 
+      /**
+       * Revocation rejects structured JWTs the same way since v9. The previous version answered
+       * with a silent 200 no-op, since the full JWT never matched the stored short `jti` key.
+       */
+      await expectOidcError(revokeToken(application, jwtAccessToken, 'access_token'), {
+        error: 'unsupported_token_type',
+        error_description: 'Structured JWT Tokens cannot be revoked via the revocation_endpoint',
+      });
+
+      /**
+       * The default `features.revocation.allowedPolicy` answers a public client presenting
+       * another client's token with a 200 without revoking anything, so that valid tokens
+       * cannot be guessed through the revocation endpoint.
+       */
+      const crossClientRevocation = await oidcApi.post('token/revocation', {
+        body: new URLSearchParams({
+          token: opaqueAccessToken,
+          token_type_hint: 'access_token',
+          client_id: publicApplication.id,
+        }),
+      });
+      expect(crossClientRevocation.status).toBe(200);
+      await expect(
+        introspectToken(application, opaqueAccessToken, 'access_token')
+      ).resolves.toMatchObject({ active: true });
+
       await revokeToken(application, opaqueAccessToken, 'access_token');
 
       await expect(
@@ -299,5 +340,95 @@ describe('opaque client-credentials revocation', () => {
         where tenant_id = ${defaultTenantId} and id in (${sql.join(tokens, sql`, `)})
       `);
     }
+  });
+});
+
+describe('refresh token rotation and reuse detection', () => {
+  const username = generateUsername();
+  const password = generatePassword();
+  /* eslint-disable @silverhand/fp/no-let */
+  let application: Application;
+  let userId = '';
+  /* eslint-enable @silverhand/fp/no-let */
+
+  beforeAll(async () => {
+    const [createdApplication, user] = await Promise.all([
+      createApplication('OIDC refresh token rotation', ApplicationType.SPA, {
+        oidcClientMetadata: {
+          redirectUris: [demoAppRedirectUri],
+          postLogoutRedirectUris: [demoAppRedirectUri],
+        },
+      }),
+      createUserByAdmin({ username, password }),
+      enableAllPasswordSignInMethods(),
+    ]);
+
+    /* eslint-disable @silverhand/fp/no-mutation */
+    application = createdApplication;
+    userId = user.id;
+    /* eslint-enable @silverhand/fp/no-mutation */
+  });
+
+  afterAll(async () => {
+    await Promise.all([deleteApplication(application.id), deleteUser(userId)]);
+  });
+
+  it('rotates public-client refresh tokens and revokes the whole grant on reuse', async () => {
+    const client = await initExperienceClient({
+      config: { appId: application.id },
+      redirectUri: demoAppRedirectUri,
+    });
+    await identifyUserWithUsernamePassword(client, username, password);
+    const { redirectTo } = await client.submitInteraction();
+    await expect(processSession(client, redirectTo)).resolves.toBe(userId);
+
+    const initialRefreshToken = await client.getRefreshToken();
+    assert(initialRefreshToken, new Error('Missing refresh token after code exchange'));
+
+    const exchangeRefreshToken = async (refreshToken: string) =>
+      oidcApi
+        .post('token', {
+          body: new URLSearchParams({
+            grant_type: 'refresh_token',
+            refresh_token: refreshToken,
+            client_id: application.id,
+          }),
+        })
+        .json<{ refresh_token: string; id_token: string }>();
+
+    /**
+     * The default `rotateRefreshToken` policy rotates on every use for public clients whose
+     * refresh tokens are not sender-constrained, marking the presented token as consumed.
+     */
+    const rotated = await exchangeRefreshToken(initialRefreshToken);
+    expect(rotated.refresh_token).toBeTruthy();
+    expect(rotated.refresh_token).not.toBe(initialRefreshToken);
+
+    /**
+     * Since v9 the token endpoint no longer sets `at_hash` on ID tokens: the claim only guards
+     * against front-channel token substitution, so it protects nothing on this response. The
+     * official SDK sweep confirmed no SDK reads it.
+     */
+    expect(decodeJwt(rotated.id_token)).not.toHaveProperty('at_hash');
+
+    /**
+     * Logto's adapter keeps a hard-coded 3-second leeway after a rotation, during which the
+     * consumed refresh token still refreshes successfully, so that concurrent refreshes from
+     * distributed apps without shared token storage (e.g. serverless) do not race each other
+     * out of the session.
+     */
+    const leewayReplay = await exchangeRefreshToken(initialRefreshToken);
+    expect(leewayReplay.refresh_token).toBeTruthy();
+
+    /**
+     * Past the leeway, presenting a consumed refresh token is treated as reuse: the provider
+     * destroys the token and revokes the whole grant, so the freshest rotated replacement dies
+     * with it.
+     */
+    await waitFor(4000);
+    await expectOidcError(exchangeRefreshToken(initialRefreshToken), { error: 'invalid_grant' });
+    await expectOidcError(exchangeRefreshToken(leewayReplay.refresh_token), {
+      error: 'invalid_grant',
+    });
   });
 });
