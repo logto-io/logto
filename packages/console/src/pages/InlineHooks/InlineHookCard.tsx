@@ -1,7 +1,12 @@
+import { type MouseEventHandler } from 'react';
+
 import Code from '@/assets/icons/code.svg?react';
+import DeleteIcon from '@/assets/icons/delete.svg?react';
+import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import Tag from '@/ds-components/Tag';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
+import { onKeyDownHandler } from '@/utils/a11y';
 
 import { type InlineHookCatalogItem } from './constants';
 import styles from './index.module.scss';
@@ -10,25 +15,35 @@ import { getInlineHookPagePath } from './utils';
 
 type Props = InlineHookCatalogItem & {
   readonly config?: InlineHookConfig;
+  readonly onDelete?: () => void;
 };
 
-function InlineHookCard({ hookType, name, description, config }: Props) {
+function InlineHookCard({ hookType, name, description, config, onDelete }: Props) {
   const { navigate } = useTenantPathname();
   const isConfigured = Boolean(config);
   const isEnabled = config?.value.enabled === true;
 
+  const goToDetail = () => {
+    navigate(
+      getInlineHookPagePath(
+        hookType,
+        isConfigured ? InlineHookAction.Edit : InlineHookAction.Create
+      )
+    );
+  };
+
+  const handleDeleteClick: MouseEventHandler<HTMLButtonElement> = (event) => {
+    event.stopPropagation();
+    onDelete?.();
+  };
+
   return (
-    <button
-      type="button"
+    <div
+      role="button"
+      tabIndex={0}
       className={styles.card}
-      onClick={() => {
-        navigate(
-          getInlineHookPagePath(
-            hookType,
-            isConfigured ? InlineHookAction.Edit : InlineHookAction.Create
-          )
-        );
-      }}
+      onClick={goToDetail}
+      onKeyDown={onKeyDownHandler(goToDetail)}
     >
       <div className={styles.iconContainer}>
         <Code className={styles.icon} />
@@ -67,8 +82,20 @@ function InlineHookCard({ hookType, name, description, config }: Props) {
         <div className={styles.description}>
           <DynamicT forKey={description} />
         </div>
+        {isConfigured && onDelete && (
+          <div className={styles.actions}>
+            <Button
+              className={styles.danger}
+              icon={<DeleteIcon className={styles.actionIcon} />}
+              type="text"
+              size="small"
+              title="general.delete"
+              onClick={handleDeleteClick}
+            />
+          </div>
+        )}
       </div>
-    </button>
+    </div>
   );
 }
 
