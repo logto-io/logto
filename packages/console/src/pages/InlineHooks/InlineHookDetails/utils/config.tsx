@@ -58,9 +58,9 @@ const defaultPostFirstFactorVerificationScript = `/**
  * Post first-factor verification hook.
  * Called after the first authentication factor is verified and before sign-in continues.
  *
- * @param {${InlineHookTypeDefinitionKey.InlineHookPayload}} payload - The input argument of the function.
+ * @param {Payload} payload - The input argument of the function.
  *
- * @returns {${InlineHookTypeDefinitionKey.PostFirstFactorVerificationResult}} The hook result.
+ * @returns The hook result.
  */
 const runInlineHook = async ({ event, environmentVariables }) => {
   // Write your custom logic here.
@@ -77,9 +77,9 @@ const defaultPostSignInScript = `/**
  * Post sign-in hook.
  * Called after a user signs in successfully.
  *
- * @param {${InlineHookTypeDefinitionKey.InlineHookPayload}} payload - The input argument of the function.
+ * @param {Payload} payload - The input argument of the function.
  *
- * @returns {${InlineHookTypeDefinitionKey.PostSignInResult}} The hook result.
+ * @returns The hook result.
  */
 const runInlineHook = async ({ event, environmentVariables }) => {
   // Write your custom logic here.
@@ -91,8 +91,13 @@ const runInlineHook = async ({ event, environmentVariables }) => {
 };
 `;
 
+/**
+ * Monaco type definitions for the script payload.
+ * Only declare types (not the entry function) so user scripts can define
+ * `const runInlineHook = ...` without a redeclaration conflict.
+ */
 const postFirstFactorVerificationDefinition = `
-declare type ${InlineHookTypeDefinitionKey.InlineHookPayload} = {
+declare type Payload = {
   /**
    * Authentication event payload for the current first-factor verification.
    */
@@ -102,22 +107,10 @@ declare type ${InlineHookTypeDefinitionKey.InlineHookPayload} = {
    */
   environmentVariables: ${InlineHookTypeDefinitionKey.EnvironmentVariables};
 };
-
-/**
- * Entry point invoked by the Logto inline hook runtime.
- *
- * @param {${InlineHookTypeDefinitionKey.InlineHookPayload}} payload
- * @returns {Promise<${InlineHookTypeDefinitionKey.PostFirstFactorVerificationResult}> | ${InlineHookTypeDefinitionKey.PostFirstFactorVerificationResult}}
- */
-declare function runInlineHook(
-  payload: ${InlineHookTypeDefinitionKey.InlineHookPayload}
-):
-  | Promise<${InlineHookTypeDefinitionKey.PostFirstFactorVerificationResult}>
-  | ${InlineHookTypeDefinitionKey.PostFirstFactorVerificationResult};
 `;
 
 const postSignInDefinition = `
-declare type ${InlineHookTypeDefinitionKey.InlineHookPayload} = {
+declare type Payload = {
   /**
    * Authentication event payload for the completed sign-in.
    */
@@ -127,16 +120,6 @@ declare type ${InlineHookTypeDefinitionKey.InlineHookPayload} = {
    */
   environmentVariables: ${InlineHookTypeDefinitionKey.EnvironmentVariables};
 };
-
-/**
- * Entry point invoked by the Logto inline hook runtime.
- *
- * @param {${InlineHookTypeDefinitionKey.InlineHookPayload}} payload
- * @returns {Promise<${InlineHookTypeDefinitionKey.PostSignInResult}> | ${InlineHookTypeDefinitionKey.PostSignInResult}}
- */
-declare function runInlineHook(
-  payload: ${InlineHookTypeDefinitionKey.InlineHookPayload}
-): Promise<${InlineHookTypeDefinitionKey.PostSignInResult}> | ${InlineHookTypeDefinitionKey.PostSignInResult};
 `;
 
 const buildSharedContextTypeDefinitions = () =>
@@ -253,7 +236,7 @@ return {
 export const environmentVariablesCodeExample = `/**
  * Access custom environment variables from the hook payload.
  *
- * @param {${InlineHookTypeDefinitionKey.InlineHookPayload}} payload - The input argument of the function.
+ * @param {Payload} payload - The input argument of the function.
  */
 const runInlineHook = async ({ environmentVariables }) => {
   const { apiKey } = environmentVariables;
