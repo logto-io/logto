@@ -8,6 +8,8 @@
   min-height: 0;
 
   > * {
+    min-height: 0;
+
     &:first-child {
       margin-inline-end: _.unit(3);
       flex: 9;
