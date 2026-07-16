@@ -40,6 +40,8 @@ const error = {
   terms_acceptance_required_description:
     'يجب أن توافق على الشروط للمتابعة. يرجى المحاولة مرة أخرى.',
   something_went_wrong: 'حدث خطأ ما',
+  account_suspended: 'الحساب موقوف',
+  account_suspended_description: 'تم إيقاف هذا الحساب. يرجى الاتصال بالمسؤول للحصول على المساعدة.',
   access_denied: 'تم رفض الوصول',
   application_access_denied:
     'ليس لديك إذن للوصول إلى هذا التطبيق.\nيرجى الاتصال بالمسؤول للحصول على المساعدة.',

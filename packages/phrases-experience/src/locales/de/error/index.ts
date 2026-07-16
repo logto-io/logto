@@ -42,6 +42,9 @@ const error = {
   terms_acceptance_required: 'Zustimmung zu den Bedingungen erforderlich',
   terms_acceptance_required_description: 'Du musst den Bedingungen zustimmen, um fortzufahren.',
   something_went_wrong: 'Etwas ist schiefgegangen',
+  account_suspended: 'Konto gesperrt',
+  account_suspended_description:
+    'Dieses Konto wurde gesperrt. Bitte wende dich an den Administrator.',
   access_denied: 'Zugriff verweigert',
   application_access_denied:
     'Sie haben keine Berechtigung, auf diese Anwendung zuzugreifen.\nBitte kontaktieren Sie Ihren Administrator um Hilfe.',

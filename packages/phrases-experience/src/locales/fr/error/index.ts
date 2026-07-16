@@ -46,6 +46,9 @@ const error = {
   terms_acceptance_required: 'Acceptation des conditions requise',
   terms_acceptance_required_description: 'Vous devez accepter les conditions pour continuer.',
   something_went_wrong: 'Quelque chose a mal tourné',
+  account_suspended: 'Compte suspendu',
+  account_suspended_description:
+    "Ce compte a été suspendu. Veuillez contacter l'administrateur pour obtenir de l'aide.",
   access_denied: 'Accès refusé',
   application_access_denied:
     "Vous n'avez pas la permission d'accéder à cette application.\nVeuillez contacter votre administrateur pour obtenir de l'aide.",

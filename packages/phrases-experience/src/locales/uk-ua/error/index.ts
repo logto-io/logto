@@ -41,6 +41,9 @@ const error = {
   terms_acceptance_required_description:
     'Ви повинні погодитися з умовами, щоб продовжити. Будь ласка, спробуйте ще раз.',
   something_went_wrong: 'Щось пішло не так',
+  account_suspended: 'Обліковий запис призупинено',
+  account_suspended_description:
+    'Цей обліковий запис призупинено. Зверніться до адміністратора по допомогу.',
   access_denied: 'Доступ заборонено',
   application_access_denied:
     'Ви не маєте дозволу на доступ до цього застосунку.\nЗверніться до адміністратора за допомогою.',

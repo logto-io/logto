@@ -41,6 +41,9 @@ const error = {
   terms_acceptance_required: 'Şartların kabulü gerekli',
   terms_acceptance_required_description: 'Devam etmek için şartları kabul etmelisiniz.',
   something_went_wrong: 'Bir şeyler yanlış gitti',
+  account_suspended: 'Hesap askıya alındı',
+  account_suspended_description:
+    'Bu hesap askıya alındı. Yardım için lütfen yöneticiyle iletişime geçin.',
   access_denied: 'Erişim reddedildi',
   application_access_denied:
     'Bu uygulamaya erişim izniniz yok.\nYardım için lütfen yöneticinizle iletişime geçin.',
