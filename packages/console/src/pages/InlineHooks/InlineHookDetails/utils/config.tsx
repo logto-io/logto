@@ -55,8 +55,8 @@ const defaultPostSignInEvent: PostSignInEvent = {
 };
 
 const defaultPostFirstFactorVerificationScript = `/**
- * This function is called after the first authentication factor is verified
- * and before sign-in continues.
+ * Post first-factor verification hook.
+ * Called after the first authentication factor is verified and before sign-in continues.
  *
  * @param {${InlineHookTypeDefinitionKey.InlineHookPayload}} payload - The input argument of the function.
  *
@@ -74,7 +74,8 @@ const runInlineHook = async ({ event, environmentVariables }) => {
 `;
 
 const defaultPostSignInScript = `/**
- * This function is called after a user signs in successfully.
+ * Post sign-in hook.
+ * Called after a user signs in successfully.
  *
  * @param {${InlineHookTypeDefinitionKey.InlineHookPayload}} payload - The input argument of the function.
  *
@@ -145,7 +146,8 @@ declare ${hookUserPatchTypeDefinition}`;
 
 const postFirstFactorVerificationModel: ModelSettings = {
   name: 'post-first-factor-verification.js',
-  title: 'runInlineHook',
+  // Display name for this hook; runtime entry remains `runInlineHook`.
+  title: 'Post first-factor verification',
   language: 'typescript',
   defaultValue: defaultPostFirstFactorVerificationScript,
   extraLibs: [
@@ -166,7 +168,8 @@ declare ${postFirstFactorVerificationResultTypeDefinition}`,
 
 const postSignInModel: ModelSettings = {
   name: 'post-sign-in.js',
-  title: 'runInlineHook',
+  // Display name for this hook; runtime entry remains `runInlineHook`.
+  title: 'Post sign-in',
   language: 'typescript',
   defaultValue: defaultPostSignInScript,
   extraLibs: [

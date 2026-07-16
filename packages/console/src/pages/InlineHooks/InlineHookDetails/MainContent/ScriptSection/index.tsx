@@ -11,6 +11,7 @@ import MonacoCodeEditor, {
 } from '@/components/MonacoCodeEditor';
 import Button from '@/ds-components/Button';
 
+import { inlineHookCatalog } from '../../../constants';
 import { CodeEditorLoadingContext } from '../../CodeEditorLoadingContext';
 import { type InlineHookForm } from '../../type';
 import { getInlineHookModel } from '../../utils/config';
@@ -35,7 +36,16 @@ function ScriptSection() {
     [envVariables]
   );
 
-  const activeModel = useMemo<ModelSettings>(() => getInlineHookModel(hookType), [hookType]);
+  const activeModel = useMemo<ModelSettings>(() => {
+    const model = getInlineHookModel(hookType);
+    const catalogItem = inlineHookCatalog.find((item) => item.hookType === hookType);
+
+    return {
+      ...model,
+      // Prefer the localized catalog name for the editor tab title.
+      title: catalogItem ? String(t(catalogItem.name)) : model.title,
+    };
+  }, [hookType, t]);
 
   const { setIsMonacoLoaded } = useContext(CodeEditorLoadingContext);
 
