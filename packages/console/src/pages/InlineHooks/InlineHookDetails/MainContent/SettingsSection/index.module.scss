@@ -1,66 +1,77 @@
 @use '@/scss/underscore' as _;
 
-.settingsSection {
+.tabs {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: _.unit(4);
-  overflow: auto;
-  min-height: 0;
-}
+  margin-bottom: _.unit(4);
 
-.card {
-  display: flex;
-  flex-direction: column;
-  gap: _.unit(4);
-}
+  .tab {
+    display: flex;
+    align-items: center;
+    border-radius: 100px;
+    height: 34px;
+    color: var(--color-text);
+    background: var(--color-layer-1);
+    border: 1px solid var(--color-surface-5);
+    padding: 0 _.unit(3);
+    transition: none;
 
-.cardTitle {
-  font: var(--font-label-2);
-  color: var(--color-text);
-}
+    svg {
+      width: 16px;
+      height: 16px;
+      object-fit: cover;
+      color: var(--color-text-link);
+    }
 
-.cardDescription {
-  font: var(--font-body-2);
-  color: var(--color-text-secondary);
-}
+    &:active {
+      background: var(--color-overlay-primary-pressed);
+    }
 
-.fieldGroup {
-  display: flex;
-  flex-direction: column;
-  gap: _.unit(3);
-}
+    &:not(:disabled):not(:active):hover {
+      background: var(--color-overlay-primary-hover);
+    }
 
-.sampleCode {
-  :global {
-    /* stylelint-disable-next-line selector-class-pattern */
-    .monaco-editor {
-      border-radius: 8px;
+    &.active {
+      background: var(--color-inverse-primary);
+      color: var(--color-white);
+      border-color: var(--color-inverse-primary);
+      cursor: default;
 
-      /* stylelint-disable-next-line selector-class-pattern */
-      .overflow-guard {
-        border-radius: 8px;
+      svg {
+        color: var(--color-button-icon);
       }
 
-      /* stylelint-disable-next-line selector-class-pattern */
-      .lines-content {
-        padding: 0 16px;
+      &:not(:disabled):not(:active):hover {
+        background: var(--color-inverse-primary);
       }
     }
   }
 }
 
-.envVariablesField {
-  margin-bottom: _.unit(2);
+.tabContent {
+  display: none;
+
+  &.active {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: _.unit(4);
+  }
+
+  .description {
+    font: var(--font-body-2);
+    color: var(--color-text-secondary);
+    padding: 0 _.unit(1);
+  }
 }
 
-.contextSampleEditor {
-  min-height: 240px;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 1px solid var(--color-border);
+.flexColumn {
+  display: flex;
+  flex-direction: column;
 }
 
-.error {
-  font: var(--font-body-2);
-  color: var(--color-error);
+.flexGrow {
+  flex: 1;
+  min-height: 200px;
 }

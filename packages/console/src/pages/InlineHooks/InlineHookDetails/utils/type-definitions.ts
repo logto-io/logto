@@ -1,3 +1,5 @@
+import { LogtoInlineHookKey } from '@logto/schemas';
+
 import { type InlineHookForm } from '../type';
 
 export enum InlineHookTypeDefinitionKey {
@@ -87,4 +89,34 @@ export const buildEnvironmentVariablesTypeDefinition = (
     : 'undefined';
 
   return `declare type ${InlineHookTypeDefinitionKey.EnvironmentVariables} = ${typeDefinition}`;
+};
+
+export const getEventTypeDefinition = (hookType: LogtoInlineHookKey) => {
+  switch (hookType) {
+    case LogtoInlineHookKey.PostFirstFactorVerification: {
+      return `declare ${hookUserTypeDefinition}
+
+declare ${postFirstFactorVerificationEventTypeDefinition}`;
+    }
+    case LogtoInlineHookKey.PostSignIn: {
+      return `declare ${hookUserTypeDefinition}
+
+declare ${postSignInEventTypeDefinition}`;
+    }
+  }
+};
+
+export const getResultTypeDefinition = (hookType: LogtoInlineHookKey) => {
+  switch (hookType) {
+    case LogtoInlineHookKey.PostFirstFactorVerification: {
+      return `declare ${hookUserPatchTypeDefinition}
+
+declare ${postFirstFactorVerificationResultTypeDefinition}`;
+    }
+    case LogtoInlineHookKey.PostSignIn: {
+      return `declare ${hookUserPatchTypeDefinition}
+
+declare ${postSignInResultTypeDefinition}`;
+    }
+  }
 };

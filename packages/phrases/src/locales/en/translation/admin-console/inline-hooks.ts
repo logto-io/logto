@@ -21,8 +21,32 @@ const inline_hooks = {
       description: 'Run custom logic after a user signs in successfully.',
     },
   },
+  data_source_tab: 'Data source',
+  test_tab: 'Test context',
+  settings_tab: 'Settings',
+  event_data: {
+    title: 'Event payload',
+    subtitle: 'Use the `event` input parameter for the authentication event data.',
+  },
+  result_data: {
+    title: 'Hook result',
+    subtitle: 'Return a result object that Logto understands for this hook type.',
+  },
+  environment_variables: {
+    title: 'Set environment variables',
+    subtitle: 'Use environment variables to store sensitive information.',
+    input_field_title: 'Add environment variables',
+    sample_code: 'Accessing environment variables in your inline hook handler. Example:',
+  },
+  fetch_external_data: {
+    title: 'Fetch external data',
+    subtitle: 'Call external APIs from your hook script.',
+    description:
+      'Use the `fetch` function to call your external APIs and include the data in the hook result. Example:',
+  },
   settings: {
     title: 'Settings',
+    subtitle: 'Control whether the hook is active and how runtime errors are handled.',
     enabled: {
       title: 'Enable hook',
       description: 'Run this script when the authentication event is triggered.',
@@ -33,17 +57,10 @@ const inline_hooks = {
       block: 'Block the authentication flow',
       allow: 'Allow the authentication flow to continue',
     },
-    environment_variables: {
-      title: 'Environment variables',
-      subtitle: 'Store secrets and configuration values used by the script.',
-      input_field_title: 'Add environment variables',
-      sample_code: 'Access environment variables in your hook script. Example:',
-    },
-    context_sample: {
-      title: 'Event sample',
-      subtitle: 'Mock event payload used as the `event` argument of `runInlineHook`.',
-      input_field_title: 'Event sample JSON',
-    },
+  },
+  test_context: {
+    subtitle: 'Adjust the mock event payload used when running tests.',
+    input_field_title: 'Event sample JSON',
   },
   script: {
     title: 'Script',

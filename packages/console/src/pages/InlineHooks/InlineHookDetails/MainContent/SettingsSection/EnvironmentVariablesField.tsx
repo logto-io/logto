@@ -94,10 +94,7 @@ function EnvironmentVariablesField({ className }: Props) {
   );
 
   return (
-    <FormField
-      title="inline_hooks.settings.environment_variables.input_field_title"
-      className={className}
-    >
+    <FormField title="inline_hooks.environment_variables.input_field_title" className={className}>
       <KeyValueInputField
         fields={fields}
         errors={envVariableErrors?.map?.((error) => error)}

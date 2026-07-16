@@ -225,6 +225,28 @@ export const sampleCodeEditorOptions: EditorProps['options'] = {
   scrollBeyondLastLine: false,
 };
 
+export const typeDefinitionCodeEditorOptions: EditorProps['options'] = {
+  ...sampleCodeEditorOptions,
+  folding: true,
+};
+
+export const fetchExternalDataCodeExample = `const response = await fetch('https://api.example.com/data', {
+  headers: {
+    Authorization: \`{{API KEY}}\`,
+  }
+});
+
+const data = await response.json();
+
+return {
+  action: 'updateUser',
+  user: {
+    customData: {
+      externalData: data,
+    },
+  },
+};`;
+
 export const environmentVariablesCodeExample = `/**
  * Access custom environment variables from the hook payload.
  *
