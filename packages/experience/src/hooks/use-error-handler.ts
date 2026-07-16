@@ -1,5 +1,5 @@
 import type { LogtoErrorCode } from '@logto/phrases';
-import type { RequestErrorBody } from '@logto/schemas';
+import { experience, type RequestErrorBody } from '@logto/schemas';
 import { HTTPError, TimeoutError } from 'ky';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -20,9 +20,9 @@ export type ErrorHandlers = {
  * these only run when the caller did not handle the code and before falling back
  * to `global` / toast.
  */
-const getTerminalErrorPath = (code: string): string | undefined => {
+const getTerminalErrorPath = (code: LogtoErrorCode): string | undefined => {
   if (code === 'user.suspended') {
-    return '/account-suspended';
+    return `/${experience.routes.accountSuspended}`;
   }
 
   return undefined;

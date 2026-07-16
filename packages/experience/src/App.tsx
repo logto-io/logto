@@ -91,7 +91,7 @@ const App = () => {
                         element={<ErrorPage message="error.invalid_session" />}
                       />
                       <Route
-                        path="account-suspended"
+                        path={experience.routes.accountSuspended}
                         element={
                           <ErrorPage
                             isNavbarHidden
