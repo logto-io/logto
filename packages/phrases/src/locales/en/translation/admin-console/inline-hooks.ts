@@ -50,6 +50,10 @@ const inline_hooks = {
     restore: 'Restore defaults',
     restored: 'Restored',
   },
+  tester: {
+    run_button: 'Run test',
+    result_title: 'Test result',
+  },
   form_error: {
     invalid_json: 'Invalid JSON format',
   },

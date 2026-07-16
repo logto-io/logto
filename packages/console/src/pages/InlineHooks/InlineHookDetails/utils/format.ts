@@ -83,3 +83,17 @@ export const formatFormDataToRequestData = (data: InlineHookForm): InlineHook =>
     contextSample: formatSampleCodeStringToJson(data.contextSample),
   };
 };
+
+export const formatFormDataToTestRequestPayload = ({
+  hookType,
+  script,
+  environmentVariables,
+  contextSample,
+}: InlineHookForm) => {
+  return {
+    hookType,
+    script,
+    environmentVariables: formatEnvVariablesFormDataToRequest(environmentVariables),
+    event: formatSampleCodeStringToJson(contextSample) ?? getDefaultContextSample(hookType),
+  };
+};
