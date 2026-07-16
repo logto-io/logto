@@ -238,7 +238,7 @@ export const environmentVariablesCodeExample = `/**
  *
  * @param {Payload} payload - The input argument of the function.
  */
-const runInlineHook = async ({ environmentVariables }) => {
+const runInlineHookSample = async ({ environmentVariables }) => {
   const { apiKey } = environmentVariables;
 
   // Write your custom logic here.
