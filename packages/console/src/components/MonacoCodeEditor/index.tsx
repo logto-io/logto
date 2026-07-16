@@ -1,5 +1,5 @@
 import { Theme } from '@logto/schemas';
-import { Editor, useMonaco, type OnMount } from '@monaco-editor/react';
+import { Editor, useMonaco, type BeforeMount, type OnMount } from '@monaco-editor/react';
 import { type Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useCallback, useEffect, useMemo, useRef, type ReactNode } from 'react';
@@ -14,6 +14,8 @@ import { defaultOptions, logtoDarkTheme, logtoLightTheme } from './config.js';
 import styles from './index.module.scss';
 import type { IStandaloneCodeEditor, ModelSettings } from './type.js';
 import useEditorHeight from './use-editor-height.js';
+
+const logtoEditorThemeName = 'logto-dark';
 
 export type { Props as DashboardProps } from './Dashboard';
 export type { ModelControl, ModelSettings } from './type.js';
@@ -117,22 +119,32 @@ function MonacoCodeEditor({
     }
   }, [activeModel, monaco, environmentVariablesDefinition]);
 
-  // Handle the editor theme settings
+  // Keep the editor theme in sync with the console theme after Monaco is ready.
   useEffect(() => {
-    // Monaco will be ready after the editor is mounted, useEffect will be called after the monaco is ready
     if (!monaco) {
       return;
     }
 
     const editorTheme = theme === Theme.Light ? logtoLightTheme : logtoDarkTheme;
 
-    monaco.editor.defineTheme('logto-dark', editorTheme);
+    monaco.editor.defineTheme(logtoEditorThemeName, editorTheme);
+    monaco.editor.setTheme(logtoEditorThemeName);
   }, [monaco, theme]);
 
+  // Define the theme before the editor mounts so Monaco never falls back to the light default.
+  const handleEditorWillMount = useCallback<BeforeMount>(
+    (monacoInstance) => {
+      const editorTheme = theme === Theme.Light ? logtoLightTheme : logtoDarkTheme;
+      monacoInstance.editor.defineTheme(logtoEditorThemeName, editorTheme);
+    },
+    [theme]
+  );
+
   const handleEditorDidMount = useCallback<OnMount>(
-    (editor) => {
+    (editor, monacoInstance) => {
       // eslint-disable-next-line @silverhand/fp/no-mutation
       editorRef.current = editor;
+      monacoInstance.editor.setTheme(logtoEditorThemeName);
       onMountHandler?.(editor);
     },
     [onMountHandler]
@@ -198,13 +210,14 @@ function MonacoCodeEditor({
             height={editorHeight}
             language={activeModel.language}
             path={activeModel.name}
-            theme="logto-dark"
+            theme={logtoEditorThemeName}
             options={{
               ...defaultOptions,
               ...activeModel.options,
             }}
             // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- empty string is falsy
             value={value || activeModel.defaultValue}
+            beforeMount={handleEditorWillMount}
             onMount={handleEditorDidMount}
             onChange={onChange}
           />
