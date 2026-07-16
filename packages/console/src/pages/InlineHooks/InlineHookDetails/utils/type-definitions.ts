@@ -83,7 +83,8 @@ export const buildEnvironmentVariablesTypeDefinition = (
     ? `{
   ${envVariables
     .filter(({ key }) => Boolean(key))
-    .map(({ key }) => `${key}: string`)
+    // Quote keys so values like `0FOO` stay valid TypeScript property names.
+    .map(({ key }) => `${JSON.stringify(key)}: string`)
     .join(';\n')}
     }`
     : 'undefined';
