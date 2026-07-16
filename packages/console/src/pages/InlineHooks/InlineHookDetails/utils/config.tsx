@@ -55,56 +55,37 @@ const defaultPostSignInEvent: PostSignInEvent = {
 };
 
 const defaultPostFirstFactorVerificationScript = `/**
- * Runs after the first authentication factor is verified and before sign-in continues.
+ * This function is called after the first authentication factor is verified
+ * and before sign-in continues.
  *
- * @param {${InlineHookTypeDefinitionKey.InlineHookPayload}} payload
- * @returns {Promise<${InlineHookTypeDefinitionKey.PostFirstFactorVerificationResult}> | ${InlineHookTypeDefinitionKey.PostFirstFactorVerificationResult}}
+ * @param {${InlineHookTypeDefinitionKey.InlineHookPayload}} payload - The input argument of the function.
+ *
+ * @returns {${InlineHookTypeDefinitionKey.PostFirstFactorVerificationResult}} The hook result.
  */
 const runInlineHook = async ({ event, environmentVariables }) => {
-  // Example: create a user when the identifier is unknown to Logto.
-  if (!event.user) {
-    return {
-      action: 'createUser',
-      passwordVerified: true,
-      user: {
-        primaryEmail: event.identifier.type === 'email' ? event.identifier.value : undefined,
-        username: event.identifier.type === 'username' ? event.identifier.value : undefined,
-        primaryPhone: event.identifier.type === 'phone' ? event.identifier.value : undefined,
-        name: 'Provisioned user',
-      },
-    };
-  }
+  // Write your custom logic here.
 
-  // Example: enrich the existing user profile.
   return {
     action: 'updateUser',
     passwordVerified: true,
-    user: {
-      name: event.user.name ?? 'Updated user',
-      customData: {
-        ...event.user.customData,
-        lastVerifiedBy: 'inline-hook',
-      },
-    },
+    user: {},
   };
 };
 `;
 
 const defaultPostSignInScript = `/**
- * Runs after a user signs in successfully.
+ * This function is called after a user signs in successfully.
  *
- * @param {${InlineHookTypeDefinitionKey.InlineHookPayload}} payload
- * @returns {Promise<${InlineHookTypeDefinitionKey.PostSignInResult}> | ${InlineHookTypeDefinitionKey.PostSignInResult}}
+ * @param {${InlineHookTypeDefinitionKey.InlineHookPayload}} payload - The input argument of the function.
+ *
+ * @returns {${InlineHookTypeDefinitionKey.PostSignInResult}} The hook result.
  */
 const runInlineHook = async ({ event, environmentVariables }) => {
+  // Write your custom logic here.
+
   return {
     action: 'updateUser',
-    user: {
-      customData: {
-        ...event.user.customData,
-        lastSignedInAt: new Date().toISOString(),
-      },
-    },
+    user: {},
   };
 };
 `;
@@ -244,8 +225,15 @@ export const sampleCodeEditorOptions: EditorProps['options'] = {
   scrollBeyondLastLine: false,
 };
 
-export const environmentVariablesCodeExample = `const runInlineHook = async ({ environmentVariables }) => {
+export const environmentVariablesCodeExample = `/**
+ * Access custom environment variables from the hook payload.
+ *
+ * @param {${InlineHookTypeDefinitionKey.InlineHookPayload}} payload - The input argument of the function.
+ */
+const runInlineHook = async ({ environmentVariables }) => {
   const { apiKey } = environmentVariables;
+
+  // Write your custom logic here.
 
   const response = await fetch('https://api.example.com/data', {
     headers: {
