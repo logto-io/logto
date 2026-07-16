@@ -54,6 +54,8 @@ const inline_hooks = {
       description: '스크립트 실행 실패 시 Logto의 동작을 선택합니다.',
       block: '인증 흐름 차단',
       allow: '인증 흐름 계속 허용',
+      post_first_factor_description:
+        '이 스크립트가 실패하면 Logto는 항상 잘못된 자격 증명을 거부하여 비밀번호 검증을 우회할 수 없도록 합니다.',
     },
   },
   test_context: {

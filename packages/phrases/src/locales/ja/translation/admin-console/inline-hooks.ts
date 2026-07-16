@@ -54,6 +54,8 @@ const inline_hooks = {
       description: 'スクリプトの実行に失敗したときの Logto の動作を選択します。',
       block: '認証フローをブロックする',
       allow: '認証フローの続行を許可する',
+      post_first_factor_description:
+        'このスクリプトが失敗した場合、Logto は常に無効な認証情報を拒否し、パスワード検証をバイパスできないようにします。',
     },
   },
   test_context: {

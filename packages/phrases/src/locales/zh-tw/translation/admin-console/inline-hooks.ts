@@ -53,6 +53,8 @@ const inline_hooks = {
       description: '選擇腳本執行失敗時 Logto 的行為。',
       block: '阻止驗證流程',
       allow: '允許驗證流程繼續',
+      post_first_factor_description:
+        '當此腳本失敗時，Logto 一律拒絕無效憑證，以確保無法繞過密碼驗證。',
     },
   },
   test_context: {

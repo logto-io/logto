@@ -28,6 +28,29 @@ describe('inline hook form formatters', () => {
 
   it('maps response data into form fields in edit mode', () => {
     const result = formatResponseDataToFormData(
+      LogtoInlineHookKey.PostSignIn,
+      InlineHookAction.Edit,
+      {
+        script: 'custom-script',
+        enabled: false,
+        onExecutionError: 'allow',
+        environmentVariables: { API_KEY: 'secret' },
+        contextSample: { foo: 'bar' },
+      }
+    );
+
+    expect(result).toEqual({
+      hookType: LogtoInlineHookKey.PostSignIn,
+      script: 'custom-script',
+      enabled: false,
+      onExecutionError: 'allow',
+      environmentVariables: [{ key: 'API_KEY', value: 'secret' }],
+      contextSample: JSON.stringify({ foo: 'bar' }, null, 2),
+    });
+  });
+
+  it('forces PostFirstFactorVerification form values to block even if stored as allow', () => {
+    const result = formatResponseDataToFormData(
       LogtoInlineHookKey.PostFirstFactorVerification,
       InlineHookAction.Edit,
       {
@@ -43,7 +66,7 @@ describe('inline hook form formatters', () => {
       hookType: LogtoInlineHookKey.PostFirstFactorVerification,
       script: 'custom-script',
       enabled: false,
-      onExecutionError: 'allow',
+      onExecutionError: 'block',
       environmentVariables: [{ key: 'API_KEY', value: 'secret' }],
       contextSample: JSON.stringify({ foo: 'bar' }, null, 2),
     });
@@ -83,5 +106,19 @@ describe('inline hook form formatters', () => {
 
     expect(payload.contextSample).toEqual({ hello: 'world' });
     expect(payload.environmentVariables).toBeUndefined();
+    expect(payload.onExecutionError).toBe('allow');
+  });
+
+  it('never submits allow for PostFirstFactorVerification', () => {
+    const payload = formatFormDataToRequestData({
+      hookType: LogtoInlineHookKey.PostFirstFactorVerification,
+      script: 'script',
+      enabled: true,
+      onExecutionError: 'allow',
+      environmentVariables: [],
+      contextSample: JSON.stringify({ hello: 'world' }),
+    });
+
+    expect(payload.onExecutionError).toBe('block');
   });
 });

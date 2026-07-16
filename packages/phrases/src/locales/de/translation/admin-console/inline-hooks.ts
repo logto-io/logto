@@ -58,6 +58,8 @@ const inline_hooks = {
         'Wähle, wie sich Logto verhalten soll, wenn das Skript zur Laufzeit fehlschlägt.',
       block: 'Authentifizierungsablauf blockieren',
       allow: 'Authentifizierungsablauf fortsetzen lassen',
+      post_first_factor_description:
+        'Wenn dieses Skript fehlschlägt, lehnt Logto ungültige Anmeldedaten immer ab, damit die Passwortprüfung nicht umgangen werden kann.',
     },
   },
   test_context: {

@@ -1,7 +1,7 @@
 import {
+  LogtoInlineHookKey,
   type InlineHook,
   type Json,
-  type LogtoInlineHookKey,
   type InlineHookExecutionErrorPolicy,
 } from '@logto/schemas';
 
@@ -55,6 +55,21 @@ const formatSampleCodeStringToJson = (sampleCode?: string) => {
 
 const defaultOnExecutionError = 'block' satisfies InlineHookExecutionErrorPolicy;
 
+/**
+ * Core always maps PostFirstFactorVerification execution errors to
+ * `rejectInvalidCredentials`, so the console never persists `allow` for it.
+ */
+const resolveOnExecutionError = (
+  hookType: LogtoInlineHookKey,
+  onExecutionError?: InlineHookExecutionErrorPolicy
+): InlineHookExecutionErrorPolicy => {
+  if (hookType === LogtoInlineHookKey.PostFirstFactorVerification) {
+    return defaultOnExecutionError;
+  }
+
+  return onExecutionError ?? defaultOnExecutionError;
+};
+
 export const formatResponseDataToFormData = (
   hookType: LogtoInlineHookKey,
   action: InlineHookAction,
@@ -64,7 +79,7 @@ export const formatResponseDataToFormData = (
     hookType,
     script: data?.script ?? getDefaultScript(hookType),
     enabled: data?.enabled ?? action === InlineHookAction.Create,
-    onExecutionError: data?.onExecutionError ?? defaultOnExecutionError,
+    onExecutionError: resolveOnExecutionError(hookType, data?.onExecutionError),
     environmentVariables: formatEnvVariablesResponseToFormData(data?.environmentVariables) ?? [
       { key: '', value: '' },
     ],
@@ -78,7 +93,7 @@ export const formatFormDataToRequestData = (data: InlineHookForm): InlineHook =>
   return {
     script: data.script,
     enabled: data.enabled,
-    onExecutionError: data.onExecutionError,
+    onExecutionError: resolveOnExecutionError(data.hookType, data.onExecutionError),
     environmentVariables: formatEnvVariablesFormDataToRequest(data.environmentVariables),
     contextSample: formatSampleCodeStringToJson(data.contextSample),
   };

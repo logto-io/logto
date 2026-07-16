@@ -57,6 +57,8 @@ const inline_hooks = {
         'Escolha como o Logto deve se comportar quando o script falhar em tempo de execução.',
       block: 'Bloquear o fluxo de autenticação',
       allow: 'Permitir que o fluxo de autenticação continue',
+      post_first_factor_description:
+        'Quando este script falha, o Logto sempre rejeita credenciais inválidas para que a verificação de senha não possa ser contornada.',
     },
   },
   test_context: {

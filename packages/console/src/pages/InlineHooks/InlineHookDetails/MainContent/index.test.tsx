@@ -118,7 +118,7 @@ describe('InlineHookDetails MainContent', () => {
         data={{
           script: 'const runInlineHook = () => ({ action: "updateUser", passwordVerified: true });',
           enabled: false,
-          onExecutionError: 'allow',
+          onExecutionError: 'block',
         }}
         mutate={mockMutate}
       />

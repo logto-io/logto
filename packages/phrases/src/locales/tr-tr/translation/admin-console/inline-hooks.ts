@@ -58,6 +58,8 @@ const inline_hooks = {
         'Betik çalışma zamanında başarısız olduğunda Logto’nun nasıl davranacağını seçin.',
       block: 'Kimlik doğrulama akışını engelle',
       allow: 'Kimlik doğrulama akışının devam etmesine izin ver',
+      post_first_factor_description:
+        'Bu betik başarısız olduğunda Logto her zaman geçersiz kimlik bilgilerini reddeder; böylece parola doğrulaması atlanamaz.',
     },
   },
   test_context: {

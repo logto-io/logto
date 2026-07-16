@@ -56,6 +56,8 @@ const inline_hooks = {
       description: 'Choose how Logto should behave when the script fails at runtime.',
       block: 'Block the authentication flow',
       allow: 'Allow the authentication flow to continue',
+      post_first_factor_description:
+        'When this script fails, Logto always rejects invalid credentials so password verification cannot be bypassed.',
     },
   },
   test_context: {

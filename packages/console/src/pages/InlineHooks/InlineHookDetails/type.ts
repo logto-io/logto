@@ -1,4 +1,8 @@
-import { LogtoInlineHookKey, type InlineHookExecutionErrorPolicy } from '@logto/schemas';
+import {
+  LogtoInlineHookKey,
+  inlineHookExecutionErrorPolicies,
+  type InlineHookExecutionErrorPolicy,
+} from '@logto/schemas';
 import { z } from 'zod';
 
 import { InlineHookAction } from '../types';
@@ -17,4 +21,17 @@ export const pageParamsGuard = z.object({
   action: z.nativeEnum(InlineHookAction),
 });
 
-export { inlineHookExecutionErrorPolicies as onExecutionErrorOptions } from '@logto/schemas';
+/**
+ * Post first-factor verification always rejects invalid credentials when the
+ * script fails. Exposing `allow` would promise a continue path Core does not
+ * provide, so only `block` is selectable for that hook.
+ */
+export const getOnExecutionErrorOptions = (
+  hookType: LogtoInlineHookKey
+): readonly InlineHookExecutionErrorPolicy[] => {
+  if (hookType === LogtoInlineHookKey.PostFirstFactorVerification) {
+    return ['block'];
+  }
+
+  return inlineHookExecutionErrorPolicies;
+};

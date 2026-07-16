@@ -1,3 +1,4 @@
+import { LogtoInlineHookKey } from '@logto/schemas';
 import { Editor } from '@monaco-editor/react';
 import classNames from 'classnames';
 import { useState } from 'react';
@@ -8,7 +9,7 @@ import FormField from '@/ds-components/FormField';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import Switch from '@/ds-components/Switch';
 
-import { type InlineHookForm, onExecutionErrorOptions } from '../../../type';
+import { type InlineHookForm, getOnExecutionErrorOptions } from '../../../type';
 import {
   environmentVariablesCodeExample,
   fetchExternalDataCodeExample,
@@ -40,6 +41,11 @@ function InstructionTab({ isActive, section }: Props) {
   );
   const { watch, control } = useFormContext<InlineHookForm>();
   const hookType = watch('hookType');
+  const onExecutionErrorOptions = getOnExecutionErrorOptions(hookType);
+  const onExecutionErrorDescription =
+    hookType === LogtoInlineHookKey.PostFirstFactorVerification
+      ? 'inline_hooks.settings.on_execution_error.post_first_factor_description'
+      : 'inline_hooks.settings.on_execution_error.description';
   const isDataSourceSection = section === InstructionTabSection.DataSource;
 
   return (
@@ -145,7 +151,7 @@ function InstructionTab({ isActive, section }: Props) {
           </FormField>
           <FormField
             title="inline_hooks.settings.on_execution_error.title"
-            description="inline_hooks.settings.on_execution_error.description"
+            description={onExecutionErrorDescription}
           >
             <Controller
               control={control}

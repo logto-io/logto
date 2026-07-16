@@ -57,6 +57,8 @@ const inline_hooks = {
         'Wybierz, jak Logto ma się zachować, gdy skrypt zakończy się niepowodzeniem w czasie działania.',
       block: 'Zablokuj proces uwierzytelniania',
       allow: 'Pozwól procesowi uwierzytelniania kontynuować',
+      post_first_factor_description:
+        'Gdy ten skrypt zakończy się niepowodzeniem, Logto zawsze odrzuca nieprawidłowe dane uwierzytelniające, aby nie dało się pominąć weryfikacji hasła.',
     },
   },
   test_context: {

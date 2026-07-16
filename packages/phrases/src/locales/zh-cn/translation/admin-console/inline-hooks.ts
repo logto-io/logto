@@ -53,6 +53,8 @@ const inline_hooks = {
       description: '选择脚本运行失败时 Logto 的行为。',
       block: '阻止身份验证流程',
       allow: '允许身份验证流程继续',
+      post_first_factor_description:
+        '当此脚本失败时，Logto 始终拒绝无效凭证，以确保无法绕过密码验证。',
     },
   },
   test_context: {

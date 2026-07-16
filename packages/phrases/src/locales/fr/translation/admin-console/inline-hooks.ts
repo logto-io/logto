@@ -60,6 +60,8 @@ const inline_hooks = {
       description: 'Choisissez le comportement de Logto lorsque le script échoue à l’exécution.',
       block: 'Bloquer le flux d’authentification',
       allow: 'Autoriser la poursuite du flux d’authentification',
+      post_first_factor_description:
+        'Lorsque ce script échoue, Logto rejette toujours les identifiants invalides afin que la vérification du mot de passe ne puisse pas être contournée.',
     },
   },
   test_context: {
