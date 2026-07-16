@@ -8,9 +8,8 @@
   }
 }
 
-.warning {
-  margin-bottom: _.unit(4);
-}
+// Spacing between warning and MainContent comes from DetailsPage's
+// child margin-top rule; do not add extra margin-bottom here.
 
 .warningTitle {
   font: var(--font-label-2);
