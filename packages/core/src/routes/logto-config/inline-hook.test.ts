@@ -13,7 +13,6 @@ import {
   mockLogtoConfigRows,
 } from '#src/__mocks__/index.js';
 import { EnvSet } from '#src/env-set/index.js';
-import { InlineHookLibrary } from '#src/libraries/inline-hook.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
 import { mockLogtoConfigsLibrary } from '#src/test-utils/mock-libraries.js';
@@ -272,7 +271,7 @@ describe('configs inline hook routes', () => {
     };
 
     jest
-      .spyOn(InlineHookLibrary, 'runScriptInLocalVm')
+      .spyOn(tenantContext.libraries.inlineHooks, 'executeScript')
       .mockRejectedValueOnce(createResponseError(422, errorBody));
 
     const response = await routeRequesterWithErrorHandler
@@ -295,7 +294,7 @@ describe('configs inline hook routes', () => {
   ])(
     'POST /configs/inline-hooks/test should map ResponseError status %i to %i',
     async (responseErrorStatus, expectedStatus) => {
-      jest.spyOn(InlineHookLibrary, 'runScriptInLocalVm').mockRejectedValueOnce(
+      jest.spyOn(tenantContext.libraries.inlineHooks, 'executeScript').mockRejectedValueOnce(
         createResponseError(responseErrorStatus, {
           message: 'Remote runner failed',
           error: { reason: 'blocked' },

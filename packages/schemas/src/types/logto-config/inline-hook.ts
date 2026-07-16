@@ -33,7 +33,11 @@ export const inlineHookGuard = z
   })
   .strict() satisfies z.ZodType<InlineHook>;
 
-export const inlineHookTestRequestBodyGuard = z
+/**
+ * Shared execution payload for production Inline Hooks and Management API dry runs.
+ * Cloud remote execution and the local VM runner both accept this shape.
+ */
+export const inlineHookExecutionRequestBodyGuard = z
   .object({
     script: z.string(),
     hookType: z.nativeEnum(LogtoInlineHookKey),
@@ -42,7 +46,14 @@ export const inlineHookTestRequestBodyGuard = z
   })
   .strict();
 
-export type InlineHookTestRequestBody = z.infer<typeof inlineHookTestRequestBodyGuard>;
+export type InlineHookExecutionRequestBody = z.infer<typeof inlineHookExecutionRequestBodyGuard>;
+
+/**
+ * Kept as an alias so the Management API `POST /configs/inline-hooks/test` contract
+ * stays compatible while production and dry-run share one execution request type.
+ */
+export const inlineHookTestRequestBodyGuard = inlineHookExecutionRequestBodyGuard;
+export type InlineHookTestRequestBody = InlineHookExecutionRequestBody;
 
 export type HookUser = Pick<
   UserInfo,

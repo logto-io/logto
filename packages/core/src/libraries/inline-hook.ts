@@ -3,7 +3,7 @@ import {
   adminTenantId,
   LogtoInlineHookKey,
   type InlineHookExecutionErrorPolicy,
-  type InlineHookTestRequestBody,
+  type InlineHookExecutionRequestBody,
 } from '@logto/schemas';
 import { got, HTTPError } from 'got';
 import { ZodError } from 'zod';
@@ -21,6 +21,11 @@ import {
 
 const inlineHookFunctionName = 'runInlineHook';
 const defaultInlineHookExecutionErrorPolicy = 'block' satisfies InlineHookExecutionErrorPolicy;
+/**
+ * Azure Function vm2 timeout is 3000ms. Use a slightly higher HTTP deadline so the
+ * client can surface Function-side failures instead of racing the sandbox limit.
+ */
+const remoteInlineHookRequestTimeout = 5000;
 
 export type InlineHookExecutionErrorFallback = {
   action: 'rejectInvalidCredentials';
@@ -189,10 +194,23 @@ export class InlineHookLibrary {
   }
 
   /**
+   * Shared entry point for production `runHook()` and Management API dry runs.
+   * Cloud always executes remotely; OSS / self-hosted always uses the local VM.
+   * Cloud remote failures must never fall back to the local VM.
+   */
+  async executeScript(payload: InlineHookExecutionRequestBody): Promise<unknown> {
+    if (EnvSet.values.isCloud) {
+      return this.runScriptRemotely(payload);
+    }
+
+    return InlineHookLibrary.runScriptInLocalVm(payload);
+  }
+
+  /**
    * For Logto Cloud use only. Run the inline hook script remotely in an isolated environment.
    * For OSS version, use @see InlineHookLibrary.runScriptInLocalVm instead.
    */
-  async runScriptRemotely(payload: InlineHookTestRequestBody): Promise<unknown> {
+  async runScriptRemotely(payload: InlineHookExecutionRequestBody): Promise<unknown> {
     const { azureFunctionUntrustedAppKey, azureFunctionUntrustedAppEndpoint } = EnvSet.values;
 
     if (!this.isRegionalAzureFunctionAppConfigured) {
@@ -209,6 +227,8 @@ export class InlineHookLibrary {
           headers: {
             'x-functions-key': azureFunctionUntrustedAppKey,
           },
+          // Got@14 expects a Delays object; bound the whole request slightly above the AF VM timeout.
+          timeout: { request: remoteInlineHookRequestTimeout },
         })
         .json<unknown>();
     } catch (error: unknown) {
@@ -238,9 +258,12 @@ export class InlineHookLibrary {
     }
 
     try {
-      return await InlineHookLibrary.runScriptInLocalVm({
+      return await this.executeScript({
         script: inlineHook.script,
-        event,
+        hookType: key,
+        // Production events are always JSON-serializable payloads from Core call sites.
+        // eslint-disable-next-line no-restricted-syntax -- Generic Event is wider than Json; cast at the shared execution boundary.
+        event: event as InlineHookExecutionRequestBody['event'],
         environmentVariables: inlineHook.environmentVariables,
       });
     } catch (error: unknown) {
