@@ -87,6 +87,30 @@
   font: var(--font-body-2);
 }
 
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: _.unit(4);
+  gap: _.unit(2);
+
+  .actionIcon {
+    max-width: _.unit(4);
+    max-height: _.unit(4);
+  }
+
+  .danger {
+    color: var(--color-error);
+
+    &:focus-visible {
+      outline: 2px solid var(--color-danger-focused);
+    }
+
+    &:not(:disabled):hover {
+      background: var(--color-overlay-danger-hover);
+    }
+  }
+}
+
 .skeletonCard {
   display: flex;
   gap: _.unit(4);

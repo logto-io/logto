@@ -48,6 +48,17 @@ jest.mock('@/components/RequestDataError', () => ({
   ),
 }));
 
+jest.mock('./DeleteConfirmModal', () => ({
+  __esModule: true,
+  default: ({
+    isOpen,
+    hookType,
+  }: {
+    readonly isOpen: boolean;
+    readonly hookType?: LogtoInlineHookKey;
+  }) => (isOpen ? <div>delete-modal:{hookType}</div> : null),
+}));
+
 const mockNavigate = jest.fn();
 const mockMutate = jest.fn();
 const mockedUseSWR = jest.mocked(useSWR);
@@ -82,6 +93,7 @@ describe('InlineHooks', () => {
     ).toBeTruthy();
     expect(screen.getByText('admin_console.inline_hooks.hooks.post_sign_in.name')).toBeTruthy();
     expect(screen.getAllByText('admin_console.inline_hooks.status.not_configured')).toHaveLength(2);
+    expect(screen.queryByRole('button', { name: 'admin_console.general.delete' })).toBeNull();
 
     fireEvent.click(screen.getByText('admin_console.inline_hooks.hooks.post_sign_in.name'));
 
@@ -90,7 +102,7 @@ describe('InlineHooks', () => {
     );
   });
 
-  it('shows a configured but disabled hook and navigates to edit', () => {
+  it('shows a configured but disabled hook, navigates to edit, and can open delete modal', () => {
     mockedUseSWR.mockReturnValue({
       data: [buildConfig(LogtoInlineHookKey.PostFirstFactorVerification, false)],
       mutate: mockMutate,
@@ -101,6 +113,7 @@ describe('InlineHooks', () => {
     expect(screen.getByText('admin_console.inline_hooks.status.configured')).toBeTruthy();
     expect(screen.getByText('admin_console.inline_hooks.status.disabled')).toBeTruthy();
     expect(screen.getByText('admin_console.inline_hooks.status.not_configured')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'admin_console.general.delete' })).toBeTruthy();
 
     fireEvent.click(
       screen.getByText('admin_console.inline_hooks.hooks.post_first_factor_verification.name')
@@ -109,6 +122,12 @@ describe('InlineHooks', () => {
     expect(mockNavigate).toHaveBeenCalledWith(
       getInlineHookPagePath(LogtoInlineHookKey.PostFirstFactorVerification, InlineHookAction.Edit)
     );
+
+    fireEvent.click(screen.getByRole('button', { name: 'admin_console.general.delete' }));
+
+    expect(
+      screen.getByText(`delete-modal:${LogtoInlineHookKey.PostFirstFactorVerification}`)
+    ).toBeTruthy();
   });
 
   it('shows a configured and enabled hook', () => {

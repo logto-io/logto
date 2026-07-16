@@ -87,6 +87,8 @@ function ScriptSection() {
               activeModelName={activeModel.name}
               value={value}
               environmentVariablesDefinition={environmentVariablesTypeDefinition}
+              restoreActionTip={t('jwt_claims.restore')}
+              restoreActionSuccessTip={t('jwt_claims.restored')}
               actionButtons={
                 <Button
                   icon={<RunIcon />}

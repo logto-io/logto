@@ -1,0 +1,17 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  position: relative;
+
+  .hidden {
+    display: none;
+  }
+}
+
+// Spacing between warning and MainContent comes from DetailsPage's
+// child margin-top rule; do not add extra margin-bottom here.
+
+.warningTitle {
+  font: var(--font-label-2);
+  margin-bottom: _.unit(1);
+}
