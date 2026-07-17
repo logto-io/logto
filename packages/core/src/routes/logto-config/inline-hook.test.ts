@@ -310,6 +310,22 @@ describe('configs inline hook routes', () => {
     }
   );
 
+  it('POST /configs/inline-hooks/test should map remote transport failures to inline_hook.general', async () => {
+    jest
+      .spyOn(tenantContext.libraries.inlineHooks, 'executeScript')
+      .mockRejectedValueOnce(new Error("Timeout awaiting 'request' for 5000ms"));
+
+    const response = await routeRequesterWithErrorHandler
+      .post('/configs/inline-hooks/test')
+      .send(inlineHookTestPayload);
+
+    expect(response.status).toEqual(422);
+    expect(response.body.code).toEqual('inline_hook.general');
+    expect(response.body.data).toMatchObject({
+      message: "Timeout awaiting 'request' for 5000ms",
+    });
+  });
+
   it('should not register inline hook routes when dev features are disabled', async () => {
     setDevFeaturesEnabled(false);
 

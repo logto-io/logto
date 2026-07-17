@@ -86,7 +86,21 @@ export default function logtoConfigInlineHookRoutes<T extends ManagementApiRoute
           );
         }
 
-        throw error;
+        // Already-normalized Management API errors (e.g. remote runner not configured).
+        if (error instanceof RequestError) {
+          throw error;
+        }
+
+        // Non-HTTP remote transport failures (e.g. Got TimeoutError) must stay within
+        // the declared 4xx contract for Console dry runs.
+        throw new RequestError(
+          { code: 'inline_hook.general', status: 422 },
+          {
+            message:
+              error instanceof Error ? error.message : 'Remote inline hook execution failed.',
+            error,
+          }
+        );
       }
 
       return next();
