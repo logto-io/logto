@@ -21,19 +21,6 @@ export const staticConfigs = {
 };
 
 /**
- * System-provided signatures for Message Authentication Service
- * These signatures are provided by Aliyun and do not require application
- * User must select one of these in the connector configuration
- */
-export const systemProvidedSignNames = [
-  '云渚科技验证平台',
-  '云渚科技验证服务',
-  '速通互联验证码',
-  '速通互联验证平台',
-  '速通互联验证服务',
-];
-
-/**
  * Connector metadata
  * This defines how the connector appears in Logto Console
  */
@@ -76,14 +63,11 @@ export const defaultMetadata: ConnectorMetadata = {
     {
       key: 'signName',
       label: 'Signature Name',
-      type: ConnectorConfigFormItemType.Select,
+      type: ConnectorConfigFormItemType.Text,
       required: true,
-      selectItems: systemProvidedSignNames.map((name) => ({
-        value: name,
-        title: name,
-      })),
+      placeholder: '<signature-name>',
       description:
-        'Select a system-provided signature. These signatures are provided by Aliyun and do not require a separate signature application.',
+        'Copy a current gift signature from your Aliyun Message Authentication Service console (号码认证 → 短信认证参数配置 → 赠送签名配置).',
     },
     {
       key: 'templates',
