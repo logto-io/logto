@@ -19,7 +19,7 @@ import {
 import { createSsoConnector, deleteSsoConnectorById } from '#src/api/sso-connector.js';
 import { newOidcSsoConnectorPayload } from '#src/constants.js';
 import { setLanguage } from '#src/helpers/sign-in-experience.js';
-import { generateSsoConnectorName } from '#src/utils.js';
+import { devFeatureTest, generateSsoConnectorName } from '#src/utils.js';
 
 describe('.well-known api', () => {
   it('should return tenant endpoint URL for any given tenant id', async () => {
@@ -60,6 +60,31 @@ describe('.well-known api', () => {
     });
     expect(response).toHaveProperty('adaptiveMfa');
   });
+
+  devFeatureTest.it(
+    'should not expose email access policies in public sign-in experience',
+    async () => {
+      const { emailBlocklistPolicy } = await getSignInExperience();
+
+      try {
+        await updateSignInExperience({
+          emailBlocklistPolicy: {
+            blockSubaddressing: true,
+            customAllowlist: ['@allowed.com'],
+            customBlocklist: ['@blocked.com'],
+          },
+        });
+
+        const response = await api.get('.well-known/sign-in-exp').json<Record<string, unknown>>();
+
+        expect(response).not.toHaveProperty('emailBlocklistPolicy');
+      } finally {
+        await updateSignInExperience({
+          emailBlocklistPolicy,
+        });
+      }
+    }
+  );
 
   // Also test for Redis cache invalidation
   it('should be able to return updated phrases', async () => {
