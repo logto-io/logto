@@ -27,18 +27,14 @@ const isDataHookSchema = (schema: string): schema is DataHookSchema =>
   Object.values(DataHookSchema).includes(schema as DataHookSchema);
 
 // Group DataHook events by schema
-// TODO: Replace this using `groupBy` once Node v22 goes LTS
-const schemaGroupedDataHookEventsMap = dataHookEvents.reduce<Map<DataHookSchema, DataHookEvent[]>>(
-  (eventGroup, event) => {
+// eslint-disable-next-line no-use-extend-native/no-use-extend-native
+const schemaGroupedDataHookEventsMap = Map.groupBy(
+  dataHookEvents.filter((event) => {
     const [schema] = event.split('.');
-
-    if (schema && isDataHookSchema(schema)) {
-      eventGroup.set(schema, [...(eventGroup.get(schema) ?? []), event]);
-    }
-
-    return eventGroup;
-  },
-  new Map()
+    return schema && isDataHookSchema(schema);
+  }),
+  // eslint-disable-next-line no-restricted-syntax
+  (event) => event.split('.')[0] as DataHookSchema
 );
 
 // Sort the grouped `DataHook` events per console product design
