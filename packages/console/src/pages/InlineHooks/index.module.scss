@@ -1,0 +1,150 @@
+@use '@/scss/underscore' as _;
+
+.content {
+  display: flex;
+  flex: 1;
+  margin-top: _.unit(4);
+}
+
+.cardList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
+  gap: _.unit(4);
+  width: 100%;
+}
+
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: _.unit(4);
+  min-height: 160px;
+  padding: _.unit(6);
+  text-align: start;
+  color: var(--color-text);
+  background: var(--color-layer-1);
+  border: 1px solid var(--color-divider);
+  border-radius: _.unit(4);
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-1);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-focused-variant);
+    outline-offset: 2px;
+  }
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  color: var(--color-primary);
+  background: var(--color-primary-container);
+  border-radius: 12px;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+}
+
+.cardContent {
+  min-width: 0;
+  flex: 1;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: _.unit(3);
+}
+
+.name {
+  font: var(--font-title-2);
+}
+
+.tags {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: _.unit(2);
+}
+
+.description {
+  margin-top: _.unit(3);
+  color: var(--color-text-secondary);
+  font: var(--font-body-2);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: _.unit(4);
+  gap: _.unit(2);
+
+  .actionIcon {
+    max-width: _.unit(4);
+    max-height: _.unit(4);
+  }
+
+  .danger {
+    color: var(--color-error);
+
+    &:focus-visible {
+      outline: 2px solid var(--color-danger-focused);
+    }
+
+    &:not(:disabled):hover {
+      background: var(--color-overlay-danger-hover);
+    }
+  }
+}
+
+.skeletonCard {
+  display: flex;
+  gap: _.unit(4);
+  min-height: 160px;
+  border: 1px solid var(--color-divider);
+}
+
+.skeletonIcon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  @include _.shimmering-animation;
+}
+
+.skeletonContent {
+  flex: 1;
+}
+
+.skeletonTitle {
+  width: 45%;
+  height: 24px;
+  @include _.shimmering-animation;
+}
+
+.skeletonDescription {
+  width: 85%;
+  height: 40px;
+  margin-top: _.unit(4);
+  @include _.shimmering-animation;
+}
+
+@media screen and (max-width: 960px) {
+  .cardList {
+    grid-template-columns: 1fr;
+  }
+}

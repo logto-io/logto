@@ -101,6 +101,8 @@ function TestTab({ isActive }: Props) {
               models={editorModels}
               activeModelName={activeModelName}
               setActiveModel={setActiveModelName}
+              restoreActionTip={t('restore')}
+              restoreActionSuccessTip={t('restored')}
               // Pass the value and onChange handler based on the active model
               {...getModelControllerProps(field)}
             />

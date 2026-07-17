@@ -1,4 +1,5 @@
 const tabs = {
+  inline_hooks: 'Hooki inline',
   get_started: 'Rozpocznij',
   dashboard: 'Panel',
   applications: 'Aplikacje',

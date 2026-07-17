@@ -1,13 +1,17 @@
 import { type CustomDomain as CustomDomainType, DomainStatus } from '@logto/schemas';
 import classNames from 'classnames';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
+
 import ActivationProcess from './ActivationProcess';
 import CustomDomainHeader from './CustomDomainHeader';
+import VerificationFiles from './VerificationFiles';
 import styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;
   readonly customDomain: CustomDomainType;
+  readonly domainId?: string;
   readonly hasExtraTipsOnDelete?: boolean;
   readonly hasOpenExternalLink?: boolean;
   readonly isReadonly?: boolean;
@@ -17,6 +21,7 @@ type Props = {
 function CustomDomain({
   className,
   customDomain,
+  domainId,
   hasExtraTipsOnDelete,
   hasOpenExternalLink,
   isReadonly,
@@ -33,6 +38,13 @@ function CustomDomain({
       />
       {customDomain.status !== DomainStatus.Active && (
         <ActivationProcess customDomain={customDomain} />
+      )}
+      {isDevFeaturesEnabled && domainId && customDomain.status === DomainStatus.Active && (
+        <VerificationFiles
+          domain={customDomain.domain}
+          domainId={domainId}
+          isReadonly={isReadonly}
+        />
       )}
     </div>
   );

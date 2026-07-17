@@ -39,6 +39,8 @@ const error = {
   terms_acceptance_required: 'پذیرش شرایط الزامی است',
   terms_acceptance_required_description: 'برای ادامه باید با شرایط موافقت کنید.',
   something_went_wrong: 'مشکلی پیش آمد',
+  account_suspended: 'حساب معلق شد',
+  account_suspended_description: 'این حساب معلق شده است. لطفاً برای کمک با مدیر تماس بگیرید.',
   access_denied: 'دسترسی رد شد',
   application_access_denied:
     'شما مجاز به دسترسی به این برنامه نیستید. لطفاً با مدیر سیستم تماس بگیرید.',

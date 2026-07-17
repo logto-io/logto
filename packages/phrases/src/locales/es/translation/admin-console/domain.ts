@@ -44,6 +44,25 @@ const domain = {
     },
     config_custom_domain_description:
       'Configura dominios personalizados para habilitar las siguientes funciones: aplicaciones, conectores sociales y conectores empresariales.',
+    verification_files: {
+      title: 'Archivos de verificación de dominio',
+      description:
+        'Sirva pequeños archivos de texto o JSON desde este dominio personalizado para verificar la propiedad del dominio con servicios de terceros.',
+      add: 'Agregar archivo de verificación',
+      empty: 'No hay archivos de verificación configurados.',
+      path: 'Ruta del archivo',
+      content_type: 'Tipo de contenido',
+      content_type_text: 'Texto sin formato',
+      content_type_json: 'JSON',
+      content: 'Contenido del archivo',
+      content_placeholder: 'Pegue el contenido exacto del archivo de verificación',
+      required: 'Este campo es obligatorio.',
+      invalid_path:
+        'Use un nombre de archivo con extensión en la raíz del dominio o una ruta bajo /.well-known/. Solo se admiten letras, números, puntos, guiones y guiones bajos.',
+      duplicate_path: 'Ya existe un archivo de verificación con esta ruta.',
+      content_too_long: 'El contenido del archivo no debe superar los 16.384 caracteres.',
+      invalid_json: 'Introduzca contenido JSON válido.',
+    },
   },
   default: {
     default_domain: 'Dominio predeterminado',

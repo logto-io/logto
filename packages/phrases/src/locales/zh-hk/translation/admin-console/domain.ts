@@ -39,6 +39,24 @@ const domain = {
     },
     config_custom_domain_description:
       '配置自定義域名以設定以下功能：應用程式、社交連接器與企業連接器。',
+    verification_files: {
+      title: '網域驗證檔案',
+      description: '透過此自訂網域提供小型文字或 JSON 檔案，以便向第三方服務驗證網域擁有權。',
+      add: '新增驗證檔案',
+      empty: '尚未設定驗證檔案。',
+      path: '檔案路徑',
+      content_type: '內容類型',
+      content_type_text: '純文字',
+      content_type_json: 'JSON',
+      content: '檔案內容',
+      content_placeholder: '貼上驗證檔案的確切內容',
+      required: '此欄位為必填。',
+      invalid_path:
+        '請在網域根目錄使用帶副檔名的檔案名稱，或使用 /.well-known/ 下的路徑。僅支援英文字母、數字、句點、連字號及底線。',
+      duplicate_path: '已有驗證檔案使用此路徑。',
+      content_too_long: '檔案內容不得超過 16,384 個字元。',
+      invalid_json: '請輸入有效的 JSON 內容。',
+    },
   },
   default: {
     default_domain: '默認域名',

@@ -1,4 +1,5 @@
 const tabs = {
+  inline_hooks: 'インラインフック',
   get_started: 'はじめに',
   dashboard: 'ダッシュボード',
   applications: 'アプリケーション',

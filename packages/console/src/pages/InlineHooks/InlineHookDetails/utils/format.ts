@@ -1,0 +1,116 @@
+import {
+  LogtoInlineHookKey,
+  type InlineHook,
+  type Json,
+  type InlineHookExecutionErrorPolicy,
+} from '@logto/schemas';
+
+import { InlineHookAction } from '../../types';
+import { type InlineHookForm } from '../type';
+
+import { getDefaultContextSample, getDefaultScript } from './config';
+
+const formatEnvVariablesResponseToFormData = (
+  envVariables?: InlineHook['environmentVariables']
+) => {
+  if (!envVariables) {
+    return;
+  }
+
+  return Object.entries(envVariables).map(([key, value]) => ({ key, value }));
+};
+
+const formatEnvVariablesFormDataToRequest = (
+  envVariables: InlineHookForm['environmentVariables']
+) => {
+  if (!envVariables) {
+    return;
+  }
+
+  const entries = envVariables.filter(({ key, value }) => key && value);
+
+  if (entries.length === 0) {
+    return;
+  }
+
+  return Object.fromEntries(entries.map(({ key, value }) => [key, value]));
+};
+
+const formatSampleCodeJsonToString = (sampleJson?: Json) => {
+  if (!sampleJson) {
+    return;
+  }
+
+  return JSON.stringify(sampleJson, null, 2);
+};
+
+const formatSampleCodeStringToJson = (sampleCode?: string) => {
+  if (!sampleCode) {
+    return;
+  }
+
+  try {
+    // eslint-disable-next-line no-restricted-syntax -- guarded by form validation
+    return JSON.parse(sampleCode) as Json;
+  } catch {}
+};
+
+const defaultOnExecutionError = 'block' satisfies InlineHookExecutionErrorPolicy;
+
+/**
+ * Core always maps PostFirstFactorVerification execution errors to
+ * `rejectInvalidCredentials`, so the console never persists `allow` for it.
+ */
+const resolveOnExecutionError = (
+  hookType: LogtoInlineHookKey,
+  onExecutionError?: InlineHookExecutionErrorPolicy
+): InlineHookExecutionErrorPolicy => {
+  if (hookType === LogtoInlineHookKey.PostFirstFactorVerification) {
+    return defaultOnExecutionError;
+  }
+
+  return onExecutionError ?? defaultOnExecutionError;
+};
+
+export const formatResponseDataToFormData = (
+  hookType: LogtoInlineHookKey,
+  action: InlineHookAction,
+  data?: InlineHook
+): InlineHookForm => {
+  return {
+    hookType,
+    script: data?.script ?? getDefaultScript(hookType),
+    enabled: data?.enabled ?? action === InlineHookAction.Create,
+    onExecutionError: resolveOnExecutionError(hookType, data?.onExecutionError),
+    environmentVariables: formatEnvVariablesResponseToFormData(data?.environmentVariables) ?? [
+      { key: '', value: '' },
+    ],
+    contextSample: formatSampleCodeJsonToString(
+      data?.contextSample ?? getDefaultContextSample(hookType)
+    ),
+  };
+};
+
+export const formatFormDataToRequestData = (data: InlineHookForm): InlineHook => {
+  return {
+    script: data.script,
+    enabled: data.enabled,
+    onExecutionError: resolveOnExecutionError(data.hookType, data.onExecutionError),
+    environmentVariables: formatEnvVariablesFormDataToRequest(data.environmentVariables),
+    contextSample: formatSampleCodeStringToJson(data.contextSample),
+  };
+};
+
+export const formatFormDataToTestRequestPayload = ({
+  hookType,
+  script,
+  environmentVariables,
+  contextSample,
+}: InlineHookForm) => {
+  return {
+    hookType,
+    script,
+    environmentVariables: formatEnvVariablesFormDataToRequest(environmentVariables),
+    event: formatSampleCodeStringToJson(contextSample) ?? getDefaultContextSample(hookType),
+  };
+};

@@ -44,6 +44,25 @@ const domain = {
     },
     config_custom_domain_description:
       'Konfigurieren Sie benutzerdefinierte Domains, um folgende Funktionen einzurichten: Anwendungen, Social‑Connectoren und Enterprise‑Connectoren.',
+    verification_files: {
+      title: 'Domain-Verifizierungsdateien',
+      description:
+        'Stellen Sie kleine Text- oder JSON-Dateien über diese benutzerdefinierte Domain bereit, um den Domainbesitz bei Drittanbieterdiensten zu bestätigen.',
+      add: 'Verifizierungsdatei hinzufügen',
+      empty: 'Keine Verifizierungsdateien konfiguriert.',
+      path: 'Dateipfad',
+      content_type: 'Inhaltstyp',
+      content_type_text: 'Nur Text',
+      content_type_json: 'JSON',
+      content: 'Dateiinhalt',
+      content_placeholder: 'Fügen Sie den exakten Inhalt der Verifizierungsdatei ein',
+      required: 'Dieses Feld ist erforderlich.',
+      invalid_path:
+        'Verwenden Sie im Stammverzeichnis der Domain einen Dateinamen mit Erweiterung oder einen Pfad unter /.well-known/. Nur Buchstaben, Zahlen, Punkte, Bindestriche und Unterstriche werden unterstützt.',
+      duplicate_path: 'Eine Verifizierungsdatei verwendet diesen Pfad bereits.',
+      content_too_long: 'Der Dateiinhalt darf 16.384 Zeichen nicht überschreiten.',
+      invalid_json: 'Geben Sie gültigen JSON-Inhalt ein.',
+    },
   },
   default: {
     default_domain: 'Standarddomain',

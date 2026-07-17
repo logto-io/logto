@@ -6,6 +6,7 @@ create table domains (
   status varchar(32) /* @use DomainStatus */ not null default('PendingVerification'),
   error_message varchar(1024),
   dns_records jsonb /* @use DomainDnsRecords */ not null default '[]'::jsonb,
+  verification_files jsonb /* @use DomainVerificationFiles */ not null default '[]'::jsonb,
   cloudflare_data jsonb /* @use CloudflareData */,
   updated_at timestamptz not null default(now()),
   created_at timestamptz not null default(now()),

@@ -44,6 +44,25 @@ const domain = {
     },
     config_custom_domain_description:
       'Configura domini personalizzati per impostare le seguenti funzionalità: applicazioni, connettori social e connettori enterprise.',
+    verification_files: {
+      title: 'File di verifica del dominio',
+      description:
+        'Servi piccoli file di testo o JSON da questo dominio personalizzato per verificare la proprietà del dominio con servizi di terze parti.',
+      add: 'Aggiungi file di verifica',
+      empty: 'Nessun file di verifica configurato.',
+      path: 'Percorso del file',
+      content_type: 'Tipo di contenuto',
+      content_type_text: 'Testo normale',
+      content_type_json: 'JSON',
+      content: 'Contenuto del file',
+      content_placeholder: 'Incolla il contenuto esatto del file di verifica',
+      required: 'Questo campo è obbligatorio.',
+      invalid_path:
+        'Usa un nome file con estensione nella radice del dominio o un percorso in /.well-known/. Sono supportati solo lettere, numeri, punti, trattini e trattini bassi.',
+      duplicate_path: 'Un file di verifica utilizza già questo percorso.',
+      content_too_long: 'Il contenuto del file non deve superare 16.384 caratteri.',
+      invalid_json: 'Inserisci contenuto JSON valido.',
+    },
   },
   default: {
     default_domain: 'Dominio predefinito',

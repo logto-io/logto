@@ -43,6 +43,8 @@ const error = {
   terms_acceptance_required_description:
     '続行するには利用規約に同意する必要があります。もう一度お試しください。',
   something_went_wrong: '問題が発生しました',
+  account_suspended: 'アカウントが停止されています',
+  account_suspended_description: 'このアカウントは停止されています。管理者にお問い合わせください。',
   access_denied: 'アクセスが拒否されました',
   application_access_denied:
     'このアプリケーションにアクセスする権限がありません。\n管理者にお問い合わせください。',

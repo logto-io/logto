@@ -44,6 +44,25 @@ const domain = {
     },
     config_custom_domain_description:
       'Skonfiguruj domeny niestandardowe, aby włączyć następujące funkcje: aplikacje, konektory społecznościowe i konektory korporacyjne.',
+    verification_files: {
+      title: 'Pliki weryfikacyjne domeny',
+      description:
+        'Udostępniaj małe pliki tekstowe lub JSON z tej domeny niestandardowej, aby potwierdzić własność domeny w usługach zewnętrznych.',
+      add: 'Dodaj plik weryfikacyjny',
+      empty: 'Nie skonfigurowano plików weryfikacyjnych.',
+      path: 'Ścieżka pliku',
+      content_type: 'Typ zawartości',
+      content_type_text: 'Zwykły tekst',
+      content_type_json: 'JSON',
+      content: 'Zawartość pliku',
+      content_placeholder: 'Wklej dokładną zawartość pliku weryfikacyjnego',
+      required: 'To pole jest wymagane.',
+      invalid_path:
+        'Użyj nazwy pliku z rozszerzeniem w katalogu głównym domeny lub ścieżki w /.well-known/. Obsługiwane są tylko litery, cyfry, kropki, łączniki i podkreślenia.',
+      duplicate_path: 'Plik weryfikacyjny używa już tej ścieżki.',
+      content_too_long: 'Zawartość pliku nie może przekraczać 16 384 znaków.',
+      invalid_json: 'Wprowadź prawidłową zawartość JSON.',
+    },
   },
   default: {
     default_domain: 'Domyślna domena',
