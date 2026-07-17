@@ -143,7 +143,7 @@ describe('GET /logs end_time with sub-millisecond createdAt', () => {
   // Sub-ms timestamp ÷ 1000 = 1784217599.999500
   const subMsTimestamp = epochMs + 0.5;
   const logId = 'sub-ms-boundary-test';
-  const logKey = 'Test.SubMillisecondBoundary';
+  const logKey = `${interaction.prefix}.SubMillisecondBoundary`;
 
   /* eslint-disable @silverhand/fp/no-let */
   let pool: DatabasePool;
