@@ -6,6 +6,15 @@
   margin: _.unit(1) 0 _.unit(2);
 }
 
+.allowlistWarning {
+  margin-top: _.unit(3);
+}
+
+.warningList {
+  margin: 0;
+  padding-inline-start: _.unit(5);
+}
+
 .paywallNotification {
   margin-bottom: _.unit(4);
 }

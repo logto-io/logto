@@ -148,6 +148,22 @@ const security = {
   blocklist: {
     card_title: '电子邮件阻止列表',
     card_description: '通过阻止高风险或不受欢迎的电子邮件地址来控制用户群。',
+    custom_email_allowlist: {
+      title: '允许自定义电子邮件地址',
+      description:
+        '仅允许匹配的电子邮件地址、域名或通配符电子邮件地址模式用于新注册和新绑定的电子邮件。',
+      placeholder:
+        '输入允许的电子邮件地址、域名或通配符电子邮件地址模式（例如，bar@example.com，@example.com，foo*@example.com，*@example.com）',
+      duplicate_error: '电子邮件地址、域名或通配符电子邮件地址模式已添加',
+      invalid_format_error:
+        '必须是有效的电子邮件地址（bar@example.com）、域名（@example.com）或通配符电子邮件地址模式（foo*@example.com，*@example.com）',
+      warnings: {
+        identical_entries: '部分允许列表条目也存在于阻止规则中。匹配的电子邮件仍可能被阻止。',
+        blocked_exact_email: '部分精确电子邮件允许条目匹配了阻止规则。匹配的电子邮件仍可能被阻止。',
+        blocked_subaddressing: '部分允许列表条目包含加号（+），但电子邮件子地址已被阻止。',
+        effectively_unusable: '根据这些检查，当前允许列表可能无法让任何新的电子邮件通过。',
+      },
+    },
     disposable_email: {
       title: '阻止一次性电子邮件地址',
       description:
