@@ -1,5 +1,6 @@
 import {
   Logs,
+  inlineHook,
   interaction,
   token,
   LogKeyUnknown,
@@ -10,6 +11,7 @@ import {
 import { yes } from '@silverhand/essentials';
 import { object, string } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import { parseTimestampParam, validateTimeWindow } from '#src/utils/time-window.js';
@@ -53,6 +55,8 @@ export default function logRoutes<T extends ManagementApiRouter>(
         interaction.prefix,
         jwtCustomizer.prefix,
         saml.prefix,
+        // Inline Hooks
+        ...(EnvSet.values.isDevFeaturesEnabled ? [inlineHook.prefix] : []),
         LogKeyUnknown,
       ];
 

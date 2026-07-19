@@ -263,11 +263,32 @@ describe('configs inline hook routes', () => {
     expect(response.status).toEqual(422);
   });
 
-  it('POST /configs/inline-hooks/test should preserve the full ResponseError body as error details', async () => {
+  it('POST /configs/inline-hooks/test should return only a redacted ResponseError summary', async () => {
+    const script = 'const privateInlineHookScript = true;';
+    const environmentSecret = 'environment-secret-value';
+    const password = 'plain-text-password';
+    const payload: InlineHookTestRequestBody = {
+      hookType: LogtoInlineHookKey.PostFirstFactorVerification,
+      script,
+      environmentVariables: {
+        API_TOKEN: environmentSecret,
+      },
+      event: {
+        key: LogtoInlineHookKey.PostFirstFactorVerification,
+        password,
+      },
+    };
     const errorBody = {
-      message: 'Script failed',
-      stack: 'Error: Script failed',
-      errors: [{ path: 'event.user', code: 'invalid_type' }],
+      message: `Script failed ${script} ${environmentSecret} ${password}`,
+      stack: `Error: ${script}`,
+      error: {
+        request: {
+          environmentVariables: { API_TOKEN: environmentSecret },
+        },
+        returnedUser: {
+          customData: { secret: 'returned-patch-secret' },
+        },
+      },
     };
 
     jest
@@ -276,14 +297,18 @@ describe('configs inline hook routes', () => {
 
     const response = await routeRequesterWithErrorHandler
       .post('/configs/inline-hooks/test')
-      .send(inlineHookTestPayload);
+      .send(payload);
 
     expect(response.status).toEqual(422);
     expect(response.body.code).toEqual('inline_hook.general');
     expect(response.body.data).toEqual({
-      message: 'Script failed',
-      error: errorBody,
+      message: 'Script failed [redacted] [redacted] [redacted]',
     });
+    const serializedResponse = JSON.stringify(response.body);
+    expect(serializedResponse).not.toContain(script);
+    expect(serializedResponse).not.toContain(environmentSecret);
+    expect(serializedResponse).not.toContain(password);
+    expect(serializedResponse).not.toContain('returned-patch-secret');
   });
 
   it.each([

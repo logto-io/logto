@@ -8,6 +8,10 @@ import { ResponseError } from '@withtyped/client';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import {
+  buildSafeInlineHookErrorSummary,
+  getInlineHookSensitiveValues,
+} from '#src/libraries/inline-hook-sanitization.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { koaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
@@ -23,14 +27,15 @@ const inlineHookResponseErrorGuard = z.object({
   message: z.string(),
 });
 
-const parseInlineHookResponseError = async (error: ResponseError) => {
-  const responseBody: unknown = await error.response.json();
-  const errorResponseResult = inlineHookResponseErrorGuard.safeParse(responseBody);
+const parseInlineHookResponseErrorMessage = async (error: ResponseError) => {
+  try {
+    const responseBody: unknown = await error.response.json();
+    const errorResponseResult = inlineHookResponseErrorGuard.safeParse(responseBody);
 
-  return {
-    message: errorResponseResult.success ? errorResponseResult.data.message : error.message,
-    error: responseBody,
-  };
+    return errorResponseResult.success ? errorResponseResult.data.message : error.message;
+  } catch {
+    return error.message;
+  }
 };
 
 const getInlineHookResponseErrorStatus = (status: number) =>
@@ -73,32 +78,42 @@ export default function logtoConfigInlineHookRoutes<T extends ManagementApiRoute
         ctx.body = await libraries.inlineHooks.executeScript(body);
         ctx.status = 200;
       } catch (error: unknown) {
+        const sensitiveValues = getInlineHookSensitiveValues(body);
+
         if (error instanceof ResponseError) {
-          const responseBody = await parseInlineHookResponseError(error);
-          const { message, error: originalError } = responseBody;
+          const message = await parseInlineHookResponseErrorMessage(error);
+          const safeError = buildSafeInlineHookErrorSummary(new Error(message), sensitiveValues);
 
           throw new RequestError(
             {
               code: 'inline_hook.general',
               status: getInlineHookResponseErrorStatus(error.response.status),
             },
-            { message, error: originalError }
+            { message: safeError.message }
           );
         }
 
-        // Already-normalized Management API errors (e.g. remote runner not configured).
         if (error instanceof RequestError) {
-          throw error;
+          const parsedErrorData = inlineHookResponseErrorGuard.safeParse(error.data);
+          const safeError = buildSafeInlineHookErrorSummary(
+            new Error(parsedErrorData.success ? parsedErrorData.data.message : error.message),
+            sensitiveValues
+          );
+
+          throw new RequestError(
+            {
+              code: 'inline_hook.general',
+              status: getInlineHookResponseErrorStatus(error.status),
+            },
+            { message: safeError.message }
+          );
         }
 
-        // Non-HTTP remote transport failures (e.g. Got TimeoutError) must stay within
-        // the declared 4xx contract for Console dry runs.
+        const safeError = buildSafeInlineHookErrorSummary(error, sensitiveValues);
+
         throw new RequestError(
           { code: 'inline_hook.general', status: 422 },
-          {
-            message:
-              error instanceof Error ? error.message : 'Remote inline hook execution failed.',
-          }
+          { message: safeError.message }
         );
       }
 

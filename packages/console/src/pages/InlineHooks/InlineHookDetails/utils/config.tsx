@@ -36,6 +36,22 @@ const defaultHookUser = {
   },
 };
 
+const defaultPostSignInUser: PostSignInEvent['user'] = {
+  ...defaultHookUser,
+  identities: {},
+  lastSignInAt: 1_750_000_000_000,
+  createdAt: 1_700_000_000_000,
+  updatedAt: 1_750_000_000_000,
+  applicationId: 'application_123',
+  isSuspended: false,
+  hasPassword: true,
+  ssoIdentities: [],
+  mfaVerificationFactors: [],
+  roles: [],
+  organizations: [],
+  organizationRoles: [],
+};
+
 const defaultPostFirstFactorVerificationEvent: PostFirstFactorVerificationEvent = {
   key: LogtoInlineHookKey.PostFirstFactorVerification,
   interactionEvent: InteractionEvent.SignIn,
@@ -51,7 +67,7 @@ const defaultPostFirstFactorVerificationEvent: PostFirstFactorVerificationEvent 
 const defaultPostSignInEvent: PostSignInEvent = {
   key: LogtoInlineHookKey.PostSignIn,
   interactionEvent: InteractionEvent.SignIn,
-  user: defaultHookUser,
+  user: defaultPostSignInUser,
 };
 
 const defaultPostFirstFactorVerificationScript = `/**

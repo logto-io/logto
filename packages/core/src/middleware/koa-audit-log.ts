@@ -12,20 +12,63 @@ import { getInjectedHeaderValues } from '#src/utils/injected-header-mapping.js';
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
+const isArray = (value: unknown): value is unknown[] => Array.isArray(value);
 
-const sensitiveDataKeys = Object.freeze(['password', 'secret']);
+const maskedValue = '******';
+const safeSensitiveDataKeys = new Set(['passwordverified', 'haspassword']);
+const exactSensitiveDataKeys = new Set(['authorization', 'xfunctionskey', 'token']);
+const sensitiveDataKeyFragments = [
+  'secret',
+  'password',
+  'apikey',
+  'privatekey',
+  'credential',
+  'cookie',
+];
+
+const normalizeKey = (key: string) => key.replaceAll(/[_-]/g, '').toLowerCase();
+
+const shouldOmitKey = (key: string) => {
+  const normalizedKey = normalizeKey(key);
+
+  return (
+    normalizedKey.startsWith('script') ||
+    normalizedKey.endsWith('script') ||
+    normalizedKey.includes('environmentvariables')
+  );
+};
+
+const isSensitiveKey = (key: string, value: unknown) => {
+  const normalizedKey = normalizeKey(key);
+  const isSafePasswordStatus =
+    safeSensitiveDataKeys.has(normalizedKey) && typeof value === 'boolean';
+
+  return (
+    !isSafePasswordStatus &&
+    (exactSensitiveDataKeys.has(normalizedKey) ||
+      normalizedKey.endsWith('token') ||
+      sensitiveDataKeyFragments.some((fragment) => normalizedKey.includes(fragment)))
+  );
+};
+
+const sanitiseRecord = (value: Record<string, unknown>) =>
+  Object.fromEntries(
+    Object.entries(value).flatMap(([key, element]) => {
+      if (shouldOmitKey(key)) {
+        return [];
+      }
+
+      return [[key, isSensitiveKey(key, element) ? maskedValue : sanitise(element)]];
+    })
+  );
 
 const sanitise = (value: unknown): unknown => {
-  if (Array.isArray(value)) {
+  if (isArray(value)) {
     return value.map((element) => sanitise(element));
   }
 
   if (isRecord(value)) {
-    return Object.fromEntries(
-      Object.entries(value).map(([key, element]) => {
-        return [key, sensitiveDataKeys.includes(key) ? '******' : sanitise(element)];
-      })
-    );
+    return sanitiseRecord(value);
   }
 
   return value;
@@ -41,12 +84,13 @@ const nullCharacter = String.fromCodePoint(0);
 const stripFromString = (value: string): string =>
   value.includes(nullCharacter) ? value.replaceAll(nullCharacter, '') : value;
 
-const stripNullCharacters = (value: unknown): unknown => {
+function stripNullCharacters<Value>(value: Value): Value;
+function stripNullCharacters(value: unknown): unknown {
   if (typeof value === 'string') {
     return stripFromString(value);
   }
 
-  if (Array.isArray(value)) {
+  if (isArray(value)) {
     return value.map((element) => stripNullCharacters(element));
   }
 
@@ -61,15 +105,12 @@ const stripNullCharacters = (value: unknown): unknown => {
   }
 
   return value;
-};
+}
 
-const filterSensitiveData = (data: Record<string, unknown>): Record<string, unknown> => {
-  return Object.fromEntries(
-    Object.entries(data).map(([key, value]) => {
-      return [key, sensitiveDataKeys.includes(key) ? '******' : sanitise(value)];
-    })
-  );
-};
+function filterSensitiveData<Data extends Record<string, unknown>>(data: Data): Data;
+function filterSensitiveData(data: Record<string, unknown>) {
+  return sanitiseRecord(data);
+}
 
 const removeUndefinedKeys = (object: Record<string, unknown>) =>
   Object.fromEntries(Object.entries(object).filter(([, value]) => value !== undefined));
@@ -77,7 +118,10 @@ const removeUndefinedKeys = (object: Record<string, unknown>) =>
 export class LogEntry {
   payload: LogContextPayload;
 
-  constructor(public readonly key: LogKey) {
+  constructor(
+    public readonly key: LogKey,
+    public readonly independent = false
+  ) {
     this.payload = {
       key,
       result: LogResult.Success,
@@ -103,8 +147,13 @@ export class LogEntry {
 
 export type LogPayload = Partial<LogContextPayload>;
 
+export type CreateLogOptions = {
+  /** Keep this entry's own result when the remainder of the request fails. */
+  independent?: boolean;
+};
+
 export type LogContext = {
-  createLog: (key: LogKey) => LogEntry;
+  createLog: (key: LogKey, options?: CreateLogOptions) => LogEntry;
   prependAllLogEntries: (payload: LogPayload) => void;
 };
 
@@ -188,8 +237,8 @@ export default function koaAuditLog<StateT, ContextT extends IRouterParamContext
   return async (ctx, next) => {
     const entries: LogEntry[] = [];
 
-    ctx.createLog = (key: LogKey) => {
-      const entry = new LogEntry(key);
+    ctx.createLog = (key: LogKey, { independent = false } = {}) => {
+      const entry = new LogEntry(key, independent);
       // eslint-disable-next-line @silverhand/fp/no-mutating-methods
       entries.push(entry);
 
@@ -206,6 +255,10 @@ export default function koaAuditLog<StateT, ContextT extends IRouterParamContext
       await next();
     } catch (error: unknown) {
       for (const entry of entries) {
+        if (entry.independent) {
+          continue;
+        }
+
         entry.append({
           result: LogResult.Error,
           error:
@@ -244,12 +297,14 @@ export default function koaAuditLog<StateT, ContextT extends IRouterParamContext
 
       await Promise.all(
         entries.map(async ({ payload }) => {
-          const fullPayload = { ...basePayload, ...payload };
+          // Apply the recursive filter at the final insertion boundary too, so common context
+          // added through `prependAllLogEntries()` can never bypass sensitive-key masking.
+          const canonicalPayload = stripNullCharacters({ ...basePayload, ...payload });
+          const fullPayload = filterSensitiveData(canonicalPayload);
           return insertLog({
             id: generateStandardId(),
             key: payload.key,
-            // eslint-disable-next-line no-restricted-syntax -- structural identity transform preserves the payload shape
-            payload: stripNullCharacters(fullPayload) as typeof fullPayload,
+            payload: fullPayload,
           });
         })
       );
