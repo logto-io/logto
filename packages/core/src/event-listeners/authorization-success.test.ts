@@ -171,6 +171,81 @@ describe('createAuthorizationSuccessListener', () => {
     });
   });
 
+  it('should trigger Grant.LimitExceeded webhook when grants are revoked', async () => {
+    const { provider, revokeByGrantId, destroy } = createMockProvider();
+    const findUserActiveGrantsByClientId = jest.fn(async () => [
+      {
+        id: 'grant-3',
+        payload: {
+          exp: 999_999_999,
+          iat: 30,
+          jti: 'grant-jti-3',
+          kind: 'Grant',
+          clientId: 'client-id',
+          accountId: 'user-id',
+        },
+        expiresAt: Date.now() + 1000,
+      },
+      {
+        id: 'grant-1',
+        payload: {
+          exp: 999_999_999,
+          iat: 10,
+          jti: 'grant-jti-1',
+          kind: 'Grant',
+          clientId: 'client-id',
+          accountId: 'user-id',
+        },
+        expiresAt: Date.now() + 1000,
+      },
+      {
+        id: 'grant-2',
+        payload: {
+          exp: 999_999_999,
+          iat: 20,
+          jti: 'grant-jti-2',
+          kind: 'Grant',
+          clientId: 'client-id',
+          accountId: 'user-id',
+        },
+        expiresAt: Date.now() + 1000,
+      },
+    ]);
+
+    const triggerEvent = jest.fn(async () => {
+      await Promise.resolve();
+    });
+
+    const listener = createAuthorizationSuccessListener(
+      // @ts-expect-error Provider mock is enough for unit test
+      provider,
+      new MockQueries({
+        oidcModelInstances: {
+          findUserActiveGrantsByClientId,
+          findUserActiveSessionUidByGrantId: jest.fn(async () => null),
+        },
+      }),
+      triggerEvent
+    );
+
+    const context = createMockAuthorizationSuccessContext({ maxAllowedGrants: 1 });
+    // @ts-expect-error Context mock is enough for unit test
+    await listener(context);
+
+    expect(triggerEvent).toHaveBeenCalledTimes(1);
+    expect(triggerEvent).toHaveBeenCalledWith(
+      expect.anything(),
+      'Grant.LimitExceeded',
+      expect.objectContaining({
+        userId: 'user-id',
+        applicationId: 'client-id',
+        revokedGrantIds: ['grant-1', 'grant-2'],
+        maxAllowedGrants: 1,
+        preRevocationActiveGrantCount: 3,
+      })
+    );
+  });
+
   it('should throw when grant query fails', async () => {
     const { provider, revokeByGrantId, destroy } = createMockProvider();
     const error = new Error('query failed');

@@ -1,5 +1,6 @@
 import { appInsights } from '@logto/app-insights/node';
-import { LogResult, userApplicationGrantPayloadGuard } from '@logto/schemas';
+import { LogResult, userApplicationGrantPayloadGuard, type HookEvent } from '@logto/schemas';
+import { type ConsoleLog } from '@logto/shared';
 import { trySafe } from '@silverhand/essentials';
 import type { KoaContextWithOIDC, Provider } from 'oidc-provider';
 
@@ -12,6 +13,12 @@ import { stringifyError } from '#src/utils/format.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
 import { extractInteractionContext } from './utils.js';
+
+export type TriggerEvent = (
+  consoleLog: ConsoleLog,
+  event: HookEvent,
+  payload: Record<string, unknown>
+) => Promise<void>;
 
 const isDefined = <T>(value: T | undefined): value is T => value !== undefined;
 const toError = (error: unknown): Error =>
@@ -55,7 +62,8 @@ const getGrantIdsToRevokeForMaxAllowedGrants = ({
 const enforceMaxAllowedGrantsRevocation = async (
   ctx: KoaContextWithOIDC & LogContext,
   provider: Provider,
-  queries: Queries
+  queries: Queries,
+  triggerEvent?: TriggerEvent
 ) => {
   const userId = ctx.oidc.session?.accountId;
   const clientId = ctx.oidc.client?.clientId;
@@ -89,6 +97,27 @@ const enforceMaxAllowedGrantsRevocation = async (
   await trySafe(
     async () => {
       const revokeResult = await sessionLibrary.revokeUserGrantsByIds(provider, grantIdsToRevoke);
+
+      // Fire webhook unconditionally after grants are revoked,
+      // even if subsequent session cleanup or error logging fails.
+      if (triggerEvent) {
+        void trySafe(
+          triggerEvent(getConsoleLogFromContext(ctx), 'Grant.LimitExceeded', {
+            userId,
+            applicationId: clientId,
+            revokedGrantIds: grantIdsToRevoke,
+            maxAllowedGrants,
+            preRevocationActiveGrantCount: activeGrants.length,
+          }),
+          (error) => {
+            getConsoleLogFromContext(ctx).error(
+              'authorization.success max-allowed-grants webhook failed:',
+              error
+            );
+          }
+        );
+      }
+
       const cleanupResult = await sessionLibrary.removeUserSessionAuthorizationsByGrantIds(
         provider,
         userId,
@@ -139,13 +168,15 @@ const enforceMaxAllowedGrantsRevocation = async (
       throw error;
     }
   );
-
-  // TODO: Trigger a webhook event for max-allowed-grants evictions.
 };
 
-export const createAuthorizationSuccessListener = (provider: Provider, queries: Queries) => {
+export const createAuthorizationSuccessListener = (
+  provider: Provider,
+  queries: Queries,
+  triggerEvent?: TriggerEvent
+) => {
   return async (ctx: KoaContextWithOIDC) => {
     assertLogContext(ctx);
-    await enforceMaxAllowedGrantsRevocation(ctx, provider, queries);
+    await enforceMaxAllowedGrantsRevocation(ctx, provider, queries, triggerEvent);
   };
 };

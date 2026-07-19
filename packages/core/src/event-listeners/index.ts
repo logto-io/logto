@@ -6,7 +6,7 @@ import type Queries from '#src/tenants/Queries.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
-import { createAuthorizationSuccessListener } from './authorization-success.js';
+import { createAuthorizationSuccessListener, type TriggerEvent } from './authorization-success.js';
 import { grantListener, grantRevocationListener } from './grant.js';
 import { interactionEndedListener, interactionStartedListener } from './interaction.js';
 import { recordActiveUsers } from './record-active-users.js';
@@ -16,7 +16,12 @@ import { deleteSessionExtensions } from './session.js';
  * @see {@link https://github.com/panva/node-oidc-provider/blob/v7.x/docs/README.md#im-getting-a-client-authentication-failed-error-with-no-details Getting auth error with no details?}
  * @see {@link https://github.com/panva/node-oidc-provider/blob/v7.x/docs/events.md OIDC Provider events}
  */
-export const addOidcEventListeners = (tenantId: string, provider: Provider, queries: Queries) => {
+export const addOidcEventListeners = (
+  tenantId: string,
+  provider: Provider,
+  queries: Queries,
+  triggerEvent?: TriggerEvent
+) => {
   const { recordTokenUsage } = queries.dailyTokenUsage;
 
   // Listener for user access tokens (increment user_token_usage)
@@ -33,7 +38,7 @@ export const addOidcEventListeners = (tenantId: string, provider: Provider, quer
 
   provider.addListener(
     'authorization.success',
-    createAuthorizationSuccessListener(provider, queries)
+    createAuthorizationSuccessListener(provider, queries, triggerEvent)
   );
 
   provider.addListener('access_token.issued', async (token) => {

@@ -289,10 +289,48 @@ export const createHookLibrary = (queries: Queries) => {
     });
   }
 
+  /**
+   * Trigger a hook event directly without the metadata enrichment pipeline (`buildWebhooks`).
+   *
+   * Unlike `triggerInteractionHooks` / `triggerDataHooks` / `triggerExceptionHooks`, this method
+   * does not go through `buildWebhooks` because callers (e.g., OIDC event listeners) operate
+   * outside the middleware request context and therefore have no `HookContextManager` or managed
+   * metadata. The payload is passed as-is with only the event name and timestamp added.
+   */
+  const triggerEvent = async (
+    consoleLog: ConsoleLog,
+    event: HookEvent,
+    payload: Record<string, unknown>
+  ) => {
+    const hooks = await findAllHooks();
+    const matchingHooks = hooks.filter(
+      ({ event: hookEvent, events, enabled }) =>
+        enabled && (events.length > 0 ? events.includes(event) : event === hookEvent)
+    );
+
+    if (matchingHooks.length === 0) {
+      return;
+    }
+
+    const webhookPayloads: Array<{ hook: Hook; payload: HookEventPayloadWithoutHookId }> =
+      matchingHooks.map((hook) => ({
+        hook,
+        // eslint-disable-next-line no-restricted-syntax
+        payload: {
+          event,
+          createdAt: new Date().toISOString(),
+          ...payload,
+        } as unknown as HookEventPayloadWithoutHookId,
+      }));
+
+    await sendWebhooks(webhookPayloads, consoleLog);
+  };
+
   return {
     triggerInteractionHooks,
     triggerDataHooks,
     triggerExceptionHooks,
     triggerTestHook,
+    triggerEvent,
   };
 };
