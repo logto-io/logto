@@ -1,3 +1,4 @@
+import { appInsights } from '@logto/app-insights/node';
 import { LogtoInlineHookKey } from '@logto/schemas';
 import { ResponseError } from '@withtyped/client';
 import nock from 'nock';
@@ -5,6 +6,7 @@ import nock from 'nock';
 import { EnvSet } from '#src/env-set/index.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 
+import { inlineHookMetricNames } from './inline-hook-telemetry.js';
 import { InlineHookLibrary } from './inline-hook.js';
 import type { LogtoConfigLibrary } from './logto-config.js';
 import type { SubscriptionLibrary } from './subscription.js';
@@ -15,6 +17,8 @@ const getInlineHook = jest.fn() as jest.MockedFunction<LogtoConfigLibrary['getIn
 const getSubscriptionData = jest.fn() as jest.MockedFunction<
   SubscriptionLibrary['getSubscriptionData']
 >;
+const trackMetric = jest.fn();
+const originalAppInsightsClient = appInsights.client;
 
 const createLibrary = (tenantId = 'tenant_id') =>
   new InlineHookLibrary(
@@ -41,6 +45,11 @@ describe('InlineHookLibrary Cloud execution routing', () => {
     library.runHook({ ...input, auditContext: { createLog } });
 
   beforeEach(() => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Provide an AppInsights client for metric assertions.
+    appInsights.client = {
+      trackMetric,
+      trackException: jest.fn(),
+    } as unknown as NonNullable<typeof appInsights.client>;
     getSubscriptionData.mockResolvedValue({
       quota: {
         inlineHooksEnabled: true,
@@ -52,6 +61,8 @@ describe('InlineHookLibrary Cloud execution routing', () => {
     nock.cleanAll();
     jest.restoreAllMocks();
     jest.clearAllMocks();
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore the shared AppInsights singleton.
+    appInsights.client = originalAppInsightsClient;
     setIsCloud(originalIsCloud);
   });
 
@@ -194,6 +205,17 @@ describe('InlineHookLibrary Cloud execution routing', () => {
       1,
       expect.objectContaining({ runtimeLocation: 'remote' })
     );
+    expect(trackMetric).toHaveBeenCalledTimes(2);
+    expect(trackMetric).toHaveBeenCalledWith({
+      name: inlineHookMetricNames.executionCount,
+      value: 1,
+      properties: {
+        hookType: 'PostSignIn',
+        runtimeLocation: 'azure',
+        outcome: 'success',
+        action: 'updateUser',
+      },
+    });
   });
 
   it('applies allow-mode policy when Cloud remote execution fails without local fallback', async () => {

@@ -1,15 +1,14 @@
 import {
   type PostFirstFactorVerificationEvent,
-  SignInIdentifier,
   type HookUserPatch,
   type InteractionIdentifier,
   postFirstFactorVerificationResultGuard,
   postSignInResultGuard,
 } from '@logto/schemas';
-import { PhoneNumberParser } from '@logto/shared/universal';
 import { isPlainObject } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { doesInlineHookPreserveSignInIdentifier } from '#src/libraries/inline-hook-identifier-validation.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { type HookProvisioningProfile } from '../../types.js';
@@ -68,53 +67,12 @@ const toHookProvisioningProfileSafe = (user: unknown) => {
   }
 };
 
-const signInIdentifierToUserField = {
-  [SignInIdentifier.Email]: 'primaryEmail',
-  [SignInIdentifier.Phone]: 'primaryPhone',
-  [SignInIdentifier.Username]: 'username',
-} as const satisfies Record<SignInIdentifier, keyof HookUserPatch>;
-
-const isSameSignInIdentifierValue = (
-  type: SignInIdentifier,
-  submitted: string,
-  returned: string
-): boolean => {
-  switch (type) {
-    case SignInIdentifier.Email: {
-      return submitted.toLowerCase() === returned.toLowerCase();
-    }
-    case SignInIdentifier.Phone: {
-      const submittedPhone = new PhoneNumberParser(submitted);
-      const returnedPhone = new PhoneNumberParser(returned);
-
-      if (
-        submittedPhone.isValid &&
-        returnedPhone.isValid &&
-        submittedPhone.internationalNumber &&
-        returnedPhone.internationalNumber
-      ) {
-        return submittedPhone.internationalNumber === returnedPhone.internationalNumber;
-      }
-
-      return submitted === returned;
-    }
-    case SignInIdentifier.Username: {
-      return submitted === returned;
-    }
-  }
-};
-
 const assertHookPreservesSignInIdentifier = (
   identifier: InteractionIdentifier,
   userPatch: HookUserPatch
 ) => {
-  const field = signInIdentifierToUserField[identifier.type];
-  const returned = userPatch[field];
-
   assertThat(
-    returned === undefined ||
-      (typeof returned === 'string' &&
-        isSameSignInIdentifierValue(identifier.type, identifier.value, returned)),
+    doesInlineHookPreserveSignInIdentifier(identifier, userPatch),
     new RequestError(
       { code: 'inline_hook.sign_in_identifier_changed', status: 422 },
       { identifierType: identifier.type }
