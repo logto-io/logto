@@ -26,11 +26,12 @@ export const staticConfigs = {
  * User must select one of these in the connector configuration
  */
 export const systemProvidedSignNames = [
-  '云渚科技验证平台',
-  '云渚科技验证服务',
-  '速通互联验证码',
-  '速通互联验证平台',
-  '速通互联验证服务',
+  '恒创联众',
+  '恒创联众科技',
+  '北京恒创联众',
+  '恒锐创岳',
+  '恒锐创岳科技',
+  '北京恒锐创岳',
 ];
 
 /**
