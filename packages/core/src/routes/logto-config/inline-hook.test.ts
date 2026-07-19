@@ -311,9 +311,19 @@ describe('configs inline hook routes', () => {
   );
 
   it('POST /configs/inline-hooks/test should map remote transport failures to inline_hook.general', async () => {
+    class TransportError extends Error {
+      readonly request = {
+        options: {
+          headers: { authorization: 'Bearer secret' },
+        },
+      };
+    }
+
+    const transportError = new TransportError("Timeout awaiting 'request' for 5000ms");
+
     jest
       .spyOn(tenantContext.libraries.inlineHooks, 'executeScript')
-      .mockRejectedValueOnce(new Error("Timeout awaiting 'request' for 5000ms"));
+      .mockRejectedValueOnce(transportError);
 
     const response = await routeRequesterWithErrorHandler
       .post('/configs/inline-hooks/test')
@@ -321,7 +331,7 @@ describe('configs inline hook routes', () => {
 
     expect(response.status).toEqual(422);
     expect(response.body.code).toEqual('inline_hook.general');
-    expect(response.body.data).toMatchObject({
+    expect(response.body.data).toEqual({
       message: "Timeout awaiting 'request' for 5000ms",
     });
   });

@@ -98,7 +98,6 @@ export default function logtoConfigInlineHookRoutes<T extends ManagementApiRoute
           {
             message:
               error instanceof Error ? error.message : 'Remote inline hook execution failed.',
-            error,
           }
         );
       }
