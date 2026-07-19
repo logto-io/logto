@@ -58,6 +58,10 @@ const users = {
 };
 
 const tenant = new MockTenant(createMockProvider(), { signInExperiences, users });
+const mockInteractionDetails = {
+  jti: 'session-id',
+  params: { client_id: 'application-id' },
+} as unknown as WithHooksAndLogsContext['interactionDetails'];
 
 const ExperienceInteraction = await pickDefault(import('./experience-interaction.js'));
 
@@ -446,6 +450,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
       assignReleaseOnSuccessInteractionHookResult: jest.fn(),
       assignReleaseAnywayInteractionHookResult: jest.fn(),
       appendDataHookContext: jest.fn(),
+      interactionDetails: mockInteractionDetails,
       ...createContextWithRouteParameters({
         headers: {
           'x-logto-cf-bot-score': '10',
@@ -667,6 +672,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
       assignReleaseOnSuccessInteractionHookResult: jest.fn(),
       assignReleaseAnywayInteractionHookResult: jest.fn(),
       appendDataHookContext: jest.fn(),
+      interactionDetails: mockInteractionDetails,
       ...createContextWithRouteParameters({
         headers: {
           'x-logto-cf-bot-score': '10',
@@ -741,6 +747,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
         assignReleaseOnSuccessInteractionHookResult: jest.fn(),
         assignReleaseAnywayInteractionHookResult: jest.fn(),
         appendDataHookContext: jest.fn(),
+        interactionDetails: mockInteractionDetails,
         ...createContextWithRouteParameters({
           headers: {
             'x-logto-cf-bot-score': '10',
@@ -792,6 +799,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
       assignReleaseOnSuccessInteractionHookResult: jest.fn(),
       assignReleaseAnywayInteractionHookResult: jest.fn(),
       appendDataHookContext: jest.fn(),
+      interactionDetails: mockInteractionDetails,
       ...createContextWithRouteParameters({
         headers: {
           'x-logto-cf-bot-score': '10',
