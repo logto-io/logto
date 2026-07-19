@@ -42,9 +42,15 @@ const isSensitiveKey = (key: string, value: unknown) => {
   const normalizedKey = normalizeKey(key);
   const isSafePasswordStatus =
     safeSensitiveDataKeys.has(normalizedKey) && typeof value === 'boolean';
+  const isSafeApplicationSecretMetadata =
+    normalizedKey === 'applicationsecret' &&
+    isRecord(value) &&
+    Object.keys(value).length === 1 &&
+    typeof value.name === 'string';
 
   return (
     !isSafePasswordStatus &&
+    !isSafeApplicationSecretMetadata &&
     (exactSensitiveDataKeys.has(normalizedKey) ||
       normalizedKey.endsWith('token') ||
       sensitiveDataKeyFragments.some((fragment) => normalizedKey.includes(fragment)))

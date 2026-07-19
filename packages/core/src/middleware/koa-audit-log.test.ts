@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Audit log middleware behavior is covered end to end. */
 import type { LogKey } from '@logto/schemas';
 import { LogResult, VerificationType } from '@logto/schemas';
 import i18next from 'i18next';
@@ -193,18 +194,24 @@ describe('koaAuditLog middleware', () => {
     expect(insertLog).not.toBeCalled();
   });
 
-  it('should filter password sensitive data in log', async () => {
+  it('should filter sensitive data while preserving safe application secret metadata', async () => {
     const ctx: TestContext = createTestContext({ 'user-agent': userAgent });
     ctx.request.ip = ip;
 
     const additionalMockPayload = {
       password: '123456',
       interaction: { profile: { password: 123_456 } },
+      applicationSecret: { name: 'rotation-2' },
+      unsafe: {
+        applicationSecret: { name: 'rotation-2', value: 'raw-application-secret' },
+      },
     };
 
     const maskedAdditionalMockPayload = {
       password: '******',
       interaction: { profile: { password: '******' } },
+      applicationSecret: { name: 'rotation-2' },
+      unsafe: { applicationSecret: '******' },
     };
 
     const next = async () => {
@@ -227,6 +234,7 @@ describe('koaAuditLog middleware', () => {
         userAgentParsed,
       },
     });
+    expect(JSON.stringify(insertLog.mock.calls)).not.toContain('raw-application-secret');
   });
 
   it('should filter TOTP secret in log', async () => {
@@ -457,3 +465,4 @@ describe('koaAuditLog middleware', () => {
     });
   });
 });
+/* eslint-enable max-lines */
