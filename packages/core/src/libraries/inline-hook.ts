@@ -89,19 +89,17 @@ const buildInlineHookExecutionErrorTelemetryPayload = <Event>({
       ? getPostFirstFactorVerificationPassword(event)
       : undefined;
 
-  if (!password) {
-    return error;
-  }
+  const sanitize = (value: string) => (password ? redactSensitiveValue(value, password) : value);
 
   const telemetryError = new Error(
-    redactSensitiveValue(error instanceof Error ? error.message : String(error), password)
+    sanitize(error instanceof Error ? error.message : String(error))
   );
 
   if (error instanceof Error) {
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Keep the original error type for telemetry while redacting secrets.
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Keep the original error type on the sanitized telemetry copy.
     telemetryError.name = error.name;
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Preserve the useful stack without leaking the inline-hook password.
-    telemetryError.stack = error.stack && redactSensitiveValue(error.stack, password);
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Preserve the useful stack on the sanitized telemetry copy.
+    telemetryError.stack = error.stack && sanitize(error.stack);
   }
 
   return telemetryError;
@@ -240,12 +238,12 @@ export class InlineHookLibrary {
     }
   }
 
-  async runHook<Event>({
+  async runHook({
     key,
     event,
   }: {
     key: LogtoInlineHookKey;
-    event: Event;
+    event: InlineHookExecutionRequestBody['event'];
   }): Promise<unknown> {
     const inlineHook = await this.findEnabledInlineHook(key);
 
@@ -261,9 +259,7 @@ export class InlineHookLibrary {
       return await this.executeScript({
         script: inlineHook.script,
         hookType: key,
-        // Production events are always JSON-serializable payloads from Core call sites.
-        // eslint-disable-next-line no-restricted-syntax -- Generic Event is wider than Json; cast at the shared execution boundary.
-        event: event as InlineHookExecutionRequestBody['event'],
+        event,
         environmentVariables: inlineHook.environmentVariables,
       });
     } catch (error: unknown) {
