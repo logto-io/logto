@@ -168,6 +168,26 @@ const security = {
     card_title: 'Lista di blocco email',
     card_description:
       'Prendi il controllo della tua base utenti bloccando indirizzi email ad alto rischio o indesiderati.',
+    custom_email_allowlist: {
+      title: 'Consenti indirizzi email personalizzati',
+      description:
+        'Consenti solo indirizzi email, domini o pattern email con caratteri jolly corrispondenti per nuove registrazioni e nuove email collegate.',
+      placeholder:
+        'Inserisci l’indirizzo email, il dominio o il pattern email con caratteri jolly consentito (ad es. bar@example.com, @example.com, foo*@example.com, *@example.com)',
+      duplicate_error: 'Indirizzo email, dominio o pattern email con caratteri jolly già aggiunto',
+      invalid_format_error:
+        'Deve essere un indirizzo email valido (bar@example.com), un dominio (@example.com) o un pattern email con caratteri jolly (foo*@example.com, *@example.com)',
+      warnings: {
+        identical_entries:
+          'Alcune voci della lista consentita esistono anche nelle regole di blocco. Le email corrispondenti potrebbero comunque essere bloccate.',
+        blocked_exact_email:
+          'Alcune email esatte della lista consentita corrispondono a una regola di blocco. Le email corrispondenti potrebbero comunque essere bloccate.',
+        blocked_subaddressing:
+          'Alcune voci della lista consentita contengono il segno più (+), ma il sottoindirizzamento email è bloccato.',
+        effectively_unusable:
+          'In base a questi controlli, la lista consentita attuale potrebbe non permettere il passaggio di alcuna nuova email.',
+      },
+    },
     disposable_email: {
       title: 'Blocca indirizzi email usa e getta',
       description:

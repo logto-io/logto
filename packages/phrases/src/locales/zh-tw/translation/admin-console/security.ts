@@ -149,6 +149,22 @@ const security = {
   blocklist: {
     card_title: '電子郵件封鎖名單',
     card_description: '通過封鎖高風險或不需要的電子郵件地址來控管你的用戶群。',
+    custom_email_allowlist: {
+      title: '允許自訂電子郵件地址',
+      description:
+        '僅允許相符的電子郵件地址、網域或萬用字元電子郵件地址模式用於新註冊和新連結的電子郵件。',
+      placeholder:
+        '輸入允許的電子郵件地址、網域或萬用字元電子郵件地址模式（例如，bar@example.com，@example.com，foo*@example.com，*@example.com）',
+      duplicate_error: '電子郵件地址、網域或萬用字元電子郵件地址模式已新增',
+      invalid_format_error:
+        '必須是有效的電子郵件地址（bar@example.com）、網域（@example.com）或萬用字元電子郵件地址模式（foo*@example.com，*@example.com）',
+      warnings: {
+        identical_entries: '部分允許清單項目也存在於阻擋規則中。相符的電子郵件仍可能被阻擋。',
+        blocked_exact_email: '部分精確電子郵件允許項目符合阻擋規則。相符的電子郵件仍可能被阻擋。',
+        blocked_subaddressing: '部分允許清單項目包含加號（+），但電子郵件子位址已被阻擋。',
+        effectively_unusable: '根據這些檢查，目前允許清單可能無法讓任何新的電子郵件通過。',
+      },
+    },
     disposable_email: {
       title: '封鎖一次性電子郵件地址',
       description:

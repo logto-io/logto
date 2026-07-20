@@ -160,6 +160,27 @@ const security = {
     card_title: 'メールブロックリスト',
     card_description:
       'ハイリスクまたは不要なメールアドレスをブロックすることで、ユーザーベースを制御します。',
+    custom_email_allowlist: {
+      title: 'カスタムメールアドレスを許可',
+      description:
+        '新規登録および新しくリンクされるメールには、一致するメールアドレス、ドメイン、またはワイルドカード付きメールアドレスパターンのみを許可します。',
+      placeholder:
+        '許可するメールアドレス、ドメイン、またはワイルドカード付きメールアドレスパターンを入力してください（例：bar@example.com、@example.com、foo*@example.com、*@example.com）',
+      duplicate_error:
+        'メールアドレス、ドメイン、またはワイルドカード付きメールアドレスパターンは既に追加されています',
+      invalid_format_error:
+        '有効なメールアドレス（bar@example.com）、ドメイン（@example.com）、またはワイルドカード付きメールアドレスパターン（foo*@example.com、*@example.com）である必要があります',
+      warnings: {
+        identical_entries:
+          '許可リストの一部の項目はブロックルールにも存在します。一致するメールは引き続きブロックされる可能性があります。',
+        blocked_exact_email:
+          '許可リストの一部の完全一致メールがブロックルールに一致しています。一致するメールは引き続きブロックされる可能性があります。',
+        blocked_subaddressing:
+          '許可リストの一部の項目にプラス記号（+）が含まれていますが、メールサブアドレッシングはブロックされています。',
+        effectively_unusable:
+          'これらのチェックに基づくと、現在の許可リストでは新しいメールを許可できない可能性があります。',
+      },
+    },
     disposable_email: {
       title: '使い捨てメールアドレスをブロック',
       description:

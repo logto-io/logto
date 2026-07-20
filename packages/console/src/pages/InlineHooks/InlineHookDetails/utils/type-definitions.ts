@@ -1,5 +1,10 @@
 import { LogtoInlineHookKey } from '@logto/schemas';
 
+import {
+  JwtCustomizerTypeDefinitionKey,
+  jwtCustomizerUserContextTypeDefinition,
+} from '@/consts/jwt-customizer-type-definition';
+
 import { type InlineHookForm } from '../type';
 
 export enum InlineHookTypeDefinitionKey {
@@ -56,7 +61,7 @@ export const postFirstFactorVerificationEventTypeDefinition = `type ${InlineHook
 export const postSignInEventTypeDefinition = `type ${InlineHookTypeDefinitionKey.PostSignInEvent} = {
   key: 'inlineHook.postSignIn';
   interactionEvent: 'SignIn';
-  user: ${InlineHookTypeDefinitionKey.HookUser};
+  user: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext};
 };`;
 
 export const postFirstFactorVerificationResultTypeDefinition = `type ${InlineHookTypeDefinitionKey.PostFirstFactorVerificationResult} =
@@ -100,7 +105,7 @@ export const getEventTypeDefinition = (hookType: LogtoInlineHookKey) => {
 declare ${postFirstFactorVerificationEventTypeDefinition}`;
     }
     case LogtoInlineHookKey.PostSignIn: {
-      return `declare ${hookUserTypeDefinition}
+      return `declare ${jwtCustomizerUserContextTypeDefinition}
 
 declare ${postSignInEventTypeDefinition}`;
     }

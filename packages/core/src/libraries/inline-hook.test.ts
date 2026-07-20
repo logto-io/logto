@@ -27,6 +27,7 @@ const createLibrary = (tenantId = 'tenant_id') =>
   );
 
 const originalIsCloud = EnvSet.values.isCloud;
+const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
 
 const setIsCloud = (isCloud: boolean) => {
   // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for Cloud/local selection tests.
@@ -37,6 +38,8 @@ describe('InlineHookLibrary', () => {
   const library = createLibrary();
 
   beforeEach(() => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for inline hook runtime tests.
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
     getSubscriptionData.mockResolvedValue({
       quota: {
         inlineHooksEnabled: true,
@@ -48,9 +51,20 @@ describe('InlineHookLibrary', () => {
     jest.restoreAllMocks();
     jest.clearAllMocks();
     setIsCloud(originalIsCloud);
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after dev feature tests.
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
+      originalIsDevFeaturesEnabled;
   });
 
   it('loads hook config and runs enabled inline hook script in local VM', async () => {
+    const getEvent = jest.fn().mockResolvedValue({
+      key: LogtoInlineHookKey.PostSignIn,
+      interactionEvent: 'SignIn',
+      user: {
+        id: 'foo',
+        name: 'Foo',
+      },
+    });
     getInlineHook.mockResolvedValueOnce({
       enabled: true,
       environmentVariables: {
@@ -70,14 +84,7 @@ describe('InlineHookLibrary', () => {
     await expect(
       library.runHook({
         key: LogtoInlineHookKey.PostSignIn,
-        event: {
-          key: LogtoInlineHookKey.PostSignIn,
-          interactionEvent: 'SignIn',
-          user: {
-            id: 'foo',
-            name: 'Foo',
-          },
-        },
+        getEvent,
       })
     ).resolves.toEqual({
       action: 'updateUser',
@@ -88,6 +95,22 @@ describe('InlineHookLibrary', () => {
     });
 
     expect(getInlineHook).toHaveBeenCalledWith(LogtoInlineHookKey.PostSignIn);
+    expect(getEvent).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not load or run hooks when dev features are disabled', async () => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for dev feature gate test.
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = false;
+
+    await expect(
+      library.runHook({
+        key: LogtoInlineHookKey.PostSignIn,
+        event: {},
+      })
+    ).resolves.toBeUndefined();
+
+    expect(getInlineHook).not.toHaveBeenCalled();
+    expect(getSubscriptionData).not.toHaveBeenCalled();
   });
 
   it('does not run disabled hooks', async () => {
@@ -109,6 +132,7 @@ describe('InlineHookLibrary', () => {
   });
 
   it('does not run when inline hook config is missing', async () => {
+    const getEvent = jest.fn().mockResolvedValue({});
     getInlineHook.mockRejectedValueOnce(
       new RequestError({
         code: 'entity.not_exists_with_id',
@@ -119,9 +143,11 @@ describe('InlineHookLibrary', () => {
     await expect(
       library.runHook({
         key: LogtoInlineHookKey.PostSignIn,
-        event: {},
+        getEvent,
       })
     ).resolves.toBeUndefined();
+
+    expect(getEvent).not.toHaveBeenCalled();
   });
 
   it('rethrows non-404 errors when loading inline hook config', async () => {
@@ -140,6 +166,7 @@ describe('InlineHookLibrary', () => {
   });
 
   it('does not run when inline hooks quota is disabled', async () => {
+    const getEvent = jest.fn().mockResolvedValue({});
     setIsCloud(true);
     getSubscriptionData.mockResolvedValueOnce({
       quota: {
@@ -161,9 +188,11 @@ describe('InlineHookLibrary', () => {
     await expect(
       library.runHook({
         key: LogtoInlineHookKey.PostSignIn,
-        event: {},
+        getEvent,
       })
     ).resolves.toBeUndefined();
+
+    expect(getEvent).not.toHaveBeenCalled();
     expect(executeScript).not.toHaveBeenCalled();
     expect(runScriptInLocalVm).not.toHaveBeenCalled();
     expect(runScriptRemotely).not.toHaveBeenCalled();

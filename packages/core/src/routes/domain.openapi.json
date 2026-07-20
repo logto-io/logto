@@ -97,7 +97,6 @@
       "get": {
         "summary": "Get domain verification files",
         "description": "Get the verification files served from the custom domain.",
-        "tags": ["Dev feature"],
         "responses": {
           "200": {
             "description": "The configured domain verification files."
@@ -110,7 +109,6 @@
       "put": {
         "summary": "Replace domain verification files",
         "description": "Replace the verification files served from the custom domain.",
-        "tags": ["Dev feature"],
         "requestBody": {
           "content": {
             "application/json": {

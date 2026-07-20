@@ -59,13 +59,30 @@
   gap: _.unit(1);
 }
 
-.path {
-  overflow: hidden;
-  color: var(--color-text);
+// Higher specificity so this wins over TextLink's `max-width: fit-content`.
+// `width: fit-content` keeps the flex item from stretching under `.fileInfo`'s
+// default `align-items: stretch`; `max-width: 100%` still allows long paths to
+// truncate within the row.
+.path.path {
+  width: fit-content;
+  max-width: 100%;
+  min-width: 0;
   font-family: 'Roboto Mono', monospace;
   font-size: 13px;
+  line-height: 20px;
+}
+
+.pathText {
+  min-width: 0;
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.externalLinkIcon {
+  flex-shrink: 0;
+  width: _.unit(4);
+  height: _.unit(4);
 }
 
 .actions {

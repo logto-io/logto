@@ -156,6 +156,26 @@ const security = {
   blocklist: {
     card_title: 'บัญชีดำอีเมล',
     card_description: 'ควบคุมผู้ใช้ของคุณโดยบล็อกอีเมลที่มีความเสี่ยงสูงหรือไม่ต้องการ',
+    custom_email_allowlist: {
+      title: 'อนุญาตที่อยู่อีเมลแบบกำหนดเอง',
+      description:
+        'อนุญาตเฉพาะที่อยู่อีเมล โดเมน หรือรูปแบบอีเมลแบบไวลด์การ์ดที่ตรงกันสำหรับการสมัครใหม่และอีเมลที่เชื่อมโยงใหม่',
+      placeholder:
+        'ป้อนที่อยู่อีเมล โดเมน หรือรูปแบบอีเมลแบบไวลด์การ์ดที่อนุญาต (เช่น bar@example.com, @example.com, foo*@example.com, *@example.com)',
+      duplicate_error: 'เพิ่มที่อยู่อีเมล โดเมน หรือรูปแบบอีเมลแบบไวลด์การ์ดนี้แล้ว',
+      invalid_format_error:
+        'ต้องเป็นที่อยู่อีเมลที่ถูกต้อง (bar@example.com), โดเมน (@example.com) หรือรูปแบบอีเมลแบบไวลด์การ์ด (foo*@example.com, *@example.com)',
+      warnings: {
+        identical_entries:
+          'บางรายการใน allowlist มีอยู่ในกฎการบล็อกด้วย อีเมลที่ตรงกันอาจยังถูกบล็อก',
+        blocked_exact_email:
+          'อีเมลแบบตรงตัวบางรายการใน allowlist ตรงกับกฎการบล็อก อีเมลที่ตรงกันอาจยังถูกบล็อก',
+        blocked_subaddressing:
+          'บางรายการใน allowlist มีเครื่องหมายบวก (+) แต่การใช้ที่อยู่อีเมลย่อยถูกบล็อก',
+        effectively_unusable:
+          'จากการตรวจสอบเหล่านี้ allowlist ปัจจุบันอาจไม่อนุญาตให้อีเมลใหม่ใดผ่านได้',
+      },
+    },
     disposable_email: {
       title: 'บล็อกอีเมลชั่วคราว (disposable email)',
       description:

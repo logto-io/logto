@@ -6,6 +6,8 @@ import type { InteractionEvent, InteractionIdentifier } from '../interactions.js
 import { userInfoGuard, type UserInfo } from '../user.js';
 import type { VerificationType } from '../verification-records/index.js';
 
+import type { JwtCustomizerUserContext } from './jwt-customizer.js';
+
 export enum LogtoInlineHookKey {
   PostFirstFactorVerification = 'inlineHook.postFirstFactorVerification',
   PostSignIn = 'inlineHook.postSignIn',
@@ -80,7 +82,7 @@ export type PostFirstFactorVerificationEvent = {
 export type PostSignInEvent = {
   key: LogtoInlineHookKey.PostSignIn;
   interactionEvent: InteractionEvent.SignIn;
-  user: HookUser;
+  user: JwtCustomizerUserContext;
 };
 
 // Nested `user` uses passthrough so password fields survive structural parsing.

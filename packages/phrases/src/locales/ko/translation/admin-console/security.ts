@@ -156,6 +156,26 @@ const security = {
   blocklist: {
     card_title: '이메일 차단 목록',
     card_description: '높은 위험 또는 원치 않는 이메일 주소를 차단하여 사용자 기반을 제어합니다.',
+    custom_email_allowlist: {
+      title: '사용자 지정 이메일 주소 허용',
+      description:
+        '새 가입 및 새로 연결되는 이메일에는 일치하는 이메일 주소, 도메인 또는 와일드카드 이메일 주소 패턴만 허용합니다.',
+      placeholder:
+        '허용할 이메일 주소, 도메인 또는 와일드카드 이메일 주소 패턴을 입력하세요(예: bar@example.com, @example.com, foo*@example.com, *@example.com)',
+      duplicate_error: '이메일 주소, 도메인 또는 와일드카드 이메일 주소 패턴이 이미 추가되었습니다',
+      invalid_format_error:
+        '유효한 이메일 주소(bar@example.com), 도메인(@example.com) 또는 와일드카드 이메일 주소 패턴(foo*@example.com, *@example.com)이어야 합니다',
+      warnings: {
+        identical_entries:
+          '일부 허용 목록 항목이 차단 규칙에도 존재합니다. 일치하는 이메일은 계속 차단될 수 있습니다.',
+        blocked_exact_email:
+          '일부 정확한 허용 목록 이메일이 차단 규칙과 일치합니다. 일치하는 이메일은 계속 차단될 수 있습니다.',
+        blocked_subaddressing:
+          '일부 허용 목록 항목에 더하기 기호(+)가 포함되어 있지만 이메일 하위 주소 지정이 차단되어 있습니다.',
+        effectively_unusable:
+          '이 검사에 따르면 현재 허용 목록은 새 이메일을 통과시키지 못할 수 있습니다.',
+      },
+    },
     disposable_email: {
       title: '일회용 이메일 주소 차단',
       description:

@@ -1,7 +1,8 @@
-import { SignInIdentifier, type HookUser } from '@logto/schemas';
+import { SignInIdentifier, type HookUser, type JwtCustomizerUserContext } from '@logto/schemas';
 
 import { mockUser } from '#src/__mocks__/user.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { runScriptFunctionInLocalVm } from '#src/utils/local-vm/index.js';
 
 import {
   type ValidatedPostFirstFactorVerificationHookResult,
@@ -10,7 +11,6 @@ import {
   validatePostSignInHookResult,
 } from './inline-hook-result-validation.js';
 
-const hookUser: HookUser = mockUser;
 const signInIdentifier = {
   type: SignInIdentifier.Email,
   value: 'jane@example.com',
@@ -22,6 +22,28 @@ const p1Event = (
   user,
   identifier: signInIdentifier,
 });
+const hookUser: JwtCustomizerUserContext = {
+  id: mockUser.id,
+  username: mockUser.username,
+  primaryEmail: mockUser.primaryEmail,
+  primaryPhone: mockUser.primaryPhone,
+  name: mockUser.name,
+  avatar: mockUser.avatar,
+  customData: mockUser.customData,
+  identities: mockUser.identities,
+  lastSignInAt: mockUser.lastSignInAt,
+  createdAt: mockUser.createdAt,
+  updatedAt: mockUser.updatedAt,
+  profile: mockUser.profile,
+  applicationId: mockUser.applicationId,
+  isSuspended: mockUser.isSuspended,
+  hasPassword: true,
+  ssoIdentities: [],
+  mfaVerificationFactors: [],
+  roles: [],
+  organizations: [],
+  organizationRoles: [],
+};
 const invalidCredentialsResult: ValidatedPostFirstFactorVerificationHookResult = {
   action: 'rejectInvalidCredentials',
 };
@@ -214,30 +236,45 @@ describe('validatePostFirstFactorVerificationHookResult', () => {
 });
 
 describe('validatePostSignInHookResult', () => {
-  it.each([undefined, null, {}, { action: 'updateUser' }, { ignored: true }])(
+  it.each([undefined, null, {}, { action: 'updateUser' }])(
     'returns continue for no-op result %#',
     (result) => {
       expect(
         validatePostSignInHookResult({
-          event: {
-            user: hookUser,
-          },
+          userId: hookUser.id,
           result,
         })
       ).toEqual(continueResult);
     }
   );
 
-  it('accepts updateUser with a provisioning profile', () => {
+  it('accepts an empty plain object returned from a separate VM realm as a no-op', async () => {
+    const result = await runScriptFunctionInLocalVm(
+      'const runInlineHook = () => ({})',
+      'runInlineHook',
+      {}
+    );
+
+    expect(result).toEqual({});
+    expect(validatePostSignInHookResult({ userId: hookUser.id, result })).toEqual(continueResult);
+  });
+
+  it('accepts updateUser with a sanitized provisioning profile', () => {
     expect(
       validatePostSignInHookResult({
-        event: {
-          user: hookUser,
-        },
+        userId: hookUser.id,
         result: {
           action: 'updateUser',
           user: {
             name: 'Jane Doe',
+            profile: {
+              givenName: 'Jane',
+              familyName: 'Doe',
+              ignored: 'not persisted',
+            },
+            customData: {
+              plan: 'pro',
+            },
           },
         },
       })
@@ -246,6 +283,13 @@ describe('validatePostSignInHookResult', () => {
       userId: hookUser.id,
       user: {
         name: 'Jane Doe',
+        profile: {
+          givenName: 'Jane',
+          familyName: 'Doe',
+        },
+        customData: {
+          plan: 'pro',
+        },
       },
     });
   });
@@ -254,15 +298,27 @@ describe('validatePostSignInHookResult', () => {
     [],
     { action: 'createUser' },
     { action: 'createUser', user: { name: 'Jane Doe' } },
+    { action: 'rejectInvalidCredentials' },
+    { action: 'rejectInvalidCredentials', user: { name: 'Jane Doe' } },
+    { action: 'denyAccess' },
+    { action: 'denyAccess', user: { name: 'Jane Doe' } },
+    { action: 'continue' },
+    { action: 'continue', user: { name: 'Jane Doe' } },
+    new Date(),
+    new Map(),
+    new (class {
+      isInvalidResult() {
+        return true;
+      }
+    })(),
+    { ignored: true },
     { user: { name: 'Jane Doe' } },
     { action: 'updateUser', user: null },
     { action: 'updateUser', user: { id: 'not-allowed' } },
   ])('throws verification failure for invalid result %#', (result) => {
     expect(() =>
       validatePostSignInHookResult({
-        event: {
-          user: hookUser,
-        },
+        userId: hookUser.id,
         result,
       })
     ).toMatchError(new RequestError({ code: 'session.verification_failed', status: 400 }));
