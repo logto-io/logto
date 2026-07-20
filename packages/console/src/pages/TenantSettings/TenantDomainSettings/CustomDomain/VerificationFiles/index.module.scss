@@ -60,7 +60,11 @@
 }
 
 // Higher specificity so this wins over TextLink's `max-width: fit-content`.
+// `width: fit-content` keeps the flex item from stretching under `.fileInfo`'s
+// default `align-items: stretch`; `max-width: 100%` still allows long paths to
+// truncate within the row.
 a.path {
+  width: fit-content;
   max-width: 100%;
   min-width: 0;
   font-family: 'Roboto Mono', monospace;
