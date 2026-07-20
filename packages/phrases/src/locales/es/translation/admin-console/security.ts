@@ -169,6 +169,26 @@ const security = {
     card_title: 'Lista de bloqueo de correos electrónicos',
     card_description:
       'Toma el control de tu base de usuarios al bloquear direcciones de correo electrónico de alto riesgo o no deseadas.',
+    custom_email_allowlist: {
+      title: 'Permitir direcciones de correo personalizadas',
+      description:
+        'Permite solo direcciones de correo, dominios o patrones comodín coincidentes para nuevos registros y correos vinculados recientemente.',
+      placeholder:
+        'Ingresa la dirección de correo, dominio o patrón comodín permitido (p. ej., bar@example.com, @example.com, foo*@example.com, *@example.com)',
+      duplicate_error: 'La dirección de correo, dominio o patrón comodín ya se agregó',
+      invalid_format_error:
+        'Debe ser una dirección de correo válida (bar@example.com), un dominio (@example.com) o un patrón comodín (foo*@example.com, *@example.com)',
+      warnings: {
+        identical_entries:
+          'Algunas entradas de la lista de permitidos también existen en las reglas de bloqueo. Los correos coincidentes aún pueden bloquearse.',
+        blocked_exact_email:
+          'Algunos correos exactos de la lista de permitidos coinciden con una regla de bloqueo. Los correos coincidentes aún pueden bloquearse.',
+        blocked_subaddressing:
+          'Algunas entradas de la lista de permitidos contienen un signo más (+), pero el subdireccionamiento de correo está bloqueado.',
+        effectively_unusable:
+          'Según estas comprobaciones, es posible que la lista de permitidos actual no permita pasar ningún correo nuevo.',
+      },
+    },
     disposable_email: {
       title: 'Bloquear direcciones de correo electrónico desechables',
       description:

@@ -165,6 +165,27 @@ const security = {
     card_title: 'Lista blokad email',
     card_description:
       'Przejmij kontrolę nad bazą użytkowników, blokując adresy email o wysokim ryzyku lub niepożądane.',
+    custom_email_allowlist: {
+      title: 'Zezwalaj na niestandardowe adresy e-mail',
+      description:
+        'Zezwalaj tylko na pasujące adresy e-mail, domeny lub wzorce z symbolami wieloznacznymi dla nowych rejestracji i nowo powiązanych e-maili.',
+      placeholder:
+        'Wpisz dozwolony adres e-mail, domenę lub wzorzec z symbolem wieloznacznym (np. bar@example.com, @example.com, foo*@example.com, *@example.com)',
+      duplicate_error:
+        'Adres e-mail, domena lub wzorzec z symbolem wieloznacznym został już dodany',
+      invalid_format_error:
+        'Musi to być prawidłowy adres e-mail (bar@example.com), domena (@example.com) lub wzorzec z symbolem wieloznacznym (foo*@example.com, *@example.com)',
+      warnings: {
+        identical_entries:
+          'Niektóre wpisy listy dozwolonych znajdują się także w regułach blokowania. Pasujące e-maile mogą nadal zostać zablokowane.',
+        blocked_exact_email:
+          'Niektóre dokładne adresy e-mail z listy dozwolonych pasują do reguły blokowania. Pasujące e-maile mogą nadal zostać zablokowane.',
+        blocked_subaddressing:
+          'Niektóre wpisy listy dozwolonych zawierają znak plus (+), ale subadresowanie e-maili jest blokowane.',
+        effectively_unusable:
+          'Na podstawie tych kontroli obecna lista dozwolonych może nie przepuścić żadnego nowego e-maila.',
+      },
+    },
     disposable_email: {
       title: 'Zablokuj jednorazowe adresy email',
       description:

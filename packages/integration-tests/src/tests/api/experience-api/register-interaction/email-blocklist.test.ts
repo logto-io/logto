@@ -10,12 +10,18 @@ import {
   setEmailConnector,
   setSocialConnector,
 } from '#src/helpers/connector.js';
+import { signInWithPassword } from '#src/helpers/experience/index.js';
 import {
   successfullyCreateSocialVerification,
   successfullyVerifySocialAuthorization,
 } from '#src/helpers/experience/social-verification.js';
 import { expectRejects } from '#src/helpers/index.js';
-import { generateEmail } from '#src/utils.js';
+import {
+  createDefaultTenantUserWithPassword,
+  deleteDefaultTenantUser,
+} from '#src/helpers/profile.js';
+import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
+import { devFeatureTest, generateEmail } from '#src/utils.js';
 
 const emailNotAllowedError = {
   code: 'session.email_blocklist.email_not_allowed',
@@ -221,5 +227,155 @@ describe('should reject the email registration if the email is in the blocklist'
         })
       ).resolves.toHaveProperty('verificationId');
     });
+  });
+});
+
+devFeatureTest.describe('should enforce the email allowlist for new email registrations', () => {
+  const exactAllowedEmail = generateEmail('allowlist-exact.com');
+  const allowedDomain = 'allowlist-domain.com';
+  const wildcardLocalPartDomain = 'allowlist-local.com';
+  const wildcardDomainRoot = 'allowlist-wildcard.com';
+  const blockedAllowedEmail = `blocked@${allowedDomain}`;
+  const subaddressedAllowedEmail = `foo+bar@${allowedDomain}`;
+  const customAllowlist = [
+    exactAllowedEmail,
+    `@${allowedDomain}`,
+    `foo*@${wildcardLocalPartDomain}`,
+    `@*.${wildcardDomainRoot}`,
+  ];
+
+  beforeAll(async () => {
+    await clearConnectorsByTypes([ConnectorType.Email]);
+    await setEmailConnector();
+    await enableAllPasswordSignInMethods({
+      identifiers: [SignInIdentifier.Email],
+      password: true,
+      verify: true,
+    });
+    await updateSignInExperience({
+      emailBlocklistPolicy: {
+        blockSubaddressing: false,
+        customAllowlist,
+        customBlocklist: [],
+      },
+    });
+  });
+
+  afterAll(async () => {
+    await updateSignInExperience({
+      emailBlocklistPolicy: {
+        blockSubaddressing: false,
+        customAllowlist: [],
+        customBlocklist: [],
+      },
+    });
+  });
+
+  it('should reject verification code send when the email does not match the allowlist', async () => {
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.Register,
+    });
+
+    await expectRejects(
+      client.sendVerificationCode({
+        identifier: {
+          type: SignInIdentifier.Email,
+          value: generateEmail('not-allowed.com'),
+        },
+        interactionEvent: InteractionEvent.Register,
+      }),
+      emailNotAllowedError
+    );
+  });
+
+  it.each([
+    ['exact email', exactAllowedEmail],
+    ['domain item', generateEmail(allowedDomain)],
+    ['wildcard local-part item', `foobar@${wildcardLocalPartDomain}`],
+    ['wildcard domain item', `bar@foo.${wildcardDomainRoot}`],
+  ])('should allow verification code send for an allowlist %s match', async (_label, email) => {
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.Register,
+    });
+
+    await expect(
+      client.sendVerificationCode({
+        identifier: {
+          type: SignInIdentifier.Email,
+          value: email,
+        },
+        interactionEvent: InteractionEvent.Register,
+      })
+    ).resolves.toHaveProperty('verificationId');
+  });
+
+  it('should still reject an allowlisted email matched by a custom block rule', async () => {
+    await updateSignInExperience({
+      emailBlocklistPolicy: {
+        blockSubaddressing: false,
+        customAllowlist,
+        customBlocklist: [blockedAllowedEmail],
+      },
+    });
+
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.Register,
+    });
+
+    await expectRejects(
+      client.sendVerificationCode({
+        identifier: {
+          type: SignInIdentifier.Email,
+          value: blockedAllowedEmail,
+        },
+        interactionEvent: InteractionEvent.Register,
+      }),
+      emailNotAllowedError
+    );
+  });
+
+  it('should still reject an allowlisted email with subaddressing when subaddressing is blocked', async () => {
+    await updateSignInExperience({
+      emailBlocklistPolicy: {
+        blockSubaddressing: true,
+        customAllowlist,
+        customBlocklist: [],
+      },
+    });
+
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.Register,
+    });
+
+    await expectRejects(
+      client.sendVerificationCode({
+        identifier: {
+          type: SignInIdentifier.Email,
+          value: subaddressedAllowedEmail,
+        },
+        interactionEvent: InteractionEvent.Register,
+      }),
+      {
+        code: 'session.email_blocklist.email_subaddressing_not_allowed',
+        status: 422,
+      }
+    );
+  });
+
+  it('should allow existing users to sign in with a non-allowlisted email', async () => {
+    const primaryEmail = generateEmail('existing-user.com');
+    const { user, password } = await createDefaultTenantUserWithPassword({ primaryEmail });
+
+    try {
+      await signInWithPassword({
+        identifier: {
+          type: SignInIdentifier.Email,
+          value: primaryEmail,
+        },
+        password,
+      });
+    } finally {
+      await deleteDefaultTenantUser(user.id);
+    }
   });
 });

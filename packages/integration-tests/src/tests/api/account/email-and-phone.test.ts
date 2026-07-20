@@ -26,7 +26,12 @@ import {
   signInAndGetUserApi,
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
-import { generateEmail, generatePhone, generateNationalPhoneNumber } from '#src/utils.js';
+import {
+  devFeatureTest,
+  generateEmail,
+  generatePhone,
+  generateNationalPhoneNumber,
+} from '#src/utils.js';
 
 const expectPrimaryEmailUpdateRejectedByBlocklist = async (
   email: string,
@@ -48,6 +53,44 @@ const expectPrimaryEmailUpdateRejectedByBlocklist = async (
       emailBlocklistPolicy: {
         ...emailBlocklistPolicy,
         customBlocklist: [...(emailBlocklistPolicy.customBlocklist ?? []), ...customBlocklist],
+      },
+    });
+
+    await expectRejects(
+      updatePrimaryEmail(api, email, verificationRecordId, newVerificationRecordId),
+      {
+        code: 'session.email_blocklist.email_not_allowed',
+        status: 422,
+      }
+    );
+  } finally {
+    await updateSignInExperience({
+      emailBlocklistPolicy,
+    });
+    await deleteDefaultTenantUser(user.id);
+  }
+};
+
+const expectPrimaryEmailUpdateRejectedByAllowlist = async (
+  email: string,
+  customAllowlist: string[]
+) => {
+  const { emailBlocklistPolicy } = await getSignInExperience();
+  const { user, username, password } = await createDefaultTenantUserWithPassword();
+  const api = await signInAndGetUserApi(username, password, {
+    scopes: [UserScope.Profile, UserScope.Email],
+  });
+
+  try {
+    const verificationRecordId = await createVerificationRecordByPassword(api, password);
+    const newVerificationRecordId = await createAndVerifyVerificationCode(api, {
+      type: SignInIdentifier.Email,
+      value: email,
+    });
+    await updateSignInExperience({
+      emailBlocklistPolicy: {
+        ...emailBlocklistPolicy,
+        customAllowlist,
       },
     });
 
@@ -235,6 +278,15 @@ describe('account (email and phone)', () => {
 
       await expectPrimaryEmailUpdateRejectedByBlocklist(email, ['FOO*@ACCOUNT-WILDCARD.COM']);
     });
+
+    devFeatureTest.it(
+      'should reject the email if the email does not match the allowlist',
+      async () => {
+        const email = generateEmail('account-allowlist.com');
+
+        await expectPrimaryEmailUpdateRejectedByAllowlist(email, ['@different-account-domain.com']);
+      }
+    );
   });
 
   describe('DELETE /my-account/primary-email', () => {

@@ -169,6 +169,26 @@ const security = {
     card_title: 'Lista de bloqueio de emails',
     card_description:
       'Assuma o controle da sua base de usuários bloqueando endereços de email de alto risco ou indesejados.',
+    custom_email_allowlist: {
+      title: 'Permitir endereços de e-mail personalizados',
+      description:
+        'Permita apenas endereços de e-mail, domínios ou padrões curinga correspondentes para novos cadastros e e-mails recém-vinculados.',
+      placeholder:
+        'Insira o endereço de e-mail, domínio ou padrão curinga permitido (ex.: bar@example.com, @example.com, foo*@example.com, *@example.com)',
+      duplicate_error: 'Endereço de e-mail, domínio ou padrão curinga já adicionado',
+      invalid_format_error:
+        'Deve ser um endereço de e-mail válido (bar@example.com), domínio (@example.com) ou padrão curinga (foo*@example.com, *@example.com)',
+      warnings: {
+        identical_entries:
+          'Algumas entradas da lista de permissões também existem nas regras de bloqueio. E-mails correspondentes ainda podem ser bloqueados.',
+        blocked_exact_email:
+          'Alguns e-mails exatos da lista de permissões correspondem a uma regra de bloqueio. E-mails correspondentes ainda podem ser bloqueados.',
+        blocked_subaddressing:
+          'Algumas entradas da lista de permissões contêm sinal de mais (+), mas o subendereçamento de e-mail está bloqueado.',
+        effectively_unusable:
+          'Com base nessas verificações, a lista de permissões atual pode não permitir a passagem de nenhum novo e-mail.',
+      },
+    },
     disposable_email: {
       title: 'Bloquear endereços de email descartáveis',
       description:
