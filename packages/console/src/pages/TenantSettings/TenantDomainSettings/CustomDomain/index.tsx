@@ -1,8 +1,6 @@
 import { type CustomDomain as CustomDomainType, DomainStatus } from '@logto/schemas';
 import classNames from 'classnames';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
-
 import ActivationProcess from './ActivationProcess';
 import CustomDomainHeader from './CustomDomainHeader';
 import VerificationFiles from './VerificationFiles';
@@ -39,7 +37,7 @@ function CustomDomain({
       {customDomain.status !== DomainStatus.Active && (
         <ActivationProcess customDomain={customDomain} />
       )}
-      {isDevFeaturesEnabled && domainId && customDomain.status === DomainStatus.Active && (
+      {domainId && customDomain.status === DomainStatus.Active && (
         <VerificationFiles
           domain={customDomain.domain}
           domainId={domainId}
