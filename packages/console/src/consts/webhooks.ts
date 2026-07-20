@@ -27,14 +27,17 @@ const isDataHookSchema = (schema: string): schema is DataHookSchema =>
   Object.values(DataHookSchema).includes(schema as DataHookSchema);
 
 // Group DataHook events by schema
-// eslint-disable-next-line no-use-extend-native/no-use-extend-native
-const schemaGroupedDataHookEventsMap = Map.groupBy(
-  dataHookEvents.filter((event) => {
+const schemaGroupedDataHookEventsMap = dataHookEvents.reduce<Map<DataHookSchema, DataHookEvent[]>>(
+  (eventGroup, event) => {
     const [schema] = event.split('.');
-    return schema && isDataHookSchema(schema);
-  }),
-  // eslint-disable-next-line no-restricted-syntax
-  (event) => event.split('.')[0] as DataHookSchema
+
+    if (schema && isDataHookSchema(schema)) {
+      eventGroup.set(schema, [...(eventGroup.get(schema) ?? []), event]);
+    }
+
+    return eventGroup;
+  },
+  new Map()
 );
 
 // Sort the grouped `DataHook` events per console product design
