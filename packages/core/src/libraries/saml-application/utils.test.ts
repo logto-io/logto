@@ -23,11 +23,13 @@ describe('generateKeyPairAndCertificate', () => {
     expect(result.notAfter.getMonth()).toBe(expectedNotAfter.getMonth());
     expect(result.notAfter.getFullYear()).toBe(expectedNotAfter.getFullYear());
 
-    // Verify certificate content
+    // Verify certificate content - subject and issuer are identical since this is a self-signed certificate
     const cert = forge.pki.certificateFromPem(result.certificate);
-    expect(cert.subject.getField('CN').value).toBe('example.com');
+    expect(cert.subject.getField('CN').value).toBe('logto.io');
     expect(cert.issuer.getField('CN').value).toBe('logto.io');
+    expect(cert.subject.getField('O').value).toBe('Logto');
     expect(cert.issuer.getField('O').value).toBe('Logto');
+    expect(cert.subject.getField('C').value).toBe('US');
     expect(cert.issuer.getField('C').value).toBe('US');
   });
 

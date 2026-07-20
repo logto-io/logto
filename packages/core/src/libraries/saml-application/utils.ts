@@ -45,15 +45,7 @@ const createCertificate = (keypair: forge.pki.KeyPair, lifeSpanInYears: number) 
   cert.validity.notAfter = notAfter;
   /* eslint-enable @silverhand/fp/no-mutation */
 
-  // TODO: read from tenant config or let user customize before downloading
-  const subjectAttributes: forge.pki.CertificateField[] = [
-    {
-      name: 'commonName',
-      value: 'example.com',
-    },
-  ];
-
-  const issuerAttributes: forge.pki.CertificateField[] = [
+  const identityAttributes: forge.pki.CertificateField[] = [
     {
       name: 'commonName',
       value: 'logto.io',
@@ -68,8 +60,8 @@ const createCertificate = (keypair: forge.pki.KeyPair, lifeSpanInYears: number) 
     },
   ];
 
-  cert.setSubject(subjectAttributes);
-  cert.setIssuer(issuerAttributes);
+  cert.setSubject(identityAttributes);
+  cert.setIssuer(identityAttributes);
   cert.sign(keypair.privateKey);
 
   return {
