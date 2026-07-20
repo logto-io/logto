@@ -63,7 +63,7 @@
 // `width: fit-content` keeps the flex item from stretching under `.fileInfo`'s
 // default `align-items: stretch`; `max-width: 100%` still allows long paths to
 // truncate within the row.
-a.path {
+.path.path {
   width: fit-content;
   max-width: 100%;
   min-width: 0;
