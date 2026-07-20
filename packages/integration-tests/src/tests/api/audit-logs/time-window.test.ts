@@ -162,7 +162,7 @@ describe('GET /logs end_time with sub-millisecond createdAt', () => {
         ${defaultTenantId},
         ${logId},
         ${logKey},
-        ${sql.jsonb({})},
+        ${sql.jsonb({ key: logKey, result: 'Success' })},
         to_timestamp(${subMsTimestamp}::double precision / 1000)
       )
     `);
