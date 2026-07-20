@@ -3,12 +3,15 @@ import {
   LogtoInlineHookKey,
   SignInIdentifier,
   VerificationType,
+  type HookUser,
+  type JwtCustomizerUserContext,
   type PostFirstFactorVerificationEvent,
   type PostSignInEvent,
 } from '@logto/schemas';
 import { type EditorProps } from '@monaco-editor/react';
 
 import type { ModelSettings } from '@/components/MonacoCodeEditor';
+import { jwtCustomizerUserContextTypeDefinition } from '@/consts/jwt-customizer-type-definition';
 
 import {
   InlineHookTypeDefinitionKey,
@@ -20,7 +23,7 @@ import {
   postSignInResultTypeDefinition,
 } from './type-definitions';
 
-const defaultHookUser = {
+const defaultHookUser: HookUser = {
   id: 'user_123',
   username: 'jane',
   primaryEmail: 'jane@example.com',
@@ -36,13 +39,13 @@ const defaultHookUser = {
   },
 };
 
-const defaultPostSignInUser: PostSignInEvent['user'] = {
+const defaultPostSignInUser: JwtCustomizerUserContext = {
   ...defaultHookUser,
   identities: {},
-  lastSignInAt: 1_750_000_000_000,
-  createdAt: 1_700_000_000_000,
-  updatedAt: 1_750_000_000_000,
-  applicationId: 'application_123',
+  lastSignInAt: 1_704_067_200_000,
+  createdAt: 1_704_067_200_000,
+  updatedAt: 1_704_067_200_000,
+  applicationId: 'app_123',
   isSuspended: false,
   hasPassword: true,
   ssoIdentities: [],
@@ -138,8 +141,8 @@ declare type Payload = {
 };
 `;
 
-const buildSharedContextTypeDefinitions = () =>
-  `declare ${hookUserTypeDefinition}
+const buildSharedContextTypeDefinitions = (userTypeDefinition: string) =>
+  `declare ${userTypeDefinition}
 
 declare ${hookUserPatchTypeDefinition}`;
 
@@ -155,7 +158,7 @@ const postFirstFactorVerificationModel: ModelSettings = {
       filePath: 'file:///logto-inline-hook.d.ts',
     },
     {
-      content: `${buildSharedContextTypeDefinitions()}
+      content: `${buildSharedContextTypeDefinitions(hookUserTypeDefinition)}
 
 declare ${postFirstFactorVerificationEventTypeDefinition}
 
@@ -177,7 +180,7 @@ const postSignInModel: ModelSettings = {
       filePath: 'file:///logto-inline-hook.d.ts',
     },
     {
-      content: `${buildSharedContextTypeDefinitions()}
+      content: `${buildSharedContextTypeDefinitions(jwtCustomizerUserContextTypeDefinition)}
 
 declare ${postSignInEventTypeDefinition}
 

@@ -50,13 +50,6 @@ export const inlineHookExecutionRequestBodyGuard = z
 
 export type InlineHookExecutionRequestBody = z.infer<typeof inlineHookExecutionRequestBodyGuard>;
 
-/**
- * Kept as an alias so the Management API `POST /configs/inline-hooks/test` contract
- * stays compatible while production and dry-run share one execution request type.
- */
-export const inlineHookTestRequestBodyGuard = inlineHookExecutionRequestBodyGuard;
-export type InlineHookTestRequestBody = InlineHookExecutionRequestBody;
-
 export type HookUser = Pick<
   UserInfo,
   'id' | 'username' | 'primaryEmail' | 'primaryPhone' | 'name' | 'avatar' | 'customData' | 'profile'

@@ -161,6 +161,26 @@ const security = {
     card_title: 'لیست مسدود ایمیل',
     card_description:
       'با مسدود کردن آدرس‌های ایمیل پرخطر یا ناخواسته کنترل بیشتری بر پایگاه کاربری خود داشته باشید.',
+    custom_email_allowlist: {
+      title: 'اجازه دادن به ایمیل‌های سفارشی',
+      description:
+        'فقط آدرس‌های ایمیل، دامنه‌ها یا الگوهای wildcard منطبق را برای ثبت‌نام‌های جدید و ایمیل‌های تازه متصل‌شده مجاز کنید.',
+      placeholder:
+        'آدرس ایمیل، دامنه یا الگوی wildcard مجاز را وارد کنید (مثلاً bar@example.com، @example.com، foo*@example.com، *@example.com)',
+      duplicate_error: 'آدرس ایمیل، دامنه یا الگوی wildcard قبلاً اضافه شده است',
+      invalid_format_error:
+        'باید یک آدرس ایمیل معتبر (bar@example.com)، دامنه (@example.com) یا الگوی wildcard ایمیل (foo*@example.com، *@example.com) باشد',
+      warnings: {
+        identical_entries:
+          'برخی ورودی‌های allowlist در قوانین block نیز وجود دارند. ایمیل‌های منطبق ممکن است همچنان مسدود شوند.',
+        blocked_exact_email:
+          'برخی ایمیل‌های دقیق allowlist با یک قانون block منطبق هستند. ایمیل‌های منطبق ممکن است همچنان مسدود شوند.',
+        blocked_subaddressing:
+          'برخی ورودی‌های allowlist شامل علامت + هستند، اما subaddressing ایمیل مسدود شده است.',
+        effectively_unusable:
+          'بر اساس این بررسی‌ها، allowlist فعلی ممکن است هیچ ایمیل جدیدی را عبور ندهد.',
+      },
+    },
     disposable_email: {
       title: 'مسدود کردن آدرس‌های ایمیل یک‌بارمصرف',
       description:

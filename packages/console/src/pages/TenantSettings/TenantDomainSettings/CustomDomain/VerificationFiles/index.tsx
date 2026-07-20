@@ -11,12 +11,15 @@ import useSWR from 'swr';
 
 import Delete from '@/assets/icons/delete.svg?react';
 import Edit from '@/assets/icons/edit.svg?react';
+import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
 import Plus from '@/assets/icons/plus.svg?react';
 import Button from '@/ds-components/Button';
+import FlipOnRtl from '@/ds-components/FlipOnRtl';
 import IconButton from '@/ds-components/IconButton';
 import Select, { type Option } from '@/ds-components/Select';
 import { Ring as Spinner } from '@/ds-components/Spinner';
 import TextInput from '@/ds-components/TextInput';
+import TextLink from '@/ds-components/TextLink';
 import Textarea from '@/ds-components/Textarea';
 import useApi from '@/hooks/use-api';
 
@@ -186,14 +189,19 @@ function VerificationFiles({ domain, domainId, isReadonly }: Props) {
           {files.map((file) => (
             <div key={file.path} className={styles.fileItem}>
               <div className={styles.fileInfo}>
-                <a
+                <TextLink
+                  isTrailingIcon
+                  targetBlank
                   className={styles.path}
                   href={`https://${domain}${file.path}`}
-                  rel="noopener noreferrer"
-                  target="_blank"
+                  icon={
+                    <FlipOnRtl>
+                      <ExternalLinkIcon className={styles.externalLinkIcon} />
+                    </FlipOnRtl>
+                  }
                 >
-                  {file.path}
-                </a>
+                  <span className={styles.pathText}>{file.path}</span>
+                </TextLink>
                 <span className={styles.contentType}>
                   {contentTypeOptions.find(({ value }) => value === file.contentType)?.title ??
                     file.contentType}

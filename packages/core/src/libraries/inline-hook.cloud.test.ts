@@ -24,6 +24,7 @@ const createLibrary = (tenantId = 'tenant_id') =>
   );
 
 const originalIsCloud = EnvSet.values.isCloud;
+const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
 
 const setIsCloud = (isCloud: boolean) => {
   // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for Cloud/local selection tests.
@@ -41,6 +42,8 @@ describe('InlineHookLibrary Cloud execution routing', () => {
     library.runHook({ ...input, auditContext: { createLog } });
 
   beforeEach(() => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for inline hook runtime tests.
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
     getSubscriptionData.mockResolvedValue({
       quota: {
         inlineHooksEnabled: true,
@@ -53,6 +56,9 @@ describe('InlineHookLibrary Cloud execution routing', () => {
     jest.restoreAllMocks();
     jest.clearAllMocks();
     setIsCloud(originalIsCloud);
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after dev feature tests.
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
+      originalIsDevFeaturesEnabled;
   });
 
   it('throws an inline hook error when the remote runner is not configured', async () => {
