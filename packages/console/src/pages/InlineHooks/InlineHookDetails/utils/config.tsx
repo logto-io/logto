@@ -3,6 +3,8 @@ import {
   LogtoInlineHookKey,
   SignInIdentifier,
   VerificationType,
+  type HookUser,
+  type JwtCustomizerUserContext,
   type PostFirstFactorVerificationEvent,
   type PostSignInEvent,
 } from '@logto/schemas';
@@ -20,7 +22,7 @@ import {
   postSignInResultTypeDefinition,
 } from './type-definitions';
 
-const defaultHookUser = {
+const defaultHookUser: HookUser = {
   id: 'user_123',
   username: 'jane',
   primaryEmail: 'jane@example.com',
@@ -34,6 +36,22 @@ const defaultHookUser = {
     familyName: 'Doe',
     givenName: 'Jane',
   },
+};
+
+const defaultPostSignInUser: JwtCustomizerUserContext = {
+  ...defaultHookUser,
+  identities: {},
+  lastSignInAt: 1_704_067_200_000,
+  createdAt: 1_704_067_200_000,
+  updatedAt: 1_704_067_200_000,
+  applicationId: 'app_123',
+  isSuspended: false,
+  hasPassword: true,
+  ssoIdentities: [],
+  mfaVerificationFactors: [],
+  roles: [],
+  organizations: [],
+  organizationRoles: [],
 };
 
 const defaultPostFirstFactorVerificationEvent: PostFirstFactorVerificationEvent = {
@@ -51,7 +69,7 @@ const defaultPostFirstFactorVerificationEvent: PostFirstFactorVerificationEvent 
 const defaultPostSignInEvent: PostSignInEvent = {
   key: LogtoInlineHookKey.PostSignIn,
   interactionEvent: InteractionEvent.SignIn,
-  user: defaultHookUser,
+  user: defaultPostSignInUser,
 };
 
 const defaultPostFirstFactorVerificationScript = `/**
