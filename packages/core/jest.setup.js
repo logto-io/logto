@@ -17,6 +17,7 @@ process.env.NODE_ENV = 'test';
 mockEsm('#src/libraries/logto-config.js', () => ({
   createLogtoConfigLibrary: () => ({
     getOidcConfigs: () => ({}),
+    getInlineHook: async () => undefined,
     promoteScheduledSigningKeyRotation: async () => Promise.resolve(),
   }),
 }));

@@ -91,7 +91,10 @@ export class MockTenant implements TenantContext {
     this.wellKnownCache = new MockWellKnownCache();
     this.queries = new MockQueries(queriesOverride, this.wellKnownCache);
 
-    this.logtoConfigs = { ...createLogtoConfigLibrary(this.queries), ...logtoConfigsOverride };
+    this.logtoConfigs = {
+      ...createLogtoConfigLibrary(this.queries),
+      ...logtoConfigsOverride,
+    };
     this.cloudConnection = createCloudConnectionLibrary(this.logtoConfigs);
     this.connectors = {
       ...createConnectorLibrary(this.queries, this.cloudConnection),

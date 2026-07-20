@@ -47,6 +47,18 @@ type InlineHookRunnerData<Event> = {
   environmentVariables?: Record<string, string>;
 };
 
+type InlineHookEventSource<Event> =
+  | {
+      event: Event;
+    }
+  | {
+      getEvent: () => Promise<Event>;
+    };
+
+type RunInlineHookData<Event> = InlineHookEventSource<Event> & {
+  key: LogtoInlineHookKey;
+};
+
 type InlineHookExecutionErrorHandlingData = {
   key: LogtoInlineHookKey;
   onExecutionError?: InlineHookExecutionErrorPolicy;
@@ -220,13 +232,11 @@ export class InlineHookLibrary {
     }
   }
 
-  async runHook<Event>({
-    key,
-    event,
-  }: {
-    key: LogtoInlineHookKey;
-    event: Event;
-  }): Promise<unknown> {
+  async runHook<Event>({ key, ...eventSource }: RunInlineHookData<Event>): Promise<unknown> {
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return;
+    }
+
     const inlineHook = await this.findEnabledInlineHook(key);
 
     if (!inlineHook) {
@@ -236,6 +246,8 @@ export class InlineHookLibrary {
     if (!(await this.isInlineHooksEnabledByQuota())) {
       return;
     }
+
+    const event = 'getEvent' in eventSource ? await eventSource.getEvent() : eventSource.event;
 
     try {
       return await InlineHookLibrary.runScriptInLocalVm({

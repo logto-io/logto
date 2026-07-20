@@ -1,6 +1,5 @@
 import {
   type PostFirstFactorVerificationEvent,
-  type PostSignInEvent,
   SignInIdentifier,
   type HookUserPatch,
   type InteractionIdentifier,
@@ -8,6 +7,7 @@ import {
   postSignInResultGuard,
 } from '@logto/schemas';
 import { PhoneNumberParser } from '@logto/shared/universal';
+import { isPlainObject } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -43,7 +43,7 @@ export type ValidatedPostSignInHookResult =
     };
 
 const isInlineHookResultObject = (result: unknown): result is Record<string, unknown> =>
-  typeof result === 'object' && result !== null && !Array.isArray(result);
+  isPlainObject(result);
 
 const invalidCredentialsResult = (): InlineHookRejectInvalidCredentialsResult => ({
   action: 'rejectInvalidCredentials',
@@ -165,10 +165,10 @@ export const validatePostFirstFactorVerificationHookResult = ({
 };
 
 export const validatePostSignInHookResult = ({
-  event,
+  userId,
   result,
 }: {
-  event: Pick<PostSignInEvent, 'user'>;
+  userId: string;
   result: unknown;
 }): ValidatedPostSignInHookResult => {
   if (result === null || result === undefined) {
@@ -179,9 +179,7 @@ export const validatePostSignInHookResult = ({
     throw verificationFailedError();
   }
 
-  const { action, user } = result;
-
-  if (action === undefined && user === undefined) {
+  if (Object.keys(result).length === 0) {
     return continueResult();
   }
 
@@ -201,7 +199,7 @@ export const validatePostSignInHookResult = ({
 
       return {
         action: 'updateUser',
-        userId: event.user.id,
+        userId,
         user: profile,
       };
     }
