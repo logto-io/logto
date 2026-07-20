@@ -1,5 +1,5 @@
 import { appInsights } from '@logto/app-insights/node';
-import { LogResult } from '@logto/schemas';
+import { LogResult, type ExceptionHookEvent } from '@logto/schemas';
 
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { MockQueries } from '#src/test-utils/tenant.js';
@@ -20,6 +20,8 @@ const createMockAuthorizationSuccessContext = ({
 }) => ({
   ...createContextWithRouteParameters(),
   ...createMockLogContext(),
+  ip: '127.0.0.1',
+  headers: { 'user-agent': 'test-agent' },
   oidc: {
     entities: {
       Account: { accountId: userId },
@@ -235,14 +237,18 @@ describe('createAuthorizationSuccessListener', () => {
     expect(triggerEvent).toHaveBeenCalledTimes(1);
     expect(triggerEvent).toHaveBeenCalledWith(
       expect.anything(),
-      'Grant.LimitExceeded',
+      'Grant.LimitExceeded' satisfies ExceptionHookEvent,
       expect.objectContaining({
         userId: 'user-id',
         applicationId: 'client-id',
         revokedGrantIds: ['grant-1', 'grant-2'],
         maxAllowedGrants: 1,
         preRevocationActiveGrantCount: 3,
-      })
+      }),
+      {
+        ip: '127.0.0.1',
+        userAgent: 'test-agent',
+      }
     );
   });
 

@@ -31,7 +31,11 @@ const hookEventGroups: Array<CheckboxOptionGroup<HookEvent>> = [
   },
   {
     title: 'webhooks.schemas.security',
-    options: [{ value: 'Identifier.Lockout' }, { value: 'Message.RateLimited' }],
+    options: [
+      { value: 'Identifier.Lockout' },
+      { value: 'Message.RateLimited' },
+      { value: 'Grant.LimitExceeded' },
+    ],
   },
 ];
 

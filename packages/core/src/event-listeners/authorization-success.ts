@@ -1,5 +1,10 @@
 import { appInsights } from '@logto/app-insights/node';
-import { LogResult, userApplicationGrantPayloadGuard, type HookEvent } from '@logto/schemas';
+import {
+  LogResult,
+  type ExceptionHookEvent,
+  type GrantLimitExceededEventData,
+  userApplicationGrantPayloadGuard,
+} from '@logto/schemas';
 import { type ConsoleLog } from '@logto/shared';
 import { trySafe } from '@silverhand/essentials';
 import type { KoaContextWithOIDC, Provider } from 'oidc-provider';
@@ -16,8 +21,9 @@ import { extractInteractionContext } from './utils.js';
 
 export type TriggerEvent = (
   consoleLog: ConsoleLog,
-  event: HookEvent,
-  payload: Record<string, unknown>
+  event: ExceptionHookEvent,
+  payload: GrantLimitExceededEventData,
+  metadata?: { ip?: string; userAgent?: string }
 ) => Promise<void>;
 
 const isDefined = <T>(value: T | undefined): value is T => value !== undefined;
@@ -102,13 +108,18 @@ const enforceMaxAllowedGrantsRevocation = async (
       // even if subsequent session cleanup or error logging fails.
       if (triggerEvent) {
         void trySafe(
-          triggerEvent(getConsoleLogFromContext(ctx), 'Grant.LimitExceeded', {
-            userId,
-            applicationId: clientId,
-            revokedGrantIds: grantIdsToRevoke,
-            maxAllowedGrants,
-            preRevocationActiveGrantCount: activeGrants.length,
-          }),
+          triggerEvent(
+            getConsoleLogFromContext(ctx),
+            'Grant.LimitExceeded',
+            {
+              userId,
+              applicationId: clientId,
+              revokedGrantIds: revokeResult.succeededNames,
+              maxAllowedGrants,
+              preRevocationActiveGrantCount: activeGrants.length,
+            },
+            { ip: ctx.ip, userAgent: ctx.headers['user-agent'] }
+          ),
           (error) => {
             getConsoleLogFromContext(ctx).error(
               'authorization.success max-allowed-grants webhook failed:',

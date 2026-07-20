@@ -1,6 +1,9 @@
 import {
   LogResult,
   userInfoSelectFields,
+  type ExceptionHookEvent,
+  type ExceptionHookEventPayload,
+  type GrantLimitExceededEventData,
   type Hook,
   type HookConfig,
   type HookEvent,
@@ -290,17 +293,19 @@ export const createHookLibrary = (queries: Queries) => {
   }
 
   /**
-   * Trigger a hook event directly without the metadata enrichment pipeline (`buildWebhooks`).
+   * Trigger a hook event directly, enriched with standard metadata.
    *
    * Unlike `triggerInteractionHooks` / `triggerDataHooks` / `triggerExceptionHooks`, this method
-   * does not go through `buildWebhooks` because callers (e.g., OIDC event listeners) operate
-   * outside the middleware request context and therefore have no `HookContextManager` or managed
-   * metadata. The payload is passed as-is with only the event name and timestamp added.
+   * does not go through the `HookContextManager` because callers (e.g., OIDC event listeners)
+   * operate outside the middleware request context. Instead it accepts explicit metadata fields
+   * and enriches the payload with application detail and standard fields (`ip`, `userAgent`)
+   * to match the shape of other exception hook events.
    */
   const triggerEvent = async (
     consoleLog: ConsoleLog,
-    event: HookEvent,
-    payload: Record<string, unknown>
+    event: ExceptionHookEvent,
+    payload: GrantLimitExceededEventData,
+    metadata?: { ip?: string; userAgent?: string }
   ) => {
     const hooks = await findAllHooks();
     const matchingHooks = hooks.filter(
@@ -312,16 +317,23 @@ export const createHookLibrary = (queries: Queries) => {
       return;
     }
 
-    const webhookPayloads: Array<{ hook: Hook; payload: HookEventPayloadWithoutHookId }> =
-      matchingHooks.map((hook) => ({
-        hook,
-        // eslint-disable-next-line no-restricted-syntax
-        payload: {
-          event,
-          createdAt: new Date().toISOString(),
-          ...payload,
-        } as unknown as HookEventPayloadWithoutHookId,
-      }));
+    const application =
+      matchingHooks.length > 0
+        ? await trySafe(async () => findApplicationById(payload.applicationId))
+        : undefined;
+
+    const webhookPayloads = matchingHooks.map((hook) => ({
+      hook,
+      payload: {
+        event,
+        createdAt: new Date().toISOString(),
+        ...metadata,
+        ...conditional(
+          application && { application: pick(application, 'id', 'type', 'name', 'description') }
+        ),
+        ...payload,
+      } satisfies BetterOmit<ExceptionHookEventPayload, 'hookId'>,
+    }));
 
     await sendWebhooks(webhookPayloads, consoleLog);
   };
