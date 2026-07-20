@@ -12,7 +12,7 @@ import FormCard from '@/components/FormCard';
 import MultiOptionInput from '@/components/MultiOptionInput';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { emailBlocklist } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import FormField from '@/ds-components/FormField';
@@ -33,6 +33,18 @@ import styles from './index.module.scss';
 
 type Props = {
   readonly formData: EmailBlocklistPolicyFormData;
+};
+
+// Dev feature guard for the custom email allowlist configuration.
+const buildEmailBlocklistPolicyPayload = (emailBlocklistPolicy: EmailBlocklistPolicyFormData) => {
+  if (isDevFeaturesEnabled) {
+    return emailBlocklistPolicy;
+  }
+
+  const { customAllowlist: _customAllowlist, ...emailBlocklistPolicyWithoutDevFeatures } =
+    emailBlocklistPolicy;
+
+  return emailBlocklistPolicyWithoutDevFeatures;
 };
 
 function BlocklistForm({ formData }: Props) {
@@ -75,7 +87,7 @@ function BlocklistForm({ formData }: Props) {
       const { emailBlocklistPolicy: updatedEmailBlocklistPolicy } = await api
         .patch('api/sign-in-exp', {
           json: {
-            emailBlocklistPolicy,
+            emailBlocklistPolicy: buildEmailBlocklistPolicyPayload(emailBlocklistPolicy),
           },
         })
         .json<SignInExperience>();
@@ -165,57 +177,59 @@ function BlocklistForm({ formData }: Props) {
               )}
             />
           </FormField>
-          <FormField title="security.blocklist.custom_email_allowlist.title">
-            <div className={styles.fieldDescription}>
-              {t('blocklist.custom_email_allowlist.description')}
-            </div>
-            <Controller
-              name="customAllowlist"
-              control={control}
-              render={({ field: { onChange, value = [] } }) => (
-                <MultiOptionInput
-                  disabled={isFreeTenant}
-                  values={value}
-                  placeholder={t('blocklist.custom_email_allowlist.placeholder')}
-                  renderValue={(value) => value}
-                  validateInput={(input) => {
-                    if (
-                      value.some(
-                        (existingValue) => existingValue.toLowerCase() === input.toLowerCase()
-                      )
-                    ) {
-                      return t('blocklist.custom_email_allowlist.duplicate_error');
-                    }
+          {isDevFeaturesEnabled && (
+            <FormField title="security.blocklist.custom_email_allowlist.title">
+              <div className={styles.fieldDescription}>
+                {t('blocklist.custom_email_allowlist.description')}
+              </div>
+              <Controller
+                name="customAllowlist"
+                control={control}
+                render={({ field: { onChange, value = [] } }) => (
+                  <MultiOptionInput
+                    disabled={isFreeTenant}
+                    values={value}
+                    placeholder={t('blocklist.custom_email_allowlist.placeholder')}
+                    renderValue={(value) => value}
+                    validateInput={(input) => {
+                      if (
+                        value.some(
+                          (existingValue) => existingValue.toLowerCase() === input.toLowerCase()
+                        )
+                      ) {
+                        return t('blocklist.custom_email_allowlist.duplicate_error');
+                      }
 
-                    if (!isEmailBlocklistItem(input)) {
-                      return t('blocklist.custom_email_allowlist.invalid_format_error');
-                    }
+                      if (!isEmailBlocklistItem(input)) {
+                        return t('blocklist.custom_email_allowlist.invalid_format_error');
+                      }
 
-                    return { value: input };
-                  }}
-                  error={errors.customAllowlist?.message}
-                  onChange={onChange}
-                  onError={(error) => {
-                    setError('customAllowlist', { type: 'custom', message: error });
-                  }}
-                  onClearError={() => {
-                    clearErrors('customAllowlist');
-                  }}
-                />
+                      return { value: input };
+                    }}
+                    error={errors.customAllowlist?.message}
+                    onChange={onChange}
+                    onError={(error) => {
+                      setError('customAllowlist', { type: 'custom', message: error });
+                    }}
+                    onClearError={() => {
+                      clearErrors('customAllowlist');
+                    }}
+                  />
+                )}
+              />
+              {emailAllowlistWarnings.length > 0 && (
+                <InlineNotification className={styles.allowlistWarning} severity="alert">
+                  <ul className={styles.warningList}>
+                    {emailAllowlistWarnings.map((warning) => (
+                      <li key={warning}>
+                        {t(`blocklist.custom_email_allowlist.warnings.${warning}`)}
+                      </li>
+                    ))}
+                  </ul>
+                </InlineNotification>
               )}
-            />
-            {emailAllowlistWarnings.length > 0 && (
-              <InlineNotification className={styles.allowlistWarning} severity="alert">
-                <ul className={styles.warningList}>
-                  {emailAllowlistWarnings.map((warning) => (
-                    <li key={warning}>
-                      {t(`blocklist.custom_email_allowlist.warnings.${warning}`)}
-                    </li>
-                  ))}
-                </ul>
-              </InlineNotification>
-            )}
-          </FormField>
+            </FormField>
+          )}
         </FormCard>
       </DetailsForm>
       <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />
