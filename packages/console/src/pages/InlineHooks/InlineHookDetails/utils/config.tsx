@@ -11,6 +11,7 @@ import {
 import { type EditorProps } from '@monaco-editor/react';
 
 import type { ModelSettings } from '@/components/MonacoCodeEditor';
+import { jwtCustomizerUserContextTypeDefinition } from '@/consts/jwt-customizer-type-definition';
 
 import {
   InlineHookTypeDefinitionKey,
@@ -140,8 +141,8 @@ declare type Payload = {
 };
 `;
 
-const buildSharedContextTypeDefinitions = () =>
-  `declare ${hookUserTypeDefinition}
+const buildSharedContextTypeDefinitions = (userTypeDefinition: string) =>
+  `declare ${userTypeDefinition}
 
 declare ${hookUserPatchTypeDefinition}`;
 
@@ -157,7 +158,7 @@ const postFirstFactorVerificationModel: ModelSettings = {
       filePath: 'file:///logto-inline-hook.d.ts',
     },
     {
-      content: `${buildSharedContextTypeDefinitions()}
+      content: `${buildSharedContextTypeDefinitions(hookUserTypeDefinition)}
 
 declare ${postFirstFactorVerificationEventTypeDefinition}
 
@@ -179,7 +180,7 @@ const postSignInModel: ModelSettings = {
       filePath: 'file:///logto-inline-hook.d.ts',
     },
     {
-      content: `${buildSharedContextTypeDefinitions()}
+      content: `${buildSharedContextTypeDefinitions(jwtCustomizerUserContextTypeDefinition)}
 
 declare ${postSignInEventTypeDefinition}
 
