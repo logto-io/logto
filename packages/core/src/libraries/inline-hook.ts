@@ -1,8 +1,12 @@
+/* eslint-disable max-lines -- Inline hook runtime, policy, and audit behavior share the same library. */
 import { appInsights } from '@logto/app-insights/node';
 import {
   adminTenantId,
+  inlineHook as inlineHookLog,
+  LogResult,
   LogtoInlineHookKey,
   type InlineHookExecutionErrorPolicy,
+  type InlineHookExecutionRequestBody,
 } from '@logto/schemas';
 import { got, HTTPError } from 'got';
 import { ZodError } from 'zod';
@@ -11,12 +15,21 @@ import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type { LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import type { SubscriptionLibrary } from '#src/libraries/subscription.js';
+import type { LogContext, LogPayload } from '#src/middleware/koa-audit-log.js';
 import { parseAzureFunctionsResponseError } from '#src/utils/custom-jwt/index.js';
 import {
   buildLocalVmErrorBody,
   LocalVmError,
   runScriptFunctionInLocalVm,
 } from '#src/utils/local-vm/index.js';
+
+import {
+  buildSafeInlineHookErrorSummary,
+  buildSafeInlineHookTelemetryError,
+  getInlineHookSensitiveValues,
+  sanitizeInlineHookEvent,
+  sanitizeInlineHookResult,
+} from './inline-hook-sanitization.js';
 
 const inlineHookFunctionName = 'runInlineHook';
 const defaultInlineHookExecutionErrorPolicy = 'block' satisfies InlineHookExecutionErrorPolicy;
@@ -61,6 +74,8 @@ type InlineHookEventSource<Event> =
 
 type RunInlineHookData<Event> = InlineHookEventSource<Event> & {
   key: LogtoInlineHookKey;
+  auditContext: Pick<LogContext, 'createLog'> &
+    Pick<LogPayload, 'applicationId' | 'sessionId' | 'userId'>;
 };
 
 type InlineHookExecutionErrorHandlingData = {
@@ -68,52 +83,41 @@ type InlineHookExecutionErrorHandlingData = {
   onExecutionError?: InlineHookExecutionErrorPolicy;
 };
 
-type InlineHookExecutionErrorTelemetryData<Event> = InlineHookExecutionErrorHandlingData & {
-  event: Event;
-};
+type InlineHookExecutionOutcome =
+  | { status: 'success'; result: unknown }
+  | { status: 'error'; error: unknown };
 
-const sensitiveValueReplacement = '[redacted]';
+const inlineHookLogTypes = Object.freeze({
+  [LogtoInlineHookKey.PostFirstFactorVerification]: inlineHookLog.Type.PostFirstFactorVerification,
+  [LogtoInlineHookKey.PostSignIn]: inlineHookLog.Type.PostSignIn,
+} satisfies Record<LogtoInlineHookKey, inlineHookLog.Type>);
 
-const getPostFirstFactorVerificationPassword = (event: unknown) => {
-  if (
-    typeof event === 'object' &&
-    event !== null &&
-    'password' in event &&
-    typeof event.password === 'string'
-  ) {
-    return event.password;
+const getInlineHookLogKey = (key: LogtoInlineHookKey): inlineHookLog.LogKey =>
+  `${inlineHookLog.prefix}.${inlineHookLogTypes[key]}`;
+
+const inlineHookResultActions = Object.freeze({
+  [LogtoInlineHookKey.PostFirstFactorVerification]: ['createUser', 'updateUser'],
+  [LogtoInlineHookKey.PostSignIn]: ['updateUser'],
+} satisfies Record<LogtoInlineHookKey, readonly string[]>);
+
+const getInlineHookResultActionSummary = (key: LogtoInlineHookKey, result: unknown) => {
+  try {
+    if (typeof result !== 'object' || result === null) {
+      return { decision: 'noop' };
+    }
+
+    const rawAction: unknown = Reflect.get(result, 'action');
+
+    if (typeof rawAction !== 'string') {
+      return { decision: 'noop' };
+    }
+
+    const action = inlineHookResultActions[key].find((candidate) => candidate === rawAction);
+
+    return action ? { action, decision: action } : { decision: 'invalid' };
+  } catch {
+    return { decision: 'invalid' };
   }
-};
-
-const redactSensitiveValue = (value: string, sensitiveValue: string) =>
-  value.split(sensitiveValue).join(sensitiveValueReplacement);
-
-const buildInlineHookExecutionErrorTelemetryPayload = <Event>({
-  key,
-  event,
-  error,
-}: InlineHookExecutionErrorTelemetryData<Event> & {
-  error: unknown;
-}) => {
-  const password =
-    key === LogtoInlineHookKey.PostFirstFactorVerification
-      ? getPostFirstFactorVerificationPassword(event)
-      : undefined;
-
-  const sanitize = (value: string) => (password ? redactSensitiveValue(value, password) : value);
-
-  const telemetryError = new Error(
-    sanitize(error instanceof Error ? error.message : String(error))
-  );
-
-  if (error instanceof Error) {
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Keep the original error type on the sanitized telemetry copy.
-    telemetryError.name = error.name;
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Preserve the useful stack on the sanitized telemetry copy.
-    telemetryError.stack = error.stack && sanitize(error.stack);
-  }
-
-  return telemetryError;
 };
 
 const getInlineHookErrorFallback = (
@@ -145,9 +149,9 @@ export const getInlineHookExecutionErrorPolicyDecision = ({
   return getInlineHookErrorFallback(key);
 };
 
-const handleInlineHookExecutionError = (data: InlineHookExecutionErrorHandlingData) => {
-  const decision = getInlineHookExecutionErrorPolicyDecision(data);
-
+const applyInlineHookExecutionErrorPolicyDecision = (
+  decision: InlineHookExecutionErrorPolicyDecision
+) => {
   if (decision.action === 'throw') {
     throw decision.error;
   }
@@ -277,7 +281,12 @@ export class InlineHookLibrary {
     }
   }
 
-  async runHook<Event>({ key, ...eventSource }: RunInlineHookData<Event>): Promise<unknown> {
+  async runHook<Event>({
+    key,
+    auditContext: { createLog, ...auditContext },
+    ...eventSource
+  }: RunInlineHookData<Event>): Promise<unknown> {
+    // Inline Hooks
     if (!EnvSet.values.isDevFeaturesEnabled) {
       return;
     }
@@ -293,24 +302,64 @@ export class InlineHookLibrary {
     }
 
     const event = 'getEvent' in eventSource ? await eventSource.getEvent() : eventSource.event;
+    const executionPayload: InlineHookExecutionRequestBody = {
+      script: inlineHook.script,
+      hookType: key,
+      // Production events are always JSON-serializable payloads from Core call sites.
+      // eslint-disable-next-line no-restricted-syntax -- Generic Event is wider than Json; cast at the shared execution boundary.
+      event: event as InlineHookExecutionRequestBody['event'],
+      environmentVariables: inlineHook.environmentVariables,
+    };
+    const sensitiveValues = getInlineHookSensitiveValues(executionPayload);
+    const onExecutionError = inlineHook.onExecutionError ?? defaultInlineHookExecutionErrorPolicy;
+    const runtimeLocation = EnvSet.values.isCloud ? 'remote' : 'local';
+    const startedAt = Date.now();
+    const log = createLog(getInlineHookLogKey(key), { independent: true });
 
-    try {
-      return await this.executeScript({
-        script: inlineHook.script,
-        hookType: key,
-        event,
-        environmentVariables: inlineHook.environmentVariables,
-      });
-    } catch (error: unknown) {
-      void appInsights.trackException(
-        buildInlineHookExecutionErrorTelemetryPayload({ key, event, error })
-      );
+    log.append({
+      ...auditContext,
+      tenantId: this.tenantId,
+      hookType: key,
+      runtimeLocation,
+      onExecutionError,
+      event: sanitizeInlineHookEvent(event, sensitiveValues),
+    });
 
-      return handleInlineHookExecutionError({
-        key,
-        onExecutionError: inlineHook.onExecutionError,
+    const executionOutcome = await this.executeScript(executionPayload).then<
+      InlineHookExecutionOutcome,
+      InlineHookExecutionOutcome
+    >(
+      (result) => ({ status: 'success', result }),
+      (error: unknown) => ({ status: 'error', error })
+    );
+
+    if (executionOutcome.status === 'error') {
+      const { error } = executionOutcome;
+      const decision = getInlineHookExecutionErrorPolicyDecision({ key, onExecutionError });
+
+      log.append({
+        result: LogResult.Error,
+        durationMs: Date.now() - startedAt,
+        decision: decision.action,
+        errorPolicyOutcome: decision.action === 'continue' ? 'allow' : 'block',
+        inlineHookError: buildSafeInlineHookErrorSummary(error, sensitiveValues),
       });
+
+      void appInsights.trackException(buildSafeInlineHookTelemetryError(error, sensitiveValues));
+
+      return applyInlineHookExecutionErrorPolicyDecision(decision);
     }
+
+    const { result } = executionOutcome;
+    const actionSummary = getInlineHookResultActionSummary(key, result);
+
+    log.append({
+      durationMs: Date.now() - startedAt,
+      ...actionSummary,
+      inlineHookResult: sanitizeInlineHookResult(result, sensitiveValues),
+    });
+
+    return result;
   }
 
   private async findEnabledInlineHook(key: LogtoInlineHookKey) {
@@ -347,3 +396,4 @@ export class InlineHookLibrary {
     return quota.inlineHooksEnabled;
   }
 }
+/* eslint-enable max-lines */

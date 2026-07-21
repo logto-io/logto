@@ -3,6 +3,7 @@ import { ResponseError } from '@withtyped/client';
 import nock from 'nock';
 
 import { EnvSet } from '#src/env-set/index.js';
+import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 
 import { InlineHookLibrary } from './inline-hook.js';
 import type { LogtoConfigLibrary } from './logto-config.js';
@@ -30,8 +31,15 @@ const setIsCloud = (isCloud: boolean) => {
   (EnvSet.values as { isCloud: boolean }).isCloud = isCloud;
 };
 
+type RunHookInput<Event> = {
+  key: LogtoInlineHookKey;
+} & ({ event: Event } | { getEvent: () => Promise<Event> });
+
 describe('InlineHookLibrary Cloud execution routing', () => {
   const library = createLibrary();
+  const { createLog, mockAppend } = createMockLogContext();
+  const runHook = async <Event>(input: RunHookInput<Event>) =>
+    library.runHook({ ...input, auditContext: { createLog } });
 
   beforeEach(() => {
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for inline hook runtime tests.
@@ -181,13 +189,17 @@ describe('InlineHookLibrary Cloud execution routing', () => {
     const runScriptInLocalVm = jest.spyOn(InlineHookLibrary, 'runScriptInLocalVm');
 
     await expect(
-      library.runHook({
+      runHook({
         key: LogtoInlineHookKey.PostSignIn,
         event,
       })
     ).resolves.toEqual(executionResult);
     expect(remoteRunner.isDone()).toBe(true);
     expect(runScriptInLocalVm).not.toHaveBeenCalled();
+    expect(mockAppend).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({ runtimeLocation: 'remote' })
+    );
   });
 
   it('applies allow-mode policy when Cloud remote execution fails without local fallback', async () => {
@@ -214,7 +226,7 @@ describe('InlineHookLibrary Cloud execution routing', () => {
     const runScriptInLocalVm = jest.spyOn(InlineHookLibrary, 'runScriptInLocalVm');
 
     await expect(
-      library.runHook({
+      runHook({
         key: LogtoInlineHookKey.PostSignIn,
         event: {},
       })
@@ -240,7 +252,7 @@ describe('InlineHookLibrary Cloud execution routing', () => {
     const runScriptInLocalVm = jest.spyOn(InlineHookLibrary, 'runScriptInLocalVm');
 
     await expect(
-      library.runHook({
+      runHook({
         key: LogtoInlineHookKey.PostSignIn,
         event: {},
       })
@@ -264,7 +276,7 @@ describe('InlineHookLibrary Cloud execution routing', () => {
     const runScriptInLocalVm = jest.spyOn(InlineHookLibrary, 'runScriptInLocalVm');
 
     await expect(
-      library.runHook({
+      runHook({
         key: LogtoInlineHookKey.PostFirstFactorVerification,
         event: {
           password: 'secret-password',

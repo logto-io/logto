@@ -9,6 +9,7 @@ import {
   VerificationType,
 } from '@logto/schemas';
 import { Action } from '@logto/schemas/lib/types/log/interaction.js';
+import { conditionalString } from '@silverhand/essentials';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
@@ -125,6 +126,12 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
               result: await libraries.inlineHooks.runHook({
                 key: LogtoInlineHookKey.PostFirstFactorVerification,
                 event,
+                auditContext: {
+                  createLog: ctx.createLog,
+                  sessionId: ctx.interactionDetails.jti,
+                  applicationId: conditionalString(ctx.interactionDetails.params.client_id),
+                  userId: existingUser?.id,
+                },
               }),
             });
 
