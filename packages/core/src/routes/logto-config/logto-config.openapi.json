@@ -319,28 +319,28 @@
         }
       }
     },
-    "/api/configs/inline-hooks": {
+    "/api/configs/actions": {
       "get": {
-        "summary": "Get all inline hooks",
-        "description": "Get all inline hook configurations for the tenant.",
+        "summary": "Get all actions",
+        "description": "Get all action configurations for the tenant.",
         "tags": ["Dev feature"],
         "responses": {
           "200": {
-            "description": "The inline hook configurations."
+            "description": "The action configurations."
           }
         }
       }
     },
-    "/api/configs/inline-hooks/{hookType}": {
+    "/api/configs/actions/{actionType}": {
       "put": {
-        "summary": "Create or update inline hook",
-        "description": "Create or update an inline hook configuration for the given hook type.",
+        "summary": "Create or update action",
+        "description": "Create or update an action configuration for the given action type.",
         "tags": ["Dev feature"],
         "parameters": [
           {
             "in": "path",
-            "name": "hookType",
-            "description": "The inline hook type to create or update."
+            "name": "actionType",
+            "description": "The action type to create or update."
           }
         ],
         "requestBody": {
@@ -349,19 +349,19 @@
               "schema": {
                 "properties": {
                   "script": {
-                    "description": "The inline hook script."
+                    "description": "The action script."
                   },
                   "environmentVariables": {
-                    "description": "The environment variables for the inline hook script."
+                    "description": "The environment variables for the action script."
                   },
                   "contextSample": {
-                    "description": "The sample context for inline hook script testing."
+                    "description": "The sample context for action script testing."
                   },
                   "enabled": {
-                    "description": "Whether the inline hook is enabled."
+                    "description": "Whether the action is enabled."
                   },
                   "onExecutionError": {
-                    "description": "The inline hook execution error handling policy."
+                    "description": "The action execution error handling policy."
                   }
                 }
               }
@@ -370,10 +370,10 @@
         },
         "responses": {
           "200": {
-            "description": "The updated inline hook configuration."
+            "description": "The updated action configuration."
           },
           "201": {
-            "description": "The created inline hook configuration."
+            "description": "The created action configuration."
           },
           "400": {
             "description": "The request body is invalid."
@@ -384,14 +384,14 @@
         }
       },
       "patch": {
-        "summary": "Update inline hook",
-        "description": "Update the inline hook configuration for the given hook type.",
+        "summary": "Update action",
+        "description": "Update the action configuration for the given action type.",
         "tags": ["Dev feature"],
         "parameters": [
           {
             "in": "path",
-            "name": "hookType",
-            "description": "The inline hook type to update."
+            "name": "actionType",
+            "description": "The action type to update."
           }
         ],
         "requestBody": {
@@ -400,19 +400,19 @@
               "schema": {
                 "properties": {
                   "script": {
-                    "description": "The inline hook script."
+                    "description": "The action script."
                   },
                   "environmentVariables": {
-                    "description": "The environment variables for the inline hook script."
+                    "description": "The environment variables for the action script."
                   },
                   "contextSample": {
-                    "description": "The sample context for inline hook script testing."
+                    "description": "The sample context for action script testing."
                   },
                   "enabled": {
-                    "description": "Whether the inline hook is enabled."
+                    "description": "Whether the action is enabled."
                   },
                   "onExecutionError": {
-                    "description": "The inline hook execution error handling policy."
+                    "description": "The action execution error handling policy."
                   }
                 }
               }
@@ -421,7 +421,7 @@
         },
         "responses": {
           "200": {
-            "description": "The updated inline hook configuration."
+            "description": "The updated action configuration."
           },
           "400": {
             "description": "The request body is invalid."
@@ -430,72 +430,72 @@
             "description": "The tenant's subscription plan does not support this feature."
           },
           "404": {
-            "description": "The inline hook configuration does not exist."
+            "description": "The action configuration does not exist."
           }
         }
       },
       "get": {
-        "summary": "Get inline hook",
-        "description": "Get the inline hook configuration for the given hook type.",
+        "summary": "Get action",
+        "description": "Get the action configuration for the given action type.",
         "tags": ["Dev feature"],
         "parameters": [
           {
             "in": "path",
-            "name": "hookType",
-            "description": "The inline hook type to get."
+            "name": "actionType",
+            "description": "The action type to get."
           }
         ],
         "responses": {
           "200": {
-            "description": "The inline hook configuration."
+            "description": "The action configuration."
           },
           "404": {
-            "description": "The inline hook configuration does not exist."
+            "description": "The action configuration does not exist."
           }
         }
       },
       "delete": {
-        "summary": "Delete inline hook",
-        "description": "Delete the inline hook configuration for the given hook type.",
+        "summary": "Delete action",
+        "description": "Delete the action configuration for the given action type.",
         "tags": ["Dev feature"],
         "parameters": [
           {
             "in": "path",
-            "name": "hookType",
-            "description": "The inline hook type to delete."
+            "name": "actionType",
+            "description": "The action type to delete."
           }
         ],
         "responses": {
           "204": {
-            "description": "The inline hook configuration was deleted successfully."
+            "description": "The action configuration was deleted successfully."
           },
           "404": {
-            "description": "The inline hook configuration does not exist."
+            "description": "The action configuration does not exist."
           }
         }
       }
     },
-    "/api/configs/inline-hooks/test": {
+    "/api/configs/actions/test": {
       "post": {
-        "summary": "Test inline hook",
-        "description": "Test an inline hook script with a sample context.",
+        "summary": "Test action",
+        "description": "Test an action script with a sample context.",
         "tags": ["Dev feature"],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "properties": {
-                  "hookType": {
-                    "description": "The inline hook type to test."
+                  "actionType": {
+                    "description": "The action type to test."
                   },
                   "script": {
-                    "description": "The inline hook script to test."
+                    "description": "The action script to test."
                   },
                   "event": {
-                    "description": "The sample event for inline hook script testing."
+                    "description": "The sample event for action script testing."
                   },
                   "environmentVariables": {
-                    "description": "The environment variables for the inline hook script."
+                    "description": "The environment variables for the action script."
                   }
                 }
               }
@@ -504,7 +504,7 @@
         },
         "responses": {
           "200": {
-            "description": "The result of the inline hook script testing."
+            "description": "The result of the action script testing."
           },
           "400": {
             "description": "The request body or response body is invalid."
@@ -513,7 +513,7 @@
             "description": "Cloud connection does not have enough permission to perform the action or the tenant's subscription plan does not support this feature."
           },
           "422": {
-            "description": "The inline hook script failed to execute."
+            "description": "The action script failed to execute."
           }
         }
       }

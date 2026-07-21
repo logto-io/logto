@@ -1,5 +1,5 @@
 const tabs = {
-  inline_hooks: 'الخطافات المضمّنة',
+  actions: 'Actions',
   get_started: 'البدء',
   dashboard: 'لوحة القيادة',
   applications: 'التطبيقات',

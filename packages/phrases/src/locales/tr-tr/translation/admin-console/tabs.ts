@@ -1,5 +1,5 @@
 const tabs = {
-  inline_hooks: 'Satır içi kancalar',
+  actions: 'Actions',
   get_started: 'Başla',
   dashboard: 'Gösterge Paneli',
   applications: 'Uygulamalar',

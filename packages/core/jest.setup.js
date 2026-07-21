@@ -2,6 +2,7 @@
  * Setup environment variables for unit test
  */
 
+import { expect } from '@jest/globals';
 import en from '@logto/phrases/lib/locales/en/index.js';
 import { createMockUtils } from '@logto/shared/esm';
 import { init } from 'i18next';
@@ -14,13 +15,17 @@ process.env.ENDPOINT = 'https://logto.test';
 process.env.NODE_ENV = 'test';
 
 /* Mock for EnvSet */
-mockEsm('#src/libraries/logto-config.js', () => ({
-  createLogtoConfigLibrary: () => ({
-    getOidcConfigs: () => ({}),
-    getInlineHook: async () => undefined,
-    promoteScheduledSigningKeyRotation: async () => Promise.resolve(),
-  }),
-}));
+// The Logto config library unit test exercises the real module; other suites keep EnvSet isolated
+// from config persistence through this lightweight mock.
+if (!expect.getState().testPath.endsWith('/libraries/logto-config.test.js')) {
+  mockEsm('#src/libraries/logto-config.js', () => ({
+    createLogtoConfigLibrary: () => ({
+      getOidcConfigs: () => ({}),
+      getAction: jest.fn(),
+      promoteScheduledSigningKeyRotation: jest.fn(),
+    }),
+  }));
+}
 
 mockEsm('#src/env-set/preconditions.js', () => ({
   checkPreconditions: () => true,

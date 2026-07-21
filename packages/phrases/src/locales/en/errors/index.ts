@@ -1,4 +1,5 @@
 import account_center from './account-center.js';
+import action from './action.js';
 import application from './application.js';
 import auth from './auth.js';
 import connector from './connector.js';
@@ -7,7 +8,6 @@ import domain from './domain.js';
 import entity from './entity.js';
 import guard from './guard.js';
 import hook from './hook.js';
-import inline_hook from './inline-hook.js';
 import jwt_customizer from './jwt-customizer.js';
 import localization from './localization.js';
 import log from './log.js';
@@ -42,7 +42,7 @@ const errors = {
   connector,
   verification_code,
   sign_in_experiences,
-  inline_hook,
+  action,
   jwt_customizer,
   localization,
   swagger,

@@ -1,3 +1,4 @@
+import actions from './actions.js';
 import api_resource_details from './api-resource-details.js';
 import api_resources from './api-resources.js';
 import application_details from './application-details.js';
@@ -17,7 +18,6 @@ import general from './general.js';
 import get_started from './get-started.js';
 import guide from './guide.js';
 import inkeep_ai_bot from './inkeep-ai-bot.js';
-import inline_hooks from './inline-hooks.js';
 import invitation from './invitation.js';
 import jwt_claims from './jwt-claims.js';
 import log_details from './log-details.js';
@@ -106,7 +106,7 @@ const admin_console = {
   protected_app,
   jwt_claims,
   invitation,
-  inline_hooks,
+  actions,
   signing_keys,
   organization_template,
   organization_role_details,

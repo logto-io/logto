@@ -21,7 +21,7 @@ export type SubscriptionUsageResponse = GuardedResponse<
   GetRoutes['/api/tenants/:tenantId/subscription-usage']
 >;
 
-type InlineHookSubscriptionQuota = {
+type ActionSubscriptionQuota = {
   inlineHooksEnabled: boolean;
 };
 
@@ -30,10 +30,10 @@ export type SubscriptionQuota = Omit<
   // Since we are deprecating the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the quota keys for now to avoid confusion.
   'organizationsEnabled'
 > &
-  InlineHookSubscriptionQuota;
+  ActionSubscriptionQuota;
 
 export type LogtoSkuResponse = Omit<CloudLogtoSkuResponse, 'quota'> & {
-  quota: CloudLogtoSkuResponse['quota'] & Partial<InlineHookSubscriptionQuota>;
+  quota: CloudLogtoSkuResponse['quota'] & Partial<ActionSubscriptionQuota>;
 };
 
 export type SubscriptionCountBasedUsage = Omit<
@@ -41,7 +41,7 @@ export type SubscriptionCountBasedUsage = Omit<
   // Since we are deprecating the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
   'organizationsEnabled'
 > &
-  InlineHookSubscriptionQuota;
+  ActionSubscriptionQuota;
 export type SubscriptionResourceScopeUsage = SubscriptionUsageResponse['resources'];
 export type SubscriptionRoleScopeUsage = Omit<
   SubscriptionUsageResponse['roles'],

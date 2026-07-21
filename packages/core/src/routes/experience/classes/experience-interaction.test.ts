@@ -5,7 +5,7 @@ import {
   adminTenantId,
   type CreateUser,
   InteractionEvent,
-  LogtoInlineHookKey,
+  LogtoActionKey,
   type JwtCustomizerUserContext,
   type SignInExperience,
   SignInIdentifier,
@@ -132,15 +132,15 @@ const createSignInInteraction = ({
     findUserById: jest.fn().mockResolvedValue(user),
     updateUserById: jest.fn().mockResolvedValue(user),
   };
-  const runHookHandler = jest.fn(
-    async (_input: { event: unknown; key: LogtoInlineHookKey }): Promise<unknown> => undefined
+  const runActionHandler = jest.fn(
+    async (_input: { event: unknown; key: LogtoActionKey }): Promise<unknown> => undefined
   );
-  const runHook = jest.fn(
+  const runAction = jest.fn(
     async <Event>(
-      input: { key: LogtoInlineHookKey } & ({ event: Event } | { getEvent: () => Promise<Event> })
+      input: { key: LogtoActionKey } & ({ event: Event } | { getEvent: () => Promise<Event> })
     ): Promise<unknown> => {
       const event = 'getEvent' in input ? await input.getEvent() : input.event;
-      return runHookHandler({ key: input.key, event });
+      return runActionHandler({ key: input.key, event });
     }
   );
   const getUserContext = jest.fn().mockResolvedValue(mockJwtCustomizerUserContext);
@@ -157,7 +157,7 @@ const createSignInInteraction = ({
     {
       users: userLibraries,
       ssoConnectors,
-      inlineHooks: { runHook },
+      actions: { runAction },
       jwtCustomizers: { getUserContext },
     }
   );
@@ -199,8 +199,8 @@ const createSignInInteraction = ({
   return {
     experienceInteraction,
     provider,
-    runHook,
-    runHookHandler,
+    runAction,
+    runActionHandler,
     getUserContext,
     signInUserQueries,
     userGeoLocations,
@@ -290,66 +290,66 @@ describe('ExperienceInteraction class', () => {
   });
 
   describe('sign-in submission', () => {
-    it('runs PostSignIn inline hook before provider interaction result', async () => {
-      const { experienceInteraction, provider, runHook, runHookHandler, getUserContext } =
+    it('runs PostSignIn action before provider interaction result', async () => {
+      const { experienceInteraction, provider, runAction, runActionHandler, getUserContext } =
         createSignInInteraction();
 
       await experienceInteraction.submit();
 
       expect(getUserContext).toHaveBeenCalledWith(mockUser.id);
-      const [runHookInput] = runHook.mock.calls[0]!;
-      expect(runHookInput).toMatchObject({ key: LogtoInlineHookKey.PostSignIn });
-      expect('getEvent' in runHookInput && typeof runHookInput.getEvent).toBe('function');
-      expect(runHookHandler).toHaveBeenCalledWith({
-        key: LogtoInlineHookKey.PostSignIn,
+      const [runActionInput] = runAction.mock.calls[0]!;
+      expect(runActionInput).toMatchObject({ key: LogtoActionKey.PostSignIn });
+      expect('getEvent' in runActionInput && typeof runActionInput.getEvent).toBe('function');
+      expect(runActionHandler).toHaveBeenCalledWith({
+        key: LogtoActionKey.PostSignIn,
         event: {
-          key: LogtoInlineHookKey.PostSignIn,
+          key: LogtoActionKey.PostSignIn,
           interactionEvent: InteractionEvent.SignIn,
           user: mockJwtCustomizerUserContext,
         },
       });
-      expect(runHookHandler.mock.invocationCallOrder[0]).toBeLessThan(
+      expect(runActionHandler.mock.invocationCallOrder[0]).toBeLessThan(
         (provider.interactionResult as jest.Mock).mock.invocationCallOrder[0]!
       );
     });
 
-    it('does not include password in the PostSignIn inline hook event', async () => {
-      const { experienceInteraction, runHookHandler } = createSignInInteraction();
+    it('does not include password in the PostSignIn action event', async () => {
+      const { experienceInteraction, runActionHandler } = createSignInInteraction();
 
       await experienceInteraction.submit();
 
-      const [{ event }] = runHookHandler.mock.calls[0]!;
+      const [{ event }] = runActionHandler.mock.calls[0]!;
 
       expect(event).not.toHaveProperty('password');
       expect(JSON.stringify(event)).not.toContain(mockUser.passwordEncrypted);
     });
 
-    it('does not run PostSignIn inline hook for register interactions', async () => {
-      const { experienceInteraction, runHook, getUserContext } = createSignInInteraction({
+    it('does not run PostSignIn action for register interactions', async () => {
+      const { experienceInteraction, runAction, getUserContext } = createSignInInteraction({
         interactionEvent: InteractionEvent.Register,
       });
 
       await experienceInteraction.submit();
 
       expect(getUserContext).not.toHaveBeenCalled();
-      expect(runHook).not.toHaveBeenCalled();
+      expect(runAction).not.toHaveBeenCalled();
     });
 
-    it('does not run PostSignIn inline hook when dev features are disabled', async () => {
+    it('does not run PostSignIn action when dev features are disabled', async () => {
       setDevFeaturesEnabled(false);
-      const { experienceInteraction, runHook, getUserContext } = createSignInInteraction();
+      const { experienceInteraction, runAction, getUserContext } = createSignInInteraction();
 
       await experienceInteraction.submit();
 
       expect(getUserContext).not.toHaveBeenCalled();
-      expect(runHook).not.toHaveBeenCalled();
+      expect(runAction).not.toHaveBeenCalled();
     });
 
-    it('updates user when PostSignIn inline hook returns updateUser', async () => {
-      const { experienceInteraction, runHookHandler } = createSignInInteraction();
+    it('updates user when PostSignIn action returns updateUser', async () => {
+      const { experienceInteraction, runActionHandler } = createSignInInteraction();
       const updateUser = jest.spyOn(experienceInteraction.provisionLibrary, 'updateUser');
 
-      runHookHandler.mockResolvedValueOnce({
+      runActionHandler.mockResolvedValueOnce({
         action: 'updateUser',
         user: {
           name: 'Jane Doe',
@@ -365,7 +365,7 @@ describe('ExperienceInteraction class', () => {
       );
     });
 
-    it('preserves existing customData when PostSignIn inline hook writes customData', async () => {
+    it('preserves existing customData when PostSignIn action writes customData', async () => {
       const user = {
         ...mockUser,
         customData: {
@@ -373,11 +373,12 @@ describe('ExperienceInteraction class', () => {
           source: 'p1',
         },
       };
-      const { experienceInteraction, runHookHandler, signInUserQueries } = createSignInInteraction({
-        user,
-      });
+      const { experienceInteraction, runActionHandler, signInUserQueries } =
+        createSignInInteraction({
+          user,
+        });
 
-      runHookHandler.mockResolvedValueOnce({
+      runActionHandler.mockResolvedValueOnce({
         action: 'updateUser',
         user: {
           customData: {
@@ -402,12 +403,12 @@ describe('ExperienceInteraction class', () => {
     });
 
     it.each([undefined, null, {}, { action: 'updateUser' }])(
-      'does not update user and proceeds when PostSignIn inline hook returns no-op result %#',
+      'does not update user and proceeds when PostSignIn action returns no-op result %#',
       async (result) => {
-        const { experienceInteraction, provider, runHookHandler } = createSignInInteraction();
+        const { experienceInteraction, provider, runActionHandler } = createSignInInteraction();
         const updateUser = jest.spyOn(experienceInteraction.provisionLibrary, 'updateUser');
 
-        runHookHandler.mockResolvedValueOnce(result);
+        runActionHandler.mockResolvedValueOnce(result);
 
         await experienceInteraction.submit();
 
@@ -429,10 +430,10 @@ describe('ExperienceInteraction class', () => {
       { action: 'continue' },
       { ignored: true },
       { user: { name: 'Jane Doe' } },
-    ])('blocks sign-in when PostSignIn inline hook returns invalid result %#', async (result) => {
-      const { experienceInteraction, provider, runHookHandler } = createSignInInteraction();
+    ])('blocks sign-in when PostSignIn action returns invalid result %#', async (result) => {
+      const { experienceInteraction, provider, runActionHandler } = createSignInInteraction();
 
-      runHookHandler.mockResolvedValueOnce(result);
+      runActionHandler.mockResolvedValueOnce(result);
 
       await expect(experienceInteraction.submit()).rejects.toMatchError(
         new RequestError({ code: 'session.verification_failed', status: 400 })
@@ -441,10 +442,10 @@ describe('ExperienceInteraction class', () => {
       expect(provider.interactionResult).not.toHaveBeenCalled();
     });
 
-    it('blocks sign-in when PostSignIn inline hook execution fails in block mode', async () => {
-      const { experienceInteraction, provider, runHookHandler } = createSignInInteraction();
+    it('blocks sign-in when PostSignIn action execution fails in block mode', async () => {
+      const { experienceInteraction, provider, runActionHandler } = createSignInInteraction();
 
-      runHookHandler.mockRejectedValueOnce(
+      runActionHandler.mockRejectedValueOnce(
         new RequestError({ code: 'session.verification_failed', status: 400 })
       );
 

@@ -65,7 +65,7 @@ describe('buildOperationId', () => {
     Reflect.set(EnvSet.values, 'isUnitTest', false);
 
     const builtCustomRoutes = new Set(
-      Object.keys(customRoutes).filter((route) => !route.includes('/configs/inline-hooks'))
+      Object.keys(customRoutes).filter((route) => !route.includes('/configs/actions'))
     );
 
     expect(() => {

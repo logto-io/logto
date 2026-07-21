@@ -28,12 +28,12 @@ const methodToVerb = Object.freeze({
 type RouteDictionary = Record<`${OpenAPIV3.HttpMethods} ${string}`, string>;
 
 const devFeatureCustomRoutes: Readonly<RouteDictionary> = Object.freeze({
-  'get /configs/inline-hooks': 'ListInlineHooks',
-  'put /configs/inline-hooks/:hookType': 'UpsertInlineHook',
-  'patch /configs/inline-hooks/:hookType': 'UpdateInlineHook',
-  'get /configs/inline-hooks/:hookType': 'GetInlineHook',
-  'delete /configs/inline-hooks/:hookType': 'DeleteInlineHook',
-  'post /configs/inline-hooks/test': 'TestInlineHook',
+  'get /configs/actions': 'ListActions',
+  'put /configs/actions/:actionType': 'UpsertAction',
+  'patch /configs/actions/:actionType': 'UpdateAction',
+  'get /configs/actions/:actionType': 'GetAction',
+  'delete /configs/actions/:actionType': 'DeleteAction',
+  'post /configs/actions/test': 'TestAction',
 });
 
 export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
@@ -115,7 +115,7 @@ export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   // Session config
   'get /configs/oidc/session': 'GetOidcSessionConfig',
   'patch /configs/oidc/session': 'UpdateOidcSessionConfig',
-  // Inline hooks
+  // Actions
   ...(EnvSet.values.isDevFeaturesEnabled ? devFeatureCustomRoutes : {}),
 } satisfies RouteDictionary); // Key assertion doesn't work without `satisfies`
 

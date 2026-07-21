@@ -1,5 +1,5 @@
 const tabs = {
-  inline_hooks: 'Inline-хуки',
+  actions: 'Actions',
   get_started: 'Начало',
   dashboard: 'Панель управления',
   applications: 'Приложения',

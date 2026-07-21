@@ -3,7 +3,7 @@ import type {
   AdminConsoleData,
   Application,
   ApplicationsRole,
-  InlineHook,
+  LogtoAction,
   LogtoConfig,
   OidcConfigKey,
   Passcode,
@@ -15,7 +15,7 @@ import type {
 import {
   ApplicationType,
   DomainStatus,
-  LogtoInlineHookKey,
+  LogtoActionKey,
   internalPrefix,
   LogtoJwtTokenKey,
   LogtoOidcConfigKey,
@@ -254,11 +254,11 @@ export const mockJwtCustomizerConfigForClientCredentials = {
   },
 };
 
-export const mockInlineHookConfigForPostSignIn = {
+export const mockActionConfigForPostSignIn = {
   tenantId: 'fake_tenant',
-  key: LogtoInlineHookKey.PostSignIn,
+  key: LogtoActionKey.PostSignIn,
   value: {
-    script: 'const runInlineHook = ({ event }) => ({ action: "updateUser", user: event.user });',
+    script: 'const runAction = ({ event }) => ({ action: "updateUser", user: event.user });',
     environmentVariables: {
       API_KEY: '<api-key>',
     },
@@ -269,16 +269,16 @@ export const mockInlineHookConfigForPostSignIn = {
     },
     enabled: true,
     onExecutionError: 'block',
-  } satisfies InlineHook,
+  } satisfies LogtoAction,
 };
 
-export const mockInlineHookConfigForPostFirstFactorVerification = {
+export const mockActionConfigForPostFirstFactorVerification = {
   tenantId: 'fake_tenant',
-  key: LogtoInlineHookKey.PostFirstFactorVerification,
+  key: LogtoActionKey.PostFirstFactorVerification,
   value: {
     script:
-      'const runInlineHook = ({ event }) => ({ action: "updateUser", user: {}, passwordVerified: true });',
+      'const runAction = ({ event }) => ({ action: "updateUser", user: {}, passwordVerified: true });',
     enabled: false,
     onExecutionError: 'allow',
-  } satisfies InlineHook,
+  } satisfies LogtoAction,
 };
