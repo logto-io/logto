@@ -15,9 +15,9 @@ services:
       # Optional default grace period, in seconds, for OIDC private key rotation when the API
       # request omits `rotationGracePeriod`.
       - PRIVATE_KEY_ROTATION_GRACE_PERIOD
-      # Set to `false` only when trusted OIDC relying-party endpoints resolve to private networks.
+      # Set to `true` only when trusted OIDC relying-party endpoints resolve to private networks.
       # SSRF protection for oidc-provider outbound requests is enabled by default.
-      - OIDC_PROVIDER_SSRF_PROTECTION_ENABLED
+      - OIDC_PROVIDER_SSRF_PROTECTION_DISABLED
       # Mandatory for GitPod to map host env to the container, thus GitPod can dynamically configure the public URL of Logto;
       # Or, you can leverage it for local testing.
       - ENDPOINT

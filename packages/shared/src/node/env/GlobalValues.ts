@@ -156,8 +156,7 @@ export default class GlobalValues {
    * that resolve unregistered remote clients, such as CIMD, must only be enabled while this is true.
    */
   public readonly isOidcProviderSsrfProtectionEnabled =
-    this.isCloud ||
-    getEnv('OIDC_PROVIDER_SSRF_PROTECTION_ENABLED', 'true').trim().toLowerCase() !== 'false';
+    this.isCloud || !yes(getEnv('OIDC_PROVIDER_SSRF_PROTECTION_DISABLED'));
 
   /** Enables protected app local development without Cloud-only behavior. */
   public readonly isProtectedAppLocalDevEnabled =
