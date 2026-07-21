@@ -1,7 +1,7 @@
 import {
   LogtoInlineHookKey,
   type InlineHook,
-  type InlineHookTestRequestBody,
+  type InlineHookExecutionRequestBody,
 } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 import { pick } from '@silverhand/essentials';
@@ -13,7 +13,6 @@ import {
   mockLogtoConfigRows,
 } from '#src/__mocks__/index.js';
 import { EnvSet } from '#src/env-set/index.js';
-import { InlineHookLibrary } from '#src/libraries/inline-hook.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
 import { mockLogtoConfigsLibrary } from '#src/test-utils/mock-libraries.js';
@@ -37,7 +36,7 @@ const createResponseError = (status: number, body: Record<string, unknown>) =>
     })
   );
 
-const inlineHookTestPayload: InlineHookTestRequestBody = {
+const inlineHookTestPayload: InlineHookExecutionRequestBody = {
   hookType: LogtoInlineHookKey.PostSignIn,
   script: `
     const runInlineHook = () => ({ action: 'continue' });
@@ -206,7 +205,7 @@ describe('configs inline hook routes', () => {
   });
 
   it('POST /configs/inline-hooks/test should run an inline hook script successfully', async () => {
-    const payload: InlineHookTestRequestBody = {
+    const payload: InlineHookExecutionRequestBody = {
       hookType: LogtoInlineHookKey.PostSignIn,
       script: `
         const runInlineHook = ({ event, environmentVariables }) => ({
@@ -247,7 +246,7 @@ describe('configs inline hook routes', () => {
   });
 
   it('POST /configs/inline-hooks/test should map general execution errors to 422', async () => {
-    const payload: InlineHookTestRequestBody = {
+    const payload: InlineHookExecutionRequestBody = {
       hookType: LogtoInlineHookKey.PostSignIn,
       script: `
         const runInlineHook = () => {
@@ -272,7 +271,7 @@ describe('configs inline hook routes', () => {
     };
 
     jest
-      .spyOn(InlineHookLibrary, 'runScriptInLocalVm')
+      .spyOn(tenantContext.libraries.inlineHooks, 'executeScript')
       .mockRejectedValueOnce(createResponseError(422, errorBody));
 
     const response = await routeRequesterWithErrorHandler
@@ -295,7 +294,7 @@ describe('configs inline hook routes', () => {
   ])(
     'POST /configs/inline-hooks/test should map ResponseError status %i to %i',
     async (responseErrorStatus, expectedStatus) => {
-      jest.spyOn(InlineHookLibrary, 'runScriptInLocalVm').mockRejectedValueOnce(
+      jest.spyOn(tenantContext.libraries.inlineHooks, 'executeScript').mockRejectedValueOnce(
         createResponseError(responseErrorStatus, {
           message: 'Remote runner failed',
           error: { reason: 'blocked' },
@@ -310,6 +309,49 @@ describe('configs inline hook routes', () => {
       expect(response.body.code).toEqual('inline_hook.general');
     }
   );
+
+  it('POST /configs/inline-hooks/test should map remote transport failures to inline_hook.general', async () => {
+    class TransportError extends Error {
+      readonly request = {
+        options: {
+          headers: { authorization: 'Bearer secret' },
+        },
+      };
+    }
+
+    const transportError = new TransportError("Timeout awaiting 'request' for 5000ms");
+
+    jest
+      .spyOn(tenantContext.libraries.inlineHooks, 'executeScript')
+      .mockRejectedValueOnce(transportError);
+
+    const response = await routeRequesterWithErrorHandler
+      .post('/configs/inline-hooks/test')
+      .send(inlineHookTestPayload);
+
+    expect(response.status).toEqual(422);
+    expect(response.body.code).toEqual('inline_hook.general');
+    expect(response.body.data).toEqual({
+      message: "Timeout awaiting 'request' for 5000ms",
+    });
+    expect(response.text).not.toContain('Bearer secret');
+  });
+
+  it('POST /configs/inline-hooks/test should preserve non-Error transport failure details', async () => {
+    jest
+      .spyOn(tenantContext.libraries.inlineHooks, 'executeScript')
+      .mockRejectedValueOnce('Socket closed');
+
+    const response = await routeRequesterWithErrorHandler
+      .post('/configs/inline-hooks/test')
+      .send(inlineHookTestPayload);
+
+    expect(response.status).toEqual(422);
+    expect(response.body.code).toEqual('inline_hook.general');
+    expect(response.body.data).toEqual({
+      message: 'Socket closed',
+    });
+  });
 
   it('should not register inline hook routes when dev features are disabled', async () => {
     setDevFeaturesEnabled(false);

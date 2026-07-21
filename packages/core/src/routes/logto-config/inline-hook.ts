@@ -1,15 +1,13 @@
 import {
   LogtoInlineHookKey,
   inlineHookGuard,
-  inlineHookTestRequestBodyGuard,
+  inlineHookExecutionRequestBodyGuard,
   jsonGuard,
 } from '@logto/schemas';
 import { ResponseError } from '@withtyped/client';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { InlineHookLibrary } from '#src/libraries/inline-hook.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { koaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
@@ -62,7 +60,7 @@ export default function logtoConfigInlineHookRoutes<T extends ManagementApiRoute
   router.post(
     '/configs/inline-hooks/test',
     koaGuard({
-      body: inlineHookTestRequestBodyGuard,
+      body: inlineHookExecutionRequestBodyGuard,
       response: jsonGuard.optional(),
       status: [200, 400, 403, 422],
     }),
@@ -71,9 +69,8 @@ export default function logtoConfigInlineHookRoutes<T extends ManagementApiRoute
       const { body } = ctx.guard;
 
       try {
-        ctx.body = EnvSet.values.isCloud
-          ? await libraries.inlineHooks.runScriptRemotely(body)
-          : await InlineHookLibrary.runScriptInLocalVm(body);
+        // Share the same Cloud/local execution selection as production `runHook()`.
+        ctx.body = await libraries.inlineHooks.executeScript(body);
         ctx.status = 200;
       } catch (error: unknown) {
         if (error instanceof ResponseError) {
@@ -89,7 +86,19 @@ export default function logtoConfigInlineHookRoutes<T extends ManagementApiRoute
           );
         }
 
-        throw error;
+        // Already-normalized Management API errors (e.g. remote runner not configured).
+        if (error instanceof RequestError) {
+          throw error;
+        }
+
+        // Non-HTTP remote transport failures (e.g. Got TimeoutError) must stay within
+        // the declared 4xx contract for Console dry runs.
+        throw new RequestError(
+          { code: 'inline_hook.general', status: 422 },
+          {
+            message: error instanceof Error ? error.message : String(error),
+          }
+        );
       }
 
       return next();

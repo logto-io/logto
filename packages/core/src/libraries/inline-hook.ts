@@ -3,7 +3,6 @@ import {
   adminTenantId,
   LogtoInlineHookKey,
   type InlineHookExecutionErrorPolicy,
-  type InlineHookTestRequestBody,
 } from '@logto/schemas';
 import { got, HTTPError } from 'got';
 import { ZodError } from 'zod';
@@ -21,6 +20,11 @@ import {
 
 const inlineHookFunctionName = 'runInlineHook';
 const defaultInlineHookExecutionErrorPolicy = 'block' satisfies InlineHookExecutionErrorPolicy;
+/**
+ * Azure Function vm2 timeout is 3000ms. Use a slightly higher HTTP deadline so the
+ * client can surface Function-side failures instead of racing the sandbox limit.
+ */
+const remoteInlineHookRequestTimeout = 5000;
 
 export type InlineHookExecutionErrorFallback = {
   action: 'rejectInvalidCredentials';
@@ -96,19 +100,17 @@ const buildInlineHookExecutionErrorTelemetryPayload = <Event>({
       ? getPostFirstFactorVerificationPassword(event)
       : undefined;
 
-  if (!password) {
-    return error;
-  }
+  const sanitize = (value: string) => (password ? redactSensitiveValue(value, password) : value);
 
   const telemetryError = new Error(
-    redactSensitiveValue(error instanceof Error ? error.message : String(error), password)
+    sanitize(error instanceof Error ? error.message : String(error))
   );
 
   if (error instanceof Error) {
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Keep the original error type for telemetry while redacting secrets.
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Keep the original error type on the sanitized telemetry copy.
     telemetryError.name = error.name;
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Preserve the useful stack without leaking the inline-hook password.
-    telemetryError.stack = error.stack && redactSensitiveValue(error.stack, password);
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Preserve the useful stack on the sanitized telemetry copy.
+    telemetryError.stack = error.stack && sanitize(error.stack);
   }
 
   return telemetryError;
@@ -201,10 +203,46 @@ export class InlineHookLibrary {
   }
 
   /**
+   * Shared entry point for production `runHook()` and Management API dry runs.
+   * Cloud always executes remotely; OSS / self-hosted always uses the local VM.
+   * Cloud remote failures must never fall back to the local VM.
+   */
+  async executeScript({
+    script,
+    hookType,
+    event,
+    environmentVariables,
+  }: {
+    script: string;
+    hookType: LogtoInlineHookKey;
+    // Production events are typed domain objects; dry-run uses JSON via the guard.
+    event: unknown;
+    environmentVariables?: Record<string, string>;
+  }): Promise<unknown> {
+    const payload = { script, hookType, event, environmentVariables };
+
+    if (EnvSet.values.isCloud) {
+      return this.runScriptRemotely(payload);
+    }
+
+    return InlineHookLibrary.runScriptInLocalVm(payload);
+  }
+
+  /**
    * For Logto Cloud use only. Run the inline hook script remotely in an isolated environment.
    * For OSS version, use @see InlineHookLibrary.runScriptInLocalVm instead.
    */
-  async runScriptRemotely(payload: InlineHookTestRequestBody): Promise<unknown> {
+  async runScriptRemotely({
+    script,
+    hookType,
+    event,
+    environmentVariables,
+  }: {
+    script: string;
+    hookType: LogtoInlineHookKey;
+    event: unknown;
+    environmentVariables?: Record<string, string>;
+  }): Promise<unknown> {
     const { azureFunctionUntrustedAppKey, azureFunctionUntrustedAppEndpoint } = EnvSet.values;
 
     if (!this.isRegionalAzureFunctionAppConfigured) {
@@ -217,10 +255,17 @@ export class InlineHookLibrary {
     try {
       return await got
         .post(new URL('/api/inline-hooks', azureFunctionUntrustedAppEndpoint), {
-          json: payload,
+          json: {
+            script,
+            hookType,
+            event,
+            environmentVariables,
+          },
           headers: {
             'x-functions-key': azureFunctionUntrustedAppKey,
           },
+          // Got@14 expects a Delays object; bound the whole request slightly above the AF VM timeout.
+          timeout: { request: remoteInlineHookRequestTimeout },
         })
         .json<unknown>();
     } catch (error: unknown) {
@@ -250,8 +295,9 @@ export class InlineHookLibrary {
     const event = 'getEvent' in eventSource ? await eventSource.getEvent() : eventSource.event;
 
     try {
-      return await InlineHookLibrary.runScriptInLocalVm({
+      return await this.executeScript({
         script: inlineHook.script,
+        hookType: key,
         event,
         environmentVariables: inlineHook.environmentVariables,
       });

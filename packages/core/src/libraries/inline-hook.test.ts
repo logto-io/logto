@@ -1,6 +1,5 @@
 import { appInsights } from '@logto/app-insights/node';
 import { LogtoInlineHookKey } from '@logto/schemas';
-import nock from 'nock';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -30,6 +29,11 @@ const createLibrary = (tenantId = 'tenant_id') =>
 const originalIsCloud = EnvSet.values.isCloud;
 const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
 
+const setIsCloud = (isCloud: boolean) => {
+  // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for Cloud/local selection tests.
+  (EnvSet.values as { isCloud: boolean }).isCloud = isCloud;
+};
+
 describe('InlineHookLibrary', () => {
   const library = createLibrary();
 
@@ -44,11 +48,9 @@ describe('InlineHookLibrary', () => {
   });
 
   afterEach(() => {
-    nock.cleanAll();
     jest.restoreAllMocks();
     jest.clearAllMocks();
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after quota tests.
-    (EnvSet.values as { isCloud: boolean }).isCloud = originalIsCloud;
+    setIsCloud(originalIsCloud);
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after dev feature tests.
     (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
       originalIsDevFeaturesEnabled;
@@ -165,8 +167,7 @@ describe('InlineHookLibrary', () => {
 
   it('does not run when inline hooks quota is disabled', async () => {
     const getEvent = jest.fn().mockResolvedValue({});
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for cloud quota test.
-    (EnvSet.values as { isCloud: boolean }).isCloud = true;
+    setIsCloud(true);
     getSubscriptionData.mockResolvedValueOnce({
       quota: {
         inlineHooksEnabled: false,
@@ -180,6 +181,9 @@ describe('InlineHookLibrary', () => {
         };
       `,
     });
+    const executeScript = jest.spyOn(library, 'executeScript');
+    const runScriptInLocalVm = jest.spyOn(InlineHookLibrary, 'runScriptInLocalVm');
+    const runScriptRemotely = jest.spyOn(library, 'runScriptRemotely');
 
     await expect(
       library.runHook({
@@ -189,6 +193,9 @@ describe('InlineHookLibrary', () => {
     ).resolves.toBeUndefined();
 
     expect(getEvent).not.toHaveBeenCalled();
+    expect(executeScript).not.toHaveBeenCalled();
+    expect(runScriptInLocalVm).not.toHaveBeenCalled();
+    expect(runScriptRemotely).not.toHaveBeenCalled();
   });
 
   it('allows PostSignIn execution errors to continue without hook enrichment', async () => {
@@ -274,51 +281,40 @@ describe('InlineHookLibrary', () => {
     expect((trackedError as Error).stack).not.toContain(password);
   });
 
-  it('throws an inline hook error when the remote runner is not configured', async () => {
-    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get').mockReturnValue('');
-    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue('');
+  it('removes remote request details from tracked execution errors', async () => {
+    const functionKey = 'function-key';
+    class RemoteRequestError extends Error {
+      readonly request = {
+        options: {
+          headers: { 'x-functions-key': functionKey },
+        },
+      };
+    }
+
+    const transportError = new RemoteRequestError('Remote runner timed out');
+    const trackException = jest.spyOn(appInsights, 'trackException').mockResolvedValue();
+    jest.spyOn(library, 'executeScript').mockRejectedValueOnce(transportError);
+    getInlineHook.mockResolvedValueOnce({
+      enabled: true,
+      onExecutionError: 'allow',
+      script: '',
+    });
 
     await expect(
-      library.runScriptRemotely({
-        hookType: LogtoInlineHookKey.PostSignIn,
-        script: 'const runInlineHook = () => ({ action: "continue" });',
-        event: {
-          key: LogtoInlineHookKey.PostSignIn,
-        },
-      })
-    ).rejects.toMatchObject({
-      code: 'inline_hook.general',
-      status: 422,
-      data: {
-        message: 'Remote inline hook runner is not configured.',
-      },
-    });
-  });
-
-  it('runs the script through the regional untrusted runner endpoint', async () => {
-    const endpoint = 'https://untrusted.example.com';
-    const functionKey = 'function-key';
-    const payload = {
-      hookType: LogtoInlineHookKey.PostSignIn,
-      script: 'const runInlineHook = () => ({ action: "continue" });',
-      event: {
+      library.runHook({
         key: LogtoInlineHookKey.PostSignIn,
-      },
-    };
-    const executionResult = { action: 'continue' };
-    const remoteRunner = nock(endpoint, {
-      reqheaders: {
-        'x-functions-key': functionKey,
-      },
-    })
-      .post('/api/inline-hooks', payload)
-      .reply(200, executionResult);
+        event: {},
+      })
+    ).resolves.toBeUndefined();
 
-    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue(endpoint);
-    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get').mockReturnValue(functionKey);
-
-    await expect(library.runScriptRemotely(payload)).resolves.toEqual(executionResult);
-    expect(remoteRunner.isDone()).toBe(true);
+    const trackedError = trackException.mock.calls[0]?.[0];
+    expect(trackedError).toBeInstanceOf(Error);
+    expect(trackedError).not.toBe(transportError);
+    expect(trackedError).toMatchObject({
+      message: 'Remote runner timed out',
+    });
+    expect(Object.hasOwn(trackedError as Error, 'request')).toBe(false);
+    expect(JSON.stringify(trackedError)).not.toContain(functionKey);
   });
 
   it('blocks PostSignIn execution errors with the owning flow failure by default', async () => {
