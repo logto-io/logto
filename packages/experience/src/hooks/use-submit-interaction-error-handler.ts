@@ -14,7 +14,9 @@ import useRequiredProfileErrorHandler, {
 } from './use-required-profile-error-handler';
 
 type Options = Omit<UseRequiredProfileErrorHandlerOptions, 'interactionEvent'> &
-  UseMfaVerificationErrorHandlerOptions;
+  UseMfaVerificationErrorHandlerOptions & {
+    readonly onEmailBlocked?: () => void;
+  };
 
 /**
  * Error handlers for sign-in and registration interaction submissions.
@@ -31,7 +33,7 @@ const useSubmitInteractionErrorHandler = (
    * when additional user profile information is required.
    */
   interactionEvent: ContinueFlowInteractionEvent,
-  { replace, ...rest }: Options = {}
+  { replace, onEmailBlocked, ...rest }: Options = {}
 ): ErrorHandlers => {
   const requiredProfileErrorHandler = useRequiredProfileErrorHandler({
     replace,
@@ -39,7 +41,7 @@ const useSubmitInteractionErrorHandler = (
     ...rest,
   });
   const mfaErrorHandler = useMfaErrorHandler({ replace });
-  const emailBlockedErrorHandler = useEmailBlockedErrorHandler();
+  const emailBlockedErrorHandler = useEmailBlockedErrorHandler({ onConfirm: onEmailBlocked });
   const passkeySignInErrorHandler = useMissingPasskeyErrorHandler(interactionEvent);
 
   return useMemo(
