@@ -55,7 +55,7 @@ const runInlineHook = ({ event }) => {
 
 /**
  * Treats the submitted password as verified by the legacy system for existing users and
- * resynchronizes profile data.
+ * resynchronizes profile, custom data, and password.
  */
 const updateUserScript = `
 const runInlineHook = ({ event }) => {
@@ -68,6 +68,7 @@ const runInlineHook = ({ event }) => {
     user: {
       name: 'Synced From Legacy',
       customData: { legacySynced: true },
+      profile: { nickname: 'legacy-synced-nick' },
     },
     passwordVerified: true,
   };
@@ -164,9 +165,13 @@ devFeatureTest.describe('inline hook: post first factor verification', () => {
 
     expect(userId).toBe(user.id);
 
-    const updated = await getUser(user.id);
+    const updated = await getUser(user.id, { includePasswordHash: true });
     expect(updated.name).toBe('Synced From Legacy');
     expect(updated.customData).toMatchObject({ legacySynced: true });
+    expect(updated.profile).toMatchObject({ nickname: 'legacy-synced-nick' });
+    // The legacy password was persisted as a fresh local credential.
+    expect(updated.passwordAlgorithm).toBe(UsersPasswordEncryptionMethod.Argon2i);
+    expect(updated.passwordDigest).toBeTruthy();
   });
 
   it('should store the migrated password with Argon2i and sign in locally once the hook is disabled', async () => {
