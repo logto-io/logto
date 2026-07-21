@@ -11,7 +11,7 @@ import {
   type User,
 } from '@logto/schemas';
 import { maskEmail, maskPhone } from '@logto/shared';
-import { conditional, conditionalString, trySafe } from '@silverhand/essentials';
+import { conditional, trySafe } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -707,7 +707,6 @@ export default class ExperienceInteraction {
   }
 
   private async triggerPostSignInInlineHook(userId: string) {
-    // Inline Hooks
     if (this.#interactionEvent !== InteractionEvent.SignIn || !EnvSet.values.isDevFeaturesEnabled) {
       return;
     }
@@ -722,7 +721,10 @@ export default class ExperienceInteraction {
         auditContext: {
           createLog: this.ctx.createLog,
           sessionId: this.ctx.interactionDetails.jti,
-          applicationId: conditionalString(this.ctx.interactionDetails.params.client_id),
+          applicationId: conditional(
+            typeof this.ctx.interactionDetails.params.client_id === 'string' &&
+              this.ctx.interactionDetails.params.client_id
+          ),
           userId,
         },
         getEvent: async (): Promise<PostSignInEvent> => ({
