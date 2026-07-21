@@ -1,3 +1,5 @@
+import { cond } from '@silverhand/essentials';
+
 import { EnvSet } from '#src/env-set/index.js';
 
 /**
@@ -22,8 +24,6 @@ const fetchWithoutSsrfDispatcher: typeof fetch = async (input, init) => {
  * upstream fetch hardening is inherited automatically. Only override it for the self-hosted opt-out.
  */
 export const getProviderFetchConfig = () =>
-  EnvSet.values.isOidcProviderSsrfProtectionEnabled
-    ? undefined
-    : { fetch: fetchWithoutSsrfDispatcher };
+  cond(!EnvSet.values.isOidcProviderSsrfProtectionEnabled && { fetch: fetchWithoutSsrfDispatcher });
 
 export default fetchWithoutSsrfDispatcher;
