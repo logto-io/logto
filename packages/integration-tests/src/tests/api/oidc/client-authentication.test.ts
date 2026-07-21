@@ -124,7 +124,7 @@ describe('client authentication', () => {
       400,
       {
         error: 'invalid_request',
-        error_description: 'mismatch in body and authorization client ids',
+        error_description: 'client_id mismatch',
       }
     );
   });

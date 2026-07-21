@@ -2,19 +2,32 @@
  * @overview This file implements the `token_exchange` grant type. The grant type is used to impersonate
  *
  * @see {@link https://github.com/logto-io/rfcs | Logto RFCs} for more information about RFC 0005.
+ *
+ * @remarks
+ * Unlike the `refresh_token` and `client_credentials` grants, this grant is Logto's own and has
+ * no upstream counterpart to stay in sync with. It still consumes the shared token-endpoint
+ * helpers from v9's `grant_common.js` through the `oidc-provider-internals.js` seam module, so
+ * the sender-constraining (mTLS and DPoP) behavior stays aligned with the forked grants.
  */
 
 import { buildOrganizationUrn } from '@logto/core-kit';
 import { GrantType } from '@logto/schemas';
 import { nanoid } from 'nanoid';
-import type { Provider } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 
 import { type EnvSet } from '#src/env-set/index.js';
 import { assertUserHasApplicationAccessForOidc } from '#src/oidc/application-access-control.js';
 import {
+  applyDpopBinding,
+  applyMtlsBinding,
+  checkDpopRequired,
+  checkMtlsCert,
+  createAccessToken,
+  dpopValidate,
   getProviderConfiguration,
+  type GrantTypeHandler,
   resolveResource,
+  validateAccount,
   validatePresence,
 } from '#src/oidc/oidc-provider-internals.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -26,7 +39,7 @@ import {
   isThirdPartyApplication,
   reversedResourceAccessTokenTtl,
 } from '../../resource.js';
-import { handleClientCertificate, handleDPoP, checkOrganizationAccess } from '../utils.js';
+import { checkOrganizationAccess } from '../utils.js';
 
 import { validateSubjectToken } from './account.js';
 import { handleActorToken } from './actor-token.js';
@@ -62,9 +75,9 @@ type Handler = (
   envSet: EnvSet,
   queries: Queries,
   applicationAccessControl: Libraries['applicationAccessControl']
-) => Parameters<Provider['registerGrantType']>[1];
+) => GrantTypeHandler;
 
-export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx, next) => {
+export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx) => {
   const { client, params, requestParamScopes, provider } = ctx.oidc;
   const { AccessToken, Grant } = provider;
 
@@ -76,9 +89,17 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx,
   validatePresence(ctx, ...requiredParameters);
 
   const {
-    features: { userinfo, resourceIndicators },
+    features: {
+      userinfo,
+      resourceIndicators,
+      mTLS: { getCertificate },
+      dPoP: { allowReplay },
+    },
     scopes: oidcScopes,
+    findAccount,
   } = getProviderConfiguration(provider);
+
+  const dPoP = await dpopValidate(ctx);
 
   const { userId, subjectTokenId } = await validateSubjectToken({
     queries,
@@ -91,11 +112,7 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx,
     },
   });
 
-  const account = await getProviderConfiguration(provider).findAccount(ctx, userId);
-
-  if (!account) {
-    throw new InvalidGrant('subject token invalid (referenced account not found)');
-  }
+  const account = await validateAccount(ctx, findAccount, { accountId: userId }, 'subject token');
 
   ctx.oidc.entity('Account', account);
 
@@ -118,23 +135,26 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx,
 
   const { organizationId } = await checkOrganizationAccess(ctx, queries, account, isThirdParty);
 
-  const accessToken = new AccessToken({
-    accountId: account.accountId,
-    clientId: client.clientId,
-    gty: GrantType.TokenExchange,
-    client,
-    grantId,
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    scope: undefined!,
-    extra: {
-      ...(subjectTokenId ? { subjectTokenId } : {}),
+  const accessToken = createAccessToken(
+    ctx,
+    AccessToken,
+    {
+      accountId: account.accountId,
+      grantId,
     },
-  });
+    GrantType.TokenExchange
+  );
+  accessToken.extra = {
+    ...(subjectTokenId ? { subjectTokenId } : {}),
+  };
 
-  await handleDPoP(ctx, accessToken);
-  await handleClientCertificate(ctx, accessToken);
+  await applyDpopBinding(ctx, dPoP, accessToken, allowReplay);
+  checkDpopRequired(ctx, dPoP);
 
-  /** The scopes requested by the client. If not provided, use the scopes from the refresh token. */
+  const cert = checkMtlsCert(ctx, getCertificate);
+  applyMtlsBinding(accessToken, cert);
+
+  /** The scopes requested by the client. */
   const scope = requestParamScopes;
   const resource = await resolveResource(
     ctx,
@@ -233,7 +253,5 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx,
     scope: accessToken.scope,
     token_type: accessToken.tokenType,
   };
-
-  await next();
 };
 /* eslint-enable @silverhand/fp/no-mutation, @typescript-eslint/no-unsafe-assignment */

@@ -23,7 +23,7 @@ const errorUris: Record<string, string> = Object.freeze({
  *
  * Note: A context-aware console log is required to be present in the context (i.e. `ctx.console`).
  *
- * @see {@link https://github.com/panva/node-oidc-provider/blob/37d0a6cfb3c618141a44cbb904ce45659438f821/lib/helpers/err_out.js | oidc-provider/lib/helpers/err_out.js}
+ * @see {@link https://github.com/panva/node-oidc-provider/blob/505be4aa147c763e6b9bc5acd645f618ad05f053/lib/helpers/err_out.js | oidc-provider/lib/helpers/err_out.js}
  */
 export const errorOut = ({
   expose,
@@ -78,7 +78,7 @@ const isSessionNotFound = (description?: string) =>
  *
  * @remarks
  * Currently, this is the only way we can check if the error is handled by the `oidc-provider`,
- * because it doesn't call renderError when the [request prefers JSON response](https://github.com/panva/node-oidc-provider/blob/37d0a6cfb3c618141a44cbb904ce45659438f821/lib/shared/error_handler.js#L48-L55).
+ * because it doesn't call renderError when the [request prefers JSON response](https://github.com/panva/node-oidc-provider/blob/505be4aa147c763e6b9bc5acd645f618ad05f053/lib/shared/error_handler.js#L43-L50).
  *
  * @see {@link errorUris} for the list of error URIs.
  */
@@ -96,7 +96,7 @@ export default function koaOidcErrorHandler<StateT, ContextT extends WithI18nCon
       }
 
       // Mimic oidc-provider's error handling, thus we can use the unified logic below.
-      // See https://github.com/panva/node-oidc-provider/blob/37d0a6cfb3c618141a44cbb904ce45659438f821/lib/shared/error_handler.js
+      // See https://github.com/panva/node-oidc-provider/blob/505be4aa147c763e6b9bc5acd645f618ad05f053/lib/shared/error_handler.js
       ctx.status = error.statusCode || 500;
       ctx.body = errorOut(error);
 

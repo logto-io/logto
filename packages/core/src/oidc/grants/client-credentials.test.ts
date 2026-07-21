@@ -7,20 +7,19 @@ import { MockTenant } from '#src/test-utils/tenant.js';
 const { jest } = import.meta;
 
 jest.unstable_mockModule('#src/oidc/oidc-provider-internals.js', () => ({
-  certificateThumbprint: jest.fn(),
+  applyDpopBinding: jest.fn(),
+  checkDpopRequired: jest.fn(),
+  checkMtlsCert: jest.fn(),
   checkResource: jest.fn(),
   dpopValidate: jest.fn(),
-  epochTime: jest.fn(),
   getProviderConfiguration: jest.fn().mockReturnValue({
     features: {
       mTLS: { getCertificate: jest.fn() },
+      dPoP: { allowReplay: false },
     },
     scopes: new Set(['foo', 'bar']),
   }),
 }));
-
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const noop = async () => {};
 
 const clientId = 'some_client_id';
 const requestScopes = ['foo', 'bar'];
@@ -89,7 +88,15 @@ const mockHandler = (tenant = new MockTenant()) => {
 describe('client credentials grant', () => {
   it('should throw an error if the client is not available', async () => {
     const ctx = createOidcContext({ ...validOidcContext, client: undefined });
-    await expect(mockHandler()(ctx, noop)).rejects.toThrow(errors.InvalidClient);
+    await expect(mockHandler()(ctx)).rejects.toThrow(errors.InvalidClient);
+  });
+
+  it('should throw an error if authorization_details is provided', async () => {
+    const ctx = createOidcContext({
+      ...validOidcContext,
+      params: { ...validOidcContext.params, authorization_details: [{ type: 'foo' }] },
+    });
+    await expect(mockHandler()(ctx)).rejects.toThrow(errors.InvalidRequest);
   });
 
   it('should throw an error if the requested scope is not allowed', async () => {
@@ -109,7 +116,7 @@ describe('client credentials grant', () => {
             },
           },
         })
-      )(ctx, noop)
+      )(ctx)
     ).rejects.toThrow(errors.InvalidScope);
   });
 
@@ -127,7 +134,7 @@ describe('client credentials grant', () => {
             },
           },
         })
-      )(ctx, noop)
+      )(ctx)
     ).rejects.toThrow(errors.AccessDenied);
   });
 
@@ -147,7 +154,7 @@ describe('client credentials grant', () => {
             },
           },
         })
-      )(ctx, noop)
+      )(ctx)
     ).resolves.toBeUndefined();
 
     expect(isKeyInObject(ctx.body, 'scope') && ctx.body.scope).toBe('foo');

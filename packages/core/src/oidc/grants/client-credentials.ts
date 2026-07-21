@@ -9,28 +9,55 @@
  * `=== End RFC 0006 ===` to indicate the changes.
  *
  * @see {@link https://github.com/logto-io/rfcs | Logto RFCs} for more information about RFC 0006.
- * @see {@link https://github.com/panva/node-oidc-provider/blob/0c52469f08b0a4a1854d90a96546a3f7aa090e5e/lib/actions/grants/client_credentials.js | Original file}.
+ * @see {@link https://github.com/logto-io/node-oidc-provider/blob/7722ac95d77cd62a41528aec4eb711b3d12589d4/lib/actions/grants/client_credentials.js | Original file}.
  *
  * @remarks
  * Since the original code is not exported, we have to copy the code here. This file should be
  * treated as a fork of the original file, which means, we should keep the code in sync with the
  * original file as much as possible.
  *
- * The commit hash of the original file is `0c52469f08b0a4a1854d90a96546a3f7aa090e5e`.
+ * The original file is from the fork's `v9` branch at commit
+ * `7722ac95d77cd62a41528aec4eb711b3d12589d4`, where it differs from the upstream v9.9.1 tag only
+ * by the fork's scope-always-present patch in the token response. Its shared helpers
+ * (`grant_common.js`) are consumed through the `oidc-provider-internals.js` seam module.
+ *
+ * Deliberate deviations from the original file:
+ *
+ * - The `ctx.oidc.resourceServers` destructure is hoisted above the scope validation so the
+ *   RFC 0006 guard (`` both `resource` and `organization_id` are not provided ``) rejects the
+ *   request before a token instance is created; the original file reads it after creating the
+ *   token.
  */
 
+import { type X509Certificate } from 'node:crypto';
+
 import { cond } from '@silverhand/essentials';
-import type { Provider } from 'oidc-provider';
-import { errors } from 'oidc-provider';
+import { errors, type Provider } from 'oidc-provider';
 
 import { type EnvSet } from '#src/env-set/index.js';
-import { checkResource, getProviderConfiguration } from '#src/oidc/oidc-provider-internals.js';
+import {
+  applyDpopBinding,
+  checkDpopRequired,
+  checkMtlsCert,
+  checkResource,
+  dpopValidate,
+  getProviderConfiguration,
+  type GrantTypeHandler,
+} from '#src/oidc/oidc-provider-internals.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { handleClientCertificate, handleDPoP, handleOrganizationToken } from './utils.js';
+import { handleOrganizationToken } from './utils.js';
 
-const { AccessDenied, InvalidClient, InvalidGrant, InvalidScope, InvalidTarget } = errors;
+const { AccessDenied, InvalidClient, InvalidRequest, InvalidScope, InvalidTarget } = errors;
+
+/**
+ * The `ClientCredentials` instance widened with the `setThumbprint` model mixin missing from
+ * `@types/oidc-provider`.
+ */
+type WidenedClientCredentials = InstanceType<Provider['ClientCredentials']> & {
+  setThumbprint(name: 'jkt' | 'x5t', input: string | X509Certificate): void;
+};
 
 /**
  * The valid parameters for the `client_credentials` grant type. Note the `resource` parameter is
@@ -45,7 +72,7 @@ export const buildHandler: (
   envSet: EnvSet,
   queries: Queries
   // eslint-disable-next-line complexity
-) => Parameters<Provider['registerGrantType']>[1] = (envSet, queries) => async (ctx, next) => {
+) => GrantTypeHandler = (envSet, queries) => async (ctx) => {
   const { client, params } = ctx.oidc;
   const { ClientCredentials } = ctx.oidc.provider;
 
@@ -54,9 +81,16 @@ export const buildHandler: (
   const {
     features: {
       mTLS: { getCertificate },
+      dPoP: { allowReplay },
     },
     scopes: statics,
   } = getProviderConfiguration(ctx.oidc.provider);
+
+  const dPoP = await dpopValidate(ctx);
+
+  if (params?.authorization_details) {
+    throw new InvalidRequest('authorization_details is unsupported for this grant_type');
+  }
 
   /* === RFC 0006 === */
   // The value type is `unknown`, which will swallow other type inferences. So we have to cast it
@@ -91,9 +125,7 @@ export const buildHandler: (
     throw new InvalidTarget('both `resource` and `organization_id` are not provided');
   }
 
-  const scopes = ctx.oidc.params?.scope
-    ? [...new Set(String(ctx.oidc.params.scope).split(' '))]
-    : [];
+  const scopes = params?.scope ? [...new Set(String(params.scope).split(' '))] : [];
 
   if (client.scope) {
     const allowList = new Set(client.scope.split(' '));
@@ -105,10 +137,11 @@ export const buildHandler: (
     }
   }
 
+  // eslint-disable-next-line no-restricted-syntax -- widen with the model mixin missing from the typings, see `WidenedClientCredentials`
   const token = new ClientCredentials({
     client,
     scope: scopes.join(' ') || undefined!,
-  });
+  }) as WidenedClientCredentials;
 
   if (resourceServer) {
     if (length !== 1) {
@@ -140,19 +173,13 @@ export const buildHandler: (
     /* === End RFC 0006 === */
   }
 
-  if (client.tlsClientCertificateBoundAccessTokens) {
-    const cert = getCertificate(ctx);
-
-    if (!cert) {
-      throw new InvalidGrant('mutual TLS client certificate not provided');
-    }
-    // @ts-expect-error -- code from oidc-provider
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  const cert = checkMtlsCert(ctx, getCertificate);
+  if (cert) {
     token.setThumbprint('x5t', cert);
   }
 
-  await handleDPoP(ctx, token);
-  await handleClientCertificate(ctx, token);
+  await applyDpopBinding(ctx, dPoP, token, allowReplay);
+  checkDpopRequired(ctx, dPoP);
 
   ctx.oidc.entity('ClientCredentials', token);
   const value = await token.save();
@@ -161,9 +188,13 @@ export const buildHandler: (
     access_token: value,
     expires_in: token.expiration,
     token_type: token.tokenType,
+    /**
+     * LOGTO PATCH(scope-always-present): always echo the token's scope in the token response.
+     * Upstream drops falsy scopes, but Logto clients rely on `scope` being present.
+     *
+     * Upstream: scope: token.scope || undefined,
+     */
     scope: token.scope,
   };
-
-  await next();
 };
 /* eslint-enable @silverhand/fp/no-mutation, @typescript-eslint/no-non-null-assertion */
