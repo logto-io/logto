@@ -217,7 +217,20 @@ export class InlineHookLibrary {
    * Cloud always executes remotely; OSS / self-hosted always uses the local VM.
    * Cloud remote failures must never fall back to the local VM.
    */
-  async executeScript(payload: InlineHookExecutionRequestBody): Promise<unknown> {
+  async executeScript({
+    script,
+    hookType,
+    event,
+    environmentVariables,
+  }: {
+    script: string;
+    hookType: LogtoInlineHookKey;
+    // Production events are typed domain objects; dry-run uses JSON via the guard.
+    event: unknown;
+    environmentVariables?: Record<string, string>;
+  }): Promise<unknown> {
+    const payload = { script, hookType, event, environmentVariables };
+
     if (EnvSet.values.isCloud) {
       return this.runScriptRemotely(payload);
     }
@@ -229,7 +242,17 @@ export class InlineHookLibrary {
    * For Logto Cloud use only. Run the inline hook script remotely in an isolated environment.
    * For OSS version, use @see InlineHookLibrary.runScriptInLocalVm instead.
    */
-  async runScriptRemotely(payload: InlineHookExecutionRequestBody): Promise<unknown> {
+  async runScriptRemotely({
+    script,
+    hookType,
+    event,
+    environmentVariables,
+  }: {
+    script: string;
+    hookType: LogtoInlineHookKey;
+    event: unknown;
+    environmentVariables?: Record<string, string>;
+  }): Promise<unknown> {
     const { azureFunctionUntrustedAppKey, azureFunctionUntrustedAppEndpoint } = EnvSet.values;
 
     if (!this.isRegionalAzureFunctionAppConfigured) {
@@ -242,7 +265,12 @@ export class InlineHookLibrary {
     try {
       return await got
         .post(new URL('/api/inline-hooks', azureFunctionUntrustedAppEndpoint), {
-          json: payload,
+          json: {
+            script,
+            hookType,
+            event,
+            environmentVariables,
+          },
           headers: {
             'x-functions-key': azureFunctionUntrustedAppKey,
           },

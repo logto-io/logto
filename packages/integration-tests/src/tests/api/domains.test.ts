@@ -9,7 +9,7 @@ import {
   getDomainVerificationFiles,
   updateDomainVerificationFiles,
 } from '#src/api/domain.js';
-import { devFeatureTest, generateDomain } from '#src/utils.js';
+import { generateDomain } from '#src/utils.js';
 
 describe('domains', () => {
   afterEach(async () => {
@@ -69,7 +69,7 @@ describe('domains', () => {
     expect(response instanceof HTTPError && response.response.status).toBe(404);
   });
 
-  devFeatureTest.describe('domain verification files', () => {
+  describe('domain verification files', () => {
     it('should get, update, and delete domain verification files', async () => {
       const domain = await createDomain();
       const verificationFiles = [

@@ -1,7 +1,7 @@
 import {
   LogtoInlineHookKey,
   inlineHookGuard,
-  inlineHookTestRequestBodyGuard,
+  inlineHookExecutionRequestBodyGuard,
   jsonGuard,
 } from '@logto/schemas';
 import { ResponseError } from '@withtyped/client';
@@ -65,7 +65,7 @@ export default function logtoConfigInlineHookRoutes<T extends ManagementApiRoute
   router.post(
     '/configs/inline-hooks/test',
     koaGuard({
-      body: inlineHookTestRequestBodyGuard,
+      body: inlineHookExecutionRequestBodyGuard,
       response: jsonGuard.optional(),
       status: [200, 400, 403, 422],
     }),

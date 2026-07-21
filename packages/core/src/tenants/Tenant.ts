@@ -172,9 +172,8 @@ export default class Tenant implements TenantContext {
     // Mount APIs
     app.use(mount('/api', initApis(tenantContext)));
 
-    // Custom domain verification files. Keep this response mapper behind the development feature
-    // flag until the feature is ready for release.
-    if (EnvSet.values.isDevFeaturesEnabled && this.customDomain) {
+    // Serve custom domain verification files when the request is on a custom domain.
+    if (this.customDomain) {
       app.use(koaServeDomainVerificationFiles(this.customDomain, queries));
     }
 

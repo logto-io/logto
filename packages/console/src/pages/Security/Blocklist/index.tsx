@@ -1,4 +1,4 @@
-import { type SignInExperience, type EmailBlocklistPolicy } from '@logto/schemas';
+import { type SignInExperience } from '@logto/schemas';
 import { useMemo } from 'react';
 import useSWR from 'swr';
 
@@ -9,34 +9,19 @@ import { type RequestError } from '@/hooks/use-api';
 
 import BlocklistForm from './BlocklistForm';
 import styles from './index.module.scss';
-
-const defaultBlockListPolicy: EmailBlocklistPolicy = {
-  blockDisposableAddresses: false,
-  blockSubaddressing: false,
-  customBlocklist: [],
-};
+import { buildEmailBlocklistPolicyFormData, type EmailBlocklistPolicyFormData } from './utils';
 
 const useDataFetch = () => {
   const { data, error, isLoading, mutate } = useSWR<SignInExperience, RequestError>(
     'api/sign-in-exp'
   );
 
-  const formData = useMemo<EmailBlocklistPolicy | undefined>(() => {
+  const formData = useMemo<EmailBlocklistPolicyFormData | undefined>(() => {
     if (!data) {
       return;
     }
 
-    const { emailBlocklistPolicy } = data;
-
-    /**
-     * Since all properties in the {@link EmailBlocklistPolicy} are optional, we need to
-     * provide default values for any missing properties in the response.
-     * This ensures consistency in the form data and prevents unexpected discrepancies.
-     */
-    return {
-      ...defaultBlockListPolicy,
-      ...emailBlocklistPolicy,
-    };
+    return buildEmailBlocklistPolicyFormData(data);
   }, [data]);
 
   return {
@@ -53,7 +38,7 @@ function Blocklist() {
   return (
     <div className={styles.content}>
       <PageMeta titleKey={['security.tabs.blocklist', 'security.page_title']} />
-      {isLoading && <FormCardSkeleton formFieldCount={2} />}
+      {isLoading && <FormCardSkeleton formFieldCount={4} />}
       {error && <RequestDataError error={error} onRetry={mutate} />}
       {formData && <BlocklistForm formData={formData} />}
     </div>

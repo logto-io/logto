@@ -551,6 +551,8 @@ describe('InlineHookLibrary', () => {
         getEvent,
       })
     ).resolves.toBeUndefined();
+
+    expect(getEvent).not.toHaveBeenCalled();
     expect(executeScript).not.toHaveBeenCalled();
     expect(runScriptInLocalVm).not.toHaveBeenCalled();
     expect(runScriptRemotely).not.toHaveBeenCalled();
@@ -693,6 +695,42 @@ describe('InlineHookLibrary', () => {
       outcome: 'executionError',
       action: 'noop',
     });
+  });
+
+  it('removes remote request details from tracked execution errors', async () => {
+    const functionKey = 'function-key';
+    class RemoteRequestError extends Error {
+      readonly request = {
+        options: {
+          headers: { 'x-functions-key': functionKey },
+        },
+      };
+    }
+
+    const transportError = new RemoteRequestError('Remote runner timed out');
+    const trackException = jest.spyOn(appInsights, 'trackException').mockResolvedValue();
+    jest.spyOn(library, 'executeScript').mockRejectedValueOnce(transportError);
+    getInlineHook.mockResolvedValueOnce({
+      enabled: true,
+      onExecutionError: 'allow',
+      script: '',
+    });
+
+    await expect(
+      runHook({
+        key: LogtoInlineHookKey.PostSignIn,
+        event: {},
+      })
+    ).resolves.toBeUndefined();
+
+    const trackedError = trackException.mock.calls[0]?.[0];
+    expect(trackedError).toBeInstanceOf(Error);
+    expect(trackedError).not.toBe(transportError);
+    expect(trackedError).toMatchObject({
+      message: 'Remote runner timed out',
+    });
+    expect(Object.hasOwn(trackedError as Error, 'request')).toBe(false);
+    expect(JSON.stringify(trackedError)).not.toContain(functionKey);
   });
 
   it('blocks PostSignIn execution errors with the owning flow failure by default', async () => {

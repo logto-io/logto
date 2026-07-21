@@ -1,7 +1,7 @@
 import {
   LogtoInlineHookKey,
   type InlineHook,
-  type InlineHookTestRequestBody,
+  type InlineHookExecutionRequestBody,
 } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 import { pick } from '@silverhand/essentials';
@@ -36,7 +36,7 @@ const createResponseError = (status: number, body: Record<string, unknown>) =>
     })
   );
 
-const inlineHookTestPayload: InlineHookTestRequestBody = {
+const inlineHookTestPayload: InlineHookExecutionRequestBody = {
   hookType: LogtoInlineHookKey.PostSignIn,
   script: `
     const runInlineHook = () => ({ action: 'continue' });
@@ -205,7 +205,7 @@ describe('configs inline hook routes', () => {
   });
 
   it('POST /configs/inline-hooks/test should run an inline hook script successfully', async () => {
-    const payload: InlineHookTestRequestBody = {
+    const payload: InlineHookExecutionRequestBody = {
       hookType: LogtoInlineHookKey.PostSignIn,
       script: `
         const runInlineHook = ({ event, environmentVariables }) => ({
@@ -246,7 +246,7 @@ describe('configs inline hook routes', () => {
   });
 
   it('POST /configs/inline-hooks/test should map general execution errors to 422', async () => {
-    const payload: InlineHookTestRequestBody = {
+    const payload: InlineHookExecutionRequestBody = {
       hookType: LogtoInlineHookKey.PostSignIn,
       script: `
         const runInlineHook = () => {
@@ -267,7 +267,7 @@ describe('configs inline hook routes', () => {
     const script = 'const privateInlineHookScript = true;';
     const environmentSecret = 'environment-secret-value';
     const password = 'plain-text-password';
-    const payload: InlineHookTestRequestBody = {
+    const payload: InlineHookExecutionRequestBody = {
       hookType: LogtoInlineHookKey.PostFirstFactorVerification,
       script,
       environmentVariables: {
@@ -358,6 +358,23 @@ describe('configs inline hook routes', () => {
     expect(response.body.code).toEqual('inline_hook.general');
     expect(response.body.data).toEqual({
       message: "Timeout awaiting 'request' for 5000ms",
+    });
+    expect(response.text).not.toContain('Bearer secret');
+  });
+
+  it('POST /configs/inline-hooks/test should preserve non-Error transport failure details', async () => {
+    jest
+      .spyOn(tenantContext.libraries.inlineHooks, 'executeScript')
+      .mockRejectedValueOnce('Socket closed');
+
+    const response = await routeRequesterWithErrorHandler
+      .post('/configs/inline-hooks/test')
+      .send(inlineHookTestPayload);
+
+    expect(response.status).toEqual(422);
+    expect(response.body.code).toEqual('inline_hook.general');
+    expect(response.body.data).toEqual({
+      message: 'Socket closed',
     });
   });
 

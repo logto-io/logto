@@ -132,7 +132,8 @@ export const validateEmailAgainstBlocklistPolicy = async (
   emailBlocklistPolicy: EmailBlocklistPolicy,
   email: string
 ) => {
-  const { customBlocklist, blockDisposableAddresses, blockSubaddressing } = emailBlocklistPolicy;
+  const { customAllowlist, customBlocklist, blockDisposableAddresses, blockSubaddressing } =
+    emailBlocklistPolicy;
   const domain = email.split('@')[1];
 
   assertThat(domain, new RequestError('session.email_blocklist.invalid_email'));
@@ -148,6 +149,22 @@ export const validateEmailAgainstBlocklistPolicy = async (
       new RequestError({
         code: 'session.email_blocklist.email_subaddressing_not_allowed',
         status: 422,
+      })
+    );
+  }
+
+  // Guard custom email allowlist if provided.
+  if (EnvSet.values.isDevFeaturesEnabled && customAllowlist && customAllowlist.length > 0) {
+    const isCustomAllowlisted = customAllowlist.some((item) =>
+      matchesEmailBlocklistItem(item, email)
+    );
+
+    assertThat(
+      isCustomAllowlisted,
+      new RequestError({
+        code: 'session.email_blocklist.email_not_allowed',
+        status: 422,
+        email,
       })
     );
   }
