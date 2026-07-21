@@ -43,7 +43,7 @@ Key differences:
 
 - **Domestic numbers only**: Currently only supports mobile numbers from China Mobile, China Unicom, and China Telecom (mainland China)
 - **No international support**: Does NOT support Taiwan, Hong Kong, Macau, or overseas regions
-- **No custom signatures**: As of November 12, 2025, Aliyun announced that "Due to carrier signature real-name policy control requirements, all authentication methods that use SMS verification codes under the Number Authentication product will not support using custom signatures to send SMS, specific recovery time will be notified separately."
+- **No custom signatures**: As of November 12, 2025, Aliyun announced that "Due to carrier signature real-name policy control requirements, all authentication methods that use SMS verification codes under the Number Authentication product will not support using custom signatures to send SMS, specific recovery time will be notified separately." In addition, Aliyun may occasionally rotate the provided signatures, so please pay attention to signature update emails and SMS notifications to update in time.
 
 If you need to send SMS to international numbers or regions outside mainland China, please use the [Aliyun Short Message Service connector](../connector-aliyun-sms/) instead.
 
@@ -57,12 +57,7 @@ If you need to send SMS to international numbers or regions outside mainland Chi
 ## Compose the connector JSON
 
 1. Fill out the `accessKeyId` and `accessKeySecret` with your AccessKey pair.
-2. Select a `signName` from the system-provided options:
-   - 云渚科技验证平台
-   - 云渚科技验证服务
-   - 速通互联验证码
-   - 速通互联验证平台
-   - 速通互联验证服务
+2. Enter a `signName` — copy one of the current gift signatures from your Aliyun console (号码认证 → 短信认证参数配置 → 赠送签名配置).
 3. Configure templates using system-provided template codes:
 
 | UsageType | Template Code | Description |
@@ -84,7 +79,7 @@ Example configuration:
 {
   "accessKeyId": "your-access-key-id",
   "accessKeySecret": "your-access-key-secret",
-  "signName": "速通互联验证码",
+  "signName": "<your-gift-signature>",
   "templates": [
     { "usageType": "SignIn", "templateCode": "100001" },
     { "usageType": "Register", "templateCode": "100001" },
@@ -105,7 +100,7 @@ Example configuration:
 |------|------|-------------|
 | accessKeyId | string | Aliyun Access Key ID |
 | accessKeySecret | string | Aliyun Access Key Secret |
-| signName | enum | Signature name |
+| signName | string | Signature name |
 | templates | Template[] | Array of template configurations |
 
 ## References
@@ -138,7 +133,7 @@ Example configuration:
 
 - **仅限中国大陆手机号**：目前仅支持中国移动、中国联通和中国电信的手机号码（中国大陆）
 - **不支持国际及港澳台**：不支持中国台湾、中国香港、中国澳门及海外地区使用
-- **不支持自定义签名**：自2025年11月12日起，阿里云发布[公告](https://help.aliyun.com/zh/pnvs/product-overview/sms-service-does-not-support-custom-signatures)称"因运营商签名实名制政策管控要求，即日起号码认证产品下所有使用短信验证码触达的认证方式，均不支持使用自定义签名下发短信，具体恢复时间另行通知。"
+- **不支持自定义签名**：自2025年11月12日起，阿里云发布[公告](https://help.aliyun.com/zh/pnvs/product-overview/sms-service-does-not-support-custom-signatures)称"因运营商签名实名制政策管控要求，即日起号码认证产品下所有使用短信验证码触达的认证方式，均不支持使用自定义签名下发短信，具体恢复时间另行通知"。此外阿里云可能会不定期轮换赠送签名，请留意签名更新的邮件和短信提醒，及时更新。
 
 > 如果您需要向国际号码或中国大陆以外的地区发送短信，请改用[阿里云短信服务连接器](../connector-aliyun-sms/)。
 
@@ -152,12 +147,7 @@ Example configuration:
 ## 编写连接器的 JSON
 
 1. 填写 `accessKeyId` 和 `accessKeySecret` 为你的 AccessKey 密钥对。
-2. 从系统赠送签名中选择一个填入 `signName`：
-   - 云渚科技验证平台
-   - 云渚科技验证服务
-   - 速通互联验证码
-   - 速通互联验证平台
-   - 速通互联验证服务
+2. 填入 `signName` —— 请从阿里云控制台（号码认证 → 短信认证参数配置 → 赠送签名配置）复制一个当前赠送的签名。
 3. 使用系统赠送模板代码配置模板：
 
 | UsageType | 模板 CODE | 说明 |
@@ -179,7 +169,7 @@ Example configuration:
 {
   "accessKeyId": "your-access-key-id",
   "accessKeySecret": "your-access-key-secret",
-  "signName": "速通互联验证码",
+  "signName": "<your-gift-signature>",
   "templates": [
     { "usageType": "SignIn", "templateCode": "100001" },
     { "usageType": "Register", "templateCode": "100001" },
@@ -200,7 +190,7 @@ Example configuration:
 |------|------|-------------|
 | accessKeyId | string | 阿里云 Access Key ID |
 | accessKeySecret | string | 阿里云 Access Key Secret |
-| signName | enum | 签名名称 |
+| signName | string | 签名名称 |
 | templates | Template[] | 模板配置数组 |
 
 ## 参考
