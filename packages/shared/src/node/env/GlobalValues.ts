@@ -149,6 +149,16 @@ export default class GlobalValues {
   /** If the env explicitly indicates it's in the cloud environment. */
   public readonly isCloud = yes(getEnv('IS_CLOUD'));
 
+  /**
+   * Whether oidc-provider protects outbound requests against SSRF.
+   *
+   * Protection is enabled by default and can only be disabled in self-hosted deployments. Features
+   * that resolve unregistered remote clients, such as CIMD, must only be enabled while this is true.
+   */
+  public readonly isOidcProviderSsrfProtectionEnabled =
+    this.isCloud ||
+    getEnv('OIDC_PROVIDER_SSRF_PROTECTION_ENABLED', 'true').trim().toLowerCase() !== 'false';
+
   /** Enables protected app local development without Cloud-only behavior. */
   public readonly isProtectedAppLocalDevEnabled =
     !this.isProduction && yes(getEnv('PROTECTED_APP_LOCAL_DEV'));

@@ -1,6 +1,50 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { parseNonNegativeIntegerEnv, parseTimeoutEnv } from './GlobalValues.js';
+import GlobalValues, { parseNonNegativeIntegerEnv, parseTimeoutEnv } from './GlobalValues.js';
+
+const createGlobalValues = () => {
+  vi.stubEnv('DB_URL', 'postgres://postgres:password@localhost:5432/logto');
+  return new GlobalValues();
+};
+
+const unsetEnvironmentVariable = (key: string) => {
+  vi.stubEnv(key, '');
+  Reflect.deleteProperty(process.env, key);
+};
+
+describe('OIDC provider SSRF protection', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it('is enabled by default in self-hosted deployments', () => {
+    unsetEnvironmentVariable('IS_CLOUD');
+    unsetEnvironmentVariable('OIDC_PROVIDER_SSRF_PROTECTION_ENABLED');
+
+    expect(createGlobalValues().isOidcProviderSsrfProtectionEnabled).toBe(true);
+  });
+
+  it('can be disabled in self-hosted deployments', () => {
+    unsetEnvironmentVariable('IS_CLOUD');
+    vi.stubEnv('OIDC_PROVIDER_SSRF_PROTECTION_ENABLED', 'false');
+
+    expect(createGlobalValues().isOidcProviderSsrfProtectionEnabled).toBe(false);
+  });
+
+  it.each(['', 'flase'])('stays enabled for an invalid value: %s', (value) => {
+    unsetEnvironmentVariable('IS_CLOUD');
+    vi.stubEnv('OIDC_PROVIDER_SSRF_PROTECTION_ENABLED', value);
+
+    expect(createGlobalValues().isOidcProviderSsrfProtectionEnabled).toBe(true);
+  });
+
+  it('stays enabled in Cloud when the environment variable is false', () => {
+    vi.stubEnv('IS_CLOUD', 'true');
+    vi.stubEnv('OIDC_PROVIDER_SSRF_PROTECTION_ENABLED', 'false');
+
+    expect(createGlobalValues().isOidcProviderSsrfProtectionEnabled).toBe(true);
+  });
+});
 
 describe('parseTimeoutEnv', () => {
   it('returns undefined for missing, blank, or invalid values', () => {
