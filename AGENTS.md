@@ -34,9 +34,9 @@ When asked to remove `isDevFeaturesEnabled`, treat the request as scoped to one 
 
 When adding `isDevFeaturesEnabled` for a new feature, include a comment that identifies the guarded feature at a high level. Prefer naming the broader feature area rather than a narrow implementation detail so the guard can be found and removed together when the feature is released.
 
-## API contract
-
 Keep public API changes backward-compatible. Do not rename existing fields, remove accepted inputs, or change released error semantics without an explicit product decision.
+
+When adding or changing API behavior, update the corresponding OpenAPI document in the same PR. For an in-development API, use `tags: ["Dev feature"]` to guard an entire operation, or set `x-logto-dev-feature: true` on an individual schema property. These markers keep in-development API surfaces out of public OpenAPI output when dev features are disabled.
 
 ## Localization
 
