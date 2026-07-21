@@ -12,13 +12,11 @@ When creating PRs:
 
 ## Changesets
 
-Changesets and `isDevFeaturesEnabled` should not appear together for the same change. If a feature is protected by `isDevFeaturesEnabled`, it is not released yet; add the changeset when removing the feature flag.
+Changesets and `isDevFeaturesEnabled` should not appear together for the same change. If a feature is split across multiple PRs, keep intermediate PRs behind `isDevFeaturesEnabled` without changesets; when releasing it, remove only that feature's guard and add its changeset.
 
 Unless explicitly requested otherwise, prefer `isDevFeaturesEnabled` over a changeset. New features should be protected by `isDevFeaturesEnabled` by default, unless the affected code is already inside an `isDevFeaturesEnabled` guard.
 
 Standalone bug fixes do not need `isDevFeaturesEnabled`, but bug-fix PRs should include a changeset when the fix affects released behavior.
-
-For larger features split across multiple PRs, keep the implementation PRs behind `isDevFeaturesEnabled` and do not add intermediate changesets. Use a dedicated release PR to remove only the dev feature guard logic introduced for that feature, and add the feature-specific changeset in that release PR.
 
 When adding a `.changeset` entry, prefer running `pnpm changeset` from the repository root.
 
@@ -36,21 +34,15 @@ When asked to remove `isDevFeaturesEnabled`, treat the request as scoped to one 
 
 When adding `isDevFeaturesEnabled` for a new feature, include a comment that identifies the guarded feature at a high level. Prefer naming the broader feature area rather than a narrow implementation detail so the guard can be found and removed together when the feature is released.
 
-Any runtime logic for a new feature must be protected by `isDevFeaturesEnabled` until the feature is released. This includes backend enforcement paths, API behavior, UI entry points, and tests that exercise in-development behavior.
-
 ## API contract
 
 Keep public API changes backward-compatible. Do not rename existing fields, remove accepted inputs, or change released error semantics without an explicit product decision.
-
-When adding or changing API behavior, update the corresponding OpenAPI document in the same PR. If the API is protected by `isDevFeaturesEnabled`, the OpenAPI document must also be guarded so the in-development API does not leak into public OpenAPI output before release. Use the existing `Dev Feature` tag or `x-logto-dev-feature` property as appropriate for that OpenAPI file.
 
 ## Localization
 
 When changing copy under `packages/phrases`, sync and translate the corresponding entries for the other locale files in the same PR unless the change is intentionally source-locale only.
 
 ## Lint and TypeScript Suppressions
-
-Prefer narrow suppressions over broad disables. Avoid file-level `eslint-disable` unless there is a strong reason and no narrower option is practical.
 
 Every `eslint-disable` and `@ts-expect-error` must include a short reason explaining why the suppression is safe or necessary.
 
