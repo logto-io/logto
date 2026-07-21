@@ -5,4 +5,6 @@
 
 strengthen OIDC provider outbound request security with SSRF protection enabled by default
 
+## Action required
+
 Self-hosted deployments that need to reach trusted relying-party endpoints on private networks must set `OIDC_PROVIDER_SSRF_PROTECTION_DISABLED=true` before starting Logto; otherwise, leave the variable unset.
