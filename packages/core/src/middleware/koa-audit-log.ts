@@ -9,118 +9,28 @@ import { UAParser } from 'ua-parser-js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import { getInjectedHeaderValues } from '#src/utils/injected-header-mapping.js';
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === 'object' && value !== null && !Array.isArray(value);
-const isArray = (value: unknown): value is unknown[] => Array.isArray(value);
-
-const maskedValue = '******';
-const safeSensitiveDataKeys = new Set(['passwordverified', 'haspassword']);
-const exactSensitiveDataKeys = new Set(['authorization', 'xfunctionskey', 'token']);
-const sensitiveDataKeyFragments = [
-  'secret',
-  'password',
-  'apikey',
-  'privatekey',
-  'credential',
-  'cookie',
-];
-
-const normalizeKey = (key: string) => key.replaceAll(/[_-]/g, '').toLowerCase();
-
-const shouldOmitKey = (key: string) => {
-  const normalizedKey = normalizeKey(key);
-
-  return (
-    normalizedKey.startsWith('script') ||
-    normalizedKey.endsWith('script') ||
-    normalizedKey.includes('environmentvariables')
-  );
-};
-
-const isSensitiveKey = (key: string, value: unknown) => {
-  const normalizedKey = normalizeKey(key);
-  const isSafePasswordStatus =
-    safeSensitiveDataKeys.has(normalizedKey) && typeof value === 'boolean';
-  const isSafeApplicationSecretMetadata =
-    normalizedKey === 'applicationsecret' &&
-    isRecord(value) &&
-    Object.keys(value).length === 1 &&
-    typeof value.name === 'string';
-
-  return (
-    !isSafePasswordStatus &&
-    !isSafeApplicationSecretMetadata &&
-    (exactSensitiveDataKeys.has(normalizedKey) ||
-      normalizedKey.endsWith('token') ||
-      sensitiveDataKeyFragments.some((fragment) => normalizedKey.includes(fragment)))
-  );
-};
-
-const sanitiseRecord = (value: Record<string, unknown>) =>
-  Object.fromEntries(
-    Object.entries(value).flatMap(([key, element]) => {
-      if (shouldOmitKey(key)) {
-        return [];
-      }
-
-      return [[key, isSensitiveKey(key, element) ? maskedValue : sanitise(element)]];
-    })
-  );
-
-const sanitise = (value: unknown): unknown => {
-  if (isArray(value)) {
-    return value.map((element) => sanitise(element));
-  }
-
-  if (isRecord(value)) {
-    return sanitiseRecord(value);
-  }
-
-  return value;
-};
-
-/**
- * Recursively strip null characters (U+0000) from every string in the value. PostgreSQL rejects
- * null bytes in `jsonb` (error code `22P05`), so leaving them in would make `insertLog` throw. Since
- * logs are inserted in a `finally` block, that throw would replace the original response with a 500.
- */
-const nullCharacter = String.fromCodePoint(0);
-
-const stripFromString = (value: string): string =>
-  value.includes(nullCharacter) ? value.replaceAll(nullCharacter, '') : value;
-
-function stripNullCharacters(value: string): string;
-function stripNullCharacters(value: unknown[]): unknown[];
-function stripNullCharacters(value: Record<string, unknown>): Record<string, unknown>;
-function stripNullCharacters(value: unknown): unknown;
-function stripNullCharacters(value: unknown): unknown {
-  if (typeof value === 'string') {
-    return stripFromString(value);
-  }
-
-  if (isArray(value)) {
-    return value.map((element) => stripNullCharacters(element));
-  }
-
-  if (isRecord(value)) {
-    // Strip from keys as well: PostgreSQL rejects null bytes anywhere in `jsonb`, keys included.
-    return Object.fromEntries(
-      Object.entries(value).map(([key, element]) => [
-        stripFromString(key),
-        stripNullCharacters(element),
-      ])
-    );
-  }
-
-  return value;
-}
-
-const filterSensitiveData = (data: Record<string, unknown>): Record<string, unknown> =>
-  sanitiseRecord(data);
+import {
+  isRecord,
+  sanitizeSensitiveDataRecord,
+  stripNullCharactersFromString,
+} from '#src/utils/sensitive-data.js';
 
 const removeUndefinedKeys = (object: Record<string, unknown>) =>
   Object.fromEntries(Object.entries(object).filter(([, value]) => value !== undefined));
+
+/**
+ * Reapply reserved fields after canonicalizing catch-all keys, so inputs such as `\0key` cannot
+ * collide with the fields that define the log entry.
+ */
+const sanitizeLogContextPayload = ({
+  key,
+  result,
+  ...payload
+}: LogContextPayload): LogContextPayload => ({
+  ...sanitizeSensitiveDataRecord(payload),
+  key: stripNullCharactersFromString(key),
+  result,
+});
 
 export class LogEntry {
   payload: LogContextPayload;
@@ -137,22 +47,18 @@ export class LogEntry {
 
   /** Update payload by spreading `data` first, then spreading `this.payload`. */
   prepend(data: Readonly<LogPayload>) {
-    this.payload = {
+    this.payload = sanitizeLogContextPayload({
       ...removeUndefinedKeys(data),
       ...this.payload,
-    };
+    });
   }
 
   /** Update payload by spreading `this.payload` first, then spreading `data`. */
   append(data: Readonly<LogPayload>) {
-    const { key = this.payload.key, result = this.payload.result } = data;
-
-    this.payload = {
+    this.payload = sanitizeLogContextPayload({
       ...this.payload,
-      ...filterSensitiveData(removeUndefinedKeys(data)),
-      key,
-      result,
-    };
+      ...removeUndefinedKeys(data),
+    });
   }
 }
 
@@ -310,13 +216,7 @@ export default function koaAuditLog<StateT, ContextT extends IRouterParamContext
         entries.map(async ({ payload }) => {
           // Apply the recursive filter at the final insertion boundary too, so common context
           // added through `prependAllLogEntries()` can never bypass sensitive-key masking.
-          const canonicalPayload = stripNullCharacters({ ...basePayload, ...payload });
-          const sanitizedPayload = filterSensitiveData(canonicalPayload);
-          const fullPayload: LogContextPayload = {
-            ...sanitizedPayload,
-            key: payload.key,
-            result: payload.result,
-          };
+          const fullPayload = sanitizeLogContextPayload({ ...basePayload, ...payload });
           return insertLog({
             id: generateStandardId(),
             key: payload.key,

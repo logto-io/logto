@@ -364,6 +364,43 @@ describe('koaAuditLog middleware', () => {
     });
   });
 
+  it('should sanitize appended data immediately and protect reserved fields after canonicalization', async () => {
+    const ctx: TestContext = createTestContext({ 'user-agent': userAgent });
+    ctx.request.ip = ip;
+
+    const next = async () => {
+      const log = ctx.createLog(logKey);
+      const nul = String.fromCodePoint(0);
+
+      log.append({
+        [`pass${nul}word`]: 'leaked-password',
+        [`${nul}key`]: 'Attacker.Controlled.Key',
+        [`${nul}result`]: LogResult.Error,
+      });
+
+      expect(log.payload).toMatchObject({
+        password: '******',
+        key: logKey,
+        result: LogResult.Success,
+      });
+      expect(JSON.stringify(log.payload)).not.toContain('leaked-password');
+      expect(JSON.stringify(log.payload)).not.toContain('Attacker.Controlled.Key');
+    };
+
+    await koaLog(queries)(ctx, next);
+
+    expect(insertLog).toHaveBeenCalledWith({
+      id: mockId,
+      key: logKey,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Jest asymmetric matcher is typed as `any`.
+      payload: expect.objectContaining({
+        password: '******',
+        key: logKey,
+        result: LogResult.Success,
+      }),
+    });
+  });
+
   describe('should insert an error log with the error message when next() throws an error', () => {
     it('should log with error message when next throws a normal Error', async () => {
       const ctx: TestContext = createTestContext({ 'user-agent': userAgent });
