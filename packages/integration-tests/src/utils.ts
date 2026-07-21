@@ -170,8 +170,12 @@ export const devFeatureDisabledTest = Object.freeze({
 
 export const parseInteractionCookie = (cookie: string): Record<string, string> => {
   try {
+    /**
+     * The v9 oidc-provider fork stores the interaction cookie mapping percent-encoded (raw JSON
+     * is not a valid RFC 6265 cookie-value). Decoding is a no-op for the legacy raw-JSON format.
+     */
     // eslint-disable-next-line no-restricted-syntax
-    return JSON.parse(cookie) as Record<string, string>;
+    return JSON.parse(decodeURIComponent(cookie)) as Record<string, string>;
   } catch {
     return {};
   }

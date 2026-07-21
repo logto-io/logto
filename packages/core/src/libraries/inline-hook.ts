@@ -292,7 +292,6 @@ export class InlineHookLibrary {
     auditContext: { createLog, ...auditContext },
     ...eventSource
   }: RunInlineHookData<Event>): Promise<unknown> {
-    // Inline Hooks
     if (!EnvSet.values.isDevFeaturesEnabled) {
       return;
     }

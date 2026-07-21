@@ -15,6 +15,7 @@ import {
 import koaGuard from '#src/middleware/koa-guard.js';
 import { koaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
+import { isRecord } from '#src/utils/sensitive-data.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
@@ -23,23 +24,37 @@ const inlineHookConfigsGuard = z.object({
   value: inlineHookGuard,
 });
 
-const inlineHookResponseErrorGuard = z.object({
-  message: z.string(),
-});
-
-const parseInlineHookResponseErrorMessage = async (error: ResponseError) => {
+const parseInlineHookResponseError = async (error: ResponseError): Promise<unknown> => {
   try {
     const responseBody: unknown = await error.response.json();
-    const errorResponseResult = inlineHookResponseErrorGuard.safeParse(responseBody);
 
-    return errorResponseResult.success ? errorResponseResult.data.message : error.message;
+    if (!isRecord(responseBody)) {
+      return error;
+    }
+
+    return {
+      ...responseBody,
+      message: typeof responseBody.message === 'string' ? responseBody.message : error.message,
+    };
   } catch {
-    return error.message;
+    return error;
   }
 };
 
 const getInlineHookResponseErrorStatus = (status: number) =>
   status === 400 || status === 403 || status === 422 ? status : 422;
+
+const buildSafeInlineHookRequestErrorData = (
+  error: unknown,
+  sensitiveValues: readonly string[]
+) => {
+  const { message, errors } = buildSafeInlineHookErrorSummary(error, sensitiveValues);
+
+  return {
+    message,
+    ...(errors ? { errors } : {}),
+  };
+};
 
 export default function logtoConfigInlineHookRoutes<T extends ManagementApiRouter>(
   ...[router, { queries, logtoConfigs, libraries }]: RouterInitArgs<T>
@@ -81,39 +96,31 @@ export default function logtoConfigInlineHookRoutes<T extends ManagementApiRoute
         const sensitiveValues = getInlineHookSensitiveValues(body);
 
         if (error instanceof ResponseError) {
-          const message = await parseInlineHookResponseErrorMessage(error);
-          const safeError = buildSafeInlineHookErrorSummary(new Error(message), sensitiveValues);
+          const responseError = await parseInlineHookResponseError(error);
 
           throw new RequestError(
             {
               code: 'inline_hook.general',
               status: getInlineHookResponseErrorStatus(error.response.status),
             },
-            { message: safeError.message }
+            buildSafeInlineHookRequestErrorData(responseError, sensitiveValues)
           );
         }
 
         if (error instanceof RequestError) {
-          const parsedErrorData = inlineHookResponseErrorGuard.safeParse(error.data);
-          const safeError = buildSafeInlineHookErrorSummary(
-            new Error(parsedErrorData.success ? parsedErrorData.data.message : error.message),
-            sensitiveValues
-          );
-
           throw new RequestError(
             {
-              code: 'inline_hook.general',
-              status: getInlineHookResponseErrorStatus(error.status),
+              code: error.code,
+              status: error.status,
+              expose: error.expose,
             },
-            { message: safeError.message }
+            buildSafeInlineHookRequestErrorData(error, sensitiveValues)
           );
         }
 
-        const safeError = buildSafeInlineHookErrorSummary(error, sensitiveValues);
-
         throw new RequestError(
           { code: 'inline_hook.general', status: 422 },
-          { message: safeError.message }
+          buildSafeInlineHookRequestErrorData(error, sensitiveValues)
         );
       }
 

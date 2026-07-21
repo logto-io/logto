@@ -211,16 +211,23 @@ describe('InlineHookLibrary Cloud execution routing', () => {
       1,
       expect.objectContaining({ runtimeLocation: 'remote' })
     );
+    const metricProperties = {
+      hookType: 'PostSignIn',
+      runtimeLocation: 'azure',
+      outcome: 'success',
+      action: 'updateUser',
+    };
     expect(trackMetric).toHaveBeenCalledTimes(2);
-    expect(trackMetric).toHaveBeenCalledWith({
+    expect(trackMetric).toHaveBeenNthCalledWith(1, {
       name: inlineHookMetricNames.executionCount,
       value: 1,
-      properties: {
-        hookType: 'PostSignIn',
-        runtimeLocation: 'azure',
-        outcome: 'success',
-        action: 'updateUser',
-      },
+      properties: metricProperties,
+    });
+    expect(trackMetric).toHaveBeenNthCalledWith(2, {
+      name: inlineHookMetricNames.executionDuration,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Jest asymmetric matcher is typed as `any`.
+      value: expect.any(Number),
+      properties: metricProperties,
     });
   });
 

@@ -1,44 +1,20 @@
 import type { InlineHookExecutionRequestBody } from '@logto/schemas';
+import { z } from 'zod';
 
-const maskedValue = '******';
+import {
+  isArray,
+  isRecord,
+  isSensitiveDataKey,
+  normalizeSensitiveDataKey,
+  sensitiveDataMask,
+  shouldOmitSensitiveDataKey,
+  stripNullCharactersFromString,
+} from '#src/utils/sensitive-data.js';
+
 const redactedValue = '[redacted]';
 const fallbackErrorMessage = 'Inline hook execution failed.';
 const safeResultActions = new Set(['createUser', 'updateUser']);
-const safePasswordStatusKeys = new Set(['passwordverified', 'haspassword']);
-const exactSensitiveKeys = new Set(['authorization', 'xfunctionskey', 'token']);
-const sensitiveKeyFragments = [
-  'secret',
-  'password',
-  'apikey',
-  'privatekey',
-  'credential',
-  'cookie',
-];
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === 'object' && value !== null && !Array.isArray(value);
-const isArray = (value: unknown): value is unknown[] => Array.isArray(value);
-
-const normalizeKey = (key: string) => key.replaceAll(/[_-]/g, '').toLowerCase();
-
-const shouldOmitKey = (key: string) => {
-  const normalizedKey = normalizeKey(key);
-
-  return normalizedKey === 'script' || normalizedKey === 'environmentvariables';
-};
-
-const isSensitiveKey = (key: string, value: unknown) => {
-  const normalizedKey = normalizeKey(key);
-  const isSafePasswordStatus =
-    safePasswordStatusKeys.has(normalizedKey) && typeof value === 'boolean';
-
-  return (
-    !isSafePasswordStatus &&
-    (exactSensitiveKeys.has(normalizedKey) ||
-      normalizedKey.endsWith('token') ||
-      sensitiveKeyFragments.some((fragment) => normalizedKey.includes(fragment)))
-  );
-};
+const safeValidationIssueCodes = new Set<string>(Object.values(z.ZodIssueCode));
 
 const collectStringLeaves = (value: unknown): string[] => {
   if (typeof value === 'string') {
@@ -66,7 +42,7 @@ const collectSensitiveValues = (value: unknown): string[] => {
   }
 
   return Object.entries(value).flatMap(([key, element]) => {
-    if (isSensitiveKey(key, element)) {
+    if (shouldOmitSensitiveDataKey(key) || isSensitiveDataKey(key, element)) {
       return collectStringLeaves(element);
     }
 
@@ -88,15 +64,19 @@ export const getInlineHookSensitiveValues = ({
     ...Object.values(environmentVariables ?? {}),
     ...collectSensitiveValues(event),
   ]
+    .map((value) => stripNullCharactersFromString(value))
     .filter(Boolean)
     .filter((value, index, values) => values.indexOf(value) === index)
     .toSorted((left, right) => right.length - left.length);
 
 const redactInlineHookSensitiveText = (value: string, sensitiveValues: readonly string[]) =>
-  sensitiveValues.reduce(
-    (redacted, sensitiveValue) => redacted.replaceAll(sensitiveValue, redactedValue),
-    value
-  );
+  sensitiveValues.reduce((redacted, sensitiveValue) => {
+    const sanitizedSensitiveValue = stripNullCharactersFromString(sensitiveValue);
+
+    return sanitizedSensitiveValue
+      ? redacted.replaceAll(sanitizedSensitiveValue, redactedValue)
+      : redacted;
+  }, stripNullCharactersFromString(value));
 
 type SanitizeOptions = {
   redactReturnedUser?: boolean;
@@ -145,20 +125,21 @@ const sanitizeInlineHookData = (
     seen.add(value);
     return Object.fromEntries(
       Object.entries(value).flatMap(([key, element]) => {
-        if (shouldOmitKey(key)) {
+        if (shouldOmitSensitiveDataKey(key)) {
           return [];
         }
 
-        const normalizedKey = normalizeKey(key);
+        const normalizedKey = normalizeSensitiveDataKey(key);
+        const sanitizedKey = redactInlineHookSensitiveText(key, sensitiveValues);
 
         if (redactReturnedUser && normalizedKey === 'user') {
-          return [[key, redactedValue]];
+          return [[sanitizedKey, redactedValue]];
         }
 
         if (redactReturnedUser && normalizedKey === 'action') {
           return [
             [
-              key,
+              sanitizedKey,
               typeof element === 'string' && safeResultActions.has(element) ? element : 'invalid',
             ],
           ];
@@ -166,9 +147,9 @@ const sanitizeInlineHookData = (
 
         return [
           [
-            key,
-            isSensitiveKey(key, element)
-              ? maskedValue
+            sanitizedKey,
+            isSensitiveDataKey(key, element)
+              ? sensitiveDataMask
               : sanitizeInlineHookData(element, sensitiveValues, { redactReturnedUser }, seen),
           ],
         ];
@@ -207,11 +188,93 @@ type SafeInlineHookErrorSummary = {
   name: string;
   message: string;
   status?: number;
+  errors?: SafeInlineHookValidationIssue[];
+};
+
+type SafeInlineHookValidationIssue = {
+  path: string | Array<string | number>;
+  code: string;
 };
 
 const getNumberProperty = (record: Record<string, unknown> | undefined, key: string) => {
   const value = record?.[key];
   return typeof value === 'number' ? value : undefined;
+};
+
+const getRecordProperty = (record: Record<string, unknown> | undefined, key: string) => {
+  const value = record?.[key];
+  return isRecord(value) ? value : undefined;
+};
+
+const getStringProperty = (record: Record<string, unknown> | undefined, key: string) => {
+  const value = record?.[key];
+  return typeof value === 'string' ? value : undefined;
+};
+
+const sanitizeInlineHookValidationPath = (
+  value: unknown,
+  sensitiveValues: readonly string[]
+): SafeInlineHookValidationIssue['path'] | undefined => {
+  if (typeof value === 'string') {
+    return redactInlineHookSensitiveText(value, sensitiveValues);
+  }
+
+  if (
+    isArray(value) &&
+    value.every(
+      (segment): segment is string | number =>
+        typeof segment === 'string' || (typeof segment === 'number' && Number.isFinite(segment))
+    )
+  ) {
+    return value.map((segment) =>
+      typeof segment === 'string'
+        ? redactInlineHookSensitiveText(segment, sensitiveValues)
+        : segment
+    );
+  }
+};
+
+const sanitizeInlineHookValidationIssue = (
+  value: unknown,
+  sensitiveValues: readonly string[]
+): SafeInlineHookValidationIssue | undefined => {
+  if (!isRecord(value)) {
+    return;
+  }
+
+  const { code } = value;
+  const path = sanitizeInlineHookValidationPath(value.path, sensitiveValues);
+
+  if (typeof code !== 'string' || !safeValidationIssueCodes.has(code) || path === undefined) {
+    return;
+  }
+
+  return { path, code };
+};
+
+const getValidationIssues = (record: Record<string, unknown> | undefined) => {
+  const nestedError = getRecordProperty(record, 'error');
+  const candidates = [record?.errors, record?.issues, nestedError?.errors, nestedError?.issues];
+
+  return candidates.find((value): value is unknown[] => isArray(value));
+};
+
+const getSafeInlineHookValidationIssues = (
+  records: Array<Record<string, unknown> | undefined>,
+  sensitiveValues: readonly string[]
+) => {
+  for (const record of records) {
+    const issues = getValidationIssues(record);
+
+    if (issues) {
+      return issues.flatMap((issue) => {
+        const sanitizedIssue = sanitizeInlineHookValidationIssue(issue, sensitiveValues);
+        return sanitizedIssue ? [sanitizedIssue] : [];
+      });
+    }
+  }
+
+  return [];
 };
 
 export const buildSafeInlineHookErrorSummary = (
@@ -220,16 +283,21 @@ export const buildSafeInlineHookErrorSummary = (
 ): SafeInlineHookErrorSummary => {
   try {
     const errorRecord = isRecord(error) ? error : undefined;
+    const errorData = getRecordProperty(errorRecord, 'data');
     const message =
-      error instanceof Error
-        ? error.message || fallbackErrorMessage
-        : stringifyUnknownError(error) || fallbackErrorMessage;
+      (error instanceof Error
+        ? (getStringProperty(errorData, 'message') ?? error.message)
+        : (getStringProperty(errorRecord, 'message') ??
+          getStringProperty(errorData, 'message') ??
+          stringifyUnknownError(error))) || fallbackErrorMessage;
     const status = getNumberProperty(errorRecord, 'status');
+    const errors = getSafeInlineHookValidationIssues([errorData, errorRecord], sensitiveValues);
 
     return {
       name: 'Error',
       message: redactInlineHookSensitiveText(message, sensitiveValues),
       ...(status === undefined ? {} : { status }),
+      ...(errors.length === 0 ? {} : { errors }),
     };
   } catch {
     return { name: 'Error', message: fallbackErrorMessage };

@@ -13,7 +13,7 @@ import { doesInlineHookPreserveSignInIdentifier } from './inline-hook-identifier
 export const inlineHookMetricNames = Object.freeze({
   executionCount: 'core/inline_hook/execution_count',
   executionDuration: 'core/inline_hook/execution_duration_ms',
-});
+} as const);
 
 export type InlineHookRuntimeLocation = 'local' | 'azure';
 
@@ -26,7 +26,7 @@ type InlineHookExecutionOutcome =
 type InlineHookExecutionAction = 'createUser' | 'updateUser' | 'noop';
 
 export type InlineHookTelemetryProperties = {
-  hookType: 'PostFirstFactorVerification' | 'PostSignIn';
+  hookType: keyof typeof LogtoInlineHookKey;
   runtimeLocation: InlineHookRuntimeLocation;
   outcome: InlineHookExecutionOutcome;
   action: InlineHookExecutionAction;

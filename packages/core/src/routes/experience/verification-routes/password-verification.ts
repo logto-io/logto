@@ -9,7 +9,7 @@ import {
   VerificationType,
 } from '@logto/schemas';
 import { Action } from '@logto/schemas/lib/types/log/interaction.js';
-import { conditionalString } from '@silverhand/essentials';
+import { conditional } from '@silverhand/essentials';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
@@ -129,7 +129,10 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
                 auditContext: {
                   createLog: ctx.createLog,
                   sessionId: ctx.interactionDetails.jti,
-                  applicationId: conditionalString(ctx.interactionDetails.params.client_id),
+                  applicationId: conditional(
+                    typeof ctx.interactionDetails.params.client_id === 'string' &&
+                      ctx.interactionDetails.params.client_id
+                  ),
                   userId: existingUser?.id,
                 },
               }),

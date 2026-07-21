@@ -29,7 +29,9 @@ import koaAppSecretTranspilation from '#src/middleware/koa-app-secret-transpilat
 import koaAuditLog, { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import koaJwksCacheControl from '#src/middleware/koa-jwks-cache-control.js';
+import koaOidcCookies from '#src/middleware/koa-oidc-cookies.js';
 import koaOidcPostToGet from '#src/middleware/koa-oidc-post-to-get.js';
+import koaOidcUnrecognizedRoute from '#src/middleware/koa-oidc-unrecognized-route.js';
 import koaResourceParam from '#src/middleware/koa-resource-param.js';
 import postgresAdapter from '#src/oidc/adapter.js';
 import {
@@ -60,6 +62,7 @@ import {
   getExtraTokenClaimsForOrganizationApiResource,
   getExtraTokenClaimsForTokenExchange,
 } from './extra-token-claims.js';
+import providerFetch from './fetch.js';
 import { registerGrants } from './grants/index.js';
 import {
   findResource,
@@ -69,6 +72,7 @@ import {
   filterResourceScopesForTheThirdPartyApplication,
 } from './resource.js';
 import { getAcceptedUserClaims, getUserClaimsData } from './scope.js';
+import { installWildcardRedirectUriMatching } from './wildcard-redirect-uri.js';
 
 // Temporarily removed 'EdDSA' since it's not supported by browser yet
 const supportedSigningAlgs = Object.freeze(['RS256', 'PS256', 'ES256', 'ES384', 'ES512'] as const);
@@ -171,13 +175,18 @@ export default function initOidc(
       introspectionSigningAlgValues: [...supportedSigningAlgs],
     },
     conformIdTokenClaims: false,
-    allowWildcardRedirectUris: true,
+    fetch: providerFetch,
     features: {
       userinfo: { enabled: true },
       revocation: { enabled: true },
       introspection: { enabled: true },
       devInteractions: { enabled: false },
       clientCredentials: { enabled: true },
+      /**
+       * The upstream enables DPoP by default since v9. Keep it off to preserve the behavior of
+       * the previous oidc-provider version until Logto officially supports DPoP.
+       */
+      dPoP: { enabled: false },
       backchannelLogout: { enabled: true },
       deviceFlow: deviceFlowConfig,
       rpInitiatedLogout: {
@@ -462,12 +471,15 @@ export default function initOidc(
       required: (ctx, client) => {
         return client.clientAuthMethod !== 'client_secret_basic';
       },
-      methods: ['S256'],
     },
   });
 
+  installWildcardRedirectUriMatching(oidc);
   addOidcEventListeners(tenantId, oidc, queries);
   registerGrants(oidc, envSet, queries, libraries);
+
+  // Register first so all downstream cookie operations go through the rebound instance
+  oidc.use(koaOidcCookies(oidc));
 
   // Provide audit log context for event listeners
   oidc.use(koaAuditLog(queries));
@@ -545,6 +557,9 @@ export default function initOidc(
   if (EnvSet.values.isCloud) {
     oidc.use(koaTokenUsageGuard(subscription));
   }
+
+  // Register last so it splices directly around the provider's internal router
+  oidc.use(koaOidcUnrecognizedRoute());
 
   return oidc;
 }

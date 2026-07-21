@@ -8,7 +8,7 @@ import {
   saml,
   type AuditLogPrefix,
 } from '@logto/schemas';
-import { yes } from '@silverhand/essentials';
+import { conditionalArray, yes } from '@silverhand/essentials';
 import { object, string } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -56,7 +56,7 @@ export default function logRoutes<T extends ManagementApiRouter>(
         jwtCustomizer.prefix,
         saml.prefix,
         // Inline Hooks
-        ...(EnvSet.values.isDevFeaturesEnabled ? [inlineHook.prefix] : []),
+        ...conditionalArray(EnvSet.values.isDevFeaturesEnabled && inlineHook.prefix),
         LogKeyUnknown,
       ];
 

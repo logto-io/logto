@@ -93,7 +93,6 @@ describe('OIDC discovery', () => {
         "issuer": "<logto-url>/oidc",
         "jwks_uri": "<logto-url>/oidc/jwks",
         "pushed_authorization_request_endpoint": "<logto-url>/oidc/request",
-        "request_parameter_supported": false,
         "request_uri_parameter_supported": false,
         "response_modes_supported": [
           "form_post",
@@ -137,10 +136,25 @@ describe('OIDC discovery', () => {
           "RS256",
           "PS256",
           "ES256",
+          "Ed25519",
           "EdDSA",
         ],
         "userinfo_endpoint": "<logto-url>/oidc/me",
       }
     `);
+  });
+
+  /**
+   * Since oidc-provider 9.2.0 the RFC 8414 `/.well-known/oauth-authorization-server` route is
+   * registered unconditionally, relative to the provider mount and backed by the same discovery
+   * handler as `/.well-known/openid-configuration`.
+   */
+  it('serves the same document at the RFC 8414 oauth-authorization-server route', async () => {
+    const [openidConfiguration, authorizationServerMetadata] = await Promise.all([
+      ky.get(discoveryUrl).json(),
+      ky.get(`${logtoUrl}/oidc/.well-known/oauth-authorization-server`).json(),
+    ]);
+
+    expect(authorizationServerMetadata).toEqual(openidConfiguration);
   });
 });

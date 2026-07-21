@@ -6,6 +6,26 @@ import createMockContext from './jest-koa-mocks/create-mock-context.js';
 
 const { jest } = import.meta;
 
+const createTestProvider = (issuer: string) => {
+  // eslint-disable-next-line no-console
+  const originalWarn = console.warn;
+  const warn = jest.spyOn(console, 'warn').mockImplementation((...args) => {
+    if (typeof args[0] !== 'string' || !args[0].includes('oidc-provider')) {
+      originalWarn(...args);
+    }
+  });
+
+  try {
+    /**
+     * Mirror the production configuration: oidc-provider v9 enables DPoP by default, and the
+     * validation helper reads headers via `ctx.get()`, which the mock context does not implement.
+     */
+    return new Provider(issuer, { features: { dPoP: { enabled: false } } });
+  } finally {
+    warn.mockRestore();
+  }
+};
+
 export abstract class GrantMock {
   static find: (id: string) => Promise<GrantMock | undefined>;
 
@@ -24,19 +44,7 @@ export const createMockProvider = (
   interactionDetails?: jest.Mock,
   Grant?: typeof GrantMock
 ): Provider => {
-  // eslint-disable-next-line no-console
-  const originalWarn = console.warn;
-  const warn = jest.spyOn(console, 'warn').mockImplementation((...args) => {
-    // Disable while creating. Too many warnings.
-    if (typeof args[0] === 'string' && args[0].includes('oidc-provider')) {
-      return;
-    }
-
-    originalWarn(...args);
-  });
-  const provider = new Provider('https://logto.test');
-
-  warn.mockRestore();
+  const provider = createTestProvider('https://logto.test');
 
   jest.spyOn(provider, 'interactionDetails').mockImplementation(
     // @ts-expect-error for testing
@@ -59,7 +67,7 @@ export const createMockProvider = (
  */
 export const createOidcContext = (override?: Partial<KoaContextWithOIDC['oidc']>) => {
   const issuer = 'https://mock-issuer.com';
-  const provider = new Provider(issuer);
+  const provider = createTestProvider(issuer);
   const context: KoaContextWithOIDC = {
     ...createMockContext(),
     oidc: {
