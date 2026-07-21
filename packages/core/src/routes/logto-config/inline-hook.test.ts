@@ -13,6 +13,7 @@ import {
   mockLogtoConfigRows,
 } from '#src/__mocks__/index.js';
 import { EnvSet } from '#src/env-set/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
 import { mockLogtoConfigsLibrary } from '#src/test-utils/mock-libraries.js';
@@ -263,11 +264,40 @@ describe('configs inline hook routes', () => {
     expect(response.status).toEqual(422);
   });
 
-  it('POST /configs/inline-hooks/test should preserve the full ResponseError body as error details', async () => {
+  it('POST /configs/inline-hooks/test should return only a redacted ResponseError summary', async () => {
+    const script = 'const privateInlineHookScript = true;';
+    const environmentSecret = 'environment-secret-value';
+    const password = 'plain-text-password';
+    const payload: InlineHookExecutionRequestBody = {
+      hookType: LogtoInlineHookKey.PostFirstFactorVerification,
+      script,
+      environmentVariables: {
+        API_TOKEN: environmentSecret,
+      },
+      event: {
+        key: LogtoInlineHookKey.PostFirstFactorVerification,
+        password,
+      },
+    };
     const errorBody = {
-      message: 'Script failed',
-      stack: 'Error: Script failed',
-      errors: [{ path: 'event.user', code: 'invalid_type' }],
+      message: `Script failed ${script} ${environmentSecret} ${password}`,
+      stack: `Error: ${script}`,
+      errors: [
+        {
+          path: ['event', password],
+          code: 'invalid_type',
+          message: `Expected string, received ${password}`,
+          received: password,
+        },
+      ],
+      error: {
+        request: {
+          environmentVariables: { API_TOKEN: environmentSecret },
+        },
+        returnedUser: {
+          customData: { secret: 'returned-patch-secret' },
+        },
+      },
     };
 
     jest
@@ -276,14 +306,60 @@ describe('configs inline hook routes', () => {
 
     const response = await routeRequesterWithErrorHandler
       .post('/configs/inline-hooks/test')
-      .send(inlineHookTestPayload);
+      .send(payload);
 
     expect(response.status).toEqual(422);
     expect(response.body.code).toEqual('inline_hook.general');
     expect(response.body.data).toEqual({
-      message: 'Script failed',
-      error: errorBody,
+      message: 'Script failed [redacted] [redacted] [redacted]',
+      errors: [{ path: ['event', '[redacted]'], code: 'invalid_type' }],
     });
+    const serializedResponse = JSON.stringify(response.body);
+    expect(serializedResponse).not.toContain(script);
+    expect(serializedResponse).not.toContain(environmentSecret);
+    expect(serializedResponse).not.toContain(password);
+    expect(serializedResponse).not.toContain('returned-patch-secret');
+  });
+
+  it('POST /configs/inline-hooks/test should preserve safe RequestError semantics', async () => {
+    const sensitiveValue = 'request-error-secret';
+    const payload: InlineHookExecutionRequestBody = {
+      ...inlineHookTestPayload,
+      environmentVariables: { API_TOKEN: sensitiveValue },
+    };
+    const requestError = new RequestError(
+      { code: 'connector.general', status: 403 },
+      {
+        message: `Runner rejected ${sensitiveValue}`,
+        errors: [
+          {
+            path: ['event', sensitiveValue],
+            code: 'invalid_type',
+            message: sensitiveValue,
+            received: sensitiveValue,
+          },
+        ],
+        request: { authorization: `Bearer ${sensitiveValue}` },
+      }
+    );
+
+    jest
+      .spyOn(tenantContext.libraries.inlineHooks, 'executeScript')
+      .mockRejectedValueOnce(requestError);
+
+    const response = await routeRequesterWithErrorHandler
+      .post('/configs/inline-hooks/test')
+      .send(payload);
+
+    expect(response.status).toEqual(403);
+    expect(response.body.code).toEqual('connector.general');
+    expect(response.body.data).toEqual({
+      message: 'Runner rejected [redacted]',
+      errors: [{ path: ['event', '[redacted]'], code: 'invalid_type' }],
+    });
+    expect(response.text).not.toContain(sensitiveValue);
+    expect(response.text).not.toContain('authorization');
+    expect(response.text).not.toContain('received');
   });
 
   it.each([
