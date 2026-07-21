@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Audit log middleware behavior is covered end to end. */
 import type { LogKey } from '@logto/schemas';
 import { LogResult, VerificationType } from '@logto/schemas';
 import i18next from 'i18next';
@@ -193,18 +194,24 @@ describe('koaAuditLog middleware', () => {
     expect(insertLog).not.toBeCalled();
   });
 
-  it('should filter password sensitive data in log', async () => {
+  it('should filter sensitive data while preserving safe application secret metadata', async () => {
     const ctx: TestContext = createTestContext({ 'user-agent': userAgent });
     ctx.request.ip = ip;
 
     const additionalMockPayload = {
       password: '123456',
       interaction: { profile: { password: 123_456 } },
+      applicationSecret: { name: 'rotation-2' },
+      unsafe: {
+        applicationSecret: { name: 'rotation-2', value: 'raw-application-secret' },
+      },
     };
 
     const maskedAdditionalMockPayload = {
       password: '******',
       interaction: { profile: { password: '******' } },
+      applicationSecret: { name: 'rotation-2' },
+      unsafe: { applicationSecret: '******' },
     };
 
     const next = async () => {
@@ -227,6 +234,7 @@ describe('koaAuditLog middleware', () => {
         userAgentParsed,
       },
     });
+    expect(JSON.stringify(insertLog.mock.calls)).not.toContain('raw-application-secret');
   });
 
   it('should filter TOTP secret in log', async () => {
@@ -270,6 +278,53 @@ describe('koaAuditLog middleware', () => {
     });
   });
 
+  it('should filter sensitive data added through common log context', async () => {
+    const ctx: TestContext = createTestContext({ 'user-agent': userAgent });
+    ctx.request.ip = ip;
+
+    const next = async () => {
+      ctx.createLog(logKey);
+      ctx.prependAllLogEntries({
+        interaction: {
+          profile: {
+            Password: 'password-from-common-context',
+            clientSecret: 'secret-from-common-context',
+            Authorization: 'Bearer private-authorization',
+            passwordEncrypted: 'private-password-digest',
+            socialConnectorTokenSetSecret: 'private-token-set',
+            script: 'private-script',
+            environmentVariables: { TOKEN: 'private-environment-value' },
+            hasPassword: 'private-password-status',
+            passwordVerified: true,
+          },
+        },
+      });
+    };
+
+    await koaLog(queries)(ctx, next);
+
+    expect(insertLog).toHaveBeenCalledWith({
+      id: mockId,
+      key: logKey,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Jest asymmetric matcher is typed as `any`.
+      payload: expect.objectContaining({
+        interaction: {
+          profile: {
+            Password: '******',
+            clientSecret: '******',
+            Authorization: '******',
+            passwordEncrypted: '******',
+            socialConnectorTokenSetSecret: '******',
+            hasPassword: '******',
+            passwordVerified: true,
+          },
+        },
+      }),
+    });
+    const serializedPayload = JSON.stringify(insertLog.mock.calls);
+    expect(serializedPayload).not.toContain('private-');
+  });
+
   it('should strip null characters so the payload is safe to store as jsonb', async () => {
     const ctx: TestContext = createTestContext({ 'user-agent': userAgent });
     ctx.request.ip = ip;
@@ -282,6 +337,8 @@ describe('koaAuditLog middleware', () => {
           grant_type: `authorization_code${nul}`,
           nested: [`a${nul}b`],
           [`field${nul}name`]: 'value',
+          [`pass${nul}word`]: 'leaked-password',
+          [`sec${nul}ret`]: 'leaked-secret',
         },
       });
     };
@@ -291,7 +348,13 @@ describe('koaAuditLog middleware', () => {
       id: mockId,
       key: logKey,
       payload: {
-        params: { grant_type: 'authorization_code', nested: ['ab'], fieldname: 'value' },
+        params: {
+          grant_type: 'authorization_code',
+          nested: ['ab'],
+          fieldname: 'value',
+          password: '******',
+          secret: '******',
+        },
         key: logKey,
         result: LogResult.Success,
         ip,
@@ -365,5 +428,41 @@ describe('koaAuditLog middleware', () => {
         },
       });
     });
+
+    it('should preserve an independent log result when the owning request later fails', async () => {
+      const ctx: TestContext = createTestContext({ 'user-agent': userAgent });
+      ctx.request.ip = ip;
+
+      const error = new Error('Owning flow failed');
+      const next = async () => {
+        const independentLog = ctx.createLog(logKey, { independent: true });
+        independentLog.append({ decision: 'updateUser' });
+        ctx.createLog(logKey);
+        throw error;
+      };
+
+      await expect(koaLog(queries)(ctx, next)).rejects.toBe(error);
+
+      expect(insertLog).toHaveBeenCalledTimes(2);
+      expect(insertLog).toHaveBeenCalledWith({
+        id: mockId,
+        key: logKey,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Jest asymmetric matcher is typed as `any`.
+        payload: expect.objectContaining({
+          decision: 'updateUser',
+          result: LogResult.Success,
+        }),
+      });
+      expect(insertLog).toHaveBeenCalledWith({
+        id: mockId,
+        key: logKey,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Jest asymmetric matcher is typed as `any`.
+        payload: expect.objectContaining({
+          result: LogResult.Error,
+          error: { message: 'Error: Owning flow failed' },
+        }),
+      });
+    });
   });
 });
+/* eslint-enable max-lines */
