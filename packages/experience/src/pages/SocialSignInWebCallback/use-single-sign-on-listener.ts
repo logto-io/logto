@@ -15,9 +15,13 @@ import useTerms from '@/hooks/use-terms';
 import useToast from '@/hooks/use-toast';
 import { parseQueryParameters } from '@/utils';
 
-const useSingleSignOnRegister = () => {
+type SingleSignOnRegisterOptions = {
+  readonly onEmailBlocked?: () => void;
+};
+
+const useSingleSignOnRegister = ({ onEmailBlocked }: SingleSignOnRegisterOptions = {}) => {
   const handleError = useErrorHandler();
-  const emailBlockedErrorHandler = useEmailBlockedErrorHandler();
+  const emailBlockedErrorHandler = useEmailBlockedErrorHandler({ onConfirm: onEmailBlocked });
 
   const request = useApi(registerWithVerifiedIdentifier);
   const { termsValidation, agreeToTermsPolicy } = useTerms();
@@ -89,7 +93,14 @@ const useSingleSignOnListener = (connectorId: string) => {
   const navigate = useNavigateWithPreservedSearchParams();
 
   const singleSignOnAuthorizationRequest = useApi(signInWithSso);
-  const registerSingleSignOnIdentity = useSingleSignOnRegister();
+
+  const navigateToSignIn = useCallback(() => {
+    navigate('/' + experience.routes.signIn, { replace: true });
+  }, [navigate]);
+
+  const registerSingleSignOnIdentity = useSingleSignOnRegister({
+    onEmailBlocked: navigateToSignIn,
+  });
 
   const singleSignOnHandler = useCallback(
     async (connectorId: string, verificationId: string, data: Record<string, unknown>) => {
@@ -109,7 +120,7 @@ const useSingleSignOnListener = (connectorId: string) => {
             // Should not let user register new social account under sign-in only mode
             if (signInMode === SignInMode.SignIn) {
               setToast(error.message);
-              navigate('/' + experience.routes.signIn);
+              navigateToSignIn();
               return;
             }
 
@@ -118,7 +129,7 @@ const useSingleSignOnListener = (connectorId: string) => {
           // Redirect to sign-in page if error is not handled by the error handlers
           global: async (error) => {
             setToast(error.message);
-            navigate('/' + experience.routes.signIn);
+            navigateToSignIn();
           },
         });
         return;
@@ -130,7 +141,7 @@ const useSingleSignOnListener = (connectorId: string) => {
     },
     [
       handleError,
-      navigate,
+      navigateToSignIn,
       redirectTo,
       registerSingleSignOnIdentity,
       setToast,
@@ -156,7 +167,7 @@ const useSingleSignOnListener = (connectorId: string) => {
 
     if (!result.valid) {
       setToast(t(`error.${result.error}`));
-      navigate('/' + experience.routes.signIn);
+      navigateToSignIn();
       return;
     }
 
@@ -164,7 +175,7 @@ const useSingleSignOnListener = (connectorId: string) => {
   }, [
     connectorId,
     isConsumed,
-    navigate,
+    navigateToSignIn,
     searchParameters,
     setSearchParameters,
     setToast,
