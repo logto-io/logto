@@ -718,6 +718,15 @@ export default class ExperienceInteraction {
       userId,
       result: await inlineHooks.runHook({
         key: LogtoInlineHookKey.PostSignIn,
+        auditContext: {
+          createLog: this.ctx.createLog,
+          sessionId: this.ctx.interactionDetails.jti,
+          applicationId: conditional(
+            typeof this.ctx.interactionDetails.params.client_id === 'string' &&
+              this.ctx.interactionDetails.params.client_id
+          ),
+          userId,
+        },
         getEvent: async (): Promise<PostSignInEvent> => ({
           key: LogtoInlineHookKey.PostSignIn,
           interactionEvent: InteractionEvent.SignIn,

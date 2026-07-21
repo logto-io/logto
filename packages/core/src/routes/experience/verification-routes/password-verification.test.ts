@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Password verification fallback scenarios share extensive route mocks. */
 import {
   InteractionEvent,
   LogtoInlineHookKey,
@@ -125,6 +126,9 @@ const runHook = jest.fn();
 const findUserByEmail = jest.fn();
 const createUser = jest.fn();
 const updateUser = jest.fn();
+const createLog = jest.fn();
+const applicationId = 'application-id';
+const sessionId = 'session-id';
 
 type PasswordVerificationRouteContext = {
   experienceInteraction: {
@@ -138,6 +142,13 @@ type PasswordVerificationRouteContext = {
   };
   verificationAuditLog: {
     append: jest.Mock;
+  };
+  createLog: typeof createLog;
+  interactionDetails: {
+    jti: string;
+    params: {
+      client_id: string;
+    };
   };
   guard: {
     body: {
@@ -186,6 +197,13 @@ const createContext = (
   },
   verificationAuditLog: {
     append: jest.fn(),
+  },
+  createLog,
+  interactionDetails: {
+    jti: sessionId,
+    params: {
+      client_id: applicationId,
+    },
   },
   guard: {
     body: {
@@ -252,6 +270,12 @@ describe('password verification route PostFirstFactorVerification fallback', () 
     await expect(getSentinelPromise()).rejects.toBe(invalidCredentialsError);
     expect(runHook).toHaveBeenCalledWith({
       key: LogtoInlineHookKey.PostFirstFactorVerification,
+      auditContext: {
+        createLog,
+        sessionId,
+        applicationId,
+        userId: undefined,
+      },
       event: {
         key: LogtoInlineHookKey.PostFirstFactorVerification,
         interactionEvent: InteractionEvent.SignIn,
@@ -368,6 +392,12 @@ describe('password verification route PostFirstFactorVerification fallback', () 
 
     expect(runHook).toHaveBeenCalledWith({
       key: LogtoInlineHookKey.PostFirstFactorVerification,
+      auditContext: {
+        createLog,
+        sessionId,
+        applicationId,
+        userId: mockUser.id,
+      },
       event: {
         key: LogtoInlineHookKey.PostFirstFactorVerification,
         interactionEvent: InteractionEvent.SignIn,
@@ -446,3 +476,4 @@ describe('password verification route PostFirstFactorVerification fallback', () 
     expect(updateUser).not.toHaveBeenCalled();
   });
 });
+/* eslint-enable max-lines */
