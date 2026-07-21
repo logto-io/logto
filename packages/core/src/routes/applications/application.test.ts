@@ -14,7 +14,11 @@ import { mockId, mockIdGenerators } from '#src/test-utils/nanoid.js';
 import { createMockQuotaLibrary } from '#src/test-utils/quota.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
+import { omitInternalApplicationSecret } from './application-response.js';
+
 const { jest } = import.meta;
+
+const mockApplicationResponse = omitInternalApplicationSecret(mockApplication);
 
 const findApplicationById = jest.fn(async () => mockApplication);
 const deleteApplicationById = jest.fn();
@@ -98,7 +102,7 @@ describe('application route', () => {
   it('GET /applications', async () => {
     const response = await applicationRequest.get('/applications');
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual([mockApplication]);
+    expect(response.body).toEqual([mockApplicationResponse]);
     expect(response.header).not.toHaveProperty('total-number');
   });
 
@@ -113,7 +117,7 @@ describe('application route', () => {
 
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
-      ...mockApplication,
+      ...mockApplicationResponse,
       id: mockId,
       name,
       description,
@@ -137,7 +141,7 @@ describe('application route', () => {
     expect(response.status).toEqual(200);
     expect(syncAppConfigsToRemote).toHaveBeenCalledWith(mockId);
     expect(response.body).toEqual({
-      ...mockApplication,
+      ...mockApplicationResponse,
       id: mockId,
       name,
       type,
@@ -158,7 +162,7 @@ describe('application route', () => {
       .send({ name, type, customClientMetadata });
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
-      ...mockApplication,
+      ...mockApplicationResponse,
       id: mockId,
       name,
       type,
@@ -213,7 +217,7 @@ describe('application route', () => {
 
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
-      ...mockApplication,
+      ...mockApplicationResponse,
       isAdmin: false,
     });
   });
@@ -226,7 +230,12 @@ describe('application route', () => {
       .patch('/applications/foo')
       .send({ name, description, customClientMetadata });
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual({ ...mockApplication, name, description, customClientMetadata });
+    expect(response.body).toEqual({
+      ...mockApplicationResponse,
+      name,
+      description,
+      customClientMetadata,
+    });
   });
 
   it('PATCH /applications/:applicationId for protected app', async () => {
@@ -240,7 +249,7 @@ describe('application route', () => {
       .patch('/applications/foo')
       .send({ name, description, protectedAppMetadata: { origin, additionalScopes } });
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual({ ...mockApplication, name, description });
+    expect(response.body).toEqual({ ...mockApplicationResponse, name, description });
     expect(syncAppConfigsToRemote).toHaveBeenCalledWith('foo');
     expect(updateApplicationById).toHaveBeenNthCalledWith(1, 'foo', {
       protectedAppMetadata: {
@@ -312,7 +321,7 @@ describe('application route', () => {
     expect(response.status).toEqual(200);
 
     // Should not update the secret, isThirdParty and type
-    expect(response.body).toEqual(mockApplication);
+    expect(response.body).toEqual(mockApplicationResponse);
   });
 
   it('PATCH /applications/:applicationId should save the formatted URIs as per RFC', async () => {

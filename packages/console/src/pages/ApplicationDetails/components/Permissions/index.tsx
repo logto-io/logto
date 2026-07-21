@@ -1,4 +1,4 @@
-import { type Application } from '@logto/schemas';
+import { type ApplicationApiResponse } from '@logto/schemas';
 
 import OidcPermissionsCard from './OidcPermissionsCard';
 import PermissionsCard from './PermissionsCard';
@@ -6,7 +6,7 @@ import { ScopeLevel } from './PermissionsCard/ApplicationScopesAssignmentModal/t
 import styles from './index.module.scss';
 
 type Props = {
-  readonly application: Application;
+  readonly application: ApplicationApiResponse;
 };
 
 function Permissions({ application }: Props) {

@@ -14,6 +14,8 @@ import type OrganizationQueries from '#src/queries/organization/index.js';
 import type SchemaRouter from '#src/utils/SchemaRouter.js';
 import { parseSearchOptions } from '#src/utils/search.js';
 
+import { omitInternalApplicationSecret } from '../../applications/application-response.js';
+
 import applicationRoleRelationRoutes from './role-relations.js';
 
 /**
@@ -151,7 +153,7 @@ export default function applicationRoutes(
         );
 
       ctx.pagination.totalCount = totalCount;
-      ctx.body = entities;
+      ctx.body = entities.map((application) => omitInternalApplicationSecret(application));
 
       return next();
     }
