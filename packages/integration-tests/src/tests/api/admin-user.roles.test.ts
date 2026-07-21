@@ -2,7 +2,7 @@ import { createManagementApi } from '@logto/api/management';
 import { ApplicationType, RoleType, defaultTenantId } from '@logto/schemas';
 import { HTTPError } from 'ky';
 
-import { assignRolesToApplication, createApplication } from '#src/api/application.js';
+import { assignRolesToApplication, createApplicationWithSecret } from '#src/api/application.js';
 import {
   assignRolesToUser,
   getUserRoles,
@@ -96,7 +96,10 @@ describe('admin console user management (roles)', () => {
   });
 
   it('should assign and replace roles via management api client', async () => {
-    const m2mApp = await createApplication(generateTestName(), ApplicationType.MachineToMachine);
+    const m2mApp = await createApplicationWithSecret(
+      generateTestName(),
+      ApplicationType.MachineToMachine
+    );
     const [managementApiRole] = await getRoles({
       type: RoleType.MachineToMachine,
       search: '%Logto Management API access%',

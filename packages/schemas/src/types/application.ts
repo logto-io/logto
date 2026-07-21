@@ -10,7 +10,18 @@ import {
   ApplicationSignInExperiences,
 } from '../db-entries/index.js';
 
-export type ApplicationResponse = Application & { isAdmin: boolean };
+/**
+ * The application response returned by Management APIs.
+ *
+ * The legacy client secret is only present before it has been replaced by an internal secret.
+ */
+export const applicationResponseGuard = Applications.guard.extend({
+  secret: Applications.guard.shape.secret.optional(),
+});
+
+export type ApplicationApiResponse = z.infer<typeof applicationResponseGuard>;
+
+export type ApplicationResponse = ApplicationApiResponse & { isAdmin: boolean };
 
 /**
  * An application that is featured for display. Usually used in a list of resources that are

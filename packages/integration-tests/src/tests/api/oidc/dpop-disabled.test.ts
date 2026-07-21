@@ -15,6 +15,7 @@ import { deleteUser } from '#src/api/admin-user.js';
 import { oidcApi } from '#src/api/api.js';
 import {
   createApplication,
+  createApplicationWithSecret,
   deleteApplication,
   getApplicationSecrets,
 } from '#src/api/application.js';
@@ -83,7 +84,7 @@ describe('token requests with a DPoP proof while DPoP is disabled', () => {
     testResource = await createResource(generateResourceName(), generateResourceIndicator());
     ({ id: testUserId } = await createUserByAdmin({ username, password }));
 
-    m2mApplication = await createApplication(
+    m2mApplication = await createApplicationWithSecret(
       'dpop-disabled-m2m-app',
       ApplicationType.MachineToMachine
     );

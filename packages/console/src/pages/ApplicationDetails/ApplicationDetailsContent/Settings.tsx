@@ -1,5 +1,5 @@
 import { validateRedirectUrl } from '@logto/core-kit';
-import type { Application } from '@logto/schemas';
+import type { ApplicationApiResponse } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
 import { useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -77,7 +77,7 @@ function WildcardUriWarning() {
 }
 
 type Props = {
-  readonly data: Application;
+  readonly data: ApplicationApiResponse;
 };
 
 function Settings({ data }: Props) {

@@ -5,7 +5,7 @@ import { assert, assertEnv } from '@silverhand/essentials';
 import { createInterceptorsPreset, createPool, sql, type DatabasePool } from '@silverhand/slonik';
 
 import { oidcApi } from '#src/api/api.js';
-import { createApplication, deleteApplication } from '#src/api/application.js';
+import { createApplicationWithSecret, deleteApplication } from '#src/api/application.js';
 import { deleteUser } from '#src/api/index.js';
 import { createResource, deleteResource } from '#src/api/resource.js';
 import { initExperienceClient, processSession } from '#src/helpers/client.js';
@@ -120,7 +120,7 @@ describe('token metering listeners', () => {
 
   it('records M2M token usage after a client credentials grant', async () => {
     const [application, resource] = await Promise.all([
-      createApplication('token metering test', ApplicationType.MachineToMachine),
+      createApplicationWithSecret('token metering test', ApplicationType.MachineToMachine),
       createResource(),
     ]);
     const usageBefore = await getTokenUsage(pool);

@@ -4,7 +4,7 @@ import { assert } from '@silverhand/essentials';
 
 import { deleteUser } from '#src/api/admin-user.js';
 import { assignUserConsentScopes } from '#src/api/application-user-consent-scope.js';
-import { createApplication, deleteApplication } from '#src/api/application.js';
+import { createApplicationWithSecret, deleteApplication } from '#src/api/application.js';
 import { consent, getConsentInfo } from '#src/api/interaction.js';
 import { OrganizationScopeApi } from '#src/api/organization-scope.js';
 import { createResource, deleteResource } from '#src/api/resource.js';
@@ -56,7 +56,7 @@ describe('consent api', () => {
   };
 
   const bootStrapApplication = async () => {
-    const thirdPartyApplication = await createApplication(
+    const thirdPartyApplication = await createApplicationWithSecret(
       thirdPartyApplicationName,
       ApplicationType.Traditional,
       {
@@ -68,7 +68,7 @@ describe('consent api', () => {
       }
     );
 
-    const firstPartyApplication = await createApplication(
+    const firstPartyApplication = await createApplicationWithSecret(
       firstPartyApplicationName,
       ApplicationType.Traditional,
       {

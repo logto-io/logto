@@ -1,7 +1,7 @@
 import { isLocalhost, isValidRegEx, validateUriOrigin } from '@logto/core-kit';
 import {
   DomainStatus,
-  type Application,
+  type ApplicationApiResponse,
   type CustomDomain as CustomDomainType,
   type SnakeCaseOidcConfig,
 } from '@logto/schemas';
@@ -41,7 +41,7 @@ import SessionForm from './components/SessionForm';
 import styles from './index.module.scss';
 
 type Props = {
-  readonly data: Application;
+  readonly data: ApplicationApiResponse;
 };
 
 const routes = Object.freeze(['/register', '/sign-in', '/sign-in-callback', '/sign-out']);

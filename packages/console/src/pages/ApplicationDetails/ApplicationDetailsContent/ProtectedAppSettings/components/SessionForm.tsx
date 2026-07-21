@@ -1,4 +1,4 @@
-import { type Application, type SnakeCaseOidcConfig } from '@logto/schemas';
+import { type ApplicationApiResponse, type SnakeCaseOidcConfig } from '@logto/schemas';
 import { type ChangeEvent } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import useSWRImmutable from 'swr/immutable';
@@ -14,7 +14,7 @@ import { type ApplicationForm } from '../../utils';
 import styles from './SessionForm.module.scss';
 
 type Props = {
-  readonly data: Application;
+  readonly data: ApplicationApiResponse;
 };
 
 const maxSessionDuration = 365; // 1 year

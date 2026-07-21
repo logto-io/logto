@@ -2,7 +2,7 @@ import { generateDarkColor } from '@logto/core-kit';
 import {
   Theme,
   defaultPrimaryColor,
-  type Application,
+  type ApplicationApiResponse,
   type ApplicationSignInExperience,
 } from '@logto/schemas';
 import { useCallback, useEffect } from 'react';
@@ -31,7 +31,7 @@ import useSignInExperienceSWR from './use-sign-in-experience-swr';
 import { type ApplicationSignInExperienceForm, formatFormToSubmitData } from './utils';
 
 type Props = {
-  readonly application: Application;
+  readonly application: ApplicationApiResponse;
   readonly isActive: boolean; // Support for conditional render UnsavedChangesAlertModal component
 };
 

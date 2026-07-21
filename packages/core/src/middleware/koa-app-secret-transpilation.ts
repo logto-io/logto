@@ -1,3 +1,4 @@
+import { internalPrefix } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
 import type { Context, MiddlewareType } from 'koa';
 import { errors } from 'oidc-provider';
@@ -32,7 +33,7 @@ export type WithAppSecretContext<ContextT = Context> = ContextT & {
  * to the one in the `applications` table in order to be recognized by `oidc-provider`.
  *
  * If the app secret is not found in the `application_secrets` table, the middleware will keep
- * everything as is and let the `oidc-provider` handle it.
+ * legacy secrets as is and let the `oidc-provider` handle them. Internal secrets are rejected.
  *
  * @remarks
  * We have to transpile the app secret because the `oidc-provider` only accepts one secret per
@@ -63,7 +64,14 @@ export default function koaAppSecretTranspilation<StateT, ContextT, ResponseBody
         return {};
       }
 
-      const [part0, part1] = Buffer.from(parts[1], 'base64').toString().split(':');
+      const credentials = Buffer.from(parts[1], 'base64').toString();
+      const separatorIndex = credentials.indexOf(':');
+      if (separatorIndex === -1) {
+        return {};
+      }
+
+      const part0 = credentials.slice(0, separatorIndex);
+      const part1 = credentials.slice(separatorIndex + 1);
 
       return {
         clientId: part0 && decodeAuthToken(part0),
@@ -114,6 +122,10 @@ export default function koaAppSecretTranspilation<StateT, ContextT, ResponseBody
     const { clientId, clientSecret } = getCredentials(header, params);
     if (!clientId || !clientSecret) {
       return next();
+    }
+
+    if (clientSecret.startsWith(internalPrefix)) {
+      throw new errors.InvalidClientAuth('internal secret provided');
     }
 
     const result = await queries.applicationSecrets.findByCredentials(clientId, clientSecret);

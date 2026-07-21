@@ -1,4 +1,9 @@
-import { type Application, ApplicationType, customClientMetadataGuard } from '@logto/schemas';
+import {
+  type Application,
+  type ApplicationApiResponse,
+  ApplicationType,
+  customClientMetadataGuard,
+} from '@logto/schemas';
 import { useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -9,7 +14,7 @@ import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
 
 type Props = {
-  readonly data: Application;
+  readonly data: ApplicationApiResponse;
 };
 
 function RefreshTokenSettings({ data: { type } }: Props) {
