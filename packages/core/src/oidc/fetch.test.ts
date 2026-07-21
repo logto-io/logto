@@ -21,7 +21,7 @@ describe('getProviderFetchConfig', () => {
       isOidcProviderSsrfProtectionEnabled: true,
     });
 
-    expect(getProviderFetchConfig()).not.toHaveProperty('fetch');
+    expect(getProviderFetchConfig()).toBeUndefined();
   });
 
   it('should drop the SSRF-protecting dispatcher when protection is disabled', async () => {
@@ -33,7 +33,7 @@ describe('getProviderFetchConfig', () => {
     const config = getProviderFetchConfig();
 
     expect(config).toHaveProperty('fetch', fetchWithoutSsrfDispatcher);
-    await config.fetch?.('https://rp.example.com/backchannel-logout', requestInit);
+    await config?.fetch('https://rp.example.com/backchannel-logout', requestInit);
 
     expect(fetchStub.calledOnce).toBe(true);
     const [, init] = fetchStub.firstCall.args;
