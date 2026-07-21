@@ -147,6 +147,19 @@ describe('ActionLibrary', () => {
     ).resolves.toBeUndefined();
   });
 
+  it('does not run when the action lookup returns no config', async () => {
+    const getEvent = jest.fn().mockResolvedValue({});
+
+    await expect(
+      library.runAction({
+        key: LogtoActionKey.PostSignIn,
+        getEvent,
+      })
+    ).resolves.toBeUndefined();
+
+    expect(getEvent).not.toHaveBeenCalled();
+  });
+
   it('does not run when action config is missing', async () => {
     const getEvent = jest.fn().mockResolvedValue({});
     getAction.mockRejectedValueOnce(

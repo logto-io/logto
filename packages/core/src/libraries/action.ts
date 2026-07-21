@@ -319,7 +319,8 @@ export class ActionLibrary {
     try {
       const action = await this.logtoConfigs.getAction(key);
 
-      if (!action.enabled) {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- Preserve the legacy no-config fallback for isolated library implementations.
+      if (!action?.enabled) {
         return;
       }
 
