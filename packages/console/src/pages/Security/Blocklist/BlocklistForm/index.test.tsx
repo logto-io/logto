@@ -9,7 +9,6 @@ import BlocklistForm from '.';
 
 const mockPatch = jest.fn();
 const mockMutateGlobal = jest.fn();
-const mockIsDevFeaturesEnabled = jest.fn(() => true);
 
 jest.mock('react-hot-toast', () => ({
   toast: {
@@ -32,9 +31,6 @@ jest.mock('@/consts', () => ({
 
 jest.mock('@/consts/env', () => ({
   isCloud: true,
-  get isDevFeaturesEnabled() {
-    return mockIsDevFeaturesEnabled();
-  },
 }));
 
 jest.mock('@/consts/subscriptions', () => ({
@@ -180,7 +176,6 @@ const addCustomAllowlistValue = async (value: string) => {
 describe('BlocklistForm', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockIsDevFeaturesEnabled.mockReturnValue(true);
     mockPatch.mockReturnValue({
       json: async () => ({
         emailBlocklistPolicy: {
@@ -214,14 +209,6 @@ describe('BlocklistForm', () => {
     );
   });
 
-  it('does not render the custom allowlist section when dev features are disabled', () => {
-    mockIsDevFeaturesEnabled.mockReturnValue(false);
-    renderBlocklistForm();
-
-    expect(screen.queryByText('allowed@example.com')).toBeNull();
-    expect(screen.queryByText('security.blocklist.custom_email_allowlist.title')).toBeNull();
-  });
-
   it('sends customAllowlist in the sign-in experience patch payload', async () => {
     renderBlocklistForm();
 
@@ -242,25 +229,6 @@ describe('BlocklistForm', () => {
     });
     expect(mockMutateGlobal).toHaveBeenCalledWith('api/sign-in-exp');
     expect(toast.success).toHaveBeenCalledWith('admin_console.general.saved');
-  });
-
-  it('omits customAllowlist from the sign-in experience patch payload when dev features are disabled', async () => {
-    mockIsDevFeaturesEnabled.mockReturnValue(false);
-    renderBlocklistForm();
-
-    fireEvent.click(screen.getByText('general.save_changes'));
-
-    await waitFor(() => {
-      expect(mockPatch).toHaveBeenCalledWith('api/sign-in-exp', {
-        json: {
-          emailBlocklistPolicy: {
-            blockDisposableAddresses: false,
-            blockSubaddressing: true,
-            customBlocklist: ['@blocked.com'],
-          },
-        },
-      });
-    });
   });
 
   it('shows cheap warnings without blocking save', async () => {

@@ -21,7 +21,7 @@ import {
   deleteDefaultTenantUser,
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
-import { devFeatureTest, generateEmail } from '#src/utils.js';
+import { generateEmail } from '#src/utils.js';
 
 const emailNotAllowedError = {
   code: 'session.email_blocklist.email_not_allowed',
@@ -230,7 +230,7 @@ describe('should reject the email registration if the email is in the blocklist'
   });
 });
 
-devFeatureTest.describe('should enforce the email allowlist for new email registrations', () => {
+describe('should enforce the email allowlist for new email registrations', () => {
   const exactAllowedEmail = generateEmail('allowlist-exact.com');
   const allowedDomain = 'allowlist-domain.com';
   const wildcardLocalPartDomain = 'allowlist-local.com';

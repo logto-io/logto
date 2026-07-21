@@ -840,7 +840,7 @@ describe('sign-in experience routes with dev features disabled', () => {
     });
   });
 
-  it('should omit custom allowlist from GET response', async () => {
+  it('should include custom allowlist in GET response', async () => {
     const emailBlocklistPolicy = {
       customAllowlist: ['@allowed.com'],
       customBlocklist: ['@blocked.com'],
@@ -853,22 +853,21 @@ describe('sign-in experience routes with dev features disabled', () => {
     const response = await requester.get('/sign-in-exp');
 
     expect(response.status).toEqual(200);
-    expect(response.body.emailBlocklistPolicy).toEqual({
-      customBlocklist: emailBlocklistPolicy.customBlocklist,
-    });
+    expect(response.body.emailBlocklistPolicy).toEqual(emailBlocklistPolicy);
   });
 
-  it('should reject custom allowlist updates', async () => {
+  it('should accept custom allowlist updates', async () => {
     const { requester, updateDefaultSignInExperience } = await createDevFeaturesDisabledRequester();
+    const emailBlocklistPolicy = {
+      customAllowlist: ['@allowed.com'],
+    };
 
     const response = await requester.patch('/sign-in-exp').send({
-      emailBlocklistPolicy: {
-        customAllowlist: ['@allowed.com'],
-      },
+      emailBlocklistPolicy,
     });
 
-    expect(response.status).toEqual(400);
-    expect(updateDefaultSignInExperience).not.toHaveBeenCalled();
+    expect(response.status).toEqual(200);
+    expect(updateDefaultSignInExperience).toHaveBeenCalledWith({ emailBlocklistPolicy });
   });
 });
 

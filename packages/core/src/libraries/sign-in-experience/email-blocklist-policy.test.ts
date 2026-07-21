@@ -1,7 +1,6 @@
 import { type EmailBlocklistPolicy } from '@logto/schemas';
 import { deduplicate } from '@silverhand/essentials';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 
 import {
@@ -20,12 +19,6 @@ const buildPolicyWithCustomList = (
 ): EmailBlocklistPolicy => ({
   [key]: list,
 });
-
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-
-const setIsDevFeaturesEnabled = (value: boolean) => {
-  Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', value);
-};
 
 describe('parseEmailBlocklistPolicy', () => {
   it.each(customListKeys)('should throw error for invalid %s item', (key) => {
@@ -68,14 +61,6 @@ describe('validateEmailAgainstBlocklistPolicy', () => {
     blockSubaddressing: true,
     customBlocklist: ['foo@bar.com', '@foo.com'],
   };
-
-  beforeAll(() => {
-    setIsDevFeaturesEnabled(true);
-  });
-
-  afterAll(() => {
-    setIsDevFeaturesEnabled(originalIsDevFeaturesEnabled);
-  });
 
   it('should throw if the email uses subaddressing', async () => {
     await expect(

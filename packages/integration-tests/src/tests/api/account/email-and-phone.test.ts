@@ -26,12 +26,7 @@ import {
   signInAndGetUserApi,
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
-import {
-  devFeatureTest,
-  generateEmail,
-  generatePhone,
-  generateNationalPhoneNumber,
-} from '#src/utils.js';
+import { generateEmail, generatePhone, generateNationalPhoneNumber } from '#src/utils.js';
 
 const expectPrimaryEmailUpdateRejectedByBlocklist = async (
   email: string,
@@ -279,14 +274,11 @@ describe('account (email and phone)', () => {
       await expectPrimaryEmailUpdateRejectedByBlocklist(email, ['FOO*@ACCOUNT-WILDCARD.COM']);
     });
 
-    devFeatureTest.it(
-      'should reject the email if the email does not match the allowlist',
-      async () => {
-        const email = generateEmail('account-allowlist.com');
+    it('should reject the email if the email does not match the allowlist', async () => {
+      const email = generateEmail('account-allowlist.com');
 
-        await expectPrimaryEmailUpdateRejectedByAllowlist(email, ['@different-account-domain.com']);
-      }
-    );
+      await expectPrimaryEmailUpdateRejectedByAllowlist(email, ['@different-account-domain.com']);
+    });
   });
 
   describe('DELETE /my-account/primary-email', () => {

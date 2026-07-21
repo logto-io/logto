@@ -154,7 +154,7 @@ export const validateEmailAgainstBlocklistPolicy = async (
   }
 
   // Guard custom email allowlist if provided.
-  if (EnvSet.values.isDevFeaturesEnabled && customAllowlist && customAllowlist.length > 0) {
+  if (customAllowlist && customAllowlist.length > 0) {
     const isCustomAllowlisted = customAllowlist.some((item) =>
       matchesEmailBlocklistItem(item, email)
     );
