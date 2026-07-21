@@ -1,4 +1,4 @@
-/* eslint-disable max-lines -- Inline hook runtime, policy, and audit behavior share the same library. */
+/* eslint-disable max-lines -- Inline hook runtime, policy, audit, and telemetry share one orchestration flow. */
 import { appInsights } from '@logto/app-insights/node';
 import {
   adminTenantId,
@@ -30,6 +30,12 @@ import {
   sanitizeInlineHookEvent,
   sanitizeInlineHookResult,
 } from './inline-hook-sanitization.js';
+import {
+  getInlineHookExecutionErrorTelemetryProperties,
+  getInlineHookResultTelemetryProperties,
+  type InlineHookRuntimeLocation,
+  trackInlineHookExecutionMetrics,
+} from './inline-hook-telemetry.js';
 
 const inlineHookFunctionName = 'runInlineHook';
 const defaultInlineHookExecutionErrorPolicy = 'block' satisfies InlineHookExecutionErrorPolicy;
@@ -312,7 +318,9 @@ export class InlineHookLibrary {
     const sensitiveValues = getInlineHookSensitiveValues(executionPayload);
     const onExecutionError = inlineHook.onExecutionError ?? defaultInlineHookExecutionErrorPolicy;
     const runtimeLocation = EnvSet.values.isCloud ? 'remote' : 'local';
-    const startedAt = Date.now();
+    const telemetryRuntimeLocation: InlineHookRuntimeLocation = EnvSet.values.isCloud
+      ? 'azure'
+      : 'local';
     const log = createLog(getInlineHookLogKey(key), { independent: true });
 
     log.append({
@@ -324,41 +332,58 @@ export class InlineHookLibrary {
       event: sanitizeInlineHookEvent(event, sensitiveValues),
     });
 
+    const startedAt = Date.now();
     const executionOutcome = await this.executeScript(executionPayload).then<
-      InlineHookExecutionOutcome,
-      InlineHookExecutionOutcome
+      InlineHookExecutionOutcome & { durationMs: number },
+      InlineHookExecutionOutcome & { durationMs: number }
     >(
-      (result) => ({ status: 'success', result }),
-      (error: unknown) => ({ status: 'error', error })
+      (result) => ({ status: 'success', result, durationMs: Date.now() - startedAt }),
+      (error: unknown) => ({ status: 'error', error, durationMs: Date.now() - startedAt })
     );
+    const { durationMs } = executionOutcome;
+    const telemetryProperties =
+      executionOutcome.status === 'error'
+        ? getInlineHookExecutionErrorTelemetryProperties(key, telemetryRuntimeLocation)
+        : getInlineHookResultTelemetryProperties({
+            key,
+            event,
+            result: executionOutcome.result,
+            runtimeLocation: telemetryRuntimeLocation,
+          });
 
-    if (executionOutcome.status === 'error') {
-      const { error } = executionOutcome;
-      const decision = getInlineHookExecutionErrorPolicyDecision({ key, onExecutionError });
+    try {
+      if (executionOutcome.status === 'error') {
+        const { error } = executionOutcome;
+        const decision = getInlineHookExecutionErrorPolicyDecision({ key, onExecutionError });
+
+        log.append({
+          result: LogResult.Error,
+          durationMs,
+          decision: decision.action,
+          errorPolicyOutcome: decision.action === 'continue' ? 'allow' : 'block',
+          inlineHookError: buildSafeInlineHookErrorSummary(error, sensitiveValues),
+        });
+
+        void appInsights.trackException(buildSafeInlineHookTelemetryError(error, sensitiveValues), {
+          properties: telemetryProperties,
+        });
+
+        return applyInlineHookExecutionErrorPolicyDecision(decision);
+      }
+
+      const { result } = executionOutcome;
+      const actionSummary = getInlineHookResultActionSummary(key, result);
 
       log.append({
-        result: LogResult.Error,
-        durationMs: Date.now() - startedAt,
-        decision: decision.action,
-        errorPolicyOutcome: decision.action === 'continue' ? 'allow' : 'block',
-        inlineHookError: buildSafeInlineHookErrorSummary(error, sensitiveValues),
+        durationMs,
+        ...actionSummary,
+        inlineHookResult: sanitizeInlineHookResult(result, sensitiveValues),
       });
 
-      void appInsights.trackException(buildSafeInlineHookTelemetryError(error, sensitiveValues));
-
-      return applyInlineHookExecutionErrorPolicyDecision(decision);
+      return result;
+    } finally {
+      trackInlineHookExecutionMetrics({ durationMs, properties: telemetryProperties });
     }
-
-    const { result } = executionOutcome;
-    const actionSummary = getInlineHookResultActionSummary(key, result);
-
-    log.append({
-      durationMs: Date.now() - startedAt,
-      ...actionSummary,
-      inlineHookResult: sanitizeInlineHookResult(result, sensitiveValues),
-    });
-
-    return result;
   }
 
   private async findEnabledInlineHook(key: LogtoInlineHookKey) {
