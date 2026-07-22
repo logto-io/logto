@@ -1,6 +1,8 @@
 import type { AuditLogKey, LogKey, interaction } from '@logto/schemas';
 import { type Optional } from '@silverhand/essentials';
 
+import { isDevFeaturesEnabled } from './env';
+
 export const auditLogEventTitle = Object.freeze({
   'ExchangeTokenBy.AuthorizationCode': 'Exchange token by Code',
   'ExchangeTokenBy.ClientCredentials': 'Exchange token by Client Credentials',
@@ -93,6 +95,13 @@ export const auditLogEventTitle = Object.freeze({
   'JwtCustomizer.ClientCredentials': 'Get custom M2M access token claims',
   'SamlApplication.AuthnRequest': 'Receive SAML application authentication request',
   'SamlApplication.Callback': 'Handle SAML application callback',
+  // Actions
+  ...(isDevFeaturesEnabled
+    ? {
+        'Action.PostFirstFactorVerification': 'Execute post first-factor verification action',
+        'Action.PostSignIn': 'Execute post sign-in action',
+      }
+    : {}),
 } satisfies Partial<Record<Exclude<AuditLogKey, interaction.DeprecatedInteractionLogKey>, string>>);
 
 export const logEventTitle: Record<string, Optional<string>> & {

@@ -1,5 +1,13 @@
+/* eslint-disable max-lines -- Action runtime, policy, audit, and telemetry share one orchestration flow. */
 import { appInsights } from '@logto/app-insights/node';
-import { adminTenantId, LogtoActionKey, type ActionExecutionErrorPolicy } from '@logto/schemas';
+import {
+  adminTenantId,
+  action as actionLog,
+  LogResult,
+  LogtoActionKey,
+  type ActionExecutionErrorPolicy,
+  type ActionExecutionRequestBody,
+} from '@logto/schemas';
 import { got, HTTPError } from 'got';
 import { ZodError } from 'zod';
 
@@ -7,6 +15,7 @@ import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type { LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import type { SubscriptionLibrary } from '#src/libraries/subscription.js';
+import type { LogContext, LogPayload } from '#src/middleware/koa-audit-log.js';
 import {
   legacyActionFunctionName,
   wrapActionScriptForLegacyRunner,
@@ -17,6 +26,20 @@ import {
   LocalVmError,
   runScriptFunctionInLocalVm,
 } from '#src/utils/local-vm/index.js';
+
+import {
+  buildSafeActionErrorSummary,
+  buildSafeActionTelemetryError,
+  getActionSensitiveValues,
+  sanitizeActionEvent,
+  sanitizeActionResult,
+} from './action-sanitization.js';
+import {
+  getActionExecutionErrorTelemetryProperties,
+  getActionResultTelemetryProperties,
+  type ActionRuntimeLocation,
+  trackActionExecutionMetrics,
+} from './action-telemetry.js';
 
 const defaultActionExecutionErrorPolicy = 'block' satisfies ActionExecutionErrorPolicy;
 /**
@@ -60,6 +83,8 @@ type ActionEventSource<Event> =
 
 type RunActionData<Event> = ActionEventSource<Event> & {
   key: LogtoActionKey;
+  auditContext: Pick<LogContext, 'createLog'> &
+    Pick<LogPayload, 'applicationId' | 'sessionId' | 'userId'>;
 };
 
 type ActionExecutionErrorHandlingData = {
@@ -67,52 +92,41 @@ type ActionExecutionErrorHandlingData = {
   onExecutionError?: ActionExecutionErrorPolicy;
 };
 
-type ActionExecutionErrorTelemetryData<Event> = ActionExecutionErrorHandlingData & {
-  event: Event;
-};
+type ActionExecutionOutcome =
+  | { status: 'success'; result: unknown }
+  | { status: 'error'; error: unknown };
 
-const sensitiveValueReplacement = '[redacted]';
+const actionLogTypes = Object.freeze({
+  [LogtoActionKey.PostFirstFactorVerification]: actionLog.Type.PostFirstFactorVerification,
+  [LogtoActionKey.PostSignIn]: actionLog.Type.PostSignIn,
+} satisfies Record<LogtoActionKey, actionLog.Type>);
 
-const getPostFirstFactorVerificationPassword = (event: unknown) => {
-  if (
-    typeof event === 'object' &&
-    event !== null &&
-    'password' in event &&
-    typeof event.password === 'string'
-  ) {
-    return event.password;
+const getActionLogKey = (key: LogtoActionKey): actionLog.LogKey =>
+  `${actionLog.prefix}.${actionLogTypes[key]}`;
+
+const actionResultActions = Object.freeze({
+  [LogtoActionKey.PostFirstFactorVerification]: ['createUser', 'updateUser'],
+  [LogtoActionKey.PostSignIn]: ['updateUser'],
+} satisfies Record<LogtoActionKey, readonly string[]>);
+
+const getActionResultActionSummary = (key: LogtoActionKey, result: unknown) => {
+  try {
+    if (typeof result !== 'object' || result === null) {
+      return { decision: 'noop' };
+    }
+
+    const rawAction: unknown = Reflect.get(result, 'action');
+
+    if (typeof rawAction !== 'string') {
+      return { decision: 'noop' };
+    }
+
+    const action = actionResultActions[key].find((candidate) => candidate === rawAction);
+
+    return action ? { action, decision: action } : { decision: 'invalid' };
+  } catch {
+    return { decision: 'invalid' };
   }
-};
-
-const redactSensitiveValue = (value: string, sensitiveValue: string) =>
-  value.split(sensitiveValue).join(sensitiveValueReplacement);
-
-const buildActionExecutionErrorTelemetryPayload = <Event>({
-  key,
-  event,
-  error,
-}: ActionExecutionErrorTelemetryData<Event> & {
-  error: unknown;
-}) => {
-  const password =
-    key === LogtoActionKey.PostFirstFactorVerification
-      ? getPostFirstFactorVerificationPassword(event)
-      : undefined;
-
-  const sanitize = (value: string) => (password ? redactSensitiveValue(value, password) : value);
-
-  const telemetryError = new Error(
-    sanitize(error instanceof Error ? error.message : String(error))
-  );
-
-  if (error instanceof Error) {
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Keep the original error type on the sanitized telemetry copy.
-    telemetryError.name = error.name;
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Preserve the useful stack on the sanitized telemetry copy.
-    telemetryError.stack = error.stack && sanitize(error.stack);
-  }
-
-  return telemetryError;
 };
 
 const getActionErrorFallback = (key: LogtoActionKey): ActionExecutionErrorPolicyDecision => {
@@ -127,6 +141,8 @@ const getActionErrorFallback = (key: LogtoActionKey): ActionExecutionErrorPolicy
       };
     }
   }
+
+  throw new TypeError('Unsupported action key');
 };
 
 export const getActionExecutionErrorPolicyDecision = ({
@@ -142,9 +158,7 @@ export const getActionExecutionErrorPolicyDecision = ({
   return getActionErrorFallback(key);
 };
 
-const handleActionExecutionError = (data: ActionExecutionErrorHandlingData) => {
-  const decision = getActionExecutionErrorPolicyDecision(data);
-
+const applyActionExecutionErrorPolicyDecision = (decision: ActionExecutionErrorPolicyDecision) => {
   if (decision.action === 'throw') {
     throw decision.error;
   }
@@ -279,7 +293,11 @@ export class ActionLibrary {
     }
   }
 
-  async runAction<Event>({ key, ...eventSource }: RunActionData<Event>): Promise<unknown> {
+  async runAction<Event>({
+    key,
+    auditContext: { createLog, ...auditContext },
+    ...eventSource
+  }: RunActionData<Event>): Promise<unknown> {
     if (!EnvSet.values.isDevFeaturesEnabled) {
       return;
     }
@@ -295,23 +313,82 @@ export class ActionLibrary {
     }
 
     const event = 'getEvent' in eventSource ? await eventSource.getEvent() : eventSource.event;
+    const executionPayload: ActionExecutionRequestBody = {
+      script: action.script,
+      actionType: key,
+      // Production events are always JSON-serializable payloads from Core call sites.
+      // eslint-disable-next-line no-restricted-syntax -- Generic Event is wider than Json; cast at the shared execution boundary.
+      event: event as ActionExecutionRequestBody['event'],
+      environmentVariables: action.environmentVariables,
+    };
+    const sensitiveValues = getActionSensitiveValues(executionPayload);
+    const onExecutionError = action.onExecutionError ?? defaultActionExecutionErrorPolicy;
+    const runtimeLocation = EnvSet.values.isCloud ? 'remote' : 'local';
+    const telemetryRuntimeLocation: ActionRuntimeLocation = EnvSet.values.isCloud
+      ? 'azure'
+      : 'local';
+    const log = createLog(getActionLogKey(key), { independent: true });
+
+    log.append({
+      ...auditContext,
+      tenantId: this.tenantId,
+      actionType: key,
+      runtimeLocation,
+      onExecutionError,
+      event: sanitizeActionEvent(event, sensitiveValues),
+    });
+
+    const startedAt = Date.now();
+    const executionOutcome = await this.executeScript(executionPayload).then<
+      ActionExecutionOutcome & { durationMs: number },
+      ActionExecutionOutcome & { durationMs: number }
+    >(
+      (result) => ({ status: 'success', result, durationMs: Date.now() - startedAt }),
+      (error: unknown) => ({ status: 'error', error, durationMs: Date.now() - startedAt })
+    );
+    const { durationMs } = executionOutcome;
+    const telemetryProperties =
+      executionOutcome.status === 'error'
+        ? getActionExecutionErrorTelemetryProperties(key, telemetryRuntimeLocation)
+        : getActionResultTelemetryProperties({
+            key,
+            event,
+            result: executionOutcome.result,
+            runtimeLocation: telemetryRuntimeLocation,
+          });
 
     try {
-      return await this.executeScript({
-        script: action.script,
-        actionType: key,
-        event,
-        environmentVariables: action.environmentVariables,
-      });
-    } catch (error: unknown) {
-      void appInsights.trackException(
-        buildActionExecutionErrorTelemetryPayload({ key, event, error })
-      );
+      if (executionOutcome.status === 'error') {
+        const { error } = executionOutcome;
+        const decision = getActionExecutionErrorPolicyDecision({ key, onExecutionError });
 
-      return handleActionExecutionError({
-        key,
-        onExecutionError: action.onExecutionError,
+        log.append({
+          result: LogResult.Error,
+          durationMs,
+          decision: decision.action,
+          errorPolicyOutcome: decision.action === 'continue' ? 'allow' : 'block',
+          actionError: buildSafeActionErrorSummary(error, sensitiveValues),
+        });
+
+        void appInsights.trackException(buildSafeActionTelemetryError(error, sensitiveValues), {
+          properties: telemetryProperties,
+        });
+
+        return applyActionExecutionErrorPolicyDecision(decision);
+      }
+
+      const { result } = executionOutcome;
+      const actionSummary = getActionResultActionSummary(key, result);
+
+      log.append({
+        durationMs,
+        ...actionSummary,
+        actionResult: sanitizeActionResult(result, sensitiveValues),
       });
+
+      return result;
+    } finally {
+      trackActionExecutionMetrics({ durationMs, properties: telemetryProperties });
     }
   }
 
@@ -351,3 +428,4 @@ export class ActionLibrary {
     return quota.inlineHooksEnabled;
   }
 }
+/* eslint-enable max-lines */

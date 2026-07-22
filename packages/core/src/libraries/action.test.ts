@@ -1,9 +1,12 @@
+/* eslint-disable max-lines -- Action runtime, policy, and audit behavior share the same library setup. */
 import { appInsights } from '@logto/app-insights/node';
-import { LogtoActionKey } from '@logto/schemas';
+import { action, LogResult, LogtoActionKey, SignInIdentifier } from '@logto/schemas';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 
+import { actionMetricNames, type ActionTelemetryProperties } from './action-telemetry.js';
 import { getActionExecutionErrorPolicyDecision, ActionLibrary } from './action.js';
 import type { ActionExecutionErrorFallback, ActionExecutionErrorPolicyDecision } from './action.js';
 import type { LogtoConfigLibrary } from './logto-config.js';
@@ -15,6 +18,23 @@ const getAction = jest.fn() as jest.MockedFunction<LogtoConfigLibrary['getAction
 const getSubscriptionData = jest.fn() as jest.MockedFunction<
   SubscriptionLibrary['getSubscriptionData']
 >;
+const trackMetric = jest.fn();
+const originalAppInsightsClient = appInsights.client;
+
+const expectActionMetrics = (properties: ActionTelemetryProperties) => {
+  expect(trackMetric).toHaveBeenCalledTimes(2);
+  expect(trackMetric).toHaveBeenNthCalledWith(1, {
+    name: actionMetricNames.executionCount,
+    value: 1,
+    properties,
+  });
+  expect(trackMetric).toHaveBeenNthCalledWith(2, {
+    name: actionMetricNames.executionDuration,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Jest asymmetric matcher is typed as `any`.
+    value: expect.any(Number),
+    properties,
+  });
+};
 
 const createLibrary = (tenantId = 'tenant_id') =>
   new ActionLibrary(
@@ -31,10 +51,22 @@ const setIsCloud = (isCloud: boolean) => {
   (EnvSet.values as { isCloud: boolean }).isCloud = isCloud;
 };
 
+type RunActionInput<Event> = {
+  key: LogtoActionKey;
+} & ({ event: Event } | { getEvent: () => Promise<Event> });
+
 describe('ActionLibrary', () => {
   const library = createLibrary();
+  const { createLog, mockAppend } = createMockLogContext();
+  const runAction = async <Event>(input: RunActionInput<Event>) =>
+    library.runAction({ ...input, auditContext: { createLog } });
 
   beforeEach(() => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Provide an AppInsights client for metric assertions.
+    appInsights.client = {
+      trackMetric,
+      trackException: jest.fn(),
+    } as unknown as NonNullable<typeof appInsights.client>;
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for action runtime tests.
     (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
     getSubscriptionData.mockResolvedValue({
@@ -47,6 +79,8 @@ describe('ActionLibrary', () => {
   afterEach(() => {
     jest.restoreAllMocks();
     jest.clearAllMocks();
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore the shared AppInsights singleton.
+    appInsights.client = originalAppInsightsClient;
     setIsCloud(originalIsCloud);
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after dev feature tests.
     (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
@@ -79,7 +113,7 @@ describe('ActionLibrary', () => {
     });
 
     await expect(
-      library.runAction({
+      runAction({
         key: LogtoActionKey.PostSignIn,
         getEvent,
       })
@@ -93,6 +127,322 @@ describe('ActionLibrary', () => {
 
     expect(getAction).toHaveBeenCalledWith(LogtoActionKey.PostSignIn);
     expect(getEvent).toHaveBeenCalledTimes(1);
+    expect(createLog).toHaveBeenCalledTimes(1);
+    expect(createLog).toHaveBeenCalledWith('Action.PostSignIn', { independent: true });
+    expect(mockAppend).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({
+        tenantId: 'tenant_id',
+        actionType: LogtoActionKey.PostSignIn,
+        runtimeLocation: 'local',
+        onExecutionError: 'block',
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Jest asymmetric matcher is typed as `any`.
+        event: expect.objectContaining({ key: LogtoActionKey.PostSignIn }),
+      })
+    );
+    expect(mockAppend).toHaveBeenNthCalledWith(2, {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Jest asymmetric matcher is typed as `any`.
+      durationMs: expect.any(Number),
+      action: 'updateUser',
+      decision: 'updateUser',
+      actionResult: {
+        action: 'updateUser',
+        user: '[redacted]',
+        apiType: 'undefined',
+      },
+    });
+    expectActionMetrics({
+      actionType: 'PostSignIn',
+      runtimeLocation: 'local',
+      outcome: 'success',
+      action: 'updateUser',
+    });
+  });
+
+  it('emits no-op metrics for a PostSignIn result without a user patch', async () => {
+    getAction.mockResolvedValueOnce({
+      enabled: true,
+      script: 'const runAction = () => ({ action: "updateUser" });',
+    });
+
+    await expect(
+      runAction({
+        key: LogtoActionKey.PostSignIn,
+        event: {},
+      })
+    ).resolves.toEqual({ action: 'updateUser' });
+
+    expectActionMetrics({
+      actionType: 'PostSignIn',
+      runtimeLocation: 'local',
+      outcome: 'noop',
+      action: 'noop',
+    });
+  });
+
+  it('emits fallback metrics when a P1 script declines with an empty result', async () => {
+    getAction.mockResolvedValueOnce({
+      enabled: true,
+      script: 'const runAction = () => ({});',
+    });
+
+    await expect(
+      runAction({
+        key: LogtoActionKey.PostFirstFactorVerification,
+        event: {},
+      })
+    ).resolves.toEqual({});
+
+    expectActionMetrics({
+      actionType: 'PostFirstFactorVerification',
+      runtimeLocation: 'local',
+      outcome: 'fallback',
+      action: 'noop',
+    });
+  });
+
+  it('emits invalid-result metrics when a P1 script does not verify the password', async () => {
+    const result = {
+      action: 'createUser',
+      user: {},
+      passwordVerified: false,
+    };
+    getAction.mockResolvedValueOnce({
+      enabled: true,
+      script: 'const runAction = () => ({});',
+    });
+    jest.spyOn(library, 'executeScript').mockResolvedValueOnce(result);
+
+    await expect(
+      runAction({
+        key: LogtoActionKey.PostFirstFactorVerification,
+        event: { user: null },
+      })
+    ).resolves.toEqual(result);
+
+    expectActionMetrics({
+      actionType: 'PostFirstFactorVerification',
+      runtimeLocation: 'local',
+      outcome: 'invalidResult',
+      action: 'noop',
+    });
+  });
+
+  it('emits invalid-result metrics when a P1 result changes the sign-in identifier', async () => {
+    const result = {
+      action: 'createUser',
+      user: { primaryEmail: 'changed@example.com' },
+      passwordVerified: true,
+    };
+    getAction.mockResolvedValueOnce({
+      enabled: true,
+      script: 'const runAction = () => ({});',
+    });
+    jest.spyOn(library, 'executeScript').mockResolvedValueOnce(result);
+
+    await expect(
+      runAction({
+        key: LogtoActionKey.PostFirstFactorVerification,
+        event: {
+          identifier: { type: SignInIdentifier.Email, value: 'original@example.com' },
+          user: null,
+        },
+      })
+    ).resolves.toEqual(result);
+
+    expectActionMetrics({
+      actionType: 'PostFirstFactorVerification',
+      runtimeLocation: 'local',
+      outcome: 'invalidResult',
+      action: 'noop',
+    });
+  });
+
+  it('keeps action behavior unchanged when metric tracking fails', async () => {
+    const result = { action: 'updateUser', user: { name: 'updated' } };
+    getAction.mockResolvedValueOnce({
+      enabled: true,
+      script: 'const runAction = () => ({});',
+    });
+    jest.spyOn(library, 'executeScript').mockResolvedValueOnce(result);
+    trackMetric
+      .mockImplementationOnce(() => {
+        throw new Error('Metric client unavailable');
+      })
+      .mockImplementationOnce(() => {
+        throw new Error('Metric client unavailable');
+      });
+
+    await expect(
+      runAction({
+        key: LogtoActionKey.PostSignIn,
+        event: {},
+      })
+    ).resolves.toEqual(result);
+
+    expect(trackMetric).toHaveBeenCalledTimes(2);
+  });
+
+  it('writes a sanitized P1 audit entry without scripts, environment values, or user patches', async () => {
+    const script = 'const privateActionScript = true;';
+    const environmentSecret = 'environment-secret-value';
+    const password = 'plain-text-password';
+    const eventSecret = 'event-secret-value';
+    const apiKey = 'api-key-value';
+    const accessToken = 'access-token-value';
+    const nestedPatchEmail = 'nested-patch@example.com';
+    const event = {
+      key: LogtoActionKey.PostFirstFactorVerification,
+      password,
+      nested: {
+        secret: eventSecret,
+      },
+      credentials: {
+        apiKey,
+        accessToken,
+      },
+      echoed: `${script} ${environmentSecret} ${password}`,
+    };
+    const result = {
+      action: 'createUser',
+      passwordVerified: true,
+      user: {
+        primaryEmail: 'jane@example.com',
+        customData: {
+          secret: 'returned-patch-secret',
+        },
+      },
+      nested: [{ User: { primaryEmail: nestedPatchEmail } }],
+      note: environmentSecret,
+    };
+
+    getAction.mockResolvedValueOnce({
+      enabled: true,
+      script,
+      environmentVariables: {
+        API_TOKEN: environmentSecret,
+      },
+    });
+    jest.spyOn(library, 'executeScript').mockResolvedValueOnce(result);
+
+    await expect(
+      library.runAction({
+        key: LogtoActionKey.PostFirstFactorVerification,
+        event,
+        auditContext: {
+          createLog,
+          sessionId: 'session-id',
+          applicationId: 'application-id',
+          userId: 'user-id',
+        },
+      })
+    ).resolves.toEqual(result);
+
+    expect(createLog).toHaveBeenCalledWith(
+      `${action.prefix}.${action.Type.PostFirstFactorVerification}`,
+      { independent: true }
+    );
+    expect(mockAppend).toHaveBeenNthCalledWith(1, {
+      sessionId: 'session-id',
+      applicationId: 'application-id',
+      userId: 'user-id',
+      tenantId: 'tenant_id',
+      actionType: LogtoActionKey.PostFirstFactorVerification,
+      runtimeLocation: 'local',
+      onExecutionError: 'block',
+      event: {
+        key: LogtoActionKey.PostFirstFactorVerification,
+        password: '******',
+        nested: {
+          secret: '******',
+        },
+        credentials: '******',
+        echoed: '[redacted] [redacted] [redacted]',
+      },
+    });
+    expect(mockAppend).toHaveBeenNthCalledWith(2, {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Jest asymmetric matcher is typed as `any`.
+      durationMs: expect.any(Number),
+      action: 'createUser',
+      decision: 'createUser',
+      actionResult: {
+        action: 'createUser',
+        passwordVerified: true,
+        user: '[redacted]',
+        nested: [{ User: '[redacted]' }],
+        note: '[redacted]',
+      },
+    });
+    expectActionMetrics({
+      actionType: 'PostFirstFactorVerification',
+      runtimeLocation: 'local',
+      outcome: 'success',
+      action: 'createUser',
+    });
+
+    const serializedAuditPayload = JSON.stringify(mockAppend.mock.calls);
+    expect(serializedAuditPayload).not.toContain(script);
+    expect(serializedAuditPayload).not.toContain(environmentSecret);
+    expect(serializedAuditPayload).not.toContain(password);
+    expect(serializedAuditPayload).not.toContain(eventSecret);
+    expect(serializedAuditPayload).not.toContain(apiKey);
+    expect(serializedAuditPayload).not.toContain(accessToken);
+    expect(serializedAuditPayload).not.toContain(nestedPatchEmail);
+    expect(serializedAuditPayload).not.toContain('returned-patch-secret');
+  });
+
+  it('normalizes untrusted result actions before writing audit summaries', async () => {
+    const environmentSecret = 'environment-secret-action';
+    const passwordStatusSecret = 'password-status-secret';
+    getAction.mockResolvedValueOnce({
+      enabled: true,
+      script: 'const runAction = () => ({});',
+      environmentVariables: { API_TOKEN: environmentSecret },
+    });
+    jest.spyOn(library, 'executeScript').mockResolvedValueOnce({
+      action: environmentSecret,
+      passwordVerified: passwordStatusSecret,
+    });
+
+    await runAction({ key: LogtoActionKey.PostSignIn, event: {} });
+
+    expect(mockAppend).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        decision: 'invalid',
+        actionResult: { action: 'invalid', passwordVerified: '******' },
+      })
+    );
+    expectActionMetrics({
+      actionType: 'PostSignIn',
+      runtimeLocation: 'local',
+      outcome: 'invalidResult',
+      action: 'noop',
+    });
+    expect(JSON.stringify(mockAppend.mock.calls)).not.toContain(environmentSecret);
+    expect(JSON.stringify(mockAppend.mock.calls)).not.toContain(passwordStatusSecret);
+  });
+
+  it('keeps audit summarization failures from changing the action result', async () => {
+    const result = {
+      action: 'updateUser',
+      get user(): never {
+        throw new Error('Untrusted getter');
+      },
+    };
+    getAction.mockResolvedValueOnce({
+      enabled: true,
+      script: 'const runAction = () => ({});',
+    });
+    jest.spyOn(library, 'executeScript').mockResolvedValueOnce(result);
+
+    await expect(runAction({ key: LogtoActionKey.PostSignIn, event: {} })).resolves.toBe(result);
+    expect(mockAppend).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        action: 'updateUser',
+        decision: 'updateUser',
+        actionResult: '[unavailable]',
+      })
+    );
   });
 
   it('continues to run stored scripts that use the legacy entry point', async () => {
@@ -104,7 +454,7 @@ describe('ActionLibrary', () => {
     });
 
     await expect(
-      library.runAction({
+      runAction({
         key: LogtoActionKey.PostSignIn,
         event: {},
       })
@@ -119,7 +469,7 @@ describe('ActionLibrary', () => {
     (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = false;
 
     await expect(
-      library.runAction({
+      runAction({
         key: LogtoActionKey.PostSignIn,
         event: {},
       })
@@ -127,6 +477,8 @@ describe('ActionLibrary', () => {
 
     expect(getAction).not.toHaveBeenCalled();
     expect(getSubscriptionData).not.toHaveBeenCalled();
+    expect(createLog).not.toHaveBeenCalled();
+    expect(trackMetric).not.toHaveBeenCalled();
   });
 
   it('does not run disabled actions', async () => {
@@ -140,24 +492,29 @@ describe('ActionLibrary', () => {
     });
 
     await expect(
-      library.runAction({
+      runAction({
         key: LogtoActionKey.PostSignIn,
         event: {},
       })
     ).resolves.toBeUndefined();
+
+    expect(createLog).not.toHaveBeenCalled();
+    expect(trackMetric).not.toHaveBeenCalled();
   });
 
   it('does not run when the action lookup returns no config', async () => {
     const getEvent = jest.fn().mockResolvedValue({});
 
     await expect(
-      library.runAction({
+      runAction({
         key: LogtoActionKey.PostSignIn,
         getEvent,
       })
     ).resolves.toBeUndefined();
 
     expect(getEvent).not.toHaveBeenCalled();
+    expect(createLog).not.toHaveBeenCalled();
+    expect(trackMetric).not.toHaveBeenCalled();
   });
 
   it('does not run when action config is missing', async () => {
@@ -170,7 +527,7 @@ describe('ActionLibrary', () => {
     );
 
     await expect(
-      library.runAction({
+      runAction({
         key: LogtoActionKey.PostSignIn,
         getEvent,
       })
@@ -187,7 +544,7 @@ describe('ActionLibrary', () => {
     getAction.mockRejectedValueOnce(requestError);
 
     await expect(
-      library.runAction({
+      runAction({
         key: LogtoActionKey.PostSignIn,
         event: {},
       })
@@ -215,7 +572,7 @@ describe('ActionLibrary', () => {
     const runScriptRemotely = jest.spyOn(library, 'runScriptRemotely');
 
     await expect(
-      library.runAction({
+      runAction({
         key: LogtoActionKey.PostSignIn,
         getEvent,
       })
@@ -225,6 +582,9 @@ describe('ActionLibrary', () => {
     expect(executeScript).not.toHaveBeenCalled();
     expect(runScriptInLocalVm).not.toHaveBeenCalled();
     expect(runScriptRemotely).not.toHaveBeenCalled();
+    expect(getEvent).not.toHaveBeenCalled();
+    expect(createLog).not.toHaveBeenCalled();
+    expect(trackMetric).not.toHaveBeenCalled();
   });
 
   it('allows PostSignIn execution errors to continue without action enrichment', async () => {
@@ -239,11 +599,19 @@ describe('ActionLibrary', () => {
     });
 
     await expect(
-      library.runAction({
+      runAction({
         key: LogtoActionKey.PostSignIn,
         event: {},
       })
     ).resolves.toBeUndefined();
+
+    expect(mockAppend).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        result: LogResult.Error,
+        decision: 'continue',
+        errorPolicyOutcome: 'allow',
+      })
+    );
   });
 
   it('keeps PostFirstFactorVerification allow-mode errors from granting access', () => {
@@ -270,32 +638,53 @@ describe('ActionLibrary', () => {
     });
 
     await expect(
-      library.runAction({
+      runAction({
         key: LogtoActionKey.PostFirstFactorVerification,
         event: {},
       })
     ).resolves.toEqual({
       action: 'rejectInvalidCredentials',
     });
+
+    expect(mockAppend).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        result: LogResult.Error,
+        decision: 'rejectInvalidCredentials',
+        errorPolicyOutcome: 'block',
+      })
+    );
   });
 
-  it('redacts the PostFirstFactorVerification password from tracked execution errors', async () => {
+  it('redacts credentials, scripts, and environment values from tracked execution errors', async () => {
     const password = 'secret-password';
+    const script = 'const privateActionScript = true;';
+    const environmentSecret = 'environment-secret-value';
+    const nestedSecret = 'nested-secret-value';
     const trackException = jest.spyOn(appInsights, 'trackException').mockResolvedValue();
-    jest
-      .spyOn(ActionLibrary, 'runScriptInLocalVm')
-      .mockRejectedValueOnce(new Error(`Action failed with ${password}`));
+    class SensitiveExecutionError extends Error {
+      override readonly name = environmentSecret;
+
+      readonly code = password;
+    }
+    const executionError = new SensitiveExecutionError(
+      `Action failed with ${password} ${script} ${environmentSecret} ${nestedSecret}`
+    );
+    jest.spyOn(ActionLibrary, 'runScriptInLocalVm').mockRejectedValueOnce(executionError);
     getAction.mockResolvedValueOnce({
       enabled: true,
       onExecutionError: 'allow',
-      script: '',
+      script,
+      environmentVariables: {
+        API_TOKEN: environmentSecret,
+      },
     });
 
     await expect(
-      library.runAction({
+      runAction({
         key: LogtoActionKey.PostFirstFactorVerification,
         event: {
           password,
+          nested: { secret: { value: nestedSecret } },
         },
       })
     ).resolves.toEqual({
@@ -305,9 +694,33 @@ describe('ActionLibrary', () => {
     const trackedError = trackException.mock.calls[0]?.[0];
     expect(trackedError).toBeInstanceOf(Error);
     expect(trackedError).toMatchObject({
-      message: 'Action failed with [redacted]',
+      name: 'Error',
+      message: 'Action failed with [redacted] [redacted] [redacted] [redacted]',
     });
     expect((trackedError as Error).stack).not.toContain(password);
+    expect(JSON.stringify(trackedError)).not.toContain(script);
+    expect(JSON.stringify(trackedError)).not.toContain(environmentSecret);
+    expect(JSON.stringify(mockAppend.mock.calls)).not.toContain(password);
+    expect(JSON.stringify(mockAppend.mock.calls)).not.toContain(script);
+    expect(JSON.stringify(mockAppend.mock.calls)).not.toContain(environmentSecret);
+    expect(JSON.stringify(mockAppend.mock.calls)).not.toContain(nestedSecret);
+    expect(trackException).toHaveBeenCalledWith(trackedError, {
+      properties: {
+        actionType: 'PostFirstFactorVerification',
+        runtimeLocation: 'local',
+        outcome: 'executionError',
+        action: 'noop',
+      },
+    });
+    expect(JSON.stringify(trackException.mock.calls)).not.toContain(password);
+    expect(JSON.stringify(trackException.mock.calls)).not.toContain(script);
+    expect(JSON.stringify(trackException.mock.calls)).not.toContain(environmentSecret);
+    expectActionMetrics({
+      actionType: 'PostFirstFactorVerification',
+      runtimeLocation: 'local',
+      outcome: 'executionError',
+      action: 'noop',
+    });
   });
 
   it('removes remote request details from tracked execution errors', async () => {
@@ -330,7 +743,7 @@ describe('ActionLibrary', () => {
     });
 
     await expect(
-      library.runAction({
+      runAction({
         key: LogtoActionKey.PostSignIn,
         event: {},
       })
@@ -357,13 +770,27 @@ describe('ActionLibrary', () => {
     });
 
     await expect(
-      library.runAction({
+      runAction({
         key: LogtoActionKey.PostSignIn,
         event: {},
       })
     ).rejects.toMatchObject({
       code: 'session.verification_failed',
       status: 400,
+    });
+
+    expect(mockAppend).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        result: LogResult.Error,
+        decision: 'throw',
+        errorPolicyOutcome: 'block',
+      })
+    );
+    expectActionMetrics({
+      actionType: 'PostSignIn',
+      runtimeLocation: 'local',
+      outcome: 'executionError',
+      action: 'noop',
     });
   });
 
@@ -383,3 +810,4 @@ describe('ActionLibrary', () => {
     });
   });
 });
+/* eslint-enable max-lines */

@@ -1,7 +1,16 @@
-import { LogResult, token, interaction, LogKeyUnknown, jwtCustomizer, saml } from '@logto/schemas';
+import {
+  LogResult,
+  token,
+  interaction,
+  action,
+  LogKeyUnknown,
+  jwtCustomizer,
+  saml,
+} from '@logto/schemas';
 import type { Log } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
+import { EnvSet } from '#src/env-set/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -20,6 +29,11 @@ const logs = {
 };
 const { countLogs, findLogs, findLogById } = logs;
 const logRoutes = await pickDefault(import('./log.js'));
+const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+
+const setDevFeaturesEnabled = (isDevFeaturesEnabled: boolean) => {
+  Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', isDevFeaturesEnabled);
+};
 
 describe('logRoutes', () => {
   const logRequest = createRequester({
@@ -29,21 +43,42 @@ describe('logRoutes', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
   });
 
   describe('GET /logs', () => {
-    it('should call countLogs and findLogs with correct parameters', async () => {
-      const userId = 'userIdValue';
-      const applicationId = 'foo';
-      const logKey = 'SignInUsernamePassword';
-      const page = 1;
-      const pageSize = 5;
+    it.each([false, true])(
+      'should call countLogs and findLogs with correct parameters when dev features are %s',
+      async (isDevFeaturesEnabled) => {
+        setDevFeaturesEnabled(isDevFeaturesEnabled);
+        const actionPrefixes = isDevFeaturesEnabled ? [action.prefix] : [];
+        const userId = 'userIdValue';
+        const applicationId = 'foo';
+        const logKey = 'SignInUsernamePassword';
+        const page = 1;
+        const pageSize = 5;
 
-      await logRequest.get(
-        `/logs?userId=${userId}&applicationId=${applicationId}&logKey=${logKey}&page=${page}&page_size=${pageSize}`
-      );
-      expect(countLogs).toHaveBeenCalledWith(
-        {
+        await logRequest.get(
+          `/logs?userId=${userId}&applicationId=${applicationId}&logKey=${logKey}&page=${page}&page_size=${pageSize}`
+        );
+        expect(countLogs).toHaveBeenCalledWith(
+          {
+            payload: { userId, applicationId },
+            logKey,
+            includeKeyPrefix: [
+              token.Type.ExchangeTokenBy,
+              token.Type.RevokeToken,
+              token.Type.RevokeGrants,
+              interaction.prefix,
+              jwtCustomizer.prefix,
+              saml.prefix,
+              ...actionPrefixes,
+              LogKeyUnknown,
+            ],
+          },
+          { capped: false }
+        );
+        expect(findLogs).toHaveBeenCalledWith(5, 0, {
           payload: { userId, applicationId },
           logKey,
           includeKeyPrefix: [
@@ -53,25 +88,12 @@ describe('logRoutes', () => {
             interaction.prefix,
             jwtCustomizer.prefix,
             saml.prefix,
+            ...actionPrefixes,
             LogKeyUnknown,
           ],
-        },
-        { capped: false }
-      );
-      expect(findLogs).toHaveBeenCalledWith(5, 0, {
-        payload: { userId, applicationId },
-        logKey,
-        includeKeyPrefix: [
-          token.Type.ExchangeTokenBy,
-          token.Type.RevokeToken,
-          token.Type.RevokeGrants,
-          interaction.prefix,
-          jwtCustomizer.prefix,
-          saml.prefix,
-          LogKeyUnknown,
-        ],
-      });
-    });
+        });
+      }
+    );
 
     it('should return correct response', async () => {
       const response = await logRequest.get(`/logs`);

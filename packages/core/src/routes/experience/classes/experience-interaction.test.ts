@@ -137,7 +137,10 @@ const createSignInInteraction = ({
   );
   const runAction = jest.fn(
     async <Event>(
-      input: { key: LogtoActionKey } & ({ event: Event } | { getEvent: () => Promise<Event> })
+      input: { key: LogtoActionKey; auditContext: unknown } & (
+        | { event: Event }
+        | { getEvent: () => Promise<Event> }
+      )
     ): Promise<unknown> => {
       const event = 'getEvent' in input ? await input.getEvent() : input.event;
       return runActionHandler({ key: input.key, event });
@@ -173,7 +176,17 @@ const createSignInInteraction = ({
           },
         }
   );
-  // @ts-expect-error --mock test context
+  const interactionDetails = {
+    jti: 'session-id',
+    params: {
+      client_id: adminConsoleApplicationId,
+    },
+    result: {
+      interactionEvent,
+      userId: user.id,
+      ...interactionResult,
+    },
+  } as unknown as Interaction;
   const signInContext: WithHooksAndLogsContext = {
     assignReleaseOnSuccessInteractionHookResult: jest.fn(),
     assignReleaseAnywayInteractionHookResult: jest.fn(),
@@ -181,14 +194,8 @@ const createSignInInteraction = ({
     appendExceptionHookContext: jest.fn(),
     ...baseContext,
     ...logContext,
+    interactionDetails,
   };
-  const interactionDetails = {
-    result: {
-      interactionEvent,
-      userId: user.id,
-      ...interactionResult,
-    },
-  } as unknown as Interaction;
 
   const experienceInteraction = new ExperienceInteraction(
     signInContext,
@@ -298,7 +305,16 @@ describe('ExperienceInteraction class', () => {
 
       expect(getUserContext).toHaveBeenCalledWith(mockUser.id);
       const [runActionInput] = runAction.mock.calls[0]!;
-      expect(runActionInput).toMatchObject({ key: LogtoActionKey.PostSignIn });
+      expect(runActionInput).toMatchObject({
+        key: LogtoActionKey.PostSignIn,
+        auditContext: {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Jest asymmetric matcher is typed as `any`.
+          createLog: expect.any(Function),
+          sessionId: 'session-id',
+          applicationId: adminConsoleApplicationId,
+          userId: mockUser.id,
+        },
+      });
       expect('getEvent' in runActionInput && typeof runActionInput.getEvent).toBe('function');
       expect(runActionHandler).toHaveBeenCalledWith({
         key: LogtoActionKey.PostSignIn,

@@ -1,9 +1,12 @@
+import { appInsights } from '@logto/app-insights/node';
 import { LogtoActionKey } from '@logto/schemas';
 import { ResponseError } from '@withtyped/client';
 import nock from 'nock';
 
 import { EnvSet } from '#src/env-set/index.js';
+import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 
+import { actionMetricNames } from './action-telemetry.js';
 import { ActionLibrary } from './action.js';
 import type { LogtoConfigLibrary } from './logto-config.js';
 import type { SubscriptionLibrary } from './subscription.js';
@@ -14,6 +17,8 @@ const getAction = jest.fn() as jest.MockedFunction<LogtoConfigLibrary['getAction
 const getSubscriptionData = jest.fn() as jest.MockedFunction<
   SubscriptionLibrary['getSubscriptionData']
 >;
+const trackMetric = jest.fn();
+const originalAppInsightsClient = appInsights.client;
 
 const createLibrary = (tenantId = 'tenant_id') =>
   new ActionLibrary(
@@ -30,10 +35,22 @@ const setIsCloud = (isCloud: boolean) => {
   (EnvSet.values as { isCloud: boolean }).isCloud = isCloud;
 };
 
+type RunActionInput<Event> = {
+  key: LogtoActionKey;
+} & ({ event: Event } | { getEvent: () => Promise<Event> });
+
 describe('ActionLibrary Cloud execution routing', () => {
   const library = createLibrary();
+  const { createLog, mockAppend } = createMockLogContext();
+  const runAction = async <Event>(input: RunActionInput<Event>) =>
+    library.runAction({ ...input, auditContext: { createLog } });
 
   beforeEach(() => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Provide an AppInsights client for metric assertions.
+    appInsights.client = {
+      trackMetric,
+      trackException: jest.fn(),
+    } as unknown as NonNullable<typeof appInsights.client>;
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for action runtime tests.
     (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
     getSubscriptionData.mockResolvedValue({
@@ -47,6 +64,8 @@ describe('ActionLibrary Cloud execution routing', () => {
     nock.cleanAll();
     jest.restoreAllMocks();
     jest.clearAllMocks();
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore the shared AppInsights singleton.
+    appInsights.client = originalAppInsightsClient;
     setIsCloud(originalIsCloud);
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after dev feature tests.
     (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
@@ -193,7 +212,7 @@ describe('ActionLibrary Cloud execution routing', () => {
     const runScriptInLocalVm = jest.spyOn(ActionLibrary, 'runScriptInLocalVm');
 
     await expect(
-      library.runAction({
+      runAction({
         key: LogtoActionKey.PostSignIn,
         event,
       })
@@ -215,6 +234,28 @@ describe('ActionLibrary Cloud execution routing', () => {
     }
     expect(requestBody.script).toContain(script);
     expect(runScriptInLocalVm).not.toHaveBeenCalled();
+    expect(mockAppend).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({ actionType: LogtoActionKey.PostSignIn, runtimeLocation: 'remote' })
+    );
+    const metricProperties = {
+      actionType: 'PostSignIn',
+      runtimeLocation: 'azure',
+      outcome: 'success',
+      action: 'updateUser',
+    };
+    expect(trackMetric).toHaveBeenCalledTimes(2);
+    expect(trackMetric).toHaveBeenNthCalledWith(1, {
+      name: actionMetricNames.executionCount,
+      value: 1,
+      properties: metricProperties,
+    });
+    expect(trackMetric).toHaveBeenNthCalledWith(2, {
+      name: actionMetricNames.executionDuration,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Jest asymmetric matcher is typed as `any`.
+      value: expect.any(Number),
+      properties: metricProperties,
+    });
   });
 
   it('applies allow-mode policy when Cloud remote execution fails without local fallback', async () => {
@@ -241,7 +282,7 @@ describe('ActionLibrary Cloud execution routing', () => {
     const runScriptInLocalVm = jest.spyOn(ActionLibrary, 'runScriptInLocalVm');
 
     await expect(
-      library.runAction({
+      runAction({
         key: LogtoActionKey.PostSignIn,
         event: {},
       })
@@ -267,7 +308,7 @@ describe('ActionLibrary Cloud execution routing', () => {
     const runScriptInLocalVm = jest.spyOn(ActionLibrary, 'runScriptInLocalVm');
 
     await expect(
-      library.runAction({
+      runAction({
         key: LogtoActionKey.PostSignIn,
         event: {},
       })
@@ -291,7 +332,7 @@ describe('ActionLibrary Cloud execution routing', () => {
     const runScriptInLocalVm = jest.spyOn(ActionLibrary, 'runScriptInLocalVm');
 
     await expect(
-      library.runAction({
+      runAction({
         key: LogtoActionKey.PostFirstFactorVerification,
         event: {
           password: 'secret-password',
