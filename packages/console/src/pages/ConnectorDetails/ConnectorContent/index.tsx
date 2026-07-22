@@ -16,7 +16,7 @@ import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { connectors, emailConnectors } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useApi from '@/hooks/use-api';
 import { useConnectorFormConfigParser } from '@/hooks/use-connector-form-config-parser';
@@ -113,7 +113,7 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
   const updateUsage = useCallback(() => {
     // A hosted-email test send consumes the daily/monthly quota; refresh that display even when the
     // lifetime count is unavailable (core wraps `getUsage` in `trySafe`, so `usage` may be undefined).
-    if (isCloud && isDevFeaturesEnabled && isEmailServiceConnector && currentTenantId) {
+    if (isCloud && isEmailServiceConnector && currentTenantId) {
       void mutate(getHostedEmailUsageKey(currentTenantId));
     }
     if (connectorData.usage !== undefined) {
