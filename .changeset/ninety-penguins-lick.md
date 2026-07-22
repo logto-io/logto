@@ -4,4 +4,4 @@
 "@logto/schemas": patch
 ---
 
-protect internal application secrets from exposure and direct client authentication
+prevent internal application secrets from being exposed through Management APIs

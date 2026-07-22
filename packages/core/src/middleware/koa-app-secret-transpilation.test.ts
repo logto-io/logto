@@ -1,4 +1,4 @@
-import { type JsonObject, internalPrefix } from '@logto/schemas';
+import { type JsonObject } from '@logto/schemas';
 import { type Context } from 'koa';
 import { type IRouterParamContext } from 'koa-router';
 
@@ -112,29 +112,6 @@ describe('koaAppSecretTranspilation middleware', () => {
     ctx.headers.authorization = authorization;
     await koaAppSecretTranspilation(queries)(ctx, next);
     expectNothingChanged(ctx, { authorization }, 1);
-  });
-
-  it.each([
-    {
-      setCredentials: (ctx: Context & IRouterParamContext, secret: string) => {
-        ctx.headers.authorization = `Basic ${Buffer.from(`1:${secret}`).toString('base64')}`;
-      },
-    },
-    {
-      setCredentials: (ctx: Context & IRouterParamContext, secret: string) => {
-        ctx.method = 'POST';
-        ctx.request.body = { client_id: '1', client_secret: secret };
-      },
-    },
-  ])('should reject an internal application secret', async ({ setCredentials }) => {
-    const ctx = createContextWithRouteParameters();
-    setCredentials(ctx, `${internalPrefix}secret`);
-
-    await expect(koaAppSecretTranspilation(queries)(ctx, next)).rejects.toMatchObject({
-      error: 'invalid_client',
-      statusCode: 401,
-    });
-    expect(findByCredentials).not.toHaveBeenCalled();
   });
 
   it('should throw an error if client credentials are expired', async () => {
