@@ -1,7 +1,6 @@
 import {
   LogResult,
   userInfoSelectFields,
-  type ExceptionHookEvent,
   type ExceptionHookEventPayload,
   type GrantLimitExceededEventData,
   type Hook,
@@ -300,10 +299,14 @@ export const createHookLibrary = (queries: Queries) => {
    * operate outside the middleware request context. Instead it accepts explicit metadata fields
    * and enriches the payload with application detail and standard fields (`ip`, `userAgent`)
    * to match the shape of other exception hook events.
+   *
+   * Note: the hook-matching and payload-enrichment logic here intentionally mirrors what
+   * `buildWebhooks` does, since both need the same semantics but operate on different context
+   * shapes. Keep both in sync when changing either one.
    */
   const triggerEvent = async (
     consoleLog: ConsoleLog,
-    event: ExceptionHookEvent,
+    event: 'Grant.LimitExceeded',
     payload: GrantLimitExceededEventData,
     metadata?: { ip?: string; userAgent?: string }
   ) => {
@@ -317,10 +320,7 @@ export const createHookLibrary = (queries: Queries) => {
       return;
     }
 
-    const application =
-      matchingHooks.length > 0
-        ? await trySafe(async () => findApplicationById(payload.applicationId))
-        : undefined;
+    const application = await trySafe(async () => findApplicationById(payload.applicationId));
 
     const webhookPayloads = matchingHooks.map((hook) => ({
       hook,

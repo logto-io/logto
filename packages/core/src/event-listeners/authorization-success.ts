@@ -1,7 +1,6 @@
 import { appInsights } from '@logto/app-insights/node';
 import {
   LogResult,
-  type ExceptionHookEvent,
   type GrantLimitExceededEventData,
   userApplicationGrantPayloadGuard,
 } from '@logto/schemas';
@@ -21,7 +20,7 @@ import { extractInteractionContext } from './utils.js';
 
 export type TriggerEvent = (
   consoleLog: ConsoleLog,
-  event: ExceptionHookEvent,
+  event: 'Grant.LimitExceeded',
   payload: GrantLimitExceededEventData,
   metadata?: { ip?: string; userAgent?: string }
 ) => Promise<void>;
@@ -104,9 +103,9 @@ const enforceMaxAllowedGrantsRevocation = async (
     async () => {
       const revokeResult = await sessionLibrary.revokeUserGrantsByIds(provider, grantIdsToRevoke);
 
-      // Fire webhook unconditionally after grants are revoked,
-      // even if subsequent session cleanup or error logging fails.
-      if (triggerEvent) {
+      // Fire webhook after grants are revoked, even if subsequent session
+      // cleanup or error logging fails. Skip if nothing was actually revoked.
+      if (triggerEvent && revokeResult.succeededNames.length > 0) {
         void trySafe(
           triggerEvent(
             getConsoleLogFromContext(ctx),
@@ -118,7 +117,7 @@ const enforceMaxAllowedGrantsRevocation = async (
               maxAllowedGrants,
               preRevocationActiveGrantCount: activeGrants.length,
             },
-            { ip: ctx.ip, userAgent: ctx.headers['user-agent'] }
+            { ip: ctx.ip, userAgent: ctx.get('user-agent') }
           ),
           (error) => {
             getConsoleLogFromContext(ctx).error(

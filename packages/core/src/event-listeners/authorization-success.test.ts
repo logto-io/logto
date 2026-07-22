@@ -22,6 +22,7 @@ const createMockAuthorizationSuccessContext = ({
   ...createMockLogContext(),
   ip: '127.0.0.1',
   headers: { 'user-agent': 'test-agent' },
+  get: (field: string) => (field === 'user-agent' ? 'test-agent' : undefined),
   oidc: {
     entities: {
       Account: { accountId: userId },

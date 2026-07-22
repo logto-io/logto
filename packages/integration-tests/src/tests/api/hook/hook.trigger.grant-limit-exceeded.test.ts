@@ -54,6 +54,8 @@ describe('trigger `Grant.LimitExceeded` exception hook', () => {
           userId: user.id,
           applicationId: app.id,
           maxAllowedGrants: 1,
+          // Exactly 2: createAppAndSignInWithPassword mints the first grant,
+          // then signIn() mints the second, exceeding maxAllowedGrants: 1.
           preRevocationActiveGrantCount: 2,
         },
       });
