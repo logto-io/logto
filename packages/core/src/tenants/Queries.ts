@@ -26,6 +26,7 @@ import { createSamlApplicationConfigQueries } from '#src/queries/saml-applicatio
 import { createSamlApplicationQueries } from '#src/queries/saml-application/index.js';
 import { createSamlApplicationSecretsQueries } from '#src/queries/saml-application/secrets.js';
 import { createSamlApplicationSessionQueries } from '#src/queries/saml-application/sessions.js';
+import { createSamlSsoConnectorSigningKeyQueries } from '#src/queries/saml-sso-connector-signing-key.js';
 import { createScopeQueries } from '#src/queries/scope.js';
 import SecretQuery from '#src/queries/secret.js';
 import { createSignInExperienceQueries } from '#src/queries/sign-in-experience.js';
@@ -84,6 +85,7 @@ export default class Queries {
   samlApplicationConfigs = createSamlApplicationConfigQueries(this.pool);
   samlApplicationSessions = createSamlApplicationSessionQueries(this.pool);
   samlApplications = createSamlApplicationQueries(this.pool);
+  samlSsoConnectorSigningKeys = createSamlSsoConnectorSigningKeyQueries(this.pool);
   personalAccessTokens = new PersonalAccessTokensQueries(this.pool);
   verificationRecords = new VerificationRecordQueries(this.pool);
   accountCenters = new AccountCenterQueries(this.pool, this.wellKnownCache);
