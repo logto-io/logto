@@ -95,12 +95,11 @@ export const auditLogEventTitle = Object.freeze({
   'JwtCustomizer.ClientCredentials': 'Get custom M2M access token claims',
   'SamlApplication.AuthnRequest': 'Receive SAML application authentication request',
   'SamlApplication.Callback': 'Handle SAML application callback',
-  // Inline Hooks
+  // Actions
   ...(isDevFeaturesEnabled
     ? {
-        'InlineHook.PostFirstFactorVerification':
-          'Execute post first-factor verification inline hook',
-        'InlineHook.PostSignIn': 'Execute post sign-in inline hook',
+        'Action.PostFirstFactorVerification': 'Execute post first-factor verification action',
+        'Action.PostSignIn': 'Execute post sign-in action',
       }
     : {}),
 } satisfies Partial<Record<Exclude<AuditLogKey, interaction.DeprecatedInteractionLogKey>, string>>);

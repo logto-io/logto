@@ -2,7 +2,7 @@ import {
   LogResult,
   token,
   interaction,
-  inlineHook,
+  action,
   LogKeyUnknown,
   jwtCustomizer,
   saml,
@@ -51,7 +51,7 @@ describe('logRoutes', () => {
       'should call countLogs and findLogs with correct parameters when dev features are %s',
       async (isDevFeaturesEnabled) => {
         setDevFeaturesEnabled(isDevFeaturesEnabled);
-        const inlineHookPrefixes = isDevFeaturesEnabled ? [inlineHook.prefix] : [];
+        const actionPrefixes = isDevFeaturesEnabled ? [action.prefix] : [];
         const userId = 'userIdValue';
         const applicationId = 'foo';
         const logKey = 'SignInUsernamePassword';
@@ -72,7 +72,7 @@ describe('logRoutes', () => {
               interaction.prefix,
               jwtCustomizer.prefix,
               saml.prefix,
-              ...inlineHookPrefixes,
+              ...actionPrefixes,
               LogKeyUnknown,
             ],
           },
@@ -88,7 +88,7 @@ describe('logRoutes', () => {
             interaction.prefix,
             jwtCustomizer.prefix,
             saml.prefix,
-            ...inlineHookPrefixes,
+            ...actionPrefixes,
             LogKeyUnknown,
           ],
         });

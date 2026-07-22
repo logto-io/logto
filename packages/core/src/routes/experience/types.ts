@@ -96,7 +96,7 @@ export type InteractionUserProvisioningProfile = Pick<
   | 'customData'
 >;
 
-export type HookProvisioningProfile = InteractionUserProvisioningProfile;
+export type ActionProvisioningProfile = InteractionUserProvisioningProfile;
 
 const interactionProfileGuard = Users.createGuard
   .pick({

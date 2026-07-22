@@ -1,7 +1,7 @@
 import {
   type LogtoConfigKey,
   LogtoConfigs,
-  LogtoInlineHookKey,
+  LogtoActionKey,
   LogtoOidcConfigKey,
   LogtoTenantConfigKey,
   OidcSigningKeyStatus,
@@ -33,11 +33,11 @@ const {
   getSigningKeyRotationState,
   setSigningKeyRotationAt,
   setTenantCacheExpiresAt,
-  upsertInlineHook,
+  upsertAction,
   upsertSigningKeyRotationState,
   updateAdminConsoleConfig,
   updateOidcConfigsByKey,
-  deleteInlineHook,
+  deleteAction,
 } = createLogtoConfigQueries(pool, new MockWellKnownCache());
 
 describe('connector queries', () => {
@@ -156,7 +156,7 @@ describe('connector queries', () => {
     void updateOidcConfigsByKey(LogtoOidcConfigKey.Session, targetValue);
   });
 
-  test('upsertInlineHook', async () => {
+  test('upsertAction', async () => {
     const targetValue = {
       script: 'export default async () => ({ action: "updateUser" });',
       environmentVariables: {
@@ -165,10 +165,10 @@ describe('connector queries', () => {
       enabled: true,
       onExecutionError: 'allow' as const,
     };
-    const targetRowData = [{ key: LogtoInlineHookKey.PostSignIn, value: targetValue }];
+    const targetRowData = [{ key: LogtoActionKey.PostSignIn, value: targetValue }];
     const expectSql = sql`
       insert into ${table} (${fields.key}, ${fields.value})
-        values (${LogtoInlineHookKey.PostSignIn}, ${sql.jsonb(targetValue)})
+        values (${LogtoActionKey.PostSignIn}, ${sql.jsonb(targetValue)})
         on conflict (${fields.tenantId}, ${fields.key}) do update set ${fields.value} = ${sql.jsonb(
           targetValue
         )}
@@ -178,7 +178,7 @@ describe('connector queries', () => {
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
       expect(values).toMatchObject([
-        LogtoInlineHookKey.PostSignIn,
+        LogtoActionKey.PostSignIn,
         JSON.stringify(targetValue),
         JSON.stringify(targetValue),
       ]);
@@ -186,46 +186,42 @@ describe('connector queries', () => {
       return createMockQueryResult(targetRowData as never);
     });
 
-    await expect(upsertInlineHook(LogtoInlineHookKey.PostSignIn, targetValue)).resolves.toEqual(
+    await expect(upsertAction(LogtoActionKey.PostSignIn, targetValue)).resolves.toEqual(
       targetRowData[0]
     );
   });
 
-  test('deleteInlineHook', async () => {
+  test('deleteAction', async () => {
     const expectSql = sql`
       delete from ${table}
-      where ${fields.key}=${LogtoInlineHookKey.PostFirstFactorVerification}
+      where ${fields.key}=${LogtoActionKey.PostFirstFactorVerification}
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([LogtoInlineHookKey.PostFirstFactorVerification]);
+      expect(values).toEqual([LogtoActionKey.PostFirstFactorVerification]);
 
       return { ...createMockQueryResult([]), rowCount: 1 };
     });
 
-    await expect(
-      deleteInlineHook(LogtoInlineHookKey.PostFirstFactorVerification)
-    ).resolves.toBeUndefined();
+    await expect(deleteAction(LogtoActionKey.PostFirstFactorVerification)).resolves.toBeUndefined();
   });
 
-  test('deleteInlineHook throws DeletionError when row is not found', async () => {
+  test('deleteAction throws DeletionError when row is not found', async () => {
     const expectSql = sql`
       delete from ${table}
-      where ${fields.key}=${LogtoInlineHookKey.PostFirstFactorVerification}
+      where ${fields.key}=${LogtoActionKey.PostFirstFactorVerification}
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([LogtoInlineHookKey.PostFirstFactorVerification]);
+      expect(values).toEqual([LogtoActionKey.PostFirstFactorVerification]);
 
       return { ...createMockQueryResult([]), rowCount: 0 };
     });
 
-    await expect(
-      deleteInlineHook(LogtoInlineHookKey.PostFirstFactorVerification)
-    ).rejects.toMatchError(
-      new DeletionError(LogtoConfigs.table, LogtoInlineHookKey.PostFirstFactorVerification)
+    await expect(deleteAction(LogtoActionKey.PostFirstFactorVerification)).rejects.toMatchError(
+      new DeletionError(LogtoConfigs.table, LogtoActionKey.PostFirstFactorVerification)
     );
   });
 

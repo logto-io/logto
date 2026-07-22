@@ -1,7 +1,7 @@
 /* eslint-disable max-lines -- Password verification fallback scenarios share extensive route mocks. */
 import {
   InteractionEvent,
-  LogtoInlineHookKey,
+  LogtoActionKey,
   SignInIdentifier,
   UsersPasswordEncryptionMethod,
   VerificationType,
@@ -58,11 +58,11 @@ mockEsm('../classes/verifications/password-verification.js', () => ({
   },
 }));
 
-const appendPasswordPayloadToInlineHookProvisioningProfile = jest.fn();
+const appendPasswordPayloadToActionProvisioningProfile = jest.fn();
 
-mockEsm('../classes/libraries/inline-hook-provisioning-profile.js', () => ({
-  appendPasswordPayloadToInlineHookProvisioningProfile,
-  toHookProvisioningProfile: (profile: unknown) => profile,
+mockEsm('../classes/libraries/action-provisioning-profile.js', () => ({
+  appendPasswordPayloadToActionProvisioningProfile,
+  toActionProvisioningProfile: (profile: unknown) => profile,
 }));
 
 const { default: passwordVerificationRoutes } = await import('./password-verification.js');
@@ -122,7 +122,7 @@ const getSentinelPromise = async () => {
   return sentinelPromise;
 };
 
-const runHook = jest.fn();
+const runAction = jest.fn();
 const findUserByEmail = jest.fn();
 const createUser = jest.fn();
 const updateUser = jest.fn();
@@ -167,8 +167,8 @@ const registerRoute = () => {
     router as never,
     {
       libraries: {
-        inlineHooks: {
-          runHook,
+        actions: {
+          runAction,
         },
       },
       queries: {
@@ -219,13 +219,13 @@ describe('password verification route PostFirstFactorVerification fallback', () 
 
     passwordVerificationRecord.verify.mockResolvedValue(mockUser);
     passwordVerificationRecord.verifyPasswordExpiration.mockImplementation(resolveVoid);
-    appendPasswordPayloadToInlineHookProvisioningProfile.mockImplementation(
+    appendPasswordPayloadToActionProvisioningProfile.mockImplementation(
       async (profile: Record<string, unknown>) => ({
         ...profile,
         ...passwordHashPayload,
       })
     );
-    runHook.mockImplementation(resolveVoid);
+    runAction.mockImplementation(resolveVoid);
     findUserByEmail.mockResolvedValue(null);
     createUser.mockResolvedValue(createdUser);
     updateUser.mockResolvedValue(updatedUser);
@@ -239,13 +239,13 @@ describe('password verification route PostFirstFactorVerification fallback', () 
     );
   });
 
-  it('does not run the inline hook when local password verification succeeds', async () => {
+  it('does not run the action when local password verification succeeds', async () => {
     const handler = registerRoute();
     const ctx = createContext();
 
     await handler(ctx, jest.fn().mockImplementation(resolveVoid));
 
-    expect(runHook).not.toHaveBeenCalled();
+    expect(runAction).not.toHaveBeenCalled();
     expect(findUserByEmail).not.toHaveBeenCalled();
     expect(passwordVerificationRecord.verifyPasswordExpiration).toHaveBeenCalledWith(mockUser);
     expect(ctx.experienceInteraction.setVerificationRecord).toHaveBeenCalledWith(
@@ -256,7 +256,7 @@ describe('password verification route PostFirstFactorVerification fallback', () 
     expect(ctx.status).toBe(200);
   });
 
-  it('wraps local failure and hook-declined invalid credentials in one Sentinel promise', async () => {
+  it('wraps local failure and action-declined invalid credentials in one Sentinel promise', async () => {
     const handler = registerRoute();
     const ctx = createContext();
 
@@ -268,8 +268,8 @@ describe('password verification route PostFirstFactorVerification fallback', () 
 
     expect(withSentinel).toHaveBeenCalledTimes(1);
     await expect(getSentinelPromise()).rejects.toBe(invalidCredentialsError);
-    expect(runHook).toHaveBeenCalledWith({
-      key: LogtoInlineHookKey.PostFirstFactorVerification,
+    expect(runAction).toHaveBeenCalledWith({
+      key: LogtoActionKey.PostFirstFactorVerification,
       auditContext: {
         createLog,
         sessionId,
@@ -277,7 +277,7 @@ describe('password verification route PostFirstFactorVerification fallback', () 
         userId: undefined,
       },
       event: {
-        key: LogtoInlineHookKey.PostFirstFactorVerification,
+        key: LogtoActionKey.PostFirstFactorVerification,
         interactionEvent: InteractionEvent.SignIn,
         verificationType: VerificationType.Password,
         identifier,
@@ -290,7 +290,7 @@ describe('password verification route PostFirstFactorVerification fallback', () 
     expect(ctx.experienceInteraction.setVerificationRecord).not.toHaveBeenCalled();
   });
 
-  it('does not run the inline hook fallback outside sign-in', async () => {
+  it('does not run the action fallback outside sign-in', async () => {
     const handler = registerRoute();
     const ctx = createContext(InteractionEvent.Register);
 
@@ -300,18 +300,18 @@ describe('password verification route PostFirstFactorVerification fallback', () 
       invalidCredentialsError
     );
 
-    expect(runHook).not.toHaveBeenCalled();
+    expect(runAction).not.toHaveBeenCalled();
     expect(findUserByEmail).not.toHaveBeenCalled();
     expect(createUser).not.toHaveBeenCalled();
     expect(updateUser).not.toHaveBeenCalled();
   });
 
-  it('wraps local failure and hook-created user success in one Sentinel promise', async () => {
+  it('wraps local failure and action-created user success in one Sentinel promise', async () => {
     const handler = registerRoute();
     const ctx = createContext();
 
     passwordVerificationRecord.verify.mockRejectedValueOnce(invalidCredentialsError);
-    runHook.mockResolvedValueOnce({
+    runAction.mockResolvedValueOnce({
       action: 'createUser',
       passwordVerified: true,
       user: {},
@@ -321,9 +321,9 @@ describe('password verification route PostFirstFactorVerification fallback', () 
 
     expect(withSentinel).toHaveBeenCalledTimes(1);
     await expect(getSentinelPromise()).resolves.toEqual(
-      expect.objectContaining({ hookResult: { action: 'createUser', user: {} } })
+      expect.objectContaining({ actionResult: { action: 'createUser', user: {} } })
     );
-    expect(appendPasswordPayloadToInlineHookProvisioningProfile).toHaveBeenCalledWith(
+    expect(appendPasswordPayloadToActionProvisioningProfile).toHaveBeenCalledWith(
       {
         primaryEmail: identifier.value,
       },
@@ -347,7 +347,7 @@ describe('password verification route PostFirstFactorVerification fallback', () 
     );
   });
 
-  it('does not provision before sentinel accepts the hook fallback', async () => {
+  it('does not provision before sentinel accepts the action fallback', async () => {
     const handler = registerRoute();
     const ctx = createContext();
     const sentinelError = new RequestError({
@@ -355,7 +355,7 @@ describe('password verification route PostFirstFactorVerification fallback', () 
     });
 
     passwordVerificationRecord.verify.mockRejectedValueOnce(invalidCredentialsError);
-    runHook.mockResolvedValueOnce({
+    runAction.mockResolvedValueOnce({
       action: 'createUser',
       passwordVerified: true,
       user: {},
@@ -374,13 +374,13 @@ describe('password verification route PostFirstFactorVerification fallback', () 
     expect(passwordVerificationRecord.markAsVerified).not.toHaveBeenCalled();
   });
 
-  it('updates the existing user from a validated hook result when local password is wrong', async () => {
+  it('updates the existing user from a validated action result when local password is wrong', async () => {
     const handler = registerRoute();
     const ctx = createContext();
 
     passwordVerificationRecord.verify.mockRejectedValueOnce(invalidCredentialsError);
     findUserByEmail.mockResolvedValueOnce(mockUser);
-    runHook.mockResolvedValueOnce({
+    runAction.mockResolvedValueOnce({
       action: 'updateUser',
       passwordVerified: true,
       user: {
@@ -390,8 +390,8 @@ describe('password verification route PostFirstFactorVerification fallback', () 
 
     await handler(ctx, jest.fn().mockImplementation(resolveVoid));
 
-    expect(runHook).toHaveBeenCalledWith({
-      key: LogtoInlineHookKey.PostFirstFactorVerification,
+    expect(runAction).toHaveBeenCalledWith({
+      key: LogtoActionKey.PostFirstFactorVerification,
       auditContext: {
         createLog,
         sessionId,
@@ -399,7 +399,7 @@ describe('password verification route PostFirstFactorVerification fallback', () 
         userId: mockUser.id,
       },
       event: {
-        key: LogtoInlineHookKey.PostFirstFactorVerification,
+        key: LogtoActionKey.PostFirstFactorVerification,
         interactionEvent: InteractionEvent.SignIn,
         verificationType: VerificationType.Password,
         identifier,
@@ -416,7 +416,7 @@ describe('password verification route PostFirstFactorVerification fallback', () 
         password,
       },
     });
-    expect(appendPasswordPayloadToInlineHookProvisioningProfile).toHaveBeenCalledWith(
+    expect(appendPasswordPayloadToActionProvisioningProfile).toHaveBeenCalledWith(
       {
         name: 'Jane Doe',
       },
@@ -434,13 +434,13 @@ describe('password verification route PostFirstFactorVerification fallback', () 
     expect(passwordVerificationRecord.markAsVerified).toHaveBeenCalled();
   });
 
-  it('surfaces identity conflict when the hook create action targets an existing user', async () => {
+  it('surfaces identity conflict when the action create result targets an existing user', async () => {
     const handler = registerRoute();
     const ctx = createContext();
 
     passwordVerificationRecord.verify.mockRejectedValueOnce(invalidCredentialsError);
     findUserByEmail.mockResolvedValueOnce(mockUser);
-    runHook.mockResolvedValueOnce({
+    runAction.mockResolvedValueOnce({
       action: 'createUser',
       passwordVerified: true,
       user: {
@@ -452,12 +452,12 @@ describe('password verification route PostFirstFactorVerification fallback', () 
       new RequestError({ code: 'session.identity_conflict', status: 409 })
     );
 
-    expect(appendPasswordPayloadToInlineHookProvisioningProfile).not.toHaveBeenCalled();
+    expect(appendPasswordPayloadToActionProvisioningProfile).not.toHaveBeenCalled();
     expect(createUser).not.toHaveBeenCalled();
     expect(updateUser).not.toHaveBeenCalled();
   });
 
-  it('does not run the inline hook fallback for suspended users', async () => {
+  it('does not run the action fallback for suspended users', async () => {
     const handler = registerRoute();
     const ctx = createContext();
 
@@ -471,7 +471,7 @@ describe('password verification route PostFirstFactorVerification fallback', () 
       invalidCredentialsError
     );
 
-    expect(runHook).not.toHaveBeenCalled();
+    expect(runAction).not.toHaveBeenCalled();
     expect(createUser).not.toHaveBeenCalled();
     expect(updateUser).not.toHaveBeenCalled();
   });

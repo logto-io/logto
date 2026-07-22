@@ -1,6 +1,6 @@
 import {
   Logs,
-  inlineHook,
+  action,
   interaction,
   token,
   LogKeyUnknown,
@@ -55,8 +55,8 @@ export default function logRoutes<T extends ManagementApiRouter>(
         interaction.prefix,
         jwtCustomizer.prefix,
         saml.prefix,
-        // Inline Hooks
-        ...conditionalArray(EnvSet.values.isDevFeaturesEnabled && inlineHook.prefix),
+        // Actions
+        ...conditionalArray(EnvSet.values.isDevFeaturesEnabled && action.prefix),
         LogKeyUnknown,
       ];
 

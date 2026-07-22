@@ -4,7 +4,7 @@ import { appInsights } from '@logto/app-insights/node';
 import {
   InteractionEvent,
   InteractionHookEvent,
-  LogtoInlineHookKey,
+  LogtoActionKey,
   MfaFactor,
   type PostSignInEvent,
   VerificationType,
@@ -36,10 +36,10 @@ import {
   mergeUserMfaVerifications,
   parseMfaPropertiesToUserConfig,
 } from './helpers.js';
+import { validatePostSignInActionResult } from './libraries/action-result-validation.js';
 import { AdaptiveMfaValidator } from './libraries/adaptive-mfa-validator/index.js';
 import { type AdaptiveMfaResult } from './libraries/adaptive-mfa-validator/types.js';
 import { CaptchaValidator } from './libraries/captcha-validator.js';
-import { validatePostSignInHookResult } from './libraries/inline-hook-result-validation.js';
 import { MfaValidator } from './libraries/mfa-validator.js';
 import { ProvisionLibrary } from './libraries/provision-library.js';
 import { SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
@@ -633,7 +633,7 @@ export default class ExperienceInteraction {
       });
     }
 
-    await this.triggerPostSignInInlineHook(user.id);
+    await this.triggerPostSignInAction(user.id);
 
     const { provider } = this.tenant;
 
@@ -706,18 +706,18 @@ export default class ExperienceInteraction {
     });
   }
 
-  private async triggerPostSignInInlineHook(userId: string) {
+  private async triggerPostSignInAction(userId: string) {
     if (this.#interactionEvent !== InteractionEvent.SignIn || !EnvSet.values.isDevFeaturesEnabled) {
       return;
     }
 
     const {
-      libraries: { inlineHooks, jwtCustomizers },
+      libraries: { actions, jwtCustomizers },
     } = this.tenant;
-    const hookResult = validatePostSignInHookResult({
+    const actionResult = validatePostSignInActionResult({
       userId,
-      result: await inlineHooks.runHook({
-        key: LogtoInlineHookKey.PostSignIn,
+      result: await actions.runAction({
+        key: LogtoActionKey.PostSignIn,
         auditContext: {
           createLog: this.ctx.createLog,
           sessionId: this.ctx.interactionDetails.jti,
@@ -728,15 +728,15 @@ export default class ExperienceInteraction {
           userId,
         },
         getEvent: async (): Promise<PostSignInEvent> => ({
-          key: LogtoInlineHookKey.PostSignIn,
+          key: LogtoActionKey.PostSignIn,
           interactionEvent: InteractionEvent.SignIn,
           user: await jwtCustomizers.getUserContext(userId),
         }),
       }),
     });
 
-    if (hookResult.action === 'updateUser') {
-      await this.provisionLibrary.updateUser(hookResult.userId, hookResult.user, {
+    if (actionResult.action === 'updateUser') {
+      await this.provisionLibrary.updateUser(actionResult.userId, actionResult.user, {
         mergeCustomData: true,
       });
     }

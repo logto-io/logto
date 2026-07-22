@@ -1,9 +1,9 @@
 import {
   InteractionEvent,
-  LogtoInlineHookKey,
+  LogtoActionKey,
   passwordVerificationPayloadGuard,
   SentinelActivityAction,
-  type HookUser,
+  type ActionUser,
   type PostFirstFactorVerificationEvent,
   type User,
   VerificationType,
@@ -17,8 +17,8 @@ import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
-import { appendPasswordPayloadToInlineHookProvisioningProfile } from '../classes/libraries/inline-hook-provisioning-profile.js';
-import { validatePostFirstFactorVerificationHookResult } from '../classes/libraries/inline-hook-result-validation.js';
+import { appendPasswordPayloadToActionProvisioningProfile } from '../classes/libraries/action-provisioning-profile.js';
+import { validatePostFirstFactorVerificationActionResult } from '../classes/libraries/action-result-validation.js';
 import { withSentinel } from '../classes/libraries/sentinel-guard.js';
 import { findUserByIdentifier, interactionIdentifierToUserProfile } from '../classes/utils.js';
 import { PasswordVerification } from '../classes/verifications/password-verification.js';
@@ -31,7 +31,7 @@ const isInvalidCredentialsError = (error: unknown): error is RequestError =>
   error.code === 'session.invalid_credentials' &&
   error.status === 422;
 
-const toHookUser = ({
+const toActionUser = ({
   id,
   username,
   primaryEmail,
@@ -40,7 +40,7 @@ const toHookUser = ({
   avatar,
   customData,
   profile,
-}: User): HookUser => ({
+}: User): ActionUser => ({
   id,
   username,
   primaryEmail,
@@ -113,18 +113,18 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
             }
 
             const event: PostFirstFactorVerificationEvent = {
-              key: LogtoInlineHookKey.PostFirstFactorVerification,
+              key: LogtoActionKey.PostFirstFactorVerification,
               interactionEvent,
               verificationType: VerificationType.Password,
               identifier,
-              user: existingUser ? toHookUser(existingUser) : null,
+              user: existingUser ? toActionUser(existingUser) : null,
               password,
             };
 
-            const hookResult = validatePostFirstFactorVerificationHookResult({
+            const actionResult = validatePostFirstFactorVerificationActionResult({
               event,
-              result: await libraries.inlineHooks.runHook({
-                key: LogtoInlineHookKey.PostFirstFactorVerification,
+              result: await libraries.actions.runAction({
+                key: LogtoActionKey.PostFirstFactorVerification,
                 event,
                 auditContext: {
                   createLog: ctx.createLog,
@@ -138,40 +138,40 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
               }),
             });
 
-            if (hookResult.action === 'rejectInvalidCredentials') {
+            if (actionResult.action === 'rejectInvalidCredentials') {
               throw error;
             }
 
-            const hookUserProfile =
-              hookResult.action === 'createUser'
+            const actionUserProfile =
+              actionResult.action === 'createUser'
                 ? {
                     ...interactionIdentifierToUserProfile(identifier),
-                    ...hookResult.user,
+                    ...actionResult.user,
                   }
-                : hookResult.user;
-            const userProfile = await appendPasswordPayloadToInlineHookProvisioningProfile(
-              hookUserProfile,
+                : actionResult.user;
+            const userProfile = await appendPasswordPayloadToActionProvisioningProfile(
+              actionUserProfile,
               password
             );
 
-            return { hookResult, userProfile };
+            return { actionResult, userProfile };
           })
       );
 
       const verifiedUser = await (async (): Promise<User> => {
-        if (!('hookResult' in verificationResult)) {
+        if (!('actionResult' in verificationResult)) {
           return verificationResult.user;
         }
 
-        const { hookResult, userProfile } = verificationResult;
+        const { actionResult, userProfile } = verificationResult;
         const user =
-          hookResult.action === 'createUser'
+          actionResult.action === 'createUser'
             ? await experienceInteraction.provisionLibrary.createUser(userProfile, {
                 checkIdentifierCollision: true,
                 mergeCustomData: true,
               })
             : await experienceInteraction.provisionLibrary.updateUser(
-                hookResult.userId,
+                actionResult.userId,
                 userProfile,
                 { mergeCustomData: true }
               );

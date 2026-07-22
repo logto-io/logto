@@ -6,13 +6,13 @@ import { safeLazy } from 'react-safe-lazy';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import NotFound from '@/pages/NotFound';
 
+import { actions } from './routes/actions';
 import { apiResources } from './routes/api-resources';
 import { applications } from './routes/applications';
 import { auditLogs } from './routes/audit-logs';
 import { connectors } from './routes/connectors';
 import { customizeJwt } from './routes/customize-jwt';
 import { enterpriseSso } from './routes/enterprise-sso';
-import { inlineHooks } from './routes/inline-hooks';
 import { mfa } from './routes/mfa';
 import { organizationTemplate } from './routes/organization-template';
 import { organizations } from './routes/organizations';
@@ -44,7 +44,7 @@ export const useConsoleRoutes = () => {
         enterpriseSso,
         security,
         webhooks,
-        ...(isDevFeaturesEnabled ? [inlineHooks] : []),
+        ...(isDevFeaturesEnabled ? [actions] : []),
         users,
         auditLogs,
         roles,

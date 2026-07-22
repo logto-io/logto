@@ -14,7 +14,8 @@ type RouteRequestBodyType<T extends { search?: unknown; body?: ZodType; response
 type CompleteSubscription = RouteResponseType<GetRoutes['/api/tenants/my/subscription']>;
 type CompleteSubscriptionUsage = RouteResponseType<GetRoutes['/api/tenants/my/subscription-usage']>;
 
-type InlineHookSubscriptionQuota = {
+/** Keep the legacy field name because it is part of the Logto Cloud subscription wire contract. */
+type ActionSubscriptionQuota = {
   inlineHooksEnabled: boolean;
 };
 
@@ -24,7 +25,7 @@ export type SubscriptionQuota = Omit<
   // Since we are deprecating the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
   | 'organizationsEnabled'
 > &
-  InlineHookSubscriptionQuota;
+  ActionSubscriptionQuota;
 
 /**
  * The subscription data is fetched from the Cloud API.
@@ -52,7 +53,7 @@ export type SubscriptionUsage = Omit<
   // Since we are deprecating the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
   'organizationsEnabled'
 > &
-  InlineHookSubscriptionQuota;
+  ActionSubscriptionQuota;
 
 export type ReportSubscriptionUpdatesUsageKey = Exclude<
   RouteRequestBodyType<PostRoutes['/api/tenants/my/subscription/item-updates']>['usageKey'],

@@ -1,5 +1,5 @@
 import {
-  type inlineHookConfigGuard,
+  type actionConfigGuard,
   type jwtCustomizerConfigGuard,
   LogtoConfigs,
   LogtoTenantConfigKey,
@@ -7,7 +7,7 @@ import {
   type IdTokenConfig,
   type LogtoConfig,
   type LogtoConfigKey,
-  type LogtoInlineHookKey,
+  type LogtoActionKey,
   LogtoOidcConfigKey,
   type LogtoJwtTokenKey,
   type OidcPrivateKey,
@@ -220,11 +220,11 @@ export const createLogtoConfigQueries = (
 
   const deleteJwtCustomizer = async <T extends LogtoJwtTokenKey>(key: T) => deleteRowByKey(key);
 
-  const upsertInlineHook = async <T extends LogtoInlineHookKey>(
+  const upsertAction = async <T extends LogtoActionKey>(
     key: T,
-    value: z.infer<(typeof inlineHookConfigGuard)[T]>
+    value: z.infer<(typeof actionConfigGuard)[T]>
   ) =>
-    pool.one<{ key: T; value: z.infer<(typeof inlineHookConfigGuard)[T]> }>(
+    pool.one<{ key: T; value: z.infer<(typeof actionConfigGuard)[T]> }>(
       sql`
         insert into ${table} (${fields.key}, ${fields.value})
           values (${key}, ${sql.jsonb(value)})
@@ -235,7 +235,7 @@ export const createLogtoConfigQueries = (
       `
     );
 
-  const deleteInlineHook = async <T extends LogtoInlineHookKey>(key: T) => deleteRowByKey(key);
+  const deleteAction = async <T extends LogtoActionKey>(key: T) => deleteRowByKey(key);
 
   const getIdTokenConfig = wellKnownCache.memoize(async () => {
     const { rows } = await getRowsByKeys([LogtoTenantConfigKey.IdToken]);
@@ -287,8 +287,8 @@ export const createLogtoConfigQueries = (
     setSigningKeyRotationAt,
     upsertJwtCustomizer,
     deleteJwtCustomizer,
-    upsertInlineHook,
-    deleteInlineHook,
+    upsertAction,
+    deleteAction,
     getIdTokenConfig,
     upsertIdTokenConfig,
     getMessageRateLimitOverride,

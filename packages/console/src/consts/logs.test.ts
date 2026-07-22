@@ -7,14 +7,14 @@ jest.mock('./env', () => ({
   },
 }));
 
-describe('inline hook audit log event visibility', () => {
+describe('action audit log event visibility', () => {
   afterEach(() => {
     jest.resetModules();
     jest.clearAllMocks();
   });
 
   it.each([false, true])(
-    'exposes inline hook event titles when dev features are %s',
+    'exposes action event titles when dev features are %s',
     async (isDevFeaturesEnabled) => {
       // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle the mocked build-time feature flag.
       mockIsDevFeaturesEnabled = isDevFeaturesEnabled;
@@ -23,15 +23,14 @@ describe('inline hook audit log event visibility', () => {
 
       if (isDevFeaturesEnabled) {
         expect(auditLogEventTitle).toMatchObject({
-          'InlineHook.PostFirstFactorVerification':
-            'Execute post first-factor verification inline hook',
-          'InlineHook.PostSignIn': 'Execute post sign-in inline hook',
+          'Action.PostFirstFactorVerification': 'Execute post first-factor verification action',
+          'Action.PostSignIn': 'Execute post sign-in action',
         });
         return;
       }
 
-      expect(auditLogEventTitle).not.toHaveProperty('InlineHook.PostFirstFactorVerification');
-      expect(auditLogEventTitle).not.toHaveProperty('InlineHook.PostSignIn');
+      expect(auditLogEventTitle).not.toHaveProperty('Action.PostFirstFactorVerification');
+      expect(auditLogEventTitle).not.toHaveProperty('Action.PostSignIn');
     }
   );
 });

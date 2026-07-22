@@ -1,5 +1,5 @@
 const tabs = {
-  inline_hooks: 'ฮุกแบบอินไลน์',
+  actions: 'Actions',
   get_started: 'เริ่มต้นใช้งาน',
   dashboard: 'แดชบอร์ด',
   applications: 'แอปพลิเคชัน',

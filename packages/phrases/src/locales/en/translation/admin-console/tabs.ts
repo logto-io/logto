@@ -8,7 +8,7 @@ const tabs = {
   enterprise_sso: 'Enterprise SSO',
   security: 'Security',
   webhooks: 'Webhooks',
-  inline_hooks: 'Inline hooks',
+  actions: 'Actions',
   organizations: 'Organizations',
   users: 'User management',
   audit_logs: 'Audit logs',

@@ -1,5 +1,5 @@
+import type * as action from './action.js';
 import type * as hook from './hook.js';
-import type * as inlineHook from './inline-hook.js';
 import type * as interaction from './interaction.js';
 import type * as jwtCustomizer from './jwt-customizer.js';
 import type * as saml from './saml.js';
@@ -8,7 +8,7 @@ import type * as token from './token.js';
 export * as interaction from './interaction.js';
 export * as token from './token.js';
 export * as hook from './hook.js';
-export * as inlineHook from './inline-hook.js';
+export * as action from './action.js';
 export * as jwtCustomizer from './jwt-customizer.js';
 export * as saml from './saml.js';
 
@@ -18,7 +18,7 @@ export const LogKeyUnknown = 'Unknown';
 export type InteractionLogKey = interaction.LogKey;
 export type TokenLogKey = token.LogKey;
 export type WebhookLogKey = hook.LogKey;
-export type InlineHookLogKey = inlineHook.LogKey;
+export type ActionLogKey = action.LogKey;
 export type JwtCustomizerLogKey = jwtCustomizer.LogKey;
 export type SamlLogKey = saml.LogKey;
 
@@ -33,7 +33,7 @@ export type AuditLogKey =
   | InteractionLogKey
   | TokenLogKey
   | SamlLogKey
-  | InlineHookLogKey
+  | ActionLogKey
   | JwtCustomizerLogKey;
 
 /**
@@ -46,7 +46,7 @@ export type AuditLogPrefix =
   | interaction.Prefix
   | token.Type
   | saml.Prefix
-  | inlineHook.Prefix
+  | action.Prefix
   | jwtCustomizer.Prefix
   | typeof LogKeyUnknown;
 

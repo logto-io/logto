@@ -131,9 +131,9 @@ export const useSidebarMenuItems = (): {
       items: [
         {
           Icon: Code,
-          title: 'inline_hooks',
-          path: 'inline-hooks',
-          // Inline hooks are still under development and should be released as one feature.
+          title: 'actions',
+          path: 'actions',
+          // Actions are still under development and should be released as one feature.
           isHidden: !isDevFeaturesEnabled,
         },
         {
