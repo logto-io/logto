@@ -10,6 +10,8 @@ import {
   type Json,
   type IdTokenConfig,
   type OidcSessionConfig,
+  type LogtoInlineHookKey,
+  type InlineHook,
 } from '@logto/schemas';
 
 import { waitFor } from '#src/utils.js';
@@ -94,6 +96,15 @@ export const testJwtCustomizer = async (payload: JwtCustomizerTestRequestBody) =
       json: payload,
     })
     .json<Json>();
+
+export const upsertInlineHook = async (key: LogtoInlineHookKey, value: InlineHook) =>
+  authedAdminApi.put(`configs/inline-hooks/${key}`, { json: value }).json<InlineHook>();
+
+export const updateInlineHook = async (key: LogtoInlineHookKey, value: Partial<InlineHook>) =>
+  authedAdminApi.patch(`configs/inline-hooks/${key}`, { json: value }).json<InlineHook>();
+
+export const deleteInlineHook = async (key: LogtoInlineHookKey) =>
+  authedAdminApi.delete(`configs/inline-hooks/${key}`);
 
 export const getIdTokenConfig = async () =>
   authedAdminApi.get('configs/id-token').json<IdTokenConfig>();
