@@ -45,6 +45,7 @@ const createCertificate = (keypair: forge.pki.KeyPair, lifeSpanInYears: number) 
   cert.validity.notAfter = notAfter;
   /* eslint-enable @silverhand/fp/no-mutation */
 
+  // TODO: read from tenant config or let user customize before downloading
   const identityAttributes: forge.pki.CertificateField[] = [
     {
       name: 'commonName',
