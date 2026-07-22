@@ -8,6 +8,19 @@ const cloud = {
     description:
       'Ein Mandant ist eine isolierte Umgebung, in der Sie Benutzeridentitäten, Anwendungen und alle anderen Logto-Ressourcen verwalten können.',
     invite_collaborators: 'Laden Sie Ihre Mitarbeiter per E-Mail ein',
+    hear_about_us: {
+      title: 'Wie haben Sie zum ersten Mal von Logto erfahren?',
+      detail_placeholder: 'Erzählen Sie uns mehr (optional)',
+      options: {
+        search_engine: 'Suchmaschine (Google, Bing...)',
+        ai_assistant: 'KI-Assistent (ChatGPT, Claude, Gemini...)',
+        github_oss: 'GitHub oder Open-Source-Verzeichnisse',
+        friend_colleague: 'Freund oder Kollege',
+        powered_by: 'Anmeldeseite einer App, die Logto verwendet',
+        content_social: 'Soziale Medien, Artikel oder Video (YouTube, X, Reddit...)',
+        other: 'Sonstiges',
+      },
+    },
   },
   social_callback: {
     title: 'Sie haben sich erfolgreich angemeldet',

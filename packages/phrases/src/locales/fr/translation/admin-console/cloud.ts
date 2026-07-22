@@ -8,6 +8,19 @@ const cloud = {
     description:
       'Un locataire est un environnement isolé où vous pouvez gérer les identités des utilisateurs, les applications et toutes les autres ressources Logto.',
     invite_collaborators: 'Invitez vos collaborateurs par e-mail',
+    hear_about_us: {
+      title: 'Comment avez-vous entendu parler de Logto pour la première fois ?',
+      detail_placeholder: 'Dites-nous en plus (facultatif)',
+      options: {
+        search_engine: 'Moteur de recherche (Google, Bing...)',
+        ai_assistant: 'Assistant IA (ChatGPT, Claude, Gemini...)',
+        github_oss: 'GitHub ou annuaires open source',
+        friend_colleague: 'Un ami ou un collègue',
+        powered_by: "Page de connexion d'une application utilisant Logto",
+        content_social: 'Réseaux sociaux, article ou vidéo (YouTube, X, Reddit...)',
+        other: 'Autre',
+      },
+    },
   },
   social_callback: {
     title: 'Connexion réussie',

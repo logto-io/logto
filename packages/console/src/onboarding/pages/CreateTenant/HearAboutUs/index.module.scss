@@ -1,0 +1,12 @@
+@use '@/scss/underscore' as _;
+
+.options {
+  display: flex;
+  flex-direction: column;
+  // Radio itself keeps a unit(2) bottom margin; the row gap tops it up for a 7-item list.
+  row-gap: _.unit(1);
+}
+
+.detailInput {
+  margin-top: _.unit(3);
+}

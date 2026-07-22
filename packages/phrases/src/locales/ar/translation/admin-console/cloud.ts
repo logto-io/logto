@@ -8,6 +8,19 @@ const cloud = {
     description:
       'المستأجر هو بيئة معزولة حيث يمكنك إدارة هويات المستخدمين والتطبيقات وجميع الموارد الأخرى في Logto.',
     invite_collaborators: 'ادعو مشاركيك عبر البريد الإلكتروني',
+    hear_about_us: {
+      title: 'كيف سمعت عن Logto لأول مرة؟',
+      detail_placeholder: 'أخبرنا المزيد (اختياري)',
+      options: {
+        search_engine: 'محرك بحث (Google، Bing...)',
+        ai_assistant: 'مساعد ذكاء اصطناعي (ChatGPT، Claude، Gemini...)',
+        github_oss: 'GitHub أو أدلة المصادر المفتوحة',
+        friend_colleague: 'صديق أو زميل',
+        powered_by: 'صفحة تسجيل الدخول لتطبيق يستخدم Logto',
+        content_social: 'وسائل التواصل الاجتماعي أو مقال أو فيديو (YouTube، X، Reddit...)',
+        other: 'أخرى',
+      },
+    },
   },
   social_callback: {
     title: 'لقد قمت بتسجيل الدخول بنجاح',

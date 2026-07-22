@@ -8,6 +8,19 @@ const cloud = {
     description:
       'Арендатор – это изолированная среда, где вы можете управлять пользовательскими идентификаторами, приложениями и всеми другими ресурсами Logto.',
     invite_collaborators: 'Пригласите ваших сотрудников по электронной почте',
+    hear_about_us: {
+      title: 'Как вы впервые узнали о Logto?',
+      detail_placeholder: 'Расскажите подробнее (необязательно)',
+      options: {
+        search_engine: 'Поисковая система (Google, Bing...)',
+        ai_assistant: 'ИИ-ассистент (ChatGPT, Claude, Gemini...)',
+        github_oss: 'GitHub или каталоги open source',
+        friend_colleague: 'Друг или коллега',
+        powered_by: 'Страница входа приложения, использующего Logto',
+        content_social: 'Социальные сети, статья или видео (YouTube, X, Reddit...)',
+        other: 'Другое',
+      },
+    },
   },
   social_callback: {
     title: 'Вход выполнен успешно',

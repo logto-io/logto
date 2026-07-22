@@ -8,6 +8,19 @@ const cloud = {
     description:
       'Bir kiracı, kullanıcı kimliklerini, uygulamaları ve diğer tüm Logto kaynaklarını yönetebileceğiniz izole bir ortamdır.',
     invite_collaborators: 'E-posta ile işbirlikçilerinizi davet edin',
+    hear_about_us: {
+      title: "Logto'yu ilk nereden duydunuz?",
+      detail_placeholder: 'Bize daha fazla anlatın (isteğe bağlı)',
+      options: {
+        search_engine: 'Arama motoru (Google, Bing...)',
+        ai_assistant: 'Yapay zeka asistanı (ChatGPT, Claude, Gemini...)',
+        github_oss: 'GitHub veya açık kaynak dizinleri',
+        friend_colleague: 'Bir arkadaş veya iş arkadaşı',
+        powered_by: 'Logto kullanan bir uygulamanın oturum açma sayfası',
+        content_social: 'Sosyal medya, makale veya video (YouTube, X, Reddit...)',
+        other: 'Diğer',
+      },
+    },
   },
   social_callback: {
     title: 'Başarıyla giriş yaptınız',

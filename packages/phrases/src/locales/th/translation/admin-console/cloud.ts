@@ -8,6 +8,19 @@ const cloud = {
     description:
       'Tenant คือสภาพแวดล้อมที่แยกออกจากกันซึ่งคุณสามารถจัดการข้อมูลตัวตนของผู้ใช้ แอปพลิเคชัน และทรัพยากรอื่น ๆ ของ Logto ได้ทั้งหมด',
     invite_collaborators: 'เชิญผู้ร่วมงานของคุณผ่านอีเมล',
+    hear_about_us: {
+      title: 'คุณรู้จัก Logto ครั้งแรกจากที่ใด?',
+      detail_placeholder: 'บอกเราเพิ่มเติม (ไม่บังคับ)',
+      options: {
+        search_engine: 'เครื่องมือค้นหา (Google, Bing...)',
+        ai_assistant: 'ผู้ช่วย AI (ChatGPT, Claude, Gemini...)',
+        github_oss: 'GitHub หรือไดเรกทอรีโอเพนซอร์ส',
+        friend_colleague: 'เพื่อนหรือเพื่อนร่วมงาน',
+        powered_by: 'หน้าเข้าสู่ระบบของแอปที่ใช้ Logto',
+        content_social: 'โซเชียลมีเดีย บทความ หรือวิดีโอ (YouTube, X, Reddit...)',
+        other: 'อื่น ๆ',
+      },
+    },
   },
   social_callback: {
     title: 'คุณลงชื่อเข้าใช้สำเร็จแล้ว',
