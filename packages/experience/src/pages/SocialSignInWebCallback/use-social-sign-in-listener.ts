@@ -50,11 +50,19 @@ const useSocialSignInListener = (connectorId: string) => {
   const navigate = useNavigateWithPreservedSearchParams();
   const handleError = useErrorHandler();
   const bindSocialRelatedUser = useBindSocialRelatedUser();
-  const registerWithSocial = useSocialRegister(connectorId, true);
   const verifySocial = useApi(verifySocialVerification);
   const asyncSignInWithSocial = useApi(identifyAndSubmitInteraction);
   const asyncInitInteraction = useApi(initInteraction);
   const redirectTo = useGlobalRedirectTo();
+
+  const navigateToSignIn = useCallback(() => {
+    navigate('/' + experience.routes.signIn, { replace: true });
+  }, [navigate]);
+
+  const registerWithSocial = useSocialRegister(connectorId, {
+    replace: true,
+    onEmailBlocked: navigateToSignIn,
+  });
 
   const accountNotExistErrorHandler = useCallback(
     async (error: RequestErrorBody) => {
@@ -65,7 +73,7 @@ const useSocialSignInListener = (connectorId: string) => {
       // Redirect to sign-in page if the verificationId is not set properly
       if (!verificationId) {
         setToast(t('error.invalid_session'));
-        navigate('/' + experience.routes.signIn);
+        navigateToSignIn();
         return;
       }
 
@@ -85,7 +93,7 @@ const useSocialSignInListener = (connectorId: string) => {
       // Should not let user register new social account under sign-in only mode
       if (signInMode === SignInMode.SignIn) {
         setToast(error.message);
-        navigate('/' + experience.routes.signIn);
+        navigateToSignIn();
         return;
       }
 
@@ -96,6 +104,7 @@ const useSocialSignInListener = (connectorId: string) => {
       bindSocialRelatedUser,
       connectorId,
       navigate,
+      navigateToSignIn,
       registerWithSocial,
       setToast,
       signInMode,
@@ -108,13 +117,14 @@ const useSocialSignInListener = (connectorId: string) => {
   const globalErrorHandler = useCallback(
     async (error: RequestErrorBody) => {
       setToast(error.message);
-      navigate('/' + experience.routes.signIn);
+      navigateToSignIn();
     },
-    [navigate, setToast]
+    [navigateToSignIn, setToast]
   );
 
   const preSignInErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.SignIn, {
     replace: true,
+    onEmailBlocked: navigateToSignIn,
   });
 
   const signInWithSocialErrorHandlers: ErrorHandlers = useMemo(

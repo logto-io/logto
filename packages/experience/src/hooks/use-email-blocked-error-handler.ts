@@ -6,7 +6,11 @@ import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-pres
 import { usePromiseConfirmModal } from './use-confirm-modal';
 import { type ErrorHandlers } from './use-error-handler';
 
-const useEmailBlockedErrorHandler = (): ErrorHandlers => {
+export type Options = {
+  readonly onConfirm?: () => void;
+};
+
+const useEmailBlockedErrorHandler = ({ onConfirm }: Options = {}): ErrorHandlers => {
   const navigate = useNavigateWithPreservedSearchParams();
   const { show } = usePromiseConfirmModal();
 
@@ -17,9 +21,15 @@ const useEmailBlockedErrorHandler = (): ErrorHandlers => {
         ModalContent: error.message,
         cancelText: 'action.got_it',
       });
+
+      if (onConfirm) {
+        onConfirm();
+        return;
+      }
+
       navigate(-1);
     },
-    [navigate, show]
+    [navigate, onConfirm, show]
   );
 
   return useMemo<ErrorHandlers>(

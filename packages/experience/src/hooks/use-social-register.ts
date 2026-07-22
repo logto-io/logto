@@ -10,7 +10,12 @@ import useGlobalRedirectTo from './use-global-redirect-to';
 import useSubmitInteractionErrorHandler from './use-submit-interaction-error-handler';
 import useTerms from './use-terms';
 
-const useSocialRegister = (connectorId: string, replace?: boolean) => {
+type Options = {
+  readonly replace?: boolean;
+  readonly onEmailBlocked?: () => void;
+};
+
+const useSocialRegister = (connectorId: string, { replace, onEmailBlocked }: Options = {}) => {
   const handleError = useErrorHandler();
   const asyncRegisterWithSocial = useApi(registerWithVerifiedIdentifier);
   const redirectTo = useGlobalRedirectTo();
@@ -20,6 +25,7 @@ const useSocialRegister = (connectorId: string, replace?: boolean) => {
   const preRegisterErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.Register, {
     linkSocial: connectorId,
     replace,
+    onEmailBlocked,
   });
 
   return useCallback(
