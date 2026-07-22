@@ -58,6 +58,7 @@ describe('role application routes', () => {
     );
     expect(response.status).toEqual(200);
     expect(response.body[0]).toHaveProperty('id', mockApplication.id);
+    expect(response.body[0]).not.toHaveProperty('secret');
   });
 
   it('POST /roles/:id/applications', async () => {

@@ -1,4 +1,4 @@
-import { type Application, ApplicationType } from '@logto/schemas';
+import { type ApplicationApiResponse, ApplicationType } from '@logto/schemas';
 import { useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -14,7 +14,7 @@ import styles from './index.module.scss';
 import { type ApplicationForm } from './utils';
 
 type Props = {
-  readonly data: Application;
+  readonly data: ApplicationApiResponse;
 };
 
 function TokenExchangeSettings({ data: { type, isThirdParty } }: Props) {

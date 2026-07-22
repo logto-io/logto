@@ -16,7 +16,7 @@ import { HTTPError } from 'ky';
 import { oidcApi } from '#src/api/api.js';
 import {
   assignRolesToApplication,
-  createApplication,
+  createApplicationWithSecret,
   deleteApplication,
 } from '#src/api/application.js';
 import { deleteJwtCustomizer, upsertJwtCustomizer } from '#src/api/logto-config.js';
@@ -91,7 +91,10 @@ describe('client credentials grant', () => {
 
   beforeAll(async () => {
     // eslint-disable-next-line @silverhand/fp/no-mutation
-    client = await createApplication('client credentials test', ApplicationType.MachineToMachine);
+    client = await createApplicationWithSecret(
+      'client credentials test',
+      ApplicationType.MachineToMachine
+    );
   });
 
   afterAll(async () => {

@@ -1,5 +1,5 @@
 import {
-  type Application,
+  type ApplicationApiResponse,
   type SnakeCaseOidcConfig,
   internalPrefix,
   hasSecrets,
@@ -41,10 +41,11 @@ import { type ApplicationSecretRow, useSecretTableColumns } from './use-secret-t
 
 export { type ApplicationSecretRow } from './use-secret-table-columns';
 
-const isLegacySecret = (secret: string) => !secret.startsWith(internalPrefix);
+const isLegacySecret = (secret?: string): secret is string =>
+  Boolean(secret && !secret.startsWith(internalPrefix));
 
 type Props = {
-  readonly app: Application;
+  readonly app: ApplicationApiResponse;
   readonly oidcConfig: SnakeCaseOidcConfig;
   readonly onApplicationUpdated: () => void;
 };
