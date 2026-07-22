@@ -8,6 +8,19 @@ const cloud = {
     description:
       'A tenant is an isolated environment where you can manage user identities, applications, and all other Logto resources.',
     invite_collaborators: 'Invite your collaborators by email',
+    hear_about_us: {
+      title: 'How did you first hear about Logto?',
+      detail_placeholder: 'Tell us more (optional)',
+      options: {
+        search_engine: 'Search engine (Google, Bing...)',
+        ai_assistant: 'AI assistant (ChatGPT, Claude, Gemini...)',
+        github_oss: 'GitHub or open-source directories',
+        friend_colleague: 'A friend or colleague',
+        powered_by: 'Sign-in page of an app using Logto',
+        content_social: 'Social media, article, or video (YouTube, X, Reddit...)',
+        other: 'Other',
+      },
+    },
   },
   social_callback: {
     title: "You've successfully signed in",

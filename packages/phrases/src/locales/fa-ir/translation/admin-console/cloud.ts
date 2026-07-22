@@ -8,6 +8,19 @@ const cloud = {
     description:
       'مستأجر یک محیط ایزوله است که در آن می‌توانید هویت‌های کاربری، برنامه‌ها و تمام منابع دیگر Logto را مدیریت کنید.',
     invite_collaborators: 'همکاران خود را از طریق ایمیل دعوت کنید',
+    hear_about_us: {
+      title: 'اولین بار چگونه با Logto آشنا شدید؟',
+      detail_placeholder: 'بیشتر برایمان بگویید (اختیاری)',
+      options: {
+        search_engine: 'موتور جستجو (Google، Bing...)',
+        ai_assistant: 'دستیار هوش مصنوعی (ChatGPT، Claude، Gemini...)',
+        github_oss: 'GitHub یا دایرکتوری‌های متن‌باز',
+        friend_colleague: 'دوست یا همکار',
+        powered_by: 'صفحه ورود برنامه‌ای که از Logto استفاده می‌کند',
+        content_social: 'شبکه‌های اجتماعی، مقاله یا ویدیو (YouTube، X، Reddit...)',
+        other: 'سایر',
+      },
+    },
   },
   social_callback: {
     title: 'شما با موفقیت وارد شدید',

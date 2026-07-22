@@ -8,6 +8,19 @@ const cloud = {
     description:
       'テナントはユーザーアイデンティティ、アプリケーション、およびその他すべての Logto リソースを管理するための独立した環境です。',
     invite_collaborators: 'メールでコラボレーターを招待',
+    hear_about_us: {
+      title: 'Logto を最初にどこで知りましたか?',
+      detail_placeholder: '詳しく教えてください(任意)',
+      options: {
+        search_engine: '検索エンジン(Google、Bing など)',
+        ai_assistant: 'AI アシスタント(ChatGPT、Claude、Gemini など)',
+        github_oss: 'GitHub またはオープンソースディレクトリ',
+        friend_colleague: '友人・同僚からの紹介',
+        powered_by: 'Logto を利用しているアプリのサインインページ',
+        content_social: 'SNS・記事・動画(YouTube、X、Reddit など)',
+        other: 'その他',
+      },
+    },
   },
   social_callback: {
     title: 'ログインが成功しました',

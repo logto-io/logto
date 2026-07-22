@@ -8,6 +8,19 @@ const cloud = {
     description:
       'Un inquilino es un entorno aislado donde puedes gestionar identidades de usuarios, aplicaciones y todos los demás recursos de Logto.',
     invite_collaborators: 'Invita a tus colaboradores por correo electrónico',
+    hear_about_us: {
+      title: '¿Cómo conociste Logto por primera vez?',
+      detail_placeholder: 'Cuéntanos más (opcional)',
+      options: {
+        search_engine: 'Motor de búsqueda (Google, Bing...)',
+        ai_assistant: 'Asistente de IA (ChatGPT, Claude, Gemini...)',
+        github_oss: 'GitHub o directorios de código abierto',
+        friend_colleague: 'Un amigo o colega',
+        powered_by: 'Página de inicio de sesión de una aplicación que usa Logto',
+        content_social: 'Redes sociales, artículo o video (YouTube, X, Reddit...)',
+        other: 'Otro',
+      },
+    },
   },
   social_callback: {
     title: 'Ha iniciado sesión correctamente',
