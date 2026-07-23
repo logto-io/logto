@@ -104,15 +104,20 @@ const actionLogTypes = Object.freeze({
 const getActionLogKey = (key: LogtoActionKey): actionLog.LogKey =>
   `${actionLog.prefix}.${actionLogTypes[key]}`;
 
+type ActionResultEffect = {
+  fields: readonly string[];
+  missingDecision: 'invalid' | 'noop';
+};
+
 const actionResultEffects: Readonly<
-  Record<LogtoActionKey, Readonly<Record<string, readonly string[]>>>
+  Record<LogtoActionKey, Readonly<Record<string, ActionResultEffect>>>
 > = Object.freeze({
   [LogtoActionKey.PostFirstFactorVerification]: {
-    createUser: ['user'],
-    updateUser: ['user'],
+    createUser: { fields: ['user'], missingDecision: 'invalid' },
+    updateUser: { fields: ['user'], missingDecision: 'invalid' },
   },
   [LogtoActionKey.PostSignIn]: {
-    updateUser: ['user'],
+    updateUser: { fields: ['user'], missingDecision: 'noop' },
   },
 });
 
@@ -137,19 +142,17 @@ const getActionResultActionSummary = (key: LogtoActionKey, result: unknown) => {
       return { decision: 'noop' };
     }
 
-    const action = Object.keys(actionResultEffects[key]).find(
-      (candidate) => candidate === rawAction
-    );
+    const effect = actionResultEffects[key][rawAction];
 
-    if (!action) {
+    if (!effect) {
       return { decision: 'invalid' };
     }
 
-    if (!hasActionResultEffect(result, actionResultEffects[key][action] ?? [])) {
-      return { decision: 'noop' };
+    if (!hasActionResultEffect(result, effect.fields)) {
+      return { decision: effect.missingDecision };
     }
 
-    return { action, decision: action };
+    return { action: rawAction, decision: rawAction };
   } catch {
     return { decision: 'invalid' };
   }

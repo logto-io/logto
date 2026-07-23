@@ -160,12 +160,12 @@ describe('ActionLibrary', () => {
   });
 
   it.each([
-    [LogtoActionKey.PostFirstFactorVerification, 'createUser'],
-    [LogtoActionKey.PostFirstFactorVerification, 'updateUser'],
-    [LogtoActionKey.PostSignIn, 'updateUser'],
+    ['invalid', LogtoActionKey.PostFirstFactorVerification, 'createUser'],
+    ['invalid', LogtoActionKey.PostFirstFactorVerification, 'updateUser'],
+    ['noop', LogtoActionKey.PostSignIn, 'updateUser'],
   ] as const)(
-    'records a no-op decision for %s results that declare %s without its effect',
-    async (key, resultAction) => {
+    'records a %s decision for %s results that declare %s without its effect',
+    async (decision, key, resultAction) => {
       getAction.mockResolvedValueOnce({
         enabled: true,
         script: `const runAction = () => ({ action: "${resultAction}" });`,
@@ -176,7 +176,7 @@ describe('ActionLibrary', () => {
       expect(mockAppend).toHaveBeenLastCalledWith({
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Jest asymmetric matcher is typed as `any`.
         durationMs: expect.any(Number),
-        decision: 'noop',
+        decision,
         actionResult: {
           action: resultAction,
         },

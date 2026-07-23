@@ -100,6 +100,12 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
           ctx.type = 'application/json';
           ctx.body = 'null';
           ctx.status = 200;
+        } else if (typeof result === 'string') {
+          // Koa sends strings as plain text by default. Serialize them explicitly so the
+          // Console can parse every successful dry-run result as JSON.
+          ctx.type = 'application/json';
+          ctx.body = JSON.stringify(result);
+          ctx.status = 200;
         } else {
           ctx.body = result;
           ctx.status = 200;

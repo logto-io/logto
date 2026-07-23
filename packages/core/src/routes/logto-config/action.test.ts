@@ -232,13 +232,14 @@ describe('configs action routes', () => {
     expect(mockQuotaLibrary.guardTenantUsageByKey).toHaveBeenCalledWith('inlineHooksEnabled');
   });
 
-  it('POST /configs/actions/test should distinguish undefined and null results', async () => {
+  it('POST /configs/actions/test should serialize undefined, null, and string results', async () => {
     jest
       .spyOn(tenantContext.libraries.actions, 'executeScript')
       .mockImplementationOnce(async () => {
         await Promise.resolve();
       })
-      .mockResolvedValueOnce(null);
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce('foo');
     const payload: ActionExecutionRequestBody = {
       actionType: LogtoActionKey.PostSignIn,
       script: 'const runAction = () => undefined;',
@@ -249,11 +250,13 @@ describe('configs action routes', () => {
 
     const undefinedResponse = await routeRequester.post('/configs/actions/test').send(payload);
     const nullResponse = await routeRequester.post('/configs/actions/test').send(payload);
+    const stringResponse = await routeRequester.post('/configs/actions/test').send(payload);
 
     expect(undefinedResponse.status).toEqual(204);
     expect(undefinedResponse.text).toBe('');
     expect(nullResponse.status).toEqual(200);
     expect(nullResponse.body).toBeNull();
+    expect(stringResponse).toMatchObject({ status: 200, type: 'application/json', body: 'foo' });
   });
 
   it('POST /configs/actions/test should map general execution errors to 422', async () => {
