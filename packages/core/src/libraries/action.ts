@@ -123,7 +123,22 @@ const getActionResultActionSummary = (key: LogtoActionKey, result: unknown) => {
 
     const action = actionResultActions[key].find((candidate) => candidate === rawAction);
 
-    return action ? { action, decision: action } : { decision: 'invalid' };
+    if (!action) {
+      return { decision: 'invalid' };
+    }
+
+    if (key === LogtoActionKey.PostSignIn && action === 'updateUser') {
+      const userDescriptor = Object.getOwnPropertyDescriptor(result, 'user');
+
+      if (
+        userDescriptor === undefined ||
+        ('value' in userDescriptor && userDescriptor.value === undefined)
+      ) {
+        return { decision: 'noop' };
+      }
+    }
+
+    return { action, decision: action };
   } catch {
     return { decision: 'invalid' };
   }

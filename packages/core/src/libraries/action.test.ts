@@ -159,7 +159,7 @@ describe('ActionLibrary', () => {
     });
   });
 
-  it('emits no-op metrics for a PostSignIn result without a user patch', async () => {
+  it('records a no-op decision for a PostSignIn result without a user patch', async () => {
     getAction.mockResolvedValueOnce({
       enabled: true,
       script: 'const runAction = () => ({ action: "updateUser" });',
@@ -172,6 +172,14 @@ describe('ActionLibrary', () => {
       })
     ).resolves.toEqual({ action: 'updateUser' });
 
+    expect(mockAppend).toHaveBeenLastCalledWith({
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Jest asymmetric matcher is typed as `any`.
+      durationMs: expect.any(Number),
+      decision: 'noop',
+      actionResult: {
+        action: 'updateUser',
+      },
+    });
     expectActionMetrics({
       actionType: 'PostSignIn',
       runtimeLocation: 'local',
