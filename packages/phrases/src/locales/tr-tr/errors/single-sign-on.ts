@@ -11,6 +11,8 @@ const single_sign_on = {
     'redirect_uri kaydedilmemiş. Lütfen uygulama ayarlarını kontrol edin.',
   idp_initiated_authentication_client_callback_uri_not_found:
     "İstemci IdP başlatılan kimlik doğrulama geri dönüş URI'si bulunamadı. Lütfen bağlayıcı ayarlarını kontrol edin.",
+  sso_signing_unavailable:
+    'Kimlik sağlayıcınızla oturum açma tamamlanamadı. Lütfen yöneticinizle iletişime geçin.',
 };
 
 export default Object.freeze(single_sign_on);
