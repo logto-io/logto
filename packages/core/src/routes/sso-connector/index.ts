@@ -26,8 +26,10 @@ import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 import ssoConnectorIdpInitiatedAuthConfigRoutes from './idp-initiated-auth-config.js';
 import {
   fetchConnectorProviderDetails,
+  isSignAuthnRequestEnabled,
   parseConnectorConfig,
   parseFactoryDetail,
+  stripGatedSigningConfigFields,
   validateConnectorConfigConnectionStatus,
   validateConnectorDomains,
 } from './utils.js';
@@ -43,6 +45,7 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
       libraries: {
         quota,
         ssoConnectors: { getSsoConnectorById, getSsoConnectors },
+        samlSsoConnectorSigningKeys: { ensureActiveSigningKey },
       },
       envSet,
     },
@@ -106,7 +109,8 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
       }
 
       // Validate the connector config if it's provided
-      const parsedConfig = config && parseConnectorConfig(providerName, config);
+      const parsedConfig =
+        config && stripGatedSigningConfigFields(parseConnectorConfig(providerName, config));
 
       // Validate the connector name is unique
       if (connectorName) {
@@ -153,6 +157,12 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
         ...conditional(domains && { domains }),
         ...rest,
       });
+
+      // Generate the first active SP signing key on creation with signed AuthnRequest enabled
+      // (the flag is stripped when dev features are off, so this cannot fire in production).
+      if (isSignAuthnRequestEnabled(parsedConfig)) {
+        await ensureActiveSigningKey(connector.id);
+      }
 
       ctx.body = connector;
 
@@ -294,7 +304,8 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
       }
 
       // Validate the connector config if it's provided
-      const parsedConfig = config && parseConnectorConfig(providerName, config);
+      const parsedConfig =
+        config && stripGatedSigningConfigFields(parseConnectorConfig(providerName, config));
 
       // Check the connection status of the connector config if it's provided
       if (parsedConfig) {
@@ -340,6 +351,17 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
             ...rest,
           })
         : originalConnector;
+
+      // Disabling (or omitting) the flag only stops signing — key deletion is exclusive to the
+      // dedicated signing-key routes.
+      // TODO: @simeng Remove the dev features check when the signed AuthnRequest feature is ready.
+      if (
+        EnvSet.values.isDevFeaturesEnabled &&
+        providerType === SsoProviderType.SAML &&
+        isSignAuthnRequestEnabled(parsedConfig)
+      ) {
+        await ensureActiveSigningKey(id);
+      }
 
       // Make the typescript happy
       assert(

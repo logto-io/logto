@@ -14,8 +14,14 @@ await mockEsmWithActual('#src/sso/OidcConnector/utils.js', () => ({
 }));
 
 const { ssoConnectorFactories } = await import('#src/sso/index.js');
-const { parseFactoryDetail, fetchConnectorProviderDetails, validateConnectorDomains } =
-  await import('./utils.js');
+const {
+  parseFactoryDetail,
+  fetchConnectorProviderDetails,
+  validateConnectorDomains,
+  parseConnectorConfig,
+  isSignAuthnRequestEnabled,
+  stripGatedSigningConfigFields,
+} = await import('./utils.js');
 
 const mockTenantId = 'mock_tenant_id';
 
@@ -157,5 +163,50 @@ describe('validateConnectorDomains', () => {
         }
       )
     );
+  });
+});
+
+describe('signed AuthnRequest config helpers', () => {
+  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+  const setDevFeaturesEnabled = (enabled: boolean) => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', enabled);
+  };
+
+  const samlSigningConfig = {
+    metadata: 'mock-metadata',
+    signAuthnRequest: true,
+    requestSignatureAlgorithm: 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256',
+  };
+
+  afterAll(() => {
+    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
+  });
+
+  describe('isSignAuthnRequestEnabled', () => {
+    it('is true only when the config explicitly enables it', () => {
+      expect(
+        isSignAuthnRequestEnabled(parseConnectorConfig(SsoProviderName.SAML, samlSigningConfig))
+      ).toBe(true);
+      expect(
+        isSignAuthnRequestEnabled(
+          parseConnectorConfig(SsoProviderName.SAML, { metadata: 'mock-metadata' })
+        )
+      ).toBe(false);
+      expect(isSignAuthnRequestEnabled()).toBe(false);
+    });
+  });
+
+  describe('stripGatedSigningConfigFields', () => {
+    it('passes the config through when dev features are on', () => {
+      setDevFeaturesEnabled(true);
+      const parsed = parseConnectorConfig(SsoProviderName.SAML, samlSigningConfig);
+      expect(stripGatedSigningConfigFields(parsed)).toEqual(parsed);
+    });
+
+    it('strips the signing fields when dev features are off', () => {
+      setDevFeaturesEnabled(false);
+      const parsed = parseConnectorConfig(SsoProviderName.SAML, samlSigningConfig);
+      expect(stripGatedSigningConfigFields(parsed)).toEqual({ metadata: 'mock-metadata' });
+    });
   });
 });

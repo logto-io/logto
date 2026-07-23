@@ -12,7 +12,6 @@ export const createSamlSsoConnectorSigningKeyLibrary = (queries: Queries) => {
       insertInactiveSigningKey,
       insertActiveSigningKey,
       findActiveSigningKeyBySsoConnectorId,
-      deleteSigningKeysBySsoConnectorId,
     },
   } = queries;
 
@@ -44,9 +43,5 @@ export const createSamlSsoConnectorSigningKeyLibrary = (queries: Queries) => {
     return active ?? createSigningKey({ ssoConnectorId, isActive: true });
   };
 
-  const deleteSigningKeys = async (ssoConnectorId: string) => {
-    await deleteSigningKeysBySsoConnectorId(ssoConnectorId);
-  };
-
-  return { createSigningKey, ensureActiveSigningKey, deleteSigningKeys };
+  return { createSigningKey, ensureActiveSigningKey };
 };

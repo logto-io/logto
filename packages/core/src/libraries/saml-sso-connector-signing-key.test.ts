@@ -38,7 +38,6 @@ const insertActiveSigningKey = jest.fn(async (data: SigningKeyInsert) => buildKe
 const findActiveSigningKeyBySsoConnectorId = jest.fn(
   async (): Promise<Nullable<SamlSsoConnectorSigningKey>> => null
 );
-const deleteSigningKeysBySsoConnectorId = jest.fn();
 
 const createLibrary = () =>
   createSamlSsoConnectorSigningKeyLibrary(
@@ -47,7 +46,6 @@ const createLibrary = () =>
         insertInactiveSigningKey,
         insertActiveSigningKey,
         findActiveSigningKeyBySsoConnectorId,
-        deleteSigningKeysBySsoConnectorId,
       },
     })
   );
@@ -102,14 +100,6 @@ describe('createSamlSsoConnectorSigningKeyLibrary()', () => {
       expect(insertActiveSigningKey).toHaveBeenCalledTimes(1);
       expect(result.active).toBe(true);
       expect(result.ssoConnectorId).toBe(ssoConnectorId);
-    });
-  });
-
-  describe('deleteSigningKeys()', () => {
-    it('should delete all keys for the connector', async () => {
-      await createLibrary().deleteSigningKeys(ssoConnectorId);
-
-      expect(deleteSigningKeysBySsoConnectorId).toHaveBeenCalledWith(ssoConnectorId);
     });
   });
 });
