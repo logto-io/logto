@@ -97,6 +97,14 @@ export type DataHookEventPayload = {
 export type ExceptionHookEventPayload = Omit<DataHookEventPayload, 'event'> & {
   event: ExceptionHookEvent;
 };
+export type GrantLimitExceededEventData = {
+  userId: string;
+  applicationId: string;
+  revokedGrantIds: string[];
+  maxAllowedGrants: number;
+  preRevocationActiveGrantCount: number;
+};
+
 export type HookEventPayload =
   | InteractionHookEventPayload
   | DataHookEventPayload

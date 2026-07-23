@@ -1,6 +1,8 @@
 import {
   LogResult,
   userInfoSelectFields,
+  type ExceptionHookEventPayload,
+  type GrantLimitExceededEventData,
   type Hook,
   type HookConfig,
   type HookEvent,
@@ -289,10 +291,58 @@ export const createHookLibrary = (queries: Queries) => {
     });
   }
 
+  /**
+   * Trigger a hook event directly, enriched with standard metadata.
+   *
+   * Unlike `triggerInteractionHooks` / `triggerDataHooks` / `triggerExceptionHooks`, this method
+   * does not go through the `HookContextManager` because callers (e.g., OIDC event listeners)
+   * operate outside the middleware request context. Instead it accepts explicit metadata fields
+   * and enriches the payload with application detail and standard fields (`ip`, `userAgent`)
+   * to match the shape of other exception hook events.
+   *
+   * Note: the hook-matching and payload-enrichment logic here intentionally mirrors what
+   * `buildWebhooks` does, since both need the same semantics but operate on different context
+   * shapes. Keep both in sync when changing either one.
+   */
+  const triggerEvent = async (
+    consoleLog: ConsoleLog,
+    event: 'Grant.LimitExceeded',
+    payload: GrantLimitExceededEventData,
+    metadata?: { ip?: string; userAgent?: string }
+  ) => {
+    const hooks = await findAllHooks();
+    const matchingHooks = hooks.filter(
+      ({ event: hookEvent, events, enabled }) =>
+        enabled && (events.length > 0 ? events.includes(event) : event === hookEvent)
+    );
+
+    if (matchingHooks.length === 0) {
+      return;
+    }
+
+    const application = await trySafe(async () => findApplicationById(payload.applicationId));
+
+    const webhookPayloads = matchingHooks.map((hook) => ({
+      hook,
+      payload: {
+        event,
+        createdAt: new Date().toISOString(),
+        ...metadata,
+        ...conditional(
+          application && { application: pick(application, 'id', 'type', 'name', 'description') }
+        ),
+        ...payload,
+      } satisfies BetterOmit<ExceptionHookEventPayload, 'hookId'>,
+    }));
+
+    await sendWebhooks(webhookPayloads, consoleLog);
+  };
+
   return {
     triggerInteractionHooks,
     triggerDataHooks,
     triggerExceptionHooks,
     triggerTestHook,
+    triggerEvent,
   };
 };
