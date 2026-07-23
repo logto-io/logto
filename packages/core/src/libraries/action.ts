@@ -104,10 +104,26 @@ const actionLogTypes = Object.freeze({
 const getActionLogKey = (key: LogtoActionKey): actionLog.LogKey =>
   `${actionLog.prefix}.${actionLogTypes[key]}`;
 
-const actionResultActions = Object.freeze({
-  [LogtoActionKey.PostFirstFactorVerification]: ['createUser', 'updateUser'],
-  [LogtoActionKey.PostSignIn]: ['updateUser'],
-} satisfies Record<LogtoActionKey, readonly string[]>);
+const actionResultEffects: Readonly<
+  Record<LogtoActionKey, Readonly<Record<string, readonly string[]>>>
+> = Object.freeze({
+  [LogtoActionKey.PostFirstFactorVerification]: {
+    createUser: ['user'],
+    updateUser: ['user'],
+  },
+  [LogtoActionKey.PostSignIn]: {
+    updateUser: ['user'],
+  },
+});
+
+const hasActionResultEffect = (result: unknown, effectFields: readonly string[]) =>
+  typeof result === 'object' &&
+  result !== null &&
+  effectFields.some((field) => {
+    const descriptor = Object.getOwnPropertyDescriptor(result, field);
+
+    return descriptor !== undefined && (!('value' in descriptor) || descriptor.value !== undefined);
+  });
 
 const getActionResultActionSummary = (key: LogtoActionKey, result: unknown) => {
   try {
@@ -121,21 +137,16 @@ const getActionResultActionSummary = (key: LogtoActionKey, result: unknown) => {
       return { decision: 'noop' };
     }
 
-    const action = actionResultActions[key].find((candidate) => candidate === rawAction);
+    const action = Object.keys(actionResultEffects[key]).find(
+      (candidate) => candidate === rawAction
+    );
 
     if (!action) {
       return { decision: 'invalid' };
     }
 
-    if (key === LogtoActionKey.PostSignIn && action === 'updateUser') {
-      const userDescriptor = Object.getOwnPropertyDescriptor(result, 'user');
-
-      if (
-        userDescriptor === undefined ||
-        ('value' in userDescriptor && userDescriptor.value === undefined)
-      ) {
-        return { decision: 'noop' };
-      }
+    if (!hasActionResultEffect(result, actionResultEffects[key][action] ?? [])) {
+      return { decision: 'noop' };
     }
 
     return { action, decision: action };
