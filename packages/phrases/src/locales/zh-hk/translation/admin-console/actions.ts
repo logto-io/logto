@@ -11,7 +11,7 @@ const actions = {
   types: {
     post_first_factor_verification: {
       name: '首個身份驗證因素驗證後',
-      description: '在首個身份驗證因素通過驗證後、登錄繼續前運行自定義邏輯。',
+      description: '在登入期間本地密碼驗證失敗後運行自訂邏輯。',
     },
     post_sign_in: {
       name: '登錄後',
@@ -75,7 +75,7 @@ const actions = {
   security_warning: {
     title: '安全警告',
     description:
-      '透過此操作建立的用戶會繞過僅適用於註冊的限制，包括電郵黑名單、僅 SSO 網域、停用註冊模式，以及註冊必填資料檢查。對現有用戶的資料和密碼寫入也會在 MFA 完成前發生。',
+      '此操作僅在本地密碼驗證失敗後運行。只有在獨立驗證提交的密碼後，才能傳回 `passwordVerified: true`。透過此操作建立的用戶會繞過僅適用於註冊的限制，包括電郵黑名單、僅 SSO 網域、停用註冊模式，以及註冊必填資料檢查。對現有用戶的資料和密碼寫入也會在 MFA 完成前發生。',
   },
   delete_modal_title: '刪除操作',
   delete_modal_content: '確定要刪除此操作嗎？身份驗證流程將不再運行此腳本。',

@@ -13,7 +13,7 @@ const actions = {
     post_first_factor_verification: {
       name: 'Po weryfikacji pierwszego czynnika',
       description:
-        'Uruchom niestandardową logikę po zweryfikowaniu pierwszego czynnika uwierzytelniania i przed kontynuowaniem logowania.',
+        'Uruchom niestandardową logikę po nieudanej weryfikacji lokalnego hasła podczas logowania.',
     },
     post_sign_in: {
       name: 'Po zalogowaniu',
@@ -79,7 +79,7 @@ const actions = {
   security_warning: {
     title: 'Ostrzeżenie bezpieczeństwa',
     description:
-      'Użytkownicy provisionowani przez tę akcję omijają zabezpieczenia dotyczące tylko rejestracji, w tym blokadę e-mail, domenę tylko SSO, tryb wyłączonej rejestracji oraz sprawdzanie obowiązkowego profilu przy rejestracji. Zapis profilu i hasła istniejących użytkowników również następuje przed zakończeniem MFA.',
+      'Ta akcja jest uruchamiana dopiero po nieudanej weryfikacji lokalnego hasła. Zwracaj `passwordVerified: true` tylko po niezależnym zweryfikowaniu przesłanego hasła. Użytkownicy provisionowani przez tę akcję omijają zabezpieczenia dotyczące tylko rejestracji, w tym blokadę e-mail, domenę tylko SSO, tryb wyłączonej rejestracji oraz sprawdzanie obowiązkowego profilu przy rejestracji. Zapis profilu i hasła istniejących użytkowników również następuje przed zakończeniem MFA.',
   },
   delete_modal_title: 'Usuń akcję',
   delete_modal_content:

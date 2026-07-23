@@ -13,7 +13,7 @@ const actions = {
     post_first_factor_verification: {
       name: 'Após a verificação do primeiro fator',
       description:
-        'Execute lógica personalizada após a verificação do primeiro fator de autenticação e antes de o início de sessão continuar.',
+        'Execute lógica personalizada após a falha da verificação da palavra-passe local durante o início de sessão.',
     },
     post_sign_in: {
       name: 'Após o início de sessão',
@@ -79,7 +79,7 @@ const actions = {
   security_warning: {
     title: 'Aviso de segurança',
     description:
-      'Os utilizadores provisionados por esta ação contornam proteções exclusivas do registo, incluindo a blocklist de e-mail, o domínio apenas SSO, o modo de registo desativado e as verificações de perfil obrigatório no registo. As escritas de perfil e palavra-passe de utilizadores existentes também ocorrem antes da conclusão da MFA.',
+      'Esta ação é executada apenas após a falha da verificação da palavra-passe local. Devolva `passwordVerified: true` apenas depois de verificar de forma independente a palavra-passe submetida. Os utilizadores provisionados por esta ação contornam proteções exclusivas do registo, incluindo a blocklist de e-mail, o domínio apenas SSO, o modo de registo desativado e as verificações de perfil obrigatório no registo. As escritas de perfil e palavra-passe de utilizadores existentes também ocorrem antes da conclusão da MFA.',
   },
   delete_modal_title: 'Eliminar ação',
   delete_modal_content:
