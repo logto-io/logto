@@ -506,6 +506,9 @@
           "200": {
             "description": "The result of the action script testing."
           },
+          "204": {
+            "description": "The action script returned no result."
+          },
           "400": {
             "description": "The request body or response body is invalid."
           },

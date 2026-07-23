@@ -82,7 +82,7 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
     koaGuard({
       body: actionExecutionRequestBodyGuard,
       response: jsonGuard.optional(),
-      status: [200, 400, 403, 422],
+      status: [200, 204, 400, 403, 422],
     }),
     koaQuotaGuard({ key: actionQuotaKey, quota: libraries.quota }),
     async (ctx, next) => {
@@ -90,8 +90,26 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
 
       try {
         // Share the same Cloud/local execution selection as production `runAction()`.
-        ctx.body = await libraries.actions.executeScript(body);
-        ctx.status = 200;
+        const result = await libraries.actions.executeScript(body);
+
+        if (result === undefined) {
+          ctx.status = 204;
+        } else if (result === null) {
+          // Koa treats a null body as no content. Serialize it explicitly so dry runs can
+          // distinguish a returned null from an undefined result.
+          ctx.type = 'application/json';
+          ctx.body = 'null';
+          ctx.status = 200;
+        } else if (typeof result === 'string') {
+          // Koa sends strings as plain text by default. Serialize them explicitly so the
+          // Console can parse every successful dry-run result as JSON.
+          ctx.type = 'application/json';
+          ctx.body = JSON.stringify(result);
+          ctx.status = 200;
+        } else {
+          ctx.body = result;
+          ctx.status = 200;
+        }
       } catch (error: unknown) {
         const sensitiveValues = getActionSensitiveValues(body);
 

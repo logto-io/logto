@@ -104,10 +104,31 @@ const actionLogTypes = Object.freeze({
 const getActionLogKey = (key: LogtoActionKey): actionLog.LogKey =>
   `${actionLog.prefix}.${actionLogTypes[key]}`;
 
-const actionResultActions = Object.freeze({
-  [LogtoActionKey.PostFirstFactorVerification]: ['createUser', 'updateUser'],
-  [LogtoActionKey.PostSignIn]: ['updateUser'],
-} satisfies Record<LogtoActionKey, readonly string[]>);
+type ActionResultEffect = {
+  fields: readonly string[];
+  missingDecision: 'invalid' | 'noop';
+};
+
+const actionResultEffects: Readonly<
+  Record<LogtoActionKey, Readonly<Record<string, ActionResultEffect>>>
+> = Object.freeze({
+  [LogtoActionKey.PostFirstFactorVerification]: {
+    createUser: { fields: ['user'], missingDecision: 'invalid' },
+    updateUser: { fields: ['user'], missingDecision: 'invalid' },
+  },
+  [LogtoActionKey.PostSignIn]: {
+    updateUser: { fields: ['user'], missingDecision: 'noop' },
+  },
+});
+
+const hasActionResultEffect = (result: unknown, effectFields: readonly string[]) =>
+  typeof result === 'object' &&
+  result !== null &&
+  effectFields.some((field) => {
+    const descriptor = Object.getOwnPropertyDescriptor(result, field);
+
+    return descriptor !== undefined && 'value' in descriptor && descriptor.value !== undefined;
+  });
 
 const getActionResultActionSummary = (key: LogtoActionKey, result: unknown) => {
   try {
@@ -121,9 +142,17 @@ const getActionResultActionSummary = (key: LogtoActionKey, result: unknown) => {
       return { decision: 'noop' };
     }
 
-    const action = actionResultActions[key].find((candidate) => candidate === rawAction);
+    const effect = actionResultEffects[key][rawAction];
 
-    return action ? { action, decision: action } : { decision: 'invalid' };
+    if (!effect) {
+      return { decision: 'invalid' };
+    }
+
+    if (!hasActionResultEffect(result, effect.fields)) {
+      return { decision: effect.missingDecision };
+    }
+
+    return { action: rawAction, decision: rawAction };
   } catch {
     return { decision: 'invalid' };
   }

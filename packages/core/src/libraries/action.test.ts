@@ -159,6 +159,31 @@ describe('ActionLibrary', () => {
     });
   });
 
+  it.each([
+    ['invalid', LogtoActionKey.PostFirstFactorVerification, 'createUser'],
+    ['invalid', LogtoActionKey.PostFirstFactorVerification, 'updateUser'],
+    ['noop', LogtoActionKey.PostSignIn, 'updateUser'],
+  ] as const)(
+    'records a %s decision for %s results that declare %s without its effect',
+    async (decision, key, resultAction) => {
+      getAction.mockResolvedValueOnce({
+        enabled: true,
+        script: `const runAction = () => ({ action: "${resultAction}" });`,
+      });
+
+      await expect(runAction({ key, event: {} })).resolves.toEqual({ action: resultAction });
+
+      expect(mockAppend).toHaveBeenLastCalledWith({
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Jest asymmetric matcher is typed as `any`.
+        durationMs: expect.any(Number),
+        decision,
+        actionResult: {
+          action: resultAction,
+        },
+      });
+    }
+  );
+
   it('emits no-op metrics for a PostSignIn result without a user patch', async () => {
     getAction.mockResolvedValueOnce({
       enabled: true,
@@ -422,7 +447,7 @@ describe('ActionLibrary', () => {
     expect(JSON.stringify(mockAppend.mock.calls)).not.toContain(passwordStatusSecret);
   });
 
-  it('keeps audit summarization failures from changing the action result', async () => {
+  it('records accessor-only effects as no-op without changing the action result', async () => {
     const result = {
       action: 'updateUser',
       get user(): never {
@@ -436,13 +461,12 @@ describe('ActionLibrary', () => {
     jest.spyOn(library, 'executeScript').mockResolvedValueOnce(result);
 
     await expect(runAction({ key: LogtoActionKey.PostSignIn, event: {} })).resolves.toBe(result);
-    expect(mockAppend).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        action: 'updateUser',
-        decision: 'updateUser',
-        actionResult: '[unavailable]',
-      })
-    );
+    expect(mockAppend).toHaveBeenLastCalledWith({
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Jest asymmetric matcher is typed as `any`.
+      durationMs: expect.any(Number),
+      decision: 'noop',
+      actionResult: '[unavailable]',
+    });
   });
 
   it('continues to run stored scripts that use the legacy entry point', async () => {
