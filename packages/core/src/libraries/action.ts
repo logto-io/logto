@@ -122,7 +122,7 @@ const hasActionResultEffect = (result: unknown, effectFields: readonly string[])
   effectFields.some((field) => {
     const descriptor = Object.getOwnPropertyDescriptor(result, field);
 
-    return descriptor !== undefined && (!('value' in descriptor) || descriptor.value !== undefined);
+    return descriptor !== undefined && 'value' in descriptor && descriptor.value !== undefined;
   });
 
 const getActionResultActionSummary = (key: LogtoActionKey, result: unknown) => {
