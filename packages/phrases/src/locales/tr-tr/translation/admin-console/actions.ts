@@ -13,7 +13,7 @@ const actions = {
     post_first_factor_verification: {
       name: 'İlk faktör doğrulamasından sonra',
       description:
-        'İlk kimlik doğrulama faktörü doğrulandıktan sonra ve oturum açma devam etmeden önce özel mantık çalıştırın.',
+        'Oturum açma sırasında yerel parola doğrulaması başarısız olduktan sonra özel mantık çalıştırın.',
     },
     post_sign_in: {
       name: 'Oturum açma sonrası',
@@ -80,7 +80,7 @@ const actions = {
   security_warning: {
     title: 'Güvenlik uyarısı',
     description:
-      'Bu eylem tarafından sağlanan kullanıcılar, e-posta engel listesi, yalnızca SSO alan adı, kayıt devre dışı modu ve kayıt zorunlu profil kontrolleri dahil olmak üzere yalnızca kayda özel korumaları atlar. Mevcut kullanıcıların profil ve parola yazımları da MFA tamamlanmadan önce gerçekleşir.',
+      'Bu eylem yalnızca yerel parola doğrulaması başarısız olduktan sonra çalışır. Yalnızca gönderilen parolayı bağımsız olarak doğruladıktan sonra `passwordVerified: true` döndürün. Bu eylem tarafından sağlanan kullanıcılar, e-posta engel listesi, yalnızca SSO alan adı, kayıt devre dışı modu ve kayıt zorunlu profil kontrolleri dahil olmak üzere yalnızca kayda özel korumaları atlar. Mevcut kullanıcıların profil ve parola yazımları da MFA tamamlanmadan önce gerçekleşir.',
   },
   delete_modal_title: 'Eylemi sil',
   delete_modal_content:

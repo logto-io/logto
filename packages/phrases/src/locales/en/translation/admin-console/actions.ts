@@ -12,8 +12,7 @@ const actions = {
   types: {
     post_first_factor_verification: {
       name: 'Post first-factor verification',
-      description:
-        'Run custom logic after the first authentication factor is verified and before sign-in continues.',
+      description: 'Run custom logic after local password verification fails during sign-in.',
     },
     post_sign_in: {
       name: 'Post sign-in',
@@ -78,7 +77,7 @@ const actions = {
   security_warning: {
     title: 'Security warning',
     description:
-      'Users provisioned by this action bypass registration-only guards, including email blocklist, SSO-only domain, sign-up-disabled mode, and registration mandatory-profile checks. Existing-user profile and password writes also occur before MFA completes.',
+      'This action runs only after local password verification fails. Return `passwordVerified: true` only after independently verifying the submitted password. Users provisioned by this action bypass registration-only guards, including email blocklist, SSO-only domain, sign-up-disabled mode, and registration mandatory-profile checks. Existing-user profile and password writes also occur before MFA completes.',
   },
   delete_modal_title: 'Delete action',
   delete_modal_content:

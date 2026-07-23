@@ -13,7 +13,7 @@ const actions = {
     post_first_factor_verification: {
       name: 'Nach Überprüfung des ersten Faktors',
       description:
-        'Führe benutzerdefinierte Logik aus, nachdem der erste Authentifizierungsfaktor überprüft wurde und bevor die Anmeldung fortgesetzt wird.',
+        'Führe benutzerdefinierte Logik aus, nachdem die lokale Passwortüberprüfung während der Anmeldung fehlgeschlagen ist.',
     },
     post_sign_in: {
       name: 'Nach der Anmeldung',
@@ -80,7 +80,7 @@ const actions = {
   security_warning: {
     title: 'Sicherheitswarnung',
     description:
-      'Durch diese Aktion bereitgestellte Benutzer umgehen nur für die Registrierung geltende Schutzmaßnahmen, einschließlich E-Mail-Blockliste, SSO-only-Domain, deaktiviertem Anmeldemodus und Pflichtprofilprüfungen bei der Registrierung. Profil- und Passwortänderungen bestehender Benutzer erfolgen außerdem, bevor MFA abgeschlossen ist.',
+      'Diese Aktion wird nur ausgeführt, nachdem die lokale Passwortüberprüfung fehlgeschlagen ist. Gib `passwordVerified: true` erst zurück, nachdem das übermittelte Passwort unabhängig überprüft wurde. Durch diese Aktion bereitgestellte Benutzer umgehen nur für die Registrierung geltende Schutzmaßnahmen, einschließlich E-Mail-Blockliste, SSO-only-Domain, deaktiviertem Anmeldemodus und Pflichtprofilprüfungen bei der Registrierung. Profil- und Passwortänderungen bestehender Benutzer erfolgen außerdem, bevor MFA abgeschlossen ist.',
   },
   delete_modal_title: 'Aktion löschen',
   delete_modal_content:
