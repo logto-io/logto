@@ -47,11 +47,12 @@ const SwitchToVerificationMethodsLink = ({
   ].filter(Boolean).length;
 
   /* TE:BEGIN qr-push-factor */
-  // TripleEnable push is one more way to verify, so as soon as it is on there is
-  // somewhere to switch to — even when a single native method is configured.
+  // TripleEnable push is one more way to verify, so whenever it is on there is
+  // somewhere to switch to — this link renders on the password and code pages, and
+  // the push factor is an alternative to both.
   const isTePushEnabled = useTePushEnabled();
 
-  if (isTePushEnabled && optionCounts >= 1) {
+  if (isTePushEnabled) {
     return (
       <TextLink
         className={className}
