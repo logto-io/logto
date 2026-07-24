@@ -6,10 +6,10 @@ import { isActionsEnabled } from '@/utils/actions';
 
 const useIsActionsEnabled = () => {
   const {
-    currentSubscriptionQuota: { inlineHooksEnabled },
+    currentSubscriptionQuota: { actionsEnabled },
   } = useContext(SubscriptionDataContext);
 
-  return isActionsEnabled({ isCloud, isDevFeaturesEnabled, inlineHooksEnabled });
+  return isActionsEnabled({ isCloud, isDevFeaturesEnabled, actionsEnabled });
 };
 
 export default useIsActionsEnabled;
