@@ -1,5 +1,18 @@
 # @logto/connector-gitlab
 
+## 1.2.8
+
+### Patch Changes
+
+- 4963a55b4e: remove the unused jose dependency
+
+  The GitLab connector declared jose as a dependency but never imported it, so installing the connector pulled in a package it did not need.
+
+- Updated dependencies [4963a55b4e]
+- Updated dependencies [58cb52c705]
+  - @logto/connector-oauth@1.7.8
+  - @logto/shared@3.4.2
+
 ## 1.2.7
 
 ### Patch Changes

@@ -1,5 +1,18 @@
 # @logto/connector-oidc
 
+## 1.7.5
+
+### Patch Changes
+
+- 4963a55b4e: upgrade jose from v5 to v6
+
+  These connectors now use jose 6, which runs on the Web Crypto API instead of Node's crypto module. Token signing and ID token verification behave exactly as before.
+
+- Updated dependencies [4963a55b4e]
+- Updated dependencies [58cb52c705]
+  - @logto/connector-oauth@1.7.8
+  - @logto/shared@3.4.2
+
 ## 1.7.4
 
 ### Patch Changes

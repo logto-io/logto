@@ -1,5 +1,13 @@
 # @logto/connector-aliyun-sms-mas
 
+## 1.1.2
+
+### Patch Changes
+
+- 6068045251: let users enter the aliyun-sms-mas signature as free text, in case Aliyun rotates signatures again in the future
+- Updated dependencies [58cb52c705]
+  - @logto/shared@3.4.2
+
 ## 1.1.1
 
 ### Patch Changes

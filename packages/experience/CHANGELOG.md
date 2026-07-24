@@ -1,5 +1,17 @@
 # Change Log
 
+## 1.21.0
+
+### Minor Changes
+
+- bfbe9c40b9: support password reset flows that verify one-time-token magic links from the reset password landing page
+
+### Patch Changes
+
+- b4ef434b3b: return users to the Logto sign-in page after blocked social or SSO registration
+
+  When a social or SSO registration flow rejects the email by email access rules, acknowledging the error now returns the user to the Logto sign-in page instead of navigating back to the external identity provider
+
 ## 1.20.0
 
 ### Minor Changes

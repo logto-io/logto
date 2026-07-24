@@ -1,5 +1,17 @@
 # Change Log
 
+## 2.12.0
+
+### Minor Changes
+
+- af678dd843: add reusable email blocklist validation and matching helpers
+
+### Patch Changes
+
+- 1650be05e1: fix email or email domain validation to match complete values and stricter domain labels
+- Updated dependencies [58cb52c705]
+  - @logto/shared@3.4.2
+
 ## 2.11.0
 
 ### Minor Changes
