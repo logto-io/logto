@@ -424,8 +424,7 @@ export class ActionLibrary {
 
     const { quota } = await this.subscription.getSubscriptionData();
 
-    // Keep the legacy key because it is part of the Logto Cloud subscription wire contract.
-    return quota.inlineHooksEnabled;
+    return quota.actionsEnabled;
   }
 }
 /* eslint-enable max-lines */

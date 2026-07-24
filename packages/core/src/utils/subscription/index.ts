@@ -19,17 +19,18 @@ export const getTenantSubscription = async (
   // All the dates will be converted to the ISO 8601 format after json serialization.
   // Convert the dates to ISO 8601 format to match the exact type of the response.
   const { currentPeriodStart, currentPeriodEnd, ...rest } = subscription;
-  const actionsEnabled =
-    'inlineHooksEnabled' in rest.quota && typeof rest.quota.inlineHooksEnabled === 'boolean'
-      ? rest.quota.inlineHooksEnabled
-      : false;
+
+  if (!('actionsEnabled' in rest.quota) || typeof rest.quota.actionsEnabled !== 'boolean') {
+    throw new TypeError('Cloud subscription response is missing the Actions quota.');
+  }
+
+  const { inlineHooksEnabled: _, ...quota } = rest.quota;
 
   return {
     ...rest,
     quota: {
-      ...rest.quota,
-      // Keep the legacy key while Logto Cloud still exposes it in the subscription wire contract.
-      inlineHooksEnabled: actionsEnabled,
+      ...quota,
+      actionsEnabled: rest.quota.actionsEnabled,
     },
     currentPeriodStart: new Date(currentPeriodStart).toISOString(),
     currentPeriodEnd: new Date(currentPeriodEnd).toISOString(),

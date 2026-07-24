@@ -8,6 +8,7 @@ import { type LogtoSkuResponse } from '@/cloud/types/router';
 import { ticketSupportResponseTimeMap } from '@/consts/plan-quotas';
 import { featuredPlanIds, planIdOrder } from '@/consts/subscriptions';
 import { type LogtoSkuQuota } from '@/types/skus';
+import { normalizeActionsQuota } from '@/utils/actions';
 
 const addSupportQuota = (logtoSkuResponse: LogtoSkuResponse) => {
   const { id, quota } = logtoSkuResponse;
@@ -15,7 +16,7 @@ const addSupportQuota = (logtoSkuResponse: LogtoSkuResponse) => {
   return {
     ...logtoSkuResponse,
     quota: {
-      ...quota,
+      ...normalizeActionsQuota(quota),
       /**
        * Manually add this support quota item to the plan since it will be compared in the downgrade plan notification modal.
        */

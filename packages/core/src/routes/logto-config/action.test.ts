@@ -130,7 +130,7 @@ describe('configs action routes', () => {
     );
     expect(response.status).toEqual(201);
     expect(response.body).toEqual(mockActionConfigForPostSignIn.value);
-    expect(mockQuotaLibrary.guardTenantUsageByKey).toHaveBeenCalledWith('inlineHooksEnabled');
+    expect(mockQuotaLibrary.guardTenantUsageByKey).toHaveBeenCalledWith('actionsEnabled');
   });
 
   it('PUT /configs/actions/:actionType should update a record successfully', async () => {
@@ -151,7 +151,7 @@ describe('configs action routes', () => {
     );
     expect(response.status).toEqual(200);
     expect(response.body).toEqual(mockActionConfigForPostSignIn.value);
-    expect(mockQuotaLibrary.guardTenantUsageByKey).toHaveBeenCalledWith('inlineHooksEnabled');
+    expect(mockQuotaLibrary.guardTenantUsageByKey).toHaveBeenCalledWith('actionsEnabled');
   });
 
   it('PATCH /configs/actions/:actionType should partially update a record successfully', async () => {
@@ -176,7 +176,7 @@ describe('configs action routes', () => {
     );
     expect(response.status).toEqual(200);
     expect(response.body).toEqual(updatedConfig);
-    expect(mockQuotaLibrary.guardTenantUsageByKey).toHaveBeenCalledWith('inlineHooksEnabled');
+    expect(mockQuotaLibrary.guardTenantUsageByKey).toHaveBeenCalledWith('actionsEnabled');
   });
 
   it('DELETE /configs/actions/:actionType should delete the record', async () => {
@@ -229,7 +229,7 @@ describe('configs action routes', () => {
         },
       },
     });
-    expect(mockQuotaLibrary.guardTenantUsageByKey).toHaveBeenCalledWith('inlineHooksEnabled');
+    expect(mockQuotaLibrary.guardTenantUsageByKey).toHaveBeenCalledWith('actionsEnabled');
   });
 
   it('POST /configs/actions/test should map general execution errors to 422', async () => {

@@ -19,8 +19,7 @@ import { isRecord } from '#src/utils/sensitive-data.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
-// Keep the legacy quota key because it is owned by the Logto Cloud subscription wire contract.
-const actionQuotaKey = 'inlineHooksEnabled';
+const actionQuotaKey = 'actionsEnabled';
 
 const actionConfigsGuard = z.object({
   key: z.nativeEnum(LogtoActionKey),

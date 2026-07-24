@@ -22,24 +22,29 @@ export type SubscriptionUsageResponse = GuardedResponse<
 >;
 
 type ActionSubscriptionQuota = {
-  inlineHooksEnabled: boolean;
+  actionsEnabled: boolean;
 };
 
 export type SubscriptionQuota = Omit<
   SubscriptionUsageResponse['quota'],
+  | 'inlineHooksEnabled'
   // Since we are deprecating the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the quota keys for now to avoid confusion.
-  'organizationsEnabled'
+  | 'organizationsEnabled'
 > &
   ActionSubscriptionQuota;
 
 export type LogtoSkuResponse = Omit<CloudLogtoSkuResponse, 'quota'> & {
-  quota: CloudLogtoSkuResponse['quota'] & Partial<ActionSubscriptionQuota>;
+  quota: Omit<CloudLogtoSkuResponse['quota'], 'inlineHooksEnabled'> &
+    Partial<ActionSubscriptionQuota> & {
+      inlineHooksEnabled?: boolean;
+    };
 };
 
 export type SubscriptionCountBasedUsage = Omit<
   SubscriptionUsageResponse['usage'],
+  | 'inlineHooksEnabled'
   // Since we are deprecating the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
-  'organizationsEnabled'
+  | 'organizationsEnabled'
 > &
   ActionSubscriptionQuota;
 export type SubscriptionResourceScopeUsage = SubscriptionUsageResponse['resources'];
