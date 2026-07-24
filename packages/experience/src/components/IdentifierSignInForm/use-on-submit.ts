@@ -11,11 +11,18 @@ import useSendVerificationCode from '@/hooks/use-send-verification-code';
 import { useSieMethods } from '@/hooks/use-sie';
 import useStartIdentifierPasskeySignInProcessing from '@/hooks/use-start-identifier-passkey-sign-in-processing';
 import useToast from '@/hooks/use-toast';
+/* TE:BEGIN qr-push-factor */
+import { hasTeDevices } from '@/te/api';
+import useTePushEnabled from '@/te/use-te-push-enabled';
+/* TE:END qr-push-factor */
 import { UserFlow } from '@/types';
 
 const useOnSubmit = (signInMethods: SignIn['methods']) => {
   const navigate = useNavigateWithPreservedSearchParams();
   const { setToast } = useToast();
+  /* TE:BEGIN qr-push-factor */
+  const isTePushEnabled = useTePushEnabled();
+  /* TE:END qr-push-factor */
   const { t } = useTranslation();
   const { ssoConnectors, passkeySignIn } = useSieMethods();
   const { onSubmit: checkSingleSignOn } = useCheckSingleSignOn();
@@ -57,6 +64,16 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
           return;
         }
       }
+
+      /* TE:BEGIN qr-push-factor */
+      // A TripleEnable account can verify in more than one way, so let the user choose
+      // instead of dropping them into whichever factor happens to be primary.
+      if (isTePushEnabled && (await hasTeDevices(value))) {
+        navigate({ pathname: `/${UserFlow.SignIn}/verification-methods` });
+
+        return;
+      }
+      /* TE:END qr-push-factor */
 
       // Try passkey sign-in first if enabled
       // If the user has no passkeys, fall back to password/verification code
@@ -113,6 +130,10 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
       sendVerificationCode,
       setToast,
       t,
+      /* TE:BEGIN qr-push-factor */
+      isTePushEnabled,
+      navigate,
+      /* TE:END qr-push-factor */
     ]
   );
 

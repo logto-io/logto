@@ -68,6 +68,22 @@ export const listTeDevices = async (identifier: string) =>
   request<{ devices: TeDevice[] }>(`/te/devices?identifier=${encodeURIComponent(identifier)}`);
 
 /**
+ * Whether this identity is a TripleEnable account, i.e. it has at least one enrolled
+ * device. Used to decide if the user should be offered a choice of factor.
+ *
+ * Never throws: if the IdP is unreachable we fall back to Logto's native flow rather
+ * than blocking sign-in.
+ */
+export const hasTeDevices = async (identifier: string) => {
+  try {
+    const { devices } = await listTeDevices(identifier);
+    return devices.length > 0;
+  } catch {
+    return false;
+  }
+};
+
+/**
  * Creates a signing challenge.
  * For `push`, the IdP publishes a notification to the chosen device.
  * For `qr`, the IdP returns a QR the wallet can scan.

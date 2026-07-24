@@ -14,7 +14,7 @@ import useStartIdentifierPasskeySignInProcessing from '@/hooks/use-start-identif
 /* TE:BEGIN qr-push-factor */
 import TeMethodCard from '@/te/TeMethodCard';
 import { teRoutes } from '@/te/config';
-import useTePushEnabled from '@/te/use-te-push-enabled';
+import useTeAccount from '@/te/use-te-devices';
 /* TE:END qr-push-factor */
 import { UserFlow } from '@/types';
 
@@ -45,7 +45,9 @@ const SignInVerificationMethods = () => {
   const onClickVerificationCodeMethod = useVerificationCodeLink();
 
   /* TE:BEGIN qr-push-factor */
-  const isTePushEnabled = useTePushEnabled();
+  // Only offer TripleEnable to accounts that actually have a device enrolled;
+  // for anyone else it would be a dead end.
+  const isTeAccount = useTeAccount();
   /* TE:END qr-push-factor */
 
   if (!identifierInputValue?.type) {
@@ -98,7 +100,7 @@ const SignInVerificationMethods = () => {
           />
         )}
         {/* TE:BEGIN qr-push-factor */}
-        {isTePushEnabled && (
+        {isTeAccount && (
           <TeMethodCard
             title="TripleEnable"
             description="Aprueba desde tu dispositivo enrolado con una notificación."
