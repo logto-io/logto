@@ -37,7 +37,12 @@ ARG vite_te_idp_url=
 ENV VITE_TE_IDP_URL=${vite_te_idp_url}
 # TE:END qr-push-factor
 
-RUN pnpm -r build
+# TE:BEGIN qr-push-factor
+# The console's Vite build blows past Node's default heap on smaller build hosts
+# (FATAL ERROR: heap out of memory). Give V8 more room; overridable via build arg.
+ARG node_build_memory=4096
+RUN NODE_OPTIONS="--max-old-space-size=${node_build_memory}" pnpm -r build
+# TE:END qr-push-factor
 
 ### Add official connectors ###
 ARG additional_connector_args
