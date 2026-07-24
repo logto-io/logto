@@ -45,8 +45,8 @@ function EnvironmentVariablesField({ className }: Props) {
       }
 
       const correspondValue = getValues(`environmentVariables.${index}.value`);
-      if (correspondValue) {
-        return Boolean(key) || t('webhook_details.settings.key_missing_error');
+      if (correspondValue && !key) {
+        return t('webhook_details.settings.key_missing_error');
       }
 
       if (Boolean(key) && !isValidKey(key)) {

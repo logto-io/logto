@@ -1,4 +1,4 @@
-import { addDays, startOfDay } from 'date-fns';
+import { endOfDay, startOfDay } from 'date-fns';
 
 import {
   customRange,
@@ -62,30 +62,28 @@ describe('preset', () => {
     it('snaps 7d to start-of-day so day-labelled presets match the custom picker (LOG-13478)', () => {
       const window = resolveTimeWindow('7d', '', '', now);
       const rolledBack = fixedNow - 7 * 24 * 60 * 60 * 1000;
-      expect(window.startTime).toBe(startOfDay(rolledBack).getTime() - 1);
+      expect(window.startTime).toBe(startOfDay(rolledBack).getTime());
       expect(window.endTime).toBeUndefined();
     });
 
     it('snaps 30d to start-of-day', () => {
       const window = resolveTimeWindow('30d', '', '', now);
       const rolledBack = fixedNow - 30 * 24 * 60 * 60 * 1000;
-      expect(window.startTime).toBe(startOfDay(rolledBack).getTime() - 1);
+      expect(window.startTime).toBe(startOfDay(rolledBack).getTime());
       expect(window.endTime).toBeUndefined();
     });
 
     it('falls back to the default preset (7d, snapped) for an unknown range value', () => {
       const window = resolveTimeWindow('bogus', '', '', now);
       const rolledBack = fixedNow - 7 * 24 * 60 * 60 * 1000;
-      expect(window.startTime).toBe(startOfDay(rolledBack).getTime() - 1);
+      expect(window.startTime).toBe(startOfDay(rolledBack).getTime());
       expect(window.endTime).toBeUndefined();
     });
 
-    it('parses a yyyy-MM-dd custom range with bounds tuned for the API exclusive semantics', () => {
+    it('parses a yyyy-MM-dd custom range with bounds tuned for the API inclusive semantics', () => {
       const window = resolveTimeWindow(customRange, '2026-04-13', '2026-04-15', now);
-      // Start: (startOfDay - 1ms) so `>` includes midnight of the picked day.
-      expect(window.startTime).toBe(startOfDay(new Date(2026, 3, 13)).getTime() - 1);
-      // End: startOfDay of the day _after_ so `<` includes 23:59:59.999 of the picked day.
-      expect(window.endTime).toBe(startOfDay(addDays(new Date(2026, 3, 15), 1)).getTime());
+      expect(window.startTime).toBe(startOfDay(new Date(2026, 3, 13)).getTime());
+      expect(window.endTime).toBe(endOfDay(new Date(2026, 3, 15)).getTime());
     });
 
     it('drops malformed custom-range strings (regression: NaN crash)', () => {
@@ -105,7 +103,7 @@ describe('preset', () => {
     it('omits a custom bound when its raw value is empty', () => {
       const window = resolveTimeWindow(customRange, '', '2026-04-15', now);
       expect(window.startTime).toBeUndefined();
-      expect(window.endTime).toBe(startOfDay(addDays(new Date(2026, 3, 15), 1)).getTime());
+      expect(window.endTime).toBe(endOfDay(new Date(2026, 3, 15)).getTime());
     });
   });
 });

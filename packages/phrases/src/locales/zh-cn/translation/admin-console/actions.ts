@@ -11,7 +11,7 @@ const actions = {
   types: {
     post_first_factor_verification: {
       name: '首个身份验证因素验证后',
-      description: '在首个身份验证因素通过验证后、登录继续前运行自定义逻辑。',
+      description: '在登录期间本地密码验证失败后运行自定义逻辑。',
     },
     post_sign_in: {
       name: '登录后',
@@ -75,7 +75,7 @@ const actions = {
   security_warning: {
     title: '安全警告',
     description:
-      '通过此操作创建的用户会绕过仅适用于注册的限制，包括邮箱黑名单、仅 SSO 域名、禁用注册模式，以及注册必填资料检查。对已有用户的资料和密码写入也会在 MFA 完成前发生。',
+      '此操作仅在本地密码验证失败后运行。只有在独立验证提交的密码后，才能返回 `passwordVerified: true`。通过此操作创建的用户会绕过仅适用于注册的限制，包括邮箱黑名单、仅 SSO 域名、禁用注册模式，以及注册必填资料检查。对已有用户的资料和密码写入也会在 MFA 完成前发生。',
   },
   delete_modal_title: '删除操作',
   delete_modal_content: '确定要删除此操作吗？身份验证流程将不再运行此脚本。',

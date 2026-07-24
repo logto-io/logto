@@ -13,7 +13,7 @@ const actions = {
     post_first_factor_verification: {
       name: 'Después de verificar el primer factor',
       description:
-        'Ejecuta lógica personalizada después de verificar el primer factor de autenticación y antes de continuar con el inicio de sesión.',
+        'Ejecuta lógica personalizada después de que falle la verificación de la contraseña local durante el inicio de sesión.',
     },
     post_sign_in: {
       name: 'Después de iniciar sesión',
@@ -81,7 +81,7 @@ const actions = {
   security_warning: {
     title: 'Advertencia de seguridad',
     description:
-      'Los usuarios aprovisionados por esta acción omiten las protecciones exclusivas del registro, incluida la lista de bloqueo de correo electrónico, el dominio solo SSO, el modo de registro deshabilitado y las comprobaciones de perfil obligatorio del registro. Las escrituras de perfil y contraseña de usuarios existentes también ocurren antes de que se complete la MFA.',
+      'Esta acción solo se ejecuta después de que falle la verificación de la contraseña local. Devuelve `passwordVerified: true` únicamente después de verificar de forma independiente la contraseña enviada. Los usuarios aprovisionados por esta acción omiten las protecciones exclusivas del registro, incluida la lista de bloqueo de correo electrónico, el dominio solo SSO, el modo de registro deshabilitado y las comprobaciones de perfil obligatorio del registro. Las escrituras de perfil y contraseña de usuarios existentes también ocurren antes de que se complete la MFA.',
   },
   delete_modal_title: 'Eliminar acción',
   delete_modal_content:

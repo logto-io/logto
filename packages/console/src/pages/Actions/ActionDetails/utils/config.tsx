@@ -75,17 +75,23 @@ const defaultPostSignInEvent: PostSignInEvent = {
 
 const defaultPostFirstFactorVerificationScript = `/**
  * Post first-factor verification action.
- * Called after the first authentication factor is verified and before sign-in continues.
+ * Called after local password verification fails during sign-in.
+ * Return \`passwordVerified: true\` only after independently verifying the submitted password.
  *
  * @param {Payload} payload - The input argument of the function.
  *
  * @returns The action result.
  */
 const runAction = async ({ event, environmentVariables }) => {
-  // Write your custom logic here.
+  // Replace this with verification against your external credential source.
+  const passwordVerified = false;
+
+  if (!passwordVerified) {
+    return;
+  }
 
   return {
-    action: 'updateUser',
+    action: event.user ? 'updateUser' : 'createUser',
     passwordVerified: true,
     user: {},
   };

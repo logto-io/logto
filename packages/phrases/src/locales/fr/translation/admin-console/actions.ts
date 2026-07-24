@@ -13,7 +13,7 @@ const actions = {
     post_first_factor_verification: {
       name: 'Après la vérification du premier facteur',
       description:
-        'Exécutez une logique personnalisée après la vérification du premier facteur d’authentification et avant la poursuite de la connexion.',
+        'Exécutez une logique personnalisée après l’échec de la vérification du mot de passe local pendant la connexion.',
     },
     post_sign_in: {
       name: 'Après la connexion',
@@ -81,7 +81,7 @@ const actions = {
   security_warning: {
     title: 'Avertissement de sécurité',
     description:
-      'Les utilisateurs provisionnés par cette action contournent les protections réservées à l’inscription, y compris la liste de blocage des e-mails, le domaine SSO uniquement, le mode inscription désactivée et les contrôles de profil obligatoire à l’inscription. Les écritures de profil et de mot de passe des utilisateurs existants se produisent aussi avant la fin de la MFA.',
+      'Cette action s’exécute uniquement après l’échec de la vérification du mot de passe local. Ne renvoyez `passwordVerified: true` qu’après avoir vérifié indépendamment le mot de passe soumis. Les utilisateurs provisionnés par cette action contournent les protections réservées à l’inscription, y compris la liste de blocage des e-mails, le domaine SSO uniquement, le mode inscription désactivée et les contrôles de profil obligatoire à l’inscription. Les écritures de profil et de mot de passe des utilisateurs existants se produisent aussi avant la fin de la MFA.',
   },
   delete_modal_title: 'Supprimer l’action',
   delete_modal_content:

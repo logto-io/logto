@@ -1,4 +1,4 @@
-import { type JsonObject, type RequestErrorBody } from '@logto/schemas';
+import { type Json, type RequestErrorBody } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 import { HTTPError } from 'ky';
 import { useCallback, useState } from 'react';
@@ -19,6 +19,9 @@ export type TestResultData = {
   payload?: string;
 };
 
+const formatTestResult = (result: unknown) =>
+  result === undefined ? 'undefined' : JSON.stringify(result, null, 2);
+
 const useTestHandler = () => {
   const [testResult, setTestResult] = useState<TestResultData>();
   const [isLoading, setIsLoading] = useState(false);
@@ -37,11 +40,15 @@ const useTestHandler = () => {
     const payload = getValues();
     setIsLoading(true);
 
-    const result = await api
+    await api
       .post(testEndpointPath, {
         json: formatFormDataToTestRequestPayload(payload),
       })
-      .json<JsonObject>()
+      .then(async (response) => {
+        const result = response.status === 204 ? undefined : await response.json<Json>();
+
+        setTestResult({ payload: formatTestResult(result) });
+      })
       .catch(async (error: unknown) => {
         if (error instanceof HTTPError) {
           const { response } = error;
@@ -88,10 +95,6 @@ const useTestHandler = () => {
       .finally(() => {
         setIsLoading(false);
       });
-
-    if (result) {
-      setTestResult({ payload: JSON.stringify(result, null, 2) });
-    }
   }, [api, getValues, trigger]);
 
   return { testResult, isLoading, onTestHandler, setTestResult };

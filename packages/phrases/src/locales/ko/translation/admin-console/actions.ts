@@ -11,8 +11,7 @@ const actions = {
   types: {
     post_first_factor_verification: {
       name: '첫 번째 인증 요소 확인 후',
-      description:
-        '첫 번째 인증 요소가 확인된 후 로그인 절차가 계속되기 전에 사용자 지정 로직을 실행합니다.',
+      description: '로그인 중 로컬 비밀번호 확인이 실패한 후 사용자 지정 로직을 실행합니다.',
     },
     post_sign_in: {
       name: '로그인 후',
@@ -76,7 +75,7 @@ const actions = {
   security_warning: {
     title: '보안 경고',
     description:
-      '이 작업으로 프로비저닝된 사용자는 이메일 차단 목록, SSO 전용 도메인, 가입 비활성화 모드, 등록 필수 프로필 검사 등 등록 전용 제한을 우회합니다. 기존 사용자의 프로필 및 비밀번호 쓰기도 MFA 완료 전에 발생합니다.',
+      '이 작업은 로컬 비밀번호 확인이 실패한 후에만 실행됩니다. 제출된 비밀번호를 별도로 확인한 경우에만 `passwordVerified: true`를 반환하세요. 이 작업으로 프로비저닝된 사용자는 이메일 차단 목록, SSO 전용 도메인, 가입 비활성화 모드, 등록 필수 프로필 검사 등 등록 전용 제한을 우회합니다. 기존 사용자의 프로필 및 비밀번호 쓰기도 MFA 완료 전에 발생합니다.',
   },
   delete_modal_title: '작업 삭제',
   delete_modal_content:

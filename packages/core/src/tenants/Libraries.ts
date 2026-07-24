@@ -17,6 +17,7 @@ import { createProtectedAppLibrary } from '#src/libraries/protected-app.js';
 import { QuotaLibrary } from '#src/libraries/quota.js';
 import { createRoleScopeLibrary } from '#src/libraries/role-scope.js';
 import { createSamlApplicationsLibrary } from '#src/libraries/saml-application/saml-applications.js';
+import { createSamlSsoConnectorSigningKeyLibrary } from '#src/libraries/saml-sso-connector-signing-key.js';
 import { createScopeLibrary } from '#src/libraries/scope.js';
 import { createSessionLibrary } from '#src/libraries/session/index.js';
 import { createSignInExperienceLibrary } from '#src/libraries/sign-in-experience/index.js';
@@ -48,6 +49,7 @@ export default class Libraries {
   applications = createApplicationLibrary(this.queries);
   verificationStatuses = createVerificationStatusLibrary(this.queries);
   samlApplications = createSamlApplicationsLibrary(this.queries);
+  samlSsoConnectorSigningKeys = createSamlSsoConnectorSigningKeyLibrary(this.queries);
   roleScopes = createRoleScopeLibrary(this.queries);
   domains = createDomainLibrary(this.queries);
   protectedApps = createProtectedAppLibrary(this.queries);
