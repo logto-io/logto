@@ -16,10 +16,9 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import { koaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 import { isRecord } from '#src/utils/sensitive-data.js';
+import { actionQuotaKey } from '#src/utils/subscription/types.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
-
-const actionQuotaKey = 'actionsEnabled';
 
 const actionConfigsGuard = z.object({
   key: z.nativeEnum(LogtoActionKey),

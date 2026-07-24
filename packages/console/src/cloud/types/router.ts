@@ -21,32 +21,31 @@ export type SubscriptionUsageResponse = GuardedResponse<
   GetRoutes['/api/tenants/:tenantId/subscription-usage']
 >;
 
-type ActionSubscriptionQuota = {
-  actionsEnabled: boolean;
-};
-
 export type SubscriptionQuota = Omit<
   SubscriptionUsageResponse['quota'],
+  // Logto uses `actionsEnabled` as the canonical Actions quota key. Keep the legacy Cloud
+  // compatibility field out of the Console subscription types.
   | 'inlineHooksEnabled'
   // Since we are deprecating the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the quota keys for now to avoid confusion.
   | 'organizationsEnabled'
-> &
-  ActionSubscriptionQuota;
+>;
 
 export type LogtoSkuResponse = Omit<CloudLogtoSkuResponse, 'quota'> & {
-  quota: Omit<CloudLogtoSkuResponse['quota'], 'inlineHooksEnabled'> &
-    Partial<ActionSubscriptionQuota> & {
-      inlineHooksEnabled?: boolean;
-    };
+  quota: Omit<CloudLogtoSkuResponse['quota'], 'inlineHooksEnabled'> & {
+    // Cloud keeps returning the legacy key for backward compatibility. It is removed when
+    // normalizing the response at the Console boundary.
+    inlineHooksEnabled?: boolean;
+  };
 };
 
 export type SubscriptionCountBasedUsage = Omit<
   SubscriptionUsageResponse['usage'],
+  // Logto uses `actionsEnabled` as the canonical Actions quota key. Keep the legacy Cloud
+  // compatibility field out of the Console subscription usage types.
   | 'inlineHooksEnabled'
   // Since we are deprecating the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
   | 'organizationsEnabled'
-> &
-  ActionSubscriptionQuota;
+>;
 export type SubscriptionResourceScopeUsage = SubscriptionUsageResponse['resources'];
 export type SubscriptionRoleScopeUsage = Omit<
   SubscriptionUsageResponse['roles'],

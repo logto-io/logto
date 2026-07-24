@@ -4,7 +4,8 @@ import { type LogtoSkuQuota } from '@/types/skus';
 
 type SkuQuotaItemPhraseKey = Exclude<
   keyof LogtoSkuQuota,
-  // Hosted-email caps are surfaced in Connector details, not the plan quota table.
+  // Actions availability and hosted-email caps are surfaced in their feature-specific pages,
+  // not the plan quota table.
   'actionsEnabled' | 'hostedEmailLimit' | 'hostedEmailDailyLimit'
 >;
 

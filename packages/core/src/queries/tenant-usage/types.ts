@@ -1,6 +1,10 @@
 import { z } from 'zod';
 
-import { type SystemLimit, type SubscriptionQuota } from '#src/utils/subscription/types.js';
+import {
+  actionQuotaKey,
+  type SystemLimit,
+  type SubscriptionQuota,
+} from '#src/utils/subscription/types.js';
 import { type ToZodEnum } from '#src/utils/type.js';
 
 /**
@@ -89,7 +93,7 @@ export const isSystemUsageKey = (key: UsageKey): key is SystemUsageKey =>
 const quotaUsageKeyGuard = z.enum([
   ...sharedUsageKeyGuard.options,
   'customJwtEnabled',
-  'actionsEnabled',
+  actionQuotaKey,
   'subjectTokenEnabled',
   'bringYourUiEnabled',
   'collectUserProfileEnabled',
@@ -136,7 +140,7 @@ type BooleanQuotaUsageKey = {
 
 const booleanQuotaUsageKeyGuard = z.enum([
   'customJwtEnabled',
-  'actionsEnabled',
+  actionQuotaKey,
   'subjectTokenEnabled',
   'bringYourUiEnabled',
   'collectUserProfileEnabled',
