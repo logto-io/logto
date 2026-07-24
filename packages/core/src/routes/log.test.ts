@@ -159,15 +159,15 @@ describe('logRoutes', () => {
         );
       });
 
-      it('returns 400 when start_time >= end_time', async () => {
+      it('returns 400 when start_time > end_time', async () => {
         const response = await logRequest.get(`/logs?start_time=2000&end_time=1000`);
         expect(response.status).toEqual(400);
         expect(countLogs).not.toHaveBeenCalled();
       });
 
-      it('returns 400 when start_time equals end_time', async () => {
+      it('succeeds when start_time equals end_time (inclusive bounds)', async () => {
         const response = await logRequest.get(`/logs?start_time=1000&end_time=1000`);
-        expect(response.status).toEqual(400);
+        expect(response.status).toEqual(200);
       });
 
       it('returns 400 when start_time is not a finite number', async () => {

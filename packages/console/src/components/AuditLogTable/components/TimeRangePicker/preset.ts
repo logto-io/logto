@@ -1,4 +1,4 @@
-import { addDays, isValid, parseISO, startOfDay } from 'date-fns';
+import { addDays, endOfDay, isValid, parseISO, startOfDay } from 'date-fns';
 
 /** Canonical preset names persisted in the URL (`?range=…`). */
 export const presetRanges = ['1h', '1d', '7d', '30d'] as const;
@@ -55,9 +55,8 @@ const parseDateAndTransform = (
 
 /**
  * Resolve URL state into the absolute window the API expects. Bounds are
- * exclusive (`createdAt > start_time AND createdAt < end_time`); the `±1ms`
- * / next-day biases below ensure the picked day is included. Callers should
- * memoize — the preset path snapshots `Date.now()` per call.
+ * inclusive (`createdAt >= start_time AND createdAt <= end_time`). Callers
+ * should memoize — the preset path snapshots `Date.now()` per call.
  */
 export const resolveTimeWindow = (
   range: string,
@@ -67,11 +66,8 @@ export const resolveTimeWindow = (
 ): { startTime?: number; endTime?: number } => {
   if (range === customRange) {
     return {
-      startTime: parseDateAndTransform(
-        rawStartTime,
-        (date) => new Date(startOfDay(date).getTime() - 1)
-      ),
-      endTime: parseDateAndTransform(rawEndTime, (date) => startOfDay(addDays(date, 1))),
+      startTime: parseDateAndTransform(rawStartTime, (date) => startOfDay(date)),
+      endTime: parseDateAndTransform(rawEndTime, (date) => endOfDay(date)),
     };
   }
   const presetRange: PresetRange = isPresetRange(range) ? range : defaultPresetRange;
@@ -81,6 +77,6 @@ export const resolveTimeWindow = (
   const startTime =
     daysBack === undefined
       ? now() - presetMs[presetRange]
-      : startOfDay(addDays(now(), -daysBack)).getTime() - 1;
+      : startOfDay(addDays(now(), -daysBack)).getTime();
   return { startTime, endTime: undefined };
 };
