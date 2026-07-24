@@ -3,6 +3,8 @@ import { conditional, type Optional } from '@silverhand/essentials';
 import { XMLValidator } from 'fast-xml-parser';
 import * as saml from 'samlify';
 
+import { EnvSet } from '#src/env-set/index.js';
+
 import {
   SsoConnectorConfigErrorCodes,
   SsoConnectorError,
@@ -14,6 +16,7 @@ import {
   type SamlServiceProviderMetadata,
   type SamlIdentityProviderMetadata,
   manualSamlConnectorConfigGuard,
+  SamlAuthnRequestSignatureAlgorithm,
 } from '../types/saml.js';
 
 import {
@@ -25,6 +28,47 @@ import {
   buildAssertionConsumerServiceUrl,
   attributeMappingPostProcessor,
 } from './utils.js';
+
+/**
+ * Force the IdP metadata's `WantAuthnRequestsSigned` to match our `signAuthnRequest` flag on the
+ * `<IDPSSODescriptor>` element. `samlify` requires `SP.AuthnRequestsSigned === IdP.WantAuthnRequestsSigned`
+ * and reads both from metadata (ignoring constructor options), so this keeps the two in sync and lets
+ * our toggle — not the customer's metadata — drive signing.
+ */
+const alignWantAuthnRequestsSigned = (metadataXml: string, enabled: boolean): string => {
+  // Real IdP metadata always has an IDPSSODescriptor; if it's absent the metadata is invalid and
+  // fails downstream in samlify anyway, so just leave it untouched here. The optional prefix accepts
+  // any namespace-prefix form (e.g. `md:`, `saml-md:`), matching samlify's namespace-agnostic parsing.
+  const descriptorTag = metadataXml.match(/<(?:[\w.-]+:)?IDPSSODescriptor\b[^>]*>/g)?.[0];
+
+  if (!descriptorTag) {
+    return metadataXml;
+  }
+
+  // XML attribute names are case-sensitive; SAML metadata uses this exact casing. Match either quote
+  // style and any value so an existing attribute is replaced (not duplicated). A replacement function
+  // keeps `$`-sequences in customer metadata from being interpreted.
+  const existingAttribute = /\s+WantAuthnRequestsSigned\s*=\s*(?:"[^"]*"|'[^']*')/;
+
+  if (existingAttribute.test(descriptorTag)) {
+    const rewritten = descriptorTag.replace(
+      existingAttribute,
+      ` WantAuthnRequestsSigned="${String(enabled)}"`
+    );
+    return metadataXml.replace(descriptorTag, () => rewritten);
+  }
+
+  // Attribute absent: it defaults to false, so only an enabled connector needs it inserted.
+  if (!enabled) {
+    return metadataXml;
+  }
+
+  const rewritten = descriptorTag.replace(
+    /(<(?:[\w.-]+:)?IDPSSODescriptor\b)/,
+    '$1 WantAuthnRequestsSigned="true"'
+  );
+  return metadataXml.replace(descriptorTag, () => rewritten);
+};
 
 /**
  * SAML connector
@@ -53,6 +97,7 @@ class SamlConnector {
 
   private _samlIdpMetadata: Optional<SamlIdentityProviderMetadata>;
   private _identityProvider: Optional<saml.IdentityProviderInstance>;
+  private _spSigningCredential?: { privateKey: string; certificate: string };
 
   // Allow _idpConfig input to be undefined when constructing the connector.
   constructor(
@@ -68,6 +113,11 @@ class SamlConnector {
       entityId: spEntityId,
       assertionConsumerServiceUrl,
     };
+  }
+
+  /** Inject the SP signing key pair — done by the sign-in flow only when `signAuthnRequest` is on. */
+  setServiceProviderSigningCredential(credential: { privateKey: string; certificate: string }) {
+    this._spSigningCredential = credential;
   }
 
   /**
@@ -140,13 +190,51 @@ class SamlConnector {
     const { x509Certificate } = await this.getSamlIdpMetadata();
     const { entityId, assertionConsumerServiceUrl } = this.serviceProviderMetadata;
 
+    const signingCredential = this._spSigningCredential;
+    // Gated behind dev features until GA: with the gate off, `signAuthnRequest` is inert and the
+    // released signing behavior below is preserved verbatim. getIdentityProvider reads the same
+    // gated value, so the SP and IdP signing flags never disagree.
+    const { isDevFeaturesEnabled } = EnvSet.values;
+    const signAuthnRequestEnabled =
+      isDevFeaturesEnabled && Boolean(this._idpConfig?.signAuthnRequest);
+
+    // Fail-closed: if signing is enabled but no SP credential was injected, refuse rather than
+    // silently send an unsigned request. The sign-in layer injects the credential and maps signing
+    // failures to a friendly error + audit log.
+    if (signAuthnRequestEnabled && !signingCredential) {
+      throw new SsoConnectorError(SsoConnectorErrorCodes.InvalidConfig, {
+        config: this._idpConfig,
+        message: SsoConnectorConfigErrorCodes.InvalidConnectorConfig,
+      });
+    }
+
+    // Drive `authnRequestsSigned` off our explicit flag rather than the IdP's `WantAuthnRequestsSigned`,
+    // so samlify never advertises a signed request without a private key. When signing, use the SP's
+    // own key/cert; when not, samlify ignores `signingCert` for a redirect request. With the dev gate
+    // off, keep the released behavior of mirroring the IdP metadata flag.
+    const signingServiceProviderOptions =
+      signAuthnRequestEnabled && signingCredential
+        ? {
+            signingCert: signingCredential.certificate,
+            authnRequestsSigned: true,
+            privateKey: signingCredential.privateKey,
+            requestSignatureAlgorithm:
+              this._idpConfig?.requestSignatureAlgorithm ??
+              SamlAuthnRequestSignatureAlgorithm.RsaSha256,
+          }
+        : {
+            signingCert: x509Certificate,
+            authnRequestsSigned: isDevFeaturesEnabled
+              ? false
+              : identityProvider.entityMeta.isWantAuthnRequestsSigned(), // Should align with IdP setting.
+          };
+
     try {
       // eslint-disable-next-line new-cap
       const serviceProvider = saml.ServiceProvider({
         entityID: entityId,
         relayState,
-        signingCert: x509Certificate,
-        authnRequestsSigned: identityProvider.entityMeta.isWantAuthnRequestsSigned(), // Should align with IdP setting.
+        ...signingServiceProviderOptions,
         assertionConsumerService: [
           {
             Location: assertionConsumerServiceUrl,
@@ -234,6 +322,13 @@ class SamlConnector {
       return this._identityProvider;
     }
 
+    // Drive signing from our flag — align the IdP side on both construction paths below
+    // (see alignWantAuthnRequestsSigned). With the dev gate off, the released behavior is preserved:
+    // the metadata is passed through untouched.
+    const { isDevFeaturesEnabled } = EnvSet.values;
+    const signAuthnRequestEnabled =
+      isDevFeaturesEnabled && Boolean(this._idpConfig?.signAuthnRequest);
+
     // If `metadataUrl` or `metadata` is provided, we use it to construct the identity provider.
     const idpMetadataXml = await this.getIdpMetadataXml();
 
@@ -256,7 +351,9 @@ class SamlConnector {
       this._identityProvider =
         // eslint-disable-next-line new-cap
         saml.IdentityProvider({
-          metadata: idpMetadataXml,
+          metadata: isDevFeaturesEnabled
+            ? alignWantAuthnRequestsSigned(idpMetadataXml, signAuthnRequestEnabled)
+            : idpMetadataXml,
         });
       return this._identityProvider;
     }
@@ -268,6 +365,8 @@ class SamlConnector {
     this._identityProvider = saml.IdentityProvider({
       entityID,
       signingCert: x509Certificate,
+      // No metadata XML here, so this option is honored (not overwritten by parsed metadata).
+      wantAuthnRequestsSigned: signAuthnRequestEnabled,
       /**
        * When `metadata` is not provided, `signInEndpoint` and `x509Certificate` are ensured by previous guard.
        * We only support redirect binding for now when sending SAML auth request.
