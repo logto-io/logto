@@ -11,6 +11,11 @@ import useVerificationCodeLink from '@/components/SwitchToVerificationMethodsLin
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { useSieMethods } from '@/hooks/use-sie';
 import useStartIdentifierPasskeySignInProcessing from '@/hooks/use-start-identifier-passkey-sign-in-processing';
+/* TE:BEGIN qr-push-factor */
+import TeMethodCard from '@/te/TeMethodCard';
+import { teRoutes } from '@/te/config';
+import useTePushEnabled from '@/te/use-te-push-enabled';
+/* TE:END qr-push-factor */
 import { UserFlow } from '@/types';
 
 import ErrorPage from '../ErrorPage';
@@ -38,6 +43,10 @@ const SignInVerificationMethods = () => {
       hideErrorToast: false,
     });
   const onClickVerificationCodeMethod = useVerificationCodeLink();
+
+  /* TE:BEGIN qr-push-factor */
+  const isTePushEnabled = useTePushEnabled();
+  /* TE:END qr-push-factor */
 
   if (!identifierInputValue?.type) {
     return <ErrorPage title="error.invalid_session" />;
@@ -88,6 +97,17 @@ const SignInVerificationMethods = () => {
             }}
           />
         )}
+        {/* TE:BEGIN qr-push-factor */}
+        {isTePushEnabled && (
+          <TeMethodCard
+            title="TripleEnable"
+            description="Aprueba desde tu dispositivo enrolado con una notificación."
+            onClick={() => {
+              navigate({ pathname: teRoutes.push });
+            }}
+          />
+        )}
+        {/* TE:END qr-push-factor */}
       </div>
     </SecondaryPageLayout>
   );

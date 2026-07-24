@@ -54,6 +54,10 @@ import SocialSignInWebCallback from './pages/SocialSignInWebCallback';
 import Springboard from './pages/Springboard';
 import SwitchAccount from './pages/SwitchAccount';
 import VerificationCode from './pages/VerificationCode';
+/* TE:BEGIN qr-push-factor */
+import TePushPage from './te/TePushPage';
+import TeQrPage from './te/TeQrPage';
+/* TE:END qr-push-factor */
 import { UserMfaFlow } from './types';
 import 'overlayscrollbars/overlayscrollbars.css';
 import './shared/scss/normalized.scss';
@@ -115,6 +119,10 @@ const App = () => {
                           path="verification-methods"
                           element={<SignInVerificationMethods />}
                         />
+                        {/* TE:BEGIN qr-push-factor */}
+                        <Route path="te-qr" element={<TeQrPage />} />
+                        <Route path="te-push" element={<TePushPage />} />
+                        {/* TE:END qr-push-factor */}
                       </Route>
 
                       {/* Create passkey for sign-in */}

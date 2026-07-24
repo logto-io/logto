@@ -20,13 +20,20 @@ export type TeDevice = {
 
 export type TeChallenge = {
   challengeId: string;
-  /** Data-URL PNG rendered by the IdP, so the fork needs no QR dependency. */
+  /** QR only: data-URL PNG rendered by the IdP, so the fork needs no QR dependency. */
   qrDataUrl?: string;
+  /** QR only: the same content encoded in the image, handy for debugging. */
+  qrPayload?: string;
+  /**
+   * Push only: the number the user must tap on the phone. Showing it here and asking
+   * for it there is what stops a blind "approve" under a prompt-bombing attack.
+   */
+  matchNumber?: number;
 };
 
 export type TeChallengeStatus =
   | { status: 'pending' }
-  | { status: 'denied' | 'expired' }
+  | { status: 'denied' | 'expired' | 'mismatch' }
   | {
       status: 'approved';
       /** Logto one-time token minted by the IdP after verifying the device signature. */
@@ -53,9 +60,12 @@ const request = async <T>(path: string, init?: RequestInit): Promise<T> => {
   return response.json();
 };
 
-/** Lists the devices enrolled for an identity, so the user can pick where the push goes. */
-export const listTeDevices = async (email: string) =>
-  request<{ devices: TeDevice[] }>(`/te/devices?email=${encodeURIComponent(email)}`);
+/**
+ * Lists the devices enrolled for an identity, so the user can pick where the push goes.
+ * The identifier is whatever the user typed on the sign-in page — email, username or phone.
+ */
+export const listTeDevices = async (identifier: string) =>
+  request<{ devices: TeDevice[] }>(`/te/devices?identifier=${encodeURIComponent(identifier)}`);
 
 /**
  * Creates a signing challenge.

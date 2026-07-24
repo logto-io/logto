@@ -1,0 +1,80 @@
+/* TE:BEGIN qr-push-factor */
+@use '@/shared/scss/underscore' as _;
+
+.container {
+  @include _.flex-column;
+  @include _.full-width;
+  gap: _.unit(4);
+}
+
+.qrFrame {
+  padding: _.unit(4);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: var(--shadow-1, 0 2px 8px rgba(0, 0, 0, 12%));
+  @include _.image-align-center;
+}
+
+.qr {
+  display: block;
+  width: 176px;
+  height: 176px;
+}
+
+.qrPlaceholder {
+  display: grid;
+  place-items: center;
+  width: 176px;
+  height: 176px;
+}
+
+.details {
+  @include _.flex-column;
+  @include _.full-width;
+  gap: _.unit(1);
+  margin: 0;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 11px;
+  color: var(--color-type-secondary);
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+  > dd {
+    margin: 0;
+    color: var(--color-type-primary, inherit);
+  }
+}
+
+.hint {
+  @include _.text-hint;
+  text-align: center;
+}
+
+.error {
+  @include _.text-hint;
+  color: var(--color-error, #e5484d);
+  text-align: center;
+}
+
+.waiting {
+  @include _.flex-column;
+  gap: _.unit(3);
+  padding: _.unit(8) 0;
+}
+
+.retry {
+  width: 100%;
+  padding: _.unit(3);
+  border: none;
+  border-radius: 8px;
+  background: var(--color-brand-default, #5d34f2);
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+}
+/* TE:END qr-push-factor */

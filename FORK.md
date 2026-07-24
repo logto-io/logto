@@ -27,7 +27,10 @@ archivos nuevos antes que editar upstream.
 
 | Archivo | Feature | Qué hace |
 |---|---|---|
-| `packages/experience/src/containers/SocialSignInList/index.tsx` | `qr-push-factor` | Detecta los conectores wallet por su `target` y abre el panel inline en vez de redirigir |
+| `packages/experience/src/App.tsx` | `qr-push-factor` | Registra las rutas `sign-in/te-qr` y `sign-in/te-push` |
+| `packages/experience/src/containers/SocialSignInList/index.tsx` | `qr-push-factor` | El botón de QR navega a su pantalla; el de push se oculta (vive en la lista de métodos) |
+| `packages/experience/src/pages/SignInVerificationMethods/index.tsx` | `qr-push-factor` | Añade TripleEnable a la lista de métodos de verificación |
+| `packages/experience/src/components/SwitchToVerificationMethodsLink/index.tsx` | `qr-push-factor` | Cuenta TripleEnable como opción, para que el enlace "probar otro método" aparezca |
 | `packages/core/src/middleware/koa-security-headers.ts` | `qr-push-factor` | Añade el origen del IdP al `connect-src` de la CSP de la experiencia (vía `TE_IDP_ORIGIN`) |
 
 ### Archivos nuevos (no dan conflicto en merge)
@@ -36,10 +39,14 @@ Todo lo nuestro vive aislado bajo `packages/experience/src/te/`:
 
 | Archivo | Qué es |
 |---|---|
-| `te/config.ts` | Targets de conector → factor, URL del IdP, timeouts |
+| `te/config.ts` | Targets de conector → factor, rutas, URL del IdP, timeouts |
 | `te/api.ts` | Cliente del IdP TripleEnable (dispositivos + retos de firma) |
-| `te/WalletFactor/index.tsx` | Panel inline: QR, selector de dispositivo y espera de aprobación |
-| `te/WalletFactor/index.module.scss` | Estilos del panel |
+| `te/use-te-challenge.ts` | Abre el reto, espera la firma y canjea el one-time token |
+| `te/use-te-push-enabled.ts` | Si el conector de push está activo en la consola |
+| `te/TeLayout/` | Layout igual que `SecondaryPageLayout` pero con textos propios |
+| `te/TeQrPage/` | Pantalla dedicada del QR (como la de passkey) |
+| `te/TePushPage/` | Pantalla dedicada del push: selector de dispositivo + number matching |
+| `te/TeMethodCard/` | Tarjeta de la lista de métodos, reutilizando los estilos nativos |
 
 ### Lo que **no** tocamos
 
@@ -52,16 +59,31 @@ consola nativa sin forkearla.
 
 ## Cómo funciona (resumen)
 
-1. En la consola se crean dos conectores con `target` `te-qr` y `te-push`.
-   Logto los publica en `sign-in-exp` y la SPA los pinta como dos botones más.
-2. Al pulsarlos, `SocialSignInList` **no** redirige: abre `te/WalletFactor`.
-3. El panel pide al IdP un reto (QR escaneable, o push dirigido al dispositivo elegido,
-   p. ej. "iPhone X").
-4. El wallet firma el reto con Ed25519; el IdP verifica la firma y **acuña un
-   one-time token de Logto** vía Management API.
-5. La SPA canjea ese token con la Experience API nativa
+En la consola se crean dos conectores con `target` `te-qr` y `te-push`. Logto los publica
+en `sign-in-exp`, y cada factor aparece donde tiene sentido según lo que necesita saber:
+
+**QR** — no necesita saber quién eres, así que vive en la primera pantalla junto a los
+botones sociales. Al pulsarlo se navega a `sign-in/te-qr`, una pantalla dedicada igual
+que la de passkey, que muestra el código y espera la firma.
+
+**Push** — necesita saber a qué dispositivos avisar, así que aparece en la lista de
+métodos de verificación, una vez el usuario ha escrito su correo, usuario o teléfono.
+Lleva a `sign-in/te-push`: elige dispositivo ("iPhone X") y entra en **number matching**,
+donde el navegador enseña un número que hay que tocar en el teléfono.
+
+En ambos casos el final es el mismo:
+
+1. El wallet firma el reto con Ed25519.
+2. El IdP verifica la firma y **acuña un one-time token de Logto** vía Management API.
+3. La SPA canjea ese token con la Experience API nativa
    (`/verification/one-time-token/verify` → `identify` → `submit`), que es lo que crea
    la sesión.
+
+### Number matching
+
+El push no se aprueba a ciegas: el IdP genera un número y dos señuelos, manda los tres al
+teléfono y devuelve solo el correcto al navegador. Tocar el equivocado anula el intento.
+Es lo que evita que un usuario harto de notificaciones apruebe un login ajeno.
 
 Consecuencia: todos los factores nativos (email, SMS, TOTP, passkey), el MFA y las
 políticas de Logto **siguen funcionando sin cambios**; el wallet solo añade una opción más.

@@ -3,6 +3,9 @@ import { useLocation } from 'react-router-dom';
 import TextLink from '@/components/TextLink';
 import useIdentifierSignInMethods from '@/pages/IdentifierSignIn/use-identifier-sign-in-methods';
 import SwitchIcon from '@/shared/assets/icons/switch-icon.svg?react';
+/* TE:BEGIN qr-push-factor */
+import useTePushEnabled from '@/te/use-te-push-enabled';
+/* TE:END qr-push-factor */
 import { type VerificationCodeIdentifier } from '@/types';
 
 import PasskeySignInLink from './PasskeySignInLink';
@@ -42,6 +45,23 @@ const SwitchToVerificationMethodsLink = ({
     hasPassword,
     hasVerificationCode,
   ].filter(Boolean).length;
+
+  /* TE:BEGIN qr-push-factor */
+  // TripleEnable push is one more way to verify, so as soon as it is on there is
+  // somewhere to switch to — even when a single native method is configured.
+  const isTePushEnabled = useTePushEnabled();
+
+  if (isTePushEnabled && optionCounts >= 1) {
+    return (
+      <TextLink
+        className={className}
+        text="mfa.try_another_verification_method"
+        icon={<SwitchIcon />}
+        to="/sign-in/verification-methods"
+      />
+    );
+  }
+  /* TE:END qr-push-factor */
 
   if (optionCounts > 2) {
     return (
