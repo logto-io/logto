@@ -8,6 +8,7 @@ import type {
 import { findDuplicatedOrBlockedEmailDomains } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import SamlConnector from '#src/sso/SamlConnector/index.js';
 import { type SingleSignOnFactory, ssoConnectorFactories } from '#src/sso/index.js';
@@ -53,6 +54,31 @@ export const parseConnectorConfig = (providerName: SsoProviderName, config: Json
   }
 
   return result.data;
+};
+
+type ParsedConnectorConfig = ReturnType<typeof parseConnectorConfig>;
+
+export const isSignAuthnRequestEnabled = (config?: ParsedConnectorConfig): boolean =>
+  Boolean(config && 'signAuthnRequest' in config && config.signAuthnRequest === true);
+
+/**
+ * The signed-AuthnRequest config fields are dev-gated: strip them before persisting so they
+ * cannot be stored in production until the feature is ready.
+ * TODO: @simeng Remove when the signed AuthnRequest feature is ready.
+ */
+export const stripGatedSigningConfigFields = (
+  config: ParsedConnectorConfig
+): ParsedConnectorConfig => {
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    return config;
+  }
+
+  if ('signAuthnRequest' in config || 'requestSignatureAlgorithm' in config) {
+    const { signAuthnRequest, requestSignatureAlgorithm, ...rest } = config;
+    return rest;
+  }
+
+  return config;
 };
 
 export const fetchConnectorProviderDetails = async (
