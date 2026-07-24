@@ -17,11 +17,11 @@ import { idpInitiatedSamlSsoSessionCookieName } from '#src/constants/index.js';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type HookContextManager } from '#src/libraries/hook/context-manager.js';
-import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
+import { type LogEntry, type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import OidcConnector from '#src/sso/OidcConnector/index.js';
 import SamlConnector from '#src/sso/SamlConnector/index.js';
 import { ssoConnectorFactories, type SingleSignOnConnectorSession } from '#src/sso/index.js';
-import { type ExtendedSocialUserInfo } from '#src/sso/types/saml.js';
+import { type ExtendedSocialUserInfo, samlConnectorConfigGuard } from '#src/sso/types/saml.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { safeParseUnknownJson } from '#src/utils/json.js';
@@ -44,6 +44,47 @@ export const authorizationUrlPayloadGuard = z.object({
 });
 type AuthorizationUrlPayload = z.infer<typeof authorizationUrlPayloadGuard>;
 
+/**
+ * Load and inject the SP signing credential when signed AuthnRequest is enabled for the SAML
+ * connector. Fails closed rather than falling back to unsigned: if no active key exists, stop
+ * sign-in with a friendly error and record connector-level detail in the audit log. No-op for
+ * every other connector type and for unsigned SAML connectors.
+ */
+const injectSamlSigningCredential = async (
+  connectorInstance: unknown,
+  connectorData: SupportedSsoConnector,
+  queries: TenantContext['queries'],
+  log: LogEntry
+) => {
+  if (!(connectorInstance instanceof SamlConnector)) {
+    return;
+  }
+
+  const parsedConfig = samlConnectorConfigGuard.safeParse(connectorData.config);
+
+  // A parse failure implies a broken connector config: the constructor parses the same guard and
+  // falls back to an undefined config, which throws on first config access before any request is
+  // sent — so returning here can never produce an unsigned request.
+  if (!parsedConfig.success || !parsedConfig.data.signAuthnRequest) {
+    return;
+  }
+
+  const signingKey = await queries.samlSsoConnectorSigningKeys.findActiveSigningKeyBySsoConnectorId(
+    connectorData.id
+  );
+
+  if (!signingKey) {
+    log.append({ ssoConnectorId: connectorData.id, reason: 'sp_signing_key_missing' });
+    throw new RequestError({ code: 'single_sign_on.sso_signing_unavailable', status: 500 });
+  }
+
+  // The private key is stored as plaintext PEM — used directly, no decryption involved.
+  connectorInstance.setServiceProviderSigningCredential({
+    certificate: signingKey.certificate,
+    privateKey: signingKey.privateKey,
+  });
+};
+
 export const getSsoAuthorizationUrl = async (
   ctx: WithLogContext,
   { provider, queries, envSet }: TenantContext,
@@ -62,7 +103,8 @@ export const getSsoAuthorizationUrl = async (
   });
 
   try {
-    // Will throw ConnectorError if the config is invalid
+    // May throw ConnectorError on an invalid config — at construction or deferred to first use
+    // (SAML connectors fall back to an undefined config and throw on first config access).
     const connectorInstance = new ssoConnectorFactories[providerName].constructor(
       connectorData,
       envSet.endpoint
@@ -117,6 +159,11 @@ export const getSsoAuthorizationUrl = async (
           return url.toString();
         }
       }
+    }
+
+    // TODO: Remove the dev features check when the signed AuthnRequest feature is ready.
+    if (EnvSet.values.isDevFeaturesEnabled) {
+      await injectSamlSigningCredential(connectorInstance, connectorData, queries, log);
     }
 
     return await connectorInstance.getAuthorizationUrl(

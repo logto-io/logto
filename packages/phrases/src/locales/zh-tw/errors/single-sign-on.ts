@@ -10,6 +10,7 @@ const single_sign_on = {
     '未註冊的 redirect_uri。請檢查應用程式設定。',
   idp_initiated_authentication_client_callback_uri_not_found:
     '未找到客戶端 IdP 發起的身份驗證回調 URI。請檢查連接器設定。',
+  sso_signing_unavailable: '無法透過您的身分提供者完成登入。請聯絡管理員。',
 };
 
 export default Object.freeze(single_sign_on);
