@@ -2,6 +2,7 @@ import {
   type CreateSsoConnectorIdpInitiatedAuthConfig,
   SsoProviderName,
   type CreateSsoConnector,
+  type SamlSsoConnectorSigningKeyResponse,
   type SsoConnector,
   type SsoConnectorProvidersResponse,
   type SsoConnectorIdpInitiatedAuthConfig,
@@ -113,6 +114,28 @@ export class SsoConnectorApi {
     await Promise.all(
       Array.from(this.connectorInstances.keys()).map(async (id) => this.delete(id))
     );
+  }
+
+  async getSigningKeys(connectorId: string) {
+    return authedAdminApi
+      .get(`sso-connectors/${connectorId}/signing-keys`)
+      .json<SamlSsoConnectorSigningKeyResponse[]>();
+  }
+
+  async createSigningKey(connectorId: string, active?: boolean) {
+    return authedAdminApi
+      .post(`sso-connectors/${connectorId}/signing-keys`, { json: { active } })
+      .json<SamlSsoConnectorSigningKeyResponse>();
+  }
+
+  async updateSigningKeyStatus(connectorId: string, keyId: string, active: boolean) {
+    return authedAdminApi
+      .patch(`sso-connectors/${connectorId}/signing-keys/${keyId}`, { json: { active } })
+      .json<SamlSsoConnectorSigningKeyResponse>();
+  }
+
+  async deleteSigningKey(connectorId: string, keyId: string) {
+    await authedAdminApi.delete(`sso-connectors/${connectorId}/signing-keys/${keyId}`);
   }
 
   async setSsoConnectorIdpInitiatedAuthConfig(data: CreateSsoConnectorIdpInitiatedAuthConfig) {

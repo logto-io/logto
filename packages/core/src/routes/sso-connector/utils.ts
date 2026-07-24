@@ -13,6 +13,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import SamlConnector from '#src/sso/SamlConnector/index.js';
 import { type SingleSignOnFactory, ssoConnectorFactories } from '#src/sso/index.js';
 import { type SingleSignOnConnectorData } from '#src/sso/types/connector.js';
+import assertThat from '#src/utils/assert-that.js';
 
 const isKeyOfI18nPhrases = (key: string, phrases: I18nPhrases): key is keyof I18nPhrases =>
   key in phrases;
@@ -60,6 +61,26 @@ type ParsedConnectorConfig = ReturnType<typeof parseConnectorConfig>;
 
 export const isSignAuthnRequestEnabled = (config?: ParsedConnectorConfig): boolean =>
   Boolean(config && 'signAuthnRequest' in config && config.signAuthnRequest === true);
+
+/**
+ * Enabling signed AuthnRequest requires an active SP signing key — the config endpoints never
+ * create keys (the signing-key routes own the lifecycle), so the flag must not claim signing that
+ * no key can perform. POST passes no finder: a new connector can never have keys, so an enabled
+ * flag is always rejected. Inert when dev features are off (the flag is stripped from payloads).
+ */
+export const assertActiveSigningKeyForSignAuthnRequest = async (
+  parsedConfig?: ParsedConnectorConfig,
+  findActiveSigningKey?: () => Promise<unknown>
+) => {
+  if (!isSignAuthnRequestEnabled(parsedConfig)) {
+    return;
+  }
+
+  assertThat(
+    await findActiveSigningKey?.(),
+    new RequestError({ code: 'single_sign_on.active_signing_key_required', status: 400 })
+  );
+};
 
 /**
  * The signed-AuthnRequest config fields are dev-gated: strip them before persisting so they

@@ -21,6 +21,7 @@ const {
   parseConnectorConfig,
   isSignAuthnRequestEnabled,
   stripGatedSigningConfigFields,
+  assertActiveSigningKeyForSignAuthnRequest,
 } = await import('./utils.js');
 
 const mockTenantId = 'mock_tenant_id';
@@ -207,6 +208,40 @@ describe('signed AuthnRequest config helpers', () => {
       setDevFeaturesEnabled(false);
       const parsed = parseConnectorConfig(SsoProviderName.SAML, samlSigningConfig);
       expect(stripGatedSigningConfigFields(parsed)).toEqual({ metadata: 'mock-metadata' });
+    });
+  });
+
+  describe('assertActiveSigningKeyForSignAuthnRequest', () => {
+    it('is a no-op when the config does not enable signing', async () => {
+      const findActiveSigningKey = jest.fn();
+      await assertActiveSigningKeyForSignAuthnRequest(undefined, findActiveSigningKey);
+      await assertActiveSigningKeyForSignAuthnRequest(
+        parseConnectorConfig(SsoProviderName.SAML, { metadata: 'mock-metadata' }),
+        findActiveSigningKey
+      );
+      expect(findActiveSigningKey).not.toBeCalled();
+    });
+
+    it('rejects enabling on creation (no finder) or without an active key', async () => {
+      setDevFeaturesEnabled(true);
+      const enabledConfig = parseConnectorConfig(SsoProviderName.SAML, samlSigningConfig);
+
+      await expect(assertActiveSigningKeyForSignAuthnRequest(enabledConfig)).rejects.toMatchObject({
+        code: 'single_sign_on.active_signing_key_required',
+        status: 400,
+      });
+      await expect(
+        assertActiveSigningKeyForSignAuthnRequest(enabledConfig, async () => null)
+      ).rejects.toMatchObject({ code: 'single_sign_on.active_signing_key_required', status: 400 });
+    });
+
+    it('passes when an active key exists', async () => {
+      setDevFeaturesEnabled(true);
+      const enabledConfig = parseConnectorConfig(SsoProviderName.SAML, samlSigningConfig);
+
+      await expect(
+        assertActiveSigningKeyForSignAuthnRequest(enabledConfig, async () => ({ id: 'key-1' }))
+      ).resolves.toBeUndefined();
     });
   });
 });

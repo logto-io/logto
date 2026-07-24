@@ -8,11 +8,7 @@ const signingKeyLifeSpanInYears = 3;
 
 export const createSamlSsoConnectorSigningKeyLibrary = (queries: Queries) => {
   const {
-    samlSsoConnectorSigningKeys: {
-      insertInactiveSigningKey,
-      insertActiveSigningKey,
-      findActiveSigningKeyBySsoConnectorId,
-    },
+    samlSsoConnectorSigningKeys: { insertInactiveSigningKey, insertActiveSigningKey },
   } = queries;
 
   /** Generate a fresh SP key pair (plaintext PEM) and store it — active, or inactive for rotation. */
@@ -37,11 +33,5 @@ export const createSamlSsoConnectorSigningKeyLibrary = (queries: Queries) => {
     return isActive ? insertActiveSigningKey(data) : insertInactiveSigningKey(data);
   };
 
-  /** Return the connector's active SP signing key, generating one if none is active (idempotent). */
-  const ensureActiveSigningKey = async (ssoConnectorId: string) => {
-    const active = await findActiveSigningKeyBySsoConnectorId(ssoConnectorId);
-    return active ?? createSigningKey({ ssoConnectorId, isActive: true });
-  };
-
-  return { createSigningKey, ensureActiveSigningKey };
+  return { createSigningKey };
 };
