@@ -7,15 +7,16 @@
  * the MFA policy and the profile rules keep applying untouched.
  */
 
-import { SignInIdentifier } from '@logto/schemas';
+import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { identifyAndSubmitInteraction, signInWithOneTimeToken } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
+import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
 
-import { getTeChallenge, startTeChallenge, type TeChallenge } from './api';
+import { createTeVerifier, getTeChallenge, startTeChallenge, type TeChallenge } from './api';
 import { teChallengeTimeoutMs, tePollIntervalMs, type TeWalletMode } from './config';
 
 const messages = Object.freeze({
@@ -29,6 +30,8 @@ const useTeChallenge = (mode: TeWalletMode) => {
   const [challenge, setChallenge] = useState<TeChallenge>();
   const [error, setError] = useState<string>();
   const [isVerifying, setIsVerifying] = useState(false);
+  /** Channel binding secret. Stays in this tab and is never sent anywhere but the redeem call. */
+  const verifier = useRef<string>();
 
   const isMounted = useRef(true);
   useEffect(() => {
@@ -44,6 +47,16 @@ const useTeChallenge = (mode: TeWalletMode) => {
   const redirectTo = useGlobalRedirectTo();
   const asyncSignInWithOneTimeToken = useApi(signInWithOneTimeToken);
   const asyncIdentifyAndSubmit = useApi(identifyAndSubmitInteraction);
+
+  /**
+   * Everything Logto may still want after a successful identification — set up a
+   * passkey, satisfy MFA, complete a missing profile — comes back as an error from
+   * `submit`. This is the same handler its own pages use, so those flows continue
+   * here exactly as they would after a password or a code.
+   */
+  const submitErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.SignIn, {
+    replace: true,
+  });
 
   /** Redeems the token minted by the IdP, which is what creates the Logto session. */
   const completeSignIn = useCallback(
@@ -71,7 +84,7 @@ const useTeChallenge = (mode: TeWalletMode) => {
       });
 
       if (submitError) {
-        await handleError(submitError);
+        await handleError(submitError, submitErrorHandler);
         setIsVerifying(false);
         return;
       }
@@ -80,7 +93,13 @@ const useTeChallenge = (mode: TeWalletMode) => {
         await redirectTo(result.redirectTo);
       }
     },
-    [asyncIdentifyAndSubmit, asyncSignInWithOneTimeToken, handleError, redirectTo]
+    [
+      asyncIdentifyAndSubmit,
+      asyncSignInWithOneTimeToken,
+      handleError,
+      redirectTo,
+      submitErrorHandler,
+    ]
   );
 
   /** Opens a challenge: a scannable QR, or a push aimed at one specific device. */
@@ -90,7 +109,16 @@ const useTeChallenge = (mode: TeWalletMode) => {
       setChallenge(undefined);
 
       try {
-        const opened = await startTeChallenge({ mode, ...payload });
+        const binding = await createTeVerifier();
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        verifier.current = binding.verifier;
+
+        const opened = await startTeChallenge({
+          mode,
+          ...payload,
+          verifierHash: binding.verifierHash,
+          client: sessionStorage.getItem('app_id') ?? undefined,
+        });
 
         if (isMounted.current) {
           setChallenge(opened);
@@ -128,7 +156,7 @@ const useTeChallenge = (mode: TeWalletMode) => {
       }
 
       try {
-        const status = await getTeChallenge(challengeId);
+        const status = await getTeChallenge(challengeId, verifier.current ?? '');
 
         if (!isMounted.current) {
           clearInterval(timer);

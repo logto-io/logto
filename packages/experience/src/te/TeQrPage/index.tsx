@@ -44,8 +44,10 @@ const TeQrPage = () => {
     try {
       const parsed: unknown = JSON.parse(challenge.qrPayload);
 
+      // Under te2 the code only points at the challenge: the material to sign is
+      // fetched by the wallet over TLS, so a photo of the screen carries nothing useful.
       return {
-        nonce: shorten(readString(parsed, 'nonce')),
+        version: readString(parsed, 'v'),
         challengeId: shorten(readString(parsed, 'challengeId')),
       };
     } catch {
@@ -97,8 +99,8 @@ const TeQrPage = () => {
             {details && (
               <dl className={styles.details}>
                 <div className={styles.detailRow}>
-                  <dt>nonce</dt>
-                  <dd>{details.nonce}</dd>
+                  <dt>protocolo</dt>
+                  <dd>{details.version}</dd>
                 </div>
                 <div className={styles.detailRow}>
                   <dt>challenge</dt>

@@ -85,6 +85,48 @@ El push no se aprueba a ciegas: el IdP genera un número y dos señuelos, manda 
 teléfono y devuelve solo el correcto al navegador. Tocar el equivocado anula el intento.
 Es lo que evita que un usuario harto de notificaciones apruebe un login ajeno.
 
+## Protocolo `te2`
+
+`te1` firmaba un nonce opaco y entregaba el one-time token a quien conociera el
+`challengeId` — que viaja dentro del QR y por un broker MQTT público. Cualquiera que
+fotografiase la pantalla podía cobrar la sesión. `te2` corrige tres cosas:
+
+**1 · Channel binding.** El navegador guarda un `verifier` aleatorio y solo publica su
+SHA-256. El token se entrega a quien presente el verifier, no a quien vea el QR. Es PKCE
+aplicado al reto.
+
+**2 · Se firma un transcript, no un nonce.** El wallet firma este texto canónico y puede
+enseñárselo al usuario antes de firmar:
+
+```
+te2
+iss=<IdP>
+rp=<origen de Logto>
+client=<aplicación>
+challengeId=<id>
+nonce=<nonce>
+verifierHash=<hash>
+iat=<epoch>
+exp=<epoch>
+```
+
+Orden de campos fijo y `clave=valor` por línea a propósito: el wallet está en Dart y
+tiene que reconstruir exactamente los mismos bytes, sin depender de cómo ordene cada
+lenguaje las claves de un JSON. La firma queda atada al dominio, la aplicación y la
+caducidad, así que no sirve en ningún otro contexto.
+
+**3 · MQTT es un timbre, no un canal de datos.** El push publica solo `{v, idp,
+challengeId, deviceId}`. El material a firmar y las opciones del number matching se
+recogen por TLS en `GET /te/challenge/:id/transcript`.
+
+Lo que `te2` **no** cambia: el number matching sigue siendo necesario en el push, porque
+ahí el problema es humano — el usuario no está mirando la pantalla que inició el login y
+ninguna firma le dice si el intento es suyo. En el QR sí sobra: escanear ya demuestra
+presencia ante esa pantalla.
+
+Compatibilidad: los retos sin `verifierHash` siguen el camino `te1` (firma del nonce,
+token por `GET`), para no romper los IdP y wallets ya desplegados.
+
 Consecuencia: todos los factores nativos (email, SMS, TOTP, passkey), el MFA y las
 políticas de Logto **siguen funcionando sin cambios**; el wallet solo añade una opción más.
 
