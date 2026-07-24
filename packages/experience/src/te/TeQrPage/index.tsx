@@ -9,6 +9,7 @@ import { useEffect, useMemo } from 'react';
 import { LoadingIcon } from '@/shared/components/LoadingLayer';
 
 import TeLayout from '../TeLayout';
+import TeSwitchLink from '../TeSwitchLink';
 import { TeWalletMode } from '../config';
 import useTeChallenge from '../use-te-challenge';
 
@@ -109,6 +110,8 @@ const TeQrPage = () => {
             <div className={styles.hint}>Esperando la firma del wallet…</div>
           </>
         )}
+
+        <TeSwitchLink className={styles.switchLink} />
       </div>
     </TeLayout>
   );

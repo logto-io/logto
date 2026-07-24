@@ -14,6 +14,7 @@ import UserInteractionContext from '@/Providers/UserInteractionContextProvider/U
 import { LoadingIcon } from '@/shared/components/LoadingLayer';
 
 import TeLayout from '../TeLayout';
+import TeSwitchLink from '../TeSwitchLink';
 import { listTeDevices, type TeDevice } from '../api';
 import { TeWalletMode } from '../config';
 import useTeChallenge from '../use-te-challenge';
@@ -177,6 +178,8 @@ const TePushPage = () => {
         )}
 
         {view === 'picker' && devices && <DevicePicker devices={devices} onPick={pickDevice} />}
+
+        <TeSwitchLink className={styles.switchLink} />
       </div>
     </TeLayout>
   );
