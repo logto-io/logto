@@ -1,0 +1,123 @@
+/* TE:BEGIN qr-push-factor */
+@use '@/shared/scss/underscore' as _;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: _.unit(4);
+  background: rgba(0, 0, 0, 40%);
+}
+
+.panel {
+  @include _.flex-column;
+  width: 100%;
+  max-width: 360px;
+  padding: _.unit(6);
+  border-radius: 12px;
+  background: var(--color-layer-1, #fff);
+  gap: _.unit(3);
+}
+
+.title {
+  @include _.title;
+  text-align: center;
+}
+
+.hint {
+  @include _.text-hint;
+  text-align: center;
+}
+
+.error {
+  @include _.text-hint;
+  color: var(--color-error, #e5484d);
+  text-align: center;
+}
+
+.qr {
+  width: 200px;
+  height: 200px;
+  @include _.image-align-center;
+  border-radius: 8px;
+}
+
+.devices {
+  @include _.flex-column;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  gap: _.unit(2);
+
+  > li {
+    width: 100%;
+  }
+}
+
+.device {
+  @include _.flex-row;
+  width: 100%;
+  padding: _.unit(3);
+  border: 1px solid var(--color-line-divider, #e0e0e0);
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  justify-content: space-between;
+  align-items: center;
+  font: inherit;
+  color: inherit;
+
+  &:hover {
+    border-color: var(--color-brand-default, #5d34f2);
+  }
+}
+
+.deviceName {
+  font-weight: 600;
+}
+
+.devicePlatform {
+  @include _.text-hint;
+  color: var(--color-type-secondary);
+}
+
+.input {
+  width: 100%;
+  padding: _.unit(3);
+  border: 1px solid var(--color-line-divider, #e0e0e0);
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+.primary {
+  width: 100%;
+  padding: _.unit(3);
+  border: none;
+  border-radius: 8px;
+  background: var(--color-brand-default, #5d34f2);
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+
+  &:disabled {
+    opacity: 50%;
+    cursor: not-allowed;
+  }
+}
+
+.cancel {
+  padding: _.unit(2);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-type-secondary);
+  font: inherit;
+}
+/* TE:END qr-push-factor */

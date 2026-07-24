@@ -146,6 +146,15 @@ const createSecurityHeaderSettings = (tenantId: string): SecurityHeaderSettings 
     ...conditionalArray(!isProduction && "'unsafe-eval'"),
   ];
 
+  /* TE:BEGIN qr-push-factor */
+  // The QR / push factors call the TripleEnable IdP straight from the sign-in page,
+  // so its origin has to be allowed. Comma-separated; empty where the factors are off.
+  const teIdpOrigins = (process.env.TE_IDP_ORIGIN ?? '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+  /* TE:END qr-push-factor */
+
   const experienceConnectSource = [
     "'self'",
     gsiOrigin,
@@ -156,6 +165,9 @@ const createSecurityHeaderSettings = (tenantId: string): SecurityHeaderSettings 
     'https://www.gstatic.com/recaptcha/',
     'https://www.gstatic.cn/recaptcha/',
     ...developmentOrigins,
+    /* TE:BEGIN qr-push-factor */
+    ...teIdpOrigins,
+    /* TE:END qr-push-factor */
   ];
 
   const getExperienceSecurityHeaderSettings = (customUiCsp: CustomUiCsp = {}) => {
