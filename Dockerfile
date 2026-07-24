@@ -29,6 +29,14 @@ ENV APPLICATIONINSIGHTS_CONNECTION_STRING=${applicationinsights_connection_strin
 ARG logto_oss_survey_endpoint=
 ENV LOGTO_OSS_SURVEY_ENDPOINT=${logto_oss_survey_endpoint}
 
+# TE:BEGIN qr-push-factor
+# The experience bundle bakes the TripleEnable IdP URL at build time (Vite reads
+# import.meta.env.VITE_TE_IDP_URL during `pnpm -r build`). Without this it would fall
+# back to localhost and QR/Push would break in any real deployment.
+ARG vite_te_idp_url=
+ENV VITE_TE_IDP_URL=${vite_te_idp_url}
+# TE:END qr-push-factor
+
 RUN pnpm -r build
 
 ### Add official connectors ###
