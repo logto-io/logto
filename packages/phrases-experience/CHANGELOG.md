@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.14.1
+
+### Patch Changes
+
+- Updated dependencies [af678dd843]
+- Updated dependencies [1650be05e1]
+  - @logto/core-kit@2.12.0
+
 ## 1.14.0
 
 ### Minor Changes

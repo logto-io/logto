@@ -1,5 +1,67 @@
 # Change Log
 
+## 1.42.0
+
+### Minor Changes
+
+- 292da8db96: support wildcard email address patterns in custom email blocklist rules
+- 7b1ba44fda: upgrade the OIDC provider to node-oidc-provider v9
+
+  ## Security
+
+  - revoking an opaque access token now also revokes all tokens under the same grant, including the refresh token. In v8, the refresh token stayed usable after revocation and could keep requesting new access tokens.
+
+  ## Updates
+
+  - the revocation endpoint now rejects JWT access tokens with `unsupported_token_type`, instead of returning a success response without actually revoking anything in v8.
+  - add the RFC 8414 authorization server metadata endpoint (`/oidc/.well-known/oauth-authorization-server`).
+  - remove the redundant `at_hash` claim from ID tokens issued at the token endpoint. Official SDKs never verify this claim, so no action is needed unless your integration verifies it manually.
+
+- 829646a4a5: add custom domain verification file support
+
+  Admins can configure small text or JSON verification files for active custom domains. Files are limited to root-level filenames or paths under `/.well-known/`, with caps on count and content size. Exact GET and HEAD matches are served with safe content types while existing Logto routes take precedence.
+
+- 893860c636: add email allowlist support for email registration and account email updates
+
+### Patch Changes
+
+- b560d17a4: require the `identities` user scope to retrieve stored third-party provider access tokens through the Account API, matching the other social and enterprise SSO identity endpoints
+- 8d2dade42e: decode percent-encoded Redis cluster credentials so connections succeed when usernames or passwords include URL-reserved characters
+- 959b203: fix TLS not being enabled for Redis cluster connections using the rediss protocol
+- ea3ede3502: remove email blocklist policy from public sign-in experience responses
+- c75b16ad8: upgrade the HTTP framework from Koa 2 to Koa 3
+
+  Logto now runs on Koa 3, the actively maintained release line that receives Koa's security fixes first. No behavior change is expected: all endpoints, OIDC flows, and API responses behave exactly as before.
+
+- 58cb52c705: strengthen OIDC provider outbound request security with SSRF protection enabled by default
+
+  ## Action required
+
+  Self-hosted deployments that need to reach trusted relying-party endpoints on private networks must set `OIDC_PROVIDER_SSRF_PROTECTION_DISABLED=true` before starting Logto; otherwise, leave the variable unset.
+
+- d91696c70f: automatically enable MFA after users bind a factor via Account APIs
+- 2e1973d3a: prevent Account API verification codes from being sent to blocked email addresses
+- Updated dependencies [af678dd843]
+- Updated dependencies [292da8db96]
+- Updated dependencies [1650be05e1]
+- Updated dependencies [ea3ede3502]
+- Updated dependencies [829646a4a5]
+- Updated dependencies [893860c636]
+- Updated dependencies [bfbe9c40b9]
+- Updated dependencies [58cb52c705]
+- Updated dependencies [b4ef434b3b]
+  - @logto/core-kit@2.12.0
+  - @logto/console@1.39.0
+  - @logto/phrases@1.30.0
+  - @logto/schemas@1.42.0
+  - @logto/experience@1.21.0
+  - @logto/shared@3.4.2
+  - @logto/account@0.5.0
+  - @logto/cli@1.42.0
+  - @logto/demo-app@1.5.0
+  - @logto/device-demo-app@0.1.0
+  - @logto/phrases-experience@1.14.1
+
 ## 1.41.0
 
 ### Minor Changes

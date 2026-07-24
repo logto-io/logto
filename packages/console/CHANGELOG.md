@@ -1,5 +1,19 @@
 # Change Log
 
+## 1.39.0
+
+### Minor Changes
+
+- 829646a4a5: add custom domain verification file support
+
+  Admins can configure small text or JSON verification files for active custom domains. Files are limited to root-level filenames or paths under `/.well-known/`, with caps on count and content size. Exact GET and HEAD matches are served with safe content types while existing Logto routes take precedence.
+
+- 893860c636: add email allowlist support for email registration and account email updates
+
+### Patch Changes
+
+- 292da8db96: support wildcard email address patterns in custom email blocklist rules
+
 ## 1.38.0
 
 ### Minor Changes

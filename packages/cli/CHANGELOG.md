@@ -1,5 +1,19 @@
 # Change Log
 
+## 1.42.0
+
+### Patch Changes
+
+- Updated dependencies [af678dd843]
+- Updated dependencies [292da8db96]
+- Updated dependencies [1650be05e1]
+- Updated dependencies [ea3ede3502]
+- Updated dependencies [829646a4a5]
+- Updated dependencies [58cb52c705]
+  - @logto/core-kit@2.12.0
+  - @logto/schemas@1.42.0
+  - @logto/shared@3.4.2
+
 ## 1.41.0
 
 ### Patch Changes
