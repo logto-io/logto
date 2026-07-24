@@ -11,6 +11,8 @@ const single_sign_on = {
   idp_initiated_authentication_client_callback_uri_not_found:
     '未找到客户端 IdP 发起的身份验证回调 URI。请检查连接器设置。',
   sso_signing_unavailable: '无法通过你的身份提供商完成登录。请联系管理员。',
+  can_not_delete_active_signing_key:
+    '无法删除当前启用的签名密钥。请先启用其他密钥或关闭签名认证请求。',
 };
 
 export default Object.freeze(single_sign_on);

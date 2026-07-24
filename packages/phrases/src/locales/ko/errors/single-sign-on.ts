@@ -11,6 +11,8 @@ const single_sign_on = {
   idp_initiated_authentication_client_callback_uri_not_found:
     '클라이언트 IdP 시작 인증 콜백 URI를 찾을 수 없습니다. 커넥터 설정을 확인해 주세요.',
   sso_signing_unavailable: 'ID 공급자를 통한 로그인을 완료할 수 없습니다. 관리자에게 문의하세요.',
+  can_not_delete_active_signing_key:
+    '활성 서명 키는 삭제할 수 없습니다. 먼저 다른 키를 활성화하거나 서명된 인증 요청을 비활성화하세요.',
 };
 
 export default Object.freeze(single_sign_on);

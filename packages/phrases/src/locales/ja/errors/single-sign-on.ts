@@ -13,6 +13,8 @@ const single_sign_on = {
     'クライアントの IdP 開始認証コールバック URI が見つかりません。コネクタ設定を確認してください。',
   sso_signing_unavailable:
     'ID プロバイダーでのサインインを完了できませんでした。管理者にお問い合わせください。',
+  can_not_delete_active_signing_key:
+    'アクティブな署名キーは削除できません。先に別のキーをアクティブにするか、署名付き認証リクエストを無効にしてください。',
 };
 
 export default Object.freeze(single_sign_on);

@@ -13,6 +13,8 @@ const single_sign_on = {
     'Nie znaleziono URI zwrotnego uwierzytelniania IdP-initiated klienta. Proszę sprawdzić ustawienia łącznika.',
   sso_signing_unavailable:
     'Nie udało się dokończyć logowania za pomocą dostawcy tożsamości. Skontaktuj się z administratorem.',
+  can_not_delete_active_signing_key:
+    'Nie można usunąć aktywnego klucza podpisującego. Najpierw aktywuj inny klucz lub wyłącz podpisane żądania uwierzytelnienia.',
 };
 
 export default Object.freeze(single_sign_on);

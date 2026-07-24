@@ -24,11 +24,13 @@ import { captureEvent } from '../../utils/posthog.js';
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
 import ssoConnectorIdpInitiatedAuthConfigRoutes from './idp-initiated-auth-config.js';
+import samlSsoConnectorSigningKeyRoutes from './signing-key.js';
 import {
   fetchConnectorProviderDetails,
   isSignAuthnRequestEnabled,
   parseConnectorConfig,
   parseFactoryDetail,
+  reconcileSigningKeys,
   stripGatedSigningConfigFields,
   validateConnectorConfigConnectionStatus,
   validateConnectorDomains,
@@ -158,9 +160,8 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
         ...rest,
       });
 
-      // Generate the first active SP signing key when the connector is created with signed
-      // AuthnRequest enabled. (`stripGatedSigningConfigFields` keeps the flag out of the stored
-      // config while the feature is dev-gated, so this cannot fire in production.)
+      // Generate the first active SP signing key when created with signed AuthnRequest enabled.
+      // (`stripGatedSigningConfigFields` keeps the flag out while dev-gated — inert in production.)
       if (isSignAuthnRequestEnabled(parsedConfig)) {
         await ensureActiveSigningKey(connector.id);
       }
@@ -353,18 +354,10 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
           })
         : originalConnector;
 
-      // Reconcile the SP signing key with the (possibly updated) signAuthnRequest flag. Guarded on
-      // `parsedConfig` so a patch that does not touch the config leaves the keys alone.
-      // TODO: @simeng Remove the dev features check when the signed AuthnRequest feature is ready.
-      if (
-        EnvSet.values.isDevFeaturesEnabled &&
-        parsedConfig &&
-        providerType === SsoProviderType.SAML
-      ) {
-        await (isSignAuthnRequestEnabled(parsedConfig)
-          ? ensureActiveSigningKey(id)
-          : deleteSigningKeys(id));
-      }
+      await reconcileSigningKeys(id, providerType, parsedConfig, {
+        ensureActiveSigningKey,
+        deleteSigningKeys,
+      });
 
       // Make the typescript happy
       assert(
@@ -384,8 +377,9 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
     }
   );
 
-  // TODO: @simeng Remove this when IdP initiated SAML SSO is ready for production
+  // TODO: @simeng Remove when IdP initiated SSO / signed AuthnRequest are ready for production
   if (EnvSet.values.isDevFeaturesEnabled) {
     ssoConnectorIdpInitiatedAuthConfigRoutes(...args);
+    samlSsoConnectorSigningKeyRoutes(...args);
   }
 }

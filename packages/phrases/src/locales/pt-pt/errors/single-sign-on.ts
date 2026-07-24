@@ -13,6 +13,8 @@ const single_sign_on = {
     'O URI de callback de autenticação iniciada pelo IdP no cliente não foi encontrado. Por favor, verifique as definições do conector.',
   sso_signing_unavailable:
     'Não foi possível concluir o início de sessão com o seu fornecedor de identidade. Contacte o seu administrador.',
+  can_not_delete_active_signing_key:
+    'Não é possível eliminar a chave de assinatura ativa. Ative outra chave ou desative primeiro os pedidos de autenticação assinados.',
 };
 
 export default Object.freeze(single_sign_on);

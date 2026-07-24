@@ -1,7 +1,10 @@
 import { socialUserInfoGuard } from '@logto/connector-kit';
 import { z } from 'zod';
 
+import { SamlSsoConnectorSigningKeys } from '../db-entries/saml-sso-connector-signing-key.js';
 import { SsoConnectors, type SsoConnector } from '../db-entries/sso-connector.js';
+
+import { certificateFingerprintsGuard } from './saml-application.js';
 
 /**
  * SSO Connector data type that are returned to the experience client for sign-in use.
@@ -97,3 +100,18 @@ export enum SsoAuthenticationQueryKey {
 // Saml assertion returned user attribute value
 export const extendedSocialUserInfoGuard = socialUserInfoGuard.catchall(z.unknown());
 export type ExtendedSocialUserInfo = z.infer<typeof extendedSocialUserInfoGuard>;
+
+// Make sure the `privateKey` is not exposed in the response.
+export const samlSsoConnectorSigningKeyResponseGuard = SamlSsoConnectorSigningKeys.guard
+  .omit({
+    tenantId: true,
+    ssoConnectorId: true,
+    privateKey: true,
+  })
+  .extend({
+    fingerprints: certificateFingerprintsGuard,
+  });
+
+export type SamlSsoConnectorSigningKeyResponse = z.infer<
+  typeof samlSsoConnectorSigningKeyResponseGuard
+>;

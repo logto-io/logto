@@ -13,6 +13,8 @@ const single_sign_on = {
     'ไม่พบ URI callback สำหรับการรับรองความถูกต้อง IdP-initiated ของ client กรุณาตรวจสอบการตั้งค่าคอนเนกเตอร์',
   sso_signing_unavailable:
     'ไม่สามารถเข้าสู่ระบบผ่านผู้ให้บริการข้อมูลประจำตัวของคุณได้ โปรดติดต่อผู้ดูแลระบบ',
+  can_not_delete_active_signing_key:
+    'ไม่สามารถลบคีย์ลงนามที่ใช้งานอยู่ได้ โปรดเปิดใช้งานคีย์อื่นหรือปิดคำขอการยืนยันตัวตนแบบลงนามก่อน',
 };
 
 export default Object.freeze(single_sign_on);
