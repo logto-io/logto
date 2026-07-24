@@ -13,6 +13,8 @@ const single_sign_on = {
     'The client IdP-initiated authentication callback URI is not found. Please check the connector settings.',
   sso_signing_unavailable:
     "We couldn't complete sign-in with your identity provider. Please contact your administrator.",
+  can_not_delete_active_signing_key:
+    'Cannot delete the active signing key. Activate another key or disable signed authentication requests first.',
 };
 
 export default Object.freeze(single_sign_on);

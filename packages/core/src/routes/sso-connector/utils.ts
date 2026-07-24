@@ -5,7 +5,7 @@ import type {
   SupportedSsoConnector,
   SsoProviderName,
 } from '@logto/schemas';
-import { findDuplicatedOrBlockedEmailDomains } from '@logto/schemas';
+import { findDuplicatedOrBlockedEmailDomains, SsoProviderType } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -13,6 +13,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import SamlConnector from '#src/sso/SamlConnector/index.js';
 import { type SingleSignOnFactory, ssoConnectorFactories } from '#src/sso/index.js';
 import { type SingleSignOnConnectorData } from '#src/sso/types/connector.js';
+import type Libraries from '#src/tenants/Libraries.js';
 
 const isKeyOfI18nPhrases = (key: string, phrases: I18nPhrases): key is keyof I18nPhrases =>
   key in phrases;
@@ -79,6 +80,34 @@ export const stripGatedSigningConfigFields = (
   }
 
   return config;
+};
+
+/**
+ * Reconcile the connector's SP signing keys with the (possibly updated) `signAuthnRequest` flag —
+ * enabling ensures an active key (idempotent); disabling deletes the connector's keys. No-op
+ * unless dev features are on, the config was touched, and the connector is a SAML connector.
+ * TODO: @simeng Remove the dev features check when the signed AuthnRequest feature is ready.
+ */
+export const reconcileSigningKeys = async (
+  connectorId: string,
+  providerType: SsoProviderType,
+  parsedConfig: ParsedConnectorConfig | undefined,
+  {
+    ensureActiveSigningKey,
+    deleteSigningKeys,
+  }: Pick<Libraries['samlSsoConnectorSigningKeys'], 'ensureActiveSigningKey' | 'deleteSigningKeys'>
+) => {
+  if (
+    !EnvSet.values.isDevFeaturesEnabled ||
+    !parsedConfig ||
+    providerType !== SsoProviderType.SAML
+  ) {
+    return;
+  }
+
+  await (isSignAuthnRequestEnabled(parsedConfig)
+    ? ensureActiveSigningKey(connectorId)
+    : deleteSigningKeys(connectorId));
 };
 
 export const fetchConnectorProviderDetails = async (

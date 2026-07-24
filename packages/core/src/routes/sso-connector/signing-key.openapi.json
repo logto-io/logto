@@ -1,0 +1,90 @@
+{
+  "tags": [
+    {
+      "name": "Dev feature"
+    }
+  ],
+  "paths": {
+    "/api/sso-connectors/{id}/signing-keys": {
+      "get": {
+        "summary": "List SP signing keys",
+        "description": "List the Service Provider signing keys of the given SAML SSO connector. The response contains the certificate, fingerprints, activation state and expiry of each key — the private key is never returned.",
+        "responses": {
+          "200": {
+            "description": "The SP signing keys of the connector."
+          },
+          "404": {
+            "description": "The SSO connector is not found or is not a SAML connector."
+          }
+        }
+      },
+      "post": {
+        "summary": "Create an SP signing key",
+        "description": "Generate a new Service Provider signing key pair for the given SAML SSO connector. Create the key inactive (default) to stage a graceful rotation — register its certificate at the identity provider before activating it. Creating an active key deactivates the currently active key atomically.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "active": {
+                    "description": "Whether the new key should become the active signing key immediately. Defaults to `false` (staged rotation)."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The created SP signing key."
+          },
+          "404": {
+            "description": "The SSO connector is not found or is not a SAML connector."
+          }
+        }
+      }
+    },
+    "/api/sso-connectors/{id}/signing-keys/{keyId}": {
+      "patch": {
+        "summary": "Activate or deactivate an SP signing key",
+        "description": "Update the activation state of the given Service Provider signing key. Activating a key atomically deactivates the currently active key — the switch step of a graceful rotation.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "active": {
+                    "description": "Whether the key should be the active signing key."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated SP signing key."
+          },
+          "404": {
+            "description": "The SSO connector is not found, is not a SAML connector, or the signing key is not found."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an SP signing key",
+        "description": "Delete the given Service Provider signing key. The active key cannot be deleted — activate another key or disable signed authentication requests first.",
+        "responses": {
+          "204": {
+            "description": "The SP signing key was deleted."
+          },
+          "400": {
+            "description": "The key is the active signing key and cannot be deleted."
+          },
+          "404": {
+            "description": "The SSO connector is not found, is not a SAML connector, or the signing key is not found."
+          }
+        }
+      }
+    }
+  }
+}

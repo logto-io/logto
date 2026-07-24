@@ -13,6 +13,8 @@ const single_sign_on = {
     'Die Client-IdP-initiierte Authentifizierungs-Callback-URI wurde nicht gefunden. Bitte überprüfe die Connector-Einstellungen.',
   sso_signing_unavailable:
     'Die Anmeldung über Ihren Identitätsanbieter konnte nicht abgeschlossen werden. Bitte wenden Sie sich an Ihren Administrator.',
+  can_not_delete_active_signing_key:
+    'Der aktive Signaturschlüssel kann nicht gelöscht werden. Aktivieren Sie zuerst einen anderen Schlüssel oder deaktivieren Sie signierte Authentifizierungsanfragen.',
 };
 
 export default Object.freeze(single_sign_on);

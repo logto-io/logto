@@ -13,6 +13,8 @@ const single_sign_on = {
     "İstemci IdP başlatılan kimlik doğrulama geri dönüş URI'si bulunamadı. Lütfen bağlayıcı ayarlarını kontrol edin.",
   sso_signing_unavailable:
     'Kimlik sağlayıcınızla oturum açma tamamlanamadı. Lütfen yöneticinizle iletişime geçin.',
+  can_not_delete_active_signing_key:
+    'Aktif imzalama anahtarı silinemez. Önce başka bir anahtarı etkinleştirin veya imzalı kimlik doğrulama isteklerini devre dışı bırakın.',
 };
 
 export default Object.freeze(single_sign_on);

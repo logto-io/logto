@@ -13,6 +13,8 @@ const single_sign_on = {
     "L'URI de rappel d'authentification initiée par le client IdP n'est pas trouvée. Veuillez vérifier les paramètres du connecteur.",
   sso_signing_unavailable:
     "Impossible de terminer la connexion avec votre fournisseur d'identité. Veuillez contacter votre administrateur.",
+  can_not_delete_active_signing_key:
+    "Impossible de supprimer la clé de signature active. Activez d'abord une autre clé ou désactivez les demandes d'authentification signées.",
 };
 
 export default Object.freeze(single_sign_on);
