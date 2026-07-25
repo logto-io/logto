@@ -125,11 +125,18 @@ const getStringProperty = (record: Record<string, unknown> | undefined, key: str
   return typeof value === 'string' ? value : undefined;
 };
 
+const redactExactValues = (value: string, redactValues: readonly string[]) =>
+  redactValues
+    .filter((redactValue) => redactValue.length > 0)
+    .toSorted((left, right) => right.length - left.length)
+    .reduce((redacted, redactValue) => redacted.replaceAll(redactValue, redactedValue), value);
+
 const toSafeActionValidationPath = (
-  value: unknown
+  value: unknown,
+  redactValues: readonly string[]
 ): SafeActionValidationIssue['path'] | undefined => {
   if (typeof value === 'string') {
-    return value;
+    return redactExactValues(value, redactValues);
   }
 
   if (
@@ -139,17 +146,22 @@ const toSafeActionValidationPath = (
         typeof segment === 'string' || (typeof segment === 'number' && Number.isFinite(segment))
     )
   ) {
-    return value;
+    return value.map((segment) =>
+      typeof segment === 'string' ? redactExactValues(segment, redactValues) : segment
+    );
   }
 };
 
-const toSafeActionValidationIssue = (value: unknown): SafeActionValidationIssue | undefined => {
+const toSafeActionValidationIssue = (
+  value: unknown,
+  redactValues: readonly string[]
+): SafeActionValidationIssue | undefined => {
   if (!isRecord(value)) {
     return;
   }
 
   const { code } = value;
-  const path = toSafeActionValidationPath(value.path);
+  const path = toSafeActionValidationPath(value.path, redactValues);
 
   if (typeof code !== 'string' || !safeValidationIssueCodes.has(code) || path === undefined) {
     return;
@@ -165,13 +177,16 @@ const getValidationIssues = (record: Record<string, unknown> | undefined) => {
   return candidates.find((value): value is unknown[] => isArray(value));
 };
 
-const getSafeActionValidationIssues = (records: Array<Record<string, unknown> | undefined>) => {
+const getSafeActionValidationIssues = (
+  records: Array<Record<string, unknown> | undefined>,
+  redactValues: readonly string[]
+) => {
   for (const record of records) {
     const issues = getValidationIssues(record);
 
     if (issues) {
       return issues.flatMap((issue) => {
-        const safeIssue = toSafeActionValidationIssue(issue);
+        const safeIssue = toSafeActionValidationIssue(issue, redactValues);
         return safeIssue ? [safeIssue] : [];
       });
     }
@@ -179,12 +194,6 @@ const getSafeActionValidationIssues = (records: Array<Record<string, unknown> | 
 
   return [];
 };
-
-const redactExactValues = (value: string, redactValues: readonly string[]) =>
-  redactValues
-    .filter((redactValue) => redactValue.length > 0)
-    .toSorted((left, right) => right.length - left.length)
-    .reduce((redacted, redactValue) => redacted.replaceAll(redactValue, redactedValue), value);
 
 /**
  * Reduce an execution failure to a structurally safe summary: a message, an HTTP status, and
@@ -210,7 +219,7 @@ export const buildSafeActionErrorSummary = (
           stringifyUnknownError(error))) || fallbackErrorMessage;
     const message = redactExactValues(rawMessage, redactValues);
     const status = getNumberProperty(errorRecord, 'status');
-    const errors = getSafeActionValidationIssues([errorData, errorRecord]);
+    const errors = getSafeActionValidationIssues([errorData, errorRecord], redactValues);
 
     return {
       name: 'Error',

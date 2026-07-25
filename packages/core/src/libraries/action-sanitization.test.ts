@@ -201,16 +201,33 @@ describe('buildSafeActionErrorSummary', () => {
     expect(serialized).not.toContain('private authorization header');
   });
 
-  it('scrubs exact end-user credentials from the message when requested', () => {
+  it('scrubs exact end-user credentials from the message and issue paths when requested', () => {
     const password = 'plain-text-password';
 
     expect(
-      buildSafeActionErrorSummary(new Error(`failed for ${password}`), {
-        redactValues: [password],
-      })
+      buildSafeActionErrorSummary(
+        {
+          message: `failed for ${password}`,
+          errors: [
+            {
+              path: ['event', password, 0],
+              code: 'invalid_type',
+            },
+            {
+              path: password,
+              code: 'invalid_type',
+            },
+          ],
+        },
+        { redactValues: [password] }
+      )
     ).toEqual({
       name: 'Error',
       message: 'failed for [redacted]',
+      errors: [
+        { path: ['event', '[redacted]', 0], code: 'invalid_type' },
+        { path: '[redacted]', code: 'invalid_type' },
+      ],
     });
   });
 
