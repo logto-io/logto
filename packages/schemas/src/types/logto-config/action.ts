@@ -8,13 +8,10 @@ import type { VerificationType } from '../verification-records/index.js';
 
 import type { JwtCustomizerUserContext } from './jwt-customizer.js';
 
+/** Values map to config key names in `logto_configs`. */
 export enum LogtoActionKey {
-  /**
-   * These values are persisted as keys in `logto_configs`. Keep the legacy `inlineHook` prefix so
-   * existing action configurations remain readable across upgrades and downgrades.
-   */
-  PostFirstFactorVerification = 'inlineHook.postFirstFactorVerification',
-  PostSignIn = 'inlineHook.postSignIn',
+  PostFirstFactorVerification = 'action.postFirstFactorVerification',
+  PostSignIn = 'action.postSignIn',
 }
 
 export const actionExecutionErrorPolicies = Object.freeze(['block', 'allow'] as const);
