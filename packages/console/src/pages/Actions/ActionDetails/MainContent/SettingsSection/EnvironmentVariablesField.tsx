@@ -4,12 +4,9 @@ import { useTranslation } from 'react-i18next';
 
 import FormField from '@/ds-components/FormField';
 import KeyValueInputField from '@/ds-components/KeyValueInputField';
+import { isValidEnvironmentVariableKey } from '@/utils/validator';
 
 import { type ActionForm } from '../../type';
-
-const isValidKey = (key: string) => {
-  return /^\w+$/.test(key);
-};
 
 type Props = {
   readonly className?: string;
@@ -49,7 +46,7 @@ function EnvironmentVariablesField({ className }: Props) {
         return t('webhook_details.settings.key_missing_error');
       }
 
-      if (Boolean(key) && !isValidKey(key)) {
+      if (Boolean(key) && !isValidEnvironmentVariableKey(key)) {
         return t('webhook_details.settings.invalid_key_error');
       }
 

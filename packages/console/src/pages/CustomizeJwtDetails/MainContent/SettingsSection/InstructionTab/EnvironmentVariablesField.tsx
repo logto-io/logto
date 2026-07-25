@@ -5,10 +5,7 @@ import { useTranslation } from 'react-i18next';
 import FormField from '@/ds-components/FormField';
 import KeyValueInputField from '@/ds-components/KeyValueInputField';
 import { type JwtCustomizerForm } from '@/pages/CustomizeJwtDetails/type';
-
-const isValidKey = (key: string) => {
-  return /^\w+$/.test(key);
-};
+import { isValidEnvironmentVariableKey } from '@/utils/validator';
 
 type Props = {
   readonly className?: string;
@@ -54,7 +51,7 @@ function EnvironmentVariablesField({ className }: Props) {
       }
 
       // Key format validation
-      if (Boolean(key) && !isValidKey(key)) {
+      if (Boolean(key) && !isValidEnvironmentVariableKey(key)) {
         // Reuse the same error phrase key from webhook settings
         return t('webhook_details.settings.invalid_key_error');
       }
