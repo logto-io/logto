@@ -37,21 +37,29 @@ function EnvironmentVariablesField({ className }: Props) {
         return true;
       }
 
+      // Match request formatting / Monaco typing, which trim keys before use.
+      const trimmedKey = key.trim();
+
       // Unique key validation
-      if (envVariables.filter(({ key: _key }) => _key.length > 0 && _key === key).length > 1) {
+      if (
+        envVariables.filter(({ key: _key }) => {
+          const trimmed = _key.trim();
+          return trimmed.length > 0 && trimmed === trimmedKey;
+        }).length > 1
+      ) {
         // Reuse the same error phrase key from webhook settings
         return t('webhook_details.settings.key_duplicated_error');
       }
 
       // Empty key validation (if value is present)
       const correspondValue = getValues(`environmentVariables.${index}.value`);
-      if (correspondValue) {
+      if (correspondValue && !trimmedKey) {
         // Reuse the same error phrase key from webhook settings
-        return Boolean(key) || t('webhook_details.settings.key_missing_error');
+        return t('webhook_details.settings.key_missing_error');
       }
 
       // Key format validation
-      if (Boolean(key) && !isValidEnvironmentVariableKey(key)) {
+      if (Boolean(trimmedKey) && !isValidEnvironmentVariableKey(trimmedKey)) {
         // Reuse the same error phrase key from webhook settings
         return t('webhook_details.settings.invalid_key_error');
       }
@@ -63,7 +71,7 @@ function EnvironmentVariablesField({ className }: Props) {
 
   const valueValidator = useCallback(
     (value: string, index: number) => {
-      return getValues(`environmentVariables.${index}.key`)
+      return getValues(`environmentVariables.${index}.key`).trim()
         ? Boolean(value) || t('webhook_details.settings.value_missing_error')
         : true;
     },
