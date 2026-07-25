@@ -85,4 +85,25 @@ describe('Logto config Action', () => {
       script: replacementScript,
     });
   });
+
+  it('preserves the existing script when the Action patch omits script', async () => {
+    const library = createLibrary();
+
+    getRowsByKeys.mockResolvedValueOnce({
+      rows: [{ key: LogtoActionKey.PostSignIn, value: action }],
+    });
+
+    const updatedAction = await library.updateAction(LogtoActionKey.PostSignIn, {
+      enabled: false,
+    });
+
+    expect(updatedAction).toEqual({
+      ...action,
+      enabled: false,
+    });
+    expect(queryUpsertAction).toHaveBeenCalledWith(LogtoActionKey.PostSignIn, {
+      ...action,
+      enabled: false,
+    });
+  });
 });
