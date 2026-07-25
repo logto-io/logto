@@ -469,25 +469,6 @@ describe('ActionLibrary', () => {
     });
   });
 
-  it('continues to run stored scripts that use the legacy entry point', async () => {
-    getAction.mockResolvedValueOnce({
-      enabled: true,
-      script: `
-        const runInlineHook = () => ({ action: 'updateUser', user: { name: 'Legacy' } });
-      `,
-    });
-
-    await expect(
-      runAction({
-        key: LogtoActionKey.PostSignIn,
-        event: {},
-      })
-    ).resolves.toEqual({
-      action: 'updateUser',
-      user: { name: 'Legacy' },
-    });
-  });
-
   it('does not load or run actions when dev features are disabled', async () => {
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for dev feature gate test.
     (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = false;

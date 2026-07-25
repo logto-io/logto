@@ -131,8 +131,7 @@ describe('ActionLibrary Cloud execution routing', () => {
     ) {
       throw new TypeError('Expected the runner request body to contain a script');
     }
-    expect(requestBody.script).toContain(payload.script);
-    expect(requestBody.script).toContain('runInlineHook');
+    expect(requestBody.script).toBe(payload.script);
   });
 
   it('uses the remote runner for Cloud executeScript without falling back to local VM', async () => {
@@ -232,7 +231,7 @@ describe('ActionLibrary Cloud execution routing', () => {
     ) {
       throw new TypeError('Expected the runner request body to contain a script');
     }
-    expect(requestBody.script).toContain(script);
+    expect(requestBody.script).toBe(script);
     expect(runScriptInLocalVm).not.toHaveBeenCalled();
     expect(mockAppend).toHaveBeenNthCalledWith(
       1,
