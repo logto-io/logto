@@ -696,7 +696,6 @@ describe('ActionLibrary', () => {
     const password = 'secret-password';
     const script = 'const privateActionScript = true;';
     const environmentSecret = 'environment-secret-value';
-    const nestedSecret = 'nested-secret-value';
     const trackException = jest.spyOn(appInsights, 'trackException').mockResolvedValue();
     class SensitiveExecutionError extends Error {
       override readonly name = environmentSecret;
@@ -704,7 +703,7 @@ describe('ActionLibrary', () => {
       readonly code = password;
     }
     const executionError = new SensitiveExecutionError(
-      `Action failed with ${password} ${script} ${environmentSecret} ${nestedSecret}`
+      `Action failed with ${password} ${script} ${environmentSecret}`
     );
     jest.spyOn(ActionLibrary, 'runScriptInLocalVm').mockRejectedValueOnce(executionError);
     getAction.mockResolvedValueOnce({
@@ -720,8 +719,12 @@ describe('ActionLibrary', () => {
       runAction({
         key: LogtoActionKey.PostFirstFactorVerification,
         event: {
+          key: LogtoActionKey.PostFirstFactorVerification,
+          interactionEvent: InteractionEvent.SignIn,
+          verificationType: VerificationType.Password,
+          identifier: { type: SignInIdentifier.Username, value: 'old_user' },
+          user: null,
           password,
-          nested: { secret: { value: nestedSecret } },
         },
       })
     ).resolves.toEqual({
@@ -737,11 +740,18 @@ describe('ActionLibrary', () => {
     expect((trackedError as Error).stack).not.toContain(password);
     expect(JSON.stringify(trackedError)).not.toContain(script);
     expect(JSON.stringify(trackedError)).not.toContain(environmentSecret);
-    // The audit log keeps the script-authored error message, but the projected event never carries
-    // the end user's credential.
-    const serializedEventPayload = JSON.stringify(mockAppend.mock.calls[0]);
-    expect(serializedEventPayload).not.toContain(password);
-    expect(serializedEventPayload).not.toContain(nestedSecret);
+    // The projected event never carries the end user's credential, and the audit error summary
+    // scrubs that same credential out of the script-authored message.
+    const serializedAuditPayload = JSON.stringify(mockAppend.mock.calls);
+    expect(serializedAuditPayload).not.toContain(password);
+    expect(mockAppend).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Jest asymmetric matcher is typed as `any`.
+        actionError: expect.objectContaining({
+          message: `Action failed with [redacted] ${script} ${environmentSecret}`,
+        }),
+      })
+    );
     expect(trackException).toHaveBeenCalledWith(trackedError, {
       properties: {
         actionType: 'PostFirstFactorVerification',

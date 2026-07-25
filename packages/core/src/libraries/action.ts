@@ -30,6 +30,7 @@ import {
 import {
   buildActionTelemetryError,
   buildSafeActionErrorSummary,
+  getActionEventCredentials,
   toLoggableActionEvent,
   toLoggableActionResult,
 } from './action-sanitization.js';
@@ -394,7 +395,9 @@ export class ActionLibrary {
           durationMs,
           decision: decision.action,
           errorPolicyOutcome: decision.action === 'continue' ? 'allow' : 'block',
-          actionError: buildSafeActionErrorSummary(error),
+          actionError: buildSafeActionErrorSummary(error, {
+            redactValues: getActionEventCredentials(event),
+          }),
         });
 
         void appInsights.trackException(buildActionTelemetryError(error), {

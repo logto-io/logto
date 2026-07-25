@@ -94,6 +94,19 @@ describe('toLoggableActionEvent', () => {
     ).toEqual({ key: LogtoActionKey.PostSignIn });
   });
 
+  it('degrades to the action key when a discriminant drifts from the schema', () => {
+    expect(
+      toLoggableActionEvent(LogtoActionKey.PostFirstFactorVerification, {
+        key: LogtoActionKey.PostFirstFactorVerification,
+        interactionEvent: InteractionEvent.Register,
+        verificationType: VerificationType.Password,
+        identifier: { type: SignInIdentifier.Username, value: 'old_user' },
+        user: null,
+        password: 'plain-text-password',
+      })
+    ).toEqual({ key: LogtoActionKey.PostFirstFactorVerification });
+  });
+
   it('degrades to the action key when reading the event throws', () => {
     const event = {
       get user() {
@@ -186,6 +199,19 @@ describe('buildSafeActionErrorSummary', () => {
     const serialized = JSON.stringify(summary);
     expect(serialized).not.toContain('private received value');
     expect(serialized).not.toContain('private authorization header');
+  });
+
+  it('scrubs exact end-user credentials from the message when requested', () => {
+    const password = 'plain-text-password';
+
+    expect(
+      buildSafeActionErrorSummary(new Error(`failed for ${password}`), {
+        redactValues: [password],
+      })
+    ).toEqual({
+      name: 'Error',
+      message: 'failed for [redacted]',
+    });
   });
 
   it('falls back to a fixed message when no message is available', () => {

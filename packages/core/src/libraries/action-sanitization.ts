@@ -1,10 +1,8 @@
 import {
   actionUserPatchFields,
-  InteractionEvent,
   LogtoActionKey,
   loggablePostFirstFactorVerificationEventGuard,
   loggablePostSignInEventGuard,
-  VerificationType,
   type LoggableActionEvent,
   type LoggableActionResult,
 } from '@logto/schemas';
@@ -13,22 +11,19 @@ import { z } from 'zod';
 import { isArray, isRecord } from '#src/utils/sensitive-data.js';
 
 const unavailableValue = '[unavailable]';
+const redactedValue = '[redacted]';
 const fallbackErrorMessage = 'Action execution failed.';
 const telemetryErrorName = 'ActionExecutionError';
 const safeValidationIssueCodes = new Set<string>(Object.values(z.ZodIssueCode));
 
 /**
- * The parts of each Action event that vary at runtime. Deriving them from the loggable guards keeps
- * the projection and the audit-log contract in sync, and Zod's default stripping means any field
- * outside the loggable shape (the end user's password, the full sign-in user context) is dropped
- * rather than masked.
+ * Parse each Action event with its loggable guard. Zod's default stripping drops anything outside
+ * the loggable shape (the end user's password, the full sign-in user context), and a discriminant
+ * mismatch fails the parse so the projection can degrade to the action key alone.
  */
 const eventProjectionGuards = Object.freeze({
-  [LogtoActionKey.PostFirstFactorVerification]: loggablePostFirstFactorVerificationEventGuard.pick({
-    identifier: true,
-    user: true,
-  }),
-  [LogtoActionKey.PostSignIn]: loggablePostSignInEventGuard.pick({ user: true }),
+  [LogtoActionKey.PostFirstFactorVerification]: loggablePostFirstFactorVerificationEventGuard,
+  [LogtoActionKey.PostSignIn]: loggablePostSignInEventGuard,
 });
 
 /** An event that does not match its key's expected shape degrades to the key alone. */
@@ -46,24 +41,10 @@ export const toLoggableActionEvent = (
 ): LoggableActionEvent | UnknownLoggableActionEvent => {
   try {
     switch (key) {
-      case LogtoActionKey.PostFirstFactorVerification: {
-        const parsed = eventProjectionGuards[key].safeParse(event);
-
-        return parsed.success
-          ? {
-              key,
-              interactionEvent: InteractionEvent.SignIn,
-              verificationType: VerificationType.Password,
-              ...parsed.data,
-            }
-          : { key };
-      }
+      case LogtoActionKey.PostFirstFactorVerification:
       case LogtoActionKey.PostSignIn: {
         const parsed = eventProjectionGuards[key].safeParse(event);
-
-        return parsed.success
-          ? { key, interactionEvent: InteractionEvent.SignIn, ...parsed.data }
-          : { key };
+        return parsed.success ? parsed.data : { key };
       }
     }
   } catch {
@@ -118,6 +99,15 @@ type SafeActionErrorSummary = {
 type SafeActionValidationIssue = {
   path: string | Array<string | number>;
   code: string;
+};
+
+type BuildSafeActionErrorSummaryOptions = {
+  /**
+   * Exact credential values that must never appear in the summary. Used by the audit-log path to
+   * scrub the end user's password out of a script-authored error message without bringing back
+   * script-and-env-wide string replacement.
+   */
+  redactValues?: readonly string[];
 };
 
 const getNumberProperty = (record: Record<string, unknown> | undefined, key: string) => {
@@ -190,24 +180,35 @@ const getSafeActionValidationIssues = (records: Array<Record<string, unknown> | 
   return [];
 };
 
+const redactExactValues = (value: string, redactValues: readonly string[]) =>
+  redactValues
+    .filter((redactValue) => redactValue.length > 0)
+    .toSorted((left, right) => right.length - left.length)
+    .reduce((redacted, redactValue) => redacted.replaceAll(redactValue, redactedValue), value);
+
 /**
  * Reduce an execution failure to a structurally safe summary: a message, an HTTP status, and
  * validation issues carrying only an allowlisted Zod issue code and its path.
  *
  * This drops transport internals such as the outbound request and its headers, and never passes
- * through a raw runner response body. The message itself is preserved: for both consumers (the
- * tenant's audit log and the dry-run response) the reader is the admin who authored the script.
+ * through a raw runner response body. The message itself is preserved for the dry-run path, where
+ * the reader is the admin who authored the script. Callers that persist the summary (audit logs)
+ * should pass known end-user credentials via {@link BuildSafeActionErrorSummaryOptions.redactValues}.
  */
-export const buildSafeActionErrorSummary = (error: unknown): SafeActionErrorSummary => {
+export const buildSafeActionErrorSummary = (
+  error: unknown,
+  { redactValues = [] }: BuildSafeActionErrorSummaryOptions = {}
+): SafeActionErrorSummary => {
   try {
     const errorRecord = isRecord(error) ? error : undefined;
     const errorData = getRecordProperty(errorRecord, 'data');
-    const message =
+    const rawMessage =
       (error instanceof Error
         ? (getStringProperty(errorData, 'message') ?? error.message)
         : (getStringProperty(errorRecord, 'message') ??
           getStringProperty(errorData, 'message') ??
           stringifyUnknownError(error))) || fallbackErrorMessage;
+    const message = redactExactValues(rawMessage, redactValues);
     const status = getNumberProperty(errorRecord, 'status');
     const errors = getSafeActionValidationIssues([errorData, errorRecord]);
 
@@ -220,6 +221,19 @@ export const buildSafeActionErrorSummary = (error: unknown): SafeActionErrorSumm
   } catch {
     return { name: 'Error', message: fallbackErrorMessage };
   }
+};
+
+/**
+ * Collect the end-user credentials present on a production Action event so the audit-log error
+ * path can scrub them out of a script-authored message without scanning the script or environment.
+ */
+export const getActionEventCredentials = (event: unknown): string[] => {
+  if (!isRecord(event)) {
+    return [];
+  }
+
+  const password = Reflect.get(event, 'password');
+  return typeof password === 'string' && password.length > 0 ? [password] : [];
 };
 
 /**
