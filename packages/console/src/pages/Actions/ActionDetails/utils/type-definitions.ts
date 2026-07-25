@@ -83,13 +83,20 @@ export const postSignInResultTypeDefinition = `type ${ActionTypeDefinitionKey.Po
   user?: ${ActionTypeDefinitionKey.ActionUserPatch};
 };`;
 
+const isValidEnvironmentVariableKey = (key: string) => /^\w+$/.test(key);
+
 export const buildEnvironmentVariablesTypeDefinition = (
   envVariables?: ActionForm['environmentVariables']
 ) => {
   const typeDefinition = envVariables
     ? `{
   ${envVariables
-    .filter(({ key }) => Boolean(key))
+    // Align with request payload filtering (`key && value`) and form key validation
+    // (`/^\w+$/`) so Monaco only types env vars that can actually be used at runtime.
+    .map(({ key, value }) => ({ key: key.trim(), value }))
+    .filter(
+      ({ key, value }) => Boolean(key) && Boolean(value) && isValidEnvironmentVariableKey(key)
+    )
     // Quote keys so values like `0FOO` stay valid TypeScript property names.
     .map(({ key }) => `${JSON.stringify(key)}: string`)
     .join(';\n')}
