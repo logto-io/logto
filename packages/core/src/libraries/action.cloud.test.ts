@@ -110,7 +110,7 @@ describe('ActionLibrary Cloud execution routing', () => {
         'x-functions-key': functionKey,
       },
     })
-      .post('/api/inline-hooks', matchLegacyRunnerPayload)
+      .post('/api/actions', matchLegacyRunnerPayload)
       .reply(200, executionResult);
 
     jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue(endpoint);
@@ -199,7 +199,7 @@ describe('ActionLibrary Cloud execution routing', () => {
         'x-functions-key': functionKey,
       },
     })
-      .post('/api/inline-hooks', matchLegacyRunnerPayload)
+      .post('/api/actions', matchLegacyRunnerPayload)
       .reply(200, executionResult);
 
     jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue(endpoint);
@@ -267,7 +267,7 @@ describe('ActionLibrary Cloud execution routing', () => {
         'x-functions-key': functionKey,
       },
     })
-      .post('/api/inline-hooks')
+      .post('/api/actions')
       .reply(500, {
         message: 'Remote runner failed',
       });

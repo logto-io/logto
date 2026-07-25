@@ -298,8 +298,8 @@ export class ActionLibrary {
 
     try {
       return await got
-        // Keep the legacy endpoint and payload field until the external Azure runner migrates.
-        .post(new URL('/api/inline-hooks', azureFunctionUntrustedAppEndpoint), {
+        // Keep the legacy payload field until the external Azure runner migrates.
+        .post(new URL('/api/actions', azureFunctionUntrustedAppEndpoint), {
           json: {
             script: wrapActionScriptForLegacyRunner(script),
             hookType: actionType,
