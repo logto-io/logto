@@ -8,10 +8,7 @@ import { ResponseError } from '@withtyped/client';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import {
-  buildSafeActionErrorSummary,
-  getActionSensitiveValues,
-} from '#src/libraries/action-sanitization.js';
+import { buildSafeActionErrorSummary } from '#src/libraries/action-sanitization.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { koaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
@@ -47,8 +44,8 @@ const parseActionResponseError = async (error: ResponseError): Promise<unknown> 
 const getActionResponseErrorStatus = (status: number) =>
   status === 400 || status === 403 || status === 422 ? status : 422;
 
-const buildSafeActionRequestErrorData = (error: unknown, sensitiveValues: readonly string[]) => {
-  const { message, errors } = buildSafeActionErrorSummary(error, sensitiveValues);
+const buildSafeActionRequestErrorData = (error: unknown) => {
+  const { message, errors } = buildSafeActionErrorSummary(error);
 
   return {
     message,
@@ -111,8 +108,6 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
           ctx.status = 200;
         }
       } catch (error: unknown) {
-        const sensitiveValues = getActionSensitiveValues(body);
-
         if (error instanceof ResponseError) {
           const responseError = await parseActionResponseError(error);
 
@@ -121,7 +116,7 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
               code: 'action.general',
               status: getActionResponseErrorStatus(error.response.status),
             },
-            buildSafeActionRequestErrorData(responseError, sensitiveValues)
+            buildSafeActionRequestErrorData(responseError)
           );
         }
 
@@ -132,13 +127,13 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
               status: error.status,
               expose: error.expose,
             },
-            buildSafeActionRequestErrorData(error, sensitiveValues)
+            buildSafeActionRequestErrorData(error)
           );
         }
 
         throw new RequestError(
           { code: 'action.general', status: 422 },
-          buildSafeActionRequestErrorData(error, sensitiveValues)
+          buildSafeActionRequestErrorData(error)
         );
       }
 

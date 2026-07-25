@@ -2,9 +2,14 @@ import { jsonGuard } from '@logto/connector-kit';
 import { z } from 'zod';
 
 import type { Json } from '../../foundations/index.js';
-import type { InteractionEvent, InteractionIdentifier } from '../interactions.js';
+import { type ToZodObject } from '../../utils/zod.js';
+import {
+  InteractionEvent,
+  interactionIdentifierGuard,
+  type InteractionIdentifier,
+} from '../interactions.js';
 import { userInfoGuard, type UserInfo } from '../user.js';
-import type { VerificationType } from '../verification-records/index.js';
+import { VerificationType } from '../verification-records/index.js';
 
 import type { JwtCustomizerUserContext } from './jwt-customizer.js';
 
@@ -116,3 +121,68 @@ export const postSignInResultGuard = z.discriminatedUnion('action', [
 ]);
 
 export type PostSignInResult = z.infer<typeof postSignInResultGuard>;
+
+export const actionUserPatchFields = Object.freeze(actionUserPatchGuard.keyof().options);
+
+/**
+ * The subset of {@link PostFirstFactorVerificationEvent} that is safe to persist in audit logs.
+ *
+ * The end user's password is the only credential in the event that the tenant does not already own,
+ * so it is dropped rather than masked. The user object collapses to its ID because the audit log
+ * records the same ID as a top-level `userId`.
+ */
+export type LoggablePostFirstFactorVerificationEvent = Omit<
+  PostFirstFactorVerificationEvent,
+  'password' | 'user'
+> & {
+  user: Pick<ActionUser, 'id'> | null;
+};
+
+export const loggablePostFirstFactorVerificationEventGuard = z.object({
+  key: z.literal(LogtoActionKey.PostFirstFactorVerification),
+  interactionEvent: z.literal(InteractionEvent.SignIn),
+  verificationType: z.literal(VerificationType.Password),
+  identifier: interactionIdentifierGuard,
+  user: z.object({ id: z.string() }).nullable(),
+}) satisfies ToZodObject<LoggablePostFirstFactorVerificationEvent>;
+
+/**
+ * The subset of {@link PostSignInEvent} that is safe to persist in audit logs. The full
+ * {@link JwtCustomizerUserContext} carries the user's identifiers, SSO identities, MFA factors,
+ * roles, and organizations, none of which the audit log needs to describe the action run.
+ */
+export type LoggablePostSignInEvent = Omit<PostSignInEvent, 'user'> & {
+  user: Pick<JwtCustomizerUserContext, 'id'>;
+};
+
+export const loggablePostSignInEventGuard = z.object({
+  key: z.literal(LogtoActionKey.PostSignIn),
+  interactionEvent: z.literal(InteractionEvent.SignIn),
+  user: z.object({ id: z.string() }),
+}) satisfies ToZodObject<LoggablePostSignInEvent>;
+
+export type LoggableActionEvent =
+  | LoggablePostFirstFactorVerificationEvent
+  | LoggablePostSignInEvent;
+
+export const loggableActionEventGuard = z.discriminatedUnion('key', [
+  loggablePostFirstFactorVerificationEventGuard,
+  loggablePostSignInEventGuard,
+]) satisfies z.ZodType<LoggableActionEvent>;
+
+/**
+ * The audit-log description of what a script asked Logto to do. Action results are authored by
+ * untrusted scripts, so this reports the shape of the requested user patch instead of its values,
+ * and names only fields on the {@link actionUserPatchFields} allowlist.
+ */
+export type LoggableActionResult = {
+  passwordVerified: boolean;
+  userFields: Array<keyof ActionUserPatch>;
+  unknownFieldCount: number;
+};
+
+export const loggableActionResultGuard = z.object({
+  passwordVerified: z.boolean(),
+  userFields: actionUserPatchGuard.keyof().array(),
+  unknownFieldCount: z.number(),
+}) satisfies ToZodObject<LoggableActionResult>;
