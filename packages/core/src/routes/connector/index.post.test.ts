@@ -26,8 +26,9 @@ const connectorQueries = {
   countConnectorByConnectorId: jest.fn(),
   deleteConnectorByIds: jest.fn(),
   insertConnector: jest.fn(async (body) => body as Connector),
+  replaceConnectorsByType: jest.fn(),
 } satisfies Partial<Queries['connectors']>;
-const { countConnectorByConnectorId, deleteConnectorByIds, insertConnector } = connectorQueries;
+const { countConnectorByConnectorId, insertConnector, replaceConnectorsByType } = connectorQueries;
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const getLogtoConnectors = jest.fn<Promise<LogtoConnector[]>, []>();
@@ -245,31 +246,24 @@ describe('connector data route', () => {
           metadata: { ...mockConnectorFactory.metadata, id: 'id1' },
         },
       ]);
-      getLogtoConnectors.mockResolvedValueOnce([
-        {
-          dbEntry: { ...mockConnector, connectorId: 'id0' },
-          metadata: { ...mockMetadata, id: 'id0' },
-          type: ConnectorType.Sms,
-          ...mockLogtoConnector,
-        },
-      ]);
-      countConnectorByConnectorId.mockResolvedValueOnce({ count: 0 });
       validateConfig.mockReturnValueOnce(null);
       buildRawConnector.mockResolvedValueOnce({ rawConnector: { configGuard: any() } });
       await connectorRequest.post('/connectors').send({
         connectorId: 'id1',
         config: { cliend_id: 'client_id', client_secret: 'client_secret' },
       });
-      expect(insertConnector).toHaveBeenCalledWith(
+      expect(replaceConnectorsByType).toHaveBeenCalledWith(
         expect.objectContaining({
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          id: expect.any(String),
           connectorId: 'id1',
           config: {
             cliend_id: 'client_id',
             client_secret: 'client_secret',
           },
-        })
+        }),
+        ['id1']
       );
-      expect(deleteConnectorByIds).toHaveBeenCalledWith(['id']);
     });
 
     it('throws when add more than 1 social connector instance with same target and platform (add from standard connector)', async () => {

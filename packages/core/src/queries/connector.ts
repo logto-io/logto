@@ -1,5 +1,6 @@
-import type { Connector } from '@logto/schemas';
+import type { Connector, CreateConnector } from '@logto/schemas';
 import { Connectors } from '@logto/schemas';
+import { has } from '@silverhand/essentials';
 import type { CommonQueryMethods } from '@silverhand/slonik';
 import { sql } from '@silverhand/slonik';
 
@@ -8,9 +9,16 @@ import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import { type ConnectorWellKnown } from '#src/utils/connectors/types.js';
-import { convertToIdentifiers, manyRows } from '#src/utils/sql.js';
+import {
+  convertToIdentifiers,
+  convertToPrimitiveOrSql,
+  excludeAutoSetFields,
+  manyRows,
+  type OmitAutoSetFields,
+} from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(Connectors);
+const insertKeys = excludeAutoSetFields(Connectors.fieldKeys);
 
 export const createConnectorQueries = (
   pool: CommonQueryMethods,
@@ -83,6 +91,37 @@ export const createConnectorQueries = (
     'connectors-well-known',
   ]);
 
+  const replaceConnectorsByType = wellKnownCache.mutate(
+    async (
+      newConnectorData: OmitAutoSetFields<CreateConnector>,
+      connectorIdsOfSameType: string[]
+    ): Promise<void> => {
+      return pool.transaction(async (connection) => {
+        const insertingKeys = insertKeys.filter((key) => has(newConnectorData, key));
+
+        await connection.query(sql`
+          insert into ${table} (${sql.join(
+            insertingKeys.map((key) => fields[key]),
+            sql`, `
+          )})
+          values (${sql.join(
+            insertingKeys.map((key) => convertToPrimitiveOrSql(key, newConnectorData[key])),
+            sql`, `
+          )})
+        `);
+
+        if (connectorIdsOfSameType.length > 0) {
+          await connection.query(sql`
+            delete from ${table}
+            where ${fields.connectorId} in (${sql.join(connectorIdsOfSameType, sql`, `)})
+            and ${fields.id} != ${newConnectorData.id}
+          `);
+        }
+      });
+    },
+    ['connectors-well-known']
+  );
+
   return {
     findAllConnectors,
     /** Find all connectors from database with no sensitive info. */
@@ -92,6 +131,7 @@ export const createConnectorQueries = (
     deleteConnectorById,
     deleteConnectorByIds,
     insertConnector,
+    replaceConnectorsByType,
     updateConnector,
   };
 };

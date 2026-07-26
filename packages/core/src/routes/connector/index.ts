@@ -55,6 +55,7 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
     deleteConnectorById,
     deleteConnectorByIds,
     insertConnector,
+    replaceConnectorsByType,
     updateConnector,
   } = tenant.queries.connectors;
   const { getLogtoConnectorById, getLogtoConnectors, getLogtoConnectorByTargetAndPlatform } =
@@ -172,29 +173,23 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
 
       const insertConnectorId = proposedId ?? generateStandardShortId();
 
-      await insertConnector({
-        id: insertConnectorId,
-        connectorId,
-        ...cleanDeep({ syncProfile, config, metadata, enableTokenStorage }),
-      });
-
       /**
        * We can have only one working email/sms connector:
        * once we insert a new one, old connectors with same type should be deleted.
-       * TODO: should using transaction to ensure the atomicity of the operation. LOG-7260
        */
       if (passwordlessConnector.has(connectorFactory.type)) {
-        const logtoConnectors = await getLogtoConnectors();
-        const conflictingConnectorIds = logtoConnectors
-          .filter(
-            ({ dbEntry: { id }, type }) =>
-              type === connectorFactory.type && id !== insertConnectorId
-          )
-          .map(({ dbEntry: { id } }) => id);
+        const connectorIdsOfSameType = connectorFactories
+          .filter(({ type }) => type === connectorFactory.type)
+          .map(({ metadata: { id } }) => id);
 
-        if (conflictingConnectorIds.length > 0) {
-          await deleteConnectorByIds(conflictingConnectorIds);
-        }
+        await replaceConnectorsByType(
+          {
+            id: insertConnectorId,
+            connectorId,
+            ...cleanDeep({ syncProfile, config, metadata, enableTokenStorage }),
+          },
+          connectorIdsOfSameType
+        );
 
         captureEvent(
           { tenantId: tenant.id, request: ctx.req },
@@ -202,6 +197,12 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
           pickFactoryProperties(connectorFactory)
         );
       } else {
+        await insertConnector({
+          id: insertConnectorId,
+          connectorId,
+          ...cleanDeep({ syncProfile, config, metadata, enableTokenStorage }),
+        });
+
         captureEvent(
           { tenantId: tenant.id, request: ctx.req },
           ProductEvent.SocialConnectorCreated,
