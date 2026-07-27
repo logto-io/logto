@@ -103,13 +103,6 @@ export const createSamlSsoConnectorSigningKeyQueries = (pool: CommonQueryMethods
     }
   };
 
-  const deleteSigningKeysBySsoConnectorId = async (ssoConnectorId: string) => {
-    await pool.query(sql`
-      delete from ${table}
-      where ${fields.ssoConnectorId} = ${ssoConnectorId}
-    `);
-  };
-
   return {
     insertInactiveSigningKey,
     insertActiveSigningKey,
@@ -118,6 +111,5 @@ export const createSamlSsoConnectorSigningKeyQueries = (pool: CommonQueryMethods
     findSigningKeyBySsoConnectorIdAndId,
     updateSigningKeyStatusBySsoConnectorIdAndId,
     deleteSigningKeyById,
-    deleteSigningKeysBySsoConnectorId,
   };
 };
