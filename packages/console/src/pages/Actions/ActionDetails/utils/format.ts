@@ -25,7 +25,9 @@ const formatEnvVariablesFormDataToRequest = (envVariables: ActionForm['environme
     return;
   }
 
-  const entries = envVariables.filter(({ key, value }) => key && value);
+  const entries = envVariables
+    .map(({ key, value }) => ({ key: key.trim(), value }))
+    .filter(({ key, value }) => key && value);
 
   if (entries.length === 0) {
     return;

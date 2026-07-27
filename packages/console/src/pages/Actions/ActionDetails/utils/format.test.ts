@@ -87,6 +87,19 @@ describe('action form formatters', () => {
     });
   });
 
+  it('trims environment variable keys when submitting', () => {
+    const payload = formatFormDataToRequestData({
+      actionType: LogtoActionKey.PostSignIn,
+      script: 'script',
+      enabled: true,
+      onExecutionError: 'block',
+      environmentVariables: [{ key: ' API_KEY ', value: 'secret' }],
+      contextSample: undefined,
+    });
+
+    expect(payload.environmentVariables).toEqual({ API_KEY: 'secret' });
+  });
+
   it('parses valid context sample JSON for the request body', () => {
     const payload = formatFormDataToRequestData({
       actionType: LogtoActionKey.PostSignIn,

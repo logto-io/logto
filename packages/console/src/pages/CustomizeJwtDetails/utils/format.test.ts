@@ -2,7 +2,7 @@ import { LogtoJwtTokenKeyType } from '@logto/schemas';
 
 import { Action } from '../../CustomizeJwt/utils/type';
 
-import { formatResponseDataToFormData } from './format';
+import { formatFormDataToRequestData, formatResponseDataToFormData } from './format';
 
 jest.mock('./config', () => ({
   defaultAccessTokenJwtCustomizerCode: 'default-access-script',
@@ -52,5 +52,22 @@ describe('formatResponseDataToFormData', () => {
     );
 
     expect(result.blockIssuanceOnError).toBe(true);
+  });
+});
+
+describe('formatFormDataToRequestData', () => {
+  it('trims environment variable keys when submitting', () => {
+    const payload = formatFormDataToRequestData({
+      tokenType: LogtoJwtTokenKeyType.AccessToken,
+      script: 'return token;',
+      blockIssuanceOnError: true,
+      environmentVariables: [{ key: ' API_KEY ', value: 'secret' }],
+      testSample: {
+        tokenSample: undefined,
+        contextSample: undefined,
+      },
+    });
+
+    expect(payload.environmentVariables).toEqual({ API_KEY: 'secret' });
   });
 });

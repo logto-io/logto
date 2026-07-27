@@ -4,12 +4,9 @@ import { useTranslation } from 'react-i18next';
 
 import FormField from '@/ds-components/FormField';
 import KeyValueInputField from '@/ds-components/KeyValueInputField';
+import { isValidEnvironmentVariableKey } from '@/utils/validator';
 
 import { type ActionForm } from '../../type';
-
-const isValidKey = (key: string) => {
-  return /^\w+$/.test(key);
-};
 
 type Props = {
   readonly className?: string;
@@ -40,16 +37,24 @@ function EnvironmentVariablesField({ className }: Props) {
         return true;
       }
 
-      if (envVariables.filter(({ key: _key }) => _key.length > 0 && _key === key).length > 1) {
+      // Match request formatting / Monaco typing, which trim keys before use.
+      const trimmedKey = key.trim();
+
+      if (
+        envVariables.filter(({ key: _key }) => {
+          const trimmed = _key.trim();
+          return trimmed.length > 0 && trimmed === trimmedKey;
+        }).length > 1
+      ) {
         return t('webhook_details.settings.key_duplicated_error');
       }
 
       const correspondValue = getValues(`environmentVariables.${index}.value`);
-      if (correspondValue && !key) {
+      if (correspondValue && !trimmedKey) {
         return t('webhook_details.settings.key_missing_error');
       }
 
-      if (Boolean(key) && !isValidKey(key)) {
+      if (Boolean(trimmedKey) && !isValidEnvironmentVariableKey(trimmedKey)) {
         return t('webhook_details.settings.invalid_key_error');
       }
 
@@ -60,7 +65,7 @@ function EnvironmentVariablesField({ className }: Props) {
 
   const valueValidator = useCallback(
     (value: string, index: number) => {
-      return getValues(`environmentVariables.${index}.key`)
+      return getValues(`environmentVariables.${index}.key`).trim()
         ? Boolean(value) || t('webhook_details.settings.value_missing_error')
         : true;
     },
