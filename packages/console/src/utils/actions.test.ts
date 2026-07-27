@@ -14,13 +14,13 @@ describe('normalizeActionsQuota', () => {
   });
 
   it('rejects a Cloud response without the Actions quota key', () => {
-    expect(() => normalizeActionsQuota({})).toThrow(
-      'Cloud response is missing the Actions quota.'
-    );
+    expect(() => normalizeActionsQuota({})).toThrow('Cloud response is missing the Actions quota.');
   });
 
   it('uses the fallback when the Actions quota key is absent', () => {
-    expect(normalizeActionsQuota({ applicationsLimit: 3 }, { fallback: false })).toEqual({
+    const quota = { applicationsLimit: 3 };
+
+    expect(normalizeActionsQuota(quota, { fallback: false })).toEqual({
       actionsEnabled: false,
       applicationsLimit: 3,
     });

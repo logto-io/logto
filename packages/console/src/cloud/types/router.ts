@@ -21,16 +21,29 @@ export type SubscriptionUsageResponse = GuardedResponse<
 
 export type SubscriptionQuota = Omit<
   SubscriptionUsageResponse['quota'],
+  // Drop once `@logto/cloud` no longer declares the legacy Actions quota key.
+  | 'inlineHooksEnabled'
   // Since we are deprecating the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the quota keys for now to avoid confusion.
-  'organizationsEnabled'
+  | 'organizationsEnabled'
 >;
 
-export type LogtoSkuResponse = GetArrayElementType<GuardedResponse<GetRoutes['/api/skus']>>;
+export type LogtoSkuResponse = Omit<
+  GetArrayElementType<GuardedResponse<GetRoutes['/api/skus']>>,
+  'quota'
+> & {
+  // Drop the legacy key once `@logto/cloud` stops declaring it on SKU quotas.
+  quota: Omit<
+    GetArrayElementType<GuardedResponse<GetRoutes['/api/skus']>>['quota'],
+    'inlineHooksEnabled'
+  >;
+};
 
 export type SubscriptionCountBasedUsage = Omit<
   SubscriptionUsageResponse['usage'],
+  // Drop once `@logto/cloud` no longer declares the legacy Actions quota key.
+  | 'inlineHooksEnabled'
   // Since we are deprecating the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
-  'organizationsEnabled'
+  | 'organizationsEnabled'
 >;
 export type SubscriptionResourceScopeUsage = SubscriptionUsageResponse['resources'];
 export type SubscriptionRoleScopeUsage = Omit<
