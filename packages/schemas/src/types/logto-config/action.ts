@@ -165,11 +165,6 @@ export type LoggableActionEvent =
   | LoggablePostFirstFactorVerificationEvent
   | LoggablePostSignInEvent;
 
-export const loggableActionEventGuard = z.discriminatedUnion('key', [
-  loggablePostFirstFactorVerificationEventGuard,
-  loggablePostSignInEventGuard,
-]) satisfies z.ZodType<LoggableActionEvent>;
-
 /**
  * The audit-log description of what a script asked Logto to do. Action results are authored by
  * untrusted scripts, so this reports the shape of the requested user patch instead of its values,
@@ -180,9 +175,3 @@ export type LoggableActionResult = {
   userFields: Array<keyof ActionUserPatch>;
   unknownFieldCount: number;
 };
-
-export const loggableActionResultGuard = z.object({
-  passwordVerified: z.boolean(),
-  userFields: actionUserPatchGuard.keyof().array(),
-  unknownFieldCount: z.number(),
-}) satisfies ToZodObject<LoggableActionResult>;
