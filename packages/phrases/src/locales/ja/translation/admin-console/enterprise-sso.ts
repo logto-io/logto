@@ -32,6 +32,12 @@ const enterprise_sso = {
         'SP エンティティ ID は任意の文字列形式で指定可能で、通常は識別子として URI 形式または URL 形式を使用しますが、これに限定されません。',
       acs_url_field_placeholder: 'https://your-domain.com/api/saml/callback',
       entity_id_field_placeholder: 'urn:your-domain.com:sp:saml:{serviceProviderId}',
+      sign_auth_request: '認証リクエストに署名',
+      sign_auth_request_tooltip:
+        'Logto は生成された証明書で SAML 認証リクエストに署名します。IdP が署名付きリクエストを検証するように設定されている場合にのみ有効にしてください。',
+      signing_certificate_field_name: 'リクエスト署名証明書',
+      sign_auth_request_warning:
+        '有効にした後、下で署名キーを生成し、その証明書を IdP に登録してください（また、そこで署名付きリクエストの検証を有効にしてください）。証明書が登録されるまで、この接続でのサインインは失敗します。',
     },
     oidc: {
       redirect_uri_field_name: 'リダイレクトURI（コールバックURL）',

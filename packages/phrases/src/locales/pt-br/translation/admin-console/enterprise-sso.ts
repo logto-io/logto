@@ -33,6 +33,12 @@ const enterprise_sso = {
         'O ID da entidade SP pode estar em qualquer formato de string, normalmente usando um formato de URI ou URL como identificador, mas isso não é obrigatório.',
       acs_url_field_placeholder: 'https://seu-dominio.com/api/saml/callback',
       entity_id_field_placeholder: 'urn:seu-dominio.com:sp:saml:{serviceProviderId}',
+      sign_auth_request: 'Assinar solicitação de autenticação',
+      sign_auth_request_tooltip:
+        'O Logto assina as solicitações de autenticação SAML com um certificado gerado. Ative apenas se o seu provedor de identidade estiver configurado para verificar solicitações assinadas.',
+      signing_certificate_field_name: 'Certificado de assinatura de solicitações',
+      sign_auth_request_warning:
+        'Após ativar, gere uma chave de assinatura abaixo e registre o certificado dela no seu provedor de identidade (e ative lá a verificação de solicitações assinadas). Até que o certificado seja registrado, o login por meio desta conexão falhará.',
     },
     oidc: {
       redirect_uri_field_name: 'URL de redirecionamento (URL de retorno de chamada)',

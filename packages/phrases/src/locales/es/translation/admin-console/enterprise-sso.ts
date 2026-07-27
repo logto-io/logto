@@ -33,6 +33,12 @@ const enterprise_sso = {
         'El ID de entidad del SP puede estar en cualquier formato de cadena, generalmente utilizando un formato de URI o un formato de URL como identificador, pero no es obligatorio.',
       acs_url_field_placeholder: 'https://tu-dominio.com/api/saml/callback',
       entity_id_field_placeholder: 'urn:tu-dominio.com:sp:saml:{serviceProviderId}',
+      sign_auth_request: 'Firmar solicitud de autenticación',
+      sign_auth_request_tooltip:
+        'Logto firma las solicitudes de autenticación SAML con un certificado generado. Actívelo solo si su proveedor de identidad está configurado para verificar solicitudes firmadas.',
+      signing_certificate_field_name: 'Certificado de firma de solicitudes',
+      sign_auth_request_warning:
+        'Después de activarlo, genere una clave de firma a continuación y registre su certificado en su proveedor de identidad (y active allí la verificación de solicitudes firmadas). Hasta que el certificado esté registrado, el inicio de sesión a través de esta conexión fallará.',
     },
     oidc: {
       redirect_uri_field_name: 'URI de redireccionamiento (URL de devolución de llamada)',

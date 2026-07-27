@@ -32,6 +32,12 @@ const enterprise_sso = {
         'SP 实体 ID 可以采用任何字符串格式，通常使用 URI 或 URL 形式作为标识符，但这不是必需的。',
       acs_url_field_placeholder: 'https://your-domain.com/api/saml/callback',
       entity_id_field_placeholder: 'urn:your-domain.com:sp:saml:{serviceProviderId}',
+      sign_auth_request: '签名认证请求',
+      sign_auth_request_tooltip:
+        'Logto 使用生成的证书对 SAML 认证请求进行签名。仅当你的身份提供者已配置为验证签名请求时才启用。',
+      signing_certificate_field_name: '请求签名证书',
+      sign_auth_request_warning:
+        '启用后，请在下方生成签名密钥，并将其证书注册到你的身份提供者（并在那里开启签名请求验证）。在证书注册完成之前，通过此连接登录将会失败。',
     },
     oidc: {
       redirect_uri_field_name: '重定向 URI（回调 URL）',

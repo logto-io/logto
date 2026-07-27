@@ -32,6 +32,12 @@ const enterprise_sso = {
         'SP Entity ID สามารถอยู่ในรูปแบบ string ใดก็ได้ โดยปกติจะใช้เป็น URI หรือ URL เพื่อระบุ แต่ไม่จำเป็นต้องเป็นแบบนี้เสมอไป',
       acs_url_field_placeholder: 'https://your-domain.com/api/saml/callback',
       entity_id_field_placeholder: 'urn:your-domain.com:sp:saml:{serviceProviderId}',
+      sign_auth_request: 'ลงนามคำขอการยืนยันตัวตน',
+      sign_auth_request_tooltip:
+        'Logto ลงนามคำขอการยืนยันตัวตน SAML ด้วยใบรับรองที่สร้างขึ้น เปิดใช้งานเฉพาะเมื่อผู้ให้บริการข้อมูลประจำตัวของคุณกำหนดค่าให้ตรวจสอบคำขอที่ลงนามแล้วเท่านั้น',
+      signing_certificate_field_name: 'ใบรับรองสำหรับลงนามคำขอ',
+      sign_auth_request_warning:
+        'หลังจากเปิดใช้งาน ให้สร้างคีย์ลงนามด้านล่างและลงทะเบียนใบรับรองของคีย์กับผู้ให้บริการข้อมูลประจำตัวของคุณ (และเปิดการตรวจสอบคำขอที่ลงนามที่นั่น) จนกว่าใบรับรองจะได้รับการลงทะเบียน การลงชื่อเข้าใช้ผ่านการเชื่อมต่อนี้จะล้มเหลว',
     },
     oidc: {
       redirect_uri_field_name: 'Redirect URI (Callback URL)',

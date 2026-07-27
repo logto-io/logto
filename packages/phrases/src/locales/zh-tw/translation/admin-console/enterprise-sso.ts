@@ -32,6 +32,12 @@ const enterprise_sso = {
         'SP 實體 ID 可以是任何字符串格式，通常使用 URI 或 URL 形式作為標識符，但這並不是強制的。',
       acs_url_field_placeholder: 'https://your-domain.com/api/saml/callback',
       entity_id_field_placeholder: 'urn:your-domain.com:sp:saml:{serviceProviderId}',
+      sign_auth_request: '簽署驗證請求',
+      sign_auth_request_tooltip:
+        'Logto 會使用產生的憑證簽署 SAML 驗證請求。僅當你的身份提供者已設定為驗證已簽署的請求時才啟用。',
+      signing_certificate_field_name: '請求簽署憑證',
+      sign_auth_request_warning:
+        '啟用後，請在下方產生簽署金鑰，並將其憑證註冊到你的身份提供者（並在該處開啟已簽署請求的驗證）。在憑證完成註冊之前，透過此連線登入將會失敗。',
     },
     oidc: {
       redirect_uri_field_name: '重定向 URI（回撥 URL）',
