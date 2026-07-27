@@ -1,11 +1,10 @@
 import { isActionsEnabled, normalizeActionsQuota } from './actions';
 
 describe('normalizeActionsQuota', () => {
-  it('uses the Actions quota key when both names are present', () => {
+  it('returns the Actions quota key when present', () => {
     expect(
       normalizeActionsQuota({
         actionsEnabled: false,
-        inlineHooksEnabled: true,
         applicationsLimit: 3,
       })
     ).toEqual({
@@ -15,15 +14,13 @@ describe('normalizeActionsQuota', () => {
   });
 
   it('rejects a Cloud response without the Actions quota key', () => {
-    expect(() => normalizeActionsQuota({ inlineHooksEnabled: true })).toThrow(
+    expect(() => normalizeActionsQuota({})).toThrow(
       'Cloud response is missing the Actions quota.'
     );
   });
 
   it('uses the fallback when the Actions quota key is absent', () => {
-    expect(
-      normalizeActionsQuota({ inlineHooksEnabled: true, applicationsLimit: 3 }, { fallback: false })
-    ).toEqual({
+    expect(normalizeActionsQuota({ applicationsLimit: 3 }, { fallback: false })).toEqual({
       actionsEnabled: false,
       applicationsLimit: 3,
     });

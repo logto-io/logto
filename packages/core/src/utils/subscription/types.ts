@@ -19,7 +19,6 @@ export const actionQuotaKey = 'actionsEnabled' satisfies keyof CompleteSubscript
 export type SubscriptionQuota = Omit<
   CompleteSubscriptionUsage['quota'],
   | 'auditLogsRetentionDays'
-  | 'inlineHooksEnabled'
   // Since we are deprecating the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
   | 'organizationsEnabled'
 >;
@@ -47,9 +46,8 @@ export type Subscription = Omit<
 
 export type SubscriptionUsage = Omit<
   CompleteSubscriptionUsage['usage'],
-  | 'inlineHooksEnabled'
   // Since we are deprecating the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
-  | 'organizationsEnabled'
+  'organizationsEnabled'
 >;
 
 export type ReportSubscriptionUpdatesUsageKey = Exclude<
