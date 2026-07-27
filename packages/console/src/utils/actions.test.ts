@@ -19,6 +19,21 @@ describe('normalizeActionsQuota', () => {
       'Cloud response is missing the Actions quota.'
     );
   });
+
+  it('uses the fallback when the Actions quota key is absent', () => {
+    expect(
+      normalizeActionsQuota({ inlineHooksEnabled: true, applicationsLimit: 3 }, { fallback: false })
+    ).toEqual({
+      actionsEnabled: false,
+      applicationsLimit: 3,
+    });
+  });
+
+  it('prefers the Actions quota key over the fallback', () => {
+    expect(normalizeActionsQuota({ actionsEnabled: true }, { fallback: false })).toEqual({
+      actionsEnabled: true,
+    });
+  });
 });
 
 describe('isActionsEnabled', () => {
