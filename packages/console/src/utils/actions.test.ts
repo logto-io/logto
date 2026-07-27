@@ -18,7 +18,9 @@ describe('normalizeActionsQuota', () => {
   });
 
   it('uses the fallback when the Actions quota key is absent', () => {
-    const quota = { applicationsLimit: 3 };
+    const quota: { actionsEnabled?: boolean; applicationsLimit: number } = {
+      applicationsLimit: 3,
+    };
 
     expect(normalizeActionsQuota(quota, { fallback: false })).toEqual({
       actionsEnabled: false,
