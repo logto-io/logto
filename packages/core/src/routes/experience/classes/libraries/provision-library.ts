@@ -43,10 +43,6 @@ import {
 type OrganizationProvisionPayload =
   | {
       userId: string;
-      email: string;
-    }
-  | {
-      userId: string;
       ssoConnectorId: string;
     }
   | {
@@ -288,6 +284,30 @@ export class ProvisionLibrary {
   }
 
   /**
+   * Provision the user with JIT organizations based on a verified email domain.
+   * The email must have been verified during the experience interaction before calling this function.
+   */
+  async provisionJitOrganizationByVerifiedEmail(userId: string, email: string) {
+    const {
+      libraries: { users: usersLibraries },
+    } = this.tenantContext;
+
+    const provisionedOrganizations = await usersLibraries.provisionOrganizationsByVerifiedEmail(
+      userId,
+      email
+    );
+
+    for (const { organizationId } of provisionedOrganizations) {
+      this.ctx.appendDataHookContext('Organization.Membership.Updated', {
+        organizationId,
+        ...truncateMembershipDelta({ addedUserIds: [userId] }),
+      });
+    }
+
+    return provisionedOrganizations;
+  }
+
+  /**
    * This method is used to get the provision context for a new user registration.
    * It will return the provision context based on the current tenant and the request context.
    */
@@ -478,10 +498,7 @@ export class ProvisionLibrary {
     if (primaryEmail) {
       return [
         ...extraJitOrganizations,
-        ...(await this.provisionJitOrganization({
-          userId,
-          email: primaryEmail,
-        })),
+        ...(await this.provisionJitOrganizationByVerifiedEmail(userId, primaryEmail)),
       ];
     }
   }

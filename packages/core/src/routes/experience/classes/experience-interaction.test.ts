@@ -51,6 +51,7 @@ const userLibraries = {
   generateUserId: jest.fn().mockResolvedValue('uid'),
   insertUser: jest.fn(async (user: CreateUser): Promise<InsertUserResult> => [user as User]),
   provisionOrganizations: jest.fn().mockResolvedValue([]),
+  provisionOrganizationsByVerifiedEmail: jest.fn().mockResolvedValue([]),
 };
 const ssoConnectors = {
   getAvailableSsoConnectors: jest.fn().mockResolvedValue([]),
@@ -289,10 +290,10 @@ describe('ExperienceInteraction class', () => {
         signInMode: SignInMode.SignIn,
       });
 
-      expect(userLibraries.provisionOrganizations).toHaveBeenCalledWith({
-        userId: 'uid',
-        email: mockEmail,
-      });
+      expect(userLibraries.provisionOrganizationsByVerifiedEmail).toHaveBeenCalledWith(
+        'uid',
+        mockEmail
+      );
     });
   });
 

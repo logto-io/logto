@@ -194,10 +194,12 @@ async function handleSubmitRegister(
 
   // JIT provisioning for email domain
   if (user.primaryEmail) {
-    const provisionedOrganizations = await libraries.users.provisionOrganizations({
-      userId: id,
-      email: user.primaryEmail,
-    });
+    // The email is guaranteed to be verified: verifyProfileIdentifiers (profile-verification.ts)
+    // requires a matching emailVerified identifier before register submission proceeds
+    const provisionedOrganizations = await libraries.users.provisionOrganizationsByVerifiedEmail(
+      id,
+      user.primaryEmail
+    );
 
     for (const { organizationId } of provisionedOrganizations) {
       ctx.appendDataHookContext('Organization.Membership.Updated', {
