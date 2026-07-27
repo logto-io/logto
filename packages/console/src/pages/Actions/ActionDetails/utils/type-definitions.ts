@@ -42,10 +42,9 @@ export const actionUserPatchTypeDefinition = `type ${ActionTypeDefinitionKey.Act
   [key: string]: unknown;
 };`;
 
-// Action keys are persisted in `logto_configs`; keep these legacy literals aligned with
-// `LogtoActionKey` so the editor reflects the runtime event payload across upgrades.
+// Keep these literals aligned with `LogtoActionKey` so the editor reflects the runtime event payload.
 export const postFirstFactorVerificationEventTypeDefinition = `type ${ActionTypeDefinitionKey.PostFirstFactorVerificationEvent} = {
-  key: 'inlineHook.postFirstFactorVerification';
+  key: 'action.postFirstFactorVerification';
   interactionEvent: 'SignIn';
   verificationType: 'Password';
   identifier: {
@@ -61,7 +60,7 @@ export const postFirstFactorVerificationEventTypeDefinition = `type ${ActionType
 };`;
 
 export const postSignInEventTypeDefinition = `type ${ActionTypeDefinitionKey.PostSignInEvent} = {
-  key: 'inlineHook.postSignIn';
+  key: 'action.postSignIn';
   interactionEvent: 'SignIn';
   user: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext};
 };`;
