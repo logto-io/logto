@@ -4,12 +4,13 @@ import { type LogtoSkuQuota } from '@/types/skus';
 
 type SkuQuotaItemPhraseKey = Exclude<
   keyof LogtoSkuQuota,
-  // Hosted-email caps are surfaced in Connector details, not the plan quota table.
-  'inlineHooksEnabled' | 'hostedEmailLimit' | 'hostedEmailDailyLimit'
+  // Actions availability and hosted-email caps are surfaced in their feature-specific pages,
+  // not the plan quota table.
+  'actionsEnabled' | 'hostedEmailLimit' | 'hostedEmailDailyLimit'
 >;
 
 export const isSkuQuotaItemPhraseKey = (key: keyof LogtoSkuQuota): key is SkuQuotaItemPhraseKey =>
-  key !== 'inlineHooksEnabled' && key !== 'hostedEmailLimit' && key !== 'hostedEmailDailyLimit';
+  key !== 'actionsEnabled' && key !== 'hostedEmailLimit' && key !== 'hostedEmailDailyLimit';
 
 /* === for new pricing model === */
 export const skuQuotaItemPhrasesMap: Record<

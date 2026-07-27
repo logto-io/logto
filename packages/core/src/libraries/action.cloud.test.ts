@@ -55,7 +55,7 @@ describe('ActionLibrary Cloud execution routing', () => {
     (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
     getSubscriptionData.mockResolvedValue({
       quota: {
-        inlineHooksEnabled: true,
+        actionsEnabled: true,
       },
     } as Awaited<ReturnType<SubscriptionLibrary['getSubscriptionData']>>);
   });

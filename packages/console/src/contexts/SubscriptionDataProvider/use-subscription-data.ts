@@ -18,6 +18,7 @@ import {
 import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import { LogtoSkuType } from '@/types/skus';
+import { normalizeActionsQuota } from '@/utils/actions';
 import { formatLogtoSkusResponses } from '@/utils/subscription';
 
 import useSubscription from '../../hooks/use-subscription';
@@ -28,14 +29,14 @@ const normalizeSubscriptionQuota = (
   quota?: SubscriptionUsageResponse['quota']
 ): SubscriptionQuota => ({
   ...defaultSubscriptionQuota,
-  ...quota,
+  ...(quota ? normalizeActionsQuota(quota) : {}),
 });
 
 const normalizeSubscriptionUsage = (
   usage?: SubscriptionUsageResponse['usage']
 ): SubscriptionCountBasedUsage => ({
   ...defaultSubscriptionUsage,
-  ...usage,
+  ...(usage ? normalizeActionsQuota(usage) : {}),
 });
 
 const useSubscriptionData: () => SubscriptionContext & { isLoading: boolean } = () => {

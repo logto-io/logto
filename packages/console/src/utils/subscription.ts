@@ -8,6 +8,7 @@ import { type LogtoSkuResponse } from '@/cloud/types/router';
 import { ticketSupportResponseTimeMap } from '@/consts/plan-quotas';
 import { featuredPlanIds, planIdOrder } from '@/consts/subscriptions';
 import { type LogtoSkuQuota } from '@/types/skus';
+import { normalizeActionsQuota } from '@/utils/actions';
 
 const addSupportQuota = (logtoSkuResponse: LogtoSkuResponse) => {
   const { id, quota } = logtoSkuResponse;
@@ -15,7 +16,12 @@ const addSupportQuota = (logtoSkuResponse: LogtoSkuResponse) => {
   return {
     ...logtoSkuResponse,
     quota: {
-      ...quota,
+      /**
+       * Cloud declares every SKU quota key as optional, since AddOn SKUs carry only the single
+       * quota key they sell. This quota feeds the plan comparison UI rather than quota
+       * enforcement, so fall back instead of throwing on a SKU that omits the key.
+       */
+      ...normalizeActionsQuota(quota, { fallback: false }),
       /**
        * Manually add this support quota item to the plan since it will be compared in the downgrade plan notification modal.
        */

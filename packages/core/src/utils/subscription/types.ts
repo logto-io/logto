@@ -14,18 +14,15 @@ type RouteRequestBodyType<T extends { search?: unknown; body?: ZodType; response
 type CompleteSubscription = RouteResponseType<GetRoutes['/api/tenants/my/subscription']>;
 type CompleteSubscriptionUsage = RouteResponseType<GetRoutes['/api/tenants/my/subscription-usage']>;
 
-/** Keep the legacy field name because it is part of the Logto Cloud subscription wire contract. */
-type ActionSubscriptionQuota = {
-  inlineHooksEnabled: boolean;
-};
+export const actionQuotaKey = 'actionsEnabled' satisfies keyof CompleteSubscription['quota'];
 
 export type SubscriptionQuota = Omit<
   CompleteSubscriptionUsage['quota'],
   | 'auditLogsRetentionDays'
+  | 'inlineHooksEnabled'
   // Since we are deprecating the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
   | 'organizationsEnabled'
-> &
-  ActionSubscriptionQuota;
+>;
 
 /**
  * The subscription data is fetched from the Cloud API.
@@ -50,10 +47,10 @@ export type Subscription = Omit<
 
 export type SubscriptionUsage = Omit<
   CompleteSubscriptionUsage['usage'],
+  | 'inlineHooksEnabled'
   // Since we are deprecating the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
-  'organizationsEnabled'
-> &
-  ActionSubscriptionQuota;
+  | 'organizationsEnabled'
+>;
 
 export type ReportSubscriptionUpdatesUsageKey = Exclude<
   RouteRequestBodyType<PostRoutes['/api/tenants/my/subscription/item-updates']>['usageKey'],
@@ -108,7 +105,7 @@ const logtoSkuQuotaGuard = z.object({
   hooksLimit: z.number().nullable(),
   auditLogsRetentionDays: z.number().nullable(),
   customJwtEnabled: z.boolean(),
-  inlineHooksEnabled: z.boolean(),
+  actionsEnabled: z.boolean(),
   subjectTokenEnabled: z.boolean(),
   bringYourUiEnabled: z.boolean(),
   collectUserProfileEnabled: z.boolean(),

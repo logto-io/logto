@@ -20,7 +20,7 @@ import styles from './index.module.scss';
 
 const excludedSkuQuotaKeys = new Set<keyof LogtoSkuQuota>([
   'auditLogsRetentionDays',
-  'inlineHooksEnabled',
+  'actionsEnabled',
   'ticketSupportResponseTime',
 ]);
 

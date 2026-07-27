@@ -71,7 +71,7 @@ describe('ActionLibrary', () => {
     (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
     getSubscriptionData.mockResolvedValue({
       quota: {
-        inlineHooksEnabled: true,
+        actionsEnabled: true,
       },
     } as Awaited<ReturnType<SubscriptionLibrary['getSubscriptionData']>>);
   });
@@ -580,7 +580,7 @@ describe('ActionLibrary', () => {
     setIsCloud(true);
     getSubscriptionData.mockResolvedValueOnce({
       quota: {
-        inlineHooksEnabled: false,
+        actionsEnabled: false,
       },
     } as Awaited<ReturnType<SubscriptionLibrary['getSubscriptionData']>>);
     getAction.mockResolvedValueOnce({

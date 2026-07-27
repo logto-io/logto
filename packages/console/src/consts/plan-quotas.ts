@@ -51,7 +51,7 @@ export const comingSoonSkuQuotaKeys: Array<keyof LogtoSkuQuota> = [];
 export const hiddenQuotaDiffUsageKeys: Array<keyof LogtoSkuQuota> = [
   'tokenLimit',
   // Keep Actions hidden from the plan quota UI until the feature is ready after further testing.
-  'inlineHooksEnabled',
+  'actionsEnabled',
   'scopesPerResourceLimit',
   'userRolesLimit',
   'machineToMachineRolesLimit',
