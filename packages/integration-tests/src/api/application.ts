@@ -1,3 +1,5 @@
+import assert from 'node:assert';
+
 import {
   ApplicationType,
   type Application,
@@ -33,6 +35,17 @@ export const createApplication = async (
       },
     })
     .json<Application>();
+
+/** Create an application and return its default user-facing secret for authentication tests. */
+export const createApplicationWithSecret = async (
+  ...args: Parameters<typeof createApplication>
+): Promise<Application> => {
+  const application = await createApplication(...args);
+  const [secret] = await getApplicationSecrets(application.id);
+  assert(secret);
+
+  return { ...application, secret: secret.value };
+};
 
 export const getApplications = async (
   types?: ApplicationType[],
@@ -117,17 +130,20 @@ export const deleteRoleFromApplication = async (applicationId: string, roleId: s
   authedAdminApi.delete(`applications/${applicationId}/roles/${roleId}`);
 
 export const generateM2mLog = async (applicationId: string) => {
-  const { id, secret, type, isThirdParty } = await getApplication(applicationId);
+  const { id, type, isThirdParty } = await getApplication(applicationId);
 
   if (type !== ApplicationType.MachineToMachine || isThirdParty) {
     return;
   }
 
+  const [secret] = await getApplicationSecrets(id);
+  assert(secret);
+
   // This is a token request with insufficient parameters and should fail. We make the request to generate a log for the current machine to machine app.
   return oidcApi.post('token', {
     body: new URLSearchParams({
       client_id: id,
-      client_secret: secret,
+      client_secret: secret.value,
       grant_type: 'client_credentials',
     }),
   });

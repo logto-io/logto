@@ -1,4 +1,4 @@
-import { ApplicationType, hasSecrets, internalPrefix, type Application } from '@logto/schemas';
+import { ApplicationType, hasSecrets, type Application } from '@logto/schemas';
 import { cond, noop } from '@silverhand/essentials';
 import { HTTPError } from 'ky';
 
@@ -43,7 +43,7 @@ describe('application secrets', () => {
           }
         )
       );
-      expect(application.secret).toMatch(new RegExp(`^${internalPrefix}`));
+      expect(application).not.toHaveProperty('secret');
 
       // Check the default secret
       const secrets = await getApplicationSecrets(application.id);

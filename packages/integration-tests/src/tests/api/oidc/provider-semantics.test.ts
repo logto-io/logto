@@ -8,7 +8,11 @@ import { decodeJwt } from 'jose';
 import ky, { HTTPError } from 'ky';
 
 import { oidcApi } from '#src/api/api.js';
-import { createApplication, deleteApplication } from '#src/api/application.js';
+import {
+  createApplication,
+  createApplicationWithSecret,
+  deleteApplication,
+} from '#src/api/application.js';
 import { deleteJwtCustomizer, deleteUser } from '#src/api/index.js';
 import { createResource, deleteResource } from '#src/api/resource.js';
 import { demoAppRedirectUri, logtoUrl } from '#src/constants.js';
@@ -66,7 +70,7 @@ describe('opaque user token lifecycle', () => {
     await deleteJwtCustomizer('access-token').catch(noop);
 
     const [createdApplication, createdPublicApplication, user] = await Promise.all([
-      createApplication('OIDC provider semantics', ApplicationType.Traditional, {
+      createApplicationWithSecret('OIDC provider semantics', ApplicationType.Traditional, {
         oidcClientMetadata: {
           redirectUris: [demoAppRedirectUri],
           postLogoutRedirectUris: [demoAppRedirectUri],
@@ -279,7 +283,7 @@ describe('opaque client-credentials revocation', () => {
   beforeAll(async () => {
     /* eslint-disable @silverhand/fp/no-mutation */
     [application, pool] = await Promise.all([
-      createApplication('Opaque client credentials', ApplicationType.MachineToMachine),
+      createApplicationWithSecret('Opaque client credentials', ApplicationType.MachineToMachine),
       createPool(assertEnv('DB_URL'), { interceptors: createInterceptorsPreset() }),
     ]);
     /* eslint-enable @silverhand/fp/no-mutation */

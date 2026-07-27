@@ -1,4 +1,4 @@
-import type { Application, Role } from '@logto/schemas';
+import type { ApplicationApiResponse, Role } from '@logto/schemas';
 import { RoleType, roleTypeToKey } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useState } from 'react';
@@ -30,7 +30,7 @@ import styles from './index.module.scss';
 const pageSize = defaultPageSize;
 
 type Props = {
-  readonly application: Application;
+  readonly application: ApplicationApiResponse;
 };
 
 function MachineToMachineApplicationRoles({ application }: Props) {

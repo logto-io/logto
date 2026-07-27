@@ -8,10 +8,10 @@ import {
   type OrganizationInvitation,
   OrganizationInvitations,
   type Application,
-  Applications,
 } from '../db-entries/index.js';
 import { type ToZodObject } from '../utils/zod.js';
 
+import { applicationResponseGuard } from './application.js';
 import { type UserInfo, type FeaturedUser, userInfoGuard } from './user.js';
 
 /**
@@ -119,10 +119,13 @@ export type ApplicationWithOrganizationRoles = Application & {
   organizationRoles: OrganizationRoleEntity[];
 };
 
-export const applicationWithOrganizationRolesGuard: ToZodObject<ApplicationWithOrganizationRoles> =
-  Applications.guard.extend({
-    organizationRoles: organizationRoleEntityGuard.array(),
-  });
+export const applicationWithOrganizationRolesGuard = applicationResponseGuard.extend({
+  organizationRoles: organizationRoleEntityGuard.array(),
+});
+
+export type ApplicationWithOrganizationRolesResponse = z.infer<
+  typeof applicationWithOrganizationRolesGuard
+>;
 
 /**
  * The organization invitation with additional fields:

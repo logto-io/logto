@@ -10,7 +10,7 @@
       "ApplicationLegacySecret": {
         "type": "string",
         "deprecated": true,
-        "description": "The internal client secret. Note it is only used for internal validation, and the actual secrets should be retrieved from `/api/applications/{id}/secrets` endpoints."
+        "description": "The legacy client secret. This field is omitted after the legacy secret has been replaced by an internal secret. Retrieve current application secrets from the `/api/applications/{id}/secrets` endpoints."
       }
     }
   },

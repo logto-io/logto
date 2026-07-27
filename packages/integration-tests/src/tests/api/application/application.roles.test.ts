@@ -9,6 +9,7 @@ import {
 import { oidcApi } from '#src/api/api.js';
 import {
   createApplication,
+  createApplicationWithSecret,
   getApplicationRoles,
   assignRolesToApplication,
   deleteRoleFromApplication,
@@ -170,7 +171,10 @@ describe('admin console application management (roles)', () => {
       script: clientCredentialsSampleScript,
     });
 
-    const m2mApp = await createApplication(generateStandardId(), ApplicationType.MachineToMachine);
+    const m2mApp = await createApplicationWithSecret(
+      generateStandardId(),
+      ApplicationType.MachineToMachine
+    );
     const resource = await createResource();
     const createdScope = await createScope(resource.id);
     const createdScope2 = await createScope(resource.id);
