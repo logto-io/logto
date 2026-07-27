@@ -37,6 +37,12 @@ const enterprise_sso = {
       sign_auth_request_tooltip:
         'Logto signs SAML authentication requests with a generated certificate. Enable only if your identity provider is configured to verify signed requests.',
       signing_certificate_field_name: 'Request signing certificate',
+      signing_keys_empty: 'No signing keys have been generated.',
+      generate_signing_key: 'Generate new key',
+      signing_key_generated: 'The signing key has been generated.',
+      signing_key_activated: 'The signing key has been activated.',
+      signing_key_deactivated: 'The signing key has been deactivated.',
+      signing_key_deleted: 'The signing key has been deleted.',
       sign_auth_request_warning:
         'After enabling, generate a signing key below and register its certificate with your identity provider (and turn on signed-request verification there). Until the certificate is registered, sign-in through this connection will fail.',
     },

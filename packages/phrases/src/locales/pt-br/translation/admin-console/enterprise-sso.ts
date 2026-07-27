@@ -37,6 +37,12 @@ const enterprise_sso = {
       sign_auth_request_tooltip:
         'O Logto assina as solicitações de autenticação SAML com um certificado gerado. Ative apenas se o seu provedor de identidade estiver configurado para verificar solicitações assinadas.',
       signing_certificate_field_name: 'Certificado de assinatura de solicitações',
+      signing_keys_empty: 'Nenhuma chave de assinatura foi gerada ainda.',
+      generate_signing_key: 'Gerar nova chave',
+      signing_key_generated: 'A chave de assinatura foi gerada.',
+      signing_key_activated: 'A chave de assinatura foi ativada.',
+      signing_key_deactivated: 'A chave de assinatura foi desativada.',
+      signing_key_deleted: 'A chave de assinatura foi excluída.',
       sign_auth_request_warning:
         'Após ativar, gere uma chave de assinatura abaixo e registre o certificado dela no seu provedor de identidade (e ative lá a verificação de solicitações assinadas). Até que o certificado seja registrado, o login por meio desta conexão falhará.',
     },

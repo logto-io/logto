@@ -36,6 +36,12 @@ const enterprise_sso = {
       sign_auth_request_tooltip:
         'Logto, SAML kimlik doğrulama isteklerini oluşturulan bir sertifikayla imzalar. Yalnızca kimlik sağlayıcınız imzalı istekleri doğrulayacak şekilde yapılandırılmışsa etkinleştirin.',
       signing_certificate_field_name: 'İstek imzalama sertifikası',
+      signing_keys_empty: 'Henüz imzalama anahtarı oluşturulmadı.',
+      generate_signing_key: 'Yeni anahtar oluştur',
+      signing_key_generated: 'İmzalama anahtarı oluşturuldu.',
+      signing_key_activated: 'İmzalama anahtarı etkinleştirildi.',
+      signing_key_deactivated: 'İmzalama anahtarı devre dışı bırakıldı.',
+      signing_key_deleted: 'İmzalama anahtarı silindi.',
       sign_auth_request_warning:
         'Etkinleştirdikten sonra aşağıda bir imzalama anahtarı oluşturun ve sertifikasını kimlik sağlayıcınıza kaydedin (ve orada imzalı istek doğrulamasını açın). Sertifika kaydedilene kadar bu bağlantı üzerinden oturum açma başarısız olur.',
     },
