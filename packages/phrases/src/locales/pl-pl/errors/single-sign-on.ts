@@ -11,6 +11,8 @@ const single_sign_on = {
     'redirect_uri nie jest zarejestrowany. Proszę sprawdzić ustawienia aplikacji.',
   idp_initiated_authentication_client_callback_uri_not_found:
     'Nie znaleziono URI zwrotnego uwierzytelniania IdP-initiated klienta. Proszę sprawdzić ustawienia łącznika.',
+  sso_signing_unavailable:
+    'Nie udało się dokończyć logowania za pomocą dostawcy tożsamości. Skontaktuj się z administratorem.',
 };
 
 export default Object.freeze(single_sign_on);

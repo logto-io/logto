@@ -10,6 +10,7 @@ const single_sign_on = {
     'redirect_uri가 등록되지 않았습니다. 애플리케이션 설정을 확인해 주세요.',
   idp_initiated_authentication_client_callback_uri_not_found:
     '클라이언트 IdP 시작 인증 콜백 URI를 찾을 수 없습니다. 커넥터 설정을 확인해 주세요.',
+  sso_signing_unavailable: 'ID 공급자를 통한 로그인을 완료할 수 없습니다. 관리자에게 문의하세요.',
 };
 
 export default Object.freeze(single_sign_on);

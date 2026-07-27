@@ -11,6 +11,8 @@ const single_sign_on = {
     'redirect_uri は登録されていません。アプリケーション設定を確認してください。',
   idp_initiated_authentication_client_callback_uri_not_found:
     'クライアントの IdP 開始認証コールバック URI が見つかりません。コネクタ設定を確認してください。',
+  sso_signing_unavailable:
+    'ID プロバイダーでのサインインを完了できませんでした。管理者にお問い合わせください。',
 };
 
 export default Object.freeze(single_sign_on);

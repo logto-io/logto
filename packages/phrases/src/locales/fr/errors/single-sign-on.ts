@@ -11,6 +11,8 @@ const single_sign_on = {
     "L'URI de redirection n'est pas enregistrée. Veuillez vérifier les paramètres de l'application.",
   idp_initiated_authentication_client_callback_uri_not_found:
     "L'URI de rappel d'authentification initiée par le client IdP n'est pas trouvée. Veuillez vérifier les paramètres du connecteur.",
+  sso_signing_unavailable:
+    "Impossible de terminer la connexion avec votre fournisseur d'identité. Veuillez contacter votre administrateur.",
 };
 
 export default Object.freeze(single_sign_on);

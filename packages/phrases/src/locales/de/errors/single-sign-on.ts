@@ -11,6 +11,8 @@ const single_sign_on = {
     'Die redirect_uri ist nicht registriert. Bitte überprüfe die Anwendungseinstellungen.',
   idp_initiated_authentication_client_callback_uri_not_found:
     'Die Client-IdP-initiierte Authentifizierungs-Callback-URI wurde nicht gefunden. Bitte überprüfe die Connector-Einstellungen.',
+  sso_signing_unavailable:
+    'Die Anmeldung über Ihren Identitätsanbieter konnte nicht abgeschlossen werden. Bitte wenden Sie sich an Ihren Administrator.',
 };
 
 export default Object.freeze(single_sign_on);

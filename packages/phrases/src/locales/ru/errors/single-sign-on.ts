@@ -11,6 +11,8 @@ const single_sign_on = {
     'redirect_uri не зарегистрирован. Пожалуйста, проверьте настройки приложения.',
   idp_initiated_authentication_client_callback_uri_not_found:
     'URI обратного вызова для аутентификации, инициированной клиентом IdP, не найден. Пожалуйста, проверьте настройки коннектора.',
+  sso_signing_unavailable:
+    'Не удалось завершить вход через вашего поставщика удостоверений. Обратитесь к администратору.',
 };
 
 export default Object.freeze(single_sign_on);

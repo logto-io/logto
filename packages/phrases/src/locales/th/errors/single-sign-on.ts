@@ -11,6 +11,8 @@ const single_sign_on = {
     'redirect_uri ยังไม่ได้ลงทะเบียน กรุณาตรวจสอบการตั้งค่าแอปพลิเคชัน',
   idp_initiated_authentication_client_callback_uri_not_found:
     'ไม่พบ URI callback สำหรับการรับรองความถูกต้อง IdP-initiated ของ client กรุณาตรวจสอบการตั้งค่าคอนเนกเตอร์',
+  sso_signing_unavailable:
+    'ไม่สามารถเข้าสู่ระบบผ่านผู้ให้บริการข้อมูลประจำตัวของคุณได้ โปรดติดต่อผู้ดูแลระบบ',
 };
 
 export default Object.freeze(single_sign_on);

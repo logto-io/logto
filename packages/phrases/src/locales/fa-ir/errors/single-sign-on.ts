@@ -11,6 +11,8 @@ const single_sign_on = {
     'redirect_uri ثبت نشده است. لطفاً تنظیمات برنامه را بررسی کنید.',
   idp_initiated_authentication_client_callback_uri_not_found:
     'URI callback احراز هویت آغازشده توسط IdP کلاینت یافت نشد. لطفاً تنظیمات اتصال‌دهنده را بررسی کنید.',
+  sso_signing_unavailable:
+    'ورود از طریق ارائه‌دهنده هویت شما تکمیل نشد. لطفاً با مدیر خود تماس بگیرید.',
 };
 
 export default Object.freeze(single_sign_on);

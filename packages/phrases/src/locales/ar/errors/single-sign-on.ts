@@ -11,6 +11,8 @@ const single_sign_on = {
     'لم يتم تسجيل redirect_uri. يرجى التحقق من إعدادات التطبيق.',
   idp_initiated_authentication_client_callback_uri_not_found:
     'لم يتم العثور على URI لاستدعاء المصادقة الذي بدأه العميل IdP. يرجى التحقق من إعدادات الموصل.',
+  sso_signing_unavailable:
+    'تعذر إكمال تسجيل الدخول عبر موفر الهوية الخاص بك. يرجى التواصل مع المسؤول.',
 };
 
 export default Object.freeze(single_sign_on);

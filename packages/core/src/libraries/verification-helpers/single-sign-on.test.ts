@@ -41,6 +41,14 @@ const getAvailableSsoConnectorsMock = jest.fn();
 const findIdpInitiatedSamlSsoSessionMock = jest.fn();
 const deleteIdpInitiatedSamlSsoSessionMock = jest.fn();
 
+const findActiveSigningKeyBySsoConnectorIdMock = jest.fn();
+const setSigningCredentialMock = jest.fn();
+
+const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+const setDevFeaturesEnabled = (enabled: boolean) => {
+  Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', enabled);
+};
+
 class MockOidcSsoConnector extends OidcSsoConnector {
   override getAuthorizationUrl = getAuthorizationUrlMock;
   override getIssuer = getIssuerMock;
@@ -51,6 +59,7 @@ class MockSamlSsoConnector extends SamlSsoConnector {
   override getAuthorizationUrl = getAuthorizationUrlMock;
   override getIssuer = getIssuerMock;
   override getUserInfo = getUserInfoMock;
+  override setServiceProviderSigningCredential = setSigningCredentialMock;
 }
 
 const {
@@ -108,6 +117,9 @@ describe('Single sign on util methods tests', () => {
       ssoConnectors: {
         findIdpInitiatedSamlSsoSessionById: findIdpInitiatedSamlSsoSessionMock,
         deleteIdpInitiatedSamlSsoSessionById: deleteIdpInitiatedSamlSsoSessionMock,
+      },
+      samlSsoConnectorSigningKeys: {
+        findActiveSigningKeyBySsoConnectorId: findActiveSigningKeyBySsoConnectorIdMock,
       },
     },
     undefined,
@@ -519,6 +531,122 @@ describe('Single sign on util methods tests', () => {
         }
       );
       expect(deleteIdpInitiatedSamlSsoSessionMock).toBeCalledWith(samlSsoSessionId);
+    });
+  });
+
+  describe('getSsoAuthorizationUrl tests with signed AuthnRequest', () => {
+    const payload = {
+      state: 'state',
+      redirectUri: 'https://example.com',
+    };
+
+    const samlAuthorizationUrl = 'https://saml-connector/sso';
+
+    const signingSamlSsoConnector = {
+      ...mockSamlSsoConnector,
+      config: { ...mockSamlSsoConnector.config, signAuthnRequest: true },
+    };
+
+    const mockSigningKey = {
+      id: 'signing-key-id',
+      tenantId: 'mock-tenant',
+      ssoConnectorId: signingSamlSsoConnector.id,
+      privateKey: 'mock-private-key',
+      certificate: 'mock-certificate',
+      createdAt: 1_700_000_000_000,
+      expiresAt: 1_800_000_000_000,
+      active: true,
+    };
+
+    beforeEach(() => {
+      setDevFeaturesEnabled(true);
+      // Reset drains `mockResolvedValueOnce` values queued (but unconsumed) by earlier describe
+      // blocks — `jest.clearAllMocks()` does not.
+      getAuthorizationUrlMock.mockReset().mockResolvedValueOnce(samlAuthorizationUrl);
+    });
+
+    afterAll(() => {
+      setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
+    });
+
+    it('should inject the active signing key when signAuthnRequest is on', async () => {
+      findActiveSigningKeyBySsoConnectorIdMock.mockResolvedValueOnce(mockSigningKey);
+
+      await expect(
+        getSsoAuthorizationUrl(mockContext, tenant, signingSamlSsoConnector, payload)
+      ).resolves.toBe(samlAuthorizationUrl);
+
+      expect(findActiveSigningKeyBySsoConnectorIdMock).toBeCalledWith(signingSamlSsoConnector.id);
+      expect(setSigningCredentialMock).toBeCalledWith({
+        certificate: mockSigningKey.certificate,
+        privateKey: mockSigningKey.privateKey,
+      });
+      // The credential must be injected before the authorization URL (AuthnRequest) is built.
+      expect(setSigningCredentialMock.mock.invocationCallOrder[0]).toBeLessThan(
+        getAuthorizationUrlMock.mock.invocationCallOrder[0]!
+      );
+    });
+
+    it('should fail closed when signAuthnRequest is on but no active key exists', async () => {
+      findActiveSigningKeyBySsoConnectorIdMock.mockResolvedValueOnce(null);
+
+      await expect(
+        getSsoAuthorizationUrl(mockContext, tenant, signingSamlSsoConnector, payload)
+      ).rejects.toThrow(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        expect.objectContaining({ status: 500, code: 'single_sign_on.sso_signing_unavailable' })
+      );
+
+      expect(mockContext.mockAppend).toBeCalledWith({
+        ssoConnectorId: signingSamlSsoConnector.id,
+        reason: 'sp_signing_key_missing',
+      });
+      expect(setSigningCredentialMock).not.toBeCalled();
+      expect(getAuthorizationUrlMock).not.toBeCalled();
+    });
+
+    it('should not load the signing key when signAuthnRequest is off', async () => {
+      await expect(
+        getSsoAuthorizationUrl(mockContext, tenant, mockSamlSsoConnector, payload)
+      ).resolves.toBe(samlAuthorizationUrl);
+
+      expect(findActiveSigningKeyBySsoConnectorIdMock).not.toBeCalled();
+      expect(setSigningCredentialMock).not.toBeCalled();
+    });
+  });
+
+  describe('getSsoAuthorizationUrl signed AuthnRequest with dev features off', () => {
+    const payload = {
+      state: 'state',
+      redirectUri: 'https://example.com',
+    };
+
+    beforeEach(() => {
+      setDevFeaturesEnabled(false);
+      getAuthorizationUrlMock.mockReset();
+    });
+
+    afterAll(() => {
+      setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
+    });
+
+    it('should not load the signing key even when signAuthnRequest is on', async () => {
+      getAuthorizationUrlMock.mockResolvedValueOnce('https://saml-connector/sso');
+
+      await expect(
+        getSsoAuthorizationUrl(
+          mockContext,
+          tenant,
+          {
+            ...mockSamlSsoConnector,
+            config: { ...mockSamlSsoConnector.config, signAuthnRequest: true },
+          },
+          payload
+        )
+      ).resolves.toBe('https://saml-connector/sso');
+
+      expect(findActiveSigningKeyBySsoConnectorIdMock).not.toBeCalled();
+      expect(setSigningCredentialMock).not.toBeCalled();
     });
   });
 });
