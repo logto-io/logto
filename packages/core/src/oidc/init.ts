@@ -475,7 +475,7 @@ export default function initOidc(
   });
 
   installWildcardRedirectUriMatching(oidc);
-  addOidcEventListeners(tenantId, oidc, queries);
+  addOidcEventListeners(tenantId, oidc, queries, libraries.hooks.triggerEvent);
   registerGrants(oidc, envSet, queries, libraries);
 
   // Register first so all downstream cookie operations go through the rebound instance
