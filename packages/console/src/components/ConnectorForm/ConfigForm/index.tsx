@@ -43,18 +43,28 @@ function ConfigForm({
   } = useFormContext<ConnectorFormType>();
   const { tenantEndpoint } = useContext(AppDataContext);
   const availableDomains = useAvailableDomains();
-  const callbackUri = new URL(`/callback/${connectorId}`, tenantEndpoint).toString();
+  const callbackUris = [
+    new URL(`/callback/${connectorId}`, tenantEndpoint).toString(),
+    new URL(`/account/callback/social/${connectorId}`, tenantEndpoint).toString(),
+  ];
   const acsUrl = conditional(
     tenantEndpoint && appendPath(tenantEndpoint, `/api/authn/saml/${connectorId}`).href
   );
   const isSamlConnector = connectorFactoryId === 'saml';
   // This is an auto-generated URL serve as the connector's internal property and should be configured on the identity provider side.
-  const displayUrl = isSamlConnector ? acsUrl : callbackUri;
+  const displayUrls = isSamlConnector ? (acsUrl ? [acsUrl] : []) : callbackUris;
+  const availableDisplayUrls = [
+    ...new Set(
+      availableDomains.flatMap((domain) =>
+        displayUrls.map((displayUrl) => applyDomain(displayUrl, domain))
+      )
+    ),
+  ];
   const { getDocumentationUrl } = useDocumentationUrl();
 
   return (
     <div className={className}>
-      {connectorType === ConnectorType.Social && displayUrl && (
+      {connectorType === ConnectorType.Social && availableDisplayUrls.length > 0 && (
         <FormField
           title={isSamlConnector ? 'connectors.guide.acs_url' : 'connectors.guide.callback_uri'}
           tip={conditional(
@@ -84,12 +94,12 @@ function ConfigForm({
           )}
         >
           <div className={styles.callbackUriContent}>
-            {availableDomains.map((domain) => (
+            {availableDisplayUrls.map((displayUrl) => (
               <CopyToClipboard
-                key={domain}
+                key={displayUrl}
                 displayType="block"
                 variant="border"
-                value={applyDomain(displayUrl, domain)}
+                value={displayUrl}
               />
             ))}
           </div>
