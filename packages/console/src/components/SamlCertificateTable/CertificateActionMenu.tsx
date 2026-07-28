@@ -1,4 +1,3 @@
-import { type SamlApplicationSecretResponse } from '@logto/schemas';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -10,21 +9,20 @@ import Activate from '@/assets/icons/shield.svg?react';
 import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
 import { downloadText } from '@/utils/downloader';
 
-import { buildSamlSigningCertificateFilename } from '../utils';
-
 import styles from './index.module.scss';
+import { type CertificateData } from './types';
 
-export type Props = {
-  readonly appId: string;
-  readonly secret: SamlApplicationSecretResponse;
+type Props = {
+  readonly data: CertificateData;
+  readonly buildDownloadFilename: (id: string) => string;
   readonly onDelete: (id: string) => void;
   readonly onActivate: (id: string) => void;
   readonly onDeactivate: (id: string) => void;
 };
 
 function CertificateActionMenu({
-  secret: { id, certificate, active },
-  appId,
+  data: { id, certificate, active },
+  buildDownloadFilename,
   onDelete,
   onActivate,
   onDeactivate,
@@ -32,12 +30,8 @@ function CertificateActionMenu({
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const onDownload = useCallback(() => {
-    downloadText(
-      certificate,
-      buildSamlSigningCertificateFilename(appId, id),
-      'application/x-x509-ca-cert'
-    );
-  }, [appId, certificate, id]);
+    downloadText(certificate, buildDownloadFilename(id), 'application/x-x509-ca-cert');
+  }, [buildDownloadFilename, certificate, id]);
 
   return (
     <ActionMenu icon={<More className={styles.icon} />} title={t('general.more_options')}>
@@ -62,7 +56,7 @@ function CertificateActionMenu({
         {t('general.download')}
       </ActionMenuItem>
       {!active && (
-        // Can only delete inactive certificates.
+        // Only inactive certificates can be deleted.
         <ActionMenuItem
           type="danger"
           icon={<Delete />}

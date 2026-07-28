@@ -36,6 +36,12 @@ const enterprise_sso = {
       sign_auth_request_tooltip:
         'Logto firma le richieste di autenticazione SAML con un certificato generato. Abilitalo solo se il tuo identity provider è configurato per verificare le richieste firmate.',
       signing_certificate_field_name: 'Certificato di firma delle richieste',
+      signing_keys_empty: 'Non è stata ancora generata alcuna chiave di firma.',
+      generate_signing_key: 'Genera nuova chiave',
+      signing_key_generated: 'La chiave di firma è stata generata.',
+      signing_key_activated: 'La chiave di firma è stata attivata.',
+      signing_key_deactivated: 'La chiave di firma è stata disattivata.',
+      signing_key_deleted: 'La chiave di firma è stata eliminata.',
       sign_auth_request_warning:
         "Dopo l'abilitazione, genera una chiave di firma qui sotto e registra il suo certificato presso il tuo identity provider (e attiva lì la verifica delle richieste firmate). Finché il certificato non è registrato, l'accesso tramite questa connessione fallirà.",
     },

@@ -36,6 +36,8 @@ export const samlConnectorConfigGuard = z
     entityId: z.string(),
     x509Certificate: z.string(),
     attributeMapping: samlAttributeMappingGuard,
+    signAuthnRequest: z.boolean(),
+    requestSignatureAlgorithm: z.string(),
   })
   .partial();
 

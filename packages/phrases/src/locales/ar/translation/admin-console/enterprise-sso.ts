@@ -36,6 +36,12 @@ const enterprise_sso = {
       sign_auth_request_tooltip:
         'يوقّع Logto طلبات مصادقة SAML بشهادة مُنشأة. فعّل هذا الخيار فقط إذا كان موفر الهوية لديك مهيأ للتحقق من الطلبات الموقعة.',
       signing_certificate_field_name: 'شهادة توقيع الطلبات',
+      signing_keys_empty: 'لم يتم إنشاء أي مفاتيح توقيع بعد.',
+      generate_signing_key: 'إنشاء مفتاح جديد',
+      signing_key_generated: 'تم إنشاء مفتاح التوقيع.',
+      signing_key_activated: 'تم تفعيل مفتاح التوقيع.',
+      signing_key_deactivated: 'تم تعطيل مفتاح التوقيع.',
+      signing_key_deleted: 'تم حذف مفتاح التوقيع.',
       sign_auth_request_warning:
         'بعد التفعيل، أنشئ مفتاح توقيع أدناه وسجّل شهادته لدى موفر الهوية الخاص بك (وفعّل التحقق من الطلبات الموقعة هناك). حتى يتم تسجيل الشهادة، سيفشل تسجيل الدخول عبر هذا الاتصال.',
     },

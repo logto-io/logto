@@ -36,6 +36,12 @@ const enterprise_sso = {
       sign_auth_request_tooltip:
         'Logto 會使用產生的憑證簽署 SAML 驗證請求。僅當你的身份提供者已設定為驗證已簽署的請求時才啟用。',
       signing_certificate_field_name: '請求簽署憑證',
+      signing_keys_empty: '尚未產生簽署金鑰。',
+      generate_signing_key: '產生新金鑰',
+      signing_key_generated: '簽署金鑰已產生。',
+      signing_key_activated: '簽署金鑰已啟用。',
+      signing_key_deactivated: '簽署金鑰已停用。',
+      signing_key_deleted: '簽署金鑰已刪除。',
       sign_auth_request_warning:
         '啟用後，請在下方產生簽署金鑰，並將其憑證註冊到你的身份提供者（並在該處開啟已簽署請求的驗證）。在憑證完成註冊之前，透過此連線登入將會失敗。',
     },

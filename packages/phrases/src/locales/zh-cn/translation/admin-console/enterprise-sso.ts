@@ -36,6 +36,12 @@ const enterprise_sso = {
       sign_auth_request_tooltip:
         'Logto 使用生成的证书对 SAML 认证请求进行签名。仅当你的身份提供者已配置为验证签名请求时才启用。',
       signing_certificate_field_name: '请求签名证书',
+      signing_keys_empty: '尚未生成签名密钥。',
+      generate_signing_key: '生成新密钥',
+      signing_key_generated: '签名密钥已生成。',
+      signing_key_activated: '签名密钥已启用。',
+      signing_key_deactivated: '签名密钥已停用。',
+      signing_key_deleted: '签名密钥已删除。',
       sign_auth_request_warning:
         '启用后，请在下方生成签名密钥，并将其证书注册到你的身份提供者（并在那里开启签名请求验证）。在证书注册完成之前，通过此连接登录将会失败。',
     },

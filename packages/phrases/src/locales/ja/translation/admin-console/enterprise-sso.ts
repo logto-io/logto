@@ -36,6 +36,12 @@ const enterprise_sso = {
       sign_auth_request_tooltip:
         'Logto は生成された証明書で SAML 認証リクエストに署名します。IdP が署名付きリクエストを検証するように設定されている場合にのみ有効にしてください。',
       signing_certificate_field_name: 'リクエスト署名証明書',
+      signing_keys_empty: '署名キーはまだ生成されていません。',
+      generate_signing_key: '新しいキーを生成',
+      signing_key_generated: '署名キーが生成されました。',
+      signing_key_activated: '署名キーがアクティブになりました。',
+      signing_key_deactivated: '署名キーが非アクティブになりました。',
+      signing_key_deleted: '署名キーが削除されました。',
       sign_auth_request_warning:
         '有効にした後、下で署名キーを生成し、その証明書を IdP に登録してください（また、そこで署名付きリクエストの検証を有効にしてください）。証明書が登録されるまで、この接続でのサインインは失敗します。',
     },
