@@ -7,8 +7,6 @@ type GetTenantAuthRoutes = RouterRoutes<typeof tenantAuthRouter>['get'];
 
 export type GetArrayElementType<T> = T extends Array<infer U> ? U : never;
 
-type CloudLogtoSkuResponse = GetArrayElementType<GuardedResponse<GetRoutes['/api/skus']>>;
-
 export type Subscription = GuardedResponse<GetRoutes['/api/tenants/:tenantId/subscription']>;
 
 export type TenantUsageAddOnSkus = GuardedResponse<
@@ -23,25 +21,26 @@ export type SubscriptionUsageResponse = GuardedResponse<
 
 export type SubscriptionQuota = Omit<
   SubscriptionUsageResponse['quota'],
-  // Logto uses `actionsEnabled` as the canonical Actions quota key. Keep the legacy Cloud
-  // compatibility field out of the Console subscription types.
+  // Drop once `@logto/cloud` no longer declares the legacy Actions quota key.
   | 'inlineHooksEnabled'
   // Since we are deprecating the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the quota keys for now to avoid confusion.
   | 'organizationsEnabled'
 >;
 
-export type LogtoSkuResponse = Omit<CloudLogtoSkuResponse, 'quota'> & {
-  quota: Omit<CloudLogtoSkuResponse['quota'], 'inlineHooksEnabled'> & {
-    // Cloud keeps returning the legacy key for backward compatibility. It is removed when
-    // normalizing the response at the Console boundary.
-    inlineHooksEnabled?: boolean;
-  };
+export type LogtoSkuResponse = Omit<
+  GetArrayElementType<GuardedResponse<GetRoutes['/api/skus']>>,
+  'quota'
+> & {
+  // Drop the legacy key once `@logto/cloud` stops declaring it on SKU quotas.
+  quota: Omit<
+    GetArrayElementType<GuardedResponse<GetRoutes['/api/skus']>>['quota'],
+    'inlineHooksEnabled'
+  >;
 };
 
 export type SubscriptionCountBasedUsage = Omit<
   SubscriptionUsageResponse['usage'],
-  // Logto uses `actionsEnabled` as the canonical Actions quota key. Keep the legacy Cloud
-  // compatibility field out of the Console subscription usage types.
+  // Drop once `@logto/cloud` no longer declares the legacy Actions quota key.
   | 'inlineHooksEnabled'
   // Since we are deprecating the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
   | 'organizationsEnabled'

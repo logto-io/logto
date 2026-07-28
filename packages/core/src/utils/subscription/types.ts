@@ -19,6 +19,7 @@ export const actionQuotaKey = 'actionsEnabled' satisfies keyof CompleteSubscript
 export type SubscriptionQuota = Omit<
   CompleteSubscriptionUsage['quota'],
   | 'auditLogsRetentionDays'
+  // Drop once `@logto/cloud` no longer declares the legacy Actions quota key.
   | 'inlineHooksEnabled'
   // Since we are deprecating the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
   | 'organizationsEnabled'
@@ -47,6 +48,7 @@ export type Subscription = Omit<
 
 export type SubscriptionUsage = Omit<
   CompleteSubscriptionUsage['usage'],
+  // Drop once `@logto/cloud` no longer declares the legacy Actions quota key.
   | 'inlineHooksEnabled'
   // Since we are deprecating the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
   | 'organizationsEnabled'

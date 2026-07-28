@@ -20,28 +20,23 @@ describe('getTenantSubscription', () => {
       getTenantSubscription(
         createCloudConnection({
           ...mockSubscriptionData,
-          quota: {
-            ...quota,
-            inlineHooksEnabled: true,
-          },
+          quota,
         })
       )
     ).rejects.toThrow('Cloud subscription response is missing the Actions quota.');
   });
 
-  it('uses the Actions quota key and omits the legacy key', async () => {
+  it('uses the Actions quota key', async () => {
     const subscription = await getTenantSubscription(
       createCloudConnection({
         ...mockSubscriptionData,
         quota: {
           ...mockSubscriptionData.quota,
           actionsEnabled: false,
-          inlineHooksEnabled: true,
         },
       })
     );
 
     expect(subscription.quota.actionsEnabled).toBe(false);
-    expect(subscription.quota).not.toHaveProperty('inlineHooksEnabled');
   });
 });

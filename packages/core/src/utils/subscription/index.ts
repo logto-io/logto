@@ -25,11 +25,8 @@ export const getTenantSubscription = async (
     throw new TypeError('Cloud subscription response is missing the Actions quota.');
   }
 
-  const { inlineHooksEnabled: _, ...quota } = rest.quota;
-
   return {
     ...rest,
-    quota,
     currentPeriodStart: new Date(currentPeriodStart).toISOString(),
     currentPeriodEnd: new Date(currentPeriodEnd).toISOString(),
   };
