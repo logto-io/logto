@@ -54,6 +54,8 @@ describe('logRoutes', () => {
         {
           payload: { userId, applicationId },
           logKey,
+          startTime: undefined,
+          endTime: undefined,
           includeKeyPrefix: [
             token.Type.ExchangeTokenBy,
             token.Type.RevokeToken,
@@ -70,6 +72,8 @@ describe('logRoutes', () => {
       expect(findLogs).toHaveBeenCalledWith(5, 0, {
         payload: { userId, applicationId },
         logKey,
+        startTime: undefined,
+        endTime: undefined,
         includeKeyPrefix: [
           token.Type.ExchangeTokenBy,
           token.Type.RevokeToken,

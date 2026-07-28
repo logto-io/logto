@@ -851,6 +851,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
       assignReleaseOnSuccessInteractionHookResult: jest.fn(),
       assignReleaseAnywayInteractionHookResult: jest.fn(),
       appendDataHookContext: jest.fn(),
+      interactionDetails: mockInteractionDetails,
       ...createContextWithRouteParameters({
         headers: {
           'x-logto-cf-bot-score': '10',
