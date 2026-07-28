@@ -66,7 +66,7 @@ const connectors = {
     },
     callback_uri: "Yeniden yönlendirme URI'si (Geri dönüş URI'si)",
     callback_uri_description:
-      "Yeniden yönlendirme URI'si, sosyal yetkilendirmeden sonra kullanıcıların yönlendirildiği yerdir. Bu URI'yi IdP yapılandırmanıza ekleyin.",
+      "Yeniden yönlendirme URI'leri, sosyal yetkilendirmeden sonra kullanıcıların yönlendirildiği yerlerdir. Görüntülenen tüm URI'leri IdP yapılandırmanıza ekleyin.",
     callback_uri_custom_domain_description:
       "Logto'da birden fazla <a>özel alan adı</a> kullanıyorsanız, sosyal oturum açmanın her alan adında çalışması için ilgili tüm geri dönüş URI'lerini IdP'nize eklediğinizden emin olun.\n\nVarsayılan Logto alan adı (*.logto.app) her zaman geçerlidir; yalnızca o alan adı altında oturumları desteklemek istiyorsanız ekleyin.",
     acs_url: 'Assertion consumer service URL',

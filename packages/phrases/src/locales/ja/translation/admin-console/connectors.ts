@@ -64,7 +64,7 @@ const connectors = {
     },
     callback_uri: 'リダイレクト URI（コールバック URI）',
     callback_uri_description:
-      'Redirect URI は、ソーシャル認可の後にユーザーがリダイレクトされる場所です。この URI を IdP の設定に追加してください。',
+      'リダイレクト URI は、ソーシャル認可の後にユーザーがリダイレクトされる場所です。表示されているすべての URI を IdP の設定に追加してください。',
     callback_uri_custom_domain_description:
       'Logto で複数の<a>カスタムドメイン</a>を使用する場合は、すべての対応するコールバック URI を IdP に追加し、各ドメインでソーシャルログインが機能するようにしてください。\n\nLogto の既定ドメイン (*.logto.app) は常に有効です。そのドメインでのログインもサポートしたい場合にのみ含めてください。',
     acs_url: 'アサーションコンシューマーサービス URL',

@@ -66,7 +66,7 @@ const connectors = {
     },
     callback_uri: 'URI di reindirizzamento (URI di callback)',
     callback_uri_description:
-      "L'URI di reindirizzamento è dove gli utenti vengono reindirizzati dopo l'autorizzazione social. Aggiungi questa URI alla configurazione del tuo IdP.",
+      "Le URI di reindirizzamento sono le destinazioni a cui gli utenti vengono reindirizzati dopo l'autorizzazione social. Aggiungi tutte le URI visualizzate alla configurazione del tuo IdP.",
     callback_uri_custom_domain_description:
       "Se utilizzi più <a>domini personalizzati</a> in Logto, assicurati di aggiungere tutte le rispettive URI di callback al tuo IdP per far funzionare il social login su ogni dominio.\n\nIl dominio predefinito di Logto (*.logto.app) è sempre valido: includilo solo se desideri supportare l'accesso anche sotto quel dominio.",
     acs_url: 'URL del servizio consumer di assunzione',

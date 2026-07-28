@@ -67,7 +67,7 @@ const connectors = {
     },
     callback_uri: 'URI de redirection (URI de rappel)',
     callback_uri_description:
-      "L'URI de redirection est l'endroit où les utilisateurs sont redirigés après l'autorisation sociale. Ajoutez cette URI à la configuration de votre IdP.",
+      "Les URI de redirection sont les adresses vers lesquelles les utilisateurs sont redirigés après l'autorisation sociale. Ajoutez toutes les URI affichées à la configuration de votre IdP.",
     callback_uri_custom_domain_description:
       'Si vous utilisez plusieurs <a>domaines personnalisés</a> dans Logto, veillez à ajouter toutes les URI de rappel correspondantes à votre IdP afin que la connexion sociale fonctionne sur chaque domaine.\n\nLe domaine Logto par défaut (*.logto.app) est toujours valide ; incluez-le uniquement si vous souhaitez aussi prendre en charge les connexions sous ce domaine.',
     acs_url: "URL de service de consommation d'assertions",

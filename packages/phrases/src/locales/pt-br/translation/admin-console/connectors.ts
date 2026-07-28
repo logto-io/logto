@@ -65,7 +65,7 @@ const connectors = {
     },
     callback_uri: 'URI de redirecionamento (URI de retorno)',
     callback_uri_description:
-      'A URI de redirecionamento é para onde os usuários são enviados após a autorização social. Adicione essa URI à configuração do seu IdP.',
+      'As URIs de redirecionamento são para onde os usuários são enviados após a autorização social. Adicione todas as URIs exibidas à configuração do seu IdP.',
     callback_uri_custom_domain_description:
       'Se você usa vários <a>domínios personalizados</a> no Logto, lembre-se de adicionar todas as URIs de callback correspondentes ao seu IdP para que o login social funcione em cada domínio.\n\nO domínio padrão do Logto (*.logto.app) é sempre válido; inclua-o apenas se também quiser oferecer suporte a logins nesse domínio.',
     acs_url: 'URL do serviço de consumo de afirmações',
