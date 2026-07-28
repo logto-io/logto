@@ -75,7 +75,7 @@
       },
       "delete": {
         "summary": "Delete an SP signing key",
-        "description": "Delete the given Service Provider signing key. The active key cannot be deleted — activate another key or deactivate this key first.",
+        "description": "Delete the given Service Provider signing key. The active key cannot be deleted — activate a replacement key first, or disable signed authentication requests and deactivate this key.",
         "responses": {
           "204": {
             "description": "The SP signing key was deleted."
