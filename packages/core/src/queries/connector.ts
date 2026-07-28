@@ -105,7 +105,7 @@ export const createConnectorQueries = (
             sql`, `
           )})
           values (${sql.join(
-            insertingKeys.map((key) => convertToPrimitiveOrSql(key, newConnectorData[key])),
+            insertingKeys.map((key) => convertToPrimitiveOrSql(key, newConnectorData[key] ?? null)),
             sql`, `
           )})
         `);

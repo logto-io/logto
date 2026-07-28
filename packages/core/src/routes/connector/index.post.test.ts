@@ -248,6 +248,14 @@ describe('connector data route', () => {
       ]);
       validateConfig.mockReturnValueOnce(null);
       buildRawConnector.mockResolvedValueOnce({ rawConnector: { configGuard: any() } });
+      getLogtoConnectors.mockResolvedValueOnce([
+        {
+          dbEntry: { ...mockConnector, connectorId: 'id0' },
+          metadata: { ...mockMetadata, id: 'id0' },
+          type: ConnectorType.Sms,
+          ...mockLogtoConnector,
+        },
+      ]);
       await connectorRequest.post('/connectors').send({
         connectorId: 'id1',
         config: { cliend_id: 'client_id', client_secret: 'client_secret' },
