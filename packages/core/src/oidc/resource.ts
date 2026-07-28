@@ -23,11 +23,17 @@ export const getSharedResourceServerData = (
 // TODO: Refactor me. This function is too complex.
 /**
  * Find the scopes for a given resource indicator according to the subject in the context. The
- * subject can be either a user or an application.
+ * subject can be either a user or an application (user takes priority).
  *
- * When both `userId` and `applicationId` are provided, the function will prioritize the user.
+ * Resolution order:
+ * 1. `ReservedResource.Organization` — short-circuits with all org scopes.
+ * 2. `userId` — resolves from user roles and optionally from organization roles when
+ *    `findFromOrganizations` is true. `organizationId` narrows org-role scopes.
+ * 3. `applicationId + organizationId` — resolves scopes from org role assignments.
+ * 4. `applicationId` (alone) — resolves from direct role assignments.
+ * 5. Fallback — empty array.
  *
- * This function also handles the reserved resources.
+ * `findFromOrganizations` only applies to the `userId` path.
  *
  * @see {@link ReservedResource} for the list of reserved resources.
  */
