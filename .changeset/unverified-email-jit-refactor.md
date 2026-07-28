@@ -2,4 +2,4 @@
 "@logto/core": patch
 ---
 
-refactor email-domain JIT organization provisioning into a separate function instead of using a boolean flag
+refactor internal email-domain JIT organization provisioning APIs (no user-facing behavior change)

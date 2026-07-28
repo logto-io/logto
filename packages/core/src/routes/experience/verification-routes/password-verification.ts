@@ -169,6 +169,8 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
             ? await experienceInteraction.provisionLibrary.createUser(userProfile, {
                 checkIdentifierCollision: true,
                 mergeCustomData: true,
+                // PrimaryEmail from the sign-in identifier is not verified, must not trigger JIT
+                skipEmailDomainJit: true,
               })
             : await experienceInteraction.provisionLibrary.updateUser(
                 actionResult.userId,

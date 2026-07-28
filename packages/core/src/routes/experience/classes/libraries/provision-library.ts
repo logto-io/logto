@@ -56,6 +56,12 @@ type ProvisioningCustomDataOptions = {
 
 type CreateUserOptions = {
   checkIdentifierCollision?: boolean;
+  /**
+   * Skip email-domain JIT organization provisioning for this user.
+   * Set to true when `primaryEmail` comes from an unverified source (e.g., a sign-in identifier
+   * in the password-verification createUser path) to prevent unverified email JIT provisioning.
+   */
+  skipEmailDomainJit?: boolean;
 } & ProvisioningCustomDataOptions;
 
 type UpdateUserOptions = ProvisioningCustomDataOptions;
@@ -105,6 +111,7 @@ export class ProvisionLibrary {
     {
       checkIdentifierCollision: shouldCheckIdentifierCollision = false,
       mergeCustomData: shouldMergeCustomData = false,
+      skipEmailDomainJit = false,
     }: CreateUserOptions = {}
   ) {
     const {
@@ -188,7 +195,10 @@ export class ProvisionLibrary {
       );
     }
 
-    await this.provisionNewUserJitOrganizations(user.id, profile);
+    await this.provisionNewUserJitOrganizations(
+      user.id,
+      this.buildJitProvisioningProfile(profile, skipEmailDomainJit)
+    );
 
     this.ctx.appendDataHookContext('User.Created', { user });
 
@@ -467,6 +477,13 @@ export class ProvisionLibrary {
       initialUserRoles,
       customData,
     };
+  }
+
+  private buildJitProvisioningProfile(
+    profile: InteractionProfile,
+    skipEmailDomainJit: boolean
+  ): InteractionProfile {
+    return skipEmailDomainJit ? { ...profile, primaryEmail: undefined } : profile;
   }
 
   /**

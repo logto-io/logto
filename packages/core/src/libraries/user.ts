@@ -322,6 +322,9 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
     email: string
   ): Promise<readonly JitOrganization[]> => {
     const userEmailDomain = email.split('@')[1];
+    if (!userEmailDomain) {
+      return [];
+    }
     const jitOrganizations =
       await organizations.jit.emailDomains.getJitOrganizations(userEmailDomain);
 
