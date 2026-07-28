@@ -1,4 +1,4 @@
-import { LogtoActionKey, type LogtoAction } from '@logto/schemas';
+import { LogtoActionKey, type LogtoAction, type SigningKeyRotationState } from '@logto/schemas';
 import { ConsoleLog } from '@logto/shared';
 
 import { createLogtoConfigLibrary } from './logto-config.js';
@@ -10,13 +10,18 @@ const queryUpsertAction = jest.fn(async (key: LogtoActionKey, value: LogtoAction
   key,
   value,
 }));
+const getSigningKeyRotationState = jest.fn<Promise<SigningKeyRotationState | undefined>, never[]>();
+const poolTransaction = jest.fn();
 
 const createLibrary = () =>
   createLogtoConfigLibrary({
     logtoConfigs: {
       getRowsByKeys,
       upsertAction: queryUpsertAction,
+      getSigningKeyRotationState,
     },
+    pool: { transaction: poolTransaction },
+    wellKnownCache: {},
   } as unknown as Parameters<typeof createLogtoConfigLibrary>[0]);
 
 const action: LogtoAction = {
@@ -105,5 +110,44 @@ describe('Logto config Action', () => {
       ...action,
       enabled: false,
     });
+  });
+});
+
+describe('promoteScheduledSigningKeyRotation', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('skips the locking transaction when no rotation is scheduled', async () => {
+    // eslint-disable-next-line unicorn/no-useless-undefined -- undefined is the query's no-row result under test
+    getSigningKeyRotationState.mockResolvedValueOnce(undefined);
+
+    await createLibrary().promoteScheduledSigningKeyRotation();
+
+    expect(poolTransaction).not.toHaveBeenCalled();
+  });
+
+  it('skips the locking transaction when the rotation state has no scheduled time', async () => {
+    getSigningKeyRotationState.mockResolvedValueOnce({ tenantCacheExpiresAt: Date.now() });
+
+    await createLibrary().promoteScheduledSigningKeyRotation();
+
+    expect(poolTransaction).not.toHaveBeenCalled();
+  });
+
+  it('skips the locking transaction when the scheduled rotation is in the future', async () => {
+    getSigningKeyRotationState.mockResolvedValueOnce({ signingKeyRotationAt: Date.now() + 60_000 });
+
+    await createLibrary().promoteScheduledSigningKeyRotation();
+
+    expect(poolTransaction).not.toHaveBeenCalled();
+  });
+
+  it('opens the locking transaction when a scheduled rotation is due', async () => {
+    getSigningKeyRotationState.mockResolvedValueOnce({ signingKeyRotationAt: Date.now() - 60_000 });
+
+    await createLibrary().promoteScheduledSigningKeyRotation();
+
+    expect(poolTransaction).toHaveBeenCalledTimes(1);
   });
 });

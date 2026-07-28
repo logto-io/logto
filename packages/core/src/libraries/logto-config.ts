@@ -267,6 +267,18 @@ export const createLogtoConfigLibrary = ({
    * This function is intended to be called before accessing OIDC configs to ensure the key statuses are up-to-date.
    */
   const promoteScheduledSigningKeyRotation = async () => {
+    // Lock-free pre-check so the common bootstrap path skips the `FOR UPDATE` transaction below.
+    // Safe because staged rotations are always scheduled in the future, and the authoritative
+    // check + mutation still runs under the lock.
+    const scheduledRotationState = await getSigningKeyRotationState();
+
+    if (
+      !scheduledRotationState?.signingKeyRotationAt ||
+      scheduledRotationState.signingKeyRotationAt > Date.now()
+    ) {
+      return;
+    }
+
     await pool.transaction(async (connection) => {
       const transactionalQueries = createLogtoConfigQueries(connection, wellKnownCache);
       await transactionalQueries.lockPrivateSigningKeysAndRotationState();
