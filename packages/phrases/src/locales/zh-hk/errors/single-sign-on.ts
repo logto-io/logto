@@ -9,6 +9,11 @@ const single_sign_on = {
   idp_initiated_authentication_client_callback_uri_not_found:
     '找不到客戶端 IdP 發起的身份驗證回調 URI。請檢查連接器設置。',
   sso_signing_unavailable: '無法透過你的身分提供者完成登入。請聯絡管理員。',
+  can_not_delete_active_signing_key: '無法刪除目前啟用的簽署金鑰。請先啟用其他金鑰或停用此金鑰。',
+  can_not_deactivate_signing_key_in_use:
+    '簽署驗證請求已開啟時無法停用簽署金鑰。請先關閉簽署驗證請求。',
+  active_signing_key_required:
+    '找不到已啟用的簽署金鑰。請先產生並啟用簽署金鑰，再開啟簽署驗證請求。',
 };
 
 export default Object.freeze(single_sign_on);
