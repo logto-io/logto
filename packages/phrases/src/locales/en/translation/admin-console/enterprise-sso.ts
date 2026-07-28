@@ -33,6 +33,12 @@ const enterprise_sso = {
         'The SP Entity ID can be in any string format, typically using a URI form or a URL form as an identifier, but this is not mandatory.',
       acs_url_field_placeholder: 'https://your-domain.com/api/saml/callback',
       entity_id_field_placeholder: 'urn:your-domain.com:sp:saml:{serviceProviderId}',
+      sign_auth_request: 'Sign authentication request',
+      sign_auth_request_tooltip:
+        'Logto signs SAML authentication requests with a generated certificate. Enable only if your identity provider is configured to verify signed requests.',
+      signing_certificate_field_name: 'Request signing certificate',
+      sign_auth_request_warning:
+        'After enabling, generate a signing key below and register its certificate with your identity provider (and turn on signed-request verification there). Until the certificate is registered, sign-in through this connection will fail.',
     },
     oidc: {
       redirect_uri_field_name: 'Redirect URI (Callback URL)',

@@ -33,6 +33,12 @@ const enterprise_sso = {
         'شناسه موجودیت SP می‌تواند در هر قالب رشته‌ای باشد، معمولاً به صورت URI یا URL به عنوان شناسه استفاده می‌شود، اما الزامی نیست.',
       acs_url_field_placeholder: 'https://your-domain.com/api/saml/callback',
       entity_id_field_placeholder: 'urn:your-domain.com:sp:saml:{serviceProviderId}',
+      sign_auth_request: 'امضای درخواست احراز هویت',
+      sign_auth_request_tooltip:
+        'Logto درخواست‌های احراز هویت SAML را با گواهی تولیدشده امضا می‌کند. فقط در صورتی فعال کنید که ارائه‌دهنده هویت شما برای تأیید درخواست‌های امضاشده پیکربندی شده باشد.',
+      signing_certificate_field_name: 'گواهی امضای درخواست',
+      sign_auth_request_warning:
+        'پس از فعال‌سازی، یک کلید امضا در زیر تولید کنید و گواهی آن را در ارائه‌دهنده هویت خود ثبت کنید (و تأیید درخواست‌های امضاشده را در آنجا فعال کنید). تا زمانی که گواهی ثبت نشود، ورود از طریق این اتصال با شکست مواجه می‌شود.',
     },
     oidc: {
       redirect_uri_field_name: 'آدرس URI بازگشت (Callback URL)',
