@@ -51,7 +51,6 @@ const createLibrary = (tenantId = 'tenant_id') =>
   );
 
 const originalIsCloud = EnvSet.values.isCloud;
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
 
 const setIsCloud = (isCloud: boolean) => {
   // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for Cloud/local selection tests.
@@ -74,8 +73,6 @@ describe('ActionLibrary', () => {
       trackMetric,
       trackException: jest.fn(),
     } as unknown as NonNullable<typeof appInsights.client>;
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for action runtime tests.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
     getSubscriptionData.mockResolvedValue({
       quota: {
         actionsEnabled: true,
@@ -89,9 +86,6 @@ describe('ActionLibrary', () => {
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore the shared AppInsights singleton.
     appInsights.client = originalAppInsightsClient;
     setIsCloud(originalIsCloud);
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after dev feature tests.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
-      originalIsDevFeaturesEnabled;
   });
 
   it('loads action config and runs the enabled script in the local VM', async () => {
@@ -480,23 +474,6 @@ describe('ActionLibrary', () => {
       decision: 'noop',
       actionResult: '[unavailable]',
     });
-  });
-
-  it('does not load or run actions when dev features are disabled', async () => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for dev feature gate test.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = false;
-
-    await expect(
-      runAction({
-        key: LogtoActionKey.PostSignIn,
-        event: {},
-      })
-    ).resolves.toBeUndefined();
-
-    expect(getAction).not.toHaveBeenCalled();
-    expect(getSubscriptionData).not.toHaveBeenCalled();
-    expect(createLog).not.toHaveBeenCalled();
-    expect(trackMetric).not.toHaveBeenCalled();
   });
 
   it('does not run disabled actions', async () => {

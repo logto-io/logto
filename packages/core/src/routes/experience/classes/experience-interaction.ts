@@ -13,7 +13,6 @@ import {
 import { maskEmail, maskPhone } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { buildUserPasswordPayload } from '#src/libraries/user.utils.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
@@ -707,7 +706,7 @@ export default class ExperienceInteraction {
   }
 
   private async triggerPostSignInAction(userId: string) {
-    if (this.#interactionEvent !== InteractionEvent.SignIn || !EnvSet.values.isDevFeaturesEnabled) {
+    if (this.#interactionEvent !== InteractionEvent.SignIn) {
       return;
     }
 

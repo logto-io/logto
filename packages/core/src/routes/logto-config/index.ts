@@ -230,8 +230,5 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
 
   logtoConfigJwtCustomizerRoutes(router, tenant);
   idTokenRoutes(router, tenant);
-
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    logtoConfigActionRoutes(router, tenant);
-  }
+  logtoConfigActionRoutes(router, tenant);
 }

@@ -320,10 +320,6 @@ export class ActionLibrary {
     auditContext: { createLog, ...auditContext },
     ...eventSource
   }: RunActionData<Event>): Promise<unknown> {
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return;
-    }
-
     const action = await this.findEnabledAction(key);
 
     if (!action) {

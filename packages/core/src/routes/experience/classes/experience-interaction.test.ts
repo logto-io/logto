@@ -351,16 +351,6 @@ describe('ExperienceInteraction class', () => {
       expect(runAction).not.toHaveBeenCalled();
     });
 
-    it('does not run PostSignIn action when dev features are disabled', async () => {
-      setDevFeaturesEnabled(false);
-      const { experienceInteraction, runAction, getUserContext } = createSignInInteraction();
-
-      await experienceInteraction.submit();
-
-      expect(getUserContext).not.toHaveBeenCalled();
-      expect(runAction).not.toHaveBeenCalled();
-    });
-
     it('updates user when PostSignIn action returns updateUser', async () => {
       const { experienceInteraction, runActionHandler } = createSignInInteraction();
       const updateUser = jest.spyOn(experienceInteraction.provisionLibrary, 'updateUser');
