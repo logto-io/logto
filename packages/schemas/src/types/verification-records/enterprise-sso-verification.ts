@@ -1,3 +1,4 @@
+import { connectorSessionGuard, type ConnectorSession } from '@logto/connector-kit';
 import { z } from 'zod';
 
 import { type ToZodObject } from '../../utils/zod.js';
@@ -17,6 +18,10 @@ export type EnterpriseSsoVerificationRecordData = {
   enterpriseSsoUserInfo?: ExtendedSocialUserInfo;
   encryptedTokenSet?: EncryptedTokenSet;
   issuer?: string;
+  /**
+   * The enterprise SSO connector session result
+   */
+  connectorSession?: ConnectorSession;
 };
 
 export const enterpriseSsoVerificationRecordDataGuard = z.object({
@@ -26,14 +31,16 @@ export const enterpriseSsoVerificationRecordDataGuard = z.object({
   enterpriseSsoUserInfo: extendedSocialUserInfoGuard.optional(),
   encryptedTokenSet: encryptedTokenSetGuard.optional(),
   issuer: z.string().optional(),
+  connectorSession: connectorSessionGuard.optional(),
 }) satisfies ToZodObject<EnterpriseSsoVerificationRecordData>;
 
 export type SanitizedEnterpriseSsoVerificationRecordData = Omit<
   EnterpriseSsoVerificationRecordData,
-  'encryptedTokenSet'
+  'encryptedTokenSet' | 'connectorSession'
 >;
 
 export const sanitizedEnterpriseSsoVerificationRecordDataGuard =
   enterpriseSsoVerificationRecordDataGuard.omit({
     encryptedTokenSet: true,
+    connectorSession: true,
   }) satisfies ToZodObject<SanitizedEnterpriseSsoVerificationRecordData>;
