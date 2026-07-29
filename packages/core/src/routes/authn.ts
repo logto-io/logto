@@ -289,7 +289,7 @@ export default function authnRoutes<T extends AnonymousRouter>(
       assertThat(
         verificationRecord,
         new RequestError({
-          code: 'session.connector_validation_session_not_found',
+          code: 'verification_record.not_found',
           status: 404,
         })
       );
@@ -302,7 +302,7 @@ export default function authnRoutes<T extends AnonymousRouter>(
       assertThat(
         parsed.success,
         new RequestError({
-          code: 'session.connector_validation_session_not_found',
+          code: 'verification_record.not_found',
           status: 404,
         })
       );
@@ -314,7 +314,7 @@ export default function authnRoutes<T extends AnonymousRouter>(
         sessionParseResult.success,
         new RequestError({
           code: 'session.connector_validation_session_not_found',
-          status: 404,
+          status: 400,
         })
       );
 
@@ -323,8 +323,8 @@ export default function authnRoutes<T extends AnonymousRouter>(
       assertThat(
         connectorId === sessionConnectorId,
         new RequestError({
-          code: 'session.connector_validation_session_not_found',
-          status: 404,
+          code: 'session.connector_id_mismatch',
+          status: 400,
         })
       );
 

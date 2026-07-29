@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import { appInsights } from '@logto/app-insights/node';
-import { ConnectorError, type ConnectorSession } from '@logto/connector-kit';
+import { ConnectorError, ConnectorErrorCodes, type ConnectorSession } from '@logto/connector-kit';
 import {
   VerificationType,
   type JsonObject,
@@ -23,7 +23,11 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import OidcConnector from '#src/sso/OidcConnector/index.js';
 import SamlConnector from '#src/sso/SamlConnector/index.js';
-import { ssoConnectorFactories, type SingleSignOnConnectorSession } from '#src/sso/index.js';
+import {
+  ssoConnectorFactories,
+  singleSignOnConnectorSessionGuard,
+  type SingleSignOnConnectorSession,
+} from '#src/sso/index.js';
 import { type ExtendedSocialUserInfo } from '#src/sso/types/saml.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -43,6 +47,24 @@ export {
   enterpriseSsoVerificationRecordDataGuard,
   sanitizedEnterpriseSsoVerificationRecordDataGuard,
 } from '@logto/schemas';
+
+const getConnectorErrorStatus = (code: ConnectorErrorCodes) => {
+  if (
+    code === ConnectorErrorCodes.InvalidResponse ||
+    code === ConnectorErrorCodes.AuthorizationFailed
+  ) {
+    return 400;
+  }
+
+  if (
+    code === ConnectorErrorCodes.SocialAuthCodeInvalid ||
+    code === ConnectorErrorCodes.SocialAccessTokenInvalid
+  ) {
+    return 401;
+  }
+
+  return 502;
+};
 
 export type EnterpriseSsoConnectorTokenSetSecret = {
   encryptedTokenSet: EncryptedTokenSet;
@@ -334,9 +356,14 @@ export class EnterpriseSsoVerification
             expires: new Date(0),
           });
 
-          void trySafe(async () => {
-            await this.queries.ssoConnectors.deleteIdpInitiatedSamlSsoSessionById(sessionId);
-          });
+          void trySafe(
+            async () => {
+              await this.queries.ssoConnectors.deleteIdpInitiatedSamlSsoSessionById(sessionId);
+            },
+            (error) => {
+              void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));
+            }
+          );
 
           const { expiresAt, assertionContent } = idpInitiatedSamlSsoSession;
 
@@ -394,44 +421,44 @@ export class EnterpriseSsoVerification
     const log = ctx.createLog('Interaction.SignIn.Identifier.SingleSignOn.Submit');
     log.append({ connectorId, data });
 
-    // Try to load the latest connector session from the DB first.
-    // For SAML SSO connectors, the ACS endpoint may have stored userInfo in the DB record's
-    // connectorSession after the user authenticated at the IdP.
-    const databaseRecord = await this.queries.verificationRecords.findActiveVerificationRecordById(
-      this.id
+    const connectorInstance = new ssoConnectorFactories[providerName].constructor(
+      connectorData,
+      envSet.endpoint
     );
 
-    if (databaseRecord) {
-      const parsed = enterpriseSsoVerificationRecordDataGuard.safeParse({
-        ...databaseRecord.data,
-        id: databaseRecord.id,
-      });
+    // Only SAML connectors store userInfo in the DB via the ACS endpoint.
+    // OIDC connectors set the session in-memory during createAuthorizationUrl.
+    if (connectorInstance instanceof SamlConnector) {
+      const databaseRecord =
+        await this.queries.verificationRecords.findActiveVerificationRecordById(this.id);
 
-      if (parsed.success && parsed.data.connectorSession) {
-        this.connectorSession = parsed.data.connectorSession;
+      if (databaseRecord) {
+        const parsed = enterpriseSsoVerificationRecordDataGuard.safeParse({
+          ...databaseRecord.data,
+          id: databaseRecord.id,
+        });
+
+        if (parsed.success && parsed.data.connectorSession) {
+          this.connectorSession = parsed.data.connectorSession;
+        }
       }
     }
 
+    const sessionResult = singleSignOnConnectorSessionGuard.safeParse(this.connectorSession);
+
     assertThat(
-      this.connectorSession,
+      sessionResult.success,
       new RequestError({ code: 'session.connector_validation_session_not_found', status: 400 })
     );
 
-    try {
-      const connectorInstance = new ssoConnectorFactories[providerName].constructor(
-        connectorData,
-        envSet.endpoint
-      );
+    const session = sessionResult.data;
 
+    try {
       const { enableTokenStorage } = connectorData;
       const issuer = await connectorInstance.getIssuer();
 
       if (connectorInstance instanceof OidcConnector) {
-        const { userInfo, tokenResponse } = await connectorInstance.getUserInfo(
-          // eslint-disable-next-line no-restricted-syntax -- ConnectorSession (catchall) is runtime-compatible with SingleSignOnConnectorSession
-          this.connectorSession as unknown as SingleSignOnConnectorSession,
-          data
-        );
+        const { userInfo, tokenResponse } = await connectorInstance.getUserInfo(session, data);
 
         log.append({ issuer, userInfo });
 
@@ -451,10 +478,7 @@ export class EnterpriseSsoVerification
         };
       }
 
-      const { userInfo } = await connectorInstance.getUserInfo(
-        // eslint-disable-next-line no-restricted-syntax -- ConnectorSession (catchall) is runtime-compatible with SingleSignOnConnectorSession
-        this.connectorSession as unknown as SingleSignOnConnectorSession
-      );
+      const { userInfo } = await connectorInstance.getUserInfo(session);
 
       return {
         issuer,
@@ -462,7 +486,10 @@ export class EnterpriseSsoVerification
       };
     } catch (error: unknown) {
       if (error instanceof ConnectorError) {
-        throw new RequestError({ code: `connector.${error.code}`, status: 500 }, error.data);
+        throw new RequestError(
+          { code: `connector.${error.code}`, status: getConnectorErrorStatus(error.code) },
+          error.data
+        );
       }
       throw error;
     }
