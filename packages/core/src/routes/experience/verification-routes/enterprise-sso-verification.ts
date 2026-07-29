@@ -8,6 +8,7 @@ import type Router from 'koa-router';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { insertVerificationRecord } from '#src/libraries/verification.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -61,8 +62,11 @@ export default function enterpriseSsoVerificationRoutes<
       const authorizationUri = await enterpriseSsoVerification.createAuthorizationUrl(
         ctx,
         tenantContext,
-        ctx.guard.body
+        ctx.guard.body,
+        'verificationRecord'
       );
+
+      await insertVerificationRecord(enterpriseSsoVerification, queries);
 
       ctx.experienceInteraction.setVerificationRecord(enterpriseSsoVerification);
 
@@ -120,7 +124,12 @@ export default function enterpriseSsoVerificationRoutes<
         new RequestError({ code: 'session.verification_session_not_found', status: 404 })
       );
 
-      await enterpriseSsoVerificationRecord.verify(ctx, tenantContext, connectorData);
+      await enterpriseSsoVerificationRecord.verify(
+        ctx,
+        tenantContext,
+        connectorData,
+        'verificationRecord'
+      );
       // Skip captcha for enterprise sso verification, as it's already verified by the connector
       ctx.experienceInteraction.skipCaptcha();
       await ctx.experienceInteraction.save();

@@ -394,6 +394,24 @@ export class EnterpriseSsoVerification
     const log = ctx.createLog('Interaction.SignIn.Identifier.SingleSignOn.Submit');
     log.append({ connectorId, data });
 
+    // Try to load the latest connector session from the DB first.
+    // For SAML SSO connectors, the ACS endpoint may have stored userInfo in the DB record's
+    // connectorSession after the user authenticated at the IdP.
+    const databaseRecord = await this.queries.verificationRecords.findActiveVerificationRecordById(
+      this.id
+    );
+
+    if (databaseRecord) {
+      const parsed = enterpriseSsoVerificationRecordDataGuard.safeParse({
+        ...databaseRecord.data,
+        id: databaseRecord.id,
+      });
+
+      if (parsed.success && parsed.data.connectorSession) {
+        this.connectorSession = parsed.data.connectorSession;
+      }
+    }
+
     assertThat(
       this.connectorSession,
       new RequestError({ code: 'session.connector_validation_session_not_found', status: 400 })
