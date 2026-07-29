@@ -31,6 +31,7 @@ type Props = {
   readonly data: CertificateData[];
   readonly isLoading: boolean;
   readonly errorMessage?: string;
+  /** Builds the certificate download filename (without extension) for the given key id. */
   readonly buildDownloadFilename: (id: string) => string;
   readonly onDelete: (id: string) => void;
   readonly onActivate: (id: string) => void;

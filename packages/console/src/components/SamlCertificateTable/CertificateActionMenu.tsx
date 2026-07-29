@@ -30,7 +30,9 @@ function CertificateActionMenu({
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const onDownload = useCallback(() => {
-    downloadText(certificate, buildDownloadFilename(id), 'application/x-x509-ca-cert');
+    // The explicit `.pem` extension keeps the file acceptable to IdP certificate-upload pickers
+    // (e.g. Okta rejects the browser-invented extension of an extension-less download).
+    downloadText(certificate, `${buildDownloadFilename(id)}.pem`, 'application/x-x509-ca-cert');
   }, [buildDownloadFilename, certificate, id]);
 
   return (
