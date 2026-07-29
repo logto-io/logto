@@ -15,6 +15,7 @@ import {
   getConstantClientMetadata,
   validateCustomClientMetadata,
   buildLoginPromptUrl,
+  buildInteractionRedirectPath,
   parseSharedExperienceParams,
 } from './utils.js';
 
@@ -432,5 +433,23 @@ describe('parseSharedExperienceParams', () => {
     ).toEqual({
       organizationId: 'org_123',
     });
+  });
+});
+
+describe('buildInteractionRedirectPath', () => {
+  it('leaves a root-mounted endpoint unchanged', () => {
+    expect(buildInteractionRedirectPath('/', 'sign-in?app_id=foo')).toBe('/sign-in?app_id=foo');
+    expect(buildInteractionRedirectPath('', 'consent')).toBe('/consent');
+  });
+
+  it('prefixes a sub-path endpoint', () => {
+    expect(buildInteractionRedirectPath('/logto', 'sign-in')).toBe('/logto/sign-in');
+    expect(buildInteractionRedirectPath('/logto', 'sign-in?app_id=foo')).toBe(
+      '/logto/sign-in?app_id=foo'
+    );
+  });
+
+  it('normalises a trailing slash on the base path', () => {
+    expect(buildInteractionRedirectPath('/logto/', 'register')).toBe('/logto/register');
   });
 });

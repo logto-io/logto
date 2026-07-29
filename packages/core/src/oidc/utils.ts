@@ -389,3 +389,19 @@ export const buildConsentPromptUrl = (appId?: unknown): string => {
 
   return experience.routes.consent + searchParamString;
 };
+
+/**
+ * Prefix an interaction prompt path (e.g. `sign-in?app_id=foo` from
+ * {@link buildLoginPromptUrl} / {@link buildConsentPromptUrl}) with the
+ * endpoint's base path, so the OIDC provider's interaction redirect stays under
+ * a sub-path deployment (e.g. `ENDPOINT=https://my.host/logto`) instead of
+ * escaping to the host root. Returns a root-relative path; a root-mounted
+ * endpoint (pathname `/`) is unchanged, keeping existing deployments identical.
+ *
+ * @param endpointPathname The endpoint URL pathname, i.e. `EnvSet.endpoint.pathname`.
+ * @param promptPath The relative prompt path (no leading slash).
+ */
+export const buildInteractionRedirectPath = (
+  endpointPathname: string,
+  promptPath: string
+): string => `${endpointPathname.replace(/\/+$/, '')}/${promptPath}`;

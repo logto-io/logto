@@ -37,6 +37,7 @@ import postgresAdapter from '#src/oidc/adapter.js';
 import {
   buildSharedExperienceCookie,
   buildConsentPromptUrl,
+  buildInteractionRedirectPath,
   buildLoginPromptUrl,
   isOriginAllowed,
   readOptionalQueryString,
@@ -265,13 +266,21 @@ export default function initOidc(
           );
         }
 
+        // Prefix the endpoint's base path so the interaction redirect stays under a
+        // sub-path deployment (e.g. ENDPOINT=https://my.host/logto) instead of escaping
+        // to the host root. Root-mounted endpoints resolve to the same path as before.
+        const { pathname: endpointPathname } = envSet.endpoint;
+
         switch (prompt.name) {
           case 'login': {
-            return '/' + buildLoginPromptUrl(params, sharedParams);
+            return buildInteractionRedirectPath(
+              endpointPathname,
+              buildLoginPromptUrl(params, sharedParams)
+            );
           }
 
           case 'consent': {
-            return '/' + buildConsentPromptUrl(appId);
+            return buildInteractionRedirectPath(endpointPathname, buildConsentPromptUrl(appId));
           }
 
           default: {
