@@ -56,6 +56,118 @@ describe('TenantPool.get', () => {
     expect(tenantCreate).toHaveBeenCalledTimes(2);
   });
 
+  it('gives up when the slot is lost on every attempt', async () => {
+    tenantCreate.mockImplementation(async () => {
+      const tenant = createMockTenant();
+      tenant.requestStart.mockReturnValue(false);
+
+      return tenant;
+    });
+
+    // The full message pins the cache-key identity and the loss count.
+    await expect(tenantPool.get('tenant-budget-exhausted')).rejects.toThrow(
+      'Failed to acquire a usable tenant instance: tenant-budget-exhausted-default (lost slots: 4)'
+    );
+
+    // The initial build plus `maxTenantRebuildAttempts` rebuilds, and no more.
+    expect(tenantCreate).toHaveBeenCalledTimes(4);
+  });
+
+  it('terminates when the fallback keeps losing the slot', async () => {
+    tenantCreate.mockImplementation(async () => {
+      const tenant = createMockTenant();
+
+      // Reloads drive acquisition to the fallback, which then keeps losing the slot.
+      if (tenantCreate.mock.calls.length > 10) {
+        tenant.requestStart.mockReturnValue(false);
+      } else {
+        tenant.checkHealth.mockResolvedValue(false);
+      }
+
+      return tenant;
+    });
+
+    await expect(tenantPool.get('tenant-fallback-lost-slot')).rejects.toThrow(
+      /Failed to acquire a usable tenant instance/
+    );
+
+    // The initial build, 10 health-check reloads, then 3 bounded rebuilds in the fallback.
+    expect(tenantCreate).toHaveBeenCalledTimes(14);
+  });
+
+  it('recovers in the fallback when a lost slot settles on the next build', async () => {
+    const createdTenants: Array<ReturnType<typeof createMockTenant>> = [];
+    tenantCreate.mockImplementation(async () => {
+      const tenant = createMockTenant();
+      const call = tenantCreate.mock.calls.length;
+      // eslint-disable-next-line @silverhand/fp/no-mutating-methods -- collect test doubles to assert the served instance
+      createdTenants.push(tenant);
+
+      // Reloads exhaust the acquire budget, the fallback loses its first slot, then recovers.
+      if (call === 11) {
+        tenant.requestStart.mockReturnValue(false);
+      } else if (call <= 10) {
+        tenant.checkHealth.mockResolvedValue(false);
+      }
+
+      return tenant;
+    });
+
+    const served = await tenantPool.get('tenant-fallback-recovery');
+
+    // The initial build, 10 health-check reloads, then one rebuild after the lost slot.
+    expect(tenantCreate).toHaveBeenCalledTimes(12);
+    expect(served).toBe(createdTenants.at(-1));
+    // The fallback serves without consulting the health check.
+    expect(served.checkHealth).not.toHaveBeenCalled();
+  });
+
+  it('grants the fallback a fresh rebuild budget', async () => {
+    tenantCreate.mockImplementation(async () => {
+      const tenant = createMockTenant();
+      const call = tenantCreate.mock.calls.length;
+
+      // Two early losses, then reloads until the acquire budget runs out, then losses again:
+      // the fallback must not inherit the main path's spent losses.
+      if (call <= 2 || call >= 11) {
+        tenant.requestStart.mockReturnValue(false);
+      } else {
+        tenant.checkHealth.mockResolvedValue(false);
+      }
+
+      return tenant;
+    });
+
+    await expect(tenantPool.get('tenant-fallback-budget')).rejects.toThrow(
+      /Failed to acquire a usable tenant instance/
+    );
+
+    // Two lost builds, a fresh build plus 8 reloads, then 3 fallback rebuilds: the fallback
+    // restarted the loss budget at zero.
+    expect(tenantCreate).toHaveBeenCalledTimes(14);
+  });
+
+  it('keeps the rebuild budget when reloads precede a lost slot', async () => {
+    tenantCreate.mockImplementation(async () => {
+      const tenant = createMockTenant();
+      const call = tenantCreate.mock.calls.length;
+
+      // Three stale instances, then one lost slot, then a healthy instance: reloads must not
+      // consume the rebuild budget, so the lost slot still gets its retry.
+      if (call <= 3) {
+        tenant.checkHealth.mockResolvedValue(false);
+      } else if (call === 4) {
+        tenant.requestStart.mockReturnValue(false);
+      }
+
+      return tenant;
+    });
+
+    await expect(tenantPool.get('tenant-reloads-then-loss')).resolves.toBeTruthy();
+
+    expect(tenantCreate).toHaveBeenCalledTimes(5);
+  });
+
   it('releases the reserved slot when the health check throws', async () => {
     const tenant = createMockTenant();
     tenant.checkHealth.mockRejectedValue(new Error('health check failed'));
