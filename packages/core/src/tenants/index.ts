@@ -1,3 +1,5 @@
+import { setTimeout } from 'node:timers/promises';
+
 import { ConsoleLog } from '@logto/shared';
 import chalk from 'chalk';
 import { LRUCache } from 'lru-cache';
@@ -16,16 +18,36 @@ const consoleLog = new ConsoleLog(chalk.magenta('tenant'));
  */
 const maxTenantAcquireAttempts = 10;
 
+/**
+ * How long an evicted tenant instance waits before disposal so requests already holding its
+ * cached promise can reserve their slot first: pending claims are microtasks while this grace
+ * elapses on a timer, so the claims always win. Without it the disposal continuation
+ * deterministically beats the requester's, and an instance evicted before it is claimed is
+ * always rebuilt. Each evicted instance keeps its idle pool open at most this much longer.
+ */
+const evictionDisposeGracePeriod = 1000;
+
 class TenantPool {
   protected cache = new LRUCache<string, Promise<Tenant>>({
     max: EnvSet.values.tenantPoolSize,
-    dispose: (entry) => {
+    dispose: (entry, key, reason) => {
+      // Eviction pressure is a leading incident indicator; keep it observable.
+      consoleLog.info('Dispose cached tenant:', key, 'Reason:', reason);
       void (async () => {
         try {
           const tenant = await entry;
 
+          // `undefined` is the timer's resolution value, present only to reach the options;
+          // the `ref: false` timer cannot keep the process alive on shutdown.
+          await setTimeout(evictionDisposeGracePeriod, undefined, { ref: false });
+
           try {
-            await tenant.dispose();
+            if ((await tenant.dispose()) === 'timeout') {
+              consoleLog.warn(
+                'Tenant disposal drain timed out; pool closed with requests in flight:',
+                key
+              );
+            }
           } catch (error: unknown) {
             consoleLog.warn('Failed to dispose tenant:', error);
           }
@@ -77,6 +99,14 @@ class TenantPool {
     // request uses it, closing the dispose-before-request race.
     if (!tenant.requestStart()) {
       this.deleteCachedTenant(cacheKey, tenantPromise);
+      consoleLog.warn(
+        'Lost tenant request slot; instance was disposed before use:',
+        tenantId,
+        'Custom domain:',
+        customDomain,
+        'Attempt:',
+        attempt
+      );
 
       return this.getWithAttempts(cacheKey, tenantId, customDomain, attempt + 1);
     }
@@ -117,6 +147,12 @@ class TenantPool {
 
     if (!tenant.requestStart()) {
       this.deleteCachedTenant(cacheKey, tenantPromise);
+      consoleLog.warn(
+        'Lost tenant request slot; instance was disposed before use:',
+        tenantId,
+        'Custom domain:',
+        customDomain
+      );
 
       return this.getAfterAttemptLimit(cacheKey, tenantId, customDomain);
     }
