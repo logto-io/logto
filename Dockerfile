@@ -29,7 +29,17 @@ ENV APPLICATIONINSIGHTS_CONNECTION_STRING=${applicationinsights_connection_strin
 ARG logto_oss_survey_endpoint=
 ENV LOGTO_OSS_SURVEY_ENDPOINT=${logto_oss_survey_endpoint}
 
-RUN pnpm -r build
+### Optionally build the Admin Console with a runtime-substitutable base ###
+# `CONSOLE_PUBLIC_URL` is Vite's `base`, baked in at build time. Building with a
+# sentinel base lets docker-entrypoint.sh rewrite it to the runtime value, so a
+# single prebuilt image (e.g. a hardened, third-party-built one) can be served
+# under any base path. Default builds are unaffected.
+ARG console_runtime_base=
+RUN if [ -n "$console_runtime_base" ]; then \
+      CONSOLE_PUBLIC_URL=/__LOGTO_CONSOLE_BASE__ pnpm -r build; \
+    else \
+      pnpm -r build; \
+    fi
 
 ### Add official connectors ###
 ARG additional_connector_args
@@ -55,5 +65,9 @@ ENV PRIVATE_KEY_ROTATION_GRACE_PERIOD=${private_key_rotation_grace_period}
 COPY --from=builder /etc/logto .
 RUN mkdir -p /etc/logto/packages/cli/alteration-scripts && chmod g+w /etc/logto/packages/cli/alteration-scripts
 EXPOSE 3001
-ENTRYPOINT ["npm", "run"]
+RUN chmod +x docker-entrypoint.sh
+# The entrypoint rewrites the Admin Console's sentinel base to the runtime
+# CONSOLE_PUBLIC_URL (no-op unless built with --build-arg console_runtime_base=true),
+# then execs `npm run <cmd>`.
+ENTRYPOINT ["./docker-entrypoint.sh"]
 CMD ["start"]
