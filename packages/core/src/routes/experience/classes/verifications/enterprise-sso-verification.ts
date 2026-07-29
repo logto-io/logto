@@ -17,6 +17,8 @@ import {
 import { generateStandardId } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
 
+import { idpInitiatedSamlSsoSessionCookieName } from '#src/constants/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import {
   getSsoAuthorizationUrl,
@@ -24,6 +26,7 @@ import {
 } from '#src/libraries/verification-helpers/single-sign-on.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import OidcConnector from '#src/sso/OidcConnector/index.js';
+import SamlConnector from '#src/sso/SamlConnector/index.js';
 import { ssoConnectorFactories, type SingleSignOnConnectorSession } from '#src/sso/index.js';
 import { type ExtendedSocialUserInfo } from '#src/sso/types/saml.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -357,6 +360,46 @@ export class EnterpriseSsoVerification
       connectorData,
       envSet.endpoint
     );
+
+    if (EnvSet.values.isDevFeaturesEnabled && connectorInstance instanceof SamlConnector) {
+      const sessionId = ctx.cookies.get(idpInitiatedSamlSsoSessionCookieName);
+
+      if (sessionId) {
+        const idpInitiatedSamlSsoSession =
+          await this.queries.ssoConnectors.findIdpInitiatedSamlSsoSessionById(sessionId);
+
+        if (
+          idpInitiatedSamlSsoSession &&
+          idpInitiatedSamlSsoSession.connectorId === this.connectorId
+        ) {
+          ctx.cookies.set(idpInitiatedSamlSsoSessionCookieName, '', {
+            httpOnly: true,
+            expires: new Date(0),
+          });
+
+          void trySafe(async () => {
+            await this.queries.ssoConnectors.deleteIdpInitiatedSamlSsoSessionById(sessionId);
+          });
+
+          const { expiresAt, assertionContent } = idpInitiatedSamlSsoSession;
+
+          if (expiresAt > Date.now()) {
+            const userInfo = connectorInstance.getUserInfoFromSamlAssertion(assertionContent);
+
+            this.connectorSession = {
+              redirectUri,
+              state,
+              connectorId: this.connectorId,
+              userInfo,
+            };
+
+            const url = new URL(redirectUri);
+            url.searchParams.append('state', state);
+            return url.toString();
+          }
+        }
+      }
+    }
 
     return connectorInstance.getAuthorizationUrl(
       {
