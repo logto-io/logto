@@ -8,7 +8,6 @@ import {
   mockActionConfigForPostSignIn,
   mockLogtoConfigRows,
 } from '#src/__mocks__/index.js';
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
@@ -18,12 +17,6 @@ import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
-
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-
-const setDevFeaturesEnabled = (isDevFeaturesEnabled: boolean) => {
-  Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', isDevFeaturesEnabled);
-};
 
 const createResponseError = (status: number, body: Record<string, unknown>) =>
   new ResponseError(
@@ -50,8 +43,6 @@ const logtoConfigQueries = {
 
 const mockQuotaLibrary = createMockQuotaLibrary();
 
-setDevFeaturesEnabled(true);
-
 const settingRoutes = await pickDefault(import('./index.js'));
 
 describe('configs action routes', () => {
@@ -76,11 +67,6 @@ describe('configs action routes', () => {
   afterEach(() => {
     jest.restoreAllMocks();
     jest.clearAllMocks();
-    setDevFeaturesEnabled(true);
-  });
-
-  afterAll(() => {
-    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
   });
 
   it('GET /configs/actions should return all records', async () => {
@@ -440,24 +426,5 @@ describe('configs action routes', () => {
     expect(response.body.data).toEqual({
       message: 'Socket closed',
     });
-  });
-
-  it('should not register action routes when dev features are disabled', async () => {
-    setDevFeaturesEnabled(false);
-
-    const requester = createRequester({
-      authedRoutes: settingRoutes,
-      tenantContext: new MockTenant(
-        undefined,
-        { logtoConfigs: logtoConfigQueries },
-        undefined,
-        { quota: mockQuotaLibrary },
-        mockLogtoConfigsLibrary
-      ),
-    });
-
-    const response = await requester.get('/configs/actions');
-
-    expect(response.status).toEqual(404);
   });
 });

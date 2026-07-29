@@ -1,6 +1,5 @@
 type ActionsAvailability = {
   isCloud: boolean;
-  isDevFeaturesEnabled: boolean;
   actionsEnabled: boolean;
 };
 
@@ -36,8 +35,5 @@ export const normalizeActionsQuota = <Quota extends ActionsQuotaData>(
   return { ...quota, actionsEnabled };
 };
 
-export const isActionsEnabled = ({
-  isCloud,
-  isDevFeaturesEnabled,
-  actionsEnabled,
-}: ActionsAvailability) => isDevFeaturesEnabled && (!isCloud || actionsEnabled);
+export const isActionsEnabled = ({ isCloud, actionsEnabled }: ActionsAvailability) =>
+  !isCloud || actionsEnabled;

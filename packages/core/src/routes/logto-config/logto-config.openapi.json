@@ -323,7 +323,6 @@
       "get": {
         "summary": "Get all actions",
         "description": "Get all action configurations for the tenant.",
-        "tags": ["Dev feature"],
         "responses": {
           "200": {
             "description": "The action configurations."
@@ -335,7 +334,6 @@
       "put": {
         "summary": "Create or update action",
         "description": "Create or update an action configuration for the given action type.",
-        "tags": ["Dev feature"],
         "parameters": [
           {
             "in": "path",
@@ -386,7 +384,6 @@
       "patch": {
         "summary": "Update action",
         "description": "Update the action configuration for the given action type.",
-        "tags": ["Dev feature"],
         "parameters": [
           {
             "in": "path",
@@ -437,7 +434,6 @@
       "get": {
         "summary": "Get action",
         "description": "Get the action configuration for the given action type.",
-        "tags": ["Dev feature"],
         "parameters": [
           {
             "in": "path",
@@ -457,7 +453,6 @@
       "delete": {
         "summary": "Delete action",
         "description": "Delete the action configuration for the given action type.",
-        "tags": ["Dev feature"],
         "parameters": [
           {
             "in": "path",
@@ -479,7 +474,6 @@
       "post": {
         "summary": "Test action",
         "description": "Test an action script with a sample context.",
-        "tags": ["Dev feature"],
         "requestBody": {
           "content": {
             "application/json": {
