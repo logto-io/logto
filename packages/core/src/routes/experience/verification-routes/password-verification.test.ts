@@ -337,7 +337,6 @@ describe('password verification route PostFirstFactorVerification fallback', () 
       {
         checkIdentifierCollision: true,
         mergeCustomData: true,
-        skipEmailDomainJit: true,
       }
     );
     expect(updateUser).not.toHaveBeenCalled();

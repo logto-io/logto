@@ -312,9 +312,9 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
     return insertJitMemberships(userId, jitOrganizations);
   };
 
+  // TODO: If the user's email is not verified, we should not provision the user into any organization.
   /**
    * Provision the user with JIT organizations and roles based on a verified email domain.
-   * The email must have been verified by the caller before calling this function.
    * Returns only the JIT orgs the user was newly added to.
    */
   const provisionOrganizationsByVerifiedEmail = async (
