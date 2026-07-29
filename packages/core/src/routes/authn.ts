@@ -19,8 +19,6 @@ import assertThat from '#src/utils/assert-that.js';
 import {
   getConnectorSessionResultFromJti,
   assignConnectorSessionResultViaJti,
-  getSingleSignOnSessionResultByJti,
-  assignSamlAssertionResultViaJti,
 } from '#src/utils/saml-assertion-handler.js';
 
 import type { AnonymousRouter, RouterInitArgs } from './types.js';
@@ -277,7 +275,6 @@ export default function authnRoutes<T extends AnonymousRouter>(
         return;
       }
 
-      // TODO: remove this assertion after the IdP initiated SSO flow is implemented
       assertThat(
         jti,
         new RequestError({
@@ -286,61 +283,42 @@ export default function authnRoutes<T extends AnonymousRouter>(
         })
       );
 
-      // Try the verification record path first.
       const verificationRecord =
         await queries.verificationRecords.findActiveVerificationRecordById(jti);
 
-      if (verificationRecord) {
-        const parsed = enterpriseSsoVerificationRecordDataGuard.safeParse({
-          ...verificationRecord.data,
-          id: verificationRecord.id,
-        });
+      assertThat(
+        verificationRecord,
+        new RequestError({
+          code: 'session.connector_validation_session_not_found',
+          status: 404,
+        })
+      );
 
-        if (parsed.success) {
-          const { connectorSession } = parsed.data;
-          const sessionParseResult = singleSignOnConnectorSessionGuard.safeParse(connectorSession);
+      const parsed = enterpriseSsoVerificationRecordDataGuard.safeParse({
+        ...verificationRecord.data,
+        id: verificationRecord.id,
+      });
 
-          if (sessionParseResult.success) {
-            const { redirectUri, state, connectorId: sessionConnectorId } = sessionParseResult.data;
+      assertThat(
+        parsed.success,
+        new RequestError({
+          code: 'session.connector_validation_session_not_found',
+          status: 404,
+        })
+      );
 
-            assertThat(
-              connectorId === sessionConnectorId,
-              new RequestError({
-                code: 'session.connector_validation_session_not_found',
-                status: 404,
-              })
-            );
+      const { connectorSession } = parsed.data;
+      const sessionParseResult = singleSignOnConnectorSessionGuard.safeParse(connectorSession);
 
-            const assertionContent = await connectorInstance.parseSamlAssertionContent(body);
-            const userInfo = connectorInstance.getUserInfoFromSamlAssertion(assertionContent);
+      assertThat(
+        sessionParseResult.success,
+        new RequestError({
+          code: 'session.connector_validation_session_not_found',
+          status: 404,
+        })
+      );
 
-            await queries.verificationRecords.update({
-              where: { id: jti },
-              set: {
-                data: {
-                  ...verificationRecord.data,
-                  connectorSession: {
-                    ...connectorSession,
-                    userInfo,
-                  },
-                },
-              },
-              jsonbMode: 'replace',
-            });
-
-            const url = new URL(redirectUri);
-            url.searchParams.append('state', state);
-
-            ctx.redirect(url.toString());
-
-            return next();
-          }
-        }
-      }
-
-      // Fall back to the interaction-based path
-      const singleSignOnSession = await getSingleSignOnSessionResultByJti(jti, provider);
-      const { redirectUri, state, connectorId: sessionConnectorId } = singleSignOnSession;
+      const { redirectUri, state, connectorId: sessionConnectorId } = sessionParseResult.data;
 
       assertThat(
         connectorId === sessionConnectorId,
@@ -353,13 +331,20 @@ export default function authnRoutes<T extends AnonymousRouter>(
       const assertionContent = await connectorInstance.parseSamlAssertionContent(body);
       const userInfo = connectorInstance.getUserInfoFromSamlAssertion(assertionContent);
 
-      // Store the extracted user info to the connector session storage for later use.
-      await assignSamlAssertionResultViaJti(jti, provider, {
-        ...singleSignOnSession,
-        userInfo,
+      await queries.verificationRecords.update({
+        where: { id: jti },
+        set: {
+          data: {
+            ...verificationRecord.data,
+            connectorSession: {
+              ...connectorSession,
+              userInfo,
+            },
+          },
+        },
+        jsonbMode: 'replace',
       });
 
-      // Client side will verify the state to prevent CSRF attack.
       const url = new URL(redirectUri);
       url.searchParams.append('state', state);
 
