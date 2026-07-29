@@ -18,7 +18,7 @@ mockEsm('./Tenant.js', () => ({
   default: { create: tenantCreate },
 }));
 
-const { tenantPool } = await import('./index.js');
+const { tenantPool, TenantNotFoundError } = await import('./index.js');
 
 const createMockTenant = () => ({
   requestStart: jest.fn<boolean, never[]>(() => true),
@@ -30,6 +30,7 @@ const createMockTenant = () => ({
 // The pool is a module-level singleton, so each test uses a distinct tenant id.
 describe('TenantPool.get', () => {
   afterEach(() => {
+    jest.restoreAllMocks();
     jest.clearAllMocks();
   });
 
@@ -166,6 +167,58 @@ describe('TenantPool.get', () => {
     await expect(tenantPool.get('tenant-reloads-then-loss')).resolves.toBeTruthy();
 
     expect(tenantCreate).toHaveBeenCalledTimes(5);
+  });
+
+  it('serves repeated unknown-tenant requests from the negative cache', async () => {
+    const healthy = createMockTenant();
+    tenantCreate.mockImplementation(async ({ id }: { id: string }) => {
+      if (id === 'tenant-unknown') {
+        throw new TenantNotFoundError('Cannot find valid tenant credentials for ID tenant-unknown');
+      }
+
+      return healthy;
+    });
+
+    await expect(tenantPool.get('tenant-unknown')).rejects.toThrow(TenantNotFoundError);
+    // Cache-served rejections stay distinguishable from fresh lookups in logs.
+    await expect(tenantPool.get('tenant-unknown')).rejects.toThrow(
+      'Cannot find valid tenant credentials for ID tenant-unknown (negative cache)'
+    );
+    // The negative entry covers the tenant across custom domains as well.
+    await expect(tenantPool.get('tenant-unknown', 'https://x.io')).rejects.toThrow(
+      TenantNotFoundError
+    );
+
+    // Only the first unknown-tenant request performs a lookup (and logs `Init tenant`).
+    expect(tenantCreate).toHaveBeenCalledTimes(1);
+
+    // Other tenants are unaffected while the negative entry is live.
+    await expect(tenantPool.get('tenant-unknown-neighbor')).resolves.toBe(healthy);
+    expect(tenantCreate).toHaveBeenCalledTimes(2);
+  });
+
+  it('retries an unknown tenant after the negative entry expires', async () => {
+    const healthy = createMockTenant();
+    tenantCreate
+      .mockRejectedValueOnce(
+        new TenantNotFoundError('Cannot find valid tenant credentials for ID tenant-provisioned')
+      )
+      .mockResolvedValue(healthy);
+
+    await expect(tenantPool.get('tenant-provisioned')).rejects.toThrow(TenantNotFoundError);
+
+    const realNow = Date.now();
+    const nowSpy = jest.spyOn(Date, 'now');
+
+    // Still cached just inside the TTL.
+    nowSpy.mockReturnValue(realNow + 59_000);
+    await expect(tenantPool.get('tenant-provisioned')).rejects.toThrow(TenantNotFoundError);
+    expect(tenantCreate).toHaveBeenCalledTimes(1);
+
+    // A tenant provisioned within the TTL becomes reachable once the entry expires.
+    nowSpy.mockReturnValue(realNow + 61_000);
+    await expect(tenantPool.get('tenant-provisioned')).resolves.toBe(healthy);
+    expect(tenantCreate).toHaveBeenCalledTimes(2);
   });
 
   it('releases the reserved slot when the health check throws', async () => {
