@@ -62,8 +62,7 @@ export default function enterpriseSsoVerificationRoutes<
       const authorizationUri = await enterpriseSsoVerification.createAuthorizationUrl(
         ctx,
         tenantContext,
-        ctx.guard.body,
-        'verificationRecord'
+        ctx.guard.body
       );
 
       await insertVerificationRecord(enterpriseSsoVerification, queries);
@@ -124,12 +123,7 @@ export default function enterpriseSsoVerificationRoutes<
         new RequestError({ code: 'session.verification_session_not_found', status: 404 })
       );
 
-      await enterpriseSsoVerificationRecord.verify(
-        ctx,
-        tenantContext,
-        connectorData,
-        'verificationRecord'
-      );
+      await enterpriseSsoVerificationRecord.verify(ctx, tenantContext, connectorData);
       // Skip captcha for enterprise sso verification, as it's already verified by the connector
       ctx.experienceInteraction.skipCaptcha();
       await ctx.experienceInteraction.save();

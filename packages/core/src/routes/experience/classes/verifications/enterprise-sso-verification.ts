@@ -20,10 +20,6 @@ import { conditional, trySafe } from '@silverhand/essentials';
 import { idpInitiatedSamlSsoSessionCookieName } from '#src/constants/index.js';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import {
-  getSsoAuthorizationUrl,
-  verifySsoIdentity,
-} from '#src/libraries/verification-helpers/single-sign-on.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import OidcConnector from '#src/sso/OidcConnector/index.js';
 import SamlConnector from '#src/sso/SamlConnector/index.js';
@@ -47,8 +43,6 @@ export {
   enterpriseSsoVerificationRecordDataGuard,
   sanitizedEnterpriseSsoVerificationRecordDataGuard,
 } from '@logto/schemas';
-
-type SsoAuthorizationSessionStorageType = 'interactionSession' | 'verificationRecord';
 
 export type EnterpriseSsoConnectorTokenSetSecret = {
   encryptedTokenSet: EncryptedTokenSet;
@@ -105,60 +99,23 @@ export class EnterpriseSsoVerification
     return this.connectorDataCache;
   }
 
-  /**
-   * Create the authorization URL for the enterprise SSO connector.
-   *
-   * @param {SsoAuthorizationSessionStorageType} connectorSessionType - Whether to store the connector
-   * session result in the current verification record directly. Set to `'verificationRecord'` for
-   * flows (e.g. profile API) that do not rely on the OIDC interaction context.
-   *
-   * @remarks
-   * Refers to the {@link getSsoAuthorizationUrl} function in the libraries/verification-helpers/single-sign-on.ts file.
-   * Currently, all the intermediate connector session results are stored in the provider's interactionDetails separately,
-   * apart from the new verification record.
-   * For compatibility reasons, we keep using the old {@link getSsoAuthorizationUrl} method here as a single source of truth.
-   * Especially for the SAML connectors,
-   * SAML ACS endpoint will find the connector session result by the jti and assign it to the interaction storage.
-   * We will need to update the SAML ACS endpoint before move the logic to this new EnterpriseSsoVerification class.
-   */
   async createAuthorizationUrl(
     ctx: WithLogContext,
     tenantContext: TenantContext,
-    payload: SocialAuthorizationUrlPayload,
-    connectorSessionType: SsoAuthorizationSessionStorageType = 'interactionSession'
+    payload: SocialAuthorizationUrlPayload
   ) {
-    if (connectorSessionType === 'verificationRecord') {
-      return this.createSocialAuthorizationSession(ctx, tenantContext, payload);
-    }
-
-    const connectorData = await this.getConnectorData();
-    return getSsoAuthorizationUrl(ctx, tenantContext, connectorData, payload);
+    return this.createSocialAuthorizationSession(ctx, tenantContext, payload);
   }
 
-  /**
-   * Verify the enterprise SSO identity and store the enterprise SSO identity in the verification record.
-   *
-   * @param {SsoAuthorizationSessionStorageType} connectorSessionType - Whether to find the connector
-   * session result from the current verification record directly. Set to `'verificationRecord'` for
-   * flows (e.g. profile API) that do not rely on the OIDC interaction context.
-   *
-   * @remarks
-   * Refers to the {@link verifySsoIdentity} function in the libraries/verification-helpers/single-sign-on.ts file.
-   * For compatibility reasons, we keep using the old {@link verifySsoIdentity} method here as a single source of truth.
-   * See the above {@link createAuthorizationUrl} method for more details.
-   */
-  async verify(
-    ctx: WithLogContext,
-    tenantContext: TenantContext,
-    callbackData: JsonObject,
-    connectorSessionType: SsoAuthorizationSessionStorageType = 'interactionSession'
-  ) {
+  async verify(ctx: WithLogContext, tenantContext: TenantContext, callbackData: JsonObject) {
     const connectorData = await this.getConnectorData();
 
-    const { issuer, userInfo, encryptedTokenSet } =
-      connectorSessionType === 'verificationRecord'
-        ? await this.verifySsoIdentityFromRecord(ctx, tenantContext, connectorData, callbackData)
-        : await verifySsoIdentity(ctx, tenantContext, connectorData, callbackData);
+    const { issuer, userInfo, encryptedTokenSet } = await this.verifySsoIdentityFromRecord(
+      ctx,
+      tenantContext,
+      connectorData,
+      callbackData
+    );
 
     this.issuer = issuer;
     this.enterpriseSsoUserInfo = userInfo;
