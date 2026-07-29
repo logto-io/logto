@@ -1,8 +1,11 @@
 import { ConnectorType } from '@logto/connector-kit';
+import { type SupportedSsoConnector } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import { mockAdminUserRole } from '#src/__mocks__/index.js';
+import { mockSamlSsoConnector } from '#src/__mocks__/sso.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import SamlConnector from '#src/sso/SamlConnector/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -12,12 +15,45 @@ import { mockConnector, mockMetadata, mockLogtoConnector } from '../__mocks__/co
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
 
+type SsoConnectorData = { id: string; config: Record<string, unknown> };
+
+const mockParseSamlAssertionContent = jest.fn();
+const mockGetUserInfoFromSamlAssertion = jest.fn();
+
+class MockSamlSsoConnector extends SamlConnector {
+  parseSamlAssertionContent: jest.Mock = mockParseSamlAssertionContent;
+  getUserInfoFromSamlAssertion: jest.Mock = mockGetUserInfoFromSamlAssertion;
+
+  constructor(data: SsoConnectorData, endpoint: URL, ..._rest: unknown[]) {
+    super(endpoint, data.id, data.config);
+  }
+}
+
+const mockSamlConnectorFactoryConstructor = jest
+  .fn()
+  .mockImplementation((...args: [SsoConnectorData, URL]) => new MockSamlSsoConnector(...args));
+
 const { verifyBearerTokenFromRequest } = await mockEsmWithActual(
   '#src/middleware/koa-auth.js',
   () => ({
     verifyBearerTokenFromRequest: jest.fn(),
   })
 );
+
+await mockEsmWithActual('#src/sso/index.js', () => ({
+  ssoConnectorFactories: {
+    SAML: {
+      provider: 'SAML',
+      constructor: mockSamlConnectorFactoryConstructor,
+      configGuard: { safeParse: jest.fn().mockReturnValue({ success: true, data: {} }) },
+    },
+    OIDC: {},
+    AZURE_AD: {},
+    AZURE_AD_OIDC: {},
+    GOOGLE_WORKSPACE: {},
+    OKTA: {},
+  },
+}));
 const validateSamlAssertion = jest.fn();
 
 const mockSamlLogtoConnector = {
@@ -62,6 +98,41 @@ const { createRequester } = await import('#src/utils/test-utils.js');
 const request = createRequester({
   anonymousRoutes: await pickDefault(import('#src/routes/authn.js')),
   tenantContext,
+});
+
+// SSO SAML ACS endpoint test helpers
+const ssoSsoConnectorsLibrary = {
+  getSsoConnectorById: jest.fn(async (connectorId: string) => {
+    if (connectorId !== 'saml_sso_connector') {
+      throw new RequestError({ code: 'entity.not_found', status: 404, connectorId });
+    }
+
+    return mockSamlSsoConnector as unknown as SupportedSsoConnector;
+  }),
+};
+
+const mockFindActiveVerificationRecordById = jest.fn();
+const mockUpdateVerificationRecord = jest.fn();
+
+const ssoTenantContext = new MockTenant(
+  createMockProvider(jest.fn().mockResolvedValue(baseProviderMock)),
+  {
+    verificationRecords: {
+      findActiveVerificationRecordById: mockFindActiveVerificationRecordById,
+      update: mockUpdateVerificationRecord,
+    },
+  },
+  undefined,
+  {
+    users: usersLibraries,
+    socials: socialsLibraries,
+    ssoConnectors: ssoSsoConnectorsLibrary,
+  }
+);
+
+const ssoRequest = createRequester({
+  anonymousRoutes: await pickDefault(import('#src/routes/authn.js')),
+  tenantContext: ssoTenantContext,
 });
 
 describe('authn route for Hasura', () => {
@@ -189,5 +260,79 @@ describe('authn route for SAML', () => {
       expect.anything(),
       expect.anything()
     );
+  });
+});
+
+describe('authn route for SSO SAML ACS (verification-record path)', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('POST /authn/single-sign-on/saml/non_existent_connector should throw 404', async () => {
+    const response = await ssoRequest
+      .post('/authn/single-sign-on/saml/non_existent_connector')
+      .send({
+        SAMLResponse: 'saml_response',
+        RelayState: 'relay_state',
+      });
+    expect(response.status).toEqual(404);
+  });
+
+  it('POST /authn/single-sign-on/saml/saml_sso_connector should throw 404 when no verification record found', async () => {
+    mockFindActiveVerificationRecordById.mockResolvedValue();
+
+    const response = await ssoRequest.post('/authn/single-sign-on/saml/saml_sso_connector').send({
+      SAMLResponse: 'saml_response',
+      RelayState: 'relay_state',
+    });
+    expect(response.status).toEqual(404);
+  });
+
+  it('POST /authn/single-sign-on/saml/saml_sso_connector with valid RelayState and verification record should redirect', async () => {
+    const redirectUri = 'https://example.com/callback';
+    const state = 'test-state';
+
+    mockFindActiveVerificationRecordById.mockResolvedValue({
+      id: 'relay_state',
+      data: {
+        type: 'EnterpriseSso',
+        connectorId: 'saml_sso_connector',
+        connectorSession: {
+          redirectUri,
+          state,
+          connectorId: 'saml_sso_connector',
+        },
+      },
+    });
+
+    const response = await ssoRequest.post('/authn/single-sign-on/saml/saml_sso_connector').send({
+      SAMLResponse: 'saml_response',
+      RelayState: 'relay_state',
+    });
+
+    expect(response.status).toEqual(302);
+    expect(response.headers.location).toBe(`${redirectUri}?state=${state}`);
+  });
+
+  it('POST /authn/single-sign-on/saml/saml_sso_connector with non-matching connectorId should return 400', async () => {
+    mockFindActiveVerificationRecordById.mockResolvedValue({
+      id: 'some_jti',
+      data: {
+        type: 'EnterpriseSso',
+        connectorId: 'wrong_connector',
+        connectorSession: {
+          redirectUri: 'https://example.com/callback',
+          state: 'test-state',
+          connectorId: 'wrong_connector',
+        },
+      },
+    });
+
+    const response = await ssoRequest.post('/authn/single-sign-on/saml/saml_sso_connector').send({
+      SAMLResponse: 'saml_response',
+      RelayState: 'some_jti',
+    });
+
+    expect(response.status).toEqual(400);
   });
 });
