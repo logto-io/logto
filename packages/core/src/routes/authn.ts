@@ -1,6 +1,10 @@
 import type { ConnectorSession } from '@logto/connector-kit';
 import { ConnectorError, ConnectorErrorCodes, ConnectorType } from '@logto/connector-kit';
-import { jsonObjectGuard, SsoAuthenticationQueryKey } from '@logto/schemas';
+import {
+  enterpriseSsoVerificationRecordDataGuard,
+  jsonObjectGuard,
+  SsoAuthenticationQueryKey,
+} from '@logto/schemas';
 import { z } from 'zod';
 
 import { idpInitiatedSamlSsoSessionCookieName, ssoPath } from '#src/constants/index.js';
@@ -10,7 +14,7 @@ import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import { verifyBearerTokenFromRequest } from '#src/middleware/koa-auth/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import SamlConnector from '#src/sso/SamlConnector/index.js';
-import { ssoConnectorFactories } from '#src/sso/index.js';
+import { singleSignOnConnectorSessionGuard, ssoConnectorFactories } from '#src/sso/index.js';
 import assertThat from '#src/utils/assert-that.js';
 import {
   getConnectorSessionResultFromJti,
@@ -282,7 +286,59 @@ export default function authnRoutes<T extends AnonymousRouter>(
         })
       );
 
-      // Retrieve the single sign on session data using the jti
+      // Try the verification record path first.
+      const verificationRecord =
+        await queries.verificationRecords.findActiveVerificationRecordById(jti);
+
+      if (verificationRecord) {
+        const parsed = enterpriseSsoVerificationRecordDataGuard.safeParse({
+          ...verificationRecord.data,
+          id: verificationRecord.id,
+        });
+
+        if (parsed.success) {
+          const { connectorSession } = parsed.data;
+          const sessionParseResult = singleSignOnConnectorSessionGuard.safeParse(connectorSession);
+
+          if (sessionParseResult.success) {
+            const { redirectUri, state, connectorId: sessionConnectorId } = sessionParseResult.data;
+
+            assertThat(
+              connectorId === sessionConnectorId,
+              new RequestError({
+                code: 'session.connector_validation_session_not_found',
+                status: 404,
+              })
+            );
+
+            const assertionContent = await connectorInstance.parseSamlAssertionContent(body);
+            const userInfo = connectorInstance.getUserInfoFromSamlAssertion(assertionContent);
+
+            await queries.verificationRecords.update({
+              where: { id: jti },
+              set: {
+                data: {
+                  ...verificationRecord.data,
+                  connectorSession: {
+                    ...connectorSession,
+                    userInfo,
+                  },
+                },
+              },
+              jsonbMode: 'replace',
+            });
+
+            const url = new URL(redirectUri);
+            url.searchParams.append('state', state);
+
+            ctx.redirect(url.toString());
+
+            return next();
+          }
+        }
+      }
+
+      // Fall back to the interaction-based path
       const singleSignOnSession = await getSingleSignOnSessionResultByJti(jti, provider);
       const { redirectUri, state, connectorId: sessionConnectorId } = singleSignOnSession;
 
