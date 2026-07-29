@@ -1,3 +1,6 @@
+/* eslint-disable max-lines */
+import { appInsights } from '@logto/app-insights/node';
+import { ConnectorError, type ConnectorSession } from '@logto/connector-kit';
 import {
   VerificationType,
   type JsonObject,
@@ -12,7 +15,7 @@ import {
   type SecretEnterpriseSsoConnectorRelationPayload,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { conditional } from '@silverhand/essentials';
+import { conditional, trySafe } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import {
@@ -20,12 +23,16 @@ import {
   verifySsoIdentity,
 } from '#src/libraries/verification-helpers/single-sign-on.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
+import OidcConnector from '#src/sso/OidcConnector/index.js';
+import { ssoConnectorFactories, type SingleSignOnConnectorSession } from '#src/sso/index.js';
 import { type ExtendedSocialUserInfo } from '#src/sso/types/saml.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { safeParseUnknownJson } from '#src/utils/json.js';
+import { buildAppInsightsTelemetry } from '#src/utils/request.js';
+import { encryptAndSerializeTokenResponse } from '#src/utils/secret-encryption.js';
 
 import type { InteractionProfile } from '../../types.js';
 
@@ -37,6 +44,8 @@ export {
   enterpriseSsoVerificationRecordDataGuard,
   sanitizedEnterpriseSsoVerificationRecordDataGuard,
 } from '@logto/schemas';
+
+type SsoAuthorizationSessionStorageType = 'interactionSession' | 'verificationRecord';
 
 export type EnterpriseSsoConnectorTokenSetSecret = {
   encryptedTokenSet: EncryptedTokenSet;
@@ -60,6 +69,7 @@ export class EnterpriseSsoVerification
   public enterpriseSsoUserInfo?: ExtendedSocialUserInfo;
   public encryptedTokenSet?: EncryptedTokenSet;
   public issuer?: string;
+  public connectorSession: ConnectorSession;
 
   private connectorDataCache?: SupportedSsoConnector;
 
@@ -68,7 +78,7 @@ export class EnterpriseSsoVerification
     private readonly queries: Queries,
     data: EnterpriseSsoVerificationRecordData
   ) {
-    const { id, connectorId, enterpriseSsoUserInfo, encryptedTokenSet, issuer } =
+    const { id, connectorId, enterpriseSsoUserInfo, encryptedTokenSet, issuer, connectorSession } =
       enterpriseSsoVerificationRecordDataGuard.parse(data);
 
     this.id = id;
@@ -76,6 +86,7 @@ export class EnterpriseSsoVerification
     this.enterpriseSsoUserInfo = enterpriseSsoUserInfo;
     this.issuer = issuer;
     this.encryptedTokenSet = encryptedTokenSet;
+    this.connectorSession = connectorSession ?? {};
   }
 
   /** Returns true if the enterprise SSO identity has been verified */
@@ -94,6 +105,10 @@ export class EnterpriseSsoVerification
   /**
    * Create the authorization URL for the enterprise SSO connector.
    *
+   * @param {SsoAuthorizationSessionStorageType} connectorSessionType - Whether to store the connector
+   * session result in the current verification record directly. Set to `'verificationRecord'` for
+   * flows (e.g. profile API) that do not rely on the OIDC interaction context.
+   *
    * @remarks
    * Refers to the {@link getSsoAuthorizationUrl} function in the libraries/verification-helpers/single-sign-on.ts file.
    * Currently, all the intermediate connector session results are stored in the provider's interactionDetails separately,
@@ -106,8 +121,13 @@ export class EnterpriseSsoVerification
   async createAuthorizationUrl(
     ctx: WithLogContext,
     tenantContext: TenantContext,
-    payload: SocialAuthorizationUrlPayload
+    payload: SocialAuthorizationUrlPayload,
+    connectorSessionType: SsoAuthorizationSessionStorageType = 'interactionSession'
   ) {
+    if (connectorSessionType === 'verificationRecord') {
+      return this.createSocialAuthorizationSession(ctx, tenantContext, payload);
+    }
+
     const connectorData = await this.getConnectorData();
     return getSsoAuthorizationUrl(ctx, tenantContext, connectorData, payload);
   }
@@ -115,19 +135,27 @@ export class EnterpriseSsoVerification
   /**
    * Verify the enterprise SSO identity and store the enterprise SSO identity in the verification record.
    *
+   * @param {SsoAuthorizationSessionStorageType} connectorSessionType - Whether to find the connector
+   * session result from the current verification record directly. Set to `'verificationRecord'` for
+   * flows (e.g. profile API) that do not rely on the OIDC interaction context.
+   *
    * @remarks
    * Refers to the {@link verifySsoIdentity} function in the libraries/verification-helpers/single-sign-on.ts file.
    * For compatibility reasons, we keep using the old {@link verifySsoIdentity} method here as a single source of truth.
    * See the above {@link createAuthorizationUrl} method for more details.
    */
-  async verify(ctx: WithLogContext, tenantContext: TenantContext, callbackData: JsonObject) {
+  async verify(
+    ctx: WithLogContext,
+    tenantContext: TenantContext,
+    callbackData: JsonObject,
+    connectorSessionType: SsoAuthorizationSessionStorageType = 'interactionSession'
+  ) {
     const connectorData = await this.getConnectorData();
-    const { issuer, userInfo, encryptedTokenSet } = await verifySsoIdentity(
-      ctx,
-      tenantContext,
-      connectorData,
-      callbackData
-    );
+
+    const { issuer, userInfo, encryptedTokenSet } =
+      connectorSessionType === 'verificationRecord'
+        ? await this.verifySsoIdentityFromRecord(ctx, tenantContext, connectorData, callbackData)
+        : await verifySsoIdentity(ctx, tenantContext, connectorData, callbackData);
 
     this.issuer = issuer;
     this.enterpriseSsoUserInfo = userInfo;
@@ -236,7 +264,15 @@ export class EnterpriseSsoVerification
   }
 
   toJson(): EnterpriseSsoVerificationRecordData {
-    const { id, type, connectorId, enterpriseSsoUserInfo, encryptedTokenSet, issuer } = this;
+    const {
+      id,
+      type,
+      connectorId,
+      enterpriseSsoUserInfo,
+      encryptedTokenSet,
+      issuer,
+      connectorSession,
+    } = this;
 
     return {
       id,
@@ -245,6 +281,7 @@ export class EnterpriseSsoVerification
       enterpriseSsoUserInfo,
       encryptedTokenSet,
       issuer,
+      connectorSession,
     };
   }
 
@@ -295,4 +332,122 @@ export class EnterpriseSsoVerification
 
     return user ?? undefined;
   }
+
+  /**
+   * Internal method to create a social authorization session for enterprise SSO.
+   *
+   * @remarks
+   * This method is an alternative to the {@link getSsoAuthorizationUrl} function in the
+   * libraries/verification-helpers/single-sign-on.ts file.
+   * Generate the SSO authorization URL and store the connector session result in the current
+   * verification record directly, without relying on the OIDC interaction context.
+   * This connector session result will be used to verify the SSO response later.
+   */
+  private async createSocialAuthorizationSession(
+    ctx: WithLogContext,
+    { envSet }: TenantContext,
+    { state, redirectUri }: SocialAuthorizationUrlPayload
+  ) {
+    assertThat(state && redirectUri, 'session.insufficient_info');
+
+    const connectorData = await this.getConnectorData();
+    const { providerName } = connectorData;
+
+    const connectorInstance = new ssoConnectorFactories[providerName].constructor(
+      connectorData,
+      envSet.endpoint
+    );
+
+    return connectorInstance.getAuthorizationUrl(
+      {
+        jti: this.id,
+        state,
+        redirectUri,
+        connectorId: this.connectorId,
+      },
+      async (connectorSession: SingleSignOnConnectorSession) => {
+        this.connectorSession = connectorSession;
+      }
+    );
+  }
+
+  /**
+   * Verify the SSO identity using the connector session stored in this verification record.
+   *
+   * @remarks
+   * Mirrors the {@link verifySsoIdentity} library function but reads the connector session from
+   * `this.connectorSession` instead of from the OIDC interaction provider.
+   * This is used for flows (e.g. profile API) that do not rely on the OIDC interaction context.
+   */
+  private async verifySsoIdentityFromRecord(
+    ctx: WithLogContext,
+    { envSet }: TenantContext,
+    connectorData: SupportedSsoConnector,
+    data: JsonObject
+  ): Promise<{
+    issuer: string;
+    userInfo: ExtendedSocialUserInfo;
+    encryptedTokenSet?: EncryptedTokenSet;
+  }> {
+    const { id: connectorId, providerName } = connectorData;
+
+    const log = ctx.createLog('Interaction.SignIn.Identifier.SingleSignOn.Submit');
+    log.append({ connectorId, data });
+
+    assertThat(
+      this.connectorSession,
+      new RequestError({ code: 'session.connector_validation_session_not_found', status: 400 })
+    );
+
+    try {
+      const connectorInstance = new ssoConnectorFactories[providerName].constructor(
+        connectorData,
+        envSet.endpoint
+      );
+
+      const { enableTokenStorage } = connectorData;
+      const issuer = await connectorInstance.getIssuer();
+
+      if (connectorInstance instanceof OidcConnector) {
+        const { userInfo, tokenResponse } = await connectorInstance.getUserInfo(
+          // eslint-disable-next-line no-restricted-syntax -- ConnectorSession (catchall) is runtime-compatible with SingleSignOnConnectorSession
+          this.connectorSession as unknown as SingleSignOnConnectorSession,
+          data
+        );
+
+        log.append({ issuer, userInfo });
+
+        return {
+          issuer,
+          userInfo,
+          encryptedTokenSet: conditional(
+            enableTokenStorage &&
+              tokenResponse?.access_token &&
+              trySafe(
+                () => encryptAndSerializeTokenResponse(tokenResponse),
+                (error) => {
+                  void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));
+                }
+              )
+          ),
+        };
+      }
+
+      const { userInfo } = await connectorInstance.getUserInfo(
+        // eslint-disable-next-line no-restricted-syntax -- ConnectorSession (catchall) is runtime-compatible with SingleSignOnConnectorSession
+        this.connectorSession as unknown as SingleSignOnConnectorSession
+      );
+
+      return {
+        issuer,
+        userInfo,
+      };
+    } catch (error: unknown) {
+      if (error instanceof ConnectorError) {
+        throw new RequestError({ code: `connector.${error.code}`, status: 500 }, error.data);
+      }
+      throw error;
+    }
+  }
 }
+/* eslint-enable max-lines */
