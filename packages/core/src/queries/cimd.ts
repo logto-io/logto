@@ -126,14 +126,6 @@ const createOrganizationResourceScopeQueries = (pool: CommonQueryMethods) => {
   return { insert, findAll, delete: deleteByScopeId };
 };
 
-/**
- * Queries for the tenant-level client ID metadata document (CIMD) permission ceiling relations.
- * All tables are tenant-owned; row-level security scopes every query to the current tenant.
- *
- * The tables are hand-written queries instead of `RelationQueries` because the tenant side has no
- * `GeneratedSchema` to act as a relation endpoint (the tenant scope is implicit via RLS), matching
- * the `application_user_consent_user_scopes` query style.
- */
 export const createCimdQueries = (pool: CommonQueryMethods) => ({
   userScopes: createUserScopeQueries(pool),
   resourceScopes: createResourceScopeQueries(pool),
