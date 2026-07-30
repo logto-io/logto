@@ -5,7 +5,6 @@ import {
   CimdResourceScopes,
   CimdUserScopes,
   OrganizationScopes,
-  Resources,
   Scopes,
   type OrganizationScope,
   type Scope,
@@ -19,6 +18,10 @@ import { convertToIdentifiers } from '#src/utils/sql.js';
 /**
  * Queries for the tenant-level client ID metadata document (CIMD) permission ceiling relations.
  * All tables are tenant-owned; row-level security scopes every query to the current tenant.
+ *
+ * The tables are hand-written queries instead of `RelationQueries` because the tenant side has no
+ * `GeneratedSchema` to act as a relation endpoint (the tenant scope is implicit via RLS), matching
+ * the `application_user_consent_user_scopes` query style.
  */
 export const createCimdQueries = (pool: CommonQueryMethods) => {
   const insertUserScopes = buildInsertIntoWithPool(pool)(CimdUserScopes, {
@@ -75,34 +78,6 @@ export const createCimdQueries = (pool: CommonQueryMethods) => {
     `);
   };
 
-  const findResourceScopesByIndicator = async (indicator: string): Promise<readonly Scope[]> => {
-    const relation = convertToIdentifiers(CimdResourceScopes, true);
-    const scopes = convertToIdentifiers(Scopes, true);
-    const resources = convertToIdentifiers(Resources, true);
-    return pool.any<Scope>(sql`
-      select ${scopes.table}.*
-      from ${relation.table}
-      join ${scopes.table} on ${scopes.fields.id} = ${relation.fields.scopeId}
-      join ${resources.table} on ${resources.fields.id} = ${scopes.fields.resourceId}
-      where ${resources.fields.indicator} = ${indicator}
-    `);
-  };
-
-  const findOrganizationResourceScopesByIndicator = async (
-    indicator: string
-  ): Promise<readonly Scope[]> => {
-    const relation = convertToIdentifiers(CimdOrganizationResourceScopes, true);
-    const scopes = convertToIdentifiers(Scopes, true);
-    const resources = convertToIdentifiers(Resources, true);
-    return pool.any<Scope>(sql`
-      select ${scopes.table}.*
-      from ${relation.table}
-      join ${scopes.table} on ${scopes.fields.id} = ${relation.fields.scopeId}
-      join ${resources.table} on ${resources.fields.id} = ${scopes.fields.resourceId}
-      where ${resources.fields.indicator} = ${indicator}
-    `);
-  };
-
   const deleteResourceScope = async (scopeId: string) => {
     const { table, fields } = convertToIdentifiers(CimdResourceScopes);
     const { rowCount } = await pool.query(sql`
@@ -155,8 +130,6 @@ export const createCimdQueries = (pool: CommonQueryMethods) => {
     deleteUserScope,
     findAllResourceScopes,
     findAllOrganizationResourceScopes,
-    findResourceScopesByIndicator,
-    findOrganizationResourceScopesByIndicator,
     deleteResourceScope,
     findAllOrganizationScopes,
     deleteOrganizationScope,
