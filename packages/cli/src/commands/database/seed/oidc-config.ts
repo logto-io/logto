@@ -18,13 +18,16 @@ import {
 
 const isBase64FormatPrivateKey = (key: string) => !key.includes('-');
 
-// We only seed private keys and cookie keys
+// Seed every OIDC config key except the optional ones below
 // Session and CIMD configs are optional
-type OidcConfigKeyToSeed = LogtoOidcConfigKey.PrivateKeys | LogtoOidcConfigKey.CookieKeys;
-const oidcConfigKeysToSeed: OidcConfigKeyToSeed[] = [
-  LogtoOidcConfigKey.PrivateKeys,
-  LogtoOidcConfigKey.CookieKeys,
-];
+type OidcConfigKeyToSeed = Exclude<
+  LogtoOidcConfigKey,
+  LogtoOidcConfigKey.Session | LogtoOidcConfigKey.Cimd
+>;
+const oidcConfigKeysToSeed = Object.values(LogtoOidcConfigKey).filter(
+  (key): key is OidcConfigKeyToSeed =>
+    key !== LogtoOidcConfigKey.Session && key !== LogtoOidcConfigKey.Cimd
+);
 
 export const seedOidcConfigs = async (pool: DatabaseTransactionConnection, tenantId: string) => {
   const tenantPrefix = `[${tenantId}]`;
