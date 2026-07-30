@@ -19,6 +19,15 @@ const consoleLog = new ConsoleLog(chalk.magenta('tenant'));
 const maxTenantAcquireAttempts = 10;
 
 /**
+ * Safety cap on rebuilds after losing the request slot, applied per phase (the attempt-limit
+ * fallback restarts its own count). Only slot losses consume it; health-check reloads spend
+ * the shared {@link maxTenantAcquireAttempts} budget instead. The eviction disposal grace
+ * makes losing a slot exceptional, so this is the backstop that bounds one acquisition to at
+ * most 14 builds (a pure loss storm fails after 4) instead of recursing forever.
+ */
+const maxTenantRebuildAttempts = 3;
+
+/**
  * How long an evicted tenant instance waits before disposal so requests already holding its
  * cached promise can reserve their slot first: pending claims are microtasks while this grace
  * elapses on a timer, so the claims always win. Without it the disposal continuation
@@ -67,7 +76,7 @@ class TenantPool {
   async get(tenantId: string, customDomain?: string): Promise<Tenant> {
     const cacheKey = `${tenantId}-${customDomain ?? 'default'}`;
 
-    return this.getWithAttempts(cacheKey, tenantId, customDomain, 0);
+    return this.getWithAttempts(cacheKey, tenantId, customDomain, 0, 0);
   }
 
   async endAll(): Promise<void> {
@@ -80,14 +89,22 @@ class TenantPool {
     );
   }
 
+  /**
+   * @param attempt Acquisition attempts spent so far, incremented by reloads and slot losses.
+   * @param lostSlots Request slots lost so far; {@link maxTenantRebuildAttempts} bounds the
+   * rebuilds they trigger.
+   */
+  // eslint-disable-next-line max-params -- two separate retry budgets plus the cache identity
   private async getWithAttempts(
     cacheKey: string,
     tenantId: string,
     customDomain: string | undefined,
-    attempt: number
+    attempt: number,
+    lostSlots: number
   ): Promise<Tenant> {
     if (attempt >= maxTenantAcquireAttempts) {
-      return this.getAfterAttemptLimit(cacheKey, tenantId, customDomain);
+      // The fallback counts its own slot losses from zero.
+      return this.getAfterAttemptLimit(cacheKey, tenantId, customDomain, 0);
     }
 
     const { tenantPromise } = this.getOrCreateTenant(cacheKey, tenantId, customDomain);
@@ -105,10 +122,18 @@ class TenantPool {
         'Custom domain:',
         customDomain,
         'Attempt:',
-        attempt
+        attempt,
+        'Lost slots:',
+        lostSlots + 1
       );
 
-      return this.getWithAttempts(cacheKey, tenantId, customDomain, attempt + 1);
+      if (lostSlots >= maxTenantRebuildAttempts) {
+        throw new Error(
+          `Failed to acquire a usable tenant instance: ${cacheKey} (lost slots: ${lostSlots + 1})`
+        );
+      }
+
+      return this.getWithAttempts(cacheKey, tenantId, customDomain, attempt + 1, lostSlots + 1);
     }
 
     // If the current LRU cached tenant instance is still healthy, return it (slot held).
@@ -132,13 +157,19 @@ class TenantPool {
       this.createAndCacheTenant(cacheKey, tenantId, customDomain, 'Reload');
     }
 
-    return this.getWithAttempts(cacheKey, tenantId, customDomain, attempt + 1);
+    // Reloads consume the shared acquire budget but not the rebuild budget.
+    return this.getWithAttempts(cacheKey, tenantId, customDomain, attempt + 1, lostSlots);
   }
 
+  /**
+   * @param lostSlots Request slots lost in the fallback; {@link maxTenantRebuildAttempts}
+   * bounds the rebuilds they trigger.
+   */
   private async getAfterAttemptLimit(
     cacheKey: string,
     tenantId: string,
-    customDomain: string | undefined
+    customDomain: string | undefined,
+    lostSlots: number
   ): Promise<Tenant> {
     // Attempt limit reached: reserve a slot on whatever is cached, dropping a disposed instance
     // with an identity check so a racing replacement is not removed accidentally.
@@ -151,10 +182,18 @@ class TenantPool {
         'Lost tenant request slot; instance was disposed before use:',
         tenantId,
         'Custom domain:',
-        customDomain
+        customDomain,
+        'Fallback lost slots:',
+        lostSlots + 1
       );
 
-      return this.getAfterAttemptLimit(cacheKey, tenantId, customDomain);
+      if (lostSlots >= maxTenantRebuildAttempts) {
+        throw new Error(
+          `Failed to acquire a usable tenant instance: ${cacheKey} (lost slots: ${lostSlots + 1})`
+        );
+      }
+
+      return this.getAfterAttemptLimit(cacheKey, tenantId, customDomain, lostSlots + 1);
     }
 
     consoleLog.warn(
