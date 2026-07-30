@@ -1,0 +1,61 @@
+{
+  "tags": [
+    {
+      "name": "CIMD",
+      "description": "Endpoints for managing the tenant-wide permission ceiling of OAuth Client ID Metadata Document (CIMD) clients. CIMD clients are unregistered, so the ceiling applies to all of them; the enablement switch itself lives under `/api/configs/cimd`."
+    },
+    {
+      "name": "Dev feature"
+    }
+  ],
+  "paths": {
+    "/api/cimd/user-consent-scopes": {
+      "get": {
+        "summary": "List CIMD user consent scopes",
+        "description": "List the tenant-level permission ceiling for CIMD clients: user scopes, API resource scopes, organization scopes, and organization API resource scopes.",
+        "responses": {
+          "200": {
+            "description": "The configured scopes."
+          }
+        }
+      },
+      "post": {
+        "summary": "Assign CIMD user consent scopes",
+        "description": "Add scopes to the tenant-level permission ceiling for CIMD clients. Database-backed scopes are referenced by ID; Management API scopes can never be selected.",
+        "responses": {
+          "201": {
+            "description": "The scopes were assigned."
+          },
+          "422": {
+            "description": "Some scopes do not exist or are not allowed."
+          }
+        }
+      }
+    },
+    "/api/cimd/user-consent-scopes/{scopeType}/{scopeId}": {
+      "delete": {
+        "summary": "Delete a CIMD user consent scope",
+        "description": "Remove a scope from the tenant-level permission ceiling for CIMD clients.",
+        "parameters": [
+          {
+            "name": "scopeType",
+            "in": "path",
+            "description": "The scope type.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The scope was removed."
+          },
+          "404": {
+            "description": "The scope relation was not found."
+          }
+        }
+      }
+    }
+  }
+}

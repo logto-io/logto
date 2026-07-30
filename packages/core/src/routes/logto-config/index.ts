@@ -21,6 +21,7 @@ import { getConsoleLogFromContext } from '#src/utils/console.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 import logtoConfigActionRoutes from './action.js';
+import logtoConfigCimdRoutes from './cimd.js';
 import idTokenRoutes from './id-token.js';
 import logtoConfigJwtCustomizerRoutes from './jwt-customizer.js';
 
@@ -231,4 +232,6 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
   logtoConfigJwtCustomizerRoutes(router, tenant);
   idTokenRoutes(router, tenant);
   logtoConfigActionRoutes(router, tenant);
+  // DEV: CIMD (client ID metadata document) support
+  logtoConfigCimdRoutes(router, tenant);
 }

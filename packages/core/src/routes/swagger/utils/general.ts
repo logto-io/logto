@@ -43,7 +43,8 @@ const tagMap = new Map([
 ]);
 
 if (EnvSet.values.isDevFeaturesEnabled) {
-  // TagMap.set('foo-bar', 'Foo bar');
+  // DEV: CIMD (client ID metadata document) support
+  tagMap.set('cimd', 'CIMD');
 }
 
 /**

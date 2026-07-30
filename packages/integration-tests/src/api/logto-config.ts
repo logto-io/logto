@@ -4,6 +4,7 @@ import {
   type OidcConfigKeysResponse,
   type LogtoOidcConfigKeyType,
   type AccessTokenJwtCustomizer,
+  type CimdConfig,
   type ClientCredentialsJwtCustomizer,
   type JwtCustomizerConfigs,
   type JwtCustomizerTestRequestBody,
@@ -125,4 +126,14 @@ export const updateSessionConfig = async (payload: Partial<OidcSessionConfig>) =
     .json<OidcSessionConfig & { ttl: number }>();
   await waitForTenantCacheInvalidation();
   return sessionConfig;
+};
+
+export const getCimdConfig = async () => authedAdminApi.get('configs/cimd').json<CimdConfig>();
+
+export const updateCimdConfig = async (payload: Partial<CimdConfig>) => {
+  const cimdConfig = await authedAdminApi
+    .patch('configs/cimd', { json: payload })
+    .json<CimdConfig>();
+  await waitForTenantCacheInvalidation();
+  return cimdConfig;
 };
