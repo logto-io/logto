@@ -1,5 +1,28 @@
 # Change Log
 
+## 1.42.0
+
+### Minor Changes
+
+- 829646a4a: add custom domain verification file support
+
+  Admins can configure small text or JSON verification files for active custom domains. Files are limited to root-level filenames or paths under `/.well-known/`, with caps on count and content size. Exact GET and HEAD matches are served with safe content types while existing Logto routes take precedence.
+
+### Patch Changes
+
+- 292da8db9: support wildcard email address patterns in custom email blocklist rules
+- ea3ede350: remove email blocklist policy from public sign-in experience responses
+- a1e0f2b680: prevent internal application secrets from being exposed through Management APIs
+- Updated dependencies [af678dd84]
+- Updated dependencies [292da8db9]
+- Updated dependencies [1650be05e]
+- Updated dependencies [829646a4a]
+- Updated dependencies [58cb52c705]
+  - @logto/core-kit@2.12.0
+  - @logto/phrases@1.30.0
+  - @logto/shared@3.4.2
+  - @logto/phrases-experience@1.14.1
+
 ## 1.41.0
 
 ### Minor Changes
