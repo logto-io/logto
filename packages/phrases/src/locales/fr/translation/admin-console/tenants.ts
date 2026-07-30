@@ -119,12 +119,6 @@ const tenants = {
     description: 'Êtes-vous sûr de vouloir quitter ce locataire?',
     leave_button: 'Partir',
   },
-  tenant_landing_page: {
-    title: "Vous n'avez pas encore créé de locataire",
-    description:
-      "Pour commencer à configurer votre projet avec Logto, veuillez créer un nouveau locataire. Si vous devez vous déconnecter ou supprimer votre compte, cliquez simplement sur le bouton d'avatar dans le coin supérieur droit.",
-    create_tenant_button: 'Créer un locataire',
-  },
   status: {
     mau_exceeded: 'MAU dépassé',
     token_exceeded: 'Jeton dépassé',

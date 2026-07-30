@@ -1,17 +1,16 @@
 import { OrganizationInvitationStatus, getTenantIdFromOrganizationId } from '@logto/schemas';
 import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import OrganizationIcon from '@/assets/icons/organization-preview.svg?react';
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type InvitationListResponse } from '@/cloud/types/router';
 import TenantEnvTag from '@/components/TenantEnvTag';
 import ThemedIcon from '@/components/ThemedIcon';
-import { TenantsContext } from '@/contexts/TenantsProvider';
+import { GlobalRoute, TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import Spacer from '@/ds-components/Spacer';
-import useTenantPathname from '@/hooks/use-tenant-pathname';
-import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 
 import styles from './index.module.scss';
 
@@ -23,10 +22,8 @@ function InvitationList({ invitations }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const cloudApi = useCloudApi();
   const { navigateTenant, resetTenants } = useContext(TenantsContext);
-  const { navigate } = useTenantPathname();
+  const navigate = useNavigate();
   const [isJoining, setIsJoining] = useState(false);
-  const [isUpdatingOnboardingStatus, setIsUpdatingOnboardingStatus] = useState(false);
-  const { update } = useUserOnboardingData();
 
   return (
     <div className={styles.container}>
@@ -70,16 +67,9 @@ function InvitationList({ invitations }: Props) {
           size="large"
           type="outline"
           className={styles.createTenantButton}
-          isLoading={isUpdatingOnboardingStatus}
           title="invitation.create_new_tenant"
-          onClick={async () => {
-            setIsUpdatingOnboardingStatus(true);
-            try {
-              await update({ isOnboardingDone: false });
-              navigate('/');
-            } finally {
-              setIsUpdatingOnboardingStatus(false);
-            }
+          onClick={() => {
+            navigate(GlobalRoute.Onboarding);
           }}
         />
       </div>

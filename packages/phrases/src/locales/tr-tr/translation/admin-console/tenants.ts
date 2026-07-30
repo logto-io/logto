@@ -117,12 +117,6 @@ const tenants = {
     description: 'Bu kiracıdan ayrılmak istediğinize emin misiniz?',
     leave_button: 'Ayrıl',
   },
-  tenant_landing_page: {
-    title: 'Henüz bir kiracı oluşturmadınız',
-    description:
-      'Logto ile projenizi yapılandırmaya başlamak için lütfen yeni bir kiracı oluşturun. Hesabınızdan çıkış yapmanız veya hesabınızı silmeniz gerekiyorsa, sağ üst köşedeki avatar düğmesine tıklayın.',
-    create_tenant_button: 'Kiracı oluştur',
-  },
   status: {
     mau_exceeded: 'MAU Sınırı Aşıldı',
     token_exceeded: 'Jeton sınırı aşıldı',

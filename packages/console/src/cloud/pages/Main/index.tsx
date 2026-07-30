@@ -2,42 +2,43 @@ import { OrganizationInvitationStatus } from '@logto/schemas';
 import { Navigate } from 'react-router-dom';
 
 import AppLoading from '@/components/AppLoading';
-import { isCloud } from '@/consts/env';
 import { GlobalRoute } from '@/contexts/TenantsProvider';
 import useCurrentUser from '@/hooks/use-current-user';
 import useUserDefaultTenantId from '@/hooks/use-user-default-tenant-id';
 import useUserInvitations from '@/hooks/use-user-invitations';
-import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 
 import InvitationList from './InvitationList';
 import Redirect from './Redirect';
-import TenantLandingPage from './TenantLandingPage';
 
 export default function Main() {
   const { isLoaded } = useCurrentUser();
-  const { isOnboarding } = useUserOnboardingData();
   const { defaultTenantId } = useUserDefaultTenantId();
-  const { data } = useUserInvitations(OrganizationInvitationStatus.Pending);
+  const { data: invitations, isLoading: isInvitationsLoading } = useUserInvitations(
+    OrganizationInvitationStatus.Pending
+  );
 
   if (!isLoaded) {
     return <AppLoading />;
   }
 
-  // A new user has just signed up, redirect them to the onboarding flow.
-  if (isOnboarding) {
-    return <Navigate to={GlobalRoute.Onboarding} />;
-  }
-
-  // If current tenant ID is not set, but the defaultTenantId is available.
+  // If the user has a tenant, redirect to it. `TenantsProvider` guarantees the tenants data
+  // is loaded before this component renders (see `ProtectedRoutes`).
   if (defaultTenantId) {
     return <Redirect toTenantId={defaultTenantId} />;
   }
 
-  // If user has pending invitations (onboarding will be skipped), show the invitation list and allow them to quick join.
-  if (isCloud && data?.length) {
-    return <InvitationList invitations={data} />;
+  // The user has no tenant. Wait for the invitations to load before deciding where to go.
+  // If the request fails, fall back to the onboarding flow so the user can still create a tenant.
+  if (isInvitationsLoading) {
+    return <AppLoading />;
   }
 
-  // If user has completed onboarding and still has no tenant, redirect to a special landing page.
-  return <TenantLandingPage />;
+  // If the user has pending invitations, show the invitation list and allow them to quick join.
+  if (invitations?.length) {
+    return <InvitationList invitations={invitations} />;
+  }
+
+  // The user has no tenant and no pending invitations, redirect them to the onboarding flow
+  // to create their first tenant.
+  return <Navigate to={GlobalRoute.Onboarding} />;
 }

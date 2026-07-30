@@ -120,12 +120,6 @@ const tenants = {
     description: 'Sei sicuro di voler lasciare questo inquilino?',
     leave_button: 'Lasciare',
   },
-  tenant_landing_page: {
-    title: 'Non hai ancora creato un inquilino',
-    description:
-      'Per iniziare a configurare il tuo progetto con Logto, crea un nuovo inquilino. Se hai bisogno di uscire o eliminare il tuo account, clicca sul pulsante avatar in alto a destra.',
-    create_tenant_button: 'Crea inquilino',
-  },
   status: {
     mau_exceeded: 'MAU Superato',
     token_exceeded: 'Token superato',

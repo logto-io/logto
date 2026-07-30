@@ -114,12 +114,6 @@ const tenants = {
     description: 'このテナントを退出してもよろしいですか？',
     leave_button: '退出',
   },
-  tenant_landing_page: {
-    title: 'まだテナントを作成していません',
-    description:
-      'Logto でプロジェクトを設定するには、新しいテナントを作成してください。ログアウトまたはアカウントを削除する必要がある場合は、右上隅のアバターボタンをクリックしてください。',
-    create_tenant_button: 'テナントを作成',
-  },
   status: {
     mau_exceeded: 'MAUの制限を超えました',
     token_exceeded: 'トークンを超えました',

@@ -119,12 +119,6 @@ const tenants = {
     description: 'Sind Sie sicher, dass Sie diesen Mandanten verlassen möchten?',
     leave_button: 'Verlassen',
   },
-  tenant_landing_page: {
-    title: 'Du hast noch keinen Mandanten erstellt',
-    description:
-      'Um Ihr Projekt mit Logto zu konfigurieren, erstellen Sie bitte einen neuen Mandanten. Wenn Sie sich abmelden oder Ihr Konto löschen möchten, klicken Sie einfach auf die Avatar-Taste in der oberen rechten Ecke.',
-    create_tenant_button: 'Mandanten erstellen',
-  },
   status: {
     mau_exceeded: 'MAU überschritten',
     token_exceeded: 'Token überschritten',

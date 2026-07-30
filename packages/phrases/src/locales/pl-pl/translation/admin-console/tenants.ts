@@ -119,12 +119,6 @@ const tenants = {
     description: 'Czy na pewno chcesz opuścić tego najemcę?',
     leave_button: 'Opuść',
   },
-  tenant_landing_page: {
-    title: 'Nie utworzyłeś jeszcze najemcy',
-    description:
-      'Aby rozpocząć konfigurowanie projektu z Logto, utwórz nowego najemcę. Jeśli musisz się wylogować lub usunąć swoje konto, wystarczy kliknąć przycisk awatara w prawym górnym rogu.',
-    create_tenant_button: 'Utwórz najemcę',
-  },
   status: {
     mau_exceeded: 'Przekroczono limit MAU',
     token_exceeded: 'Przekroczono limit tokenów',
