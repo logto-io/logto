@@ -19,14 +19,11 @@ import {
 const isBase64FormatPrivateKey = (key: string) => !key.includes('-');
 
 // Seed every OIDC config key except the optional ones below
-// Session and CIMD configs are optional
-type OidcConfigKeyToSeed = Exclude<
-  LogtoOidcConfigKey,
-  LogtoOidcConfigKey.Session | LogtoOidcConfigKey.Cimd
->;
+const optionalOidcConfigKeys = [LogtoOidcConfigKey.Session, LogtoOidcConfigKey.Cimd] as const;
+type OidcConfigKeyToSeed = Exclude<LogtoOidcConfigKey, (typeof optionalOidcConfigKeys)[number]>;
+const optionalOidcConfigKeySet: ReadonlySet<LogtoOidcConfigKey> = new Set(optionalOidcConfigKeys);
 const oidcConfigKeysToSeed = Object.values(LogtoOidcConfigKey).filter(
-  (key): key is OidcConfigKeyToSeed =>
-    key !== LogtoOidcConfigKey.Session && key !== LogtoOidcConfigKey.Cimd
+  (key): key is OidcConfigKeyToSeed => !optionalOidcConfigKeySet.has(key)
 );
 
 export const seedOidcConfigs = async (pool: DatabaseTransactionConnection, tenantId: string) => {
