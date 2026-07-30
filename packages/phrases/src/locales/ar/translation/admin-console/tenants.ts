@@ -108,6 +108,12 @@ const tenants = {
     description: 'هل أنت متأكد أنك تريد مغادرة هذا المستأجر؟',
     leave_button: 'مغادرة',
   },
+  tenant_landing_page: {
+    title: 'لم تقم بإنشاء مستأجر بعد',
+    description:
+      'لبدء تكوين مشروعك باستخدام Logto ، يرجى إنشاء مستأجر جديد. إذا كنت بحاجة إلى تسجيل الخروج أو حذف حسابك ، فقط انقر فوق زر الصورة الرمزية في الزاوية اليمنى العلوية.',
+    create_tenant_button: 'إنشاء مستأجر',
+  },
   status: {
     mau_exceeded: 'تجاوز MAU',
     token_exceeded: 'تجاوز الرمز',

@@ -100,6 +100,12 @@ const tenants = {
     description: '确定要离开此租户吗?',
     leave_button: '离开',
   },
+  tenant_landing_page: {
+    title: '您还没有创建租户',
+    description:
+      '要开始使用 Logto 配置项目，请创建一个新的租户。如果您需要注销或删除您的帐户，只需单击右上角的头像按钮。',
+    create_tenant_button: '创建租户',
+  },
   status: {
     mau_exceeded: '超出 MAU 限制',
     token_exceeded: '超出 Token 限制',

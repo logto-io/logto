@@ -1,0 +1,41 @@
+@use '@/scss/underscore' as _;
+
+.pageContainer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex-grow: 1;
+    padding-bottom: 64px; // the height of the topbar
+
+    .image {
+      > svg {
+        width: 256px;
+        height: 256px;
+      }
+    }
+
+    .title {
+      font: var(--font-label-2);
+    }
+
+    .description {
+      max-width: 470px;
+      font: var(--font-body-2);
+      color: var(--color-text-secondary);
+      margin-top: _.unit(2);
+    }
+
+    .button {
+      margin-top: _.unit(6);
+    }
+  }
+}

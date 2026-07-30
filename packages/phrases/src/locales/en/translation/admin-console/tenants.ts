@@ -113,6 +113,12 @@ const tenants = {
     description: 'Are you sure you want to leave this tenant?',
     leave_button: 'Leave',
   },
+  tenant_landing_page: {
+    title: "You haven't created a tenant yet",
+    description:
+      'To start configuring your project with Logto, please create a new tenant. If you need to log out or delete your account, just click on the avatar button in the top right corner.',
+    create_tenant_button: 'Create tenant',
+  },
   status: {
     mau_exceeded: 'MAU exceeded',
     token_exceeded: 'Token exceeded',
