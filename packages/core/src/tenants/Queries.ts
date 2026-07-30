@@ -6,6 +6,7 @@ import { ApplicationSecretQueries } from '#src/queries/application-secrets.js';
 import createApplicationSignInExperienceQueries from '#src/queries/application-sign-in-experience.js';
 import { createApplicationQueries } from '#src/queries/application.js';
 import { createApplicationsRolesQueries } from '#src/queries/applications-roles.js';
+import { createCimdQueries } from '#src/queries/cimd.js';
 import { createConnectorQueries } from '#src/queries/connector.js';
 import { createCustomPhraseQueries } from '#src/queries/custom-phrase.js';
 import { createCustomProfileFieldsQueries } from '#src/queries/custom-profile-fields.js';
@@ -96,6 +97,7 @@ export default class Queries {
   sentinelActivities = createSentinelActivitiesQueries(this.pool);
   oidcSessionExtensions = new OidcSessionExtensionsQueries(this.pool);
   secrets = new SecretQuery(this.pool);
+  cimd = createCimdQueries(this.pool);
 
   constructor(
     public readonly pool: CommonQueryMethods,

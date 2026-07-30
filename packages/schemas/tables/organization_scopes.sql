@@ -12,7 +12,10 @@ create table organization_scopes (
   description varchar(256),
   primary key (id),
   constraint organization_scopes__name
-    unique (tenant_id, name)
+    unique (tenant_id, name),
+  /** Support tenant-aware composite foreign keys from tenant-owned scope relations. */
+  constraint organization_scopes__tenant_id_id
+    unique (tenant_id, id)
 );
 
 create index organization_scopes__id
