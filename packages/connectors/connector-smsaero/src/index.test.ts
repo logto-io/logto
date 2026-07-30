@@ -1,4 +1,4 @@
-import got from 'got';
+import { got } from 'got';
 import nock from 'nock';
 
 import { ConnectorErrorCodes, TemplateType } from '@logto/connector-kit';
