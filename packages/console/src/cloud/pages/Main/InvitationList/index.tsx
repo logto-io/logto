@@ -1,7 +1,6 @@
 import { OrganizationInvitationStatus, getTenantIdFromOrganizationId } from '@logto/schemas';
 import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
 import OrganizationIcon from '@/assets/icons/organization-preview.svg?react';
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
@@ -11,6 +10,7 @@ import ThemedIcon from '@/components/ThemedIcon';
 import { GlobalRoute, TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import Spacer from '@/ds-components/Spacer';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 
 import styles from './index.module.scss';
 
@@ -22,7 +22,7 @@ function InvitationList({ invitations }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const cloudApi = useCloudApi();
   const { navigateTenant, resetTenants } = useContext(TenantsContext);
-  const navigate = useNavigate();
+  const { navigate } = useTenantPathname();
   const [isJoining, setIsJoining] = useState(false);
 
   return (
