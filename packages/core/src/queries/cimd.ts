@@ -16,11 +16,6 @@ import { DeletionError } from '#src/errors/SlonikError/index.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
 
 const cimdUserScopes = convertToIdentifiers(CimdUserScopes, true);
-const cimdResourceScopes = convertToIdentifiers(CimdResourceScopes, true);
-const cimdOrganizationScopes = convertToIdentifiers(CimdOrganizationScopes, true);
-const cimdOrganizationResourceScopes = convertToIdentifiers(CimdOrganizationResourceScopes, true);
-const scopes = convertToIdentifiers(Scopes, true);
-const organizationScopes = convertToIdentifiers(OrganizationScopes, true);
 
 const createUserScopeQueries = (pool: CommonQueryMethods) => {
   const insert = buildInsertIntoWithPool(pool)(CimdUserScopes, {
@@ -48,6 +43,9 @@ const createUserScopeQueries = (pool: CommonQueryMethods) => {
   return { insert, findAll, delete: deleteByUserScope };
 };
 
+const cimdResourceScopes = convertToIdentifiers(CimdResourceScopes, true);
+const scopes = convertToIdentifiers(Scopes, true);
+
 const createResourceScopeQueries = (pool: CommonQueryMethods) => {
   const insert = buildInsertIntoWithPool(pool)(CimdResourceScopes, {
     onConflict: { ignore: true },
@@ -73,6 +71,9 @@ const createResourceScopeQueries = (pool: CommonQueryMethods) => {
   return { insert, findAll, delete: deleteByScopeId };
 };
 
+const cimdOrganizationScopes = convertToIdentifiers(CimdOrganizationScopes, true);
+const organizationScopes = convertToIdentifiers(OrganizationScopes, true);
+
 const createOrganizationScopeQueries = (pool: CommonQueryMethods) => {
   const insert = buildInsertIntoWithPool(pool)(CimdOrganizationScopes, {
     onConflict: { ignore: true },
@@ -97,6 +98,8 @@ const createOrganizationScopeQueries = (pool: CommonQueryMethods) => {
 
   return { insert, findAll, delete: deleteByOrganizationScopeId };
 };
+
+const cimdOrganizationResourceScopes = convertToIdentifiers(CimdOrganizationResourceScopes, true);
 
 const createOrganizationResourceScopeQueries = (pool: CommonQueryMethods) => {
   const insert = buildInsertIntoWithPool(pool)(CimdOrganizationResourceScopes, {
