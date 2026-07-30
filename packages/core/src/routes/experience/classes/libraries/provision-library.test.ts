@@ -58,7 +58,7 @@ const createProvisionLibrary = ({
   const generateUserId = jest.fn().mockResolvedValue('uid');
   const insertUser = jest.fn(async (user: CreateUser): Promise<InsertUserResult> => [user as User]);
   const provisionOrganizations = jest.fn().mockResolvedValue([]);
-  const provisionOrganizationsByVerifiedEmail = jest.fn().mockResolvedValue([]);
+  const provisionOrganizationsByEmailDomain = jest.fn().mockResolvedValue([]);
   const upsertSocialTokenSetSecret = jest.fn();
   const upsertEnterpriseSsoTokenSetSecret = jest.fn();
   const findEntities = jest.fn().mockResolvedValue(invitations);
@@ -95,7 +95,7 @@ const createProvisionLibrary = ({
         generateUserId,
         insertUser,
         provisionOrganizations,
-        provisionOrganizationsByVerifiedEmail,
+        provisionOrganizationsByEmailDomain,
       },
       socials: {
         upsertSocialTokenSetSecret,
@@ -125,7 +125,7 @@ const createProvisionLibrary = ({
     checkIdentifierCollision,
     insertUser,
     provisionOrganizations,
-    provisionOrganizationsByVerifiedEmail,
+    provisionOrganizationsByEmailDomain,
     upsertSocialTokenSetSecret,
     upsertEnterpriseSsoTokenSetSecret,
     findEntities,
@@ -160,7 +160,7 @@ describe('ProvisionLibrary', () => {
         checkIdentifierCollision,
         insertUser,
         provisionOrganizations,
-        provisionOrganizationsByVerifiedEmail,
+        provisionOrganizationsByEmailDomain,
         upsertSocialTokenSetSecret,
         upsertEnterpriseSsoTokenSetSecret,
         updateDefaultSignInExperience,
@@ -263,7 +263,7 @@ describe('ProvisionLibrary', () => {
         userId: 'uid',
         organizationIds: ['jit-organization-id'],
       });
-      expect(provisionOrganizationsByVerifiedEmail).toHaveBeenCalledWith('uid', 'jane@example.com');
+      expect(provisionOrganizationsByEmailDomain).toHaveBeenCalledWith('uid', 'jane@example.com');
       expect(upsertSocialTokenSetSecret).toHaveBeenCalledWith('uid', {
         encryptedTokenSet,
         socialConnectorRelationPayload: {

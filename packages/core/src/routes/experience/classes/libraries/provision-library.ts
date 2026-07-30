@@ -273,38 +273,40 @@ export class ProvisionLibrary {
 
     const provisionedOrganizations = await usersLibraries.provisionOrganizations(payload);
 
-    for (const { organizationId } of provisionedOrganizations) {
-      this.ctx.appendDataHookContext('Organization.Membership.Updated', {
-        organizationId,
-        ...truncateMembershipDelta({ addedUserIds: [payload.userId] }),
-      });
-    }
+    this.appendMembershipUpdatedHooks(payload.userId, provisionedOrganizations);
 
     return provisionedOrganizations;
   }
 
   /**
-   * Provision the user with JIT organizations based on a verified email domain.
-   * The email must have been verified during the experience interaction before calling this function.
+   * Provision the user with JIT organizations based on the email domain.
    */
-  async provisionJitOrganizationByVerifiedEmail(userId: string, email: string) {
+  private async provisionJitOrganizationByEmailDomain(userId: string, email: string) {
     const {
       libraries: { users: usersLibraries },
     } = this.tenantContext;
 
-    const provisionedOrganizations = await usersLibraries.provisionOrganizationsByVerifiedEmail(
+    const provisionedOrganizations = await usersLibraries.provisionOrganizationsByEmailDomain(
       userId,
       email
     );
 
+    this.appendMembershipUpdatedHooks(userId, provisionedOrganizations);
+
+    return provisionedOrganizations;
+  }
+
+  private appendMembershipUpdatedHooks(
+    userId: string,
+    provisionedOrganizations: readonly JitOrganization[]
+  ) {
     for (const { organizationId } of provisionedOrganizations) {
       this.ctx.appendDataHookContext('Organization.Membership.Updated', {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- appendDataHookContext accepts unknown
         organizationId,
         ...truncateMembershipDelta({ addedUserIds: [userId] }),
       });
     }
-
-    return provisionedOrganizations;
   }
 
   /**
@@ -498,7 +500,7 @@ export class ProvisionLibrary {
     if (primaryEmail) {
       return [
         ...extraJitOrganizations,
-        ...(await this.provisionJitOrganizationByVerifiedEmail(userId, primaryEmail)),
+        ...(await this.provisionJitOrganizationByEmailDomain(userId, primaryEmail)),
       ];
     }
   }

@@ -294,7 +294,7 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
 
   /**
    * Provision the user with JIT organizations and roles based on SSO connector or explicit org IDs.
-   * For email-domain JIT, use `provisionOrganizationsByVerifiedEmail` instead.
+   * For email-domain JIT, use `provisionOrganizationsByEmailDomain` instead.
    * Returns only the JIT orgs the user was newly added to (i.e. orgs the user was not already a
    * member of) so callers can decide whether to emit `Organization.Membership.Updated` for each
    * org and what `addedUserIds` to include.
@@ -314,10 +314,10 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
 
   // TODO: If the user's email is not verified, we should not provision the user into any organization.
   /**
-   * Provision the user with JIT organizations and roles based on a verified email domain.
+   * Provision the user with JIT organizations and roles based on the email domain.
    * Returns only the JIT orgs the user was newly added to.
    */
-  const provisionOrganizationsByVerifiedEmail = async (
+  const provisionOrganizationsByEmailDomain = async (
     userId: string,
     email: string
   ): Promise<readonly JitOrganization[]> => {
@@ -343,6 +343,6 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
     signOutUser,
     findUserSsoIdentities,
     provisionOrganizations,
-    provisionOrganizationsByVerifiedEmail,
+    provisionOrganizationsByEmailDomain,
   };
 };

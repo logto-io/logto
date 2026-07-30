@@ -196,7 +196,7 @@ async function handleSubmitRegister(
   if (user.primaryEmail) {
     // The email is guaranteed to be verified: verifyProfileIdentifiers (profile-verification.ts)
     // requires a matching emailVerified identifier before register submission proceeds
-    const provisionedOrganizations = await libraries.users.provisionOrganizationsByVerifiedEmail(
+    const provisionedOrganizations = await libraries.users.provisionOrganizationsByEmailDomain(
       id,
       user.primaryEmail
     );
