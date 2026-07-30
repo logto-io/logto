@@ -11,10 +11,7 @@ create table scopes (
   created_at timestamptz not null default(now()),
   primary key (id),
   constraint scopes__resource_id_name
-    unique (tenant_id, resource_id, name),
-  /** Support tenant-aware composite foreign keys from tenant-owned scope relations. */
-  constraint scopes__tenant_id_id
-    unique (tenant_id, id)
+    unique (tenant_id, resource_id, name)
 );
 
 create index scopes__id
