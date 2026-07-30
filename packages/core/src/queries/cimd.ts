@@ -15,6 +15,114 @@ import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
 
+const cimdUserScopes = convertToIdentifiers(CimdUserScopes, true);
+const cimdResourceScopes = convertToIdentifiers(CimdResourceScopes, true);
+const cimdOrganizationScopes = convertToIdentifiers(CimdOrganizationScopes, true);
+const cimdOrganizationResourceScopes = convertToIdentifiers(CimdOrganizationResourceScopes, true);
+const scopes = convertToIdentifiers(Scopes, true);
+const organizationScopes = convertToIdentifiers(OrganizationScopes, true);
+
+const createUserScopeQueries = (pool: CommonQueryMethods) => {
+  const insert = buildInsertIntoWithPool(pool)(CimdUserScopes, {
+    onConflict: { ignore: true },
+  });
+
+  const findAll = async (): Promise<UserScope[]> => {
+    const rows = await pool.any<{ userScope: UserScope }>(sql`
+      select ${cimdUserScopes.fields.userScope}
+      from ${cimdUserScopes.table}
+    `);
+    return rows.map(({ userScope }) => userScope);
+  };
+
+  const deleteByUserScope = async (userScope: string) => {
+    const { rowCount } = await pool.query(sql`
+      delete from ${cimdUserScopes.table}
+      where ${cimdUserScopes.fields.userScope} = ${userScope}
+    `);
+    if (rowCount < 1) {
+      throw new DeletionError(CimdUserScopes.table);
+    }
+  };
+
+  return { insert, findAll, delete: deleteByUserScope };
+};
+
+const createResourceScopeQueries = (pool: CommonQueryMethods) => {
+  const insert = buildInsertIntoWithPool(pool)(CimdResourceScopes, {
+    onConflict: { ignore: true },
+  });
+
+  const findAll = async (): Promise<readonly Scope[]> =>
+    pool.any<Scope>(sql`
+      select ${scopes.table}.*
+      from ${cimdResourceScopes.table}
+      join ${scopes.table} on ${scopes.fields.id} = ${cimdResourceScopes.fields.scopeId}
+    `);
+
+  const deleteByScopeId = async (scopeId: string) => {
+    const { rowCount } = await pool.query(sql`
+      delete from ${cimdResourceScopes.table}
+      where ${cimdResourceScopes.fields.scopeId} = ${scopeId}
+    `);
+    if (rowCount < 1) {
+      throw new DeletionError(CimdResourceScopes.table);
+    }
+  };
+
+  return { insert, findAll, delete: deleteByScopeId };
+};
+
+const createOrganizationScopeQueries = (pool: CommonQueryMethods) => {
+  const insert = buildInsertIntoWithPool(pool)(CimdOrganizationScopes, {
+    onConflict: { ignore: true },
+  });
+
+  const findAll = async (): Promise<readonly OrganizationScope[]> =>
+    pool.any<OrganizationScope>(sql`
+      select ${organizationScopes.table}.*
+      from ${cimdOrganizationScopes.table}
+      join ${organizationScopes.table} on ${organizationScopes.fields.id} = ${cimdOrganizationScopes.fields.organizationScopeId}
+    `);
+
+  const deleteByOrganizationScopeId = async (organizationScopeId: string) => {
+    const { rowCount } = await pool.query(sql`
+      delete from ${cimdOrganizationScopes.table}
+      where ${cimdOrganizationScopes.fields.organizationScopeId} = ${organizationScopeId}
+    `);
+    if (rowCount < 1) {
+      throw new DeletionError(CimdOrganizationScopes.table);
+    }
+  };
+
+  return { insert, findAll, delete: deleteByOrganizationScopeId };
+};
+
+const createOrganizationResourceScopeQueries = (pool: CommonQueryMethods) => {
+  const insert = buildInsertIntoWithPool(pool)(CimdOrganizationResourceScopes, {
+    onConflict: { ignore: true },
+  });
+
+  const findAll = async (): Promise<readonly Scope[]> =>
+    pool.any<Scope>(sql`
+      select ${scopes.table}.*
+      from ${cimdOrganizationResourceScopes.table}
+      join ${scopes.table} on ${scopes.fields.id} = ${cimdOrganizationResourceScopes.fields.scopeId}
+    `);
+
+  const deleteByScopeId = async (scopeId: string) => {
+    const { rowCount } = await pool.query(sql`
+      delete from ${cimdOrganizationResourceScopes.table}
+      where ${cimdOrganizationResourceScopes.fields.scopeId} = ${scopeId}
+    `);
+    if (rowCount < 1) {
+      throw new DeletionError(CimdOrganizationResourceScopes.table);
+    }
+  };
+
+  return { insert, findAll, delete: deleteByScopeId };
+};
+
 /**
  * Queries for the tenant-level client ID metadata document (CIMD) permission ceiling relations.
  * All tables are tenant-owned; row-level security scopes every query to the current tenant.
@@ -23,116 +131,9 @@ import { convertToIdentifiers } from '#src/utils/sql.js';
  * `GeneratedSchema` to act as a relation endpoint (the tenant scope is implicit via RLS), matching
  * the `application_user_consent_user_scopes` query style.
  */
-export const createCimdQueries = (pool: CommonQueryMethods) => {
-  const insertUserScopes = buildInsertIntoWithPool(pool)(CimdUserScopes, {
-    onConflict: { ignore: true },
-  });
-  const insertResourceScopes = buildInsertIntoWithPool(pool)(CimdResourceScopes, {
-    onConflict: { ignore: true },
-  });
-  const insertOrganizationScopes = buildInsertIntoWithPool(pool)(CimdOrganizationScopes, {
-    onConflict: { ignore: true },
-  });
-  const insertOrganizationResourceScopes = buildInsertIntoWithPool(pool)(
-    CimdOrganizationResourceScopes,
-    { onConflict: { ignore: true } }
-  );
-
-  const findAllUserScopes = async (): Promise<UserScope[]> => {
-    const { table, fields } = convertToIdentifiers(CimdUserScopes);
-    const rows = await pool.any<{ userScope: UserScope }>(sql`
-      select ${fields.userScope}
-      from ${table}
-    `);
-    return rows.map(({ userScope }) => userScope);
-  };
-
-  const deleteUserScope = async (userScope: string) => {
-    const { table, fields } = convertToIdentifiers(CimdUserScopes);
-    const { rowCount } = await pool.query(sql`
-      delete from ${table}
-      where ${fields.userScope} = ${userScope}
-    `);
-    if (rowCount < 1) {
-      throw new DeletionError(CimdUserScopes.table);
-    }
-  };
-
-  const findAllResourceScopes = async (): Promise<readonly Scope[]> => {
-    const relation = convertToIdentifiers(CimdResourceScopes, true);
-    const scopes = convertToIdentifiers(Scopes, true);
-    return pool.any<Scope>(sql`
-      select ${scopes.table}.*
-      from ${relation.table}
-      join ${scopes.table} on ${scopes.fields.id} = ${relation.fields.scopeId}
-    `);
-  };
-
-  const findAllOrganizationResourceScopes = async (): Promise<readonly Scope[]> => {
-    const relation = convertToIdentifiers(CimdOrganizationResourceScopes, true);
-    const scopes = convertToIdentifiers(Scopes, true);
-    return pool.any<Scope>(sql`
-      select ${scopes.table}.*
-      from ${relation.table}
-      join ${scopes.table} on ${scopes.fields.id} = ${relation.fields.scopeId}
-    `);
-  };
-
-  const deleteResourceScope = async (scopeId: string) => {
-    const { table, fields } = convertToIdentifiers(CimdResourceScopes);
-    const { rowCount } = await pool.query(sql`
-      delete from ${table}
-      where ${fields.scopeId} = ${scopeId}
-    `);
-    if (rowCount < 1) {
-      throw new DeletionError(CimdResourceScopes.table);
-    }
-  };
-
-  const findAllOrganizationScopes = async (): Promise<readonly OrganizationScope[]> => {
-    const relation = convertToIdentifiers(CimdOrganizationScopes, true);
-    const organizationScopes = convertToIdentifiers(OrganizationScopes, true);
-    return pool.any<OrganizationScope>(sql`
-      select ${organizationScopes.table}.*
-      from ${relation.table}
-      join ${organizationScopes.table} on ${organizationScopes.fields.id} = ${relation.fields.organizationScopeId}
-    `);
-  };
-
-  const deleteOrganizationScope = async (organizationScopeId: string) => {
-    const { table, fields } = convertToIdentifiers(CimdOrganizationScopes);
-    const { rowCount } = await pool.query(sql`
-      delete from ${table}
-      where ${fields.organizationScopeId} = ${organizationScopeId}
-    `);
-    if (rowCount < 1) {
-      throw new DeletionError(CimdOrganizationScopes.table);
-    }
-  };
-
-  const deleteOrganizationResourceScope = async (scopeId: string) => {
-    const { table, fields } = convertToIdentifiers(CimdOrganizationResourceScopes);
-    const { rowCount } = await pool.query(sql`
-      delete from ${table}
-      where ${fields.scopeId} = ${scopeId}
-    `);
-    if (rowCount < 1) {
-      throw new DeletionError(CimdOrganizationResourceScopes.table);
-    }
-  };
-
-  return {
-    insertUserScopes,
-    insertResourceScopes,
-    insertOrganizationScopes,
-    insertOrganizationResourceScopes,
-    findAllUserScopes,
-    deleteUserScope,
-    findAllResourceScopes,
-    findAllOrganizationResourceScopes,
-    deleteResourceScope,
-    findAllOrganizationScopes,
-    deleteOrganizationScope,
-    deleteOrganizationResourceScope,
-  };
-};
+export const createCimdQueries = (pool: CommonQueryMethods) => ({
+  userScopes: createUserScopeQueries(pool),
+  resourceScopes: createResourceScopeQueries(pool),
+  organizationScopes: createOrganizationScopeQueries(pool),
+  organizationResourceScopes: createOrganizationResourceScopeQueries(pool),
+});
