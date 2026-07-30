@@ -1,15 +1,8 @@
-import { EnvSet } from '#src/env-set/index.js';
 import { generateKeyPairAndCertificate } from '#src/libraries/saml-application/utils.js';
 
 import { SamlAuthnRequestSignatureAlgorithm } from '../types/saml.js';
 
 import SamlConnector from './index.js';
-
-const setDevFeaturesEnabled = (enabled: boolean) => {
-  Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', enabled);
-};
-
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
 
 // Minimal IdP metadata with a redirect SSO endpoint and a signing cert. Pass a namespace `prefix`
 // (e.g. `md`, `saml-md`) to exercise prefixed elements; default is the un-prefixed default namespace.
@@ -33,14 +26,6 @@ const buildIdpMetadataXml = (cert: string, prefix = '') => {
 
 describe('SamlConnector signed AuthnRequest', () => {
   const endpoint = new URL('https://logto.example.com');
-
-  beforeEach(() => {
-    setDevFeaturesEnabled(true);
-  });
-
-  afterAll(() => {
-    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
-  });
 
   it('omits Signature when signAuthnRequest is off', async () => {
     const { certificate } = await generateKeyPairAndCertificate(1);
@@ -188,33 +173,14 @@ describe('SamlConnector signed AuthnRequest', () => {
     expect(url).toContain('Signature=');
   });
 
-  it('does not sign when dev features are off', async () => {
-    setDevFeaturesEnabled(false);
-    const idp = await generateKeyPairAndCertificate(1);
-    const sp = await generateKeyPairAndCertificate(1);
-    const connector = new SamlConnector(endpoint, 'conn-10', {
-      metadata: buildIdpMetadataXml(idp.certificate),
-      signAuthnRequest: true,
-    });
-    connector.setServiceProviderSigningCredential({
-      privateKey: sp.privateKey,
-      certificate: sp.certificate,
-    });
-    const url = await connector.getSingleSignOnUrl('relay-10');
-    expect(url).not.toContain('Signature=');
-  });
-
-  it('preserves the released mirror behavior when dev features are off', async () => {
-    setDevFeaturesEnabled(false);
-    // Released behavior mirrors the IdP metadata flag onto the SP, so an IdP advertising
-    // WantAuthnRequestsSigned="true" makes samlify attempt to sign without a private key and
-    // throw. The dev gate keeps that behavior (raw metadata, mirrored flag) until GA.
+  it('stays unsigned on the manual-config path when off', async () => {
     const { certificate } = await generateKeyPairAndCertificate(1);
-    const metadata = buildIdpMetadataXml(certificate).replace(
-      '<IDPSSODescriptor',
-      '<IDPSSODescriptor WantAuthnRequestsSigned="true"'
-    );
-    const connector = new SamlConnector(endpoint, 'conn-12', { metadata });
-    await expect(connector.getSingleSignOnUrl('relay-12')).rejects.toThrow();
+    const connector = new SamlConnector(endpoint, 'conn-12', {
+      entityId: 'https://idp.example.com',
+      signInEndpoint: 'https://idp.example.com/sso',
+      x509Certificate: certificate,
+    });
+    const url = await connector.getSingleSignOnUrl('relay-12');
+    expect(url).not.toContain('Signature=');
   });
 });

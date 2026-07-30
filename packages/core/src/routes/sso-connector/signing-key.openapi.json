@@ -1,9 +1,4 @@
 {
-  "tags": [
-    {
-      "name": "Dev feature"
-    }
-  ],
   "paths": {
     "/api/sso-connectors/{id}/signing-keys": {
       "get": {

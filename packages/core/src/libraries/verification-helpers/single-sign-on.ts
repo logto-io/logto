@@ -161,10 +161,7 @@ export const getSsoAuthorizationUrl = async (
       }
     }
 
-    // TODO: Remove the dev features check when the signed AuthnRequest feature is ready.
-    if (EnvSet.values.isDevFeaturesEnabled) {
-      await injectSamlSigningCredential(connectorInstance, connectorData, queries, log);
-    }
+    await injectSamlSigningCredential(connectorInstance, connectorData, queries, log);
 
     return await connectorInstance.getAuthorizationUrl(
       { jti, ...payload, connectorId },

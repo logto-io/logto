@@ -65,8 +65,8 @@ export enum SamlAuthnRequestSignatureAlgorithm {
 
 /**
  * Optional signed-`AuthnRequest` settings, shared across all SAML config shapes. Both fields are
- * optional so existing connector configs remain valid; the signing behaviour is gated behind
- * `isDevFeaturesEnabled` at the sign-in / route / console layers, not here.
+ * optional so existing connector configs remain valid; enabling `signAuthnRequest` is validated at
+ * the route layer (an active signing key must exist), not here.
  */
 const samlSigningConfigGuard = z.object({
   signAuthnRequest: z.boolean().optional(),
