@@ -7,10 +7,16 @@ const alteration: AlterationScript = {
     await pool.query(sql`
       alter table oidc_session_extensions alter column client_id set data type varchar(200);
     `);
+    await pool.query(sql`
+      alter table users alter column application_id set data type varchar(200);
+    `);
   },
   down: async (pool) => {
     await pool.query(sql`
       alter table oidc_session_extensions alter column client_id set data type varchar(21);
+    `);
+    await pool.query(sql`
+      alter table users alter column application_id set data type varchar(21);
     `);
   },
 };
