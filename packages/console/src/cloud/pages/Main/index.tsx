@@ -26,14 +26,18 @@ export default function Main() {
     return <AppLoading />;
   }
 
-  // If the user has a tenant, redirect to it. `TenantsProvider` guarantees the tenants data
-  // is loaded before this component renders (see `ProtectedRoutes`).
+  /**
+   * If the user has a tenant, redirect to it. `TenantsProvider` guarantees the tenants data
+   * is loaded before this component renders (see `ProtectedRoutes`).
+   */
   if (defaultTenantId) {
     return <Redirect toTenantId={defaultTenantId} />;
   }
 
-  // The user has no tenant. Wait for the invitations to load before deciding where to go.
-  // If the request fails, fall back to the branches below so the user can still create a tenant.
+  /**
+   * The user has no tenant. Wait for the invitations to load before deciding where to go.
+   * If the request fails, fall back to the branches below so the user can still create a tenant.
+   */
   if (isInvitationsLoading) {
     return <AppLoading />;
   }
@@ -43,13 +47,17 @@ export default function Main() {
     return <InvitationList invitations={invitations} />;
   }
 
-  // The user has completed onboarding before (e.g., deleted or left all their tenants), show
-  // the landing page which allows creating tenants with the full-featured modal.
+  /**
+   * The user has completed onboarding before (e.g., deleted or left all their tenants), show
+   * the landing page which allows creating tenants with the full-featured modal.
+   */
   if (isOnboardingDone) {
     return <TenantLandingPage />;
   }
 
-  // A new user with no tenant and no pending invitations, redirect them to the onboarding flow
-  // to create their first tenant.
+  /**
+   * A new user with no tenant and no pending invitations, redirect them to the onboarding flow
+   * to create their first tenant.
+   */
   return <Navigate to={GlobalRoute.Onboarding} />;
 }

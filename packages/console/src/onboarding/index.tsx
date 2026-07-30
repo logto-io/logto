@@ -38,9 +38,11 @@ export function OnboardingApp() {
     };
   }, [setThemeOverride]);
 
-  // The onboarding flow is only for creating the first tenant. Once the user has a tenant
-  // (including the one just created in the flow), redirect back to let the root routing decide.
-  // `ProtectedRoutes` guarantees the tenants data is loaded before this component renders.
+  /**
+   * The onboarding flow is only for creating the first tenant. Once the user has a tenant
+   * (including the one just created in the flow), redirect back to let the root routing decide.
+   * `ProtectedRoutes` guarantees the tenants data is loaded before this component renders.
+   */
   if (tenants.length > 0) {
     return <Navigate replace to="/" />;
   }
