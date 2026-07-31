@@ -8,6 +8,7 @@ import { redisCache } from '#src/caches/index.js';
 import { EnvSet } from '#src/env-set/index.js';
 
 import Tenant from './Tenant.js';
+import { TenantNotFoundError } from './utils.js';
 
 const consoleLog = new ConsoleLog(chalk.magenta('tenant'));
 
@@ -35,6 +36,23 @@ const maxTenantRebuildAttempts = 3;
  * always rebuilt. Each evicted instance keeps its idle pool open at most this much longer.
  */
 const evictionDisposeGracePeriod = 1000;
+
+/**
+ * How long a {@link TenantNotFoundError} outcome is served from memory before the shared
+ * `tenants` table is consulted again. Unknown-tenant probes are unauthenticated and would
+ * otherwise cost a shared-pool query (plus an `Init tenant` log) per request; the answer is
+ * deterministic (it changes only when the tenant is provisioned), so a short TTL caps that
+ * load while keeping a newly provisioned tenant reachable promptly. A tenant whose id was
+ * probed before its insert committed — possible when the id is user-chosen rather than
+ * generated — can keep serving 404 for up to this long after creation.
+ */
+const tenantNotFoundCacheTtl = 60_000;
+
+/**
+ * Upper bound on tracked unknown-tenant ids. The key space is unauthenticated and
+ * attacker-supplied, so this cap is what bounds memory under an id-spraying probe flood.
+ */
+const tenantNotFoundCacheSize = 1000;
 
 class TenantPool {
   protected cache = new LRUCache<string, Promise<Tenant>>({
@@ -68,12 +86,35 @@ class TenantPool {
   });
 
   /**
+   * Expiry timestamps for tenant ids that recently failed with {@link TenantNotFoundError},
+   * keyed by tenant id rather than cache key since existence is domain-independent. Expiry is
+   * checked manually against `Date.now()` — lru-cache's built-in `ttl` runs on
+   * `performance.now()`, which the expiry test cannot drive.
+   */
+  protected notFoundCache = new LRUCache<string, number>({ max: tenantNotFoundCacheSize });
+
+  /**
    * Resolve a tenant instance and atomically reserve a request slot on it (see
    * {@link Tenant.requestStart}). The caller owns the slot and must call
    * {@link Tenant.requestEnd} exactly once when the request finishes. Acquisition retries to
-   * converge on a healthy instance, with a capped fallback to avoid looping forever.
+   * converge on a healthy instance, with a capped fallback to avoid looping forever. Tenant
+   * ids that recently failed with {@link TenantNotFoundError} rethrow from a short-lived
+   * negative cache without a new lookup.
    */
   async get(tenantId: string, customDomain?: string): Promise<Tenant> {
+    const notFoundExpiresAt = this.notFoundCache.get(tenantId);
+
+    if (notFoundExpiresAt !== undefined) {
+      if (Date.now() < notFoundExpiresAt) {
+        // The suffix keeps cache-served rejections distinguishable in logs and telemetry.
+        throw new TenantNotFoundError(
+          `Cannot find valid tenant credentials for ID ${tenantId} (negative cache)`
+        );
+      }
+
+      this.notFoundCache.delete(tenantId);
+    }
+
     const cacheKey = `${tenantId}-${customDomain ?? 'default'}`;
 
     return this.getWithAttempts(cacheKey, tenantId, customDomain, 0, 0);
@@ -108,7 +149,7 @@ class TenantPool {
     }
 
     const { tenantPromise } = this.getOrCreateTenant(cacheKey, tenantId, customDomain);
-    const tenant = await this.resolveCachedTenant(cacheKey, tenantPromise);
+    const tenant = await this.resolveCachedTenant(cacheKey, tenantId, tenantPromise);
 
     // Reserve a request slot *before* the async health check. If the instance has been
     // disposed concurrently, `requestStart()` returns `false` and we retry to acquire a
@@ -174,7 +215,7 @@ class TenantPool {
     // Attempt limit reached: reserve a slot on whatever is cached, dropping a disposed instance
     // with an identity check so a racing replacement is not removed accidentally.
     const { tenantPromise } = this.getOrCreateTenant(cacheKey, tenantId, customDomain);
-    const tenant = await this.resolveCachedTenant(cacheKey, tenantPromise);
+    const tenant = await this.resolveCachedTenant(cacheKey, tenantId, tenantPromise);
 
     if (!tenant.requestStart()) {
       this.deleteCachedTenant(cacheKey, tenantPromise);
@@ -241,6 +282,7 @@ class TenantPool {
 
   private async resolveCachedTenant(
     cacheKey: string,
+    tenantId: string,
     tenantPromise: Promise<Tenant>
   ): Promise<Tenant> {
     try {
@@ -248,6 +290,12 @@ class TenantPool {
     } catch (error: unknown) {
       if (this.cache.get(cacheKey) === tenantPromise) {
         this.cache.delete(cacheKey);
+      }
+
+      // Only the deterministic "tenant does not exist" outcome is negative-cached;
+      // transient creation failures stay uncached so the next request retries.
+      if (error instanceof TenantNotFoundError) {
+        this.notFoundCache.set(tenantId, Date.now() + tenantNotFoundCacheTtl);
       }
 
       throw error;
