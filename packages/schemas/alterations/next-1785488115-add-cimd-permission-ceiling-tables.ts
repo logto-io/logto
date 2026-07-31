@@ -9,6 +9,8 @@ import { applyTableRls, dropTableRls } from './utils/1704934999-tables.js';
  * The ceiling is tenant-wide because CIMD clients are unregistered and have no per-client record
  * to attach configuration to. The tables reference the tenant and scope tables directly (not the
  * CIMD config row), so disabling CIMD does not wipe the permission settings.
+ * Rows are an allowlist: an empty table allows nothing (deny-all), and an unrestricted state is not
+ * expressible.
  */
 const alteration: AlterationScript = {
   up: async (pool) => {
