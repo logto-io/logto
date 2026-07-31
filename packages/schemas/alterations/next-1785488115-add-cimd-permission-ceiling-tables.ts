@@ -26,9 +26,10 @@ const alteration: AlterationScript = {
       create table cimd_resource_scopes (
         tenant_id varchar(21) not null
           references tenants (id) on update cascade on delete cascade,
-        scope_id varchar(21) not null
-          references scopes (id) on update cascade on delete cascade,
-        primary key (tenant_id, scope_id)
+        scope_id varchar(21) not null,
+        primary key (tenant_id, scope_id),
+        foreign key (tenant_id, scope_id)
+          references scopes (tenant_id, id) on update cascade on delete cascade
       );
     `);
     await applyTableRls(pool, 'cimd_resource_scopes');
@@ -37,9 +38,10 @@ const alteration: AlterationScript = {
       create table cimd_organization_scopes (
         tenant_id varchar(21) not null
           references tenants (id) on update cascade on delete cascade,
-        organization_scope_id varchar(21) not null
-          references organization_scopes (id) on update cascade on delete cascade,
-        primary key (tenant_id, organization_scope_id)
+        organization_scope_id varchar(21) not null,
+        primary key (tenant_id, organization_scope_id),
+        foreign key (tenant_id, organization_scope_id)
+          references organization_scopes (tenant_id, id) on update cascade on delete cascade
       );
     `);
     await applyTableRls(pool, 'cimd_organization_scopes');
@@ -48,9 +50,10 @@ const alteration: AlterationScript = {
       create table cimd_organization_resource_scopes (
         tenant_id varchar(21) not null
           references tenants (id) on update cascade on delete cascade,
-        scope_id varchar(21) not null
-          references scopes (id) on update cascade on delete cascade,
-        primary key (tenant_id, scope_id)
+        scope_id varchar(21) not null,
+        primary key (tenant_id, scope_id),
+        foreign key (tenant_id, scope_id)
+          references scopes (tenant_id, id) on update cascade on delete cascade
       );
     `);
     await applyTableRls(pool, 'cimd_organization_resource_scopes');

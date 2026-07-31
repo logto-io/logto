@@ -5,7 +5,8 @@ create table cimd_organization_scopes (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
   /** The globally unique identifier of the organization scope. */
-  organization_scope_id varchar(21) not null
-    references organization_scopes (id) on update cascade on delete cascade,
-  primary key (tenant_id, organization_scope_id)
+  organization_scope_id varchar(21) not null,
+  primary key (tenant_id, organization_scope_id),
+  foreign key (tenant_id, organization_scope_id)
+    references organization_scopes (tenant_id, id) on update cascade on delete cascade
 );
