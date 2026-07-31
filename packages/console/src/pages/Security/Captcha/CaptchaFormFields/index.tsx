@@ -25,6 +25,9 @@ function CaptchaFormFields({ metadata, errors, register, control }: Props) {
   const projectIdField = metadata.requiredFields.find((field) => field.field === 'projectId');
   const domainField = metadata.requiredFields.find((field) => field.field === 'domain');
   const modeField = metadata.requiredFields.find((field) => field.field === 'mode');
+  const scoreThresholdField = metadata.requiredFields.find(
+    (field) => field.field === 'scoreThreshold'
+  );
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -62,6 +65,24 @@ function CaptchaFormFields({ metadata, errors, register, control }: Props) {
             error={Boolean(errors.domain)}
             placeholder={String(t(domainField.placeholder))}
             {...register('domain', { required: !domainField.isOptional })}
+          />
+        </FormField>
+      )}
+      {scoreThresholdField && (
+        <FormField isRequired={!scoreThresholdField.isOptional} title={scoreThresholdField.label}>
+          <TextInput
+            type="number"
+            min={0}
+            max={1}
+            step={0.1}
+            error={errors.scoreThreshold && t('security.captcha_details.score_threshold_error')}
+            placeholder={String(t(scoreThresholdField.placeholder))}
+            {...register('scoreThreshold', {
+              required: !scoreThresholdField.isOptional,
+              min: 0,
+              max: 1,
+              valueAsNumber: true,
+            })}
           />
         </FormField>
       )}

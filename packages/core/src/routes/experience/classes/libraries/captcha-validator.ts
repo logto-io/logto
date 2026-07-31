@@ -10,6 +10,8 @@ import { z } from 'zod';
 
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 
+const DEFAULT_SCORE_THRESHOLD = 0.5;
+
 function isRecaptchaEnterprise(
   config: CaptchaProvider['config']
 ): config is RecaptchaEnterpriseConfig {
@@ -109,11 +111,12 @@ export class CaptchaValidator {
         riskAnalysis: { score },
       } = responseGuard.parse(result);
 
+      const scoreThreshold = config.scoreThreshold ?? DEFAULT_SCORE_THRESHOLD;
+
       // For checkbox mode, only check if the token is valid (skip score threshold)
       // Checkbox challenges are interactive and provide binary pass/fail
       const isCheckboxMode = config.mode === RecaptchaEnterpriseMode.Checkbox;
-      // TODO: customize the score threshold
-      const success = isCheckboxMode ? valid : valid && score >= 0.5;
+      const success = isCheckboxMode ? valid : valid && score >= scoreThreshold;
 
       this.log.append({
         success,
