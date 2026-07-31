@@ -1,6 +1,8 @@
+import assert from 'node:assert';
 import { generateKeyPairSync } from 'node:crypto';
 
 import { LogtoOidcConfigKey, OidcSigningKeyStatus, type LogtoOidcConfigType } from '@logto/schemas';
+import { SignJWT, importJWK, jwtVerify } from 'jose';
 
 import loadOidcValues from './oidc.js';
 
@@ -33,12 +35,27 @@ describe('loadOidcValues', () => {
     ['secp384r1', 'ES384'],
     ['secp521r1', 'ES512'],
   ])('derives the signing algorithm from the %s current key', async (namedCurve, expected) => {
-    const { jwkSigningAlg } = await loadOidcValues(
+    const { jwkSigningAlg, privateJwks, localJWKSet } = await loadOidcValues(
       issuer,
       buildConfigs([generateEcPrivateKeyPem(namedCurve)])
     );
 
     expect(jwkSigningAlg).toBe(expected);
+
+    /**
+     * The declared algorithm must be one the current key can actually sign with — with a
+     * mismatched declaration (e.g. `ES384` hardcoded for a P-256 key), `importJWK` rejects the
+     * curve and this round trip fails.
+     */
+    const [currentPrivateJwk] = privateJwks;
+    assert(currentPrivateJwk && jwkSigningAlg);
+    const signingKey = await importJWK(currentPrivateJwk, jwkSigningAlg);
+    const jwt = await new SignJWT({})
+      .setProtectedHeader({ alg: jwkSigningAlg, kid: currentPrivateJwk.kid })
+      .sign(signingKey);
+    const { protectedHeader } = await jwtVerify(jwt, localJWKSet);
+
+    expect(protectedHeader.alg).toBe(expected);
   });
 
   it('keeps the signing algorithm undefined for an RSA current key', async () => {
