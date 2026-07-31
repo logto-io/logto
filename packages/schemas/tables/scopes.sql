@@ -14,9 +14,6 @@ create table scopes (
     unique (tenant_id, resource_id, name)
 );
 
-create index scopes__id
-  on scopes (tenant_id, id);
-
 /** Supports tenant-aware foreign keys from tenant-owned scope relations. */
 create unique index scopes__tenant_id_id
   on scopes (tenant_id, id);

@@ -15,9 +15,6 @@ create table organization_scopes (
     unique (tenant_id, name)
 );
 
-create index organization_scopes__id
-  on organization_scopes (tenant_id, id);
-
 /** Supports tenant-aware foreign keys from tenant-owned organization scope relations. */
 create unique index organization_scopes__tenant_id_id
   on organization_scopes (tenant_id, id);
