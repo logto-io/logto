@@ -81,7 +81,8 @@ function CaptchaFormFields({ metadata, errors, register, control }: Props) {
               required: !scoreThresholdField.isOptional,
               min: 0,
               max: 1,
-              valueAsNumber: true,
+              setValueAs: (value) => (value === '' || value === null ? undefined : Number(value)),
+              validate: (value) => value === undefined || Number.isFinite(value),
             })}
           />
         </FormField>
