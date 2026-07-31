@@ -1,5 +1,4 @@
 import { LogtoActionKey } from '@logto/schemas';
-import classNames from 'classnames';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
@@ -63,7 +62,7 @@ function Content({ actionType, mode }: ContentProps) {
             <InlineNotification
               hasIcon
               severity="alert"
-              className={classNames(styles.warning, !isMonacoLoaded && styles.hidden)}
+              className={isMonacoLoaded ? undefined : styles.hidden}
             >
               <div className={styles.warningTitle}>{t('actions.security_warning.title')}</div>
               <div>{t('actions.security_warning.description')}</div>
