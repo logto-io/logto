@@ -13,6 +13,10 @@ create table oidc_session_extensions (
   primary key (tenant_id, session_uid)
 );
 
+/* Leads with account_id instead of tenant_id so the cascades from the users table can use it (users.id is globally unique, so a tenant_id prefix adds no selectivity). */
+create index oidc_session_extensions__account_id
+  on oidc_session_extensions (account_id);
+
 create trigger set_updated_at
   before update on oidc_session_extensions
   for each row
