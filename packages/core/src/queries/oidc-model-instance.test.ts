@@ -51,8 +51,7 @@ describe('oidc-model-instance query', () => {
   });
 
   afterEach(() => {
-    // `clearAllMocks` does not remove persistent implementations, so reset here to keep a
-    // failed test from leaking its `mockImplementation` into the rest of the file.
+    // `clearAllMocks` keeps persistent implementations; reset so a failed test cannot leak one.
     mockQuery.mockReset();
     jest.restoreAllMocks();
   });
@@ -302,7 +301,7 @@ describe('oidc-model-instance query', () => {
     await destroyInstanceById(instance.modelName, instance.id);
   });
 
-  const revokeBatchSize = 5000;
+  const revokeBatchSize = 2000;
   const revokeCases = {
     revokeInstanceByGrantId: {
       revoke: async (target: string) => revokeInstanceByGrantId(instance.modelName, target),
@@ -335,15 +334,17 @@ describe('oidc-model-instance query', () => {
   } as const;
 
   it.each([
-    ['revokeInstanceByGrantId', [5000, 0]],
-    ['revokeInstanceByGrantId', [2500, 200, 0]],
-    ['revokeInstanceByUserId', [5000, 0]],
-    ['revokeInstanceByUserId', [2500, 200, 0]],
+    ['revokeInstanceByGrantId', [2000, 0]],
+    // A partial batch must not end the loop — see the early-exit bug closed in #9151.
+    ['revokeInstanceByGrantId', [1200, 200, 0]],
+    ['revokeInstanceByUserId', [2000, 0]],
+    ['revokeInstanceByUserId', [1200, 200, 0]],
+    ['revokeInstanceByUserId', [2000, undefined]],
   ] as const)('%s deletes in batches until drained %j', async (method, rowCounts) => {
     const target = 'target-id';
     const { revoke, expectSql } = revokeCases[method];
 
-    const mockBatch = (rowCount: number) => {
+    const mockBatch = (rowCount?: number) => {
       // @ts-expect-error - mock delete query
       mockQuery.mockImplementationOnce(async (sql, values) => {
         expectSqlAssert(sql, expectSql.sql);

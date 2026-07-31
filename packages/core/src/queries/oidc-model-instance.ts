@@ -32,9 +32,10 @@ const sessionModelName = 'Session';
  */
 // Hard-code this value since 3 seconds is a reasonable number for concurrency and no need for further configuration
 const refreshTokenReuseInterval = 3;
-const revokeInstanceBatchSize = 5000;
+const revokeInstanceBatchSize = 2000;
 /** Safety valve so a revocation request stays bounded even for pathological instance counts. */
 const maxRevokeInstanceBatches = 1000;
+/** Fixed-length array to drive the bounded batch loop without a mutable counter. */
 const revokeInstanceBatchIterations = Array.from({ length: maxRevokeInstanceBatches });
 
 const consoleLog = new ConsoleLog(chalk.magenta('query'));
@@ -189,12 +190,12 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
   };
 
   /**
-   * Delete instances of the given model matching the condition in bounded batches until no
-   * matches remain, so no single statement can exceed the database statement timeout.
-   * The condition must include the payload key-existence clause that matches the partial
-   * index predicate, so the batches stay index-backed under any query plan.
+   * Delete matching instances in bounded batches until none remain, so no single statement can
+   * exceed the database statement timeout.
    *
    * @param target - Human-readable principal for the cap log, e.g. `accountId <userId>`.
+   * @param condition - Must include the payload key-existence clause matching the partial index
+   * predicate, or the batches stop being index-backed.
    */
   const revokeInstancesInBatches = async (
     modelName: string,
