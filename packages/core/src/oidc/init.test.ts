@@ -3,7 +3,7 @@ import assert from 'node:assert';
 import { GrantType, type Scope } from '@logto/schemas';
 import { errors, type KoaContextWithOIDC } from 'oidc-provider';
 
-import { mockResource } from '#src/__mocks__/index.js';
+import { mockResource, mockUser } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { getProviderConfiguration } from '#src/oidc/oidc-provider-internals.js';
 import { mockEnvSet } from '#src/test-utils/env-set.js';
@@ -375,5 +375,33 @@ describe('oidc provider init', () => {
     expect(findResourceByIndicator).toHaveBeenCalledTimes(2);
     expect(findApplicationById).toHaveBeenCalledTimes(2);
     expect(findUserScopesForResourceIndicator).toHaveBeenCalledTimes(2);
+  });
+});
+
+const findAccount = async (findUserById: () => Promise<typeof mockUser>) => {
+  const provider = createProvider(new MockTenant(undefined, { users: { findUserById } }));
+  const configuration = getProviderConfiguration(provider);
+  return configuration.findAccount(createOidcContext({ provider }), accountId);
+};
+
+describe('findAccount', () => {
+  it('should resolve the account for an active user', async () => {
+    await expect(findAccount(async () => ({ ...mockUser, id: accountId }))).resolves.toMatchObject({
+      accountId,
+    });
+  });
+
+  it('should reject when the user cannot be found', async () => {
+    await expect(
+      findAccount(async () => {
+        throw new Error('not found');
+      })
+    ).rejects.toMatchError(new errors.InvalidGrant('user not found'));
+  });
+
+  it('should reject when the user is suspended', async () => {
+    await expect(
+      findAccount(async () => ({ ...mockUser, id: accountId, isSuspended: true }))
+    ).rejects.toMatchError(new errors.InvalidGrant('user is suspended'));
   });
 });

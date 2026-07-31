@@ -270,6 +270,23 @@ describe('refresh token grant', () => {
     );
   });
 
+  it('should throw before consuming the refresh token when the user is suspended', async () => {
+    const ctx = createOidcContext(validOidcContext);
+    const consume = jest.fn();
+    stubRefreshToken(ctx, { consume });
+    stubGrant(ctx);
+    // The suspension check lives in `findAccount` (see `oidc/init.ts`); the grant surfaces its
+    // rejection at the account validation step.
+    Sinon.stub(getProviderConfiguration(ctx.oidc.provider), 'findAccount').rejects(
+      new errors.InvalidGrant('user is suspended')
+    );
+
+    await expect(mockHandler()(ctx)).rejects.toMatchError(
+      new errors.InvalidGrant('user is suspended')
+    );
+    expect(consume).not.toHaveBeenCalled();
+  });
+
   it('should throw when refresh token has been consumed', async () => {
     const ctx = createOidcContext(validOidcContext);
     stubRefreshToken(ctx, {
