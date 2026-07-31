@@ -4,19 +4,11 @@ import type { AlterationScript } from '../lib/types/alteration.js';
 
 const alteration: AlterationScript = {
   beforeUp: async (pool) => {
-    // Clean up an invalid index that may be left by a failed concurrent build.
-    await pool.query(sql`
-      drop index concurrently if exists scopes__tenant_id_id;
-    `);
     await pool.query(sql`
       create unique index concurrently scopes__tenant_id_id
         on scopes (tenant_id, id);
     `);
 
-    // Clean up an invalid index that may be left by a failed concurrent build.
-    await pool.query(sql`
-      drop index concurrently if exists organization_scopes__tenant_id_id;
-    `);
     await pool.query(sql`
       create unique index concurrently organization_scopes__tenant_id_id
         on organization_scopes (tenant_id, id);
