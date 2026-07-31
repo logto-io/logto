@@ -32,6 +32,7 @@ describe('captcha provider', () => {
         siteKey: 'site_key',
         secretKey: 'secret_key',
         projectId: 'project_id',
+        scoreThreshold: 0.7,
       },
     });
 
@@ -43,6 +44,7 @@ describe('captcha provider', () => {
         siteKey: 'site_key',
         secretKey: 'secret_key',
         projectId: 'project_id',
+        scoreThreshold: 0.7,
       },
     });
   });
