@@ -29,7 +29,7 @@ import logtoConfigJwtCustomizerRoutes from './jwt-customizer.js';
  */
 const getOidcConfigKeyDatabaseColumnName = (
   key: LogtoOidcConfigKeyType
-): Exclude<LogtoOidcConfigKey, LogtoOidcConfigKey.Session> =>
+): LogtoOidcConfigKey.PrivateKeys | LogtoOidcConfigKey.CookieKeys =>
   key === LogtoOidcConfigKeyType.PrivateKeys
     ? LogtoOidcConfigKey.PrivateKeys
     : LogtoOidcConfigKey.CookieKeys;

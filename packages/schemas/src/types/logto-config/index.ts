@@ -35,6 +35,7 @@ export enum LogtoOidcConfigKey {
   PrivateKeys = 'oidc.privateKeys',
   CookieKeys = 'oidc.cookieKeys',
   Session = 'oidc.session',
+  Cimd = 'oidc.cimd',
 }
 
 /**
@@ -69,10 +70,21 @@ export const oidcSessionConfigGuard = z.object({
 
 export type OidcSessionConfig = z.infer<typeof oidcSessionConfigGuard>;
 
+/**
+ * Tenant-level config for the OAuth Client ID Metadata Document (CIMD) feature.
+ * The `oidc.cimd` row is optional; a missing row is treated as `{ enabled: false }`.
+ */
+export const cimdConfigGuard = z.object({
+  enabled: z.boolean(),
+});
+
+export type CimdConfig = z.infer<typeof cimdConfigGuard>;
+
 export type LogtoOidcConfigType = {
   [LogtoOidcConfigKey.PrivateKeys]: OidcPrivateKey[];
   [LogtoOidcConfigKey.CookieKeys]: OidcConfigKey[];
   [LogtoOidcConfigKey.Session]: OidcSessionConfig;
+  [LogtoOidcConfigKey.Cimd]: CimdConfig;
 };
 
 export const logtoOidcConfigGuard: Readonly<{
@@ -86,6 +98,10 @@ export const logtoOidcConfigGuard: Readonly<{
   [LogtoOidcConfigKey.CookieKeys]: oidcConfigKeyGuard.array(),
   // Session config is optional, if not set, it will fallback to default value in core.
   [LogtoOidcConfigKey.Session]: oidcSessionConfigGuard.nullish().transform((data) => data ?? {}),
+  // CIMD config is optional; a missing row means the feature is disabled.
+  [LogtoOidcConfigKey.Cimd]: cimdConfigGuard
+    .nullish()
+    .transform((data) => data ?? { enabled: false }),
 });
 
 export enum LogtoJwtTokenKey {
