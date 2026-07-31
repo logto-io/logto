@@ -184,12 +184,15 @@ export type SigningKeyRotationState = z.infer<typeof signingKeyRotationStateGuar
 /* --- CIMD Config --- */
 /**
  * Config for the OAuth Client ID Metadata Document (CIMD) feature. The row is only written once
- * the feature is toggled, so readers must treat a missing row as `{ enabled: false }`.
+ * the feature is toggled, so readers must fall back to {@link defaultCimdConfig}.
  */
 export const cimdConfigGuard = z.object({
   enabled: z.boolean(),
 });
 export type CimdConfig = z.infer<typeof cimdConfigGuard>;
+
+/** Applied when the `cimd` row is absent: the feature is opt-in per tenant. */
+export const defaultCimdConfig = Object.freeze({ enabled: false } satisfies CimdConfig);
 
 export enum LogtoTenantConfigKey {
   AdminConsole = 'adminConsole',
