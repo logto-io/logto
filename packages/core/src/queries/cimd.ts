@@ -30,7 +30,7 @@ const createUserScopeQueries = (pool: CommonQueryMethods) => {
     return rows.map(({ userScope }) => userScope);
   };
 
-  const deleteByUserScope = async (userScope: string) => {
+  const deleteByUserScope = async (userScope: UserScope) => {
     const { rowCount } = await pool.query(sql`
       delete from ${cimdUserScopes.table}
       where ${cimdUserScopes.fields.userScope} = ${userScope}
