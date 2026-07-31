@@ -6,6 +6,7 @@ import {
   LogtoJwtTokenKeyType,
   OidcSigningKeyStatus,
 } from '@logto/schemas';
+import ky from 'ky';
 
 import {
   accessTokenJwtCustomizerPayload,
@@ -30,11 +31,36 @@ import {
   getSessionConfig,
   updateSessionConfig,
 } from '#src/api/index.js';
+import { discoveryUrl } from '#src/constants.js';
 import { expectRejects } from '#src/helpers/index.js';
+import { waitFor } from '#src/utils.js';
 
 const defaultAdminConsoleConfig: AdminConsoleData = {
   signInExperienceCustomized: false,
   organizationCreated: false,
+};
+
+const fetchDeclaredSigningAlgs = async () => {
+  const { id_token_signing_alg_values_supported: algs } = await ky
+    .get(discoveryUrl)
+    .json<{ id_token_signing_alg_values_supported: string[] }>();
+
+  return algs.slice().sort();
+};
+
+/**
+ * The tenant rebuild after a signing key change is fire-and-forget, so briefly poll until the
+ * discovery document reflects the new key set before asserting.
+ */
+const expectDeclaredSigningAlgs = async (expected: string[], retries = 10): Promise<void> => {
+  const algs = await fetchDeclaredSigningAlgs();
+
+  if (retries > 0 && algs.join(',') !== expected.join(',')) {
+    await waitFor(200);
+    return expectDeclaredSigningAlgs(expected, retries - 1);
+  }
+
+  expect(algs).toEqual(expected);
 };
 
 describe('logto config', () => {
@@ -180,6 +206,29 @@ describe('logto config', () => {
       id: rotatedPrivateKeys[0]!.id,
       status: OidcSigningKeyStatus.Current,
     });
+  });
+
+  it('should declare the signing algorithms of every coexisting key in the discovery document', async () => {
+    await expectDeclaredSigningAlgs(['ES384']);
+
+    const mixedKeys = await rotateOidcKeys(
+      LogtoOidcConfigKeyType.PrivateKeys,
+      SupportedSigningKeyAlgorithm.RSA
+    );
+    expect(mixedKeys).toHaveLength(2);
+
+    /**
+     * Both the RSA current key and the EC previous key remain usable during the rotation grace
+     * window, so the discovery document must declare the algorithms of both.
+     */
+    await expectDeclaredSigningAlgs(['ES384', 'PS256', 'RS256']);
+
+    const restoredKeys = await rotateOidcKeys(LogtoOidcConfigKeyType.PrivateKeys);
+    const previousKey = restoredKeys.find(({ status }) => status === OidcSigningKeyStatus.Previous);
+    await deleteOidcKey(LogtoOidcConfigKeyType.PrivateKeys, previousKey!.id);
+
+    /** Removing the last RSA key must also drop its algorithms from the declaration. */
+    await expectDeclaredSigningAlgs(['ES384']);
   });
 
   it('should support staged private-key rotation with a grace period', async () => {
