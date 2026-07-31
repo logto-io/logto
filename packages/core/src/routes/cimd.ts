@@ -89,20 +89,21 @@ export default function cimdRoutes<T extends ManagementApiRouter>(
       // The shared third-party application validation also rejects Management API scopes.
       await validateApplicationUserConsentScopes(body, tenant.id);
 
-      await Promise.all([
-        ...(userScopes ?? []).map(async (userScope) =>
-          queries.cimd.userScopes.insert({ userScope })
-        ),
-        ...(resourceScopes ?? []).map(async (scopeId) =>
-          queries.cimd.resourceScopes.insert({ scopeId })
-        ),
-        ...(organizationScopes ?? []).map(async (organizationScopeId) =>
-          queries.cimd.organizationScopes.insert({ organizationScopeId })
-        ),
-        ...(organizationResourceScopes ?? []).map(async (scopeId) =>
-          queries.cimd.organizationResourceScopes.insert({ scopeId })
-        ),
-      ]);
+      if (userScopes) {
+        await queries.cimd.userScopes.insert(userScopes);
+      }
+
+      if (resourceScopes) {
+        await queries.cimd.resourceScopes.insert(resourceScopes);
+      }
+
+      if (organizationScopes) {
+        await queries.cimd.organizationScopes.insert(organizationScopes);
+      }
+
+      if (organizationResourceScopes) {
+        await queries.cimd.organizationResourceScopes.insert(organizationResourceScopes);
+      }
 
       ctx.status = 201;
 

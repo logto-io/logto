@@ -116,10 +116,8 @@ describe('CIMD user consent scope routes', () => {
         { userScopes: [UserScope.Email], resourceScopes: [mockResourceScope.id] },
         'mock_id'
       );
-      expect(cimdQueries.userScopes.insert).toHaveBeenCalledWith({ userScope: UserScope.Email });
-      expect(cimdQueries.resourceScopes.insert).toHaveBeenCalledWith({
-        scopeId: mockResourceScope.id,
-      });
+      expect(cimdQueries.userScopes.insert).toHaveBeenCalledWith([UserScope.Email]);
+      expect(cimdQueries.resourceScopes.insert).toHaveBeenCalledWith([mockResourceScope.id]);
     });
   });
 
