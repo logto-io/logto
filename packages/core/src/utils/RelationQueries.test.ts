@@ -7,7 +7,7 @@ import {
 } from '@silverhand/slonik';
 import { type PrimitiveValueExpression } from '@silverhand/slonik/dist/src/types.js';
 
-import { TwoRelationsQueries } from './RelationQueries.js';
+import RelationQueries, { TwoRelationsQueries } from './RelationQueries.js';
 
 /** Records each SQL statement issued (including the ones inside `pool.transaction`). */
 type CapturedQuery = {
@@ -40,6 +40,37 @@ const createCapturingPool = (
   });
   return { pool, captured };
 };
+
+describe('RelationQueries.insert()', () => {
+  it('resolves without issuing any query when called with no entities', async () => {
+    const { pool, captured } = createCapturingPool([]);
+    const queries = new RelationQueries(pool, 'organization_user_relations', Organizations, Users);
+
+    // Regression: an empty entity list used to compose `values` with an empty
+    // `sql.join`, which slonik rejects with an `InvalidInputError`, surfacing as a
+    // 500 for any API route whose guard accepts an empty (but present) array.
+    await expect(queries.insert()).resolves.toBeUndefined();
+    expect(captured).toHaveLength(0);
+  });
+
+  it('inserts all given entities in a single statement', async () => {
+    const { pool, captured } = createCapturingPool([{}]);
+    const queries = new RelationQueries(pool, 'organization_user_relations', Organizations, Users);
+
+    await queries.insert(
+      { organizationId: 'org-1', userId: 'user-1' },
+      { organizationId: 'org-2', userId: 'user-2' }
+    );
+
+    expect(captured).toHaveLength(1);
+    expect(captured[0]?.sql).toMatch(
+      /insert into "organization_user_relations" \("organization_id", "user_id"\)/
+    );
+    expect(captured[0]?.sql).toMatch(/values \(\$1, \$2\), \(\$3, \$4\)/);
+    expect(captured[0]?.sql).toMatch(/on conflict do nothing/);
+    expect(captured[0]?.values).toEqual(['org-1', 'user-1', 'org-2', 'user-2']);
+  });
+});
 
 describe('TwoRelationsQueries.replaceWithDelta()', () => {
   it('acquires a row lock on the schema1 entity before issuing the delta statement', async () => {
