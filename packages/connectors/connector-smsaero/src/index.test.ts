@@ -95,7 +95,7 @@ describe('SMSAero SMS connector', () => {
       await expect(
         sendMessage({
           to: '13800138000',
-          type: TemplateType.SignIn,
+          type: TemplateType.OrganizationInvitation,
           payload: { code: '1234' },
         })
       ).rejects.toMatchObject({ code: ConnectorErrorCodes.TemplateNotFound });
@@ -108,12 +108,17 @@ describe('SMSAero SMS connector', () => {
         sendMessage(
           {
             to: '13800138000',
-            type: TemplateType.SignIn,
+            type: TemplateType.OrganizationInvitation,
             payload: { code: '1234' },
           },
           {
             ...mockedConfig,
-            templates: [{ usageType: 'Register', content: 'register {{code}}' }],
+            templates: [
+              { usageType: 'Register', content: 'register {{code}}' },
+              { usageType: 'SignIn', content: 'sign in {{code}}' },
+              { usageType: 'ForgotPassword', content: 'forgot password {{code}}' },
+              { usageType: 'Generic', content: 'generic {{code}}' },
+            ],
           }
         )
       ).rejects.toMatchObject({ code: ConnectorErrorCodes.TemplateNotFound });
