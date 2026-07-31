@@ -13,27 +13,11 @@ const alteration: AlterationScript = {
       create unique index concurrently organization_scopes__tenant_id_id
         on organization_scopes (tenant_id, id);
     `);
-
-    await pool.query(sql`
-      drop index concurrently if exists scopes__id;
-    `);
-    await pool.query(sql`
-      drop index concurrently if exists organization_scopes__id;
-    `);
   },
   up: async () => {
     // The indexes must be created outside of a transaction.
   },
   beforeDown: async (pool) => {
-    await pool.query(sql`
-      create index concurrently scopes__id
-        on scopes (tenant_id, id);
-    `);
-    await pool.query(sql`
-      create index concurrently organization_scopes__id
-        on organization_scopes (tenant_id, id);
-    `);
-
     await pool.query(sql`
       drop index concurrently if exists organization_scopes__tenant_id_id;
     `);
