@@ -1,7 +1,7 @@
 import { type AdminConsoleKey } from '@logto/phrases';
 import { type CaptchaType } from '@logto/schemas';
 
-type FormField = 'siteKey' | 'secretKey' | 'projectId' | 'domain' | 'mode';
+type FormField = 'siteKey' | 'secretKey' | 'projectId' | 'domain' | 'mode' | 'scoreThreshold';
 
 export type CaptchaProviderMetadata = {
   name: AdminConsoleKey;

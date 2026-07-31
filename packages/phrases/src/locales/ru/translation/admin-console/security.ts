@@ -59,6 +59,10 @@ const security = {
     mode_checkbox: 'Флажок',
     mode_notice:
       'Режим проверки определяется в настройках ключа reCAPTCHA в Google Cloud Console. Для изменения режима здесь требуется соответствующий тип ключа.',
+    score_threshold: 'Порог оценки',
+    score_threshold_description:
+      'Оценки ниже порога отклоняются. 0.0 разрешает все, 1.0 — только идеальные оценки. По умолчанию 0.5.',
+    score_threshold_error: 'Порог оценки должен быть от 0 до 1.',
   },
   password_policy: {
     password_requirements: 'Требования к паролю',
