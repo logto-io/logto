@@ -9,6 +9,7 @@ import {
   getUserSessions,
   revokeUserGrant,
   revokeUserSession,
+  suspendUser,
 } from '#src/api/index.js';
 import { signInWithPassword } from '#src/helpers/experience/index.js';
 import { expectRejects } from '#src/helpers/index.js';
@@ -337,6 +338,35 @@ describe('Sessions API', () => {
     const { sessions } = await getUserSessions(user.id);
     const appSession = findSessionByAppId(sessions, app.id);
     expect(appSession).toBeUndefined();
+
+    await deleteApplication(app.id);
+  });
+
+  it('should revoke user sessions and refresh tokens when the user is suspended', async () => {
+    await enableAllPasswordSignInMethods();
+
+    const { username, password } = generateNewUserProfile({ username: true, password: true });
+    const user = await userApi.create({ username, password });
+
+    const { app, refreshToken } = await createAppAndSignInWithPassword({
+      username,
+      password,
+    });
+
+    assert(refreshToken, new Error('No refresh token found'));
+
+    const { sessions } = await getUserSessions(user.id);
+    expect(findSessionByAppId(sessions, app.id)).toBeTruthy();
+
+    await suspendUser(user.id, true);
+
+    const { sessions: sessionsAfterSuspension } = await getUserSessions(user.id);
+    expect(sessionsAfterSuspension).toHaveLength(0);
+
+    await assertRefreshTokenInvalidGrant({
+      clientId: app.id,
+      refreshToken,
+    });
 
     await deleteApplication(app.id);
   });
