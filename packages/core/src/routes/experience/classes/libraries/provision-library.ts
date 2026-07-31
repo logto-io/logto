@@ -24,6 +24,7 @@ import { condArray, conditional, conditionalArray, trySafe } from '@silverhand/e
 import { EnvSet } from '#src/env-set/index.js';
 import { truncateMembershipDelta } from '#src/libraries/hook/utils.js';
 import { buildUserPasswordPayload } from '#src/libraries/user.utils.js';
+import { type JitOrganization } from '#src/queries/organization/email-domains.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 import { getTenantId } from '#src/utils/tenant.js';
@@ -302,7 +303,6 @@ export class ProvisionLibrary {
   ) {
     for (const { organizationId } of provisionedOrganizations) {
       this.ctx.appendDataHookContext('Organization.Membership.Updated', {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- appendDataHookContext accepts unknown
         organizationId,
         ...truncateMembershipDelta({ addedUserIds: [userId] }),
       });
