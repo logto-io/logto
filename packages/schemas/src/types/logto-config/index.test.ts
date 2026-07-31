@@ -79,23 +79,26 @@ describe('logto config guards', () => {
     );
   });
 
-  it('resolves a null CIMD config value to disabled', () => {
-    expect(logtoOidcConfigGuard[LogtoOidcConfigKey.Cimd].parse(null)).toEqual({ enabled: false });
+  it('includes the CIMD key in the logto config summary guards', () => {
+    expect(logtoConfigKeys).toContain(LogtoTenantConfigKey.Cimd);
+    expect(logtoConfigGuards[LogtoTenantConfigKey.Cimd]).toBe(
+      logtoTenantConfigGuard[LogtoTenantConfigKey.Cimd]
+    );
   });
 
   it('keeps a stored CIMD config value', () => {
-    expect(logtoOidcConfigGuard[LogtoOidcConfigKey.Cimd].parse({ enabled: true })).toEqual({
+    expect(logtoTenantConfigGuard[LogtoTenantConfigKey.Cimd].parse({ enabled: true })).toEqual({
       enabled: true,
     });
   });
 
   it('rejects invalid CIMD config values', () => {
-    const result = logtoOidcConfigGuard[LogtoOidcConfigKey.Cimd].safeParse({ enabled: 'yes' });
+    const result = logtoTenantConfigGuard[LogtoTenantConfigKey.Cimd].safeParse({ enabled: 'yes' });
 
     expect(result.success).toBe(false);
   });
 
-  it('parses OIDC configs without the optional session and CIMD rows', () => {
+  it('parses OIDC configs without the optional session row', () => {
     const result = z.object(logtoOidcConfigGuard).parse({
       [LogtoOidcConfigKey.PrivateKeys]: [
         { id: 'key_1', value: 'private-key-1', createdAt: 1_710_000_000_000 },
@@ -104,6 +107,5 @@ describe('logto config guards', () => {
     });
 
     expect(result[LogtoOidcConfigKey.Session]).toEqual({});
-    expect(result[LogtoOidcConfigKey.Cimd]).toEqual({ enabled: false });
   });
 });
