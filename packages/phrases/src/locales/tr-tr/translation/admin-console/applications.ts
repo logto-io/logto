@@ -81,6 +81,10 @@ const applications = {
   dynamic_app: {
     title: 'Dinamik uygulama',
     subtitle: 'CIMD',
+    description:
+      'Dinamik uygulama, OAuth istemcilerinin önceden kayıt olmadan bağlanmasına olanak tanır.',
+    settings_description:
+      'Dinamik uygulama, OAuth istemcilerinin önceden kayıt olmadan bağlanmasına olanak tanır. OAuth Client ID Metadata Document (CIMD) belirtimini kullanır.',
     app_id_placeholder: 'Her istemci tarafından dinamik olarak sağlanır',
     enable_confirm_modal: {
       title: 'Dinamik istemci erişimi etkinleştirilsin mi?',
@@ -88,6 +92,12 @@ const applications = {
         "Geçerli bir genel HTTPS istemci kimliği URL'sine sahip her OAuth istemcisi, önceden kayıt olmadan bu kiracı için yetkilendirme başlatabilir. Erişim, azami izinleriniz ve kullanıcı onayı ile sınırlı kalmaya devam eder.",
     },
     enabled: 'Dinamik uygulama başarıyla etkinleştirildi.',
+    disable_confirm_modal: {
+      title: 'Dinamik uygulama devre dışı bırakılsın mı?',
+      content:
+        'CIMD istemcileri artık yeni yetkilendirme istekleri başlatamaz. Mevcut izinler korunur ve verilmiş erişim belirteçleri süreleri dolana kadar geçerli kalabilir.',
+    },
+    disabled: 'Dinamik uygulama başarıyla devre dışı bırakıldı.',
   },
   guide: {
     third_party: {

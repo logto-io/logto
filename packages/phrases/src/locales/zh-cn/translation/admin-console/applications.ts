@@ -78,6 +78,9 @@ const applications = {
   dynamic_app: {
     title: '动态应用',
     subtitle: 'CIMD',
+    description: '动态应用允许 OAuth 客户端无需预先注册即可接入。',
+    settings_description:
+      '动态应用允许 OAuth 客户端无需预先注册即可接入，基于 OAuth Client ID Metadata Document (CIMD) 规范。',
     app_id_placeholder: '由每个客户端动态提供',
     enable_confirm_modal: {
       title: '启用动态客户端接入？',
@@ -85,6 +88,12 @@ const applications = {
         '任何拥有有效公开 HTTPS 客户端 ID URL 的 OAuth 客户端，都可以无需预先注册即向该租户发起授权。访问范围仍受你设置的最大权限和用户同意的限制。',
     },
     enabled: '动态应用已成功启用。',
+    disable_confirm_modal: {
+      title: '禁用动态应用？',
+      content:
+        'CIMD 客户端将无法再发起新的授权请求。已有的授权记录会保留，已签发的访问令牌在过期前可能仍然有效。',
+    },
+    disabled: '动态应用已成功禁用。',
   },
   guide: {
     third_party: {

@@ -80,6 +80,9 @@ const applications = {
   dynamic_app: {
     title: '다이나믹 앱',
     subtitle: 'CIMD',
+    description: '다이나믹 앱을 사용하면 OAuth 클라이언트가 사전 등록 없이 연결할 수 있습니다.',
+    settings_description:
+      '다이나믹 앱을 사용하면 OAuth 클라이언트가 사전 등록 없이 연결할 수 있습니다. OAuth Client ID Metadata Document (CIMD) 사양을 사용합니다.',
     app_id_placeholder: '각 클라이언트가 동적으로 제공',
     enable_confirm_modal: {
       title: '동적 클라이언트 접근을 활성화할까요?',
@@ -87,6 +90,12 @@ const applications = {
         '유효한 공개 HTTPS 클라이언트 ID URL을 가진 모든 OAuth 클라이언트는 사전 등록 없이 이 테넌트에 대한 인가를 시작할 수 있어요. 접근 범위는 설정한 최대 권한과 사용자 동의에 의해 계속 제한돼요.',
     },
     enabled: '다이나믹 앱을 활성화했어요.',
+    disable_confirm_modal: {
+      title: '다이나믹 앱을 비활성화할까요?',
+      content:
+        'CIMD 클라이언트는 더 이상 새로운 인증 요청을 시작할 수 없습니다. 기존 권한 부여는 유지되며, 이미 발급된 액세스 토큰은 만료될 때까지 유효할 수 있습니다.',
+    },
+    disabled: '다이나믹 앱이 성공적으로 비활성화되었습니다.',
   },
   guide: {
     third_party: {
