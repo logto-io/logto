@@ -30,7 +30,6 @@ import {
   fetchConnectorProviderDetails,
   parseConnectorConfig,
   parseFactoryDetail,
-  stripGatedSigningConfigFields,
   validateConnectorConfigConnectionStatus,
   validateConnectorDomains,
 } from './utils.js';
@@ -113,8 +112,7 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
       }
 
       // Validate the connector config if it's provided
-      const parsedConfig =
-        config && stripGatedSigningConfigFields(parseConnectorConfig(providerName, config));
+      const parsedConfig = config && parseConnectorConfig(providerName, config);
 
       // A new connector has no signing keys, so an enabled signAuthnRequest is always rejected.
       await assertActiveSigningKeyForSignAuthnRequest(parsedConfig);
@@ -305,8 +303,7 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
       }
 
       // Validate the connector config if it's provided
-      const parsedConfig =
-        config && stripGatedSigningConfigFields(parseConnectorConfig(providerName, config));
+      const parsedConfig = config && parseConnectorConfig(providerName, config);
 
       // Check the connection status of the connector config if it's provided
       if (parsedConfig) {
@@ -376,9 +373,10 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
     }
   );
 
-  // TODO: @simeng Remove when IdP initiated SSO / signed AuthnRequest are ready for production
+  samlSsoConnectorSigningKeyRoutes(...args);
+
+  // TODO: @simeng Remove when IdP initiated SSO is ready for production
   if (EnvSet.values.isDevFeaturesEnabled) {
     ssoConnectorIdpInitiatedAuthConfigRoutes(...args);
-    samlSsoConnectorSigningKeyRoutes(...args);
   }
 }

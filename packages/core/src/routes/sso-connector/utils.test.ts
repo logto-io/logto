@@ -20,7 +20,6 @@ const {
   validateConnectorDomains,
   parseConnectorConfig,
   isSignAuthnRequestEnabled,
-  stripGatedSigningConfigFields,
   assertActiveSigningKeyForSignAuthnRequest,
 } = await import('./utils.js');
 
@@ -168,20 +167,11 @@ describe('validateConnectorDomains', () => {
 });
 
 describe('signed AuthnRequest config helpers', () => {
-  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-  const setDevFeaturesEnabled = (enabled: boolean) => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', enabled);
-  };
-
   const samlSigningConfig = {
     metadata: 'mock-metadata',
     signAuthnRequest: true,
     requestSignatureAlgorithm: 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256',
   };
-
-  afterAll(() => {
-    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
-  });
 
   describe('isSignAuthnRequestEnabled', () => {
     it('is true only when the config explicitly enables it', () => {
@@ -197,20 +187,6 @@ describe('signed AuthnRequest config helpers', () => {
     });
   });
 
-  describe('stripGatedSigningConfigFields', () => {
-    it('passes the config through when dev features are on', () => {
-      setDevFeaturesEnabled(true);
-      const parsed = parseConnectorConfig(SsoProviderName.SAML, samlSigningConfig);
-      expect(stripGatedSigningConfigFields(parsed)).toEqual(parsed);
-    });
-
-    it('strips the signing fields when dev features are off', () => {
-      setDevFeaturesEnabled(false);
-      const parsed = parseConnectorConfig(SsoProviderName.SAML, samlSigningConfig);
-      expect(stripGatedSigningConfigFields(parsed)).toEqual({ metadata: 'mock-metadata' });
-    });
-  });
-
   describe('assertActiveSigningKeyForSignAuthnRequest', () => {
     it('is a no-op when the config does not enable signing', async () => {
       const findActiveSigningKey = jest.fn();
@@ -223,7 +199,6 @@ describe('signed AuthnRequest config helpers', () => {
     });
 
     it('rejects enabling on creation (no finder) or without an active key', async () => {
-      setDevFeaturesEnabled(true);
       const enabledConfig = parseConnectorConfig(SsoProviderName.SAML, samlSigningConfig);
 
       await expect(assertActiveSigningKeyForSignAuthnRequest(enabledConfig)).rejects.toMatchObject({
@@ -236,7 +211,6 @@ describe('signed AuthnRequest config helpers', () => {
     });
 
     it('passes when an active key exists', async () => {
-      setDevFeaturesEnabled(true);
       const enabledConfig = parseConnectorConfig(SsoProviderName.SAML, samlSigningConfig);
 
       await expect(

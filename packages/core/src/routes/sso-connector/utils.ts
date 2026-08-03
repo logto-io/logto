@@ -8,7 +8,6 @@ import type {
 import { findDuplicatedOrBlockedEmailDomains } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import SamlConnector from '#src/sso/SamlConnector/index.js';
 import { type SingleSignOnFactory, ssoConnectorFactories } from '#src/sso/index.js';
@@ -66,7 +65,7 @@ export const isSignAuthnRequestEnabled = (config?: ParsedConnectorConfig): boole
  * Enabling signed AuthnRequest requires an active SP signing key — the config endpoints never
  * create keys (the signing-key routes own the lifecycle), so the flag must not claim signing that
  * no key can perform. POST passes no finder: a new connector can never have keys, so an enabled
- * flag is always rejected. Inert when dev features are off (the flag is stripped from payloads).
+ * flag is always rejected.
  */
 export const assertActiveSigningKeyForSignAuthnRequest = async (
   parsedConfig?: ParsedConnectorConfig,
@@ -80,26 +79,6 @@ export const assertActiveSigningKeyForSignAuthnRequest = async (
     await findActiveSigningKey?.(),
     new RequestError({ code: 'single_sign_on.active_signing_key_required', status: 400 })
   );
-};
-
-/**
- * The signed-AuthnRequest config fields are dev-gated: strip them before persisting so they
- * cannot be stored in production until the feature is ready.
- * TODO: @simeng Remove when the signed AuthnRequest feature is ready.
- */
-export const stripGatedSigningConfigFields = (
-  config: ParsedConnectorConfig
-): ParsedConnectorConfig => {
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    return config;
-  }
-
-  if ('signAuthnRequest' in config || 'requestSignatureAlgorithm' in config) {
-    const { signAuthnRequest, requestSignatureAlgorithm, ...rest } = config;
-    return rest;
-  }
-
-  return config;
 };
 
 export const fetchConnectorProviderDetails = async (

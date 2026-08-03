@@ -10,7 +10,6 @@ import { useTranslation } from 'react-i18next';
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import useApi from '@/hooks/use-api';
 import {
   samlConnectorConfigGuard,
@@ -61,9 +60,7 @@ function SamlConnectorForm({ isDeleted, data, onUpdated }: Props) {
 
     // Normalize the toggle to a real boolean: with an absent field the switch would compare
     // `false` against `undefined` after toggling on and off again, leaving the form stuck dirty.
-    return isDevFeaturesEnabled
-      ? { ...result.data, signAuthnRequest: Boolean(result.data.signAuthnRequest) }
-      : result.data;
+    return { ...result.data, signAuthnRequest: Boolean(result.data.signAuthnRequest) };
   }, [config]);
 
   // Guard the provider config data
@@ -139,7 +136,7 @@ function SamlConnectorForm({ isDeleted, data, onUpdated }: Props) {
           }}
         >
           <SamlConnectorSpInfo samlProviderConfig={samlProviderConfig} />
-          {isDevFeaturesEnabled && <SamlSigningKeySection connectorId={connectorId} />}
+          <SamlSigningKeySection connectorId={connectorId} />
         </FormCard>
         <FormCard
           title="enterprise_sso_details.attribute_mapping_title"
