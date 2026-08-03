@@ -372,6 +372,12 @@ export default function initOidc(
         throw new errors.InvalidGrant('user not found');
       });
 
+      // Suspension revokes the user's sessions and tokens; reject here as well so any token
+      // that survives a partial revocation still cannot be used.
+      if (user.isSuspended) {
+        throw new errors.InvalidGrant('user is suspended');
+      }
+
       return {
         accountId: sub,
         /**
