@@ -98,6 +98,18 @@ const applications = {
         'CIMD istemcileri artık yeni yetkilendirme istekleri başlatamaz. Mevcut izinler korunur ve verilmiş erişim belirteçleri süreleri dolana kadar geçerli kalabilir.',
     },
     disabled: 'Dinamik uygulama başarıyla devre dışı bırakıldı.',
+    permissions: {
+      user_title: 'Kullanıcı',
+      user_description:
+        'OAuth istemcilerinin belirli kullanıcı verilerine erişmek için istediği izinleri seçin.',
+      grant_user_level_permissions: 'Kullanıcı izinlerini ver',
+      organization_title: 'Organizasyon',
+      organization_description:
+        'OAuth istemcilerinin belirli organizasyon verilerine erişmek için istediği izinleri seçin.',
+      grant_organization_level_permissions: 'Organizasyon izinlerini ver',
+      permission_delete_confirm:
+        'Bu işlem, izni dinamik uygulamadan kaldıracak ve OAuth istemcilerinin bu izin için kullanıcı yetkilendirmesi istemesini engelleyecektir. Devam etmek istediğinizden emin misiniz?',
+    },
   },
   guide: {
     third_party: {

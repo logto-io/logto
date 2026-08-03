@@ -97,6 +97,18 @@ const applications = {
         'Os clientes CIMD deixarão de poder iniciar novos pedidos de autorização. As concessões existentes serão mantidas e os tokens de acesso emitidos podem permanecer válidos até expirarem.',
     },
     disabled: 'Aplicação dinâmica desativada com sucesso.',
+    permissions: {
+      user_title: 'Utilizador',
+      user_description:
+        'Selecione as permissões solicitadas pelos clientes OAuth para aceder a dados específicos do utilizador.',
+      grant_user_level_permissions: 'Conceder permissões de utilizador',
+      organization_title: 'Organização',
+      organization_description:
+        'Selecione as permissões solicitadas pelos clientes OAuth para aceder a dados específicos da organização.',
+      grant_organization_level_permissions: 'Conceder permissões de organização',
+      permission_delete_confirm:
+        'Esta ação irá remover a permissão da aplicação dinâmica, impedindo os clientes OAuth de solicitarem a autorização do utilizador para a mesma. Tem a certeza de que deseja continuar?',
+    },
   },
   guide: {
     third_party: {

@@ -96,6 +96,18 @@ const applications = {
         'CIMD 클라이언트는 더 이상 새로운 인증 요청을 시작할 수 없습니다. 기존 권한 부여는 유지되며, 이미 발급된 액세스 토큰은 만료될 때까지 유효할 수 있습니다.',
     },
     disabled: '다이나믹 앱이 성공적으로 비활성화되었습니다.',
+    permissions: {
+      user_title: '사용자',
+      user_description:
+        'OAuth 클라이언트가 특정 사용자 데이터에 액세스하기 위해 요청하는 권한을 선택하세요.',
+      grant_user_level_permissions: '사용자 권한 부여',
+      organization_title: '조직',
+      organization_description:
+        'OAuth 클라이언트가 특정 조직 데이터에 액세스하기 위해 요청하는 권한을 선택하세요.',
+      grant_organization_level_permissions: '조직 권한 부여',
+      permission_delete_confirm:
+        '이 작업은 다이나믹 앱에서 해당 권한을 제거하여 OAuth 클라이언트가 이에 대한 사용자 승인을 요청할 수 없게 합니다. 계속 진행하시겠습니까?',
+    },
   },
   guide: {
     third_party: {

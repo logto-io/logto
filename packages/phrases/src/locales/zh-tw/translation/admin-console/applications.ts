@@ -94,6 +94,16 @@ const applications = {
         'CIMD 用戶端將無法再發起新的授權請求。既有的授權記錄會保留，已簽發的存取權杖在到期前可能仍然有效。',
     },
     disabled: '動態應用已成功停用。',
+    permissions: {
+      user_title: '用戶',
+      user_description: '選擇 OAuth 用戶端為存取特定用戶資料所需的權限。',
+      grant_user_level_permissions: '授予用戶權限',
+      organization_title: '組織',
+      organization_description: '選擇 OAuth 用戶端為存取特定組織資料所需的權限。',
+      grant_organization_level_permissions: '授予組織權限',
+      permission_delete_confirm:
+        '此操作將從動態應用中移除該權限，防止 OAuth 用戶端為其要求用戶授權。確定要繼續嗎？',
+    },
   },
   guide: {
     third_party: {

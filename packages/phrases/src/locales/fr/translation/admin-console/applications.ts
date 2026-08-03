@@ -100,6 +100,18 @@ const applications = {
         "Les clients CIMD ne pourront plus initier de nouvelles demandes d'autorisation. Les autorisations existantes sont conservées et les jetons d'accès déjà émis peuvent rester valides jusqu'à leur expiration.",
     },
     disabled: 'Application dynamique désactivée avec succès.',
+    permissions: {
+      user_title: 'Utilisateur',
+      user_description:
+        'Sélectionnez les permissions demandées par les clients OAuth pour accéder à des données utilisateur spécifiques.',
+      grant_user_level_permissions: 'Accorder les permissions utilisateur',
+      organization_title: 'Organisation',
+      organization_description:
+        "Sélectionnez les permissions demandées par les clients OAuth pour accéder à des données d'organisation spécifiques.",
+      grant_organization_level_permissions: "Accorder les permissions d'organisation",
+      permission_delete_confirm:
+        "Cette action retirera la permission de l'application dynamique, empêchant les clients OAuth de demander l'autorisation de l'utilisateur pour celle-ci. Êtes-vous sûr de vouloir continuer ?",
+    },
   },
   guide: {
     third_party: {

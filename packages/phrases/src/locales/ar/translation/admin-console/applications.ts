@@ -96,6 +96,17 @@ const applications = {
         'لن يتمكن عملاء CIMD بعد الآن من بدء طلبات تفويض جديدة. سيتم الاحتفاظ بالمنح الحالية، وقد تظل رموز الوصول الصادرة صالحة حتى انتهاء صلاحيتها.',
     },
     disabled: 'تم تعطيل التطبيق الديناميكي بنجاح.',
+    permissions: {
+      user_title: 'المستخدم',
+      user_description: 'حدد الأذونات التي يطلبها عملاء OAuth للوصول إلى بيانات مستخدم محددة.',
+      grant_user_level_permissions: 'منح أذونات المستخدم',
+      organization_title: 'المؤسسة',
+      organization_description:
+        'حدد الأذونات التي يطلبها عملاء OAuth للوصول إلى بيانات مؤسسة محددة.',
+      grant_organization_level_permissions: 'منح أذونات المؤسسة',
+      permission_delete_confirm:
+        'سيؤدي هذا الإجراء إلى إزالة الإذن من التطبيق الديناميكي، مما يمنع عملاء OAuth من طلب موافقة المستخدم عليه. هل أنت متأكد أنك تريد المتابعة؟',
+    },
   },
   guide: {
     third_party: {
