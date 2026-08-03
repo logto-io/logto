@@ -75,6 +75,17 @@ const applications = {
     'Logto 使用 OIDC 的应用程序实体来帮助识别你的应用程序、管理登录和创建审计日志等任务。',
   third_party_application_placeholder_description:
     '使用 Logto 作为身份提供者为第三方服务提供 OAuth 授权。\n 包括资源访问的预建用户同意屏幕。<a>了解更多</a>',
+  dynamic_app: {
+    title: '动态应用',
+    subtitle: 'CIMD',
+    app_id_placeholder: '由每个客户端动态提供',
+    enable_confirm_modal: {
+      title: '启用动态客户端接入？',
+      content:
+        '任何拥有有效公开 HTTPS 客户端 ID URL 的 OAuth 客户端，都可以无需预先注册即向该租户发起授权。访问范围仍受你设置的最大权限和用户同意的限制。',
+    },
+    enabled: '动态应用已成功启用。',
+  },
   guide: {
     third_party: {
       title: '集成第三方应用',
