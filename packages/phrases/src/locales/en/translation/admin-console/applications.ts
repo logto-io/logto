@@ -96,6 +96,18 @@ const applications = {
         'CIMD clients will no longer be able to start new authorization requests. Existing grants will be retained, and issued access tokens may remain valid until they expire.',
     },
     disabled: 'Dynamic app disabled successfully.',
+    permissions: {
+      user_title: 'User',
+      user_description:
+        'Select the permissions requested by OAuth clients for accessing specific user data.',
+      grant_user_level_permissions: 'Grant user permissions',
+      organization_title: 'Organization',
+      organization_description:
+        'Select the permissions requested by OAuth clients for accessing specific organization data.',
+      grant_organization_level_permissions: 'Grant organization permissions',
+      permission_delete_confirm:
+        'This action will remove the permission from the dynamic app, preventing OAuth clients from requesting user authorization for it. Are you sure you want to continue?',
+    },
   },
   guide: {
     third_party: {
