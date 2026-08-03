@@ -1,4 +1,4 @@
-import { ApplicationType } from '@logto/schemas';
+import { ApplicationType, type Application } from '@logto/schemas';
 
 import { type Guide } from '@/assets/docs/guides/types';
 
@@ -9,6 +9,21 @@ export const thirdPartyAppCategory = 'ThirdParty';
  * instead of creating an application.
  */
 export const dynamicAppGuideId = 'third-party-dynamic-app';
+
+const dynamicAppRowId = 'dynamic-app';
+
+/**
+ * The dynamic app is listed among third-party applications once enabled, but it is a tenant-level
+ * feature switch: it has no application record, hence no client id and no details page.
+ */
+export type DynamicAppRow = { id: typeof dynamicAppRowId };
+
+export const dynamicAppRow: DynamicAppRow = { id: dynamicAppRowId };
+
+export const isDynamicAppRow = (row: { id: string }): row is DynamicAppRow =>
+  row.id === dynamicAppRowId;
+
+export type ApplicationListRow = Application | DynamicAppRow;
 
 export const applicationTypeI18nKey = Object.freeze({
   [ApplicationType.Native]: 'applications.type.native',
