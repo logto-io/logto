@@ -11,26 +11,19 @@ import {
 } from '@logto/schemas';
 import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
+import { buildBatchInsertIntoWithPool } from '#src/database/insert-into.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
 
 const cimdUserScopes = convertToIdentifiers(CimdUserScopes, true);
 
 const createUserScopeQueries = (pool: CommonQueryMethods) => {
-  const insert = async (userScopes: readonly UserScope[]) => {
-    if (userScopes.length === 0) {
-      return;
-    }
+  const batchInsert = buildBatchInsertIntoWithPool(pool)(CimdUserScopes, {
+    onConflict: { ignore: true },
+  });
 
-    await pool.query(sql`
-      insert into ${cimdUserScopes.table} (${sql.identifier([CimdUserScopes.fields.userScope])})
-      values ${sql.join(
-        userScopes.map((userScope) => sql`(${userScope})`),
-        sql`, `
-      )}
-      on conflict do nothing
-    `);
-  };
+  const insert = async (userScopes: readonly UserScope[]) =>
+    batchInsert(userScopes.map((userScope) => ({ userScope })));
 
   const findAll = async (): Promise<UserScope[]> => {
     const rows = await pool.any<{ userScope: UserScope }>(sql`
@@ -57,20 +50,12 @@ const cimdResourceScopes = convertToIdentifiers(CimdResourceScopes, true);
 const scopes = convertToIdentifiers(Scopes, true);
 
 const createResourceScopeQueries = (pool: CommonQueryMethods) => {
-  const insert = async (scopeIds: readonly string[]) => {
-    if (scopeIds.length === 0) {
-      return;
-    }
+  const batchInsert = buildBatchInsertIntoWithPool(pool)(CimdResourceScopes, {
+    onConflict: { ignore: true },
+  });
 
-    await pool.query(sql`
-      insert into ${cimdResourceScopes.table} (${sql.identifier([CimdResourceScopes.fields.scopeId])})
-      values ${sql.join(
-        scopeIds.map((scopeId) => sql`(${scopeId})`),
-        sql`, `
-      )}
-      on conflict do nothing
-    `);
-  };
+  const insert = async (scopeIds: readonly string[]) =>
+    batchInsert(scopeIds.map((scopeId) => ({ scopeId })));
 
   const findAll = async (): Promise<readonly Scope[]> =>
     pool.any<Scope>(sql`
@@ -96,22 +81,12 @@ const cimdOrganizationScopes = convertToIdentifiers(CimdOrganizationScopes, true
 const organizationScopes = convertToIdentifiers(OrganizationScopes, true);
 
 const createOrganizationScopeQueries = (pool: CommonQueryMethods) => {
-  const insert = async (organizationScopeIds: readonly string[]) => {
-    if (organizationScopeIds.length === 0) {
-      return;
-    }
+  const batchInsert = buildBatchInsertIntoWithPool(pool)(CimdOrganizationScopes, {
+    onConflict: { ignore: true },
+  });
 
-    await pool.query(sql`
-      insert into ${cimdOrganizationScopes.table} (${sql.identifier([
-        CimdOrganizationScopes.fields.organizationScopeId,
-      ])})
-      values ${sql.join(
-        organizationScopeIds.map((organizationScopeId) => sql`(${organizationScopeId})`),
-        sql`, `
-      )}
-      on conflict do nothing
-    `);
-  };
+  const insert = async (organizationScopeIds: readonly string[]) =>
+    batchInsert(organizationScopeIds.map((organizationScopeId) => ({ organizationScopeId })));
 
   const findAll = async (): Promise<readonly OrganizationScope[]> =>
     pool.any<OrganizationScope>(sql`
@@ -136,22 +111,12 @@ const createOrganizationScopeQueries = (pool: CommonQueryMethods) => {
 const cimdOrganizationResourceScopes = convertToIdentifiers(CimdOrganizationResourceScopes, true);
 
 const createOrganizationResourceScopeQueries = (pool: CommonQueryMethods) => {
-  const insert = async (scopeIds: readonly string[]) => {
-    if (scopeIds.length === 0) {
-      return;
-    }
+  const batchInsert = buildBatchInsertIntoWithPool(pool)(CimdOrganizationResourceScopes, {
+    onConflict: { ignore: true },
+  });
 
-    await pool.query(sql`
-      insert into ${cimdOrganizationResourceScopes.table} (${sql.identifier([
-        CimdOrganizationResourceScopes.fields.scopeId,
-      ])})
-      values ${sql.join(
-        scopeIds.map((scopeId) => sql`(${scopeId})`),
-        sql`, `
-      )}
-      on conflict do nothing
-    `);
-  };
+  const insert = async (scopeIds: readonly string[]) =>
+    batchInsert(scopeIds.map((scopeId) => ({ scopeId })));
 
   const findAll = async (): Promise<readonly Scope[]> =>
     pool.any<Scope>(sql`
