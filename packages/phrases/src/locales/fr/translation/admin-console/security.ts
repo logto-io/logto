@@ -173,9 +173,8 @@ const security = {
     custom_email_allowlist: {
       title: 'Autoriser des adresses e-mail personnalisées',
       description:
-        'Autorisez uniquement les adresses e-mail, domaines ou modèles avec joker correspondants pour les nouvelles inscriptions et les e-mails récemment liés.',
-      placeholder:
-        'Saisissez l’adresse e-mail, le domaine ou le modèle avec joker autorisé (par ex. bar@example.com, @example.com, foo*@example.com, *@example.com)',
+        'Ajoutez des règles pour autoriser uniquement certains domaines, adresses e-mail ou modèles avec joker pour les nouvelles inscriptions et les e-mails récemment liés. Exemples : bar@example.com, @example.com, foo*@example.com, *@example.com. Les points dans les adresses Gmail sont ignorés, donc foo.bar@gmail.com correspond à foobar@gmail.com.',
+      placeholder: 'Saisissez une adresse e-mail, un domaine ou un modèle avec joker',
       duplicate_error: 'L’adresse e-mail, le domaine ou le modèle avec joker a déjà été ajouté',
       invalid_format_error:
         'Doit être une adresse e-mail valide (bar@example.com), un domaine (@example.com) ou un modèle avec joker (foo*@example.com, *@example.com)',
@@ -203,9 +202,8 @@ const security = {
     custom_email_address: {
       title: 'Bloquer les adresses e-mail personnalisées',
       description:
-        "Ajoutez des règles pour bloquer des domaines d'e-mail, des adresses e-mail ou des modèles d'adresse e-mail avec joker spécifiques afin qu'ils ne puissent pas s'inscrire ou se lier via l'interface utilisateur.",
-      placeholder:
-        "Entrez l'adresse e-mail, le domaine ou le modèle d'adresse e-mail avec joker bloqué (ex. : bar@example.com, @example.com, foo*@example.com, *@example.com)",
+        "Ajoutez des règles pour empêcher certains domaines, adresses e-mail ou modèles avec joker de s'inscrire ou de se lier via l'interface utilisateur. Exemples : bar@example.com, @example.com, foo*@example.com, *@example.com. Les points dans les adresses Gmail sont ignorés, donc foo.bar@gmail.com correspond à foobar@gmail.com.",
+      placeholder: 'Saisissez une adresse e-mail, un domaine ou un modèle avec joker',
       duplicate_error:
         "L'adresse e-mail, le domaine ou le modèle d'adresse e-mail avec joker a déjà été ajouté",
       invalid_format_error:

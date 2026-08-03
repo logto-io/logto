@@ -172,9 +172,8 @@ const security = {
     custom_email_allowlist: {
       title: 'Permitir endereços de email personalizados',
       description:
-        'Permita apenas endereços de email, domínios ou padrões curinga correspondentes para novos registos e emails recentemente associados.',
-      placeholder:
-        'Introduza o endereço de email, domínio ou padrão curinga permitido (ex.: bar@example.com, @example.com, foo*@example.com, *@example.com)',
+        'Adicione regras para permitir apenas domínios de email, endereços de email ou padrões curinga específicos para novos registos e emails recentemente associados. Exemplos: bar@example.com, @example.com, foo*@example.com, *@example.com. Os pontos nos endereços do Gmail são ignorados, pelo que foo.bar@gmail.com corresponde a foobar@gmail.com.',
+      placeholder: 'Introduza um endereço de email, domínio ou padrão curinga',
       duplicate_error: 'Endereço de email, domínio ou padrão curinga já adicionado',
       invalid_format_error:
         'Deve ser um endereço de email válido (bar@example.com), domínio (@example.com) ou padrão curinga (foo*@example.com, *@example.com)',
@@ -202,9 +201,8 @@ const security = {
     custom_email_address: {
       title: 'Bloquear endereços de email personalizados',
       description:
-        'Adicionar regras para bloquear domínios de email específicos, endereços de email ou padrões de endereço de email com caracteres universais de se registar ou vincular via a IU.',
-      placeholder:
-        'Insira o endereço de email, domínio ou padrão de endereço de email com caracteres universais bloqueado (por exemplo, bar@example.com, @example.com, foo*@example.com, *@example.com)',
+        'Adicione regras para impedir que domínios de email, endereços de email ou padrões curinga específicos se registem ou sejam associados através da IU. Exemplos: bar@example.com, @example.com, foo*@example.com, *@example.com. Os pontos nos endereços do Gmail são ignorados, pelo que foo.bar@gmail.com corresponde a foobar@gmail.com.',
+      placeholder: 'Introduza um endereço de email, domínio ou padrão curinga',
       duplicate_error:
         'Endereço de email, domínio ou padrão de endereço de email com caracteres universais já adicionado',
       invalid_format_error:

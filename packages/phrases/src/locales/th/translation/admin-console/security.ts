@@ -159,9 +159,8 @@ const security = {
     custom_email_allowlist: {
       title: 'อนุญาตที่อยู่อีเมลแบบกำหนดเอง',
       description:
-        'อนุญาตเฉพาะที่อยู่อีเมล โดเมน หรือรูปแบบอีเมลแบบไวลด์การ์ดที่ตรงกันสำหรับการสมัครใหม่และอีเมลที่เชื่อมโยงใหม่',
-      placeholder:
-        'ป้อนที่อยู่อีเมล โดเมน หรือรูปแบบอีเมลแบบไวลด์การ์ดที่อนุญาต (เช่น bar@example.com, @example.com, foo*@example.com, *@example.com)',
+        'เพิ่มกฎเพื่ออนุญาตเฉพาะโดเมนอีเมล ที่อยู่อีเมล หรือรูปแบบไวลด์การ์ดที่กำหนดสำหรับการสมัครใหม่และอีเมลที่เชื่อมโยงใหม่ ตัวอย่าง: bar@example.com, @example.com, foo*@example.com, *@example.com ระบบจะไม่สนใจจุดในที่อยู่ Gmail ดังนั้น foo.bar@gmail.com จึงตรงกับ foobar@gmail.com',
+      placeholder: 'ป้อนที่อยู่อีเมล โดเมน หรือรูปแบบไวลด์การ์ด',
       duplicate_error: 'เพิ่มที่อยู่อีเมล โดเมน หรือรูปแบบอีเมลแบบไวลด์การ์ดนี้แล้ว',
       invalid_format_error:
         'ต้องเป็นที่อยู่อีเมลที่ถูกต้อง (bar@example.com), โดเมน (@example.com) หรือรูปแบบอีเมลแบบไวลด์การ์ด (foo*@example.com, *@example.com)',
@@ -189,9 +188,8 @@ const security = {
     custom_email_address: {
       title: 'บล็อกอีเมลกำหนดเอง',
       description:
-        'เพิ่มกฎเพื่อบล็อกโดเมนอีเมล อีเมล หรือรูปแบบที่อยู่อีเมลที่ใช้ไวลด์การ์ดไม่ให้ลงทะเบียนหรือลิงก์ผ่าน UI',
-      placeholder:
-        'ป้อนอีเมล โดเมน หรือรูปแบบที่อยู่อีเมลที่ใช้ไวลด์การ์ดที่ต้องการบล็อก (เช่น bar@example.com, @example.com, foo*@example.com, *@example.com)',
+        'เพิ่มกฎเพื่อบล็อกโดเมนอีเมล ที่อยู่อีเมล หรือรูปแบบไวลด์การ์ดที่กำหนดไม่ให้ลงทะเบียนหรือลิงก์ผ่าน UI ตัวอย่าง: bar@example.com, @example.com, foo*@example.com, *@example.com ระบบจะไม่สนใจจุดในที่อยู่ Gmail ดังนั้น foo.bar@gmail.com จึงตรงกับ foobar@gmail.com',
+      placeholder: 'ป้อนที่อยู่อีเมล โดเมน หรือรูปแบบไวลด์การ์ด',
       duplicate_error: 'เพิ่มอีเมล โดเมน หรือรูปแบบที่อยู่อีเมลที่ใช้ไวลด์การ์ดนี้แล้ว',
       invalid_format_error:
         'ต้องเป็นอีเมลที่ถูกต้อง (bar@example.com), โดเมน (@example.com) หรือรูปแบบที่อยู่อีเมลที่ใช้ไวลด์การ์ด (foo*@example.com, *@example.com)',

@@ -167,9 +167,8 @@ const security = {
     custom_email_allowlist: {
       title: 'Özel e-posta adreslerine izin ver',
       description:
-        'Yeni kayıtlar ve yeni bağlanan e-postalar için yalnızca eşleşen e-posta adreslerine, alan adlarına veya joker karakterli e-posta kalıplarına izin ver.',
-      placeholder:
-        'İzin verilen e-posta adresini, alan adını veya joker karakterli e-posta kalıbını girin (örn. bar@example.com, @example.com, foo*@example.com, *@example.com)',
+        'Yeni kayıtlar ve yeni bağlanan e-postalar için yalnızca belirli e-posta alan adlarına, e-posta adreslerine veya joker karakterli kalıplara izin veren kurallar ekleyin. Örnekler: bar@example.com, @example.com, foo*@example.com, *@example.com. Gmail adreslerindeki noktalar yok sayılır; bu nedenle foo.bar@gmail.com, foobar@gmail.com ile eşleşir.',
+      placeholder: 'E-posta adresi, alan adı veya joker karakterli kalıp girin',
       duplicate_error:
         'E-posta adresi, alan adı veya joker karakterli e-posta kalıbı zaten eklendi',
       invalid_format_error:
@@ -198,9 +197,8 @@ const security = {
     custom_email_address: {
       title: 'Özel e-posta adreslerini engelle',
       description:
-        'Belirli e-posta alan adlarının, e-posta adreslerinin veya joker karakterli e-posta adresi kalıplarının kullanıcı arayüzü aracılığıyla kaydolmasını veya bağlantı kurmasını engelleyen kurallar ekleyin.',
-      placeholder:
-        'Engellenen e-posta adresini, alan adını veya joker karakterli e-posta adresi kalıbını girin (örn., bar@example.com, @example.com, foo*@example.com, *@example.com)',
+        'Belirli e-posta alan adlarının, e-posta adreslerinin veya joker karakterli kalıpların kullanıcı arayüzü aracılığıyla kaydolmasını veya bağlantı kurmasını engelleyen kurallar ekleyin. Örnekler: bar@example.com, @example.com, foo*@example.com, *@example.com. Gmail adreslerindeki noktalar yok sayılır; bu nedenle foo.bar@gmail.com, foobar@gmail.com ile eşleşir.',
+      placeholder: 'E-posta adresi, alan adı veya joker karakterli kalıp girin',
       duplicate_error:
         'E-posta adresi, alan adı veya joker karakterli e-posta adresi kalıbı zaten eklendi',
       invalid_format_error:

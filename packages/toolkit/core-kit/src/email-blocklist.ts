@@ -3,6 +3,7 @@ import { emailOrEmailDomainRegEx } from './regex.js';
 const wildcard = '*';
 const emailSeparator = '@';
 const domainSeparator = '.';
+const gmailDomain = 'gmail.com';
 const whitespaceRegEx = /\s/u;
 const wildcardOnlyDomainRegEx = /^[*.]+$/u;
 
@@ -12,6 +13,18 @@ const escapeRegExp = (value: string) => value.replaceAll(/[.+?^${}()|[\]\\]/gu, 
 
 const buildWildcardRegExp = (pattern: string) =>
   new RegExp(`^${escapeRegExp(pattern).replaceAll(wildcard, '.*')}$`, 'u');
+
+const removeDotsFromLocalPart = (value: string) => {
+  const separatorIndex = value.indexOf(emailSeparator);
+
+  if (separatorIndex === -1) {
+    return value;
+  }
+
+  return `${value.slice(0, separatorIndex).replaceAll(domainSeparator, '')}${value.slice(
+    separatorIndex
+  )}`;
+};
 
 const isValidWildcardLocalPart = (localPart: string) =>
   localPart.length > 0 && !localPart.includes(emailSeparator) && !whitespaceRegEx.test(localPart);
@@ -66,7 +79,9 @@ export const isEmailBlocklistItem = (value: string) => {
  * Checks whether an email address matches an email blocklist item.
  *
  * Matching is case-insensitive. Domain items (`@example.com`) match only the email
- * domain, while full email items match the complete email address.
+ * domain, while full email items match the complete email address. Dots in the local
+ * part of `gmail.com` addresses are ignored because Gmail treats those variants as the
+ * same mailbox.
  */
 export const matchesEmailBlocklistItem = (item: string, email: string) => {
   const normalizedItem = item.toLowerCase();
@@ -82,7 +97,12 @@ export const matchesEmailBlocklistItem = (item: string, email: string) => {
     );
   }
 
-  return hasWildcard(normalizedItem)
-    ? buildWildcardRegExp(normalizedItem).test(normalizedEmail)
-    : normalizedEmail === normalizedItem;
+  const comparableItem =
+    domain === gmailDomain ? removeDotsFromLocalPart(normalizedItem) : normalizedItem;
+  const comparableEmail =
+    domain === gmailDomain ? removeDotsFromLocalPart(normalizedEmail) : normalizedEmail;
+
+  return hasWildcard(comparableItem)
+    ? buildWildcardRegExp(comparableItem).test(comparableEmail)
+    : comparableEmail === comparableItem;
 };

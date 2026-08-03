@@ -171,9 +171,8 @@ const security = {
     custom_email_allowlist: {
       title: 'Consenti indirizzi email personalizzati',
       description:
-        'Consenti solo indirizzi email, domini o pattern email con caratteri jolly corrispondenti per nuove registrazioni e nuove email collegate.',
-      placeholder:
-        'Inserisci l’indirizzo email, il dominio o il pattern email con caratteri jolly consentito (ad es. bar@example.com, @example.com, foo*@example.com, *@example.com)',
+        'Aggiungi regole per consentire solo domini email, indirizzi email o pattern con caratteri jolly specifici per nuove registrazioni e nuove email collegate. Esempi: bar@example.com, @example.com, foo*@example.com, *@example.com. I punti negli indirizzi Gmail vengono ignorati, quindi foo.bar@gmail.com corrisponde a foobar@gmail.com.',
+      placeholder: 'Inserisci un indirizzo email, un dominio o un pattern con caratteri jolly',
       duplicate_error: 'Indirizzo email, dominio o pattern email con caratteri jolly già aggiunto',
       invalid_format_error:
         'Deve essere un indirizzo email valido (bar@example.com), un dominio (@example.com) o un pattern email con caratteri jolly (foo*@example.com, *@example.com)',
@@ -201,9 +200,8 @@ const security = {
     custom_email_address: {
       title: 'Blocca indirizzi email personalizzati',
       description:
-        "Aggiungi regole per bloccare domini email specifici, indirizzi email o modelli di indirizzi email con caratteri jolly dalla registrazione o dal collegamento tramite l'UI.",
-      placeholder:
-        "Inserisci l'indirizzo email, il dominio o il modello di indirizzo email con caratteri jolly bloccato (ad es., bar@example.com, @example.com, foo*@example.com, *@example.com)",
+        "Aggiungi regole per impedire a domini email, indirizzi email o pattern con caratteri jolly specifici di registrarsi o collegarsi tramite l'UI. Esempi: bar@example.com, @example.com, foo*@example.com, *@example.com. I punti negli indirizzi Gmail vengono ignorati, quindi foo.bar@gmail.com corrisponde a foobar@gmail.com.",
+      placeholder: 'Inserisci un indirizzo email, un dominio o un pattern con caratteri jolly',
       duplicate_error:
         'Indirizzo email, dominio o modello di indirizzo email con caratteri jolly già aggiunto',
       invalid_format_error:
