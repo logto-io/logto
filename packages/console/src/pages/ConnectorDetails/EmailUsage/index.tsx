@@ -40,7 +40,7 @@ function UsageWindow({ windowKey, usage, limit }: UsageWindowProps) {
 }
 
 type Props = {
-  /** Lifetime count, shown until the hosted-email usage feature ships (and for self-hosted). */
+  /** Lifetime count, the fallback display when windowed usage is unavailable (self-hosted/OSS). */
   readonly usage?: number;
   readonly isCompact?: boolean;
 };

@@ -20,9 +20,9 @@ const connectorsPasswordlessPage = `/connectors/${ConnectorsTabs.Passwordless}`;
  * the cap, a hard block that can interrupt sign-in emails) — each offering to connect an own email
  * provider or upgrade.
  *
- * Gated behind `isDevFeaturesEnabled` and to capped free/dev tenants (paid tenants report `null`
- * limits, so nothing renders). Dismissible per session; re-shown if the state escalates from
- * approaching to reached.
+ * Cloud-only (the usage hook gates on `isCloud`) and effectively limited to capped free/dev
+ * tenants (paid tenants report `null` limits, so nothing renders). Dismissible per session;
+ * re-shown if the state escalates from approaching to reached.
  */
 function HostedEmailCapBanner() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
