@@ -127,6 +127,24 @@ describe('assign user consent scopes to application', () => {
     );
   });
 
+  it('should succeed without assigning anything when scope arrays are empty', async () => {
+    await expect(
+      assignUserConsentScopes(applicationIds.get('thirdPartyApp')!, {
+        organizationScopes: [],
+        resourceScopes: [],
+        organizationResourceScopes: [],
+        userScopes: [],
+      })
+    ).resolves.not.toThrow();
+
+    const result = await getUserConsentScopes(applicationIds.get('thirdPartyApp')!);
+
+    expect(result.organizationScopes.length).toBe(0);
+    expect(result.resourceScopes.length).toBe(0);
+    expect(result.organizationResourceScopes.length).toBe(0);
+    expect(result.userScopes.length).toBe(0);
+  });
+
   it('should assign scopes to third-party application successfully', async () => {
     await expect(
       assignUserConsentScopes(applicationIds.get('thirdPartyApp')!, {

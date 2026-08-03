@@ -103,9 +103,12 @@ export default class RelationQueries<
    * Each entity must contain the same number of ids as the number of relations, and
    * the order of the ids must match the order of the relations.
    * Insert existing relations will be ignored.
+   * Calling with no entities is a no-op and issues no query, since an SQL `values`
+   * list cannot be empty.
    *
    * @param data Entities to insert.
-   * @returns A Promise that resolves to the query result.
+   * @returns A Promise that resolves to the query result, or `undefined` when no
+   * entities are given.
    *
    * @example
    * ```ts
@@ -120,6 +123,10 @@ export default class RelationQueries<
    * ```
    */
   async insert(...data: ReadonlyArray<CamelCaseIdObject<Schemas[number]['tableSingular']>>) {
+    if (data.length === 0) {
+      return;
+    }
+
     return this.pool.query(sql`
       insert into ${this.table} (${sql.join(
         this.schemas.map(({ tableSingular }) => sql.identifier([tableSingular + '_id'])),

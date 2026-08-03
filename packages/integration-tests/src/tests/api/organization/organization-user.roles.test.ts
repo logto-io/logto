@@ -47,6 +47,18 @@ describe('organization user role APIs', () => {
       expect(roles).toContainEqual(expect.objectContaining({ id: role2.id }));
     });
 
+    it('should succeed without assigning anything when the role id list is empty', async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const user = await userApi.create({ username: generateTestName() });
+      await organizationApi.addUsers(organization.id, [user.id]);
+
+      const addRolesResult = await organizationApi.addUserRoles(organization.id, user.id, []);
+      expect(addRolesResult.organizationRoleIds).toEqual([]);
+
+      const roles = await organizationApi.getUserRoles(organization.id, user.id);
+      expect(roles).toEqual([]);
+    });
+
     it('should be able to get all organizations with roles for a user', async () => {
       const [organization1, organization2] = await Promise.all([
         organizationApi.create({ name: 'test' }),
