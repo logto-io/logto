@@ -1,5 +1,11 @@
 import { RecaptchaEnterpriseMode } from '@logto/schemas';
-import { type UseFormRegister, type FieldErrors, Controller, type Control } from 'react-hook-form';
+import {
+  type UseFormRegister,
+  type FieldErrors,
+  Controller,
+  type Control,
+  useWatch,
+} from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import FormField from '@/ds-components/FormField';
@@ -28,10 +34,37 @@ function CaptchaFormFields({ metadata, errors, register, control }: Props) {
   const scoreThresholdField = metadata.requiredFields.find(
     (field) => field.field === 'scoreThreshold'
   );
+  const mode = useWatch({ control, name: 'mode' });
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
     <>
+      {modeField && (
+        <>
+          <FormField title={modeField.label}>
+            <Controller
+              name="mode"
+              control={control}
+              defaultValue={RecaptchaEnterpriseMode.Invisible}
+              render={({ field: { onChange, value } }) => (
+                <RadioGroup name="mode" value={value} onChange={onChange}>
+                  <Radio
+                    title="security.captcha_details.mode_invisible"
+                    value={RecaptchaEnterpriseMode.Invisible}
+                  />
+                  <Radio
+                    title="security.captcha_details.mode_checkbox"
+                    value={RecaptchaEnterpriseMode.Checkbox}
+                  />
+                </RadioGroup>
+              )}
+            />
+          </FormField>
+          <InlineNotification className={styles.modeNotice} severity="alert">
+            {t('security.captcha_details.mode_notice')}
+          </InlineNotification>
+        </>
+      )}
       {siteKeyField && (
         <FormField isRequired title={siteKeyField.label}>
           <TextInput
@@ -68,13 +101,17 @@ function CaptchaFormFields({ metadata, errors, register, control }: Props) {
           />
         </FormField>
       )}
-      {scoreThresholdField && (
-        <FormField isRequired={!scoreThresholdField.isOptional} title={scoreThresholdField.label}>
+      {mode !== RecaptchaEnterpriseMode.Checkbox && scoreThresholdField && (
+        <FormField
+          isRequired={!scoreThresholdField.isOptional}
+          title={scoreThresholdField.label}
+          description="security.captcha_details.score_threshold_description"
+        >
           <TextInput
             type="number"
             min={0}
             max={1}
-            step={0.1}
+            step={0.01}
             error={errors.scoreThreshold && t('security.captcha_details.score_threshold_error')}
             placeholder={String(t(scoreThresholdField.placeholder))}
             {...register('scoreThreshold', {
@@ -86,32 +123,6 @@ function CaptchaFormFields({ metadata, errors, register, control }: Props) {
             })}
           />
         </FormField>
-      )}
-      {modeField && (
-        <>
-          <FormField title={modeField.label}>
-            <Controller
-              name="mode"
-              control={control}
-              defaultValue={RecaptchaEnterpriseMode.Invisible}
-              render={({ field: { onChange, value } }) => (
-                <RadioGroup name="mode" value={value} onChange={onChange}>
-                  <Radio
-                    title="security.captcha_details.mode_invisible"
-                    value={RecaptchaEnterpriseMode.Invisible}
-                  />
-                  <Radio
-                    title="security.captcha_details.mode_checkbox"
-                    value={RecaptchaEnterpriseMode.Checkbox}
-                  />
-                </RadioGroup>
-              )}
-            />
-          </FormField>
-          <InlineNotification className={styles.modeNotice} severity="alert">
-            {t('security.captcha_details.mode_notice')}
-          </InlineNotification>
-        </>
       )}
     </>
   );

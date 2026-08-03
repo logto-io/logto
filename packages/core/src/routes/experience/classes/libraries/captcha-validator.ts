@@ -22,6 +22,23 @@ function isTurnstile(config: CaptchaProvider['config']): config is TurnstileConf
   return config.type === CaptchaType.Turnstile;
 }
 
+type ScorePassParams = {
+  valid: boolean;
+  score: number;
+  mode?: RecaptchaEnterpriseMode;
+  scoreThreshold?: number;
+};
+
+/**
+ * Decide whether a reCAPTCHA Enterprise assessment passes.
+ * Checkbox challenges are interactive and provide binary pass/fail, so the score
+ * threshold is skipped in checkbox mode.
+ */
+export const isScorePass = ({ valid, score, mode, scoreThreshold }: ScorePassParams) =>
+  mode === RecaptchaEnterpriseMode.Checkbox
+    ? valid
+    : valid && score >= (scoreThreshold ?? DEFAULT_SCORE_THRESHOLD);
+
 export class CaptchaValidator {
   constructor(
     private readonly captchaProvider: CaptchaProvider,
@@ -111,12 +128,12 @@ export class CaptchaValidator {
         riskAnalysis: { score },
       } = responseGuard.parse(result);
 
-      const scoreThreshold = config.scoreThreshold ?? DEFAULT_SCORE_THRESHOLD;
-
-      // For checkbox mode, only check if the token is valid (skip score threshold)
-      // Checkbox challenges are interactive and provide binary pass/fail
-      const isCheckboxMode = config.mode === RecaptchaEnterpriseMode.Checkbox;
-      const success = isCheckboxMode ? valid : valid && score >= scoreThreshold;
+      const success = isScorePass({
+        valid,
+        score,
+        mode: config.mode,
+        scoreThreshold: config.scoreThreshold,
+      });
 
       this.log.append({
         success,
