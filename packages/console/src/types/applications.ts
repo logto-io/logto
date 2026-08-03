@@ -4,6 +4,12 @@ import { type Guide } from '@/assets/docs/guides/types';
 
 export const thirdPartyAppCategory = 'ThirdParty';
 
+/**
+ * The guide id of the dynamic app (CIMD) card. Selecting it enables the tenant-level feature
+ * instead of creating an application.
+ */
+export const dynamicAppGuideId = 'third-party-dynamic-app';
+
 export const applicationTypeI18nKey = Object.freeze({
   [ApplicationType.Native]: 'applications.type.native',
   [ApplicationType.SPA]: 'applications.type.spa',

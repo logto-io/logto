@@ -24,8 +24,10 @@ import Table from '@/ds-components/Table';
 import { type RequestError } from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import pageLayout from '@/scss/page-layout.module.scss';
+import { dynamicAppGuideId } from '@/types/applications';
 import { buildUrl } from '@/utils/url';
 
+import EnableDynamicAppModal from './components/EnableDynamicAppModal';
 import GuideLibrary from './components/GuideLibrary';
 import GuideLibraryModal from './components/GuideLibraryModal';
 import ProtectedAppModal from './components/ProtectedAppModal';
@@ -78,6 +80,8 @@ function Applications({ tab }: Props) {
    */
   const [selectedGuide, setSelectedGuide] = useState<Nullable<SelectedGuide>>();
 
+  const [isEnablingDynamicApp, setIsEnablingDynamicApp] = useState(false);
+
   const isThirdPartyTab = tab === 'thirdPartyApplications';
   const shouldFetchSamlApplicationsCount = !isCloud && !isThirdPartyTab;
 
@@ -115,6 +119,16 @@ function Applications({ tab }: Props) {
     },
     [navigate, selectedGuide]
   );
+
+  /** The dynamic app card enables a tenant-level feature, it never creates an application. */
+  const onSelectGuide = useCallback((guide?: Nullable<SelectedGuide>) => {
+    if (guide?.id === dynamicAppGuideId) {
+      setIsEnablingDynamicApp(true);
+      return;
+    }
+
+    setSelectedGuide(guide);
+  }, []);
 
   const onCreate = useCallback(() => {
     navigate({
@@ -193,12 +207,12 @@ function Applications({ tab }: Props) {
             hasCardBorder
             hasCardButton
             className={styles.library}
-            onSelectGuide={setSelectedGuide}
+            onSelectGuide={onSelectGuide}
           />
         </div>
       )}
       {!isLoading && !applications?.length && isThirdPartyTab && (
-        <ThirdPartyAppGuideLibrary onSelectGuide={setSelectedGuide} />
+        <ThirdPartyAppGuideLibrary onSelectGuide={onSelectGuide} />
       )}
       {(isLoading || !!applications?.length) && (
         <Table
@@ -238,8 +252,15 @@ function Applications({ tab }: Props) {
         onClose={() => {
           navigate(-1);
         }}
-        onSelectGuide={setSelectedGuide}
+        onSelectGuide={onSelectGuide}
       />
+      {isEnablingDynamicApp && (
+        <EnableDynamicAppModal
+          onClose={() => {
+            setIsEnablingDynamicApp(false);
+          }}
+        />
+      )}
       {selectedGuide !== undefined && (
         <ApplicationCreation
           defaultCreateType={cond(

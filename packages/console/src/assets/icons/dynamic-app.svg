@@ -1,0 +1,39 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(0.0 0.0)"><path id="l1-Vector" d="M32 0H8C3.58172 0 0 3.58172 0 8V32C0 36.4183 3.58172 40 8 40H32C36.4183 40 40 36.4183 40 32V8C40 3.58172 36.4183 0 32 0Z" fill="#F3EFFA"/></g>
+  <g transform="translate(2.5 5.0)"><path id="l2-Vector" d="M10.5 0.5H3.5C1.84315 0.5 0.5 1.84315 0.5 3.5V10.5C0.5 12.1569 1.84315 13.5 3.5 13.5H10.5C12.1569 13.5 13.5 12.1569 13.5 10.5V3.5C13.5 1.84315 12.1569 0.5 10.5 0.5Z" fill="#7958FF" fill-opacity="0.06" stroke="#7958FF" stroke-linecap="round" stroke-dasharray="2.5 1.5"/></g>
+  <g transform="translate(4.0 6.5)"><path id="l3-Vector" d="M9.5 0H1.5C0.671573 0 0 0.671573 0 1.5C0 2.32843 0.671573 3 1.5 3H9.5C10.3284 3 11 2.32843 11 1.5C11 0.671573 10.3284 0 9.5 0Z" fill="#7958FF" fill-opacity="0.18"/></g>
+  <g transform="translate(4.75 7.25)"><path id="l4-Vector" opacity="0.5" d="M0.75 1.5C1.16421 1.5 1.5 1.16421 1.5 0.75C1.5 0.335786 1.16421 0 0.75 0C0.335786 0 0 0.335786 0 0.75C0 1.16421 0.335786 1.5 0.75 1.5Z" fill="#7958FF"/></g>
+  <g transform="translate(6.75 7.25)"><path id="l5-Vector" opacity="0.35" d="M0.75 1.5C1.16421 1.5 1.5 1.16421 1.5 0.75C1.5 0.335786 1.16421 0 0.75 0C0.335786 0 0 0.335786 0 0.75C0 1.16421 0.335786 1.5 0.75 1.5Z" fill="#7958FF"/></g>
+  <g transform="translate(8.75 7.25)"><path id="l6-Vector" opacity="0.2" d="M0.75 1.5C1.16421 1.5 1.5 1.16421 1.5 0.75C1.5 0.335786 1.16421 0 0.75 0C0.335786 0 0 0.335786 0 0.75C0 1.16421 0.335786 1.5 0.75 1.5Z" fill="#7958FF"/></g>
+  <text x="9.5" y="14.0" font-family="Inter, sans-serif" font-weight="700" font-size="7" fill="#7958FF" text-anchor="middle" dominant-baseline="central">?</text>
+  <g transform="translate(2.5 21.0)"><path id="l7-Vector" opacity="0.65" d="M10.5 0.5H3.5C1.84315 0.5 0.5 1.84315 0.5 3.5V10.5C0.5 12.1569 1.84315 13.5 3.5 13.5H10.5C12.1569 13.5 13.5 12.1569 13.5 10.5V3.5C13.5 1.84315 12.1569 0.5 10.5 0.5Z" fill="#7958FF" fill-opacity="0.06" stroke="#7958FF" stroke-linecap="round" stroke-dasharray="2.5 1.5"/></g>
+  <g transform="translate(4.0 22.5)"><path id="l8-Vector" opacity="0.65" d="M9.5 0H1.5C0.671573 0 0 0.671573 0 1.5C0 2.32843 0.671573 3 1.5 3H9.5C10.3284 3 11 2.32843 11 1.5C11 0.671573 10.3284 0 9.5 0Z" fill="#7958FF" fill-opacity="0.18"/></g>
+  <g transform="translate(4.75 23.25)"><path id="l9-Vector" opacity="0.4" d="M0.75 1.5C1.16421 1.5 1.5 1.16421 1.5 0.75C1.5 0.335786 1.16421 0 0.75 0C0.335786 0 0 0.335786 0 0.75C0 1.16421 0.335786 1.5 0.75 1.5Z" fill="#7958FF"/></g>
+  <g transform="translate(6.75 23.25)"><path id="l10-Vector" opacity="0.25" d="M0.75 1.5C1.16421 1.5 1.5 1.16421 1.5 0.75C1.5 0.335786 1.16421 0 0.75 0C0.335786 0 0 0.335786 0 0.75C0 1.16421 0.335786 1.5 0.75 1.5Z" fill="#7958FF"/></g>
+  <g transform="translate(8.75 23.25)"><path id="l11-Vector" opacity="0.12" d="M0.75 1.5C1.16421 1.5 1.5 1.16421 1.5 0.75C1.5 0.335786 1.16421 0 0.75 0C0.335786 0 0 0.335786 0 0.75C0 1.16421 0.335786 1.5 0.75 1.5Z" fill="#7958FF"/></g>
+  <text x="9.5" y="30.0" font-family="Inter, sans-serif" font-weight="700" font-size="7" fill="#7958FF" text-anchor="middle" dominant-baseline="central">?</text>
+  <g transform="translate(15.9999 11.4999)"><path id="l12-Vector" opacity="0.65" d="M0.500099 0.500099L4.5001 8.0001" stroke="#9D85FD" stroke-linecap="round" stroke-dasharray="2 1.5"/></g>
+  <g transform="translate(15.9999 19.9999)"><path id="l13-Vector" opacity="0.45" d="M0.500099 8.0001L4.5001 0.500099" stroke="#9D85FD" stroke-linecap="round" stroke-dasharray="2 1.5"/></g>
+  <g transform="translate(22.75 19.25)"><path id="l14-Vector" d="M0.75 0.75H2.75" stroke="#7958FF" stroke-width="1.5" stroke-linecap="round"/></g>
+  <g transform="translate(16.0 15.0)"><path id="l15-Vector" d="M5 10C7.76142 10 10 7.76142 10 5C10 2.23858 7.76142 0 5 0C2.23858 0 0 2.23858 0 5C0 7.76142 2.23858 10 5 10Z" fill="url(#l15-paint0_radial_0_12)"/>
+<defs>
+<radialGradient id="l15-paint0_radial_0_12" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(5 5) scale(5)">
+<stop stop-color="#FFF06A" stop-opacity="0.55"/>
+<stop offset="1" stop-color="#F4E560" stop-opacity="0"/>
+</radialGradient>
+</defs></g>
+  <g transform="translate(17.5 16.5)"><path id="l16-Vector" d="M3.5 7C5.433 7 7 5.433 7 3.5C7 1.567 5.433 0 3.5 0C1.567 0 0 1.567 0 3.5C0 5.433 1.567 7 3.5 7Z" fill="#F4E560"/></g>
+  <g transform="translate(20.1 17.3)"><path id="l17-Vector" d="M1.8 0L0 2.8H1.4L0 5.4L3 2H1.5L1.8 0Z" fill="#5D34F2"/></g>
+  <g transform="translate(26.0 13.0)"><path id="l18-Vector" d="M8.5 0H2.5C1.11929 0 0 1.11929 0 2.5V11.5C0 12.8807 1.11929 14 2.5 14H8.5C9.88071 14 11 12.8807 11 11.5V2.5C11 1.11929 9.88071 0 8.5 0Z" fill="url(#l18-paint0_linear_0_6)"/>
+<defs>
+<linearGradient id="l18-paint0_linear_0_6" x1="0" y1="0" x2="11" y2="15" gradientUnits="userSpaceOnUse">
+<stop stop-color="#492EF3"/>
+<stop offset="1" stop-color="#CF69FF"/>
+</linearGradient>
+</defs></g>
+  <g transform="translate(28.0 16.5)"><path id="l19-Vector" opacity="0.9" d="M5.75 0H0.75C0.335786 0 0 0.335786 0 0.75C0 1.16421 0.335786 1.5 0.75 1.5H5.75C6.16421 1.5 6.5 1.16421 6.5 0.75C6.5 0.335786 6.16421 0 5.75 0Z" fill="#F5EEFF"/></g>
+  <g transform="translate(28.0 19.5)"><path id="l20-Vector" opacity="0.7" d="M4.25 0H0.75C0.335786 0 0 0.335786 0 0.75C0 1.16421 0.335786 1.5 0.75 1.5H4.25C4.66421 1.5 5 1.16421 5 0.75C5 0.335786 4.66421 0 4.25 0Z" fill="#F5EEFF"/></g>
+  <g transform="translate(28.0 22.5)"><path id="l21-Vector" opacity="0.55" d="M5.05 0H0.75C0.335786 0 0 0.335786 0 0.75C0 1.16421 0.335786 1.5 0.75 1.5H5.05C5.46421 1.5 5.8 1.16421 5.8 0.75C5.8 0.335786 5.46421 0 5.05 0Z" fill="#F5EEFF"/></g>
+  <g transform="translate(33.2 12.7)"><path id="l22-Vector" d="M1.8 3.6C2.79411 3.6 3.6 2.79411 3.6 1.8C3.6 0.805888 2.79411 0 1.8 0C0.805887 0 0 0.805888 0 1.8C0 2.79411 0.805887 3.6 1.8 3.6Z" fill="#EC78FF"/></g>
+  <g transform="translate(34.1 13.6)"><path id="l23-Vector" d="M0.900002 1.8C1.39706 1.8 1.8 1.39706 1.8 0.9C1.8 0.402943 1.39706 0 0.900002 0C0.402945 0 0 0.402943 0 0.9C0 1.39706 0.402945 1.8 0.900002 1.8Z" fill="#FFBEFF"/></g>
+</svg>
