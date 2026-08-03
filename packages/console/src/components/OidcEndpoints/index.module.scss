@@ -1,0 +1,10 @@
+@use '@/scss/underscore' as _;
+
+.fieldButton {
+  margin-top: _.unit(2);
+}
+
+.trailingIcon {
+  width: 16px;
+  height: 16px;
+}
