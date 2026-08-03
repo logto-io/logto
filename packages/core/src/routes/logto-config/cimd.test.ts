@@ -1,5 +1,6 @@
 import { defaultCimdConfig, type CimdConfig } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
+import Sinon from 'sinon';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -22,15 +23,9 @@ describe('CIMD config routes', () => {
     tenantContext,
   });
 
-  const originalSsrfProtectionEnabled = EnvSet.values.isOidcProviderSsrfProtectionEnabled;
-
   afterEach(() => {
     jest.clearAllMocks();
-    Reflect.set(
-      EnvSet.values,
-      'isOidcProviderSsrfProtectionEnabled',
-      originalSsrfProtectionEnabled
-    );
+    Sinon.restore();
   });
 
   describe('GET /configs/cimd', () => {
@@ -61,7 +56,10 @@ describe('CIMD config routes', () => {
     });
 
     it('rejects enabling with 422 while the SSRF protection is disabled', async () => {
-      Reflect.set(EnvSet.values, 'isOidcProviderSsrfProtectionEnabled', false);
+      Sinon.stub(EnvSet, 'values').value({
+        ...EnvSet.values,
+        isOidcProviderSsrfProtectionEnabled: false,
+      });
 
       const response = await routeRequester.patch('/configs/cimd').send({ enabled: true });
 
@@ -70,7 +68,10 @@ describe('CIMD config routes', () => {
     });
 
     it('allows disabling while the SSRF protection is disabled', async () => {
-      Reflect.set(EnvSet.values, 'isOidcProviderSsrfProtectionEnabled', false);
+      Sinon.stub(EnvSet, 'values').value({
+        ...EnvSet.values,
+        isOidcProviderSsrfProtectionEnabled: false,
+      });
       logtoConfigQueries.getCimdConfig.mockResolvedValueOnce({ enabled: true });
 
       const response = await routeRequester.patch('/configs/cimd').send({ enabled: false });
