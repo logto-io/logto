@@ -10,18 +10,22 @@ export const thirdPartyAppCategory = 'ThirdParty';
  */
 export const dynamicAppGuideId = 'third-party-dynamic-app';
 
-const dynamicAppRowId = 'dynamic-app';
+/**
+ * Stands in for an application id in the list row and in the details page path. Application ids are
+ * generated, so it can never collide with a real one.
+ */
+export const dynamicAppId = 'dynamic-app';
 
 /**
  * The dynamic app is listed among third-party applications once enabled, but it is a tenant-level
- * feature switch: it has no application record, hence no client id and no details page.
+ * feature switch: it has no application record, hence no client id.
  */
-export type DynamicAppRow = { id: typeof dynamicAppRowId };
+export type DynamicAppRow = { id: typeof dynamicAppId };
 
-export const dynamicAppRow: DynamicAppRow = { id: dynamicAppRowId };
+export const dynamicAppRow: DynamicAppRow = { id: dynamicAppId };
 
 export const isDynamicAppRow = (row: { id: string }): row is DynamicAppRow =>
-  row.id === dynamicAppRowId;
+  row.id === dynamicAppId;
 
 export type ApplicationListRow = Application | DynamicAppRow;
 

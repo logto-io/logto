@@ -1,0 +1,17 @@
+@use '@/scss/underscore' as _;
+
+.tabContainer {
+  flex-direction: column;
+  flex-grow: 1;
+
+  &[data-active='true'] {
+    display: flex;
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(4);
+  padding-bottom: _.unit(6);
+}

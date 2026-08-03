@@ -23,7 +23,7 @@ import Table from '@/ds-components/Table';
 import { type RequestError } from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import pageLayout from '@/scss/page-layout.module.scss';
-import { dynamicAppGuideId, isDynamicAppRow, type ApplicationListRow } from '@/types/applications';
+import { dynamicAppGuideId, type ApplicationListRow } from '@/types/applications';
 import { buildUrl } from '@/utils/url';
 
 import ApplicationId from './components/ApplicationId';
@@ -240,7 +240,6 @@ function Applications({ tab }: Props) {
               render: (data) => <ApplicationId data={data} />,
             },
           ]}
-          isRowClickable={(row) => !isDynamicAppRow(row)}
           rowClickHandler={({ id }) => {
             navigate(buildDetailsPathname(id));
           }}
