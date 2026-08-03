@@ -78,6 +78,9 @@ const applications = {
   third_party_application_placeholder_description:
     'Use Logto as an Identity Provider to provide OAuth authorization to third-party services. Includes a prebuilt user consent screen for resource access. <a>Learn more</a>',
   dynamic_app: {
+    title: 'Dynamic app',
+    subtitle: 'CIMD',
+    app_id_placeholder: 'Provided dynamically by each client',
     enable_confirm_modal: {
       title: 'Enable dynamic client access?',
       content:

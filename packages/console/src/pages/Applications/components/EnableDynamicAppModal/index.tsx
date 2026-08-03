@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { useSWRConfig } from 'swr';
 
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import useApi from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
+
+import { cimdConfigEndpoint } from '../../hooks/use-dynamic-app';
 
 type Props = {
   readonly onClose: () => void;
@@ -17,6 +20,7 @@ type Props = {
 function EnableDynamicAppModal({ onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useApi();
+  const { mutate } = useSWRConfig();
   const { navigate } = useTenantPathname();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -24,7 +28,8 @@ function EnableDynamicAppModal({ onClose }: Props) {
     setIsSubmitting(true);
 
     try {
-      await api.patch('api/configs/cimd', { json: { enabled: true } });
+      await api.patch(cimdConfigEndpoint, { json: { enabled: true } });
+      await mutate(cimdConfigEndpoint);
       toast.success(t('applications.dynamic_app.enabled'));
       onClose();
       navigate('/applications/third-party-applications', { replace: true });
