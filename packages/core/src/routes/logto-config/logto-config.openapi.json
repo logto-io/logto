@@ -553,6 +553,31 @@
           }
         }
       }
+    },
+    "/api/configs/cimd": {
+      "get": {
+        "tags": ["Dev feature"],
+        "summary": "Get CIMD config",
+        "description": "Get the tenant-level OAuth Client ID Metadata Document (CIMD) configuration. A missing configuration resolves to the disabled state.",
+        "responses": {
+          "200": {
+            "description": "The CIMD configuration."
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Dev feature"],
+        "summary": "Update CIMD config",
+        "description": "Update the tenant-level OAuth Client ID Metadata Document (CIMD) switch. Enabling requires the OIDC provider SSRF protection to be active.",
+        "responses": {
+          "200": {
+            "description": "The updated CIMD configuration."
+          },
+          "422": {
+            "description": "The OIDC provider SSRF protection is disabled, so CIMD cannot be enabled."
+          }
+        }
+      }
     }
   }
 }

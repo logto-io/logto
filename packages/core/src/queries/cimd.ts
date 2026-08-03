@@ -11,16 +11,19 @@ import {
 } from '@logto/schemas';
 import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
-import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
+import { buildBatchInsertIntoWithPool } from '#src/database/insert-into.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
 
 const cimdUserScopes = convertToIdentifiers(CimdUserScopes, true);
 
 const createUserScopeQueries = (pool: CommonQueryMethods) => {
-  const insert = buildInsertIntoWithPool(pool)(CimdUserScopes, {
+  const batchInsert = buildBatchInsertIntoWithPool(pool)(CimdUserScopes, {
     onConflict: { ignore: true },
   });
+
+  const insert = async (userScopes: readonly UserScope[]) =>
+    batchInsert(userScopes.map((userScope) => ({ userScope })));
 
   const findAll = async (): Promise<UserScope[]> => {
     const rows = await pool.any<{ userScope: UserScope }>(sql`
@@ -47,9 +50,12 @@ const cimdResourceScopes = convertToIdentifiers(CimdResourceScopes, true);
 const scopes = convertToIdentifiers(Scopes, true);
 
 const createResourceScopeQueries = (pool: CommonQueryMethods) => {
-  const insert = buildInsertIntoWithPool(pool)(CimdResourceScopes, {
+  const batchInsert = buildBatchInsertIntoWithPool(pool)(CimdResourceScopes, {
     onConflict: { ignore: true },
   });
+
+  const insert = async (scopeIds: readonly string[]) =>
+    batchInsert(scopeIds.map((scopeId) => ({ scopeId })));
 
   const findAll = async (): Promise<readonly Scope[]> =>
     pool.any<Scope>(sql`
@@ -75,9 +81,12 @@ const cimdOrganizationScopes = convertToIdentifiers(CimdOrganizationScopes, true
 const organizationScopes = convertToIdentifiers(OrganizationScopes, true);
 
 const createOrganizationScopeQueries = (pool: CommonQueryMethods) => {
-  const insert = buildInsertIntoWithPool(pool)(CimdOrganizationScopes, {
+  const batchInsert = buildBatchInsertIntoWithPool(pool)(CimdOrganizationScopes, {
     onConflict: { ignore: true },
   });
+
+  const insert = async (organizationScopeIds: readonly string[]) =>
+    batchInsert(organizationScopeIds.map((organizationScopeId) => ({ organizationScopeId })));
 
   const findAll = async (): Promise<readonly OrganizationScope[]> =>
     pool.any<OrganizationScope>(sql`
@@ -102,9 +111,12 @@ const createOrganizationScopeQueries = (pool: CommonQueryMethods) => {
 const cimdOrganizationResourceScopes = convertToIdentifiers(CimdOrganizationResourceScopes, true);
 
 const createOrganizationResourceScopeQueries = (pool: CommonQueryMethods) => {
-  const insert = buildInsertIntoWithPool(pool)(CimdOrganizationResourceScopes, {
+  const batchInsert = buildBatchInsertIntoWithPool(pool)(CimdOrganizationResourceScopes, {
     onConflict: { ignore: true },
   });
+
+  const insert = async (scopeIds: readonly string[]) =>
+    batchInsert(scopeIds.map((scopeId) => ({ scopeId })));
 
   const findAll = async (): Promise<readonly Scope[]> =>
     pool.any<Scope>(sql`
