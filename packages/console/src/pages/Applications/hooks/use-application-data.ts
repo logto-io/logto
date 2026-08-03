@@ -102,11 +102,15 @@ const useApplicationsData = (isThirdParty = false) => {
    */
   const hasDynamicAppRow = isThirdParty && isDynamicAppEnabled && currentPage === 1;
 
-  const rows = useMemo(
-    (): Optional<[ApplicationListRow[], number]> =>
-      data && [hasDynamicAppRow ? [dynamicAppRow, ...data[0]] : data[0], data[1]],
-    [data, hasDynamicAppRow]
-  );
+  const rows = useMemo((): Optional<[ApplicationListRow[], number]> => {
+    if (!data) {
+      return;
+    }
+
+    const [applications, totalCount] = data;
+
+    return [hasDynamicAppRow ? [dynamicAppRow, ...applications] : applications, totalCount];
+  }, [data, hasDynamicAppRow]);
 
   return {
     ...applicationsData,

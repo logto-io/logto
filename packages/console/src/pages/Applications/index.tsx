@@ -42,8 +42,8 @@ const tabs = Object.freeze({
 });
 
 const applicationsPathname = '/applications';
-const buildDetailsPathname = (id: string) => `${applicationsPathname}/${id}`;
 const createApplicationPathname = `${applicationsPathname}/create`;
+const buildDetailsPathname = (id: string) => `${applicationsPathname}/${id}`;
 const samlApplicationsFetchUrl = buildUrl('api/applications', [
   ['page', '1'],
   ['page_size', '1'],
@@ -94,7 +94,6 @@ function Applications({ tab }: Props) {
   const isLoading = !data && !error;
   const [applications, totalCount] = data ?? [];
   const samlAppTotalCount = samlApplicationsData?.[1];
-  const isGuideLibraryVisible = !isLoading && !applications?.length;
 
   const onAppCreationCompleted = useCallback(
     (newApp?: Application) => {
@@ -197,7 +196,7 @@ function Applications({ tab }: Props) {
       <SamlAppLimitNotice isThirdPartyTab={isThirdPartyTab} samlAppTotalCount={samlAppTotalCount} />
 
       {/* Guide library for my applications tab */}
-      {isGuideLibraryVisible && !isThirdPartyTab && (
+      {!isLoading && !applications?.length && !isThirdPartyTab && (
         <div className={styles.guideLibraryContainer}>
           <CardTitle
             className={styles.title}
@@ -212,10 +211,10 @@ function Applications({ tab }: Props) {
           />
         </div>
       )}
-      {isGuideLibraryVisible && isThirdPartyTab && (
+      {!isLoading && !applications?.length && isThirdPartyTab && (
         <ThirdPartyAppGuideLibrary onSelectGuide={onSelectGuide} />
       )}
-      {!isGuideLibraryVisible && (
+      {(isLoading || !!applications?.length) && (
         <Table
           isLoading={isLoading}
           className={pageLayout.table}
