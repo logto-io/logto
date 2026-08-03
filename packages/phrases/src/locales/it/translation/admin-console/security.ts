@@ -171,7 +171,7 @@ const security = {
     custom_email_allowlist: {
       title: 'Consenti indirizzi email personalizzati',
       description:
-        'Aggiungi regole per consentire solo domini email, indirizzi email o pattern con caratteri jolly specifici per nuove registrazioni e nuove email collegate. Esempi: bar@example.com, @example.com, foo*@example.com, *@example.com. I punti negli indirizzi Gmail vengono ignorati, quindi foo.bar@gmail.com corrisponde a foobar@gmail.com.',
+        'Aggiungi regole per consentire solo domini email, indirizzi email o pattern con caratteri jolly specifici per nuove registrazioni e nuove email collegate. Esempi: bar@example.com, @example.com, foo*@example.com, *@example.com. I domini gmail.com e googlemail.com sono considerati equivalenti e i punti nella parte locale vengono ignorati, quindi foo.bar@gmail.com corrisponde a foobar@googlemail.com.',
       placeholder: 'Inserisci un indirizzo email, un dominio o un pattern con caratteri jolly',
       duplicate_error: 'Indirizzo email, dominio o pattern email con caratteri jolly già aggiunto',
       invalid_format_error:
@@ -200,7 +200,7 @@ const security = {
     custom_email_address: {
       title: 'Blocca indirizzi email personalizzati',
       description:
-        "Aggiungi regole per impedire a domini email, indirizzi email o pattern con caratteri jolly specifici di registrarsi o collegarsi tramite l'UI. Esempi: bar@example.com, @example.com, foo*@example.com, *@example.com. I punti negli indirizzi Gmail vengono ignorati, quindi foo.bar@gmail.com corrisponde a foobar@gmail.com.",
+        "Aggiungi regole per impedire a domini email, indirizzi email o pattern con caratteri jolly specifici di registrarsi o collegarsi tramite l'UI. Esempi: bar@example.com, @example.com, foo*@example.com, *@example.com. I domini gmail.com e googlemail.com sono considerati equivalenti e i punti nella parte locale vengono ignorati, quindi foo.bar@gmail.com corrisponde a foobar@googlemail.com.",
       placeholder: 'Inserisci un indirizzo email, un dominio o un pattern con caratteri jolly',
       duplicate_error:
         'Indirizzo email, dominio o modello di indirizzo email con caratteri jolly già aggiunto',

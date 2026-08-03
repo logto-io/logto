@@ -172,7 +172,7 @@ const security = {
     custom_email_allowlist: {
       title: 'Permitir endereços de email personalizados',
       description:
-        'Adicione regras para permitir apenas domínios de email, endereços de email ou padrões curinga específicos para novos registos e emails recentemente associados. Exemplos: bar@example.com, @example.com, foo*@example.com, *@example.com. Os pontos nos endereços do Gmail são ignorados, pelo que foo.bar@gmail.com corresponde a foobar@gmail.com.',
+        'Adicione regras para permitir apenas domínios de email, endereços de email ou padrões curinga específicos para novos registos e emails recentemente associados. Exemplos: bar@example.com, @example.com, foo*@example.com, *@example.com. Os domínios gmail.com e googlemail.com são tratados como equivalentes e os pontos na parte local são ignorados, pelo que foo.bar@gmail.com corresponde a foobar@googlemail.com.',
       placeholder: 'Introduza um endereço de email, domínio ou padrão curinga',
       duplicate_error: 'Endereço de email, domínio ou padrão curinga já adicionado',
       invalid_format_error:
@@ -201,7 +201,7 @@ const security = {
     custom_email_address: {
       title: 'Bloquear endereços de email personalizados',
       description:
-        'Adicione regras para impedir que domínios de email, endereços de email ou padrões curinga específicos se registem ou sejam associados através da IU. Exemplos: bar@example.com, @example.com, foo*@example.com, *@example.com. Os pontos nos endereços do Gmail são ignorados, pelo que foo.bar@gmail.com corresponde a foobar@gmail.com.',
+        'Adicione regras para impedir que domínios de email, endereços de email ou padrões curinga específicos se registem ou sejam associados através da IU. Exemplos: bar@example.com, @example.com, foo*@example.com, *@example.com. Os domínios gmail.com e googlemail.com são tratados como equivalentes e os pontos na parte local são ignorados, pelo que foo.bar@gmail.com corresponde a foobar@googlemail.com.',
       placeholder: 'Introduza um endereço de email, domínio ou padrão curinga',
       duplicate_error:
         'Endereço de email, domínio ou padrão de endereço de email com caracteres universais já adicionado',

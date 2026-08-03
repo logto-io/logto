@@ -138,8 +138,8 @@ describe('validateEmailAgainstBlocklistPolicy', () => {
     }
   });
 
-  it('should throw if a dotted Gmail alias matches a custom blocklist item', async () => {
-    const email = 'foo.bar@gmail.com';
+  it('should throw if a dotted Google Mail alias matches a custom Gmail blocklist item', async () => {
+    const email = 'foo.bar@googlemail.com';
     const policy: EmailBlocklistPolicy = {
       customBlocklist: ['foobar@gmail.com'],
     };
@@ -181,9 +181,9 @@ describe('validateEmailAgainstBlocklistPolicy', () => {
     await expect(validateEmailAgainstBlocklistPolicy(policy, email)).resolves.not.toThrow();
   });
 
-  it('should allow a dotted Gmail alias that matches a custom allowlist item', async () => {
+  it('should allow a dotted Gmail alias that matches a custom Google Mail allowlist item', async () => {
     const policy: EmailBlocklistPolicy = {
-      customAllowlist: ['foobar@gmail.com'],
+      customAllowlist: ['foobar@googlemail.com'],
     };
 
     await expect(

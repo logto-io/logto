@@ -151,7 +151,7 @@ const security = {
     custom_email_allowlist: {
       title: '允许自定义电子邮件地址',
       description:
-        '添加规则，仅允许特定的电子邮件域名、电子邮件地址或通配符模式用于新注册和新绑定的电子邮件。例如：bar@example.com、@example.com、foo*@example.com、*@example.com。Gmail 地址中的点号会被忽略，因此 foo.bar@gmail.com 与 foobar@gmail.com 匹配。',
+        '添加规则，仅允许特定的电子邮件域名、电子邮件地址或通配符模式用于新注册和新绑定的电子邮件。例如：bar@example.com、@example.com、foo*@example.com、*@example.com。gmail.com 和 googlemail.com 域名会被视为等效，且本地部分中的点号会被忽略，因此 foo.bar@gmail.com 与 foobar@googlemail.com 匹配。',
       placeholder: '输入电子邮件地址、域名或通配符模式',
       duplicate_error: '电子邮件地址、域名或通配符电子邮件地址模式已添加',
       invalid_format_error:
@@ -176,7 +176,7 @@ const security = {
     custom_email_address: {
       title: '阻止自定义电子邮件地址',
       description:
-        '添加规则，阻止特定的电子邮件域名、电子邮件地址或通配符模式通过 UI 注册或链接。例如：bar@example.com、@example.com、foo*@example.com、*@example.com。Gmail 地址中的点号会被忽略，因此 foo.bar@gmail.com 与 foobar@gmail.com 匹配。',
+        '添加规则，阻止特定的电子邮件域名、电子邮件地址或通配符模式通过 UI 注册或链接。例如：bar@example.com、@example.com、foo*@example.com、*@example.com。gmail.com 和 googlemail.com 域名会被视为等效，且本地部分中的点号会被忽略，因此 foo.bar@gmail.com 与 foobar@googlemail.com 匹配。',
       placeholder: '输入电子邮件地址、域名或通配符模式',
       duplicate_error: '电子邮件地址、域名或通配符电子邮件地址模式已添加',
       invalid_format_error:

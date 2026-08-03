@@ -164,7 +164,7 @@ const security = {
     custom_email_allowlist: {
       title: 'اجازه دادن به ایمیل‌های سفارشی',
       description:
-        'قوانینی اضافه کنید تا فقط دامنه‌های ایمیل، آدرس‌های ایمیل یا الگوهای wildcard مشخص برای ثبت‌نام‌های جدید و ایمیل‌های تازه متصل‌شده مجاز باشند. مثال‌ها: bar@example.com، @example.com، foo*@example.com، *@example.com. نقطه‌ها در آدرس‌های Gmail نادیده گرفته می‌شوند، بنابراین foo.bar@gmail.com با foobar@gmail.com مطابقت دارد.',
+        'قوانینی اضافه کنید تا فقط دامنه‌های ایمیل، آدرس‌های ایمیل یا الگوهای wildcard مشخص برای ثبت‌نام‌های جدید و ایمیل‌های تازه متصل‌شده مجاز باشند. مثال‌ها: bar@example.com، @example.com، foo*@example.com، *@example.com. دامنه‌های gmail.com و googlemail.com معادل در نظر گرفته می‌شوند و نقطه‌ها در بخش محلی نادیده گرفته می‌شوند، بنابراین foo.bar@gmail.com با foobar@googlemail.com مطابقت دارد.',
       placeholder: 'آدرس ایمیل، دامنه یا الگوی wildcard را وارد کنید',
       duplicate_error: 'آدرس ایمیل، دامنه یا الگوی wildcard قبلاً اضافه شده است',
       invalid_format_error:
@@ -193,7 +193,7 @@ const security = {
     custom_email_address: {
       title: 'مسدود کردن آدرس‌های ایمیل سفارشی',
       description:
-        'قوانینی اضافه کنید تا دامنه‌های ایمیل، آدرس‌های ایمیل یا الگوهای wildcard مشخص از ثبت‌نام یا اتصال از طریق رابط کاربری منع شوند. مثال‌ها: bar@example.com، @example.com، foo*@example.com، *@example.com. نقطه‌ها در آدرس‌های Gmail نادیده گرفته می‌شوند، بنابراین foo.bar@gmail.com با foobar@gmail.com مطابقت دارد.',
+        'قوانینی اضافه کنید تا دامنه‌های ایمیل، آدرس‌های ایمیل یا الگوهای wildcard مشخص از ثبت‌نام یا اتصال از طریق رابط کاربری منع شوند. مثال‌ها: bar@example.com، @example.com، foo*@example.com، *@example.com. دامنه‌های gmail.com و googlemail.com معادل در نظر گرفته می‌شوند و نقطه‌ها در بخش محلی نادیده گرفته می‌شوند، بنابراین foo.bar@gmail.com با foobar@googlemail.com مطابقت دارد.',
       placeholder: 'آدرس ایمیل، دامنه یا الگوی wildcard را وارد کنید',
       duplicate_error: 'آدرس ایمیل، دامنه یا الگوی آدرس ایمیل با وایلدکارد از قبل اضافه شده است',
       invalid_format_error:

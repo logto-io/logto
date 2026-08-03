@@ -172,7 +172,7 @@ const security = {
     custom_email_allowlist: {
       title: 'Permitir direcciones de correo personalizadas',
       description:
-        'Agrega reglas para permitir solo dominios de correo, direcciones de correo o patrones comodín específicos para nuevos registros y correos vinculados recientemente. Ejemplos: bar@example.com, @example.com, foo*@example.com, *@example.com. Los puntos en las direcciones de Gmail se ignoran, por lo que foo.bar@gmail.com coincide con foobar@gmail.com.',
+        'Agrega reglas para permitir solo dominios de correo, direcciones de correo o patrones comodín específicos para nuevos registros y correos vinculados recientemente. Ejemplos: bar@example.com, @example.com, foo*@example.com, *@example.com. Los dominios gmail.com y googlemail.com se tratan como equivalentes y los puntos de la parte local se ignoran, por lo que foo.bar@gmail.com coincide con foobar@googlemail.com.',
       placeholder: 'Ingresa una dirección de correo, dominio o patrón comodín',
       duplicate_error: 'La dirección de correo, dominio o patrón comodín ya se agregó',
       invalid_format_error:
@@ -201,7 +201,7 @@ const security = {
     custom_email_address: {
       title: 'Bloquear direcciones de correo electrónico personalizadas',
       description:
-        'Agrega reglas para impedir que dominios de correo, direcciones de correo o patrones comodín específicos se registren o vinculen mediante la interfaz de usuario. Ejemplos: bar@example.com, @example.com, foo*@example.com, *@example.com. Los puntos en las direcciones de Gmail se ignoran, por lo que foo.bar@gmail.com coincide con foobar@gmail.com.',
+        'Agrega reglas para impedir que dominios de correo, direcciones de correo o patrones comodín específicos se registren o vinculen mediante la interfaz de usuario. Ejemplos: bar@example.com, @example.com, foo*@example.com, *@example.com. Los dominios gmail.com y googlemail.com se tratan como equivalentes y los puntos de la parte local se ignoran, por lo que foo.bar@gmail.com coincide con foobar@googlemail.com.',
       placeholder: 'Ingresa una dirección de correo, dominio o patrón comodín',
       duplicate_error:
         'La dirección de correo electrónico, el dominio o el patrón de dirección de correo con comodín ya fue agregado',

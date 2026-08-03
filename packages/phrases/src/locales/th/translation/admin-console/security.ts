@@ -159,7 +159,7 @@ const security = {
     custom_email_allowlist: {
       title: 'อนุญาตที่อยู่อีเมลแบบกำหนดเอง',
       description:
-        'เพิ่มกฎเพื่ออนุญาตเฉพาะโดเมนอีเมล ที่อยู่อีเมล หรือรูปแบบไวลด์การ์ดที่กำหนดสำหรับการสมัครใหม่และอีเมลที่เชื่อมโยงใหม่ ตัวอย่าง: bar@example.com, @example.com, foo*@example.com, *@example.com ระบบจะไม่สนใจจุดในที่อยู่ Gmail ดังนั้น foo.bar@gmail.com จึงตรงกับ foobar@gmail.com',
+        'เพิ่มกฎเพื่ออนุญาตเฉพาะโดเมนอีเมล ที่อยู่อีเมล หรือรูปแบบไวลด์การ์ดที่กำหนดสำหรับการสมัครใหม่และอีเมลที่เชื่อมโยงใหม่ ตัวอย่าง: bar@example.com, @example.com, foo*@example.com, *@example.com ระบบจะถือว่าโดเมน gmail.com และ googlemail.com เทียบเท่ากันและไม่สนใจจุดในส่วน local ดังนั้น foo.bar@gmail.com จึงตรงกับ foobar@googlemail.com',
       placeholder: 'ป้อนที่อยู่อีเมล โดเมน หรือรูปแบบไวลด์การ์ด',
       duplicate_error: 'เพิ่มที่อยู่อีเมล โดเมน หรือรูปแบบอีเมลแบบไวลด์การ์ดนี้แล้ว',
       invalid_format_error:
@@ -188,7 +188,7 @@ const security = {
     custom_email_address: {
       title: 'บล็อกอีเมลกำหนดเอง',
       description:
-        'เพิ่มกฎเพื่อบล็อกโดเมนอีเมล ที่อยู่อีเมล หรือรูปแบบไวลด์การ์ดที่กำหนดไม่ให้ลงทะเบียนหรือลิงก์ผ่าน UI ตัวอย่าง: bar@example.com, @example.com, foo*@example.com, *@example.com ระบบจะไม่สนใจจุดในที่อยู่ Gmail ดังนั้น foo.bar@gmail.com จึงตรงกับ foobar@gmail.com',
+        'เพิ่มกฎเพื่อบล็อกโดเมนอีเมล ที่อยู่อีเมล หรือรูปแบบไวลด์การ์ดที่กำหนดไม่ให้ลงทะเบียนหรือลิงก์ผ่าน UI ตัวอย่าง: bar@example.com, @example.com, foo*@example.com, *@example.com ระบบจะถือว่าโดเมน gmail.com และ googlemail.com เทียบเท่ากันและไม่สนใจจุดในส่วน local ดังนั้น foo.bar@gmail.com จึงตรงกับ foobar@googlemail.com',
       placeholder: 'ป้อนที่อยู่อีเมล โดเมน หรือรูปแบบไวลด์การ์ด',
       duplicate_error: 'เพิ่มอีเมล โดเมน หรือรูปแบบที่อยู่อีเมลที่ใช้ไวลด์การ์ดนี้แล้ว',
       invalid_format_error:

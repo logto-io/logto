@@ -171,7 +171,7 @@ const security = {
     custom_email_allowlist: {
       title: 'Benutzerdefinierte E-Mail-Adressen zulassen',
       description:
-        'Fügen Sie Regeln hinzu, um nur bestimmte E-Mail-Domains, E-Mail-Adressen oder Wildcard-Muster für neue Registrierungen und neu verknüpfte E-Mails zuzulassen. Beispiele: bar@example.com, @example.com, foo*@example.com, *@example.com. Punkte in Gmail-Adressen werden ignoriert, daher entspricht foo.bar@gmail.com der Adresse foobar@gmail.com.',
+        'Fügen Sie Regeln hinzu, um nur bestimmte E-Mail-Domains, E-Mail-Adressen oder Wildcard-Muster für neue Registrierungen und neu verknüpfte E-Mails zuzulassen. Beispiele: bar@example.com, @example.com, foo*@example.com, *@example.com. Die Domains gmail.com und googlemail.com werden als gleichwertig behandelt und Punkte im lokalen Teil werden ignoriert, daher entspricht foo.bar@gmail.com der Adresse foobar@googlemail.com.',
       placeholder: 'E-Mail-Adresse, Domain oder Wildcard-Muster eingeben',
       duplicate_error:
         'E-Mail-Adresse, Domain oder Wildcard-E-Mail-Muster wurde bereits hinzugefügt',
@@ -201,7 +201,7 @@ const security = {
     custom_email_address: {
       title: 'Benutzerdefinierte E-Mail-Adressen blockieren',
       description:
-        'Fügen Sie Regeln hinzu, um bestimmte E-Mail-Domains, E-Mail-Adressen oder Wildcard-Muster an der Registrierung oder Verknüpfung über die Benutzeroberfläche zu hindern. Beispiele: bar@example.com, @example.com, foo*@example.com, *@example.com. Punkte in Gmail-Adressen werden ignoriert, daher entspricht foo.bar@gmail.com der Adresse foobar@gmail.com.',
+        'Fügen Sie Regeln hinzu, um bestimmte E-Mail-Domains, E-Mail-Adressen oder Wildcard-Muster an der Registrierung oder Verknüpfung über die Benutzeroberfläche zu hindern. Beispiele: bar@example.com, @example.com, foo*@example.com, *@example.com. Die Domains gmail.com und googlemail.com werden als gleichwertig behandelt und Punkte im lokalen Teil werden ignoriert, daher entspricht foo.bar@gmail.com der Adresse foobar@googlemail.com.',
       placeholder: 'E-Mail-Adresse, Domain oder Wildcard-Muster eingeben',
       duplicate_error:
         'E-Mail-Adresse, Domain oder E-Mail-Adressmuster mit Platzhalter bereits hinzugefügt',
