@@ -113,8 +113,9 @@ function CaptchaFormFields({ metadata, errors, register, control }: Props) {
             max={1}
             step={0.01}
             error={errors.scoreThreshold && t('security.captcha_details.score_threshold_error')}
-            placeholder={String(t(scoreThresholdField.placeholder))}
+            placeholder="0.5"
             {...register('scoreThreshold', {
+              shouldUnregister: true,
               required: !scoreThresholdField.isOptional,
               min: 0,
               max: 1,
