@@ -209,7 +209,7 @@ function DetailsPageHeader({
                 primaryTag
               )}
               {/* The bar separates the tags from what follows, it must not trail the row. */}
-              {Boolean(subtitle ?? statusTag ?? identifier) && (
+              {[subtitle, statusTag, identifier].some(Boolean) && (
                 <div className={styles.verticalBar} />
               )}
             </>
