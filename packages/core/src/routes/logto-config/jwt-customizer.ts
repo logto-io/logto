@@ -246,7 +246,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
       } catch (error: unknown) {
         /**
          * - All cloud APIs should throw `RequestError`.
-         * - All local VM errors should throw `LocalVmError` extended from `RequestError`.
+         * - All script execution errors should throw `ScriptExecutionError` extended from `RequestError`.
          *
          * In the admin console, we caught the error and recognized the error with the code `jwt_customizer.general`,
          * and then we extract and show the error message to the user.
