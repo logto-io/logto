@@ -267,6 +267,8 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
       return [];
     }
 
+    // Snapshot pre-existing memberships before the insert; afterwards
+    // `getExistingOrganizationIds` cannot distinguish pre-existing from newly-added rows.
     const jitOrganizationIds = jitOrganizations.map(({ organizationId }) => organizationId);
     const existingOrganizationIds = new Set(
       await organizations.relations.users.getExistingOrganizationIds(userId, jitOrganizationIds)

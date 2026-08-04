@@ -194,8 +194,9 @@ async function handleSubmitRegister(
 
   // JIT provisioning for email domain
   if (user.primaryEmail) {
-    // The email is guaranteed to be verified: verifyProfileIdentifiers (profile-verification.ts)
-    // requires a matching emailVerified identifier before register submission proceeds
+    // `primaryEmail` is not necessarily verified here: social registration copies it from the
+    // IdP profile without requiring an `emailVerified` identifier. See the TODO on
+    // `provisionOrganizationsByEmailDomain`.
     const provisionedOrganizations = await libraries.users.provisionOrganizationsByEmailDomain(
       id,
       user.primaryEmail

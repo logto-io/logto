@@ -264,8 +264,9 @@ export class ProvisionLibrary {
   }
 
   /**
-   * Add the user to the specified organizations. This function is called when an existing
-   * user is invited to organization(s) by admin through one-time token (e.g. Magic link).
+   * Add the user to the JIT organizations resolved from the enterprise SSO connector or from the
+   * explicit organization IDs (e.g. an admin invite carried by a one-time token / Magic link).
+   * For email-domain JIT, use `provisionJitOrganizationByEmailDomain` instead.
    */
   async provisionJitOrganization(payload: OrganizationProvisionPayload) {
     const {
