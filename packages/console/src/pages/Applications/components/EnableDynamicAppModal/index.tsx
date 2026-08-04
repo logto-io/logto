@@ -30,12 +30,13 @@ function EnableDynamicAppModal({ onClose }: Props) {
     try {
       await api.patch(cimdConfigEndpoint, { json: { enabled: true } });
       await mutate(cimdConfigEndpoint);
-      toast.success(t('applications.dynamic_app.enabled'));
-      onClose();
-      navigate('/applications/third-party-applications', { replace: true });
     } finally {
       setIsSubmitting(false);
     }
+
+    toast.success(t('applications.dynamic_app.enabled'));
+    onClose();
+    navigate('/applications/third-party-applications', { replace: true });
   };
 
   return (

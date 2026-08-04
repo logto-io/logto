@@ -9,6 +9,8 @@ import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import { dynamicAppRow, type ApplicationListRow } from '@/types/applications';
 import { buildUrl } from '@/utils/url';
 
+import { shouldListDynamicApp } from '../utils';
+
 import useDynamicApp from './use-dynamic-app';
 
 const pageSize = defaultPageSize;
@@ -96,11 +98,12 @@ const useApplicationsData = (isThirdParty = false) => {
 
   const currentPage = isThirdParty ? thirdPartyApplicationPage : firstPartyApplicationPage;
   const { enabled: isDynamicAppEnabled } = useDynamicApp(isThirdParty);
-  /**
-   * The dynamic app has no application record to paginate, so it is pinned to the top of the
-   * first page and left out of the total count.
-   */
-  const hasDynamicAppRow = isThirdParty && isDynamicAppEnabled && currentPage === 1;
+  /** The dynamic app is not part of the total count, it is prepended to the listed page. */
+  const hasDynamicAppRow = shouldListDynamicApp({
+    isThirdPartyTab: isThirdParty,
+    isDynamicAppEnabled,
+    page: currentPage,
+  });
 
   const rows = useMemo((): Optional<[ApplicationListRow[], number]> => {
     if (!data) {
