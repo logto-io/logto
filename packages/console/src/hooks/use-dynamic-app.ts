@@ -9,13 +9,15 @@ export const cimdConfigEndpoint = 'api/configs/cimd';
 
 /** The dynamic app (CIMD) is a tenant-level feature switch rather than an application entity. */
 const useDynamicApp = (shouldFetch = true) => {
-  const { data, error } = useSWR<CimdConfig, RequestError>(
+  const { data, error, mutate } = useSWR<CimdConfig, RequestError>(
     conditional(isDevFeaturesEnabled && shouldFetch && cimdConfigEndpoint)
   );
 
   return {
     enabled: Boolean(data?.enabled),
     isLoading: isDevFeaturesEnabled && shouldFetch && !data && !error,
+    error,
+    mutate,
   };
 };
 

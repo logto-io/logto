@@ -37,14 +37,16 @@ function DynamicAppDetails() {
   const { getTo } = useTenantPathname();
   const theme = useTheme();
 
-  const { enabled, isLoading: isConfigLoading } = useDynamicApp();
+  const config = useDynamicApp();
   const oidcConfig = useSWR<SnakeCaseOidcConfig, RequestError>(openIdProviderConfigPath);
   const [isDisabling, setIsDisabling] = useState(false);
 
-  const isLoading = isConfigLoading || (!oidcConfig.data && !oidcConfig.error);
+  const isLoading = config.isLoading || (!oidcConfig.data && !oidcConfig.error);
+  const requestError = config.error ?? oidcConfig.error;
   const Icon = theme === Theme.Light ? DynamicAppIcon : DynamicAppDarkIcon;
 
-  if (!isLoading && !enabled) {
+  /** A failed config request is an error to show, only a successful one can rule the feature out. */
+  if (!isLoading && !requestError && !config.enabled) {
     return <Navigate replace to={getTo(thirdPartyApplicationsPathname)} />;
   }
 
@@ -53,8 +55,9 @@ function DynamicAppDetails() {
       backLink={thirdPartyApplicationsPathname}
       backLinkTitle="application_details.back_to_applications"
       isLoading={isLoading}
-      error={oidcConfig.error}
+      error={requestError}
       onRetry={() => {
+        void config.mutate();
         void oidcConfig.mutate();
       }}
     >
