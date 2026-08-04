@@ -13,7 +13,7 @@ import useOrganizationScopesAssignment from './use-organization-scopes-assignmen
 import useResourceScopesAssignment from './use-resource-scopes-assignment';
 import useUserScopesAssignment from './use-user-scopes-assignment';
 
-const useApplicationScopesAssignment = (applicationId: string, scopeLevel: ScopeLevel) => {
+const useApplicationScopesAssignment = (scopesEndpoint: string, scopeLevel: ScopeLevel) => {
   const [activeTab, setActiveTab] = useState<ApplicationUserConsentScopeType>(
     scopeLevel === ScopeLevel.Organization
       ? ApplicationUserConsentScopeType.OrganizationScopes
@@ -24,7 +24,7 @@ const useApplicationScopesAssignment = (applicationId: string, scopeLevel: Scope
   const api = useApi();
 
   const { data, mutate } = useSWR<ApplicationUserConsentScopesResponse, RequestError>(
-    `api/applications/${applicationId}/user-consent-scopes`
+    scopesEndpoint
   );
 
   const userScopesAssignment = useUserScopesAssignment(data?.userScopes);
@@ -57,7 +57,7 @@ const useApplicationScopesAssignment = (applicationId: string, scopeLevel: Scope
     );
 
     await api
-      .post(`api/applications/${applicationId}/user-consent-scopes`, {
+      .post(scopesEndpoint, {
         json: {
           ...conditional(newUserScopes.length > 0 && { userScopes: newUserScopes }),
           ...conditional(
@@ -80,7 +80,7 @@ const useApplicationScopesAssignment = (applicationId: string, scopeLevel: Scope
     void mutate();
   }, [
     api,
-    applicationId,
+    scopesEndpoint,
     mutate,
     organizationResourceScopesAssignment.selectedData,
     organizationScopesAssignment.selectedData,

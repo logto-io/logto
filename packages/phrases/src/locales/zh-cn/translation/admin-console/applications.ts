@@ -94,6 +94,16 @@ const applications = {
         'CIMD 客户端将无法再发起新的授权请求。已有的授权记录会保留，已签发的访问令牌在过期前可能仍然有效。',
     },
     disabled: '动态应用已成功禁用。',
+    permissions: {
+      user_title: '用户',
+      user_description: '选择 OAuth 客户端访问特定用户数据所需的权限。',
+      grant_user_level_permissions: '授予用户权限',
+      organization_title: '组织',
+      organization_description: '选择 OAuth 客户端访问特定组织数据所需的权限。',
+      grant_organization_level_permissions: '授予组织权限',
+      permission_delete_confirm:
+        '此操作将从动态应用中移除该权限，阻止 OAuth 客户端就该权限请求用户授权。你确定要继续吗？',
+    },
   },
   guide: {
     third_party: {

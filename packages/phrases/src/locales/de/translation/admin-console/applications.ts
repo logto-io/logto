@@ -99,6 +99,18 @@ const applications = {
         'CIMD-Clients können keine neuen Autorisierungsanfragen mehr starten. Bestehende Berechtigungen bleiben erhalten und bereits ausgestellte Access Tokens können bis zu ihrem Ablauf gültig bleiben.',
     },
     disabled: 'Dynamische App erfolgreich deaktiviert.',
+    permissions: {
+      user_title: 'Benutzer',
+      user_description:
+        'Wählen Sie die Berechtigungen aus, die von OAuth-Clients für den Zugriff auf bestimmte Benutzerdaten angefordert werden.',
+      grant_user_level_permissions: 'Benutzerberechtigungen erteilen',
+      organization_title: 'Organisation',
+      organization_description:
+        'Wählen Sie die Berechtigungen aus, die von OAuth-Clients für den Zugriff auf bestimmte Organisationsdaten angefordert werden.',
+      grant_organization_level_permissions: 'Organisationsberechtigungen erteilen',
+      permission_delete_confirm:
+        'Diese Aktion entfernt die Berechtigung aus der dynamischen App, sodass OAuth-Clients keine Benutzerberechtigung mehr dafür anfragen können. Sind Sie sicher, dass Sie fortfahren möchten?',
+    },
   },
   guide: {
     third_party: {

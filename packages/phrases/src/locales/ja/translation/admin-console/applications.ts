@@ -96,6 +96,18 @@ const applications = {
         'CIMD クライアントは新しい認可リクエストを開始できなくなります。既存の許可は保持され、発行済みのアクセストークンは有効期限まで有効な場合があります。',
     },
     disabled: 'ダイナミックアプリを無効にしました。',
+    permissions: {
+      user_title: 'ユーザー',
+      user_description:
+        '特定のユーザーデータにアクセスするために OAuth クライアントが要求する権限を選択します。',
+      grant_user_level_permissions: 'ユーザー権限を付与する',
+      organization_title: '組織',
+      organization_description:
+        '特定の組織データにアクセスするために OAuth クライアントが要求する権限を選択します。',
+      grant_organization_level_permissions: '組織権限を付与する',
+      permission_delete_confirm:
+        'この操作により、ダイナミックアプリからこの権限が削除され、OAuth クライアントはこの権限に対するユーザー認可を要求できなくなります。続行してもよろしいですか？',
+    },
   },
   guide: {
     third_party: {
