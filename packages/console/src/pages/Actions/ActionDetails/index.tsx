@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import DetailsPage from '@/components/DetailsPage';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import PageMeta from '@/components/PageMeta';
+import { isCloud } from '@/consts/env';
 import InlineNotification from '@/ds-components/InlineNotification';
 
 import { actionCatalog } from '../constants';
@@ -41,6 +42,8 @@ function Content({ actionType, mode }: ContentProps) {
     mode === ActionPageMode.Edit && !isLoading && (error?.status === 404 || !data);
 
   const shouldShowSecurityWarning = actionType === LogtoActionKey.PostFirstFactorVerification;
+  // OSS self-hosted runtime is not a security sandbox; hide on Cloud (Dynamic Workers).
+  const shouldShowSandboxWarning = !isCloud;
 
   return (
     <DetailsPage
@@ -58,6 +61,16 @@ function Content({ actionType, mode }: ContentProps) {
       {shouldShowNotFound && <EmptyDataPlaceholder />}
       {!isLoading && !shouldShowNotFound && (
         <CodeEditorLoadingContext.Provider value={codeEditorContextValue}>
+          {shouldShowSandboxWarning && (
+            <InlineNotification
+              hasIcon
+              severity="alert"
+              className={isMonacoLoaded ? undefined : styles.hidden}
+            >
+              <div className={styles.warningTitle}>{t('actions.sandbox_warning.title')}</div>
+              <div>{t('actions.sandbox_warning.description')}</div>
+            </InlineNotification>
+          )}
           {shouldShowSecurityWarning && (
             <InlineNotification
               hasIcon

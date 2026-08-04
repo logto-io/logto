@@ -101,6 +101,11 @@ const jwt_claims = {
     run_button: 'Run test',
     result_title: 'Test result',
   },
+  sandbox_warning: {
+    title: 'Scripts run with server privileges',
+    description:
+      'On self-hosted Logto, this script runs in the same environment as Logto itself: it can read server environment variables and reach services on your internal network. It is not sandboxed. Only give access to this page to people you would trust with access to the server.',
+  },
   form_error: {
     invalid_json: 'Invalid JSON format',
   },

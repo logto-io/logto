@@ -77,6 +77,11 @@ const actions = {
   form_error: {
     invalid_json: 'Geçersiz JSON biçimi',
   },
+  sandbox_warning: {
+    title: 'Komut dosyaları sunucu ayrıcalıklarıyla çalışır',
+    description:
+      'Kendi barındırılan Logto’da bu komut dosyası, Logto’nun kendisiyle aynı ortamda çalışır: sunucu ortam değişkenlerini okuyabilir ve iç ağınızdaki hizmetlere erişebilir. Sandbox’lanmamıştır. Bu sayfaya yalnızca sunucuya erişim vereceğiniz kişilere erişim verin.',
+  },
   security_warning: {
     title: 'Güvenlik uyarısı',
     description:

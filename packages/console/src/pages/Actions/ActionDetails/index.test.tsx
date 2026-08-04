@@ -19,6 +19,14 @@ jest.mock('./use-data-fetch', () => ({
   default: jest.fn(),
 }));
 
+const mockIsCloud = jest.fn(() => false);
+
+jest.mock('@/consts/env', () => ({
+  get isCloud() {
+    return mockIsCloud();
+  },
+}));
+
 jest.mock('@/components/PageMeta', () => ({
   __esModule: true,
   default: () => null,
@@ -76,6 +84,7 @@ const mockMutate = jest.fn();
 describe('ActionDetails', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockIsCloud.mockReturnValue(false);
   });
 
   it('renders empty placeholder for invalid route params', () => {
@@ -127,6 +136,43 @@ describe('ActionDetails', () => {
     render(<ActionDetails />);
 
     expect(screen.queryByText('admin_console.actions.security_warning.title')).toBeNull();
+    expect(screen.getByText('main-content')).toBeTruthy();
+  });
+
+  it('shows the sandbox warning for self-hosted tenants', () => {
+    mockedUseParams.mockReturnValue({
+      actionType: LogtoActionKey.PostSignIn,
+      mode: ActionPageMode.Create,
+    });
+    mockedUseDataFetch.mockReturnValue({
+      isLoading: false,
+      data: undefined,
+      mutate: mockMutate,
+      error: undefined,
+    });
+
+    render(<ActionDetails />);
+
+    expect(screen.getByText('admin_console.actions.sandbox_warning.title')).toBeTruthy();
+    expect(screen.getByText('admin_console.actions.sandbox_warning.description')).toBeTruthy();
+  });
+
+  it('hides the sandbox warning for Cloud tenants', () => {
+    mockIsCloud.mockReturnValue(true);
+    mockedUseParams.mockReturnValue({
+      actionType: LogtoActionKey.PostSignIn,
+      mode: ActionPageMode.Create,
+    });
+    mockedUseDataFetch.mockReturnValue({
+      isLoading: false,
+      data: undefined,
+      mutate: mockMutate,
+      error: undefined,
+    });
+
+    render(<ActionDetails />);
+
+    expect(screen.queryByText('admin_console.actions.sandbox_warning.title')).toBeNull();
     expect(screen.getByText('main-content')).toBeTruthy();
   });
 

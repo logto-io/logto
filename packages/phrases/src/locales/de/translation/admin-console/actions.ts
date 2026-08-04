@@ -77,6 +77,11 @@ const actions = {
   form_error: {
     invalid_json: 'Ungültiges JSON-Format',
   },
+  sandbox_warning: {
+    title: 'Skripte laufen mit Serverrechten',
+    description:
+      'Bei selbst gehostetem Logto läuft dieses Skript in derselben Umgebung wie Logto selbst: Es kann Server-Umgebungsvariablen lesen und Dienste in deinem internen Netzwerk erreichen. Es ist nicht sandboxed. Gib nur Personen Zugriff auf diese Seite, denen du auch Zugriff auf den Server anvertrauen würdest.',
+  },
   security_warning: {
     title: 'Sicherheitswarnung',
     description:

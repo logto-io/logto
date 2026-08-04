@@ -72,6 +72,11 @@ const actions = {
   form_error: {
     invalid_json: '無效的 JSON 格式',
   },
+  sandbox_warning: {
+    title: '腳本以伺服器權限運行',
+    description:
+      '在自託管的 Logto 中，此腳本與 Logto 本身運行在相同環境中：它可以讀取伺服器環境變數並存取你的內網服務。它沒有沙箱隔離。請僅向你信任可存取伺服器的人開放此頁面。',
+  },
   security_warning: {
     title: '安全警告',
     description:

@@ -76,6 +76,11 @@ const actions = {
   form_error: {
     invalid_json: 'Formato JSON inválido',
   },
+  sandbox_warning: {
+    title: 'Os scripts são executados com privilégios do servidor',
+    description:
+      'No Logto auto-hospedado, este script é executado no mesmo ambiente que o próprio Logto: ele pode ler variáveis de ambiente do servidor e acessar serviços na sua rede interna. Não está em sandbox. Conceda acesso a esta página apenas a pessoas em quem você confiaria o acesso ao servidor.',
+  },
   security_warning: {
     title: 'Aviso de segurança',
     description:
