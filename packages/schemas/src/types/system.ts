@@ -84,6 +84,7 @@ export const storageProviderGuard: Readonly<{
 export enum EmailServiceProvider {
   SendGrid = 'SendGrid',
   Cloudflare = 'Cloudflare',
+  Resend = 'Resend',
 }
 
 export const sendgridEmailServiceConfigGuard = z.object({
@@ -106,25 +107,76 @@ export const cloudflareEmailServiceConfigGuard = z.object({
 
 export type CloudflareEmailServiceConfig = z.infer<typeof cloudflareEmailServiceConfigGuard>;
 
+export const resendEmailServiceConfigGuard = z.object({
+  provider: z.literal(EmailServiceProvider.Resend),
+  apiKey: z.string(),
+  fromName: z.string(),
+  fromEmail: z.string(),
+});
+
+export type ResendEmailServiceConfig = z.infer<typeof resendEmailServiceConfigGuard>;
+
 export const emailServiceConfigGuard = z.discriminatedUnion('provider', [
   sendgridEmailServiceConfigGuard,
   cloudflareEmailServiceConfigGuard,
+  resendEmailServiceConfigGuard,
 ]);
 
 export type EmailServiceConfig = z.infer<typeof emailServiceConfigGuard>;
 
 export enum EmailServiceProviderKey {
   EmailServiceProvider = 'emailServiceProvider',
+  EmailProviderConfigs = 'emailProviderConfigs',
 }
+
+/**
+ * Named email-provider configs plus per-tier `enabled` pointers.
+ *
+ * Strict **write/seed** shape only. Cloud must NOT read the stored row through this guard: one
+ * malformed `providers` entry would fail the whole-record parse and silently drop the live pointer,
+ * so the cloud runtime reads entries leniently (drop + alert the bad one) instead.
+ */
+export const emailProviderConfigsGuard = z
+  .object({
+    /** Multiple provider configs coexist, keyed by a free-form name. */
+    providers: z.record(emailServiceConfigGuard),
+    /**
+     * Which named config each tier uses; absent ⇒ fall through (paid → default → legacy). A set
+     * pointer must reference an existing `providers` key — a dangling pointer at write time is
+     * always a typo.
+     */
+    enabled: z
+      .object({
+        default: z.string().optional(),
+        paid: z.string().optional(),
+      })
+      .strict(),
+  })
+  .strict()
+  .superRefine(({ providers, enabled }, context) => {
+    for (const [tier, name] of Object.entries(enabled)) {
+      if (name && !(name in providers)) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['enabled', tier],
+          message: `Enabled pointer "${tier}" references a provider config that does not exist: "${name}".`,
+        });
+      }
+    }
+  });
+
+export type EmailProviderConfigs = z.infer<typeof emailProviderConfigsGuard>;
 
 export type EmailServiceProviderType = {
   [EmailServiceProviderKey.EmailServiceProvider]: EmailServiceConfig;
+  [EmailServiceProviderKey.EmailProviderConfigs]: EmailProviderConfigs;
 };
 
 export const emailServiceProviderGuard: Readonly<{
   [key in EmailServiceProviderKey]: ZodType<EmailServiceProviderType[key]>;
 }> = Object.freeze({
   [EmailServiceProviderKey.EmailServiceProvider]: emailServiceConfigGuard,
+  [EmailServiceProviderKey.EmailProviderConfigs]: emailProviderConfigsGuard,
 });
 
 // Demo social connectors
