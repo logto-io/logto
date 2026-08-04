@@ -72,6 +72,11 @@ const actions = {
   form_error: {
     invalid_json: '无效的 JSON 格式',
   },
+  sandbox_and_security_warning: {
+    title: '脚本以服务器权限运行',
+    description:
+      '在自托管的 Logto 中，此脚本与 Logto 本身运行在相同环境中：它可以读取服务器环境变量并访问你的内网服务。它没有沙箱隔离。请仅向你信任可访问服务器的人开放此页面。此操作仅在本地密码验证失败后运行——只有在独立验证提交的密码后，才能返回 `passwordVerified: true`。通过此操作创建的用户会绕过仅适用于注册的限制，包括邮箱黑名单、仅 SSO 域名、禁用注册模式，以及注册必填资料检查。对已有用户的资料和密码写入也会在 MFA 完成前发生。',
+  },
   sandbox_warning: {
     title: '脚本以服务器权限运行',
     description:

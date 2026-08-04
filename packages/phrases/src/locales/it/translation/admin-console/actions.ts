@@ -76,6 +76,11 @@ const actions = {
   form_error: {
     invalid_json: 'Formato JSON non valido',
   },
+  sandbox_and_security_warning: {
+    title: 'Gli script vengono eseguiti con i privilegi del server',
+    description:
+      'Su Logto self-hosted, questo script viene eseguito nello stesso ambiente di Logto: può leggere le variabili d’ambiente del server e raggiungere i servizi della rete interna. Non è sandboxato. Concedi l’accesso a questa pagina solo a persone a cui fidaresti l’accesso al server. Questa azione viene eseguita solo dopo che la verifica della password locale non riesce — restituisci `passwordVerified: true` solo dopo aver verificato in modo indipendente la password inviata. Gli utenti provisionati da questa azione aggirano le protezioni riservate alla registrazione, inclusa la blocklist email, il dominio solo SSO, la modalità registrazione disabilitata e i controlli del profilo obbligatorio in registrazione. Anche le scritture di profilo e password degli utenti esistenti avvengono prima del completamento della MFA.',
+  },
   sandbox_warning: {
     title: 'Gli script vengono eseguiti con i privilegi del server',
     description:

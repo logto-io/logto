@@ -45,6 +45,15 @@ function Content({ actionType, mode }: ContentProps) {
   // Script runtime consolidation (Custom JWT & Actions): OSS sandbox warning.
   // Self-hosted scripts are not sandboxed; hide on Cloud (Dynamic Workers).
   const shouldShowSandboxWarning = isDevFeaturesEnabled && !isCloud;
+  // Avoid stacking two alerts: merge sandbox + action-specific security copy into one notice.
+  const warningPhraseKey =
+    shouldShowSandboxWarning && shouldShowSecurityWarning
+      ? 'actions.sandbox_and_security_warning'
+      : shouldShowSandboxWarning
+        ? 'actions.sandbox_warning'
+        : shouldShowSecurityWarning
+          ? 'actions.security_warning'
+          : undefined;
 
   return (
     <DetailsPage
@@ -62,24 +71,14 @@ function Content({ actionType, mode }: ContentProps) {
       {shouldShowNotFound && <EmptyDataPlaceholder />}
       {!isLoading && !shouldShowNotFound && (
         <CodeEditorLoadingContext.Provider value={codeEditorContextValue}>
-          {shouldShowSandboxWarning && (
+          {warningPhraseKey && (
             <InlineNotification
               hasIcon
               severity="alert"
               className={isMonacoLoaded ? undefined : styles.hidden}
             >
-              <div className={styles.warningTitle}>{t('actions.sandbox_warning.title')}</div>
-              <div>{t('actions.sandbox_warning.description')}</div>
-            </InlineNotification>
-          )}
-          {shouldShowSecurityWarning && (
-            <InlineNotification
-              hasIcon
-              severity="alert"
-              className={isMonacoLoaded ? undefined : styles.hidden}
-            >
-              <div className={styles.warningTitle}>{t('actions.security_warning.title')}</div>
-              <div>{t('actions.security_warning.description')}</div>
+              <div className={styles.warningTitle}>{t(`${warningPhraseKey}.title`)}</div>
+              <div>{t(`${warningPhraseKey}.description`)}</div>
             </InlineNotification>
           )}
           <MainContent

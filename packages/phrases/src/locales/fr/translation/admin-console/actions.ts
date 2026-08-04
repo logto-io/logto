@@ -78,6 +78,11 @@ const actions = {
   form_error: {
     invalid_json: 'Format JSON non valide',
   },
+  sandbox_and_security_warning: {
+    title: 'Les scripts s’exécutent avec les privilèges du serveur',
+    description:
+      'Sur Logto auto-hébergé, ce script s’exécute dans le même environnement que Logto lui-même : il peut lire les variables d’environnement du serveur et atteindre les services de votre réseau interne. Il n’est pas isolé dans un bac à sable. N’accordez l’accès à cette page qu’aux personnes auxquelles vous feriez confiance pour accéder au serveur. Cette action s’exécute uniquement après l’échec de la vérification du mot de passe local — ne renvoyez `passwordVerified: true` qu’après avoir vérifié indépendamment le mot de passe soumis. Les utilisateurs provisionnés par cette action contournent les protections réservées à l’inscription, y compris la liste de blocage des e-mails, le domaine SSO uniquement, le mode inscription désactivée et les contrôles de profil obligatoire à l’inscription. Les écritures de profil et de mot de passe des utilisateurs existants se produisent aussi avant la fin de la MFA.',
+  },
   sandbox_warning: {
     title: 'Les scripts s’exécutent avec les privilèges du serveur',
     description:

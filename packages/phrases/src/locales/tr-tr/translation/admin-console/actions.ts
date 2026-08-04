@@ -77,6 +77,11 @@ const actions = {
   form_error: {
     invalid_json: 'Geçersiz JSON biçimi',
   },
+  sandbox_and_security_warning: {
+    title: 'Komut dosyaları sunucu ayrıcalıklarıyla çalışır',
+    description:
+      'Kendi barındırılan Logto’da bu komut dosyası, Logto’nun kendisiyle aynı ortamda çalışır: sunucu ortam değişkenlerini okuyabilir ve iç ağınızdaki hizmetlere erişebilir. Sandbox’lanmamıştır. Bu sayfaya yalnızca sunucuya erişim vereceğiniz kişilere erişim verin. Bu eylem yalnızca yerel parola doğrulaması başarısız olduktan sonra çalışır — yalnızca gönderilen parolayı bağımsız olarak doğruladıktan sonra `passwordVerified: true` döndürün. Bu eylem tarafından sağlanan kullanıcılar, e-posta engel listesi, yalnızca SSO alan adı, kayıt devre dışı modu ve kayıt zorunlu profil kontrolleri dahil olmak üzere yalnızca kayda özel korumaları atlar. Mevcut kullanıcıların profil ve parola yazımları da MFA tamamlanmadan önce gerçekleşir.',
+  },
   sandbox_warning: {
     title: 'Komut dosyaları sunucu ayrıcalıklarıyla çalışır',
     description:
