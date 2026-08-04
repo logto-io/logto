@@ -23,7 +23,7 @@ import Table from '@/ds-components/Table';
 import { type RequestError } from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import pageLayout from '@/scss/page-layout.module.scss';
-import { dynamicAppGuideId, isDynamicAppRow } from '@/types/applications';
+import { dynamicAppGuideId, isDynamicAppRow, type ApplicationListRow } from '@/types/applications';
 import { buildUrl } from '@/utils/url';
 
 import ApplicationId from './components/ApplicationId';
@@ -61,6 +61,10 @@ const buildTabPathWithPagePagination = (page: number, tab?: keyof typeof tabs) =
 };
 
 const thirdPartyAppGuide = guides.find((guide) => guide.id === 'third-party-oidc');
+
+/** The dynamic app row is not counted in `totalCount`, so both sources decide whether to show it. */
+const hasListedApplications = (totalCount?: number, rows?: ApplicationListRow[]) =>
+  Boolean(totalCount) || Boolean(rows?.length);
 
 type Props = {
   readonly tab?: keyof typeof tabs;
@@ -166,7 +170,7 @@ function Applications({ tab }: Props) {
             </>
           }
         />
-        {!!applications?.length && (
+        {hasListedApplications(totalCount, applications) && (
           <Button
             icon={<Plus />}
             type="primary"

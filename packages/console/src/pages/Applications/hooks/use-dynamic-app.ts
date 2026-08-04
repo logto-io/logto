@@ -8,9 +8,9 @@ import { type RequestError } from '@/hooks/use-api';
 export const cimdConfigEndpoint = 'api/configs/cimd';
 
 /** The dynamic app (CIMD) is a tenant-level feature switch rather than an application entity. */
-const useDynamicApp = () => {
+const useDynamicApp = (shouldFetch = true) => {
   const { data } = useSWR<CimdConfig, RequestError>(
-    conditional(isDevFeaturesEnabled && cimdConfigEndpoint)
+    conditional(isDevFeaturesEnabled && shouldFetch && cimdConfigEndpoint)
   );
 
   return { enabled: Boolean(data?.enabled) };

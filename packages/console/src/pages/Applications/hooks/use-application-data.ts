@@ -95,7 +95,7 @@ const useApplicationsData = (isThirdParty = false) => {
     : firstPartyApplicationsData;
 
   const currentPage = isThirdParty ? thirdPartyApplicationPage : firstPartyApplicationPage;
-  const { enabled: isDynamicAppEnabled } = useDynamicApp();
+  const { enabled: isDynamicAppEnabled } = useDynamicApp(isThirdParty);
   /**
    * The dynamic app has no application record to paginate, so it is pinned to the top of the
    * first page and left out of the total count.

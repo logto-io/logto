@@ -9,7 +9,7 @@ import { type GuideMetadata } from '../types';
 const metadata: Readonly<GuideMetadata> = Object.freeze({
   name: 'Dynamic app',
   description:
-    'Allow compatible public clients to connect without registration. Using CIMD specification.',
+    'Allow compatible public clients to connect without registration, using the CIMD specification.',
   target: ApplicationType.Traditional,
   isThirdParty: true,
   isDevFeature: true,
