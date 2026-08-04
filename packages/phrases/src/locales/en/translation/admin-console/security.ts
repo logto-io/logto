@@ -168,9 +168,8 @@ const security = {
     custom_email_allowlist: {
       title: 'Allow custom email addresses',
       description:
-        'Allow only matching email addresses, domains, or wildcard email address patterns for new sign-ups and newly linked emails.',
-      placeholder:
-        'Enter the allowed email address, domain, or wildcard email address pattern (e.g., bar@example.com, @example.com, foo*@example.com, *@example.com)',
+        'Add rules to allow only specific email domains, email addresses, or wildcard patterns for new sign-ups and newly linked emails. Examples: bar@example.com, @example.com, foo*@example.com, *@example.com. The gmail.com and googlemail.com domains are treated as equivalent, and dots in the local part are ignored, so foo.bar@gmail.com matches foobar@googlemail.com.',
+      placeholder: 'Enter an email address, domain, or wildcard pattern',
       duplicate_error: 'Email address, domain, or wildcard email address pattern already added',
       invalid_format_error:
         'Must be a valid email address (bar@example.com), domain (@example.com), or wildcard email address pattern (foo*@example.com, *@example.com)',
@@ -198,9 +197,8 @@ const security = {
     custom_email_address: {
       title: 'Block custom email addresses',
       description:
-        'Add rules to block specific email domains, email addresses, or wildcard email address patterns from registering or linking via the UI.',
-      placeholder:
-        'Enter the blocked email address, domain, or wildcard email address pattern (e.g., bar@example.com, @example.com, foo*@example.com, *@example.com)',
+        'Add rules to block specific email domains, email addresses, or wildcard patterns from registering or linking via the UI. Examples: bar@example.com, @example.com, foo*@example.com, *@example.com. The gmail.com and googlemail.com domains are treated as equivalent, and dots in the local part are ignored, so foo.bar@gmail.com matches foobar@googlemail.com.',
+      placeholder: 'Enter an email address, domain, or wildcard pattern',
       duplicate_error: 'Email address, domain, or wildcard email address pattern already added',
       invalid_format_error:
         'Must be a valid email address (bar@example.com), domain (@example.com), or wildcard email address pattern (foo*@example.com, *@example.com)',

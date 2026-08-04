@@ -3,6 +3,7 @@ import { emailOrEmailDomainRegEx } from './regex.js';
 const wildcard = '*';
 const emailSeparator = '@';
 const domainSeparator = '.';
+const gmailDomains = new Set(['gmail.com', 'googlemail.com']);
 const whitespaceRegEx = /\s/u;
 const wildcardOnlyDomainRegEx = /^[*.]+$/u;
 
@@ -12,6 +13,29 @@ const escapeRegExp = (value: string) => value.replaceAll(/[.+?^${}()|[\]\\]/gu, 
 
 const buildWildcardRegExp = (pattern: string) =>
   new RegExp(`^${escapeRegExp(pattern).replaceAll(wildcard, '.*')}$`, 'u');
+
+const matchesPattern = (pattern: string, value: string) =>
+  hasWildcard(pattern) ? buildWildcardRegExp(pattern).test(value) : pattern === value;
+
+const removeDotsFromLocalPart = (value: string) => {
+  const separatorIndex = value.indexOf(emailSeparator);
+
+  if (separatorIndex === -1) {
+    return value;
+  }
+
+  return `${value.slice(0, separatorIndex).replaceAll(domainSeparator, '')}${value.slice(
+    separatorIndex
+  )}`;
+};
+
+const buildGmailAddressVariants = (email: string) => {
+  const emailWithoutLocalPartDots = removeDotsFromLocalPart(email);
+  const separatorIndex = emailWithoutLocalPartDots.indexOf(emailSeparator);
+  const localPart = emailWithoutLocalPartDots.slice(0, separatorIndex);
+
+  return Array.from(gmailDomains, (domain) => `${localPart}${emailSeparator}${domain}`);
+};
 
 const isValidWildcardLocalPart = (localPart: string) =>
   localPart.length > 0 && !localPart.includes(emailSeparator) && !whitespaceRegEx.test(localPart);
@@ -66,7 +90,9 @@ export const isEmailBlocklistItem = (value: string) => {
  * Checks whether an email address matches an email blocklist item.
  *
  * Matching is case-insensitive. Domain items (`@example.com`) match only the email
- * domain, while full email items match the complete email address.
+ * domain, while full email items match the complete email address. `gmail.com` and
+ * `googlemail.com` are treated as the same domain, and dots in their local parts are
+ * ignored because Gmail treats those variants as the same mailbox.
  */
 export const matchesEmailBlocklistItem = (item: string, email: string) => {
   const normalizedItem = item.toLowerCase();
@@ -74,15 +100,25 @@ export const matchesEmailBlocklistItem = (item: string, email: string) => {
   const domain = normalizedEmail.split(emailSeparator)[1];
 
   if (normalizedItem.startsWith(emailSeparator)) {
-    return Boolean(
-      domain &&
-        (hasWildcard(normalizedItem.slice(1))
-          ? buildWildcardRegExp(normalizedItem.slice(1)).test(domain)
-          : domain === normalizedItem.slice(1))
+    if (!domain) {
+      return false;
+    }
+
+    const comparableDomains = gmailDomains.has(domain) ? gmailDomains : [domain];
+
+    return Array.from(comparableDomains).some((comparableDomain) =>
+      matchesPattern(normalizedItem.slice(1), comparableDomain)
     );
   }
 
-  return hasWildcard(normalizedItem)
-    ? buildWildcardRegExp(normalizedItem).test(normalizedEmail)
-    : normalizedEmail === normalizedItem;
+  const comparableItem =
+    domain && gmailDomains.has(domain) ? removeDotsFromLocalPart(normalizedItem) : normalizedItem;
+  const comparableEmails =
+    domain && gmailDomains.has(domain)
+      ? buildGmailAddressVariants(normalizedEmail)
+      : [normalizedEmail];
+
+  return comparableEmails.some((comparableEmail) =>
+    matchesPattern(comparableItem, comparableEmail)
+  );
 };

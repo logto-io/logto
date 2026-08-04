@@ -168,9 +168,8 @@ const security = {
     custom_email_allowlist: {
       title: 'Zezwalaj na niestandardowe adresy e-mail',
       description:
-        'Zezwalaj tylko na pasujące adresy e-mail, domeny lub wzorce z symbolami wieloznacznymi dla nowych rejestracji i nowo powiązanych e-maili.',
-      placeholder:
-        'Wpisz dozwolony adres e-mail, domenę lub wzorzec z symbolem wieloznacznym (np. bar@example.com, @example.com, foo*@example.com, *@example.com)',
+        'Dodaj reguły zezwalające tylko na określone domeny e-mail, adresy e-mail lub wzorce z symbolami wieloznacznymi dla nowych rejestracji i nowo powiązanych e-maili. Przykłady: bar@example.com, @example.com, foo*@example.com, *@example.com. Domeny gmail.com i googlemail.com są traktowane jako równoważne, a kropki w części lokalnej są ignorowane, więc foo.bar@gmail.com pasuje do foobar@googlemail.com.',
+      placeholder: 'Wpisz adres e-mail, domenę lub wzorzec z symbolem wieloznacznym',
       duplicate_error:
         'Adres e-mail, domena lub wzorzec z symbolem wieloznacznym został już dodany',
       invalid_format_error:
@@ -199,9 +198,8 @@ const security = {
     custom_email_address: {
       title: 'Zablokuj niestandardowe adresy email',
       description:
-        'Dodaj reguły blokujące określone domeny email, adresy email lub wzorce adresów email z symbolami wieloznacznymi przed rejestracją lub powiązaniem przez UI.',
-      placeholder:
-        'Wprowadź zablokowany adres email, domenę lub wzorzec adresu email z symbolem wieloznacznym (np. bar@example.com, @example.com, foo*@example.com, *@example.com)',
+        'Dodaj reguły blokujące określone domeny e-mail, adresy e-mail lub wzorce z symbolami wieloznacznymi przed rejestracją lub powiązaniem przez UI. Przykłady: bar@example.com, @example.com, foo*@example.com, *@example.com. Domeny gmail.com i googlemail.com są traktowane jako równoważne, a kropki w części lokalnej są ignorowane, więc foo.bar@gmail.com pasuje do foobar@googlemail.com.',
+      placeholder: 'Wpisz adres e-mail, domenę lub wzorzec z symbolem wieloznacznym',
       duplicate_error:
         'Adres email, domena lub wzorzec adresu email z symbolem wieloznacznym już dodany',
       invalid_format_error:

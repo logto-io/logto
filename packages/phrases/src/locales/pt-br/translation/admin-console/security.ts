@@ -172,9 +172,8 @@ const security = {
     custom_email_allowlist: {
       title: 'Permitir endereços de e-mail personalizados',
       description:
-        'Permita apenas endereços de e-mail, domínios ou padrões curinga correspondentes para novos cadastros e e-mails recém-vinculados.',
-      placeholder:
-        'Insira o endereço de e-mail, domínio ou padrão curinga permitido (ex.: bar@example.com, @example.com, foo*@example.com, *@example.com)',
+        'Adicione regras para permitir apenas domínios de e-mail, endereços de e-mail ou padrões curinga específicos para novos cadastros e e-mails recém-vinculados. Exemplos: bar@example.com, @example.com, foo*@example.com, *@example.com. Os domínios gmail.com e googlemail.com são tratados como equivalentes e os pontos na parte local são ignorados, portanto foo.bar@gmail.com corresponde a foobar@googlemail.com.',
+      placeholder: 'Insira um endereço de e-mail, domínio ou padrão curinga',
       duplicate_error: 'Endereço de e-mail, domínio ou padrão curinga já adicionado',
       invalid_format_error:
         'Deve ser um endereço de e-mail válido (bar@example.com), domínio (@example.com) ou padrão curinga (foo*@example.com, *@example.com)',
@@ -202,9 +201,8 @@ const security = {
     custom_email_address: {
       title: 'Bloquear endereços de email personalizados',
       description:
-        'Adicione regras para bloquear domínios de email específicos, endereços de email ou padrões de endereço de email com curinga de se registrar ou vincular via UI.',
-      placeholder:
-        'Digite o endereço de email, domínio ou padrão de endereço de email com curinga bloqueado (por exemplo, bar@example.com, @example.com, foo*@example.com, *@example.com)',
+        'Adicione regras para impedir que domínios de e-mail, endereços de e-mail ou padrões curinga específicos se registrem ou sejam vinculados pela UI. Exemplos: bar@example.com, @example.com, foo*@example.com, *@example.com. Os domínios gmail.com e googlemail.com são tratados como equivalentes e os pontos na parte local são ignorados, portanto foo.bar@gmail.com corresponde a foobar@googlemail.com.',
+      placeholder: 'Insira um endereço de e-mail, domínio ou padrão curinga',
       duplicate_error:
         'Endereço de email, domínio ou padrão de endereço de email com curinga já adicionado',
       invalid_format_error:

@@ -163,9 +163,8 @@ const security = {
     custom_email_allowlist: {
       title: 'カスタムメールアドレスを許可',
       description:
-        '新規登録および新しくリンクされるメールには、一致するメールアドレス、ドメイン、またはワイルドカード付きメールアドレスパターンのみを許可します。',
-      placeholder:
-        '許可するメールアドレス、ドメイン、またはワイルドカード付きメールアドレスパターンを入力してください（例：bar@example.com、@example.com、foo*@example.com、*@example.com）',
+        '新規登録および新しくリンクされるメールに対して、特定のメールドメイン、メールアドレス、またはワイルドカードパターンのみを許可するルールを追加します。例：bar@example.com、@example.com、foo*@example.com、*@example.com。gmail.com と googlemail.com のドメインは同等として扱われ、ローカル部分のドットは無視されるため、foo.bar@gmail.com は foobar@googlemail.com と一致します。',
+      placeholder: 'メールアドレス、ドメイン、またはワイルドカードパターンを入力',
       duplicate_error:
         'メールアドレス、ドメイン、またはワイルドカード付きメールアドレスパターンは既に追加されています',
       invalid_format_error:
@@ -194,9 +193,8 @@ const security = {
     custom_email_address: {
       title: 'カスタムメールアドレスをブロック',
       description:
-        '特定のメールドメイン、メールアドレス、またはワイルドカード付きメールアドレスパターンが UI を介して登録またはリンクできないようにブロックするルールを追加します。',
-      placeholder:
-        'ブロックするメールアドレス、ドメイン、またはワイルドカード付きメールアドレスパターンを入力してください（例：bar@example.com、@example.com、foo*@example.com、*@example.com）',
+        '特定のメールドメイン、メールアドレス、またはワイルドカードパターンが UI を介して登録またはリンクできないようにするルールを追加します。例：bar@example.com、@example.com、foo*@example.com、*@example.com。gmail.com と googlemail.com のドメインは同等として扱われ、ローカル部分のドットは無視されるため、foo.bar@gmail.com は foobar@googlemail.com と一致します。',
+      placeholder: 'メールアドレス、ドメイン、またはワイルドカードパターンを入力',
       duplicate_error:
         'メールアドレス、ドメイン、またはワイルドカード付きメールアドレスパターンは既に追加されています',
       invalid_format_error:

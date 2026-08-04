@@ -151,9 +151,8 @@ const security = {
     custom_email_allowlist: {
       title: '允許自訂電子郵件地址',
       description:
-        '只允許相符的電子郵件地址、網域或萬用字元電子郵件地址模式用於新註冊和新綁定的電子郵件。',
-      placeholder:
-        '輸入允許的電子郵件地址、網域或萬用字元電子郵件地址模式（例如，bar@example.com，@example.com，foo*@example.com，*@example.com）',
+        '新增規則，只允許特定的電子郵件網域、電子郵件地址或萬用字元模式用於新註冊和新綁定的電子郵件。例如：bar@example.com、@example.com、foo*@example.com、*@example.com。gmail.com 和 googlemail.com 網域會被視為等同，且本地部分中的點號會被忽略，因此 foo.bar@gmail.com 與 foobar@googlemail.com 相符。',
+      placeholder: '輸入電子郵件地址、網域或萬用字元模式',
       duplicate_error: '電子郵件地址、網域或萬用字元電子郵件地址模式已新增',
       invalid_format_error:
         '必須是有效的電子郵件地址（bar@example.com）、網域（@example.com）或萬用字元電子郵件地址模式（foo*@example.com，*@example.com）',
@@ -177,9 +176,8 @@ const security = {
     custom_email_address: {
       title: '封鎖自定義電子郵件地址',
       description:
-        '添加規則，以封鎖特定電子郵件域、電子郵件地址或通配符電子郵件地址模式通過 UI 註冊或連結。',
-      placeholder:
-        '輸入被封鎖的電子郵件地址、域或通配符電子郵件地址模式（例如 bar@example.com, @example.com, foo*@example.com, *@example.com）',
+        '新增規則，封鎖特定的電子郵件網域、電子郵件地址或萬用字元模式透過 UI 註冊或連結。例如：bar@example.com、@example.com、foo*@example.com、*@example.com。gmail.com 和 googlemail.com 網域會被視為等同，且本地部分中的點號會被忽略，因此 foo.bar@gmail.com 與 foobar@googlemail.com 相符。',
+      placeholder: '輸入電子郵件地址、網域或萬用字元模式',
       duplicate_error: '電子郵件地址、域或通配符電子郵件地址模式已添加',
       invalid_format_error:
         '必須是有效的電子郵件地址（bar@example.com）、域（@example.com）或通配符電子郵件地址模式（foo*@example.com, *@example.com）',

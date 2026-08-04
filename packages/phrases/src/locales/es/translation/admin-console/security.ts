@@ -172,9 +172,8 @@ const security = {
     custom_email_allowlist: {
       title: 'Permitir direcciones de correo personalizadas',
       description:
-        'Permite solo direcciones de correo, dominios o patrones comodín coincidentes para nuevos registros y correos vinculados recientemente.',
-      placeholder:
-        'Ingresa la dirección de correo, dominio o patrón comodín permitido (p. ej., bar@example.com, @example.com, foo*@example.com, *@example.com)',
+        'Agrega reglas para permitir solo dominios de correo, direcciones de correo o patrones comodín específicos para nuevos registros y correos vinculados recientemente. Ejemplos: bar@example.com, @example.com, foo*@example.com, *@example.com. Los dominios gmail.com y googlemail.com se tratan como equivalentes y los puntos de la parte local se ignoran, por lo que foo.bar@gmail.com coincide con foobar@googlemail.com.',
+      placeholder: 'Ingresa una dirección de correo, dominio o patrón comodín',
       duplicate_error: 'La dirección de correo, dominio o patrón comodín ya se agregó',
       invalid_format_error:
         'Debe ser una dirección de correo válida (bar@example.com), un dominio (@example.com) o un patrón comodín (foo*@example.com, *@example.com)',
@@ -202,9 +201,8 @@ const security = {
     custom_email_address: {
       title: 'Bloquear direcciones de correo electrónico personalizadas',
       description:
-        'Agrega reglas para bloquear dominios de correo específicos, direcciones de correo electrónico o patrones de direcciones de correo con comodines para que no puedan registrarse o vincularse a través de la interfaz de usuario.',
-      placeholder:
-        'Ingresa la dirección de correo electrónico, dominio o patrón de dirección de correo con comodín bloqueado (por ejemplo, bar@example.com, @example.com, foo*@example.com, *@example.com)',
+        'Agrega reglas para impedir que dominios de correo, direcciones de correo o patrones comodín específicos se registren o vinculen mediante la interfaz de usuario. Ejemplos: bar@example.com, @example.com, foo*@example.com, *@example.com. Los dominios gmail.com y googlemail.com se tratan como equivalentes y los puntos de la parte local se ignoran, por lo que foo.bar@gmail.com coincide con foobar@googlemail.com.',
+      placeholder: 'Ingresa una dirección de correo, dominio o patrón comodín',
       duplicate_error:
         'La dirección de correo electrónico, el dominio o el patrón de dirección de correo con comodín ya fue agregado',
       invalid_format_error:
