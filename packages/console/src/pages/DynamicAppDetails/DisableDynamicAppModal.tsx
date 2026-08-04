@@ -12,11 +12,8 @@ type Props = {
   readonly onClose: () => void;
 };
 
-/**
- * Confirmation step for the dynamic app (CIMD) card. There is no application entity to create;
- * confirming turns on the tenant-level feature switch.
- */
-function EnableDynamicAppModal({ onClose }: Props) {
+/** Disabling the dynamic app turns off the tenant-level feature switch, there is nothing to delete. */
+function DisableDynamicAppModal({ onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useApi();
   const { mutate } = useSWRConfig();
@@ -27,30 +24,28 @@ function EnableDynamicAppModal({ onClose }: Props) {
     setIsSubmitting(true);
 
     try {
-      await api.patch(cimdConfigEndpoint, { json: { enabled: true } });
+      await api.patch(cimdConfigEndpoint, { json: { enabled: false } });
       await mutate(cimdConfigEndpoint);
+      toast.success(t('applications.dynamic_app.disabled'));
+      onClose();
+      navigate('/applications/third-party-applications', { replace: true });
     } finally {
       setIsSubmitting(false);
     }
-
-    toast.success(t('applications.dynamic_app.enabled'));
-    onClose();
-    navigate('/applications/third-party-applications', { replace: true });
   };
 
   return (
     <ConfirmModal
       isOpen
       isLoading={isSubmitting}
-      title="applications.dynamic_app.enable_confirm_modal.title"
-      confirmButtonType="primary"
-      confirmButtonText="general.enable"
+      title="applications.dynamic_app.disable_confirm_modal.title"
+      confirmButtonText="general.disable"
       onCancel={onClose}
       onConfirm={handleConfirm}
     >
-      {t('applications.dynamic_app.enable_confirm_modal.content')}
+      {t('applications.dynamic_app.disable_confirm_modal.content')}
     </ConfirmModal>
   );
 }
 
-export default EnableDynamicAppModal;
+export default DisableDynamicAppModal;

@@ -27,6 +27,7 @@ const general = {
   set_up: 'راه‌اندازی',
   customize: 'سفارشی‌سازی',
   enable: 'فعال‌سازی',
+  disable: 'غیرفعال‌سازی',
   reminder: 'یادآوری',
   edit: 'ویرایش',
   delete: 'حذف',

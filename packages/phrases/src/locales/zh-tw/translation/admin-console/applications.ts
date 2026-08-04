@@ -78,6 +78,9 @@ const applications = {
   dynamic_app: {
     title: '動態應用',
     subtitle: 'CIMD',
+    description: '動態應用允許 OAuth 用戶端無需預先註冊即可接入。',
+    settings_description:
+      '動態應用允許 OAuth 用戶端無需預先註冊即可接入，基於 OAuth Client ID Metadata Document (CIMD) 規範。',
     app_id_placeholder: '由每個用戶端動態提供',
     enable_confirm_modal: {
       title: '啟用動態用戶端接入？',
@@ -85,6 +88,12 @@ const applications = {
         '任何擁有有效公開 HTTPS 用戶端 ID URL 的 OAuth 用戶端，都可以無需預先註冊即向該租戶發起授權。存取範圍仍受你設定的最大權限和使用者同意的限制。',
     },
     enabled: '動態應用已成功啟用。',
+    disable_confirm_modal: {
+      title: '停用動態應用？',
+      content:
+        'CIMD 用戶端將無法再發起新的授權請求。既有的授權記錄會保留，已簽發的存取權杖在到期前可能仍然有效。',
+    },
+    disabled: '動態應用已成功停用。',
   },
   guide: {
     third_party: {

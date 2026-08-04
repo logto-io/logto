@@ -80,6 +80,9 @@ const applications = {
   dynamic_app: {
     title: 'Dynamic app',
     subtitle: 'CIMD',
+    description: 'Dynamic app allows OAuth clients to connect without pre-registration.',
+    settings_description:
+      'Dynamic app allows OAuth clients to connect without pre-registration. Uses the OAuth Client ID Metadata Document (CIMD) specification.',
     app_id_placeholder: 'Provided dynamically by each client',
     enable_confirm_modal: {
       title: 'Enable dynamic client access?',
@@ -87,6 +90,12 @@ const applications = {
         'Any OAuth client with a valid public HTTPS client ID URL can initiate authorization for this tenant without pre-registration. Access remains limited by your maximum permissions and user consent.',
     },
     enabled: 'Dynamic app enabled successfully.',
+    disable_confirm_modal: {
+      title: 'Disable dynamic app?',
+      content:
+        'CIMD clients will no longer be able to start new authorization requests. Existing grants will be retained, and issued access tokens may remain valid until they expire.',
+    },
+    disabled: 'Dynamic app disabled successfully.',
   },
   guide: {
     third_party: {
