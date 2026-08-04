@@ -1,11 +1,17 @@
 import { type Application } from '@logto/schemas';
+import { type Optional } from '@silverhand/essentials';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
 
 import { defaultPageSize } from '@/consts';
 import { type RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
+import { dynamicAppRow, type ApplicationListRow } from '@/types/applications';
 import { buildUrl } from '@/utils/url';
+
+import { shouldListDynamicApp } from '../utils';
+
+import useDynamicApp from './use-dynamic-app';
 
 const pageSize = defaultPageSize;
 const applicationsEndpoint = 'api/applications';
@@ -86,8 +92,32 @@ const useApplicationsData = (isThirdParty = false) => {
     thirdPartyApplicationsFetchUrl
   );
 
+  const { data, ...applicationsData } = isThirdParty
+    ? thirdPartyApplicationsData
+    : firstPartyApplicationsData;
+
+  const currentPage = isThirdParty ? thirdPartyApplicationPage : firstPartyApplicationPage;
+  const { enabled: isDynamicAppEnabled } = useDynamicApp(isThirdParty);
+  /** The dynamic app is not part of the total count, it is prepended to the listed page. */
+  const hasDynamicAppRow = shouldListDynamicApp({
+    isThirdPartyTab: isThirdParty,
+    isDynamicAppEnabled,
+    page: currentPage,
+  });
+
+  const rows = useMemo((): Optional<[ApplicationListRow[], number]> => {
+    if (!data) {
+      return;
+    }
+
+    const [applications, totalCount] = data;
+
+    return [hasDynamicAppRow ? [dynamicAppRow, ...applications] : applications, totalCount];
+  }, [data, hasDynamicAppRow]);
+
   return {
-    ...(isThirdParty ? thirdPartyApplicationsData : firstPartyApplicationsData),
+    ...applicationsData,
+    data: rows,
     pagination: {
       page: isThirdParty ? thirdPartyApplicationPage : firstPartyApplicationPage,
       pageSize,

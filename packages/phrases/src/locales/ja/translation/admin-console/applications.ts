@@ -77,6 +77,17 @@ const applications = {
     'Logto は OIDC のためにアプリケーションエンティティを使用して、アプリケーションの識別、サインインの管理、監査ログの作成などのタスクをサポートします。',
   third_party_application_placeholder_description:
     'Logto を ID プロバイダーとして使用して、サードパーティのサービスに OAuth 承認を提供します。 \n リソースアクセスのための事前構築されたユーザー同意画面が含まれています。<a>詳細を確認</a>',
+  dynamic_app: {
+    title: 'ダイナミックアプリ',
+    subtitle: 'CIMD',
+    app_id_placeholder: '各クライアントから動的に提供されます',
+    enable_confirm_modal: {
+      title: '動的クライアントアクセスを有効にしますか？',
+      content:
+        '有効な公開HTTPSクライアントID URLを持つOAuthクライアントは、事前登録なしでこのテナントへの認可を開始できます。アクセス範囲は、設定した最大権限とユーザーの同意によって引き続き制限されます。',
+    },
+    enabled: 'ダイナミックアプリを有効にしました。',
+  },
   guide: {
     third_party: {
       title: 'サードパーティアプリケーションを統合する',

@@ -78,6 +78,17 @@ const applications = {
     'Logto, uygulamanızı tanımlamaya, oturum açmayı yönetmeye ve denetim kayıtları oluşturmaya yardımcı olmak için OIDC için bir uygulama varlığı kullanır.',
   third_party_application_placeholder_description:
     'Üçüncü taraf hizmetlere OAuth yetkilendirmesi sağlamak için Logtoyu bir Kimlik Sağlayıcı olarak kullanın. \n Kaynak erişimi için önceden oluşturulmuş bir kullanıcı onay ekranı içerir. <a>Daha fazla bilgi edinin</a>',
+  dynamic_app: {
+    title: 'Dinamik uygulama',
+    subtitle: 'CIMD',
+    app_id_placeholder: 'Her istemci tarafından dinamik olarak sağlanır',
+    enable_confirm_modal: {
+      title: 'Dinamik istemci erişimi etkinleştirilsin mi?',
+      content:
+        "Geçerli bir genel HTTPS istemci kimliği URL'sine sahip her OAuth istemcisi, önceden kayıt olmadan bu kiracı için yetkilendirme başlatabilir. Erişim, azami izinleriniz ve kullanıcı onayı ile sınırlı kalmaya devam eder.",
+    },
+    enabled: 'Dinamik uygulama başarıyla etkinleştirildi.',
+  },
   guide: {
     third_party: {
       title: 'Üçüncü taraf uygulamayı entegre et',

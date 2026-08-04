@@ -21,6 +21,7 @@ import spaReact from './spa-react/index';
 import spaVanilla from './spa-vanilla/index';
 import spaVue from './spa-vue/index';
 import spaWebflow from './spa-webflow/index';
+import thirdPartyDynamicApp from './third-party-dynamic-app/index';
 import thirdPartyOidc from './third-party-oidc/index';
 import thirdPartyOidcNative from './third-party-oidc-native/index';
 import thirdPartyOidcSpa from './third-party-oidc-spa/index';
@@ -384,6 +385,14 @@ export const guides: Readonly<Guide[]> = Object.freeze([
     DarkLogo: safeLazy(async () => import('@/assets/icons/native-app-dark.svg?react')),
     Component: safeLazy(async () => import('./third-party-oidc-native/README.mdx')),
     metadata: thirdPartyOidcNative,
+  },
+  {
+    order: Number.POSITIVE_INFINITY,
+    id: 'third-party-dynamic-app',
+    Logo: safeLazy(async () => import('@/assets/icons/dynamic-app.svg?react')),
+    DarkLogo: safeLazy(async () => import('@/assets/icons/dynamic-app-dark.svg?react')),
+    Component: safeLazy(async () => import('./third-party-dynamic-app/README.mdx')),
+    metadata: thirdPartyDynamicApp,
   },
   {
     order: 6,

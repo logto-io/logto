@@ -17,15 +17,17 @@ import { integrateLogto } from '@/consts';
 import { isCloud } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
-import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import DynamicT from '@/ds-components/DynamicT';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import Table from '@/ds-components/Table';
 import { type RequestError } from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import pageLayout from '@/scss/page-layout.module.scss';
+import { dynamicAppGuideId, isDynamicAppRow, type ApplicationListRow } from '@/types/applications';
 import { buildUrl } from '@/utils/url';
 
+import ApplicationId from './components/ApplicationId';
+import EnableDynamicAppModal from './components/EnableDynamicAppModal';
 import GuideLibrary from './components/GuideLibrary';
 import GuideLibraryModal from './components/GuideLibraryModal';
 import ProtectedAppModal from './components/ProtectedAppModal';
@@ -60,6 +62,10 @@ const buildTabPathWithPagePagination = (page: number, tab?: keyof typeof tabs) =
 
 const thirdPartyAppGuide = guides.find((guide) => guide.id === 'third-party-oidc');
 
+/** The dynamic app row is not counted in `totalCount`, so both sources decide whether to show it. */
+const hasListedApplications = (totalCount?: number, rows?: ApplicationListRow[]) =>
+  Boolean(totalCount) || Boolean(rows?.length);
+
 type Props = {
   readonly tab?: keyof typeof tabs;
 };
@@ -77,6 +83,8 @@ function Applications({ tab }: Props) {
    * - `selectedGuide`: Create application with the selected guide
    */
   const [selectedGuide, setSelectedGuide] = useState<Nullable<SelectedGuide>>();
+
+  const [isEnablingDynamicApp, setIsEnablingDynamicApp] = useState(false);
 
   const isThirdPartyTab = tab === 'thirdPartyApplications';
   const shouldFetchSamlApplicationsCount = !isCloud && !isThirdPartyTab;
@@ -116,6 +124,16 @@ function Applications({ tab }: Props) {
     [navigate, selectedGuide]
   );
 
+  /** The dynamic app card enables a tenant-level feature, it never creates an application. */
+  const onSelectGuide = useCallback((guide?: Nullable<SelectedGuide>) => {
+    if (guide?.id === dynamicAppGuideId) {
+      setIsEnablingDynamicApp(true);
+      return;
+    }
+
+    setSelectedGuide(guide);
+  }, []);
+
   const onCreate = useCallback(() => {
     navigate({
       pathname: createApplicationPathname,
@@ -152,7 +170,7 @@ function Applications({ tab }: Props) {
             </>
           }
         />
-        {!!totalCount && (
+        {hasListedApplications(totalCount, applications) && (
           <Button
             icon={<Plus />}
             type="primary"
@@ -193,12 +211,12 @@ function Applications({ tab }: Props) {
             hasCardBorder
             hasCardButton
             className={styles.library}
-            onSelectGuide={setSelectedGuide}
+            onSelectGuide={onSelectGuide}
           />
         </div>
       )}
       {!isLoading && !applications?.length && isThirdPartyTab && (
-        <ThirdPartyAppGuideLibrary onSelectGuide={setSelectedGuide} />
+        <ThirdPartyAppGuideLibrary onSelectGuide={onSelectGuide} />
       )}
       {(isLoading || !!applications?.length) && (
         <Table
@@ -219,9 +237,10 @@ function Applications({ tab }: Props) {
               title: t('applications.app_id'),
               dataIndex: 'id',
               colSpan: 10,
-              render: ({ id }) => <CopyToClipboard value={id} variant="text" />,
+              render: (data) => <ApplicationId data={data} />,
             },
           ]}
+          isRowClickable={(row) => !isDynamicAppRow(row)}
           rowClickHandler={({ id }) => {
             navigate(buildDetailsPathname(id));
           }}
@@ -238,8 +257,15 @@ function Applications({ tab }: Props) {
         onClose={() => {
           navigate(-1);
         }}
-        onSelectGuide={setSelectedGuide}
+        onSelectGuide={onSelectGuide}
       />
+      {isEnablingDynamicApp && (
+        <EnableDynamicAppModal
+          onClose={() => {
+            setIsEnablingDynamicApp(false);
+          }}
+        />
+      )}
       {selectedGuide !== undefined && (
         <ApplicationCreation
           defaultCreateType={cond(

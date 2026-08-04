@@ -79,6 +79,17 @@ const applications = {
     "Logto utilizza un'entità applicazione per OIDC per aiutarti in compiti come l'identificazione delle tue app, la gestione dell'accesso e la creazione di registri di audit.",
   third_party_application_placeholder_description:
     "Usa Logto come fornitore di identità per fornire l'autorizzazione OAuth ai servizi di terze parti. \n Include uno schermo preconfigurato di consenso utente per l'accesso alle risorse. <a>Scopri di più</a>",
+  dynamic_app: {
+    title: 'App dinamica',
+    subtitle: 'CIMD',
+    app_id_placeholder: 'Fornito dinamicamente da ogni client',
+    enable_confirm_modal: {
+      title: "Abilitare l'accesso dinamico dei client?",
+      content:
+        "Qualsiasi client OAuth con un URL di ID client HTTPS pubblico e valido può avviare l'autorizzazione per questo tenant senza registrazione preventiva. L'accesso resta limitato dalle tue autorizzazioni massime e dal consenso dell'utente.",
+    },
+    enabled: 'App dinamica abilitata con successo.',
+  },
   guide: {
     third_party: {
       title: 'Integra un’applicazione di terze parti',
