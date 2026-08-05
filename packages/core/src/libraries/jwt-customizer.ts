@@ -10,7 +10,6 @@ import {
   type JwtCustomizerOrganizationContext,
   jwtCustomizerOrganizationContextGuard,
   type LogtoJwtTokenKey,
-  type CustomJwtApiContext,
   type CustomJwtScriptPayload,
   jsonObjectGuard,
   isBuiltInApplicationId,
@@ -28,7 +27,7 @@ import {
 import deepmerge from 'deepmerge';
 import { got, HTTPError } from 'got';
 import { type UnknownObject } from 'oidc-provider';
-import { ZodError, z } from 'zod';
+import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -41,68 +40,63 @@ import {
   type CustomJwtDeployRequestBody,
   parseAzureFunctionsResponseError,
 } from '#src/utils/custom-jwt/index.js';
-import { runScriptFunctionInLocalVm } from '#src/utils/local-vm/index.js';
 
 import { type CloudConnectionLibrary } from './cloud-connection.js';
 import {
-  buildScriptExecutionErrorBody,
-  getScriptFailureStatusCode,
+  buildScriptFailureError,
+  runScriptOnWorkerPool,
   ScriptExecutionError,
   scriptFailureStatusCodes,
 } from './script-runner/index.js';
 
-const apiContext: CustomJwtApiContext = Object.freeze({
-  denyAccess: (message = 'Access denied') => {
-    const error: CustomJwtErrorBody = {
-      code: CustomJwtErrorCode.AccessDenied,
-      message,
-    };
-
-    throw new ScriptExecutionError(
-      {
-        message,
-        error,
-      },
-      scriptFailureStatusCodes.denied
-    );
-  },
-});
-
 export class JwtCustomizerLibrary {
-  // Convert errors to WithTyped client response error to share the error handling logic.
+  // Convert failures to WithTyped client response errors to share the error handling logic.
   static async runScriptInLocalVm(data: CustomJwtFetcher) {
-    try {
-      const payload: CustomJwtScriptPayload = {
-        ...pick(data, 'token', 'context', 'environmentVariables'),
-        api: apiContext,
-      };
+    /**
+     * `api` is not part of the payload: functions cannot cross the structured-clone boundary, so
+     * the worker constructs `denyAccess` itself and reports a denial as a `denied` failure.
+     */
+    const payload: Omit<CustomJwtScriptPayload, 'api'> = pick(
+      data,
+      'token',
+      'context',
+      'environmentVariables'
+    );
 
-      const result = await runScriptFunctionInLocalVm(data.script, 'getCustomJwtClaims', payload);
+    const result = await runScriptOnWorkerPool({
+      script: data.script,
+      entry: 'getCustomJwtClaims',
+      payload,
+    });
 
-      // If the `result` is not a record, we cannot merge it to the existing token payload.
-      return z.record(z.unknown()).parse(result);
-    } catch (error: unknown) {
-      if (error instanceof ScriptExecutionError) {
-        throw error;
-      }
+    if (!result.ok) {
+      if (result.kind === 'denied') {
+        const error: CustomJwtErrorBody = {
+          code: CustomJwtErrorCode.AccessDenied,
+          message: result.message,
+        };
 
-      // Assuming we only use zod for request body validation
-      if (error instanceof ZodError) {
-        const { errors } = error;
         throw new ScriptExecutionError(
-          {
-            message: 'Invalid input',
-            errors,
-          },
-          400
+          { message: result.message, error },
+          scriptFailureStatusCodes.denied
         );
       }
 
+      throw buildScriptFailureError(result);
+    }
+
+    // If the returned value is not a record, we cannot merge it to the existing token payload.
+    // This is call-site validation of a successful run, not a runner failure — it keeps the 400.
+    const parsed = z.record(z.unknown()).safeParse(result.value);
+
+    if (!parsed.success) {
       throw new ScriptExecutionError(
-        buildScriptExecutionErrorBody(error),
-        getScriptFailureStatusCode(error)
+        { message: 'Invalid input', errors: parsed.error.errors },
+        400
       );
     }
+
+    return parsed.data;
   }
 
   constructor(

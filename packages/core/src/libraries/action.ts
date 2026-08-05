@@ -9,7 +9,6 @@ import {
   type ActionExecutionRequestBody,
 } from '@logto/schemas';
 import { got, HTTPError } from 'got';
-import { ZodError } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -17,7 +16,6 @@ import type { LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import type { SubscriptionLibrary } from '#src/libraries/subscription.js';
 import type { LogContext, LogPayload } from '#src/middleware/koa-audit-log.js';
 import { parseAzureFunctionsResponseError } from '#src/utils/custom-jwt/index.js';
-import { runScriptFunctionInLocalVm } from '#src/utils/local-vm/index.js';
 
 import {
   buildActionTelemetryError,
@@ -32,11 +30,7 @@ import {
   type ActionRuntimeLocation,
   trackActionExecutionMetrics,
 } from './action-telemetry.js';
-import {
-  buildScriptExecutionErrorBody,
-  getScriptFailureStatusCode,
-  ScriptExecutionError,
-} from './script-runner/index.js';
+import { buildScriptFailureError, runScriptOnWorkerPool } from './script-runner/index.js';
 
 const actionFunctionName = 'runAction';
 const defaultActionExecutionErrorPolicy = 'block' satisfies ActionExecutionErrorPolicy;
@@ -199,33 +193,24 @@ export class ActionLibrary {
     event,
     environmentVariables,
   }: ActionRunnerData<Event>): Promise<unknown> {
-    try {
-      const payload: ActionScriptPayload<Event> = {
-        event,
-        environmentVariables,
-      };
+    // No `api` capability for Actions: the payload stays `{ event, environmentVariables }`, and
+    // the worker only injects `api` for the Custom JWT entry.
+    const payload: ActionScriptPayload<Event> = {
+      event,
+      environmentVariables,
+    };
 
-      return await runScriptFunctionInLocalVm(script, actionFunctionName, payload);
-    } catch (error: unknown) {
-      if (error instanceof ScriptExecutionError) {
-        throw error;
-      }
+    const result = await runScriptOnWorkerPool({
+      script,
+      entry: actionFunctionName,
+      payload,
+    });
 
-      if (error instanceof ZodError) {
-        throw new ScriptExecutionError(
-          {
-            message: 'Invalid input',
-            errors: error.errors,
-          },
-          400
-        );
-      }
-
-      throw new ScriptExecutionError(
-        buildScriptExecutionErrorBody(error),
-        getScriptFailureStatusCode(error)
-      );
+    if (!result.ok) {
+      throw buildScriptFailureError(result);
     }
+
+    return result.value;
   }
 
   constructor(
@@ -242,8 +227,8 @@ export class ActionLibrary {
 
   /**
    * Shared entry point for production `runAction()` and Management API dry runs.
-   * Cloud always executes remotely; OSS / self-hosted always uses the local VM.
-   * Cloud remote failures must never fall back to the local VM.
+   * Cloud always executes remotely; OSS / self-hosted always runs on the local worker pool.
+   * Cloud remote failures must never fall back to the local runner.
    */
   async executeScript({
     script,
