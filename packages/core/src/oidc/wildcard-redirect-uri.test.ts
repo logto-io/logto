@@ -2,7 +2,11 @@ import type { Provider } from 'oidc-provider';
 
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 
-import { installWildcardRedirectUriMatching, wildcardUrlMatch } from './wildcard-redirect-uri.js';
+import {
+  installWildcardRedirectUriMatching,
+  isValidWildcardRedirectUriPattern,
+  wildcardUrlMatch,
+} from './wildcard-redirect-uri.js';
 
 type ClientInstance = InstanceType<Provider['Client']>;
 
@@ -73,6 +77,20 @@ describe('wildcardUrlMatch', () => {
     expect(
       wildcardUrlMatch('https://*.example.com/cb', new URL('https://a.example.com:8443/cb'))
     ).toBe(false);
+  });
+});
+
+describe('isValidWildcardRedirectUriPattern', () => {
+  it('accepts patterns the runtime matcher supports', () => {
+    expect(isValidWildcardRedirectUriPattern('https://*.example.com/callback')).toBe(true);
+    expect(isValidWildcardRedirectUriPattern('https://app.example.com/cb/*')).toBe(true);
+  });
+
+  it('rejects patterns the runtime matcher would never match', () => {
+    expect(isValidWildcardRedirectUriPattern('https://*.com/callback')).toBe(false);
+    expect(isValidWildcardRedirectUriPattern('https://example.*/callback')).toBe(false);
+    expect(isValidWildcardRedirectUriPattern('https://app.example.com:*/cb')).toBe(false);
+    expect(isValidWildcardRedirectUriPattern('not-a-url')).toBe(false);
   });
 });
 

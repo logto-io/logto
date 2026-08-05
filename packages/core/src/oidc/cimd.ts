@@ -9,10 +9,14 @@
  * @see {@link https://www.ietf.org/archive/id/draft-ietf-oauth-client-id-metadata-document-02.html | draft-02}
  */
 
+import { CustomClientMetadataKey } from '@logto/schemas';
 import { conditional, type Optional } from '@silverhand/essentials';
 import { type Client, errors, type KoaContextWithOIDC } from 'oidc-provider';
 
 import { EnvSet } from '#src/env-set/index.js';
+
+import { appLevelAccessControlMetadataKey } from './application-access-control.js';
+import { isValidWildcardRedirectUriPattern } from './wildcard-redirect-uri.js';
 
 /**
  * Must not exceed the `cimd_client_id varchar(2048)` column width — neither the draft nor the
@@ -20,6 +24,23 @@ import { EnvSet } from '#src/env-set/index.js';
  * `invalid_client` rather than a database error.
  */
 const cimdClientIdMaxLength = 2048;
+
+const assertClientIdWithinLengthBound = (clientId: string) => {
+  if (clientId.length > cimdClientIdMaxLength) {
+    throw new errors.InvalidClient(`client_id must not exceed ${cimdClientIdMaxLength} characters`);
+  }
+};
+
+/**
+ * Logto private client metadata that a remote CIMD document must never carry. The provider
+ * recognizes these keys through `extraClientMetadata`, so without this deny a remote document
+ * could set them and have them honored. Derived from the code-defined key collections so future
+ * private keys are covered automatically.
+ */
+const forbiddenCimdMetadataKeys = Object.freeze([
+  ...Object.values(CustomClientMetadataKey),
+  appLevelAccessControlMetadataKey,
+]);
 
 /**
  * Whether CIMD is effectively enabled for the tenant. All three conditions must hold:
@@ -58,8 +79,9 @@ export const isCimdClientId = (clientId: string): boolean => /^https:\/\//iu.tes
  * behavior change.
  *
  * The explicit return type stands in for `@types/oidc-provider`, which does not declare this
- * draft feature of the fork. A falsy return from either callback makes the provider throw
- * `InvalidClient`; an OIDC error thrown inside a callback propagates to the client as-is.
+ * draft feature of the fork. Both callbacks reject by throwing specific OIDC errors — the fork
+ * propagates them to the client as-is, while a falsy return would only yield the generic
+ * `InvalidClient` with no failure reason.
  */
 export const buildClientIdMetadataDocumentFeature = (
   envSet: EnvSet
@@ -76,13 +98,17 @@ export const buildClientIdMetadataDocumentFeature = (
       clientIdMetadataDocument: {
         enabled: true,
         ack: 'draft-02',
-        allowFetch: (_ctx: KoaContextWithOIDC | undefined, clientId: string) =>
-          clientId.length <= cimdClientIdMaxLength,
-        /** Cache hits skip `allowFetch`, so the bound must repeat here. */
+        allowFetch: (_ctx: KoaContextWithOIDC | undefined, clientId: string) => {
+          assertClientIdWithinLengthBound(clientId);
+          return true;
+        },
+        /**
+         * Runs on every use of a CIMD client including metadata-cache hits (a cached document
+         * can be up to 24 hours old), so tenant policy always applies before the client is
+         * used. The length bound must repeat here because cache hits skip `allowFetch`.
+         */
         allowClient: (_ctx: KoaContextWithOIDC | undefined, client: Client) => {
-          if (client.clientId.length > cimdClientIdMaxLength) {
-            return false;
-          }
+          assertClientIdWithinLengthBound(client.clientId);
 
           /**
            * The client schema only checks the algorithm against the product-level allowlist —
@@ -100,6 +126,31 @@ export const buildClientIdMetadataDocumentFeature = (
           ) {
             throw new errors.InvalidClientMetadata(
               `id_token_signed_response_alg ${idTokenSignedResponseAlg} cannot be signed with the tenant signing key`
+            );
+          }
+
+          const metadata = client.metadata();
+          const forbiddenKey = forbiddenCimdMetadataKeys.find((key) => metadata[key] !== undefined);
+
+          if (forbiddenKey) {
+            throw new errors.InvalidClientMetadata(
+              `client_id metadata document must not contain Logto private metadata (${forbiddenKey})`
+            );
+          }
+
+          /**
+           * An unsupported wildcard pattern never matches at runtime, so pre-validating with
+           * the matcher's own parser turns a dead registration into an upfront error naming
+           * the pattern instead of an unexplained redirect_uri mismatch at authorization.
+           */
+          const invalidPattern = [
+            ...(metadata.redirect_uris ?? []),
+            ...(metadata.post_logout_redirect_uris ?? []),
+          ].find((uri) => uri.includes('*') && !isValidWildcardRedirectUriPattern(uri));
+
+          if (invalidPattern !== undefined) {
+            throw new errors.InvalidClientMetadata(
+              `client_id metadata document contains an unsupported wildcard redirect URI pattern (${invalidPattern})`
             );
           }
 
