@@ -17,6 +17,7 @@ create table users (
   /** Additional OpenID Connect standard claims that are not included in user's properties. */
   profile jsonb /* @use UserProfile */ not null default '{}'::jsonb,
   application_id varchar(21),
+  cimd_client_id varchar(2048),
   identities jsonb /* @use Identities */ not null default '{}'::jsonb,
   custom_data jsonb /* @use JsonObject */ not null default '{}'::jsonb,
   logto_config jsonb /* @use JsonObject */ not null default '{}'::jsonb,
