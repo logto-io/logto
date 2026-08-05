@@ -16,7 +16,7 @@ import {
   ExtraParamsKey,
   type Json,
 } from '@logto/schemas';
-import { trySafe, tryThat } from '@silverhand/essentials';
+import { conditional, trySafe, tryThat } from '@silverhand/essentials';
 import { type i18n } from 'i18next';
 import { type KoaContextWithOIDC, Provider, type ResourceServer, errors } from 'oidc-provider';
 import getRawBody from 'raw-body';
@@ -169,6 +169,22 @@ export default function initOidc(
     jwks: {
       keys: envSet.oidc.privateJwks,
     },
+    /**
+     * Registered applications never rely on this default — the adapter force-writes their
+     * `id_token_signed_response_alg` via `getConstantClientMetadata()`. Dynamically resolved
+     * clients (e.g. Client ID Metadata Documents) skip that path and fall back to
+     * oidc-provider's built-in default `RS256`, which passes client validation (it checks the
+     * product-level allowlist above) while an EC-keystore tenant cannot sign it, so token
+     * issuance would fail late with a server error. Align the default with the tenant signing
+     * key; RSA tenants keep the built-in `RS256`.
+     */
+    ...conditional(
+      envSet.oidc.jwkSigningAlg && {
+        clientDefaults: {
+          id_token_signed_response_alg: envSet.oidc.jwkSigningAlg,
+        },
+      }
+    ),
     enabledJWA: {
       authorizationSigningAlgValues: [...supportedSigningAlgs],
       userinfoSigningAlgValues: [...supportedSigningAlgs],
