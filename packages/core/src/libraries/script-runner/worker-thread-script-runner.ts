@@ -44,8 +44,10 @@ const resolveWorkerPath = async () => {
  * runaway allocation from taking the host's heap with it. It is not an isolation boundary — a
  * script still runs with the host's privileges.
  *
- * Workers are keyed by script, so a script is compiled once and its worker is reused across runs.
- * Recycling happens on fault, on idle expiry, and after a fixed number of runs.
+ * Workers are keyed by `{keyPrefix}:{entry}:{sha256(script)}`, so a script is compiled once and
+ * its worker is reused across runs, while runs with different key prefixes (e.g. different
+ * tenants) never share a worker even for a byte-identical script. Recycling happens on fault, on
+ * idle expiry, and after a fixed number of runs.
  */
 export class WorkerThreadScriptRunner implements ScriptRunner {
   /** Insertion-ordered, which makes the first entry the least recently used. */
@@ -70,7 +72,14 @@ export class WorkerThreadScriptRunner implements ScriptRunner {
    * Rejects only for an egress policy this runner cannot enforce, which is a caller bug rather than
    * a script outcome. Every script failure comes back as a {@link ScriptResult}.
    */
-  async run({ script, entry, payload, limits, egress }: ScriptRunInput): Promise<ScriptResult> {
+  async run({
+    script,
+    entry,
+    payload,
+    limits,
+    egress,
+    keyPrefix,
+  }: ScriptRunInput): Promise<ScriptResult> {
     if (egress.mode !== 'allowAll') {
       // A worker thread reaches `fetch`, `node:http` and `node:net` unimpeded. Accepting the policy
       // and running the script anyway would be a lie about what was enforced.
@@ -81,7 +90,7 @@ export class WorkerThreadScriptRunner implements ScriptRunner {
 
     // The only `await` before the synchronous region below.
     const workerPath = await this.workerPath;
-    const key = this.buildKey(entry, script);
+    const key = this.buildKey(keyPrefix, entry, script);
 
     /**
      * Synchronous through `reserve()`: Node runs it without suspension, so two concurrent misses on
@@ -103,10 +112,14 @@ export class WorkerThreadScriptRunner implements ScriptRunner {
     await Promise.all(workers.map(async (worker) => worker.dispose()));
   }
 
-  private buildKey(entry: ScriptEntry, script: string): string {
+  /**
+   * The key prefix leads and the fixed-length hash trails, so a prefix containing `:` can never
+   * collide with another prefix/entry combination.
+   */
+  private buildKey(keyPrefix: string | undefined, entry: ScriptEntry, script: string): string {
     const hash = createHash('sha256').update(script).digest('hex');
 
-    return `${entry}:${hash}`;
+    return `${keyPrefix ?? ''}:${entry}:${hash}`;
   }
 
   /** Must never contain an `await` — see the synchronous region in {@link run}. */
