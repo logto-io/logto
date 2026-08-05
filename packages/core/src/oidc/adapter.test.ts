@@ -177,3 +177,119 @@ describe('postgres Adapter', () => {
     );
   });
 });
+
+describe('client adapter `find` fallback contract', () => {
+  const clientId = 'some_client_id';
+
+  /**
+   * Load the adapter (and its error classes) after resetting the module registry, so the
+   * `instanceof` checks inside the adapter observe the same class identities as the errors
+   * thrown and asserted below.
+   */
+  const loadClientAdapter = async ({
+    isDevFeaturesEnabled = true,
+    isOidcProviderSsrfProtectionEnabled = true,
+    cimdEnabled = true,
+    findApplicationById,
+  }: {
+    isDevFeaturesEnabled?: boolean;
+    isOidcProviderSsrfProtectionEnabled?: boolean;
+    cimdEnabled?: boolean;
+    findApplicationById: jest.Mock;
+  }) => {
+    jest.resetModules();
+    mockEsm('#src/env-set/index.js', () => ({
+      EnvSet: {
+        values: { isDevFeaturesEnabled, isOidcProviderSsrfProtectionEnabled },
+      },
+    }));
+
+    /**
+     * Sequential imports on purpose: concurrent `import()` calls after `jest.resetModules()`
+     * race the ESM linking of the shared dependency graph ("Module status must not be unlinked
+     * or linking").
+     */
+    const { default: loadedAdapter } = await import('./adapter.js');
+    const { default: RequestError } = await import('#src/errors/RequestError/index.js');
+    const { errors } = await import('oidc-provider');
+
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal env-set stub scoped to the field the adapter reads
+    const envSet = { oidc: { cimdEnabled } } as EnvSet;
+    const adapter = loadedAdapter(
+      envSet,
+      new MockQueries({ applications: { findApplicationById } }),
+      'Client'
+    );
+
+    return {
+      // eslint-disable-next-line unicorn/no-array-callback-reference -- `Adapter#find` is not an array method
+      findClient: async () => adapter.find(clientId),
+      buildNotFoundError: () =>
+        new RequestError({
+          code: 'entity.not_exists_with_id',
+          name: 'applications',
+          id: clientId,
+          status: 404,
+        }),
+      errors,
+    };
+  };
+
+  it('resolves to undefined on a confirmed missing record while CIMD is effectively enabled', async () => {
+    const findApplicationById = jest.fn();
+    const { findClient, buildNotFoundError } = await loadClientAdapter({ findApplicationById });
+    findApplicationById.mockRejectedValue(buildNotFoundError());
+
+    await expect(findClient()).resolves.toBeUndefined();
+  });
+
+  it('keeps the invalid_client behavior on a missing record when CIMD is not effectively enabled', async () => {
+    const findApplicationById = jest.fn();
+    const { findClient, buildNotFoundError, errors } = await loadClientAdapter({
+      cimdEnabled: false,
+      findApplicationById,
+    });
+    findApplicationById.mockRejectedValue(buildNotFoundError());
+
+    await expect(findClient()).rejects.toThrow(errors.InvalidClient);
+  });
+
+  it('keeps the invalid_client behavior on a missing record when SSRF protection is off', async () => {
+    const findApplicationById = jest.fn();
+    const { findClient, buildNotFoundError, errors } = await loadClientAdapter({
+      isOidcProviderSsrfProtectionEnabled: false,
+      findApplicationById,
+    });
+    findApplicationById.mockRejectedValue(buildNotFoundError());
+
+    await expect(findClient()).rejects.toThrow(errors.InvalidClient);
+  });
+
+  it('propagates database errors instead of resolving to undefined while CIMD is effectively enabled', async () => {
+    const databaseError = new Error('connection reset');
+    const findApplicationById = jest.fn().mockRejectedValue(databaseError);
+    const { findClient } = await loadClientAdapter({ findApplicationById });
+
+    await expect(findClient()).rejects.toBe(databaseError);
+  });
+
+  it('folds database errors into invalid_client when CIMD is not effectively enabled', async () => {
+    const findApplicationById = jest.fn().mockRejectedValue(new Error('connection reset'));
+    const { findClient, errors } = await loadClientAdapter({
+      cimdEnabled: false,
+      findApplicationById,
+    });
+
+    await expect(findClient()).rejects.toThrow(errors.InvalidClient);
+  });
+
+  it('folds every lookup error into invalid_client when the dev features flag is off', async () => {
+    const findApplicationById = jest.fn().mockRejectedValue(new Error('connection reset'));
+    const { findClient, errors } = await loadClientAdapter({
+      isDevFeaturesEnabled: false,
+      findApplicationById,
+    });
+
+    await expect(findClient()).rejects.toThrow(errors.InvalidClient);
+  });
+});

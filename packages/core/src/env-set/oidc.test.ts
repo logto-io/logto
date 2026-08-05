@@ -1,7 +1,12 @@
 import assert from 'node:assert';
 import { generateKeyPairSync } from 'node:crypto';
 
-import { LogtoOidcConfigKey, OidcSigningKeyStatus, type LogtoOidcConfigType } from '@logto/schemas';
+import {
+  LogtoOidcConfigKey,
+  OidcSigningKeyStatus,
+  defaultCimdConfig,
+  type LogtoOidcConfigType,
+} from '@logto/schemas';
 import { SignJWT, importJWK, jwtVerify } from 'jose';
 
 import loadOidcValues from './oidc.js';
@@ -37,7 +42,8 @@ describe('loadOidcValues', () => {
   ])('derives the signing algorithm from the %s current key', async (namedCurve, expected) => {
     const { jwkSigningAlg, privateJwks, localJWKSet } = await loadOidcValues(
       issuer,
-      buildConfigs([generateEcPrivateKeyPem(namedCurve)])
+      buildConfigs([generateEcPrivateKeyPem(namedCurve)]),
+      defaultCimdConfig
     );
 
     expect(jwkSigningAlg).toBe(expected);
@@ -61,7 +67,8 @@ describe('loadOidcValues', () => {
   it('keeps the signing algorithm undefined for an RSA current key', async () => {
     const { jwkSigningAlg } = await loadOidcValues(
       issuer,
-      buildConfigs([generateRsaPrivateKeyPem()])
+      buildConfigs([generateRsaPrivateKeyPem()]),
+      defaultCimdConfig
     );
 
     expect(jwkSigningAlg).toBeUndefined();
@@ -70,7 +77,8 @@ describe('loadOidcValues', () => {
   it('follows the current key when a previous key of another type remains in rotation grace', async () => {
     const { jwkSigningAlg, privateJwks, publicJwks } = await loadOidcValues(
       issuer,
-      buildConfigs([generateEcPrivateKeyPem('prime256v1'), generateRsaPrivateKeyPem()])
+      buildConfigs([generateEcPrivateKeyPem('prime256v1'), generateRsaPrivateKeyPem()]),
+      defaultCimdConfig
     );
 
     expect(jwkSigningAlg).toBe('ES256');

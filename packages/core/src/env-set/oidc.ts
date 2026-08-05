@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
 
-import type { LogtoOidcConfigType } from '@logto/schemas';
+import type { CimdConfig, LogtoOidcConfigType } from '@logto/schemas';
 import {
   LogtoOidcConfigKey,
   getCurrentOidcPrivateKey,
@@ -27,7 +27,11 @@ const getEcSigningAlg = (crv: string | undefined) => {
   }
 };
 
-const loadOidcValues = async (issuer: string, configs: LogtoOidcConfigType) => {
+const loadOidcValues = async (
+  issuer: string,
+  configs: LogtoOidcConfigType,
+  cimdConfig: CimdConfig
+) => {
   const cookieKeys = configs[LogtoOidcConfigKey.CookieKeys].map(({ value }) => value);
   const currentPrivateKey = crypto.createPrivateKey(
     getCurrentOidcPrivateKey(configs[LogtoOidcConfigKey.PrivateKeys]).value
@@ -59,6 +63,7 @@ const loadOidcValues = async (issuer: string, configs: LogtoOidcConfigType) => {
     jwkSigningAlg,
     localJWKSet,
     sessionTtl: session.ttl,
+    cimdEnabled: cimdConfig.enabled,
     issuer,
   });
 };
