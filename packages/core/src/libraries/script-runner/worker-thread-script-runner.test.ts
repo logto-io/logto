@@ -111,13 +111,85 @@ describe('WorkerThreadScriptRunner', () => {
         runner.run(buildInput('const runAction = ({ api }) => ({ apiType: typeof api });'))
       ).resolves.toEqual({ ok: true, value: { apiType: 'undefined' } });
     });
+
+    // The sentinel class is private to the worker module, so a script can imitate its name but
+    // never its identity — the `instanceof` check must not be fooled into a 403.
+    it('does not mistake a script-thrown error named like the deny sentinel for a denial', async () => {
+      await expect(
+        runner.run(
+          buildInput(
+            `const getCustomJwtClaims = () => {
+               const error = new Error('forged');
+               error.name = 'DenyAccessSignal';
+               throw error;
+             };`,
+            'getCustomJwtClaims'
+          )
+        )
+      ).resolves.toMatchObject({
+        ok: false,
+        kind: 'runtime',
+        name: 'DenyAccessSignal',
+        message: 'forged',
+      });
+    });
+
+    it('keeps serving on the same worker after a denial', async () => {
+      const isolated = new WorkerThreadScriptRunner();
+      const script = `var count = 0;
+         const getCustomJwtClaims = ({ api, deny }) => {
+           count += 1;
+           if (deny) { api.denyAccess('no'); }
+           return { count };
+         };`;
+
+      try {
+        await expect(
+          isolated.run(buildInput(script, 'getCustomJwtClaims', { deny: true }))
+        ).resolves.toEqual({ ok: false, kind: 'denied', message: 'no' });
+        // A denial is a settled outcome rather than a fault, so the worker stays pooled and its
+        // state proves the second run reused it.
+        await expect(
+          isolated.run(buildInput(script, 'getCustomJwtClaims', { deny: false }))
+        ).resolves.toEqual({ ok: true, value: { count: 2 } });
+        expect(isolated.size).toBe(1);
+      } finally {
+        await isolated.dispose();
+      }
+    });
   });
 
   describe('failure kinds', () => {
     it('reports syntax for a script that cannot be compiled', async () => {
       const result = await runner.run(buildInput('const runAction = () => {'));
 
-      expect(result).toMatchObject({ ok: false, kind: 'syntax' });
+      // The compiler's message survives the flattening that carries it across the thread.
+      expect(result).toMatchObject({
+        ok: false,
+        kind: 'syntax',
+        message: expect.stringContaining('Unexpected end of input') as string,
+      });
+    });
+
+    // The protocol promises that a script which cannot start never occupies a pool slot, so a
+    // tenant retrying a broken script cannot pin the pool full of corpses.
+    it('keeps a startup-failed worker out of the pool', async () => {
+      const isolated = new WorkerThreadScriptRunner();
+
+      try {
+        await expect(isolated.run(buildInput('const runAction = () => {'))).resolves.toMatchObject({
+          ok: false,
+          kind: 'syntax',
+        });
+        expect(isolated.size).toBe(0);
+
+        await expect(
+          isolated.run(buildInput('const somethingElse = () => ({});'))
+        ).resolves.toMatchObject({ ok: false, kind: 'type' });
+        expect(isolated.size).toBe(0);
+      } finally {
+        await isolated.dispose();
+      }
     });
 
     it('reports type when the entry function is missing', async () => {
@@ -240,7 +312,12 @@ describe('WorkerThreadScriptRunner', () => {
       const script = 'const runAction = () => () => 1;';
       const result = await runner.run(buildInput(script));
 
-      expect(result).toMatchObject({ ok: false, kind: 'type' });
+      // The `DataCloneError` is deliberately flattened to this constant, author-facing message.
+      expect(result).toEqual({
+        ok: false,
+        kind: 'type',
+        message: 'The script return value must be JSON-serializable.',
+      });
 
       // Nothing was terminated, so the worker keeps serving.
       await expect(
@@ -254,7 +331,11 @@ describe('WorkerThreadScriptRunner', () => {
         buildInput(script, 'runAction', { callback: () => 'not cloneable' })
       );
 
-      expect(result).toMatchObject({ ok: false, kind: 'type' });
+      expect(result).toMatchObject({
+        ok: false,
+        kind: 'type',
+        message: expect.stringContaining('cannot be transferred to the worker thread') as string,
+      });
       await expect(runner.run(buildInput(script))).resolves.toEqual({
         ok: true,
         value: { count: 1 },

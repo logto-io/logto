@@ -24,6 +24,8 @@ const buildInput = (
 
 /** Keep in sync with `maxWorkers` in `worker-thread-script-runner.ts`. */
 const maxWorkers = 4;
+/** Keep in sync with `maxInvocationsPerWorker` in `pooled-worker.ts`. */
+const maxInvocationsPerWorker = 1000;
 
 describe('WorkerThreadScriptRunner pooling', () => {
   const runners: WorkerThreadScriptRunner[] = [];
@@ -110,6 +112,37 @@ describe('WorkerThreadScriptRunner pooling', () => {
     expect(new Set(counts).size).toBe(30);
     expect(runner.size).toBe(1);
   }, 15_000);
+
+  // Recycling after a fixed number of runs bounds how much state — and how much leaked memory — a
+  // long-lived script can accumulate on one thread.
+  it('retires a worker after its invocation budget and starts the next run fresh', async () => {
+    const runner = createRunner();
+    const input = {
+      ...buildInput(counterScript()),
+      // One worker serves every run sequentially, so the deadline must cover the whole queue.
+      limits: { wallClockMs: 30_000, memoryMb: 64 },
+    };
+    const results = await Promise.all(
+      Array.from({ length: maxInvocationsPerWorker }, async () => runner.run(input))
+    );
+    const counts = results.map((result) =>
+      result.ok &&
+      typeof result.value === 'object' &&
+      result.value !== null &&
+      'count' in result.value
+        ? result.value.count
+        : undefined
+    );
+
+    // Every admission was served by the same worker: one counter, no duplicates.
+    expect(new Set(counts).size).toBe(maxInvocationsPerWorker);
+    // The budget was exhausted, so the worker retired and left the pool once it drained.
+    expect(runner.size).toBe(0);
+    // The next run starts a fresh counter on a fresh worker.
+    await expect(runner.run(buildInput(counterScript()))).resolves.toMatchObject({
+      value: { count: 1 },
+    });
+  }, 60_000);
 
   it('evicts the least recently used worker at the cap', async () => {
     const runner = createRunner();
