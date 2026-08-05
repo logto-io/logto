@@ -25,6 +25,7 @@ import 'react-day-picker/dist/style.css';
 import CloudAppRoutes from '@/cloud/AppRoutes';
 import AppLoading from '@/components/AppLoading';
 import { isCloud, postHogHost, postHogUiHost, postHogKey } from '@/consts/env';
+import { noopPostHogClient } from '@/consts/posthog';
 import { cloudApi, getManagementApi, meApi } from '@/consts/resources';
 import { ConsoleRoutes } from '@/containers/ConsoleRoutes';
 
@@ -107,12 +108,16 @@ function Providers() {
 
   return (
     <PostHogProvider
-      apiKey={postHogKey ?? ''} // Empty key will disable PostHog
-      options={{
-        ui_host: postHogUiHost,
-        api_host: postHogHost,
-        defaults: '2025-05-24',
-      }}
+      {...(postHogKey // If there is no key, use the no-op client to avoid errors in the consumers and console warnings.
+        ? {
+            apiKey: postHogKey,
+            options: {
+              ui_host: postHogUiHost,
+              api_host: postHogHost,
+              defaults: '2025-05-24',
+            },
+          }
+        : { client: noopPostHogClient })}
     >
       <LogtoProvider
         unstable_enableCache
