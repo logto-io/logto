@@ -5,7 +5,9 @@ import type { PromptDetail, Provider } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 import { z } from 'zod';
 
+import { type EnvSet } from '#src/env-set/index.js';
 import { markAppLevelAccessControlChecked } from '#src/oidc/application-access-control.js';
+import { isCimdEffectivelyEnabled } from '#src/oidc/cimd.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -35,6 +37,36 @@ export const getMissingScopes = (prompt: PromptDetail) => {
   return missingScopesGuard.parse(prompt.details);
 };
 
+/** Exactly one identifier is present, matching the kind of the consenting client. */
+type ClientIdentifiers = {
+  registeredClientId?: string;
+  cimdClientId?: string;
+};
+
+/**
+ * The `client_id` param alone cannot tell a registered application from a CIMD client, so the
+ * resolved client instance's marker decides. While CIMD is not effectively enabled the lookup
+ * is skipped: only registered applications can reach consent then.
+ */
+const identifyClient = async (
+  provider: Provider,
+  envSet: EnvSet,
+  clientId: string
+): Promise<ClientIdentifiers> => {
+  // DEV: CIMD (client ID metadata document) support
+  if (!isCimdEffectivelyEnabled(envSet)) {
+    return { registeredClientId: clientId };
+  }
+
+  const client = await provider.Client.find(clientId);
+
+  assertThat(client, new errors.InvalidClient('client must be available'));
+
+  return client.clientIdMetadataDocument
+    ? { cimdClientId: clientId }
+    : { registeredClientId: clientId };
+};
+
 /**
  * Persists the interaction's `lastSubmission` information to the session for future reference.
  *
@@ -59,13 +91,10 @@ export const getMissingScopes = (prompt: PromptDetail) => {
  */
 const saveInteractionLastSubmissionToSession = async (
   queries: Queries,
-  interactionDetails: Awaited<ReturnType<Provider['interactionDetails']>>
+  interactionDetails: Awaited<ReturnType<Provider['interactionDetails']>>,
+  { registeredClientId, cimdClientId }: ClientIdentifiers
 ) => {
-  const {
-    session,
-    lastSubmission,
-    params: { client_id: clientId },
-  } = interactionDetails;
+  const { session, lastSubmission } = interactionDetails;
 
   if (!session || !lastSubmission) {
     return;
@@ -75,12 +104,16 @@ const saveInteractionLastSubmissionToSession = async (
   const result = jsonObjectGuard.safeParse(lastSubmission);
 
   if (result.success) {
-    // Persist the last submission to the session extensions
+    /**
+     * The explicit `null` on the unused identifier column makes the upsert overwrite a stale
+     * value left by a previous submission of the other client type.
+     */
     await oidcSessionExtensions.insert({
       sessionUid: session.uid,
       accountId: session.accountId,
       lastSubmission: result.data,
-      ...conditional(typeof clientId === 'string' && { clientId }),
+      clientId: registeredClientId ?? null,
+      cimdClientId: cimdClientId ?? null,
     });
   }
 };
@@ -88,6 +121,7 @@ const saveInteractionLastSubmissionToSession = async (
 export const consent = async ({
   ctx,
   provider,
+  envSet,
   queries,
   interactionDetails,
   missingOIDCScopes = [],
@@ -97,6 +131,7 @@ export const consent = async ({
 }: {
   ctx: Context;
   provider: Provider;
+  envSet: EnvSet;
   queries: Queries;
   interactionDetails: Awaited<ReturnType<Provider['interactionDetails']>>;
   missingOIDCScopes?: string[];
@@ -118,13 +153,24 @@ export const consent = async ({
 
   const { accountId } = session;
 
+  const { registeredClientId, cimdClientId } = await identifyClient(provider, envSet, clientId);
+
   const grant =
     conditional(grantId && (await provider.Grant.find(grantId))) ??
     new provider.Grant({ accountId, clientId });
 
   await Promise.all([
-    saveUserFirstConsentedAppId(queries, accountId, clientId),
-    saveInteractionLastSubmissionToSession(queries, interactionDetails),
+    /**
+     * A CIMD URL must never reach `users.application_id` (varchar(21), registered ids only).
+     * TODO: @xiaoyijun persist the CIMD attribution to `users.cimd_client_id` instead (LOG-13928).
+     */
+    conditional(
+      registeredClientId && saveUserFirstConsentedAppId(queries, accountId, registeredClientId)
+    ),
+    saveInteractionLastSubmissionToSession(queries, interactionDetails, {
+      registeredClientId,
+      cimdClientId,
+    }),
   ]);
 
   // Fulfill missing scopes

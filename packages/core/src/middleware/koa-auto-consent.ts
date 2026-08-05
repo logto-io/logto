@@ -3,9 +3,11 @@ import { type MiddlewareType } from 'koa';
 import type { Provider } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 
+import { type EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { consent, getMissingScopes } from '#src/libraries/session/index.js';
 import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
+import { isCimdEffectivelyEnabled } from '#src/oidc/cimd.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -14,10 +16,21 @@ import assertThat from '#src/utils/assert-that.js';
  * Automatically consent for the first party apps.
  */
 
-const shouldAutoConsentApplication = async (clientId: string, query: Queries) => {
+const shouldAutoConsentApplication = async (clientId: string, query: Queries, envSet: EnvSet) => {
   const {
     applications: { findApplicationById },
   } = query;
+
+  // DEV: CIMD (client ID metadata document) support
+  if (isCimdEffectivelyEnabled(envSet) && clientId.startsWith('https://')) {
+    /**
+     * Registered application ids never take the URL shape, and authorization has already
+     * resolved this client — a URL here is a CIMD client, which is never first-party.
+     * TODO: @xiaoyijun support CIMD clients on the rest of the experience consent flow
+     * (consent info and guards).
+     */
+    return false;
+  }
 
   const application = isBuiltInApplicationId(clientId)
     ? buildBuiltInApplicationDataForTenant('', clientId)
@@ -35,6 +48,7 @@ export default function koaAutoConsent<
   ResponseBodyT,
 >(
   provider: Provider,
+  envSet: EnvSet,
   query: Queries,
   libraries: Libraries
 ): MiddlewareType<StateT, ContextT, ResponseBodyT> {
@@ -52,7 +66,7 @@ export default function koaAutoConsent<
       new errors.InvalidClient('client must be available')
     );
 
-    const shouldAutoConsent = await shouldAutoConsentApplication(clientId, query);
+    const shouldAutoConsent = await shouldAutoConsentApplication(clientId, query, envSet);
 
     if (shouldAutoConsent) {
       try {
@@ -74,6 +88,7 @@ export default function koaAutoConsent<
       const redirectTo = await consent({
         ctx,
         provider,
+        envSet,
         queries: query,
         interactionDetails,
         missingOIDCScopes,

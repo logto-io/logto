@@ -1,9 +1,13 @@
 import { type User } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import type { Provider } from 'oidc-provider';
+import { errors } from 'oidc-provider';
+import Sinon from 'sinon';
 
 import { mockUser } from '#src/__mocks__/user.js';
+import { EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
+import { mockEnvSet } from '#src/test-utils/env-set.js';
 import { GrantMock, createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
@@ -34,6 +38,21 @@ const context = createContextWithRouteParameters();
 
 type Interaction = Awaited<ReturnType<Provider['interactionDetails']>>;
 
+const buildInteractionDetails = (clientId: string) =>
+  ({
+    session: { accountId: mockUser.id, uid: 'sessionUid' },
+    params: { client_id: clientId },
+    prompt: { details: {} },
+    lastSubmission: { foo: 'bar' },
+  }) as unknown as Interaction;
+
+const buildProvider = (interactionDetails: Interaction, client?: unknown) => {
+  const provider = createMockProvider(jest.fn().mockResolvedValue(interactionDetails), Grant);
+  Sinon.stub(provider, 'Client').value({ find: async () => client });
+
+  return provider;
+};
+
 describe('saveInteractionLastSubmissionToSession', () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -54,6 +73,7 @@ describe('saveInteractionLastSubmissionToSession', () => {
     await consent({
       ctx: context,
       provider,
+      envSet: mockEnvSet,
       queries,
       interactionDetails,
     });
@@ -63,6 +83,101 @@ describe('saveInteractionLastSubmissionToSession', () => {
       accountId: mockUser.id,
       lastSubmission: { foo: 'bar' },
       clientId: 'clientId',
+      cimdClientId: null,
     });
+  });
+});
+
+describe('saveInteractionLastSubmissionToSession while CIMD is effectively enabled', () => {
+  const cimdClientId = 'https://client.example.com/metadata.json';
+
+  /**
+   * The predicate reads only `oidc.cimdEnabled` from the tenant env set; the static flags are
+   * stubbed onto `EnvSet.values` below.
+   */
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal env-set stub scoped to the field the gate reads
+  const cimdEnvSet = { oidc: { cimdEnabled: true } } as EnvSet;
+
+  beforeEach(() => {
+    Sinon.stub(EnvSet, 'values').value({
+      ...EnvSet.values,
+      isDevFeaturesEnabled: true,
+      isOidcProviderSsrfProtectionEnabled: true,
+    });
+  });
+
+  afterEach(() => {
+    Sinon.restore();
+    jest.clearAllMocks();
+  });
+
+  it('should write a cimd client identifier to the dedicated column and skip the app attribution', async () => {
+    const interactionDetails = buildInteractionDetails(cimdClientId);
+    /** The fork resolver stamps this marker onto every client it builds from a metadata document. */
+    const provider = buildProvider(interactionDetails, { clientIdMetadataDocument: true });
+
+    await consent({
+      ctx: context,
+      provider,
+      envSet: cimdEnvSet,
+      queries,
+      interactionDetails,
+    });
+
+    expect(oidcSessionExtensionsInsert).toHaveBeenCalledWith({
+      sessionUid: 'sessionUid',
+      accountId: mockUser.id,
+      lastSubmission: { foo: 'bar' },
+      clientId: null,
+      cimdClientId,
+    });
+    expect(userQueries.findUserById).not.toHaveBeenCalled();
+    expect(userQueries.updateUserById).not.toHaveBeenCalled();
+  });
+
+  it('should write a registered client identifier to the client id column and keep the app attribution', async () => {
+    userQueries.findUserById.mockImplementationOnce(async () => ({
+      ...mockUser,
+      applicationId: null,
+    }));
+    const interactionDetails = buildInteractionDetails('registeredClientId');
+    const provider = buildProvider(interactionDetails, {});
+
+    await consent({
+      ctx: context,
+      provider,
+      envSet: cimdEnvSet,
+      queries,
+      interactionDetails,
+    });
+
+    expect(oidcSessionExtensionsInsert).toHaveBeenCalledWith({
+      sessionUid: 'sessionUid',
+      accountId: mockUser.id,
+      lastSubmission: { foo: 'bar' },
+      clientId: 'registeredClientId',
+      cimdClientId: null,
+    });
+    expect(userQueries.updateUserById).toHaveBeenCalledWith(mockUser.id, {
+      applicationId: 'registeredClientId',
+    });
+  });
+
+  it('should reject without persisting anything when the client cannot be resolved', async () => {
+    const interactionDetails = buildInteractionDetails('registeredClientId');
+    const provider = buildProvider(interactionDetails);
+
+    await expect(
+      consent({
+        ctx: context,
+        provider,
+        envSet: cimdEnvSet,
+        queries,
+        interactionDetails,
+      })
+    ).rejects.toThrow(errors.InvalidClient);
+
+    expect(oidcSessionExtensionsInsert).not.toHaveBeenCalled();
+    expect(userQueries.updateUserById).not.toHaveBeenCalled();
   });
 });

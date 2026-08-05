@@ -265,7 +265,7 @@ export default class Tenant implements TenantContext {
           compose([
             koaInteractionDetails(provider),
             koaConsentGuard(libraries, queries),
-            koaAutoConsent(provider, queries, libraries),
+            koaAutoConsent(provider, envSet, queries, libraries),
           ])
         ),
         koaSpaProxy({ mountedApps, queries }),

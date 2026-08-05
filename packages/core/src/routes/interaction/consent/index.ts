@@ -31,7 +31,7 @@ const { InvalidClient, InvalidRedirectUri } = errors;
 
 export default function consentRoutes<T extends IRouterParamContext>(
   router: Router<unknown, WithInteractionDetailsContext<T>>,
-  { provider, queries, libraries }: TenantContext
+  { provider, envSet, queries, libraries }: TenantContext
 ) {
   const {
     applications: { validateUserConsentOrganizationMembership },
@@ -182,6 +182,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
       const redirectTo = await consent({
         ctx,
         provider,
+        envSet,
         queries,
         interactionDetails,
         missingOIDCScopes: missingOIDCScope,
