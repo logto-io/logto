@@ -231,7 +231,7 @@ export const mockJwtCustomizerConfigForAccessToken = {
   tenantId: 'fake_tenant',
   key: LogtoJwtTokenKey.AccessToken,
   value: {
-    script: 'console.log("hello world");',
+    script: 'const getCustomJwtClaims = () => ({});',
     environmentVariables: {
       API_KEY: '<api-key>',
     },
@@ -247,7 +247,7 @@ export const mockJwtCustomizerConfigForClientCredentials = {
   tenantId: 'fake_tenant',
   key: LogtoJwtTokenKey.ClientCredentials,
   value: {
-    script: 'console.log("hello world");',
+    script: 'const getCustomJwtClaims = () => ({});',
     environmentVariables: {
       API_KEY: '<api-key>',
     },
