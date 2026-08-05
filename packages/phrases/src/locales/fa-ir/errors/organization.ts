@@ -5,8 +5,7 @@ const organizations = {
   invitation_status_not_changeable: 'وضعیت دعوت‌نامه دیگر قابل تغییر نیست.',
   accepted_user_id_required: 'هنگام پذیرش دعوت‌نامه، `acceptedUserId` الزامی است.',
   invitee_already_member: 'دعوت‌شونده در حال حاضر عضو سازمان است.',
-  accepted_user_email_mismatch:
-    'کاربر پذیرنده باید همان ایمیل دعوت‌شونده را داشته باشد.',
+  accepted_user_email_mismatch: 'کاربر پذیرنده باید همان ایمیل دعوت‌شونده را داشته باشد.',
   expires_at_in_future: 'مقدار `expiresAt` باید در آینده باشد.',
 };
 

@@ -3,8 +3,7 @@ const organization = {
   role_names_not_found:
     'Nombres de roles no válidos detectados: {{names,list(type:conjunction)}}. Por favor, crea estos roles primero antes de continuar.',
   invitation_status_not_changeable: 'El estado de la invitación ya no se puede cambiar.',
-  accepted_user_id_required:
-    'Se requiere `acceptedUserId` al aceptar una invitación.',
+  accepted_user_id_required: 'Se requiere `acceptedUserId` al aceptar una invitación.',
   invitee_already_member: 'El invitado ya es miembro de la organización.',
   accepted_user_email_mismatch:
     'El usuario que acepta debe tener el mismo correo electrónico que el invitado.',

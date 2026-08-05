@@ -3,11 +3,9 @@ const organizations = {
   role_names_not_found:
     'Invalid role names detected: {{names,list(type:conjunction)}}. Please create these roles first before proceeding.',
   invitation_status_not_changeable: 'The status of the invitation cannot be changed anymore.',
-  accepted_user_id_required:
-    'The `acceptedUserId` is required when accepting an invitation.',
+  accepted_user_id_required: 'The `acceptedUserId` is required when accepting an invitation.',
   invitee_already_member: 'The invitee is already a member of the organization.',
-  accepted_user_email_mismatch:
-    'The accepted user must have the same email as the invitee.',
+  accepted_user_email_mismatch: 'The accepted user must have the same email as the invitee.',
   expires_at_in_future: 'The value of `expiresAt` must be in the future.',
 };
 
