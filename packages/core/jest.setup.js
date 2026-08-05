@@ -40,6 +40,7 @@ if (!expect.getState().testPath.endsWith('/env-set/oidc.test.js')) {
     cookieKeys: [],
     privateJwks: [],
     publicJwks: [],
+    cimdEnabled: false,
   }));
 }
 /* End */

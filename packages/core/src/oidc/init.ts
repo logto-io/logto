@@ -55,6 +55,7 @@ import {
   hasAppLevelAccessControlChecked,
   markAppLevelAccessControlCheckedForOidcContext,
 } from './application-access-control.js';
+import { buildClientIdMetadataDocumentFeature } from './cimd.js';
 import defaults from './defaults.js';
 import { deviceFlowConfig, defaultDeviceCodeTtl } from './device-flow.js';
 import {
@@ -189,6 +190,8 @@ export default function initOidc(
       dPoP: { enabled: false },
       backchannelLogout: { enabled: true },
       deviceFlow: deviceFlowConfig,
+      // DEV: CIMD (client ID metadata document) support
+      ...buildClientIdMetadataDocumentFeature(envSet),
       rpInitiatedLogout: {
         logoutSource: (ctx, form) => {
           // eslint-disable-next-line no-template-curly-in-string

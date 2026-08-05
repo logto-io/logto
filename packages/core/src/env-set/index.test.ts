@@ -1,4 +1,4 @@
-import { LogtoOidcConfigKey, OidcSigningKeyStatus } from '@logto/schemas';
+import { LogtoOidcConfigKey, OidcSigningKeyStatus, defaultCimdConfig } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
 const { jest } = import.meta;
@@ -29,6 +29,7 @@ const mockLockPrivateSigningKeys = jest.fn();
 const mockGetPrivateSigningKeys = jest.fn();
 const mockUpsertPrivateSigningKeys = jest.fn();
 const mockGetOidcConfigs = jest.fn();
+const mockGetCimdConfig = jest.fn(async () => defaultCimdConfig);
 const mockPromoteScheduledSigningKeyRotation = jest.fn();
 const mockLoadOidcValues = jest.fn(async () => ({ issuer: 'https://tenant.example.com/oidc' }));
 
@@ -42,6 +43,7 @@ mockEsm('#src/queries/logto-config.js', () => ({
     lockPrivateSigningKeys: mockLockPrivateSigningKeys,
     getPrivateSigningKeys: mockGetPrivateSigningKeys,
     upsertPrivateSigningKeys: mockUpsertPrivateSigningKeys,
+    getCimdConfig: mockGetCimdConfig,
   })),
 }));
 
@@ -95,6 +97,11 @@ describe('EnvSet.load()', () => {
     expect(promoteCallOrder!).toBeLessThan(getConfigsCallOrder!);
     expect(mockPromoteScheduledSigningKeyRotation).toHaveBeenCalledTimes(1);
     expect(mockLoadOidcValues).toHaveBeenCalledTimes(1);
+    expect(mockLoadOidcValues).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.anything(),
+      defaultCimdConfig
+    );
   });
 
   it('skips promotion when the staged signing key is not due yet', async () => {
