@@ -20,9 +20,9 @@ const loadCimdModule = async ({
   return import('./cimd.js');
 };
 
-const buildEnvSet = (cimdEnabled: boolean): EnvSet => {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal env-set stub scoped to the field the module reads
-  return { oidc: { cimdEnabled } } as EnvSet;
+const buildEnvSet = (cimdEnabled: boolean, jwkSigningAlg?: 'ES256' | 'ES384' | 'ES512'): EnvSet => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal env-set stub scoped to the fields the module reads
+  return { oidc: { cimdEnabled, jwkSigningAlg } } as EnvSet;
 };
 
 const cimdClientIdMaxLength = 2048;
@@ -30,14 +30,14 @@ const cimdClientIdMaxLength = 2048;
 const buildClientId = (length: number) =>
   `https://example.com/${'a'.repeat(length - 'https://example.com/'.length)}`;
 
-const buildClient = (clientId: string): Client => {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal client stub scoped to the field the hook reads
-  return { clientId } as Client;
+const buildClient = (clientId: string, idTokenSignedResponseAlg?: string): Client => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal client stub scoped to the fields the hook reads
+  return { clientId, idTokenSignedResponseAlg } as Client;
 };
 
-const loadEnabledFeature = async () => {
+const loadEnabledFeature = async (jwkSigningAlg?: 'ES256' | 'ES384' | 'ES512') => {
   const { buildClientIdMetadataDocumentFeature } = await loadCimdModule();
-  const feature = buildClientIdMetadataDocumentFeature(buildEnvSet(true));
+  const feature = buildClientIdMetadataDocumentFeature(buildEnvSet(true, jwkSigningAlg));
 
   if (!feature) {
     throw new Error('Expected the CIMD feature to be built');
@@ -114,5 +114,44 @@ describe('client identifier length bound', () => {
     expect(allowClient(undefined, buildClient(buildClientId(cimdClientIdMaxLength + 1)))).toBe(
       false
     );
+  });
+});
+
+describe('ID token signing algorithm guard', () => {
+  const clientId = buildClientId(64);
+
+  it('allowClient accepts the tenant signing algorithm and an omitted declaration on an EC tenant', async () => {
+    const { allowClient } = await loadEnabledFeature('ES384');
+    expect(allowClient(undefined, buildClient(clientId, 'ES384'))).toBe(true);
+    expect(allowClient(undefined, buildClient(clientId))).toBe(true);
+  });
+
+  it('allowClient rejects a declaration the EC tenant signing key cannot sign', async () => {
+    const { allowClient } = await loadEnabledFeature('ES384');
+
+    /**
+     * `jest.resetModules` gives cimd.js its own `oidc-provider` module instance, so class
+     * identity assertions would fail; the thrown error also keeps the OIDC error code in
+     * `message` and the human-readable text in `error_description`.
+     */
+    const thrown = ((): unknown => {
+      try {
+        return allowClient(undefined, buildClient(clientId, 'RS256'));
+      } catch (error) {
+        return error;
+      }
+    })();
+
+    expect(thrown).toMatchObject({
+      message: 'invalid_client_metadata',
+      error_description:
+        'id_token_signed_response_alg RS256 cannot be signed with the tenant signing key',
+    });
+  });
+
+  it('allowClient does not guard the algorithm when the tenant key derives none', async () => {
+    const { allowClient } = await loadEnabledFeature();
+    expect(allowClient(undefined, buildClient(clientId, 'RS256'))).toBe(true);
+    expect(allowClient(undefined, buildClient(clientId, 'ES384'))).toBe(true);
   });
 });

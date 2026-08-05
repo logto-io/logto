@@ -170,13 +170,9 @@ export default function initOidc(
       keys: envSet.oidc.privateJwks,
     },
     /**
-     * Registered applications never rely on this default — the adapter force-writes their
-     * `id_token_signed_response_alg` via `getConstantClientMetadata()`. Dynamically resolved
-     * clients (e.g. Client ID Metadata Documents) skip that path and fall back to
-     * oidc-provider's built-in default `RS256`, which passes client validation (it checks the
-     * product-level allowlist above) while an EC-keystore tenant cannot sign it, so token
-     * issuance would fail late with a server error. Align the default with the tenant signing
-     * key; RSA tenants keep the built-in `RS256`.
+     * Clients that skip the adapter's metadata force-write (e.g. CIMD) fall back to the
+     * built-in `RS256` default, which EC-keystore tenants cannot sign. Align the default
+     * with the tenant signing key; RSA tenants keep the built-in `RS256`.
      */
     ...conditional(
       envSet.oidc.jwkSigningAlg && {

@@ -10,7 +10,7 @@
  */
 
 import { conditional, type Optional } from '@silverhand/essentials';
-import { type Client, type KoaContextWithOIDC } from 'oidc-provider';
+import { type Client, errors, type KoaContextWithOIDC } from 'oidc-provider';
 
 import { EnvSet } from '#src/env-set/index.js';
 
@@ -59,7 +59,7 @@ export const isCimdClientId = (clientId: string): boolean => /^https:\/\//iu.tes
  *
  * The explicit return type stands in for `@types/oidc-provider`, which does not declare this
  * draft feature of the fork. A falsy return from either callback makes the provider throw
- * `InvalidClient`.
+ * `InvalidClient`; an OIDC error thrown inside a callback propagates to the client as-is.
  */
 export const buildClientIdMetadataDocumentFeature = (
   envSet: EnvSet
@@ -79,8 +79,32 @@ export const buildClientIdMetadataDocumentFeature = (
         allowFetch: (_ctx: KoaContextWithOIDC | undefined, clientId: string) =>
           clientId.length <= cimdClientIdMaxLength,
         /** Cache hits skip `allowFetch`, so the bound must repeat here. */
-        allowClient: (_ctx: KoaContextWithOIDC | undefined, client: Client) =>
-          client.clientId.length <= cimdClientIdMaxLength,
+        allowClient: (_ctx: KoaContextWithOIDC | undefined, client: Client) => {
+          if (client.clientId.length > cimdClientIdMaxLength) {
+            return false;
+          }
+
+          /**
+           * The client schema only checks the algorithm against the product-level allowlist —
+           * a declaration the tenant's current signing key cannot sign would fail late at
+           * token issuance with a server error. RSA tenants derive no algorithm and can sign
+           * the built-in `RS256` default, so there is nothing to enforce for them.
+           */
+          const { idTokenSignedResponseAlg } = client;
+          const { jwkSigningAlg } = envSet.oidc;
+
+          if (
+            jwkSigningAlg &&
+            idTokenSignedResponseAlg &&
+            idTokenSignedResponseAlg !== jwkSigningAlg
+          ) {
+            throw new errors.InvalidClientMetadata(
+              `id_token_signed_response_alg ${idTokenSignedResponseAlg} cannot be signed with the tenant signing key`
+            );
+          }
+
+          return true;
+        },
       },
     }
   );
