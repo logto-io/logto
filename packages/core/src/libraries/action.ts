@@ -17,11 +17,7 @@ import type { LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import type { SubscriptionLibrary } from '#src/libraries/subscription.js';
 import type { LogContext, LogPayload } from '#src/middleware/koa-audit-log.js';
 import { parseAzureFunctionsResponseError } from '#src/utils/custom-jwt/index.js';
-import {
-  buildLocalVmErrorBody,
-  LocalVmError,
-  runScriptFunctionInLocalVm,
-} from '#src/utils/local-vm/index.js';
+import { runScriptFunctionInLocalVm } from '#src/utils/local-vm/index.js';
 
 import {
   buildActionTelemetryError,
@@ -36,6 +32,11 @@ import {
   type ActionRuntimeLocation,
   trackActionExecutionMetrics,
 } from './action-telemetry.js';
+import {
+  buildScriptExecutionErrorBody,
+  getScriptFailureStatusCode,
+  ScriptExecutionError,
+} from './script-runner/index.js';
 
 const actionFunctionName = 'runAction';
 const defaultActionExecutionErrorPolicy = 'block' satisfies ActionExecutionErrorPolicy;
@@ -206,12 +207,12 @@ export class ActionLibrary {
 
       return await runScriptFunctionInLocalVm(script, actionFunctionName, payload);
     } catch (error: unknown) {
-      if (error instanceof LocalVmError) {
+      if (error instanceof ScriptExecutionError) {
         throw error;
       }
 
       if (error instanceof ZodError) {
-        throw new LocalVmError(
+        throw new ScriptExecutionError(
           {
             message: 'Invalid input',
             errors: error.errors,
@@ -220,9 +221,9 @@ export class ActionLibrary {
         );
       }
 
-      throw new LocalVmError(
-        buildLocalVmErrorBody(error),
-        error instanceof SyntaxError || error instanceof TypeError ? 422 : 500
+      throw new ScriptExecutionError(
+        buildScriptExecutionErrorBody(error),
+        getScriptFailureStatusCode(error)
       );
     }
   }

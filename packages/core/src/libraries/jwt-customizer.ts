@@ -41,13 +41,15 @@ import {
   type CustomJwtDeployRequestBody,
   parseAzureFunctionsResponseError,
 } from '#src/utils/custom-jwt/index.js';
-import {
-  buildLocalVmErrorBody,
-  LocalVmError,
-  runScriptFunctionInLocalVm,
-} from '#src/utils/local-vm/index.js';
+import { runScriptFunctionInLocalVm } from '#src/utils/local-vm/index.js';
 
 import { type CloudConnectionLibrary } from './cloud-connection.js';
+import {
+  buildScriptExecutionErrorBody,
+  getScriptFailureStatusCode,
+  ScriptExecutionError,
+  scriptFailureStatusCodes,
+} from './script-runner/index.js';
 
 const apiContext: CustomJwtApiContext = Object.freeze({
   denyAccess: (message = 'Access denied') => {
@@ -56,12 +58,12 @@ const apiContext: CustomJwtApiContext = Object.freeze({
       message,
     };
 
-    throw new LocalVmError(
+    throw new ScriptExecutionError(
       {
         message,
         error,
       },
-      403
+      scriptFailureStatusCodes.denied
     );
   },
 });
@@ -80,14 +82,14 @@ export class JwtCustomizerLibrary {
       // If the `result` is not a record, we cannot merge it to the existing token payload.
       return z.record(z.unknown()).parse(result);
     } catch (error: unknown) {
-      if (error instanceof LocalVmError) {
+      if (error instanceof ScriptExecutionError) {
         throw error;
       }
 
       // Assuming we only use zod for request body validation
       if (error instanceof ZodError) {
         const { errors } = error;
-        throw new LocalVmError(
+        throw new ScriptExecutionError(
           {
             message: 'Invalid input',
             errors,
@@ -96,9 +98,9 @@ export class JwtCustomizerLibrary {
         );
       }
 
-      throw new LocalVmError(
-        buildLocalVmErrorBody(error),
-        error instanceof SyntaxError || error instanceof TypeError ? 422 : 500
+      throw new ScriptExecutionError(
+        buildScriptExecutionErrorBody(error),
+        getScriptFailureStatusCode(error)
       );
     }
   }
