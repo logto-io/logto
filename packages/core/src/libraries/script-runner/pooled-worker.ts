@@ -86,6 +86,16 @@ export class PooledWorker {
       // worker's output through to the host process — the passthrough dry runs rely on.
     });
 
+    /**
+     * The per-run deadline is the only handle this class refs. The event loop therefore stays alive
+     * exactly as long as a run is outstanding, and an idle or leaked worker can never hold the
+     * process — or a test runner — open.
+     *
+     * Startup has no separate timer: `reserve(wallClockMs)` arms before the caller awaits ready, so
+     * a worker that never signals still settles through the run deadline.
+     */
+    this.worker.unref();
+
     // All three are attached synchronously and for the worker's whole life. An unhandled `error`
     // event on a worker crashes the host process.
     this.worker.on('message', (response: ScriptWorkerResponse) => {
@@ -114,19 +124,6 @@ export class PooledWorker {
         message: `The script worker exited unexpectedly with code ${code}.`,
       });
     });
-
-    /**
-     * The per-run deadline is the only handle this class refs. The event loop therefore stays alive
-     * exactly as long as a run is outstanding, and an idle or leaked worker can never hold the
-     * process — or a test runner — open.
-     *
-     * Must come after the listeners: attaching a `message` listener refs the worker's message port
-     * again, so unref-then-listen leaves the worker holding the event loop for its whole idle TTL.
-     *
-     * Startup has no separate timer: `reserve(wallClockMs)` arms before the caller awaits ready, so
-     * a worker that never signals still settles through the run deadline.
-     */
-    this.worker.unref();
   }
 
   /** Whether the pool may hand this worker a new run. */

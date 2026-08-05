@@ -9,6 +9,7 @@ import {
   type ActionExecutionRequestBody,
 } from '@logto/schemas';
 import { got, HTTPError } from 'got';
+import { ZodError } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -16,6 +17,7 @@ import type { LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import type { SubscriptionLibrary } from '#src/libraries/subscription.js';
 import type { LogContext, LogPayload } from '#src/middleware/koa-audit-log.js';
 import { parseAzureFunctionsResponseError } from '#src/utils/custom-jwt/index.js';
+import { runScriptFunctionInLocalVm } from '#src/utils/local-vm/index.js';
 
 import {
   buildActionTelemetryError,
@@ -30,7 +32,13 @@ import {
   type ActionRuntimeLocation,
   trackActionExecutionMetrics,
 } from './action-telemetry.js';
-import { buildScriptFailureError, runScriptOnWorkerPool } from './script-runner/index.js';
+import {
+  buildScriptExecutionErrorBody,
+  buildScriptFailureError,
+  getScriptFailureStatusCode,
+  runScriptOnWorkerPool,
+  ScriptExecutionError,
+} from './script-runner/index.js';
 
 const actionFunctionName = 'runAction';
 const defaultActionExecutionErrorPolicy = 'block' satisfies ActionExecutionErrorPolicy;
@@ -188,11 +196,14 @@ const applyActionExecutionErrorPolicyDecision = (decision: ActionExecutionErrorP
 };
 
 export class ActionLibrary {
-  static async runScriptInLocalVm<Event>({
-    script,
-    event,
-    environmentVariables,
-  }: ActionRunnerData<Event>): Promise<unknown> {
+  static async runScriptInLocalVm<Event>(data: ActionRunnerData<Event>): Promise<unknown> {
+    // TODO (LOG-13956): drop the legacy `node:vm` path and the gate once the worker-thread
+    // runner has been manually verified and released.
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return ActionLibrary.runScriptInLegacyVm(data);
+    }
+
+    const { script, event, environmentVariables } = data;
     // No `api` capability for Actions: the payload stays `{ event, environmentVariables }`, and
     // the worker only injects `api` for the Custom JWT entry.
     const payload: ActionScriptPayload<Event> = {
@@ -213,6 +224,41 @@ export class ActionLibrary {
     return result.value;
   }
 
+  /** The pre-worker-runner execution path, still serving production until the gate above lifts. */
+  private static async runScriptInLegacyVm<Event>({
+    script,
+    event,
+    environmentVariables,
+  }: ActionRunnerData<Event>): Promise<unknown> {
+    try {
+      const payload: ActionScriptPayload<Event> = {
+        event,
+        environmentVariables,
+      };
+
+      return await runScriptFunctionInLocalVm(script, actionFunctionName, payload);
+    } catch (error: unknown) {
+      if (error instanceof ScriptExecutionError) {
+        throw error;
+      }
+
+      if (error instanceof ZodError) {
+        throw new ScriptExecutionError(
+          {
+            message: 'Invalid input',
+            errors: error.errors,
+          },
+          400
+        );
+      }
+
+      throw new ScriptExecutionError(
+        buildScriptExecutionErrorBody(error),
+        getScriptFailureStatusCode(error)
+      );
+    }
+  }
+
   constructor(
     private readonly tenantId: string,
     private readonly logtoConfigs: LogtoConfigLibrary,
@@ -227,7 +273,8 @@ export class ActionLibrary {
 
   /**
    * Shared entry point for production `runAction()` and Management API dry runs.
-   * Cloud always executes remotely; OSS / self-hosted always runs on the local worker pool.
+   * Cloud always executes remotely; OSS / self-hosted runs locally — on the worker pool behind
+   * dev features, otherwise in the legacy `node:vm`.
    * Cloud remote failures must never fall back to the local runner.
    */
   async executeScript({

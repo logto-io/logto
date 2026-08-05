@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- The legacy `node:vm` path coexists with the worker-pool adapter until LOG-13956 removes it. */
 import {
   type CustomJwtErrorBody,
   CustomJwtErrorCode,
@@ -10,6 +11,7 @@ import {
   type JwtCustomizerOrganizationContext,
   jwtCustomizerOrganizationContextGuard,
   type LogtoJwtTokenKey,
+  type CustomJwtApiContext,
   type CustomJwtScriptPayload,
   jsonObjectGuard,
   isBuiltInApplicationId,
@@ -27,7 +29,7 @@ import {
 import deepmerge from 'deepmerge';
 import { got, HTTPError } from 'got';
 import { type UnknownObject } from 'oidc-provider';
-import { z } from 'zod';
+import { ZodError, z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -40,18 +42,44 @@ import {
   type CustomJwtDeployRequestBody,
   parseAzureFunctionsResponseError,
 } from '#src/utils/custom-jwt/index.js';
+import { runScriptFunctionInLocalVm } from '#src/utils/local-vm/index.js';
 
 import { type CloudConnectionLibrary } from './cloud-connection.js';
 import {
+  buildScriptExecutionErrorBody,
   buildScriptFailureError,
+  getScriptFailureStatusCode,
   runScriptOnWorkerPool,
   ScriptExecutionError,
   scriptFailureStatusCodes,
 } from './script-runner/index.js';
 
+const apiContext: CustomJwtApiContext = Object.freeze({
+  denyAccess: (message = 'Access denied') => {
+    const error: CustomJwtErrorBody = {
+      code: CustomJwtErrorCode.AccessDenied,
+      message,
+    };
+
+    throw new ScriptExecutionError(
+      {
+        message,
+        error,
+      },
+      scriptFailureStatusCodes.denied
+    );
+  },
+});
+
 export class JwtCustomizerLibrary {
   // Convert failures to WithTyped client response errors to share the error handling logic.
   static async runScriptInLocalVm(data: CustomJwtFetcher) {
+    // TODO (LOG-13956): drop the legacy `node:vm` path and the gate once the worker-thread
+    // runner has been manually verified and released.
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return JwtCustomizerLibrary.runScriptInLegacyVm(data);
+    }
+
     /**
      * `api` is not part of the payload: functions cannot cross the structured-clone boundary, so
      * the worker constructs `denyAccess` itself and reports a denial as a `denied` failure.
@@ -97,6 +125,42 @@ export class JwtCustomizerLibrary {
     }
 
     return parsed.data;
+  }
+
+  /** The pre-worker-runner execution path, still serving production until the gate above lifts. */
+  private static async runScriptInLegacyVm(data: CustomJwtFetcher) {
+    try {
+      const payload: CustomJwtScriptPayload = {
+        ...pick(data, 'token', 'context', 'environmentVariables'),
+        api: apiContext,
+      };
+
+      const result = await runScriptFunctionInLocalVm(data.script, 'getCustomJwtClaims', payload);
+
+      // If the `result` is not a record, we cannot merge it to the existing token payload.
+      return z.record(z.unknown()).parse(result);
+    } catch (error: unknown) {
+      if (error instanceof ScriptExecutionError) {
+        throw error;
+      }
+
+      // Assuming we only use zod for request body validation
+      if (error instanceof ZodError) {
+        const { errors } = error;
+        throw new ScriptExecutionError(
+          {
+            message: 'Invalid input',
+            errors,
+          },
+          400
+        );
+      }
+
+      throw new ScriptExecutionError(
+        buildScriptExecutionErrorBody(error),
+        getScriptFailureStatusCode(error)
+      );
+    }
   }
 
   constructor(
@@ -347,3 +411,4 @@ export class JwtCustomizerLibrary {
     });
   }
 }
+/* eslint-enable max-lines */
