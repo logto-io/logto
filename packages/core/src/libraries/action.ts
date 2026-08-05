@@ -32,7 +32,11 @@ import {
   type ActionRuntimeLocation,
   trackActionExecutionMetrics,
 } from './action-telemetry.js';
-import { buildScriptExecutionErrorBody, ScriptExecutionError } from './script-runner/index.js';
+import {
+  buildScriptExecutionErrorBody,
+  getScriptFailureStatusCode,
+  ScriptExecutionError,
+} from './script-runner/index.js';
 
 const actionFunctionName = 'runAction';
 const defaultActionExecutionErrorPolicy = 'block' satisfies ActionExecutionErrorPolicy;
@@ -219,7 +223,7 @@ export class ActionLibrary {
 
       throw new ScriptExecutionError(
         buildScriptExecutionErrorBody(error),
-        error instanceof SyntaxError || error instanceof TypeError ? 422 : 500
+        getScriptFailureStatusCode(error)
       );
     }
   }

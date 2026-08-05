@@ -10,7 +10,8 @@ type ScriptFailureKind = Extract<ScriptResult, { ok: false }>['kind'];
  * The HTTP status code each failure kind maps to.
  *
  * This is the status mapping the local VM implementation has always used, kept as-is so
- * route-level error handling stays untouched.
+ * route-level error handling stays untouched. Call sites that throw {@link ScriptExecutionError}
+ * for a known kind should read the status from here rather than hardcoding the number.
  */
 export const scriptFailureStatusCodes = Object.freeze({
   denied: 403,
@@ -20,6 +21,19 @@ export const scriptFailureStatusCodes = Object.freeze({
   oom: 500,
   runtime: 500,
 } as const satisfies Record<ScriptFailureKind, number>);
+
+/** Map a thrown script error to the pinned {@link scriptFailureStatusCodes} status. */
+export const getScriptFailureStatusCode = (error: unknown): number => {
+  if (error instanceof SyntaxError) {
+    return scriptFailureStatusCodes.syntax;
+  }
+
+  if (error instanceof TypeError) {
+    return scriptFailureStatusCodes.type;
+  }
+
+  return scriptFailureStatusCodes.runtime;
+};
 
 /**
  * Extend the ResponseError from @withtyped/client.
