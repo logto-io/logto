@@ -20,7 +20,7 @@ describe('WorkerThreadScriptRunner runaway containment', () => {
   const runners: WorkerThreadScriptRunner[] = [];
 
   const createRunner = () => {
-    const runner = new WorkerThreadScriptRunner({ startupTimeoutMs: 5000 });
+    const runner = new WorkerThreadScriptRunner();
 
     // eslint-disable-next-line @silverhand/fp/no-mutating-methods -- test bookkeeping for teardown
     runners.push(runner);

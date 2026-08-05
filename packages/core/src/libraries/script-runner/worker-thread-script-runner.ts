@@ -17,6 +17,15 @@ import {
  */
 const workerBuildPath = 'build/workers/tasks/script-runner.js';
 
+/**
+ * Hard ceiling on pooled workers, enforced rather than emergent: the pool key includes a script
+ * hash, and the dry run routes accept an arbitrary script per request.
+ *
+ * Total script heap is bounded by `maxWorkers * limits.memoryMb`, plus a transient tail of
+ * evicted workers still draining runs that are each wall clock bounded.
+ */
+const maxWorkers = 4;
+
 const resolveWorkerPath = async () => {
   const rootDirectory = await packageDirectory();
 
@@ -26,39 +35,6 @@ const resolveWorkerPath = async () => {
 
   return path.join(rootDirectory, workerBuildPath);
 };
-
-export type WorkerThreadScriptRunnerOptions = {
-  /**
-   * Hard ceiling on pooled workers, enforced rather than emergent: the pool key includes a script
-   * hash, and the dry run routes accept an arbitrary script per request.
-   *
-   * Total script heap is bounded by `maxWorkers * limits.memoryMb`, plus a transient tail of
-   * evicted workers still draining runs that are each wall clock bounded.
-   */
-  maxWorkers?: number;
-  /** Backstop for a worker that never signals ready. Every run is separately wall clock bounded. */
-  startupTimeoutMs?: number;
-  /** How long a worker with no in-flight runs is kept for reuse. */
-  idleTtlMs?: number;
-  /** A worker stops accepting new runs after this many admissions, then drains and terminates. */
-  maxInvocationsPerWorker?: number;
-  /**
-   * Prepended to the pool key.
-   *
-   * Pooling outlives a single run, so a script's top-level state is shared by everything that maps
-   * to the same key. Pass the tenant id to keep two tenants running a byte-identical script from
-   * sharing one heap.
-   */
-  keyPrefix?: string;
-};
-
-const defaultOptions = Object.freeze({
-  maxWorkers: 4,
-  startupTimeoutMs: 5000,
-  idleTtlMs: 30_000,
-  maxInvocationsPerWorker: 1000,
-  keyPrefix: '',
-});
 
 /**
  * Runs user-authored scripts on pooled worker threads.
@@ -81,12 +57,7 @@ export class WorkerThreadScriptRunner implements ScriptRunner {
    * pool alone is not enough to shut everything down.
    */
   private readonly liveWorkers = new Set<PooledWorker>();
-  private readonly options: Required<WorkerThreadScriptRunnerOptions>;
   private readonly workerPath = resolveWorkerPath();
-
-  constructor(options: WorkerThreadScriptRunnerOptions = {}) {
-    this.options = { ...defaultOptions, ...options };
-  }
 
   /** Live pooled workers. Exposed for tests. */
   get size(): number {
@@ -135,7 +106,7 @@ export class WorkerThreadScriptRunner implements ScriptRunner {
   private buildKey(entry: ScriptEntry, script: string): string {
     const hash = createHash('sha256').update(script).digest('hex');
 
-    return `${this.options.keyPrefix}:${entry}:${hash}`;
+    return `${entry}:${hash}`;
   }
 
   /** Must never contain an `await` — see the synchronous region in {@link run}. */
@@ -157,15 +128,12 @@ export class WorkerThreadScriptRunner implements ScriptRunner {
       this.pool.delete(key);
     }
 
-    if (this.pool.size >= this.options.maxWorkers) {
+    if (this.pool.size >= maxWorkers) {
       this.evictLeastRecentlyUsed();
     }
 
     const pooled = new PooledWorker({
       ...spawn,
-      startupTimeoutMs: this.options.startupTimeoutMs,
-      idleTtlMs: this.options.idleTtlMs,
-      maxInvocationsPerWorker: this.options.maxInvocationsPerWorker,
       unpool: (worker) => {
         this.unpool(key, worker);
       },

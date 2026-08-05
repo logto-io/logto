@@ -8,6 +8,11 @@ import {
   type ScriptWorkerResponse,
 } from './worker-protocol.js';
 
+/** How long a worker with no in-flight runs is kept for reuse. */
+const idleTtlMs = 30_000;
+/** A worker stops accepting new runs after this many admissions, then drains and terminates. */
+const maxInvocationsPerWorker = 1000;
+
 type PooledWorkerOptions = {
   /** Absolute path of the built worker entry. */
   workerPath: string;
@@ -25,10 +30,6 @@ type PooledWorkerOptions = {
    * that always holds.
    */
   memoryMb: number;
-  /** Backstop for a worker that never signals ready. Every run is separately wall clock bounded. */
-  startupTimeoutMs: number;
-  idleTtlMs: number;
-  maxInvocationsPerWorker: number;
   /** Lets the pool drop its entry as soon as this worker stops accepting new runs. */
   unpool: (worker: PooledWorker) => void;
 };
@@ -75,7 +76,6 @@ export class PooledWorker {
   private state: PooledWorkerState = 'starting';
   private runIdCounter = 0;
   private admissionCount = 0;
-  private readonly startupTimer: NodeJS.Timeout | undefined;
   private idleTimer: NodeJS.Timeout | undefined;
 
   constructor(private readonly options: PooledWorkerOptions) {
@@ -90,6 +90,9 @@ export class PooledWorker {
      * The per-run deadline is the only handle this class refs. The event loop therefore stays alive
      * exactly as long as a run is outstanding, and an idle or leaked worker can never hold the
      * process — or a test runner — open.
+     *
+     * Startup has no separate timer: `reserve(wallClockMs)` arms before the caller awaits ready, so
+     * a worker that never signals still settles through the run deadline.
      */
     this.worker.unref();
 
@@ -121,11 +124,6 @@ export class PooledWorker {
         message: `The script worker exited unexpectedly with code ${code}.`,
       });
     });
-
-    this.startupTimer = setTimeout(() => {
-      this.fail({ ok: false, kind: 'timeout' });
-    }, options.startupTimeoutMs);
-    this.startupTimer.unref();
   }
 
   /** Whether the pool may hand this worker a new run. */
@@ -154,7 +152,7 @@ export class PooledWorker {
     this.admissionCount += 1;
 
     // Retire only once the run is registered, otherwise the worker would look drained and die.
-    if (this.admissionCount >= this.options.maxInvocationsPerWorker) {
+    if (this.admissionCount >= maxInvocationsPerWorker) {
       this.retire();
     }
 
@@ -226,8 +224,6 @@ export class PooledWorker {
       return;
     }
 
-    this.clearStartupTimer();
-
     if (response.type === 'startup-failed') {
       this.fail(response.failure);
       return;
@@ -269,7 +265,7 @@ export class PooledWorker {
 
     this.idleTimer = setTimeout(() => {
       this.kill();
-    }, this.options.idleTtlMs);
+    }, idleTtlMs);
     this.idleTimer.unref();
   }
 
@@ -292,15 +288,9 @@ export class PooledWorker {
 
   private kill(): void {
     this.state = 'dead';
-    this.clearStartupTimer();
     this.clearIdleTimer();
     this.options.unpool(this);
     void this.worker.terminate();
-  }
-
-  // Clearing an already-cleared or already-fired timer is a no-op, so neither handle is reset.
-  private clearStartupTimer(): void {
-    clearTimeout(this.startupTimer);
   }
 
   private clearIdleTimer(): void {

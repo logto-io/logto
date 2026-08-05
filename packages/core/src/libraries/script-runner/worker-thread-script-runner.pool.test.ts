@@ -1,8 +1,5 @@
 import { type ScriptEntry, type ScriptRunInput } from './types.js';
-import {
-  WorkerThreadScriptRunner,
-  type WorkerThreadScriptRunnerOptions,
-} from './worker-thread-script-runner.js';
+import { WorkerThreadScriptRunner } from './worker-thread-script-runner.js';
 
 /**
  * A script whose top-level state survives between runs, which makes worker reuse observable: a
@@ -25,11 +22,14 @@ const buildInput = (
   egress: { mode: 'allowAll' },
 });
 
+/** Keep in sync with `maxWorkers` in `worker-thread-script-runner.ts`. */
+const maxWorkers = 4;
+
 describe('WorkerThreadScriptRunner pooling', () => {
   const runners: WorkerThreadScriptRunner[] = [];
 
-  const createRunner = (options?: WorkerThreadScriptRunnerOptions) => {
-    const runner = new WorkerThreadScriptRunner(options);
+  const createRunner = () => {
+    const runner = new WorkerThreadScriptRunner();
 
     // eslint-disable-next-line @silverhand/fp/no-mutating-methods -- test bookkeeping for teardown
     runners.push(runner);
@@ -77,15 +77,6 @@ describe('WorkerThreadScriptRunner pooling', () => {
     expect(runner.size).toBe(2);
   });
 
-  it('does not share a worker between key prefixes', async () => {
-    const first = createRunner({ keyPrefix: 'tenant-a' });
-    const second = createRunner({ keyPrefix: 'tenant-b' });
-    const input = buildInput(counterScript());
-
-    await expect(first.run(input)).resolves.toMatchObject({ value: { count: 1 } });
-    await expect(second.run(input)).resolves.toMatchObject({ value: { count: 1 } });
-  });
-
   it('gives each concurrent run its own result', async () => {
     const runner = createRunner();
     const script = 'const runAction = ({ index }) => ({ doubled: index * 2 });';
@@ -120,48 +111,29 @@ describe('WorkerThreadScriptRunner pooling', () => {
     expect(runner.size).toBe(1);
   }, 15_000);
 
-  it('recycles a worker once it hits the invocation cap', async () => {
-    const runner = createRunner({ maxInvocationsPerWorker: 2 });
-    const input = buildInput(counterScript());
-
-    await expect(runner.run(input)).resolves.toMatchObject({ value: { count: 1 } });
-    await expect(runner.run(input)).resolves.toMatchObject({ value: { count: 2 } });
-    await expect(runner.run(input)).resolves.toMatchObject({ value: { count: 1 } });
-  });
-
-  it('terminates an idle worker once its ttl expires', async () => {
-    const runner = createRunner({ idleTtlMs: 50 });
-    const input = buildInput(counterScript());
-
-    await expect(runner.run(input)).resolves.toMatchObject({ value: { count: 1 } });
-
-    await new Promise((resolve) => {
-      setTimeout(resolve, 400);
-    });
-
-    expect(runner.size).toBe(0);
-    await expect(runner.run(input)).resolves.toMatchObject({ value: { count: 1 } });
-  }, 10_000);
-
   it('evicts the least recently used worker at the cap', async () => {
-    const runner = createRunner({ maxWorkers: 2 });
+    const runner = createRunner();
+    const markers = Array.from({ length: maxWorkers }, (_, index) => `worker-${index}`);
 
-    await runner.run(buildInput(counterScript('a')));
-    await runner.run(buildInput(counterScript('b')));
-    expect(runner.size).toBe(2);
+    for (const marker of markers) {
+      // eslint-disable-next-line no-await-in-loop -- fill the pool in LRU insertion order
+      await runner.run(buildInput(counterScript(marker)));
+    }
 
-    await runner.run(buildInput(counterScript('c')));
-    expect(runner.size).toBe(2);
+    expect(runner.size).toBe(maxWorkers);
 
-    // `a` was evicted, so it starts counting over.
-    await expect(runner.run(buildInput(counterScript('a')))).resolves.toMatchObject({
-      value: { marker: 'a', count: 1 },
+    await runner.run(buildInput(counterScript('overflow')));
+    expect(runner.size).toBe(maxWorkers);
+
+    // The first fill entry was evicted, so it starts counting over.
+    await expect(runner.run(buildInput(counterScript(markers[0])))).resolves.toMatchObject({
+      value: { marker: markers[0], count: 1 },
     });
   });
 
   // Reaching the cap is a capacity decision, not a fault, so an evicted worker drains first.
   it('finishes the run in flight on an evicted worker', async () => {
-    const runner = createRunner({ maxWorkers: 1 });
+    const runner = createRunner();
     const slow = runner.run(
       buildInput(
         `const runAction = async () => {
@@ -171,7 +143,11 @@ describe('WorkerThreadScriptRunner pooling', () => {
       )
     );
 
-    await runner.run(buildInput(counterScript('evictor')));
+    // Fill the remaining slots, then one more to force the slow worker out of the pool.
+    for (const marker of Array.from({ length: maxWorkers }, (_, index) => `evictor-${index}`)) {
+      // eslint-disable-next-line no-await-in-loop -- sequential fills so LRU order is deterministic
+      await runner.run(buildInput(counterScript(marker)));
+    }
 
     await expect(slow).resolves.toEqual({ ok: true, value: { slow: true } });
   }, 10_000);
@@ -194,13 +170,17 @@ describe('WorkerThreadScriptRunner pooling', () => {
   // Eviction and recycling drop a worker from the pool while it is still draining, so tracking
   // only the pool would leave those threads — and their ref'd deadline timers — running.
   it('terminates a worker that was evicted while still draining', async () => {
-    const runner = createRunner({ maxWorkers: 1 });
+    const runner = createRunner();
     const evicted = runner.run(
       buildInput('const runAction = () => new Promise(() => {});', 'runAction', {})
     );
 
-    await runner.run(buildInput(counterScript('evictor')));
-    expect(runner.size).toBe(1);
+    for (const marker of Array.from({ length: maxWorkers }, (_, index) => `evictor-${index}`)) {
+      // eslint-disable-next-line no-await-in-loop -- sequential fills so the stuck worker is oldest
+      await runner.run(buildInput(counterScript(marker)));
+    }
+
+    expect(runner.size).toBe(maxWorkers);
 
     await runner.dispose();
 

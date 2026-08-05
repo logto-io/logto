@@ -20,7 +20,7 @@ const buildInput = (
 });
 
 describe('WorkerThreadScriptRunner', () => {
-  const runner = new WorkerThreadScriptRunner({ startupTimeoutMs: 5000 });
+  const runner = new WorkerThreadScriptRunner();
 
   // Every worker must be torn down: there is no `forceExit` or `globalTeardown` in this package, so
   // a surviving thread would hang the run.
