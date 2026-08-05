@@ -44,7 +44,12 @@ import {
 import { runScriptFunctionInLocalVm } from '#src/utils/local-vm/index.js';
 
 import { type CloudConnectionLibrary } from './cloud-connection.js';
-import { buildScriptExecutionErrorBody, ScriptExecutionError } from './script-runner/index.js';
+import {
+  buildScriptExecutionErrorBody,
+  getScriptFailureStatusCode,
+  ScriptExecutionError,
+  scriptFailureStatusCodes,
+} from './script-runner/index.js';
 
 const apiContext: CustomJwtApiContext = Object.freeze({
   denyAccess: (message = 'Access denied') => {
@@ -58,7 +63,7 @@ const apiContext: CustomJwtApiContext = Object.freeze({
         message,
         error,
       },
-      403
+      scriptFailureStatusCodes.denied
     );
   },
 });
@@ -95,7 +100,7 @@ export class JwtCustomizerLibrary {
 
       throw new ScriptExecutionError(
         buildScriptExecutionErrorBody(error),
-        error instanceof SyntaxError || error instanceof TypeError ? 422 : 500
+        getScriptFailureStatusCode(error)
       );
     }
   }

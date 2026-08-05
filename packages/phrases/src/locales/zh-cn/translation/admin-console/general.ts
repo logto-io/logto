@@ -27,6 +27,7 @@ const general = {
   set_up: '配置',
   customize: '自定义',
   enable: '启用',
+  disable: '禁用',
   reminder: '提示',
   edit: '编辑',
   delete: '删除',

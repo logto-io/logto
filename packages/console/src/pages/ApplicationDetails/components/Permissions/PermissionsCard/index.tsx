@@ -3,7 +3,6 @@ import {
   ApplicationUserConsentScopeType,
   type ApplicationUserConsentScopesResponse,
 } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
@@ -12,10 +11,10 @@ import ActionsButton from '@/components/ActionsButton';
 import Breakable from '@/components/Breakable';
 import FormCard, { type Props as FormCardProps } from '@/components/FormCard';
 import TemplateTable from '@/components/TemplateTable';
-import { logtoThirdPartyAppPermissionsLink } from '@/consts';
 import Tag from '@/ds-components/Tag';
 import { type RequestError } from '@/hooks/use-api';
-import useDocumentationUrl from '@/hooks/use-documentation-url';
+
+import { type PermissionsPhraseGroup } from '../types';
 
 import ApplicationScopesAssignmentModal from './ApplicationScopesAssignmentModal';
 import { ScopeLevel } from './ApplicationScopesAssignmentModal/type';
@@ -26,18 +25,20 @@ import styles from './index.module.scss';
 import useScopesTable from './use-scopes-table';
 
 type Props = {
-  readonly applicationId: string;
+  /** The user consent scopes API path, without a trailing slash. */
+  readonly scopesEndpoint: string;
   readonly scopeLevel: ScopeLevel;
+  readonly phraseGroup: PermissionsPhraseGroup;
+  readonly learnMoreLink?: FormCardProps['learnMoreLink'];
 };
 
-function PermissionsCard({ applicationId, scopeLevel }: Props) {
+function PermissionsCard({ scopesEndpoint, scopeLevel, phraseGroup, learnMoreLink }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { getDocumentationUrl } = useDocumentationUrl();
 
   const { data, error, mutate, isLoading } = useSWR<
     ApplicationUserConsentScopesResponse,
     RequestError
-  >(`api/applications/${applicationId}/user-consent-scopes`);
+  >(scopesEndpoint);
 
   const { parseRowGroup, deleteScope, editScope } = useScopesTable();
 
@@ -58,18 +59,13 @@ function PermissionsCard({ applicationId, scopeLevel }: Props) {
 
     return {
       formCard: {
-        title: `application_details.permissions.${scopeLevelPhrase}_title`,
-        description: `application_details.permissions.${scopeLevelPhrase}_description`,
-        learnMoreLink: conditional(
-          scopeLevel === ScopeLevel.User && {
-            href: getDocumentationUrl(logtoThirdPartyAppPermissionsLink),
-            targetBlank: 'noopener',
-          }
-        ),
+        title: `${phraseGroup}.${scopeLevelPhrase}_title`,
+        description: `${phraseGroup}.${scopeLevelPhrase}_description`,
+        learnMoreLink,
       },
-      tableName: `application_details.permissions.grant_${scopeLevelPhrase}_level_permissions`,
+      tableName: `${phraseGroup}.grant_${scopeLevelPhrase}_level_permissions`,
     };
-  }, [getDocumentationUrl, scopeLevel]);
+  }, [learnMoreLink, phraseGroup, scopeLevel]);
 
   return (
     <FormCard {...displayTextProps.formCard}>
@@ -106,7 +102,7 @@ function PermissionsCard({ applicationId, scopeLevel }: Props) {
             render: (data) => (
               <ActionsButton
                 fieldName="application_details.permissions.name"
-                deleteConfirmation="application_details.permissions.permission_delete_confirm"
+                deleteConfirmation={`${phraseGroup}.permission_delete_confirm`}
                 textOverrides={{
                   delete: 'application_details.permissions.delete_text',
                   deleteConfirmation: 'general.remove',
@@ -120,7 +116,7 @@ function PermissionsCard({ applicationId, scopeLevel }: Props) {
                       }
                 }
                 onDelete={async () => {
-                  await deleteScope(data, applicationId);
+                  await deleteScope(data, scopesEndpoint);
                   void mutate();
                 }}
               />
@@ -135,8 +131,9 @@ function PermissionsCard({ applicationId, scopeLevel }: Props) {
       {data && (
         <ApplicationScopesAssignmentModal
           isOpen={isAssignScopesModalOpen}
-          applicationId={applicationId}
+          scopesEndpoint={scopesEndpoint}
           scopeLevel={scopeLevel}
+          phraseGroup={phraseGroup}
           onClose={() => {
             setIsAssignScopesModalOpen(false);
           }}

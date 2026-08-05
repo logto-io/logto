@@ -78,6 +78,38 @@ const applications = {
     'O Logto usa uma entidade de aplicativo para OIDC para ajudar em tarefas como identificar seus aplicativos, gerenciar o registro e criar registros de auditoria.',
   third_party_application_placeholder_description:
     'Use o Logto como um Provedor de Identidade para fornecer autorização OAuth para serviços de terceiros. \n Inclui uma tela de consentimento do utilizador pré-construída para acesso a recursos. <a>Saiba mais</a>',
+  dynamic_app: {
+    title: 'Aplicação dinâmica',
+    subtitle: 'CIMD',
+    description: 'A aplicação dinâmica permite que clientes OAuth se liguem sem registo prévio.',
+    settings_description:
+      'A aplicação dinâmica permite que clientes OAuth se liguem sem registo prévio. Usa a especificação OAuth Client ID Metadata Document (CIMD).',
+    app_id_placeholder: 'Fornecido dinamicamente por cada cliente',
+    enable_confirm_modal: {
+      title: 'Ativar o acesso dinâmico de clientes?',
+      content:
+        'Qualquer cliente OAuth com um URL de ID de cliente HTTPS público e válido pode iniciar a autorização para este inquilino sem registo prévio. O acesso permanece limitado pelas suas permissões máximas e pelo consentimento do utilizador.',
+    },
+    enabled: 'Aplicação dinâmica ativada com sucesso.',
+    disable_confirm_modal: {
+      title: 'Desativar a aplicação dinâmica?',
+      content:
+        'Os clientes CIMD deixarão de poder iniciar novos pedidos de autorização. As concessões existentes serão mantidas e os tokens de acesso emitidos podem permanecer válidos até expirarem.',
+    },
+    disabled: 'Aplicação dinâmica desativada com sucesso.',
+    permissions: {
+      user_title: 'Utilizador',
+      user_description:
+        'Selecione as permissões solicitadas pelos clientes OAuth para aceder a dados específicos do utilizador.',
+      grant_user_level_permissions: 'Conceder permissões de utilizador',
+      organization_title: 'Organização',
+      organization_description:
+        'Selecione as permissões solicitadas pelos clientes OAuth para aceder a dados específicos da organização.',
+      grant_organization_level_permissions: 'Conceder permissões de organização',
+      permission_delete_confirm:
+        'Esta ação irá remover a permissão da aplicação dinâmica, impedindo os clientes OAuth de solicitarem a autorização do utilizador para a mesma. Tem a certeza de que deseja continuar?',
+    },
+  },
   guide: {
     third_party: {
       title: 'Integrar uma aplicação de terceiros',

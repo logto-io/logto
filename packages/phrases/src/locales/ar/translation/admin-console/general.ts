@@ -27,6 +27,7 @@ const general = {
   set_up: 'إعداد',
   customize: 'تخصيص',
   enable: 'تمكين',
+  disable: 'تعطيل',
   reminder: 'تذكير',
   edit: 'تعديل',
   delete: 'حذف',

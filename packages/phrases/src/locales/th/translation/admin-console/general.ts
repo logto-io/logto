@@ -27,6 +27,7 @@ const general = {
   set_up: 'ตั้งค่า',
   customize: 'ปรับแต่ง',
   enable: 'เปิดใช้งาน',
+  disable: 'ปิดใช้งาน',
   reminder: 'เตือนความจำ',
   edit: 'แก้ไข',
   delete: 'ลบ',

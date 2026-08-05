@@ -27,6 +27,7 @@ const general = {
   set_up: '設定する',
   customize: 'カスタマイズする',
   enable: '有効にする',
+  disable: '無効にする',
   reminder: 'リマインダー',
   edit: '編集',
   delete: '削除',

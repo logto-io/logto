@@ -101,8 +101,8 @@ export const defaultLogtoSku: LogtoSkuResponse = {
 export const defaultSubscriptionQuota: SubscriptionQuota = {
   mauLimit: 50_000,
   tokenLimit: 500_000,
-  hostedEmailLimit: 30_000,
-  hostedEmailDailyLimit: 1000,
+  hostedEmailLimit: 100_000,
+  hostedEmailDailyLimit: 10_000,
   applicationsLimit: 3,
   machineToMachineLimit: 1,
   resourcesLimit: 1,

@@ -27,6 +27,7 @@ const general = {
   set_up: '설정',
   customize: '사용자화',
   enable: '활성화',
+  disable: '비활성화',
   reminder: '리마인더',
   edit: '편집',
   delete: '삭제',

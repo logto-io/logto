@@ -43,6 +43,10 @@ export type EgressPolicy = { mode: 'allowAll' } | { mode: 'denyAll' };
  * Failures are values rather than exceptions so both runners report the same set of kinds. The
  * mapping to HTTP status codes is unchanged from the local VM implementation: `denied` → 403,
  * `syntax` and `type` → 422, and everything else → 500.
+ *
+ * Call-site validation of a successful return value (e.g. Custom JWT's Zod `z.record` parse) is
+ * intentionally outside this union and keeps today's 400 "Invalid input" response — it is not a
+ * runner failure kind and must not be folded into `type`.
  */
 export type ScriptResult =
   | { ok: true; value: unknown }
@@ -54,8 +58,12 @@ export type ScriptResult =
    */
   | { ok: false; kind: 'timeout' | 'oom' }
   /**
-   * The script could not be compiled (`syntax`), or it does not expose a callable entry function
-   * or returned a value the caller cannot use (`type`).
+   * The script could not be compiled (`syntax`), or the runner could not invoke/transfer the run
+   * (`type`): missing or non-function entry, or a payload/return value that is not
+   * structured-cloneable across the worker boundary.
+   *
+   * Does not cover call-site validation of a successfully returned value (e.g. Custom JWT's Zod
+   * `z.record` parse) — that stays at 400 (see the {@link ScriptResult} note above).
    */
   | { ok: false; kind: 'syntax' | 'type'; message: string; stack?: string }
   /** The script threw while running. */
@@ -64,7 +72,13 @@ export type ScriptResult =
 export type ScriptRunInput = {
   script: string;
   entry: ScriptEntry;
-  /** Must be structured-cloneable: runners may pass it across a thread or process boundary. */
+  /**
+   * Structured-cloneable data only. Runners may pass it across a thread or process boundary.
+   *
+   * Capability APIs such as `api` (with `denyAccess`) are not part of the payload: the runner
+   * constructs and injects them on its side — functions cannot cross the structured-clone
+   * boundary — and a denial comes back as `{ kind: 'denied' }`.
+   */
   payload: Record<string, unknown>;
   limits: ScriptLimits;
   egress: EgressPolicy;

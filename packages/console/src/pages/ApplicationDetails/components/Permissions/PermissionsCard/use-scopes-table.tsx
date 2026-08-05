@@ -149,8 +149,8 @@ const useScopesTable = () => {
   );
 
   const deleteScope = useCallback(
-    async (scope: ScopesTableRowDataType, applicationId: string) =>
-      api.delete(`api/applications/${applicationId}/user-consent-scopes/${scope.type}/${scope.id}`),
+    async (scope: ScopesTableRowDataType, scopesEndpoint: string) =>
+      api.delete(`${scopesEndpoint}/${scope.type}/${scope.id}`),
     [api]
   );
 

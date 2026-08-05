@@ -77,6 +77,38 @@ const applications = {
     'Logto uses an application entity for OIDC to help with tasks such as identifying your apps, managing sign-in, and creating audit logs.',
   third_party_application_placeholder_description:
     'Use Logto as an Identity Provider to provide OAuth authorization to third-party services. Includes a prebuilt user consent screen for resource access. <a>Learn more</a>',
+  dynamic_app: {
+    title: 'Dynamic app',
+    subtitle: 'CIMD',
+    description: 'Dynamic app allows OAuth clients to connect without pre-registration.',
+    settings_description:
+      'Dynamic app allows OAuth clients to connect without pre-registration. Uses the OAuth Client ID Metadata Document (CIMD) specification.',
+    app_id_placeholder: 'Provided dynamically by each client',
+    enable_confirm_modal: {
+      title: 'Enable dynamic client access?',
+      content:
+        'Any OAuth client with a valid public HTTPS client ID URL can initiate authorization for this tenant without pre-registration. Access remains limited by your maximum permissions and user consent.',
+    },
+    enabled: 'Dynamic app enabled successfully.',
+    disable_confirm_modal: {
+      title: 'Disable dynamic app?',
+      content:
+        'CIMD clients will no longer be able to start new authorization requests. Existing grants will be retained, and issued access tokens may remain valid until they expire.',
+    },
+    disabled: 'Dynamic app disabled successfully.',
+    permissions: {
+      user_title: 'User',
+      user_description:
+        'Select the permissions requested by OAuth clients for accessing specific user data.',
+      grant_user_level_permissions: 'Grant user permissions',
+      organization_title: 'Organization',
+      organization_description:
+        'Select the permissions requested by OAuth clients for accessing specific organization data.',
+      grant_organization_level_permissions: 'Grant organization permissions',
+      permission_delete_confirm:
+        'This action will remove the permission from the dynamic app, preventing OAuth clients from requesting user authorization for it. Are you sure you want to continue?',
+    },
+  },
   guide: {
     third_party: {
       title: 'Integrate a third-party application',

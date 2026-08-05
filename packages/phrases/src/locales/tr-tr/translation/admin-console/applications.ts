@@ -78,6 +78,39 @@ const applications = {
     'Logto, uygulamanızı tanımlamaya, oturum açmayı yönetmeye ve denetim kayıtları oluşturmaya yardımcı olmak için OIDC için bir uygulama varlığı kullanır.',
   third_party_application_placeholder_description:
     'Üçüncü taraf hizmetlere OAuth yetkilendirmesi sağlamak için Logtoyu bir Kimlik Sağlayıcı olarak kullanın. \n Kaynak erişimi için önceden oluşturulmuş bir kullanıcı onay ekranı içerir. <a>Daha fazla bilgi edinin</a>',
+  dynamic_app: {
+    title: 'Dinamik uygulama',
+    subtitle: 'CIMD',
+    description:
+      'Dinamik uygulama, OAuth istemcilerinin önceden kayıt olmadan bağlanmasına olanak tanır.',
+    settings_description:
+      'Dinamik uygulama, OAuth istemcilerinin önceden kayıt olmadan bağlanmasına olanak tanır. OAuth Client ID Metadata Document (CIMD) belirtimini kullanır.',
+    app_id_placeholder: 'Her istemci tarafından dinamik olarak sağlanır',
+    enable_confirm_modal: {
+      title: 'Dinamik istemci erişimi etkinleştirilsin mi?',
+      content:
+        "Geçerli bir genel HTTPS istemci kimliği URL'sine sahip her OAuth istemcisi, önceden kayıt olmadan bu kiracı için yetkilendirme başlatabilir. Erişim, azami izinleriniz ve kullanıcı onayı ile sınırlı kalmaya devam eder.",
+    },
+    enabled: 'Dinamik uygulama başarıyla etkinleştirildi.',
+    disable_confirm_modal: {
+      title: 'Dinamik uygulama devre dışı bırakılsın mı?',
+      content:
+        'CIMD istemcileri artık yeni yetkilendirme istekleri başlatamaz. Mevcut izinler korunur ve verilmiş erişim belirteçleri süreleri dolana kadar geçerli kalabilir.',
+    },
+    disabled: 'Dinamik uygulama başarıyla devre dışı bırakıldı.',
+    permissions: {
+      user_title: 'Kullanıcı',
+      user_description:
+        'OAuth istemcilerinin belirli kullanıcı verilerine erişmek için istediği izinleri seçin.',
+      grant_user_level_permissions: 'Kullanıcı izinlerini ver',
+      organization_title: 'Organizasyon',
+      organization_description:
+        'OAuth istemcilerinin belirli organizasyon verilerine erişmek için istediği izinleri seçin.',
+      grant_organization_level_permissions: 'Organizasyon izinlerini ver',
+      permission_delete_confirm:
+        'Bu işlem, izni dinamik uygulamadan kaldıracak ve OAuth istemcilerinin bu izin için kullanıcı yetkilendirmesi istemesini engelleyecektir. Devam etmek istediğinizden emin misiniz?',
+    },
+  },
   guide: {
     third_party: {
       title: 'Üçüncü taraf uygulamayı entegre et',

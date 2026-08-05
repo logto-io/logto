@@ -100,6 +100,11 @@ const jwt_claims = {
     run_button: 'テストを実行',
     result_title: 'テスト結果',
   },
+  sandbox_warning: {
+    title: 'スクリプトはサーバー権限で実行されます',
+    description:
+      'セルフホスト版 Logto では、このスクリプトは Logto 本体と同じ環境で実行されます。サーバーの環境変数を読み取り、内部ネットワーク上のサービスに到達できます。サンドボックス化されていません。サーバーへのアクセスを許可してもよい相手にのみ、このページへのアクセスを付与してください。',
+  },
   form_error: {
     invalid_json: '無効なJSON形式',
   },

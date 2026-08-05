@@ -27,6 +27,7 @@ const general = {
   set_up: 'Imposta',
   customize: 'Personalizza',
   enable: 'Abilita',
+  disable: 'Disabilita',
   reminder: 'Promemoria',
   edit: 'Modifica',
   delete: 'Elimina',

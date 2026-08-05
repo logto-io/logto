@@ -106,6 +106,11 @@ const jwt_claims = {
     run_button: 'Esegui test',
     result_title: 'Risultato del test',
   },
+  sandbox_warning: {
+    title: 'Gli script vengono eseguiti con i privilegi del server',
+    description:
+      'Su Logto self-hosted, questo script viene eseguito nello stesso ambiente di Logto: può leggere le variabili d’ambiente del server e raggiungere i servizi della rete interna. Non è sandboxato. Concedi l’accesso a questa pagina solo a persone a cui fidaresti l’accesso al server.',
+  },
   form_error: {
     invalid_json: 'Formato JSON non valido',
   },

@@ -27,6 +27,7 @@ const general = {
   set_up: 'Set up',
   customize: 'Customize',
   enable: 'Enable',
+  disable: 'Disable',
   reminder: 'Reminder',
   edit: 'Edit',
   delete: 'Delete',
