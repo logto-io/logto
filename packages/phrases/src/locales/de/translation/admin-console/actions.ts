@@ -77,6 +77,16 @@ const actions = {
   form_error: {
     invalid_json: 'Ungültiges JSON-Format',
   },
+  sandbox_and_security_warning: {
+    title: 'Skripte laufen mit Serverrechten',
+    description:
+      'Bei selbst gehostetem Logto läuft dieses Skript in derselben Umgebung wie Logto selbst: Es kann Server-Umgebungsvariablen lesen und Dienste in deinem internen Netzwerk erreichen. Es ist nicht sandboxed. Gib nur Personen Zugriff auf diese Seite, denen du auch Zugriff auf den Server anvertrauen würdest. Diese Aktion wird nur ausgeführt, nachdem die lokale Passwortüberprüfung fehlgeschlagen ist — gib `passwordVerified: true` erst zurück, nachdem das übermittelte Passwort unabhängig überprüft wurde. Durch diese Aktion bereitgestellte Benutzer umgehen nur für die Registrierung geltende Schutzmaßnahmen, einschließlich E-Mail-Blockliste, SSO-only-Domain, deaktiviertem Anmeldemodus und Pflichtprofilprüfungen bei der Registrierung. Profil- und Passwortänderungen bestehender Benutzer erfolgen außerdem, bevor MFA abgeschlossen ist.',
+  },
+  sandbox_warning: {
+    title: 'Skripte laufen mit Serverrechten',
+    description:
+      'Bei selbst gehostetem Logto läuft dieses Skript in derselben Umgebung wie Logto selbst: Es kann Server-Umgebungsvariablen lesen und Dienste in deinem internen Netzwerk erreichen. Es ist nicht sandboxed. Gib nur Personen Zugriff auf diese Seite, denen du auch Zugriff auf den Server anvertrauen würdest.',
+  },
   security_warning: {
     title: 'Sicherheitswarnung',
     description:

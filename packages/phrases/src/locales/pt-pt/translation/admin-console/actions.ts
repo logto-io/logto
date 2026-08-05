@@ -76,6 +76,16 @@ const actions = {
   form_error: {
     invalid_json: 'Formato JSON inválido',
   },
+  sandbox_and_security_warning: {
+    title: 'Os scripts são executados com privilégios do servidor',
+    description:
+      'No Logto self-hosted, este script é executado no mesmo ambiente que o próprio Logto: pode ler variáveis de ambiente do servidor e alcançar serviços na sua rede interna. Não está em sandbox. Dê acesso a esta página apenas a pessoas a quem confiaria o acesso ao servidor. Esta ação é executada apenas após a falha da verificação da palavra-passe local — devolva `passwordVerified: true` apenas depois de verificar de forma independente a palavra-passe submetida. Os utilizadores provisionados por esta ação contornam proteções exclusivas do registo, incluindo a blocklist de e-mail, o domínio apenas SSO, o modo de registo desativado e as verificações de perfil obrigatório no registo. As escritas de perfil e palavra-passe de utilizadores existentes também ocorrem antes da conclusão da MFA.',
+  },
+  sandbox_warning: {
+    title: 'Os scripts são executados com privilégios do servidor',
+    description:
+      'No Logto self-hosted, este script é executado no mesmo ambiente que o próprio Logto: pode ler variáveis de ambiente do servidor e alcançar serviços na sua rede interna. Não está em sandbox. Dê acesso a esta página apenas a pessoas a quem confiaria o acesso ao servidor.',
+  },
   security_warning: {
     title: 'Aviso de segurança',
     description:
