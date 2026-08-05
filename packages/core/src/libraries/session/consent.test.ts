@@ -5,6 +5,7 @@ import type { Provider } from 'oidc-provider';
 import { mockUser } from '#src/__mocks__/user.js';
 import { markAppLevelAccessControlChecked } from '#src/oidc/application-access-control.js';
 import type Queries from '#src/tenants/Queries.js';
+import { mockEnvSet } from '#src/test-utils/env-set.js';
 import { GrantMock, createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
@@ -63,6 +64,7 @@ describe('consent', () => {
     await consent({
       ctx: context,
       provider,
+      envSet: mockEnvSet,
       queries,
       interactionDetails: baseInteractionDetails,
     });
@@ -94,6 +96,7 @@ describe('consent', () => {
     await consent({
       ctx: context,
       provider,
+      envSet: mockEnvSet,
       queries,
       interactionDetails,
     });
@@ -118,6 +121,7 @@ describe('consent', () => {
     await consent({
       ctx: context,
       provider,
+      envSet: mockEnvSet,
       queries,
       interactionDetails: baseInteractionDetails,
       markAppLevelAccessControlChecked: true,
@@ -153,6 +157,7 @@ describe('consent', () => {
     await consent({
       ctx: context,
       provider,
+      envSet: mockEnvSet,
       queries,
       interactionDetails: baseInteractionDetails,
     });
@@ -167,6 +172,7 @@ describe('consent', () => {
     await consent({
       ctx: context,
       provider,
+      envSet: mockEnvSet,
       queries,
       interactionDetails: baseInteractionDetails,
       missingOIDCScopes: ['openid', 'profile'],

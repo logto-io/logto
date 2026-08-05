@@ -22,7 +22,7 @@ type NullablePick<T, K extends keyof T> = {
   [P in K]: Nullable<T[P]>;
 };
 export type SessionInstanceWithExtension = SessionInstance &
-  NullablePick<OidcSessionExtension, 'lastSubmission' | 'clientId' | 'accountId'>;
+  NullablePick<OidcSessionExtension, 'lastSubmission' | 'clientId' | 'cimdClientId' | 'accountId'>;
 
 export class OidcSessionExtensionsQueries {
   public readonly insert = buildInsertIntoWithPool(this.pool)(OidcSessionExtensions, {
@@ -33,6 +33,7 @@ export class OidcSessionExtensionsQueries {
         fields.updatedAt,
         fields.accountId,
         fields.clientId,
+        fields.cimdClientId,
       ],
     },
     returning: true,
@@ -74,6 +75,7 @@ export class OidcSessionExtensionsQueries {
           ...Object.values(modelInstanceFieldsWithoutTenantId),
           fields.lastSubmission,
           fields.clientId,
+          fields.cimdClientId,
           fields.accountId,
         ],
         sql`, `
@@ -100,6 +102,7 @@ export class OidcSessionExtensionsQueries {
           ...Object.values(modelInstanceFieldsWithoutTenantId),
           fields.lastSubmission,
           fields.clientId,
+          fields.cimdClientId,
           fields.accountId,
         ],
         sql`, `
