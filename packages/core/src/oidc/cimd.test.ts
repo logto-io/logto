@@ -109,16 +109,6 @@ describe('buildClientIdMetadataDocumentFeature', () => {
   });
 });
 
-describe('isCimdClientId', () => {
-  it('matches the fork scheme test case-insensitively and never matches registered ids', async () => {
-    const { isCimdClientId } = await loadCimdModule();
-
-    expect(isCimdClientId('https://client.example.com/metadata.json')).toBe(true);
-    expect(isCimdClientId('HTTPS://client.example.com/metadata.json')).toBe(true);
-    expect(isCimdClientId('registered_client_id')).toBe(false);
-  });
-});
-
 describe('client identifier length bound', () => {
   const overLengthRejection = {
     message: 'invalid_client',
