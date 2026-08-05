@@ -1,7 +1,6 @@
 import { type User } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import type { Provider } from 'oidc-provider';
-import { errors } from 'oidc-provider';
 import Sinon from 'sinon';
 
 import { mockUser } from '#src/__mocks__/user.js';
@@ -46,13 +45,6 @@ const buildInteractionDetails = (clientId: string) =>
     lastSubmission: { foo: 'bar' },
   }) as unknown as Interaction;
 
-const buildProvider = (interactionDetails: Interaction, client?: unknown) => {
-  const provider = createMockProvider(jest.fn().mockResolvedValue(interactionDetails), Grant);
-  Sinon.stub(provider, 'Client').value({ find: async () => client });
-
-  return provider;
-};
-
 describe('saveInteractionLastSubmissionToSession', () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -92,7 +84,7 @@ describe('saveInteractionLastSubmissionToSession while CIMD is effectively enabl
   const cimdClientId = 'https://client.example.com/metadata.json';
 
   /**
-   * The predicate reads only `oidc.cimdEnabled` from the tenant env set; the static flags are
+   * The gate reads only `oidc.cimdEnabled` from the tenant env set; the static flags are
    * stubbed onto `EnvSet.values` below.
    */
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal env-set stub scoped to the field the gate reads
@@ -113,8 +105,7 @@ describe('saveInteractionLastSubmissionToSession while CIMD is effectively enabl
 
   it('should write a cimd client identifier to the dedicated column and skip the app attribution', async () => {
     const interactionDetails = buildInteractionDetails(cimdClientId);
-    /** The fork resolver stamps this marker onto every client it builds from a metadata document. */
-    const provider = buildProvider(interactionDetails, { clientIdMetadataDocument: true });
+    const provider = createMockProvider(jest.fn().mockResolvedValue(interactionDetails), Grant);
 
     await consent({
       ctx: context,
@@ -141,7 +132,7 @@ describe('saveInteractionLastSubmissionToSession while CIMD is effectively enabl
       applicationId: null,
     }));
     const interactionDetails = buildInteractionDetails('registeredClientId');
-    const provider = buildProvider(interactionDetails, {});
+    const provider = createMockProvider(jest.fn().mockResolvedValue(interactionDetails), Grant);
 
     await consent({
       ctx: context,
@@ -161,23 +152,5 @@ describe('saveInteractionLastSubmissionToSession while CIMD is effectively enabl
     expect(userQueries.updateUserById).toHaveBeenCalledWith(mockUser.id, {
       applicationId: 'registeredClientId',
     });
-  });
-
-  it('should reject without persisting anything when the client cannot be resolved', async () => {
-    const interactionDetails = buildInteractionDetails('registeredClientId');
-    const provider = buildProvider(interactionDetails);
-
-    await expect(
-      consent({
-        ctx: context,
-        provider,
-        envSet: cimdEnvSet,
-        queries,
-        interactionDetails,
-      })
-    ).rejects.toThrow(errors.InvalidClient);
-
-    expect(oidcSessionExtensionsInsert).not.toHaveBeenCalled();
-    expect(userQueries.updateUserById).not.toHaveBeenCalled();
   });
 });

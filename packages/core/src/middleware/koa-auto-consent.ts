@@ -7,7 +7,7 @@ import { type EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { consent, getMissingScopes } from '#src/libraries/session/index.js';
 import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
-import { isCimdEffectivelyEnabled } from '#src/oidc/cimd.js';
+import { isCimdClientId, isCimdEffectivelyEnabled } from '#src/oidc/cimd.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -22,7 +22,7 @@ const shouldAutoConsentApplication = async (clientId: string, query: Queries, en
   } = query;
 
   // DEV: CIMD (client ID metadata document) support
-  if (isCimdEffectivelyEnabled(envSet) && clientId.startsWith('https://')) {
+  if (isCimdEffectivelyEnabled(envSet) && isCimdClientId(clientId)) {
     /**
      * Registered application ids never take the URL shape, and authorization has already
      * resolved this client — a URL here is a CIMD client, which is never first-party.

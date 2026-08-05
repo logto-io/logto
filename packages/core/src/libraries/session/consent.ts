@@ -7,7 +7,7 @@ import { z } from 'zod';
 
 import { type EnvSet } from '#src/env-set/index.js';
 import { markAppLevelAccessControlChecked } from '#src/oidc/application-access-control.js';
-import { isCimdEffectivelyEnabled } from '#src/oidc/cimd.js';
+import { isCimdClientId, isCimdEffectivelyEnabled } from '#src/oidc/cimd.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -44,28 +44,16 @@ type ClientIdentifiers = {
 };
 
 /**
- * The `client_id` param alone cannot tell a registered application from a CIMD client, so the
- * resolved client instance's marker decides. While CIMD is not effectively enabled the lookup
- * is skipped: only registered applications can reach consent then.
+ * The identifier shape is a sufficient classifier here: registered application ids never take
+ * the URL shape, and authorization has already resolved the client — resolving it again via
+ * `provider.Client.find` would cost a lookup (or an outbound document fetch on a cold cache)
+ * on every consent submission for the same verdict.
  */
-const identifyClient = async (
-  provider: Provider,
-  envSet: EnvSet,
-  clientId: string
-): Promise<ClientIdentifiers> => {
+const identifyClient = (envSet: EnvSet, clientId: string): ClientIdentifiers =>
   // DEV: CIMD (client ID metadata document) support
-  if (!isCimdEffectivelyEnabled(envSet)) {
-    return { registeredClientId: clientId };
-  }
-
-  const client = await provider.Client.find(clientId);
-
-  assertThat(client, new errors.InvalidClient('client must be available'));
-
-  return client.clientIdMetadataDocument
+  isCimdEffectivelyEnabled(envSet) && isCimdClientId(clientId)
     ? { cimdClientId: clientId }
     : { registeredClientId: clientId };
-};
 
 /**
  * Persists the interaction's `lastSubmission` information to the session for future reference.
@@ -153,7 +141,7 @@ export const consent = async ({
 
   const { accountId } = session;
 
-  const { registeredClientId, cimdClientId } = await identifyClient(provider, envSet, clientId);
+  const { registeredClientId, cimdClientId } = identifyClient(envSet, clientId);
 
   const grant =
     conditional(grantId && (await provider.Grant.find(grantId))) ??
