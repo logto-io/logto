@@ -151,7 +151,7 @@ export class OrganizationInvitationLibrary {
     status: OrganizationInvitationStatus.Accepted,
     acceptedUserId: string
   ): Promise<OrganizationInvitationEntity>;
-  
+
   async updateStatus(
     id: string,
     status: OrganizationInvitationStatus,
