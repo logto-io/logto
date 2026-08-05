@@ -10,8 +10,16 @@
  */
 
 import { conditional, type Optional } from '@silverhand/essentials';
+import { type Client, type KoaContextWithOIDC } from 'oidc-provider';
 
 import { EnvSet } from '#src/env-set/index.js';
+
+/**
+ * Must not exceed the `cimd_client_id varchar(2048)` column width — neither the draft nor the
+ * provider defines a maximum, so this bound is what keeps an over-long identifier an
+ * `invalid_client` rather than a database error.
+ */
+const cimdClientIdMaxLength = 2048;
 
 /**
  * Whether CIMD is effectively enabled for the tenant. All three conditions must hold:
@@ -43,16 +51,29 @@ export const isCimdEffectivelyEnabled = (envSet: EnvSet): boolean =>
  * behavior change.
  *
  * The explicit return type stands in for `@types/oidc-provider`, which does not declare this
- * draft feature of the fork.
+ * draft feature of the fork. A falsy return from either callback makes the provider throw
+ * `InvalidClient`.
  */
 export const buildClientIdMetadataDocumentFeature = (
   envSet: EnvSet
-): Optional<{ clientIdMetadataDocument: { enabled: true; ack: 'draft-02' } }> =>
+): Optional<{
+  clientIdMetadataDocument: {
+    enabled: true;
+    ack: 'draft-02';
+    allowFetch: (ctx: KoaContextWithOIDC | undefined, clientId: string) => boolean;
+    allowClient: (ctx: KoaContextWithOIDC | undefined, client: Client) => boolean;
+  };
+}> =>
   conditional(
     isCimdEffectivelyEnabled(envSet) && {
       clientIdMetadataDocument: {
         enabled: true,
         ack: 'draft-02',
+        allowFetch: (_ctx: KoaContextWithOIDC | undefined, clientId: string) =>
+          clientId.length <= cimdClientIdMaxLength,
+        /** Cache hits skip `allowFetch`, so the bound must repeat here. */
+        allowClient: (_ctx: KoaContextWithOIDC | undefined, client: Client) =>
+          client.clientId.length <= cimdClientIdMaxLength,
       },
     }
   );
