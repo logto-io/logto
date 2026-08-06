@@ -1,8 +1,10 @@
+/* eslint-disable max-lines */
 import { UserScope } from '@logto/core-kit';
 import { type KoaContextWithOIDC, errors, type Adapter } from 'oidc-provider';
 import Sinon from 'sinon';
 
 import { mockApplication } from '#src/__mocks__/index.js';
+import { type EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { getProviderConfiguration } from '#src/oidc/oidc-provider-internals.js';
 import { createOidcContext } from '#src/test-utils/oidc-provider.js';
@@ -443,3 +445,87 @@ describe('refresh token grant', () => {
     });
   });
 });
+
+// DEV: CIMD (client ID metadata document) support
+describe('refresh token grant for CIMD clients', () => {
+  const cimdClientId = 'https://client.example.com/metadata.json';
+
+  /**
+   * The gate reads only `oidc.cimdEnabled` from the tenant env set; the jest environment keeps
+   * the dev-features and SSRF-protection static flags on already.
+   */
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal env-set stub scoped to the field the gate reads
+  const cimdEnvSet = { oidc: { cimdEnabled: true } } as EnvSet;
+
+  const cimdClient: Client = {
+    clientId: cimdClientId,
+    grantTypeAllowed: jest.fn().mockResolvedValue(true),
+    clientAuthMethod: 'none',
+    metadata: jest.fn(() => ({ client_id: cimdClientId })),
+  } as unknown as Client;
+
+  const buildCimdHandler = (tenant: MockTenant, envSet: EnvSet = cimdEnvSet) =>
+    buildHandler(envSet, tenant.queries, { assertUserHasApplicationAccess });
+
+  const createCimdPreparedContext = () => {
+    const ctx = createOidcContext({
+      ...validOidcContext,
+      entities: { ...validOidcContext.entities, Client: cimdClient },
+      client: cimdClient,
+    });
+    stubRefreshToken(ctx, { clientId: cimdClientId });
+    stubGrant(ctx, { clientId: cimdClientId });
+    stubAccount(ctx);
+    return ctx;
+  };
+
+  afterEach(() => {
+    assertUserHasApplicationAccess.mockClear();
+  });
+
+  it('should skip the application access check and the organization grant lookup', async () => {
+    const ctx = createCimdPreparedContext();
+    const tenant = new MockTenant();
+
+    Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(true);
+    const findApplicationById = Sinon.stub(tenant.queries.applications, 'findApplicationById');
+    const userConsentOrganizationExists = Sinon.stub(
+      tenant.queries.applications.userConsentOrganizations,
+      'exists'
+    );
+    Sinon.stub(tenant.queries.organizations.relations.usersRoles, 'getUserScopes').resolves([
+      { tenantId: 'default', id: 'foo', name: 'foo', description: 'foo' },
+      { tenantId: 'default', id: 'bar', name: 'bar', description: 'bar' },
+    ]);
+    Sinon.stub(tenant.queries.organizations, 'getMfaStatus').resolves({
+      isMfaRequired: false,
+      hasMfaConfigured: false,
+    });
+
+    await expect(buildCimdHandler(tenant)(ctx)).resolves.toBeUndefined();
+
+    expect(assertUserHasApplicationAccess).not.toHaveBeenCalled();
+    expect(findApplicationById.called).toBe(false);
+    expect(userConsentOrganizationExists.called).toBe(false);
+  });
+
+  it('should keep the organization membership gate', async () => {
+    const ctx = createCimdPreparedContext();
+    const tenant = new MockTenant();
+    Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(false);
+
+    await expect(buildCimdHandler(tenant)(ctx)).rejects.toThrow(
+      createAccessDeniedError('user is not a member of the organization', 403)
+    );
+  });
+
+  it('should keep the application access check for a url client id when CIMD is not effectively enabled', async () => {
+    const ctx = createCimdPreparedContext();
+    const tenant = new MockTenant();
+    assertUserHasApplicationAccess.mockRejectedValueOnce(new RequestError('oidc.access_denied'));
+
+    await expect(buildCimdHandler(tenant, tenant.envSet)(ctx)).rejects.toThrow(errors.AccessDenied);
+    expect(assertUserHasApplicationAccess).toHaveBeenCalled();
+  });
+});
+/* eslint-enable max-lines */
