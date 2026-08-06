@@ -3,6 +3,7 @@ import type { Provider } from 'oidc-provider';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 
 import {
+  getRedirectUriMatchType,
   installWildcardRedirectUriMatching,
   isValidWildcardRedirectUriPattern,
   wildcardUrlMatch,
@@ -284,5 +285,72 @@ describe('postLogoutRedirectUriAllowed override', () => {
     // …and RP-Initiated Logout has no loopback exception: variable ports never match.
     expect(postLogoutRedirectUriAllowed.call(cimdClient, 'http://localhost/bye')).toBe(true);
     expect(postLogoutRedirectUriAllowed.call(cimdClient, 'http://localhost:49152/bye')).toBe(false);
+  });
+});
+
+describe('getRedirectUriMatchType', () => {
+  const client = asClient({
+    applicationType: 'web',
+    redirectUris: ['https://*.example.com/callback', 'https://exact.example.org/cb'],
+  });
+
+  it('classifies literal registrations as exact and pattern registrations as wildcard', () => {
+    expect(getRedirectUriMatchType(client, 'https://exact.example.org/cb')).toBe('exact');
+    expect(getRedirectUriMatchType(client, 'https://tenant.example.com/callback')).toBe('wildcard');
+    expect(getRedirectUriMatchType(client, 'https://tenant.example.net/callback')).toBeUndefined();
+  });
+
+  it('prefers exact when a value matches both a literal and a pattern registration', () => {
+    const overlapping = asClient({
+      applicationType: 'web',
+      redirectUris: ['https://*.example.com/callback', 'https://tenant.example.com/callback'],
+    });
+
+    expect(getRedirectUriMatchType(overlapping, 'https://tenant.example.com/callback')).toBe(
+      'exact'
+    );
+  });
+
+  it('rejects candidate values containing a wildcard or failing to parse', () => {
+    expect(getRedirectUriMatchType(client, 'https://*.example.com/callback')).toBeUndefined();
+    expect(getRedirectUriMatchType(client, 'not-a-url')).toBeUndefined();
+  });
+
+  it('classifies the loopback port retry as exact for native registered applications only', () => {
+    const nativeClient = asClient({
+      applicationType: 'native',
+      redirectUris: ['http://127.0.0.1:3000/cb'],
+    });
+    const webClient = asClient({
+      applicationType: 'web',
+      redirectUris: ['http://127.0.0.1:3000/cb'],
+    });
+
+    expect(getRedirectUriMatchType(nativeClient, 'http://127.0.0.1:49152/cb')).toBe('exact');
+    expect(getRedirectUriMatchType(webClient, 'http://127.0.0.1:49152/cb')).toBeUndefined();
+  });
+
+  // DEV: CIMD (client ID metadata document) support
+  it('classifies cimd raw-string and loopback matches as exact, patterns as wildcard', () => {
+    const cimdClient = asClient({
+      clientId: 'https://client.example.com/oauth/metadata.json',
+      applicationType: 'web',
+      redirectUris: [
+        'https://app.example.com/callback',
+        'https://*.tenant.example.com/callback',
+        'http://localhost/cb',
+      ],
+    });
+
+    expect(getRedirectUriMatchType(cimdClient, 'https://app.example.com/callback')).toBe('exact');
+    // Raw-string comparison: normalized-equal values stay unmatched.
+    expect(
+      getRedirectUriMatchType(cimdClient, 'https://app.example.com:443/callback')
+    ).toBeUndefined();
+    expect(getRedirectUriMatchType(cimdClient, 'https://a.tenant.example.com/callback')).toBe(
+      'wildcard'
+    );
+    // The shape-based loopback retry stays exact: the registered value is a literal URI.
+    expect(getRedirectUriMatchType(cimdClient, 'http://localhost:49152/cb')).toBe('exact');
   });
 });
