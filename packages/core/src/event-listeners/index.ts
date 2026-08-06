@@ -1,14 +1,15 @@
 import { appInsights } from '@logto/app-insights/node';
 import { type Provider } from 'oidc-provider';
 
+import { type EnvSet } from '#src/env-set/index.js';
 import { TokenUsageType } from '#src/queries/daily-token-usage.js';
 import type Queries from '#src/tenants/Queries.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
 import { createAuthorizationSuccessListener, type TriggerEvent } from './authorization-success.js';
-import { grantListener, grantRevocationListener } from './grant.js';
-import { interactionEndedListener, interactionStartedListener } from './interaction.js';
+import { createGrantListener, createGrantRevocationListener } from './grant.js';
+import { createInteractionEndedListener, createInteractionStartedListener } from './interaction.js';
 import { recordActiveUsers } from './record-active-users.js';
 import { deleteSessionExtensions } from './session.js';
 
@@ -18,6 +19,7 @@ import { deleteSessionExtensions } from './session.js';
  */
 export const addOidcEventListeners = (
   tenantId: string,
+  envSet: EnvSet,
   provider: Provider,
   queries: Queries,
   triggerEvent?: TriggerEvent
@@ -32,13 +34,14 @@ export const addOidcEventListeners = (
   const m2mTokenUsageListener = async () =>
     recordTokenUsage(new Date(), { type: TokenUsageType.M2m });
 
+  const grantListener = createGrantListener(envSet);
   provider.addListener('grant.success', grantListener);
   provider.addListener('grant.error', grantListener);
-  provider.addListener('grant.revoked', grantRevocationListener);
+  provider.addListener('grant.revoked', createGrantRevocationListener(envSet));
 
   provider.addListener(
     'authorization.success',
-    createAuthorizationSuccessListener(provider, queries, triggerEvent)
+    createAuthorizationSuccessListener(envSet, provider, queries, triggerEvent)
   );
 
   provider.addListener('access_token.issued', async (token) => {
@@ -47,8 +50,8 @@ export const addOidcEventListeners = (
   provider.addListener('access_token.saved', async (token) => {
     return recordActiveUsers(token, queries);
   });
-  provider.addListener('interaction.started', interactionStartedListener);
-  provider.addListener('interaction.ended', interactionEndedListener);
+  provider.addListener('interaction.started', createInteractionStartedListener(envSet));
+  provider.addListener('interaction.ended', createInteractionEndedListener(envSet));
   provider.addListener('server_error', (ctx, error) => {
     getConsoleLogFromContext(ctx).error('server_error:', error);
 

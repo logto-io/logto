@@ -1,10 +1,11 @@
 import type { LogKey } from '@logto/schemas';
 import type { PromptDetail } from 'oidc-provider';
 
+import { mockEnvSet } from '#src/test-utils/env-set.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import { interactionEndedListener, interactionStartedListener } from './interaction.js';
+import { createInteractionEndedListener, createInteractionStartedListener } from './interaction.js';
 
 const { jest } = import.meta;
 
@@ -31,7 +32,9 @@ const prompt: PromptDetail = {
 const baseCallArgs = { applicationId, sessionId, userId };
 
 const testInteractionListener = (
-  listener: typeof interactionStartedListener | typeof interactionEndedListener,
+  listener:
+    | ReturnType<typeof createInteractionStartedListener>
+    | ReturnType<typeof createInteractionEndedListener>,
   parameters: { grant_type: string } & Record<string, unknown>,
   expectLogKey: LogKey,
   expectPrompt?: PromptDetail
@@ -60,7 +63,7 @@ describe('interactionStartedListener', () => {
 
   it('should log proper interaction started info', async () => {
     testInteractionListener(
-      interactionStartedListener,
+      createInteractionStartedListener(mockEnvSet),
       { grant_type: 'authorization_code', code: 'codeValue' },
       'Interaction.Create',
       prompt
@@ -69,7 +72,7 @@ describe('interactionStartedListener', () => {
 
   it('should log proper interaction ended info', async () => {
     testInteractionListener(
-      interactionEndedListener,
+      createInteractionEndedListener(mockEnvSet),
       { grant_type: 'authorization_code', code: 'codeValue' },
       'Interaction.End'
     );

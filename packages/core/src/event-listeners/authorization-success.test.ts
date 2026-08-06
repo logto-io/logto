@@ -1,6 +1,7 @@
 import { appInsights } from '@logto/app-insights/node';
 import { LogResult, type ExceptionHookEvent } from '@logto/schemas';
 
+import { mockEnvSet } from '#src/test-utils/env-set.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { MockQueries } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
@@ -78,6 +79,7 @@ describe('createAuthorizationSuccessListener', () => {
     const findUserActiveGrantsByClientId = jest.fn(async () => []);
 
     const listener = createAuthorizationSuccessListener(
+      mockEnvSet,
       // @ts-expect-error Provider mock is enough for unit test
       provider,
       new MockQueries({
@@ -139,6 +141,7 @@ describe('createAuthorizationSuccessListener', () => {
     ]);
 
     const listener = createAuthorizationSuccessListener(
+      mockEnvSet,
       // @ts-expect-error Provider mock is enough for unit test
       provider,
       new MockQueries({
@@ -220,6 +223,7 @@ describe('createAuthorizationSuccessListener', () => {
     });
 
     const listener = createAuthorizationSuccessListener(
+      mockEnvSet,
       // @ts-expect-error Provider mock is enough for unit test
       provider,
       new MockQueries({
@@ -261,6 +265,7 @@ describe('createAuthorizationSuccessListener', () => {
     });
 
     const listener = createAuthorizationSuccessListener(
+      mockEnvSet,
       // @ts-expect-error Provider mock is enough for unit test
       provider,
       new MockQueries({
@@ -297,6 +302,7 @@ describe('createAuthorizationSuccessListener', () => {
       },
     ]);
     const listener = createAuthorizationSuccessListener(
+      mockEnvSet,
       // @ts-expect-error Provider mock is enough for unit test
       provider,
       new MockQueries({
@@ -353,6 +359,7 @@ describe('createAuthorizationSuccessListener', () => {
     });
 
     const listener = createAuthorizationSuccessListener(
+      mockEnvSet,
       // @ts-expect-error Provider mock is enough for unit test
       provider,
       new MockQueries({

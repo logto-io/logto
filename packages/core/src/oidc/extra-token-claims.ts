@@ -30,6 +30,7 @@ import { isAccessDeniedError, parseCustomJwtResponseError } from '#src/utils/cus
 import { i18next } from '#src/utils/i18n.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
+import { getClientIdentifierPayload } from './cimd.js';
 import { tokenExchangeActGuard } from './grants/token-exchange/types.js';
 
 const hasI18n = (ctx: KoaContextWithOIDC): ctx is KoaContextWithOIDC & { i18n: i18n } =>
@@ -273,7 +274,8 @@ export const getExtraTokenClaimsForJwtCustomization = async (
 
     logEntry.append({
       sessionId: ctx.oidc.session?.uid,
-      applicationId: ctx.oidc.client?.clientId,
+      // DEV: CIMD (client ID metadata document) support
+      ...getClientIdentifierPayload(envSet, ctx.oidc.client?.clientId),
       ...conditional(logtoUserInfo && { userId: logtoUserInfo.id }),
       tenantId: envSet.tenantId,
     });

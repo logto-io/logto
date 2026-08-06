@@ -1,10 +1,12 @@
 import type { KoaContextWithOIDC, PromptDetail } from 'oidc-provider';
 
+import { type EnvSet } from '#src/env-set/index.js';
 import { assertLogContext } from '#src/middleware/koa-audit-log.js';
 
 import { extractInteractionContext } from './utils.js';
 
 const interactionListener = (
+  envSet: EnvSet,
   event: 'started' | 'ended',
   ctx: KoaContextWithOIDC,
   prompt?: PromptDetail
@@ -12,13 +14,14 @@ const interactionListener = (
   assertLogContext(ctx);
 
   const log = ctx.createLog(`Interaction.${event === 'started' ? 'Create' : 'End'}`);
-  log.append({ ...extractInteractionContext(ctx), prompt });
+  log.append({ ...extractInteractionContext(envSet, ctx), prompt });
 };
 
-export const interactionStartedListener = (ctx: KoaContextWithOIDC, prompt: PromptDetail) => {
-  interactionListener('started', ctx, prompt);
-};
+export const createInteractionStartedListener =
+  (envSet: EnvSet) => (ctx: KoaContextWithOIDC, prompt: PromptDetail) => {
+    interactionListener(envSet, 'started', ctx, prompt);
+  };
 
-export const interactionEndedListener = (ctx: KoaContextWithOIDC) => {
-  interactionListener('ended', ctx);
+export const createInteractionEndedListener = (envSet: EnvSet) => (ctx: KoaContextWithOIDC) => {
+  interactionListener(envSet, 'ended', ctx);
 };

@@ -8,6 +8,7 @@ import { type ConsoleLog } from '@logto/shared';
 import { trySafe } from '@silverhand/essentials';
 import type { KoaContextWithOIDC, Provider } from 'oidc-provider';
 
+import { type EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { createSessionLibrary } from '#src/libraries/session/index.js';
 import { assertLogContext, type LogContext } from '#src/middleware/koa-audit-log.js';
@@ -66,6 +67,7 @@ const getGrantIdsToRevokeForMaxAllowedGrants = ({
 
 const enforceMaxAllowedGrantsRevocation = async (
   ctx: KoaContextWithOIDC & LogContext,
+  envSet: EnvSet,
   provider: Provider,
   queries: Queries,
   triggerEvent?: TriggerEvent
@@ -94,7 +96,7 @@ const enforceMaxAllowedGrantsRevocation = async (
 
   const revokeGrantsLog = ctx.createLog('RevokeGrants');
   revokeGrantsLog.append({
-    ...extractInteractionContext(ctx),
+    ...extractInteractionContext(envSet, ctx),
     revokeGrantIds: grantIdsToRevoke,
     reason: 'maxAllowedGrants limit reached',
   });
@@ -181,12 +183,13 @@ const enforceMaxAllowedGrantsRevocation = async (
 };
 
 export const createAuthorizationSuccessListener = (
+  envSet: EnvSet,
   provider: Provider,
   queries: Queries,
   triggerEvent?: TriggerEvent
 ) => {
   return async (ctx: KoaContextWithOIDC) => {
     assertLogContext(ctx);
-    await enforceMaxAllowedGrantsRevocation(ctx, provider, queries, triggerEvent);
+    await enforceMaxAllowedGrantsRevocation(ctx, envSet, provider, queries, triggerEvent);
   };
 };

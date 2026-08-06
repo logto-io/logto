@@ -1,11 +1,14 @@
 import type { LogKey } from '@logto/schemas';
 import { LogResult, token } from '@logto/schemas';
+import Sinon from 'sinon';
 
+import { EnvSet } from '#src/env-set/index.js';
+import { mockEnvSet } from '#src/test-utils/env-set.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { stringifyError } from '#src/utils/format.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import { grantListener, grantRevocationListener } from './grant.js';
+import { createGrantListener, createGrantRevocationListener } from './grant.js';
 
 const { jest } = import.meta;
 
@@ -23,6 +26,17 @@ const entities = {
 
 const baseCallArgs = { applicationId, sessionId, userId };
 
+const buildCimdContext = (clientId: string) => ({
+  ...createContextWithRouteParameters(),
+  createLog: log.createLog,
+  prependAllLogEntries: log.prependAllLogEntries,
+  oidc: {
+    entities: { ...entities, Client: { clientId } },
+    params: { grant_type: 'refresh_token' },
+  },
+  body: { access_token: 'newAccessTokenValue' },
+});
+
 const testGrantListener = (
   parameters: { grant_type: string } & Record<string, unknown>,
   body: Record<string, string>,
@@ -39,7 +53,7 @@ const testGrantListener = (
   };
 
   // @ts-expect-error pass complex type check to mock ctx directly
-  grantListener(ctx, expectError);
+  createGrantListener(mockEnvSet)(ctx, expectError);
   expect(log.createLog).toHaveBeenCalledWith(expectLogKey);
   expect(log.mockAppend).toHaveBeenCalledWith({
     ...baseCallArgs,
@@ -118,6 +132,59 @@ describe('grantSuccessListener', () => {
   });
 });
 
+// DEV: CIMD (client ID metadata document) support
+describe('grantSuccessListener while CIMD is effectively enabled', () => {
+  const cimdClientId = 'https://client.example.com/metadata.json';
+
+  /**
+   * The gate reads only `oidc.cimdEnabled` from the tenant env set; the static flags are
+   * stubbed onto `EnvSet.values` below.
+   */
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal env-set stub scoped to the field the gate reads
+  const cimdEnvSet = { oidc: { cimdEnabled: true } } as EnvSet;
+
+  beforeEach(() => {
+    Sinon.stub(EnvSet, 'values').value({
+      ...EnvSet.values,
+      isDevFeaturesEnabled: true,
+      isOidcProviderSsrfProtectionEnabled: true,
+    });
+  });
+
+  afterEach(() => {
+    Sinon.restore();
+    jest.clearAllMocks();
+  });
+
+  it('should log a cimd client identifier under the dedicated key', () => {
+    const ctx = buildCimdContext(cimdClientId);
+
+    // @ts-expect-error pass complex type check to mock ctx directly
+    createGrantListener(cimdEnvSet)(ctx);
+    expect(log.mockAppend).toHaveBeenCalledWith({
+      cimdClientId,
+      sessionId,
+      userId,
+      tokenTypes: [token.TokenType.AccessToken],
+      params: { grant_type: 'refresh_token' },
+    });
+  });
+
+  it('should keep a url-shaped identifier under applicationId when CIMD is not effectively enabled', () => {
+    const ctx = buildCimdContext(cimdClientId);
+
+    // @ts-expect-error pass complex type check to mock ctx directly
+    createGrantListener(mockEnvSet)(ctx);
+    expect(log.mockAppend).toHaveBeenCalledWith({
+      applicationId: cimdClientId,
+      sessionId,
+      userId,
+      tokenTypes: [token.TokenType.AccessToken],
+      params: { grant_type: 'refresh_token' },
+    });
+  });
+});
+
 describe('grantErrorListener', () => {
   const errorMessage = 'error ocurred';
 
@@ -176,7 +243,7 @@ describe('grantRevocationListener', () => {
     };
 
     // @ts-expect-error pass complex type check to mock ctx directly
-    grantRevocationListener(ctx, grantId);
+    createGrantRevocationListener(mockEnvSet)(ctx, grantId);
     expect(log.createLog).toHaveBeenCalledWith('RevokeToken');
     expect(log.mockAppend).toHaveBeenCalledWith({
       applicationId,
@@ -205,7 +272,7 @@ describe('grantRevocationListener', () => {
     };
 
     // @ts-expect-error pass complex type check to mock ctx directly
-    grantRevocationListener(ctx, grantId);
+    createGrantRevocationListener(mockEnvSet)(ctx, grantId);
     expect(log.createLog).toHaveBeenCalledWith('RevokeToken');
     expect(log.mockAppend).toHaveBeenCalledWith({
       applicationId,
