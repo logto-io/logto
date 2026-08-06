@@ -24,11 +24,21 @@ export type PublicUserInfo = z.infer<typeof publicUserInfoGuard>;
 
 /**
  * Define the public application info that can be exposed to the public. e.g. on the user consent page.
+ *
+ * The overrides lift the applications-table column length bounds: a CIMD client puts its
+ * identifier URL (up to 2048 characters) in `id` and the remote document's `client_name`,
+ * which no column bound governs, in `name`.
  */
-export const publicApplicationGuard = Applications.guard.pick({
-  id: true,
-  name: true,
-});
+export const publicApplicationGuard = Applications.guard
+  .pick({
+    id: true,
+    name: true,
+  })
+  // DEV: CIMD (client ID metadata document) support
+  .extend({
+    id: z.string(),
+    name: z.string(),
+  });
 export type PublicApplication = z.infer<typeof publicApplicationGuard>;
 export const applicationSignInExperienceGuard = ApplicationSignInExperiences.guard.pick({
   branding: true,

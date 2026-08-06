@@ -20,6 +20,8 @@ import { consent, getMissingScopes } from '#src/libraries/session/index.js';
 import koaAppAccessControl from '#src/middleware/koa-app-access-control.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
+import { isCimdClientId } from '#src/oidc/cimd/client-id.js';
+import { isCimdEffectivelyEnabled } from '#src/oidc/cimd/index.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -27,7 +29,7 @@ import { interactionPrefix } from '../const.js';
 
 import { filterAndParseMissingResourceScopes } from './utils.js';
 
-const { InvalidClient, InvalidRedirectUri } = errors;
+const { InvalidClient, InvalidRedirectUri, InvalidRequest } = errors;
 
 export default function consentRoutes<T extends IRouterParamContext>(
   router: Router<unknown, WithInteractionDetailsContext<T>>,
@@ -70,8 +72,22 @@ export default function consentRoutes<T extends IRouterParamContext>(
 
       const { accountId: userId } = session;
 
+      // DEV: CIMD (client ID metadata document) support
+      const isCimdClient = isCimdEffectivelyEnabled(envSet) && isCimdClientId(applicationId);
+
       // Grant the organizations to the application if the user has selected the organizations
       if (organizationIds?.length) {
+        /**
+         * Organization grants are keyed to registered applications
+         * (`application_user_consent_organizations`); the grant-scoped counterpart for CIMD
+         * clients lands with LOG-13930, so a CIMD consent submission must not carry any
+         * organization selection.
+         */
+        assertThat(
+          !isCimdClient,
+          new InvalidRequest('organization consent is not available for CIMD clients')
+        );
+
         // Assert that user is a member of all organizations
         await validateUserConsentOrganizationMembership(userId, organizationIds);
 
@@ -93,14 +109,16 @@ export default function consentRoutes<T extends IRouterParamContext>(
       // to ensure the scopes are correct.
 
       // Find the organizations granted by the user
-      // The user may send consent request multiple times, so we need to find the organizations again
-      const [, organizations] = await queries.applications.userConsentOrganizations.getEntities(
-        Organizations,
-        {
-          applicationId,
-          userId,
-        }
-      );
+      // The user may send consent request multiple times, so we need to find the organizations again.
+      // A CIMD client can hold none until LOG-13930 lands the grant-scoped storage.
+      const organizations = isCimdClient
+        ? []
+        : await queries.applications.userConsentOrganizations
+            .getEntities(Organizations, {
+              applicationId,
+              userId,
+            })
+            .then(([, entities]) => entities);
 
       // The missingResourceScopes from the prompt details are from `getResourceServerInfo`,
       // which contains resource scopes and organization resource scopes.
@@ -108,6 +126,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
       // The "scopes" in `missingResourceScopes` do not have "id", so we have to rebuild the scopes list.
       const missingResourceScopes = await filterAndParseMissingResourceScopes({
         resourceScopes: allMissingResourceScopes,
+        envSet,
         queries,
         libraries,
         userId,
@@ -118,6 +137,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
         organizations.map(async ({ name, id }) => {
           const missingResourceScopes = await filterAndParseMissingResourceScopes({
             resourceScopes: allMissingResourceScopes,
+            envSet,
             queries,
             libraries,
             userId,
@@ -225,18 +245,54 @@ export default function consentRoutes<T extends IRouterParamContext>(
 
       const { accountId } = session;
 
-      const application = isBuiltInApplicationId(clientId)
-        ? buildBuiltInApplicationDataForTenant('', clientId)
-        : await queries.applications.findApplicationById(clientId);
+      // DEV: CIMD (client ID metadata document) support
+      const isCimdClient = isCimdEffectivelyEnabled(envSet) && isCimdClientId(clientId);
 
-      const isDeviceFlowApplication =
-        application.type === ApplicationType.Native &&
-        Boolean(application.customClientMetadata.isDeviceFlow);
+      /**
+       * CIMD clients are unregistered: display data comes from the provider-resolved metadata
+       * document (cache-backed) instead of the applications table, and no application-level
+       * sign-in experience or device-flow variant exists for them.
+       */
+      const getApplicationDisplayData = async (): Promise<{
+        application: ConsentInfoResponse['application'];
+        isDeviceFlowApplication: boolean;
+      }> => {
+        // DEV: CIMD (client ID metadata document) support
+        if (isCimdClient) {
+          const client = await provider.Client.find(clientId);
+          assertThat(client, new InvalidClient('client must be available'));
 
-      const applicationSignInExperience =
-        await queries.applicationSignInExperiences.safeFindSignInExperienceByApplicationId(
-          clientId
-        );
+          return {
+            application: { id: clientId, name: client.clientName ?? clientId },
+            isDeviceFlowApplication: false,
+          };
+        }
+
+        const application = isBuiltInApplicationId(clientId)
+          ? buildBuiltInApplicationDataForTenant('', clientId)
+          : await queries.applications.findApplicationById(clientId);
+
+        const applicationSignInExperience =
+          await queries.applicationSignInExperiences.safeFindSignInExperienceByApplicationId(
+            clientId
+          );
+
+        return {
+          // Merge the public application data and application sign-in-experience data
+          application: {
+            ...publicApplicationGuard.parse(application),
+            ...conditional(
+              applicationSignInExperience &&
+                applicationSignInExperienceGuard.parse(applicationSignInExperience)
+            ),
+          },
+          isDeviceFlowApplication:
+            application.type === ApplicationType.Native &&
+            Boolean(application.customClientMetadata.isDeviceFlow),
+        };
+      };
+
+      const { application, isDeviceFlowApplication } = await getApplicationDisplayData();
 
       if (!isDeviceFlowApplication) {
         assertThat(
@@ -256,21 +312,29 @@ export default function consentRoutes<T extends IRouterParamContext>(
       // The "scopes" in `missingResourceScopes` do not have "id", so we have to rebuild the scopes list.
       const missingResourceScopes = await filterAndParseMissingResourceScopes({
         resourceScopes: allMissingResourceScopes,
+        envSet,
         queries,
         libraries,
         userId: accountId,
         applicationId: clientId,
       });
 
-      // Find the organizations if the application is requesting the organizations scope
-      const organizations = missingOIDCScope?.includes(UserScope.Organizations)
-        ? await queries.organizations.relations.users.getOrganizationsByUserId(accountId)
-        : [];
+      // Find the organizations if the application is requesting the organizations scope.
+      /**
+       * Organization grants are keyed to registered applications
+       * (`application_user_consent_organizations`); the grant-scoped counterpart for CIMD
+       * clients lands with LOG-13930, so a CIMD consent offers no organization selection yet.
+       */
+      const organizations =
+        !isCimdClient && missingOIDCScope?.includes(UserScope.Organizations)
+          ? await queries.organizations.relations.users.getOrganizationsByUserId(accountId)
+          : [];
 
       const organizationsWithMissingResourceScopes = await Promise.all(
         organizations.map(async ({ name, id }) => {
           const missingResourceScopes = await filterAndParseMissingResourceScopes({
             resourceScopes: allMissingResourceScopes,
+            envSet,
             queries,
             libraries,
             userId: accountId,
@@ -283,14 +347,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
       );
 
       ctx.body = {
-        // Merge the public application data and application sign-in-experience data
-        application: {
-          ...publicApplicationGuard.parse(application),
-          ...conditional(
-            applicationSignInExperience &&
-              applicationSignInExperienceGuard.parse(applicationSignInExperience)
-          ),
-        },
+        application,
         user: publicUserInfoGuard.parse(userInfo),
         organizations: organizationsWithMissingResourceScopes,
         // Filter out the OIDC scopes that are not needed for the consent page.
