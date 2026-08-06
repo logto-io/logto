@@ -9,11 +9,18 @@
  * @see {@link https://www.ietf.org/archive/id/draft-ietf-oauth-client-id-metadata-document-02.html | draft-02}
  */
 
-import { CustomClientMetadataKey } from '@logto/schemas';
+import { ReservedScope } from '@logto/core-kit';
+import { CustomClientMetadataKey, GrantType } from '@logto/schemas';
 import { conditional, type Optional } from '@silverhand/essentials';
-import { type Client, errors, type KoaContextWithOIDC } from 'oidc-provider';
+import {
+  type AllClientMetadata,
+  type Client,
+  errors,
+  type KoaContextWithOIDC,
+} from 'oidc-provider';
 
 import { EnvSet } from '#src/env-set/index.js';
+import type Queries from '#src/tenants/Queries.js';
 
 import { appLevelAccessControlMetadataKey } from './application-access-control.js';
 import { isValidWildcardRedirectUriPattern } from './wildcard-redirect-uri.js';
@@ -77,12 +84,17 @@ export const isCimdEffectivelyEnabled = (envSet: EnvSet): boolean =>
  * `InvalidClient` with no failure reason.
  */
 export const buildClientIdMetadataDocumentFeature = (
-  envSet: EnvSet
+  envSet: EnvSet,
+  cimdQueries: Queries['cimd']
 ): Optional<{
   clientIdMetadataDocument: {
     enabled: true;
     ack: 'draft-02';
     allowFetch: (ctx: KoaContextWithOIDC | undefined, clientId: string) => boolean;
+    transformClientMetadata: (
+      ctx: KoaContextWithOIDC | undefined,
+      metadata: AllClientMetadata
+    ) => Promise<AllClientMetadata>;
     allowClient: (ctx: KoaContextWithOIDC | undefined, client: Client) => boolean;
   };
 }> =>
@@ -95,6 +107,36 @@ export const buildClientIdMetadataDocumentFeature = (
           assertClientIdWithinLengthBound(clientId);
           return true;
         },
+        /**
+         * `scope` and `grant_types` are server-owned — registered applications never
+         * take them from client input — so the document's declarations are replaced,
+         * not honored. The override must happen before the client schema runs: declared
+         * values the provider does not recognize would reject the whole client.
+         *
+         * - `scope` carries the tenant's user-scope ceiling so enforcement runs through
+         *   the provider's native `check_scope` like third-party applications, which
+         *   also covers PAR.
+         *   TODO: @xiaoyijun enforce the resource and organization scope ceilings on the
+         *   resource-server filter path (LOG-13927, LOG-13930).
+         * - `grant_types`: a remote document must not self-grant client_credentials,
+         *   device code, or token exchange, which registered applications only get by
+         *   type or explicit opt-in.
+         * - `response_types` must be pinned too, or the schema re-derives the implicit
+         *   grant from a declared response type.
+         */
+        transformClientMetadata: async (
+          _ctx: KoaContextWithOIDC | undefined,
+          metadata: AllClientMetadata
+        ): Promise<AllClientMetadata> => ({
+          ...metadata,
+          scope: [
+            ReservedScope.OpenId,
+            ReservedScope.OfflineAccess,
+            ...(await cimdQueries.userScopes.findAll()),
+          ].join(' '),
+          grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken],
+          response_types: ['code'],
+        }),
         /**
          * Runs on every use of a CIMD client including metadata-cache hits (a cached document
          * can be up to 24 hours old), so tenant policy always applies before the client is

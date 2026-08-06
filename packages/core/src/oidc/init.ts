@@ -203,7 +203,7 @@ export default function initOidc(
       backchannelLogout: { enabled: true },
       deviceFlow: deviceFlowConfig,
       // DEV: CIMD (client ID metadata document) support
-      ...buildClientIdMetadataDocumentFeature(envSet),
+      ...buildClientIdMetadataDocumentFeature(envSet, queries.cimd),
       rpInitiatedLogout: {
         logoutSource: (ctx, form) => {
           // eslint-disable-next-line no-template-curly-in-string
