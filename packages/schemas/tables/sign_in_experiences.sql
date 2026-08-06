@@ -25,6 +25,7 @@ create table sign_in_experiences (
   password_policy jsonb /* @use PartialPasswordPolicy */ not null default '{}'::jsonb,
   mfa jsonb /* @use Mfa */ not null default '{}'::jsonb,
   adaptive_mfa jsonb /* @use AdaptiveMfa */ not null default '{}'::jsonb,
+  trusted_device jsonb /* @use TrustedDevicePolicy */ not null default ('{"enabled": false, "durationDays": 30}'::jsonb),
   single_sign_on_enabled boolean not null default false,
   support_email text,
   support_website_url text,

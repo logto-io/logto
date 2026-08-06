@@ -3,6 +3,7 @@ import { generateDarkColor } from '@logto/core-kit';
 import type { CreateSignInExperience } from '../db-entries/index.js';
 import { SignInMode } from '../db-entries/index.js';
 import {
+  defaultTrustedDevicePolicy,
   MfaFactor,
   MfaPolicy,
   OrganizationRequiredMfaPolicy,
@@ -62,6 +63,7 @@ export const createDefaultSignInExperience = (
       factors: [],
       policy: MfaPolicy.UserControlled,
     },
+    trustedDevice: defaultTrustedDevicePolicy,
   });
 
 /** @deprecated Use `createDefaultSignInExperience()` instead. */

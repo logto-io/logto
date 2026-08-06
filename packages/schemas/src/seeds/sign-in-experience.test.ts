@@ -38,4 +38,9 @@ describe('createDefaultSignInExperience', () => {
     const row = createDefaultSignInExperience('some-tenant-id', false);
     expect(row.signUpProfileFields).toBeNull();
   });
+
+  it('disables trusted devices with a 30-day duration by default', () => {
+    const row = createDefaultSignInExperience('some-tenant-id', false);
+    expect(row.trustedDevice).toEqual({ enabled: false, durationDays: 30 });
+  });
 });

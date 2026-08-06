@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { customUiCspGuard, passwordExpirationPolicyGuard } from './sign-in-experience.js';
+import {
+  customUiCspGuard,
+  passwordExpirationPolicyGuard,
+  trustedDevicePolicyGuard,
+} from './sign-in-experience.js';
 
 describe('customUiCspGuard', () => {
   it.each([
@@ -76,5 +80,25 @@ describe('passwordExpirationPolicyGuard', () => {
     { enabled: true, validPeriodDays: 30, enabledAt: 1.5 },
   ])('rejects invalid policy %p', (value) => {
     expect(passwordExpirationPolicyGuard.safeParse(value).success).toBe(false);
+  });
+});
+
+describe('trustedDevicePolicyGuard', () => {
+  it.each([
+    { enabled: false, durationDays: 1 },
+    { enabled: false, durationDays: 30 },
+    { enabled: true, durationDays: 365 },
+  ])('accepts valid policy %p', (value) => {
+    expect(trustedDevicePolicyGuard.parse(value)).toEqual(value);
+  });
+
+  it.each([
+    { enabled: false },
+    { durationDays: 30 },
+    { enabled: false, durationDays: 0 },
+    { enabled: false, durationDays: 366 },
+    { enabled: false, durationDays: 1.5 },
+  ])('rejects invalid policy %p', (value) => {
+    expect(trustedDevicePolicyGuard.safeParse(value).success).toBe(false);
   });
 });
