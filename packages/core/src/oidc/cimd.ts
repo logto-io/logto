@@ -23,6 +23,7 @@ import { EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 
 import { appLevelAccessControlMetadataKey } from './application-access-control.js';
+import { isCimdClientId } from './cimd-client-id.js';
 import { isValidWildcardRedirectUriPattern } from './wildcard-redirect-uri.js';
 
 /**
@@ -67,6 +68,28 @@ export const isCimdEffectivelyEnabled = (envSet: EnvSet): boolean =>
   EnvSet.values.isDevFeaturesEnabled &&
   envSet.oidc.cimdEnabled &&
   EnvSet.values.isOidcProviderSsrfProtectionEnabled;
+
+/** Exactly one identifier is set, matching the kind of the client. */
+export type ClientIdentifierPayload = {
+  applicationId?: string;
+  cimdClientId?: string;
+};
+
+/**
+ * Route a client identifier into the payload key its kind owns: `applicationId` carries
+ * registered application ids only, while a CIMD identifier goes under the dedicated
+ * `cimdClientId` key — audit log and webhook consumers branch on key presence instead of
+ * parsing URL shapes. Identifiers merely shaped like URLs while CIMD is not effectively
+ * enabled keep flowing through `applicationId` unchanged.
+ */
+export const getClientIdentifierPayload = (
+  envSet: EnvSet,
+  clientId?: string
+): ClientIdentifierPayload =>
+  // DEV: CIMD (client ID metadata document) support
+  clientId !== undefined && isCimdEffectivelyEnabled(envSet) && isCimdClientId(clientId)
+    ? { cimdClientId: clientId }
+    : { applicationId: clientId };
 
 /**
  * Build the `features.clientIdMetadataDocument` entry for the provider configuration, or
