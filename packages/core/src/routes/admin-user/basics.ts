@@ -10,6 +10,7 @@ import {
   userProfileGuard,
 } from '@logto/schemas';
 import { conditional, yes } from '@silverhand/essentials';
+import { StatementTimeoutError } from '@silverhand/slonik';
 import { boolean, literal, nativeEnum, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -26,6 +27,7 @@ import {
 } from '#src/libraries/user.utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
+import { getConsoleLogFromContext } from '#src/utils/console.js';
 
 import { parseLegacyPassword } from '../../utils/password.js';
 import { captureDeveloperEvent } from '../../utils/posthog.js';
@@ -484,7 +486,22 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 
       const user = await findUserById(userId);
 
-      await signOutUser(userId);
+      // Revocation is best-effort on deletion: once the user row is gone, the remaining
+      // OIDC instances can no longer be exchanged or introspected since the account fails
+      // to resolve, and they are pruned after expiry. A revocation statement timeout on a
+      // pathological instance count must not leave the user permanently undeletable.
+      try {
+        await signOutUser(userId);
+      } catch (error: unknown) {
+        if (!(error instanceof StatementTimeoutError)) {
+          throw error;
+        }
+        getConsoleLogFromContext(ctx).error(
+          `Failed to revoke sessions and tokens for user ${userId} before deletion. Proceeding with the deletion; remaining instances are left to expire.`,
+          error
+        );
+      }
+
       await deleteUserById(userId);
 
       if (tenantId === adminTenantId) {
