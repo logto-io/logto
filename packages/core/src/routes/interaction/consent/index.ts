@@ -22,6 +22,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import { isCimdClientId } from '#src/oidc/cimd-client-id.js';
 import { isCimdEffectivelyEnabled } from '#src/oidc/cimd.js';
+import { getRedirectUriMatchType } from '#src/oidc/wildcard-redirect-uri.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -249,21 +250,40 @@ export default function consentRoutes<T extends IRouterParamContext>(
       const isCimdClient = isCimdEffectivelyEnabled(envSet) && isCimdClientId(clientId);
 
       /**
-       * CIMD clients are unregistered: display data comes from the provider-resolved metadata
-       * document (cache-backed) instead of the applications table, and no application-level
-       * sign-in experience or device-flow variant exists for them.
+       * Every consenting client already resolved through the provider at the authorization
+       * endpoint, so the provider client is the single authority for both the registered
+       * redirect URIs the match type classifies against and the CIMD metadata document the
+       * display data comes from.
        */
-      const getApplicationDisplayData = async (): Promise<{
-        application: ConsentInfoResponse['application'];
+      const oidcClient = await provider.Client.find(clientId);
+      assertThat(oidcClient, new InvalidClient('client must be available'));
+
+      /**
+       * CIMD clients are unregistered: display data comes from the provider-resolved metadata
+       * document (cache-backed) instead of the applications table, no application entity
+       * exists for them, and no application-level sign-in experience or device-flow variant
+       * applies. Registered applications keep their response field-for-field and mirror the
+       * `{ id, name }` pair onto the kind-agnostic client summary.
+       */
+      const getClientDisplayData = async (): Promise<{
+        application?: ConsentInfoResponse['application'];
+        client: ConsentInfoResponse['client'];
         isDeviceFlowApplication: boolean;
       }> => {
         // DEV: CIMD (client ID metadata document) support
         if (isCimdClient) {
-          const client = await provider.Client.find(clientId);
-          assertThat(client, new InvalidClient('client must be available'));
+          const { hostname } = new URL(clientId);
 
           return {
-            application: { id: clientId, name: client.clientName ?? clientId },
+            client: {
+              id: clientId,
+              name: oidcClient.clientName ?? hostname,
+              hostname,
+              logoUri: oidcClient.logoUri,
+              clientUri: oidcClient.clientUri,
+              policyUri: oidcClient.policyUri,
+              tosUri: oidcClient.tosUri,
+            },
             isDeviceFlowApplication: false,
           };
         }
@@ -277,27 +297,47 @@ export default function consentRoutes<T extends IRouterParamContext>(
             clientId
           );
 
+        const publicApplication = publicApplicationGuard.parse(application);
+
         return {
           // Merge the public application data and application sign-in-experience data
           application: {
-            ...publicApplicationGuard.parse(application),
+            ...publicApplication,
             ...conditional(
               applicationSignInExperience &&
                 applicationSignInExperienceGuard.parse(applicationSignInExperience)
             ),
           },
+          client: { id: publicApplication.id, name: publicApplication.name },
           isDeviceFlowApplication:
             application.type === ApplicationType.Native &&
             Boolean(application.customClientMetadata.isDeviceFlow),
         };
       };
 
-      const { application, isDeviceFlowApplication } = await getApplicationDisplayData();
+      const { application, client, isDeviceFlowApplication } = await getClientDisplayData();
 
       if (!isDeviceFlowApplication) {
         assertThat(
           redirectUri && typeof redirectUri === 'string',
           new InvalidRedirectUri('redirect_uri must be available')
+        );
+      }
+
+      /**
+       * Authorization already validated the value against the same client, so a missing match
+       * here means the registered set changed mid-flow (for CIMD clients the metadata document
+       * may refetch between authorization and consent); the consent screen must not vouch for
+       * a redirect target the client no longer registers.
+       */
+      const redirectUriMatchType = conditional(
+        typeof redirectUri === 'string' && getRedirectUriMatchType(oidcClient, redirectUri)
+      );
+
+      if (typeof redirectUri === 'string') {
+        assertThat(
+          redirectUriMatchType,
+          new InvalidRedirectUri('redirect_uri must match a registered redirect uri')
         );
       }
 
@@ -348,6 +388,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
 
       ctx.body = {
         application,
+        client,
         user: publicUserInfoGuard.parse(userInfo),
         organizations: organizationsWithMissingResourceScopes,
         // Filter out the OIDC scopes that are not needed for the consent page.
@@ -357,6 +398,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
         missingResourceScopes,
         // Device flow consent does not require a redirect_uri.
         redirectUri: typeof redirectUri === 'string' ? redirectUri : undefined,
+        redirectUriMatchType,
       } satisfies ConsentInfoResponse;
 
       return next();
