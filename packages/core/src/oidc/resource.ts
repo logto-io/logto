@@ -208,6 +208,54 @@ export const filterResourceScopesForTheThirdPartyApplication = async (
   );
 };
 
+// DEV: CIMD (client ID metadata document) support
+/**
+ * Filter out the scopes that fall outside the tenant-wide CIMD permission ceiling.
+ *
+ * CIMD clients are unregistered, so there is no application-level user consent configuration
+ * to consult — the tenant-wide ceiling tables take that role, with the same filtering shape
+ * as {@link filterResourceScopesForTheThirdPartyApplication}. Out-of-ceiling scopes are
+ * silently dropped, and every issuance re-runs this filter, so narrowing the ceiling takes
+ * effect on the next issued token.
+ */
+export const filterResourceScopesForTheCimdClient = async (
+  { cimd }: Queries,
+  indicator: string,
+  scopes: ReadonlyArray<{ name: string; id: string }>
+) => {
+  if (isReservedResource(indicator)) {
+    switch (indicator) {
+      case ReservedResource.Organization: {
+        const ceilingOrganizationScopes = await cimd.organizationScopes.findAll();
+
+        return scopes.filter(({ id: organizationScopeId }) =>
+          ceilingOrganizationScopes.some(({ id }) => id === organizationScopeId)
+        );
+      }
+      // Mirror the third-party filter: other reserved resources are not ceiling-governed
+      // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
+      default: {
+        return scopes;
+      }
+    }
+  }
+
+  /**
+   * A resource can sit behind the ceiling as a plain API resource or as an organization
+   * resource; scope ids are globally unique, so the flat union mirrors the third-party
+   * filter's per-indicator merge of the two application consent tables.
+   */
+  const [ceilingResourceScopes, ceilingOrganizationResourceScopes] = await Promise.all([
+    cimd.resourceScopes.findAll(),
+    cimd.organizationResourceScopes.findAll(),
+  ]);
+  const ceilingScopes = [...ceilingResourceScopes, ...ceilingOrganizationResourceScopes];
+
+  return scopes.filter(({ id: resourceScopeId }) =>
+    ceilingScopes.some(({ id }) => id === resourceScopeId)
+  );
+};
+
 /**
  * Check if the user has consented to the application for the specific organization.
  *
