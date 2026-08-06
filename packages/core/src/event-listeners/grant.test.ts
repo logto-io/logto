@@ -1,6 +1,8 @@
 import type { LogKey } from '@logto/schemas';
 import { LogResult, token } from '@logto/schemas';
+import Sinon from 'sinon';
 
+import { EnvSet } from '#src/env-set/index.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { stringifyError } from '#src/utils/format.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
@@ -22,6 +24,10 @@ const entities = {
 };
 
 const baseCallArgs = { applicationId, sessionId, userId };
+
+const stubDevFeaturesFlag = (isDevFeaturesEnabled: boolean) => {
+  Sinon.stub(EnvSet, 'values').value({ ...EnvSet.values, isDevFeaturesEnabled });
+};
 
 const testGrantListener = (
   parameters: { grant_type: string } & Record<string, unknown>,
@@ -115,6 +121,57 @@ describe('grantSuccessListener', () => {
       'ExchangeTokenBy.Unknown',
       [token.TokenType.AccessToken]
     );
+  });
+});
+
+// DEV: CIMD (client ID metadata document) support
+describe('grantSuccessListener with a cimd client identifier', () => {
+  const cimdClientId = 'https://client.example.com/metadata.json';
+
+  const buildCimdContext = () => ({
+    ...createContextWithRouteParameters(),
+    createLog: log.createLog,
+    prependAllLogEntries: log.prependAllLogEntries,
+    oidc: {
+      entities: { ...entities, Client: { clientId: cimdClientId } },
+      params: { grant_type: 'refresh_token' },
+    },
+    body: { access_token: 'newAccessTokenValue' },
+  });
+
+  afterEach(() => {
+    Sinon.restore();
+    jest.clearAllMocks();
+  });
+
+  it('should log a cimd client identifier under the dedicated key', () => {
+    stubDevFeaturesFlag(true);
+    const ctx = buildCimdContext();
+
+    // @ts-expect-error pass complex type check to mock ctx directly
+    grantListener(ctx);
+    expect(log.mockAppend).toHaveBeenCalledWith({
+      cimdClientId,
+      sessionId,
+      userId,
+      tokenTypes: [token.TokenType.AccessToken],
+      params: { grant_type: 'refresh_token' },
+    });
+  });
+
+  it('should keep a url-shaped identifier under applicationId when the dev features flag is off', () => {
+    stubDevFeaturesFlag(false);
+    const ctx = buildCimdContext();
+
+    // @ts-expect-error pass complex type check to mock ctx directly
+    grantListener(ctx);
+    expect(log.mockAppend).toHaveBeenCalledWith({
+      applicationId: cimdClientId,
+      sessionId,
+      userId,
+      tokenTypes: [token.TokenType.AccessToken],
+      params: { grant_type: 'refresh_token' },
+    });
   });
 });
 
