@@ -103,7 +103,16 @@ export type DataHookEventPayload = {
   Partial<ManagementApiContext> &
   Record<string, unknown>;
 
-export type ExceptionHookEventPayload = Omit<DataHookEventPayload, 'event'> & {
+/**
+ * A key-remapping omit instead of the built-in `Omit`: `DataHookEventPayload` carries a string
+ * index signature, under which `Omit` collapses every named property into `unknown`; the
+ * homomorphic form keeps the named properties typed.
+ */
+type BetterOmit<T, Ignore> = {
+  [key in keyof T as key extends Ignore ? never : key]: T[key];
+};
+
+export type ExceptionHookEventPayload = BetterOmit<DataHookEventPayload, 'event'> & {
   event: ExceptionHookEvent;
 };
 export type GrantLimitExceededEventData = {

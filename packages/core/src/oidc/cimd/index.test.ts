@@ -110,30 +110,30 @@ describe('isCimdEffectivelyEnabled', () => {
 describe('getClientIdentifierPayload', () => {
   const cimdClientId = 'https://client.example.com/metadata.json';
 
-  it('routes a cimd identifier to the dedicated key when effectively enabled', async () => {
+  it('routes a cimd-namespace identifier to the dedicated key', async () => {
     const { getClientIdentifierPayload } = await loadCimdModule();
-    expect(getClientIdentifierPayload(buildEnvSet(true), cimdClientId)).toEqual({
+    expect(getClientIdentifierPayload(cimdClientId)).toStrictEqual({
       cimdClientId,
     });
   });
 
   it('routes a registered application id to applicationId', async () => {
     const { getClientIdentifierPayload } = await loadCimdModule();
-    expect(getClientIdentifierPayload(buildEnvSet(true), 'app-id')).toEqual({
+    expect(getClientIdentifierPayload('app-id')).toStrictEqual({
       applicationId: 'app-id',
     });
   });
 
-  it('keeps a url-shaped identifier under applicationId when not effectively enabled', async () => {
-    const { getClientIdentifierPayload } = await loadCimdModule();
-    expect(getClientIdentifierPayload(buildEnvSet(false), cimdClientId)).toEqual({
+  it('keeps a url-shaped identifier under applicationId when the dev features flag is off', async () => {
+    const { getClientIdentifierPayload } = await loadCimdModule({ isDevFeaturesEnabled: false });
+    expect(getClientIdentifierPayload(cimdClientId)).toStrictEqual({
       applicationId: cimdClientId,
     });
   });
 
   it('yields an undefined applicationId for a missing identifier', async () => {
     const { getClientIdentifierPayload } = await loadCimdModule();
-    expect(getClientIdentifierPayload(buildEnvSet(true))).toEqual({
+    expect(getClientIdentifierPayload()).toStrictEqual({
       applicationId: undefined,
     });
   });
