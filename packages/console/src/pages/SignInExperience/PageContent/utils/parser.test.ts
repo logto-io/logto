@@ -64,6 +64,7 @@ const mockSignInExperience: SignInExperience = {
   adaptiveMfa: {
     enabled: true,
   },
+  trustedDevice: {},
   singleSignOnEnabled: false,
   socialSignIn: {},
   supportEmail: null,
