@@ -215,8 +215,10 @@ export const filterResourceScopesForTheThirdPartyApplication = async (
  * CIMD clients are unregistered, so there is no application-level user consent configuration
  * to consult — the tenant-wide ceiling tables take that role, with the same filtering shape
  * as {@link filterResourceScopesForTheThirdPartyApplication}. Out-of-ceiling scopes are
- * silently dropped, and every issuance re-runs this filter, so narrowing the ceiling takes
- * effect on the next issued token.
+ * silently dropped before they can enter a grant: consent computes missing scopes against
+ * the filtered set, and the refresh-token resource path re-intersects with it on every
+ * issuance. On the authorization-code path the persisted grant stays authoritative until
+ * revoked — the same enforcement geometry as third-party applications.
  */
 export const filterResourceScopesForTheCimdClient = async (
   { cimd }: Queries,
