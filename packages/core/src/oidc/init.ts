@@ -272,14 +272,27 @@ export default function initOidc(
     interactions: {
       url: (ctx, { params: { client_id: appId }, prompt }) => {
         const params = trySafe(() => extraParamsObjectGuard.parse(ctx.oidc.params ?? {})) ?? {};
+        const resolvedAppId = readOptionalQueryString(appId);
         const sharedParams = {
-          appId: readOptionalQueryString(appId),
+          appId: resolvedAppId,
           organizationId: params.organization_id,
           uiLocales: params.ui_locales,
         };
 
+        /**
+         * A CIMD identifier can span 2048 characters — omitting `appId` keeps the URL out of a
+         * second browser cookie, and with no per-application overrides to resolve, the cookie
+         * consumers (experience SSR, verification-code template context) fall back to the
+         * tenant default sign-in experience without any application lookup.
+         */
+        // DEV: CIMD (client ID metadata document) support
+        const cookieParams =
+          resolvedAppId && isCimdEffectivelyEnabled(envSet) && isCimdClientId(resolvedAppId)
+            ? { ...sharedParams, appId: undefined }
+            : sharedParams;
+
         // Cookies are required to apply the correct server-side rendering
-        ctx.cookies.set(logtoCookieKey, JSON.stringify(buildSharedExperienceCookie(sharedParams)), {
+        ctx.cookies.set(logtoCookieKey, JSON.stringify(buildSharedExperienceCookie(cookieParams)), {
           sameSite: 'lax',
           overwrite: true,
           httpOnly: false,

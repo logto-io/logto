@@ -1,7 +1,7 @@
 /* eslint-disable max-lines -- provider init tests share one harness; splitting fragments the shared mock setup. */
 import assert from 'node:assert';
 
-import { defaultTenantId, GrantType, type Scope } from '@logto/schemas';
+import { defaultTenantId, GrantType, logtoCookieKey, type Scope } from '@logto/schemas';
 import { errors, type KoaContextWithOIDC } from 'oidc-provider';
 
 import { mockResource, mockUser } from '#src/__mocks__/index.js';
@@ -580,6 +580,59 @@ describe('loadExistingGrant for CIMD clients', () => {
 
     await expect(configuration.loadExistingGrant(ctx)).rejects.toThrow(errors.AccessDenied);
     expect(assertUserHasApplicationAccess).toHaveBeenCalledWith(cimdClientId, accountId, undefined);
+  });
+});
+
+const runInteractionUrl = (provider: ReturnType<typeof createProvider>, promptClientId: string) => {
+  const configuration = getProviderConfiguration(provider);
+  const ctx = createOidcContext({ provider });
+  const interaction = {
+    params: { client_id: promptClientId },
+    prompt: { name: 'consent', reasons: [], details: {} },
+  } as unknown as Parameters<typeof configuration.interactions.url>[1];
+
+  return { ctx, url: configuration.interactions.url(ctx, interaction) };
+};
+
+// DEV: CIMD (client ID metadata document) support
+describe('experience cookie for CIMD prompts', () => {
+  const cimdClientId = 'https://client.example.com/client-metadata.json';
+
+  it('should omit appId from the experience cookie for a cimd prompt', async () => {
+    const { id, queries, libraries, logtoConfigs, subscription } = new MockTenant();
+    const provider = initOidc(id, cimdEnvSet, queries, libraries, logtoConfigs, subscription);
+
+    const { ctx } = runInteractionUrl(provider, cimdClientId);
+
+    expect(ctx.cookies.set).toHaveBeenCalledWith(
+      logtoCookieKey,
+      JSON.stringify({}),
+      expect.anything()
+    );
+  });
+
+  it('should keep appId in the experience cookie for a registered client prompt', async () => {
+    const provider = createProvider(new MockTenant());
+
+    const { ctx } = runInteractionUrl(provider, clientId);
+
+    expect(ctx.cookies.set).toHaveBeenCalledWith(
+      logtoCookieKey,
+      JSON.stringify({ appId: clientId }),
+      expect.anything()
+    );
+  });
+
+  it('should keep appId in the experience cookie for a url client id when CIMD is not effectively enabled', async () => {
+    const provider = createProvider(new MockTenant());
+
+    const { ctx } = runInteractionUrl(provider, cimdClientId);
+
+    expect(ctx.cookies.set).toHaveBeenCalledWith(
+      logtoCookieKey,
+      JSON.stringify({ appId: cimdClientId }),
+      expect.anything()
+    );
   });
 });
 
