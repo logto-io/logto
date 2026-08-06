@@ -36,8 +36,14 @@ export type HookTestErrorResponseData = z.infer<typeof hookTestErrorResponseData
  * we will store the context before processing the interaction and consume it after the interaction is processed if needed.
  */
 export type InteractionApiMetadata = {
-  /** The application ID if the hook is triggered by interaction API. */
+  /** The registered application ID if the hook is triggered by interaction API. */
   applicationId?: string;
+  // DEV: CIMD (client ID metadata document) support
+  /**
+   * The CIMD client identifier URL, kept apart from `applicationId` so payload consumers
+   * branch on key presence instead of URL shape.
+   */
+  cimdClientId?: string;
   /** The session ID if the hook is triggered by interaction API. */
   sessionId?: string;
   /** The InteractionEvent if the hook is triggered by interaction API. */
@@ -47,6 +53,9 @@ export type InteractionApiMetadata = {
 type InteractionApiContextPayload = {
   /** Fetch application detail by application ID before sending the hook event */
   application?: Pick<Application, 'id' | 'type' | 'name' | 'description'>;
+  // DEV: CIMD (client ID metadata document) support
+  /** CIMD clients are unregistered, so the identifier URL stands in for `application`. */
+  cimdClientId?: string;
   sessionId?: string;
   interactionEvent?: InteractionEvent;
 };
