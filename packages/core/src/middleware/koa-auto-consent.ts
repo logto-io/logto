@@ -27,8 +27,6 @@ const shouldAutoConsentApplication = async (clientId: string, query: Queries, en
     /**
      * Registered application ids never take the URL shape, and authorization has already
      * resolved this client — a URL here is a CIMD client, which is never first-party.
-     * TODO: @xiaoyijun support CIMD clients on the rest of the experience consent flow
-     * (consent info and guards).
      */
     return false;
   }

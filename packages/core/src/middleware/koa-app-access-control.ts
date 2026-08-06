@@ -1,9 +1,12 @@
 import { type MiddlewareType } from 'koa';
 import { errors } from 'oidc-provider';
 
+import { type EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import { hasAppLevelAccessControlChecked } from '#src/oidc/application-access-control.js';
+import { isCimdClientId } from '#src/oidc/cimd-client-id.js';
+import { isCimdEffectivelyEnabled } from '#src/oidc/cimd.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -11,7 +14,7 @@ export default function koaAppAccessControl<
   StateT,
   ContextT extends WithInteractionDetailsContext,
   ResponseBodyT,
->(libraries: Libraries): MiddlewareType<StateT, ContextT, ResponseBodyT> {
+>(envSet: EnvSet, libraries: Libraries): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   return async (ctx, next) => {
     const {
       params: { client_id: clientId },
@@ -23,6 +26,16 @@ export default function koaAppAccessControl<
       clientId && typeof clientId === 'string',
       new errors.InvalidClient('client must be available')
     );
+
+    // DEV: CIMD (client ID metadata document) support
+    if (isCimdEffectivelyEnabled(envSet) && isCimdClientId(clientId)) {
+      /**
+       * Application-level access control only applies to registered applications; the library's
+       * fallback lookup would query the applications table with the identifier URL and deny on
+       * not-found.
+       */
+      return next();
+    }
 
     if (
       hasAppLevelAccessControlChecked(ctx.interactionDetails.result, clientId, session.accountId)

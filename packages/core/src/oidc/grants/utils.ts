@@ -7,6 +7,8 @@ import { type EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { isCimdClientId } from '../cimd-client-id.js';
+import { isCimdEffectivelyEnabled } from '../cimd.js';
 import {
   getSharedResourceServerData,
   isOrganizationConsentedToApplication,
@@ -21,6 +23,7 @@ const { InvalidGrant, InvalidClient, AccessDenied } = errors;
  */
 export const checkOrganizationAccess = async (
   ctx: KoaContextWithOIDC,
+  envSet: EnvSet,
   queries: Queries,
   account: Account,
   isThirdParty?: boolean
@@ -46,8 +49,20 @@ export const checkOrganizationAccess = async (
       throw error;
     }
 
+    // DEV: CIMD (client ID metadata document) support
+    /**
+     * A CIMD identifier would silently fall through `isThirdPartyApplication` — the not-found
+     * fallback reads as first-party — while also querying the applications table with the URL.
+     * Keep the skip explicit instead: organization grants are keyed to registered applications
+     * (`application_user_consent_organizations`), and the grant-scoped check for CIMD clients
+     * lands with LOG-13930. Until then organization tokens for CIMD clients stay gated by the
+     * membership check above and the MFA check below.
+     */
+    const isCimdClient = isCimdEffectivelyEnabled(envSet) && isCimdClientId(client.clientId);
+
     // Check if the organization is granted (third-party application only) by the user
     if (
+      !isCimdClient &&
       (isThirdParty ?? (await isThirdPartyApplication(queries, client.clientId))) &&
       !(await isOrganizationConsentedToApplication(
         queries,

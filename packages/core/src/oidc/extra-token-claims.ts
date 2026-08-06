@@ -30,7 +30,8 @@ import { isAccessDeniedError, parseCustomJwtResponseError } from '#src/utils/cus
 import { i18next } from '#src/utils/i18n.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
-import { getClientIdentifierPayload } from './cimd.js';
+import { isCimdClientId } from './cimd-client-id.js';
+import { getClientIdentifierPayload, isCimdEffectivelyEnabled } from './cimd.js';
 import { tokenExchangeActGuard } from './grants/token-exchange/types.js';
 
 const hasI18n = (ctx: KoaContextWithOIDC): ctx is KoaContextWithOIDC & { i18n: i18n } =>
@@ -245,8 +246,17 @@ export const getExtraTokenClaimsForJwtCustomization = async (
     );
 
     const clientId = token.clientId ?? ctx.oidc.client?.clientId;
+    // DEV: CIMD (client ID metadata document) support
+    /**
+     * CIMD clients are unregistered, so there is no application context to expose and the
+     * identifier URL must never be used to query the applications table.
+     */
+    const isCimdClient =
+      clientId !== undefined && isCimdEffectivelyEnabled(envSet) && isCimdClientId(clientId);
     const applicationContext = conditional(
-      clientId && (await libraries.jwtCustomizers.getApplicationContext(envSet.tenantId, clientId))
+      clientId &&
+        !isCimdClient &&
+        (await libraries.jwtCustomizers.getApplicationContext(envSet.tenantId, clientId))
     );
 
     // For organization (API resource) tokens, expose the target organization so the customizer

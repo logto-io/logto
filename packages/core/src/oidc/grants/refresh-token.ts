@@ -36,6 +36,8 @@ import { errors, type Provider } from 'oidc-provider';
 
 import { type EnvSet } from '#src/env-set/index.js';
 import { assertUserHasApplicationAccessForOidc } from '#src/oidc/application-access-control.js';
+import { isCimdClientId } from '#src/oidc/cimd-client-id.js';
+import { isCimdEffectivelyEnabled } from '#src/oidc/cimd.js';
 import {
   applyMtlsBinding,
   buildTokenResponse,
@@ -229,15 +231,23 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx)
     throw new InvalidRequest('authorization_details is unsupported for this refresh token');
   }
 
-  await assertUserHasApplicationAccessForOidc(
-    appAccess,
-    client.clientId,
-    account.accountId,
-    client.metadata().appLevelAccessControlEnabled
-  );
+  // DEV: CIMD (client ID metadata document) support
+  /**
+   * Application-level access control only applies to registered applications; the
+   * access-control library's fallback lookup would query the applications table with the CIMD
+   * identifier URL and deny on not-found.
+   */
+  if (!(isCimdEffectivelyEnabled(envSet) && isCimdClientId(client.clientId))) {
+    await assertUserHasApplicationAccessForOidc(
+      appAccess,
+      client.clientId,
+      account.accountId,
+      client.metadata().appLevelAccessControlEnabled
+    );
+  }
 
   /* === RFC 0001 === */
-  const { organizationId } = await checkOrganizationAccess(ctx, queries, account);
+  const { organizationId } = await checkOrganizationAccess(ctx, envSet, queries, account);
 
   if (
     organizationId && // Validate if the refresh token has the required scope from RFC 0001.

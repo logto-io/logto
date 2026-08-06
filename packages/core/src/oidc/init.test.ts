@@ -523,6 +523,66 @@ describe('getResourceServerInfo for CIMD clients', () => {
   });
 });
 
+// DEV: CIMD (client ID metadata document) support
+describe('loadExistingGrant for CIMD clients', () => {
+  const cimdClientId = 'https://client.example.com/client-metadata.json';
+
+  const createCimdTestClient = (): KoaContextWithOIDC['oidc']['client'] => {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal client stub for OIDC context testing
+    return {
+      clientId: cimdClientId,
+      metadata: () => ({}),
+    } as KoaContextWithOIDC['oidc']['client'];
+  };
+
+  it('should load the grant without the application access check', async () => {
+    const assertUserHasApplicationAccess = jest.fn();
+    const tenant = new MockTenant();
+
+    tenant.setPartial('libraries', {
+      applicationAccessControl: { assertUserHasApplicationAccess },
+    });
+
+    const { id, queries, libraries, logtoConfigs, subscription } = tenant;
+    const provider = initOidc(id, cimdEnvSet, queries, libraries, logtoConfigs, subscription);
+    const findGrant = mockGrantFound(provider);
+    const configuration = getProviderConfiguration(provider);
+    const ctx = createOidcContext({
+      provider,
+      account: { accountId, claims: async () => ({ sub: accountId }) },
+      client: createCimdTestClient(),
+      result: { consent: { grantId: 'grant_id' } },
+    } as Partial<KoaContextWithOIDC['oidc']>);
+
+    await expect(configuration.loadExistingGrant(ctx)).resolves.toBeDefined();
+    expect(assertUserHasApplicationAccess).not.toHaveBeenCalled();
+    expect(findGrant).toHaveBeenCalledWith('grant_id');
+  });
+
+  it('should keep the application access check for a url client id when CIMD is not effectively enabled', async () => {
+    const assertUserHasApplicationAccess = jest
+      .fn()
+      .mockRejectedValueOnce(new RequestError('oidc.access_denied'));
+    const tenant = new MockTenant();
+
+    tenant.setPartial('libraries', {
+      applicationAccessControl: { assertUserHasApplicationAccess },
+    });
+
+    const provider = createProvider(tenant);
+    const configuration = getProviderConfiguration(provider);
+    const ctx = createOidcContext({
+      provider,
+      account: { accountId },
+      client: createCimdTestClient(),
+      result: { consent: { grantId: 'grant_id' } },
+    } as Partial<KoaContextWithOIDC['oidc']>);
+
+    await expect(configuration.loadExistingGrant(ctx)).rejects.toThrow(errors.AccessDenied);
+    expect(assertUserHasApplicationAccess).toHaveBeenCalledWith(cimdClientId, accountId, undefined);
+  });
+});
+
 const findAccount = async (findUserById: () => Promise<typeof mockUser>) => {
   const provider = createProvider(new MockTenant(undefined, { users: { findUserById } }));
   const configuration = getProviderConfiguration(provider);
