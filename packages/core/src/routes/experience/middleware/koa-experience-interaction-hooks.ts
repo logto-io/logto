@@ -4,11 +4,13 @@ import { type MiddlewareType } from 'koa';
 import { type IRouterParamContext } from 'koa-router';
 import { z } from 'zod';
 
+import { type EnvSet } from '#src/env-set/index.js';
 import {
   HookContextManager,
   InteractionHookContextManager,
 } from '#src/libraries/hook/context-manager.js';
 import { type WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
+import { getClientIdentifierPayload } from '#src/oidc/cimd.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 
@@ -29,9 +31,10 @@ export function koaExperienceInteractionHooks<
   StateT,
   ContextT extends WithInteractionDetailsContext,
   ResponseT,
->({
-  hooks: { triggerInteractionHooks, triggerDataHooks, triggerExceptionHooks },
-}: Libraries): MiddlewareType<StateT, WithExperienceInteractionHooksContext<ContextT>, ResponseT> {
+>(
+  envSet: EnvSet,
+  { hooks: { triggerInteractionHooks, triggerDataHooks, triggerExceptionHooks } }: Libraries
+): MiddlewareType<StateT, WithExperienceInteractionHooksContext<ContextT>, ResponseT> {
   return async (ctx, next) => {
     const {
       interactionDetails,
@@ -54,7 +57,8 @@ export function koaExperienceInteractionHooks<
     const interactionApiMetadata = {
       interactionEvent,
       userAgent,
-      applicationId: conditionalString(interactionDetails.params.client_id),
+      // DEV: CIMD (client ID metadata document) support
+      ...getClientIdentifierPayload(envSet, conditionalString(interactionDetails.params.client_id)),
       sessionId: interactionDetails.jti,
     };
     const interactionHookContext = new InteractionHookContextManager({

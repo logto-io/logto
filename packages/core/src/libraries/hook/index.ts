@@ -127,7 +127,8 @@ export const createHookLibrary = (queries: Queries) => {
       return;
     }
 
-    const { interactionEvent, sessionId, applicationId, userIp, userAgent } = metadata;
+    const { interactionEvent, sessionId, applicationId, cimdClientId, userIp, userAgent } =
+      metadata;
 
     const found = await findAllHooks();
 
@@ -173,6 +174,8 @@ export const createHookLibrary = (queries: Queries) => {
         userIp,
         user: user && pick(user, ...userInfoSelectFields),
         application: application && pick(application, 'id', 'type', 'name', 'description'),
+        // DEV: CIMD (client ID metadata document) support
+        cimdClientId,
       } satisfies BetterOmit<InteractionHookEventPayload, 'hookId'>;
 
       // eslint-disable-next-line @silverhand/fp/no-mutating-methods

@@ -1,22 +1,25 @@
 import { conditionalString } from '@silverhand/essentials';
 import { type MiddlewareType } from 'koa';
 
+import { type EnvSet } from '#src/env-set/index.js';
 import { type LogContext } from '#src/middleware/koa-audit-log.js';
 import { type WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
+import { getClientIdentifierPayload } from '#src/oidc/cimd.js';
 
 export default function koaExperienceAuditLog<
   StateT,
   ContextT extends WithInteractionDetailsContext & LogContext,
   ResponseT,
->(): MiddlewareType<StateT, ContextT, ResponseT> {
+>(envSet: EnvSet): MiddlewareType<StateT, ContextT, ResponseT> {
   return async (ctx, next) => {
     const { prependAllLogEntries, interactionDetails } = ctx;
-    const applicationId = conditionalString(interactionDetails.params.client_id);
+    const clientId = conditionalString(interactionDetails.params.client_id);
 
     try {
       await next();
     } finally {
-      prependAllLogEntries({ applicationId });
+      // DEV: CIMD (client ID metadata document) support
+      prependAllLogEntries(getClientIdentifierPayload(envSet, clientId));
     }
   };
 }

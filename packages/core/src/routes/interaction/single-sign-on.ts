@@ -28,7 +28,7 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
   router: Router<unknown, WithInteractionDetailsContext<WithLogContext<T>>>,
   tenant: TenantContext
 ) {
-  const { provider, libraries, queries } = tenant;
+  const { provider, envSet, libraries, queries } = tenant;
 
   const { ssoConnectors: ssoConnectorsLibrary } = libraries;
 
@@ -84,7 +84,7 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
         redirectTo: z.string(),
       }),
     }),
-    koaInteractionHooks(libraries),
+    koaInteractionHooks(envSet, libraries),
     async (ctx, next) => {
       const { guard, interactionDetails, assignReleaseOnSuccessInteractionHookResult } = ctx;
 
@@ -131,7 +131,7 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
       }),
     }),
     koaInteractionSie(queries),
-    koaInteractionHooks(libraries),
+    koaInteractionHooks(envSet, libraries),
     async (ctx, next) => {
       const {
         assignReleaseOnSuccessInteractionHookResult,

@@ -47,16 +47,16 @@ type RouterContext<T> = T extends Router<unknown, infer Context> ? Context : nev
 export default function experienceApiRoutes<T extends AnonymousRouter>(
   ...[anonymousRouter, tenant]: RouterInitArgs<T>
 ) {
-  const { provider, libraries } = tenant;
+  const { provider, envSet, libraries } = tenant;
 
   const experienceRouter =
     // @ts-expect-error for good koa types
     // eslint-disable-next-line no-restricted-syntax
     (anonymousRouter as Router<unknown, ExperienceInteractionRouterContext<RouterContext<T>>>).use(
       koaInteractionDetails(provider),
-      koaExperienceInteractionHooks(libraries),
+      koaExperienceInteractionHooks(envSet, libraries),
       koaExperienceInteraction(tenant),
-      koaExperienceAuditLog()
+      koaExperienceAuditLog(envSet)
     );
 
   experienceRouter.put(

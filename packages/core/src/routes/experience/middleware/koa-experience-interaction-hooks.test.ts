@@ -6,6 +6,7 @@ import { type Provider } from 'oidc-provider';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import type Libraries from '#src/tenants/Libraries.js';
+import { mockEnvSet } from '#src/test-utils/env-set.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import {
@@ -67,9 +68,9 @@ describe('exception hooks', () => {
       throw error;
     });
 
-    await expect(koaExperienceInteractionHooks(mockHooksLibrary)(ctx, next)).rejects.toThrowError(
-      error
-    );
+    await expect(
+      koaExperienceInteractionHooks(mockEnvSet, mockHooksLibrary)(ctx, next)
+    ).rejects.toThrowError(error);
 
     expect(triggerInteractionHooks).not.toBeCalled();
     expect(triggerDataHooks).not.toBeCalled();
@@ -128,9 +129,9 @@ describe('exception hooks', () => {
       throw error;
     });
 
-    await expect(koaExperienceInteractionHooks(mockHooksLibrary)(ctx, next)).rejects.toThrowError(
-      error
-    );
+    await expect(
+      koaExperienceInteractionHooks(mockEnvSet, mockHooksLibrary)(ctx, next)
+    ).rejects.toThrowError(error);
 
     expect(triggerInteractionHooks).toBeCalledTimes(1);
 
@@ -200,9 +201,9 @@ describe('exception hooks', () => {
       throw error;
     });
 
-    await expect(koaExperienceInteractionHooks(mockHooksLibrary)(ctx, next)).rejects.toThrowError(
-      error
-    );
+    await expect(
+      koaExperienceInteractionHooks(mockEnvSet, mockHooksLibrary)(ctx, next)
+    ).rejects.toThrowError(error);
 
     expect(triggerInteractionHooks).toBeCalledTimes(1);
 
@@ -255,7 +256,7 @@ describe('exception hooks', () => {
     });
 
     await expect(
-      koaExperienceInteractionHooks(mockHooksLibrary)(ctx, next)
+      koaExperienceInteractionHooks(mockEnvSet, mockHooksLibrary)(ctx, next)
     ).resolves.toBeUndefined();
 
     expect(triggerInteractionHooks).toBeCalledTimes(2);

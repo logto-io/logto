@@ -15,6 +15,7 @@ import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import { getClientIdentifierPayload } from '#src/oidc/cimd.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
 import { appendPasswordPayloadToActionProvisioningProfile } from '../classes/libraries/action-provisioning-profile.js';
@@ -53,7 +54,7 @@ const toActionUser = ({
 
 export default function passwordVerificationRoutes<T extends ExperienceInteractionRouterContext>(
   router: Router<unknown, T>,
-  { libraries, queries, sentinel }: TenantContext
+  { envSet, libraries, queries, sentinel }: TenantContext
 ) {
   router.post(
     `${experienceRoutes.verification}/password`,
@@ -129,9 +130,13 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
                 auditContext: {
                   createLog: ctx.createLog,
                   sessionId: ctx.interactionDetails.jti,
-                  applicationId: conditional(
-                    typeof ctx.interactionDetails.params.client_id === 'string' &&
-                      ctx.interactionDetails.params.client_id
+                  // DEV: CIMD (client ID metadata document) support
+                  ...getClientIdentifierPayload(
+                    envSet,
+                    conditional(
+                      typeof ctx.interactionDetails.params.client_id === 'string' &&
+                        ctx.interactionDetails.params.client_id
+                    )
                   ),
                   userId: existingUser?.id,
                 },
