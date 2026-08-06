@@ -31,8 +31,7 @@ const alteration: AlterationScript = {
         on trusted_devices (tenant_id, expires_at);
 
       alter table sign_in_experiences
-        add column trusted_device jsonb not null
-          default '{"enabled": false, "durationDays": 30}'::jsonb;
+        add column trusted_device jsonb not null default '{}'::jsonb;
 
       alter table organizations
         add column is_trusted_device_allowed boolean not null default true;

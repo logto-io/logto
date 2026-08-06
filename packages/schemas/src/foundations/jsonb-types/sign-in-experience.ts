@@ -270,21 +270,21 @@ export const adaptiveMfaGuard = z.object({
   enabled: z.boolean().optional(),
 }) satisfies ToZodObject<AdaptiveMfa>;
 
-/** Tenant-level settings for MFA trusted-device credentials. */
+/** Stored tenant-level overrides for MFA trusted-device credentials. */
 export type TrustedDevicePolicy = {
-  enabled: boolean;
-  durationDays: number;
+  enabled?: boolean;
+  durationDays?: number;
 };
 
 /** Default trusted-device policy for newly created sign-in experiences. */
 export const defaultTrustedDevicePolicy = Object.freeze({
   enabled: false,
   durationDays: 30,
-}) satisfies TrustedDevicePolicy;
+}) satisfies Required<TrustedDevicePolicy>;
 
 export const trustedDevicePolicyGuard = z.object({
-  enabled: z.boolean(),
-  durationDays: z.number().int().min(1).max(365),
+  enabled: z.boolean().optional(),
+  durationDays: z.number().int().min(1).max(365).optional(),
 }) satisfies ToZodObject<TrustedDevicePolicy>;
 
 export const customUiAssetsGuard = z.object({

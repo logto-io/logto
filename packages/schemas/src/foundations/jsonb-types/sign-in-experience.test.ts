@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   customUiCspGuard,
+  defaultTrustedDevicePolicy,
   passwordExpirationPolicyGuard,
   trustedDevicePolicyGuard,
 } from './sign-in-experience.js';
@@ -84,21 +85,27 @@ describe('passwordExpirationPolicyGuard', () => {
 });
 
 describe('trustedDevicePolicyGuard', () => {
-  it.each([
-    { enabled: false, durationDays: 1 },
-    { enabled: false, durationDays: 30 },
-    { enabled: true, durationDays: 365 },
-  ])('accepts valid policy %p', (value) => {
-    expect(trustedDevicePolicyGuard.parse(value)).toEqual(value);
+  it.each([{}, { enabled: false }, { durationDays: 1 }, { enabled: true, durationDays: 365 }])(
+    'accepts valid policy %p',
+    (value) => {
+      expect(trustedDevicePolicyGuard.parse(value)).toEqual(value);
+    }
+  );
+
+  it.each([{ durationDays: 0 }, { durationDays: 366 }, { durationDays: 1.5 }])(
+    'rejects invalid policy %p',
+    (value) => {
+      expect(trustedDevicePolicyGuard.safeParse(value).success).toBe(false);
+    }
+  );
+
+  it('provides the complete effective default', () => {
+    expect(defaultTrustedDevicePolicy).toEqual({ enabled: false, durationDays: 30 });
+    expect(trustedDevicePolicyGuard.safeParse(defaultTrustedDevicePolicy).success).toBe(true);
   });
 
-  it.each([
-    { enabled: false },
-    { durationDays: 30 },
-    { enabled: false, durationDays: 0 },
-    { enabled: false, durationDays: 366 },
-    { enabled: false, durationDays: 1.5 },
-  ])('rejects invalid policy %p', (value) => {
+  it('rejects invalid enabled values', () => {
+    const value = { enabled: 'true' };
     expect(trustedDevicePolicyGuard.safeParse(value).success).toBe(false);
   });
 });
