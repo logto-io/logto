@@ -27,6 +27,25 @@ const saveUserFirstConsentedAppId = async (
   }
 };
 
+/**
+ * The CIMD mirror of {@link saveUserFirstConsentedAppId} on the dedicated
+ * `users.cimd_client_id` column: `users.application_id` (varchar(21)) keeps meaning "first
+ * consented registered application", so a CIMD URL must never reach it — user management still
+ * shows which client a user came from through the dedicated column.
+ */
+const saveUserFirstConsentedCimdClientId = async (
+  queries: Queries,
+  userId: string,
+  cimdClientId: string
+) => {
+  const { findUserById, updateUserById } = queries.users;
+  const { cimdClientId: firstConsentedCimdClientId } = await findUserById(userId);
+
+  if (!firstConsentedCimdClientId) {
+    await updateUserById(userId, { cimdClientId });
+  }
+};
+
 // Get the missing scopes from prompt details
 const missingScopesGuard = z.object({
   missingOIDCScope: z.string().array().optional(),
@@ -145,12 +164,11 @@ export const consent = async ({
     new provider.Grant({ accountId, clientId });
 
   await Promise.all([
-    /**
-     * A CIMD URL must never reach `users.application_id` (varchar(21), registered ids only).
-     * TODO: @xiaoyijun persist the CIMD attribution to `users.cimd_client_id` instead (LOG-13928).
-     */
     conditional(
       registeredClientId && saveUserFirstConsentedAppId(queries, accountId, registeredClientId)
+    ),
+    conditional(
+      cimdClientId && saveUserFirstConsentedCimdClientId(queries, accountId, cimdClientId)
     ),
     saveInteractionLastSubmissionToSession(queries, interactionDetails, {
       registeredClientId,
