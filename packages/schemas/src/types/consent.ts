@@ -73,14 +73,44 @@ export const publicOrganizationGuard = Organizations.guard
 
 export type PublicOrganization = z.infer<typeof publicOrganizationGuard>;
 
+// DEV: CIMD (client ID metadata document) support
+/**
+ * The kind-agnostic client summary for the consent page: one flat object instead of a
+ * discriminated union, so the experience renders by field presence without judging the client
+ * kind. `id` is the OAuth client_id for both kinds (a registered application id or a CIMD
+ * client identifier URL). The optional fields are present only for CIMD clients, resolved
+ * server-side from the provider-validated metadata document; `name` falls back to the client
+ * identifier hostname when the document carries no `client_name` (a compliant document without
+ * a name must not break authorization).
+ */
+export const publicClientSummaryGuard = z.object({
+  id: z.string(),
+  name: z.string(),
+  hostname: z.string().optional(),
+  logoUri: z.string().optional(),
+  clientUri: z.string().optional(),
+  policyUri: z.string().optional(),
+  tosUri: z.string().optional(),
+});
+export type PublicClientSummary = z.infer<typeof publicClientSummaryGuard>;
+
 export const consentInfoResponseGuard = z.object({
-  application: publicApplicationGuard.merge(applicationSignInExperienceGuard.partial()),
+  // DEV: CIMD (client ID metadata document) support
+  /** Present only for registered applications; a CIMD client carries no application entity. */
+  application: publicApplicationGuard.merge(applicationSignInExperienceGuard.partial()).optional(),
+  client: publicClientSummaryGuard,
   user: publicUserInfoGuard,
   organizations: publicOrganizationGuard.array().optional(),
   missingOIDCScope: z.string().array().optional(),
   missingResourceScopes: missingResourceScopesGuard.array().optional(),
   // Device flow consent does not require a redirect_uri.
   redirectUri: z.string().optional(),
+  /**
+   * How the authorization `redirect_uri` matches the client's registered redirect URIs,
+   * computed server-side from the registered values and the matcher — never trusted from the
+   * client or the experience. Absent for device-flow consent, which carries no redirect URI.
+   */
+  redirectUriMatchType: z.enum(['exact', 'wildcard']).optional(),
 });
 
 export type ConsentInfoResponse = z.infer<typeof consentInfoResponseGuard>;

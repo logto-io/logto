@@ -13,7 +13,7 @@ import FirstScreenLayout from '../FirstScreenLayout';
 
 import styles from './index.module.scss';
 
-type ThirdPartyBranding = ConsentInfoResponse['application']['branding'];
+type ThirdPartyBranding = NonNullable<ConsentInfoResponse['application']>['branding'];
 
 type Props = {
   readonly children: ReactNode;

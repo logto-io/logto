@@ -53,7 +53,7 @@ const Consent = () => {
   const signOut = useCallback(() => {
     const applicationId =
       new URLSearchParams(window.location.search).get(searchKeys.appId) ??
-      consentData?.application.id;
+      consentData?.application?.id;
     const signOutUrl = new URL('/oidc/session/end', window.location.origin);
 
     if (applicationId) {
@@ -61,7 +61,7 @@ const Consent = () => {
     }
 
     window.location.assign(signOutUrl.href);
-  }, [consentData?.application.id]);
+  }, [consentData?.application?.id]);
 
   const consentHandler = useCallback(async () => {
     setIsConsentLoading(true);
@@ -120,9 +120,18 @@ const Consent = () => {
     return null;
   }
 
-  const {
-    application: { displayName, name, termsOfUseUrl, privacyPolicyUrl },
-  } = consentData;
+  const { application } = consentData;
+
+  // DEV: CIMD (client ID metadata document) support
+  /**
+   * A response without `application` is a CIMD client; this page renders registered
+   * applications only until LOG-13931 lands the kind-agnostic client rendering.
+   */
+  if (!application) {
+    return null;
+  }
+
+  const { displayName, name, termsOfUseUrl, privacyPolicyUrl } = application;
 
   const applicationName = displayName ?? name;
   const showTerms = Boolean(termsOfUseUrl ?? privacyPolicyUrl);
@@ -137,7 +146,7 @@ const Consent = () => {
       titleInterpolation={{
         name: applicationName,
       }}
-      thirdPartyBranding={consentData.application.branding}
+      thirdPartyBranding={application.branding}
     >
       <UserProfile user={consentData.user} />
       <ScopesListCard

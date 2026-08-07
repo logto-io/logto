@@ -28,6 +28,10 @@ const consentInfo: ConsentInfoResponse = {
     privacyPolicyUrl: null,
     termsOfUseUrl: null,
   },
+  client: {
+    id: 'application_id',
+    name: 'Application',
+  },
   user: {
     id: 'user_id',
     name: null,
