@@ -196,7 +196,10 @@ const applyActionExecutionErrorPolicyDecision = (decision: ActionExecutionErrorP
 };
 
 export class ActionLibrary {
-  static async runScriptInLocalVm<Event>(data: ActionRunnerData<Event>): Promise<unknown> {
+  static async runScriptInLocalVm<Event>(
+    data: ActionRunnerData<Event>,
+    tenantId: string
+  ): Promise<unknown> {
     // TODO (LOG-13956): drop the legacy `node:vm` path and the gate once the worker-thread
     // runner has been manually verified and released.
     if (!EnvSet.values.isDevFeaturesEnabled) {
@@ -215,6 +218,7 @@ export class ActionLibrary {
       script,
       entry: actionFunctionName,
       payload,
+      tenantId,
     });
 
     if (!result.ok) {
@@ -295,7 +299,7 @@ export class ActionLibrary {
       return this.runScriptRemotely(payload);
     }
 
-    return ActionLibrary.runScriptInLocalVm(payload);
+    return ActionLibrary.runScriptInLocalVm(payload, this.tenantId);
   }
 
   /**

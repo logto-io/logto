@@ -24,9 +24,9 @@ export const ossScriptLimits: ScriptLimits = Object.freeze({
 /**
  * The process-wide runner shared by Custom JWT and Actions.
  *
- * A single pool is deliberate: workers are keyed by `{entry}:{sha256(script)}`, so the two
- * libraries can never collide on a worker, and one pool keeps the worker cap a process-level
- * bound. Never dispose it from a call site — it outlives every tenant.
+ * A single pool is deliberate: workers are keyed by `{tenantId}:{entry}:{sha256(script)}`, so
+ * neither the two libraries nor two tenants can ever collide on a worker, and one pool keeps the
+ * worker cap a process-level bound. Never dispose it from a call site — it outlives every tenant.
  */
 const sharedRunner = new WorkerThreadScriptRunner();
 
@@ -38,13 +38,23 @@ const sharedRunner = new WorkerThreadScriptRunner();
  * the legacy `node:vm` path. The payload must be structured-cloneable — capability APIs such as
  * `api.denyAccess` are injected by the worker and must not be part of it.
  */
-export const runScriptOnWorkerPool = async (input: {
+export const runScriptOnWorkerPool = async ({
+  tenantId,
+  ...input
+}: {
   script: string;
   entry: ScriptEntry;
   payload: Record<string, unknown>;
+  /**
+   * The tenant the script belongs to. Required, not optional: worker reuse deliberately persists
+   * top-level script state, so two tenants running byte-identical script text must never share a
+   * worker heap — the tenant id becomes the pool key's prefix to guarantee that.
+   */
+  tenantId: string;
 }): Promise<ScriptResult> =>
   sharedRunner.run({
     ...input,
+    keyPrefix: tenantId,
     limits: ossScriptLimits,
     egress: { mode: 'allowAll' },
   });

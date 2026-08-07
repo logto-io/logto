@@ -79,6 +79,29 @@ describe('WorkerThreadScriptRunner pooling', () => {
     expect(runner.size).toBe(2);
   });
 
+  // Worker reuse persists top-level script state across runs, so without prefix isolation a
+  // byte-identical script would leak one tenant's cached state to another.
+  it('does not share a worker between different key prefixes', async () => {
+    const runner = createRunner();
+    const script = counterScript();
+
+    await expect(
+      runner.run({ ...buildInput(script), keyPrefix: 'tenant-a' })
+    ).resolves.toMatchObject({ value: { count: 1 } });
+    await expect(
+      runner.run({ ...buildInput(script), keyPrefix: 'tenant-b' })
+    ).resolves.toMatchObject({ value: { count: 1 } });
+    // A run without a key prefix does not reuse a prefixed worker either.
+    await expect(runner.run(buildInput(script))).resolves.toMatchObject({ value: { count: 1 } });
+    expect(runner.size).toBe(3);
+
+    // Same prefix and script reuse the worker.
+    await expect(
+      runner.run({ ...buildInput(script), keyPrefix: 'tenant-a' })
+    ).resolves.toMatchObject({ value: { count: 2 } });
+    expect(runner.size).toBe(3);
+  });
+
   it('gives each concurrent run its own result', async () => {
     const runner = createRunner();
     const script = 'const runAction = ({ index }) => ({ doubled: index * 2 });';

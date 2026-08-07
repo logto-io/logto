@@ -241,7 +241,9 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
 
           ctx.body = await libraries.jwtCustomizers.runScriptRemotely(body, true);
         } else {
-          ctx.body = removeUndefinedKeys(await JwtCustomizerLibrary.runScriptInLocalVm(body));
+          ctx.body = removeUndefinedKeys(
+            await JwtCustomizerLibrary.runScriptInLocalVm(body, tenantId)
+          );
         }
       } catch (error: unknown) {
         /**

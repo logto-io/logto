@@ -162,7 +162,7 @@ describe('ActionLibrary Cloud execution routing', () => {
     const runScriptRemotely = jest.spyOn(library, 'runScriptRemotely');
 
     await expect(library.executeScript(payload)).resolves.toEqual({ action: 'continue' });
-    expect(runScriptInLocalVm).toHaveBeenCalledWith(payload);
+    expect(runScriptInLocalVm).toHaveBeenCalledWith(payload, 'tenant_id');
     expect(runScriptRemotely).not.toHaveBeenCalled();
   });
 
