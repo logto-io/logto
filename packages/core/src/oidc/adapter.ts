@@ -14,10 +14,10 @@ import snakecaseKeys from 'snakecase-keys';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { getTenantUrls } from '#src/env-set/utils.js';
-import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 
 import { appLevelAccessControlMetadataKey } from './application-access-control.js';
+import { isCimdClientId } from './cimd/client-id.js';
 import { isCimdEffectivelyEnabled } from './cimd/index.js';
 import { getConstantClientMetadata } from './utils.js';
 
@@ -152,31 +152,6 @@ export default function postgresAdapter(
       throw new Error('Not implemented');
     };
 
-    /**
-     * Find the registered application for the client ID.
-     *
-     * While CIMD is effectively enabled, a confirmed "record not found" resolves to `undefined`
-     * and every other error keeps propagating — a database blip must never masquerade as
-     * "not found" and turn registered applications into CIMD fetch candidates. Otherwise the
-     * pre-CIMD behavior stays: every lookup failure folds into `invalid_client`.
-     */
-    const findApplicationWithCimdFallback = async (id: string) => {
-      // DEV: CIMD (client ID metadata document) support
-      if (isCimdEffectivelyEnabled(envSet)) {
-        try {
-          return await findApplicationById(id);
-        } catch (error) {
-          if (error instanceof RequestError && error.code === 'entity.not_exists_with_id') {
-            // Return `undefined` to hand resolution over to the provider's native CIMD resolver.
-            return;
-          }
-          throw error;
-        }
-      }
-
-      return tryThat(findApplicationById(id), new errors.InvalidClient(`invalid client ${id}`));
-    };
-
     const transpileClient = (
       {
         id: client_id,
@@ -214,11 +189,20 @@ export default function postgresAdapter(
           return buildDeviceDemoAppClientMetadata(envSet);
         }
 
-        const application = await findApplicationWithCimdFallback(id);
-
-        if (!application) {
+        /**
+         * A CIMD client ID is a URL and can never name a registered application, so resolution is
+         * handed over to the provider's native CIMD resolver without a database lookup — every
+         * other identifier keeps folding its lookup failures into `invalid_client`.
+         */
+        // DEV: CIMD (client ID metadata document) support
+        if (isCimdEffectivelyEnabled(envSet) && isCimdClientId(id)) {
           return;
         }
+
+        const application = await tryThat(
+          findApplicationById(id),
+          new errors.InvalidClient(`invalid client ${id}`)
+        );
 
         if (application.isThirdParty) {
           const clientScopes = await getThirdPartyClientScopes(applications, id);
