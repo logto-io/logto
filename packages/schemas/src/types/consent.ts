@@ -26,8 +26,7 @@ export type PublicUserInfo = z.infer<typeof publicUserInfoGuard>;
  * Define the public application info that can be exposed to the public. e.g. on the user consent page.
  *
  * The overrides lift the applications-table column length bounds: a CIMD client puts its
- * identifier URL (up to 2048 characters) in `id` and the remote document's `client_name`,
- * which no column bound governs, in `name`.
+ * identifier URL (up to 2048 characters) in both `id` and `name`.
  */
 export const publicApplicationGuard = Applications.guard
   .pick({

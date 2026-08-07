@@ -136,7 +136,11 @@ export const filterAndParseMissingResourceScopes = async ({
             const filteredScopes = await filterResourceScopesForTheCimdClient(
               queries,
               resourceIndicator,
-              scopes
+              scopes,
+              {
+                includeOrganizationResourceScopes: Boolean(organizationId),
+                includeResourceScopes: !organizationId,
+              }
             );
 
             return [

@@ -59,7 +59,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
 
       const {
         session,
-        params: { client_id: applicationId },
+        params: { client_id: applicationId, redirect_uri: redirectUri },
         prompt,
       } = interactionDetails;
 
@@ -74,6 +74,23 @@ export default function consentRoutes<T extends IRouterParamContext>(
 
       // DEV: CIMD (client ID metadata document) support
       const isCimdClient = isCimdEffectivelyEnabled(envSet) && isCimdClientId(applicationId);
+
+      if (isCimdClient) {
+        /**
+         * The oidc-provider resume path re-runs `checkClient` (re-fetching the metadata
+         * document when its cache has expired) but not `check_redirect_uri`, so a URI removed
+         * from the current document would still receive the authorization code. Re-assert it
+         * here: the document resolved now is the one resume reads moments later.
+         */
+        const client = await provider.Client.find(applicationId);
+        assertThat(client, new InvalidClient('client must be available'));
+        assertThat(
+          typeof redirectUri === 'string' && client.redirectUriAllowed(redirectUri),
+          new InvalidRedirectUri(
+            'redirect_uri must still be allowed by the client metadata document'
+          )
+        );
+      }
 
       // Grant the organizations to the application if the user has selected the organizations
       if (organizationIds?.length) {
@@ -192,7 +209,14 @@ export default function consentRoutes<T extends IRouterParamContext>(
           const resource = resourceScopesToGrant[resourceIndicator];
 
           if (!resource) {
-            return [resourceIndicator, []];
+            /**
+             * With the organization rebuild closed for CIMD (until LOG-13930), a scope held
+             * only through organization roles can end up neither granted nor rejected; the
+             * provider would then see it still missing on resume and restart the consent
+             * prompt indefinitely. Reject the whole group instead — consistent with the
+             * consent page, which never displayed these scopes.
+             */
+            return [resourceIndicator, isCimdClient ? scopes : []];
           }
 
           return [resourceIndicator, scopes.filter((scope) => !resource.includes(scope))];
@@ -259,11 +283,20 @@ export default function consentRoutes<T extends IRouterParamContext>(
       }> => {
         // DEV: CIMD (client ID metadata document) support
         if (isCimdClient) {
-          const client = await provider.Client.find(clientId);
-          assertThat(client, new InvalidClient('client must be available'));
+          assertThat(
+            await provider.Client.find(clientId),
+            new InvalidClient('client must be available')
+          );
 
+          /**
+           * The document's `client_name` is fully controlled by the remote, unregistered
+           * client, and the consent page renders the name as the only identity signal — so
+           * showing it verbatim invites phishing (CIMD draft-02 §8.5). Until the identifier
+           * hostname is rendered alongside it, the unforgeable identifier URL is the name.
+           * TODO: @xiaoyijun display the fetched name with the identifier hostname (LOG-13990).
+           */
           return {
-            application: { id: clientId, name: client.clientName ?? clientId },
+            application: { id: clientId, name: clientId },
             isDeviceFlowApplication: false,
           };
         }
