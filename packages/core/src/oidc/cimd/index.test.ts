@@ -17,7 +17,7 @@ const loadCimdModule = async ({
     },
   }));
 
-  return import('./cimd.js');
+  return import('./index.js');
 };
 
 const buildEnvSet = (cimdEnabled: boolean, jwkSigningAlg?: 'ES256' | 'ES384' | 'ES512'): EnvSet => {
@@ -53,7 +53,11 @@ const captureThrown = (run: () => unknown): unknown => {
   }
 };
 
-const loadEnabledFeature = async (jwkSigningAlg?: 'ES256' | 'ES384' | 'ES512') => {
+const loadEnabledFeature = async ({
+  jwkSigningAlg,
+}: {
+  jwkSigningAlg?: 'ES256' | 'ES384' | 'ES512';
+} = {}) => {
   const { buildClientIdMetadataDocumentFeature } = await loadCimdModule();
   const feature = buildClientIdMetadataDocumentFeature(buildEnvSet(true, jwkSigningAlg));
 
@@ -138,13 +142,13 @@ describe('ID token signing algorithm guard', () => {
   const clientId = buildClientId(64);
 
   it('allowClient accepts the tenant signing algorithm and an omitted declaration on an EC tenant', async () => {
-    const { allowClient } = await loadEnabledFeature('ES384');
+    const { allowClient } = await loadEnabledFeature({ jwkSigningAlg: 'ES384' });
     expect(allowClient(undefined, buildClient(clientId, 'ES384'))).toBe(true);
     expect(allowClient(undefined, buildClient(clientId))).toBe(true);
   });
 
   it('allowClient rejects a declaration the EC tenant signing key cannot sign', async () => {
-    const { allowClient } = await loadEnabledFeature('ES384');
+    const { allowClient } = await loadEnabledFeature({ jwkSigningAlg: 'ES384' });
 
     expect(
       captureThrown(() => allowClient(undefined, buildClient(clientId, 'RS256')))

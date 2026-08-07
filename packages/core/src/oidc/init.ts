@@ -9,7 +9,6 @@ import { userClaims } from '@logto/core-kit';
 import type { I18nKey } from '@logto/phrases';
 import {
   customClientMetadataDefault,
-  CustomClientMetadataKey,
   extraParamsObjectGuard,
   inSeconds,
   logtoCookieKey,
@@ -52,10 +51,11 @@ import koaTokenUsageGuard from '../middleware/koa-token-usage-guard.js';
 import {
   appLevelAccessControlMetadataKey,
   assertUserHasApplicationAccessForOidc,
+  extraClientMetadataKeys,
   hasAppLevelAccessControlChecked,
   markAppLevelAccessControlCheckedForOidcContext,
 } from './application-access-control.js';
-import { buildClientIdMetadataDocumentFeature } from './cimd.js';
+import { buildClientIdMetadataDocumentFeature } from './cimd/index.js';
 import defaults from './defaults.js';
 import { deviceFlowConfig, defaultDeviceCodeTtl } from './device-flow.js';
 import {
@@ -65,6 +65,7 @@ import {
 } from './extra-token-claims.js';
 import { getProviderFetchConfig } from './fetch.js';
 import { registerGrants } from './grants/index.js';
+import { installWildcardRedirectUriMatching } from './redirect-uri/index.js';
 import {
   findResource,
   findResourceScopes,
@@ -73,7 +74,6 @@ import {
   filterResourceScopesForTheThirdPartyApplication,
 } from './resource.js';
 import { getAcceptedUserClaims, getUserClaimsData } from './scope.js';
-import { installWildcardRedirectUriMatching } from './wildcard-redirect-uri.js';
 
 // Temporarily removed 'EdDSA' since it's not supported by browser yet
 const supportedSigningAlgs = Object.freeze(['RS256', 'PS256', 'ES256', 'ES384', 'ES512'] as const);
@@ -352,7 +352,7 @@ export default function initOidc(
       };
     },
     extraClientMetadata: {
-      properties: [...Object.values(CustomClientMetadataKey), appLevelAccessControlMetadataKey],
+      properties: [...extraClientMetadataKeys],
       validator: (_, key, value) => {
         if (key === appLevelAccessControlMetadataKey) {
           if (value === undefined) {

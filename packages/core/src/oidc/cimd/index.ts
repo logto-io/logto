@@ -9,14 +9,13 @@
  * @see {@link https://www.ietf.org/archive/id/draft-ietf-oauth-client-id-metadata-document-02.html | draft-02}
  */
 
-import { CustomClientMetadataKey } from '@logto/schemas';
 import { conditional, type Optional } from '@silverhand/essentials';
 import { type Client, errors, type KoaContextWithOIDC } from 'oidc-provider';
 
 import { EnvSet } from '#src/env-set/index.js';
 
-import { appLevelAccessControlMetadataKey } from './application-access-control.js';
-import { isValidWildcardRedirectUriPattern } from './wildcard-redirect-uri.js';
+import { extraClientMetadataKeys } from '../application-access-control.js';
+import { isValidWildcardRedirectUriPattern } from '../redirect-uri/utils.js';
 
 /**
  * Must not exceed the `cimd_client_id varchar(2048)` column width — neither the draft nor the
@@ -30,17 +29,6 @@ const assertClientIdWithinLengthBound = (clientId: string) => {
     throw new errors.InvalidClient(`client_id must not exceed ${cimdClientIdMaxLength} characters`);
   }
 };
-
-/**
- * Logto private client metadata that a remote CIMD document must never carry. The provider
- * recognizes these keys through `extraClientMetadata`, so without this deny a remote document
- * could set them and have them honored. Derived from the code-defined key collections so future
- * private keys are covered automatically.
- */
-const forbiddenCimdMetadataKeys = Object.freeze([
-  ...Object.values(CustomClientMetadataKey),
-  appLevelAccessControlMetadataKey,
-]);
 
 /**
  * Whether CIMD is effectively enabled for the tenant. All three conditions must hold:
@@ -123,7 +111,13 @@ export const buildClientIdMetadataDocumentFeature = (
           }
 
           const metadata = client.metadata();
-          const forbiddenKey = forbiddenCimdMetadataKeys.find((key) => metadata[key] !== undefined);
+
+          /**
+           * Logto private client metadata that a remote CIMD document must never carry. The
+           * provider recognizes exactly {@link extraClientMetadataKeys}, so without this deny
+           * a remote document could set those keys and have them honored.
+           */
+          const forbiddenKey = extraClientMetadataKeys.find((key) => metadata[key] !== undefined);
 
           if (forbiddenKey) {
             throw new errors.InvalidClientMetadata(

@@ -1,4 +1,4 @@
-import { isCimdClientId } from './cimd-client-id.js';
+import { isCimdClientId } from './client-id.js';
 
 describe('isCimdClientId', () => {
   it('matches the fork scheme test case-insensitively and never matches registered ids', () => {

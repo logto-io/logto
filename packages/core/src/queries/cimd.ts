@@ -25,10 +25,12 @@ const createUserScopeQueries = (pool: CommonQueryMethods) => {
   const insert = async (userScopes: readonly UserScope[]) =>
     batchInsert(userScopes.map((userScope) => ({ userScope })));
 
+  /** Ordered so the client scope string issued from this ceiling is deterministic. */
   const findAll = async (): Promise<UserScope[]> => {
     const rows = await pool.any<{ userScope: UserScope }>(sql`
       select ${cimdUserScopes.fields.userScope}
       from ${cimdUserScopes.table}
+      order by ${cimdUserScopes.fields.userScope}
     `);
     return rows.map(({ userScope }) => userScope);
   };
