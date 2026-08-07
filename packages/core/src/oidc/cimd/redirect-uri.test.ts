@@ -84,6 +84,8 @@ describe('redirectUriAllowed override for cimd clients', () => {
     // Ports are stripped from both sides, and IPv6 literals are handled.
     expect(redirectUriAllowed.call(client, 'http://127.0.0.1:49152/cb')).toBe(true);
     expect(redirectUriAllowed.call(client, 'http://[::1]:49152/v6')).toBe(true);
+    // The reverse direction: a port-less request matches a ported registration too.
+    expect(redirectUriAllowed.call(client, 'http://127.0.0.1/cb')).toBe(true);
   });
 
   it('treats an explicit default port as strippable on both sides', () => {
@@ -95,6 +97,8 @@ describe('redirectUriAllowed override for cimd clients', () => {
     // WHATWG reports an explicit `:80` as an empty port; it must still strip like any other.
     expect(redirectUriAllowed.call(client, 'http://localhost:49152/cb')).toBe(true);
     expect(redirectUriAllowed.call(client, 'http://127.0.0.1:80/p80')).toBe(true);
+    // The reverse direction: a port-less request matches the explicitly ported registration.
+    expect(redirectUriAllowed.call(client, 'http://localhost/cb')).toBe(true);
   });
 
   it('does not treat path content after a backslash as a strippable port', () => {

@@ -10,7 +10,7 @@
  */
 
 import { ReservedScope } from '@logto/core-kit';
-import { CustomClientMetadataKey, GrantType } from '@logto/schemas';
+import { GrantType } from '@logto/schemas';
 import { conditional, type Optional } from '@silverhand/essentials';
 import {
   type AllClientMetadata,
@@ -22,7 +22,7 @@ import {
 import { EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 
-import { appLevelAccessControlMetadataKey } from '../application-access-control.js';
+import { extraClientMetadataKeys } from '../application-access-control.js';
 import { isValidWildcardRedirectUriPattern } from '../redirect-uri/utils.js';
 
 /**
@@ -37,17 +37,6 @@ const assertClientIdWithinLengthBound = (clientId: string) => {
     throw new errors.InvalidClient(`client_id must not exceed ${cimdClientIdMaxLength} characters`);
   }
 };
-
-/**
- * Logto private client metadata that a remote CIMD document must never carry. The provider
- * recognizes these keys through `extraClientMetadata`, so without this deny a remote document
- * could set them and have them honored. Derived from the code-defined key collections so future
- * private keys are covered automatically.
- */
-const forbiddenCimdMetadataKeys = Object.freeze([
-  ...Object.values(CustomClientMetadataKey),
-  appLevelAccessControlMetadataKey,
-]);
 
 /**
  * Whether CIMD is effectively enabled for the tenant. All three conditions must hold:
@@ -165,7 +154,13 @@ export const buildClientIdMetadataDocumentFeature = (
           }
 
           const metadata = client.metadata();
-          const forbiddenKey = forbiddenCimdMetadataKeys.find((key) => metadata[key] !== undefined);
+
+          /**
+           * Logto private client metadata that a remote CIMD document must never carry. The
+           * provider recognizes exactly {@link extraClientMetadataKeys}, so without this deny
+           * a remote document could set those keys and have them honored.
+           */
+          const forbiddenKey = extraClientMetadataKeys.find((key) => metadata[key] !== undefined);
 
           if (forbiddenKey) {
             throw new errors.InvalidClientMetadata(

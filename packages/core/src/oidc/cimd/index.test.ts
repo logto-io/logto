@@ -27,10 +27,10 @@ const buildEnvSet = (cimdEnabled: boolean, jwkSigningAlg?: 'ES256' | 'ES384' | '
   return { oidc: { cimdEnabled, jwkSigningAlg } } as EnvSet;
 };
 
-const buildCimdQueries = (ceilingUserScopes: UserScope[] = []): Queries['cimd'] => {
+const buildCimdQueries = (findAllUserScopes: () => Promise<UserScope[]> = async () => []) => {
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal queries stub scoped to the methods the transform reads
   return {
-    userScopes: { findAll: async () => ceilingUserScopes },
+    userScopes: { findAll: findAllUserScopes },
   } as Queries['cimd'];
 };
 
@@ -62,21 +62,25 @@ const captureThrown = (run: () => unknown): unknown => {
   }
 };
 
-const loadEnabledFeature = async (
-  jwkSigningAlg?: 'ES256' | 'ES384' | 'ES512',
-  ceilingUserScopes?: UserScope[]
-) => {
+const loadEnabledFeature = async ({
+  jwkSigningAlg,
+  ceilingUserScopes = [],
+}: {
+  jwkSigningAlg?: 'ES256' | 'ES384' | 'ES512';
+  ceilingUserScopes?: UserScope[];
+} = {}) => {
   const { buildClientIdMetadataDocumentFeature } = await loadCimdModule();
+  const findAllUserScopes = jest.fn(async () => ceilingUserScopes);
   const feature = buildClientIdMetadataDocumentFeature(
     buildEnvSet(true, jwkSigningAlg),
-    buildCimdQueries(ceilingUserScopes)
+    buildCimdQueries(findAllUserScopes)
   );
 
   if (!feature) {
     throw new Error('Expected the CIMD feature to be built');
   }
 
-  return feature.clientIdMetadataDocument;
+  return { ...feature.clientIdMetadataDocument, findAllUserScopes };
 };
 
 describe('isCimdEffectivelyEnabled', () => {
@@ -157,10 +161,9 @@ describe('client identifier length bound', () => {
 
 describe('server-side metadata takeover', () => {
   it('overrides the document scope with the tenant user-scope ceiling and pins grant and response types', async () => {
-    const { transformClientMetadata } = await loadEnabledFeature(undefined, [
-      UserScope.Profile,
-      UserScope.Email,
-    ]);
+    const { transformClientMetadata } = await loadEnabledFeature({
+      ceilingUserScopes: [UserScope.Profile, UserScope.Email],
+    });
 
     await expect(
       transformClientMetadata(undefined, {
@@ -183,6 +186,25 @@ describe('server-side metadata takeover', () => {
       grant_types: ['authorization_code', 'refresh_token'],
       response_types: ['code'],
     });
+  });
+
+  it('re-reads the user-scope ceiling on every client resolution so changes apply immediately', async () => {
+    const { transformClientMetadata, findAllUserScopes } = await loadEnabledFeature({
+      ceilingUserScopes: [UserScope.Profile],
+    });
+
+    await expect(transformClientMetadata(undefined, {})).resolves.toMatchObject({
+      scope: 'openid offline_access profile',
+    });
+
+    // A memoized implementation would keep serving the first result; the ceiling must be
+    // re-queried per resolution for tenant changes to apply without a provider rebuild.
+    findAllUserScopes.mockResolvedValueOnce([UserScope.Profile, UserScope.Email]);
+
+    await expect(transformClientMetadata(undefined, {})).resolves.toMatchObject({
+      scope: 'openid offline_access profile email',
+    });
+    expect(findAllUserScopes).toHaveBeenCalledTimes(2);
   });
 
   it('passes the other document fields through untouched', async () => {
@@ -211,13 +233,13 @@ describe('ID token signing algorithm guard', () => {
   const clientId = buildClientId(64);
 
   it('allowClient accepts the tenant signing algorithm and an omitted declaration on an EC tenant', async () => {
-    const { allowClient } = await loadEnabledFeature('ES384');
+    const { allowClient } = await loadEnabledFeature({ jwkSigningAlg: 'ES384' });
     expect(allowClient(undefined, buildClient(clientId, 'ES384'))).toBe(true);
     expect(allowClient(undefined, buildClient(clientId))).toBe(true);
   });
 
   it('allowClient rejects a declaration the EC tenant signing key cannot sign', async () => {
-    const { allowClient } = await loadEnabledFeature('ES384');
+    const { allowClient } = await loadEnabledFeature({ jwkSigningAlg: 'ES384' });
 
     expect(
       captureThrown(() => allowClient(undefined, buildClient(clientId, 'RS256')))

@@ -1,9 +1,20 @@
+import { CustomClientMetadataKey } from '@logto/schemas';
 import { errors, type InteractionResults } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
 
 export const appLevelAccessControlMetadataKey = 'appLevelAccessControlEnabled';
+
+/**
+ * Every extra client metadata key Logto registers on the provider — the single source for
+ * `extraClientMetadata.properties` in `init.js` and for the CIMD private-metadata deny, so a
+ * future key is covered by both sites automatically.
+ */
+export const extraClientMetadataKeys = Object.freeze([
+  ...Object.values(CustomClientMetadataKey),
+  appLevelAccessControlMetadataKey,
+]);
 
 const appLevelAccessControlInteractionResultKey = 'appLevelAccessControl';
 

@@ -29,10 +29,9 @@ export const filterResourceScopesForTheCimdClient = async (
     switch (indicator) {
       case ReservedResource.Organization: {
         const ceilingOrganizationScopes = await cimd.organizationScopes.findAll();
+        const ceilingOrganizationScopeIds = new Set(ceilingOrganizationScopes.map(({ id }) => id));
 
-        return scopes.filter(({ id: organizationScopeId }) =>
-          ceilingOrganizationScopes.some(({ id }) => id === organizationScopeId)
-        );
+        return scopes.filter(({ id }) => ceilingOrganizationScopeIds.has(id));
       }
       // Mirror the third-party filter: other reserved resources are not ceiling-governed
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
@@ -51,9 +50,9 @@ export const filterResourceScopesForTheCimdClient = async (
     cimd.resourceScopes.findAll(),
     cimd.organizationResourceScopes.findAll(),
   ]);
-  const ceilingScopes = [...ceilingResourceScopes, ...ceilingOrganizationResourceScopes];
-
-  return scopes.filter(({ id: resourceScopeId }) =>
-    ceilingScopes.some(({ id }) => id === resourceScopeId)
+  const ceilingScopeIds = new Set(
+    [...ceilingResourceScopes, ...ceilingOrganizationResourceScopes].map(({ id }) => id)
   );
+
+  return scopes.filter(({ id }) => ceilingScopeIds.has(id));
 };

@@ -1,6 +1,13 @@
 /**
- * @overview CIMD redirect URI matching branches, installed by
- * `../redirect-uri/index.js` when the resolved client is in the CIMD namespace.
+ * @overview CIMD redirect URI matching branches, dispatched to by `../redirect-uri/index.js`
+ * when the resolved client is in the CIMD namespace.
+ *
+ * CIMD clients (draft-02) take a stricter exact branch than registered applications on both
+ * matching methods — their redirect and post-logout URIs come from the same metadata document,
+ * so a non-wildcard registered value must equal the raw request string (RFC 9700 simple string
+ * comparison, no URL normalization). The RFC 8252 loopback port exception applies to the
+ * authorization redirect only: RFC 9700 builds it into that matching rule, while RP-Initiated
+ * Logout requires exact matching with no exception.
  */
 
 import { loopbackHostnames, wildcardUrlMatch } from '../redirect-uri/utils.js';
@@ -34,9 +41,9 @@ const stripLoopbackPort = (value: string) =>
 
 /**
  * The CIMD retry keeps RFC 9700's exception scoped to the port alone: strip a `:port` from the
- * raw strings and compare every remaining character position. The parsed comparison above would
- * reintroduce normalization beyond the exception (hostname case folding, path normalization).
- * The parsed candidate still gates eligibility only.
+ * raw strings and compare every remaining character position. The registered-application
+ * retry's parsed comparison would reintroduce normalization beyond the exception (hostname
+ * case folding, path normalization). The parsed candidate still gates eligibility only.
  */
 export const matchLoopbackPortInsensitiveCimd = (
   registeredUris: readonly string[],
