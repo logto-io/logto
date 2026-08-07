@@ -55,7 +55,7 @@ export const checkOrganizationAccess = async (
     if (isCimdEffectivelyEnabled(envSet) && isCimdClientId(client.clientId)) {
       // TODO: @xiaoyijun replace the rejection with the grant-scoped organization check (LOG-13930)
       const error = new AccessDenied('organization tokens are not supported for CIMD clients');
-      // eslint-disable-next-line @silverhand/fp/no-mutation
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- oidc-provider errors take the HTTP status by assignment after construction
       error.statusCode = 403;
       throw error;
     }
