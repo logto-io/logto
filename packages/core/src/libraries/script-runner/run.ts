@@ -24,9 +24,9 @@ export const ossScriptLimits: ScriptLimits = Object.freeze({
 /**
  * The process-wide runner shared by Custom JWT and Actions.
  *
- * A single pool is deliberate: workers are keyed by `{tenantId}:{entry}:{sha256(script)}`, so
- * neither the two libraries nor two tenants can ever collide on a worker, and one pool keeps the
- * worker cap a process-level bound. Never dispose it from a call site — it outlives every tenant.
+ * A single pool is deliberate: workers are keyed by
+ * `{tenantId}:{entry}:{memoryMb}:{sha256(script)}`, so neither the two libraries nor two tenants
+ * can ever collide on a worker, and one pool keeps the worker cap a process-level bound. Never dispose it from a call site — it outlives every tenant.
  */
 const sharedRunner = new WorkerThreadScriptRunner();
 

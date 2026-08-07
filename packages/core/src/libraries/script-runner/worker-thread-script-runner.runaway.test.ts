@@ -85,6 +85,51 @@ describe('WorkerThreadScriptRunner runaway containment', () => {
     expect(result).toMatchObject({ ok: false, kind: 'runtime' });
   }, 10_000);
 
+  // Recycling after an out-of-memory kill lives in `worker-thread-script-runner.spawn.test.ts`:
+  // reproducing a real OOM here would race a multi-gigabyte allocation against the wall clock,
+  // because the jest process's `--max_old_space_size` overrides the per-worker limit.
+
+  it('serves the next run on a fresh worker after the script exits the thread', async () => {
+    const runner = createRunner();
+    const script = `var runs = 0;
+       const runAction = ({ die }) => {
+         runs += 1;
+         if (die) { process.exit(0); }
+         return { runs };
+       };`;
+
+    await expect(
+      runner.run({ ...buildInput(script, { wallClockMs: 5000 }), payload: { die: true } })
+    ).resolves.toMatchObject({ ok: false, kind: 'runtime' });
+    expect(runner.size).toBe(0);
+
+    await expect(
+      runner.run({ ...buildInput(script, { wallClockMs: 5000 }), payload: { die: false } })
+    ).resolves.toEqual({ ok: true, value: { runs: 1 } });
+  }, 10_000);
+
+  it('recycles the worker when the script crashes it outside a run', async () => {
+    // A throw from a timer escapes the worker's request handling entirely, so it surfaces as the
+    // worker `error` event rather than a settled result — the third recycling trigger next to
+    // timeout and out-of-memory.
+    const runner = createRunner();
+    const script = `const runAction = () => {
+         setTimeout(() => { throw new Error('crash'); }, 0);
+         return new Promise((resolve) => setTimeout(() => resolve({ survived: true }), 5000));
+       };`;
+
+    await expect(runner.run(buildInput(script, { wallClockMs: 8000 }))).resolves.toMatchObject({
+      ok: false,
+      kind: 'runtime',
+      message: 'crash',
+    });
+    expect(runner.size).toBe(0);
+
+    await expect(
+      runner.run(buildInput('const runAction = () => ({ healthy: true });'))
+    ).resolves.toEqual({ ok: true, value: { healthy: true } });
+  }, 15_000);
+
   it('serves the next run after a timeout on a fresh worker', async () => {
     const runner = createRunner();
     const script = 'const runAction = () => { while (true) {} };';

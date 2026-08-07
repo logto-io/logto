@@ -21,8 +21,8 @@ type PooledWorkerOptions = {
   /**
    * V8 old space cap for the thread.
    *
-   * `resourceLimits` are fixed at spawn, so a pooled worker keeps the budget of the run that
-   * created it.
+   * `resourceLimits` are fixed at spawn; the pool keys workers on this value, so every run this
+   * worker serves asked for exactly this budget.
    *
    * It is a per-isolate constraint, and V8 lets the process-global `--max-old-space-size` override
    * it: a host started with that flag (directly or through `NODE_OPTIONS`) lets a script grow to
@@ -86,16 +86,6 @@ export class PooledWorker {
       // worker's output through to the host process — the passthrough dry runs rely on.
     });
 
-    /**
-     * The per-run deadline is the only handle this class refs. The event loop therefore stays alive
-     * exactly as long as a run is outstanding, and an idle or leaked worker can never hold the
-     * process — or a test runner — open.
-     *
-     * Startup has no separate timer: `reserve(wallClockMs)` arms before the caller awaits ready, so
-     * a worker that never signals still settles through the run deadline.
-     */
-    this.worker.unref();
-
     // All three are attached synchronously and for the worker's whole life. An unhandled `error`
     // event on a worker crashes the host process.
     this.worker.on('message', (response: ScriptWorkerResponse) => {
@@ -124,6 +114,19 @@ export class PooledWorker {
         message: `The script worker exited unexpectedly with code ${code}.`,
       });
     });
+
+    /**
+     * The per-run deadline is the only handle this class refs. The event loop therefore stays alive
+     * exactly as long as a run is outstanding, and an idle or leaked worker can never hold the
+     * process — or a test runner — open.
+     *
+     * Must come after the listeners: attaching a `message` listener refs the worker's message port
+     * again, so unref-then-listen leaves the worker holding the event loop for its whole idle TTL.
+     *
+     * Startup has no separate timer: `reserve(wallClockMs)` arms before the caller awaits ready, so
+     * a worker that never signals still settles through the run deadline.
+     */
+    this.worker.unref();
   }
 
   /** Whether the pool may hand this worker a new run. */
