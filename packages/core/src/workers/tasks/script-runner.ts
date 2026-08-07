@@ -155,8 +155,9 @@ const postResult = (runId: number, result: ScriptResult) => {
     /**
      * Only reachable for a successful run: every failure shape is plain strings. The script
      * returned something structured clone cannot carry — a function, symbol, proxy, promise or
-     * `Response`. The replacement is constant-shape and therefore cannot throw in turn, which is
-     * what stops the throw escaping and killing the worker along with its co-resident runs.
+     * `Response`. The replacement is constant-shape and total (`safeString`, not the
+     * script-overridable global `String`), so it cannot throw in turn, which is what stops the
+     * throw escaping and killing the worker along with its co-resident runs.
      */
     port.postMessage({
       type: 'result',
@@ -164,7 +165,7 @@ const postResult = (runId: number, result: ScriptResult) => {
       result: {
         ok: false,
         kind: 'type',
-        message: `The script returned a value that cannot be transferred from the worker thread: ${String(
+        message: `The script returned a value that cannot be transferred from the worker thread: ${safeString(
           error
         )}`,
       },

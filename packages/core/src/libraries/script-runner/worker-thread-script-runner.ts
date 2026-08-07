@@ -59,7 +59,12 @@ export class WorkerThreadScriptRunner implements ScriptRunner {
    * pool alone is not enough to shut everything down.
    */
   private readonly liveWorkers = new Set<PooledWorker>();
-  private readonly workerPath = resolveWorkerPath();
+  /**
+   * Resolved lazily on the first run rather than at construction: a construction-time promise that
+   * rejects before anyone awaits it is an unhandled rejection, which can take the process down for
+   * a runner that never served a script.
+   */
+  private workerPath: Promise<string> | undefined;
 
   /** Live pooled workers. Exposed for tests. */
   get size(): number {
@@ -69,8 +74,9 @@ export class WorkerThreadScriptRunner implements ScriptRunner {
   /**
    * Run a script and report its outcome as a value.
    *
-   * Rejects only for an egress policy this runner cannot enforce, which is a caller bug rather than
-   * a script outcome. Every script failure comes back as a {@link ScriptResult}.
+   * Rejects only for host-side defects that no script can cause: an egress policy this runner
+   * cannot enforce (a caller bug) or a worker entry whose build output cannot be resolved (a
+   * deployment bug). Every script failure comes back as a {@link ScriptResult}.
    */
   async run({
     script,
@@ -88,7 +94,9 @@ export class WorkerThreadScriptRunner implements ScriptRunner {
       );
     }
 
-    // The only `await` before the synchronous region below.
+    // The only `await` before the synchronous region below. A rejection here is memoized, so
+    // every run against a broken build fails the same way instead of retrying the resolution.
+    this.workerPath ||= resolveWorkerPath();
     const workerPath = await this.workerPath;
     const key = this.buildKey(keyPrefix, entry, script);
 
