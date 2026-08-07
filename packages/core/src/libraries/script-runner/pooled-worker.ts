@@ -21,8 +21,8 @@ type PooledWorkerOptions = {
   /**
    * V8 old space cap for the thread.
    *
-   * `resourceLimits` are fixed at spawn, so a pooled worker keeps the budget of the run that
-   * created it.
+   * `resourceLimits` are fixed at spawn; the pool keys workers on this value, so every run this
+   * worker serves asked for exactly this budget.
    *
    * It is a per-isolate constraint, and V8 lets the process-global `--max-old-space-size` override
    * it: a host started with that flag (directly or through `NODE_OPTIONS`) lets a script grow to

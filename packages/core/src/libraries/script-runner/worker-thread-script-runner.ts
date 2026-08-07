@@ -44,10 +44,12 @@ const resolveWorkerPath = async () => {
  * runaway allocation from taking the host's heap with it. It is not an isolation boundary — a
  * script still runs with the host's privileges.
  *
- * Workers are keyed by `{keyPrefix}:{entry}:{sha256(script)}`, so a script is compiled once and
- * its worker is reused across runs, while runs with different key prefixes (e.g. different
- * tenants) never share a worker even for a byte-identical script. Recycling happens on fault, on
- * idle expiry, and after a fixed number of runs.
+ * Workers are keyed by `{keyPrefix}:{entry}:{memoryMb}:{sha256(script)}`, so a script is compiled
+ * once and its worker is reused across runs, while runs with different key prefixes (e.g.
+ * different tenants) never share a worker even for a byte-identical script. The memory budget is
+ * part of the key because `resourceLimits` are fixed at spawn: keying on it is what guarantees a
+ * run is never served by a worker with a stricter or looser limit than it asked for. Recycling
+ * happens on fault, on idle expiry, and after a fixed number of runs.
  */
 export class WorkerThreadScriptRunner implements ScriptRunner {
   /** Insertion-ordered, which makes the first entry the least recently used. */
@@ -98,7 +100,7 @@ export class WorkerThreadScriptRunner implements ScriptRunner {
     // every run against a broken build fails the same way instead of retrying the resolution.
     this.workerPath ||= resolveWorkerPath();
     const workerPath = await this.workerPath;
-    const key = this.buildKey(keyPrefix, entry, script);
+    const key = this.buildKey(keyPrefix, entry, limits.memoryMb, script);
 
     /**
      * Synchronous through `reserve()`: Node runs it without suspension, so two concurrent misses on
@@ -124,10 +126,15 @@ export class WorkerThreadScriptRunner implements ScriptRunner {
    * The key prefix leads and the fixed-length hash trails, so a prefix containing `:` can never
    * collide with another prefix/entry combination.
    */
-  private buildKey(keyPrefix: string | undefined, entry: ScriptEntry, script: string): string {
+  private buildKey(
+    keyPrefix: string | undefined,
+    entry: ScriptEntry,
+    memoryMb: number,
+    script: string
+  ): string {
     const hash = createHash('sha256').update(script).digest('hex');
 
-    return `${keyPrefix ?? ''}:${entry}:${hash}`;
+    return `${keyPrefix ?? ''}:${entry}:${memoryMb}:${hash}`;
   }
 
   /** Must never contain an `await` — see the synchronous region in {@link run}. */

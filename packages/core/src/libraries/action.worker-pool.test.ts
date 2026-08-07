@@ -22,8 +22,10 @@ const script = 'const runAction = () => ({});';
 const event = Object.freeze({ user: { name: 'Foo' } });
 const environmentVariables = Object.freeze({ API_KEY: 'api-key' });
 
+const tenantId = 'test-tenant';
+
 const runAdapter = async () =>
-  ActionLibrary.runScriptInLocalVm({ script, event, environmentVariables });
+  ActionLibrary.runScriptInLocalVm({ script, event, environmentVariables }, tenantId);
 
 const catchScriptExecutionError = async (promise: Promise<unknown>) => {
   try {
@@ -63,6 +65,7 @@ describe('ActionLibrary worker-pool adapter', () => {
       script,
       entry: 'runAction',
       payload: { event, environmentVariables },
+      keyPrefix: tenantId,
       limits: ossScriptLimits,
       egress: { mode: 'allowAll' },
     });
@@ -130,22 +133,28 @@ describe('ActionLibrary worker-pool adapter', () => {
 
     it('runs the script without touching the worker pool', async () => {
       await expect(
-        ActionLibrary.runScriptInLocalVm({
-          script: 'const runAction = ({ event }) => ({ echoed: event.user.name });',
-          event,
-          environmentVariables,
-        })
+        ActionLibrary.runScriptInLocalVm(
+          {
+            script: 'const runAction = ({ event }) => ({ echoed: event.user.name });',
+            event,
+            environmentVariables,
+          },
+          tenantId
+        )
       ).resolves.toEqual({ echoed: 'Foo' });
       expect(runScript).not.toHaveBeenCalled();
     });
 
     it('maps a thrown script error to the runtime status', async () => {
       const { status, body } = await catchScriptExecutionError(
-        ActionLibrary.runScriptInLocalVm({
-          script: "const runAction = () => { throw new Error('legacy boom'); };",
-          event,
-          environmentVariables,
-        })
+        ActionLibrary.runScriptInLocalVm(
+          {
+            script: "const runAction = () => { throw new Error('legacy boom'); };",
+            event,
+            environmentVariables,
+          },
+          tenantId
+        )
       );
 
       expect(status).toBe(500);
@@ -157,11 +166,14 @@ describe('ActionLibrary worker-pool adapter', () => {
     // worker runner evaluates in its own realm and is what makes syntax failures report 422.
     it('maps a script that cannot be compiled to the runtime status', async () => {
       const { status, body } = await catchScriptExecutionError(
-        ActionLibrary.runScriptInLocalVm({
-          script: 'const runAction = () => {',
-          event,
-          environmentVariables,
-        })
+        ActionLibrary.runScriptInLocalVm(
+          {
+            script: 'const runAction = () => {',
+            event,
+            environmentVariables,
+          },
+          tenantId
+        )
       );
 
       expect(status).toBe(500);
@@ -175,11 +187,14 @@ describe('ActionLibrary worker-pool adapter', () => {
     // host-thrown TypeError and its 422.
     it('maps a non-function entry to the type status', async () => {
       const { status, body } = await catchScriptExecutionError(
-        ActionLibrary.runScriptInLocalVm({
-          script: 'const runAction = 1;',
-          event,
-          environmentVariables,
-        })
+        ActionLibrary.runScriptInLocalVm(
+          {
+            script: 'const runAction = 1;',
+            event,
+            environmentVariables,
+          },
+          tenantId
+        )
       );
 
       expect(status).toBe(422);

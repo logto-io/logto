@@ -33,7 +33,9 @@ const buildData = (): CustomJwtFetcher => ({
   environmentVariables: { ...environmentVariables },
 });
 
-const runAdapter = async () => JwtCustomizerLibrary.runScriptInLocalVm(buildData());
+const tenantId = 'test-tenant';
+
+const runAdapter = async () => JwtCustomizerLibrary.runScriptInLocalVm(buildData(), tenantId);
 
 const catchScriptExecutionError = async (promise: Promise<unknown>) => {
   try {
@@ -73,6 +75,7 @@ describe('JwtCustomizerLibrary worker-pool adapter', () => {
       script,
       entry: 'getCustomJwtClaims',
       payload: { token, context, environmentVariables },
+      keyPrefix: tenantId,
       limits: ossScriptLimits,
       egress: { mode: 'allowAll' },
     });
@@ -160,20 +163,26 @@ describe('JwtCustomizerLibrary worker-pool adapter', () => {
 
     it('runs the script without touching the worker pool', async () => {
       await expect(
-        JwtCustomizerLibrary.runScriptInLocalVm({
-          ...buildData(),
-          script: 'const getCustomJwtClaims = ({ token }) => ({ echoed: token.sub });',
-        })
+        JwtCustomizerLibrary.runScriptInLocalVm(
+          {
+            ...buildData(),
+            script: 'const getCustomJwtClaims = ({ token }) => ({ echoed: token.sub });',
+          },
+          tenantId
+        )
       ).resolves.toEqual({ echoed: 'user-id' });
       expect(runScript).not.toHaveBeenCalled();
     });
 
     it('maps an access denial to the denied status with the error body', async () => {
       const { status, body } = await catchScriptExecutionError(
-        JwtCustomizerLibrary.runScriptInLocalVm({
-          ...buildData(),
-          script: "const getCustomJwtClaims = ({ api }) => api.denyAccess('legacy blocked');",
-        })
+        JwtCustomizerLibrary.runScriptInLocalVm(
+          {
+            ...buildData(),
+            script: "const getCustomJwtClaims = ({ api }) => api.denyAccess('legacy blocked');",
+          },
+          tenantId
+        )
       );
 
       expect(status).toBe(403);
@@ -185,10 +194,13 @@ describe('JwtCustomizerLibrary worker-pool adapter', () => {
 
     it('rejects a non-record value with the 400 invalid-input error', async () => {
       const { status, body } = await catchScriptExecutionError(
-        JwtCustomizerLibrary.runScriptInLocalVm({
-          ...buildData(),
-          script: 'const getCustomJwtClaims = () => 42;',
-        })
+        JwtCustomizerLibrary.runScriptInLocalVm(
+          {
+            ...buildData(),
+            script: 'const getCustomJwtClaims = () => 42;',
+          },
+          tenantId
+        )
       );
 
       expect(status).toBe(400);
@@ -197,10 +209,13 @@ describe('JwtCustomizerLibrary worker-pool adapter', () => {
 
     it('maps a thrown script error to the runtime status', async () => {
       const { status, body } = await catchScriptExecutionError(
-        JwtCustomizerLibrary.runScriptInLocalVm({
-          ...buildData(),
-          script: "const getCustomJwtClaims = () => { throw new Error('legacy boom'); };",
-        })
+        JwtCustomizerLibrary.runScriptInLocalVm(
+          {
+            ...buildData(),
+            script: "const getCustomJwtClaims = () => { throw new Error('legacy boom'); };",
+          },
+          tenantId
+        )
       );
 
       expect(status).toBe(500);

@@ -155,9 +155,9 @@ describe('WorkerThreadScriptRunner spawn contract', () => {
     expect(spawnedWorkers).toHaveLength(2);
   });
 
-  // `resourceLimits` are fixed at spawn, so a pooled worker keeps the budget of the run that
-  // created it — documented on `PooledWorkerOptions.memoryMb`.
-  it('keeps the memory budget of the run that spawned the worker', async () => {
+  // `resourceLimits` are fixed at spawn, so the memory budget is part of the pool key: a run
+  // asking for a different budget gets a fresh worker instead of one with the wrong limit.
+  it('spawns a fresh worker when a run requests a different memory budget', async () => {
     const runner = createRunner();
     const first = runner.run(buildInput('worker-source', 64));
 
@@ -167,11 +167,21 @@ describe('WorkerThreadScriptRunner spawn contract', () => {
 
     const second = runner.run(buildInput('worker-source', 256));
 
-    await waitFor(() => spawnedWorkers[0]?.requests.length === 2);
-    spawnedWorkers[0]?.succeedLast({});
+    await waitFor(() => spawnedWorkers[1]?.requests.length === 1);
+    spawnedWorkers[1]?.succeedLast({});
     await second;
 
-    expect(spawnedWorkers).toHaveLength(1);
+    expect(spawnedWorkers).toHaveLength(2);
     expect(spawnedWorkers[0]?.options.resourceLimits).toEqual({ maxOldGenerationSizeMb: 64 });
+    expect(spawnedWorkers[1]?.options.resourceLimits).toEqual({ maxOldGenerationSizeMb: 256 });
+
+    const third = runner.run(buildInput('worker-source', 256));
+
+    await waitFor(() => spawnedWorkers[1]?.requests.length === 2);
+    spawnedWorkers[1]?.succeedLast({});
+    await third;
+
+    // Same script and same budget reuse the pooled worker rather than spawning a third.
+    expect(spawnedWorkers).toHaveLength(2);
   });
 });
