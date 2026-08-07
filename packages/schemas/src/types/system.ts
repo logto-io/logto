@@ -184,6 +184,19 @@ export const protectedAppConfigProviderDataGuard = z.object({
 
 export type ProtectedAppConfigProviderData = z.infer<typeof protectedAppConfigProviderDataGuard>;
 
+// Cloudflare KV for the edge region-lookup cache (hostname → region/tenant bindings)
+export const regionLookupKvProviderDataGuard = z.object({
+  /* Cloudflare Workers & Pages account ID */
+  accountIdentifier: z.string(),
+  /* KV namespace ID */
+  namespaceIdentifier: z.string(),
+  /* Key prefix for region lookup cache entries (e.g. `region`) */
+  keyName: z.string(),
+  apiToken: z.string(), // Requires account permission for "KV Storage Edit"
+});
+
+export type RegionLookupKvProviderData = z.infer<typeof regionLookupKvProviderDataGuard>;
+
 /**
  * Cloudflare workers config for custom JWT.
  * Ref: https://developers.cloudflare.com/api/
@@ -206,6 +219,7 @@ export enum CloudflareKey {
   ProtectedAppConfigProvider = 'cloudflareProtectedAppConfigProvider',
   ProtectedAppHostnameProvider = 'cloudflareProtectedAppHostnameProvider',
   CustomJwtWorkerConfig = 'cloudflareCustomJwtWorkerConfig',
+  RegionLookupKvProvider = 'cloudflareRegionLookupKvProvider',
 }
 
 export type CloudflareType = {
@@ -213,6 +227,7 @@ export type CloudflareType = {
   [CloudflareKey.ProtectedAppConfigProvider]: ProtectedAppConfigProviderData;
   [CloudflareKey.ProtectedAppHostnameProvider]: HostnameProviderData;
   [CloudflareKey.CustomJwtWorkerConfig]: CustomJwtWorkerConfig;
+  [CloudflareKey.RegionLookupKvProvider]: RegionLookupKvProviderData;
 };
 
 export const cloudflareGuard: Readonly<{
@@ -222,6 +237,7 @@ export const cloudflareGuard: Readonly<{
   [CloudflareKey.ProtectedAppConfigProvider]: protectedAppConfigProviderDataGuard,
   [CloudflareKey.ProtectedAppHostnameProvider]: hostnameProviderDataGuard,
   [CloudflareKey.CustomJwtWorkerConfig]: customJwtWorkerConfigGuard,
+  [CloudflareKey.RegionLookupKvProvider]: regionLookupKvProviderDataGuard,
 });
 
 // Summary

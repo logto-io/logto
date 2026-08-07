@@ -8,6 +8,8 @@ import {
   type SystemKey,
   type ProtectedAppConfigProviderData,
   protectedAppConfigProviderDataGuard,
+  type RegionLookupKvProviderData,
+  regionLookupKvProviderDataGuard,
 } from '@logto/schemas';
 import type { CommonQueryMethods } from '@silverhand/slonik';
 import { type ZodType } from 'zod';
@@ -23,6 +25,7 @@ export default class SystemContext {
   public hostnameProviderConfig?: HostnameProviderData;
   public protectedAppConfigProviderConfig?: ProtectedAppConfigProviderData;
   public protectedAppHostnameProviderConfig?: HostnameProviderData;
+  public regionLookupKvProviderConfig?: RegionLookupKvProviderData;
 
   async loadProviderConfigs(pool: CommonQueryMethods) {
     await Promise.all([
@@ -66,6 +69,13 @@ export default class SystemContext {
           pool,
           CloudflareKey.ProtectedAppHostnameProvider,
           hostnameProviderDataGuard
+        );
+      })(),
+      (async () => {
+        this.regionLookupKvProviderConfig = await this.loadConfig(
+          pool,
+          CloudflareKey.RegionLookupKvProvider,
+          regionLookupKvProviderDataGuard
         );
       })(),
     ]);

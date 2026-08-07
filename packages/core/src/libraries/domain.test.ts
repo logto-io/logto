@@ -15,15 +15,18 @@ import { mockFallbackOrigin } from '#src/utils/cloudflare/mock.js';
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
 
-const { getCustomHostname, createCustomHostname, deleteCustomHostname } = await mockEsmWithActual(
-  '#src/utils/cloudflare/index.js',
-  () => ({
-    createCustomHostname: jest.fn(async () => mockCloudflareData),
-    getCustomHostname: jest.fn(async () => mockCloudflareData),
-    deleteCustomHostname: jest.fn(),
-    getFallbackOrigin: jest.fn(async () => mockFallbackOrigin),
-  })
-);
+const {
+  getCustomHostname,
+  createCustomHostname,
+  deleteCustomHostname,
+  deleteRegionLookupKvRecord,
+} = await mockEsmWithActual('#src/utils/cloudflare/index.js', () => ({
+  createCustomHostname: jest.fn(async () => mockCloudflareData),
+  getCustomHostname: jest.fn(async () => mockCloudflareData),
+  deleteCustomHostname: jest.fn(),
+  deleteRegionLookupKvRecord: jest.fn(),
+  getFallbackOrigin: jest.fn(async () => mockFallbackOrigin),
+}));
 
 const { clearCustomDomainCache } = await mockEsmWithActual('#src/utils/tenant.js', () => ({
   clearCustomDomainCache: jest.fn(),
@@ -43,19 +46,28 @@ const { syncDomainStatus, addDomain, deleteDomain, cleanupDomains } = createDoma
   })
 );
 
+const mockRegionLookupKvProviderConfig = {
+  accountIdentifier: 'fake_account_id',
+  namespaceIdentifier: 'fake_namespace_id',
+  keyName: 'region',
+  apiToken: '',
+};
+
+/* eslint-disable @silverhand/fp/no-mutation */
 beforeAll(() => {
-  // eslint-disable-next-line @silverhand/fp/no-mutation
   SystemContext.shared.hostnameProviderConfig = {
     zoneId: 'fake_zone_id',
     apiToken: '',
     blockedDomains: ['blocked.com'],
   };
+  SystemContext.shared.regionLookupKvProviderConfig = mockRegionLookupKvProviderConfig;
 });
 
 afterAll(() => {
-  // eslint-disable-next-line @silverhand/fp/no-mutation
   SystemContext.shared.hostnameProviderConfig = undefined;
+  SystemContext.shared.regionLookupKvProviderConfig = undefined;
 });
+/* eslint-enable @silverhand/fp/no-mutation */
 
 afterEach(() => {
   clearCustomDomainCache.mockClear();
@@ -65,6 +77,7 @@ afterEach(() => {
   findAllDomains.mockClear();
   deleteDomainById.mockClear();
   deleteCustomHostname.mockClear();
+  deleteRegionLookupKvRecord.mockClear();
   getCustomHostname.mockClear();
 });
 
@@ -74,6 +87,10 @@ describe('addDomain()', () => {
     expect(createCustomHostname).toBeCalledTimes(1);
     expect(insertDomain).toBeCalledTimes(1);
     expect(clearCustomDomainCache).toBeCalledTimes(1);
+    expect(deleteRegionLookupKvRecord).toHaveBeenCalledWith(
+      mockRegionLookupKvProviderConfig,
+      mockDomain.domain
+    );
     expect(response.cloudflareData).toMatchObject(mockCloudflareData);
     expect(response.dnsRecords).toContainEqual({
       type: 'CNAME',
@@ -86,6 +103,21 @@ describe('addDomain()', () => {
     await expect(addDomain('hi.blocked.com')).rejects.toMatchError(
       new RequestError({ code: 'domain.domain_is_not_allowed' })
     );
+  });
+
+  it('should skip the edge region cache purge when the provider is not configured', async () => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    SystemContext.shared.regionLookupKvProviderConfig = undefined;
+
+    try {
+      await addDomain(mockDomain.domain);
+    } finally {
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      SystemContext.shared.regionLookupKvProviderConfig = mockRegionLookupKvProviderConfig;
+    }
+
+    expect(clearCustomDomainCache).toBeCalledTimes(1);
+    expect(deleteRegionLookupKvRecord).not.toHaveBeenCalled();
   });
 });
 
@@ -103,6 +135,7 @@ describe('syncDomainStatus()', () => {
     });
     expect(getCustomHostname).toBeCalledTimes(1);
     expect(clearCustomDomainCache).toBeCalledTimes(1);
+    expect(deleteRegionLookupKvRecord).not.toHaveBeenCalled();
     expect(response.cloudflareData).toMatchObject(mockCloudflareData);
   });
 
@@ -160,6 +193,10 @@ describe('cleanupDomains()', () => {
     });
     expect(deleteDomainById).toHaveBeenCalledWith(orphanDomain.id);
     expect(clearCustomDomainCache).toHaveBeenCalledWith(orphanDomain.domain);
+    expect(deleteRegionLookupKvRecord).toHaveBeenCalledWith(
+      mockRegionLookupKvProviderConfig,
+      orphanDomain.domain
+    );
     expect(getCustomHostname).not.toHaveBeenCalled();
   });
 
@@ -286,6 +323,10 @@ describe('deleteDomain()', () => {
     await deleteDomain(mockDomain.id);
     expect(deleteCustomHostname).toBeCalledTimes(1);
     expect(clearCustomDomainCache).toBeCalledTimes(1);
+    expect(deleteRegionLookupKvRecord).toHaveBeenCalledWith(
+      mockRegionLookupKvProviderConfig,
+      mockDomainWithCloudflareData.domain
+    );
     expect(deleteDomainById).toBeCalledTimes(1);
   });
 
@@ -304,6 +345,14 @@ describe('deleteDomain()', () => {
     );
     await expect(deleteDomain(mockDomain.id)).resolves.not.toThrow();
     expect(clearCustomDomainCache).toBeCalledTimes(1);
+    expect(deleteDomainById).toBeCalledTimes(1);
+  });
+
+  it('should tolerate edge region cache purge failures', async () => {
+    findDomainById.mockResolvedValueOnce(mockDomainWithCloudflareData);
+    deleteRegionLookupKvRecord.mockRejectedValueOnce(new Error('Cloudflare KV is down'));
+    await expect(deleteDomain(mockDomain.id)).resolves.not.toThrow();
+    expect(deleteRegionLookupKvRecord).toBeCalledTimes(1);
     expect(deleteDomainById).toBeCalledTimes(1);
   });
 });

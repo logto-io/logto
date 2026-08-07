@@ -10,11 +10,27 @@ import {
   getCustomHostname,
   createCustomHostname,
   deleteCustomHostname,
+  deleteRegionLookupKvRecord,
   getFallbackOrigin,
   getDomainStatusFromCloudflareData,
 } from '#src/utils/cloudflare/index.js';
 import { isSubdomainOf } from '#src/utils/domain.js';
 import { clearCustomDomainCache } from '#src/utils/tenant.js';
+
+/**
+ * Clears the region-local custom domain cache and best-effort purges the edge region-lookup
+ * cache, so a hostname that is re-bound to a tenant in another region stops being proxied to
+ * this region right away instead of when the edge cache entry expires.
+ */
+const clearDomainCache = async (hostname: string) => {
+  await clearCustomDomainCache(hostname);
+
+  const { regionLookupKvProviderConfig } = SystemContext.shared;
+
+  if (regionLookupKvProviderConfig) {
+    await trySafe(async () => deleteRegionLookupKvRecord(regionLookupKvProviderConfig, hostname));
+  }
+};
 
 export type DomainCleanupSummary = {
   scannedCount: number;
@@ -97,7 +113,7 @@ export const createDomainLibrary = (queries: Queries) => {
         },
       ],
     });
-    await clearCustomDomainCache(hostname);
+    await clearDomainCache(hostname);
     return insertedDomain;
   };
 
@@ -119,7 +135,7 @@ export const createDomainLibrary = (queries: Queries) => {
     }
 
     await deleteDomainById(id);
-    await clearCustomDomainCache(domain.domain);
+    await clearDomainCache(domain.domain);
   };
 
   const cleanupDomains = async (staleDays: number): Promise<DomainCleanupSummary> => {
@@ -142,7 +158,7 @@ export const createDomainLibrary = (queries: Queries) => {
       if (!domain.cloudflareData) {
         try {
           await deleteDomainById(domain.id);
-          await clearCustomDomainCache(domain.domain);
+          await clearDomainCache(domain.domain);
           summary.deletedCount += 1;
         } catch {
           summary.failedCount += 1;
@@ -159,7 +175,7 @@ export const createDomainLibrary = (queries: Queries) => {
         if (error instanceof RequestError && error.code === 'domain.cloudflare_not_found') {
           try {
             await deleteDomainById(domain.id);
-            await clearCustomDomainCache(domain.domain);
+            await clearDomainCache(domain.domain);
             summary.deletedCount += 1;
           } catch {
             summary.failedCount += 1;
