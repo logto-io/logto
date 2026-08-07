@@ -1,4 +1,4 @@
-/* eslint-disable max-lines */
+/* eslint-disable max-lines -- the CIMD grant scenarios push the suite over the limit */
 import { UserScope } from '@logto/core-kit';
 import { type KoaContextWithOIDC, errors, type Adapter } from 'oidc-provider';
 import Sinon from 'sinon';
@@ -467,9 +467,10 @@ describe('refresh token grant for CIMD clients', () => {
   const buildCimdHandler = (tenant: MockTenant, envSet: EnvSet = cimdEnvSet) =>
     buildHandler(envSet, tenant.queries, { assertUserHasApplicationAccess });
 
-  const createCimdPreparedContext = () => {
+  const createCimdPreparedContext = (params = validOidcContext.params) => {
     const ctx = createOidcContext({
       ...validOidcContext,
+      params,
       entities: { ...validOidcContext.entities, Client: cimdClient },
       client: cimdClient,
     });
@@ -483,40 +484,40 @@ describe('refresh token grant for CIMD clients', () => {
     assertUserHasApplicationAccess.mockClear();
   });
 
-  it('should skip the application access check and the organization grant lookup', async () => {
-    const ctx = createCimdPreparedContext();
+  it('should skip the application access check without an organization_id', async () => {
+    const ctx = createCimdPreparedContext({
+      ...validOidcContext.params,
+      organization_id: undefined,
+    });
     const tenant = new MockTenant();
 
-    Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(true);
     const findApplicationById = Sinon.stub(tenant.queries.applications, 'findApplicationById');
-    const userConsentOrganizationExists = Sinon.stub(
-      tenant.queries.applications.userConsentOrganizations,
-      'exists'
-    );
-    Sinon.stub(tenant.queries.organizations.relations.usersRoles, 'getUserScopes').resolves([
-      { tenantId: 'default', id: 'foo', name: 'foo', description: 'foo' },
-      { tenantId: 'default', id: 'bar', name: 'bar', description: 'bar' },
-    ]);
-    Sinon.stub(tenant.queries.organizations, 'getMfaStatus').resolves({
-      isMfaRequired: false,
-      hasMfaConfigured: false,
-    });
 
     await expect(buildCimdHandler(tenant)(ctx)).resolves.toBeUndefined();
 
     expect(assertUserHasApplicationAccess).not.toHaveBeenCalled();
     expect(findApplicationById.called).toBe(false);
-    expect(userConsentOrganizationExists.called).toBe(false);
   });
 
-  it('should keep the organization membership gate', async () => {
+  it('should reject organization token requests until the grant-scoped check lands', async () => {
     const ctx = createCimdPreparedContext();
     const tenant = new MockTenant();
-    Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(false);
+
+    const membershipExists = Sinon.stub(tenant.queries.organizations.relations.users, 'exists');
+    const findApplicationById = Sinon.stub(tenant.queries.applications, 'findApplicationById');
+    const userConsentOrganizationExists = Sinon.stub(
+      tenant.queries.applications.userConsentOrganizations,
+      'exists'
+    );
 
     await expect(buildCimdHandler(tenant)(ctx)).rejects.toThrow(
-      createAccessDeniedError('user is not a member of the organization', 403)
+      createAccessDeniedError('organization tokens are not supported for CIMD clients', 403)
     );
+
+    expect(assertUserHasApplicationAccess).not.toHaveBeenCalled();
+    expect(membershipExists.called).toBe(false);
+    expect(findApplicationById.called).toBe(false);
+    expect(userConsentOrganizationExists.called).toBe(false);
   });
 
   it('should keep the application access check for a url client id when CIMD is not effectively enabled', async () => {

@@ -23,10 +23,17 @@ const { InvalidGrant, InvalidClient, AccessDenied } = errors;
  */
 export const checkOrganizationAccess = async (
   ctx: KoaContextWithOIDC,
-  envSet: EnvSet,
-  queries: Queries,
-  account: Account,
-  isThirdParty?: boolean
+  {
+    envSet,
+    queries,
+    account,
+    isThirdParty,
+  }: {
+    envSet: EnvSet;
+    queries: Queries;
+    account: Account;
+    isThirdParty?: boolean;
+  }
 ): Promise<{ organizationId?: string }> => {
   const { client, params } = ctx.oidc;
 
@@ -36,6 +43,23 @@ export const checkOrganizationAccess = async (
   const organizationId = cond(Boolean(params.organization_id) && String(params.organization_id));
 
   if (organizationId) {
+    // DEV: CIMD (client ID metadata document) support
+    /**
+     * Organization grants are keyed to registered applications
+     * (`application_user_consent_organizations`), so no user has ever granted an organization to
+     * a CIMD client — and the accidental alternative would silently pass `isThirdPartyApplication`,
+     * whose not-found fallback reads the identifier URL as first-party. Membership alone is a
+     * user-to-organization relation, not a substitute for the user-to-client grant, so fail
+     * closed instead of skipping the consent check.
+     */
+    if (isCimdEffectivelyEnabled(envSet) && isCimdClientId(client.clientId)) {
+      // TODO: @xiaoyijun replace the rejection with the grant-scoped organization check (LOG-13930)
+      const error = new AccessDenied('organization tokens are not supported for CIMD clients');
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      error.statusCode = 403;
+      throw error;
+    }
+
     // Check membership
     if (
       !(await queries.organizations.relations.users.exists({
@@ -49,20 +73,8 @@ export const checkOrganizationAccess = async (
       throw error;
     }
 
-    // DEV: CIMD (client ID metadata document) support
-    /**
-     * A CIMD identifier would silently fall through `isThirdPartyApplication` — the not-found
-     * fallback reads as first-party — while also querying the applications table with the URL.
-     * Keep the skip explicit instead: organization grants are keyed to registered applications
-     * (`application_user_consent_organizations`), and the grant-scoped check for CIMD clients
-     * lands with LOG-13930. Until then organization tokens for CIMD clients stay gated by the
-     * membership check above and the MFA check below.
-     */
-    const isCimdClient = isCimdEffectivelyEnabled(envSet) && isCimdClientId(client.clientId);
-
     // Check if the organization is granted (third-party application only) by the user
     if (
-      !isCimdClient &&
       (isThirdParty ?? (await isThirdPartyApplication(queries, client.clientId))) &&
       !(await isOrganizationConsentedToApplication(
         queries,

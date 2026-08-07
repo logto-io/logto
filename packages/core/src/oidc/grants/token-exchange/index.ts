@@ -133,13 +133,12 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx)
     clientId: client.clientId,
   } as ConstructorParameters<typeof Grant>[0]);
 
-  const { organizationId } = await checkOrganizationAccess(
-    ctx,
+  const { organizationId } = await checkOrganizationAccess(ctx, {
     envSet,
     queries,
     account,
-    isThirdParty
-  );
+    isThirdParty,
+  });
 
   const accessToken = createAccessToken(
     ctx,

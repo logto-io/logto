@@ -137,7 +137,7 @@ describe('koaAppAccessControl middleware', () => {
     it('should skip the application access check for a cimd client', async () => {
       const ctx = createContext({
         params: { client_id: cimdClientId },
-        // @ts-expect-error
+        // @ts-expect-error -- minimal session stub for middleware testing
         session: { accountId: 'user-id' },
       });
       const guard = koaAppAccessControl(cimdEnvSet, mockTenant.libraries);
@@ -151,7 +151,7 @@ describe('koaAppAccessControl middleware', () => {
     it('should keep the access check for a url client id when CIMD is not effectively enabled', async () => {
       const ctx = createContext({
         params: { client_id: cimdClientId },
-        // @ts-expect-error
+        // @ts-expect-error -- minimal session stub for middleware testing
         session: { accountId: 'user-id' },
       });
       const guard = koaAppAccessControl(mockTenant.envSet, mockTenant.libraries);
@@ -165,7 +165,7 @@ describe('koaAppAccessControl middleware', () => {
     it('should keep the access check for a registered client while CIMD is effectively enabled', async () => {
       const ctx = createContext({
         params: { client_id: 'app-id' },
-        // @ts-expect-error
+        // @ts-expect-error -- minimal session stub for middleware testing
         session: { accountId: 'user-id' },
       });
       const guard = koaAppAccessControl(cimdEnvSet, mockTenant.libraries);

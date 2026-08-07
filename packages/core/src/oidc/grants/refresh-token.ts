@@ -247,7 +247,7 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx)
   }
 
   /* === RFC 0001 === */
-  const { organizationId } = await checkOrganizationAccess(ctx, envSet, queries, account);
+  const { organizationId } = await checkOrganizationAccess(ctx, { envSet, queries, account });
 
   if (
     organizationId && // Validate if the refresh token has the required scope from RFC 0001.

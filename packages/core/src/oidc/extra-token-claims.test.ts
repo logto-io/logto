@@ -209,6 +209,53 @@ describe('getExtraTokenClaimsForJwtCustomization', () => {
     expect(runScriptInLocalVm.mock.calls[0]?.[0]?.context).not.toHaveProperty('organization');
   });
 
+  // DEV: CIMD (client ID metadata document) support
+  describe('for CIMD clients', () => {
+    const cimdClientId = 'https://client.example.com/metadata.json';
+
+    it('skips the application context lookup while CIMD is effectively enabled', async () => {
+      const tenant = createTenant({});
+      const { ctxWithLog, token } = buildContextAndToken({ clientId: cimdClientId });
+
+      /**
+       * The gate additionally reads the static dev-features and SSRF-protection flags from
+       * `EnvSet.values`; the jest environment keeps both on.
+       */
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- spread copy of the mock env set with the tenant CIMD toggle on; `oidc` is a getter and must be rebuilt explicitly
+      const cimdEnvSet = {
+        ...tenant.envSet,
+        oidc: { ...tenant.envSet.oidc, cimdEnabled: true },
+      } as InstanceType<typeof EnvSet>;
+
+      await getExtraTokenClaimsForJwtCustomization(ctxWithLog, token, {
+        envSet: cimdEnvSet,
+        queries: tenant.queries,
+        libraries: tenant.libraries,
+        logtoConfigs: tenant.logtoConfigs,
+      });
+
+      expect(tenant.libraries.jwtCustomizers.getApplicationContext).not.toHaveBeenCalled();
+      expect(runScriptInLocalVm.mock.calls[0]?.[0]?.context).not.toHaveProperty('application');
+    });
+
+    it('keeps the application context lookup for a url client id when CIMD is not effectively enabled', async () => {
+      const tenant = createTenant({});
+      const { ctxWithLog, token } = buildContextAndToken({ clientId: cimdClientId });
+
+      await getExtraTokenClaimsForJwtCustomization(ctxWithLog, token, {
+        envSet: tenant.envSet,
+        queries: tenant.queries,
+        libraries: tenant.libraries,
+        logtoConfigs: tenant.logtoConfigs,
+      });
+
+      expect(tenant.libraries.jwtCustomizers.getApplicationContext).toHaveBeenCalledWith(
+        tenant.envSet.tenantId,
+        cimdClientId
+      );
+    });
+  });
+
   it('throws invalid request with original error message on script failure when blocking is enabled', async () => {
     runScriptInLocalVm.mockRejectedValue(new Error('boom'));
 
