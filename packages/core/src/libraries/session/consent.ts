@@ -7,7 +7,8 @@ import { z } from 'zod';
 
 import { type EnvSet } from '#src/env-set/index.js';
 import { markAppLevelAccessControlChecked } from '#src/oidc/application-access-control.js';
-import { isCimdClientId, isCimdEffectivelyEnabled } from '#src/oidc/cimd.js';
+import { isCimdClientId } from '#src/oidc/cimd-client-id.js';
+import { isCimdEffectivelyEnabled } from '#src/oidc/cimd.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
