@@ -84,12 +84,15 @@ const mockGrantFound = (provider: KoaContextWithOIDC['oidc']['provider']) => {
 
 const createContext = (
   provider: KoaContextWithOIDC['oidc']['provider'],
-  grantType: GrantType,
-  organizationId?: string
+  {
+    grantType,
+    organizationId,
+    clientId: contextClientId = clientId,
+  }: { grantType: GrantType; organizationId?: string; clientId?: string }
 ) => {
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal client stub for OIDC context testing
   const client: KoaContextWithOIDC['oidc']['client'] = {
-    clientId,
+    clientId: contextClientId,
   } as KoaContextWithOIDC['oidc']['client'];
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal account stub for OIDC context testing
   const account: KoaContextWithOIDC['oidc']['entities']['Account'] = {
@@ -194,7 +197,10 @@ describe('oidc provider init', () => {
     });
 
     const provider = createProvider(tenant);
-    const ctx = createContext(provider, GrantType.TokenExchange, 'org_1');
+    const ctx = createContext(provider, {
+      grantType: GrantType.TokenExchange,
+      organizationId: 'org_1',
+    });
 
     const result1 = await getResourceServerInfo(ctx, indicator);
     const result2 = await getResourceServerInfo(ctx, indicator);
@@ -237,11 +243,11 @@ describe('oidc provider init', () => {
     const provider = createProvider(tenant);
 
     const result1 = await getResourceServerInfo(
-      createContext(provider, GrantType.TokenExchange, 'org_1'),
+      createContext(provider, { grantType: GrantType.TokenExchange, organizationId: 'org_1' }),
       indicator
     );
     const result2 = await getResourceServerInfo(
-      createContext(provider, GrantType.TokenExchange, 'org_2'),
+      createContext(provider, { grantType: GrantType.TokenExchange, organizationId: 'org_2' }),
       indicator
     );
 
@@ -398,7 +404,10 @@ describe('oidc provider init', () => {
     });
 
     const provider = createProvider(tenant);
-    const ctx = createContext(provider, GrantType.RefreshToken, 'org_1');
+    const ctx = createContext(provider, {
+      grantType: GrantType.RefreshToken,
+      organizationId: 'org_1',
+    });
 
     const result1 = await getResourceServerInfo(ctx, indicator);
     const result2 = await getResourceServerInfo(ctx, indicator);

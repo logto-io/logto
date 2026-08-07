@@ -16,19 +16,11 @@
  *   guard: when the provider defaults a sole registered wildcard URI as the `redirect_uri`
  *   parameter, the match fails and the authorization request is rejected.
  *
- * CIMD clients (draft-02) take a stricter exact branch on both methods — their redirect and
- * post-logout URIs come from the same metadata document, so a non-wildcard registered value
- * must equal the raw request string (RFC 9700 simple string comparison, no URL normalization).
- * The RFC 8252 loopback port exception applies to the authorization redirect only — RFC 9700
- * builds it into that matching rule, while RP-Initiated Logout requires exact matching with no
- * exception — and it anchors on the URI shape rather than the declared application type: the
- * type is self-declared and commonly omitted (schema-defaulted to `web`), and it cannot be
- * inferred from registered URIs either — native apps span custom schemes, loopback, and https
- * App Links, the last indistinguishable from web callbacks. Only an `http:` loopback
- * registration — a URI with no non-local use whatever the document declares — matches through
- * the retry. Wildcard
- * patterns remain a non-standard Logto extension for CIMD clients too; a document relying on
- * them cannot claim strict draft-02 conformance.
+ * CIMD clients (draft-02) take a stricter exact branch on both methods — the semantics live in
+ * `../cimd/redirect-uri.js`, and which clients reach the loopback retry is this module's policy
+ * (see the comment in `redirectUriAllowed`). Wildcard patterns remain a non-standard Logto
+ * extension for CIMD clients too; a document relying on them cannot claim strict draft-02
+ * conformance.
  */
 
 import { type Provider } from 'oidc-provider';
@@ -54,13 +46,13 @@ const matchAgainstRegistered = (registeredUris: readonly string[], parsed: URL) 
  * behavior. Only `http:` loopback candidates qualify; which clients reach the retry is the
  * callers' policy.
  */
-/* eslint-disable @silverhand/fp/no-mutation -- URL port stripping mutates local copies */
 const matchLoopbackPortInsensitive = (registeredUris: readonly string[], parsed: URL) => {
   if (parsed.protocol !== 'http:' || !loopbackHostnames.has(parsed.hostname)) {
     return false;
   }
 
   const candidate = new URL(parsed.href);
+  // eslint-disable-next-line @silverhand/fp/no-mutation -- URL port stripping mutates a local copy
   candidate.port = '';
 
   return registeredUris.some((allowed) => {
@@ -68,11 +60,11 @@ const matchLoopbackPortInsensitive = (registeredUris: readonly string[], parsed:
     if (!registered) {
       return false;
     }
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- URL port stripping mutates a local copy
     registered.port = '';
     return candidate.href === registered.href;
   });
 };
-/* eslint-enable @silverhand/fp/no-mutation */
 
 /**
  * Override `redirectUriAllowed` and `postLogoutRedirectUriAllowed` on the provider's per-tenant

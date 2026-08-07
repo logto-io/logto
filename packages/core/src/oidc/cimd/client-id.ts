@@ -2,7 +2,7 @@
  * @overview The CIMD client identifier namespace predicate.
  *
  * Lives in its own dependency-free module because both sides of the CIMD wiring need it:
- * `cimd.js` (feature configuration) and `wildcard-redirect-uri.js` (request-time matching)
+ * `./index.js` (feature configuration) and `../redirect-uri/index.js` (request-time matching)
  * import each other's counterpart, so hosting the predicate in either would create a cycle.
  */
 

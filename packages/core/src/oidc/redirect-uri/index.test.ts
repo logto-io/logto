@@ -92,6 +92,10 @@ describe('isValidWildcardRedirectUriPattern', () => {
     expect(isValidWildcardRedirectUriPattern('https://app.example.com:*/cb')).toBe(false);
     expect(isValidWildcardRedirectUriPattern('not-a-url')).toBe(false);
   });
+
+  it('rejects a plain URI without a wildcard', () => {
+    expect(isValidWildcardRedirectUriPattern('https://app.example.com/callback')).toBe(false);
+  });
 });
 
 describe('redirectUriAllowed override', () => {

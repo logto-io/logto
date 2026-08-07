@@ -9,7 +9,6 @@ import { userClaims } from '@logto/core-kit';
 import type { I18nKey } from '@logto/phrases';
 import {
   customClientMetadataDefault,
-  CustomClientMetadataKey,
   extraParamsObjectGuard,
   inSeconds,
   logtoCookieKey,
@@ -52,6 +51,7 @@ import koaTokenUsageGuard from '../middleware/koa-token-usage-guard.js';
 import {
   appLevelAccessControlMetadataKey,
   assertUserHasApplicationAccessForOidc,
+  extraClientMetadataKeys,
   hasAppLevelAccessControlChecked,
   markAppLevelAccessControlCheckedForOidcContext,
 } from './application-access-control.js';
@@ -352,7 +352,7 @@ export default function initOidc(
       };
     },
     extraClientMetadata: {
-      properties: [...Object.values(CustomClientMetadataKey), appLevelAccessControlMetadataKey],
+      properties: [...extraClientMetadataKeys],
       validator: (_, key, value) => {
         if (key === appLevelAccessControlMetadataKey) {
           if (value === undefined) {
