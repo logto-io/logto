@@ -29,6 +29,30 @@ const stubDevFeaturesFlag = (isDevFeaturesEnabled: boolean) => {
   Sinon.stub(EnvSet, 'values').value({ ...EnvSet.values, isDevFeaturesEnabled });
 };
 
+const cimdClientId = 'https://client.example.com/metadata.json';
+
+const buildCimdContext = () => ({
+  ...createContextWithRouteParameters(),
+  createLog: log.createLog,
+  prependAllLogEntries: log.prependAllLogEntries,
+  oidc: {
+    entities: { ...entities, Client: { clientId: cimdClientId } },
+    params: { grant_type: 'refresh_token' },
+  },
+  body: { access_token: 'newAccessTokenValue' },
+});
+
+const buildUnresolvedClientContext = (clientId: string) => ({
+  ...createContextWithRouteParameters(),
+  createLog: log.createLog,
+  prependAllLogEntries: log.prependAllLogEntries,
+  oidc: {
+    entities: {},
+    params: { grant_type: 'authorization_code', client_id: clientId },
+  },
+  body: { error: 'invalid_client' },
+});
+
 const testGrantListener = (
   parameters: { grant_type: string } & Record<string, unknown>,
   body: Record<string, string>,
@@ -126,19 +150,6 @@ describe('grantSuccessListener', () => {
 
 // DEV: CIMD (client ID metadata document) support
 describe('grantSuccessListener with a cimd client identifier', () => {
-  const cimdClientId = 'https://client.example.com/metadata.json';
-
-  const buildCimdContext = () => ({
-    ...createContextWithRouteParameters(),
-    createLog: log.createLog,
-    prependAllLogEntries: log.prependAllLogEntries,
-    oidc: {
-      entities: { ...entities, Client: { clientId: cimdClientId } },
-      params: { grant_type: 'refresh_token' },
-    },
-    body: { access_token: 'newAccessTokenValue' },
-  });
-
   afterEach(() => {
     Sinon.restore();
     jest.clearAllMocks();
@@ -171,6 +182,45 @@ describe('grantSuccessListener with a cimd client identifier', () => {
       userId,
       tokenTypes: [token.TokenType.AccessToken],
       params: { grant_type: 'refresh_token' },
+    });
+  });
+});
+
+// DEV: CIMD (client ID metadata document) support
+describe('grantErrorListener with an unresolved client', () => {
+  const error = new Error('client metadata fetch failed');
+
+  afterEach(() => {
+    Sinon.restore();
+    jest.clearAllMocks();
+  });
+
+  it('should attribute a cimd-namespace client_id from params when the client is not resolved', () => {
+    stubDevFeaturesFlag(true);
+    const ctx = buildUnresolvedClientContext(cimdClientId);
+
+    // @ts-expect-error pass complex type check to mock ctx directly
+    grantListener(ctx, error);
+    expect(log.mockAppend).toHaveBeenCalledWith({
+      cimdClientId,
+      result: LogResult.Error,
+      tokenTypes: [],
+      error: stringifyError(error),
+      params: { grant_type: 'authorization_code', client_id: cimdClientId },
+    });
+  });
+
+  it('should keep an unresolved non-cimd client_id unattributed', () => {
+    stubDevFeaturesFlag(true);
+    const ctx = buildUnresolvedClientContext('app-typo');
+
+    // @ts-expect-error pass complex type check to mock ctx directly
+    grantListener(ctx, error);
+    expect(log.mockAppend).toHaveBeenCalledWith({
+      result: LogResult.Error,
+      tokenTypes: [],
+      error: stringifyError(error),
+      params: { grant_type: 'authorization_code', client_id: 'app-typo' },
     });
   });
 });
