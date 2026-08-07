@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- The legacy `node:vm` path coexists with the worker-pool adapter until LOG-13956 removes it. */
 import {
   type CustomJwtErrorBody,
   CustomJwtErrorCode,
@@ -46,7 +47,9 @@ import { runScriptFunctionInLocalVm } from '#src/utils/local-vm/index.js';
 import { type CloudConnectionLibrary } from './cloud-connection.js';
 import {
   buildScriptExecutionErrorBody,
+  buildScriptFailureError,
   getScriptFailureStatusCode,
+  runScriptOnWorkerPool,
   ScriptExecutionError,
   scriptFailureStatusCodes,
 } from './script-runner/index.js';
@@ -69,8 +72,64 @@ const apiContext: CustomJwtApiContext = Object.freeze({
 });
 
 export class JwtCustomizerLibrary {
-  // Convert errors to WithTyped client response error to share the error handling logic.
-  static async runScriptInLocalVm(data: CustomJwtFetcher) {
+  // Convert failures to WithTyped client response errors to share the error handling logic.
+  static async runScriptInLocalVm(data: CustomJwtFetcher, tenantId: string) {
+    // TODO (LOG-13956): drop the legacy `node:vm` path and the gate once the worker-thread
+    // runner has been manually verified and released.
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return JwtCustomizerLibrary.runScriptInLegacyVm(data);
+    }
+
+    /**
+     * `api` is not part of the payload: functions cannot cross the structured-clone boundary, so
+     * the worker constructs `denyAccess` itself and reports a denial as a `denied` failure.
+     */
+    const payload: Omit<CustomJwtScriptPayload, 'api'> = pick(
+      data,
+      'token',
+      'context',
+      'environmentVariables'
+    );
+
+    const result = await runScriptOnWorkerPool({
+      script: data.script,
+      entry: 'getCustomJwtClaims',
+      payload,
+      tenantId,
+    });
+
+    if (!result.ok) {
+      if (result.kind === 'denied') {
+        const error: CustomJwtErrorBody = {
+          code: CustomJwtErrorCode.AccessDenied,
+          message: result.message,
+        };
+
+        throw new ScriptExecutionError(
+          { message: result.message, error },
+          scriptFailureStatusCodes.denied
+        );
+      }
+
+      throw buildScriptFailureError(result);
+    }
+
+    // If the returned value is not a record, we cannot merge it to the existing token payload.
+    // This is call-site validation of a successful run, not a runner failure — it keeps the 400.
+    const parsed = z.record(z.unknown()).safeParse(result.value);
+
+    if (!parsed.success) {
+      throw new ScriptExecutionError(
+        { message: 'Invalid input', errors: parsed.error.errors },
+        400
+      );
+    }
+
+    return parsed.data;
+  }
+
+  /** The pre-worker-runner execution path, still serving production until the gate above lifts. */
+  private static async runScriptInLegacyVm(data: CustomJwtFetcher) {
     try {
       const payload: CustomJwtScriptPayload = {
         ...pick(data, 'token', 'context', 'environmentVariables'),
@@ -353,3 +412,4 @@ export class JwtCustomizerLibrary {
     });
   }
 }
+/* eslint-enable max-lines */

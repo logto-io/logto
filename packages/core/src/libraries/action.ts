@@ -34,7 +34,9 @@ import {
 } from './action-telemetry.js';
 import {
   buildScriptExecutionErrorBody,
+  buildScriptFailureError,
   getScriptFailureStatusCode,
+  runScriptOnWorkerPool,
   ScriptExecutionError,
 } from './script-runner/index.js';
 
@@ -194,7 +196,40 @@ const applyActionExecutionErrorPolicyDecision = (decision: ActionExecutionErrorP
 };
 
 export class ActionLibrary {
-  static async runScriptInLocalVm<Event>({
+  static async runScriptInLocalVm<Event>(
+    data: ActionRunnerData<Event>,
+    tenantId: string
+  ): Promise<unknown> {
+    // TODO (LOG-13956): drop the legacy `node:vm` path and the gate once the worker-thread
+    // runner has been manually verified and released.
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return ActionLibrary.runScriptInLegacyVm(data);
+    }
+
+    const { script, event, environmentVariables } = data;
+    // No `api` capability for Actions: the payload stays `{ event, environmentVariables }`, and
+    // the worker only injects `api` for the Custom JWT entry.
+    const payload: ActionScriptPayload<Event> = {
+      event,
+      environmentVariables,
+    };
+
+    const result = await runScriptOnWorkerPool({
+      script,
+      entry: actionFunctionName,
+      payload,
+      tenantId,
+    });
+
+    if (!result.ok) {
+      throw buildScriptFailureError(result);
+    }
+
+    return result.value;
+  }
+
+  /** The pre-worker-runner execution path, still serving production until the gate above lifts. */
+  private static async runScriptInLegacyVm<Event>({
     script,
     event,
     environmentVariables,
@@ -242,8 +277,9 @@ export class ActionLibrary {
 
   /**
    * Shared entry point for production `runAction()` and Management API dry runs.
-   * Cloud always executes remotely; OSS / self-hosted always uses the local VM.
-   * Cloud remote failures must never fall back to the local VM.
+   * Cloud always executes remotely; OSS / self-hosted runs locally — on the worker pool behind
+   * dev features, otherwise in the legacy `node:vm`.
+   * Cloud remote failures must never fall back to the local runner.
    */
   async executeScript({
     script,
@@ -263,7 +299,7 @@ export class ActionLibrary {
       return this.runScriptRemotely(payload);
     }
 
-    return ActionLibrary.runScriptInLocalVm(payload);
+    return ActionLibrary.runScriptInLocalVm(payload, this.tenantId);
   }
 
   /**
