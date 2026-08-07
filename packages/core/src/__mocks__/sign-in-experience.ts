@@ -112,6 +112,7 @@ export const mockSignInExperience: SignInExperience = {
   adaptiveMfa: {
     enabled: false,
   },
+  trustedDevice: {},
   singleSignOnEnabled: true,
   socialSignIn: {},
   supportEmail: null,

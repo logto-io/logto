@@ -19,6 +19,7 @@ type OmittedSignInExperienceKeys = keyof Pick<
   SignInExperience,
   | 'mfa'
   | 'adaptiveMfa'
+  | 'trustedDevice'
   | 'captchaPolicy'
   | 'sentinelPolicy'
   | 'passwordPolicy'
@@ -35,7 +36,7 @@ export enum SignInExperienceTab {
   Content = 'content',
 }
 
-const accountCenterFieldKeys: Array<keyof AccountCenterFieldControl> = [
+const accountCenterFieldKeys = [
   'email',
   'phone',
   'social',
@@ -48,7 +49,7 @@ const accountCenterFieldKeys: Array<keyof AccountCenterFieldControl> = [
   'profile',
   'customData',
   'session',
-] as const;
+] as const satisfies ReadonlyArray<keyof AccountCenterFieldControl>;
 
 export type AccountCenterFieldKey = (typeof accountCenterFieldKeys)[number];
 
