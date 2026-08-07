@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- provider init tests share one harness; splitting fragments the shared mock setup. */
 import assert from 'node:assert';
 
 import { defaultTenantId, GrantType, type Scope } from '@logto/schemas';
@@ -66,6 +67,20 @@ class MockEcEnvSet extends EnvSet {
 }
 
 const ecEnvSet = new MockEcEnvSet(defaultTenantId, EnvSet.values.dbUrl);
+
+// DEV: CIMD (client ID metadata document) support
+/**
+ * The tenant-level `cimdEnabled` flag is the only effective-enablement input the jest
+ * environment leaves off (dev features and SSRF protection are both on), so flipping it is
+ * enough to exercise the CIMD paths.
+ */
+class MockCimdEnvSet extends EnvSet {
+  override get oidc(): EnvSet['oidc'] {
+    return { ...mockEnvSet.oidc, cimdEnabled: true };
+  }
+}
+
+const cimdEnvSet = new MockCimdEnvSet(defaultTenantId, EnvSet.values.dbUrl);
 
 const createTestClient = (): KoaContextWithOIDC['oidc']['client'] => {
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal client stub for OIDC context testing
@@ -420,6 +435,87 @@ describe('oidc provider init', () => {
   });
 });
 
+// DEV: CIMD (client ID metadata document) support
+describe('getResourceServerInfo for CIMD clients', () => {
+  const cimdClientId = 'https://client.example.com/client-metadata.json';
+
+  const createCimdContext = (provider: KoaContextWithOIDC['oidc']['provider']) =>
+    createContext(provider, { grantType: GrantType.AuthorizationCode, clientId: cimdClientId });
+
+  it('should filter resource scopes through the tenant ceiling without touching the applications table', async () => {
+    const findResourceByIndicator = jest.fn().mockResolvedValue({
+      ...mockResource,
+      indicator,
+      accessTokenTtl: 3600,
+    });
+    const findApplicationById = jest.fn();
+    const findUserScopesForResourceIndicator = jest
+      .fn()
+      .mockResolvedValue([
+        buildScope('scope_1', 'read:api'),
+        buildScope('scope_2', 'write:api'),
+        buildScope('scope_3', 'read:organization-api'),
+      ]);
+    const tenant = new MockTenant(undefined, {
+      resources: { findResourceByIndicator },
+      applications: { findApplicationById },
+      cimd: {
+        resourceScopes: {
+          insert: jest.fn(),
+          findAll: jest.fn().mockResolvedValue([buildScope('scope_1', 'read:api')]),
+          delete: jest.fn(),
+        },
+        organizationResourceScopes: {
+          insert: jest.fn(),
+          findAll: jest.fn().mockResolvedValue([buildScope('scope_3', 'read:organization-api')]),
+          delete: jest.fn(),
+        },
+      },
+    });
+
+    tenant.setPartial('libraries', {
+      users: { findUserScopesForResourceIndicator },
+    });
+
+    const { id, queries, libraries, logtoConfigs, subscription } = tenant;
+    const provider = initOidc(id, cimdEnvSet, queries, libraries, logtoConfigs, subscription);
+    const ctx = createCimdContext(provider);
+
+    const result = await getResourceServerInfo(ctx, indicator);
+
+    expect(result.scope).toBe('read:api read:organization-api');
+    expect(findApplicationById).not.toHaveBeenCalled();
+  });
+
+  it('should keep the legacy application lookup when CIMD is not effectively enabled', async () => {
+    const findResourceByIndicator = jest.fn().mockResolvedValue({
+      ...mockResource,
+      indicator,
+      accessTokenTtl: 3600,
+    });
+    const findApplicationById = jest.fn().mockRejectedValue(new Error('not found'));
+    const findUserScopesForResourceIndicator = jest
+      .fn()
+      .mockResolvedValue([buildScope('scope_1', 'read:api'), buildScope('scope_2', 'write:api')]);
+    const tenant = new MockTenant(undefined, {
+      resources: { findResourceByIndicator },
+      applications: { findApplicationById },
+    });
+
+    tenant.setPartial('libraries', {
+      users: { findUserScopesForResourceIndicator },
+    });
+
+    const provider = createProvider(tenant);
+    const ctx = createCimdContext(provider);
+
+    const result = await getResourceServerInfo(ctx, indicator);
+
+    expect(result.scope).toBe('read:api write:api');
+    expect(findApplicationById).toHaveBeenCalledWith(cimdClientId);
+  });
+});
+
 const findAccount = async (findUserById: () => Promise<typeof mockUser>) => {
   const provider = createProvider(new MockTenant(undefined, { users: { findUserById } }));
   const configuration = getProviderConfiguration(provider);
@@ -447,3 +543,4 @@ describe('findAccount', () => {
     ).rejects.toMatchError(new errors.InvalidGrant('user is suspended'));
   });
 });
+/* eslint-enable max-lines */
