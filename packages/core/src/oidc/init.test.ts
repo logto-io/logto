@@ -1,9 +1,10 @@
 import assert from 'node:assert';
 
-import { GrantType, type Scope } from '@logto/schemas';
+import { defaultTenantId, GrantType, type Scope } from '@logto/schemas';
 import { errors, type KoaContextWithOIDC } from 'oidc-provider';
 
 import { mockResource, mockUser } from '#src/__mocks__/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { getProviderConfiguration } from '#src/oidc/oidc-provider-internals.js';
 import { mockEnvSet } from '#src/test-utils/env-set.js';
@@ -52,6 +53,19 @@ const createProvider = (tenant: MockTenant) =>
     tenant.logtoConfigs,
     tenant.subscription
   );
+
+/**
+ * The jest-level `loadOidcValues` mock leaves `jwkSigningAlg` undefined, which matches how RSA
+ * tenants load. Asserting the EC-tenant provider defaults needs an env set that carries the
+ * algorithm derived from the tenant key.
+ */
+class MockEcEnvSet extends EnvSet {
+  override get oidc(): EnvSet['oidc'] {
+    return { ...mockEnvSet.oidc, jwkSigningAlg: 'ES384' };
+  }
+}
+
+const ecEnvSet = new MockEcEnvSet(defaultTenantId, EnvSet.values.dbUrl);
 
 const createTestClient = (): KoaContextWithOIDC['oidc']['client'] => {
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal client stub for OIDC context testing
@@ -103,6 +117,25 @@ describe('oidc provider init', () => {
     expect(() =>
       initOidc(id, mockEnvSet, queries, libraries, logtoConfigs, subscription)
     ).not.toThrow();
+  });
+
+  it('should align the default id_token_signed_response_alg with the tenant signing key', () => {
+    const { id, queries, libraries, logtoConfigs, subscription } = new MockTenant();
+    const provider = initOidc(id, ecEnvSet, queries, libraries, logtoConfigs, subscription);
+    const { clientDefaults } = getProviderConfiguration(provider);
+
+    expect(clientDefaults.id_token_signed_response_alg).toBe('ES384');
+    // The configured override merges per property; the other built-in defaults must survive.
+    expect(clientDefaults.grant_types).toEqual(['authorization_code']);
+    expect(clientDefaults.response_types).toEqual(['code']);
+    expect(clientDefaults.token_endpoint_auth_method).toBe('client_secret_basic');
+  });
+
+  it('should keep the built-in RS256 default when the tenant key derives no signing algorithm', () => {
+    const provider = createProvider(new MockTenant());
+    const { clientDefaults } = getProviderConfiguration(provider);
+
+    expect(clientDefaults.id_token_signed_response_alg).toBe('RS256');
   });
 
   it('should allow missing application access control client metadata', async () => {

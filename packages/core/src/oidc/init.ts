@@ -16,7 +16,7 @@ import {
   ExtraParamsKey,
   type Json,
 } from '@logto/schemas';
-import { trySafe, tryThat } from '@silverhand/essentials';
+import { conditional, trySafe, tryThat } from '@silverhand/essentials';
 import { type i18n } from 'i18next';
 import { type KoaContextWithOIDC, Provider, type ResourceServer, errors } from 'oidc-provider';
 import getRawBody from 'raw-body';
@@ -169,6 +169,18 @@ export default function initOidc(
     jwks: {
       keys: envSet.oidc.privateJwks,
     },
+    /**
+     * Clients that skip the adapter's metadata force-write (e.g. CIMD) fall back to the
+     * built-in `RS256` default, which EC-keystore tenants cannot sign. Align the default
+     * with the tenant signing key; RSA tenants keep the built-in `RS256`.
+     */
+    ...conditional(
+      envSet.oidc.jwkSigningAlg && {
+        clientDefaults: {
+          id_token_signed_response_alg: envSet.oidc.jwkSigningAlg,
+        },
+      }
+    ),
     enabledJWA: {
       authorizationSigningAlgValues: [...supportedSigningAlgs],
       userinfoSigningAlgValues: [...supportedSigningAlgs],
