@@ -1,5 +1,5 @@
 import { createMockUtils } from '@logto/shared/esm';
-import { type Client } from 'oidc-provider';
+import { type AllClientMetadata, type Client } from 'oidc-provider';
 
 import { type EnvSet } from '#src/env-set/index.js';
 
@@ -30,9 +30,27 @@ const cimdClientIdMaxLength = 2048;
 const buildClientId = (length: number) =>
   `https://example.com/${'a'.repeat(length - 'https://example.com/'.length)}`;
 
-const buildClient = (clientId: string, idTokenSignedResponseAlg?: string): Client => {
+const buildClient = (
+  clientId: string,
+  idTokenSignedResponseAlg?: string,
+  metadata: AllClientMetadata = {}
+): Client => {
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal client stub scoped to the fields the hook reads
-  return { clientId, idTokenSignedResponseAlg } as Client;
+  return { clientId, idTokenSignedResponseAlg, metadata: () => metadata } as Client;
+};
+
+/**
+ * `jest.resetModules` gives cimd.js its own `oidc-provider` module instance, so class identity
+ * assertions on thrown errors would fail; assert on the thrown shape instead — the OIDC error
+ * code lives in `message` and the human-readable text in `error_description`.
+ */
+const captureThrown = (run: () => unknown): unknown => {
+  try {
+    run();
+    return undefined;
+  } catch (error: unknown) {
+    return error;
+  }
 };
 
 const loadEnabledFeature = async (jwkSigningAlg?: 'ES256' | 'ES384' | 'ES512') => {
@@ -102,18 +120,27 @@ describe('isCimdClientId', () => {
 });
 
 describe('client identifier length bound', () => {
+  const overLengthRejection = {
+    message: 'invalid_client',
+    error_description: `client_id must not exceed ${cimdClientIdMaxLength} characters`,
+  };
+
   it('allowFetch accepts an identifier at the bound and rejects one past it', async () => {
     const { allowFetch } = await loadEnabledFeature();
     expect(allowFetch(undefined, buildClientId(cimdClientIdMaxLength))).toBe(true);
-    expect(allowFetch(undefined, buildClientId(cimdClientIdMaxLength + 1))).toBe(false);
+    expect(
+      captureThrown(() => allowFetch(undefined, buildClientId(cimdClientIdMaxLength + 1)))
+    ).toMatchObject(overLengthRejection);
   });
 
   it('allowClient accepts a client at the bound and rejects one past it', async () => {
     const { allowClient } = await loadEnabledFeature();
     expect(allowClient(undefined, buildClient(buildClientId(cimdClientIdMaxLength)))).toBe(true);
-    expect(allowClient(undefined, buildClient(buildClientId(cimdClientIdMaxLength + 1)))).toBe(
-      false
-    );
+    expect(
+      captureThrown(() =>
+        allowClient(undefined, buildClient(buildClientId(cimdClientIdMaxLength + 1)))
+      )
+    ).toMatchObject(overLengthRejection);
   });
 });
 
@@ -129,20 +156,9 @@ describe('ID token signing algorithm guard', () => {
   it('allowClient rejects a declaration the EC tenant signing key cannot sign', async () => {
     const { allowClient } = await loadEnabledFeature('ES384');
 
-    /**
-     * `jest.resetModules` gives cimd.js its own `oidc-provider` module instance, so class
-     * identity assertions would fail; the thrown error also keeps the OIDC error code in
-     * `message` and the human-readable text in `error_description`.
-     */
-    const thrown = ((): unknown => {
-      try {
-        return allowClient(undefined, buildClient(clientId, 'RS256'));
-      } catch (error) {
-        return error;
-      }
-    })();
-
-    expect(thrown).toMatchObject({
+    expect(
+      captureThrown(() => allowClient(undefined, buildClient(clientId, 'RS256')))
+    ).toMatchObject({
       message: 'invalid_client_metadata',
       error_description:
         'id_token_signed_response_alg RS256 cannot be signed with the tenant signing key',
@@ -153,5 +169,97 @@ describe('ID token signing algorithm guard', () => {
     const { allowClient } = await loadEnabledFeature();
     expect(allowClient(undefined, buildClient(clientId, 'RS256'))).toBe(true);
     expect(allowClient(undefined, buildClient(clientId, 'ES384'))).toBe(true);
+  });
+});
+
+describe('private metadata deny', () => {
+  const clientId = buildClientId(64);
+
+  it('allowClient rejects a document carrying a custom client metadata key', async () => {
+    const { allowClient } = await loadEnabledFeature();
+
+    expect(
+      captureThrown(() =>
+        allowClient(
+          undefined,
+          buildClient(clientId, undefined, { corsAllowedOrigins: ['https://app.example.com'] })
+        )
+      )
+    ).toMatchObject({
+      message: 'invalid_client_metadata',
+      error_description:
+        'client_id metadata document must not contain Logto private metadata (corsAllowedOrigins)',
+    });
+  });
+
+  it('allowClient rejects a document carrying the app-level access control key', async () => {
+    const { allowClient } = await loadEnabledFeature();
+
+    expect(
+      captureThrown(() =>
+        allowClient(
+          undefined,
+          buildClient(clientId, undefined, { appLevelAccessControlEnabled: true })
+        )
+      )
+    ).toMatchObject({
+      message: 'invalid_client_metadata',
+      error_description:
+        'client_id metadata document must not contain Logto private metadata (appLevelAccessControlEnabled)',
+    });
+  });
+});
+
+describe('wildcard redirect URI pattern validation', () => {
+  const clientId = buildClientId(64);
+
+  it('allowClient accepts exact URIs and supported wildcard patterns', async () => {
+    const { allowClient } = await loadEnabledFeature();
+
+    expect(
+      allowClient(
+        undefined,
+        buildClient(clientId, undefined, {
+          redirect_uris: ['https://app.example.com/callback', 'https://*.example.com/callback'],
+          post_logout_redirect_uris: ['https://*.example.com/signed-out'],
+        })
+      )
+    ).toBe(true);
+  });
+
+  it('allowClient rejects a pattern the runtime matcher would never match', async () => {
+    const { allowClient } = await loadEnabledFeature();
+
+    expect(
+      captureThrown(() =>
+        allowClient(
+          undefined,
+          buildClient(clientId, undefined, { redirect_uris: ['https://*.com/callback'] })
+        )
+      )
+    ).toMatchObject({
+      message: 'invalid_client_metadata',
+      error_description:
+        'client_id metadata document contains an unsupported wildcard redirect URI pattern (https://*.com/callback)',
+    });
+  });
+
+  it('allowClient validates post_logout_redirect_uris with the same rules', async () => {
+    const { allowClient } = await loadEnabledFeature();
+
+    expect(
+      captureThrown(() =>
+        allowClient(
+          undefined,
+          buildClient(clientId, undefined, {
+            post_logout_redirect_uris: ['https://example.*/signed-out'],
+          })
+        )
+      )
+    ).toMatchObject({
+      message: 'invalid_client_metadata',
+      error_description:
+        'client_id metadata document contains an unsupported wildcard redirect URI pattern (https://example.*/signed-out)',
+    });
   });
 });

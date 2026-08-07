@@ -203,6 +203,14 @@ export const wildcardUrlMatch = (pattern: string, actual: URL): boolean => {
   return actual.search === parsedPattern.search && actual.hash === parsedPattern.hash;
 };
 
+/**
+ * Whether a redirect URI value containing `*` is a valid Logto wildcard pattern. Used by the
+ * CIMD `allowClient` policy so remote metadata documents cannot register patterns the runtime
+ * matcher would never match (or overly broad ones such as `*.com`).
+ */
+export const isValidWildcardRedirectUriPattern = (pattern: string): boolean =>
+  parseWildcardUrlPattern(pattern) !== undefined;
+
 const matchAgainstRegistered = (registeredUris: readonly string[], parsed: URL) =>
   registeredUris.some((allowed) =>
     allowed.includes('*')
