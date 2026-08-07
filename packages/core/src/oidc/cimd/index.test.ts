@@ -17,7 +17,7 @@ const loadCimdModule = async ({
     },
   }));
 
-  return import('./cimd.js');
+  return import('./index.js');
 };
 
 const buildEnvSet = (cimdEnabled: boolean, jwkSigningAlg?: 'ES256' | 'ES384' | 'ES512'): EnvSet => {

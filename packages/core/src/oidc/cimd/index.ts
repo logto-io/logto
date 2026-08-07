@@ -15,8 +15,8 @@ import { type Client, errors, type KoaContextWithOIDC } from 'oidc-provider';
 
 import { EnvSet } from '#src/env-set/index.js';
 
-import { appLevelAccessControlMetadataKey } from './application-access-control.js';
-import { isValidWildcardRedirectUriPattern } from './wildcard-redirect-uri.js';
+import { appLevelAccessControlMetadataKey } from '../application-access-control.js';
+import { isValidWildcardRedirectUriPattern } from '../redirect-uri/utils.js';
 
 /**
  * Must not exceed the `cimd_client_id varchar(2048)` column width — neither the draft nor the
