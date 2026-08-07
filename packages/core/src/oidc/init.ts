@@ -55,7 +55,9 @@ import {
   hasAppLevelAccessControlChecked,
   markAppLevelAccessControlCheckedForOidcContext,
 } from './application-access-control.js';
-import { buildClientIdMetadataDocumentFeature } from './cimd/index.js';
+import { isCimdClientId } from './cimd/client-id.js';
+import { buildClientIdMetadataDocumentFeature, isCimdEffectivelyEnabled } from './cimd/index.js';
+import { filterResourceScopesForTheCimdClient } from './cimd/resource-scopes.js';
 import defaults from './defaults.js';
 import { deviceFlowConfig, defaultDeviceCodeTtl } from './device-flow.js';
 import {
@@ -124,6 +126,22 @@ export default function initOidc(
       applicationId: clientId,
       userId,
     });
+
+    // DEV: CIMD (client ID metadata document) support
+    if (clientId && isCimdEffectivelyEnabled(envSet) && isCimdClientId(clientId)) {
+      /**
+       * CIMD clients are unregistered: the tenant-wide ceiling replaces the per-application
+       * consent configuration, and the client identifier URL must never be used to query the
+       * applications table (which the third-party check below would do).
+       */
+      const filteredScopes = await filterResourceScopesForTheCimdClient(queries, indicator, scopes);
+
+      return {
+        ...getSharedResourceServerData(envSet),
+        accessTokenTTL,
+        scope: filteredScopes.map(({ name }) => name).join(' '),
+      };
+    }
 
     if (clientId && (await isThirdPartyApplication(queries, clientId))) {
       const filteredScopes = await filterResourceScopesForTheThirdPartyApplication(

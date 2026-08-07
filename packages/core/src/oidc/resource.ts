@@ -7,7 +7,7 @@ import { type EnvSet } from '#src/env-set/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 
-const isReservedResource = (indicator: string): indicator is ReservedResource =>
+export const isReservedResource = (indicator: string): indicator is ReservedResource =>
   // eslint-disable-next-line no-restricted-syntax -- it's the best way to do it
   Object.values(ReservedResource).includes(indicator as ReservedResource);
 
