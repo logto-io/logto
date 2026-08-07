@@ -59,7 +59,7 @@ export const isCimdEffectivelyEnabled = (envSet: EnvSet): boolean =>
   envSet.oidc.cimdEnabled &&
   EnvSet.values.isOidcProviderSsrfProtectionEnabled;
 
-/** Exactly one identifier is set, matching the namespace of the client identifier. */
+/** At most one identifier is set, matching the namespace of the client identifier. */
 export type ClientIdentifierPayload = {
   applicationId?: string;
   cimdClientId?: string;

@@ -11,6 +11,7 @@ import type { KoaContextWithOIDC, Provider } from 'oidc-provider';
 import RequestError from '#src/errors/RequestError/index.js';
 import { createSessionLibrary } from '#src/libraries/session/index.js';
 import { assertLogContext, type LogContext } from '#src/middleware/koa-audit-log.js';
+import { getClientIdentifierPayload } from '#src/oidc/cimd/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 import { stringifyError } from '#src/utils/format.js';
@@ -112,7 +113,8 @@ const enforceMaxAllowedGrantsRevocation = async (
             'Grant.LimitExceeded',
             {
               userId,
-              applicationId: clientId,
+              // DEV: CIMD (client ID metadata document) support
+              ...getClientIdentifierPayload(clientId),
               revokedGrantIds: revokeResult.succeededNames,
               maxAllowedGrants,
               preRevocationActiveGrantCount: activeGrants.length,

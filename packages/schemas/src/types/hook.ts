@@ -104,11 +104,11 @@ export type DataHookEventPayload = {
   Record<string, unknown>;
 
 /**
- * A key-remapping omit instead of the built-in `Omit`: `DataHookEventPayload` carries a string
- * index signature, under which `Omit` collapses every named property into `unknown`; the
- * homomorphic form keeps the named properties typed.
+ * A key-remapping omit instead of the built-in `Omit`: on a type carrying a string index
+ * signature (e.g. the hook event payloads), `Omit` collapses every named property into
+ * `unknown`; the homomorphic form keeps the named properties typed.
  */
-type BetterOmit<T, Ignore> = {
+export type BetterOmit<T, Ignore> = {
   [key in keyof T as key extends Ignore ? never : key]: T[key];
 };
 
@@ -117,7 +117,16 @@ export type ExceptionHookEventPayload = BetterOmit<DataHookEventPayload, 'event'
 };
 export type GrantLimitExceededEventData = {
   userId: string;
-  applicationId: string;
+  /** The registered application ID; absent for a CIMD client. */
+  applicationId?: string;
+  // DEV: CIMD (client ID metadata document) support
+  /**
+   * The CIMD client identifier URL, set instead of `applicationId`. No grant-ceiling source
+   * exists for CIMD clients today (the CIMD policy denies Logto private client metadata
+   * regardless of source), so this key is defensive: it keeps `applicationId` registered-only
+   * by construction should a ceiling for CIMD clients ever be introduced.
+   */
+  cimdClientId?: string;
   revokedGrantIds: string[];
   maxAllowedGrants: number;
   preRevocationActiveGrantCount: number;
