@@ -58,11 +58,12 @@ export type ScriptResult =
    */
   | { ok: false; kind: 'timeout' | 'oom' }
   /**
-   * The script could not be compiled (`syntax`), or it does not expose a callable entry function
-   * (`type`).
+   * The script could not be compiled (`syntax`), or the runner could not invoke/transfer the run
+   * (`type`): missing or non-function entry, or a payload/return value that is not
+   * structured-cloneable across the worker boundary.
    *
-   * Does not cover an unusable return value — that stays call-site validation at 400 (see the
-   * {@link ScriptResult} note above).
+   * Does not cover call-site validation of a successfully returned value (e.g. Custom JWT's Zod
+   * `z.record` parse) — that stays at 400 (see the {@link ScriptResult} note above).
    */
   | { ok: false; kind: 'syntax' | 'type'; message: string; stack?: string }
   /** The script threw while running. */
@@ -81,6 +82,14 @@ export type ScriptRunInput = {
   payload: Record<string, unknown>;
   limits: ScriptLimits;
   egress: EgressPolicy;
+  /**
+   * Opaque isolation scope for the run, e.g. the tenant id.
+   *
+   * A runner that reuses execution state across runs (such as a pooled worker's top-level script
+   * state) must never share that state between runs with different key prefixes, so two tenants
+   * running a byte-identical script do not share one worker heap.
+   */
+  keyPrefix?: string;
 };
 
 /**
