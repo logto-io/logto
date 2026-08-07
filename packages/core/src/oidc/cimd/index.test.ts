@@ -1,7 +1,9 @@
+import { UserScope } from '@logto/core-kit';
 import { createMockUtils } from '@logto/shared/esm';
 import { type AllClientMetadata, type Client } from 'oidc-provider';
 
 import { type EnvSet } from '#src/env-set/index.js';
+import type Queries from '#src/tenants/Queries.js';
 
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
@@ -23,6 +25,13 @@ const loadCimdModule = async ({
 const buildEnvSet = (cimdEnabled: boolean, jwkSigningAlg?: 'ES256' | 'ES384' | 'ES512'): EnvSet => {
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal env-set stub scoped to the fields the module reads
   return { oidc: { cimdEnabled, jwkSigningAlg } } as EnvSet;
+};
+
+const buildCimdQueries = (findAllUserScopes: () => Promise<UserScope[]> = async () => []) => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal queries stub scoped to the methods the transform reads
+  return {
+    userScopes: { findAll: findAllUserScopes },
+  } as Queries['cimd'];
 };
 
 const cimdClientIdMaxLength = 2048;
@@ -55,17 +64,23 @@ const captureThrown = (run: () => unknown): unknown => {
 
 const loadEnabledFeature = async ({
   jwkSigningAlg,
+  ceilingUserScopes = [],
 }: {
   jwkSigningAlg?: 'ES256' | 'ES384' | 'ES512';
+  ceilingUserScopes?: UserScope[];
 } = {}) => {
   const { buildClientIdMetadataDocumentFeature } = await loadCimdModule();
-  const feature = buildClientIdMetadataDocumentFeature(buildEnvSet(true, jwkSigningAlg));
+  const findAllUserScopes = jest.fn(async () => ceilingUserScopes);
+  const feature = buildClientIdMetadataDocumentFeature(
+    buildEnvSet(true, jwkSigningAlg),
+    buildCimdQueries(findAllUserScopes)
+  );
 
   if (!feature) {
     throw new Error('Expected the CIMD feature to be built');
   }
 
-  return feature.clientIdMetadataDocument;
+  return { ...feature.clientIdMetadataDocument, findAllUserScopes };
 };
 
 describe('isCimdEffectivelyEnabled', () => {
@@ -95,7 +110,9 @@ describe('isCimdEffectivelyEnabled', () => {
 describe('buildClientIdMetadataDocumentFeature', () => {
   it('wires the feature with the draft-02 acknowledgement when effectively enabled', async () => {
     const { buildClientIdMetadataDocumentFeature } = await loadCimdModule();
-    expect(buildClientIdMetadataDocumentFeature(buildEnvSet(true))).toMatchObject({
+    expect(
+      buildClientIdMetadataDocumentFeature(buildEnvSet(true), buildCimdQueries())
+    ).toMatchObject({
       clientIdMetadataDocument: { enabled: true, ack: 'draft-02' },
     });
   });
@@ -104,12 +121,16 @@ describe('buildClientIdMetadataDocumentFeature', () => {
     const { buildClientIdMetadataDocumentFeature } = await loadCimdModule({
       isDevFeaturesEnabled: false,
     });
-    expect(buildClientIdMetadataDocumentFeature(buildEnvSet(true))).toBeUndefined();
+    expect(
+      buildClientIdMetadataDocumentFeature(buildEnvSet(true), buildCimdQueries())
+    ).toBeUndefined();
   });
 
   it('does not wire the feature when not effectively enabled', async () => {
     const { buildClientIdMetadataDocumentFeature } = await loadCimdModule();
-    expect(buildClientIdMetadataDocumentFeature(buildEnvSet(false))).toBeUndefined();
+    expect(
+      buildClientIdMetadataDocumentFeature(buildEnvSet(false), buildCimdQueries())
+    ).toBeUndefined();
   });
 });
 
@@ -135,6 +156,76 @@ describe('client identifier length bound', () => {
         allowClient(undefined, buildClient(buildClientId(cimdClientIdMaxLength + 1)))
       )
     ).toMatchObject(overLengthRejection);
+  });
+});
+
+describe('server-side metadata takeover', () => {
+  it('overrides the document scope with the tenant user-scope ceiling and pins grant and response types', async () => {
+    const { transformClientMetadata } = await loadEnabledFeature({
+      ceilingUserScopes: [UserScope.Profile, UserScope.Email],
+    });
+
+    await expect(
+      transformClientMetadata(undefined, {
+        scope: 'openid phone custom:unknown',
+        grant_types: ['client_credentials', 'implicit'],
+        response_types: ['id_token'],
+      })
+    ).resolves.toEqual({
+      scope: 'openid offline_access profile email',
+      grant_types: ['authorization_code', 'refresh_token'],
+      response_types: ['code'],
+    });
+  });
+
+  it('pins the server-side values when the document omits the fields, with an empty ceiling denying all user scopes', async () => {
+    const { transformClientMetadata } = await loadEnabledFeature();
+
+    await expect(transformClientMetadata(undefined, {})).resolves.toEqual({
+      scope: 'openid offline_access',
+      grant_types: ['authorization_code', 'refresh_token'],
+      response_types: ['code'],
+    });
+  });
+
+  it('re-reads the user-scope ceiling on every client resolution so changes apply immediately', async () => {
+    const { transformClientMetadata, findAllUserScopes } = await loadEnabledFeature({
+      ceilingUserScopes: [UserScope.Profile],
+    });
+
+    await expect(transformClientMetadata(undefined, {})).resolves.toMatchObject({
+      scope: 'openid offline_access profile',
+    });
+
+    // A memoized implementation would keep serving the first result; the ceiling must be
+    // re-queried per resolution for tenant changes to apply without a provider rebuild.
+    findAllUserScopes.mockResolvedValueOnce([UserScope.Profile, UserScope.Email]);
+
+    await expect(transformClientMetadata(undefined, {})).resolves.toMatchObject({
+      scope: 'openid offline_access profile email',
+    });
+    expect(findAllUserScopes).toHaveBeenCalledTimes(2);
+  });
+
+  it('passes the other document fields through untouched', async () => {
+    const { transformClientMetadata } = await loadEnabledFeature();
+
+    await expect(
+      transformClientMetadata(undefined, {
+        client_id: 'https://client.example.com/oauth/metadata',
+        client_name: 'Example MCP client',
+        redirect_uris: ['https://app.example.com/callback'],
+        token_endpoint_auth_method: 'none',
+      })
+    ).resolves.toEqual({
+      client_id: 'https://client.example.com/oauth/metadata',
+      client_name: 'Example MCP client',
+      redirect_uris: ['https://app.example.com/callback'],
+      token_endpoint_auth_method: 'none',
+      scope: 'openid offline_access',
+      grant_types: ['authorization_code', 'refresh_token'],
+      response_types: ['code'],
+    });
   });
 });
 
