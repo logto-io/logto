@@ -32,7 +32,12 @@ const sessionModelName = 'Session';
  */
 // Hard-code this value since 3 seconds is a reasonable number for concurrency and no need for further configuration
 const refreshTokenReuseInterval = 3;
-const revokeInstanceBatchSize = 2000;
+/**
+ * Kept small because each deleted row also updates every index on the table, so the
+ * per-statement random I/O must fit within a storage-throttled moment without hitting
+ * the statement timeout.
+ */
+const revokeInstanceBatchSize = 500;
 /** Safety valve so a revocation request stays bounded even for pathological instance counts. */
 const maxRevokeInstanceBatches = 1000;
 /** Fixed-length array to drive the bounded batch loop without a mutable counter. */
