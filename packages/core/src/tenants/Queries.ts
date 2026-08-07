@@ -34,6 +34,7 @@ import { createSignInExperienceQueries } from '#src/queries/sign-in-experience.j
 import SsoConnectorQueries from '#src/queries/sso-connectors.js';
 import { createSubjectTokenQueries } from '#src/queries/subject-token.js';
 import createTenantQueries from '#src/queries/tenant.js';
+import { TrustedDeviceQueries } from '#src/queries/trusted-device.js';
 import { createUserGeoLocationQueries } from '#src/queries/user-geo-location.js';
 import { createUserSignInCountriesQueries } from '#src/queries/user-sign-in-countries.js';
 import UserSsoIdentityQueries from '#src/queries/user-sso-identities.js';
@@ -91,6 +92,7 @@ export default class Queries {
   verificationRecords = new VerificationRecordQueries(this.pool);
   accountCenters = new AccountCenterQueries(this.pool, this.wellKnownCache);
   tenants = createTenantQueries(this.pool);
+  trustedDevices = new TrustedDeviceQueries(this.pool);
   tenantUsage = new TenantUsageQuery(this.pool);
   emailTemplates = new EmailTemplatesQueries(this.pool, this.wellKnownCache);
   captchaProviders = new CaptchaProviderQueries(this.pool);

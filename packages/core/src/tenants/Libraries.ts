@@ -1,3 +1,4 @@
+import { EnvSet } from '#src/env-set/index.js';
 import { ActionLibrary } from '#src/libraries/action.js';
 import { createApplicationAccessControlLibrary } from '#src/libraries/application-access-control.js';
 import { createApplicationLibrary } from '#src/libraries/application.js';
@@ -24,6 +25,7 @@ import { createSignInExperienceLibrary } from '#src/libraries/sign-in-experience
 import { createSocialLibrary } from '#src/libraries/social.js';
 import { createSsoConnectorLibrary } from '#src/libraries/sso-connector.js';
 import { type SubscriptionLibrary } from '#src/libraries/subscription.js';
+import { createTrustedDeviceLibrary } from '#src/libraries/trusted-device.js';
 import { createUserLibrary } from '#src/libraries/user.js';
 import { createVerificationStatusLibrary } from '#src/libraries/verification-status.js';
 
@@ -81,6 +83,11 @@ export default class Libraries {
   oidcPrivateKeys = new OidcPrivateKeyLibrary(this.queries);
 
   customProfileFields = createCustomProfileFieldsLibrary(this.queries);
+
+  // Trusted device
+  trustedDevices = EnvSet.values.isDevFeaturesEnabled
+    ? createTrustedDeviceLibrary(this.tenantId, this.queries.trustedDevices)
+    : undefined;
 
   session = createSessionLibrary(this.queries);
 
