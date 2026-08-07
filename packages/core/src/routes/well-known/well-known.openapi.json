@@ -77,23 +77,7 @@
         "description": "Get the default account center configuration.",
         "responses": {
           "200": {
-            "description": "The default account center configuration.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "fields": {
-                      "properties": {
-                        "trustedDevice": {
-                          "description": "Control access to trusted-device management.",
-                          "x-logto-dev-feature": true
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
+            "description": "The default account center configuration."
           }
         }
       }

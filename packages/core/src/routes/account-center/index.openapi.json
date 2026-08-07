@@ -13,23 +13,7 @@
         "description": "Get the account center settings.",
         "responses": {
           "200": {
-            "description": "Account center settings.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "fields": {
-                      "properties": {
-                        "trustedDevice": {
-                          "description": "Control access to trusted-device management.",
-                          "x-logto-dev-feature": true
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Account center settings."
           }
         }
       },
@@ -46,13 +30,7 @@
                     "description": "Enable or disable the account API."
                   },
                   "fields": {
-                    "description": "The fields settings for the account API.",
-                    "properties": {
-                      "trustedDevice": {
-                        "description": "Control access to trusted-device management.",
-                        "x-logto-dev-feature": true
-                      }
-                    }
+                    "description": "The fields settings for the account API."
                   },
                   "webauthnRelatedOrigins": {
                     "description": "The allowed domains for webauthn."
@@ -70,23 +48,7 @@
         },
         "responses": {
           "200": {
-            "description": "Updated account center settings.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "fields": {
-                      "properties": {
-                        "trustedDevice": {
-                          "description": "Control access to trusted-device management.",
-                          "x-logto-dev-feature": true
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Updated account center settings."
           }
         }
       }

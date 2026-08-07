@@ -22,7 +22,6 @@ import {
   wellConfiguredSsoConnector,
 } from '#src/__mocks__/index.js';
 import { WellKnownCache } from '#src/caches/well-known.js';
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
 import { mockSsoConnectorLibrary } from '#src/test-utils/mock-libraries.js';
@@ -30,7 +29,6 @@ import { mockSsoConnectorLibrary } from '#src/test-utils/mock-libraries.js';
 import { createConnectorLibrary } from '../connector.js';
 
 const { jest } = import.meta;
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
 
 const allCustomLanguageTags: LanguageTag[] = [];
 
@@ -101,12 +99,6 @@ const getPublicSignInExperience = (signInExperience: SignInExperience) => {
 
 beforeEach(() => {
   jest.clearAllMocks();
-});
-
-afterEach(() => {
-  // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after each feature-gate test.
-  (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
-    originalIsDevFeaturesEnabled;
 });
 
 describe('validate language info', () => {
@@ -194,22 +186,6 @@ describe('getAccountCenterSsrSignInExperience()', () => {
 });
 
 describe('getFullSignInExperience()', () => {
-  it('should omit trusted device policy when dev features are disabled', async () => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for this feature-gate test.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = false;
-    findDefaultSignInExperience.mockResolvedValueOnce({
-      ...mockSignInExperience,
-      trustedDevice: { enabled: true, durationDays: 30 },
-    });
-    getLogtoConnectors.mockResolvedValueOnce([]);
-    findAllCustomProfileFields.mockResolvedValueOnce(mockCustomProfileFields);
-    mockSsoConnectorLibrary.getAvailableSsoConnectors.mockResolvedValueOnce([]);
-
-    const fullSignInExperience = await getFullSignInExperience({ locale: 'en' });
-
-    expect(fullSignInExperience).not.toHaveProperty('trustedDevice');
-  });
-
   it('should return full sign-in experience', async () => {
     findDefaultSignInExperience.mockResolvedValueOnce(mockSignInExperience);
     getLogtoConnectors.mockResolvedValueOnce(mockSocialConnectors);
