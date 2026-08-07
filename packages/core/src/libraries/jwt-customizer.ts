@@ -73,7 +73,7 @@ const apiContext: CustomJwtApiContext = Object.freeze({
 
 export class JwtCustomizerLibrary {
   // Convert failures to WithTyped client response errors to share the error handling logic.
-  static async runScriptInLocalVm(data: CustomJwtFetcher) {
+  static async runScriptInLocalVm(data: CustomJwtFetcher, tenantId: string) {
     // TODO (LOG-13956): drop the legacy `node:vm` path and the gate once the worker-thread
     // runner has been manually verified and released.
     if (!EnvSet.values.isDevFeaturesEnabled) {
@@ -95,6 +95,7 @@ export class JwtCustomizerLibrary {
       script: data.script,
       entry: 'getCustomJwtClaims',
       payload,
+      tenantId,
     });
 
     if (!result.ok) {

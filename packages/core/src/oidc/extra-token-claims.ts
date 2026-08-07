@@ -334,7 +334,7 @@ export const getExtraTokenClaimsForJwtCustomization = async (
 
     const result = EnvSet.values.isCloud
       ? await libraries.jwtCustomizers.runScriptRemotely(payload)
-      : await JwtCustomizerLibrary.runScriptInLocalVm(payload);
+      : await JwtCustomizerLibrary.runScriptInLocalVm(payload, envSet.tenantId);
 
     ctx.prependAllLogEntries({ customTokenClaims: result });
 
