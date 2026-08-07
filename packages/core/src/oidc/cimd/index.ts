@@ -22,8 +22,8 @@ import {
 import { EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 
-import { appLevelAccessControlMetadataKey } from './application-access-control.js';
-import { isValidWildcardRedirectUriPattern } from './wildcard-redirect-uri.js';
+import { appLevelAccessControlMetadataKey } from '../application-access-control.js';
+import { isValidWildcardRedirectUriPattern } from '../redirect-uri/utils.js';
 
 /**
  * Must not exceed the `cimd_client_id varchar(2048)` column width — neither the draft nor the

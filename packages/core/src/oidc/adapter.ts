@@ -18,7 +18,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 
 import { appLevelAccessControlMetadataKey } from './application-access-control.js';
-import { isCimdEffectivelyEnabled } from './cimd.js';
+import { isCimdEffectivelyEnabled } from './cimd/index.js';
 import { getConstantClientMetadata } from './utils.js';
 
 /**

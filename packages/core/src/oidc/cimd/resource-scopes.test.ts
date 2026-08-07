@@ -3,7 +3,7 @@ import { type OrganizationScope, type Scope } from '@logto/schemas';
 
 import { MockQueries } from '#src/test-utils/tenant.js';
 
-import { filterResourceScopesForTheCimdClient } from './resource.js';
+import { filterResourceScopesForTheCimdClient } from './resource-scopes.js';
 
 const { jest } = import.meta;
 
