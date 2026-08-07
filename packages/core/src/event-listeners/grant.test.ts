@@ -42,13 +42,13 @@ const buildCimdContext = () => ({
   body: { access_token: 'newAccessTokenValue' },
 });
 
-const buildUnresolvedClientContext = (clientId: string) => ({
+const buildUnresolvedClientContext = (params: Record<string, unknown>) => ({
   ...createContextWithRouteParameters(),
   createLog: log.createLog,
   prependAllLogEntries: log.prependAllLogEntries,
   oidc: {
     entities: {},
-    params: { grant_type: 'authorization_code', client_id: clientId },
+    params,
   },
   body: { error: 'invalid_client' },
 });
@@ -197,7 +197,8 @@ describe('grantErrorListener with an unresolved client', () => {
 
   it('should attribute a cimd-namespace client_id from params when the client is not resolved', () => {
     stubDevFeaturesFlag(true);
-    const ctx = buildUnresolvedClientContext(cimdClientId);
+    const params = { grant_type: 'authorization_code', client_id: cimdClientId };
+    const ctx = buildUnresolvedClientContext(params);
 
     // @ts-expect-error pass complex type check to mock ctx directly
     grantListener(ctx, error);
@@ -206,13 +207,14 @@ describe('grantErrorListener with an unresolved client', () => {
       result: LogResult.Error,
       tokenTypes: [],
       error: stringifyError(error),
-      params: { grant_type: 'authorization_code', client_id: cimdClientId },
+      params,
     });
   });
 
   it('should keep an unresolved non-cimd client_id unattributed', () => {
     stubDevFeaturesFlag(true);
-    const ctx = buildUnresolvedClientContext('app-typo');
+    const params = { grant_type: 'authorization_code', client_id: 'app-typo' };
+    const ctx = buildUnresolvedClientContext(params);
 
     // @ts-expect-error pass complex type check to mock ctx directly
     grantListener(ctx, error);
@@ -220,7 +222,46 @@ describe('grantErrorListener with an unresolved client', () => {
       result: LogResult.Error,
       tokenTypes: [],
       error: stringifyError(error),
-      params: { grant_type: 'authorization_code', client_id: 'app-typo' },
+      params,
+    });
+  });
+
+  it('should keep an unresolved url-shaped client_id unattributed when the dev features flag is off', () => {
+    stubDevFeaturesFlag(false);
+    const params = { grant_type: 'authorization_code', client_id: cimdClientId };
+    const ctx = buildUnresolvedClientContext(params);
+
+    // @ts-expect-error pass complex type check to mock ctx directly
+    grantListener(ctx, error);
+    expect(log.mockAppend).toHaveBeenCalledWith({
+      result: LogResult.Error,
+      tokenTypes: [],
+      error: stringifyError(error),
+      params,
+    });
+  });
+
+  /**
+   * Attribution reads the resolved Client and the explicit `client_id` parameter only; an
+   * identifier embedded in authentication material (e.g. `client_assertion.sub`) stays raw in
+   * `params` for forensics.
+   */
+  it('should keep an assertion-only failure unattributed while params carry the assertion', () => {
+    stubDevFeaturesFlag(true);
+    const params = {
+      grant_type: 'authorization_code',
+      client_assertion: 'header.payload.signature',
+      client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
+    };
+    const ctx = buildUnresolvedClientContext(params);
+
+    // @ts-expect-error pass complex type check to mock ctx directly
+    grantListener(ctx, error);
+    expect(log.mockAppend).toHaveBeenCalledWith({
+      result: LogResult.Error,
+      tokenTypes: [],
+      error: stringifyError(error),
+      params,
     });
   });
 });
