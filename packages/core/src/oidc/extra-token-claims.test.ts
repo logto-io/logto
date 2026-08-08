@@ -27,10 +27,13 @@ jest.unstable_mockModule('#src/libraries/jwt-customizer.js', () => ({
 const { EnvSet } = await import('#src/env-set/index.js');
 const { getExtraTokenClaimsForJwtCustomization } = await import('./extra-token-claims.js');
 
-const buildContextAndToken = ({ organizationId }: { organizationId?: string } = {}) => {
+const buildContextAndToken = ({
+  organizationId,
+  clientId = 'app-1',
+}: { organizationId?: string; clientId?: string } = {}) => {
   const ctx = createOidcContext({
     session: { uid: sessionUid } as unknown as KoaContextWithOIDC['oidc']['session'],
-    client: { clientId: 'app-1' } as unknown as KoaContextWithOIDC['oidc']['client'],
+    client: { clientId } as unknown as KoaContextWithOIDC['oidc']['client'],
     params: { organization_id: organizationId },
   });
 
@@ -54,7 +57,7 @@ const buildContextAndToken = ({ organizationId }: { organizationId?: string } = 
     gty: { value: 'password', enumerable: true },
   }) as AccessToken;
 
-  return { ctxWithLog, token };
+  return { ctxWithLog, token, logEntry };
 };
 
 const mockOrganization = {
@@ -122,6 +125,21 @@ const callGetExtraTokenClaimsForJwtCustomization = async ({
     libraries: tenant.libraries,
     logtoConfigs: tenant.logtoConfigs,
   });
+};
+
+// DEV: CIMD (client ID metadata document) support
+const runJwtCustomizationWithClientId = async (clientId: string) => {
+  const tenant = createTenant({});
+  const { ctxWithLog, token, logEntry } = buildContextAndToken({ clientId });
+
+  await getExtraTokenClaimsForJwtCustomization(ctxWithLog, token, {
+    envSet: tenant.envSet,
+    queries: tenant.queries,
+    libraries: tenant.libraries,
+    logtoConfigs: tenant.logtoConfigs,
+  });
+
+  return logEntry;
 };
 
 const createResponseError = (status: number, body: Record<string, unknown>) =>
@@ -254,5 +272,28 @@ describe('getExtraTokenClaimsForJwtCustomization', () => {
     await expect(
       callGetExtraTokenClaimsForJwtCustomization({ blockIssuanceOnError: true })
     ).rejects.toBeInstanceOf(errors.InvalidRequest);
+  });
+
+  // DEV: CIMD (client ID metadata document) support
+  describe('log attribution for a cimd client identifier', () => {
+    const cimdClientId = 'https://client.example.com/metadata.json';
+
+    it('routes the identifier to the dedicated key when dev features are enabled', async () => {
+      const logEntry = await runJwtCustomizationWithClientId(cimdClientId);
+
+      const payload: unknown = logEntry.append.mock.calls[0]?.[0];
+      expect(payload).toHaveProperty('cimdClientId', cimdClientId);
+      expect(payload).not.toHaveProperty('applicationId');
+    });
+
+    it('keeps the url-shaped identifier under applicationId when dev features are disabled', async () => {
+      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+
+      const logEntry = await runJwtCustomizationWithClientId(cimdClientId);
+
+      expect(logEntry.append).toHaveBeenCalledWith(
+        expect.objectContaining({ applicationId: cimdClientId })
+      );
+    });
   });
 });

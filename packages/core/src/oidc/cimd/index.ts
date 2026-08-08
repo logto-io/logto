@@ -25,6 +25,8 @@ import type Queries from '#src/tenants/Queries.js';
 import { extraClientMetadataKeys } from '../application-access-control.js';
 import { isValidWildcardRedirectUriPattern } from '../redirect-uri/utils.js';
 
+import { isCimdClientId } from './client-id.js';
+
 /**
  * Must not exceed the `cimd_client_id varchar(2048)` column width — neither the draft nor the
  * provider defines a maximum, so this bound is what keeps an over-long identifier an
@@ -56,6 +58,31 @@ export const isCimdEffectivelyEnabled = (envSet: EnvSet): boolean =>
   EnvSet.values.isDevFeaturesEnabled &&
   envSet.oidc.cimdEnabled &&
   EnvSet.values.isOidcProviderSsrfProtectionEnabled;
+
+/** At most one identifier is set, matching the namespace of the client identifier. */
+export type ClientIdentifierPayload = {
+  applicationId?: string;
+  cimdClientId?: string;
+};
+
+/**
+ * Route a client identifier into the payload key its namespace owns: `applicationId` carries
+ * registered application ids only, while an identifier in the CIMD namespace goes under the
+ * dedicated `cimdClientId` key — audit log and webhook consumers branch on key presence instead
+ * of parsing URL shapes.
+ *
+ * The namespace alone decides, deliberately ignoring the tenant CIMD config: the config can flip
+ * between an interaction's creation and its payload emission (the tenant is rebuilt on config
+ * change), and routing by it would put the in-flight interaction's URL identifier under
+ * `applicationId`, breaking the registered-only contract. The key attributes the identifier the
+ * requester presented, not a resolved client — an identifier that later fails resolution still
+ * lands under `cimdClientId`.
+ */
+export const getClientIdentifierPayload = (clientId?: string): ClientIdentifierPayload =>
+  // DEV: CIMD (client ID metadata document) support
+  clientId !== undefined && EnvSet.values.isDevFeaturesEnabled && isCimdClientId(clientId)
+    ? { cimdClientId: clientId }
+    : { applicationId: clientId };
 
 /**
  * Build the `features.clientIdMetadataDocument` entry for the provider configuration, or

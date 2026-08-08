@@ -1,11 +1,13 @@
 import { appInsights } from '@logto/app-insights/node';
 import { LogResult, type ExceptionHookEvent } from '@logto/schemas';
+import Sinon from 'sinon';
 
+import { EnvSet } from '#src/env-set/index.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { MockQueries } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import { createAuthorizationSuccessListener } from './authorization-success.js';
+import { createAuthorizationSuccessListener, type TriggerEvent } from './authorization-success.js';
 
 const { jest } = import.meta;
 
@@ -251,6 +253,80 @@ describe('createAuthorizationSuccessListener', () => {
         userAgent: 'test-agent',
       }
     );
+  });
+
+  // DEV: CIMD (client ID metadata document) support
+  describe('grant limit webhook payload for a cimd client', () => {
+    const cimdClientId = 'https://client.example.com/metadata.json';
+
+    afterEach(() => {
+      Sinon.restore();
+    });
+
+    /**
+     * No grant-ceiling source exists for CIMD clients today, so this locks the payload contract
+     * for any future one: the identifier routes by namespace, keeping `applicationId`
+     * registered-only by construction.
+     */
+    it('should attribute the identifier under the dedicated key', async () => {
+      Sinon.stub(EnvSet, 'values').value({ ...EnvSet.values, isDevFeaturesEnabled: true });
+
+      const { provider } = createMockProvider();
+      const findUserActiveGrantsByClientId = jest.fn(async () => [
+        {
+          id: 'grant-2',
+          payload: {
+            exp: 999_999_999,
+            iat: 20,
+            jti: 'grant-jti-2',
+            kind: 'Grant',
+            clientId: cimdClientId,
+            accountId: 'user-id',
+          },
+          expiresAt: Date.now() + 1000,
+        },
+        {
+          id: 'grant-1',
+          payload: {
+            exp: 999_999_999,
+            iat: 10,
+            jti: 'grant-jti-1',
+            kind: 'Grant',
+            clientId: cimdClientId,
+            accountId: 'user-id',
+          },
+          expiresAt: Date.now() + 1000,
+        },
+      ]);
+
+      const triggerEvent = jest.fn<Promise<void>, Parameters<TriggerEvent>>(async () => {
+        await Promise.resolve();
+      });
+
+      const listener = createAuthorizationSuccessListener(
+        // @ts-expect-error Provider mock is enough for unit test
+        provider,
+        new MockQueries({
+          oidcModelInstances: {
+            findUserActiveGrantsByClientId,
+            findUserActiveSessionUidByGrantId: jest.fn(async () => null),
+          },
+        }),
+        triggerEvent
+      );
+
+      const context = createMockAuthorizationSuccessContext({
+        clientId: cimdClientId,
+        maxAllowedGrants: 1,
+      });
+      // @ts-expect-error Context mock is enough for unit test
+      await listener(context);
+
+      expect(triggerEvent).toHaveBeenCalledTimes(1);
+      const payload = triggerEvent.mock.calls[0]?.[2];
+      expect(payload).toMatchObject({ cimdClientId, revokedGrantIds: ['grant-1'] });
+      expect(payload).not.toHaveProperty('applicationId');
+    });
   });
 
   it('should throw when grant query fails', async () => {
