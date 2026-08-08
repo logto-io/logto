@@ -1,5 +1,45 @@
 # Change Log
 
+## 1.43.0
+
+### Minor Changes
+
+- 28885b42d5: add optional signed SAML authentication requests for enterprise SSO connectors
+
+  Enterprise SSO SAML connectors can now sign the SAML authentication request (AuthnRequest) sent to the identity provider. Generate a service-provider signing key on the connector, download its certificate and register it at the identity provider, then enable "Sign authentication request". RSA-SHA256 (default) and RSA-SHA512 are supported, and staged keys allow graceful, zero-downtime certificate rotation. Identity-provider metadata advertising `WantAuthnRequestsSigned` no longer breaks SAML sign-in when signing is disabled.
+
+### Patch Changes
+
+- 28c3c9283e: treat Gmail address aliases as the same address in custom email allowlist and blocklist rules
+
+  The matcher treats gmail.com and googlemail.com as equivalent and ignores local-part dots. The Console now shows custom email rule examples and Gmail matching behavior in the field descriptions, with shorter input placeholders.
+
+- f5289eb78b: fix a 500 error when assigning an empty list of scopes or roles
+
+  Management API endpoints that assign relations, such as `POST /applications/:applicationId/user-consent-scopes` and `POST /organizations/:id/users/:userId/roles`, now accept an empty array and make no changes, instead of responding with a 500 error.
+
+- 6f43932ae9: declare the token signing algorithm that matches the signing key's curve
+
+  Previously, every Elliptic Curve signing key was declared as `ES384` regardless of its curve, so tenants seeded with a custom P-256 or P-521 private key advertised an algorithm their key cannot sign and clients failed validation at the authorization endpoint. The declared algorithm now follows the key's actual curve: P-256 declares `ES256`, P-384 declares `ES384`, and P-521 declares `ES512`. RSA keys keep the `RS256` default.
+
+- fafc8cd9f3: reject token issuance for suspended users
+
+  Suspending a user revokes their sessions and tokens, but token issuance itself never checked the suspension flag — if revocation partially failed, a surviving refresh token kept working indefinitely. The OIDC `findAccount` hook now rejects suspended users with `invalid_grant`, mirroring how deleted users are handled, so all user token grants (refresh token, authorization code, device code, token exchange) and userinfo reject suspended users regardless of revocation state.
+
+- Updated dependencies [ebfefb513d]
+- Updated dependencies [28c3c9283e]
+- Updated dependencies [28885b42d5]
+  - @logto/core-kit@2.12.1
+  - @logto/console@1.40.0
+  - @logto/phrases@1.30.1
+  - @logto/account@0.5.0
+  - @logto/cli@1.43.0
+  - @logto/demo-app@1.5.0
+  - @logto/device-demo-app@0.1.0
+  - @logto/experience@1.21.0
+  - @logto/phrases-experience@1.14.2
+  - @logto/schemas@1.43.0
+
 ## 1.42.0
 
 ### Minor Changes
