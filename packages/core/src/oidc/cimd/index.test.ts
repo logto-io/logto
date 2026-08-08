@@ -107,37 +107,37 @@ describe('isCimdEffectivelyEnabled', () => {
   });
 });
 
-describe('isInCimdNamespace', () => {
+describe('shouldAttributeToCimd', () => {
   const cimdClientId = 'https://client.example.com/metadata.json';
 
-  it('is in the namespace for a url-shaped identifier', async () => {
-    const { isInCimdNamespace } = await loadCimdModule();
-    expect(isInCimdNamespace(cimdClientId)).toBe(true);
+  it('attributes a url-shaped identifier to cimd', async () => {
+    const { shouldAttributeToCimd } = await loadCimdModule();
+    expect(shouldAttributeToCimd(cimdClientId)).toBe(true);
   });
 
-  it('is not in the namespace for a registered application id or a missing identifier', async () => {
-    const { isInCimdNamespace } = await loadCimdModule();
-    expect(isInCimdNamespace('app-id')).toBe(false);
-    expect(isInCimdNamespace()).toBe(false);
+  it('does not attribute a registered application id or a missing identifier', async () => {
+    const { shouldAttributeToCimd } = await loadCimdModule();
+    expect(shouldAttributeToCimd('app-id')).toBe(false);
+    expect(shouldAttributeToCimd()).toBe(false);
   });
 
-  it('is not in the namespace when the dev features flag is off', async () => {
-    const { isInCimdNamespace } = await loadCimdModule({ isDevFeaturesEnabled: false });
-    expect(isInCimdNamespace(cimdClientId)).toBe(false);
+  it('does not attribute when the dev features flag is off', async () => {
+    const { shouldAttributeToCimd } = await loadCimdModule({ isDevFeaturesEnabled: false });
+    expect(shouldAttributeToCimd(cimdClientId)).toBe(false);
   });
 
-  it('is in the namespace regardless of the tenant cimd config', async () => {
-    const { isInCimdNamespace } = await loadCimdModule({
+  it('attributes even when cimd is not effectively enabled for the tenant', async () => {
+    const { shouldAttributeToCimd } = await loadCimdModule({
       isOidcProviderSsrfProtectionEnabled: false,
     });
-    expect(isInCimdNamespace(cimdClientId)).toBe(true);
+    expect(shouldAttributeToCimd(cimdClientId)).toBe(true);
   });
 });
 
 describe('getClientIdentifierPayload', () => {
   const cimdClientId = 'https://client.example.com/metadata.json';
 
-  it('routes a cimd-namespace identifier to the dedicated key', async () => {
+  it('routes a cimd client identifier to the dedicated key', async () => {
     const { getClientIdentifierPayload } = await loadCimdModule();
     expect(getClientIdentifierPayload(cimdClientId)).toStrictEqual({
       cimdClientId,
