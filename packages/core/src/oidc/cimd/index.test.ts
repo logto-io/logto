@@ -107,6 +107,33 @@ describe('isCimdEffectivelyEnabled', () => {
   });
 });
 
+describe('isInCimdNamespace', () => {
+  const cimdClientId = 'https://client.example.com/metadata.json';
+
+  it('is in the namespace for a url-shaped identifier', async () => {
+    const { isInCimdNamespace } = await loadCimdModule();
+    expect(isInCimdNamespace(cimdClientId)).toBe(true);
+  });
+
+  it('is not in the namespace for a registered application id or a missing identifier', async () => {
+    const { isInCimdNamespace } = await loadCimdModule();
+    expect(isInCimdNamespace('app-id')).toBe(false);
+    expect(isInCimdNamespace()).toBe(false);
+  });
+
+  it('is not in the namespace when the dev features flag is off', async () => {
+    const { isInCimdNamespace } = await loadCimdModule({ isDevFeaturesEnabled: false });
+    expect(isInCimdNamespace(cimdClientId)).toBe(false);
+  });
+
+  it('is in the namespace regardless of the tenant cimd config', async () => {
+    const { isInCimdNamespace } = await loadCimdModule({
+      isOidcProviderSsrfProtectionEnabled: false,
+    });
+    expect(isInCimdNamespace(cimdClientId)).toBe(true);
+  });
+});
+
 describe('getClientIdentifierPayload', () => {
   const cimdClientId = 'https://client.example.com/metadata.json';
 
@@ -136,6 +163,30 @@ describe('getClientIdentifierPayload', () => {
     expect(getClientIdentifierPayload()).toStrictEqual({
       applicationId: undefined,
     });
+  });
+});
+
+describe('isCimdClient', () => {
+  const cimdClientId = 'https://client.example.com/client-metadata.json';
+
+  it('is a cimd client when the feature is effective and the identifier is url-shaped', async () => {
+    const { isCimdClient } = await loadCimdModule();
+    expect(isCimdClient(buildEnvSet(true), cimdClientId)).toBe(true);
+  });
+
+  it('is not a cimd client for a registered application id', async () => {
+    const { isCimdClient } = await loadCimdModule();
+    expect(isCimdClient(buildEnvSet(true), 'registered_client_id')).toBe(false);
+  });
+
+  it('is not a cimd client without an identifier', async () => {
+    const { isCimdClient } = await loadCimdModule();
+    expect(isCimdClient(buildEnvSet(true))).toBe(false);
+  });
+
+  it('is not a cimd client when the feature is not effectively enabled', async () => {
+    const { isCimdClient } = await loadCimdModule();
+    expect(isCimdClient(buildEnvSet(false), cimdClientId)).toBe(false);
   });
 });
 

@@ -55,8 +55,7 @@ import {
   hasAppLevelAccessControlChecked,
   markAppLevelAccessControlCheckedForOidcContext,
 } from './application-access-control.js';
-import { isCimdClientId } from './cimd/client-id.js';
-import { buildClientIdMetadataDocumentFeature, isCimdEffectivelyEnabled } from './cimd/index.js';
+import { buildClientIdMetadataDocumentFeature, isCimdClient } from './cimd/index.js';
 import { filterResourceScopesForTheCimdClient } from './cimd/resource-scopes.js';
 import defaults from './defaults.js';
 import { deviceFlowConfig, defaultDeviceCodeTtl } from './device-flow.js';
@@ -128,7 +127,7 @@ export default function initOidc(
     });
 
     // DEV: CIMD (client ID metadata document) support
-    if (clientId && isCimdEffectivelyEnabled(envSet) && isCimdClientId(clientId)) {
+    if (isCimdClient(envSet, clientId)) {
       /**
        * CIMD clients are unregistered: the tenant-wide ceiling replaces the per-application
        * consent configuration, and the client identifier URL must never be used to query the

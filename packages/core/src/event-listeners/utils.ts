@@ -1,11 +1,9 @@
 import { conditional } from '@silverhand/essentials';
 import type { KoaContextWithOIDC } from 'oidc-provider';
 
-import { EnvSet } from '#src/env-set/index.js';
 import { type WithAppSecretContext } from '#src/middleware/koa-app-secret-transpilation.js';
 import type { LogPayload } from '#src/middleware/koa-audit-log.js';
-import { isCimdClientId } from '#src/oidc/cimd/client-id.js';
-import { getClientIdentifierPayload } from '#src/oidc/cimd/index.js';
+import { getClientIdentifierPayload, isInCimdNamespace } from '#src/oidc/cimd/index.js';
 
 export const extractInteractionContext = (
   ctx: WithAppSecretContext<KoaContextWithOIDC>
@@ -25,9 +23,8 @@ export const extractInteractionContext = (
    * resolution-backed, keeping a mistyped registered id unattributed as before.
    */
   const cimdFallbackClientId = conditional(
-    EnvSet.values.isDevFeaturesEnabled &&
-      typeof submittedClientId === 'string' &&
-      isCimdClientId(submittedClientId) &&
+    typeof submittedClientId === 'string' &&
+      isInCimdNamespace(submittedClientId) &&
       submittedClientId
   );
 
