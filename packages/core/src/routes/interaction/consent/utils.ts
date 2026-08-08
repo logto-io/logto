@@ -3,8 +3,7 @@ import { type MissingResourceScopes, type Scope, missingResourceScopesGuard } fr
 import { errors } from 'oidc-provider';
 
 import { type EnvSet } from '#src/env-set/index.js';
-import { isCimdClientId } from '#src/oidc/cimd/client-id.js';
-import { isCimdEffectivelyEnabled } from '#src/oidc/cimd/index.js';
+import { isCimdClient } from '#src/oidc/cimd/index.js';
 import { filterResourceScopesForTheCimdClient } from '#src/oidc/cimd/resource-scopes.js';
 import {
   filterResourceScopesForTheThirdPartyApplication,
@@ -125,8 +124,7 @@ export const filterAndParseMissingResourceScopes = async ({
             organizationId,
           });
 
-          // DEV: CIMD (client ID metadata document) support
-          if (isCimdEffectivelyEnabled(envSet) && isCimdClientId(applicationId)) {
+          if (isCimdClient(envSet, applicationId)) {
             /**
              * CIMD clients are unregistered: the tenant-wide ceiling replaces the
              * per-application consent configuration, and the identifier URL must never reach

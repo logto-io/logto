@@ -20,8 +20,7 @@ import { consent, getMissingScopes } from '#src/libraries/session/index.js';
 import koaAppAccessControl from '#src/middleware/koa-app-access-control.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
-import { isCimdClientId } from '#src/oidc/cimd/client-id.js';
-import { isCimdEffectivelyEnabled } from '#src/oidc/cimd/index.js';
+import { isCimdClient } from '#src/oidc/cimd/index.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -72,10 +71,9 @@ export default function consentRoutes<T extends IRouterParamContext>(
 
       const { accountId: userId } = session;
 
-      // DEV: CIMD (client ID metadata document) support
-      const isCimdClient = isCimdEffectivelyEnabled(envSet) && isCimdClientId(applicationId);
+      const cimd = isCimdClient(envSet, applicationId);
 
-      if (isCimdClient) {
+      if (cimd) {
         /**
          * The oidc-provider resume path re-runs `checkClient` (re-fetching the metadata
          * document when its cache has expired) but not `check_redirect_uri`, so a URI removed
@@ -101,7 +99,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
          * organization selection.
          */
         assertThat(
-          !isCimdClient,
+          !cimd,
           new InvalidRequest('organization consent is not available for CIMD clients')
         );
 
@@ -128,7 +126,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
       // Find the organizations granted by the user
       // The user may send consent request multiple times, so we need to find the organizations again.
       // A CIMD client can hold none until LOG-13930 lands the grant-scoped storage.
-      const organizations = isCimdClient
+      const organizations = cimd
         ? []
         : await queries.applications.userConsentOrganizations
             .getEntities(Organizations, {
@@ -222,7 +220,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
              * organization support reopens the rebuild and retires this branch.
              * TODO: @xiaoyijun reopen the organization rebuild for CIMD (LOG-13930).
              */
-            return [resourceIndicator, isCimdClient ? scopes : []];
+            return [resourceIndicator, cimd ? scopes : []];
           }
 
           return [resourceIndicator, scopes.filter((scope) => !resource.includes(scope))];
@@ -275,8 +273,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
 
       const { accountId } = session;
 
-      // DEV: CIMD (client ID metadata document) support
-      const isCimdClient = isCimdEffectivelyEnabled(envSet) && isCimdClientId(clientId);
+      const cimd = isCimdClient(envSet, clientId);
 
       /**
        * CIMD clients are unregistered: display data comes from the provider-resolved metadata
@@ -287,8 +284,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
         application: ConsentInfoResponse['application'];
         isDeviceFlowApplication: boolean;
       }> => {
-        // DEV: CIMD (client ID metadata document) support
-        if (isCimdClient) {
+        if (cimd) {
           assertThat(
             await provider.Client.find(clientId),
             new InvalidClient('client must be available')
@@ -365,7 +361,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
        * clients lands with LOG-13930, so a CIMD consent offers no organization selection yet.
        */
       const organizations =
-        !isCimdClient && missingOIDCScope?.includes(UserScope.Organizations)
+        !cimd && missingOIDCScope?.includes(UserScope.Organizations)
           ? await queries.organizations.relations.users.getOrganizationsByUserId(accountId)
           : [];
 

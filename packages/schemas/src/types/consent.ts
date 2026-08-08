@@ -33,7 +33,6 @@ export const publicApplicationGuard = Applications.guard
     id: true,
     name: true,
   })
-  // DEV: CIMD (client ID metadata document) support
   .extend({
     id: z.string(),
     name: z.string(),
