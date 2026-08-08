@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.43.0
+
+### Patch Changes
+
+- Updated dependencies [ebfefb513d]
+- Updated dependencies [28c3c9283e]
+  - @logto/core-kit@2.12.1
+  - @logto/phrases@1.30.1
+  - @logto/phrases-experience@1.14.2
+
 ## 1.42.0
 
 ### Minor Changes
