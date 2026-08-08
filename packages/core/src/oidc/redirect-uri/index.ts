@@ -23,9 +23,9 @@
  * conformance.
  */
 
+import { isCimdClientId } from '@logto/shared';
 import { type Provider } from 'oidc-provider';
 
-import { isCimdClientId } from '../cimd/client-id.js';
 import {
   matchAgainstRegisteredCimd,
   matchLoopbackPortInsensitiveCimd,

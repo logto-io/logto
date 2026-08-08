@@ -1,3 +1,4 @@
+export * from './cimd-client-id.js';
 export * from './fetch.js';
 export * from './id.js';
 export * from './normalize-error.js';
