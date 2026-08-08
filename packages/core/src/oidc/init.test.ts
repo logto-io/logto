@@ -68,7 +68,6 @@ class MockEcEnvSet extends EnvSet {
 
 const ecEnvSet = new MockEcEnvSet(defaultTenantId, EnvSet.values.dbUrl);
 
-// DEV: CIMD (client ID metadata document) support
 /**
  * The tenant-level `cimdEnabled` flag is the only effective-enablement input the jest
  * environment leaves off (dev features and SSRF protection are both on), so flipping it is
@@ -435,7 +434,6 @@ describe('oidc provider init', () => {
   });
 });
 
-// DEV: CIMD (client ID metadata document) support
 describe('getResourceServerInfo for CIMD clients', () => {
   const cimdClientId = 'https://client.example.com/client-metadata.json';
 

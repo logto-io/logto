@@ -15,7 +15,6 @@ export const extractInteractionContext = (
 
   const submittedClientId = params?.client_id;
 
-  // DEV: CIMD (client ID metadata document) support
   /**
    * `grant.error` fires for failures thrown before the provider resolves the Client entity — a
    * CIMD document fetch or metadata-validation failure lands exactly there — so fall back to the
@@ -29,7 +28,6 @@ export const extractInteractionContext = (
   );
 
   return {
-    // DEV: CIMD (client ID metadata document) support
     ...getClientIdentifierPayload(Client?.clientId ?? cimdFallbackClientId),
     applicationSecret: ctx.appSecret,
     sessionId: Session?.jti,

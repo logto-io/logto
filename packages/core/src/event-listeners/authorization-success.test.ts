@@ -255,7 +255,6 @@ describe('createAuthorizationSuccessListener', () => {
     );
   });
 
-  // DEV: CIMD (client ID metadata document) support
   describe('grant limit webhook payload for a cimd client', () => {
     const cimdClientId = 'https://client.example.com/metadata.json';
 

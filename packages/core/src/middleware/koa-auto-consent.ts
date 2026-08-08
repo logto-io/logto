@@ -21,7 +21,6 @@ const shouldAutoConsentApplication = async (clientId: string, query: Queries, en
     applications: { findApplicationById },
   } = query;
 
-  // DEV: CIMD (client ID metadata document) support
   if (isCimdClient(envSet, clientId)) {
     /**
      * Registered application ids never take the URL shape, and authorization has already

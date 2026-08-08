@@ -126,7 +126,6 @@ export default function initOidc(
       userId,
     });
 
-    // DEV: CIMD (client ID metadata document) support
     if (isCimdClient(envSet, clientId)) {
       /**
        * CIMD clients are unregistered: the tenant-wide ceiling replaces the per-application
@@ -219,7 +218,6 @@ export default function initOidc(
       dPoP: { enabled: false },
       backchannelLogout: { enabled: true },
       deviceFlow: deviceFlowConfig,
-      // DEV: CIMD (client ID metadata document) support
       ...buildClientIdMetadataDocumentFeature(envSet, queries.cimd),
       rpInitiatedLogout: {
         logoutSource: (ctx, form) => {

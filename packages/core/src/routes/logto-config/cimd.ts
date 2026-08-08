@@ -20,7 +20,6 @@ export default function logtoConfigCimdRoutes<T extends ManagementApiRouter>(
 
   const { getCimdConfig, upsertCimdConfig } = tenant.queries.logtoConfigs;
 
-  // DEV: CIMD (client ID metadata document) support
   router.get(
     '/configs/cimd',
     koaGuard({
@@ -34,7 +33,6 @@ export default function logtoConfigCimdRoutes<T extends ManagementApiRouter>(
     }
   );
 
-  // DEV: CIMD (client ID metadata document) support
   router.patch(
     '/configs/cimd',
     koaGuard({

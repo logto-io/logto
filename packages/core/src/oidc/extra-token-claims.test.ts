@@ -127,7 +127,6 @@ const callGetExtraTokenClaimsForJwtCustomization = async ({
   });
 };
 
-// DEV: CIMD (client ID metadata document) support
 const runJwtCustomizationWithClientId = async (clientId: string) => {
   const tenant = createTenant({});
   const { ctxWithLog, token, logEntry } = buildContextAndToken({ clientId });
@@ -274,7 +273,6 @@ describe('getExtraTokenClaimsForJwtCustomization', () => {
     ).rejects.toBeInstanceOf(errors.InvalidRequest);
   });
 
-  // DEV: CIMD (client ID metadata document) support
   describe('log attribution for a cimd client identifier', () => {
     const cimdClientId = 'https://client.example.com/metadata.json';
 

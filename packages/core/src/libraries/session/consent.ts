@@ -50,7 +50,6 @@ type ClientIdentifiers = {
  * on every consent submission for the same verdict.
  */
 const identifyClient = (envSet: EnvSet, clientId: string): ClientIdentifiers =>
-  // DEV: CIMD (client ID metadata document) support
   isCimdClient(envSet, clientId) ? { cimdClientId: clientId } : { registeredClientId: clientId };
 
 /**

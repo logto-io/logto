@@ -193,7 +193,6 @@ export default function postgresAdapter(
          * handed over to the provider's native CIMD resolver without a database lookup — every
          * other identifier keeps folding its lookup failures into `invalid_client`.
          */
-        // DEV: CIMD (client ID metadata document) support
         if (isCimdClient(envSet, id)) {
           return;
         }

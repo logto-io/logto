@@ -42,7 +42,6 @@ export default function cimdRoutes<T extends ManagementApiRouter>(
     );
   };
 
-  // DEV: CIMD (client ID metadata document) support
   router.get(
     '/cimd/user-consent-scopes',
     koaGuard({
@@ -70,7 +69,6 @@ export default function cimdRoutes<T extends ManagementApiRouter>(
     }
   );
 
-  // DEV: CIMD (client ID metadata document) support
   router.post(
     '/cimd/user-consent-scopes',
     koaGuard({
@@ -111,7 +109,6 @@ export default function cimdRoutes<T extends ManagementApiRouter>(
     }
   );
 
-  // DEV: CIMD (client ID metadata document) support
   router.delete(
     '/cimd/user-consent-scopes/:scopeType/:scopeId',
     koaGuard({

@@ -44,7 +44,6 @@ export default function koaInteractionHooks<
     const interactionApiMetadata = {
       interactionEvent,
       userAgent,
-      // DEV: CIMD (client ID metadata document) support
       ...getClientIdentifierPayload(conditionalString(interactionDetails.params.client_id)),
       sessionId: interactionDetails.jti,
     };

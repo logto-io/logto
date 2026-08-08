@@ -89,7 +89,6 @@ export type ClientIdentifierPayload = {
  * that later fails resolution still lands under `cimdClientId`.
  */
 export const getClientIdentifierPayload = (clientId?: string): ClientIdentifierPayload =>
-  // DEV: CIMD (client ID metadata document) support
   isInCimdNamespace(clientId) ? { cimdClientId: clientId } : { applicationId: clientId };
 
 /**
@@ -101,7 +100,6 @@ export const getClientIdentifierPayload = (clientId?: string): ClientIdentifierP
  * a CIMD client.
  */
 export const isCimdClient = (envSet: EnvSet, clientId?: string): boolean =>
-  // DEV: CIMD (client ID metadata document) support
   clientId !== undefined && isCimdEffectivelyEnabled(envSet) && isCimdClientId(clientId);
 
 /**

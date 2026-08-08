@@ -721,7 +721,6 @@ export default class ExperienceInteraction {
         auditContext: {
           createLog: this.ctx.createLog,
           sessionId: this.ctx.interactionDetails.jti,
-          // DEV: CIMD (client ID metadata document) support
           ...getClientIdentifierPayload(
             conditional(
               typeof this.ctx.interactionDetails.params.client_id === 'string' &&

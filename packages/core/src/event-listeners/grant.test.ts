@@ -148,7 +148,6 @@ describe('grantSuccessListener', () => {
   });
 });
 
-// DEV: CIMD (client ID metadata document) support
 describe('grantSuccessListener with a cimd client identifier', () => {
   afterEach(() => {
     Sinon.restore();
@@ -186,7 +185,6 @@ describe('grantSuccessListener with a cimd client identifier', () => {
   });
 });
 
-// DEV: CIMD (client ID metadata document) support
 describe('grantErrorListener with an unresolved client', () => {
   const error = new Error('client metadata fetch failed');
 

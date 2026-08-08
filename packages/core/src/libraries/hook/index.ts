@@ -171,7 +171,6 @@ export const createHookLibrary = (queries: Queries) => {
         userIp,
         user: user && pick(user, ...userInfoSelectFields),
         application: application && pick(application, 'id', 'type', 'name', 'description'),
-        // DEV: CIMD (client ID metadata document) support
         cimdClientId,
       } satisfies BetterOmit<InteractionHookEventPayload, 'hookId'>;
 
@@ -321,7 +320,6 @@ export const createHookLibrary = (queries: Queries) => {
     }
 
     const { applicationId } = payload;
-    // DEV: CIMD (client ID metadata document) support
     /** A CIMD-attributed payload carries no registered application id to enrich with. */
     const application = conditional(
       applicationId && (await trySafe(async () => findApplicationById(applicationId)))
