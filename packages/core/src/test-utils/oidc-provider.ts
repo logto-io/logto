@@ -68,30 +68,34 @@ export const createMockProvider = (
 export const createOidcContext = (override?: Partial<KoaContextWithOIDC['oidc']>) => {
   const issuer = 'https://mock-issuer.com';
   const provider = createTestProvider(issuer);
-  const context: KoaContextWithOIDC = {
-    ...createMockContext(),
-    oidc: {
-      route: '',
-      cookies: {
-        get: jest.fn(),
-        set: jest.fn(),
-      },
-      params: {},
-      entities: {},
-      claims: {},
-      issuer,
-      provider,
-      entity: jest.fn(),
-      promptPending: jest.fn(),
-      requestParamClaims: new Set(),
-      requestParamScopes: new Set(),
-      prompts: new Set(),
-      acr: '',
-      amr: [],
-      getAccessToken: jest.fn(),
-      clientJwtAuthExpectedAudience: jest.fn(),
-      ...override,
+  const oidc: KoaContextWithOIDC['oidc'] = {
+    route: '',
+    cookies: {
+      get: jest.fn(),
+      set: jest.fn(),
     },
+    params: {},
+    entities: {},
+    claims: {},
+    issuer,
+    provider,
+    entity: jest.fn(),
+    promptPending: jest.fn(),
+    requestParamClaims: new Set(),
+    requestParamScopes: new Set(),
+    prompts: new Set(),
+    acr: '',
+    amr: [],
+    getAccessToken: jest.fn(),
+    clientJwtAuthExpectedAudience: jest.fn(),
+    ...override,
   };
+  /**
+   * Koa exposes `cookies` (and other context members) through prototype accessors, so spreading
+   * the mock context into a plain object would silently drop them — attach `oidc` in place to
+   * keep the prototype and the top-level cookie jar reachable.
+   */
+  // eslint-disable-next-line @silverhand/fp/no-mutating-assign
+  const context: KoaContextWithOIDC = Object.assign(createMockContext(), { oidc });
   return context;
 };
