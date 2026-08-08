@@ -215,6 +215,12 @@ export default function consentRoutes<T extends IRouterParamContext>(
              * provider would then see it still missing on resume and restart the consent
              * prompt indefinitely. Reject the whole group instead — consistent with the
              * consent page, which never displayed these scopes.
+             *
+             * The rejection persists on the grant (rejected counts as encountered), so the
+             * scope stays withheld even if the user becomes eligible later — accepted as an
+             * interim state: CIMD ships together with LOG-13930, whose grant-scoped
+             * organization support reopens the rebuild and retires this branch.
+             * TODO: @xiaoyijun reopen the organization rebuild for CIMD (LOG-13930).
              */
             return [resourceIndicator, isCimdClient ? scopes : []];
           }
