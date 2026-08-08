@@ -22,7 +22,11 @@ import { isReservedResource } from '../resource.js';
 export const filterResourceScopesForTheCimdClient = async (
   { cimd }: Queries,
   indicator: string,
-  scopes: ReadonlyArray<{ name: string; id: string }>
+  scopes: ReadonlyArray<{ name: string; id: string }>,
+  {
+    includeOrganizationResourceScopes = true,
+    includeResourceScopes = true,
+  }: { includeOrganizationResourceScopes?: boolean; includeResourceScopes?: boolean } = {}
 ) => {
   if (isReservedResource(indicator)) {
     switch (indicator) {
@@ -41,13 +45,14 @@ export const filterResourceScopesForTheCimdClient = async (
   }
 
   /**
-   * A resource can sit behind the ceiling as a plain API resource or as an organization
-   * resource; scope ids are globally unique, so the flat union mirrors the third-party
-   * filter's per-indicator merge of the two application consent tables.
+   * The two ceiling tables carry different authorization contexts, mirroring the
+   * third-party filter's include flags: a scope configured only as an organization
+   * resource scope must stay out of an ordinary (organization-less) grant, where no
+   * organization membership is ever checked.
    */
   const [ceilingResourceScopes, ceilingOrganizationResourceScopes] = await Promise.all([
-    cimd.resourceScopes.findAll(),
-    cimd.organizationResourceScopes.findAll(),
+    includeResourceScopes ? cimd.resourceScopes.findAll() : [],
+    includeOrganizationResourceScopes ? cimd.organizationResourceScopes.findAll() : [],
   ]);
   const ceilingScopeIds = new Set(
     [...ceilingResourceScopes, ...ceilingOrganizationResourceScopes].map(({ id }) => id)

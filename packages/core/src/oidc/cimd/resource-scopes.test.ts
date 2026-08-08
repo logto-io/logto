@@ -71,6 +71,38 @@ describe('filterResourceScopesForTheCimdClient', () => {
     expect(filtered.map(({ name }) => name)).toEqual(['read:api', 'read:organization-api']);
   });
 
+  it('should keep the organization resource ceiling out of an organization-less filter', async () => {
+    const queries = buildCeilingQueries({
+      resourceScopes: [buildScope('scope_1', 'read:api')],
+      organizationResourceScopes: [buildScope('scope_2', 'write:api')],
+    });
+
+    const filtered = await filterResourceScopesForTheCimdClient(
+      queries,
+      indicator,
+      [buildScope('scope_1', 'read:api'), buildScope('scope_2', 'write:api')],
+      { includeOrganizationResourceScopes: false, includeResourceScopes: true }
+    );
+
+    expect(filtered.map(({ name }) => name)).toEqual(['read:api']);
+  });
+
+  it('should keep the resource ceiling out of an organization-scoped filter', async () => {
+    const queries = buildCeilingQueries({
+      resourceScopes: [buildScope('scope_1', 'read:api')],
+      organizationResourceScopes: [buildScope('scope_2', 'write:api')],
+    });
+
+    const filtered = await filterResourceScopesForTheCimdClient(
+      queries,
+      indicator,
+      [buildScope('scope_1', 'read:api'), buildScope('scope_2', 'write:api')],
+      { includeOrganizationResourceScopes: true, includeResourceScopes: false }
+    );
+
+    expect(filtered.map(({ name }) => name)).toEqual(['write:api']);
+  });
+
   it('should drop every scope when the ceiling is empty', async () => {
     const queries = buildCeilingQueries({});
 
