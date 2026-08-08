@@ -221,5 +221,64 @@ describe('JwtCustomizerLibrary worker-pool adapter', () => {
       expect(status).toBe(500);
       expect(body).toMatchObject({ message: 'legacy boom' });
     });
+
+    // Custom JWT cryptographic capability
+    it('does not expose api.crypto when development features are disabled', async () => {
+      await expect(
+        JwtCustomizerLibrary.runScriptInLocalVm(
+          {
+            ...buildData(),
+            script: 'const getCustomJwtClaims = ({ api }) => ({ hasCrypto: Boolean(api.crypto) });',
+          },
+          tenantId
+        )
+      ).resolves.toEqual({ hasCrypto: false });
+    });
+  });
+
+  // Custom JWT cryptographic capability
+  describe('the cryptographic capability on the legacy path when the guard is true', () => {
+    const originalIsCloud = EnvSet.values.isCloud;
+
+    beforeEach(() => {
+      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+      Reflect.set(EnvSet.values, 'isCloud', false);
+    });
+
+    afterAll(() => {
+      Reflect.set(EnvSet.values, 'isCloud', originalIsCloud);
+    });
+
+    it('exposes frozen sha256 when constructed for self-hosted development-feature execution', async () => {
+      // Call the legacy path directly: the public adapter routes to the worker pool while the
+      // development-feature gate is on, but the API-context builder still owns this capability.
+      await expect(
+        // @ts-expect-error -- private static method, accessible at runtime for this coverage
+        JwtCustomizerLibrary.runScriptInLegacyVm({
+          ...buildData(),
+          script: `const getCustomJwtClaims = async ({ api }) => ({
+            digest: await api.crypto.sha256('abc'),
+            cryptoFrozen: Object.isFrozen(api.crypto),
+            apiFrozen: Object.isFrozen(api),
+          });`,
+        })
+      ).resolves.toEqual({
+        digest: 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad',
+        cryptoFrozen: true,
+        apiFrozen: true,
+      });
+    });
+
+    it('omits api.crypto in Cloud mode', async () => {
+      Reflect.set(EnvSet.values, 'isCloud', true);
+
+      await expect(
+        // @ts-expect-error -- private static method, accessible at runtime for this coverage
+        JwtCustomizerLibrary.runScriptInLegacyVm({
+          ...buildData(),
+          script: 'const getCustomJwtClaims = ({ api }) => ({ hasCrypto: Boolean(api.crypto) });',
+        })
+      ).resolves.toEqual({ hasCrypto: false });
+    });
   });
 });

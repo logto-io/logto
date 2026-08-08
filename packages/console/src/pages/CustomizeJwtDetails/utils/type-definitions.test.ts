@@ -1,6 +1,21 @@
 import { JwtCustomizerTypeDefinitionKey } from '@/consts/jwt-customizer-type-definition';
 
-import { buildEnvironmentVariablesTypeDefinition } from './type-definitions';
+import {
+  buildAccessTokenJwtCustomizerContextTsDefinition,
+  buildEnvironmentVariablesTypeDefinition,
+} from './type-definitions';
+
+const mockIsCloud = jest.fn(() => false);
+const mockIsDevFeaturesEnabled = jest.fn(() => true);
+
+jest.mock('@/consts/env', () => ({
+  get isCloud() {
+    return mockIsCloud();
+  },
+  get isDevFeaturesEnabled() {
+    return mockIsDevFeaturesEnabled();
+  },
+}));
 
 describe('buildEnvironmentVariablesTypeDefinition', () => {
   it('returns undefined when environment variables are missing', () => {
@@ -29,5 +44,35 @@ describe('buildEnvironmentVariablesTypeDefinition', () => {
       .toBe(`declare type ${JwtCustomizerTypeDefinitionKey.EnvironmentVariables} = {
   "API_KEY": string
     }`);
+  });
+});
+
+// Custom JWT cryptographic capability
+describe('Custom JWT cryptographic capability authoring types', () => {
+  beforeEach(() => {
+    mockIsCloud.mockReturnValue(false);
+    mockIsDevFeaturesEnabled.mockReturnValue(true);
+  });
+
+  it('includes required crypto methods when the capability is enabled', () => {
+    const definition = buildAccessTokenJwtCustomizerContextTsDefinition();
+
+    expect(definition).toContain('crypto: {');
+    expect(definition).toContain('sha256: (input: string) => Promise<string>;');
+    expect(definition).toContain(
+      'hmacSha256: (options: { key: string; input: string }) => Promise<string>;'
+    );
+  });
+
+  it('omits crypto from authoring types when development features are disabled', () => {
+    mockIsDevFeaturesEnabled.mockReturnValue(false);
+
+    expect(buildAccessTokenJwtCustomizerContextTsDefinition()).not.toContain('crypto:');
+  });
+
+  it('omits crypto from authoring types in Cloud mode', () => {
+    mockIsCloud.mockReturnValue(true);
+
+    expect(buildAccessTokenJwtCustomizerContextTsDefinition()).not.toContain('crypto:');
   });
 });

@@ -63,6 +63,12 @@ const jwt_claims = {
     title: 'API 上下文：訪問控制',
     subtitle: '使用 `api.denyAccess` 方法拒絕令牌請求。',
   },
+  cryptographic_capability: {
+    title: 'API 上下文：密碼學',
+    subtitle: '使用 `api.crypto.sha256` 和 `api.crypto.hmacSha256` 進行 UTF-8 雜湊。',
+    description:
+      '兩個方法皆為非同步，並回傳 Promise，結果是 64 位小寫十六進位字串。輸入以 UTF-8 編碼且不做 Unicode 正規化：`sha256(input)` 計算 SHA-256(UTF-8(input))；`hmacSha256({ key, input })` 計算 HMAC-SHA-256(UTF-8(key), UTF-8(input))。HMAC 金鑰請從環境變數讀取，自行呼叫 `.trim()`，並在呼叫前拒絕空結果——方法本身不會 trim，也不會回退到 SHA-256。建議使用高熵且不含空白的金鑰。空訊息輸入有效，空金鑰無效。輸入上限為 1 MiB UTF-8 位元組，HMAC 金鑰上限為 64 KiB。SHA-256 無法隱藏電子郵件、電話號碼等可列舉識別碼；需要帶金鑰的穩定識別請使用 HMAC。兩者都不適用於密碼儲存。環境變數對有權限的 Custom JWT 管理員和執行執行時期可見，並不是託管金鑰系統。輪換 HMAC 金鑰會改變所有衍生值——需要遷移的指令碼應攜帶應用自訂的金鑰版本，並自行實作雙值過渡期。多個值需要呼叫端定義明確的序列化（同執行時期可用 `JSON.stringify([value1, value2])`）；跨語言整合需自行約定規範形式。在自託管 Logto 中，此指令碼仍遵循沙箱警告中的可信指令碼模型。',
+  },
   error_handling: {
     title: '錯誤處理',
     subtitle: '控制當腳本執行失敗時是否阻止簽發權杖。',

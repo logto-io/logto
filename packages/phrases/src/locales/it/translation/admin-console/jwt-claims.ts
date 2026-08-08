@@ -74,6 +74,12 @@ const jwt_claims = {
     title: 'Contesto API: controllo accessi',
     subtitle: 'Usa il metodo `api.denyAccess` per rifiutare la richiesta di token.',
   },
+  cryptographic_capability: {
+    title: 'Contesto API: crittografia',
+    subtitle: "Usa `api.crypto.sha256` e `api.crypto.hmacSha256` per l'hashing UTF-8.",
+    description:
+      "Entrambi i metodi sono asincroni e restituiscono una Promise con una stringa esadecimale minuscola di 64 caratteri. Gli input sono codificati come UTF-8 senza normalizzazione Unicode: `sha256(input)` calcola SHA-256(UTF-8(input)); `hmacSha256({ key, input })` calcola HMAC-SHA-256(UTF-8(key), UTF-8(input)). Leggi le chiavi HMAC dalle variabili d'ambiente, chiama tu `.trim()` e rifiuta un risultato vuoto prima di invocare HMAC — il metodo non esegue mai trim né ricade su SHA-256. Preferisci una chiave ad alta entropia senza spazi. Un input messaggio vuoto è valido; una chiave vuota no. L'input è limitato a 1 MiB di byte UTF-8 e una chiave HMAC a 64 KiB. SHA-256 non nasconde identificatori enumerabili come email o numeri di telefono; usa HMAC per un identificatore stabile con chiave segreta. Nessun metodo è adatto all'archiviazione di password. Le variabili d'ambiente sono visibili agli amministratori Custom JWT autorizzati e al runtime di esecuzione, e non sono un sistema di chiavi gestito. Ruotare una chiave HMAC cambia ogni valore derivato — gli script che necessitano una migrazione devono portare una versione di chiave definita dall'applicazione e implementare eventuali periodi a doppio valore. Più valori richiedono una serializzazione non ambigua definita dal chiamante (ad es. `JSON.stringify([value1, value2])` nello stesso runtime); le integrazioni cross-language devono concordare la propria forma canonica. Su Logto self-hosted questo script mantiene il modello di script attendibile descritto nell'avviso sandbox.",
+  },
   error_handling: {
     title: 'Gestione degli errori',
     subtitle: "Controlla se l'emissione del token deve essere bloccata quando lo script fallisce.",
