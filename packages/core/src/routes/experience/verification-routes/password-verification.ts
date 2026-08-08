@@ -130,7 +130,6 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
                 auditContext: {
                   createLog: ctx.createLog,
                   sessionId: ctx.interactionDetails.jti,
-                  // DEV: CIMD (client ID metadata document) support
                   ...getClientIdentifierPayload(
                     conditional(
                       typeof ctx.interactionDetails.params.client_id === 'string' &&

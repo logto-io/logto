@@ -7,8 +7,7 @@ import { z } from 'zod';
 
 import { type EnvSet } from '#src/env-set/index.js';
 import { markAppLevelAccessControlChecked } from '#src/oidc/application-access-control.js';
-import { isCimdClientId } from '#src/oidc/cimd/client-id.js';
-import { isCimdEffectivelyEnabled } from '#src/oidc/cimd/index.js';
+import { isCimdClient } from '#src/oidc/cimd/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -51,10 +50,7 @@ type ClientIdentifiers = {
  * on every consent submission for the same verdict.
  */
 const identifyClient = (envSet: EnvSet, clientId: string): ClientIdentifiers =>
-  // DEV: CIMD (client ID metadata document) support
-  isCimdEffectivelyEnabled(envSet) && isCimdClientId(clientId)
-    ? { cimdClientId: clientId }
-    : { registeredClientId: clientId };
+  isCimdClient(envSet, clientId) ? { cimdClientId: clientId } : { registeredClientId: clientId };
 
 /**
  * Persists the interaction's `lastSubmission` information to the session for future reference.

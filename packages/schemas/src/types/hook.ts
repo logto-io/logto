@@ -38,7 +38,6 @@ export type HookTestErrorResponseData = z.infer<typeof hookTestErrorResponseData
 export type InteractionApiMetadata = {
   /** The registered application ID if the hook is triggered by interaction API. */
   applicationId?: string;
-  // DEV: CIMD (client ID metadata document) support
   /**
    * The CIMD client identifier URL, kept apart from `applicationId` so payload consumers
    * branch on key presence instead of URL shape.
@@ -53,7 +52,6 @@ export type InteractionApiMetadata = {
 type InteractionApiContextPayload = {
   /** Fetch application detail by application ID before sending the hook event */
   application?: Pick<Application, 'id' | 'type' | 'name' | 'description'>;
-  // DEV: CIMD (client ID metadata document) support
   /** CIMD clients are unregistered, so the identifier URL stands in for `application`. */
   cimdClientId?: string;
   sessionId?: string;
@@ -119,7 +117,6 @@ export type GrantLimitExceededEventData = {
   userId: string;
   /** The registered application ID; absent for a CIMD client. */
   applicationId?: string;
-  // DEV: CIMD (client ID metadata document) support
   /**
    * The CIMD client identifier URL, set instead of `applicationId`. No grant-ceiling source
    * exists for CIMD clients today (the CIMD policy denies Logto private client metadata

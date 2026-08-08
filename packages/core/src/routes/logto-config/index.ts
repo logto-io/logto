@@ -232,6 +232,5 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
   logtoConfigJwtCustomizerRoutes(router, tenant);
   idTokenRoutes(router, tenant);
   logtoConfigActionRoutes(router, tenant);
-  // DEV: CIMD (client ID metadata document) support
   logtoConfigCimdRoutes(router, tenant);
 }

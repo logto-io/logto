@@ -100,7 +100,6 @@ const createRouters = (tenant: TenantContext) => {
   sentinelActivitiesRoutes(managementRouter, tenant);
   customProfileFieldsRoutes(managementRouter, tenant);
   secretsRoutes(managementRouter, tenant);
-  // DEV: CIMD (client ID metadata document) support
   cimdRoutes(managementRouter, tenant);
 
   // General anonymous router for publicly accessible APIs

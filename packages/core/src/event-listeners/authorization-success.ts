@@ -113,7 +113,6 @@ const enforceMaxAllowedGrantsRevocation = async (
             'Grant.LimitExceeded',
             {
               userId,
-              // DEV: CIMD (client ID metadata document) support
               ...getClientIdentifierPayload(clientId),
               revokedGrantIds: revokeResult.succeededNames,
               maxAllowedGrants,

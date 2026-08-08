@@ -17,8 +17,7 @@ import { getTenantUrls } from '#src/env-set/utils.js';
 import type Queries from '#src/tenants/Queries.js';
 
 import { appLevelAccessControlMetadataKey } from './application-access-control.js';
-import { isCimdClientId } from './cimd/client-id.js';
-import { isCimdEffectivelyEnabled } from './cimd/index.js';
+import { isCimdClient } from './cimd/index.js';
 import { getConstantClientMetadata } from './utils.js';
 
 /**
@@ -194,8 +193,7 @@ export default function postgresAdapter(
          * handed over to the provider's native CIMD resolver without a database lookup — every
          * other identifier keeps folding its lookup failures into `invalid_client`.
          */
-        // DEV: CIMD (client ID metadata document) support
-        if (isCimdEffectivelyEnabled(envSet) && isCimdClientId(id)) {
+        if (isCimdClient(envSet, id)) {
           return;
         }
 

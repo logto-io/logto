@@ -274,7 +274,6 @@ export const getExtraTokenClaimsForJwtCustomization = async (
 
     logEntry.append({
       sessionId: ctx.oidc.session?.uid,
-      // DEV: CIMD (client ID metadata document) support
       ...getClientIdentifierPayload(ctx.oidc.client?.clientId),
       ...conditional(logtoUserInfo && { userId: logtoUserInfo.id }),
       tenantId: envSet.tenantId,

@@ -17,7 +17,6 @@ export default function koaExperienceAuditLog<
     try {
       await next();
     } finally {
-      // DEV: CIMD (client ID metadata document) support
       prependAllLogEntries(getClientIdentifierPayload(clientId));
     }
   };

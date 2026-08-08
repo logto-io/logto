@@ -261,7 +261,6 @@ export const createLogtoConfigQueries = (
     ['id-token-config']
   );
 
-  // DEV: CIMD (client ID metadata document) support
   const getCimdConfig = async (): Promise<CimdConfig> => {
     const { rows } = await getRowsByKeys([LogtoTenantConfigKey.Cimd]);
 
@@ -272,7 +271,6 @@ export const createLogtoConfigQueries = (
     return cimdConfigGuard.parse(rows[0]?.value);
   };
 
-  // DEV: CIMD (client ID metadata document) support
   const upsertCimdConfig = async (value: CimdConfig) =>
     pool.query(sql`
       insert into ${table} (${fields.key}, ${fields.value})

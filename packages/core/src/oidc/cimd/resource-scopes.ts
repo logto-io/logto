@@ -1,4 +1,3 @@
-// DEV: CIMD (client ID metadata document) support
 /**
  * @overview The tenant-wide CIMD permission ceiling filter for resource scopes.
  */
