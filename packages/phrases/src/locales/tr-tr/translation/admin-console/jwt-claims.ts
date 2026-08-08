@@ -72,6 +72,12 @@ const jwt_claims = {
     title: 'API bağlamı: erişim kontrolü',
     subtitle: '`api.denyAccess` yöntemini kullanarak belge isteğini reddedin.',
   },
+  cryptographic_capability: {
+    title: 'API bağlamı: kriptografi',
+    subtitle: 'UTF-8 hash için `api.crypto.sha256` ve `api.crypto.hmacSha256` kullanın.',
+    description:
+      "Her iki yöntem de asenkrondur ve 64 karakterlik küçük harfli onaltılık bir dize Promise döndürür. Girdiler Unicode normalizasyonu olmadan UTF-8 olarak kodlanır: `sha256(input)` SHA-256(UTF-8(input)) hesaplar; `hmacSha256({ key, input })` HMAC-SHA-256(UTF-8(key), UTF-8(input)) hesaplar. HMAC anahtarlarını ortam değişkenlerinden okuyun, kendiniz `.trim()` çağırın ve HMAC çağırmadan önce boş sonucu reddedin — yöntem asla trim yapmaz veya SHA-256'ya düşmez. Boşluksuz yüksek entropili bir anahtar tercih edin. Boş mesaj girdisi geçerlidir; boş anahtar değildir. Girdi en fazla 1 MiB UTF-8 bayt, HMAC anahtarı en fazla 64 KiB'dir. SHA-256 e-posta veya telefon gibi numaralandırılabilir kimlikleri gizlemez; gizli anahtarlı kararlı bir kimlik için HMAC kullanın. Hiçbiri parola saklamak için uygun değildir. Ortam değişkenleri yetkili Custom JWT yöneticilerine ve yürütme çalışma zamanına görünür ve yönetilen bir anahtar sistemi değildir. Bir HMAC anahtarını döndürmek her türetilmiş değeri değiştirir — geçiş gereken betikler uygulama tanımlı bir anahtar sürümü taşımalı ve çift değer dönemini kendileri uygulamalıdır. Birden fazla değer, çağıranın tanımladığı açık bir serileştirme gerektirir (aynı çalışma zamanında örn. `JSON.stringify([value1, value2])`); diller arası entegrasyonlar kendi kanonik biçimlerinde anlaşmalıdır. Self-hosted Logto'da bu betik, sanal alan uyarısındaki güvenilir betik modelini korur.",
+  },
   error_handling: {
     title: 'Hata yönetimi',
     subtitle:

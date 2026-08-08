@@ -73,6 +73,12 @@ const jwt_claims = {
     title: 'Kontekst API: kontrola dostępu',
     subtitle: 'Użyj metody `api.denyAccess`, aby odrzucić żądanie tokenu.',
   },
+  cryptographic_capability: {
+    title: 'Kontekst API: kryptografia',
+    subtitle: 'Użyj `api.crypto.sha256` i `api.crypto.hmacSha256` do haszowania UTF-8.',
+    description:
+      'Obie metody są asynchroniczne i zwracają Promise z 64-znakowym małymi literami heksadecymalnym ciągiem. Wejścia są kodowane jako UTF-8 bez normalizacji Unicode: `sha256(input)` oblicza SHA-256(UTF-8(input)); `hmacSha256({ key, input })` oblicza HMAC-SHA-256(UTF-8(key), UTF-8(input)). Odczytuj klucze HMAC ze zmiennych środowiskowych, samodzielnie wywołaj `.trim()` i odrzuć pusty wynik przed wywołaniem HMAC — metoda nigdy nie przycina i nie przełącza się na SHA-256. Preferuj klucz o wysokiej entropii bez białych znaków. Puste wejście wiadomości jest prawidłowe; pusty klucz nie. Wejście jest ograniczone do 1 MiB bajtów UTF-8, a klucz HMAC do 64 KiB. SHA-256 nie ukrywa wyliczalnych identyfikatorów, takich jak e-maile czy numery telefonów; użyj HMAC dla stabilnego identyfikatora z tajnym kluczem. Żadna metoda nie służy do przechowywania haseł. Zmienne środowiskowe są widoczne dla uprawnionych administratorów Custom JWT i środowiska wykonawczego i nie stanowią zarządzanego systemu kluczy. Rotacja klucza HMAC zmienia każdą wartość pochodną — skrypty wymagające migracji powinny nieść zdefiniowaną przez aplikację wersję klucza i zaimplementować ewentualny okres podwójnej wartości. Wiele wartości wymaga jednoznacznej serializacji zdefiniowanej przez wywołującego (np. `JSON.stringify([value1, value2])` w tym samym runtime); integracje międzyjęzykowe muszą uzgodnić własną formę kanoniczną. W self-hosted Logto ten skrypt nadal działa w modelu zaufanego skryptu opisanym w ostrzeżeniu sandbox.',
+  },
   error_handling: {
     title: 'Obsługa błędów',
     subtitle: 'Określa, czy wydanie tokena ma zostać zablokowane, gdy skrypt zakończy się błędem.',

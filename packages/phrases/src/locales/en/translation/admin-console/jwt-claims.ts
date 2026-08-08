@@ -70,6 +70,12 @@ const jwt_claims = {
     title: 'API context: access control',
     subtitle: 'Use `api.denyAccess` method to reject the token request.',
   },
+  cryptographic_capability: {
+    title: 'API context: cryptography',
+    subtitle: 'Use `api.crypto.sha256` and `api.crypto.hmacSha256` for UTF-8 hashing.',
+    description:
+      'Both methods are asynchronous and return a Promise of a 64-character lowercase hex string. Inputs are UTF-8 encoded without Unicode normalization: `sha256(input)` computes SHA-256(UTF-8(input)); `hmacSha256({ key, input })` computes HMAC-SHA-256(UTF-8(key), UTF-8(input)). Read HMAC keys from environment variables, call `.trim()` yourself, and reject an empty result before invoking HMAC — the method never trims or falls back to SHA-256. Prefer a high-entropy key without whitespace. Empty message input is valid; an empty key is not. Input is limited to 1 MiB UTF-8 bytes and an HMAC key to 64 KiB. SHA-256 does not hide enumerable identifiers such as email addresses or phone numbers; use HMAC for a secret-keyed stable identifier. Neither method is for password storage. Environment variables are visible to authorized Custom JWT administrators and the execution runner and are not a managed-key system. Rotating an HMAC key changes every derived value — scripts that need a migration should carry an application-defined key version and implement any dual-value period. Multiple values need an unambiguous caller-defined serialization (for example `JSON.stringify([value1, value2])` on the same runtime); cross-language integrations must agree on their own canonical form. On self-hosted Logto this script still runs with the trusted-script model described in the sandbox warning.',
+  },
   error_handling: {
     title: 'Error handling',
     subtitle: 'Control whether token issuance should be blocked when the script fails.',
