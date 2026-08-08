@@ -16,6 +16,7 @@ import { conditional, trySafe } from '@silverhand/essentials';
 import RequestError from '#src/errors/RequestError/index.js';
 import { buildUserPasswordPayload } from '#src/libraries/user.utils.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
+import { getClientIdentifierPayload } from '#src/oidc/cimd/index.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
@@ -720,9 +721,12 @@ export default class ExperienceInteraction {
         auditContext: {
           createLog: this.ctx.createLog,
           sessionId: this.ctx.interactionDetails.jti,
-          applicationId: conditional(
-            typeof this.ctx.interactionDetails.params.client_id === 'string' &&
-              this.ctx.interactionDetails.params.client_id
+          // DEV: CIMD (client ID metadata document) support
+          ...getClientIdentifierPayload(
+            conditional(
+              typeof this.ctx.interactionDetails.params.client_id === 'string' &&
+                this.ctx.interactionDetails.params.client_id
+            )
           ),
           userId,
         },

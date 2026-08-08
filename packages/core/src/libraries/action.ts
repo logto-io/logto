@@ -84,7 +84,8 @@ type ActionEventSource<Event> =
 type RunActionData<Event> = ActionEventSource<Event> & {
   key: LogtoActionKey;
   auditContext: Pick<LogContext, 'createLog'> &
-    Pick<LogPayload, 'applicationId' | 'sessionId' | 'userId'>;
+    // DEV: CIMD (client ID metadata document) support
+    Pick<LogPayload, 'applicationId' | 'cimdClientId' | 'sessionId' | 'userId'>;
 };
 
 type ActionExecutionErrorHandlingData = {
