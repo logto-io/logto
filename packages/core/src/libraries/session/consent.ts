@@ -13,39 +13,6 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { updateInteractionResult } from './interaction.js';
 
-const saveUserFirstConsentedAppId = async (
-  queries: Queries,
-  userId: string,
-  applicationId: string
-) => {
-  const { findUserById, updateUserById } = queries.users;
-  const { applicationId: firstConsentedAppId } = await findUserById(userId);
-
-  if (!firstConsentedAppId) {
-    // Save application id that the user first consented
-    await updateUserById(userId, { applicationId });
-  }
-};
-
-/**
- * The CIMD mirror of {@link saveUserFirstConsentedAppId} on the dedicated
- * `users.cimd_client_id` column: `users.application_id` (varchar(21)) keeps meaning "first
- * consented registered application", so a CIMD URL must never reach it — user management still
- * shows which client a user came from through the dedicated column.
- */
-const saveUserFirstConsentedCimdClientId = async (
-  queries: Queries,
-  userId: string,
-  cimdClientId: string
-) => {
-  const { findUserById, updateUserById } = queries.users;
-  const { cimdClientId: firstConsentedCimdClientId } = await findUserById(userId);
-
-  if (!firstConsentedCimdClientId) {
-    await updateUserById(userId, { cimdClientId });
-  }
-};
-
 // Get the missing scopes from prompt details
 const missingScopesGuard = z.object({
   missingOIDCScope: z.string().array().optional(),
@@ -70,6 +37,34 @@ type ClientIdentifiers = {
  */
 const identifyClient = (envSet: EnvSet, clientId: string): ClientIdentifiers =>
   isCimdClient(envSet, clientId) ? { cimdClientId: clientId } : { registeredClientId: clientId };
+
+/**
+ * `users.application_id` and `users.cimd_client_id` form a single first-consent attribution,
+ * so a user already attributed through either column is never written again. The columns stay
+ * separate because `application_id` (varchar(21)) only ever holds registered application ids —
+ * a CIMD client identifier URL must never reach it.
+ */
+const saveUserFirstConsentedClient = async (
+  queries: Queries,
+  userId: string,
+  { registeredClientId, cimdClientId }: ClientIdentifiers
+) => {
+  const { findUserById, updateUserById } = queries.users;
+  const user = await findUserById(userId);
+
+  if (user.applicationId ?? user.cimdClientId) {
+    return;
+  }
+
+  if (registeredClientId) {
+    await updateUserById(userId, { applicationId: registeredClientId });
+    return;
+  }
+
+  if (cimdClientId) {
+    await updateUserById(userId, { cimdClientId });
+  }
+};
 
 /**
  * Persists the interaction's `lastSubmission` information to the session for future reference.
@@ -164,12 +159,7 @@ export const consent = async ({
     new provider.Grant({ accountId, clientId });
 
   await Promise.all([
-    conditional(
-      registeredClientId && saveUserFirstConsentedAppId(queries, accountId, registeredClientId)
-    ),
-    conditional(
-      cimdClientId && saveUserFirstConsentedCimdClientId(queries, accountId, cimdClientId)
-    ),
+    saveUserFirstConsentedClient(queries, accountId, { registeredClientId, cimdClientId }),
     saveInteractionLastSubmissionToSession(queries, interactionDetails, {
       registeredClientId,
       cimdClientId,

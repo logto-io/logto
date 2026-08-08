@@ -103,9 +103,10 @@ describe('saveInteractionLastSubmissionToSession while CIMD is effectively enabl
     jest.clearAllMocks();
   });
 
-  it('should write a cimd client identifier to the dedicated columns and keep the app attribution null', async () => {
+  it('should write a cimd client identifier to the dedicated column for a cimd-first user', async () => {
     userQueries.findUserById.mockImplementationOnce(async () => ({
       ...mockUser,
+      applicationId: null,
       cimdClientId: null,
     }));
     const interactionDetails = buildInteractionDetails(cimdClientId);
@@ -126,12 +127,14 @@ describe('saveInteractionLastSubmissionToSession while CIMD is effectively enabl
       clientId: null,
       cimdClientId,
     });
+    expect(userQueries.updateUserById).toHaveBeenCalledTimes(1);
     expect(userQueries.updateUserById).toHaveBeenCalledWith(mockUser.id, { cimdClientId });
   });
 
   it('should not overwrite an existing first-consent cimd attribution', async () => {
     userQueries.findUserById.mockImplementationOnce(async () => ({
       ...mockUser,
+      applicationId: null,
       cimdClientId: 'https://first.example.com/metadata.json',
     }));
     const interactionDetails = buildInteractionDetails(cimdClientId);
@@ -148,10 +151,51 @@ describe('saveInteractionLastSubmissionToSession while CIMD is effectively enabl
     expect(userQueries.updateUserById).not.toHaveBeenCalled();
   });
 
-  it('should write a registered client identifier to the client id column and keep the app attribution', async () => {
+  it('should not write the cimd column for a user attributed to a registered application', async () => {
+    userQueries.findUserById.mockImplementationOnce(async () => ({
+      ...mockUser,
+      applicationId: 'bar',
+      cimdClientId: null,
+    }));
+    const interactionDetails = buildInteractionDetails(cimdClientId);
+    const provider = createMockProvider(jest.fn().mockResolvedValue(interactionDetails), Grant);
+
+    await consent({
+      ctx: context,
+      provider,
+      envSet: cimdEnvSet,
+      queries,
+      interactionDetails,
+    });
+
+    expect(userQueries.updateUserById).not.toHaveBeenCalled();
+  });
+
+  it('should not write the app attribution for a cimd-first user consenting to a registered application', async () => {
     userQueries.findUserById.mockImplementationOnce(async () => ({
       ...mockUser,
       applicationId: null,
+      cimdClientId: 'https://first.example.com/metadata.json',
+    }));
+    const interactionDetails = buildInteractionDetails('registeredClientId');
+    const provider = createMockProvider(jest.fn().mockResolvedValue(interactionDetails), Grant);
+
+    await consent({
+      ctx: context,
+      provider,
+      envSet: cimdEnvSet,
+      queries,
+      interactionDetails,
+    });
+
+    expect(userQueries.updateUserById).not.toHaveBeenCalled();
+  });
+
+  it('should write a registered client identifier to the client id column and save the app attribution', async () => {
+    userQueries.findUserById.mockImplementationOnce(async () => ({
+      ...mockUser,
+      applicationId: null,
+      cimdClientId: null,
     }));
     const interactionDetails = buildInteractionDetails('registeredClientId');
     const provider = createMockProvider(jest.fn().mockResolvedValue(interactionDetails), Grant);
@@ -171,6 +215,7 @@ describe('saveInteractionLastSubmissionToSession while CIMD is effectively enabl
       clientId: 'registeredClientId',
       cimdClientId: null,
     });
+    expect(userQueries.updateUserById).toHaveBeenCalledTimes(1);
     expect(userQueries.updateUserById).toHaveBeenCalledWith(mockUser.id, {
       applicationId: 'registeredClientId',
     });
