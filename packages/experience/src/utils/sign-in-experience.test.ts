@@ -49,10 +49,14 @@ describe('getSignInExperienceSettings SSR context matching', () => {
     phrases: { lng: 'en', data: resource.en },
   });
 
+  /** Clear up front — earlier describe blocks in this file leave calls on the shared API mock. */
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   afterEach(() => {
     setLogtoSsr(ssrPlaceholder);
     sessionStorage.clear();
-    jest.clearAllMocks();
   });
 
   it('should keep the SSR settings when the SSR appId matches the stored app_id', async () => {
