@@ -10,6 +10,8 @@ import { z } from 'zod';
 
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 
+const DEFAULT_SCORE_THRESHOLD = 0.5;
+
 function isRecaptchaEnterprise(
   config: CaptchaProvider['config']
 ): config is RecaptchaEnterpriseConfig {
@@ -19,6 +21,23 @@ function isRecaptchaEnterprise(
 function isTurnstile(config: CaptchaProvider['config']): config is TurnstileConfig {
   return config.type === CaptchaType.Turnstile;
 }
+
+type ScorePassParams = {
+  valid: boolean;
+  score: number;
+  mode?: RecaptchaEnterpriseMode;
+  scoreThreshold?: number;
+};
+
+/**
+ * Decide whether a reCAPTCHA Enterprise assessment passes.
+ * Checkbox challenges are interactive and provide binary pass/fail, so the score
+ * threshold is skipped in checkbox mode.
+ */
+export const isScorePass = ({ valid, score, mode, scoreThreshold }: ScorePassParams) =>
+  mode === RecaptchaEnterpriseMode.Checkbox
+    ? valid
+    : valid && score >= (scoreThreshold ?? DEFAULT_SCORE_THRESHOLD);
 
 export class CaptchaValidator {
   constructor(
@@ -109,11 +128,12 @@ export class CaptchaValidator {
         riskAnalysis: { score },
       } = responseGuard.parse(result);
 
-      // For checkbox mode, only check if the token is valid (skip score threshold)
-      // Checkbox challenges are interactive and provide binary pass/fail
-      const isCheckboxMode = config.mode === RecaptchaEnterpriseMode.Checkbox;
-      // TODO: customize the score threshold
-      const success = isCheckboxMode ? valid : valid && score >= 0.5;
+      const success = isScorePass({
+        valid,
+        score,
+        mode: config.mode,
+        scoreThreshold: config.scoreThreshold,
+      });
 
       this.log.append({
         success,
