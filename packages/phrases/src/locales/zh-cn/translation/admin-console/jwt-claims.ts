@@ -63,6 +63,12 @@ const jwt_claims = {
     title: 'API 上下文：访问控制',
     subtitle: '使用 `api.denyAccess` 方法拒绝令牌请求。',
   },
+  cryptographic_capability: {
+    title: 'API 上下文：密码学',
+    subtitle: '使用 `api.crypto.sha256` 和 `api.crypto.hmacSha256` 进行 UTF-8 哈希。',
+    description:
+      '两个方法均为异步，并返回 Promise，结果是 64 位小写十六进制字符串。输入按 UTF-8 编码且不做 Unicode 规范化：`sha256(input)` 计算 SHA-256(UTF-8(input))；`hmacSha256({ key, input })` 计算 HMAC-SHA-256(UTF-8(key), UTF-8(input))。HMAC 密钥请从环境变量读取，自行调用 `.trim()`，并在调用前拒绝空结果——方法本身不会 trim，也不会回退到 SHA-256。建议使用高熵且不含空白的密钥。空消息输入有效，空密钥无效。输入上限为 1 MiB UTF-8 字节，HMAC 密钥上限为 64 KiB。SHA-256 无法隐藏邮箱、手机号等可枚举标识符；需要带密钥的稳定标识请使用 HMAC。两者都不适用于密码存储。环境变量对有权限的 Custom JWT 管理员和执行运行时可见，并不是托管密钥系统。轮换 HMAC 密钥会改变所有派生值——需要迁移的脚本应携带应用自定义的密钥版本，并自行实现双值过渡期。多个值需要调用方定义明确的序列化（同运行时可用 `JSON.stringify([value1, value2])`）；跨语言集成需自行约定规范形式。在自托管 Logto 中，此脚本仍遵循沙箱警告中的可信脚本模型。',
+  },
   error_handling: {
     title: '错误处理',
     subtitle: '控制当脚本执行失败时是否阻止签发令牌。',

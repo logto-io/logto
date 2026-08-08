@@ -17,6 +17,8 @@ export enum CardType {
   FetchExternalData = 'fetch_external_data',
   EnvironmentVariables = 'environment_variables',
   ApiContext = 'api_context',
+  /** Custom JWT cryptographic capability */
+  CryptographicCapability = 'cryptographic_capability',
   ErrorHandling = 'error_handling',
 }
 

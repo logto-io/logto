@@ -45,6 +45,7 @@ import {
 import { runScriptFunctionInLocalVm } from '#src/utils/local-vm/index.js';
 
 import { type CloudConnectionLibrary } from './cloud-connection.js';
+import { createCustomJwtCryptographicCapability } from './jwt-customizer-cryptographic-capability.js';
 import {
   buildScriptExecutionErrorBody,
   buildScriptFailureError,
@@ -54,22 +55,38 @@ import {
   scriptFailureStatusCodes,
 } from './script-runner/index.js';
 
-const apiContext: CustomJwtApiContext = Object.freeze({
-  denyAccess: (message = 'Access denied') => {
-    const error: CustomJwtErrorBody = {
-      code: CustomJwtErrorCode.AccessDenied,
-      message,
-    };
+const denyAccess: CustomJwtApiContext['denyAccess'] = (message = 'Access denied') => {
+  const error: CustomJwtErrorBody = {
+    code: CustomJwtErrorCode.AccessDenied,
+    message,
+  };
 
-    throw new ScriptExecutionError(
-      {
-        message,
-        error,
-      },
-      scriptFailureStatusCodes.denied
-    );
-  },
-});
+  throw new ScriptExecutionError(
+    {
+      message,
+      error,
+    },
+    scriptFailureStatusCodes.denied
+  );
+};
+
+/**
+ * Build the host-provided Custom JWT API context.
+ *
+ * Custom JWT cryptographic capability is attached only for self-hosted development-feature
+ * execution (`isDevFeaturesEnabled && !isCloud`).
+ */
+const buildCustomJwtApiContext = (): CustomJwtApiContext => {
+  // Custom JWT cryptographic capability
+  if (EnvSet.values.isDevFeaturesEnabled && !EnvSet.values.isCloud) {
+    return Object.freeze({
+      denyAccess,
+      crypto: createCustomJwtCryptographicCapability(),
+    });
+  }
+
+  return Object.freeze({ denyAccess });
+};
 
 export class JwtCustomizerLibrary {
   // Convert failures to WithTyped client response errors to share the error handling logic.
@@ -133,7 +150,7 @@ export class JwtCustomizerLibrary {
     try {
       const payload: CustomJwtScriptPayload = {
         ...pick(data, 'token', 'context', 'environmentVariables'),
-        api: apiContext,
+        api: buildCustomJwtApiContext(),
       };
 
       const result = await runScriptFunctionInLocalVm(data.script, 'getCustomJwtClaims', payload);
