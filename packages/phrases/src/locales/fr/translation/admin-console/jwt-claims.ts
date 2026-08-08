@@ -74,6 +74,12 @@ const jwt_claims = {
     title: "Contexte API : contrôle d'accès",
     subtitle: 'Utilisez la méthode `api.denyAccess` pour rejeter la demande de jeton.',
   },
+  cryptographic_capability: {
+    title: 'Contexte API : cryptographie',
+    subtitle: 'Utilisez `api.crypto.sha256` et `api.crypto.hmacSha256` pour le hachage UTF-8.',
+    description:
+      "Les deux méthodes sont asynchrones et renvoient une Promise contenant une chaîne hexadécimale minuscule de 64 caractères. Les entrées sont encodées en UTF-8 sans normalisation Unicode : `sha256(input)` calcule SHA-256(UTF-8(input)) ; `hmacSha256({ key, input })` calcule HMAC-SHA-256(UTF-8(key), UTF-8(input)). Lisez les clés HMAC depuis les variables d'environnement, appelez vous-même `.trim()`, et refusez un résultat vide avant d'appeler HMAC — la méthode ne trimme jamais et ne revient jamais à SHA-256. Préférez une clé à haute entropie sans espaces. Une entrée de message vide est valide ; une clé vide ne l'est pas. L'entrée est limitée à 1 Mio d'octets UTF-8 et une clé HMAC à 64 Kio. SHA-256 ne masque pas les identifiants énumérables comme les e-mails ou numéros de téléphone ; utilisez HMAC pour un identifiant stable à clé secrète. Aucune méthode ne convient au stockage de mots de passe. Les variables d'environnement sont visibles des administrateurs Custom JWT autorisés et du runtime d'exécution, et ne constituent pas un système de clés géré. La rotation d'une clé HMAC change chaque valeur dérivée — les scripts nécessitant une migration doivent porter une version de clé définie par l'application et implémenter toute période à double valeur. Plusieurs valeurs exigent une sérialisation non ambiguë définie par l'appelant (par ex. `JSON.stringify([value1, value2])` au même runtime) ; les intégrations multi-langages doivent convenir de leur propre forme canonique. Sur Logto auto-hébergé, ce script conserve le modèle de script de confiance décrit dans l'avertissement sandbox.",
+  },
   error_handling: {
     title: 'Gestion des erreurs',
     subtitle: "Définissez si l'émission du jeton doit être bloquée lorsque le script échoue.",

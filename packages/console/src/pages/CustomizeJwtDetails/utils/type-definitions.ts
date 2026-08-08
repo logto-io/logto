@@ -1,3 +1,4 @@
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import {
   JwtCustomizerTypeDefinitionKey,
   accessTokenPayloadTypeDefinition,
@@ -8,6 +9,7 @@ import {
   jwtCustomizerApplicationContextTypeDefinition,
   jwtCustomizerOrganizationContextTypeDefinition,
   jwtCustomizerApiContextTypeDefinition,
+  jwtCustomizerApiContextWithCryptoTypeDefinition,
 } from '@/consts/jwt-customizer-type-definition';
 import { isValidEnvironmentVariableKey } from '@/utils/validator';
 
@@ -24,12 +26,20 @@ export {
   jwtCustomizerOrganizationContextTypeDefinition,
 } from '@/consts/jwt-customizer-type-definition';
 
+/** Custom JWT cryptographic capability */
+export const isCustomJwtCryptographicCapabilityEnabled = () => isDevFeaturesEnabled && !isCloud;
+
+const resolveJwtCustomizerApiContextTypeDefinition = () =>
+  isCustomJwtCryptographicCapabilityEnabled()
+    ? jwtCustomizerApiContextWithCryptoTypeDefinition
+    : jwtCustomizerApiContextTypeDefinition;
+
 export const buildAccessTokenJwtCustomizerContextTsDefinition = () => {
   return `declare ${jwtCustomizerUserContextTypeDefinition}
 
   declare ${jwtCustomizerGrantContextTypeDefinition}
 
-  declare ${jwtCustomizerApiContextTypeDefinition}
+  declare ${resolveJwtCustomizerApiContextTypeDefinition()}
 
   declare ${accessTokenPayloadTypeDefinition}
 
@@ -45,7 +55,7 @@ export const buildClientCredentialsJwtCustomizerContextTsDefinition = () =>
 
   declare ${jwtCustomizerApplicationContextTypeDefinition}
 
-  declare ${jwtCustomizerApiContextTypeDefinition}`;
+  declare ${resolveJwtCustomizerApiContextTypeDefinition()}`;
 
 export const buildEnvironmentVariablesTypeDefinition = (
   envVariables?: JwtCustomizerForm['environmentVariables']

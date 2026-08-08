@@ -75,6 +75,12 @@ const jwt_claims = {
     title: 'API-Kontext: Zugriffskontrolle',
     subtitle: 'Verwenden Sie die Methode `api.denyAccess`, um die Token-Anfrage abzulehnen.',
   },
+  cryptographic_capability: {
+    title: 'API-Kontext: Kryptografie',
+    subtitle: 'Verwende `api.crypto.sha256` und `api.crypto.hmacSha256` für UTF-8-Hashing.',
+    description:
+      'Beide Methoden sind asynchron und geben ein Promise mit einem 64-stelligen Hex-String in Kleinbuchstaben zurück. Eingaben werden ohne Unicode-Normalisierung als UTF-8 kodiert: `sha256(input)` berechnet SHA-256(UTF-8(input)); `hmacSha256({ key, input })` berechnet HMAC-SHA-256(UTF-8(key), UTF-8(input)). Lies HMAC-Schlüssel aus Umgebungsvariablen, rufe selbst `.trim()` auf und lehne ein leeres Ergebnis ab, bevor du HMAC aufrufst — die Methode trimmt nicht und fällt nicht auf SHA-256 zurück. Bevorzuge einen hochentropischen Schlüssel ohne Leerzeichen. Leere Nachrichteneingabe ist gültig; ein leerer Schlüssel nicht. Eingaben sind auf 1 MiB UTF-8-Bytes und HMAC-Schlüssel auf 64 KiB begrenzt. SHA-256 versteckt keine aufzählbaren Kennungen wie E-Mail-Adressen oder Telefonnummern; nutze HMAC für eine geheimnisgeschlüsselte stabile Kennung. Keine Methode ist für Passwortspeicherung geeignet. Umgebungsvariablen sind für autorisierte Custom-JWT-Administratoren und den Ausführungsrunner sichtbar und kein verwaltetes Schlüsselsystem. Das Rotieren eines HMAC-Schlüssels ändert jeden abgeleiteten Wert — Skripte mit Migration sollten eine anwendungsdefinierte Schlüsselversion und eine Doppelwertphase implementieren. Mehrere Werte brauchen eine eindeutige aufruferdefinierte Serialisierung (z. B. `JSON.stringify([value1, value2])` zur Laufzeit); sprachübergreifende Integrationen müssen ihre eigene kanonische Form vereinbaren. Auf selbst gehostetem Logto läuft dieses Skript weiterhin im Trusted-Script-Modell der Sandbox-Warnung.',
+  },
   error_handling: {
     title: 'Fehlerbehandlung',
     subtitle:

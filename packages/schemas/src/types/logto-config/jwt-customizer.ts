@@ -294,6 +294,17 @@ export const customJwtErrorBodyGuard = z.object({
 
 export type CustomJwtErrorBody = z.infer<typeof customJwtErrorBodyGuard>;
 
+/**
+ * Curated cryptographic operations exposed to a Custom JWT script through the API context.
+ *
+ * Available only when Custom JWT cryptographic capability is enabled
+ * (`isDevFeaturesEnabled && !isCloud`).
+ */
+export type CustomJwtCryptographicCapability = Readonly<{
+  sha256: (input: string) => Promise<string>;
+  hmacSha256: (options: Readonly<{ key: string; input: string }>) => Promise<string>;
+}>;
+
 export type CustomJwtApiContext = {
   /**
    * Reject the current token request.
@@ -306,6 +317,14 @@ export type CustomJwtApiContext = {
    * @throws {ResponseError} with `CustomJwtErrorBody`
    */
   denyAccess: (message?: string) => never;
+  /**
+   * Curated cryptographic operations for Custom JWT scripts.
+   *
+   * Present only when Custom JWT cryptographic capability is available
+   * (`isDevFeaturesEnabled && !isCloud`); omitted otherwise.
+   */
+  // Custom JWT cryptographic capability
+  crypto?: CustomJwtCryptographicCapability;
 };
 
 /**

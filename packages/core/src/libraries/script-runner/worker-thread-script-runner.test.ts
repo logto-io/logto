@@ -112,6 +112,41 @@ describe('WorkerThreadScriptRunner', () => {
       ).resolves.toEqual({ ok: true, value: { apiType: 'undefined' } });
     });
 
+    // Custom JWT cryptographic capability
+    it('exposes frozen sha256 and hmacSha256 on api.crypto for Custom JWT scripts', async () => {
+      await expect(
+        runner.run(
+          buildInput(
+            `const getCustomJwtClaims = async ({ api }) => ({
+               digest: await api.crypto.sha256('abc'),
+               hmac: await api.crypto.hmacSha256({ key: 'Jefe', input: 'what do ya want for nothing?' }),
+               apiFrozen: Object.isFrozen(api),
+               cryptoFrozen: Object.isFrozen(api.crypto),
+             });`,
+            'getCustomJwtClaims'
+          )
+        )
+      ).resolves.toEqual({
+        ok: true,
+        value: {
+          digest: 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad',
+          hmac: '5bdcc146bf60754e6a042426089575c75a003f089d2739839dec58b964ec3843',
+          apiFrozen: true,
+          cryptoFrozen: true,
+        },
+      });
+    });
+
+    it('does not expose api.crypto to action scripts', async () => {
+      await expect(
+        runner.run(
+          buildInput(
+            'const runAction = (payload) => ({ hasCrypto: Boolean(payload.api?.crypto) });'
+          )
+        )
+      ).resolves.toEqual({ ok: true, value: { hasCrypto: false } });
+    });
+
     // The sentinel class is private to the worker module, so a script can imitate its name but
     // never its identity — the `instanceof` check must not be fooled into a 403.
     it('does not mistake a script-thrown error named like the deny sentinel for a denial', async () => {
@@ -360,10 +395,37 @@ describe('WorkerThreadScriptRunner', () => {
   // The `node:` prefix is deliberately stripped before the check: the type-check build keeps it and
   // the bundled build drops it, and asserting on the prefix would only ever describe the build Jest
   // happens to be looking at.
+  //
+  // The Custom JWT cryptographic capability helper is the only allowed relative import: it uses
+  // Node builtins exclusively, the type-check build leaves the specifier, and the production
+  // bundle inlines it.
   it('builds a worker entry that imports node builtins only', async () => {
     const rootDirectory = await packageDirectory();
     const source = await readFile(
       path.join(rootDirectory ?? '', 'build/workers/tasks/script-runner.js'),
+      'utf8'
+    );
+    const specifiers = [...source.matchAll(/(?:from|import)\s*["']([^"']+)["']/g)].map(
+      ([, specifier]) => specifier?.replace(/^node:/, '')
+    );
+    const allowedRelativeSpecifiers = new Set([
+      '../../libraries/jwt-customizer-cryptographic-capability.js',
+    ]);
+
+    expect(specifiers.length).toBeGreaterThan(0);
+    expect(
+      specifiers.filter(
+        (specifier) =>
+          !builtinModules.includes(specifier ?? '') &&
+          !allowedRelativeSpecifiers.has(specifier ?? '')
+      )
+    ).toEqual([]);
+  });
+
+  it('builds the cryptographic capability helper from node builtins only', async () => {
+    const rootDirectory = await packageDirectory();
+    const source = await readFile(
+      path.join(rootDirectory ?? '', 'build/libraries/jwt-customizer-cryptographic-capability.js'),
       'utf8'
     );
     const specifiers = [...source.matchAll(/(?:from|import)\s*["']([^"']+)["']/g)].map(
