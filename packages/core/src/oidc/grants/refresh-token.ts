@@ -36,8 +36,7 @@ import { errors, type Provider } from 'oidc-provider';
 
 import { type EnvSet } from '#src/env-set/index.js';
 import { assertUserHasApplicationAccessForOidc } from '#src/oidc/application-access-control.js';
-import { isCimdClientId } from '#src/oidc/cimd/client-id.js';
-import { isCimdEffectivelyEnabled } from '#src/oidc/cimd/index.js';
+import { isCimdClient } from '#src/oidc/cimd/index.js';
 import {
   applyMtlsBinding,
   buildTokenResponse,
@@ -231,13 +230,12 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx)
     throw new InvalidRequest('authorization_details is unsupported for this refresh token');
   }
 
-  // DEV: CIMD (client ID metadata document) support
   /**
    * Application-level access control only applies to registered applications; the
    * access-control library's fallback lookup would query the applications table with the CIMD
    * identifier URL and deny on not-found.
    */
-  if (!(isCimdEffectivelyEnabled(envSet) && isCimdClientId(client.clientId))) {
+  if (!isCimdClient(envSet, client.clientId)) {
     await assertUserHasApplicationAccessForOidc(
       appAccess,
       client.clientId,

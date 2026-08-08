@@ -7,8 +7,7 @@ import { type EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { isCimdClientId } from '../cimd/client-id.js';
-import { isCimdEffectivelyEnabled } from '../cimd/index.js';
+import { isCimdClient } from '../cimd/index.js';
 import {
   getSharedResourceServerData,
   isOrganizationConsentedToApplication,
@@ -43,7 +42,6 @@ export const checkOrganizationAccess = async (
   const organizationId = cond(Boolean(params.organization_id) && String(params.organization_id));
 
   if (organizationId) {
-    // DEV: CIMD (client ID metadata document) support
     /**
      * Organization grants are keyed to registered applications
      * (`application_user_consent_organizations`), so no user has ever granted an organization to
@@ -52,7 +50,7 @@ export const checkOrganizationAccess = async (
      * user-to-organization relation, not a substitute for the user-to-client grant, so fail
      * closed instead of skipping the consent check.
      */
-    if (isCimdEffectivelyEnabled(envSet) && isCimdClientId(client.clientId)) {
+    if (isCimdClient(envSet, client.clientId)) {
       // TODO: @xiaoyijun replace the rejection with the grant-scoped organization check (LOG-13930)
       const error = new AccessDenied('organization tokens are not supported for CIMD clients');
       // eslint-disable-next-line @silverhand/fp/no-mutation -- oidc-provider errors take the HTTP status by assignment after construction

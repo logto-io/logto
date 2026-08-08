@@ -446,7 +446,6 @@ describe('refresh token grant', () => {
   });
 });
 
-// DEV: CIMD (client ID metadata document) support
 describe('refresh token grant for CIMD clients', () => {
   const cimdClientId = 'https://client.example.com/metadata.json';
 

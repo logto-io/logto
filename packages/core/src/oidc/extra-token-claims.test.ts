@@ -209,7 +209,6 @@ describe('getExtraTokenClaimsForJwtCustomization', () => {
     expect(runScriptInLocalVm.mock.calls[0]?.[0]?.context).not.toHaveProperty('organization');
   });
 
-  // DEV: CIMD (client ID metadata document) support
   describe('for CIMD clients', () => {
     const cimdClientId = 'https://client.example.com/metadata.json';
 

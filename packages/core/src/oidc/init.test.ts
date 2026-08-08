@@ -514,7 +514,6 @@ describe('getResourceServerInfo for CIMD clients', () => {
   });
 });
 
-// DEV: CIMD (client ID metadata document) support
 describe('loadExistingGrant for CIMD clients', () => {
   const cimdClientId = 'https://client.example.com/client-metadata.json';
 

@@ -111,7 +111,6 @@ describe('koaAppAccessControl middleware', () => {
     await expect(guard(ctx, next)).rejects.toThrow(new RequestError({ code: 'session.not_found' }));
   });
 
-  // DEV: CIMD (client ID metadata document) support
   describe('while CIMD is effectively enabled', () => {
     const cimdClientId = 'https://client.example.com/metadata.json';
 

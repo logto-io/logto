@@ -322,8 +322,7 @@ export default function initOidc(
          * access-control library's fallback lookup would query the applications table with the
          * CIMD identifier URL and deny on not-found.
          */
-        // DEV: CIMD (client ID metadata document) support
-        !(isCimdEffectivelyEnabled(envSet) && isCimdClientId(client.clientId)) &&
+        !isCimdClient(envSet, client.clientId) &&
         !hasAppLevelAccessControlChecked(result, client.clientId, account.accountId);
 
       if (grantId && shouldCheckApplicationAccess) {
