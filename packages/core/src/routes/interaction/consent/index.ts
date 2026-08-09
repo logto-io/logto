@@ -293,15 +293,15 @@ export default function consentRoutes<T extends IRouterParamContext>(
           assertThat(client, new InvalidClient('client must be available'));
 
           /**
-           * The document's `client_name` is fully controlled by the remote, unregistered
-           * client, and the consent page renders the name as the only identity signal — so
-           * showing it verbatim invites phishing (CIMD draft-02 §8.5). Until the identifier
-           * hostname is rendered alongside it, the unforgeable identifier URL is the name.
+           * The document's `client_name` is fully controlled by the remote, unregistered client,
+           * so it must never be the page's only identity signal (CIMD draft-02 §8.5) — the
+           * unforgeable identifier URL rides in `id` for the consent page to render beside the
+           * name, and stands in as the name when the document omits one.
            */
           return {
             application: {
               id: clientId,
-              name: clientId,
+              name: client.clientName ?? clientId,
               termsOfUseUrl: client.tosUri,
               privacyPolicyUrl: client.policyUri,
               ...conditional(client.logoUri && { branding: { logoUrl: client.logoUri } }),
