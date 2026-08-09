@@ -296,21 +296,20 @@ export default function consentRoutes<T extends IRouterParamContext>(
            * The document's `client_name` is fully controlled by the remote, unregistered
            * client, and the consent page renders the name as the only identity signal — so
            * showing it verbatim invites phishing (CIMD draft-02 §8.5). Until the identifier
-           * hostname is rendered alongside it, the unforgeable identifier URL is the name;
-           * `hostname` ships as its own field so the pairing needs no further API change.
-           * The document's `logo_uri` is deliberately not exposed: a browser-ready remote
-           * URL is a tracking and content-swap surface (draft-02 §8.8), so logos wait for a
-           * Logto-served cached asset.
+           * hostname is rendered alongside it, the unforgeable identifier URL is the name.
            * TODO: @xiaoyijun display the fetched name with the identifier hostname (LOG-13990).
+           *
+           * Terms and privacy reuse the registered-application fields so the existing consent
+           * rendering applies as-is; `logo_uri` passes through raw for now — the draft-02
+           * §8.8 prefetch-and-cache serving is a pre-graduation follow-up.
            */
           return {
             application: {
               id: clientId,
               name: clientId,
-              hostname: new URL(clientId).hostname,
-              clientUri: oidcClient.clientUri,
-              policyUri: oidcClient.policyUri,
-              tosUri: oidcClient.tosUri,
+              logoUri: oidcClient.logoUri,
+              termsOfUseUrl: oidcClient.tosUri,
+              privacyPolicyUrl: oidcClient.policyUri,
             },
             isDeviceFlowApplication: false,
           };

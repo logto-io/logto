@@ -71,26 +71,17 @@ export const publicOrganizationGuard = Organizations.guard
 
 export type PublicOrganization = z.infer<typeof publicOrganizationGuard>;
 
-/**
- * Display metadata for CIMD clients, resolved server-side from the provider-validated
- * metadata document and absent for registered applications. Purely additive so every
- * consumer of the consent info keeps its shape: the experience renders by field presence,
- * where a present `hostname` marks an unregistered external client and is the unforgeable
- * identity signal to pair with the display name (draft-02 §8.5). The document's `logo_uri`
- * is deliberately absent: a browser-ready remote URL is a tracking and content-swap surface
- * (draft-02 §8.8), so logos wait for a Logto-served cached asset.
- */
-const cimdClientDisplayGuard = z.object({
-  hostname: z.string().optional(),
-  clientUri: z.string().optional(),
-  policyUri: z.string().optional(),
-  tosUri: z.string().optional(),
-});
-
 export const consentInfoResponseGuard = z.object({
   application: publicApplicationGuard
     .merge(applicationSignInExperienceGuard.partial())
-    .merge(cimdClientDisplayGuard),
+    /**
+     * The CIMD metadata document's raw `logo_uri`; absent for registered applications, whose
+     * logos travel in `branding`. Raw is interim — the draft-02 §8.8 prefetch-and-cache
+     * serving is a pre-graduation follow-up. The document's terms and privacy links reuse
+     * `termsOfUseUrl`/`privacyPolicyUrl` above, and the client kind is judged from `id` (a
+     * CIMD client carries its identifier URL there), so no other CIMD-only field exists.
+     */
+    .extend({ logoUri: z.string().optional() }),
   user: publicUserInfoGuard,
   organizations: publicOrganizationGuard.array().optional(),
   missingOIDCScope: z.string().array().optional(),
