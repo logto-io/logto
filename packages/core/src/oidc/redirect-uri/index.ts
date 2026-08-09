@@ -121,19 +121,23 @@ export const getRedirectUriMatchType = (
     return 'exact';
   }
 
+  /**
+   * The retry is still a literal-registration match, so it outranks the wildcard branch —
+   * otherwise a pattern covering the same candidate would misclassify the match.
+   */
+  if (cimd || applicationType === 'native') {
+    const loopbackMatched = cimd
+      ? matchLoopbackPortInsensitiveCimd(literalUris, value, parsed)
+      : matchLoopbackPortInsensitive(literalUris, parsed);
+
+    if (loopbackMatched) {
+      return 'exact';
+    }
+  }
+
   if (wildcardUris.some((allowed) => wildcardUrlMatch(allowed, parsed))) {
     return 'wildcard';
   }
-
-  if (!cimd && applicationType !== 'native') {
-    return;
-  }
-
-  const loopbackMatched = cimd
-    ? matchLoopbackPortInsensitiveCimd(registeredUris, value, parsed)
-    : matchLoopbackPortInsensitive(registeredUris, parsed);
-
-  return loopbackMatched ? 'exact' : undefined;
 };
 
 /**

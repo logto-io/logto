@@ -225,7 +225,22 @@ describe('getRedirectUriMatchType', () => {
     expect(getRedirectUriMatchType(webClient, 'http://127.0.0.1:49152/cb')).toBeUndefined();
   });
 
-  // DEV: CIMD (client ID metadata document) support
+  it('prefers the loopback literal retry over a pattern covering the same candidate', () => {
+    const overlappingUris = ['http://localhost:3000/cb', 'http://localhost/*'];
+    const nativeClient = asClient({
+      applicationType: 'native',
+      redirectUris: overlappingUris,
+    });
+    const cimdClient = asClient({
+      clientId: 'https://client.example.com/oauth/metadata.json',
+      applicationType: 'web',
+      redirectUris: overlappingUris,
+    });
+
+    expect(getRedirectUriMatchType(nativeClient, 'http://localhost/cb')).toBe('exact');
+    expect(getRedirectUriMatchType(cimdClient, 'http://localhost/cb')).toBe('exact');
+  });
+
   it('classifies cimd raw-string and loopback matches as exact, patterns as wildcard', () => {
     const cimdClient = asClient({
       clientId: 'https://client.example.com/oauth/metadata.json',
