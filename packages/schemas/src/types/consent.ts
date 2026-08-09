@@ -71,14 +71,39 @@ export const publicOrganizationGuard = Organizations.guard
 
 export type PublicOrganization = z.infer<typeof publicOrganizationGuard>;
 
+// DEV: CIMD (client ID metadata document) support
+/**
+ * Display metadata for CIMD clients, resolved server-side from the provider-validated
+ * metadata document and absent for registered applications. Purely additive so every
+ * consumer of the consent info keeps its shape: the experience renders by field presence,
+ * where a present `hostname` marks an unregistered external client and is the unforgeable
+ * identity signal to pair with the display name (draft-02 §8.5).
+ */
+const cimdClientDisplayGuard = z.object({
+  hostname: z.string().optional(),
+  logoUri: z.string().optional(),
+  clientUri: z.string().optional(),
+  policyUri: z.string().optional(),
+  tosUri: z.string().optional(),
+});
+
 export const consentInfoResponseGuard = z.object({
-  application: publicApplicationGuard.merge(applicationSignInExperienceGuard.partial()),
+  application: publicApplicationGuard
+    .merge(applicationSignInExperienceGuard.partial())
+    // DEV: CIMD (client ID metadata document) support
+    .merge(cimdClientDisplayGuard),
   user: publicUserInfoGuard,
   organizations: publicOrganizationGuard.array().optional(),
   missingOIDCScope: z.string().array().optional(),
   missingResourceScopes: missingResourceScopesGuard.array().optional(),
   // Device flow consent does not require a redirect_uri.
   redirectUri: z.string().optional(),
+  /**
+   * How the authorization `redirect_uri` matches the client's registered redirect URIs,
+   * computed server-side from the registered values and the matcher — never trusted from the
+   * client or the experience. Absent for device-flow consent, which carries no redirect URI.
+   */
+  redirectUriMatchType: z.enum(['exact', 'wildcard']).optional(),
 });
 
 export type ConsentInfoResponse = z.infer<typeof consentInfoResponseGuard>;
