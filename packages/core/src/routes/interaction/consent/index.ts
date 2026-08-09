@@ -16,6 +16,7 @@ import { type IRouterParamContext } from 'koa-router';
 import { errors } from 'oidc-provider';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import { consent, getMissingScopes } from '#src/libraries/session/index.js';
 import koaAppAccessControl from '#src/middleware/koa-app-access-control.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -280,15 +281,6 @@ export default function consentRoutes<T extends IRouterParamContext>(
       const cimd = isCimdClient(envSet, clientId);
 
       /**
-       * Every consenting client already resolved through the provider at the authorization
-       * endpoint, so the provider client is the single authority for both the registered
-       * redirect URIs the match type classifies against and the CIMD metadata document the
-       * display data comes from.
-       */
-      const oidcClient = await provider.Client.find(clientId);
-      assertThat(oidcClient, new InvalidClient('client must be available'));
-
-      /**
        * CIMD clients are unregistered: display data comes from the provider-resolved metadata
        * document (cache-backed) instead of the applications table, and no application-level
        * sign-in experience or device-flow variant exists for them.
@@ -298,12 +290,18 @@ export default function consentRoutes<T extends IRouterParamContext>(
         isDeviceFlowApplication: boolean;
       }> => {
         if (cimd) {
+          const oidcClient = await provider.Client.find(clientId);
+          assertThat(oidcClient, new InvalidClient('client must be available'));
+
           /**
            * The document's `client_name` is fully controlled by the remote, unregistered
            * client, and the consent page renders the name as the only identity signal — so
            * showing it verbatim invites phishing (CIMD draft-02 §8.5). Until the identifier
            * hostname is rendered alongside it, the unforgeable identifier URL is the name;
            * `hostname` ships as its own field so the pairing needs no further API change.
+           * The document's `logo_uri` is deliberately not exposed: a browser-ready remote
+           * URL is a tracking and content-swap surface (draft-02 §8.8), so logos wait for a
+           * Logto-served cached asset.
            * TODO: @xiaoyijun display the fetched name with the identifier hostname (LOG-13990).
            */
           return {
@@ -311,7 +309,6 @@ export default function consentRoutes<T extends IRouterParamContext>(
               id: clientId,
               name: clientId,
               hostname: new URL(clientId).hostname,
-              logoUri: oidcClient.logoUri,
               clientUri: oidcClient.clientUri,
               policyUri: oidcClient.policyUri,
               tosUri: oidcClient.tosUri,
@@ -353,22 +350,32 @@ export default function consentRoutes<T extends IRouterParamContext>(
         );
       }
 
+      // DEV: CIMD (client ID metadata document) support
       /**
        * Authorization already validated the value against the same client, so a missing match
        * here means the registered set changed mid-flow (for CIMD clients the metadata document
        * may refetch between authorization and consent); the consent screen must not vouch for
-       * a redirect target the client no longer registers.
+       * a redirect target the client no longer registers. Render-time only — issuance stays
+       * guarded by the consent POST re-assert.
        */
-      const redirectUriMatchType = conditional(
-        typeof redirectUri === 'string' && getRedirectUriMatchType(oidcClient, redirectUri)
-      );
+      const resolveRedirectUriMatchType = async () => {
+        if (!EnvSet.values.isDevFeaturesEnabled || typeof redirectUri !== 'string') {
+          return;
+        }
 
-      if (typeof redirectUri === 'string') {
+        const oidcClient = await provider.Client.find(clientId);
+        assertThat(oidcClient, new InvalidClient('client must be available'));
+
+        const matchType = getRedirectUriMatchType(oidcClient, redirectUri);
         assertThat(
-          redirectUriMatchType,
+          matchType,
           new InvalidRedirectUri('redirect_uri must match a registered redirect uri')
         );
-      }
+
+        return matchType;
+      };
+
+      const redirectUriMatchType = await resolveRedirectUriMatchType();
 
       const userInfo = await queries.users.findUserById(accountId);
 
