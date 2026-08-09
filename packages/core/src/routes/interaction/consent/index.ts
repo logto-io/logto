@@ -298,18 +298,14 @@ export default function consentRoutes<T extends IRouterParamContext>(
            * showing it verbatim invites phishing (CIMD draft-02 §8.5). Until the identifier
            * hostname is rendered alongside it, the unforgeable identifier URL is the name.
            * TODO: @xiaoyijun display the fetched name with the identifier hostname (LOG-13990).
-           *
-           * Terms and privacy reuse the registered-application fields so the existing consent
-           * rendering applies as-is; `logo_uri` passes through raw for now — the draft-02
-           * §8.8 prefetch-and-cache serving is a pre-graduation follow-up.
            */
           return {
             application: {
               id: clientId,
               name: clientId,
-              logoUri: oidcClient.logoUri,
               termsOfUseUrl: oidcClient.tosUri,
               privacyPolicyUrl: oidcClient.policyUri,
+              ...conditional(oidcClient.logoUri && { branding: { logoUrl: oidcClient.logoUri } }),
             },
             isDeviceFlowApplication: false,
           };

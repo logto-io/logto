@@ -72,16 +72,7 @@ export const publicOrganizationGuard = Organizations.guard
 export type PublicOrganization = z.infer<typeof publicOrganizationGuard>;
 
 export const consentInfoResponseGuard = z.object({
-  application: publicApplicationGuard
-    .merge(applicationSignInExperienceGuard.partial())
-    /**
-     * The CIMD metadata document's raw `logo_uri`; absent for registered applications, whose
-     * logos travel in `branding`. Raw is interim — the draft-02 §8.8 prefetch-and-cache
-     * serving is a pre-graduation follow-up. The document's terms and privacy links reuse
-     * `termsOfUseUrl`/`privacyPolicyUrl` above, and the client kind is judged from `id` (a
-     * CIMD client carries its identifier URL there), so no other CIMD-only field exists.
-     */
-    .extend({ logoUri: z.string().optional() }),
+  application: publicApplicationGuard.merge(applicationSignInExperienceGuard.partial()),
   user: publicUserInfoGuard,
   organizations: publicOrganizationGuard.array().optional(),
   missingOIDCScope: z.string().array().optional(),
