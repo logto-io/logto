@@ -297,7 +297,6 @@ export default function consentRoutes<T extends IRouterParamContext>(
            * client, and the consent page renders the name as the only identity signal — so
            * showing it verbatim invites phishing (CIMD draft-02 §8.5). Until the identifier
            * hostname is rendered alongside it, the unforgeable identifier URL is the name.
-           * TODO: @xiaoyijun display the fetched name with the identifier hostname (LOG-13990).
            */
           return {
             application: {
