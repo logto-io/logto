@@ -30,12 +30,16 @@ type SendWebhookRequest = {
   signingKey: string;
 };
 
+/** Public contract: retry webhook POST on HTTP 5xx. Ky 1.2.3 defaults omit POST and most 5xx codes. */
+const webhookRetryLimit = 3;
+const webhookRetryStatusCodes = Array.from({ length: 100 }, (_, index) => 500 + index);
+
 export const sendWebhookRequest = async ({
   hookConfig,
   payload,
   signingKey,
 }: SendWebhookRequest) => {
-  const { url, headers, retries } = hookConfig;
+  const { url, headers } = hookConfig;
 
   return ky.post(url, {
     headers: {
@@ -44,7 +48,11 @@ export const sendWebhookRequest = async ({
       ...conditional(signingKey && { 'logto-signature-sha-256': sign(signingKey, payload) }),
     },
     json: payload,
-    retry: { limit: retries ?? 3 },
+    retry: {
+      limit: webhookRetryLimit,
+      methods: ['post'],
+      statusCodes: webhookRetryStatusCodes,
+    },
     timeout: 10_000,
   });
 };

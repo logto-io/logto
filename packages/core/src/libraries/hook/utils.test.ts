@@ -48,7 +48,11 @@ describe('sendWebhookRequest', () => {
         'logto-signature-sha-256': mockSignature,
       },
       json: testPayload,
-      retry: { limit: 3 },
+      retry: {
+        limit: 3,
+        methods: ['post'],
+        statusCodes: Array.from({ length: 100 }, (_, index) => 500 + index),
+      },
       timeout: 10_000,
     });
   });
