@@ -289,8 +289,8 @@ export default function consentRoutes<T extends IRouterParamContext>(
         isDeviceFlowApplication: boolean;
       }> => {
         if (cimd) {
-          const oidcClient = await provider.Client.find(clientId);
-          assertThat(oidcClient, new InvalidClient('client must be available'));
+          const client = await provider.Client.find(clientId);
+          assertThat(client, new InvalidClient('client must be available'));
 
           /**
            * The document's `client_name` is fully controlled by the remote, unregistered
@@ -303,9 +303,9 @@ export default function consentRoutes<T extends IRouterParamContext>(
             application: {
               id: clientId,
               name: clientId,
-              termsOfUseUrl: oidcClient.tosUri,
-              privacyPolicyUrl: oidcClient.policyUri,
-              ...conditional(oidcClient.logoUri && { branding: { logoUrl: oidcClient.logoUri } }),
+              termsOfUseUrl: client.tosUri,
+              privacyPolicyUrl: client.policyUri,
+              ...conditional(client.logoUri && { branding: { logoUrl: client.logoUri } }),
             },
             isDeviceFlowApplication: false,
           };
@@ -353,10 +353,10 @@ export default function consentRoutes<T extends IRouterParamContext>(
        * guarded by the consent POST re-assert.
        */
       if (EnvSet.values.isDevFeaturesEnabled && typeof redirectUri === 'string') {
-        const oidcClient = await provider.Client.find(clientId);
-        assertThat(oidcClient, new InvalidClient('client must be available'));
+        const client = await provider.Client.find(clientId);
+        assertThat(client, new InvalidClient('client must be available'));
         assertThat(
-          oidcClient.redirectUriAllowed(redirectUri),
+          client.redirectUriAllowed(redirectUri),
           new InvalidRedirectUri('redirect_uri must match a registered redirect uri')
         );
       }
