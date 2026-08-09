@@ -22,7 +22,6 @@ import koaAppAccessControl from '#src/middleware/koa-app-access-control.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import { isCimdClient } from '#src/oidc/cimd/index.js';
-import { getRedirectUriMatchType } from '#src/oidc/redirect-uri/index.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -352,30 +351,20 @@ export default function consentRoutes<T extends IRouterParamContext>(
 
       // DEV: CIMD (client ID metadata document) support
       /**
-       * Authorization already validated the value against the same client, so a missing match
+       * Authorization already validated the value against the same client, so a failing check
        * here means the registered set changed mid-flow (for CIMD clients the metadata document
        * may refetch between authorization and consent); the consent screen must not vouch for
        * a redirect target the client no longer registers. Render-time only — issuance stays
        * guarded by the consent POST re-assert.
        */
-      const resolveRedirectUriMatchType = async () => {
-        if (!EnvSet.values.isDevFeaturesEnabled || typeof redirectUri !== 'string') {
-          return;
-        }
-
+      if (EnvSet.values.isDevFeaturesEnabled && typeof redirectUri === 'string') {
         const oidcClient = await provider.Client.find(clientId);
         assertThat(oidcClient, new InvalidClient('client must be available'));
-
-        const matchType = getRedirectUriMatchType(oidcClient, redirectUri);
         assertThat(
-          matchType,
+          oidcClient.redirectUriAllowed(redirectUri),
           new InvalidRedirectUri('redirect_uri must match a registered redirect uri')
         );
-
-        return matchType;
-      };
-
-      const redirectUriMatchType = await resolveRedirectUriMatchType();
+      }
 
       const userInfo = await queries.users.findUserById(accountId);
 
@@ -433,7 +422,6 @@ export default function consentRoutes<T extends IRouterParamContext>(
         missingResourceScopes,
         // Device flow consent does not require a redirect_uri.
         redirectUri: typeof redirectUri === 'string' ? redirectUri : undefined,
-        redirectUriMatchType,
       } satisfies ConsentInfoResponse;
 
       return next();

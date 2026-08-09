@@ -97,12 +97,6 @@ export const consentInfoResponseGuard = z.object({
   missingResourceScopes: missingResourceScopesGuard.array().optional(),
   // Device flow consent does not require a redirect_uri.
   redirectUri: z.string().optional(),
-  /**
-   * How the authorization `redirect_uri` matches the client's registered redirect URIs,
-   * computed server-side from the registered values and the matcher — never trusted from the
-   * client or the experience. Absent for device-flow consent, which carries no redirect URI.
-   */
-  redirectUriMatchType: z.enum(['exact', 'wildcard']).optional(),
 });
 
 export type ConsentInfoResponse = z.infer<typeof consentInfoResponseGuard>;
