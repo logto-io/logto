@@ -8,6 +8,7 @@ import {
   type ActionExecutionErrorPolicy,
   type ActionExecutionRequestBody,
 } from '@logto/schemas';
+import { got, HTTPError } from 'got';
 import { ZodError } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -15,6 +16,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import type { LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import type { SubscriptionLibrary } from '#src/libraries/subscription.js';
 import type { LogContext, LogPayload } from '#src/middleware/koa-audit-log.js';
+import { parseAzureFunctionsResponseError } from '#src/utils/custom-jwt/index.js';
 import { runScriptFunctionInLocalVm } from '#src/utils/local-vm/index.js';
 
 import {
@@ -44,6 +46,13 @@ import {
 
 const actionFunctionName = 'runAction';
 const defaultActionExecutionErrorPolicy = 'block' satisfies ActionExecutionErrorPolicy;
+/**
+ * Azure Function vm2 timeout is 3000ms. Use a slightly higher HTTP deadline so the
+ * client can surface Function-side failures instead of racing the sandbox limit.
+ *
+ * Only used by the legacy Azure Functions path; the Cloud script runner owns its own budget.
+ */
+const remoteActionRequestTimeout = 5000;
 
 export type ActionExecutionErrorFallback = {
   action: 'rejectInvalidCredentials';
@@ -267,6 +276,12 @@ export class ActionLibrary {
     private readonly cloudConnection: CloudConnectionLibrary
   ) {}
 
+  get isRegionalAzureFunctionAppConfigured(): boolean {
+    const { azureFunctionUntrustedAppKey, azureFunctionUntrustedAppEndpoint } = EnvSet.values;
+
+    return Boolean(azureFunctionUntrustedAppKey && azureFunctionUntrustedAppEndpoint);
+  }
+
   /**
    * Shared entry point for production `runAction()` and Management API dry runs.
    * Cloud always executes remotely; OSS / self-hosted runs locally — on the worker pool behind
@@ -298,16 +313,20 @@ export class ActionLibrary {
    * For Logto Cloud use only. Run the action script remotely in an isolated environment.
    * For OSS version, use @see ActionLibrary.runScriptInLocalVm instead.
    */
-  async runScriptRemotely({
-    script,
-    event,
-    environmentVariables,
-  }: {
+  async runScriptRemotely(data: {
     script: string;
     actionType: LogtoActionKey;
     event: unknown;
     environmentVariables?: Record<string, string>;
   }): Promise<unknown> {
+    // TODO (LOG-13958): drop the legacy Azure Functions path and the gate once the Cloud script
+    // runner has been manually verified and released.
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return this.runScriptOnAzureFunction(data);
+    }
+
+    const { script, event, environmentVariables } = data;
+
     /**
      * `actionType` selects the script on this side and is deliberately not forwarded — anything
      * in `payload` becomes a visible field of the script's `runAction` argument, and the
@@ -422,6 +441,53 @@ export class ActionLibrary {
       return result;
     } finally {
       trackActionExecutionMetrics({ durationMs, properties: telemetryProperties });
+    }
+  }
+
+  /** The pre-script-runner remote path, still serving production until the gate above lifts. */
+  private async runScriptOnAzureFunction({
+    script,
+    actionType,
+    event,
+    environmentVariables,
+  }: {
+    script: string;
+    actionType: LogtoActionKey;
+    event: unknown;
+    environmentVariables?: Record<string, string>;
+  }): Promise<unknown> {
+    const { azureFunctionUntrustedAppKey, azureFunctionUntrustedAppEndpoint } = EnvSet.values;
+
+    if (!this.isRegionalAzureFunctionAppConfigured) {
+      throw new RequestError(
+        { code: 'action.general', status: 422 },
+        { message: 'Remote action runner is not configured.' }
+      );
+    }
+
+    try {
+      return await got
+        // The remote runner must invoke `runAction` from the supplied script.
+        .post(new URL('/api/actions', azureFunctionUntrustedAppEndpoint), {
+          json: {
+            script,
+            actionType,
+            event,
+            environmentVariables,
+          },
+          headers: {
+            'x-functions-key': azureFunctionUntrustedAppKey,
+          },
+          // Got@14 expects a Delays object; bound the whole request slightly above the AF VM timeout.
+          timeout: { request: remoteActionRequestTimeout },
+        })
+        .json<unknown>();
+    } catch (error: unknown) {
+      if (error instanceof HTTPError) {
+        throw parseAzureFunctionsResponseError(error);
+      }
+
+      throw error;
     }
   }
 

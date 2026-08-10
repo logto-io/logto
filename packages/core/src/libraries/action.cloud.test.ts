@@ -1,6 +1,8 @@
+/* eslint-disable max-lines -- The dev-features-gated script-run path and the legacy Azure Functions path share one setup. */
 import { appInsights } from '@logto/app-insights/node';
 import { LogtoActionKey } from '@logto/schemas';
 import { ResponseError } from '@withtyped/client';
+import nock from 'nock';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
@@ -34,6 +36,7 @@ const createLibrary = (tenantId = 'tenant_id') =>
   );
 
 const originalIsCloud = EnvSet.values.isCloud;
+const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
 
 const setIsCloud = (isCloud: boolean) => {
   // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for Cloud/local selection tests.
@@ -64,6 +67,7 @@ describe('ActionLibrary Cloud execution routing', () => {
     library.runAction({ ...input, auditContext: { createLog } });
 
   beforeEach(() => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Provide an AppInsights client for metric assertions.
     appInsights.client = {
       trackMetric,
@@ -82,6 +86,7 @@ describe('ActionLibrary Cloud execution routing', () => {
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore the shared AppInsights singleton.
     appInsights.client = originalAppInsightsClient;
     setIsCloud(originalIsCloud);
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
   });
 
   it('runs the script through the Cloud script-run endpoint', async () => {
@@ -320,3 +325,143 @@ describe('ActionLibrary Cloud execution routing', () => {
     expect(runScriptInLocalVm).not.toHaveBeenCalled();
   });
 });
+
+describe('ActionLibrary Cloud execution routing without dev features', () => {
+  const library = createLibrary();
+  const { createLog } = createMockLogContext();
+  const runAction = async <Event>(input: RunActionInput<Event>) =>
+    library.runAction({ ...input, auditContext: { createLog } });
+
+  beforeEach(() => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Provide an AppInsights client for metric assertions.
+    appInsights.client = {
+      trackMetric,
+      trackException: jest.fn(),
+    } as unknown as NonNullable<typeof appInsights.client>;
+    getSubscriptionData.mockResolvedValue({
+      quota: {
+        actionsEnabled: true,
+      },
+    } as Awaited<ReturnType<SubscriptionLibrary['getSubscriptionData']>>);
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
+    jest.restoreAllMocks();
+    jest.clearAllMocks();
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore the shared AppInsights singleton.
+    appInsights.client = originalAppInsightsClient;
+    setIsCloud(originalIsCloud);
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
+  });
+
+  it('throws an action error when the remote runner is not configured', async () => {
+    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get').mockReturnValue('');
+    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue('');
+
+    await expect(
+      library.runScriptRemotely({
+        actionType: LogtoActionKey.PostSignIn,
+        script: 'const runAction = () => ({ action: "continue" });',
+        event: {
+          key: LogtoActionKey.PostSignIn,
+        },
+      })
+    ).rejects.toMatchObject({
+      code: 'action.general',
+      status: 422,
+      data: {
+        message: 'Remote action runner is not configured.',
+      },
+    });
+    expect(post).not.toHaveBeenCalled();
+  });
+
+  it('routes Cloud runAction through the Azure Function endpoint with the execution payload', async () => {
+    setIsCloud(true);
+    const endpoint = 'https://untrusted.example.com';
+    const functionKey = 'function-key';
+    const script = 'const runAction = () => ({ action: "updateUser", user: { name: "Bar" } });';
+    const event = {
+      key: LogtoActionKey.PostSignIn,
+      interactionEvent: 'SignIn',
+      user: {
+        id: 'foo',
+        name: 'Foo',
+      },
+    };
+    const environmentVariables = { NAME_SUFFIX: ' updated' };
+    const executionResult = {
+      action: 'updateUser',
+      user: {
+        name: 'Bar',
+      },
+    };
+    const matchRunnerPayload = jest.fn((_body: unknown) => true);
+    const remoteRunner = nock(endpoint, {
+      reqheaders: {
+        'x-functions-key': functionKey,
+      },
+    })
+      .post('/api/actions', matchRunnerPayload)
+      .reply(200, executionResult);
+
+    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue(endpoint);
+    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get').mockReturnValue(functionKey);
+    getAction.mockResolvedValueOnce({
+      enabled: true,
+      script,
+      environmentVariables,
+    });
+
+    await expect(
+      runAction({
+        key: LogtoActionKey.PostSignIn,
+        event,
+      })
+    ).resolves.toEqual(executionResult);
+    expect(remoteRunner.isDone()).toBe(true);
+    expect(post).not.toHaveBeenCalled();
+    expect(matchRunnerPayload.mock.calls[0]?.[0]).toMatchObject({
+      script,
+      actionType: LogtoActionKey.PostSignIn,
+      event,
+      environmentVariables,
+    });
+  });
+
+  it('applies allow-mode policy when the Azure Function run fails', async () => {
+    setIsCloud(true);
+    const endpoint = 'https://untrusted.example.com';
+    const functionKey = 'function-key';
+    const remoteRunner = nock(endpoint, {
+      reqheaders: {
+        'x-functions-key': functionKey,
+      },
+    })
+      .post('/api/actions')
+      .reply(500, {
+        message: 'Remote runner failed',
+      });
+
+    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue(endpoint);
+    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get').mockReturnValue(functionKey);
+    getAction.mockResolvedValueOnce({
+      enabled: true,
+      onExecutionError: 'allow',
+      script: 'const runAction = () => ({ action: "continue" });',
+    });
+    const runScriptInLocalVm = jest.spyOn(ActionLibrary, 'runScriptInLocalVm');
+
+    await expect(
+      runAction({
+        key: LogtoActionKey.PostSignIn,
+        event: {},
+      })
+    ).resolves.toBeUndefined();
+    expect(remoteRunner.isDone()).toBe(true);
+    expect(runScriptInLocalVm).not.toHaveBeenCalled();
+  });
+});
+/* eslint-enable max-lines */

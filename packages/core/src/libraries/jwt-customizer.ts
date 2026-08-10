@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- The legacy `node:vm` and Azure Functions paths coexist with the script-runner adapters until LOG-13956 and LOG-13958 remove them. */
 import {
   type CustomJwtErrorBody,
   CustomJwtErrorCode,
@@ -12,6 +13,7 @@ import {
   type LogtoJwtTokenKey,
   type CustomJwtApiContext,
   type CustomJwtScriptPayload,
+  jsonObjectGuard,
   isBuiltInApplicationId,
   buildBuiltInApplicationDataForTenant,
 } from '@logto/schemas';
@@ -25,6 +27,7 @@ import {
   trySafe,
 } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
+import { got, HTTPError } from 'got';
 import { type UnknownObject } from 'oidc-provider';
 import { ZodError, z } from 'zod';
 
@@ -37,6 +40,7 @@ import type Queries from '#src/tenants/Queries.js';
 import {
   getJwtCustomizerScripts,
   type CustomJwtDeployRequestBody,
+  parseAzureFunctionsResponseError,
 } from '#src/utils/custom-jwt/index.js';
 import { runScriptFunctionInLocalVm } from '#src/utils/local-vm/index.js';
 
@@ -383,6 +387,12 @@ export class JwtCustomizerLibrary {
     payload: CustomJwtFetcher,
     isTest?: boolean
   ): Promise<Optional<UnknownObject>> {
+    // TODO (LOG-13958): drop the legacy remote paths and the gate once the Cloud script runner
+    // has been manually verified and released.
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return this.runScriptOnLegacyRuntime(payload, isTest);
+    }
+
     /**
      * `api` is not part of the payload — it carries a function and cannot travel over the wire.
      * The runner merges it in inside the isolate and reports a denial as a `denied` failure,
@@ -391,6 +401,48 @@ export class JwtCustomizerLibrary {
     const value = await this.postScriptRun(payload, isTest);
 
     return JwtCustomizerLibrary.parseScriptResultValue(value);
+  }
+
+  /**
+   * The pre-script-runner remote paths, still serving production until the gate above lifts:
+   * the regional untrusted Azure Function app where configured, otherwise the deprecated
+   * `POST /api/services/custom-jwt` cloud endpoint.
+   */
+  private async runScriptOnLegacyRuntime(
+    payload: CustomJwtFetcher,
+    isTest?: boolean
+  ): Promise<Optional<UnknownObject>> {
+    const { azureFunctionUntrustedAppKey, azureFunctionUntrustedAppEndpoint } = EnvSet.values;
+
+    if (this.isRegionalAzureFunctionAppConfigured) {
+      try {
+        const result = await got
+          .post(new URL('/api/custom-jwt', azureFunctionUntrustedAppEndpoint), {
+            json: payload,
+            headers: {
+              'x-functions-key': azureFunctionUntrustedAppKey,
+            },
+          })
+          .json<unknown>();
+
+        const parsedResult = jsonObjectGuard.parse(result);
+        return parsedResult;
+      } catch (error: unknown) {
+        // Convert got HTTPError to WithTyped client ResponseError for unified error handling.
+        if (error instanceof HTTPError) {
+          throw parseAzureFunctionsResponseError(error);
+        }
+
+        throw error;
+      }
+    }
+
+    // Fallback to use cloud connection to call the custom JWT API.
+    const client = await this.cloudConnection.getClient();
+    return client.post(`/api/services/custom-jwt`, {
+      body: payload,
+      search: isTest ? { isTest: 'true' } : {},
+    });
   }
 
   /**
@@ -419,3 +471,4 @@ export class JwtCustomizerLibrary {
     }
   }
 }
+/* eslint-enable max-lines */
