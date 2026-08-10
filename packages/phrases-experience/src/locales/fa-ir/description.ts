@@ -103,6 +103,8 @@ const description = {
     'سازمان شما ورود یکپارچه (SSO) را برای حساب ایمیل {{email}} فعال کرده است. می‌توانید با ارائه‌دهندگان SSO زیر ادامه دهید.',
   single_sign_on_enabled: 'ورود یکپارچه برای این حساب فعال است',
   authorize_title: 'مجوز دادن به {{name}}',
+  unregistered_client_notice:
+    'این برنامه توسط <hostname>{{host}}</hostname> خوداظهاری شده است، از جمله نام و لوگوی آن. لطفاً پیش از ادامه، نام میزبان را بررسی کنید.',
   request_permission: '{{name}} درخواست دسترسی به موارد زیر را دارد:',
   grant_organization_access: 'اعطای دسترسی به سازمان:',
   authorize_personal_data_usage: 'مجوز استفاده از اطلاعات شخصی شما:',

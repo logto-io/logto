@@ -107,6 +107,8 @@ const description = {
     'Ihr Unternehmen hat Single Sign-On für das E-Mail-Konto {{email}} aktiviert. Sie können sich weiterhin mit den folgenden SSO-Anbietern anmelden.',
   single_sign_on_enabled: 'Single Sign-On ist für dieses Konto aktiviert',
   authorize_title: 'Autorisieren {{name}}',
+  unregistered_client_notice:
+    'Diese App wird von <hostname>{{host}}</hostname> selbst deklariert, einschließlich Name und Logo. Bitte überprüfen Sie den Hostnamen, bevor Sie fortfahren.',
   request_permission: '{{name}} fordert Zugang zu:',
   grant_organization_access: 'Gewähren Sie der Organisation Zugriff:',
   authorize_personal_data_usage: 'Erlauben Sie die Nutzung Ihrer persönlichen Daten:',

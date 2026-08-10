@@ -1,0 +1,25 @@
+@use '@/shared/scss/underscore' as _;
+
+.notice {
+  padding: _.unit(3) _.unit(4);
+  border-radius: var(--radius);
+  background: var(--color-container-on-alert);
+  font: var(--font-body-2);
+  color: var(--color-static-white);
+  @include _.flex_row;
+  align-items: center;
+  gap: _.unit(2);
+}
+
+/** Same pairing as the development tenant notification: the on-alert surface carries the alert color. */
+.icon {
+  flex-shrink: 0;
+  color: var(--color-container-alert);
+}
+
+/** The host is the identity signal of the whole notice, so it outweighs the sentence around it. */
+.host {
+  font-weight: bold;
+  /* A host runs up to 253 characters: wrap it anywhere so every label stays readable, never clipped. */
+  overflow-wrap: anywhere;
+}

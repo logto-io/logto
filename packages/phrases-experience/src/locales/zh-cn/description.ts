@@ -90,6 +90,8 @@ const description = {
     '你的企业已为电子邮件账户 {{email}} 启用了单点登录。你可以继续使用以下 SSO 提供商进行登录。',
   single_sign_on_enabled: '该帐户已启用单点登录',
   authorize_title: '授权给 {{name}}',
+  unregistered_client_notice:
+    '此应用由 <hostname>{{host}}</hostname> 自行声明，包括其名称和图标。请在继续之前确认该域名。',
   request_permission: '{{name}} 需要权限：',
   grant_organization_access: '授予组织访问权限：',
   authorize_personal_data_usage: '你将授权该应用使用你的以下个人数据：',
