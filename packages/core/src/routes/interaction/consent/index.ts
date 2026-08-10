@@ -27,7 +27,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { interactionPrefix } from '../const.js';
 
-import { filterAndParseMissingResourceScopes } from './utils.js';
+import { buildResourceScopesToReject, filterAndParseMissingResourceScopes } from './utils.js';
 
 const { InvalidClient, InvalidRedirectUri, InvalidRequest } = errors;
 
@@ -211,22 +211,10 @@ export default function consentRoutes<T extends IRouterParamContext>(
         )
       );
 
-      const resourceScopesToReject = Object.fromEntries(
-        Object.entries(allMissingResourceScopes).map(([resourceIndicator, scopes]) => {
-          const resource = resourceScopesToGrant[resourceIndicator];
-
-          if (!resource) {
-            /**
-             * An empty rejection is cleaned off the grant, so an all-ineligible group would
-             * stay "missing" and reopen consent forever — reject it whole for CIMD, where the
-             * rejection dies with the per-authorization grant; a registered client's long-lived
-             * grant must stay re-askable for later eligibility changes.
-             */
-            return [resourceIndicator, cimd ? scopes : []];
-          }
-
-          return [resourceIndicator, scopes.filter((scope) => !resource.includes(scope))];
-        })
+      const resourceScopesToReject = buildResourceScopesToReject(
+        allMissingResourceScopes,
+        resourceScopesToGrant,
+        cimd
       );
 
       const redirectTo = await consent({

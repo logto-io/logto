@@ -191,6 +191,16 @@ export const consent = async ({
       organizationId: cimdOrganizationId,
       userId: accountId,
     });
+
+    /**
+     * The conflict-ignored insert cannot tell a same-organization retry from a different
+     * organization landing on this grant — re-read and fail closed on a mismatch.
+     */
+    const organizationIds = await queries.cimd.grantOrganizations.findOrganizationIds(finalGrantId);
+    assertThat(
+      organizationIds.every((organizationId) => organizationId === cimdOrganizationId),
+      new errors.InvalidRequest('a different organization is already authorized on the grant')
+    );
   }
 
   const result = {

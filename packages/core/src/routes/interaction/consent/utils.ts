@@ -87,6 +87,32 @@ const parseMissingResourceScopesInfo = async (
 };
 
 /**
+ * Build the resource scopes to reject on the grant — the requested-but-not-granted remainder of
+ * each group.
+ *
+ * An empty rejection is cleaned off the grant, so an all-ineligible group would stay "missing"
+ * and reopen consent forever — reject it whole for a CIMD client, where the rejection dies with
+ * the per-authorization grant; a registered client's long-lived grant must stay re-askable for
+ * later eligibility changes.
+ */
+export const buildResourceScopesToReject = (
+  allMissingResourceScopes: Record<string, string[]>,
+  resourceScopesToGrant: Record<string, string[]>,
+  cimd: boolean
+): Record<string, string[]> =>
+  Object.fromEntries(
+    Object.entries(allMissingResourceScopes).map(([resourceIndicator, scopes]) => {
+      const resource = resourceScopesToGrant[resourceIndicator];
+
+      if (!resource) {
+        return [resourceIndicator, cimd ? scopes : []];
+      }
+
+      return [resourceIndicator, scopes.filter((scope) => !resource.includes(scope))];
+    })
+  );
+
+/**
  * The missingResourceScopes in the prompt details are from `getResourceServerInfo`,
  * which contains resource scopes and organization resource scopes.
  * We need to separate the organization resource scopes from the resource scopes.

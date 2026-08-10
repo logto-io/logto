@@ -1,6 +1,6 @@
 import { type User } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import type { Provider } from 'oidc-provider';
+import { errors, type Provider } from 'oidc-provider';
 
 import { mockUser } from '#src/__mocks__/user.js';
 import { markAppLevelAccessControlChecked } from '#src/oidc/application-access-control.js';
@@ -43,12 +43,19 @@ const userQueries = {
 };
 
 const insertGrantOrganization = jest.fn();
+const findGrantOrganizationIds = jest.fn(async () => ['org_id']);
 
 const queries: Queries = {
   // @ts-expect-error -- partial mock of the user queries
   users: userQueries,
   // @ts-expect-error -- partial mock of the cimd queries
-  cimd: { grantOrganizations: { insert: insertGrantOrganization } },
+  cimd: {
+    grantOrganizations: {
+      insert: insertGrantOrganization,
+      findOrganizationIds: findGrantOrganizationIds,
+      exists: jest.fn(),
+    },
+  },
 };
 const context = createContextWithRouteParameters();
 
@@ -192,6 +199,25 @@ describe('consent', () => {
     expect(grantSave.mock.invocationCallOrder[0]).toBeLessThan(
       insertGrantOrganization.mock.invocationCallOrder[0] ?? 0
     );
+  });
+
+  it('should fail the consent when a different organization is already authorized on the grant', async () => {
+    findGrantOrganizationIds.mockResolvedValueOnce(['other_org_id']);
+    const provider = createMockProvider(jest.fn().mockResolvedValue(baseInteractionDetails), Grant);
+
+    await expect(
+      consent({
+        ctx: context,
+        provider,
+        envSet: mockEnvSet,
+        queries,
+        interactionDetails: baseInteractionDetails,
+        cimdOrganizationId: 'org_id',
+      })
+    ).rejects.toMatchError(
+      new errors.InvalidRequest('a different organization is already authorized on the grant')
+    );
+    expect(provider.interactionResult).not.toHaveBeenCalled();
   });
 
   it('should fail the consent before the interaction result update when the organization row write fails', async () => {

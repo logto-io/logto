@@ -166,7 +166,16 @@ const createGrantOrganizationQueries = (pool: CommonQueryMethods) => {
       and ${cimdGrantOrganizations.fields.organizationId} = ${organizationId}
     `);
 
-  return { insert, exists };
+  const findOrganizationIds = async (grantId: string) => {
+    const rows = await pool.any<{ organizationId: string }>(sql`
+      select ${cimdGrantOrganizations.fields.organizationId}
+      from ${cimdGrantOrganizations.table}
+      where ${cimdGrantOrganizations.fields.grantId} = ${grantId}
+    `);
+    return rows.map(({ organizationId }) => organizationId);
+  };
+
+  return { insert, exists, findOrganizationIds };
 };
 
 export const createCimdQueries = (pool: CommonQueryMethods) => ({
