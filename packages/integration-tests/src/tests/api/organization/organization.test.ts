@@ -2,6 +2,7 @@ import { HTTPError } from 'ky';
 
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import { UserApiTest } from '#src/helpers/user.js';
+import { devFeatureTest } from '#src/utils.js';
 
 // Add additional layer of describe to run tests in band
 describe('organization APIs', () => {
@@ -106,6 +107,34 @@ describe('organization APIs', () => {
     const organization = await organizationApi.get(createdOrganization.id);
 
     expect(organization).toStrictEqual(createdOrganization);
+  });
+
+  devFeatureTest.it('should create, read, and update the trusted-device restriction', async () => {
+    const createdOrganization = await organizationApi.create({
+      name: 'trusted-device-policy',
+      isTrustedDeviceAllowed: false,
+    });
+
+    expect(createdOrganization.isTrustedDeviceAllowed).toBe(false);
+    await expect(organizationApi.get(createdOrganization.id)).resolves.toEqual(
+      expect.objectContaining({ isTrustedDeviceAllowed: false })
+    );
+
+    await expect(
+      organizationApi.update(createdOrganization.id, { isTrustedDeviceAllowed: true })
+    ).resolves.toEqual(expect.objectContaining({ isTrustedDeviceAllowed: true }));
+  });
+
+  devFeatureTest.it('should reject an invalid trusted-device restriction', async () => {
+    const createdOrganization = await organizationApi.create({ name: 'trusted-device-policy' });
+    const response = await organizationApi
+      .update(createdOrganization.id, {
+        // @ts-expect-error -- Intentionally verify runtime API validation.
+        isTrustedDeviceAllowed: 'true',
+      })
+      .catch((error: unknown) => error);
+
+    expect(response instanceof HTTPError && response.response.status).toBe(400);
   });
 
   it('should fail when try to get an organization that does not exist', async () => {

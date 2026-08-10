@@ -5,7 +5,11 @@ import {
   OrganizationRequiredMfaPolicy,
   SignInIdentifier,
   ConnectorType,
+  defaultTenantId,
 } from '@logto/schemas';
+import { generateStandardId } from '@logto/shared';
+import { assertEnv } from '@silverhand/essentials';
+import { createInterceptorsPreset, createPool, sql, type DatabasePool } from '@silverhand/slonik';
 import { HTTPError, type ResponsePromise } from 'ky';
 
 import {
@@ -22,7 +26,7 @@ import {
 } from '#src/helpers/connector.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { defaultSignInSignUpConfigs } from '#src/helpers/sign-in-experience.js';
-import { generatePassword } from '#src/utils.js';
+import { devFeatureTest, generatePassword } from '#src/utils.js';
 
 describe('admin console sign-in experience', () => {
   afterAll(async () => {
@@ -195,6 +199,117 @@ describe('admin console sign-in experience', () => {
         }
       );
     });
+  });
+
+  devFeatureTest.describe('trusted device policy', () => {
+    beforeEach(async () => {
+      await updateSignInExperience({
+        trustedDevice: { enabled: false, durationDays: 30 },
+      });
+    });
+
+    afterAll(async () => {
+      await updateSignInExperience({
+        trustedDevice: { enabled: false, durationDays: 30 },
+      });
+    });
+
+    it.each([1, 365])('should persist a valid %i-day policy', async (durationDays) => {
+      const trustedDevice = { enabled: true, durationDays };
+
+      const updated = await updateSignInExperience({ trustedDevice });
+      const fetched = await getSignInExperience();
+
+      expect(updated.trustedDevice).toEqual(trustedDevice);
+      expect(fetched.trustedDevice).toEqual(trustedDevice);
+    });
+
+    it.each([0, 366, 1.5])('should reject invalid duration %s', async (durationDays) => {
+      await expectRejects(
+        updateSignInExperience({ trustedDevice: { enabled: true, durationDays } }),
+        { code: 'guard.invalid_input', status: 400 }
+      );
+    });
+
+    it('should reject a non-boolean enabled value', async () => {
+      await expectRejects(
+        updateSignInExperience({
+          trustedDevice: {
+            // @ts-expect-error -- Intentionally verify runtime API validation.
+            enabled: 'true',
+            durationDays: 30,
+          },
+        }),
+        { code: 'guard.invalid_input', status: 400 }
+      );
+    });
+
+    it.each([{}, { enabled: true }, { durationDays: 30 }])(
+      'should reject incomplete policy %p',
+      async (trustedDevice) => {
+        await expectRejects(updateSignInExperience({ trustedDevice }), {
+          code: 'guard.invalid_input',
+          status: 400,
+        });
+      }
+    );
+  });
+});
+
+devFeatureTest.describe('trusted device global disable', () => {
+  // eslint-disable-next-line @silverhand/fp/no-let -- Database pool lifecycle is managed by Jest hooks.
+  let pool: DatabasePool;
+
+  beforeAll(async () => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Initialize the shared test pool once.
+    pool = await createPool(assertEnv('DB_URL'), {
+      interceptors: createInterceptorsPreset(),
+    });
+  });
+
+  afterAll(async () => {
+    await updateSignInExperience({ trustedDevice: { enabled: false, durationDays: 30 } });
+    await pool.end();
+  });
+
+  it('deletes every tenant trusted-device record when enabled changes to disabled', async () => {
+    const user = await createUser({ name: 'trusted-device-policy-test' });
+    const trustedDeviceId = generateStandardId();
+
+    try {
+      await updateSignInExperience({ trustedDevice: { enabled: true, durationDays: 30 } });
+      await pool.query(sql`
+        insert into trusted_devices (
+          tenant_id,
+          id,
+          user_id,
+          secret_hash,
+          expires_at
+        ) values (
+          ${defaultTenantId},
+          ${trustedDeviceId},
+          ${user.id},
+          ${sql.binary(Buffer.alloc(32, 1))},
+          now() + interval '30 days'
+        )
+      `);
+
+      await updateSignInExperience({ trustedDevice: { enabled: false, durationDays: 30 } });
+
+      await expect(
+        pool.oneFirst<number>(sql`
+          select count(*)::integer
+          from trusted_devices
+          where tenant_id = ${defaultTenantId} and id = ${trustedDeviceId}
+        `)
+      ).resolves.toBe(0);
+    } finally {
+      await pool.query(sql`
+        delete from trusted_devices
+        where tenant_id = ${defaultTenantId} and id = ${trustedDeviceId}
+      `);
+      await deleteUser(user.id);
+    }
   });
 });
 

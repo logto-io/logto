@@ -9,6 +9,7 @@ import {
   type SignInExperience,
   ForgotPasswordMethod,
   passwordExpirationPolicyGuard,
+  trustedDevicePolicyGuard,
   verificationCodePolicyGuard,
 } from '@logto/schemas';
 import { conditional, type Optional, tryThat } from '@silverhand/essentials';
@@ -47,8 +48,11 @@ const isNonSkippableMfaPromptPolicy = (policy: MfaPolicy) =>
 const trustedDeviceOmitMask = EnvSet.values.isDevFeaturesEnabled
   ? {}
   : { trustedDevice: true as const };
+const trustedDeviceUpdateGuard = trustedDevicePolicyGuard.required();
 const signInExperienceResponseGuard = SignInExperiences.guard.omit(trustedDeviceOmitMask);
-const signInExperienceCreateGuard = SignInExperiences.createGuard.omit(trustedDeviceOmitMask);
+const signInExperienceCreateGuard = SignInExperiences.createGuard
+  .extend({ trustedDevice: trustedDeviceUpdateGuard.optional() })
+  .omit(trustedDeviceOmitMask);
 
 export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
   ...args: RouterInitArgs<T>
@@ -61,6 +65,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
   const {
     signInExperiences: { validateLanguageInfo, findCaseConflicts },
     quota,
+    trustedDevicePolicy,
   } = libraries;
   const { getLogtoConnectors } = connectors;
 
@@ -115,15 +120,19 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const {
         query: { removeUnusedDemoSocialConnector },
-        body: {
-          socialSignInConnectorTargets,
-          emailBlocklistPolicy,
-          signUpProfileFields,
-          customUiCsp,
-          usernamePolicy,
-          ...rest
-        },
+        body,
       } = ctx.guard;
+      // eslint-disable-next-line no-restricted-syntax -- The dev-feature guard conditionally omits this property from its inferred type.
+      const { trustedDevice, ...bodyWithoutTrustedDevice } = body as typeof body &
+        Pick<Partial<SignInExperience>, 'trustedDevice'>;
+      const {
+        socialSignInConnectorTargets,
+        emailBlocklistPolicy,
+        signUpProfileFields,
+        customUiCsp,
+        usernamePolicy,
+        ...rest
+      } = bodyWithoutTrustedDevice;
       const {
         languageInfo,
         signUp,
@@ -407,7 +416,13 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         ...conditional(verificationCodePolicy && { verificationCodePolicy }),
       };
 
-      ctx.body = await updateDefaultSignInExperience(payload);
+      ctx.body =
+        trustedDevice === undefined
+          ? await updateDefaultSignInExperience(payload)
+          : await trustedDevicePolicy.updateGlobalPolicy(
+              trustedDeviceUpdateGuard.parse(trustedDevice),
+              payload
+            );
 
       void quota.reportSubscriptionUpdatesUsage('mfaEnabled');
 

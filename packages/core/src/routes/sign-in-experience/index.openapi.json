@@ -83,6 +83,18 @@
                     "adaptiveMfa": {
                       "description": "Adaptive MFA settings."
                     },
+                    "trustedDevice": {
+                      "description": "Trusted-device policy for MFA. Organization policies can only restrict this tenant-level policy.",
+                      "x-logto-dev-feature": true,
+                      "properties": {
+                        "enabled": {
+                          "description": "Whether MFA trusted devices are enabled for the tenant."
+                        },
+                        "durationDays": {
+                          "description": "The fixed lifetime, in days, assigned to subsequently created trusted-device credentials."
+                        }
+                      }
+                    },
                     "supportEmail": {
                       "description": "The support email address to display on the error pages."
                     },
@@ -200,6 +212,18 @@
                   "adaptiveMfa": {
                     "description": "Adaptive MFA settings. Only effective when developer features are enabled."
                   },
+                  "trustedDevice": {
+                    "description": "Configure the tenant-level MFA trusted-device policy.",
+                    "x-logto-dev-feature": true,
+                    "properties": {
+                      "enabled": {
+                        "description": "Whether MFA trusted devices are enabled for the tenant."
+                      },
+                      "durationDays": {
+                        "description": "The fixed lifetime, in days, assigned to subsequently created trusted-device credentials. Must be an integer from 1 through 365."
+                      }
+                    }
+                  },
                   "supportEmail": {
                     "description": "The support email address to display on the error pages."
                   },
@@ -236,7 +260,19 @@
         },
         "responses": {
           "200": {
-            "description": "Updated default sign-in experience settings."
+            "description": "Updated default sign-in experience settings.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "trustedDevice": {
+                      "description": "Trusted-device policy for MFA.",
+                      "x-logto-dev-feature": true
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad request. Invalid data provided."

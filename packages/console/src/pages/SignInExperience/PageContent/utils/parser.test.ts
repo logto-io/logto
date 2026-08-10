@@ -173,6 +173,20 @@ describe('sign-in experience parser', () => {
     expect(comparePayload).not.toHaveProperty('adaptiveMfa');
   });
 
+  it('should omit trusted-device policy from sign-up and sign-in page data', () => {
+    const formData = sieFormDataParser.fromSignInExperience(mockSignInExperience);
+
+    expect(formData).not.toHaveProperty('trustedDevice');
+
+    const submitPayload = sieFormDataParser.toSignInExperience(formData);
+
+    expect(submitPayload).not.toHaveProperty('trustedDevice');
+
+    const comparePayload = signInExperienceToUpdatedDataParser(mockSignInExperience);
+
+    expect(comparePayload).not.toHaveProperty('trustedDevice');
+  });
+
   it('should omit usernamePolicy from sign-up and sign-in page data (modal-owned)', () => {
     const formData = sieFormDataParser.fromSignInExperience(mockSignInExperience);
 

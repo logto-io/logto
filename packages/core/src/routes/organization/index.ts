@@ -1,12 +1,8 @@
-import {
-  type OrganizationWithFeatured,
-  Organizations,
-  ProductEvent,
-  featuredUserGuard,
-} from '@logto/schemas';
+import { Organizations, ProductEvent, featuredUserGuard } from '@logto/schemas';
 import { yes } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import { koaQuotaGuard, koaReportSubscriptionUpdates } from '#src/middleware/koa-quota-guard.js';
@@ -23,6 +19,12 @@ import applicationRoutes from './application/index.js';
 import jitRoutes from './jit/index.js';
 import userRoutes from './user/index.js';
 import { errorHandler } from './utils.js';
+
+// DEV: MFA trusted devices
+const hiddenFields = EnvSet.values.isDevFeaturesEnabled
+  ? {}
+  : { isTrustedDeviceAllowed: true as const };
+const organizationResponseGuard = Organizations.guard.omit(hiddenFields);
 
 export default function organizationRoutes<T extends ManagementApiRouter>(
   ...args: RouterInitArgs<T>
@@ -58,6 +60,7 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
     searchFields: ['name'],
     disabled: { get: true },
     idLength: 12,
+    hiddenFields,
     hooks: {
       afterInsert: async (ctx) => {
         captureEvent({ tenantId, request: ctx.req }, ProductEvent.OrganizationCreated);
@@ -73,8 +76,8 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
     koaPagination(),
     koaGuard({
       query: z.object({ q: z.string().optional(), showFeatured: z.string().optional() }),
-      response: (
-        Organizations.guard.merge(
+      response: organizationResponseGuard
+        .merge(
           // For `showFeatured` query
           z
             .object({
@@ -82,8 +85,8 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
               featuredUsers: featuredUserGuard.array(),
             })
             .partial()
-        ) satisfies z.ZodType<OrganizationWithFeatured>
-      ).array(),
+        )
+        .array(),
       status: [200],
     }),
     async (ctx, next) => {

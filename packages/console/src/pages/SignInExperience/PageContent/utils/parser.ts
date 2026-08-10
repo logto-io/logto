@@ -167,6 +167,7 @@ export const sieFormDataParser = {
       passwordPolicy,
       mfa,
       adaptiveMfa,
+      trustedDevice,
       captchaPolicy,
       sentinelPolicy,
       emailBlocklistPolicy,
@@ -257,6 +258,7 @@ export const sieFormDataParser = {
  *  runtime semantics and must stay distinct in compare payloads.
  * - `mfa`
  * - `adaptiveMfa`
+ * - `trustedDevice`
  * - `passwordPolicy`
  * - `captchaPolicy`
  * - `sentinelPolicy`
@@ -277,6 +279,7 @@ export const signInExperienceToUpdatedDataParser = (
     // Start: Remove the omitted fields from the data
     mfa,
     adaptiveMfa,
+    trustedDevice,
     passwordPolicy,
     captchaPolicy,
     sentinelPolicy,

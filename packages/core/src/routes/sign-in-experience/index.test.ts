@@ -69,6 +69,16 @@ const signInExperiences = {
   }),
 };
 const { findDefaultSignInExperience } = signInExperiences;
+const updateGlobalTrustedDevicePolicy = jest.fn(
+  async (
+    trustedDevice: SignInExperience['trustedDevice'],
+    data: Partial<CreateSignInExperience>
+  ): Promise<SignInExperience> => ({
+    ...mockSignInExperience,
+    ...data,
+    trustedDevice,
+  })
+);
 
 const validateLanguageInfo = jest.fn();
 const mockGetLogtoConnectors = jest.fn(async () => logtoConnectors);
@@ -82,7 +92,10 @@ const tenantContext = new MockTenant(
     connectors: { deleteConnectorById: mockDeleteConnectorById },
   },
   { getLogtoConnectors: mockGetLogtoConnectors },
-  { signInExperiences: { validateLanguageInfo } }
+  {
+    signInExperiences: { validateLanguageInfo },
+    trustedDevicePolicy: { updateGlobalPolicy: updateGlobalTrustedDevicePolicy },
+  }
 );
 
 const signInExperiencesRoutes = await pickDefault(import('./index.js'));
@@ -238,6 +251,7 @@ describe('GET /sign-in-exp', () => {
 describe('PATCH /sign-in-exp', () => {
   afterEach(() => {
     mockDeleteConnectorById.mockClear();
+    updateGlobalTrustedDevicePolicy.mockClear();
 
     mockGetLogtoConnectors.mockReset();
     mockGetLogtoConnectors.mockImplementation(async () => logtoConnectors);
@@ -345,6 +359,38 @@ describe('PATCH /sign-in-exp', () => {
         signIn: mockSignIn,
       },
     });
+  });
+
+  it('should update trusted-device policy through the dedicated policy library', async () => {
+    const trustedDevice = { enabled: true, durationDays: 60 };
+
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
+      trustedDevice,
+      supportEmail: 'support@example.com',
+    });
+
+    expect(response.status).toEqual(200);
+    expect(updateGlobalTrustedDevicePolicy).toHaveBeenCalledWith(trustedDevice, {
+      supportEmail: 'support@example.com',
+    });
+    expect(response.body).toEqual(
+      expect.objectContaining({ trustedDevice, supportEmail: 'support@example.com' })
+    );
+  });
+
+  it.each([
+    {},
+    { enabled: true },
+    { durationDays: 30 },
+    { enabled: true, durationDays: 0 },
+    { enabled: true, durationDays: 366 },
+    { enabled: true, durationDays: 1.5 },
+    { enabled: 'true', durationDays: 30 },
+  ])('should reject invalid trusted-device policy %p', async (trustedDevice) => {
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({ trustedDevice });
+
+    expect(response.status).toEqual(400);
+    expect(updateGlobalTrustedDevicePolicy).not.toHaveBeenCalled();
   });
 
   it('should reject adaptive mfa enablement when mfa is disabled', async () => {

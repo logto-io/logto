@@ -1,6 +1,10 @@
 import { type TrustedDevice, TrustedDevices } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import { type CommonQueryMethods, sql } from '@silverhand/slonik';
+import {
+  type CommonQueryMethods,
+  type DatabaseTransactionConnection,
+  sql,
+} from '@silverhand/slonik';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
@@ -9,6 +13,18 @@ import { convertToIdentifiers, manyRows } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(TrustedDevices);
 const activePredicate = sql`${fields.expiresAt} > now()`;
+
+export const lockTrustedDeviceTableForCreate = async (
+  connection: DatabaseTransactionConnection
+) => {
+  await connection.query(sql`lock table ${table} in row exclusive mode`);
+};
+
+export const lockTrustedDeviceTableForCleanup = async (
+  connection: DatabaseTransactionConnection
+) => {
+  await connection.query(sql`lock table ${table} in share row exclusive mode`);
+};
 
 export type TrustedDeviceMetadata = Readonly<{
   userAgent?: string;
