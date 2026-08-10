@@ -51,6 +51,37 @@ describe('sendWebhookRequest', () => {
       retry: {
         limit: 3,
         methods: ['post'],
+        // Ky requires an explicit list; HTTP 5xx class is 500–599.
+        statusCodes: Array.from({ length: 100 }, (_, index) => 500 + index),
+      },
+      timeout: 10_000,
+    });
+  });
+
+  it('passes hook config retries through to ky', async () => {
+    const mockHookId = 'mockHookId';
+    const mockEvent: HookEvent = InteractionHookEvent.PostSignIn;
+    const testPayload = generateHookTestPayload(mockHookId, mockEvent);
+
+    await sendWebhookRequest({
+      hookConfig: {
+        url: 'https://logto.gg',
+        retries: 1,
+      },
+      payload: testPayload,
+      signingKey: 'mockSigningKey',
+    });
+
+    expect(post).toHaveBeenLastCalledWith('https://logto.gg', {
+      headers: {
+        'user-agent': 'Logto (https://logto.io/)',
+        'logto-signature-sha-256': mockSignature,
+      },
+      json: testPayload,
+      retry: {
+        limit: 1,
+        methods: ['post'],
+        // Ky requires an explicit list; HTTP 5xx class is 500–599.
         statusCodes: Array.from({ length: 100 }, (_, index) => 500 + index),
       },
       timeout: 10_000,

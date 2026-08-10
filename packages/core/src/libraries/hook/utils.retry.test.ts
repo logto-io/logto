@@ -99,7 +99,7 @@ describe('sendWebhookRequest HTTP retries', () => {
     }
   });
 
-  it('ignores deprecated retries config and still retries 5xx three times', async () => {
+  it('does not retry when hook config retries is 0', async () => {
     const state = { attempts: 0 };
     const server = createServer((_request, response) => {
       state.attempts += 1;
@@ -111,7 +111,25 @@ describe('sendWebhookRequest HTTP retries', () => {
       const port = await listen(server);
 
       await expect(sendToServer(port, 0)).rejects.toThrow();
-      expect(state.attempts).toBe(4);
+      expect(state.attempts).toBe(1);
+    } finally {
+      await close(server);
+    }
+  });
+
+  it('honors hook config retries when set below the default', async () => {
+    const state = { attempts: 0 };
+    const server = createServer((_request, response) => {
+      state.attempts += 1;
+      response.writeHead(500);
+      response.end();
+    });
+
+    try {
+      const port = await listen(server);
+
+      await expect(sendToServer(port, 1)).rejects.toThrow();
+      expect(state.attempts).toBe(2);
     } finally {
       await close(server);
     }

@@ -30,16 +30,20 @@ type SendWebhookRequest = {
   signingKey: string;
 };
 
+const rangeInclusive = (start: number, end: number) =>
+  Array.from({ length: end - start + 1 }, (_, index) => start + index);
+
 /** Public contract: retry webhook POST on HTTP 5xx. Ky 1.2.3 defaults omit POST and most 5xx codes. */
 const webhookRetryLimit = 3;
-const webhookRetryStatusCodes = Array.from({ length: 100 }, (_, index) => 500 + index);
+/** Ky only accepts `statusCodes` as a number list; HTTP 5xx class is 500–599. */
+const webhookRetryStatusCodes = rangeInclusive(500, 599);
 
 export const sendWebhookRequest = async ({
   hookConfig,
   payload,
   signingKey,
 }: SendWebhookRequest) => {
-  const { url, headers } = hookConfig;
+  const { url, headers, retries } = hookConfig;
 
   return ky.post(url, {
     headers: {
@@ -49,7 +53,7 @@ export const sendWebhookRequest = async ({
     },
     json: payload,
     retry: {
-      limit: webhookRetryLimit,
+      limit: retries ?? webhookRetryLimit,
       methods: ['post'],
       statusCodes: webhookRetryStatusCodes,
     },
