@@ -342,9 +342,9 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx)
     const availableScopes = isCimdClient(envSet, client.clientId)
       ? await queries.cimd.organizationScopes.findAll().then((ceiling) => {
           const ceilingNames = new Set(ceiling.map(({ name }) => name));
+          // `getResourceScope` returns `''` when the Grant carries no record for the resource.
           const grantedOrganizationScopes = new Set(
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- the typings promise a string, but the fork returns `undefined` when the Grant carries no record for the resource
-            grant.getResourceScope(ReservedResource.Organization)?.split(' ') ?? []
+            grant.getResourceScope(ReservedResource.Organization).split(' ').filter(Boolean)
           );
           return roleScopeNames.filter(
             (name) => ceilingNames.has(name) && grantedOrganizationScopes.has(name)
