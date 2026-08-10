@@ -53,5 +53,6 @@ export const setupI18nForTesting = async (
 
 void setupI18nForTesting();
 
+/** Writable so tests can stage SSR payloads; restore to {@link ssrPlaceholder} afterwards. */
 // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-Object.defineProperty(global, 'logtoSsr', { value: ssrPlaceholder });
+Object.defineProperty(global, 'logtoSsr', { value: ssrPlaceholder, writable: true });

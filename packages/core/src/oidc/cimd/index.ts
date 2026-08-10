@@ -10,7 +10,7 @@
  */
 
 import { ReservedScope } from '@logto/core-kit';
-import { GrantType } from '@logto/schemas';
+import { GrantType, isCimdClientId } from '@logto/schemas';
 import { conditional, type Optional } from '@silverhand/essentials';
 import {
   type AllClientMetadata,
@@ -24,8 +24,6 @@ import type Queries from '#src/tenants/Queries.js';
 
 import { extraClientMetadataKeys } from '../application-access-control.js';
 import { isValidWildcardRedirectUriPattern } from '../redirect-uri/utils.js';
-
-import { isCimdClientId } from './client-id.js';
 
 /**
  * Must not exceed the `cimd_client_id varchar(2048)` column width — neither the draft nor the
