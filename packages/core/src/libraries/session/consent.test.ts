@@ -42,8 +42,14 @@ const userQueries = {
   updateUserById: jest.fn(async (..._args: unknown[]) => ({ id: 'id' })),
 };
 
-// @ts-expect-error
-const queries: Queries = { users: userQueries };
+const insertGrantOrganization = jest.fn();
+
+const queries: Queries = {
+  // @ts-expect-error
+  users: userQueries,
+  // @ts-expect-error
+  cimd: { grantOrganizations: { insert: insertGrantOrganization } },
+};
 const context = createContextWithRouteParameters();
 
 type Interaction = Awaited<ReturnType<Provider['interactionDetails']>>;
@@ -165,6 +171,57 @@ describe('consent', () => {
     expect(userQueries.updateUserById).toHaveBeenCalledWith(mockUser.id, {
       applicationId: baseInteractionDetails.params.client_id,
     });
+  });
+
+  it('should write the grant-scoped organization row after the grant is saved', async () => {
+    const provider = createMockProvider(jest.fn().mockResolvedValue(baseInteractionDetails), Grant);
+    await consent({
+      ctx: context,
+      provider,
+      envSet: mockEnvSet,
+      queries,
+      interactionDetails: baseInteractionDetails,
+      cimdOrganizationId: 'org_id',
+    });
+
+    expect(insertGrantOrganization).toHaveBeenCalledWith({
+      grantId: grantSave.mock.calls[0]?.[0],
+      organizationId: 'org_id',
+      userId: mockUser.id,
+    });
+    expect(grantSave.mock.invocationCallOrder[0]).toBeLessThan(
+      insertGrantOrganization.mock.invocationCallOrder[0] ?? 0
+    );
+  });
+
+  it('should fail the consent before the interaction result update when the organization row write fails', async () => {
+    insertGrantOrganization.mockRejectedValueOnce(new Error('write failed'));
+    const provider = createMockProvider(jest.fn().mockResolvedValue(baseInteractionDetails), Grant);
+
+    await expect(
+      consent({
+        ctx: context,
+        provider,
+        envSet: mockEnvSet,
+        queries,
+        interactionDetails: baseInteractionDetails,
+        cimdOrganizationId: 'org_id',
+      })
+    ).rejects.toThrow('write failed');
+    expect(provider.interactionResult).not.toHaveBeenCalled();
+  });
+
+  it('should not write any organization row without an organization selection', async () => {
+    const provider = createMockProvider(jest.fn().mockResolvedValue(baseInteractionDetails), Grant);
+    await consent({
+      ctx: context,
+      provider,
+      envSet: mockEnvSet,
+      queries,
+      interactionDetails: baseInteractionDetails,
+    });
+
+    expect(insertGrantOrganization).not.toHaveBeenCalled();
   });
 
   it('should grant missing scopes', async () => {

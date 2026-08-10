@@ -369,6 +369,30 @@ describe('oidc provider init', () => {
     expect(findGrant).toHaveBeenCalledWith('grant_id');
   });
 
+  it('should reuse the session grant for registered clients', async () => {
+    const assertUserHasApplicationAccess = jest.fn();
+    const tenant = new MockTenant();
+
+    tenant.setPartial('libraries', {
+      applicationAccessControl: { assertUserHasApplicationAccess },
+    });
+
+    const provider = createProvider(tenant);
+    const findGrant = mockGrantFound(provider);
+    const configuration = getProviderConfiguration(provider);
+    const grantIdFor = jest.fn().mockReturnValue('session_grant_id');
+    const ctx = createOidcContext({
+      provider,
+      account: { accountId, claims: async () => ({ sub: accountId }) },
+      client: createTestClient(),
+      session: { grantIdFor },
+    } as unknown as Partial<KoaContextWithOIDC['oidc']>);
+
+    await expect(configuration.loadExistingGrant(ctx)).resolves.toBeDefined();
+    expect(grantIdFor).toHaveBeenCalledWith(clientId);
+    expect(findGrant).toHaveBeenCalledWith('session_grant_id');
+  });
+
   it('should defer application access check to consent prompt when no existing grant is loaded', async () => {
     const assertUserHasApplicationAccess = jest
       .fn()
@@ -599,6 +623,25 @@ describe('loadExistingGrant for CIMD clients', () => {
     await expect(configuration.loadExistingGrant(ctx)).resolves.toBeDefined();
     expect(assertUserHasApplicationAccess).not.toHaveBeenCalled();
     expect(findGrant).toHaveBeenCalledWith('grant_id');
+  });
+
+  it('should skip the session grant reuse so each authorization gets a fresh grant', async () => {
+    const tenant = new MockTenant();
+    const { id, queries, libraries, logtoConfigs, subscription } = tenant;
+    const provider = initOidc(id, cimdEnvSet, queries, libraries, logtoConfigs, subscription);
+    const findGrant = jest.spyOn(provider.Grant, 'find');
+    const configuration = getProviderConfiguration(provider);
+    const grantIdFor = jest.fn().mockReturnValue('session_grant_id');
+    const ctx = createOidcContext({
+      provider,
+      account: { accountId, claims: async () => ({ sub: accountId }) },
+      client: createCimdTestClient(),
+      session: { grantIdFor },
+    } as unknown as Partial<KoaContextWithOIDC['oidc']>);
+
+    await expect(configuration.loadExistingGrant(ctx)).resolves.toBeUndefined();
+    expect(grantIdFor).not.toHaveBeenCalled();
+    expect(findGrant).not.toHaveBeenCalled();
   });
 
   it('should keep the application access check for a url client id when CIMD is not effectively enabled', async () => {

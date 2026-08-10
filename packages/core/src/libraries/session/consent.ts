@@ -127,6 +127,7 @@ export const consent = async ({
   resourceScopesToGrant = {},
   resourceScopesToReject = {},
   markAppLevelAccessControlChecked: shouldMarkAppLevelAccessControlChecked = false,
+  cimdOrganizationId,
 }: {
   ctx: Context;
   provider: Provider;
@@ -137,6 +138,8 @@ export const consent = async ({
   resourceScopesToGrant?: Record<string, string[]>;
   resourceScopesToReject?: Record<string, string[]>;
   markAppLevelAccessControlChecked?: boolean;
+  /** CIMD clients only — organization access is grant-scoped, at most one per grant. */
+  cimdOrganizationId?: string;
 }) => {
   const {
     session,
@@ -180,6 +183,16 @@ export const consent = async ({
   }
 
   const finalGrantId = await grant.save();
+
+  if (cimdOrganizationId) {
+    /** Precedes the interaction result update so a failed write fails the whole consent. */
+    await queries.cimd.grantOrganizations.insert({
+      grantId: finalGrantId,
+      organizationId: cimdOrganizationId,
+      userId: accountId,
+    });
+  }
+
   const result = {
     consent: { grantId: finalGrantId },
   };

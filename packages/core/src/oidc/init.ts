@@ -323,8 +323,15 @@ export default function initOidc(
     },
     loadExistingGrant: async (ctx) => {
       const { account, client, provider, result, session } = ctx.oidc;
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- Keep oidc-provider's default loadExistingGrant fallback semantics.
-      const grantId = result?.consent?.grantId || (client && session?.grantIdFor(client.clientId));
+      const cimd = isCimdClient(envSet, client?.clientId);
+      /**
+       * CIMD organization access is grant-scoped, so a Grant must never serve more than one
+       * authorization — skip the session grant reuse. The `result.consent.grantId` branch
+       * stays: it is this same authorization's grant on the post-consent resume.
+       */
+      const grantId =
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- Keep oidc-provider's default loadExistingGrant fallback semantics.
+        result?.consent?.grantId || (client && !cimd && session?.grantIdFor(client.clientId));
       const shouldCheckApplicationAccess =
         account &&
         client &&
@@ -333,7 +340,7 @@ export default function initOidc(
          * access-control library's fallback lookup would query the applications table with the
          * CIMD identifier URL and deny on not-found.
          */
-        !isCimdClient(envSet, client.clientId) &&
+        !cimd &&
         !hasAppLevelAccessControlChecked(result, client.clientId, account.accountId);
 
       if (grantId && shouldCheckApplicationAccess) {
