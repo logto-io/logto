@@ -8,11 +8,12 @@ import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-contex
 
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
+const mockEnvSetValues = new GlobalValues();
 
 await mockEsmWithActual('#src/env-set/index.js', () => ({
   EnvSet: {
     get values() {
-      return new GlobalValues();
+      return mockEnvSetValues;
     },
   },
   AdminApps: { Console: 'console', Welcome: 'welcome' },
@@ -186,5 +187,51 @@ describe('koaSecurityHeaders() middleware — experience CSP', () => {
     expect(scriptSource).toContain('https://cdn.jsdelivr.net/');
     expect(scriptSource).not.toContain(customScriptSource);
     expect(queries.signInExperiences.findDefaultSignInExperience).not.toHaveBeenCalled();
+  });
+});
+
+describe('koaSecurityHeaders() middleware — production admin CSP selection', () => {
+  const { isProduction } = mockEnvSetValues;
+
+  beforeEach(() => {
+    Object.assign(mockEnvSetValues, { isProduction: true });
+  });
+
+  afterEach(() => {
+    Object.assign(mockEnvSetValues, { isProduction });
+  });
+
+  it.each([
+    { path: '/console', mountedApp: 'console' },
+    { path: '/welcome', mountedApp: 'welcome' },
+  ])('uses the Console CSP for mounted $path routes', async ({ path, mountedApp }) => {
+    const run = koaSecurityHeaders([mountedApp], 'default');
+    const ctx = createMockContext({ method: 'GET', url: path });
+
+    await run(ctx, koaNoop);
+
+    const scriptSource = getCspDirective(ctx, 'script-src');
+
+    expect(scriptSource).toContain("'self'");
+    expect(scriptSource).toContain('https://cdn.jsdelivr.net/');
+    expect(scriptSource).toContain('blob:');
+    expect(scriptSource).not.toContain("'unsafe-inline'");
+  });
+
+  it.each([
+    { path: '/console' },
+    { path: '/welcome' },
+  ])('uses the Experience CSP for unmounted $path routes', async ({ path }) => {
+    const run = koaSecurityHeaders([], 'default');
+    const ctx = createMockContext({ method: 'GET', url: path });
+
+    await run(ctx, koaNoop);
+
+    const scriptSource = getCspDirective(ctx, 'script-src');
+
+    expect(scriptSource).toContain("'self'");
+    expect(scriptSource).toContain("'unsafe-inline'");
+    expect(scriptSource).not.toContain('https://cdn.jsdelivr.net/');
+    expect(scriptSource).not.toContain('blob:');
   });
 });
