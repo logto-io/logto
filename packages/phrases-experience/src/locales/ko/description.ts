@@ -95,6 +95,8 @@ const description = {
     '귀하의 기업은 {{email}} 이메일 계정에 대해 Single Sign-On을 활성화했습니다. 다음 SSO 제공업체를 사용하여 로그인을 계속할 수 있습니다.',
   single_sign_on_enabled: '이 계정에는 Single Sign-On이 활성화되어 있습니다.',
   authorize_title: '{{name}} 권한 부여',
+  unregistered_client_notice:
+    '이 앱은 Logto에 등록되어 있지 않습니다. 이름과 로고는 앱이 직접 제공한 것으로 검토되지 않았습니다.',
   request_permission: '{{name}} 이(가) 다음에 대한 액세스를 요청하고 있습니다:',
   grant_organization_access: '조직 접근 권한 부여:',
   authorize_personal_data_usage: '개인 데이터 사용 권한 부여:',

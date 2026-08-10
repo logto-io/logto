@@ -1,3 +1,4 @@
+import resource from '@logto/phrases-experience';
 import type { ConsentInfoResponse, RequestErrorBody } from '@logto/schemas';
 import { fireEvent, waitFor } from '@testing-library/react';
 import { HTTPError } from 'ky';
@@ -6,6 +7,7 @@ import UserInteractionContextProvider from '@/Providers/UserInteractionContextPr
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { consent, getConsentInfo } from '@/apis/consent';
+import { setupI18nForTesting } from '@/jest.setup';
 import { searchKeys } from '@/shared/utils/search-parameters';
 
 import Consent from '.';
@@ -140,6 +142,64 @@ describe('Consent', () => {
     expect(queryByText('account_center.sessions.revoke_session')).not.toBeNull();
     expect(queryByText('action.authorize')).toBeNull();
     expect(queryByText('action.cancel')).toBeNull();
+  });
+
+  it('renders the identifier host and the unregistered notice for a CIMD client', async () => {
+    mockedGetConsentInfo.mockResolvedValueOnce({
+      ...consentInfo,
+      application: {
+        ...consentInfo.application,
+        id: 'https://client.example.com/oauth/metadata.json',
+        name: 'Fancy client',
+      },
+    });
+
+    const { queryByText } = renderConsent();
+
+    await waitFor(() => {
+      expect(queryByText('client.example.com')).not.toBeNull();
+    });
+
+    expect(queryByText('description.unregistered_client_notice')).not.toBeNull();
+  });
+
+  it('falls back to the identifier host in the headline when the client declares no name', async () => {
+    await setupI18nForTesting({
+      translation: {
+        description: { authorize_title: resource.en.translation.description.authorize_title },
+      },
+    });
+
+    mockedGetConsentInfo.mockResolvedValueOnce({
+      ...consentInfo,
+      application: {
+        ...consentInfo.application,
+        id: 'https://client.example.com/oauth/metadata.json',
+        name: '',
+      },
+    });
+
+    const { queryByText, unmount } = renderConsent();
+
+    await waitFor(() => {
+      expect(queryByText('Authorize client.example.com')).not.toBeNull();
+    });
+
+    // Reset i18n, with the page unmounted so the language change does not re-render it
+    unmount();
+    await setupI18nForTesting();
+  });
+
+  it('does not render the unregistered notice for a registered application', async () => {
+    mockedGetConsentInfo.mockResolvedValueOnce(consentInfo);
+
+    const { queryByText } = renderConsent();
+
+    await waitFor(() => {
+      expect(queryByText('action.authorize')).not.toBeNull();
+    });
+
+    expect(queryByText('description.unregistered_client_notice')).toBeNull();
   });
 
   it('signs out from the access denied page', async () => {

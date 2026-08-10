@@ -107,6 +107,8 @@ const description = {
     'Votre entreprise a activé la connexion unique (Single Sign-On) pour le compte email {{email}}. Vous pouvez continuer à vous connecter avec les fournisseurs SSO suivants.',
   single_sign_on_enabled: 'La connexion unique (Single Sign-On) est activée pour ce compte',
   authorize_title: 'Autoriser {{name}}',
+  unregistered_client_notice:
+    "Cette application n'est pas enregistrée auprès de Logto. Son nom et son logo sont fournis par l'application elle-même et n'ont pas été vérifiés.",
   request_permission: "{{name}} demande l'accès à :",
   grant_organization_access: "Accorder l'accès à l'organisation :",
   authorize_personal_data_usage: "Autoriser l'utilisation de vos données personnelles :",

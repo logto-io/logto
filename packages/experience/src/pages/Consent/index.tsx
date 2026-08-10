@@ -1,5 +1,5 @@
 import { ReservedResource } from '@logto/core-kit';
-import { type ConsentInfoResponse } from '@logto/schemas';
+import { type ConsentInfoResponse, isCimdClientId } from '@logto/schemas';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -16,9 +16,27 @@ import { searchKeys } from '@/shared/utils/search-parameters';
 
 import OrganizationSelector, { type Organization } from './OrganizationSelector';
 import ScopesListCard from './ScopesListCard';
+import UnregisteredClientIdentity from './UnregisteredClientIdentity';
 import UserProfile from './UserProfile';
 import styles from './index.module.scss';
-import { getRedirectUriOrigin } from './util';
+import { getClientIdentifierHost, getRedirectUriOrigin } from './util';
+
+/**
+ * Resolve how the client identifies itself on the page.
+ *
+ * An unregistered (CIMD) client is recognized by its identifier alone: the consent info keeps the
+ * client identifier URL in `id`, and a registered application id never takes that shape. Its name
+ * comes from the metadata document, which may omit `client_name` — the identifier host stands in
+ * then, and stays on the page as a permanent identity signal either way.
+ */
+const getClientDisplayData = ({ application: { id, displayName, name } }: ConsentInfoResponse) => {
+  const unregisteredClientHost = isCimdClientId(id) ? getClientIdentifierHost(id) : undefined;
+
+  return {
+    unregisteredClientHost,
+    applicationName: (displayName ?? name) || (unregisteredClientHost ?? name),
+  };
+};
 
 const Consent = () => {
   const handleError = useErrorHandler();
@@ -121,10 +139,10 @@ const Consent = () => {
   }
 
   const {
-    application: { displayName, name, termsOfUseUrl, privacyPolicyUrl },
+    application: { termsOfUseUrl, privacyPolicyUrl },
   } = consentData;
 
-  const applicationName = displayName ?? name;
+  const { unregisteredClientHost, applicationName } = getClientDisplayData(consentData);
   const showTerms = Boolean(termsOfUseUrl ?? privacyPolicyUrl);
   const { redirectUri } = consentData;
   const redirectUriOrigin = consentData.redirectUri
@@ -139,6 +157,12 @@ const Consent = () => {
       }}
       thirdPartyBranding={consentData.application.branding}
     >
+      {unregisteredClientHost && (
+        <UnregisteredClientIdentity
+          className={styles.clientIdentity}
+          host={unregisteredClientHost}
+        />
+      )}
       <UserProfile user={consentData.user} />
       <ScopesListCard
         userScopes={consentData.missingOIDCScope}
@@ -190,7 +214,7 @@ const Consent = () => {
             }}
           >
             {t('description.authorize_agreement_with_redirect', {
-              name,
+              name: applicationName,
               uri: redirectUriOrigin,
             })}
           </Trans>
@@ -210,7 +234,7 @@ const Consent = () => {
             }}
           >
             {t('description.authorize_agreement', {
-              name,
+              name: applicationName,
             })}
           </Trans>
         </div>

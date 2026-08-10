@@ -1,6 +1,7 @@
 @use '@/shared/scss/underscore' as _;
 
 $logo-height: 40px;
+$logo-max-width: 160px;
 
 .container {
   width: 100%;
@@ -20,6 +21,16 @@ $logo-height: 40px;
   height: $logo-height;
   width: auto;
   @include _.image-align-center;
+}
+
+/**
+ * The third-party asset is remote and its aspect ratio is whatever the client declares, so the
+ * height alone does not bound it: cap the width and contain the image inside the box.
+ */
+.thirdPartyLogo {
+  max-width: $logo-max-width;
+  object-fit: contain;
+  color: var(--color-type-secondary);
 }
 
 .headline {

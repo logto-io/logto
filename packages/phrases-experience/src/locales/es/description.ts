@@ -108,6 +108,8 @@ const description = {
   single_sign_on_enabled:
     'El inicio de sesión único (Single Sign-On) está habilitado para esta cuenta',
   authorize_title: 'Autorizar {{name}}',
+  unregistered_client_notice:
+    'Esta aplicación no está registrada en Logto. Su nombre y logotipo los proporciona la propia aplicación y no han sido revisados.',
   request_permission: '{{name}} solicita acceso a:',
   grant_organization_access: 'Otorgar acceso a la organización:',
   authorize_personal_data_usage: 'Autorizar el uso de tus datos personales:',

@@ -103,6 +103,8 @@ const description = {
     'Sua empresa ativou o Single Sign-On para a conta de email {{email}}. Você pode continuar a fazer login com os seguintes provedores de SSO.',
   single_sign_on_enabled: 'Esta conta tem Single Sign-On ativado.',
   authorize_title: 'Autorizar {{name}}',
+  unregistered_client_notice:
+    'Este app não está registrado no Logto. Seu nome e logotipo são fornecidos pelo próprio app e não foram revisados.',
   request_permission: '{{name}} está solicitando acesso a:',
   grant_organization_access: 'Conceder acesso à organização:',
   authorize_personal_data_usage: 'Autorizar o uso dos seus dados pessoais:',

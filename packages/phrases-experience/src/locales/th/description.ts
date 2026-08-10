@@ -103,6 +103,8 @@ const description = {
     'องค์กรของคุณได้เปิดใช้งาน Single Sign-On สำหรับอีเมล {{email}} คุณสามารถเข้าสู่ระบบผ่าน SSO ด้านล่างนี้',
   single_sign_on_enabled: 'บัญชีนี้เปิดใช้งาน Single Sign-On แล้ว',
   authorize_title: 'อนุมัติ {{name}}',
+  unregistered_client_notice:
+    'แอปนี้ไม่ได้ลงทะเบียนกับ Logto ชื่อและโลโก้มาจากตัวแอปเองและยังไม่ได้รับการตรวจสอบ',
   request_permission: '{{name}} กำลังขอสิทธิ์เข้าถึง:',
   grant_organization_access: 'ให้สิทธิ์เข้าถึงองค์กร:',
   authorize_personal_data_usage: 'อนุญาตให้ใช้ข้อมูลส่วนตัวของคุณ:',

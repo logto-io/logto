@@ -106,6 +106,8 @@ const description = {
     'Twoja firma włączyła jednokrotne logowanie dla konta e-mail {{email}}. Możesz kontynuować logowanie za pomocą następujących dostawców SSO.',
   single_sign_on_enabled: 'To konto ma włączone jednokrotne logowanie.',
   authorize_title: 'Autoryzuj {{name}}',
+  unregistered_client_notice:
+    'Ta aplikacja nie jest zarejestrowana w Logto. Jej nazwa i logo pochodzą od samej aplikacji i nie zostały zweryfikowane.',
   request_permission: '{{name}} żąda dostępu do:',
   grant_organization_access: 'Przyznaj dostęp do organizacji:',
   authorize_personal_data_usage: 'Autoryzuj użycie twoich danych osobowych:',

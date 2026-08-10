@@ -104,6 +104,8 @@ const description = {
     "La tua azienda ha abilitato il Single Sign-On per l'account email {{email}}. Puoi continuare ad accedere con i seguenti fornitori di SSO.",
   single_sign_on_enabled: 'Il Single Sign-On è abilitato per questo account',
   authorize_title: 'Autorizza {{name}}',
+  unregistered_client_notice:
+    "Questa app non è registrata su Logto. Il nome e il logo sono forniti dall'app stessa e non sono stati verificati.",
   request_permission: '{{name}} sta richiedendo accesso a:',
   grant_organization_access: "Concedi accesso all'organizzazione:",
   authorize_personal_data_usage: "Autorizza l'utilizzo dei tuoi dati personali:",

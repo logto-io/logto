@@ -101,6 +101,8 @@ const description = {
     'Şirketiniz, {{email}} e-posta hesabı için Tekli Oturum Açmayı (Single Sign-On) etkinleştirdi. Aşağıdaki SSO sağlayıcıları ile oturum açmaya devam edebilirsiniz.',
   single_sign_on_enabled: 'Bu hesapta Tekli Oturum Açma etkinleştirildi.',
   authorize_title: '{{name}} yetkilendir',
+  unregistered_client_notice:
+    "Bu uygulama Logto'ya kayıtlı değil. Adı ve logosu uygulamanın kendisi tarafından sağlanmıştır ve incelenmemiştir.",
   request_permission: '{{name}} erişim izni istiyor:',
   grant_organization_access: 'Organizasyon erişimi ver:',
   authorize_personal_data_usage: 'Kişisel verilerinizin kullanımını yetkilendirin:',
