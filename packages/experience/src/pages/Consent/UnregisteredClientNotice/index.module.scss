@@ -19,7 +19,7 @@
 
 /** The host is the identity signal of the whole notice, so it outweighs the sentence around it. */
 .host {
-  font-weight: 700;
+  font-weight: bold;
   /* A host runs up to 253 characters: wrap it anywhere so every label stays readable, never clipped. */
   overflow-wrap: anywhere;
 }
