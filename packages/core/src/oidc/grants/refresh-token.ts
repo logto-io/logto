@@ -325,10 +325,21 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx)
   // the logic is handled in `getResourceServerInfo` and `extraTokenClaims`, see the init file of oidc-provider.
   if (organizationId && !params.resource) {
     /* === RFC 0001 === */
-    /** All available scopes for the user in the organization. */
-    const availableScopes = await queries.organizations.relations.usersRoles
+    /** All the scopes granted to the user through organization roles. */
+    const roleScopeNames = await queries.organizations.relations.usersRoles
       .getUserScopes(organizationId, account.accountId)
       .then((scopes) => scopes.map(({ name }) => name));
+    /**
+     * CIMD clients cap organization role scopes at the tenant-wide `cimd_organization_scopes`
+     * ceiling — the organization-scope counterpart of the resource-server ceiling filter in
+     * `init.ts`. Registered applications are governed by their own consent configuration.
+     */
+    const availableScopes = isCimdClient(envSet, client.clientId)
+      ? await queries.cimd.organizationScopes.findAll().then((ceiling) => {
+          const ceilingNames = new Set(ceiling.map(({ name }) => name));
+          return roleScopeNames.filter((name) => ceilingNames.has(name));
+        })
+      : roleScopeNames;
     await handleOrganizationToken({
       envSet,
       availableScopes,

@@ -148,9 +148,10 @@ export const buildClientIdMetadataDocumentFeature = (
          *
          * - `scope` carries the tenant's user-scope ceiling so enforcement runs through
          *   the provider's native `check_scope` like third-party applications, which
-         *   also covers PAR.
-         *   TODO: @xiaoyijun enforce the resource and organization scope ceilings on the
-         *   resource-server filter path (LOG-13927, LOG-13930).
+         *   also covers PAR. The resource and organization-resource ceilings apply on the
+         *   resource-server filter path (`getResourceServerInfo` in `init.ts`), and the
+         *   organization-scope ceiling caps organization role scopes on the refresh
+         *   grant's organization token path.
          * - `grant_types`: a remote document must not self-grant client_credentials,
          *   device code, or token exchange, which registered applications only get by
          *   type or explicit opt-in.

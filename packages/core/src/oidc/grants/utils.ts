@@ -18,6 +18,30 @@ import {
 const { InvalidGrant, InvalidClient, AccessDenied } = errors;
 
 /**
+ * Assert the organization was authorized on the grant behind the current refresh token, reading
+ * `cimd_grant_organizations`. Caller contract: organization tokens are only obtainable through
+ * the refresh grant — CIMD `grant_types` are pinned to authorization_code + refresh_token and
+ * the fork's token endpoint gates every grant type through `grantTypeAllowed`, so the
+ * client-credentials and token-exchange callers never reach here with a CIMD client — and the
+ * refresh grant asserts `grantId` before validating the grant, so the refresh token entity is
+ * always present on this path. Fail closed if it ever is not.
+ */
+const assertCimdOrganizationGrantAccess = async (
+  ctx: KoaContextWithOIDC,
+  queries: Queries,
+  organizationId: string
+) => {
+  const grantId = ctx.oidc.entities.RefreshToken?.grantId;
+
+  if (!grantId || !(await queries.cimd.grantOrganizations.exists(grantId, organizationId))) {
+    const error = new AccessDenied('organization access is not granted to the application');
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    error.statusCode = 403;
+    throw error;
+  }
+};
+
+/**
  * Implement access check for RFC 0001
  */
 export const checkOrganizationAccess = async (
@@ -42,22 +66,6 @@ export const checkOrganizationAccess = async (
   const organizationId = cond(Boolean(params.organization_id) && String(params.organization_id));
 
   if (organizationId) {
-    /**
-     * Organization grants are keyed to registered applications
-     * (`application_user_consent_organizations`), so no user has ever granted an organization to
-     * a CIMD client — and the accidental alternative would silently pass `isThirdPartyApplication`,
-     * whose not-found fallback reads the identifier URL as first-party. Membership alone is a
-     * user-to-organization relation, not a substitute for the user-to-client grant, so fail
-     * closed instead of skipping the consent check.
-     */
-    if (isCimdClient(envSet, client.clientId)) {
-      // TODO: @xiaoyijun replace the rejection with the grant-scoped organization check (LOG-13930)
-      const error = new AccessDenied('organization tokens are not supported for CIMD clients');
-      // eslint-disable-next-line @silverhand/fp/no-mutation -- oidc-provider errors take the HTTP status by assignment after construction
-      error.statusCode = 403;
-      throw error;
-    }
-
     // Check membership
     if (
       !(await queries.organizations.relations.users.exists({
@@ -71,8 +79,16 @@ export const checkOrganizationAccess = async (
       throw error;
     }
 
-    // Check if the organization is granted (third-party application only) by the user
-    if (
+    /**
+     * CIMD organization access is grant-scoped (`cimd_grant_organizations`), not the cross-grant
+     * relation registered third-party applications use. The branch must come before
+     * `isThirdPartyApplication`, whose not-found fallback reads the identifier URL as
+     * first-party and would silently skip the user-to-client grant check.
+     */
+    if (isCimdClient(envSet, client.clientId)) {
+      await assertCimdOrganizationGrantAccess(ctx, queries, organizationId);
+    } else if (
+      // Check if the organization is granted (third-party application only) by the user
       (isThirdParty ?? (await isThirdPartyApplication(queries, client.clientId))) &&
       !(await isOrganizationConsentedToApplication(
         queries,
