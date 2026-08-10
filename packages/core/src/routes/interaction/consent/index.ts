@@ -10,7 +10,7 @@ import {
   publicUserInfoGuard,
   isBuiltInApplicationId,
 } from '@logto/schemas';
-import { conditional, deduplicate } from '@silverhand/essentials';
+import { conditional, conditionalString, deduplicate } from '@silverhand/essentials';
 import type Router from 'koa-router';
 import { type IRouterParamContext } from 'koa-router';
 import { errors } from 'oidc-provider';
@@ -295,13 +295,16 @@ export default function consentRoutes<T extends IRouterParamContext>(
           /**
            * The document's `client_name` is fully controlled by the remote, unregistered client,
            * so it must never be the page's only identity signal (CIMD draft-02 §8.5) — the
-           * unforgeable identifier URL rides in `id` for the consent page to render beside the
-           * name, and stands in as the name when the document omits one.
+           * unforgeable identifier URL rides in `id` for the consent page to render beside it.
+           *
+           * `client_name` is optional in the document and the provider neither requires nor
+           * defaults it, so an absent name stays absent: it empties rather than borrowing another
+           * value, and the consent page owns what to show in its place.
            */
           return {
             application: {
               id: clientId,
-              name: client.clientName ?? clientId,
+              name: conditionalString(client.clientName),
               termsOfUseUrl: client.tosUri,
               privacyPolicyUrl: client.policyUri,
               ...conditional(client.logoUri && { branding: { logoUrl: client.logoUri } }),
