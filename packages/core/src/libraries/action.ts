@@ -193,6 +193,22 @@ export const getActionExecutionErrorPolicyDecision = ({
   return getActionErrorFallback(key);
 };
 
+/**
+ * The telemetry label for where a run executes.
+ *
+ * Deliberately kept in sync with the branch {@link ActionLibrary.runScriptRemotely} takes: while
+ * both remote runtimes coexist behind `isDevFeaturesEnabled`, splitting `azure` from `cloud` is
+ * what makes the share of traffic already served by the Cloud script runner readable in the
+ * metric. Collapses back to `azure`-free once LOG-13958 removes the Azure Functions path.
+ */
+const getTelemetryRuntimeLocation = (): ActionRuntimeLocation => {
+  if (!EnvSet.values.isCloud) {
+    return 'local';
+  }
+
+  return EnvSet.values.isDevFeaturesEnabled ? 'cloud' : 'azure';
+};
+
 const applyActionExecutionErrorPolicyDecision = (decision: ActionExecutionErrorPolicyDecision) => {
   if (decision.action === 'throw') {
     throw decision.error;
@@ -374,9 +390,7 @@ export class ActionLibrary {
     };
     const onExecutionError = action.onExecutionError ?? defaultActionExecutionErrorPolicy;
     const runtimeLocation = EnvSet.values.isCloud ? 'remote' : 'local';
-    const telemetryRuntimeLocation: ActionRuntimeLocation = EnvSet.values.isCloud
-      ? 'azure'
-      : 'local';
+    const telemetryRuntimeLocation = getTelemetryRuntimeLocation();
     const log = createLog(getActionLogKey(key), { independent: true });
 
     log.append({

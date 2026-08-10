@@ -232,7 +232,8 @@ describe('ActionLibrary Cloud execution routing', () => {
     );
     const metricProperties = {
       actionType: 'PostSignIn',
-      runtimeLocation: 'azure',
+      // `cloud`, not `azure`: the metric distinguishes the two remote runtimes while both exist.
+      runtimeLocation: 'cloud',
       outcome: 'success',
       action: 'updateUser',
     };
@@ -428,6 +429,16 @@ describe('ActionLibrary Cloud execution routing without dev features', () => {
       actionType: LogtoActionKey.PostSignIn,
       event,
       environmentVariables,
+    });
+    expect(trackMetric).toHaveBeenNthCalledWith(1, {
+      name: actionMetricNames.executionCount,
+      value: 1,
+      properties: {
+        actionType: 'PostSignIn',
+        runtimeLocation: 'azure',
+        outcome: 'success',
+        action: 'updateUser',
+      },
     });
   });
 
