@@ -16,7 +16,7 @@ create table cimd_grant_organizations (
   organization_id varchar(21) not null,
   /** The user the grant was issued to and the membership FK's target. Must match the Grant payload's `accountId` (unreachable by FK) — the consent write enforces the pairing. */
   user_id varchar(21) not null,
-  primary key (tenant_id, grant_id, organization_id),
+  primary key (tenant_id, grant_id),
   constraint cimd_grant_organizations__grant_model_name
     check (grant_model_name = 'Grant'),
   /** Revoking the grant hard-deletes the Grant row, which erases the organization authorization with it. */
