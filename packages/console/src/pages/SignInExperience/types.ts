@@ -19,6 +19,7 @@ type OmittedSignInExperienceKeys = keyof Pick<
   SignInExperience,
   | 'mfa'
   | 'adaptiveMfa'
+  | 'trustedDevice'
   | 'captchaPolicy'
   | 'sentinelPolicy'
   | 'passwordPolicy'

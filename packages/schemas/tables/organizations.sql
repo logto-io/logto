@@ -14,6 +14,8 @@ create table organizations (
   custom_data jsonb /* @use JsonObject */ not null default '{}'::jsonb,
   /** Whether multi-factor authentication configuration is required for the members of the organization. */
   is_mfa_required boolean not null default false,
+  /** Whether trusted devices are allowed for members of the organization. */
+  is_trusted_device_allowed boolean not null default true,
   /** The organization's branding color configuration. */
   color jsonb /* @use PartialColor */ not null default '{}'::jsonb,
   /** The organization's branding configuration. */
