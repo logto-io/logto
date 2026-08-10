@@ -32,6 +32,15 @@ const alteration: AlterationScript = {
           on update cascade on delete cascade
       );
     `);
+    /**
+     * Backs the membership FK's cascade lookup; the PK leaves `organization_id` outside its
+     * usable prefix. The table is created empty in this transaction, so a plain (non-concurrent)
+     * index build is free.
+     */
+    await pool.query(sql`
+      create index cimd_grant_organizations__organization_id_user_id
+        on cimd_grant_organizations (tenant_id, organization_id, user_id);
+    `);
     await applyTableRls(pool, 'cimd_grant_organizations');
   },
   down: async (pool) => {
