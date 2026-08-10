@@ -78,7 +78,10 @@ export default function consentRoutes<T extends IRouterParamContext>(
          * The oidc-provider resume path re-runs `checkClient` (re-fetching the metadata
          * document when its cache has expired) but not `check_redirect_uri`, so a URI removed
          * from the current document would still receive the authorization code. Re-assert it
-         * here: the document resolved now is the one resume reads moments later.
+         * here against whatever document the cache serves at submission time — best effort,
+         * not airtight: a cache expiry between this check and resume can still swap in a
+         * changed document unchecked. It narrows the exposure from the whole login-to-consent
+         * span to that cache-boundary race.
          */
         const client = await provider.Client.find(applicationId);
         assertThat(client, new InvalidClient('client must be available'));
