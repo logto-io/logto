@@ -30,7 +30,7 @@ type SendWebhookRequest = {
   signingKey: string;
 };
 
-const rangeInclusive = (start: number, end: number) =>
+export const rangeInclusive = (start: number, end: number) =>
   Array.from({ length: end - start + 1 }, (_, index) => start + index);
 
 /** Public contract: retry webhook POST on HTTP 5xx. Ky 1.2.3 defaults omit POST and most 5xx codes. */

@@ -21,6 +21,7 @@ const {
   sendWebhookRequest,
   truncateMembershipDelta,
   MEMBERSHIP_DELTA_CAP,
+  rangeInclusive,
 } = await import('./utils.js');
 
 describe('sendWebhookRequest', () => {
@@ -51,8 +52,7 @@ describe('sendWebhookRequest', () => {
       retry: {
         limit: 3,
         methods: ['post'],
-        // Ky requires an explicit list; HTTP 5xx class is 500–599.
-        statusCodes: Array.from({ length: 100 }, (_, index) => 500 + index),
+        statusCodes: rangeInclusive(500, 599),
       },
       timeout: 10_000,
     });
@@ -81,8 +81,7 @@ describe('sendWebhookRequest', () => {
       retry: {
         limit: 1,
         methods: ['post'],
-        // Ky requires an explicit list; HTTP 5xx class is 500–599.
-        statusCodes: Array.from({ length: 100 }, (_, index) => 500 + index),
+        statusCodes: rangeInclusive(500, 599),
       },
       timeout: 10_000,
     });
