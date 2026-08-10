@@ -105,7 +105,7 @@ const description = {
   single_sign_on_enabled: 'Esta conta tem o Single Sign-On ativado.',
   authorize_title: 'Autorizar {{name}}',
   unregistered_client_notice:
-    'Esta aplicação não está registada no Logto. O seu nome e logótipo são fornecidos pela própria aplicação e não foram revistos.',
+    'Esta aplicação é autodeclarada por <hostname>{{host}}</hostname>, incluindo o seu nome e logótipo. Verifique o nome do anfitrião antes de continuar.',
   request_permission: '{{name}} está solicitando acesso a:',
   grant_organization_access: 'Conceder acesso à organização:',
   authorize_personal_data_usage: 'Autorizar o uso dos seus dados pessoais:',

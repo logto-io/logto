@@ -107,7 +107,7 @@ const description = {
   single_sign_on_enabled: 'To konto ma włączone jednokrotne logowanie.',
   authorize_title: 'Autoryzuj {{name}}',
   unregistered_client_notice:
-    'Ta aplikacja nie jest zarejestrowana w Logto. Jej nazwa i logo pochodzą od samej aplikacji i nie zostały zweryfikowane.',
+    'Ta aplikacja jest deklarowana samodzielnie przez <hostname>{{host}}</hostname>, łącznie z nazwą i logo. Zweryfikuj nazwę hosta przed kontynuowaniem.',
   request_permission: '{{name}} żąda dostępu do:',
   grant_organization_access: 'Przyznaj dostęp do organizacji:',
   authorize_personal_data_usage: 'Autoryzuj użycie twoich danych osobowych:',

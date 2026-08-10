@@ -43,6 +43,15 @@ const consentInfo: ConsentInfoResponse = {
   redirectUri: 'https://example.com/callback',
 };
 
+const cimdConsentInfo = (name: string): ConsentInfoResponse => ({
+  ...consentInfo,
+  application: {
+    ...consentInfo.application,
+    id: 'https://client.example.com/oauth/metadata.json',
+    name,
+  },
+});
+
 const createHttpError = (body: RequestErrorBody) =>
   new HTTPError(
     {
@@ -144,62 +153,57 @@ describe('Consent', () => {
     expect(queryByText('action.cancel')).toBeNull();
   });
 
-  it('renders the identifier host and the unregistered notice for a CIMD client', async () => {
-    mockedGetConsentInfo.mockResolvedValueOnce({
-      ...consentInfo,
-      application: {
-        ...consentInfo.application,
-        id: 'https://client.example.com/oauth/metadata.json',
-        name: 'Fancy client',
-      },
+  describe('CIMD client', () => {
+    const { authorize_title, unregistered_client_notice } = resource.en.translation.description;
+
+    // The assertions read the rendered copy, so the phrases have to be the real ones
+    beforeAll(async () => {
+      await setupI18nForTesting({
+        translation: { description: { authorize_title, unregistered_client_notice } },
+      });
     });
 
-    const { queryByText } = renderConsent();
-
-    await waitFor(() => {
-      expect(queryByText('client.example.com')).not.toBeNull();
+    afterAll(async () => {
+      await setupI18nForTesting();
     });
 
-    expect(queryByText('description.unregistered_client_notice')).not.toBeNull();
-  });
+    it('renders the identifier host in the notice', async () => {
+      mockedGetConsentInfo.mockResolvedValueOnce(cimdConsentInfo('Fancy client'));
 
-  it('falls back to the identifier host in the headline when the client declares no name', async () => {
-    await setupI18nForTesting({
-      translation: {
-        description: { authorize_title: resource.en.translation.description.authorize_title },
-      },
+      const { queryByText, unmount } = renderConsent();
+
+      await waitFor(() => {
+        expect(queryByText('client.example.com')).not.toBeNull();
+      });
+
+      expect(queryByText(/is self-declared by/)).not.toBeNull();
+      unmount();
     });
 
-    mockedGetConsentInfo.mockResolvedValueOnce({
-      ...consentInfo,
-      application: {
-        ...consentInfo.application,
-        id: 'https://client.example.com/oauth/metadata.json',
-        name: '',
-      },
+    it('falls back to the identifier host in the headline when the client declares no name', async () => {
+      mockedGetConsentInfo.mockResolvedValueOnce(cimdConsentInfo(''));
+
+      const { queryByText, unmount } = renderConsent();
+
+      await waitFor(() => {
+        expect(queryByText('Authorize client.example.com')).not.toBeNull();
+      });
+
+      unmount();
     });
 
-    const { queryByText, unmount } = renderConsent();
+    it('does not render the notice for a registered application', async () => {
+      mockedGetConsentInfo.mockResolvedValueOnce(consentInfo);
 
-    await waitFor(() => {
-      expect(queryByText('Authorize client.example.com')).not.toBeNull();
+      const { queryByText, unmount } = renderConsent();
+
+      await waitFor(() => {
+        expect(queryByText('action.authorize')).not.toBeNull();
+      });
+
+      expect(queryByText(/is self-declared by/)).toBeNull();
+      unmount();
     });
-
-    // Reset i18n, with the page unmounted so the language change does not re-render it
-    unmount();
-    await setupI18nForTesting();
-  });
-
-  it('does not render the unregistered notice for a registered application', async () => {
-    mockedGetConsentInfo.mockResolvedValueOnce(consentInfo);
-
-    const { queryByText } = renderConsent();
-
-    await waitFor(() => {
-      expect(queryByText('action.authorize')).not.toBeNull();
-    });
-
-    expect(queryByText('description.unregistered_client_notice')).toBeNull();
   });
 
   it('signs out from the access denied page', async () => {

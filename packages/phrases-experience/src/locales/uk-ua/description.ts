@@ -107,7 +107,7 @@ const description = {
   single_sign_on_enabled: 'Єдиний вхід (SSO) увімкнено для цього облікового запису',
   authorize_title: 'Авторизувати {{name}}',
   unregistered_client_notice:
-    'Цей застосунок не зареєстрований у Logto. Його назву та логотип надає сам застосунок, і вони не перевірялися.',
+    'Цей застосунок самозаявлений доменом <hostname>{{host}}</hostname>, включно з назвою та логотипом. Перевірте імʼя хоста, перш ніж продовжити.',
   request_permission: '{{name}} запитує доступ до:',
   grant_organization_access: 'Надати доступ організації:',
   authorize_personal_data_usage: 'Дозволити використання ваших персональних даних:',

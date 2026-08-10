@@ -96,7 +96,7 @@ const description = {
   single_sign_on_enabled: '이 계정에는 Single Sign-On이 활성화되어 있습니다.',
   authorize_title: '{{name}} 권한 부여',
   unregistered_client_notice:
-    '이 앱은 Logto에 등록되어 있지 않습니다. 이름과 로고는 앱이 직접 제공한 것으로 검토되지 않았습니다.',
+    '이 앱은 이름과 로고를 포함해 <hostname>{{host}}</hostname>이(가) 직접 선언한 것입니다. 계속하기 전에 호스트 이름을 확인하세요.',
   request_permission: '{{name}} 이(가) 다음에 대한 액세스를 요청하고 있습니다:',
   grant_organization_access: '조직 접근 권한 부여:',
   authorize_personal_data_usage: '개인 데이터 사용 권한 부여:',

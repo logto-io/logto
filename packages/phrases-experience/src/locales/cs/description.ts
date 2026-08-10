@@ -105,7 +105,7 @@ const description = {
   single_sign_on_enabled: 'Single Sign-On je povoleno pro tento účet',
   authorize_title: 'Autorizovat {{name}}',
   unregistered_client_notice:
-    'Tato aplikace není registrovaná v Logto. Její název a logo poskytuje sama aplikace a nebyly ověřeny.',
+    'Tato aplikace je deklarována samotným <hostname>{{host}}</hostname>, včetně názvu a loga. Před pokračováním ověř název hostitele.',
   request_permission: '{{name}} žádá o přístup k:',
   grant_organization_access: 'Udělit organizaci přístup:',
   authorize_personal_data_usage: 'Povolit použití tvých osobních údajů:',

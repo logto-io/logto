@@ -16,7 +16,7 @@ import { searchKeys } from '@/shared/utils/search-parameters';
 
 import OrganizationSelector, { type Organization } from './OrganizationSelector';
 import ScopesListCard from './ScopesListCard';
-import UnregisteredClientIdentity from './UnregisteredClientIdentity';
+import UnregisteredClientNotice from './UnregisteredClientNotice';
 import UserProfile from './UserProfile';
 import styles from './index.module.scss';
 import { getClientIdentifierHost, getRedirectUriOrigin } from './util';
@@ -158,8 +158,8 @@ const Consent = () => {
       thirdPartyBranding={consentData.application.branding}
     >
       {unregisteredClientHost && (
-        <UnregisteredClientIdentity
-          className={styles.clientIdentity}
+        <UnregisteredClientNotice
+          className={styles.unregisteredClientNotice}
           host={unregisteredClientHost}
         />
       )}

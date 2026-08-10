@@ -91,7 +91,7 @@ const description = {
   single_sign_on_enabled: '該帳戶已啟用單一登入',
   authorize_title: '授權 {{name}}',
   unregistered_client_notice:
-    '此應用程式未在 Logto 註冊。其名稱和圖示由應用程式自行提供，未經審核。',
+    '此應用程式由 <hostname>{{host}}</hostname> 自行聲明，包括其名稱和圖示。請在繼續之前確認該網域。',
   request_permission: '{{name}} 請求訪問權限：',
   grant_organization_access: '授予組織訪問權限：',
   authorize_personal_data_usage: '授權使用你的個人數據：',

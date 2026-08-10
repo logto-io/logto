@@ -102,7 +102,7 @@ const description = {
   single_sign_on_enabled: 'Bu hesapta Tekli Oturum Açma etkinleştirildi.',
   authorize_title: '{{name}} yetkilendir',
   unregistered_client_notice:
-    "Bu uygulama Logto'ya kayıtlı değil. Adı ve logosu uygulamanın kendisi tarafından sağlanmıştır ve incelenmemiştir.",
+    'Bu uygulama, adı ve logosu dahil olmak üzere <hostname>{{host}}</hostname> tarafından beyan edilmiştir. Devam etmeden önce ana bilgisayar adını doğrulayın.',
   request_permission: '{{name}} erişim izni istiyor:',
   grant_organization_access: 'Organizasyon erişimi ver:',
   authorize_personal_data_usage: 'Kişisel verilerinizin kullanımını yetkilendirin:',

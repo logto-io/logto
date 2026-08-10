@@ -102,7 +102,7 @@ const description = {
   single_sign_on_enabled: 'このアカウントではシングル サインオンが有効になっています',
   authorize_title: '{{name}} を承認する',
   unregistered_client_notice:
-    'このアプリは Logto に登録されていません。名前とロゴはアプリ自身が提供したもので、確認されていません。',
+    'このアプリは名前とロゴを含めて <hostname>{{host}}</hostname> による自己申告です。続行する前にホスト名をご確認ください。',
   request_permission: '{{name}} が以下へのアクセスを要求しています：',
   grant_organization_access: '組織へのアクセスを許可する：',
   authorize_personal_data_usage: '個人データの使用を承認する：',

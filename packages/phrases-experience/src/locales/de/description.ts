@@ -108,7 +108,7 @@ const description = {
   single_sign_on_enabled: 'Single Sign-On ist für dieses Konto aktiviert',
   authorize_title: 'Autorisieren {{name}}',
   unregistered_client_notice:
-    'Diese App ist nicht bei Logto registriert. Name und Logo stammen von der App selbst und wurden nicht überprüft.',
+    'Diese App wird von <hostname>{{host}}</hostname> selbst deklariert, einschließlich Name und Logo. Bitte überprüfen Sie den Hostnamen, bevor Sie fortfahren.',
   request_permission: '{{name}} fordert Zugang zu:',
   grant_organization_access: 'Gewähren Sie der Organisation Zugriff:',
   authorize_personal_data_usage: 'Erlauben Sie die Nutzung Ihrer persönlichen Daten:',
