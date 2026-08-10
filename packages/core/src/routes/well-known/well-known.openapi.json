@@ -13,19 +13,7 @@
         "description": "Get the full sign-in experience configuration.",
         "responses": {
           "200": {
-            "description": "The full sign-in experience configuration.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "trustedDevice": {
-                      "description": "MFA trusted-device policy.",
-                      "x-logto-dev-feature": true
-                    }
-                  }
-                }
-              }
-            }
+            "description": "The full sign-in experience configuration."
           }
         }
       }
@@ -54,19 +42,7 @@
         "description": "Get the full sign-in experience configuration.",
         "responses": {
           "200": {
-            "description": "The full sign-in experience configuration.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "trustedDevice": {
-                      "description": "MFA trusted-device policy.",
-                      "x-logto-dev-feature": true
-                    }
-                  }
-                }
-              }
-            }
+            "description": "The full sign-in experience configuration."
           }
         }
       }

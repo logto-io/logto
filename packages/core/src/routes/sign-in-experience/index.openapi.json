@@ -83,10 +83,6 @@
                     "adaptiveMfa": {
                       "description": "Adaptive MFA settings."
                     },
-                    "trustedDevice": {
-                      "description": "MFA trusted-device policy.",
-                      "x-logto-dev-feature": true
-                    },
                     "supportEmail": {
                       "description": "The support email address to display on the error pages."
                     },
@@ -203,10 +199,6 @@
                   },
                   "adaptiveMfa": {
                     "description": "Adaptive MFA settings. Only effective when developer features are enabled."
-                  },
-                  "trustedDevice": {
-                    "description": "MFA trusted-device policy.",
-                    "x-logto-dev-feature": true
                   },
                   "supportEmail": {
                     "description": "The support email address to display on the error pages."
