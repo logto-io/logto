@@ -216,7 +216,13 @@ export default function consentRoutes<T extends IRouterParamContext>(
           const resource = resourceScopesToGrant[resourceIndicator];
 
           if (!resource) {
-            return [resourceIndicator, []];
+            /**
+             * An empty rejection is cleaned off the grant, so an all-ineligible group would
+             * stay "missing" and reopen consent forever — reject it whole for CIMD, where the
+             * rejection dies with the per-authorization grant; a registered client's long-lived
+             * grant must stay re-askable for later eligibility changes.
+             */
+            return [resourceIndicator, cimd ? scopes : []];
           }
 
           return [resourceIndicator, scopes.filter((scope) => !resource.includes(scope))];

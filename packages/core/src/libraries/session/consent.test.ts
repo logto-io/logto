@@ -45,9 +45,9 @@ const userQueries = {
 const insertGrantOrganization = jest.fn();
 
 const queries: Queries = {
-  // @ts-expect-error
+  // @ts-expect-error -- partial mock of the user queries
   users: userQueries,
-  // @ts-expect-error
+  // @ts-expect-error -- partial mock of the cimd queries
   cimd: { grantOrganizations: { insert: insertGrantOrganization } },
 };
 const context = createContextWithRouteParameters();
