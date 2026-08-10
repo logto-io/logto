@@ -10,8 +10,7 @@
  */
 
 import { ReservedScope } from '@logto/core-kit';
-import { GrantType } from '@logto/schemas';
-import { isCimdClientId } from '@logto/shared';
+import { GrantType, isCimdClientId } from '@logto/schemas';
 import { conditional, type Optional } from '@silverhand/essentials';
 import {
   type AllClientMetadata,

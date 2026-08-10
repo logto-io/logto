@@ -23,7 +23,7 @@
  * conformance.
  */
 
-import { isCimdClientId } from '@logto/shared';
+import { isCimdClientId } from '@logto/schemas';
 import { type Provider } from 'oidc-provider';
 
 import {

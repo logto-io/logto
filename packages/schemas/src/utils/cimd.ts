@@ -1,7 +1,7 @@
 /**
  * @overview The CIMD (OAuth Client ID Metadata Document) client identifier namespace predicate.
  *
- * Lives in `@logto/shared` because both runtimes need the same classification: core wires the
+ * Lives in `@logto/schemas` because both runtimes classify the same identifier: core wires the
  * feature configuration and request-time matching, while the experience client recognizes a CIMD
  * identifier carried over from the authorization request (e.g. to accept SSR settings rendered
  * without an `appId`).
