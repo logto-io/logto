@@ -36,7 +36,7 @@ export enum SignInExperienceTab {
   Content = 'content',
 }
 
-const accountCenterFieldKeys = [
+const accountCenterFieldKeys: Array<keyof AccountCenterFieldControl> = [
   'email',
   'phone',
   'social',
@@ -49,7 +49,7 @@ const accountCenterFieldKeys = [
   'profile',
   'customData',
   'session',
-] as const satisfies ReadonlyArray<keyof AccountCenterFieldControl>;
+] as const;
 
 export type AccountCenterFieldKey = (typeof accountCenterFieldKeys)[number];
 
