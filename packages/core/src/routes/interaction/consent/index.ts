@@ -10,12 +10,13 @@ import {
   publicUserInfoGuard,
   isBuiltInApplicationId,
 } from '@logto/schemas';
-import { conditional, deduplicate } from '@silverhand/essentials';
+import { conditional, conditionalString, deduplicate } from '@silverhand/essentials';
 import type Router from 'koa-router';
 import { type IRouterParamContext } from 'koa-router';
 import { errors } from 'oidc-provider';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import { consent, getMissingScopes } from '#src/libraries/session/index.js';
 import koaAppAccessControl from '#src/middleware/koa-app-access-control.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -288,20 +289,26 @@ export default function consentRoutes<T extends IRouterParamContext>(
         isDeviceFlowApplication: boolean;
       }> => {
         if (cimd) {
-          assertThat(
-            await provider.Client.find(clientId),
-            new InvalidClient('client must be available')
-          );
+          const client = await provider.Client.find(clientId);
+          assertThat(client, new InvalidClient('client must be available'));
 
           /**
-           * The document's `client_name` is fully controlled by the remote, unregistered
-           * client, and the consent page renders the name as the only identity signal — so
-           * showing it verbatim invites phishing (CIMD draft-02 §8.5). Until the identifier
-           * hostname is rendered alongside it, the unforgeable identifier URL is the name.
-           * TODO: @xiaoyijun display the fetched name with the identifier hostname (LOG-13990).
+           * The document's `client_name` is fully controlled by the remote, unregistered client,
+           * so it must never be the page's only identity signal (CIMD draft-02 §8.5) — the
+           * unforgeable identifier URL rides in `id` for the consent page to render beside it.
+           *
+           * `client_name` is optional in the document and the provider neither requires nor
+           * defaults it, so an absent name stays absent: it empties rather than borrowing another
+           * value, and the consent page owns what to show in its place.
            */
           return {
-            application: { id: clientId, name: clientId },
+            application: {
+              id: clientId,
+              name: conditionalString(client.clientName),
+              termsOfUseUrl: client.tosUri,
+              privacyPolicyUrl: client.policyUri,
+              ...conditional(client.logoUri && { branding: { logoUrl: client.logoUri } }),
+            },
             isDeviceFlowApplication: false,
           };
         }
@@ -336,6 +343,23 @@ export default function consentRoutes<T extends IRouterParamContext>(
         assertThat(
           redirectUri && typeof redirectUri === 'string',
           new InvalidRedirectUri('redirect_uri must be available')
+        );
+      }
+
+      // DEV: CIMD (client ID metadata document) support
+      /**
+       * Authorization already validated the value against the same client, so a failing check
+       * here means the registered set changed mid-flow (for CIMD clients the metadata document
+       * may refetch between authorization and consent); the consent screen must not vouch for
+       * a redirect target the client no longer registers. Render-time only — issuance stays
+       * guarded by the consent POST re-assert.
+       */
+      if (EnvSet.values.isDevFeaturesEnabled && typeof redirectUri === 'string') {
+        const client = await provider.Client.find(clientId);
+        assertThat(client, new InvalidClient('client must be available'));
+        assertThat(
+          client.redirectUriAllowed(redirectUri),
+          new InvalidRedirectUri('redirect_uri must match a registered redirect uri')
         );
       }
 
