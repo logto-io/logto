@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { Trans, useTranslation } from 'react-i18next';
 
-import InfoIcon from '@/assets/icons/info-icon.svg?react';
+import AlertIcon from '@/assets/icons/alert-icon.svg?react';
 
 import styles from './index.module.scss';
 
@@ -24,7 +24,7 @@ const UnregisteredClientNotice = ({ host, className }: Props) => {
 
   return (
     <div className={classNames(styles.notice, className)}>
-      <InfoIcon className={styles.icon} />
+      <AlertIcon className={styles.icon} />
       <div>
         <Trans components={{ hostname: <span className={styles.host} /> }}>
           {t('description.unregistered_client_notice', { host })}

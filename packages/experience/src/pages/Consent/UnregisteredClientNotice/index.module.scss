@@ -11,10 +11,10 @@
   gap: _.unit(2);
 }
 
-/** The icon paints its glyph white, so the disc needs a darker fill than the notice background. */
+/** Same pairing as the development tenant notification: the on-alert surface carries the alert color. */
 .icon {
   flex-shrink: 0;
-  color: var(--color-alert-60);
+  color: var(--color-container-alert);
 }
 
 /** The host is the identity signal of the whole notice, so it outweighs the sentence around it. */
