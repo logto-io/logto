@@ -2,6 +2,9 @@ import { ReservedResource } from '@logto/core-kit';
 import { type MissingResourceScopes, type Scope, missingResourceScopesGuard } from '@logto/schemas';
 import { errors } from 'oidc-provider';
 
+import { type EnvSet } from '#src/env-set/index.js';
+import { isCimdClient } from '#src/oidc/cimd/index.js';
+import { filterResourceScopesForTheCimdClient } from '#src/oidc/cimd/resource-scopes.js';
 import {
   filterResourceScopesForTheThirdPartyApplication,
   findResourceScopes,
@@ -91,6 +94,7 @@ const parseMissingResourceScopesInfo = async (
  */
 export const filterAndParseMissingResourceScopes = async ({
   resourceScopes,
+  envSet,
   queries,
   libraries,
   userId,
@@ -98,6 +102,7 @@ export const filterAndParseMissingResourceScopes = async ({
   organizationId,
 }: {
   resourceScopes: Record<string, string[]>;
+  envSet: EnvSet;
   queries: Queries;
   libraries: Libraries;
   userId: string;
@@ -118,6 +123,29 @@ export const filterAndParseMissingResourceScopes = async ({
             findFromOrganizations: Boolean(organizationId),
             organizationId,
           });
+
+          if (isCimdClient(envSet, applicationId)) {
+            /**
+             * CIMD clients are unregistered: the tenant-wide ceiling replaces the
+             * per-application consent configuration, and the identifier URL must never reach
+             * `isThirdPartyApplication` (its not-found fallback would read as first-party and
+             * skip the filter entirely).
+             */
+            const filteredScopes = await filterResourceScopesForTheCimdClient(
+              queries,
+              resourceIndicator,
+              scopes,
+              {
+                includeOrganizationResourceScopes: Boolean(organizationId),
+                includeResourceScopes: !organizationId,
+              }
+            );
+
+            return [
+              resourceIndicator,
+              missingScopes.filter((scope) => filteredScopes.some(({ name }) => name === scope)),
+            ];
+          }
 
           const isThirdPartyApp = await isThirdPartyApplication(queries, applicationId);
 
