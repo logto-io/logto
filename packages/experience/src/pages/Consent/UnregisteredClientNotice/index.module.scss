@@ -7,7 +7,7 @@
   font: var(--font-body-2);
   color: var(--color-static-white);
   @include _.flex_row;
-  align-items: flex-start;
+  align-items: center;
   gap: _.unit(2);
 }
 
@@ -17,8 +17,9 @@
   color: var(--color-alert-60);
 }
 
+/** The host is the identity signal of the whole notice, so it outweighs the sentence around it. */
 .host {
-  font: var(--font-label-2);
+  font-weight: 700;
   /* A host runs up to 253 characters: wrap it anywhere so every label stays readable, never clipped. */
   overflow-wrap: anywhere;
 }
