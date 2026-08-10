@@ -8,7 +8,6 @@ import {
   type ActionExecutionErrorPolicy,
   type ActionExecutionRequestBody,
 } from '@logto/schemas';
-import { got, HTTPError } from 'got';
 import { ZodError } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -16,7 +15,6 @@ import RequestError from '#src/errors/RequestError/index.js';
 import type { LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import type { SubscriptionLibrary } from '#src/libraries/subscription.js';
 import type { LogContext, LogPayload } from '#src/middleware/koa-audit-log.js';
-import { parseAzureFunctionsResponseError } from '#src/utils/custom-jwt/index.js';
 import { runScriptFunctionInLocalVm } from '#src/utils/local-vm/index.js';
 
 import {
@@ -32,21 +30,20 @@ import {
   type ActionRuntimeLocation,
   trackActionExecutionMetrics,
 } from './action-telemetry.js';
+import { type CloudConnectionLibrary } from './cloud-connection.js';
 import {
+  buildCloudScriptFailureError,
   buildScriptExecutionErrorBody,
   buildScriptFailureError,
   getScriptFailureStatusCode,
+  parseCloudScriptFailure,
+  runScriptOnCloud,
   runScriptOnWorkerPool,
   ScriptExecutionError,
 } from './script-runner/index.js';
 
 const actionFunctionName = 'runAction';
 const defaultActionExecutionErrorPolicy = 'block' satisfies ActionExecutionErrorPolicy;
-/**
- * Azure Function vm2 timeout is 3000ms. Use a slightly higher HTTP deadline so the
- * client can surface Function-side failures instead of racing the sandbox limit.
- */
-const remoteActionRequestTimeout = 5000;
 
 export type ActionExecutionErrorFallback = {
   action: 'rejectInvalidCredentials';
@@ -266,14 +263,9 @@ export class ActionLibrary {
   constructor(
     private readonly tenantId: string,
     private readonly logtoConfigs: LogtoConfigLibrary,
-    private readonly subscription: SubscriptionLibrary
+    private readonly subscription: SubscriptionLibrary,
+    private readonly cloudConnection: CloudConnectionLibrary
   ) {}
-
-  get isRegionalAzureFunctionAppConfigured(): boolean {
-    const { azureFunctionUntrustedAppKey, azureFunctionUntrustedAppEndpoint } = EnvSet.values;
-
-    return Boolean(azureFunctionUntrustedAppKey && azureFunctionUntrustedAppEndpoint);
-  }
 
   /**
    * Shared entry point for production `runAction()` and Management API dry runs.
@@ -308,7 +300,6 @@ export class ActionLibrary {
    */
   async runScriptRemotely({
     script,
-    actionType,
     event,
     environmentVariables,
   }: {
@@ -317,38 +308,24 @@ export class ActionLibrary {
     event: unknown;
     environmentVariables?: Record<string, string>;
   }): Promise<unknown> {
-    const { azureFunctionUntrustedAppKey, azureFunctionUntrustedAppEndpoint } = EnvSet.values;
-
-    if (!this.isRegionalAzureFunctionAppConfigured) {
-      throw new RequestError(
-        { code: 'action.general', status: 422 },
-        { message: 'Remote action runner is not configured.' }
-      );
-    }
+    /**
+     * `actionType` selects the script on this side and is deliberately not forwarded — anything
+     * in `payload` becomes a visible field of the script's `runAction` argument, and the
+     * authoring contract promises `{ event, environmentVariables }` only.
+     */
+    const payload: ActionScriptPayload<unknown> = { event, environmentVariables };
 
     try {
-      return await got
-        // The remote runner must invoke `runAction` from the supplied script.
-        .post(new URL('/api/actions', azureFunctionUntrustedAppEndpoint), {
-          json: {
-            script,
-            actionType,
-            event,
-            environmentVariables,
-          },
-          headers: {
-            'x-functions-key': azureFunctionUntrustedAppKey,
-          },
-          // Got@14 expects a Delays object; bound the whole request slightly above the AF VM timeout.
-          timeout: { request: remoteActionRequestTimeout },
-        })
-        .json<unknown>();
+      return await runScriptOnCloud({
+        cloudConnection: this.cloudConnection,
+        script,
+        entry: actionFunctionName,
+        payload,
+      });
     } catch (error: unknown) {
-      if (error instanceof HTTPError) {
-        throw parseAzureFunctionsResponseError(error);
-      }
+      const failure = await parseCloudScriptFailure(error);
 
-      throw error;
+      throw failure ? buildCloudScriptFailureError(failure) : error;
     }
   }
 

@@ -1,4 +1,3 @@
-/* eslint-disable max-lines -- The legacy `node:vm` path coexists with the worker-pool adapter until LOG-13956 removes it. */
 import {
   type CustomJwtErrorBody,
   CustomJwtErrorCode,
@@ -13,7 +12,6 @@ import {
   type LogtoJwtTokenKey,
   type CustomJwtApiContext,
   type CustomJwtScriptPayload,
-  jsonObjectGuard,
   isBuiltInApplicationId,
   buildBuiltInApplicationDataForTenant,
 } from '@logto/schemas';
@@ -27,7 +25,6 @@ import {
   trySafe,
 } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
-import { got, HTTPError } from 'got';
 import { type UnknownObject } from 'oidc-provider';
 import { ZodError, z } from 'zod';
 
@@ -40,34 +37,41 @@ import type Queries from '#src/tenants/Queries.js';
 import {
   getJwtCustomizerScripts,
   type CustomJwtDeployRequestBody,
-  parseAzureFunctionsResponseError,
 } from '#src/utils/custom-jwt/index.js';
 import { runScriptFunctionInLocalVm } from '#src/utils/local-vm/index.js';
 
 import { type CloudConnectionLibrary } from './cloud-connection.js';
 import {
+  buildCloudScriptFailureError,
   buildScriptExecutionErrorBody,
   buildScriptFailureError,
   getScriptFailureStatusCode,
+  parseCloudScriptFailure,
+  runScriptOnCloud,
   runScriptOnWorkerPool,
   ScriptExecutionError,
   scriptFailureStatusCodes,
 } from './script-runner/index.js';
 
+/**
+ * The error a denial (`api.denyAccess()`) leaves the library as, on every runtime.
+ *
+ * The `CustomJwtErrorBody` under `error` is what makes the denial recognizable downstream
+ * (`isAccessDeniedError`), which is why a `denied` failure never goes through the generic
+ * failure-to-error mapping.
+ */
+const buildAccessDeniedError = (message: string) => {
+  const error: CustomJwtErrorBody = {
+    code: CustomJwtErrorCode.AccessDenied,
+    message,
+  };
+
+  return new ScriptExecutionError({ message, error }, scriptFailureStatusCodes.denied);
+};
+
 const apiContext: CustomJwtApiContext = Object.freeze({
   denyAccess: (message = 'Access denied') => {
-    const error: CustomJwtErrorBody = {
-      code: CustomJwtErrorCode.AccessDenied,
-      message,
-    };
-
-    throw new ScriptExecutionError(
-      {
-        message,
-        error,
-      },
-      scriptFailureStatusCodes.denied
-    );
+    throw buildAccessDeniedError(message);
   },
 });
 
@@ -100,23 +104,23 @@ export class JwtCustomizerLibrary {
 
     if (!result.ok) {
       if (result.kind === 'denied') {
-        const error: CustomJwtErrorBody = {
-          code: CustomJwtErrorCode.AccessDenied,
-          message: result.message,
-        };
-
-        throw new ScriptExecutionError(
-          { message: result.message, error },
-          scriptFailureStatusCodes.denied
-        );
+        throw buildAccessDeniedError(result.message);
       }
 
       throw buildScriptFailureError(result);
     }
 
-    // If the returned value is not a record, we cannot merge it to the existing token payload.
-    // This is call-site validation of a successful run, not a runner failure — it keeps the 400.
-    const parsed = z.record(z.unknown()).safeParse(result.value);
+    return JwtCustomizerLibrary.parseScriptResultValue(result.value);
+  }
+
+  /**
+   * Validate the value a successful run returned.
+   *
+   * If it is not a record, we cannot merge it to the existing token payload. This is call-site
+   * validation of a successful run, not a runner failure — it keeps the 400.
+   */
+  private static parseScriptResultValue(value: unknown) {
+    const parsed = z.record(z.unknown()).safeParse(value);
 
     if (!parsed.success) {
       throw new ScriptExecutionError(
@@ -379,37 +383,39 @@ export class JwtCustomizerLibrary {
     payload: CustomJwtFetcher,
     isTest?: boolean
   ): Promise<Optional<UnknownObject>> {
-    const { azureFunctionUntrustedAppKey, azureFunctionUntrustedAppEndpoint } = EnvSet.values;
+    /**
+     * `api` is not part of the payload — it carries a function and cannot travel over the wire.
+     * The runner merges it in inside the isolate and reports a denial as a `denied` failure,
+     * exactly like the worker-thread runner does.
+     */
+    const value = await this.postScriptRun(payload, isTest);
 
-    if (this.isRegionalAzureFunctionAppConfigured) {
-      try {
-        const result = await got
-          .post(new URL('/api/custom-jwt', azureFunctionUntrustedAppEndpoint), {
-            json: payload,
-            headers: {
-              'x-functions-key': azureFunctionUntrustedAppKey,
-            },
-          })
-          .json<unknown>();
+    return JwtCustomizerLibrary.parseScriptResultValue(value);
+  }
 
-        const parsedResult = jsonObjectGuard.parse(result);
-        return parsedResult;
-      } catch (error: unknown) {
-        // Convert got HTTPError to WithTyped client ResponseError for unified error handling.
-        if (error instanceof HTTPError) {
-          throw parseAzureFunctionsResponseError(error);
-        }
+  /**
+   * Post the run to the Cloud script runner, mapping a script failure onto the same
+   * `ScriptExecutionError` the local runners produce.
+   */
+  private async postScriptRun(payload: CustomJwtFetcher, isTest?: boolean): Promise<unknown> {
+    try {
+      return await runScriptOnCloud({
+        cloudConnection: this.cloudConnection,
+        script: payload.script,
+        entry: 'getCustomJwtClaims',
+        payload: pick(payload, 'token', 'context', 'environmentVariables'),
+        isTest,
+      });
+    } catch (error: unknown) {
+      const failure = await parseCloudScriptFailure(error);
 
+      if (!failure) {
         throw error;
       }
-    }
 
-    // Fallback to use cloud connection to call the custom JWT API.
-    const client = await this.cloudConnection.getClient();
-    return client.post(`/api/services/custom-jwt`, {
-      body: payload,
-      search: isTest ? { isTest: 'true' } : {},
-    });
+      throw failure.kind === 'denied'
+        ? buildAccessDeniedError(failure.message)
+        : buildCloudScriptFailureError(failure);
+    }
   }
 }
-/* eslint-enable max-lines */

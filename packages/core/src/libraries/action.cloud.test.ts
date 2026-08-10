@@ -1,13 +1,13 @@
 import { appInsights } from '@logto/app-insights/node';
 import { LogtoActionKey } from '@logto/schemas';
 import { ResponseError } from '@withtyped/client';
-import nock from 'nock';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 
 import { actionMetricNames } from './action-telemetry.js';
 import { ActionLibrary } from './action.js';
+import type { CloudConnectionLibrary } from './cloud-connection.js';
 import type { LogtoConfigLibrary } from './logto-config.js';
 import type { SubscriptionLibrary } from './subscription.js';
 
@@ -17,14 +17,20 @@ const getAction = jest.fn() as jest.MockedFunction<LogtoConfigLibrary['getAction
 const getSubscriptionData = jest.fn() as jest.MockedFunction<
   SubscriptionLibrary['getSubscriptionData']
 >;
+const post = jest.fn();
 const trackMetric = jest.fn();
 const originalAppInsightsClient = appInsights.client;
+
+const cloudConnection = {
+  getClient: async () => ({ post }),
+} as unknown as CloudConnectionLibrary;
 
 const createLibrary = (tenantId = 'tenant_id') =>
   new ActionLibrary(
     tenantId,
     { getAction } as unknown as LogtoConfigLibrary,
-    { getSubscriptionData } as unknown as SubscriptionLibrary
+    { getSubscriptionData } as unknown as SubscriptionLibrary,
+    cloudConnection
   );
 
 const originalIsCloud = EnvSet.values.isCloud;
@@ -33,6 +39,19 @@ const setIsCloud = (isCloud: boolean) => {
   // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for Cloud/local selection tests.
   (EnvSet.values as { isCloud: boolean }).isCloud = isCloud;
 };
+
+/** The body `POST /api/services/script-run` returns for a failed run, as withtyped shapes it. */
+const buildScriptFailureResponseError = (
+  status: number,
+  message: string,
+  error: Record<string, unknown>
+) =>
+  new ResponseError(
+    new Response(JSON.stringify({ message, error }), {
+      status,
+      headers: { 'content-type': 'application/json' },
+    })
+  );
 
 type RunActionInput<Event> = {
   key: LogtoActionKey;
@@ -58,7 +77,6 @@ describe('ActionLibrary Cloud execution routing', () => {
   });
 
   afterEach(() => {
-    nock.cleanAll();
     jest.restoreAllMocks();
     jest.clearAllMocks();
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore the shared AppInsights singleton.
@@ -66,66 +84,63 @@ describe('ActionLibrary Cloud execution routing', () => {
     setIsCloud(originalIsCloud);
   });
 
-  it('throws an action error when the remote runner is not configured', async () => {
-    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get').mockReturnValue('');
-    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue('');
-
-    await expect(
-      library.runScriptRemotely({
-        actionType: LogtoActionKey.PostSignIn,
-        script: 'const runAction = () => ({ action: "continue" });',
-        event: {
-          key: LogtoActionKey.PostSignIn,
-        },
-      })
-    ).rejects.toMatchObject({
-      code: 'action.general',
-      status: 422,
-      data: {
-        message: 'Remote action runner is not configured.',
-      },
-    });
-  });
-
-  it('runs the script through the regional untrusted runner endpoint', async () => {
-    const endpoint = 'https://untrusted.example.com';
-    const functionKey = 'function-key';
+  it('runs the script through the Cloud script-run endpoint', async () => {
     const payload = {
       actionType: LogtoActionKey.PostSignIn,
       script: 'const runAction = () => ({ action: "continue" });',
       event: {
         key: LogtoActionKey.PostSignIn,
       },
+      environmentVariables: { NAME_SUFFIX: ' updated' },
     };
-    const executionResult = { action: 'continue' };
-    const matchRunnerPayload = jest.fn((_body: unknown) => true);
-    const remoteRunner = nock(endpoint, {
-      reqheaders: {
-        'x-functions-key': functionKey,
+    post.mockResolvedValueOnce({ value: { action: 'continue' } });
+
+    await expect(library.runScriptRemotely(payload)).resolves.toEqual({ action: 'continue' });
+    expect(post).toHaveBeenCalledWith('/api/services/script-run', {
+      body: {
+        entry: 'runAction',
+        script: payload.script,
+        // `actionType` selects the script on this side and must not reach the user script.
+        payload: {
+          event: payload.event,
+          environmentVariables: payload.environmentVariables,
+        },
       },
-    })
-      .post('/api/actions', matchRunnerPayload)
-      .reply(200, executionResult);
-
-    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue(endpoint);
-    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get').mockReturnValue(functionKey);
-
-    await expect(library.runScriptRemotely(payload)).resolves.toEqual(executionResult);
-    expect(remoteRunner.isDone()).toBe(true);
-    const requestBody = matchRunnerPayload.mock.calls[0]?.[0];
-    expect(requestBody).toMatchObject({
-      actionType: payload.actionType,
-      event: payload.event,
     });
-    if (
-      typeof requestBody !== 'object' ||
-      requestBody === null ||
-      !('script' in requestBody) ||
-      typeof requestBody.script !== 'string'
-    ) {
-      throw new TypeError('Expected the runner request body to contain a script');
-    }
-    expect(requestBody.script).toBe(payload.script);
+  });
+
+  it.each([
+    ['denied', 403],
+    ['syntax', 422],
+    ['type', 422],
+    ['timeout', 500],
+    ['oom', 500],
+    ['runtime', 500],
+  ])('maps a %s script failure to status %i', async (kind, status) => {
+    post.mockRejectedValueOnce(
+      buildScriptFailureResponseError(status, 'Script failed', { kind, name: 'Error' })
+    );
+
+    await expect(
+      library.runScriptRemotely({
+        actionType: LogtoActionKey.PostSignIn,
+        script: 'const runAction = () => ({ action: "continue" });',
+        event: {},
+      })
+    ).rejects.toMatchObject({ status });
+  });
+
+  it('rethrows a non-script-failure error untouched', async () => {
+    const error = buildScriptFailureResponseError(403, 'Actions feature is not available.', {});
+    post.mockRejectedValueOnce(error);
+
+    await expect(
+      library.runScriptRemotely({
+        actionType: LogtoActionKey.PostSignIn,
+        script: 'const runAction = () => ({ action: "continue" });',
+        event: {},
+      })
+    ).rejects.toBe(error);
   });
 
   it('uses the remote runner for Cloud executeScript without falling back to local VM', async () => {
@@ -166,10 +181,8 @@ describe('ActionLibrary Cloud execution routing', () => {
     expect(runScriptRemotely).not.toHaveBeenCalled();
   });
 
-  it('routes Cloud runAction through the Azure Function endpoint with the execution payload', async () => {
+  it('routes Cloud runAction through the script-run endpoint with the execution payload', async () => {
     setIsCloud(true);
-    const endpoint = 'https://untrusted.example.com';
-    const functionKey = 'function-key';
     const script = 'const runAction = () => ({ action: "updateUser", user: { name: "Bar" } });';
     const event = {
       key: LogtoActionKey.PostSignIn,
@@ -186,17 +199,7 @@ describe('ActionLibrary Cloud execution routing', () => {
         name: 'Bar',
       },
     };
-    const matchRunnerPayload = jest.fn((_body: unknown) => true);
-    const remoteRunner = nock(endpoint, {
-      reqheaders: {
-        'x-functions-key': functionKey,
-      },
-    })
-      .post('/api/actions', matchRunnerPayload)
-      .reply(200, executionResult);
-
-    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue(endpoint);
-    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get').mockReturnValue(functionKey);
+    post.mockResolvedValueOnce({ value: executionResult });
     getAction.mockResolvedValueOnce({
       enabled: true,
       script,
@@ -210,22 +213,13 @@ describe('ActionLibrary Cloud execution routing', () => {
         event,
       })
     ).resolves.toEqual(executionResult);
-    expect(remoteRunner.isDone()).toBe(true);
-    const requestBody = matchRunnerPayload.mock.calls[0]?.[0];
-    expect(requestBody).toMatchObject({
-      actionType: LogtoActionKey.PostSignIn,
-      event,
-      environmentVariables,
+    expect(post).toHaveBeenCalledWith('/api/services/script-run', {
+      body: {
+        entry: 'runAction',
+        script,
+        payload: { event, environmentVariables },
+      },
     });
-    if (
-      typeof requestBody !== 'object' ||
-      requestBody === null ||
-      !('script' in requestBody) ||
-      typeof requestBody.script !== 'string'
-    ) {
-      throw new TypeError('Expected the runner request body to contain a script');
-    }
-    expect(requestBody.script).toBe(script);
     expect(runScriptInLocalVm).not.toHaveBeenCalled();
     expect(mockAppend).toHaveBeenNthCalledWith(
       1,
@@ -253,20 +247,12 @@ describe('ActionLibrary Cloud execution routing', () => {
 
   it('applies allow-mode policy when Cloud remote execution fails without local fallback', async () => {
     setIsCloud(true);
-    const endpoint = 'https://untrusted.example.com';
-    const functionKey = 'function-key';
-    const remoteRunner = nock(endpoint, {
-      reqheaders: {
-        'x-functions-key': functionKey,
-      },
-    })
-      .post('/api/actions')
-      .reply(500, {
-        message: 'Remote runner failed',
-      });
-
-    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue(endpoint);
-    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get').mockReturnValue(functionKey);
+    post.mockRejectedValueOnce(
+      buildScriptFailureResponseError(500, 'Remote runner failed', {
+        kind: 'runtime',
+        name: 'Error',
+      })
+    );
     getAction.mockResolvedValueOnce({
       enabled: true,
       onExecutionError: 'allow',
@@ -280,20 +266,17 @@ describe('ActionLibrary Cloud execution routing', () => {
         event: {},
       })
     ).resolves.toBeUndefined();
-    expect(remoteRunner.isDone()).toBe(true);
+    expect(post).toHaveBeenCalledTimes(1);
     expect(runScriptInLocalVm).not.toHaveBeenCalled();
   });
 
   it('blocks PostSignIn when Cloud remote execution fails by default', async () => {
     setIsCloud(true);
-    jest.spyOn(library, 'runScriptRemotely').mockRejectedValueOnce(
-      new ResponseError(
-        new Response(JSON.stringify({ message: 'Remote runner failed' }), {
-          status: 500,
-          headers: { 'content-type': 'application/json' },
-        })
-      )
-    );
+    jest
+      .spyOn(library, 'runScriptRemotely')
+      .mockRejectedValueOnce(
+        buildScriptFailureResponseError(500, 'Remote runner failed', { kind: 'runtime' })
+      );
     getAction.mockResolvedValueOnce({
       enabled: true,
       script: 'const runAction = () => ({ action: "continue" });',

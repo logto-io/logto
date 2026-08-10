@@ -34,7 +34,13 @@ export default class Libraries {
   users = createUserLibrary(this.tenantId, this.queries);
   phrases = createPhraseLibrary(this.queries);
   hooks = createHookLibrary(this.queries);
-  actions = new ActionLibrary(this.tenantId, this.logtoConfigs, this.subscription);
+  actions = new ActionLibrary(
+    this.tenantId,
+    this.logtoConfigs,
+    this.subscription,
+    this.cloudConnection
+  );
+
   scopes = createScopeLibrary(this.queries);
   socials = createSocialLibrary(this.queries, this.connectors);
   jwtCustomizers = new JwtCustomizerLibrary(
