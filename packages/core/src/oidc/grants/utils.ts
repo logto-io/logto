@@ -35,7 +35,7 @@ const assertCimdOrganizationGrantAccess = async (
 
   if (!grantId || !(await queries.cimd.grantOrganizations.exists(grantId, organizationId))) {
     const error = new AccessDenied('organization access is not granted to the application');
-    // eslint-disable-next-line @silverhand/fp/no-mutation
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- oidc-provider errors take the HTTP status by assignment after construction
     error.statusCode = 403;
     throw error;
   }

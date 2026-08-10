@@ -466,7 +466,10 @@ describe('refresh token grant for CIMD clients', () => {
   const buildCimdHandler = (tenant: MockTenant, envSet: EnvSet = cimdEnvSet) =>
     buildHandler(envSet, tenant.queries, { assertUserHasApplicationAccess });
 
-  const createCimdPreparedContext = (params = validOidcContext.params) => {
+  const createCimdPreparedContext = (
+    params = validOidcContext.params,
+    grantOverrides?: Partial<Grant> & Record<string, unknown>
+  ) => {
     const ctx = createOidcContext({
       ...validOidcContext,
       params,
@@ -474,7 +477,7 @@ describe('refresh token grant for CIMD clients', () => {
       client: cimdClient,
     });
     stubRefreshToken(ctx, { clientId: cimdClientId });
-    stubGrant(ctx, { clientId: cimdClientId });
+    stubGrant(ctx, { clientId: cimdClientId, ...grantOverrides });
     stubAccount(ctx);
     return ctx;
   };
@@ -513,7 +516,7 @@ describe('refresh token grant for CIMD clients', () => {
       'exists'
     );
 
-    await expect(buildCimdHandler(tenant)(ctx)).rejects.toThrow(
+    await expect(buildCimdHandler(tenant)(ctx)).rejects.toMatchError(
       createAccessDeniedError('organization access is not granted to the application', 403)
     );
 
@@ -523,8 +526,11 @@ describe('refresh token grant for CIMD clients', () => {
     expect(userConsentOrganizationExists.called).toBe(false);
   });
 
-  it('should cap the organization token scopes at the tenant ceiling', async () => {
-    const ctx = createCimdPreparedContext();
+  it('should bound the organization token scopes by the grant record and the tenant ceiling', async () => {
+    // The Grant recorded only `foo` under the organization resource.
+    const ctx = createCimdPreparedContext(validOidcContext.params, {
+      getResourceScope: jest.fn().mockReturnValue('foo'),
+    });
     const tenant = new MockTenant();
 
     Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(true);
@@ -534,9 +540,10 @@ describe('refresh token grant for CIMD clients', () => {
       { tenantId: 'default', id: 'bar', name: 'bar', description: 'bar' },
       { tenantId: 'default', id: 'baz', name: 'baz', description: 'baz' },
     ]);
-    // Only `foo` sits inside the tenant-wide organization-scope ceiling.
+    // `foo` and `bar` sit inside the tenant-wide organization-scope ceiling.
     Sinon.stub(tenant.queries.cimd.organizationScopes, 'findAll').resolves([
       { tenantId: 'default', id: 'foo', name: 'foo', description: 'foo' },
+      { tenantId: 'default', id: 'bar', name: 'bar', description: 'bar' },
     ]);
     Sinon.stub(tenant.queries.organizations, 'getMfaStatus').resolves({
       isMfaRequired: false,
@@ -546,14 +553,15 @@ describe('refresh token grant for CIMD clients', () => {
     const entityStub = Sinon.stub(ctx.oidc, 'entity');
     await expect(buildCimdHandler(tenant)(ctx)).resolves.toBeUndefined();
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- `entity()` args are typed `unknown`; the assertions below narrow them
     const [key, value] = entityStub.lastCall.args;
     expect(key).toBe('AccessToken');
     expect(value).toMatchObject({
       accountId,
       clientId: cimdClientId,
       grantId,
-      // The requested `foo bar` intersects the role scopes and then the ceiling.
+      // Requested `foo bar` ∩ role scopes ∩ ceiling (`foo bar`) ∩ grant record (`foo`):
+      // `bar` survives the ceiling but was never granted under the organization resource.
       scope: 'foo',
       aud: 'urn:logto:organization:some_org_id',
     });
