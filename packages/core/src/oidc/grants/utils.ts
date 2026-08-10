@@ -7,6 +7,7 @@ import { type EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { isCimdClient } from '../cimd/index.js';
 import {
   getSharedResourceServerData,
   isOrganizationConsentedToApplication,
@@ -21,9 +22,17 @@ const { InvalidGrant, InvalidClient, AccessDenied } = errors;
  */
 export const checkOrganizationAccess = async (
   ctx: KoaContextWithOIDC,
-  queries: Queries,
-  account: Account,
-  isThirdParty?: boolean
+  {
+    envSet,
+    queries,
+    account,
+    isThirdParty,
+  }: {
+    envSet: EnvSet;
+    queries: Queries;
+    account: Account;
+    isThirdParty?: boolean;
+  }
 ): Promise<{ organizationId?: string }> => {
   const { client, params } = ctx.oidc;
 
@@ -33,6 +42,22 @@ export const checkOrganizationAccess = async (
   const organizationId = cond(Boolean(params.organization_id) && String(params.organization_id));
 
   if (organizationId) {
+    /**
+     * Organization grants are keyed to registered applications
+     * (`application_user_consent_organizations`), so no user has ever granted an organization to
+     * a CIMD client — and the accidental alternative would silently pass `isThirdPartyApplication`,
+     * whose not-found fallback reads the identifier URL as first-party. Membership alone is a
+     * user-to-organization relation, not a substitute for the user-to-client grant, so fail
+     * closed instead of skipping the consent check.
+     */
+    if (isCimdClient(envSet, client.clientId)) {
+      // TODO: @xiaoyijun replace the rejection with the grant-scoped organization check (LOG-13930)
+      const error = new AccessDenied('organization tokens are not supported for CIMD clients');
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- oidc-provider errors take the HTTP status by assignment after construction
+      error.statusCode = 403;
+      throw error;
+    }
+
     // Check membership
     if (
       !(await queries.organizations.relations.users.exists({

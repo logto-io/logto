@@ -1,4 +1,4 @@
-import { adminTenantId, fullSignInExperienceGuard, AccountCenters } from '@logto/schemas';
+import { adminTenantId, fullSignInExperienceGuard } from '@logto/schemas';
 import { z } from 'zod';
 
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
@@ -6,6 +6,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import { getExperienceLanguage } from '#src/utils/i18n.js';
 
+import { getAccountCenterApiGuards } from '../account-center/guards.js';
 import type { AnonymousRouter } from '../types.js';
 
 import experienceRoutes from './well-known.experience.js';
@@ -14,6 +15,7 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
   router: T,
   { libraries, queries, id: tenantId }: TenantContext
 ) {
+  const { accountCenter: accountCenterApiGuard } = getAccountCenterApiGuards();
   const {
     signInExperiences: { getFullSignInExperience },
     phrases: { getPhrases },
@@ -87,7 +89,7 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
   router.get(
     '/.well-known/account-center',
     koaGuard({
-      response: AccountCenters.guard,
+      response: accountCenterApiGuard,
       status: 200,
     }),
     async (ctx, next) => {

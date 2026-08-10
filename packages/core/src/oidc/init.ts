@@ -328,6 +328,12 @@ export default function initOidc(
       const shouldCheckApplicationAccess =
         account &&
         client &&
+        /**
+         * Application-level access control only applies to registered applications; the
+         * access-control library's fallback lookup would query the applications table with the
+         * CIMD identifier URL and deny on not-found.
+         */
+        !isCimdClient(envSet, client.clientId) &&
         !hasAppLevelAccessControlChecked(result, client.clientId, account.accountId);
 
       if (grantId && shouldCheckApplicationAccess) {

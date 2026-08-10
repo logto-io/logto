@@ -33,8 +33,10 @@ export type ExperienceSocialConnector = Omit<
 
 export type FullSignInExperience = Omit<
   SignInExperience,
-  'emailBlocklistPolicy' | 'forgotPasswordMethods'
+  'emailBlocklistPolicy' | 'forgotPasswordMethods' | 'trustedDevice'
 > & {
+  /** Available while the MFA trusted-device feature is under development. */
+  trustedDevice?: SignInExperience['trustedDevice'];
   socialConnectors: ExperienceSocialConnector[];
   ssoConnectors: SsoConnectorMetadata[];
   forgotPassword: ForgotPassword;
@@ -66,8 +68,9 @@ export type FullSignInExperience = Omit<
 };
 
 export const fullSignInExperienceGuard = SignInExperiences.guard
-  .omit({ emailBlocklistPolicy: true, forgotPasswordMethods: true })
+  .omit({ emailBlocklistPolicy: true, forgotPasswordMethods: true, trustedDevice: true })
   .extend({
+    trustedDevice: SignInExperiences.guard.shape.trustedDevice.optional(),
     socialConnectors: connectorMetadataGuard
       .omit({
         description: true,
