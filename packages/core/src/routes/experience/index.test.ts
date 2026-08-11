@@ -118,12 +118,21 @@ const createRequesterWithMocks = ({
     }),
   };
 
-  const tenant = new MockTenant(provider, {
-    users,
-    signInExperiences,
-    userGeoLocations,
-    userSignInCountries,
-  });
+  const tenant = new MockTenant(
+    provider,
+    {
+      users,
+      signInExperiences,
+      userGeoLocations,
+      userSignInCountries,
+    },
+    undefined,
+    {
+      trustedDevicePolicy: {
+        getEffectivePolicy: jest.fn().mockResolvedValue({ enabled: false, durationDays: 30 }),
+      },
+    }
+  );
 
   const { middleware: logMiddleware, mockAppend } = createLogMiddleware();
   const requester = createRequester({
