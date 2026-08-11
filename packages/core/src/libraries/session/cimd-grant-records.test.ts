@@ -271,6 +271,16 @@ describe('consent for a cimd client', () => {
     expect(provider.interactionResult).not.toHaveBeenCalled();
   });
 
+  it('should keep the write failure as the surfaced error when the grant cleanup also fails', async () => {
+    insertGrantClientSnapshot.mockRejectedValueOnce(new Error('write failed'));
+    grantDestroy.mockRejectedValueOnce(new Error('destroy failed'));
+    const provider = createCimdProvider(cimdInteractionDetails);
+
+    await expect(runConsent(provider, cimdInteractionDetails)).rejects.toThrow('write failed');
+    expect(grantDestroy).toHaveBeenCalled();
+    expect(provider.interactionResult).not.toHaveBeenCalled();
+  });
+
   it('should reject a conflicting organization without writing a snapshot and destroy the fresh grant', async () => {
     findGrantOrganizationIds.mockResolvedValueOnce(['other_org_id']);
     const provider = createCimdProvider(cimdInteractionDetails);

@@ -10,6 +10,7 @@ import { markAppLevelAccessControlChecked } from '#src/oidc/application-access-c
 import { isCimdClient } from '#src/oidc/cimd/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
+import { getConsoleLogFromContext } from '#src/utils/console.js';
 
 import { updateInteractionResult } from './interaction.js';
 
@@ -182,19 +183,37 @@ const saveCimdGrantRecords = async (
 
 /**
  * A failed record write would orphan the already-saved grant, and once the snapshot marker
- * exists the orphan would surface in the grant list — destroy it, best effort, and let the
- * foreign-key cascades erase the written rows.
+ * exists the orphan would surface in the grant list — destroy it and let the foreign-key
+ * cascades erase the written rows. Best effort: a failed cleanup is logged, the write error
+ * stays the surfaced failure, and an uncleaned orphan expires with the grant TTL.
  */
 const saveCimdGrantRecordsForFreshGrant = async (
+  ctx: Context,
   provider: Provider,
   queries: Queries,
-  grant: { destroy: () => Promise<void> },
-  data: { grantId: string; cimdClientId?: string; organizationId?: string; userId: string }
+  {
+    grant,
+    ...data
+  }: {
+    grant: { destroy: () => Promise<void> };
+    grantId: string;
+    cimdClientId?: string;
+    organizationId?: string;
+    userId: string;
+  }
 ) => {
   try {
     await saveCimdGrantRecords(provider, queries, data);
   } catch (error: unknown) {
-    await trySafe(async () => grant.destroy());
+    await trySafe(
+      async () => grant.destroy(),
+      (destroyError) => {
+        getConsoleLogFromContext(ctx).warn(
+          'Failed to destroy the grant after a failed cimd record write:',
+          destroyError
+        );
+      }
+    );
     throw error;
   }
 };
@@ -281,7 +300,8 @@ export const consent = async ({
 
   if (!existingGrant) {
     /** Precedes the interaction result update so a failed write fails the whole consent. */
-    await saveCimdGrantRecordsForFreshGrant(provider, queries, grant, {
+    await saveCimdGrantRecordsForFreshGrant(ctx, provider, queries, {
+      grant,
       grantId: finalGrantId,
       cimdClientId,
       organizationId: cimdOrganizationId,

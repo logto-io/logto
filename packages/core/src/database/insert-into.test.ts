@@ -50,6 +50,15 @@ describe('buildInsertInto()', () => {
     await expect(insertInto(user)).resolves.toBe(undefined);
   });
 
+  it('supports onConflict do nothing', async () => {
+    const user: CreateUser = { id: 'foo', username: '456', applicationId: 'bar' };
+    const expectInsertIntoSql = buildExpectedInsertIntoSql(Object.keys(user));
+    const pool = createTestPool([...expectInsertIntoSql, 'on conflict do nothing'].join('\n'));
+
+    const insertInto = buildInsertIntoWithPool(pool)(Users, { onConflict: { ignore: true } });
+    await expect(insertInto(user)).resolves.toBe(undefined);
+  });
+
   it('resolves a promise with single entity when `returning` is true', async () => {
     const user: CreateUser = {
       id: 'foo',
