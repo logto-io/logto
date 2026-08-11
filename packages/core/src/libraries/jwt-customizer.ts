@@ -280,6 +280,14 @@ export class JwtCustomizerLibrary {
    * @params payload.key - The tokenType of the JWT customizer.
    * @params payload.value - JWT customizer value
    * @params payload.useCase - The use case of JWT customizer script, can be either `test` or `production`.
+   *
+   * @remarks
+   * Deliberately left outside the `isDevFeaturesEnabled` gate that {@link runScriptRemotely} is
+   * behind, so this and {@link undeployJwtCustomizerScript} keep the worker service in sync while
+   * the legacy `POST /api/services/custom-jwt` path is still one rollback away from serving
+   * production. The cost is real and accepted: with dev features on and no Azure app configured,
+   * every save, delete and Console "test" still pays a deploy whose result the script run no
+   * longer reads. Both come out with the legacy paths in LOG-13958.
    */
   async deployJwtCustomizerScript<T extends LogtoJwtTokenKey>(
     consoleLog: ConsoleLog,

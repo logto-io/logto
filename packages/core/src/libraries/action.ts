@@ -309,17 +309,24 @@ export class ActionLibrary {
     actionType,
     event,
     environmentVariables,
+    isTest,
   }: {
     script: string;
     actionType: LogtoActionKey;
     // Production events are typed domain objects; dry-run uses JSON via the guard.
     event: unknown;
     environmentVariables?: Record<string, string>;
+    /**
+     * Whether this is a dry run. Set by the Management API test route, never by `runAction()`, so
+     * the Cloud runner can tell a Console "test" apart from production traffic. The local runners
+     * ignore it.
+     */
+    isTest?: boolean;
   }): Promise<unknown> {
     const payload = { script, actionType, event, environmentVariables };
 
     if (EnvSet.values.isCloud) {
-      return this.runScriptRemotely(payload);
+      return this.runScriptRemotely(payload, isTest);
     }
 
     return ActionLibrary.runScriptInLocalVm(payload, this.tenantId);
@@ -329,12 +336,16 @@ export class ActionLibrary {
    * For Logto Cloud use only. Run the action script remotely in an isolated environment.
    * For OSS version, use @see ActionLibrary.runScriptInLocalVm instead.
    */
-  async runScriptRemotely(data: {
-    script: string;
-    actionType: LogtoActionKey;
-    event: unknown;
-    environmentVariables?: Record<string, string>;
-  }): Promise<unknown> {
+  async runScriptRemotely(
+    data: {
+      script: string;
+      actionType: LogtoActionKey;
+      event: unknown;
+      environmentVariables?: Record<string, string>;
+    },
+    /** Whether this is a dry run. The legacy Azure Functions path has no notion of it. */
+    isTest?: boolean
+  ): Promise<unknown> {
     // TODO (LOG-13958): drop the legacy Azure Functions path and the gate once the Cloud script
     // runner has been manually verified and released.
     if (!EnvSet.values.isDevFeaturesEnabled) {
@@ -356,6 +367,7 @@ export class ActionLibrary {
         script,
         entry: actionFunctionName,
         payload,
+        isTest,
       });
     } catch (error: unknown) {
       const failure = await parseCloudScriptFailure(error);

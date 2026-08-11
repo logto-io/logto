@@ -101,9 +101,7 @@ describe('JwtCustomizerLibrary.runScriptRemotely', () => {
   });
 
   it('converts a denial into a recognizable access denied error', async () => {
-    post.mockRejectedValueOnce(
-      buildScriptFailureResponseError(403, 'Nope', { kind: 'denied', name: 'Error' })
-    );
+    post.mockRejectedValueOnce(buildScriptFailureResponseError(403, 'Nope', { kind: 'denied' }));
 
     const error: unknown = await library
       .runScriptRemotely(payload)
@@ -125,9 +123,7 @@ describe('JwtCustomizerLibrary.runScriptRemotely', () => {
     ['oom', 500],
     ['runtime', 500],
   ])('maps a %s script failure to status %i', async (kind, status) => {
-    post.mockRejectedValueOnce(
-      buildScriptFailureResponseError(status, 'Script failed', { kind, name: 'Error' })
-    );
+    post.mockRejectedValueOnce(buildScriptFailureResponseError(status, 'Script failed', { kind }));
 
     await expect(library.runScriptRemotely(payload)).rejects.toMatchObject({ status });
   });

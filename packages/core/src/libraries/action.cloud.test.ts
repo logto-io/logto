@@ -122,9 +122,7 @@ describe('ActionLibrary Cloud execution routing', () => {
     ['oom', 500],
     ['runtime', 500],
   ])('maps a %s script failure to status %i', async (kind, status) => {
-    post.mockRejectedValueOnce(
-      buildScriptFailureResponseError(status, 'Script failed', { kind, name: 'Error' })
-    );
+    post.mockRejectedValueOnce(buildScriptFailureResponseError(status, 'Script failed', { kind }));
 
     await expect(
       library.runScriptRemotely({
@@ -133,6 +131,47 @@ describe('ActionLibrary Cloud execution routing', () => {
         event: {},
       })
     ).rejects.toMatchObject({ status });
+  });
+
+  it('marks a dry run as a test', async () => {
+    const payload = {
+      actionType: LogtoActionKey.PostSignIn,
+      script: 'const runAction = () => ({ action: "continue" });',
+      event: { key: LogtoActionKey.PostSignIn },
+    };
+    post.mockResolvedValueOnce({ value: { action: 'continue' } });
+
+    await library.runScriptRemotely(payload, true);
+    expect(post).toHaveBeenCalledWith('/api/services/script-run', {
+      body: {
+        entry: 'runAction',
+        script: payload.script,
+        payload: {
+          event: payload.event,
+          environmentVariables: undefined,
+        },
+        isTest: true,
+      },
+    });
+  });
+
+  it('forwards the dry-run flag from executeScript', async () => {
+    setIsCloud(true);
+    const payload = {
+      actionType: LogtoActionKey.PostSignIn,
+      script: 'const runAction = () => ({ action: "continue" });',
+      event: { key: LogtoActionKey.PostSignIn },
+    };
+    post.mockResolvedValueOnce({ value: { action: 'continue' } });
+
+    await library.executeScript({ ...payload, isTest: true });
+    expect(post).toHaveBeenCalledWith(
+      '/api/services/script-run',
+      expect.objectContaining({
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Jest asymmetric matcher is typed as `any`.
+        body: expect.objectContaining({ isTest: true }),
+      })
+    );
   });
 
   it('rethrows a non-script-failure error untouched', async () => {
@@ -163,7 +202,7 @@ describe('ActionLibrary Cloud execution routing', () => {
     const runScriptInLocalVm = jest.spyOn(ActionLibrary, 'runScriptInLocalVm');
 
     await expect(library.executeScript(payload)).resolves.toEqual({ action: 'continue' });
-    expect(runScriptRemotely).toHaveBeenCalledWith(payload);
+    expect(runScriptRemotely).toHaveBeenCalledWith(payload, undefined);
     expect(runScriptInLocalVm).not.toHaveBeenCalled();
   });
 
@@ -254,10 +293,7 @@ describe('ActionLibrary Cloud execution routing', () => {
   it('applies allow-mode policy when Cloud remote execution fails without local fallback', async () => {
     setIsCloud(true);
     post.mockRejectedValueOnce(
-      buildScriptFailureResponseError(500, 'Remote runner failed', {
-        kind: 'runtime',
-        name: 'Error',
-      })
+      buildScriptFailureResponseError(500, 'Remote runner failed', { kind: 'runtime' })
     );
     getAction.mockResolvedValueOnce({
       enabled: true,
