@@ -1,11 +1,124 @@
 import { SessionGrantRevokeTarget } from '@logto/schemas';
 import type { Provider } from 'oidc-provider';
+import Sinon from 'sinon';
 
+import { EnvSet } from '#src/env-set/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import { type ActiveApplicationGrantInstance } from '#src/queries/oidc-model-instance.js';
 import type Queries from '#src/tenants/Queries.js';
 
 import { createSessionLibrary } from './index.js';
 
 const { jest } = import.meta;
+
+const stubDevFeaturesFlag = (isDevFeaturesEnabled: boolean) => {
+  Sinon.stub(EnvSet, 'values').value({ ...EnvSet.values, isDevFeaturesEnabled });
+};
+
+describe('findUserActiveApplicationGrants', () => {
+  const findActiveApplicationGrants = jest.fn<
+    Promise<ActiveApplicationGrantInstance[]>,
+    [string, ('firstParty' | 'thirdParty')?]
+  >(async () => []);
+  const findActiveCimdGrants = jest.fn<Promise<ActiveApplicationGrantInstance[]>, [string]>(
+    async () => []
+  );
+
+  const sessionLibrary = createSessionLibrary({
+    oidcModelInstances: {
+      findUserActiveApplicationGrants: findActiveApplicationGrants,
+      findUserActiveCimdGrants: findActiveCimdGrants,
+    },
+    oidcSessionExtensions: {
+      findUserActiveSessionsWithExtensions: jest.fn(async () => []),
+      findUserActiveSessionWithExtension: jest.fn(async () => null),
+    },
+  } as unknown as Queries);
+
+  const basePayload = {
+    exp: 1_700_000_600,
+    iat: 1_700_000_000,
+    jti: 'jti',
+    kind: 'Grant',
+    accountId: 'user-id',
+  } as const;
+
+  const registeredGrantRow = {
+    id: 'grant-1',
+    payload: { ...basePayload, clientId: 'app-1' },
+    expiresAt: 1_700_000_600_000,
+    application: { id: 'app-1', name: 'App One' },
+  };
+
+  afterEach(() => {
+    Sinon.restore();
+    jest.clearAllMocks();
+  });
+
+  it('should pass registered application grants through', async () => {
+    stubDevFeaturesFlag(true);
+    findActiveApplicationGrants.mockResolvedValueOnce([registeredGrantRow]);
+
+    await expect(
+      sessionLibrary.findUserActiveApplicationGrants('user-id', 'thirdParty')
+    ).resolves.toEqual([registeredGrantRow]);
+    expect(findActiveApplicationGrants).toHaveBeenCalledWith('user-id', 'thirdParty');
+    expect(findActiveCimdGrants).toHaveBeenCalledWith('user-id');
+  });
+
+  it('should append cimd grants after the registered ones', async () => {
+    stubDevFeaturesFlag(true);
+    const cimdClientId = 'https://client.example.com/oauth/metadata.json';
+    const cimdGrantRow = {
+      id: 'cimd-grant-id',
+      payload: { ...basePayload, clientId: cimdClientId },
+      expiresAt: 1_700_000_600_000,
+      application: { id: cimdClientId, name: 'Example App' },
+    };
+
+    findActiveApplicationGrants.mockResolvedValueOnce([registeredGrantRow]);
+    findActiveCimdGrants.mockResolvedValueOnce([cimdGrantRow]);
+
+    await expect(sessionLibrary.findUserActiveApplicationGrants('user-id')).resolves.toEqual([
+      registeredGrantRow,
+      cimdGrantRow,
+    ]);
+  });
+
+  it('should not query cimd grants when dev features are disabled', async () => {
+    stubDevFeaturesFlag(false);
+
+    await sessionLibrary.findUserActiveApplicationGrants('user-id');
+
+    expect(findActiveCimdGrants).not.toHaveBeenCalled();
+  });
+
+  it('should not query cimd grants for the first-party filter', async () => {
+    stubDevFeaturesFlag(true);
+
+    await sessionLibrary.findUserActiveApplicationGrants('user-id', 'firstParty');
+
+    expect(findActiveCimdGrants).not.toHaveBeenCalled();
+    expect(findActiveApplicationGrants).toHaveBeenCalledWith('user-id', 'firstParty');
+  });
+
+  it('should throw a server error on an invalid grant payload', async () => {
+    stubDevFeaturesFlag(true);
+    findActiveApplicationGrants.mockResolvedValueOnce([
+      {
+        id: 'grant-1',
+        // Missing the required `clientId` field.
+        payload: { ...basePayload },
+        expiresAt: 1_700_000_600_000,
+        application: { id: 'app-1', name: 'App One' },
+      },
+    ]);
+
+    await expect(sessionLibrary.findUserActiveApplicationGrants('user-id')).rejects.toThrow(
+      RequestError
+    );
+  });
+});
 
 describe('revokeSessionAssociatedGrants', () => {
   const revokeAccessTokenByGrantId = jest.fn(async () => 'ok');

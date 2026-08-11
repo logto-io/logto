@@ -111,3 +111,22 @@ export const getUserApplicationGrantsResponseGuard = z.object({
 export type GetUserApplicationGrantsResponse = z.infer<
   typeof getUserApplicationGrantsResponseGuard
 >;
+
+/**
+ * The grants response as it looks once CIMD clients can hold grants. They are URL identities
+ * without an `applications` row: the identifier URL lands in `application.id` and its name comes
+ * from the consent-time snapshot, so neither field can keep the applications table varchar
+ * bounds. Graduation folds this shape back into {@link getUserApplicationGrantsResponseGuard} —
+ * until then the published contract keeps its bounds, and the inferred response type is
+ * identical either way.
+ */
+export const getCimdCapableUserApplicationGrantsResponseGuard = z.object({
+  grants: z.array(
+    userApplicationGrantGuard.extend({
+      application: z.object({
+        id: z.string(),
+        name: z.string(),
+      }),
+    })
+  ),
+});
