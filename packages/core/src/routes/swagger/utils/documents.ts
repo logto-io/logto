@@ -20,6 +20,7 @@ import {
   devFeatureTag,
   findSupplementFiles,
   pruneSwaggerDocument,
+  removeDevFeatureSchemaProperties,
   removeUnnecessaryOperations,
   shouldThrow,
   validateSupplement,
@@ -285,6 +286,12 @@ export const assembleSwaggerDocument = <ContextT extends IRouterParamContext>(
     baseDocument
   );
 
+  /**
+   * Supplements are pruned before merging, but the base document is generated from the env-free
+   * zod guards in `@logto/schemas` and can still carry dev-feature properties — prune the
+   * assembled result as well.
+   */
+  removeDevFeatureSchemaProperties(data);
   pruneSwaggerDocument(data);
 
   if (EnvSet.values.isUnitTest) {
