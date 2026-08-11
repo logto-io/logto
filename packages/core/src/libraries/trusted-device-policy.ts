@@ -1,11 +1,10 @@
 import {
   defaultTrustedDevicePolicy,
   type CreateSignInExperience,
-  type Organization,
   type TrustedDevicePolicy,
 } from '@logto/schemas';
 
-import OrganizationQueries from '#src/queries/organization/index.js';
+import { UserRelationQueries } from '#src/queries/organization/user-relations.js';
 import {
   lockTrustedDeviceChangesForTenant,
   TrustedDeviceQueries,
@@ -16,11 +15,9 @@ type EffectiveTrustedDevicePolicy = Readonly<Required<TrustedDevicePolicy>>;
 
 export const resolveEffectiveTrustedDevicePolicy = (
   policy: TrustedDevicePolicy,
-  organizations: ReadonlyArray<Pick<Organization, 'isTrustedDeviceAllowed'>>
+  hasDisallowedOrganization: boolean
 ): EffectiveTrustedDevicePolicy => ({
-  enabled:
-    (policy.enabled ?? defaultTrustedDevicePolicy.enabled) &&
-    organizations.every(({ isTrustedDeviceAllowed }) => isTrustedDeviceAllowed),
+  enabled: (policy.enabled ?? defaultTrustedDevicePolicy.enabled) && !hasDisallowedOrganization,
   durationDays: policy.durationDays ?? defaultTrustedDevicePolicy.durationDays,
 });
 
@@ -62,12 +59,15 @@ export const createTrustedDevicePolicyLibrary = (tenantId: string, queries: Quer
   );
 
   const getEffectivePolicy = async (userId: string) => {
-    const [signInExperience, organizations] = await Promise.all([
+    const [signInExperience, hasDisallowedOrganization] = await Promise.all([
       queries.signInExperiences.findDefaultSignInExperience(),
-      queries.organizations.relations.users.getOrganizationsByUserId(userId),
+      new UserRelationQueries(queries.pool).hasUserDisallowedTrustedDeviceOrganization(userId),
     ]);
 
-    return resolveEffectiveTrustedDevicePolicy(signInExperience.trustedDevice, organizations);
+    return resolveEffectiveTrustedDevicePolicy(
+      signInExperience.trustedDevice,
+      hasDisallowedOrganization
+    );
   };
 
   const runIfEnabled = async <Result>(
@@ -79,12 +79,12 @@ export const createTrustedDevicePolicyLibrary = (tenantId: string, queries: Quer
 
       const signInExperience =
         await queries.signInExperiences.findDefaultSignInExperience(connection);
-      const organizations = await new OrganizationQueries(
+      const hasDisallowedOrganization = await new UserRelationQueries(
         connection
-      ).relations.users.getOrganizationsByUserId(userId);
+      ).hasUserDisallowedTrustedDeviceOrganization(userId);
       const policy = resolveEffectiveTrustedDevicePolicy(
         signInExperience.trustedDevice,
-        organizations
+        hasDisallowedOrganization
       );
 
       if (!policy.enabled) {

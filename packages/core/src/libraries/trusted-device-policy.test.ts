@@ -14,54 +14,42 @@ import {
 
 const { jest } = import.meta;
 
-const allowedOrganization = { isTrustedDeviceAllowed: true };
-const blockedOrganization = { isTrustedDeviceAllowed: false };
-
 describe('resolveEffectiveTrustedDevicePolicy', () => {
   it.each([
     {
       name: 'uses disabled defaults for an empty global policy',
       policy: {},
-      organizations: [],
+      hasDisallowedOrganization: false,
       expected: { enabled: false, durationDays: 30 },
     },
     {
       name: 'allows a globally enabled user without organizations',
       policy: { enabled: true, durationDays: 7 },
-      organizations: [],
+      hasDisallowedOrganization: false,
       expected: { enabled: true, durationDays: 7 },
     },
     {
       name: 'keeps globally disabled trust disabled when every organization allows it',
       policy: { enabled: false, durationDays: 14 },
-      organizations: [allowedOrganization, allowedOrganization],
+      hasDisallowedOrganization: false,
       expected: { enabled: false, durationDays: 14 },
     },
     {
       name: 'allows trust when global policy and every organization allow it',
       policy: { enabled: true, durationDays: 21 },
-      organizations: [allowedOrganization, allowedOrganization],
+      hasDisallowedOrganization: false,
       expected: { enabled: true, durationDays: 21 },
     },
     {
       name: 'blocks trust when any organization disallows it',
       policy: { enabled: true, durationDays: 60 },
-      organizations: [allowedOrganization, blockedOrganization],
+      hasDisallowedOrganization: true,
       expected: { enabled: false, durationDays: 60 },
     },
-  ])('$name', ({ policy, organizations, expected }) => {
-    expect(resolveEffectiveTrustedDevicePolicy(policy, organizations)).toEqual(expected);
-  });
-
-  it('ignores organization MFA requirement when resolving trusted-device permission', () => {
-    const organizations = [
-      { isTrustedDeviceAllowed: true, isMfaRequired: false },
-      { isTrustedDeviceAllowed: false, isMfaRequired: false },
-    ];
-
-    expect(
-      resolveEffectiveTrustedDevicePolicy({ enabled: true, durationDays: 30 }, organizations)
-    ).toEqual({ enabled: false, durationDays: 30 });
+  ])('$name', ({ policy, hasDisallowedOrganization, expected }) => {
+    expect(resolveEffectiveTrustedDevicePolicy(policy, hasDisallowedOrganization)).toEqual(
+      expected
+    );
   });
 });
 
@@ -79,13 +67,6 @@ const createQueries = (
       findDefaultSignInExperience: jest.fn(async () =>
         typeof signInExperience === 'function' ? signInExperience() : signInExperience
       ),
-    },
-    organizations: {
-      relations: {
-        users: {
-          getOrganizationsByUserId: jest.fn(async () => []),
-        },
-      },
     },
   }) as unknown as Queries;
 
@@ -189,7 +170,7 @@ describe('trusted device policy library', () => {
   it('does not run the create callback when the tenant policy is disabled', async () => {
     const connection = {
       query: jest.fn(async () => createMockQueryResult([])),
-      any: jest.fn(async () => []),
+      exists: jest.fn(async () => false),
     };
     const pool = {
       transaction: jest.fn(
@@ -203,6 +184,28 @@ describe('trusted device policy library', () => {
     expect(run).not.toHaveBeenCalled();
     expect(connection.query).toHaveBeenCalledWith(
       expectSqlString('select pg_advisory_xact_lock(hashtextextended($1, 0))')
+    );
+  });
+
+  it('resolves the effective policy with a targeted organization restriction query', async () => {
+    const pool = {
+      exists: jest.fn(async () => true),
+    };
+    const signInExperience = {
+      ...mockSignInExperience,
+      trustedDevice: { enabled: true, durationDays: 30 },
+    };
+    const library = createTrustedDevicePolicyLibrary(
+      'tenant-id',
+      createQueries(pool, signInExperience)
+    );
+
+    await expect(library.getEffectivePolicy('user-id')).resolves.toEqual({
+      enabled: false,
+      durationDays: 30,
+    });
+    expect(pool.exists).toHaveBeenCalledWith(
+      expectSqlString('"organizations"."is_trusted_device_allowed" = false')
     );
   });
 });
