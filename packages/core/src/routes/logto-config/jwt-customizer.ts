@@ -249,8 +249,8 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
         /**
          * Both execution paths surface failures as a withtyped `ResponseError`:
          *
-         * - Remote runs convert the Azure Functions `HTTPError` via `parseAzureFunctionsResponseError`,
-         *   and the cloud connection client throws `ResponseError` directly.
+         * - Remote runs map the Cloud script-run failure onto a `ScriptExecutionError`, and any
+         *   other cloud connection failure throws `ResponseError` directly.
          * - Local runs throw `ScriptExecutionError`, which extends `ResponseError`.
          *
          * In the admin console, we caught the error and recognized the error with the code `jwt_customizer.general`,

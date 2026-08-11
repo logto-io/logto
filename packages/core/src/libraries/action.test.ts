@@ -16,6 +16,7 @@ import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { actionMetricNames, type ActionTelemetryProperties } from './action-telemetry.js';
 import { getActionExecutionErrorPolicyDecision, ActionLibrary } from './action.js';
 import type { ActionExecutionErrorFallback, ActionExecutionErrorPolicyDecision } from './action.js';
+import type { CloudConnectionLibrary } from './cloud-connection.js';
 import type { LogtoConfigLibrary } from './logto-config.js';
 import type { SubscriptionLibrary } from './subscription.js';
 
@@ -47,7 +48,8 @@ const createLibrary = (tenantId = 'tenant_id') =>
   new ActionLibrary(
     tenantId,
     { getAction } as unknown as LogtoConfigLibrary,
-    { getSubscriptionData } as unknown as SubscriptionLibrary
+    { getSubscriptionData } as unknown as SubscriptionLibrary,
+    {} as CloudConnectionLibrary
   );
 
 const originalIsCloud = EnvSet.values.isCloud;

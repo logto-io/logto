@@ -84,8 +84,9 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
       const { body } = ctx.guard;
 
       try {
-        // Share the same Cloud/local execution selection as production `runAction()`.
-        const result = await libraries.actions.executeScript(body);
+        // Share the same Cloud/local execution selection as production `runAction()`, flagged as
+        // a dry run so the Cloud runner does not account for it as production traffic.
+        const result = await libraries.actions.executeScript({ ...body, isTest: true });
 
         if (result === undefined) {
           ctx.status = 204;
