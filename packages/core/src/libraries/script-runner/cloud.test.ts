@@ -63,7 +63,7 @@ describe('runScriptOnCloud', () => {
 
     await flushMicrotasks();
     expect(jest.getTimerCount()).toBe(1);
-    jest.advanceTimersByTime(10_000);
+    jest.advanceTimersByTime(5000);
     await expectation;
   });
 

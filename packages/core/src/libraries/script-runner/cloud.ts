@@ -17,13 +17,21 @@ type ScriptFailureKind = Extract<ScriptResult, { ok: false }>['kind'];
  * to undici's 300s defaults — on `PostSignIn` / `PostFirstFactorVerification` that hangs sign-in
  * inline, and `onExecutionError: 'allow'` cannot rescue a call that never returns.
  *
- * Set above the runner's own wall clock (the 5s `ossScriptLimits` grants locally) so a slow script
- * hits that bound and reports a real `timeout`, leaving this to fire only when the hop itself is
- * stuck. Racing does not cancel the underlying request — the runner still finishes and drops the
- * response — which is fine: the run is bounded on its side, and it is the caller that must stop
- * waiting.
+ * The value is a ceiling on how long core is willing to block, not an inference about the runner:
+ * core can neither read nor set the per-isolate budget (the route body takes `cpuMs` and
+ * `subRequests` only). 5s is the ceiling every other script path already carries — what the Azure
+ * hop bounded (`remoteActionRequestTimeout`) and what a local run gets (`ossScriptLimits`) — so a
+ * script blocks sign-in for the same time wherever it runs.
+ *
+ * Should the runner's own budget reach this, the two race and a runner-side breach can surface as
+ * this timeout instead of the runner's `timeout`, losing its message. That is the accepted trade:
+ * the failure is a timeout either way, and no script may hold sign-in longer than the ceiling.
+ * Keeping the isolate budget below it keeps the runner's own report the one that wins.
+ *
+ * Racing does not cancel the underlying request — the runner still finishes and drops the response
+ * — which is fine: the run is bounded on its side, and it is the caller that must stop waiting.
  */
-const cloudScriptRunTimeout = 10_000;
+const cloudScriptRunTimeout = 5000;
 
 /**
  * Bound `run` at {@link cloudScriptRunTimeout}, rejecting with the 500 `ScriptExecutionError` a
