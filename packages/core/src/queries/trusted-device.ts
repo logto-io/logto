@@ -14,16 +14,11 @@ import { convertToIdentifiers, manyRows } from '#src/utils/sql.js';
 const { table, fields } = convertToIdentifiers(TrustedDevices);
 const activePredicate = sql`${fields.expiresAt} > now()`;
 
-export const lockTrustedDeviceTableForCreate = async (
-  connection: DatabaseTransactionConnection
+export const lockTrustedDeviceChangesForTenant = async (
+  connection: DatabaseTransactionConnection,
+  tenantId: string
 ) => {
-  await connection.query(sql`lock table ${table} in row exclusive mode`);
-};
-
-export const lockTrustedDeviceTableForCleanup = async (
-  connection: DatabaseTransactionConnection
-) => {
-  await connection.query(sql`lock table ${table} in share row exclusive mode`);
+  await connection.query(sql`select pg_advisory_xact_lock(hashtextextended(${tenantId}, 0))`);
 };
 
 export type TrustedDeviceMetadata = Readonly<{

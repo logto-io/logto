@@ -7,8 +7,7 @@ import {
 
 import OrganizationQueries from '#src/queries/organization/index.js';
 import {
-  lockTrustedDeviceTableForCleanup,
-  lockTrustedDeviceTableForCreate,
+  lockTrustedDeviceChangesForTenant,
   TrustedDeviceQueries,
 } from '#src/queries/trusted-device.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -30,16 +29,19 @@ type EffectivePolicyTransaction = Readonly<{
   trustedDevices: TrustedDeviceQueries;
 }>;
 
-export const createTrustedDevicePolicyLibrary = (queries: Queries) => {
+export const createTrustedDevicePolicyLibrary = (tenantId: string, queries: Queries) => {
   const updateGlobalPolicy = queries.wellKnownCache.mutate(
     async (
       trustedDevice: Readonly<Required<TrustedDevicePolicy>>,
       signInExperienceUpdate: Omit<Partial<CreateSignInExperience>, 'trustedDevice'>
     ) => {
       return queries.pool.transaction(async (connection) => {
-        if (!trustedDevice.enabled) {
-          await lockTrustedDeviceTableForCleanup(connection);
-        }
+        await lockTrustedDeviceChangesForTenant(connection, tenantId);
+
+        const currentSignInExperience =
+          await queries.signInExperiences.findDefaultSignInExperience(connection);
+        const shouldDeleteTrustedDevices =
+          currentSignInExperience.trustedDevice.enabled === true && !trustedDevice.enabled;
 
         const updatedSignInExperience =
           await queries.signInExperiences.updateDefaultSignInExperience(
@@ -49,7 +51,7 @@ export const createTrustedDevicePolicyLibrary = (queries: Queries) => {
             },
             connection
           );
-        if (!trustedDevice.enabled) {
+        if (shouldDeleteTrustedDevices) {
           await new TrustedDeviceQueries(connection).deleteAllByTenant();
         }
 
@@ -73,7 +75,7 @@ export const createTrustedDevicePolicyLibrary = (queries: Queries) => {
     run: (transaction: EffectivePolicyTransaction) => Promise<Result>
   ): Promise<Result | undefined> =>
     queries.pool.transaction(async (connection) => {
-      await lockTrustedDeviceTableForCreate(connection);
+      await lockTrustedDeviceChangesForTenant(connection, tenantId);
 
       const signInExperience =
         await queries.signInExperiences.findDefaultSignInExperience(connection);

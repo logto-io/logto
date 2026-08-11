@@ -91,6 +91,10 @@ const createQueries = (
 
 describe('trusted device policy library', () => {
   it('disables and deletes all tenant records in one transaction', async () => {
+    const current = {
+      ...mockSignInExperience,
+      trustedDevice: { enabled: true, durationDays: 30 },
+    };
     const updated = {
       ...mockSignInExperience,
       trustedDevice: { enabled: false, durationDays: 30 },
@@ -107,7 +111,7 @@ describe('trusted device policy library', () => {
         async <Result>(run: (transaction: typeof connection) => Promise<Result>) => run(connection)
       ),
     };
-    const library = createTrustedDevicePolicyLibrary(createQueries(pool));
+    const library = createTrustedDevicePolicyLibrary('tenant-id', createQueries(pool, current));
 
     await expect(
       library.updateGlobalPolicy({ enabled: false, durationDays: 30 }, {})
@@ -115,7 +119,7 @@ describe('trusted device policy library', () => {
 
     expect(connection.query).toHaveBeenCalledTimes(3);
     expect(connection.query.mock.calls[0]?.[0]).toEqual(
-      expectSqlString('lock table "trusted_devices" in share row exclusive mode')
+      expectSqlString('select pg_advisory_xact_lock(hashtextextended($1, 0))')
     );
     expect(connection.query.mock.calls[1]?.[0]).toEqual(
       expectSqlString('update "sign_in_experiences"')
@@ -124,121 +128,81 @@ describe('trusted device policy library', () => {
   });
 
   it('does not delete records for a duration-only policy update', async () => {
+    const current = {
+      ...mockSignInExperience,
+      trustedDevice: { enabled: true, durationDays: 30 },
+    };
     const updated = {
       ...mockSignInExperience,
       trustedDevice: { enabled: true, durationDays: 60 },
     };
     const connection = {
-      query: jest.fn(async () => createMockQueryResult([updated as never])),
+      query: jest.fn(async (_query: unknown) => createMockQueryResult([updated as never])),
     };
     const pool = {
       transaction: jest.fn(
         async <Result>(run: (transaction: typeof connection) => Promise<Result>) => run(connection)
       ),
     };
-    const library = createTrustedDevicePolicyLibrary(createQueries(pool));
+    const library = createTrustedDevicePolicyLibrary('tenant-id', createQueries(pool, current));
 
     await expect(
       library.updateGlobalPolicy({ enabled: true, durationDays: 60 }, {})
     ).resolves.toEqual(updated);
-    expect(connection.query).toHaveBeenCalledTimes(1);
+    expect(connection.query).toHaveBeenCalledTimes(2);
+    expect(connection.query.mock.calls[0]?.[0]).toEqual(
+      expectSqlString('select pg_advisory_xact_lock(hashtextextended($1, 0))')
+    );
+    expect(connection.query.mock.calls[1]?.[0]).toEqual(
+      expectSqlString('update "sign_in_experiences"')
+    );
   });
 
-  it('serializes global disable before concurrent creation and prevents post-disable creation', async () => {
-    /* eslint-disable @silverhand/fp/no-mutation, @silverhand/fp/no-let -- Simulate mutable database state and lock ownership for the concurrency test. */
-    let signInExperience = {
+  it('does not delete records when the policy remains disabled', async () => {
+    const current = {
       ...mockSignInExperience,
-      trustedDevice: { enabled: true, durationDays: 30 },
+      trustedDevice: { enabled: false, durationDays: 30 },
     };
-    let isCleanupLockHeld = false;
-    let notifyCleanupLockAcquired: (() => void) | undefined;
-    let continueDisable: (() => void) | undefined;
-    let notifyCreateLockRequested: (() => void) | undefined;
-    let notifyCleanupLockReleased: (() => void) | undefined;
-    const cleanupLockAcquired = new Promise<void>((resolve) => {
-      notifyCleanupLockAcquired = resolve;
-    });
-    const disableCanContinue = new Promise<void>((resolve) => {
-      continueDisable = resolve;
-    });
-    const createLockRequested = new Promise<void>((resolve) => {
-      notifyCreateLockRequested = resolve;
-    });
-    const cleanupLockReleased = new Promise<void>((resolve) => {
-      notifyCleanupLockReleased = resolve;
-    });
-    const createConnection = () => {
-      let holdsCleanupLock = false;
-
-      return {
-        any: jest.fn(async () => []),
-        query: jest.fn(async (query: { sql: string }) => {
-          if (/share row exclusive mode/i.test(query.sql)) {
-            isCleanupLockHeld = true;
-            holdsCleanupLock = true;
-            notifyCleanupLockAcquired?.();
-            await disableCanContinue;
-
-            return createMockQueryResult([]);
-          }
-
-          if (/row exclusive mode/i.test(query.sql)) {
-            notifyCreateLockRequested?.();
-
-            if (isCleanupLockHeld) {
-              await cleanupLockReleased;
-            }
-
-            return createMockQueryResult([]);
-          }
-
-          if (/update "sign_in_experiences"/i.test(query.sql)) {
-            signInExperience = {
-              ...signInExperience,
-              trustedDevice: { enabled: false, durationDays: 30 },
-            };
-            return createMockQueryResult([signInExperience as never]);
-          }
-
-          return createMockQueryResult([]);
-        }),
-        release: () => {
-          if (holdsCleanupLock) {
-            isCleanupLockHeld = false;
-            notifyCleanupLockReleased?.();
-          }
-        },
-      };
+    const updated = {
+      ...mockSignInExperience,
+      trustedDevice: { enabled: false, durationDays: 60 },
+    };
+    const connection = {
+      query: jest
+        .fn()
+        .mockResolvedValueOnce(createMockQueryResult([]))
+        .mockResolvedValueOnce(createMockQueryResult([updated as never])),
     };
     const pool = {
       transaction: jest.fn(
-        async <Result>(
-          run: (transaction: ReturnType<typeof createConnection>) => Promise<Result>
-        ) => {
-          const connection = createConnection();
-
-          try {
-            return await run(connection);
-          } finally {
-            connection.release();
-          }
-        }
+        async <Result>(run: (transaction: typeof connection) => Promise<Result>) => run(connection)
       ),
     };
-    const library = createTrustedDevicePolicyLibrary(createQueries(pool, () => signInExperience));
-    const createRecord = jest.fn(async () => 'created');
-    const disable = library.updateGlobalPolicy({ enabled: false, durationDays: 30 }, {});
+    const library = createTrustedDevicePolicyLibrary('tenant-id', createQueries(pool, current));
 
-    await cleanupLockAcquired;
-    const create = library.runIfEnabled('user-id', createRecord);
-    await createLockRequested;
-    continueDisable?.();
+    await expect(
+      library.updateGlobalPolicy({ enabled: false, durationDays: 60 }, {})
+    ).resolves.toEqual(updated);
+    expect(connection.query).toHaveBeenCalledTimes(2);
+  });
 
-    await expect(Promise.all([disable, create])).resolves.toEqual([
-      expect.objectContaining({ trustedDevice: { enabled: false, durationDays: 30 } }),
-      undefined,
-    ]);
-    expect(createRecord).not.toHaveBeenCalled();
-    /* eslint-enable @silverhand/fp/no-mutation, @silverhand/fp/no-let */
+  it('does not run the create callback when the tenant policy is disabled', async () => {
+    const connection = {
+      query: jest.fn(async () => createMockQueryResult([])),
+      any: jest.fn(async () => []),
+    };
+    const pool = {
+      transaction: jest.fn(
+        async <Result>(run: (transaction: typeof connection) => Promise<Result>) => run(connection)
+      ),
+    };
+    const run = jest.fn(async () => 'created');
+    const library = createTrustedDevicePolicyLibrary('tenant-id', createQueries(pool));
+
+    await expect(library.runIfEnabled('user-id', run)).resolves.toBeUndefined();
+    expect(run).not.toHaveBeenCalled();
+    expect(connection.query).toHaveBeenCalledWith(
+      expectSqlString('select pg_advisory_xact_lock(hashtextextended($1, 0))')
+    );
   });
 });

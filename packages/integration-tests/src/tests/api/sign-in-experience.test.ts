@@ -311,6 +311,77 @@ devFeatureTest.describe('trusted device global disable', () => {
       await deleteUser(user.id);
     }
   });
+
+  it('does not delete trusted-device records when the policy remains disabled', async () => {
+    const user = await createUser({ name: 'trusted-device-disabled-policy-test' });
+    const trustedDeviceId = generateStandardId();
+
+    try {
+      await updateSignInExperience({ trustedDevice: { enabled: false, durationDays: 30 } });
+      await pool.query(sql`
+        insert into trusted_devices (
+          tenant_id,
+          id,
+          user_id,
+          secret_hash,
+          expires_at
+        ) values (
+          ${defaultTenantId},
+          ${trustedDeviceId},
+          ${user.id},
+          ${sql.binary(Buffer.alloc(32, 1))},
+          now() + interval '30 days'
+        )
+      `);
+
+      await updateSignInExperience({ trustedDevice: { enabled: false, durationDays: 60 } });
+
+      await expect(
+        pool.oneFirst<number>(sql`
+          select count(*)::integer
+          from trusted_devices
+          where tenant_id = ${defaultTenantId} and id = ${trustedDeviceId}
+        `)
+      ).resolves.toBe(1);
+    } finally {
+      await pool.query(sql`
+        delete from trusted_devices
+        where tenant_id = ${defaultTenantId} and id = ${trustedDeviceId}
+      `);
+      await deleteUser(user.id);
+    }
+  });
+
+  it('serializes policy writes and credential creation by tenant', async () => {
+    await pool.transaction(async (firstConnection) => {
+      await firstConnection.query(
+        sql`select pg_advisory_xact_lock(hashtextextended(${defaultTenantId}, 0))`
+      );
+
+      await pool.transaction(async (secondConnection) => {
+        await expect(
+          secondConnection.oneFirst<boolean>(sql`
+            select pg_try_advisory_xact_lock(hashtextextended(${defaultTenantId}, 0))
+          `)
+        ).resolves.toBe(false);
+        await expect(
+          secondConnection.oneFirst<boolean>(sql`
+            select pg_try_advisory_xact_lock(
+              hashtextextended(${`${defaultTenantId}-another-tenant`}, 0)
+            )
+          `)
+        ).resolves.toBe(true);
+      });
+    });
+
+    await pool.transaction(async (connection) => {
+      await expect(
+        connection.oneFirst<boolean>(sql`
+          select pg_try_advisory_xact_lock(hashtextextended(${defaultTenantId}, 0))
+        `)
+      ).resolves.toBe(true);
+    });
+  });
 });
 
 const expectPasswordIssues = async (promise: ResponsePromise, issueCodes: string[]) => {
