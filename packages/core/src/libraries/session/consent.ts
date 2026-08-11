@@ -167,17 +167,16 @@ const saveCimdGrantRecords = async (
   const client = await provider.Client.find(cimdClientId);
   assertThat(client, new errors.InvalidClient('client must be available'));
 
+  const { clientName, logoUri } = client;
+
+  /** The insert builder maps an explicitly-undefined field to SQL null. */
   await queries.cimd.grantClientSnapshots.insert({
     grantId,
     clientId: cimdClientId,
-    name:
-      client.clientName === undefined
-        ? null
-        : truncateToCodePoints(client.clientName, snapshotNameMaxLength),
-    logoUri:
-      client.logoUri && Array.from(client.logoUri).length <= snapshotLogoUriMaxLength
-        ? client.logoUri
-        : null,
+    name: conditional(clientName && truncateToCodePoints(clientName, snapshotNameMaxLength)),
+    logoUri: conditional(
+      logoUri && Array.from(logoUri).length <= snapshotLogoUriMaxLength && logoUri
+    ),
   });
 };
 

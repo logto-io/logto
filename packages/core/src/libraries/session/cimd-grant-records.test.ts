@@ -167,7 +167,7 @@ describe('consent for a cimd client', () => {
     );
   });
 
-  it('should store an absent client name and logo as null', async () => {
+  it('should leave an absent client name and logo unset for the insert to store null', async () => {
     findClient.mockResolvedValueOnce({});
     const provider = createCimdProvider(cimdInteractionDetails);
     await runConsent(provider, cimdInteractionDetails);
@@ -175,8 +175,8 @@ describe('consent for a cimd client', () => {
     expect(insertGrantClientSnapshot).toHaveBeenCalledWith({
       grantId: grantSave.mock.calls[0]?.[0],
       clientId: cimdClientId,
-      name: null,
-      logoUri: null,
+      name: undefined,
+      logoUri: undefined,
     });
   });
 
@@ -189,7 +189,7 @@ describe('consent for a cimd client', () => {
       grantId: grantSave.mock.calls[0]?.[0],
       clientId: cimdClientId,
       name: 'a'.repeat(256),
-      logoUri: null,
+      logoUri: undefined,
     });
   });
 
@@ -202,7 +202,7 @@ describe('consent for a cimd client', () => {
       grantId: grantSave.mock.calls[0]?.[0],
       clientId: cimdClientId,
       name: `${'a'.repeat(255)}😀`,
-      logoUri: null,
+      logoUri: undefined,
     });
   });
 
@@ -215,11 +215,11 @@ describe('consent for a cimd client', () => {
       grantId: grantSave.mock.calls[0]?.[0],
       clientId: cimdClientId,
       name: 'a'.repeat(256),
-      logoUri: null,
+      logoUri: undefined,
     });
   });
 
-  it('should store an overlong logo uri as null', async () => {
+  it('should drop an overlong logo uri instead of truncating it', async () => {
     findClient.mockResolvedValueOnce({
       clientName: 'Example App',
       logoUri: `https://client.example.com/${'a'.repeat(2048)}.png`,
@@ -231,7 +231,7 @@ describe('consent for a cimd client', () => {
       grantId: grantSave.mock.calls[0]?.[0],
       clientId: cimdClientId,
       name: 'Example App',
-      logoUri: null,
+      logoUri: undefined,
     });
   });
 
