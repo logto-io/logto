@@ -1,8 +1,8 @@
-import { organizationWithOrganizationRolesGuard } from '@logto/schemas';
 import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 
+import { organizationWithRolesResponseGuard } from '../organization/guards.js';
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
 export default function adminUserOrganizationRoutes<T extends ManagementApiRouter>(
@@ -12,7 +12,7 @@ export default function adminUserOrganizationRoutes<T extends ManagementApiRoute
     '/users/:userId/organizations',
     koaGuard({
       params: z.object({ userId: z.string() }),
-      response: organizationWithOrganizationRolesGuard.array(),
+      response: organizationWithRolesResponseGuard.array(),
       status: [200, 404],
     }),
     async (ctx, next) => {

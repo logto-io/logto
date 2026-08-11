@@ -2,7 +2,6 @@ import { Organizations, ProductEvent, featuredUserGuard } from '@logto/schemas';
 import { yes } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import { koaQuotaGuard, koaReportSubscriptionUpdates } from '#src/middleware/koa-quota-guard.js';
@@ -16,15 +15,10 @@ import organizationScopeRoutes from '../organization-scope/index.js';
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
 import applicationRoutes from './application/index.js';
+import { organizationHiddenFields, organizationResponseGuard } from './guards.js';
 import jitRoutes from './jit/index.js';
 import userRoutes from './user/index.js';
 import { errorHandler } from './utils.js';
-
-// DEV: MFA trusted devices
-const hiddenFields = EnvSet.values.isDevFeaturesEnabled
-  ? {}
-  : { isTrustedDeviceAllowed: true as const };
-const organizationResponseGuard = Organizations.guard.omit(hiddenFields);
 
 export default function organizationRoutes<T extends ManagementApiRouter>(
   ...args: RouterInitArgs<T>
@@ -60,7 +54,7 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
     searchFields: ['name'],
     disabled: { get: true },
     idLength: 12,
-    hiddenFields,
+    hiddenFields: organizationHiddenFields,
     hooks: {
       afterInsert: async (ctx) => {
         captureEvent({ tenantId, request: ctx.req }, ProductEvent.OrganizationCreated);
