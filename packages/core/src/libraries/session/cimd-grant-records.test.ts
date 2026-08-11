@@ -14,6 +14,9 @@ import { consent } from './index.js';
 const { jest } = import.meta;
 
 const grantSave = jest.fn(async (id: string) => id);
+const grantDestroy = jest.fn(async () => {
+  await Promise.resolve();
+});
 
 class Grant extends GrantMock {
   static async find(id: string) {
@@ -24,10 +27,13 @@ class Grant extends GrantMock {
 
   accountId?: string;
 
+  destroy: () => Promise<void>;
+
   constructor() {
     super();
     this.id = generateStandardId();
     this.save = async () => grantSave(this.id);
+    this.destroy = grantDestroy;
   }
 }
 
@@ -77,6 +83,11 @@ describe('consent for a cimd client', () => {
     prompt: { details: {} },
   } as unknown as Interaction;
 
+  const reusedGrantInteractionDetails = {
+    ...cimdInteractionDetails,
+    grantId: 'exists',
+  } as unknown as Interaction;
+
   const findClient = jest.fn(
     async (): Promise<unknown> => ({
       clientName: 'Example App',
@@ -87,6 +98,20 @@ describe('consent for a cimd client', () => {
   const createCimdProvider = (interactionDetails: Interaction) =>
     createMockProvider(jest.fn().mockResolvedValue(interactionDetails), Grant, {
       find: findClient,
+    });
+
+  const runConsent = async (
+    provider: Provider,
+    interactionDetails: Interaction,
+    cimdOrganizationId?: string
+  ) =>
+    consent({
+      ctx: context,
+      provider,
+      envSet: cimdEnvSet,
+      queries,
+      interactionDetails,
+      cimdOrganizationId,
     });
 
   beforeEach(() => {
@@ -104,13 +129,7 @@ describe('consent for a cimd client', () => {
 
   it('should write the client snapshot after the grant is saved when no organization is selected', async () => {
     const provider = createCimdProvider(cimdInteractionDetails);
-    await consent({
-      ctx: context,
-      provider,
-      envSet: cimdEnvSet,
-      queries,
-      interactionDetails: cimdInteractionDetails,
-    });
+    await runConsent(provider, cimdInteractionDetails);
 
     expect(findClient).toHaveBeenCalledWith(cimdClientId);
     expect(insertGrantClientSnapshot).toHaveBeenCalledWith({
@@ -125,16 +144,9 @@ describe('consent for a cimd client', () => {
     expect(insertGrantOrganization).not.toHaveBeenCalled();
   });
 
-  it('should write the client snapshot and the grant-scoped organization row after the grant is saved', async () => {
+  it('should occupy the organization binding before writing the client snapshot', async () => {
     const provider = createCimdProvider(cimdInteractionDetails);
-    await consent({
-      ctx: context,
-      provider,
-      envSet: cimdEnvSet,
-      queries,
-      interactionDetails: cimdInteractionDetails,
-      cimdOrganizationId: 'org_id',
-    });
+    await runConsent(provider, cimdInteractionDetails, 'org_id');
 
     expect(insertGrantClientSnapshot).toHaveBeenCalledWith({
       grantId: grantSave.mock.calls[0]?.[0],
@@ -150,18 +162,15 @@ describe('consent for a cimd client', () => {
     expect(grantSave.mock.invocationCallOrder[0]).toBeLessThan(
       insertGrantOrganization.mock.invocationCallOrder[0] ?? 0
     );
+    expect(insertGrantOrganization.mock.invocationCallOrder[0]).toBeLessThan(
+      insertGrantClientSnapshot.mock.invocationCallOrder[0] ?? 0
+    );
   });
 
   it('should store an absent client name and logo as null', async () => {
     findClient.mockResolvedValueOnce({});
     const provider = createCimdProvider(cimdInteractionDetails);
-    await consent({
-      ctx: context,
-      provider,
-      envSet: cimdEnvSet,
-      queries,
-      interactionDetails: cimdInteractionDetails,
-    });
+    await runConsent(provider, cimdInteractionDetails);
 
     expect(insertGrantClientSnapshot).toHaveBeenCalledWith({
       grantId: grantSave.mock.calls[0]?.[0],
@@ -174,13 +183,33 @@ describe('consent for a cimd client', () => {
   it('should truncate an overlong client name to the column bound', async () => {
     findClient.mockResolvedValueOnce({ clientName: 'a'.repeat(300) });
     const provider = createCimdProvider(cimdInteractionDetails);
-    await consent({
-      ctx: context,
-      provider,
-      envSet: cimdEnvSet,
-      queries,
-      interactionDetails: cimdInteractionDetails,
+    await runConsent(provider, cimdInteractionDetails);
+
+    expect(insertGrantClientSnapshot).toHaveBeenCalledWith({
+      grantId: grantSave.mock.calls[0]?.[0],
+      clientId: cimdClientId,
+      name: 'a'.repeat(256),
+      logoUri: null,
     });
+  });
+
+  it('should keep a client name that fits the column in characters but not in code units', async () => {
+    findClient.mockResolvedValueOnce({ clientName: `${'a'.repeat(255)}😀` });
+    const provider = createCimdProvider(cimdInteractionDetails);
+    await runConsent(provider, cimdInteractionDetails);
+
+    expect(insertGrantClientSnapshot).toHaveBeenCalledWith({
+      grantId: grantSave.mock.calls[0]?.[0],
+      clientId: cimdClientId,
+      name: `${'a'.repeat(255)}😀`,
+      logoUri: null,
+    });
+  });
+
+  it('should truncate at a character boundary without splitting a surrogate pair', async () => {
+    findClient.mockResolvedValueOnce({ clientName: `${'a'.repeat(256)}😀` });
+    const provider = createCimdProvider(cimdInteractionDetails);
+    await runConsent(provider, cimdInteractionDetails);
 
     expect(insertGrantClientSnapshot).toHaveBeenCalledWith({
       grantId: grantSave.mock.calls[0]?.[0],
@@ -196,13 +225,7 @@ describe('consent for a cimd client', () => {
       logoUri: `https://client.example.com/${'a'.repeat(2048)}.png`,
     });
     const provider = createCimdProvider(cimdInteractionDetails);
-    await consent({
-      ctx: context,
-      provider,
-      envSet: cimdEnvSet,
-      queries,
-      interactionDetails: cimdInteractionDetails,
-    });
+    await runConsent(provider, cimdInteractionDetails);
 
     expect(insertGrantClientSnapshot).toHaveBeenCalledWith({
       grantId: grantSave.mock.calls[0]?.[0],
@@ -212,58 +235,53 @@ describe('consent for a cimd client', () => {
     });
   });
 
-  it('should fail the consent when the client can no longer be resolved', async () => {
+  it('should keep a logo uri that fits the column in characters but not in code units', async () => {
+    const logoUri = `https://client.example.com/${'😀'.repeat(1015)}.png`;
+    findClient.mockResolvedValueOnce({ clientName: 'Example App', logoUri });
+    const provider = createCimdProvider(cimdInteractionDetails);
+    await runConsent(provider, cimdInteractionDetails);
+
+    expect(insertGrantClientSnapshot).toHaveBeenCalledWith({
+      grantId: grantSave.mock.calls[0]?.[0],
+      clientId: cimdClientId,
+      name: 'Example App',
+      logoUri,
+    });
+  });
+
+  it('should fail the consent and destroy the fresh grant when the client can no longer be resolved', async () => {
     // eslint-disable-next-line unicorn/no-useless-undefined -- undefined is the provider's not-found result under test
     findClient.mockResolvedValueOnce(undefined);
     const provider = createCimdProvider(cimdInteractionDetails);
 
-    await expect(
-      consent({
-        ctx: context,
-        provider,
-        envSet: cimdEnvSet,
-        queries,
-        interactionDetails: cimdInteractionDetails,
-      })
-    ).rejects.toMatchError(new errors.InvalidClient('client must be available'));
+    await expect(runConsent(provider, cimdInteractionDetails)).rejects.toMatchError(
+      new errors.InvalidClient('client must be available')
+    );
     expect(insertGrantClientSnapshot).not.toHaveBeenCalled();
+    expect(grantDestroy).toHaveBeenCalled();
     expect(provider.interactionResult).not.toHaveBeenCalled();
   });
 
-  it('should fail the consent before the interaction result update when the snapshot write fails', async () => {
+  it('should fail the consent and destroy the fresh grant when the snapshot write fails', async () => {
     insertGrantClientSnapshot.mockRejectedValueOnce(new Error('write failed'));
     const provider = createCimdProvider(cimdInteractionDetails);
 
-    await expect(
-      consent({
-        ctx: context,
-        provider,
-        envSet: cimdEnvSet,
-        queries,
-        interactionDetails: cimdInteractionDetails,
-      })
-    ).rejects.toThrow('write failed');
+    await expect(runConsent(provider, cimdInteractionDetails)).rejects.toThrow('write failed');
+    expect(grantDestroy).toHaveBeenCalled();
     expect(provider.interactionResult).not.toHaveBeenCalled();
   });
 
-  it('should fail the consent when a different organization is already authorized on the grant', async () => {
+  it('should reject a conflicting organization without writing a snapshot and destroy the fresh grant', async () => {
     findGrantOrganizationIds.mockResolvedValueOnce(['other_org_id']);
     const provider = createCimdProvider(cimdInteractionDetails);
 
-    await expect(
-      consent({
-        ctx: context,
-        provider,
-        envSet: cimdEnvSet,
-        queries,
-        interactionDetails: cimdInteractionDetails,
-        cimdOrganizationId: 'org_id',
-      })
-    ).rejects.toMatchError(
+    await expect(runConsent(provider, cimdInteractionDetails, 'org_id')).rejects.toMatchError(
       new errors.InvalidRequest(
         'the grant organization binding does not match the submitted organization'
       )
     );
+    expect(insertGrantClientSnapshot).not.toHaveBeenCalled();
+    expect(grantDestroy).toHaveBeenCalled();
     expect(provider.interactionResult).not.toHaveBeenCalled();
   });
 
@@ -271,37 +289,31 @@ describe('consent for a cimd client', () => {
     findGrantOrganizationIds.mockResolvedValueOnce([]);
     const provider = createCimdProvider(cimdInteractionDetails);
 
-    await expect(
-      consent({
-        ctx: context,
-        provider,
-        envSet: cimdEnvSet,
-        queries,
-        interactionDetails: cimdInteractionDetails,
-        cimdOrganizationId: 'org_id',
-      })
-    ).rejects.toMatchError(
+    await expect(runConsent(provider, cimdInteractionDetails, 'org_id')).rejects.toMatchError(
       new errors.InvalidRequest(
         'the grant organization binding does not match the submitted organization'
       )
     );
+    expect(insertGrantClientSnapshot).not.toHaveBeenCalled();
+    expect(grantDestroy).toHaveBeenCalled();
+    expect(provider.interactionResult).not.toHaveBeenCalled();
+  });
+
+  it('should fail the consent and destroy the fresh grant when the organization row write fails', async () => {
+    insertGrantOrganization.mockRejectedValueOnce(new Error('write failed'));
+    const provider = createCimdProvider(cimdInteractionDetails);
+
+    await expect(runConsent(provider, cimdInteractionDetails, 'org_id')).rejects.toThrow(
+      'write failed'
+    );
+    expect(insertGrantClientSnapshot).not.toHaveBeenCalled();
+    expect(grantDestroy).toHaveBeenCalled();
     expect(provider.interactionResult).not.toHaveBeenCalled();
   });
 
   it('should re-write the client snapshot without failing when a retried submission reuses the grant', async () => {
-    const interactionDetails = {
-      ...cimdInteractionDetails,
-      grantId: 'exists',
-    } as unknown as Interaction;
-    const provider = createCimdProvider(interactionDetails);
-
-    await consent({
-      ctx: context,
-      provider,
-      envSet: cimdEnvSet,
-      queries,
-      interactionDetails,
-    });
+    const provider = createCimdProvider(reusedGrantInteractionDetails);
+    await runConsent(provider, reusedGrantInteractionDetails);
 
     expect(insertGrantClientSnapshot).toHaveBeenCalledWith({
       grantId: 'exists',
@@ -314,20 +326,8 @@ describe('consent for a cimd client', () => {
   });
 
   it('should write the snapshot and occupy the organization binding before changing a reused grant', async () => {
-    const interactionDetails = {
-      ...cimdInteractionDetails,
-      grantId: 'exists',
-    } as unknown as Interaction;
-    const provider = createCimdProvider(interactionDetails);
-
-    await consent({
-      ctx: context,
-      provider,
-      envSet: cimdEnvSet,
-      queries,
-      interactionDetails,
-      cimdOrganizationId: 'org_id',
-    });
+    const provider = createCimdProvider(reusedGrantInteractionDetails);
+    await runConsent(provider, reusedGrantInteractionDetails, 'org_id');
 
     expect(insertGrantClientSnapshot).toHaveBeenCalledWith({
       grantId: 'exists',
@@ -348,46 +348,20 @@ describe('consent for a cimd client', () => {
     );
   });
 
-  it('should fail before any grant change when a reused grant carries a different organization', async () => {
+  it('should fail before any grant change without destroying a reused grant carrying a different organization', async () => {
     findGrantOrganizationIds.mockResolvedValueOnce(['other_org_id']);
-    const interactionDetails = {
-      ...cimdInteractionDetails,
-      grantId: 'exists',
-    } as unknown as Interaction;
-    const provider = createCimdProvider(interactionDetails);
+    const provider = createCimdProvider(reusedGrantInteractionDetails);
 
     await expect(
-      consent({
-        ctx: context,
-        provider,
-        envSet: cimdEnvSet,
-        queries,
-        interactionDetails,
-        cimdOrganizationId: 'org_id',
-      })
+      runConsent(provider, reusedGrantInteractionDetails, 'org_id')
     ).rejects.toMatchError(
       new errors.InvalidRequest(
         'the grant organization binding does not match the submitted organization'
       )
     );
+    expect(insertGrantClientSnapshot).not.toHaveBeenCalled();
     expect(grantSave).not.toHaveBeenCalled();
-    expect(provider.interactionResult).not.toHaveBeenCalled();
-  });
-
-  it('should fail the consent before the interaction result update when the organization row write fails', async () => {
-    insertGrantOrganization.mockRejectedValueOnce(new Error('write failed'));
-    const provider = createCimdProvider(cimdInteractionDetails);
-
-    await expect(
-      consent({
-        ctx: context,
-        provider,
-        envSet: cimdEnvSet,
-        queries,
-        interactionDetails: cimdInteractionDetails,
-        cimdOrganizationId: 'org_id',
-      })
-    ).rejects.toThrow('write failed');
+    expect(grantDestroy).not.toHaveBeenCalled();
     expect(provider.interactionResult).not.toHaveBeenCalled();
   });
 });

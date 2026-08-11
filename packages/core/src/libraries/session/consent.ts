@@ -1,5 +1,5 @@
 import { jsonObjectGuard } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
+import { conditional, trySafe } from '@silverhand/essentials';
 import type { Context } from 'koa';
 import type { PromptDetail, Provider } from 'oidc-provider';
 import { errors } from 'oidc-provider';
@@ -130,6 +130,14 @@ const snapshotNameMaxLength = 256;
 const snapshotLogoUriMaxLength = 2048;
 
 /**
+ * PostgreSQL `varchar(n)` counts characters (code points), so the column bounds must be applied
+ * the same way — a UTF-16 `slice`/`length` would split a surrogate pair at the boundary into a
+ * lone `�`, or reject a value the column actually fits.
+ */
+const truncateToCodePoints = (value: string, maxLength: number) =>
+  Array.from(value).slice(0, maxLength).join('');
+
+/**
  * Persist the grant-scoped CIMD rows: the client display snapshot on every consent, and the
  * organization binding when one was selected.
  *
@@ -142,7 +150,8 @@ const snapshotLogoUriMaxLength = 2048;
  * The organization part asserts the binding holds after the write: exactly one row, carrying
  * the submitted organization. Its conflict-ignored insert cannot tell a same-organization retry
  * from a different organization landing on the grant, and the exactly-one read also fails
- * closed when the row was cascade-deleted in between.
+ * closed when the row was cascade-deleted in between. It precedes the snapshot write so a
+ * submission rejected here leaves no snapshot behind.
  *
  * No-ops for a non-CIMD client — the rows are CIMD-only.
  */
@@ -160,29 +169,53 @@ const saveCimdGrantRecords = async (
     return;
   }
 
+  if (organizationId) {
+    await queries.cimd.grantOrganizations.insert({ grantId, organizationId, userId });
+    const organizationIds = await queries.cimd.grantOrganizations.findOrganizationIds(grantId);
+    assertThat(
+      organizationIds.length === 1 && organizationIds[0] === organizationId,
+      new errors.InvalidRequest(
+        'the grant organization binding does not match the submitted organization'
+      )
+    );
+  }
+
   const client = await provider.Client.find(cimdClientId);
   assertThat(client, new errors.InvalidClient('client must be available'));
 
   await queries.cimd.grantClientSnapshots.insert({
     grantId,
     clientId: cimdClientId,
-    name: client.clientName?.slice(0, snapshotNameMaxLength) ?? null,
+    name:
+      client.clientName === undefined
+        ? null
+        : truncateToCodePoints(client.clientName, snapshotNameMaxLength),
     logoUri:
-      client.logoUri && client.logoUri.length <= snapshotLogoUriMaxLength ? client.logoUri : null,
+      client.logoUri && Array.from(client.logoUri).length <= snapshotLogoUriMaxLength
+        ? client.logoUri
+        : null,
   });
+};
 
-  if (!organizationId) {
-    return;
+/**
+ * A fresh grant is already persisted when its records are written, so a failed write would
+ * leave an orphan Grant row — and once the snapshot marker exists, such an orphan would
+ * surface as an active CIMD grant in the grant list until pruned. Destroying the grant lets
+ * the foreign-key cascades erase whatever records were written with it; best effort — the
+ * write error stays the failure the consent surfaces.
+ */
+const saveCimdGrantRecordsForFreshGrant = async (
+  provider: Provider,
+  queries: Queries,
+  grant: { destroy: () => Promise<void> },
+  data: { grantId: string; cimdClientId?: string; organizationId?: string; userId: string }
+) => {
+  try {
+    await saveCimdGrantRecords(provider, queries, data);
+  } catch (error: unknown) {
+    await trySafe(async () => grant.destroy());
+    throw error;
   }
-
-  await queries.cimd.grantOrganizations.insert({ grantId, organizationId, userId });
-  const organizationIds = await queries.cimd.grantOrganizations.findOrganizationIds(grantId);
-  assertThat(
-    organizationIds.length === 1 && organizationIds[0] === organizationId,
-    new errors.InvalidRequest(
-      'the grant organization binding does not match the submitted organization'
-    )
-  );
 };
 
 export const consent = async ({
@@ -267,7 +300,7 @@ export const consent = async ({
 
   if (!existingGrant) {
     /** Precedes the interaction result update so a failed write fails the whole consent. */
-    await saveCimdGrantRecords(provider, queries, {
+    await saveCimdGrantRecordsForFreshGrant(provider, queries, grant, {
       grantId: finalGrantId,
       cimdClientId,
       organizationId: cimdOrganizationId,
