@@ -180,10 +180,7 @@ const createGrantOrganizationQueries = (pool: CommonQueryMethods) => {
 };
 
 const createGrantClientSnapshotQueries = (pool: CommonQueryMethods) => {
-  /**
-   * Idempotent so a retried consent submission does not fail — the first write wins, keeping
-   * the identity closest to what the user saw when approving.
-   */
+  /** Idempotent so a retried consent submission does not fail; the first write wins. */
   const insert = buildInsertIntoWithPool(pool)(CimdGrantClientSnapshots, {
     onConflict: { ignore: true },
   });

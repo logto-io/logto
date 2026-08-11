@@ -117,43 +117,26 @@ const saveInteractionLastSubmissionToSession = async (
   }
 };
 
-/**
- * Must fit the `name varchar(256)` column of `cimd_grant_client_snapshots` — an overlong name
- * is truncated rather than failing the consent over display data.
- */
+/** The snapshot's `name varchar(256)` bound — truncate rather than fail the consent. */
 const snapshotNameMaxLength = 256;
 
-/**
- * Must fit the `logo_uri varchar(2048)` column of `cimd_grant_client_snapshots` — a truncated
- * URL is useless, so an overlong logo URI is stored as absent.
- */
+/** The snapshot's `logo_uri varchar(2048)` bound — a truncated URL is useless, so null instead. */
 const snapshotLogoUriMaxLength = 2048;
 
 /**
- * PostgreSQL `varchar(n)` counts characters (code points), so the column bounds must be applied
- * the same way — a UTF-16 `slice`/`length` would split a surrogate pair at the boundary into a
- * lone `�`, or reject a value the column actually fits.
+ * PostgreSQL `varchar(n)` counts code points — a UTF-16 `slice` could split a surrogate pair
+ * into a lone `�`.
  */
 const truncateToCodePoints = (value: string, maxLength: number) =>
   Array.from(value).slice(0, maxLength).join('');
 
 /**
- * Persist the grant-scoped CIMD rows: the client display snapshot on every consent, and the
- * organization binding when one was selected.
- *
- * The snapshot captures the identity the user approved, read from the provider-validated
- * metadata document — the same source the consent page rendered. An unvetted client can rewrite
- * its hosted document at any time, so the grant list renders this row instead of refetching,
- * and the row's existence marks the grant as CIMD. The conflict-ignored insert keeps the first
- * write on a retried submission instead of failing.
- *
- * The organization part asserts the binding holds after the write: exactly one row, carrying
- * the submitted organization. Its conflict-ignored insert cannot tell a same-organization retry
- * from a different organization landing on the grant, and the exactly-one read also fails
- * closed when the row was cascade-deleted in between. It precedes the snapshot write so a
- * submission rejected here leaves no snapshot behind.
- *
- * No-ops for a non-CIMD client — the rows are CIMD-only.
+ * The client snapshot rides every CIMD consent: the grant list renders it instead of
+ * refetching the rewritable document, and its existence marks the grant as CIMD. The
+ * organization binding precedes it so a rejected submission leaves no snapshot, and must hold
+ * exactly the submitted organization — the conflict-ignored insert cannot tell a
+ * same-organization retry from a different organization landing on the grant, and the read
+ * fails closed when the row was cascade-deleted in between. No-ops for a non-CIMD client.
  */
 const saveCimdGrantRecords = async (
   provider: Provider,
@@ -198,11 +181,9 @@ const saveCimdGrantRecords = async (
 };
 
 /**
- * A fresh grant is already persisted when its records are written, so a failed write would
- * leave an orphan Grant row — and once the snapshot marker exists, such an orphan would
- * surface as an active CIMD grant in the grant list until pruned. Destroying the grant lets
- * the foreign-key cascades erase whatever records were written with it; best effort — the
- * write error stays the failure the consent surfaces.
+ * A failed record write would orphan the already-saved grant, and once the snapshot marker
+ * exists the orphan would surface in the grant list — destroy it, best effort, and let the
+ * foreign-key cascades erase the written rows.
  */
 const saveCimdGrantRecordsForFreshGrant = async (
   provider: Provider,
