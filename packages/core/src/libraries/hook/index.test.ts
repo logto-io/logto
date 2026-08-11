@@ -68,6 +68,7 @@ const { triggerInteractionHooks, triggerTestHook, triggerDataHooks } = createHoo
       findUserById: jest.fn().mockReturnValue({
         id: 'user_id',
         username: 'user',
+        cimdClientId: 'https://client.example.com/metadata.json',
         extraField: 'not_ok',
       }),
     },
@@ -114,7 +115,11 @@ describe('triggerInteractionHooks()', () => {
         interactionEvent: 'SignIn',
         sessionId: interactionHookContext.metadata.sessionId,
         userId: '123',
-        user: { id: 'user_id', username: 'user' },
+        user: {
+          id: 'user_id',
+          username: 'user',
+          cimdClientId: 'https://client.example.com/metadata.json',
+        },
         application: { id: 'app_id' },
         createdAt: new Date(100_000).toISOString(),
       },

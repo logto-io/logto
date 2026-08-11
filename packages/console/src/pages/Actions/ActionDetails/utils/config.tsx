@@ -46,6 +46,7 @@ const defaultPostSignInUser: JwtCustomizerUserContext = {
   createdAt: 1_704_067_200_000,
   updatedAt: 1_704_067_200_000,
   applicationId: 'app_123',
+  cimdClientId: null,
   isSuspended: false,
   hasPassword: true,
   ssoIdentities: [],
