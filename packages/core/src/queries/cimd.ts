@@ -1,5 +1,6 @@
 import { type UserScope } from '@logto/core-kit';
 import {
+  CimdGrantOrganizations,
   CimdOrganizationResourceScopes,
   CimdOrganizationScopes,
   CimdResourceScopes,
@@ -140,9 +141,30 @@ const createOrganizationResourceScopeQueries = (pool: CommonQueryMethods) => {
   return { insert, findAll, delete: deleteByScopeId };
 };
 
+const cimdGrantOrganizations = convertToIdentifiers(CimdGrantOrganizations, true);
+
+const createGrantOrganizationQueries = (pool: CommonQueryMethods) => {
+  /**
+   * Whether the organization was authorized on the given grant. Row presence is only an
+   * additional condition on top of a provider-validated live grant, never a validity source:
+   * rows live as long as the Grant *row*, which can outlast the grant's validity by up to the
+   * pruning retention. The consent-side insert lands with LOG-13930.
+   */
+  const exists = async (grantId: string, organizationId: string) =>
+    pool.exists(sql`
+      select 1
+      from ${cimdGrantOrganizations.table}
+      where ${cimdGrantOrganizations.fields.grantId} = ${grantId}
+      and ${cimdGrantOrganizations.fields.organizationId} = ${organizationId}
+    `);
+
+  return { exists };
+};
+
 export const createCimdQueries = (pool: CommonQueryMethods) => ({
   userScopes: createUserScopeQueries(pool),
   resourceScopes: createResourceScopeQueries(pool),
   organizationScopes: createOrganizationScopeQueries(pool),
   organizationResourceScopes: createOrganizationResourceScopeQueries(pool),
+  grantOrganizations: createGrantOrganizationQueries(pool),
 });

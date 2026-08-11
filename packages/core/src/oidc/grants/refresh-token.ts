@@ -30,7 +30,7 @@
  *   from the v8 fork; upstream relies on the grant lookup failing instead.
  */
 
-import { UserScope } from '@logto/core-kit';
+import { ReservedResource, UserScope } from '@logto/core-kit';
 import { noop } from '@silverhand/essentials';
 import { errors, type Provider } from 'oidc-provider';
 
@@ -325,10 +325,32 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx)
   // the logic is handled in `getResourceServerInfo` and `extraTokenClaims`, see the init file of oidc-provider.
   if (organizationId && !params.resource) {
     /* === RFC 0001 === */
-    /** All available scopes for the user in the organization. */
-    const availableScopes = await queries.organizations.relations.usersRoles
+    /** All the scopes granted to the user through organization roles. */
+    const roleScopeNames = await queries.organizations.relations.usersRoles
       .getUserScopes(organizationId, account.accountId)
       .then((scopes) => scopes.map(({ name }) => name));
+    /**
+     * CIMD clients bound organization role scopes twice: by the Grant's organization-resource
+     * record and by the tenant-wide `cimd_organization_scopes` ceiling (the organization-scope
+     * counterpart of the resource-server ceiling filter in `init.ts`). The Grant intersection is
+     * load-bearing — scope names are not unique across resources, and the flat refresh-token
+     * scope set passed to `handleOrganizationToken` cannot carry the organization resource's
+     * boundary, so without it a name granted for an unrelated API resource would issue the
+     * same-named organization scope. Registered applications are governed by their own consent
+     * configuration.
+     */
+    const availableScopes = isCimdClient(envSet, client.clientId)
+      ? await queries.cimd.organizationScopes.findAll().then((ceiling) => {
+          const ceilingNames = new Set(ceiling.map(({ name }) => name));
+          // `getResourceScope` returns `''` when the Grant carries no record for the resource.
+          const grantedOrganizationScopes = new Set(
+            grant.getResourceScope(ReservedResource.Organization).split(' ').filter(Boolean)
+          );
+          return roleScopeNames.filter(
+            (name) => ceilingNames.has(name) && grantedOrganizationScopes.has(name)
+          );
+        })
+      : roleScopeNames;
     await handleOrganizationToken({
       envSet,
       availableScopes,

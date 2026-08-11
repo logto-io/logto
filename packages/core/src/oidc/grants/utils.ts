@@ -17,23 +17,71 @@ import {
 
 const { InvalidGrant, InvalidClient, AccessDenied } = errors;
 
+/** Build the 403 denial the RFC 0001 organization access checks answer with. */
+const accessDenied = (message: string) => {
+  const error = new AccessDenied(message);
+  // eslint-disable-next-line @silverhand/fp/no-mutation -- oidc-provider errors take the HTTP status by assignment after construction
+  error.statusCode = 403;
+  return error;
+};
+
+type OrganizationAccessOptions = {
+  envSet: EnvSet;
+  queries: Queries;
+  account: Account;
+  isThirdParty?: boolean;
+};
+
+/**
+ * Whether the user has granted this organization to this client.
+ *
+ * The CIMD test must come first: `isThirdPartyApplication`'s not-found fallback reads the
+ * identifier URL as first-party, which would skip the user-to-client grant check entirely.
+ */
+const isOrganizationGrantedToClient = async (
+  ctx: KoaContextWithOIDC,
+  clientId: string,
+  organizationId: string,
+  { envSet, queries, account, isThirdParty }: OrganizationAccessOptions
+): Promise<boolean> => {
+  /**
+   * CIMD organization access is grant-scoped, keyed on the grant behind the current refresh
+   * token. Caller contract: organization tokens are only obtainable through the refresh grant —
+   * CIMD `grant_types` are pinned to authorization_code + refresh_token and the fork's token
+   * endpoint gates every grant type through `grantTypeAllowed`, so the client-credentials and
+   * token-exchange callers never reach here with a CIMD client — and the refresh grant asserts
+   * `grantId` before validating the grant, so the entity is always present. Fail closed if it
+   * ever is not: at an authorization boundary a broken contract must not be distinguishable
+   * from a plain denial.
+   */
+  if (isCimdClient(envSet, clientId)) {
+    const grantId = ctx.oidc.entities.RefreshToken?.grantId;
+
+    return grantId !== undefined && queries.cimd.grantOrganizations.exists(grantId, organizationId);
+  }
+
+  // Registered third-party applications carry the cross-grant consent relation.
+  if (isThirdParty ?? (await isThirdPartyApplication(queries, clientId))) {
+    return isOrganizationConsentedToApplication(
+      queries,
+      clientId,
+      account.accountId,
+      organizationId
+    );
+  }
+
+  // First-party applications are implicitly granted every organization the user belongs to.
+  return true;
+};
+
 /**
  * Implement access check for RFC 0001
  */
 export const checkOrganizationAccess = async (
   ctx: KoaContextWithOIDC,
-  {
-    envSet,
-    queries,
-    account,
-    isThirdParty,
-  }: {
-    envSet: EnvSet;
-    queries: Queries;
-    account: Account;
-    isThirdParty?: boolean;
-  }
+  options: OrganizationAccessOptions
 ): Promise<{ organizationId?: string }> => {
+  const { queries, account } = options;
   const { client, params } = ctx.oidc;
 
   assertThat(params, new InvalidGrant('parameters must be available'));
@@ -42,22 +90,6 @@ export const checkOrganizationAccess = async (
   const organizationId = cond(Boolean(params.organization_id) && String(params.organization_id));
 
   if (organizationId) {
-    /**
-     * Organization grants are keyed to registered applications
-     * (`application_user_consent_organizations`), so no user has ever granted an organization to
-     * a CIMD client — and the accidental alternative would silently pass `isThirdPartyApplication`,
-     * whose not-found fallback reads the identifier URL as first-party. Membership alone is a
-     * user-to-organization relation, not a substitute for the user-to-client grant, so fail
-     * closed instead of skipping the consent check.
-     */
-    if (isCimdClient(envSet, client.clientId)) {
-      // TODO: @xiaoyijun replace the rejection with the grant-scoped organization check (LOG-13930)
-      const error = new AccessDenied('organization tokens are not supported for CIMD clients');
-      // eslint-disable-next-line @silverhand/fp/no-mutation -- oidc-provider errors take the HTTP status by assignment after construction
-      error.statusCode = 403;
-      throw error;
-    }
-
     // Check membership
     if (
       !(await queries.organizations.relations.users.exists({
@@ -65,26 +97,12 @@ export const checkOrganizationAccess = async (
         userId: account.accountId,
       }))
     ) {
-      const error = new AccessDenied('user is not a member of the organization');
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      error.statusCode = 403;
-      throw error;
+      throw accessDenied('user is not a member of the organization');
     }
 
-    // Check if the organization is granted (third-party application only) by the user
-    if (
-      (isThirdParty ?? (await isThirdPartyApplication(queries, client.clientId))) &&
-      !(await isOrganizationConsentedToApplication(
-        queries,
-        client.clientId,
-        account.accountId,
-        organizationId
-      ))
-    ) {
-      const error = new AccessDenied('organization access is not granted to the application');
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      error.statusCode = 403;
-      throw error;
+    // Check if the organization is granted to the client by the user
+    if (!(await isOrganizationGrantedToClient(ctx, client.clientId, organizationId, options))) {
+      throw accessDenied('organization access is not granted to the application');
     }
 
     // Check if the organization requires MFA and the user has MFA enabled
@@ -93,10 +111,7 @@ export const checkOrganizationAccess = async (
       account.accountId
     );
     if (isMfaRequired && !hasMfaConfigured) {
-      const error = new AccessDenied('organization requires MFA but user has no MFA configured');
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      error.statusCode = 403;
-      throw error;
+      throw accessDenied('organization requires MFA but user has no MFA configured');
     }
   }
 
