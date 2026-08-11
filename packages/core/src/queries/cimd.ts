@@ -12,7 +12,10 @@ import {
 } from '@logto/schemas';
 import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
-import { buildBatchInsertIntoWithPool } from '#src/database/insert-into.js';
+import {
+  buildBatchInsertIntoWithPool,
+  buildInsertIntoWithPool,
+} from '#src/database/insert-into.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
 
@@ -144,11 +147,16 @@ const createOrganizationResourceScopeQueries = (pool: CommonQueryMethods) => {
 const cimdGrantOrganizations = convertToIdentifiers(CimdGrantOrganizations, true);
 
 const createGrantOrganizationQueries = (pool: CommonQueryMethods) => {
+  /** Idempotent so a retried consent submission re-writes the same row instead of failing. */
+  const insert = buildInsertIntoWithPool(pool)(CimdGrantOrganizations, {
+    onConflict: { ignore: true },
+  });
+
   /**
    * Whether the organization was authorized on the given grant. Row presence is only an
    * additional condition on top of a provider-validated live grant, never a validity source:
    * rows live as long as the Grant *row*, which can outlast the grant's validity by up to the
-   * pruning retention. The consent-side insert lands with LOG-13930.
+   * pruning retention.
    */
   const exists = async (grantId: string, organizationId: string) =>
     pool.exists(sql`
@@ -158,7 +166,16 @@ const createGrantOrganizationQueries = (pool: CommonQueryMethods) => {
       and ${cimdGrantOrganizations.fields.organizationId} = ${organizationId}
     `);
 
-  return { exists };
+  const findOrganizationIds = async (grantId: string) => {
+    const rows = await pool.any<{ organizationId: string }>(sql`
+      select ${cimdGrantOrganizations.fields.organizationId}
+      from ${cimdGrantOrganizations.table}
+      where ${cimdGrantOrganizations.fields.grantId} = ${grantId}
+    `);
+    return rows.map(({ organizationId }) => organizationId);
+  };
+
+  return { insert, exists, findOrganizationIds };
 };
 
 export const createCimdQueries = (pool: CommonQueryMethods) => ({

@@ -117,6 +117,31 @@ const saveInteractionLastSubmissionToSession = async (
   }
 };
 
+/**
+ * Insert the grant-scoped organization row and assert the binding holds: exactly one row,
+ * carrying the submitted organization. The conflict-ignored insert cannot tell a
+ * same-organization retry from a different organization landing on the grant, and the
+ * exactly-one read also fails closed when the row was cascade-deleted in between. No-ops
+ * without an organization — the binding is CIMD-only.
+ */
+const bindCimdGrantOrganization = async (
+  queries: Queries,
+  { organizationId, ...data }: { grantId: string; organizationId?: string; userId: string }
+) => {
+  if (!organizationId) {
+    return;
+  }
+
+  await queries.cimd.grantOrganizations.insert({ ...data, organizationId });
+  const organizationIds = await queries.cimd.grantOrganizations.findOrganizationIds(data.grantId);
+  assertThat(
+    organizationIds.length === 1 && organizationIds[0] === organizationId,
+    new errors.InvalidRequest(
+      'the grant organization binding does not match the submitted organization'
+    )
+  );
+};
+
 export const consent = async ({
   ctx,
   provider,
@@ -127,6 +152,7 @@ export const consent = async ({
   resourceScopesToGrant = {},
   resourceScopesToReject = {},
   markAppLevelAccessControlChecked: shouldMarkAppLevelAccessControlChecked = false,
+  cimdOrganizationId,
 }: {
   ctx: Context;
   provider: Provider;
@@ -137,6 +163,8 @@ export const consent = async ({
   resourceScopesToGrant?: Record<string, string[]>;
   resourceScopesToReject?: Record<string, string[]>;
   markAppLevelAccessControlChecked?: boolean;
+  /** CIMD clients only — organization access is grant-scoped, at most one per grant. */
+  cimdOrganizationId?: string;
 }) => {
   const {
     session,
@@ -154,9 +182,21 @@ export const consent = async ({
 
   const { registeredClientId, cimdClientId } = identifyClient(envSet, clientId);
 
-  const grant =
-    conditional(grantId && (await provider.Grant.find(grantId))) ??
-    new provider.Grant({ accountId, clientId });
+  const existingGrant = conditional(grantId && (await provider.Grant.find(grantId)));
+  const grant = existingGrant ?? new provider.Grant({ accountId, clientId });
+
+  /**
+   * Occupying the organization binding precedes every change to a reused grant, so a
+   * conflicting organization fails before this round mutates the grant. A fresh grant cannot
+   * conflict, and its row must follow `grant.save()` — the row's FK needs the grant row.
+   */
+  if (grantId && existingGrant) {
+    await bindCimdGrantOrganization(queries, {
+      grantId,
+      organizationId: cimdOrganizationId,
+      userId: accountId,
+    });
+  }
 
   await Promise.all([
     saveUserFirstConsentedClient(queries, accountId, { registeredClientId, cimdClientId }),
@@ -180,6 +220,16 @@ export const consent = async ({
   }
 
   const finalGrantId = await grant.save();
+
+  if (!existingGrant) {
+    /** Precedes the interaction result update so a failed write fails the whole consent. */
+    await bindCimdGrantOrganization(queries, {
+      grantId: finalGrantId,
+      organizationId: cimdOrganizationId,
+      userId: accountId,
+    });
+  }
+
   const result = {
     consent: { grantId: finalGrantId },
   };

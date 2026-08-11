@@ -27,7 +27,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { interactionPrefix } from '../const.js';
 
-import { filterAndParseMissingResourceScopes } from './utils.js';
+import { buildResourceScopesToReject, filterAndParseMissingResourceScopes } from './utils.js';
 
 const { InvalidClient, InvalidRedirectUri, InvalidRequest } = errors;
 
@@ -96,27 +96,27 @@ export default function consentRoutes<T extends IRouterParamContext>(
 
       // Grant the organizations to the application if the user has selected the organizations
       if (organizationIds?.length) {
-        /**
-         * Organization grants are keyed to registered applications
-         * (`application_user_consent_organizations`); the grant-scoped counterpart for CIMD
-         * clients lands with LOG-13930, so a CIMD consent submission must not carry any
-         * organization selection.
-         */
-        assertThat(
-          !cimd,
-          new InvalidRequest('organization consent is not available for CIMD clients')
-        );
+        /** One grant carries one organization for a CIMD client. */
+        if (cimd) {
+          assertThat(
+            organizationIds.length === 1,
+            new InvalidRequest('at most one organization can be consented to a CIMD client')
+          );
+        }
 
         // Assert that user is a member of all organizations
         await validateUserConsentOrganizationMembership(userId, organizationIds);
 
-        await queries.applications.userConsentOrganizations.insert(
-          ...organizationIds.map((organizationId) => ({
-            applicationId,
-            userId,
-            organizationId,
-          }))
-        );
+        /** The CIMD counterpart is grant-keyed — `consent()` writes it after `grant.save()`. */
+        if (!cimd) {
+          await queries.applications.userConsentOrganizations.insert(
+            ...organizationIds.map((organizationId) => ({
+              applicationId,
+              userId,
+              organizationId,
+            }))
+          );
+        }
       }
 
       const { missingOIDCScope = [], missingResourceScopes: allMissingResourceScopes = {} } =
@@ -127,11 +127,16 @@ export default function consentRoutes<T extends IRouterParamContext>(
       // Instead of trust the front-end's submission, we choose to find the organizations and build the resource scopes again,
       // to ensure the scopes are correct.
 
-      // Find the organizations granted by the user
-      // The user may send consent request multiple times, so we need to find the organizations again.
-      // A CIMD client can hold none until LOG-13930 lands the grant-scoped storage.
+      /**
+       * A CIMD authorization is served by its own grant alone, so the just-validated selection
+       * is its whole organization set; registered applications re-query the cross-grant relation.
+       */
       const organizations = cimd
-        ? []
+        ? await Promise.all(
+            (organizationIds ?? []).map(async (organizationId) =>
+              queries.organizations.findById(organizationId)
+            )
+          )
         : await queries.applications.userConsentOrganizations
             .getEntities(Organizations, {
               applicationId,
@@ -206,29 +211,10 @@ export default function consentRoutes<T extends IRouterParamContext>(
         )
       );
 
-      const resourceScopesToReject = Object.fromEntries(
-        Object.entries(allMissingResourceScopes).map(([resourceIndicator, scopes]) => {
-          const resource = resourceScopesToGrant[resourceIndicator];
-
-          if (!resource) {
-            /**
-             * With the organization rebuild closed for CIMD (until LOG-13930), a scope held
-             * only through organization roles can end up neither granted nor rejected; the
-             * provider would then see it still missing on resume and restart the consent
-             * prompt indefinitely. Reject the whole group instead — consistent with the
-             * consent page, which never displayed these scopes.
-             *
-             * The rejection persists on the grant (rejected counts as encountered), so the
-             * scope stays withheld even if the user becomes eligible later — accepted as an
-             * interim state: CIMD ships together with LOG-13930, whose grant-scoped
-             * organization support reopens the rebuild and retires this branch.
-             * TODO: @xiaoyijun reopen the organization rebuild for CIMD (LOG-13930).
-             */
-            return [resourceIndicator, cimd ? scopes : []];
-          }
-
-          return [resourceIndicator, scopes.filter((scope) => !resource.includes(scope))];
-        })
+      const resourceScopesToReject = buildResourceScopesToReject(
+        allMissingResourceScopes,
+        resourceScopesToGrant,
+        cimd
       );
 
       const redirectTo = await consent({
@@ -241,6 +227,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
         resourceScopesToGrant,
         resourceScopesToReject,
         markAppLevelAccessControlChecked: true,
+        cimdOrganizationId: conditional(cimd && organizationIds?.[0]),
       });
 
       ctx.body = { redirectTo };
@@ -382,15 +369,9 @@ export default function consentRoutes<T extends IRouterParamContext>(
       });
 
       // Find the organizations if the application is requesting the organizations scope.
-      /**
-       * Organization grants are keyed to registered applications
-       * (`application_user_consent_organizations`); the grant-scoped counterpart for CIMD
-       * clients lands with LOG-13930, so a CIMD consent offers no organization selection yet.
-       */
-      const organizations =
-        !cimd && missingOIDCScope?.includes(UserScope.Organizations)
-          ? await queries.organizations.relations.users.getOrganizationsByUserId(accountId)
-          : [];
+      const organizations = missingOIDCScope?.includes(UserScope.Organizations)
+        ? await queries.organizations.relations.users.getOrganizationsByUserId(accountId)
+        : [];
 
       const organizationsWithMissingResourceScopes = await Promise.all(
         organizations.map(async ({ name, id }) => {
