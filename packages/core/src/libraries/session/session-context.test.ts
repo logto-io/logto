@@ -32,6 +32,7 @@ const userQueries = {
 const queries = {
   users: userQueries,
   oidcSessionExtensions: { insert: oidcSessionExtensionsInsert },
+  cimd: { grantClientSnapshots: { insert: jest.fn() } },
 } as unknown as Queries;
 const context = createContextWithRouteParameters();
 
@@ -90,6 +91,9 @@ describe('saveInteractionLastSubmissionToSession while CIMD is effectively enabl
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal env-set stub scoped to the field the gate reads
   const cimdEnvSet = { oidc: { cimdEnabled: true } } as EnvSet;
 
+  /** The grant client snapshot path resolves the client for its display data. */
+  const cimdClient = { find: async (): Promise<unknown> => ({ clientName: 'Example App' }) };
+
   beforeEach(() => {
     Sinon.stub(EnvSet, 'values').value({
       ...EnvSet.values,
@@ -110,7 +114,11 @@ describe('saveInteractionLastSubmissionToSession while CIMD is effectively enabl
       cimdClientId: null,
     }));
     const interactionDetails = buildInteractionDetails(cimdClientId);
-    const provider = createMockProvider(jest.fn().mockResolvedValue(interactionDetails), Grant);
+    const provider = createMockProvider(
+      jest.fn().mockResolvedValue(interactionDetails),
+      Grant,
+      cimdClient
+    );
 
     await consent({
       ctx: context,
@@ -138,7 +146,11 @@ describe('saveInteractionLastSubmissionToSession while CIMD is effectively enabl
       cimdClientId: 'https://first.example.com/metadata.json',
     }));
     const interactionDetails = buildInteractionDetails(cimdClientId);
-    const provider = createMockProvider(jest.fn().mockResolvedValue(interactionDetails), Grant);
+    const provider = createMockProvider(
+      jest.fn().mockResolvedValue(interactionDetails),
+      Grant,
+      cimdClient
+    );
 
     await consent({
       ctx: context,
@@ -158,7 +170,11 @@ describe('saveInteractionLastSubmissionToSession while CIMD is effectively enabl
       cimdClientId: null,
     }));
     const interactionDetails = buildInteractionDetails(cimdClientId);
-    const provider = createMockProvider(jest.fn().mockResolvedValue(interactionDetails), Grant);
+    const provider = createMockProvider(
+      jest.fn().mockResolvedValue(interactionDetails),
+      Grant,
+      cimdClient
+    );
 
     await consent({
       ctx: context,

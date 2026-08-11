@@ -1,6 +1,6 @@
 import { type User } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { errors, type Provider } from 'oidc-provider';
+import { type Provider } from 'oidc-provider';
 
 import { mockUser } from '#src/__mocks__/user.js';
 import { markAppLevelAccessControlChecked } from '#src/oidc/application-access-control.js';
@@ -44,6 +44,7 @@ const userQueries = {
 
 const insertGrantOrganization = jest.fn();
 const findGrantOrganizationIds = jest.fn(async () => ['org_id']);
+const insertGrantClientSnapshot = jest.fn();
 
 const queries: Queries = {
   // @ts-expect-error -- partial mock of the user queries
@@ -54,6 +55,9 @@ const queries: Queries = {
       insert: insertGrantOrganization,
       findOrganizationIds: findGrantOrganizationIds,
       exists: jest.fn(),
+    },
+    grantClientSnapshots: {
+      insert: insertGrantClientSnapshot,
     },
   },
 };
@@ -180,139 +184,7 @@ describe('consent', () => {
     });
   });
 
-  it('should write the grant-scoped organization row after the grant is saved', async () => {
-    const provider = createMockProvider(jest.fn().mockResolvedValue(baseInteractionDetails), Grant);
-    await consent({
-      ctx: context,
-      provider,
-      envSet: mockEnvSet,
-      queries,
-      interactionDetails: baseInteractionDetails,
-      cimdOrganizationId: 'org_id',
-    });
-
-    expect(insertGrantOrganization).toHaveBeenCalledWith({
-      grantId: grantSave.mock.calls[0]?.[0],
-      organizationId: 'org_id',
-      userId: mockUser.id,
-    });
-    expect(grantSave.mock.invocationCallOrder[0]).toBeLessThan(
-      insertGrantOrganization.mock.invocationCallOrder[0] ?? 0
-    );
-  });
-
-  it('should fail the consent when a different organization is already authorized on the grant', async () => {
-    findGrantOrganizationIds.mockResolvedValueOnce(['other_org_id']);
-    const provider = createMockProvider(jest.fn().mockResolvedValue(baseInteractionDetails), Grant);
-
-    await expect(
-      consent({
-        ctx: context,
-        provider,
-        envSet: mockEnvSet,
-        queries,
-        interactionDetails: baseInteractionDetails,
-        cimdOrganizationId: 'org_id',
-      })
-    ).rejects.toMatchError(
-      new errors.InvalidRequest(
-        'the grant organization binding does not match the submitted organization'
-      )
-    );
-    expect(provider.interactionResult).not.toHaveBeenCalled();
-  });
-
-  it('should fail the consent when the organization binding is missing after the write', async () => {
-    findGrantOrganizationIds.mockResolvedValueOnce([]);
-    const provider = createMockProvider(jest.fn().mockResolvedValue(baseInteractionDetails), Grant);
-
-    await expect(
-      consent({
-        ctx: context,
-        provider,
-        envSet: mockEnvSet,
-        queries,
-        interactionDetails: baseInteractionDetails,
-        cimdOrganizationId: 'org_id',
-      })
-    ).rejects.toMatchError(
-      new errors.InvalidRequest(
-        'the grant organization binding does not match the submitted organization'
-      )
-    );
-    expect(provider.interactionResult).not.toHaveBeenCalled();
-  });
-
-  it('should occupy the organization binding before changing a reused grant', async () => {
-    const interactionDetails = {
-      ...baseInteractionDetails,
-      grantId: 'exists',
-    } as unknown as Interaction;
-    const provider = createMockProvider(jest.fn().mockResolvedValue(interactionDetails), Grant);
-
-    await consent({
-      ctx: context,
-      provider,
-      envSet: mockEnvSet,
-      queries,
-      interactionDetails,
-      cimdOrganizationId: 'org_id',
-    });
-
-    expect(insertGrantOrganization).toHaveBeenCalledWith({
-      grantId: 'exists',
-      organizationId: 'org_id',
-      userId: mockUser.id,
-    });
-    expect(insertGrantOrganization.mock.invocationCallOrder[0]).toBeLessThan(
-      grantSave.mock.invocationCallOrder[0] ?? 0
-    );
-  });
-
-  it('should fail before any grant change when a reused grant carries a different organization', async () => {
-    findGrantOrganizationIds.mockResolvedValueOnce(['other_org_id']);
-    const interactionDetails = {
-      ...baseInteractionDetails,
-      grantId: 'exists',
-    } as unknown as Interaction;
-    const provider = createMockProvider(jest.fn().mockResolvedValue(interactionDetails), Grant);
-
-    await expect(
-      consent({
-        ctx: context,
-        provider,
-        envSet: mockEnvSet,
-        queries,
-        interactionDetails,
-        cimdOrganizationId: 'org_id',
-      })
-    ).rejects.toMatchError(
-      new errors.InvalidRequest(
-        'the grant organization binding does not match the submitted organization'
-      )
-    );
-    expect(grantSave).not.toHaveBeenCalled();
-    expect(provider.interactionResult).not.toHaveBeenCalled();
-  });
-
-  it('should fail the consent before the interaction result update when the organization row write fails', async () => {
-    insertGrantOrganization.mockRejectedValueOnce(new Error('write failed'));
-    const provider = createMockProvider(jest.fn().mockResolvedValue(baseInteractionDetails), Grant);
-
-    await expect(
-      consent({
-        ctx: context,
-        provider,
-        envSet: mockEnvSet,
-        queries,
-        interactionDetails: baseInteractionDetails,
-        cimdOrganizationId: 'org_id',
-      })
-    ).rejects.toThrow('write failed');
-    expect(provider.interactionResult).not.toHaveBeenCalled();
-  });
-
-  it('should not write any organization row without an organization selection', async () => {
+  it('should write neither the client snapshot nor an organization row for a registered client', async () => {
     const provider = createMockProvider(jest.fn().mockResolvedValue(baseInteractionDetails), Grant);
     await consent({
       ctx: context,
@@ -322,6 +194,7 @@ describe('consent', () => {
       interactionDetails: baseInteractionDetails,
     });
 
+    expect(insertGrantClientSnapshot).not.toHaveBeenCalled();
     expect(insertGrantOrganization).not.toHaveBeenCalled();
   });
 

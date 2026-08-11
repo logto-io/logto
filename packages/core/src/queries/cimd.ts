@@ -1,5 +1,6 @@
 import { type UserScope } from '@logto/core-kit';
 import {
+  CimdGrantClientSnapshots,
   CimdGrantOrganizations,
   CimdOrganizationResourceScopes,
   CimdOrganizationScopes,
@@ -178,10 +179,23 @@ const createGrantOrganizationQueries = (pool: CommonQueryMethods) => {
   return { insert, exists, findOrganizationIds };
 };
 
+const createGrantClientSnapshotQueries = (pool: CommonQueryMethods) => {
+  /**
+   * Idempotent so a retried consent submission does not fail — the first write wins, keeping
+   * the identity closest to what the user saw when approving.
+   */
+  const insert = buildInsertIntoWithPool(pool)(CimdGrantClientSnapshots, {
+    onConflict: { ignore: true },
+  });
+
+  return { insert };
+};
+
 export const createCimdQueries = (pool: CommonQueryMethods) => ({
   userScopes: createUserScopeQueries(pool),
   resourceScopes: createResourceScopeQueries(pool),
   organizationScopes: createOrganizationScopeQueries(pool),
   organizationResourceScopes: createOrganizationResourceScopeQueries(pool),
   grantOrganizations: createGrantOrganizationQueries(pool),
+  grantClientSnapshots: createGrantClientSnapshotQueries(pool),
 });

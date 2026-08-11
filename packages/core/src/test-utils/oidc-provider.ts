@@ -42,7 +42,8 @@ export abstract class GrantMock {
 
 export const createMockProvider = (
   interactionDetails?: jest.Mock,
-  Grant?: typeof GrantMock
+  Grant?: typeof GrantMock,
+  Client?: { find: (id: string) => Promise<unknown> }
 ): Provider => {
   const provider = createTestProvider('https://logto.test');
 
@@ -55,6 +56,10 @@ export const createMockProvider = (
 
   if (Grant) {
     Sinon.stub(provider, 'Grant').value(Grant);
+  }
+
+  if (Client) {
+    Sinon.stub(provider, 'Client').value(Client);
   }
 
   return provider;

@@ -118,22 +118,65 @@ const saveInteractionLastSubmissionToSession = async (
 };
 
 /**
- * Insert the grant-scoped organization row and assert the binding holds: exactly one row,
- * carrying the submitted organization. The conflict-ignored insert cannot tell a
- * same-organization retry from a different organization landing on the grant, and the
- * exactly-one read also fails closed when the row was cascade-deleted in between. No-ops
- * without an organization — the binding is CIMD-only.
+ * Must fit the `name varchar(256)` column of `cimd_grant_client_snapshots` — an overlong name
+ * is truncated rather than failing the consent over display data.
  */
-const bindCimdGrantOrganization = async (
+const snapshotNameMaxLength = 256;
+
+/**
+ * Must fit the `logo_uri varchar(2048)` column of `cimd_grant_client_snapshots` — a truncated
+ * URL is useless, so an overlong logo URI is stored as absent.
+ */
+const snapshotLogoUriMaxLength = 2048;
+
+/**
+ * Persist the grant-scoped CIMD rows: the client display snapshot on every consent, and the
+ * organization binding when one was selected.
+ *
+ * The snapshot captures the identity the user approved, read from the provider-validated
+ * metadata document — the same source the consent page rendered. An unvetted client can rewrite
+ * its hosted document at any time, so the grant list renders this row instead of refetching,
+ * and the row's existence marks the grant as CIMD. The conflict-ignored insert keeps the first
+ * write on a retried submission instead of failing.
+ *
+ * The organization part asserts the binding holds after the write: exactly one row, carrying
+ * the submitted organization. Its conflict-ignored insert cannot tell a same-organization retry
+ * from a different organization landing on the grant, and the exactly-one read also fails
+ * closed when the row was cascade-deleted in between.
+ *
+ * No-ops for a non-CIMD client — the rows are CIMD-only.
+ */
+const saveCimdGrantRecords = async (
+  provider: Provider,
   queries: Queries,
-  { organizationId, ...data }: { grantId: string; organizationId?: string; userId: string }
+  {
+    grantId,
+    cimdClientId,
+    organizationId,
+    userId,
+  }: { grantId: string; cimdClientId?: string; organizationId?: string; userId: string }
 ) => {
+  if (!cimdClientId) {
+    return;
+  }
+
+  const client = await provider.Client.find(cimdClientId);
+  assertThat(client, new errors.InvalidClient('client must be available'));
+
+  await queries.cimd.grantClientSnapshots.insert({
+    grantId,
+    clientId: cimdClientId,
+    name: client.clientName?.slice(0, snapshotNameMaxLength) ?? null,
+    logoUri:
+      client.logoUri && client.logoUri.length <= snapshotLogoUriMaxLength ? client.logoUri : null,
+  });
+
   if (!organizationId) {
     return;
   }
 
-  await queries.cimd.grantOrganizations.insert({ ...data, organizationId });
-  const organizationIds = await queries.cimd.grantOrganizations.findOrganizationIds(data.grantId);
+  await queries.cimd.grantOrganizations.insert({ grantId, organizationId, userId });
+  const organizationIds = await queries.cimd.grantOrganizations.findOrganizationIds(grantId);
   assertThat(
     organizationIds.length === 1 && organizationIds[0] === organizationId,
     new errors.InvalidRequest(
@@ -188,11 +231,12 @@ export const consent = async ({
   /**
    * Occupying the organization binding precedes every change to a reused grant, so a
    * conflicting organization fails before this round mutates the grant. A fresh grant cannot
-   * conflict, and its row must follow `grant.save()` — the row's FK needs the grant row.
+   * conflict, and its rows must follow `grant.save()` — their foreign keys need the grant row.
    */
   if (grantId && existingGrant) {
-    await bindCimdGrantOrganization(queries, {
+    await saveCimdGrantRecords(provider, queries, {
       grantId,
+      cimdClientId,
       organizationId: cimdOrganizationId,
       userId: accountId,
     });
@@ -223,8 +267,9 @@ export const consent = async ({
 
   if (!existingGrant) {
     /** Precedes the interaction result update so a failed write fails the whole consent. */
-    await bindCimdGrantOrganization(queries, {
+    await saveCimdGrantRecords(provider, queries, {
       grantId: finalGrantId,
+      cimdClientId,
       organizationId: cimdOrganizationId,
       userId: accountId,
     });
