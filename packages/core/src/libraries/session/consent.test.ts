@@ -215,8 +215,62 @@ describe('consent', () => {
         cimdOrganizationId: 'org_id',
       })
     ).rejects.toMatchError(
-      new errors.InvalidRequest('a different organization is already authorized on the grant')
+      new errors.InvalidRequest(
+        'the grant organization binding does not match the submitted organization'
+      )
     );
+    expect(provider.interactionResult).not.toHaveBeenCalled();
+  });
+
+  it('should occupy the organization binding before changing a reused grant', async () => {
+    const interactionDetails = {
+      ...baseInteractionDetails,
+      grantId: 'exists',
+    } as unknown as Interaction;
+    const provider = createMockProvider(jest.fn().mockResolvedValue(interactionDetails), Grant);
+
+    await consent({
+      ctx: context,
+      provider,
+      envSet: mockEnvSet,
+      queries,
+      interactionDetails,
+      cimdOrganizationId: 'org_id',
+    });
+
+    expect(insertGrantOrganization).toHaveBeenCalledWith({
+      grantId: 'exists',
+      organizationId: 'org_id',
+      userId: mockUser.id,
+    });
+    expect(insertGrantOrganization.mock.invocationCallOrder[0]).toBeLessThan(
+      grantSave.mock.invocationCallOrder[0] ?? 0
+    );
+  });
+
+  it('should fail before any grant change when a reused grant carries a different organization', async () => {
+    findGrantOrganizationIds.mockResolvedValueOnce(['other_org_id']);
+    const interactionDetails = {
+      ...baseInteractionDetails,
+      grantId: 'exists',
+    } as unknown as Interaction;
+    const provider = createMockProvider(jest.fn().mockResolvedValue(interactionDetails), Grant);
+
+    await expect(
+      consent({
+        ctx: context,
+        provider,
+        envSet: mockEnvSet,
+        queries,
+        interactionDetails,
+        cimdOrganizationId: 'org_id',
+      })
+    ).rejects.toMatchError(
+      new errors.InvalidRequest(
+        'the grant organization binding does not match the submitted organization'
+      )
+    );
+    expect(grantSave).not.toHaveBeenCalled();
     expect(provider.interactionResult).not.toHaveBeenCalled();
   });
 
