@@ -81,6 +81,20 @@ const connector_details = {
     in_use: '啟用登錄',
     not_in_use: '禁用登錄',
   },
+  email_logs: {
+    title: '電郵日誌',
+    time: '時間',
+    recipient: '收件人',
+    recipient_placeholder: '按完整收件人地址搜尋',
+    template_type: '範本類型',
+    status: '狀態',
+    status_sent: '已發送',
+    status_failed: '發送失敗',
+    language_tag: '語言',
+    provider_message_id: '服務商訊息 ID',
+    previous_page: '上一頁',
+    next_page: '下一頁',
+  },
 };
 
 export default Object.freeze(connector_details);

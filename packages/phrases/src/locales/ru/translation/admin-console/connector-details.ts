@@ -87,6 +87,20 @@ const connector_details = {
     in_use: 'Включён для входа в систему ',
     not_in_use: 'Отключён для входа в систему ',
   },
+  email_logs: {
+    title: 'Журналы электронной почты',
+    time: 'Время',
+    recipient: 'Получатель',
+    recipient_placeholder: 'Поиск по полному адресу получателя',
+    template_type: 'Тип шаблона',
+    status: 'Статус',
+    status_sent: 'Отправлено',
+    status_failed: 'Ошибка',
+    language_tag: 'Язык',
+    provider_message_id: 'ID сообщения у провайдера',
+    previous_page: 'Назад',
+    next_page: 'Далее',
+  },
 };
 
 export default Object.freeze(connector_details);

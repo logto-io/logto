@@ -86,6 +86,20 @@ const connector_details = {
     in_use: "Abilitato per l'accesso ",
     not_in_use: "Disabilitato per l'accesso ",
   },
+  email_logs: {
+    title: 'Registri email',
+    time: 'Ora',
+    recipient: 'Destinatario',
+    recipient_placeholder: 'Cerca per indirizzo completo del destinatario',
+    template_type: 'Tipo di modello',
+    status: 'Stato',
+    status_sent: 'Inviata',
+    status_failed: 'Non riuscita',
+    language_tag: 'Lingua',
+    provider_message_id: 'ID messaggio del provider',
+    previous_page: 'Precedente',
+    next_page: 'Successivo',
+  },
 };
 
 export default Object.freeze(connector_details);
