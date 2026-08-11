@@ -13,7 +13,19 @@
         "description": "Get profile for the user.",
         "responses": {
           "200": {
-            "description": "The profile was retrieved successfully."
+            "description": "The profile was retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "cimdClientId": {
+                      "description": "Dev feature. The identifier of the CIMD (client ID metadata document) client from the user's first consent. `null` unless the user's first consent was granted to a CIMD client. Mutually exclusive with `applicationId`. Only returned with the `profile` scope.",
+                      "x-logto-dev-feature": true
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -46,7 +58,19 @@
         },
         "responses": {
           "200": {
-            "description": "The profile was updated successfully."
+            "description": "The profile was updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "cimdClientId": {
+                      "description": "Dev feature. The identifier of the CIMD (client ID metadata document) client from the user's first consent. `null` unless the user's first consent was granted to a CIMD client. Mutually exclusive with `applicationId`. Only returned with the `profile` scope.",
+                      "x-logto-dev-feature": true
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "The request body is invalid."
