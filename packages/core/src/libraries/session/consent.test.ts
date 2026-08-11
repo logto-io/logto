@@ -222,6 +222,27 @@ describe('consent', () => {
     expect(provider.interactionResult).not.toHaveBeenCalled();
   });
 
+  it('should fail the consent when the organization binding is missing after the write', async () => {
+    findGrantOrganizationIds.mockResolvedValueOnce([]);
+    const provider = createMockProvider(jest.fn().mockResolvedValue(baseInteractionDetails), Grant);
+
+    await expect(
+      consent({
+        ctx: context,
+        provider,
+        envSet: mockEnvSet,
+        queries,
+        interactionDetails: baseInteractionDetails,
+        cimdOrganizationId: 'org_id',
+      })
+    ).rejects.toMatchError(
+      new errors.InvalidRequest(
+        'the grant organization binding does not match the submitted organization'
+      )
+    );
+    expect(provider.interactionResult).not.toHaveBeenCalled();
+  });
+
   it('should occupy the organization binding before changing a reused grant', async () => {
     const interactionDetails = {
       ...baseInteractionDetails,
