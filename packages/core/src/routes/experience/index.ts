@@ -17,6 +17,7 @@ import type Router from 'koa-router';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { assignInteractionResults } from '#src/libraries/session/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaInteractionDetails from '#src/middleware/koa-interaction-details.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -192,6 +193,39 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       });
 
       ctx.status = 200;
+      return next();
+    }
+  );
+
+  experienceRouter.post(
+    experienceRoutes.abort,
+    koaGuard({
+      body: z.object({
+        // RFC 6749 §4.1.2.1 limits `error_description` to a subset of printable ASCII.
+        reason: z
+          .string()
+          .max(256)
+          .regex(/^[ !#-[\]-~]*$/)
+          .optional(),
+      }),
+      response: z.object({
+        redirectTo: z.string(),
+      }),
+      status: [200, 400],
+    }),
+    async (ctx, next) => {
+      const { reason } = ctx.guard.body;
+
+      // Finish the interaction with a standard OAuth error so the user agent returns to the
+      // client's redirect_uri instead of staying on the hosted experience — the only sensible
+      // exit when the client application owns the sign-in UI (e.g. direct sign-in).
+      await assignInteractionResults(ctx, provider, {
+        error: 'access_denied',
+        ...conditional(reason && { error_description: reason }),
+      });
+
+      ctx.status = 200;
+
       return next();
     }
   );

@@ -67,3 +67,11 @@ export const identifyAndSubmitInteraction = async (payload?: IdentificationApiPa
   await identifyUser(payload);
   return submitInteraction();
 };
+
+/**
+ * Finishes the interaction with an `access_denied` OAuth error. The returned `redirectTo`
+ * resumes the OIDC flow and sends the user agent back to the client's redirect URI with the
+ * error attached.
+ */
+export const abortInteraction = async (reason?: string) =>
+  api.post(experienceApiRoutes.abort, { json: { reason } }).json<SubmitInteractionResponse>();
