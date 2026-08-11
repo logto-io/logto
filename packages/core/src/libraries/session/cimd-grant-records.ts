@@ -19,6 +19,19 @@ const snapshotLogoUriMaxLength = 2048;
 const truncateToCodePoints = (value: string, maxLength: number) =>
   Array.from(value).slice(0, maxLength).join('');
 
+type CimdGrantRecordsData = {
+  grantId: string;
+  cimdClientId?: string;
+  organizationId?: string;
+  userId: string;
+  /**
+   * The grant this consent just saved — destroyed on a failed write, since an orphan
+   * carrying the snapshot marker would surface in the grant list. Best effort: a failed
+   * cleanup is logged and the write error stays the surfaced failure.
+   */
+  freshGrant?: { destroy: () => Promise<void> };
+};
+
 /**
  * The client snapshot rides every CIMD consent: the grant list renders it instead of
  * refetching the rewritable document, and its existence marks the grant as CIMD. The
@@ -31,24 +44,7 @@ export const saveCimdGrantRecords = async (
   ctx: Context,
   provider: Provider,
   queries: Queries,
-  {
-    grantId,
-    cimdClientId,
-    organizationId,
-    userId,
-    freshGrant,
-  }: {
-    grantId: string;
-    cimdClientId?: string;
-    organizationId?: string;
-    userId: string;
-    /**
-     * The grant this consent just saved — destroyed on a failed write, since an orphan
-     * carrying the snapshot marker would surface in the grant list. Best effort: a failed
-     * cleanup is logged and the write error stays the surfaced failure.
-     */
-    freshGrant?: { destroy: () => Promise<void> };
-  }
+  { grantId, cimdClientId, organizationId, userId, freshGrant }: CimdGrantRecordsData
 ) => {
   if (!cimdClientId) {
     return;
