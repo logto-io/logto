@@ -33,6 +33,12 @@ import accountUserAssetsRoutes from './user-assets.js';
 import { getAccountCenterFilteredProfile, getScopedProfile } from './utils/get-scoped-profile.js';
 import { hasSecurityVerificationMethod } from './utils/has-security-verification-method.js';
 
+/**
+ * The Account API never returns `cimdClientId` — `getScopedProfile()` rebuilds the payload without
+ * it, so keep it out of the advertised response schema.
+ */
+const accountProfileResponseGuard = userProfileResponseGuard.omit({ cimdClientId: true }).partial();
+
 export default function accountRoutes<T extends UserRouter>(...args: RouterInitArgs<T>) {
   const [router, { queries, libraries }] = args;
   const {
@@ -50,7 +56,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
   router.get(
     `${accountApiPrefix}`,
     koaGuard({
-      response: userProfileResponseGuard.partial(),
+      response: accountProfileResponseGuard,
       status: [200],
     }),
     async (ctx, next) => {
@@ -70,7 +76,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
         username: z.string().regex(usernameRegEx).nullable().optional(),
         customData: jsonObjectGuard.optional(),
       }),
-      response: userProfileResponseGuard.partial(),
+      response: accountProfileResponseGuard,
       status: [200, 400, 401, 422],
     }),
     async (ctx, next) => {
