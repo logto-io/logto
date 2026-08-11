@@ -122,6 +122,16 @@ describe('SchemaRouter', () => {
       expect(response.body).toStrictEqual({ id: 'test', name: 'test_new' });
       expect(response.status).toEqual(200);
     });
+
+    it('should not allow patching an entity id', async () => {
+      const response = await request
+        .patch(`${baseRoute}/test`)
+        .send({ id: 'other', name: 'test_new' });
+
+      expect(queries.updateById).toHaveBeenCalledWith('test', { name: 'test_new' });
+      expect(response.body).toStrictEqual({ id: 'test', name: 'test_new' });
+      expect(response.status).toEqual(200);
+    });
   });
 
   describe('deleteById', () => {

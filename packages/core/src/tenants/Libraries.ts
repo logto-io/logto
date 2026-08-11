@@ -84,7 +84,7 @@ export default class Libraries {
 
   customProfileFields = createCustomProfileFieldsLibrary(this.queries);
 
-  trustedDevicePolicy = createTrustedDevicePolicyLibrary(this.tenantId, this.queries);
+  trustedDevicePolicy = createTrustedDevicePolicyLibrary(this.queries);
 
   trustedDevices = createTrustedDeviceLibrary(
     this.tenantId,

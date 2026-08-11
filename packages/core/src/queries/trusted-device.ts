@@ -1,10 +1,6 @@
 import { type TrustedDevice, TrustedDevices } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import {
-  type CommonQueryMethods,
-  type DatabaseTransactionConnection,
-  sql,
-} from '@silverhand/slonik';
+import { type CommonQueryMethods, sql } from '@silverhand/slonik';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
@@ -13,13 +9,6 @@ import { convertToIdentifiers, manyRows } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(TrustedDevices);
 const activePredicate = sql`${fields.expiresAt} > now()`;
-
-export const lockTrustedDeviceChangesForTenant = async (
-  connection: DatabaseTransactionConnection,
-  tenantId: string
-) => {
-  await connection.query(sql`select pg_advisory_xact_lock(hashtextextended(${tenantId}, 0))`);
-};
 
 export type TrustedDeviceMetadata = Readonly<{
   userAgent?: string;

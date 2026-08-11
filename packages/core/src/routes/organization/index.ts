@@ -1,4 +1,9 @@
-import { Organizations, ProductEvent, featuredUserGuard } from '@logto/schemas';
+import {
+  type OrganizationWithFeatured,
+  Organizations,
+  ProductEvent,
+  featuredUserGuard,
+} from '@logto/schemas';
 import { yes } from '@silverhand/essentials';
 import { z } from 'zod';
 
@@ -19,6 +24,9 @@ import { organizationHiddenFields, organizationResponseGuard } from './guards.js
 import jitRoutes from './jit/index.js';
 import userRoutes from './user/index.js';
 import { errorHandler } from './utils.js';
+
+type OrganizationWithFeaturedResponse = Omit<OrganizationWithFeatured, 'isTrustedDeviceAllowed'> &
+  Partial<Pick<OrganizationWithFeatured, 'isTrustedDeviceAllowed'>>;
 
 export default function organizationRoutes<T extends ManagementApiRouter>(
   ...args: RouterInitArgs<T>
@@ -54,6 +62,7 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
     searchFields: ['name'],
     disabled: { get: true },
     idLength: 12,
+    entityGuard: organizationResponseGuard,
     hiddenFields: organizationHiddenFields,
     hooks: {
       afterInsert: async (ctx) => {
@@ -70,8 +79,8 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
     koaPagination(),
     koaGuard({
       query: z.object({ q: z.string().optional(), showFeatured: z.string().optional() }),
-      response: organizationResponseGuard
-        .merge(
+      response: (
+        organizationResponseGuard.merge(
           // For `showFeatured` query
           z
             .object({
@@ -79,8 +88,8 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
               featuredUsers: featuredUserGuard.array(),
             })
             .partial()
-        )
-        .array(),
+        ) satisfies z.ZodType<OrganizationWithFeaturedResponse>
+      ).array(),
       status: [200],
     }),
     async (ctx, next) => {

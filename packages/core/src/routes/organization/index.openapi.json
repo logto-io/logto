@@ -20,10 +20,6 @@
                   },
                   "description": {
                     "description": "The description of the organization."
-                  },
-                  "isTrustedDeviceAllowed": {
-                    "description": "Whether members of the organization may use MFA trusted devices. This can only restrict the tenant-level policy.",
-                    "x-logto-dev-feature": true
                   }
                 }
               }
@@ -32,19 +28,7 @@
         },
         "responses": {
           "201": {
-            "description": "The organization was created successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "isTrustedDeviceAllowed": {
-                      "description": "Whether members of the organization may use MFA trusted devices.",
-                      "x-logto-dev-feature": true
-                    }
-                  }
-                }
-              }
-            }
+            "description": "The organization was created successfully."
           }
         }
       },
@@ -65,21 +49,7 @@
         ],
         "responses": {
           "200": {
-            "description": "A list of organizations.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "properties": {
-                      "isTrustedDeviceAllowed": {
-                        "description": "Whether members of the organization may use MFA trusted devices.",
-                        "x-logto-dev-feature": true
-                      }
-                    }
-                  }
-                }
-              }
-            }
+            "description": "A list of organizations."
           }
         }
       }
@@ -90,19 +60,7 @@
         "description": "Get organization details by ID.",
         "responses": {
           "200": {
-            "description": "Details of the organization.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "isTrustedDeviceAllowed": {
-                      "description": "Whether members of the organization may use MFA trusted devices.",
-                      "x-logto-dev-feature": true
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Details of the organization."
           }
         }
       },
@@ -119,10 +77,6 @@
                   },
                   "description": {
                     "description": "The updated description of the organization."
-                  },
-                  "isTrustedDeviceAllowed": {
-                    "description": "Whether members of the organization may use MFA trusted devices. This can only restrict the tenant-level policy.",
-                    "x-logto-dev-feature": true
                   }
                 }
               }
@@ -131,19 +85,7 @@
         },
         "responses": {
           "200": {
-            "description": "The organization was updated successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "isTrustedDeviceAllowed": {
-                      "description": "Whether members of the organization may use MFA trusted devices.",
-                      "x-logto-dev-feature": true
-                    }
-                  }
-                }
-              }
-            }
+            "description": "The organization was updated successfully."
           }
         }
       },

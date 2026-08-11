@@ -89,11 +89,7 @@ export const tableToPathname = (tableName: string) => tableName.replaceAll('_', 
 const camelCaseSchemaId = <T extends { tableSingular: Table }, Table extends string>(schema: T) =>
   `${camelcase(schema.tableSingular)}Id` as const;
 
-type SchemaRouterConfig<
-  Key extends string,
-  CreateSchema extends Partial<SchemaLike<Key> & { id: string }>,
-  Schema extends SchemaLike<Key> & { id: string },
-> = {
+type SchemaRouterConfig<Key extends string> = {
   /** Disable certain routes for the router. */
   disabled: {
     /** Disable `GET /` route. */
@@ -183,12 +179,12 @@ export default class SchemaRouter<
   StateT = unknown,
   CustomT extends WithHookContext = WithHookContext,
 > extends Router<StateT, CustomT> {
-  public readonly config: SchemaRouterConfig<Key, CreateSchema, Schema>;
+  public readonly config: SchemaRouterConfig<Key>;
 
   constructor(
     public readonly schema: GeneratedSchema<Key, CreateSchema, Schema>,
     public readonly queries: SchemaQueries<Key, CreateSchema, Schema>,
-    config: DeepPartial<SchemaRouterConfig<Key, CreateSchema, Schema>> = {}
+    config: DeepPartial<SchemaRouterConfig<Key>> = {}
   ) {
     super({ prefix: '/' + tableToPathname(schema.table) });
 
@@ -393,8 +389,11 @@ export default class SchemaRouter<
     const responseGuard = entityGuard ?? schema.guard.omit(hiddenFields);
     // @ts-expect-error -- `.omit()` doesn't play well with generic schema keys.
     const createBodyGuard = schema.createGuard.omit({ id: true, ...hiddenFields });
+    // @ts-expect-error -- `.omit()` doesn't play well with generic schema keys.
     // eslint-disable-next-line no-restricted-syntax -- Zod `.omit()` loses the output type for generic schema keys.
-    const updateBodyGuard = schema.updateGuard.omit(hiddenFields) as z.ZodType<Partial<Schema>>;
+    const updateBodyGuard = schema.updateGuard.omit({ id: true, ...hiddenFields }) as z.ZodType<
+      Partial<Schema>
+    >;
 
     if (!disabled.get) {
       this.get(
@@ -430,8 +429,8 @@ export default class SchemaRouter<
         async (ctx, next) => {
           // eslint-disable-next-line no-restricted-syntax -- `.omit()` doesn't play well with generics
           ctx.body = await queries.insert({
-            ...ctx.guard.body,
             id: generateStandardId(idLength),
+            ...ctx.guard.body,
           } as CreateSchema);
           this.config.hooks?.afterInsert?.(ctx);
           ctx.status = 201;

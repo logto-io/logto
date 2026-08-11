@@ -182,27 +182,25 @@ export const createTrustedDeviceLibrary = (
   };
 
   const createCredential = async ({ ctx, userId, ...metadata }: CreateTrustedDeviceCredential) => {
-    const result = await policyLibrary.runIfEnabled(userId, async ({ policy, trustedDevices }) => {
-      const id = generateStandardId();
-      const secret = generateTrustedDeviceSecret();
-      const secretHash = hashTrustedDeviceSecret(secret);
-      const expiresAt = Date.now() + policy.durationDays * dayInMilliseconds;
-      const trustedDevice = await trustedDevices.insert({
-        id,
-        userId,
-        secretHash,
-        expiresAt,
-        ...metadata,
-      });
+    const policy = await policyLibrary.getEffectivePolicy(userId);
 
-      return { credential: { id, secret }, trustedDevice };
-    });
-
-    if (!result) {
+    if (!policy.enabled) {
       return;
     }
 
-    const { credential, trustedDevice } = result;
+    const id = generateStandardId();
+    const secret = generateTrustedDeviceSecret();
+    const secretHash = hashTrustedDeviceSecret(secret);
+    const expiresAt = Date.now() + policy.durationDays * dayInMilliseconds;
+    const trustedDevice = await queries.insert({
+      id,
+      userId,
+      secretHash,
+      expiresAt,
+      ...metadata,
+    });
+    const credential = { id, secret };
+
     writeCredential(ctx, userId, credential, trustedDevice.expiresAt);
     void cleanupExpired();
 

@@ -13,30 +13,19 @@ export const createSignInExperienceQueries = (
   pool: CommonQueryMethods,
   wellKnownCache: WellKnownCache
 ) => {
+  const updateSignInExperience = buildUpdateWhereWithPool(pool)(SignInExperiences, true);
   const findSignInExperienceById = buildFindEntityByIdWithPool(pool)(SignInExperiences);
 
-  const updateDefaultSignInExperience = async (
-    set: Partial<CreateSignInExperience>,
-    executor?: CommonQueryMethods
-  ) => {
-    const updateSignInExperience = buildUpdateWhereWithPool(executor ?? pool)(
-      SignInExperiences,
-      true
-    );
-    const update = async () => updateSignInExperience({ set, where: { id }, jsonbMode: 'replace' });
-
-    return executor ? update() : wellKnownCache.mutate(update, ['sie'])();
-  };
-
-  const findDefaultSignInExperienceWithCache = wellKnownCache.memoize(
-    async () => findSignInExperienceById(id),
+  const updateDefaultSignInExperience = wellKnownCache.mutate(
+    async (set: Partial<CreateSignInExperience>) =>
+      updateSignInExperience({ set, where: { id }, jsonbMode: 'replace' }),
     ['sie']
   );
 
-  const findDefaultSignInExperience = async (executor?: CommonQueryMethods) =>
-    executor
-      ? buildFindEntityByIdWithPool(executor)(SignInExperiences)(id)
-      : findDefaultSignInExperienceWithCache();
+  const findDefaultSignInExperience = wellKnownCache.memoize(
+    async () => findSignInExperienceById(id),
+    ['sie']
+  );
 
   /**
    * Effective username case-sensitivity: the per-tenant policy AND-combined with the legacy

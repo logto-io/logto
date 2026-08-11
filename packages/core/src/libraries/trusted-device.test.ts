@@ -42,24 +42,10 @@ const createQueries = () =>
 
 type TrustedDevicePolicyLibrary = ReturnType<typeof createTrustedDevicePolicyLibrary>;
 
-const createPolicyLibrary = (
-  queries: TrustedDeviceQueries,
-  { enabled = true, durationDays = 30 } = {}
-) => {
-  const runIfEnabled: TrustedDevicePolicyLibrary['runIfEnabled'] = async (_userId, run) =>
-    enabled
-      ? run({
-          policy: { enabled, durationDays },
-          trustedDevices: queries,
-        })
-      : undefined;
-
-  return {
+const createPolicyLibrary = ({ enabled = true, durationDays = 30 } = {}) =>
+  ({
     getEffectivePolicy: jest.fn(async () => ({ enabled, durationDays })),
-    runIfEnabled: jest.fn(runIfEnabled),
-    updateGlobalPolicy: jest.fn(),
-  } as unknown as TrustedDevicePolicyLibrary;
-};
+  }) as unknown as TrustedDevicePolicyLibrary;
 
 const buildTrustedDevice = (secretHash: Uint8Array): TrustedDevice => ({
   tenantId,
@@ -128,7 +114,7 @@ describe('trusted device library', () => {
     const durationDays = 7;
     const expiresAt = now + durationDays * 24 * 60 * 60 * 1000;
     const queries = createQueries();
-    const policyLibrary = createPolicyLibrary(queries, { durationDays });
+    const policyLibrary = createPolicyLibrary({ durationDays });
     const { ctx, set } = createCookieContext();
 
     jest.spyOn(Date, 'now').mockReturnValue(now);
@@ -182,13 +168,13 @@ describe('trusted device library', () => {
     );
     expect(set.mock.calls[0]?.[2]?.maxAge).toBeLessThanOrEqual(expiresAt - now);
     expect(set.mock.calls[0]?.[2]).not.toHaveProperty('domain');
-    expect(policyLibrary.runIfEnabled).toHaveBeenCalledWith(userId, expect.any(Function));
+    expect(policyLibrary.getEffectivePolicy).toHaveBeenCalledWith(userId);
     expect(queries.deleteExpiredByTenant).toHaveBeenCalledTimes(1);
   });
 
   it('does not create a record or cookie when the effective policy is disabled', async () => {
     const queries = createQueries();
-    const policyLibrary = createPolicyLibrary(queries, { enabled: false });
+    const policyLibrary = createPolicyLibrary({ enabled: false });
     const { ctx, set } = createCookieContext();
     const library = createTrustedDeviceLibrary(tenantId, queries, policyLibrary, {
       isProduction: false,
@@ -202,7 +188,7 @@ describe('trusted device library', () => {
   it('uses Secure and the __Host- prefix in production', () => {
     const queries = createQueries();
     const { ctx, set } = createCookieContext();
-    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(queries), {
+    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(), {
       isProduction: true,
     });
     const credential = { id: trustedDeviceId, secret: generateTrustedDeviceSecret() };
@@ -226,7 +212,7 @@ describe('trusted device library', () => {
     );
     queries.findActiveByIdAndUserId.mockResolvedValueOnce(record);
 
-    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(queries), {
+    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(), {
       isProduction: false,
     });
 
@@ -241,7 +227,7 @@ describe('trusted device library', () => {
   it('clears a malformed credential without querying a record', async () => {
     const queries = createQueries();
     const { ctx, set } = createCookieContext('malformed');
-    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(queries), {
+    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(), {
       isProduction: false,
     });
 
@@ -266,7 +252,7 @@ describe('trusted device library', () => {
         secret: generateTrustedDeviceSecret(),
       })
     );
-    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(queries), {
+    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(), {
       isProduction: false,
     });
 
@@ -285,7 +271,7 @@ describe('trusted device library', () => {
     );
     queries.findActiveByIdAndUserId.mockResolvedValueOnce(record);
 
-    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(queries), {
+    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(), {
       isProduction: false,
     });
 
@@ -303,7 +289,7 @@ describe('trusted device library', () => {
     queries.findActiveByIdAndUserId.mockResolvedValueOnce(null);
     queries.deleteExpiredByIdAndUserId.mockResolvedValueOnce(1);
 
-    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(queries), {
+    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(), {
       isProduction: false,
     });
 
@@ -317,7 +303,7 @@ describe('trusted device library', () => {
   it('deduplicates concurrent opportunistic cleanup within the cooldown', async () => {
     const queries = createQueries();
     queries.deleteExpiredByTenant.mockResolvedValue(2);
-    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(queries), {
+    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(), {
       isProduction: false,
       cleanupCooldown: 60_000,
     });
@@ -332,7 +318,7 @@ describe('trusted device library', () => {
     const queries = createQueries();
     queries.deleteExpiredByTenant.mockRejectedValueOnce(new Error('cleanup failed'));
     queries.deleteExpiredByTenant.mockResolvedValueOnce(2);
-    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(queries), {
+    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(), {
       isProduction: false,
       cleanupCooldown: 60_000,
     });
