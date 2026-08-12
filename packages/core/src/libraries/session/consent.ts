@@ -11,6 +11,7 @@ import { isCimdClient } from '#src/oidc/cimd/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { saveCimdGrantRecords } from './cimd-grant-records.js';
 import { updateInteractionResult } from './interaction.js';
 
 // Get the missing scopes from prompt details
@@ -117,31 +118,6 @@ const saveInteractionLastSubmissionToSession = async (
   }
 };
 
-/**
- * Insert the grant-scoped organization row and assert the binding holds: exactly one row,
- * carrying the submitted organization. The conflict-ignored insert cannot tell a
- * same-organization retry from a different organization landing on the grant, and the
- * exactly-one read also fails closed when the row was cascade-deleted in between. No-ops
- * without an organization — the binding is CIMD-only.
- */
-const bindCimdGrantOrganization = async (
-  queries: Queries,
-  { organizationId, ...data }: { grantId: string; organizationId?: string; userId: string }
-) => {
-  if (!organizationId) {
-    return;
-  }
-
-  await queries.cimd.grantOrganizations.insert({ ...data, organizationId });
-  const organizationIds = await queries.cimd.grantOrganizations.findOrganizationIds(data.grantId);
-  assertThat(
-    organizationIds.length === 1 && organizationIds[0] === organizationId,
-    new errors.InvalidRequest(
-      'the grant organization binding does not match the submitted organization'
-    )
-  );
-};
-
 export const consent = async ({
   ctx,
   provider,
@@ -188,11 +164,12 @@ export const consent = async ({
   /**
    * Occupying the organization binding precedes every change to a reused grant, so a
    * conflicting organization fails before this round mutates the grant. A fresh grant cannot
-   * conflict, and its row must follow `grant.save()` — the row's FK needs the grant row.
+   * conflict, and its rows must follow `grant.save()` — their foreign keys need the grant row.
    */
   if (grantId && existingGrant) {
-    await bindCimdGrantOrganization(queries, {
+    await saveCimdGrantRecords(ctx, provider, queries, {
       grantId,
+      cimdClientId,
       organizationId: cimdOrganizationId,
       userId: accountId,
     });
@@ -223,10 +200,12 @@ export const consent = async ({
 
   if (!existingGrant) {
     /** Precedes the interaction result update so a failed write fails the whole consent. */
-    await bindCimdGrantOrganization(queries, {
+    await saveCimdGrantRecords(ctx, provider, queries, {
       grantId: finalGrantId,
+      cimdClientId,
       organizationId: cimdOrganizationId,
       userId: accountId,
+      freshGrant: grant,
     });
   }
 
