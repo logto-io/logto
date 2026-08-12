@@ -257,4 +257,29 @@ describe('Well-known cache function wrappers', () => {
     expect(await cache.get('custom-phrases', '2+2')).toBeUndefined();
     expect(run).toBeCalledTimes(2);
   });
+
+  it('should discard a stale write-back when a mutation invalidates the cache mid-read', async () => {
+    const cache = new WellKnownCache(tenantId, cacheStore);
+    const update = jest.fn(async () => true);
+    const mutate = cache.mutate(update, ['custom-phrases']);
+
+    const read = jest
+      .fn(async (): Promise<Record<string, unknown>> => ({ foo: 'fresh' }))
+      .mockImplementationOnce(async () => {
+        // The mutation lands while this read is still in flight, i.e. the value below
+        // was computed from pre-mutation state
+        await mutate();
+        return { foo: 'stale' };
+      });
+    const memoized = cache.memoize(read, ['custom-phrases']);
+
+    // The caller still receives the computed value, but it must not persist in the cache
+    expect(await memoized()).toStrictEqual({ foo: 'stale' });
+    expect(await cache.get('custom-phrases', WellKnownCache.defaultKey)).toBeUndefined();
+
+    expect(await memoized()).toStrictEqual({ foo: 'fresh' });
+    expect(await cache.get('custom-phrases', WellKnownCache.defaultKey)).toStrictEqual({
+      foo: 'fresh',
+    });
+  });
 });

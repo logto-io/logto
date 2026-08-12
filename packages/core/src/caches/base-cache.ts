@@ -1,3 +1,4 @@
+import { generateStandardShortId } from '@logto/shared';
 import { trySafe, type Optional } from '@silverhand/essentials';
 import { type ZodType } from 'zod';
 
@@ -70,7 +71,13 @@ export abstract class BaseCache<CacheMapT extends Record<string, unknown>> {
     return this.cacheStore.set(this.cacheKey(type, key), JSON.stringify(value), expire);
   }
 
-  /** Delete value from the inner cache store for the given type and key. */
+  /**
+   * Delete value from the inner cache store for the given type and key.
+   *
+   * Note this is a plain deletion: unlike {@link mutate}, it does not bump the invalidation
+   * generation, so an in-flight {@link memoize} read may still write its result back
+   * afterwards. Callers that invalidate on their own should be migrated to {@link mutate}.
+   */
   async delete(type: CacheKeyOf<CacheMapT>, key: string) {
     return this.cacheStore.delete(this.cacheKey(type, key));
   }
@@ -93,12 +100,21 @@ export abstract class BaseCache<CacheMapT extends Record<string, unknown>> {
     const mutated = async function (this: unknown, ...args: Args): Promise<Return> {
       const value = await run.apply(this, args);
 
-      // We don't leverage `finally` here since we want to ensure cache deleting
-      // only happens when the original function executed successfully
-      void Promise.all(
-        types.map(async ([type, cacheKey]) =>
-          trySafe(kvCache.delete(type, cacheKey?.(...args) ?? BaseCache.defaultKey))
-        )
+      /**
+       * We don't leverage `finally` here since we want to ensure cache invalidation
+       * only happens when the original function executed successfully.
+       *
+       * The generation must be bumped before deleting, and both must be awaited: this
+       * guarantees that once this function returns, in-flight reads that computed from
+       * pre-mutation state either fail the generation check in {@link BaseCache.memoize}
+       * or have their write-back removed by the deletion below.
+       */
+      await Promise.all(
+        types.map(async ([type, cacheKey]) => {
+          const key = cacheKey?.(...args) ?? BaseCache.defaultKey;
+          await trySafe(kvCache.bumpGeneration(type, key));
+          await trySafe(kvCache.delete(type, key));
+        })
       );
 
       return value;
@@ -110,6 +126,11 @@ export abstract class BaseCache<CacheMapT extends Record<string, unknown>> {
   /**
    * [Memoize](https://en.wikipedia.org/wiki/Memoization) a function and cache the result. The function execution
    * will be also cached, which means there will be only one execution at a time.
+   *
+   * Results computed before an invalidation (see {@link mutate}) are discarded instead of
+   * written back, so stale data can never persist in the cache after an invalidation
+   * returns. (A caller that joined an already in-flight execution may still receive
+   * pre-invalidation data once; it is never written back.)
    *
    * @param run The function to memoize.
    * @param config The object to determine how cache key will be built. See {@link CacheKeyConfig} for details.
@@ -153,9 +174,25 @@ export abstract class BaseCache<CacheMapT extends Record<string, unknown>> {
             return cachedValue;
           }
 
+          const generation = await kvCache.getGeneration(type, promiseKey);
+          const isInvalidated = async () =>
+            (await kvCache.getGeneration(type, promiseKey)) !== generation;
+
           const value = await run.apply(this, args);
 
+          // Skip the write-back when an invalidation happened while `run` was in flight,
+          // since the result may be computed from pre-mutation state.
+          if (await isInvalidated()) {
+            return value;
+          }
+
           await trySafe(kvCache.set(type, promiseKey, value, getExpiresIn?.(value)));
+
+          // Undo the write if an invalidation landed between the check and the write,
+          // so a stale value can never persist in the cache.
+          if (await isInvalidated()) {
+            await trySafe(kvCache.delete(type, promiseKey));
+          }
 
           return value;
         } finally {
@@ -172,6 +209,36 @@ export abstract class BaseCache<CacheMapT extends Record<string, unknown>> {
   }
 
   abstract getValueGuard<Type extends CacheKeyOf<CacheMapT>>(type: Type): ZodType<CacheMapT[Type]>;
+
+  /**
+   * Get the current invalidation generation for the given type and key.
+   * Note: Store errors will be silently caught and result an `undefined` return.
+   *
+   * Bumped by every {@link mutate} invalidation; {@link memoize} compares snapshots of it
+   * to detect invalidations that raced with an in-flight read.
+   */
+  protected async getGeneration(type: CacheKeyOf<CacheMapT>, key: string) {
+    return trySafe(async () => this.cacheStore.get(this.generationKey(type, key)));
+  }
+
+  /**
+   * Bump the invalidation generation for the given type and key. See {@link getGeneration}.
+   *
+   * A short id suffices: the value is only ever compared against the immediately preceding
+   * one, so it needs to differ from a single known value rather than be globally unique.
+   *
+   * Best-effort by design: the store may drop writes while degraded (unlike deletions), in
+   * which case staleness is bounded by the value TTL, as it was before generations existed.
+   */
+  protected async bumpGeneration(type: CacheKeyOf<CacheMapT>, key: string) {
+    return this.cacheStore.set(this.generationKey(type, key), generateStandardShortId());
+  }
+
+  protected generationKey(type: CacheKeyOf<CacheMapT>, key: string) {
+    // The marker owns a controlled segment so free-form keys (e.g. arbitrary resource
+    // indicators) can never collide with it.
+    return `${this.tenantId}:generation:${type}:${key}`;
+  }
 
   protected cacheKey(type: CacheKeyOf<CacheMapT>, key: string) {
     return `${this.tenantId}:${type}:${key}`;
