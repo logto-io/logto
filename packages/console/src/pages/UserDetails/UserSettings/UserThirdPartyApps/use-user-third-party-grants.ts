@@ -9,6 +9,12 @@ import useApi, { type RequestError } from '@/hooks/use-api';
 export type GrantedThirdPartyAppRow = {
   id: string;
   applicationId: string;
+  /**
+   * The name carried in the grants response. For a CIMD grant this is the consent-time
+   * snapshot name (the identifier URL when the metadata document has no `client_name`),
+   * and there is no application to fetch it from afterwards.
+   */
+  applicationName: string;
   createdAt: string;
   grantIds: string[];
 };
@@ -23,9 +29,10 @@ function useUserThirdPartyGrants(userId: string) {
 
   const rowData = useMemo<GrantedThirdPartyAppRow[]>(() => {
     return normalizeUserApplicationGrantGroups(data?.grants ?? []).map(
-      ({ id, applicationId, iat, grantIds }) => ({
+      ({ id, applicationId, applicationName, iat, grantIds }) => ({
         id,
         applicationId,
+        applicationName,
         createdAt: new Date(iat * 1000).toLocaleString(i18n.language),
         grantIds,
       })

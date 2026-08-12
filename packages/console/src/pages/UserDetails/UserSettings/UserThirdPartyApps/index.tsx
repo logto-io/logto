@@ -1,3 +1,4 @@
+import { isCimdClientId } from '@logto/schemas';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -6,6 +7,7 @@ import FormCard from '@/components/FormCard';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import Table from '@/ds-components/Table';
+import { Tooltip } from '@/ds-components/Tip';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 
 import styles from './index.module.scss';
@@ -66,15 +68,38 @@ function UserThirdPartyApps({ userId }: Props) {
                 title: t('name_column'),
                 dataIndex: 'applicationId',
                 colSpan: 5,
-                render: ({ applicationId }) => (
-                  <ApplicationName isLink applicationId={applicationId} />
-                ),
+                render: ({ applicationId, applicationName }) =>
+                  /**
+                   * A CIMD client identifier is a URL with no applications row behind it:
+                   * fetching `/api/applications/:id` can only 404 and there is no details
+                   * page to link to. The grants response already carries its snapshot name.
+                   */
+                  isCimdClientId(applicationId) ? (
+                    <span className={styles.cimdName}>{applicationName}</span>
+                  ) : (
+                    <ApplicationName isLink applicationId={applicationId} />
+                  ),
               },
               {
                 title: t('app_id_column'),
                 dataIndex: 'applicationId',
                 colSpan: 5,
-                render: ({ applicationId }) => applicationId,
+                render: ({ applicationId }) =>
+                  /**
+                   * A CIMD identifier runs up to 2048 characters — show its host (the part
+                   * carrying the client identity) and keep the full URL in a tooltip.
+                   */
+                  isCimdClientId(applicationId) ? (
+                    <Tooltip
+                      className={styles.identifierTooltip}
+                      anchorClassName={styles.identifierHost}
+                      content={applicationId}
+                    >
+                      {new URL(applicationId).host}
+                    </Tooltip>
+                  ) : (
+                    applicationId
+                  ),
               },
               {
                 title: t('access_created_at_column'),

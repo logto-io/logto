@@ -5,3 +5,23 @@
   font: var(--font-body-2);
   margin-bottom: _.unit(1);
 }
+
+/* A CIMD snapshot name can fall back to the full identifier URL — keep the cell one line. */
+.cimdName {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.identifierHost {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The identifier URL has no break opportunities of its own. */
+.identifierTooltip {
+  word-break: break-all;
+}
