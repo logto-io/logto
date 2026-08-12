@@ -129,8 +129,7 @@ export default function initOidc(
     if (isCimdClient(envSet, clientId)) {
       /**
        * CIMD clients are unregistered: the tenant-wide ceiling replaces the per-application
-       * consent configuration, and the client identifier URL must never be used to query the
-       * applications table (which the third-party check below would do).
+       * consent configuration the third-party filter below reads.
        */
       const filteredScopes = await filterResourceScopesForTheCimdClient(queries, indicator, scopes);
 

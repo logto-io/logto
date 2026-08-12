@@ -153,9 +153,7 @@ export const filterAndParseMissingResourceScopes = async ({
           if (isCimdClient(envSet, applicationId)) {
             /**
              * CIMD clients are unregistered: the tenant-wide ceiling replaces the
-             * per-application consent configuration, and the identifier URL must never reach
-             * `isThirdPartyApplication` (its not-found fallback would read as first-party and
-             * skip the filter entirely).
+             * per-application consent configuration the third-party filter reads.
              */
             const filteredScopes = await filterResourceScopesForTheCimdClient(
               queries,

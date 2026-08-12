@@ -509,16 +509,22 @@ describe('getResourceServerInfo for CIMD clients', () => {
     expect(findApplicationById).not.toHaveBeenCalled();
   });
 
-  it('should keep the legacy application lookup when CIMD is not effectively enabled', async () => {
+  it('should treat the identifier url as third-party without a database lookup when CIMD is not effectively enabled', async () => {
     const findResourceByIndicator = jest.fn().mockResolvedValue({
       ...mockResource,
       indicator,
       accessTokenTtl: 3600,
     });
-    const findApplicationById = jest.fn().mockRejectedValue(new Error('not found'));
+    const findApplicationById = jest.fn();
     const findUserScopesForResourceIndicator = jest
       .fn()
       .mockResolvedValue([buildScope('scope_1', 'read:api'), buildScope('scope_2', 'write:api')]);
+    const getApplicationUserConsentResourceScopes = jest
+      .fn()
+      .mockResolvedValue([
+        { resource: { indicator }, scopes: [buildScope('scope_1', 'read:api')] },
+      ]);
+    const getApplicationUserConsentOrganizationResourceScopes = jest.fn().mockResolvedValue([]);
     const tenant = new MockTenant(undefined, {
       resources: { findResourceByIndicator },
       applications: { findApplicationById },
@@ -526,6 +532,10 @@ describe('getResourceServerInfo for CIMD clients', () => {
 
     tenant.setPartial('libraries', {
       users: { findUserScopesForResourceIndicator },
+      applications: {
+        getApplicationUserConsentResourceScopes,
+        getApplicationUserConsentOrganizationResourceScopes,
+      },
     });
 
     const provider = createProvider(tenant);
@@ -533,8 +543,8 @@ describe('getResourceServerInfo for CIMD clients', () => {
 
     const result = await getResourceServerInfo(ctx, indicator);
 
-    expect(result.scope).toBe('read:api write:api');
-    expect(findApplicationById).toHaveBeenCalledWith(cimdClientId);
+    expect(result.scope).toBe('read:api');
+    expect(findApplicationById).not.toHaveBeenCalled();
   });
 });
 

@@ -35,8 +35,8 @@ type OrganizationAccessOptions = {
 /**
  * Whether the user has granted this organization to this client.
  *
- * The CIMD test must come first: `isThirdPartyApplication`'s not-found fallback reads the
- * identifier URL as first-party, which would skip the user-to-client grant check entirely.
+ * The CIMD test must come first: CIMD organization access is grant-scoped, not the
+ * application-keyed consent relation the third-party branch checks.
  */
 const isOrganizationGrantedToClient = async (
   ctx: KoaContextWithOIDC,

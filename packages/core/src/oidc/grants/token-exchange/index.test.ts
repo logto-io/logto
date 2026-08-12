@@ -2,6 +2,7 @@ import { type SubjectToken } from '@logto/schemas';
 import { type KoaContextWithOIDC, errors } from 'oidc-provider';
 import Sinon from 'sinon';
 
+import { mockApplication } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { getProviderConfiguration } from '#src/oidc/oidc-provider-internals.js';
 import { createOidcContext } from '#src/test-utils/oidc-provider.js';
@@ -26,6 +27,10 @@ const mockQueries = {
   subjectTokens: {
     findSubjectToken,
     updateSubjectTokenById,
+  },
+  applications: {
+    // The organization token cases require a registered first-party application.
+    findApplicationById: async () => ({ ...mockApplication, id: clientId }),
   },
 };
 const assertUserHasApplicationAccess = jest.fn(async () => {
