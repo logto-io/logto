@@ -208,20 +208,6 @@ export abstract class BaseCache<CacheMapT extends Record<string, unknown>> {
   abstract getValueGuard<Type extends CacheKeyOf<CacheMapT>>(type: Type): ZodType<CacheMapT[Type]>;
 
   /**
-   * Delete value from the inner cache store for the given type and key.
-   *
-   * Note this is a plain deletion: unlike {@link invalidate}, it does not bump the invalidation
-   * generation, so an in-flight {@link memoize} read may still write its result back afterwards.
-   * Invalidating after a mutation requires {@link invalidate} or {@link mutate}.
-   *
-   * {@link memoize} intentionally uses it to undo its own write-back: bumping the generation
-   * there would make other in-flight reads discard results that are not stale.
-   */
-  protected async delete(type: CacheKeyOf<CacheMapT>, key: string) {
-    return this.cacheStore.delete(this.cacheKey(type, key));
-  }
-
-  /**
    * Get the current invalidation generation for the given type and key.
    * Note: Store errors will be silently caught and result an `undefined` return.
    *
@@ -253,5 +239,19 @@ export abstract class BaseCache<CacheMapT extends Record<string, unknown>> {
 
   protected cacheKey(type: CacheKeyOf<CacheMapT>, key: string) {
     return `${this.tenantId}:${type}:${key}`;
+  }
+
+  /**
+   * Delete value from the inner cache store for the given type and key.
+   *
+   * Note this is a plain deletion: unlike {@link invalidate}, it does not bump the invalidation
+   * generation, so an in-flight {@link memoize} read may still write its result back afterwards.
+   * Invalidating after a mutation requires {@link invalidate} or {@link mutate}.
+   *
+   * {@link memoize} intentionally uses it to undo its own write-back: bumping the generation
+   * there would make other in-flight reads discard results that are not stale.
+   */
+  private async delete(type: CacheKeyOf<CacheMapT>, key: string) {
+    return this.cacheStore.delete(this.cacheKey(type, key));
   }
 }
