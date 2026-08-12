@@ -117,9 +117,10 @@ export abstract class BaseCache<CacheMapT extends Record<string, unknown>> {
    * will be also cached, which means there will be only one execution at a time.
    *
    * Results computed before an invalidation (see {@link invalidate}) are discarded instead of
-   * written back, so stale data can never persist in the cache after an invalidation
-   * returns. (A caller that joined an already in-flight execution may still receive
-   * pre-invalidation data once; it is never written back.)
+   * written back, so stale data does not persist in the cache after an invalidation returns,
+   * within the bounds documented on {@link invalidateWithGeneration}. (A caller that joined an
+   * already in-flight execution may still receive pre-invalidation data once; it is never
+   * written back.)
    *
    * @param run The function to memoize.
    * @param config The object to determine how cache key will be built. See {@link CacheKeyConfig} for details.
@@ -169,10 +170,10 @@ export abstract class BaseCache<CacheMapT extends Record<string, unknown>> {
           );
 
           const value = await run.apply(this, args);
+          // Resolved outside the write-back, which swallows what it throws.
+          const expiresIn = getExpiresIn?.(value);
 
-          await writeBackIfFresh(async () =>
-            kvCache.set(type, promiseKey, value, getExpiresIn?.(value))
-          );
+          await writeBackIfFresh(async () => kvCache.set(type, promiseKey, value, expiresIn));
 
           return value;
         } finally {
