@@ -183,7 +183,7 @@ describe('Tenant cache health check', () => {
       logtoConfigQueries.setTenantCacheExpiresAt
     );
     Sinon.stub(tenant.wellKnownCache, 'set').value(jest.fn());
-    Sinon.stub(tenant.wellKnownCache, 'delete').value(jest.fn());
+    Sinon.stub(tenant.wellKnownCache, 'invalidate').value(jest.fn());
 
     await tenant.invalidateCache();
 
@@ -206,7 +206,7 @@ describe('Tenant cache health check', () => {
       setTenantCacheExpiresAt
     );
     Sinon.stub(tenant.wellKnownCache, 'set').value(jest.fn());
-    Sinon.stub(tenant.wellKnownCache, 'delete').value(jest.fn());
+    Sinon.stub(tenant.wellKnownCache, 'invalidate').value(jest.fn());
 
     await tenant.invalidateCache();
     expect(setTenantCacheExpiresAt).toHaveBeenCalledTimes(1);
@@ -267,7 +267,7 @@ describe('Tenant cache health check', () => {
       setSigningKeyRotationAt
     );
     Sinon.stub(tenant.wellKnownCache, 'set').value(jest.fn());
-    Sinon.stub(tenant.wellKnownCache, 'delete').value(jest.fn());
+    Sinon.stub(tenant.wellKnownCache, 'invalidate').value(jest.fn());
 
     await tenant.scheduleSigningKeyRotation(1_234_567_890);
 
@@ -292,7 +292,7 @@ describe('Tenant cache health check', () => {
     const now = Date.now();
     Sinon.stub(tenant.wellKnownCache, 'get').resolves();
     Sinon.stub(tenant.wellKnownCache, 'set').value(jest.fn());
-    Sinon.stub(tenant.wellKnownCache, 'delete').value(jest.fn());
+    Sinon.stub(tenant.wellKnownCache, 'invalidate').value(jest.fn());
     Sinon.stub(tenant.queries.logtoConfigs, 'getSigningKeyRotationState').value(
       jest.fn(async () => ({ tenantCacheExpiresAt: now }))
     );
