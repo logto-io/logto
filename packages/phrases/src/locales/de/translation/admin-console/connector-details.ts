@@ -87,6 +87,20 @@ const connector_details = {
     in_use: 'Aktiviert für die Anmeldung',
     not_in_use: 'Deaktiviert für die Anmeldung',
   },
+  email_logs: {
+    title: 'E-Mail-Logs',
+    time: 'Zeit',
+    recipient: 'Empfänger',
+    recipient_placeholder: 'Nach vollständiger Empfängeradresse suchen',
+    template_type: 'Vorlagentyp',
+    status: 'Status',
+    status_sent: 'Gesendet',
+    status_failed: 'Fehlgeschlagen',
+    language_tag: 'Sprache',
+    provider_message_id: 'Nachrichten-ID des Anbieters',
+    previous_page: 'Zurück',
+    next_page: 'Weiter',
+  },
 };
 
 export default Object.freeze(connector_details);

@@ -1,5 +1,5 @@
 import type router from '@logto/cloud/routes';
-import { type tenantAuthRouter } from '@logto/cloud/routes';
+import { type emailLogsRouter, type tenantAuthRouter } from '@logto/cloud/routes';
 import { useLogto } from '@logto/react';
 import { getTenantOrganizationId } from '@logto/schemas';
 import { conditional, trySafe } from '@silverhand/essentials';
@@ -39,14 +39,22 @@ type UseCloudApiProps = {
   hideErrorToast?: boolean;
 };
 
-export const useCloudApi = ({ hideErrorToast = false }: UseCloudApiProps = {}): Client<
-  typeof router
-> => {
+/**
+ * The routers the cloud API exposes to the console under the same access token. Routers outside
+ * the default one are standalone on the cloud side (split to stay under TypeScript's
+ * type-instantiation depth limit), so the client type is selected per call site instead of
+ * intersecting them.
+ */
+type ConsoleCloudRouter = typeof router | typeof emailLogsRouter;
+
+export const useCloudApi = <R extends ConsoleCloudRouter = typeof router>({
+  hideErrorToast = false,
+}: UseCloudApiProps = {}): Client<R> => {
   const { i18n } = useTranslation();
   const { isAuthenticated, getAccessToken } = useLogto();
   const api = useMemo(
     () =>
-      new Client<typeof router>({
+      new Client<R>({
         baseUrl: window.location.origin,
         headers: async () => {
           if (isAuthenticated) {

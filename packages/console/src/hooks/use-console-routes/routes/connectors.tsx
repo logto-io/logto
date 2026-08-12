@@ -13,6 +13,6 @@ export const connectors = {
     { path: ':tab', element: <Connectors /> },
     { path: ':tab/create/:createType', element: <Connectors /> },
     { path: ':tab/guide/:factoryId', element: <Connectors /> },
-    { path: ':tab/:connectorId', element: <ConnectorDetails /> },
+    { path: ':tab/:connectorId/:connectorTab?', element: <ConnectorDetails /> },
   ],
 };

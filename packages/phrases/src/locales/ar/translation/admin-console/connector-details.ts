@@ -87,6 +87,20 @@ const connector_details = {
     in_use: 'ممكّن لتسجيل الدخول',
     not_in_use: 'معطّل لتسجيل الدخول',
   },
+  email_logs: {
+    title: 'سجلات البريد الإلكتروني',
+    time: 'الوقت',
+    recipient: 'المستلم',
+    recipient_placeholder: 'البحث بعنوان المستلم الكامل',
+    template_type: 'نوع القالب',
+    status: 'الحالة',
+    status_sent: 'تم الإرسال',
+    status_failed: 'فشل',
+    language_tag: 'اللغة',
+    provider_message_id: 'معرّف الرسالة لدى المزوّد',
+    previous_page: 'السابق',
+    next_page: 'التالي',
+  },
 };
 
 export default Object.freeze(connector_details);

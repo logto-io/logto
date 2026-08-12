@@ -1,9 +1,18 @@
 import type router from '@logto/cloud/routes';
-import { type tenantAuthRouter } from '@logto/cloud/routes';
+import { type emailLogsRouter, type tenantAuthRouter } from '@logto/cloud/routes';
 import { type GuardedResponse, type RouterRoutes } from '@withtyped/client';
 
 type GetRoutes = RouterRoutes<typeof router>['get'];
 type GetTenantAuthRoutes = RouterRoutes<typeof tenantAuthRouter>['get'];
+type GetEmailLogsRoutes = RouterRoutes<typeof emailLogsRouter>['get'];
+
+/** The paginated hosted-email log page returned by the cloud email-logs endpoint. */
+export type TenantEmailLogsResponse = GuardedResponse<
+  GetEmailLogsRoutes['/api/tenants/:tenantId/email-logs']
+>;
+
+/** A single hosted-email log entry (redacted by the endpoint's response whitelist). */
+export type TenantEmailLog = TenantEmailLogsResponse['logs'][number];
 
 export type GetArrayElementType<T> = T extends Array<infer U> ? U : never;
 

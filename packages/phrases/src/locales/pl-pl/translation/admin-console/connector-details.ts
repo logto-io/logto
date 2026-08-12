@@ -87,6 +87,20 @@ const connector_details = {
     in_use: 'Włączone dla logowania ',
     not_in_use: 'Wyłączone dla logowania ',
   },
+  email_logs: {
+    title: 'Dzienniki e-mail',
+    time: 'Czas',
+    recipient: 'Odbiorca',
+    recipient_placeholder: 'Szukaj po pełnym adresie odbiorcy',
+    template_type: 'Typ szablonu',
+    status: 'Status',
+    status_sent: 'Wysłano',
+    status_failed: 'Niepowodzenie',
+    language_tag: 'Język',
+    provider_message_id: 'ID wiadomości dostawcy',
+    previous_page: 'Poprzednia',
+    next_page: 'Następna',
+  },
 };
 
 export default Object.freeze(connector_details);

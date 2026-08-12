@@ -86,6 +86,20 @@ const connector_details = {
     in_use: 'برای ورود فعال است ',
     not_in_use: 'برای ورود غیرفعال است ',
   },
+  email_logs: {
+    title: 'گزارش‌های ایمیل',
+    time: 'زمان',
+    recipient: 'گیرنده',
+    recipient_placeholder: 'جستجو با آدرس کامل گیرنده',
+    template_type: 'نوع قالب',
+    status: 'وضعیت',
+    status_sent: 'ارسال شد',
+    status_failed: 'ناموفق',
+    language_tag: 'زبان',
+    provider_message_id: 'شناسه پیام ارائه‌دهنده',
+    previous_page: 'قبلی',
+    next_page: 'بعدی',
+  },
 };
 
 export default Object.freeze(connector_details);
