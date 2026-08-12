@@ -32,4 +32,13 @@ create index service_logs__email__tenant_id__recipient__created_at__id
   on service_logs (tenant_id, lower(payload->'data'->>'to'), created_at desc, id desc)
   where type in ('sendEmail', 'sendEmailFailed');
 
+/* Cloud delivery-event webhook write path: single-row lookup of the `sendEmail` row that carries
+   the provider-assigned message id. Doubly partial on purpose — rows without a message id (all
+   history before the id was captured, and providers that return none) never enter the index, so
+   its size and per-insert maintenance stay proportional to id-carrying rows only. The strict `=`
+   in the webhook's update provably implies `is not null`, so the planner can use it. */
+create index service_logs__email__provider_message_id
+  on service_logs ((payload->>'providerMessageId'))
+  where type = 'sendEmail' and payload->>'providerMessageId' is not null;
+
 /* no_after_each */
