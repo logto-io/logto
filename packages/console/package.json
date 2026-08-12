@@ -86,7 +86,7 @@
     "libphonenumber-js": "^1.12.6",
     "lint-staged": "^15.0.0",
     "mermaid": "^10.9.1",
-    "nanoid": "^5.0.9",
+    "nanoid": "^5.1.16",
     "overlayscrollbars": "^2.0.2",
     "overlayscrollbars-react": "^0.5.0",
     "postcss": "^8.5.18",
