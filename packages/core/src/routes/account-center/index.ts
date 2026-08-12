@@ -45,7 +45,7 @@ export default function accountCentersRoutes<T extends ManagementApiRouter>(
         profileFields: accountCenterProfileFieldsGuard.nullable().optional(),
       }),
       response: accountCenterApiGuard,
-      status: [200],
+      status: [200, 400],
     }),
 
     async (ctx, next) => {

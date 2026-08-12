@@ -49,6 +49,9 @@
         "responses": {
           "200": {
             "description": "Updated account center settings."
+          },
+          "400": {
+            "description": "The request body is invalid. E.g. `profileFields` contains names that do not exist in the custom profile fields catalog, or contains duplicate names."
           }
         }
       }
