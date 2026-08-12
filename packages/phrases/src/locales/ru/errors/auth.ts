@@ -9,6 +9,8 @@ const auth = {
   require_re_authentication:
     'Для выполнения защищенного действия требуется повторная аутентификация.',
   exceed_token_limit: 'Превышен лимит токенов. Пожалуйста, свяжитесь с администратором.',
+  third_party_application_forbidden:
+    'Сторонние приложения не могут изменять данные учётной записи через этот API.',
 };
 
 export default Object.freeze(auth);

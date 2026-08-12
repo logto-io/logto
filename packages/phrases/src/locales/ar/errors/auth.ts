@@ -8,6 +8,8 @@ const auth = {
   jwt_sub_missing: 'القيمة `sub` مفقودة في JWT.',
   require_re_authentication: 'مطلوب إعادة المصادقة لإجراء حماية.',
   exceed_token_limit: 'تم تجاوز حد الرمز. يرجى الاتصال بالمسؤول الخاص بك.',
+  third_party_application_forbidden:
+    'لا يُسمح للتطبيقات التابعة لجهات خارجية بتعديل بيانات الحساب عبر واجهة برمجة التطبيقات هذه.',
 };
 
 export default Object.freeze(auth);

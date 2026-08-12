@@ -9,6 +9,8 @@ const auth = {
   require_re_authentication:
     "È necessaria una nuova autenticazione per eseguire un'azione protetta.",
   exceed_token_limit: 'Limite di token superato. Contatta il tuo amministratore.',
+  third_party_application_forbidden:
+    'Le applicazioni di terze parti non possono modificare i dati dell’account tramite questa API.',
 };
 
 export default Object.freeze(auth);

@@ -8,6 +8,8 @@ const auth = {
   jwt_sub_missing: 'فیلد `sub` در JWT وجود ندارد.',
   require_re_authentication: 'برای انجام اقدام محافظت‌شده، احراز هویت مجدد لازم است.',
   exceed_token_limit: 'محدودیت توکن تجاوز شد. لطفاً با مدیر خود تماس بگیرید.',
+  third_party_application_forbidden:
+    'برنامه‌های شخص ثالث مجاز به تغییر داده‌های حساب از طریق این API نیستند.',
 };
 
 export default Object.freeze(auth);

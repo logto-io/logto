@@ -23,6 +23,7 @@ import {
 } from '#src/libraries/verification-helpers/totp-validation.js';
 import { buildVerificationRecordByIdAndType } from '#src/libraries/verification.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import { assertFirstPartyClient } from '#src/utils/assert-first-party-client.js';
 import assertThat from '#src/utils/assert-that.js';
 import { transpileUserMfaVerifications } from '#src/utils/user.js';
 
@@ -85,10 +86,10 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
           codes: z.string().array(),
         }),
       ]),
-      status: [204, 400, 401, 422],
+      status: [204, 400, 401, 403, 422],
     }),
     async (ctx, next) => {
-      const { id: userId, scopes, identityVerified } = ctx.auth;
+      const { id: userId, scopes, identityVerified, clientId } = ctx.auth;
       assertThat(
         identityVerified,
         new RequestError({ code: 'verification_record.permission_denied', status: 401 })
@@ -105,6 +106,7 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
         scopes.has(UserScope.Identities),
         new RequestError({ code: 'auth.unauthorized', status: 401 })
       );
+      await assertFirstPartyClient(queries, clientId);
 
       const user = await findUserById(userId);
 
@@ -257,10 +259,10 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
         secret: z.string(),
         code: z.string(),
       }),
-      status: [204, 400, 401],
+      status: [204, 400, 401, 403],
     }),
     async (ctx, next) => {
-      const { id: userId, scopes, identityVerified } = ctx.auth;
+      const { id: userId, scopes, identityVerified, clientId } = ctx.auth;
       assertThat(
         identityVerified,
         new RequestError({ code: 'verification_record.permission_denied', status: 401 })
@@ -275,6 +277,7 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
         scopes.has(UserScope.Identities),
         new RequestError({ code: 'auth.unauthorized', status: 401 })
       );
+      await assertFirstPartyClient(queries, clientId);
 
       const { mfa } = await findDefaultSignInExperience();
       assertThat(mfa.factors.includes(MfaFactor.TOTP), 'session.mfa.mfa_factor_not_enabled');
@@ -398,10 +401,10 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
       body: z.object({
         name: z.string(),
       }),
-      status: [200, 400, 401],
+      status: [200, 400, 401, 403],
     }),
     async (ctx, next) => {
-      const { id: userId, scopes, identityVerified } = ctx.auth;
+      const { id: userId, scopes, identityVerified, clientId } = ctx.auth;
       assertThat(
         identityVerified,
         new RequestError({ code: 'verification_record.permission_denied', status: 401 })
@@ -418,6 +421,7 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
         scopes.has(UserScope.Identities),
         new RequestError({ code: 'auth.unauthorized', status: 401 })
       );
+      await assertFirstPartyClient(queries, clientId);
 
       const user = await findUserById(userId);
       const mfaVerification = user.mfaVerifications.find(
@@ -449,10 +453,10 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
       params: z.object({
         verificationId: z.string(),
       }),
-      status: [204, 400, 401],
+      status: [204, 400, 401, 403],
     }),
     async (ctx, next) => {
-      const { id: userId, scopes, identityVerified } = ctx.auth;
+      const { id: userId, scopes, identityVerified, clientId } = ctx.auth;
       assertThat(
         identityVerified,
         new RequestError({ code: 'verification_record.permission_denied', status: 401 })
@@ -461,6 +465,7 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
         scopes.has(UserScope.Identities),
         new RequestError({ code: 'auth.unauthorized', status: 401 })
       );
+      await assertFirstPartyClient(queries, clientId);
 
       const user = await findUserById(userId);
       const mfaVerification = user.mfaVerifications.find(

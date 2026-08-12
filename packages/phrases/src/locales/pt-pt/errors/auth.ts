@@ -7,6 +7,8 @@ const auth = {
   jwt_sub_missing: 'Campo `sub` está ausente no JWT.',
   require_re_authentication: 'É necessária uma nova autenticação para executar uma ação protegida.',
   exceed_token_limit: 'Limite de token excedido. Por favor, contacte o seu administrador.',
+  third_party_application_forbidden:
+    'Aplicações de terceiros não podem modificar dados da conta através desta API.',
 };
 
 export default Object.freeze(auth);
