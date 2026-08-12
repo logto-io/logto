@@ -1,5 +1,5 @@
 import type { Application, OidcModelInstance, OidcModelInstancePayload } from '@logto/schemas';
-import { Applications, OidcModelInstances } from '@logto/schemas';
+import { Applications, CimdGrantClientSnapshots, OidcModelInstances } from '@logto/schemas';
 import { ConsoleLog } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
@@ -16,6 +16,7 @@ export type QueryResult = Pick<OidcModelInstance, 'payload' | 'consumedAt'>;
 
 const { table, fields } = convertToIdentifiers(OidcModelInstances);
 const { table: applicationTable } = convertToIdentifiers(Applications);
+const cimdGrantClientSnapshots = convertToIdentifiers(CimdGrantClientSnapshots, true);
 
 export type ActiveGrantInstance = Pick<OidcModelInstance, 'id' | 'payload' | 'expiresAt'>;
 export type ActiveApplicationGrantInstance = ActiveGrantInstance & {
@@ -297,6 +298,41 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
     `);
   };
 
+  /**
+   * Active grants of CIMD (client ID metadata document) clients, shaped like the registered
+   * application grants. They are URL identities without an `applications` row, so
+   * `findUserActiveApplicationGrants` cannot see them; a grant is a CIMD grant exactly when a
+   * consent-time snapshot row exists for it, and the snapshot carries the approved display data.
+   *
+   * The identifier URL stands in for a missing name: `client_name` is optional in the metadata
+   * document, and the snapshot write normalizes an empty one to null.
+   */
+  const findUserActiveCimdGrants = async (userId: string) => {
+    /** The snapshot table also has a `tenant_id` column, so this side of the join must qualify. */
+    const oidcModelInstanceTenantId = sql.identifier([
+      OidcModelInstances.table,
+      OidcModelInstances.fields.tenantId,
+    ]);
+
+    return pool.any<ActiveApplicationGrantInstance>(sql`
+      select ${fields.id}, ${fields.payload}, ${fields.expiresAt},
+        json_build_object(
+          'id', ${cimdGrantClientSnapshots.fields.clientId},
+          'name', coalesce(
+            ${cimdGrantClientSnapshots.fields.name},
+            ${cimdGrantClientSnapshots.fields.clientId}
+          )
+        ) as application
+      from ${table}
+      inner join ${cimdGrantClientSnapshots.table}
+        on ${cimdGrantClientSnapshots.fields.tenantId}=${oidcModelInstanceTenantId}
+        and ${cimdGrantClientSnapshots.fields.grantId}=${fields.id}
+      where ${fields.modelName}='Grant'
+        and ${fields.payload}->>'accountId'=${userId}
+        and ${fields.expiresAt} > ${convertToTimestamp()}
+    `);
+  };
+
   const findUserActiveGrantsByClientId = async (userId: string, clientId: string) => {
     return pool.any<ActiveGrantInstance>(sql`
       select ${fields.id}, ${fields.payload}, ${fields.expiresAt}
@@ -337,6 +373,7 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
     revokeInstanceByGrantId,
     revokeInstanceByUserId,
     findUserActiveApplicationGrants,
+    findUserActiveCimdGrants,
     findUserActiveGrantsByClientId,
     findUserActiveSessionUidByGrantId,
   };

@@ -1,8 +1,13 @@
 import { UserScope } from '@logto/core-kit';
-import { AccountCenterControlValue, getUserApplicationGrantsResponseGuard } from '@logto/schemas';
+import {
+  AccountCenterControlValue,
+  getCimdCapableUserApplicationGrantsResponseGuard,
+  getUserApplicationGrantsResponseGuard,
+} from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -10,6 +15,11 @@ import assertThat from '#src/utils/assert-that.js';
 import { type UserRouter, type RouterInitArgs } from '../types.js';
 
 import { accountApiPrefix } from './constants.js';
+
+// DEV: CIMD (client ID metadata document) support
+const grantsResponseGuard = EnvSet.values.isDevFeaturesEnabled
+  ? getCimdCapableUserApplicationGrantsResponseGuard
+  : getUserApplicationGrantsResponseGuard;
 
 export default function accountGrantRoutes<T extends UserRouter>(
   ...[router, { provider, libraries }]: RouterInitArgs<T>
@@ -23,7 +33,7 @@ export default function accountGrantRoutes<T extends UserRouter>(
         appType: z.enum(['firstParty', 'thirdParty']).optional(),
       }),
       status: [200, 400, 401, 500],
-      response: getUserApplicationGrantsResponseGuard,
+      response: grantsResponseGuard,
     }),
     async (ctx, next) => {
       const { id: userId, scopes, identityVerified } = ctx.auth;
