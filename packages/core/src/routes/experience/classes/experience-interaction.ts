@@ -13,6 +13,7 @@ import {
 import { maskEmail, maskPhone } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { buildUserPasswordPayload } from '#src/libraries/user.utils.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
@@ -54,6 +55,12 @@ import {
 } from './verifications/index.js';
 import { VerificationRecordsMap } from './verifications/verification-records-map.js';
 
+type TrustedDeviceFulfillmentStatus =
+  /** A matching trusted-device fulfillment was restored from interaction storage. */
+  | 'stored'
+  /** A trusted-device credential was validated and stored during the current request. */
+  | 'validated';
+
 /**
  * Interaction is a short-lived session session that is initiated when a user starts an interaction flow with the Logto platform.
  * This class is used to manage all the interaction data and status.
@@ -73,6 +80,8 @@ export default class ExperienceInteraction {
   private readonly verificationRecords = new VerificationRecordsMap();
   /** The userId of the user for the current interaction. Only available once the user is identified. */
   private userId?: string;
+  /** Internal fulfillment state for the trusted-device MFA alternative. */
+  private trustedDeviceFulfillment?: InteractionStorage['trustedDeviceFulfillment'];
   private userCache?: User;
   private readonly adaptiveMfaValidator: AdaptiveMfaValidator;
 
@@ -144,6 +153,7 @@ export default class ExperienceInteraction {
       profile = {},
       mfa = {},
       userId,
+      trustedDeviceFulfillment,
       interactionEvent,
       captcha = {
         verified: false,
@@ -153,6 +163,7 @@ export default class ExperienceInteraction {
 
     this.#interactionEvent = interactionEvent;
     this.userId = userId;
+    this.trustedDeviceFulfillment = trustedDeviceFulfillment;
     this.profile = new Profile(libraries, queries, profile, interactionContext);
     this.mfa = new Mfa(libraries, queries, mfa, interactionContext);
     this.captcha = captcha;
@@ -382,7 +393,17 @@ export default class ExperienceInteraction {
       return;
     }
 
+    const trustedDeviceFulfillmentStatus = await this.tryFulfillMfaWithTrustedDevice(user.id);
+
+    if (trustedDeviceFulfillmentStatus === 'stored') {
+      return;
+    }
+
     this.assignAdaptiveMfaHookResult(user.id, adaptiveMfaResult);
+
+    if (trustedDeviceFulfillmentStatus === 'validated') {
+      return;
+    }
 
     const { primaryEmail, primaryPhone } = user;
     const maskedIdentifiers: Record<string, string> = {
@@ -671,12 +692,13 @@ export default class ExperienceInteraction {
 
   /** Convert the current interaction to JSON, so that it can be stored as the OIDC provider interaction result */
   public toJson(): InteractionStorage {
-    const { interactionEvent, userId, captcha } = this;
+    const { interactionEvent, userId, trustedDeviceFulfillment, captcha } = this;
     const signInContext = this.adaptiveMfaValidator.getSignInContext();
 
     return {
       interactionEvent,
       userId,
+      trustedDeviceFulfillment,
       profile: this.profile.data,
       mfa: this.mfa.data,
       verificationRecords: this.verificationRecordsArray.map((record) => record.toJson()),
@@ -686,12 +708,52 @@ export default class ExperienceInteraction {
   }
 
   public toSanitizedJson(): SanitizedInteractionStorageData {
+    // Trusted-device fulfillment is internal authentication state. Explicitly remove it before
+    // spreading the remaining storage.
+    const { trustedDeviceFulfillment: _, ...interactionStorage } = this.toJson();
+
     return {
-      ...this.toJson(),
+      ...interactionStorage,
       profile: this.profile.sanitizedData,
       mfa: this.mfa.sanitizedData,
       verificationRecords: this.verificationRecordsArray.map((record) => record.toSanitizedJson()),
     };
+  }
+
+  private async tryFulfillMfaWithTrustedDevice(
+    userId: string
+  ): Promise<TrustedDeviceFulfillmentStatus | undefined> {
+    // Trusted-device MFA fulfillment is under development and must remain isolated from released flows.
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return;
+    }
+
+    if (this.trustedDeviceFulfillment?.userId === userId) {
+      return 'stored';
+    }
+
+    const {
+      libraries: { trustedDevicePolicy, trustedDevices },
+    } = this.tenant;
+    const { enabled } = await trustedDevicePolicy.getEffectivePolicy(userId);
+
+    if (!enabled) {
+      return;
+    }
+
+    const trustedDevice = await trustedDevices.validateCredential(this.ctx, userId);
+
+    if (!trustedDevice) {
+      return;
+    }
+
+    this.trustedDeviceFulfillment = {
+      userId,
+      trustedDeviceId: trustedDevice.id,
+      fulfilledAt: Date.now(),
+    };
+
+    return 'validated';
   }
 
   private assignAdaptiveMfaHookResult(userId: string, adaptiveMfaResult?: AdaptiveMfaResult) {
