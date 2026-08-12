@@ -46,26 +46,31 @@ const matchPathBasedTenantId = (urlSet: UrlSet, url: URL) => {
   return urlSegments[found.pathname === '/' ? 1 : endpointSegments.length];
 };
 
-const cacheKey = 'custom-domain';
 const getHostname = (url: URL | string) => (typeof url === 'string' ? url : url.hostname);
-const getDomainCacheKey = (url: URL | string) => `${cacheKey}:${getHostname(url)}`;
+const getDomainCacheKey = (url: URL | string) => `custom-domain:${getHostname(url)}`;
 /**
- * Hostnames cannot contain `:`, so the `generation` segment can never collide with a
- * {@link getDomainCacheKey} value key.
+ * The marker gets its own prefix rather than a segment inside the value keyspace: the two
+ * prefixes diverge before the hostname is appended, so no hostname — whatever the `domains`
+ * column happens to hold — can spell a key belonging to the other.
  */
-const getDomainGenerationKey = (url: URL | string) => `${cacheKey}:generation:${getHostname(url)}`;
+const getDomainGenerationKey = (url: URL | string) =>
+  `custom-domain-generation:${getHostname(url)}`;
 
 /**
  * Invalidate the cached mapping for the given custom domain after the mutation it reflects
  * has been committed.
  *
- * The generation must be bumped before deleting, and both must be awaited: this guarantees
- * that once this function resolves, an in-flight {@link getTenantIdFromCustomDomain} lookup
- * that read pre-mutation state either skips its write-back or has it removed by the deletion.
- * (The same guard as `BaseCache`, which this cache cannot build on since it is cross-tenant.)
+ * The generation must be bumped before deleting, and both must be awaited: an in-flight
+ * {@link getTenantIdFromCustomDomain} lookup that read pre-mutation state then either skips its
+ * write-back or has it removed by the deletion. Callers must therefore await it before returning
+ * to their own caller. (The same guard as `BaseCache`, which this cache cannot build on since it
+ * is cross-tenant.)
  *
- * Store errors are silently caught, as an invalidation failure degrades to staleness bounded
- * by the value TTL rather than a failed domain mutation.
+ * The guarantee is bounded by what the store can promise, and every way it degrades caps
+ * staleness at the value TTL rather than leaving it unbounded: store errors are silently caught,
+ * a read served by a lagging replica (the cluster client enables `useReplicas`) can observe a
+ * pre-bump generation, and a command that timed out client-side is not cancelled, so it may land
+ * after this resolved.
  */
 export const clearCustomDomainCache = async (url: URL | string) => {
   await trySafe(async () => redisCache.set(getDomainGenerationKey(url), generateStandardShortId()));
@@ -79,13 +84,20 @@ const getTenantIdFromCustomDomain = async (
   url: URL,
   pool: CommonQueryMethods
 ): Promise<string | undefined> => {
-  const cachedValue = await trySafe(async () => redisCache.get(getDomainCacheKey(url)));
+  /**
+   * The snapshot only has to be taken before the database read starts, so it rides along with
+   * the value read instead of costing a second round trip on a path that runs per request.
+   * Snapshotting earlier observes a superset of the invalidations it otherwise would.
+   */
+  const [cachedValue, generation] = await Promise.all([
+    trySafe(async () => redisCache.get(getDomainCacheKey(url))),
+    trySafe(async () => redisCache.get(getDomainGenerationKey(url))),
+  ]);
 
   if (cachedValue) {
     return cachedValue;
   }
 
-  const generation = await trySafe(async () => redisCache.get(getDomainGenerationKey(url)));
   const isInvalidated = async () =>
     (await trySafe(async () => redisCache.get(getDomainGenerationKey(url)))) !== generation;
 
