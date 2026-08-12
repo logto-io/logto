@@ -257,4 +257,39 @@ describe('Well-known cache function wrappers', () => {
     expect(await cache.get('custom-phrases', '2+2')).toBeUndefined();
     expect(run).toBeCalledTimes(2);
   });
+
+  it('should discard a stale write-back when a mutation invalidates the cache mid-read', async () => {
+    jest.useFakeTimers();
+
+    const read = jest
+      .fn(async (): Promise<Record<string, unknown>> => ({ foo: 'fresh' }))
+      .mockImplementationOnce(
+        async () =>
+          new Promise((resolve) => {
+            // Simulate a slow query that started before the mutation and resolves after it
+            setTimeout(() => {
+              resolve({ foo: 'stale' });
+            }, 100);
+          })
+      );
+    const update = jest.fn(async () => true);
+    const cache = new WellKnownCache(tenantId, cacheStore);
+    const memoized = cache.memoize(read, ['custom-phrases']);
+    const mutate = cache.mutate(update, ['custom-phrases']);
+
+    const staleRead = memoized();
+    await mutate();
+    jest.advanceTimersByTime(101);
+
+    // The caller still receives the computed value, but it must not persist in the cache
+    expect(await staleRead).toStrictEqual({ foo: 'stale' });
+    expect(await cache.get('custom-phrases', WellKnownCache.defaultKey)).toBeUndefined();
+
+    expect(await memoized()).toStrictEqual({ foo: 'fresh' });
+    expect(await cache.get('custom-phrases', WellKnownCache.defaultKey)).toStrictEqual({
+      foo: 'fresh',
+    });
+
+    jest.useRealTimers();
+  });
 });
