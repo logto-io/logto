@@ -1,4 +1,4 @@
-import { generateStandardId } from '@logto/shared';
+import { generateStandardShortId } from '@logto/shared';
 import { trySafe, type Optional } from '@silverhand/essentials';
 import { type ZodType } from 'zod';
 
@@ -223,11 +223,14 @@ export abstract class BaseCache<CacheMapT extends Record<string, unknown>> {
   /**
    * Bump the invalidation generation for the given type and key. See {@link getGeneration}.
    *
+   * A short id suffices: the value is only ever compared against the immediately preceding
+   * one, so it needs to differ from a single known value rather than be globally unique.
+   *
    * Best-effort by design: the store may drop writes while degraded (unlike deletions), in
    * which case staleness is bounded by the value TTL, as it was before generations existed.
    */
   protected async bumpGeneration(type: CacheKeyOf<CacheMapT>, key: string) {
-    return this.cacheStore.set(this.generationKey(type, key), generateStandardId());
+    return this.cacheStore.set(this.generationKey(type, key), generateStandardShortId());
   }
 
   protected generationKey(type: CacheKeyOf<CacheMapT>, key: string) {
