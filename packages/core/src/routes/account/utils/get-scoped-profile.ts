@@ -43,6 +43,7 @@ export const getScopedProfile = async (
     updatedAt,
     profile: { address, ...restProfile },
     applicationId,
+    cimdClientId,
     isSuspended,
     hasPassword,
   } = transpileUserProfileResponse(user);
@@ -70,6 +71,7 @@ export const getScopedProfile = async (
           createdAt,
           updatedAt,
           applicationId,
+          cimdClientId,
           isSuspended,
           hasPassword,
         }

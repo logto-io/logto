@@ -108,7 +108,21 @@
       "get": {
         "responses": {
           "200": {
-            "description": "An array of users who have the role assigned."
+            "description": "An array of users who have the role assigned.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "properties": {
+                      "cimdClientId": {
+                        "description": "Dev feature. The identifier of the CIMD (client ID metadata document) client from the user's first consent. `null` unless the user's first consent was granted to a CIMD client. Mutually exclusive with `applicationId`.",
+                        "x-logto-dev-feature": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Get role users",

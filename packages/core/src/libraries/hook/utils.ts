@@ -71,6 +71,7 @@ export const generateHookTestPayload = (hookId: string, event: HookEvent): HookE
       },
       profile: {},
       applicationId: 'fake-application-id',
+      cimdClientId: null,
       isSuspended: false,
       lastSignInAt: now.getTime(),
       createdAt: now.getTime(),

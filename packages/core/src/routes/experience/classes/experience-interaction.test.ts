@@ -85,6 +85,7 @@ const mockJwtCustomizerUserContext: JwtCustomizerUserContext = {
   updatedAt: mockUser.updatedAt,
   profile: mockUser.profile,
   applicationId: mockUser.applicationId,
+  cimdClientId: mockUser.cimdClientId,
   isSuspended: mockUser.isSuspended,
   hasPassword: true,
   ssoIdentities: [],
