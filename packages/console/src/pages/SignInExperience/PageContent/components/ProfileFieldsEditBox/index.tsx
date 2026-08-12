@@ -1,5 +1,5 @@
 import { type CustomProfileField } from '@logto/schemas';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import {
   Controller,
   type FieldArrayPath,
@@ -68,7 +68,7 @@ function ProfileFieldsEditBox<
   }) as Array<{ name: string }> | undefined;
   /* eslint-enable no-restricted-syntax */
 
-  const { fields, swap, remove, append, replace } = useFieldArray({ control, name });
+  const { fields, swap, remove, append } = useFieldArray({ control, name });
 
   const availableFields = useMemo(() => {
     if (!catalog) {
@@ -87,23 +87,6 @@ function ProfileFieldsEditBox<
   }, [catalog, getI18nLabel]);
 
   const catalogNameSet = useMemo(() => new Set((catalog ?? []).map(({ name }) => name)), [catalog]);
-
-  // Drop selected fields that were removed from the catalog (e.g. deleted under Collect user
-  // profile) so they cannot remain as undeletable rows and block saving.
-  useEffect(() => {
-    if (!catalog) {
-      return;
-    }
-
-    const current = selectedValue ?? [];
-    if (current.every(({ name: fieldName }) => catalogNameSet.has(fieldName))) {
-      return;
-    }
-
-    onFieldsChange?.();
-    // eslint-disable-next-line no-restricted-syntax -- runtime shape matches the caller's array element
-    replace(current.filter(({ name: fieldName }) => catalogNameSet.has(fieldName)) as never);
-  }, [catalog, catalogNameSet, onFieldsChange, replace, selectedValue]);
 
   const hasSelectedFields = fields.length > 0;
 
