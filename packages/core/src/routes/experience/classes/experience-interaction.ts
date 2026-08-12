@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 
 import { appInsights } from '@logto/app-insights/node';
+import { TemplateType } from '@logto/connector-kit';
 import {
   InteractionEvent,
   InteractionHookEvent,
@@ -18,6 +19,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { buildUserPasswordPayload } from '#src/libraries/user.utils.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 import { getClientIdentifierPayload } from '#src/oidc/cimd/index.js';
+import { type TrustedDeviceMetadata } from '#src/queries/trusted-device.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
@@ -60,6 +62,51 @@ type TrustedDeviceFulfillmentStatus =
   | 'stored'
   /** A trusted-device credential was validated and stored during the current request. */
   | 'validated';
+
+type SubmitOptions = Readonly<{
+  createTrustedDevice?: boolean;
+}>;
+
+const isEligibleExistingTrustedDeviceVerification = (verification: VerificationRecord) => {
+  switch (verification.type) {
+    case VerificationType.TOTP:
+    case VerificationType.WebAuthn: {
+      return verification.isVerified && !verification.isNewBindMfaVerification;
+    }
+    case VerificationType.MfaEmailVerificationCode:
+    case VerificationType.MfaPhoneVerificationCode: {
+      return verification.isVerified;
+    }
+    default: {
+      return false;
+    }
+  }
+};
+
+const isEligibleIdentifierMfaBinding = (
+  verification: VerificationRecord,
+  profile: InteractionStorage['profile']
+) => {
+  switch (verification.type) {
+    case VerificationType.EmailVerificationCode: {
+      return (
+        verification.isVerified &&
+        verification.templateType === TemplateType.BindMfa &&
+        profile?.primaryEmail === verification.identifier.value
+      );
+    }
+    case VerificationType.PhoneVerificationCode: {
+      return (
+        verification.isVerified &&
+        verification.templateType === TemplateType.BindMfa &&
+        profile?.primaryPhone === verification.identifier.value
+      );
+    }
+    default: {
+      return false;
+    }
+  }
+};
 
 /**
  * Interaction is a short-lived session session that is initiated when a user starts an interaction flow with the Logto platform.
@@ -499,7 +546,7 @@ export default class ExperienceInteraction {
    * @throws {RequestError} with 422 if the required profile fields are missing
    **/
   // eslint-disable-next-line complexity
-  public async submit(log?: LogEntry) {
+  public async submit(log?: LogEntry, { createTrustedDevice = false }: SubmitOptions = {}) {
     const {
       queries: { users: userQueries, userSsoIdentities: userSsoIdentityQueries },
       libraries: {
@@ -664,6 +711,16 @@ export default class ExperienceInteraction {
       ...this.toJson(),
     });
 
+    // Trusted-device writes happen only after the full interaction has succeeded. They remain
+    // best effort so a persistence or cookie failure never turns a successful authentication into
+    // an error.
+    await trySafe(
+      async () => this.finalizeTrustedDevice(user.id, createTrustedDevice),
+      (error) => {
+        void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
+      }
+    );
+
     // The geo context is only recorded when the `submit()` function succeeds.
     // The recorded geo context will affect the evaluation results of the adaptive MFA afterwards.
     void trySafe(
@@ -707,17 +764,89 @@ export default class ExperienceInteraction {
     };
   }
 
-  public toSanitizedJson(): SanitizedInteractionStorageData {
+  public async toSanitizedJson(): Promise<SanitizedInteractionStorageData> {
     // Trusted-device fulfillment is internal authentication state. Explicitly remove it before
     // spreading the remaining storage.
     const { trustedDeviceFulfillment: _, ...interactionStorage } = this.toJson();
 
+    const trustedDevice = await this.getTrustedDeviceCreationAvailability();
+
     return {
       ...interactionStorage,
+      ...conditional(trustedDevice && { trustedDevice }),
       profile: this.profile.sanitizedData,
       mfa: this.mfa.sanitizedData,
       verificationRecords: this.verificationRecordsArray.map((record) => record.toSanitizedJson()),
     };
+  }
+
+  private async getTrustedDeviceCreationAvailability() {
+    // Trusted-device opt-in is under development and must remain isolated from released flows.
+    if (!EnvSet.values.isDevFeaturesEnabled || !this.userId) {
+      return;
+    }
+
+    const { enabled, durationDays } =
+      await this.tenant.libraries.trustedDevicePolicy.getEffectivePolicy(this.userId);
+
+    return {
+      canCreate: enabled,
+      ...conditional(enabled && { durationDays }),
+    };
+  }
+
+  private hasEligibleTrustedDeviceProof() {
+    const hasEligibleVerification = this.verificationRecordsArray.some(
+      (verification) =>
+        isEligibleExistingTrustedDeviceVerification(verification) ||
+        isEligibleIdentifierMfaBinding(verification, this.profile.data)
+    );
+
+    const hasEligibleBinding = this.mfa.bindMfaFactorsArray.some(
+      ({ type }) => type === MfaFactor.TOTP || type === MfaFactor.WebAuthn
+    );
+
+    return hasEligibleVerification || hasEligibleBinding;
+  }
+
+  private getTrustedDeviceMetadata(): TrustedDeviceMetadata {
+    const { ip, userAgent } = this.adaptiveMfaValidator.getSignInContext() ?? {};
+    const { country, city } = this.adaptiveMfaValidator.getCurrentContext()?.location ?? {};
+
+    return {
+      ...conditional(userAgent && { userAgent }),
+      ...conditional(ip && { ip }),
+      ...conditional(country && { country }),
+      ...conditional(city && { city }),
+    };
+  }
+
+  private async finalizeTrustedDevice(userId: string, createTrustedDevice: boolean) {
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return;
+    }
+
+    const {
+      libraries: { trustedDevices },
+    } = this.tenant;
+    const metadata = this.getTrustedDeviceMetadata();
+
+    if (this.trustedDeviceFulfillment?.userId === userId) {
+      if (this.#interactionEvent === InteractionEvent.SignIn) {
+        await trustedDevices.updateMetadata(
+          this.trustedDeviceFulfillment.trustedDeviceId,
+          userId,
+          metadata
+        );
+      }
+      return;
+    }
+
+    if (!createTrustedDevice || !this.hasEligibleTrustedDeviceProof()) {
+      return;
+    }
+
+    await trustedDevices.createCredential({ ctx: this.ctx, userId, ...metadata });
   }
 
   private async tryFulfillMfaWithTrustedDevice(

@@ -103,6 +103,20 @@
         "operationId": "SubmitInteraction",
         "summary": "Submit interaction",
         "description": "Submit the current interaction. <br/>- Submit the verified user identity to the OIDC provider for further authentication (SignIn and Register). <br/>- Update the user's profile data if any (SignIn and Register). <br/>- Reset the password and clear all the interaction records (ForgotPassword).",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "createTrustedDevice": {
+                    "description": "Dev feature. Whether the user explicitly opts in to trust this device after an eligible MFA verification or binding.",
+                    "x-logto-dev-feature": true
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "The interaction has been successfully submitted."
@@ -126,7 +140,19 @@
         "description": "Get the public interaction data.",
         "responses": {
           "200": {
-            "description": "The public interaction data has been successfully retrieved."
+            "description": "The public interaction data has been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "trustedDevice": {
+                      "description": "Dev feature. Trusted-device creation availability for the identified user and current effective policy.",
+                      "x-logto-dev-feature": true
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }

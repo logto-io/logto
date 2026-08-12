@@ -7,13 +7,19 @@ import {
   SignInIdentifier,
   VerificationType,
   type Mfa,
+  type User,
 } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 import type { Middleware } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
-import { mockUser, mockUserTotpMfaVerification } from '#src/__mocks__/user.js';
+import {
+  mockUser,
+  mockUserBackupCodeMfaVerification,
+  mockUserTotpMfaVerification,
+  mockUserWebAuthnMfaVerification,
+} from '#src/__mocks__/user.js';
 import { EnvSet } from '#src/env-set/index.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
@@ -23,6 +29,58 @@ import { createRequester } from '#src/utils/test-utils.js';
 const { jest } = import.meta;
 
 const experienceRoutes = await pickDefault(import('./index.js'));
+
+const eligibleTrustedDeviceVerificationCases: Array<{
+  name: string;
+  factor: MfaFactor;
+  mfaVerification?: User['mfaVerifications'][number];
+  verificationRecord: Record<string, unknown>;
+}> = [
+  {
+    name: 'TOTP',
+    factor: MfaFactor.TOTP,
+    mfaVerification: mockUserTotpMfaVerification,
+    verificationRecord: {
+      id: 'totp-verification-id',
+      type: VerificationType.TOTP,
+      userId: mockUser.id,
+      verified: true,
+    },
+  },
+  {
+    name: 'WebAuthn',
+    factor: MfaFactor.WebAuthn,
+    mfaVerification: mockUserWebAuthnMfaVerification,
+    verificationRecord: {
+      id: 'webauthn-verification-id',
+      type: VerificationType.WebAuthn,
+      userId: mockUser.id,
+      verified: true,
+    },
+  },
+  {
+    name: 'email OTP',
+    factor: MfaFactor.EmailVerificationCode,
+    verificationRecord: {
+      id: 'email-mfa-verification-id',
+      type: VerificationType.MfaEmailVerificationCode,
+      identifier: { type: SignInIdentifier.Email, value: mockUser.primaryEmail },
+      templateType: TemplateType.MfaVerification,
+      verified: true,
+    },
+  },
+  {
+    name: 'SMS OTP',
+    factor: MfaFactor.PhoneVerificationCode,
+    verificationRecord: {
+      id: 'phone-mfa-verification-id',
+      type: VerificationType.MfaPhoneVerificationCode,
+      identifier: { type: SignInIdentifier.Phone, value: mockUser.primaryPhone },
+      templateType: TemplateType.MfaVerification,
+      verified: true,
+    },
+  },
+];
 
 const createLogMiddleware = (): {
   middleware: Middleware<unknown, IRouterParamContext>;
@@ -50,6 +108,7 @@ const createRequesterWithMocks = ({
   passwordExpiration = { enabled: false },
   interactionResult = {},
   persistInteractionResult = false,
+  trustedDevicePolicy = { enabled: false, durationDays: 30 },
 }: {
   interactionEvent?: InteractionEvent;
   adaptiveMfaEnabled?: boolean;
@@ -59,6 +118,7 @@ const createRequesterWithMocks = ({
   passwordExpiration?: { enabled: boolean; validPeriodDays?: number };
   interactionResult?: Record<string, unknown>;
   persistInteractionResult?: boolean;
+  trustedDevicePolicy?: { enabled: boolean; durationDays: number };
 } = {}) => {
   const mockedInteractionDetails: {
     params: { client_id: string };
@@ -117,6 +177,10 @@ const createRequesterWithMocks = ({
       passwordExpiration,
     }),
   };
+  const getEffectivePolicy = jest.fn().mockResolvedValue(trustedDevicePolicy);
+  const validateCredential = jest.fn();
+  const createCredential = jest.fn();
+  const updateMetadata = jest.fn();
 
   const tenant = new MockTenant(
     provider,
@@ -129,8 +193,9 @@ const createRequesterWithMocks = ({
     undefined,
     {
       trustedDevicePolicy: {
-        getEffectivePolicy: jest.fn().mockResolvedValue({ enabled: false, durationDays: 30 }),
+        getEffectivePolicy,
       },
+      trustedDevices: { validateCredential, createCredential, updateMetadata },
     }
   );
 
@@ -141,7 +206,18 @@ const createRequesterWithMocks = ({
     middlewares: [logMiddleware],
   });
 
-  return { requester, userGeoLocations, userSignInCountries, mockAppend, users };
+  return {
+    requester,
+    userGeoLocations,
+    userSignInCountries,
+    mockAppend,
+    users,
+    provider,
+    getEffectivePolicy,
+    validateCredential,
+    createCredential,
+    updateMetadata,
+  };
 };
 
 const createMfaRequiredRequester = () => {
@@ -477,6 +553,270 @@ describe('POST /experience/submit', () => {
     expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(mockUser.id, 'JP');
   });
 
+  it.each(eligibleTrustedDeviceVerificationCases)(
+    'should create a trusted device after eligible $name verification and explicit opt-in',
+    async ({ factor, mfaVerification, verificationRecord }) => {
+      setDevFeaturesEnabled(true);
+      const user = {
+        ...mockUser,
+        mfaVerifications: mfaVerification ? [mfaVerification] : [],
+      };
+      const { requester, createCredential } = createRequesterWithMocks({
+        user,
+        mfa: { policy: MfaPolicy.Mandatory, factors: [factor] },
+        interactionResult: { verificationRecords: [verificationRecord] },
+        trustedDevicePolicy: { enabled: true, durationDays: 30 },
+      });
+
+      const response = await requester
+        .post('/experience/submit')
+        .set('User-Agent', 'Trusted device test browser')
+        .set('x-logto-cf-country', 'us')
+        .set('x-logto-cf-city', 'Portland')
+        .send({ createTrustedDevice: true });
+
+      expect(response.status).toBe(200);
+      const payload = createCredential.mock.calls[0]?.[0] as
+        | {
+            ctx?: unknown;
+            userId?: string;
+            userAgent?: string;
+            ip?: string;
+            country?: string;
+            city?: string;
+          }
+        | undefined;
+      expect(payload).toMatchObject({
+        userId: user.id,
+        userAgent: 'Trusted device test browser',
+        country: 'US',
+        city: 'Portland',
+      });
+      expect(payload?.ctx).toBeDefined();
+      expect(typeof payload?.ip).toBe('string');
+    }
+  );
+
+  it('should default trusted-device intent to false', async () => {
+    setDevFeaturesEnabled(true);
+    const user = {
+      ...mockUser,
+      mfaVerifications: [mockUserTotpMfaVerification],
+    };
+    const { requester, createCredential } = createRequesterWithMocks({
+      user,
+      mfa: { policy: MfaPolicy.Mandatory, factors: [MfaFactor.TOTP] },
+      interactionResult: {
+        verificationRecords: [
+          {
+            id: 'totp-verification-id',
+            type: VerificationType.TOTP,
+            userId: user.id,
+            verified: true,
+          },
+        ],
+      },
+      trustedDevicePolicy: { enabled: true, durationDays: 30 },
+    });
+
+    const response = await requester.post('/experience/submit');
+
+    expect(response.status).toBe(200);
+    expect(createCredential).not.toHaveBeenCalled();
+  });
+
+  it('should not treat trusted-device intent as MFA proof', async () => {
+    setDevFeaturesEnabled(true);
+    const user = {
+      ...mockUser,
+      mfaVerifications: [mockUserTotpMfaVerification],
+    };
+    const { requester, createCredential } = createRequesterWithMocks({
+      user,
+      mfa: { policy: MfaPolicy.Mandatory, factors: [MfaFactor.TOTP] },
+      trustedDevicePolicy: { enabled: true, durationDays: 30 },
+    });
+
+    const response = await requester.post('/experience/submit').send({ createTrustedDevice: true });
+
+    expect(response.status).toBe(403);
+    expect(createCredential).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    {
+      name: 'TOTP',
+      mfaData: {
+        mfaEnabled: true,
+        totp: { type: MfaFactor.TOTP, secret: 'totp-secret' },
+      },
+      factor: MfaFactor.TOTP,
+    },
+    {
+      name: 'WebAuthn',
+      mfaData: {
+        mfaEnabled: true,
+        webAuthn: [
+          {
+            type: MfaFactor.WebAuthn,
+            rpId: 'logto.test',
+            credentialId: 'credential-id',
+            publicKey: 'public-key',
+            counter: 0,
+            agent: 'test-agent',
+            transports: [],
+          },
+        ],
+      },
+      factor: MfaFactor.WebAuthn,
+    },
+  ])(
+    'should create a trusted device after eligible $name binding and explicit opt-in',
+    async ({ mfaData, factor }) => {
+      setDevFeaturesEnabled(true);
+      const { requester, createCredential } = createRequesterWithMocks({
+        interactionEvent: InteractionEvent.Register,
+        mfa: { policy: MfaPolicy.Mandatory, factors: [factor] },
+        interactionResult: { mfa: mfaData },
+        trustedDevicePolicy: { enabled: true, durationDays: 30 },
+      });
+
+      const response = await requester
+        .post('/experience/submit')
+        .send({ createTrustedDevice: true });
+
+      expect(response.status).toBe(200);
+      expect(createCredential).toHaveBeenCalledWith(
+        expect.objectContaining({ userId: mockUser.id })
+      );
+    }
+  );
+
+  it('should exclude backup-code verification from trusted-device creation', async () => {
+    setDevFeaturesEnabled(true);
+    const user = {
+      ...mockUser,
+      mfaVerifications: [mockUserTotpMfaVerification, mockUserBackupCodeMfaVerification],
+    };
+    const { requester, createCredential } = createRequesterWithMocks({
+      user,
+      mfa: {
+        policy: MfaPolicy.Mandatory,
+        factors: [MfaFactor.TOTP, MfaFactor.BackupCode],
+      },
+      interactionResult: {
+        verificationRecords: [
+          {
+            id: 'backup-code-verification-id',
+            type: VerificationType.BackupCode,
+            userId: user.id,
+            code: 'code',
+          },
+        ],
+      },
+      trustedDevicePolicy: { enabled: true, durationDays: 30 },
+    });
+
+    const response = await requester.post('/experience/submit').send({ createTrustedDevice: true });
+
+    expect(response.status).toBe(200);
+    expect(createCredential).not.toHaveBeenCalled();
+  });
+
+  it('should update a fulfilling trusted device best effort without creating a duplicate', async () => {
+    setDevFeaturesEnabled(true);
+    const user = {
+      ...mockUser,
+      mfaVerifications: [mockUserTotpMfaVerification],
+    };
+    const { requester, createCredential, updateMetadata } = createRequesterWithMocks({
+      user,
+      mfa: { policy: MfaPolicy.Mandatory, factors: [MfaFactor.TOTP] },
+      interactionResult: {
+        trustedDeviceFulfillment: {
+          userId: user.id,
+          trustedDeviceId: 'trusted-device-id',
+          fulfilledAt: Date.now(),
+        },
+      },
+      trustedDevicePolicy: { enabled: true, durationDays: 30 },
+    });
+    updateMetadata.mockRejectedValueOnce(new Error('trusted-device metadata update failed'));
+
+    const response = await requester
+      .post('/experience/submit')
+      .set('x-logto-cf-country', 'US')
+      .send({ createTrustedDevice: true });
+
+    expect(response.status).toBe(200);
+    expect(updateMetadata).toHaveBeenCalledWith(
+      'trusted-device-id',
+      user.id,
+      expect.objectContaining({ country: 'US' })
+    );
+    expect(createCredential).not.toHaveBeenCalled();
+  });
+
+  it('should keep submit successful when trusted-device creation fails', async () => {
+    setDevFeaturesEnabled(true);
+    const user = {
+      ...mockUser,
+      mfaVerifications: [mockUserTotpMfaVerification],
+    };
+    const { requester, createCredential } = createRequesterWithMocks({
+      user,
+      mfa: { policy: MfaPolicy.Mandatory, factors: [MfaFactor.TOTP] },
+      interactionResult: {
+        verificationRecords: [
+          {
+            id: 'totp-verification-id',
+            type: VerificationType.TOTP,
+            userId: user.id,
+            verified: true,
+          },
+        ],
+      },
+      trustedDevicePolicy: { enabled: true, durationDays: 30 },
+    });
+    createCredential.mockRejectedValueOnce(new Error('trusted-device creation failed'));
+
+    const response = await requester.post('/experience/submit').send({ createTrustedDevice: true });
+
+    expect(response.status).toBe(200);
+    expect(createCredential).toHaveBeenCalledTimes(1);
+  });
+
+  it('should not create a trusted device when the complete interaction fails', async () => {
+    setDevFeaturesEnabled(true);
+    const user = {
+      ...mockUser,
+      mfaVerifications: [mockUserTotpMfaVerification],
+    };
+    const { requester, provider, createCredential } = createRequesterWithMocks({
+      user,
+      mfa: { policy: MfaPolicy.Mandatory, factors: [MfaFactor.TOTP] },
+      interactionResult: {
+        verificationRecords: [
+          {
+            id: 'totp-verification-id',
+            type: VerificationType.TOTP,
+            userId: user.id,
+            verified: true,
+          },
+        ],
+      },
+      trustedDevicePolicy: { enabled: true, durationDays: 30 },
+    });
+    (provider.interactionResult as jest.Mock).mockRejectedValueOnce(
+      new Error('interaction submission failed')
+    );
+
+    const response = await requester.post('/experience/submit').send({ createTrustedDevice: true });
+
+    expect(response.status).toBe(500);
+    expect(createCredential).not.toHaveBeenCalled();
+  });
+
   it.each([
     {
       name: 'email',
@@ -506,7 +846,7 @@ describe('POST /experience/submit', () => {
         mfaVerifications: [],
       };
 
-      const { requester, users, mockAppend } = createRequesterWithMocks({
+      const { requester, users, mockAppend, createCredential } = createRequesterWithMocks({
         adaptiveMfaEnabled: true,
         user,
         mfa: {
@@ -529,6 +869,7 @@ describe('POST /experience/submit', () => {
           ],
         },
         persistInteractionResult: true,
+        trustedDevicePolicy: { enabled: true, durationDays: 30 },
       });
 
       const bindResponse = await requester.post('/experience/profile/mfa').send({
@@ -539,7 +880,8 @@ describe('POST /experience/submit', () => {
 
       const submitResponse = await requester
         .post('/experience/submit')
-        .set('x-logto-cf-bot-score', '10');
+        .set('x-logto-cf-bot-score', '10')
+        .send({ createTrustedDevice: true });
       expect(submitResponse.status).toBe(200);
 
       expect(users.updateUserById).toHaveBeenCalledWith(
@@ -553,7 +895,78 @@ describe('POST /experience/submit', () => {
         )
         .find(Boolean);
       expect(adaptiveMfaResult?.requiresMfa).toBe(true);
+      expect(createCredential).toHaveBeenCalledWith(expect.objectContaining({ userId: user.id }));
     }
   );
+
+  it('should expose only trusted-device creation availability for an identified user', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester, getEffectivePolicy } = createRequesterWithMocks({
+      interactionResult: {
+        trustedDeviceFulfillment: {
+          userId: mockUser.id,
+          trustedDeviceId: 'internal-device-id',
+          fulfilledAt: Date.now(),
+        },
+      },
+      trustedDevicePolicy: { enabled: true, durationDays: 30 },
+    });
+
+    const response = await requester.get('/experience/interaction');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchObject({
+      trustedDevice: { canCreate: true, durationDays: 30 },
+    });
+    expect(response.body).not.toHaveProperty('trustedDeviceFulfillment');
+    expect(getEffectivePolicy).toHaveBeenCalledWith(mockUser.id);
+  });
+
+  it('should expose disabled creation without a duration when effective policy disallows it', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester } = createRequesterWithMocks({
+      trustedDevicePolicy: { enabled: false, durationDays: 30 },
+    });
+
+    const response = await requester.get('/experience/interaction');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchObject({ trustedDevice: { canCreate: false } });
+    expect(response.body.trustedDevice).not.toHaveProperty('durationDays');
+  });
+
+  it('should omit trusted-device interaction data and behavior when dev features are disabled', async () => {
+    setDevFeaturesEnabled(false);
+    const user = {
+      ...mockUser,
+      mfaVerifications: [mockUserTotpMfaVerification],
+    };
+    const { requester, createCredential, getEffectivePolicy } = createRequesterWithMocks({
+      user,
+      mfa: { policy: MfaPolicy.Mandatory, factors: [MfaFactor.TOTP] },
+      interactionResult: {
+        verificationRecords: [
+          {
+            id: 'totp-verification-id',
+            type: VerificationType.TOTP,
+            userId: user.id,
+            verified: true,
+          },
+        ],
+      },
+      trustedDevicePolicy: { enabled: true, durationDays: 30 },
+    });
+
+    const interactionResponse = await requester.get('/experience/interaction');
+    const submitResponse = await requester
+      .post('/experience/submit')
+      .send({ createTrustedDevice: true });
+
+    expect(interactionResponse.status).toBe(200);
+    expect(interactionResponse.body).not.toHaveProperty('trustedDevice');
+    expect(submitResponse.status).toBe(200);
+    expect(getEffectivePolicy).not.toHaveBeenCalled();
+    expect(createCredential).not.toHaveBeenCalled();
+  });
 });
 /* eslint-enable max-lines */

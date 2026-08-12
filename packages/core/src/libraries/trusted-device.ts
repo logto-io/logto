@@ -237,11 +237,27 @@ export const createTrustedDeviceLibrary = (
     return trustedDevice;
   };
 
+  const updateMetadata = async (
+    trustedDeviceId: string,
+    userId: string,
+    metadata: TrustedDeviceMetadata
+  ) => {
+    const trustedDevice = await queries.updateMetadataByIdAndUserId(
+      trustedDeviceId,
+      userId,
+      metadata
+    );
+    void cleanupExpired();
+
+    return trustedDevice;
+  };
+
   return {
     cleanupExpired,
     clearCredential,
     createCredential,
     getCookieName,
+    updateMetadata,
     validateCredential,
     writeCredential,
   };

@@ -14,6 +14,7 @@ import { identificationApiPayloadGuard, InteractionEvent } from '@logto/schemas'
 import type Router from 'koa-router';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaInteractionDetails from '#src/middleware/koa-interaction-details.js';
@@ -169,6 +170,9 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
   experienceRouter.post(
     `${experienceRoutes.prefix}/submit`,
     koaGuard({
+      body: z.object({
+        createTrustedDevice: z.boolean().optional(),
+      }),
       status: [200, 400, 403, 404, 422],
       response: z
         .object({
@@ -178,10 +182,13 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
     }),
     async (ctx, next) => {
       const { createLog, experienceInteraction } = ctx;
+      const createTrustedDevice = EnvSet.values.isDevFeaturesEnabled
+        ? ctx.guard.body.createTrustedDevice
+        : undefined;
 
       const log = createLog(`Interaction.${experienceInteraction.interactionEvent}.Submit`);
 
-      await ctx.experienceInteraction.submit(log);
+      await ctx.experienceInteraction.submit(log, { createTrustedDevice });
 
       log.append({
         interaction: ctx.experienceInteraction.toJson(),
@@ -202,7 +209,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
     async (ctx, next) => {
       const { experienceInteraction } = ctx;
 
-      ctx.body = experienceInteraction.toSanitizedJson();
+      ctx.body = await experienceInteraction.toSanitizedJson();
       ctx.status = 200;
       return next();
     }

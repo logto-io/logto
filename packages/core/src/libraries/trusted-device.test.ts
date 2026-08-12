@@ -36,6 +36,7 @@ const createQueries = () =>
   ({
     insert: jest.fn(),
     findActiveByIdAndUserId: jest.fn(),
+    updateMetadataByIdAndUserId: jest.fn(),
     deleteExpiredByIdAndUserId: jest.fn(),
     deleteExpiredByTenant: jest.fn(),
   }) as unknown as jest.Mocked<TrustedDeviceQueries>;
@@ -185,6 +186,28 @@ describe('trusted device library', () => {
     expect(set).not.toHaveBeenCalled();
   });
 
+  it('rechecks the effective policy before each creation attempt', async () => {
+    const queries = createQueries();
+    const getEffectivePolicy = jest
+      .fn()
+      .mockResolvedValueOnce({ enabled: false, durationDays: 30 })
+      .mockResolvedValueOnce({ enabled: true, durationDays: 30 });
+    const policyLibrary = { getEffectivePolicy } as unknown as TrustedDevicePolicyLibrary;
+    const { ctx, set } = createCookieContext();
+    const record = buildTrustedDevice(Buffer.alloc(32));
+    queries.insert.mockResolvedValueOnce(record);
+    const library = createTrustedDeviceLibrary(tenantId, queries, policyLibrary, {
+      isProduction: false,
+    });
+
+    await expect(library.createCredential({ ctx, userId })).resolves.toBeUndefined();
+    await expect(library.createCredential({ ctx, userId })).resolves.toEqual(record);
+
+    expect(getEffectivePolicy).toHaveBeenCalledTimes(2);
+    expect(queries.insert).toHaveBeenCalledTimes(1);
+    expect(set).toHaveBeenCalledTimes(1);
+  });
+
   it('uses Secure and the __Host- prefix in production', () => {
     const queries = createQueries();
     const { ctx, set } = createCookieContext();
@@ -298,6 +321,32 @@ describe('trusted device library', () => {
 
     expect(queries.deleteExpiredByIdAndUserId).toHaveBeenCalledWith(trustedDeviceId, userId);
     expect(set).toHaveBeenCalledTimes(1);
+  });
+
+  it('updates last-used metadata and schedules opportunistic cleanup', async () => {
+    const queries = createQueries();
+    const metadata = {
+      userAgent: 'Test browser',
+      ip: '192.0.2.1',
+      country: 'US',
+      city: 'Portland',
+    };
+    const record = buildTrustedDevice(Buffer.alloc(32));
+    queries.updateMetadataByIdAndUserId.mockResolvedValueOnce(record);
+    queries.deleteExpiredByTenant.mockResolvedValueOnce(0);
+    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(), {
+      isProduction: false,
+    });
+
+    await expect(library.updateMetadata(trustedDeviceId, userId, metadata)).resolves.toEqual(
+      record
+    );
+    expect(queries.updateMetadataByIdAndUserId).toHaveBeenCalledWith(
+      trustedDeviceId,
+      userId,
+      metadata
+    );
+    expect(queries.deleteExpiredByTenant).toHaveBeenCalledTimes(1);
   });
 
   it('deduplicates concurrent opportunistic cleanup within the cooldown', async () => {
