@@ -19,7 +19,7 @@ afterEach(() => {
 });
 
 describe('Well-known cache basics', () => {
-  it('should be able to get, set, and delete values', async () => {
+  it('should be able to get, set, and invalidate values', async () => {
     const cache = new WellKnownCache(tenantId, cacheStore);
 
     await cache.set('sie', WellKnownCache.defaultKey, mockSignInExperience);
@@ -36,7 +36,7 @@ describe('Well-known cache basics', () => {
     await cache.set('resource-by-indicator', 'resource', mockResource);
     expect(await cache.get('resource-by-indicator', 'resource')).toStrictEqual(mockResource);
 
-    await cache.delete('sie', WellKnownCache.defaultKey);
+    await cache.invalidate('sie', WellKnownCache.defaultKey);
     expect(await cache.get('sie', WellKnownCache.defaultKey)).toBe(undefined);
   });
 
@@ -74,13 +74,13 @@ describe('Well-known cache basics', () => {
     ).toBe(undefined);
   });
 
-  it('should be able to get, set, and delete null value', async () => {
+  it('should be able to get, set, and invalidate null value', async () => {
     const cache = new WellKnownCache(tenantId, cacheStore);
 
     await cache.set('email-templates', 'en:SignIn', null);
     expect(await cache.get('email-templates', 'en:SignIn')).toBe(null);
 
-    await cache.delete('email-templates', 'en:SignIn');
+    await cache.invalidate('email-templates', 'en:SignIn');
     expect(await cache.get('email-templates', 'en:SignIn')).toBe(undefined);
   });
 });

@@ -8,7 +8,6 @@ import {
   type UpdateCustomProfileFieldSieOrder,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { trySafe } from '@silverhand/essentials';
 import { sql } from '@silverhand/slonik';
 
 import { BaseCache } from '#src/caches/base-cache.js';
@@ -205,16 +204,12 @@ export const createCustomProfileFieldsLibrary = (queries: Queries) => {
     );
 
     // Invalidate caches only after the transaction commits, so concurrent readers cannot
-    // repopulate them with pre-commit data during the cache delete window.
-    const invalidations = [
-      didUpdateSignInExperience && queries.wellKnownCache.delete('sie', BaseCache.defaultKey),
+    // repopulate them with pre-commit data.
+    await Promise.all([
+      didUpdateSignInExperience && queries.wellKnownCache.invalidate('sie', BaseCache.defaultKey),
       didUpdateAccountCenter &&
-        queries.wellKnownCache.delete('account-center', BaseCache.defaultKey),
-    ].filter((value): value is Promise<void> => value !== false);
-
-    if (invalidations.length > 0) {
-      await Promise.all(invalidations.map(async (promise) => trySafe(promise)));
-    }
+        queries.wellKnownCache.invalidate('account-center', BaseCache.defaultKey),
+    ]);
   };
 
   const normalizeProfileFields = async <ProfileFields extends NormalizableProfileFields>(
