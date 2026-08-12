@@ -1,8 +1,13 @@
 import { adminTenantId, defaultTenantId } from '@logto/schemas';
-import { generateStandardShortId, type UrlSet } from '@logto/shared';
+import { type UrlSet } from '@logto/shared';
 import { conditionalString, trySafe } from '@silverhand/essentials';
 import { type CommonQueryMethods } from '@silverhand/slonik';
 
+import {
+  invalidateWithGeneration,
+  snapshotGeneration,
+  type GuardedKeys,
+} from '#src/caches/generation.js';
 import { redisCache } from '#src/caches/index.js';
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import { createDomainsQueries } from '#src/queries/domains.js';
@@ -46,35 +51,28 @@ const matchPathBasedTenantId = (urlSet: UrlSet, url: URL) => {
   return urlSegments[found.pathname === '/' ? 1 : endpointSegments.length];
 };
 
-const getHostname = (url: URL | string) => (typeof url === 'string' ? url : url.hostname);
-const getDomainCacheKey = (url: URL | string) => `custom-domain:${getHostname(url)}`;
 /**
  * The marker gets its own prefix rather than a segment inside the value keyspace: the two
  * prefixes diverge before the hostname is appended, so no hostname — whatever the `domains`
  * column happens to hold — can spell a key belonging to the other.
  */
-const getDomainGenerationKey = (url: URL | string) =>
-  `custom-domain-generation:${getHostname(url)}`;
+const getDomainKeys = (url: URL | string): GuardedKeys => {
+  const hostname = typeof url === 'string' ? url : url.hostname;
+
+  return {
+    value: `custom-domain:${hostname}`,
+    generation: `custom-domain-generation:${hostname}`,
+  };
+};
 
 /**
  * Invalidate the cached mapping for the given custom domain after the mutation it reflects
- * has been committed.
- *
- * The generation must be bumped before deleting, and both must be awaited: an in-flight
- * {@link getTenantIdFromCustomDomain} lookup that read pre-mutation state then either skips its
- * write-back or has it removed by the deletion. Callers must therefore await it before returning
- * to their own caller. (The same guard as `BaseCache`, which this cache cannot build on since it
- * is cross-tenant.)
- *
- * The guarantee is bounded by what the store can promise, and every way it degrades caps
- * staleness at the value TTL rather than leaving it unbounded: store errors are silently caught,
- * a read served by a lagging replica (the cluster client enables `useReplicas`) can observe a
- * pre-bump generation, and a command that timed out client-side is not cancelled, so it may land
- * after this resolved.
+ * has been committed. See {@link invalidateWithGeneration} for the ordering guarantee it
+ * provides and the bounds it comes with, and note it requires callers to await it before
+ * returning to their own caller.
  */
 export const clearCustomDomainCache = async (url: URL | string) => {
-  await trySafe(async () => redisCache.set(getDomainGenerationKey(url), generateStandardShortId()));
-  await trySafe(async () => redisCache.delete(getDomainCacheKey(url)));
+  await invalidateWithGeneration(redisCache, getDomainKeys(url));
 };
 
 /**
@@ -84,48 +82,31 @@ const getTenantIdFromCustomDomain = async (
   url: URL,
   pool: CommonQueryMethods
 ): Promise<string | undefined> => {
+  const keys = getDomainKeys(url);
   /**
    * The snapshot only has to be taken before the database read starts, so it rides along with
    * the value read instead of costing a second round trip on a path that runs per request.
    * Snapshotting earlier observes a superset of the invalidations it otherwise would.
    */
-  const [cachedValue, generation] = await Promise.all([
-    trySafe(async () => redisCache.get(getDomainCacheKey(url))),
-    trySafe(async () => redisCache.get(getDomainGenerationKey(url))),
+  const [cachedValue, writeBackIfFresh] = await Promise.all([
+    trySafe(async () => redisCache.get(keys.value)),
+    snapshotGeneration(redisCache, keys),
   ]);
 
   if (cachedValue) {
     return cachedValue;
   }
 
-  const isInvalidated = async () =>
-    (await trySafe(async () => redisCache.get(getDomainGenerationKey(url)))) !== generation;
-
   const { findActiveDomain } = createDomainsQueries(pool);
 
   const domain = await findActiveDomain(url.hostname);
 
+  // A missing mapping is left uncached, so probes for unknown hostnames cannot fill the store.
   if (!domain?.tenantId) {
     return;
   }
 
-  /**
-   * Skip the write-back when an invalidation happened while the database read was in flight,
-   * since the mapping may reflect pre-mutation state.
-   */
-  if (await isInvalidated()) {
-    return domain.tenantId;
-  }
-
-  await trySafe(async () => redisCache.set(getDomainCacheKey(url), domain.tenantId));
-
-  /**
-   * Undo the write if an invalidation landed between the check and the write, so a stale
-   * mapping can never persist after {@link clearCustomDomainCache} resolves.
-   */
-  if (await isInvalidated()) {
-    await trySafe(async () => redisCache.delete(getDomainCacheKey(url)));
-  }
+  await writeBackIfFresh(async () => redisCache.set(keys.value, domain.tenantId));
 
   return domain.tenantId;
 };
