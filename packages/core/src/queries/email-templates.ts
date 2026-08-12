@@ -5,7 +5,6 @@ import {
   type CreateEmailTemplate,
   type TemplateType,
 } from '@logto/schemas';
-import { trySafe } from '@silverhand/essentials';
 import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
 import SchemaQueries from '#src/utils/SchemaQueries.js';
@@ -66,9 +65,9 @@ export default class EmailTemplatesQueries extends SchemaQueries<
     });
 
     // Make sure to invalidate the cache after updating email templates
-    void Promise.all(
+    await Promise.all(
       results.map(async ({ languageTag, templateType }) =>
-        trySafe(this.wellKnownCache.delete('email-templates', `${languageTag}:${templateType}`))
+        this.wellKnownCache.invalidate('email-templates', `${languageTag}:${templateType}`)
       )
     );
 
@@ -83,8 +82,9 @@ export default class EmailTemplatesQueries extends SchemaQueries<
     const result = await super.updateById(id, data, jsonbMode);
 
     // Make sure to invalidate the cache after updating email templates
-    void trySafe(
-      this.wellKnownCache.delete('email-templates', `${result.languageTag}:${result.templateType}`)
+    await this.wellKnownCache.invalidate(
+      'email-templates',
+      `${result.languageTag}:${result.templateType}`
     );
 
     return result;
@@ -95,11 +95,9 @@ export default class EmailTemplatesQueries extends SchemaQueries<
     await super.deleteById(id);
 
     // Make sure to invalidate the cache after deleting email templates
-    void trySafe(
-      this.wellKnownCache.delete(
-        'email-templates',
-        `${emailTemplate.languageTag}:${emailTemplate.templateType}`
-      )
+    await this.wellKnownCache.invalidate(
+      'email-templates',
+      `${emailTemplate.languageTag}:${emailTemplate.templateType}`
     );
   }
 
@@ -158,9 +156,9 @@ export default class EmailTemplatesQueries extends SchemaQueries<
     `);
 
     // Make sure to invalidate the cache after deleting email templates
-    void Promise.all(
+    await Promise.all(
       rows.map(async ({ languageTag, templateType }) =>
-        trySafe(this.wellKnownCache.delete('email-templates', `${languageTag}:${templateType}`))
+        this.wellKnownCache.invalidate('email-templates', `${languageTag}:${templateType}`)
       )
     );
 

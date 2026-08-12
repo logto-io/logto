@@ -74,12 +74,29 @@ export abstract class BaseCache<CacheMapT extends Record<string, unknown>> {
   /**
    * Delete value from the inner cache store for the given type and key.
    *
-   * Note this is a plain deletion: unlike {@link mutate}, it does not bump the invalidation
-   * generation, so an in-flight {@link memoize} read may still write its result back
-   * afterwards. Callers that invalidate on their own should be migrated to {@link mutate}.
+   * Note this is a plain deletion: unlike {@link invalidate}, it does not bump the invalidation
+   * generation, so an in-flight {@link memoize} read may still write its result back afterwards.
+   * Callers invalidating after a mutation should use {@link invalidate} or {@link mutate}.
    */
   async delete(type: CacheKeyOf<CacheMapT>, key: string) {
     return this.cacheStore.delete(this.cacheKey(type, key));
+  }
+
+  /**
+   * Invalidate the cached value for the given type and key, after the mutation it reflects
+   * has been committed.
+   *
+   * The generation must be bumped before deleting, and both must be awaited: this guarantees
+   * that once this method resolves, in-flight reads that computed from pre-mutation state
+   * either fail the generation check in {@link memoize} or have their write-back removed by
+   * the deletion. Callers must therefore await it before returning to their own caller.
+   *
+   * Store errors are silently caught, as an invalidation failure degrades to staleness bounded
+   * by the value TTL rather than a failed mutation.
+   */
+  async invalidate(type: CacheKeyOf<CacheMapT>, key: string) {
+    await trySafe(this.bumpGeneration(type, key));
+    await trySafe(this.delete(type, key));
   }
 
   /**
@@ -100,21 +117,12 @@ export abstract class BaseCache<CacheMapT extends Record<string, unknown>> {
     const mutated = async function (this: unknown, ...args: Args): Promise<Return> {
       const value = await run.apply(this, args);
 
-      /**
-       * We don't leverage `finally` here since we want to ensure cache invalidation
-       * only happens when the original function executed successfully.
-       *
-       * The generation must be bumped before deleting, and both must be awaited: this
-       * guarantees that once this function returns, in-flight reads that computed from
-       * pre-mutation state either fail the generation check in {@link BaseCache.memoize}
-       * or have their write-back removed by the deletion below.
-       */
+      // We don't leverage `finally` here since we want to ensure cache invalidation
+      // only happens when the original function executed successfully.
       await Promise.all(
-        types.map(async ([type, cacheKey]) => {
-          const key = cacheKey?.(...args) ?? BaseCache.defaultKey;
-          await trySafe(kvCache.bumpGeneration(type, key));
-          await trySafe(kvCache.delete(type, key));
-        })
+        types.map(async ([type, cacheKey]) =>
+          kvCache.invalidate(type, cacheKey?.(...args) ?? BaseCache.defaultKey)
+        )
       );
 
       return value;
@@ -127,7 +135,7 @@ export abstract class BaseCache<CacheMapT extends Record<string, unknown>> {
    * [Memoize](https://en.wikipedia.org/wiki/Memoization) a function and cache the result. The function execution
    * will be also cached, which means there will be only one execution at a time.
    *
-   * Results computed before an invalidation (see {@link mutate}) are discarded instead of
+   * Results computed before an invalidation (see {@link invalidate}) are discarded instead of
    * written back, so stale data can never persist in the cache after an invalidation
    * returns. (A caller that joined an already in-flight execution may still receive
    * pre-invalidation data once; it is never written back.)
@@ -214,7 +222,7 @@ export abstract class BaseCache<CacheMapT extends Record<string, unknown>> {
    * Get the current invalidation generation for the given type and key.
    * Note: Store errors will be silently caught and result an `undefined` return.
    *
-   * Bumped by every {@link mutate} invalidation; {@link memoize} compares snapshots of it
+   * Bumped by every {@link invalidate} call; {@link memoize} compares snapshots of it
    * to detect invalidations that raced with an in-flight read.
    */
   protected async getGeneration(type: CacheKeyOf<CacheMapT>, key: string) {
