@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ApplicationName from '@/components/ApplicationName';
+import DynamicAppName from '@/components/DynamicAppName';
 import FormCard from '@/components/FormCard';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
@@ -71,11 +72,11 @@ function UserThirdPartyApps({ userId }: Props) {
                 render: ({ applicationId, applicationName }) =>
                   /**
                    * A CIMD client identifier is a URL with no applications row behind it:
-                   * fetching `/api/applications/:id` can only 404 and there is no details
-                   * page to link to. The grants response already carries its snapshot name.
+                   * fetching `/api/applications/:id` can only 404. The grants response
+                   * already carries its snapshot name.
                    */
                   isCimdClientId(applicationId) ? (
-                    <span className={styles.cimdName}>{applicationName}</span>
+                    <DynamicAppName clientId={applicationId} name={applicationName} />
                   ) : (
                     <ApplicationName isLink applicationId={applicationId} />
                   ),

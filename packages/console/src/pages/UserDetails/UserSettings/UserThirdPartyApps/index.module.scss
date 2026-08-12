@@ -6,14 +6,6 @@
   margin-bottom: _.unit(1);
 }
 
-/* A CIMD snapshot name can fall back to the full identifier URL — keep the cell one line. */
-.cimdName {
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 .identifierHost {
   max-width: 100%;
   overflow: hidden;
