@@ -9,7 +9,6 @@ import { isAccessDeniedError, parseCustomJwtResponseError } from '#src/utils/cus
 
 import type { CloudConnectionLibrary } from './cloud-connection.js';
 import { JwtCustomizerLibrary } from './jwt-customizer.js';
-import type { LogtoConfigLibrary } from './logto-config.js';
 import type { ScopeLibrary } from './scope.js';
 import type { SubscriptionLibrary } from './subscription.js';
 import type { UserLibrary } from './user.js';
@@ -32,7 +31,6 @@ const createLibrary = (tenantId = 'test-tenant') =>
   new JwtCustomizerLibrary(
     tenantId,
     {} as Queries,
-    {} as LogtoConfigLibrary,
     cloudConnection,
     { getSubscriptionData } as unknown as SubscriptionLibrary,
     {} as UserLibrary,

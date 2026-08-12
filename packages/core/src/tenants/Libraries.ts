@@ -47,7 +47,6 @@ export default class Libraries {
   jwtCustomizers = new JwtCustomizerLibrary(
     this.tenantId,
     this.queries,
-    this.logtoConfigs,
     this.cloudConnection,
     this.subscription,
     this.users,
