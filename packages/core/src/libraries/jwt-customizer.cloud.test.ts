@@ -1,9 +1,7 @@
 import { CustomJwtErrorCode, LogtoJwtTokenKeyType } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { ResponseError } from '@withtyped/client';
-import nock from 'nock';
 
-import { EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import { isAccessDeniedError, parseCustomJwtResponseError } from '#src/utils/custom-jwt/index.js';
 
@@ -46,16 +44,9 @@ const buildScriptFailureResponseError = (
     })
   );
 
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-
 describe('JwtCustomizerLibrary.runScriptRemotely', () => {
-  beforeEach(() => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
-  });
-
   afterEach(() => {
     jest.clearAllMocks();
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
   });
 
   it('runs the script through the Cloud script-run endpoint', async () => {
@@ -133,47 +124,5 @@ describe('JwtCustomizerLibrary.runScriptRemotely', () => {
     post.mockRejectedValueOnce(error);
 
     await expect(library.runScriptRemotely(payload)).rejects.toBe(error);
-  });
-});
-
-describe('JwtCustomizerLibrary.runScriptRemotely without dev features', () => {
-  beforeEach(() => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
-  });
-
-  afterEach(() => {
-    nock.cleanAll();
-    jest.restoreAllMocks();
-    jest.clearAllMocks();
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
-  });
-
-  it('runs the script through the regional untrusted Azure Function app when configured', async () => {
-    const endpoint = 'https://untrusted.example.com';
-    const functionKey = 'function-key';
-    const remoteRunner = nock(endpoint, {
-      reqheaders: { 'x-functions-key': functionKey },
-    })
-      .post('/api/custom-jwt')
-      .reply(200, { foo: 'bar' });
-
-    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue(endpoint);
-    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get').mockReturnValue(functionKey);
-
-    await expect(library.runScriptRemotely(payload)).resolves.toEqual({ foo: 'bar' });
-    expect(remoteRunner.isDone()).toBe(true);
-    expect(post).not.toHaveBeenCalled();
-  });
-
-  it('falls back to the deprecated custom-jwt cloud endpoint', async () => {
-    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue('');
-    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get').mockReturnValue('');
-    post.mockResolvedValueOnce({ foo: 'bar' });
-
-    await expect(library.runScriptRemotely(payload, true)).resolves.toEqual({ foo: 'bar' });
-    expect(post).toHaveBeenCalledWith('/api/services/custom-jwt', {
-      body: payload,
-      search: { isTest: 'true' },
-    });
   });
 });

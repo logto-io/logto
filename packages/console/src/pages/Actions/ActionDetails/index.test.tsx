@@ -20,14 +20,10 @@ jest.mock('./use-data-fetch', () => ({
 }));
 
 const mockIsCloud = jest.fn(() => false);
-const mockIsDevFeaturesEnabled = jest.fn(() => true);
 
 jest.mock('@/consts/env', () => ({
   get isCloud() {
     return mockIsCloud();
-  },
-  get isDevFeaturesEnabled() {
-    return mockIsDevFeaturesEnabled();
   },
 }));
 
@@ -89,7 +85,6 @@ describe('ActionDetails', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockIsCloud.mockReturnValue(false);
-    mockIsDevFeaturesEnabled.mockReturnValue(true);
   });
 
   it('renders empty placeholder for invalid route params', () => {
@@ -175,7 +170,7 @@ describe('ActionDetails', () => {
     expect(screen.getByText('main-content')).toBeTruthy();
   });
 
-  it('shows the sandbox warning for self-hosted tenants when dev features are enabled', () => {
+  it('shows the sandbox warning for self-hosted tenants', () => {
     mockedUseParams.mockReturnValue({
       actionType: LogtoActionKey.PostSignIn,
       mode: ActionPageMode.Create,
@@ -198,25 +193,6 @@ describe('ActionDetails', () => {
 
   it('hides the sandbox warning for Cloud tenants', () => {
     mockIsCloud.mockReturnValue(true);
-    mockedUseParams.mockReturnValue({
-      actionType: LogtoActionKey.PostSignIn,
-      mode: ActionPageMode.Create,
-    });
-    mockedUseDataFetch.mockReturnValue({
-      isLoading: false,
-      data: undefined,
-      mutate: mockMutate,
-      error: undefined,
-    });
-
-    render(<ActionDetails />);
-
-    expect(screen.queryByText('admin_console.actions.sandbox_warning.title')).toBeNull();
-    expect(screen.getByText('main-content')).toBeTruthy();
-  });
-
-  it('hides the sandbox warning when dev features are disabled', () => {
-    mockIsDevFeaturesEnabled.mockReturnValue(false);
     mockedUseParams.mockReturnValue({
       actionType: LogtoActionKey.PostSignIn,
       mode: ActionPageMode.Create,

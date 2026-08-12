@@ -1,4 +1,3 @@
-/* eslint-disable max-lines -- The legacy `node:vm` and Azure Functions paths coexist with the script-runner adapters until LOG-13956 and LOG-13958 remove them. */
 import {
   type CustomJwtErrorBody,
   CustomJwtErrorCode,
@@ -11,9 +10,7 @@ import {
   type JwtCustomizerOrganizationContext,
   jwtCustomizerOrganizationContextGuard,
   type LogtoJwtTokenKey,
-  type CustomJwtApiContext,
   type CustomJwtScriptPayload,
-  jsonObjectGuard,
   isBuiltInApplicationId,
   buildBuiltInApplicationDataForTenant,
 } from '@logto/schemas';
@@ -27,9 +24,8 @@ import {
   trySafe,
 } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
-import { got, HTTPError } from 'got';
 import { type UnknownObject } from 'oidc-provider';
-import { ZodError, z } from 'zod';
+import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -40,16 +36,12 @@ import type Queries from '#src/tenants/Queries.js';
 import {
   getJwtCustomizerScripts,
   type CustomJwtDeployRequestBody,
-  parseAzureFunctionsResponseError,
 } from '#src/utils/custom-jwt/index.js';
-import { runScriptFunctionInLocalVm } from '#src/utils/local-vm/index.js';
 
 import { type CloudConnectionLibrary } from './cloud-connection.js';
 import {
   buildCloudScriptFailureError,
-  buildScriptExecutionErrorBody,
   buildScriptFailureError,
-  getScriptFailureStatusCode,
   parseCloudScriptFailure,
   runScriptOnCloud,
   runScriptOnWorkerPool,
@@ -73,21 +65,9 @@ const buildAccessDeniedError = (message: string) => {
   return new ScriptExecutionError({ message, error }, scriptFailureStatusCodes.denied);
 };
 
-const apiContext: CustomJwtApiContext = Object.freeze({
-  denyAccess: (message = 'Access denied') => {
-    throw buildAccessDeniedError(message);
-  },
-});
-
 export class JwtCustomizerLibrary {
   // Convert failures to WithTyped client response errors to share the error handling logic.
   static async runScriptInLocalVm(data: CustomJwtFetcher, tenantId: string) {
-    // TODO (LOG-13956): drop the legacy `node:vm` path and the gate once the worker-thread
-    // runner has been manually verified and released.
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return JwtCustomizerLibrary.runScriptInLegacyVm(data);
-    }
-
     /**
      * `api` is not part of the payload: functions cannot cross the structured-clone boundary, so
      * the worker constructs `denyAccess` itself and reports a denial as a `denied` failure.
@@ -134,42 +114,6 @@ export class JwtCustomizerLibrary {
     }
 
     return parsed.data;
-  }
-
-  /** The pre-worker-runner execution path, still serving production until the gate above lifts. */
-  private static async runScriptInLegacyVm(data: CustomJwtFetcher) {
-    try {
-      const payload: CustomJwtScriptPayload = {
-        ...pick(data, 'token', 'context', 'environmentVariables'),
-        api: apiContext,
-      };
-
-      const result = await runScriptFunctionInLocalVm(data.script, 'getCustomJwtClaims', payload);
-
-      // If the `result` is not a record, we cannot merge it to the existing token payload.
-      return z.record(z.unknown()).parse(result);
-    } catch (error: unknown) {
-      if (error instanceof ScriptExecutionError) {
-        throw error;
-      }
-
-      // Assuming we only use zod for request body validation
-      if (error instanceof ZodError) {
-        const { errors } = error;
-        throw new ScriptExecutionError(
-          {
-            message: 'Invalid input',
-            errors,
-          },
-          400
-        );
-      }
-
-      throw new ScriptExecutionError(
-        buildScriptExecutionErrorBody(error),
-        getScriptFailureStatusCode(error)
-      );
-    }
   }
 
   constructor(
@@ -282,12 +226,9 @@ export class JwtCustomizerLibrary {
    * @params payload.useCase - The use case of JWT customizer script, can be either `test` or `production`.
    *
    * @remarks
-   * Deliberately left outside the `isDevFeaturesEnabled` gate that {@link runScriptRemotely} is
-   * behind, so this and {@link undeployJwtCustomizerScript} keep the worker service in sync while
-   * the legacy `POST /api/services/custom-jwt` path is still one rollback away from serving
-   * production. The cost is real and accepted: with dev features on and no Azure app configured,
+   * Kept until LOG-13957 removes the per-tenant worker lifecycle. With the script-run path live,
    * every save, delete and Console "test" still pays a deploy whose result the script run no
-   * longer reads. Both come out with the legacy paths in LOG-13958.
+   * longer reads.
    */
   async deployJwtCustomizerScript<T extends LogtoJwtTokenKey>(
     consoleLog: ConsoleLog,
@@ -395,12 +336,6 @@ export class JwtCustomizerLibrary {
     payload: CustomJwtFetcher,
     isTest?: boolean
   ): Promise<Optional<UnknownObject>> {
-    // TODO (LOG-13958): drop the legacy remote paths and the gate once the Cloud script runner
-    // has been manually verified and released.
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return this.runScriptOnLegacyRuntime(payload, isTest);
-    }
-
     /**
      * `api` is not part of the payload — it carries a function and cannot travel over the wire.
      * The runner merges it in inside the isolate and reports a denial as a `denied` failure,
@@ -409,48 +344,6 @@ export class JwtCustomizerLibrary {
     const value = await this.postScriptRun(payload, isTest);
 
     return JwtCustomizerLibrary.parseScriptResultValue(value);
-  }
-
-  /**
-   * The pre-script-runner remote paths, still serving production until the gate above lifts:
-   * the regional untrusted Azure Function app where configured, otherwise the deprecated
-   * `POST /api/services/custom-jwt` cloud endpoint.
-   */
-  private async runScriptOnLegacyRuntime(
-    payload: CustomJwtFetcher,
-    isTest?: boolean
-  ): Promise<Optional<UnknownObject>> {
-    const { azureFunctionUntrustedAppKey, azureFunctionUntrustedAppEndpoint } = EnvSet.values;
-
-    if (this.isRegionalAzureFunctionAppConfigured) {
-      try {
-        const result = await got
-          .post(new URL('/api/custom-jwt', azureFunctionUntrustedAppEndpoint), {
-            json: payload,
-            headers: {
-              'x-functions-key': azureFunctionUntrustedAppKey,
-            },
-          })
-          .json<unknown>();
-
-        const parsedResult = jsonObjectGuard.parse(result);
-        return parsedResult;
-      } catch (error: unknown) {
-        // Convert got HTTPError to WithTyped client ResponseError for unified error handling.
-        if (error instanceof HTTPError) {
-          throw parseAzureFunctionsResponseError(error);
-        }
-
-        throw error;
-      }
-    }
-
-    // Fallback to use cloud connection to call the custom JWT API.
-    const client = await this.cloudConnection.getClient();
-    return client.post(`/api/services/custom-jwt`, {
-      body: payload,
-      search: isTest ? { isTest: 'true' } : {},
-    });
   }
 
   /**
@@ -479,4 +372,3 @@ export class JwtCustomizerLibrary {
     }
   }
 }
-/* eslint-enable max-lines */

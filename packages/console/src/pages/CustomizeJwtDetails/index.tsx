@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 
 import DetailsPage from '@/components/DetailsPage';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import InlineNotification from '@/ds-components/InlineNotification';
 import { type Action } from '@/pages/CustomizeJwt/utils/type';
 
@@ -32,9 +32,8 @@ function Content({ tokenType, action }: Props) {
     [isMonacoLoaded]
   );
 
-  // Script runtime consolidation (Custom JWT & Actions): OSS sandbox warning.
   // Self-hosted scripts are not sandboxed; hide on Cloud (Dynamic Workers).
-  const shouldShowSandboxWarning = isDevFeaturesEnabled && !isCloud;
+  const shouldShowSandboxWarning = !isCloud;
 
   return (
     <DetailsPage

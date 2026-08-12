@@ -18,10 +18,8 @@ export const actionMetricNames = Object.freeze({
 /**
  * Where a script run actually executed.
  *
- * `azure` and `cloud` are both Cloud runs, kept apart on purpose while the two remote runtimes
- * coexist behind `isDevFeaturesEnabled`: it makes the migration off Azure Functions readable in
- * the metric itself. `azure` also keeps the pre-existing series intact rather than renaming it.
- * Once LOG-13958 removes the Azure Functions runtime, `azure` goes with it.
+ * `cloud` is the Cloud script-run path. `azure` remains on the type until LOG-13958 removes the
+ * Azure Functions runtime and the leftover metric series.
  */
 export type ActionRuntimeLocation = 'local' | 'azure' | 'cloud';
 
