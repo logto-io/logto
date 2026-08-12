@@ -4,6 +4,7 @@ import { z } from 'zod';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 
+import { organizationResponseGuard } from '../organization/guards.js';
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
 export default function applicationUserConsentOrganizationRoutes<T extends ManagementApiRouter>(
@@ -42,7 +43,7 @@ export default function applicationUserConsentOrganizationRoutes<T extends Manag
     koaGuard({
       params: z.object(params),
       response: z.object({
-        organizations: Organizations.guard.array(),
+        organizations: organizationResponseGuard.array(),
       }),
       status: [200, 404, 422],
     }),

@@ -133,6 +133,11 @@ type SchemaRouterConfig<Key extends string> = {
    */
   entityGuard?: z.ZodTypeAny;
   /**
+   * Fields to omit from native create and update request bodies, as well as schema-derived
+   * responses. A custom `entityGuard` takes precedence for responses.
+   */
+  hiddenFields?: Partial<Record<Exclude<Key, 'id'>, true>>;
+  /**
    * If the GET route's pagination is optional.
    * @default false
    */
@@ -373,7 +378,22 @@ export default class SchemaRouter<
 
   #addRoutes() {
     const { queries, schema, config } = this;
-    const { disabled, searchFields, idLength, entityGuard, isPaginationOptional } = config;
+    const {
+      disabled,
+      searchFields,
+      idLength,
+      entityGuard,
+      hiddenFields = {},
+      isPaginationOptional,
+    } = config;
+    const responseGuard = entityGuard ?? schema.guard.omit(hiddenFields);
+    // @ts-expect-error -- `.omit()` doesn't play well with generic schema keys.
+    const createBodyGuard = schema.createGuard.omit({ id: true, ...hiddenFields });
+    // @ts-expect-error -- `.omit()` doesn't play well with generic schema keys.
+    // eslint-disable-next-line no-restricted-syntax -- Zod `.omit()` loses the output type for generic schema keys.
+    const updateBodyGuard = schema.updateGuard.omit({ id: true, ...hiddenFields }) as z.ZodType<
+      Partial<Schema>
+    >;
 
     if (!disabled.get) {
       this.get(
@@ -381,7 +401,7 @@ export default class SchemaRouter<
         koaPagination({ isOptional: isPaginationOptional }),
         koaGuard({
           query: z.object({ q: z.string().optional() }),
-          response: (entityGuard ?? schema.guard).array(),
+          response: responseGuard.array(),
           status: this.#collectRouteStatuses('get', [200]),
         }),
         this.#assembleQualifiedMiddlewares('get'),
@@ -401,9 +421,8 @@ export default class SchemaRouter<
       this.post(
         '/',
         koaGuard({
-          // @ts-expect-error -- `.omit()` doesn't play well with generics
-          body: schema.createGuard.omit({ id: true }),
-          response: entityGuard ?? schema.guard,
+          body: createBodyGuard,
+          response: responseGuard,
           status: this.#collectRouteStatuses('post', [201, 422]),
         }),
         this.#assembleQualifiedMiddlewares('post'),
@@ -425,7 +444,7 @@ export default class SchemaRouter<
         '/:id',
         koaGuard({
           params: z.object({ id: z.string().min(1) }),
-          response: entityGuard ?? schema.guard,
+          response: responseGuard,
           status: this.#collectRouteStatuses('get', [200, 404]),
         }),
         this.#assembleQualifiedMiddlewares('get'),
@@ -441,8 +460,8 @@ export default class SchemaRouter<
         '/:id',
         koaGuard({
           params: z.object({ id: z.string().min(1) }),
-          body: schema.updateGuard,
-          response: entityGuard ?? schema.guard,
+          body: updateBodyGuard,
+          response: responseGuard,
           status: this.#collectRouteStatuses('patch', [200, 404, 422]),
         }),
         this.#assembleQualifiedMiddlewares('patch'),

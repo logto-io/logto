@@ -1,9 +1,9 @@
-import { organizationWithOrganizationRolesGuard } from '@logto/schemas';
 import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 
+import { organizationWithRolesResponseGuard } from '../organization/guards.js';
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
 export default function applicationOrganizationRoutes<T extends ManagementApiRouter>(
@@ -14,7 +14,7 @@ export default function applicationOrganizationRoutes<T extends ManagementApiRou
     koaPagination({ isOptional: true }),
     koaGuard({
       params: z.object({ id: z.string() }),
-      response: organizationWithOrganizationRolesGuard.array(),
+      response: organizationWithRolesResponseGuard.array(),
       status: [200, 404],
     }),
     async (ctx, next) => {

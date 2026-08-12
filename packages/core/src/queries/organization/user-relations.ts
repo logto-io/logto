@@ -79,6 +79,20 @@ export class UserRelationQueries extends TwoRelationsQueries<typeof Organization
     `);
   }
 
+  async hasUserDisallowedTrustedDeviceOrganization(userId: string): Promise<boolean> {
+    const organizations = convertToIdentifiers(Organizations, true);
+    const relations = convertToIdentifiers(OrganizationUserRelations, true);
+
+    return this.pool.exists(sql`
+      select 1
+      from ${relations.table}
+      join ${organizations.table}
+        on ${relations.fields.organizationId} = ${organizations.fields.id}
+      where ${relations.fields.userId} = ${userId}
+        and ${organizations.fields.isTrustedDeviceAllowed} = false
+    `);
+  }
+
   async getFeatured(
     organizationId: string
   ): Promise<[totalNumber: number, users: readonly FeaturedUser[]]> {

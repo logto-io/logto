@@ -4,6 +4,7 @@ import type { TrustedDevice } from '@logto/schemas';
 
 import type { TrustedDeviceQueries } from '#src/queries/trusted-device.js';
 
+import type { createTrustedDevicePolicyLibrary } from './trusted-device-policy.js';
 import {
   createTrustedDeviceLibrary,
   generateTrustedDeviceSecret,
@@ -38,6 +39,13 @@ const createQueries = () =>
     deleteExpiredByIdAndUserId: jest.fn(),
     deleteExpiredByTenant: jest.fn(),
   }) as unknown as jest.Mocked<TrustedDeviceQueries>;
+
+type TrustedDevicePolicyLibrary = ReturnType<typeof createTrustedDevicePolicyLibrary>;
+
+const createPolicyLibrary = ({ enabled = true, durationDays = 30 } = {}) =>
+  ({
+    getEffectivePolicy: jest.fn(async () => ({ enabled, durationDays })),
+  }) as unknown as TrustedDevicePolicyLibrary;
 
 const buildTrustedDevice = (secretHash: Uint8Array): TrustedDevice => ({
   tenantId,
@@ -97,11 +105,19 @@ describe('trusted device library', () => {
     jest.clearAllMocks();
   });
 
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
   it('creates a record with only the secret hash and writes an unsigned host-only cookie', async () => {
     const now = Date.now();
-    const expiresAt = now + 60_000;
+    const durationDays = 7;
+    const expiresAt = now + durationDays * 24 * 60 * 60 * 1000;
     const queries = createQueries();
+    const policyLibrary = createPolicyLibrary({ durationDays });
     const { ctx, set } = createCookieContext();
+
+    jest.spyOn(Date, 'now').mockReturnValue(now);
 
     queries.insert.mockImplementationOnce(async (data) => ({
       tenantId,
@@ -115,8 +131,15 @@ describe('trusted device library', () => {
     }));
     queries.deleteExpiredByTenant.mockResolvedValueOnce(0);
 
-    const library = createTrustedDeviceLibrary(tenantId, queries, { isProduction: false });
-    const record = await library.createCredential({ ctx, userId, expiresAt });
+    const library = createTrustedDeviceLibrary(tenantId, queries, policyLibrary, {
+      isProduction: false,
+    });
+    const record = await library.createCredential({ ctx, userId });
+
+    if (!record) {
+      throw new Error('Expected trusted-device creation to be allowed');
+    }
+
     const inserted = queries.insert.mock.calls[0]?.[0];
     const cookieValue = set.mock.calls[0]?.[1];
     const parsed =
@@ -145,13 +168,29 @@ describe('trusted device library', () => {
     );
     expect(set.mock.calls[0]?.[2]?.maxAge).toBeLessThanOrEqual(expiresAt - now);
     expect(set.mock.calls[0]?.[2]).not.toHaveProperty('domain');
+    expect(policyLibrary.getEffectivePolicy).toHaveBeenCalledWith(userId);
     expect(queries.deleteExpiredByTenant).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not create a record or cookie when the effective policy is disabled', async () => {
+    const queries = createQueries();
+    const policyLibrary = createPolicyLibrary({ enabled: false });
+    const { ctx, set } = createCookieContext();
+    const library = createTrustedDeviceLibrary(tenantId, queries, policyLibrary, {
+      isProduction: false,
+    });
+
+    await expect(library.createCredential({ ctx, userId })).resolves.toBeUndefined();
+    expect(queries.insert).not.toHaveBeenCalled();
+    expect(set).not.toHaveBeenCalled();
   });
 
   it('uses Secure and the __Host- prefix in production', () => {
     const queries = createQueries();
     const { ctx, set } = createCookieContext();
-    const library = createTrustedDeviceLibrary(tenantId, queries, { isProduction: true });
+    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(), {
+      isProduction: true,
+    });
     const credential = { id: trustedDeviceId, secret: generateTrustedDeviceSecret() };
 
     library.writeCredential(ctx, userId, credential, Date.now() + 60_000);
@@ -173,7 +212,9 @@ describe('trusted device library', () => {
     );
     queries.findActiveByIdAndUserId.mockResolvedValueOnce(record);
 
-    const library = createTrustedDeviceLibrary(tenantId, queries, { isProduction: false });
+    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(), {
+      isProduction: false,
+    });
 
     await expect(library.validateCredential(ctx, userId)).resolves.toEqual(record);
     expect(get).toHaveBeenCalledWith(getTrustedDeviceCookieName(tenantId, userId, false), {
@@ -186,7 +227,9 @@ describe('trusted device library', () => {
   it('clears a malformed credential without querying a record', async () => {
     const queries = createQueries();
     const { ctx, set } = createCookieContext('malformed');
-    const library = createTrustedDeviceLibrary(tenantId, queries, { isProduction: false });
+    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(), {
+      isProduction: false,
+    });
 
     await expect(library.validateCredential(ctx, userId)).resolves.toBeUndefined();
     expect(queries.findActiveByIdAndUserId).not.toHaveBeenCalled();
@@ -209,7 +252,9 @@ describe('trusted device library', () => {
         secret: generateTrustedDeviceSecret(),
       })
     );
-    const library = createTrustedDeviceLibrary(tenantId, queries, { isProduction: false });
+    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(), {
+      isProduction: false,
+    });
 
     await expect(library.validateCredential(ctx, userId)).resolves.toBeUndefined();
     expect(queries.findActiveByIdAndUserId).not.toHaveBeenCalled();
@@ -226,7 +271,9 @@ describe('trusted device library', () => {
     );
     queries.findActiveByIdAndUserId.mockResolvedValueOnce(record);
 
-    const library = createTrustedDeviceLibrary(tenantId, queries, { isProduction: false });
+    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(), {
+      isProduction: false,
+    });
 
     await expect(library.validateCredential(ctx, userId)).resolves.toBeUndefined();
     expect(set).toHaveBeenCalledTimes(1);
@@ -242,7 +289,9 @@ describe('trusted device library', () => {
     queries.findActiveByIdAndUserId.mockResolvedValueOnce(null);
     queries.deleteExpiredByIdAndUserId.mockResolvedValueOnce(1);
 
-    const library = createTrustedDeviceLibrary(tenantId, queries, { isProduction: false });
+    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(), {
+      isProduction: false,
+    });
 
     await expect(library.validateCredential(ctx, userId)).resolves.toBeUndefined();
     await Promise.resolve();
@@ -254,7 +303,7 @@ describe('trusted device library', () => {
   it('deduplicates concurrent opportunistic cleanup within the cooldown', async () => {
     const queries = createQueries();
     queries.deleteExpiredByTenant.mockResolvedValue(2);
-    const library = createTrustedDeviceLibrary(tenantId, queries, {
+    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(), {
       isProduction: false,
       cleanupCooldown: 60_000,
     });
@@ -269,7 +318,7 @@ describe('trusted device library', () => {
     const queries = createQueries();
     queries.deleteExpiredByTenant.mockRejectedValueOnce(new Error('cleanup failed'));
     queries.deleteExpiredByTenant.mockResolvedValueOnce(2);
-    const library = createTrustedDeviceLibrary(tenantId, queries, {
+    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(), {
       isProduction: false,
       cleanupCooldown: 60_000,
     });

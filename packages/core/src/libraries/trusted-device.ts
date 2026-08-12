@@ -8,10 +8,13 @@ import { type Context } from 'koa';
 import { EnvSet } from '#src/env-set/index.js';
 import type { TrustedDeviceMetadata, TrustedDeviceQueries } from '#src/queries/trusted-device.js';
 
+import type { createTrustedDevicePolicyLibrary } from './trusted-device-policy.js';
+
 const trustedDeviceSecretByteLength = 32;
 const trustedDeviceSecretHashAlgorithm = 'sha256';
 const trustedDeviceCookiePrefix = 'logto-trusted-device-';
 const trustedDeviceCleanupCooldown = 5 * 60 * 1000;
+const dayInMilliseconds = 24 * 60 * 60 * 1000;
 const trustedDeviceIdPattern = /^[\da-z]+$/;
 
 export type TrustedDeviceCookieContext = Readonly<{
@@ -32,8 +35,9 @@ type CreateTrustedDeviceCredential = TrustedDeviceMetadata &
   Readonly<{
     ctx: TrustedDeviceCookieContext;
     userId: string;
-    expiresAt: number;
   }>;
+
+type TrustedDevicePolicyLibrary = ReturnType<typeof createTrustedDevicePolicyLibrary>;
 
 export const getTrustedDeviceCookieName = (
   tenantId: string,
@@ -115,6 +119,7 @@ export const parseTrustedDeviceCredential = (
 export const createTrustedDeviceLibrary = (
   tenantId: string,
   queries: TrustedDeviceQueries,
+  policyLibrary: TrustedDevicePolicyLibrary,
   {
     isProduction = EnvSet.values.isProduction,
     cleanupCooldown = trustedDeviceCleanupCooldown,
@@ -176,16 +181,17 @@ export const createTrustedDeviceLibrary = (
     return deletedCount;
   };
 
-  const createCredential = async ({
-    ctx,
-    userId,
-    expiresAt,
-    ...metadata
-  }: CreateTrustedDeviceCredential) => {
+  const createCredential = async ({ ctx, userId, ...metadata }: CreateTrustedDeviceCredential) => {
+    const policy = await policyLibrary.getEffectivePolicy(userId);
+
+    if (!policy.enabled) {
+      return;
+    }
+
     const id = generateStandardId();
     const secret = generateTrustedDeviceSecret();
     const secretHash = hashTrustedDeviceSecret(secret);
-
+    const expiresAt = Date.now() + policy.durationDays * dayInMilliseconds;
     const trustedDevice = await queries.insert({
       id,
       userId,
@@ -193,8 +199,9 @@ export const createTrustedDeviceLibrary = (
       expiresAt,
       ...metadata,
     });
+    const credential = { id, secret };
 
-    writeCredential(ctx, userId, { id, secret }, trustedDevice.expiresAt);
+    writeCredential(ctx, userId, credential, trustedDevice.expiresAt);
     void cleanupExpired();
 
     return trustedDevice;
