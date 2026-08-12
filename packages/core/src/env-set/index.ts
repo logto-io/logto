@@ -102,11 +102,18 @@ export class EnvSet {
 
     await promoteScheduledSigningKeyRotation();
 
-    const oidcConfigs = await getOidcConfigs(consoleLog);
+    const [oidcConfigs, cimdConfig] = await Promise.all([
+      getOidcConfigs(consoleLog),
+      logtoConfigQueries.getCimdConfig(),
+    ]);
     this.#endpoint = customDomain
       ? new URL(customDomain)
       : getTenantEndpoint(this.tenantId, EnvSet.values);
-    this.#oidc = await loadOidcValues(appendPath(this.#endpoint, '/oidc').href, oidcConfigs);
+    this.#oidc = await loadOidcValues(
+      appendPath(this.#endpoint, '/oidc').href,
+      oidcConfigs,
+      cimdConfig
+    );
   }
 
   async end() {

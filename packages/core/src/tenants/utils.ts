@@ -13,7 +13,9 @@ import { z } from 'zod';
 import { EnvSet } from '#src/env-set/index.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
 
-export class TenantNotFoundError extends Error {}
+export class TenantNotFoundError extends Error {
+  name = 'TenantNotFoundError';
+}
 
 const { table: logtoConfigsTable, fields: logtoConfigFields } = convertToIdentifiers(LogtoConfigs);
 

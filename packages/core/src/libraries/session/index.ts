@@ -7,6 +7,7 @@ import {
 import { deduplicate } from '@silverhand/essentials';
 import type { Provider, Session } from 'oidc-provider';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type SessionInstanceWithExtension } from '#src/queries/oidc-session-extensions.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -136,12 +137,17 @@ export const createSessionLibrary = (queries: Queries) => {
     userId: string,
     applicationType?: 'thirdParty' | 'firstParty'
   ) => {
-    const result = await queries.oidcModelInstances.findUserActiveApplicationGrants(
-      userId,
-      applicationType
-    );
+    const [applicationGrants, cimdGrants] = await Promise.all([
+      queries.oidcModelInstances.findUserActiveApplicationGrants(userId, applicationType),
+      // DEV: CIMD (client ID metadata document) support
+      // CIMD clients are third-party by definition, so the `firstParty` filter skips their
+      // query entirely.
+      EnvSet.values.isDevFeaturesEnabled && applicationType !== 'firstParty'
+        ? queries.oidcModelInstances.findUserActiveCimdGrants(userId)
+        : [],
+    ]);
 
-    return result.map((grant) => formatApplicationGrant(grant));
+    return [...applicationGrants, ...cimdGrants].map((grant) => formatApplicationGrant(grant));
   };
 
   const revokeSessionAssociatedGrants = async ({

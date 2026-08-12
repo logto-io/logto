@@ -9,14 +9,13 @@ import { userClaims } from '@logto/core-kit';
 import type { I18nKey } from '@logto/phrases';
 import {
   customClientMetadataDefault,
-  CustomClientMetadataKey,
   extraParamsObjectGuard,
   inSeconds,
   logtoCookieKey,
   ExtraParamsKey,
   type Json,
 } from '@logto/schemas';
-import { trySafe, tryThat } from '@silverhand/essentials';
+import { conditional, trySafe, tryThat } from '@silverhand/essentials';
 import { type i18n } from 'i18next';
 import { type KoaContextWithOIDC, Provider, type ResourceServer, errors } from 'oidc-provider';
 import getRawBody from 'raw-body';
@@ -52,9 +51,12 @@ import koaTokenUsageGuard from '../middleware/koa-token-usage-guard.js';
 import {
   appLevelAccessControlMetadataKey,
   assertUserHasApplicationAccessForOidc,
+  extraClientMetadataKeys,
   hasAppLevelAccessControlChecked,
   markAppLevelAccessControlCheckedForOidcContext,
 } from './application-access-control.js';
+import { buildClientIdMetadataDocumentFeature, isCimdClient } from './cimd/index.js';
+import { filterResourceScopesForTheCimdClient } from './cimd/resource-scopes.js';
 import defaults from './defaults.js';
 import { deviceFlowConfig, defaultDeviceCodeTtl } from './device-flow.js';
 import {
@@ -64,6 +66,7 @@ import {
 } from './extra-token-claims.js';
 import { getProviderFetchConfig } from './fetch.js';
 import { registerGrants } from './grants/index.js';
+import { installWildcardRedirectUriMatching } from './redirect-uri/index.js';
 import {
   findResource,
   findResourceScopes,
@@ -72,7 +75,6 @@ import {
   filterResourceScopesForTheThirdPartyApplication,
 } from './resource.js';
 import { getAcceptedUserClaims, getUserClaimsData } from './scope.js';
-import { installWildcardRedirectUriMatching } from './wildcard-redirect-uri.js';
 
 // Temporarily removed 'EdDSA' since it's not supported by browser yet
 const supportedSigningAlgs = Object.freeze(['RS256', 'PS256', 'ES256', 'ES384', 'ES512'] as const);
@@ -124,6 +126,20 @@ export default function initOidc(
       userId,
     });
 
+    if (isCimdClient(envSet, clientId)) {
+      /**
+       * CIMD clients are unregistered: the tenant-wide ceiling replaces the per-application
+       * consent configuration the third-party filter below reads.
+       */
+      const filteredScopes = await filterResourceScopesForTheCimdClient(queries, indicator, scopes);
+
+      return {
+        ...getSharedResourceServerData(envSet),
+        accessTokenTTL,
+        scope: filteredScopes.map(({ name }) => name).join(' '),
+      };
+    }
+
     if (clientId && (await isThirdPartyApplication(queries, clientId))) {
       const filteredScopes = await filterResourceScopesForTheThirdPartyApplication(
         libraries,
@@ -168,6 +184,18 @@ export default function initOidc(
     jwks: {
       keys: envSet.oidc.privateJwks,
     },
+    /**
+     * Clients that skip the adapter's metadata force-write (e.g. CIMD) fall back to the
+     * built-in `RS256` default, which EC-keystore tenants cannot sign. Align the default
+     * with the tenant signing key; RSA tenants keep the built-in `RS256`.
+     */
+    ...conditional(
+      envSet.oidc.jwkSigningAlg && {
+        clientDefaults: {
+          id_token_signed_response_alg: envSet.oidc.jwkSigningAlg,
+        },
+      }
+    ),
     enabledJWA: {
       authorizationSigningAlgValues: [...supportedSigningAlgs],
       userinfoSigningAlgValues: [...supportedSigningAlgs],
@@ -189,6 +217,7 @@ export default function initOidc(
       dPoP: { enabled: false },
       backchannelLogout: { enabled: true },
       deviceFlow: deviceFlowConfig,
+      ...buildClientIdMetadataDocumentFeature(envSet, queries.cimd),
       rpInitiatedLogout: {
         logoutSource: (ctx, form) => {
           // eslint-disable-next-line no-template-curly-in-string
@@ -239,14 +268,25 @@ export default function initOidc(
     interactions: {
       url: (ctx, { params: { client_id: appId }, prompt }) => {
         const params = trySafe(() => extraParamsObjectGuard.parse(ctx.oidc.params ?? {})) ?? {};
+        const resolvedAppId = readOptionalQueryString(appId);
         const sharedParams = {
-          appId: readOptionalQueryString(appId),
+          appId: resolvedAppId,
           organizationId: params.organization_id,
           uiLocales: params.ui_locales,
         };
 
+        /**
+         * A CIMD identifier can span 2048 characters — omitting `appId` keeps the URL out of a
+         * second browser cookie, and with no per-application overrides to resolve, the cookie
+         * consumers (experience SSR, verification-code template context) fall back to the
+         * tenant default sign-in experience without any application lookup.
+         */
+        const cookieParams = isCimdClient(envSet, resolvedAppId)
+          ? { ...sharedParams, appId: undefined }
+          : sharedParams;
+
         // Cookies are required to apply the correct server-side rendering
-        ctx.cookies.set(logtoCookieKey, JSON.stringify(buildSharedExperienceCookie(sharedParams)), {
+        ctx.cookies.set(logtoCookieKey, JSON.stringify(buildSharedExperienceCookie(cookieParams)), {
           sameSite: 'lax',
           overwrite: true,
           httpOnly: false,
@@ -282,11 +322,24 @@ export default function initOidc(
     },
     loadExistingGrant: async (ctx) => {
       const { account, client, provider, result, session } = ctx.oidc;
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- Keep oidc-provider's default loadExistingGrant fallback semantics.
-      const grantId = result?.consent?.grantId || (client && session?.grantIdFor(client.clientId));
+      const cimd = isCimdClient(envSet, client?.clientId);
+      /**
+       * CIMD organization access is grant-scoped, so a Grant must never serve more than one
+       * authorization — skip the session grant reuse. The `result.consent.grantId` branch
+       * stays: it is this same authorization's grant on the post-consent resume.
+       */
+      const grantId =
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- Keep oidc-provider's default loadExistingGrant fallback semantics.
+        result?.consent?.grantId || (client && !cimd && session?.grantIdFor(client.clientId));
       const shouldCheckApplicationAccess =
         account &&
         client &&
+        /**
+         * Application-level access control only applies to registered applications; the
+         * access-control library's fallback lookup would query the applications table with the
+         * CIMD identifier URL and deny on not-found.
+         */
+        !cimd &&
         !hasAppLevelAccessControlChecked(result, client.clientId, account.accountId);
 
       if (grantId && shouldCheckApplicationAccess) {
@@ -337,7 +390,7 @@ export default function initOidc(
       };
     },
     extraClientMetadata: {
-      properties: [...Object.values(CustomClientMetadataKey), appLevelAccessControlMetadataKey],
+      properties: [...extraClientMetadataKeys],
       validator: (_, key, value) => {
         if (key === appLevelAccessControlMetadataKey) {
           if (value === undefined) {
@@ -371,6 +424,12 @@ export default function initOidc(
       const user = await tryThat(findUserById(sub), () => {
         throw new errors.InvalidGrant('user not found');
       });
+
+      // Suspension revokes the user's sessions and tokens; reject here as well so any token
+      // that survives a partial revocation still cannot be used.
+      if (user.isSuspended) {
+        throw new errors.InvalidGrant('user is suspended');
+      }
 
       return {
         accountId: sub,
@@ -475,7 +534,7 @@ export default function initOidc(
   });
 
   installWildcardRedirectUriMatching(oidc);
-  addOidcEventListeners(tenantId, oidc, queries);
+  addOidcEventListeners(tenantId, oidc, queries, libraries.hooks.triggerEvent);
   registerGrants(oidc, envSet, queries, libraries);
 
   // Register first so all downstream cookie operations go through the rebound instance

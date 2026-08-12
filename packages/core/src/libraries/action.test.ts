@@ -1,6 +1,13 @@
 /* eslint-disable max-lines -- Action runtime, policy, and audit behavior share the same library setup. */
 import { appInsights } from '@logto/app-insights/node';
-import { action, LogResult, LogtoActionKey, SignInIdentifier } from '@logto/schemas';
+import {
+  action,
+  InteractionEvent,
+  LogResult,
+  LogtoActionKey,
+  SignInIdentifier,
+  VerificationType,
+} from '@logto/schemas';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -9,6 +16,7 @@ import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { actionMetricNames, type ActionTelemetryProperties } from './action-telemetry.js';
 import { getActionExecutionErrorPolicyDecision, ActionLibrary } from './action.js';
 import type { ActionExecutionErrorFallback, ActionExecutionErrorPolicyDecision } from './action.js';
+import type { CloudConnectionLibrary } from './cloud-connection.js';
 import type { LogtoConfigLibrary } from './logto-config.js';
 import type { SubscriptionLibrary } from './subscription.js';
 
@@ -40,11 +48,11 @@ const createLibrary = (tenantId = 'tenant_id') =>
   new ActionLibrary(
     tenantId,
     { getAction } as unknown as LogtoConfigLibrary,
-    { getSubscriptionData } as unknown as SubscriptionLibrary
+    { getSubscriptionData } as unknown as SubscriptionLibrary,
+    {} as CloudConnectionLibrary
   );
 
 const originalIsCloud = EnvSet.values.isCloud;
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
 
 const setIsCloud = (isCloud: boolean) => {
   // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for Cloud/local selection tests.
@@ -67,11 +75,9 @@ describe('ActionLibrary', () => {
       trackMetric,
       trackException: jest.fn(),
     } as unknown as NonNullable<typeof appInsights.client>;
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for action runtime tests.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
     getSubscriptionData.mockResolvedValue({
       quota: {
-        inlineHooksEnabled: true,
+        actionsEnabled: true,
       },
     } as Awaited<ReturnType<SubscriptionLibrary['getSubscriptionData']>>);
   });
@@ -82,9 +88,6 @@ describe('ActionLibrary', () => {
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore the shared AppInsights singleton.
     appInsights.client = originalAppInsightsClient;
     setIsCloud(originalIsCloud);
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after dev feature tests.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
-      originalIsDevFeaturesEnabled;
   });
 
   it('loads action config and runs the enabled script in the local VM', async () => {
@@ -146,9 +149,9 @@ describe('ActionLibrary', () => {
       action: 'updateUser',
       decision: 'updateUser',
       actionResult: {
-        action: 'updateUser',
-        user: '[redacted]',
-        apiType: 'undefined',
+        passwordVerified: false,
+        userFields: ['name'],
+        unknownFieldCount: 0,
       },
     });
     expectActionMetrics({
@@ -178,7 +181,9 @@ describe('ActionLibrary', () => {
         durationMs: expect.any(Number),
         decision,
         actionResult: {
-          action: resultAction,
+          passwordVerified: false,
+          userFields: [],
+          unknownFieldCount: 0,
         },
       });
     }
@@ -308,7 +313,7 @@ describe('ActionLibrary', () => {
     expect(trackMetric).toHaveBeenCalledTimes(2);
   });
 
-  it('writes a sanitized P1 audit entry without scripts, environment values, or user patches', async () => {
+  it('writes a projected P1 audit entry without credentials or user patch values', async () => {
     const script = 'const privateActionScript = true;';
     const environmentSecret = 'environment-secret-value';
     const password = 'plain-text-password';
@@ -316,8 +321,14 @@ describe('ActionLibrary', () => {
     const apiKey = 'api-key-value';
     const accessToken = 'access-token-value';
     const nestedPatchEmail = 'nested-patch@example.com';
+    const eventUsername = 'jane-private-username';
+    const eventPhone = '+15551234567';
     const event = {
       key: LogtoActionKey.PostFirstFactorVerification,
+      interactionEvent: InteractionEvent.SignIn,
+      verificationType: VerificationType.Password,
+      identifier: { type: SignInIdentifier.Email, value: 'jane@example.com' },
+      user: { id: 'user-id', username: eventUsername, primaryPhone: eventPhone },
       password,
       nested: {
         secret: eventSecret,
@@ -329,7 +340,7 @@ describe('ActionLibrary', () => {
       echoed: `${script} ${environmentSecret} ${password}`,
     };
     const result = {
-      action: 'createUser',
+      action: 'updateUser',
       passwordVerified: true,
       user: {
         primaryEmail: 'jane@example.com',
@@ -377,32 +388,28 @@ describe('ActionLibrary', () => {
       onExecutionError: 'block',
       event: {
         key: LogtoActionKey.PostFirstFactorVerification,
-        password: '******',
-        nested: {
-          secret: '******',
-        },
-        credentials: '******',
-        echoed: '[redacted] [redacted] [redacted]',
+        interactionEvent: InteractionEvent.SignIn,
+        verificationType: VerificationType.Password,
+        identifier: { type: SignInIdentifier.Email, value: 'jane@example.com' },
+        user: { id: 'user-id' },
       },
     });
     expect(mockAppend).toHaveBeenNthCalledWith(2, {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Jest asymmetric matcher is typed as `any`.
       durationMs: expect.any(Number),
-      action: 'createUser',
-      decision: 'createUser',
+      action: 'updateUser',
+      decision: 'updateUser',
       actionResult: {
-        action: 'createUser',
         passwordVerified: true,
-        user: '[redacted]',
-        nested: [{ User: '[redacted]' }],
-        note: '[redacted]',
+        userFields: ['primaryEmail', 'customData'],
+        unknownFieldCount: 0,
       },
     });
     expectActionMetrics({
       actionType: 'PostFirstFactorVerification',
       runtimeLocation: 'local',
       outcome: 'success',
-      action: 'createUser',
+      action: 'updateUser',
     });
 
     const serializedAuditPayload = JSON.stringify(mockAppend.mock.calls);
@@ -414,6 +421,8 @@ describe('ActionLibrary', () => {
     expect(serializedAuditPayload).not.toContain(accessToken);
     expect(serializedAuditPayload).not.toContain(nestedPatchEmail);
     expect(serializedAuditPayload).not.toContain('returned-patch-secret');
+    expect(serializedAuditPayload).not.toContain(eventUsername);
+    expect(serializedAuditPayload).not.toContain(eventPhone);
   });
 
   it('normalizes untrusted result actions before writing audit summaries', async () => {
@@ -434,7 +443,7 @@ describe('ActionLibrary', () => {
     expect(mockAppend).toHaveBeenLastCalledWith(
       expect.objectContaining({
         decision: 'invalid',
-        actionResult: { action: 'invalid', passwordVerified: '******' },
+        actionResult: { passwordVerified: false, userFields: [], unknownFieldCount: 0 },
       })
     );
     expectActionMetrics({
@@ -467,42 +476,6 @@ describe('ActionLibrary', () => {
       decision: 'noop',
       actionResult: '[unavailable]',
     });
-  });
-
-  it('continues to run stored scripts that use the legacy entry point', async () => {
-    getAction.mockResolvedValueOnce({
-      enabled: true,
-      script: `
-        const runInlineHook = () => ({ action: 'updateUser', user: { name: 'Legacy' } });
-      `,
-    });
-
-    await expect(
-      runAction({
-        key: LogtoActionKey.PostSignIn,
-        event: {},
-      })
-    ).resolves.toEqual({
-      action: 'updateUser',
-      user: { name: 'Legacy' },
-    });
-  });
-
-  it('does not load or run actions when dev features are disabled', async () => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for dev feature gate test.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = false;
-
-    await expect(
-      runAction({
-        key: LogtoActionKey.PostSignIn,
-        event: {},
-      })
-    ).resolves.toBeUndefined();
-
-    expect(getAction).not.toHaveBeenCalled();
-    expect(getSubscriptionData).not.toHaveBeenCalled();
-    expect(createLog).not.toHaveBeenCalled();
-    expect(trackMetric).not.toHaveBeenCalled();
   });
 
   it('does not run disabled actions', async () => {
@@ -580,7 +553,7 @@ describe('ActionLibrary', () => {
     setIsCloud(true);
     getSubscriptionData.mockResolvedValueOnce({
       quota: {
-        inlineHooksEnabled: false,
+        actionsEnabled: false,
       },
     } as Awaited<ReturnType<SubscriptionLibrary['getSubscriptionData']>>);
     getAction.mockResolvedValueOnce({
@@ -679,11 +652,10 @@ describe('ActionLibrary', () => {
     );
   });
 
-  it('redacts credentials, scripts, and environment values from tracked execution errors', async () => {
+  it('reports execution errors to telemetry without any tenant-authored text', async () => {
     const password = 'secret-password';
     const script = 'const privateActionScript = true;';
     const environmentSecret = 'environment-secret-value';
-    const nestedSecret = 'nested-secret-value';
     const trackException = jest.spyOn(appInsights, 'trackException').mockResolvedValue();
     class SensitiveExecutionError extends Error {
       override readonly name = environmentSecret;
@@ -691,7 +663,7 @@ describe('ActionLibrary', () => {
       readonly code = password;
     }
     const executionError = new SensitiveExecutionError(
-      `Action failed with ${password} ${script} ${environmentSecret} ${nestedSecret}`
+      `Action failed with ${password} ${script} ${environmentSecret}`
     );
     jest.spyOn(ActionLibrary, 'runScriptInLocalVm').mockRejectedValueOnce(executionError);
     getAction.mockResolvedValueOnce({
@@ -707,8 +679,12 @@ describe('ActionLibrary', () => {
       runAction({
         key: LogtoActionKey.PostFirstFactorVerification,
         event: {
+          key: LogtoActionKey.PostFirstFactorVerification,
+          interactionEvent: InteractionEvent.SignIn,
+          verificationType: VerificationType.Password,
+          identifier: { type: SignInIdentifier.Username, value: 'old_user' },
+          user: null,
           password,
-          nested: { secret: { value: nestedSecret } },
         },
       })
     ).resolves.toEqual({
@@ -718,16 +694,24 @@ describe('ActionLibrary', () => {
     const trackedError = trackException.mock.calls[0]?.[0];
     expect(trackedError).toBeInstanceOf(Error);
     expect(trackedError).toMatchObject({
-      name: 'Error',
-      message: 'Action failed with [redacted] [redacted] [redacted] [redacted]',
+      name: 'ActionExecutionError',
+      message: 'Action execution failed.',
     });
     expect((trackedError as Error).stack).not.toContain(password);
     expect(JSON.stringify(trackedError)).not.toContain(script);
     expect(JSON.stringify(trackedError)).not.toContain(environmentSecret);
-    expect(JSON.stringify(mockAppend.mock.calls)).not.toContain(password);
-    expect(JSON.stringify(mockAppend.mock.calls)).not.toContain(script);
-    expect(JSON.stringify(mockAppend.mock.calls)).not.toContain(environmentSecret);
-    expect(JSON.stringify(mockAppend.mock.calls)).not.toContain(nestedSecret);
+    // The projected event never carries the end user's credential, and the audit error summary
+    // scrubs that same credential out of the script-authored message.
+    const serializedAuditPayload = JSON.stringify(mockAppend.mock.calls);
+    expect(serializedAuditPayload).not.toContain(password);
+    expect(mockAppend).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Jest asymmetric matcher is typed as `any`.
+        actionError: expect.objectContaining({
+          message: `Action failed with [redacted] ${script} ${environmentSecret}`,
+        }),
+      })
+    );
     expect(trackException).toHaveBeenCalledWith(trackedError, {
       properties: {
         actionType: 'PostFirstFactorVerification',
@@ -777,7 +761,8 @@ describe('ActionLibrary', () => {
     expect(trackedError).toBeInstanceOf(Error);
     expect(trackedError).not.toBe(transportError);
     expect(trackedError).toMatchObject({
-      message: 'Remote runner timed out',
+      name: 'ActionExecutionError',
+      message: 'Action execution failed.',
     });
     expect(Object.hasOwn(trackedError as Error, 'request')).toBe(false);
     expect(JSON.stringify(trackedError)).not.toContain(functionKey);

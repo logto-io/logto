@@ -24,6 +24,7 @@ import { condArray, conditional, conditionalArray, trySafe } from '@silverhand/e
 import { EnvSet } from '#src/env-set/index.js';
 import { truncateMembershipDelta } from '#src/libraries/hook/utils.js';
 import { buildUserPasswordPayload } from '#src/libraries/user.utils.js';
+import { type JitOrganization } from '#src/queries/organization/email-domains.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 import { getTenantId } from '#src/utils/tenant.js';
@@ -41,10 +42,6 @@ import {
 } from './provisioning-profile.js';
 
 type OrganizationProvisionPayload =
-  | {
-      userId: string;
-      email: string;
-    }
   | {
       userId: string;
       ssoConnectorId: string;
@@ -267,8 +264,9 @@ export class ProvisionLibrary {
   }
 
   /**
-   * Add the user to the specified organizations. This function is called when an existing
-   * user is invited to organization(s) by admin through one-time token (e.g. Magic link).
+   * Add the user to the JIT organizations resolved from the enterprise SSO connector or from the
+   * explicit organization IDs (e.g. an admin invite carried by a one-time token / Magic link).
+   * For email-domain JIT, use `provisionJitOrganizationByEmailDomain` instead.
    */
   async provisionJitOrganization(payload: OrganizationProvisionPayload) {
     const {
@@ -277,14 +275,39 @@ export class ProvisionLibrary {
 
     const provisionedOrganizations = await usersLibraries.provisionOrganizations(payload);
 
+    this.appendMembershipUpdatedHooks(payload.userId, provisionedOrganizations);
+
+    return provisionedOrganizations;
+  }
+
+  /**
+   * Provision the user with JIT organizations based on the email domain.
+   */
+  private async provisionJitOrganizationByEmailDomain(userId: string, email: string) {
+    const {
+      libraries: { users: usersLibraries },
+    } = this.tenantContext;
+
+    const provisionedOrganizations = await usersLibraries.provisionOrganizationsByEmailDomain(
+      userId,
+      email
+    );
+
+    this.appendMembershipUpdatedHooks(userId, provisionedOrganizations);
+
+    return provisionedOrganizations;
+  }
+
+  private appendMembershipUpdatedHooks(
+    userId: string,
+    provisionedOrganizations: readonly JitOrganization[]
+  ) {
     for (const { organizationId } of provisionedOrganizations) {
       this.ctx.appendDataHookContext('Organization.Membership.Updated', {
         organizationId,
-        ...truncateMembershipDelta({ addedUserIds: [payload.userId] }),
+        ...truncateMembershipDelta({ addedUserIds: [userId] }),
       });
     }
-
-    return provisionedOrganizations;
   }
 
   /**
@@ -478,10 +501,7 @@ export class ProvisionLibrary {
     if (primaryEmail) {
       return [
         ...extraJitOrganizations,
-        ...(await this.provisionJitOrganization({
-          userId,
-          email: primaryEmail,
-        })),
+        ...(await this.provisionJitOrganizationByEmailDomain(userId, primaryEmail)),
       ];
     }
   }

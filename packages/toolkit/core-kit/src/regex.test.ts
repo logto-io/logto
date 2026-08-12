@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { domainRegEx, emailOrEmailDomainRegEx } from './regex.js';
+import { dateRegEx, domainRegEx, emailOrEmailDomainRegEx } from './regex.js';
 
 describe('Regular expressions should work as expected', () => {
   it('should allow valid domains that consists of 3 parts. E.g. foo.bar.com', () => {
@@ -71,6 +71,19 @@ describe('Regular expressions should work as expected', () => {
       expect(emailOrEmailDomainRegEx.test('@example..com')).toBe(false);
       expect(emailOrEmailDomainRegEx.test('@example_.com')).toBe(false);
       expect(emailOrEmailDomainRegEx.test('@example.com extra')).toBe(false);
+    });
+  });
+
+  describe('dateRegEx', () => {
+    it('should allow a full yyyy-MM-dd date', () => {
+      expect(dateRegEx.test('2020-01-01')).toBe(true);
+      expect(dateRegEx.test('1999-12-31')).toBe(true);
+    });
+
+    it('should not allow a valid date prefix followed by trailing input', () => {
+      expect(dateRegEx.test('2020-01-01xyz')).toBe(false);
+      expect(dateRegEx.test('2020-01-01T00:00:00Z')).toBe(false);
+      expect(dateRegEx.test('2020-01-01 ')).toBe(false);
     });
   });
 });

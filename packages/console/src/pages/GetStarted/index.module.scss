@@ -16,7 +16,6 @@
 .subtitle {
   font: var(--font-body-2);
   color: var(--color-text-secondary);
-  margin-bottom: _.unit(-3);
 }
 
 .bodyText {
@@ -28,6 +27,10 @@
   display: flex;
   flex-direction: column;
   gap: _.unit(1);
+
+  .subtitle {
+    margin-bottom: _.unit(-3);
+  }
 }
 
 .developActions {

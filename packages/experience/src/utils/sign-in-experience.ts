@@ -3,7 +3,7 @@
  * Remove this once we have a better way to get the sign in experience through SSR
  */
 
-import { SignInIdentifier, VerificationType } from '@logto/schemas';
+import { isCimdClientId, SignInIdentifier, VerificationType } from '@logto/schemas';
 import { isObject } from '@silverhand/essentials';
 import i18next from 'i18next';
 
@@ -31,7 +31,20 @@ export const getSignInExperienceSettings = async (): Promise<SignInExperienceRes
       searchKeysCamelCase.every((key) => {
         const ssrValue = rest[key];
         const storageValue = sessionStorage.getItem(searchKeys[key]) ?? undefined;
-        return (!ssrValue && !storageValue) || ssrValue === storageValue;
+
+        if ((!ssrValue && !storageValue) || ssrValue === storageValue) {
+          return true;
+        }
+
+        /**
+         * CIMD prompts deliberately omit `appId` from the experience cookie (the identifier can
+         * span 2048 characters), so the SSR payload carries no `appId` while the URL-derived
+         * storage still holds it. A CIMD client can never have per-application overrides, so the
+         * tenant-default settings the SSR rendered are exactly what the flow needs.
+         */
+        return (
+          key === 'appId' && !ssrValue && storageValue !== undefined && isCimdClientId(storageValue)
+        );
       })
     ) {
       return parseSignInExperienceResponse(data);

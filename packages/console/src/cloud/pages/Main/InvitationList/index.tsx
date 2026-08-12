@@ -7,11 +7,10 @@ import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type InvitationListResponse } from '@/cloud/types/router';
 import TenantEnvTag from '@/components/TenantEnvTag';
 import ThemedIcon from '@/components/ThemedIcon';
-import { TenantsContext } from '@/contexts/TenantsProvider';
+import { GlobalRoute, TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import Spacer from '@/ds-components/Spacer';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
-import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 
 import styles from './index.module.scss';
 
@@ -25,8 +24,6 @@ function InvitationList({ invitations }: Props) {
   const { navigateTenant, resetTenants } = useContext(TenantsContext);
   const { navigate } = useTenantPathname();
   const [isJoining, setIsJoining] = useState(false);
-  const [isUpdatingOnboardingStatus, setIsUpdatingOnboardingStatus] = useState(false);
-  const { update } = useUserOnboardingData();
 
   return (
     <div className={styles.container}>
@@ -70,16 +67,9 @@ function InvitationList({ invitations }: Props) {
           size="large"
           type="outline"
           className={styles.createTenantButton}
-          isLoading={isUpdatingOnboardingStatus}
           title="invitation.create_new_tenant"
-          onClick={async () => {
-            setIsUpdatingOnboardingStatus(true);
-            try {
-              await update({ isOnboardingDone: false });
-              navigate('/');
-            } finally {
-              setIsUpdatingOnboardingStatus(false);
-            }
+          onClick={() => {
+            navigate(GlobalRoute.Onboarding);
           }}
         />
       </div>

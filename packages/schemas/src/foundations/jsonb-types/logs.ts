@@ -72,7 +72,13 @@ export const logContextPayloadGuard = z
     userAgent: z.string().optional(),
     userAgentParsed: userAgentParsedGuard.optional(),
     userId: z.string().optional(),
+    /** Registered application ids only; a CIMD client identifier goes under {@link cimdClientId}. */
     applicationId: z.string().optional(),
+    /**
+     * The CIMD client identifier URL, kept apart from `applicationId` so payload consumers
+     * branch on key presence instead of URL shape.
+     */
+    cimdClientId: z.string().optional(),
     sessionId: z.string().optional(),
     params: z.record(z.string(), z.unknown()).optional(),
   })

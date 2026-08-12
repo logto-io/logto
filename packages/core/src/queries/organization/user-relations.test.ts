@@ -28,4 +28,16 @@ describe('UserRelationQueries', () => {
     expect(pool.one).toHaveBeenCalledWith(expectSqlString('organization_role_id'));
     expect(pool.any).toHaveBeenCalledWith(expectSqlString('limit'));
   });
+
+  it('checks whether any organization disallows trusted devices for the user', async () => {
+    const pool = createMockCommonQueryMethods();
+    pool.exists.mockResolvedValueOnce(true);
+
+    const queries = new UserRelationQueries(pool);
+
+    await expect(queries.hasUserDisallowedTrustedDeviceOrganization('user-id')).resolves.toBe(true);
+    expect(pool.exists).toHaveBeenCalledWith(
+      expectSqlString('"organizations"."is_trusted_device_allowed" = false')
+    );
+  });
 });

@@ -101,6 +101,8 @@ const description = {
     'لقد قامت الشركة بتمكين تسجيل الدخول الموحد لحساب البريد الإلكتروني {{email}}. يمكنك الاستمرار في تسجيل الدخول باستخدام موفرات SSO التالية.',
   single_sign_on_enabled: 'تم تمكين تسجيل الدخول الموحد لهذا الحساب',
   authorize_title: 'السماح لـ {{name}}',
+  unregistered_client_notice:
+    'هذا التطبيق معلن ذاتيًا من قِبل <hostname>{{host}}</hostname>، بما في ذلك اسمه وشعاره. يرجى التحقق من اسم المضيف قبل المتابعة.',
   request_permission: '{{name}} يطلب الوصول إلى:',
   grant_organization_access: 'منح الوصول إلى المؤسسة:',
   authorize_personal_data_usage: 'السماح باستخدام البيانات الشخصية الخاصة بك:',

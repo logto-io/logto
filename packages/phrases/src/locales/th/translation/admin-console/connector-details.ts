@@ -85,6 +85,20 @@ const connector_details = {
     in_use: 'เปิดใช้งานสำหรับการเข้าสู่ระบบ ',
     not_in_use: 'ปิดใช้งานสำหรับการเข้าสู่ระบบ ',
   },
+  email_logs: {
+    title: 'บันทึกอีเมล',
+    time: 'เวลา',
+    recipient: 'ผู้รับ',
+    recipient_placeholder: 'ค้นหาด้วยที่อยู่ผู้รับแบบเต็ม',
+    template_type: 'ประเภทเทมเพลต',
+    status: 'สถานะ',
+    status_sent: 'ส่งแล้ว',
+    status_failed: 'ล้มเหลว',
+    language_tag: 'ภาษา',
+    provider_message_id: 'ID ข้อความของผู้ให้บริการ',
+    previous_page: 'ก่อนหน้า',
+    next_page: 'ถัดไป',
+  },
 };
 
 export default Object.freeze(connector_details);

@@ -8,7 +8,11 @@ import { decodeJwt } from 'jose';
 import ky, { HTTPError } from 'ky';
 
 import { oidcApi } from '#src/api/api.js';
-import { createApplication, deleteApplication } from '#src/api/application.js';
+import {
+  createApplication,
+  createApplicationWithSecret,
+  deleteApplication,
+} from '#src/api/application.js';
 import { deleteJwtCustomizer, deleteUser } from '#src/api/index.js';
 import { createResource, deleteResource } from '#src/api/resource.js';
 import { demoAppRedirectUri, logtoUrl } from '#src/constants.js';
@@ -66,7 +70,7 @@ describe('opaque user token lifecycle', () => {
     await deleteJwtCustomizer('access-token').catch(noop);
 
     const [createdApplication, createdPublicApplication, user] = await Promise.all([
-      createApplication('OIDC provider semantics', ApplicationType.Traditional, {
+      createApplicationWithSecret('OIDC provider semantics', ApplicationType.Traditional, {
         oidcClientMetadata: {
           redirectUris: [demoAppRedirectUri],
           postLogoutRedirectUris: [demoAppRedirectUri],
@@ -279,7 +283,7 @@ describe('opaque client-credentials revocation', () => {
   beforeAll(async () => {
     /* eslint-disable @silverhand/fp/no-mutation */
     [application, pool] = await Promise.all([
-      createApplication('Opaque client credentials', ApplicationType.MachineToMachine),
+      createApplicationWithSecret('Opaque client credentials', ApplicationType.MachineToMachine),
       createPool(assertEnv('DB_URL'), { interceptors: createInterceptorsPreset() }),
     ]);
     /* eslint-enable @silverhand/fp/no-mutation */
@@ -430,5 +434,92 @@ describe('refresh token rotation and reuse detection', () => {
     await expectOidcError(exchangeRefreshToken(leewayReplay.refresh_token), {
       error: 'invalid_grant',
     });
+  });
+});
+
+describe('suspended user refresh token rejection', () => {
+  const username = generateUsername();
+  const password = generatePassword();
+  /* eslint-disable @silverhand/fp/no-let */
+  let application: Application;
+  let pool: DatabasePool;
+  let userId = '';
+  /* eslint-enable @silverhand/fp/no-let */
+
+  beforeAll(async () => {
+    const [createdApplication, createdPool, user] = await Promise.all([
+      createApplication('OIDC suspended user semantics', ApplicationType.SPA, {
+        oidcClientMetadata: {
+          redirectUris: [demoAppRedirectUri],
+          postLogoutRedirectUris: [demoAppRedirectUri],
+        },
+      }),
+      createPool(assertEnv('DB_URL'), { interceptors: createInterceptorsPreset() }),
+      createUserByAdmin({ username, password }),
+      enableAllPasswordSignInMethods(),
+    ]);
+
+    /* eslint-disable @silverhand/fp/no-mutation */
+    application = createdApplication;
+    pool = createdPool;
+    userId = user.id;
+    /* eslint-enable @silverhand/fp/no-mutation */
+  });
+
+  afterAll(async () => {
+    await Promise.all([deleteApplication(application.id), deleteUser(userId), pool.end()]);
+  });
+
+  it('rejects a refresh token that survived suspension-time revocation', async () => {
+    const client = await initExperienceClient({
+      config: { appId: application.id },
+      redirectUri: demoAppRedirectUri,
+    });
+    await identifyUserWithUsernamePassword(client, username, password);
+    const { redirectTo } = await client.submitInteraction();
+    await expect(processSession(client, redirectTo)).resolves.toBe(userId);
+
+    const initialRefreshToken = await client.getRefreshToken();
+    assert(initialRefreshToken, new Error('Missing refresh token after code exchange'));
+
+    const exchangeRefreshToken = async (refreshToken: string) =>
+      oidcApi
+        .post('token', {
+          body: new URLSearchParams({
+            grant_type: 'refresh_token',
+            refresh_token: refreshToken,
+            client_id: application.id,
+          }),
+        })
+        .json<{ refresh_token: string }>();
+
+    // Baseline: the token works, and rotation leaves a fresh, unconsumed replacement.
+    const { refresh_token: rotatedRefreshToken } = await exchangeRefreshToken(initialRefreshToken);
+    assert(rotatedRefreshToken, new Error('Missing rotated refresh token'));
+
+    const setSuspended = async (isSuspended: boolean) =>
+      pool.query(sql`
+        update users set is_suspended = ${isSuspended}
+        where tenant_id = ${defaultTenantId} and id = ${userId}
+      `);
+
+    /**
+     * Suspending through the management API also revokes the user's tokens (`signOutUser`), so
+     * flip the flag directly instead — simulating a partial revocation failure where a refresh
+     * token survives. The surviving token must still be rejected by the suspension check in
+     * `findAccount`.
+     */
+    await setSuspended(true);
+
+    try {
+      await expectOidcError(exchangeRefreshToken(rotatedRefreshToken), { error: 'invalid_grant' });
+    } finally {
+      await setSuspended(false);
+    }
+
+    // The rejection consumed nothing: the same token works again after unsuspension, proving
+    // the failure above was caused by the suspension flag alone.
+    const { refresh_token: postUnsuspendToken } = await exchangeRefreshToken(rotatedRefreshToken);
+    expect(postUnsuspendToken).toBeTruthy();
   });
 });

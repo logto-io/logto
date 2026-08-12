@@ -17,6 +17,7 @@ const createAccountCenterFields = (
   profile: AccountCenterControlValue.Off,
   customData: AccountCenterControlValue.Off,
   session: AccountCenterControlValue.Off,
+  trustedDevice: AccountCenterControlValue.Off,
   ...overrides,
 });
 

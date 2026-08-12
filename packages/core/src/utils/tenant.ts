@@ -3,6 +3,11 @@ import { type UrlSet } from '@logto/shared';
 import { conditionalString, trySafe } from '@silverhand/essentials';
 import { type CommonQueryMethods } from '@silverhand/slonik';
 
+import {
+  invalidateWithGeneration,
+  snapshotGeneration,
+  type GuardedKeys,
+} from '#src/caches/generation.js';
 import { redisCache } from '#src/caches/index.js';
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import { createDomainsQueries } from '#src/queries/domains.js';
@@ -46,12 +51,28 @@ const matchPathBasedTenantId = (urlSet: UrlSet, url: URL) => {
   return urlSegments[found.pathname === '/' ? 1 : endpointSegments.length];
 };
 
-const cacheKey = 'custom-domain';
-const getDomainCacheKey = (url: URL | string) =>
-  `${cacheKey}:${typeof url === 'string' ? url : url.hostname}`;
+/**
+ * The marker gets its own prefix rather than a segment inside the value keyspace: the two
+ * prefixes diverge before the hostname is appended, so no hostname — whatever the `domains`
+ * column happens to hold — can spell a key belonging to the other.
+ */
+const getDomainKeys = (url: URL | string): GuardedKeys => {
+  const hostname = typeof url === 'string' ? url : url.hostname;
 
+  return {
+    value: `custom-domain:${hostname}`,
+    generation: `custom-domain-generation:${hostname}`,
+  };
+};
+
+/**
+ * Invalidate the cached mapping for the given custom domain after the mutation it reflects
+ * has been committed. See {@link invalidateWithGeneration} for the ordering guarantee it
+ * provides and the bounds it comes with, and note it requires callers to await it before
+ * returning to their own caller.
+ */
 export const clearCustomDomainCache = async (url: URL | string) => {
-  await trySafe(async () => redisCache.delete(getDomainCacheKey(url)));
+  await invalidateWithGeneration(redisCache, getDomainKeys(url));
 };
 
 /**
@@ -61,7 +82,16 @@ const getTenantIdFromCustomDomain = async (
   url: URL,
   pool: CommonQueryMethods
 ): Promise<string | undefined> => {
-  const cachedValue = await trySafe(async () => redisCache.get(getDomainCacheKey(url)));
+  const keys = getDomainKeys(url);
+  /**
+   * The snapshot only has to be taken before the database read starts, so it rides along with
+   * the value read instead of costing a second round trip on a path that runs per request.
+   * Snapshotting earlier observes a superset of the invalidations it otherwise would.
+   */
+  const [cachedValue, writeBackIfFresh] = await Promise.all([
+    trySafe(async () => redisCache.get(keys.value)),
+    snapshotGeneration(redisCache, keys),
+  ]);
 
   if (cachedValue) {
     return cachedValue;
@@ -71,11 +101,14 @@ const getTenantIdFromCustomDomain = async (
 
   const domain = await findActiveDomain(url.hostname);
 
-  if (domain?.tenantId) {
-    await trySafe(async () => redisCache.set(getDomainCacheKey(url), domain.tenantId));
+  // A missing mapping is left uncached, so probes for unknown hostnames cannot fill the store.
+  if (!domain?.tenantId) {
+    return;
   }
 
-  return domain?.tenantId;
+  await writeBackIfFresh(async () => redisCache.set(keys.value, domain.tenantId));
+
+  return domain.tenantId;
 };
 
 /**

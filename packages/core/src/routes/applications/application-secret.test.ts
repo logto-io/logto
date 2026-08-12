@@ -19,6 +19,12 @@ const mockApplicationSecret: ApplicationSecret = {
 };
 
 const findApplicationById = jest.fn(async (): Promise<Application> => mockProtectedApplication);
+const updateApplicationById = jest.fn(
+  async (_id: string, data: Partial<Application>): Promise<Application> => ({
+    ...mockApplication,
+    ...data,
+  })
+);
 const insert = jest.fn(async (data: Partial<ApplicationSecret>) => ({
   ...mockApplicationSecret,
   ...data,
@@ -35,6 +41,7 @@ const tenantContext = new MockTenant(
   {
     applications: {
       findApplicationById,
+      updateApplicationById,
     },
     applicationSecrets: {
       insert,
@@ -61,10 +68,25 @@ describe('application secret routes', () => {
 
   afterEach(() => {
     findApplicationById.mockClear();
+    updateApplicationById.mockClear();
     insert.mockClear();
     deleteByName.mockClear();
     update.mockClear();
     syncAppConfigsToRemote.mockClear();
+  });
+
+  it('DELETE /applications/:id/legacy-secret should omit the generated internal secret', async () => {
+    findApplicationById.mockResolvedValueOnce({ ...mockApplication, secret: 'legacy-secret' });
+
+    const response = await applicationSecretRequest.delete(
+      `/applications/${mockApplication.id}/legacy-secret`
+    );
+
+    expect(response.status).toEqual(200);
+    expect(response.body).not.toHaveProperty('secret');
+    expect(updateApplicationById).toHaveBeenCalledTimes(1);
+    expect(updateApplicationById.mock.calls[0]?.[0]).toBe(mockApplication.id);
+    expect(updateApplicationById.mock.calls[0]?.[1].secret).toMatch(/^#internal:/);
   });
 
   it('POST /applications/:id/secrets should resync protected app configs', async () => {

@@ -43,8 +43,12 @@ const isNonSkippableMfaPromptPolicy = (policy: MfaPolicy) =>
     policy
   );
 
-const signInExperienceResponseGuard = SignInExperiences.guard;
-const signInExperienceCreateGuard = SignInExperiences.createGuard;
+// DEV: MFA trusted devices
+const trustedDeviceOmitMask = EnvSet.values.isDevFeaturesEnabled
+  ? {}
+  : { trustedDevice: true as const };
+const signInExperienceResponseGuard = SignInExperiences.guard.omit(trustedDeviceOmitMask);
+const signInExperienceCreateGuard = SignInExperiences.createGuard.omit(trustedDeviceOmitMask);
 
 export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
   ...args: RouterInitArgs<T>

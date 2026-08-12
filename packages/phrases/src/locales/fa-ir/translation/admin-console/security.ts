@@ -164,9 +164,8 @@ const security = {
     custom_email_allowlist: {
       title: 'اجازه دادن به ایمیل‌های سفارشی',
       description:
-        'فقط آدرس‌های ایمیل، دامنه‌ها یا الگوهای wildcard منطبق را برای ثبت‌نام‌های جدید و ایمیل‌های تازه متصل‌شده مجاز کنید.',
-      placeholder:
-        'آدرس ایمیل، دامنه یا الگوی wildcard مجاز را وارد کنید (مثلاً bar@example.com، @example.com، foo*@example.com، *@example.com)',
+        'قوانینی اضافه کنید تا فقط دامنه‌های ایمیل، آدرس‌های ایمیل یا الگوهای wildcard مشخص برای ثبت‌نام‌های جدید و ایمیل‌های تازه متصل‌شده مجاز باشند. مثال‌ها: bar@example.com، @example.com، foo*@example.com، *@example.com. دامنه‌های gmail.com و googlemail.com معادل در نظر گرفته می‌شوند و نقطه‌ها در بخش محلی نادیده گرفته می‌شوند، بنابراین foo.bar@gmail.com با foobar@googlemail.com مطابقت دارد.',
+      placeholder: 'آدرس ایمیل، دامنه یا الگوی wildcard را وارد کنید',
       duplicate_error: 'آدرس ایمیل، دامنه یا الگوی wildcard قبلاً اضافه شده است',
       invalid_format_error:
         'باید یک آدرس ایمیل معتبر (bar@example.com)، دامنه (@example.com) یا الگوی wildcard ایمیل (foo*@example.com، *@example.com) باشد',
@@ -194,9 +193,8 @@ const security = {
     custom_email_address: {
       title: 'مسدود کردن آدرس‌های ایمیل سفارشی',
       description:
-        'قوانینی اضافه کنید تا دامنه‌های ایمیل، آدرس‌های ایمیل یا الگوهای آدرس ایمیل با وایلدکارد از ثبت‌نام یا اتصال از طریق رابط کاربری مسدود شوند.',
-      placeholder:
-        'آدرس ایمیل، دامنه یا الگوی آدرس ایمیل با وایلدکارد مسدود را وارد کنید (مثلاً bar@example.com، @example.com، foo*@example.com، *@example.com)',
+        'قوانینی اضافه کنید تا دامنه‌های ایمیل، آدرس‌های ایمیل یا الگوهای wildcard مشخص از ثبت‌نام یا اتصال از طریق رابط کاربری منع شوند. مثال‌ها: bar@example.com، @example.com، foo*@example.com، *@example.com. دامنه‌های gmail.com و googlemail.com معادل در نظر گرفته می‌شوند و نقطه‌ها در بخش محلی نادیده گرفته می‌شوند، بنابراین foo.bar@gmail.com با foobar@googlemail.com مطابقت دارد.',
+      placeholder: 'آدرس ایمیل، دامنه یا الگوی wildcard را وارد کنید',
       duplicate_error: 'آدرس ایمیل، دامنه یا الگوی آدرس ایمیل با وایلدکارد از قبل اضافه شده است',
       invalid_format_error:
         'باید آدرس ایمیل معتبر (bar@example.com)، دامنه (@example.com) یا الگوی آدرس ایمیل با وایلدکارد (foo*@example.com، *@example.com) باشد',

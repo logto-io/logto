@@ -2,6 +2,9 @@ import { ReservedResource } from '@logto/core-kit';
 import { type MissingResourceScopes, type Scope, missingResourceScopesGuard } from '@logto/schemas';
 import { errors } from 'oidc-provider';
 
+import { type EnvSet } from '#src/env-set/index.js';
+import { isCimdClient } from '#src/oidc/cimd/index.js';
+import { filterResourceScopesForTheCimdClient } from '#src/oidc/cimd/resource-scopes.js';
 import {
   filterResourceScopesForTheThirdPartyApplication,
   findResourceScopes,
@@ -84,6 +87,32 @@ const parseMissingResourceScopesInfo = async (
 };
 
 /**
+ * Build the resource scopes to reject on the grant — the requested-but-not-granted remainder of
+ * each group.
+ *
+ * An empty rejection is cleaned off the grant, so an all-ineligible group would stay "missing"
+ * and reopen consent forever — reject it whole for a CIMD client, where the rejection dies with
+ * the per-authorization grant; a registered client's long-lived grant must stay re-askable for
+ * later eligibility changes.
+ */
+export const buildResourceScopesToReject = (
+  allMissingResourceScopes: Record<string, string[]>,
+  resourceScopesToGrant: Record<string, string[]>,
+  cimd: boolean
+): Record<string, string[]> =>
+  Object.fromEntries(
+    Object.entries(allMissingResourceScopes).map(([resourceIndicator, scopes]) => {
+      const resource = resourceScopesToGrant[resourceIndicator];
+
+      if (!resource) {
+        return [resourceIndicator, cimd ? scopes : []];
+      }
+
+      return [resourceIndicator, scopes.filter((scope) => !resource.includes(scope))];
+    })
+  );
+
+/**
  * The missingResourceScopes in the prompt details are from `getResourceServerInfo`,
  * which contains resource scopes and organization resource scopes.
  * We need to separate the organization resource scopes from the resource scopes.
@@ -91,6 +120,7 @@ const parseMissingResourceScopesInfo = async (
  */
 export const filterAndParseMissingResourceScopes = async ({
   resourceScopes,
+  envSet,
   queries,
   libraries,
   userId,
@@ -98,6 +128,7 @@ export const filterAndParseMissingResourceScopes = async ({
   organizationId,
 }: {
   resourceScopes: Record<string, string[]>;
+  envSet: EnvSet;
   queries: Queries;
   libraries: Libraries;
   userId: string;
@@ -118,6 +149,27 @@ export const filterAndParseMissingResourceScopes = async ({
             findFromOrganizations: Boolean(organizationId),
             organizationId,
           });
+
+          if (isCimdClient(envSet, applicationId)) {
+            /**
+             * CIMD clients are unregistered: the tenant-wide ceiling replaces the
+             * per-application consent configuration the third-party filter reads.
+             */
+            const filteredScopes = await filterResourceScopesForTheCimdClient(
+              queries,
+              resourceIndicator,
+              scopes,
+              {
+                includeOrganizationResourceScopes: Boolean(organizationId),
+                includeResourceScopes: !organizationId,
+              }
+            );
+
+            return [
+              resourceIndicator,
+              missingScopes.filter((scope) => filteredScopes.some(({ name }) => name === scope)),
+            ];
+          }
 
           const isThirdPartyApp = await isThirdPartyApplication(queries, applicationId);
 

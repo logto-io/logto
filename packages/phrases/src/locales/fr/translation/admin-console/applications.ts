@@ -80,6 +80,39 @@ const applications = {
     "Logto utilise une entité d'application pour OIDC pour aider aux tâches telles que l'identification de vos applications, la gestion de la connexion et la création de journaux d'audit",
   third_party_application_placeholder_description:
     "Utilisez Logto comme fournisseur d'identité pour offrir une autorisation OAuth aux services tiers. \n Inclut un écran de consentement utilisateur intégré pour l'accès aux ressources. <a>En savoir plus</a>",
+  dynamic_app: {
+    title: 'Application dynamique',
+    subtitle: 'CIMD',
+    description:
+      "L'application dynamique permet aux clients OAuth de se connecter sans enregistrement préalable.",
+    settings_description:
+      "L'application dynamique permet aux clients OAuth de se connecter sans enregistrement préalable. Utilise la spécification OAuth Client ID Metadata Document (CIMD).",
+    app_id_placeholder: 'Fourni dynamiquement par chaque client',
+    enable_confirm_modal: {
+      title: "Activer l'accès dynamique des clients ?",
+      content:
+        "Tout client OAuth disposant d'une URL d'ID client HTTPS publique et valide peut lancer l'autorisation pour ce locataire sans enregistrement préalable. L'accès reste limité par vos permissions maximales et le consentement de l'utilisateur.",
+    },
+    enabled: 'Application dynamique activée avec succès.',
+    disable_confirm_modal: {
+      title: "Désactiver l'application dynamique ?",
+      content:
+        "Les clients CIMD ne pourront plus initier de nouvelles demandes d'autorisation. Les autorisations existantes sont conservées et les jetons d'accès déjà émis peuvent rester valides jusqu'à leur expiration.",
+    },
+    disabled: 'Application dynamique désactivée avec succès.',
+    permissions: {
+      user_title: 'Utilisateur',
+      user_description:
+        'Sélectionnez les permissions demandées par les clients OAuth pour accéder à des données utilisateur spécifiques.',
+      grant_user_level_permissions: 'Accorder les permissions utilisateur',
+      organization_title: 'Organisation',
+      organization_description:
+        "Sélectionnez les permissions demandées par les clients OAuth pour accéder à des données d'organisation spécifiques.",
+      grant_organization_level_permissions: "Accorder les permissions d'organisation",
+      permission_delete_confirm:
+        "Cette action retirera la permission de l'application dynamique, empêchant les clients OAuth de demander l'autorisation de l'utilisateur pour celle-ci. Êtes-vous sûr de vouloir continuer ?",
+    },
+  },
   guide: {
     third_party: {
       title: 'Intégrer une application tierce',

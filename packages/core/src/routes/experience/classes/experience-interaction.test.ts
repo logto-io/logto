@@ -51,6 +51,7 @@ const userLibraries = {
   generateUserId: jest.fn().mockResolvedValue('uid'),
   insertUser: jest.fn(async (user: CreateUser): Promise<InsertUserResult> => [user as User]),
   provisionOrganizations: jest.fn().mockResolvedValue([]),
+  provisionOrganizationsByEmailDomain: jest.fn().mockResolvedValue([]),
 };
 const ssoConnectors = {
   getAvailableSsoConnectors: jest.fn().mockResolvedValue([]),
@@ -84,6 +85,7 @@ const mockJwtCustomizerUserContext: JwtCustomizerUserContext = {
   updatedAt: mockUser.updatedAt,
   profile: mockUser.profile,
   applicationId: mockUser.applicationId,
+  cimdClientId: mockUser.cimdClientId,
   isSuspended: mockUser.isSuspended,
   hasPassword: true,
   ssoIdentities: [],
@@ -289,10 +291,10 @@ describe('ExperienceInteraction class', () => {
         signInMode: SignInMode.SignIn,
       });
 
-      expect(userLibraries.provisionOrganizations).toHaveBeenCalledWith({
-        userId: 'uid',
-        email: mockEmail,
-      });
+      expect(userLibraries.provisionOrganizationsByEmailDomain).toHaveBeenCalledWith(
+        'uid',
+        mockEmail
+      );
     });
   });
 
@@ -344,16 +346,6 @@ describe('ExperienceInteraction class', () => {
       const { experienceInteraction, runAction, getUserContext } = createSignInInteraction({
         interactionEvent: InteractionEvent.Register,
       });
-
-      await experienceInteraction.submit();
-
-      expect(getUserContext).not.toHaveBeenCalled();
-      expect(runAction).not.toHaveBeenCalled();
-    });
-
-    it('does not run PostSignIn action when dev features are disabled', async () => {
-      setDevFeaturesEnabled(false);
-      const { experienceInteraction, runAction, getUserContext } = createSignInInteraction();
 
       await experienceInteraction.submit();
 

@@ -28,12 +28,12 @@ const methodToVerb = Object.freeze({
 type RouteDictionary = Record<`${OpenAPIV3.HttpMethods} ${string}`, string>;
 
 const devFeatureCustomRoutes: Readonly<RouteDictionary> = Object.freeze({
-  'get /configs/actions': 'ListActions',
-  'put /configs/actions/:actionType': 'UpsertAction',
-  'patch /configs/actions/:actionType': 'UpdateAction',
-  'get /configs/actions/:actionType': 'GetAction',
-  'delete /configs/actions/:actionType': 'DeleteAction',
-  'post /configs/actions/test': 'TestAction',
+  // DEV: CIMD (client ID metadata document) support
+  'get /configs/cimd': 'GetCimdConfig',
+  'patch /configs/cimd': 'UpdateCimdConfig',
+  'get /cimd/user-consent-scopes': 'ListCimdUserConsentScopes',
+  'post /cimd/user-consent-scopes': 'AssignCimdUserConsentScopes',
+  'delete /cimd/user-consent-scopes/:scopeType/:scopeId': 'DeleteCimdUserConsentScope',
 });
 
 export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
@@ -116,6 +116,12 @@ export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   'get /configs/oidc/session': 'GetOidcSessionConfig',
   'patch /configs/oidc/session': 'UpdateOidcSessionConfig',
   // Actions
+  'get /configs/actions': 'ListActions',
+  'put /configs/actions/:actionType': 'UpsertAction',
+  'patch /configs/actions/:actionType': 'UpdateAction',
+  'get /configs/actions/:actionType': 'GetAction',
+  'delete /configs/actions/:actionType': 'DeleteAction',
+  'post /configs/actions/test': 'TestAction',
   ...(EnvSet.values.isDevFeaturesEnabled ? devFeatureCustomRoutes : {}),
 } satisfies RouteDictionary); // Key assertion doesn't work without `satisfies`
 

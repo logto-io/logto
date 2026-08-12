@@ -24,7 +24,9 @@ import { captureEvent } from '../../utils/posthog.js';
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
 import ssoConnectorIdpInitiatedAuthConfigRoutes from './idp-initiated-auth-config.js';
+import samlSsoConnectorSigningKeyRoutes from './signing-key.js';
 import {
+  assertActiveSigningKeyForSignAuthnRequest,
   fetchConnectorProviderDetails,
   parseConnectorConfig,
   parseFactoryDetail,
@@ -39,7 +41,11 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
     router,
     {
       id: tenantId,
-      queries: { ssoConnectors, secrets },
+      queries: {
+        ssoConnectors,
+        secrets,
+        samlSsoConnectorSigningKeys: { findActiveSigningKeyBySsoConnectorId },
+      },
       libraries: {
         quota,
         ssoConnectors: { getSsoConnectorById, getSsoConnectors },
@@ -107,6 +113,9 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
 
       // Validate the connector config if it's provided
       const parsedConfig = config && parseConnectorConfig(providerName, config);
+
+      // A new connector has no signing keys, so an enabled signAuthnRequest is always rejected.
+      await assertActiveSigningKeyForSignAuthnRequest(parsedConfig);
 
       // Validate the connector name is unique
       if (connectorName) {
@@ -329,6 +338,11 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
         await secrets.deleteTokenSetSecretsByEnterpriseSsoConnectorId(id);
       }
 
+      // Enabling signed AuthnRequest requires an active signing key (validated before persisting).
+      await assertActiveSigningKeyForSignAuthnRequest(parsedConfig, async () =>
+        findActiveSigningKeyBySsoConnectorId(id)
+      );
+
       // Check if there's any valid update
       const hasValidUpdate = parsedConfig ?? domains ?? Object.keys(rest).length > 0;
 
@@ -359,7 +373,9 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
     }
   );
 
-  // TODO: @simeng Remove this when IdP initiated SAML SSO is ready for production
+  samlSsoConnectorSigningKeyRoutes(...args);
+
+  // TODO: @simeng Remove when IdP initiated SSO is ready for production
   if (EnvSet.values.isDevFeaturesEnabled) {
     ssoConnectorIdpInitiatedAuthConfigRoutes(...args);
   }

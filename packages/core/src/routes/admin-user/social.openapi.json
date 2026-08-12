@@ -33,7 +33,19 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "The identity is deleted from the user."
+            "description": "The identity is deleted from the user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "cimdClientId": {
+                      "description": "Dev feature. The identifier of the CIMD (client ID metadata document) client from the user's first consent. `null` unless the user's first consent was granted to a CIMD client. Mutually exclusive with `applicationId`.",
+                      "x-logto-dev-feature": true
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Delete social identity from user",

@@ -23,6 +23,7 @@ import { invalidConfigErrorCode, invalidMetadataErrorCode } from '../config';
 
 import SamlAttributeMapping from './SamlAttributeMapping';
 import SamlMetadataForm from './SamlMetadataForm';
+import SamlSigningKeySection from './SamlSigningKeySection';
 import SamlConnectorSpInfo from './ServiceProviderInfo/SamlConnectorSpInfo';
 import styles from './index.module.scss';
 
@@ -52,10 +53,14 @@ function SamlConnectorForm({ isDeleted, data, onUpdated }: Props) {
   // Guard the config data
   const samlConnectorConfig = useMemo(() => {
     const result = samlConnectorConfigGuard.safeParse(config);
-    const { success } = result;
-    const guardedConfig = success ? result.data : undefined;
 
-    return guardedConfig;
+    if (!result.success) {
+      return;
+    }
+
+    // Normalize the toggle to a real boolean: with an absent field the switch would compare
+    // `false` against `undefined` after toggling on and off again, leaving the form stuck dirty.
+    return { ...result.data, signAuthnRequest: Boolean(result.data.signAuthnRequest) };
   }, [config]);
 
   // Guard the provider config data
@@ -131,6 +136,7 @@ function SamlConnectorForm({ isDeleted, data, onUpdated }: Props) {
           }}
         >
           <SamlConnectorSpInfo samlProviderConfig={samlProviderConfig} />
+          <SamlSigningKeySection connectorId={connectorId} />
         </FormCard>
         <FormCard
           title="enterprise_sso_details.attribute_mapping_title"

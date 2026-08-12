@@ -21,6 +21,7 @@ import adminUserRoutes from './admin-user/index.js';
 import applicationRoutes from './applications/application.js';
 import authnRoutes from './authn.js';
 import captchaProviderRoutes from './captcha-provider/index.js';
+import cimdRoutes from './cimd.js';
 import connectorRoutes from './connector/index.js';
 import customPhraseRoutes from './custom-phrase.js';
 import customProfileFieldsRoutes from './custom-profile-fields.js';
@@ -99,6 +100,7 @@ const createRouters = (tenant: TenantContext) => {
   sentinelActivitiesRoutes(managementRouter, tenant);
   customProfileFieldsRoutes(managementRouter, tenant);
   secretsRoutes(managementRouter, tenant);
+  cimdRoutes(managementRouter, tenant);
 
   // General anonymous router for publicly accessible APIs
   const anonymousRouter: AnonymousRouter = new Router();

@@ -58,7 +58,10 @@ function CreateTenant() {
   const { prependTenant } = useContext(TenantsContext);
   const theme = useTheme();
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { update } = useUserOnboardingData();
+  const {
+    data: { isOnboardingDone },
+    update,
+  } = useUserOnboardingData();
   const parseEmailOptions = useCallback(
     (values: InviteeEmailItem[]) => {
       const validEmails = values.filter(({ value }) => emailRegEx.test(value));
@@ -95,22 +98,25 @@ function CreateTenant() {
         prependTenant(newTenant);
         toast.success(t('tenants.create_modal.tenant_created'));
 
-        const { source } = hearAboutUs;
-        const sourceDetail = conditional(
-          source && sourcesWithDetail.has(source) && hearAboutUs.detail?.trim()
-        );
-        postHog.capture('console:user_source_submit', {
-          source: source ?? 'skipped',
-          ...conditional(sourceDetail && { source_detail: sourceDetail }),
-          ...conditional(
-            source && {
-              $set_once: {
-                self_reported_source: source,
-                ...conditional(sourceDetail && { self_reported_source_detail: sourceDetail }),
-              },
-            }
-          ),
-        });
+        // Only report the questionnaire when it was shown (i.e., the user hasn't answered before).
+        if (!isOnboardingDone) {
+          const { source } = hearAboutUs;
+          const sourceDetail = conditional(
+            source && sourcesWithDetail.has(source) && hearAboutUs.detail?.trim()
+          );
+          postHog.capture('console:user_source_submit', {
+            source: source ?? 'skipped',
+            ...conditional(sourceDetail && { source_detail: sourceDetail }),
+            ...conditional(
+              source && {
+                $set_once: {
+                  self_reported_source: source,
+                  ...conditional(sourceDetail && { self_reported_source_detail: sourceDetail }),
+                },
+              }
+            ),
+          });
+        }
 
         const tenantCloudApi = createTenantApi({
           hideErrorToast: true,
@@ -135,7 +141,9 @@ function CreateTenant() {
             toast.error(t('tenants.create_modal.invitation_failed', { duration: 5 }));
           }
         }
-        await update({ isOnboardingDone: true });
+        if (!isOnboardingDone) {
+          await update({ isOnboardingDone: true });
+        }
       }
     )
   );
@@ -210,13 +218,15 @@ function CreateTenant() {
                 )}
               />
             </FormField>
-            <Controller
-              name="hearAboutUs"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <HearAboutUs value={value} isDisabled={isSubmitting} onChange={onChange} />
-              )}
-            />
+            {!isOnboardingDone && (
+              <Controller
+                name="hearAboutUs"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <HearAboutUs value={value} isDisabled={isSubmitting} onChange={onChange} />
+                )}
+              />
+            )}
           </FormProvider>
         </div>
       </OverlayScrollbar>

@@ -138,6 +138,21 @@ describe('validateEmailAgainstBlocklistPolicy', () => {
     }
   });
 
+  it('should throw if a dotted Google Mail alias matches a custom Gmail blocklist item', async () => {
+    const email = 'foo.bar@googlemail.com';
+    const policy: EmailBlocklistPolicy = {
+      customBlocklist: ['foobar@gmail.com'],
+    };
+
+    await expect(validateEmailAgainstBlocklistPolicy(policy, email)).rejects.toMatchError(
+      new RequestError({
+        code: 'session.email_blocklist.email_not_allowed',
+        status: 422,
+        email,
+      })
+    );
+  });
+
   it('should throw if the email address does not match a non-empty custom allowlist', async () => {
     const email = 'test@foo.com';
     const policy: EmailBlocklistPolicy = {
@@ -164,6 +179,16 @@ describe('validateEmailAgainstBlocklistPolicy', () => {
     };
 
     await expect(validateEmailAgainstBlocklistPolicy(policy, email)).resolves.not.toThrow();
+  });
+
+  it('should allow a dotted Gmail alias that matches a custom Google Mail allowlist item', async () => {
+    const policy: EmailBlocklistPolicy = {
+      customAllowlist: ['foobar@googlemail.com'],
+    };
+
+    await expect(
+      validateEmailAgainstBlocklistPolicy(policy, 'foo.bar@gmail.com')
+    ).resolves.not.toThrow();
   });
 
   it('should still throw if the email address matches both custom allowlist and blocklist', async () => {

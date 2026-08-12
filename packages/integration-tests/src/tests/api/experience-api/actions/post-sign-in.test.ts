@@ -14,12 +14,12 @@ import {
   enableMandatoryMfaWithTotp,
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
-import { devFeatureTest, generateName, generatePassword, generateUsername } from '#src/utils.js';
+import { generateName, generatePassword, generateUsername } from '#src/utils.js';
 
 const p1Key = LogtoActionKey.PostFirstFactorVerification;
 const p2Key = LogtoActionKey.PostSignIn;
 
-devFeatureTest.describe('action: post sign-in composition', () => {
+describe('action: post sign-in composition', () => {
   beforeAll(async () => {
     await enableAllPasswordSignInMethods({
       identifiers: [SignInIdentifier.Username],

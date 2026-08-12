@@ -8,6 +8,8 @@ import DataTransferBox from '@/ds-components/DataTransferBox';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import TabWrapper from '@/ds-components/TabWrapper';
 
+import { type PermissionsPhraseGroup } from '../../types';
+
 import { organizationLevelPermissionsTab, userLevelPermissionsTabs } from './constants';
 import { ScopeLevel } from './type';
 import useApplicationScopesAssignment from './use-application-scopes-assignment';
@@ -15,15 +17,23 @@ import useApplicationScopesAssignment from './use-application-scopes-assignment'
 type Props = {
   readonly isOpen: boolean;
   readonly onClose: () => void;
-  readonly applicationId: string;
+  /** The user consent scopes API path, without a trailing slash. */
+  readonly scopesEndpoint: string;
   readonly scopeLevel: ScopeLevel;
+  readonly phraseGroup: PermissionsPhraseGroup;
 };
 
-function ApplicationScopesAssignmentModal({ isOpen, onClose, applicationId, scopeLevel }: Props) {
+function ApplicationScopesAssignmentModal({
+  isOpen,
+  onClose,
+  scopesEndpoint,
+  scopeLevel,
+  phraseGroup,
+}: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const { activeTab, setActiveTab, scopesAssignment, clearSelectedData, onSubmit, isLoading } =
-    useApplicationScopesAssignment(applicationId, scopeLevel);
+    useApplicationScopesAssignment(scopesEndpoint, scopeLevel);
 
   const onCloseHandler = useCallback(() => {
     onClose();
@@ -76,11 +86,11 @@ function ApplicationScopesAssignmentModal({ isOpen, onClose, applicationId, scop
     const scopeLevelPhrase = scopeLevel === ScopeLevel.User ? 'user' : 'organization';
 
     return {
-      title: `application_details.permissions.grant_${scopeLevelPhrase}_level_permissions`,
-      subtitle: `application_details.permissions.${scopeLevelPhrase}_description`,
+      title: `${phraseGroup}.grant_${scopeLevelPhrase}_level_permissions`,
+      subtitle: `${phraseGroup}.${scopeLevelPhrase}_description`,
       saveButton: 'general.save',
     };
-  }, [scopeLevel]);
+  }, [phraseGroup, scopeLevel]);
 
   return (
     <ConfirmModal

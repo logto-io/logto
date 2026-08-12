@@ -1,10 +1,5 @@
-import { LogtoActionKey, type LogtoAction } from '@logto/schemas';
+import { LogtoActionKey, type LogtoAction, type SigningKeyRotationState } from '@logto/schemas';
 import { ConsoleLog } from '@logto/shared';
-
-import {
-  unwrapActionScriptFromLegacyRunner,
-  wrapActionScriptForLegacyRunner,
-} from '#src/utils/action-script-compatibility.js';
 
 import { createLogtoConfigLibrary } from './logto-config.js';
 
@@ -15,13 +10,18 @@ const queryUpsertAction = jest.fn(async (key: LogtoActionKey, value: LogtoAction
   key,
   value,
 }));
+const getSigningKeyRotationState = jest.fn<Promise<SigningKeyRotationState | undefined>, never[]>();
+const poolTransaction = jest.fn();
 
 const createLibrary = () =>
   createLogtoConfigLibrary({
     logtoConfigs: {
       getRowsByKeys,
       upsertAction: queryUpsertAction,
+      getSigningKeyRotationState,
     },
+    pool: { transaction: poolTransaction },
+    wellKnownCache: {},
   } as unknown as Parameters<typeof createLogtoConfigLibrary>[0]);
 
 const action: LogtoAction = {
@@ -33,105 +33,121 @@ const action: LogtoAction = {
   },
 };
 
-describe('Logto config Action compatibility', () => {
+describe('Logto config Action', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('keeps repeated write and read cycles idempotent', async () => {
+  it('persists and returns Action scripts unchanged', async () => {
     const library = createLibrary();
-    const firstWrite = await library.upsertAction(LogtoActionKey.PostSignIn, action);
-    const firstPersisted = queryUpsertAction.mock.calls[0]?.[1];
+    const write = await library.upsertAction(LogtoActionKey.PostSignIn, action);
 
-    expect(firstWrite.value).toEqual(action);
-    expect(firstPersisted).toBeDefined();
-    if (!firstPersisted) {
-      throw new Error('Expected an Action config to be persisted');
-    }
-    expect(firstPersisted.script).not.toBe(action.script);
-    expect(unwrapActionScriptFromLegacyRunner(firstPersisted.script)).toBe(action.script);
+    expect(write.value).toEqual(action);
+    expect(queryUpsertAction).toHaveBeenCalledWith(LogtoActionKey.PostSignIn, action);
 
     getRowsByKeys.mockResolvedValueOnce({
-      rows: [{ key: LogtoActionKey.PostSignIn, value: firstPersisted }],
-    });
-    const readAfterFirstWrite = await library.getAction(LogtoActionKey.PostSignIn);
-
-    expect(readAfterFirstWrite).toEqual(action);
-
-    const secondWrite = await library.upsertAction(LogtoActionKey.PostSignIn, readAfterFirstWrite);
-    const secondPersisted = queryUpsertAction.mock.calls[1]?.[1];
-
-    expect(secondWrite.value).toEqual(action);
-    expect(secondPersisted).toEqual(firstPersisted);
-  });
-
-  it('returns existing unwrapped legacy scripts unchanged', async () => {
-    const library = createLibrary();
-    const legacyAction: LogtoAction = {
-      ...action,
-      script: `const runInlineHook = () => ({ action: 'continue' });`,
-    };
-
-    getRowsByKeys.mockResolvedValueOnce({
-      rows: [{ key: LogtoActionKey.PostSignIn, value: legacyAction }],
+      rows: [{ key: LogtoActionKey.PostSignIn, value: action }],
     });
 
-    await expect(library.getAction(LogtoActionKey.PostSignIn)).resolves.toEqual(legacyAction);
+    await expect(library.getAction(LogtoActionKey.PostSignIn)).resolves.toEqual(action);
   });
 
-  it.each([
-    ['keeps the original script when the patch omits it', { enabled: false }, action.script],
-    [
-      'persists a replacement script once',
-      { script: `function runAction() { return { action: 'continue' }; }` },
-      `function runAction() { return { action: 'continue' }; }`,
-    ],
-  ])('%s', async (_name, patch, expectedScript) => {
+  it('lists Actions without transforming scripts', async () => {
     const library = createLibrary();
-    const persistedAction: LogtoAction = {
+    const anotherAction: LogtoAction = {
       ...action,
-      script: wrapActionScriptForLegacyRunner(action.script),
-    };
-
-    getRowsByKeys.mockResolvedValueOnce({
-      rows: [{ key: LogtoActionKey.PostSignIn, value: persistedAction }],
-    });
-
-    const updatedAction = await library.updateAction(LogtoActionKey.PostSignIn, patch);
-    const updatedPersistedAction = queryUpsertAction.mock.calls[0]?.[1];
-
-    expect(updatedAction.script).toBe(expectedScript);
-    expect(updatedPersistedAction).toBeDefined();
-    if (!updatedPersistedAction) {
-      throw new Error('Expected the updated Action config to be persisted');
-    }
-    expect(unwrapActionScriptFromLegacyRunner(updatedPersistedAction.script)).toBe(expectedScript);
-    expect(wrapActionScriptForLegacyRunner(updatedPersistedAction.script)).toBe(
-      updatedPersistedAction.script
-    );
-  });
-
-  it('unwraps only persisted compatibility scripts when listing Actions', async () => {
-    const library = createLibrary();
-    const legacyAction: LogtoAction = {
-      ...action,
-      script: `function runInlineHook() { return { action: 'continue' }; }`,
-    };
-    const persistedAction: LogtoAction = {
-      ...action,
-      script: wrapActionScriptForLegacyRunner(action.script),
+      script: `function runAction() { return { action: 'continue' }; }`,
     };
 
     getRowsByKeys.mockResolvedValueOnce({
       rows: [
-        { key: LogtoActionKey.PostFirstFactorVerification, value: legacyAction },
-        { key: LogtoActionKey.PostSignIn, value: persistedAction },
+        { key: LogtoActionKey.PostFirstFactorVerification, value: anotherAction },
+        { key: LogtoActionKey.PostSignIn, value: action },
       ],
     });
 
     await expect(library.getActions(new ConsoleLog())).resolves.toEqual({
-      [LogtoActionKey.PostFirstFactorVerification]: legacyAction,
+      [LogtoActionKey.PostFirstFactorVerification]: anotherAction,
       [LogtoActionKey.PostSignIn]: action,
     });
+  });
+
+  it('merges Action patches and persists the resulting script', async () => {
+    const library = createLibrary();
+    const replacementScript = `function runAction() { return { action: 'continue' }; }`;
+
+    getRowsByKeys.mockResolvedValueOnce({
+      rows: [{ key: LogtoActionKey.PostSignIn, value: action }],
+    });
+
+    const updatedAction = await library.updateAction(LogtoActionKey.PostSignIn, {
+      script: replacementScript,
+    });
+
+    expect(updatedAction.script).toBe(replacementScript);
+    expect(queryUpsertAction).toHaveBeenCalledWith(LogtoActionKey.PostSignIn, {
+      ...action,
+      script: replacementScript,
+    });
+  });
+
+  it('preserves the existing script when the Action patch omits script', async () => {
+    const library = createLibrary();
+
+    getRowsByKeys.mockResolvedValueOnce({
+      rows: [{ key: LogtoActionKey.PostSignIn, value: action }],
+    });
+
+    const updatedAction = await library.updateAction(LogtoActionKey.PostSignIn, {
+      enabled: false,
+    });
+
+    expect(updatedAction).toEqual({
+      ...action,
+      enabled: false,
+    });
+    expect(queryUpsertAction).toHaveBeenCalledWith(LogtoActionKey.PostSignIn, {
+      ...action,
+      enabled: false,
+    });
+  });
+});
+
+describe('promoteScheduledSigningKeyRotation', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('skips the locking transaction when no rotation is scheduled', async () => {
+    // eslint-disable-next-line unicorn/no-useless-undefined -- undefined is the query's no-row result under test
+    getSigningKeyRotationState.mockResolvedValueOnce(undefined);
+
+    await createLibrary().promoteScheduledSigningKeyRotation();
+
+    expect(poolTransaction).not.toHaveBeenCalled();
+  });
+
+  it('skips the locking transaction when the rotation state has no scheduled time', async () => {
+    getSigningKeyRotationState.mockResolvedValueOnce({ tenantCacheExpiresAt: Date.now() });
+
+    await createLibrary().promoteScheduledSigningKeyRotation();
+
+    expect(poolTransaction).not.toHaveBeenCalled();
+  });
+
+  it('skips the locking transaction when the scheduled rotation is in the future', async () => {
+    getSigningKeyRotationState.mockResolvedValueOnce({ signingKeyRotationAt: Date.now() + 60_000 });
+
+    await createLibrary().promoteScheduledSigningKeyRotation();
+
+    expect(poolTransaction).not.toHaveBeenCalled();
+  });
+
+  it('opens the locking transaction when a scheduled rotation is due', async () => {
+    getSigningKeyRotationState.mockResolvedValueOnce({ signingKeyRotationAt: Date.now() - 60_000 });
+
+    await createLibrary().promoteScheduledSigningKeyRotation();
+
+    expect(poolTransaction).toHaveBeenCalledTimes(1);
   });
 });

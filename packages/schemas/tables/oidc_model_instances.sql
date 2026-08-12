@@ -42,6 +42,11 @@ create index oidc_model_instances__grant_payload_account_id_expires_at
   on oidc_model_instances (tenant_id, (payload->>'accountId'), expires_at)
   WHERE model_name = 'Grant';
 
+/* Partial on payload key existence so rows without accountId (e.g. client credentials tokens) stay out of the index. The parameter-free predicate stays provable under generic query plans, but matching queries must include the payload ? 'accountId' clause. */
+create index oidc_model_instances__model_name_payload_account_id_partial
+  on oidc_model_instances (tenant_id, model_name, (payload->>'accountId'))
+  where payload ? 'accountId';
+
 alter table oidc_model_instances set (
   autovacuum_vacuum_scale_factor = 0.05,
   autovacuum_analyze_scale_factor = 0.02,

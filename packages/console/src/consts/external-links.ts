@@ -45,6 +45,8 @@ export const integrateLogto = '/integrate-logto';
 export const applicationDataStructure = '/integrate-logto/application-data-structure';
 export const thirdPartyApp =
   '/integrate-logto/third-party-applications/oidc-oauth-third-party-applications';
+/** The page is not published yet, it ships together with the dynamic app (CIMD) feature. */
+export const dynamicApp = '/integrate-logto/third-party-applications/dynamic-apps';
 export const protectedApp = '/integrate-logto/protected-app';
 export const protectedAppLocalDev = '/integrate-logto/protected-app#local-development';
 export const protectOriginServer = '/integrate-logto/protected-app#protect-your-origin-server';

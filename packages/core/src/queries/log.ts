@@ -21,9 +21,14 @@ type AllowedKeyPrefix = AuditLogPrefix | WebhookLogPrefix;
 type LogCondition = {
   logKey?: string;
   payload?: { applicationId?: string; userId?: string; hookId?: string };
-  /** Exclusive lower bound on `createdAt`, in unix milliseconds. */
+  /** Inclusive lower bound on `createdAt`, in unix milliseconds. */
   startTime?: number;
-  /** Exclusive upper bound on `createdAt`, in unix milliseconds. */
+  /**
+   * Inclusive upper bound on `createdAt`, in unix milliseconds. Internally the
+   * SQL adds 1ms so that rows with sub-millisecond precision (PostgreSQL stores
+   * timestamps at microsecond granularity) whose displayed `createdAt` rounds
+   * to this value are not excluded.
+   */
   endTime?: number;
   includeKeyPrefix?: AllowedKeyPrefix[];
 };
@@ -65,10 +70,10 @@ const buildLogConditionSql = (logCondition: LogCondition) =>
       // falsy and would silently drop the filter.
       startTime === undefined
         ? sql``
-        : sql`${fields.createdAt} > to_timestamp(${startTime}::double precision / 1000)`,
+        : sql`${fields.createdAt} >= to_timestamp(${startTime}::double precision / 1000)`,
       endTime === undefined
         ? sql``
-        : sql`${fields.createdAt} < to_timestamp(${endTime}::double precision / 1000)`,
+        : sql`${fields.createdAt} < to_timestamp(${endTime}::double precision / 1000) + interval '1 millisecond'`,
     ].filter(({ sql }) => sql);
 
     return subConditions.length > 0 ? sql`where ${sql.join(subConditions, sql` and `)}` : sql``;

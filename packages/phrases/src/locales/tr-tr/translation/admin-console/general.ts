@@ -27,6 +27,7 @@ const general = {
   set_up: 'Kur',
   customize: 'Özelleştir',
   enable: 'Etkinleştir',
+  disable: 'Devre dışı bırak',
   reminder: 'Hatırlatıcı',
   edit: 'Düzenle',
   delete: 'Sil',

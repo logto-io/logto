@@ -3,7 +3,11 @@ import { type OpenAPIV3 } from 'openapi-types';
 import { EnvSet } from '#src/env-set/index.js';
 import { type DeepPartial } from '#src/test-utils/tenant.js';
 
-import { devFeatureSchemaExtension, removeUnnecessaryOperations } from './general.js';
+import {
+  devFeatureSchemaExtension,
+  removeDevFeatureSchemaProperties,
+  removeUnnecessaryOperations,
+} from './general.js';
 
 const originalIsCloud = EnvSet.values.isCloud;
 const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
@@ -78,7 +82,8 @@ describe('swagger general utils', () => {
   it('should remove dev feature schema properties when dev features are disabled', () => {
     setDevFeaturesEnabled(false);
 
-    const document = removeUnnecessaryOperations(createDocument());
+    const document = createDocument();
+    removeDevFeatureSchemaProperties(document);
 
     expect(document).toMatchObject({
       paths: {
@@ -109,7 +114,8 @@ describe('swagger general utils', () => {
   it('should keep dev feature schema properties without exposing the internal marker when dev features are enabled', () => {
     setDevFeaturesEnabled(true);
 
-    const document = removeUnnecessaryOperations(createDocument());
+    const document = createDocument();
+    removeDevFeatureSchemaProperties(document);
 
     expect(document).toMatchObject({
       paths: {

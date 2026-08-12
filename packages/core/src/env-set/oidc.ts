@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
 
-import type { LogtoOidcConfigType } from '@logto/schemas';
+import type { CimdConfig, LogtoOidcConfigType } from '@logto/schemas';
 import {
   LogtoOidcConfigKey,
   getCurrentOidcPrivateKey,
@@ -12,7 +12,26 @@ import { createLocalJWKSet } from 'jose';
 import { getOidcProviderPublicJwks } from '#src/libraries/oidc-private-key.js';
 import { exportJWK } from '#src/utils/jwks.js';
 
-const loadOidcValues = async (issuer: string, configs: LogtoOidcConfigType) => {
+const getEcSigningAlg = (crv: string | undefined) => {
+  switch (crv) {
+    case 'P-256': {
+      return 'ES256';
+    }
+    case 'P-384': {
+      return 'ES384';
+    }
+    case 'P-521': {
+      return 'ES512';
+    }
+    default:
+  }
+};
+
+const loadOidcValues = async (
+  issuer: string,
+  configs: LogtoOidcConfigType,
+  cimdConfig: CimdConfig
+) => {
   const cookieKeys = configs[LogtoOidcConfigKey.CookieKeys].map(({ value }) => value);
   const currentPrivateKey = crypto.createPrivateKey(
     getCurrentOidcPrivateKey(configs[LogtoOidcConfigKey.PrivateKeys]).value
@@ -26,9 +45,16 @@ const loadOidcValues = async (issuer: string, configs: LogtoOidcConfigType) => {
   const localJWKSet = createLocalJWKSet({ keys: publicJwks });
   const currentPrivateJwk = await exportJWK(currentPrivateKey);
 
-  // Use ES384 if it's an Elliptic Curve key, otherwise fall back to default
-  // It's for backwards compatibility since we were using RSA keys before v1.0.0-beta.20
-  const jwkSigningAlg = conditional(currentPrivateJwk.kty === 'EC' && 'ES384');
+  /**
+   * The declared algorithm must match the current key's actual curve — Logto generates P-384
+   * keys, but seeded keys (`OIDC_PRIVATE_KEYS`) may be on any supported curve, and a mismatched
+   * declaration falls outside the algorithms the tenant can sign with.
+   * RSA keys stay `undefined` to fall back to the oidc-provider `RS256` defaults, for backwards
+   * compatibility since we were using RSA keys before v1.0.0-beta.20.
+   */
+  const jwkSigningAlg = conditional(
+    currentPrivateJwk.kty === 'EC' && getEcSigningAlg(currentPrivateJwk.crv)
+  );
 
   return Object.freeze({
     cookieKeys,
@@ -37,6 +63,7 @@ const loadOidcValues = async (issuer: string, configs: LogtoOidcConfigType) => {
     jwkSigningAlg,
     localJWKSet,
     sessionTtl: session.ttl,
+    cimdEnabled: cimdConfig.enabled,
     issuer,
   });
 };

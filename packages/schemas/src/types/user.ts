@@ -22,6 +22,7 @@ export const userInfoSelectFields = Object.freeze([
   'updatedAt',
   'profile',
   'applicationId',
+  'cimdClientId',
   'isSuspended',
 ] satisfies Array<keyof User>);
 

@@ -11,6 +11,14 @@ const single_sign_on = {
     'redirect_uri ยังไม่ได้ลงทะเบียน กรุณาตรวจสอบการตั้งค่าแอปพลิเคชัน',
   idp_initiated_authentication_client_callback_uri_not_found:
     'ไม่พบ URI callback สำหรับการรับรองความถูกต้อง IdP-initiated ของ client กรุณาตรวจสอบการตั้งค่าคอนเนกเตอร์',
+  sso_signing_unavailable:
+    'ไม่สามารถเข้าสู่ระบบผ่านผู้ให้บริการข้อมูลประจำตัวของคุณได้ โปรดติดต่อผู้ดูแลระบบ',
+  can_not_delete_active_signing_key:
+    'ไม่สามารถลบคีย์ลงนามที่ใช้งานอยู่ได้ โปรดเปิดใช้งานคีย์อื่นหรือปิดใช้งานคีย์นี้ก่อน',
+  can_not_deactivate_signing_key_in_use:
+    'ไม่สามารถปิดใช้งานคีย์ลงนามได้ขณะที่คำขอการยืนยันตัวตนแบบลงนามเปิดใช้งานอยู่ โปรดปิดคำขอการยืนยันตัวตนแบบลงนามก่อน',
+  active_signing_key_required:
+    'ไม่พบคีย์ลงนามที่ใช้งานอยู่ โปรดสร้างและเปิดใช้งานคีย์ลงนามก่อนเปิดใช้คำขอการยืนยันตัวตนแบบลงนาม',
 };
 
 export default Object.freeze(single_sign_on);

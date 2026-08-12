@@ -81,6 +81,20 @@ const connector_details = {
     in_use: '已启用用于登录',
     not_in_use: '已禁用用于登录',
   },
+  email_logs: {
+    title: '邮件日志',
+    time: '时间',
+    recipient: '收件人',
+    recipient_placeholder: '按完整收件人地址搜索',
+    template_type: '模板类型',
+    status: '状态',
+    status_sent: '已发送',
+    status_failed: '发送失败',
+    language_tag: '语言',
+    provider_message_id: '服务商消息 ID',
+    previous_page: '上一页',
+    next_page: '下一页',
+  },
 };
 
 export default Object.freeze(connector_details);

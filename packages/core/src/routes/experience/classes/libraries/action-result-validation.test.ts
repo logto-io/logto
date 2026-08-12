@@ -2,6 +2,7 @@ import { SignInIdentifier, type ActionUser, type JwtCustomizerUserContext } from
 
 import { mockUser } from '#src/__mocks__/user.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { WorkerThreadScriptRunner } from '#src/libraries/script-runner/worker-thread-script-runner.js';
 import { runScriptFunctionInLocalVm } from '#src/utils/local-vm/index.js';
 
 import {
@@ -36,6 +37,7 @@ const actionUser: JwtCustomizerUserContext = {
   updatedAt: mockUser.updatedAt,
   profile: mockUser.profile,
   applicationId: mockUser.applicationId,
+  cimdClientId: mockUser.cimdClientId,
   isSuspended: mockUser.isSuspended,
   hasPassword: true,
   ssoIdentities: [],
@@ -248,6 +250,7 @@ describe('validatePostSignInActionResult', () => {
     }
   );
 
+  // TODO (LOG-13956): drop this case together with the legacy `node:vm` execution path.
   it('accepts an empty plain object returned from a separate VM realm as a no-op', async () => {
     const result = await runScriptFunctionInLocalVm(
       'const runAction = () => ({})',
@@ -260,6 +263,32 @@ describe('validatePostSignInActionResult', () => {
       continueResult
     );
   });
+
+  // The worker-pool analog of the separate-realm case above: the value reaches validation after a
+  // structured-clone round trip across the thread boundary.
+  it('accepts an empty plain object returned across the worker thread boundary as a no-op', async () => {
+    const runner = new WorkerThreadScriptRunner();
+
+    try {
+      const result = await runner.run({
+        script: 'const runAction = () => ({})',
+        entry: 'runAction',
+        payload: {},
+        limits: { wallClockMs: 5000, memoryMb: 64 },
+        egress: { mode: 'allowAll' },
+      });
+
+      expect(result).toEqual({ ok: true, value: {} });
+      expect(
+        validatePostSignInActionResult({
+          userId: actionUser.id,
+          result: result.ok ? result.value : undefined,
+        })
+      ).toEqual(continueResult);
+    } finally {
+      await runner.dispose();
+    }
+  }, 10_000);
 
   it('accepts updateUser with a sanitized provisioning profile', () => {
     expect(

@@ -241,12 +241,17 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
 
           ctx.body = await libraries.jwtCustomizers.runScriptRemotely(body, true);
         } else {
-          ctx.body = removeUndefinedKeys(await JwtCustomizerLibrary.runScriptInLocalVm(body));
+          ctx.body = removeUndefinedKeys(
+            await JwtCustomizerLibrary.runScriptInLocalVm(body, tenantId)
+          );
         }
       } catch (error: unknown) {
         /**
-         * - All cloud APIs should throw `RequestError`.
-         * - All local VM errors should throw `LocalVmError` extended from `RequestError`.
+         * Both execution paths surface failures as a withtyped `ResponseError`:
+         *
+         * - Remote runs map the Cloud script-run failure onto a `ScriptExecutionError`, and any
+         *   other cloud connection failure throws `ResponseError` directly.
+         * - Local runs throw `ScriptExecutionError`, which extends `ResponseError`.
          *
          * In the admin console, we caught the error and recognized the error with the code `jwt_customizer.general`,
          * and then we extract and show the error message to the user.

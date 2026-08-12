@@ -1,5 +1,4 @@
 import { LogtoActionKey } from '@logto/schemas';
-import classNames from 'classnames';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
@@ -7,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import DetailsPage from '@/components/DetailsPage';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import PageMeta from '@/components/PageMeta';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import InlineNotification from '@/ds-components/InlineNotification';
 
 import { actionCatalog } from '../constants';
@@ -42,6 +42,18 @@ function Content({ actionType, mode }: ContentProps) {
     mode === ActionPageMode.Edit && !isLoading && (error?.status === 404 || !data);
 
   const shouldShowSecurityWarning = actionType === LogtoActionKey.PostFirstFactorVerification;
+  // Script runtime consolidation (Custom JWT & Actions): OSS sandbox warning.
+  // Self-hosted scripts are not sandboxed; hide on Cloud (Dynamic Workers).
+  const shouldShowSandboxWarning = isDevFeaturesEnabled && !isCloud;
+  // Avoid stacking two alerts: merge sandbox + action-specific security copy into one notice.
+  const warningPhraseKey =
+    shouldShowSandboxWarning && shouldShowSecurityWarning
+      ? 'actions.sandbox_and_security_warning'
+      : shouldShowSandboxWarning
+        ? 'actions.sandbox_warning'
+        : shouldShowSecurityWarning
+          ? 'actions.security_warning'
+          : undefined;
 
   return (
     <DetailsPage
@@ -59,14 +71,14 @@ function Content({ actionType, mode }: ContentProps) {
       {shouldShowNotFound && <EmptyDataPlaceholder />}
       {!isLoading && !shouldShowNotFound && (
         <CodeEditorLoadingContext.Provider value={codeEditorContextValue}>
-          {shouldShowSecurityWarning && (
+          {warningPhraseKey && (
             <InlineNotification
               hasIcon
               severity="alert"
-              className={classNames(styles.warning, !isMonacoLoaded && styles.hidden)}
+              className={isMonacoLoaded ? undefined : styles.hidden}
             >
-              <div className={styles.warningTitle}>{t('actions.security_warning.title')}</div>
-              <div>{t('actions.security_warning.description')}</div>
+              <div className={styles.warningTitle}>{t(`${warningPhraseKey}.title`)}</div>
+              <div>{t(`${warningPhraseKey}.description`)}</div>
             </InlineNotification>
           )}
           <MainContent

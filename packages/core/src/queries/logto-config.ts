@@ -4,6 +4,9 @@ import {
   LogtoConfigs,
   LogtoTenantConfigKey,
   type AdminConsoleData,
+  type CimdConfig,
+  cimdConfigGuard,
+  defaultCimdConfig,
   type IdTokenConfig,
   type LogtoConfig,
   type LogtoConfigKey,
@@ -258,6 +261,26 @@ export const createLogtoConfigQueries = (
     ['id-token-config']
   );
 
+  const getCimdConfig = async (): Promise<CimdConfig> => {
+    const { rows } = await getRowsByKeys([LogtoTenantConfigKey.Cimd]);
+
+    if (rows.length === 0) {
+      return defaultCimdConfig;
+    }
+
+    return cimdConfigGuard.parse(rows[0]?.value);
+  };
+
+  const upsertCimdConfig = async (value: CimdConfig) =>
+    pool.query(sql`
+      insert into ${table} (${fields.key}, ${fields.value})
+        values (${LogtoTenantConfigKey.Cimd}, ${sql.jsonb(value)})
+        on conflict (${fields.tenantId}, ${fields.key}) do update set ${fields.value} = ${sql.jsonb(
+          value
+        )}
+        returning *
+    `);
+
   // Internal, ops-only per-tenant override of the system message send-rate-limit policy. There is
   // intentionally no upsert counterpart: the key is set by direct DB write only (no API), so the
   // cache picks it up on its next expiry (or tenant restart).
@@ -291,6 +314,8 @@ export const createLogtoConfigQueries = (
     deleteAction,
     getIdTokenConfig,
     upsertIdTokenConfig,
+    getCimdConfig,
+    upsertCimdConfig,
     getMessageRateLimitOverride,
   };
 };

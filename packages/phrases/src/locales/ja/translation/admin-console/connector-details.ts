@@ -87,6 +87,20 @@ const connector_details = {
     in_use: 'サインインに有効',
     not_in_use: 'サインインに無効',
   },
+  email_logs: {
+    title: 'メールログ',
+    time: '時間',
+    recipient: '宛先',
+    recipient_placeholder: '受信者の完全なアドレスで検索',
+    template_type: 'テンプレートタイプ',
+    status: 'ステータス',
+    status_sent: '送信済み',
+    status_failed: '失敗',
+    language_tag: '言語',
+    provider_message_id: 'プロバイダーメッセージ ID',
+    previous_page: '前へ',
+    next_page: '次へ',
+  },
 };
 
 export default Object.freeze(connector_details);

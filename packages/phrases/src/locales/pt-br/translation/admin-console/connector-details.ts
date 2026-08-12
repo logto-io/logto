@@ -87,6 +87,20 @@ const connector_details = {
     in_use: 'Habilitado para login',
     not_in_use: 'Desabilitado para login',
   },
+  email_logs: {
+    title: 'Logs de e-mail',
+    time: 'Hora',
+    recipient: 'Destinatário',
+    recipient_placeholder: 'Pesquisar pelo endereço completo do destinatário',
+    template_type: 'Tipo de modelo',
+    status: 'Status',
+    status_sent: 'Enviado',
+    status_failed: 'Falhou',
+    language_tag: 'Idioma',
+    provider_message_id: 'ID da mensagem do provedor',
+    previous_page: 'Anterior',
+    next_page: 'Próxima',
+  },
 };
 
 export default Object.freeze(connector_details);

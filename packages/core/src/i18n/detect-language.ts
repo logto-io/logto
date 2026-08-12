@@ -12,7 +12,7 @@ import type { IRouterParamContext } from 'koa-router';
  */
 const resolveLanguage = (languageString: string): Optional<[string, number]> => {
   // Edited from https://github.com/lxzxl/koa-i18next-detector/blob/master/src/lookups/header.js
-  const [language, ...rest] = languageString.split(';');
+  const [language, ...rest] = languageString.split(';').map((part) => part.trim());
 
   if (!language) {
     return;
@@ -20,9 +20,10 @@ const resolveLanguage = (languageString: string): Optional<[string, number]> => 
 
   for (const item of rest) {
     const [key, value] = item.split('=');
+    const quality = Number(value);
 
-    if (key === 'q' && !Number.isNaN(value)) {
-      return [language, Number(value)];
+    if (key === 'q' && !Number.isNaN(quality)) {
+      return [language, quality];
     }
   }
 

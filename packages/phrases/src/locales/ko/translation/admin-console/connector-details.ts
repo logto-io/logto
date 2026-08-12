@@ -86,6 +86,20 @@ const connector_details = {
     in_use: '로그인에 사용 가능 ',
     not_in_use: '로그인에 사용 안 함 ',
   },
+  email_logs: {
+    title: '이메일 로그',
+    time: '시간',
+    recipient: '수신자',
+    recipient_placeholder: '수신자 전체 주소로 검색',
+    template_type: '템플릿 유형',
+    status: '상태',
+    status_sent: '전송됨',
+    status_failed: '실패',
+    language_tag: '언어',
+    provider_message_id: '제공자 메시지 ID',
+    previous_page: '이전',
+    next_page: '다음',
+  },
 };
 
 export default Object.freeze(connector_details);

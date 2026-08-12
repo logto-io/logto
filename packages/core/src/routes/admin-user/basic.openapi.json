@@ -35,6 +35,10 @@
                     },
                     "passwordAlgorithm": {
                       "description": "The algorithm used to hash the password. Only present when `includePasswordHash` is provided with a truthy value. `null` if the user has no password set."
+                    },
+                    "cimdClientId": {
+                      "description": "Dev feature. The identifier of the CIMD (client ID metadata document) client from the user's first consent. `null` unless the user's first consent was granted to a CIMD client. Mutually exclusive with `applicationId`.",
+                      "x-logto-dev-feature": true
                     }
                   }
                 }
@@ -70,7 +74,19 @@
         },
         "responses": {
           "200": {
-            "description": "Updated user data for the given ID."
+            "description": "Updated user data for the given ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "cimdClientId": {
+                      "description": "Dev feature. The identifier of the CIMD (client ID metadata document) client from the user's first consent. `null` unless the user's first consent was granted to a CIMD client. Mutually exclusive with `applicationId`.",
+                      "x-logto-dev-feature": true
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Update user",
@@ -226,7 +242,19 @@
         },
         "responses": {
           "200": {
-            "description": "User data for the newly created user."
+            "description": "User data for the newly created user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "cimdClientId": {
+                      "description": "Dev feature. The identifier of the CIMD (client ID metadata document) client from the user's first consent. `null` unless the user's first consent was granted to a CIMD client. Mutually exclusive with `applicationId`.",
+                      "x-logto-dev-feature": true
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Create user",
@@ -250,7 +278,19 @@
         },
         "responses": {
           "200": {
-            "description": "User password updated successfully."
+            "description": "User password updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "cimdClientId": {
+                      "description": "Dev feature. The identifier of the CIMD (client ID metadata document) client from the user's first consent. `null` unless the user's first consent was granted to a CIMD client. Mutually exclusive with `applicationId`.",
+                      "x-logto-dev-feature": true
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Update user password",
@@ -274,7 +314,19 @@
         },
         "responses": {
           "200": {
-            "description": "User password expiration state has been updated successfully."
+            "description": "User password expiration state has been updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "cimdClientId": {
+                      "description": "Dev feature. The identifier of the CIMD (client ID metadata document) client from the user's first consent. `null` unless the user's first consent was granted to a CIMD client. Mutually exclusive with `applicationId`.",
+                      "x-logto-dev-feature": true
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Password expiration policy is not enabled in the sign-in experience settings."
@@ -339,7 +391,19 @@
         },
         "responses": {
           "200": {
-            "description": "User suspension status updated successfully."
+            "description": "User suspension status updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "cimdClientId": {
+                      "description": "Dev feature. The identifier of the CIMD (client ID metadata document) client from the user's first consent. `null` unless the user's first consent was granted to a CIMD client. Mutually exclusive with `applicationId`.",
+                      "x-logto-dev-feature": true
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Update user suspension status",

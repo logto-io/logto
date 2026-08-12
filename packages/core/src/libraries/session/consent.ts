@@ -5,25 +5,14 @@ import type { PromptDetail, Provider } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 import { z } from 'zod';
 
+import { type EnvSet } from '#src/env-set/index.js';
 import { markAppLevelAccessControlChecked } from '#src/oidc/application-access-control.js';
+import { isCimdClient } from '#src/oidc/cimd/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { saveCimdGrantRecords } from './cimd-grant-records.js';
 import { updateInteractionResult } from './interaction.js';
-
-const saveUserFirstConsentedAppId = async (
-  queries: Queries,
-  userId: string,
-  applicationId: string
-) => {
-  const { findUserById, updateUserById } = queries.users;
-  const { applicationId: firstConsentedAppId } = await findUserById(userId);
-
-  if (!firstConsentedAppId) {
-    // Save application id that the user first consented
-    await updateUserById(userId, { applicationId });
-  }
-};
 
 // Get the missing scopes from prompt details
 const missingScopesGuard = z.object({
@@ -33,6 +22,49 @@ const missingScopesGuard = z.object({
 
 export const getMissingScopes = (prompt: PromptDetail) => {
   return missingScopesGuard.parse(prompt.details);
+};
+
+/** Exactly one identifier is present, matching the kind of the consenting client. */
+type ClientIdentifiers = {
+  registeredClientId?: string;
+  cimdClientId?: string;
+};
+
+/**
+ * The identifier shape is a sufficient classifier here: registered application ids never take
+ * the URL shape, and authorization has already resolved the client — resolving it again via
+ * `provider.Client.find` would cost a lookup (or an outbound document fetch on a cold cache)
+ * on every consent submission for the same verdict.
+ */
+const identifyClient = (envSet: EnvSet, clientId: string): ClientIdentifiers =>
+  isCimdClient(envSet, clientId) ? { cimdClientId: clientId } : { registeredClientId: clientId };
+
+/**
+ * `users.application_id` and `users.cimd_client_id` form a single first-consent attribution,
+ * so a user already attributed through either column is never written again. The columns stay
+ * separate because `application_id` (varchar(21)) only ever holds registered application ids —
+ * a CIMD client identifier URL must never reach it.
+ */
+const saveUserFirstConsentedClient = async (
+  queries: Queries,
+  userId: string,
+  { registeredClientId, cimdClientId }: ClientIdentifiers
+) => {
+  const { findUserById, updateUserById } = queries.users;
+  const user = await findUserById(userId);
+
+  if (user.applicationId ?? user.cimdClientId) {
+    return;
+  }
+
+  if (registeredClientId) {
+    await updateUserById(userId, { applicationId: registeredClientId });
+    return;
+  }
+
+  if (cimdClientId) {
+    await updateUserById(userId, { cimdClientId });
+  }
 };
 
 /**
@@ -59,13 +91,10 @@ export const getMissingScopes = (prompt: PromptDetail) => {
  */
 const saveInteractionLastSubmissionToSession = async (
   queries: Queries,
-  interactionDetails: Awaited<ReturnType<Provider['interactionDetails']>>
+  interactionDetails: Awaited<ReturnType<Provider['interactionDetails']>>,
+  { registeredClientId, cimdClientId }: ClientIdentifiers
 ) => {
-  const {
-    session,
-    lastSubmission,
-    params: { client_id: clientId },
-  } = interactionDetails;
+  const { session, lastSubmission } = interactionDetails;
 
   if (!session || !lastSubmission) {
     return;
@@ -75,12 +104,16 @@ const saveInteractionLastSubmissionToSession = async (
   const result = jsonObjectGuard.safeParse(lastSubmission);
 
   if (result.success) {
-    // Persist the last submission to the session extensions
+    /**
+     * The explicit `null` on the unused identifier column makes the upsert overwrite a stale
+     * value left by a previous submission of the other client type.
+     */
     await oidcSessionExtensions.insert({
       sessionUid: session.uid,
       accountId: session.accountId,
       lastSubmission: result.data,
-      ...conditional(typeof clientId === 'string' && { clientId }),
+      clientId: registeredClientId ?? null,
+      cimdClientId: cimdClientId ?? null,
     });
   }
 };
@@ -88,21 +121,26 @@ const saveInteractionLastSubmissionToSession = async (
 export const consent = async ({
   ctx,
   provider,
+  envSet,
   queries,
   interactionDetails,
   missingOIDCScopes = [],
   resourceScopesToGrant = {},
   resourceScopesToReject = {},
   markAppLevelAccessControlChecked: shouldMarkAppLevelAccessControlChecked = false,
+  cimdOrganizationId,
 }: {
   ctx: Context;
   provider: Provider;
+  envSet: EnvSet;
   queries: Queries;
   interactionDetails: Awaited<ReturnType<Provider['interactionDetails']>>;
   missingOIDCScopes?: string[];
   resourceScopesToGrant?: Record<string, string[]>;
   resourceScopesToReject?: Record<string, string[]>;
   markAppLevelAccessControlChecked?: boolean;
+  /** CIMD clients only — organization access is grant-scoped, at most one per grant. */
+  cimdOrganizationId?: string;
 }) => {
   const {
     session,
@@ -118,13 +156,31 @@ export const consent = async ({
 
   const { accountId } = session;
 
-  const grant =
-    conditional(grantId && (await provider.Grant.find(grantId))) ??
-    new provider.Grant({ accountId, clientId });
+  const { registeredClientId, cimdClientId } = identifyClient(envSet, clientId);
+
+  const existingGrant = conditional(grantId && (await provider.Grant.find(grantId)));
+  const grant = existingGrant ?? new provider.Grant({ accountId, clientId });
+
+  /**
+   * Occupying the organization binding precedes every change to a reused grant, so a
+   * conflicting organization fails before this round mutates the grant. A fresh grant cannot
+   * conflict, and its rows must follow `grant.save()` — their foreign keys need the grant row.
+   */
+  if (grantId && existingGrant) {
+    await saveCimdGrantRecords(ctx, provider, queries, {
+      grantId,
+      cimdClientId,
+      organizationId: cimdOrganizationId,
+      userId: accountId,
+    });
+  }
 
   await Promise.all([
-    saveUserFirstConsentedAppId(queries, accountId, clientId),
-    saveInteractionLastSubmissionToSession(queries, interactionDetails),
+    saveUserFirstConsentedClient(queries, accountId, { registeredClientId, cimdClientId }),
+    saveInteractionLastSubmissionToSession(queries, interactionDetails, {
+      registeredClientId,
+      cimdClientId,
+    }),
   ]);
 
   // Fulfill missing scopes
@@ -141,6 +197,18 @@ export const consent = async ({
   }
 
   const finalGrantId = await grant.save();
+
+  if (!existingGrant) {
+    /** Precedes the interaction result update so a failed write fails the whole consent. */
+    await saveCimdGrantRecords(ctx, provider, queries, {
+      grantId: finalGrantId,
+      cimdClientId,
+      organizationId: cimdOrganizationId,
+      userId: accountId,
+      freshGrant: grant,
+    });
+  }
+
   const result = {
     consent: { grantId: finalGrantId },
   };

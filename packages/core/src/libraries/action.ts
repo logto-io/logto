@@ -16,23 +16,15 @@ import RequestError from '#src/errors/RequestError/index.js';
 import type { LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import type { SubscriptionLibrary } from '#src/libraries/subscription.js';
 import type { LogContext, LogPayload } from '#src/middleware/koa-audit-log.js';
-import {
-  legacyActionFunctionName,
-  wrapActionScriptForLegacyRunner,
-} from '#src/utils/action-script-compatibility.js';
 import { parseAzureFunctionsResponseError } from '#src/utils/custom-jwt/index.js';
-import {
-  buildLocalVmErrorBody,
-  LocalVmError,
-  runScriptFunctionInLocalVm,
-} from '#src/utils/local-vm/index.js';
+import { runScriptFunctionInLocalVm } from '#src/utils/local-vm/index.js';
 
 import {
+  buildActionTelemetryError,
   buildSafeActionErrorSummary,
-  buildSafeActionTelemetryError,
-  getActionSensitiveValues,
-  sanitizeActionEvent,
-  sanitizeActionResult,
+  getActionEventCredentials,
+  toLoggableActionEvent,
+  toLoggableActionResult,
 } from './action-sanitization.js';
 import {
   getActionExecutionErrorTelemetryProperties,
@@ -40,11 +32,25 @@ import {
   type ActionRuntimeLocation,
   trackActionExecutionMetrics,
 } from './action-telemetry.js';
+import { type CloudConnectionLibrary } from './cloud-connection.js';
+import {
+  buildCloudScriptFailureError,
+  buildScriptExecutionErrorBody,
+  buildScriptFailureError,
+  getScriptFailureStatusCode,
+  parseCloudScriptFailure,
+  runScriptOnCloud,
+  runScriptOnWorkerPool,
+  ScriptExecutionError,
+} from './script-runner/index.js';
 
+const actionFunctionName = 'runAction';
 const defaultActionExecutionErrorPolicy = 'block' satisfies ActionExecutionErrorPolicy;
 /**
  * Azure Function vm2 timeout is 3000ms. Use a slightly higher HTTP deadline so the
  * client can surface Function-side failures instead of racing the sandbox limit.
+ *
+ * Only used by the legacy Azure Functions path; the Cloud script runner owns its own budget.
  */
 const remoteActionRequestTimeout = 5000;
 
@@ -84,7 +90,7 @@ type ActionEventSource<Event> =
 type RunActionData<Event> = ActionEventSource<Event> & {
   key: LogtoActionKey;
   auditContext: Pick<LogContext, 'createLog'> &
-    Pick<LogPayload, 'applicationId' | 'sessionId' | 'userId'>;
+    Pick<LogPayload, 'applicationId' | 'cimdClientId' | 'sessionId' | 'userId'>;
 };
 
 type ActionExecutionErrorHandlingData = {
@@ -187,6 +193,22 @@ export const getActionExecutionErrorPolicyDecision = ({
   return getActionErrorFallback(key);
 };
 
+/**
+ * The telemetry label for where a run executes.
+ *
+ * Deliberately kept in sync with the branch {@link ActionLibrary.runScriptRemotely} takes: while
+ * both remote runtimes coexist behind `isDevFeaturesEnabled`, splitting `azure` from `cloud` is
+ * what makes the share of traffic already served by the Cloud script runner readable in the
+ * metric. Collapses back to `azure`-free once LOG-13958 removes the Azure Functions path.
+ */
+const getTelemetryRuntimeLocation = (): ActionRuntimeLocation => {
+  if (!EnvSet.values.isCloud) {
+    return 'local';
+  }
+
+  return EnvSet.values.isDevFeaturesEnabled ? 'cloud' : 'azure';
+};
+
 const applyActionExecutionErrorPolicyDecision = (decision: ActionExecutionErrorPolicyDecision) => {
   if (decision.action === 'throw') {
     throw decision.error;
@@ -196,7 +218,40 @@ const applyActionExecutionErrorPolicyDecision = (decision: ActionExecutionErrorP
 };
 
 export class ActionLibrary {
-  static async runScriptInLocalVm<Event>({
+  static async runScriptInLocalVm<Event>(
+    data: ActionRunnerData<Event>,
+    tenantId: string
+  ): Promise<unknown> {
+    // TODO (LOG-13956): drop the legacy `node:vm` path and the gate once the worker-thread
+    // runner has been manually verified and released.
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return ActionLibrary.runScriptInLegacyVm(data);
+    }
+
+    const { script, event, environmentVariables } = data;
+    // No `api` capability for Actions: the payload stays `{ event, environmentVariables }`, and
+    // the worker only injects `api` for the Custom JWT entry.
+    const payload: ActionScriptPayload<Event> = {
+      event,
+      environmentVariables,
+    };
+
+    const result = await runScriptOnWorkerPool({
+      script,
+      entry: actionFunctionName,
+      payload,
+      tenantId,
+    });
+
+    if (!result.ok) {
+      throw buildScriptFailureError(result);
+    }
+
+    return result.value;
+  }
+
+  /** The pre-worker-runner execution path, still serving production until the gate above lifts. */
+  private static async runScriptInLegacyVm<Event>({
     script,
     event,
     environmentVariables,
@@ -207,18 +262,14 @@ export class ActionLibrary {
         environmentVariables,
       };
 
-      return await runScriptFunctionInLocalVm(
-        wrapActionScriptForLegacyRunner(script),
-        legacyActionFunctionName,
-        payload
-      );
+      return await runScriptFunctionInLocalVm(script, actionFunctionName, payload);
     } catch (error: unknown) {
-      if (error instanceof LocalVmError) {
+      if (error instanceof ScriptExecutionError) {
         throw error;
       }
 
       if (error instanceof ZodError) {
-        throw new LocalVmError(
+        throw new ScriptExecutionError(
           {
             message: 'Invalid input',
             errors: error.errors,
@@ -227,9 +278,9 @@ export class ActionLibrary {
         );
       }
 
-      throw new LocalVmError(
-        buildLocalVmErrorBody(error),
-        error instanceof SyntaxError || error instanceof TypeError ? 422 : 500
+      throw new ScriptExecutionError(
+        buildScriptExecutionErrorBody(error),
+        getScriptFailureStatusCode(error)
       );
     }
   }
@@ -237,7 +288,8 @@ export class ActionLibrary {
   constructor(
     private readonly tenantId: string,
     private readonly logtoConfigs: LogtoConfigLibrary,
-    private readonly subscription: SubscriptionLibrary
+    private readonly subscription: SubscriptionLibrary,
+    private readonly cloudConnection: CloudConnectionLibrary
   ) {}
 
   get isRegionalAzureFunctionAppConfigured(): boolean {
@@ -248,77 +300,79 @@ export class ActionLibrary {
 
   /**
    * Shared entry point for production `runAction()` and Management API dry runs.
-   * Cloud always executes remotely; OSS / self-hosted always uses the local VM.
-   * Cloud remote failures must never fall back to the local VM.
+   * Cloud always executes remotely; OSS / self-hosted runs locally — on the worker pool behind
+   * dev features, otherwise in the legacy `node:vm`.
+   * Cloud remote failures must never fall back to the local runner.
    */
   async executeScript({
     script,
     actionType,
     event,
     environmentVariables,
+    isTest,
   }: {
     script: string;
     actionType: LogtoActionKey;
     // Production events are typed domain objects; dry-run uses JSON via the guard.
     event: unknown;
     environmentVariables?: Record<string, string>;
+    /**
+     * Whether this is a dry run. Set by the Management API test route, never by `runAction()`, so
+     * the Cloud runner can tell a Console "test" apart from production traffic. The local runners
+     * ignore it.
+     */
+    isTest?: boolean;
   }): Promise<unknown> {
     const payload = { script, actionType, event, environmentVariables };
 
     if (EnvSet.values.isCloud) {
-      return this.runScriptRemotely(payload);
+      return this.runScriptRemotely(payload, isTest);
     }
 
-    return ActionLibrary.runScriptInLocalVm(payload);
+    return ActionLibrary.runScriptInLocalVm(payload, this.tenantId);
   }
 
   /**
    * For Logto Cloud use only. Run the action script remotely in an isolated environment.
    * For OSS version, use @see ActionLibrary.runScriptInLocalVm instead.
    */
-  async runScriptRemotely({
-    script,
-    actionType,
-    event,
-    environmentVariables,
-  }: {
-    script: string;
-    actionType: LogtoActionKey;
-    event: unknown;
-    environmentVariables?: Record<string, string>;
-  }): Promise<unknown> {
-    const { azureFunctionUntrustedAppKey, azureFunctionUntrustedAppEndpoint } = EnvSet.values;
-
-    if (!this.isRegionalAzureFunctionAppConfigured) {
-      throw new RequestError(
-        { code: 'action.general', status: 422 },
-        { message: 'Remote action runner is not configured.' }
-      );
+  async runScriptRemotely(
+    data: {
+      script: string;
+      actionType: LogtoActionKey;
+      event: unknown;
+      environmentVariables?: Record<string, string>;
+    },
+    /** Whether this is a dry run. The legacy Azure Functions path has no notion of it. */
+    isTest?: boolean
+  ): Promise<unknown> {
+    // TODO (LOG-13958): drop the legacy Azure Functions path and the gate once the Cloud script
+    // runner has been manually verified and released.
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return this.runScriptOnAzureFunction(data);
     }
 
-    try {
-      return await got
-        // Keep the legacy endpoint and payload field until the external Azure runner migrates.
-        .post(new URL('/api/inline-hooks', azureFunctionUntrustedAppEndpoint), {
-          json: {
-            script: wrapActionScriptForLegacyRunner(script),
-            hookType: actionType,
-            event,
-            environmentVariables,
-          },
-          headers: {
-            'x-functions-key': azureFunctionUntrustedAppKey,
-          },
-          // Got@14 expects a Delays object; bound the whole request slightly above the AF VM timeout.
-          timeout: { request: remoteActionRequestTimeout },
-        })
-        .json<unknown>();
-    } catch (error: unknown) {
-      if (error instanceof HTTPError) {
-        throw parseAzureFunctionsResponseError(error);
-      }
+    const { script, event, environmentVariables } = data;
 
-      throw error;
+    /**
+     * `actionType` selects the script on this side and is deliberately not forwarded — anything
+     * in `payload` becomes a visible field of the script's `runAction` argument, and the
+     * authoring contract promises `{ event, environmentVariables }` only.
+     */
+    const payload: ActionScriptPayload<unknown> = { event, environmentVariables };
+
+    try {
+      return await runScriptOnCloud({
+        cloudConnection: this.cloudConnection,
+        script,
+        entry: actionFunctionName,
+        payload,
+        isTest,
+      });
+    } catch (error: unknown) {
+      const failure = await parseCloudScriptFailure(error);
+
+      throw failure ? buildCloudScriptFailureError(failure) : error;
     }
   }
 
@@ -327,10 +381,6 @@ export class ActionLibrary {
     auditContext: { createLog, ...auditContext },
     ...eventSource
   }: RunActionData<Event>): Promise<unknown> {
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return;
-    }
-
     const action = await this.findEnabledAction(key);
 
     if (!action) {
@@ -350,12 +400,9 @@ export class ActionLibrary {
       event: event as ActionExecutionRequestBody['event'],
       environmentVariables: action.environmentVariables,
     };
-    const sensitiveValues = getActionSensitiveValues(executionPayload);
     const onExecutionError = action.onExecutionError ?? defaultActionExecutionErrorPolicy;
     const runtimeLocation = EnvSet.values.isCloud ? 'remote' : 'local';
-    const telemetryRuntimeLocation: ActionRuntimeLocation = EnvSet.values.isCloud
-      ? 'azure'
-      : 'local';
+    const telemetryRuntimeLocation = getTelemetryRuntimeLocation();
     const log = createLog(getActionLogKey(key), { independent: true });
 
     log.append({
@@ -364,7 +411,7 @@ export class ActionLibrary {
       actionType: key,
       runtimeLocation,
       onExecutionError,
-      event: sanitizeActionEvent(event, sensitiveValues),
+      event: toLoggableActionEvent(key, event),
     });
 
     const startedAt = Date.now();
@@ -396,10 +443,12 @@ export class ActionLibrary {
           durationMs,
           decision: decision.action,
           errorPolicyOutcome: decision.action === 'continue' ? 'allow' : 'block',
-          actionError: buildSafeActionErrorSummary(error, sensitiveValues),
+          actionError: buildSafeActionErrorSummary(error, {
+            redactValues: getActionEventCredentials(event),
+          }),
         });
 
-        void appInsights.trackException(buildSafeActionTelemetryError(error, sensitiveValues), {
+        void appInsights.trackException(buildActionTelemetryError(error), {
           properties: telemetryProperties,
         });
 
@@ -412,7 +461,7 @@ export class ActionLibrary {
       log.append({
         durationMs,
         ...actionSummary,
-        actionResult: sanitizeActionResult(result, sensitiveValues),
+        actionResult: toLoggableActionResult(result),
       });
 
       return result;
@@ -421,11 +470,57 @@ export class ActionLibrary {
     }
   }
 
+  /** The pre-script-runner remote path, still serving production until the gate above lifts. */
+  private async runScriptOnAzureFunction({
+    script,
+    actionType,
+    event,
+    environmentVariables,
+  }: {
+    script: string;
+    actionType: LogtoActionKey;
+    event: unknown;
+    environmentVariables?: Record<string, string>;
+  }): Promise<unknown> {
+    const { azureFunctionUntrustedAppKey, azureFunctionUntrustedAppEndpoint } = EnvSet.values;
+
+    if (!this.isRegionalAzureFunctionAppConfigured) {
+      throw new RequestError(
+        { code: 'action.general', status: 422 },
+        { message: 'Remote action runner is not configured.' }
+      );
+    }
+
+    try {
+      return await got
+        // The remote runner must invoke `runAction` from the supplied script.
+        .post(new URL('/api/actions', azureFunctionUntrustedAppEndpoint), {
+          json: {
+            script,
+            actionType,
+            event,
+            environmentVariables,
+          },
+          headers: {
+            'x-functions-key': azureFunctionUntrustedAppKey,
+          },
+          // Got@14 expects a Delays object; bound the whole request slightly above the AF VM timeout.
+          timeout: { request: remoteActionRequestTimeout },
+        })
+        .json<unknown>();
+    } catch (error: unknown) {
+      if (error instanceof HTTPError) {
+        throw parseAzureFunctionsResponseError(error);
+      }
+
+      throw error;
+    }
+  }
+
   private async findEnabledAction(key: LogtoActionKey) {
     try {
       const action = await this.logtoConfigs.getAction(key);
 
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- Preserve the legacy no-config fallback for isolated library implementations.
       if (!action?.enabled) {
         return;
       }
@@ -453,8 +548,7 @@ export class ActionLibrary {
 
     const { quota } = await this.subscription.getSubscriptionData();
 
-    // Keep the legacy key because it is part of the Logto Cloud subscription wire contract.
-    return quota.inlineHooksEnabled;
+    return quota.actionsEnabled;
   }
 }
 /* eslint-enable max-lines */

@@ -45,5 +45,22 @@ describe('email blocklist helpers', () => {
       expect(matchesEmailBlocklistItem('foo.+*@example.com', 'foo.+bar@example.com')).toBe(true);
       expect(matchesEmailBlocklistItem('foo.+*@example.com', 'fooxbar@example.com')).toBe(false);
     });
+
+    it('treats Gmail domain aliases and local-part dot variants as the same address', () => {
+      expect(matchesEmailBlocklistItem('foo.bar@gmail.com', 'foobar@gmail.com')).toBe(true);
+      expect(matchesEmailBlocklistItem('foobar@gmail.com', 'f.o.o.b.a.r@gmail.com')).toBe(true);
+      expect(matchesEmailBlocklistItem('foo.bar*@gmail.com', 'foobarbaz@gmail.com')).toBe(true);
+      expect(matchesEmailBlocklistItem('foobar*@*.com', 'foo.bar.baz@gmail.com')).toBe(true);
+      expect(matchesEmailBlocklistItem('foo.bar@gmail.com', 'foobar@googlemail.com')).toBe(true);
+      expect(matchesEmailBlocklistItem('foo.bar@googlemail.com', 'foobar@gmail.com')).toBe(true);
+      expect(matchesEmailBlocklistItem('foo@googlemail.*', 'f.oo@gmail.com')).toBe(true);
+      expect(matchesEmailBlocklistItem('@gmail.com', 'foo@googlemail.com')).toBe(true);
+      expect(matchesEmailBlocklistItem('@googlemail.com', 'foo@gmail.com')).toBe(true);
+    });
+
+    it('keeps dots in the local part significant for non-Gmail addresses', () => {
+      expect(matchesEmailBlocklistItem('foo.bar@example.com', 'foobar@example.com')).toBe(false);
+      expect(matchesEmailBlocklistItem('foobar@*.com', 'foo.bar@example.com')).toBe(false);
+    });
   });
 });

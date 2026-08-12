@@ -9,6 +9,7 @@ import {
   jwtCustomizerOrganizationContextTypeDefinition,
   jwtCustomizerApiContextTypeDefinition,
 } from '@/consts/jwt-customizer-type-definition';
+import { isValidEnvironmentVariableKey } from '@/utils/validator';
 
 import { type JwtCustomizerForm } from '../type';
 
@@ -52,8 +53,14 @@ export const buildEnvironmentVariablesTypeDefinition = (
   const typeDefinition = envVariables
     ? `{
   ${envVariables
-    .filter(({ key }) => Boolean(key))
-    .map(({ key }) => `${key}: string`)
+    // Align with request payload filtering (`key && value`) and form key validation
+    // so Monaco only types env vars that can actually be used at runtime.
+    .map(({ key, value }) => ({ key: key.trim(), value }))
+    .filter(
+      ({ key, value }) => Boolean(key) && Boolean(value) && isValidEnvironmentVariableKey(key)
+    )
+    // Quote keys so keys like `0FOO` stay valid TypeScript property names.
+    .map(({ key }) => `${JSON.stringify(key)}: string`)
     .join(';\n')}
     }`
     : 'undefined';

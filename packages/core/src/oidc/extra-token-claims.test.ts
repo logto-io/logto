@@ -27,10 +27,13 @@ jest.unstable_mockModule('#src/libraries/jwt-customizer.js', () => ({
 const { EnvSet } = await import('#src/env-set/index.js');
 const { getExtraTokenClaimsForJwtCustomization } = await import('./extra-token-claims.js');
 
-const buildContextAndToken = ({ organizationId }: { organizationId?: string } = {}) => {
+const buildContextAndToken = ({
+  organizationId,
+  clientId = 'app-1',
+}: { organizationId?: string; clientId?: string } = {}) => {
   const ctx = createOidcContext({
     session: { uid: sessionUid } as unknown as KoaContextWithOIDC['oidc']['session'],
-    client: { clientId: 'app-1' } as unknown as KoaContextWithOIDC['oidc']['client'],
+    client: { clientId } as unknown as KoaContextWithOIDC['oidc']['client'],
     params: { organization_id: organizationId },
   });
 
@@ -54,7 +57,7 @@ const buildContextAndToken = ({ organizationId }: { organizationId?: string } = 
     gty: { value: 'password', enumerable: true },
   }) as AccessToken;
 
-  return { ctxWithLog, token };
+  return { ctxWithLog, token, logEntry };
 };
 
 const mockOrganization = {
@@ -122,6 +125,20 @@ const callGetExtraTokenClaimsForJwtCustomization = async ({
     libraries: tenant.libraries,
     logtoConfigs: tenant.logtoConfigs,
   });
+};
+
+const runJwtCustomizationWithClientId = async (clientId: string) => {
+  const tenant = createTenant({});
+  const { ctxWithLog, token, logEntry } = buildContextAndToken({ clientId });
+
+  await getExtraTokenClaimsForJwtCustomization(ctxWithLog, token, {
+    envSet: tenant.envSet,
+    queries: tenant.queries,
+    libraries: tenant.libraries,
+    logtoConfigs: tenant.logtoConfigs,
+  });
+
+  return logEntry;
 };
 
 const createResponseError = (status: number, body: Record<string, unknown>) =>
@@ -192,6 +209,52 @@ describe('getExtraTokenClaimsForJwtCustomization', () => {
     expect(runScriptInLocalVm.mock.calls[0]?.[0]?.context).not.toHaveProperty('organization');
   });
 
+  describe('for CIMD clients', () => {
+    const cimdClientId = 'https://client.example.com/metadata.json';
+
+    it('skips the application context lookup while CIMD is effectively enabled', async () => {
+      const tenant = createTenant({});
+      const { ctxWithLog, token } = buildContextAndToken({ clientId: cimdClientId });
+
+      /**
+       * The gate additionally reads the static dev-features and SSRF-protection flags from
+       * `EnvSet.values`; the jest environment keeps both on.
+       */
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- spread copy of the mock env set with the tenant CIMD toggle on; `oidc` is a getter and must be rebuilt explicitly
+      const cimdEnvSet = {
+        ...tenant.envSet,
+        oidc: { ...tenant.envSet.oidc, cimdEnabled: true },
+      } as InstanceType<typeof EnvSet>;
+
+      await getExtraTokenClaimsForJwtCustomization(ctxWithLog, token, {
+        envSet: cimdEnvSet,
+        queries: tenant.queries,
+        libraries: tenant.libraries,
+        logtoConfigs: tenant.logtoConfigs,
+      });
+
+      expect(tenant.libraries.jwtCustomizers.getApplicationContext).not.toHaveBeenCalled();
+      expect(runScriptInLocalVm.mock.calls[0]?.[0]?.context).not.toHaveProperty('application');
+    });
+
+    it('keeps the application context lookup for a url client id when CIMD is not effectively enabled', async () => {
+      const tenant = createTenant({});
+      const { ctxWithLog, token } = buildContextAndToken({ clientId: cimdClientId });
+
+      await getExtraTokenClaimsForJwtCustomization(ctxWithLog, token, {
+        envSet: tenant.envSet,
+        queries: tenant.queries,
+        libraries: tenant.libraries,
+        logtoConfigs: tenant.logtoConfigs,
+      });
+
+      expect(tenant.libraries.jwtCustomizers.getApplicationContext).toHaveBeenCalledWith(
+        tenant.envSet.tenantId,
+        cimdClientId
+      );
+    });
+  });
+
   it('throws invalid request with original error message on script failure when blocking is enabled', async () => {
     runScriptInLocalVm.mockRejectedValue(new Error('boom'));
 
@@ -254,5 +317,27 @@ describe('getExtraTokenClaimsForJwtCustomization', () => {
     await expect(
       callGetExtraTokenClaimsForJwtCustomization({ blockIssuanceOnError: true })
     ).rejects.toBeInstanceOf(errors.InvalidRequest);
+  });
+
+  describe('log attribution for a cimd client identifier', () => {
+    const cimdClientId = 'https://client.example.com/metadata.json';
+
+    it('routes the identifier to the dedicated key when dev features are enabled', async () => {
+      const logEntry = await runJwtCustomizationWithClientId(cimdClientId);
+
+      const payload: unknown = logEntry.append.mock.calls[0]?.[0];
+      expect(payload).toHaveProperty('cimdClientId', cimdClientId);
+      expect(payload).not.toHaveProperty('applicationId');
+    });
+
+    it('keeps the url-shaped identifier under applicationId when dev features are disabled', async () => {
+      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+
+      const logEntry = await runJwtCustomizationWithClientId(cimdClientId);
+
+      expect(logEntry.append).toHaveBeenCalledWith(
+        expect.objectContaining({ applicationId: cimdClientId })
+      );
+    });
   });
 });

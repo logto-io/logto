@@ -86,6 +86,20 @@ const connector_details = {
     in_use: 'Enabled for sign-in ',
     not_in_use: 'Disabled for sign-in ',
   },
+  email_logs: {
+    title: 'Email logs',
+    time: 'Time',
+    recipient: 'Recipient',
+    recipient_placeholder: 'Search by full recipient address',
+    template_type: 'Template type',
+    status: 'Status',
+    status_sent: 'Sent',
+    status_failed: 'Failed',
+    language_tag: 'Language',
+    provider_message_id: 'Provider message ID',
+    previous_page: 'Previous',
+    next_page: 'Next',
+  },
 };
 
 export default Object.freeze(connector_details);

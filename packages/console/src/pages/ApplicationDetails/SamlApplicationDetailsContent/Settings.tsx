@@ -17,6 +17,7 @@ import Plus from '@/assets/icons/plus.svg?react';
 import DetailsForm from '@/components/DetailsForm';
 import DomainSelector from '@/components/DomainSelector';
 import FormCard from '@/components/FormCard';
+import SamlCertificateTable from '@/components/SamlCertificateTable';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { isCloud } from '@/consts/env';
 import { AppDataContext } from '@/contexts/AppDataProvider';
@@ -25,7 +26,6 @@ import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
 import Select from '@/ds-components/Select';
 import Switch from '@/ds-components/Switch';
-import Table from '@/ds-components/Table';
 import TextInput from '@/ds-components/TextInput';
 import Textarea from '@/ds-components/Textarea';
 import useApi, { type RequestError } from '@/hooks/use-api';
@@ -36,8 +36,8 @@ import { uriValidator } from '@/utils/validator';
 
 import CreateSecretModal from './CreateSecretModal';
 import styles from './index.module.scss';
-import { useSecretTableColumns } from './use-secret-table-columns';
 import {
+  buildSamlSigningCertificateFilename,
   parseFormDataToSamlApplicationRequest,
   parseSamlApplicationResponseToFormData,
   samlApplicationEndpointPrefix,
@@ -108,6 +108,11 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
 
   const secretsData = useMemo(() => secrets.data ?? [], [secrets.data]);
 
+  const buildDownloadFilename = useCallback(
+    (id: string) => buildSamlSigningCertificateFilename(data.id, id),
+    [data.id]
+  );
+
   const api = useApi();
 
   const onSubmit = handleSubmit(
@@ -164,13 +169,6 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
     },
     [api, data.id, secrets, secretsData, t]
   );
-
-  const secretTableColumns = useSecretTableColumns({
-    appId: data.id,
-    onDelete,
-    onActivate,
-    onDeactivate,
-  });
 
   return (
     <>
@@ -300,14 +298,14 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
               </>
             ) : (
               <>
-                <Table
-                  hasBorder
-                  isRowHoverEffectDisabled
-                  rowIndexKey="id"
+                <SamlCertificateTable
+                  data={secretsData}
                   isLoading={!secrets.data && !secrets.error}
                   errorMessage={secrets.error?.body?.message ?? secrets.error?.message}
-                  rowGroups={[{ key: 'application_secrets', data: secretsData }]}
-                  columns={secretTableColumns}
+                  buildDownloadFilename={buildDownloadFilename}
+                  onDelete={onDelete}
+                  onActivate={onActivate}
+                  onDeactivate={onDeactivate}
                 />
                 <Button
                   size="small"

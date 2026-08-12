@@ -15,3 +15,13 @@ export const getRedirectUriOrigin = (redirectUri: string) => {
   // Otherwise return the original uri. e.g. native schema io.logto://callback
   return redirectUri;
 };
+
+/**
+ * The host of a client identifier URL, e.g. `client.example.com` for
+ * `https://client.example.com/oauth/metadata.json`.
+ *
+ * The path is dropped: whoever controls the host controls every path under it, so the path carries
+ * no identity of its own — and it is where the identifier's length comes from. A non-default port
+ * is kept, as it belongs to the origin the document is served from.
+ */
+export const getClientIdentifierHost = (clientIdentifier: string) => new URL(clientIdentifier).host;

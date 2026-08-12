@@ -58,6 +58,7 @@ const createProvisionLibrary = ({
   const generateUserId = jest.fn().mockResolvedValue('uid');
   const insertUser = jest.fn(async (user: CreateUser): Promise<InsertUserResult> => [user as User]);
   const provisionOrganizations = jest.fn().mockResolvedValue([]);
+  const provisionOrganizationsByEmailDomain = jest.fn().mockResolvedValue([]);
   const upsertSocialTokenSetSecret = jest.fn();
   const upsertEnterpriseSsoTokenSetSecret = jest.fn();
   const findEntities = jest.fn().mockResolvedValue(invitations);
@@ -94,6 +95,7 @@ const createProvisionLibrary = ({
         generateUserId,
         insertUser,
         provisionOrganizations,
+        provisionOrganizationsByEmailDomain,
       },
       socials: {
         upsertSocialTokenSetSecret,
@@ -123,6 +125,7 @@ const createProvisionLibrary = ({
     checkIdentifierCollision,
     insertUser,
     provisionOrganizations,
+    provisionOrganizationsByEmailDomain,
     upsertSocialTokenSetSecret,
     upsertEnterpriseSsoTokenSetSecret,
     findEntities,
@@ -157,6 +160,7 @@ describe('ProvisionLibrary', () => {
         checkIdentifierCollision,
         insertUser,
         provisionOrganizations,
+        provisionOrganizationsByEmailDomain,
         upsertSocialTokenSetSecret,
         upsertEnterpriseSsoTokenSetSecret,
         updateDefaultSignInExperience,
@@ -259,10 +263,7 @@ describe('ProvisionLibrary', () => {
         userId: 'uid',
         organizationIds: ['jit-organization-id'],
       });
-      expect(provisionOrganizations).toHaveBeenCalledWith({
-        userId: 'uid',
-        email: 'jane@example.com',
-      });
+      expect(provisionOrganizationsByEmailDomain).toHaveBeenCalledWith('uid', 'jane@example.com');
       expect(upsertSocialTokenSetSecret).toHaveBeenCalledWith('uid', {
         encryptedTokenSet,
         socialConnectorRelationPayload: {

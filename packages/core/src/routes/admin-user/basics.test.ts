@@ -3,6 +3,7 @@ import type { CreateUser, Role, SignInExperience, User } from '@logto/schemas';
 import { RoleType, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import { removeUndefinedKeys } from '@silverhand/essentials';
+import { StatementTimeoutError } from '@silverhand/slonik';
 
 import { mockSignInExperience, mockUser, mockUserResponse } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -470,6 +471,22 @@ describe('adminUserRoutes', () => {
     const response = await userRequest.delete(`/users/${userId}`);
     expect(response.status).toEqual(204);
     expect(signOutUser).toHaveBeenCalledWith(userId);
+  });
+
+  it('DELETE /users/:userId should proceed with deletion when revocation times out', async () => {
+    const userId = 'fooUser';
+    signOutUser.mockRejectedValueOnce(new StatementTimeoutError(new Error('statement timeout')));
+    const response = await userRequest.delete(`/users/${userId}`);
+    expect(response.status).toEqual(204);
+    expect(deleteUserById).toHaveBeenCalledWith(userId);
+  });
+
+  it('DELETE /users/:userId should fail when revocation fails with a non-timeout error', async () => {
+    const userId = 'fooUser';
+    signOutUser.mockRejectedValueOnce(new Error('connection refused'));
+    const response = await userRequest.delete(`/users/${userId}`);
+    expect(response.status).toEqual(500);
+    expect(deleteUserById).not.toHaveBeenCalled();
   });
 
   it('DELETE /users/:userId should throw if user is deleting self', async () => {

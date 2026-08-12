@@ -181,6 +181,19 @@ export const signingKeyRotationStateGuard = z.object({
 });
 export type SigningKeyRotationState = z.infer<typeof signingKeyRotationStateGuard>;
 
+/* --- CIMD Config --- */
+/**
+ * Config for the OAuth Client ID Metadata Document (CIMD) feature. The row is only written once
+ * the feature is toggled, so readers must fall back to {@link defaultCimdConfig}.
+ */
+export const cimdConfigGuard = z.object({
+  enabled: z.boolean(),
+});
+export type CimdConfig = z.infer<typeof cimdConfigGuard>;
+
+/** Applied when the `cimd` row is absent: the feature is opt-in per tenant. */
+export const defaultCimdConfig = Object.freeze({ enabled: false } satisfies CimdConfig);
+
 export enum LogtoTenantConfigKey {
   AdminConsole = 'adminConsole',
   CloudConnection = 'cloudConnection',
@@ -192,6 +205,8 @@ export enum LogtoTenantConfigKey {
   SigningKeyRotationState = 'signingKeyRotationState',
   /** Internal, ops-only override of the system message send-rate-limit policy. Not exposed by any API. */
   MessageRateLimitOverride = 'messageRateLimitOverride',
+  /** Tenant-level switch for the OAuth Client ID Metadata Document feature. */
+  Cimd = 'cimd',
 }
 export type LogtoTenantConfigType = {
   [LogtoTenantConfigKey.AdminConsole]: AdminConsoleData;
@@ -200,6 +215,7 @@ export type LogtoTenantConfigType = {
   [LogtoTenantConfigKey.IdToken]: IdTokenConfig;
   [LogtoTenantConfigKey.SigningKeyRotationState]: SigningKeyRotationState;
   [LogtoTenantConfigKey.MessageRateLimitOverride]: MessageRateLimitOverride;
+  [LogtoTenantConfigKey.Cimd]: CimdConfig;
 };
 
 export const logtoTenantConfigGuard: Readonly<{
@@ -211,6 +227,7 @@ export const logtoTenantConfigGuard: Readonly<{
   [LogtoTenantConfigKey.IdToken]: idTokenConfigGuard,
   [LogtoTenantConfigKey.SigningKeyRotationState]: signingKeyRotationStateGuard,
   [LogtoTenantConfigKey.MessageRateLimitOverride]: messageRateLimitOverrideGuard,
+  [LogtoTenantConfigKey.Cimd]: cimdConfigGuard,
 });
 
 /* --- Summary --- */

@@ -1,5 +1,5 @@
 import { adminTenantId, defaultTenantId } from '@logto/schemas';
-import { GlobalValues } from '@logto/shared';
+import { GlobalValues, TtlCache } from '@logto/shared';
 import { createMockUtils } from '@logto/shared/esm';
 
 const { jest } = import.meta;
@@ -21,7 +21,12 @@ mockEsm('#src/queries/domains.js', () => ({
   }),
 }));
 
-const { getTenantId } = await import('./tenant.js');
+const mockRedisCache = new TtlCache<string, string>(60_000);
+mockEsm('#src/caches/index.js', () => ({
+  redisCache: mockRedisCache,
+}));
+
+const { getTenantId, clearCustomDomainCache } = await import('./tenant.js');
 
 const getTenantIdFirstElement = async (url: URL) => {
   const [tenantId] = await getTenantId(url);
@@ -33,6 +38,7 @@ describe('getTenantId()', () => {
 
   afterEach(() => {
     process.env = backupEnv;
+    mockRedisCache.clear();
   });
 
   it('should resolve development tenant ID when needed', async () => {
@@ -177,5 +183,33 @@ describe('getTenantId()', () => {
     };
     findActiveDomain.mockResolvedValueOnce({ domain: 'logto.mock.com', tenantId: 'mock' });
     await expect(getTenantIdFirstElement(new URL('https://logto.mock.com'))).resolves.toBe('mock');
+  });
+
+  it('should discard a stale write-back when the domain cache is invalidated mid-lookup', async () => {
+    process.env = {
+      ...backupEnv,
+      ENDPOINT: 'https://foo.*.logto.mock/app',
+      NODE_ENV: 'production',
+    };
+    findActiveDomain
+      .mockImplementationOnce(async () => {
+        /**
+         * The domain mutation lands while this lookup's database read is in flight, i.e. the
+         * mapping returned below reflects pre-mutation state.
+         */
+        await clearCustomDomainCache('logto.mock.com');
+        return { domain: 'logto.mock.com', tenantId: 'stale' };
+      })
+      .mockResolvedValueOnce({ domain: 'logto.mock.com', tenantId: 'fresh' });
+
+    /** The in-flight lookup still resolves, but its result must not persist in the cache. */
+    await expect(getTenantIdFirstElement(new URL('https://logto.mock.com'))).resolves.toBe('stale');
+    await expect(getTenantIdFirstElement(new URL('https://logto.mock.com'))).resolves.toBe('fresh');
+
+    /**
+     * Served from the cache: both queued database results are already consumed, so a cache
+     * miss here would resolve to `undefined`.
+     */
+    await expect(getTenantIdFirstElement(new URL('https://logto.mock.com'))).resolves.toBe('fresh');
   });
 });

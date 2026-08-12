@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { Navigate, useParams, type RouteObject } from 'react-router-dom';
 import { safeLazy } from 'react-safe-lazy';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
+import useIsActionsEnabled from '@/hooks/use-is-actions-enabled';
 import NotFound from '@/pages/NotFound';
 
 import { actions } from './routes/actions';
@@ -28,6 +28,7 @@ const GetStarted = safeLazy(async () => import('@/pages/GetStarted'));
 
 export const useConsoleRoutes = () => {
   const tenantSettings = useTenantSettings();
+  const isActionsEnabled = useIsActionsEnabled();
   const { tenantId } = useParams();
 
   const routeObjects: RouteObject[] = useMemo(
@@ -44,7 +45,7 @@ export const useConsoleRoutes = () => {
         enterpriseSso,
         security,
         webhooks,
-        ...(isDevFeaturesEnabled ? [actions] : []),
+        ...(isActionsEnabled ? [actions] : []),
         users,
         auditLogs,
         roles,
@@ -63,7 +64,7 @@ export const useConsoleRoutes = () => {
         tenantSettings,
         customizeJwt
       ),
-    [tenantId, tenantSettings]
+    [isActionsEnabled, tenantId, tenantSettings]
   );
 
   return routeObjects;

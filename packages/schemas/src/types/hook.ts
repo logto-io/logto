@@ -36,8 +36,13 @@ export type HookTestErrorResponseData = z.infer<typeof hookTestErrorResponseData
  * we will store the context before processing the interaction and consume it after the interaction is processed if needed.
  */
 export type InteractionApiMetadata = {
-  /** The application ID if the hook is triggered by interaction API. */
+  /** The registered application ID if the hook is triggered by interaction API. */
   applicationId?: string;
+  /**
+   * The CIMD client identifier URL, kept apart from `applicationId` so payload consumers
+   * branch on key presence instead of URL shape.
+   */
+  cimdClientId?: string;
   /** The session ID if the hook is triggered by interaction API. */
   sessionId?: string;
   /** The InteractionEvent if the hook is triggered by interaction API. */
@@ -47,6 +52,8 @@ export type InteractionApiMetadata = {
 type InteractionApiContextPayload = {
   /** Fetch application detail by application ID before sending the hook event */
   application?: Pick<Application, 'id' | 'type' | 'name' | 'description'>;
+  /** CIMD clients are unregistered, so the identifier URL stands in for `application`. */
+  cimdClientId?: string;
   sessionId?: string;
   interactionEvent?: InteractionEvent;
 };
@@ -94,9 +101,34 @@ export type DataHookEventPayload = {
   Partial<ManagementApiContext> &
   Record<string, unknown>;
 
-export type ExceptionHookEventPayload = Omit<DataHookEventPayload, 'event'> & {
+/**
+ * A key-remapping omit instead of the built-in `Omit`: on a type carrying a string index
+ * signature (e.g. the hook event payloads), `Omit` collapses every named property into
+ * `unknown`; the homomorphic form keeps the named properties typed.
+ */
+export type BetterOmit<T, Ignore> = {
+  [key in keyof T as key extends Ignore ? never : key]: T[key];
+};
+
+export type ExceptionHookEventPayload = BetterOmit<DataHookEventPayload, 'event'> & {
   event: ExceptionHookEvent;
 };
+export type GrantLimitExceededEventData = {
+  userId: string;
+  /** The registered application ID; absent for a CIMD client. */
+  applicationId?: string;
+  /**
+   * The CIMD client identifier URL, set instead of `applicationId`. No grant-ceiling source
+   * exists for CIMD clients today (the CIMD policy denies Logto private client metadata
+   * regardless of source), so this key is defensive: it keeps `applicationId` registered-only
+   * by construction should a ceiling for CIMD clients ever be introduced.
+   */
+  cimdClientId?: string;
+  revokedGrantIds: string[];
+  maxAllowedGrants: number;
+  preRevocationActiveGrantCount: number;
+};
+
 export type HookEventPayload =
   | InteractionHookEventPayload
   | DataHookEventPayload

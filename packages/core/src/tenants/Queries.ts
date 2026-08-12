@@ -6,6 +6,7 @@ import { ApplicationSecretQueries } from '#src/queries/application-secrets.js';
 import createApplicationSignInExperienceQueries from '#src/queries/application-sign-in-experience.js';
 import { createApplicationQueries } from '#src/queries/application.js';
 import { createApplicationsRolesQueries } from '#src/queries/applications-roles.js';
+import { createCimdQueries } from '#src/queries/cimd.js';
 import { createConnectorQueries } from '#src/queries/connector.js';
 import { createCustomPhraseQueries } from '#src/queries/custom-phrase.js';
 import { createCustomProfileFieldsQueries } from '#src/queries/custom-profile-fields.js';
@@ -33,6 +34,7 @@ import { createSignInExperienceQueries } from '#src/queries/sign-in-experience.j
 import SsoConnectorQueries from '#src/queries/sso-connectors.js';
 import { createSubjectTokenQueries } from '#src/queries/subject-token.js';
 import createTenantQueries from '#src/queries/tenant.js';
+import { TrustedDeviceQueries } from '#src/queries/trusted-device.js';
 import { createUserGeoLocationQueries } from '#src/queries/user-geo-location.js';
 import { createUserSignInCountriesQueries } from '#src/queries/user-sign-in-countries.js';
 import UserSsoIdentityQueries from '#src/queries/user-sso-identities.js';
@@ -90,12 +92,14 @@ export default class Queries {
   verificationRecords = new VerificationRecordQueries(this.pool);
   accountCenters = new AccountCenterQueries(this.pool, this.wellKnownCache);
   tenants = createTenantQueries(this.pool);
+  trustedDevices = new TrustedDeviceQueries(this.pool);
   tenantUsage = new TenantUsageQuery(this.pool);
   emailTemplates = new EmailTemplatesQueries(this.pool, this.wellKnownCache);
   captchaProviders = new CaptchaProviderQueries(this.pool);
   sentinelActivities = createSentinelActivitiesQueries(this.pool);
   oidcSessionExtensions = new OidcSessionExtensionsQueries(this.pool);
   secrets = new SecretQuery(this.pool);
+  cimd = createCimdQueries(this.pool);
 
   constructor(
     public readonly pool: CommonQueryMethods,

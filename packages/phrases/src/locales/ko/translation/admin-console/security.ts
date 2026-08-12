@@ -159,9 +159,8 @@ const security = {
     custom_email_allowlist: {
       title: '사용자 지정 이메일 주소 허용',
       description:
-        '새 가입 및 새로 연결되는 이메일에는 일치하는 이메일 주소, 도메인 또는 와일드카드 이메일 주소 패턴만 허용합니다.',
-      placeholder:
-        '허용할 이메일 주소, 도메인 또는 와일드카드 이메일 주소 패턴을 입력하세요(예: bar@example.com, @example.com, foo*@example.com, *@example.com)',
+        '신규 가입 및 새로 연결되는 이메일에 특정 이메일 도메인, 이메일 주소 또는 와일드카드 패턴만 허용하는 규칙을 추가하세요. 예: bar@example.com, @example.com, foo*@example.com, *@example.com. gmail.com과 googlemail.com 도메인은 동일하게 처리되며 로컬 부분의 점은 무시되므로 foo.bar@gmail.com은 foobar@googlemail.com과 일치합니다.',
+      placeholder: '이메일 주소, 도메인 또는 와일드카드 패턴 입력',
       duplicate_error: '이메일 주소, 도메인 또는 와일드카드 이메일 주소 패턴이 이미 추가되었습니다',
       invalid_format_error:
         '유효한 이메일 주소(bar@example.com), 도메인(@example.com) 또는 와일드카드 이메일 주소 패턴(foo*@example.com, *@example.com)이어야 합니다',
@@ -189,9 +188,8 @@ const security = {
     custom_email_address: {
       title: '사용자 정의 이메일 주소 차단',
       description:
-        '특정 이메일 도메인, 이메일 주소 또는 와일드카드 이메일 주소 패턴이 UI를 통해 등록되거나 연결되지 않도록 차단하는 규칙을 추가합니다.',
-      placeholder:
-        '차단할 이메일 주소, 도메인 또는 와일드카드 이메일 주소 패턴을 입력하세요 (예: bar@example.com, @example.com, foo*@example.com, *@example.com)',
+        '특정 이메일 도메인, 이메일 주소 또는 와일드카드 패턴이 UI를 통해 등록되거나 연결되지 않도록 하는 규칙을 추가하세요. 예: bar@example.com, @example.com, foo*@example.com, *@example.com. gmail.com과 googlemail.com 도메인은 동일하게 처리되며 로컬 부분의 점은 무시되므로 foo.bar@gmail.com은 foobar@googlemail.com과 일치합니다.',
+      placeholder: '이메일 주소, 도메인 또는 와일드카드 패턴 입력',
       duplicate_error: '이메일 주소, 도메인 또는 와일드카드 이메일 주소 패턴이 이미 추가되었습니다',
       invalid_format_error:
         '유효한 이메일 주소(bar@example.com), 도메인(@example.com) 또는 와일드카드 이메일 주소 패턴(foo*@example.com, *@example.com)이어야 합니다',

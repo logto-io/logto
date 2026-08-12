@@ -72,6 +72,16 @@ const actions = {
   form_error: {
     invalid_json: '無效的 JSON 格式',
   },
+  sandbox_and_security_warning: {
+    title: '腳本以伺服器權限執行',
+    description:
+      '在自託管的 Logto 中，此腳本與 Logto 本身執行於相同環境：它可以讀取伺服器環境變數並連線到你的內部網路服務。它沒有沙箱隔離。請僅向你信任可存取伺服器的人開放此頁面。此動作僅在本機密碼驗證失敗後執行——只有在獨立驗證提交的密碼後，才能回傳 `passwordVerified: true`。透過此動作建立的使用者會繞過僅適用於註冊的限制，包括電子郵件黑名單、僅 SSO 網域、停用註冊模式，以及註冊必填資料檢查。對現有使用者的資料和密碼寫入也會在 MFA 完成前發生。',
+  },
+  sandbox_warning: {
+    title: '腳本以伺服器權限執行',
+    description:
+      '在自託管的 Logto 中，此腳本與 Logto 本身執行於相同環境：它可以讀取伺服器環境變數並連線到你的內部網路服務。它沒有沙箱隔離。請僅向你信任可存取伺服器的人開放此頁面。',
+  },
   security_warning: {
     title: '安全警告',
     description:

@@ -152,33 +152,6 @@ describe('client authentication', () => {
     );
   });
 
-  it('should pass when client credentials are valid in authorization header (legacy)', async () => {
-    await expect(
-      post({
-        authorization: `Basic ${Buffer.from(`${application.id}:${application.secret}`).toString(
-          'base64'
-        )}`,
-        body: { resource: resource.indicator },
-      })
-    ).resolves.toMatchObject({
-      token_type: 'Bearer',
-    });
-  });
-
-  it('should pass when client credentials are valid in body (legacy)', async () => {
-    await expect(
-      post({
-        body: {
-          client_id: application.id,
-          client_secret: application.secret,
-          resource: resource.indicator,
-        },
-      })
-    ).resolves.toMatchObject({
-      token_type: 'Bearer',
-    });
-  });
-
   it('should pass when client credentials are valid in authorization header', async () => {
     const application = await createApplication('application', ApplicationType.MachineToMachine);
     const secret = await createApplicationSecret({

@@ -92,22 +92,25 @@ export const createSamlSsoConnectorSigningKeyQueries = (pool: CommonQueryMethods
       `);
     });
 
-  const deleteSigningKeyById = async (id: string) => {
+  /**
+   * Delete a key only when it is inactive and belongs to the connector — the `active = false`
+   * predicate makes the delete-active guard atomic (a concurrent activation makes this a no-op
+   * instead of deleting the active key).
+   */
+  const deleteInactiveSigningKeyBySsoConnectorIdAndId = async (
+    ssoConnectorId: string,
+    id: string
+  ) => {
     const { rowCount } = await pool.query(sql`
       delete from ${table}
       where ${fields.id} = ${id}
+        and ${fields.ssoConnectorId} = ${ssoConnectorId}
+        and ${fields.active} = false
     `);
 
     if (rowCount < 1) {
       throw new DeletionError(SamlSsoConnectorSigningKeys.table);
     }
-  };
-
-  const deleteSigningKeysBySsoConnectorId = async (ssoConnectorId: string) => {
-    await pool.query(sql`
-      delete from ${table}
-      where ${fields.ssoConnectorId} = ${ssoConnectorId}
-    `);
   };
 
   return {
@@ -117,7 +120,6 @@ export const createSamlSsoConnectorSigningKeyQueries = (pool: CommonQueryMethods
     findActiveSigningKeyBySsoConnectorId,
     findSigningKeyBySsoConnectorIdAndId,
     updateSigningKeyStatusBySsoConnectorIdAndId,
-    deleteSigningKeyById,
-    deleteSigningKeysBySsoConnectorId,
+    deleteInactiveSigningKeyBySsoConnectorIdAndId,
   };
 };

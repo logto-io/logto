@@ -29,12 +29,12 @@
           {
             "name": "start_time",
             "in": "query",
-            "description": "Exclusive lower bound on `createdAt`, in unix milliseconds. When set, returns only logs where `createdAt > start_time`. Recommended for clients paginating across very large log ranges to keep query latency consistent."
+            "description": "Inclusive lower bound on `createdAt`, in unix milliseconds. When set, returns only logs where `createdAt >= start_time`. Recommended for clients paginating across very large log ranges to keep query latency consistent. Because the bound is inclusive, when resuming pagination from the last fetched log, pass its `createdAt + 1` as `start_time` (or de-duplicate by log `id`) to avoid re-fetching the boundary log."
           },
           {
             "name": "end_time",
             "in": "query",
-            "description": "Exclusive upper bound on `createdAt`, in unix milliseconds. When set, returns only logs where `createdAt < end_time`. Returns `400` if `start_time >= end_time` when both are present."
+            "description": "Inclusive upper bound on `createdAt`, in unix milliseconds. When set, returns only logs where `createdAt <= end_time`. Returns `400` if `start_time > end_time` when both are present."
           },
           {
             "name": "enableCap",
@@ -44,7 +44,7 @@
         ],
         "responses": {
           "400": {
-            "description": "Returned when `start_time` or `end_time` is not a finite number, or when `start_time >= end_time`."
+            "description": "Returned when `start_time` or `end_time` is not a finite number, or when `start_time > end_time`."
           },
           "200": {
             "description": "An array of logs that match the given query.",

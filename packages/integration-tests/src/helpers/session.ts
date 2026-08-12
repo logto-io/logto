@@ -4,7 +4,7 @@ import { ApplicationType, SignInIdentifier, type GetUserSessionsResponse } from 
 import { assert } from '@silverhand/essentials';
 
 import { assignUserConsentScopes } from '#src/api/application-user-consent-scope.js';
-import { createApplication } from '#src/api/application.js';
+import { createApplication, createApplicationWithSecret } from '#src/api/application.js';
 import { consent } from '#src/api/interaction.js';
 import { defaultConfig } from '#src/client/index.js';
 import { demoAppRedirectUri } from '#src/constants.js';
@@ -90,7 +90,9 @@ export const createAppAndSignInWithPassword = async ({
   appName = generateTestName(),
   redirectUri = demoAppRedirectUri,
 }: CreateAppAndSignInOptions) => {
-  const app = await createApplication(appName, appType, {
+  const createApp =
+    appType === ApplicationType.Traditional ? createApplicationWithSecret : createApplication;
+  const app = await createApp(appName, appType, {
     isThirdParty,
     oidcClientMetadata: {
       redirectUris: [redirectUri],

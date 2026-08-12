@@ -79,6 +79,39 @@ const applications = {
     'Logto verwendet eine Anwendungs-Entität für OIDC, um Aufgaben wie die Identifizierung deiner Apps, das Management der Anmeldung und die Erstellung von Prüfprotokollen zu erleichtern.',
   third_party_application_placeholder_description:
     'Verwende Logto als Identity Provider, um OAuth-Autorisierung für Drittanbieterdienste bereitzustellen. \n Beinhaltet einen vorgebauten Benutzerzustimmungsbildschirm für den Ressourcenzugriff. <a>Mehr erfahren</a>',
+  dynamic_app: {
+    title: 'Dynamische App',
+    subtitle: 'CIMD',
+    description:
+      'Dynamische App erlaubt OAuth-Clients, sich ohne vorherige Registrierung zu verbinden.',
+    settings_description:
+      'Dynamische App erlaubt OAuth-Clients, sich ohne vorherige Registrierung zu verbinden. Verwendet die Spezifikation OAuth Client ID Metadata Document (CIMD).',
+    app_id_placeholder: 'Wird von jedem Client dynamisch bereitgestellt',
+    enable_confirm_modal: {
+      title: 'Dynamischen Client-Zugriff aktivieren?',
+      content:
+        'Jeder OAuth-Client mit einer gültigen öffentlichen HTTPS-Client-ID-URL kann die Autorisierung für diesen Mandanten ohne vorherige Registrierung starten. Der Zugriff bleibt durch deine maximalen Berechtigungen und die Zustimmung der Benutzer begrenzt.',
+    },
+    enabled: 'Dynamische App erfolgreich aktiviert.',
+    disable_confirm_modal: {
+      title: 'Dynamische App deaktivieren?',
+      content:
+        'CIMD-Clients können keine neuen Autorisierungsanfragen mehr starten. Bestehende Berechtigungen bleiben erhalten und bereits ausgestellte Access Tokens können bis zu ihrem Ablauf gültig bleiben.',
+    },
+    disabled: 'Dynamische App erfolgreich deaktiviert.',
+    permissions: {
+      user_title: 'Benutzer',
+      user_description:
+        'Wählen Sie die Berechtigungen aus, die von OAuth-Clients für den Zugriff auf bestimmte Benutzerdaten angefordert werden.',
+      grant_user_level_permissions: 'Benutzerberechtigungen erteilen',
+      organization_title: 'Organisation',
+      organization_description:
+        'Wählen Sie die Berechtigungen aus, die von OAuth-Clients für den Zugriff auf bestimmte Organisationsdaten angefordert werden.',
+      grant_organization_level_permissions: 'Organisationsberechtigungen erteilen',
+      permission_delete_confirm:
+        'Diese Aktion entfernt die Berechtigung aus der dynamischen App, sodass OAuth-Clients keine Benutzerberechtigung mehr dafür anfragen können. Sind Sie sicher, dass Sie fortfahren möchten?',
+    },
+  },
   guide: {
     third_party: {
       title: 'Integriere eine Drittanbieteranwendung',

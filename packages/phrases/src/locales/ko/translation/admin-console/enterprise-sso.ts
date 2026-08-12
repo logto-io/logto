@@ -32,6 +32,18 @@ const enterprise_sso = {
         'SP 엔터티 ID는 URI 형식이나 URL 형식을 식별자로 사용하는 것이 일반적이지만, 반드시 그런 것은 아닙니다.',
       acs_url_field_placeholder: 'https://your-domain.com/api/saml/callback',
       entity_id_field_placeholder: 'urn:your-domain.com:sp:saml:{serviceProviderId}',
+      sign_auth_request: '인증 요청 서명',
+      sign_auth_request_tooltip:
+        'Logto는 생성된 인증서로 SAML 인증 요청에 서명합니다. 신원 공급자가 서명된 요청을 검증하도록 구성된 경우에만 활성화하세요.',
+      signing_certificate_field_name: '요청 서명 인증서',
+      signing_keys_empty: '아직 생성된 서명 키가 없습니다.',
+      generate_signing_key: '새 키 생성',
+      signing_key_generated: '서명 키가 생성되었습니다.',
+      signing_key_activated: '서명 키가 활성화되었습니다.',
+      signing_key_deactivated: '서명 키가 비활성화되었습니다.',
+      signing_key_deleted: '서명 키가 삭제되었습니다.',
+      sign_auth_request_warning:
+        '활성화한 후 아래에서 서명 키를 생성하고 해당 인증서를 신원 공급자에 등록하세요(그리고 그곳에서 서명된 요청 검증을 켜세요). 인증서가 등록될 때까지 이 연결을 통한 로그인은 실패합니다.',
     },
     oidc: {
       redirect_uri_field_name: '리디렉션 URI (콜백 URL)',

@@ -33,25 +33,9 @@ import { ZodError, z } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import { createLogtoConfigQueries } from '#src/queries/logto-config.js';
 import type Queries from '#src/tenants/Queries.js';
-import {
-  unwrapActionScriptFromLegacyRunner,
-  wrapActionScriptForLegacyRunner,
-} from '#src/utils/action-script-compatibility.js';
 import { exportJWK } from '#src/utils/jwks.js';
 
 export type LogtoConfigLibrary = ReturnType<typeof createLogtoConfigLibrary>;
-
-const parseActionWithOriginalScript = <T extends LogtoActionKey>(
-  key: T,
-  value: unknown
-): ActionType[T] => {
-  const action = actionConfigGuard[key].parse(value);
-
-  return actionConfigGuard[key].parse({
-    ...action,
-    script: unwrapActionScriptFromLegacyRunner(action.script),
-  });
-};
 
 export const createLogtoConfigLibrary = ({
   logtoConfigs: {
@@ -177,15 +161,11 @@ export const createLogtoConfigLibrary = ({
   };
 
   const upsertAction = async <T extends LogtoActionKey>(key: T, value: ActionType[T]) => {
-    const persistedValue = actionConfigGuard[key].parse({
-      ...value,
-      script: wrapActionScriptForLegacyRunner(value.script),
-    });
-    const { value: rawValue } = await queryUpsertAction(key, persistedValue);
+    const { value: rawValue } = await queryUpsertAction(key, value);
 
     return {
       key,
-      value: parseActionWithOriginalScript(key, rawValue),
+      value: actionConfigGuard[key].parse(rawValue),
     };
   };
 
@@ -201,30 +181,17 @@ export const createLogtoConfigLibrary = ({
       });
     }
 
-    return parseActionWithOriginalScript(key, rows[0]?.value);
+    return z.object({ value: actionConfigGuard[key] }).parse(rows[0]).value;
   };
 
   const getActions = async (consoleLog: ConsoleLog): Promise<Partial<ActionType>> => {
     try {
       const { rows } = await getRowsByKeys(Object.values(LogtoActionKey));
 
-      const actions = z
-        .object(actionConfigGuard)
-        .partial()
-        .parse(Object.fromEntries(rows.map(({ key, value }) => [key, value])));
-
       return z
         .object(actionConfigGuard)
         .partial()
-        .parse(
-          Object.fromEntries(
-            Object.values(LogtoActionKey).flatMap((key) => {
-              const action = actions[key];
-
-              return action ? [[key, parseActionWithOriginalScript(key, action)]] : [];
-            })
-          )
-        );
+        .parse(Object.fromEntries(rows.map(({ key, value }) => [key, value])));
     } catch (error: unknown) {
       if (error instanceof ZodError) {
         consoleLog.error(
@@ -300,6 +267,18 @@ export const createLogtoConfigLibrary = ({
    * This function is intended to be called before accessing OIDC configs to ensure the key statuses are up-to-date.
    */
   const promoteScheduledSigningKeyRotation = async () => {
+    // Lock-free pre-check so the common bootstrap path skips the `FOR UPDATE` transaction below.
+    // Safe because staged rotations are always scheduled in the future, and the authoritative
+    // check + mutation still runs under the lock.
+    const scheduledRotationState = await getSigningKeyRotationState();
+
+    if (
+      !scheduledRotationState?.signingKeyRotationAt ||
+      scheduledRotationState.signingKeyRotationAt > Date.now()
+    ) {
+      return;
+    }
+
     await pool.transaction(async (connection) => {
       const transactionalQueries = createLogtoConfigQueries(connection, wellKnownCache);
       await transactionalQueries.lockPrivateSigningKeysAndRotationState();

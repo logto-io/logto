@@ -1,0 +1,16 @@
+.expired {
+  color: var(--color-placeholder);
+}
+
+.fingerPrint {
+  word-break: break-all;
+}
+
+.icon {
+  color: var(--color-text-secondary);
+
+  > svg {
+    width: 20px;
+    height: 20px;
+  }
+}

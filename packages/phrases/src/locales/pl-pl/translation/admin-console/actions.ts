@@ -76,6 +76,16 @@ const actions = {
   form_error: {
     invalid_json: 'Nieprawidłowy format JSON',
   },
+  sandbox_and_security_warning: {
+    title: 'Skrypty działają z uprawnieniami serwera',
+    description:
+      'W samodzielnie hostowanym Logto ten skrypt działa w tym samym środowisku co samo Logto: może odczytywać zmienne środowiskowe serwera i osiągać usługi w Twojej sieci wewnętrznej. Nie jest w piaskownicy. Udostępniaj tę stronę tylko osobom, którym zaufałbyś dostęp do serwera. Ta akcja jest uruchamiana dopiero po nieudanej weryfikacji lokalnego hasła — zwracaj `passwordVerified: true` tylko po niezależnym zweryfikowaniu przesłanego hasła. Użytkownicy provisionowani przez tę akcję omijają zabezpieczenia dotyczące tylko rejestracji, w tym blokadę e-mail, domenę tylko SSO, tryb wyłączonej rejestracji oraz sprawdzanie obowiązkowego profilu przy rejestracji. Zapis profilu i hasła istniejących użytkowników również następuje przed zakończeniem MFA.',
+  },
+  sandbox_warning: {
+    title: 'Skrypty działają z uprawnieniami serwera',
+    description:
+      'W samodzielnie hostowanym Logto ten skrypt działa w tym samym środowisku co samo Logto: może odczytywać zmienne środowiskowe serwera i osiągać usługi w Twojej sieci wewnętrznej. Nie jest w piaskownicy. Udostępniaj tę stronę tylko osobom, którym zaufałbyś dostęp do serwera.',
+  },
   security_warning: {
     title: 'Ostrzeżenie bezpieczeństwa',
     description:

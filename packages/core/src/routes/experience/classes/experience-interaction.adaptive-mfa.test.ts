@@ -57,7 +57,10 @@ const users = {
   hasUserWithIdentity: jest.fn().mockResolvedValue(false),
 };
 
-const tenant = new MockTenant(createMockProvider(), { signInExperiences, users });
+const getEffectivePolicy = jest.fn().mockResolvedValue({ enabled: false, durationDays: 30 });
+const tenant = new MockTenant(createMockProvider(), { signInExperiences, users }, undefined, {
+  trustedDevicePolicy: { getEffectivePolicy },
+});
 const mockInteractionDetails = {
   jti: 'session-id',
   params: { client_id: 'application-id' },
@@ -851,6 +854,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
       assignReleaseOnSuccessInteractionHookResult: jest.fn(),
       assignReleaseAnywayInteractionHookResult: jest.fn(),
       appendDataHookContext: jest.fn(),
+      interactionDetails: mockInteractionDetails,
       ...createContextWithRouteParameters({
         headers: {
           'x-logto-cf-bot-score': '10',

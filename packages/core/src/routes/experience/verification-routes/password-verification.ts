@@ -15,6 +15,7 @@ import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import { getClientIdentifierPayload } from '#src/oidc/cimd/index.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
 import { appendPasswordPayloadToActionProvisioningProfile } from '../classes/libraries/action-provisioning-profile.js';
@@ -129,9 +130,11 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
                 auditContext: {
                   createLog: ctx.createLog,
                   sessionId: ctx.interactionDetails.jti,
-                  applicationId: conditional(
-                    typeof ctx.interactionDetails.params.client_id === 'string' &&
-                      ctx.interactionDetails.params.client_id
+                  ...getClientIdentifierPayload(
+                    conditional(
+                      typeof ctx.interactionDetails.params.client_id === 'string' &&
+                        ctx.interactionDetails.params.client_id
+                    )
                   ),
                   userId: existingUser?.id,
                 },

@@ -1,6 +1,7 @@
 import { trySafe, type Optional } from '@silverhand/essentials';
 import { type ZodType } from 'zod';
 
+import { invalidateWithGeneration, snapshotGeneration, type GuardedKeys } from './generation.js';
 import { type CacheStore } from './types.js';
 import { cacheConsole } from './utils.js';
 
@@ -70,9 +71,13 @@ export abstract class BaseCache<CacheMapT extends Record<string, unknown>> {
     return this.cacheStore.set(this.cacheKey(type, key), JSON.stringify(value), expire);
   }
 
-  /** Delete value from the inner cache store for the given type and key. */
-  async delete(type: CacheKeyOf<CacheMapT>, key: string) {
-    return this.cacheStore.delete(this.cacheKey(type, key));
+  /**
+   * Invalidate the cached value for the given type and key, after the mutation it reflects
+   * has been committed. See {@link invalidateWithGeneration} for the ordering guarantee it
+   * provides, which requires callers to await it before returning to their own caller.
+   */
+  async invalidate(type: CacheKeyOf<CacheMapT>, key: string) {
+    await invalidateWithGeneration(this.cacheStore, this.guardedKeys(type, key));
   }
 
   /**
@@ -93,11 +98,11 @@ export abstract class BaseCache<CacheMapT extends Record<string, unknown>> {
     const mutated = async function (this: unknown, ...args: Args): Promise<Return> {
       const value = await run.apply(this, args);
 
-      // We don't leverage `finally` here since we want to ensure cache deleting
-      // only happens when the original function executed successfully
-      void Promise.all(
+      // We don't leverage `finally` here since we want to ensure cache invalidation
+      // only happens when the original function executed successfully.
+      await Promise.all(
         types.map(async ([type, cacheKey]) =>
-          trySafe(kvCache.delete(type, cacheKey?.(...args) ?? BaseCache.defaultKey))
+          kvCache.invalidate(type, cacheKey?.(...args) ?? BaseCache.defaultKey)
         )
       );
 
@@ -110,6 +115,12 @@ export abstract class BaseCache<CacheMapT extends Record<string, unknown>> {
   /**
    * [Memoize](https://en.wikipedia.org/wiki/Memoization) a function and cache the result. The function execution
    * will be also cached, which means there will be only one execution at a time.
+   *
+   * Results computed before an invalidation (see {@link invalidate}) are discarded instead of
+   * written back, so stale data does not persist in the cache after an invalidation returns,
+   * within the bounds documented on {@link invalidateWithGeneration}. (A caller that joined an
+   * already in-flight execution may still receive pre-invalidation data once; it is never
+   * written back.)
    *
    * @param run The function to memoize.
    * @param config The object to determine how cache key will be built. See {@link CacheKeyConfig} for details.
@@ -153,9 +164,16 @@ export abstract class BaseCache<CacheMapT extends Record<string, unknown>> {
             return cachedValue;
           }
 
-          const value = await run.apply(this, args);
+          const writeBackIfFresh = await snapshotGeneration(
+            kvCache.cacheStore,
+            kvCache.guardedKeys(type, promiseKey)
+          );
 
-          await trySafe(kvCache.set(type, promiseKey, value, getExpiresIn?.(value)));
+          const value = await run.apply(this, args);
+          // Resolved outside the write-back, which swallows what it throws.
+          const expiresIn = getExpiresIn?.(value);
+
+          await writeBackIfFresh(async () => kvCache.set(type, promiseKey, value, expiresIn));
 
           return value;
         } finally {
@@ -172,6 +190,15 @@ export abstract class BaseCache<CacheMapT extends Record<string, unknown>> {
   }
 
   abstract getValueGuard<Type extends CacheKeyOf<CacheMapT>>(type: Type): ZodType<CacheMapT[Type]>;
+
+  protected guardedKeys(type: CacheKeyOf<CacheMapT>, key: string): GuardedKeys {
+    return {
+      value: this.cacheKey(type, key),
+      // The marker owns a controlled segment so free-form keys (e.g. arbitrary resource
+      // indicators) can never collide with it.
+      generation: `${this.tenantId}:generation:${type}:${key}`,
+    };
+  }
 
   protected cacheKey(type: CacheKeyOf<CacheMapT>, key: string) {
     return `${this.tenantId}:${type}:${key}`;

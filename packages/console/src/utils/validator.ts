@@ -23,3 +23,6 @@ export const jsonValidator = (value: string) => {
 
   return true;
 };
+
+/** Environment variable keys accepted by Actions / Custom JWT form validation. */
+export const isValidEnvironmentVariableKey = (key: string) => /^\w+$/.test(key);

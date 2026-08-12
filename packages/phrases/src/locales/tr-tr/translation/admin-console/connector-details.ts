@@ -87,6 +87,20 @@ const connector_details = {
     in_use: 'Oturum açma için etkin',
     not_in_use: 'Oturum açma için devre dışı',
   },
+  email_logs: {
+    title: 'E-posta kayıtları',
+    time: 'Zaman',
+    recipient: 'Alıcı',
+    recipient_placeholder: 'Alıcının tam adresiyle ara',
+    template_type: 'Şablon türü',
+    status: 'Durum',
+    status_sent: 'Gönderildi',
+    status_failed: 'Başarısız',
+    language_tag: 'Dil',
+    provider_message_id: 'Sağlayıcı mesaj kimliği',
+    previous_page: 'Önceki',
+    next_page: 'Sonraki',
+  },
 };
 
 export default Object.freeze(connector_details);

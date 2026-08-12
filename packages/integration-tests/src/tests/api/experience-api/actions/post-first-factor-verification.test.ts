@@ -27,7 +27,7 @@ import {
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
 import { UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest, generatePassword, generateUsername } from '#src/utils.js';
+import { generatePassword, generateUsername } from '#src/utils.js';
 
 const actionKey = LogtoActionKey.PostFirstFactorVerification;
 
@@ -75,7 +75,7 @@ const runAction = ({ event }) => {
 };
 `;
 
-devFeatureTest.describe('action: post first factor verification', () => {
+describe('action: post first factor verification', () => {
   const userApi = new UserApiTest();
 
   beforeAll(async () => {

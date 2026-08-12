@@ -32,6 +32,18 @@ const enterprise_sso = {
         'يمكن أن يكون معرف كيان مزود الخدمة في أي تنسيق نصي، عادةً باستخدام صيغة URI أو URL كمُعرِّف، ولكن هذا ليس إلزاميًا.',
       acs_url_field_placeholder: 'https://your-domain.com/api/saml/callback',
       entity_id_field_placeholder: 'urn:your-domain.com:sp:saml:{serviceProviderId}',
+      sign_auth_request: 'توقيع طلب المصادقة',
+      sign_auth_request_tooltip:
+        'يوقّع Logto طلبات مصادقة SAML بشهادة مُنشأة. فعّل هذا الخيار فقط إذا كان موفر الهوية لديك مهيأ للتحقق من الطلبات الموقعة.',
+      signing_certificate_field_name: 'شهادة توقيع الطلبات',
+      signing_keys_empty: 'لم يتم إنشاء أي مفاتيح توقيع بعد.',
+      generate_signing_key: 'إنشاء مفتاح جديد',
+      signing_key_generated: 'تم إنشاء مفتاح التوقيع.',
+      signing_key_activated: 'تم تفعيل مفتاح التوقيع.',
+      signing_key_deactivated: 'تم تعطيل مفتاح التوقيع.',
+      signing_key_deleted: 'تم حذف مفتاح التوقيع.',
+      sign_auth_request_warning:
+        'بعد التفعيل، أنشئ مفتاح توقيع أدناه وسجّل شهادته لدى موفر الهوية الخاص بك (وفعّل التحقق من الطلبات الموقعة هناك). حتى يتم تسجيل الشهادة، سيفشل تسجيل الدخول عبر هذا الاتصال.',
     },
     oidc: {
       redirect_uri_field_name: 'عنوان URL لإعادة التوجيه (عنوان URL للرد)',

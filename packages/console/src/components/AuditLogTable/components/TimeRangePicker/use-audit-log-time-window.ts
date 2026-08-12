@@ -86,11 +86,9 @@ const useAuditLogTimeWindow = ({
       // instead of silently broadening to the full retention window.
       // When already on `custom`, leave any existing dates intact.
       const isAlreadyCustom = range === customRange;
-      // `+ 1` undoes the day-snap preset's `-1ms` bias — without it the seed
-      // formats to the day before the preset's actual window.
       const seedStart =
         !isAlreadyCustom && startTime !== undefined
-          ? format(startTime + 1, dateInputPattern)
+          ? format(startTime, dateInputPattern)
           : undefined;
       const seedEnd = isAlreadyCustom ? undefined : format(Date.now(), dateInputPattern);
       updateSearchParameters({

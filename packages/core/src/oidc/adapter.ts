@@ -17,6 +17,7 @@ import { getTenantUrls } from '#src/env-set/utils.js';
 import type Queries from '#src/tenants/Queries.js';
 
 import { appLevelAccessControlMetadataKey } from './application-access-control.js';
+import { isCimdClient } from './cimd/index.js';
 import { getConstantClientMetadata } from './utils.js';
 
 /**
@@ -149,6 +150,7 @@ export default function postgresAdapter(
     const reject = async () => {
       throw new Error('Not implemented');
     };
+
     const transpileClient = (
       {
         id: client_id,
@@ -184,6 +186,15 @@ export default function postgresAdapter(
         }
         if (id === deviceDemoAppApplicationId) {
           return buildDeviceDemoAppClientMetadata(envSet);
+        }
+
+        /**
+         * A CIMD client ID is a URL and can never name a registered application, so resolution is
+         * handed over to the provider's native CIMD resolver without a database lookup — every
+         * other identifier keeps folding its lookup failures into `invalid_client`.
+         */
+        if (isCimdClient(envSet, id)) {
+          return;
         }
 
         const application = await tryThat(

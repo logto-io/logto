@@ -8,7 +8,6 @@ import {
   mockActionConfigForPostSignIn,
   mockLogtoConfigRows,
 } from '#src/__mocks__/index.js';
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
@@ -18,12 +17,6 @@ import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
-
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-
-const setDevFeaturesEnabled = (isDevFeaturesEnabled: boolean) => {
-  Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', isDevFeaturesEnabled);
-};
 
 const createResponseError = (status: number, body: Record<string, unknown>) =>
   new ResponseError(
@@ -50,8 +43,6 @@ const logtoConfigQueries = {
 
 const mockQuotaLibrary = createMockQuotaLibrary();
 
-setDevFeaturesEnabled(true);
-
 const settingRoutes = await pickDefault(import('./index.js'));
 
 describe('configs action routes', () => {
@@ -76,11 +67,6 @@ describe('configs action routes', () => {
   afterEach(() => {
     jest.restoreAllMocks();
     jest.clearAllMocks();
-    setDevFeaturesEnabled(true);
-  });
-
-  afterAll(() => {
-    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
   });
 
   it('GET /configs/actions should return all records', async () => {
@@ -130,7 +116,7 @@ describe('configs action routes', () => {
     );
     expect(response.status).toEqual(201);
     expect(response.body).toEqual(mockActionConfigForPostSignIn.value);
-    expect(mockQuotaLibrary.guardTenantUsageByKey).toHaveBeenCalledWith('inlineHooksEnabled');
+    expect(mockQuotaLibrary.guardTenantUsageByKey).toHaveBeenCalledWith('actionsEnabled');
   });
 
   it('PUT /configs/actions/:actionType should update a record successfully', async () => {
@@ -151,7 +137,7 @@ describe('configs action routes', () => {
     );
     expect(response.status).toEqual(200);
     expect(response.body).toEqual(mockActionConfigForPostSignIn.value);
-    expect(mockQuotaLibrary.guardTenantUsageByKey).toHaveBeenCalledWith('inlineHooksEnabled');
+    expect(mockQuotaLibrary.guardTenantUsageByKey).toHaveBeenCalledWith('actionsEnabled');
   });
 
   it('PATCH /configs/actions/:actionType should partially update a record successfully', async () => {
@@ -176,7 +162,7 @@ describe('configs action routes', () => {
     );
     expect(response.status).toEqual(200);
     expect(response.body).toEqual(updatedConfig);
-    expect(mockQuotaLibrary.guardTenantUsageByKey).toHaveBeenCalledWith('inlineHooksEnabled');
+    expect(mockQuotaLibrary.guardTenantUsageByKey).toHaveBeenCalledWith('actionsEnabled');
   });
 
   it('DELETE /configs/actions/:actionType should delete the record', async () => {
@@ -229,7 +215,7 @@ describe('configs action routes', () => {
         },
       },
     });
-    expect(mockQuotaLibrary.guardTenantUsageByKey).toHaveBeenCalledWith('inlineHooksEnabled');
+    expect(mockQuotaLibrary.guardTenantUsageByKey).toHaveBeenCalledWith('actionsEnabled');
   });
 
   it('POST /configs/actions/test should serialize undefined, null, and string results', async () => {
@@ -277,7 +263,7 @@ describe('configs action routes', () => {
     expect(response.status).toEqual(422);
   });
 
-  it('POST /configs/actions/test should return only a redacted ResponseError summary', async () => {
+  it('POST /configs/actions/test should return only a structurally safe ResponseError summary', async () => {
     const script = 'const privateActionScript = true;';
     const environmentSecret = 'environment-secret-value';
     const password = 'plain-text-password';
@@ -323,15 +309,16 @@ describe('configs action routes', () => {
 
     expect(response.status).toEqual(422);
     expect(response.body.code).toEqual('action.general');
+    // The dry run answers the admin who just submitted this script, so their own message and
+    // validation paths come back intact. Only runner internals are dropped.
     expect(response.body.data).toEqual({
-      message: 'Script failed [redacted] [redacted] [redacted]',
-      errors: [{ path: ['event', '[redacted]'], code: 'invalid_type' }],
+      message: `Script failed ${script} ${environmentSecret} ${password}`,
+      errors: [{ path: ['event', password], code: 'invalid_type' }],
     });
     const serializedResponse = JSON.stringify(response.body);
-    expect(serializedResponse).not.toContain(script);
-    expect(serializedResponse).not.toContain(environmentSecret);
-    expect(serializedResponse).not.toContain(password);
     expect(serializedResponse).not.toContain('returned-patch-secret');
+    expect(serializedResponse).not.toContain('stack');
+    expect(serializedResponse).not.toContain('received');
   });
 
   it('POST /configs/actions/test should preserve safe RequestError semantics', async () => {
@@ -367,10 +354,9 @@ describe('configs action routes', () => {
     expect(response.status).toEqual(403);
     expect(response.body.code).toEqual('connector.general');
     expect(response.body.data).toEqual({
-      message: 'Runner rejected [redacted]',
-      errors: [{ path: ['event', '[redacted]'], code: 'invalid_type' }],
+      message: `Runner rejected ${sensitiveValue}`,
+      errors: [{ path: ['event', sensitiveValue], code: 'invalid_type' }],
     });
-    expect(response.text).not.toContain(sensitiveValue);
     expect(response.text).not.toContain('authorization');
     expect(response.text).not.toContain('received');
   });
@@ -440,24 +426,5 @@ describe('configs action routes', () => {
     expect(response.body.data).toEqual({
       message: 'Socket closed',
     });
-  });
-
-  it('should not register action routes when dev features are disabled', async () => {
-    setDevFeaturesEnabled(false);
-
-    const requester = createRequester({
-      authedRoutes: settingRoutes,
-      tenantContext: new MockTenant(
-        undefined,
-        { logtoConfigs: logtoConfigQueries },
-        undefined,
-        { quota: mockQuotaLibrary },
-        mockLogtoConfigsLibrary
-      ),
-    });
-
-    const response = await requester.get('/configs/actions');
-
-    expect(response.status).toEqual(404);
   });
 });

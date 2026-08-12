@@ -33,6 +33,18 @@ const enterprise_sso = {
         "L'ID d'entité SP peut être dans n'importe quel format de chaîne, généralement en utilisant une forme URI ou une forme URL comme identifiant, mais ce n'est pas obligatoire.",
       acs_url_field_placeholder: 'https://your-domain.com/api/saml/callback',
       entity_id_field_placeholder: 'urn:your-domain.com:sp:saml:{serviceProviderId}',
+      sign_auth_request: "Signer la demande d'authentification",
+      sign_auth_request_tooltip:
+        "Logto signe les demandes d'authentification SAML avec un certificat généré. Activez cette option uniquement si votre fournisseur d'identité est configuré pour vérifier les demandes signées.",
+      signing_certificate_field_name: 'Certificat de signature des demandes',
+      signing_keys_empty: "Aucune clé de signature n'a encore été générée.",
+      generate_signing_key: 'Générer une nouvelle clé',
+      signing_key_generated: 'La clé de signature a été générée.',
+      signing_key_activated: 'La clé de signature a été activée.',
+      signing_key_deactivated: 'La clé de signature a été désactivée.',
+      signing_key_deleted: 'La clé de signature a été supprimée.',
+      sign_auth_request_warning:
+        "Après l'activation, générez une clé de signature ci-dessous et enregistrez son certificat auprès de votre fournisseur d'identité (et activez-y la vérification des demandes signées). Tant que le certificat n'est pas enregistré, la connexion via cette liaison échouera.",
     },
     oidc: {
       redirect_uri_field_name: 'URI de redirection (URL de rappel)',

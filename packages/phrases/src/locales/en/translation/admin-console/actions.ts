@@ -74,6 +74,16 @@ const actions = {
   form_error: {
     invalid_json: 'Invalid JSON format',
   },
+  sandbox_and_security_warning: {
+    title: 'Scripts run with server privileges',
+    description:
+      'On self-hosted Logto, this script runs in the same environment as Logto itself: it can read server environment variables and reach services on your internal network. It is not sandboxed. Only give access to this page to people you would trust with access to the server. This action runs only after local password verification fails — return `passwordVerified: true` only after independently verifying the submitted password. Users provisioned by this action bypass registration-only guards, including email blocklist, SSO-only domain, sign-up-disabled mode, and registration mandatory-profile checks. Existing-user profile and password writes also occur before MFA completes.',
+  },
+  sandbox_warning: {
+    title: 'Scripts run with server privileges',
+    description:
+      'On self-hosted Logto, this script runs in the same environment as Logto itself: it can read server environment variables and reach services on your internal network. It is not sandboxed. Only give access to this page to people you would trust with access to the server.',
+  },
   security_warning: {
     title: 'Security warning',
     description:

@@ -32,6 +32,18 @@ const enterprise_sso = {
         'Идентификатор сущности SP может иметь любую строку, обычно используемая форма URI или URL как идентификатор, но это не обязательно.',
       acs_url_field_placeholder: 'https://your-domain.com/api/saml/callback',
       entity_id_field_placeholder: 'urn:your-domain.com:sp:saml:{serviceProviderId}',
+      sign_auth_request: 'Подписывать запрос аутентификации',
+      sign_auth_request_tooltip:
+        'Logto подписывает SAML-запросы аутентификации сгенерированным сертификатом. Включайте только если ваш поставщик удостоверений настроен на проверку подписанных запросов.',
+      signing_certificate_field_name: 'Сертификат подписи запросов',
+      signing_keys_empty: 'Ключи подписи ещё не созданы.',
+      generate_signing_key: 'Создать новый ключ',
+      signing_key_generated: 'Ключ подписи создан.',
+      signing_key_activated: 'Ключ подписи активирован.',
+      signing_key_deactivated: 'Ключ подписи деактивирован.',
+      signing_key_deleted: 'Ключ подписи удалён.',
+      sign_auth_request_warning:
+        'После включения создайте ключ подписи ниже и зарегистрируйте его сертификат у вашего поставщика удостоверений (и включите там проверку подписанных запросов). Пока сертификат не зарегистрирован, вход через это подключение будет завершаться ошибкой.',
     },
     oidc: {
       redirect_uri_field_name: 'URI перенаправления (URL обратного вызова)',

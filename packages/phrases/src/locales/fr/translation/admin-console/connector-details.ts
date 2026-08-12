@@ -87,6 +87,20 @@ const connector_details = {
     in_use: 'Activé pour la connexion',
     not_in_use: 'Désactivé pour la connexion',
   },
+  email_logs: {
+    title: "Journaux d'e-mails",
+    time: 'Heure',
+    recipient: 'Destinataire',
+    recipient_placeholder: 'Rechercher par adresse complète du destinataire',
+    template_type: 'Type de modèle',
+    status: 'Statut',
+    status_sent: 'Envoyé',
+    status_failed: 'Échoué',
+    language_tag: 'Langue',
+    provider_message_id: 'ID du message du fournisseur',
+    previous_page: 'Précédent',
+    next_page: 'Suivant',
+  },
 };
 
 export default Object.freeze(connector_details);

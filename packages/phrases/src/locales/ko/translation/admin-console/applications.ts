@@ -77,6 +77,38 @@ const applications = {
     'Logto는 OIDC용 앱 엔티티를 사용하여 앱 식별, 로그인 관리 및 감사 로그 생성과 같은 작업을 지원합니다.',
   third_party_application_placeholder_description:
     'Logto를 아이덴티티 제공자로 사용하여 서드파티 서비스에 OAuth 권한 부여를 제공합니다. \n 리소스 접근을 위한 사전 제작된 사용자 동의 화면이 포함되어 있습니다. <a>더 알아보기</a>',
+  dynamic_app: {
+    title: '다이나믹 앱',
+    subtitle: 'CIMD',
+    description: '다이나믹 앱을 사용하면 OAuth 클라이언트가 사전 등록 없이 연결할 수 있습니다.',
+    settings_description:
+      '다이나믹 앱을 사용하면 OAuth 클라이언트가 사전 등록 없이 연결할 수 있습니다. OAuth Client ID Metadata Document (CIMD) 사양을 사용합니다.',
+    app_id_placeholder: '각 클라이언트가 동적으로 제공',
+    enable_confirm_modal: {
+      title: '동적 클라이언트 접근을 활성화할까요?',
+      content:
+        '유효한 공개 HTTPS 클라이언트 ID URL을 가진 모든 OAuth 클라이언트는 사전 등록 없이 이 테넌트에 대한 인가를 시작할 수 있어요. 접근 범위는 설정한 최대 권한과 사용자 동의에 의해 계속 제한돼요.',
+    },
+    enabled: '다이나믹 앱을 활성화했어요.',
+    disable_confirm_modal: {
+      title: '다이나믹 앱을 비활성화할까요?',
+      content:
+        'CIMD 클라이언트는 더 이상 새로운 인증 요청을 시작할 수 없습니다. 기존 권한 부여는 유지되며, 이미 발급된 액세스 토큰은 만료될 때까지 유효할 수 있습니다.',
+    },
+    disabled: '다이나믹 앱이 성공적으로 비활성화되었습니다.',
+    permissions: {
+      user_title: '사용자',
+      user_description:
+        'OAuth 클라이언트가 특정 사용자 데이터에 액세스하기 위해 요청하는 권한을 선택하세요.',
+      grant_user_level_permissions: '사용자 권한 부여',
+      organization_title: '조직',
+      organization_description:
+        'OAuth 클라이언트가 특정 조직 데이터에 액세스하기 위해 요청하는 권한을 선택하세요.',
+      grant_organization_level_permissions: '조직 권한 부여',
+      permission_delete_confirm:
+        '이 작업은 다이나믹 앱에서 해당 권한을 제거하여 OAuth 클라이언트가 이에 대한 사용자 승인을 요청할 수 없게 합니다. 계속 진행하시겠습니까?',
+    },
+  },
   guide: {
     third_party: {
       title: '서드파티 어플리케이션 통합',

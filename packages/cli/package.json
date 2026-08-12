@@ -1,6 +1,6 @@
 {
   "name": "@logto/cli",
-  "version": "1.41.0",
+  "version": "1.42.0",
   "description": "Logto CLI.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/logto#readme",
@@ -61,7 +61,7 @@
     "p-retry": "^6.0.0",
     "pg-protocol": "^1.6.0",
     "semver": "^7.3.8",
-    "tar": "^7.5.7",
+    "tar": "^7.5.21",
     "yargs": "^17.6.0",
     "zod": "3.24.3"
   },

@@ -107,6 +107,8 @@ const description = {
     'Votre entreprise a activé la connexion unique (Single Sign-On) pour le compte email {{email}}. Vous pouvez continuer à vous connecter avec les fournisseurs SSO suivants.',
   single_sign_on_enabled: 'La connexion unique (Single Sign-On) est activée pour ce compte',
   authorize_title: 'Autoriser {{name}}',
+  unregistered_client_notice:
+    "Cette application est auto-déclarée par <hostname>{{host}}</hostname>, y compris son nom et son logo. Veuillez vérifier le nom d'hôte avant de continuer.",
   request_permission: "{{name}} demande l'accès à :",
   grant_organization_access: "Accorder l'accès à l'organisation :",
   authorize_personal_data_usage: "Autoriser l'utilisation de vos données personnelles :",

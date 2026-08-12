@@ -1,4 +1,4 @@
-export const sensitiveDataMask = '******';
+const sensitiveDataMask = '******';
 
 export const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -21,10 +21,10 @@ const sensitiveDataKeyFragments = [
 export const stripNullCharactersFromString = (value: string): string =>
   value.includes(nullCharacter) ? value.replaceAll(nullCharacter, '') : value;
 
-export const normalizeSensitiveDataKey = (key: string) =>
+const normalizeSensitiveDataKey = (key: string) =>
   stripNullCharactersFromString(key).replaceAll(/[_-]/g, '').toLowerCase();
 
-export const shouldOmitSensitiveDataKey = (key: string) => {
+const shouldOmitSensitiveDataKey = (key: string) => {
   const normalizedKey = normalizeSensitiveDataKey(key);
 
   return (
@@ -34,7 +34,7 @@ export const shouldOmitSensitiveDataKey = (key: string) => {
   );
 };
 
-export const isSensitiveDataKey = (key: string, value: unknown) => {
+const isSensitiveDataKey = (key: string, value: unknown) => {
   const normalizedKey = normalizeSensitiveDataKey(key);
   const isSafePasswordStatus =
     safeSensitiveDataKeys.has(normalizedKey) && typeof value === 'boolean';

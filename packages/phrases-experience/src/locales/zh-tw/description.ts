@@ -90,6 +90,8 @@ const description = {
     '你的企業已為電子郵件帳戶{{email}}啟用單一登入。你可以繼續使用以下的SSO供應商登入。',
   single_sign_on_enabled: '該帳戶已啟用單一登入',
   authorize_title: '授權 {{name}}',
+  unregistered_client_notice:
+    '此應用程式由 <hostname>{{host}}</hostname> 自行聲明，包括其名稱和圖示。請在繼續之前確認該網域。',
   request_permission: '{{name}} 請求訪問權限：',
   grant_organization_access: '授予組織訪問權限：',
   authorize_personal_data_usage: '授權使用你的個人數據：',

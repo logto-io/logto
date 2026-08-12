@@ -101,6 +101,8 @@ const description = {
     'あなたの企業は、メールアカウント{{email}}に対してシングルサインオンを有効にしました。以下のSSOプロバイダーを使用してサインインを続けることができます。',
   single_sign_on_enabled: 'このアカウントではシングル サインオンが有効になっています',
   authorize_title: '{{name}} を承認する',
+  unregistered_client_notice:
+    'このアプリは名前とロゴを含めて <hostname>{{host}}</hostname> による自己申告です。続行する前にホスト名をご確認ください。',
   request_permission: '{{name}} が以下へのアクセスを要求しています：',
   grant_organization_access: '組織へのアクセスを許可する：',
   authorize_personal_data_usage: '個人データの使用を承認する：',

@@ -21,6 +21,17 @@ export const devFeatureTag = 'Dev feature';
 /** The OpenAPI schema extension that hides a schema property when dev features are disabled. */
 export const devFeatureSchemaExtension = 'x-logto-dev-feature';
 
+/**
+ * Schema property names that belong to in-development features. These properties are generated
+ * from the env-free zod guards in `@logto/schemas`, and supplement markers cannot reach every
+ * generated occurrence (e.g. properties nested in `oneOf` branches, which `deepmerge` appends to
+ * instead of merging into), so the assembled document is also pruned by property name.
+ */
+const devFeatureSchemaPropertyNames = new Set([
+  // DEV: CIMD (client ID metadata document) support
+  'cimdClientId',
+]);
+
 const reservedTags = new Set([cloudOnlyTag, devFeatureTag]);
 
 /**
@@ -43,7 +54,8 @@ const tagMap = new Map([
 ]);
 
 if (EnvSet.values.isDevFeaturesEnabled) {
-  // TagMap.set('foo-bar', 'Foo bar');
+  // DEV: CIMD (client ID metadata document) support
+  tagMap.set('cimd', 'CIMD');
 }
 
 /**
@@ -261,9 +273,12 @@ export const validateSwaggerDocument = (document: OpenAPIV3.Document) => {
  *
  * Remove operations (path + method) that are tagged with `Cloud only` if the application is not
  * running in the cloud and remove operations with `Dev feature` tag if Logto's
- * `isDevFeaturesEnabled` flag is set to be false. It also prunes schema properties marked with
- * `x-logto-dev-feature` when dev features are disabled, and removes the internal marker when they
- * are enabled.
+ * `isDevFeaturesEnabled` flag is set to be false.
+ *
+ * Dev-feature schema properties are NOT pruned here: supplement documents run through this
+ * function before merging, and pruning `x-logto-dev-feature` markers at that point would strip
+ * them before they reach the base schema properties generated from the guards. The assembled
+ * document is pruned instead — see {@link removeDevFeatureSchemaProperties}.
  *
  * This will prevent the swagger validation from failing in the OSS environment.
  *
@@ -273,8 +288,6 @@ export const removeUnnecessaryOperations = (
   document: DeepPartial<OpenAPIV3.Document>
 ): DeepPartial<OpenAPIV3.Document> => {
   const { isCloud, isDevFeaturesEnabled } = EnvSet.values;
-
-  removeDevFeatureSchemaProperties(document);
 
   if ((isCloud && isDevFeaturesEnabled) || !document.paths) {
     return document;
@@ -335,7 +348,9 @@ const removeDevFeatureSchemaProperty = (
   propertyName: string,
   propertySchema: unknown
 ) => {
-  if (!isRecord(propertySchema) || propertySchema[devFeatureSchemaExtension] !== true) {
+  const isMarked = isRecord(propertySchema) && propertySchema[devFeatureSchemaExtension] === true;
+
+  if (!isMarked && !devFeatureSchemaPropertyNames.has(propertyName)) {
     return false;
   }
 
@@ -346,12 +361,24 @@ const removeDevFeatureSchemaProperty = (
     return true;
   }
 
-  Reflect.deleteProperty(propertySchema, devFeatureSchemaExtension);
+  if (isMarked && isRecord(propertySchema)) {
+    Reflect.deleteProperty(propertySchema, devFeatureSchemaExtension);
+  }
 
   return false;
 };
 
-const removeDevFeatureSchemaProperties = (value: unknown) => {
+/**
+ * **CAUTION**: This function mutates the input value.
+ *
+ * Recursively prune dev-feature schema properties: when dev features are disabled, properties
+ * marked with `x-logto-dev-feature` or listed in the dev-feature property names are removed
+ * (including their `required` entries); when enabled, only the internal marker is removed.
+ *
+ * Run this on the assembled document — the base schema properties generated from the env-free
+ * zod guards carry no markers, so pruning supplements alone cannot remove them.
+ */
+export const removeDevFeatureSchemaProperties = (value: unknown) => {
   if (Array.isArray(value)) {
     for (const item of value) {
       removeDevFeatureSchemaProperties(item);

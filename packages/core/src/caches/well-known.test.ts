@@ -19,7 +19,7 @@ afterEach(() => {
 });
 
 describe('Well-known cache basics', () => {
-  it('should be able to get, set, and delete values', async () => {
+  it('should be able to get, set, and invalidate values', async () => {
     const cache = new WellKnownCache(tenantId, cacheStore);
 
     await cache.set('sie', WellKnownCache.defaultKey, mockSignInExperience);
@@ -36,7 +36,7 @@ describe('Well-known cache basics', () => {
     await cache.set('resource-by-indicator', 'resource', mockResource);
     expect(await cache.get('resource-by-indicator', 'resource')).toStrictEqual(mockResource);
 
-    await cache.delete('sie', WellKnownCache.defaultKey);
+    await cache.invalidate('sie', WellKnownCache.defaultKey);
     expect(await cache.get('sie', WellKnownCache.defaultKey)).toBe(undefined);
   });
 
@@ -74,13 +74,13 @@ describe('Well-known cache basics', () => {
     ).toBe(undefined);
   });
 
-  it('should be able to get, set, and delete null value', async () => {
+  it('should be able to get, set, and invalidate null value', async () => {
     const cache = new WellKnownCache(tenantId, cacheStore);
 
     await cache.set('email-templates', 'en:SignIn', null);
     expect(await cache.get('email-templates', 'en:SignIn')).toBe(null);
 
-    await cache.delete('email-templates', 'en:SignIn');
+    await cache.invalidate('email-templates', 'en:SignIn');
     expect(await cache.get('email-templates', 'en:SignIn')).toBe(undefined);
   });
 });
@@ -256,5 +256,30 @@ describe('Well-known cache function wrappers', () => {
 
     expect(await cache.get('custom-phrases', '2+2')).toBeUndefined();
     expect(run).toBeCalledTimes(2);
+  });
+
+  it('should discard a stale write-back when a mutation invalidates the cache mid-read', async () => {
+    const cache = new WellKnownCache(tenantId, cacheStore);
+    const update = jest.fn(async () => true);
+    const mutate = cache.mutate(update, ['custom-phrases']);
+
+    const read = jest
+      .fn(async (): Promise<Record<string, unknown>> => ({ foo: 'fresh' }))
+      .mockImplementationOnce(async () => {
+        // The mutation lands while this read is still in flight, i.e. the value below
+        // was computed from pre-mutation state
+        await mutate();
+        return { foo: 'stale' };
+      });
+    const memoized = cache.memoize(read, ['custom-phrases']);
+
+    // The caller still receives the computed value, but it must not persist in the cache
+    expect(await memoized()).toStrictEqual({ foo: 'stale' });
+    expect(await cache.get('custom-phrases', WellKnownCache.defaultKey)).toBeUndefined();
+
+    expect(await memoized()).toStrictEqual({ foo: 'fresh' });
+    expect(await cache.get('custom-phrases', WellKnownCache.defaultKey)).toStrictEqual({
+      foo: 'fresh',
+    });
   });
 });

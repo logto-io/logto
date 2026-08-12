@@ -12,6 +12,14 @@ const single_sign_on = {
     "Il redirect_uri non è registrato. Si prega di controllare le impostazioni dell'applicazione.",
   idp_initiated_authentication_client_callback_uri_not_found:
     "L'URI di callback dell'autenticazione iniziata dal client IdP non è stato trovato. Controlla le impostazioni del connettore.",
+  sso_signing_unavailable:
+    "Impossibile completare l'accesso con il tuo provider di identità. Contatta il tuo amministratore.",
+  can_not_delete_active_signing_key:
+    "Impossibile eliminare la chiave di firma attiva. Attiva prima un'altra chiave o disattiva questa chiave.",
+  can_not_deactivate_signing_key_in_use:
+    'Impossibile disattivare la chiave di firma mentre le richieste di autenticazione firmate sono abilitate. Disabilita prima le richieste di autenticazione firmate.',
+  active_signing_key_required:
+    'Nessuna chiave di firma attiva trovata. Genera e attiva una chiave di firma prima di abilitare le richieste di autenticazione firmate.',
 };
 
 export default Object.freeze(single_sign_on);

@@ -1,6 +1,6 @@
 {
   "name": "@logto/core-kit",
-  "version": "2.11.0",
+  "version": "2.12.0",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/toolkit#readme",
   "repository": {
@@ -65,7 +65,7 @@
     "@vitest/coverage-v8": "^4.1.8",
     "eslint": "^8.56.0",
     "lint-staged": "^15.0.0",
-    "postcss": "^8.4.31",
+    "postcss": "^8.5.18",
     "prettier": "^3.5.3",
     "stylelint": "^15.0.0",
     "typescript": "^5.5.3",

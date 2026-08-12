@@ -1,3 +1,4 @@
+import resource from '@logto/phrases-experience';
 import type { ConsentInfoResponse, RequestErrorBody } from '@logto/schemas';
 import { fireEvent, waitFor } from '@testing-library/react';
 import { HTTPError } from 'ky';
@@ -6,6 +7,7 @@ import UserInteractionContextProvider from '@/Providers/UserInteractionContextPr
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { consent, getConsentInfo } from '@/apis/consent';
+import { setupI18nForTesting } from '@/jest.setup';
 import { searchKeys } from '@/shared/utils/search-parameters';
 
 import Consent from '.';
@@ -40,6 +42,15 @@ const consentInfo: ConsentInfoResponse = {
   missingResourceScopes: [],
   redirectUri: 'https://example.com/callback',
 };
+
+const cimdConsentInfo = (name: string): ConsentInfoResponse => ({
+  ...consentInfo,
+  application: {
+    ...consentInfo.application,
+    id: 'https://client.example.com/oauth/metadata.json',
+    name,
+  },
+});
 
 const createHttpError = (body: RequestErrorBody) =>
   new HTTPError(
@@ -140,6 +151,59 @@ describe('Consent', () => {
     expect(queryByText('account_center.sessions.revoke_session')).not.toBeNull();
     expect(queryByText('action.authorize')).toBeNull();
     expect(queryByText('action.cancel')).toBeNull();
+  });
+
+  describe('CIMD client', () => {
+    const { authorize_title, unregistered_client_notice } = resource.en.translation.description;
+
+    // The assertions read the rendered copy, so the phrases have to be the real ones
+    beforeAll(async () => {
+      await setupI18nForTesting({
+        translation: { description: { authorize_title, unregistered_client_notice } },
+      });
+    });
+
+    afterAll(async () => {
+      await setupI18nForTesting();
+    });
+
+    it('renders the identifier host in the notice', async () => {
+      mockedGetConsentInfo.mockResolvedValueOnce(cimdConsentInfo('Fancy client'));
+
+      const { queryByText, unmount } = renderConsent();
+
+      await waitFor(() => {
+        expect(queryByText('client.example.com')).not.toBeNull();
+      });
+
+      expect(queryByText(/is self-declared by/)).not.toBeNull();
+      unmount();
+    });
+
+    it('falls back to the identifier host in the headline when the client declares no name', async () => {
+      mockedGetConsentInfo.mockResolvedValueOnce(cimdConsentInfo(''));
+
+      const { queryByText, unmount } = renderConsent();
+
+      await waitFor(() => {
+        expect(queryByText('Authorize client.example.com')).not.toBeNull();
+      });
+
+      unmount();
+    });
+
+    it('does not render the notice for a registered application', async () => {
+      mockedGetConsentInfo.mockResolvedValueOnce(consentInfo);
+
+      const { queryByText, unmount } = renderConsent();
+
+      await waitFor(() => {
+        expect(queryByText('action.authorize')).not.toBeNull();
+      });
+
+      expect(queryByText(/is self-declared by/)).toBeNull();
+      unmount();
+    });
   });
 
   it('signs out from the access denied page', async () => {

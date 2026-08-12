@@ -1,9 +1,11 @@
 import type { Application, OidcModelInstance, OidcModelInstancePayload } from '@logto/schemas';
-import { Applications, OidcModelInstances } from '@logto/schemas';
+import { Applications, CimdGrantClientSnapshots, OidcModelInstances } from '@logto/schemas';
+import { ConsoleLog } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
-import type { CommonQueryMethods, ValueExpression } from '@silverhand/slonik';
+import type { CommonQueryMethods, SqlSqlToken, ValueExpression } from '@silverhand/slonik';
 import { sql } from '@silverhand/slonik';
+import chalk from 'chalk';
 import { addSeconds, isBefore } from 'date-fns';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
@@ -14,6 +16,7 @@ export type QueryResult = Pick<OidcModelInstance, 'payload' | 'consumedAt'>;
 
 const { table, fields } = convertToIdentifiers(OidcModelInstances);
 const { table: applicationTable } = convertToIdentifiers(Applications);
+const cimdGrantClientSnapshots = convertToIdentifiers(CimdGrantClientSnapshots, true);
 
 export type ActiveGrantInstance = Pick<OidcModelInstance, 'id' | 'payload' | 'expiresAt'>;
 export type ActiveApplicationGrantInstance = ActiveGrantInstance & {
@@ -30,7 +33,18 @@ const sessionModelName = 'Session';
  */
 // Hard-code this value since 3 seconds is a reasonable number for concurrency and no need for further configuration
 const refreshTokenReuseInterval = 3;
-const revokeInstanceBatchSize = 1000;
+/**
+ * Kept small because each deleted row also updates every index on the table, so the
+ * per-statement random I/O must fit within a storage-throttled moment without hitting
+ * the statement timeout.
+ */
+const revokeInstanceBatchSize = 500;
+/** Safety valve so a revocation request stays bounded even for pathological instance counts. */
+const maxRevokeInstanceBatches = 1000;
+/** Fixed-length array to drive the bounded batch loop without a mutable counter. */
+const revokeInstanceBatchIterations = Array.from({ length: maxRevokeInstanceBatches });
+
+const consoleLog = new ConsoleLog(chalk.magenta('query'));
 
 const isConsumed = (modelName: string, consumedAt: Nullable<number>): boolean => {
   if (!consumedAt) {
@@ -181,36 +195,57 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
     `);
   };
 
-  const revokeInstanceByGrantId = async (modelName: string, grantId: string) => {
-    // Keep deleting bounded batches until the revoke query no longer finds matches.
-    for (;;) {
-      // Revocation batches must run serially to keep each delete bounded.
-      // eslint-disable-next-line no-await-in-loop
+  /**
+   * Delete matching instances in bounded batches until none remain, so no single statement can
+   * exceed the database statement timeout.
+   *
+   * @param target - Human-readable principal for the cap log, e.g. `accountId <userId>`.
+   * @param condition - Must include the payload key-existence clause matching the partial index
+   * predicate, or the batches stop being index-backed.
+   */
+  const revokeInstancesInBatches = async (
+    modelName: string,
+    target: string,
+    condition: SqlSqlToken
+  ) => {
+    for (const _ of revokeInstanceBatchIterations) {
+      // eslint-disable-next-line no-await-in-loop -- revocation batches must run serially to keep each delete bounded
       const { rowCount } = await pool.query(sql`
         delete from ${table}
         where ${fields.id} in (
           select ${fields.id}
           from ${table}
           where ${fields.modelName}=${modelName}
-          and ${fields.payload} ? 'grantId'
-          and ${fields.payload}->>'grantId'=${grantId}
+          and ${condition}
           limit ${revokeInstanceBatchSize}
         )
       `);
 
-      if (rowCount === 0) {
+      if (!rowCount) {
         return;
       }
     }
+
+    consoleLog.error(
+      `Revoking ${modelName} instances for ${target} did not finish within ${maxRevokeInstanceBatches} batches; remaining instances are left for a retry.`
+    );
   };
 
-  const revokeInstanceByUserId = async (modelName: string, userId: string) => {
-    await pool.query(sql`
-      delete from ${table}
-      where ${fields.modelName}=${modelName}
-      and ${fields.payload}->>'accountId'=${userId}
-    `);
-  };
+  const revokeInstanceByGrantId = async (modelName: string, grantId: string) =>
+    revokeInstancesInBatches(
+      modelName,
+      `grantId ${grantId}`,
+      sql`${fields.payload} ? 'grantId'
+          and ${fields.payload}->>'grantId'=${grantId}`
+    );
+
+  const revokeInstanceByUserId = async (modelName: string, userId: string) =>
+    revokeInstancesInBatches(
+      modelName,
+      `accountId ${userId}`,
+      sql`${fields.payload} ? 'accountId'
+          and ${fields.payload}->>'accountId'=${userId}`
+    );
 
   const findUserActiveApplicationGrants = async (
     userId: string,
@@ -263,6 +298,41 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
     `);
   };
 
+  /**
+   * Active grants of CIMD (client ID metadata document) clients, shaped like the registered
+   * application grants. They are URL identities without an `applications` row, so
+   * `findUserActiveApplicationGrants` cannot see them; a grant is a CIMD grant exactly when a
+   * consent-time snapshot row exists for it, and the snapshot carries the approved display data.
+   *
+   * The identifier URL stands in for a missing name: `client_name` is optional in the metadata
+   * document, and the snapshot write normalizes an empty one to null.
+   */
+  const findUserActiveCimdGrants = async (userId: string) => {
+    /** The snapshot table also has a `tenant_id` column, so this side of the join must qualify. */
+    const oidcModelInstanceTenantId = sql.identifier([
+      OidcModelInstances.table,
+      OidcModelInstances.fields.tenantId,
+    ]);
+
+    return pool.any<ActiveApplicationGrantInstance>(sql`
+      select ${fields.id}, ${fields.payload}, ${fields.expiresAt},
+        json_build_object(
+          'id', ${cimdGrantClientSnapshots.fields.clientId},
+          'name', coalesce(
+            ${cimdGrantClientSnapshots.fields.name},
+            ${cimdGrantClientSnapshots.fields.clientId}
+          )
+        ) as application
+      from ${table}
+      inner join ${cimdGrantClientSnapshots.table}
+        on ${cimdGrantClientSnapshots.fields.tenantId}=${oidcModelInstanceTenantId}
+        and ${cimdGrantClientSnapshots.fields.grantId}=${fields.id}
+      where ${fields.modelName}='Grant'
+        and ${fields.payload}->>'accountId'=${userId}
+        and ${fields.expiresAt} > ${convertToTimestamp()}
+    `);
+  };
+
   const findUserActiveGrantsByClientId = async (userId: string, clientId: string) => {
     return pool.any<ActiveGrantInstance>(sql`
       select ${fields.id}, ${fields.payload}, ${fields.expiresAt}
@@ -303,6 +373,7 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
     revokeInstanceByGrantId,
     revokeInstanceByUserId,
     findUserActiveApplicationGrants,
+    findUserActiveCimdGrants,
     findUserActiveGrantsByClientId,
     findUserActiveSessionUidByGrantId,
   };

@@ -1,4 +1,4 @@
-import type { RoleResponse, UserProfileResponse, Application } from '@logto/schemas';
+import type { RoleResponse, UserProfileResponse, ApplicationApiResponse } from '@logto/schemas';
 import { RoleType } from '@logto/schemas';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -22,7 +22,7 @@ type Props = (
       type: RoleType.User;
     }
   | {
-      entity: Application;
+      entity: ApplicationApiResponse;
       type: RoleType.MachineToMachine;
     }
 ) & {

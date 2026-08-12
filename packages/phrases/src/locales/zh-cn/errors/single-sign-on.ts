@@ -10,6 +10,12 @@ const single_sign_on = {
     'redirect_uri 未注册。请检查应用程序设置。',
   idp_initiated_authentication_client_callback_uri_not_found:
     '未找到客户端 IdP 发起的身份验证回调 URI。请检查连接器设置。',
+  sso_signing_unavailable: '无法通过你的身份提供商完成登录。请联系管理员。',
+  can_not_delete_active_signing_key: '无法删除当前启用的签名密钥。请先启用其他密钥或停用此密钥。',
+  can_not_deactivate_signing_key_in_use:
+    '签名认证请求已开启时无法停用签名密钥。请先关闭签名认证请求。',
+  active_signing_key_required:
+    '未找到已启用的签名密钥。请先生成并启用签名密钥，再开启签名认证请求。',
 };
 
 export default Object.freeze(single_sign_on);

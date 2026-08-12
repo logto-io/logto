@@ -32,6 +32,18 @@ const enterprise_sso = {
         'Identyfikator jednostki dostawcy usług może przybierać dowolny format tekstowy, zazwyczaj używa formy URI lub URL jako identyfikatora, ale nie jest to obowiązkowe.',
       acs_url_field_placeholder: 'https://your-domain.com/api/saml/callback',
       entity_id_field_placeholder: 'urn:your-domain.com:sp:saml:{serviceProviderId}',
+      sign_auth_request: 'Podpisuj żądanie uwierzytelnienia',
+      sign_auth_request_tooltip:
+        'Logto podpisuje żądania uwierzytelnienia SAML wygenerowanym certyfikatem. Włącz tylko wtedy, gdy Twój dostawca tożsamości jest skonfigurowany do weryfikacji podpisanych żądań.',
+      signing_certificate_field_name: 'Certyfikat podpisywania żądań',
+      signing_keys_empty: 'Nie wygenerowano jeszcze żadnych kluczy podpisujących.',
+      generate_signing_key: 'Wygeneruj nowy klucz',
+      signing_key_generated: 'Klucz podpisujący został wygenerowany.',
+      signing_key_activated: 'Klucz podpisujący został aktywowany.',
+      signing_key_deactivated: 'Klucz podpisujący został dezaktywowany.',
+      signing_key_deleted: 'Klucz podpisujący został usunięty.',
+      sign_auth_request_warning:
+        'Po włączeniu wygeneruj poniżej klucz podpisujący i zarejestruj jego certyfikat u swojego dostawcy tożsamości (oraz włącz tam weryfikację podpisanych żądań). Dopóki certyfikat nie zostanie zarejestrowany, logowanie przez to połączenie będzie się kończyć niepowodzeniem.',
     },
     oidc: {
       redirect_uri_field_name: 'Adres URL przekierowania (Adres URL wywołania zwrotnego)',

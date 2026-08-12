@@ -1,6 +1,5 @@
 import type { Resource, CreateResource } from '@logto/schemas';
 import { Resources } from '@logto/schemas';
-import { trySafe } from '@silverhand/essentials';
 import type { CommonQueryMethods } from '@silverhand/slonik';
 import { sql } from '@silverhand/slonik';
 
@@ -88,9 +87,9 @@ export const createResourceQueries = (pool: CommonQueryMethods, wellKnownCache: 
     const previousResource = await findResourceById(id);
     const updatedResource = await updateResource({ set, where: { id }, jsonbMode });
 
-    void Promise.all(
+    await Promise.all(
       [previousResource.indicator, updatedResource.indicator].map(async (indicator) =>
-        trySafe(wellKnownCache.delete('resource-by-indicator', indicator))
+        wellKnownCache.invalidate('resource-by-indicator', indicator)
       )
     );
 
@@ -108,7 +107,7 @@ export const createResourceQueries = (pool: CommonQueryMethods, wellKnownCache: 
       throw new DeletionError(Resources.table, id);
     }
 
-    void trySafe(wellKnownCache.delete('resource-by-indicator', indicator));
+    await wellKnownCache.invalidate('resource-by-indicator', indicator);
   };
 
   return {

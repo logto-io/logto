@@ -24,6 +24,8 @@ import { createSignInExperienceLibrary } from '#src/libraries/sign-in-experience
 import { createSocialLibrary } from '#src/libraries/social.js';
 import { createSsoConnectorLibrary } from '#src/libraries/sso-connector.js';
 import { type SubscriptionLibrary } from '#src/libraries/subscription.js';
+import { createTrustedDevicePolicyLibrary } from '#src/libraries/trusted-device-policy.js';
+import { createTrustedDeviceLibrary } from '#src/libraries/trusted-device.js';
 import { createUserLibrary } from '#src/libraries/user.js';
 import { createVerificationStatusLibrary } from '#src/libraries/verification-status.js';
 
@@ -33,7 +35,13 @@ export default class Libraries {
   users = createUserLibrary(this.tenantId, this.queries);
   phrases = createPhraseLibrary(this.queries);
   hooks = createHookLibrary(this.queries);
-  actions = new ActionLibrary(this.tenantId, this.logtoConfigs, this.subscription);
+  actions = new ActionLibrary(
+    this.tenantId,
+    this.logtoConfigs,
+    this.subscription,
+    this.cloudConnection
+  );
+
   scopes = createScopeLibrary(this.queries);
   socials = createSocialLibrary(this.queries, this.connectors);
   jwtCustomizers = new JwtCustomizerLibrary(
@@ -81,6 +89,14 @@ export default class Libraries {
   oidcPrivateKeys = new OidcPrivateKeyLibrary(this.queries);
 
   customProfileFields = createCustomProfileFieldsLibrary(this.queries);
+
+  trustedDevicePolicy = createTrustedDevicePolicyLibrary(this.queries);
+
+  trustedDevices = createTrustedDeviceLibrary(
+    this.tenantId,
+    this.queries.trustedDevices,
+    this.trustedDevicePolicy
+  );
 
   session = createSessionLibrary(this.queries);
 

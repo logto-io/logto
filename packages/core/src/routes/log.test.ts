@@ -10,7 +10,6 @@ import {
 import type { Log } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
-import { EnvSet } from '#src/env-set/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -29,11 +28,6 @@ const logs = {
 };
 const { countLogs, findLogs, findLogById } = logs;
 const logRoutes = await pickDefault(import('./log.js'));
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-
-const setDevFeaturesEnabled = (isDevFeaturesEnabled: boolean) => {
-  Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', isDevFeaturesEnabled);
-};
 
 describe('logRoutes', () => {
   const logRequest = createRequester({
@@ -43,44 +37,25 @@ describe('logRoutes', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
-    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
   });
 
   describe('GET /logs', () => {
-    it.each([false, true])(
-      'should call countLogs and findLogs with correct parameters when dev features are %s',
-      async (isDevFeaturesEnabled) => {
-        setDevFeaturesEnabled(isDevFeaturesEnabled);
-        const actionPrefixes = isDevFeaturesEnabled ? [action.prefix] : [];
-        const userId = 'userIdValue';
-        const applicationId = 'foo';
-        const logKey = 'SignInUsernamePassword';
-        const page = 1;
-        const pageSize = 5;
+    it('should call countLogs and findLogs with correct parameters', async () => {
+      const userId = 'userIdValue';
+      const applicationId = 'foo';
+      const logKey = 'SignInUsernamePassword';
+      const page = 1;
+      const pageSize = 5;
 
-        await logRequest.get(
-          `/logs?userId=${userId}&applicationId=${applicationId}&logKey=${logKey}&page=${page}&page_size=${pageSize}`
-        );
-        expect(countLogs).toHaveBeenCalledWith(
-          {
-            payload: { userId, applicationId },
-            logKey,
-            includeKeyPrefix: [
-              token.Type.ExchangeTokenBy,
-              token.Type.RevokeToken,
-              token.Type.RevokeGrants,
-              interaction.prefix,
-              jwtCustomizer.prefix,
-              saml.prefix,
-              ...actionPrefixes,
-              LogKeyUnknown,
-            ],
-          },
-          { capped: false }
-        );
-        expect(findLogs).toHaveBeenCalledWith(5, 0, {
+      await logRequest.get(
+        `/logs?userId=${userId}&applicationId=${applicationId}&logKey=${logKey}&page=${page}&page_size=${pageSize}`
+      );
+      expect(countLogs).toHaveBeenCalledWith(
+        {
           payload: { userId, applicationId },
           logKey,
+          startTime: undefined,
+          endTime: undefined,
           includeKeyPrefix: [
             token.Type.ExchangeTokenBy,
             token.Type.RevokeToken,
@@ -88,12 +63,29 @@ describe('logRoutes', () => {
             interaction.prefix,
             jwtCustomizer.prefix,
             saml.prefix,
-            ...actionPrefixes,
+            action.prefix,
             LogKeyUnknown,
           ],
-        });
-      }
-    );
+        },
+        { capped: false }
+      );
+      expect(findLogs).toHaveBeenCalledWith(5, 0, {
+        payload: { userId, applicationId },
+        logKey,
+        startTime: undefined,
+        endTime: undefined,
+        includeKeyPrefix: [
+          token.Type.ExchangeTokenBy,
+          token.Type.RevokeToken,
+          token.Type.RevokeGrants,
+          interaction.prefix,
+          jwtCustomizer.prefix,
+          saml.prefix,
+          action.prefix,
+          LogKeyUnknown,
+        ],
+      });
+    });
 
     it('should return correct response', async () => {
       const response = await logRequest.get(`/logs`);
@@ -159,15 +151,15 @@ describe('logRoutes', () => {
         );
       });
 
-      it('returns 400 when start_time >= end_time', async () => {
+      it('returns 400 when start_time > end_time', async () => {
         const response = await logRequest.get(`/logs?start_time=2000&end_time=1000`);
         expect(response.status).toEqual(400);
         expect(countLogs).not.toHaveBeenCalled();
       });
 
-      it('returns 400 when start_time equals end_time', async () => {
+      it('succeeds when start_time equals end_time (inclusive bounds)', async () => {
         const response = await logRequest.get(`/logs?start_time=1000&end_time=1000`);
-        expect(response.status).toEqual(400);
+        expect(response.status).toEqual(200);
       });
 
       it('returns 400 when start_time is not a finite number', async () => {

@@ -20,7 +20,7 @@ import SecurityLock from '@/assets/icons/security-lock.svg?react';
 import Security from '@/assets/icons/security.svg?react';
 import EnterpriseSso from '@/assets/icons/single-sign-on.svg?react';
 import Web from '@/assets/icons/web.svg?react';
-import { isDevFeaturesEnabled } from '@/consts/env';
+import useIsActionsEnabled from '@/hooks/use-is-actions-enabled';
 
 type SidebarItem = {
   Icon: FC;
@@ -51,6 +51,7 @@ export const useSidebarMenuItems = (): {
   sections: SidebarSection[];
   firstItem: Optional<SidebarItem>;
 } => {
+  const isActionsEnabled = useIsActionsEnabled();
   const allSections: SidebarSection[] = [
     {
       title: 'overview',
@@ -134,7 +135,7 @@ export const useSidebarMenuItems = (): {
           title: 'actions',
           path: 'actions',
           // Actions are still under development and should be released as one feature.
-          isHidden: !isDevFeaturesEnabled,
+          isHidden: !isActionsEnabled,
         },
         {
           Icon: JwtClaims,

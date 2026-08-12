@@ -31,13 +31,18 @@ mockEsm('#src/env-set/preconditions.js', () => ({
   checkPreconditions: () => true,
 }));
 
-// eslint-disable-next-line unicorn/consistent-function-scoping
-mockEsmDefault('#src/env-set/oidc.js', () => () => ({
-  issuer: 'https://logto.test/oidc',
-  cookieKeys: [],
-  privateJwks: [],
-  publicJwks: [],
-}));
+// The env-set oidc unit test exercises the real module; other suites keep OIDC values inert
+// through this lightweight mock.
+if (!expect.getState().testPath.endsWith('/env-set/oidc.test.js')) {
+  // eslint-disable-next-line unicorn/consistent-function-scoping -- the nested arrow is the mocked module's default export, not a hoistable helper
+  mockEsmDefault('#src/env-set/oidc.js', () => () => ({
+    issuer: 'https://logto.test/oidc',
+    cookieKeys: [],
+    privateJwks: [],
+    publicJwks: [],
+    cimdEnabled: false,
+  }));
+}
 /* End */
 
 // Logger is not considered in all test cases
