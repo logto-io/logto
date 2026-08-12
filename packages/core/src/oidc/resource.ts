@@ -1,5 +1,5 @@
 import { ReservedResource } from '@logto/core-kit';
-import { type Resource } from '@logto/schemas';
+import { isBuiltInApplicationId, isCimdClientId, type Resource } from '@logto/schemas';
 import { trySafe, type Nullable } from '@silverhand/essentials';
 import { type ResourceServer } from 'oidc-provider';
 
@@ -128,10 +128,20 @@ export const findResource = async (
 };
 
 export const isThirdPartyApplication = async ({ applications }: Queries, applicationId: string) => {
-  // Demo-app not exist in the database
+  // Built-in clients have no applications row and are always first-party.
+  if (isBuiltInApplicationId(applicationId)) {
+    return false;
+  }
+
+  // A CIMD client identifier is a URL and never names a registered application.
+  if (isCimdClientId(applicationId)) {
+    return true;
+  }
+
   const application = await trySafe(async () => applications.findApplicationById(applicationId));
 
-  return application?.isThirdParty ?? false;
+  // Fail closed: an unresolvable client is never first-party.
+  return application?.isThirdParty ?? true;
 };
 
 /**

@@ -60,13 +60,6 @@ export const isCimdEffectivelyEnabled = (envSet: EnvSet): boolean =>
 /**
  * Whether an identifier presented as a `client_id` should be attributed to a CIMD client —
  * payload builders route it under `cimdClientId` instead of `applicationId`.
- *
- * Deliberately ignores the tenant CIMD config, unlike {@link isCimdClient}: attribution
- * classifies the identifier the requester presented, and the config can flip between the moment
- * an identifier enters the system and the moment it is attributed (the tenant is rebuilt on
- * config change), which would retroactively re-route an in-flight URL identifier into
- * `applicationId` and break its registered-ids-only contract. Gate behavior with
- * {@link isCimdClient}; use this only to decide where an identifier is recorded.
  */
 export const shouldAttributeToCimd = (clientId?: string): boolean =>
   // DEV: CIMD (client ID metadata document) support
