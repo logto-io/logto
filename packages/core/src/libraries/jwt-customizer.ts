@@ -414,6 +414,11 @@ export class JwtCustomizerLibrary {
      *
      * The Management API routes carry `koaQuotaGuard` already, so this only ever fires on the
      * issuance path, where no guard runs. Mirrors `ActionLibrary.isActionsEnabledByQuota`.
+     *
+     * Returning here rather than throwing is the intended behavior, and matches what
+     * `ActionLibrary.runAction` does for its own quota check: a plan downgrade must not break
+     * token issuance. The caller reads this as "no custom claims", so a customizer configured
+     * with `blockIssuanceOnError` still gets its token — the quota is not a script error.
      */
     if (!(await this.isCustomJwtEnabledByQuota())) {
       return;

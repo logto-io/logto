@@ -69,36 +69,18 @@ const withCloudScriptRunTimeout = async <T>(
 };
 
 /**
- * The longest upstream body kept in an error message.
- *
- * The message travels far further than the transport: both Console dry-run routes, the persisted
- * `customJwtError` audit-log field, and — when `blockIssuanceOnError` is set — the OIDC
- * `error_description` handed to the RP. An unbounded body puts a Cloudflare HTML error page or a
- * JWT-verification detail into all three, so it is capped to a prefix that still identifies the
- * failure.
- */
-const maxUpstreamBodyLength = 256;
-
-/**
  * The 500 `ScriptExecutionError` a transport failure produces.
  *
- * `responseBody` carries the upstream body in a structured field rather than in `message`, capped
- * to {@link maxUpstreamBodyLength}, so the text stays diagnosable without leaking an arbitrary
- * payload into the audit log or the RP-facing `error_description`.
+ * The upstream body is deliberately not carried, in `message` or beside it. This error travels far
+ * further than the transport: both Console dry-run routes, the persisted `customJwtError`
+ * audit-log field, and — when `blockIssuanceOnError` is set — the OIDC `error_description` handed
+ * to the RP. A Cloudflare HTML error page or a JWT-verification detail has no business in any of
+ * those, and every consumer strips unknown fields anyway (`errorResponseBodyGuard` for Custom JWT,
+ * `buildSafeActionErrorSummary`'s allowlist for Actions), so a structured field would be dead
+ * weight rather than a diagnostic. The status in `message` is what identifies the failure.
  */
-const buildWorkerTransportError = (message: string, body?: string): ScriptExecutionError =>
-  new ScriptExecutionError(
-    {
-      message,
-      ...conditional(
-        body && {
-          responseBody:
-            body.length > maxUpstreamBodyLength ? `${body.slice(0, maxUpstreamBodyLength)}…` : body,
-        }
-      ),
-    },
-    500
-  );
+const buildWorkerTransportError = (message: string): ScriptExecutionError =>
+  new ScriptExecutionError({ message }, 500);
 
 /**
  * The failure kinds the script-runner Worker can report, i.e. those of `ScriptResult` in
@@ -213,7 +195,7 @@ export const runScriptOnCloud = async ({
         cloudConnection.invalidateWorkerAccessToken();
       }
 
-      throw buildWorkerTransportError(`Script runner error: ${response.status}`, body);
+      throw buildWorkerTransportError(`Script runner error: ${response.status}`);
     }
 
     const result = cloudScriptResultGuard.safeParse(
@@ -222,10 +204,11 @@ export const runScriptOnCloud = async ({
 
     if (!result.success) {
       /**
-       * The envelope drifted — a new failure kind, a renamed field. Carrying the raw body keeps
-       * the failure diagnosable at exactly the moment the text matters most.
+       * The envelope drifted — a new failure kind, a renamed field. The body stays out of the
+       * error for the reason given on {@link buildWorkerTransportError}; drift is a deploy-skew
+       * bug to be read from the Worker's own logs, not from a token response.
        */
-      throw buildWorkerTransportError('Script runner returned an unexpected response.', body);
+      throw buildWorkerTransportError('Script runner returned an unexpected response.');
     }
 
     return result.data;

@@ -199,13 +199,20 @@ export const getActionExecutionErrorPolicyDecision = ({
  * both remote runtimes coexist behind `isDevFeaturesEnabled`, splitting `azure` from `cloud` is
  * what makes the share of traffic already served by the Cloud script runner readable in the
  * metric. Collapses back to `azure`-free once LOG-13958 removes the Azure Functions path.
+ *
+ * That gate gained the `scriptRunnerEndpoint` condition, so this must read it too: a region with
+ * dev features on and the endpoint not injected yet runs every script on Azure Functions, and
+ * labelling those `cloud` would report full adoption where there is none — the very signal the
+ * LOG-13958 TODO relies on to decide when the gate can drop.
  */
 const getTelemetryRuntimeLocation = (): ActionRuntimeLocation => {
-  if (!EnvSet.values.isCloud) {
+  const { isCloud, isDevFeaturesEnabled, scriptRunnerEndpoint } = EnvSet.values;
+
+  if (!isCloud) {
     return 'local';
   }
 
-  return EnvSet.values.isDevFeaturesEnabled ? 'cloud' : 'azure';
+  return isDevFeaturesEnabled && scriptRunnerEndpoint ? 'cloud' : 'azure';
 };
 
 const applyActionExecutionErrorPolicyDecision = (decision: ActionExecutionErrorPolicyDecision) => {

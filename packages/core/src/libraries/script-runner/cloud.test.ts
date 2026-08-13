@@ -155,29 +155,24 @@ describe('runScriptOnCloud', () => {
     await expect(runAndCatch()).resolves.toMatchObject({ status: 500 });
   });
 
-  it('keeps the upstream body out of the message and caps it', async () => {
+  it('keeps the upstream body out of the error entirely', async () => {
     const longBody = 'x'.repeat(1000);
     mockWorkerCall().reply(502, longBody);
 
     const error = await runAndCatch();
     const body: unknown = await (error as { response: Response }).response.json();
 
-    expect(body).toMatchObject({ message: 'Script runner error: 502' });
-    // The body is carried in a structured field, capped to the prefix plus the ellipsis.
-    expect((body as { responseBody: string }).responseBody).toHaveLength(257);
-    expect((body as { message: string }).message).not.toContain('x');
+    // The status identifies the failure; the body reaches the audit log and the RP, so it is dropped.
+    expect(body).toEqual({ message: 'Script runner error: 502' });
   });
 
-  it('carries the raw body when the envelope drifts', async () => {
+  it('drops the raw body when the envelope drifts', async () => {
     mockWorkerCall().reply(200, { ok: false, kind: 'brandNewKind', message: 'Boom.' });
 
     const error = await runAndCatch();
     const body: unknown = await (error as { response: Response }).response.json();
 
-    expect(body).toMatchObject({
-      message: 'Script runner returned an unexpected response.',
-      responseBody: JSON.stringify({ ok: false, kind: 'brandNewKind', message: 'Boom.' }),
-    });
+    expect(body).toEqual({ message: 'Script runner returned an unexpected response.' });
   });
 
   it('throws on an unrecognizable envelope', async () => {

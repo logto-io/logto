@@ -219,6 +219,47 @@ describe('ActionLibrary Cloud execution routing', () => {
     expect(getWorkerAccessToken).not.toHaveBeenCalled();
   });
 
+  it('reports `azure` telemetry when the script runner endpoint is not injected', async () => {
+    setIsCloud(true);
+    jest.spyOn(EnvSet.values, 'scriptRunnerEndpoint', 'get').mockReturnValue('');
+    const azureEndpoint = 'https://untrusted.example.com';
+    const executionResult = { action: 'updateUser', user: { name: 'Bar' } };
+    nock(azureEndpoint).post('/api/actions').reply(200, executionResult);
+    jest
+      .spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get')
+      .mockReturnValue(azureEndpoint);
+    jest
+      .spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get')
+      .mockReturnValue('function-key');
+    getAction.mockResolvedValueOnce({
+      enabled: true,
+      script: 'const runAction = () => ({ action: "updateUser", user: { name: "Bar" } });',
+    });
+
+    await expect(
+      runAction({
+        key: LogtoActionKey.PostSignIn,
+        event: {
+          key: LogtoActionKey.PostSignIn,
+          interactionEvent: 'SignIn',
+          user: { id: 'foo', name: 'Foo' },
+        },
+      })
+    ).resolves.toEqual(executionResult);
+    // Dev features alone must not label an Azure Functions run as `cloud`: the metric decides
+    // when the gate can drop, so it has to read the same condition the gate does.
+    expect(trackMetric).toHaveBeenNthCalledWith(1, {
+      name: actionMetricNames.executionCount,
+      value: 1,
+      properties: {
+        actionType: 'PostSignIn',
+        runtimeLocation: 'azure',
+        outcome: 'success',
+        action: 'updateUser',
+      },
+    });
+  });
+
   it('uses the remote runner for Cloud executeScript without falling back to local VM', async () => {
     setIsCloud(true);
     const payload = {
