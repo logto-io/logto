@@ -17,6 +17,10 @@ on:
       - master
       - 'push-action/**'
   pull_request:
+    # `edited` is the only event fired when a PR base changes (e.g. a stacked PR
+    # retargeting to master after its base merges); analyses are base-relative, so
+    # without a fresh run the code scanning merge requirement blocks the PR forever
+    types: [opened, synchronize, reopened, edited]
     # The branches below must be a subset of the branches above
     branches:
       - master
@@ -26,6 +30,8 @@ on:
 jobs:
   analyze:
     name: Analyze
+    # Among `edited` events only base changes need a re-scan; skip title/body edits
+    if: github.event_name != 'pull_request' || github.event.action != 'edited' || github.event.changes.base != null
     runs-on: ubuntu-latest
     permissions:
       actions: read
