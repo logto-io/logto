@@ -1,4 +1,72 @@
-import { buildResourceScopesToReject } from './utils.js';
+import { ReservedScope, UserScope } from '@logto/core-kit';
+
+import { buildResourceScopesToReject, findStaleOidcScopes } from './utils.js';
+
+describe('findStaleOidcScopes', () => {
+  const clientScope = [ReservedScope.OpenId, ReservedScope.OfflineAccess, UserScope.Profile].join(
+    ' '
+  );
+
+  it('should return nothing when every requested OIDC scope is still allowed', () => {
+    expect(
+      findStaleOidcScopes({
+        clientScope,
+        requestedScope: `${ReservedScope.OpenId} ${UserScope.Profile}`,
+        missingOIDCScope: [UserScope.Profile],
+      })
+    ).toEqual([]);
+  });
+
+  it('should flag a requested user scope the current client scope no longer allows', () => {
+    expect(
+      findStaleOidcScopes({
+        clientScope,
+        requestedScope: `${ReservedScope.OpenId} ${UserScope.Profile} ${UserScope.Email}`,
+        missingOIDCScope: [UserScope.Profile],
+      })
+    ).toEqual([UserScope.Email]);
+  });
+
+  it('should flag a snapshot scope even when it no longer derives from the scope parameter', () => {
+    expect(
+      findStaleOidcScopes({
+        clientScope,
+        requestedScope: ReservedScope.OpenId,
+        missingOIDCScope: [UserScope.Email],
+      })
+    ).toEqual([UserScope.Email]);
+  });
+
+  it('should ignore resource scope names in the scope parameter', () => {
+    expect(
+      findStaleOidcScopes({
+        clientScope,
+        requestedScope: `${ReservedScope.OpenId} read:resource`,
+        missingOIDCScope: [],
+      })
+    ).toEqual([]);
+  });
+
+  it('should validate the snapshot alone when the scope parameter is not a string', () => {
+    expect(
+      findStaleOidcScopes({
+        clientScope,
+        requestedScope: undefined,
+        missingOIDCScope: [UserScope.Profile, UserScope.Email],
+      })
+    ).toEqual([UserScope.Email]);
+  });
+
+  it('should deduplicate scopes present in both the request and the snapshot', () => {
+    expect(
+      findStaleOidcScopes({
+        clientScope,
+        requestedScope: `${UserScope.Email} ${UserScope.Organizations}`,
+        missingOIDCScope: [UserScope.Email, UserScope.Organizations],
+      })
+    ).toEqual([UserScope.Email, UserScope.Organizations]);
+  });
+});
 
 describe('buildResourceScopesToReject', () => {
   it('should reject the remainder of a partially granted group', () => {
