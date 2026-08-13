@@ -58,7 +58,7 @@ const queries: Queries = {
     },
     grantClientSnapshots: {
       insert: insertGrantClientSnapshot,
-      findLatestByClientId: jest.fn(),
+      findUserLatestByClientId: jest.fn(),
     },
   },
 };

@@ -46,7 +46,12 @@ export default function cimdRoutes<T extends ManagementApiRouter>(
   router.get(
     '/cimd/client-snapshots',
     koaGuard({
-      query: z.object({ clientId: z.string().max(2048) }),
+      /**
+       * `userId` is mandatory: the lookup is scoped to the user's own grants so an
+       * unvetted client cannot rewrite the name a user sees by re-authorizing under
+       * another account. An unknown user resolves to the same 404 as a missing snapshot.
+       */
+      query: z.object({ clientId: z.string().max(2048), userId: z.string() }),
       response: CimdGrantClientSnapshots.guard.pick({
         clientId: true,
         name: true,
@@ -56,9 +61,12 @@ export default function cimdRoutes<T extends ManagementApiRouter>(
       status: [200, 404],
     }),
     async (ctx, next) => {
-      const { clientId } = ctx.guard.query;
+      const { clientId, userId } = ctx.guard.query;
 
-      const snapshot = await queries.cimd.grantClientSnapshots.findLatestByClientId(clientId);
+      const snapshot = await queries.cimd.grantClientSnapshots.findUserLatestByClientId(
+        userId,
+        clientId
+      );
 
       assertThat(snapshot, new RequestError({ code: 'entity.not_found', status: 404 }));
 

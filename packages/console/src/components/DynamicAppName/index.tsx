@@ -22,10 +22,15 @@ type Props = {
    * The consent-time snapshot name, when the caller already holds one (e.g. the grants
    * tab). The backend falls back to the identifier itself when the metadata document has
    * no `client_name`, and an empty string can come through as well — both mean "unnamed".
-   * Without it, the component resolves the snapshot lookup endpoint — the same
-   * fetch-per-row pattern as `ApplicationName`.
    */
   readonly name?: string;
+  /**
+   * Without a `name`, the component resolves the snapshot the given user has approved —
+   * the same fetch-per-row pattern as `ApplicationName`, scoped per user so nobody
+   * else's consent can change the name shown here. Without either, the identifier host
+   * stands in.
+   */
+  readonly userId?: string;
   /** Whether to append the "Dynamic app" kind tag. Kept off in dense tables. */
   readonly hasTag?: boolean;
 };
@@ -39,13 +44,13 @@ type ClientSnapshot = Pick<CimdGrantClientSnapshot, 'clientId' | 'name' | 'logoU
  * document) instead of an application details page; a client with no resolvable snapshot
  * name shows its identifier host, matching the consent page.
  */
-function DynamicAppName({ clientId, name, hasTag = false }: Props) {
+function DynamicAppName({ clientId, name, userId, hasTag = false }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const fetchApi = useApi({ hideErrorToast: ['entity.not_found'] });
   const fetcher = useSwrFetcher<ClientSnapshot>(fetchApi);
   const { data } = useSWR<ClientSnapshot, RequestError>(
-    conditional(!name && buildUrl('api/cimd/client-snapshots', { clientId })),
+    conditional(!name && userId && buildUrl('api/cimd/client-snapshots', { clientId, userId })),
     {
       fetcher,
       shouldRetryOnError: shouldRetryOnError({ ignore: [404] }),

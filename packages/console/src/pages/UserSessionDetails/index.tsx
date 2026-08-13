@@ -118,7 +118,7 @@ function UserSessionDetails() {
            * fetching `/api/applications/:id` can only fail. The component resolves its
            * consent snapshot name from the snapshot lookup instead.
            */
-          <DynamicAppName clientId={applicationId} />
+          <DynamicAppName clientId={applicationId} userId={userId} />
         ) : (
           <ApplicationName
             applicationId={applicationId}
@@ -127,7 +127,7 @@ function UserSessionDetails() {
         )}
       </Fragment>
     ));
-  }, [sessionData]);
+  }, [sessionData, userId]);
 
   const infoFields = useMemo<
     Array<{ key: string; labelKey: AdminConsoleKey; value: ReactNode }>

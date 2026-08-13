@@ -12,7 +12,7 @@
     "/api/cimd/client-snapshots": {
       "get": {
         "summary": "Get a CIMD client display snapshot",
-        "description": "Resolve the latest consent-time display snapshot captured for a CIMD client identifier. Snapshots live as long as their grants, so a client whose grants are all revoked and pruned has none — the identifier itself stays the permanent identity signal.",
+        "description": "Resolve the latest consent-time display snapshot the user has approved for a CIMD client identifier. The lookup is scoped to the user's own grants, so no other account's consent can change the name shown for this user. Snapshots live as long as their grants — a user whose grants are all revoked and pruned has none, and the identifier itself stays the permanent identity signal.",
         "parameters": [
           {
             "name": "clientId",
@@ -22,14 +22,23 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "The user whose consented snapshots are searched.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "The latest display snapshot for the client identifier."
+            "description": "The latest display snapshot the user has approved for the client identifier."
           },
           "404": {
-            "description": "No snapshot exists for the client identifier."
+            "description": "The user has no snapshot for the client identifier."
           }
         }
       }

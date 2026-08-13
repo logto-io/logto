@@ -119,9 +119,9 @@ function AuditLogTable({ applicationId, userId, className }: Props) {
     title: t('logs.application'),
     dataIndex: 'application',
     colSpan: isUserColumnVisible ? 4 : 5,
-    render: ({ payload: { applicationId, cimdClientId } }) => {
+    render: ({ payload: { applicationId, cimdClientId, userId } }) => {
       if (cimdClientId) {
-        return <DynamicAppName clientId={cimdClientId} />;
+        return <DynamicAppName clientId={cimdClientId} userId={userId} />;
       }
 
       return applicationId ? <ApplicationName applicationId={applicationId} /> : <div>-</div>;

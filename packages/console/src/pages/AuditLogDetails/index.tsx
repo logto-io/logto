@@ -102,7 +102,10 @@ function AuditLogDetails() {
                       <div className={styles.label}>{t('log_details.application')}</div>
                       <div>
                         {data.payload.cimdClientId ? (
-                          <DynamicAppName clientId={data.payload.cimdClientId} />
+                          <DynamicAppName
+                            clientId={data.payload.cimdClientId}
+                            userId={data.payload.userId}
+                          />
                         ) : data.payload.applicationId ? (
                           <ApplicationName
                             isLink={!isBuiltInApplicationId(data.payload.applicationId)}
