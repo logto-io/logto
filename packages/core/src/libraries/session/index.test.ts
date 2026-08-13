@@ -264,7 +264,7 @@ describe('removeUserSessionAuthorizationByGrantId', () => {
     jest.clearAllMocks();
   });
 
-  it('should remove matching authorization and persist session', async () => {
+  it('should remove matching authorization and persist session without resetting its identifier', async () => {
     findUserActiveSessionUidByGrantId.mockResolvedValueOnce({ sessionUid: 'session-id' });
     findByUid.mockResolvedValueOnce({
       accountId: 'user-id',
@@ -277,7 +277,9 @@ describe('removeUserSessionAuthorizationByGrantId', () => {
 
     expect(findUserActiveSessionUidByGrantId).toHaveBeenCalledWith('user-id', 'grant-id');
     expect(findByUid).toHaveBeenCalledWith('session-id');
-    expect(resetIdentifier).toHaveBeenCalled();
+    // Rotating the identifier would orphan the browser session cookie and silently
+    // drop the browser's SSO session; grant revocation must keep the session alive.
+    expect(resetIdentifier).not.toHaveBeenCalled();
     expect(persist).toHaveBeenCalled();
   });
 
@@ -359,7 +361,7 @@ describe('removeUserSessionAuthorizationsByGrantIds', () => {
     expect(findUserActiveSessionUidByGrantId).toHaveBeenNthCalledWith(2, 'user-id', 'grant-2');
     expect(findByUid).toHaveBeenCalledTimes(1);
     expect(findByUid).toHaveBeenCalledWith('session-1');
-    expect(resetIdentifier).toHaveBeenCalledTimes(1);
+    expect(resetIdentifier).not.toHaveBeenCalled();
     expect(persist).toHaveBeenCalledTimes(1);
     expect(result).toEqual({
       succeededGrantIds: ['grant-1', 'grant-2'],
