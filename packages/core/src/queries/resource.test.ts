@@ -26,6 +26,7 @@ const {
   findResourceById,
   findResourceByIndicator,
   insertResource,
+  setDefaultResource,
   updateResourceById,
   deleteResourceById,
 } = createResourceQueries(pool, wellKnownCache);
@@ -284,6 +285,91 @@ describe('resource query', () => {
       ...mockResource,
       accessTokenTtl: updatedAccessTokenTtl,
     });
+  });
+
+  it('setDefaultResource invalidates cached resources for both defaults', async () => {
+    const previousDefault = {
+      ...mockResource,
+      id: 'previous_default',
+      indicator: 'https://previous.dev/api',
+      isDefault: true,
+    };
+    const newDefault = { ...mockResource, isDefault: true };
+    const { id, indicator } = mockResource;
+    const expectFindByIndicatorSql = sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      where ${fields.indicator}=$1
+    `;
+    const expectUnsetDefaultSql = sql`
+      update ${table}
+        set ${fields.isDefault}=false
+        where ${fields.isDefault}=true
+        returning ${fields.indicator};
+    `;
+    const expectSetDefaultSql = sql`
+      update ${table}
+        set ${fields.isDefault}=true
+        where ${fields.id}=$1
+        returning *;
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectFindByIndicatorSql.sql);
+      expect(values).toEqual([previousDefault.indicator]);
+
+      return createMockQueryResult([previousDefault]);
+    });
+
+    await expect(findResourceByIndicator(previousDefault.indicator)).resolves.toEqual(
+      previousDefault
+    );
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectFindByIndicatorSql.sql);
+      expect(values).toEqual([indicator]);
+
+      return createMockQueryResult([mockResource]);
+    });
+
+    await expect(findResourceByIndicator(indicator)).resolves.toEqual(mockResource);
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectUnsetDefaultSql.sql);
+      expect(values).toEqual([]);
+
+      return createMockQueryResult([{ indicator: previousDefault.indicator }]);
+    });
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSetDefaultSql.sql);
+      expect(values).toEqual([id]);
+
+      return createMockQueryResult([newDefault]);
+    });
+
+    await expect(setDefaultResource(id)).resolves.toEqual(newDefault);
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectFindByIndicatorSql.sql);
+      expect(values).toEqual([previousDefault.indicator]);
+
+      return createMockQueryResult([{ ...previousDefault, isDefault: false }]);
+    });
+
+    await expect(findResourceByIndicator(previousDefault.indicator)).resolves.toEqual({
+      ...previousDefault,
+      isDefault: false,
+    });
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectFindByIndicatorSql.sql);
+      expect(values).toEqual([indicator]);
+
+      return createMockQueryResult([newDefault]);
+    });
+
+    await expect(findResourceByIndicator(indicator)).resolves.toEqual(newDefault);
   });
 
   it('deleteResourceById', async () => {
