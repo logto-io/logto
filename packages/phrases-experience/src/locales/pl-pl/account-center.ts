@@ -276,6 +276,7 @@ const account_center = {
       'Nie udało się załadować aplikacji firm trzecich. Spróbuj ponownie.',
     granted_at: 'Autoryzowano {{date}}',
     dynamic_app: 'Aplikacja dynamiczna',
+    client_id: 'ID klienta: {{clientId}}',
     revoke_grant: 'Usuń',
     revoke_grant_title: 'Usuń dostęp aplikacji firmy trzeciej',
     revoke_grant_description:

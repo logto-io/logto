@@ -273,6 +273,7 @@ const account_center = {
     third_party_apps_load_failed: 'Üçüncü taraf uygulamalar yüklenemedi. Lütfen tekrar deneyin.',
     granted_at: '{{date}} tarihinde yetkilendirildi',
     dynamic_app: 'Dinamik uygulama',
+    client_id: 'Müşteri kimliği: {{clientId}}',
     revoke_grant: 'Kaldır',
     revoke_grant_title: 'Üçüncü taraf uygulama erişimini kaldır',
     revoke_grant_description:

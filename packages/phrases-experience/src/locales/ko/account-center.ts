@@ -265,6 +265,7 @@ const account_center = {
     third_party_apps_load_failed: '서드파티 앱을 불러오지 못했습니다. 다시 시도해 주세요.',
     granted_at: '{{date}}에 승인',
     dynamic_app: '다이나믹 앱',
+    client_id: '클라이언트 ID: {{clientId}}',
     revoke_grant: '제거',
     revoke_grant_title: '서드파티 앱 액세스 제거',
     revoke_grant_description:

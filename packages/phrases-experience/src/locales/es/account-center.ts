@@ -278,6 +278,7 @@ const account_center = {
       'No se pudieron cargar las aplicaciones de terceros. Inténtalo de nuevo.',
     granted_at: 'Autorizado {{date}}',
     dynamic_app: 'Aplicación dinámica',
+    client_id: 'ID de cliente: {{clientId}}',
     revoke_grant: 'Eliminar',
     revoke_grant_title: 'Eliminar acceso de aplicación de terceros',
     revoke_grant_description:

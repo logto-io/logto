@@ -286,6 +286,7 @@ const account_center = {
       'Drittanbieter-Apps konnten nicht geladen werden. Bitte versuche es erneut.',
     granted_at: 'Autorisiert {{date}}',
     dynamic_app: 'Dynamische App',
+    client_id: 'Client-ID: {{clientId}}',
     revoke_grant: 'Entfernen',
     revoke_grant_title: 'Drittanbieter-App-Zugriff entfernen',
     revoke_grant_description:

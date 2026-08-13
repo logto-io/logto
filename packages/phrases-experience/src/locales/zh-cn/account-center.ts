@@ -255,6 +255,7 @@ const account_center = {
     third_party_apps_load_failed: '第三方应用加载失败，请重试。',
     granted_at: '授权于 {{date}}',
     dynamic_app: '动态应用',
+    client_id: '客户端 ID: {{clientId}}',
     revoke_grant: '移除',
     revoke_grant_title: '移除第三方应用访问权限',
     revoke_grant_description: '这将撤销授予该应用的所有访问权限。确定要继续吗？',

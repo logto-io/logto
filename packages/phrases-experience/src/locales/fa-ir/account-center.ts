@@ -272,6 +272,7 @@ const account_center = {
       'بارگذاری برنامه‌های شخص ثالث ناموفق بود. لطفاً دوباره تلاش کنید.',
     granted_at: 'مجازشده در {{date}}',
     dynamic_app: 'برنامه پویا',
+    client_id: 'شناسه کلاینت: {{clientId}}',
     revoke_grant: 'حذف',
     revoke_grant_title: 'حذف دسترسی برنامه شخص ثالث',
     revoke_grant_description:

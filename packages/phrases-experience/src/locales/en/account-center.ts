@@ -276,6 +276,7 @@ const account_center = {
     third_party_apps_load_failed: 'Failed to load third-party apps. Please try again.',
     granted_at: 'Authorized {{date}}',
     dynamic_app: 'Dynamic app',
+    client_id: 'Client ID: {{clientId}}',
     revoke_grant: 'Remove',
     revoke_grant_title: 'Remove third-party app access',
     revoke_grant_description:

@@ -271,6 +271,7 @@ const account_center = {
     third_party_apps_load_failed: 'Не удалось загрузить сторонние приложения. Повторите попытку.',
     granted_at: 'Авторизовано {{date}}',
     dynamic_app: 'Динамическое приложение',
+    client_id: 'ID клиента: {{clientId}}',
     revoke_grant: 'Удалить',
     revoke_grant_title: 'Удалить доступ стороннего приложения',
     revoke_grant_description:

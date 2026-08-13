@@ -2,7 +2,6 @@ import { isCimdClientId } from '@logto/schemas';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
-import ExternalLinkIcon from '@ac/assets/icons/external-link.svg?react';
 import { layoutClassNames } from '@ac/constants/layout';
 
 import styles from './index.module.scss';
@@ -18,32 +17,32 @@ type GrantRowProps = {
 const GrantRow = ({ app, isEditable, isRemoving, onRevoke }: GrantRowProps) => {
   const { t, i18n } = useTranslation();
 
+  /**
+   * A dynamic app (CIMD) client is a URL identity with no applications row behind it.
+   * Its consent-time snapshot name is client-declared, so the row also shows the client
+   * identifier URL — the unforgeable identity signal, matching the consent page's notice.
+   * Everything stays plain text: the identifier is a client-controlled URL, and an
+   * end-user surface should not hand it a navigation slot.
+   */
+  const isDynamicApp = isCimdClientId(app.applicationId);
+
   return (
     <div className={classNames(styles.row, layoutClassNames.row)}>
       <div className={styles.sessionInfo}>
-        {/**
-         * A dynamic app (CIMD) client is a URL identity with no applications row behind
-         * it, so its consent-time snapshot name links to the client identifier URL (the
-         * metadata document) — the user can inspect what they authorized before revoking.
-         */}
-        {isCimdClientId(app.applicationId) ? (
+        {isDynamicApp ? (
           <div className={styles.dynamicAppName}>
-            <a
-              className={styles.dynamicAppLink}
-              href={app.applicationId}
-              target="_blank"
-              rel="noopener noreferrer"
-              title={app.applicationId}
-            >
-              <span className={styles.dynamicAppLinkName}>
-                {getDynamicAppDisplayName(app.applicationId, app.applicationName)}
-              </span>
-              <ExternalLinkIcon className={styles.dynamicAppLinkIcon} />
-            </a>
+            <span className={styles.deviceName}>
+              {getDynamicAppDisplayName(app.applicationId, app.applicationName)}
+            </span>
             <span className={styles.dynamicAppTag}>{t('account_center.sessions.dynamic_app')}</span>
           </div>
         ) : (
           <div className={styles.deviceName}>{app.applicationName}</div>
+        )}
+        {isDynamicApp && (
+          <div className={styles.meta}>
+            {t('account_center.sessions.client_id', { clientId: app.applicationId })}
+          </div>
         )}
         <div className={styles.meta}>
           {t('account_center.sessions.granted_at', {
