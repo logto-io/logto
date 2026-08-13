@@ -1,0 +1,41 @@
+@use '@/scss/underscore' as _;
+
+/* `inline-flex` keeps the component composable in inline contexts (e.g. a comma-separated
+ * client list) while the table cell still gets one-line truncation via `max-width`. */
+.container {
+  display: inline-flex;
+  align-items: center;
+  gap: _.unit(2);
+  max-width: 100%;
+}
+
+.anchor {
+  max-width: 100%;
+  overflow: hidden;
+
+  /* The descendant selector outranks `TextLink`'s own `max-width: fit-content`,
+   * which shares the flat class specificity and would win or lose by load order. */
+  .link {
+    max-width: 100%;
+    overflow: hidden;
+  }
+}
+
+.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.icon {
+  flex-shrink: 0;
+}
+
+.tag {
+  flex-shrink: 0;
+}
+
+/* The identifier URL has no break opportunities of its own. */
+.tooltip {
+  word-break: break-all;
+}

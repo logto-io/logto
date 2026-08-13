@@ -1,0 +1,15 @@
+.identifier {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The identifier has no break opportunities of its own. */
+.tooltip {
+  word-break: break-all;
+}
+
+.wrapped {
+  word-break: break-all;
+}

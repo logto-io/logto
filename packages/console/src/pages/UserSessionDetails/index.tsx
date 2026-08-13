@@ -1,5 +1,10 @@
 import type { AdminConsoleKey } from '@logto/phrases';
-import { Theme, isBuiltInApplicationId, type GetUserSessionResponse } from '@logto/schemas';
+import {
+  Theme,
+  isBuiltInApplicationId,
+  isCimdClientId,
+  type GetUserSessionResponse,
+} from '@logto/schemas';
 import { getSessionDisplayInfo } from '@logto/shared/universal';
 import { Fragment, type ReactNode, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +16,7 @@ import More from '@/assets/icons/more.svg?react';
 import SessionDarkIcon from '@/assets/icons/session-dark.svg?react';
 import SessionIcon from '@/assets/icons/session.svg?react';
 import ApplicationName from '@/components/ApplicationName';
+import ClientIdentifier from '@/components/ClientIdentifier';
 import DetailsPage from '@/components/DetailsPage';
 import UserName from '@/components/UserName';
 import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
@@ -106,10 +112,19 @@ function UserSessionDetails() {
     return authorizedApplicationIds.map((applicationId, index) => (
       <Fragment key={applicationId}>
         {index > 0 ? ', ' : null}
-        <ApplicationName
-          applicationId={applicationId}
-          isLink={!isBuiltInApplicationId(applicationId)}
-        />
+        {isCimdClientId(applicationId) ? (
+          /**
+           * A CIMD client identifier is a URL with no applications row behind it —
+           * fetching `/api/applications/:id` can only fail. Shown as the raw identifier;
+           * the revocation surface (the third-party apps tab) renders the snapshot name.
+           */
+          <ClientIdentifier isWrapped value={applicationId} />
+        ) : (
+          <ApplicationName
+            applicationId={applicationId}
+            isLink={!isBuiltInApplicationId(applicationId)}
+          />
+        )}
       </Fragment>
     ));
   }, [sessionData]);

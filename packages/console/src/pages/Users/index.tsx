@@ -8,6 +8,7 @@ import Plus from '@/assets/icons/plus.svg?react';
 import UsersEmptyDark from '@/assets/images/users-empty-dark.svg?react';
 import UsersEmpty from '@/assets/images/users-empty.svg?react';
 import ApplicationName from '@/components/ApplicationName';
+import ClientIdentifier from '@/components/ClientIdentifier';
 import { LocaleDate } from '@/components/DateTime';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
@@ -109,8 +110,21 @@ function Users() {
             title: t('users.application_name'),
             dataIndex: 'app',
             colSpan: 5,
-            render: ({ applicationId }) =>
-              applicationId ? <ApplicationName applicationId={applicationId} /> : <div>-</div>,
+            render: ({ applicationId, cimdClientId }) => {
+              /**
+               * A CIMD-first user has no `applicationId`; its origin client lives in the
+               * additive `cimdClientId` field (LOG-14005) — shown as the raw identifier.
+               */
+              if (cimdClientId) {
+                return <ClientIdentifier value={cimdClientId} />;
+              }
+
+              return applicationId ? (
+                <ApplicationName applicationId={applicationId} />
+              ) : (
+                <div>-</div>
+              );
+            },
           },
           {
             title: t('users.latest_sign_in'),

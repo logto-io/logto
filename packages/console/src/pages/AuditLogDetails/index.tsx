@@ -8,6 +8,7 @@ import useSWR from 'swr';
 
 import ApplicationName from '@/components/ApplicationName';
 import { isImpersonationLog } from '@/components/AuditLogTable/components/EventName/utils';
+import ClientIdentifier from '@/components/ClientIdentifier';
 import DetailsPage from '@/components/DetailsPage';
 import PageMeta from '@/components/PageMeta';
 import UserName from '@/components/UserName';
@@ -100,7 +101,9 @@ function AuditLogDetails() {
                     <div className={styles.infoItem}>
                       <div className={styles.label}>{t('log_details.application')}</div>
                       <div>
-                        {data.payload.applicationId ? (
+                        {data.payload.cimdClientId ? (
+                          <ClientIdentifier isWrapped value={data.payload.cimdClientId} />
+                        ) : data.payload.applicationId ? (
                           <ApplicationName
                             isLink={!isBuiltInApplicationId(data.payload.applicationId)}
                             applicationId={data.payload.applicationId}

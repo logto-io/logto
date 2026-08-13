@@ -1,7 +1,10 @@
+import { isCimdClientId } from '@logto/schemas';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ApplicationName from '@/components/ApplicationName';
+import ClientIdentifier from '@/components/ClientIdentifier';
+import DynamicAppName from '@/components/DynamicAppName';
 import FormCard from '@/components/FormCard';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
@@ -66,15 +69,29 @@ function UserThirdPartyApps({ userId }: Props) {
                 title: t('name_column'),
                 dataIndex: 'applicationId',
                 colSpan: 5,
-                render: ({ applicationId }) => (
-                  <ApplicationName isLink applicationId={applicationId} />
-                ),
+                render: ({ applicationId, applicationName }) =>
+                  /**
+                   * A CIMD client identifier is a URL with no applications row behind it:
+                   * fetching `/api/applications/:id` can only 404. The grants response
+                   * already carries its snapshot name.
+                   */
+                  isCimdClientId(applicationId) ? (
+                    <DynamicAppName hasTag clientId={applicationId} name={applicationName} />
+                  ) : (
+                    <ApplicationName isLink applicationId={applicationId} />
+                  ),
               },
               {
                 title: t('app_id_column'),
                 dataIndex: 'applicationId',
                 colSpan: 5,
-                render: ({ applicationId }) => applicationId,
+                render: ({ applicationId }) =>
+                  /** A CIMD identifier runs up to 2048 characters — truncate with a tooltip. */
+                  isCimdClientId(applicationId) ? (
+                    <ClientIdentifier value={applicationId} />
+                  ) : (
+                    applicationId
+                  ),
               },
               {
                 title: t('access_created_at_column'),
