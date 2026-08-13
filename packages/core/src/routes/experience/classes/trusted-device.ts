@@ -1,5 +1,6 @@
 import { appInsights } from '@logto/app-insights/node';
 import { InteractionEvent } from '@logto/schemas';
+import { generateStandardId } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -18,10 +19,11 @@ type TrustedDeviceFulfillmentStatus =
 
 type TrustedDeviceData = Pick<
   InteractionStorage,
-  'createTrustedDevice' | 'trustedDeviceFulfillment'
+  'trustedDeviceCreation' | 'trustedDeviceFulfillment'
 >;
 
 type FinalizeOptions = {
+  creation?: InteractionStorage['trustedDeviceCreation'];
   interactionEvent: InteractionEvent;
   userId: string;
   hasEligibleMfaProof: boolean;
@@ -39,7 +41,7 @@ type FinalizeOptions = {
  * Owns trusted-device interaction state and coordinates credential fulfillment and creation.
  */
 export class TrustedDevice {
-  #createTrustedDevice?: boolean;
+  #creation?: InteractionStorage['trustedDeviceCreation'];
   #fulfillment?: InteractionStorage['trustedDeviceFulfillment'];
 
   constructor(
@@ -47,19 +49,15 @@ export class TrustedDevice {
     private readonly tenant: TenantContext,
     data: TrustedDeviceData
   ) {
-    this.#createTrustedDevice = data.createTrustedDevice;
+    this.#creation = data.trustedDeviceCreation;
     this.#fulfillment = data.trustedDeviceFulfillment;
   }
 
   get data(): TrustedDeviceData {
     return {
-      ...conditional(this.#createTrustedDevice && { createTrustedDevice: true }),
+      ...conditional(this.#creation && { trustedDeviceCreation: this.#creation }),
       ...conditional(this.#fulfillment && { trustedDeviceFulfillment: this.#fulfillment }),
     };
-  }
-
-  get creationRequested() {
-    return this.#createTrustedDevice === true;
   }
 
   requestCreation(hasEligibleMfaProof: boolean) {
@@ -68,7 +66,15 @@ export class TrustedDevice {
       new RequestError({ code: 'session.mfa.require_mfa_verification', status: 403 })
     );
 
-    this.#createTrustedDevice = true;
+    this.#creation ||= { deviceId: generateStandardId() };
+  }
+
+  consumeCreationRequest() {
+    const creation = this.#creation;
+
+    this.#creation = undefined;
+
+    return creation;
   }
 
   async getCreationAvailability(userId?: string) {
@@ -121,6 +127,7 @@ export class TrustedDevice {
   }
 
   async finalize({
+    creation,
     interactionEvent,
     userId,
     hasEligibleMfaProof,
@@ -160,11 +167,16 @@ export class TrustedDevice {
           return;
         }
 
-        if (!this.#createTrustedDevice || !hasEligibleMfaProof) {
+        if (!creation || !hasEligibleMfaProof) {
           return;
         }
 
-        await trustedDevices.createCredential({ ctx: this.ctx, userId, ...metadata });
+        await trustedDevices.createCredential({
+          ctx: this.ctx,
+          deviceId: creation.deviceId,
+          userId,
+          ...metadata,
+        });
       },
       (error) => {
         void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));

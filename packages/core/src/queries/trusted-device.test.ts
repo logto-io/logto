@@ -42,9 +42,10 @@ describe('trusted device queries', () => {
     jest.restoreAllMocks();
   });
 
-  it('inserts a trusted device record', async () => {
+  it('inserts a trusted device record once per device ID', async () => {
     mockQuery.mockImplementationOnce(async (query, values) => {
       expect(query).toMatch(/insert into "trusted_devices"/i);
+      expect(query).toMatch(/on conflict \("id"\) do nothing/i);
       expect(values).toEqual([
         trustedDevice.id,
         trustedDevice.userId,
@@ -60,17 +61,30 @@ describe('trusted device queries', () => {
     });
 
     await expect(
-      queries.insert({
+      queries.insertIfNotExists({
         id: trustedDevice.id,
         userId: trustedDevice.userId,
         secretHash: trustedDevice.secretHash,
-        userAgent: trustedDevice.userAgent,
-        ip: trustedDevice.ip,
-        country: trustedDevice.country,
-        city: trustedDevice.city,
+        userAgent: trustedDevice.userAgent ?? undefined,
+        ip: trustedDevice.ip ?? undefined,
+        country: trustedDevice.country ?? undefined,
+        city: trustedDevice.city ?? undefined,
         expiresAt: trustedDevice.expiresAt,
       })
     ).resolves.toEqual(trustedDevice);
+  });
+
+  it('returns null when the device ID already exists', async () => {
+    mockQuery.mockResolvedValueOnce(createMockQueryResult([]));
+
+    await expect(
+      queries.insertIfNotExists({
+        id: trustedDevice.id,
+        userId: trustedDevice.userId,
+        secretHash: trustedDevice.secretHash,
+        expiresAt: trustedDevice.expiresAt,
+      })
+    ).resolves.toBeNull();
   });
 
   it('uses the same strict active predicate for paginated list and count', async () => {

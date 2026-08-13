@@ -1,7 +1,6 @@
 import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
 
 import { TrustedDevices } from '@logto/schemas';
-import { generateStandardId } from '@logto/shared';
 import { trySafe } from '@silverhand/essentials';
 import { type Context } from 'koa';
 
@@ -34,6 +33,7 @@ type TrustedDeviceLibraryOptions = Readonly<{
 type CreateTrustedDeviceCredential = TrustedDeviceMetadata &
   Readonly<{
     ctx: TrustedDeviceCookieContext;
+    deviceId: string;
     userId: string;
   }>;
 
@@ -181,25 +181,37 @@ export const createTrustedDeviceLibrary = (
     return deletedCount;
   };
 
-  const createCredential = async ({ ctx, userId, ...metadata }: CreateTrustedDeviceCredential) => {
+  const createCredential = async ({
+    ctx,
+    deviceId,
+    userId,
+    ...metadata
+  }: CreateTrustedDeviceCredential) => {
     const policy = await policyLibrary.getEffectivePolicy(userId);
 
     if (!policy.enabled) {
       return;
     }
 
-    const id = generateStandardId();
     const secret = generateTrustedDeviceSecret();
     const secretHash = hashTrustedDeviceSecret(secret);
     const expiresAt = Date.now() + policy.durationDays * dayInMilliseconds;
-    const trustedDevice = await queries.insert({
-      id,
+    const trustedDevice = await queries.insertIfNotExists({
+      id: deviceId,
       userId,
       secretHash,
       expiresAt,
       ...metadata,
     });
-    const credential = { id, secret };
+
+    // Another submit with the same creation intent may have won the insert race. Only the winner
+    // writes its matching random credential, so a late response can never replace the cookie
+    // with a credential whose record was not persisted.
+    if (!trustedDevice) {
+      return;
+    }
+
+    const credential = { id: deviceId, secret };
 
     writeCredential(ctx, userId, credential, trustedDevice.expiresAt);
     void cleanupExpired();

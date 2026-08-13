@@ -1,9 +1,13 @@
 import { type TrustedDevice, TrustedDevices } from '@logto/schemas';
 import { type CommonQueryMethods, sql } from '@silverhand/slonik';
 
-import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { expandFields } from '#src/database/utils.js';
-import { conditionalSql, convertToIdentifiers, manyRows } from '#src/utils/sql.js';
+import {
+  conditionalSql,
+  convertToIdentifiers,
+  convertToPrimitiveOrSql,
+  manyRows,
+} from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(TrustedDevices);
 const activePredicate = sql`${fields.expiresAt} > now()`;
@@ -15,17 +19,51 @@ export type TrustedDeviceMetadata = Readonly<{
   city?: string;
 }>;
 
+type TrustedDeviceCreation = TrustedDeviceMetadata &
+  Readonly<Pick<TrustedDevice, 'id' | 'userId' | 'secretHash' | 'expiresAt'>>;
+
 type Pagination = Readonly<{
   limit: number;
   offset: number;
 }>;
 
 export class TrustedDeviceQueries {
-  public readonly insert = buildInsertIntoWithPool(this.pool)(TrustedDevices, {
-    returning: true,
-  });
-
   constructor(public readonly pool: CommonQueryMethods) {}
+
+  public async insertIfNotExists({
+    id,
+    userId,
+    secretHash,
+    userAgent,
+    ip,
+    country,
+    city,
+    expiresAt,
+  }: TrustedDeviceCreation) {
+    return this.pool.maybeOne<TrustedDevice>(sql`
+      insert into ${table} (
+        ${fields.id},
+        ${fields.userId},
+        ${fields.secretHash},
+        ${fields.userAgent},
+        ${fields.ip},
+        ${fields.country},
+        ${fields.city},
+        ${fields.expiresAt}
+      ) values (
+        ${id},
+        ${userId},
+        ${convertToPrimitiveOrSql('secretHash', secretHash)},
+        ${userAgent ?? null},
+        ${ip ?? null},
+        ${country ?? null},
+        ${city ?? null},
+        ${convertToPrimitiveOrSql('expiresAt', expiresAt)}
+      )
+      on conflict (${fields.id}) do nothing
+      returning ${expandFields(TrustedDevices)}
+    `);
+  }
 
   public async findActiveByUserId(
     userId: string,

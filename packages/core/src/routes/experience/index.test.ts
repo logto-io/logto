@@ -585,6 +585,7 @@ describe('POST /experience/submit', () => {
       const payload = createCredential.mock.calls[0]?.[0] as
         | {
             ctx?: unknown;
+            deviceId?: string;
             userId?: string;
             userAgent?: string;
             ip?: string;
@@ -598,10 +599,97 @@ describe('POST /experience/submit', () => {
         country: 'US',
         city: 'Portland',
       });
+      expect(typeof payload?.deviceId).toBe('string');
       expect(payload?.ctx).toBeDefined();
       expect(typeof payload?.ip).toBe('string');
     }
   );
+
+  it('should consume trusted-device creation intent after a successful submit', async () => {
+    setDevFeaturesEnabled(true);
+    const user = {
+      ...mockUser,
+      mfaVerifications: [mockUserTotpMfaVerification],
+    };
+    const { requester, provider, createCredential } = createRequesterWithMocks({
+      user,
+      mfa: { policy: MfaPolicy.Mandatory, factors: [MfaFactor.TOTP] },
+      interactionResult: {
+        verificationRecords: [
+          {
+            id: 'totp-verification-id',
+            type: VerificationType.TOTP,
+            userId: user.id,
+            verified: true,
+          },
+        ],
+      },
+      persistInteractionResult: true,
+      trustedDevicePolicy: { enabled: true, durationDays: 30 },
+    });
+
+    const optInResponse = await requester.post('/experience/profile/mfa/trusted-device');
+    const repeatedOptInResponse = await requester.post('/experience/profile/mfa/trusted-device');
+    const firstSubmitResponse = await requester.post('/experience/submit');
+    const retrySubmitResponse = await requester.post('/experience/submit');
+
+    expect(optInResponse.status).toBe(204);
+    expect(repeatedOptInResponse.status).toBe(204);
+    expect(firstSubmitResponse.status).toBe(200);
+    expect(retrySubmitResponse.status).toBe(200);
+    const interactionResultCalls = (provider.interactionResult as jest.Mock).mock.calls;
+    const firstOptInResult = interactionResultCalls[0]?.[2] as Record<string, unknown> | undefined;
+    const repeatedOptInResult = interactionResultCalls[1]?.[2] as
+      | Record<string, unknown>
+      | undefined;
+    const firstSubmitResult = interactionResultCalls[2]?.[2] as Record<string, unknown> | undefined;
+    expect(firstOptInResult?.trustedDeviceCreation).toEqual(
+      repeatedOptInResult?.trustedDeviceCreation
+    );
+    expect(firstSubmitResult).not.toHaveProperty('trustedDeviceCreation');
+    expect(createCredential).toHaveBeenCalledTimes(1);
+    expect(createCredential).toHaveBeenCalledWith(expect.objectContaining({ userId: user.id }));
+    const creationPayload = createCredential.mock.calls[0]?.[0] as
+      | { deviceId?: unknown }
+      | undefined;
+    expect(typeof creationPayload?.deviceId).toBe('string');
+  });
+
+  it('should use one idempotency key for concurrent submits restored from the same interaction', async () => {
+    setDevFeaturesEnabled(true);
+    const user = {
+      ...mockUser,
+      mfaVerifications: [mockUserTotpMfaVerification],
+    };
+    const { requester, createCredential } = createRequesterWithMocks({
+      user,
+      mfa: { policy: MfaPolicy.Mandatory, factors: [MfaFactor.TOTP] },
+      interactionResult: {
+        trustedDeviceCreation: { deviceId: 'trusted-device-id' },
+        verificationRecords: [
+          {
+            id: 'totp-verification-id',
+            type: VerificationType.TOTP,
+            userId: user.id,
+            verified: true,
+          },
+        ],
+      },
+      trustedDevicePolicy: { enabled: true, durationDays: 30 },
+    });
+
+    const responses = await Promise.all([
+      requester.post('/experience/submit'),
+      requester.post('/experience/submit'),
+    ]);
+
+    expect(responses.map(({ status }) => status)).toEqual([200, 200]);
+    expect(createCredential).toHaveBeenCalledTimes(2);
+    expect(createCredential.mock.calls.map(([{ deviceId }]) => deviceId)).toEqual([
+      'trusted-device-id',
+      'trusted-device-id',
+    ]);
+  });
 
   it('should default trusted-device intent to false', async () => {
     setDevFeaturesEnabled(true);
@@ -1027,7 +1115,7 @@ describe('POST /experience/submit', () => {
     setDevFeaturesEnabled(true);
     const { requester, getEffectivePolicy } = createRequesterWithMocks({
       interactionResult: {
-        createTrustedDevice: true,
+        trustedDeviceCreation: { deviceId: 'internal-device-id' },
         trustedDeviceFulfillment: {
           userId: mockUser.id,
           trustedDeviceId: 'internal-device-id',
@@ -1044,7 +1132,7 @@ describe('POST /experience/submit', () => {
       trustedDevice: { canCreate: true, durationDays: 30 },
     });
     expect(response.body).not.toHaveProperty('trustedDeviceFulfillment');
-    expect(response.body).not.toHaveProperty('createTrustedDevice');
+    expect(response.body).not.toHaveProperty('trustedDeviceCreation');
     expect(getEffectivePolicy).toHaveBeenCalledWith(mockUser.id);
   });
 

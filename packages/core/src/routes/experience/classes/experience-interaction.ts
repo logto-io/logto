@@ -148,7 +148,7 @@ export default class ExperienceInteraction {
       profile = {},
       mfa = {},
       userId,
-      createTrustedDevice,
+      trustedDeviceCreation,
       trustedDeviceFulfillment,
       interactionEvent,
       captcha = {
@@ -162,7 +162,7 @@ export default class ExperienceInteraction {
     this.profile = new Profile(libraries, queries, profile, interactionContext);
     this.mfa = new Mfa(libraries, queries, mfa, interactionContext);
     this.trustedDevice = new TrustedDevice(ctx, tenant, {
-      createTrustedDevice,
+      trustedDeviceCreation,
       trustedDeviceFulfillment,
     });
     this.captcha = captcha;
@@ -662,6 +662,10 @@ export default class ExperienceInteraction {
     await this.triggerPostSignInAction(user.id);
 
     const { provider } = this.tenant;
+    // Do not persist a fulfilled creation intent in the final interaction result. A failed
+    // interactionResult call leaves the previously stored intent available for a retry, while a
+    // successful call makes subsequent submits a no-op for trusted-device creation.
+    const trustedDeviceCreation = this.trustedDevice.consumeCreationRequest();
 
     const redirectTo = await provider.interactionResult(this.ctx.req, this.ctx.res, {
       login: { accountId: user.id },
@@ -670,10 +674,11 @@ export default class ExperienceInteraction {
     });
 
     // Trusted-device writes happen only after the full interaction has succeeded.
-    const hasEligibleMfaProof =
-      this.trustedDevice.creationRequested &&
-      (await this.hasEligibleTrustedDeviceProof(updatedUser));
+    const hasEligibleMfaProof = trustedDeviceCreation
+      ? await this.hasEligibleTrustedDeviceProof(updatedUser)
+      : false;
     await this.trustedDevice.finalize({
+      creation: trustedDeviceCreation,
       interactionEvent: this.#interactionEvent,
       userId: user.id,
       hasEligibleMfaProof,
@@ -727,7 +732,7 @@ export default class ExperienceInteraction {
   public toSanitizedJson(): SanitizedInteractionStorageData {
     // Trusted-device intent and fulfillment are internal authentication state.
     const {
-      createTrustedDevice: _,
+      trustedDeviceCreation: _,
       trustedDeviceFulfillment: __,
       ...interactionStorage
     } = this.toJson();
