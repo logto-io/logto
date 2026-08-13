@@ -566,16 +566,18 @@ describe('POST /experience/submit', () => {
         user,
         mfa: { policy: MfaPolicy.Mandatory, factors: [factor] },
         interactionResult: { verificationRecords: [verificationRecord] },
+        persistInteractionResult: true,
         trustedDevicePolicy: { enabled: true, durationDays: 30 },
       });
 
+      const optInResponse = await requester.post('/experience/profile/mfa/trusted-device');
       const response = await requester
         .post('/experience/submit')
         .set('User-Agent', 'Trusted device test browser')
         .set('x-logto-cf-country', 'us')
-        .set('x-logto-cf-city', 'Portland')
-        .send({ createTrustedDevice: true });
+        .set('x-logto-cf-city', 'Portland');
 
+      expect(optInResponse.status).toBe(204);
       expect(response.status).toBe(200);
       const payload = createCredential.mock.calls[0]?.[0] as
         | {
@@ -638,7 +640,7 @@ describe('POST /experience/submit', () => {
       trustedDevicePolicy: { enabled: true, durationDays: 30 },
     });
 
-    const response = await requester.post('/experience/submit').send({ createTrustedDevice: true });
+    const response = await requester.post('/experience/profile/mfa/trusted-device');
 
     expect(response.status).toBe(403);
     expect(createCredential).not.toHaveBeenCalled();
@@ -679,13 +681,14 @@ describe('POST /experience/submit', () => {
         interactionEvent: InteractionEvent.Register,
         mfa: { policy: MfaPolicy.Mandatory, factors: [factor] },
         interactionResult: { mfa: mfaData },
+        persistInteractionResult: true,
         trustedDevicePolicy: { enabled: true, durationDays: 30 },
       });
 
-      const response = await requester
-        .post('/experience/submit')
-        .send({ createTrustedDevice: true });
+      const optInResponse = await requester.post('/experience/profile/mfa/trusted-device');
+      const response = await requester.post('/experience/submit');
 
+      expect(optInResponse.status).toBe(204);
       expect(response.status).toBe(200);
       expect(createCredential).toHaveBeenCalledWith(
         expect.objectContaining({ userId: mockUser.id })
@@ -718,9 +721,9 @@ describe('POST /experience/submit', () => {
       trustedDevicePolicy: { enabled: true, durationDays: 30 },
     });
 
-    const response = await requester.post('/experience/submit').send({ createTrustedDevice: true });
+    const response = await requester.post('/experience/profile/mfa/trusted-device');
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(403);
     expect(createCredential).not.toHaveBeenCalled();
   });
 
@@ -746,9 +749,9 @@ describe('POST /experience/submit', () => {
       trustedDevicePolicy: { enabled: true, durationDays: 30 },
     });
 
-    const response = await requester.post('/experience/submit').send({ createTrustedDevice: true });
+    const response = await requester.post('/experience/profile/mfa/trusted-device');
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(403);
     expect(createCredential).not.toHaveBeenCalled();
   });
 
@@ -778,9 +781,9 @@ describe('POST /experience/submit', () => {
       trustedDevicePolicy: { enabled: true, durationDays: 30 },
     });
 
-    const response = await requester.post('/experience/submit').send({ createTrustedDevice: true });
+    const response = await requester.post('/experience/profile/mfa/trusted-device');
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(403);
     expect(createCredential).not.toHaveBeenCalled();
   });
 
@@ -804,10 +807,7 @@ describe('POST /experience/submit', () => {
     });
     updateMetadata.mockRejectedValueOnce(new Error('trusted-device metadata update failed'));
 
-    const response = await requester
-      .post('/experience/submit')
-      .set('x-logto-cf-country', 'US')
-      .send({ createTrustedDevice: true });
+    const response = await requester.post('/experience/submit').set('x-logto-cf-country', 'US');
 
     expect(response.status).toBe(200);
     expect(updateMetadata).toHaveBeenCalledWith(
@@ -863,12 +863,15 @@ describe('POST /experience/submit', () => {
           },
         ],
       },
+      persistInteractionResult: true,
       trustedDevicePolicy: { enabled: true, durationDays: 30 },
     });
     createCredential.mockRejectedValueOnce(new Error('trusted-device creation failed'));
 
-    const response = await requester.post('/experience/submit').send({ createTrustedDevice: true });
+    const optInResponse = await requester.post('/experience/profile/mfa/trusted-device');
+    const response = await requester.post('/experience/submit');
 
+    expect(optInResponse.status).toBe(204);
     expect(response.status).toBe(200);
     expect(createCredential).toHaveBeenCalledTimes(1);
   });
@@ -892,14 +895,17 @@ describe('POST /experience/submit', () => {
           },
         ],
       },
+      persistInteractionResult: true,
       trustedDevicePolicy: { enabled: true, durationDays: 30 },
     });
+    const optInResponse = await requester.post('/experience/profile/mfa/trusted-device');
     (provider.interactionResult as jest.Mock).mockRejectedValueOnce(
       new Error('interaction submission failed')
     );
 
-    const response = await requester.post('/experience/submit').send({ createTrustedDevice: true });
+    const response = await requester.post('/experience/submit');
 
+    expect(optInResponse.status).toBe(204);
     expect(response.status).toBe(500);
     expect(createCredential).not.toHaveBeenCalled();
   });
@@ -965,10 +971,11 @@ describe('POST /experience/submit', () => {
       });
       expect(bindResponse.status).toBe(204);
 
+      const optInResponse = await requester.post('/experience/profile/mfa/trusted-device');
       const submitResponse = await requester
         .post('/experience/submit')
-        .set('x-logto-cf-bot-score', '10')
-        .send({ createTrustedDevice: true });
+        .set('x-logto-cf-bot-score', '10');
+      expect(optInResponse.status).toBe(204);
       expect(submitResponse.status).toBe(200);
 
       expect(users.updateUserById).toHaveBeenCalledWith(
@@ -990,6 +997,7 @@ describe('POST /experience/submit', () => {
     setDevFeaturesEnabled(true);
     const { requester, getEffectivePolicy } = createRequesterWithMocks({
       interactionResult: {
+        createTrustedDevice: true,
         trustedDeviceFulfillment: {
           userId: mockUser.id,
           trustedDeviceId: 'internal-device-id',
@@ -1006,6 +1014,7 @@ describe('POST /experience/submit', () => {
       trustedDevice: { canCreate: true, durationDays: 30 },
     });
     expect(response.body).not.toHaveProperty('trustedDeviceFulfillment');
+    expect(response.body).not.toHaveProperty('createTrustedDevice');
     expect(getEffectivePolicy).toHaveBeenCalledWith(mockUser.id);
   });
 
@@ -1060,12 +1069,15 @@ describe('POST /experience/submit', () => {
     });
 
     const interactionResponse = await requester.get('/experience/interaction');
+    const optInResponse = await requester.post('/experience/profile/mfa/trusted-device');
     const submitResponse = await requester
       .post('/experience/submit')
-      .send({ createTrustedDevice: true });
+      .set('Content-Type', 'text/plain')
+      .send('released submit payload');
 
     expect(interactionResponse.status).toBe(200);
     expect(interactionResponse.body).not.toHaveProperty('trustedDevice');
+    expect(optInResponse.status).toBe(404);
     expect(submitResponse.status).toBe(200);
     expect(getEffectivePolicy).not.toHaveBeenCalled();
     expect(createCredential).not.toHaveBeenCalled();

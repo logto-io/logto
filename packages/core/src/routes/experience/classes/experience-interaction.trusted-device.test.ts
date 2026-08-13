@@ -229,9 +229,7 @@ describe('ExperienceInteraction trusted-device MFA fulfillment', () => {
       trustedDeviceId: trustedDevice.id,
       fulfilledAt,
     });
-    await expect(experienceInteraction.toSanitizedJson()).resolves.not.toHaveProperty(
-      'trustedDeviceFulfillment'
-    );
+    expect(experienceInteraction.toSanitizedJson()).not.toHaveProperty('trustedDeviceFulfillment');
   });
 
   it('allows a valid trusted device to fulfill adaptive MFA', async () => {

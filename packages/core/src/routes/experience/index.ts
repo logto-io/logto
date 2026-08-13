@@ -10,15 +10,17 @@
  * The experience APIs can be used by developers to build custom user interaction experiences.
  */
 
+import { appInsights } from '@logto/app-insights/node';
 import { identificationApiPayloadGuard, InteractionEvent } from '@logto/schemas';
+import { conditional, trySafe } from '@silverhand/essentials';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaInteractionDetails from '#src/middleware/koa-interaction-details.js';
 import assertThat from '#src/utils/assert-that.js';
+import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
 import { type AnonymousRouter, type RouterInitArgs } from '../types.js';
 
@@ -170,9 +172,6 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
   experienceRouter.post(
     `${experienceRoutes.prefix}/submit`,
     koaGuard({
-      body: z.object({
-        createTrustedDevice: z.boolean().optional(),
-      }),
       status: [200, 400, 403, 404, 422],
       response: z
         .object({
@@ -182,13 +181,10 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
     }),
     async (ctx, next) => {
       const { createLog, experienceInteraction } = ctx;
-      const createTrustedDevice = EnvSet.values.isDevFeaturesEnabled
-        ? ctx.guard.body.createTrustedDevice
-        : undefined;
 
       const log = createLog(`Interaction.${experienceInteraction.interactionEvent}.Submit`);
 
-      await ctx.experienceInteraction.submit(log, { createTrustedDevice });
+      await ctx.experienceInteraction.submit(log);
 
       log.append({
         interaction: ctx.experienceInteraction.toJson(),
@@ -208,8 +204,20 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
     }),
     async (ctx, next) => {
       const { experienceInteraction } = ctx;
+      const trustedDevice = await trySafe(
+        async () =>
+          experienceInteraction.trustedDevice.getCreationAvailability(
+            experienceInteraction.identifiedUserId
+          ),
+        (error) => {
+          void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));
+        }
+      );
 
-      ctx.body = await experienceInteraction.toSanitizedJson();
+      ctx.body = {
+        ...experienceInteraction.toSanitizedJson(),
+        ...conditional(trustedDevice && { trustedDevice }),
+      };
       ctx.status = 200;
       return next();
     }

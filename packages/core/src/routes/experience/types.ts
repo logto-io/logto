@@ -197,6 +197,7 @@ export type WithHooksAndLogsContext<ContextT extends WithLogContext = WithLogCon
 export type InteractionStorage = {
   interactionEvent: InteractionEvent;
   userId?: string;
+  createTrustedDevice?: boolean;
   trustedDeviceFulfillment?: {
     userId: string;
     trustedDeviceId: string;
@@ -215,6 +216,7 @@ export type InteractionStorage = {
 export const interactionStorageGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent),
   userId: z.string().optional(),
+  createTrustedDevice: z.boolean().optional(),
   trustedDeviceFulfillment: z
     .object({
       userId: z.string(),
