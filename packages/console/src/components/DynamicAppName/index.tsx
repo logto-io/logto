@@ -1,6 +1,8 @@
 import { useTranslation } from 'react-i18next';
 
+import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
 import Tag from '@/ds-components/Tag';
+import TextLink from '@/ds-components/TextLink';
 
 import styles from './index.module.scss';
 
@@ -17,17 +19,26 @@ type Props = {
 
 /**
  * The display name of a dynamic app (CIMD) client. It is a URL identity with no
- * applications row behind it, so there is no details page to link to; an unnamed client
- * shows its identifier host instead, matching the consent page.
+ * applications row behind it, so the name links to the client identifier URL (the metadata
+ * document) instead of an application details page; an unnamed client shows its identifier
+ * host, matching the consent page.
  */
 function DynamicAppName({ clientId, name }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
     <div className={styles.container}>
-      <span className={styles.name}>
-        {name && name !== clientId ? name : new URL(clientId).host}
-      </span>
+      <TextLink
+        isTrailingIcon
+        targetBlank
+        className={styles.link}
+        href={clientId}
+        icon={<ExternalLinkIcon className={styles.icon} />}
+      >
+        <span className={styles.name}>
+          {name && name !== clientId ? name : new URL(clientId).host}
+        </span>
+      </TextLink>
       <Tag className={styles.tag}>{t('applications.dynamic_app.title')}</Tag>
     </div>
   );

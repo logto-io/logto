@@ -6,10 +6,19 @@
   gap: _.unit(2);
 }
 
+.link {
+  max-width: 100%;
+  overflow: hidden;
+}
+
 .name {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.icon {
+  flex-shrink: 0;
 }
 
 .tag {

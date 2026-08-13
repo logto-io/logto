@@ -87,16 +87,16 @@ function UserThirdPartyApps({ userId }: Props) {
                 colSpan: 5,
                 render: ({ applicationId }) =>
                   /**
-                   * A CIMD identifier runs up to 2048 characters — show its host (the part
-                   * carrying the client identity) and keep the full URL in a tooltip.
+                   * A CIMD identifier runs up to 2048 characters — keep the cell one line
+                   * and put the full URL in a tooltip.
                    */
                   isCimdClientId(applicationId) ? (
                     <Tooltip
                       className={styles.identifierTooltip}
-                      anchorClassName={styles.identifierHost}
+                      anchorClassName={styles.identifier}
                       content={applicationId}
                     >
-                      {new URL(applicationId).host}
+                      {applicationId}
                     </Tooltip>
                   ) : (
                     applicationId
