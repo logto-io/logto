@@ -13,6 +13,7 @@ import { shouldRetryOnError } from '@/utils/request';
 import { buildUrl } from '@/utils/url';
 
 import styles from './index.module.scss';
+import { getDynamicAppDisplayName } from './utils';
 
 type Props = {
   /** The CIMD client identifier URL. */
@@ -61,7 +62,7 @@ function DynamicAppName({ clientId, name }: Props) {
           icon={<ExternalLinkIcon className={styles.icon} />}
         >
           <span className={styles.name}>
-            {resolvedName && resolvedName !== clientId ? resolvedName : new URL(clientId).host}
+            {getDynamicAppDisplayName(clientId, resolvedName ?? undefined)}
           </span>
         </TextLink>
       </Tooltip>

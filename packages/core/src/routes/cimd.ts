@@ -62,6 +62,7 @@ export default function cimdRoutes<T extends ManagementApiRouter>(
 
       assertThat(snapshot, new RequestError({ code: 'entity.not_found', status: 404 }));
 
+      // The query returns the full row; the response guard strips the FK plumbing.
       ctx.body = snapshot;
 
       return next();

@@ -12,11 +12,13 @@
 .anchor {
   max-width: 100%;
   overflow: hidden;
-}
 
-.link {
-  max-width: 100%;
-  overflow: hidden;
+  /* The descendant selector outranks `TextLink`'s own `max-width: fit-content`,
+   * which shares the flat class specificity and would win or lose by load order. */
+  .link {
+    max-width: 100%;
+    overflow: hidden;
+  }
 }
 
 .name {

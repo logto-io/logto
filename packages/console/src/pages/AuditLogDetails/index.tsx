@@ -101,7 +101,6 @@ function AuditLogDetails() {
                     <div className={styles.infoItem}>
                       <div className={styles.label}>{t('log_details.application')}</div>
                       <div>
-                        {/* The payload keeps a CIMD client identifier apart from `applicationId` (LOG-13928). */}
                         {data.payload.cimdClientId ? (
                           <DynamicAppName clientId={data.payload.cimdClientId} />
                         ) : data.payload.applicationId ? (

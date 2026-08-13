@@ -191,13 +191,11 @@ const createGrantClientSnapshotQueries = (pool: CommonQueryMethods) => {
   /**
    * The latest consent snapshot for a client identifier, across grants. Snapshots live as
    * long as their Grant rows, so a client whose grants are all revoked and pruned resolves
-   * to nothing — the identifier itself stays the permanent identity signal. The row's
-   * scoping and FK plumbing (`tenantId`, `grantModelName`, `grantId`) stays internal.
+   * to nothing — the identifier itself stays the permanent identity signal.
    */
   const findLatestByClientId = async (clientId: string) =>
-    pool.maybeOne<Pick<CimdGrantClientSnapshot, 'clientId' | 'name' | 'logoUri' | 'createdAt'>>(sql`
-      select ${cimdGrantClientSnapshots.fields.clientId}, ${cimdGrantClientSnapshots.fields.name},
-        ${cimdGrantClientSnapshots.fields.logoUri}, ${cimdGrantClientSnapshots.fields.createdAt}
+    pool.maybeOne<CimdGrantClientSnapshot>(sql`
+      select ${cimdGrantClientSnapshots.table}.*
       from ${cimdGrantClientSnapshots.table}
       where ${cimdGrantClientSnapshots.fields.clientId} = ${clientId}
       order by ${cimdGrantClientSnapshots.fields.createdAt} desc
