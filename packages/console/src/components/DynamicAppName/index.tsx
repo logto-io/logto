@@ -26,6 +26,8 @@ type Props = {
    * fetch-per-row pattern as `ApplicationName`.
    */
   readonly name?: string;
+  /** Whether to append the "Dynamic app" kind tag. Kept off in dense tables. */
+  readonly hasTag?: boolean;
 };
 
 /** The `/api/cimd/client-snapshot` response: the snapshot without its FK plumbing. */
@@ -37,7 +39,7 @@ type ClientSnapshot = Pick<CimdGrantClientSnapshot, 'clientId' | 'name' | 'logoU
  * document) instead of an application details page; a client with no resolvable snapshot
  * name shows its identifier host, matching the consent page.
  */
-function DynamicAppName({ clientId, name }: Props) {
+function DynamicAppName({ clientId, name, hasTag = false }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const fetchApi = useApi({ hideErrorToast: ['entity.not_found'] });
@@ -66,7 +68,7 @@ function DynamicAppName({ clientId, name }: Props) {
           </span>
         </TextLink>
       </Tooltip>
-      <Tag className={styles.tag}>{t('applications.dynamic_app.title')}</Tag>
+      {hasTag && <Tag className={styles.tag}>{t('applications.dynamic_app.title')}</Tag>}
     </div>
   );
 }

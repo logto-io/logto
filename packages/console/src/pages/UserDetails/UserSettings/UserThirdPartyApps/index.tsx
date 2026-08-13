@@ -76,7 +76,7 @@ function UserThirdPartyApps({ userId }: Props) {
                    * already carries its snapshot name.
                    */
                   isCimdClientId(applicationId) ? (
-                    <DynamicAppName clientId={applicationId} name={applicationName} />
+                    <DynamicAppName hasTag clientId={applicationId} name={applicationName} />
                   ) : (
                     <ApplicationName isLink applicationId={applicationId} />
                   ),
