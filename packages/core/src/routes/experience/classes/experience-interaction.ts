@@ -794,13 +794,20 @@ export default class ExperienceInteraction {
       libraries: { trustedDevices },
     } = this.tenant;
     const metadata = this.getTrustedDeviceMetadata();
+    const { trustedDeviceFulfillment } = this;
 
-    if (this.trustedDeviceFulfillment?.userId === user.id) {
+    if (trustedDeviceFulfillment?.userId === user.id) {
       if (this.#interactionEvent === InteractionEvent.SignIn) {
-        await trustedDevices.updateMetadata(
-          this.trustedDeviceFulfillment.trustedDeviceId,
-          user.id,
-          metadata
+        void trySafe(
+          async () =>
+            trustedDevices.updateMetadata(
+              trustedDeviceFulfillment.trustedDeviceId,
+              user.id,
+              metadata
+            ),
+          (error) => {
+            void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
+          }
         );
       }
       return;

@@ -818,6 +818,32 @@ describe('POST /experience/submit', () => {
     expect(createCredential).not.toHaveBeenCalled();
   });
 
+  it('should omit trusted-device location when the current context has none', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester, updateMetadata } = createRequesterWithMocks({
+      interactionResult: {
+        trustedDeviceFulfillment: {
+          userId: mockUser.id,
+          trustedDeviceId: 'trusted-device-id',
+          fulfilledAt: Date.now(),
+        },
+      },
+      trustedDevicePolicy: { enabled: true, durationDays: 30 },
+    });
+
+    const response = await requester.post('/experience/submit');
+    const metadata = updateMetadata.mock.calls[0]?.[2] as Record<string, unknown> | undefined;
+
+    expect(response.status).toBe(200);
+    expect(updateMetadata).toHaveBeenCalledWith(
+      'trusted-device-id',
+      mockUser.id,
+      expect.any(Object)
+    );
+    expect(metadata).not.toHaveProperty('country');
+    expect(metadata).not.toHaveProperty('city');
+  });
+
   it('should keep submit successful when trusted-device creation fails', async () => {
     setDevFeaturesEnabled(true);
     const user = {

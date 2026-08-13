@@ -1,11 +1,9 @@
 import { type TrustedDevice, TrustedDevices } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
 import { type CommonQueryMethods, sql } from '@silverhand/slonik';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
-import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
 import { expandFields } from '#src/database/utils.js';
-import { convertToIdentifiers, manyRows } from '#src/utils/sql.js';
+import { conditionalSql, convertToIdentifiers, manyRows } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(TrustedDevices);
 const activePredicate = sql`${fields.expiresAt} > now()`;
@@ -26,8 +24,6 @@ export class TrustedDeviceQueries {
   public readonly insert = buildInsertIntoWithPool(this.pool)(TrustedDevices, {
     returning: true,
   });
-
-  private readonly updateMetadata = buildUpdateWhereWithPool(this.pool)(TrustedDevices, true);
 
   constructor(public readonly pool: CommonQueryMethods) {}
 
@@ -65,18 +61,22 @@ export class TrustedDeviceQueries {
     userId: string,
     { userAgent, ip, country, city }: TrustedDeviceMetadata
   ) {
-    const shouldReplaceLocation = country !== undefined || city !== undefined;
+    const metadataUpdates = [
+      sql`${fields.lastUsedAt}=to_timestamp(${Date.now()}::double precision / 1000)`,
+      conditionalSql(userAgent !== undefined, () => sql`${fields.userAgent}=${userAgent ?? null}`),
+      conditionalSql(ip !== undefined, () => sql`${fields.ip}=${ip ?? null}`),
+      sql`${fields.country}=${country ?? null}`,
+      sql`${fields.city}=${city ?? null}`,
+    ].filter(({ sql }) => sql.trim() !== '');
 
-    return this.updateMetadata({
-      set: {
-        lastUsedAt: Date.now(),
-        userAgent,
-        ip,
-        ...conditional(shouldReplaceLocation && { country: country ?? null, city: city ?? null }),
-      },
-      where: { id, userId },
-      jsonbMode: 'replace',
-    });
+    return this.pool.maybeOne<TrustedDevice>(sql`
+      update ${table}
+      set ${sql.join(metadataUpdates, sql`, `)}
+      where ${fields.id} = ${id}
+        and ${fields.userId} = ${userId}
+        and ${activePredicate}
+      returning ${expandFields(TrustedDevices)}
+    `);
   }
 
   public async deleteExpiredByIdAndUserId(id: string, userId: string) {

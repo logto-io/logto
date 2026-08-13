@@ -126,14 +126,16 @@ describe('trusted device queries', () => {
     ).resolves.toEqual(trustedDevice);
   });
 
-  it('updates metadata without overwriting missing values and replaces a supplied location pair', async () => {
+  it('updates active-device metadata without overwriting missing values and replaces a supplied location pair', async () => {
     jest.spyOn(Date, 'now').mockReturnValue(123_000);
 
     const expectSql = sql`
       update ${table}
       set ${fields.lastUsedAt}=to_timestamp($1::double precision / 1000), ${fields.userAgent}=$2, ${fields.country}=$3, ${fields.city}=$4
-      where ${fields.id}=$5 and ${fields.userId}=$6
-      returning *
+      where ${fields.id} = $5
+        and ${fields.userId} = $6
+        and ${fields.expiresAt} > now()
+      returning ${expandFields(TrustedDevices)}
     `;
 
     mockQuery.mockImplementationOnce(async (query, values) => {
@@ -155,6 +157,24 @@ describe('trusted device queries', () => {
         country: 'CA',
       })
     ).resolves.toEqual(trustedDevice);
+  });
+
+  it('returns null when metadata cannot be updated for an inactive or missing device', async () => {
+    mockQuery.mockImplementationOnce(async (query, values) => {
+      expect(query).toMatch(/and "expires_at" > now\(\)/i);
+      expect(values).toEqual([
+        expect.any(Number),
+        null,
+        null,
+        trustedDevice.id,
+        trustedDevice.userId,
+      ]);
+      return createMockQueryResult([]);
+    });
+
+    await expect(
+      queries.updateMetadataByIdAndUserId(trustedDevice.id, trustedDevice.userId, {})
+    ).resolves.toBeNull();
   });
 
   it('deletes only the presented owned record at the expiry boundary', async () => {
