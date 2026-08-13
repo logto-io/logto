@@ -30,7 +30,7 @@ type Props = {
   readonly hasTag?: boolean;
 };
 
-/** The `/api/cimd/client-snapshot` response: the snapshot without its FK plumbing. */
+/** The `/api/cimd/client-snapshots` response: the latest snapshot without its FK plumbing. */
 type ClientSnapshot = Pick<CimdGrantClientSnapshot, 'clientId' | 'name' | 'logoUri' | 'createdAt'>;
 
 /**
@@ -45,7 +45,7 @@ function DynamicAppName({ clientId, name, hasTag = false }: Props) {
   const fetchApi = useApi({ hideErrorToast: ['entity.not_found'] });
   const fetcher = useSwrFetcher<ClientSnapshot>(fetchApi);
   const { data } = useSWR<ClientSnapshot, RequestError>(
-    conditional(!name && buildUrl('api/cimd/client-snapshot', { clientId })),
+    conditional(!name && buildUrl('api/cimd/client-snapshots', { clientId })),
     {
       fetcher,
       shouldRetryOnError: shouldRetryOnError({ ignore: [404] }),

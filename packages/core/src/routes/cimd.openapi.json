@@ -9,7 +9,7 @@
     }
   ],
   "paths": {
-    "/api/cimd/client-snapshot": {
+    "/api/cimd/client-snapshots": {
       "get": {
         "summary": "Get a CIMD client display snapshot",
         "description": "Resolve the latest consent-time display snapshot captured for a CIMD client identifier. Snapshots live as long as their grants, so a client whose grants are all revoked and pruned has none — the identifier itself stays the permanent identity signal.",

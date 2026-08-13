@@ -44,7 +44,7 @@ export default function cimdRoutes<T extends ManagementApiRouter>(
   };
 
   router.get(
-    '/cimd/client-snapshot',
+    '/cimd/client-snapshots',
     koaGuard({
       query: z.object({ clientId: z.string().max(2048) }),
       response: CimdGrantClientSnapshots.guard.pick({
