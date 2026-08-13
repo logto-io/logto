@@ -231,8 +231,9 @@ export default class ExpectExperience extends ExpectPage {
       } else {
         // Reject the password and assert the error message
         // eslint-disable-next-line no-await-in-loop
-        await this.toMatchAlert(
-          typeof errorMessage === 'string' ? new RegExp(errorMessage, 'i') : errorMessage
+        await this.toMatchPasswordRejection(
+          typeof errorMessage === 'string' ? new RegExp(errorMessage, 'i') : errorMessage,
+          password
         );
       }
     }
@@ -323,6 +324,30 @@ export default class ExpectExperience extends ExpectPage {
   /** Build a full experience URL from a pathname. */
   protected buildExperienceUrl(pathname = '') {
     return appendPath(this.options.endpoint, pathname);
+  }
+
+  /**
+   * Assert that the password form shows a rejection alert matching the given pattern.
+   *
+   * The alert only updates after a full server round-trip, which can exceed the default 5s
+   * timeout under CI load, so wait longer here. On timeout, report what the page actually
+   * shows — the current alert text and whether a submission is still in flight — since that
+   * is what separates a slow response from a wrong rejection message or a swallowed submit.
+   */
+  protected async toMatchPasswordRejection(expected: RegExp, password: string) {
+    try {
+      await this.toMatchAlert(expected, { timeout: 10_000 });
+    } catch {
+      const alert = await this.page.$('*[role=alert]');
+      const alertText = await alert?.evaluate(({ textContent }) => textContent);
+      const pendingSubmit = await this.page.$('button[type=submit][disabled]');
+
+      this.throwError(
+        `Expected the alert to match ${String(expected)} for password "${password}", but ${
+          alertText ? `the alert reads "${alertText}"` : 'no alert is present'
+        } (submission in flight: ${String(Boolean(pendingSubmit))}).`
+      );
+    }
   }
 
   protected throwNoOngoingExperienceError() {

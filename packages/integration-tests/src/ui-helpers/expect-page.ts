@@ -60,12 +60,15 @@ export default class ExpectPage {
   }
 
   /**
-   * Click on the `<button type="submit">` element on the page.
+   * Click on the `<button type="submit">` element on the page, once it is enabled.
+   *
+   * A disabled submit button (e.g. while a previous submission is still in flight) swallows
+   * clicks silently, so wait for it to be enabled instead of clicking right away.
    *
    * @param shouldNavigate Whether the click should trigger a navigation. Defaults to `true`.
    */
   async toClickSubmit(shouldNavigate = true) {
-    return this.toClick('button[type=submit]', undefined, shouldNavigate);
+    return this.toClick('button[type=submit]:not([disabled])', undefined, shouldNavigate);
   }
 
   /**
@@ -133,9 +136,13 @@ export default class ExpectPage {
    * Expect the page to match an element with `role="alert"` and optionally with the given text.
    *
    * @param text The text to match, if provided.
+   * @param options.timeout The maximum time to wait for the element, overriding the default.
    */
-  async toMatchAlert(text?: string | RegExp): Promise<ElementHandle> {
-    return expect(this.page).toMatchElement('*[role=alert]', { text });
+  async toMatchAlert(
+    text?: string | RegExp,
+    options?: { timeout?: number }
+  ): Promise<ElementHandle> {
+    return expect(this.page).toMatchElement('*[role=alert]', { text, ...options });
   }
 
   /**
