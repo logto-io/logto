@@ -38,25 +38,34 @@ export const createResourceQueries = (pool: CommonQueryMethods, wellKnownCache: 
     `);
 
   const setDefaultResource = async (id: string) => {
-    return pool.transaction(async (connection) => {
-      await connection.query(sql`
+    const { previousDefaults, resource } = await pool.transaction(async (connection) => {
+      const previousDefaults = await connection.any<Pick<Resource, 'indicator'>>(sql`
         update ${table}
           set ${fields.isDefault}=false
-          where ${fields.isDefault}=true;
+          where ${fields.isDefault}=true
+          returning ${fields.indicator};
       `);
-      const returning = await connection.maybeOne<Resource>(sql`
+      const resource = await connection.maybeOne<Resource>(sql`
         update ${table}
           set ${fields.isDefault}=true
           where ${fields.id}=${id}
           returning *;
       `);
 
-      if (!returning) {
+      if (!resource) {
         throw new UpdateError(Resources, { set: { isDefault: true }, where: { id } });
       }
 
-      return returning;
+      return { previousDefaults, resource };
     });
+
+    await Promise.all(
+      [...previousDefaults, resource].map(async ({ indicator }) =>
+        wellKnownCache.invalidate('resource-by-indicator', indicator)
+      )
+    );
+
+    return resource;
   };
 
   const findResourceById = buildFindEntityByIdWithPool(pool)(Resources);
