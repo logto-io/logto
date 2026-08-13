@@ -32,6 +32,10 @@
   position: absolute;
   bottom: devStatusSpacing.$dev-status-bottom-offset;
   inset-inline-start: _.unit(4);
+  padding: _.unit(1) _.unit(3);
+  border-radius: 999px;
+  background: var(--color-layer-1);
+  box-shadow: var(--shadow-2);
 }
 
 .daisy {
