@@ -1,3 +1,4 @@
+import { conditionalArray } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
 
 import { type TenantEmailLog } from '@/cloud/types/router';
@@ -55,9 +56,13 @@ function EmailLogs() {
     recipient,
   });
 
+  // Providers like Cloudflare return no message id; when no loaded row carries one, drop the
+  // column entirely instead of rendering a dash-only column.
+  const hasProviderMessageId = Boolean(logs?.some(({ providerMessageId }) => providerMessageId));
+
   // Column spans are proportional (the table is `table-layout: fixed`); sized by content type —
   // recipient addresses and message ids are the long fields, language tags and status tags short.
-  const columns: Array<Column<TenantEmailLog>> = [
+  const columns: Array<Column<TenantEmailLog>> = conditionalArray(
     {
       title: t('connector_details.email_logs.time'),
       dataIndex: 'time',
@@ -80,9 +85,11 @@ function EmailLogs() {
       title: t('connector_details.email_logs.language_tag'),
       dataIndex: 'locale',
       colSpan: 2,
-      render: ({ locale }) => locale ?? '-',
+      // The email renderer defaults to `en` when the payload carries no locale (e.g. connector
+      // test emails), so show the effective language instead of a dash.
+      render: ({ locale }) => locale ?? 'en',
     },
-    {
+    hasProviderMessageId && {
       title: t('connector_details.email_logs.provider_message_id'),
       dataIndex: 'providerMessageId',
       colSpan: 5,
@@ -111,8 +118,8 @@ function EmailLogs() {
           )}
         </Tag>
       ),
-    },
-  ];
+    }
+  );
 
   return (
     <>
