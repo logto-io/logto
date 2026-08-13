@@ -9,6 +9,7 @@ import UsersEmptyDark from '@/assets/images/users-empty-dark.svg?react';
 import UsersEmpty from '@/assets/images/users-empty.svg?react';
 import ApplicationName from '@/components/ApplicationName';
 import { LocaleDate } from '@/components/DateTime';
+import DynamicAppName from '@/components/DynamicAppName';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import PageMeta from '@/components/PageMeta';
@@ -109,8 +110,21 @@ function Users() {
             title: t('users.application_name'),
             dataIndex: 'app',
             colSpan: 5,
-            render: ({ applicationId }) =>
-              applicationId ? <ApplicationName applicationId={applicationId} /> : <div>-</div>,
+            render: ({ applicationId, cimdClientId }) => {
+              /**
+               * A CIMD-first user has no `applicationId`; its origin client lives in the
+               * additive `cimdClientId` field (LOG-14005), which has no applications row.
+               */
+              if (cimdClientId) {
+                return <DynamicAppName clientId={cimdClientId} />;
+              }
+
+              return applicationId ? (
+                <ApplicationName applicationId={applicationId} />
+              ) : (
+                <div>-</div>
+              );
+            },
           },
           {
             title: t('users.latest_sign_in'),

@@ -9,6 +9,11 @@
   max-width: 100%;
 }
 
+.anchor {
+  max-width: 100%;
+  overflow: hidden;
+}
+
 .link {
   max-width: 100%;
   overflow: hidden;
@@ -26,4 +31,9 @@
 
 .tag {
   flex-shrink: 0;
+}
+
+/* The identifier URL has no break opportunities of its own. */
+.tooltip {
+  word-break: break-all;
 }

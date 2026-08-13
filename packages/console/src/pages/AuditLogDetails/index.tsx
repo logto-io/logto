@@ -9,6 +9,7 @@ import useSWR from 'swr';
 import ApplicationName from '@/components/ApplicationName';
 import { isImpersonationLog } from '@/components/AuditLogTable/components/EventName/utils';
 import DetailsPage from '@/components/DetailsPage';
+import DynamicAppName from '@/components/DynamicAppName';
 import PageMeta from '@/components/PageMeta';
 import UserName from '@/components/UserName';
 import { logEventTitle } from '@/consts/logs';
@@ -100,7 +101,10 @@ function AuditLogDetails() {
                     <div className={styles.infoItem}>
                       <div className={styles.label}>{t('log_details.application')}</div>
                       <div>
-                        {data.payload.applicationId ? (
+                        {/* The payload keeps a CIMD client identifier apart from `applicationId` (LOG-13928). */}
+                        {data.payload.cimdClientId ? (
+                          <DynamicAppName clientId={data.payload.cimdClientId} />
+                        ) : data.payload.applicationId ? (
                           <ApplicationName
                             isLink={!isBuiltInApplicationId(data.payload.applicationId)}
                             applicationId={data.payload.applicationId}

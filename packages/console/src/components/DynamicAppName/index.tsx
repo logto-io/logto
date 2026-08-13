@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
 import Tag from '@/ds-components/Tag';
 import TextLink from '@/ds-components/TextLink';
+import { Tooltip } from '@/ds-components/Tip';
 
 import styles from './index.module.scss';
 
@@ -30,17 +31,19 @@ function DynamicAppName({ clientId, name }: Props) {
 
   return (
     <div className={styles.container}>
-      <TextLink
-        isTrailingIcon
-        targetBlank
-        className={styles.link}
-        href={clientId}
-        icon={<ExternalLinkIcon className={styles.icon} />}
-      >
-        <span className={styles.name}>
-          {name && name !== clientId ? name : new URL(clientId).host}
-        </span>
-      </TextLink>
+      <Tooltip className={styles.tooltip} anchorClassName={styles.anchor} content={clientId}>
+        <TextLink
+          isTrailingIcon
+          targetBlank
+          className={styles.link}
+          href={clientId}
+          icon={<ExternalLinkIcon className={styles.icon} />}
+        >
+          <span className={styles.name}>
+            {name && name !== clientId ? name : new URL(clientId).host}
+          </span>
+        </TextLink>
+      </Tooltip>
       <Tag className={styles.tag}>{t('applications.dynamic_app.title')}</Tag>
     </div>
   );

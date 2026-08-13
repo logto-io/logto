@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import ApplicationName from '@/components/ApplicationName';
+import DynamicAppName from '@/components/DynamicAppName';
 import UserName from '@/components/UserName';
 import { auditLogEventTitle, defaultPageSize } from '@/consts';
 import Table from '@/ds-components/Table';
@@ -118,8 +119,14 @@ function AuditLogTable({ applicationId, userId, className }: Props) {
     title: t('logs.application'),
     dataIndex: 'application',
     colSpan: isUserColumnVisible ? 3 : 5,
-    render: ({ payload: { applicationId } }) =>
-      applicationId ? <ApplicationName applicationId={applicationId} /> : <div>-</div>,
+    render: ({ payload: { applicationId, cimdClientId } }) => {
+      /** The payload keeps a CIMD client identifier apart from `applicationId` (LOG-13928). */
+      if (cimdClientId) {
+        return <DynamicAppName clientId={cimdClientId} />;
+      }
+
+      return applicationId ? <ApplicationName applicationId={applicationId} /> : <div>-</div>;
+    },
   };
 
   const timeColumn: Column<Log> = {
