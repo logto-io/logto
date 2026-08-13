@@ -81,7 +81,6 @@ export const buildHandler: (
   const {
     features: {
       mTLS: { getCertificate },
-      dPoP: { allowReplay },
     },
     scopes: statics,
   } = getProviderConfiguration(ctx.oidc.provider);
@@ -178,7 +177,7 @@ export const buildHandler: (
     token.setThumbprint('x5t', cert);
   }
 
-  await applyDpopBinding(ctx, dPoP, token, allowReplay);
+  await applyDpopBinding(ctx, dPoP, token);
   checkDpopRequired(ctx, dPoP);
 
   ctx.oidc.entity('ClientCredentials', token);
