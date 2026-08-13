@@ -1,5 +1,6 @@
 import { UserScope } from '@logto/core-kit';
 import { ApplicationType, ApplicationUserConsentScopeType, SignInIdentifier } from '@logto/schemas';
+import ky from 'ky';
 
 import { deleteUser } from '#src/api/admin-user.js';
 import {
@@ -8,8 +9,8 @@ import {
 } from '#src/api/application-user-consent-scope.js';
 import { createApplicationWithSecret, deleteApplication } from '#src/api/application.js';
 import { consent } from '#src/api/interaction.js';
+import { logtoUrl } from '#src/constants.js';
 import { initExperienceClient } from '#src/helpers/client.js';
-import { expectRejects } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
 
@@ -76,10 +77,14 @@ describe('consent scope revalidation', () => {
       UserScope.Email
     );
 
-    await expectRejects(client.send(consent), {
-      code: 'oidc.invalid_scope',
-      status: 400,
+    const response = await ky.post(`${logtoUrl}/api/interaction/consent`, {
+      headers: { cookie: client.interactionCookie },
+      json: {},
+      throwHttpErrors: false,
     });
+
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toMatchObject({ code: 'oidc.invalid_scope' });
 
     await Promise.all([deleteApplication(application.id), deleteUser(user.id)]);
   });
