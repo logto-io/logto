@@ -8,12 +8,14 @@ import {
   type ActionExecutionErrorPolicy,
   type ActionExecutionRequestBody,
 } from '@logto/schemas';
+import { got, HTTPError } from 'got';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type { LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import type { SubscriptionLibrary } from '#src/libraries/subscription.js';
 import type { LogContext, LogPayload } from '#src/middleware/koa-audit-log.js';
+import { parseAzureFunctionsResponseError } from '#src/utils/custom-jwt/index.js';
 
 import {
   buildActionTelemetryError,
@@ -39,6 +41,13 @@ import {
 
 const actionFunctionName = 'runAction';
 const defaultActionExecutionErrorPolicy = 'block' satisfies ActionExecutionErrorPolicy;
+/**
+ * Azure Function vm2 timeout is 3000ms. Use a slightly higher HTTP deadline so the
+ * client can surface Function-side failures instead of racing the sandbox limit.
+ *
+ * Only used by the Azure Functions fallback; the Cloud script runner owns its own budget.
+ */
+const remoteActionRequestTimeout = 5000;
 
 export type ActionExecutionErrorFallback = {
   action: 'rejectInvalidCredentials';
@@ -182,11 +191,18 @@ export const getActionExecutionErrorPolicyDecision = ({
 /**
  * The telemetry label for where a run executes.
  *
- * Cloud runs always go through the script-run endpoint (`cloud`). `azure` remains on the type
- * until LOG-13958 removes the Azure Functions runtime and the leftover series.
+ * Kept in sync with the branch {@link ActionLibrary.runScriptRemotely} takes, so the split between
+ * regions already served by the script runner (`cloud`) and those still on the Azure Functions
+ * fallback (`azure`) stays readable in the metric — which is what makes a per-region rollback
+ * observable.
  */
-const getTelemetryRuntimeLocation = (): ActionRuntimeLocation =>
-  EnvSet.values.isCloud ? 'cloud' : 'local';
+const getTelemetryRuntimeLocation = (isAzureFallbackActive: boolean): ActionRuntimeLocation => {
+  if (!EnvSet.values.isCloud) {
+    return 'local';
+  }
+
+  return isAzureFallbackActive ? 'azure' : 'cloud';
+};
 
 const applyActionExecutionErrorPolicyDecision = (decision: ActionExecutionErrorPolicyDecision) => {
   if (decision.action === 'throw') {
@@ -229,6 +245,23 @@ export class ActionLibrary {
     private readonly subscription: SubscriptionLibrary,
     private readonly cloudConnection: CloudConnectionLibrary
   ) {}
+
+  /**
+   * Whether this region runs scripts on the untrusted Azure Function app rather than the Cloud
+   * script runner. See {@link runScriptOnAzureFunction}.
+   *
+   * TODO (LOG-13958): drop the `isDevFeaturesEnabled` gate once the fallback has been verified.
+   * Until then the selection is dev-only, so production keeps going to the script runner
+   * unconditionally — the behavior LOG-13963 released.
+   */
+  get isRegionalAzureFunctionAppConfigured(): boolean {
+    const { isDevFeaturesEnabled, azureFunctionUntrustedAppKey, azureFunctionUntrustedAppEndpoint } =
+      EnvSet.values;
+
+    return Boolean(
+      isDevFeaturesEnabled && azureFunctionUntrustedAppKey && azureFunctionUntrustedAppEndpoint
+    );
+  }
 
   /**
    * Shared entry point for production `runAction()` and Management API dry runs.
@@ -277,6 +310,12 @@ export class ActionLibrary {
     /** Whether this is a dry run (Console "test"). */
     isTest?: boolean
   ): Promise<unknown> {
+    // Break-glass fallback: a region that still has the untrusted Azure Function app configured
+    // keeps running scripts there. See {@link runScriptOnAzureFunction}.
+    if (this.isRegionalAzureFunctionAppConfigured) {
+      return this.runScriptOnAzureFunction(data);
+    }
+
     const { script, event, environmentVariables } = data;
 
     /**
@@ -327,7 +366,9 @@ export class ActionLibrary {
     };
     const onExecutionError = action.onExecutionError ?? defaultActionExecutionErrorPolicy;
     const runtimeLocation = EnvSet.values.isCloud ? 'remote' : 'local';
-    const telemetryRuntimeLocation = getTelemetryRuntimeLocation();
+    const telemetryRuntimeLocation = getTelemetryRuntimeLocation(
+      this.isRegionalAzureFunctionAppConfigured
+    );
     const log = createLog(getActionLogKey(key), { independent: true });
 
     log.append({
@@ -392,6 +433,57 @@ export class ActionLibrary {
       return result;
     } finally {
       trackActionExecutionMetrics({ durationMs, properties: telemetryProperties });
+    }
+  }
+
+  /**
+   * The pre-script-runner runtime, kept as the fallback for a Dynamic Workers outage.
+   *
+   * Selected per region by {@link isRegionalAzureFunctionAppConfigured}: unsetting
+   * `AZURE_FUNCTION_UNTRUSTED_APP_ENDPOINT` / `_KEY` on a core deployment moves it to the script
+   * runner, and setting them again moves it back — no code change, no coordinated rollback, and
+   * one region at a time.
+   *
+   * `isTest` is deliberately not forwarded: this runtime has no notion of a dry run. Nothing is
+   * lost by it — vm2 builds a fresh VM per call, so a test run can never share state with
+   * production the way a warm isolate could.
+   */
+  private async runScriptOnAzureFunction({
+    script,
+    actionType,
+    event,
+    environmentVariables,
+  }: {
+    script: string;
+    actionType: LogtoActionKey;
+    event: unknown;
+    environmentVariables?: Record<string, string>;
+  }): Promise<unknown> {
+    const { azureFunctionUntrustedAppKey, azureFunctionUntrustedAppEndpoint } = EnvSet.values;
+
+    try {
+      return await got
+        // The remote runner must invoke `runAction` from the supplied script.
+        .post(new URL('/api/actions', azureFunctionUntrustedAppEndpoint), {
+          json: {
+            script,
+            actionType,
+            event,
+            environmentVariables,
+          },
+          headers: {
+            'x-functions-key': azureFunctionUntrustedAppKey,
+          },
+          // Got@14 expects a Delays object; bound the whole request slightly above the AF VM timeout.
+          timeout: { request: remoteActionRequestTimeout },
+        })
+        .json<unknown>();
+    } catch (error: unknown) {
+      if (error instanceof HTTPError) {
+        throw parseAzureFunctionsResponseError(error);
+      }
+
+      throw error;
     }
   }
 

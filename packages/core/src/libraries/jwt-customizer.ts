@@ -11,6 +11,7 @@ import {
   jwtCustomizerOrganizationContextGuard,
   type LogtoJwtTokenKey,
   type CustomJwtScriptPayload,
+  jsonObjectGuard,
   isBuiltInApplicationId,
   buildBuiltInApplicationDataForTenant,
 } from '@logto/schemas';
@@ -24,6 +25,7 @@ import {
   trySafe,
 } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
+import { got, HTTPError } from 'got';
 import { type UnknownObject } from 'oidc-provider';
 import { z } from 'zod';
 
@@ -36,6 +38,7 @@ import type Queries from '#src/tenants/Queries.js';
 import {
   getJwtCustomizerScripts,
   type CustomJwtDeployRequestBody,
+  parseAzureFunctionsResponseError,
 } from '#src/utils/custom-jwt/index.js';
 
 import { type CloudConnectionLibrary } from './cloud-connection.js';
@@ -128,6 +131,22 @@ export class JwtCustomizerLibrary {
     const { azureFunctionUntrustedAppKey, azureFunctionUntrustedAppEndpoint } = EnvSet.values;
 
     return Boolean(azureFunctionUntrustedAppKey && azureFunctionUntrustedAppEndpoint);
+  }
+
+  /**
+   * Whether a script run should go to the untrusted Azure Function app instead of the Cloud
+   * script runner. See {@link runScriptOnAzureFunction}.
+   *
+   * Narrower than {@link isRegionalAzureFunctionAppConfigured}, which also governs whether the
+   * per-tenant Cloudflare worker is deployed: that behavior shipped long ago and must not change
+   * here.
+   *
+   * TODO (LOG-13958): drop the `isDevFeaturesEnabled` gate once the fallback has been verified.
+   * Until then the selection is dev-only, so production keeps going to the script runner
+   * unconditionally — the behavior LOG-13963 released.
+   */
+  private get isAzureFunctionScriptFallbackActive(): boolean {
+    return Boolean(EnvSet.values.isDevFeaturesEnabled) && this.isRegionalAzureFunctionAppConfigured;
   }
 
   /**
@@ -336,6 +355,12 @@ export class JwtCustomizerLibrary {
     payload: CustomJwtFetcher,
     isTest?: boolean
   ): Promise<Optional<UnknownObject>> {
+    // Break-glass fallback: a region that still has the untrusted Azure Function app configured
+    // keeps running scripts there. See {@link runScriptOnAzureFunction}.
+    if (this.isAzureFunctionScriptFallbackActive) {
+      return this.runScriptOnAzureFunction(payload);
+    }
+
     /**
      * `api` is not part of the payload — it carries a function and cannot travel over the wire.
      * The runner merges it in inside the isolate and reports a denial as a `denied` failure,
@@ -344,6 +369,44 @@ export class JwtCustomizerLibrary {
     const value = await this.postScriptRun(payload, isTest);
 
     return JwtCustomizerLibrary.parseScriptResultValue(value);
+  }
+
+  /**
+   * The pre-script-runner runtime, kept as the fallback for a Dynamic Workers outage.
+   *
+   * Selected per region by {@link isRegionalAzureFunctionAppConfigured}: unsetting
+   * `AZURE_FUNCTION_UNTRUSTED_APP_ENDPOINT` / `_KEY` on a core deployment moves it to the script
+   * runner, and setting them again moves it back — no code change, no coordinated rollback, and
+   * one region at a time.
+   *
+   * `isTest` is deliberately not forwarded: this runtime has no notion of a dry run. Nothing is
+   * lost by it — vm2 builds a fresh VM per call, so a test run can never share state with
+   * production the way a warm isolate could.
+   */
+  private async runScriptOnAzureFunction(
+    payload: CustomJwtFetcher
+  ): Promise<Optional<UnknownObject>> {
+    const { azureFunctionUntrustedAppKey, azureFunctionUntrustedAppEndpoint } = EnvSet.values;
+
+    try {
+      const result = await got
+        .post(new URL('/api/custom-jwt', azureFunctionUntrustedAppEndpoint), {
+          json: payload,
+          headers: {
+            'x-functions-key': azureFunctionUntrustedAppKey,
+          },
+        })
+        .json<unknown>();
+
+      return jsonObjectGuard.parse(result);
+    } catch (error: unknown) {
+      // Convert got HTTPError to WithTyped client ResponseError for unified error handling.
+      if (error instanceof HTTPError) {
+        throw parseAzureFunctionsResponseError(error);
+      }
+
+      throw error;
+    }
   }
 
   /**

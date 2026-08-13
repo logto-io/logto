@@ -18,8 +18,9 @@ export const actionMetricNames = Object.freeze({
 /**
  * Where a script run actually executed.
  *
- * `cloud` is the Cloud script-run path. `azure` remains on the type until LOG-13958 removes the
- * Azure Functions runtime and the leftover metric series.
+ * `cloud` is the Cloud script-run path; `azure` is the Azure Functions fallback, selected per
+ * region by `AZURE_FUNCTION_UNTRUSTED_APP_ENDPOINT` / `_KEY`. Keeping the two apart is what makes
+ * a per-region rollback observable in the metric.
  */
 export type ActionRuntimeLocation = 'local' | 'azure' | 'cloud';
 

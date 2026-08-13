@@ -1,7 +1,9 @@
 import { CustomJwtErrorCode, LogtoJwtTokenKeyType } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { ResponseError } from '@withtyped/client';
+import nock from 'nock';
 
+import { EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import { isAccessDeniedError, parseCustomJwtResponseError } from '#src/utils/custom-jwt/index.js';
 
@@ -124,5 +126,60 @@ describe('JwtCustomizerLibrary.runScriptRemotely', () => {
     post.mockRejectedValueOnce(error);
 
     await expect(library.runScriptRemotely(payload)).rejects.toBe(error);
+  });
+});
+
+describe('JwtCustomizerLibrary Azure Functions fallback', () => {
+  const endpoint = 'https://untrusted.example.com';
+  const functionKey = 'function-key';
+  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+
+  beforeEach(() => {
+    // The fallback selection is dev-gated until LOG-13958 verifies it.
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
+    jest.restoreAllMocks();
+    jest.clearAllMocks();
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
+  });
+
+  it('stays on the script-run endpoint when dev features are off', async () => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue(endpoint);
+    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get').mockReturnValue(functionKey);
+    post.mockResolvedValueOnce({ value: { foo: 'bar' } });
+
+    // Production behavior is unchanged while the gate is on, even where the app is configured.
+    await expect(library.runScriptRemotely(payload)).resolves.toEqual({ foo: 'bar' });
+    expect(post).toHaveBeenCalled();
+  });
+
+  it('runs the script on the regional untrusted Azure Function app when configured', async () => {
+    const remoteRunner = nock(endpoint, {
+      reqheaders: { 'x-functions-key': functionKey },
+    })
+      .post('/api/custom-jwt')
+      .reply(200, { foo: 'bar' });
+
+    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue(endpoint);
+    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get').mockReturnValue(functionKey);
+
+    // A dry run takes the same path: this runtime has no notion of `isTest`.
+    await expect(library.runScriptRemotely(payload, true)).resolves.toEqual({ foo: 'bar' });
+    expect(remoteRunner.isDone()).toBe(true);
+    // The fallback talks to the function app directly; the cloud hop is not taken.
+    expect(post).not.toHaveBeenCalled();
+  });
+
+  it('uses the script-run endpoint when no Azure Function app is configured', async () => {
+    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue('');
+    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get').mockReturnValue('');
+    post.mockResolvedValueOnce({ value: { foo: 'bar' } });
+
+    await expect(library.runScriptRemotely(payload)).resolves.toEqual({ foo: 'bar' });
+    expect(post).toHaveBeenCalled();
   });
 });
