@@ -1,5 +1,6 @@
 /* eslint-disable max-lines -- The legacy `node:vm` and Azure Functions paths coexist with the script-runner adapters until LOG-13956 and LOG-13958 remove them. */
 import {
+  adminTenantId,
   type CustomJwtErrorBody,
   CustomJwtErrorCode,
   jwtCustomizerUserContextGuard,
@@ -35,6 +36,7 @@ import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type { LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import { type ScopeLibrary } from '#src/libraries/scope.js';
+import { type SubscriptionLibrary } from '#src/libraries/subscription.js';
 import { type UserLibrary } from '#src/libraries/user.js';
 import type Queries from '#src/tenants/Queries.js';
 import {
@@ -177,6 +179,7 @@ export class JwtCustomizerLibrary {
     private readonly queries: Queries,
     private readonly logtoConfigs: LogtoConfigLibrary,
     private readonly cloudConnection: CloudConnectionLibrary,
+    private readonly subscription: SubscriptionLibrary,
     private readonly userLibrary: UserLibrary,
     private readonly scopeLibrary: ScopeLibrary
   ) {}
@@ -403,6 +406,19 @@ export class JwtCustomizerLibrary {
     }
 
     /**
+     * The plan quota is enforced here rather than left to the transport: the cloud `script-run`
+     * route rejects a run for a tenant whose plan has `customJwtEnabled` false, but the Worker
+     * only verifies audience and scope, so the direct path would otherwise keep executing the
+     * script of a downgraded tenant and injecting its claims into every issued token.
+     *
+     * The Management API routes carry `koaQuotaGuard` already, so this only ever fires on the
+     * issuance path, where no guard runs. Mirrors `ActionLibrary.isActionsEnabledByQuota`.
+     */
+    if (!(await this.isCustomJwtEnabledByQuota())) {
+      return;
+    }
+
+    /**
      * `api` is not part of the payload — it carries a function and cannot travel over the wire.
      * The runner merges it in inside the isolate and reports a denial as a `denied` failure,
      * exactly like the worker-thread runner does.
@@ -410,6 +426,24 @@ export class JwtCustomizerLibrary {
     const value = await this.postScriptRun(payload, isTest);
 
     return JwtCustomizerLibrary.parseScriptResultValue(value);
+  }
+
+  /**
+   * Whether the tenant's plan allows running a custom JWT script.
+   *
+   * OSS and the admin tenant are never metered; every other tenant reads the cached subscription
+   * quota.
+   */
+  private async isCustomJwtEnabledByQuota(): Promise<boolean> {
+    const { isCloud } = EnvSet.values;
+
+    if (!isCloud || this.tenantId === adminTenantId) {
+      return true;
+    }
+
+    const { quota } = await this.subscription.getSubscriptionData();
+
+    return quota.customJwtEnabled;
   }
 
   /**

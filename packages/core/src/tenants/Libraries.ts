@@ -49,6 +49,7 @@ export default class Libraries {
     this.queries,
     this.logtoConfigs,
     this.cloudConnection,
+    this.subscription,
     this.users,
     this.scopes
   );

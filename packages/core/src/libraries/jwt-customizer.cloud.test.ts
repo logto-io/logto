@@ -1,4 +1,4 @@
-import { CustomJwtErrorCode, LogtoJwtTokenKeyType } from '@logto/schemas';
+import { adminTenantId, CustomJwtErrorCode, LogtoJwtTokenKeyType } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { ResponseError } from '@withtyped/client';
 import nock from 'nock';
@@ -11,17 +11,20 @@ import type { CloudConnectionLibrary } from './cloud-connection.js';
 import { JwtCustomizerLibrary } from './jwt-customizer.js';
 import type { LogtoConfigLibrary } from './logto-config.js';
 import type { ScopeLibrary } from './scope.js';
+import type { SubscriptionLibrary } from './subscription.js';
 import type { UserLibrary } from './user.js';
 
 const { jest } = import.meta;
 
 const post = jest.fn();
+const getSubscriptionData = jest.fn(async () => ({ quota: { customJwtEnabled: true } }));
 
 const library = new JwtCustomizerLibrary(
   'test-tenant',
   {} as Queries,
   {} as LogtoConfigLibrary,
   { getClient: async () => ({ post }) } as unknown as CloudConnectionLibrary,
+  { getSubscriptionData } as unknown as SubscriptionLibrary,
   {} as UserLibrary,
   {} as ScopeLibrary
 );
@@ -134,6 +137,58 @@ describe('JwtCustomizerLibrary.runScriptRemotely', () => {
     post.mockRejectedValueOnce(error);
 
     await expect(library.runScriptRemotely(payload)).rejects.toBe(error);
+  });
+});
+
+describe('JwtCustomizerLibrary.runScriptRemotely quota', () => {
+  const originalIsCloud = EnvSet.values.isCloud;
+
+  const setIsCloud = (isCloud: boolean) => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for the Cloud-only quota check.
+    (EnvSet.values as { isCloud: boolean }).isCloud = isCloud;
+  };
+
+  beforeEach(() => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+    setIsCloud(true);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
+    setIsCloud(originalIsCloud);
+  });
+
+  it('skips the run when the plan does not include custom JWT', async () => {
+    getSubscriptionData.mockResolvedValueOnce({ quota: { customJwtEnabled: false } });
+
+    await expect(library.runScriptRemotely(payload)).resolves.toBeUndefined();
+    expect(post).not.toHaveBeenCalled();
+  });
+
+  it('runs when the plan includes custom JWT', async () => {
+    getSubscriptionData.mockResolvedValueOnce({ quota: { customJwtEnabled: true } });
+    post.mockResolvedValueOnce({ value: { foo: 'bar' } });
+
+    await expect(library.runScriptRemotely(payload)).resolves.toEqual({ foo: 'bar' });
+    expect(post).toHaveBeenCalled();
+  });
+
+  it('never meters the admin tenant', async () => {
+    const adminLibrary = new JwtCustomizerLibrary(
+      adminTenantId,
+      {} as Queries,
+      {} as LogtoConfigLibrary,
+      { getClient: async () => ({ post }) } as unknown as CloudConnectionLibrary,
+      { getSubscriptionData } as unknown as SubscriptionLibrary,
+      {} as UserLibrary,
+      {} as ScopeLibrary
+    );
+
+    post.mockResolvedValueOnce({ value: { foo: 'bar' } });
+
+    await expect(adminLibrary.runScriptRemotely(payload)).resolves.toEqual({ foo: 'bar' });
+    expect(getSubscriptionData).not.toHaveBeenCalled();
   });
 });
 

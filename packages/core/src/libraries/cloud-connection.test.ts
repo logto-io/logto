@@ -128,4 +128,45 @@ describe('getWorkerAccessToken()', () => {
 
     await expect(getWorkerAccessToken()).resolves.toBe(mockWorkerAccessToken);
   });
+
+  it('should drop the cached token when invalidated', async () => {
+    const { getWorkerAccessToken, invalidateWorkerAccessToken } =
+      createCloudConnectionLibrary(logtoConfigs);
+
+    nock(adminEndpoint).post('/oidc/token').reply(200, {
+      access_token: mockWorkerAccessToken,
+      expires_in: 3600,
+      token_type: 'Bearer',
+      scope: 'invoke:worker:script-run',
+    });
+
+    await expect(getWorkerAccessToken()).resolves.toBe(mockWorkerAccessToken);
+
+    invalidateWorkerAccessToken();
+
+    nock(adminEndpoint).post('/oidc/token').reply(200, {
+      access_token: 'rotatedWorkerAccessToken',
+      expires_in: 3600,
+      token_type: 'Bearer',
+      scope: 'invoke:worker:script-run',
+    });
+
+    await expect(getWorkerAccessToken()).resolves.toBe('rotatedWorkerAccessToken');
+  });
+
+  it('should coalesce concurrent misses into a single mint', async () => {
+    const { getWorkerAccessToken } = createCloudConnectionLibrary(logtoConfigs);
+
+    // Only one interceptor is mounted: a second request would have no reply and reject.
+    nock(adminEndpoint).post('/oidc/token').reply(200, {
+      access_token: mockWorkerAccessToken,
+      expires_in: 3600,
+      token_type: 'Bearer',
+      scope: 'invoke:worker:script-run',
+    });
+
+    await expect(
+      Promise.all([getWorkerAccessToken(), getWorkerAccessToken(), getWorkerAccessToken()])
+    ).resolves.toEqual([mockWorkerAccessToken, mockWorkerAccessToken, mockWorkerAccessToken]);
+  });
 });

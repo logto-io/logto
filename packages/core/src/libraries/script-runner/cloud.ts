@@ -30,33 +30,42 @@ type ScriptFailureKind = Extract<ScriptResult, { ok: false }>['kind'];
  * this timeout instead of the runner's `timeout`, losing its message. That is the accepted trade:
  * the failure is a timeout either way, and no script may hold sign-in longer than the ceiling.
  * Keeping the isolate budget below it keeps the runner's own report the one that wins.
- *
- * Racing does not cancel the underlying request — the runner still finishes and drops the response
- * — which is fine: the run is bounded on its side, and it is the caller that must stop waiting.
  */
 const cloudScriptRunTimeout = 5000;
 
 /**
  * Bound `run` at {@link cloudScriptRunTimeout}, rejecting with the 500 `ScriptExecutionError` a
  * runner-side `timeout` produces so route-level handling stays identical.
+ *
+ * `run` receives an `AbortSignal` that fires at the same deadline, so a transport able to honour
+ * it tears the socket down instead of leaking it: losing the race only stops the caller waiting,
+ * it does not free the request. The cloud hop cannot use it — the withtyped client calls bare
+ * `fetch` with no `signal` hook, leaving a hung request to undici's 300s defaults — but the
+ * direct Worker call goes through ky, which does.
  */
-const withCloudScriptRunTimeout = async <T>(run: Promise<T>): Promise<T> => {
+const withCloudScriptRunTimeout = async <T>(
+  run: (signal: AbortSignal) => Promise<T>
+): Promise<T> => {
   // Node keeps the process alive for a pending timer, so the timeout must be cleared either way.
   // eslint-disable-next-line @silverhand/fp/no-let
   let timer: Optional<NodeJS.Timeout>;
+  const abortController = new AbortController();
 
   try {
     return await Promise.race([
-      run,
+      run(abortController.signal),
       new Promise<never>((_resolve, reject) => {
         // eslint-disable-next-line @silverhand/fp/no-mutation
         timer = setTimeout(() => {
-          reject(
-            new ScriptExecutionError(
-              { message: `Script execution timed out after ${cloudScriptRunTimeout}ms.` },
-              scriptFailureStatusCodes.timeout
-            )
+          const error = new ScriptExecutionError(
+            { message: `Script execution timed out after ${cloudScriptRunTimeout}ms.` },
+            scriptFailureStatusCodes.timeout
           );
+
+          // Reject with the pinned error first: aborting makes the raced call reject too, and the
+          // winner of `Promise.race` must be this shape rather than ky's `AbortError`.
+          reject(error);
+          abortController.abort(error);
         }, cloudScriptRunTimeout);
       }),
     ]);
@@ -64,6 +73,38 @@ const withCloudScriptRunTimeout = async <T>(run: Promise<T>): Promise<T> => {
     clearTimeout(timer);
   }
 };
+
+/**
+ * The longest upstream body kept in an error message.
+ *
+ * The message travels far further than the transport: both Console dry-run routes, the persisted
+ * `customJwtError` audit-log field, and — when `blockIssuanceOnError` is set — the OIDC
+ * `error_description` handed to the RP. An unbounded body puts a Cloudflare HTML error page or a
+ * JWT-verification detail into all three, so it is capped to a prefix that still identifies the
+ * failure.
+ */
+const maxUpstreamBodyLength = 256;
+
+/**
+ * The 500 `ScriptExecutionError` a transport failure on the direct Worker path produces.
+ *
+ * `responseBody` carries the upstream body in a structured field rather than in `message`, capped
+ * to {@link maxUpstreamBodyLength}, so the text stays diagnosable without leaking an arbitrary
+ * payload into the audit log or the RP-facing `error_description`.
+ */
+const buildWorkerTransportError = (message: string, body?: string): ScriptExecutionError =>
+  new ScriptExecutionError(
+    {
+      message,
+      ...conditional(
+        body && {
+          responseBody:
+            body.length > maxUpstreamBodyLength ? `${body.slice(0, maxUpstreamBodyLength)}…` : body,
+        }
+      ),
+    },
+    500
+  );
 
 /**
  * The failure body `POST /api/services/script-run` returns, i.e. `ScriptFailureBody` in
@@ -77,10 +118,19 @@ const withCloudScriptRunTimeout = async <T>(run: Promise<T>): Promise<T> => {
  * The status alone cannot reconstruct the failure (`timeout`, `oom` and `runtime` all map to
  * 500), so `kind` is read from the body rather than inferred.
  */
+const scriptFailureKinds = [
+  'denied',
+  'timeout',
+  'oom',
+  'syntax',
+  'type',
+  'runtime',
+] as const satisfies readonly ScriptFailureKind[];
+
 const cloudScriptFailureBodyGuard = z.object({
   message: z.string(),
   error: z.object({
-    kind: z.enum(['denied', 'timeout', 'oom', 'syntax', 'type', 'runtime']),
+    kind: z.enum(scriptFailureKinds),
     /** Absent for `denied`; redacted for every other kind. */
     stack: z.string().optional(),
   }),
@@ -109,7 +159,7 @@ const workerScriptResultGuard = z.union([
   }),
   z.object({
     ok: z.literal(false),
-    kind: z.enum(['denied', 'timeout', 'oom', 'syntax', 'type', 'runtime']),
+    kind: z.enum(scriptFailureKinds),
     message: z.string(),
     /** The original error constructor name, when it survived far enough to be observed. */
     name: z.string().optional(),
@@ -117,6 +167,33 @@ const workerScriptResultGuard = z.union([
     stack: z.string().optional(),
   }),
 ]);
+
+/**
+ * Reshape a Worker script failure into the exact non-2xx body the cloud `script-run` route
+ * produces for the same failure, so both transports are indistinguishable downstream.
+ */
+const buildWorkerScriptFailureError = ({
+  kind,
+  message,
+  name,
+  stack,
+}: Extract<z.infer<typeof workerScriptResultGuard>, { ok: false }>): ScriptExecutionError => {
+  // The cloud route defaults a nameless `runtime` failure's name to 'Error'
+  // (`defaultRuntimeErrorName` in its reshaping) — mirrored so the bodies stay identical.
+  const errorName = name ?? conditional(kind === 'runtime' && 'Error');
+
+  return new ScriptExecutionError(
+    {
+      message,
+      error: {
+        kind,
+        ...conditional(errorName !== undefined && { name: errorName }),
+        ...conditional(stack !== undefined && { stack }),
+      },
+    },
+    scriptFailureStatusCodes[kind]
+  );
+};
 
 /**
  * Run the script on the script-runner Worker directly, skipping the cloud service hop.
@@ -132,6 +209,7 @@ const runScriptOnWorker = async ({
   endpoint,
   tenantId,
   isTest,
+  signal,
   ...input
 }: {
   cloudConnection: CloudConnectionLibrary;
@@ -141,55 +219,58 @@ const runScriptOnWorker = async ({
   entry: ScriptEntry;
   payload: Record<string, unknown>;
   isTest?: boolean;
+  signal: AbortSignal;
 }): Promise<unknown> => {
   const accessToken = await cloudConnection.getWorkerAccessToken();
 
   const response = await ky.post(new URL('/api/script-run', endpoint), {
     json: { tenantId, ...input, ...conditional(isTest && { isTest }) },
     headers: { Authorization: `Bearer ${accessToken}` },
-    // The round-trip deadline is owned by the caller's `withCloudScriptRunTimeout`; ky's own
-    // timeout would only race it with a different error shape.
+    /**
+     * The round-trip deadline is owned by the caller's `withCloudScriptRunTimeout`; ky's own
+     * timeout would only race it with a different error shape. The caller's signal fires at that
+     * same deadline, so a hung Worker has its socket torn down rather than held to undici's
+     * defaults.
+     */
     timeout: false,
+    signal,
     throwHttpErrors: false,
   });
 
+  const body = await trySafe(async () => response.text());
+
   if (!response.ok) {
-    const body = await trySafe(async () => response.text());
-    throw new ScriptExecutionError(
-      { message: `Script runner error: ${response.status}${body ? ` ${body}` : ''}` },
-      500
-    );
+    /**
+     * The Worker rejected the token. It is cached until expiry, so without dropping it here an
+     * admin-tenant key rotation or a grant revocation would fail every run for the rest of the
+     * token's lifetime when a single re-mint would recover.
+     */
+    if (response.status === 401 || response.status === 403) {
+      cloudConnection.invalidateWorkerAccessToken();
+    }
+
+    throw buildWorkerTransportError(`Script runner error: ${response.status}`, body);
   }
 
-  const result = workerScriptResultGuard.safeParse(await trySafe(async () => response.json()));
+  const result = workerScriptResultGuard.safeParse(
+    conditional(body !== undefined && trySafe((): unknown => JSON.parse(body)))
+  );
 
   if (!result.success) {
-    throw new ScriptExecutionError(
-      { message: 'Script runner returned an unexpected response.' },
-      500
-    );
+    /**
+     * The envelope drifted — a new failure kind, a renamed field. The cloud hop keeps the
+     * original body intact in this case (`parseCloudScriptFailure` misses and the callers rethrow
+     * untouched), so carrying it here keeps the two transports equally diagnosable at exactly the
+     * moment the text matters most.
+     */
+    throw buildWorkerTransportError('Script runner returned an unexpected response.', body);
   }
 
   if (result.data.ok) {
     return result.data.value;
   }
 
-  const { kind, message, name, stack } = result.data;
-  // The cloud route defaults a nameless `runtime` failure's name to 'Error'
-  // (`defaultRuntimeErrorName` in its reshaping) — mirrored so the bodies stay identical.
-  const errorName = name ?? conditional(kind === 'runtime' && 'Error');
-
-  throw new ScriptExecutionError(
-    {
-      message,
-      error: {
-        kind,
-        ...conditional(errorName !== undefined && { name: errorName }),
-        ...conditional(stack !== undefined && { stack }),
-      },
-    },
-    scriptFailureStatusCodes[kind]
-  );
+  throw buildWorkerScriptFailureError(result.data);
 };
 
 /**
@@ -232,12 +313,13 @@ export const runScriptOnCloud = async ({
   const { isDevFeaturesEnabled, scriptRunnerEndpoint } = EnvSet.values;
 
   if (isDevFeaturesEnabled && scriptRunnerEndpoint) {
-    return withCloudScriptRunTimeout(
+    return withCloudScriptRunTimeout(async (signal) =>
       runScriptOnWorker({
         cloudConnection,
         endpoint: scriptRunnerEndpoint,
         tenantId,
         isTest,
+        signal,
         ...input,
       })
     );
@@ -255,7 +337,8 @@ export const runScriptOnCloud = async ({
    */
   const { value } =
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- The route type says non-nullable; the client returns `undefined` for a 204 regardless.
-    (await withCloudScriptRunTimeout(
+    (await withCloudScriptRunTimeout(async () =>
+      // The withtyped client takes no `signal`, so this path can only stop waiting, not cancel.
       client.post('/api/services/script-run', {
         body: { ...input, ...conditional(isTest && { isTest }) },
       })
