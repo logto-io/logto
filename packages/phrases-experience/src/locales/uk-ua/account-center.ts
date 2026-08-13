@@ -273,6 +273,8 @@ const account_center = {
     no_third_party_apps: 'Немає авторизованих сторонніх додатків.',
     third_party_apps_load_failed: 'Не вдалося завантажити сторонні додатки. Спробуйте ще раз.',
     granted_at: 'Авторизовано {{date}}',
+    dynamic_app: 'Динамічний додаток',
+    client_id: 'Ідентифікатор клієнта: {{clientId}}',
     revoke_grant: 'Видалити',
     revoke_grant_title: 'Видалити доступ стороннього додатку',
     revoke_grant_description:

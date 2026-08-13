@@ -265,6 +265,8 @@ const account_center = {
     no_third_party_apps: 'لا توجد تطبيقات طرف ثالث معتمدة.',
     third_party_apps_load_failed: 'فشل تحميل تطبيقات الطرف الثالث. يُرجى المحاولة مرة أخرى.',
     granted_at: 'تم التفويض {{date}}',
+    dynamic_app: 'تطبيق ديناميكي',
+    client_id: 'معرف العميل: {{clientId}}',
     revoke_grant: 'إزالة',
     revoke_grant_title: 'إزالة وصول تطبيق الطرف الثالث',
     revoke_grant_description:

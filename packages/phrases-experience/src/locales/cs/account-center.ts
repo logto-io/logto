@@ -272,6 +272,8 @@ const account_center = {
     third_party_apps_load_failed:
       'Nepodařilo se načíst aplikace třetích stran. Zkuste to prosím znovu.',
     granted_at: 'Autorizováno {{date}}',
+    dynamic_app: 'Dynamická aplikace',
+    client_id: 'ID klienta: {{clientId}}',
     revoke_grant: 'Odebrat',
     revoke_grant_title: 'Odebrat přístup aplikace třetí strany',
     revoke_grant_description:

@@ -270,6 +270,8 @@ const account_center = {
     third_party_apps_load_failed:
       'サードパーティアプリを読み込めませんでした。もう一度お試しください。',
     granted_at: '{{date}} に認可',
+    dynamic_app: 'ダイナミックアプリ',
+    client_id: 'クライアント ID: {{clientId}}',
     revoke_grant: '削除',
     revoke_grant_title: 'サードパーティアプリのアクセスを削除',
     revoke_grant_description:

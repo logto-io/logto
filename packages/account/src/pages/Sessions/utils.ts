@@ -6,6 +6,7 @@ import {
   normalizeUserApplicationGrantGroups,
   type UserApplicationGrantGroup,
 } from '@logto/shared/universal';
+import { trySafe } from '@silverhand/essentials';
 import { format } from 'date-fns';
 
 import { getDateFnsLocale } from '@ac/utils/date';
@@ -32,3 +33,11 @@ export type GrantedAppRow = UserApplicationGrantGroup;
 
 export const normalizeGrantRows = (grants: AccountGrant[]): GrantedAppRow[] =>
   normalizeUserApplicationGrantGroups(grants);
+
+export const getDynamicAppDisplayName = (clientId: string, name?: string) => {
+  if (name && name !== clientId) {
+    return name;
+  }
+
+  return trySafe(() => new URL(clientId).host) ?? clientId;
+};
