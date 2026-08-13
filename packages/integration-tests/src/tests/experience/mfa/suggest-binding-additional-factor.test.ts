@@ -225,7 +225,7 @@ describe('Experience - suggest additional MFA after WebAuthn binding as sign-in 
     // The page is `create-passkey` (sign-in passkey flow), not `mfa-binding/WebAuthn`,
     // so we click the button directly instead of using `toCreatePasskey()`.
     await experience.page.waitForNetworkIdle();
-    await experience.toClickButton('Create a passkey');
+    await experience.toClick('button:not([disabled])', 'Create a passkey', false);
 
     // Should suggest binding additional MFA factor
     await experience.waitForPathname('mfa-binding');
@@ -271,7 +271,7 @@ describe('Experience - suggest additional MFA after WebAuthn binding as sign-in 
     // The page is `create-passkey` (sign-in passkey flow), not `mfa-binding/WebAuthn`,
     // so we click the button directly instead of using `toCreatePasskey()`.
     await experience.page.waitForNetworkIdle();
-    await experience.toClickButton('Create a passkey');
+    await experience.toClick('button:not([disabled])', 'Create a passkey', false);
 
     // After binding WebAuthn with passkey sign-in enabled, backend suggests binding additional MFA factors
     await experience.waitForPathname('mfa-binding');

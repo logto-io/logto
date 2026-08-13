@@ -135,6 +135,15 @@ describe('Passkey sign-in', () => {
     await resetPasskeySignInSettings();
   });
 
+  afterEach(async () => {
+    /**
+     * Cases in this suite override the MFA policy and passkey sign-in settings mid-test;
+     * restore the baseline so one failed case cannot leak its settings into the next.
+     */
+    await enableMandatoryMfaWithWebAuthn();
+    await resetPasskeySignInSettings();
+  });
+
   it('should prompt enable MFA if new registered user has no MFA but has bound sign-in passkey', async () => {
     await updateSignInExperience({
       mfa: {
@@ -162,22 +171,27 @@ describe('Passkey sign-in', () => {
 
     // Bind a sign-in passkey during registration
     await experience.waitForPathname('create-passkey');
-    await experience.toClickButton('Create a passkey');
+    /**
+     * The "Create a passkey" button stays disabled (and a click on it is silently swallowed)
+     * until the WebAuthn registration options have been fetched.
+     */
+    await experience.page.waitForNetworkIdle();
+    await experience.toClick('button:not([disabled])', 'Create a passkey', false);
 
     // After passkey is created, user should be prompted to enable MFA since the user has no MFA factor bound but has a sign-in passkey
     await experience.waitForPathname('mfa-onboarding');
-    await experience.toClick('button', 'Enable 2-step verification');
+    await experience.toClick('button', 'Enable 2-step verification', false);
+    await experience.waitForPathname('mfa-binding');
 
-    // SKip enabling MFA
-    await experience.toClick('div[role=button][class$=skipButton]');
+    // Skip enabling MFA
+    await experience.toClick('div[role=button][class$=skipButton]', undefined, false);
 
+    await experience.waitForUrl(demoAppUrl);
     await experience.page.waitForNetworkIdle();
     const userId = await experience.getUserIdFromDemoAppPage();
     await experience.clearVirtualAuthenticator();
     await experience.verifyThenEnd();
 
-    await enableMandatoryMfaWithWebAuthn();
-    await resetPasskeySignInSettings();
     await deleteUser(userId);
   });
 
@@ -220,8 +234,8 @@ describe('Passkey sign-in', () => {
     // Wait for the page and passkey sign-in button to load
     await waitFor(1000);
 
-    // Click the "Continue with passkey" button
-    await experience.toClick('button', 'Continue with passkey');
+    // Click the "Continue with passkey" button; `verifyThenEnd` below waits for the demo app URL
+    await experience.toClick('button', 'Continue with passkey', false);
 
     // Step 5: Verify the user is signed in successfully without MFA verification prompt
     // If MFA was not skipped, the user would be redirected to the MFA verification page

@@ -3,11 +3,14 @@ import { appendPath } from '@silverhand/essentials';
 
 import { logtoUrl, mockSocialAuthPageUrl } from '#src/constants.js';
 import { readConnectorMessage } from '#src/helpers/index.js';
-import { dcls } from '#src/utils.js';
+import { dcls, waitFor } from '#src/utils.js';
 
 import ExpectPage from './expect-page.js';
 
 const demoAppUrl = appendPath(new URL(logtoUrl), 'demo-app');
+
+/** Aligned with puppeteer's default navigation timeout. */
+const defaultUrlWaitTimeout = 30_000;
 
 /** Remove the query string together with the `?` from a URL string. */
 const stripQuery = (url: string) => url.split('?')[0];
@@ -96,24 +99,21 @@ export default class ExpectExperience extends ExpectPage {
     this.#ongoing = { type, initialUrl };
   }
 
-  async waitForUrl(url: URL, retry = 3) {
-    // eslint-disable-next-line @silverhand/fp/no-let
-    let retries = retry;
-
-    do {
-      if (this.page.url() === url.href) {
-        return;
-      }
-
-      // eslint-disable-next-line no-await-in-loop
-      await this.page.waitForNavigation({ waitUntil: 'networkidle0' });
-    } while (retries--); // eslint-disable-line @silverhand/fp/no-mutation
+  /**
+   * Poll the page URL until it exactly matches the given URL.
+   *
+   * Polling covers client-side route changes and full page loads alike, keeps working when
+   * the navigation completed before this call, and does not rely on `networkidle0`, which
+   * in-flight connections can starve beyond the navigation timeout.
+   */
+  async waitForUrl(url: URL, timeout?: number) {
+    await this.waitForUrlToMatch((current) => current === url.href, `to be ${url.href}`, timeout);
   }
 
-  async waitForPathname(pathname: string, retry = 3, appId = demoAppApplicationId) {
+  async waitForPathname(pathname: string, timeout?: number, appId = demoAppApplicationId) {
     const url = this.buildExperienceUrl(pathname);
     url.searchParams.set('app_id', appId);
-    return this.waitForUrl(url, retry);
+    return this.waitForUrl(url, timeout);
   }
 
   /**
@@ -318,6 +318,32 @@ export default class ExpectExperience extends ExpectPage {
       }),
     ]);
     return { favicon, appleFavicon };
+  }
+
+  /**
+   * Poll the page URL until it satisfies the given predicate; throw if it still does not
+   * after the timeout.
+   *
+   * @param match The predicate to test the page URL against.
+   * @param expectation A human-readable description of the expected URL for the error message.
+   */
+  protected async waitForUrlToMatch(
+    match: (url: string) => boolean,
+    expectation: string,
+    timeout = defaultUrlWaitTimeout
+  ) {
+    const deadline = Date.now() + timeout;
+
+    while (!match(this.page.url())) {
+      if (Date.now() > deadline) {
+        this.throwError(
+          `Timed out (${timeout}ms) waiting for the page URL ${expectation}. Current URL: ${this.page.url()}`
+        );
+      }
+
+      // eslint-disable-next-line no-await-in-loop
+      await waitFor(100);
+    }
   }
 
   /** Build a full experience URL from a pathname. */

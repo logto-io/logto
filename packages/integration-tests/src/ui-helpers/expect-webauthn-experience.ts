@@ -51,16 +51,32 @@ export default class ExpectWebAuthnExperience extends ExpectMfaExperience {
 
   async toCreatePasskey() {
     this.toBeAt('mfa-binding/WebAuthn');
-    // Wait for the WebAuthn options have been prepared.
-    await this.page.waitForNetworkIdle();
-    await this.toClick('button', 'Create a passkey');
+    await this.toClickCeremonyButton('Create a passkey');
   }
 
   async toVerifyViaPasskey() {
     this.toBeAt('mfa-verification/WebAuthn');
+    await this.toClickCeremonyButton('Verify via passkey');
+  }
+
+  /**
+   * Click a WebAuthn ceremony button and wait for the ceremony and the follow-up interaction
+   * requests to complete.
+   *
+   * The destination differs per flow (a client-side route change or a full redirect chain back
+   * to the app), so completion is detected by leaving the current URL instead of by a
+   * `waitForNavigation` watcher; the trailing network-idle wait lets the destination page
+   * settle like the previous navigation-coupled click did.
+   */
+  private async toClickCeremonyButton(buttonText: string) {
     // Wait for the WebAuthn options have been prepared.
     await this.page.waitForNetworkIdle();
-    await this.toClick('button', 'Verify via passkey');
+
+    const ceremonyUrl = this.page.url();
+    // A click on a disabled button is silently swallowed, so wait until it is interactive.
+    await this.toClick('button:not([disabled])', buttonText, false);
+    await this.waitForUrlToMatch((url) => url !== ceremonyUrl, `to leave ${ceremonyUrl}`);
+    await this.page.waitForNetworkIdle();
   }
 
   private async getCdpClient() {
