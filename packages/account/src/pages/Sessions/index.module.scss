@@ -53,6 +53,49 @@
   white-space: nowrap;
 }
 
+.dynamicAppName {
+  display: flex;
+  align-items: center;
+  gap: _.unit(2);
+  min-width: 0;
+}
+
+.dynamicAppLink {
+  display: inline-flex;
+  align-items: center;
+  gap: _.unit(1);
+  min-width: 0;
+  font: var(--font-label-2);
+  color: var(--color-type-link);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.dynamicAppLinkName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dynamicAppLinkIcon {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
+.dynamicAppTag {
+  flex-shrink: 0;
+  padding: _.unit(0.5) _.unit(2);
+  border-radius: 14px;
+  background: var(--color-line-divider);
+  font: var(--font-label-3);
+  color: var(--color-type-secondary);
+  white-space: nowrap;
+}
+
 .meta {
   font: var(--font-body-3);
   color: var(--color-type-secondary);
@@ -139,6 +182,16 @@
   }
 
   .deviceName {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .dynamicAppName {
+    flex-wrap: wrap;
+  }
+
+  .dynamicAppLinkName {
     white-space: normal;
     overflow-wrap: anywhere;
     word-break: break-word;

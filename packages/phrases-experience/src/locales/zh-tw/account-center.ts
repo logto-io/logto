@@ -256,6 +256,7 @@ const account_center = {
     no_third_party_apps: '沒有已授權的第三方應用程式。',
     third_party_apps_load_failed: '無法載入第三方應用程式。請再試一次。',
     granted_at: '授權於 {{date}}',
+    dynamic_app: '動態應用',
     revoke_grant: '移除',
     revoke_grant_title: '移除第三方應用程式存取權限',
     revoke_grant_description: '這將撤銷授予該應用程式的所有存取權限。確定要繼續嗎？',

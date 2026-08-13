@@ -276,6 +276,7 @@ const account_center = {
     no_third_party_apps: 'Nenhuma aplicação de terceiros autorizada.',
     third_party_apps_load_failed: 'Falha ao carregar aplicações de terceiros. Tente novamente.',
     granted_at: 'Autorizado em {{date}}',
+    dynamic_app: 'Aplicação dinâmica',
     revoke_grant: 'Remover',
     revoke_grant_title: 'Remover acesso da aplicação de terceiros',
     revoke_grant_description:

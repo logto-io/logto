@@ -271,6 +271,7 @@ const account_center = {
     third_party_apps_load_failed:
       'بارگذاری برنامه‌های شخص ثالث ناموفق بود. لطفاً دوباره تلاش کنید.',
     granted_at: 'مجازشده در {{date}}',
+    dynamic_app: 'برنامه پویا',
     revoke_grant: 'حذف',
     revoke_grant_title: 'حذف دسترسی برنامه شخص ثالث',
     revoke_grant_description:

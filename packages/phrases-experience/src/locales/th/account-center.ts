@@ -264,6 +264,7 @@ const account_center = {
     no_third_party_apps: 'ไม่มีแอปพลิเคชันบุคคลที่สามที่ได้รับอนุญาต',
     third_party_apps_load_failed: 'โหลดแอปบุคคลที่สามไม่สำเร็จ โปรดลองอีกครั้ง',
     granted_at: 'อนุญาตเมื่อ {{date}}',
+    dynamic_app: 'แอปแบบไดนามิก',
     revoke_grant: 'ลบ',
     revoke_grant_title: 'ลบการเข้าถึงแอปบุคคลที่สาม',
     revoke_grant_description:
