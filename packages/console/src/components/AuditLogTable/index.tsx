@@ -111,14 +111,14 @@ function AuditLogTable({ applicationId, userId, className }: Props) {
   const userColumn: Column<Log> = {
     title: t('logs.user'),
     dataIndex: 'user',
-    colSpan: 5,
+    colSpan: 4,
     render: ({ payload: { userId } }) => (userId ? <UserName userId={userId} /> : <div>-</div>),
   };
 
   const applicationColumn: Column<Log> = {
     title: t('logs.application'),
     dataIndex: 'application',
-    colSpan: isUserColumnVisible ? 3 : 5,
+    colSpan: isUserColumnVisible ? 4 : 5,
     render: ({ payload: { applicationId, cimdClientId } }) => {
       /** The payload keeps a CIMD client identifier apart from `applicationId` (LOG-13928). */
       if (cimdClientId) {
