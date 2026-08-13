@@ -9,6 +9,31 @@
     }
   ],
   "paths": {
+    "/api/cimd/client-snapshot": {
+      "get": {
+        "summary": "Get a CIMD client display snapshot",
+        "description": "Resolve the latest consent-time display snapshot captured for a CIMD client identifier. Snapshots live as long as their grants, so a client whose grants are all revoked and pruned has none — the identifier itself stays the permanent identity signal.",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "query",
+            "description": "The CIMD client identifier URL.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The latest display snapshot for the client identifier."
+          },
+          "404": {
+            "description": "No snapshot exists for the client identifier."
+          }
+        }
+      }
+    },
     "/api/cimd/user-consent-scopes": {
       "get": {
         "summary": "List CIMD user consent scopes",

@@ -1,6 +1,7 @@
 import { UserScope } from '@logto/core-kit';
 import {
   ApplicationUserConsentScopeType,
+  CimdGrantClientSnapshots,
   applicationUserConsentScopesResponseGuard,
 } from '@logto/schemas';
 import { z } from 'zod';
@@ -41,6 +42,31 @@ export default function cimdRoutes<T extends ManagementApiRouter>(
       }))
     );
   };
+
+  router.get(
+    '/cimd/client-snapshot',
+    koaGuard({
+      query: z.object({ clientId: z.string().max(2048) }),
+      response: CimdGrantClientSnapshots.guard.pick({
+        clientId: true,
+        name: true,
+        logoUri: true,
+        createdAt: true,
+      }),
+      status: [200, 404],
+    }),
+    async (ctx, next) => {
+      const { clientId } = ctx.guard.query;
+
+      const snapshot = await queries.cimd.grantClientSnapshots.findLatestByClientId(clientId);
+
+      assertThat(snapshot, new RequestError({ code: 'entity.not_found', status: 404 }));
+
+      ctx.body = snapshot;
+
+      return next();
+    }
+  );
 
   router.get(
     '/cimd/user-consent-scopes',

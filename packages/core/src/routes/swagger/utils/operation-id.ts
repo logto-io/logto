@@ -31,6 +31,7 @@ const devFeatureCustomRoutes: Readonly<RouteDictionary> = Object.freeze({
   // DEV: CIMD (client ID metadata document) support
   'get /configs/cimd': 'GetCimdConfig',
   'patch /configs/cimd': 'UpdateCimdConfig',
+  'get /cimd/client-snapshot': 'GetCimdClientSnapshot',
   'get /cimd/user-consent-scopes': 'ListCimdUserConsentScopes',
   'post /cimd/user-consent-scopes': 'AssignCimdUserConsentScopes',
   'delete /cimd/user-consent-scopes/:scopeType/:scopeId': 'DeleteCimdUserConsentScope',

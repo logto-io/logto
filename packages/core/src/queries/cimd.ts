@@ -8,6 +8,7 @@ import {
   CimdUserScopes,
   OrganizationScopes,
   Scopes,
+  type CimdGrantClientSnapshot,
   type OrganizationScope,
   type Scope,
 } from '@logto/schemas';
@@ -179,13 +180,31 @@ const createGrantOrganizationQueries = (pool: CommonQueryMethods) => {
   return { insert, exists, findOrganizationIds };
 };
 
+const cimdGrantClientSnapshots = convertToIdentifiers(CimdGrantClientSnapshots, true);
+
 const createGrantClientSnapshotQueries = (pool: CommonQueryMethods) => {
   /** Idempotent so a retried consent submission does not fail; the first write wins. */
   const insert = buildInsertIntoWithPool(pool)(CimdGrantClientSnapshots, {
     onConflict: { ignore: true },
   });
 
-  return { insert };
+  /**
+   * The latest consent snapshot for a client identifier, across grants. Snapshots live as
+   * long as their Grant rows, so a client whose grants are all revoked and pruned resolves
+   * to nothing — the identifier itself stays the permanent identity signal. The row's
+   * scoping and FK plumbing (`tenantId`, `grantModelName`, `grantId`) stays internal.
+   */
+  const findLatestByClientId = async (clientId: string) =>
+    pool.maybeOne<Pick<CimdGrantClientSnapshot, 'clientId' | 'name' | 'logoUri' | 'createdAt'>>(sql`
+      select ${cimdGrantClientSnapshots.fields.clientId}, ${cimdGrantClientSnapshots.fields.name},
+        ${cimdGrantClientSnapshots.fields.logoUri}, ${cimdGrantClientSnapshots.fields.createdAt}
+      from ${cimdGrantClientSnapshots.table}
+      where ${cimdGrantClientSnapshots.fields.clientId} = ${clientId}
+      order by ${cimdGrantClientSnapshots.fields.createdAt} desc
+      limit 1
+    `);
+
+  return { insert, findLatestByClientId };
 };
 
 export const createCimdQueries = (pool: CommonQueryMethods) => ({

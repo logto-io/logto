@@ -116,9 +116,9 @@ function UserSessionDetails() {
           /**
            * A CIMD client identifier is a URL with no applications row behind it —
            * fetching `/api/applications/:id` can only fail. The component resolves its
-           * consent snapshot name from the user's grants instead.
+           * consent snapshot name from the snapshot lookup instead.
            */
-          <DynamicAppName clientId={applicationId} userId={userId} />
+          <DynamicAppName clientId={applicationId} />
         ) : (
           <ApplicationName
             applicationId={applicationId}
@@ -127,7 +127,7 @@ function UserSessionDetails() {
         )}
       </Fragment>
     ));
-  }, [sessionData, userId]);
+  }, [sessionData]);
 
   const infoFields = useMemo<
     Array<{ key: string; labelKey: AdminConsoleKey; value: ReactNode }>

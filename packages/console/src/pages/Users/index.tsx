@@ -110,13 +110,13 @@ function Users() {
             title: t('users.application_name'),
             dataIndex: 'app',
             colSpan: 5,
-            render: ({ id, applicationId, cimdClientId }) => {
+            render: ({ applicationId, cimdClientId }) => {
               /**
                * A CIMD-first user has no `applicationId`; its origin client lives in the
                * additive `cimdClientId` field (LOG-14005), which has no applications row.
                */
               if (cimdClientId) {
-                return <DynamicAppName clientId={cimdClientId} userId={id} />;
+                return <DynamicAppName clientId={cimdClientId} />;
               }
 
               return applicationId ? (
