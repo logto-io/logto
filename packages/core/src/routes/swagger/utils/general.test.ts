@@ -73,6 +73,34 @@ const createDevFeatureOperationDocument = (): DeepPartial<OpenAPIV3.Document> =>
   },
 });
 
+const createDevFeatureOnlyRequestBodyDocument = (): DeepPartial<OpenAPIV3.Document> => ({
+  openapi: '3.0.1',
+  info: {
+    title: 'Test',
+    version: '1.0.0',
+  },
+  paths: {
+    '/api/mock': {
+      post: {
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['beta'],
+                properties: {
+                  beta: createDevFeatureBooleanSchema(),
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+});
+
 describe('swagger general utils', () => {
   afterEach(() => {
     Reflect.set(EnvSet.values, 'isCloud', originalIsCloud);
@@ -134,6 +162,36 @@ describe('swagger general utils', () => {
                   },
                 },
               },
+            },
+          },
+        },
+      },
+    });
+    expect(JSON.stringify(document)).not.toContain(devFeatureSchemaExtension);
+  });
+
+  it('should remove a request body that contains only disabled dev feature properties', () => {
+    setDevFeaturesEnabled(false);
+
+    const document = createDevFeatureOnlyRequestBodyDocument();
+    removeDevFeatureSchemaProperties(document);
+
+    expect(document.paths?.['/api/mock']?.post).not.toHaveProperty('requestBody');
+  });
+
+  it('should keep a dev-only request body when dev features are enabled', () => {
+    setDevFeaturesEnabled(true);
+
+    const document = createDevFeatureOnlyRequestBodyDocument();
+    removeDevFeatureSchemaProperties(document);
+
+    expect(document.paths?.['/api/mock']?.post?.requestBody).toMatchObject({
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            properties: {
+              beta: { type: 'boolean' },
             },
           },
         },

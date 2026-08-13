@@ -266,6 +266,32 @@ describe('GET /swagger.json', () => {
     });
   });
 
+  it('should mark a request body as optional when its guard accepts undefined', async () => {
+    const optionalBodyRouter = new Router();
+    optionalBodyRouter.post(
+      '/mock',
+      koaGuard({
+        body: object({
+          name: string().optional(),
+        }).optional(),
+      }),
+      () => ({})
+    );
+    const swaggerRequest = createSwaggerRequest([optionalBodyRouter]);
+
+    const response = await swaggerRequest.get('/swagger.json');
+
+    expect(response.body.paths).toMatchObject({
+      '/api/mock': {
+        post: {
+          requestBody: {
+            required: false,
+          },
+        },
+      },
+    });
+  });
+
   it('should fall back to default when no response guard found', async () => {
     const swaggerRequest = createSwaggerRequest([mockRouter]);
     const response = await swaggerRequest.get('/swagger.json');

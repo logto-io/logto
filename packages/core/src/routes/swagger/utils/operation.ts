@@ -55,7 +55,7 @@ const buildOperation = (
   ];
 
   const requestBody = body && {
-    required: true,
+    required: !body.isOptional(),
     content: {
       'application/json': {
         schema: zodTypeToSwagger(body),

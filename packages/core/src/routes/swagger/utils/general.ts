@@ -1,3 +1,5 @@
+/* eslint-disable max-lines -- Dev-feature pruning shares traversal logic with the existing OpenAPI document utilities. */
+
 import assert from 'node:assert';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -368,6 +370,65 @@ const removeDevFeatureSchemaProperty = (
   return false;
 };
 
+const isEmptyJsonObjectRequestBody = (value: unknown) => {
+  if (!isRecord(value)) {
+    return false;
+  }
+
+  const { content } = value;
+
+  if (!isRecord(content) || Object.keys(content).length !== 1) {
+    return false;
+  }
+
+  const jsonContent = content['application/json'];
+
+  if (!isRecord(jsonContent) || !isRecord(jsonContent.schema)) {
+    return false;
+  }
+
+  const { properties } = jsonContent.schema;
+
+  return isRecord(properties) && Object.keys(properties).length === 0;
+};
+
+const pruneDevFeatureSchemaProperties = (value: unknown): boolean => {
+  if (Array.isArray(value)) {
+    return value.map((item) => pruneDevFeatureSchemaProperties(item)).some(Boolean);
+  }
+
+  if (!isRecord(value)) {
+    return false;
+  }
+
+  const schema = value;
+  const { properties } = schema;
+  const hasPrunedProperty = isRecord(properties)
+    ? Object.entries(properties)
+        .map(([propertyName, propertySchema]) =>
+          removeDevFeatureSchemaProperty(schema, properties, propertyName, propertySchema)
+        )
+        .some(Boolean)
+    : false;
+
+  Reflect.deleteProperty(schema, devFeatureSchemaExtension);
+
+  const hasPrunedChild = Object.entries(schema)
+    .map(([key, item]) => {
+      const hasPrunedDescendant = pruneDevFeatureSchemaProperties(item);
+
+      if (key === 'requestBody' && hasPrunedDescendant && isEmptyJsonObjectRequestBody(item)) {
+        Reflect.deleteProperty(schema, key);
+        return true;
+      }
+
+      return hasPrunedDescendant;
+    })
+    .some(Boolean);
+
+  return hasPrunedProperty || hasPrunedChild;
+};
+
 /**
  * **CAUTION**: This function mutates the input value.
  *
@@ -379,34 +440,7 @@ const removeDevFeatureSchemaProperty = (
  * zod guards carry no markers, so pruning supplements alone cannot remove them.
  */
 export const removeDevFeatureSchemaProperties = (value: unknown) => {
-  if (Array.isArray(value)) {
-    for (const item of value) {
-      removeDevFeatureSchemaProperties(item);
-    }
-
-    return;
-  }
-
-  if (!isRecord(value)) {
-    return;
-  }
-
-  const schema = value;
-  const { properties } = schema;
-
-  if (isRecord(properties)) {
-    for (const [propertyName, propertySchema] of Object.entries(properties)) {
-      if (removeDevFeatureSchemaProperty(schema, properties, propertyName, propertySchema)) {
-        continue;
-      }
-    }
-  }
-
-  Reflect.deleteProperty(schema, devFeatureSchemaExtension);
-
-  for (const item of Object.values(schema)) {
-    removeDevFeatureSchemaProperties(item);
-  }
+  pruneDevFeatureSchemaProperties(value);
 };
 
 export const shouldThrow = () => !EnvSet.values.isProduction || EnvSet.values.isIntegrationTest;
@@ -439,6 +473,8 @@ export const pruneSwaggerDocument = (document: OpenAPIV3.Document) => {
 
   prune(document);
 };
+
+/* eslint-enable max-lines */
 
 /**
  * Check if the given router is a Management API router. The function will check if the router
