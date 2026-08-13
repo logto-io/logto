@@ -3,9 +3,14 @@ import {
   Theme,
   isBuiltInApplicationId,
   isCimdClientId,
+  type GetUserApplicationGrantsResponse,
   type GetUserSessionResponse,
 } from '@logto/schemas';
-import { getSessionDisplayInfo } from '@logto/shared/universal';
+import {
+  getSessionDisplayInfo,
+  normalizeUserApplicationGrantGroups,
+} from '@logto/shared/universal';
+import { conditional } from '@silverhand/essentials';
 import { Fragment, type ReactNode, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -98,13 +103,37 @@ function UserSessionDetails() {
 
   const signedInAt = useMemo(() => formatTimestamp(sessionData?.payload.loginTs), [sessionData]);
 
-  const applications = useMemo<ReactNode>(() => {
-    // `authorizations` is a clientId-keyed record map that stores all apps authorized by this session.
-    // We use the keys of this record to get the authorized application IDs.
-    const authorizedApplicationIds = sessionData
-      ? Object.keys(sessionData.payload.authorizations ?? {})
-      : [];
+  // `authorizations` is a clientId-keyed record map that stores all apps authorized by this session.
+  // We use the keys of this record to get the authorized application IDs.
+  const authorizedApplicationIds = useMemo(
+    () => (sessionData ? Object.keys(sessionData.payload.authorizations ?? {}) : []),
+    [sessionData]
+  );
 
+  /**
+   * A CIMD client identifier is a URL with no applications row behind it — fetching
+   * `/api/applications/:id` can only fail. Its consent-time snapshot name travels on the
+   * grants response instead, keyed by the same client identifier.
+   */
+  const { data: grantsData } = useSWR<GetUserApplicationGrantsResponse, RequestError>(
+    conditional(
+      authorizedApplicationIds.some((id) => isCimdClientId(id)) &&
+        userId &&
+        `api/users/${userId}/grants?appType=thirdParty`
+    )
+  );
+
+  const cimdClientNames = useMemo(
+    () =>
+      new Map(
+        normalizeUserApplicationGrantGroups(grantsData?.grants ?? []).map(
+          ({ applicationId, applicationName }) => [applicationId, applicationName]
+        )
+      ),
+    [grantsData]
+  );
+
+  const applications = useMemo<ReactNode>(() => {
     if (authorizedApplicationIds.length === 0) {
       return '-';
     }
@@ -113,12 +142,7 @@ function UserSessionDetails() {
       <Fragment key={applicationId}>
         {index > 0 ? ', ' : null}
         {isCimdClientId(applicationId) ? (
-          /**
-           * A CIMD client identifier is a URL with no applications row behind it —
-           * fetching `/api/applications/:id` can only fail. The session payload carries
-           * no name for it, so the component renders the identifier host.
-           */
-          <DynamicAppName clientId={applicationId} />
+          <DynamicAppName clientId={applicationId} name={cimdClientNames.get(applicationId)} />
         ) : (
           <ApplicationName
             applicationId={applicationId}
@@ -127,7 +151,7 @@ function UserSessionDetails() {
         )}
       </Fragment>
     ));
-  }, [sessionData]);
+  }, [authorizedApplicationIds, cimdClientNames]);
 
   const infoFields = useMemo<
     Array<{ key: string; labelKey: AdminConsoleKey; value: ReactNode }>

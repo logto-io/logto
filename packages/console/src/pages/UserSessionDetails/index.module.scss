@@ -25,6 +25,8 @@
       display: flex;
       align-items: center;
       flex-wrap: wrap;
+      /* The item width already reserves `unit(8)` for the two inter-column gaps. */
+      column-gap: _.unit(4);
       padding-top: _.unit(4);
 
       > * {
