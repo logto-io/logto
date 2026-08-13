@@ -38,7 +38,6 @@ import {
   buildScriptExecutionErrorBody,
   buildScriptFailureError,
   getScriptFailureStatusCode,
-  parseCloudScriptFailure,
   runScriptOnCloud,
   runScriptOnWorkerPool,
   ScriptExecutionError,
@@ -347,8 +346,11 @@ export class ActionLibrary {
     isTest?: boolean
   ): Promise<unknown> {
     // TODO (LOG-13958): drop the legacy Azure Functions path and the gate once the Cloud script
-    // runner has been manually verified and released.
-    if (!EnvSet.values.isDevFeaturesEnabled) {
+    // runner has been manually verified and released. `scriptRunnerEndpoint` additionally covers a
+    // region where the Worker endpoint is not injected yet.
+    const { isDevFeaturesEnabled, scriptRunnerEndpoint } = EnvSet.values;
+
+    if (!isDevFeaturesEnabled || !scriptRunnerEndpoint) {
       return this.runScriptOnAzureFunction(data);
     }
 
@@ -361,20 +363,21 @@ export class ActionLibrary {
      */
     const payload: ActionScriptPayload<unknown> = { event, environmentVariables };
 
-    try {
-      return await runScriptOnCloud({
-        cloudConnection: this.cloudConnection,
-        tenantId: this.tenantId,
-        script,
-        entry: actionFunctionName,
-        payload,
-        isTest,
-      });
-    } catch (error: unknown) {
-      const failure = await parseCloudScriptFailure(error);
+    const result = await runScriptOnCloud({
+      cloudConnection: this.cloudConnection,
+      endpoint: scriptRunnerEndpoint,
+      tenantId: this.tenantId,
+      script,
+      entry: actionFunctionName,
+      payload,
+      isTest,
+    });
 
-      throw failure ? buildCloudScriptFailureError(failure) : error;
+    if (!result.ok) {
+      throw buildCloudScriptFailureError(result);
     }
+
+    return result.value;
   }
 
   async runAction<Event>({
