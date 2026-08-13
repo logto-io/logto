@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+import { appInsights } from '@logto/app-insights/node';
 import { TemplateType } from '@logto/connector-kit';
 import {
   InteractionEvent,
@@ -993,6 +994,21 @@ describe('POST /experience/submit', () => {
     expect(response.status).toBe(200);
     expect(response.body).toMatchObject({ trustedDevice: { canCreate: false } });
     expect(response.body.trustedDevice).not.toHaveProperty('durationDays');
+  });
+
+  it('should omit trusted-device availability when the policy lookup fails', async () => {
+    setDevFeaturesEnabled(true);
+    const policyError = new Error('trusted-device policy lookup failed');
+    const trackException = jest.spyOn(appInsights, 'trackException').mockResolvedValue();
+    const { requester, getEffectivePolicy } = createRequesterWithMocks();
+    getEffectivePolicy.mockRejectedValueOnce(policyError);
+
+    const response = await requester.get('/experience/interaction');
+
+    expect(response.status).toBe(200);
+    expect(response.body).not.toHaveProperty('trustedDevice');
+    expect(trackException).toHaveBeenCalledWith(policyError, expect.any(Object));
+    trackException.mockRestore();
   });
 
   it('should omit trusted-device interaction data and behavior when dev features are disabled', async () => {

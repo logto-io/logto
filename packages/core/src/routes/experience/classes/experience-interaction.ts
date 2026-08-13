@@ -727,7 +727,12 @@ export default class ExperienceInteraction {
     // spreading the remaining storage.
     const { trustedDeviceFulfillment: _, ...interactionStorage } = this.toJson();
 
-    const trustedDevice = await this.getTrustedDeviceCreationAvailability();
+    const trustedDevice = await trySafe(
+      async () => this.getTrustedDeviceCreationAvailability(),
+      (error) => {
+        void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
+      }
+    );
 
     return {
       ...interactionStorage,
