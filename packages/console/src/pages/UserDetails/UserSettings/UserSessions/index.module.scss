@@ -5,3 +5,20 @@
   font: var(--font-body-2);
   margin-bottom: _.unit(1);
 }
+
+.sessionId {
+  display: flex;
+  align-items: center;
+  gap: _.unit(1);
+
+  .value {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+/* The session ID has no break opportunities of its own. */
+.tooltip {
+  word-break: break-all;
+}

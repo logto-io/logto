@@ -10,11 +10,13 @@ type Props = {
   /** The CIMD client identifier URL. */
   readonly clientId: string;
   /**
-   * The consent-time snapshot name carried in the grants response. When the metadata
-   * document has no `client_name`, the backend falls back to the identifier itself — and
-   * an empty string can come through as well. Both mean "unnamed".
+   * The consent-time snapshot name, when the context carries one (e.g. the grants
+   * response). The backend falls back to the identifier itself when the metadata document
+   * has no `client_name`, and an empty string can come through as well — both mean
+   * "unnamed", as does omitting the prop where no name source exists (e.g. a session's
+   * authorized clients).
    */
-  readonly name: string;
+  readonly name?: string;
 };
 
 /**

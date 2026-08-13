@@ -8,6 +8,7 @@ import Button from '@/ds-components/Button';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
 import Table from '@/ds-components/Table';
+import { Tooltip } from '@/ds-components/Tip';
 import { type RequestError } from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 
@@ -64,10 +65,16 @@ function UserSessions({ userId }: Props) {
                 dataIndex: 'sessionId',
                 colSpan: 5,
                 render: ({ sessionId }) => (
-                  <>
-                    {sessionId}
+                  <div className={styles.sessionId}>
+                    <Tooltip
+                      className={styles.tooltip}
+                      anchorClassName={styles.value}
+                      content={sessionId}
+                    >
+                      {sessionId}
+                    </Tooltip>
                     <CopyToClipboard variant="icon" value={sessionId} />
-                  </>
+                  </div>
                 ),
               },
               {
