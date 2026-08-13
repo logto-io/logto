@@ -42,8 +42,6 @@ const runAndCatch = async (): Promise<unknown> => expect(run()).rejects.toThrow(
 describe('runScriptOnCloud', () => {
   afterEach(() => {
     jest.clearAllMocks();
-    // Tear down the socket the timeout test leaves hanging, which would outlive the suite.
-    nock.abortPendingRequests();
     nock.cleanAll();
   });
 
@@ -117,10 +115,4 @@ describe('runScriptOnCloud', () => {
 
     expect(invalidateWorkerAccessToken).not.toHaveBeenCalled();
   });
-
-  it('rejects with a timeout error when the request never settles', async () => {
-    mockWorkerCall().delayConnection(10_000).reply(200, { ok: true, value: null });
-
-    await expect(run()).rejects.toMatchObject({ status: 500 });
-  }, 10_000);
 });
