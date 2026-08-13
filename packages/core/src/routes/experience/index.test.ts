@@ -22,6 +22,8 @@ import {
   mockUserWebAuthnMfaVerification,
 } from '#src/__mocks__/user.js';
 import { EnvSet } from '#src/env-set/index.js';
+import koaErrorHandler from '#src/middleware/koa-error-handler.js';
+import koaI18next from '#src/middleware/koa-i18next.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -204,7 +206,7 @@ const createRequesterWithMocks = ({
   const requester = createRequester({
     anonymousRoutes: experienceRoutes,
     tenantContext: tenant,
-    middlewares: [logMiddleware],
+    middlewares: [koaI18next(), koaErrorHandler(), logMiddleware],
   });
 
   return {
@@ -277,6 +279,7 @@ describe('POST /experience/submit', () => {
   afterEach(() => {
     setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
     jest.useRealTimers();
+    jest.restoreAllMocks();
   });
 
   it('should record geo context when dev features are disabled', async () => {
@@ -643,6 +646,7 @@ describe('POST /experience/submit', () => {
     const response = await requester.post('/experience/profile/mfa/trusted-device');
 
     expect(response.status).toBe(403);
+    expect(response.body).toMatchObject({ code: 'session.mfa.require_mfa_verification' });
     expect(createCredential).not.toHaveBeenCalled();
   });
 
@@ -789,6 +793,8 @@ describe('POST /experience/submit', () => {
 
   it('should update a fulfilling trusted device best effort without creating a duplicate', async () => {
     setDevFeaturesEnabled(true);
+    const metadataError = new Error('trusted-device metadata update failed');
+    const trackException = jest.spyOn(appInsights, 'trackException').mockResolvedValue();
     const user = {
       ...mockUser,
       mfaVerifications: [mockUserTotpMfaVerification],
@@ -805,7 +811,7 @@ describe('POST /experience/submit', () => {
       },
       trustedDevicePolicy: { enabled: true, durationDays: 30 },
     });
-    updateMetadata.mockRejectedValueOnce(new Error('trusted-device metadata update failed'));
+    updateMetadata.mockRejectedValueOnce(metadataError);
 
     const response = await requester.post('/experience/submit').set('x-logto-cf-country', 'US');
 
@@ -815,6 +821,27 @@ describe('POST /experience/submit', () => {
       user.id,
       expect.objectContaining({ country: 'US' })
     );
+    expect(createCredential).not.toHaveBeenCalled();
+    expect(trackException).toHaveBeenCalledWith(metadataError, expect.any(Object));
+  });
+
+  it('should not update trusted-device metadata from another user fulfillment', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester, createCredential, updateMetadata } = createRequesterWithMocks({
+      interactionResult: {
+        trustedDeviceFulfillment: {
+          userId: 'another-user-id',
+          trustedDeviceId: 'another-user-trusted-device-id',
+          fulfilledAt: Date.now(),
+        },
+      },
+      trustedDevicePolicy: { enabled: true, durationDays: 30 },
+    });
+
+    const response = await requester.post('/experience/submit');
+
+    expect(response.status).toBe(200);
+    expect(updateMetadata).not.toHaveBeenCalled();
     expect(createCredential).not.toHaveBeenCalled();
   });
 
@@ -846,6 +873,8 @@ describe('POST /experience/submit', () => {
 
   it('should keep submit successful when trusted-device creation fails', async () => {
     setDevFeaturesEnabled(true);
+    const creationError = new Error('trusted-device creation failed');
+    const trackException = jest.spyOn(appInsights, 'trackException').mockResolvedValue();
     const user = {
       ...mockUser,
       mfaVerifications: [mockUserTotpMfaVerification],
@@ -866,7 +895,7 @@ describe('POST /experience/submit', () => {
       persistInteractionResult: true,
       trustedDevicePolicy: { enabled: true, durationDays: 30 },
     });
-    createCredential.mockRejectedValueOnce(new Error('trusted-device creation failed'));
+    createCredential.mockRejectedValueOnce(creationError);
 
     const optInResponse = await requester.post('/experience/profile/mfa/trusted-device');
     const response = await requester.post('/experience/submit');
@@ -874,6 +903,7 @@ describe('POST /experience/submit', () => {
     expect(optInResponse.status).toBe(204);
     expect(response.status).toBe(200);
     expect(createCredential).toHaveBeenCalledTimes(1);
+    expect(trackException).toHaveBeenCalledWith(creationError, expect.any(Object));
   });
 
   it('should not create a trusted device when the complete interaction fails', async () => {
