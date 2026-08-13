@@ -102,7 +102,7 @@ function AuditLogDetails() {
                       <div className={styles.label}>{t('log_details.application')}</div>
                       <div>
                         {data.payload.cimdClientId ? (
-                          <ClientIdentifier value={data.payload.cimdClientId} />
+                          <ClientIdentifier isWrapped value={data.payload.cimdClientId} />
                         ) : data.payload.applicationId ? (
                           <ApplicationName
                             isLink={!isBuiltInApplicationId(data.payload.applicationId)}

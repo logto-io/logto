@@ -118,7 +118,7 @@ function UserSessionDetails() {
            * fetching `/api/applications/:id` can only fail. Shown as the raw identifier;
            * the revocation surface (the third-party apps tab) renders the snapshot name.
            */
-          <ClientIdentifier value={applicationId} />
+          <ClientIdentifier isWrapped value={applicationId} />
         ) : (
           <ApplicationName
             applicationId={applicationId}
