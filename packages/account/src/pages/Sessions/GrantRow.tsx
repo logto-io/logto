@@ -17,13 +17,6 @@ type GrantRowProps = {
 const GrantRow = ({ app, isEditable, isRemoving, onRevoke }: GrantRowProps) => {
   const { t, i18n } = useTranslation();
 
-  /**
-   * A dynamic app (CIMD) client is a URL identity with no applications row behind it.
-   * Its consent-time snapshot name is client-declared, so the row also shows the client
-   * identifier URL — the unforgeable identity signal, matching the consent page's notice.
-   * Everything stays plain text: the identifier is a client-controlled URL, and an
-   * end-user surface should not hand it a navigation slot.
-   */
   const isDynamicApp = isCimdClientId(app.applicationId);
 
   return (
