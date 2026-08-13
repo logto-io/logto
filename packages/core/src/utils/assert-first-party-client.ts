@@ -13,9 +13,8 @@ import type Queries from '#src/tenants/Queries.js';
  * mutation of the primary email. Call this alongside the scope check on routes that change account
  * data or mint a verification record.
  *
- * Note: CIMD clients are not covered. `isThirdPartyApplication` resolves an unregistered client
- * identifier URL to first-party through its not-found fallback, so they pass this assertion. That
- * is handled by a separate change.
+ * `isThirdPartyApplication` fails closed, so a client that cannot be resolved — including a CIMD
+ * client identifier URL, which never names a registered application — is rejected here as well.
  */
 export const assertFirstPartyClient = async (queries: Queries, clientId?: string) => {
   if (clientId !== undefined && (await isThirdPartyApplication(queries, clientId))) {

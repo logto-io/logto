@@ -1,4 +1,4 @@
-/* eslint-disable max-lines */
+/* eslint-disable max-lines -- the first-party guard adds a check to every verification route */
 import { TemplateType } from '@logto/connector-kit';
 import {
   AdditionalIdentifier,

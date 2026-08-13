@@ -1,3 +1,5 @@
+import { accountCenterApplicationId } from '@logto/schemas';
+
 import RequestError from '#src/errors/RequestError/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
@@ -29,10 +31,28 @@ describe('assertFirstPartyClient', () => {
     );
   });
 
-  it('should pass for an application that is not in the database', async () => {
+  it('should pass for a built-in application without looking up anything', async () => {
+    await expect(
+      assertFirstPartyClient(queries, accountCenterApplicationId)
+    ).resolves.toBeUndefined();
+    expect(findApplicationById).not.toHaveBeenCalled();
+  });
+
+  it('should reject an application that cannot be resolved', async () => {
     findApplicationById.mockRejectedValue(new Error('not found'));
 
-    await expect(assertFirstPartyClient(queries, 'demo_app')).resolves.toBeUndefined();
+    await expect(assertFirstPartyClient(queries, 'unknown_app')).rejects.toMatchObject(
+      new RequestError({ code: 'auth.third_party_application_forbidden', status: 403 })
+    );
+  });
+
+  it('should reject a CIMD client identifier', async () => {
+    await expect(
+      assertFirstPartyClient(queries, 'https://client.example.com/metadata.json')
+    ).rejects.toMatchObject(
+      new RequestError({ code: 'auth.third_party_application_forbidden', status: 403 })
+    );
+    expect(findApplicationById).not.toHaveBeenCalled();
   });
 
   it('should pass without looking up anything when the client ID is absent', async () => {
