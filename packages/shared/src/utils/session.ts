@@ -1,10 +1,14 @@
 import { UAParser } from 'ua-parser-js';
 
-type SignInContext = {
-  readonly ip?: string;
+/** Raw metadata used to derive a device title and approximate location. */
+export type DeviceDisplayMetadata = {
   readonly userAgent?: string;
   readonly country?: string;
   readonly city?: string;
+};
+
+type SignInContext = DeviceDisplayMetadata & {
+  readonly ip?: string;
 };
 
 type SessionWithLastSubmission = {
@@ -19,12 +23,16 @@ type ParsedUserAgentInfo = {
   readonly deviceModel?: string;
 };
 
-export type SessionDisplayInfo = ParsedUserAgentInfo & {
+/** Normalized device information shared by session and device-management views. */
+export type DeviceDisplayInfo = ParsedUserAgentInfo & {
   readonly name?: string;
   readonly location?: string;
-  readonly ip?: string;
   readonly city?: string;
   readonly country?: string;
+};
+
+export type SessionDisplayInfo = DeviceDisplayInfo & {
+  readonly ip?: string;
 };
 
 type UserApplicationGrant = {
@@ -78,7 +86,7 @@ const getParsedUserAgentInfo = (userAgent?: string): ParsedUserAgentInfo => {
   };
 };
 
-const formatSessionDeviceName = ({ browserName, osName, deviceModel }: ParsedUserAgentInfo) => {
+const formatDeviceName = ({ browserName, osName, deviceModel }: ParsedUserAgentInfo) => {
   if (browserName && deviceModel) {
     return `${browserName} on ${deviceModel}`;
   }
@@ -98,21 +106,25 @@ const formatSessionDeviceName = ({ browserName, osName, deviceModel }: ParsedUse
   return osName;
 };
 
-const formatSessionLocation = ({ country, city }: SignInContext) => {
+const formatDeviceLocation = ({ country, city }: DeviceDisplayMetadata) => {
   const location = [city, country].filter(Boolean).join(', ');
 
   return location || undefined;
 };
 
-const normalizeSessionInfo = (signInContext: SignInContext): SessionDisplayInfo => {
-  const parsed = getParsedUserAgentInfo(signInContext.userAgent);
+/** Derive reusable browser, operating-system, device, and location display information. */
+export const getDeviceDisplayInfo = ({
+  userAgent,
+  country,
+  city,
+}: DeviceDisplayMetadata): DeviceDisplayInfo => {
+  const parsed = getParsedUserAgentInfo(userAgent);
 
   return {
-    name: formatSessionDeviceName(parsed),
-    location: formatSessionLocation(signInContext),
-    ip: signInContext.ip,
-    city: signInContext.city,
-    country: signInContext.country,
+    name: formatDeviceName(parsed),
+    location: formatDeviceLocation({ country, city }),
+    city,
+    country,
     ...parsed,
   };
 };
@@ -120,7 +132,14 @@ const normalizeSessionInfo = (signInContext: SignInContext): SessionDisplayInfo 
 export const getSessionDisplayInfo = (session: SessionWithLastSubmission): SessionDisplayInfo => {
   const signInContext = session.lastSubmission?.signInContext;
 
-  return isSignInContext(signInContext) ? normalizeSessionInfo(signInContext) : {};
+  if (!isSignInContext(signInContext)) {
+    return {};
+  }
+
+  return {
+    ...getDeviceDisplayInfo(signInContext),
+    ip: signInContext.ip,
+  };
 };
 
 export const normalizeUserApplicationGrantGroups = (

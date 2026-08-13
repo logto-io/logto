@@ -1,6 +1,56 @@
 import { describe, expect, it } from 'vitest';
 
-import { getSessionDisplayInfo, normalizeUserApplicationGrantGroups } from './session.js';
+import {
+  getDeviceDisplayInfo,
+  getSessionDisplayInfo,
+  normalizeUserApplicationGrantGroups,
+} from './session.js';
+
+describe('getDeviceDisplayInfo()', () => {
+  it.each([
+    {
+      name: 'Chrome on Apple Macintosh',
+      userAgent:
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
+    },
+    {
+      name: 'Mobile Safari on Apple iPhone',
+      userAgent:
+        'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1',
+    },
+  ])('should derive $name from a common user agent', ({ name, userAgent }) => {
+    expect(getDeviceDisplayInfo({ userAgent }).name).toBe(name);
+  });
+
+  it('should tolerate a malformed user agent and preserve available location metadata', () => {
+    expect(
+      getDeviceDisplayInfo({
+        userAgent: '\u0000not-a-user-agent',
+        city: 'Paris',
+      })
+    ).toEqual({
+      browserName: undefined,
+      city: 'Paris',
+      country: undefined,
+      deviceModel: undefined,
+      location: 'Paris',
+      name: undefined,
+      osName: undefined,
+    });
+  });
+
+  it('should return empty display fields when metadata is missing', () => {
+    expect(getDeviceDisplayInfo({})).toEqual({
+      browserName: undefined,
+      city: undefined,
+      country: undefined,
+      deviceModel: undefined,
+      location: undefined,
+      name: undefined,
+      osName: undefined,
+    });
+  });
+});
 
 describe('getSessionDisplayInfo()', () => {
   it('should parse user agent, location, and ip from sign-in context', () => {
