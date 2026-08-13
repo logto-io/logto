@@ -5,15 +5,3 @@
   font: var(--font-body-2);
   margin-bottom: _.unit(1);
 }
-
-.identifier {
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* The identifier URL has no break opportunities of its own. */
-.identifierTooltip {
-  word-break: break-all;
-}

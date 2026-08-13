@@ -16,8 +16,8 @@ import More from '@/assets/icons/more.svg?react';
 import SessionDarkIcon from '@/assets/icons/session-dark.svg?react';
 import SessionIcon from '@/assets/icons/session.svg?react';
 import ApplicationName from '@/components/ApplicationName';
+import ClientIdentifier from '@/components/ClientIdentifier';
 import DetailsPage from '@/components/DetailsPage';
-import DynamicAppName from '@/components/DynamicAppName';
 import UserName from '@/components/UserName';
 import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
 import Card from '@/ds-components/Card';
@@ -115,10 +115,10 @@ function UserSessionDetails() {
         {isCimdClientId(applicationId) ? (
           /**
            * A CIMD client identifier is a URL with no applications row behind it —
-           * fetching `/api/applications/:id` can only fail. The component resolves its
-           * consent snapshot name from the snapshot lookup instead.
+           * fetching `/api/applications/:id` can only fail. Shown as the raw identifier;
+           * the revocation surface (the third-party apps tab) renders the snapshot name.
            */
-          <DynamicAppName clientId={applicationId} userId={userId} />
+          <ClientIdentifier value={applicationId} />
         ) : (
           <ApplicationName
             applicationId={applicationId}
@@ -127,7 +127,7 @@ function UserSessionDetails() {
         )}
       </Fragment>
     ));
-  }, [sessionData, userId]);
+  }, [sessionData]);
 
   const infoFields = useMemo<
     Array<{ key: string; labelKey: AdminConsoleKey; value: ReactNode }>

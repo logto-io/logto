@@ -6,10 +6,8 @@ import {
   CimdOrganizationScopes,
   CimdResourceScopes,
   CimdUserScopes,
-  OidcModelInstances,
   OrganizationScopes,
   Scopes,
-  type CimdGrantClientSnapshot,
   type OrganizationScope,
   type Scope,
 } from '@logto/schemas';
@@ -181,45 +179,13 @@ const createGrantOrganizationQueries = (pool: CommonQueryMethods) => {
   return { insert, exists, findOrganizationIds };
 };
 
-const cimdGrantClientSnapshots = convertToIdentifiers(CimdGrantClientSnapshots, true);
-const oidcModelInstances = convertToIdentifiers(OidcModelInstances, true);
-
 const createGrantClientSnapshotQueries = (pool: CommonQueryMethods) => {
   /** Idempotent so a retried consent submission does not fail; the first write wins. */
   const insert = buildInsertIntoWithPool(pool)(CimdGrantClientSnapshots, {
     onConflict: { ignore: true },
   });
 
-  /**
-   * The latest consent snapshot the user has approved for a client identifier. Scoping to
-   * the user's own grants keeps the display name out of reach of anyone else's consent —
-   * an unvetted client cannot rewrite what this user sees by re-authorizing elsewhere.
-   * Snapshots live as long as their Grant rows, so a user whose grants are all revoked
-   * and pruned resolves to nothing — the identifier itself stays the permanent identity
-   * signal.
-   */
-  const findUserLatestByClientId = async (userId: string, clientId: string) => {
-    /** The snapshot table also has a `tenant_id` column, so this side of the join must qualify. */
-    const snapshotTenantId = sql.identifier([
-      CimdGrantClientSnapshots.table,
-      CimdGrantClientSnapshots.fields.tenantId,
-    ]);
-
-    return pool.maybeOne<CimdGrantClientSnapshot>(sql`
-      select ${cimdGrantClientSnapshots.table}.*
-      from ${cimdGrantClientSnapshots.table}
-      inner join ${oidcModelInstances.table}
-        on ${oidcModelInstances.fields.tenantId} = ${snapshotTenantId}
-        and ${oidcModelInstances.fields.modelName} = ${cimdGrantClientSnapshots.fields.grantModelName}
-        and ${oidcModelInstances.fields.id} = ${cimdGrantClientSnapshots.fields.grantId}
-      where ${cimdGrantClientSnapshots.fields.clientId} = ${clientId}
-        and ${oidcModelInstances.fields.payload} ->> 'accountId' = ${userId}
-      order by ${cimdGrantClientSnapshots.fields.createdAt} desc
-      limit 1
-    `);
-  };
-
-  return { insert, findUserLatestByClientId };
+  return { insert };
 };
 
 export const createCimdQueries = (pool: CommonQueryMethods) => ({

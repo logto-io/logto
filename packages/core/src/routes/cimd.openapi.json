@@ -9,40 +9,6 @@
     }
   ],
   "paths": {
-    "/api/cimd/client-snapshots": {
-      "get": {
-        "summary": "Get a CIMD client display snapshot",
-        "description": "Resolve the latest consent-time display snapshot the user has approved for a CIMD client identifier. The lookup is scoped to the user's own grants, so no other account's consent can change the name shown for this user. Snapshots live as long as their grants — a user whose grants are all revoked and pruned has none, and the identifier itself stays the permanent identity signal.",
-        "parameters": [
-          {
-            "name": "clientId",
-            "in": "query",
-            "description": "The CIMD client identifier URL.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "userId",
-            "in": "query",
-            "description": "The user whose consented snapshots are searched.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The latest display snapshot the user has approved for the client identifier."
-          },
-          "404": {
-            "description": "The user has no snapshot for the client identifier."
-          }
-        }
-      }
-    },
     "/api/cimd/user-consent-scopes": {
       "get": {
         "summary": "List CIMD user consent scopes",

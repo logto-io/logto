@@ -1,7 +1,6 @@
 import { UserScope } from '@logto/core-kit';
 import {
   ApplicationUserConsentScopeType,
-  CimdGrantClientSnapshots,
   applicationUserConsentScopesResponseGuard,
 } from '@logto/schemas';
 import { z } from 'zod';
@@ -42,40 +41,6 @@ export default function cimdRoutes<T extends ManagementApiRouter>(
       }))
     );
   };
-
-  router.get(
-    '/cimd/client-snapshots',
-    koaGuard({
-      /**
-       * `userId` is mandatory: the lookup is scoped to the user's own grants so an
-       * unvetted client cannot rewrite the name a user sees by re-authorizing under
-       * another account. An unknown user resolves to the same 404 as a missing snapshot.
-       */
-      query: z.object({ clientId: z.string().max(2048), userId: z.string() }),
-      response: CimdGrantClientSnapshots.guard.pick({
-        clientId: true,
-        name: true,
-        logoUri: true,
-        createdAt: true,
-      }),
-      status: [200, 404],
-    }),
-    async (ctx, next) => {
-      const { clientId, userId } = ctx.guard.query;
-
-      const snapshot = await queries.cimd.grantClientSnapshots.findUserLatestByClientId(
-        userId,
-        clientId
-      );
-
-      assertThat(snapshot, new RequestError({ code: 'entity.not_found', status: 404 }));
-
-      // The query returns the full row; the response guard strips the FK plumbing.
-      ctx.body = snapshot;
-
-      return next();
-    }
-  );
 
   router.get(
     '/cimd/user-consent-scopes',

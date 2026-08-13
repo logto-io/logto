@@ -3,12 +3,12 @@ import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ApplicationName from '@/components/ApplicationName';
+import ClientIdentifier from '@/components/ClientIdentifier';
 import DynamicAppName from '@/components/DynamicAppName';
 import FormCard from '@/components/FormCard';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import Table from '@/ds-components/Table';
-import { Tooltip } from '@/ds-components/Tip';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 
 import styles from './index.module.scss';
@@ -86,18 +86,9 @@ function UserThirdPartyApps({ userId }: Props) {
                 dataIndex: 'applicationId',
                 colSpan: 5,
                 render: ({ applicationId }) =>
-                  /**
-                   * A CIMD identifier runs up to 2048 characters — keep the cell one line
-                   * and put the full URL in a tooltip.
-                   */
+                  /** A CIMD identifier runs up to 2048 characters — truncate with a tooltip. */
                   isCimdClientId(applicationId) ? (
-                    <Tooltip
-                      className={styles.identifierTooltip}
-                      anchorClassName={styles.identifier}
-                      content={applicationId}
-                    >
-                      {applicationId}
-                    </Tooltip>
+                    <ClientIdentifier value={applicationId} />
                   ) : (
                     applicationId
                   ),

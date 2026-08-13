@@ -8,8 +8,8 @@ import Plus from '@/assets/icons/plus.svg?react';
 import UsersEmptyDark from '@/assets/images/users-empty-dark.svg?react';
 import UsersEmpty from '@/assets/images/users-empty.svg?react';
 import ApplicationName from '@/components/ApplicationName';
+import ClientIdentifier from '@/components/ClientIdentifier';
 import { LocaleDate } from '@/components/DateTime';
-import DynamicAppName from '@/components/DynamicAppName';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import PageMeta from '@/components/PageMeta';
@@ -110,13 +110,13 @@ function Users() {
             title: t('users.application_name'),
             dataIndex: 'app',
             colSpan: 5,
-            render: ({ id, applicationId, cimdClientId }) => {
+            render: ({ applicationId, cimdClientId }) => {
               /**
                * A CIMD-first user has no `applicationId`; its origin client lives in the
-               * additive `cimdClientId` field (LOG-14005), which has no applications row.
+               * additive `cimdClientId` field (LOG-14005) — shown as the raw identifier.
                */
               if (cimdClientId) {
-                return <DynamicAppName clientId={cimdClientId} userId={id} />;
+                return <ClientIdentifier value={cimdClientId} />;
               }
 
               return applicationId ? (

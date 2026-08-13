@@ -1,16 +1,9 @@
-import { type CimdGrantClientSnapshot } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
-import useSWR from 'swr';
 
 import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
 import Tag from '@/ds-components/Tag';
 import TextLink from '@/ds-components/TextLink';
 import { Tooltip } from '@/ds-components/Tip';
-import useApi, { type RequestError } from '@/hooks/use-api';
-import useSwrFetcher from '@/hooks/use-swr-fetcher';
-import { shouldRetryOnError } from '@/utils/request';
-import { buildUrl } from '@/utils/url';
 
 import styles from './index.module.scss';
 import { getDynamicAppDisplayName } from './utils';
@@ -19,44 +12,25 @@ type Props = {
   /** The CIMD client identifier URL. */
   readonly clientId: string;
   /**
-   * The consent-time snapshot name, when the caller already holds one (e.g. the grants
-   * tab). The backend falls back to the identifier itself when the metadata document has
-   * no `client_name`, and an empty string can come through as well — both mean "unnamed".
+   * The consent-time snapshot name carried in the grants response. The backend falls back
+   * to the identifier itself when the metadata document has no `client_name`, and an
+   * empty string can come through as well — both render the identifier host instead.
    */
   readonly name?: string;
-  /**
-   * Without a `name`, the component resolves the snapshot the given user has approved —
-   * the same fetch-per-row pattern as `ApplicationName`, scoped per user so nobody
-   * else's consent can change the name shown here. Without either, the identifier host
-   * stands in.
-   */
-  readonly userId?: string;
   /** Whether to append the "Dynamic app" kind tag. Kept off in dense tables. */
   readonly hasTag?: boolean;
 };
 
-/** The `/api/cimd/client-snapshots` response: the latest snapshot without its FK plumbing. */
-type ClientSnapshot = Pick<CimdGrantClientSnapshot, 'clientId' | 'name' | 'logoUri' | 'createdAt'>;
-
 /**
- * The display name of a dynamic app (CIMD) client. It is a URL identity with no
- * applications row behind it, so the name links to the client identifier URL (the metadata
- * document) instead of an application details page; a client with no resolvable snapshot
- * name shows its identifier host, matching the consent page.
+ * The display identity of a dynamic app (CIMD) client on management surfaces (e.g. the
+ * user's third-party apps list). It is a URL identity with no applications row behind it,
+ * so the name links to the client identifier URL (the metadata document) instead of an
+ * application details page; an unnamed client shows its identifier host, matching the
+ * consent page. Forensic surfaces render the raw identifier via `ClientIdentifier`
+ * instead.
  */
-function DynamicAppName({ clientId, name, userId, hasTag = false }: Props) {
+function DynamicAppName({ clientId, name, hasTag = false }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-
-  const fetchApi = useApi({ hideErrorToast: ['entity.not_found'] });
-  const fetcher = useSwrFetcher<ClientSnapshot>(fetchApi);
-  const { data } = useSWR<ClientSnapshot, RequestError>(
-    conditional(!name && userId && buildUrl('api/cimd/client-snapshots', { clientId, userId })),
-    {
-      fetcher,
-      shouldRetryOnError: shouldRetryOnError({ ignore: [404] }),
-    }
-  );
-  const resolvedName = name ?? data?.name;
 
   return (
     <div className={styles.container}>
@@ -68,9 +42,7 @@ function DynamicAppName({ clientId, name, userId, hasTag = false }: Props) {
           href={clientId}
           icon={<ExternalLinkIcon className={styles.icon} />}
         >
-          <span className={styles.name}>
-            {getDynamicAppDisplayName(clientId, resolvedName ?? undefined)}
-          </span>
+          <span className={styles.name}>{getDynamicAppDisplayName(clientId, name)}</span>
         </TextLink>
       </Tooltip>
       {hasTag && <Tag className={styles.tag}>{t('applications.dynamic_app.title')}</Tag>}
