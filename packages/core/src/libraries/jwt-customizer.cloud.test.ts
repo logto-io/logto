@@ -18,6 +18,7 @@ const { jest } = import.meta;
 const post = jest.fn();
 
 const library = new JwtCustomizerLibrary(
+  'test-tenant',
   {} as Queries,
   {} as LogtoConfigLibrary,
   { getClient: async () => ({ post }) } as unknown as CloudConnectionLibrary,

@@ -45,6 +45,7 @@ export default class Libraries {
   scopes = createScopeLibrary(this.queries);
   socials = createSocialLibrary(this.queries, this.connectors);
   jwtCustomizers = new JwtCustomizerLibrary(
+    this.tenantId,
     this.queries,
     this.logtoConfigs,
     this.cloudConnection,

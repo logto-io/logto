@@ -27,6 +27,7 @@ const flushMicrotasks = async (hops = 5): Promise<void> => {
 const run = async () =>
   runScriptOnCloud({
     cloudConnection,
+    tenantId: 'test-tenant',
     script: 'const runAction = () => ({ action: "continue" });',
     entry: 'runAction',
     payload: {},

@@ -173,6 +173,7 @@ export class JwtCustomizerLibrary {
   }
 
   constructor(
+    private readonly tenantId: string,
     private readonly queries: Queries,
     private readonly logtoConfigs: LogtoConfigLibrary,
     private readonly cloudConnection: CloudConnectionLibrary,
@@ -461,6 +462,7 @@ export class JwtCustomizerLibrary {
     try {
       return await runScriptOnCloud({
         cloudConnection: this.cloudConnection,
+        tenantId: this.tenantId,
         script: payload.script,
         entry: 'getCustomJwtClaims',
         payload: pick(payload, 'token', 'context', 'environmentVariables'),

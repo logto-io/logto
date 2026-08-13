@@ -13,6 +13,9 @@ const { mockEsm, mockEsmDefault } = createMockUtils(jest);
 process.env.DB_URL = 'postgres://mock.db.url';
 process.env.ENDPOINT = 'https://logto.test';
 process.env.NODE_ENV = 'test';
+// A developer shell running a local script-runner Worker exports this; under jest it would flip
+// every cloud script-run suite onto the direct Worker path, whose mocks they do not carry.
+process.env.SCRIPT_RUNNER_ENDPOINT = '';
 
 /* Mock for EnvSet */
 // The Logto config library unit test exercises the real module; other suites keep EnvSet isolated

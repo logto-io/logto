@@ -364,6 +364,7 @@ export class ActionLibrary {
     try {
       return await runScriptOnCloud({
         cloudConnection: this.cloudConnection,
+        tenantId: this.tenantId,
         script,
         entry: actionFunctionName,
         payload,

@@ -271,6 +271,16 @@ export default class GlobalValues {
   }
 
   /**
+   * For cloud use only.
+   * The per-deployment script-runner Worker endpoint. When set, the Cloud script-run path calls
+   * the Worker directly instead of detouring through the cloud service, which is pinned to a
+   * single region while the Worker is reachable from Cloudflare's edge everywhere.
+   */
+  public get scriptRunnerEndpoint() {
+    return getEnv('SCRIPT_RUNNER_ENDPOINT');
+  }
+
+  /**
    * The key encryption key (KEK) for the secret vault.
    * It is used to encrypt and decrypt secret DEKs (data encryption keys) in the secret vault.
    */

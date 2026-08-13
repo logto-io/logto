@@ -1,6 +1,9 @@
 import { conditional, type Optional, trySafe } from '@silverhand/essentials';
 import { ResponseError } from '@withtyped/client';
+import ky from 'ky';
 import { z } from 'zod';
+
+import { EnvSet } from '#src/env-set/index.js';
 
 import { type CloudConnectionLibrary } from '../cloud-connection.js';
 
@@ -91,6 +94,105 @@ export type CloudScriptFailure = {
 };
 
 /**
+ * The envelope `POST /api/script-run` on the script-runner Worker returns, i.e. `ScriptResult`
+ * in `@logto/cloud-models` — redeclared for the same no-shared-guard reason as
+ * {@link cloudScriptFailureBodyGuard}.
+ *
+ * A script outcome — success or failure — always arrives as a 200 carrying this envelope; a
+ * non-2xx means the script never ran (bad auth, malformed body, Worker misconfiguration) and is
+ * a transport failure, not a script failure.
+ */
+const workerScriptResultGuard = z.union([
+  z.object({
+    ok: z.literal(true),
+    value: z.unknown(),
+  }),
+  z.object({
+    ok: z.literal(false),
+    kind: z.enum(['denied', 'timeout', 'oom', 'syntax', 'type', 'runtime']),
+    message: z.string(),
+    /** The original error constructor name, when it survived far enough to be observed. */
+    name: z.string().optional(),
+    /** Absent for `denied`; redacted for every other kind. */
+    stack: z.string().optional(),
+  }),
+]);
+
+/**
+ * Run the script on the script-runner Worker directly, skipping the cloud service hop.
+ *
+ * The Worker reports a script outcome as a 200 carrying its `ScriptResult` envelope rather than
+ * as an error status. A failure is reshaped here into the exact non-2xx body the cloud
+ * `script-run` route produces for the same failure — {@link ScriptExecutionError} is a
+ * `ResponseError` — so {@link parseCloudScriptFailure} and every caller downstream cannot tell
+ * the two transports apart.
+ */
+const runScriptOnWorker = async ({
+  cloudConnection,
+  endpoint,
+  tenantId,
+  isTest,
+  ...input
+}: {
+  cloudConnection: CloudConnectionLibrary;
+  endpoint: string;
+  tenantId: string;
+  script: string;
+  entry: ScriptEntry;
+  payload: Record<string, unknown>;
+  isTest?: boolean;
+}): Promise<unknown> => {
+  const accessToken = await cloudConnection.getWorkerAccessToken();
+
+  const response = await ky.post(new URL('/api/script-run', endpoint), {
+    json: { tenantId, ...input, ...conditional(isTest && { isTest }) },
+    headers: { Authorization: `Bearer ${accessToken}` },
+    // The round-trip deadline is owned by the caller's `withCloudScriptRunTimeout`; ky's own
+    // timeout would only race it with a different error shape.
+    timeout: false,
+    throwHttpErrors: false,
+  });
+
+  if (!response.ok) {
+    const body = await trySafe(async () => response.text());
+    throw new ScriptExecutionError(
+      { message: `Script runner error: ${response.status}${body ? ` ${body}` : ''}` },
+      500
+    );
+  }
+
+  const result = workerScriptResultGuard.safeParse(await trySafe(async () => response.json()));
+
+  if (!result.success) {
+    throw new ScriptExecutionError(
+      { message: 'Script runner returned an unexpected response.' },
+      500
+    );
+  }
+
+  if (result.data.ok) {
+    return result.data.value;
+  }
+
+  const { kind, message, name, stack } = result.data;
+  // The cloud route defaults a nameless `runtime` failure's name to 'Error'
+  // (`defaultRuntimeErrorName` in its reshaping) — mirrored so the bodies stay identical.
+  const errorName = name ?? conditional(kind === 'runtime' && 'Error');
+
+  throw new ScriptExecutionError(
+    {
+      message,
+      error: {
+        kind,
+        ...conditional(errorName !== undefined && { name: errorName }),
+        ...conditional(stack !== undefined && { stack }),
+      },
+    },
+    scriptFailureStatusCodes[kind]
+  );
+};
+
+/**
  * Run a user script on the Cloud script runner.
  *
  * The Cloud counterpart of {@link runScriptOnWorkerPool}, shared by Custom JWT and Actions:
@@ -108,16 +210,39 @@ export type CloudScriptFailure = {
  */
 export const runScriptOnCloud = async ({
   cloudConnection,
+  tenantId,
   isTest,
   ...input
 }: {
   cloudConnection: CloudConnectionLibrary;
+  /**
+   * The tenant that owns the script. Sent only on the direct Worker path, where it scopes the
+   * runner's isolate cache — the cloud route instead derives it from the caller's credentials
+   * and rejects it in the body.
+   */
+  tenantId: string;
   script: string;
   entry: ScriptEntry;
   payload: Record<string, unknown>;
   /** Whether this is a dry run (Console "test" / the Management API test routes). */
   isTest?: boolean;
 }): Promise<unknown> => {
+  // TODO (LOG-14029): drop the cloud-service hop below (and this gate) once the direct Worker
+  // path has been verified and the endpoint is injected in every region.
+  const { isDevFeaturesEnabled, scriptRunnerEndpoint } = EnvSet.values;
+
+  if (isDevFeaturesEnabled && scriptRunnerEndpoint) {
+    return withCloudScriptRunTimeout(
+      runScriptOnWorker({
+        cloudConnection,
+        endpoint: scriptRunnerEndpoint,
+        tenantId,
+        isTest,
+        ...input,
+      })
+    );
+  }
+
   const client = await cloudConnection.getClient();
 
   /**
