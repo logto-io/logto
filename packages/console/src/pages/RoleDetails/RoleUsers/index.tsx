@@ -10,6 +10,7 @@ import Delete from '@/assets/icons/delete.svg?react';
 import Plus from '@/assets/icons/plus.svg?react';
 import ApplicationName from '@/components/ApplicationName';
 import { LocaleDate } from '@/components/DateTime';
+import DynamicAppName from '@/components/DynamicAppName';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import UserPreview from '@/components/ItemPreview/UserPreview';
 import { defaultPageSize } from '@/consts';
@@ -96,8 +97,14 @@ function RoleUsers() {
             title: t('role_details.users.app_column'),
             dataIndex: 'app',
             colSpan: 5,
-            render: ({ applicationId }) =>
-              applicationId ? <ApplicationName applicationId={applicationId} /> : '-',
+            render: ({ applicationId, cimdClientId }) => {
+              /** A CIMD-first user has no `applicationId` — see the users list column. */
+              if (cimdClientId) {
+                return <DynamicAppName clientId={cimdClientId} />;
+              }
+
+              return applicationId ? <ApplicationName applicationId={applicationId} /> : '-';
+            },
           },
           {
             title: t('role_details.users.latest_sign_in_column'),
