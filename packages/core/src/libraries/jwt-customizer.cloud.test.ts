@@ -54,6 +54,8 @@ describe('JwtCustomizerLibrary.runScriptRemotely', () => {
   });
 
   afterEach(() => {
+    nock.cleanAll();
+    jest.restoreAllMocks();
     jest.clearAllMocks();
     Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
   });
@@ -133,6 +135,25 @@ describe('JwtCustomizerLibrary.runScriptRemotely', () => {
     post.mockRejectedValueOnce(error);
 
     await expect(library.runScriptRemotely(payload)).rejects.toBe(error);
+  });
+
+  it('falls back to the Azure Function app on a region that still has one configured', async () => {
+    const endpoint = 'https://untrusted.example.com';
+    const functionKey = 'function-key';
+    const remoteRunner = nock(endpoint, {
+      reqheaders: { 'x-functions-key': functionKey },
+    })
+      .post('/api/custom-jwt')
+      .reply(200, { foo: 'bar' });
+
+    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue(endpoint);
+    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get').mockReturnValue(functionKey);
+
+    // A dry run takes the same path: this runtime has no notion of `isTest`.
+    await expect(library.runScriptRemotely(payload, true)).resolves.toEqual({ foo: 'bar' });
+    expect(remoteRunner.isDone()).toBe(true);
+    // The fallback talks to the function app directly; the script runner is not called.
+    expect(post).not.toHaveBeenCalled();
   });
 });
 

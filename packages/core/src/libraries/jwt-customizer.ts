@@ -395,10 +395,22 @@ export class JwtCustomizerLibrary {
     payload: CustomJwtFetcher,
     isTest?: boolean
   ): Promise<Optional<UnknownObject>> {
-    // TODO (LOG-13958): drop the legacy remote paths and the gate once the Cloud script runner
-    // has been manually verified and released.
+    /**
+     * The Azure Functions runtime is kept as a per-region fallback rather than retired: a script
+     * runner outage is then routed around by setting `AZURE_FUNCTION_UNTRUSTED_APP_ENDPOINT` /
+     * `_KEY` on that region's core, with no code change and no coordinated rollback.
+     *
+     * With dev features off this keeps the whole legacy selection, which is production's behavior
+     * today. With them on, only the Azure Functions branch survives as the fallback — the
+     * deprecated `POST /api/services/custom-jwt` cloud endpoint is on its way out (LOG-13957) and
+     * must not be reachable from the new arrangement.
+     */
     if (!EnvSet.values.isDevFeaturesEnabled) {
       return this.runScriptOnLegacyRuntime(payload, isTest);
+    }
+
+    if (this.isRegionalAzureFunctionAppConfigured) {
+      return this.runScriptOnAzureFunction(payload);
     }
 
     /**
@@ -415,34 +427,15 @@ export class JwtCustomizerLibrary {
    * The pre-script-runner remote paths, still serving production until the gate above lifts:
    * the regional untrusted Azure Function app where configured, otherwise the deprecated
    * `POST /api/services/custom-jwt` cloud endpoint.
+   *
+   * Only the first of the two survives the gate — see {@link runScriptOnAzureFunction}.
    */
   private async runScriptOnLegacyRuntime(
     payload: CustomJwtFetcher,
     isTest?: boolean
   ): Promise<Optional<UnknownObject>> {
-    const { azureFunctionUntrustedAppKey, azureFunctionUntrustedAppEndpoint } = EnvSet.values;
-
     if (this.isRegionalAzureFunctionAppConfigured) {
-      try {
-        const result = await got
-          .post(new URL('/api/custom-jwt', azureFunctionUntrustedAppEndpoint), {
-            json: payload,
-            headers: {
-              'x-functions-key': azureFunctionUntrustedAppKey,
-            },
-          })
-          .json<unknown>();
-
-        const parsedResult = jsonObjectGuard.parse(result);
-        return parsedResult;
-      } catch (error: unknown) {
-        // Convert got HTTPError to WithTyped client ResponseError for unified error handling.
-        if (error instanceof HTTPError) {
-          throw parseAzureFunctionsResponseError(error);
-        }
-
-        throw error;
-      }
+      return this.runScriptOnAzureFunction(payload);
     }
 
     // Fallback to use cloud connection to call the custom JWT API.
@@ -451,6 +444,40 @@ export class JwtCustomizerLibrary {
       body: payload,
       search: isTest ? { isTest: 'true' } : {},
     });
+  }
+
+  /**
+   * The Azure Functions runtime, kept as the per-region fallback for the Cloud script runner.
+   *
+   * Selected by {@link isRegionalAzureFunctionAppConfigured}. `isTest` is deliberately not
+   * forwarded: this runtime has no notion of a dry run, and nothing is lost by it — vm2 builds a
+   * fresh VM per call, so a test run can never share state with production the way a warm isolate
+   * could.
+   */
+  private async runScriptOnAzureFunction(
+    payload: CustomJwtFetcher
+  ): Promise<Optional<UnknownObject>> {
+    const { azureFunctionUntrustedAppKey, azureFunctionUntrustedAppEndpoint } = EnvSet.values;
+
+    try {
+      const result = await got
+        .post(new URL('/api/custom-jwt', azureFunctionUntrustedAppEndpoint), {
+          json: payload,
+          headers: {
+            'x-functions-key': azureFunctionUntrustedAppKey,
+          },
+        })
+        .json<unknown>();
+
+      return jsonObjectGuard.parse(result);
+    } catch (error: unknown) {
+      // Convert got HTTPError to WithTyped client ResponseError for unified error handling.
+      if (error instanceof HTTPError) {
+        throw parseAzureFunctionsResponseError(error);
+      }
+
+      throw error;
+    }
   }
 
   /**

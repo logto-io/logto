@@ -196,17 +196,17 @@ export const getActionExecutionErrorPolicyDecision = ({
 /**
  * The telemetry label for where a run executes.
  *
- * Deliberately kept in sync with the branch {@link ActionLibrary.runScriptRemotely} takes: while
- * both remote runtimes coexist behind `isDevFeaturesEnabled`, splitting `azure` from `cloud` is
- * what makes the share of traffic already served by the Cloud script runner readable in the
- * metric. Collapses back to `azure`-free once LOG-13958 removes the Azure Functions path.
+ * Deliberately kept in sync with the branch {@link ActionLibrary.runScriptRemotely} takes, so the
+ * split between regions served by the Cloud script runner (`cloud`) and those on the Azure
+ * Functions fallback (`azure`) is readable in the metric — which is what makes a per-region
+ * rollback observable.
  */
-const getTelemetryRuntimeLocation = (): ActionRuntimeLocation => {
+const getTelemetryRuntimeLocation = (isAzureFallbackActive: boolean): ActionRuntimeLocation => {
   if (!EnvSet.values.isCloud) {
     return 'local';
   }
 
-  return EnvSet.values.isDevFeaturesEnabled ? 'cloud' : 'azure';
+  return isAzureFallbackActive ? 'azure' : 'cloud';
 };
 
 const applyActionExecutionErrorPolicyDecision = (decision: ActionExecutionErrorPolicyDecision) => {
@@ -299,6 +299,16 @@ export class ActionLibrary {
   }
 
   /**
+   * Whether a Cloud run goes to the Azure Functions runtime rather than the script runner.
+   *
+   * Unconditional while dev features are off — production's behavior today — and per region once
+   * they are on. Read by both the execution branch and the telemetry label, which must agree.
+   */
+  get isAzureFunctionRuntimeSelected(): boolean {
+    return !EnvSet.values.isDevFeaturesEnabled || this.isRegionalAzureFunctionAppConfigured;
+  }
+
+  /**
    * Shared entry point for production `runAction()` and Management API dry runs.
    * Cloud always executes remotely; OSS / self-hosted runs locally — on the worker pool behind
    * dev features, otherwise in the legacy `node:vm`.
@@ -343,12 +353,19 @@ export class ActionLibrary {
       event: unknown;
       environmentVariables?: Record<string, string>;
     },
-    /** Whether this is a dry run. The legacy Azure Functions path has no notion of it. */
+    /** Whether this is a dry run. The Azure Functions path has no notion of it. */
     isTest?: boolean
   ): Promise<unknown> {
-    // TODO (LOG-13958): drop the legacy Azure Functions path and the gate once the Cloud script
-    // runner has been manually verified and released.
-    if (!EnvSet.values.isDevFeaturesEnabled) {
+    /**
+     * The Azure Functions runtime is kept as a per-region fallback rather than retired: a script
+     * runner outage is then routed around by setting `AZURE_FUNCTION_UNTRUSTED_APP_ENDPOINT` /
+     * `_KEY` on that region's core, with no code change and no coordinated rollback.
+     *
+     * With dev features off this is unconditional, which is production's behavior today. With
+     * them on, the app is used only where it is configured, so the script runner can be exercised
+     * by unsetting it — the arrangement LOG-13963 will make the only one once the gate comes out.
+     */
+    if (this.isAzureFunctionRuntimeSelected) {
       return this.runScriptOnAzureFunction(data);
     }
 
@@ -402,7 +419,9 @@ export class ActionLibrary {
     };
     const onExecutionError = action.onExecutionError ?? defaultActionExecutionErrorPolicy;
     const runtimeLocation = EnvSet.values.isCloud ? 'remote' : 'local';
-    const telemetryRuntimeLocation = getTelemetryRuntimeLocation();
+    const telemetryRuntimeLocation = getTelemetryRuntimeLocation(
+      this.isAzureFunctionRuntimeSelected
+    );
     const log = createLog(getActionLogKey(key), { independent: true });
 
     log.append({
@@ -470,7 +489,14 @@ export class ActionLibrary {
     }
   }
 
-  /** The pre-script-runner remote path, still serving production until the gate above lifts. */
+  /**
+   * The Azure Functions runtime, kept as the per-region fallback for the Cloud script runner.
+   *
+   * Selected by {@link isRegionalAzureFunctionAppConfigured} once dev features are on, and
+   * unconditionally while they are off. `isTest` is deliberately not forwarded: this runtime has
+   * no notion of a dry run, and nothing is lost by it — vm2 builds a fresh VM per call, so a test
+   * run can never share state with production the way a warm isolate could.
+   */
   private async runScriptOnAzureFunction({
     script,
     actionType,

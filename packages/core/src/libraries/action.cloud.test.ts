@@ -81,6 +81,7 @@ describe('ActionLibrary Cloud execution routing', () => {
   });
 
   afterEach(() => {
+    nock.cleanAll();
     jest.restoreAllMocks();
     jest.clearAllMocks();
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore the shared AppInsights singleton.
@@ -360,6 +361,45 @@ describe('ActionLibrary Cloud execution routing', () => {
       action: 'rejectInvalidCredentials',
     });
     expect(runScriptInLocalVm).not.toHaveBeenCalled();
+  });
+
+  it('falls back to the Azure Function app on a region that still has one configured', async () => {
+    setIsCloud(true);
+    const endpoint = 'https://untrusted.example.com';
+    const functionKey = 'function-key';
+    const script = 'const runAction = () => ({ action: "updateUser", user: { name: "Bar" } });';
+    const executionResult = { action: 'updateUser', user: { name: 'Bar' } };
+    const remoteRunner = nock(endpoint, {
+      reqheaders: { 'x-functions-key': functionKey },
+    })
+      .post('/api/actions')
+      .reply(200, executionResult);
+
+    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue(endpoint);
+    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get').mockReturnValue(functionKey);
+    getAction.mockResolvedValueOnce({ enabled: true, script });
+
+    await expect(
+      runAction({
+        key: LogtoActionKey.PostSignIn,
+        event: { key: LogtoActionKey.PostSignIn },
+      })
+    ).resolves.toEqual(executionResult);
+
+    expect(remoteRunner.isDone()).toBe(true);
+    // The fallback talks to the function app directly; the script runner is not called.
+    expect(post).not.toHaveBeenCalled();
+    expect(trackMetric).toHaveBeenNthCalledWith(1, {
+      name: actionMetricNames.executionCount,
+      value: 1,
+      properties: {
+        actionType: 'PostSignIn',
+        // `azure`, not `cloud`: the metric is what makes a per-region rollback observable.
+        runtimeLocation: 'azure',
+        outcome: 'success',
+        action: 'updateUser',
+      },
+    });
   });
 });
 
