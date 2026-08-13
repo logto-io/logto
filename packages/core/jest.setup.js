@@ -13,9 +13,7 @@ const { mockEsm, mockEsmDefault } = createMockUtils(jest);
 process.env.DB_URL = 'postgres://mock.db.url';
 process.env.ENDPOINT = 'https://logto.test';
 process.env.NODE_ENV = 'test';
-// A developer shell running a local script-runner Worker exports this; under jest it would flip
-// the script-run suites onto the Cloud runner path, whose mocks they do not carry. Suites that
-// exercise that path set the endpoint themselves.
+// Suites that exercise the Cloud script runner set this themselves.
 process.env.SCRIPT_RUNNER_ENDPOINT = '';
 
 /* Mock for EnvSet */

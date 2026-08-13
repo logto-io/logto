@@ -1,5 +1,5 @@
-import { conditional, type Optional, trySafe } from '@silverhand/essentials';
-import ky from 'ky';
+import { conditional, trySafe } from '@silverhand/essentials';
+import ky, { TimeoutError } from 'ky';
 import { z } from 'zod';
 
 import { type CloudConnectionLibrary } from '../cloud-connection.js';
@@ -12,75 +12,14 @@ type ScriptFailureKind = Extract<ScriptResult, { ok: false }>['kind'];
 /**
  * Host-side deadline for the whole `POST /api/script-run` round trip.
  *
- * The runner owns the per-isolate budget, but that bound stops at the isolate: without a deadline
- * here a hung request is left to undici's 300s defaults — on `PostSignIn` /
- * `PostFirstFactorVerification` that hangs sign-in inline, and `onExecutionError: 'allow'` cannot
- * rescue a call that never returns.
- *
- * The value is a ceiling on how long core is willing to block, not an inference about the runner:
- * core can neither read nor set the per-isolate budget. 5s is the ceiling every other script path
- * already carries — what the Azure hop bounded (`remoteActionRequestTimeout`) and what a local run
- * gets (`ossScriptLimits`) — so a script blocks sign-in for the same time wherever it runs.
- *
- * Should the runner's own budget reach this, the two race and a runner-side breach can surface as
- * this timeout instead of the runner's `timeout`, losing its message. That is the accepted trade:
- * the failure is a timeout either way, and no script may hold sign-in longer than the ceiling.
- * Keeping the isolate budget below it keeps the runner's own report the one that wins.
+ * The runner owns the per-isolate budget, but that bound stops at the isolate: a hung request
+ * would otherwise hang sign-in inline, and `onExecutionError: 'allow'` cannot rescue a call that
+ * never returns. 5s is the ceiling every other script path already carries — what the Azure hop
+ * bounded (`remoteActionRequestTimeout`) and what a local run gets (`ossScriptLimits`) — so a
+ * script blocks sign-in for the same time wherever it runs. Keeping the isolate budget below it
+ * keeps the runner's own failure report the one that wins the race.
  */
 const cloudScriptRunTimeout = 5000;
-
-/**
- * Bound `run` at {@link cloudScriptRunTimeout}, rejecting with the 500 `ScriptExecutionError` a
- * runner-side `timeout` produces so route-level handling stays identical.
- *
- * `run` receives an `AbortSignal` that fires at the same deadline, so the transport tears the
- * socket down instead of leaking it: losing the race only stops the caller waiting, it does not
- * free the request.
- */
-const withCloudScriptRunTimeout = async <T>(
-  run: (signal: AbortSignal) => Promise<T>
-): Promise<T> => {
-  // Node keeps the process alive for a pending timer, so the timeout must be cleared either way.
-  // eslint-disable-next-line @silverhand/fp/no-let
-  let timer: Optional<NodeJS.Timeout>;
-  const abortController = new AbortController();
-
-  try {
-    return await Promise.race([
-      run(abortController.signal),
-      new Promise<never>((_resolve, reject) => {
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        timer = setTimeout(() => {
-          const error = new ScriptExecutionError(
-            { message: `Script execution timed out after ${cloudScriptRunTimeout}ms.` },
-            scriptFailureStatusCodes.timeout
-          );
-
-          // Reject with the pinned error first: aborting makes the raced call reject too, and the
-          // winner of `Promise.race` must be this shape rather than ky's `AbortError`.
-          reject(error);
-          abortController.abort(error);
-        }, cloudScriptRunTimeout);
-      }),
-    ]);
-  } finally {
-    clearTimeout(timer);
-  }
-};
-
-/**
- * The 500 `ScriptExecutionError` a transport failure produces.
- *
- * The upstream body is deliberately not carried, in `message` or beside it. This error travels far
- * further than the transport: both Console dry-run routes, the persisted `customJwtError`
- * audit-log field, and — when `blockIssuanceOnError` is set — the OIDC `error_description` handed
- * to the RP. A Cloudflare HTML error page or a JWT-verification detail has no business in any of
- * those, and every consumer strips unknown fields anyway (`errorResponseBodyGuard` for Custom JWT,
- * `buildSafeActionErrorSummary`'s allowlist for Actions), so a structured field would be dead
- * weight rather than a diagnostic. The status in `message` is what identifies the failure.
- */
-const buildWorkerTransportError = (message: string): ScriptExecutionError =>
-  new ScriptExecutionError({ message }, 500);
 
 /**
  * The failure kinds the script-runner Worker can report, i.e. those of `ScriptResult` in
@@ -134,6 +73,17 @@ export type CloudScriptResult = z.infer<typeof cloudScriptResultGuard>;
 export type CloudScriptFailure = Extract<CloudScriptResult, { ok: false }>;
 
 /**
+ * The 500 `ScriptExecutionError` a transport failure produces.
+ *
+ * The upstream body is deliberately dropped: this error reaches the persisted `customJwtError`
+ * audit-log field and — with `blockIssuanceOnError` — the OIDC `error_description` handed to the
+ * RP, where a Cloudflare error page or a JWT-verification detail has no business. The status
+ * identifies the failure; the details belong in the Worker's own logs.
+ */
+const buildTransportError = (message: string): ScriptExecutionError =>
+  new ScriptExecutionError({ message }, 500);
+
+/**
  * Run a user script on the Cloud script runner, i.e. the script-runner Worker on Cloudflare's
  * edge.
  *
@@ -166,53 +116,51 @@ export const runScriptOnCloud = async ({
   payload: Record<string, unknown>;
   /** Whether this is a dry run (Console "test" / the Management API test routes). */
   isTest?: boolean;
-}): Promise<CloudScriptResult> =>
-  withCloudScriptRunTimeout(async (signal) => {
-    const accessToken = await cloudConnection.getWorkerAccessToken();
+}): Promise<CloudScriptResult> => {
+  const accessToken = await cloudConnection.getWorkerAccessToken();
 
-    const response = await ky.post(new URL('/api/script-run', endpoint), {
-      json: { tenantId, ...input, ...conditional(isTest && { isTest }) },
+  const response = await ky
+    .post(new URL('/api/script-run', endpoint), {
+      json: { tenantId, ...input, isTest },
       headers: { Authorization: `Bearer ${accessToken}` },
-      /**
-       * The round-trip deadline is owned by `withCloudScriptRunTimeout`; ky's own timeout would
-       * only race it with a different error shape. The signal fires at that same deadline, so a
-       * hung Worker has its socket torn down rather than held to undici's defaults.
-       */
-      timeout: false,
-      signal,
+      timeout: cloudScriptRunTimeout,
       throwHttpErrors: false,
-    });
-
-    const body = await trySafe(async () => response.text());
-
-    if (!response.ok) {
-      /**
-       * The Worker rejected the token. It is cached until expiry, so without dropping it here an
-       * admin-tenant key rotation or a grant revocation would fail every run for the rest of the
-       * token's lifetime when a single re-mint would recover.
-       */
-      if (response.status === 401 || response.status === 403) {
-        cloudConnection.invalidateWorkerAccessToken();
+    })
+    .catch((error: unknown) => {
+      if (error instanceof TimeoutError) {
+        throw new ScriptExecutionError(
+          { message: `Script execution timed out after ${cloudScriptRunTimeout}ms.` },
+          scriptFailureStatusCodes.timeout
+        );
       }
 
-      throw buildWorkerTransportError(`Script runner error: ${response.status}`);
+      throw error;
+    });
+
+  if (!response.ok) {
+    /**
+     * The Worker rejected the token. It is cached until expiry, so without dropping it here an
+     * admin-tenant key rotation or a grant revocation would fail every run for the rest of the
+     * token's lifetime when a single re-mint would recover.
+     */
+    if (response.status === 401 || response.status === 403) {
+      cloudConnection.invalidateWorkerAccessToken();
     }
 
-    const result = cloudScriptResultGuard.safeParse(
-      conditional(body !== undefined && trySafe((): unknown => JSON.parse(body)))
-    );
+    throw buildTransportError(`Script runner error: ${response.status}`);
+  }
 
-    if (!result.success) {
-      /**
-       * The envelope drifted — a new failure kind, a renamed field. The body stays out of the
-       * error for the reason given on {@link buildWorkerTransportError}; drift is a deploy-skew
-       * bug to be read from the Worker's own logs, not from a token response.
-       */
-      throw buildWorkerTransportError('Script runner returned an unexpected response.');
-    }
+  const result = cloudScriptResultGuard.safeParse(
+    await trySafe<unknown>(async () => response.json())
+  );
 
-    return result.data;
-  });
+  // The envelope drifted — a new failure kind, a renamed field. Read the Worker's own logs.
+  if (!result.success) {
+    throw buildTransportError('Script runner returned an unexpected response.');
+  }
+
+  return result.data;
+};
 
 /**
  * Convert a Cloud script failure into the {@link ScriptExecutionError} the routes already handle,

@@ -49,11 +49,9 @@ const payload = Object.freeze({
   environmentVariables: { SECRET: 'secret' },
 });
 
-/** Intercept the script runner call, capturing the request body for assertions. */
-const mockScriptRun = (reply: (body: unknown) => unknown) =>
-  nock(scriptRunnerEndpoint)
-    .post('/api/script-run')
-    .reply(200, (uri, body) => reply(body));
+/** Intercept the script runner call, optionally asserting the request body via nock's matcher. */
+const mockScriptRun = (body?: nock.RequestBodyMatcher) =>
+  nock(scriptRunnerEndpoint).post('/api/script-run', body);
 
 const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
 
@@ -71,17 +69,7 @@ describe('JwtCustomizerLibrary.runScriptRemotely', () => {
   });
 
   it('runs the script on the Cloud script runner', async () => {
-    // eslint-disable-next-line @silverhand/fp/no-let
-    let requestBody: unknown;
-    mockScriptRun((body) => {
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      requestBody = body;
-
-      return { ok: true, value: { foo: 'bar' } };
-    });
-
-    await expect(library.runScriptRemotely(payload)).resolves.toEqual({ foo: 'bar' });
-    expect(requestBody).toEqual({
+    mockScriptRun({
       tenantId: 'test-tenant',
       entry: 'getCustomJwtClaims',
       script: payload.script,
@@ -91,32 +79,29 @@ describe('JwtCustomizerLibrary.runScriptRemotely', () => {
         context: payload.context,
         environmentVariables: payload.environmentVariables,
       },
-    });
+    }).reply(200, { ok: true, value: { foo: 'bar' } });
+
+    await expect(library.runScriptRemotely(payload)).resolves.toEqual({ foo: 'bar' });
     expect(post).not.toHaveBeenCalled();
   });
 
   it('marks a dry run as a test', async () => {
-    // eslint-disable-next-line @silverhand/fp/no-let
-    let requestBody: unknown;
-    mockScriptRun((body) => {
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      requestBody = body;
-
-      return { ok: true, value: {} };
-    });
+    const scriptRunner = mockScriptRun(
+      (body: Record<string, unknown>) => body.isTest === true
+    ).reply(200, { ok: true, value: {} });
 
     await library.runScriptRemotely(payload, true);
-    expect(requestBody).toMatchObject({ isTest: true });
+    expect(scriptRunner.isDone()).toBe(true);
   });
 
   it('rejects a returned value that is not a record', async () => {
-    mockScriptRun(() => ({ ok: true, value: 'not a record' }));
+    mockScriptRun().reply(200, { ok: true, value: 'not a record' });
 
     await expect(library.runScriptRemotely(payload)).rejects.toMatchObject({ status: 400 });
   });
 
   it('converts a denial into a recognizable access denied error', async () => {
-    mockScriptRun(() => ({ ok: false, kind: 'denied', message: 'Nope' }));
+    mockScriptRun().reply(200, { ok: false, kind: 'denied', message: 'Nope' });
 
     const error: unknown = await library
       .runScriptRemotely(payload)
@@ -138,7 +123,7 @@ describe('JwtCustomizerLibrary.runScriptRemotely', () => {
     ['oom', 500],
     ['runtime', 500],
   ])('maps a %s script failure to status %i', async (kind, status) => {
-    mockScriptRun(() => ({ ok: false, kind, message: 'Script failed' }));
+    mockScriptRun().reply(200, { ok: false, kind, message: 'Script failed' });
 
     await expect(library.runScriptRemotely(payload)).rejects.toMatchObject({ status });
   });
@@ -181,14 +166,14 @@ describe('JwtCustomizerLibrary.runScriptRemotely quota', () => {
 
   it('runs when the plan includes custom JWT', async () => {
     getSubscriptionData.mockResolvedValueOnce({ quota: { customJwtEnabled: true } });
-    mockScriptRun(() => ({ ok: true, value: { foo: 'bar' } }));
+    mockScriptRun().reply(200, { ok: true, value: { foo: 'bar' } });
 
     await expect(library.runScriptRemotely(payload)).resolves.toEqual({ foo: 'bar' });
   });
 
   it('never meters the admin tenant', async () => {
     const adminLibrary = createLibrary(adminTenantId);
-    mockScriptRun(() => ({ ok: true, value: { foo: 'bar' } }));
+    mockScriptRun().reply(200, { ok: true, value: { foo: 'bar' } });
 
     await expect(adminLibrary.runScriptRemotely(payload)).resolves.toEqual({ foo: 'bar' });
     expect(getSubscriptionData).not.toHaveBeenCalled();

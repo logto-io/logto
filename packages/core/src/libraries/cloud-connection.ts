@@ -1,7 +1,7 @@
 import type router from '@logto/cloud/routes';
 import { cloudConnectionDataGuard, CloudScope } from '@logto/schemas';
 import { formUrlEncodedHeaders } from '@logto/shared';
-import { appendPath, type Optional } from '@silverhand/essentials';
+import { appendPath } from '@silverhand/essentials';
 import Client from '@withtyped/client';
 import ky from 'ky';
 import { z } from 'zod';
@@ -44,40 +44,21 @@ const accessTokenExpirationMargin = 60;
  *
  * Mirror `workerResourceIndicator` / `WorkerScope.InvokeScriptRunner` in `@logto/cloud-models`
  * (`consts/worker.ts`) — that package ships no runtime code to core, so the pair is redeclared
- * here. The Worker rejects a token missing either value, which keeps a drift from failing
- * silently.
+ * here.
  */
 const workerResourceIndicator = 'https://*.logto.workers.dev';
 const workerScriptRunScope = 'invoke:worker:script-run';
 
-type MintedAccessToken = { expiresAt: number; accessToken: string; scope?: string };
+type MintedAccessToken = { expiresAt: number; accessToken: string };
 
-/**
- * The cached token if it is still fresh enough to use, `undefined` otherwise.
- *
- * The margin keeps a token that is about to expire from being handed to a call that outlives it.
- */
-const readFreshToken = (cache?: MintedAccessToken): Optional<string> => {
-  if (cache && cache.expiresAt > Date.now() / 1000 + accessTokenExpirationMargin) {
-    return cache.accessToken;
-  }
-};
+/** The cache key of the Cloud API resource, whose value is only known after reading credentials. */
+const cloudResourceCacheKey = '';
 
 /** The library for connecting to Logto Cloud service. */
 export class CloudConnectionLibrary {
   private client?: Client<typeof router>;
-  private accessTokenCache?: MintedAccessToken;
-  private workerAccessTokenCache?: MintedAccessToken;
-  /**
-   * The in-flight mint per resource, so concurrent misses share one credentials query and one
-   * admin-tenant token request instead of herding.
-   *
-   * This runs inline in token issuance: without coalescing, every time a busy tenant's token
-   * crosses the expiry margin all of its concurrent issuances mint at once, and the
-   * missing-scope failure below — deliberately uncached — would re-mint on every single run
-   * fleet-wide until the grant lands. Cleared on settle so a rejection is immediately retryable.
-   */
-  private readonly pendingMints = new Map<string, Promise<MintedAccessToken>>();
+  /** The minted tokens by resource. Audiences differ, so they are never interchangeable. */
+  private readonly accessTokenCache = new Map<string, MintedAccessToken>();
 
   constructor(private readonly logtoConfigs: LogtoConfigLibrary) {}
 
@@ -102,65 +83,25 @@ export class CloudConnectionLibrary {
    *
    * @returns The access token for the Cloud service.
    */
-  public getAccessToken = async (): Promise<string> => {
-    const cached = readFreshToken(this.accessTokenCache);
-
-    if (cached) {
-      return cached;
-    }
-
-    this.accessTokenCache = await this.mintAccessToken(scopes.join(' '));
-
-    return this.accessTokenCache.accessToken;
-  };
+  public getAccessToken = async (): Promise<string> =>
+    this.getCachedAccessToken(cloudResourceCacheKey, scopes.join(' '));
 
   /**
    * Get the access token for invoking the script-runner Worker directly, minted with the same
    * cloud-connection M2M credentials as {@link getAccessToken} but for the worker resource.
-   *
-   * Cached separately from the Cloud service token — the two differ in audience and are not
-   * interchangeable.
    */
-  public getWorkerAccessToken = async (): Promise<string> => {
-    const cached = readFreshToken(this.workerAccessTokenCache);
-
-    if (cached) {
-      return cached;
-    }
-
-    const { scope, ...minted } = await this.mintAccessToken(
-      workerScriptRunScope,
-      workerResourceIndicator
-    );
-
-    /**
-     * The OIDC provider filters the requested scope down to what the credentials' roles grant
-     * and still answers 200, so an ungranted scope surfaces here rather than as an
-     * `invalid_scope` error. Failing without caching keeps the misprovisioning loud and
-     * immediately retryable — a cached scopeless token would 401 on the Worker for the rest of
-     * its lifetime.
-     */
-    if (!scope?.split(' ').includes(workerScriptRunScope)) {
-      throw new Error(
-        `The minted worker access token is missing the \`${workerScriptRunScope}\` scope. ` +
-          'Is the admin tenant alteration granting it to the tenant application role deployed?'
-      );
-    }
-
-    this.workerAccessTokenCache = minted;
-
-    return minted.accessToken;
-  };
+  public getWorkerAccessToken = async (): Promise<string> =>
+    this.getCachedAccessToken(workerResourceIndicator, workerScriptRunScope);
 
   /**
    * Drop the cached Worker token so the next call mints a fresh one.
    *
    * The cache is otherwise only invalidated by time, so a token invalidated before its expiry —
-   * admin-tenant key rotation, grant revocation — would break every script run for the rest of
-   * its lifetime. The Worker transport calls this when the Worker rejects the token.
+   * admin-tenant key rotation, a missing grant — would break every script run for the rest of its
+   * lifetime. The Worker transport calls this when the Worker rejects the token.
    */
   public invalidateWorkerAccessToken = (): void => {
-    this.workerAccessTokenCache = undefined;
+    this.accessTokenCache.delete(workerResourceIndicator);
   };
 
   /**
@@ -184,43 +125,35 @@ export class CloudConnectionLibrary {
   };
 
   /**
-   * Mint an access token via the client credentials flow against the admin tenant, for
-   * `resourceOverride` when given and the Cloud API resource of the stored credentials otherwise.
+   * Mint an access token via the client credentials flow against the admin tenant, caching it
+   * under `resourceKey` until it expires. The margin keeps a token that is about to expire from
+   * being handed to a call that outlives it.
    *
-   * Concurrent calls for the same resource share one in-flight request; see {@link pendingMints}.
-   *
-   * `scope` echoes what the provider actually granted, which can be less than what was asked.
+   * `resourceKey` is the resource indicator to request, or {@link cloudResourceCacheKey} for the
+   * Cloud API resource carried by the stored credentials.
    */
-  private readonly mintAccessToken = async (
-    scope: string,
-    resourceOverride?: string
-  ): Promise<MintedAccessToken> => {
-    const key = resourceOverride ?? '';
-    const pending = this.pendingMints.get(key);
+  private readonly getCachedAccessToken = async (
+    resourceKey: string,
+    scope: string
+  ): Promise<string> => {
+    const cached = this.accessTokenCache.get(resourceKey);
 
-    if (pending) {
-      return pending;
+    if (cached && cached.expiresAt > Date.now() / 1000 + accessTokenExpirationMargin) {
+      return cached.accessToken;
     }
 
-    const mint = (async () => {
-      try {
-        return await this.requestAccessToken(scope, resourceOverride);
-      } finally {
-        this.pendingMints.delete(key);
-      }
-    })();
+    const minted = await this.requestAccessToken(resourceKey, scope);
+    this.accessTokenCache.set(resourceKey, minted);
 
-    this.pendingMints.set(key, mint);
-
-    return mint;
+    return minted.accessToken;
   };
 
   private readonly requestAccessToken = async (
-    scope: string,
-    resourceOverride?: string
+    resourceKey: string,
+    scope: string
   ): Promise<MintedAccessToken> => {
     const { tokenEndpoint, appId, appSecret, resource } = await this.getCloudConnectionData();
-    const targetResource = resourceOverride ?? resource;
+    const targetResource = resourceKey === cloudResourceCacheKey ? resource : resourceKey;
 
     const text = await ky
       .post(tokenEndpoint, {
@@ -245,7 +178,6 @@ export class CloudConnectionLibrary {
     return {
       expiresAt: Date.now() / 1000 + result.data.expires_in,
       accessToken: result.data.access_token,
-      scope: result.data.scope,
     };
   };
 }

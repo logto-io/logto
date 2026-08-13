@@ -32,11 +32,9 @@ const cloudConnection = {
   invalidateWorkerAccessToken: jest.fn(),
 } as unknown as CloudConnectionLibrary;
 
-/** Intercept the script runner call, capturing the request body for assertions. */
-const mockScriptRun = (reply: (body: unknown) => unknown) =>
-  nock(scriptRunnerEndpoint)
-    .post('/api/script-run')
-    .reply(200, (uri, body) => reply(body));
+/** Intercept the script runner call, optionally asserting the request body via nock's matcher. */
+const mockScriptRun = (body?: nock.RequestBodyMatcher) =>
+  nock(scriptRunnerEndpoint).post('/api/script-run', body);
 
 const createLibrary = (tenantId = 'tenant_id') =>
   new ActionLibrary(
@@ -111,17 +109,7 @@ describe('ActionLibrary Cloud execution routing', () => {
       },
       environmentVariables: { NAME_SUFFIX: ' updated' },
     };
-    // eslint-disable-next-line @silverhand/fp/no-let
-    let requestBody: unknown;
-    mockScriptRun((body) => {
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      requestBody = body;
-
-      return { ok: true, value: { action: 'continue' } };
-    });
-
-    await expect(library.runScriptRemotely(payload)).resolves.toEqual({ action: 'continue' });
-    expect(requestBody).toEqual({
+    mockScriptRun({
       tenantId: 'tenant_id',
       entry: 'runAction',
       script: payload.script,
@@ -130,7 +118,9 @@ describe('ActionLibrary Cloud execution routing', () => {
         event: payload.event,
         environmentVariables: payload.environmentVariables,
       },
-    });
+    }).reply(200, { ok: true, value: { action: 'continue' } });
+
+    await expect(library.runScriptRemotely(payload)).resolves.toEqual({ action: 'continue' });
     expect(post).not.toHaveBeenCalled();
   });
 
@@ -142,7 +132,7 @@ describe('ActionLibrary Cloud execution routing', () => {
     ['oom', 500],
     ['runtime', 500],
   ])('maps a %s script failure to status %i', async (kind, status) => {
-    mockScriptRun(() => ({ ok: false, kind, message: 'Script failed' }));
+    mockScriptRun().reply(200, { ok: false, kind, message: 'Script failed' });
 
     await expect(
       library.runScriptRemotely({
@@ -159,17 +149,12 @@ describe('ActionLibrary Cloud execution routing', () => {
       script: 'const runAction = () => ({ action: "continue" });',
       event: { key: LogtoActionKey.PostSignIn },
     };
-    // eslint-disable-next-line @silverhand/fp/no-let
-    let requestBody: unknown;
-    mockScriptRun((body) => {
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      requestBody = body;
-
-      return { ok: true, value: { action: 'continue' } };
-    });
+    const scriptRunner = mockScriptRun(
+      (body: Record<string, unknown>) => body.isTest === true
+    ).reply(200, { ok: true, value: { action: 'continue' } });
 
     await library.runScriptRemotely(payload, true);
-    expect(requestBody).toMatchObject({ isTest: true });
+    expect(scriptRunner.isDone()).toBe(true);
   });
 
   it('forwards the dry-run flag from executeScript', async () => {
@@ -179,17 +164,12 @@ describe('ActionLibrary Cloud execution routing', () => {
       script: 'const runAction = () => ({ action: "continue" });',
       event: { key: LogtoActionKey.PostSignIn },
     };
-    // eslint-disable-next-line @silverhand/fp/no-let
-    let requestBody: unknown;
-    mockScriptRun((body) => {
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      requestBody = body;
-
-      return { ok: true, value: { action: 'continue' } };
-    });
+    const scriptRunner = mockScriptRun(
+      (body: Record<string, unknown>) => body.isTest === true
+    ).reply(200, { ok: true, value: { action: 'continue' } });
 
     await library.executeScript({ ...payload, isTest: true });
-    expect(requestBody).toMatchObject({ isTest: true });
+    expect(scriptRunner.isDone()).toBe(true);
   });
 
   it('surfaces a transport failure as a 500, not as a script failure', async () => {
@@ -316,14 +296,12 @@ describe('ActionLibrary Cloud execution routing', () => {
         name: 'Bar',
       },
     };
-    // eslint-disable-next-line @silverhand/fp/no-let
-    let requestBody: unknown;
-    mockScriptRun((body) => {
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      requestBody = body;
-
-      return { ok: true, value: executionResult };
-    });
+    mockScriptRun({
+      tenantId: 'tenant_id',
+      entry: 'runAction',
+      script,
+      payload: { event, environmentVariables },
+    }).reply(200, { ok: true, value: executionResult });
     getAction.mockResolvedValueOnce({
       enabled: true,
       script,
@@ -337,12 +315,6 @@ describe('ActionLibrary Cloud execution routing', () => {
         event,
       })
     ).resolves.toEqual(executionResult);
-    expect(requestBody).toEqual({
-      tenantId: 'tenant_id',
-      entry: 'runAction',
-      script,
-      payload: { event, environmentVariables },
-    });
     expect(runScriptInLocalVm).not.toHaveBeenCalled();
     expect(mockAppend).toHaveBeenNthCalledWith(
       1,
@@ -371,11 +343,11 @@ describe('ActionLibrary Cloud execution routing', () => {
 
   it('applies allow-mode policy when Cloud remote execution fails without local fallback', async () => {
     setIsCloud(true);
-    const scriptRunner = mockScriptRun(() => ({
+    const scriptRunner = mockScriptRun().reply(200, {
       ok: false,
       kind: 'runtime',
       message: 'Remote runner failed',
-    }));
+    });
     getAction.mockResolvedValueOnce({
       enabled: true,
       onExecutionError: 'allow',
