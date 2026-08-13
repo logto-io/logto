@@ -4,6 +4,7 @@ import { enableAllAccountCenterFields } from '#src/api/account-center.js';
 import { authedAdminApi, baseApi } from '#src/api/api.js';
 import { deleteApplication } from '#src/api/application.js';
 import { getUserInfo, updatePassword, updateUser } from '#src/api/my-account.js';
+import { createVerificationRecordByPassword } from '#src/api/verification-record.js';
 import { expectRejects } from '#src/helpers/index.js';
 import {
   createDefaultTenantUserWithPassword,
@@ -46,6 +47,13 @@ describe('account API third-party guard', () => {
       });
 
       await expectRejects(updatePassword(api, undefined, generatePassword()), {
+        code: 'auth.third_party_application_forbidden',
+        status: 403,
+      });
+
+      // The Verification API is a separate router with its own wiring, so cover it too. Minting a
+      // record here is what would otherwise let a third-party application reach the guarded routes.
+      await expectRejects(createVerificationRecordByPassword(api, password), {
         code: 'auth.third_party_application_forbidden',
         status: 403,
       });
