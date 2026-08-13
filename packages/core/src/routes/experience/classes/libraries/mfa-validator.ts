@@ -10,6 +10,7 @@ import { type Optional } from '@silverhand/essentials';
 
 import { isNoSkipMfaPolicy } from '#src/libraries/sign-in-experience/mfa-policy.js';
 
+import { type InteractionProfile } from '../../types.js';
 import { getAllUserEnabledMfaVerifications } from '../helpers.js';
 import { type BackupCodeVerification } from '../verifications/backup-code-verification.js';
 import {
@@ -136,18 +137,36 @@ export class MfaValidator {
   }
 
   isMfaVerified(verificationRecords: VerificationRecord[]) {
-    const verifiedMfaVerificationRecords = verificationRecords.filter(
+    return this.getVerifiedMfaVerificationRecords(verificationRecords).length > 0;
+  }
+
+  hasEligibleTrustedDeviceVerification(
+    verificationRecords: VerificationRecord[],
+    currentProfile?: InteractionProfile
+  ) {
+    return this.getVerifiedMfaVerificationRecords(verificationRecords, currentProfile).some(
+      ({ type }) => type !== VerificationType.BackupCode
+    );
+  }
+
+  private getVerifiedMfaVerificationRecords(
+    verificationRecords: VerificationRecord[],
+    currentProfile?: InteractionProfile
+  ) {
+    const userEnabledMfaVerifications = getAllUserEnabledMfaVerifications(
+      this.mfaSettings,
+      this.user,
+      currentProfile
+    );
+
+    return verificationRecords.filter(
       (verification) =>
         isMfaVerificationRecord(verification) &&
         verification.isVerified &&
         // New bind MFA verification can not be used for verification
         !verification.isNewBindMfaVerification &&
         // Check if the verification type is enabled in the user's MFA settings
-        this.userEnabledMfaVerifications.includes(
-          mfaVerificationTypeToMfaFactorMap[verification.type]
-        )
+        userEnabledMfaVerifications.includes(mfaVerificationTypeToMfaFactorMap[verification.type])
     );
-
-    return verifiedMfaVerificationRecords.length > 0;
   }
 }

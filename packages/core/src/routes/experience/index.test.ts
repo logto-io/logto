@@ -723,6 +723,66 @@ describe('POST /experience/submit', () => {
     expect(createCredential).not.toHaveBeenCalled();
   });
 
+  it('should exclude a verified MFA factor that is disabled in the sign-in experience', async () => {
+    setDevFeaturesEnabled(true);
+    const user = {
+      ...mockUser,
+      mfaVerifications: [mockUserTotpMfaVerification],
+    };
+    const { requester, createCredential } = createRequesterWithMocks({
+      user,
+      mfa: { policy: MfaPolicy.Mandatory, factors: [] },
+      interactionResult: {
+        verificationRecords: [
+          {
+            id: 'totp-verification-id',
+            type: VerificationType.TOTP,
+            userId: user.id,
+            verified: true,
+          },
+        ],
+      },
+      trustedDevicePolicy: { enabled: true, durationDays: 30 },
+    });
+
+    const response = await requester.post('/experience/submit').send({ createTrustedDevice: true });
+
+    expect(response.status).toBe(200);
+    expect(createCredential).not.toHaveBeenCalled();
+  });
+
+  it('should not treat a BindMfa-templated profile identifier as an MFA binding', async () => {
+    setDevFeaturesEnabled(true);
+    const primaryEmail = 'profile-only@logto.dev';
+    const user = {
+      ...mockUser,
+      primaryEmail: null,
+      mfaVerifications: [],
+    };
+    const { requester, createCredential } = createRequesterWithMocks({
+      user,
+      mfa: { policy: MfaPolicy.Mandatory, factors: [] },
+      interactionResult: {
+        profile: { primaryEmail },
+        verificationRecords: [
+          {
+            id: 'email-verification-id',
+            type: VerificationType.EmailVerificationCode,
+            identifier: { type: SignInIdentifier.Email, value: primaryEmail },
+            templateType: TemplateType.BindMfa,
+            verified: true,
+          },
+        ],
+      },
+      trustedDevicePolicy: { enabled: true, durationDays: 30 },
+    });
+
+    const response = await requester.post('/experience/submit').send({ createTrustedDevice: true });
+
+    expect(response.status).toBe(200);
+    expect(createCredential).not.toHaveBeenCalled();
+  });
+
   it('should update a fulfilling trusted device best effort without creating a duplicate', async () => {
     setDevFeaturesEnabled(true);
     const user = {

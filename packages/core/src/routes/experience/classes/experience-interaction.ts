@@ -1,7 +1,6 @@
 /* eslint-disable max-lines */
 
 import { appInsights } from '@logto/app-insights/node';
-import { TemplateType } from '@logto/connector-kit';
 import {
   InteractionEvent,
   InteractionHookEvent,
@@ -66,47 +65,6 @@ type TrustedDeviceFulfillmentStatus =
 type SubmitOptions = Readonly<{
   createTrustedDevice?: boolean;
 }>;
-
-const isEligibleExistingTrustedDeviceVerification = (verification: VerificationRecord) => {
-  switch (verification.type) {
-    case VerificationType.TOTP:
-    case VerificationType.WebAuthn: {
-      return verification.isVerified && !verification.isNewBindMfaVerification;
-    }
-    case VerificationType.MfaEmailVerificationCode:
-    case VerificationType.MfaPhoneVerificationCode: {
-      return verification.isVerified;
-    }
-    default: {
-      return false;
-    }
-  }
-};
-
-const isEligibleIdentifierMfaBinding = (
-  verification: VerificationRecord,
-  profile: InteractionStorage['profile']
-) => {
-  switch (verification.type) {
-    case VerificationType.EmailVerificationCode: {
-      return (
-        verification.isVerified &&
-        verification.templateType === TemplateType.BindMfa &&
-        profile?.primaryEmail === verification.identifier.value
-      );
-    }
-    case VerificationType.PhoneVerificationCode: {
-      return (
-        verification.isVerified &&
-        verification.templateType === TemplateType.BindMfa &&
-        profile?.primaryPhone === verification.identifier.value
-      );
-    }
-    default: {
-      return false;
-    }
-  }
-};
 
 /**
  * Interaction is a short-lived session session that is initiated when a user starts an interaction flow with the Logto platform.
@@ -715,7 +673,7 @@ export default class ExperienceInteraction {
     // best effort so a persistence or cookie failure never turns a successful authentication into
     // an error.
     await trySafe(
-      async () => this.finalizeTrustedDevice(user.id, createTrustedDevice),
+      async () => this.finalizeTrustedDevice(updatedUser, createTrustedDevice),
       (error) => {
         void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
       }
@@ -795,11 +753,12 @@ export default class ExperienceInteraction {
     };
   }
 
-  private hasEligibleTrustedDeviceProof() {
-    const hasEligibleVerification = this.verificationRecordsArray.some(
-      (verification) =>
-        isEligibleExistingTrustedDeviceVerification(verification) ||
-        isEligibleIdentifierMfaBinding(verification, this.profile.data)
+  private async hasEligibleTrustedDeviceProof(user: User) {
+    const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
+    const mfaValidator = new MfaValidator(mfaSettings, user);
+    const hasEligibleVerification = mfaValidator.hasEligibleTrustedDeviceVerification(
+      this.verificationRecordsArray,
+      this.profile.data
     );
 
     const hasEligibleBinding = this.mfa.bindMfaFactorsArray.some(
@@ -821,7 +780,7 @@ export default class ExperienceInteraction {
     };
   }
 
-  private async finalizeTrustedDevice(userId: string, createTrustedDevice: boolean) {
+  private async finalizeTrustedDevice(user: User, createTrustedDevice: boolean) {
     if (!EnvSet.values.isDevFeaturesEnabled) {
       return;
     }
@@ -831,22 +790,22 @@ export default class ExperienceInteraction {
     } = this.tenant;
     const metadata = this.getTrustedDeviceMetadata();
 
-    if (this.trustedDeviceFulfillment?.userId === userId) {
+    if (this.trustedDeviceFulfillment?.userId === user.id) {
       if (this.#interactionEvent === InteractionEvent.SignIn) {
         await trustedDevices.updateMetadata(
           this.trustedDeviceFulfillment.trustedDeviceId,
-          userId,
+          user.id,
           metadata
         );
       }
       return;
     }
 
-    if (!createTrustedDevice || !this.hasEligibleTrustedDeviceProof()) {
+    if (!createTrustedDevice || !(await this.hasEligibleTrustedDeviceProof(user))) {
       return;
     }
 
-    await trustedDevices.createCredential({ ctx: this.ctx, userId, ...metadata });
+    await trustedDevices.createCredential({ ctx: this.ctx, userId: user.id, ...metadata });
   }
 
   private async tryFulfillMfaWithTrustedDevice(
