@@ -97,10 +97,10 @@ function RoleUsers() {
             title: t('role_details.users.app_column'),
             dataIndex: 'app',
             colSpan: 5,
-            render: ({ applicationId, cimdClientId }) => {
+            render: ({ id, applicationId, cimdClientId }) => {
               /** A CIMD-first user has no `applicationId` — see the users list column. */
               if (cimdClientId) {
-                return <DynamicAppName clientId={cimdClientId} />;
+                return <DynamicAppName clientId={cimdClientId} userId={id} />;
               }
 
               return applicationId ? <ApplicationName applicationId={applicationId} /> : '-';
