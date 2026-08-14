@@ -29,6 +29,8 @@ import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
+import { MfaValidator } from './classes/libraries/mfa-validator.js';
+
 const { jest } = import.meta;
 
 const experienceRoutes = await pickDefault(import('./index.js'));
@@ -992,6 +994,47 @@ describe('POST /experience/submit', () => {
     expect(response.status).toBe(200);
     expect(createCredential).toHaveBeenCalledTimes(1);
     expect(trackException).toHaveBeenCalledWith(creationError, expect.any(Object));
+  });
+
+  it('should keep submit successful when trusted-device proof eligibility fails', async () => {
+    setDevFeaturesEnabled(true);
+    const eligibilityError = new Error('trusted-device proof eligibility failed');
+    const trackException = jest.spyOn(appInsights, 'trackException').mockResolvedValue();
+    const hasEligibleTrustedDeviceVerification = jest
+      .spyOn(MfaValidator.prototype, 'hasEligibleTrustedDeviceVerification')
+      .mockReturnValueOnce(true)
+      .mockImplementationOnce(() => {
+        throw eligibilityError;
+      });
+    const user = {
+      ...mockUser,
+      mfaVerifications: [mockUserTotpMfaVerification],
+    };
+    const { requester, createCredential } = createRequesterWithMocks({
+      user,
+      mfa: { policy: MfaPolicy.Mandatory, factors: [MfaFactor.TOTP] },
+      interactionResult: {
+        verificationRecords: [
+          {
+            id: 'totp-verification-id',
+            type: VerificationType.TOTP,
+            userId: user.id,
+            verified: true,
+          },
+        ],
+      },
+      persistInteractionResult: true,
+      trustedDevicePolicy: { enabled: true, durationDays: 30 },
+    });
+
+    const optInResponse = await requester.post('/experience/profile/mfa/trusted-device');
+    const submitResponse = await requester.post('/experience/submit');
+
+    expect(optInResponse.status).toBe(204);
+    expect(submitResponse.status).toBe(200);
+    expect(hasEligibleTrustedDeviceVerification).toHaveBeenCalledTimes(2);
+    expect(createCredential).not.toHaveBeenCalled();
+    expect(trackException).toHaveBeenCalledWith(eligibilityError, expect.any(Object));
   });
 
   it('should not create a trusted device when the complete interaction fails', async () => {

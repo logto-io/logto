@@ -673,18 +673,26 @@ export default class ExperienceInteraction {
       ...this.toJson(),
     });
 
-    // Trusted-device writes happen only after the full interaction has succeeded.
-    const hasEligibleMfaProof = trustedDeviceCreation
-      ? await this.hasEligibleTrustedDeviceProof(updatedUser)
-      : false;
-    await this.trustedDevice.finalize({
-      creation: trustedDeviceCreation,
-      interactionEvent: this.#interactionEvent,
-      userId: user.id,
-      hasEligibleMfaProof,
-      signInContext: this.adaptiveMfaValidator.getSignInContext(),
-      location: this.adaptiveMfaValidator.getCurrentContext()?.location,
-    });
+    // Trusted-device writes happen only after the full interaction has succeeded and must not
+    // turn a successful sign-in into an error.
+    await trySafe(
+      async () => {
+        const hasEligibleMfaProof = trustedDeviceCreation
+          ? await this.hasEligibleTrustedDeviceProof(updatedUser)
+          : false;
+        await this.trustedDevice.finalize({
+          creation: trustedDeviceCreation,
+          interactionEvent: this.#interactionEvent,
+          userId: user.id,
+          hasEligibleMfaProof,
+          signInContext: this.adaptiveMfaValidator.getSignInContext(),
+          location: this.adaptiveMfaValidator.getCurrentContext()?.location,
+        });
+      },
+      (error) => {
+        void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
+      }
+    );
 
     // The geo context is only recorded when the `submit()` function succeeds.
     // The recorded geo context will affect the evaluation results of the adaptive MFA afterwards.
