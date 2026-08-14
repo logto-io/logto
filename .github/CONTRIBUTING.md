@@ -64,8 +64,8 @@ We use the monorepo approach for development. Since pnpm supports monorepo natur
 
 You'll need these installed to proceed:
 
-- [Node.js](https://nodejs.org/) `^18.12.0`
-- [pnpm](https://pnpm.io/) `^9.0`
+- [Node.js](https://nodejs.org/) `^22.14.0`
+- [pnpm](https://pnpm.io/) `^9.0.0 || ^10.0.0`
 - A [Postgres](https://postgresql.org/) `^14.0` instance
 - [Docker](https://www.docker.com/) and Docker Compose, if you want to run integration tests locally
 
