@@ -1,77 +1,118 @@
+import nock from 'nock';
+
 import { type CloudConnectionLibrary } from '../cloud-connection.js';
 
 import { runScriptOnCloud } from './cloud.js';
 
 const { jest } = import.meta;
 
-const post = jest.fn();
+const endpoint = 'http://script-runner.example.com';
+const workerAccessToken = 'worker-access-token';
+
+const getWorkerAccessToken = jest.fn(async () => workerAccessToken);
+const invalidateWorkerAccessToken = jest.fn();
 
 const cloudConnection = {
-  getClient: async () => ({ post }),
+  getWorkerAccessToken,
+  invalidateWorkerAccessToken,
 } as unknown as CloudConnectionLibrary;
 
-/**
- * Let the `await cloudConnection.getClient()` hop settle so the deadline timer is armed. Enough
- * microtask hops to cover the awaits `runScriptOnCloud` takes before `setTimeout` runs.
- */
-const flushMicrotasks = async (hops = 5): Promise<void> => {
-  if (hops === 0) {
-    return;
-  }
+const script = 'const runAction = () => ({ action: "continue" });';
 
-  await Promise.resolve();
-
-  return flushMicrotasks(hops - 1);
-};
-
-const run = async () =>
+const run = async (isTest?: boolean) =>
   runScriptOnCloud({
     cloudConnection,
-    script: 'const runAction = () => ({ action: "continue" });',
+    endpoint,
+    tenantId: 'test-tenant',
+    script,
     entry: 'runAction',
-    payload: {},
+    payload: { event: {} },
+    isTest,
   });
+
+/** Intercept the Worker call, asserting the auth header the token mint produced. */
+const mockWorkerCall = (body?: nock.RequestBodyMatcher) =>
+  nock(endpoint, {
+    reqheaders: { authorization: `Bearer ${workerAccessToken}` },
+  }).post('/api/script-run', body);
+
+/** The rejection reason of a run that is expected to throw. */
+const runAndCatch = async (): Promise<unknown> => expect(run()).rejects.toThrow();
 
 describe('runScriptOnCloud', () => {
   afterEach(() => {
     jest.clearAllMocks();
-    jest.useRealTimers();
+    nock.cleanAll();
   });
 
-  it('unwraps the value envelope', async () => {
-    post.mockResolvedValueOnce({ value: { action: 'continue' } });
+  it('posts the run request and returns a success result', async () => {
+    mockWorkerCall({
+      tenantId: 'test-tenant',
+      entry: 'runAction',
+      script,
+      payload: { event: {} },
+    }).reply(200, { ok: true, value: { action: 'continue' } });
 
-    await expect(run()).resolves.toEqual({ action: 'continue' });
+    await expect(run()).resolves.toEqual({ ok: true, value: { action: 'continue' } });
   });
 
-  it('tolerates a body-less response instead of throwing on the destructure', async () => {
-    // The withtyped client returns `undefined` for a 204 whatever the route declares.
-    // eslint-disable-next-line unicorn/no-useless-undefined -- That `undefined` is the case under test.
-    post.mockResolvedValueOnce(undefined);
+  it('forwards the dry-run flag', async () => {
+    mockWorkerCall((body: Record<string, unknown>) => body.isTest === true).reply(200, {
+      ok: true,
+      value: null,
+    });
 
-    await expect(run()).resolves.toBeUndefined();
+    await expect(run(true)).resolves.toEqual({ ok: true, value: null });
   });
 
-  it('rejects with a timeout error when the request never settles', async () => {
-    jest.useFakeTimers();
-    // eslint-disable-next-line @typescript-eslint/no-empty-function -- A request that never settles is the case under test.
-    post.mockReturnValueOnce(new Promise(() => {}));
+  it('returns a script failure as a result rather than throwing', async () => {
+    mockWorkerCall().reply(200, {
+      ok: false,
+      kind: 'runtime',
+      message: 'Boom.',
+      stack: 'TypeError: Boom.\n  at <redacted>',
+    });
 
-    const result = run();
-    // Attach the assertion before advancing so the rejection is never unhandled.
-    const expectation = expect(result).rejects.toMatchObject({ status: 500 });
-
-    await flushMicrotasks();
-    expect(jest.getTimerCount()).toBe(1);
-    jest.advanceTimersByTime(5000);
-    await expectation;
+    await expect(run()).resolves.toEqual({
+      ok: false,
+      kind: 'runtime',
+      message: 'Boom.',
+      stack: 'TypeError: Boom.\n  at <redacted>',
+    });
   });
 
-  it('does not leave a pending timer behind on a settled request', async () => {
-    jest.useFakeTimers();
-    post.mockResolvedValueOnce({ value: 'done' });
+  it('keeps the upstream body out of the error on a non-2xx', async () => {
+    mockWorkerCall().reply(502, 'x'.repeat(1000));
 
-    await expect(run()).resolves.toBe('done');
-    expect(jest.getTimerCount()).toBe(0);
+    const error = await run().catch((error: unknown) => error);
+    const body: unknown = await (error as { response: Response }).response.json();
+
+    // The status identifies the failure; the body reaches the audit log and the RP, so it is dropped.
+    expect(body).toEqual({ message: 'Script runner error: 502' });
+  });
+
+  it('throws when the envelope drifts', async () => {
+    mockWorkerCall().reply(200, { ok: false, kind: 'brandNewKind', message: 'Boom.' });
+
+    const error = await run().catch((error: unknown) => error);
+    const body: unknown = await (error as { response: Response }).response.json();
+
+    expect(body).toEqual({ message: 'Script runner returned an unexpected response.' });
+  });
+
+  it.each([401, 403])('drops the cached worker token on a %i', async (status) => {
+    mockWorkerCall().reply(status, { message: 'Nope.' });
+
+    await runAndCatch();
+
+    expect(invalidateWorkerAccessToken).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps the cached worker token on a non-auth failure', async () => {
+    mockWorkerCall().reply(500, { message: 'Nope.' });
+
+    await runAndCatch();
+
+    expect(invalidateWorkerAccessToken).not.toHaveBeenCalled();
   });
 });

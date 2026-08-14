@@ -59,3 +59,70 @@ describe('getAccessToken()', () => {
     expect(cachedToken).toBe(mockAccessToken);
   });
 });
+
+describe('getWorkerAccessToken()', () => {
+  const { getAccessToken, getWorkerAccessToken } = createCloudConnectionLibrary(logtoConfigs);
+  const mockWorkerAccessToken = 'mockWorkerAccessToken';
+
+  beforeEach(() => {
+    // Drop interceptors the previous describe left unconsumed — nock matching is global FIFO.
+    nock.cleanAll();
+  });
+
+  it('should mint the token for the worker resource and scope, cached separately', async () => {
+    nock(adminEndpoint)
+      .post(
+        '/oidc/token',
+        (body: Record<string, string>) =>
+          body.resource === 'https://*.logto.workers.dev' &&
+          body.scope === 'invoke:worker:script-run'
+      )
+      .reply(200, {
+        access_token: mockWorkerAccessToken,
+        expires_in: 3600,
+        token_type: 'Bearer',
+      });
+
+    const token = await getWorkerAccessToken();
+    expect(token).toBe(mockWorkerAccessToken);
+
+    // The Cloud service token cache must not be shared — the audiences differ.
+    nock(adminEndpoint)
+      .post('/oidc/token', (body: Record<string, string>) => body.resource === 'resource')
+      .reply(200, {
+        access_token: mockAccessToken,
+        expires_in: 3600,
+        token_type: 'Bearer',
+      });
+
+    const cloudToken = await getAccessToken();
+    expect(cloudToken).toBe(mockAccessToken);
+
+    // Cached: no further request is mounted, so a miss would throw from nock.
+    const cachedToken = await getWorkerAccessToken();
+    expect(cachedToken).toBe(mockWorkerAccessToken);
+  });
+
+  it('should drop the cached token when invalidated', async () => {
+    const { getWorkerAccessToken, invalidateWorkerAccessToken } =
+      createCloudConnectionLibrary(logtoConfigs);
+
+    nock(adminEndpoint).post('/oidc/token').reply(200, {
+      access_token: mockWorkerAccessToken,
+      expires_in: 3600,
+      token_type: 'Bearer',
+    });
+
+    await expect(getWorkerAccessToken()).resolves.toBe(mockWorkerAccessToken);
+
+    invalidateWorkerAccessToken();
+
+    nock(adminEndpoint).post('/oidc/token').reply(200, {
+      access_token: 'rotatedWorkerAccessToken',
+      expires_in: 3600,
+      token_type: 'Bearer',
+    });
+
+    await expect(getWorkerAccessToken()).resolves.toBe('rotatedWorkerAccessToken');
+  });
+});

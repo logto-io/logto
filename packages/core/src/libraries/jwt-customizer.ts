@@ -1,5 +1,6 @@
 /* eslint-disable max-lines -- The legacy `node:vm` and Azure Functions paths coexist with the script-runner adapters until LOG-13956 and LOG-13958 remove them. */
 import {
+  adminTenantId,
   type CustomJwtErrorBody,
   CustomJwtErrorCode,
   jwtCustomizerUserContextGuard,
@@ -35,6 +36,7 @@ import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type { LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import { type ScopeLibrary } from '#src/libraries/scope.js';
+import { type SubscriptionLibrary } from '#src/libraries/subscription.js';
 import { type UserLibrary } from '#src/libraries/user.js';
 import type Queries from '#src/tenants/Queries.js';
 import {
@@ -50,7 +52,6 @@ import {
   buildScriptExecutionErrorBody,
   buildScriptFailureError,
   getScriptFailureStatusCode,
-  parseCloudScriptFailure,
   runScriptOnCloud,
   runScriptOnWorkerPool,
   ScriptExecutionError,
@@ -173,9 +174,11 @@ export class JwtCustomizerLibrary {
   }
 
   constructor(
+    private readonly tenantId: string,
     private readonly queries: Queries,
     private readonly logtoConfigs: LogtoConfigLibrary,
     private readonly cloudConnection: CloudConnectionLibrary,
+    private readonly subscription: SubscriptionLibrary,
     private readonly userLibrary: UserLibrary,
     private readonly scopeLibrary: ScopeLibrary
   ) {}
@@ -396,9 +399,29 @@ export class JwtCustomizerLibrary {
     isTest?: boolean
   ): Promise<Optional<UnknownObject>> {
     // TODO (LOG-13958): drop the legacy remote paths and the gate once the Cloud script runner
-    // has been manually verified and released.
-    if (!EnvSet.values.isDevFeaturesEnabled) {
+    // has been manually verified and released. `scriptRunnerEndpoint` additionally covers a region
+    // where the Worker endpoint is not injected yet.
+    const { isDevFeaturesEnabled, scriptRunnerEndpoint } = EnvSet.values;
+
+    if (!isDevFeaturesEnabled || !scriptRunnerEndpoint) {
       return this.runScriptOnLegacyRuntime(payload, isTest);
+    }
+
+    /**
+     * The plan quota is enforced here rather than left to the transport: the runner only verifies
+     * audience and scope, so without this check the script of a downgraded tenant would keep
+     * running and injecting its claims into every issued token.
+     *
+     * The Management API routes carry `koaQuotaGuard` already, so this only ever fires on the
+     * issuance path, where no guard runs. Mirrors `ActionLibrary.isActionsEnabledByQuota`.
+     *
+     * Returning here rather than throwing is the intended behavior, and matches what
+     * `ActionLibrary.runAction` does for its own quota check: a plan downgrade must not break
+     * token issuance. The caller reads this as "no custom claims", so a customizer configured
+     * with `blockIssuanceOnError` still gets its token — the quota is not a script error.
+     */
+    if (!(await this.isCustomJwtEnabledByQuota())) {
+      return;
     }
 
     /**
@@ -406,9 +429,27 @@ export class JwtCustomizerLibrary {
      * The runner merges it in inside the isolate and reports a denial as a `denied` failure,
      * exactly like the worker-thread runner does.
      */
-    const value = await this.postScriptRun(payload, isTest);
+    const value = await this.postScriptRun(payload, scriptRunnerEndpoint, isTest);
 
     return JwtCustomizerLibrary.parseScriptResultValue(value);
+  }
+
+  /**
+   * Whether the tenant's plan allows running a custom JWT script.
+   *
+   * OSS and the admin tenant are never metered; every other tenant reads the cached subscription
+   * quota.
+   */
+  private async isCustomJwtEnabledByQuota(): Promise<boolean> {
+    const { isCloud } = EnvSet.values;
+
+    if (!isCloud || this.tenantId === adminTenantId) {
+      return true;
+    }
+
+    const { quota } = await this.subscription.getSubscriptionData();
+
+    return quota.customJwtEnabled;
   }
 
   /**
@@ -457,26 +498,28 @@ export class JwtCustomizerLibrary {
    * Post the run to the Cloud script runner, mapping a script failure onto the same
    * `ScriptExecutionError` the local runners produce.
    */
-  private async postScriptRun(payload: CustomJwtFetcher, isTest?: boolean): Promise<unknown> {
-    try {
-      return await runScriptOnCloud({
-        cloudConnection: this.cloudConnection,
-        script: payload.script,
-        entry: 'getCustomJwtClaims',
-        payload: pick(payload, 'token', 'context', 'environmentVariables'),
-        isTest,
-      });
-    } catch (error: unknown) {
-      const failure = await parseCloudScriptFailure(error);
+  private async postScriptRun(
+    payload: CustomJwtFetcher,
+    endpoint: string,
+    isTest?: boolean
+  ): Promise<unknown> {
+    const result = await runScriptOnCloud({
+      cloudConnection: this.cloudConnection,
+      endpoint,
+      tenantId: this.tenantId,
+      script: payload.script,
+      entry: 'getCustomJwtClaims',
+      payload: pick(payload, 'token', 'context', 'environmentVariables'),
+      isTest,
+    });
 
-      if (!failure) {
-        throw error;
-      }
-
-      throw failure.kind === 'denied'
-        ? buildAccessDeniedError(failure.message)
-        : buildCloudScriptFailureError(failure);
+    if (!result.ok) {
+      throw result.kind === 'denied'
+        ? buildAccessDeniedError(result.message)
+        : buildCloudScriptFailureError(result);
     }
+
+    return result.value;
   }
 }
 /* eslint-enable max-lines */

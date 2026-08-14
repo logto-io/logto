@@ -38,10 +38,27 @@ const scopes: string[] = [
 ];
 const accessTokenExpirationMargin = 60;
 
+/**
+ * The OAuth resource indicator of the Cloudflare Worker APIs, and the scope granting invocation
+ * of the script-runner Worker.
+ *
+ * Mirror `workerResourceIndicator` / `WorkerScope.InvokeScriptRunner` in `@logto/cloud-models`
+ * (`consts/worker.ts`) — that package ships no runtime code to core, so the pair is redeclared
+ * here.
+ */
+const workerResourceIndicator = 'https://*.logto.workers.dev';
+const workerScriptRunScope = 'invoke:worker:script-run';
+
+type MintedAccessToken = { expiresAt: number; accessToken: string };
+
+/** The cache key of the Cloud API resource, whose value is only known after reading credentials. */
+const cloudResourceCacheKey = '';
+
 /** The library for connecting to Logto Cloud service. */
 export class CloudConnectionLibrary {
   private client?: Client<typeof router>;
-  private accessTokenCache?: { expiresAt: number; accessToken: string };
+  /** The minted tokens by resource. Audiences differ, so they are never interchangeable. */
+  private readonly accessTokenCache = new Map<string, MintedAccessToken>();
 
   constructor(private readonly logtoConfigs: LogtoConfigLibrary) {}
 
@@ -66,43 +83,25 @@ export class CloudConnectionLibrary {
    *
    * @returns The access token for the Cloud service.
    */
-  public getAccessToken = async (): Promise<string> => {
-    if (this.accessTokenCache) {
-      const { expiresAt, accessToken } = this.accessTokenCache;
+  public getAccessToken = async (): Promise<string> =>
+    this.getCachedAccessToken(cloudResourceCacheKey, scopes.join(' '));
 
-      if (expiresAt > Date.now() / 1000 + accessTokenExpirationMargin) {
-        return accessToken;
-      }
-    }
+  /**
+   * Get the access token for invoking the script-runner Worker directly, minted with the same
+   * cloud-connection M2M credentials as {@link getAccessToken} but for the worker resource.
+   */
+  public getWorkerAccessToken = async (): Promise<string> =>
+    this.getCachedAccessToken(workerResourceIndicator, workerScriptRunScope);
 
-    const { tokenEndpoint, appId, appSecret, resource } = await this.getCloudConnectionData();
-
-    const text = await ky
-      .post(tokenEndpoint, {
-        headers: {
-          ...formUrlEncodedHeaders,
-          Authorization: `Basic ${Buffer.from(`${appId}:${appSecret}`).toString('base64')}`,
-        },
-        body: new URLSearchParams({
-          grant_type: 'client_credentials',
-          resource,
-          scope: scopes.join(' '),
-        }),
-      })
-      .text();
-
-    const result = accessTokenResponseGuard.safeParse(safeParseJson(text));
-
-    if (!result.success) {
-      throw new Error('Unable to get access token for Cloud service');
-    }
-
-    this.accessTokenCache = {
-      expiresAt: Date.now() / 1000 + result.data.expires_in,
-      accessToken: result.data.access_token,
-    };
-
-    return result.data.access_token;
+  /**
+   * Drop the cached Worker token so the next call mints a fresh one.
+   *
+   * The cache is otherwise only invalidated by time, so a token invalidated before its expiry —
+   * admin-tenant key rotation, a missing grant — would break every script run for the rest of its
+   * lifetime. The Worker transport calls this when the Worker rejects the token.
+   */
+  public invalidateWorkerAccessToken = (): void => {
+    this.accessTokenCache.delete(workerResourceIndicator);
   };
 
   /**
@@ -123,6 +122,63 @@ export class CloudConnectionLibrary {
     }
 
     return this.client;
+  };
+
+  /**
+   * Mint an access token via the client credentials flow against the admin tenant, caching it
+   * under `resourceKey` until it expires. The margin keeps a token that is about to expire from
+   * being handed to a call that outlives it.
+   *
+   * `resourceKey` is the resource indicator to request, or {@link cloudResourceCacheKey} for the
+   * Cloud API resource carried by the stored credentials.
+   */
+  private readonly getCachedAccessToken = async (
+    resourceKey: string,
+    scope: string
+  ): Promise<string> => {
+    const cached = this.accessTokenCache.get(resourceKey);
+
+    if (cached && cached.expiresAt > Date.now() / 1000 + accessTokenExpirationMargin) {
+      return cached.accessToken;
+    }
+
+    const minted = await this.requestAccessToken(resourceKey, scope);
+    this.accessTokenCache.set(resourceKey, minted);
+
+    return minted.accessToken;
+  };
+
+  private readonly requestAccessToken = async (
+    resourceKey: string,
+    scope: string
+  ): Promise<MintedAccessToken> => {
+    const { tokenEndpoint, appId, appSecret, resource } = await this.getCloudConnectionData();
+    const targetResource = resourceKey === cloudResourceCacheKey ? resource : resourceKey;
+
+    const text = await ky
+      .post(tokenEndpoint, {
+        headers: {
+          ...formUrlEncodedHeaders,
+          Authorization: `Basic ${Buffer.from(`${appId}:${appSecret}`).toString('base64')}`,
+        },
+        body: new URLSearchParams({
+          grant_type: 'client_credentials',
+          resource: targetResource,
+          scope,
+        }),
+      })
+      .text();
+
+    const result = accessTokenResponseGuard.safeParse(safeParseJson(text));
+
+    if (!result.success) {
+      throw new Error(`Unable to get access token for resource \`${targetResource}\``);
+    }
+
+    return {
+      expiresAt: Date.now() / 1000 + result.data.expires_in,
+      accessToken: result.data.access_token,
+    };
   };
 }
 
