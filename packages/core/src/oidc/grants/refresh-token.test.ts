@@ -496,6 +496,56 @@ describe('refresh token grant', () => {
     expect(value).toMatchObject({ scope: 'openid profile' });
   });
 
+  it('should keep an organization scope sharing its name with a no-longer-allowed user scope', async () => {
+    const requested = [UserScope.Organizations, UserScope.Email];
+    const ctx = createOidcContext({
+      ...validOidcContext,
+      requestParamScopes: new Set(requested),
+      params: {
+        refresh_token: 'some_refresh_token',
+        organization_id: 'some_org_id',
+        scope: requested.join(' '),
+      },
+      /** `email` is no longer in the consent configuration, but is also an organization role scope. */
+      client: {
+        ...validClient,
+        scope: ['openid', 'offline_access', UserScope.Organizations].join(' '),
+      } as unknown as Client,
+    });
+    stubRefreshToken(ctx, {
+      scope: requested.join(' '),
+      scopes: new Set(requested),
+    });
+    stubGrant(ctx, {
+      getOIDCScopeFiltered: jest.fn((filter: Set<string>) =>
+        requested.filter((scope) => filter.has(scope)).join(' ')
+      ),
+    });
+    stubAccount(ctx);
+    const tenant = new MockTenant();
+
+    Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(true);
+    Sinon.stub(tenant.queries.applications, 'findApplicationById').resolves(mockApplication);
+    Sinon.stub(tenant.queries.organizations.relations.usersRoles, 'getUserScopes').resolves([
+      { tenantId: 'default', id: 'email', name: UserScope.Email, description: null },
+    ]);
+    Sinon.stub(tenant.queries.organizations, 'getMfaStatus').resolves({
+      isMfaRequired: false,
+      hasMfaConfigured: false,
+    });
+
+    const entityStub = Sinon.stub(ctx.oidc, 'entity');
+    await expect(mockHandler(tenant)(ctx)).resolves.toBeUndefined();
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- `entity()` args are typed `unknown`; the assertions below narrow them
+    const [key, value] = entityStub.lastCall.args;
+    expect(key).toBe('AccessToken');
+    expect(value).toMatchObject({
+      scope: UserScope.Email,
+      aud: 'urn:logto:organization:some_org_id',
+    });
+  });
+
   it('should not explode when everything looks fine', async () => {
     const ctx = createPreparedContext();
     const tenant = new MockTenant();
