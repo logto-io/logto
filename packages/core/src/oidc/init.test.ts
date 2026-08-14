@@ -81,17 +81,28 @@ class MockCimdEnvSet extends EnvSet {
 
 const cimdEnvSet = new MockCimdEnvSet(defaultTenantId, EnvSet.values.dbUrl);
 
-const createTestClient = (): KoaContextWithOIDC['oidc']['client'] => {
+const createTestClient = (scope?: string): KoaContextWithOIDC['oidc']['client'] => {
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal client stub for OIDC context testing
   return {
     clientId,
+    scope,
     metadata: () => ({ appLevelAccessControlEnabled: true }),
   } as KoaContextWithOIDC['oidc']['client'];
 };
 
-const mockGrantFound = (provider: KoaContextWithOIDC['oidc']['provider']) => {
+const mockGrantFound = (
+  provider: KoaContextWithOIDC['oidc']['provider'],
+  /** Mirrors the real `getOIDCScopeFiltered`: the granted OP scopes intersected with the request. */
+  grantedOidcScope = ''
+) => {
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal grant stub for OIDC context testing
-  const grant = {} as Awaited<ReturnType<typeof provider.Grant.find>>;
+  const grant = {
+    getOIDCScopeFiltered: (filter: Set<string>) =>
+      grantedOidcScope
+        .split(' ')
+        .filter((scope) => filter.has(scope))
+        .join(' '),
+  } as Awaited<ReturnType<typeof provider.Grant.find>>;
 
   return jest.spyOn(provider.Grant, 'find').mockResolvedValueOnce(grant);
 };
@@ -391,6 +402,71 @@ describe('oidc provider init', () => {
     await expect(configuration.loadExistingGrant(ctx)).resolves.toBeDefined();
     expect(grantIdFor).toHaveBeenCalledWith(clientId);
     expect(findGrant).toHaveBeenCalledWith('session_grant_id');
+  });
+
+  it('should reject a granted user scope the client is no longer configured for', async () => {
+    const tenant = new MockTenant();
+
+    tenant.setPartial('libraries', {
+      applicationAccessControl: { assertUserHasApplicationAccess: jest.fn() },
+    });
+
+    const provider = createProvider(tenant);
+    mockGrantFound(provider, 'openid email');
+    const configuration = getProviderConfiguration(provider);
+    const ctx = createOidcContext({
+      provider,
+      account: { accountId, claims: async () => ({ sub: accountId }) },
+      client: createTestClient('openid offline_access'),
+      requestParamScopes: new Set(['openid', 'email']),
+      result: { consent: { grantId: 'grant_id' } },
+    } as Partial<KoaContextWithOIDC['oidc']>);
+
+    await expect(configuration.loadExistingGrant(ctx)).rejects.toMatchError(
+      new errors.InvalidScope('requested scope is not allowed', 'email')
+    );
+  });
+
+  it('should serve a granted user scope the client still allows', async () => {
+    const tenant = new MockTenant();
+
+    tenant.setPartial('libraries', {
+      applicationAccessControl: { assertUserHasApplicationAccess: jest.fn() },
+    });
+
+    const provider = createProvider(tenant);
+    mockGrantFound(provider, 'openid email');
+    const configuration = getProviderConfiguration(provider);
+    const ctx = createOidcContext({
+      provider,
+      account: { accountId, claims: async () => ({ sub: accountId }) },
+      client: createTestClient('openid offline_access email'),
+      requestParamScopes: new Set(['openid', 'email']),
+      result: { consent: { grantId: 'grant_id' } },
+    } as Partial<KoaContextWithOIDC['oidc']>);
+
+    await expect(configuration.loadExistingGrant(ctx)).resolves.toBeDefined();
+  });
+
+  it('should not restrict a client that carries no scope metadata', async () => {
+    const tenant = new MockTenant();
+
+    tenant.setPartial('libraries', {
+      applicationAccessControl: { assertUserHasApplicationAccess: jest.fn() },
+    });
+
+    const provider = createProvider(tenant);
+    mockGrantFound(provider, 'openid email');
+    const configuration = getProviderConfiguration(provider);
+    const ctx = createOidcContext({
+      provider,
+      account: { accountId, claims: async () => ({ sub: accountId }) },
+      client: createTestClient(),
+      requestParamScopes: new Set(['openid', 'email']),
+      result: { consent: { grantId: 'grant_id' } },
+    } as Partial<KoaContextWithOIDC['oidc']>);
+
+    await expect(configuration.loadExistingGrant(ctx)).resolves.toBeDefined();
   });
 
   it('should defer application access check to consent prompt when no existing grant is loaded', async () => {

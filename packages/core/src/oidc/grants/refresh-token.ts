@@ -37,6 +37,7 @@ import { errors, type Provider } from 'oidc-provider';
 import { type EnvSet } from '#src/env-set/index.js';
 import { assertUserHasApplicationAccessForOidc } from '#src/oidc/application-access-control.js';
 import { isCimdClient } from '#src/oidc/cimd/index.js';
+import { getOidcScopesNoLongerAllowed } from '#src/oidc/client-scope.js';
 import {
   applyMtlsBinding,
   buildTokenResponse,
@@ -305,7 +306,16 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx)
   }
 
   /** The scopes requested by the client. If not provided, use the scopes from the refresh token. */
-  const scope = params.scope ? requestParamScopes : refreshToken.scopes;
+  const requestedScope = params.scope ? requestParamScopes : refreshToken.scopes;
+  /**
+   * Dropped rather than rejected: the client usually sends no `scope` on refresh, so rejecting
+   * would turn a configuration change into an outage it has no way to fix.
+   */
+  const scopesNoLongerAllowed = getOidcScopesNoLongerAllowed(grant, client, requestedScope);
+  const scope =
+    scopesNoLongerAllowed.length > 0
+      ? new Set([...requestedScope].filter((name) => !scopesNoLongerAllowed.includes(name)))
+      : requestedScope;
   await checkRar(ctx, noop);
 
   // Note, issue organization token only if `params.resource` is not present.

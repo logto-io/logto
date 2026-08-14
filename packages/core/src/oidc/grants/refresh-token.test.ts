@@ -414,6 +414,88 @@ describe('refresh token grant', () => {
     expect(claims.mock.calls[0][1]).toBe(requestScope);
   });
 
+  it('should stop issuing a user scope the client is no longer configured for', async () => {
+    const grantedScopes = ['openid', 'profile', 'email'];
+    const claims = jest.fn().mockResolvedValue({ sub: accountId });
+    const ctx = createOidcContext({
+      ...validOidcContext,
+      requestParamScopes: new Set(grantedScopes),
+      // No `organization_id`: this exercises the plain refresh path with an ID token.
+      params: { refresh_token: 'some_refresh_token', scope: grantedScopes.join(' ') },
+      /** A third-party client whose consent configuration no longer carries `email`. */
+      client: { ...validClient, scope: 'openid offline_access profile' } as unknown as Client,
+      account: { accountId, claims },
+    });
+    stubRefreshToken(ctx, {
+      scope: grantedScopes.join(' '),
+      scopes: new Set(grantedScopes),
+    });
+    stubGrant(ctx, {
+      getOIDCScopeFiltered: jest.fn((filter: Set<string>) =>
+        grantedScopes.filter((scope) => filter.has(scope)).join(' ')
+      ),
+      getRejectedOIDCClaims: jest.fn().mockReturnValue([]),
+    });
+    stubAccount(ctx);
+    /** The real `IdToken` constructor rejects the mocked plain-object client. */
+    class StubIdToken {
+      scope?: string;
+      mask?: unknown;
+      rejected?: unknown;
+      set = jest.fn();
+      issue = jest.fn().mockResolvedValue('stub_id_token');
+    }
+    Sinon.stub(ctx.oidc.provider, 'IdToken').value(StubIdToken);
+
+    const entityStub = Sinon.stub(ctx.oidc, 'entity');
+    await expect(mockHandler()(ctx)).resolves.toBeUndefined();
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- `entity()` args are typed `unknown`; the assertions below narrow them
+    const [key, value] = entityStub.lastCall.args;
+    expect(key).toBe('AccessToken');
+    expect(value).toMatchObject({ scope: 'openid profile' });
+    // The dropped scope must not reach the ID token claims either.
+    expect(claims.mock.calls[0][1]).toBe('openid profile');
+  });
+
+  it('should issue every granted scope the client still allows', async () => {
+    const grantedScopes = ['openid', 'profile'];
+    const ctx = createOidcContext({
+      ...validOidcContext,
+      requestParamScopes: new Set(grantedScopes),
+      params: { refresh_token: 'some_refresh_token', scope: grantedScopes.join(' ') },
+      client: { ...validClient, scope: 'openid offline_access profile' } as unknown as Client,
+      account: { accountId, claims: jest.fn().mockResolvedValue({ sub: accountId }) },
+    });
+    stubRefreshToken(ctx, {
+      scope: grantedScopes.join(' '),
+      scopes: new Set(grantedScopes),
+    });
+    stubGrant(ctx, {
+      getOIDCScopeFiltered: jest.fn((filter: Set<string>) =>
+        grantedScopes.filter((scope) => filter.has(scope)).join(' ')
+      ),
+      getRejectedOIDCClaims: jest.fn().mockReturnValue([]),
+    });
+    stubAccount(ctx);
+    class StubIdToken {
+      scope?: string;
+      mask?: unknown;
+      rejected?: unknown;
+      set = jest.fn();
+      issue = jest.fn().mockResolvedValue('stub_id_token');
+    }
+    Sinon.stub(ctx.oidc.provider, 'IdToken').value(StubIdToken);
+
+    const entityStub = Sinon.stub(ctx.oidc, 'entity');
+    await expect(mockHandler()(ctx)).resolves.toBeUndefined();
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- `entity()` args are typed `unknown`; the assertions below narrow them
+    const [key, value] = entityStub.lastCall.args;
+    expect(key).toBe('AccessToken');
+    expect(value).toMatchObject({ scope: 'openid profile' });
+  });
+
   it('should not explode when everything looks fine', async () => {
     const ctx = createPreparedContext();
     const tenant = new MockTenant();
