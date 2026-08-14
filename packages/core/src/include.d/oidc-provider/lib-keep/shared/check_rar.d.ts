@@ -1,4 +1,4 @@
-// https://github.com/logto-io/node-oidc-provider/blob/d60ae9bd6d089e69f3a243119c6d87db25e837ce/lib/shared/check_rar.js
+// https://github.com/logto-io/node-oidc-provider/blob/513c523c0e68ee6112da8c871cce86204a136163/lib/shared/check_rar.js
 declare module 'oidc-provider/lib/shared/check_rar.js' {
   import type { KoaContextWithOIDC } from 'oidc-provider';
 

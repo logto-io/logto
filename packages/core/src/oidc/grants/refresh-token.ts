@@ -43,18 +43,16 @@ import {
   certificateThumbprint,
   checkAccountMismatch,
   checkAttestBinding,
+  checkDpopReplay,
   checkDpopRequired,
   checkRar,
   createAccessToken,
-  CHALLENGE_OK_WINDOW,
   difference,
   dpopValidate,
-  epochTime,
   getProviderConfiguration,
   type GrantTypeHandler,
   issueIdToken,
   pluralize,
-  type ReplayDetectionClass,
   resolveResource,
   revoke,
   validateAccount,
@@ -133,13 +131,12 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx)
     features: {
       userinfo,
       mTLS: { getCertificate },
-      dPoP: { allowReplay },
       resourceIndicators,
       richAuthorizationRequests,
     },
   } = getProviderConfiguration(provider);
 
-  const { RefreshToken, AccessToken, ReplayDetection } = provider;
+  const { RefreshToken, AccessToken } = provider;
 
   const dPoP = await dpopValidate(ctx);
 
@@ -194,16 +191,7 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx)
     }
   }
 
-  if (dPoP && !allowReplay) {
-    // eslint-disable-next-line no-restricted-syntax -- widen with the static method missing from the typings, see `ReplayDetectionClass`
-    const unique = await (ReplayDetection as ReplayDetectionClass).unique(
-      client.clientId,
-      dPoP.jti,
-      epochTime() + CHALLENGE_OK_WINDOW
-    );
-
-    assertThat(unique, new InvalidGrant('DPoP proof JWT Replay detected'));
-  }
+  await checkDpopReplay(ctx, dPoP, client.clientId, InvalidGrant);
 
   if (refreshToken.jkt && (!dPoP || refreshToken.jkt !== dPoP.thumbprint)) {
     throw new InvalidGrant('failed jkt verification');

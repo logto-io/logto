@@ -1,4 +1,4 @@
-// https://github.com/logto-io/node-oidc-provider/blob/7722ac95d77cd62a41528aec4eb711b3d12589d4/lib/helpers/grant_common.js
+// https://github.com/logto-io/node-oidc-provider/blob/513c523c0e68ee6112da8c871cce86204a136163/lib/helpers/grant_common.js
 declare module 'oidc-provider/lib/helpers/grant_common.js' {
   import { type X509Certificate } from 'node:crypto';
 
@@ -73,13 +73,13 @@ declare module 'oidc-provider/lib/helpers/grant_common.js' {
 
   /**
    * Binds the token to the DPoP proof key when a proof is present: runs replay detection
-   * (unless `allowReplay` is enabled) and sets the `jkt` thumbprint.
+   * (via `checkDpopReplay`, a no-op when `features.dPoP.allowReplay` is enabled) and sets the
+   * `jkt` thumbprint.
    */
   export function applyDpopBinding(
     ctx: KoaContextWithOIDC,
     dPoP: { jti: string; thumbprint: string } | undefined,
-    at: { setThumbprint(name: 'jkt', input: string): void },
-    allowReplay: boolean
+    at: { setThumbprint(name: 'jkt', input: string): void }
   ): Promise<void>;
 
   /**

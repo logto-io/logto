@@ -15,7 +15,6 @@ jest.unstable_mockModule('#src/oidc/oidc-provider-internals.js', () => ({
   getProviderConfiguration: jest.fn().mockReturnValue({
     features: {
       mTLS: { getCertificate: jest.fn() },
-      dPoP: { allowReplay: false },
     },
     scopes: new Set(['foo', 'bar']),
   }),

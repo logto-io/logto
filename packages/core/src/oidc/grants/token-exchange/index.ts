@@ -93,7 +93,6 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx)
       userinfo,
       resourceIndicators,
       mTLS: { getCertificate },
-      dPoP: { allowReplay },
     },
     scopes: oidcScopes,
     findAccount,
@@ -153,7 +152,7 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx)
     ...(subjectTokenId ? { subjectTokenId } : {}),
   };
 
-  await applyDpopBinding(ctx, dPoP, accessToken, allowReplay);
+  await applyDpopBinding(ctx, dPoP, accessToken);
   checkDpopRequired(ctx, dPoP);
 
   const cert = checkMtlsCert(ctx, getCertificate);
