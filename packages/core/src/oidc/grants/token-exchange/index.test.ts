@@ -45,6 +45,12 @@ const clientId = 'some_client_id';
 const subjectTokenId = 'some_token_id';
 const accountId = 'some_account_id';
 
+/** A verified JWT access token, as `jose` would return it for a token issued by the provider. */
+const mockVerifiedAccessToken = (payload: Record<string, unknown> = {}) => ({
+  protectedHeader: { alg: 'ES384', typ: 'at+jwt' },
+  payload: { sub: accountId, client_id: 'some_source_client_id', ...payload },
+});
+
 type Client = InstanceType<KoaContextWithOIDC['oidc']['provider']['Client']>;
 
 const validClient: Client = {
@@ -300,22 +306,24 @@ describe('token exchange', () => {
 
     it('should throw when JWT does not contain sub claim', async () => {
       const ctx = createPreparedJwtContext();
-      mockJwtVerify.mockResolvedValueOnce({ payload: {} });
+      mockJwtVerify.mockResolvedValueOnce(mockVerifiedAccessToken({ sub: undefined }));
       await expect(mockHandler()(ctx)).rejects.toMatchError(
         new errors.InvalidGrant('subject token does not contain a valid `sub` claim')
       );
     });
 
+    // The token-class assertions on the JWT subject token live in `account.test.ts`.
+
     it('should throw when account cannot be found', async () => {
       const ctx = createPreparedJwtContext();
-      mockJwtVerify.mockResolvedValueOnce({ payload: { sub: accountId } });
+      mockJwtVerify.mockResolvedValueOnce(mockVerifiedAccessToken());
       Sinon.stub(getProviderConfiguration(ctx.oidc.provider), 'findAccount').resolves();
       await expect(mockHandler()(ctx)).rejects.toThrow(errors.InvalidGrant);
     });
 
     it('should not consume the token (allow multiple exchanges)', async () => {
       const ctx = createPreparedJwtContext();
-      mockJwtVerify.mockResolvedValueOnce({ payload: { sub: accountId } });
+      mockJwtVerify.mockResolvedValueOnce(mockVerifiedAccessToken());
       Sinon.stub(getProviderConfiguration(ctx.oidc.provider), 'findAccount').resolves({
         accountId,
       });
@@ -396,7 +404,7 @@ describe('token exchange', () => {
       // Mock AccessToken.find to return undefined (not found)
       Sinon.stub(ctx.oidc.provider.AccessToken, 'find').resolves();
       // Mock jwtVerify to succeed
-      mockJwtVerify.mockResolvedValueOnce({ payload: { sub: accountId } });
+      mockJwtVerify.mockResolvedValueOnce(mockVerifiedAccessToken());
       Sinon.stub(getProviderConfiguration(ctx.oidc.provider), 'findAccount').resolves({
         accountId,
       });

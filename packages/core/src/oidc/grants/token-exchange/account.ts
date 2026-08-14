@@ -42,8 +42,25 @@ const validateImpersonationToken = async (
 };
 
 /**
+ * The JOSE `typ` header value that RFC 9068 assigns to OAuth 2.0 JWT access tokens. Every signed
+ * JWT access token issued by the provider carries it, while ID tokens (and any other same-issuer
+ * JWT) do not.
+ */
+const jwtAccessTokenType = 'at+jwt';
+
+/**
  * Validates a JWT access token using the issuer's JWK set.
  * JWT access tokens can be exchanged multiple times (not consumption-tracked).
+ *
+ * @remarks
+ * A valid signature from the tenant's JWK set is NOT sufficient: ID tokens are signed by the same
+ * keys under the same issuer, so verifying only the signature would let an authentication-purpose
+ * ID token (e.g. one held by a third-party application that was granted `openid` alone) be
+ * submitted as an access-token subject and converted into an API access token. The token class is
+ * therefore asserted explicitly before the subject is trusted.
+ *
+ * @see {@link https://www.rfc-editor.org/rfc/rfc8725.html#section-3.12 | RFC 8725 §3.12} for the
+ * general requirement that different kinds of JWTs from one issuer stay mutually exclusive.
  */
 const validateJwtAccessToken = async (
   subjectToken: string,
@@ -52,7 +69,18 @@ const validateJwtAccessToken = async (
   const { localJWKSet, issuer } = jwtVerificationOptions;
 
   try {
-    const { payload } = await jwtVerify(subjectToken, localJWKSet, { issuer });
+    const { payload, protectedHeader } = await jwtVerify(subjectToken, localJWKSet, { issuer });
+
+    // The media type may appear with or without the `application/` prefix. @see RFC 7515 §4.1.9.
+    assertThat(
+      protectedHeader.typ?.toLowerCase().replace(/^application\//, '') === jwtAccessTokenType,
+      new InvalidGrant('subject token is not an access token')
+    );
+    // Defense in depth: every JWT access token carries `client_id`, no ID token does.
+    assertThat(
+      typeof payload.client_id === 'string',
+      new InvalidGrant('subject token is not an access token')
+    );
     assertThat(payload.sub, new InvalidGrant('subject token does not contain a valid `sub` claim'));
 
     // JWT access tokens are not consumption-tracked, so no subjectTokenId is returned.
