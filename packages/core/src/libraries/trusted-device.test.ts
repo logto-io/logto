@@ -34,8 +34,9 @@ const createCookieContext = (value?: string) => {
 
 const createQueries = () =>
   ({
-    insert: jest.fn(),
+    insertIfNotExists: jest.fn(),
     findActiveByIdAndUserId: jest.fn(),
+    updateMetadataByIdAndUserId: jest.fn(),
     deleteExpiredByIdAndUserId: jest.fn(),
     deleteExpiredByTenant: jest.fn(),
   }) as unknown as jest.Mocked<TrustedDeviceQueries>;
@@ -119,7 +120,7 @@ describe('trusted device library', () => {
 
     jest.spyOn(Date, 'now').mockReturnValue(now);
 
-    queries.insert.mockImplementationOnce(async (data) => ({
+    queries.insertIfNotExists.mockImplementationOnce(async (data) => ({
       tenantId,
       userAgent: null,
       ip: null,
@@ -134,13 +135,13 @@ describe('trusted device library', () => {
     const library = createTrustedDeviceLibrary(tenantId, queries, policyLibrary, {
       isProduction: false,
     });
-    const record = await library.createCredential({ ctx, userId });
+    const record = await library.createCredential({ ctx, deviceId: trustedDeviceId, userId });
 
     if (!record) {
       throw new Error('Expected trusted-device creation to be allowed');
     }
 
-    const inserted = queries.insert.mock.calls[0]?.[0];
+    const inserted = queries.insertIfNotExists.mock.calls[0]?.[0];
     const cookieValue = set.mock.calls[0]?.[1];
     const parsed =
       typeof cookieValue === 'string' ? parseTrustedDeviceCredential(cookieValue) : null;
@@ -180,9 +181,74 @@ describe('trusted device library', () => {
       isProduction: false,
     });
 
-    await expect(library.createCredential({ ctx, userId })).resolves.toBeUndefined();
-    expect(queries.insert).not.toHaveBeenCalled();
+    await expect(
+      library.createCredential({ ctx, deviceId: trustedDeviceId, userId })
+    ).resolves.toBeUndefined();
+    expect(queries.insertIfNotExists).not.toHaveBeenCalled();
     expect(set).not.toHaveBeenCalled();
+  });
+
+  it('rechecks the effective policy before each creation attempt', async () => {
+    const queries = createQueries();
+    const getEffectivePolicy = jest
+      .fn()
+      .mockResolvedValueOnce({ enabled: false, durationDays: 30 })
+      .mockResolvedValueOnce({ enabled: true, durationDays: 30 });
+    const policyLibrary = { getEffectivePolicy } as unknown as TrustedDevicePolicyLibrary;
+    const { ctx, set } = createCookieContext();
+    const record = buildTrustedDevice(Buffer.alloc(32));
+    queries.insertIfNotExists.mockResolvedValueOnce(record);
+    const library = createTrustedDeviceLibrary(tenantId, queries, policyLibrary, {
+      isProduction: false,
+    });
+
+    await expect(
+      library.createCredential({ ctx, deviceId: trustedDeviceId, userId })
+    ).resolves.toBeUndefined();
+    await expect(
+      library.createCredential({ ctx, deviceId: trustedDeviceId, userId })
+    ).resolves.toEqual(record);
+
+    expect(getEffectivePolicy).toHaveBeenCalledTimes(2);
+    expect(queries.insertIfNotExists).toHaveBeenCalledTimes(1);
+    expect(set).toHaveBeenCalledTimes(1);
+  });
+
+  it('writes only the credential that wins concurrent creation for an interaction', async () => {
+    const queries = createQueries();
+    const firstCookie = createCookieContext();
+    const secondCookie = createCookieContext();
+    queries.insertIfNotExists
+      .mockImplementationOnce(async (data) => ({
+        tenantId,
+        userAgent: null,
+        ip: null,
+        country: null,
+        city: null,
+        createdAt: Date.now(),
+        lastUsedAt: Date.now(),
+        ...data,
+      }))
+      .mockResolvedValueOnce(null);
+    queries.deleteExpiredByTenant.mockResolvedValueOnce(0);
+    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(), {
+      isProduction: false,
+    });
+
+    const results = await Promise.all([
+      library.createCredential({ ctx: firstCookie.ctx, deviceId: trustedDeviceId, userId }),
+      library.createCredential({ ctx: secondCookie.ctx, deviceId: trustedDeviceId, userId }),
+    ]);
+
+    expect(results[0]).toBeDefined();
+    expect(results[1]).toBeUndefined();
+    expect(queries.insertIfNotExists).toHaveBeenCalledTimes(2);
+    expect(queries.insertIfNotExists.mock.calls.map(([data]) => data.id)).toEqual([
+      trustedDeviceId,
+      trustedDeviceId,
+    ]);
+    expect(firstCookie.set).toHaveBeenCalledTimes(1);
+    expect(secondCookie.set).not.toHaveBeenCalled();
   });
 
   it('uses Secure and the __Host- prefix in production', () => {
@@ -298,6 +364,32 @@ describe('trusted device library', () => {
 
     expect(queries.deleteExpiredByIdAndUserId).toHaveBeenCalledWith(trustedDeviceId, userId);
     expect(set).toHaveBeenCalledTimes(1);
+  });
+
+  it('updates last-used metadata and schedules opportunistic cleanup', async () => {
+    const queries = createQueries();
+    const metadata = {
+      userAgent: 'Test browser',
+      ip: '192.0.2.1',
+      country: 'US',
+      city: 'Portland',
+    };
+    const record = buildTrustedDevice(Buffer.alloc(32));
+    queries.updateMetadataByIdAndUserId.mockResolvedValueOnce(record);
+    queries.deleteExpiredByTenant.mockResolvedValueOnce(0);
+    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(), {
+      isProduction: false,
+    });
+
+    await expect(library.updateMetadata(trustedDeviceId, userId, metadata)).resolves.toEqual(
+      record
+    );
+    expect(queries.updateMetadataByIdAndUserId).toHaveBeenCalledWith(
+      trustedDeviceId,
+      userId,
+      metadata
+    );
+    expect(queries.deleteExpiredByTenant).toHaveBeenCalledTimes(1);
   });
 
   it('deduplicates concurrent opportunistic cleanup within the cooldown', async () => {

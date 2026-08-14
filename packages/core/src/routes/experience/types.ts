@@ -6,6 +6,7 @@ import {
   secretEnterpriseSsoConnectorRelationPayloadGuard,
   secretSocialConnectorRelationPayloadGuard,
   type User,
+  TrustedDevices,
   Users,
   UserSsoIdentities,
   type UserSsoIdentity,
@@ -197,6 +198,9 @@ export type WithHooksAndLogsContext<ContextT extends WithLogContext = WithLogCon
 export type InteractionStorage = {
   interactionEvent: InteractionEvent;
   userId?: string;
+  trustedDeviceCreation?: {
+    deviceId: string;
+  };
   trustedDeviceFulfillment?: {
     userId: string;
     trustedDeviceId: string;
@@ -215,6 +219,11 @@ export type InteractionStorage = {
 export const interactionStorageGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent),
   userId: z.string().optional(),
+  trustedDeviceCreation: z
+    .object({
+      deviceId: TrustedDevices.guard.shape.id,
+    })
+    .optional(),
   trustedDeviceFulfillment: z
     .object({
       userId: z.string(),
@@ -237,6 +246,10 @@ export const interactionStorageGuard = z.object({
 export type SanitizedInteractionStorageData = {
   interactionEvent: InteractionEvent;
   userId?: string;
+  trustedDevice?: {
+    canCreate: boolean;
+    durationDays?: number;
+  };
   profile?: SanitizedInteractionProfile;
   verificationRecords?: SanitizedVerificationRecordData[];
   mfa?: SanitizedMfaData;
@@ -254,6 +267,12 @@ export type SanitizedInteractionStorageData = {
 export const sanitizedInteractionStorageGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent),
   userId: z.string().optional(),
+  trustedDevice: z
+    .object({
+      canCreate: z.boolean(),
+      durationDays: z.number().optional(),
+    })
+    .optional(),
   profile: sanitizedInteractionProfileGuard,
   verificationRecords: publicVerificationRecordDataGuard.array().optional(),
   mfa: sanitizedMfaDataGuard.optional(),
