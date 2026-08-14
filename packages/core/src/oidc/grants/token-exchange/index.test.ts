@@ -366,6 +366,7 @@ describe('token exchange', () => {
       // Mock AccessToken.find to return a valid token
       Sinon.stub(ctx.oidc.provider.AccessToken, 'find').resolves({
         accountId,
+        clientId,
         isExpired: false,
       });
       Sinon.stub(getProviderConfiguration(ctx.oidc.provider), 'findAccount').resolves({
