@@ -4,6 +4,7 @@ import type * as interaction from './interaction.js';
 import type * as jwtCustomizer from './jwt-customizer.js';
 import type * as saml from './saml.js';
 import type * as token from './token.js';
+import type * as trustedDevice from './trusted-device.js';
 
 export * as interaction from './interaction.js';
 export * as token from './token.js';
@@ -11,6 +12,7 @@ export * as hook from './hook.js';
 export * as action from './action.js';
 export * as jwtCustomizer from './jwt-customizer.js';
 export * as saml from './saml.js';
+export * as trustedDevice from './trusted-device.js';
 
 /** Fallback for empty or unrecognized log keys. */
 export const LogKeyUnknown = 'Unknown';
@@ -21,6 +23,7 @@ export type WebhookLogKey = hook.LogKey;
 export type ActionLogKey = action.LogKey;
 export type JwtCustomizerLogKey = jwtCustomizer.LogKey;
 export type SamlLogKey = saml.LogKey;
+export type TrustedDeviceLogKey = trustedDevice.LogKey;
 
 /**
  * The union type of all available audit log keys.
@@ -34,7 +37,8 @@ export type AuditLogKey =
   | TokenLogKey
   | SamlLogKey
   | ActionLogKey
-  | JwtCustomizerLogKey;
+  | JwtCustomizerLogKey
+  | TrustedDeviceLogKey;
 
 /**
  * The union type of all available log keys.
@@ -48,6 +52,7 @@ export type AuditLogPrefix =
   | saml.Prefix
   | action.Prefix
   | jwtCustomizer.Prefix
+  | trustedDevice.Prefix
   | typeof LogKeyUnknown;
 
 export type WebhookLogPrefix = hook.Type;

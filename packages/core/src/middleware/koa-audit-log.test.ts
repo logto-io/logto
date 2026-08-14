@@ -19,7 +19,8 @@ const { jest } = import.meta;
 await mockIdGenerators();
 
 const insertLog = jest.fn();
-const queries = { logs: { insertLog } } as unknown as Queries;
+const insertLogIfNotExists = jest.fn();
+const queries = { logs: { insertLog, insertLogIfNotExists } } as unknown as Queries;
 
 const { default: koaLog } = await import('./koa-audit-log.js');
 const { default: RequestError } = await import('#src/errors/RequestError/index.js');
@@ -78,6 +79,62 @@ describe('koaAuditLog middleware', () => {
         key: logKey,
         result: LogResult.Success,
         ip,
+        userAgent,
+        userAgentParsed,
+      },
+    });
+  });
+
+  it('should omit the request IP for entries that opt out of it', async () => {
+    const ctx: TestContext = createTestContext({ 'user-agent': userAgent });
+    ctx.request.ip = ip;
+
+    const next = async () => {
+      const log = ctx.createLog('TrustedDevice.Created', { includeRequestIp: false });
+      log.append(mockPayload);
+    };
+
+    await koaLog(queries)(ctx, next);
+
+    expect(insertLog).toHaveBeenCalledWith({
+      id: mockId,
+      key: 'TrustedDevice.Created',
+      payload: {
+        ...mockPayload,
+        key: 'TrustedDevice.Created',
+        result: LogResult.Success,
+        userAgent,
+        userAgentParsed,
+      },
+    });
+  });
+
+  it('should reuse a conflict-safe log ID for retries with an idempotency key', async () => {
+    const idempotencyKey = 'trusted-usage-id';
+    const createRetry = async () => {
+      const ctx: TestContext = createTestContext({ 'user-agent': userAgent });
+      ctx.request.ip = ip;
+
+      await koaLog(queries)(ctx, async () => {
+        const log = ctx.createLog('TrustedDevice.Used', {
+          includeRequestIp: false,
+          idempotencyKey,
+        });
+        log.append(mockPayload);
+      });
+    };
+
+    await Promise.all([createRetry(), createRetry()]);
+
+    expect(insertLog).not.toHaveBeenCalled();
+    expect(insertLogIfNotExists).toHaveBeenCalledTimes(2);
+    expect(insertLogIfNotExists).toHaveBeenNthCalledWith(2, {
+      id: idempotencyKey,
+      key: 'TrustedDevice.Used',
+      payload: {
+        ...mockPayload,
+        key: 'TrustedDevice.Used',
+        result: LogResult.Success,
         userAgent,
         userAgentParsed,
       },

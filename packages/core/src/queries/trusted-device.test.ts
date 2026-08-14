@@ -176,6 +176,7 @@ describe('trusted device queries', () => {
   it('returns null when metadata cannot be updated for an inactive or missing device', async () => {
     mockQuery.mockImplementationOnce(async (query, values) => {
       expect(query).toMatch(/and "expires_at" > now\(\)/i);
+      expect(query).not.toMatch(/"last_used_at" < to_timestamp/i);
       expect(values).toEqual([
         expect.any(Number),
         null,

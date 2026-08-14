@@ -42,7 +42,7 @@ const buildOperation = (
   const guard = stack.find((function_): function_ is WithGuardConfig<IMiddleware> =>
     isGuardMiddleware(function_)
   );
-  const { params, query, body, response, status } = guard?.config ?? {};
+  const { params, query, body, response, responseForOpenApi, status } = guard?.config ?? {};
 
   const pathParameters = buildParameters(params, 'path', path);
 
@@ -64,6 +64,7 @@ const buildOperation = (
   };
 
   const hasInputGuard = Boolean(params ?? query ?? body);
+  const documentedResponse = responseForOpenApi ?? response;
 
   const responses: OpenAPIV3.ResponsesObject = Object.fromEntries(
     deduplicate(
@@ -82,7 +83,7 @@ const buildOperation = (
             description,
             content: {
               'application/json': {
-                schema: response && zodTypeToSwagger(response),
+                schema: documentedResponse && zodTypeToSwagger(documentedResponse),
               },
             },
           },

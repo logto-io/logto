@@ -19,6 +19,7 @@ export enum InteractionHookEvent {
 // DataHookEvent
 export enum DataHookSchema {
   User = 'User',
+  TrustedDevice = 'TrustedDevice',
   Role = 'Role',
   Scope = 'Scope',
   Organization = 'Organization',
@@ -39,7 +40,7 @@ type BasicDataHookEvent = `${DataHookSchema}.${DataHookBasicMutationType}`;
 
 // Custom DataHook mutable schemas
 type CustomDataHookMutableSchema =
-  | `${DataHookSchema}.Data`
+  | `${Exclude<DataHookSchema, DataHookSchema.TrustedDevice>}.Data`
   | `${DataHookSchema.User}.SuspensionStatus`
   | `${DataHookSchema.Role}.Scopes`
   | `${DataHookSchema.Organization}.Membership`
@@ -55,6 +56,14 @@ export type ExceptionHookEvent =
 
 export type DataHookEvent = BasicDataHookEvent | DataHookPropertyUpdateEvent;
 
+/** Data hook events that are available only while their feature is under development. */
+export const devFeatureHookEvents = Object.freeze([
+  'TrustedDevice.Created',
+  'TrustedDevice.Deleted',
+] as const satisfies readonly DataHookEvent[]);
+
+export type DevFeatureHookEvent = (typeof devFeatureHookEvents)[number];
+
 /** The hook event values that can be registered. */
 export const hookEvents = Object.freeze([
   InteractionHookEvent.PostRegister,
@@ -65,6 +74,7 @@ export const hookEvents = Object.freeze([
   'User.Deleted',
   'User.Data.Updated',
   'User.SuspensionStatus.Updated',
+  ...devFeatureHookEvents,
   'Role.Created',
   'Role.Deleted',
   'Role.Data.Updated',

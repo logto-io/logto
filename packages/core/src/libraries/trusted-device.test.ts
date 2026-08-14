@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Credential and lifecycle behavior share security-sensitive fixtures. */
 import { createHash } from 'node:crypto';
 
 import type { TrustedDevice } from '@logto/schemas';
@@ -37,6 +38,7 @@ const createQueries = () =>
     insertIfNotExists: jest.fn(),
     findActiveByIdAndUserId: jest.fn(),
     updateMetadataByIdAndUserId: jest.fn(),
+    deleteByIdAndUserId: jest.fn(),
     deleteExpiredByIdAndUserId: jest.fn(),
     deleteExpiredByTenant: jest.fn(),
   }) as unknown as jest.Mocked<TrustedDeviceQueries>;
@@ -268,6 +270,52 @@ describe('trusted device library', () => {
     );
   });
 
+  it('queues a redacted deletion webhook only after deleting an existing record', async () => {
+    const queries = createQueries();
+    const trustedDevice = {
+      ...buildTrustedDevice(Buffer.alloc(32, 1)),
+      ip: '192.0.2.1',
+      userAgent: 'private user agent',
+    };
+    const ctx = { appendDataHookContext: jest.fn() };
+    queries.deleteByIdAndUserId.mockResolvedValueOnce(trustedDevice).mockResolvedValueOnce(null);
+    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary());
+
+    await expect(library.deleteByIdAndUserId(ctx, trustedDeviceId, userId)).resolves.toEqual(
+      trustedDevice
+    );
+    await expect(
+      library.deleteByIdAndUserId(ctx, trustedDeviceId, userId)
+    ).resolves.toBeUndefined();
+
+    expect(ctx.appendDataHookContext).toHaveBeenCalledTimes(1);
+    expect(ctx.appendDataHookContext).toHaveBeenCalledWith('TrustedDevice.Deleted', {
+      data: {
+        id: trustedDeviceId,
+        userId,
+        expiresAt: trustedDevice.expiresAt,
+      },
+      includeRequestIp: false,
+    });
+    expect(JSON.stringify(ctx.appendDataHookContext.mock.calls)).not.toContain('192.0.2.1');
+    expect(JSON.stringify(ctx.appendDataHookContext.mock.calls)).not.toContain(
+      'private user agent'
+    );
+    expect(JSON.stringify(ctx.appendDataHookContext.mock.calls)).not.toContain('secretHash');
+  });
+
+  it('does not queue a deletion webhook when the delete query fails', async () => {
+    const queries = createQueries();
+    const error = new Error('delete failed');
+    const ctx = { appendDataHookContext: jest.fn() };
+    queries.deleteByIdAndUserId.mockRejectedValueOnce(error);
+    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary());
+
+    await expect(library.deleteByIdAndUserId(ctx, trustedDeviceId, userId)).rejects.toBe(error);
+
+    expect(ctx.appendDataHookContext).not.toHaveBeenCalled();
+  });
+
   it('reads the unsigned user-specific cookie and validates the active record hash', async () => {
     const secret = generateTrustedDeviceSecret();
     const secretHash = hashTrustedDeviceSecret(secret);
@@ -420,3 +468,4 @@ describe('trusted device library', () => {
     expect(queries.deleteExpiredByTenant).toHaveBeenCalledTimes(2);
   });
 });
+/* eslint-enable max-lines */

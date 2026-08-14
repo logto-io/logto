@@ -7,6 +7,7 @@ import {
   type DataHookEvent,
   type InteractionApiMetadata,
   type ManagementApiContext,
+  type TrustedDeviceEventData,
   userInfoSelectFields,
   type ExceptionHookEvent,
 } from '@logto/schemas';
@@ -28,6 +29,8 @@ export type HookMetadata = {
 export type HookContext = {
   /** Data details */
   data?: unknown;
+  /** Include the request IP in this event's webhook payload. */
+  includeRequestIp?: boolean;
 } & Partial<ManagementApiContext> &
   Record<string, unknown>;
 
@@ -60,6 +63,8 @@ type DataHookContextMap = {
   'User.Created': UserContext;
   'User.Data.Updated': UserContext;
   'User.Deleted': UserContext;
+  'TrustedDevice.Created': { data: TrustedDeviceEventData };
+  'TrustedDevice.Deleted': { data: TrustedDeviceEventData };
 };
 
 export class HookContextManager {

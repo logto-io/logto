@@ -121,7 +121,9 @@ describe('experience api hook trigger', () => {
       }),
       webHookApi.create({
         name: 'dataHookEventListener',
-        events: hookEvents.filter((event) => !(event in InteractionHookEvent)),
+        events: getSupportedHookEvents(
+          hookEvents.filter((event) => !(event in InteractionHookEvent))
+        ),
         config: { url: webHookMockServer.endpoint },
       }),
       webHookApi.create({
