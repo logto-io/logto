@@ -57,6 +57,7 @@ describe('sendWebhookRequest', () => {
       timeout: 10_000,
       hooks: {
         afterResponse: [expect.any(Function)],
+        beforeRetry: [expect.any(Function)],
       },
     });
   });
@@ -89,6 +90,7 @@ describe('sendWebhookRequest', () => {
       timeout: 10_000,
       hooks: {
         afterResponse: [expect.any(Function)],
+        beforeRetry: [expect.any(Function)],
       },
     });
   });

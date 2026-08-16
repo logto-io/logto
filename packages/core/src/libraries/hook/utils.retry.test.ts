@@ -99,6 +99,23 @@ describe('sendWebhookRequest HTTP retries', () => {
     }
   });
 
+  it('does not retry when the connection is reset', async () => {
+    const state = { attempts: 0 };
+    const server = createServer((request) => {
+      state.attempts += 1;
+      request.socket.destroy();
+    });
+
+    try {
+      const port = await listen(server);
+
+      await expect(sendToServer(port)).rejects.toThrow();
+      expect(state.attempts).toBe(1);
+    } finally {
+      await close(server);
+    }
+  });
+
   it('does not retry when hook config retries is 0', async () => {
     const state = { attempts: 0 };
     const server = createServer((_request, response) => {

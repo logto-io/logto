@@ -11,7 +11,7 @@ import {
 import { conditional, trySafe } from '@silverhand/essentials';
 import { type Context } from 'koa';
 import { type IRouterParamContext } from 'koa-router';
-import ky, { type KyResponse } from 'ky';
+import ky, { HTTPError, type KyResponse } from 'ky';
 
 import { sign } from '#src/utils/sign.js';
 
@@ -71,6 +71,18 @@ const dropRetryAfterHeader = async (
   });
 };
 
+/**
+ * Webhook retry contract is HTTP 5xx only. Ky 1.2.3 retries any non-timeout
+ * error once POST is in `methods`; `statusCodes` only filters HTTPError.
+ * Rethrow network failures so they stay at one attempt. Do not return
+ * `ky.stop` — that resolves the request as success.
+ */
+const abortRetryOnNonHttpError = ({ error }: { error: Error }) => {
+  if (!(error instanceof HTTPError)) {
+    throw error;
+  }
+};
+
 export const sendWebhookRequest = async ({
   hookConfig,
   payload,
@@ -94,6 +106,7 @@ export const sendWebhookRequest = async ({
     timeout: 10_000,
     hooks: {
       afterResponse: [dropRetryAfterHeader],
+      beforeRetry: [abortRetryOnNonHttpError],
     },
   });
 };
