@@ -69,3 +69,5 @@ export const deleteAccountUrlGuard = z
       message: 'deleteAccountUrl must be a valid http(s) URL',
     }
   );
+
+export const accountCenterSocialStatePrefix = 'ac_';

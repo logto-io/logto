@@ -3,6 +3,7 @@
  * (POST request) from the authentication provider.
  */
 
+import { accountCenterSocialStatePrefix } from '@logto/schemas';
 import type Koa from 'koa';
 import { koaBody } from 'koa-body';
 import Router from 'koa-router';
@@ -12,13 +13,33 @@ import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
 function callbackRoutes<T extends Router>(router: T) {
+  router.get('/callback/:connectorId', async (ctx, next) => {
+    const searchParams = new URLSearchParams(ctx.querystring).toString();
+    const state = typeof ctx.query.state === 'string' ? ctx.query.state : undefined;
+
+    if (state?.startsWith(accountCenterSocialStatePrefix)) {
+      ctx.status = 303;
+      ctx.set('Location', `/account/callback/social/${ctx.params.connectorId}?${searchParams}`);
+      return;
+    }
+
+    return next();
+  });
   router.post('/callback/:connectorId', koaBody(), async (ctx) => {
     const parsed = z.record(z.string()).safeParse(ctx.request.body);
 
     assertThat(parsed.success, new RequestError('oidc.invalid_request'));
 
+    const searchParams = new URLSearchParams(parsed.data).toString();
+    const { state } = parsed.data;
+
     ctx.status = 303;
-    ctx.set('Location', ctx.request.path + '?' + new URLSearchParams(parsed.data).toString());
+    if (state?.startsWith(accountCenterSocialStatePrefix)) {
+      ctx.set('Location', `/account/callback/social/${ctx.params.connectorId}?${searchParams}`);
+      return;
+    }
+
+    ctx.set('Location', ctx.request.path + '?' + searchParams);
   });
   router.post('/account/callback/social/:connectorId', koaBody(), async (ctx) => {
     const parsed = z.record(z.string()).safeParse(ctx.request.body);

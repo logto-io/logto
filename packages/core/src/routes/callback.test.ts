@@ -1,3 +1,4 @@
+import { accountCenterSocialStatePrefix } from '@logto/schemas';
 import Koa from 'koa';
 import supertest from 'supertest';
 
@@ -13,6 +14,28 @@ describe('social connector form post callback', () => {
 
     expect(response.status).toBe(303);
     expect(response.header.location).toBe('/callback/some_connector_id?some=data');
+  });
+
+  it('should redirect to account center callback when state starts with ac_ on GET', async () => {
+    const response = await request.get(
+      `/callback/some_connector_id?state=${accountCenterSocialStatePrefix}12345&code=abc`
+    );
+
+    expect(response.status).toBe(303);
+    expect(response.header.location).toBe(
+      `/account/callback/social/some_connector_id?state=${accountCenterSocialStatePrefix}12345&code=abc`
+    );
+  });
+
+  it('should redirect to account center callback when state starts with ac_ on POST', async () => {
+    const response = await request
+      .post('/callback/some_connector_id')
+      .send({ state: `${accountCenterSocialStatePrefix}12345`, code: 'abc' });
+
+    expect(response.status).toBe(303);
+    expect(response.header.location).toBe(
+      `/account/callback/social/some_connector_id?state=${accountCenterSocialStatePrefix}12345&code=abc`
+    );
   });
 
   it('should redirect account social callback form post to the same path with query string', async () => {

@@ -43,10 +43,7 @@ function ConfigForm({
   } = useFormContext<ConnectorFormType>();
   const { tenantEndpoint } = useContext(AppDataContext);
   const availableDomains = useAvailableDomains();
-  const callbackUris = [
-    new URL(`/callback/${connectorId}`, tenantEndpoint).toString(),
-    new URL(`/account/callback/social/${connectorId}`, tenantEndpoint).toString(),
-  ];
+  const callbackUris = [new URL(`/callback/${connectorId}`, tenantEndpoint).toString()];
   const acsUrl = conditional(
     tenantEndpoint && appendPath(tenantEndpoint, `/api/authn/saml/${connectorId}`).href
   );
