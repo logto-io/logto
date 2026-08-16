@@ -12,6 +12,9 @@ import { z } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
+const getAccountCenterCallbackLocation = (connectorId: string | undefined, searchParams: string) =>
+  `/account/callback/social/${connectorId ?? ''}?${searchParams}`;
+
 function callbackRoutes<T extends Router>(router: T) {
   router.get('/callback/:connectorId', async (ctx, next) => {
     const searchParams = new URLSearchParams(ctx.querystring).toString();
@@ -19,11 +22,11 @@ function callbackRoutes<T extends Router>(router: T) {
 
     if (state?.startsWith(accountCenterSocialStatePrefix)) {
       ctx.status = 303;
-      ctx.set('Location', `/account/callback/social/${ctx.params.connectorId}?${searchParams}`);
+      ctx.set('Location', getAccountCenterCallbackLocation(ctx.params.connectorId, searchParams));
       return;
     }
 
-    return next();
+    await next();
   });
   router.post('/callback/:connectorId', koaBody(), async (ctx) => {
     const parsed = z.record(z.string()).safeParse(ctx.request.body);
@@ -35,7 +38,7 @@ function callbackRoutes<T extends Router>(router: T) {
 
     ctx.status = 303;
     if (state?.startsWith(accountCenterSocialStatePrefix)) {
-      ctx.set('Location', `/account/callback/social/${ctx.params.connectorId}?${searchParams}`);
+      ctx.set('Location', getAccountCenterCallbackLocation(ctx.params.connectorId, searchParams));
       return;
     }
 

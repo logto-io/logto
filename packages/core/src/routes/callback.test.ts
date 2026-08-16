@@ -22,9 +22,12 @@ describe('social connector form post callback', () => {
     );
 
     expect(response.status).toBe(303);
-    expect(response.header.location).toBe(
-      `/account/callback/social/some_connector_id?state=${accountCenterSocialStatePrefix}12345&code=abc`
-    );
+    const location = response.header.location!;
+    expect(location).toBeDefined();
+    const redirectUrl = new URL(location, 'http://localhost');
+    expect(redirectUrl.pathname).toBe('/account/callback/social/some_connector_id');
+    expect(redirectUrl.searchParams.get('state')).toBe(`${accountCenterSocialStatePrefix}12345`);
+    expect(redirectUrl.searchParams.get('code')).toBe('abc');
   });
 
   it('should redirect to account center callback when state starts with ac_ on POST', async () => {
@@ -33,9 +36,12 @@ describe('social connector form post callback', () => {
       .send({ state: `${accountCenterSocialStatePrefix}12345`, code: 'abc' });
 
     expect(response.status).toBe(303);
-    expect(response.header.location).toBe(
-      `/account/callback/social/some_connector_id?state=${accountCenterSocialStatePrefix}12345&code=abc`
-    );
+    const location = response.header.location!;
+    expect(location).toBeDefined();
+    const redirectUrl = new URL(location, 'http://localhost');
+    expect(redirectUrl.pathname).toBe('/account/callback/social/some_connector_id');
+    expect(redirectUrl.searchParams.get('state')).toBe(`${accountCenterSocialStatePrefix}12345`);
+    expect(redirectUrl.searchParams.get('code')).toBe('abc');
   });
 
   it('should redirect account social callback form post to the same path with query string', async () => {
