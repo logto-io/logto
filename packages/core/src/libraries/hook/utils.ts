@@ -36,7 +36,7 @@ const rangeInclusive = (start: number, end: number) =>
 /** Public contract: retry webhook POST on HTTP 5xx. Ky 1.2.3 defaults omit POST and most 5xx codes. */
 const webhookRetryLimit = 3;
 /** Ky only accepts `statusCodes` as a number list; HTTP 5xx class is 500–599. */
-export const webhookRetryStatusCodes = rangeInclusive(500, 599);
+const webhookRetryStatusCodes = rangeInclusive(500, 599);
 
 /**
  * Ky 1.2.3 always honors `Retry-After` on 503: `afterStatusCodes` is hardcoded to

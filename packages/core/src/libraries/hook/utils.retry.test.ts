@@ -1,10 +1,23 @@
 /* eslint-disable @silverhand/fp/no-mutation -- local HTTP fixture counters increment per request */
-import { createServer, type Server } from 'node:http';
+import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http';
 import { type AddressInfo } from 'node:net';
 
 import { InteractionHookEvent } from '@logto/schemas';
 
 import { generateHookTestPayload, sendWebhookRequest } from './utils.js';
+
+type MockReply =
+  | {
+      status: number;
+      headers?: Record<string, string>;
+      body?: string;
+    }
+  | { reset: true };
+
+type RetryServerFixture = {
+  endpoint: string;
+  getAttempts: () => number;
+};
 
 const listen = async (server: Server) =>
   new Promise<number>((resolve) => {
@@ -24,154 +37,132 @@ const close = async (server: Server) =>
     });
   });
 
-const sendToServer = async (port: number, retries?: number) =>
+const sendToServer = async (endpoint: string, retries?: number) =>
   sendWebhookRequest({
     hookConfig: {
-      url: `http://127.0.0.1:${port}`,
+      url: endpoint,
       retries,
     },
     payload: generateHookTestPayload('hook-id', InteractionHookEvent.PostSignIn),
     signingKey: 'signing-key',
   });
 
+const withRetryServer = async (
+  replyForAttempt: (attempt: number) => MockReply,
+  run: (fixture: RetryServerFixture) => Promise<void>
+) => {
+  const state = { attempts: 0 };
+
+  const server = createServer((request: IncomingMessage, response: ServerResponse) => {
+    state.attempts += 1;
+    const reply = replyForAttempt(state.attempts);
+
+    if ('reset' in reply) {
+      request.socket.destroy();
+      return;
+    }
+
+    response.writeHead(reply.status, reply.headers);
+    response.end(reply.body);
+  });
+
+  const port = await listen(server);
+
+  try {
+    await run({
+      endpoint: `http://127.0.0.1:${port}`,
+      getAttempts: () => state.attempts,
+    });
+  } finally {
+    await close(server);
+  }
+};
+
 describe('sendWebhookRequest HTTP retries', () => {
   it.each([500, 501, 599])(
     'retries POST %s responses three times for a total of four attempts',
-    async (statusCode) => {
-      const state = { attempts: 0 };
-      const server = createServer((_request, response) => {
-        state.attempts += 1;
-        response.writeHead(statusCode);
-        response.end();
-      });
-
-      try {
-        const port = await listen(server);
-
-        await expect(sendToServer(port)).rejects.toThrow();
-        expect(state.attempts).toBe(4);
-      } finally {
-        await close(server);
-      }
+    async (status) => {
+      await withRetryServer(
+        () => ({ status }),
+        async ({ endpoint, getAttempts }) => {
+          await expect(sendToServer(endpoint)).rejects.toThrow();
+          expect(getAttempts()).toBe(4);
+        }
+      );
     },
     20_000
   );
 
   it('stops retrying after a successful attempt', async () => {
-    const state = { attempts: 0 };
-    const server = createServer((_request, response) => {
-      state.attempts += 1;
-      if (state.attempts < 3) {
-        response.writeHead(500);
-        response.end();
-        return;
+    await withRetryServer(
+      (attempt) =>
+        attempt < 3
+          ? { status: 500 }
+          : {
+              status: 200,
+              headers: { 'Content-Type': 'application/json' },
+              body: '{"ok":true}',
+            },
+      async ({ endpoint, getAttempts }) => {
+        await expect(sendToServer(endpoint)).resolves.toHaveProperty('status', 200);
+        expect(getAttempts()).toBe(3);
       }
-
-      response.writeHead(200, { 'Content-Type': 'application/json' });
-      response.end('{"ok":true}');
-    });
-
-    try {
-      const port = await listen(server);
-
-      await expect(sendToServer(port)).resolves.toHaveProperty('status', 200);
-      expect(state.attempts).toBe(3);
-    } finally {
-      await close(server);
-    }
+    );
   }, 20_000);
 
   it('does not retry 4xx responses', async () => {
-    const state = { attempts: 0 };
-    const server = createServer((_request, response) => {
-      state.attempts += 1;
-      response.writeHead(400);
-      response.end();
-    });
-
-    try {
-      const port = await listen(server);
-
-      await expect(sendToServer(port)).rejects.toThrow();
-      expect(state.attempts).toBe(1);
-    } finally {
-      await close(server);
-    }
+    await withRetryServer(
+      () => ({ status: 400 }),
+      async ({ endpoint, getAttempts }) => {
+        await expect(sendToServer(endpoint)).rejects.toThrow();
+        expect(getAttempts()).toBe(1);
+      }
+    );
   });
 
   it('does not retry when the connection is reset', async () => {
-    const state = { attempts: 0 };
-    const server = createServer((request) => {
-      state.attempts += 1;
-      request.socket.destroy();
-    });
-
-    try {
-      const port = await listen(server);
-
-      await expect(sendToServer(port)).rejects.toThrow();
-      expect(state.attempts).toBe(1);
-    } finally {
-      await close(server);
-    }
+    await withRetryServer(
+      () => ({ reset: true }),
+      async ({ endpoint, getAttempts }) => {
+        await expect(sendToServer(endpoint)).rejects.toThrow();
+        expect(getAttempts()).toBe(1);
+      }
+    );
   });
 
   it('does not retry when hook config retries is 0', async () => {
-    const state = { attempts: 0 };
-    const server = createServer((_request, response) => {
-      state.attempts += 1;
-      response.writeHead(500);
-      response.end();
-    });
-
-    try {
-      const port = await listen(server);
-
-      await expect(sendToServer(port, 0)).rejects.toThrow();
-      expect(state.attempts).toBe(1);
-    } finally {
-      await close(server);
-    }
+    await withRetryServer(
+      () => ({ status: 500 }),
+      async ({ endpoint, getAttempts }) => {
+        await expect(sendToServer(endpoint, 0)).rejects.toThrow();
+        expect(getAttempts()).toBe(1);
+      }
+    );
   });
 
   it('honors hook config retries when set below the default', async () => {
-    const state = { attempts: 0 };
-    const server = createServer((_request, response) => {
-      state.attempts += 1;
-      response.writeHead(500);
-      response.end();
-    });
-
-    try {
-      const port = await listen(server);
-
-      await expect(sendToServer(port, 1)).rejects.toThrow();
-      expect(state.attempts).toBe(2);
-    } finally {
-      await close(server);
-    }
+    await withRetryServer(
+      () => ({ status: 500 }),
+      async ({ endpoint, getAttempts }) => {
+        await expect(sendToServer(endpoint, 1)).rejects.toThrow();
+        expect(getAttempts()).toBe(2);
+      }
+    );
   }, 20_000);
 
   it.each(['0', '86400'])(
     'retries 503 even when Retry-After is %s',
     async (retryAfter) => {
-      const state = { attempts: 0 };
       const startedAt = Date.now();
-      const server = createServer((_request, response) => {
-        state.attempts += 1;
-        response.writeHead(503, { 'Retry-After': retryAfter });
-        response.end();
-      });
 
-      try {
-        const port = await listen(server);
-
-        await expect(sendToServer(port)).rejects.toThrow();
-        expect(state.attempts).toBe(4);
-        expect(Date.now() - startedAt).toBeLessThan(10_000);
-      } finally {
-        await close(server);
-      }
+      await withRetryServer(
+        () => ({ status: 503, headers: { 'Retry-After': retryAfter } }),
+        async ({ endpoint, getAttempts }) => {
+          await expect(sendToServer(endpoint)).rejects.toThrow();
+          expect(getAttempts()).toBe(4);
+          expect(Date.now() - startedAt).toBeLessThan(10_000);
+        }
+      );
     },
     20_000
   );

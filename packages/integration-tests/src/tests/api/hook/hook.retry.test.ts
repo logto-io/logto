@@ -37,6 +37,33 @@ describe('webhook delivery retries', () => {
     }
   });
 
+  const triggerRoleCreated = async ({
+    description,
+    expectedLog,
+  }: {
+    description: string;
+    expectedLog: {
+      errorMessage?: string;
+      hookPayload?: Record<string, unknown>;
+    };
+  }) => {
+    const hook = webHookApi.hooks.get(hookName)!;
+    const role = await createRole({ description });
+
+    try {
+      await assertHookLogResult(hook, hookEvent, expectedLog);
+
+      const logs = await getWebhookRecentLogs(
+        hook.id,
+        new URLSearchParams({ logKey: `TriggerHook.${hookEvent}`, page_size: '10' })
+      );
+
+      return { logs };
+    } finally {
+      await deleteRole(role.id);
+    }
+  };
+
   beforeAll(async () => {
     await webhookServer.listen();
   });
@@ -67,23 +94,14 @@ describe('webhook delivery retries', () => {
     async (statusCode) => {
       state.statusCode = statusCode;
 
-      const hook = webHookApi.hooks.get(hookName)!;
-      const role = await createRole({ description: `webhook-retry-${statusCode}` });
-
-      await assertHookLogResult(hook, hookEvent, {
-        errorMessage: String(statusCode),
+      const { logs } = await triggerRoleCreated({
+        description: `webhook-retry-${statusCode}`,
+        expectedLog: { errorMessage: String(statusCode) },
       });
 
-      const logs = await getWebhookRecentLogs(
-        hook.id,
-        new URLSearchParams({ logKey: `TriggerHook.${hookEvent}`, page_size: '10' })
-      );
-
       expect(state.requestCount).toBe(4);
-      expect(logs.filter(({ payload }) => payload.hookId === hook.id)).toHaveLength(1);
+      expect(logs).toHaveLength(1);
       expect(logs[0]?.payload.result).toBe(LogResult.Error);
-
-      await deleteRole(role.id);
     },
     20_000
   );
@@ -92,37 +110,24 @@ describe('webhook delivery retries', () => {
     state.statusCode = 500;
     state.succeedOnAttempt = 3;
 
-    const hook = webHookApi.hooks.get(hookName)!;
-    const role = await createRole({ description: 'webhook-retry-eventual-success' });
-
-    await assertHookLogResult(hook, hookEvent, {
-      hookPayload: { event: hookEvent },
+    const { logs } = await triggerRoleCreated({
+      description: 'webhook-retry-eventual-success',
+      expectedLog: { hookPayload: { event: hookEvent } },
     });
 
-    const logs = await getWebhookRecentLogs(
-      hook.id,
-      new URLSearchParams({ logKey: `TriggerHook.${hookEvent}`, page_size: '10' })
-    );
-
     expect(state.requestCount).toBe(3);
-    expect(logs.filter(({ payload }) => payload.hookId === hook.id)).toHaveLength(1);
-
-    await deleteRole(role.id);
+    expect(logs).toHaveLength(1);
   }, 20_000);
 
   it('does not retry 4xx responses', async () => {
     state.statusCode = 400;
 
-    const hook = webHookApi.hooks.get(hookName)!;
-    const role = await createRole({ description: 'webhook-retry-4xx' });
-
-    await assertHookLogResult(hook, hookEvent, {
-      errorMessage: '400',
+    await triggerRoleCreated({
+      description: 'webhook-retry-4xx',
+      expectedLog: { errorMessage: '400' },
     });
 
     expect(state.requestCount).toBe(1);
-
-    await deleteRole(role.id);
   });
 
   it.each(['0', '86400'])(
@@ -131,25 +136,16 @@ describe('webhook delivery retries', () => {
       state.statusCode = 503;
       state.retryAfter = retryAfter;
 
-      const hook = webHookApi.hooks.get(hookName)!;
       const startedAt = Date.now();
-      const role = await createRole({ description: `webhook-retry-after-${retryAfter}` });
-
-      await assertHookLogResult(hook, hookEvent, {
-        errorMessage: '503',
+      const { logs } = await triggerRoleCreated({
+        description: `webhook-retry-after-${retryAfter}`,
+        expectedLog: { errorMessage: '503' },
       });
 
-      const logs = await getWebhookRecentLogs(
-        hook.id,
-        new URLSearchParams({ logKey: `TriggerHook.${hookEvent}`, page_size: '10' })
-      );
-
       expect(state.requestCount).toBe(4);
-      expect(logs.filter(({ payload }) => payload.hookId === hook.id)).toHaveLength(1);
+      expect(logs).toHaveLength(1);
       expect(logs[0]?.payload.result).toBe(LogResult.Error);
       expect(Date.now() - startedAt).toBeLessThan(10_000);
-
-      await deleteRole(role.id);
     },
     20_000
   );

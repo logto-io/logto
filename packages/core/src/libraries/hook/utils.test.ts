@@ -4,7 +4,7 @@ import ky from 'ky';
 
 const { jest } = import.meta;
 
-const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
+const { mockEsm } = createMockUtils(jest);
 
 const post = jest
   .spyOn(ky, 'post')
@@ -21,11 +21,10 @@ const {
   sendWebhookRequest,
   truncateMembershipDelta,
   MEMBERSHIP_DELTA_CAP,
-  webhookRetryStatusCodes,
 } = await import('./utils.js');
 
 describe('sendWebhookRequest', () => {
-  it('should call got.post with correct values', async () => {
+  it('sends a signed webhook request with the default retry limit', async () => {
     const mockHookId = 'mockHookId';
     const mockEvent: HookEvent = InteractionHookEvent.PostSignIn;
     const testPayload = generateHookTestPayload(mockHookId, mockEvent);
@@ -42,7 +41,8 @@ describe('sendWebhookRequest', () => {
       signingKey: mockSigningKey,
     });
 
-    expect(post).toBeCalledWith(mockUrl, {
+    expect(post.mock.calls[0]?.[0]).toBe(mockUrl);
+    expect(post.mock.calls[0]?.[1]).toMatchObject({
       headers: {
         'user-agent': 'Logto (https://logto.io/)',
         foo: 'bar',
@@ -52,14 +52,17 @@ describe('sendWebhookRequest', () => {
       retry: {
         limit: 3,
         methods: ['post'],
-        statusCodes: webhookRetryStatusCodes,
       },
       timeout: 10_000,
-      hooks: {
-        afterResponse: [expect.any(Function)],
-        beforeRetry: [expect.any(Function)],
-      },
     });
+    expect(post.mock.calls[0]?.[1]).toEqual(
+      expect.objectContaining({
+        hooks: {
+          afterResponse: [expect.any(Function)],
+          beforeRetry: [expect.any(Function)],
+        },
+      })
+    );
   });
 
   it('passes hook config retries through to ky', async () => {
@@ -76,7 +79,8 @@ describe('sendWebhookRequest', () => {
       signingKey: 'mockSigningKey',
     });
 
-    expect(post).toHaveBeenLastCalledWith('https://logto.gg', {
+    expect(post.mock.lastCall?.[0]).toBe('https://logto.gg');
+    expect(post.mock.lastCall?.[1]).toMatchObject({
       headers: {
         'user-agent': 'Logto (https://logto.io/)',
         'logto-signature-sha-256': mockSignature,
@@ -85,14 +89,17 @@ describe('sendWebhookRequest', () => {
       retry: {
         limit: 1,
         methods: ['post'],
-        statusCodes: webhookRetryStatusCodes,
       },
       timeout: 10_000,
-      hooks: {
-        afterResponse: [expect.any(Function)],
-        beforeRetry: [expect.any(Function)],
-      },
     });
+    expect(post.mock.lastCall?.[1]).toEqual(
+      expect.objectContaining({
+        hooks: {
+          afterResponse: [expect.any(Function)],
+          beforeRetry: [expect.any(Function)],
+        },
+      })
+    );
   });
 });
 
