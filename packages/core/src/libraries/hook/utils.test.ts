@@ -21,7 +21,7 @@ const {
   sendWebhookRequest,
   truncateMembershipDelta,
   MEMBERSHIP_DELTA_CAP,
-  rangeInclusive,
+  webhookRetryStatusCodes,
 } = await import('./utils.js');
 
 describe('sendWebhookRequest', () => {
@@ -52,9 +52,12 @@ describe('sendWebhookRequest', () => {
       retry: {
         limit: 3,
         methods: ['post'],
-        statusCodes: rangeInclusive(500, 599),
+        statusCodes: webhookRetryStatusCodes,
       },
       timeout: 10_000,
+      hooks: {
+        afterResponse: [expect.any(Function)],
+      },
     });
   });
 
@@ -81,9 +84,12 @@ describe('sendWebhookRequest', () => {
       retry: {
         limit: 1,
         methods: ['post'],
-        statusCodes: rangeInclusive(500, 599),
+        statusCodes: webhookRetryStatusCodes,
       },
       timeout: 10_000,
+      hooks: {
+        afterResponse: [expect.any(Function)],
+      },
     });
   });
 });

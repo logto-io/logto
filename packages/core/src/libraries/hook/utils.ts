@@ -30,13 +30,46 @@ type SendWebhookRequest = {
   signingKey: string;
 };
 
-export const rangeInclusive = (start: number, end: number) =>
+const rangeInclusive = (start: number, end: number) =>
   Array.from({ length: end - start + 1 }, (_, index) => start + index);
 
 /** Public contract: retry webhook POST on HTTP 5xx. Ky 1.2.3 defaults omit POST and most 5xx codes. */
 const webhookRetryLimit = 3;
 /** Ky only accepts `statusCodes` as a number list; HTTP 5xx class is 500–599. */
-const webhookRetryStatusCodes = rangeInclusive(500, 599);
+export const webhookRetryStatusCodes = rangeInclusive(500, 599);
+
+/**
+ * Ky 1.2.3 always honors `Retry-After` on 503: `afterStatusCodes` is hardcoded to
+ * `[413, 429, 503]` and cannot be overridden.
+ * See https://github.com/sindresorhus/ky/issues/473
+ * `timeout` / `backoffLimit` do not cap that delay, and `Retry-After: 0` skips
+ * further attempts (fixed in ky 1.5.0: https://github.com/sindresorhus/ky/pull/604).
+ * Drop the header so webhook 5xx stays on the short in-process backoff.
+ *
+ * Preferred fix after upgrading to ky >= 1.5.0: set `retry.afterStatusCodes: []`
+ * instead of mutating the response.
+ * https://github.com/sindresorhus/ky/releases/tag/v1.5.0
+ * https://github.com/sindresorhus/ky/pull/598
+ * https://github.com/sindresorhus/ky#retry
+ */
+const dropRetryAfterHeader = async (
+  _request: Request,
+  _options: unknown,
+  response: Response
+): Promise<Response> => {
+  if (!response.headers.has('retry-after')) {
+    return response;
+  }
+
+  const headers = new Headers(response.headers);
+  headers.delete('retry-after');
+
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+};
 
 export const sendWebhookRequest = async ({
   hookConfig,
@@ -56,8 +89,12 @@ export const sendWebhookRequest = async ({
       limit: retries ?? webhookRetryLimit,
       methods: ['post'],
       statusCodes: webhookRetryStatusCodes,
+      // `afterStatusCodes: []` is ignored on ky 1.2.3; see dropRetryAfterHeader.
     },
     timeout: 10_000,
+    hooks: {
+      afterResponse: [dropRetryAfterHeader],
+    },
   });
 };
 

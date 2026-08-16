@@ -134,6 +134,30 @@ describe('sendWebhookRequest HTTP retries', () => {
       await close(server);
     }
   }, 20_000);
+
+  it.each(['0', '86400'])(
+    'retries 503 even when Retry-After is %s',
+    async (retryAfter) => {
+      const state = { attempts: 0 };
+      const startedAt = Date.now();
+      const server = createServer((_request, response) => {
+        state.attempts += 1;
+        response.writeHead(503, { 'Retry-After': retryAfter });
+        response.end();
+      });
+
+      try {
+        const port = await listen(server);
+
+        await expect(sendToServer(port)).rejects.toThrow();
+        expect(state.attempts).toBe(4);
+        expect(Date.now() - startedAt).toBeLessThan(10_000);
+      } finally {
+        await close(server);
+      }
+    },
+    20_000
+  );
 });
 
 /* eslint-enable @silverhand/fp/no-mutation */
