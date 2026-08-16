@@ -16,6 +16,7 @@ const state = {
   requestCount: 0,
   statusCode: 200,
   succeedOnAttempt: Number.POSITIVE_INFINITY,
+  retryAfter: undefined as string | undefined,
 };
 
 describe('webhook delivery retries', () => {
@@ -27,6 +28,11 @@ describe('webhook delivery retries', () => {
 
     if (status >= 400) {
       response.statusCode = status;
+
+      if (state.retryAfter !== undefined) {
+        response.setHeader('Retry-After', state.retryAfter);
+      }
+
       response.end();
     }
   });
@@ -43,6 +49,7 @@ describe('webhook delivery retries', () => {
     state.requestCount = 0;
     state.statusCode = 200;
     state.succeedOnAttempt = Number.POSITIVE_INFINITY;
+    state.retryAfter = undefined;
 
     await webHookApi.create({
       name: hookName,
@@ -117,6 +124,35 @@ describe('webhook delivery retries', () => {
 
     await deleteRole(role.id);
   });
+
+  it.each(['0', '86400'])(
+    'retries POST 503 with Retry-After %s three times and records a single error log',
+    async (retryAfter) => {
+      state.statusCode = 503;
+      state.retryAfter = retryAfter;
+
+      const hook = webHookApi.hooks.get(hookName)!;
+      const startedAt = Date.now();
+      const role = await createRole({ description: `webhook-retry-after-${retryAfter}` });
+
+      await assertHookLogResult(hook, hookEvent, {
+        errorMessage: '503',
+      });
+
+      const logs = await getWebhookRecentLogs(
+        hook.id,
+        new URLSearchParams({ logKey: `TriggerHook.${hookEvent}`, page_size: '10' })
+      );
+
+      expect(state.requestCount).toBe(4);
+      expect(logs.filter(({ payload }) => payload.hookId === hook.id)).toHaveLength(1);
+      expect(logs[0]?.payload.result).toBe(LogResult.Error);
+      expect(Date.now() - startedAt).toBeLessThan(10_000);
+
+      await deleteRole(role.id);
+    },
+    20_000
+  );
 });
 
 /* eslint-enable @silverhand/fp/no-mutation */
