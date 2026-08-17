@@ -33,10 +33,9 @@ const sharedRunner = new WorkerThreadScriptRunner();
 /**
  * Run a user script on the shared worker pool with the standard OSS limits.
  *
- * Reachable only when `EnvSet.values.isCloud` is `false` (Cloud runs scripts remotely) and, until
- * the runner is manually verified and released, behind `isDevFeaturesEnabled` — production keeps
- * the legacy `node:vm` path. The payload must be structured-cloneable — capability APIs such as
- * `api.denyAccess` are injected by the worker and must not be part of it.
+ * Reachable only when `EnvSet.values.isCloud` is `false` — Cloud runs scripts remotely. The
+ * payload must be structured-cloneable: capability APIs such as `api.denyAccess` are injected by
+ * the worker and must not be part of it.
  */
 export const runScriptOnWorkerPool = async ({
   tenantId,

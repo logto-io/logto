@@ -14,7 +14,6 @@ jest.unstable_mockModule('#src/libraries/script-runner/worker-thread-script-runn
   },
 }));
 
-const { EnvSet } = await import('#src/env-set/index.js');
 const { ActionLibrary } = await import('./action.js');
 const { ossScriptLimits, ScriptExecutionError } = await import('./script-runner/index.js');
 
@@ -44,15 +43,8 @@ const catchScriptExecutionError = async (promise: Promise<unknown>) => {
 };
 
 describe('ActionLibrary worker-pool adapter', () => {
-  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-
   beforeEach(() => {
     runScript.mockReset();
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
-  });
-
-  afterAll(() => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
   });
 
   it('hands the runner the standard OSS limits and the allow-all egress policy', async () => {
@@ -122,85 +114,6 @@ describe('ActionLibrary worker-pool adapter', () => {
 
       expect(status).toBe(expectedStatus);
       expect(body).toEqual(expectedBody);
-    });
-  });
-
-  // TODO (LOG-13956): drop these together with the legacy `node:vm` execution path.
-  describe('the legacy `node:vm` path while dev features are disabled', () => {
-    beforeEach(() => {
-      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
-    });
-
-    it('runs the script without touching the worker pool', async () => {
-      await expect(
-        ActionLibrary.runScriptInLocalVm(
-          {
-            script: 'const runAction = ({ event }) => ({ echoed: event.user.name });',
-            event,
-            environmentVariables,
-          },
-          tenantId
-        )
-      ).resolves.toEqual({ echoed: 'Foo' });
-      expect(runScript).not.toHaveBeenCalled();
-    });
-
-    it('maps a thrown script error to the runtime status', async () => {
-      const { status, body } = await catchScriptExecutionError(
-        ActionLibrary.runScriptInLocalVm(
-          {
-            script: "const runAction = () => { throw new Error('legacy boom'); };",
-            event,
-            environmentVariables,
-          },
-          tenantId
-        )
-      );
-
-      expect(status).toBe(500);
-      expect(body).toMatchObject({ message: 'legacy boom' });
-    });
-
-    // The vm constructs the SyntaxError in the script's realm, so the host-side `instanceof`
-    // classification never fires and a compile error falls through to the runtime status. The
-    // worker runner evaluates in its own realm and is what makes syntax failures report 422.
-    it('maps a script that cannot be compiled to the runtime status', async () => {
-      const { status, body } = await catchScriptExecutionError(
-        ActionLibrary.runScriptInLocalVm(
-          {
-            script: 'const runAction = () => {',
-            event,
-            environmentVariables,
-          },
-          tenantId
-        )
-      );
-
-      expect(status).toBe(500);
-      expect(body).toMatchObject({
-        message: expect.stringContaining('Unexpected end of input') as string,
-      });
-    });
-
-    // An undeclared entry throws a ReferenceError inside the vm realm (also invisible to the
-    // host-side `instanceof`) — only an entry that exists but is not a function reaches the
-    // host-thrown TypeError and its 422.
-    it('maps a non-function entry to the type status', async () => {
-      const { status, body } = await catchScriptExecutionError(
-        ActionLibrary.runScriptInLocalVm(
-          {
-            script: 'const runAction = 1;',
-            event,
-            environmentVariables,
-          },
-          tenantId
-        )
-      );
-
-      expect(status).toBe(422);
-      expect(body).toMatchObject({
-        message: 'The script does not have a function named `runAction`',
-      });
     });
   });
 });

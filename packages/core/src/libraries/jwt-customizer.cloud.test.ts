@@ -53,11 +53,8 @@ const payload = Object.freeze({
 const mockScriptRun = (body?: nock.RequestBodyMatcher) =>
   nock(scriptRunnerEndpoint).post('/api/script-run', body);
 
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-
 describe('JwtCustomizerLibrary.runScriptRemotely', () => {
   beforeEach(() => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
     jest.spyOn(EnvSet.values, 'scriptRunnerEndpoint', 'get').mockReturnValue(scriptRunnerEndpoint);
   });
 
@@ -65,7 +62,6 @@ describe('JwtCustomizerLibrary.runScriptRemotely', () => {
     nock.cleanAll();
     jest.restoreAllMocks();
     jest.clearAllMocks();
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
   });
 
   it('runs the script on the Cloud script runner', async () => {
@@ -144,7 +140,6 @@ describe('JwtCustomizerLibrary.runScriptRemotely quota', () => {
   };
 
   beforeEach(() => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
     jest.spyOn(EnvSet.values, 'scriptRunnerEndpoint', 'get').mockReturnValue(scriptRunnerEndpoint);
     setIsCloud(true);
   });
@@ -153,7 +148,6 @@ describe('JwtCustomizerLibrary.runScriptRemotely quota', () => {
     nock.cleanAll();
     jest.restoreAllMocks();
     jest.clearAllMocks();
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
     setIsCloud(originalIsCloud);
   });
 
@@ -180,30 +174,19 @@ describe('JwtCustomizerLibrary.runScriptRemotely quota', () => {
   });
 });
 
-describe('JwtCustomizerLibrary.runScriptRemotely on the legacy remote paths', () => {
+describe('JwtCustomizerLibrary.runScriptRemotely on the Azure Functions fallback', () => {
   beforeEach(() => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+    // An unset script runner endpoint is what selects the Azure Functions runtime.
+    jest.spyOn(EnvSet.values, 'scriptRunnerEndpoint', 'get').mockReturnValue('');
   });
 
   afterEach(() => {
     nock.cleanAll();
     jest.restoreAllMocks();
     jest.clearAllMocks();
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
   });
 
-  it('falls back to the legacy path when the script runner endpoint is not injected', async () => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
-    jest.spyOn(EnvSet.values, 'scriptRunnerEndpoint', 'get').mockReturnValue('');
-    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue('');
-    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get').mockReturnValue('');
-    post.mockResolvedValueOnce({ foo: 'bar' });
-
-    await expect(library.runScriptRemotely(payload)).resolves.toEqual({ foo: 'bar' });
-    expect(getWorkerAccessToken).not.toHaveBeenCalled();
-  });
-
-  it('runs the script through the regional untrusted Azure Function app when configured', async () => {
+  it('runs the script through the regional untrusted Azure Function app', async () => {
     const endpoint = 'https://untrusted.example.com';
     const functionKey = 'function-key';
     const remoteRunner = nock(endpoint, {
@@ -217,18 +200,17 @@ describe('JwtCustomizerLibrary.runScriptRemotely on the legacy remote paths', ()
 
     await expect(library.runScriptRemotely(payload)).resolves.toEqual({ foo: 'bar' });
     expect(remoteRunner.isDone()).toBe(true);
+    expect(getWorkerAccessToken).not.toHaveBeenCalled();
+    // The deprecated `POST /api/services/custom-jwt` cloud endpoint is no longer reachable.
     expect(post).not.toHaveBeenCalled();
   });
 
-  it('falls back to the deprecated custom-jwt cloud endpoint', async () => {
+  it('reports a 422 when neither runtime is configured', async () => {
     jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue('');
     jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get').mockReturnValue('');
-    post.mockResolvedValueOnce({ foo: 'bar' });
 
-    await expect(library.runScriptRemotely(payload, true)).resolves.toEqual({ foo: 'bar' });
-    expect(post).toHaveBeenCalledWith('/api/services/custom-jwt', {
-      body: payload,
-      search: { isTest: 'true' },
-    });
+    await expect(library.runScriptRemotely(payload)).rejects.toMatchObject({ status: 422 });
+    expect(getWorkerAccessToken).not.toHaveBeenCalled();
+    expect(post).not.toHaveBeenCalled();
   });
 });

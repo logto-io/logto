@@ -16,7 +16,6 @@ jest.unstable_mockModule('#src/libraries/script-runner/worker-thread-script-runn
   },
 }));
 
-const { EnvSet } = await import('#src/env-set/index.js');
 const { JwtCustomizerLibrary } = await import('./jwt-customizer.js');
 const { ossScriptLimits, ScriptExecutionError } = await import('./script-runner/index.js');
 
@@ -54,15 +53,8 @@ const catchScriptExecutionError = async (promise: Promise<unknown>) => {
 };
 
 describe('JwtCustomizerLibrary worker-pool adapter', () => {
-  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-
   beforeEach(() => {
     runScript.mockReset();
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
-  });
-
-  afterAll(() => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
   });
 
   it('hands the runner the standard OSS limits and the allow-all egress policy', async () => {
@@ -152,74 +144,6 @@ describe('JwtCustomizerLibrary worker-pool adapter', () => {
 
       expect(status).toBe(expectedStatus);
       expect(body).toEqual(expectedBody);
-    });
-  });
-
-  // TODO (LOG-13956): drop these together with the legacy `node:vm` execution path.
-  describe('the legacy `node:vm` path while dev features are disabled', () => {
-    beforeEach(() => {
-      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
-    });
-
-    it('runs the script without touching the worker pool', async () => {
-      await expect(
-        JwtCustomizerLibrary.runScriptInLocalVm(
-          {
-            ...buildData(),
-            script: 'const getCustomJwtClaims = ({ token }) => ({ echoed: token.sub });',
-          },
-          tenantId
-        )
-      ).resolves.toEqual({ echoed: 'user-id' });
-      expect(runScript).not.toHaveBeenCalled();
-    });
-
-    it('maps an access denial to the denied status with the error body', async () => {
-      const { status, body } = await catchScriptExecutionError(
-        JwtCustomizerLibrary.runScriptInLocalVm(
-          {
-            ...buildData(),
-            script: "const getCustomJwtClaims = ({ api }) => api.denyAccess('legacy blocked');",
-          },
-          tenantId
-        )
-      );
-
-      expect(status).toBe(403);
-      expect(body).toEqual({
-        message: 'legacy blocked',
-        error: { code: CustomJwtErrorCode.AccessDenied, message: 'legacy blocked' },
-      });
-    });
-
-    it('rejects a non-record value with the 400 invalid-input error', async () => {
-      const { status, body } = await catchScriptExecutionError(
-        JwtCustomizerLibrary.runScriptInLocalVm(
-          {
-            ...buildData(),
-            script: 'const getCustomJwtClaims = () => 42;',
-          },
-          tenantId
-        )
-      );
-
-      expect(status).toBe(400);
-      expect(body).toMatchObject({ message: 'Invalid input' });
-    });
-
-    it('maps a thrown script error to the runtime status', async () => {
-      const { status, body } = await catchScriptExecutionError(
-        JwtCustomizerLibrary.runScriptInLocalVm(
-          {
-            ...buildData(),
-            script: "const getCustomJwtClaims = () => { throw new Error('legacy boom'); };",
-          },
-          tenantId
-        )
-      );
-
-      expect(status).toBe(500);
-      expect(body).toMatchObject({ message: 'legacy boom' });
     });
   });
 });

@@ -1,4 +1,4 @@
-/* eslint-disable max-lines -- The dev-features-gated script-run path and the legacy Azure Functions path share one setup. */
+/* eslint-disable max-lines -- The script-run path and the Azure Functions fallback share one setup. */
 import { appInsights } from '@logto/app-insights/node';
 import { LogtoActionKey } from '@logto/schemas';
 import { ResponseError } from '@withtyped/client';
@@ -45,14 +45,13 @@ const createLibrary = (tenantId = 'tenant_id') =>
   );
 
 const originalIsCloud = EnvSet.values.isCloud;
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
 
 const setIsCloud = (isCloud: boolean) => {
   // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for Cloud/local selection tests.
   (EnvSet.values as { isCloud: boolean }).isCloud = isCloud;
 };
 
-/** The error body the legacy Azure Functions path produces for a failed run. */
+/** The error body the Azure Functions runtime produces for a failed run. */
 const buildScriptFailureResponseError = (
   status: number,
   message: string,
@@ -76,7 +75,6 @@ describe('ActionLibrary Cloud execution routing', () => {
     library.runAction({ ...input, auditContext: { createLog } });
 
   beforeEach(() => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
     jest.spyOn(EnvSet.values, 'scriptRunnerEndpoint', 'get').mockReturnValue(scriptRunnerEndpoint);
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Provide an AppInsights client for metric assertions.
     appInsights.client = {
@@ -97,7 +95,6 @@ describe('ActionLibrary Cloud execution routing', () => {
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore the shared AppInsights singleton.
     appInsights.client = originalAppInsightsClient;
     setIsCloud(originalIsCloud);
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
   });
 
   it('runs the script on the Cloud script runner', async () => {
@@ -184,7 +181,7 @@ describe('ActionLibrary Cloud execution routing', () => {
     ).rejects.toMatchObject({ status: 500 });
   });
 
-  it('falls back to the legacy path when the script runner endpoint is not injected', async () => {
+  it('falls back to the Azure Functions runtime when the script runner endpoint is not injected', async () => {
     jest.spyOn(EnvSet.values, 'scriptRunnerEndpoint', 'get').mockReturnValue('');
     jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get').mockReturnValue('');
     jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue('');
@@ -226,8 +223,8 @@ describe('ActionLibrary Cloud execution routing', () => {
         },
       })
     ).resolves.toEqual(executionResult);
-    // Dev features alone must not label an Azure Functions run as `cloud`: the metric decides
-    // when the gate can drop, so it has to read the same condition the gate does.
+    // A run served by the Azure Functions fallback must not be labelled `cloud`: the metric is
+    // what makes a per-region rollback observable, so it reads the same condition the branch does.
     expect(trackMetric).toHaveBeenNthCalledWith(1, {
       name: actionMetricNames.executionCount,
       value: 1,
@@ -322,7 +319,7 @@ describe('ActionLibrary Cloud execution routing', () => {
     );
     const metricProperties = {
       actionType: 'PostSignIn',
-      // `cloud`, not `azure`: the metric distinguishes the two remote runtimes while both exist.
+      // `cloud`, not `azure`: the metric distinguishes the script runner from its fallback.
       runtimeLocation: 'cloud',
       outcome: 'success',
       action: 'updateUser',
@@ -416,14 +413,15 @@ describe('ActionLibrary Cloud execution routing', () => {
   });
 });
 
-describe('ActionLibrary Cloud execution routing without dev features', () => {
+describe('ActionLibrary Cloud execution routing on the Azure Functions fallback', () => {
   const library = createLibrary();
   const { createLog } = createMockLogContext();
   const runAction = async <Event>(input: RunActionInput<Event>) =>
     library.runAction({ ...input, auditContext: { createLog } });
 
   beforeEach(() => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+    // An unset script runner endpoint is what selects the Azure Functions runtime.
+    jest.spyOn(EnvSet.values, 'scriptRunnerEndpoint', 'get').mockReturnValue('');
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Provide an AppInsights client for metric assertions.
     appInsights.client = {
       trackMetric,
@@ -443,7 +441,6 @@ describe('ActionLibrary Cloud execution routing without dev features', () => {
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore the shared AppInsights singleton.
     appInsights.client = originalAppInsightsClient;
     setIsCloud(originalIsCloud);
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
   });
 
   it('throws an action error when the remote runner is not configured', async () => {
