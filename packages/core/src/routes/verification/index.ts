@@ -1,4 +1,4 @@
-/* eslint-disable max-lines -- the first-party guard adds a check to every verification route */
+/* eslint-disable max-lines -- this file hosts every verification method (password, verification code, WebAuthn, social) in one router; the first-party guard pushed it just over the limit */
 import { TemplateType } from '@logto/connector-kit';
 import {
   AdditionalIdentifier,

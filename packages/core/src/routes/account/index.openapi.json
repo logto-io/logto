@@ -812,7 +812,7 @@
             "description": "Permission denied, the access token does not include the `profile` scope."
           },
           "403": {
-            "description": "Permission denied, either the application is a third-party application or the avatar field is not editable for the current account center state."
+            "description": "Permission denied, the application is a third-party application."
           },
           "500": {
             "description": "Failed to upload the file to the storage provider."
