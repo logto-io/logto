@@ -50,11 +50,17 @@ const insertTrustedDevice = async (
     )
   `);
 
-const pool = await createPool(assertEnv('DB_URL'), {
-  interceptors: createInterceptorsPreset(),
-});
-
 devFeatureTest.describe('admin user trusted devices', () => {
+  // eslint-disable-next-line @silverhand/fp/no-let -- Initialized only when this dev-feature suite runs.
+  let pool: DatabasePool;
+
+  beforeAll(async () => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- The matching afterAll closes this suite-scoped pool.
+    pool = await createPool(assertEnv('DB_URL'), {
+      interceptors: createInterceptorsPreset(),
+    });
+  });
+
   afterAll(async () => {
     await pool.end();
   });
