@@ -4,6 +4,7 @@ import { pickDefault } from '@logto/shared/esm';
 import { mockUser } from '#src/__mocks__/index.js';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { koaManagementApiHooks } from '#src/middleware/koa-management-api-hooks.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import { MockTenant, type Partial2 } from '#src/test-utils/tenant.js';
@@ -35,6 +36,7 @@ const mockedQueries = {
     findActiveByUserId: jest.fn(
       async (): Promise<[number, readonly TrustedDevice[]]> => [1, [trustedDevice]]
     ),
+    deleteByIdAndUserId: jest.fn(async (): Promise<TrustedDevice> => trustedDevice),
   },
 } satisfies Partial2<Queries>;
 
@@ -45,7 +47,8 @@ const mockedLibraries = {
 } satisfies Partial2<Libraries>;
 
 const { findUserById } = mockedQueries.users;
-const { findActiveByUserId } = mockedQueries.trustedDevices;
+const { findActiveByUserId, deleteByIdAndUserId: deleteTrustedDeviceRecordByIdAndUserId } =
+  mockedQueries.trustedDevices;
 const { deleteByIdAndUserId } = mockedLibraries.trustedDevices;
 
 const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
@@ -130,6 +133,44 @@ describe('admin user trusted device routes', () => {
       params: { userId, trustedDeviceId },
       matchedRoute: '/users/:userId/trusted-devices/:trustedDeviceId',
     });
+  });
+
+  it('appends the deletion hook with Management API context', async () => {
+    const triggerDataHooks = jest.fn();
+    const tenantContext = new MockTenant(undefined, mockedQueries, undefined, {
+      hooks: { triggerDataHooks },
+    });
+    const requester = createRequester({
+      middlewares: [koaManagementApiHooks(tenantContext.libraries.hooks)],
+      authedRoutes: adminUserTrustedDeviceRoutes,
+      tenantContext,
+    });
+
+    const response = await requester.delete(`/users/${userId}/trusted-devices/${trustedDeviceId}`);
+
+    expect(response.status).toBe(204);
+    expect(deleteTrustedDeviceRecordByIdAndUserId).toHaveBeenCalledWith(trustedDeviceId, userId);
+    expect(triggerDataHooks).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        dataHookContextArray: [
+          {
+            event: 'TrustedDevice.Deleted',
+            path: `/users/${userId}/trusted-devices/${trustedDeviceId}`,
+            method: 'DELETE',
+            status: 204,
+            params: { userId, trustedDeviceId },
+            matchedRoute: '/users/:userId/trusted-devices/:trustedDeviceId',
+            data: {
+              id: trustedDeviceId,
+              userId,
+              expiresAt: trustedDevice.expiresAt,
+            },
+            includeRequestIp: false,
+          },
+        ],
+      })
+    );
   });
 
   it('returns 404 when the trusted device is missing or belongs to another user', async () => {
