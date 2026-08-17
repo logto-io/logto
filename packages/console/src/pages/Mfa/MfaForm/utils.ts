@@ -1,4 +1,10 @@
-import { type AdaptiveMfa, MfaFactor, MfaPolicy } from '@logto/schemas';
+import {
+  type AdaptiveMfa,
+  defaultTrustedDevicePolicy,
+  MfaFactor,
+  MfaPolicy,
+  type TrustedDevicePolicy,
+} from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
 import {
@@ -72,7 +78,8 @@ export const normalizeSetUpPrompt = (policy: MfaPolicy, adaptiveMfaEnabled: bool
 
 export const convertMfaConfigToForm = (
   { policy, factors, organizationRequiredMfaPolicy }: MfaConfig,
-  adaptiveMfa?: AdaptiveMfa
+  adaptiveMfa?: AdaptiveMfa,
+  trustedDevice?: TrustedDevicePolicy
 ): MfaConfigForm => ({
   isMandatory: policy === MfaPolicy.Mandatory,
   setUpPrompt: normalizeSetUpPrompt(policy, Boolean(adaptiveMfa?.enabled)),
@@ -83,6 +90,8 @@ export const convertMfaConfigToForm = (
   phoneVerificationCodeEnabled: factors.includes(MfaFactor.PhoneVerificationCode),
   organizationRequiredMfaPolicy,
   adaptiveMfaEnabled: Boolean(adaptiveMfa?.enabled),
+  trustedDeviceEnabled: trustedDevice?.enabled ?? defaultTrustedDevicePolicy.enabled,
+  trustedDeviceDurationDays: trustedDevice?.durationDays ?? defaultTrustedDevicePolicy.durationDays,
 });
 
 export const convertMfaFormToConfig = (mfaConfigForm: MfaConfigForm): MfaConfig => {
@@ -124,12 +133,21 @@ export const validateBackupCodeFactor = (factors: MfaFactor[]): boolean => {
 };
 
 export const buildMfaPatchPayload = (
-  mfaConfigForm: MfaConfigForm
-): { mfa: MfaConfig; adaptiveMfa: AdaptiveMfa } => {
+  mfaConfigForm: MfaConfigForm,
+  includeTrustedDevice = false
+): { mfa: MfaConfig; adaptiveMfa: AdaptiveMfa; trustedDevice?: TrustedDevicePolicy } => {
   const mfa = convertMfaFormToConfig(mfaConfigForm);
 
   return {
     mfa,
     adaptiveMfa: { enabled: mfaConfigForm.adaptiveMfaEnabled },
+    ...conditional(
+      includeTrustedDevice && {
+        trustedDevice: {
+          enabled: mfaConfigForm.trustedDeviceEnabled,
+          durationDays: mfaConfigForm.trustedDeviceDurationDays,
+        },
+      }
+    ),
   };
 };

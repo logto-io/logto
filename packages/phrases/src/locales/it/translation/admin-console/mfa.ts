@@ -71,6 +71,24 @@ const mfa = {
   no_sms_connector_error:
     'Impossibile abilitare MFA con codice di verifica SMS senza un connettore SMS. Si prega di configurare prima un connettore SMS.',
   setup_link: 'Configura',
+  trusted_device: {
+    title: 'Dispositivi attendibili',
+    description:
+      'Consenti agli utenti di saltare le verifiche MFA di routine nei browser attendibili. Le policy adattive o ad alto rischio possono comunque richiedere MFA.',
+    enable_title: 'Abilita dispositivi attendibili',
+    enable_description:
+      'Consenti di rendere attendibile questo browser dopo un fattore MFA idoneo.',
+    duration_title: 'Durata attendibilità (giorni)',
+    duration_error: 'Il numero deve essere compreso tra {{min}} e {{max}}.',
+    duration_note: 'Le modifiche alla durata si applicano solo ai dispositivi aggiunti in seguito.',
+    organization_allow_title: 'Consenti dispositivi attendibili',
+    organization_allow_tip:
+      "Un'organizzazione può solo restringere la policy del tenant e non può abilitarla quando è disattivata globalmente.",
+    organization_allow_description:
+      'Consenti la verifica con dispositivi attendibili ai membri di questa organizzazione.',
+    organization_global_disabled:
+      'Abilita prima i dispositivi attendibili nelle impostazioni MFA del tenant.',
+  },
 };
 
 export default Object.freeze(mfa);

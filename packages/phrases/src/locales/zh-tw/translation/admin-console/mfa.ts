@@ -49,6 +49,20 @@ const mfa = {
     '沒有電子郵件連接器無法啟用電子郵件驗證碼 MFA。請先設定電子郵件連接器。',
   no_sms_connector_error: '沒有 SMS 連接器無法啟用 SMS 驗證碼 MFA。請先設定 SMS 連接器。',
   setup_link: '設定',
+  trusted_device: {
+    title: '受信任裝置',
+    description: '讓使用者在受信任的瀏覽器上略過一般 MFA 驗證。高風險或自適應策略仍可要求 MFA。',
+    enable_title: '啟用受信任裝置',
+    enable_description: '允許使用者完成符合條件的 MFA 因素驗證後信任此瀏覽器。',
+    duration_title: '信任期限（天）',
+    duration_error: '數字必須介於 {{min}} 和 {{max}} 之間。',
+    duration_note: '信任期限的變更只適用於之後加入的受信任裝置。',
+    organization_allow_title: '允許受信任裝置',
+    organization_allow_tip:
+      '組織只能收緊租戶的受信任裝置策略；租戶策略關閉時，組織無法啟用此功能。',
+    organization_allow_description: '允許此組織的成員使用受信任裝置完成驗證。',
+    organization_global_disabled: '請先在租戶 MFA 設定中啟用受信任裝置，再為此組織允許此功能。',
+  },
 };
 
 export default Object.freeze(mfa);

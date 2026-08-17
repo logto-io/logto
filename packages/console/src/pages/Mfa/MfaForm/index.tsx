@@ -1,4 +1,4 @@
-/* eslint-disable max-lines */
+/* eslint-disable max-lines -- MFA settings share one form state and atomic save operation */
 import {
   type AdaptiveMfa,
   ConnectorType,
@@ -8,6 +8,7 @@ import {
   SignInIdentifier,
   type SignInExperience,
   type SignIn,
+  type TrustedDevicePolicy,
 } from '@logto/schemas';
 import { useContext, useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -19,7 +20,7 @@ import FormCard from '@/components/FormCard';
 import InlineUpsell from '@/components/InlineUpsell';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { mfa } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
@@ -36,6 +37,7 @@ import { isPaidPlan } from '@/utils/subscription';
 import { type MfaConfigForm, type MfaConfig } from '../types';
 
 import FactorLabel from './FactorLabel';
+import TrustedDeviceSettings from './TrustedDeviceSettings';
 import UpsellNotice from './UpsellNotice';
 import styles from './index.module.scss';
 import {
@@ -52,11 +54,16 @@ import {
 type Props = {
   readonly data: MfaConfig;
   readonly adaptiveMfa?: AdaptiveMfa;
+  readonly trustedDevice?: TrustedDevicePolicy;
   readonly signInMethods: SignIn['methods'];
-  readonly onMfaUpdated: (updatedData: MfaConfig, adaptiveMfa?: AdaptiveMfa) => void;
+  readonly onMfaUpdated: (
+    updatedData: MfaConfig,
+    adaptiveMfa?: AdaptiveMfa,
+    trustedDevice?: TrustedDevicePolicy
+  ) => void;
 };
 
-function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
+function MfaForm({ data, adaptiveMfa, trustedDevice, signInMethods, onMfaUpdated }: Props) {
   const {
     currentSubscription: { planId, isEnterprisePlan },
     currentSubscriptionQuota,
@@ -72,13 +79,13 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
   const {
     register,
     reset,
-    formState: { isDirty, isSubmitting },
+    formState: { isDirty, isSubmitting, errors },
     handleSubmit,
     control,
     watch,
     setValue,
   } = useForm<MfaConfigForm>({
-    defaultValues: convertMfaConfigToForm(data, adaptiveMfa),
+    defaultValues: convertMfaConfigToForm(data, adaptiveMfa, trustedDevice),
     mode: 'onChange',
   });
   const api = useApi();
@@ -257,16 +264,20 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
         return;
       }
 
-      const payload = buildMfaPatchPayload(formData);
-      const { mfa: updatedMfaConfig, adaptiveMfa: updatedAdaptiveMfa } = await api
+      const payload = buildMfaPatchPayload(formData, isDevFeaturesEnabled);
+      const {
+        mfa: updatedMfaConfig,
+        adaptiveMfa: updatedAdaptiveMfa,
+        trustedDevice: updatedTrustedDevice,
+      } = await api
         .patch('api/sign-in-exp', {
           json: payload,
         })
         .json<SignInExperience>();
       mutateSubscriptionQuotaAndUsages();
-      reset(convertMfaConfigToForm(updatedMfaConfig, updatedAdaptiveMfa));
+      reset(convertMfaConfigToForm(updatedMfaConfig, updatedAdaptiveMfa, updatedTrustedDevice));
       toast.success(t('general.saved'));
-      onMfaUpdated(updatedMfaConfig, updatedAdaptiveMfa);
+      onMfaUpdated(updatedMfaConfig, updatedAdaptiveMfa, updatedTrustedDevice);
     })
   );
 
@@ -444,6 +455,14 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
             </FormField>
           )}
         </FormCard>
+        {/* DEV: MFA trusted devices */}
+        {isDevFeaturesEnabled && (
+          <TrustedDeviceSettings
+            register={register}
+            errors={errors}
+            isDisabled={isPolicySettingsDisabled}
+          />
+        )}
       </DetailsForm>
       <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />
     </>

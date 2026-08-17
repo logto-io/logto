@@ -68,6 +68,24 @@ const mfa = {
   no_sms_connector_error:
     'Cannot enable SMS verification code MFA without an SMS connector. Please configure an SMS connector first.',
   setup_link: 'Set up',
+  trusted_device: {
+    title: 'Trusted devices',
+    description:
+      'Let users skip routine MFA challenges on browsers they trust. High-risk or adaptive policies can still require MFA.',
+    enable_title: 'Enable trusted devices',
+    enable_description:
+      'Allow users to trust this browser after completing an eligible MFA factor.',
+    duration_title: 'Trust duration (days)',
+    duration_error: 'The number should be between {{min}} and {{max}}.',
+    duration_note: 'Changes to the trust duration apply only to devices trusted afterward.',
+    organization_allow_title: 'Allow trusted devices',
+    organization_allow_tip:
+      'An organization can only restrict the tenant trusted-device policy; it cannot enable the feature when the tenant policy is off.',
+    organization_allow_description:
+      'Allow trusted-device verification for members of this organization.',
+    organization_global_disabled:
+      'Enable trusted devices in the tenant MFA settings before allowing them for this organization.',
+  },
 };
 
 export default Object.freeze(mfa);

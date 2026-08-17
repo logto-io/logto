@@ -72,6 +72,23 @@ const mfa = {
   no_sms_connector_error:
     'SMS bağlantısı olmadan SMS doğrulama kodu MFA etkinleştirilemez. Lütfen önce bir SMS bağlantısı yapılandırın.',
   setup_link: 'Kur',
+  trusted_device: {
+    title: 'Güvenilen cihazlar',
+    description:
+      'Kullanıcıların güvendikleri tarayıcılarda rutin MFA doğrulamalarını atlamasına izin verin. Yüksek riskli veya uyarlanabilir ilkeler yine MFA isteyebilir.',
+    enable_title: 'Güvenilen cihazları etkinleştir',
+    enable_description:
+      'Uygun bir MFA faktörü tamamlandıktan sonra bu tarayıcıya güvenilmesine izin verin.',
+    duration_title: 'Güven süresi (gün)',
+    duration_error: 'Sayı {{min}} ile {{max}} arasında olmalıdır.',
+    duration_note: 'Güven süresi değişiklikleri yalnızca daha sonra güvenilen cihazlara uygulanır.',
+    organization_allow_title: 'Güvenilen cihazlara izin ver',
+    organization_allow_tip:
+      'Bir kuruluş yalnızca tenant ilkesini daraltabilir; özellik tenant düzeyinde kapalıyken etkinleştiremez.',
+    organization_allow_description:
+      'Bu kuruluşun üyeleri için güvenilen cihaz doğrulamasına izin verin.',
+    organization_global_disabled: 'Önce tenant MFA ayarlarında güvenilen cihazları etkinleştirin.',
+  },
 };
 
 export default Object.freeze(mfa);
