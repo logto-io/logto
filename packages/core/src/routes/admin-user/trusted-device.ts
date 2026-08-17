@@ -1,4 +1,5 @@
-import { trustedDeviceResponseGuard } from '@logto/schemas';
+import { trustedDeviceResponseGuard, type TrustedDeviceResponse } from '@logto/schemas';
+import { pick } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -45,7 +46,19 @@ export default function adminUserTrustedDeviceRoutes<T extends ManagementApiRout
       });
 
       ctx.pagination.totalCount = totalNumber;
-      ctx.body = records;
+      ctx.body = records.map(
+        (record) =>
+          pick(
+            record,
+            'id',
+            'userAgent',
+            'country',
+            'city',
+            'createdAt',
+            'lastUsedAt',
+            'expiresAt'
+          ) satisfies TrustedDeviceResponse
+      );
 
       return next();
     }
