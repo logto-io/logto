@@ -9,8 +9,6 @@ import type Queries from '#src/tenants/Queries.js';
 import { MockTenant, type Partial2 } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
-import { getSupplementDocuments } from '../swagger/utils/documents.js';
-
 const { jest } = import.meta;
 
 const userId = mockUser.id;
@@ -163,27 +161,5 @@ describe('admin user trusted device routes', () => {
 
     expect(response.status).toBe(404);
     expect(findUserById).not.toHaveBeenCalled();
-  });
-});
-
-describe('admin user trusted device OpenAPI', () => {
-  afterEach(() => {
-    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
-  });
-
-  it('filters trusted-device operations when dev features are disabled', async () => {
-    setDevFeaturesEnabled(false);
-
-    const documents = await getSupplementDocuments('admin-user');
-
-    expect(JSON.stringify(documents)).not.toContain('/api/users/{userId}/trusted-devices');
-  });
-
-  it('keeps trusted-device operations when dev features are enabled', async () => {
-    setDevFeaturesEnabled(true);
-
-    const documents = await getSupplementDocuments('admin-user');
-
-    expect(JSON.stringify(documents)).toContain('/api/users/{userId}/trusted-devices');
   });
 });

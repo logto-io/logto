@@ -55,7 +55,7 @@ const managementApiIdentifiableEntityNames = Object.freeze(
     'email-template',
     'one-time-token',
     'session',
-    'trusted-device',
+    EnvSet.values.isDevFeaturesEnabled && 'trusted-device',
     'grant'
   )
 );
