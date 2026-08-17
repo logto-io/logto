@@ -8,6 +8,8 @@ const auth = {
   jwt_sub_missing: 'Brak `sub` w JWT.',
   require_re_authentication: 'Wymagane ponowne uwierzytelnienie, aby wykonać chronione działanie.',
   exceed_token_limit: 'Przekroczono limit tokenów. Skontaktuj się z administratorem.',
+  third_party_application_forbidden:
+    'Aplikacje firm trzecich nie mogą modyfikować danych konta za pomocą tego API.',
 };
 
 export default Object.freeze(auth);

@@ -294,7 +294,7 @@
             "description": "The new verification record is invalid."
           },
           "403": {
-            "description": "Permission denied, the verification record is invalid."
+            "description": "Permission denied, the application is a third-party application. The Account API only accepts mutations from first-party applications."
           }
         }
       },
@@ -344,7 +344,7 @@
             "description": "The new verification record is invalid."
           },
           "403": {
-            "description": "Permission denied, the verification record is invalid."
+            "description": "Permission denied, the application is a third-party application. The Account API only accepts mutations from first-party applications."
           }
         }
       },
@@ -812,7 +812,7 @@
             "description": "Permission denied, the access token does not include the `profile` scope."
           },
           "403": {
-            "description": "Permission denied for the current account center state."
+            "description": "Permission denied, the application is a third-party application."
           },
           "500": {
             "description": "Failed to upload the file to the storage provider."

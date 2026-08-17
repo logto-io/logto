@@ -8,6 +8,8 @@ const auth = {
   require_re_authentication:
     'Korumalı bir işlem gerçekleştirmek için yeniden doğrulama gereklidir.',
   exceed_token_limit: 'Token limiti aşıldı. Lütfen yöneticinizle iletişime geçin.',
+  third_party_application_forbidden:
+    'Üçüncü taraf uygulamaları bu API üzerinden hesap verilerini değiştiremez.',
 };
 
 export default Object.freeze(auth);

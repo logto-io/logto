@@ -8,6 +8,7 @@ import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import { assertFirstPartyClient } from '#src/utils/assert-first-party-client.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { type UserRouter, type RouterInitArgs } from '../types.js';
@@ -15,7 +16,7 @@ import { type UserRouter, type RouterInitArgs } from '../types.js';
 import { accountApiPrefix } from './constants.js';
 
 export default function accountSessionRoutes<T extends UserRouter>(
-  ...[router, { provider, libraries }]: RouterInitArgs<T>
+  ...[router, { provider, libraries, queries }]: RouterInitArgs<T>
 ) {
   const { session: sessionLibrary } = libraries;
 
@@ -67,11 +68,11 @@ export default function accountSessionRoutes<T extends UserRouter>(
       params: z.object({
         sessionId: z.string().min(1),
       }),
-      status: [204, 400, 401, 404, 500],
+      status: [204, 400, 401, 403, 404, 500],
     }),
     async (ctx, next) => {
       const { sessionId } = ctx.guard.params;
-      const { id: userId, scopes, identityVerified } = ctx.auth;
+      const { id: userId, scopes, identityVerified, clientId } = ctx.auth;
       const { fields } = ctx.accountCenter;
 
       assertThat(
@@ -88,6 +89,8 @@ export default function accountSessionRoutes<T extends UserRouter>(
         scopes.has(UserScope.Sessions),
         new RequestError({ code: 'auth.unauthorized', status: 401 })
       );
+
+      await assertFirstPartyClient(queries, clientId);
 
       const session = await provider.Session.findByUid(sessionId);
 

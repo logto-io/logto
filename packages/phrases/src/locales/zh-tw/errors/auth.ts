@@ -7,6 +7,7 @@ const auth = {
   jwt_sub_missing: 'JWT 缺失 `sub`',
   require_re_authentication: '需要重新認證以進行受保護操作。',
   exceed_token_limit: '超出 Token 限制。請聯繫你的管理員。',
+  third_party_application_forbidden: '第三方應用程式不允許透過此 API 修改帳戶資料。',
 };
 
 export default Object.freeze(auth);

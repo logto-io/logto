@@ -9,6 +9,8 @@ const auth = {
   require_re_authentication:
     'La ré-authentification est requise pour effectuer une action protégée.',
   exceed_token_limit: 'Limite de jeton dépassée. Veuillez contacter votre administrateur.',
+  third_party_application_forbidden:
+    'Les applications tierces ne sont pas autorisées à modifier les données du compte via cette API.',
 };
 
 export default Object.freeze(auth);

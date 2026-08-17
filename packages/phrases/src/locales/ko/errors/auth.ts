@@ -8,6 +8,8 @@ const auth = {
   jwt_sub_missing: 'JWT에서 `sub`를 찾을 수 없어요.',
   require_re_authentication: '보호된 작업을 수행하려면 재인증이 필요해요.',
   exceed_token_limit: '토큰 한도를 초과했습니다. 관리자에게 문의하세요.',
+  third_party_application_forbidden:
+    '서드파티 애플리케이션에서는 이 API를 통해 계정 데이터를 수정할 수 없습니다.',
 };
 
 export default Object.freeze(auth);
