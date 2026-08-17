@@ -7,4 +7,11 @@ describe('action audit log event titles', () => {
       'Action.PostSignIn': 'Execute post sign-in action',
     });
   });
+
+  it('exposes trusted-device event titles', () => {
+    expect(auditLogEventTitle).toMatchObject({
+      'TrustedDevice.Created': 'Create trusted device',
+      'TrustedDevice.Used': 'Use trusted device',
+    });
+  });
 });

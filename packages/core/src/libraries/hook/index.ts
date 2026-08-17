@@ -265,12 +265,13 @@ export const createHookLibrary = (queries: Queries) => {
 
     // Fetch application detail if available
     const { applicationId } = metadata;
+    const { ip, ...metadataWithoutIp } = metadata;
     const application =
       foundHooks.length > 0 && applicationId
         ? await trySafe(async () => findApplicationById(applicationId))
         : undefined;
 
-    return contextArray.flatMap(({ event, ...rest }) => {
+    return contextArray.flatMap(({ event, includeRequestIp = true, ...rest }) => {
       const hooks = foundHooks.filter(
         ({ event: hookEvent, events, enabled }) =>
           enabled && (events.length > 0 ? events.includes(event) : event === hookEvent)
@@ -279,7 +280,8 @@ export const createHookLibrary = (queries: Queries) => {
       const payload = {
         event,
         createdAt: new Date().toISOString(),
-        ...metadata,
+        ...metadataWithoutIp,
+        ...conditional(includeRequestIp && { ip }),
         ...conditional(
           application && { application: pick(application, 'id', 'type', 'name', 'description') }
         ),

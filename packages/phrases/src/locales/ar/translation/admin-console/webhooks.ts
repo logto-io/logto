@@ -6,6 +6,7 @@ const webhooks = {
   schemas: {
     interaction: 'تفاعل المستخدم',
     user: 'المستخدم',
+    trusted_device: 'جهاز موثوق',
     organization: 'المؤسسة',
     role: 'الدور',
     scope: 'الصلاحية',

@@ -1,10 +1,14 @@
+import { createHash } from 'node:crypto';
+
 import { appInsights } from '@logto/app-insights/node';
-import { InteractionEvent } from '@logto/schemas';
+import { InteractionEvent, type TrustedDevice as TrustedDeviceModel } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { getTrustedDeviceEventData } from '#src/libraries/trusted-device.js';
+import { type TrustedDeviceMetadata } from '#src/queries/trusted-device.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
@@ -21,6 +25,14 @@ type TrustedDeviceData = Pick<
   InteractionStorage,
   'trustedDeviceCreation' | 'trustedDeviceFulfillment'
 >;
+
+type TrustedDeviceFulfillment = NonNullable<InteractionStorage['trustedDeviceFulfillment']>;
+
+const buildTrustedDeviceUsageLogId = (tenantId: string, interactionId: string) =>
+  createHash('sha256')
+    .update(`TrustedDevice.Used:${tenantId}:${interactionId}`)
+    .digest('base64url')
+    .slice(0, 21);
 
 type FinalizeOptions = {
   creation?: InteractionStorage['trustedDeviceCreation'];
@@ -42,7 +54,7 @@ type FinalizeOptions = {
  */
 export class TrustedDevice {
   #creation?: InteractionStorage['trustedDeviceCreation'];
-  #fulfillment?: InteractionStorage['trustedDeviceFulfillment'];
+  #fulfillment?: TrustedDeviceFulfillment;
 
   constructor(
     private readonly ctx: WithHooksAndLogsContext,
@@ -140,9 +152,6 @@ export class TrustedDevice {
 
     await trySafe(
       async () => {
-        const {
-          libraries: { trustedDevices },
-        } = this.tenant;
         const { ip, userAgent } = signInContext ?? {};
         const { country, city } = location ?? {};
         const metadata = {
@@ -155,32 +164,85 @@ export class TrustedDevice {
         const fulfillment = this.#fulfillment;
 
         if (fulfillment?.userId === userId) {
-          if (interactionEvent === InteractionEvent.SignIn) {
-            void trySafe(
-              async () =>
-                trustedDevices.updateMetadata(fulfillment.trustedDeviceId, userId, metadata),
-              (error) => {
-                void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
-              }
-            );
-          }
+          await this.#finalizeFulfillment(fulfillment, interactionEvent, userId, metadata);
           return;
         }
 
-        if (!creation || !hasEligibleMfaProof) {
-          return;
-        }
-
-        await trustedDevices.createCredential({
-          ctx: this.ctx,
-          deviceId: creation.deviceId,
-          userId,
-          ...metadata,
-        });
+        await this.#finalizeCreation(creation, hasEligibleMfaProof, userId, metadata);
       },
       (error) => {
         void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
       }
     );
+  }
+
+  async #finalizeFulfillment(
+    fulfillment: TrustedDeviceFulfillment,
+    interactionEvent: InteractionEvent,
+    userId: string,
+    metadata: TrustedDeviceMetadata
+  ) {
+    if (interactionEvent !== InteractionEvent.SignIn) {
+      return;
+    }
+
+    const trustedDevice = await this.tenant.libraries.trustedDevices.updateMetadata(
+      fulfillment.trustedDeviceId,
+      userId,
+      metadata
+    );
+
+    if (trustedDevice) {
+      this.#appendAuditLog(
+        'TrustedDevice.Used',
+        trustedDevice,
+        buildTrustedDeviceUsageLogId(this.tenant.id, this.ctx.interactionDetails.jti)
+      );
+    }
+  }
+
+  async #finalizeCreation(
+    creation: InteractionStorage['trustedDeviceCreation'],
+    hasEligibleMfaProof: boolean,
+    userId: string,
+    metadata: TrustedDeviceMetadata
+  ) {
+    if (!creation || !hasEligibleMfaProof) {
+      return;
+    }
+
+    const trustedDevice = await this.tenant.libraries.trustedDevices.createCredential({
+      ctx: this.ctx,
+      deviceId: creation.deviceId,
+      userId,
+      ...metadata,
+    });
+
+    if (!trustedDevice) {
+      return;
+    }
+
+    const data = getTrustedDeviceEventData(trustedDevice);
+
+    this.#appendAuditLog('TrustedDevice.Created', trustedDevice);
+    this.ctx.appendDataHookContext('TrustedDevice.Created', {
+      data,
+      // Trusted-device lifecycle payloads intentionally exclude the request IP.
+      includeRequestIp: false,
+    });
+  }
+
+  #appendAuditLog(
+    key: 'TrustedDevice.Created' | 'TrustedDevice.Used',
+    trustedDevice: TrustedDeviceModel,
+    idempotencyKey?: string
+  ) {
+    const data = getTrustedDeviceEventData(trustedDevice);
+    const log = this.ctx.createLog(key, {
+      includeRequestIp: false,
+      ...conditional(idempotencyKey && { idempotencyKey }),
+    });
+
+    log.append({ userId: data.userId, data });
   }
 }

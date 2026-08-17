@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { Hooks, type Application, type User } from '../db-entries/index.js';
+import { Hooks, type Application, type TrustedDevice, type User } from '../db-entries/index.js';
 import {
   type ExceptionHookEvent,
   type DataHookEvent,
@@ -100,6 +100,9 @@ export type DataHookEventPayload = {
 } & Partial<InteractionApiContextPayload> &
   Partial<ManagementApiContext> &
   Record<string, unknown>;
+
+/** The intentionally limited trusted-device projection exposed by lifecycle events. */
+export type TrustedDeviceEventData = Pick<TrustedDevice, 'id' | 'userId' | 'expiresAt'>;
 
 /**
  * A key-remapping omit instead of the built-in `Omit`: on a type carrying a string index

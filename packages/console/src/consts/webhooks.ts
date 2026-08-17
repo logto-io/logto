@@ -1,13 +1,17 @@
 import { type AdminConsoleKey } from '@logto/phrases';
 import {
   DataHookSchema,
+  devFeatureHookEvents,
   InteractionHookEvent,
   hookEvents,
   type DataHookEvent,
 } from '@logto/schemas';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
+
 export const dataHookEventsLabel = Object.freeze({
   [DataHookSchema.User]: 'webhooks.schemas.user',
+  [DataHookSchema.TrustedDevice]: 'webhooks.schemas.trusted_device',
   [DataHookSchema.Organization]: 'webhooks.schemas.organization',
   [DataHookSchema.Role]: 'webhooks.schemas.role',
   [DataHookSchema.Scope]: 'webhooks.schemas.scope',
@@ -16,10 +20,15 @@ export const dataHookEventsLabel = Object.freeze({
 } satisfies Record<DataHookSchema, AdminConsoleKey>);
 
 export const interactionHookEvents = Object.values(InteractionHookEvent);
+const interactionHookEventSet = new Set<string>(interactionHookEvents);
+const devFeatureHookEventSet = new Set<string>(devFeatureHookEvents);
 
-const dataHookEvents: DataHookEvent[] = hookEvents.filter(
-  // eslint-disable-next-line no-restricted-syntax
-  (event): event is DataHookEvent => !interactionHookEvents.includes(event as InteractionHookEvent)
+export const availableHookEvents = hookEvents.filter(
+  (event) => isDevFeaturesEnabled || !devFeatureHookEventSet.has(event)
+);
+
+const dataHookEvents: DataHookEvent[] = availableHookEvents.filter(
+  (event): event is DataHookEvent => !interactionHookEventSet.has(event)
 );
 
 const isDataHookSchema = (schema: string): schema is DataHookSchema =>
@@ -46,11 +55,12 @@ const hookEventSchemaOrder: {
   [key in DataHookSchema]: number;
 } = {
   [DataHookSchema.User]: 0,
-  [DataHookSchema.Organization]: 1,
-  [DataHookSchema.Role]: 2,
-  [DataHookSchema.OrganizationRole]: 3,
-  [DataHookSchema.Scope]: 4,
-  [DataHookSchema.OrganizationScope]: 5,
+  [DataHookSchema.TrustedDevice]: 1,
+  [DataHookSchema.Organization]: 2,
+  [DataHookSchema.Role]: 3,
+  [DataHookSchema.OrganizationRole]: 4,
+  [DataHookSchema.Scope]: 5,
+  [DataHookSchema.OrganizationScope]: 6,
 };
 
 export const schemaGroupedDataHookEvents = Array.from(schemaGroupedDataHookEventsMap.entries())
