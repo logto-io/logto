@@ -43,7 +43,7 @@ export const logtoActionGuard = z
 
 /**
  * Shared execution payload for production Actions and Management API dry runs.
- * Cloud remote execution and the local VM runner both accept this shape.
+ * Cloud remote execution and the local runner both accept this shape.
  */
 export const actionExecutionRequestBodyGuard = z
   .object({

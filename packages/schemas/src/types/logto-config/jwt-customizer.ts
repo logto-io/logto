@@ -282,7 +282,7 @@ export enum CustomJwtErrorCode {
   AccessDenied = 'AccessDenied',
   /** General JWT customizer error,
    * this is the fallback custom jwt error code
-   * for any internal error thrown by the JWT customizer (localVM, azure function, or CF worker).
+   * for any internal error thrown by the JWT customizer on any runtime.
    */
   General = 'General',
 }

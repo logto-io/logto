@@ -34,7 +34,7 @@ const buildData = (): CustomJwtFetcher => ({
 
 const tenantId = 'test-tenant';
 
-const runAdapter = async () => JwtCustomizerLibrary.runScriptInLocalVm(buildData(), tenantId);
+const runAdapter = async () => JwtCustomizerLibrary.runScriptLocally(buildData(), tenantId);
 
 const catchScriptExecutionError = async (promise: Promise<unknown>) => {
   try {
@@ -93,7 +93,7 @@ describe('JwtCustomizerLibrary worker-pool adapter', () => {
 
   // Call-site validation of a successful run, not a runner failure — it must keep today's 400
   // rather than joining the `type` → 422 mapping.
-  it('rejects a non-record value with the 400 the local VM used', async () => {
+  it('rejects a non-record value with a 400', async () => {
     runScript.mockResolvedValueOnce({ ok: true, value: 42 });
 
     const { status, body } = await catchScriptExecutionError(runAdapter());

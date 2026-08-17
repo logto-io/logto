@@ -3,7 +3,6 @@ import { SignInIdentifier, type ActionUser, type JwtCustomizerUserContext } from
 import { mockUser } from '#src/__mocks__/user.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { WorkerThreadScriptRunner } from '#src/libraries/script-runner/worker-thread-script-runner.js';
-import { runScriptFunctionInLocalVm } from '#src/utils/local-vm/index.js';
 
 import {
   type ValidatedPostFirstFactorVerificationActionResult,
@@ -250,22 +249,9 @@ describe('validatePostSignInActionResult', () => {
     }
   );
 
-  // TODO (LOG-13956): drop this case together with the legacy `node:vm` execution path.
-  it('accepts an empty plain object returned from a separate VM realm as a no-op', async () => {
-    const result = await runScriptFunctionInLocalVm(
-      'const runAction = () => ({})',
-      'runAction',
-      {}
-    );
-
-    expect(result).toEqual({});
-    expect(validatePostSignInActionResult({ userId: actionUser.id, result })).toEqual(
-      continueResult
-    );
-  });
-
-  // The worker-pool analog of the separate-realm case above: the value reaches validation after a
-  // structured-clone round trip across the thread boundary.
+  // End-to-end guard on the shape validation actually receives: a script result is rebuilt by the
+  // structured-clone round trip across the thread boundary, so what reaches the validator is a
+  // plain object it never saw the script construct. An empty one must still read as a no-op.
   it('accepts an empty plain object returned across the worker thread boundary as a no-op', async () => {
     const runner = new WorkerThreadScriptRunner();
 

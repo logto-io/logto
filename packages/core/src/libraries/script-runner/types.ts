@@ -41,7 +41,7 @@ export type EgressPolicy = { mode: 'allowAll' } | { mode: 'denyAll' };
  * The outcome of a script run.
  *
  * Failures are values rather than exceptions so both runners report the same set of kinds. The
- * mapping to HTTP status codes is unchanged from the local VM implementation: `denied` → 403,
+ * mapping to HTTP status codes is unchanged from the previous execution path: `denied` → 403,
  * `syntax` and `type` → 422, and everything else → 500.
  *
  * Call-site validation of a successful return value (e.g. Custom JWT's Zod `z.record` parse) is

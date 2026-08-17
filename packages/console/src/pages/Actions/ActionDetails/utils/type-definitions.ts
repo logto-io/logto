@@ -55,7 +55,7 @@ export const postFirstFactorVerificationEventTypeDefinition = `type ${ActionType
   user: ${ActionTypeDefinitionKey.ActionUser} | null;
   /**
    * Sensitive credential provided for action-controlled password verification.
-   * Never log or persist this value outside the sandbox.
+   * Never log or persist this value outside this script.
    */
   password: string;
 };`;

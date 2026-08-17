@@ -72,7 +72,7 @@ const buildAccessDeniedError = (message: string) => {
 
 export class JwtCustomizerLibrary {
   // Convert failures to WithTyped client response errors to share the error handling logic.
-  static async runScriptInLocalVm(data: CustomJwtFetcher, tenantId: string) {
+  static async runScriptLocally(data: CustomJwtFetcher, tenantId: string) {
     /**
      * `api` is not part of the payload: functions cannot cross the structured-clone boundary, so
      * the worker constructs `denyAccess` itself and reports a denial as a `denied` failure.
@@ -337,7 +337,7 @@ export class JwtCustomizerLibrary {
   /**
    * @remarks
    * For Logto cloud use only. Run the custom JWT claims script remotely in an isolated environment.
-   * For OSS version, use @see JwtCustomizerLibrary.runScriptInLocalVm instead.
+   * For OSS version, use @see JwtCustomizerLibrary.runScriptLocally instead.
    *
    * @param payload - The custom JWT fetcher payload.
    * @param isTest - Whether to run the script in test mode.

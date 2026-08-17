@@ -79,7 +79,7 @@ const safeString = (value: unknown) => {
 };
 
 /**
- * Flatten a thrown value the same way `buildScriptExecutionErrorBody` does on the host side.
+ * Flatten a thrown value into a structured-cloneable description the host can report.
  *
  * Total by construction. It is called from the handler's own `catch`, so a throw here would escape
  * as an unhandled rejection and take down the thread along with every run multiplexed on it — and
@@ -113,8 +113,8 @@ const startup = ((): Startup => {
   try {
     /**
      * Evaluated in this realm on purpose. It buys accurate `filename`/stack output and makes
-     * `instanceof SyntaxError` — plus the script's own error classes — work, which the cross-realm
-     * `runInNewContext` never allowed. It is not an isolation boundary; the thread is.
+     * `instanceof SyntaxError` — plus the script's own error classes — work, which a cross-realm
+     * evaluation would break. It is not an isolation boundary; the thread is.
      *
      * `typeof X === 'function' ? X : undefined` cannot throw a `ReferenceError` for an undeclared
      * entry, so anything thrown below is unambiguously the script's own top-level code. The leading
