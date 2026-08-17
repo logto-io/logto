@@ -7,7 +7,7 @@ import { type Context } from 'koa';
 import { EnvSet } from '#src/env-set/index.js';
 import type { TrustedDeviceMetadata, TrustedDeviceQueries } from '#src/queries/trusted-device.js';
 
-import type { HookContextManager } from './hook/context-manager.js';
+import type { HookContext, HookContextManager } from './hook/context-manager.js';
 import type { createTrustedDevicePolicyLibrary } from './trusted-device-policy.js';
 
 const trustedDeviceSecretByteLength = 32;
@@ -276,7 +276,8 @@ export const createTrustedDeviceLibrary = (
   const deleteByIdAndUserId = async (
     ctx: TrustedDeviceLifecycleContext,
     id: string,
-    userId: string
+    userId: string,
+    hookContext: Omit<HookContext, 'data' | 'includeRequestIp'> = {}
   ) => {
     const trustedDevice = await queries.deleteByIdAndUserId(id, userId);
 
@@ -285,6 +286,7 @@ export const createTrustedDeviceLibrary = (
     }
 
     ctx.appendDataHookContext('TrustedDevice.Deleted', {
+      ...hookContext,
       data: getTrustedDeviceEventData(trustedDevice),
       // Trusted-device lifecycle payloads intentionally exclude the request IP.
       includeRequestIp: false,

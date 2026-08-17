@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -60,10 +61,12 @@ export default function adminUserTrustedDeviceRoutes<T extends ManagementApiRout
       const { userId, trustedDeviceId } = ctx.guard.params;
 
       await findUserById(userId);
+      ctx.status = 204;
       const trustedDevice = await trustedDeviceLibrary.deleteByIdAndUserId(
         ctx,
         trustedDeviceId,
-        userId
+        userId,
+        buildManagementApiContext(ctx)
       );
 
       assertThat(
@@ -73,8 +76,6 @@ export default function adminUserTrustedDeviceRoutes<T extends ManagementApiRout
           status: 404,
         })
       );
-
-      ctx.status = 204;
 
       return next();
     }

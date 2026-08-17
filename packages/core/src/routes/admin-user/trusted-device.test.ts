@@ -125,7 +125,13 @@ describe('admin user trusted device routes', () => {
 
     expect(response.status).toBe(204);
     expect(findUserById).toHaveBeenCalledWith(userId);
-    expect(deleteByIdAndUserId).toHaveBeenCalledWith(expect.any(Object), trustedDeviceId, userId);
+    expect(deleteByIdAndUserId).toHaveBeenCalledWith(expect.any(Object), trustedDeviceId, userId, {
+      path: `/users/${userId}/trusted-devices/${trustedDeviceId}`,
+      method: 'DELETE',
+      status: 204,
+      params: { userId, trustedDeviceId },
+      matchedRoute: '/users/:userId/trusted-devices/:trustedDeviceId',
+    });
   });
 
   it('returns 404 when the trusted device is missing or belongs to another user', async () => {

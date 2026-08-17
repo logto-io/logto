@@ -278,18 +278,26 @@ describe('trusted device library', () => {
       userAgent: 'private user agent',
     };
     const ctx = { appendDataHookContext: jest.fn() };
+    const managementApiContext = {
+      path: `/api/users/${userId}/trusted-devices/${trustedDeviceId}`,
+      method: 'DELETE',
+      status: 204,
+      params: { userId, trustedDeviceId },
+      matchedRoute: '/api/users/:userId/trusted-devices/:trustedDeviceId',
+    };
     queries.deleteByIdAndUserId.mockResolvedValueOnce(trustedDevice).mockResolvedValueOnce(null);
     const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary());
 
-    await expect(library.deleteByIdAndUserId(ctx, trustedDeviceId, userId)).resolves.toEqual(
-      trustedDevice
-    );
+    await expect(
+      library.deleteByIdAndUserId(ctx, trustedDeviceId, userId, managementApiContext)
+    ).resolves.toEqual(trustedDevice);
     await expect(
       library.deleteByIdAndUserId(ctx, trustedDeviceId, userId)
     ).resolves.toBeUndefined();
 
     expect(ctx.appendDataHookContext).toHaveBeenCalledTimes(1);
     expect(ctx.appendDataHookContext).toHaveBeenCalledWith('TrustedDevice.Deleted', {
+      ...managementApiContext,
       data: {
         id: trustedDeviceId,
         userId,
