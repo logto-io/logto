@@ -5,6 +5,8 @@ import { type Provider, errors } from 'oidc-provider';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { resolveIsThirdPartyApplication } from '../../resource.js';
+
 import { TokenExchangeTokenType } from './types.js';
 
 const { InvalidGrant } = errors;
@@ -65,7 +67,7 @@ const jwtAccessTokenType = 'at+jwt';
 const validateJwtAccessToken = async (
   subjectToken: string,
   jwtVerificationOptions: NonNullable<ValidateSubjectTokenParams['jwtVerificationOptions']>
-): Promise<{ userId: string }> => {
+): Promise<{ userId: string; clientId: string }> => {
   const { localJWKSet, issuer } = jwtVerificationOptions;
 
   try {
@@ -85,7 +87,7 @@ const validateJwtAccessToken = async (
 
     // JWT access tokens are not consumption-tracked, so no subjectTokenId is returned.
     // This allows the same token to be exchanged multiple times (e.g., by different services).
-    return { userId: payload.sub };
+    return { userId: payload.sub, clientId: payload.client_id };
   } catch (error) {
     if (error instanceof errors.OIDCProviderError) {
       throw error;
@@ -101,7 +103,7 @@ const validateJwtAccessToken = async (
 const validateOpaqueAccessToken = async (
   subjectToken: string,
   AccessToken: Provider['AccessToken']
-): Promise<{ userId: string } | undefined> => {
+): Promise<{ userId: string; clientId: string } | undefined> => {
   // eslint-disable-next-line unicorn/no-array-callback-reference -- AccessToken.find is not an array method
   const token = await trySafe(async () => AccessToken.find(subjectToken));
   if (!token?.accountId) {
@@ -113,9 +115,45 @@ const validateOpaqueAccessToken = async (
     throw new InvalidGrant('subject token is expired');
   }
 
+  // Every access token is bound to the client it was issued to; treat a token without that binding
+  // as unusable rather than falling back to a less restrictive path.
+  assertThat(token.clientId, new InvalidGrant('subject token is not bound to an issuing client'));
+
   // Opaque access tokens are not consumption-tracked, so no subjectTokenId is returned.
   // This allows the same token to be exchanged multiple times (e.g., by different services).
-  return { userId: token.accountId };
+  return { userId: token.accountId, clientId: token.clientId };
+};
+
+/**
+ * Asserts that the subject token was issued to a first-party application.
+ *
+ * @remarks
+ * Token exchange does not inherit the subject token's audience or scopes: the issued token carries
+ * the receiver's authorization for the user, which for a first-party receiver means every scope the
+ * user's roles grant. A third-party application only ever holds credentials the user consented to
+ * for that application, so letting one of its access tokens act as the subject would turn a narrow,
+ * consented credential into the user's full first-party authorization.
+ *
+ * Third-party applications are already barred from enabling token exchange as the receiver
+ * (`assertThirdPartyApplicationTokenExchangeDisabled` in the application routes); this closes the
+ * same boundary on the subject side.
+ *
+ * A lookup that fails outright is not treated as a rejection: `invalid_grant` reads as permanent, so
+ * a database hiccup would turn every legitimate exchange into an error clients do not retry and
+ * cannot diagnose. Those errors propagate and surface as a 500 instead.
+ */
+const assertFirstPartySubjectTokenClient = async (queries: Queries, clientId: string) => {
+  const isThirdParty = await resolveIsThirdPartyApplication(queries, clientId);
+
+  // A deleted or otherwise unknown client cannot be shown to be first-party, so it is rejected.
+  assertThat(
+    isThirdParty !== undefined,
+    new InvalidGrant('subject token was issued to an unknown client')
+  );
+  assertThat(
+    !isThirdParty,
+    new InvalidGrant('subject token was not issued to a first-party application')
+  );
 };
 
 /** Prefix used by impersonation tokens. */
@@ -148,12 +186,15 @@ export const validateSubjectToken = async ({
     // First, try to find the token as an opaque access token
     const opaqueResult = await validateOpaqueAccessToken(subjectToken, AccessToken);
     if (opaqueResult) {
-      return opaqueResult;
+      await assertFirstPartySubjectTokenClient(queries, opaqueResult.clientId);
+      return { userId: opaqueResult.userId };
     }
 
     // If not found as opaque token, try to verify as JWT
     assertThat(jwtVerificationOptions, new InvalidGrant('JWT verification options are required'));
-    return validateJwtAccessToken(subjectToken, jwtVerificationOptions);
+    const jwtResult = await validateJwtAccessToken(subjectToken, jwtVerificationOptions);
+    await assertFirstPartySubjectTokenClient(queries, jwtResult.clientId);
+    return { userId: jwtResult.userId };
   }
 
   if (subjectTokenType === TokenExchangeTokenType.PersonalAccessToken) {
