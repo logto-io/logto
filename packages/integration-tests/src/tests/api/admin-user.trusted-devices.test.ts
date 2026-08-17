@@ -11,6 +11,7 @@ import {
 } from '#src/api/admin-user.js';
 import api from '#src/api/api.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
+import { devFeatureTest } from '#src/utils.js';
 
 const insertTrustedDevice = async (
   pool: DatabasePool,
@@ -53,7 +54,7 @@ const pool = await createPool(assertEnv('DB_URL'), {
   interceptors: createInterceptorsPreset(),
 });
 
-describe('admin user trusted devices', () => {
+devFeatureTest.describe('admin user trusted devices', () => {
   afterAll(async () => {
     await pool.end();
   });
