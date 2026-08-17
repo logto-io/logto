@@ -184,6 +184,7 @@ const sign_in_exp = {
       custom_data: 'بيانات مخصصة',
       custom_data_description: 'تحكم في الوصول إلى بيانات JSON المخصصة المخزنة للمستخدم.',
       sessions: 'إدارة الجلسات',
+      trusted_devices: 'الأجهزة الموثوقة',
     },
     profile_fields: {
       title: 'حقول الملف الشخصي لمركز الحساب الجاهز',

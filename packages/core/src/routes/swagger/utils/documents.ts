@@ -182,13 +182,17 @@ export const buildExperienceApiBaseDocument = (
 });
 
 // ID parameters for account API entities.
-const userApiIdentifiableEntityNames = Object.freeze([
-  'profile',
-  'verification',
-  'connector',
-  'session',
-  'grant',
-]);
+const userApiIdentifiableEntityNames = Object.freeze(
+  condArray<string>(
+    'profile',
+    'verification',
+    'connector',
+    'session',
+    // DEV: MFA trusted device management
+    EnvSet.values.isDevFeaturesEnabled && 'trusted-device',
+    'grant'
+  )
+);
 
 export const buildUserApiBaseDocument = (
   pathMap: Map<string, OpenAPIV3.PathItemObject>,

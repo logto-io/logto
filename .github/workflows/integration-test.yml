@@ -41,6 +41,8 @@ jobs:
     env:
       INTEGRATION_TEST: true
       DEV_FEATURES_ENABLED: ${{ matrix.dev-features-enabled }}
+      # Allow production-mode tests to simulate TLS termination for Secure cookies.
+      TRUST_PROXY_HEADER: 1
       # Allow Console tests to use the local backchannel logout mock server.
       OIDC_PROVIDER_SSRF_PROTECTION_DISABLED: ${{ matrix.target == 'console' }}
       # Key encryption key (KEK) for the secret vault used in integration tests

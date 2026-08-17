@@ -250,7 +250,6 @@ export const createTrustedDeviceLibrary = (
     const trustedDevice = await queries.findActiveByIdAndUserId(credential.id, userId);
 
     if (!trustedDevice) {
-      void trySafe(async () => queries.deleteExpiredByIdAndUserId(credential.id, userId));
       clearCredential(ctx, userId);
       return;
     }

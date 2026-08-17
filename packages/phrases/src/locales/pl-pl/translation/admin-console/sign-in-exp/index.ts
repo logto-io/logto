@@ -187,6 +187,7 @@ const sign_in_exp = {
       custom_data_description:
         'Kontroluj dostęp do niestandardowych danych JSON przechowywanych przy użytkowniku.',
       sessions: 'Sesje',
+      trusted_devices: 'Zaufane urządzenia',
     },
     profile_fields: {
       title: 'Pola profilu dla gotowego centrum konta',
