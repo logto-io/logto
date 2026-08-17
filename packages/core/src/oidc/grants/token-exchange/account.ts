@@ -5,7 +5,7 @@ import { type Provider, errors } from 'oidc-provider';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { isThirdPartyApplication } from '../../resource.js';
+import { resolveIsThirdPartyApplication } from '../../resource.js';
 
 import { TokenExchangeTokenType } from './types.js';
 
@@ -117,7 +117,7 @@ const validateOpaqueAccessToken = async (
 
   // Every access token is bound to the client it was issued to; treat a token without that binding
   // as unusable rather than falling back to a less restrictive path.
-  assertThat(token.clientId, new InvalidGrant('invalid subject token'));
+  assertThat(token.clientId, new InvalidGrant('subject token is not bound to an issuing client'));
 
   // Opaque access tokens are not consumption-tracked, so no subjectTokenId is returned.
   // This allows the same token to be exchanged multiple times (e.g., by different services).
@@ -137,11 +137,21 @@ const validateOpaqueAccessToken = async (
  * Third-party applications are already barred from enabling token exchange as the receiver
  * (`assertThirdPartyApplicationTokenExchangeDisabled` in the application routes); this closes the
  * same boundary on the subject side.
+ *
+ * A lookup that fails outright is not treated as a rejection: `invalid_grant` reads as permanent, so
+ * a database hiccup would turn every legitimate exchange into an error clients do not retry and
+ * cannot diagnose. Those errors propagate and surface as a 500 instead.
  */
 const assertFirstPartySubjectTokenClient = async (queries: Queries, clientId: string) => {
-  // `isThirdPartyApplication` fails closed: an unresolvable client is never treated as first-party.
+  const isThirdParty = await resolveIsThirdPartyApplication(queries, clientId);
+
+  // A deleted or otherwise unknown client cannot be shown to be first-party, so it is rejected.
   assertThat(
-    !(await isThirdPartyApplication(queries, clientId)),
+    isThirdParty !== undefined,
+    new InvalidGrant('subject token was issued to an unknown client')
+  );
+  assertThat(
+    !isThirdParty,
     new InvalidGrant('subject token was not issued to a first-party application')
   );
 };

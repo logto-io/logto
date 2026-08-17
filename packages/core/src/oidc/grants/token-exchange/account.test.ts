@@ -1,6 +1,8 @@
+import { Applications } from '@logto/schemas';
 import { errors, type Provider } from 'oidc-provider';
 
 import { mockApplication } from '#src/__mocks__/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 
 import { TokenExchangeTokenType } from './types.js';
@@ -161,6 +163,17 @@ describe('validateSubjectToken() subject token client', () => {
     await expect(validateAccessTokenSubject(AccessToken)).rejects.toMatchError(notFirstParty);
   });
 
+  it('should accept a JWT access token issued to a first-party application', async () => {
+    mockJwtVerify.mockResolvedValueOnce({
+      protectedHeader: { alg: 'ES384', typ: 'at+jwt' },
+      payload: { sub: accountId, client_id: sourceClientId },
+    });
+
+    await expect(validateJwtSubjectToken()).resolves.toEqual({ userId: accountId });
+    // The claim carrying the issuing client, not the subject, is what gets checked.
+    expect(findApplicationById).toHaveBeenCalledWith(sourceClientId);
+  });
+
   it('should reject a JWT access token issued to a third-party application', async () => {
     findApplicationById.mockResolvedValueOnce({
       ...mockApplication,
@@ -173,23 +186,48 @@ describe('validateSubjectToken() subject token client', () => {
     });
 
     await expect(validateJwtSubjectToken()).rejects.toMatchError(notFirstParty);
+    expect(findApplicationById).toHaveBeenCalledWith(sourceClientId);
   });
 
-  it('should reject when the issuing client cannot be resolved', async () => {
-    findApplicationById.mockRejectedValueOnce(new Error('not found'));
+  it('should reject when the issuing client no longer exists', async () => {
+    findApplicationById.mockRejectedValueOnce(
+      new RequestError({
+        code: 'entity.not_exists_with_id',
+        name: Applications.table,
+        id: sourceClientId,
+        status: 404,
+      })
+    );
     mockJwtVerify.mockResolvedValueOnce({
       protectedHeader: { alg: 'ES384', typ: 'at+jwt' },
       payload: { sub: accountId, client_id: sourceClientId },
     });
 
-    await expect(validateJwtSubjectToken()).rejects.toMatchError(notFirstParty);
+    await expect(validateJwtSubjectToken()).rejects.toMatchError(
+      new InvalidGrant('subject token was issued to an unknown client')
+    );
+  });
+
+  /**
+   * `invalid_grant` reads as permanent, so a database hiccup must not be reported as one: the
+   * failure propagates and surfaces as a 500 that clients can retry and operators can diagnose.
+   */
+  it('should surface an unexpected lookup failure instead of rejecting the grant', async () => {
+    const error = new Error('connection terminated unexpectedly');
+    findApplicationById.mockRejectedValueOnce(error);
+    mockJwtVerify.mockResolvedValueOnce({
+      protectedHeader: { alg: 'ES384', typ: 'at+jwt' },
+      payload: { sub: accountId, client_id: sourceClientId },
+    });
+
+    await expect(validateJwtSubjectToken()).rejects.toBe(error);
   });
 
   it('should reject an opaque access token with no client binding', async () => {
     const AccessToken = mockOpaqueToken({ accountId, isExpired: false });
 
     await expect(validateAccessTokenSubject(AccessToken)).rejects.toMatchError(
-      new InvalidGrant('invalid subject token')
+      new InvalidGrant('subject token is not bound to an issuing client')
     );
   });
 });
