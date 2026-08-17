@@ -53,6 +53,24 @@ function removeProfileFieldByName(
   return profileFields.filter(({ name: fieldName }) => fieldName !== name);
 }
 
+const assertNoDuplicateProfileFieldNames = (fields: ProfileFieldsList) => {
+  const names = fields.map(({ name }) => name);
+  const uniqueNames = [...new Set(names)];
+  const duplicateNames = uniqueNames.filter(
+    (name) => names.indexOf(name) !== names.lastIndexOf(name)
+  );
+  assertThat(
+    duplicateNames.length === 0,
+    new RequestError(
+      {
+        code: 'request.invalid_input',
+        details: `Duplicate profile field names: ${duplicateNames.join(', ')}`,
+      },
+      { duplicateNames }
+    )
+  );
+};
+
 export const createCustomProfileFieldsLibrary = (queries: Queries) => {
   const {
     insertCustomProfileFields,
@@ -92,6 +110,8 @@ export const createCustomProfileFieldsLibrary = (queries: Queries) => {
       return;
     }
 
+    assertNoDuplicateProfileFieldNames(fields);
+
     const names = fields.map(({ name }) => name);
     const uniqueNames = [...new Set(names)];
     const profileFields = await findCustomProfileFieldsByNames(uniqueNames);
@@ -103,20 +123,6 @@ export const createCustomProfileFieldsLibrary = (queries: Queries) => {
         code: 'custom_profile_fields.entity_not_exists_with_names',
         names: missing.join(', '),
       })
-    );
-
-    const duplicateNames = uniqueNames.filter(
-      (name) => names.indexOf(name) !== names.lastIndexOf(name)
-    );
-    assertThat(
-      duplicateNames.length === 0,
-      new RequestError(
-        {
-          code: 'request.invalid_input',
-          details: `Duplicate profile field names: ${duplicateNames.join(', ')}`,
-        },
-        { duplicateNames }
-      )
     );
   };
 
@@ -212,6 +218,14 @@ export const createCustomProfileFieldsLibrary = (queries: Queries) => {
     ]);
   };
 
+  /**
+   * Normalize a configured profile-field list against the catalog.
+   *
+   * Drops references to fields that no longer exist so a concurrent catalog delete (or stale
+   * Console form state) cannot block saving account-center / sign-up config. Duplicate names are
+   * still rejected. Keep {@link validateProfileFieldsList} for APIs that intentionally address
+   * specific catalog fields (e.g. SIE order updates).
+   */
   const normalizeProfileFields = async <ProfileFields extends NormalizableProfileFields>(
     profileFields: ProfileFields
   ): Promise<ProfileFields | undefined> => {
@@ -219,8 +233,24 @@ export const createCustomProfileFieldsLibrary = (queries: Queries) => {
       return profileFields;
     }
 
-    await validateProfileFieldsList(profileFields);
-    return profileFields;
+    if (profileFields.length === 0) {
+      return profileFields;
+    }
+
+    assertNoDuplicateProfileFieldNames(profileFields);
+
+    const names = profileFields.map(({ name }) => name);
+    const uniqueNames = [...new Set(names)];
+    const catalogFields = await findCustomProfileFieldsByNames(uniqueNames);
+    const existingNames = new Set(catalogFields.map(({ name }) => name));
+    const normalized = profileFields.filter(({ name }) => existingNames.has(name));
+
+    if (normalized.length === profileFields.length) {
+      return profileFields;
+    }
+
+    // eslint-disable-next-line no-restricted-syntax -- filter keeps the same item shape as the input list
+    return normalized as ProfileFields;
   };
 
   return {

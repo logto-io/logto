@@ -86,6 +86,8 @@ function ProfileFieldsEditBox<
     return map;
   }, [catalog, getI18nLabel]);
 
+  const catalogNameSet = useMemo(() => new Set((catalog ?? []).map(({ name }) => name)), [catalog]);
+
   const hasSelectedFields = fields.length > 0;
 
   const addProfileFieldsButtonProps: ButtonProps = {
@@ -108,9 +110,15 @@ function ProfileFieldsEditBox<
         {fields.map(({ id }, index) => {
           const fieldValue = selectedValue?.[index];
           const currentFieldName = fieldValue?.name;
-          const disabledReason = currentFieldName
-            ? getFieldDisabledReason?.(currentFieldName)
-            : undefined;
+          // Missing catalog fields must stay removable so admins can clear stale references even
+          // when the related account-center permission control is Off.
+          const isMissingFromCatalog = Boolean(
+            currentFieldName && catalog && !catalogNameSet.has(currentFieldName)
+          );
+          const disabledReason =
+            currentFieldName && !isMissingFromCatalog
+              ? getFieldDisabledReason?.(currentFieldName)
+              : undefined;
           const isDisabled = Boolean(disabledReason);
           return (
             <DraggableItem
