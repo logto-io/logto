@@ -85,11 +85,15 @@ const applications = {
       'Dinamik uygulama, OAuth istemcilerinin önceden kayıt olmadan bağlanmasına olanak tanır.',
     settings_description:
       'Dinamik uygulama, OAuth istemcilerinin önceden kayıt olmadan bağlanmasına olanak tanır. OAuth Client ID Metadata Document (CIMD) belirtimini kullanır.',
+    beta_notice:
+      'Dinamik uygulama şu anda beta sürümünde. Keşfetmeye hoş geldiniz ve <ContactLink>geri bildiriminizi paylaşın</ContactLink>.',
     app_id_placeholder: 'Her istemci tarafından dinamik olarak sağlanır',
     enable_confirm_modal: {
       title: 'Dinamik istemci erişimi etkinleştirilsin mi?',
       content:
         "Geçerli bir genel HTTPS istemci kimliği URL'sine sahip her OAuth istemcisi, önceden kayıt olmadan bu kiracı için yetkilendirme başlatabilir. Erişim, azami izinleriniz ve kullanıcı onayı ile sınırlı kalmaya devam eder.",
+      beta_pricing_notice:
+        'Dinamik uygulama beta sürecinde ücretsizdir. Beta sonrasında eklenti ücreti uygulanabilir. Sizi önceden bilgilendireceğiz ve dilediğiniz zaman kapatabilirsiniz.',
     },
     enabled: 'Dinamik uygulama başarıyla etkinleştirildi.',
     disable_confirm_modal: {

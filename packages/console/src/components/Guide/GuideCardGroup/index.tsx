@@ -30,6 +30,11 @@ function getPaywallTag(
   isPaidPlan: boolean,
   isEnterprisePlan: boolean
 ) {
+  /** A beta feature is free while in beta, so it carries no paywall yet. */
+  if (guideMetadata.isBeta) {
+    return;
+  }
+
   if (guideMetadata.isThirdParty) {
     return (
       <CombinedAddOnAndFeatureTag
@@ -83,6 +88,7 @@ function GuideCardGroup(
             hasBorder={hasCardBorder}
             hasButton={hasCardButton}
             data={guide}
+            isBeta={guide.metadata.isBeta}
             paywallTag={getPaywallTag(
               guide.metadata,
               currentSubscriptionQuota,

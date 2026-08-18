@@ -1,17 +1,20 @@
 import { type SnakeCaseOidcConfig, Theme } from '@logto/schemas';
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { Navigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import DynamicAppDarkIcon from '@/assets/icons/dynamic-app-dark.svg?react';
 import DynamicAppIcon from '@/assets/icons/dynamic-app.svg?react';
 import Forbidden from '@/assets/icons/forbidden.svg?react';
+import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import DetailsPage from '@/components/DetailsPage';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
+import { BetaTag } from '@/components/FeatureTag';
 import PageMeta from '@/components/PageMeta';
 import { ApplicationDetailsTabs } from '@/consts';
 import { openIdProviderConfigPath } from '@/consts/oidc';
+import InlineNotification from '@/ds-components/InlineNotification';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import TabWrapper from '@/ds-components/TabWrapper';
 import { type RequestError } from '@/hooks/use-api';
@@ -63,9 +66,19 @@ function DynamicAppDetails() {
       }}
     >
       <PageMeta titleKey="application_details.page_title" />
+      <InlineNotification>
+        <Trans components={{ ContactLink: <ContactUsPhraseLink /> }}>
+          {t('applications.dynamic_app.beta_notice')}
+        </Trans>
+      </InlineNotification>
       <DetailsPageHeader
         icon={<Icon />}
-        title={t('applications.dynamic_app.title')}
+        title={
+          <div className={styles.title}>
+            {t('applications.dynamic_app.title')}
+            <BetaTag />
+          </div>
+        }
         primaryTag={[
           t(`${applicationTypeI18nKey.thirdParty}.title`),
           t('applications.dynamic_app.subtitle'),

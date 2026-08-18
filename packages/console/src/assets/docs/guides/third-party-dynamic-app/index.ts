@@ -13,6 +13,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
   target: ApplicationType.Traditional,
   isThirdParty: true,
   isDevFeature: true,
+  isBeta: true,
 });
 
 export default metadata;

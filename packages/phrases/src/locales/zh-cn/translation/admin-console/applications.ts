@@ -81,11 +81,15 @@ const applications = {
     description: '动态应用允许 OAuth 客户端无需预先注册即可接入。',
     settings_description:
       '动态应用允许 OAuth 客户端无需预先注册即可接入，基于 OAuth Client ID Metadata Document (CIMD) 规范。',
+    beta_notice:
+      '动态应用目前处于测试阶段。欢迎您去探索并<ContactLink>分享您的反馈</ContactLink>。',
     app_id_placeholder: '由每个客户端动态提供',
     enable_confirm_modal: {
       title: '启用动态客户端接入？',
       content:
         '任何拥有有效公开 HTTPS 客户端 ID URL 的 OAuth 客户端，都可以无需预先注册即向该租户发起授权。访问范围仍受你设置的最大权限和用户同意的限制。',
+      beta_pricing_notice:
+        '动态应用在 Beta 期间免费使用。Beta 结束后可能会作为附加功能收费。届时我们会提前通知你，你也可以随时关闭它。',
     },
     enabled: '动态应用已成功启用。',
     disable_confirm_modal: {
