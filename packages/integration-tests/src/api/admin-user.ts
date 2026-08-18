@@ -208,6 +208,17 @@ export const updatePersonalAccessToken = async (
 export const deletePersonalAccessTokenLegacy = async (userId: string, name: string) =>
   authedAdminApi.delete(`users/${userId}/personal-access-tokens/${name}`);
 
+export const updatePersonalAccessTokenLegacy = async (
+  userId: string,
+  name: string,
+  body: Record<string, unknown>
+) =>
+  authedAdminApi
+    .patch(`users/${userId}/personal-access-tokens/${name}`, {
+      json: body,
+    })
+    .json<PersonalAccessToken>();
+
 export const getUserTrustedDevicesResponse = async (
   userId: string,
   searchParams?: URLSearchParams
@@ -224,17 +235,6 @@ export const getUserTrustedDevices = async (userId: string, searchParams?: URLSe
 
 export const deleteUserTrustedDevice = async (userId: string, trustedDeviceId: string) =>
   authedAdminApi.delete(`users/${userId}/trusted-devices/${trustedDeviceId}`);
-
-export const updatePersonalAccessTokenLegacy = async (
-  userId: string,
-  name: string,
-  body: Record<string, unknown>
-) =>
-  authedAdminApi
-    .patch(`users/${userId}/personal-access-tokens/${name}`, {
-      json: body,
-    })
-    .json<PersonalAccessToken>();
 
 export const getUserIdentity = async (
   userId: string,

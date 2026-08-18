@@ -1,13 +1,18 @@
 import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
 
-import { TrustedDevices, type TrustedDevice, type TrustedDeviceEventData } from '@logto/schemas';
+import {
+  TrustedDevices,
+  type ManagementApiContext,
+  type TrustedDevice,
+  type TrustedDeviceEventData,
+} from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 import { type Context } from 'koa';
 
 import { EnvSet } from '#src/env-set/index.js';
 import type { TrustedDeviceMetadata, TrustedDeviceQueries } from '#src/queries/trusted-device.js';
 
-import type { HookContext, HookContextManager } from './hook/context-manager.js';
+import type { HookContextManager } from './hook/context-manager.js';
 import type { createTrustedDevicePolicyLibrary } from './trusted-device-policy.js';
 
 const trustedDeviceSecretByteLength = 32;
@@ -277,7 +282,7 @@ export const createTrustedDeviceLibrary = (
     ctx: TrustedDeviceLifecycleContext,
     id: string,
     userId: string,
-    hookContext: Omit<HookContext, 'data' | 'includeRequestIp'> = {}
+    hookContext: Partial<ManagementApiContext> = {}
   ) => {
     const trustedDevice = await queries.deleteByIdAndUserId(id, userId);
 

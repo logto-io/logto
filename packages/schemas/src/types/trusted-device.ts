@@ -13,5 +13,4 @@ export const trustedDeviceResponseGuard = TrustedDevices.guard.pick({
   expiresAt: true,
 });
 
-/** Public trusted-device metadata returned by user management APIs. */
 export type TrustedDeviceResponse = z.infer<typeof trustedDeviceResponseGuard>;

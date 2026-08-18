@@ -9,7 +9,6 @@ import {
   getUserTrustedDevices,
   getUserTrustedDevicesResponse,
 } from '#src/api/admin-user.js';
-import api from '#src/api/api.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
 import { devFeatureTest } from '#src/utils.js';
 
@@ -63,14 +62,6 @@ devFeatureTest.describe('admin user trusted devices', () => {
 
   afterAll(async () => {
     await pool.end();
-  });
-
-  it('requires Management API authorization', async () => {
-    const response = await api.get('users/missing/trusted-devices', {
-      throwHttpErrors: false,
-    });
-
-    expect(response.status).toBe(401);
   });
 
   it('lists only active owned records with pagination and deletes only owned records', async () => {

@@ -33,7 +33,7 @@ export default function adminUserTrustedDeviceRoutes<T extends ManagementApiRout
     koaGuard({
       params: z.object({ userId: z.string() }),
       response: trustedDeviceResponseGuard.array(),
-      status: [200, 400, 404],
+      status: [200, 404],
     }),
     async (ctx, next) => {
       const { userId } = ctx.guard.params;
