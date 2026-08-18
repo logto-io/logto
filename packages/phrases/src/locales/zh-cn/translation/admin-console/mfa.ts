@@ -60,6 +60,13 @@ const mfa = {
     organization_allow_tip: '组织只能收紧租户可信设备策略；租户策略关闭时，组织无法启用此功能。',
     organization_allow_description: '允许此组织的成员使用可信设备完成验证。',
     organization_global_disabled: '请先在租户 MFA 设置中启用可信设备，再为此组织允许该功能。',
+    management_description:
+      '管理此用户完成 MFA 后信任的浏览器。移除后，该浏览器在下次登录时需要再次完成 MFA。',
+    management_hint: '最近的位置仅供参考。',
+    management_empty: '此用户没有有效的可信设备。',
+    management_deletion_confirmation:
+      '确定要移除 {{name}} 吗？该浏览器在下次登录时需要再次完成 MFA。',
+    management_removed: '可信设备已移除。',
   },
 };
 

@@ -88,6 +88,13 @@ const mfa = {
     organization_allow_description:
       'Bu kuruluşun üyeleri için güvenilen cihaz doğrulamasına izin verin.',
     organization_global_disabled: 'Önce tenant MFA ayarlarında güvenilen cihazları etkinleştirin.',
+    management_description:
+      'Bu kullanıcının MFA işlemini tamamladıktan sonra güvendiği tarayıcıları yönetin. Kaldırılan tarayıcı bir sonraki oturum açmada yeniden MFA isteyecektir.',
+    management_hint: 'Son konum yalnızca bilgi amaçlıdır.',
+    management_empty: 'Bu kullanıcının etkin güvenilen cihazı yok.',
+    management_deletion_confirmation:
+      '{{name}} kaldırılsın mı? Bu tarayıcı bir sonraki oturum açmada yeniden MFA isteyecektir.',
+    management_removed: 'Güvenilen cihaz kaldırıldı.',
   },
 };
 

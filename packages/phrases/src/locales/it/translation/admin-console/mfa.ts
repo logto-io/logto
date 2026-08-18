@@ -88,6 +88,13 @@ const mfa = {
       'Consenti la verifica con dispositivi attendibili ai membri di questa organizzazione.',
     organization_global_disabled:
       'Abilita prima i dispositivi attendibili nelle impostazioni MFA del tenant.',
+    management_description:
+      "Gestisci i browser considerati attendibili dall'utente dopo aver completato l'MFA. Dopo la rimozione, il browser richiederà nuovamente l'MFA al prossimo accesso.",
+    management_hint: "L'ultima posizione è solo informativa.",
+    management_empty: "L'utente non ha dispositivi attendibili attivi.",
+    management_deletion_confirmation:
+      "Rimuovere {{name}}? Questo browser richiederà nuovamente l'MFA al prossimo accesso.",
+    management_removed: 'Dispositivo attendibile rimosso.',
   },
 };
 

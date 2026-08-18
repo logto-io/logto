@@ -84,6 +84,13 @@ const mfa = {
       '組織はテナントのポリシーを制限することだけができ、テナントで無効な機能を有効にはできません。',
     organization_allow_description: 'この組織のメンバーに信頼済みデバイスの検証を許可します。',
     organization_global_disabled: '先にテナントの MFA 設定で信頼済みデバイスを有効にしてください。',
+    management_description:
+      'このユーザーが MFA 完了後に信頼したブラウザーを管理します。削除すると、そのブラウザーでは次回のサインイン時に再度 MFA が必要になります。',
+    management_hint: '最新の位置情報は参考情報です。',
+    management_empty: 'このユーザーに有効な信頼済みデバイスはありません。',
+    management_deletion_confirmation:
+      '{{name}} を削除しますか？このブラウザーでは次回のサインイン時に再度 MFA が必要になります。',
+    management_removed: '信頼済みデバイスを削除しました。',
   },
 };
 

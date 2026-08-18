@@ -89,6 +89,13 @@ const mfa = {
       'Permite la verificación con dispositivos de confianza a los miembros de esta organización.',
     organization_global_disabled:
       'Habilita primero los dispositivos de confianza en la configuración MFA del tenant.',
+    management_description:
+      'Gestiona los navegadores en los que este usuario confió tras completar la MFA. Al eliminar uno, se volverá a solicitar MFA en ese navegador en el siguiente inicio de sesión.',
+    management_hint: 'La ubicación más reciente es solo informativa.',
+    management_empty: 'Este usuario no tiene dispositivos de confianza activos.',
+    management_deletion_confirmation:
+      '¿Eliminar {{name}}? Este navegador volverá a requerir MFA en el siguiente inicio de sesión.',
+    management_removed: 'Dispositivo de confianza eliminado.',
   },
 };
 

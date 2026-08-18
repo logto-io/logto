@@ -1,0 +1,41 @@
+@use '@/scss/underscore' as _;
+
+.hint {
+  color: var(--color-text-secondary);
+  font: var(--font-body-3);
+  margin: 0 0 _.unit(3);
+}
+
+.table {
+  min-width: 0;
+}
+
+.tableBody {
+  :global(tbody tr) {
+    height: 80px;
+  }
+}
+
+.name {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(0.5);
+  min-width: 0;
+
+  .id {
+    color: var(--color-text-secondary);
+    font: var(--font-body-3);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.expiresAt {
+  font: var(--font-body-3);
+}
+
+.action {
+  display: flex;
+  justify-content: center;
+}

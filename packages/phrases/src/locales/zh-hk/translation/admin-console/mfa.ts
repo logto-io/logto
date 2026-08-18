@@ -61,6 +61,13 @@ const mfa = {
       '組織只能收緊租戶的受信任裝置策略；租戶策略關閉時，組織不能啟用此功能。',
     organization_allow_description: '允許此組織的成員使用受信任裝置完成驗證。',
     organization_global_disabled: '請先在租戶 MFA 設定中啟用受信任裝置，再為此組織允許此功能。',
+    management_description:
+      '管理此使用者完成 MFA 後信任的瀏覽器。移除後，該瀏覽器下次登入時需要再次完成 MFA。',
+    management_hint: '最近的位置只供參考。',
+    management_empty: '此使用者沒有有效的受信任裝置。',
+    management_deletion_confirmation:
+      '確定要移除 {{name}} 嗎？該瀏覽器下次登入時需要再次完成 MFA。',
+    management_removed: '受信任裝置已移除。',
   },
 };
 

@@ -85,6 +85,13 @@ const mfa = {
       'Allow trusted-device verification for members of this organization.',
     organization_global_disabled:
       'Enable trusted devices in the tenant MFA settings before allowing them for this organization.',
+    management_description:
+      'Manage browsers this user trusted after completing MFA. Removing one requires MFA again on that browser at the next sign-in.',
+    management_hint: 'Latest location is informational only.',
+    management_empty: 'This user has no active trusted devices.',
+    management_deletion_confirmation:
+      'Remove {{name}}? This browser will require MFA again at the next sign-in.',
+    management_removed: 'Trusted device removed.',
   },
 };
 
