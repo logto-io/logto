@@ -3,9 +3,6 @@
     {
       "name": "CIMD",
       "description": "Endpoints for managing the tenant-wide permission ceiling of OAuth Client ID Metadata Document (CIMD) clients. CIMD clients are unregistered, so the ceiling applies to all of them; the enablement switch itself lives under `/api/configs/cimd`."
-    },
-    {
-      "name": "Dev feature"
     }
   ],
   "paths": {

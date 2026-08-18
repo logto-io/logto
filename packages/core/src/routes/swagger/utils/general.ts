@@ -21,17 +21,6 @@ export const devFeatureTag = 'Dev feature';
 /** The OpenAPI schema extension that hides a schema property when dev features are disabled. */
 export const devFeatureSchemaExtension = 'x-logto-dev-feature';
 
-/**
- * Schema property names that belong to in-development features. These properties are generated
- * from the env-free zod guards in `@logto/schemas`, and supplement markers cannot reach every
- * generated occurrence (e.g. properties nested in `oneOf` branches, which `deepmerge` appends to
- * instead of merging into), so the assembled document is also pruned by property name.
- */
-const devFeatureSchemaPropertyNames = new Set([
-  // DEV: CIMD (client ID metadata document) support
-  'cimdClientId',
-]);
-
 const reservedTags = new Set([cloudOnlyTag, devFeatureTag]);
 
 /**
@@ -51,12 +40,8 @@ const tagMap = new Map([
   ['saml', 'SAML applications auth flow'],
   ['one-time-tokens', 'One-time tokens'],
   ['custom-profile-fields', 'Custom profile fields'],
+  ['cimd', 'CIMD'],
 ]);
-
-if (EnvSet.values.isDevFeaturesEnabled) {
-  // DEV: CIMD (client ID metadata document) support
-  tagMap.set('cimd', 'CIMD');
-}
 
 /**
  * Build a tag name from the given absolute path. The function will get the root component name
@@ -350,7 +335,7 @@ const removeDevFeatureSchemaProperty = (
 ) => {
   const isMarked = isRecord(propertySchema) && propertySchema[devFeatureSchemaExtension] === true;
 
-  if (!isMarked && !devFeatureSchemaPropertyNames.has(propertyName)) {
+  if (!isMarked) {
     return false;
   }
 
@@ -361,7 +346,7 @@ const removeDevFeatureSchemaProperty = (
     return true;
   }
 
-  if (isMarked && isRecord(propertySchema)) {
+  if (isRecord(propertySchema)) {
     Reflect.deleteProperty(propertySchema, devFeatureSchemaExtension);
   }
 
@@ -372,8 +357,8 @@ const removeDevFeatureSchemaProperty = (
  * **CAUTION**: This function mutates the input value.
  *
  * Recursively prune dev-feature schema properties: when dev features are disabled, properties
- * marked with `x-logto-dev-feature` or listed in the dev-feature property names are removed
- * (including their `required` entries); when enabled, only the internal marker is removed.
+ * marked with `x-logto-dev-feature` are removed (including their `required` entries); when
+ * enabled, only the internal marker is removed.
  *
  * Run this on the assembled document — the base schema properties generated from the env-free
  * zod guards carry no markers, so pruning supplements alone cannot remove them.

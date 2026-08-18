@@ -3,7 +3,6 @@ import { Navigate, type RouteObject } from 'react-router-dom';
 import { safeLazy } from 'react-safe-lazy';
 
 import { ApplicationDetailsTabs } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { dynamicAppId } from '@/types/applications';
 
 const Applications = safeLazy(async () => import('@/pages/Applications'));
@@ -21,8 +20,7 @@ export const applications: RouteObject = {
     },
     { path: 'create', element: <Applications /> },
     { path: ':id/guide/:guideId', element: <ApplicationDetails /> },
-    // DEV: dynamic app (CIMD)
-    isDevFeaturesEnabled && {
+    {
       path: dynamicAppId,
       children: [
         { index: true, element: <Navigate replace to={ApplicationDetailsTabs.Settings} /> },

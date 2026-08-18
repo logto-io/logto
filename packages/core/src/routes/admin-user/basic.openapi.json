@@ -37,8 +37,7 @@
                       "description": "The algorithm used to hash the password. Only present when `includePasswordHash` is provided with a truthy value. `null` if the user has no password set."
                     },
                     "cimdClientId": {
-                      "description": "Dev feature. The identifier of the CIMD (client ID metadata document) client from the user's first consent. `null` unless the user's first consent was granted to a CIMD client. Mutually exclusive with `applicationId`.",
-                      "x-logto-dev-feature": true
+                      "description": "The identifier of the CIMD (client ID metadata document) client from the user's first consent. `null` unless the user's first consent was granted to a CIMD client. Mutually exclusive with `applicationId`."
                     }
                   }
                 }
@@ -80,8 +79,7 @@
                 "schema": {
                   "properties": {
                     "cimdClientId": {
-                      "description": "Dev feature. The identifier of the CIMD (client ID metadata document) client from the user's first consent. `null` unless the user's first consent was granted to a CIMD client. Mutually exclusive with `applicationId`.",
-                      "x-logto-dev-feature": true
+                      "description": "The identifier of the CIMD (client ID metadata document) client from the user's first consent. `null` unless the user's first consent was granted to a CIMD client. Mutually exclusive with `applicationId`."
                     }
                   }
                 }
@@ -248,8 +246,7 @@
                 "schema": {
                   "properties": {
                     "cimdClientId": {
-                      "description": "Dev feature. The identifier of the CIMD (client ID metadata document) client from the user's first consent. `null` unless the user's first consent was granted to a CIMD client. Mutually exclusive with `applicationId`.",
-                      "x-logto-dev-feature": true
+                      "description": "The identifier of the CIMD (client ID metadata document) client from the user's first consent. `null` unless the user's first consent was granted to a CIMD client. Mutually exclusive with `applicationId`."
                     }
                   }
                 }
@@ -284,8 +281,7 @@
                 "schema": {
                   "properties": {
                     "cimdClientId": {
-                      "description": "Dev feature. The identifier of the CIMD (client ID metadata document) client from the user's first consent. `null` unless the user's first consent was granted to a CIMD client. Mutually exclusive with `applicationId`.",
-                      "x-logto-dev-feature": true
+                      "description": "The identifier of the CIMD (client ID metadata document) client from the user's first consent. `null` unless the user's first consent was granted to a CIMD client. Mutually exclusive with `applicationId`."
                     }
                   }
                 }
@@ -320,8 +316,7 @@
                 "schema": {
                   "properties": {
                     "cimdClientId": {
-                      "description": "Dev feature. The identifier of the CIMD (client ID metadata document) client from the user's first consent. `null` unless the user's first consent was granted to a CIMD client. Mutually exclusive with `applicationId`.",
-                      "x-logto-dev-feature": true
+                      "description": "The identifier of the CIMD (client ID metadata document) client from the user's first consent. `null` unless the user's first consent was granted to a CIMD client. Mutually exclusive with `applicationId`."
                     }
                   }
                 }
@@ -397,8 +392,7 @@
                 "schema": {
                   "properties": {
                     "cimdClientId": {
-                      "description": "Dev feature. The identifier of the CIMD (client ID metadata document) client from the user's first consent. `null` unless the user's first consent was granted to a CIMD client. Mutually exclusive with `applicationId`.",
-                      "x-logto-dev-feature": true
+                      "description": "The identifier of the CIMD (client ID metadata document) client from the user's first consent. `null` unless the user's first consent was granted to a CIMD client. Mutually exclusive with `applicationId`."
                     }
                   }
                 }

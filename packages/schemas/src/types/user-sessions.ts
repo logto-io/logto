@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-import { Applications } from '../db-entries/index.js';
 import { oidcSessionInstancePayloadGuard } from '../foundations/index.js';
 
 import { jwtCustomizerUserInteractionContextGuard } from './logto-config/jwt-customizer.js';
@@ -96,9 +95,15 @@ export const userApplicationGrantGuard = z.object({
   id: z.string(),
   payload: userApplicationGrantPayloadGuard,
   expiresAt: z.number(),
-  application: Applications.guard.pick({
-    id: true,
-    name: true,
+  /**
+   * A CIMD (client ID metadata document) grant fills this slot with a URL identity that has no
+   * `applications` row: the identifier URL lands in `id` and `name` comes from the consent-time
+   * snapshot, so neither field can keep the applications table varchar bounds. Consumers tell
+   * the kinds apart by the id shape.
+   */
+  application: z.object({
+    id: z.string(),
+    name: z.string(),
   }),
 });
 
@@ -111,22 +116,3 @@ export const getUserApplicationGrantsResponseGuard = z.object({
 export type GetUserApplicationGrantsResponse = z.infer<
   typeof getUserApplicationGrantsResponseGuard
 >;
-
-/**
- * The grants response as it looks once CIMD clients can hold grants. They are URL identities
- * without an `applications` row: the identifier URL lands in `application.id` and its name comes
- * from the consent-time snapshot, so neither field can keep the applications table varchar
- * bounds. Graduation folds this shape back into {@link getUserApplicationGrantsResponseGuard} —
- * until then the published contract keeps its bounds, and the inferred response type is
- * identical either way.
- */
-export const getCimdCapableUserApplicationGrantsResponseGuard = z.object({
-  grants: z.array(
-    userApplicationGrantGuard.extend({
-      application: z.object({
-        id: z.string(),
-        name: z.string(),
-      }),
-    })
-  ),
-});

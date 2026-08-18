@@ -8,14 +8,11 @@ import type Queries from '#src/tenants/Queries.js';
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
 
-const loadCimdModule = async ({
-  isDevFeaturesEnabled = true,
-  isOidcProviderSsrfProtectionEnabled = true,
-} = {}) => {
+const loadCimdModule = async ({ isOidcProviderSsrfProtectionEnabled = true } = {}) => {
   jest.resetModules();
   mockEsm('#src/env-set/index.js', () => ({
     EnvSet: {
-      values: { isDevFeaturesEnabled, isOidcProviderSsrfProtectionEnabled },
+      values: { isOidcProviderSsrfProtectionEnabled },
     },
   }));
 
@@ -84,14 +81,9 @@ const loadEnabledFeature = async ({
 };
 
 describe('isCimdEffectivelyEnabled', () => {
-  it('is enabled only when all three conditions hold', async () => {
+  it('is enabled only when both conditions hold', async () => {
     const { isCimdEffectivelyEnabled } = await loadCimdModule();
     expect(isCimdEffectivelyEnabled(buildEnvSet(true))).toBe(true);
-  });
-
-  it('is disabled when the dev features flag is off', async () => {
-    const { isCimdEffectivelyEnabled } = await loadCimdModule({ isDevFeaturesEnabled: false });
-    expect(isCimdEffectivelyEnabled(buildEnvSet(true))).toBe(false);
   });
 
   it('is disabled when the tenant config is off', async () => {
@@ -121,11 +113,6 @@ describe('shouldAttributeToCimd', () => {
     expect(shouldAttributeToCimd()).toBe(false);
   });
 
-  it('does not attribute when the dev features flag is off', async () => {
-    const { shouldAttributeToCimd } = await loadCimdModule({ isDevFeaturesEnabled: false });
-    expect(shouldAttributeToCimd(cimdClientId)).toBe(false);
-  });
-
   it('attributes even when cimd is not effectively enabled for the tenant', async () => {
     const { shouldAttributeToCimd } = await loadCimdModule({
       isOidcProviderSsrfProtectionEnabled: false,
@@ -148,13 +135,6 @@ describe('getClientIdentifierPayload', () => {
     const { getClientIdentifierPayload } = await loadCimdModule();
     expect(getClientIdentifierPayload('app-id')).toStrictEqual({
       applicationId: 'app-id',
-    });
-  });
-
-  it('keeps a url-shaped identifier under applicationId when the dev features flag is off', async () => {
-    const { getClientIdentifierPayload } = await loadCimdModule({ isDevFeaturesEnabled: false });
-    expect(getClientIdentifierPayload(cimdClientId)).toStrictEqual({
-      applicationId: cimdClientId,
     });
   });
 
@@ -198,15 +178,6 @@ describe('buildClientIdMetadataDocumentFeature', () => {
     ).toMatchObject({
       clientIdMetadataDocument: { enabled: true, ack: 'draft-02' },
     });
-  });
-
-  it('does not wire the feature at all when the dev features flag is off', async () => {
-    const { buildClientIdMetadataDocumentFeature } = await loadCimdModule({
-      isDevFeaturesEnabled: false,
-    });
-    expect(
-      buildClientIdMetadataDocumentFeature(buildEnvSet(true), buildCimdQueries())
-    ).toBeUndefined();
   });
 
   it('does not wire the feature when not effectively enabled', async () => {

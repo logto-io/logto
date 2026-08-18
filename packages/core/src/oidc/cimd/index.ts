@@ -39,9 +39,8 @@ const assertClientIdWithinLengthBound = (clientId: string) => {
 };
 
 /**
- * Whether CIMD is effectively enabled for the tenant. All three conditions must hold:
+ * Whether CIMD is effectively enabled for the tenant. Both conditions must hold:
  *
- * - The development features flag is on (release guard);
  * - The tenant has enabled CIMD in its configs;
  * - The provider SSRF protection is active — CIMD forces outbound fetches, so it hard-requires
  *   the SSRF-protected dispatcher. Disabling the protection (self-hosted only) turns CIMD off
@@ -52,18 +51,14 @@ const assertClientIdWithinLengthBound = (clientId: string) => {
  * changes, so every predicate consumer observes the same value for the provider's lifetime.
  */
 export const isCimdEffectivelyEnabled = (envSet: EnvSet): boolean =>
-  // DEV: CIMD (client ID metadata document) support
-  EnvSet.values.isDevFeaturesEnabled &&
-  envSet.oidc.cimdEnabled &&
-  EnvSet.values.isOidcProviderSsrfProtectionEnabled;
+  envSet.oidc.cimdEnabled && EnvSet.values.isOidcProviderSsrfProtectionEnabled;
 
 /**
  * Whether an identifier presented as a `client_id` should be attributed to a CIMD client —
  * payload builders route it under `cimdClientId` instead of `applicationId`.
  */
 export const shouldAttributeToCimd = (clientId?: string): boolean =>
-  // DEV: CIMD (client ID metadata document) support
-  clientId !== undefined && EnvSet.values.isDevFeaturesEnabled && isCimdClientId(clientId);
+  clientId !== undefined && isCimdClientId(clientId);
 
 /** At most one identifier is set — a registered application id or a CIMD client identifier. */
 export type ClientIdentifierPayload = {

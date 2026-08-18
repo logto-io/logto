@@ -1,8 +1,6 @@
 import { SessionGrantRevokeTarget } from '@logto/schemas';
 import type { Provider } from 'oidc-provider';
-import Sinon from 'sinon';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type ActiveApplicationGrantInstance } from '#src/queries/oidc-model-instance.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -10,10 +8,6 @@ import type Queries from '#src/tenants/Queries.js';
 import { createSessionLibrary } from './index.js';
 
 const { jest } = import.meta;
-
-const stubDevFeaturesFlag = (isDevFeaturesEnabled: boolean) => {
-  Sinon.stub(EnvSet, 'values').value({ ...EnvSet.values, isDevFeaturesEnabled });
-};
 
 describe('findUserActiveApplicationGrants', () => {
   const findActiveApplicationGrants = jest.fn<
@@ -51,12 +45,10 @@ describe('findUserActiveApplicationGrants', () => {
   };
 
   afterEach(() => {
-    Sinon.restore();
     jest.clearAllMocks();
   });
 
   it('should pass registered application grants through', async () => {
-    stubDevFeaturesFlag(true);
     findActiveApplicationGrants.mockResolvedValueOnce([registeredGrantRow]);
 
     await expect(
@@ -67,7 +59,6 @@ describe('findUserActiveApplicationGrants', () => {
   });
 
   it('should append cimd grants after the registered ones', async () => {
-    stubDevFeaturesFlag(true);
     const cimdClientId = 'https://client.example.com/oauth/metadata.json';
     const cimdGrantRow = {
       id: 'cimd-grant-id',
@@ -85,17 +76,7 @@ describe('findUserActiveApplicationGrants', () => {
     ]);
   });
 
-  it('should not query cimd grants when dev features are disabled', async () => {
-    stubDevFeaturesFlag(false);
-
-    await sessionLibrary.findUserActiveApplicationGrants('user-id');
-
-    expect(findActiveCimdGrants).not.toHaveBeenCalled();
-  });
-
   it('should not query cimd grants for the first-party filter', async () => {
-    stubDevFeaturesFlag(true);
-
     await sessionLibrary.findUserActiveApplicationGrants('user-id', 'firstParty');
 
     expect(findActiveCimdGrants).not.toHaveBeenCalled();
@@ -103,7 +84,6 @@ describe('findUserActiveApplicationGrants', () => {
   });
 
   it('should throw a server error on an invalid grant payload', async () => {
-    stubDevFeaturesFlag(true);
     findActiveApplicationGrants.mockResolvedValueOnce([
       {
         id: 'grant-1',

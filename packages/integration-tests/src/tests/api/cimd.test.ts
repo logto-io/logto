@@ -1,7 +1,6 @@
 import { UserScope } from '@logto/core-kit';
 import { ApplicationUserConsentScopeType } from '@logto/schemas';
 
-import { authedAdminApi } from '#src/api/api.js';
 import {
   assignCimdUserConsentScopes,
   deleteCimdUserConsentScope,
@@ -11,9 +10,8 @@ import { OrganizationScopeApi } from '#src/api/organization-scope.js';
 import { createResource, deleteResource } from '#src/api/resource.js';
 import { createScope } from '#src/api/scope.js';
 import { expectRejects } from '#src/helpers/index.js';
-import { devFeatureDisabledTest, devFeatureTest } from '#src/utils.js';
 
-devFeatureTest.describe('CIMD user consent scopes', () => {
+describe('CIMD user consent scopes', () => {
   const organizationScopes = new Map<string, string>();
   const resourceScopes = new Map<string, string>();
   const organizationResourceScopes = new Map<string, string>();
@@ -202,15 +200,5 @@ devFeatureTest.describe('CIMD user consent scopes', () => {
     ).toBeFalsy();
     expect(result.organizationResourceScopes.length).toBe(0);
     expect(result.userScopes.includes(UserScope.Email)).toBeFalsy();
-  });
-});
-
-devFeatureDisabledTest.describe('CIMD routes when dev features are disabled', () => {
-  it('should not expose the CIMD user consent scope routes', async () => {
-    const response = await authedAdminApi.get('cimd/user-consent-scopes', {
-      throwHttpErrors: false,
-    });
-
-    expect(response.status).toBe(404);
   });
 });
