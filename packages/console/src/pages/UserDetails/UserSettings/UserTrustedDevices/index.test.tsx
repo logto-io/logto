@@ -93,7 +93,7 @@ const trustedDevice: TrustedDeviceResponse & { readonly ip: string } = {
   city: 'Shanghai',
   createdAt: new Date('2026-07-01T00:00:00.000Z').getTime(),
   lastUsedAt: new Date('2026-07-20T00:00:00.000Z').getTime(),
-  expiresAt: new Date('2026-07-26T00:00:00.000Z').getTime(),
+  expiresAt: new Date(2026, 6, 26, 12).getTime(),
   ip: '192.0.2.1',
 };
 
