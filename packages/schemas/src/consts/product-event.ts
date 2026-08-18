@@ -68,6 +68,10 @@ export enum ProductEvent {
   MfaDisabled = 'mfa disabled',
   CustomDomainCreated = 'custom domain created',
   CustomDomainDeleted = 'custom domain deleted',
+  /** The tenant has turned on dynamic app (CIMD) client access. */
+  DynamicAppEnabled = 'dynamic app enabled',
+  /** The tenant has turned off dynamic app (CIMD) client access. */
+  DynamicAppDisabled = 'dynamic app disabled',
 }
 
 /** The PostHog groups for product events. */
