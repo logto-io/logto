@@ -1,5 +1,6 @@
 import type { TrustedDeviceResponse } from '@logto/schemas';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import i18next from 'i18next';
 import type * as React from 'react';
 import { toast } from 'react-hot-toast';
 import useSWR from 'swr';
@@ -99,7 +100,8 @@ const trustedDevice: TrustedDeviceResponse & { readonly ip: string } = {
 const renderTrustedDevices = () => render(<UserTrustedDevices userId="user-id" />);
 
 describe('UserTrustedDevices', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
+    await i18next.changeLanguage('en');
     jest.clearAllMocks();
     mockDelete.mockResolvedValue(undefined);
     mockMutate.mockResolvedValue(undefined);
@@ -141,6 +143,18 @@ describe('UserTrustedDevices', () => {
     expect(
       screen.getByText('admin_console.user_details.personal_access_tokens.expires_at')
     ).toBeTruthy();
+  });
+
+  it('formats the expiry date using the current Console language', async () => {
+    await i18next.changeLanguage('ja');
+    mockedUseSWR.mockReturnValue({
+      data: [[trustedDevice], 1],
+      mutate: mockMutate,
+    } as unknown as ReturnType<typeof useSWR>);
+
+    renderTrustedDevices();
+
+    expect(screen.getByText('2026年7月26日')).toBeTruthy();
   });
 
   it('shows the empty state when the user has no active trusted devices', () => {

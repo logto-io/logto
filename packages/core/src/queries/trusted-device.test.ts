@@ -173,17 +173,36 @@ describe('trusted device queries', () => {
     ).resolves.toEqual(trustedDevice);
   });
 
+  it('preserves the existing location when request metadata has no location', async () => {
+    jest.spyOn(Date, 'now').mockReturnValue(123_000);
+
+    const expectSql = sql`
+      update ${table}
+      set ${fields.lastUsedAt}=to_timestamp($1::double precision / 1000), ${fields.userAgent}=$2
+      where ${fields.id} = $3
+        and ${fields.userId} = $4
+        and ${fields.expiresAt} > now()
+      returning ${expandFields(TrustedDevices)}
+    `;
+
+    mockQuery.mockImplementationOnce(async (query, values) => {
+      expectSqlAssert(query, expectSql.sql);
+      expect(values).toEqual([123_000, 'new-user-agent', trustedDevice.id, trustedDevice.userId]);
+      return createMockQueryResult([trustedDevice]);
+    });
+
+    await expect(
+      queries.updateMetadataByIdAndUserId(trustedDevice.id, trustedDevice.userId, {
+        userAgent: 'new-user-agent',
+      })
+    ).resolves.toEqual(trustedDevice);
+  });
+
   it('returns null when metadata cannot be updated for an inactive or missing device', async () => {
     mockQuery.mockImplementationOnce(async (query, values) => {
       expect(query).toMatch(/and "expires_at" > now\(\)/i);
       expect(query).not.toMatch(/"last_used_at" < to_timestamp/i);
-      expect(values).toEqual([
-        expect.any(Number),
-        null,
-        null,
-        trustedDevice.id,
-        trustedDevice.userId,
-      ]);
+      expect(values).toEqual([expect.any(Number), trustedDevice.id, trustedDevice.userId]);
       return createMockQueryResult([]);
     });
 

@@ -5,7 +5,6 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
-import { LocaleDate } from '@/components/DateTime';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import FormCard from '@/components/FormCard';
 import { defaultPageSize } from '@/consts';
@@ -30,9 +29,18 @@ type TrustedDeviceTableRow = TrustedDeviceResponse & {
 const pageSize = defaultPageSize;
 
 function UserTrustedDevices({ userId }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [page, setPage] = useState(1);
   const [deletingDeviceId, setDeletingDeviceId] = useState<string>();
+  const expiryDateFormatter = useMemo(
+    () =>
+      new Intl.DateTimeFormat(i18n.language, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      }),
+    [i18n.language]
+  );
 
   const { data, error, mutate } = useSWR<[TrustedDeviceResponse[], number], RequestError>(
     buildUrl(`api/users/${userId}/trusted-devices`, {
@@ -136,9 +144,7 @@ function UserTrustedDevices({ userId }: Props) {
               dataIndex: 'expiresAt',
               colSpan: 4,
               render: ({ expiresAt }) => (
-                <span className={styles.expiresAt}>
-                  <LocaleDate format="MMM d, yyyy">{expiresAt}</LocaleDate>
-                </span>
+                <span className={styles.expiresAt}>{expiryDateFormatter.format(expiresAt)}</span>
               ),
             },
             {
