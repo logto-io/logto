@@ -35,9 +35,15 @@ function Mfa() {
         <MfaForm
           data={data.mfa}
           adaptiveMfa={data.adaptiveMfa}
+          trustedDevice={data.trustedDevice}
           signInMethods={data.signIn.methods}
-          onMfaUpdated={(mfa, adaptiveMfa) => {
-            void mutate({ ...data, mfa, adaptiveMfa: adaptiveMfa ?? data.adaptiveMfa });
+          onMfaUpdated={(mfa, adaptiveMfa, trustedDevice) => {
+            void mutate({
+              ...data,
+              mfa,
+              adaptiveMfa: adaptiveMfa ?? data.adaptiveMfa,
+              ...(trustedDevice && { trustedDevice }),
+            });
           }}
         />
       )}

@@ -24,4 +24,6 @@ export type MfaConfigForm = {
   setUpPrompt: MfaSetUpPrompt;
   organizationRequiredMfaPolicy?: OrganizationRequiredMfaPolicy;
   adaptiveMfaEnabled: boolean;
+  trustedDeviceEnabled: boolean;
+  trustedDeviceDurationDays: number;
 };

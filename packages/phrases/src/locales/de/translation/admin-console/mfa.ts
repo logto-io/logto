@@ -71,6 +71,24 @@ const mfa = {
   no_sms_connector_error:
     'SMS-Verifizierungscode MFA kann nicht ohne einen SMS-Connector aktiviert werden. Bitte konfigurieren Sie zuerst einen SMS-Connector.',
   setup_link: 'Einrichten',
+  trusted_device: {
+    title: 'Vertrauenswürdige Geräte',
+    description:
+      'Lassen Sie vertrauenswürdige Browser die MFA-Verifizierung automatisch abschließen, wenn der aktuelle MFA-Ablauf sie erfordert.',
+    enable_title: 'Vertrauenswürdige Geräte aktivieren',
+    enable_description:
+      'Benutzern erlauben, diesen Browser nach einem zulässigen MFA-Faktor zu vertrauen.',
+    duration_title: 'Vertrauensdauer (Tage)',
+    duration_error: 'Geben Sie eine ganze Zahl zwischen {{min}} und {{max}} ein.',
+    duration_note: 'Änderungen der Vertrauensdauer gelten nur für danach vertraute Geräte.',
+    organization_allow_title: 'Vertrauenswürdige Geräte zulassen',
+    organization_allow_tip:
+      'Eine Organisation kann die Mandantenrichtlinie nur einschränken und die Funktion nicht aktivieren, wenn sie für den Mandanten deaktiviert ist.',
+    organization_allow_description:
+      'Verifizierung über vertrauenswürdige Geräte für Mitglieder dieser Organisation zulassen.',
+    organization_global_disabled:
+      'Aktivieren Sie vertrauenswürdige Geräte zuerst in den MFA-Einstellungen des Mandanten.',
+  },
 };
 
 export default Object.freeze(mfa);

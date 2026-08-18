@@ -48,6 +48,19 @@ const mfa = {
   no_email_connector_error: '无法在没有邮件连接器的情况下启用邮件验证码 MFA。请先配置邮件连接器。',
   no_sms_connector_error: '无法在没有短信连接器的情况下启用短信验证码 MFA。请先配置短信连接器。',
   setup_link: '设置',
+  trusted_device: {
+    title: '可信设备',
+    description: '允许可信浏览器在当前 MFA 流程要求验证时自动完成 MFA 验证。',
+    enable_title: '启用可信设备',
+    enable_description: '允许用户在完成符合条件的 MFA 因素验证后信任此浏览器。',
+    duration_title: '信任时长（天）',
+    duration_error: '请输入 {{min}} 到 {{max}} 之间的整数。',
+    duration_note: '信任时长的更改仅适用于之后添加的可信设备。',
+    organization_allow_title: '允许可信设备',
+    organization_allow_tip: '组织只能收紧租户可信设备策略；租户策略关闭时，组织无法启用此功能。',
+    organization_allow_description: '允许此组织的成员使用可信设备完成验证。',
+    organization_global_disabled: '请先在租户 MFA 设置中启用可信设备，再为此组织允许该功能。',
+  },
 };
 
 export default Object.freeze(mfa);
