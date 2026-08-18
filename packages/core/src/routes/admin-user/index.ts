@@ -10,6 +10,7 @@ import adminUserRoleRoutes from './role.js';
 import adminUserSearchRoutes from './search.js';
 import adminUserSessionRoutes from './session.js';
 import adminUserSocialRoutes from './social.js';
+import adminUserTrustedDeviceRoutes from './trusted-device.js';
 
 export default function adminUserRoutes<T extends ManagementApiRouter>(...args: RouterInitArgs<T>) {
   adminUserBasicsRoutes(...args);
@@ -22,4 +23,5 @@ export default function adminUserRoutes<T extends ManagementApiRouter>(...args: 
   adminUserPersonalAccessTokenRoutes(...args);
   adminUserEnterpriseSsoRoutes(...args);
   adminUserSessionRoutes(...args);
+  adminUserTrustedDeviceRoutes(...args);
 }

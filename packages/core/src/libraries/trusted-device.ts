@@ -1,6 +1,11 @@
 import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
 
-import { TrustedDevices, type TrustedDevice, type TrustedDeviceEventData } from '@logto/schemas';
+import {
+  TrustedDevices,
+  type ManagementApiContext,
+  type TrustedDevice,
+  type TrustedDeviceEventData,
+} from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 import { type Context } from 'koa';
 
@@ -276,7 +281,8 @@ export const createTrustedDeviceLibrary = (
   const deleteByIdAndUserId = async (
     ctx: TrustedDeviceLifecycleContext,
     id: string,
-    userId: string
+    userId: string,
+    hookContext: Partial<ManagementApiContext> = {}
   ) => {
     const trustedDevice = await queries.deleteByIdAndUserId(id, userId);
 
@@ -285,6 +291,7 @@ export const createTrustedDeviceLibrary = (
     }
 
     ctx.appendDataHookContext('TrustedDevice.Deleted', {
+      ...hookContext,
       data: getTrustedDeviceEventData(trustedDevice),
       // Trusted-device lifecycle payloads intentionally exclude the request IP.
       includeRequestIp: false,
