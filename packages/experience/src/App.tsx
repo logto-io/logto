@@ -51,7 +51,6 @@ import SingleSignOnLanding from './pages/SingleSignOnLanding';
 import SocialLanding from './pages/SocialLanding';
 import SocialLinkAccount from './pages/SocialLinkAccount';
 import SocialSignInWebCallback from './pages/SocialSignInWebCallback';
-import Springboard from './pages/Springboard';
 import SwitchAccount from './pages/SwitchAccount';
 import VerificationCode from './pages/VerificationCode';
 import { UserMfaFlow } from './types';
@@ -72,7 +71,6 @@ const App = () => {
               <AppBoundary>
                 <Routes>
                   <Route element={<LoadingLayerProvider />}>
-                    <Route path="springboard" element={<Springboard />} />
                     <Route path="callback/:connectorId" element={<Callback />} />
                     <Route
                       path="callback/social/:connectorId"
