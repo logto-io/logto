@@ -277,7 +277,7 @@ const account_center = {
     revoke_grant: 'Odebrat',
     revoke_grant_title: 'Odebrat přístup aplikace třetí strany',
     revoke_grant_description:
-      'Tímto se zruší veškerý přístup udělený této aplikaci. Opravdu chcete pokračovat?',
+      'Tímto se zruší přístup udělený této aplikaci. Dříve vydané přístupové tokeny mohou zůstat platné až do svého vypršení. Opravdu chcete pokračovat?',
     revoke_grant_failed: 'Nepodařilo se zrušit některá oprávnění. Zkuste to prosím znovu.',
   },
 };

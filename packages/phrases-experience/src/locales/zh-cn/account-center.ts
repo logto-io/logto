@@ -258,7 +258,8 @@ const account_center = {
     client_id: '客户端 ID: {{clientId}}',
     revoke_grant: '移除',
     revoke_grant_title: '移除第三方应用访问权限',
-    revoke_grant_description: '这将撤销授予该应用的所有访问权限。确定要继续吗？',
+    revoke_grant_description:
+      '这将撤销授予该应用的访问权限。此前已签发的访问令牌可能在过期前仍然有效。确定要继续吗？',
     revoke_grant_failed: '部分授权撤销失败，请重试。',
   },
 };

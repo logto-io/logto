@@ -280,7 +280,7 @@ const account_center = {
     revoke_grant: 'Usuń',
     revoke_grant_title: 'Usuń dostęp aplikacji firmy trzeciej',
     revoke_grant_description:
-      'Spowoduje to cofnięcie wszystkich uprawnień przyznanych tej aplikacji. Czy na pewno chcesz kontynuować?',
+      'Spowoduje to cofnięcie uprawnień przyznanych tej aplikacji. Wcześniej wydane tokeny dostępu mogą pozostać ważne do czasu ich wygaśnięcia. Czy na pewno chcesz kontynuować?',
     revoke_grant_failed: 'Nie udało się cofnąć niektórych uprawnień. Spróbuj ponownie.',
   },
 };

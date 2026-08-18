@@ -168,7 +168,7 @@ const user_details = {
     access_created_at_column: '授權建立時間',
     revoke_access_title: '要撤銷存取權嗎？',
     revoke_access_description:
-      '此操作會撤銷該應用程式在所有裝置上存取此使用者帳戶的權限。使用者必須重新授權才能恢復存取。',
+      '此操作會撤銷該應用程式在所有裝置上存取此使用者帳戶的權限。使用者必須重新授權才能恢復存取。先前已簽發的存取權杖可能在過期前仍然有效。',
   },
   connections: {
     title: '連接',

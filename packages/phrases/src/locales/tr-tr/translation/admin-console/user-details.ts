@@ -185,7 +185,7 @@ const user_details = {
     access_created_at_column: 'Erişim oluşturulma zamanı',
     revoke_access_title: 'Erişim iptal edilsin mi?',
     revoke_access_description:
-      'Bu işlem uygulamanın bu kullanıcının hesabına tüm cihazlardaki erişimini iptal eder. Erişimi geri yüklemek için kullanıcı yeniden yetkilendirme yapmalıdır.',
+      'Bu işlem uygulamanın bu kullanıcının hesabına tüm cihazlardaki erişimini iptal eder. Erişimi geri yüklemek için kullanıcı yeniden yetkilendirme yapmalıdır. Daha önce verilmiş erişim belirteçleri süreleri dolana kadar geçerli kalabilir.',
   },
   connections: {
     title: 'Bağlantı',
