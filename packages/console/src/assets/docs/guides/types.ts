@@ -42,6 +42,8 @@ export type GuideMetadata = {
   }>;
   /** Whether the guide is a development feature, that needs to be hidden from the production environment. */
   isDevFeature?: boolean;
+  /** Whether the feature the guide is for is still in beta. */
+  isBeta?: boolean;
 };
 
 /** The guide instance to build in the console. */

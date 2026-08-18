@@ -1,12 +1,21 @@
+import classNames from 'classnames';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import ReactModal from 'react-modal';
 import { useSWRConfig } from 'swr';
 
-import ConfirmModal from '@/ds-components/ConfirmModal';
+import AddOnNoticeFooter from '@/components/AddOnNoticeFooter';
+import { isCloud } from '@/consts/env';
+import Button from '@/ds-components/Button';
+import ModalLayout from '@/ds-components/ModalLayout';
 import useApi from '@/hooks/use-api';
 import { cimdConfigEndpoint } from '@/hooks/use-dynamic-app';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
+import modalStyles from '@/scss/modal.module.scss';
+import { dynamicAppId } from '@/types/applications';
+
+import styles from './index.module.scss';
 
 type Props = {
   readonly onClose: () => void;
@@ -35,21 +44,48 @@ function EnableDynamicAppModal({ onClose }: Props) {
 
     toast.success(t('applications.dynamic_app.enabled'));
     onClose();
-    navigate('/applications/third-party-applications', { replace: true });
+    navigate(`/applications/${dynamicAppId}`, { replace: true });
   };
 
   return (
-    <ConfirmModal
+    <ReactModal
+      shouldCloseOnEsc
       isOpen
-      isLoading={isSubmitting}
-      title="applications.dynamic_app.enable_confirm_modal.title"
-      confirmButtonType="primary"
-      confirmButtonText="general.enable"
-      onCancel={onClose}
-      onConfirm={handleConfirm}
+      className={modalStyles.content}
+      overlayClassName={classNames(modalStyles.overlay, styles.overlay)}
+      onRequestClose={onClose}
     >
-      {t('applications.dynamic_app.enable_confirm_modal.content')}
-    </ConfirmModal>
+      <ModalLayout
+        title="applications.dynamic_app.enable_confirm_modal.title"
+        footer={
+          /** The beta pricing notice only concerns Logto Cloud, OSS is never charged for it. */
+          isCloud ? (
+            <AddOnNoticeFooter
+              isLoading={isSubmitting}
+              buttonTitle="general.enable"
+              onClick={handleConfirm}
+            >
+              {t('applications.dynamic_app.enable_confirm_modal.beta_pricing_notice')}
+            </AddOnNoticeFooter>
+          ) : (
+            <>
+              <Button title="general.cancel" onClick={onClose} />
+              <Button
+                type="primary"
+                title="general.enable"
+                isLoading={isSubmitting}
+                onClick={handleConfirm}
+              />
+            </>
+          )
+        }
+        onClose={onClose}
+      >
+        <div className={styles.content}>
+          {t('applications.dynamic_app.enable_confirm_modal.content')}
+        </div>
+      </ModalLayout>
+    </ReactModal>
   );
 }
 
