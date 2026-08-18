@@ -74,11 +74,11 @@ const mfa = {
   trusted_device: {
     title: 'Zaufane urządzenia',
     description:
-      'Pozwól pomijać rutynowe wyzwania MFA w zaufanych przeglądarkach. Zasady wysokiego ryzyka lub adaptacyjne nadal mogą wymagać MFA.',
+      'Pozwól zaufanym przeglądarkom automatycznie ukończyć weryfikację MFA, gdy wymaga jej bieżący proces MFA.',
     enable_title: 'Włącz zaufane urządzenia',
     enable_description: 'Pozwól zaufać tej przeglądarce po ukończeniu odpowiedniego czynnika MFA.',
     duration_title: 'Okres zaufania (dni)',
-    duration_error: 'Liczba musi mieścić się między {{min}} a {{max}}.',
+    duration_error: 'Wprowadź liczbę całkowitą od {{min}} do {{max}}.',
     duration_note: 'Zmiany okresu dotyczą tylko urządzeń uznanych za zaufane później.',
     organization_allow_title: 'Zezwól na zaufane urządzenia',
     organization_allow_tip:

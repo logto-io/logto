@@ -71,12 +71,12 @@ const mfa = {
   trusted_device: {
     title: 'Trusted devices',
     description:
-      'Let users skip routine MFA challenges on browsers they trust. High-risk or adaptive policies can still require MFA.',
+      'Let trusted browsers automatically complete MFA verification when the current MFA flow requires it.',
     enable_title: 'Enable trusted devices',
     enable_description:
       'Allow users to trust this browser after completing an eligible MFA factor.',
     duration_title: 'Trust duration (days)',
-    duration_error: 'The number should be between {{min}} and {{max}}.',
+    duration_error: 'Enter a whole number between {{min}} and {{max}}.',
     duration_note: 'Changes to the trust duration apply only to devices trusted afterward.',
     organization_allow_title: 'Allow trusted devices',
     organization_allow_tip:

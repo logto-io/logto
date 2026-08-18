@@ -74,12 +74,12 @@ const mfa = {
   trusted_device: {
     title: 'Dispositivi attendibili',
     description:
-      'Consenti agli utenti di saltare le verifiche MFA di routine nei browser attendibili. Le policy adattive o ad alto rischio possono comunque richiedere MFA.',
+      'Consenti ai browser attendibili di completare automaticamente la verifica MFA quando il flusso MFA corrente lo richiede.',
     enable_title: 'Abilita dispositivi attendibili',
     enable_description:
       'Consenti di rendere attendibile questo browser dopo un fattore MFA idoneo.',
     duration_title: 'Durata attendibilità (giorni)',
-    duration_error: 'Il numero deve essere compreso tra {{min}} e {{max}}.',
+    duration_error: 'Inserisci un numero intero compreso tra {{min}} e {{max}}.',
     duration_note: 'Le modifiche alla durata si applicano solo ai dispositivi aggiunti in seguito.',
     organization_allow_title: 'Consenti dispositivi attendibili',
     organization_allow_tip:

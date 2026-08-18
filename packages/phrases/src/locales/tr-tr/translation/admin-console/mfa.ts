@@ -75,12 +75,12 @@ const mfa = {
   trusted_device: {
     title: 'Güvenilen cihazlar',
     description:
-      'Kullanıcıların güvendikleri tarayıcılarda rutin MFA doğrulamalarını atlamasına izin verin. Yüksek riskli veya uyarlanabilir ilkeler yine MFA isteyebilir.',
+      'Güvenilen tarayıcıların, mevcut MFA akışı gerektirdiğinde MFA doğrulamasını otomatik olarak tamamlamasına izin verin.',
     enable_title: 'Güvenilen cihazları etkinleştir',
     enable_description:
       'Uygun bir MFA faktörü tamamlandıktan sonra bu tarayıcıya güvenilmesine izin verin.',
     duration_title: 'Güven süresi (gün)',
-    duration_error: 'Sayı {{min}} ile {{max}} arasında olmalıdır.',
+    duration_error: '{{min}} ile {{max}} arasında bir tam sayı girin.',
     duration_note: 'Güven süresi değişiklikleri yalnızca daha sonra güvenilen cihazlara uygulanır.',
     organization_allow_title: 'Güvenilen cihazlara izin ver',
     organization_allow_tip:

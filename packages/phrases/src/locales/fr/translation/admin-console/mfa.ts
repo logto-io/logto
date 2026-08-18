@@ -75,12 +75,12 @@ const mfa = {
   trusted_device: {
     title: 'Appareils de confiance',
     description:
-      'Permettez aux utilisateurs de contourner les défis MFA habituels sur leurs navigateurs de confiance. Les politiques à haut risque ou adaptatives peuvent toujours exiger la MFA.',
+      'Permettez aux navigateurs de confiance d’effectuer automatiquement la vérification MFA lorsque le parcours MFA en cours l’exige.',
     enable_title: 'Activer les appareils de confiance',
     enable_description:
       'Autorisez les utilisateurs à faire confiance à ce navigateur après un facteur MFA éligible.',
     duration_title: 'Durée de confiance (jours)',
-    duration_error: 'Le nombre doit être compris entre {{min}} et {{max}}.',
+    duration_error: 'Saisissez un nombre entier compris entre {{min}} et {{max}}.',
     duration_note: 'Les changements de durée ne concernent que les appareils approuvés ensuite.',
     organization_allow_title: 'Autoriser les appareils de confiance',
     organization_allow_tip:

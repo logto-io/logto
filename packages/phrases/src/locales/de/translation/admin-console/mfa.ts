@@ -74,12 +74,12 @@ const mfa = {
   trusted_device: {
     title: 'Vertrauenswürdige Geräte',
     description:
-      'Benutzer können routinemäßige MFA-Abfragen in vertrauenswürdigen Browsern überspringen. Risiko- oder adaptive Richtlinien können weiterhin MFA verlangen.',
+      'Lassen Sie vertrauenswürdige Browser die MFA-Verifizierung automatisch abschließen, wenn der aktuelle MFA-Ablauf sie erfordert.',
     enable_title: 'Vertrauenswürdige Geräte aktivieren',
     enable_description:
       'Benutzern erlauben, diesen Browser nach einem zulässigen MFA-Faktor zu vertrauen.',
     duration_title: 'Vertrauensdauer (Tage)',
-    duration_error: 'Die Zahl muss zwischen {{min}} und {{max}} liegen.',
+    duration_error: 'Geben Sie eine ganze Zahl zwischen {{min}} und {{max}} ein.',
     duration_note: 'Änderungen der Vertrauensdauer gelten nur für danach vertraute Geräte.',
     organization_allow_title: 'Vertrauenswürdige Geräte zulassen',
     organization_allow_tip:

@@ -67,11 +67,11 @@ const mfa = {
   trusted_device: {
     title: '신뢰할 수 있는 기기',
     description:
-      '신뢰하는 브라우저에서 일반 MFA 확인을 건너뛸 수 있습니다. 고위험 또는 적응형 정책은 계속 MFA를 요구할 수 있습니다.',
+      '현재 MFA 흐름에서 확인이 필요할 때 신뢰할 수 있는 브라우저가 MFA 확인을 자동으로 완료하도록 합니다.',
     enable_title: '신뢰할 수 있는 기기 활성화',
     enable_description: '적격 MFA 요소를 완료한 후 이 브라우저를 신뢰하도록 허용합니다.',
     duration_title: '신뢰 기간(일)',
-    duration_error: '숫자는 {{min}}에서 {{max}} 사이여야 합니다.',
+    duration_error: '{{min}}에서 {{max}} 사이의 정수를 입력하세요.',
     duration_note: '신뢰 기간 변경은 이후에 신뢰한 기기에만 적용됩니다.',
     organization_allow_title: '신뢰할 수 있는 기기 허용',
     organization_allow_tip:

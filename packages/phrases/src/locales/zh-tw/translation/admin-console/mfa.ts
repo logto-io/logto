@@ -51,11 +51,11 @@ const mfa = {
   setup_link: '設定',
   trusted_device: {
     title: '受信任裝置',
-    description: '讓使用者在受信任的瀏覽器上略過一般 MFA 驗證。高風險或自適應策略仍可要求 MFA。',
+    description: '讓受信任的瀏覽器在目前 MFA 流程要求驗證時自動完成 MFA 驗證。',
     enable_title: '啟用受信任裝置',
     enable_description: '允許使用者完成符合條件的 MFA 因素驗證後信任此瀏覽器。',
     duration_title: '信任期限（天）',
-    duration_error: '數字必須介於 {{min}} 和 {{max}} 之間。',
+    duration_error: '請輸入 {{min}} 到 {{max}} 之間的整數。',
     duration_note: '信任期限的變更只適用於之後加入的受信任裝置。',
     organization_allow_title: '允許受信任裝置',
     organization_allow_tip:

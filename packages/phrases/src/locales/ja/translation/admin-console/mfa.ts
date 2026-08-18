@@ -73,11 +73,11 @@ const mfa = {
   trusted_device: {
     title: '信頼済みデバイス',
     description:
-      '信頼するブラウザーでは通常の MFA チャレンジを省略できます。高リスクまたは適応型ポリシーでは引き続き MFA を要求できます。',
+      '現在の MFA フローで検証が必要な場合、信頼済みブラウザーが MFA 検証を自動的に完了できるようにします。',
     enable_title: '信頼済みデバイスを有効にする',
     enable_description: '対象の MFA 要素を完了した後、このブラウザーを信頼できるようにします。',
     duration_title: '信頼期間（日）',
-    duration_error: '数値は {{min}} から {{max}} の範囲で指定してください。',
+    duration_error: '{{min}} から {{max}} までの整数を入力してください。',
     duration_note: '信頼期間の変更は、その後に信頼されたデバイスにのみ適用されます。',
     organization_allow_title: '信頼済みデバイスを許可',
     organization_allow_tip:

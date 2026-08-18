@@ -74,11 +74,11 @@ const mfa = {
   trusted_device: {
     title: 'Dispositivos confiáveis',
     description:
-      'Permita pular desafios rotineiros de MFA em navegadores confiáveis. Políticas adaptativas ou de alto risco ainda podem exigir MFA.',
+      'Permita que navegadores confiáveis concluam automaticamente a verificação de MFA quando o fluxo de MFA atual exigir.',
     enable_title: 'Habilitar dispositivos confiáveis',
     enable_description: 'Permita confiar neste navegador após concluir um fator de MFA elegível.',
     duration_title: 'Duração da confiança (dias)',
-    duration_error: 'O número deve estar entre {{min}} e {{max}}.',
+    duration_error: 'Insira um número inteiro entre {{min}} e {{max}}.',
     duration_note: 'As alterações de duração valem apenas para dispositivos confiados depois.',
     organization_allow_title: 'Permitir dispositivos confiáveis',
     organization_allow_tip:
