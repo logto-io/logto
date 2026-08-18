@@ -10,6 +10,7 @@ const user_scopes = {
     'urn:logto:scope:organization_roles': 'Organizasyon rollerin',
     address: 'Adresin',
     'urn:logto:scope:sessions': 'Aktif oturumların',
+    'urn:logto:scope:trusted_devices': 'Güvenilir cihazların',
   },
 };
 

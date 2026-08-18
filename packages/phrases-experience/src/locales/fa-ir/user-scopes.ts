@@ -10,6 +10,7 @@ const user_scopes = {
     'urn:logto:scope:organization_roles': 'نقش‌های سازمانی شما',
     address: 'نشانی شما',
     'urn:logto:scope:sessions': 'نشست‌های فعال شما',
+    'urn:logto:scope:trusted_devices': 'دستگاه‌های مورد اعتماد شما',
   },
 };
 
