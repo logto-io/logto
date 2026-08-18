@@ -185,7 +185,7 @@ const user_details = {
     access_created_at_column: 'Accesso creato il',
     revoke_access_title: 'Revocare accesso?',
     revoke_access_description:
-      "Questa azione revoca l'accesso dell'app all'account di questo utente su tutti i dispositivi. L'utente dovrà autorizzarla di nuovo per ripristinare l'accesso.",
+      "Questa azione revoca l'accesso dell'app all'account di questo utente su tutti i dispositivi. L'utente dovrà autorizzarla di nuovo per ripristinare l'accesso. I token di accesso già emessi potrebbero restare validi fino alla loro scadenza.",
   },
   connections: {
     title: 'Connessione',

@@ -281,7 +281,7 @@ const account_center = {
     revoke_grant: 'Remover',
     revoke_grant_title: 'Remover acesso do app de terceiros',
     revoke_grant_description:
-      'Isso revogará todo o acesso concedido a este aplicativo. Tem certeza de que deseja continuar?',
+      'Isso revogará o acesso concedido a este aplicativo. Os tokens de acesso emitidos anteriormente podem permanecer válidos até expirarem. Tem certeza de que deseja continuar?',
     revoke_grant_failed: 'Falha ao revogar algumas permissões. Tente novamente.',
   },
 };

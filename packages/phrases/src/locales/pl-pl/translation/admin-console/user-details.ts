@@ -182,7 +182,7 @@ const user_details = {
     access_created_at_column: 'Dostęp utworzono',
     revoke_access_title: 'Cofnąć dostęp?',
     revoke_access_description:
-      'Ta operacja cofnie dostęp aplikacji do konta tego użytkownika na wszystkich urządzeniach. Użytkownik musi ponownie udzielić autoryzacji, aby przywrócić dostęp.',
+      'Ta operacja cofnie dostęp aplikacji do konta tego użytkownika na wszystkich urządzeniach. Użytkownik musi ponownie udzielić autoryzacji, aby przywrócić dostęp. Wcześniej wydane tokeny dostępu mogą pozostać ważne do czasu ich wygaśnięcia.',
   },
   connections: {
     title: 'Połączenie',

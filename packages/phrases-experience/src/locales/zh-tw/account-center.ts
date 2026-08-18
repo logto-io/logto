@@ -260,7 +260,8 @@ const account_center = {
     client_id: '客戶端 ID：{{clientId}}',
     revoke_grant: '移除',
     revoke_grant_title: '移除第三方應用程式存取權限',
-    revoke_grant_description: '這將撤銷授予該應用程式的所有存取權限。確定要繼續嗎？',
+    revoke_grant_description:
+      '這將撤銷授予該應用程式的存取權限。先前已簽發的存取權杖可能在過期前仍然有效。確定要繼續嗎？',
     revoke_grant_failed: '部分授權撤銷失敗，請重試。',
   },
 };

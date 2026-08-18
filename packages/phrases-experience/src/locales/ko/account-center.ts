@@ -269,7 +269,7 @@ const account_center = {
     revoke_grant: '제거',
     revoke_grant_title: '서드파티 앱 액세스 제거',
     revoke_grant_description:
-      '이 애플리케이션에 부여된 모든 액세스를 철회합니다. 계속하시겠습니까?',
+      '이 애플리케이션에 부여된 액세스를 철회합니다. 이미 발급된 액세스 토큰은 만료될 때까지 유효할 수 있습니다. 계속하시겠습니까?',
     revoke_grant_failed: '일부 권한 철회에 실패했습니다. 다시 시도해 주세요.',
   },
 };

@@ -186,7 +186,7 @@ const user_details = {
     access_created_at_column: 'Zugriff erstellt am',
     revoke_access_title: 'Zugriff widerrufen?',
     revoke_access_description:
-      'Dadurch wird der Zugriff der App auf das Konto dieses Benutzers auf allen Geräten widerrufen. Der Benutzer muss die App erneut autorisieren, um den Zugriff wiederherzustellen.',
+      'Dadurch wird der Zugriff der App auf das Konto dieses Benutzers auf allen Geräten widerrufen. Der Benutzer muss die App erneut autorisieren, um den Zugriff wiederherzustellen. Bereits ausgestellte Zugriffstokens können bis zu ihrem Ablauf gültig bleiben.',
   },
   connections: {
     title: 'Verbindung',

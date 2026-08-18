@@ -183,7 +183,7 @@ const user_details = {
     access_created_at_column: 'Acesso criado em',
     revoke_access_title: 'Revogar acesso?',
     revoke_access_description:
-      'Isso revogará o acesso do aplicativo à conta deste usuário em todos os dispositivos. O usuário precisará autorizar novamente para restaurar o acesso.',
+      'Isso revogará o acesso do aplicativo à conta deste usuário em todos os dispositivos. O usuário precisará autorizar novamente para restaurar o acesso. Os tokens de acesso emitidos anteriormente podem permanecer válidos até expirarem.',
   },
   connections: {
     title: 'Conexão',
