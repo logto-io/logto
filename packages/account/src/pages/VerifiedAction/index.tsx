@@ -6,7 +6,7 @@ import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
 import { isDevFeaturesEnabled } from '@ac/constants/env';
-import { getPasskeyFieldControl, hasVisibleSessionsPage } from '@ac/utils/security-page';
+import { getPasskeyFieldControl, isVisibleField } from '@ac/utils/security-page';
 import { sessionStorage } from '@ac/utils/session-storage';
 import type { PendingVerifiedAction } from '@ac/utils/session-storage';
 
@@ -65,8 +65,11 @@ const VerifiedAction = () => {
         return accountCenterSettings.fields.social === AccountCenterControlValue.Edit;
       }
       case 'load-sessions': {
+        return isVisibleField(accountCenterSettings.fields.session);
+      }
+      case 'load-trusted-devices': {
         // DEV: MFA trusted device management
-        return hasVisibleSessionsPage(accountCenterSettings, isDevFeaturesEnabled);
+        return isDevFeaturesEnabled && isVisibleField(accountCenterSettings.fields.trustedDevice);
       }
       default: {
         return false;

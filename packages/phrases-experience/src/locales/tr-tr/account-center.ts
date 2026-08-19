@@ -120,6 +120,21 @@ const account_center = {
     email_removed: 'E-posta adresi başarıyla kaldırıldı.',
     phone_removed: 'Telefon numarası başarıyla kaldırıldı.',
     username_removed: 'Kullanıcı adı başarıyla kaldırıldı.',
+    trusted_devices: {
+      title: 'MFA güvenilir cihazları',
+      current_device: 'Geçerli cihaz',
+      expires_on: '{{date}} tarihinde sona erer',
+      unknown_location: 'Bilinmeyen konum',
+      remove: 'Kaldır',
+      removed: 'Güvenilir cihaz başarıyla kaldırıldı.',
+      loading: 'Yükleniyor...',
+      empty: 'Güvenilir cihaz yok.',
+      load_failed: 'Güvenilir cihazlar yüklenemedi. Lütfen tekrar deneyin.',
+      retry: 'Tekrar dene',
+      remove_confirmation_title: 'Güvenilir cihaz kaldırılsın mı?',
+      remove_confirmation_description:
+        'Bu cihazda bir sonraki oturum açışınızda MFA işlemini yeniden tamamlamanız gerekecek. Geçerli oturumunuz etkin kalacak.',
+    },
   },
   social: {
     linked: '{{connector}} başarıyla bağlandı.',
@@ -279,21 +294,6 @@ const account_center = {
     revoke_grant_description:
       'Bu, bu uygulamaya verilen erişimi iptal edecektir. Daha önce verilmiş erişim belirteçleri süreleri dolana kadar geçerli kalabilir. Devam etmek istediğinizden emin misiniz?',
     revoke_grant_failed: 'Bazı izinler iptal edilemedi. Lütfen tekrar deneyin.',
-    trusted_devices: {
-      title: 'MFA güvenilir cihazları',
-      current_device: 'Geçerli cihaz',
-      expires_on: '{{date}} tarihinde sona erer',
-      unknown_location: 'Bilinmeyen konum',
-      remove: 'Kaldır',
-      removed: 'Güvenilir cihaz başarıyla kaldırıldı.',
-      loading: 'Yükleniyor...',
-      empty: 'Güvenilir cihaz yok.',
-      load_failed: 'Güvenilir cihazlar yüklenemedi. Lütfen tekrar deneyin.',
-      retry: 'Tekrar dene',
-      remove_confirmation_title: 'Güvenilir cihaz kaldırılsın mı?',
-      remove_confirmation_description:
-        'Bu cihazda bir sonraki oturum açışınızda MFA işlemini yeniden tamamlamanız gerekecek. Geçerli oturumunuz etkin kalacak.',
-    },
   },
 };
 

@@ -124,6 +124,21 @@ const account_center = {
     email_removed: 'Endereço de e-mail removido com sucesso.',
     phone_removed: 'Número de telefone removido com sucesso.',
     username_removed: 'Nome de utilizador removido com sucesso.',
+    trusted_devices: {
+      title: 'Dispositivos fidedignos de MFA',
+      current_device: 'Dispositivo atual',
+      expires_on: 'Expira em {{date}}',
+      unknown_location: 'Localização desconhecida',
+      remove: 'Remover',
+      removed: 'Dispositivo fidedigno removido com sucesso.',
+      loading: 'A carregar...',
+      empty: 'Nenhum dispositivo fidedigno.',
+      load_failed: 'Falha ao carregar dispositivos fidedignos. Tente novamente.',
+      retry: 'Tentar novamente',
+      remove_confirmation_title: 'Remover dispositivo fidedigno?',
+      remove_confirmation_description:
+        'Terá de concluir novamente a MFA neste dispositivo da próxima vez que iniciar sessão. A sua sessão atual permanecerá ativa.',
+    },
   },
   social: {
     linked: '{{connector}} associada com sucesso.',
@@ -284,21 +299,6 @@ const account_center = {
     revoke_grant_description:
       'Isto revogará o acesso concedido a esta aplicação. Os tokens de acesso emitidos anteriormente podem permanecer válidos até expirarem. Tem a certeza de que pretende continuar?',
     revoke_grant_failed: 'Falha ao revogar algumas permissões. Tente novamente.',
-    trusted_devices: {
-      title: 'Dispositivos fidedignos de MFA',
-      current_device: 'Dispositivo atual',
-      expires_on: 'Expira em {{date}}',
-      unknown_location: 'Localização desconhecida',
-      remove: 'Remover',
-      removed: 'Dispositivo fidedigno removido com sucesso.',
-      loading: 'A carregar...',
-      empty: 'Nenhum dispositivo fidedigno.',
-      load_failed: 'Falha ao carregar dispositivos fidedignos. Tente novamente.',
-      retry: 'Tentar novamente',
-      remove_confirmation_title: 'Remover dispositivo fidedigno?',
-      remove_confirmation_description:
-        'Terá de concluir novamente a MFA neste dispositivo da próxima vez que iniciar sessão. A sua sessão atual permanecerá ativa.',
-    },
   },
 };
 

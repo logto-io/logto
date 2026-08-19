@@ -1,4 +1,4 @@
-/* eslint-disable max-lines */
+/* eslint-disable max-lines -- Security page integration scenarios are kept together. */
 import type { SignInExperienceResponse } from '@experience/shared/types';
 import {
   AccountCenterControlValue,
@@ -21,6 +21,7 @@ import { securityRoute, verifiedActionRoute } from '@ac/constants/routes';
 import { sessionStorage } from '@ac/utils/session-storage';
 
 import { getMfaSettings, getMfaVerifications, updateMfaSettings } from '../../apis/mfa';
+import { getTrustedDevices, removeTrustedDevice } from '../../apis/trusted-devices';
 
 import Security from '.';
 
@@ -32,10 +33,19 @@ jest.mock('@logto/react', () => ({
   }),
 }));
 
+jest.mock('@ac/constants/env', () => ({
+  isDevFeaturesEnabled: true,
+}));
+
 jest.mock('../../apis/mfa', () => ({
   getMfaSettings: jest.fn(),
   getMfaVerifications: jest.fn(),
   updateMfaSettings: jest.fn(),
+}));
+
+jest.mock('../../apis/trusted-devices', () => ({
+  getTrustedDevices: jest.fn(),
+  removeTrustedDevice: jest.fn(),
 }));
 
 type SecurityRenderOptions = {
@@ -69,6 +79,10 @@ const mockGetMfaVerifications = getMfaVerifications as jest.MockedFunction<
   typeof getMfaVerifications
 >;
 const mockUpdateMfaSettings = updateMfaSettings as jest.MockedFunction<typeof updateMfaSettings>;
+const mockGetTrustedDevices = getTrustedDevices as jest.MockedFunction<typeof getTrustedDevices>;
+const mockRemoveTrustedDevice = removeTrustedDevice as jest.MockedFunction<
+  typeof removeTrustedDevice
+>;
 
 const configuredMfaVerifications = [
   {
@@ -119,6 +133,7 @@ const renderSecurity = ({
             social: AccountCenterControlValue.Off,
             mfa: AccountCenterControlValue.Off,
             session: AccountCenterControlValue.Off,
+            trustedDevice: AccountCenterControlValue.Off,
             ...fields,
           },
           deleteAccountUrl: null,
@@ -151,6 +166,8 @@ describe('<Security />', () => {
     mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true });
     mockGetMfaVerifications.mockResolvedValue([]);
     mockUpdateMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true });
+    mockGetTrustedDevices.mockResolvedValue([]);
+    mockRemoveTrustedDevice.mockResolvedValue(undefined);
     window.sessionStorage.clear();
   });
 
@@ -231,6 +248,41 @@ describe('<Security />', () => {
     expect(queryByText('account_center.security.social_sign_in')).toBeNull();
     expect(queryByText('account_center.security.two_step_verification')).toBeNull();
     expect(queryByText('account_center.security.account_removal')).toBeNull();
+  });
+
+  it('renders trusted devices immediately below 2-step verification', async () => {
+    mockGetMfaVerifications.mockResolvedValue(configuredMfaVerifications);
+
+    const { getByText } = renderSecurity({
+      accountCenterSettings: {
+        fields: {
+          username: AccountCenterControlValue.Off,
+          email: AccountCenterControlValue.Off,
+          phone: AccountCenterControlValue.Off,
+          password: AccountCenterControlValue.Off,
+          social: AccountCenterControlValue.Off,
+          mfa: AccountCenterControlValue.ReadOnly,
+          trustedDevice: AccountCenterControlValue.ReadOnly,
+        },
+      },
+      experienceSettings: {
+        mfa: {
+          factors: [MfaFactor.TOTP],
+        },
+      },
+      verificationId: 'verification-record-id',
+    });
+
+    await waitFor(() => {
+      expect(getByText('account_center.security.trusted_devices.title')).not.toBeNull();
+    });
+
+    const twoStepVerification = getByText('account_center.security.two_step_verification');
+    const trustedDevices = getByText('account_center.security.trusted_devices.title');
+
+    expect(twoStepVerification.compareDocumentPosition(trustedDevices)).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING
+    );
   });
 
   it('renders social section only when available web social connectors exist', () => {

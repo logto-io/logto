@@ -119,6 +119,21 @@ const account_center = {
     email_removed: 'メールアドレスが正常に削除されました。',
     phone_removed: '電話番号が正常に削除されました。',
     username_removed: 'ユーザー名が正常に削除されました。',
+    trusted_devices: {
+      title: 'MFA 信頼済みデバイス',
+      current_device: '現在のデバイス',
+      expires_on: '{{date}} に期限切れ',
+      unknown_location: '不明な場所',
+      remove: '削除',
+      removed: '信頼済みデバイスを削除しました。',
+      loading: '読み込み中...',
+      empty: '信頼済みデバイスはありません。',
+      load_failed: '信頼済みデバイスを読み込めませんでした。もう一度お試しください。',
+      retry: '再試行',
+      remove_confirmation_title: '信頼済みデバイスを削除しますか？',
+      remove_confirmation_description:
+        '次回このデバイスでサインインするときは、MFA をもう一度完了する必要があります。現在のセッションは引き続き有効です。',
+    },
   },
   social: {
     linked: '{{connector}}の連携に成功しました。',
@@ -277,21 +292,6 @@ const account_center = {
     revoke_grant_description:
       'このアプリケーションに付与されたアクセスを取り消します。すでに発行されたアクセストークンは、有効期限が切れるまで有効なままの場合があります。続行しますか？',
     revoke_grant_failed: '一部の認可の取り消しに失敗しました。もう一度お試しください。',
-    trusted_devices: {
-      title: 'MFA 信頼済みデバイス',
-      current_device: '現在のデバイス',
-      expires_on: '{{date}} に期限切れ',
-      unknown_location: '不明な場所',
-      remove: '削除',
-      removed: '信頼済みデバイスを削除しました。',
-      loading: '読み込み中...',
-      empty: '信頼済みデバイスはありません。',
-      load_failed: '信頼済みデバイスを読み込めませんでした。もう一度お試しください。',
-      retry: '再試行',
-      remove_confirmation_title: '信頼済みデバイスを削除しますか？',
-      remove_confirmation_description:
-        '次回このデバイスでサインインするときは、MFA をもう一度完了する必要があります。現在のセッションは引き続き有効です。',
-    },
   },
 };
 

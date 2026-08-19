@@ -37,7 +37,7 @@ const TrustedDeviceRow = ({ trustedDevice, isEditable, onRemove }: Props) => {
           {isCurrent && (
             <span className={styles.currentTag}>
               <span className={styles.currentDot} />
-              {t('account_center.sessions.trusted_devices.current_device')}
+              {t('account_center.security.trusted_devices.current_device')}
             </span>
           )}
         </div>
@@ -45,17 +45,17 @@ const TrustedDeviceRow = ({ trustedDevice, isEditable, onRemove }: Props) => {
       </div>
       <div className={styles.deviceDetails}>
         <div className={styles.expiry}>
-          {t('account_center.sessions.trusted_devices.expires_on', {
+          {t('account_center.security.trusted_devices.expires_on', {
             date: expiryDateFormatter.format(expiresAt),
           })}
         </div>
         <div className={styles.meta}>
-          {location ?? t('account_center.sessions.trusted_devices.unknown_location')}
+          {location ?? t('account_center.security.trusted_devices.unknown_location')}
         </div>
       </div>
       {isEditable && (
         <button type="button" className={styles.removeButton} onClick={onRemove}>
-          {t('account_center.sessions.trusted_devices.remove')}
+          {t('account_center.security.trusted_devices.remove')}
         </button>
       )}
     </div>

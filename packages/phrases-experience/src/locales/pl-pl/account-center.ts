@@ -121,6 +121,21 @@ const account_center = {
     email_removed: 'Adres e-mail został pomyślnie usunięty.',
     phone_removed: 'Numer telefonu został pomyślnie usunięty.',
     username_removed: 'Nazwa użytkownika została pomyślnie usunięta.',
+    trusted_devices: {
+      title: 'Zaufane urządzenia MFA',
+      current_device: 'Bieżące urządzenie',
+      expires_on: 'Wygasa {{date}}',
+      unknown_location: 'Nieznana lokalizacja',
+      remove: 'Usuń',
+      removed: 'Zaufane urządzenie zostało usunięte.',
+      loading: 'Ładowanie...',
+      empty: 'Brak zaufanych urządzeń.',
+      load_failed: 'Nie udało się załadować zaufanych urządzeń. Spróbuj ponownie.',
+      retry: 'Spróbuj ponownie',
+      remove_confirmation_title: 'Usunąć zaufane urządzenie?',
+      remove_confirmation_description:
+        'Przy następnym logowaniu na tym urządzeniu konieczne będzie ponowne wykonanie MFA. Bieżąca sesja pozostanie aktywna.',
+    },
   },
   social: {
     linked: '{{connector}} połączono pomyślnie.',
@@ -283,21 +298,6 @@ const account_center = {
     revoke_grant_description:
       'Spowoduje to cofnięcie uprawnień przyznanych tej aplikacji. Wcześniej wydane tokeny dostępu mogą pozostać ważne do czasu ich wygaśnięcia. Czy na pewno chcesz kontynuować?',
     revoke_grant_failed: 'Nie udało się cofnąć niektórych uprawnień. Spróbuj ponownie.',
-    trusted_devices: {
-      title: 'Zaufane urządzenia MFA',
-      current_device: 'Bieżące urządzenie',
-      expires_on: 'Wygasa {{date}}',
-      unknown_location: 'Nieznana lokalizacja',
-      remove: 'Usuń',
-      removed: 'Zaufane urządzenie zostało usunięte.',
-      loading: 'Ładowanie...',
-      empty: 'Brak zaufanych urządzeń.',
-      load_failed: 'Nie udało się załadować zaufanych urządzeń. Spróbuj ponownie.',
-      retry: 'Spróbuj ponownie',
-      remove_confirmation_title: 'Usunąć zaufane urządzenie?',
-      remove_confirmation_description:
-        'Przy następnym logowaniu na tym urządzeniu konieczne będzie ponowne wykonanie MFA. Bieżąca sesja pozostanie aktywna.',
-    },
   },
 };
 

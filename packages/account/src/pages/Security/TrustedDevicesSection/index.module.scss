@@ -1,23 +1,5 @@
 @use '@experience/shared/scss/underscore' as _;
 
-.section {
-  display: flex;
-  flex-direction: column;
-  gap: _.unit(1.5);
-}
-
-.sectionTitle {
-  padding-inline-start: _.unit(1);
-  font: var(--font-label-2);
-  color: var(--color-type-primary);
-}
-
-.card {
-  background: var(--color-bg-body);
-  border-radius: 12px;
-  overflow: clip;
-}
-
 .row {
   display: grid;
   grid-template-columns: minmax(0, 235px) minmax(0, 1fr) auto;
@@ -119,10 +101,6 @@
 }
 
 @mixin mobile-layout {
-  .sectionTitle {
-    padding-inline-start: 0;
-  }
-
   .row {
     grid-template-columns: minmax(0, 1fr) auto;
     gap: _.unit(2) _.unit(3);

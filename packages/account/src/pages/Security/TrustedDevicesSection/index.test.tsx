@@ -1,13 +1,16 @@
 import { AccountCenterControlValue, type AccountTrustedDeviceResponse } from '@logto/schemas';
 import { fireEvent, waitFor } from '@testing-library/react';
+import { Route, Routes } from 'react-router-dom';
 
 import renderWithPageContext, {
   mockAccountCenterSettings,
 } from '@ac/__mocks__/RenderWithPageContext';
 import { getTrustedDevices, removeTrustedDevice } from '@ac/apis/trusted-devices';
+import { securityRoute, verifiedActionRoute } from '@ac/constants/routes';
 import { setupI18nForTesting } from '@ac/jest.setup';
+import { sessionStorage } from '@ac/utils/session-storage';
 
-import TrustedDevices from '.';
+import TrustedDevicesSection from '.';
 
 const mockGetAccessToken = jest.fn().mockResolvedValue('access-token');
 
@@ -46,23 +49,22 @@ const renderTrustedDevices = (
     control?: AccountCenterControlValue;
     verificationId?: string;
     setToast?: jest.Mock;
-    onManage?: jest.Mock;
-    onPermissionDenied?: jest.Mock;
   } = {}
 ) => {
-  const {
-    control = AccountCenterControlValue.Edit,
-    setToast = jest.fn(),
-    onManage = jest.fn(),
-    onPermissionDenied = jest.fn(),
-  } = options;
+  const { control = AccountCenterControlValue.Edit, setToast = jest.fn() } = options;
   const verificationId = Object.hasOwn(options, 'verificationId')
     ? options.verificationId
     : 'verification-id';
 
   return renderWithPageContext(
-    <TrustedDevices hasManageAction onManage={onManage} onPermissionDenied={onPermissionDenied} />,
-    { future: { v7_relativeSplatPath: true, v7_startTransition: true } },
+    <Routes>
+      <Route path={securityRoute} element={<TrustedDevicesSection />} />
+      <Route path={verifiedActionRoute} element={<div>verified action page</div>} />
+    </Routes>,
+    {
+      initialEntries: [securityRoute],
+      future: { v7_relativeSplatPath: true, v7_startTransition: true },
+    },
     {
       pageContext: {
         verificationId,
@@ -79,14 +81,14 @@ const renderTrustedDevices = (
   );
 };
 
-describe('<TrustedDevices />', () => {
+describe('<TrustedDevicesSection />', () => {
   beforeAll(async () => {
     await setupI18nForTesting({
       translation: {
         action: { cancel: 'Cancel' },
         account_center: {
-          security: { manage: 'Manage' },
-          sessions: {
+          security: {
+            manage: 'Manage',
             trusted_devices: {
               title: 'MFA trusted devices',
               current_device: 'Current device',
@@ -113,6 +115,7 @@ describe('<TrustedDevices />', () => {
     mockGetAccessToken.mockResolvedValue('access-token');
     mockGetTrustedDevices.mockResolvedValue([currentTrustedDevice]);
     mockRemoveTrustedDevice.mockResolvedValue(undefined);
+    window.sessionStorage.clear();
   });
 
   it('does not render or load devices when permission is off', () => {
@@ -202,12 +205,22 @@ describe('<TrustedDevices />', () => {
     consoleError.mockRestore();
   });
 
-  it('shows Manage without calling the API when verification is not available', () => {
-    const onManage = jest.fn();
-    const { getByRole } = renderTrustedDevices({ verificationId: undefined, onManage });
+  it('starts the independent trusted-device verification action when verification is unavailable', () => {
+    const { getByRole, getByText } = renderTrustedDevices({ verificationId: undefined });
 
     expect(mockGetTrustedDevices).not.toHaveBeenCalled();
     fireEvent.click(getByRole('button', { name: 'Manage' }));
-    expect(onManage).toHaveBeenCalledTimes(1);
+    expect(getByText('verified action page')).toBeTruthy();
+    expect(sessionStorage.getPendingVerifiedAction()).toBe('load-trusted-devices');
+  });
+
+  it('clears the pending trusted-device action after returning with verification', async () => {
+    sessionStorage.setPendingVerifiedAction('load-trusted-devices');
+    renderTrustedDevices();
+
+    await waitFor(() => {
+      expect(mockGetTrustedDevices).toHaveBeenCalled();
+    });
+    expect(sessionStorage.getPendingVerifiedAction()).toBeUndefined();
   });
 });

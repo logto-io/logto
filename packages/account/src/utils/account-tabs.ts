@@ -17,9 +17,13 @@ export const getAccountTabSettings = ({
   accountCenterSettings,
   experienceSettings,
 }: AccountTabSettings) => {
-  const hasSecurity = hasVisibleSecuritySection(accountCenterSettings, experienceSettings);
   // DEV: MFA trusted device management
-  const hasSessions = hasVisibleSessionsPage(accountCenterSettings, isDevFeaturesEnabled);
+  const hasSecurity = hasVisibleSecuritySection(
+    accountCenterSettings,
+    experienceSettings,
+    isDevFeaturesEnabled
+  );
+  const hasSessions = hasVisibleSessionsPage(accountCenterSettings);
   const hasProfile = hasVisibleProfilePage(accountCenterSettings, experienceSettings);
 
   return {

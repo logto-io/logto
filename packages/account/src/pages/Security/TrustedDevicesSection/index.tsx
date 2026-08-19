@@ -1,28 +1,28 @@
 import type { AccountTrustedDeviceResponse } from '@logto/schemas';
 import { AccountCenterControlValue } from '@logto/schemas';
-import classNames from 'classnames';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { getTrustedDevices, removeTrustedDevice } from '@ac/apis/trusted-devices';
 import ConfirmModal from '@ac/components/ConfirmModal';
-import { layoutClassNames } from '@ac/constants/layout';
+import { verifiedActionRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
+import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
+import { sessionStorage } from '@ac/utils/session-storage';
+
+import SecuritySection from '../components/SecuritySection';
 
 import TrustedDeviceRow from './TrustedDeviceRow';
 import styles from './index.module.scss';
 
-type Props = {
-  readonly hasManageAction: boolean;
-  readonly onManage: () => void;
-  readonly onPermissionDenied: () => void;
-};
-
-const TrustedDevices = ({ hasManageAction, onManage, onPermissionDenied }: Props) => {
+const TrustedDevicesSection = () => {
   const { t } = useTranslation();
-  const { accountCenterSettings, verificationId, setToast } = useContext(PageContext);
+  const navigate = useNavigate();
+  const { accountCenterSettings, verificationId, setVerificationId, setToast } =
+    useContext(PageContext);
   const [trustedDevices, setTrustedDevices] = useState<AccountTrustedDeviceResponse[]>();
   const [isLoading, setIsLoading] = useState(false);
   const [hasLoadingError, setHasLoadingError] = useState(false);
@@ -36,13 +36,15 @@ const TrustedDevices = ({ hasManageAction, onManage, onPermissionDenied }: Props
   const isVisible =
     control === AccountCenterControlValue.ReadOnly || control === AccountCenterControlValue.Edit;
   const isEditable = control === AccountCenterControlValue.Edit;
+  const isInitialLoading = Boolean(verificationId) && !hasLoadingError && !trustedDevices;
 
   const handlePermissionDenied = useCallback(() => {
     setHasLoadingError(false);
     setTrustedDevices(undefined);
     setRemoveTarget(undefined);
-    onPermissionDenied();
-  }, [onPermissionDenied]);
+    setVerificationId(undefined);
+    setToast(t('account_center.verification.verification_required'));
+  }, [setToast, setVerificationId, t]);
 
   const fetchTrustedDevices = useCallback(async () => {
     if (!verificationId || !isVisible) {
@@ -66,8 +68,22 @@ const TrustedDevices = ({ hasManageAction, onManage, onPermissionDenied }: Props
   }, [getTrustedDevicesApi, handleError, handlePermissionDenied, isVisible, verificationId]);
 
   useEffect(() => {
+    if (!verificationId) {
+      return;
+    }
+
+    if (sessionStorage.getPendingVerifiedAction() === 'load-trusted-devices') {
+      sessionStorage.clearPendingVerifiedAction();
+    }
+
     void fetchTrustedDevices();
-  }, [fetchTrustedDevices]);
+  }, [fetchTrustedDevices, verificationId]);
+
+  const handleManage = useCallback(() => {
+    setPendingReturn(getPendingReturn() ?? window.location.href);
+    sessionStorage.setPendingVerifiedAction('load-trusted-devices');
+    navigate(verifiedActionRoute);
+  }, [navigate]);
 
   const handleConfirmRemove = useCallback(async () => {
     if (!verificationId || !removeTarget) {
@@ -88,7 +104,7 @@ const TrustedDevices = ({ hasManageAction, onManage, onPermissionDenied }: Props
     setTrustedDevices((previous) => previous?.filter(({ id }) => id !== removeTarget.id));
     setRemoveTarget(undefined);
     setIsRemoving(false);
-    setToast(t('account_center.sessions.trusted_devices.removed'));
+    setToast(t('account_center.security.trusted_devices.removed'));
   }, [
     handleError,
     handlePermissionDenied,
@@ -105,59 +121,50 @@ const TrustedDevices = ({ hasManageAction, onManage, onPermissionDenied }: Props
 
   return (
     <>
-      <div className={classNames(styles.section, layoutClassNames.section)}>
-        <div className={classNames(styles.sectionTitle, layoutClassNames.sectionTitle)}>
-          {t('account_center.sessions.trusted_devices.title')}
-        </div>
-        <div className={classNames(styles.card, layoutClassNames.card)}>
-          {isLoading ? (
-            <div className={styles.state}>
-              {t('account_center.sessions.trusted_devices.loading')}
-            </div>
-          ) : hasLoadingError ? (
-            <div className={styles.state}>
-              <span>{t('account_center.sessions.trusted_devices.load_failed')}</span>
-              <button
-                type="button"
-                className={styles.actionButton}
-                onClick={() => {
-                  void fetchTrustedDevices();
+      <SecuritySection title={t('account_center.security.trusted_devices.title')}>
+        {isLoading || isInitialLoading ? (
+          <div className={styles.state}>{t('account_center.security.trusted_devices.loading')}</div>
+        ) : hasLoadingError ? (
+          <div className={styles.state}>
+            <span>{t('account_center.security.trusted_devices.load_failed')}</span>
+            <button
+              type="button"
+              className={styles.actionButton}
+              onClick={() => {
+                void fetchTrustedDevices();
+              }}
+            >
+              {t('account_center.security.trusted_devices.retry')}
+            </button>
+          </div>
+        ) : trustedDevices ? (
+          trustedDevices.length > 0 ? (
+            trustedDevices.map((trustedDevice) => (
+              <TrustedDeviceRow
+                key={trustedDevice.id}
+                trustedDevice={trustedDevice}
+                isEditable={isEditable}
+                onRemove={() => {
+                  setRemoveTarget(trustedDevice);
                 }}
-              >
-                {t('account_center.sessions.trusted_devices.retry')}
-              </button>
-            </div>
-          ) : trustedDevices ? (
-            trustedDevices.length > 0 ? (
-              trustedDevices.map((trustedDevice) => (
-                <TrustedDeviceRow
-                  key={trustedDevice.id}
-                  trustedDevice={trustedDevice}
-                  isEditable={isEditable}
-                  onRemove={() => {
-                    setRemoveTarget(trustedDevice);
-                  }}
-                />
-              ))
-            ) : (
-              <div className={styles.state}>
-                {t('account_center.sessions.trusted_devices.empty')}
-              </div>
-            )
-          ) : hasManageAction ? (
-            <div className={styles.state}>
-              <button type="button" className={styles.actionButton} onClick={onManage}>
-                {t('account_center.security.manage')}
-              </button>
-            </div>
-          ) : null}
-        </div>
-      </div>
+              />
+            ))
+          ) : (
+            <div className={styles.state}>{t('account_center.security.trusted_devices.empty')}</div>
+          )
+        ) : (
+          <div className={styles.state}>
+            <button type="button" className={styles.actionButton} onClick={handleManage}>
+              {t('account_center.security.manage')}
+            </button>
+          </div>
+        )}
+      </SecuritySection>
 
       <ConfirmModal
         isOpen={Boolean(removeTarget)}
-        title="account_center.sessions.trusted_devices.remove_confirmation_title"
-        confirmText="account_center.sessions.trusted_devices.remove"
+        title="account_center.security.trusted_devices.remove_confirmation_title"
+        confirmText="account_center.security.trusted_devices.remove"
         confirmButtonType="danger"
         cancelText="action.cancel"
         isLoading={isRemoving}
@@ -170,10 +177,10 @@ const TrustedDevices = ({ hasManageAction, onManage, onPermissionDenied }: Props
           }
         }}
       >
-        {t('account_center.sessions.trusted_devices.remove_confirmation_description')}
+        {t('account_center.security.trusted_devices.remove_confirmation_description')}
       </ConfirmModal>
     </>
   );
 };
 
-export default TrustedDevices;
+export default TrustedDevicesSection;

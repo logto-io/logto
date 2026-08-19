@@ -114,6 +114,21 @@ const account_center = {
     email_removed: '電郵地址已成功移除。',
     phone_removed: '電話號碼已成功移除。',
     username_removed: '用戶名已成功移除。',
+    trusted_devices: {
+      title: 'MFA 受信任裝置',
+      current_device: '目前裝置',
+      expires_on: '於 {{date}} 到期',
+      unknown_location: '未知位置',
+      remove: '移除',
+      removed: '受信任裝置已成功移除。',
+      loading: '載入中...',
+      empty: '沒有受信任裝置。',
+      load_failed: '無法載入受信任裝置，請再試一次。',
+      retry: '再試一次',
+      remove_confirmation_title: '移除受信任裝置？',
+      remove_confirmation_description:
+        '下次在此裝置登入時，你需要再次完成 MFA。目前的工作階段將保持有效。',
+    },
   },
   social: {
     linked: '已成功連結 {{connector}}。',
@@ -261,21 +276,6 @@ const account_center = {
     revoke_grant_description:
       '這將撤銷授予該應用程式的存取權限。先前已簽發的存取權杖可能在過期前仍然有效。確定要繼續嗎？',
     revoke_grant_failed: '部分授權撤銷失敗，請重試。',
-    trusted_devices: {
-      title: 'MFA 受信任裝置',
-      current_device: '目前裝置',
-      expires_on: '於 {{date}} 到期',
-      unknown_location: '未知位置',
-      remove: '移除',
-      removed: '受信任裝置已成功移除。',
-      loading: '載入中...',
-      empty: '沒有受信任裝置。',
-      load_failed: '無法載入受信任裝置，請再試一次。',
-      retry: '再試一次',
-      remove_confirmation_title: '移除受信任裝置？',
-      remove_confirmation_description:
-        '下次在此裝置登入時，你需要再次完成 MFA。目前的工作階段將保持有效。',
-    },
   },
 };
 

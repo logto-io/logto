@@ -100,13 +100,15 @@ export const hasConfiguredSecondFactor = (
 
 export const hasVisibleSecuritySection = (
   accountCenterSettings?: SecurityPageSettings,
-  experienceSettings?: SecurityPageExperienceSettings
+  experienceSettings?: SecurityPageExperienceSettings,
+  includeTrustedDevices = false
 ): boolean => {
   if (!accountCenterSettings?.enabled) {
     return false;
   }
 
-  const { username, email, phone, password, social, mfa, passkey } = accountCenterSettings.fields;
+  const { username, email, phone, password, social, mfa, passkey, trustedDevice } =
+    accountCenterSettings.fields;
   const hasDeleteAccountUrl = Boolean(accountCenterSettings.deleteAccountUrl?.trim());
 
   return (
@@ -117,22 +119,17 @@ export const hasVisibleSecuritySection = (
     hasDeleteAccountUrl ||
     hasVisibleSocialSection(social, experienceSettings) ||
     hasVisibleMfaSection(mfa, experienceSettings) ||
-    hasVisiblePasskeySection(getPasskeyFieldControl(passkey, mfa), experienceSettings)
+    hasVisiblePasskeySection(getPasskeyFieldControl(passkey, mfa), experienceSettings) ||
+    (includeTrustedDevices && isVisibleField(trustedDevice))
   );
 };
 
-export const hasVisibleSessionsPage = (
-  accountCenterSettings?: SecurityPageSettings,
-  includeTrustedDevices = false
-): boolean => {
+export const hasVisibleSessionsPage = (accountCenterSettings?: SecurityPageSettings): boolean => {
   if (!accountCenterSettings?.enabled) {
     return false;
   }
 
-  return (
-    isVisibleField(accountCenterSettings.fields.session) ||
-    (includeTrustedDevices && isVisibleField(accountCenterSettings.fields.trustedDevice))
-  );
+  return isVisibleField(accountCenterSettings.fields.session);
 };
 
 export const hasAvailableSecurityVerificationMethod = (

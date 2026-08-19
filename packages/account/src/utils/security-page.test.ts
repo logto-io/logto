@@ -21,7 +21,7 @@ import {
 } from './security-page';
 
 describe('security-page utils', () => {
-  it('hasVisibleSessionsPage independently respects session and trusted-device controls', () => {
+  it('places trusted-device-only access on Security without exposing Sessions', () => {
     const settings = {
       enabled: true,
       deleteAccountUrl: null,
@@ -32,7 +32,8 @@ describe('security-page utils', () => {
     };
 
     expect(hasVisibleSessionsPage(settings)).toBe(false);
-    expect(hasVisibleSessionsPage(settings, true)).toBe(true);
+    expect(hasVisibleSecuritySection(settings)).toBe(false);
+    expect(hasVisibleSecuritySection(settings, undefined, true)).toBe(true);
     expect(
       hasVisibleSessionsPage({
         ...settings,
