@@ -86,11 +86,15 @@ const applications = {
       'Dynamische App erlaubt OAuth-Clients, sich ohne vorherige Registrierung zu verbinden.',
     settings_description:
       'Dynamische App erlaubt OAuth-Clients, sich ohne vorherige Registrierung zu verbinden. Verwendet die Spezifikation OAuth Client ID Metadata Document (CIMD).',
+    beta_notice:
+      'Dynamische App befindet sich derzeit in der Beta-Phase. Willkommen, es zu erkunden und <ContactLink>Geben Sie Ihr Feedback</ContactLink>.',
     app_id_placeholder: 'Wird von jedem Client dynamisch bereitgestellt',
     enable_confirm_modal: {
       title: 'Dynamischen Client-Zugriff aktivieren?',
       content:
         'Jeder OAuth-Client mit einer gültigen öffentlichen HTTPS-Client-ID-URL kann die Autorisierung für diesen Mandanten ohne vorherige Registrierung starten. Der Zugriff bleibt durch deine maximalen Berechtigungen und die Zustimmung der Benutzer begrenzt.',
+      beta_pricing_notice:
+        'Dynamische App ist während der Beta-Phase kostenlos. Nach der Beta-Phase können Add-on-Gebühren anfallen. Wir informieren dich rechtzeitig vorher, und du kannst die Funktion jederzeit deaktivieren.',
     },
     enabled: 'Dynamische App erfolgreich aktiviert.',
     disable_confirm_modal: {

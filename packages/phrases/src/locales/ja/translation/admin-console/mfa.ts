@@ -70,6 +70,21 @@ const mfa = {
   no_sms_connector_error:
     'SMSコネクターがないとSMS認証コードMFAを有効にできません。まずSMSコネクターを設定してください。',
   setup_link: '設定',
+  trusted_device: {
+    title: '信頼済みデバイス',
+    description:
+      '現在の MFA フローで検証が必要な場合、信頼済みブラウザーが MFA 検証を自動的に完了できるようにします。',
+    enable_title: '信頼済みデバイスを有効にする',
+    enable_description: '対象の MFA 要素を完了した後、このブラウザーを信頼できるようにします。',
+    duration_title: '信頼期間（日）',
+    duration_error: '{{min}} から {{max}} までの整数を入力してください。',
+    duration_note: '信頼期間の変更は、その後に信頼されたデバイスにのみ適用されます。',
+    organization_allow_title: '信頼済みデバイスを許可',
+    organization_allow_tip:
+      '組織はテナントのポリシーを制限することだけができ、テナントで無効な機能を有効にはできません。',
+    organization_allow_description: 'この組織のメンバーに信頼済みデバイスの検証を許可します。',
+    organization_global_disabled: '先にテナントの MFA 設定で信頼済みデバイスを有効にしてください。',
+  },
 };
 
 export default Object.freeze(mfa);

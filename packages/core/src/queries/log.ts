@@ -81,6 +81,9 @@ const buildLogConditionSql = (logCondition: LogCondition) =>
 
 export const createLogQueries = (pool: CommonQueryMethods) => {
   const insertLog = buildInsertIntoWithPool(pool)(Logs);
+  const insertLogIfNotExists = buildInsertIntoWithPool(pool)(Logs, {
+    onConflict: { ignore: true },
+  });
 
   const countLogs = async (
     condition: LogCondition,
@@ -135,6 +138,7 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
 
   return {
     insertLog,
+    insertLogIfNotExists,
     countLogs,
     findLogs,
     findLogById,

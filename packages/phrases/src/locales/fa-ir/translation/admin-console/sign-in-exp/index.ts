@@ -187,6 +187,7 @@ const sign_in_exp = {
       custom_data: 'داده‌های سفارشی',
       custom_data_description: 'کنترل دسترسی به داده‌های JSON سفارشی ذخیره‌شده روی کاربر.',
       sessions: 'نشست‌ها',
+      trusted_devices: 'دستگاه‌های مورد اعتماد',
     },
     profile_fields: {
       title: 'فیلدهای پروفایل برای مرکز حساب از پیش‌ساخته',

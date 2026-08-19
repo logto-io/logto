@@ -13,6 +13,7 @@ import type {
   PersonalAccessToken,
   Role,
   SessionGrantRevokeTarget,
+  TrustedDeviceResponse,
   User,
   UserProfileResponse,
   UserSsoIdentity,
@@ -217,6 +218,23 @@ export const updatePersonalAccessTokenLegacy = async (
       json: body,
     })
     .json<PersonalAccessToken>();
+
+export const getUserTrustedDevicesResponse = async (
+  userId: string,
+  searchParams?: URLSearchParams
+) =>
+  authedAdminApi.get(`users/${userId}/trusted-devices`, {
+    searchParams,
+  });
+
+export const getUserTrustedDevices = async (userId: string, searchParams?: URLSearchParams) => {
+  const response = await getUserTrustedDevicesResponse(userId, searchParams);
+
+  return response.json<TrustedDeviceResponse[]>();
+};
+
+export const deleteUserTrustedDevice = async (userId: string, trustedDeviceId: string) =>
+  authedAdminApi.delete(`users/${userId}/trusted-devices/${trustedDeviceId}`);
 
 export const getUserIdentity = async (
   userId: string,

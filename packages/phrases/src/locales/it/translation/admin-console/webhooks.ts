@@ -7,6 +7,7 @@ const webhooks = {
   schemas: {
     interaction: 'Interazione utente',
     user: 'Utente',
+    trusted_device: 'Dispositivo attendibile',
     organization: 'Organizzazione',
     role: 'Ruolo',
     scope: 'Permesso',

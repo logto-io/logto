@@ -117,17 +117,6 @@ export class TrustedDeviceQueries {
     `);
   }
 
-  public async deleteExpiredByIdAndUserId(id: string, userId: string) {
-    const { rowCount } = await this.pool.query<TrustedDevice>(sql`
-      delete from ${table}
-      where ${fields.id} = ${id}
-        and ${fields.userId} = ${userId}
-        and ${fields.expiresAt} <= now()
-    `);
-
-    return rowCount;
-  }
-
   public async deleteByIdAndUserId(id: string, userId: string) {
     return this.pool.maybeOne<TrustedDevice>(sql`
       delete from ${table}

@@ -10,6 +10,7 @@ const user_scopes = {
     'urn:logto:scope:organization_roles': 'Seus papéis na organização',
     address: 'Seu endereço',
     'urn:logto:scope:sessions': 'Suas sessões ativas',
+    'urn:logto:scope:trusted_devices': 'Seus dispositivos confiáveis',
   },
 };
 

@@ -183,6 +183,7 @@ const sign_in_exp = {
       custom_data: '사용자 정의 데이터',
       custom_data_description: '사용자에 저장된 사용자 정의 JSON 데이터에 대한 접근을 제어합니다.',
       sessions: '세션',
+      trusted_devices: '신뢰할 수 있는 기기',
     },
     profile_fields: {
       title: '사전 구축된 계정 센터의 프로필 필드',

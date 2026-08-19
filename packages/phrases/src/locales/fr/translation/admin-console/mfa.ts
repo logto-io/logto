@@ -72,6 +72,24 @@ const mfa = {
   no_sms_connector_error:
     "Impossible d'activer MFA avec code de vérification SMS sans connecteur SMS. Veuillez d'abord configurer un connecteur SMS.",
   setup_link: 'Configurer',
+  trusted_device: {
+    title: 'Appareils de confiance',
+    description:
+      'Permettez aux navigateurs de confiance d’effectuer automatiquement la vérification MFA lorsque le parcours MFA en cours l’exige.',
+    enable_title: 'Activer les appareils de confiance',
+    enable_description:
+      'Autorisez les utilisateurs à faire confiance à ce navigateur après un facteur MFA éligible.',
+    duration_title: 'Durée de confiance (jours)',
+    duration_error: 'Saisissez un nombre entier compris entre {{min}} et {{max}}.',
+    duration_note: 'Les changements de durée ne concernent que les appareils approuvés ensuite.',
+    organization_allow_title: 'Autoriser les appareils de confiance',
+    organization_allow_tip:
+      "Une organisation peut seulement restreindre la politique du locataire ; elle ne peut pas l'activer si la politique globale est désactivée.",
+    organization_allow_description:
+      'Autorisez la vérification par appareil de confiance pour les membres de cette organisation.',
+    organization_global_disabled:
+      "Activez d'abord les appareils de confiance dans les paramètres MFA du locataire.",
+  },
 };
 
 export default Object.freeze(mfa);

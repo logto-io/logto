@@ -83,11 +83,15 @@ const applications = {
     description: '다이나믹 앱을 사용하면 OAuth 클라이언트가 사전 등록 없이 연결할 수 있습니다.',
     settings_description:
       '다이나믹 앱을 사용하면 OAuth 클라이언트가 사전 등록 없이 연결할 수 있습니다. OAuth Client ID Metadata Document (CIMD) 사양을 사용합니다.',
+    beta_notice:
+      '다이나믹 앱은 현재 베타 버전입니다. 탐색하고 <ContactLink>피드백을 공유</ContactLink>해주세요.',
     app_id_placeholder: '각 클라이언트가 동적으로 제공',
     enable_confirm_modal: {
       title: '동적 클라이언트 접근을 활성화할까요?',
       content:
         '유효한 공개 HTTPS 클라이언트 ID URL을 가진 모든 OAuth 클라이언트는 사전 등록 없이 이 테넌트에 대한 인가를 시작할 수 있어요. 접근 범위는 설정한 최대 권한과 사용자 동의에 의해 계속 제한돼요.',
+      beta_pricing_notice:
+        '다이나믹 앱은 베타 기간 동안 무료로 사용할 수 있습니다. 베타 종료 후에는 애드온 요금이 부과될 수 있습니다. 사전에 알려드리며, 언제든지 비활성화할 수 있습니다.',
     },
     enabled: '다이나믹 앱을 활성화했어요.',
     disable_confirm_modal: {

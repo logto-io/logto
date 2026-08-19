@@ -64,6 +64,21 @@ const mfa = {
   no_sms_connector_error:
     'SMS 커넥터 없이는 SMS 인증 코드 MFA를 활성화할 수 없습니다. 먼저 SMS 커넥터를 구성해주세요.',
   setup_link: '설정',
+  trusted_device: {
+    title: '신뢰할 수 있는 기기',
+    description:
+      '현재 MFA 흐름에서 확인이 필요할 때 신뢰할 수 있는 브라우저가 MFA 확인을 자동으로 완료하도록 합니다.',
+    enable_title: '신뢰할 수 있는 기기 활성화',
+    enable_description: '적격 MFA 요소를 완료한 후 이 브라우저를 신뢰하도록 허용합니다.',
+    duration_title: '신뢰 기간(일)',
+    duration_error: '{{min}}에서 {{max}} 사이의 정수를 입력하세요.',
+    duration_note: '신뢰 기간 변경은 이후에 신뢰한 기기에만 적용됩니다.',
+    organization_allow_title: '신뢰할 수 있는 기기 허용',
+    organization_allow_tip:
+      '조직은 테넌트 정책을 제한할 수만 있으며 테넌트에서 꺼진 기능을 활성화할 수 없습니다.',
+    organization_allow_description: '이 조직의 멤버에게 신뢰할 수 있는 기기 인증을 허용합니다.',
+    organization_global_disabled: '먼저 테넌트 MFA 설정에서 신뢰할 수 있는 기기를 활성화하세요.',
+  },
 };
 
 export default Object.freeze(mfa);

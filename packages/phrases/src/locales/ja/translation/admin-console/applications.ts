@@ -83,11 +83,15 @@ const applications = {
     description: 'ダイナミックアプリを使用すると、OAuth クライアントは事前登録なしで接続できます。',
     settings_description:
       'ダイナミックアプリを使用すると、OAuth クライアントは事前登録なしで接続できます。OAuth Client ID Metadata Document (CIMD) 仕様を利用します。',
+    beta_notice:
+      'ダイナミックアプリは現在ベータ版です。お試しいただき、<ContactLink>フィードバックを共有</ContactLink>してください。',
     app_id_placeholder: '各クライアントから動的に提供されます',
     enable_confirm_modal: {
       title: '動的クライアントアクセスを有効にしますか？',
       content:
         '有効な公開HTTPSクライアントID URLを持つOAuthクライアントは、事前登録なしでこのテナントへの認可を開始できます。アクセス範囲は、設定した最大権限とユーザーの同意によって引き続き制限されます。',
+      beta_pricing_notice:
+        'ダイナミックアプリはベータ期間中は無料でご利用いただけます。ベータ終了後はアドオン料金が発生する可能性があります。事前にお知らせしますので、いつでも無効にできます。',
     },
     enabled: 'ダイナミックアプリを有効にしました。',
     disable_confirm_modal: {

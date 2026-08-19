@@ -10,6 +10,7 @@ const user_scopes = {
     'urn:logto:scope:organization_roles': 'Role v tvé organizaci',
     address: 'Tvá adresa',
     'urn:logto:scope:sessions': 'Tvé aktivní relace',
+    'urn:logto:scope:trusted_devices': 'Tvá důvěryhodná zařízení',
   },
 };
 

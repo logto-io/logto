@@ -49,6 +49,8 @@ export type GuardConfig<QueryT, BodyT, ParametersT, ResponseT, FilesT> = {
    * @example z.object({ key1: z.string() })
    */
   response?: ZodType<ResponseT, ZodTypeDef, unknown>;
+  /** Override the response schema used for OpenAPI without changing runtime validation. */
+  responseForOpenApi?: ZodType<unknown, ZodTypeDef, unknown>;
   /**
    * Guard response status code. It produces a `ServerError` (500) if the response does not satisfy
    * any of the given value(s).
@@ -151,6 +153,7 @@ export default function koaGuard<
   body,
   params,
   response,
+  responseForOpenApi,
   status,
   files,
 }: GuardConfig<
@@ -255,7 +258,7 @@ export default function koaGuard<
 
   // Intended
   // eslint-disable-next-line @silverhand/fp/no-mutation
-  guardMiddleware.config = { query, body, params, response, status };
+  guardMiddleware.config = { query, body, params, response, responseForOpenApi, status };
 
   return guardMiddleware;
 }

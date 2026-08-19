@@ -185,6 +185,7 @@ const sign_in_exp = {
       custom_data: 'ข้อมูลแบบกำหนดเอง',
       custom_data_description: 'ควบคุมการเข้าถึงข้อมูล JSON แบบกำหนดเองที่เก็บไว้กับผู้ใช้.',
       sessions: 'การจัดการเซสชัน',
+      trusted_devices: 'อุปกรณ์ที่เชื่อถือได้',
     },
     profile_fields: {
       title: 'ฟิลด์โปรไฟล์สำหรับศูนย์บัญชีที่สร้างไว้ล่วงหน้า',

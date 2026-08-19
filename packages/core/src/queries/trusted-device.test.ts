@@ -176,6 +176,7 @@ describe('trusted device queries', () => {
   it('returns null when metadata cannot be updated for an inactive or missing device', async () => {
     mockQuery.mockImplementationOnce(async (query, values) => {
       expect(query).toMatch(/and "expires_at" > now\(\)/i);
+      expect(query).not.toMatch(/"last_used_at" < to_timestamp/i);
       expect(values).toEqual([
         expect.any(Number),
         null,
@@ -189,25 +190,6 @@ describe('trusted device queries', () => {
     await expect(
       queries.updateMetadataByIdAndUserId(trustedDevice.id, trustedDevice.userId, {})
     ).resolves.toBeNull();
-  });
-
-  it('deletes only the presented owned record at the expiry boundary', async () => {
-    const expectSql = sql`
-      delete from ${table}
-      where ${fields.id} = $1
-        and ${fields.userId} = $2
-        and ${fields.expiresAt} <= now()
-    `;
-
-    mockQuery.mockImplementationOnce(async (query, values) => {
-      expectSqlAssert(query, expectSql.sql);
-      expect(values).toEqual([trustedDevice.id, trustedDevice.userId]);
-      return createMockQueryResult([trustedDevice]);
-    });
-
-    await expect(
-      queries.deleteExpiredByIdAndUserId(trustedDevice.id, trustedDevice.userId)
-    ).resolves.toBe(1);
   });
 
   it('deletes a record only when both its ID and owner match', async () => {

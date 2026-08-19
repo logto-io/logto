@@ -1,12 +1,18 @@
 import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
 
-import { TrustedDevices } from '@logto/schemas';
+import {
+  TrustedDevices,
+  type ManagementApiContext,
+  type TrustedDevice,
+  type TrustedDeviceEventData,
+} from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 import { type Context } from 'koa';
 
 import { EnvSet } from '#src/env-set/index.js';
 import type { TrustedDeviceMetadata, TrustedDeviceQueries } from '#src/queries/trusted-device.js';
 
+import type { HookContextManager } from './hook/context-manager.js';
 import type { createTrustedDevicePolicyLibrary } from './trusted-device-policy.js';
 
 const trustedDeviceSecretByteLength = 32;
@@ -38,6 +44,14 @@ type CreateTrustedDeviceCredential = TrustedDeviceMetadata &
   }>;
 
 type TrustedDevicePolicyLibrary = ReturnType<typeof createTrustedDevicePolicyLibrary>;
+
+type TrustedDeviceLifecycleContext = Pick<HookContextManager, 'appendDataHookContext'>;
+
+export const getTrustedDeviceEventData = ({
+  id,
+  userId,
+  expiresAt,
+}: TrustedDevice): TrustedDeviceEventData => ({ id, userId, expiresAt });
 
 export const getTrustedDeviceCookieName = (
   tenantId: string,
@@ -236,7 +250,6 @@ export const createTrustedDeviceLibrary = (
     const trustedDevice = await queries.findActiveByIdAndUserId(credential.id, userId);
 
     if (!trustedDevice) {
-      void trySafe(async () => queries.deleteExpiredByIdAndUserId(credential.id, userId));
       clearCredential(ctx, userId);
       return;
     }
@@ -264,10 +277,33 @@ export const createTrustedDeviceLibrary = (
     return trustedDevice;
   };
 
+  const deleteByIdAndUserId = async (
+    ctx: TrustedDeviceLifecycleContext,
+    id: string,
+    userId: string,
+    hookContext: Partial<ManagementApiContext> = {}
+  ) => {
+    const trustedDevice = await queries.deleteByIdAndUserId(id, userId);
+
+    if (!trustedDevice) {
+      return;
+    }
+
+    ctx.appendDataHookContext('TrustedDevice.Deleted', {
+      ...hookContext,
+      data: getTrustedDeviceEventData(trustedDevice),
+      // Trusted-device lifecycle payloads intentionally exclude the request IP.
+      includeRequestIp: false,
+    });
+
+    return trustedDevice;
+  };
+
   return {
     cleanupExpired,
     clearCredential,
     createCredential,
+    deleteByIdAndUserId,
     getCookieName,
     updateMetadata,
     validateCredential,

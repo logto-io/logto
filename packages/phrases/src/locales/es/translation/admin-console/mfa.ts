@@ -72,6 +72,24 @@ const mfa = {
   no_sms_connector_error:
     'No se puede habilitar MFA con código de verificación SMS sin un conector SMS. Por favor, configure primero un conector SMS.',
   setup_link: 'Configurar',
+  trusted_device: {
+    title: 'Dispositivos de confianza',
+    description:
+      'Permite que los navegadores de confianza completen automáticamente la verificación MFA cuando el flujo de MFA actual lo requiera.',
+    enable_title: 'Habilitar dispositivos de confianza',
+    enable_description:
+      'Permite confiar en este navegador después de completar un factor MFA elegible.',
+    duration_title: 'Duración de la confianza (días)',
+    duration_error: 'Introduce un número entero entre {{min}} y {{max}}.',
+    duration_note: 'Los cambios de duración solo se aplican a los dispositivos confiados después.',
+    organization_allow_title: 'Permitir dispositivos de confianza',
+    organization_allow_tip:
+      'Una organización solo puede restringir la política del tenant; no puede habilitarla si está desactivada globalmente.',
+    organization_allow_description:
+      'Permite la verificación con dispositivos de confianza a los miembros de esta organización.',
+    organization_global_disabled:
+      'Habilita primero los dispositivos de confianza en la configuración MFA del tenant.',
+  },
 };
 
 export default Object.freeze(mfa);

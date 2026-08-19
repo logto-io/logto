@@ -1,0 +1,34 @@
+{
+  "paths": {
+    "/api/users/{userId}/trusted-devices": {
+      "get": {
+        "tags": ["Dev feature"],
+        "summary": "Get user trusted devices",
+        "description": "Retrieve a paginated list of active trusted devices for the user.",
+        "responses": {
+          "200": {
+            "description": "A paginated list of the user's active trusted devices."
+          },
+          "404": {
+            "description": "The user was not found."
+          }
+        }
+      }
+    },
+    "/api/users/{userId}/trusted-devices/{trustedDeviceId}": {
+      "delete": {
+        "tags": ["Dev feature"],
+        "summary": "Delete a user trusted device",
+        "description": "Delete a trusted device that belongs to the user.",
+        "responses": {
+          "204": {
+            "description": "The trusted device was deleted successfully."
+          },
+          "404": {
+            "description": "The user or trusted device was not found."
+          }
+        }
+      }
+    }
+  }
+}

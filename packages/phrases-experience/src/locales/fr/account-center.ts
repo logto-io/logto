@@ -285,7 +285,7 @@ const account_center = {
     revoke_grant: 'Supprimer',
     revoke_grant_title: "Supprimer l'accès de l'application tierce",
     revoke_grant_description:
-      'Cela révoquera tous les accès accordés à cette application. Êtes-vous sûr de vouloir continuer ?',
+      "Cela révoquera l'accès accordé à cette application. Les jetons d'accès déjà émis peuvent rester valides jusqu'à leur expiration. Êtes-vous sûr de vouloir continuer ?",
     revoke_grant_failed: 'Échec de la révocation de certaines autorisations. Veuillez réessayer.',
   },
 };

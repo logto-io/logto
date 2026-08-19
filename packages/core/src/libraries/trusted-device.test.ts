@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Credential and lifecycle behavior share security-sensitive fixtures. */
 import { createHash } from 'node:crypto';
 
 import type { TrustedDevice } from '@logto/schemas';
@@ -37,7 +38,7 @@ const createQueries = () =>
     insertIfNotExists: jest.fn(),
     findActiveByIdAndUserId: jest.fn(),
     updateMetadataByIdAndUserId: jest.fn(),
-    deleteExpiredByIdAndUserId: jest.fn(),
+    deleteByIdAndUserId: jest.fn(),
     deleteExpiredByTenant: jest.fn(),
   }) as unknown as jest.Mocked<TrustedDeviceQueries>;
 
@@ -268,6 +269,60 @@ describe('trusted device library', () => {
     );
   });
 
+  it('queues a redacted deletion webhook only after deleting an existing record', async () => {
+    const queries = createQueries();
+    const trustedDevice = {
+      ...buildTrustedDevice(Buffer.alloc(32, 1)),
+      ip: '192.0.2.1',
+      userAgent: 'private user agent',
+    };
+    const ctx = { appendDataHookContext: jest.fn() };
+    const managementApiContext = {
+      path: `/api/users/${userId}/trusted-devices/${trustedDeviceId}`,
+      method: 'DELETE',
+      status: 204,
+      params: { userId, trustedDeviceId },
+      matchedRoute: '/api/users/:userId/trusted-devices/:trustedDeviceId',
+    };
+    queries.deleteByIdAndUserId.mockResolvedValueOnce(trustedDevice).mockResolvedValueOnce(null);
+    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary());
+
+    await expect(
+      library.deleteByIdAndUserId(ctx, trustedDeviceId, userId, managementApiContext)
+    ).resolves.toEqual(trustedDevice);
+    await expect(
+      library.deleteByIdAndUserId(ctx, trustedDeviceId, userId)
+    ).resolves.toBeUndefined();
+
+    expect(ctx.appendDataHookContext).toHaveBeenCalledTimes(1);
+    expect(ctx.appendDataHookContext).toHaveBeenCalledWith('TrustedDevice.Deleted', {
+      ...managementApiContext,
+      data: {
+        id: trustedDeviceId,
+        userId,
+        expiresAt: trustedDevice.expiresAt,
+      },
+      includeRequestIp: false,
+    });
+    expect(JSON.stringify(ctx.appendDataHookContext.mock.calls)).not.toContain('192.0.2.1');
+    expect(JSON.stringify(ctx.appendDataHookContext.mock.calls)).not.toContain(
+      'private user agent'
+    );
+    expect(JSON.stringify(ctx.appendDataHookContext.mock.calls)).not.toContain('secretHash');
+  });
+
+  it('does not queue a deletion webhook when the delete query fails', async () => {
+    const queries = createQueries();
+    const error = new Error('delete failed');
+    const ctx = { appendDataHookContext: jest.fn() };
+    queries.deleteByIdAndUserId.mockRejectedValueOnce(error);
+    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary());
+
+    await expect(library.deleteByIdAndUserId(ctx, trustedDeviceId, userId)).rejects.toBe(error);
+
+    expect(ctx.appendDataHookContext).not.toHaveBeenCalled();
+  });
+
   it('reads the unsigned user-specific cookie and validates the active record hash', async () => {
     const secret = generateTrustedDeviceSecret();
     const secretHash = hashTrustedDeviceSecret(secret);
@@ -343,26 +398,22 @@ describe('trusted device library', () => {
 
     await expect(library.validateCredential(ctx, userId)).resolves.toBeUndefined();
     expect(set).toHaveBeenCalledTimes(1);
-    expect(queries.deleteExpiredByIdAndUserId).not.toHaveBeenCalled();
   });
 
-  it('silently attempts exact cleanup for a missing or expired presented record', async () => {
+  it('clears a credential for a missing or expired record', async () => {
     const secret = generateTrustedDeviceSecret();
     const queries = createQueries();
     const { ctx, set } = createCookieContext(
       serializeTrustedDeviceCredential({ id: trustedDeviceId, secret })
     );
     queries.findActiveByIdAndUserId.mockResolvedValueOnce(null);
-    queries.deleteExpiredByIdAndUserId.mockResolvedValueOnce(1);
 
     const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(), {
       isProduction: false,
     });
 
     await expect(library.validateCredential(ctx, userId)).resolves.toBeUndefined();
-    await Promise.resolve();
 
-    expect(queries.deleteExpiredByIdAndUserId).toHaveBeenCalledWith(trustedDeviceId, userId);
     expect(set).toHaveBeenCalledTimes(1);
   });
 
@@ -420,3 +471,4 @@ describe('trusted device library', () => {
     expect(queries.deleteExpiredByTenant).toHaveBeenCalledTimes(2);
   });
 });
+/* eslint-enable max-lines */

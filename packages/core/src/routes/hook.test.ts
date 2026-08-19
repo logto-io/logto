@@ -2,7 +2,9 @@
 import {
   InteractionHookEvent,
   LogResult,
+  devFeatureHookEvents,
   hook,
+  hookEvents,
   type CreateHook,
   type Hook,
   type HookConfig,
@@ -11,6 +13,7 @@ import {
 } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 import { subDays } from 'date-fns';
+import Router from 'koa-router';
 
 import {
   mockCreatedAtForHook,
@@ -19,26 +22,33 @@ import {
   mockNanoIdForHook,
   mockTenantIdForHook,
 } from '#src/__mocks__/hook.js';
+import { EnvSet } from '#src/env-set/index.js';
 import { createMockQuotaLibrary } from '#src/test-utils/quota.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
+import { buildRouterObjects } from './swagger/utils/operation.js';
+import { type ManagementApiRouter } from './types.js';
+
 const { jest } = import.meta;
+
+const findAllHooks = jest.fn(async (): Promise<Hook[]> => mockHookList);
+const findHookById = jest.fn(async (id: string): Promise<Hook> => {
+  const hook = mockHookList.find((hook) => hook.id === id);
+  if (!hook) {
+    throw new Error('Not found');
+  }
+  return hook;
+});
 
 const hooks = {
   getTotalNumberOfHooks: async (): Promise<{ count: number }> => ({ count: mockHookList.length }),
-  findAllHooks: async (): Promise<Hook[]> => mockHookList,
+  findAllHooks,
   insertHook: async (data: CreateHook): Promise<Hook> => ({
     ...mockHook,
     ...data,
   }),
-  findHookById: async (id: string): Promise<Hook> => {
-    const hook = mockHookList.find((hook) => hook.id === id);
-    if (!hook) {
-      throw new Error('Not found');
-    }
-    return hook;
-  },
+  findHookById,
   updateHookById: async (id: string, data: Partial<CreateHook>): Promise<Hook> => {
     const targetHook = mockHookList.find((hook) => hook.id === id) ?? mockHook;
     return {
@@ -89,7 +99,24 @@ const tenantContext = new MockTenant(undefined, mockQueries, undefined, mockLibr
 const hookRoutes = await pickDefault(import('./hook.js'));
 
 describe('hook routes', () => {
-  const hookRequest = createRequester({ authedRoutes: hookRoutes, tenantContext });
+  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+
+  const createHookRequester = (isDevFeaturesEnabled: boolean) => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Build route guards for the requested feature environment.
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
+      isDevFeaturesEnabled;
+
+    try {
+      return createRequester({ authedRoutes: hookRoutes, tenantContext });
+    } finally {
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore process-wide configuration after route initialization.
+      (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
+        originalIsDevFeaturesEnabled;
+    }
+  };
+
+  const hookRequest = createHookRequester(true);
+  const nonDevHookRequest = createHookRequester(false);
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -335,6 +362,152 @@ describe('hook routes', () => {
       events: payload.events,
       config: payload.config,
     });
+  });
+
+  it('allows trusted-device webhook events when dev features are enabled', async () => {
+    const response = await hookRequest.post('/hooks').send({
+      name: 'trustedDeviceHook',
+      events: ['TrustedDevice.Created', 'TrustedDevice.Deleted'],
+      config: { url: 'https://example.com' },
+    });
+
+    expect(response.status).toEqual(201);
+    expect(response.body.events).toEqual(['TrustedDevice.Created', 'TrustedDevice.Deleted']);
+  });
+
+  it('rejects trusted-device webhook events when dev features are disabled', async () => {
+    const targetMockHook = mockHookList[0] ?? mockHook;
+    const payload = {
+      events: ['TrustedDevice.Created'],
+      config: { url: 'https://example.com' },
+    };
+
+    const [createResponse, testResponse, updateResponse] = await Promise.all([
+      nonDevHookRequest.post('/hooks').send({ name: 'trustedDeviceHook', ...payload }),
+      nonDevHookRequest.post(`/hooks/${targetMockHook.id}/test`).send(payload),
+      nonDevHookRequest.patch(`/hooks/${targetMockHook.id}`).send({ events: payload.events }),
+    ]);
+
+    expect([createResponse.status, testResponse.status, updateResponse.status]).toEqual([
+      400, 400, 400,
+    ]);
+  });
+
+  it('returns stored dev-event hooks when dev features are later disabled', async () => {
+    const storedDevHook: Hook = {
+      ...mockHook,
+      event: null,
+      events: ['TrustedDevice.Created'],
+    };
+    findAllHooks.mockResolvedValueOnce([storedDevHook]);
+    findHookById.mockResolvedValueOnce(storedDevHook);
+
+    const [listResponse, detailResponse] = await Promise.all([
+      nonDevHookRequest.get('/hooks'),
+      nonDevHookRequest.get(`/hooks/${storedDevHook.id}`),
+    ]);
+
+    expect(listResponse.status).toBe(200);
+    expect(listResponse.body).toEqual([storedDevHook]);
+    expect(detailResponse.status).toBe(200);
+    expect(detailResponse.body).toEqual(storedDevHook);
+  });
+
+  it('describes only available hook events in OpenAPI request and response schemas', () => {
+    const router: ManagementApiRouter = new Router();
+
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Build the OpenAPI fixture for a non-dev environment.
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = false;
+    try {
+      hookRoutes(router, tenantContext);
+    } finally {
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore process-wide configuration after route initialization.
+      (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
+        originalIsDevFeaturesEnabled;
+    }
+
+    const routeObjects = buildRouterObjects([router]);
+    const getRequestBody = (method: string, path: string) =>
+      routeObjects.find((route) => route.method === method && route.path === path)?.operation
+        .requestBody;
+    const getResponses = (method: string, path: string) =>
+      routeObjects.find((route) => route.method === method && route.path === path)?.operation
+        .responses;
+    const devFeatureHookEventSet = new Set<string>(devFeatureHookEvents);
+    const availableEvents = hookEvents.filter((event) => !devFeatureHookEventSet.has(event));
+    const expectedEventSchema = {
+      type: 'string',
+      enum: availableEvents,
+    };
+    const expectedEventsSchema = {
+      type: 'array',
+      items: expectedEventSchema,
+    };
+    const expectedResponseProperties = {
+      event: { ...expectedEventSchema, nullable: true },
+      events: expectedEventsSchema,
+    };
+
+    expect(getRequestBody('post', '/api/hooks')).toMatchObject({
+      content: {
+        'application/json': {
+          schema: {
+            properties: {
+              event: expectedEventSchema,
+              events: expectedEventsSchema,
+            },
+          },
+        },
+      },
+    });
+    expect(getRequestBody('post', '/api/hooks/{id}/test')).toMatchObject({
+      content: {
+        'application/json': {
+          schema: { properties: { events: expectedEventsSchema } },
+        },
+      },
+    });
+    expect(getRequestBody('patch', '/api/hooks/{id}')).toMatchObject({
+      content: {
+        'application/json': {
+          schema: {
+            properties: {
+              event: { ...expectedEventSchema, nullable: true },
+              events: expectedEventsSchema,
+            },
+          },
+        },
+      },
+    });
+
+    expect(getResponses('get', '/api/hooks')).toMatchObject({
+      200: {
+        content: {
+          'application/json': {
+            schema: {
+              type: 'array',
+              items: { properties: expectedResponseProperties },
+            },
+          },
+        },
+      },
+    });
+    for (const [method, path, status] of [
+      ['get', '/api/hooks/{id}', 200],
+      ['post', '/api/hooks', 201],
+      ['patch', '/api/hooks/{id}', 200],
+      ['patch', '/api/hooks/{id}/signing-key', 200],
+    ] as const) {
+      expect(getResponses(method, path)).toMatchObject({
+        [status]: {
+          content: {
+            'application/json': {
+              schema: { properties: expectedResponseProperties },
+            },
+          },
+        },
+      });
+    }
   });
 
   it('POST /hooks should fail when no events are provided', async () => {

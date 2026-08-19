@@ -3,6 +3,7 @@ import {
   InteractionHookEvent,
   managementApiHooksRegistration,
   type HookConfig,
+  type ExceptionHookEvent,
   type HookEvent,
   type HookEventPayload,
   type ManagementApiContext,
@@ -95,6 +96,8 @@ export const generateHookTestPayload = (hookId: string, event: HookEvent): HookE
 
   const isInteractionHookEvent = (event: HookEvent): event is InteractionHookEvent =>
     Object.values<string>(InteractionHookEvent).includes(event);
+  const isExceptionHookEvent = (event: HookEvent): event is ExceptionHookEvent =>
+    ['Identifier.Lockout', 'Message.RateLimited', 'Grant.LimitExceeded'].includes(event);
 
   const basicPayload = {
     hookId,
@@ -107,6 +110,14 @@ export const generateHookTestPayload = (hookId: string, event: HookEvent): HookE
       event,
       ...basicPayload,
       ...interactionHookContext,
+    };
+  }
+
+  if (isExceptionHookEvent(event)) {
+    return {
+      event,
+      ...basicPayload,
+      ...dataHookContext,
     };
   }
 

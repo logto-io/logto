@@ -1,4 +1,4 @@
-import { hookEvents, type Log } from '@logto/schemas';
+import { type Log } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
@@ -8,6 +8,7 @@ import { z } from 'zod';
 import EventSelector from '@/components/AuditLogTable/components/EventSelector';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import { defaultPageSize } from '@/consts';
+import { availableHookEvents } from '@/consts/webhooks';
 import Table from '@/ds-components/Table';
 import Tag from '@/ds-components/Tag';
 import { type RequestError } from '@/hooks/use-api';
@@ -20,7 +21,7 @@ import { buildHookEventLogKey, getHookEventKey } from '../utils';
 
 import styles from './index.module.scss';
 
-const hookLogEventOptions = hookEvents.map((event) => ({
+const hookLogEventOptions = availableHookEvents.map((event) => ({
   title: event,
   value: buildHookEventLogKey(event),
 }));

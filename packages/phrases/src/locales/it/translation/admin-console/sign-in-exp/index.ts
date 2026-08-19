@@ -188,6 +188,7 @@ const sign_in_exp = {
       custom_data_description:
         'Controlla l’accesso ai dati JSON personalizzati archiviati sull’utente.',
       sessions: 'Sessioni',
+      trusted_devices: 'Dispositivi attendibili',
     },
     profile_fields: {
       title: 'Campi del profilo per il centro account predefinito',

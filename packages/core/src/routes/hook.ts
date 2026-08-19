@@ -3,10 +3,10 @@ import {
   Logs,
   ProductEvent,
   type WebhookLogPrefix,
+  devFeatureHookEvents,
   hook,
   hookConfigGuard,
-  hookEventGuard,
-  hookEventsGuard,
+  hookEvents,
   hookResponseGuard,
   type Hook,
   type HookResponse,
@@ -16,6 +16,7 @@ import { conditional, deduplicate, yes } from '@silverhand/essentials';
 import { subDays } from 'date-fns';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -27,13 +28,31 @@ import { captureEvent } from '../utils/posthog.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
-const nonemptyUniqueHookEventsGuard = hookEventsGuard
-  .nonempty()
-  .transform((events) => deduplicate(events));
+const devFeatureHookEventSet = new Set<string>(devFeatureHookEvents);
+const isHookEventAvailable = (event: string) =>
+  EnvSet.values.isDevFeaturesEnabled || !devFeatureHookEventSet.has(event);
 
 export default function hookRoutes<T extends ManagementApiRouter>(
   ...[router, { id: tenantId, queries, libraries }]: RouterInitArgs<T>
 ) {
+  const availableHookEvents = [
+    hookEvents[0],
+    ...hookEvents.slice(1).filter((event) => isHookEventAvailable(event)),
+  ] satisfies [string, ...string[]];
+  const availableHookEventGuard = z.enum(availableHookEvents);
+  const nonemptyUniqueHookEventsGuard = availableHookEventGuard
+    .array()
+    .nonempty()
+    .transform((events) => deduplicate(events));
+  const availableHookOpenApiGuard = Hooks.guard.extend({
+    event: availableHookEventGuard.nullable(),
+    events: availableHookEventGuard.array(),
+  });
+  const availableHookResponseOpenApiGuard = hookResponseGuard.extend({
+    event: availableHookEventGuard.nullable(),
+    events: availableHookEventGuard.array(),
+  });
+
   const {
     hooks: {
       getTotalNumberOfHooks,
@@ -62,6 +81,9 @@ export default function hookRoutes<T extends ManagementApiRouter>(
     koaGuard({
       query: z.object({ includeExecutionStats: z.string().optional() }),
       response: hookResponseGuard.partial({ executionStats: true }).array(),
+      responseForOpenApi: availableHookResponseOpenApiGuard
+        .partial({ executionStats: true })
+        .array(),
       status: 200,
     }),
     async (ctx, next) => {
@@ -101,6 +123,7 @@ export default function hookRoutes<T extends ManagementApiRouter>(
       params: z.object({ id: z.string() }),
       query: z.object({ includeExecutionStats: z.string().optional() }),
       response: hookResponseGuard.partial({ executionStats: true }),
+      responseForOpenApi: availableHookResponseOpenApiGuard.partial({ executionStats: true }),
       status: [200, 404],
     }),
     async (ctx, next) => {
@@ -184,10 +207,11 @@ export default function hookRoutes<T extends ManagementApiRouter>(
     koaQuotaGuard({ key: 'hooksLimit', quota }),
     koaGuard({
       body: Hooks.createGuard.omit({ id: true, signingKey: true }).extend({
-        event: hookEventGuard.optional(),
+        event: availableHookEventGuard.optional(),
         events: nonemptyUniqueHookEventsGuard.optional(),
       }),
       response: Hooks.guard,
+      responseForOpenApi: availableHookOpenApiGuard,
       status: [201, 400],
     }),
     koaReportSubscriptionUpdates({
@@ -243,10 +267,12 @@ export default function hookRoutes<T extends ManagementApiRouter>(
       body: Hooks.createGuard
         .omit({ id: true, signingKey: true })
         .extend({
+          event: availableHookEventGuard.nullable().optional(),
           events: nonemptyUniqueHookEventsGuard,
         })
         .partial(),
       response: Hooks.guard,
+      responseForOpenApi: availableHookOpenApiGuard,
       status: [200, 404],
     }),
     async (ctx, next) => {
@@ -266,6 +292,7 @@ export default function hookRoutes<T extends ManagementApiRouter>(
     koaGuard({
       params: z.object({ id: z.string() }),
       response: Hooks.guard,
+      responseForOpenApi: availableHookOpenApiGuard,
       status: [200, 404],
     }),
     async (ctx, next) => {

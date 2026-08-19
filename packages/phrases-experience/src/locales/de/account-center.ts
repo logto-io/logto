@@ -290,7 +290,7 @@ const account_center = {
     revoke_grant: 'Entfernen',
     revoke_grant_title: 'Drittanbieter-App-Zugriff entfernen',
     revoke_grant_description:
-      'Dadurch wird der gesamte dieser Anwendung gewährte Zugriff widerrufen. Möchten Sie wirklich fortfahren?',
+      'Dadurch wird der dieser Anwendung gewährte Zugriff widerrufen. Bereits ausgestellte Zugriffstokens können bis zu ihrem Ablauf gültig bleiben. Möchten Sie wirklich fortfahren?',
     revoke_grant_failed:
       'Einige Berechtigungen konnten nicht widerrufen werden. Bitte versuchen Sie es erneut.',
   },

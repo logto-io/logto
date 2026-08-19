@@ -280,7 +280,7 @@ const account_center = {
     revoke_grant: 'Remove',
     revoke_grant_title: 'Remove third-party app access',
     revoke_grant_description:
-      'This will revoke all access granted to this application. Are you sure you want to continue?',
+      'This will revoke the access granted to this application. Previously issued access tokens may remain valid until they expire. Are you sure you want to continue?',
     revoke_grant_failed: 'Failed to revoke some grants. Please try again.',
   },
 };

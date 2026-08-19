@@ -277,7 +277,7 @@ const account_center = {
     revoke_grant: 'Kaldır',
     revoke_grant_title: 'Üçüncü taraf uygulama erişimini kaldır',
     revoke_grant_description:
-      'Bu, bu uygulamaya verilen tüm erişimi iptal edecektir. Devam etmek istediğinizden emin misiniz?',
+      'Bu, bu uygulamaya verilen erişimi iptal edecektir. Daha önce verilmiş erişim belirteçleri süreleri dolana kadar geçerli kalabilir. Devam etmek istediğinizden emin misiniz?',
     revoke_grant_failed: 'Bazı izinler iptal edilemedi. Lütfen tekrar deneyin.',
   },
 };

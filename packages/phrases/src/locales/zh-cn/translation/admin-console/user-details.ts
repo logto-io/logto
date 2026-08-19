@@ -168,7 +168,7 @@ const user_details = {
     access_created_at_column: '授权时间',
     revoke_access_title: '撤销访问权限？',
     revoke_access_description:
-      '此操作将撤销该应用在所有设备上访问此用户账户的权限。用户必须重新授权才能恢复访问。',
+      '此操作将撤销该应用在所有设备上访问此用户账户的权限。用户必须重新授权才能恢复访问。此前已签发的访问令牌可能在过期前仍然有效。',
   },
   connections: {
     title: '连接',

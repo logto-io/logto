@@ -885,6 +885,7 @@ describe('POST /experience/submit', () => {
     setDevFeaturesEnabled(true);
     const metadataError = new Error('trusted-device metadata update failed');
     const trackException = jest.spyOn(appInsights, 'trackException').mockResolvedValue();
+    const fulfilledAt = Date.now();
     const user = {
       ...mockUser,
       mfaVerifications: [mockUserTotpMfaVerification],
@@ -896,7 +897,7 @@ describe('POST /experience/submit', () => {
         trustedDeviceFulfillment: {
           userId: user.id,
           trustedDeviceId: 'trusted-device-id',
-          fulfilledAt: Date.now(),
+          fulfilledAt,
         },
       },
       trustedDevicePolicy: { enabled: true, durationDays: 30 },
@@ -937,12 +938,13 @@ describe('POST /experience/submit', () => {
 
   it('should omit trusted-device location when the current context has none', async () => {
     setDevFeaturesEnabled(true);
+    const fulfilledAt = Date.now();
     const { requester, updateMetadata } = createRequesterWithMocks({
       interactionResult: {
         trustedDeviceFulfillment: {
           userId: mockUser.id,
           trustedDeviceId: 'trusted-device-id',
-          fulfilledAt: Date.now(),
+          fulfilledAt,
         },
       },
       trustedDevicePolicy: { enabled: true, durationDays: 30 },
