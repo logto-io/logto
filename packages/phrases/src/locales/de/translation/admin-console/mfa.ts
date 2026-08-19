@@ -88,6 +88,13 @@ const mfa = {
       'Verifizierung über vertrauenswürdige Geräte für Mitglieder dieser Organisation zulassen.',
     organization_global_disabled:
       'Aktivieren Sie vertrauenswürdige Geräte zuerst in den MFA-Einstellungen des Mandanten.',
+    management_description:
+      'Verwalten Sie Browser, denen dieser Benutzer nach Abschluss der MFA vertraut hat. Nach dem Entfernen ist bei der nächsten Anmeldung in diesem Browser erneut MFA erforderlich.',
+    management_hint: 'Der letzte Standort dient nur zur Information.',
+    management_empty: 'Dieser Benutzer hat keine aktiven vertrauenswürdigen Geräte.',
+    management_deletion_confirmation:
+      '{{name}} entfernen? In diesem Browser ist bei der nächsten Anmeldung erneut MFA erforderlich.',
+    management_removed: 'Vertrauenswürdiges Gerät entfernt.',
   },
 };
 

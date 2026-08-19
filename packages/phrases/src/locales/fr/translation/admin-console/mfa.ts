@@ -89,6 +89,13 @@ const mfa = {
       'Autorisez la vérification par appareil de confiance pour les membres de cette organisation.',
     organization_global_disabled:
       "Activez d'abord les appareils de confiance dans les paramètres MFA du locataire.",
+    management_description:
+      "Gérez les navigateurs auxquels cet utilisateur a fait confiance après avoir effectué l'authentification multifacteur. Après suppression, ce navigateur exigera de nouveau l'authentification multifacteur à la prochaine connexion.",
+    management_hint: 'Le dernier emplacement est fourni à titre informatif uniquement.',
+    management_empty: "Cet utilisateur n'a aucun appareil de confiance actif.",
+    management_deletion_confirmation:
+      "Supprimer {{name}} ? Ce navigateur exigera de nouveau l'authentification multifacteur à la prochaine connexion.",
+    management_removed: 'Appareil de confiance supprimé.',
   },
 };
 

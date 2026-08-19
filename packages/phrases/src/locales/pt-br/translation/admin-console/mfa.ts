@@ -87,6 +87,13 @@ const mfa = {
       'Permita a verificação por dispositivo confiável aos membros desta organização.',
     organization_global_disabled:
       'Primeiro habilite dispositivos confiáveis nas configurações de MFA do tenant.',
+    management_description:
+      'Gerencie os navegadores em que este usuário confiou após concluir a MFA. Ao remover um deles, esse navegador exigirá MFA novamente no próximo login.',
+    management_hint: 'A localização mais recente é apenas informativa.',
+    management_empty: 'Este usuário não tem dispositivos confiáveis ativos.',
+    management_deletion_confirmation:
+      'Remover {{name}}? Este navegador exigirá MFA novamente no próximo login.',
+    management_removed: 'Dispositivo confiável removido.',
   },
 };
 

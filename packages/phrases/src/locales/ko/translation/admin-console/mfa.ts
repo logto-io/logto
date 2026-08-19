@@ -78,6 +78,13 @@ const mfa = {
       '조직은 테넌트 정책을 제한할 수만 있으며 테넌트에서 꺼진 기능을 활성화할 수 없습니다.',
     organization_allow_description: '이 조직의 멤버에게 신뢰할 수 있는 기기 인증을 허용합니다.',
     organization_global_disabled: '먼저 테넌트 MFA 설정에서 신뢰할 수 있는 기기를 활성화하세요.',
+    management_description:
+      '이 사용자가 MFA를 완료한 후 신뢰한 브라우저를 관리합니다. 제거하면 해당 브라우저는 다음 로그인 시 MFA를 다시 완료해야 합니다.',
+    management_hint: '최근 위치는 참고용 정보입니다.',
+    management_empty: '이 사용자에게 활성 상태인 신뢰할 수 있는 기기가 없습니다.',
+    management_deletion_confirmation:
+      '{{name}}을(를) 제거할까요? 이 브라우저는 다음 로그인 시 MFA를 다시 완료해야 합니다.',
+    management_removed: '신뢰할 수 있는 기기를 제거했습니다.',
   },
 };
 

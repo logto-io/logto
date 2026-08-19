@@ -87,6 +87,13 @@ const mfa = {
       'Permita a verificação por dispositivo fidedigno aos membros desta organização.',
     organization_global_disabled:
       'Ative primeiro os dispositivos fidedignos nas definições MFA do tenant.',
+    management_description:
+      'Faça a gestão dos navegadores em que este utilizador confiou após concluir a MFA. Ao remover um, esse navegador voltará a exigir MFA no próximo início de sessão.',
+    management_hint: 'A localização mais recente é apenas informativa.',
+    management_empty: 'Este utilizador não tem dispositivos fidedignos ativos.',
+    management_deletion_confirmation:
+      'Remover {{name}}? Este navegador voltará a exigir MFA no próximo início de sessão.',
+    management_removed: 'Dispositivo fidedigno removido.',
   },
 };
 

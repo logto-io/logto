@@ -86,6 +86,13 @@ const mfa = {
     organization_allow_description:
       'Zezwól członkom tej organizacji na weryfikację za pomocą zaufanych urządzeń.',
     organization_global_disabled: 'Najpierw włącz zaufane urządzenia w ustawieniach MFA tenanta.',
+    management_description:
+      'Zarządzaj przeglądarkami, którym ten użytkownik zaufał po ukończeniu MFA. Po usunięciu przeglądarka ponownie zażąda MFA przy następnym logowaniu.',
+    management_hint: 'Ostatnia lokalizacja ma charakter wyłącznie informacyjny.',
+    management_empty: 'Ten użytkownik nie ma aktywnych zaufanych urządzeń.',
+    management_deletion_confirmation:
+      'Usunąć {{name}}? Ta przeglądarka ponownie zażąda MFA przy następnym logowaniu.',
+    management_removed: 'Zaufane urządzenie zostało usunięte.',
   },
 };
 

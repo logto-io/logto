@@ -99,12 +99,13 @@ export class TrustedDeviceQueries {
     userId: string,
     { userAgent, ip, country, city }: TrustedDeviceMetadata
   ) {
+    const hasLocation = country !== undefined || city !== undefined;
     const metadataUpdates = [
       sql`${fields.lastUsedAt}=to_timestamp(${Date.now()}::double precision / 1000)`,
       conditionalSql(userAgent !== undefined, () => sql`${fields.userAgent}=${userAgent ?? null}`),
       conditionalSql(ip !== undefined, () => sql`${fields.ip}=${ip ?? null}`),
-      sql`${fields.country}=${country ?? null}`,
-      sql`${fields.city}=${city ?? null}`,
+      conditionalSql(hasLocation, () => sql`${fields.country}=${country ?? null}`),
+      conditionalSql(hasLocation, () => sql`${fields.city}=${city ?? null}`),
     ].filter(({ sql }) => sql.trim() !== '');
 
     return this.pool.maybeOne<TrustedDevice>(sql`
