@@ -219,4 +219,55 @@ describe('Consent', () => {
 
     expect(assign).toBeCalledWith('http://localhost/oidc/session/end?client_id=application_id');
   });
+
+  it('submits all selected organizations', async () => {
+    mockedGetConsentInfo.mockResolvedValueOnce({
+      ...consentInfo,
+      organizations: [
+        { id: 'organization_1', name: 'Organization 1' },
+        { id: 'organization_2', name: 'Organization 2' },
+      ],
+    });
+    mockedConsent.mockResolvedValueOnce({ redirectTo: '' });
+
+    const { getByText } = renderConsent();
+
+    await waitFor(() => {
+      expect(getByText('Organization 1')).not.toBeNull();
+    });
+
+    fireEvent.click(getByText('Organization 1'));
+    fireEvent.click(getByText('Organization 2'));
+    fireEvent.click(getByText('action.authorize'));
+
+    await waitFor(() => {
+      expect(mockedConsent).toBeCalledWith(['organization_1', 'organization_2']);
+    });
+  });
+
+  it('allows a selected organization to be removed when another remains', async () => {
+    mockedGetConsentInfo.mockResolvedValueOnce({
+      ...consentInfo,
+      organizations: [
+        { id: 'organization_1', name: 'Organization 1' },
+        { id: 'organization_2', name: 'Organization 2' },
+      ],
+    });
+    mockedConsent.mockResolvedValueOnce({ redirectTo: '' });
+
+    const { getAllByText, getByText } = renderConsent();
+
+    await waitFor(() => {
+      expect(getByText('Organization 1')).not.toBeNull();
+    });
+
+    fireEvent.click(getByText('Organization 1'));
+    fireEvent.click(getByText('Organization 2'));
+    fireEvent.click(getAllByText('Organization 1').at(-1)!);
+    fireEvent.click(getByText('action.authorize'));
+
+    await waitFor(() => {
+      expect(mockedConsent).toBeCalledWith(['organization_2']);
+    });
+  });
 });

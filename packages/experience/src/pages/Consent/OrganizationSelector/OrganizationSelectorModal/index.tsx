@@ -12,8 +12,9 @@ type Props = {
   readonly isOpen: boolean;
   readonly parentElementRef: React.RefObject<HTMLDivElement>;
   readonly organizations: Organization[];
-  readonly selectedOrganization: Organization;
-  readonly onSelect: (organization: Organization) => void;
+  readonly selectedOrganizations: Organization[];
+  readonly isMultiSelectEnabled: boolean;
+  readonly onToggle: (organization: Organization) => void;
   readonly onClose: () => void;
 };
 
@@ -21,8 +22,9 @@ const OrganizationSelectorModal = ({
   isOpen,
   parentElementRef,
   organizations,
-  selectedOrganization,
-  onSelect,
+  selectedOrganizations,
+  isMultiSelectEnabled,
+  onToggle,
   onClose,
 }: Props) => {
   const { isMobile } = usePlatform();
@@ -83,10 +85,13 @@ const OrganizationSelectorModal = ({
             key={organization.id}
             className={styles.organizationItem}
             organization={organization}
-            isSelected={organization.id === selectedOrganization.id}
+            isSelected={selectedOrganizations.some(({ id }) => id === organization.id)}
             onSelect={() => {
-              onClose();
-              onSelect(organization);
+              onToggle(organization);
+
+              if (!isMultiSelectEnabled) {
+                onClose();
+              }
             }}
           />
         ))}

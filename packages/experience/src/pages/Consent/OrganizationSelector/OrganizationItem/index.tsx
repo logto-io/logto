@@ -31,6 +31,7 @@ const OrganizationItem = ({
       data-selected={isSelected}
       {...(onSelect && {
         role: 'button',
+        'aria-pressed': isSelected,
         tabIndex: 0,
         onClick: () => {
           onSelect(organization);
