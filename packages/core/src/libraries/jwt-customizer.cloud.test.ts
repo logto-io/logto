@@ -172,9 +172,9 @@ describe('JwtCustomizerLibrary.runScriptRemotely quota', () => {
   });
 });
 
-describe('JwtCustomizerLibrary.runScriptRemotely on the legacy remote paths', () => {
+describe('JwtCustomizerLibrary.runScriptRemotely on the Azure Functions fallback', () => {
   beforeEach(() => {
-    // An unset script runner endpoint is what selects the legacy remote paths.
+    // An unset script runner endpoint is what selects the Azure Functions runtime.
     jest.spyOn(EnvSet.values, 'scriptRunnerEndpoint', 'get').mockReturnValue('');
   });
 
@@ -184,7 +184,7 @@ describe('JwtCustomizerLibrary.runScriptRemotely on the legacy remote paths', ()
     jest.clearAllMocks();
   });
 
-  it('runs the script through the regional untrusted Azure Function app when configured', async () => {
+  it('runs the script through the regional untrusted Azure Function app', async () => {
     const endpoint = 'https://untrusted.example.com';
     const functionKey = 'function-key';
     const remoteRunner = nock(endpoint, {
@@ -202,16 +202,11 @@ describe('JwtCustomizerLibrary.runScriptRemotely on the legacy remote paths', ()
     expect(post).not.toHaveBeenCalled();
   });
 
-  it('falls back to the deprecated custom-jwt cloud endpoint', async () => {
+  it('reports a 422 when neither runtime is configured', async () => {
     jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue('');
     jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get').mockReturnValue('');
-    post.mockResolvedValueOnce({ foo: 'bar' });
 
-    await expect(library.runScriptRemotely(payload, true)).resolves.toEqual({ foo: 'bar' });
-    expect(post).toHaveBeenCalledWith('/api/services/custom-jwt', {
-      body: payload,
-      search: { isTest: 'true' },
-    });
+    await expect(library.runScriptRemotely(payload)).rejects.toMatchObject({ status: 422 });
     expect(getWorkerAccessToken).not.toHaveBeenCalled();
   });
 });
