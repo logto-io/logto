@@ -69,6 +69,11 @@ const mfa = {
   verify_via_passkey: 'تأیید از طریق کلید عبور',
   verify_via_passkey_description:
     'از کلید عبور برای تأیید با رمز عبور دستگاه یا بیومتریک، اسکن کد QR، یا استفاده از کلید امنیتی USB مانند YubiKey استفاده کنید.',
+  trust_this_device_one: 'تا {{count}} روز دیگر در این دستگاه درخواست تأیید نکن',
+  trust_this_device_two: 'تا {{count}} روز دیگر در این دستگاه درخواست تأیید نکن',
+  trust_this_device_few: 'تا {{count}} روز دیگر در این دستگاه درخواست تأیید نکن',
+  trust_this_device_many: 'تا {{count}} روز دیگر در این دستگاه درخواست تأیید نکن',
+  trust_this_device_other: 'تا {{count}} روز دیگر در این دستگاه درخواست تأیید نکن',
   secret_key_copied: 'کلید مخفی کپی شد.',
   backup_code_copied: 'کد پشتیبان کپی شد.',
   webauthn_not_ready: 'WebAuthn هنوز آماده نیست. لطفاً بعداً دوباره تلاش کنید.',

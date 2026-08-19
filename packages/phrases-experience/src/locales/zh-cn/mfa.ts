@@ -64,6 +64,11 @@ const mfa = {
   verify_via_passkey: '通过通行密钥验证',
   verify_via_passkey_description:
     '使用通行密钥通过设备密码或生物识别、扫描 QR 码或使用 USB 安全密钥（如 YubiKey）进行验证。',
+  trust_this_device_one: '在此设备上 {{count}} 天内不再询问',
+  trust_this_device_two: '在此设备上 {{count}} 天内不再询问',
+  trust_this_device_few: '在此设备上 {{count}} 天内不再询问',
+  trust_this_device_many: '在此设备上 {{count}} 天内不再询问',
+  trust_this_device_other: '在此设备上 {{count}} 天内不再询问',
   secret_key_copied: '密钥已复制。',
   backup_code_copied: '备份代码已复制。',
   webauthn_not_ready: 'WebAuthn 尚未准备就绪。请稍后重试。',

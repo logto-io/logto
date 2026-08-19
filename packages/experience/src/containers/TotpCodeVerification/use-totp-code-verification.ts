@@ -23,10 +23,11 @@ const useTotpCodeVerification = (errorCallback?: () => void) => {
       code: string,
       payload:
         | { flow: UserMfaFlow.MfaBinding; verificationId: string }
-        | { flow: UserMfaFlow.MfaVerification }
+        | { flow: UserMfaFlow.MfaVerification },
+      createTrustedDevice: boolean
     ) => {
       await sendMfaPayload(
-        { payload: { type: MfaFactor.TOTP, code }, ...payload },
+        { payload: { type: MfaFactor.TOTP, code }, createTrustedDevice, ...payload },
         invalidCodeErrorHandlers,
         errorCallback
       );

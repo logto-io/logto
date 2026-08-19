@@ -21,6 +21,7 @@ import {
 
 export {
   initInteraction,
+  getInteraction,
   submitInteraction,
   identifyUser,
   identifyAndSubmitInteraction,

@@ -10,22 +10,31 @@ import useGlobalRedirectTo from './use-global-redirect-to';
 import useSubmitInteractionErrorHandler from './use-submit-interaction-error-handler';
 
 export type SendMfaPayloadApiOptions =
-  | {
+  | ({
       flow: UserMfaFlow.MfaBinding;
       payload: BindMfaPayload;
       verificationId: string;
-    }
-  | {
+    } & TrustedDeviceOptIn)
+  | ({
       flow: UserMfaFlow.MfaVerification;
       payload: VerifyMfaPayload;
       verificationId?: string;
-    };
+    } & TrustedDeviceOptIn);
 
-const sendMfaPayloadApi = async ({ flow, payload, verificationId }: SendMfaPayloadApiOptions) => {
+type TrustedDeviceOptIn = {
+  createTrustedDevice?: boolean;
+};
+
+const sendMfaPayloadApi = async ({
+  flow,
+  payload,
+  verificationId,
+  createTrustedDevice,
+}: SendMfaPayloadApiOptions) => {
   if (flow === UserMfaFlow.MfaBinding) {
-    return bindMfa(payload.type, verificationId, payload);
+    return bindMfa(payload.type, verificationId, payload, createTrustedDevice);
   }
-  return verifyMfa(payload, verificationId);
+  return verifyMfa(payload, verificationId, createTrustedDevice);
 };
 
 const useSendMfaPayload = () => {

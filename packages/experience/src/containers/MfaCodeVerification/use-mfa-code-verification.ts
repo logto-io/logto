@@ -13,6 +13,7 @@ import useGeneralVerificationCodeErrorHandler from '../VerificationCode/use-gene
 const useMfaCodeVerification = (
   identifierType: SignInIdentifier.Email | SignInIdentifier.Phone,
   verificationId: string,
+  createTrustedDevice: boolean,
   errorCallback?: () => void
 ) => {
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -38,7 +39,12 @@ const useMfaCodeVerification = (
 
   const onSubmit = useCallback(
     async (code: string) => {
-      const [error, result] = await asyncVerify(verificationId, code, identifierType);
+      const [error, result] = await asyncVerify(
+        verificationId,
+        code,
+        identifierType,
+        createTrustedDevice
+      );
 
       if (error) {
         await handleError(error, errorHandlers);
@@ -53,6 +59,7 @@ const useMfaCodeVerification = (
     },
     [
       asyncVerify,
+      createTrustedDevice,
       errorCallback,
       errorHandlers,
       generalErrorMessage,

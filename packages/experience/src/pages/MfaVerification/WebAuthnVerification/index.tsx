@@ -1,4 +1,4 @@
-import { VerificationType } from '@logto/schemas';
+import { MfaFactor, VerificationType } from '@logto/schemas';
 import { useContext, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { validate } from 'superstruct';
@@ -7,6 +7,8 @@ import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import SectionLayout from '@/Layout/SectionLayout';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
+import TrustedDeviceOptIn from '@/containers/TrustedDeviceOptIn';
+import useTrustedDeviceOptIn from '@/hooks/use-trusted-device-opt-in';
 import useWebAuthnOperation from '@/hooks/use-webauthn-operation';
 import ErrorPage from '@/pages/ErrorPage';
 import Button from '@/shared/components/Button';
@@ -23,6 +25,7 @@ const WebAuthnVerification = () => {
   const verificationId = verificationIdsMap[VerificationType.WebAuthn];
 
   const handleWebAuthn = useWebAuthnOperation();
+  const { durationDays, isChecked, setIsChecked } = useTrustedDeviceOptIn(MfaFactor.WebAuthn);
   const [isVerifying, setIsVerifying] = useState(false);
 
   if (!webAuthnState || !verificationId) {
@@ -41,13 +44,19 @@ const WebAuthnVerification = () => {
         title="mfa.verify_via_passkey"
         description="mfa.verify_via_passkey_description"
       >
+        <TrustedDeviceOptIn
+          durationDays={durationDays}
+          isChecked={isChecked}
+          className={styles.optIn}
+          onChange={setIsChecked}
+        />
         <Button
           title="action.verify_via_passkey"
           className={styles.verifyButton}
           isLoading={isVerifying}
           onClick={async () => {
             setIsVerifying(true);
-            await handleWebAuthn(options, verificationId);
+            await handleWebAuthn(options, verificationId, isChecked);
             setIsVerifying(false);
           }}
         />

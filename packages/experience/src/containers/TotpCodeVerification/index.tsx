@@ -1,6 +1,9 @@
+import { MfaFactor } from '@logto/schemas';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import TrustedDeviceOptIn from '@/containers/TrustedDeviceOptIn';
+import useTrustedDeviceOptIn from '@/hooks/use-trusted-device-opt-in';
 import Button from '@/shared/components/Button';
 import VerificationCodeInput from '@/shared/components/VerificationCode';
 import { type UserMfaFlow } from '@/types';
@@ -35,6 +38,7 @@ const TotpCodeVerification = <T extends UserMfaFlow>(props: Props<T>) => {
   }, []);
 
   const { errorMessage: submitErrorMessage, onSubmit } = useTotpCodeVerification(errorCallback);
+  const { durationDays, isChecked, setIsChecked } = useTrustedDeviceOptIn(MfaFactor.TOTP);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -49,10 +53,10 @@ const TotpCodeVerification = <T extends UserMfaFlow>(props: Props<T>) => {
       setInputErrorMessage(undefined);
       setIsSubmitting(true);
 
-      await onSubmit(code.join(''), props);
+      await onSubmit(code.join(''), props, isChecked);
       setIsSubmitting(false);
     },
-    [onSubmit, isSubmitting, props]
+    [isChecked, isSubmitting, onSubmit, props]
   );
 
   return (
@@ -68,6 +72,12 @@ const TotpCodeVerification = <T extends UserMfaFlow>(props: Props<T>) => {
             void handleSubmit(code);
           }
         }}
+      />
+      <TrustedDeviceOptIn
+        durationDays={durationDays}
+        isChecked={isChecked}
+        className={styles.optIn}
+        onChange={setIsChecked}
       />
       <Button
         title="action.continue"

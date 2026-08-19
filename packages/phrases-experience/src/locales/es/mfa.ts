@@ -70,6 +70,11 @@ const mfa = {
   verify_via_passkey: 'Verificar mediante contraseña',
   verify_via_passkey_description:
     'Use la contraseña para verificar mediante la contraseña de su dispositivo o biometría, escanee el código QR o use una clave de seguridad USB como YubiKey.',
+  trust_this_device_one: 'No volver a preguntar en este dispositivo durante {{count}} día',
+  trust_this_device_two: 'No volver a preguntar en este dispositivo durante {{count}} días',
+  trust_this_device_few: 'No volver a preguntar en este dispositivo durante {{count}} días',
+  trust_this_device_many: 'No volver a preguntar en este dispositivo durante {{count}} días',
+  trust_this_device_other: 'No volver a preguntar en este dispositivo durante {{count}} días',
   secret_key_copied: 'Clave secreta copiada.',
   backup_code_copied: 'Código de respaldo copiado.',
   webauthn_not_ready: 'WebAuthn aún no está listo. Por favor, inténtelo de nuevo más tarde.',

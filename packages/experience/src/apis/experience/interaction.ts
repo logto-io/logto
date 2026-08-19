@@ -12,6 +12,17 @@ type SubmitInteractionResponse = {
   redirectTo: string;
 };
 
+export type InteractionData = {
+  trustedDevice?: {
+    canCreate: boolean;
+    durationDays?: number;
+  };
+};
+
+type SubmitInteractionOptions = {
+  createTrustedDevice?: boolean;
+};
+
 export const initInteraction = async (interactionEvent: InteractionEvent, captchaToken?: string) =>
   api.put(`${experienceApiRoutes.prefix}`, {
     json: {
@@ -23,8 +34,21 @@ export const initInteraction = async (interactionEvent: InteractionEvent, captch
 export const identifyUser = async (payload: IdentificationApiPayload = {}) =>
   api.post(experienceApiRoutes.identification, { json: payload });
 
-export const submitInteraction = async () =>
-  api.post(`${experienceApiRoutes.submit}`).json<SubmitInteractionResponse>();
+export const getInteraction = async () =>
+  api.get(experienceApiRoutes.interaction).json<InteractionData>();
+
+const requestTrustedDeviceCreation = async () =>
+  api.post(`${experienceApiRoutes.mfa}/trusted-device`);
+
+export const submitInteraction = async ({
+  createTrustedDevice = false,
+}: SubmitInteractionOptions = {}) => {
+  if (createTrustedDevice) {
+    await requestTrustedDeviceCreation();
+  }
+
+  return api.post(experienceApiRoutes.submit).json<SubmitInteractionResponse>();
+};
 
 export const updateProfile = async (payload: UpdateProfileApiPayload) =>
   api.post(experienceApiRoutes.profile, { json: payload });
