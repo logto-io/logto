@@ -13,8 +13,8 @@ const buildInput = (
 });
 
 /**
- * The runner exists so a runaway script cannot take the host with it. Every case here hangs or
- * exhausts memory under the `node:vm` path these tests replace.
+ * The runner exists so a runaway script cannot take the host with it. Every case here would hang
+ * or exhaust memory without the worker thread bounds.
  */
 describe('WorkerThreadScriptRunner runaway containment', () => {
   const runners: WorkerThreadScriptRunner[] = [];
@@ -51,8 +51,8 @@ describe('WorkerThreadScriptRunner runaway containment', () => {
     ).resolves.toEqual({ ok: false, kind: 'timeout' });
   }, 10_000);
 
-  // The case the `node:vm` timeout never covered: it bounds synchronous execution only, so a
-  // pending promise waits forever.
+  // A synchronous-only timeout would never cover this case: a pending promise waits forever
+  // unless the wall clock bounds the whole run.
   it('times out a promise that never settles', async () => {
     const runner = createRunner();
 

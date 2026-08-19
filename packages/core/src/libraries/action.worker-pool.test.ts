@@ -24,7 +24,7 @@ const environmentVariables = Object.freeze({ API_KEY: 'api-key' });
 const tenantId = 'test-tenant';
 
 const runAdapter = async () =>
-  ActionLibrary.runScriptInLocalVm({ script, event, environmentVariables }, tenantId);
+  ActionLibrary.runScriptLocally({ script, event, environmentVariables }, tenantId);
 
 const catchScriptExecutionError = async (promise: Promise<unknown>) => {
   try {
