@@ -9,7 +9,6 @@ import { isAccessDeniedError, parseCustomJwtResponseError } from '#src/utils/cus
 
 import type { CloudConnectionLibrary } from './cloud-connection.js';
 import { JwtCustomizerLibrary } from './jwt-customizer.js';
-import type { LogtoConfigLibrary } from './logto-config.js';
 import type { ScopeLibrary } from './scope.js';
 import type { SubscriptionLibrary } from './subscription.js';
 import type { UserLibrary } from './user.js';
@@ -32,7 +31,6 @@ const createLibrary = (tenantId = 'test-tenant') =>
   new JwtCustomizerLibrary(
     tenantId,
     {} as Queries,
-    {} as LogtoConfigLibrary,
     cloudConnection,
     { getSubscriptionData } as unknown as SubscriptionLibrary,
     {} as UserLibrary,
@@ -172,11 +170,35 @@ describe('JwtCustomizerLibrary.runScriptRemotely quota', () => {
     await expect(adminLibrary.runScriptRemotely(payload)).resolves.toEqual({ foo: 'bar' });
     expect(getSubscriptionData).not.toHaveBeenCalled();
   });
+
+  it('skips the Azure Functions fallback when the plan does not include custom JWT', async () => {
+    const endpoint = 'https://untrusted.example.com';
+    const remoteRunner = nock(endpoint).post('/api/custom-jwt').reply(200, { foo: 'bar' });
+
+    jest.spyOn(EnvSet.values, 'scriptRunnerEndpoint', 'get').mockReturnValue('');
+    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue(endpoint);
+    jest
+      .spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get')
+      .mockReturnValue('function-key');
+    getSubscriptionData.mockResolvedValueOnce({ quota: { customJwtEnabled: false } });
+
+    await expect(library.runScriptRemotely(payload)).resolves.toBeUndefined();
+    expect(remoteRunner.isDone()).toBe(false);
+  });
+
+  it('does not throw 422 for a downgraded tenant when neither runtime is configured', async () => {
+    jest.spyOn(EnvSet.values, 'scriptRunnerEndpoint', 'get').mockReturnValue('');
+    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue('');
+    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get').mockReturnValue('');
+    getSubscriptionData.mockResolvedValueOnce({ quota: { customJwtEnabled: false } });
+
+    await expect(library.runScriptRemotely(payload)).resolves.toBeUndefined();
+  });
 });
 
-describe('JwtCustomizerLibrary.runScriptRemotely on the legacy remote paths', () => {
+describe('JwtCustomizerLibrary.runScriptRemotely on the Azure Functions fallback', () => {
   beforeEach(() => {
-    // An unset script runner endpoint is what selects the legacy remote paths.
+    // An unset script runner endpoint is what selects the Azure Functions runtime.
     jest.spyOn(EnvSet.values, 'scriptRunnerEndpoint', 'get').mockReturnValue('');
   });
 
@@ -186,7 +208,7 @@ describe('JwtCustomizerLibrary.runScriptRemotely on the legacy remote paths', ()
     jest.clearAllMocks();
   });
 
-  it('runs the script through the regional untrusted Azure Function app when configured', async () => {
+  it('runs the script through the regional untrusted Azure Function app', async () => {
     const endpoint = 'https://untrusted.example.com';
     const functionKey = 'function-key';
     const remoteRunner = nock(endpoint, {
@@ -204,16 +226,11 @@ describe('JwtCustomizerLibrary.runScriptRemotely on the legacy remote paths', ()
     expect(post).not.toHaveBeenCalled();
   });
 
-  it('falls back to the deprecated custom-jwt cloud endpoint', async () => {
+  it('reports a 422 when neither runtime is configured', async () => {
     jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue('');
     jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get').mockReturnValue('');
-    post.mockResolvedValueOnce({ foo: 'bar' });
 
-    await expect(library.runScriptRemotely(payload, true)).resolves.toEqual({ foo: 'bar' });
-    expect(post).toHaveBeenCalledWith('/api/services/custom-jwt', {
-      body: payload,
-      search: { isTest: 'true' },
-    });
+    await expect(library.runScriptRemotely(payload)).rejects.toMatchObject({ status: 422 });
     expect(getWorkerAccessToken).not.toHaveBeenCalled();
   });
 });

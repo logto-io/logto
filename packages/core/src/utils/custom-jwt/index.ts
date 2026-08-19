@@ -2,8 +2,6 @@ import {
   type CustomJwtErrorBody,
   customJwtErrorBodyGuard,
   CustomJwtErrorCode,
-  LogtoJwtTokenKey,
-  type JwtCustomizerType,
 } from '@logto/schemas';
 import { conditional, trySafe } from '@silverhand/essentials';
 import { ResponseError } from '@withtyped/client';
@@ -11,17 +9,6 @@ import { type HTTPError } from 'got';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-
-import { type CustomJwtDeployRequestBody } from './types.js';
-
-export * from './types.js';
-
-export const getJwtCustomizerScripts = (jwtCustomizers: Partial<JwtCustomizerType>) => {
-  // eslint-disable-next-line no-restricted-syntax -- enable to infer the type using `Object.fromEntries`
-  return Object.fromEntries(
-    Object.values(LogtoJwtTokenKey).map((key) => [key, { production: jwtCustomizers[key]?.script }])
-  ) as CustomJwtDeployRequestBody;
-};
 
 /**
  * Parse the withtyped ResponseError body.

@@ -38,10 +38,7 @@ const getJwtTokenKeyAndBody = (tokenPath: LogtoJwtTokenKeyType, body: unknown) =
 };
 
 export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRouter>(
-  ...[
-    router,
-    { id: tenantId, queries, logtoConfigs, cloudConnection, libraries },
-  ]: RouterInitArgs<T>
+  ...[router, { id: tenantId, queries, logtoConfigs, libraries }]: RouterInitArgs<T>
 ) {
   const { getRowsByKeys, deleteJwtCustomizer } = queries.logtoConfigs;
   const { upsertJwtCustomizer, getJwtCustomizer, getJwtCustomizers, updateJwtCustomizer } =
@@ -81,16 +78,6 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
 
       const { key, body } = getJwtTokenKeyAndBody(tokenTypePath, rawBody);
 
-      // Deploy first to avoid the case where the JWT customizer was saved to DB but not deployed successfully.
-      // Apply Cloudflare Workers deployment when doing integration tests on Cloud.
-      if (!isIntegrationTest || isCloud) {
-        await libraries.jwtCustomizers.deployJwtCustomizerScript(getConsoleLogFromContext(ctx), {
-          key,
-          value: body,
-          useCase: 'production',
-        });
-      }
-
       const { rows } = await getRowsByKeys([key]);
 
       const jwtCustomizer = await upsertJwtCustomizer(key, body);
@@ -119,23 +106,11 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
     }),
     koaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota }),
     async (ctx, next) => {
-      const { isCloud, isIntegrationTest } = EnvSet.values;
-
       const {
         params: { tokenTypePath },
         body: rawBody,
       } = ctx.guard;
       const { key, body } = getJwtTokenKeyAndBody(tokenTypePath, rawBody);
-
-      // Deploy first to avoid the case where the JWT customizer was saved to DB but not deployed successfully.
-      // Apply Cloudflare Workers deployment when doing integration tests on Cloud.
-      if (!isIntegrationTest || isCloud) {
-        await libraries.jwtCustomizers.deployJwtCustomizerScript(getConsoleLogFromContext(ctx), {
-          key,
-          value: body,
-          useCase: 'production',
-        });
-      }
 
       ctx.body = await updateJwtCustomizer(key, body);
 
@@ -190,8 +165,6 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
       status: [204, 404],
     }),
     async (ctx, next) => {
-      const { isCloud, isIntegrationTest } = EnvSet.values;
-
       const {
         params: { tokenTypePath },
       } = ctx.guard;
@@ -200,15 +173,6 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
         tokenTypePath === LogtoJwtTokenKeyType.AccessToken
           ? LogtoJwtTokenKey.AccessToken
           : LogtoJwtTokenKey.ClientCredentials;
-
-      // Undeploy the script first to avoid the case where the JWT customizer was deleted from DB but worker script not updated successfully.
-      // Apply Cloudflare Workers deployment when doing integration tests on Cloud.
-      if (!isIntegrationTest || isCloud) {
-        await libraries.jwtCustomizers.undeployJwtCustomizerScript(
-          getConsoleLogFromContext(ctx),
-          tokenKey
-        );
-      }
 
       await deleteJwtCustomizer(tokenKey);
       ctx.status = 204;
@@ -228,23 +192,9 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
       const { body } = ctx.guard;
 
       try {
-        if (EnvSet.values.isCloud) {
-          // Deploy the test script if needed.(Only for cloud worker service)
-          await libraries.jwtCustomizers.deployJwtCustomizerScript(getConsoleLogFromContext(ctx), {
-            key:
-              body.tokenType === LogtoJwtTokenKeyType.AccessToken
-                ? LogtoJwtTokenKey.AccessToken
-                : LogtoJwtTokenKey.ClientCredentials,
-            value: body,
-            useCase: 'test',
-          });
-
-          ctx.body = await libraries.jwtCustomizers.runScriptRemotely(body, true);
-        } else {
-          ctx.body = removeUndefinedKeys(
-            await JwtCustomizerLibrary.runScriptLocally(body, tenantId)
-          );
-        }
+        ctx.body = EnvSet.values.isCloud
+          ? await libraries.jwtCustomizers.runScriptRemotely(body, true)
+          : removeUndefinedKeys(await JwtCustomizerLibrary.runScriptLocally(body, tenantId));
       } catch (error: unknown) {
         /**
          * Both execution paths surface failures as a withtyped `ResponseError`:
