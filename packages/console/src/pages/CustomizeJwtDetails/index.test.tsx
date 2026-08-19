@@ -18,14 +18,10 @@ jest.mock('./use-data-fetch', () => ({
 }));
 
 const mockIsCloud = jest.fn(() => false);
-const mockIsDevFeaturesEnabled = jest.fn(() => true);
 
 jest.mock('@/consts/env', () => ({
   get isCloud() {
     return mockIsCloud();
-  },
-  get isDevFeaturesEnabled() {
-    return mockIsDevFeaturesEnabled();
   },
 }));
 
@@ -68,7 +64,6 @@ describe('CustomizeJwtDetails', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockIsCloud.mockReturnValue(false);
-    mockIsDevFeaturesEnabled.mockReturnValue(true);
     mockedUseParams.mockReturnValue({
       tokenType: LogtoJwtTokenKeyType.AccessToken,
       action: Action.Create,
@@ -89,7 +84,7 @@ describe('CustomizeJwtDetails', () => {
     expect(screen.getByText('empty')).toBeTruthy();
   });
 
-  it('shows the sandbox warning for self-hosted tenants when dev features are enabled', () => {
+  it('shows the sandbox warning for self-hosted tenants', () => {
     render(<CustomizeJwtDetails />);
 
     expect(screen.getByText('admin_console.jwt_claims.sandbox_warning.title')).toBeTruthy();
@@ -99,15 +94,6 @@ describe('CustomizeJwtDetails', () => {
 
   it('hides the sandbox warning for Cloud tenants', () => {
     mockIsCloud.mockReturnValue(true);
-
-    render(<CustomizeJwtDetails />);
-
-    expect(screen.queryByText('admin_console.jwt_claims.sandbox_warning.title')).toBeNull();
-    expect(screen.getByText('main-content')).toBeTruthy();
-  });
-
-  it('hides the sandbox warning when dev features are disabled', () => {
-    mockIsDevFeaturesEnabled.mockReturnValue(false);
 
     render(<CustomizeJwtDetails />);
 

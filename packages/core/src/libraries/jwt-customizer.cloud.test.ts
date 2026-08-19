@@ -53,11 +53,8 @@ const payload = Object.freeze({
 const mockScriptRun = (body?: nock.RequestBodyMatcher) =>
   nock(scriptRunnerEndpoint).post('/api/script-run', body);
 
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-
 describe('JwtCustomizerLibrary.runScriptRemotely', () => {
   beforeEach(() => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
     jest.spyOn(EnvSet.values, 'scriptRunnerEndpoint', 'get').mockReturnValue(scriptRunnerEndpoint);
   });
 
@@ -65,7 +62,6 @@ describe('JwtCustomizerLibrary.runScriptRemotely', () => {
     nock.cleanAll();
     jest.restoreAllMocks();
     jest.clearAllMocks();
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
   });
 
   it('runs the script on the Cloud script runner', async () => {
@@ -144,7 +140,6 @@ describe('JwtCustomizerLibrary.runScriptRemotely quota', () => {
   };
 
   beforeEach(() => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
     jest.spyOn(EnvSet.values, 'scriptRunnerEndpoint', 'get').mockReturnValue(scriptRunnerEndpoint);
     setIsCloud(true);
   });
@@ -153,7 +148,6 @@ describe('JwtCustomizerLibrary.runScriptRemotely quota', () => {
     nock.cleanAll();
     jest.restoreAllMocks();
     jest.clearAllMocks();
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
     setIsCloud(originalIsCloud);
   });
 
@@ -182,25 +176,14 @@ describe('JwtCustomizerLibrary.runScriptRemotely quota', () => {
 
 describe('JwtCustomizerLibrary.runScriptRemotely on the legacy remote paths', () => {
   beforeEach(() => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+    // An unset script runner endpoint is what selects the legacy remote paths.
+    jest.spyOn(EnvSet.values, 'scriptRunnerEndpoint', 'get').mockReturnValue('');
   });
 
   afterEach(() => {
     nock.cleanAll();
     jest.restoreAllMocks();
     jest.clearAllMocks();
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
-  });
-
-  it('falls back to the legacy path when the script runner endpoint is not injected', async () => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
-    jest.spyOn(EnvSet.values, 'scriptRunnerEndpoint', 'get').mockReturnValue('');
-    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue('');
-    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get').mockReturnValue('');
-    post.mockResolvedValueOnce({ foo: 'bar' });
-
-    await expect(library.runScriptRemotely(payload)).resolves.toEqual({ foo: 'bar' });
-    expect(getWorkerAccessToken).not.toHaveBeenCalled();
   });
 
   it('runs the script through the regional untrusted Azure Function app when configured', async () => {
@@ -217,6 +200,7 @@ describe('JwtCustomizerLibrary.runScriptRemotely on the legacy remote paths', ()
 
     await expect(library.runScriptRemotely(payload)).resolves.toEqual({ foo: 'bar' });
     expect(remoteRunner.isDone()).toBe(true);
+    expect(getWorkerAccessToken).not.toHaveBeenCalled();
     expect(post).not.toHaveBeenCalled();
   });
 
@@ -230,5 +214,6 @@ describe('JwtCustomizerLibrary.runScriptRemotely on the legacy remote paths', ()
       body: payload,
       search: { isTest: 'true' },
     });
+    expect(getWorkerAccessToken).not.toHaveBeenCalled();
   });
 });
