@@ -38,10 +38,7 @@ const getJwtTokenKeyAndBody = (tokenPath: LogtoJwtTokenKeyType, body: unknown) =
 };
 
 export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRouter>(
-  ...[
-    router,
-    { id: tenantId, queries, logtoConfigs, libraries },
-  ]: RouterInitArgs<T>
+  ...[router, { id: tenantId, queries, logtoConfigs, libraries }]: RouterInitArgs<T>
 ) {
   const { getRowsByKeys, deleteJwtCustomizer } = queries.logtoConfigs;
   const { upsertJwtCustomizer, getJwtCustomizer, getJwtCustomizers, updateJwtCustomizer } =

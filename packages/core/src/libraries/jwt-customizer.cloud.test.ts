@@ -177,7 +177,9 @@ describe('JwtCustomizerLibrary.runScriptRemotely quota', () => {
 
     jest.spyOn(EnvSet.values, 'scriptRunnerEndpoint', 'get').mockReturnValue('');
     jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue(endpoint);
-    jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get').mockReturnValue('function-key');
+    jest
+      .spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get')
+      .mockReturnValue('function-key');
     getSubscriptionData.mockResolvedValueOnce({ quota: { customJwtEnabled: false } });
 
     await expect(library.runScriptRemotely(payload)).resolves.toBeUndefined();
