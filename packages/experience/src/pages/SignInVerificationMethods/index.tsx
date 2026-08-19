@@ -8,6 +8,7 @@ import FactorPhone from '@/assets/icons/factor-phone.svg?react';
 import FactorWebAuthn from '@/assets/icons/factor-webauthn.svg?react';
 import LockIcon from '@/assets/icons/lock.svg?react';
 import useVerificationCodeLink from '@/components/SwitchToVerificationMethodsLink/use-verification-code-link';
+import CaptchaBox from '@/containers/CaptchaBox';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { useSieMethods } from '@/hooks/use-sie';
 import useStartIdentifierPasskeySignInProcessing from '@/hooks/use-start-identifier-passkey-sign-in-processing';
@@ -77,6 +78,7 @@ const SignInVerificationMethods = () => {
             }}
           />
         )}
+        {hasVerificationCode && type !== SignInIdentifier.Username && <CaptchaBox />}
         {hasVerificationCode && type !== SignInIdentifier.Username && (
           <VerificationMethodCard
             titleKey={`description.verification_method.${type}_verification_code`}

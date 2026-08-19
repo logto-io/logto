@@ -7,6 +7,7 @@ import { validate } from 'superstruct';
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import SwitchToVerificationMethodsLink from '@/components/SwitchToVerificationMethodsLink';
+import CaptchaBox from '@/containers/CaptchaBox';
 import useIdentifierPasskeySignInVerification from '@/hooks/use-identifier-passkey-sign-in-verification';
 import { useSieMethods } from '@/hooks/use-sie';
 import ErrorPage from '@/pages/ErrorPage';
@@ -71,6 +72,7 @@ const SignInPasskeyVerification = () => {
           setIsVerifying(false);
         }}
       />
+      {type !== SignInIdentifier.Username && methodSetting?.verificationCode && <CaptchaBox />}
       <SwitchToVerificationMethodsLink
         className={styles.switchLink}
         identifier={cond(type !== SignInIdentifier.Username && type)}
