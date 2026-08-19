@@ -9,21 +9,21 @@ import useErrorHandler, { type ErrorHandlers } from './use-error-handler';
 import useGlobalRedirectTo from './use-global-redirect-to';
 import useSubmitInteractionErrorHandler from './use-submit-interaction-error-handler';
 
+type TrustedDeviceOption = {
+  createTrustedDevice?: boolean;
+};
+
 export type SendMfaPayloadApiOptions =
   | ({
       flow: UserMfaFlow.MfaBinding;
       payload: BindMfaPayload;
       verificationId: string;
-    } & TrustedDeviceOptIn)
+    } & TrustedDeviceOption)
   | ({
       flow: UserMfaFlow.MfaVerification;
       payload: VerifyMfaPayload;
       verificationId?: string;
-    } & TrustedDeviceOptIn);
-
-type TrustedDeviceOptIn = {
-  createTrustedDevice?: boolean;
-};
+    } & TrustedDeviceOption);
 
 const sendMfaPayloadApi = async ({
   flow,

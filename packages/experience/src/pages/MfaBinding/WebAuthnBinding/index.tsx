@@ -1,4 +1,4 @@
-import { MfaFactor, VerificationType } from '@logto/schemas';
+import { VerificationType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useContext, useState } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -25,9 +25,13 @@ const WebAuthnBinding = () => {
   const [, webAuthnState] = validate(state, webAuthnStateGuard);
   const { verificationIdsMap } = useContext(UserInteractionContext);
   const verificationId = verificationIdsMap[VerificationType.WebAuthn];
+  const isSessionValid = Boolean(
+    webAuthnState && verificationId && isWebAuthnOptions(webAuthnState.options)
+  );
 
   const handleWebAuthn = useWebAuthnOperation();
-  const { durationDays, isChecked, setIsChecked } = useTrustedDeviceOptIn(MfaFactor.WebAuthn);
+  const { availability, isLoading, isChecked, setIsChecked } =
+    useTrustedDeviceOptIn(isSessionValid);
   const skipMfa = useSkipMfa();
   const skipOptionalMfa = useSkipOptionalMfa();
   const [isCreatingPasskey, setIsCreatingPasskey] = useState(false);
@@ -63,14 +67,14 @@ const WebAuthnBinding = () => {
       onSkip={conditional(skippable && (suggestion ? skipOptionalMfa : skipMfa))}
     >
       <TrustedDeviceOptIn
-        durationDays={durationDays}
+        availability={availability}
+        isLoading={isLoading}
         isChecked={isChecked}
         className={styles.optIn}
         onChange={setIsChecked}
       />
       <Button
         title="mfa.create_a_passkey"
-        className={styles.createButton}
         isLoading={isCreatingPasskey}
         onClick={async () => {
           setIsCreatingPasskey(true);

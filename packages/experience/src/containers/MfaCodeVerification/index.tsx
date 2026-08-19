@@ -1,4 +1,4 @@
-import { MfaFactor, SignInIdentifier } from '@logto/schemas';
+import type { SignInIdentifier } from '@logto/schemas';
 import { useCallback, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -28,11 +28,7 @@ const MfaCodeVerification = ({ identifierType, verificationId }: Props) => {
   const [codeInput, setCodeInput] = useState<string[]>([]);
   const [inputErrorMessage, setInputErrorMessage] = useState<string>();
   const [currentVerificationId, setCurrentVerificationId] = useState(verificationId);
-  const factor =
-    identifierType === SignInIdentifier.Email
-      ? MfaFactor.EmailVerificationCode
-      : MfaFactor.PhoneVerificationCode;
-  const { durationDays, isChecked, setIsChecked } = useTrustedDeviceOptIn(factor);
+  const { availability, isLoading, isVisible, isChecked, setIsChecked } = useTrustedDeviceOptIn();
 
   useEffect(() => {
     setCurrentVerificationId(verificationId);
@@ -81,7 +77,7 @@ const MfaCodeVerification = ({ identifierType, verificationId }: Props) => {
         error={errorMessage}
         onChange={(code) => {
           setCodeInput(code);
-          if (isCodeReady(code)) {
+          if (isCodeReady(code) && !isVisible) {
             void handleSubmit(code);
           }
         }}
@@ -114,7 +110,8 @@ const MfaCodeVerification = ({ identifierType, verificationId }: Props) => {
         )}
       </div>
       <TrustedDeviceOptIn
-        durationDays={durationDays}
+        availability={availability}
+        isLoading={isLoading}
         isChecked={isChecked}
         className={styles.optIn}
         onChange={setIsChecked}

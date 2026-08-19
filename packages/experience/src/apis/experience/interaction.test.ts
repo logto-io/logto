@@ -26,7 +26,7 @@ describe('interaction experience APIs', () => {
 
     await expect(getInteraction()).resolves.toEqual(response);
 
-    expect(mockedApiGet).toBeCalledWith(experienceApiRoutes.interaction);
+    expect(mockedApiGet).toBeCalledWith(experienceApiRoutes.interaction, { signal: undefined });
     expect(json).toBeCalled();
   });
 
@@ -35,6 +35,19 @@ describe('interaction experience APIs', () => {
     const json = jest.fn().mockResolvedValue(response);
     mockedApiPost
       .mockReturnValueOnce({} as ReturnType<typeof api.post>)
+      .mockReturnValueOnce({ json } as unknown as ReturnType<typeof api.post>);
+
+    await expect(submitInteraction({ createTrustedDevice: true })).resolves.toEqual(response);
+
+    expect(mockedApiPost).toHaveBeenNthCalledWith(1, `${experienceApiRoutes.mfa}/trusted-device`);
+    expect(mockedApiPost).toHaveBeenNthCalledWith(2, experienceApiRoutes.submit);
+  });
+
+  it('still submits when recording trusted-device intent fails', async () => {
+    const response = { redirectTo: '/callback' };
+    const json = jest.fn().mockResolvedValue(response);
+    mockedApiPost
+      .mockRejectedValueOnce(new Error('Failed to record trusted-device intent'))
       .mockReturnValueOnce({ json } as unknown as ReturnType<typeof api.post>);
 
     await expect(submitInteraction({ createTrustedDevice: true })).resolves.toEqual(response);

@@ -1,10 +1,7 @@
-import { MfaFactor } from '@logto/schemas';
 import { act, fireEvent, render, waitFor } from '@testing-library/react';
 
 import { getInteraction } from '@/apis/experience';
-import useTrustedDeviceOptIn, {
-  isTrustedDeviceOptInEligible,
-} from '@/hooks/use-trusted-device-opt-in';
+import useTrustedDeviceOptIn from '@/hooks/use-trusted-device-opt-in';
 
 import TrustedDeviceOptIn from '.';
 
@@ -14,25 +11,22 @@ jest.mock('@/apis/experience', () => ({
 
 const mockedGetInteraction = getInteraction as jest.MockedFunction<typeof getInteraction>;
 
-const TestOptIn = ({ factor = MfaFactor.TOTP }: { readonly factor?: MfaFactor }) => {
-  const { durationDays, isChecked, setIsChecked } = useTrustedDeviceOptIn(factor);
+const TestOptIn = ({ isEnabled = true }: { readonly isEnabled?: boolean }) => {
+  const { availability, isLoading, isChecked, setIsChecked } = useTrustedDeviceOptIn(isEnabled);
 
   return (
-    <TrustedDeviceOptIn durationDays={durationDays} isChecked={isChecked} onChange={setIsChecked} />
+    <TrustedDeviceOptIn
+      availability={availability}
+      isLoading={isLoading}
+      isChecked={isChecked}
+      onChange={setIsChecked}
+    />
   );
 };
 
 describe('<TrustedDeviceOptIn />', () => {
   afterEach(() => {
     jest.clearAllMocks();
-  });
-
-  it('supports the eligible MFA factors and excludes backup codes', () => {
-    expect(isTrustedDeviceOptInEligible(MfaFactor.TOTP)).toBe(true);
-    expect(isTrustedDeviceOptInEligible(MfaFactor.WebAuthn)).toBe(true);
-    expect(isTrustedDeviceOptInEligible(MfaFactor.EmailVerificationCode)).toBe(true);
-    expect(isTrustedDeviceOptInEligible(MfaFactor.PhoneVerificationCode)).toBe(true);
-    expect(isTrustedDeviceOptInEligible(MfaFactor.BackupCode)).toBe(false);
   });
 
   it('shows a default-unchecked checkbox when effective policy allows creation', async () => {
@@ -44,6 +38,7 @@ describe('<TrustedDeviceOptIn />', () => {
     await waitFor(() => {
       expect(container.querySelector('[role="checkbox"]')).not.toBeNull();
     });
+    expect(mockedGetInteraction).toBeCalledWith(expect.any(AbortSignal));
 
     const checkbox = container.querySelector('[role="checkbox"]');
     expect(checkbox?.getAttribute('aria-checked')).toBe('false');
@@ -68,8 +63,38 @@ describe('<TrustedDeviceOptIn />', () => {
     expect(container.querySelector('[role="checkbox"]')).toBeNull();
   });
 
-  it('does not query availability for an ineligible backup-code screen', () => {
-    render(<TestOptIn factor={MfaFactor.BackupCode} />);
+  it('stays hidden when availability cannot be loaded', async () => {
+    mockedGetInteraction.mockRejectedValue(new Error('Request failed'));
+    const { container } = render(<TestOptIn />);
+
+    await waitFor(() => {
+      expect(container.firstElementChild).toBeNull();
+    });
+  });
+
+  it('stays hidden when an available policy does not include a duration', async () => {
+    mockedGetInteraction.mockResolvedValue({ trustedDevice: { canCreate: true } });
+    const { container } = render(<TestOptIn />);
+
+    await waitFor(() => {
+      expect(container.firstElementChild).toBeNull();
+    });
+  });
+
+  it('reserves the checkbox space while availability is loading', () => {
+    mockedGetInteraction.mockReturnValue(
+      new Promise(() => {
+        // Keep the request pending to verify the loading placeholder.
+      })
+    );
+    const { container } = render(<TestOptIn />);
+
+    expect(container.firstElementChild).not.toBeNull();
+    expect(container.querySelector('[role="checkbox"]')).toBeNull();
+  });
+
+  it('does not query availability when the calling page is invalid', () => {
+    render(<TestOptIn isEnabled={false} />);
 
     expect(mockedGetInteraction).not.toBeCalled();
   });

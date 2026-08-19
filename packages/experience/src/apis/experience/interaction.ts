@@ -3,6 +3,7 @@ import {
   type IdentificationApiPayload,
   type UpdateProfileApiPayload,
 } from '@logto/schemas';
+import { trySafe } from '@silverhand/essentials';
 
 import api from '../api';
 
@@ -12,11 +13,13 @@ type SubmitInteractionResponse = {
   redirectTo: string;
 };
 
-export type InteractionData = {
-  trustedDevice?: {
-    canCreate: boolean;
-    durationDays?: number;
-  };
+export type TrustedDeviceAvailability = {
+  canCreate: boolean;
+  durationDays?: number;
+};
+
+export type TrustedDeviceInteractionData = {
+  trustedDevice?: TrustedDeviceAvailability;
 };
 
 type SubmitInteractionOptions = {
@@ -34,8 +37,8 @@ export const initInteraction = async (interactionEvent: InteractionEvent, captch
 export const identifyUser = async (payload: IdentificationApiPayload = {}) =>
   api.post(experienceApiRoutes.identification, { json: payload });
 
-export const getInteraction = async () =>
-  api.get(experienceApiRoutes.interaction).json<InteractionData>();
+export const getInteraction = async (signal?: AbortSignal) =>
+  api.get(experienceApiRoutes.interaction, { signal }).json<TrustedDeviceInteractionData>();
 
 const requestTrustedDeviceCreation = async () =>
   api.post(`${experienceApiRoutes.mfa}/trusted-device`);
@@ -44,7 +47,7 @@ export const submitInteraction = async ({
   createTrustedDevice = false,
 }: SubmitInteractionOptions = {}) => {
   if (createTrustedDevice) {
-    await requestTrustedDeviceCreation();
+    await trySafe(requestTrustedDeviceCreation);
   }
 
   return api.post(experienceApiRoutes.submit).json<SubmitInteractionResponse>();

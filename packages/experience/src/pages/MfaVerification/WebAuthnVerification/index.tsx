@@ -1,4 +1,4 @@
-import { MfaFactor, VerificationType } from '@logto/schemas';
+import { VerificationType } from '@logto/schemas';
 import { useContext, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { validate } from 'superstruct';
@@ -23,9 +23,13 @@ const WebAuthnVerification = () => {
   const [, webAuthnState] = validate(state, webAuthnStateGuard);
   const { verificationIdsMap } = useContext(UserInteractionContext);
   const verificationId = verificationIdsMap[VerificationType.WebAuthn];
+  const isSessionValid = Boolean(
+    webAuthnState && verificationId && isWebAuthnOptions(webAuthnState.options)
+  );
 
   const handleWebAuthn = useWebAuthnOperation();
-  const { durationDays, isChecked, setIsChecked } = useTrustedDeviceOptIn(MfaFactor.WebAuthn);
+  const { availability, isLoading, isChecked, setIsChecked } =
+    useTrustedDeviceOptIn(isSessionValid);
   const [isVerifying, setIsVerifying] = useState(false);
 
   if (!webAuthnState || !verificationId) {
@@ -45,7 +49,8 @@ const WebAuthnVerification = () => {
         description="mfa.verify_via_passkey_description"
       >
         <TrustedDeviceOptIn
-          durationDays={durationDays}
+          availability={availability}
+          isLoading={isLoading}
           isChecked={isChecked}
           className={styles.optIn}
           onChange={setIsChecked}

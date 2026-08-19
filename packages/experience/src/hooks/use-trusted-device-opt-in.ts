@@ -1,57 +1,48 @@
-import { MfaFactor } from '@logto/schemas';
 import { useEffect, useState } from 'react';
 
-import { getInteraction } from '@/apis/experience';
+import { getInteraction, type TrustedDeviceAvailability } from '@/apis/experience';
 import { isDevFeaturesEnabled } from '@/constants/env';
+import useApi from '@/hooks/use-api';
 
-const eligibleFactors = Object.freeze([
-  MfaFactor.TOTP,
-  MfaFactor.WebAuthn,
-  MfaFactor.EmailVerificationCode,
-  MfaFactor.PhoneVerificationCode,
-]);
-
-export const isTrustedDeviceOptInEligible = (factor: MfaFactor) => eligibleFactors.includes(factor);
-
-const useTrustedDeviceOptIn = (factor: MfaFactor) => {
-  const [durationDays, setDurationDays] = useState<number>();
+const useTrustedDeviceOptIn = (shouldFetch = true) => {
+  const canFetch = isDevFeaturesEnabled && shouldFetch;
+  const [availability, setAvailability] = useState<TrustedDeviceAvailability>();
+  const [isLoading, setIsLoading] = useState(canFetch);
   const [isChecked, setIsChecked] = useState(false);
+  const request = useApi(getInteraction, { silent: true });
 
   useEffect(() => {
-    setDurationDays(undefined);
+    setAvailability(undefined);
+    setIsLoading(canFetch);
     setIsChecked(false);
 
     // Trusted-device opt-in stays isolated from released Experience flows until launch.
-    if (!isDevFeaturesEnabled || !isTrustedDeviceOptInEligible(factor)) {
+    if (!canFetch) {
       return;
     }
 
     const controller = new AbortController();
 
     void (async () => {
-      try {
-        const { trustedDevice } = await getInteraction();
-        if (!controller.signal.aborted) {
-          setDurationDays(
-            trustedDevice?.canCreate && trustedDevice.durationDays
-              ? trustedDevice.durationDays
-              : undefined
-          );
-        }
-      } catch {
-        if (!controller.signal.aborted) {
-          setDurationDays(undefined);
-        }
+      const [, result] = await request(controller.signal);
+
+      if (!controller.signal.aborted) {
+        setAvailability(result?.trustedDevice);
+        setIsLoading(false);
       }
     })();
 
     return () => {
       controller.abort();
     };
-  }, [factor]);
+  }, [canFetch, request]);
+
+  const isVisible = Boolean(availability?.canCreate && availability.durationDays);
 
   return {
-    durationDays,
+    availability,
+    isLoading,
+    isVisible,
     isChecked,
     setIsChecked,
   };
