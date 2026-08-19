@@ -301,12 +301,11 @@ export class ActionLibrary {
     isTest?: boolean
   ): Promise<unknown> {
     /**
-     * The Azure Functions runtime is kept as a per-region fallback rather than retired: a script
-     * runner outage is then routed around by unsetting `SCRIPT_RUNNER_ENDPOINT` on that region's
-     * core, with no code change and no coordinated rollback.
-     *
-     * A region where the endpoint is not injected yet therefore keeps running on the function app
-     * instead of failing.
+     * The Azure Functions runtime is kept as a per-region fallback rather than retired: on a
+     * region whose untrusted function app is configured, a script runner outage is routed around
+     * by unsetting `SCRIPT_RUNNER_ENDPOINT` there, with no code change and no coordinated
+     * rollback. Where that app is not configured this runtime throws the 422 below, exactly as it
+     * does today.
      */
     const { scriptRunnerEndpoint } = EnvSet.values;
 

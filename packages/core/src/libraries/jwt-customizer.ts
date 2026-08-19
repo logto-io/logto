@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- The legacy remote paths coexist with the script-runner adapters until LOG-13957 removes the per-tenant worker lifecycle. */
 import {
   adminTenantId,
   type CustomJwtErrorBody,
@@ -232,11 +233,12 @@ export class JwtCustomizerLibrary {
    * @params payload.useCase - The use case of JWT customizer script, can be either `test` or `production`.
    *
    * @remarks
-   * No script run reads the deployed worker any more: a Cloud run goes to the script runner, or to
-   * the Azure Functions runtime where `SCRIPT_RUNNER_ENDPOINT` is unset. This and
-   * {@link undeployJwtCustomizerScript} therefore still pay a deploy on every save, delete and
-   * Console "test" whose result nothing consumes. Both come out with the per-tenant worker
-   * lifecycle in LOG-13957.
+   * Deliberately left outside the `SCRIPT_RUNNER_ENDPOINT` selection that {@link runScriptRemotely}
+   * makes, so this and {@link undeployJwtCustomizerScript} keep the worker service in sync for a
+   * region still on the legacy `POST /api/services/custom-jwt` path. The cost is real and accepted:
+   * where the endpoint is set, every save, delete and Console "test" still pays a deploy whose
+   * result the script run no longer reads. Both come out with the per-tenant worker lifecycle in
+   * LOG-13957.
    */
   async deployJwtCustomizerScript<T extends LogtoJwtTokenKey>(
     consoleLog: ConsoleLog,
@@ -345,17 +347,17 @@ export class JwtCustomizerLibrary {
     isTest?: boolean
   ): Promise<Optional<UnknownObject>> {
     /**
-     * The Azure Functions runtime is kept as a per-region fallback rather than retired: a script
-     * runner outage is then routed around by unsetting `SCRIPT_RUNNER_ENDPOINT` on that region's
-     * core, with no code change and no coordinated rollback.
+     * The legacy runtimes are kept as a per-region fallback rather than retired: a script runner
+     * outage is then routed around by unsetting `SCRIPT_RUNNER_ENDPOINT` on that region's core,
+     * with no code change and no coordinated rollback.
      *
-     * A region where the endpoint is not injected yet therefore keeps running on the function app
-     * instead of failing.
+     * A region where the endpoint is not injected yet therefore keeps running on the legacy
+     * runtimes instead of failing.
      */
     const { scriptRunnerEndpoint } = EnvSet.values;
 
     if (!scriptRunnerEndpoint) {
-      return this.runScriptOnAzureFunction(payload);
+      return this.runScriptOnLegacyRuntime(payload, isTest);
     }
 
     /**
@@ -404,48 +406,49 @@ export class JwtCustomizerLibrary {
   }
 
   /**
-   * The Azure Functions runtime, kept as the per-region fallback for the Cloud script runner.
+   * The legacy remote paths, kept as the per-region fallback for the Cloud script runner:
+   * the regional untrusted Azure Function app where configured, otherwise the deprecated
+   * `POST /api/services/custom-jwt` cloud endpoint.
    *
-   * Selected whenever `SCRIPT_RUNNER_ENDPOINT` is unset. `isTest` is deliberately not forwarded:
-   * this runtime has no notion of a dry run, and nothing is lost by it — vm2 builds a fresh VM per
-   * call, so a test run can never share state with production the way a warm isolate could.
-   *
-   * The deprecated `POST /api/services/custom-jwt` cloud endpoint this used to fall back to is no
-   * longer reachable: it is on its way out with the per-tenant worker lifecycle (LOG-13957).
+   * Selected whenever `SCRIPT_RUNNER_ENDPOINT` is unset. `isTest` is not forwarded to the function
+   * app: that runtime has no notion of a dry run, and nothing is lost by it — vm2 builds a fresh
+   * VM per call, so a test run can never share state with production the way a warm isolate could.
    */
-  private async runScriptOnAzureFunction(
-    payload: CustomJwtFetcher
+  private async runScriptOnLegacyRuntime(
+    payload: CustomJwtFetcher,
+    isTest?: boolean
   ): Promise<Optional<UnknownObject>> {
     const { azureFunctionUntrustedAppKey, azureFunctionUntrustedAppEndpoint } = EnvSet.values;
 
-    /**
-     * Neither runtime is reachable. Named explicitly rather than left to `new URL()` throwing an
-     * opaque `Invalid URL`, since this misconfiguration reaches the RP as an `error_description`
-     * when the customizer sets `blockIssuanceOnError`.
-     */
-    if (!this.isRegionalAzureFunctionAppConfigured) {
-      throw new ScriptExecutionError({ message: 'Remote script runner is not configured.' }, 422);
-    }
+    if (this.isRegionalAzureFunctionAppConfigured) {
+      try {
+        const result = await got
+          .post(new URL('/api/custom-jwt', azureFunctionUntrustedAppEndpoint), {
+            json: payload,
+            headers: {
+              'x-functions-key': azureFunctionUntrustedAppKey,
+            },
+          })
+          .json<unknown>();
 
-    try {
-      const result = await got
-        .post(new URL('/api/custom-jwt', azureFunctionUntrustedAppEndpoint), {
-          json: payload,
-          headers: {
-            'x-functions-key': azureFunctionUntrustedAppKey,
-          },
-        })
-        .json<unknown>();
+        const parsedResult = jsonObjectGuard.parse(result);
+        return parsedResult;
+      } catch (error: unknown) {
+        // Convert got HTTPError to WithTyped client ResponseError for unified error handling.
+        if (error instanceof HTTPError) {
+          throw parseAzureFunctionsResponseError(error);
+        }
 
-      return jsonObjectGuard.parse(result);
-    } catch (error: unknown) {
-      // Convert got HTTPError to WithTyped client ResponseError for unified error handling.
-      if (error instanceof HTTPError) {
-        throw parseAzureFunctionsResponseError(error);
+        throw error;
       }
-
-      throw error;
     }
+
+    // Fallback to use cloud connection to call the custom JWT API.
+    const client = await this.cloudConnection.getClient();
+    return client.post(`/api/services/custom-jwt`, {
+      body: payload,
+      search: isTest ? { isTest: 'true' } : {},
+    });
   }
 
   /**
@@ -476,3 +479,5 @@ export class JwtCustomizerLibrary {
     return result.value;
   }
 }
+
+/* eslint-enable max-lines */
