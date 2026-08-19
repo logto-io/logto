@@ -214,19 +214,6 @@ export class JwtCustomizerLibrary {
     isTest?: boolean
   ): Promise<Optional<UnknownObject>> {
     /**
-     * The Azure Functions runtime is kept as a per-region fallback rather than retired: on a
-     * region whose untrusted function app is configured, a script runner outage is routed around
-     * by unsetting `SCRIPT_RUNNER_ENDPOINT` there, with no code change and no coordinated
-     * rollback. Where that app is not configured this runtime throws a 422, matching what
-     * `ActionLibrary` already does.
-     */
-    const { scriptRunnerEndpoint } = EnvSet.values;
-
-    if (!scriptRunnerEndpoint) {
-      return this.runScriptOnAzureFunction(payload);
-    }
-
-    /**
      * The plan quota is enforced here rather than left to the transport: the runner only verifies
      * audience and scope, so without this check the script of a downgraded tenant would keep
      * running and injecting its claims into every issued token.
@@ -238,9 +225,26 @@ export class JwtCustomizerLibrary {
      * `ActionLibrary.runAction` does for its own quota check: a plan downgrade must not break
      * token issuance. The caller reads this as "no custom claims", so a customizer configured
      * with `blockIssuanceOnError` still gets its token — the quota is not a script error.
+     *
+     * Checked before runtime selection so a downgraded tenant never reaches Azure Functions
+     * either: that path throws a 422 when the function app is unset, which would otherwise
+     * break issuance when `blockIssuanceOnError` is on.
      */
     if (!(await this.isCustomJwtEnabledByQuota())) {
       return;
+    }
+
+    /**
+     * The Azure Functions runtime is kept as a per-region fallback rather than retired: on a
+     * region whose untrusted function app is configured, a script runner outage is routed around
+     * by unsetting `SCRIPT_RUNNER_ENDPOINT` there, with no code change and no coordinated
+     * rollback. Where that app is not configured this runtime throws a 422, matching what
+     * `ActionLibrary` already does.
+     */
+    const { scriptRunnerEndpoint } = EnvSet.values;
+
+    if (!scriptRunnerEndpoint) {
+      return this.runScriptOnAzureFunction(payload);
     }
 
     /**
