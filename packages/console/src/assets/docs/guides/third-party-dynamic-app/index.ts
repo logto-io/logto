@@ -12,7 +12,6 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
     'Allow compatible public clients to connect without registration, using the CIMD specification.',
   target: ApplicationType.Traditional,
   isThirdParty: true,
-  isDevFeature: true,
   isBeta: true,
 });
 

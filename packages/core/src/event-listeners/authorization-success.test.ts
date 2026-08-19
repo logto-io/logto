@@ -1,8 +1,6 @@
 import { appInsights } from '@logto/app-insights/node';
 import { LogResult, type ExceptionHookEvent } from '@logto/schemas';
-import Sinon from 'sinon';
 
-import { EnvSet } from '#src/env-set/index.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { MockQueries } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
@@ -258,18 +256,12 @@ describe('createAuthorizationSuccessListener', () => {
   describe('grant limit webhook payload for a cimd client', () => {
     const cimdClientId = 'https://client.example.com/metadata.json';
 
-    afterEach(() => {
-      Sinon.restore();
-    });
-
     /**
      * No grant-ceiling source exists for CIMD clients today, so this locks the payload contract
      * for any future one: the identifier routes by namespace, keeping `applicationId`
      * registered-only by construction.
      */
     it('should attribute the identifier under the dedicated key', async () => {
-      Sinon.stub(EnvSet, 'values').value({ ...EnvSet.values, isDevFeaturesEnabled: true });
-
       const { provider } = createMockProvider();
       const findUserActiveGrantsByClientId = jest.fn(async () => [
         {

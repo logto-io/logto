@@ -74,7 +74,6 @@ const cimdEnvSet = { oidc: { cimdEnabled: true } } as EnvSet;
 const stubCimdStaticFlags = () =>
   Sinon.stub(EnvSet, 'values').value({
     ...EnvSet.values,
-    isDevFeaturesEnabled: true,
     isOidcProviderSsrfProtectionEnabled: true,
   });
 

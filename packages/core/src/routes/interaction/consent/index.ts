@@ -16,7 +16,6 @@ import { type IRouterParamContext } from 'koa-router';
 import { errors } from 'oidc-provider';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import { consent, getMissingScopes } from '#src/libraries/session/index.js';
 import koaAppAccessControl from '#src/middleware/koa-app-access-control.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -333,7 +332,6 @@ export default function consentRoutes<T extends IRouterParamContext>(
         );
       }
 
-      // DEV: CIMD (client ID metadata document) support
       /**
        * Authorization already validated the value against the same client, so a failing check
        * here means the registered set changed mid-flow (for CIMD clients the metadata document
@@ -341,7 +339,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
        * a redirect target the client no longer registers. Render-time only — issuance stays
        * guarded by the consent POST re-assert.
        */
-      if (EnvSet.values.isDevFeaturesEnabled && typeof redirectUri === 'string') {
+      if (typeof redirectUri === 'string') {
         const client = await provider.Client.find(clientId);
         assertThat(client, new InvalidClient('client must be available'));
         assertThat(

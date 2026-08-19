@@ -15,9 +15,9 @@ const setDevFeaturesEnabled = (isDevFeaturesEnabled: boolean) => {
 };
 
 /**
- * Mimics the generated base document: the user payload schema comes from the env-free zod guards,
- * so `cimdClientId` appears in `properties` and `required` without any dev-feature marker,
- * including occurrences nested in `oneOf` branches (e.g. the JWT customizer context schemas).
+ * Mimics the generated base document: the payload schema comes from the env-free zod guards, so
+ * the dev-feature property appears in `properties` and `required` without any marker — only the
+ * supplement carries it, and it reaches the base property when the documents merge.
  */
 const createBaseDocument = (): OpenAPIV3.Document => ({
   openapi: '3.0.1',
@@ -35,45 +35,11 @@ const createBaseDocument = (): OpenAPIV3.Document => ({
               'application/json': {
                 schema: {
                   type: 'object',
-                  required: ['id', 'cimdClientId'],
+                  required: ['id', 'betaFlag'],
                   properties: {
                     id: { type: 'string' },
-                    cimdClientId: { type: 'string', nullable: true },
+                    betaFlag: { type: 'string', nullable: true },
                   },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-    '/api/configs/jwt-customizer': {
-      get: {
-        responses: {
-          '200': {
-            description: 'ok',
-            content: {
-              'application/json': {
-                schema: {
-                  oneOf: [
-                    {
-                      type: 'object',
-                      properties: {
-                        contextSample: {
-                          type: 'object',
-                          properties: {
-                            user: {
-                              type: 'object',
-                              properties: {
-                                id: { type: 'string' },
-                                cimdClientId: { type: 'string', nullable: true },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  ],
                 },
               },
             },
@@ -86,7 +52,7 @@ const createBaseDocument = (): OpenAPIV3.Document => ({
 
 const createMarkedPropertySchema = () =>
   ({
-    description: 'Dev feature. The CIMD client identifier.',
+    description: 'Dev feature. The beta flag.',
     [devFeatureSchemaExtension]: true,
   }) satisfies OpenAPIV3.SchemaObject & Record<typeof devFeatureSchemaExtension, true>;
 
@@ -100,7 +66,7 @@ const createSupplementDocument = (): DeepPartial<OpenAPIV3.Document> => ({
               'application/json': {
                 schema: {
                   properties: {
-                    cimdClientId: createMarkedPropertySchema(),
+                    betaFlag: createMarkedPropertySchema(),
                   },
                 },
               },
@@ -129,7 +95,7 @@ describe('assembleSwaggerDocument', () => {
 
     const document = assemble();
 
-    expect(JSON.stringify(document)).not.toContain('cimdClientId');
+    expect(JSON.stringify(document)).not.toContain('betaFlag');
     expect(JSON.stringify(document)).not.toContain(devFeatureSchemaExtension);
     expect(document.paths['/api/users/{userId}']?.get?.responses['200']).toMatchObject({
       content: {
@@ -153,16 +119,13 @@ describe('assembleSwaggerDocument', () => {
       content: {
         'application/json': {
           schema: {
-            required: ['id', 'cimdClientId'],
+            required: ['id', 'betaFlag'],
             properties: {
-              cimdClientId: { description: 'Dev feature. The CIMD client identifier.' },
+              betaFlag: { description: 'Dev feature. The beta flag.' },
             },
           },
         },
       },
     });
-    expect(
-      JSON.stringify(document.paths['/api/configs/jwt-customizer']?.get?.responses['200'])
-    ).toContain('cimdClientId');
   });
 });

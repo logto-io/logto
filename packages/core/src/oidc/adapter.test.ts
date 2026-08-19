@@ -183,12 +183,10 @@ describe('postgres Adapter', () => {
  * classes asserted below share the identities of the ones the adapter throws.
  */
 const loadClientAdapter = async ({
-  isDevFeaturesEnabled = true,
   isOidcProviderSsrfProtectionEnabled = true,
   cimdEnabled = true,
   findApplicationById,
 }: {
-  isDevFeaturesEnabled?: boolean;
   isOidcProviderSsrfProtectionEnabled?: boolean;
   cimdEnabled?: boolean;
   findApplicationById: jest.Mock;
@@ -196,7 +194,7 @@ const loadClientAdapter = async ({
   jest.resetModules();
   mockEsm('#src/env-set/index.js', () => ({
     EnvSet: {
-      values: { isDevFeaturesEnabled, isOidcProviderSsrfProtectionEnabled },
+      values: { isOidcProviderSsrfProtectionEnabled },
     },
   }));
 
@@ -238,7 +236,6 @@ describe('client adapter `find` fallback contract', () => {
   it.each([
     ['CIMD is disabled for the tenant', { cimdEnabled: false }],
     ['SSRF protection is off', { isOidcProviderSsrfProtectionEnabled: false }],
-    ['the dev features flag is off', { isDevFeaturesEnabled: false }],
   ])('looks a CIMD client ID up as a registered application when %s', async (_, flags) => {
     const findApplicationById = jest.fn().mockRejectedValue(new Error('not found'));
     const { findClient, errors } = await loadClientAdapter({ ...flags, findApplicationById });

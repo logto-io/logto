@@ -115,7 +115,7 @@ describe('koaAppAccessControl middleware', () => {
     const cimdClientId = 'https://client.example.com/metadata.json';
 
     /**
-     * The gate reads only `oidc.cimdEnabled` from the tenant env set; the static flags are
+     * The gate reads only `oidc.cimdEnabled` from the tenant env set; the static SSRF flag is
      * stubbed onto `EnvSet.values` below.
      */
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal env-set stub scoped to the field the gate reads
@@ -124,7 +124,6 @@ describe('koaAppAccessControl middleware', () => {
     beforeEach(() => {
       Sinon.stub(EnvSet, 'values').value({
         ...EnvSet.values,
-        isDevFeaturesEnabled: true,
         isOidcProviderSsrfProtectionEnabled: true,
       });
     });

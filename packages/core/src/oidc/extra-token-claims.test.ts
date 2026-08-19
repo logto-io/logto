@@ -322,22 +322,12 @@ describe('getExtraTokenClaimsForJwtCustomization', () => {
   describe('log attribution for a cimd client identifier', () => {
     const cimdClientId = 'https://client.example.com/metadata.json';
 
-    it('routes the identifier to the dedicated key when dev features are enabled', async () => {
+    it('routes the identifier to the dedicated key', async () => {
       const logEntry = await runJwtCustomizationWithClientId(cimdClientId);
 
       const payload: unknown = logEntry.append.mock.calls[0]?.[0];
       expect(payload).toHaveProperty('cimdClientId', cimdClientId);
       expect(payload).not.toHaveProperty('applicationId');
-    });
-
-    it('keeps the url-shaped identifier under applicationId when dev features are disabled', async () => {
-      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
-
-      const logEntry = await runJwtCustomizationWithClientId(cimdClientId);
-
-      expect(logEntry.append).toHaveBeenCalledWith(
-        expect.objectContaining({ applicationId: cimdClientId })
-      );
     });
   });
 });

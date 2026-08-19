@@ -5,7 +5,6 @@ import {
 } from '@logto/schemas';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -20,10 +19,6 @@ import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 export default function cimdRoutes<T extends ManagementApiRouter>(
   ...[router, tenant]: RouterInitArgs<T>
 ) {
-  if (!EnvSet.values.isDevFeaturesEnabled) {
-    return;
-  }
-
   const { queries, libraries } = tenant;
   const {
     resources: { findResourceById },

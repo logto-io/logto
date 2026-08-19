@@ -1,20 +1,11 @@
-import {
-  getCimdCapableUserApplicationGrantsResponseGuard,
-  getUserApplicationGrantsResponseGuard,
-} from '@logto/schemas';
+import { getUserApplicationGrantsResponseGuard } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 import { object, string, enum as zodEnum } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
-
-// DEV: CIMD (client ID metadata document) support
-const grantsResponseGuard = EnvSet.values.isDevFeaturesEnabled
-  ? getCimdCapableUserApplicationGrantsResponseGuard
-  : getUserApplicationGrantsResponseGuard;
 
 export default function adminUserGrantRoutes<T extends ManagementApiRouter>(
   ...[router, tenant]: RouterInitArgs<T>
@@ -31,7 +22,7 @@ export default function adminUserGrantRoutes<T extends ManagementApiRouter>(
       query: object({
         appType: zodEnum(['firstParty', 'thirdParty']).optional(),
       }),
-      response: grantsResponseGuard,
+      response: getUserApplicationGrantsResponseGuard,
       status: [200, 500],
     }),
     async (ctx, next) => {

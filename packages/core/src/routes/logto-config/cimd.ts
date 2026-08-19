@@ -15,10 +15,6 @@ import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 export default function logtoConfigCimdRoutes<T extends ManagementApiRouter>(
   ...[router, tenant]: RouterInitArgs<T>
 ) {
-  if (!EnvSet.values.isDevFeaturesEnabled) {
-    return;
-  }
-
   const { id: tenantId } = tenant;
   const { getCimdConfig, upsertCimdConfig } = tenant.queries.logtoConfigs;
 
