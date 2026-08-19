@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- This page coordinates related session, grant, and trusted-device state. */
 import classNames from 'classnames';
 import { HTTPError } from 'ky';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
@@ -8,10 +9,11 @@ import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import AccountPageHeader from '@ac/components/AccountPageHeader';
 import ConfirmModal from '@ac/components/ConfirmModal';
 import PageFooter from '@ac/components/PageFooter';
+import { isDevFeaturesEnabled } from '@ac/constants/env';
 import { layoutClassNames } from '@ac/constants/layout';
 import { verifiedActionRoute } from '@ac/constants/routes';
 import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
-import { isEditableField } from '@ac/utils/security-page';
+import { isEditableField, isVisibleField } from '@ac/utils/security-page';
 import { sessionStorage } from '@ac/utils/session-storage';
 
 import { getSessions, revokeSession, getGrants, revokeGrant } from '../../apis/sessions';
@@ -21,6 +23,7 @@ import homeStyles from '../Home/index.module.scss';
 
 import GrantRow from './GrantRow';
 import SessionRow from './SessionRow';
+import TrustedDevices from './TrustedDevices';
 import styles from './index.module.scss';
 import { normalizeGrantRows, type AccountSession, type GrantedAppRow } from './utils';
 
@@ -46,10 +49,15 @@ const Sessions = () => {
   const revokeGrantApi = useApi(revokeGrant);
 
   const sessionControl = accountCenterSettings?.fields.session;
+  const trustedDeviceControl = accountCenterSettings?.fields.trustedDevice;
+  const isSessionVisible = isVisibleField(sessionControl);
+  // DEV: MFA trusted device management
+  const isTrustedDeviceVisible = isDevFeaturesEnabled && isVisibleField(trustedDeviceControl);
   const isEditable = isEditableField(sessionControl);
 
-  const handlePermissionDenied = useCallback(async () => {
+  const handlePermissionDenied = useCallback(() => {
     setVerificationId(undefined);
+    setHasLoaded(false);
     setToast(t('account_center.verification.verification_required'));
   }, [setVerificationId, setToast, t]);
 
@@ -104,7 +112,7 @@ const Sessions = () => {
   );
 
   useEffect(() => {
-    if (!verificationId || hasLoaded || isLoading) {
+    if (!verificationId || !isSessionVisible || hasLoaded || isLoading) {
       return;
     }
 
@@ -128,13 +136,15 @@ const Sessions = () => {
 
   const handleManage = useCallback(() => {
     if (verificationId) {
-      void fetchData(verificationId);
+      if (isSessionVisible) {
+        void fetchData(verificationId);
+      }
       return;
     }
 
     sessionStorage.setPendingVerifiedAction('load-sessions');
     navigateTo(verifiedActionRoute);
-  }, [verificationId, fetchData, navigateTo]);
+  }, [verificationId, fetchData, isSessionVisible, navigateTo]);
 
   const handleRevoke = useCallback(
     async (session: AccountSession) => {
@@ -224,49 +234,63 @@ const Sessions = () => {
           descriptionKey="account_center.sessions.page_description"
         />
         <div className={classNames(homeStyles.content, layoutClassNames.pageContent)}>
-          <div className={classNames(styles.section, layoutClassNames.section)}>
-            <div className={classNames(styles.sectionTitle, layoutClassNames.sectionTitle)}>
-              {t('account_center.sessions.title')}
-            </div>
-            <div className={classNames(styles.card, layoutClassNames.card)}>
-              {hasLoaded ? (
-                <>
-                  {currentSession && (
-                    <SessionRow isCurrent session={currentSession} isEditable={false} />
-                  )}
-                  {otherSessions.map((session) => (
-                    <SessionRow
-                      key={session.payload.uid}
-                      session={session}
-                      isEditable={isEditable}
-                      onRevoke={() => {
-                        setRevokeTarget(session);
-                      }}
-                    />
-                  ))}
-                  {otherSessions.length === 0 && (
-                    <div className={styles.emptyState}>
-                      {t('account_center.sessions.no_other_sessions')}
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className={classNames(styles.row, layoutClassNames.row)}>
-                  <div className={styles.sessionInfo}>
-                    {isLoading ? (
-                      <div className={styles.meta}>{t('account_center.sessions.loading')}</div>
-                    ) : (
-                      <button type="button" className={styles.actionButton} onClick={handleManage}>
-                        {t('account_center.security.manage')}
-                      </button>
+          {isSessionVisible && (
+            <div className={classNames(styles.section, layoutClassNames.section)}>
+              <div className={classNames(styles.sectionTitle, layoutClassNames.sectionTitle)}>
+                {t('account_center.sessions.title')}
+              </div>
+              <div className={classNames(styles.card, layoutClassNames.card)}>
+                {hasLoaded ? (
+                  <>
+                    {currentSession && (
+                      <SessionRow isCurrent session={currentSession} isEditable={false} />
                     )}
+                    {otherSessions.map((session) => (
+                      <SessionRow
+                        key={session.payload.uid}
+                        session={session}
+                        isEditable={isEditable}
+                        onRevoke={() => {
+                          setRevokeTarget(session);
+                        }}
+                      />
+                    ))}
+                    {otherSessions.length === 0 && (
+                      <div className={styles.emptyState}>
+                        {t('account_center.sessions.no_other_sessions')}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className={classNames(styles.row, layoutClassNames.row)}>
+                    <div className={styles.sessionInfo}>
+                      {isLoading ? (
+                        <div className={styles.meta}>{t('account_center.sessions.loading')}</div>
+                      ) : (
+                        <button
+                          type="button"
+                          className={styles.actionButton}
+                          onClick={handleManage}
+                        >
+                          {t('account_center.security.manage')}
+                        </button>
+                      )}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
-          {hasLoaded && (grantRows !== undefined || hasGrantLoadingError) && (
+          {isTrustedDeviceVisible && (Boolean(verificationId) || !isSessionVisible) && (
+            <TrustedDevices
+              hasManageAction={!isSessionVisible}
+              onManage={handleManage}
+              onPermissionDenied={handlePermissionDenied}
+            />
+          )}
+
+          {isSessionVisible && hasLoaded && (grantRows !== undefined || hasGrantLoadingError) && (
             <div className={classNames(styles.section, layoutClassNames.section)}>
               <div className={classNames(styles.sectionTitle, layoutClassNames.sectionTitle)}>
                 {t('account_center.sessions.third_party_apps_title')}
@@ -336,3 +360,4 @@ const Sessions = () => {
 };
 
 export default Sessions;
+/* eslint-enable max-lines */

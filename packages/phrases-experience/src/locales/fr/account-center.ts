@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'Page introuvable',
@@ -287,7 +288,23 @@ const account_center = {
     revoke_grant_description:
       "Cela révoquera l'accès accordé à cette application. Les jetons d'accès déjà émis peuvent rester valides jusqu'à leur expiration. Êtes-vous sûr de vouloir continuer ?",
     revoke_grant_failed: 'Échec de la révocation de certaines autorisations. Veuillez réessayer.',
+    trusted_devices: {
+      title: 'Appareils de confiance MFA',
+      current_device: 'Appareil actuel',
+      expires_on: 'Expire le {{date}}',
+      unknown_location: 'Emplacement inconnu',
+      remove: 'Supprimer',
+      removed: "L'appareil de confiance a été supprimé.",
+      loading: 'Chargement...',
+      empty: 'Aucun appareil de confiance.',
+      load_failed: 'Impossible de charger les appareils de confiance. Veuillez réessayer.',
+      retry: 'Réessayer',
+      remove_confirmation_title: "Supprimer l'appareil de confiance ?",
+      remove_confirmation_description:
+        'Vous devrez à nouveau effectuer la MFA sur cet appareil lors de votre prochaine connexion. Votre session actuelle restera active.',
+    },
   },
 };
 
 export default Object.freeze(account_center);
+/* eslint-enable max-lines */

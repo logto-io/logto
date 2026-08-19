@@ -271,6 +271,21 @@ const account_center = {
     revoke_grant_description:
       '이 애플리케이션에 부여된 액세스를 철회합니다. 이미 발급된 액세스 토큰은 만료될 때까지 유효할 수 있습니다. 계속하시겠습니까?',
     revoke_grant_failed: '일부 권한 철회에 실패했습니다. 다시 시도해 주세요.',
+    trusted_devices: {
+      title: 'MFA 신뢰할 수 있는 기기',
+      current_device: '현재 기기',
+      expires_on: '{{date}}에 만료',
+      unknown_location: '알 수 없는 위치',
+      remove: '제거',
+      removed: '신뢰할 수 있는 기기를 제거했습니다.',
+      loading: '로딩 중...',
+      empty: '신뢰할 수 있는 기기가 없습니다.',
+      load_failed: '신뢰할 수 있는 기기를 불러오지 못했습니다. 다시 시도해 주세요.',
+      retry: '다시 시도',
+      remove_confirmation_title: '신뢰할 수 있는 기기를 제거할까요?',
+      remove_confirmation_description:
+        '다음에 이 기기에서 로그인할 때 MFA를 다시 완료해야 합니다. 현재 세션은 계속 활성 상태로 유지됩니다.',
+    },
   },
 };
 

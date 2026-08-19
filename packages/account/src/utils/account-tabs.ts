@@ -1,5 +1,6 @@
 import type { PageContextType } from '@ac/Providers/PageContextProvider/PageContext';
 import { buildAccountNavItems } from '@ac/components/account-nav-items';
+import { isDevFeaturesEnabled } from '@ac/constants/env';
 
 import {
   hasVisibleProfilePage,
@@ -17,7 +18,8 @@ export const getAccountTabSettings = ({
   experienceSettings,
 }: AccountTabSettings) => {
   const hasSecurity = hasVisibleSecuritySection(accountCenterSettings, experienceSettings);
-  const hasSessions = hasVisibleSessionsPage(accountCenterSettings);
+  // DEV: MFA trusted device management
+  const hasSessions = hasVisibleSessionsPage(accountCenterSettings, isDevFeaturesEnabled);
   const hasProfile = hasVisibleProfilePage(accountCenterSettings, experienceSettings);
 
   return {

@@ -282,6 +282,21 @@ const account_center = {
     revoke_grant_description:
       'This will revoke the access granted to this application. Previously issued access tokens may remain valid until they expire. Are you sure you want to continue?',
     revoke_grant_failed: 'Failed to revoke some grants. Please try again.',
+    trusted_devices: {
+      title: 'MFA trusted devices',
+      current_device: 'Current device',
+      expires_on: 'Expire on {{date}}',
+      unknown_location: 'Unknown location',
+      remove: 'Remove',
+      removed: 'Trusted device removed successfully.',
+      loading: 'Loading...',
+      empty: 'No trusted devices.',
+      load_failed: 'Failed to load trusted devices. Please try again.',
+      retry: 'Try again',
+      remove_confirmation_title: 'Remove trusted device?',
+      remove_confirmation_description:
+        "You'll need to complete MFA again on this device the next time you sign in. Your current session will stay active.",
+    },
   },
 };
 

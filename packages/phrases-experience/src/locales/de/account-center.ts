@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'Seite nicht gefunden',
@@ -293,7 +294,24 @@ const account_center = {
       'Dadurch wird der dieser Anwendung gewährte Zugriff widerrufen. Bereits ausgestellte Zugriffstokens können bis zu ihrem Ablauf gültig bleiben. Möchten Sie wirklich fortfahren?',
     revoke_grant_failed:
       'Einige Berechtigungen konnten nicht widerrufen werden. Bitte versuchen Sie es erneut.',
+    trusted_devices: {
+      title: 'Vertrauenswürdige MFA-Geräte',
+      current_device: 'Aktuelles Gerät',
+      expires_on: 'Läuft am {{date}} ab',
+      unknown_location: 'Unbekannter Standort',
+      remove: 'Entfernen',
+      removed: 'Vertrauenswürdiges Gerät wurde erfolgreich entfernt.',
+      loading: 'Wird geladen...',
+      empty: 'Keine vertrauenswürdigen Geräte.',
+      load_failed:
+        'Vertrauenswürdige Geräte konnten nicht geladen werden. Bitte versuche es erneut.',
+      retry: 'Erneut versuchen',
+      remove_confirmation_title: 'Vertrauenswürdiges Gerät entfernen?',
+      remove_confirmation_description:
+        'Bei deiner nächsten Anmeldung auf diesem Gerät musst du MFA erneut abschließen. Deine aktuelle Sitzung bleibt aktiv.',
+    },
   },
 };
 
 export default Object.freeze(account_center);
+/* eslint-enable max-lines */

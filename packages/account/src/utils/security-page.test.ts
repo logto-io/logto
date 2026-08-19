@@ -16,10 +16,34 @@ import {
   hasVisibleMfaSection,
   hasVisibleProfilePage,
   hasVisibleSecuritySection,
+  hasVisibleSessionsPage,
   hasVisibleSocialSection,
 } from './security-page';
 
 describe('security-page utils', () => {
+  it('hasVisibleSessionsPage independently respects session and trusted-device controls', () => {
+    const settings = {
+      enabled: true,
+      deleteAccountUrl: null,
+      fields: {
+        session: AccountCenterControlValue.Off,
+        trustedDevice: AccountCenterControlValue.ReadOnly,
+      },
+    };
+
+    expect(hasVisibleSessionsPage(settings)).toBe(false);
+    expect(hasVisibleSessionsPage(settings, true)).toBe(true);
+    expect(
+      hasVisibleSessionsPage({
+        ...settings,
+        fields: {
+          session: AccountCenterControlValue.Edit,
+          trustedDevice: AccountCenterControlValue.Off,
+        },
+      })
+    ).toBe(true);
+  });
+
   it('hasVisibleSecuritySection returns false when account center is disabled', () => {
     expect(
       hasVisibleSecuritySection({

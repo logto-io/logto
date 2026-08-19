@@ -14,7 +14,7 @@ type SecurityPageSettings = Pick<AccountCenter, 'enabled' | 'fields' | 'deleteAc
 type SecurityPageExperienceSettings = Pick<SignInExperienceResponse, 'socialConnectors' | 'mfa'> &
   Partial<Pick<SignInExperienceResponse, 'passkeySignIn'>>;
 
-const isVisibleField = (value?: AccountCenterControlValue): boolean =>
+export const isVisibleField = (value?: AccountCenterControlValue): boolean =>
   value !== undefined && value !== AccountCenterControlValue.Off;
 
 const isReadableField = (value?: AccountCenterControlValue): boolean =>
@@ -121,12 +121,18 @@ export const hasVisibleSecuritySection = (
   );
 };
 
-export const hasVisibleSessionsPage = (accountCenterSettings?: SecurityPageSettings): boolean => {
+export const hasVisibleSessionsPage = (
+  accountCenterSettings?: SecurityPageSettings,
+  includeTrustedDevices = false
+): boolean => {
   if (!accountCenterSettings?.enabled) {
     return false;
   }
 
-  return isVisibleField(accountCenterSettings.fields.session);
+  return (
+    isVisibleField(accountCenterSettings.fields.session) ||
+    (includeTrustedDevices && isVisibleField(accountCenterSettings.fields.trustedDevice))
+  );
 };
 
 export const hasAvailableSecurityVerificationMethod = (

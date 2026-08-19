@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'Pagina non trovata',
@@ -285,7 +286,23 @@ const account_center = {
     revoke_grant_description:
       "Questo revocherà l'accesso concesso a questa applicazione. I token di accesso già emessi potrebbero restare validi fino alla loro scadenza. Sei sicuro di voler continuare?",
     revoke_grant_failed: 'Revoca di alcune autorizzazioni non riuscita. Riprova.',
+    trusted_devices: {
+      title: 'Dispositivi attendibili MFA',
+      current_device: 'Dispositivo attuale',
+      expires_on: 'Scade il {{date}}',
+      unknown_location: 'Posizione sconosciuta',
+      remove: 'Rimuovi',
+      removed: 'Dispositivo attendibile rimosso correttamente.',
+      loading: 'Caricamento...',
+      empty: 'Nessun dispositivo attendibile.',
+      load_failed: 'Impossibile caricare i dispositivi attendibili. Riprova.',
+      retry: 'Riprova',
+      remove_confirmation_title: 'Rimuovere il dispositivo attendibile?',
+      remove_confirmation_description:
+        'Al prossimo accesso su questo dispositivo dovrai completare nuovamente la MFA. La sessione attuale resterà attiva.',
+    },
   },
 };
 
 export default Object.freeze(account_center);
+/* eslint-enable max-lines */
