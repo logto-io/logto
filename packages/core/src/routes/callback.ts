@@ -16,6 +16,12 @@ const getAccountCenterCallbackLocation = (connectorId: string | undefined, searc
   `/account/callback/social/${connectorId ?? ''}?${searchParams}`;
 
 function callbackRoutes<T extends Router>(router: T) {
+  /**
+   * Sign-in Experience and Account Center share the same social callback URI, so that connectors
+   * allowing only one redirect URI (e.g. QQ) can serve both. Route by the `state` prefix, and
+   * default to the Sign-in Experience for any other `state`, which covers in-flight requests and
+   * custom sign-in UIs building their own `state`.
+   */
   router.get('/callback/:connectorId', async (ctx, next) => {
     const searchParams = new URLSearchParams(ctx.querystring).toString();
     const state = typeof ctx.query.state === 'string' ? ctx.query.state : undefined;

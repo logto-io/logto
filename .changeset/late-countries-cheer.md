@@ -2,6 +2,7 @@
 '@logto/account': minor
 '@logto/console': minor
 '@logto/core': minor
+'@logto/experience': minor
 '@logto/schemas': minor
 ---
 
