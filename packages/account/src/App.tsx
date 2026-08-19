@@ -1,5 +1,6 @@
 import LogtoSignature from '@experience/shared/components/LogtoSignature';
-import { LogtoProvider, ReservedScope, useLogto, UserScope } from '@logto/react';
+import { ReservedScope, UserScope } from '@logto/core-kit';
+import { LogtoProvider, useLogto } from '@logto/react';
 import { accountCenterApplicationId, SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import { useContext, useMemo } from 'react';
@@ -293,6 +294,7 @@ const App = () => (
           UserScope.Identities,
           UserScope.CustomData,
           UserScope.Sessions,
+          UserScope.TrustedDevices,
         ],
       }}
     >

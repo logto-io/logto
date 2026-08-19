@@ -1,4 +1,4 @@
-import { type z } from 'zod';
+import { z } from 'zod';
 
 import { TrustedDevices } from '../db-entries/index.js';
 
@@ -14,3 +14,10 @@ export const trustedDeviceResponseGuard = TrustedDevices.guard.pick({
 });
 
 export type TrustedDeviceResponse = z.infer<typeof trustedDeviceResponseGuard>;
+
+/** Account API trusted-device metadata with current-browser state. */
+export const accountTrustedDeviceResponseGuard = trustedDeviceResponseGuard.extend({
+  isCurrent: z.boolean(),
+});
+
+export type AccountTrustedDeviceResponse = z.infer<typeof accountTrustedDeviceResponseGuard>;

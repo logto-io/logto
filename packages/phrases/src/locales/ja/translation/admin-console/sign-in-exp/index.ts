@@ -187,6 +187,7 @@ const sign_in_exp = {
       custom_data_description:
         'ユーザーに保存されているカスタム JSON データへのアクセスを制御します。',
       sessions: 'セッション',
+      trusted_devices: '信頼済みデバイス',
     },
     profile_fields: {
       title: 'ビルトインアカウントセンターのプロフィールフィールド',

@@ -187,6 +187,7 @@ const sign_in_exp = {
       custom_data: 'Custom data',
       custom_data_description: 'Control access to custom JSON data stored on the user.',
       sessions: 'Sessions',
+      trusted_devices: 'Trusted devices',
     },
     profile_fields: {
       title: 'Profile fields for prebuilt account center',

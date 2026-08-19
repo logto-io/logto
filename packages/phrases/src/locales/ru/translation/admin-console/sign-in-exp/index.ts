@@ -187,6 +187,7 @@ const sign_in_exp = {
       custom_data_description:
         'Управляйте доступом к пользовательским JSON-данным, хранящимся у пользователя.',
       sessions: 'Сессии',
+      trusted_devices: 'Доверенные устройства',
     },
     profile_fields: {
       title: 'Поля профиля для готового центра учётной записи',

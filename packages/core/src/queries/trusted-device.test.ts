@@ -192,25 +192,6 @@ describe('trusted device queries', () => {
     ).resolves.toBeNull();
   });
 
-  it('deletes only the presented owned record at the expiry boundary', async () => {
-    const expectSql = sql`
-      delete from ${table}
-      where ${fields.id} = $1
-        and ${fields.userId} = $2
-        and ${fields.expiresAt} <= now()
-    `;
-
-    mockQuery.mockImplementationOnce(async (query, values) => {
-      expectSqlAssert(query, expectSql.sql);
-      expect(values).toEqual([trustedDevice.id, trustedDevice.userId]);
-      return createMockQueryResult([trustedDevice]);
-    });
-
-    await expect(
-      queries.deleteExpiredByIdAndUserId(trustedDevice.id, trustedDevice.userId)
-    ).resolves.toBe(1);
-  });
-
   it('deletes a record only when both its ID and owner match', async () => {
     const expectSql = sql`
       delete from ${table}

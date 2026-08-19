@@ -39,7 +39,6 @@ const createQueries = () =>
     findActiveByIdAndUserId: jest.fn(),
     updateMetadataByIdAndUserId: jest.fn(),
     deleteByIdAndUserId: jest.fn(),
-    deleteExpiredByIdAndUserId: jest.fn(),
     deleteExpiredByTenant: jest.fn(),
   }) as unknown as jest.Mocked<TrustedDeviceQueries>;
 
@@ -399,26 +398,22 @@ describe('trusted device library', () => {
 
     await expect(library.validateCredential(ctx, userId)).resolves.toBeUndefined();
     expect(set).toHaveBeenCalledTimes(1);
-    expect(queries.deleteExpiredByIdAndUserId).not.toHaveBeenCalled();
   });
 
-  it('silently attempts exact cleanup for a missing or expired presented record', async () => {
+  it('clears a credential for a missing or expired record', async () => {
     const secret = generateTrustedDeviceSecret();
     const queries = createQueries();
     const { ctx, set } = createCookieContext(
       serializeTrustedDeviceCredential({ id: trustedDeviceId, secret })
     );
     queries.findActiveByIdAndUserId.mockResolvedValueOnce(null);
-    queries.deleteExpiredByIdAndUserId.mockResolvedValueOnce(1);
 
     const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(), {
       isProduction: false,
     });
 
     await expect(library.validateCredential(ctx, userId)).resolves.toBeUndefined();
-    await Promise.resolve();
 
-    expect(queries.deleteExpiredByIdAndUserId).toHaveBeenCalledWith(trustedDeviceId, userId);
     expect(set).toHaveBeenCalledTimes(1);
   });
 

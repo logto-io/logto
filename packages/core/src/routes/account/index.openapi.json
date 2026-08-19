@@ -783,6 +783,47 @@
         }
       }
     },
+    "/api/my-account/trusted-devices": {
+      "get": {
+        "tags": ["Dev feature"],
+        "operationId": "GetTrustedDevices",
+        "summary": "Get trusted devices",
+        "description": "Retrieve a paginated list of active trusted devices for the signed-in user. A logto-verification-id in header and the trusted-devices scope are required. Each entry includes isCurrent, which is true only when the browser's trusted-device cookie passes full credential validation for that record.",
+        "responses": {
+          "200": {
+            "description": "A paginated list of the signed-in user's active trusted devices."
+          },
+          "401": {
+            "description": "Permission denied, the verification record is invalid or the access token does not include the trusted-devices scope."
+          }
+        }
+      }
+    },
+    "/api/my-account/trusted-devices/{trustedDeviceId}": {
+      "delete": {
+        "tags": ["Dev feature"],
+        "operationId": "DeleteTrustedDeviceById",
+        "summary": "Delete a trusted device",
+        "description": "Delete a trusted device owned by the signed-in user. Deleting the current trusted device clears its cookie without ending the login session.",
+        "responses": {
+          "204": {
+            "description": "The trusted device was deleted successfully."
+          },
+          "400": {
+            "description": "The field is not editable."
+          },
+          "401": {
+            "description": "Permission denied, the verification record is invalid or the access token does not include the trusted-devices scope."
+          },
+          "403": {
+            "description": "The request was made by a third-party application."
+          },
+          "404": {
+            "description": "The trusted device was not found or does not belong to the signed-in user."
+          }
+        }
+      }
+    },
     "/api/my-account/user-assets/avatar": {
       "post": {
         "operationId": "UploadAccountAvatar",

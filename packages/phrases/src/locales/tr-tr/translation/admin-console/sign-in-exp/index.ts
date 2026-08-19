@@ -187,6 +187,7 @@ const sign_in_exp = {
       custom_data: 'Özel veriler',
       custom_data_description: 'Kullanıcıda saklanan özel JSON verilerine erişimi kontrol edin.',
       sessions: 'Oturumlar',
+      trusted_devices: 'Güvenilir cihazlar',
     },
     profile_fields: {
       title: 'Önceden oluşturulmuş hesap merkezi için profil alanları',
