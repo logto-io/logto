@@ -7,17 +7,27 @@ type WindowInput = {
   endTime?: number;
   /** Full recipient address; the endpoint matches it case-insensitively and exactly. */
   recipient?: string;
-  cursor?: string;
+  /** 1-based page index. */
+  page: number;
+  /** Rows per page, forwarded as the endpoint's `page_size`. */
+  pageSize: number;
 };
 
 /**
- * Translate the picker window, recipient filter, and cursor into the email-logs endpoint's
+ * Translate the picker window, recipient filter, and page into the email-logs endpoint's
  * search parameters. The picker window's end is inclusive; the endpoint's `to` bound is
  * exclusive, hence the one-millisecond shift.
  */
-export const buildEmailLogsSearch = ({ startTime, endTime, recipient, cursor }: WindowInput) => ({
+export const buildEmailLogsSearch = ({
+  startTime,
+  endTime,
+  recipient,
+  page,
+  pageSize,
+}: WindowInput) => ({
   ...conditional(startTime !== undefined && { from: new Date(startTime).toISOString() }),
   ...conditional(endTime !== undefined && { to: new Date(endTime + 1).toISOString() }),
   ...conditional(recipient && { recipient }),
-  ...conditional(cursor && { cursor }),
+  page: String(page),
+  page_size: String(pageSize),
 });

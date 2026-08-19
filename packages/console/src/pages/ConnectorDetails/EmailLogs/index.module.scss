@@ -2,7 +2,7 @@
 
 .logs {
   flex: 1;
-  margin-bottom: _.unit(2);
+  margin-bottom: _.unit(6);
 }
 
 .filter {
@@ -36,11 +36,4 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-}
-
-.pagination {
-  display: flex;
-  justify-content: flex-end;
-  gap: _.unit(2);
-  margin-bottom: _.unit(6);
 }
