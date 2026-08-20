@@ -204,6 +204,31 @@ describe('Consent', () => {
       expect(queryByText(/is self-declared by/)).toBeNull();
       unmount();
     });
+
+    it('only submits one selected organization', async () => {
+      mockedGetConsentInfo.mockResolvedValueOnce({
+        ...cimdConsentInfo('Fancy client'),
+        organizations: [
+          { id: 'organization_1', name: 'Organization 1' },
+          { id: 'organization_2', name: 'Organization 2' },
+        ],
+      });
+      mockedConsent.mockResolvedValueOnce({ redirectTo: '' });
+
+      const { getByText } = renderConsent();
+
+      await waitFor(() => {
+        expect(getByText('Organization 1')).not.toBeNull();
+      });
+
+      fireEvent.click(getByText('Organization 1'));
+      fireEvent.click(getByText('Organization 2'));
+      fireEvent.click(getByText('action.authorize'));
+
+      await waitFor(() => {
+        expect(mockedConsent).toBeCalledWith(['organization_2']);
+      });
+    });
   });
 
   it('signs out from the access denied page', async () => {

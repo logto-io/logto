@@ -101,25 +101,6 @@ const Consent = () => {
     }
   }, [asyncConsent, handleConsentError, redirectTo, selectedOrganizations]);
 
-  const toggleOrganization = useCallback((organization: Organization) => {
-    setSelectedOrganizations((selectedOrganizations) => {
-      if (!isMultiOrganizationConsentEnabled) {
-        return [organization];
-      }
-
-      const isSelected = selectedOrganizations.some(({ id }) => id === organization.id);
-
-      // Organization access consent always requires at least one selected organization.
-      if (isSelected && selectedOrganizations.length === 1) {
-        return selectedOrganizations;
-      }
-
-      return isSelected
-        ? selectedOrganizations.filter(({ id }) => id !== organization.id)
-        : [...selectedOrganizations, organization];
-    });
-  }, []);
-
   useEffect(() => {
     const getConsentInfoHandler = async () => {
       const [error, result] = await asyncGetConsentInfo();
@@ -166,6 +147,25 @@ const Consent = () => {
   } = consentData;
 
   const { unregisteredClientHost, applicationName } = getClientDisplayData(consentData);
+  const isMultiSelectEnabled = isMultiOrganizationConsentEnabled && !unregisteredClientHost;
+  const toggleOrganization = (organization: Organization) => {
+    setSelectedOrganizations((selectedOrganizations) => {
+      if (!isMultiSelectEnabled) {
+        return [organization];
+      }
+
+      const isSelected = selectedOrganizations.some(({ id }) => id === organization.id);
+
+      // Organization access consent always requires at least one selected organization.
+      if (isSelected && selectedOrganizations.length === 1) {
+        return selectedOrganizations;
+      }
+
+      return isSelected
+        ? selectedOrganizations.filter(({ id }) => id !== organization.id)
+        : [...selectedOrganizations, organization];
+    });
+  };
   const showTerms = Boolean(termsOfUseUrl ?? privacyPolicyUrl);
   const { redirectUri } = consentData;
   const redirectUriOrigin = consentData.redirectUri
@@ -203,7 +203,7 @@ const Consent = () => {
           className={styles.organizationSelector}
           organizations={consentData.organizations}
           selectedOrganizations={selectedOrganizations}
-          isMultiSelectEnabled={isMultiOrganizationConsentEnabled}
+          isMultiSelectEnabled={isMultiSelectEnabled}
           onToggle={toggleOrganization}
         />
       )}
