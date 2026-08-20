@@ -64,7 +64,7 @@ const OrganizationSelectorModal = ({
     return () => {
       window.removeEventListener('resize', updatePosition);
     };
-  }, [updatePosition, isOpen]);
+  }, [updatePosition, isOpen, selectedOrganizations.length]);
 
   return (
     <ReactModal
