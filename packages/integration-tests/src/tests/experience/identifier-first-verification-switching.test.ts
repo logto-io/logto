@@ -1,16 +1,19 @@
 import { ConnectorType } from '@logto/connector-kit';
-import { CaptchaType, SignInIdentifier } from '@logto/schemas';
+import { SignInIdentifier } from '@logto/schemas';
 
 import { deleteUser, updateUser } from '#src/api/admin-user.js';
-import { deleteCaptchaProvider, updateCaptchaProvider } from '#src/api/captcha-provider.js';
+import { deleteCaptchaProvider } from '#src/api/captcha-provider.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { demoAppUrl } from '#src/constants.js';
+import { setAlwaysPassCaptcha } from '#src/helpers/captcha.js';
 import {
   clearConnectorsByTypes,
   setEmailConnector,
   setSmsConnector,
 } from '#src/helpers/connector.js';
 import {
+  disableCaptcha,
+  enableCaptcha,
   enableMandatoryMfaWithWebAuthn,
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
@@ -272,32 +275,31 @@ describe('identifier-first verification method switching', () => {
       await experience.verifyThenEnd(false);
       await updateUser(userId, { primaryEmail: email });
 
-      await updateCaptchaProvider({
-        config: {
-          type: CaptchaType.Turnstile,
-          siteKey: 'site_key',
-          secretKey: 'secret_key',
-        },
-      });
+      await setAlwaysPassCaptcha();
       await setupSignInExperience({
         passkeyEnabled: true,
         passwordEnabled: false,
         verificationCodeEnabled: true,
         isPasswordPrimary: false,
       });
-      await updateSignInExperience({ captchaPolicy: { enabled: true } });
+      await enableCaptcha();
 
-      await experience.startWith(demoAppUrl);
-      await experience.toFillInput('identifier', email, { submit: true });
-      await experience.waitForPathname('sign-in/passkey');
+      try {
+        await experience.startWith(demoAppUrl);
+        await experience.toFillInput('identifier', email, { submit: true });
+        await experience.waitForPathname('sign-in/passkey');
 
-      await expect(experience.page).toMatchElement('div[class*="captchaBox"]');
-
-      await updateSignInExperience({ captchaPolicy: { enabled: false } });
-      await deleteCaptchaProvider();
-      await experience.clearVirtualAuthenticator();
-      await deleteUser(userId);
-      await experience.page.close();
+        await expect(experience.page).toMatchElement('div[class*="captchaBox"]');
+        await experience.page.waitForFunction(() => 'turnstile' in window);
+        await experience.toClick('a', /sign in with verification code/i);
+        await experience.waitForPathname('sign-in/verification-code');
+      } finally {
+        await disableCaptcha();
+        await deleteCaptchaProvider();
+        await experience.clearVirtualAuthenticator();
+        await deleteUser(userId);
+        await experience.page.close();
+      }
     });
 
     it('should show switch link and navigate to password page when switching methods', async () => {

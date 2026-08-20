@@ -17,21 +17,8 @@ describe('SignInPasskeyVerification', () => {
   const { result } = renderHook(() => useSessionStorage());
   const { set, remove } = result.current;
 
-  beforeEach(() => {
-    set(StorageKeys.IdentifierInputValue, {
-      type: SignInIdentifier.Email,
-      value: 'foo@logto.io',
-    });
-    set(StorageKeys.verificationIds, { [VerificationType.SignInPasskey]: 'verification-id' });
-  });
-
-  afterEach(() => {
-    remove(StorageKeys.IdentifierInputValue);
-    remove(StorageKeys.verificationIds);
-  });
-
-  it('mounts the CAPTCHA box when verification code sign-in is available', () => {
-    const { queryByTestId } = renderWithPageContext(
+  const renderPasskeyVerificationPage = (password: boolean) =>
+    renderWithPageContext(
       <SettingsProvider
         settings={{
           ...mockSignInExperienceSettings,
@@ -39,9 +26,9 @@ describe('SignInPasskeyVerification', () => {
             methods: [
               {
                 identifier: SignInIdentifier.Email,
-                password: false,
+                password,
                 verificationCode: true,
-                isPasswordPrimary: false,
+                isPasswordPrimary: password,
               },
             ],
           },
@@ -68,6 +55,28 @@ describe('SignInPasskeyVerification', () => {
       }
     );
 
+  beforeEach(() => {
+    set(StorageKeys.IdentifierInputValue, {
+      type: SignInIdentifier.Email,
+      value: 'foo@logto.io',
+    });
+    set(StorageKeys.verificationIds, { [VerificationType.SignInPasskey]: 'verification-id' });
+  });
+
+  afterEach(() => {
+    remove(StorageKeys.IdentifierInputValue);
+    remove(StorageKeys.verificationIds);
+  });
+
+  it('mounts the CAPTCHA box for direct verification code fallback', () => {
+    const { queryByTestId } = renderPasskeyVerificationPage(false);
+
     expect(queryByTestId('captcha-box')).not.toBeNull();
+  });
+
+  it('does not mount the CAPTCHA box when password fallback takes priority', () => {
+    const { queryByTestId } = renderPasskeyVerificationPage(true);
+
+    expect(queryByTestId('captcha-box')).toBeNull();
   });
 });

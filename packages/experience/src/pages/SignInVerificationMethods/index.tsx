@@ -47,7 +47,8 @@ const SignInVerificationMethods = () => {
   const { type, value } = identifierInputValue;
   const methodSetting = signInMethods.find((method) => method.identifier === type);
   const hasPassword = Boolean(methodSetting?.password);
-  const hasVerificationCode = Boolean(methodSetting?.verificationCode);
+  const hasVerificationCode =
+    type !== SignInIdentifier.Username && Boolean(methodSetting?.verificationCode);
 
   return (
     <SecondaryPageLayout
@@ -78,8 +79,7 @@ const SignInVerificationMethods = () => {
             }}
           />
         )}
-        {hasVerificationCode && type !== SignInIdentifier.Username && <CaptchaBox />}
-        {hasVerificationCode && type !== SignInIdentifier.Username && (
+        {hasVerificationCode && (
           <VerificationMethodCard
             titleKey={`description.verification_method.${type}_verification_code`}
             descriptionKey="description.verification_method.verification_code_description"
@@ -91,6 +91,7 @@ const SignInVerificationMethods = () => {
           />
         )}
       </div>
+      {hasVerificationCode && <CaptchaBox />}
     </SecondaryPageLayout>
   );
 };

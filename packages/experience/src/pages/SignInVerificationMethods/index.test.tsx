@@ -58,6 +58,9 @@ describe('SignInVerificationMethods', () => {
       { initialEntries: ['/sign-in/verification-methods'] }
     );
 
-    expect(queryByTestId('captcha-box')).not.toBeNull();
+    const captchaBox = queryByTestId('captcha-box');
+
+    expect(captchaBox).not.toBeNull();
+    expect(captchaBox?.closest('[class*="methodList"]')).toBeNull();
   });
 });
