@@ -6,7 +6,7 @@ import TimeRangePicker from '@/components/AuditLogTable/components/TimeRangePick
 import { defaultPresetRange } from '@/components/AuditLogTable/components/TimeRangePicker/preset';
 import useAuditLogTimeWindow from '@/components/AuditLogTable/components/TimeRangePicker/use-audit-log-time-window';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
-import Button from '@/ds-components/Button';
+import { defaultPageSize } from '@/consts';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import Search from '@/ds-components/Search';
 import Table from '@/ds-components/Table';
@@ -20,15 +20,18 @@ import useEmailLogs from './use-email-logs';
 /**
  * The hosted-email send log for the built-in email connector: sent + failed rows from the
  * cloud email-logs endpoint, windowed like the audit log (preset ranges + custom range) and
- * cursor-paginated (the endpoint has no total count, so paging is previous/next only).
+ * paginated with the audit log's footer (page-based; the numbered jumper degrades to
+ * previous/next when the total count is capped).
  */
 function EmailLogs() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const pageSize = defaultPageSize;
 
   // URL values are untyped; validated downstream via `isPresetRange`.
   const initialRange: string = defaultPresetRange;
-  const [{ range, start_time, end_time, recipient }, updateSearchParameters] =
+  const [{ page, range, start_time, end_time, recipient }, updateSearchParameters] =
     useSearchParametersWatcher({
+      page: 1,
       range: initialRange,
       start_time: '',
       end_time: '',
@@ -50,10 +53,12 @@ function EmailLogs() {
     updateSearchParameters,
   });
 
-  const { logs, error, isLoading, mutate, hasNext, hasPrevious, next, previous } = useEmailLogs({
+  const { logs, totalCount, isTotalCountCapped, error, isLoading, mutate } = useEmailLogs({
     startTime,
     endTime,
     recipient,
+    page,
+    pageSize,
   });
 
   // Providers like Cloudflare return no message id; when no loaded row carries one, drop the
@@ -122,59 +127,52 @@ function EmailLogs() {
   );
 
   return (
-    <>
-      <Table
-        className={styles.logs}
-        rowGroups={[{ key: 'logs', data: logs }]}
-        rowIndexKey="id"
-        columns={columns}
-        filter={
-          <div className={styles.filter}>
-            <Search
-              placeholder={t('connector_details.email_logs.recipient_placeholder')}
-              defaultValue={recipient}
-              isClearable={Boolean(recipient)}
-              onSearch={(value) => {
-                updateSearchParameters({ recipient: value });
-              }}
-              onClearSearch={() => {
-                updateSearchParameters({ recipient: '' });
-              }}
-            />
-            <div className={styles.timeWindow}>
-              <div className={styles.title}>{t('logs.filter_by')}</div>
-              <div className={styles.timeRangePicker}>
-                <TimeRangePicker
-                  value={pickerRangeValue}
-                  customStartDate={customStartDate}
-                  customEndDate={customEndDate}
-                  onChange={handleRangeChange}
-                  onCustomDatesChange={handleCustomDatesChange}
-                />
-              </div>
+    <Table
+      className={styles.logs}
+      rowGroups={[{ key: 'logs', data: logs }]}
+      rowIndexKey="id"
+      columns={columns}
+      filter={
+        <div className={styles.filter}>
+          <Search
+            placeholder={t('connector_details.email_logs.recipient_placeholder')}
+            defaultValue={recipient}
+            isClearable={Boolean(recipient)}
+            onSearch={(value) => {
+              updateSearchParameters({ recipient: value, page: undefined });
+            }}
+            onClearSearch={() => {
+              updateSearchParameters({ recipient: '', page: undefined });
+            }}
+          />
+          <div className={styles.timeWindow}>
+            <div className={styles.title}>{t('logs.filter_by')}</div>
+            <div className={styles.timeRangePicker}>
+              <TimeRangePicker
+                value={pickerRangeValue}
+                customStartDate={customStartDate}
+                customEndDate={customEndDate}
+                onChange={handleRangeChange}
+                onCustomDatesChange={handleCustomDatesChange}
+              />
             </div>
           </div>
-        }
-        placeholder={<EmptyDataPlaceholder />}
-        isLoading={isLoading}
-        errorMessage={error instanceof Error ? error.message : undefined}
-        onRetry={async () => mutate(undefined, true)}
-      />
-      {(hasPrevious || hasNext) && (
-        <div className={styles.pagination}>
-          <Button
-            title="connector_details.email_logs.previous_page"
-            disabled={!hasPrevious}
-            onClick={previous}
-          />
-          <Button
-            title="connector_details.email_logs.next_page"
-            disabled={!hasNext}
-            onClick={next}
-          />
         </div>
-      )}
-    </>
+      }
+      placeholder={<EmptyDataPlaceholder />}
+      pagination={{
+        page,
+        totalCount,
+        isTotalCountCapped,
+        pageSize,
+        onChange: (page) => {
+          updateSearchParameters({ page });
+        },
+      }}
+      isLoading={isLoading}
+      errorMessage={error instanceof Error ? error.message : undefined}
+      onRetry={async () => mutate(undefined, true)}
+    />
   );
 }
 

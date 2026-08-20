@@ -1,6 +1,6 @@
 import { type emailLogsRouter } from '@logto/cloud/routes';
 import { conditional } from '@silverhand/essentials';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import useSWR from 'swr';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
@@ -16,23 +16,20 @@ type Props = {
   readonly endTime?: number;
   /** Full recipient address; the endpoint matches it case-insensitively and exactly. */
   readonly recipient?: string;
+  /** 1-based page index, owned by the URL search parameters. */
+  readonly page: number;
+  /** Rows per page; the caller shares one binding between this fetch and the footer's math. */
+  readonly pageSize: number;
 };
 
 /**
  * Fetches one page of hosted-email logs for the current tenant (Cloud only). The endpoint is
- * cursor-paginated (no total count), so paging is a cursor stack: `next` pushes the server's
- * `nextCursor`, `previous` pops back to the prior page, and any window change resets to the
- * first page.
+ * page-based with a capped total count — the same pagination contract the audit-log table
+ * consumes.
  */
-const useEmailLogs = ({ startTime, endTime, recipient }: Props) => {
+const useEmailLogs = ({ startTime, endTime, recipient, page, pageSize }: Props) => {
   const { currentTenantId } = useContext(TenantsContext);
   const cloudApi = useCloudApi<typeof emailLogsRouter>({ hideErrorToast: true });
-  const [cursorStack, setCursorStack] = useState<string[]>([]);
-  const cursor = cursorStack.at(-1);
-
-  useEffect(() => {
-    setCursorStack([]);
-  }, [startTime, endTime, recipient]);
 
   const { data, error, mutate } = useSWR<TenantEmailLogsResponse, unknown>(
     conditional(
@@ -42,39 +39,26 @@ const useEmailLogs = ({ startTime, endTime, recipient }: Props) => {
         startTime,
         endTime,
         recipient ?? '',
-        cursor ?? '',
+        page,
+        pageSize,
       ]
     ),
     async () =>
       cloudApi.get('/api/tenants/:tenantId/email-logs', {
         params: { tenantId: currentTenantId },
-        search: buildEmailLogsSearch({ startTime, endTime, recipient, cursor }),
+        search: buildEmailLogsSearch({ startTime, endTime, recipient, page, pageSize }),
       })
   );
 
-  const nextCursor = data?.nextCursor ?? undefined;
-
-  const next = useCallback(() => {
-    if (nextCursor) {
-      setCursorStack((stack) => [...stack, nextCursor]);
-    }
-  }, [nextCursor]);
-
-  const previous = useCallback(() => {
-    setCursorStack((stack) => stack.slice(0, -1));
-  }, []);
-
   return {
     logs: data?.logs,
+    totalCount: data?.totalCount,
+    isTotalCountCapped: data?.isTotalCountCapped,
     error,
     // Loading only while the fetch is actually enabled — with no tenant id the key is null and
     // SWR never fires, which would otherwise read as loading forever.
     isLoading: Boolean(currentTenantId) && !data && !error,
     mutate,
-    hasNext: Boolean(nextCursor),
-    hasPrevious: cursorStack.length > 0,
-    next,
-    previous,
   };
 };
 

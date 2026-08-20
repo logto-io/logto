@@ -97,8 +97,6 @@ const connector_details = {
     status_failed: 'Failed',
     language_tag: 'Language',
     provider_message_id: 'Provider message ID',
-    previous_page: 'Previous',
-    next_page: 'Next',
   },
 };
 
