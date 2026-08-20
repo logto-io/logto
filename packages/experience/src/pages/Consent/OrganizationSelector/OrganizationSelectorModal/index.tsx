@@ -80,21 +80,26 @@ const OrganizationSelectorModal = ({
       onRequestClose={onClose}
     >
       <div className={styles.container}>
-        {organizations.map((organization) => (
-          <OrganizationItem
-            key={organization.id}
-            className={styles.organizationItem}
-            organization={organization}
-            isSelected={selectedOrganizations.some(({ id }) => id === organization.id)}
-            onSelect={() => {
-              onToggle(organization);
+        {organizations.map((organization) => {
+          const isSelected = selectedOrganizations.some(({ id }) => id === organization.id);
 
-              if (!isMultiSelectEnabled) {
-                onClose();
-              }
-            }}
-          />
-        ))}
+          return (
+            <OrganizationItem
+              key={organization.id}
+              className={styles.organizationItem}
+              organization={organization}
+              isSelected={isSelected}
+              isDisabled={isMultiSelectEnabled && isSelected && selectedOrganizations.length === 1}
+              onSelect={() => {
+                onToggle(organization);
+
+                if (!isMultiSelectEnabled) {
+                  onClose();
+                }
+              }}
+            />
+          );
+        })}
       </div>
     </ReactModal>
   );

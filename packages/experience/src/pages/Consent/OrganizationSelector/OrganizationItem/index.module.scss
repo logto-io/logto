@@ -29,4 +29,17 @@
       color: var(--color-brand-default);
     }
   }
+
+  &[aria-disabled='true'] {
+    color: var(--color-type-disable);
+    cursor: not-allowed;
+
+    &:hover {
+      background-color: transparent;
+    }
+
+    .icon {
+      color: var(--color-type-disable);
+    }
+  }
 }

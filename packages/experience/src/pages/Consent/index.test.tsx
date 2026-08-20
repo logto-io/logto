@@ -295,4 +295,30 @@ describe('Consent', () => {
       expect(mockedConsent).toBeCalledWith(['organization_2']);
     });
   });
+
+  it('disables deselecting the last selected organization', async () => {
+    mockedGetConsentInfo.mockResolvedValueOnce({
+      ...consentInfo,
+      organizations: [
+        { id: 'organization_1', name: 'Organization 1' },
+        { id: 'organization_2', name: 'Organization 2' },
+      ],
+    });
+
+    const { getAllByText, getByText } = renderConsent();
+
+    await waitFor(() => {
+      expect(getByText('Organization 1')).not.toBeNull();
+    });
+
+    fireEvent.click(getByText('Organization 1'));
+
+    const organization1Item = getAllByText('Organization 1').at(-1)?.closest('[role="button"]');
+
+    expect(organization1Item?.getAttribute('aria-disabled')).toBe('true');
+
+    fireEvent.click(getByText('Organization 2'));
+
+    expect(organization1Item?.getAttribute('aria-disabled')).toBe('false');
+  });
 });
