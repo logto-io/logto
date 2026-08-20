@@ -7,13 +7,11 @@ import useSWR from 'swr';
 
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import FormCard from '@/components/FormCard';
-import { defaultPageSize } from '@/consts';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import Table from '@/ds-components/Table';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
-import { buildUrl } from '@/utils/url';
 
 import styles from './index.module.scss';
 
@@ -26,11 +24,8 @@ type TrustedDeviceTableRow = TrustedDeviceResponse & {
   readonly location?: string;
 };
 
-const pageSize = defaultPageSize;
-
 function UserTrustedDevices({ userId }: Props) {
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const [page, setPage] = useState(1);
   const [deletingDeviceId, setDeletingDeviceId] = useState<string>();
   const expiryDateFormatter = useMemo(
     () =>
@@ -42,18 +37,14 @@ function UserTrustedDevices({ userId }: Props) {
     [i18n.language]
   );
 
-  const { data, error, mutate } = useSWR<[TrustedDeviceResponse[], number], RequestError>(
-    buildUrl(`api/users/${userId}/trusted-devices`, {
-      page: String(page),
-      page_size: String(pageSize),
-    })
+  const { data, error, mutate } = useSWR<TrustedDeviceResponse[], RequestError>(
+    `api/users/${userId}/trusted-devices`
   );
 
   const isLoading = !data && !error;
-  const [trustedDevices, totalCount] = data ?? [[], 0];
   const rows = useMemo(
     () =>
-      trustedDevices.map<TrustedDeviceTableRow>((trustedDevice) => {
+      (data ?? []).map<TrustedDeviceTableRow>((trustedDevice) => {
         const { userAgent, country, city } = trustedDevice;
 
         return {
@@ -65,7 +56,7 @@ function UserTrustedDevices({ userId }: Props) {
           }),
         };
       }),
-    [trustedDevices]
+    [data]
   );
 
   const api = useApi();
@@ -89,12 +80,6 @@ function UserTrustedDevices({ userId }: Props) {
       try {
         await api.delete(`api/users/${userId}/trusted-devices/${trustedDevice.id}`);
         toast.success(t('mfa.trusted_device.management_removed'));
-
-        if (rows.length === 1 && page > 1) {
-          setPage(page - 1);
-          return;
-        }
-
         await mutate();
       } catch {
         // Request errors are surfaced by useApi's global error handler.
@@ -102,7 +87,7 @@ function UserTrustedDevices({ userId }: Props) {
         setDeletingDeviceId(undefined);
       }
     },
-    [api, mutate, page, rows.length, showConfirm, t, userId]
+    [api, mutate, showConfirm, t, userId]
   );
 
   return (
@@ -166,12 +151,6 @@ function UserTrustedDevices({ userId }: Props) {
               ),
             },
           ]}
-          pagination={{
-            page,
-            pageSize,
-            totalCount,
-            onChange: setPage,
-          }}
           placeholder={
             <EmptyDataPlaceholder size="small" title={t('mfa.trusted_device.management_empty')} />
           }

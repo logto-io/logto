@@ -260,22 +260,13 @@ export const deleteSession = async (
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });
 
-export const getTrustedDevicesResponse = async (
-  api: KyInstance,
-  verificationRecordId: string,
-  searchParams?: URLSearchParams
-) =>
+export const getTrustedDevicesResponse = async (api: KyInstance, verificationRecordId: string) =>
   api.get('api/my-account/trusted-devices', {
-    searchParams,
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });
 
-export const getTrustedDevices = async (
-  api: KyInstance,
-  verificationRecordId: string,
-  searchParams?: URLSearchParams
-) => {
-  const response = await getTrustedDevicesResponse(api, verificationRecordId, searchParams);
+export const getTrustedDevices = async (api: KyInstance, verificationRecordId: string) => {
+  const response = await getTrustedDevicesResponse(api, verificationRecordId);
 
   return response.json<AccountTrustedDeviceResponse[]>();
 };
