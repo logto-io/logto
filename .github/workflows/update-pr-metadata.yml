@@ -39,6 +39,7 @@ jobs:
           ref: refs/pull/${{ github.event.number }}/merge
           fetch-depth: 0
           persist-credentials: false
+          allow-unsafe-pr-checkout: true
 
       - name: Prepare
         run: |
