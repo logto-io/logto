@@ -40,7 +40,7 @@ const otherTrustedDevice: TrustedDevice = {
 };
 
 const findActiveByUserId = jest.fn(
-  async (): Promise<[number, readonly TrustedDevice[]]> => [2, [trustedDevice, otherTrustedDevice]]
+  async (): Promise<readonly TrustedDevice[]> => [trustedDevice, otherTrustedDevice]
 );
 const validateCredential = jest.fn(async (): Promise<TrustedDevice | undefined> => trustedDevice);
 const deleteByIdAndUserId = jest.fn(async (): Promise<TrustedDevice | undefined> => trustedDevice);
@@ -112,14 +112,14 @@ describe('account trusted device routes', () => {
     setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
   });
 
-  it('returns a paginated, redacted list and marks only the validated credential as current', async () => {
-    const response = await buildRequester({ field: AccountCenterControlValue.ReadOnly })
-      .get('/my-account/trusted-devices')
-      .query({ page: 2, page_size: 1 });
+  it('returns all redacted devices and marks only the validated credential as current', async () => {
+    const response = await buildRequester({ field: AccountCenterControlValue.ReadOnly }).get(
+      '/my-account/trusted-devices'
+    );
 
     expect(response.status).toBe(200);
-    expect(response.headers['total-number']).toBe('2');
-    expect(response.headers.link).toContain('rel="first"');
+    expect(response.headers['total-number']).toBeUndefined();
+    expect(response.headers.link).toBeUndefined();
     expect(response.body).toEqual([
       {
         id: trustedDevice.id,
@@ -145,7 +145,7 @@ describe('account trusted device routes', () => {
     expect(response.text).not.toContain('secretHash');
     expect(response.text).not.toContain(trustedDevice.ip);
     expect(validateCredential).toHaveBeenCalledWith(expect.any(Object), mockUser.id);
-    expect(findActiveByUserId).toHaveBeenCalledWith(mockUser.id, { limit: 1, offset: 1 });
+    expect(findActiveByUserId).toHaveBeenCalledWith(mockUser.id);
   });
 
   it('does not infer the current device from a record ID when credential validation fails', async () => {

@@ -4,10 +4,10 @@
       "get": {
         "tags": ["Dev feature"],
         "summary": "Get user trusted devices",
-        "description": "Retrieve a paginated list of active trusted devices for the user.",
+        "description": "Retrieve all active trusted devices for the user.",
         "responses": {
           "200": {
-            "description": "A paginated list of the user's active trusted devices."
+            "description": "A list of the user's active trusted devices."
           },
           "404": {
             "description": "The user was not found."
