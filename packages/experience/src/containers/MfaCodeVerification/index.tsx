@@ -1,8 +1,10 @@
-import { type SignInIdentifier } from '@logto/schemas';
+import type { SignInIdentifier } from '@logto/schemas';
 import { useCallback, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import TextLink from '@/components/TextLink';
+import TrustedDeviceOptIn from '@/containers/TrustedDeviceOptIn';
+import useTrustedDeviceOptIn from '@/hooks/use-trusted-device-opt-in';
 import Button from '@/shared/components/Button';
 import VerificationCodeInput from '@/shared/components/VerificationCode';
 
@@ -26,6 +28,7 @@ const MfaCodeVerification = ({ identifierType, verificationId }: Props) => {
   const [codeInput, setCodeInput] = useState<string[]>([]);
   const [inputErrorMessage, setInputErrorMessage] = useState<string>();
   const [currentVerificationId, setCurrentVerificationId] = useState(verificationId);
+  const { availability, isLoading, isVisible, isChecked, setIsChecked } = useTrustedDeviceOptIn();
 
   useEffect(() => {
     setCurrentVerificationId(verificationId);
@@ -39,6 +42,7 @@ const MfaCodeVerification = ({ identifierType, verificationId }: Props) => {
   const { errorMessage: submitErrorMessage, onSubmit } = useMfaCodeVerification(
     identifierType,
     currentVerificationId,
+    isChecked,
     errorCallback
   );
 
@@ -73,7 +77,7 @@ const MfaCodeVerification = ({ identifierType, verificationId }: Props) => {
         error={errorMessage}
         onChange={(code) => {
           setCodeInput(code);
-          if (isCodeReady(code)) {
+          if (isCodeReady(code) && !isVisible) {
             void handleSubmit(code);
           }
         }}
@@ -105,6 +109,13 @@ const MfaCodeVerification = ({ identifierType, verificationId }: Props) => {
           </Trans>
         )}
       </div>
+      <TrustedDeviceOptIn
+        availability={availability}
+        isLoading={isLoading}
+        isChecked={isChecked}
+        className={styles.optIn}
+        onChange={setIsChecked}
+      />
       <Button
         title="action.continue"
         type="primary"

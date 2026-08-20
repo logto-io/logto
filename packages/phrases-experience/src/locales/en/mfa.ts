@@ -70,6 +70,11 @@ const mfa = {
   verify_via_passkey: 'Verify via passkey',
   verify_via_passkey_description:
     'Use passkey to verify by your device password or biometrics, scanning QR code, or using USB security key like YubiKey.',
+  trust_this_device_one: 'Don’t ask again on this device for {{count}} day',
+  trust_this_device_two: 'Don’t ask again on this device for {{count}} days',
+  trust_this_device_few: 'Don’t ask again on this device for {{count}} days',
+  trust_this_device_many: 'Don’t ask again on this device for {{count}} days',
+  trust_this_device_other: 'Don’t ask again on this device for {{count}} days',
   secret_key_copied: 'Secret key copied.',
   backup_code_copied: 'Backup code copied.',
   webauthn_not_ready: 'WebAuthn is not ready yet. Please try again later.',

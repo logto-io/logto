@@ -7,8 +7,10 @@ import { validate } from 'superstruct';
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
+import TrustedDeviceOptIn from '@/containers/TrustedDeviceOptIn';
 import useSkipMfa from '@/hooks/use-skip-mfa';
 import useSkipOptionalMfa from '@/hooks/use-skip-optional-mfa';
+import useTrustedDeviceOptIn from '@/hooks/use-trusted-device-opt-in';
 import useWebAuthnOperation from '@/hooks/use-webauthn-operation';
 import ErrorPage from '@/pages/ErrorPage';
 import Button from '@/shared/components/Button';
@@ -23,8 +25,13 @@ const WebAuthnBinding = () => {
   const [, webAuthnState] = validate(state, webAuthnStateGuard);
   const { verificationIdsMap } = useContext(UserInteractionContext);
   const verificationId = verificationIdsMap[VerificationType.WebAuthn];
+  const isSessionValid = Boolean(
+    webAuthnState && verificationId && isWebAuthnOptions(webAuthnState.options)
+  );
 
   const handleWebAuthn = useWebAuthnOperation();
+  const { availability, isLoading, isChecked, setIsChecked } =
+    useTrustedDeviceOptIn(isSessionValid);
   const skipMfa = useSkipMfa();
   const skipOptionalMfa = useSkipOptionalMfa();
   const [isCreatingPasskey, setIsCreatingPasskey] = useState(false);
@@ -59,12 +66,19 @@ const WebAuthnBinding = () => {
       description="mfa.create_passkey_description"
       onSkip={conditional(skippable && (suggestion ? skipOptionalMfa : skipMfa))}
     >
+      <TrustedDeviceOptIn
+        availability={availability}
+        isLoading={isLoading}
+        isChecked={isChecked}
+        className={styles.optIn}
+        onChange={setIsChecked}
+      />
       <Button
         title="mfa.create_a_passkey"
         isLoading={isCreatingPasskey}
         onClick={async () => {
           setIsCreatingPasskey(true);
-          await handleWebAuthn(options, verificationId);
+          await handleWebAuthn(options, verificationId, isChecked);
           setIsCreatingPasskey(false);
         }}
       />

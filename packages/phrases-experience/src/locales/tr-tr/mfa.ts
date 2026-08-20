@@ -69,6 +69,11 @@ const mfa = {
   verify_via_passkey: 'Anahtar ile doğrula',
   verify_via_passkey_description:
     'Anahtar kullanarak cihaz parolanız veya biyometri ile doğrulama, QR kodunu tarama veya YubiKey gibi USB güvenlik anahtarı kullanma.',
+  trust_this_device_one: 'Bu cihazda {{count}} gün boyunca tekrar sorma',
+  trust_this_device_two: 'Bu cihazda {{count}} gün boyunca tekrar sorma',
+  trust_this_device_few: 'Bu cihazda {{count}} gün boyunca tekrar sorma',
+  trust_this_device_many: 'Bu cihazda {{count}} gün boyunca tekrar sorma',
+  trust_this_device_other: 'Bu cihazda {{count}} gün boyunca tekrar sorma',
   secret_key_copied: 'Gizli anahtar kopyalandı.',
   backup_code_copied: 'Yedek kod kopyalandı.',
   webauthn_not_ready: 'WebAuthn henüz hazır değil. Lütfen daha sonra tekrar deneyin.',

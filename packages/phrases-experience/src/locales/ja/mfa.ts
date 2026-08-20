@@ -68,6 +68,11 @@ const mfa = {
   verify_via_passkey: 'パスキーで確認',
   verify_via_passkey_description:
     'デバイスのパスワードまたは生体認証、QRコードのスキャン、YubiKeyなどのUSBセキュリティキーを使用してパスキーで確認します。',
+  trust_this_device_one: 'このデバイスでは {{count}} 日間再確認しない',
+  trust_this_device_two: 'このデバイスでは {{count}} 日間再確認しない',
+  trust_this_device_few: 'このデバイスでは {{count}} 日間再確認しない',
+  trust_this_device_many: 'このデバイスでは {{count}} 日間再確認しない',
+  trust_this_device_other: 'このデバイスでは {{count}} 日間再確認しない',
   secret_key_copied: '秘密鍵がコピーされました。',
   backup_code_copied: 'バックアップコードがコピーされました。',
   webauthn_not_ready: 'WebAuthnはまだ準備ができていません。後でもう一度試してください。',
