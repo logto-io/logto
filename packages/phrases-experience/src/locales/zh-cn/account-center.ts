@@ -114,6 +114,21 @@ const account_center = {
     email_removed: '邮箱地址已成功移除。',
     phone_removed: '手机号已成功移除。',
     username_removed: '用户名已成功移除。',
+    trusted_devices: {
+      title: 'MFA 受信任设备',
+      current_device: '当前设备',
+      expires_on: '于 {{date}} 到期',
+      unknown_location: '未知位置',
+      remove: '移除',
+      removed: '受信任设备已成功移除。',
+      loading: '加载中...',
+      empty: '暂无受信任设备。',
+      load_failed: '受信任设备加载失败，请重试。',
+      retry: '重试',
+      remove_confirmation_title: '移除受信任设备？',
+      remove_confirmation_description:
+        '下次在此设备上登录时，你需要再次完成 MFA。当前会话将保持有效。',
+    },
   },
   social: {
     linked: '已成功关联 {{connector}}。',

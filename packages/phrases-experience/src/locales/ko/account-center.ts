@@ -118,6 +118,21 @@ const account_center = {
     email_removed: '이메일 주소가 성공적으로 제거되었습니다.',
     phone_removed: '전화번호가 성공적으로 제거되었습니다.',
     username_removed: '사용자 이름이 성공적으로 제거되었습니다.',
+    trusted_devices: {
+      title: 'MFA 신뢰할 수 있는 기기',
+      current_device: '현재 기기',
+      expires_on: '{{date}}에 만료',
+      unknown_location: '알 수 없는 위치',
+      remove: '제거',
+      removed: '신뢰할 수 있는 기기를 제거했습니다.',
+      loading: '로딩 중...',
+      empty: '신뢰할 수 있는 기기가 없습니다.',
+      load_failed: '신뢰할 수 있는 기기를 불러오지 못했습니다. 다시 시도해 주세요.',
+      retry: '다시 시도',
+      remove_confirmation_title: '신뢰할 수 있는 기기를 제거할까요?',
+      remove_confirmation_description:
+        '다음에 이 기기에서 로그인할 때 MFA를 다시 완료해야 합니다. 현재 세션은 계속 활성 상태로 유지됩니다.',
+    },
   },
   social: {
     linked: '{{connector}}이(가) 성공적으로 연결되었습니다.',

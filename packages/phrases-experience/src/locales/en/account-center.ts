@@ -120,6 +120,21 @@ const account_center = {
     email_removed: 'Email address removed successfully.',
     phone_removed: 'Phone number removed successfully.',
     username_removed: 'Username removed successfully.',
+    trusted_devices: {
+      title: 'MFA trusted devices',
+      current_device: 'Current device',
+      expires_on: 'Expire on {{date}}',
+      unknown_location: 'Unknown location',
+      remove: 'Remove',
+      removed: 'Trusted device removed successfully.',
+      loading: 'Loading...',
+      empty: 'No trusted devices.',
+      load_failed: 'Failed to load trusted devices. Please try again.',
+      retry: 'Try again',
+      remove_confirmation_title: 'Remove trusted device?',
+      remove_confirmation_description:
+        "You'll need to complete MFA again on this device the next time you sign in. Your current session will stay active.",
+    },
   },
   social: {
     linked: '{{connector}} linked successfully.',

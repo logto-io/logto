@@ -119,6 +119,21 @@ const account_center = {
     email_removed: 'آدرس ایمیل با موفقیت حذف شد.',
     phone_removed: 'شماره تلفن با موفقیت حذف شد.',
     username_removed: 'نام کاربری با موفقیت حذف شد.',
+    trusted_devices: {
+      title: 'دستگاه‌های مورد اعتماد MFA',
+      current_device: 'دستگاه فعلی',
+      expires_on: 'انقضا در {{date}}',
+      unknown_location: 'مکان نامشخص',
+      remove: 'حذف',
+      removed: 'دستگاه مورد اعتماد با موفقیت حذف شد.',
+      loading: 'در حال بارگذاری...',
+      empty: 'هیچ دستگاه مورد اعتمادی وجود ندارد.',
+      load_failed: 'بارگذاری دستگاه‌های مورد اعتماد ناموفق بود. لطفاً دوباره تلاش کنید.',
+      retry: 'تلاش مجدد',
+      remove_confirmation_title: 'دستگاه مورد اعتماد حذف شود؟',
+      remove_confirmation_description:
+        'دفعه بعد که در این دستگاه وارد می‌شوید، باید MFA را دوباره تکمیل کنید. نشست فعلی شما فعال باقی می‌ماند.',
+    },
   },
   social: {
     linked: '{{connector}} با موفقیت پیوند داده شد.',
