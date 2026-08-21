@@ -194,10 +194,12 @@ describe('koaSecurityHeaders() middleware — production admin CSP selection', (
   const { isProduction } = mockEnvSetValues;
 
   beforeEach(() => {
+    // eslint-disable-next-line @silverhand/fp/no-mutating-assign -- Toggle production mode for CSP selection tests.
     Object.assign(mockEnvSetValues, { isProduction: true });
   });
 
   afterEach(() => {
+    // eslint-disable-next-line @silverhand/fp/no-mutating-assign -- Restore the shared environment after each test.
     Object.assign(mockEnvSetValues, { isProduction });
   });
 
@@ -218,20 +220,20 @@ describe('koaSecurityHeaders() middleware — production admin CSP selection', (
     expect(scriptSource).not.toContain("'unsafe-inline'");
   });
 
-  it.each([
-    { path: '/console' },
-    { path: '/welcome' },
-  ])('uses the Experience CSP for unmounted $path routes', async ({ path }) => {
-    const run = koaSecurityHeaders([], 'default');
-    const ctx = createMockContext({ method: 'GET', url: path });
+  it.each([{ path: '/console' }, { path: '/welcome' }])(
+    'uses the Experience CSP for unmounted $path routes',
+    async ({ path }) => {
+      const run = koaSecurityHeaders([], 'default');
+      const ctx = createMockContext({ method: 'GET', url: path });
 
-    await run(ctx, koaNoop);
+      await run(ctx, koaNoop);
 
-    const scriptSource = getCspDirective(ctx, 'script-src');
+      const scriptSource = getCspDirective(ctx, 'script-src');
 
-    expect(scriptSource).toContain("'self'");
-    expect(scriptSource).toContain("'unsafe-inline'");
-    expect(scriptSource).not.toContain('https://cdn.jsdelivr.net/');
-    expect(scriptSource).not.toContain('blob:');
-  });
+      expect(scriptSource).toContain("'self'");
+      expect(scriptSource).toContain("'unsafe-inline'");
+      expect(scriptSource).not.toContain('https://cdn.jsdelivr.net/');
+      expect(scriptSource).not.toContain('blob:');
+    }
+  );
 });
