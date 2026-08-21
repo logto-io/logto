@@ -82,7 +82,9 @@ function CustomUiForm() {
       <Card>
         <FormSectionTitle
           title="custom_ui.bring_your_ui_title"
-          featureTag={{ isVisible: !isBringYourUiEnabled, plan: latestProPlanId }}
+          featureTag={
+            isCloud ? { isVisible: !isBringYourUiEnabled, plan: latestProPlanId } : undefined
+          }
         />
         {isCloud && (
           <FormField
