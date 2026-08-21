@@ -1,3 +1,4 @@
+import { cond } from '@silverhand/essentials';
 import { useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
@@ -82,7 +83,7 @@ function CustomUiForm() {
       <Card>
         <FormSectionTitle
           title="custom_ui.bring_your_ui_title"
-          featureTag={{ isVisible: !isBringYourUiEnabled, plan: latestProPlanId }}
+          featureTag={cond(isCloud && { isVisible: !isBringYourUiEnabled, plan: latestProPlanId })}
         />
         {isCloud && (
           <FormField
