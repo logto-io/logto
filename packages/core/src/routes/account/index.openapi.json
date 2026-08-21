@@ -786,10 +786,10 @@
         "tags": ["Dev feature"],
         "operationId": "GetTrustedDevices",
         "summary": "Get trusted devices",
-        "description": "Retrieve a paginated list of active trusted devices for the signed-in user. A logto-verification-id in header and the trusted-devices scope are required. Each entry includes isCurrent, which is true only when the browser's trusted-device cookie passes full credential validation for that record.",
+        "description": "Retrieve all active trusted devices for the signed-in user. A logto-verification-id in header and the trusted-devices scope are required. Each entry includes isCurrent, which is true only when the browser's trusted-device cookie passes full credential validation for that record.",
         "responses": {
           "200": {
-            "description": "A paginated list of the signed-in user's active trusted devices."
+            "description": "A list of the signed-in user's active trusted devices."
           },
           "401": {
             "description": "Permission denied, the verification record is invalid or the access token does not include the trusted-devices scope."

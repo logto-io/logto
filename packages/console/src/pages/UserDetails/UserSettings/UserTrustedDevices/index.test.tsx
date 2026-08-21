@@ -34,10 +34,6 @@ jest.mock('@/hooks/use-confirm-modal', () => ({
   useConfirmModal: jest.fn(),
 }));
 
-jest.mock('@/consts', () => ({
-  defaultPageSize: 20,
-}));
-
 jest.mock('@/hooks/use-tenant-pathname', () => ({
   __esModule: true,
   default: () => ({ getTo: (path: string) => path }),
@@ -127,7 +123,7 @@ describe('UserTrustedDevices', () => {
 
   it('renders approved device metadata without exposing the raw IP address', () => {
     mockedUseSWR.mockReturnValue({
-      data: [[trustedDevice], 1],
+      data: [trustedDevice],
       mutate: mockMutate,
     } as unknown as ReturnType<typeof useSWR>);
 
@@ -148,7 +144,7 @@ describe('UserTrustedDevices', () => {
   it('formats the expiry date using the current Console language', async () => {
     await i18next.changeLanguage('ja');
     mockedUseSWR.mockReturnValue({
-      data: [[trustedDevice], 1],
+      data: [trustedDevice],
       mutate: mockMutate,
     } as unknown as ReturnType<typeof useSWR>);
 
@@ -159,7 +155,7 @@ describe('UserTrustedDevices', () => {
 
   it('shows the empty state when the user has no active trusted devices', () => {
     mockedUseSWR.mockReturnValue({
-      data: [[], 0],
+      data: [],
       mutate: mockMutate,
     } as unknown as ReturnType<typeof useSWR>);
 
@@ -181,24 +177,21 @@ describe('UserTrustedDevices', () => {
     expect(mockMutate).toHaveBeenCalledTimes(1);
   });
 
-  it('requests the selected page through the Management API', () => {
+  it('requests all trusted devices without pagination parameters', () => {
     mockedUseSWR.mockReturnValue({
-      data: [[trustedDevice], 21],
+      data: [trustedDevice],
       mutate: mockMutate,
     } as unknown as ReturnType<typeof useSWR>);
 
     renderTrustedDevices();
-    fireEvent.click(screen.getByRole('button', { name: '2' }));
 
-    expect(mockedUseSWR).toHaveBeenLastCalledWith(
-      'api/users/user-id/trusted-devices?page=2&page_size=20'
-    );
+    expect(mockedUseSWR).toHaveBeenLastCalledWith('api/users/user-id/trusted-devices');
   });
 
   it('keeps the device when removal is canceled', async () => {
     mockShowConfirm.mockResolvedValue([false]);
     mockedUseSWR.mockReturnValue({
-      data: [[trustedDevice], 1],
+      data: [trustedDevice],
       mutate: mockMutate,
     } as unknown as ReturnType<typeof useSWR>);
 
@@ -213,7 +206,7 @@ describe('UserTrustedDevices', () => {
 
   it('removes a confirmed device and refreshes the successful state', async () => {
     mockedUseSWR.mockReturnValue({
-      data: [[trustedDevice], 1],
+      data: [trustedDevice],
       mutate: mockMutate,
     } as unknown as ReturnType<typeof useSWR>);
 
@@ -238,7 +231,7 @@ describe('UserTrustedDevices', () => {
   it('keeps the current list when removal fails', async () => {
     mockDelete.mockRejectedValue(new Error('request failed'));
     mockedUseSWR.mockReturnValue({
-      data: [[trustedDevice], 1],
+      data: [trustedDevice],
       mutate: mockMutate,
     } as unknown as ReturnType<typeof useSWR>);
 

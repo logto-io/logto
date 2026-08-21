@@ -33,9 +33,7 @@ const mockedQueries = {
     findUserById: jest.fn(async () => mockUser),
   },
   trustedDevices: {
-    findActiveByUserId: jest.fn(
-      async (): Promise<[number, readonly TrustedDevice[]]> => [1, [trustedDevice]]
-    ),
+    findActiveByUserId: jest.fn(async (): Promise<readonly TrustedDevice[]> => [trustedDevice]),
     deleteByIdAndUserId: jest.fn(async (): Promise<TrustedDevice> => trustedDevice),
   },
 } satisfies Partial2<Queries>;
@@ -75,14 +73,12 @@ describe('admin user trusted device routes', () => {
     setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
   });
 
-  it('returns a paginated and redacted list of active trusted devices', async () => {
-    const response = await createTrustedDeviceRequester()
-      .get(`/users/${userId}/trusted-devices`)
-      .query({ page: 2, page_size: 1 });
+  it('returns all active trusted devices with sensitive fields redacted', async () => {
+    const response = await createTrustedDeviceRequester().get(`/users/${userId}/trusted-devices`);
 
     expect(response.status).toBe(200);
-    expect(response.headers['total-number']).toBe('1');
-    expect(response.headers.link).toContain('rel="first"');
+    expect(response.headers['total-number']).toBeUndefined();
+    expect(response.headers.link).toBeUndefined();
     expect(response.body).toEqual([
       {
         id: trustedDevice.id,
@@ -97,7 +93,7 @@ describe('admin user trusted device routes', () => {
     expect(response.text).not.toContain('secretHash');
     expect(response.text).not.toContain(trustedDevice.ip);
     expect(findUserById).toHaveBeenCalledWith(userId);
-    expect(findActiveByUserId).toHaveBeenCalledWith(userId, { limit: 1, offset: 1 });
+    expect(findActiveByUserId).toHaveBeenCalledWith(userId);
   });
 
   it('returns 404 without querying devices when the user does not exist', async () => {
@@ -106,16 +102,6 @@ describe('admin user trusted device routes', () => {
     const response = await createTrustedDeviceRequester().get(`/users/${userId}/trusted-devices`);
 
     expect(response.status).toBe(404);
-    expect(findActiveByUserId).not.toHaveBeenCalled();
-  });
-
-  it('returns 400 for invalid pagination', async () => {
-    const response = await createTrustedDeviceRequester().get(
-      `/users/${userId}/trusted-devices?page=0`
-    );
-
-    expect(response.status).toBe(400);
-    expect(findUserById).not.toHaveBeenCalled();
     expect(findActiveByUserId).not.toHaveBeenCalled();
   });
 
