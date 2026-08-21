@@ -26,7 +26,11 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { interactionPrefix } from '../const.js';
 
-import { buildResourceScopesToReject, filterAndParseMissingResourceScopes } from './utils.js';
+import {
+  buildResourceScopesToReject,
+  filterAndParseMissingResourceScopes,
+  revalidateConsentClient,
+} from './utils.js';
 
 const { InvalidClient, InvalidRedirectUri, InvalidRequest } = errors;
 
@@ -58,7 +62,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
 
       const {
         session,
-        params: { client_id: applicationId, redirect_uri: redirectUri },
+        params: { client_id: applicationId, redirect_uri: redirectUri, scope },
         prompt,
       } = interactionDetails;
 
@@ -73,25 +77,18 @@ export default function consentRoutes<T extends IRouterParamContext>(
 
       const cimd = isCimdClient(envSet, applicationId);
 
-      if (cimd) {
-        /**
-         * The oidc-provider resume path re-runs `checkClient` (re-fetching the metadata
-         * document when its cache has expired) but not `check_redirect_uri`, so a URI removed
-         * from the current document would still receive the authorization code. Re-assert it
-         * here against whatever document the cache serves at submission time — best effort,
-         * not airtight: a cache expiry between this check and resume can still swap in a
-         * changed document unchecked. It narrows the exposure from the whole login-to-consent
-         * span to that cache-boundary race.
-         */
-        const client = await provider.Client.find(applicationId);
-        assertThat(client, new InvalidClient('client must be available'));
-        assertThat(
-          typeof redirectUri === 'string' && client.redirectUriAllowed(redirectUri),
-          new InvalidRedirectUri(
-            'redirect_uri must still be allowed by the client metadata document'
-          )
-        );
-      }
+      const { missingOIDCScope = [], missingResourceScopes: allMissingResourceScopes = {} } =
+        getMissingScopes(prompt);
+
+      await revalidateConsentClient({
+        provider,
+        queries,
+        applicationId,
+        cimd,
+        redirectUri,
+        requestedScope: scope,
+        missingOIDCScope,
+      });
 
       // Grant the organizations to the application if the user has selected the organizations
       if (organizationIds?.length) {
@@ -117,9 +114,6 @@ export default function consentRoutes<T extends IRouterParamContext>(
           );
         }
       }
-
-      const { missingOIDCScope = [], missingResourceScopes: allMissingResourceScopes = {} } =
-        getMissingScopes(prompt);
 
       /* === Rebuild resource scopes === */
       // The resource scopes saved in the prompt details lost the organization information.

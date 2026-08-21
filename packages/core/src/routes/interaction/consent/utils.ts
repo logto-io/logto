@@ -1,6 +1,7 @@
-import { ReservedResource } from '@logto/core-kit';
+import { ReservedResource, ReservedScope, UserScope } from '@logto/core-kit';
 import { type MissingResourceScopes, type Scope, missingResourceScopesGuard } from '@logto/schemas';
-import { errors } from 'oidc-provider';
+import { deduplicate } from '@silverhand/essentials';
+import { type Provider, errors } from 'oidc-provider';
 
 import { type EnvSet } from '#src/env-set/index.js';
 import { isCimdClient } from '#src/oidc/cimd/index.js';
@@ -14,7 +15,7 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-const { InvalidTarget } = errors;
+const { InvalidClient, InvalidRedirectUri, InvalidScope, InvalidTarget } = errors;
 
 /**
  * Parse the missing resource scopes info with details. We need to display the resource name and scope details on the consent page.
@@ -83,6 +84,93 @@ const parseMissingResourceScopesInfo = async (
       // Filter out if all resource scopes are not found (should not happen)
       .filter(({ scopes }) => scopes.length > 0)
       .map((resourceWithGroups) => missingResourceScopesGuard.parse(resourceWithGroups))
+  );
+};
+
+/** Find the requested or snapshot OIDC scopes that the client's current scope no longer allows. */
+export const findStaleOidcScopes = ({
+  clientScope,
+  requestedScope,
+  missingOIDCScope,
+}: {
+  clientScope: string | undefined;
+  requestedScope: unknown;
+  missingOIDCScope: string[];
+}): string[] => {
+  /** Mirrors the provider `scopes` configuration, keeping resource scope names out of the comparison. */
+  const oidcScopes = new Set<string>([
+    ...Object.values(ReservedScope),
+    ...Object.values(UserScope),
+  ]);
+  const allowedScopes = new Set(clientScope?.split(' '));
+  const requestedOidcScopes =
+    typeof requestedScope === 'string'
+      ? requestedScope.split(' ').filter((scope) => oidcScopes.has(scope))
+      : [];
+
+  return deduplicate([...requestedOidcScopes, ...missingOIDCScope]).filter(
+    (scope) => !allowedScopes.has(scope)
+  );
+};
+
+/**
+ * The scopes a submission grants were validated at interaction creation, up to 1 hour ago, and
+ * the provider's resume stack never re-runs `checkScope` — re-assert them against the freshly
+ * resolved client before anything is written. Resource scopes re-check their own source tables
+ * in `filterAndParseMissingResourceScopes`.
+ */
+export const revalidateConsentClient = async ({
+  provider,
+  queries,
+  applicationId,
+  cimd,
+  redirectUri,
+  requestedScope,
+  missingOIDCScope,
+}: {
+  provider: Provider;
+  queries: Queries;
+  applicationId: string;
+  cimd: boolean;
+  redirectUri: unknown;
+  requestedScope: unknown;
+  missingOIDCScope: string[];
+}) => {
+  if (!(await isThirdPartyApplication(queries, applicationId))) {
+    return;
+  }
+
+  const client = await provider.Client.find(applicationId);
+  assertThat(client, new InvalidClient('client must be available'));
+
+  if (cimd) {
+    /**
+     * The oidc-provider resume path re-runs `checkClient` (re-fetching the metadata document
+     * when its cache has expired) but not `check_redirect_uri`, so a URI removed from the
+     * current document would still receive the authorization code. Re-assert it here against
+     * whatever document the cache serves at submission time — best effort, not airtight: a
+     * cache expiry between this check and resume can still swap in a changed document
+     * unchecked. It narrows the exposure from the whole login-to-consent span to that
+     * cache-boundary race.
+     */
+    assertThat(
+      typeof redirectUri === 'string' && client.redirectUriAllowed(redirectUri),
+      new InvalidRedirectUri('redirect_uri must still be allowed by the client metadata document')
+    );
+  }
+
+  const staleOidcScopes = findStaleOidcScopes({
+    clientScope: client.scope,
+    requestedScope,
+    missingOIDCScope,
+  });
+
+  assertThat(
+    staleOidcScopes.length === 0,
+    new InvalidScope(
+      'requested scope is no longer allowed for the client',
+      staleOidcScopes.join(' ')
+    )
   );
 };
 
