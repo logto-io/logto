@@ -57,6 +57,10 @@ const security = {
     mode_checkbox: '複選框驗證',
     mode_notice:
       '驗證模式在 Google Cloud Console 的 reCAPTCHA 金鑰設定中定義。更改此處的模式需要匹配的金鑰類型。',
+    score_threshold: '分數門檻',
+    score_threshold_description:
+      '低於門檻的分數會被拒絕。0.0 允許所有分數，1.0 只允許滿分。預設值為 0.5。',
+    score_threshold_error: '分數門檻必須介乎 0 至 1 之間。',
   },
   password_policy: {
     password_requirements: '密碼要求',

@@ -59,6 +59,10 @@ const security = {
     mode_checkbox: 'Case à cocher',
     mode_notice:
       'Le mode de vérification est défini dans les paramètres de votre clé reCAPTCHA dans Google Cloud Console. Changer le mode ici nécessite un type de clé correspondant.',
+    score_threshold: 'Seuil de score',
+    score_threshold_description:
+      "Les scores inférieurs au seuil sont rejetés. 0.0 accepte tout, 1.0 n'accepte que les scores parfaits. La valeur par défaut est 0.5.",
+    score_threshold_error: 'Le seuil de score doit être compris entre 0 et 1.',
   },
   password_policy: {
     password_requirements: 'Exigences relatives au mot de passe',
