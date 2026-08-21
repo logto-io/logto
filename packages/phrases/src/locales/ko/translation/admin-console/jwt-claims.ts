@@ -69,6 +69,12 @@ const jwt_claims = {
     title: 'API 컨텍스트: 접근 제어',
     subtitle: '`api.denyAccess` 메소드를 사용하여 토큰 요청을 거절하세요.',
   },
+  cryptographic_capability: {
+    title: 'API 컨텍스트: 암호화',
+    subtitle: '`api.crypto.sha256` 및 `api.crypto.hmacSha256`으로 UTF-8 해시를 계산합니다.',
+    description:
+      '두 메서드는 모두 비동기이며 64자 소문자 16진수 문자열 Promise를 반환합니다. 입력은 Unicode 정규화 없이 UTF-8로 인코딩됩니다. `sha256(input)`은 SHA-256(UTF-8(input))을, `hmacSha256({ key, input })`은 HMAC-SHA-256(UTF-8(key), UTF-8(input))을 계산합니다. HMAC 키는 환경 변수에서 읽고 직접 `.trim()`한 뒤 빈 값이면 호출하지 마세요. 메서드는 trim하거나 SHA-256으로 대체하지 않습니다. 공백 없는 고엔트로피 키를 권장합니다. 빈 메시지는 유효하고 빈 키는 유효하지 않습니다. 입력은 최대 1 MiB UTF-8, HMAC 키는 최대 64 KiB입니다. SHA-256은 이메일·전화번호 같은 열거 가능한 식별자를 숨기지 않습니다. 비밀키 기반 안정 ID에는 HMAC을 사용하세요. 둘 다 비밀번호 저장용은 아닙니다. 환경 변수는 Custom JWT 관리자와 실행 런너에 보이며 관리형 키 시스템이 아닙니다. HMAC 키를 교체하면 모든 파생 값이 바뀝니다. 마이그레이션이 필요하면 앱 정의 키 버전과 이중 값 기간을 직접 구현하세요. 여러 값은 호출자가 명확한 직렬화를 정의해야 합니다(같은 런타임에서는 `JSON.stringify([value1, value2])`가 간단한 예). 언어 간 통합은 자체 정규 형식에 합의하세요. 셀프호스팅 Logto에서는 이 스크립트가 샌드박스 경고의 신뢰 스크립트 모델을 그대로 따릅니다.',
+  },
   error_handling: {
     title: '오류 처리',
     subtitle: '스크립트 실행에 실패했을 때 토큰 발급을 차단할지 제어해요.',

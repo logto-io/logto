@@ -73,6 +73,12 @@ const jwt_claims = {
     title: 'Contexto da API: controlo de acesso',
     subtitle: 'Use o método `api.denyAccess` para rejeitar o pedido de token.',
   },
+  cryptographic_capability: {
+    title: 'Contexto da API: criptografia',
+    subtitle: 'Utilize `api.crypto.sha256` e `api.crypto.hmacSha256` para hashing UTF-8.',
+    description:
+      'Ambos os métodos são assíncronos e devolvem uma Promise com uma cadeia hexadecimal minúscula de 64 caracteres. As entradas são codificadas como UTF-8 sem normalização Unicode: `sha256(input)` calcula SHA-256(UTF-8(input)); `hmacSha256({ key, input })` calcula HMAC-SHA-256(UTF-8(key), UTF-8(input)). Leia as chaves HMAC das variáveis de ambiente, chame `.trim()` e rejeite um resultado vazio antes de invocar o HMAC — o método nunca faz trim nem recorre ao SHA-256. Prefira uma chave de elevada entropia sem espaços. A entrada de mensagem vazia é válida; uma chave vazia não. A entrada está limitada a 1 MiB de bytes UTF-8 e uma chave HMAC a 64 KiB. O SHA-256 não oculta identificadores enumeráveis como e-mails ou telefones; use HMAC para um identificador estável com chave secreta. Nenhum método se destina ao armazenamento de palavras-passe. As variáveis de ambiente são visíveis para administradores autorizados de Custom JWT e o runtime de execução, e não são um sistema de chaves gerido. Rodar uma chave HMAC altera cada valor derivado — os scripts que precisem de migração devem transportar uma versão de chave definida pela aplicação e implementar qualquer período de valor duplo. Vários valores precisam de uma serialização inequívoca definida pelo chamador (por exemplo `JSON.stringify([value1, value2])` no mesmo runtime); as integrações entre linguagens devem acordar a sua própria forma canónica. No Logto self-hosted, este script mantém o modelo de script de confiança descrito no aviso de sandbox.',
+  },
   error_handling: {
     title: 'Tratamento de erros',
     subtitle: 'Controla se a emissão do token deve ser bloqueada quando o script falha.',
