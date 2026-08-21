@@ -1,5 +1,97 @@
 # Change Log
 
+## 1.43.0
+
+### Minor Changes
+
+- 8b2aaab9b0: add dynamic app support (OAuth Client ID Metadata Documents)
+
+  The dynamic app lets compatible public clients, such as MCP clients, connect to your tenant without registering an application. Following the OAuth Client ID Metadata Documents (CIMD) draft, such a client presents a public HTTPS URL as its `client_id`, and Logto fetches the client metadata from that URL.
+
+  Enable it from the dynamic app card in the third-party app section on the create application page in Console. The switch is tenant-level and off by default, and requires the OIDC provider SSRF protection to be active. Control what dynamic app clients can request with the permission settings on the dynamic app page.
+
+- 28885b42d5: add optional signed SAML authentication requests for enterprise SSO connectors
+
+  Enterprise SSO SAML connectors can now sign the SAML authentication request (AuthnRequest) sent to the identity provider. Generate a service-provider signing key on the connector, download its certificate and register it at the identity provider, then enable "Sign authentication request". RSA-SHA256 (default) and RSA-SHA512 are supported, and staged keys allow graceful, zero-downtime certificate rotation. Identity-provider metadata advertising `WantAuthnRequestsSigned` no longer breaks SAML sign-in when signing is disabled.
+
+- 860188898f: run Custom JWT and Actions scripts on the consolidated script runtime
+
+  Self-hosted deployments execute Custom JWT and Actions scripts on a pooled worker-thread runner with a 5-second wall-clock deadline and a 128 MB memory budget, so a runaway or never-settling async script fails instead of hanging token issuance. Script return values must be JSON-serializable.
+
+- e516f6eaba: block third-party applications from mutating account data through the Account API and Verification API
+
+  The Account API is the user managing their own account at the identity provider, and was built for the first-party Account Center.
+
+  Third-party applications now receive `403 auth.third_party_application_forbidden` when they try to change account data. First-party applications are unaffected, including Account Center and Console.
+
+  The check fails closed: a client identifier that no longer resolves to an application is treated as third-party. Two cases follow from that. A client identifier document (CIMD) client identifier is a URL and never names a registered application, so CIMD clients are blocked from these routes. An application that has been deleted while its access tokens are still live is blocked as well, because the token keeps authenticating after the application row is gone.
+
+  No read route gained a guard. Three reads do become unreachable for third-party applications as a side effect, because they require a verified user-permission verification record and the routes that mint one are now guarded:
+
+  - `GET /api/my-account/grants`
+  - `GET /api/my-account/sessions`
+  - `GET /api/my-account/mfa-verifications/backup-codes`
+
+  For a third-party application these now return `401 verification_record.permission_denied` whenever Account Center is enabled, and the existing `400 account_center.not_enabled` when it is not. Every other read is unchanged.
+
+### Patch Changes
+
+- f0d369f377: drop deleted profile fields from account center and sign-up configs on save
+
+  When a custom profile field is removed from Collect user profile, saving Account Center (or sign-up) settings no longer fails with `custom_profile_fields.entity_not_exists_with_names`. Stale field references are ignored on save, and deleted fields remain removable in the Console editor even when their permission control is Off.
+
+- 42222f07a4: honor Accept-Language quality values written with whitespace before `q=`
+
+  RFC 7231 allows optional whitespace around the quality parameter, so `Accept-Language: en; q=0.7, pl; q=0.9` is a valid way to ask for Polish ahead of English. Logto discarded the weight whenever that whitespace was present and fell back to header order, serving the sign-in experience and the emails it sends in the wrong language. A non-numeric quality value such as `q=high` now falls back to the default weight instead of producing `NaN`.
+
+- 28c3c9283e: treat Gmail address aliases as the same address in custom email allowlist and blocklist rules
+
+  The matcher treats gmail.com and googlemail.com as equivalent and ignores local-part dots. The Console now shows custom email rule examples and Gmail matching behavior in the field descriptions, with shorter input placeholders.
+
+- f5289eb78b: fix a 500 error when assigning an empty list of scopes or roles
+
+  Management API endpoints that assign relations, such as `POST /applications/:applicationId/user-consent-scopes` and `POST /organizations/:id/users/:userId/roles`, now accept an empty array and make no changes, instead of responding with a 500 error.
+
+- 7692f43b07: require token exchange subject tokens to come from a first-party application
+
+  Token exchange does not inherit the subject token's audience or scopes — the issued token carries the receiver's authorization for the user, which for a first-party receiver means every scope the user's roles grant. The subject token's issuing client was previously discarded, so an access token held by a third-party application could be presented to any token-exchange-enabled client and converted into the user's full first-party authorization, turning a narrowly consented credential into a much broader one.
+
+  The subject token must now have been issued to a first-party application, on both the opaque and the JWT path. Third-party applications are already barred from enabling token exchange as the receiver; this closes the same boundary on the subject side. A subject token whose issuing client no longer exists is rejected as well.
+
+  **Breaking**: if you deliberately exchange access tokens issued to third-party applications, those requests now fail with `invalid_grant`. Use a first-party application to obtain the subject token instead.
+
+- 6f43932ae9: declare the token signing algorithm that matches the signing key's curve
+
+  Previously, every Elliptic Curve signing key was declared as `ES384` regardless of its curve, so tenants seeded with a custom P-256 or P-521 private key advertised an algorithm their key cannot sign and clients failed validation at the authorization endpoint. The declared algorithm now follows the key's actual curve: P-256 declares `ES256`, P-384 declares `ES384`, and P-521 declares `ES512`. RSA keys keep the `RS256` default.
+
+- 508de60b9f: validate the subject token class in token exchange
+
+  The `access_token` subject path of the token exchange grant falls back to JWT verification when the token is not a known opaque token. That fallback checked only the signature and the issuer, so any JWT signed by the tenant's keys was accepted as an access token — including an OIDC ID token, which is an authentication assertion and carries no API authorization. A client with token exchange enabled could therefore submit an ID token as `subject_token` and receive an API access token for that user.
+
+  The JWT subject token is now required to carry the RFC 9068 `at+jwt` type header and a `client_id` claim before the account is resolved. Both are set unconditionally on every JWT access token Logto issues, so legitimate subject tokens are unaffected; ID tokens are rejected with `invalid_grant`.
+
+- fafc8cd9f3: reject token issuance for suspended users
+
+  Suspending a user revokes their sessions and tokens, but token issuance itself never checked the suspension flag — if revocation partially failed, a surviving refresh token kept working indefinitely. The OIDC `findAccount` hook now rejects suspended users with `invalid_grant`, mirroring how deleted users are handled, so all user token grants (refresh token, authorization code, device code, token exchange) and userinfo reject suspended users regardless of revocation state.
+
+- Updated dependencies [ebfefb513d]
+- Updated dependencies [f0d369f377]
+- Updated dependencies [28c3c9283e]
+- Updated dependencies [e6ed7d8be9]
+- Updated dependencies [8b2aaab9b0]
+- Updated dependencies [28885b42d5]
+- Updated dependencies [860188898f]
+  - @logto/core-kit@2.12.1
+  - @logto/console@1.40.0
+  - @logto/phrases@1.31.0
+  - @logto/experience@1.22.0
+  - @logto/schemas@1.43.0
+  - @logto/account@0.6.0
+  - @logto/phrases-experience@1.15.0
+  - @logto/cli@1.43.0
+  - @logto/demo-app@1.5.0
+  - @logto/device-demo-app@0.1.0
+
 ## 1.42.0
 
 ### Minor Changes
