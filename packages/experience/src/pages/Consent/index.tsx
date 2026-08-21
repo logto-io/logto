@@ -7,6 +7,7 @@ import LandingPageLayout from '@/Layout/LandingPageLayout';
 import { consent, getConsentInfo } from '@/apis/consent';
 import TermsLinks from '@/components/TermsLinks';
 import TextLink from '@/components/TextLink';
+import { isDevFeaturesEnabled } from '@/constants/env';
 import useApi from '@/hooks/use-api';
 import useErrorHandler, { type ErrorHandlers } from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
@@ -38,6 +39,9 @@ const getClientDisplayData = ({ application: { id, displayName, name } }: Consen
   };
 };
 
+// Multi-organization third-party consent
+const isMultiOrganizationConsentEnabled = isDevFeaturesEnabled;
+
 const Consent = () => {
   const handleError = useErrorHandler();
   const asyncConsent = useApi(consent);
@@ -45,7 +49,7 @@ const Consent = () => {
   const redirectTo = useGlobalRedirectTo();
 
   const [consentData, setConsentData] = useState<ConsentInfoResponse>();
-  const [selectedOrganization, setSelectedOrganization] = useState<Organization>();
+  const [selectedOrganizations, setSelectedOrganizations] = useState<Organization[]>([]);
   const [isAccessDenied, setIsAccessDenied] = useState(false);
 
   const [isConsentLoading, setIsConsentLoading] = useState(false);
@@ -83,7 +87,7 @@ const Consent = () => {
 
   const consentHandler = useCallback(async () => {
     setIsConsentLoading(true);
-    const [error, result] = await asyncConsent(selectedOrganization?.id);
+    const [error, result] = await asyncConsent(selectedOrganizations.map(({ id }) => id));
     setIsConsentLoading(false);
 
     if (error) {
@@ -95,7 +99,7 @@ const Consent = () => {
     if (result?.redirectTo) {
       await redirectTo(result.redirectTo);
     }
-  }, [asyncConsent, handleConsentError, redirectTo, selectedOrganization?.id]);
+  }, [asyncConsent, handleConsentError, redirectTo, selectedOrganizations]);
 
   useEffect(() => {
     const getConsentInfoHandler = async () => {
@@ -114,7 +118,7 @@ const Consent = () => {
         return;
       }
 
-      setSelectedOrganization(result.organizations[0]);
+      setSelectedOrganizations(result.organizations.slice(0, 1));
     };
 
     void getConsentInfoHandler();
@@ -143,6 +147,25 @@ const Consent = () => {
   } = consentData;
 
   const { unregisteredClientHost, applicationName } = getClientDisplayData(consentData);
+  const isMultiSelectEnabled = isMultiOrganizationConsentEnabled && !unregisteredClientHost;
+  const toggleOrganization = (organization: Organization) => {
+    setSelectedOrganizations((selectedOrganizations) => {
+      if (!isMultiSelectEnabled) {
+        return [organization];
+      }
+
+      const isSelected = selectedOrganizations.some(({ id }) => id === organization.id);
+
+      // Organization access consent always requires at least one selected organization.
+      if (isSelected && selectedOrganizations.length === 1) {
+        return selectedOrganizations;
+      }
+
+      return isSelected
+        ? selectedOrganizations.filter(({ id }) => id !== organization.id)
+        : [...selectedOrganizations, organization];
+    });
+  };
   const showTerms = Boolean(termsOfUseUrl ?? privacyPolicyUrl);
   const { redirectUri } = consentData;
   const redirectUriOrigin = consentData.redirectUri
@@ -179,8 +202,9 @@ const Consent = () => {
         <OrganizationSelector
           className={styles.organizationSelector}
           organizations={consentData.organizations}
-          selectedOrganization={selectedOrganization}
-          onSelect={setSelectedOrganization}
+          selectedOrganizations={selectedOrganizations}
+          isMultiSelectEnabled={isMultiSelectEnabled}
+          onToggle={toggleOrganization}
         />
       )}
       <div className={styles.footerButton}>

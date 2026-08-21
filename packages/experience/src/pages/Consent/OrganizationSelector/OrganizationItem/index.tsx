@@ -15,6 +15,7 @@ type OrganizationItemProps = {
   readonly organization: Organization;
   readonly onSelect?: (organization: Organization) => void;
   readonly isSelected?: boolean;
+  readonly isDisabled?: boolean;
   readonly suffixElement?: ReactNode;
 };
 
@@ -22,6 +23,7 @@ const OrganizationItem = ({
   organization,
   onSelect,
   isSelected,
+  isDisabled,
   suffixElement,
   className,
 }: OrganizationItemProps) => {
@@ -31,12 +33,16 @@ const OrganizationItem = ({
       data-selected={isSelected}
       {...(onSelect && {
         role: 'button',
+        'aria-pressed': isSelected,
+        'aria-disabled': isDisabled,
         tabIndex: 0,
-        onClick: () => {
-          onSelect(organization);
-        },
-        onKeyDown: onKeyDownHandler(() => {
-          onSelect(organization);
+        ...(!isDisabled && {
+          onClick: () => {
+            onSelect(organization);
+          },
+          onKeyDown: onKeyDownHandler(() => {
+            onSelect(organization);
+          }),
         }),
       })}
     >

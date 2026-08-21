@@ -204,6 +204,31 @@ describe('Consent', () => {
       expect(queryByText(/is self-declared by/)).toBeNull();
       unmount();
     });
+
+    it('only submits one selected organization', async () => {
+      mockedGetConsentInfo.mockResolvedValueOnce({
+        ...cimdConsentInfo('Fancy client'),
+        organizations: [
+          { id: 'organization_1', name: 'Organization 1' },
+          { id: 'organization_2', name: 'Organization 2' },
+        ],
+      });
+      mockedConsent.mockResolvedValueOnce({ redirectTo: '' });
+
+      const { getByText } = renderConsent();
+
+      await waitFor(() => {
+        expect(getByText('Organization 1')).not.toBeNull();
+      });
+
+      fireEvent.click(getByText('Organization 1'));
+      fireEvent.click(getByText('Organization 2'));
+      fireEvent.click(getByText('action.authorize'));
+
+      await waitFor(() => {
+        expect(mockedConsent).toBeCalledWith(['organization_2']);
+      });
+    });
   });
 
   it('signs out from the access denied page', async () => {
@@ -218,5 +243,82 @@ describe('Consent', () => {
     fireEvent.click(getByText('account_center.sessions.revoke_session'));
 
     expect(assign).toBeCalledWith('http://localhost/oidc/session/end?client_id=application_id');
+  });
+
+  it('submits all selected organizations', async () => {
+    mockedGetConsentInfo.mockResolvedValueOnce({
+      ...consentInfo,
+      organizations: [
+        { id: 'organization_1', name: 'Organization 1' },
+        { id: 'organization_2', name: 'Organization 2' },
+      ],
+    });
+    mockedConsent.mockResolvedValueOnce({ redirectTo: '' });
+
+    const { getByText } = renderConsent();
+
+    await waitFor(() => {
+      expect(getByText('Organization 1')).not.toBeNull();
+    });
+
+    fireEvent.click(getByText('Organization 1'));
+    fireEvent.click(getByText('Organization 2'));
+    fireEvent.click(getByText('action.authorize'));
+
+    await waitFor(() => {
+      expect(mockedConsent).toBeCalledWith(['organization_1', 'organization_2']);
+    });
+  });
+
+  it('allows a selected organization to be removed when another remains', async () => {
+    mockedGetConsentInfo.mockResolvedValueOnce({
+      ...consentInfo,
+      organizations: [
+        { id: 'organization_1', name: 'Organization 1' },
+        { id: 'organization_2', name: 'Organization 2' },
+      ],
+    });
+    mockedConsent.mockResolvedValueOnce({ redirectTo: '' });
+
+    const { getAllByText, getByText } = renderConsent();
+
+    await waitFor(() => {
+      expect(getByText('Organization 1')).not.toBeNull();
+    });
+
+    fireEvent.click(getByText('Organization 1'));
+    fireEvent.click(getByText('Organization 2'));
+    fireEvent.click(getAllByText('Organization 1').at(-1)!);
+    fireEvent.click(getByText('action.authorize'));
+
+    await waitFor(() => {
+      expect(mockedConsent).toBeCalledWith(['organization_2']);
+    });
+  });
+
+  it('disables deselecting the last selected organization', async () => {
+    mockedGetConsentInfo.mockResolvedValueOnce({
+      ...consentInfo,
+      organizations: [
+        { id: 'organization_1', name: 'Organization 1' },
+        { id: 'organization_2', name: 'Organization 2' },
+      ],
+    });
+
+    const { getAllByText, getByText } = renderConsent();
+
+    await waitFor(() => {
+      expect(getByText('Organization 1')).not.toBeNull();
+    });
+
+    fireEvent.click(getByText('Organization 1'));
+
+    const organization1Item = getAllByText('Organization 1').at(-1)?.closest('[role="button"]');
+
+    expect(organization1Item?.getAttribute('aria-disabled')).toBe('true');
+
+    fireEvent.click(getByText('Organization 2'));
+
+    expect(organization1Item?.getAttribute('aria-disabled')).toBe('false');
   });
 });

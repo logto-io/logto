@@ -13,33 +13,69 @@ import styles from './index.module.scss';
 
 export { type Organization } from './OrganizationItem';
 
+type ResourceScopes = NonNullable<Organization['missingResourceScopes']>;
+
+const mergeResourceScopes = (
+  resourceScopes: ResourceScopes,
+  scopesToMerge: ResourceScopes
+): ResourceScopes =>
+  scopesToMerge.reduce<ResourceScopes>((mergedResourceScopes, resourceScope) => {
+    const existingResourceScope = mergedResourceScopes.find(
+      ({ resource }) => resource.id === resourceScope.resource.id
+    );
+
+    if (!existingResourceScope) {
+      return [...mergedResourceScopes, resourceScope];
+    }
+
+    return mergedResourceScopes.map((candidate) =>
+      candidate.resource.id === resourceScope.resource.id
+        ? {
+            ...candidate,
+            scopes: [
+              ...candidate.scopes,
+              ...resourceScope.scopes.filter(
+                ({ id }) => !candidate.scopes.some((scope) => scope.id === id)
+              ),
+            ],
+          }
+        : candidate
+    );
+  }, resourceScopes);
+
 type Props = {
   readonly organizations: Organization[];
-  readonly selectedOrganization: Organization | undefined;
-  readonly onSelect: (organization: Organization) => void;
+  readonly selectedOrganizations: Organization[];
+  readonly isMultiSelectEnabled: boolean;
+  readonly onToggle: (organization: Organization) => void;
   readonly className?: string;
 };
 
 const OrganizationSelector = ({
   organizations,
-  selectedOrganization,
-  onSelect,
+  selectedOrganizations,
+  isMultiSelectEnabled,
+  onToggle,
   className,
 }: Props) => {
   const { t } = useTranslation();
   const parentElementRef = useRef<HTMLDivElement>(null);
   const [showDropdown, setShowDropdown] = useState(false);
 
-  if (organizations.length === 0 || !selectedOrganization) {
+  if (organizations.length === 0 || selectedOrganizations.length === 0) {
     return null;
   }
 
-  const { missingResourceScopes: resourceScopes } = selectedOrganization;
+  const resourceScopes = selectedOrganizations.reduce<ResourceScopes>(
+    (resourceScopes, { missingResourceScopes = [] }) =>
+      mergeResourceScopes(resourceScopes, missingResourceScopes),
+    []
+  );
 
   return (
     <div className={className}>
       <div className={styles.title}>{t(`description.authorize_organization_access`)}</div>
-      {resourceScopes && resourceScopes.length > 0 && (
+      {resourceScopes.length > 0 && (
         <div className={styles.scopeListWrapper}>
           {resourceScopes
             .slice()
@@ -68,25 +104,31 @@ const OrganizationSelector = ({
         ref={parentElementRef}
         className={classNames(
           styles.cardWrapper,
-          Boolean(resourceScopes?.length) && styles.withoutTopRadius
+          resourceScopes.length > 0 && styles.withoutTopRadius
         )}
         data-active={showDropdown}
       >
-        <OrganizationItem
-          className={styles.selectedOrganization}
-          organization={selectedOrganization}
-          suffixElement={<ExpandableIcon className={styles.expandButton} />}
-          onSelect={() => {
-            setShowDropdown(true);
-          }}
-        />
+        {selectedOrganizations.map((organization, index) => (
+          <OrganizationItem
+            key={organization.id}
+            className={styles.selectedOrganization}
+            organization={organization}
+            suffixElement={
+              index === 0 ? <ExpandableIcon className={styles.expandButton} /> : undefined
+            }
+            onSelect={() => {
+              setShowDropdown(true);
+            }}
+          />
+        ))}
       </div>
       <OrganizationSelectorModal
         isOpen={showDropdown}
         parentElementRef={parentElementRef}
         organizations={organizations}
-        selectedOrganization={selectedOrganization}
-        onSelect={onSelect}
+        selectedOrganizations={selectedOrganizations}
+        isMultiSelectEnabled={isMultiSelectEnabled}
+        onToggle={onToggle}
         onClose={() => {
           setShowDropdown(false);
         }}

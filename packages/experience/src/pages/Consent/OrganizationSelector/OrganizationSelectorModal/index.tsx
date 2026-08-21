@@ -12,8 +12,9 @@ type Props = {
   readonly isOpen: boolean;
   readonly parentElementRef: React.RefObject<HTMLDivElement>;
   readonly organizations: Organization[];
-  readonly selectedOrganization: Organization;
-  readonly onSelect: (organization: Organization) => void;
+  readonly selectedOrganizations: Organization[];
+  readonly isMultiSelectEnabled: boolean;
+  readonly onToggle: (organization: Organization) => void;
   readonly onClose: () => void;
 };
 
@@ -21,8 +22,9 @@ const OrganizationSelectorModal = ({
   isOpen,
   parentElementRef,
   organizations,
-  selectedOrganization,
-  onSelect,
+  selectedOrganizations,
+  isMultiSelectEnabled,
+  onToggle,
   onClose,
 }: Props) => {
   const { isMobile } = usePlatform();
@@ -62,7 +64,7 @@ const OrganizationSelectorModal = ({
     return () => {
       window.removeEventListener('resize', updatePosition);
     };
-  }, [updatePosition, isOpen]);
+  }, [updatePosition, isOpen, selectedOrganizations.length]);
 
   return (
     <ReactModal
@@ -78,18 +80,26 @@ const OrganizationSelectorModal = ({
       onRequestClose={onClose}
     >
       <div className={styles.container}>
-        {organizations.map((organization) => (
-          <OrganizationItem
-            key={organization.id}
-            className={styles.organizationItem}
-            organization={organization}
-            isSelected={organization.id === selectedOrganization.id}
-            onSelect={() => {
-              onClose();
-              onSelect(organization);
-            }}
-          />
-        ))}
+        {organizations.map((organization) => {
+          const isSelected = selectedOrganizations.some(({ id }) => id === organization.id);
+
+          return (
+            <OrganizationItem
+              key={organization.id}
+              className={styles.organizationItem}
+              organization={organization}
+              isSelected={isSelected}
+              isDisabled={isMultiSelectEnabled && isSelected && selectedOrganizations.length === 1}
+              onSelect={() => {
+                onToggle(organization);
+
+                if (!isMultiSelectEnabled) {
+                  onClose();
+                }
+              }}
+            />
+          );
+        })}
       </div>
     </ReactModal>
   );
