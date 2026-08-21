@@ -7,7 +7,7 @@ import { usePromiseConfirmModal } from './use-confirm-modal';
 import { type ErrorHandlers } from './use-error-handler';
 
 export type Options = {
-  readonly onConfirm?: () => void;
+  readonly onConfirm?: (errorCode: string) => void;
 };
 
 const useEmailBlockedErrorHandler = ({ onConfirm }: Options = {}): ErrorHandlers => {
@@ -23,7 +23,7 @@ const useEmailBlockedErrorHandler = ({ onConfirm }: Options = {}): ErrorHandlers
       });
 
       if (onConfirm) {
-        onConfirm();
+        onConfirm(error.code);
         return;
       }
 

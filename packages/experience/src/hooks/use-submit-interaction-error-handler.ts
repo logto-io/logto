@@ -15,7 +15,7 @@ import useRequiredProfileErrorHandler, {
 
 type Options = Omit<UseRequiredProfileErrorHandlerOptions, 'interactionEvent'> &
   UseMfaVerificationErrorHandlerOptions & {
-    readonly onEmailBlocked?: () => void;
+    readonly onEmailBlocked?: (errorCode: string) => void;
   };
 
 /**

@@ -1,7 +1,9 @@
+import { renderHook } from '@testing-library/react';
 import { useParams as useParamsMock } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import { mockSsoConnectors, socialConnectors } from '@/__mocks__/logto';
+import useSessionStorage, { StorageKeys } from '@/hooks/use-session-storages';
 
 import DirectSignIn from '.';
 
@@ -65,8 +67,11 @@ afterAll(() => {
 });
 
 describe('DirectSignIn', () => {
+  const { result: sessionStorageHook } = renderHook(() => useSessionStorage());
+
   beforeEach(() => {
     jest.clearAllMocks();
+    sessionStorageHook.current.remove(StorageKeys.DirectSignIn);
   });
 
   it('should fallback to the first screen when `directSignIn` is not provided', () => {
@@ -92,6 +97,7 @@ describe('DirectSignIn', () => {
     search.mockReturnValue('?fallback=sign-in');
     renderWithPageContext(<DirectSignIn />);
     expect(replace).toBeCalledWith('/sign-in');
+    expect(sessionStorageHook.current.get(StorageKeys.DirectSignIn)).toBeUndefined();
   });
 
   it('should fallback to the first screen when method is valid but target is invalid (sso)', () => {
@@ -99,6 +105,7 @@ describe('DirectSignIn', () => {
     search.mockReturnValue('?fallback=sign-in');
     renderWithPageContext(<DirectSignIn />);
     expect(replace).toBeCalledWith('/sign-in');
+    expect(sessionStorageHook.current.get(StorageKeys.DirectSignIn)).toBeUndefined();
   });
 
   it('should invoke social sign-in when method is social and target is valid (social)', () => {
@@ -109,6 +116,9 @@ describe('DirectSignIn', () => {
 
     expect(replace).not.toBeCalled();
     expect(assign).toBeCalledWith('/social-redirect-to');
+    expect(sessionStorageHook.current.get(StorageKeys.DirectSignIn)).toBe(
+      `social:${socialConnectors[0]!.target}`
+    );
   });
 
   it('should invoke sso sign-in when method is sso and target is valid (sso)', () => {
@@ -119,5 +129,8 @@ describe('DirectSignIn', () => {
 
     expect(replace).not.toBeCalled();
     expect(assign).toBeCalledWith('/sso-redirect-to');
+    expect(sessionStorageHook.current.get(StorageKeys.DirectSignIn)).toBe(
+      `sso:${mockSsoConnectors[0]!.id}`
+    );
   });
 });

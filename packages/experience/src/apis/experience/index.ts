@@ -25,6 +25,7 @@ export {
   submitInteraction,
   identifyUser,
   identifyAndSubmitInteraction,
+  abortInteraction,
 } from './interaction';
 export type { TrustedDeviceAvailability, TrustedDeviceInteractionData } from './interaction';
 

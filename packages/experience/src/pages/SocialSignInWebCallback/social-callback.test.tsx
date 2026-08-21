@@ -10,6 +10,7 @@ import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider
 import { mockSignInExperienceSettings } from '@/__mocks__/logto';
 import { socialConnectors } from '@/__mocks__/social-connectors';
 import {
+  abortInteraction,
   identifyAndSubmitInteraction,
   registerWithVerifiedIdentifier,
   verifySocialVerification,
@@ -36,6 +37,9 @@ jest.mock('@/apis/experience', () => ({
   identifyAndSubmitInteraction: jest.fn().mockResolvedValue({ redirectTo: `/sign-in` }),
   registerWithVerifiedIdentifier: jest.fn().mockResolvedValue({ redirectTo: `/sign-in` }),
   signInWithSso: jest.fn().mockResolvedValue({ redirectTo: `/sign-in` }),
+  abortInteraction: jest.fn().mockResolvedValue({
+    redirectTo: 'https://client.example.com/callback?error=access_denied',
+  }),
 }));
 
 jest.mock('@/hooks/use-global-redirect-to', () => ({
@@ -60,6 +64,7 @@ const mockedIdentifyAndSubmitInteraction = identifyAndSubmitInteraction as jest.
 const mockedRegisterWithVerifiedIdentifier = registerWithVerifiedIdentifier as jest.MockedFunction<
   typeof registerWithVerifiedIdentifier
 >;
+const mockedAbortInteraction = abortInteraction as jest.MockedFunction<typeof abortInteraction>;
 
 const verificationIdsMap = {
   [VerificationType.Social]: 'foo',
@@ -89,6 +94,9 @@ describe('SocialCallbackPage — social sign-in', () => {
     mockedVerifySocialVerification.mockResolvedValue({ verificationId: 'foo' });
     mockedIdentifyAndSubmitInteraction.mockResolvedValue({ redirectTo: `/sign-in` });
     mockedRegisterWithVerifiedIdentifier.mockResolvedValue({ redirectTo: `/sign-in` });
+    mockedAbortInteraction.mockResolvedValue({
+      redirectTo: 'https://client.example.com/callback?error=access_denied',
+    });
   });
 
   describe('fallback', () => {
@@ -275,6 +283,72 @@ describe('SocialCallbackPage — social sign-in', () => {
       await waitFor(() => {
         expect(verifySocialVerification).not.toBeCalled();
       });
+    });
+
+    it('should abort back to the client when the session entered via direct sign-in', async () => {
+      const state = generateState();
+      set(StorageKeys.DirectSignIn, `social:${socialConnectors[0]!.target}`);
+
+      mockUseSearchParameters.mockReturnValue([
+        new URLSearchParams(`state=${state}&code=foo`),
+        jest.fn(),
+      ]);
+
+      renderWithPageContext(
+        <SettingsProvider>
+          <UserInteractionContextProvider>
+            <Routes>
+              <Route path="/callback/social/:connectorId" element={<SocialCallback />} />
+            </Routes>
+          </UserInteractionContextProvider>
+        </SettingsProvider>,
+        { initialEntries: [`/callback/social/${connectorId}`] }
+      );
+
+      await waitFor(() => {
+        expect(mockedAbortInteraction).toBeCalled();
+        expect(mockRedirectTo).toBeCalledWith(
+          'https://client.example.com/callback?error=access_denied'
+        );
+      });
+
+      // The marker is consumed on use.
+      expect(result.current.get(StorageKeys.DirectSignIn)).toBeUndefined();
+    });
+
+    it('should fall back to the sign-in page when aborting fails', async () => {
+      const state = generateState();
+      set(StorageKeys.DirectSignIn, `social:${socialConnectors[0]!.target}`);
+      mockedAbortInteraction.mockRejectedValueOnce(
+        createRequestError({
+          code: 'session.not_found',
+          message: 'Session not found.',
+          data: undefined,
+        })
+      );
+
+      mockUseSearchParameters.mockReturnValue([
+        new URLSearchParams(`state=${state}&code=foo`),
+        jest.fn(),
+      ]);
+
+      const { getByText } = renderWithPageContext(
+        <SettingsProvider>
+          <UserInteractionContextProvider>
+            <Routes>
+              <Route path="/callback/social/:connectorId" element={<SocialCallback />} />
+              <Route path="/sign-in" element={<div>Sign in page</div>} />
+            </Routes>
+          </UserInteractionContextProvider>
+        </SettingsProvider>,
+        { initialEntries: [`/callback/social/${connectorId}`] }
+      );
+
+      await waitFor(() => {
+        expect(mockedAbortInteraction).toBeCalled();
+        expect(getByText('Sign in page')).not.toBeNull();
+      });
+      expect(mockRedirectTo).not.toBeCalled();
     });
 
     it('should not consult fallback on state mismatch', async () => {
