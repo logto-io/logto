@@ -86,6 +86,7 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
         {
           ctx,
           sentinel,
+          queries,
           action: SentinelActivityAction.Password,
           identifier,
           payload: {

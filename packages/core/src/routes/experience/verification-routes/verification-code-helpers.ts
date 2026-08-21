@@ -208,6 +208,7 @@ type VerifyCodeParams = {
     | VerificationType.MfaEmailVerificationCode
     | VerificationType.MfaPhoneVerificationCode;
   sentinel: Sentinel;
+  queries: Queries;
   ctx: ExperienceInteractionRouterContext;
 };
 
@@ -221,6 +222,7 @@ export const verifyCode = async ({
   identifier,
   verificationType,
   sentinel,
+  queries,
   ctx,
 }: VerifyCodeParams): Promise<{ verificationId: string }> => {
   const { experienceInteraction } = ctx;
@@ -250,6 +252,7 @@ export const verifyCode = async ({
     {
       ctx,
       sentinel,
+      queries,
       action: SentinelActivityAction.VerificationCode,
       identifier,
       payload: {

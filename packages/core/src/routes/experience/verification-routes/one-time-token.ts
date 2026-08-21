@@ -52,6 +52,7 @@ export default function oneTimeTokenVerificationRoutes<
         {
           ctx,
           sentinel,
+          queries,
           action: SentinelActivityAction.OneTimeToken,
           identifier,
           payload: {
