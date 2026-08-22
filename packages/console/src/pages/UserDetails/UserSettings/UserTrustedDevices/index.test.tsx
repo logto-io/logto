@@ -69,11 +69,6 @@ jest.mock('@/ds-components/FormField', () => ({
   ),
 }));
 
-jest.mock('@/components/EmptyDataPlaceholder', () => ({
-  __esModule: true,
-  default: ({ title }: { readonly title: React.ReactNode }) => <div>{title}</div>,
-}));
-
 jest.mock('@/ds-components/OverlayScrollbar', () => ({
   __esModule: true,
   default: ({ children }: { readonly children: React.ReactNode }) => <div>{children}</div>,
@@ -137,6 +132,7 @@ describe('UserTrustedDevices', () => {
     expect(screen.getByText('trusted-device-id')).toBeTruthy();
     expect(screen.getByText('Shanghai, China')).toBeTruthy();
     expect(screen.getByText('Jul 26, 2026')).toBeTruthy();
+    expect(screen.getByText('admin_console.mfa.trusted_device.management_hint')).toBeTruthy();
     expect(screen.queryByText('192.0.2.1')).toBeNull();
     expect(screen.getByText('admin_console.user_details.sessions.name_column')).toBeTruthy();
     expect(screen.getByText('admin_console.user_details.sessions.location_column')).toBeTruthy();
@@ -166,6 +162,8 @@ describe('UserTrustedDevices', () => {
     renderTrustedDevices();
 
     expect(screen.getByText('admin_console.mfa.trusted_device.management_empty')).toBeTruthy();
+    expect(screen.queryByText('admin_console.mfa.trusted_device.management_hint')).toBeNull();
+    expect(screen.queryByText('admin_console.user_details.sessions.name_column')).toBeNull();
   });
 
   it('shows an error and retries the request', () => {
