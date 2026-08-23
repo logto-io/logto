@@ -30,6 +30,8 @@ type PooledWorkerOptions = {
    * that always holds.
    */
   memoryMb: number;
+  /** Whether this worker exposes the development-only Custom JWT crypto capability. */
+  isCustomJwtCryptographicCapabilityEnabled: boolean;
   /** Lets the pool drop its entry as soon as this worker stops accepting new runs. */
   unpool: (worker: PooledWorker) => void;
 };
@@ -82,6 +84,10 @@ export class PooledWorker {
     this.worker = new Worker(options.workerPath, {
       workerData: { script: options.script, entry: options.entry } satisfies ScriptWorkerData,
       resourceLimits: { maxOldGenerationSizeMb: options.memoryMb },
+      env: {
+        ...process.env,
+        LOGTO_CUSTOM_JWT_CRYPTO_ENABLED: String(options.isCustomJwtCryptographicCapabilityEnabled),
+      },
       // `stdout` and `stderr` are deliberately left at their default `false`, which pipes the
       // worker's output through to the host process — the passthrough dry runs rely on.
     });

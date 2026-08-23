@@ -271,14 +271,11 @@ getCustomJwtClaims = async ({ api, environmentVariables, context }) => {
   // to Custom JWT administrators and the execution runner; they are not a managed
   // key system. Rotating the key changes every derived value — carry an application
   // key version if you need a migration or dual-value period.
-  const email = context.user.primaryEmail ?? '';
+  const userId = context.user.id;
 
-  // Multiple values need an unambiguous caller-defined serialization.
-  // JSON.stringify([value1, value2]) is a simple same-runtime example.
-  const digest = await api.crypto.sha256(email);
-  const stableId = await api.crypto.hmacSha256({ key, input: email });
+  const stableId = await api.crypto.hmacSha256({ key, input: userId });
 
-  return { digest, stableId };
+  return { stableId };
 };`;
 
 /**

@@ -3,6 +3,8 @@ import path from 'node:path';
 
 import { packageDirectory } from 'pkg-dir';
 
+import { EnvSet } from '#src/env-set/index.js';
+
 import { PooledWorker } from './pooled-worker.js';
 import {
   type ScriptEntry,
@@ -26,6 +28,14 @@ const workerBuildPath = 'build/workers/tasks/script-runner.js';
  */
 const maxWorkers = 4;
 
+type WorkerSpawnOptions = {
+  workerPath: string;
+  script: string;
+  entry: ScriptEntry;
+  memoryMb: number;
+  isCustomJwtCryptographicCapabilityEnabled: boolean;
+};
+
 const resolveWorkerPath = async () => {
   const rootDirectory = await packageDirectory();
 
@@ -44,12 +54,12 @@ const resolveWorkerPath = async () => {
  * runaway allocation from taking the host's heap with it. It is not an isolation boundary — a
  * script still runs with the host's privileges.
  *
- * Workers are keyed by `{keyPrefix}:{entry}:{memoryMb}:{sha256(script)}`, so a script is compiled
- * once and its worker is reused across runs, while runs with different key prefixes (e.g.
- * different tenants) never share a worker even for a byte-identical script. The memory budget is
- * part of the key because `resourceLimits` are fixed at spawn: keying on it is what guarantees a
- * run is never served by a worker with a stricter or looser limit than it asked for. Recycling
- * happens on fault, on idle expiry, and after a fixed number of runs.
+ * Workers are keyed by
+ * `{keyPrefix}:{entry}:{memoryMb}:{isCustomJwtCryptographicCapabilityEnabled}:{sha256(script)}`,
+ * so a script is compiled once and its worker is reused across runs, while runs with different key
+ * prefixes (e.g. different tenants) never share a worker even for a byte-identical script. The
+ * memory budget and spawn-time capability flag are part of the key because both are fixed at
+ * spawn. Recycling happens on fault, on idle expiry, and after a fixed number of runs.
  */
 export class WorkerThreadScriptRunner implements ScriptRunner {
   /** Insertion-ordered, which makes the first entry the least recently used. */
@@ -100,13 +110,22 @@ export class WorkerThreadScriptRunner implements ScriptRunner {
     // every run against a broken build fails the same way instead of retrying the resolution.
     this.workerPath ||= resolveWorkerPath();
     const workerPath = await this.workerPath;
-    const key = this.buildKey(keyPrefix, entry, limits.memoryMb, script);
+    // Custom JWT cryptographic capability. Keep this gate independent from the script runtime.
+    const isCustomJwtCryptographicCapabilityEnabled = EnvSet.values.isDevFeaturesEnabled;
+    const spawn: WorkerSpawnOptions = {
+      workerPath,
+      script,
+      entry,
+      memoryMb: limits.memoryMb,
+      isCustomJwtCryptographicCapabilityEnabled,
+    };
+    const key = this.buildKey(keyPrefix, spawn);
 
     /**
      * Synchronous through `reserve()`: Node runs it without suspension, so two concurrent misses on
      * a cold key cannot both spawn a worker.
      */
-    const worker = this.acquire(key, { workerPath, script, entry, memoryMb: limits.memoryMb });
+    const worker = this.acquire(key, spawn);
     const { runId, promise } = worker.reserve(limits.wallClockMs);
 
     return worker.execute(runId, promise, payload);
@@ -128,20 +147,17 @@ export class WorkerThreadScriptRunner implements ScriptRunner {
    */
   private buildKey(
     keyPrefix: string | undefined,
-    entry: ScriptEntry,
-    memoryMb: number,
-    script: string
+    { entry, memoryMb, isCustomJwtCryptographicCapabilityEnabled, script }: WorkerSpawnOptions
   ): string {
     const hash = createHash('sha256').update(script).digest('hex');
 
-    return `${keyPrefix ?? ''}:${entry}:${memoryMb}:${hash}`;
+    return `${keyPrefix ?? ''}:${entry}:${memoryMb}:${String(
+      isCustomJwtCryptographicCapabilityEnabled
+    )}:${hash}`;
   }
 
   /** Must never contain an `await` — see the synchronous region in {@link run}. */
-  private acquire(
-    key: string,
-    spawn: { workerPath: string; script: string; entry: ScriptEntry; memoryMb: number }
-  ): PooledWorker {
+  private acquire(key: string, spawn: WorkerSpawnOptions): PooledWorker {
     const existing = this.pool.get(key);
 
     if (existing?.isUsable) {

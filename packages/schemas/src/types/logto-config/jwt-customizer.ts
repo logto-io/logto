@@ -299,6 +299,10 @@ export type CustomJwtErrorBody = z.infer<typeof customJwtErrorBodyGuard>;
  *
  * Available only when Custom JWT cryptographic capability is enabled
  * (`isDevFeaturesEnabled && !isCloud`).
+ *
+ * @see The worker-local mirror in
+ * `packages/core/src/workers/jwt-customizer-cryptographic-capability.ts`. Keep both definitions in
+ * sync.
  */
 export type CustomJwtCryptographicCapability = Readonly<{
   sha256: (input: string) => Promise<string>;

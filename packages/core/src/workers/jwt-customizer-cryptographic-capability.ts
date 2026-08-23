@@ -16,6 +16,9 @@ type HmacSha256Options = Readonly<{
  *
  * Kept local (not imported from `@logto/schemas`) so the worker-thread runner can load this
  * module with Node builtins only.
+ *
+ * @see `CustomJwtCryptographicCapability` in
+ * `packages/schemas/src/types/logto-config/jwt-customizer.ts`. Keep both definitions in sync.
  */
 type CustomJwtCryptographicCapability = Readonly<{
   sha256: (input: string) => Promise<string>;
@@ -47,14 +50,6 @@ const encodeUtf8WithinLimit = (value: string, label: string, maxBytes: number): 
   return bytes;
 };
 
-const assertHexDigest = (digest: string): string => {
-  if (digest.length !== 64 || /[^\da-f]/.test(digest)) {
-    throw new TypeError('The cryptographic digest is not a valid lowercase hexadecimal string.');
-  }
-
-  return digest;
-};
-
 const readHmacOptions = (options: unknown): HmacSha256Options => {
   if (typeof options !== 'object' || options === null) {
     throw new TypeError('The HMAC options must be an object.');
@@ -73,9 +68,7 @@ const readHmacOptions = (options: unknown): HmacSha256Options => {
 const sha256 = async (input: unknown): Promise<string> => {
   const value = assertPrimitiveString(input, 'input');
   const bytes = encodeUtf8WithinLimit(value, 'input', customJwtCryptoMaxInputBytes);
-  const digest = createHash('sha256').update(bytes).digest('hex');
-
-  return assertHexDigest(digest);
+  return createHash('sha256').update(bytes).digest('hex');
 };
 
 const hmacSha256 = async (options: unknown): Promise<string> => {
@@ -87,9 +80,7 @@ const hmacSha256 = async (options: unknown): Promise<string> => {
 
   const keyBytes = encodeUtf8WithinLimit(key, 'HMAC key', customJwtCryptoMaxKeyBytes);
   const inputBytes = encodeUtf8WithinLimit(input, 'input', customJwtCryptoMaxInputBytes);
-  const digest = createHmac('sha256', keyBytes).update(inputBytes).digest('hex');
-
-  return assertHexDigest(digest);
+  return createHmac('sha256', keyBytes).update(inputBytes).digest('hex');
 };
 
 /**

@@ -230,27 +230,28 @@ function InstructionTab({ isActive, section, action }: Props) {
               options={sampleCodeEditorOptions}
             />
           </GuideCard>
-          {isCustomJwtCryptographicCapabilityEnabled() && (
-            <GuideCard
-              name={CardType.CryptographicCapability}
-              isExpanded={expendCard === CardType.CryptographicCapability}
-              setExpanded={(expand) => {
-                setExpendCard(expand ? CardType.CryptographicCapability : undefined);
-              }}
-            >
-              <div className={tabContentStyles.description}>
-                {t('jwt_claims.cryptographic_capability.description')}
-              </div>
-              <Editor
-                language="typescript"
-                className={styles.sampleCode}
-                value={cryptographicCapabilityCodeExample}
-                height="420px"
-                theme="logto-dark"
-                options={sampleCodeEditorOptions}
-              />
-            </GuideCard>
-          )}
+          {isCustomJwtCryptographicCapabilityEnabled() &&
+            tokenType === LogtoJwtTokenKeyType.AccessToken && (
+              <GuideCard
+                name={CardType.CryptographicCapability}
+                isExpanded={expendCard === CardType.CryptographicCapability}
+                setExpanded={(expand) => {
+                  setExpendCard(expand ? CardType.CryptographicCapability : undefined);
+                }}
+              >
+                <div className={tabContentStyles.description}>
+                  {t('jwt_claims.cryptographic_capability.description')}
+                </div>
+                <Editor
+                  language="typescript"
+                  className={styles.sampleCode}
+                  value={cryptographicCapabilityCodeExample}
+                  height="420px"
+                  theme="logto-dark"
+                  options={sampleCodeEditorOptions}
+                />
+              </GuideCard>
+            )}
         </>
       )}
       {isErrorHandlingSection && isDevFeaturesEnabled && (

@@ -2,7 +2,6 @@ import { types } from 'node:util';
 import { runInThisContext } from 'node:vm';
 import { parentPort, workerData } from 'node:worker_threads';
 
-import { createCustomJwtCryptographicCapability } from '../../libraries/jwt-customizer-cryptographic-capability.js';
 import type { ScriptResult } from '../../libraries/script-runner/types.js';
 import type {
   ScriptFailure,
@@ -10,6 +9,7 @@ import type {
   ScriptWorkerRequest,
   ScriptWorkerResponse,
 } from '../../libraries/script-runner/worker-protocol.js';
+import { createCustomJwtCryptographicCapability } from '../jwt-customizer-cryptographic-capability.js';
 
 /**
  * The worker thread entry behind `WorkerThreadScriptRunner`.
@@ -178,10 +178,13 @@ const postResult = (runId: number, result: ScriptResult) => {
  * Only Custom JWT scripts get it: an Actions payload is `{ event, environmentVariables }` today, so
  * handing `runAction` an `api` would be a silent capability change.
  *
- * Custom JWT cryptographic capability is always attached here: this worker path is only used for
- * self-hosted Custom JWT when development features are enabled, which is exactly when the
- * capability is available. Cloud and Actions never receive it.
+ * Custom JWT cryptographic capability is a separate development feature from the script runtime.
+ * The host derives this worker-only environment marker from `EnvSet.values.isDevFeaturesEnabled`
+ * when spawning the worker. Cloud and Actions never receive the capability.
  */
+const isCustomJwtCryptographicCapabilityEnabled =
+  process.env.LOGTO_CUSTOM_JWT_CRYPTO_ENABLED === 'true';
+
 const api =
   entry === 'getCustomJwtClaims'
     ? Object.freeze({
@@ -189,7 +192,9 @@ const api =
           throw new DenyAccessSignal(message);
         },
         // Custom JWT cryptographic capability
-        crypto: createCustomJwtCryptographicCapability(),
+        ...(isCustomJwtCryptographicCapabilityEnabled && {
+          crypto: createCustomJwtCryptographicCapability(),
+        }),
       })
     : undefined;
 

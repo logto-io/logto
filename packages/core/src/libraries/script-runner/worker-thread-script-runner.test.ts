@@ -4,6 +4,8 @@ import path from 'node:path';
 
 import { packageDirectory } from 'pkg-dir';
 
+import { EnvSet } from '#src/env-set/index.js';
+
 import { type ScriptEntry, type ScriptRunInput } from './types.js';
 import { WorkerThreadScriptRunner } from './worker-thread-script-runner.js';
 
@@ -21,6 +23,11 @@ const buildInput = (
 
 describe('WorkerThreadScriptRunner', () => {
   const runner = new WorkerThreadScriptRunner();
+  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+
+  afterEach(() => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
+  });
 
   // Every worker must be torn down: there is no `forceExit` or `globalTeardown` in this package, so
   // a surviving thread would hang the run.
@@ -134,6 +141,26 @@ describe('WorkerThreadScriptRunner', () => {
           apiFrozen: true,
           cryptoFrozen: true,
         },
+      });
+    });
+
+    // Custom JWT cryptographic capability
+    it('separates workers by development-feature state and hides api.crypto when disabled', async () => {
+      const input = buildInput(
+        'const getCustomJwtClaims = ({ api }) => ({ cryptoType: typeof api.crypto });',
+        'getCustomJwtClaims'
+      );
+
+      await expect(runner.run(input)).resolves.toEqual({
+        ok: true,
+        value: { cryptoType: 'object' },
+      });
+
+      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+
+      await expect(runner.run(input)).resolves.toEqual({
+        ok: true,
+        value: { cryptoType: 'undefined' },
       });
     });
 
@@ -396,9 +423,9 @@ describe('WorkerThreadScriptRunner', () => {
   // the bundled build drops it, and asserting on the prefix would only ever describe the build Jest
   // happens to be looking at.
   //
-  // The Custom JWT cryptographic capability helper is the only allowed relative import: it uses
-  // Node builtins exclusively, the type-check build leaves the specifier, and the production
-  // bundle inlines it.
+  // The Custom JWT cryptographic capability helper is the only allowed relative import. It lives
+  // inside the worker boundary and uses Node builtins exclusively; the type-check build leaves the
+  // specifier, and the production bundle inlines it.
   it('builds a worker entry that imports node builtins only', async () => {
     const rootDirectory = await packageDirectory();
     const source = await readFile(
@@ -408,9 +435,7 @@ describe('WorkerThreadScriptRunner', () => {
     const specifiers = [...source.matchAll(/(?:from|import)\s*["']([^"']+)["']/g)].map(
       ([, specifier]) => specifier?.replace(/^node:/, '')
     );
-    const allowedRelativeSpecifiers = new Set([
-      '../../libraries/jwt-customizer-cryptographic-capability.js',
-    ]);
+    const allowedRelativeSpecifiers = new Set(['../jwt-customizer-cryptographic-capability.js']);
 
     expect(specifiers.length).toBeGreaterThan(0);
     expect(
@@ -425,7 +450,7 @@ describe('WorkerThreadScriptRunner', () => {
   it('builds the cryptographic capability helper from node builtins only', async () => {
     const rootDirectory = await packageDirectory();
     const source = await readFile(
-      path.join(rootDirectory ?? '', 'build/libraries/jwt-customizer-cryptographic-capability.js'),
+      path.join(rootDirectory ?? '', 'build/workers/jwt-customizer-cryptographic-capability.js'),
       'utf8'
     );
     const specifiers = [...source.matchAll(/(?:from|import)\s*["']([^"']+)["']/g)].map(
