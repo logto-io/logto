@@ -33,7 +33,6 @@ type SendWebhookRequest = {
 const rangeInclusive = (start: number, end: number) =>
   Array.from({ length: end - start + 1 }, (_, index) => start + index);
 
-/** Public contract: retry webhook POST on HTTP 5xx. Ky 1.2.3 defaults omit POST and most 5xx codes. */
 const webhookRetryLimit = 3;
 /** Ky only accepts `statusCodes` as a number list; HTTP 5xx class is 500–599. */
 const webhookRetryStatusCodes = rangeInclusive(500, 599);
@@ -57,7 +56,7 @@ const dropRetryAfterHeader = async (
   _options: unknown,
   response: Response
 ): Promise<Response> => {
-  if (!response.headers.has('retry-after')) {
+  if (response.status !== 503 || !response.headers.has('retry-after')) {
     return response;
   }
 
@@ -97,6 +96,8 @@ export const sendWebhookRequest = async ({
       ...conditional(signingKey && { 'logto-signature-sha-256': sign(signingKey, payload) }),
     },
     json: payload,
+    // Public webhook delivery contract: retry POST requests on HTTP 5xx only.
+    // 408 and 429 are intentionally excluded so receivers cannot control this short retry window.
     retry: {
       limit: retries ?? webhookRetryLimit,
       methods: ['post'],

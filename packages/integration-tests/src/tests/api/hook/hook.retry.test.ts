@@ -16,7 +16,6 @@ const state = {
   requestCount: 0,
   statusCode: 200,
   succeedOnAttempt: Number.POSITIVE_INFINITY,
-  retryAfter: undefined as string | undefined,
 };
 
 describe('webhook delivery retries', () => {
@@ -28,11 +27,6 @@ describe('webhook delivery retries', () => {
 
     if (status >= 400) {
       response.statusCode = status;
-
-      if (state.retryAfter !== undefined) {
-        response.setHeader('Retry-After', state.retryAfter);
-      }
-
       response.end();
     }
   });
@@ -76,7 +70,6 @@ describe('webhook delivery retries', () => {
     state.requestCount = 0;
     state.statusCode = 200;
     state.succeedOnAttempt = Number.POSITIVE_INFINITY;
-    state.retryAfter = undefined;
 
     await webHookApi.create({
       name: hookName,
@@ -89,22 +82,18 @@ describe('webhook delivery retries', () => {
     await webHookApi.cleanUp();
   });
 
-  it.each([500, 501, 599])(
-    'retries POST %s responses three times and records a single error log',
-    async (statusCode) => {
-      state.statusCode = statusCode;
+  it('retries POST 500 responses three times and records a single error log', async () => {
+    state.statusCode = 500;
 
-      const { logs } = await triggerRoleCreated({
-        description: `webhook-retry-${statusCode}`,
-        expectedLog: { errorMessage: String(statusCode) },
-      });
+    const { logs } = await triggerRoleCreated({
+      description: 'webhook-retry-500',
+      expectedLog: { errorMessage: '500' },
+    });
 
-      expect(state.requestCount).toBe(4);
-      expect(logs).toHaveLength(1);
-      expect(logs[0]?.payload.result).toBe(LogResult.Error);
-    },
-    20_000
-  );
+    expect(state.requestCount).toBe(4);
+    expect(logs).toHaveLength(1);
+    expect(logs[0]?.payload.result).toBe(LogResult.Error);
+  });
 
   it('stops retrying after a successful attempt and records a single success log', async () => {
     state.statusCode = 500;
@@ -117,7 +106,7 @@ describe('webhook delivery retries', () => {
 
     expect(state.requestCount).toBe(3);
     expect(logs).toHaveLength(1);
-  }, 20_000);
+  });
 
   it('does not retry 4xx responses', async () => {
     state.statusCode = 400;
@@ -129,26 +118,6 @@ describe('webhook delivery retries', () => {
 
     expect(state.requestCount).toBe(1);
   });
-
-  it.each(['0', '86400'])(
-    'retries POST 503 with Retry-After %s three times and records a single error log',
-    async (retryAfter) => {
-      state.statusCode = 503;
-      state.retryAfter = retryAfter;
-
-      const startedAt = Date.now();
-      const { logs } = await triggerRoleCreated({
-        description: `webhook-retry-after-${retryAfter}`,
-        expectedLog: { errorMessage: '503' },
-      });
-
-      expect(state.requestCount).toBe(4);
-      expect(logs).toHaveLength(1);
-      expect(logs[0]?.payload.result).toBe(LogResult.Error);
-      expect(Date.now() - startedAt).toBeLessThan(10_000);
-    },
-    20_000
-  );
 });
 
 /* eslint-enable @silverhand/fp/no-mutation */

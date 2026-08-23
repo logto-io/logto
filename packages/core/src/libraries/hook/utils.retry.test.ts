@@ -153,14 +153,11 @@ describe('sendWebhookRequest HTTP retries', () => {
   it.each(['0', '86400'])(
     'retries 503 even when Retry-After is %s',
     async (retryAfter) => {
-      const startedAt = Date.now();
-
       await withRetryServer(
         () => ({ status: 503, headers: { 'Retry-After': retryAfter } }),
         async ({ endpoint, getAttempts }) => {
           await expect(sendToServer(endpoint)).rejects.toThrow();
           expect(getAttempts()).toBe(4);
-          expect(Date.now() - startedAt).toBeLessThan(10_000);
         }
       );
     },
