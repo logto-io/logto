@@ -1,5 +1,7 @@
 import EventEmitter from 'node:events';
 
+import { EnvSet } from '#src/env-set/index.js';
+
 import { type ScriptRunInput } from './types.js';
 import {
   type ScriptWorkerData,
@@ -24,7 +26,11 @@ class FakeWorker extends EventEmitter {
 
   constructor(
     readonly workerPath: string,
-    readonly options: { workerData: ScriptWorkerData; resourceLimits: Record<string, number> }
+    readonly options: {
+      workerData: ScriptWorkerData;
+      resourceLimits: Record<string, number>;
+      env: Record<string, string | undefined>;
+    }
   ) {
     super();
     // eslint-disable-next-line @silverhand/fp/no-mutating-methods -- test bookkeeping
@@ -126,9 +132,12 @@ describe('WorkerThreadScriptRunner spawn contract', () => {
 
     await expect(promise).resolves.toEqual({ ok: true, value: { done: true } });
     expect(spawnedWorkers).toHaveLength(1);
-    expect(spawnedWorkers[0]?.options).toEqual({
+    expect(spawnedWorkers[0]?.options).toMatchObject({
       workerData: { script: 'worker-source', entry: 'runAction' },
       resourceLimits: { maxOldGenerationSizeMb: 64 },
+    });
+    expect(spawnedWorkers[0]?.options.env).toMatchObject({
+      LOGTO_CUSTOM_JWT_CRYPTO_ENABLED: String(EnvSet.values.isDevFeaturesEnabled),
     });
   });
 
