@@ -120,7 +120,6 @@ function PersonalAccessTokens({ userId }: Props) {
           <Button
             size="small"
             type="text"
-            className={styles.add}
             title="user_details.personal_access_tokens.create_new_token"
             icon={<CirclePlus />}
             onClick={() => {
