@@ -56,6 +56,64 @@ describe('<UserMenu />', () => {
     expect(queryByText('Sign out')).toBeNull();
   });
 
+  it('closes on Escape and returns focus to the avatar trigger', () => {
+    const { getByRole, getByText, queryByText } = renderWithPageContext(<UserMenu />);
+
+    const trigger = getByRole('button', { name: 'User menu' });
+    fireEvent.click(trigger);
+
+    expect(getByText('Sign out')).toBeTruthy();
+
+    fireEvent.keyDown(document, { key: 'Escape' });
+
+    expect(queryByText('Sign out')).toBeNull();
+    expect(document.activeElement).toBe(trigger);
+  });
+
+  it('falls back to the display name initial when no avatar is set', () => {
+    const { getByRole, container } = renderWithPageContext(<UserMenu />);
+
+    expect(container.querySelector('img[alt="avatar"]')).toBeNull();
+    expect(getByRole('button', { name: 'User menu' }).textContent).toBe('A');
+  });
+
+  it('renders the avatar image when one is set', () => {
+    const { container } = renderWithPageContext(
+      <UserMenu />,
+      {},
+      {
+        pageContext: { userInfo: { ...mockUserInfo, avatar: 'https://example.com/avatar.png' } },
+      }
+    );
+
+    expect(container.querySelector('img[alt="avatar"]')?.getAttribute('src')).toBe(
+      'https://example.com/avatar.png'
+    );
+  });
+
+  it('formats the secondary phone number for a phone-only user', () => {
+    const { getByRole, getByText, queryByText } = renderWithPageContext(
+      <UserMenu />,
+      {},
+      {
+        pageContext: {
+          userInfo: {
+            ...mockUserInfo,
+            name: 'Alex',
+            username: null,
+            primaryEmail: null,
+            primaryPhone: '16502530100',
+          },
+        },
+      }
+    );
+
+    fireEvent.click(getByRole('button', { name: 'User menu' }));
+
+    expect(getByText('+1 650 253 0100')).toBeTruthy();
+    expect(queryByText('16502530100')).toBeNull();
+  });
+
   it('signs out with the account center redirect URI', async () => {
     const { getByRole, getByText } = renderWithPageContext(<UserMenu />);
 
@@ -67,7 +125,7 @@ describe('<UserMenu />', () => {
     });
   });
 
-  it('ignores repeated sign-out clicks', async () => {
+  it('ignores repeated sign-out clicks and marks the item as disabled', async () => {
     const { getByRole, getByText } = renderWithPageContext(<UserMenu />);
 
     fireEvent.click(getByRole('button', { name: 'User menu' }));
@@ -77,5 +135,7 @@ describe('<UserMenu />', () => {
     await waitFor(() => {
       expect(mockSignOut).toHaveBeenCalledTimes(1);
     });
+
+    expect(getByRole('menuitem').getAttribute('aria-disabled')).toBe('true');
   });
 });

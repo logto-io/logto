@@ -1,7 +1,7 @@
 import FlipOnRtl from '@experience/shared/components/FlipOnRtl';
 import { onKeyDownHandler } from '@experience/shared/utils/a11y';
 import { useLogto } from '@logto/react';
-import { getUserDisplayName } from '@logto/shared/universal';
+import { formatToInternationalPhoneNumber, getUserDisplayName } from '@logto/shared/universal';
 import classNames from 'classnames';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -33,11 +33,18 @@ const UserMenu = () => {
   const { signOut } = useLogto();
   const { userInfo } = useContext(PageContext);
   const containerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
 
   const close = useCallback(() => {
     setIsOpen(false);
+  }, []);
+
+  /** Closes the menu and returns focus to the avatar trigger, for keyboard dismissal. */
+  const closeAndRestoreFocus = useCallback(() => {
+    setIsOpen(false);
+    triggerRef.current?.focus();
   }, []);
 
   useEffect(() => {
@@ -55,7 +62,7 @@ const UserMenu = () => {
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        close();
+        closeAndRestoreFocus();
       }
     };
 
@@ -68,7 +75,7 @@ const UserMenu = () => {
       document.removeEventListener('touchstart', handlePointerDown);
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [close, isOpen]);
+  }, [close, closeAndRestoreFocus, isOpen]);
 
   const handleSignOut = useCallback(() => {
     if (isSigningOut) {
@@ -87,11 +94,16 @@ const UserMenu = () => {
   const avatarUrl = avatar ?? undefined;
   const displayName = getUserDisplayName({ name, username, primaryEmail, primaryPhone });
   const initial = displayName?.charAt(0).toLocaleUpperCase();
-  const secondaryText = primaryEmail ?? primaryPhone ?? username ?? undefined;
+  // `primaryPhone` is stored as normalized digits, so format it the same way `getUserDisplayName`
+  // does. Otherwise a phone-only user sees the formatted number as the name and the raw digits
+  // right below it.
+  const formattedPhone = primaryPhone && formatToInternationalPhoneNumber(primaryPhone);
+  const secondaryText = primaryEmail ?? formattedPhone ?? username ?? undefined;
 
   return (
     <div ref={containerRef} className={classNames(styles.container, layoutClassNames.userMenu)}>
       <div
+        ref={triggerRef}
         role="button"
         tabIndex={0}
         aria-haspopup="menu"
@@ -113,7 +125,7 @@ const UserMenu = () => {
       </div>
       {isOpen && (
         <div role="menu" className={classNames(styles.dropdown, layoutClassNames.userMenuDropdown)}>
-          <div className={styles.userInfo}>
+          <div role="group" className={styles.userInfo}>
             <Avatar className={styles.userInfoAvatar} avatar={avatarUrl} initial={initial} />
             <div className={styles.userInfoText}>
               {displayName && <div className={styles.name}>{displayName}</div>}
@@ -122,10 +134,11 @@ const UserMenu = () => {
               )}
             </div>
           </div>
-          <div className={styles.divider} />
+          <div role="separator" className={styles.divider} />
           <div
             role="menuitem"
             tabIndex={0}
+            aria-disabled={isSigningOut}
             className={classNames(styles.item, isSigningOut && styles.disabled)}
             onKeyDown={onKeyDownHandler(handleSignOut)}
             onClick={handleSignOut}
