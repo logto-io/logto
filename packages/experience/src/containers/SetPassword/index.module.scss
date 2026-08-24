@@ -19,6 +19,22 @@
   }
 }
 
+/**
+ * Visually hide the identifier input while keeping it discoverable by password managers.
+ * The HTML `hidden` attribute can not be used here, as some browsers ignore hidden fields
+ * when looking for the username context of a new password field.
+ */
+.hiddenIdentifierInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: none;
+  opacity: 0%;
+  pointer-events: none;
+  clip-path: inset(50%);
+}
+
 .passwordSwitch {
   @include _.flex-row;
   width: 100%;
