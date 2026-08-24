@@ -7,6 +7,7 @@ import { validate } from 'superstruct';
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import SwitchToVerificationMethodsLink from '@/components/SwitchToVerificationMethodsLink';
+import CaptchaBox from '@/containers/CaptchaBox';
 import useIdentifierPasskeySignInVerification from '@/hooks/use-identifier-passkey-sign-in-verification';
 import { useSieMethods } from '@/hooks/use-sie';
 import ErrorPage from '@/pages/ErrorPage';
@@ -55,6 +56,11 @@ const SignInPasskeyVerification = () => {
 
   // Check if alternative methods are available
   const methodSetting = signInMethods.find((method) => method.identifier === type);
+  const isVerificationCodeIdentifier = type !== SignInIdentifier.Username;
+  const hasPassword = Boolean(methodSetting?.password);
+  const hasVerificationCode =
+    isVerificationCodeIdentifier && Boolean(methodSetting?.verificationCode);
+  const shouldRenderCaptcha = hasVerificationCode && !hasPassword;
 
   return (
     <SecondaryPageLayout
@@ -71,12 +77,13 @@ const SignInPasskeyVerification = () => {
           setIsVerifying(false);
         }}
       />
+      {shouldRenderCaptcha && <CaptchaBox />}
       <SwitchToVerificationMethodsLink
         className={styles.switchLink}
-        identifier={cond(type !== SignInIdentifier.Username && type)}
+        identifier={cond(isVerificationCodeIdentifier && type)}
         value={identifierInputValue.value}
-        hasPassword={methodSetting?.password}
-        hasVerificationCode={type !== SignInIdentifier.Username && methodSetting?.verificationCode}
+        hasPassword={hasPassword}
+        hasVerificationCode={hasVerificationCode}
       />
     </SecondaryPageLayout>
   );
