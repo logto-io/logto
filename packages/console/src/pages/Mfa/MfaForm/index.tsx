@@ -79,7 +79,7 @@ function MfaForm({ data, adaptiveMfa, trustedDevice, signInMethods, onMfaUpdated
   const {
     register,
     reset,
-    formState: { isDirty, isSubmitting, errors },
+    formState: { isDirty, isSubmitting, errors, dirtyFields },
     handleSubmit,
     control,
     watch,
@@ -461,6 +461,7 @@ function MfaForm({ data, adaptiveMfa, trustedDevice, signInMethods, onMfaUpdated
             register={register}
             errors={errors}
             isDisabled={isPolicySettingsDisabled}
+            isDurationDirty={Boolean(dirtyFields.trustedDeviceDurationDays)}
           />
         )}
       </DetailsForm>
