@@ -15,12 +15,6 @@ import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
 import { type InteractionStorage, type WithHooksAndLogsContext } from '../types.js';
 
-type TrustedDeviceValidationStatus =
-  /** A matching trusted-device credential was already validated during the current request. */
-  | 'cached'
-  /** A trusted-device credential was validated during the current request. */
-  | 'validated';
-
 type TrustedDeviceData = Pick<InteractionStorage, 'trustedDeviceCreation'>;
 
 type ValidatedTrustedDevice = Pick<TrustedDeviceModel, 'id' | 'userId'>;
@@ -99,15 +93,13 @@ export class TrustedDevice {
     };
   }
 
-  async tryFulfillMfa(userId: string): Promise<TrustedDeviceValidationStatus | undefined> {
+  async tryFulfillMfa(userId: string): Promise<boolean> {
     // Trusted-device MFA fulfillment is under development and must remain isolated from released flows.
     if (!EnvSet.values.isDevFeaturesEnabled) {
-      return;
+      return false;
     }
 
-    if (this.#validatedDevice?.userId === userId) {
-      return 'cached';
-    }
+    this.#validatedDevice = undefined;
 
     const {
       libraries: { trustedDevicePolicy, trustedDevices },
@@ -115,18 +107,18 @@ export class TrustedDevice {
     const { enabled } = await trustedDevicePolicy.getEffectivePolicy(userId);
 
     if (!enabled) {
-      return;
+      return false;
     }
 
     const trustedDevice = await trustedDevices.validateCredential(this.ctx, userId);
 
     if (!trustedDevice) {
-      return;
+      return false;
     }
 
     this.#validatedDevice = { id: trustedDevice.id, userId };
 
-    return 'validated';
+    return true;
   }
 
   async finalize({

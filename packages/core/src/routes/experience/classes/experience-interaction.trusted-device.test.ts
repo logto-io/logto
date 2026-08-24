@@ -217,15 +217,15 @@ describe('ExperienceInteraction trusted-device MFA fulfillment', () => {
     expect(experienceInteraction.toJson()).not.toHaveProperty('trustedDeviceFulfillment');
   });
 
-  it('caches valid credential fulfillment only within the current request', async () => {
-    validateCredential.mockResolvedValueOnce(trustedDevice);
+  it('revalidates the trusted-device credential every time the guard runs', async () => {
+    validateCredential.mockResolvedValue(trustedDevice);
     const { ctx, experienceInteraction } = createInteraction();
 
     await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.toBeUndefined();
     await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.toBeUndefined();
 
-    expect(getEffectivePolicy).toHaveBeenCalledTimes(1);
-    expect(validateCredential).toHaveBeenCalledTimes(1);
+    expect(getEffectivePolicy).toHaveBeenCalledTimes(2);
+    expect(validateCredential).toHaveBeenCalledTimes(2);
     expect(validateCredential).toHaveBeenCalledWith(ctx, mockUserWithMfaVerifications.id);
     expect(experienceInteraction.toJson()).not.toHaveProperty('trustedDeviceFulfillment');
     expect(experienceInteraction.toSanitizedJson()).not.toHaveProperty('trustedDeviceFulfillment');

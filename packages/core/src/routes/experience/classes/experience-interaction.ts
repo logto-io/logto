@@ -390,15 +390,11 @@ export default class ExperienceInteraction {
       return;
     }
 
-    const trustedDeviceValidationStatus = await this.trustedDevice.tryFulfillMfa(user.id);
-
-    if (trustedDeviceValidationStatus === 'cached') {
-      return;
-    }
+    const isMfaFulfilledByTrustedDevice = await this.trustedDevice.tryFulfillMfa(user.id);
 
     this.assignAdaptiveMfaHookResult(user.id, adaptiveMfaResult);
 
-    if (trustedDeviceValidationStatus === 'validated') {
+    if (isMfaFulfilledByTrustedDevice) {
       return;
     }
 

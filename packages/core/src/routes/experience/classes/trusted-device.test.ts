@@ -199,6 +199,25 @@ describe('Experience trusted-device lifecycle events', () => {
     expect(earlierIdempotencyKey).not.toBe(laterIdempotencyKey);
   });
 
+  it('clears the request-local device when revalidation fails', async () => {
+    const usage = createSubject({
+      data: {},
+      updateResult: trustedDevice,
+    });
+    usage.validateCredential.mockResolvedValueOnce(trustedDevice).mockResolvedValueOnce(null);
+
+    await expect(usage.subject.tryFulfillMfa(userId)).resolves.toBe(true);
+    await expect(usage.subject.tryFulfillMfa(userId)).resolves.toBe(false);
+    await usage.subject.finalize({
+      interactionEvent: InteractionEvent.SignIn,
+      userId,
+      hasEligibleMfaProof: false,
+    });
+
+    expect(usage.updateMetadata).not.toHaveBeenCalled();
+    expect(usage.createLog).not.toHaveBeenCalled();
+  });
+
   it('uses one audit-log key across concurrent requests for the same interaction', async () => {
     const first = createSubject({
       data: {},
@@ -215,7 +234,7 @@ describe('Experience trusted-device lifecycle events', () => {
 
     await expect(
       Promise.all([first.subject.tryFulfillMfa(userId), second.subject.tryFulfillMfa(userId)])
-    ).resolves.toEqual(['validated', 'validated']);
+    ).resolves.toEqual([true, true]);
 
     const options = {
       interactionEvent: InteractionEvent.SignIn,
