@@ -15,18 +15,15 @@ import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
 import { type InteractionStorage, type WithHooksAndLogsContext } from '../types.js';
 
-type TrustedDeviceFulfillmentStatus =
-  /** A matching trusted-device fulfillment was restored from interaction storage. */
-  | 'stored'
-  /** A trusted-device credential was validated and stored during the current request. */
+type TrustedDeviceValidationStatus =
+  /** A matching trusted-device credential was already validated during the current request. */
+  | 'cached'
+  /** A trusted-device credential was validated during the current request. */
   | 'validated';
 
-type TrustedDeviceData = Pick<
-  InteractionStorage,
-  'trustedDeviceCreation' | 'trustedDeviceFulfillment'
->;
+type TrustedDeviceData = Pick<InteractionStorage, 'trustedDeviceCreation'>;
 
-type TrustedDeviceFulfillment = NonNullable<InteractionStorage['trustedDeviceFulfillment']>;
+type ValidatedTrustedDevice = Pick<TrustedDeviceModel, 'id' | 'userId'>;
 
 const buildTrustedDeviceUsageLogId = (tenantId: string, interactionId: string) =>
   createHash('sha256')
@@ -54,7 +51,7 @@ type FinalizeOptions = {
  */
 export class TrustedDevice {
   #creation?: InteractionStorage['trustedDeviceCreation'];
-  #fulfillment?: TrustedDeviceFulfillment;
+  #validatedDevice?: ValidatedTrustedDevice;
 
   constructor(
     private readonly ctx: WithHooksAndLogsContext,
@@ -62,13 +59,11 @@ export class TrustedDevice {
     data: TrustedDeviceData
   ) {
     this.#creation = data.trustedDeviceCreation;
-    this.#fulfillment = data.trustedDeviceFulfillment;
   }
 
   get data(): TrustedDeviceData {
     return {
       ...conditional(this.#creation && { trustedDeviceCreation: this.#creation }),
-      ...conditional(this.#fulfillment && { trustedDeviceFulfillment: this.#fulfillment }),
     };
   }
 
@@ -104,14 +99,14 @@ export class TrustedDevice {
     };
   }
 
-  async tryFulfillMfa(userId: string): Promise<TrustedDeviceFulfillmentStatus | undefined> {
+  async tryFulfillMfa(userId: string): Promise<TrustedDeviceValidationStatus | undefined> {
     // Trusted-device MFA fulfillment is under development and must remain isolated from released flows.
     if (!EnvSet.values.isDevFeaturesEnabled) {
       return;
     }
 
-    if (this.#fulfillment?.userId === userId) {
-      return 'stored';
+    if (this.#validatedDevice?.userId === userId) {
+      return 'cached';
     }
 
     const {
@@ -129,11 +124,7 @@ export class TrustedDevice {
       return;
     }
 
-    this.#fulfillment = {
-      userId,
-      trustedDeviceId: trustedDevice.id,
-      fulfilledAt: Date.now(),
-    };
+    this.#validatedDevice = { id: trustedDevice.id, userId };
 
     return 'validated';
   }
@@ -161,10 +152,10 @@ export class TrustedDevice {
           ...conditional(city && { city }),
         };
 
-        const fulfillment = this.#fulfillment;
+        const validatedDevice = this.#validatedDevice;
 
-        if (fulfillment?.userId === userId) {
-          await this.#finalizeFulfillment(fulfillment, interactionEvent, userId, metadata);
+        if (validatedDevice?.userId === userId) {
+          await this.#finalizeUsage(validatedDevice, interactionEvent, userId, metadata);
           return;
         }
 
@@ -176,8 +167,8 @@ export class TrustedDevice {
     );
   }
 
-  async #finalizeFulfillment(
-    fulfillment: TrustedDeviceFulfillment,
+  async #finalizeUsage(
+    validatedDevice: ValidatedTrustedDevice,
     interactionEvent: InteractionEvent,
     userId: string,
     metadata: TrustedDeviceMetadata
@@ -187,7 +178,7 @@ export class TrustedDevice {
     }
 
     const trustedDevice = await this.tenant.libraries.trustedDevices.updateMetadata(
-      fulfillment.trustedDeviceId,
+      validatedDevice.id,
       userId,
       metadata
     );

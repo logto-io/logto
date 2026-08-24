@@ -149,7 +149,6 @@ export default class ExperienceInteraction {
       mfa = {},
       userId,
       trustedDeviceCreation,
-      trustedDeviceFulfillment,
       interactionEvent,
       captcha = {
         verified: false,
@@ -163,7 +162,6 @@ export default class ExperienceInteraction {
     this.mfa = new Mfa(libraries, queries, mfa, interactionContext);
     this.trustedDevice = new TrustedDevice(ctx, tenant, {
       trustedDeviceCreation,
-      trustedDeviceFulfillment,
     });
     this.captcha = captcha;
     for (const record of verificationRecords) {
@@ -392,15 +390,15 @@ export default class ExperienceInteraction {
       return;
     }
 
-    const trustedDeviceFulfillmentStatus = await this.trustedDevice.tryFulfillMfa(user.id);
+    const trustedDeviceValidationStatus = await this.trustedDevice.tryFulfillMfa(user.id);
 
-    if (trustedDeviceFulfillmentStatus === 'stored') {
+    if (trustedDeviceValidationStatus === 'cached') {
       return;
     }
 
     this.assignAdaptiveMfaHookResult(user.id, adaptiveMfaResult);
 
-    if (trustedDeviceFulfillmentStatus === 'validated') {
+    if (trustedDeviceValidationStatus === 'validated') {
       return;
     }
 
@@ -738,12 +736,8 @@ export default class ExperienceInteraction {
   }
 
   public toSanitizedJson(): SanitizedInteractionStorageData {
-    // Trusted-device intent and fulfillment are internal authentication state.
-    const {
-      trustedDeviceCreation: _,
-      trustedDeviceFulfillment: __,
-      ...interactionStorage
-    } = this.toJson();
+    // Trusted-device creation intent is internal authentication state.
+    const { trustedDeviceCreation: _, ...interactionStorage } = this.toJson();
 
     return {
       ...interactionStorage,

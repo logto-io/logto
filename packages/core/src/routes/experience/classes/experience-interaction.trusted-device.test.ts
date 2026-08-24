@@ -169,31 +169,33 @@ describe('ExperienceInteraction trusted-device MFA fulfillment', () => {
     expect(validateCredential).not.toHaveBeenCalled();
   });
 
-  it('restores matching interaction fulfillment before resolving effective policy', async () => {
+  it('ignores legacy interaction fulfillment and revalidates the trusted-device credential', async () => {
     findDefaultSignInExperience.mockResolvedValueOnce(adaptiveMfaSignInExperience);
-    const fulfillment = {
-      userId: mockUserWithMfaVerifications.id,
-      trustedDeviceId: trustedDevice.id,
-      fulfilledAt: 1_786_435_200_000,
-    };
+    validateCredential.mockResolvedValueOnce(trustedDevice);
     const { ctx, experienceInteraction } = createInteraction(
-      { trustedDeviceFulfillment: fulfillment },
+      {
+        // A pending interaction created before request-local fulfillment may still contain this field.
+        trustedDeviceFulfillment: {
+          userId: mockUserWithMfaVerifications.id,
+          trustedDeviceId: trustedDevice.id,
+          fulfilledAt: 1_786_435_200_000,
+        },
+      },
       { 'x-logto-cf-bot-score': '10' }
     );
 
     await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.toBeUndefined();
 
-    expect(experienceInteraction.toJson().trustedDeviceFulfillment).toEqual(fulfillment);
-    expect(getEffectivePolicy).not.toHaveBeenCalled();
-    expect(validateCredential).not.toHaveBeenCalled();
-    expect(ctx.assignReleaseAnywayInteractionHookResult).not.toHaveBeenCalled();
+    expect(getEffectivePolicy).toHaveBeenCalledWith(mockUserWithMfaVerifications.id);
+    expect(validateCredential).toHaveBeenCalledWith(ctx, mockUserWithMfaVerifications.id);
+    expect(experienceInteraction.toJson()).not.toHaveProperty('trustedDeviceFulfillment');
   });
 
-  it('does not use fulfillment stored for another user', async () => {
+  it('rechecks policy instead of reusing legacy interaction fulfillment', async () => {
     getEffectivePolicy.mockResolvedValueOnce({ enabled: false, durationDays: 30 });
     const { experienceInteraction } = createInteraction({
       trustedDeviceFulfillment: {
-        userId: 'another-user',
+        userId: mockUserWithMfaVerifications.id,
         trustedDeviceId: trustedDevice.id,
         fulfilledAt: 1_786_435_200_000,
       },
@@ -212,23 +214,20 @@ describe('ExperienceInteraction trusted-device MFA fulfillment', () => {
 
     expect(getEffectivePolicy).toHaveBeenCalledWith(mockUserWithMfaVerifications.id);
     expect(validateCredential).toHaveBeenCalledWith(ctx, mockUserWithMfaVerifications.id);
-    expect(experienceInteraction.toJson().trustedDeviceFulfillment).toBeUndefined();
+    expect(experienceInteraction.toJson()).not.toHaveProperty('trustedDeviceFulfillment');
   });
 
-  it('stores valid credential fulfillment internally without exposing it publicly', async () => {
-    const fulfilledAt = 1_786_435_200_000;
-    jest.spyOn(Date, 'now').mockReturnValue(fulfilledAt);
+  it('caches valid credential fulfillment only within the current request', async () => {
     validateCredential.mockResolvedValueOnce(trustedDevice);
     const { ctx, experienceInteraction } = createInteraction();
 
     await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.toBeUndefined();
+    await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.toBeUndefined();
 
+    expect(getEffectivePolicy).toHaveBeenCalledTimes(1);
+    expect(validateCredential).toHaveBeenCalledTimes(1);
     expect(validateCredential).toHaveBeenCalledWith(ctx, mockUserWithMfaVerifications.id);
-    expect(experienceInteraction.toJson().trustedDeviceFulfillment).toEqual({
-      userId: mockUserWithMfaVerifications.id,
-      trustedDeviceId: trustedDevice.id,
-      fulfilledAt,
-    });
+    expect(experienceInteraction.toJson()).not.toHaveProperty('trustedDeviceFulfillment');
     expect(experienceInteraction.toSanitizedJson()).not.toHaveProperty('trustedDeviceFulfillment');
   });
 
@@ -239,12 +238,7 @@ describe('ExperienceInteraction trusted-device MFA fulfillment', () => {
 
     await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.toBeUndefined();
 
-    expect(experienceInteraction.toJson().trustedDeviceFulfillment).toEqual(
-      expect.objectContaining({
-        userId: mockUserWithMfaVerifications.id,
-        trustedDeviceId: trustedDevice.id,
-      })
-    );
+    expect(experienceInteraction.toJson()).not.toHaveProperty('trustedDeviceFulfillment');
     expect(ctx.assignReleaseAnywayInteractionHookResult).toHaveBeenCalledWith({
       event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
       payload: {

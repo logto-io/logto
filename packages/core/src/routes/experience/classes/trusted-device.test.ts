@@ -136,23 +136,13 @@ describe('Experience trusted-device lifecycle events', () => {
 
   it('writes Used audit only after a successful active-device metadata update', async () => {
     const success = createSubject({
-      data: {
-        trustedDeviceFulfillment: {
-          userId,
-          trustedDeviceId,
-          fulfilledAt: 1,
-        },
-      },
+      data: {},
       updateResult: trustedDevice,
+      validateResult: trustedDevice,
     });
     const inactive = createSubject({
-      data: {
-        trustedDeviceFulfillment: {
-          userId,
-          trustedDeviceId,
-          fulfilledAt: 1,
-        },
-      },
+      data: {},
+      validateResult: trustedDevice,
     });
     const options = {
       interactionEvent: InteractionEvent.SignIn,
@@ -160,6 +150,10 @@ describe('Experience trusted-device lifecycle events', () => {
       hasEligibleMfaProof: false,
     };
 
+    await Promise.all([
+      success.subject.tryFulfillMfa(userId),
+      inactive.subject.tryFulfillMfa(userId),
+    ]);
     await Promise.all([success.subject.finalize(options), inactive.subject.finalize(options)]);
 
     expect(success.updateMetadata).toHaveBeenCalledWith(trustedDeviceId, userId, {});
@@ -175,27 +169,17 @@ describe('Experience trusted-device lifecycle events', () => {
     expect(inactive.createLog).not.toHaveBeenCalled();
   });
 
-  it('keeps distinct same-millisecond fulfillments observable when they finish out of order', async () => {
+  it('keeps distinct trusted-device uses observable when they finish out of order', async () => {
     const earlier = createSubject({
-      data: {
-        trustedDeviceFulfillment: {
-          userId,
-          trustedDeviceId,
-          fulfilledAt: 123_000,
-        },
-      },
+      data: {},
       updateResult: trustedDevice,
+      validateResult: trustedDevice,
       interactionId: 'earlier-interaction-id',
     });
     const later = createSubject({
-      data: {
-        trustedDeviceFulfillment: {
-          userId,
-          trustedDeviceId,
-          fulfilledAt: 123_000,
-        },
-      },
+      data: {},
       updateResult: trustedDevice,
+      validateResult: trustedDevice,
       interactionId: 'later-interaction-id',
     });
     const options = {
@@ -204,6 +188,7 @@ describe('Experience trusted-device lifecycle events', () => {
       hasEligibleMfaProof: false,
     };
 
+    await Promise.all([earlier.subject.tryFulfillMfa(userId), later.subject.tryFulfillMfa(userId)]);
     await later.subject.finalize(options);
     await earlier.subject.finalize(options);
 
@@ -214,7 +199,7 @@ describe('Experience trusted-device lifecycle events', () => {
     expect(earlierIdempotencyKey).not.toBe(laterIdempotencyKey);
   });
 
-  it('uses one audit-log key across requests racing before fulfillment is stored', async () => {
+  it('uses one audit-log key across concurrent requests for the same interaction', async () => {
     const first = createSubject({
       data: {},
       updateResult: trustedDevice,
@@ -248,14 +233,10 @@ describe('Experience trusted-device lifecycle events', () => {
   });
 
   it('reuses one audit-log idempotency key for concurrent or sequential fulfillment retries', async () => {
-    const fulfillment = {
-      userId,
-      trustedDeviceId,
-      fulfilledAt: 123_000,
-    };
     const usage = createSubject({
-      data: { trustedDeviceFulfillment: fulfillment },
+      data: {},
       updateResult: trustedDevice,
+      validateResult: trustedDevice,
     });
     const options = {
       interactionEvent: InteractionEvent.SignIn,
@@ -263,6 +244,7 @@ describe('Experience trusted-device lifecycle events', () => {
       hasEligibleMfaProof: false,
     };
 
+    await usage.subject.tryFulfillMfa(userId);
     await Promise.all([usage.subject.finalize(options), usage.subject.finalize(options)]);
     await usage.subject.finalize(options);
 
@@ -281,13 +263,8 @@ describe('Experience trusted-device lifecycle events', () => {
     const creation = createSubject({ data: {} });
     creation.createCredential.mockRejectedValueOnce(error);
     const usage = createSubject({
-      data: {
-        trustedDeviceFulfillment: {
-          userId,
-          trustedDeviceId,
-          fulfilledAt: 1,
-        },
-      },
+      data: {},
+      validateResult: trustedDevice,
     });
     usage.updateMetadata.mockRejectedValueOnce(error);
 
@@ -299,6 +276,7 @@ describe('Experience trusted-device lifecycle events', () => {
         hasEligibleMfaProof: true,
       })
     ).resolves.toBeUndefined();
+    await usage.subject.tryFulfillMfa(userId);
     await expect(
       usage.subject.finalize({
         interactionEvent: InteractionEvent.SignIn,
