@@ -112,7 +112,7 @@ function UserTrustedDevices({ userId }: Props) {
     >
       <FormField title="mfa.trusted_device.title">
         {!isLoading && !error && (
-          <div className={styles.hint}>
+          <div className={styles.description}>
             {t(
               hasRows ? 'mfa.trusted_device.management_hint' : 'mfa.trusted_device.management_empty'
             )}
@@ -122,8 +122,6 @@ function UserTrustedDevices({ userId }: Props) {
           <Table
             hasBorder
             isRowHoverEffectDisabled
-            className={styles.table}
-            bodyTableWrapperClassName={styles.tableBody}
             rowGroups={[{ key: 'trustedDevices', data: rows }]}
             rowIndexKey="id"
             isLoading={isLoading}
@@ -150,9 +148,7 @@ function UserTrustedDevices({ userId }: Props) {
                 title: t('user_details.personal_access_tokens.expires_at'),
                 dataIndex: 'expiresAt',
                 colSpan: 4,
-                render: ({ expiresAt }) => (
-                  <span className={styles.expiresAt}>{expiryDateFormatter.format(expiresAt)}</span>
-                ),
+                render: ({ expiresAt }) => expiryDateFormatter.format(expiresAt),
               },
               {
                 title: null,
