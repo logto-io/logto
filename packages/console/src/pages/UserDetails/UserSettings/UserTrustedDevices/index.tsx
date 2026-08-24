@@ -5,7 +5,6 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
-import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import FormCard from '@/components/FormCard';
 import { defaultPageSize } from '@/consts';
 import Button from '@/ds-components/Button';
@@ -67,6 +66,7 @@ function UserTrustedDevices({ userId }: Props) {
       }),
     [trustedDevices]
   );
+  const hasRows = rows.length > 0;
 
   const api = useApi();
   const { show: showConfirm } = useConfirmModal();
@@ -111,74 +111,79 @@ function UserTrustedDevices({ userId }: Props) {
       description="mfa.trusted_device.management_description"
     >
       <FormField title="mfa.trusted_device.title">
-        <div className={styles.hint}>{t('mfa.trusted_device.management_hint')}</div>
-        <Table
-          hasBorder
-          isRowHoverEffectDisabled
-          className={styles.table}
-          bodyTableWrapperClassName={styles.tableBody}
-          rowGroups={[{ key: 'trustedDevices', data: rows }]}
-          rowIndexKey="id"
-          isLoading={isLoading}
-          errorMessage={error?.body?.message ?? error?.message}
-          columns={[
-            {
-              title: t('user_details.sessions.name_column'),
-              dataIndex: 'name',
-              colSpan: 7,
-              render: ({ id, name }) => (
-                <div className={styles.name}>
-                  <span>{name ?? '-'}</span>
-                  <span className={styles.id}>{id}</span>
-                </div>
-              ),
-            },
-            {
-              title: t('user_details.sessions.location_column'),
-              dataIndex: 'location',
-              colSpan: 5,
-              render: ({ location }) => location ?? '-',
-            },
-            {
-              title: t('user_details.personal_access_tokens.expires_at'),
-              dataIndex: 'expiresAt',
-              colSpan: 4,
-              render: ({ expiresAt }) => (
-                <span className={styles.expiresAt}>{expiryDateFormatter.format(expiresAt)}</span>
-              ),
-            },
-            {
-              title: null,
-              dataIndex: 'action',
-              colSpan: 2,
-              render: (trustedDevice) => (
-                <div className={styles.action}>
-                  <Button
-                    title="general.remove"
-                    type="text"
-                    size="small"
-                    isLoading={deletingDeviceId === trustedDevice.id}
-                    onClick={() => {
-                      void handleRemove(trustedDevice);
-                    }}
-                  />
-                </div>
-              ),
-            },
-          ]}
-          pagination={{
-            page,
-            pageSize,
-            totalCount,
-            onChange: setPage,
-          }}
-          placeholder={
-            <EmptyDataPlaceholder size="small" title={t('mfa.trusted_device.management_empty')} />
-          }
-          onRetry={() => {
-            void mutate();
-          }}
-        />
+        {!isLoading && !error && (
+          <div className={styles.hint}>
+            {t(
+              hasRows ? 'mfa.trusted_device.management_hint' : 'mfa.trusted_device.management_empty'
+            )}
+          </div>
+        )}
+        {(isLoading || hasRows || error) && (
+          <Table
+            hasBorder
+            isRowHoverEffectDisabled
+            className={styles.table}
+            bodyTableWrapperClassName={styles.tableBody}
+            rowGroups={[{ key: 'trustedDevices', data: rows }]}
+            rowIndexKey="id"
+            isLoading={isLoading}
+            errorMessage={error?.body?.message ?? error?.message}
+            columns={[
+              {
+                title: t('user_details.sessions.name_column'),
+                dataIndex: 'name',
+                colSpan: 7,
+                render: ({ id, name }) => (
+                  <div className={styles.name}>
+                    <span>{name ?? '-'}</span>
+                    <span className={styles.id}>{id}</span>
+                  </div>
+                ),
+              },
+              {
+                title: t('user_details.sessions.location_column'),
+                dataIndex: 'location',
+                colSpan: 5,
+                render: ({ location }) => location ?? '-',
+              },
+              {
+                title: t('user_details.personal_access_tokens.expires_at'),
+                dataIndex: 'expiresAt',
+                colSpan: 4,
+                render: ({ expiresAt }) => (
+                  <span className={styles.expiresAt}>{expiryDateFormatter.format(expiresAt)}</span>
+                ),
+              },
+              {
+                title: null,
+                dataIndex: 'action',
+                colSpan: 2,
+                render: (trustedDevice) => (
+                  <div className={styles.action}>
+                    <Button
+                      title="general.remove"
+                      type="text"
+                      size="small"
+                      isLoading={deletingDeviceId === trustedDevice.id}
+                      onClick={() => {
+                        void handleRemove(trustedDevice);
+                      }}
+                    />
+                  </div>
+                ),
+              },
+            ]}
+            pagination={{
+              page,
+              pageSize,
+              totalCount,
+              onChange: setPage,
+            }}
+            onRetry={() => {
+              void mutate();
+            }}
+          />
+        )}
       </FormField>
     </FormCard>
   );
