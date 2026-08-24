@@ -292,7 +292,7 @@ describe('<SocialFlow />', () => {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             state: expect.any(String),
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            redirectUri: expect.stringContaining('/callback/social/google-web'),
+            redirectUri: expect.stringContaining('/callback/google-web'),
           })
         );
         expect(mockLocationAssign).toHaveBeenCalledWith(
@@ -540,7 +540,7 @@ describe('<SocialFlow />', () => {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             state: expect.any(String),
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            redirectUri: expect.stringContaining('/callback/social/google-web'),
+            redirectUri: expect.stringContaining('/callback/google-web'),
           })
         );
         expect(mockLocationAssign).toHaveBeenCalledWith(

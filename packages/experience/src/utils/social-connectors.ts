@@ -1,6 +1,6 @@
 import { GoogleConnector } from '@logto/connector-kit';
 import type { ExperienceSocialConnector } from '@logto/schemas';
-import { ConnectorPlatform } from '@logto/schemas';
+import { ConnectorPlatform, experienceSocialStatePrefix } from '@logto/schemas';
 import { getCookie } from 'tiny-cookie';
 
 import { SearchParameters } from '@/types';
@@ -13,11 +13,14 @@ import { getLogtoNativeSdk, isNativeWebview } from '@/utils/native-sdk';
 
 const storageStateKeyPrefix = 'social_auth_state';
 
-export const generateState = () => {
-  const uuid = generateRandomString();
-
-  return uuid;
-};
+/**
+ * Generate a random OAuth `state` for social and SSO sign-in.
+ *
+ * The random part is base64url-encoded, whose alphabet overlaps with the Account Center state
+ * prefix. The Experience prefix keeps the two namespaces disjoint so that Logto Core can route
+ * the shared `/callback/:connectorId` URI by the `state` prefix without ambiguity.
+ */
+export const generateState = () => `${experienceSocialStatePrefix}${generateRandomString()}`;
 
 export const storeState = (state: string, connectorId: string) => {
   sessionStorage.setItem(`${storageStateKeyPrefix}:${connectorId}`, state);
