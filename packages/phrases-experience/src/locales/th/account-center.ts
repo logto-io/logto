@@ -13,6 +13,8 @@ const account_center = {
     sidebar_security: 'ความปลอดภัย',
     sidebar_sessions: 'เซสชัน',
     support: 'ฝ่ายช่วยเหลือ',
+    user_menu: 'เมนูผู้ใช้',
+    sign_out: 'ออกจากระบบ',
   },
   verification: {
     title: 'การยืนยันความปลอดภัย',

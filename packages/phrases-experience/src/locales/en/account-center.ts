@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'Page not found',
@@ -13,6 +14,8 @@ const account_center = {
     sidebar_security: 'Security',
     sidebar_sessions: 'Sessions',
     support: 'Support',
+    user_menu: 'User menu',
+    sign_out: 'Sign out',
   },
   verification: {
     title: 'Security verification',
@@ -301,3 +304,4 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
+/* eslint-enable max-lines */

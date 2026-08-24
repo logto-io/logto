@@ -13,6 +13,8 @@ const account_center = {
     sidebar_security: 'Безопасность',
     sidebar_sessions: 'Сессии',
     support: 'Поддержка',
+    user_menu: 'Меню пользователя',
+    sign_out: 'Выйти',
   },
   verification: {
     title: 'Проверка безопасности',

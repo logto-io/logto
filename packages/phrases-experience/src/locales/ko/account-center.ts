@@ -13,6 +13,8 @@ const account_center = {
     sidebar_security: '보안',
     sidebar_sessions: '세션',
     support: '지원',
+    user_menu: '사용자 메뉴',
+    sign_out: '로그아웃',
   },
   verification: {
     title: '보안 인증',
