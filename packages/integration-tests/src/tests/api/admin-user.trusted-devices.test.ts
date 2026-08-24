@@ -1,14 +1,9 @@
-import { defaultTenantId, type TrustedDeviceResponse } from '@logto/schemas';
+import { defaultTenantId } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { assertEnv } from '@silverhand/essentials';
 import { createInterceptorsPreset, createPool, sql, type DatabasePool } from '@silverhand/slonik';
 
-import {
-  deleteUser,
-  deleteUserTrustedDevice,
-  getUserTrustedDevices,
-  getUserTrustedDevicesResponse,
-} from '#src/api/admin-user.js';
+import { deleteUser, deleteUserTrustedDevice, getUserTrustedDevices } from '#src/api/admin-user.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
 import { devFeatureTest } from '#src/utils.js';
 
@@ -64,7 +59,7 @@ devFeatureTest.describe('admin user trusted devices', () => {
     await pool.end();
   });
 
-  it('lists only active owned records with pagination and deletes only owned records', async () => {
+  it('lists all active owned records and deletes only owned records', async () => {
     const [user, otherUser] = await Promise.all([createUserByAdmin(), createUserByAdmin()]);
     const now = Date.now();
     const olderDeviceId = generateStandardId();
@@ -100,15 +95,9 @@ devFeatureTest.describe('admin user trusted devices', () => {
         }),
       ]);
 
-      const firstPageResponse = await getUserTrustedDevicesResponse(
-        user.id,
-        new URLSearchParams({ page: '1', page_size: '1' })
-      );
-      const firstPage = await firstPageResponse.json<TrustedDeviceResponse[]>();
+      const trustedDevices = await getUserTrustedDevices(user.id);
 
-      expect(firstPageResponse.headers.get('Total-Number')).toBe('2');
-      expect(firstPageResponse.headers.get('Link')).toContain('rel="next"');
-      expect(firstPage).toEqual([
+      expect(trustedDevices).toEqual([
         {
           id: newerDeviceId,
           userAgent: 'Mozilla/5.0 integration test',
@@ -118,9 +107,18 @@ devFeatureTest.describe('admin user trusted devices', () => {
           lastUsedAt: now - 1000,
           expiresAt: now + 60_000,
         },
+        {
+          id: olderDeviceId,
+          userAgent: 'Mozilla/5.0 integration test',
+          country: 'US',
+          city: 'San Francisco',
+          createdAt: now - 2000,
+          lastUsedAt: now - 2000,
+          expiresAt: now + 60_000,
+        },
       ]);
-      expect(JSON.stringify(firstPage)).not.toContain('192.0.2.1');
-      expect(JSON.stringify(firstPage)).not.toContain('secretHash');
+      expect(JSON.stringify(trustedDevices)).not.toContain('192.0.2.1');
+      expect(JSON.stringify(trustedDevices)).not.toContain('secretHash');
 
       await expect(deleteUserTrustedDevice(user.id, otherUserDeviceId)).rejects.toHaveProperty(
         'response.status',

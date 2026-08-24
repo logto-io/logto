@@ -10,7 +10,6 @@ import { z } from 'zod';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
-import koaPagination from '#src/middleware/koa-pagination.js';
 import { assertFirstPartyClient } from '#src/utils/assert-first-party-client.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -31,7 +30,6 @@ export default function accountTrustedDeviceRoutes<T extends UserRouter>(
 
   router.get(
     `${accountApiPrefix}/trusted-devices`,
-    koaPagination(),
     koaGuard({
       response: accountTrustedDeviceResponseGuard.array(),
       status: [200, 400, 401, 500],
@@ -53,13 +51,11 @@ export default function accountTrustedDeviceRoutes<T extends UserRouter>(
         scopes.has(UserScope.TrustedDevices),
         new RequestError({ code: 'auth.unauthorized', status: 401 })
       );
-      const { limit, offset } = ctx.pagination;
-      const [currentTrustedDevice, [totalNumber, records]] = await Promise.all([
+      const [currentTrustedDevice, records] = await Promise.all([
         trustedDeviceLibrary.validateCredential(ctx, userId),
-        trustedDevices.findActiveByUserId(userId, { limit, offset }),
+        trustedDevices.findActiveByUserId(userId),
       ]);
 
-      ctx.pagination.totalCount = totalNumber;
       ctx.body = records.map(
         (record) =>
           ({

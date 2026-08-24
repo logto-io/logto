@@ -180,26 +180,38 @@ devFeatureTest.describe('account trusted device management', () => {
     await pool.end();
   });
 
-  it('returns paginated redacted records and marks only a fully validated credential as current', async () => {
+  it('returns more than 100 redacted records and marks only a fully validated credential as current', async () => {
     const api = buildApiWithCredential(
       owner.accessToken,
       owner.user.id,
       currentCredential.id,
       currentCredential.secret
     );
-    const firstPageResponse = await getTrustedDevicesResponse(
-      api,
-      owner.verificationRecordId,
-      new URLSearchParams({ page: '1', page_size: '1' })
-    );
-    const firstPage = await firstPageResponse.json<AccountTrustedDeviceResponse[]>();
-    const [firstDevice] = firstPage;
-    assert(firstDevice, new Error('Expected the first trusted-device page'));
+    const now = Date.now();
+    const additionalCredentials = Array.from({ length: 99 }, (_, index) => ({
+      ...createCredential(generateStandardId()),
+      createdAt: now - 2000 - index,
+    }));
 
-    expect(firstPageResponse.headers.get('total-number')).toBe('2');
-    expect(firstPageResponse.headers.get('link')).toContain('rel="next"');
-    expect(firstPage).toEqual([
+    await Promise.all(
+      additionalCredentials.map(async (credential) =>
+        insertTrustedDevice({
+          ...credential,
+          userId: owner.user.id,
+        })
+      )
+    );
+    const response = await getTrustedDevicesResponse(api, owner.verificationRecordId);
+    const devices = await response.json<AccountTrustedDeviceResponse[]>();
+    const [firstDevice] = devices;
+    assert(firstDevice, new Error('Expected an active trusted device'));
+
+    expect(response.headers.get('total-number')).toBeNull();
+    expect(response.headers.get('link')).toBeNull();
+    expect(devices).toHaveLength(101);
+    expect(devices.slice(0, 2)).toEqual([
       expect.objectContaining({ id: currentCredential.id, isCurrent: true }),
+      expect.objectContaining({ id: remoteCredential.id, isCurrent: false }),
     ]);
     expect(firstDevice).toMatchObject({
       id: currentCredential.id,
@@ -211,17 +223,8 @@ devFeatureTest.describe('account trusted device management', () => {
     expect(typeof firstDevice.createdAt).toBe('number');
     expect(typeof firstDevice.lastUsedAt).toBe('number');
     expect(typeof firstDevice.expiresAt).toBe('number');
-    expect(JSON.stringify(firstPage)).not.toContain('192.0.2.1');
-    expect(JSON.stringify(firstPage)).not.toContain('secretHash');
-
-    const secondPage = await getTrustedDevices(
-      api,
-      owner.verificationRecordId,
-      new URLSearchParams({ page: '2', page_size: '1' })
-    );
-    expect(secondPage).toEqual([
-      expect.objectContaining({ id: remoteCredential.id, isCurrent: false }),
-    ]);
+    expect(JSON.stringify(devices)).not.toContain('192.0.2.1');
+    expect(JSON.stringify(devices)).not.toContain('secretHash');
   });
 
   it('never marks a record current when the cookie ID matches but the secret is invalid', async () => {

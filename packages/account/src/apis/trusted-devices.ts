@@ -10,7 +10,6 @@ export const getTrustedDevices = async (
   return createAuthenticatedKy(accessToken)
     .get('/api/my-account/trusted-devices', {
       headers: { [verificationRecordIdHeader]: verificationRecordId },
-      searchParams: { page_size: '100' },
     })
     .json<AccountTrustedDeviceResponse[]>();
 };
