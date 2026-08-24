@@ -6,6 +6,7 @@ import {
   LogKeyUnknown,
   jwtCustomizer,
   saml,
+  trustedDevice,
   type AuditLogPrefix,
 } from '@logto/schemas';
 import { yes } from '@silverhand/essentials';
@@ -55,6 +56,7 @@ export default function logRoutes<T extends ManagementApiRouter>(
         jwtCustomizer.prefix,
         saml.prefix,
         action.prefix,
+        trustedDevice.prefix,
         LogKeyUnknown,
       ];
 
