@@ -8,25 +8,30 @@ import { type IdentifierInputValue } from '@/shared/components/InputFields/Smart
 
 import HiddenIdentifierInput from './HiddenIdentifierInput';
 
-const renderWithIdentifier = (identifierInputValue?: IdentifierInputValue) =>
+type ContextValue = {
+  identifierInputValue?: IdentifierInputValue;
+  forgotPasswordIdentifierInputValue?: IdentifierInputValue;
+};
+
+const renderWithIdentifier = (contextValue: ContextValue, isForgotPassword = false) =>
   render(
-    <UserInteractionContext.Provider value={{ identifierInputValue } as UserInteractionContextType}>
-      <HiddenIdentifierInput />
+    <UserInteractionContext.Provider value={contextValue as UserInteractionContextType}>
+      <HiddenIdentifierInput isForgotPassword={isForgotPassword} />
     </UserInteractionContext.Provider>
   );
 
 describe('<HiddenIdentifierInput />', () => {
   test('renders nothing without a cached identifier', () => {
-    const { container } = renderWithIdentifier();
+    const { container } = renderWithIdentifier({});
     expect(container.querySelector('input')).toBeNull();
   });
 
   test.each([
-    [SignInIdentifier.Email, 'foo@logto.io', 'email'],
-    [SignInIdentifier.Phone, '18888888888', 'tel'],
-    [SignInIdentifier.Username, 'foo', 'text'],
-  ])('renders the username context for %s', (type, value, expectedInputType) => {
-    const { container } = renderWithIdentifier({ type, value });
+    [SignInIdentifier.Email, 'foo@logto.io'],
+    [SignInIdentifier.Phone, '18888888888'],
+    [SignInIdentifier.Username, 'foo'],
+  ])('renders the username context for %s', (type, value) => {
+    const { container } = renderWithIdentifier({ identifierInputValue: { type, value } });
     const input = container.querySelector('input');
 
     expect(input).not.toBeNull();
@@ -34,9 +39,33 @@ describe('<HiddenIdentifierInput />', () => {
     // context of the new password field, otherwise no strong password will be suggested.
     expect(input?.getAttribute('autocomplete')).toBe('username');
     expect(input?.getAttribute('name')).toBe('username');
-    expect(input?.getAttribute('type')).toBe(expectedInputType);
+    expect(input?.getAttribute('type')).toBe('text');
     expect(input?.value).toBe(value);
     // Some browsers skip fields hidden by the `hidden` attribute when detecting the context.
     expect(input?.hasAttribute('hidden')).toBe(false);
+  });
+
+  test('reads the forgot password identifier in a reset password flow', () => {
+    const { container } = renderWithIdentifier(
+      {
+        identifierInputValue: { type: SignInIdentifier.Email, value: 'alice@logto.io' },
+        forgotPasswordIdentifierInputValue: {
+          type: SignInIdentifier.Email,
+          value: 'bob@logto.io',
+        },
+      },
+      true
+    );
+
+    expect(container.querySelector('input')?.value).toBe('bob@logto.io');
+  });
+
+  test('renders nothing in a reset password flow without a forgot password identifier', () => {
+    const { container } = renderWithIdentifier(
+      { identifierInputValue: { type: SignInIdentifier.Email, value: 'alice@logto.io' } },
+      true
+    );
+
+    expect(container.querySelector('input')).toBeNull();
   });
 });

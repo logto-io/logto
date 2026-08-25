@@ -11,6 +11,8 @@ type Props = {
   readonly errorMessage?: string;
   readonly clearErrorMessage?: () => void;
   readonly maxLength?: number;
+  /** Whether the password is being set in a reset password flow. */
+  readonly isForgotPassword?: boolean;
 };
 
 const SetPassword = (props: Props) => {

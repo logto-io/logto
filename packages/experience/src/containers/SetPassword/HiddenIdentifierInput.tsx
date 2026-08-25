@@ -1,15 +1,18 @@
-import { SignInIdentifier } from '@logto/schemas';
 import { useContext } from 'react';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 
 import styles from './index.module.scss';
 
-const identifierInputTypeMap = Object.freeze({
-  [SignInIdentifier.Email]: 'email',
-  [SignInIdentifier.Phone]: 'tel',
-  [SignInIdentifier.Username]: 'text',
-}) satisfies Record<SignInIdentifier, InputType>;
+type Props = {
+  /**
+   * Whether the password is being set in a reset password flow.
+   *
+   * Note: since a user may not use the same identifier to sign in and reset password, the two
+   * identifiers are cached separately, the same way `usePrefilledIdentifier` distinguishes them.
+   */
+  readonly isForgotPassword?: boolean;
+};
 
 /**
  * This component renders a visually hidden input field that stores the user's identifier.
@@ -23,14 +26,15 @@ const identifierInputTypeMap = Object.freeze({
  * browsers (e.g. Safari) skip `hidden` fields when detecting the username context, which
  * prevents them from offering a strong password suggestion.
  */
-const HiddenIdentifierInput = () => {
-  const { identifierInputValue } = useContext(UserInteractionContext);
+const HiddenIdentifierInput = ({ isForgotPassword = false }: Props) => {
+  const { identifierInputValue, forgotPasswordIdentifierInputValue } =
+    useContext(UserInteractionContext);
 
-  if (!identifierInputValue) {
+  const identifier = isForgotPassword ? forgotPasswordIdentifierInputValue : identifierInputValue;
+
+  if (!identifier) {
     return null;
   }
-
-  const { type, value } = identifierInputValue;
 
   return (
     <input
@@ -40,8 +44,8 @@ const HiddenIdentifierInput = () => {
       tabIndex={-1}
       name="username"
       autoComplete="username"
-      type={type ? identifierInputTypeMap[type] : 'text'}
-      value={value}
+      type="text"
+      value={identifier.value}
     />
   );
 };
