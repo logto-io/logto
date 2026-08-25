@@ -12,13 +12,16 @@ import Switch from '@/ds-components/Switch';
 import { Action, type Action as JwtAction } from '@/pages/CustomizeJwt/utils/type';
 import { type JwtCustomizerForm } from '@/pages/CustomizeJwtDetails/type';
 import {
-  cryptographicCapabilityCodeExample,
   denyAccessCodeExample,
   environmentVariablesCodeExample,
   fetchExternalDataCodeExample,
   sampleCodeEditorOptions,
   typeDefinitionCodeEditorOptions,
 } from '@/pages/CustomizeJwtDetails/utils/config';
+import {
+  accessTokenCryptographicCapabilityCodeExample,
+  clientCredentialsCryptographicCapabilityCodeExample,
+} from '@/pages/CustomizeJwtDetails/utils/cryptographic-capability-code-examples';
 import {
   accessTokenPayloadTypeDefinition,
   clientCredentialsPayloadTypeDefinition,
@@ -230,28 +233,31 @@ function InstructionTab({ isActive, section, action }: Props) {
               options={sampleCodeEditorOptions}
             />
           </GuideCard>
-          {isCustomJwtCryptographicCapabilityEnabled() &&
-            tokenType === LogtoJwtTokenKeyType.AccessToken && (
-              <GuideCard
-                name={CardType.CryptographicCapability}
-                isExpanded={expendCard === CardType.CryptographicCapability}
-                setExpanded={(expand) => {
-                  setExpendCard(expand ? CardType.CryptographicCapability : undefined);
-                }}
-              >
-                <div className={tabContentStyles.description}>
-                  {t('jwt_claims.cryptographic_capability.description')}
-                </div>
-                <Editor
-                  language="typescript"
-                  className={styles.sampleCode}
-                  value={cryptographicCapabilityCodeExample}
-                  height="420px"
-                  theme="logto-dark"
-                  options={sampleCodeEditorOptions}
-                />
-              </GuideCard>
-            )}
+          {isCustomJwtCryptographicCapabilityEnabled() && (
+            <GuideCard
+              name={CardType.CryptographicCapability}
+              isExpanded={expendCard === CardType.CryptographicCapability}
+              setExpanded={(expand) => {
+                setExpendCard(expand ? CardType.CryptographicCapability : undefined);
+              }}
+            >
+              <div className={tabContentStyles.description}>
+                {t('jwt_claims.cryptographic_capability.description')}
+              </div>
+              <Editor
+                language="typescript"
+                className={styles.sampleCode}
+                value={
+                  tokenType === LogtoJwtTokenKeyType.AccessToken
+                    ? accessTokenCryptographicCapabilityCodeExample
+                    : clientCredentialsCryptographicCapabilityCodeExample
+                }
+                height="420px"
+                theme="logto-dark"
+                options={sampleCodeEditorOptions}
+              />
+            </GuideCard>
+          )}
         </>
       )}
       {isErrorHandlingSection && isDevFeaturesEnabled && (

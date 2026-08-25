@@ -2,6 +2,7 @@ import { JwtCustomizerTypeDefinitionKey } from '@/consts/jwt-customizer-type-def
 
 import {
   buildAccessTokenJwtCustomizerContextTsDefinition,
+  buildClientCredentialsJwtCustomizerContextTsDefinition,
   buildEnvironmentVariablesTypeDefinition,
 } from './type-definitions';
 
@@ -54,15 +55,21 @@ describe('Custom JWT cryptographic capability authoring types', () => {
     mockIsDevFeaturesEnabled.mockReturnValue(true);
   });
 
-  it('includes required crypto methods when the capability is enabled', () => {
-    const definition = buildAccessTokenJwtCustomizerContextTsDefinition();
+  it.each([
+    ['access tokens', buildAccessTokenJwtCustomizerContextTsDefinition],
+    ['client credentials', buildClientCredentialsJwtCustomizerContextTsDefinition],
+  ] as const)(
+    'includes required crypto methods for %s when the capability is enabled',
+    (_, build) => {
+      const definition = build();
 
-    expect(definition).toContain('crypto: {');
-    expect(definition).toContain('sha256: (input: string) => Promise<string>;');
-    expect(definition).toContain(
-      'hmacSha256: (options: { key: string; input: string }) => Promise<string>;'
-    );
-  });
+      expect(definition).toContain('crypto: {');
+      expect(definition).toContain('sha256: (input: string) => Promise<string>;');
+      expect(definition).toContain(
+        'hmacSha256: (options: { key: string; input: string }) => Promise<string>;'
+      );
+    }
+  );
 
   it('omits crypto from authoring types when development features are disabled', () => {
     mockIsDevFeaturesEnabled.mockReturnValue(false);
