@@ -147,6 +147,21 @@ export default class ExpectExperience extends ExpectPage {
   }
 
   /**
+   * Poll the page URL (query excluded) until it is at the given experience path. Unlike
+   * {@link toBeAt}, this tolerates navigations that only complete after one or more API
+   * round trips, which can exceed any fixed delay under CI load.
+   *
+   * @param pathname The experience path to wait for.
+   */
+  async waitToBeAt(pathname: ExperiencePath) {
+    const expected = this.buildExperienceUrl(pathname).href;
+    await this.waitForUrlToMatch(
+      (current) => stripQuery(current) === expected,
+      `to be ${expected}`
+    );
+  }
+
+  /**
    * Assert the page is at the verification code page and fill the verification code inputs with the
    * code from Logto database.
    *
