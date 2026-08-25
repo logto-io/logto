@@ -10,6 +10,8 @@ import {
   revalidateConsentClient,
 } from './utils.js';
 
+const { jest } = import.meta;
+
 describe('findStaleOidcScopes', () => {
   const clientScope = [ReservedScope.OpenId, ReservedScope.OfflineAccess, UserScope.Profile].join(
     ' '
