@@ -6,10 +6,14 @@ import { EnvSet } from '#src/env-set/index.js';
 
 import { guardSocket, ssrfProtectedFetch, ssrfProtectedGot } from './outbound-request.js';
 
-const stubSsrfProtection = (isSsrfProtectionEnabled: boolean) => {
+const stubSsrfProtection = (
+  isSsrfProtectionEnabled: boolean,
+  ssrfAllowedAddresses: string[] = []
+) => {
   Sinon.stub(EnvSet, 'values').value({
     ...EnvSet.values,
     isSsrfProtectionEnabled,
+    ssrfAllowedAddresses,
   });
 };
 
@@ -132,6 +136,10 @@ const guard = (address: string) => {
 };
 
 describe('guardSocket', () => {
+  afterEach(() => {
+    Sinon.restore();
+  });
+
   it.each([
     ['169.254.169.254', 'cloud metadata'],
     ['127.0.0.1', 'loopback'],
@@ -152,5 +160,33 @@ describe('guardSocket', () => {
     ['2606:4700:4700::1111', 'public IPv6'],
   ])('keeps a connection to %s (%s)', (address) => {
     expect(guard(address)).toBeUndefined();
+  });
+
+  describe('with an allowlist', () => {
+    it.each([
+      ['127.0.0.1', ['127.0.0.1'], 'exact address'],
+      ['127.0.0.5', ['127.0.0.0/8'], 'CIDR range'],
+      ['172.17.0.1', ['172.16.0.0/12'], 'Docker bridge range'],
+      ['::1', ['::1'], 'IPv6 address'],
+    ])('keeps a connection to %s allowed by %j (%s)', (address, allowlist) => {
+      stubSsrfProtection(true, allowlist);
+
+      expect(guard(address)).toBeUndefined();
+    });
+
+    it('still blocks an address outside the allowlist', () => {
+      stubSsrfProtection(true, ['127.0.0.0/8']);
+
+      // The whole point of allowlisting over disabling: metadata stays unreachable.
+      expect(guard('169.254.169.254')).toMatchObject({
+        message: 'hostname resolves to a special-use IP address',
+      });
+    });
+
+    it('rejects a malformed entry instead of silently ignoring it', () => {
+      stubSsrfProtection(true, ['not-an-ip']);
+
+      expect(() => guard('127.0.0.1')).toThrow('Invalid address in `SSRF_ALLOWED_ADDRESSES`');
+    });
   });
 });

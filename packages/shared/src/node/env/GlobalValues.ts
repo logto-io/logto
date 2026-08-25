@@ -168,6 +168,18 @@ export default class GlobalValues {
       yes(getEnv('OIDC_PROVIDER_SSRF_PROTECTION_DISABLED'))
     );
 
+  /**
+   * Destinations that stay reachable while the SSRF protection is on, as a comma-separated list of
+   * IP addresses or CIDR ranges (`127.0.0.1,10.0.0.0/8,::1`).
+   *
+   * Prefer this over `SSRF_PROTECTION_DISABLED` when only a known internal host has to be reached:
+   * naming the destinations keeps every other special-use address blocked, and it does not disable
+   * features that hard-require the protection, such as CIMD. Ignored in Cloud.
+   */
+  public readonly ssrfAllowedAddresses = this.isCloud
+    ? []
+    : getEnvAsStringArray('SSRF_ALLOWED_ADDRESSES');
+
   /** Enables protected app local development without Cloud-only behavior. */
   public readonly isProtectedAppLocalDevEnabled =
     !this.isProduction && yes(getEnv('PROTECTED_APP_LOCAL_DEV'));

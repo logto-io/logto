@@ -15,8 +15,11 @@ services:
       # Optional default grace period, in seconds, for OIDC private key rotation when the API
       # request omits `rotationGracePeriod`.
       - PRIVATE_KEY_ROTATION_GRACE_PERIOD
-      # Set to `true` only when trusted webhook, SSO, or OIDC relying-party endpoints resolve to
-      # private networks. SSRF protection for outbound requests is enabled by default.
+      # SSRF protection for outbound requests is enabled by default. To reach a trusted webhook,
+      # SSO, or OIDC relying-party endpoint on a private network, list its address or CIDR range in
+      # `SSRF_ALLOWED_ADDRESSES` (for example `10.0.0.0/8`). Setting `SSRF_PROTECTION_DISABLED=true`
+      # turns the protection off entirely and also disables features that require it, such as CIMD.
+      - SSRF_ALLOWED_ADDRESSES
       - SSRF_PROTECTION_DISABLED
       # Mandatory for GitPod to map host env to the container, thus GitPod can dynamically configure the public URL of Logto;
       # Or, you can leverage it for local testing.
