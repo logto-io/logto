@@ -6,6 +6,7 @@ import {
   LogKeyUnknown,
   jwtCustomizer,
   saml,
+  trustedDevice,
 } from '@logto/schemas';
 import type { Log } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
@@ -64,6 +65,7 @@ describe('logRoutes', () => {
             jwtCustomizer.prefix,
             saml.prefix,
             action.prefix,
+            trustedDevice.prefix,
             LogKeyUnknown,
           ],
         },
@@ -82,6 +84,7 @@ describe('logRoutes', () => {
           jwtCustomizer.prefix,
           saml.prefix,
           action.prefix,
+          trustedDevice.prefix,
           LogKeyUnknown,
         ],
       });
