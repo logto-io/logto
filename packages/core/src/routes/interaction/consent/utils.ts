@@ -136,7 +136,8 @@ export const revalidateConsentClient = async ({
   requestedScope: unknown;
   missingOIDCScope: string[];
 }) => {
-  if (!(await isThirdPartyApplication(queries, applicationId))) {
+  /** A CIMD client is third-party by definition; only registered ids consult the classifier. */
+  if (!cimd && !(await isThirdPartyApplication(queries, applicationId))) {
     return;
   }
 

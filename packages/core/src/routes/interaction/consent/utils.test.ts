@@ -1,6 +1,14 @@
 import { ReservedScope, UserScope } from '@logto/core-kit';
+import { errors } from 'oidc-provider';
 
-import { buildResourceScopesToReject, findStaleOidcScopes } from './utils.js';
+import type Queries from '#src/tenants/Queries.js';
+import { createMockProvider } from '#src/test-utils/oidc-provider.js';
+
+import {
+  buildResourceScopesToReject,
+  findStaleOidcScopes,
+  revalidateConsentClient,
+} from './utils.js';
 
 describe('findStaleOidcScopes', () => {
   const clientScope = [ReservedScope.OpenId, ReservedScope.OfflineAccess, UserScope.Profile].join(
@@ -102,5 +110,115 @@ describe('buildResourceScopesToReject', () => {
         'https://api.example.com': [],
       }
     );
+  });
+});
+
+describe('revalidateConsentClient', () => {
+  const clientScope = [ReservedScope.OpenId, ReservedScope.OfflineAccess, UserScope.Profile].join(
+    ' '
+  );
+  const cimdClientId = 'https://client.example.com/metadata.json';
+  const redirectUri = 'https://client.example.com/callback';
+
+  it('should reject a CIMD submission whose redirect uri the current document no longer allows, without consulting the application registry', async () => {
+    const findApplicationById = jest.fn().mockRejectedValue(new Error('should not be called'));
+    const provider = createMockProvider(undefined, undefined, {
+      find: async () => ({ scope: clientScope, redirectUriAllowed: () => false }),
+    });
+
+    await expect(
+      revalidateConsentClient({
+        provider,
+        queries: { applications: { findApplicationById } } as unknown as Queries,
+        applicationId: cimdClientId,
+        cimd: true,
+        redirectUri,
+        requestedScope: ReservedScope.OpenId,
+        missingOIDCScope: [],
+      })
+    ).rejects.toThrow(errors.InvalidRedirectUri);
+
+    expect(findApplicationById).not.toHaveBeenCalled();
+  });
+
+  it('should reject a CIMD submission when the tenant ceiling no longer allows a snapshot scope', async () => {
+    const provider = createMockProvider(undefined, undefined, {
+      find: async () => ({ scope: clientScope, redirectUriAllowed: () => true }),
+    });
+
+    await expect(
+      revalidateConsentClient({
+        provider,
+        queries: { applications: { findApplicationById: jest.fn() } } as unknown as Queries,
+        applicationId: cimdClientId,
+        cimd: true,
+        redirectUri,
+        requestedScope: `${ReservedScope.OpenId} ${UserScope.Email}`,
+        missingOIDCScope: [UserScope.Email],
+      })
+    ).rejects.toThrow(errors.InvalidScope);
+  });
+
+  it('should pass a CIMD submission whose redirect uri and scopes are still allowed', async () => {
+    const provider = createMockProvider(undefined, undefined, {
+      find: async () => ({ scope: clientScope, redirectUriAllowed: () => true }),
+    });
+
+    await expect(
+      revalidateConsentClient({
+        provider,
+        queries: { applications: { findApplicationById: jest.fn() } } as unknown as Queries,
+        applicationId: cimdClientId,
+        cimd: true,
+        redirectUri,
+        requestedScope: `${ReservedScope.OpenId} ${UserScope.Profile}`,
+        missingOIDCScope: [UserScope.Profile],
+      })
+    ).resolves.toBeUndefined();
+  });
+
+  it('should skip revalidation for a first-party application', async () => {
+    const find = jest.fn();
+    const provider = createMockProvider(undefined, undefined, { find });
+
+    await expect(
+      revalidateConsentClient({
+        provider,
+        queries: {
+          applications: {
+            findApplicationById: jest.fn().mockResolvedValue({ isThirdParty: false }),
+          },
+        } as unknown as Queries,
+        applicationId: 'registered-app-id',
+        cimd: false,
+        redirectUri,
+        requestedScope: ReservedScope.OpenId,
+        missingOIDCScope: [],
+      })
+    ).resolves.toBeUndefined();
+
+    expect(find).not.toHaveBeenCalled();
+  });
+
+  it('should reject a third-party application submission when a snapshot scope is no longer allowed', async () => {
+    const provider = createMockProvider(undefined, undefined, {
+      find: async () => ({ scope: clientScope, redirectUriAllowed: () => true }),
+    });
+
+    await expect(
+      revalidateConsentClient({
+        provider,
+        queries: {
+          applications: {
+            findApplicationById: jest.fn().mockResolvedValue({ isThirdParty: true }),
+          },
+        } as unknown as Queries,
+        applicationId: 'registered-app-id',
+        cimd: false,
+        redirectUri,
+        requestedScope: `${ReservedScope.OpenId} ${UserScope.Email}`,
+        missingOIDCScope: [UserScope.Email],
+      })
+    ).rejects.toThrow(errors.InvalidScope);
   });
 });
