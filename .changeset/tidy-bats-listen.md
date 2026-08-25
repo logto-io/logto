@@ -4,4 +4,4 @@
 
 stop issuing user scopes a third-party application is no longer configured for
 
-Removing a user scope from a third-party application's consent settings only affected new authorization requests — anything already recorded in a user's grant kept being issued. Refresh token exchanges now drop the scopes that are no longer allowed, and an authorization that resumes on an existing grant is rejected with `invalid_scope`.
+Removing a user scope from a third-party application's consent settings used to affect only new authorization requests, and scopes already in a user's grant kept being issued. Now a refresh token exchange drops the removed scopes, and an authorization resuming on an existing grant fails with `invalid_scope`.
