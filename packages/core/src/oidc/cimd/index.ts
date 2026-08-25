@@ -51,7 +51,7 @@ const assertClientIdWithinLengthBound = (clientId: string) => {
  * changes, so every predicate consumer observes the same value for the provider's lifetime.
  */
 export const isCimdEffectivelyEnabled = (envSet: EnvSet): boolean =>
-  envSet.oidc.cimdEnabled && EnvSet.values.isOidcProviderSsrfProtectionEnabled;
+  envSet.oidc.cimdEnabled && EnvSet.values.isSsrfProtectionEnabled;
 
 /**
  * Whether an identifier presented as a `client_id` should be attributed to a CIMD client —

@@ -24,6 +24,6 @@ const fetchWithoutSsrfDispatcher: typeof fetch = async (input, init) => {
  * upstream fetch hardening is inherited automatically. Only override it for the self-hosted opt-out.
  */
 export const getProviderFetchConfig = () =>
-  cond(!EnvSet.values.isOidcProviderSsrfProtectionEnabled && { fetch: fetchWithoutSsrfDispatcher });
+  cond(!EnvSet.values.isSsrfProtectionEnabled && { fetch: fetchWithoutSsrfDispatcher });
 
 export default fetchWithoutSsrfDispatcher;

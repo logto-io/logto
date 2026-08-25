@@ -58,7 +58,7 @@ describe('CIMD config routes', () => {
     it('rejects enabling with 422 while the SSRF protection is disabled', async () => {
       Sinon.stub(EnvSet, 'values').value({
         ...EnvSet.values,
-        isOidcProviderSsrfProtectionEnabled: false,
+        isSsrfProtectionEnabled: false,
       });
 
       const response = await routeRequester.patch('/configs/cimd').send({ enabled: true });
@@ -70,7 +70,7 @@ describe('CIMD config routes', () => {
     it('allows disabling while the SSRF protection is disabled', async () => {
       Sinon.stub(EnvSet, 'values').value({
         ...EnvSet.values,
-        isOidcProviderSsrfProtectionEnabled: false,
+        isSsrfProtectionEnabled: false,
       });
       logtoConfigQueries.getCimdConfig.mockResolvedValueOnce({ enabled: true });
 

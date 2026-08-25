@@ -18,7 +18,7 @@ describe('getProviderFetchConfig', () => {
   it('should preserve the provider native fetch when SSRF protection is enabled', () => {
     Sinon.stub(EnvSet, 'values').value({
       ...EnvSet.values,
-      isOidcProviderSsrfProtectionEnabled: true,
+      isSsrfProtectionEnabled: true,
     });
 
     expect(getProviderFetchConfig()).toBeUndefined();
@@ -27,7 +27,7 @@ describe('getProviderFetchConfig', () => {
   it('should drop the SSRF-protecting dispatcher when protection is disabled', async () => {
     Sinon.stub(EnvSet, 'values').value({
       ...EnvSet.values,
-      isOidcProviderSsrfProtectionEnabled: false,
+      isSsrfProtectionEnabled: false,
     });
     const fetchStub = Sinon.stub(globalThis, 'fetch').resolves(new Response());
     const config = getProviderFetchConfig();

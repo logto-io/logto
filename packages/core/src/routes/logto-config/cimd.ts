@@ -47,12 +47,12 @@ export default function logtoConfigCimdRoutes<T extends ManagementApiRouter>(
        * construction applies the same condition (LOG-13920).
        */
       assertThat(
-        !body.enabled || EnvSet.values.isOidcProviderSsrfProtectionEnabled,
+        !body.enabled || EnvSet.values.isSsrfProtectionEnabled,
         new RequestError(
           { code: 'request.invalid_input', status: 422 },
           {
             details:
-              'CIMD requires the OIDC provider SSRF protection. Remove `OIDC_PROVIDER_SSRF_PROTECTION_DISABLED` to enable CIMD.',
+              'CIMD requires the outbound request SSRF protection. Remove `SSRF_PROTECTION_DISABLED` to enable CIMD.',
           }
         )
       );

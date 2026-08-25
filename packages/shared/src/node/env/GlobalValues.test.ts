@@ -12,37 +12,44 @@ const unsetEnvironmentVariable = (key: string) => {
   Reflect.deleteProperty(process.env, key);
 };
 
-describe('OIDC provider SSRF protection', () => {
+/** The current name, and the narrower one it replaced, which stays supported. */
+const optOutVariables = ['SSRF_PROTECTION_DISABLED', 'OIDC_PROVIDER_SSRF_PROTECTION_DISABLED'];
+
+describe('SSRF protection', () => {
   afterEach(() => {
     vi.unstubAllEnvs();
   });
 
   it('is enabled by default in self-hosted deployments', () => {
     unsetEnvironmentVariable('IS_CLOUD');
-    unsetEnvironmentVariable('OIDC_PROVIDER_SSRF_PROTECTION_DISABLED');
+    for (const variable of optOutVariables) {
+      unsetEnvironmentVariable(variable);
+    }
 
-    expect(createGlobalValues().isOidcProviderSsrfProtectionEnabled).toBe(true);
+    expect(createGlobalValues().isSsrfProtectionEnabled).toBe(true);
   });
 
-  it('can be disabled in self-hosted deployments', () => {
-    unsetEnvironmentVariable('IS_CLOUD');
-    vi.stubEnv('OIDC_PROVIDER_SSRF_PROTECTION_DISABLED', 'true');
+  describe.each(optOutVariables)('%s', (variable) => {
+    it('can disable the protection in self-hosted deployments', () => {
+      unsetEnvironmentVariable('IS_CLOUD');
+      vi.stubEnv(variable, 'true');
 
-    expect(createGlobalValues().isOidcProviderSsrfProtectionEnabled).toBe(false);
-  });
+      expect(createGlobalValues().isSsrfProtectionEnabled).toBe(false);
+    });
 
-  it.each(['', 'false', 'flase'])('stays enabled when the opt-out value is: %s', (value) => {
-    unsetEnvironmentVariable('IS_CLOUD');
-    vi.stubEnv('OIDC_PROVIDER_SSRF_PROTECTION_DISABLED', value);
+    it.each(['', 'false', 'flase'])('stays enabled when the opt-out value is: %s', (value) => {
+      unsetEnvironmentVariable('IS_CLOUD');
+      vi.stubEnv(variable, value);
 
-    expect(createGlobalValues().isOidcProviderSsrfProtectionEnabled).toBe(true);
-  });
+      expect(createGlobalValues().isSsrfProtectionEnabled).toBe(true);
+    });
 
-  it('stays enabled in Cloud when the environment variable is true', () => {
-    vi.stubEnv('IS_CLOUD', 'true');
-    vi.stubEnv('OIDC_PROVIDER_SSRF_PROTECTION_DISABLED', 'true');
+    it('stays enabled in Cloud when the environment variable is true', () => {
+      vi.stubEnv('IS_CLOUD', 'true');
+      vi.stubEnv(variable, 'true');
 
-    expect(createGlobalValues().isOidcProviderSsrfProtectionEnabled).toBe(true);
+      expect(createGlobalValues().isSsrfProtectionEnabled).toBe(true);
+    });
   });
 });
 

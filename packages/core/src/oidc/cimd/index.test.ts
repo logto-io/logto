@@ -8,11 +8,11 @@ import type Queries from '#src/tenants/Queries.js';
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
 
-const loadCimdModule = async ({ isOidcProviderSsrfProtectionEnabled = true } = {}) => {
+const loadCimdModule = async ({ isSsrfProtectionEnabled = true } = {}) => {
   jest.resetModules();
   mockEsm('#src/env-set/index.js', () => ({
     EnvSet: {
-      values: { isOidcProviderSsrfProtectionEnabled },
+      values: { isSsrfProtectionEnabled },
     },
   }));
 
@@ -93,7 +93,7 @@ describe('isCimdEffectivelyEnabled', () => {
 
   it('is disabled when the provider SSRF protection is off, regardless of the stored config', async () => {
     const { isCimdEffectivelyEnabled } = await loadCimdModule({
-      isOidcProviderSsrfProtectionEnabled: false,
+      isSsrfProtectionEnabled: false,
     });
     expect(isCimdEffectivelyEnabled(buildEnvSet(true))).toBe(false);
   });
@@ -115,7 +115,7 @@ describe('shouldAttributeToCimd', () => {
 
   it('attributes even when cimd is not effectively enabled for the tenant', async () => {
     const { shouldAttributeToCimd } = await loadCimdModule({
-      isOidcProviderSsrfProtectionEnabled: false,
+      isSsrfProtectionEnabled: false,
     });
     expect(shouldAttributeToCimd(cimdClientId)).toBe(true);
   });
