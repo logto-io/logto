@@ -17,8 +17,6 @@ import { type InteractionStorage, type WithHooksAndLogsContext } from '../types.
 
 type TrustedDeviceData = Pick<InteractionStorage, 'trustedDeviceCreation'>;
 
-type ValidatedTrustedDevice = Pick<TrustedDeviceModel, 'id' | 'userId'>;
-
 const buildTrustedDeviceUsageLogId = (tenantId: string, interactionId: string) =>
   createHash('sha256')
     .update(`TrustedDevice.Used:${tenantId}:${interactionId}`)
@@ -41,11 +39,11 @@ type FinalizeOptions = {
 };
 
 /**
- * Owns trusted-device interaction state and coordinates credential fulfillment and creation.
+ * Coordinates persisted creation intent and the request-local trusted-device credential lifecycle.
  */
 export class TrustedDevice {
   #creation?: InteractionStorage['trustedDeviceCreation'];
-  #validatedDevice?: ValidatedTrustedDevice;
+  #validatedDeviceId?: string;
 
   constructor(
     private readonly ctx: WithHooksAndLogsContext,
@@ -93,17 +91,28 @@ export class TrustedDevice {
     };
   }
 
-  async tryFulfillMfa(userId: string): Promise<boolean> {
-    // Trusted-device MFA fulfillment is under development and must remain isolated from released flows.
+  /**
+   * Tries to verify the current MFA requirement with a trusted-device credential.
+   *
+   * @remarks Clears previously validated request-local state. On success, retains the device ID for
+   * post-submit usage finalization.
+   */
+  async tryVerifyMfa(userId: string): Promise<boolean> {
+    // Trusted-device MFA verification is under development and must remain isolated from released flows.
     if (!EnvSet.values.isDevFeaturesEnabled) {
       return false;
     }
 
-    this.#validatedDevice = undefined;
+    this.#validatedDeviceId = undefined;
 
     const {
       libraries: { trustedDevicePolicy, trustedDevices },
     } = this.tenant;
+
+    if (!trustedDevices.hasCredential(this.ctx, userId)) {
+      return false;
+    }
+
     const { enabled } = await trustedDevicePolicy.getEffectivePolicy(userId);
 
     if (!enabled) {
@@ -116,7 +125,7 @@ export class TrustedDevice {
       return false;
     }
 
-    this.#validatedDevice = { id: trustedDevice.id, userId };
+    this.#validatedDeviceId = trustedDevice.id;
 
     return true;
   }
@@ -144,10 +153,10 @@ export class TrustedDevice {
           ...conditional(city && { city }),
         };
 
-        const validatedDevice = this.#validatedDevice;
+        const validatedDeviceId = this.#validatedDeviceId;
 
-        if (validatedDevice?.userId === userId) {
-          await this.#finalizeUsage(validatedDevice, interactionEvent, userId, metadata);
+        if (validatedDeviceId) {
+          await this.#finalizeUsage(validatedDeviceId, interactionEvent, userId, metadata);
           return;
         }
 
@@ -160,7 +169,7 @@ export class TrustedDevice {
   }
 
   async #finalizeUsage(
-    validatedDevice: ValidatedTrustedDevice,
+    validatedDeviceId: string,
     interactionEvent: InteractionEvent,
     userId: string,
     metadata: TrustedDeviceMetadata
@@ -170,7 +179,7 @@ export class TrustedDevice {
     }
 
     const trustedDevice = await this.tenant.libraries.trustedDevices.updateMetadata(
-      validatedDevice.id,
+      validatedDeviceId,
       userId,
       metadata
     );

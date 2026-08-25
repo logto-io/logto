@@ -69,7 +69,7 @@ export default class ExperienceInteraction {
   readonly profile: Profile;
   /** The user linked MFA data in the current interaction that needs to be stored to database. */
   readonly mfa: Mfa;
-  /** Trusted-device intent, fulfillment, and credential lifecycle for the current interaction. */
+  /** Persisted creation intent and request-local trusted-device MFA verification lifecycle. */
   readonly trustedDevice: TrustedDevice;
 
   /** The user verification record list for the current interaction. */
@@ -390,11 +390,11 @@ export default class ExperienceInteraction {
       return;
     }
 
-    const isMfaFulfilledByTrustedDevice = await this.trustedDevice.tryFulfillMfa(user.id);
+    const isMfaVerifiedWithTrustedDevice = await this.trustedDevice.tryVerifyMfa(user.id);
 
     this.assignAdaptiveMfaHookResult(user.id, adaptiveMfaResult);
 
-    if (isMfaFulfilledByTrustedDevice) {
+    if (isMfaVerifiedWithTrustedDevice) {
       return;
     }
 

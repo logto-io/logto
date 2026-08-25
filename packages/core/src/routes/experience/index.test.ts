@@ -198,6 +198,7 @@ const createRequesterWithMocks = ({
     }),
   };
   const getEffectivePolicy = jest.fn().mockResolvedValue(trustedDevicePolicy);
+  const hasCredential = jest.fn().mockReturnValue(true);
   const validateCredential = jest.fn();
   const createCredential = jest.fn();
   const updateMetadata = jest.fn();
@@ -215,7 +216,7 @@ const createRequesterWithMocks = ({
       trustedDevicePolicy: {
         getEffectivePolicy,
       },
-      trustedDevices: { validateCredential, createCredential, updateMetadata },
+      trustedDevices: { hasCredential, validateCredential, createCredential, updateMetadata },
     }
   );
 
@@ -896,7 +897,7 @@ describe('POST /experience/submit', () => {
     expect(createCredential).not.toHaveBeenCalled();
   });
 
-  it('should update a fulfilling trusted device best effort without creating a duplicate', async () => {
+  it('should update a verifying trusted device best effort without creating a duplicate', async () => {
     setDevFeaturesEnabled(true);
     const metadataError = new Error('trusted-device metadata update failed');
     const trackException = jest.spyOn(appInsights, 'trackException').mockResolvedValue();

@@ -61,16 +61,18 @@ const createSubject = ({
   const createCredential = jest.fn().mockResolvedValue(createResult);
   const updateMetadata = jest.fn().mockResolvedValue(updateResult);
   const validateCredential = jest.fn().mockResolvedValue(validateResult);
+  const hasCredential = jest.fn().mockReturnValue(true);
+  const getEffectivePolicy = jest.fn().mockResolvedValue({ enabled: true, durationDays: 30 });
   const tenant = new MockTenant(undefined, undefined, undefined, {
-    trustedDevicePolicy: {
-      getEffectivePolicy: jest.fn().mockResolvedValue({ enabled: true, durationDays: 30 }),
-    },
-    trustedDevices: { createCredential, updateMetadata, validateCredential },
+    trustedDevicePolicy: { getEffectivePolicy },
+    trustedDevices: { createCredential, hasCredential, updateMetadata, validateCredential },
   });
 
   return {
     ...context,
     createCredential,
+    getEffectivePolicy,
+    hasCredential,
     updateMetadata,
     validateCredential,
     subject: new TrustedDevice(context.ctx, tenant, data),
@@ -151,8 +153,8 @@ describe('Experience trusted-device lifecycle events', () => {
     };
 
     await Promise.all([
-      success.subject.tryFulfillMfa(userId),
-      inactive.subject.tryFulfillMfa(userId),
+      success.subject.tryVerifyMfa(userId),
+      inactive.subject.tryVerifyMfa(userId),
     ]);
     await Promise.all([success.subject.finalize(options), inactive.subject.finalize(options)]);
 
@@ -188,7 +190,7 @@ describe('Experience trusted-device lifecycle events', () => {
       hasEligibleMfaProof: false,
     };
 
-    await Promise.all([earlier.subject.tryFulfillMfa(userId), later.subject.tryFulfillMfa(userId)]);
+    await Promise.all([earlier.subject.tryVerifyMfa(userId), later.subject.tryVerifyMfa(userId)]);
     await later.subject.finalize(options);
     await earlier.subject.finalize(options);
 
@@ -206,8 +208,8 @@ describe('Experience trusted-device lifecycle events', () => {
     });
     usage.validateCredential.mockResolvedValueOnce(trustedDevice).mockResolvedValueOnce(null);
 
-    await expect(usage.subject.tryFulfillMfa(userId)).resolves.toBe(true);
-    await expect(usage.subject.tryFulfillMfa(userId)).resolves.toBe(false);
+    await expect(usage.subject.tryVerifyMfa(userId)).resolves.toBe(true);
+    await expect(usage.subject.tryVerifyMfa(userId)).resolves.toBe(false);
     await usage.subject.finalize({
       interactionEvent: InteractionEvent.SignIn,
       userId,
@@ -216,6 +218,17 @@ describe('Experience trusted-device lifecycle events', () => {
 
     expect(usage.updateMetadata).not.toHaveBeenCalled();
     expect(usage.createLog).not.toHaveBeenCalled();
+  });
+
+  it('skips policy and credential validation when no trusted-device cookie is present', async () => {
+    const usage = createSubject({ data: {} });
+    usage.hasCredential.mockReturnValueOnce(false);
+
+    await expect(usage.subject.tryVerifyMfa(userId)).resolves.toBe(false);
+
+    expect(usage.hasCredential).toHaveBeenCalledWith(usage.ctx, userId);
+    expect(usage.getEffectivePolicy).not.toHaveBeenCalled();
+    expect(usage.validateCredential).not.toHaveBeenCalled();
   });
 
   it('uses one audit-log key across concurrent requests for the same interaction', async () => {
@@ -233,7 +246,7 @@ describe('Experience trusted-device lifecycle events', () => {
     });
 
     await expect(
-      Promise.all([first.subject.tryFulfillMfa(userId), second.subject.tryFulfillMfa(userId)])
+      Promise.all([first.subject.tryVerifyMfa(userId), second.subject.tryVerifyMfa(userId)])
     ).resolves.toEqual([true, true]);
 
     const options = {
@@ -251,7 +264,7 @@ describe('Experience trusted-device lifecycle events', () => {
     expect(secondIdempotencyKey).toBe(firstIdempotencyKey);
   });
 
-  it('reuses one audit-log idempotency key for concurrent or sequential fulfillment retries', async () => {
+  it('reuses one audit-log idempotency key for concurrent or sequential verification retries', async () => {
     const usage = createSubject({
       data: {},
       updateResult: trustedDevice,
@@ -263,7 +276,7 @@ describe('Experience trusted-device lifecycle events', () => {
       hasEligibleMfaProof: false,
     };
 
-    await usage.subject.tryFulfillMfa(userId);
+    await usage.subject.tryVerifyMfa(userId);
     await Promise.all([usage.subject.finalize(options), usage.subject.finalize(options)]);
     await usage.subject.finalize(options);
 
@@ -295,7 +308,7 @@ describe('Experience trusted-device lifecycle events', () => {
         hasEligibleMfaProof: true,
       })
     ).resolves.toBeUndefined();
-    await usage.subject.tryFulfillMfa(userId);
+    await usage.subject.tryVerifyMfa(userId);
     await expect(
       usage.subject.finalize({
         interactionEvent: InteractionEvent.SignIn,
