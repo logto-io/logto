@@ -19,15 +19,31 @@ describe('getProviderFetchConfig', () => {
     Sinon.stub(EnvSet, 'values').value({
       ...EnvSet.values,
       isSsrfProtectionEnabled: true,
+      ssrfAllowedAddresses: [],
     });
 
     expect(getProviderFetchConfig()).toBeUndefined();
+  });
+
+  /**
+   * The provider's built-in guard has no hook for the allowlist, so a listed address would stay
+   * unreachable on this path while being reachable through webhooks and SSO connectors.
+   */
+  it('should override the provider fetch when an allowlist is configured', () => {
+    Sinon.stub(EnvSet, 'values').value({
+      ...EnvSet.values,
+      isSsrfProtectionEnabled: true,
+      ssrfAllowedAddresses: ['127.0.0.1'],
+    });
+
+    expect(getProviderFetchConfig()).toHaveProperty('fetch');
   });
 
   it('should drop the SSRF-protecting dispatcher when protection is disabled', async () => {
     Sinon.stub(EnvSet, 'values').value({
       ...EnvSet.values,
       isSsrfProtectionEnabled: false,
+      ssrfAllowedAddresses: [],
     });
     const fetchStub = Sinon.stub(globalThis, 'fetch').resolves(new Response());
     const config = getProviderFetchConfig();
