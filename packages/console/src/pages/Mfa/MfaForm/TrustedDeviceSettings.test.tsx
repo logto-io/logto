@@ -58,12 +58,17 @@ function TestForm({ isDisabled = false, onSubmit }: Props) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, dirtyFields },
   } = useForm<MfaConfigForm>({ defaultValues, mode: 'onChange' });
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <TrustedDeviceSettings isDisabled={isDisabled} register={register} errors={errors} />
+      <TrustedDeviceSettings
+        isDisabled={isDisabled}
+        isDurationDirty={Boolean(dirtyFields.trustedDeviceDurationDays)}
+        register={register}
+        errors={errors}
+      />
       <button type="submit">Save</button>
     </form>
   );
@@ -79,10 +84,6 @@ describe('TrustedDeviceSettings', () => {
 
     expect(enableSwitch.checked).toBe(false);
     expect(durationInput.value).toBe('30');
-    expect(screen.getByRole('note').textContent).toBe(
-      'admin_console.mfa.trusted_device.duration_note'
-    );
-
     fireEvent.click(enableSwitch);
     fireEvent.change(durationInput, { target: { value: '365' } });
     fireEvent.click(screen.getByRole('button', { name: 'Save' }));
@@ -95,6 +96,28 @@ describe('TrustedDeviceSettings', () => {
         }),
         expect.anything()
       );
+    });
+  });
+
+  it('shows the duration note only while the duration value differs from the saved value', async () => {
+    render(<TestForm onSubmit={jest.fn()} />);
+
+    const durationInput = screen.getByRole('spinbutton');
+
+    expect(screen.queryByRole('note')).toBeNull();
+
+    fireEvent.change(durationInput, { target: { value: '365' } });
+
+    await waitFor(() => {
+      expect(screen.getByRole('note').textContent).toBe(
+        'admin_console.mfa.trusted_device.duration_note'
+      );
+    });
+
+    fireEvent.change(durationInput, { target: { value: '30' } });
+
+    await waitFor(() => {
+      expect(screen.queryByRole('note')).toBeNull();
     });
   });
 
