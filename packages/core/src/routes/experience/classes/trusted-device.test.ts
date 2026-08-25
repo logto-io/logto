@@ -1,6 +1,7 @@
 import { appInsights } from '@logto/app-insights/node';
 import { InteractionEvent, type TrustedDevice as TrustedDeviceModel } from '@logto/schemas';
 
+import { createMockTrustedDevice } from '#src/__mocks__/trusted-device.js';
 import { EnvSet } from '#src/env-set/index.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -14,19 +15,15 @@ const { jest } = import.meta;
 
 const userId = 'user-id';
 const trustedDeviceId = 'trusteddeviceid';
-const trustedDevice: TrustedDeviceModel = {
+const trustedDevice: TrustedDeviceModel = createMockTrustedDevice({
   tenantId: 'tenant-id',
   id: trustedDeviceId,
   userId,
-  secretHash: Buffer.alloc(32, 1),
   userAgent: 'private user agent',
   ip: '192.0.2.1',
   country: 'US',
   city: 'Portland',
-  createdAt: 1,
-  lastUsedAt: 1,
-  expiresAt: 2,
-};
+});
 
 const createContext = (interactionId = 'interaction-id') => {
   const { mockAppend, ...logContext } = createMockLogContext();

@@ -1,6 +1,7 @@
 import { TrustedDevices, type TrustedDevice } from '@logto/schemas';
 import { createMockPool, createMockQueryResult, sql } from '@silverhand/slonik';
 
+import { createMockTrustedDevice } from '#src/__mocks__/trusted-device.js';
 import { expandFields } from '#src/database/utils.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
 import type { QueryType } from '#src/utils/test-utils.js';
@@ -18,11 +19,10 @@ const queries = new TrustedDeviceQueries(pool);
 
 const { table, fields } = convertToIdentifiers(TrustedDevices);
 
-const trustedDevice: TrustedDevice = {
+const trustedDevice: TrustedDevice = createMockTrustedDevice({
   tenantId: 'tenant-id',
   id: 'trusted-device-id',
   userId: 'user-id',
-  secretHash: Buffer.alloc(32, 1),
   userAgent: 'user-agent',
   ip: '127.0.0.1',
   country: 'US',
@@ -30,7 +30,7 @@ const trustedDevice: TrustedDevice = {
   createdAt: 1,
   lastUsedAt: 1,
   expiresAt: 2,
-};
+});
 
 describe('trusted device queries', () => {
   beforeEach(() => {
