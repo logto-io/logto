@@ -45,6 +45,13 @@ const subscription = {
     },
   },
   quota_item,
+  cancel_feedback_modal: {
+    title: 'Que pena ver você partir',
+    description:
+      'Sua assinatura foi cancelada. Seu feedback nos ajuda a melhorar o Logto. Lemos todas as respostas.',
+    what_made_you_cancel: 'O que fez você cancelar?',
+    how_to_reconsider: 'O que poderíamos fazer para você reconsiderar?',
+  },
   downgrade_modal: {
     title: 'Tem certeza de que deseja fazer downgrade?',
     description:

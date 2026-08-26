@@ -46,6 +46,13 @@ const subscription = {
     },
   },
   quota_item,
+  cancel_feedback_modal: {
+    title: 'Désolé de vous voir partir',
+    description:
+      'Votre abonnement a été annulé. Vos retours nous aident à améliorer Logto. Nous lisons chaque réponse.',
+    what_made_you_cancel: "Qu'est-ce qui vous a poussé à annuler?",
+    how_to_reconsider: "Que pourrions-nous faire pour vous faire changer d'avis?",
+  },
   downgrade_modal: {
     title: 'Êtes-vous sûr de vouloir passer à un Plan Inférieur?',
     description:

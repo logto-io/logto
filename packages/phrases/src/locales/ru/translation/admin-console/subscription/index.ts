@@ -44,6 +44,13 @@ const subscription = {
     },
   },
   quota_item,
+  cancel_feedback_modal: {
+    title: 'Жаль, что вы уходите',
+    description:
+      'Ваша подписка отменена. Ваши отзывы помогают нам делать Logto лучше. Мы читаем каждый ответ.',
+    what_made_you_cancel: 'Что побудило вас отменить подписку?',
+    how_to_reconsider: 'Что мы могли бы сделать, чтобы вы передумали?',
+  },
   downgrade_modal: {
     title: 'Вы действительно хотите понизить уровень?',
     description:
