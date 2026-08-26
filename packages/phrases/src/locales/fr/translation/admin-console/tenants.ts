@@ -16,6 +16,10 @@ const tenants = {
     card_description:
       'Ajoutez des administrateurs ou des collaborateurs à votre locataire sans partager un seul compte administrateur.',
     card_action: 'Découvrir Logto Cloud',
+    self_hosted_card_title: 'Gérez vos locataires plus sûrement avec les plans auto-hébergés',
+    self_hosted_card_description:
+      'Ajoutez des administrateurs ou des collaborateurs à votre locataire sans partager un seul compte administrateur.',
+    self_hosted_card_action: 'Découvrir les plans auto-hébergés',
   },
   settings: {
     title: 'PARAMÈTRES',

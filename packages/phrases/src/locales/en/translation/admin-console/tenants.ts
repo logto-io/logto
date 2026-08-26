@@ -16,6 +16,10 @@ const tenants = {
     card_description:
       'Add admins or collaborators to your tenant without sharing a single admin account.',
     card_action: 'Explore Logto Cloud',
+    self_hosted_card_title: 'Manage tenants more securely with self-hosted plans',
+    self_hosted_card_description:
+      'Add admins or collaborators to your tenant without sharing a single admin account.',
+    self_hosted_card_action: 'Explore self-hosted plans',
   },
   settings: {
     title: 'SETTINGS',

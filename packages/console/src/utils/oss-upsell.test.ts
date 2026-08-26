@@ -1,4 +1,10 @@
-import { buildCloudUpsellUrl, openCloudUpsell, ossUpsellEntries } from './oss-upsell';
+import {
+  buildCloudUpsellUrl,
+  buildSelfHostedPlansUrl,
+  openCloudUpsell,
+  openSelfHostedPlansUpsell,
+  ossUpsellEntries,
+} from './oss-upsell';
 
 describe('oss upsell helpers', () => {
   const mockWindowOpen = jest.fn<ReturnType<typeof window.open>, Parameters<typeof window.open>>();
@@ -20,6 +26,17 @@ describe('oss upsell helpers', () => {
     expect(url.searchParams.get('utm_content')).toBe('get_started_oss_cloud_banner');
   });
 
+  it('builds a self-hosted plans URL with a dedicated campaign value', () => {
+    const url = new URL(buildSelfHostedPlansUrl(ossUpsellEntries.tenantSettingsMembersOssUpsell));
+
+    expect(url.origin).toBe('https://logto.io');
+    expect(url.pathname).toBe('/self-hosted-plans');
+    expect(url.searchParams.get('utm_source')).toBe('logto_oss');
+    expect(url.searchParams.get('utm_medium')).toBe('console');
+    expect(url.searchParams.get('utm_campaign')).toBe('self_hosted_plans');
+    expect(url.searchParams.get('utm_content')).toBe('tenant_settings_members_oss_upsell');
+  });
+
   it('opens the UTM-tagged Cloud URL in a new tab', () => {
     const targetUrl = openCloudUpsell({
       entry: ossUpsellEntries.ossSidebarCloudCard,
@@ -29,6 +46,19 @@ describe('oss upsell helpers', () => {
     expect(targetUrl).toContain('utm_medium=console');
     expect(targetUrl).toContain('utm_campaign=cloud_upsell');
     expect(targetUrl).toContain('utm_content=oss_sidebar_cloud_card');
+    expect(mockWindowOpen).toHaveBeenCalledWith(targetUrl, '_blank', 'noopener,noreferrer');
+  });
+
+  it('opens the UTM-tagged self-hosted plans URL in a new tab', () => {
+    const targetUrl = openSelfHostedPlansUpsell({
+      entry: ossUpsellEntries.tenantSettingsMembersOssUpsell,
+    });
+
+    expect(targetUrl).toContain('https://logto.io/self-hosted-plans');
+    expect(targetUrl).toContain('utm_source=logto_oss');
+    expect(targetUrl).toContain('utm_medium=console');
+    expect(targetUrl).toContain('utm_campaign=self_hosted_plans');
+    expect(targetUrl).toContain('utm_content=tenant_settings_members_oss_upsell');
     expect(mockWindowOpen).toHaveBeenCalledWith(targetUrl, '_blank', 'noopener,noreferrer');
   });
 
