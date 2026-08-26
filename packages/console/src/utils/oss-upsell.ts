@@ -14,6 +14,7 @@ export const ossUpsellEntries = Object.freeze({
   ossSidebarCloudCard: 'oss_sidebar_cloud_card',
   tenantSettingsMembersOssUpsell: 'tenant_settings_members_oss_upsell',
   connectorEmailBuiltinUpsellBanner: 'connector_email_builtin_upsell_banner',
+  enterpriseSsoIdpInitiatedOssUpsell: 'enterprise_sso_idp_initiated_oss_upsell',
 });
 
 type OssUpsellEntry = (typeof ossUpsellEntries)[keyof typeof ossUpsellEntries];

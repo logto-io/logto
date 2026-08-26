@@ -85,6 +85,8 @@ const enterprise_sso_details = {
     enable_idp_initiated_sso: "IdP başlatmalı SSO'yu etkinleştir",
     enable_idp_initiated_sso_description:
       'Kurumsal kullanıcıların kimlik sağlayıcı portalından kimlik doğrulama sürecine doğrudan başlamalarına izin verin. Bu özelliği etkinleştirmeden önce olası güvenlik risklerini anlayın.',
+    self_hosted_note:
+      'IdP başlatmalı SSO, <selfHosted>self-hosted planlarla</selfHosted> kullanılabilir. Ayrıca <a>Logto Cloud</a> içinde yerel olarak da kullanılabilir.',
     default_application: 'Varsayılan uygulama',
     default_application_tooltip:
       'Kullanıcının kimlik doğrulama sonrası yönlendirileceği hedef uygulama.',

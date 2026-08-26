@@ -85,6 +85,8 @@ const enterprise_sso_details = {
     enable_idp_initiated_sso: 'IdP によって開始された SSO を有効にする',
     enable_idp_initiated_sso_description:
       '企業ユーザーがアイデンティティプロバイダーのポータルから直接認証プロセスを開始できるようにします。この機能を有効にする前に潜在的なセキュリティリスクを確認してください。',
+    self_hosted_note:
+      'IdP 起点の SSO は <selfHosted>セルフホストプラン</selfHosted> で利用できます。また <a>Logto Cloud</a> でもネイティブに利用できます。',
     default_application: 'デフォルトアプリケーション',
     default_application_tooltip: 'ユーザーが認証後にリダイレクトされる目標アプリケーション。',
     empty_applications_error:

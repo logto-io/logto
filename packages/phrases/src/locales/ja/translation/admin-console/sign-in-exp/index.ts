@@ -46,6 +46,8 @@ const sign_in_exp = {
     hide_logto_branding_description:
       '「Powered by Logto」を削除します。クリーンでプロフェッショナルなサインイン体験で自社ブランドだけを際立たせましょう。',
     hide_logto_branding_oss_note: 'この機能は <a>Logto Cloud</a> でネイティブに利用できます。',
+    hide_logto_branding_self_hosted_note:
+      'この機能は <selfHosted>セルフホストプラン</selfHosted> で利用できます。また <a>Logto Cloud</a> でもネイティブに利用できます。',
   },
   branding_uploads: {
     app_logo: {
@@ -96,6 +98,8 @@ const sign_in_exp = {
     bring_your_ui_oss_description: '独自のコードでサインイン UI をカスタマイズします。',
     bring_your_ui_oss_card_description:
       'カスタムのサインイン UI を <a>Logto Cloud</a> に直接アップロードできます。フォークや再デプロイは不要です。',
+    bring_your_ui_self_hosted_card_description:
+      'カスタムのサインイン UI は <selfHosted>セルフホストプラン</selfHosted> でアップロードできます。<a>Logto Cloud</a> に直接アップロードすることもできます。',
     bring_your_ui_oss_try_cloud: 'Cloud を試す',
     preview_with_bring_your_ui_description:
       'カスタム UI のアセットは正常にアップロードされ、現在提供されています。したがって、組み込みのプレビューウィンドウは無効になりました。\nパーソナライズされたサインイン UI をテストするには、「ライブプレビュー」ボタンをクリックして新しいブラウザタブで開きます。',

@@ -84,6 +84,8 @@ const enterprise_sso_details = {
     enable_idp_initiated_sso: 'تمكين SSO الذي يبدأ من IdP',
     enable_idp_initiated_sso_description:
       'السماح للمستخدمين الشركات ببدء عملية المصادقة مباشرة من بوابة موفر الهوية. يرجى فهم المخاطر الأمنية المحتملة قبل تمكين هذه الميزة.',
+    self_hosted_note:
+      'ميزة SSO التي يبدأها موفر الهوية متاحة مع <selfHosted>خطط الاستضافة الذاتية</selfHosted>. وهي متاحة أيضًا بشكل أصلي في <a>Logto Cloud</a>.',
     default_application: 'التطبيق الافتراضي',
     default_application_tooltip: 'التطبيق الهدف الذي سيتم توجيه المستخدم إليه بعد المصادقة.',
     empty_applications_error:

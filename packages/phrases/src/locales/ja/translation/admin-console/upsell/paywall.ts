@@ -45,6 +45,8 @@ const paywall = {
     '追加の SAML アプリは Logto エンタープライズプランで利用可能です。サポートが必要な場合は、お問い合わせください。',
   saml_applications_oss_limit_notice:
     'オープンソース版のインスタンスでは、最大 {{limit}} 個の SAML アプリケーションを利用できます。追加の選択肢については、Logto Cloud を利用するか、お問い合わせください。',
+  saml_applications_oss_limit_notice_self_hosted:
+    'オープンソース版のインスタンスでは、最大 {{limit}} 個の SAML アプリケーションを利用できます。セルフホストプランでさらに多くの SAML アプリを解除するか、Logto Cloud をご利用ください。',
   logto_pricing_button_text: 'Logto クラウド価格設定',
   saml_applications:
     '追加の SAML アプリは Logto エンタープライズプランで利用可能です。サポートが必要な場合は、お問い合わせください。',

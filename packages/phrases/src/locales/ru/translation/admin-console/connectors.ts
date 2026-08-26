@@ -87,6 +87,8 @@ const connectors = {
       title: 'Встроенный почтовый сервис Logto',
       description:
         'Отправка писем без настройки. Сразу отправляйте коды подтверждения и magic link.',
+      self_hosted_description:
+        'Отправка писем без настройки с self-hosted Enterprise. Сразу отправляйте коды подтверждения и magic link или попробуйте Logto Cloud.',
     },
     standard_connectors:
       'Или вы можете настроить свой социальный коннектор с помощью стандартного протокола.',
