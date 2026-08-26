@@ -145,6 +145,9 @@ export const createTrustedDeviceLibrary = (
   const getCookieName = (userId: string) =>
     getTrustedDeviceCookieName(tenantId, userId, isProduction);
 
+  const hasCredential = (ctx: TrustedDeviceCookieContext, userId: string) =>
+    Boolean(ctx.cookies.get(getCookieName(userId), { signed: false }));
+
   const clearCredential = (ctx: TrustedDeviceCookieContext, userId: string) => {
     ctx.cookies.set(getCookieName(userId), '', {
       expires: new Date(0),
@@ -305,6 +308,7 @@ export const createTrustedDeviceLibrary = (
     createCredential,
     deleteByIdAndUserId,
     getCookieName,
+    hasCredential,
     updateMetadata,
     validateCredential,
     writeCredential,

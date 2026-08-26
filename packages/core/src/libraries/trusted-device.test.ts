@@ -111,6 +111,23 @@ describe('trusted device library', () => {
     jest.restoreAllMocks();
   });
 
+  it('checks for an unsigned user-specific trusted-device cookie', () => {
+    const queries = createQueries();
+    const { ctx, get } = createCookieContext('credential');
+    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(), {
+      isProduction: false,
+    });
+
+    expect(library.hasCredential(ctx, userId)).toBe(true);
+    expect(get).toHaveBeenCalledWith(getTrustedDeviceCookieName(tenantId, userId, false), {
+      signed: false,
+    });
+
+    const { ctx: emptyContext } = createCookieContext();
+
+    expect(library.hasCredential(emptyContext, userId)).toBe(false);
+  });
+
   it('creates a record with only the secret hash and writes an unsigned host-only cookie', async () => {
     const now = Date.now();
     const durationDays = 7;

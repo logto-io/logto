@@ -53,6 +53,7 @@ const adaptiveMfaSignInExperience: SignInExperience = {
 const findDefaultSignInExperience = jest.fn().mockResolvedValue(requiredMfaSignInExperience);
 const findUserById = jest.fn().mockResolvedValue(mockUserWithMfaVerifications);
 const getEffectivePolicy = jest.fn().mockResolvedValue({ enabled: true, durationDays: 30 });
+const hasCredential = jest.fn().mockReturnValue(true);
 const validateCredential = jest.fn();
 
 const tenant = new MockTenant(
@@ -64,7 +65,7 @@ const tenant = new MockTenant(
   undefined,
   {
     trustedDevicePolicy: { getEffectivePolicy },
-    trustedDevices: { validateCredential },
+    trustedDevices: { hasCredential, validateCredential },
   }
 );
 
@@ -127,7 +128,7 @@ const expectConventionalMfaRequired = async (
   );
 };
 
-describe('ExperienceInteraction trusted-device MFA fulfillment', () => {
+describe('ExperienceInteraction trusted-device MFA verification', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle the mocked feature environment per test.
@@ -135,6 +136,7 @@ describe('ExperienceInteraction trusted-device MFA fulfillment', () => {
     findDefaultSignInExperience.mockResolvedValue(requiredMfaSignInExperience);
     findUserById.mockResolvedValue(mockUserWithMfaVerifications);
     getEffectivePolicy.mockResolvedValue({ enabled: true, durationDays: 30 });
+    hasCredential.mockReturnValue(true);
   });
 
   afterEach(() => {
@@ -169,31 +171,33 @@ describe('ExperienceInteraction trusted-device MFA fulfillment', () => {
     expect(validateCredential).not.toHaveBeenCalled();
   });
 
-  it('restores matching interaction fulfillment before resolving effective policy', async () => {
+  it('ignores legacy interaction fulfillment and revalidates the trusted-device credential', async () => {
     findDefaultSignInExperience.mockResolvedValueOnce(adaptiveMfaSignInExperience);
-    const fulfillment = {
-      userId: mockUserWithMfaVerifications.id,
-      trustedDeviceId: trustedDevice.id,
-      fulfilledAt: 1_786_435_200_000,
-    };
+    validateCredential.mockResolvedValueOnce(trustedDevice);
     const { ctx, experienceInteraction } = createInteraction(
-      { trustedDeviceFulfillment: fulfillment },
+      {
+        // A pending interaction created before request-local fulfillment may still contain this field.
+        trustedDeviceFulfillment: {
+          userId: mockUserWithMfaVerifications.id,
+          trustedDeviceId: trustedDevice.id,
+          fulfilledAt: 1_786_435_200_000,
+        },
+      },
       { 'x-logto-cf-bot-score': '10' }
     );
 
     await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.toBeUndefined();
 
-    expect(experienceInteraction.toJson().trustedDeviceFulfillment).toEqual(fulfillment);
-    expect(getEffectivePolicy).not.toHaveBeenCalled();
-    expect(validateCredential).not.toHaveBeenCalled();
-    expect(ctx.assignReleaseAnywayInteractionHookResult).not.toHaveBeenCalled();
+    expect(getEffectivePolicy).toHaveBeenCalledWith(mockUserWithMfaVerifications.id);
+    expect(validateCredential).toHaveBeenCalledWith(ctx, mockUserWithMfaVerifications.id);
+    expect(experienceInteraction.toJson()).not.toHaveProperty('trustedDeviceFulfillment');
   });
 
-  it('does not use fulfillment stored for another user', async () => {
+  it('rechecks policy instead of reusing legacy interaction fulfillment', async () => {
     getEffectivePolicy.mockResolvedValueOnce({ enabled: false, durationDays: 30 });
     const { experienceInteraction } = createInteraction({
       trustedDeviceFulfillment: {
-        userId: 'another-user',
+        userId: mockUserWithMfaVerifications.id,
         trustedDeviceId: trustedDevice.id,
         fulfilledAt: 1_786_435_200_000,
       },
@@ -205,46 +209,49 @@ describe('ExperienceInteraction trusted-device MFA fulfillment', () => {
     expect(validateCredential).not.toHaveBeenCalled();
   });
 
-  it('falls back to conventional MFA when credential validation does not fulfill the guard', async () => {
+  it('skips policy and credential validation when no trusted-device cookie is present', async () => {
+    hasCredential.mockReturnValueOnce(false);
+    const { ctx, experienceInteraction } = createInteraction();
+
+    await expectConventionalMfaRequired(experienceInteraction);
+
+    expect(hasCredential).toHaveBeenCalledWith(ctx, mockUserWithMfaVerifications.id);
+    expect(getEffectivePolicy).not.toHaveBeenCalled();
+    expect(validateCredential).not.toHaveBeenCalled();
+  });
+
+  it('falls back to conventional MFA when credential validation does not verify the guard', async () => {
     const { ctx, experienceInteraction } = createInteraction();
 
     await expectConventionalMfaRequired(experienceInteraction);
 
     expect(getEffectivePolicy).toHaveBeenCalledWith(mockUserWithMfaVerifications.id);
     expect(validateCredential).toHaveBeenCalledWith(ctx, mockUserWithMfaVerifications.id);
-    expect(experienceInteraction.toJson().trustedDeviceFulfillment).toBeUndefined();
+    expect(experienceInteraction.toJson()).not.toHaveProperty('trustedDeviceFulfillment');
   });
 
-  it('stores valid credential fulfillment internally without exposing it publicly', async () => {
-    const fulfilledAt = 1_786_435_200_000;
-    jest.spyOn(Date, 'now').mockReturnValue(fulfilledAt);
-    validateCredential.mockResolvedValueOnce(trustedDevice);
+  it('revalidates the trusted-device credential every time the guard runs', async () => {
+    validateCredential.mockResolvedValue(trustedDevice);
     const { ctx, experienceInteraction } = createInteraction();
 
     await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.toBeUndefined();
+    await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.toBeUndefined();
 
+    expect(getEffectivePolicy).toHaveBeenCalledTimes(2);
+    expect(validateCredential).toHaveBeenCalledTimes(2);
     expect(validateCredential).toHaveBeenCalledWith(ctx, mockUserWithMfaVerifications.id);
-    expect(experienceInteraction.toJson().trustedDeviceFulfillment).toEqual({
-      userId: mockUserWithMfaVerifications.id,
-      trustedDeviceId: trustedDevice.id,
-      fulfilledAt,
-    });
+    expect(experienceInteraction.toJson()).not.toHaveProperty('trustedDeviceFulfillment');
     expect(experienceInteraction.toSanitizedJson()).not.toHaveProperty('trustedDeviceFulfillment');
   });
 
-  it('allows a valid trusted device to fulfill adaptive MFA', async () => {
+  it('allows a valid trusted device to verify adaptive MFA', async () => {
     findDefaultSignInExperience.mockResolvedValueOnce(adaptiveMfaSignInExperience);
     validateCredential.mockResolvedValueOnce(trustedDevice);
     const { ctx, experienceInteraction } = createInteraction({}, { 'x-logto-cf-bot-score': '10' });
 
     await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.toBeUndefined();
 
-    expect(experienceInteraction.toJson().trustedDeviceFulfillment).toEqual(
-      expect.objectContaining({
-        userId: mockUserWithMfaVerifications.id,
-        trustedDeviceId: trustedDevice.id,
-      })
-    );
+    expect(experienceInteraction.toJson()).not.toHaveProperty('trustedDeviceFulfillment');
     expect(ctx.assignReleaseAnywayInteractionHookResult).toHaveBeenCalledWith({
       event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
       payload: {
@@ -259,7 +266,7 @@ describe('ExperienceInteraction trusted-device MFA fulfillment', () => {
     });
   });
 
-  it('does not enable trusted-device fulfillment when dev features are disabled', async () => {
+  it('does not enable trusted-device verification when dev features are disabled', async () => {
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Verify the feature-level runtime guard.
     mockEnvSetValues.isDevFeaturesEnabled = false;
     validateCredential.mockResolvedValueOnce(trustedDevice);

@@ -201,11 +201,6 @@ export type InteractionStorage = {
   trustedDeviceCreation?: {
     deviceId: string;
   };
-  trustedDeviceFulfillment?: {
-    userId: string;
-    trustedDeviceId: string;
-    fulfilledAt: number;
-  };
   profile?: InteractionProfile;
   mfa?: MfaData;
   verificationRecords?: VerificationRecordData[];
@@ -222,13 +217,6 @@ export const interactionStorageGuard = z.object({
   trustedDeviceCreation: z
     .object({
       deviceId: TrustedDevices.guard.shape.id,
-    })
-    .optional(),
-  trustedDeviceFulfillment: z
-    .object({
-      userId: z.string(),
-      trustedDeviceId: z.string(),
-      fulfilledAt: z.number(),
     })
     .optional(),
   profile: interactionProfileGuard.optional(),
