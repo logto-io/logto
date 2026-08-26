@@ -37,6 +37,7 @@ describe('guard', () => {
           skippable: true,
           suggestion: true,
           isWebAuthnUsedAsSignInPasskey: true,
+          trustedDevice: { canCreate: true, durationDays: 30 },
         },
         mfaErrorDataGuard
       );

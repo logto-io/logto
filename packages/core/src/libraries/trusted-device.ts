@@ -13,7 +13,10 @@ import { EnvSet } from '#src/env-set/index.js';
 import type { TrustedDeviceMetadata, TrustedDeviceQueries } from '#src/queries/trusted-device.js';
 
 import type { HookContextManager } from './hook/context-manager.js';
-import type { createTrustedDevicePolicyLibrary } from './trusted-device-policy.js';
+import type {
+  createTrustedDevicePolicyLibrary,
+  EffectiveTrustedDevicePolicy,
+} from './trusted-device-policy.js';
 
 const trustedDeviceSecretByteLength = 32;
 const trustedDeviceSecretHashAlgorithm = 'sha256';
@@ -40,6 +43,7 @@ type CreateTrustedDeviceCredential = TrustedDeviceMetadata &
   Readonly<{
     ctx: TrustedDeviceCookieContext;
     deviceId: string;
+    effectivePolicy?: EffectiveTrustedDevicePolicy;
     userId: string;
   }>;
 
@@ -201,10 +205,11 @@ export const createTrustedDeviceLibrary = (
   const createCredential = async ({
     ctx,
     deviceId,
+    effectivePolicy,
     userId,
     ...metadata
   }: CreateTrustedDeviceCredential) => {
-    const policy = await policyLibrary.getEffectivePolicy(userId);
+    const policy = effectivePolicy ?? (await policyLibrary.getEffectivePolicy(userId));
 
     if (!policy.enabled) {
       return;

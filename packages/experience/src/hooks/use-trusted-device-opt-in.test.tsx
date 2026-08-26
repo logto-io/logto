@@ -1,24 +1,34 @@
+import { MfaFactor } from '@logto/schemas';
 import { render } from '@testing-library/react';
-
-import { getInteraction } from '@/apis/experience';
+import { MemoryRouter } from 'react-router-dom';
 
 import useTrustedDeviceOptIn from './use-trusted-device-opt-in';
-
-jest.mock('@/apis/experience', () => ({
-  getInteraction: jest.fn(),
-}));
 
 jest.mock('@/constants/env', () => ({
   isDevFeaturesEnabled: false,
 }));
 
 const TestHook = () => {
-  useTrustedDeviceOptIn();
-  return null;
+  const { availability } = useTrustedDeviceOptIn();
+  return <span>{JSON.stringify(availability)}</span>;
 };
 
-it('does not query trusted-device availability when dev features are disabled', () => {
-  render(<TestHook />);
+it('ignores router-state availability when dev features are disabled', () => {
+  const { container } = render(
+    <MemoryRouter
+      initialEntries={[
+        {
+          pathname: '/',
+          state: {
+            availableFactors: [MfaFactor.TOTP],
+            trustedDevice: { canCreate: true, durationDays: 30 },
+          },
+        },
+      ]}
+    >
+      <TestHook />
+    </MemoryRouter>
+  );
 
-  expect(getInteraction).not.toBeCalled();
+  expect(container.textContent).toBe('');
 });

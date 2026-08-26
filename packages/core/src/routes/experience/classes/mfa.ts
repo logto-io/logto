@@ -11,6 +11,7 @@ import {
   InteractionEvent,
   type JsonObject,
   MfaPolicy,
+  type OrganizationWithRoles,
   type User,
   VerificationType,
   type Mfa as MfaSettings,
@@ -23,7 +24,7 @@ import {
   SignInIdentifier,
 } from '@logto/schemas';
 import { generateStandardId, maskEmail, maskPhone } from '@logto/shared';
-import { cond, condObject, deduplicate, pick } from '@silverhand/essentials';
+import { cond, conditional, condObject, deduplicate, pick } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -119,6 +120,7 @@ const isPasskeySkipped = (logtoConfig: JsonObject): boolean => {
 
 type SubmitMfaValidationContext = {
   mfaSettings: MfaSettings;
+  organizations?: Readonly<OrganizationWithRoles[]>;
   user: User;
   userFactors: MfaFactor[];
 };
@@ -407,7 +409,12 @@ export class Mfa {
   private async assertOptionalMfaEnablement(
     submitMfaValidationContext: SubmitMfaValidationContext
   ) {
-    const { mfaSettings, user: identifiedUser, userFactors } = submitMfaValidationContext;
+    const {
+      mfaSettings,
+      organizations,
+      user: identifiedUser,
+      userFactors,
+    } = submitMfaValidationContext;
     const { policy, factors } = mfaSettings;
 
     // If there are no factors, bypass the check.
@@ -440,26 +447,11 @@ export class Mfa {
     }
 
     // If MFA is required by organizations, bypass.
-    if (await this.isMfaRequiredByUserOrganizations(mfaSettings, userId)) {
+    if (await this.isMfaRequiredByUserOrganizations(mfaSettings, userId, organizations)) {
       return;
     }
 
-    // Since MFA `enabled` flag is introduced later, legacy users who don't have the `enabled` flag in their config should
-    // be checked if they have any MFA factors bound, in order to determine whether MFA is effectively enabled for them.
-    if (hasEnabledMfa === undefined) {
-      assertThat(
-        userFactors.length > 0,
-        new RequestError({ code: 'user.suggest_mfa', status: 422 })
-      );
-
-      // Backfill the `enabled` flag for legacy users to avoid repeated suggestions in future interactions.
-      this.markMfaEnabled();
-      return;
-    }
-
-    // Suggest MFA binding if the user has not completed MFA binding, even if the policy is not mandatory,
-    // to encourage better account security.
-    assertThat(hasEnabledMfa, new RequestError({ code: 'user.suggest_mfa', status: 422 }));
+    await this.assertOptionalMfaEnabled(hasEnabledMfa, userFactors, userId, organizations);
   }
 
   /**
@@ -471,7 +463,7 @@ export class Mfa {
   private async assertUserMandatoryMfaFulfilled(
     submitMfaValidationContext: SubmitMfaValidationContext
   ) {
-    const { mfaSettings } = submitMfaValidationContext;
+    const { mfaSettings, organizations } = submitMfaValidationContext;
     const { policy, factors } = mfaSettings;
 
     // If there are no factors, then there is nothing to check
@@ -492,7 +484,8 @@ export class Mfa {
 
     const isMfaRequiredByUserOrganizations = await this.isMfaRequiredByUserOrganizations(
       mfaSettings,
-      userId
+      userId,
+      organizations
     );
 
     // If the policy is no prompt, and mfa is not required by the user organizations, then there is nothing to check
@@ -518,15 +511,20 @@ export class Mfa {
     const linkedFactors = deduplicate([...factorsInUser, ...factorsInBind]);
 
     // Assert that the user has at least one of the required factors bound
-    assertThat(
-      configuredFactors.some((factor) => linkedFactors.includes(factor)),
-      new RequestError(
+    if (!configuredFactors.some((factor) => linkedFactors.includes(factor))) {
+      const trustedDevice = await this.getTrustedDeviceCreationAvailability(userId, organizations);
+
+      throw new RequestError(
         { code: 'user.missing_mfa', status: 422 },
-        isNoSkipMfaPolicy(policy) || isMfaRequiredByUserOrganizations
-          ? { availableFactors: configuredFactors }
-          : { availableFactors: configuredFactors, skippable: true }
-      )
-    );
+        {
+          availableFactors: configuredFactors,
+          ...conditional(
+            !isNoSkipMfaPolicy(policy) && !isMfaRequiredByUserOrganizations && { skippable: true }
+          ),
+          ...conditional(trustedDevice && { trustedDevice }),
+        }
+      );
+    }
 
     // Optional suggestion: Let Mfa decide whether to suggest additional binding during registration
     await this.guardAdditionalBindingSuggestion(factorsInUser, configuredFactors, identifiedUser);
@@ -648,15 +646,20 @@ export class Mfa {
     assertThat(isFactorsEnabled, new RequestError({ code: 'session.mfa.mfa_factor_not_enabled' }));
   }
 
-  private async isMfaRequiredByUserOrganizations(mfaSettings: MfaSettings, userId: string) {
+  private async isMfaRequiredByUserOrganizations(
+    mfaSettings: MfaSettings,
+    userId: string,
+    organizations?: Readonly<OrganizationWithRoles[]>
+  ) {
     if (mfaSettings.organizationRequiredMfaPolicy !== OrganizationRequiredMfaPolicy.Mandatory) {
       return false;
     }
 
-    const organizations =
-      await this.queries.organizations.relations.users.getOrganizationsByUserId(userId);
+    const resolvedOrganizations =
+      organizations ??
+      (await this.queries.organizations.relations.users.getOrganizationsByUserId(userId));
 
-    return organizations.some(({ isMfaRequired }) => isMfaRequired);
+    return resolvedOrganizations.some(({ isMfaRequired }) => isMfaRequired);
   }
 
   /**
@@ -675,13 +678,66 @@ export class Mfa {
       this.signInExperienceValidator.getMfaSettings(),
       this.interactionContext.getIdentifiedUser(),
     ]);
-    const userFactors = await this.getUserMfaFactors({ mfaSettings, user });
+    const [userFactors, organizations] = await Promise.all([
+      this.getUserMfaFactors({ mfaSettings, user }),
+      mfaSettings.factors.length > 0 &&
+      mfaSettings.organizationRequiredMfaPolicy === OrganizationRequiredMfaPolicy.Mandatory
+        ? this.queries.organizations.relations.users.getOrganizationsByUserId(user.id)
+        : undefined,
+    ]);
 
     return {
       mfaSettings,
+      organizations,
       user,
       userFactors,
     };
+  }
+
+  private async throwMfaSuggestion(
+    userId: string,
+    organizations?: Readonly<OrganizationWithRoles[]>
+  ): Promise<never> {
+    const trustedDevice = await this.getTrustedDeviceCreationAvailability(userId, organizations);
+
+    throw new RequestError(
+      { code: 'user.suggest_mfa', status: 422 },
+      {
+        ...conditional(trustedDevice && { trustedDevice }),
+      }
+    );
+  }
+
+  private async assertOptionalMfaEnabled(
+    hasEnabledMfa: boolean | undefined,
+    userFactors: MfaFactor[],
+    userId: string,
+    organizations?: Readonly<OrganizationWithRoles[]>
+  ) {
+    // Since MFA `enabled` flag is introduced later, legacy users who don't have the `enabled` flag in their config should
+    // be checked if they have any MFA factors bound, in order to determine whether MFA is effectively enabled for them.
+    if (hasEnabledMfa === undefined) {
+      if (userFactors.length === 0) {
+        await this.throwMfaSuggestion(userId, organizations);
+      }
+
+      // Backfill the `enabled` flag for legacy users to avoid repeated suggestions in future interactions.
+      this.markMfaEnabled();
+      return;
+    }
+
+    // Suggest MFA binding if the user has not completed MFA binding, even if the policy is not mandatory,
+    // to encourage better account security.
+    if (!hasEnabledMfa) {
+      await this.throwMfaSuggestion(userId, organizations);
+    }
+  }
+
+  private async getTrustedDeviceCreationAvailability(
+    userId: string,
+    organizations?: Readonly<OrganizationWithRoles[]>
+  ) {
+    return this.interactionContext.getTrustedDeviceCreationAvailability?.(userId, organizations);
   }
 
   private async getUserMfaFactors({

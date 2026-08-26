@@ -113,17 +113,19 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
   const handleMfaError = useCallback(
     (flow: UserMfaFlow) => {
       return async (error: RequestErrorBody) => {
+        const [_, data] = validate(error.data, mfaErrorDataGuard);
+
         if (error.code === 'user.suggest_mfa') {
-          navigate({ pathname: `/mfa-onboarding` }, { replace });
+          navigate({ pathname: `/mfa-onboarding` }, { replace, state: data });
           return;
         }
 
-        const [_, data] = validate(error.data, mfaErrorDataGuard);
         const factors = data?.availableFactors ?? [];
         const skippable = data?.skippable;
         const maskedIdentifiers = data?.maskedIdentifiers;
         const suggestion = data?.suggestion;
         const isWebAuthnUsedAsSignInPasskey = data?.isWebAuthnUsedAsSignInPasskey;
+        const trustedDevice = data?.trustedDevice;
 
         if (factors.length === 0) {
           setToast(error.message);
@@ -142,6 +144,7 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
           maskedIdentifiers,
           suggestion,
           isWebAuthnUsedAsSignInPasskey,
+          trustedDevice,
         });
       };
     },

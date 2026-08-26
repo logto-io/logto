@@ -1,33 +1,20 @@
 import api from '../api';
 
 import { experienceApiRoutes } from './const';
-import { getInteraction, submitInteraction } from './interaction';
+import { submitInteraction } from './interaction';
 
 jest.mock('../api', () => ({
   __esModule: true,
   default: {
-    get: jest.fn(),
     post: jest.fn(),
   },
 }));
 
-const mockedApiGet = api.get as jest.MockedFunction<typeof api.get>;
 const mockedApiPost = api.post as jest.MockedFunction<typeof api.post>;
 
 describe('interaction experience APIs', () => {
   afterEach(() => {
     jest.clearAllMocks();
-  });
-
-  it('gets trusted-device creation availability from public interaction data', async () => {
-    const response = { trustedDevice: { canCreate: true, durationDays: 30 } };
-    const json = jest.fn().mockResolvedValue(response);
-    mockedApiGet.mockReturnValueOnce({ json } as unknown as ReturnType<typeof api.get>);
-
-    await expect(getInteraction()).resolves.toEqual(response);
-
-    expect(mockedApiGet).toBeCalledWith(experienceApiRoutes.interaction, { signal: undefined });
-    expect(json).toBeCalled();
   });
 
   it('records selected trusted-device intent before submitting the interaction', async () => {
