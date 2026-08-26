@@ -10,7 +10,7 @@ import {
 } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { SsoConnectorApi } from '#src/api/sso-connector.js';
-import { demoAppUrl } from '#src/constants.js';
+import { demoAppUrl, isDevFeaturesEnabled } from '#src/constants.js';
 import { clearConnectorsByTypes } from '#src/helpers/connector.js';
 import { signInWithEnterpriseSso } from '#src/helpers/experience/index.js';
 import {
@@ -44,10 +44,22 @@ describe('MFA - WebAuthn', () => {
       },
       forgotPasswordMethods: [],
     });
+
+    if (isDevFeaturesEnabled) {
+      await updateSignInExperience({
+        trustedDevice: { enabled: true, durationDays: 365 },
+      });
+    }
   });
 
   afterAll(async () => {
     await resetMfaSettings();
+
+    if (isDevFeaturesEnabled) {
+      await updateSignInExperience({
+        trustedDevice: { enabled: false },
+      });
+    }
   });
 
   it('should bind WebAuthn when registering and verify WebAuthn when signing in', async () => {
@@ -73,6 +85,13 @@ describe('MFA - WebAuthn', () => {
     );
     // Wait for the page to process submitting request.
     await waitFor(500);
+
+    if (isDevFeaturesEnabled) {
+      await experience.toMatchElement('div[role=checkbox][aria-checked=false]', {
+        text: 'Trust this device for 365 days',
+      });
+    }
+
     await experience.toVerifyViaPasskey();
 
     await experience.clearVirtualAuthenticator();

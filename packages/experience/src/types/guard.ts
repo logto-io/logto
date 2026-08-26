@@ -79,7 +79,7 @@ const trustedDeviceAvailabilityGuard = s.object({
   durationDays: s.optional(s.number()),
 });
 
-export const mfaErrorDataGuard = s.object({
+const mfaErrorDataShape = {
   availableFactors: s.optional(mfaFactorsGuard),
   skippable: s.optional(s.boolean()),
   maskedIdentifiers: s.optional(s.record(s.enums(mfaFactorEnumValues), s.string())),
@@ -88,12 +88,15 @@ export const mfaErrorDataGuard = s.object({
   // Whether the current WebAuthn factor is used as a sign-in passkey.
   isWebAuthnUsedAsSignInPasskey: s.optional(s.boolean()),
   trustedDevice: s.optional(trustedDeviceAvailabilityGuard),
-});
+};
 
-export const mfaFlowStateGuard = s.assign(
-  mfaErrorDataGuard,
-  s.object({ availableFactors: mfaFactorsGuard })
-);
+export const mfaErrorDataGuard = s.object(mfaErrorDataShape);
+
+// MFA route state can include page-specific fields such as WebAuthn options or TOTP secrets.
+export const mfaFlowStateGuard = s.type({
+  ...mfaErrorDataShape,
+  availableFactors: mfaFactorsGuard,
+});
 
 export type MfaFlowState = s.Infer<typeof mfaFlowStateGuard>;
 export type TrustedDeviceAvailability = s.Infer<typeof trustedDeviceAvailabilityGuard>;

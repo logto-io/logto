@@ -20,7 +20,11 @@ const TestOptIn = ({ isEnabled = true }: { readonly isEnabled?: boolean }) => {
   );
 };
 
-const renderOptIn = (trustedDevice?: TrustedDeviceAvailability, isEnabled = true) =>
+const renderOptIn = (
+  trustedDevice?: TrustedDeviceAvailability,
+  isEnabled = true,
+  additionalState: Record<string, unknown> = {}
+) =>
   render(
     <MemoryRouter
       initialEntries={[
@@ -29,6 +33,7 @@ const renderOptIn = (trustedDevice?: TrustedDeviceAvailability, isEnabled = true
           state: {
             availableFactors: [MfaFactor.TOTP],
             trustedDevice,
+            ...additionalState,
           },
         },
       ]}
@@ -52,6 +57,14 @@ describe('<TrustedDeviceOptIn />', () => {
     });
 
     expect(checkbox?.getAttribute('aria-checked')).toBe('true');
+  });
+
+  it('shows the checkbox when WebAuthn options are included in route state', () => {
+    const { container } = renderOptIn({ canCreate: true, durationDays: 365 }, true, {
+      options: { challenge: 'challenge' },
+    });
+
+    expect(container.querySelector('[role="checkbox"]')).not.toBeNull();
   });
 
   it('stays hidden when MFA flow state disallows creation', () => {
