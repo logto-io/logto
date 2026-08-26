@@ -16,6 +16,7 @@ import type { Middleware } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
+import { createMockTrustedDevice } from '#src/__mocks__/trusted-device.js';
 import {
   mockUser,
   mockUserBackupCodeMfaVerification,
@@ -88,19 +89,8 @@ const eligibleTrustedDeviceVerificationCases: Array<{
   },
 ];
 
-const buildTrustedDevice = (userId: string): TrustedDevice => ({
-  tenantId: 'tenant-id',
-  id: 'trusted-device-id',
-  userId,
-  secretHash: Buffer.alloc(32, 1),
-  userAgent: null,
-  ip: null,
-  country: null,
-  city: null,
-  createdAt: 1,
-  lastUsedAt: 1,
-  expiresAt: 2,
-});
+const buildTrustedDevice = (userId: string): TrustedDevice =>
+  createMockTrustedDevice({ tenantId: 'tenant-id', userId });
 
 const createLogMiddleware = (): {
   middleware: Middleware<unknown, IRouterParamContext>;

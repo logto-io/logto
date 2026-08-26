@@ -1,8 +1,8 @@
 import { UserScope } from '@logto/core-kit';
-import { AccountCenterControlValue, type TrustedDevice, defaultTenantId } from '@logto/schemas';
+import { AccountCenterControlValue, type TrustedDevice } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
-import { mockUser } from '#src/__mocks__/index.js';
+import { createMockTrustedDevice, mockUser } from '#src/__mocks__/index.js';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
@@ -21,11 +21,9 @@ jest.unstable_mockModule('#src/utils/assert-first-party-client.js', () => ({
 
 const trustedDeviceId = 'trusteddeviceid';
 const otherTrustedDeviceId = 'othertrusteddeviceid';
-const trustedDevice: TrustedDevice = {
-  tenantId: defaultTenantId,
+const trustedDevice: TrustedDevice = createMockTrustedDevice({
   id: trustedDeviceId,
   userId: mockUser.id,
-  secretHash: Buffer.alloc(32, 1),
   userAgent: 'Mozilla/5.0 test browser',
   ip: '192.0.2.1',
   country: 'US',
@@ -33,7 +31,7 @@ const trustedDevice: TrustedDevice = {
   createdAt: 1000,
   lastUsedAt: 2000,
   expiresAt: 3000,
-};
+});
 const otherTrustedDevice: TrustedDevice = {
   ...trustedDevice,
   id: otherTrustedDeviceId,

@@ -1,7 +1,7 @@
-import { type TrustedDevice, defaultTenantId } from '@logto/schemas';
+import { type TrustedDevice } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
-import { mockUser } from '#src/__mocks__/index.js';
+import { createMockTrustedDevice, mockUser } from '#src/__mocks__/index.js';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { koaManagementApiHooks } from '#src/middleware/koa-management-api-hooks.js';
@@ -14,11 +14,9 @@ const { jest } = import.meta;
 
 const userId = mockUser.id;
 const trustedDeviceId = 'device-id';
-const trustedDevice: TrustedDevice = {
-  tenantId: defaultTenantId,
+const trustedDevice: TrustedDevice = createMockTrustedDevice({
   id: trustedDeviceId,
   userId,
-  secretHash: Buffer.alloc(32, 1),
   userAgent: 'Mozilla/5.0 test browser',
   ip: '192.0.2.1',
   country: 'US',
@@ -26,7 +24,7 @@ const trustedDevice: TrustedDevice = {
   createdAt: 1000,
   lastUsedAt: 2000,
   expiresAt: 3000,
-};
+});
 
 const mockedQueries = {
   users: {

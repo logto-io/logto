@@ -10,6 +10,7 @@ import {
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
+import { createMockTrustedDevice } from '#src/__mocks__/trusted-device.js';
 import { mockUser, mockUserWithMfaVerifications } from '#src/__mocks__/user.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
@@ -69,19 +70,11 @@ const tenant = new MockTenant(
   }
 );
 
-const trustedDevice: TrustedDevice = {
+const trustedDevice: TrustedDevice = createMockTrustedDevice({
   tenantId: tenant.id,
   id: 'trusteddeviceid',
   userId: mockUserWithMfaVerifications.id,
-  secretHash: Buffer.alloc(32, 1),
-  userAgent: null,
-  ip: null,
-  country: null,
-  city: null,
-  createdAt: 1,
-  lastUsedAt: 1,
-  expiresAt: 2,
-};
+});
 
 const ExperienceInteraction = await pickDefault(import('./experience-interaction.js'));
 
