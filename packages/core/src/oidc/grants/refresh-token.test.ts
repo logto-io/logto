@@ -535,6 +535,47 @@ describe('refresh token grant', () => {
     });
   });
 
+  it('should reject an organization token when the client no longer allows the organizations scope', async () => {
+    const requested = [UserScope.Organizations, UserScope.Email];
+    const ctx = createOidcContext({
+      ...validOidcContext,
+      requestParamScopes: new Set(requested),
+      params: {
+        refresh_token: 'some_refresh_token',
+        organization_id: 'some_org_id',
+        scope: requested.join(' '),
+      },
+      client: {
+        ...validClient,
+        scope: ['openid', 'offline_access', UserScope.Email].join(' '),
+      } as unknown as Client,
+    });
+    stubRefreshToken(ctx, {
+      scope: requested.join(' '),
+      scopes: new Set(requested),
+    });
+    stubGrant(ctx, {
+      getOIDCScopeFiltered: jest.fn((filter: Set<string>) =>
+        requested.filter((scope) => filter.has(scope)).join(' ')
+      ),
+    });
+    stubAccount(ctx);
+    const tenant = new MockTenant();
+    Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(true);
+    Sinon.stub(tenant.queries.applications, 'findApplicationById').resolves(mockApplication);
+    Sinon.stub(tenant.queries.organizations, 'getMfaStatus').resolves({
+      isMfaRequired: false,
+      hasMfaConfigured: false,
+    });
+
+    await expect(mockHandler(tenant)(ctx)).rejects.toMatchError(
+      new errors.InsufficientScope(
+        'requested scope is no longer allowed for the client',
+        UserScope.Organizations
+      )
+    );
+  });
+
   it('should not explode when everything looks fine', async () => {
     const ctx = createPreparedContext();
     const tenant = new MockTenant();

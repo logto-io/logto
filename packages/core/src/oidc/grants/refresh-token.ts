@@ -242,6 +242,19 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx)
   ) {
     throw new InsufficientScope('refresh token missing required scope', UserScope.Organizations);
   }
+
+  /** Keyed on the token's own scopes: the request may omit `scope` and still pass `organization_id`. */
+  if (
+    organizationId &&
+    getOidcScopesNoLongerAllowed(grant, client, refreshToken.scopes).includes(
+      UserScope.Organizations
+    )
+  ) {
+    throw new InsufficientScope(
+      'requested scope is no longer allowed for the client',
+      UserScope.Organizations
+    );
+  }
   /* === End RFC 0001 === */
 
   if (
