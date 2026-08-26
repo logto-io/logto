@@ -12,7 +12,7 @@ import * as s from 'superstruct';
 
 import { type IdentifierInputValue } from '@/shared/components/InputFields/SmartInputField';
 
-import { UserFlow } from '.';
+import { UserFlow, UserMfaFlow } from '.';
 
 export const userFlowGuard = s.enums([
   UserFlow.SignIn,
@@ -100,6 +100,11 @@ export const mfaFlowStateGuard = s.type({
 
 export type MfaFlowState = s.Infer<typeof mfaFlowStateGuard>;
 export type TrustedDeviceAvailability = s.Infer<typeof trustedDeviceAvailabilityGuard>;
+
+export const mfaBindingVerificationCodeStateGuard = s.type({
+  flow: s.literal(UserMfaFlow.MfaBinding),
+  mfaFlowState: mfaFlowStateGuard,
+});
 
 export const totpBindingStateGuard = s.assign(
   s.object({

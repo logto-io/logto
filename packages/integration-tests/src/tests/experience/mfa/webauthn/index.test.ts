@@ -10,7 +10,7 @@ import {
 } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { SsoConnectorApi } from '#src/api/sso-connector.js';
-import { demoAppUrl, isDevFeaturesEnabled } from '#src/constants.js';
+import { demoAppUrl } from '#src/constants.js';
 import { clearConnectorsByTypes } from '#src/helpers/connector.js';
 import { signInWithEnterpriseSso } from '#src/helpers/experience/index.js';
 import {
@@ -20,7 +20,7 @@ import {
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
 import ExpectWebAuthnExperience from '#src/ui-helpers/expect-webauthn-experience.js';
-import { generateUsername, waitFor } from '#src/utils.js';
+import { devFeatureTest, generateUsername, waitFor } from '#src/utils.js';
 
 describe('MFA - WebAuthn', () => {
   beforeAll(async () => {
@@ -44,22 +44,10 @@ describe('MFA - WebAuthn', () => {
       },
       forgotPasswordMethods: [],
     });
-
-    if (isDevFeaturesEnabled) {
-      await updateSignInExperience({
-        trustedDevice: { enabled: true, durationDays: 365 },
-      });
-    }
   });
 
   afterAll(async () => {
     await resetMfaSettings();
-
-    if (isDevFeaturesEnabled) {
-      await updateSignInExperience({
-        trustedDevice: { enabled: false },
-      });
-    }
   });
 
   it('should bind WebAuthn when registering and verify WebAuthn when signing in', async () => {
@@ -85,12 +73,6 @@ describe('MFA - WebAuthn', () => {
     );
     // Wait for the page to process submitting request.
     await waitFor(500);
-
-    if (isDevFeaturesEnabled) {
-      await experience.toMatchElement('div[role=checkbox][aria-checked=false]', {
-        text: 'Trust this device for 365 days',
-      });
-    }
 
     await experience.toVerifyViaPasskey();
 
@@ -121,6 +103,76 @@ describe('MFA - WebAuthn', () => {
     await experience.verifyThenEnd();
 
     await deleteUser(user.id);
+  });
+
+  devFeatureTest.describe('trusted device opt-in', () => {
+    beforeAll(async () => {
+      await updateSignInExperience({ trustedDevice: { enabled: true, durationDays: 365 } });
+    });
+
+    afterAll(async () => {
+      await updateSignInExperience({ trustedDevice: { enabled: false } });
+    });
+
+    it('creates a trusted device from WebAuthn binding and skips MFA on the next sign-in', async () => {
+      const { userProfile, user } = await generateNewUser({ username: true, password: true });
+      const experience = new ExpectWebAuthnExperience(await browser.newPage());
+      await experience.setupVirtualAuthenticator();
+
+      await experience.startWith(demoAppUrl, 'sign-in');
+      await experience.toFillForm(
+        { identifier: userProfile.username, password: userProfile.password },
+        { submit: true }
+      );
+      await experience.waitToBeAt(`mfa-binding/${MfaFactor.WebAuthn}`);
+      await experience.toOptInTrustedDevice();
+      await experience.toCreatePasskey();
+      await experience.verifyThenEnd(false);
+      await experience.clearVirtualAuthenticator();
+
+      await experience.startWith(demoAppUrl, 'sign-in');
+      await experience.toFillForm(
+        { identifier: userProfile.username, password: userProfile.password },
+        { submit: true }
+      );
+      await experience.verifyThenEnd();
+
+      await deleteUser(user.id);
+    });
+
+    it('creates a trusted device from WebAuthn verification and skips MFA on the next sign-in', async () => {
+      const { userProfile, user } = await generateNewUser({ username: true, password: true });
+      const experience = new ExpectWebAuthnExperience(await browser.newPage());
+      await experience.setupVirtualAuthenticator();
+
+      await experience.startWith(demoAppUrl, 'sign-in');
+      await experience.toFillForm(
+        { identifier: userProfile.username, password: userProfile.password },
+        { submit: true }
+      );
+      await experience.toCreatePasskey();
+      await experience.verifyThenEnd(false);
+
+      await experience.startWith(demoAppUrl, 'sign-in');
+      await experience.toFillForm(
+        { identifier: userProfile.username, password: userProfile.password },
+        { submit: true }
+      );
+      await experience.waitToBeAt(`mfa-verification/${MfaFactor.WebAuthn}`);
+      await experience.toOptInTrustedDevice();
+      await experience.toVerifyViaPasskey();
+      await experience.verifyThenEnd(false);
+      await experience.clearVirtualAuthenticator();
+
+      await experience.startWith(demoAppUrl, 'sign-in');
+      await experience.toFillForm(
+        { identifier: userProfile.username, password: userProfile.password },
+        { submit: true }
+      );
+      await experience.verifyThenEnd();
+
+      await deleteUser(user.id);
+    });
   });
 });
 

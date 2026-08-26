@@ -188,6 +188,22 @@ export default class ExpectExperience extends ExpectPage {
     }
   }
 
+  async toCompleteMfaVerification(
+    connectorType: Parameters<typeof readConnectorMessage>['0'],
+    submitManually = false
+  ) {
+    const { code } = await readConnectorMessage(connectorType);
+
+    for (const [index, char] of code.split('').entries()) {
+      // eslint-disable-next-line no-await-in-loop -- verification inputs must be filled in order
+      await this.toFillInput(`mfaCode_${index}`, char);
+    }
+
+    if (submitManually) {
+      await this.toClickButton('Continue');
+    }
+  }
+
   /**
    * Fill the password form inputs with the given passwords. If forgot password flow is enabled,
    * only the `newPassword` input will be filled; otherwise, both `newPassword` and `confirmPassword`
@@ -261,6 +277,13 @@ export default class ExpectExperience extends ExpectPage {
    */
   async waitForToast(text: string | RegExp) {
     return this.toMatchAndRemove('div[role=toast]', text);
+  }
+
+  async toOptInTrustedDevice(durationDays = 365) {
+    const text = `Trust this device for ${durationDays} days`;
+    await this.toMatchElement('div[role=checkbox][aria-checked=false]', { text });
+    await this.toClick('div[role=checkbox]', text, false);
+    await this.toMatchElement('div[role=checkbox][aria-checked=true]', { text });
   }
 
   /**
