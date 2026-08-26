@@ -96,9 +96,11 @@ const UserMenu = () => {
     return null;
   }
 
-  const { avatar, name, username, primaryEmail, primaryPhone } = userInfo;
+  const { id, avatar, name, username, primaryEmail, primaryPhone } = userInfo;
   const avatarUrl = avatar ?? undefined;
-  const displayName = getUserDisplayName({ name, username, primaryEmail, primaryPhone });
+  const displayName =
+    getUserDisplayName({ name, username, primaryEmail, primaryPhone }) ??
+    (id ? t('description.user_id', { id }) : undefined);
   const initial = displayName?.charAt(0).toLocaleUpperCase();
   // `primaryPhone` is stored as normalized digits, so format it the same way `getUserDisplayName`
   // does. Otherwise a phone-only user sees the formatted number as the name and the raw digits

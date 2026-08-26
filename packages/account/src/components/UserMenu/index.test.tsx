@@ -77,14 +77,15 @@ describe('<UserMenu />', () => {
     expect(getByRole('button', { name: 'User menu' }).textContent).toBe('A');
   });
 
-  it('falls back to the default user avatar icon when no avatar and no display name exist', () => {
-    const { getByRole, container } = renderWithPageContext(
+  it('falls back to user ID and default avatar icon when user has no avatar and no display name', () => {
+    const { getByRole, getByText, container } = renderWithPageContext(
       <UserMenu />,
       {},
       {
         pageContext: {
           userInfo: {
             ...mockUserInfo,
+            id: 'user_123',
             name: null,
             username: null,
             primaryEmail: null,
@@ -96,8 +97,8 @@ describe('<UserMenu />', () => {
     );
 
     expect(container.querySelector('img[alt="avatar"]')).toBeNull();
-    expect(getByRole('button', { name: 'User menu' }).textContent).toBe('');
-    expect(container.querySelector('svg')).not.toBeNull();
+    fireEvent.click(getByRole('button', { name: 'User menu' }));
+    expect(getByText('description.user_id')).toBeTruthy();
   });
 
   it('renders the avatar image when one is set', () => {
