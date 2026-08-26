@@ -36,7 +36,7 @@ const WebAuthnVerification = () => {
     return <ErrorPage title="error.invalid_session" />;
   }
 
-  const { options, availableFactors, skippable } = webAuthnState;
+  const { options, ...flowState } = webAuthnState;
 
   if (!isWebAuthnOptions(options)) {
     return <ErrorPage title="error.invalid_session" />;
@@ -66,10 +66,7 @@ const WebAuthnVerification = () => {
           }}
         />
       </SectionLayout>
-      <SwitchMfaFactorsLink
-        flow={UserMfaFlow.MfaVerification}
-        flowState={{ availableFactors, skippable }}
-      />
+      <SwitchMfaFactorsLink flow={UserMfaFlow.MfaVerification} flowState={flowState} />
     </SecondaryPageLayout>
   );
 };

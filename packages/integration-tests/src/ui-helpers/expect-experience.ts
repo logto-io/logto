@@ -279,9 +279,14 @@ export default class ExpectExperience extends ExpectPage {
     return this.toMatchAndRemove('div[role=toast]', text);
   }
 
-  async toOptInTrustedDevice(durationDays = 365) {
+  async toSeeTrustedDeviceOptIn(durationDays = 365) {
     const text = `Trust this device for ${durationDays} days`;
     await this.toMatchElement('div[role=checkbox][aria-checked=false]', { text });
+  }
+
+  async toOptInTrustedDevice(durationDays = 365) {
+    const text = `Trust this device for ${durationDays} days`;
+    await this.toSeeTrustedDeviceOptIn(durationDays);
     await this.toClick('div[role=checkbox]', text, false);
     await this.toMatchElement('div[role=checkbox][aria-checked=true]', { text });
   }

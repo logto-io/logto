@@ -4,7 +4,10 @@ import { useCallback, useContext, useMemo } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
-import { updateProfileWithVerificationCode } from '@/apis/experience';
+import {
+  updateProfileWithVerificationCode,
+  verifyAndUpdateProfileWithVerificationCode,
+} from '@/apis/experience';
 import { bindMfa } from '@/apis/experience/mfa';
 import { getInteractionEventFromState } from '@/apis/utils';
 import useApi from '@/hooks/use-api';
@@ -45,6 +48,7 @@ const useContinueFlowCodeVerification = (
   const handleError = useErrorHandler();
 
   const verifyVerificationCode = useApi(updateProfileWithVerificationCode);
+  const verifyAndUpdateProfile = useApi(verifyAndUpdateProfileWithVerificationCode);
   const asyncBindMfa = useApi(bindMfa);
 
   const { generalVerificationCodeErrorHandlers, errorMessage, clearErrorMessage } =
@@ -125,7 +129,7 @@ const useContinueFlowCodeVerification = (
           : MfaFactor.PhoneVerificationCode;
 
       if (mfaFlowState?.availableFactors.includes(factor)) {
-        const [verifyError] = await verifyVerificationCode(
+        const [verifyError] = await verifyAndUpdateProfile(
           {
             code,
             identifier,
@@ -193,6 +197,7 @@ const useContinueFlowCodeVerification = (
       verificationId,
       verifyVerificationCode,
       verifyVerificationCodeErrorHandlers,
+      verifyAndUpdateProfile,
     ]
   );
 

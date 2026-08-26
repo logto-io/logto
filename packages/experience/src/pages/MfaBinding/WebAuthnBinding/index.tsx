@@ -15,7 +15,7 @@ import useWebAuthnOperation from '@/hooks/use-webauthn-operation';
 import ErrorPage from '@/pages/ErrorPage';
 import Button from '@/shared/components/Button';
 import { UserMfaFlow } from '@/types';
-import { type MfaFlowState, webAuthnStateGuard } from '@/types/guard';
+import { webAuthnStateGuard } from '@/types/guard';
 import { isWebAuthnOptions } from '@/utils/webauthn';
 
 import styles from './index.module.scss';
@@ -40,21 +40,8 @@ const WebAuthnBinding = () => {
     return <ErrorPage title="error.invalid_session" />;
   }
 
-  const {
-    options,
-    availableFactors,
-    skippable,
-    suggestion,
-    maskedIdentifiers,
-    isWebAuthnUsedAsSignInPasskey,
-  } = webAuthnState;
-  const mfaFlowState: MfaFlowState = {
-    availableFactors,
-    skippable,
-    suggestion,
-    maskedIdentifiers,
-    isWebAuthnUsedAsSignInPasskey,
-  };
+  const { options, ...mfaFlowState } = webAuthnState;
+  const { availableFactors, skippable, suggestion } = mfaFlowState;
 
   if (!isWebAuthnOptions(options)) {
     return <ErrorPage title="error.invalid_session" />;
