@@ -19,8 +19,10 @@ services:
       # SSO, or OIDC relying-party endpoint on a private network, list its address or CIDR range in
       # `SSRF_ALLOWED_ADDRESSES` (for example `10.0.0.0/8`). Setting `SSRF_PROTECTION_DISABLED=true`
       # turns the protection off entirely and also disables features that require it, such as CIMD.
+      # `OIDC_PROVIDER_SSRF_PROTECTION_DISABLED` is supported as a legacy alias.
       - SSRF_ALLOWED_ADDRESSES
       - SSRF_PROTECTION_DISABLED
+      - OIDC_PROVIDER_SSRF_PROTECTION_DISABLED
       # Mandatory for GitPod to map host env to the container, thus GitPod can dynamically configure the public URL of Logto;
       # Or, you can leverage it for local testing.
       - ENDPOINT

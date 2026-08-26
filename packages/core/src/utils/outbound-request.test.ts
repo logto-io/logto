@@ -188,5 +188,20 @@ describe('guardSocket', () => {
 
       expect(() => guard('127.0.0.1')).toThrow('Invalid address in `SSRF_ALLOWED_ADDRESSES`');
     });
+
+    it.each([['127.0.0.0/'], ['127.0.0.0/abc'], ['127.0.0.0/-1'], ['127.0.0.0/33'], ['::1/129']])(
+      'rejects invalid CIDR prefix %s',
+      (entry) => {
+        stubSsrfProtection(true, [entry]);
+
+        expect(() => guard('127.0.0.1')).toThrow('Invalid CIDR prefix in `SSRF_ALLOWED_ADDRESSES`');
+      }
+    );
+
+    it('rejects entries with multiple slashes', () => {
+      stubSsrfProtection(true, ['127.0.0.0/8/16']);
+
+      expect(() => guard('127.0.0.1')).toThrow('Invalid address in `SSRF_ALLOWED_ADDRESSES`');
+    });
   });
 });

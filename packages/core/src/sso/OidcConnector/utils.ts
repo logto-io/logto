@@ -2,10 +2,10 @@ import { parseJson, tokenResponseGuard, type TokenResponse } from '@logto/connec
 import { assert } from '@silverhand/essentials';
 import camelcaseKeys, { type CamelCaseKeys } from 'camelcase-keys';
 import { HTTPError } from 'got';
-import { createRemoteJWKSet, jwtVerify, type JWTVerifyOptions } from 'jose';
+import { createRemoteJWKSet, customFetch, jwtVerify, type JWTVerifyOptions } from 'jose';
 import { z, ZodError } from 'zod';
 
-import { ssrfProtectedGot } from '#src/utils/outbound-request.js';
+import { ssrfProtectedFetch, ssrfProtectedGot } from '#src/utils/outbound-request.js';
 
 import {
   SsoConnectorConfigErrorCodes,
@@ -150,11 +150,15 @@ export const getIdTokenClaims = async (
   jwtVerifyOptions?: JWTVerifyOptions
 ) => {
   try {
-    const { payload } = await jwtVerify(idToken, createRemoteJWKSet(new URL(config.jwksUri)), {
-      issuer: config.issuer,
-      audience: config.clientId,
-      ...jwtVerifyOptions,
-    });
+    const { payload } = await jwtVerify(
+      idToken,
+      createRemoteJWKSet(new URL(config.jwksUri), { [customFetch]: ssrfProtectedFetch }),
+      {
+        issuer: config.issuer,
+        audience: config.clientId,
+        ...jwtVerifyOptions,
+      }
+    );
 
     if (Math.abs((payload.iat ?? 0) - Date.now() / 1000) > issuedAtTimeTolerance) {
       throw new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {

@@ -20,9 +20,9 @@ import { BlockList, isIP, type Socket } from 'node:net';
 
 import { cond, type Optional } from '@silverhand/essentials';
 import { got, type Got } from 'got';
-import { isSpecialUseIP } from 'oidc-provider/lib/helpers/fetch_request.js';
 
 import { EnvSet } from '#src/env-set/index.js';
+import { isSpecialUseIP } from '#src/oidc/oidc-provider-internals.js';
 import assertThat from '#src/utils/assert-that.js';
 
 /** Memoizes a factory, so the shared resources below are built at most once. */
@@ -67,7 +67,14 @@ const parseAllowedAddresses = (): Optional<BlockList> => {
   const list = new BlockList();
 
   for (const entry of raw) {
-    const [address, prefix] = entry.split('/');
+    const segments = entry.trim().split('/');
+
+    assertThat(
+      segments.length === 1 || segments.length === 2,
+      new Error(`Invalid address in \`SSRF_ALLOWED_ADDRESSES\`: ${entry}`)
+    );
+
+    const [address, prefix] = segments;
 
     // Silently skipping a malformed entry would leave the operator believing a host is reachable.
     assertThat(
@@ -80,7 +87,15 @@ const parseAllowedAddresses = (): Optional<BlockList> => {
     if (prefix === undefined) {
       list.addAddress(address, family);
     } else {
-      list.addSubnet(address, Number(prefix), family);
+      const maxPrefix = family === 'ipv6' ? 128 : 32;
+      const parsedPrefix = Number(prefix);
+
+      assertThat(
+        /^\d+$/.test(prefix) && parsedPrefix >= 0 && parsedPrefix <= maxPrefix,
+        new Error(`Invalid CIDR prefix in \`SSRF_ALLOWED_ADDRESSES\`: ${entry}`)
+      );
+
+      list.addSubnet(address, parsedPrefix, family);
     }
   }
 
@@ -152,7 +167,17 @@ const asConnectionFactory = (agent: http.Agent | https.Agent): ConnectionFactory
   // eslint-disable-next-line no-restricted-syntax -- see `ConnectionFactory`
   agent as unknown as ConnectionFactory;
 
+const defaultAgentOptions: http.AgentOptions = {
+  keepAlive: true,
+  scheduling: 'lifo',
+  timeout: 5000,
+};
+
 class SsrfProtectedHttpAgent extends http.Agent {
+  constructor(options?: http.AgentOptions) {
+    super({ ...defaultAgentOptions, ...options });
+  }
+
   createConnection(options: ConnectionOptions, callback?: unknown): Socket {
     return guardSocket(
       asConnectionFactory(http.Agent.prototype).createConnection.call(this, options, callback)
@@ -161,6 +186,10 @@ class SsrfProtectedHttpAgent extends http.Agent {
 }
 
 class SsrfProtectedHttpsAgent extends https.Agent {
+  constructor(options?: https.AgentOptions) {
+    super({ ...defaultAgentOptions, ...options });
+  }
+
   createConnection(options: ConnectionOptions, callback?: unknown): Socket {
     return guardSocket(
       asConnectionFactory(https.Agent.prototype).createConnection.call(this, options, callback)

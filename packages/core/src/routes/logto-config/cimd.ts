@@ -52,7 +52,7 @@ export default function logtoConfigCimdRoutes<T extends ManagementApiRouter>(
           { code: 'request.invalid_input', status: 422 },
           {
             details:
-              'CIMD requires the outbound request SSRF protection. Remove `SSRF_PROTECTION_DISABLED` to enable CIMD.',
+              'CIMD requires outbound request SSRF protection. Remove `SSRF_PROTECTION_DISABLED` (or `OIDC_PROVIDER_SSRF_PROTECTION_DISABLED`) to enable CIMD.',
           }
         )
       );

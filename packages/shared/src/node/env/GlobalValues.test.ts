@@ -26,19 +26,29 @@ describe('SSRF protection', () => {
       unsetEnvironmentVariable(variable);
     }
 
-    expect(createGlobalValues().isSsrfProtectionEnabled).toBe(true);
+    const values = createGlobalValues();
+    expect(values.isSsrfProtectionEnabled).toBe(true);
+    expect(values.isOidcProviderSsrfProtectionEnabled).toBe(true);
   });
 
   describe.each(optOutVariables)('%s', (variable) => {
     it('can disable the protection in self-hosted deployments', () => {
       unsetEnvironmentVariable('IS_CLOUD');
+      for (const other of optOutVariables) {
+        unsetEnvironmentVariable(other);
+      }
       vi.stubEnv(variable, 'true');
 
-      expect(createGlobalValues().isSsrfProtectionEnabled).toBe(false);
+      const values = createGlobalValues();
+      expect(values.isSsrfProtectionEnabled).toBe(false);
+      expect(values.isOidcProviderSsrfProtectionEnabled).toBe(false);
     });
 
     it.each(['', 'false', 'flase'])('stays enabled when the opt-out value is: %s', (value) => {
       unsetEnvironmentVariable('IS_CLOUD');
+      for (const other of optOutVariables) {
+        unsetEnvironmentVariable(other);
+      }
       vi.stubEnv(variable, value);
 
       expect(createGlobalValues().isSsrfProtectionEnabled).toBe(true);
@@ -49,6 +59,22 @@ describe('SSRF protection', () => {
       vi.stubEnv(variable, 'true');
 
       expect(createGlobalValues().isSsrfProtectionEnabled).toBe(true);
+    });
+  });
+
+  describe('ssrfAllowedAddresses', () => {
+    it('parses comma-separated entries with trimming in self-hosted deployments', () => {
+      unsetEnvironmentVariable('IS_CLOUD');
+      vi.stubEnv('SSRF_ALLOWED_ADDRESSES', ' 127.0.0.1, 10.0.0.0/8 , ::1 ');
+
+      expect(createGlobalValues().ssrfAllowedAddresses).toEqual(['127.0.0.1', '10.0.0.0/8', '::1']);
+    });
+
+    it('always returns an empty array in Cloud', () => {
+      vi.stubEnv('IS_CLOUD', 'true');
+      vi.stubEnv('SSRF_ALLOWED_ADDRESSES', '127.0.0.1,10.0.0.0/8');
+
+      expect(createGlobalValues().ssrfAllowedAddresses).toEqual([]);
     });
   });
 });

@@ -8,12 +8,4 @@ declare module 'oidc-provider/lib/helpers/fetch_request.js' {
    * @param address A valid IPv4 or IPv6 address, such as `socket.remoteAddress`.
    */
   export function isSpecialUseIP(address: string): boolean;
-
-  /**
-   * Attaches the SSRF guard to an undici dispatcher: on every established connection the socket's
-   * remote address is inspected and the socket is destroyed when it points at a special-use IP.
-   *
-   * @returns The same dispatcher instance, for chaining.
-   */
-  export function applySSRFProtection<T>(dispatcher: T): T;
 }

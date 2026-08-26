@@ -169,6 +169,14 @@ export default class GlobalValues {
     );
 
   /**
+   * @deprecated Renamed to `isSsrfProtectionEnabled` as the protection now covers webhook delivery
+   * and SSO connector discovery/metadata requests as well.
+   */
+  public get isOidcProviderSsrfProtectionEnabled(): boolean {
+    return this.isSsrfProtectionEnabled;
+  }
+
+  /**
    * Destinations that stay reachable while the SSRF protection is on, as a comma-separated list of
    * IP addresses or CIDR ranges (`127.0.0.1,10.0.0.0/8,::1`).
    *
