@@ -87,7 +87,7 @@ const loadEnabledFeature = async ({
 };
 
 describe('isCimdEffectivelyEnabled', () => {
-  it('is enabled only when both conditions hold', async () => {
+  it('is enabled only when the tenant config, SSRF protection, and empty allowlist all hold', async () => {
     const { isCimdEffectivelyEnabled } = await loadCimdModule();
     expect(isCimdEffectivelyEnabled(buildEnvSet(true))).toBe(true);
   });

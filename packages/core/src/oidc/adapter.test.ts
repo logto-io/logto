@@ -184,17 +184,19 @@ describe('postgres Adapter', () => {
  */
 const loadClientAdapter = async ({
   isSsrfProtectionEnabled = true,
+  ssrfAllowedAddresses = [],
   cimdEnabled = true,
   findApplicationById,
 }: {
   isSsrfProtectionEnabled?: boolean;
+  ssrfAllowedAddresses?: string[];
   cimdEnabled?: boolean;
   findApplicationById: jest.Mock;
 }) => {
   jest.resetModules();
   mockEsm('#src/env-set/index.js', () => ({
     EnvSet: {
-      values: { isSsrfProtectionEnabled },
+      values: { isSsrfProtectionEnabled, ssrfAllowedAddresses },
     },
   }));
 
@@ -236,6 +238,7 @@ describe('client adapter `find` fallback contract', () => {
   it.each([
     ['CIMD is disabled for the tenant', { cimdEnabled: false }],
     ['SSRF protection is off', { isSsrfProtectionEnabled: false }],
+    ['private addresses are allowlisted', { ssrfAllowedAddresses: ['10.0.0.0/8'] }],
   ])('looks a CIMD client ID up as a registered application when %s', async (_, flags) => {
     const findApplicationById = jest.fn().mockRejectedValue(new Error('not found'));
     const { findClient, errors } = await loadClientAdapter({ ...flags, findApplicationById });

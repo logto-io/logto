@@ -47,7 +47,7 @@ services:
       TRUST_PROXY_HEADER: "1"
       # Webhook deliveries target the host through `host.docker.internal`, which resolves to the
       # private bridge gateway. Allow the Docker bridge ranges rather than disabling the SSRF
-      # protection, which suites such as CIMD require to stay on.
+      # protection. CIMD cannot be enabled while an allowlist is set.
       SSRF_ALLOWED_ADDRESSES: 172.16.0.0/12,192.168.0.0/16,10.0.0.0/8
       COVERAGE: ${COVERAGE:-0}
       COVERAGE_REPORT_DIR: /coverage/report
