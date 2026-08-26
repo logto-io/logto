@@ -76,10 +76,8 @@ function OssCloudUpsell({ isBannerVisible, onDismissBanner }: Props) {
               {/* Self-hosted plans upsell routing. */}
               {isDevFeaturesEnabled && (
                 <TextLink
-                  isTrailingIcon
                   className={styles.selfHostedPlansLink}
                   href={buildSelfHostedPlansUrl(entry)}
-                  icon={<ExternalLinkIcon className={styles.selfHostedPlansLinkIcon} />}
                   targetBlank="noopener"
                 >
                   {t('upsell.explore_self_hosted_plans')}

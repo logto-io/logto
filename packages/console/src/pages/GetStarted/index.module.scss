@@ -156,7 +156,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: _.unit(4);
+  gap: _.unit(2);
   margin-left: auto;
   margin-right: _.unit(4.5);
   flex-shrink: 0;
@@ -171,11 +171,6 @@
 .selfHostedPlansLink {
   white-space: nowrap;
   color: var(--color-text-secondary);
-}
-
-.selfHostedPlansLinkIcon {
-  width: 16px;
-  height: 16px;
 }
 
 .dismissButton {
