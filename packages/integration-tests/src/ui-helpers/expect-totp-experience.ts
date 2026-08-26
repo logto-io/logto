@@ -10,17 +10,14 @@ export default class ExpectTotpExperience extends ExpectMfaExperience {
   }
 
   /**
-   * Assert the page is at the TOTP binding page and fill the TOTP code
+   * Wait until the page is at the TOTP binding page and fill the TOTP code
    * generated from the TOTP secret.
    *
    * @param [signingInAfterBinding=true] Whether the flow will continue to sign in after the binding.
    * @returns The binding TOTP secret.
    */
   async toBindTotp(signingInAfterBinding = true) {
-    // Wait for the page to load
-    await waitFor(500);
-
-    this.toBeAt('mfa-binding/Totp');
+    await this.waitToBeAt('mfa-binding/Totp');
     // Expect the QR code rendered
     await expect(this.page).toMatchElement(`${dcls('qrCode')} img[src*="data:image"]`);
 
@@ -46,17 +43,14 @@ export default class ExpectTotpExperience extends ExpectMfaExperience {
   }
 
   /**
-   * Assert the page is at the TOTP verification page and fill the TOTP code
+   * Wait until the page is at the TOTP verification page and fill the TOTP code
    * generated from the TOTP secret.
    *
    * @param secret The TOTP secret.
    * @param [signingInAfterVerification=true] Whether the flow will continue to sign in after the verification.
    */
   async toVerifyTotp(secret: string, signingInAfterVerification = true) {
-    // Wait for the page to load
-    await waitFor(500);
-
-    this.toBeAt('mfa-verification/Totp');
+    await this.waitToBeAt('mfa-verification/Totp');
 
     const code = authenticator.generate(secret);
 
