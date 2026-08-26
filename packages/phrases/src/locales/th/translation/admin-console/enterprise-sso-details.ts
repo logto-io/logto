@@ -83,8 +83,6 @@ const enterprise_sso_details = {
     enable_idp_initiated_sso: 'เปิดใช้งาน SSO ที่เริ่มโดย IdP',
     enable_idp_initiated_sso_description:
       'อนุญาตให้ผู้ใช้ขององค์กรเริ่มกระบวนการยืนยันตัวตนโดยตรงจากหน้า Identity Provider โปรดเข้าใจความเสี่ยงด้านความปลอดภัยก่อนเปิดใช้งาน',
-    self_hosted_note:
-      'SSO ที่เริ่มจาก IdP พร้อมใช้งานกับ <selfHosted>แผน self-hosted</selfHosted> และพร้อมใช้งานแบบเนทีฟใน <a>Logto Cloud</a> ด้วย',
     default_application: 'แอปพลิเคชันเริ่มต้น',
     default_application_tooltip: 'แอปเป้าหมายที่ผู้ใช้จะถูกเปลี่ยนเส้นทางหลังจากเข้าสู่ระบบ',
     empty_applications_error: 'ไม่พบแอปพลิเคชัน กรุณาเพิ่มในส่วน <a>แอปพลิเคชัน</a> ก่อน',

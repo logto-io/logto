@@ -46,8 +46,6 @@ const sign_in_exp = {
     hide_logto_branding_description:
       'Remove "Powered by Logto". Spotlight your brand exclusively with a clean, professional sign-in experience.',
     hide_logto_branding_oss_note: 'This feature is natively available in <a>Logto Cloud</a>.',
-    hide_logto_branding_self_hosted_note:
-      'This feature is available with <selfHosted>self-hosted plans</selfHosted>. It is also natively available in <a>Logto Cloud</a>.',
   },
   branding_uploads: {
     app_logo: {
@@ -98,8 +96,6 @@ const sign_in_exp = {
     bring_your_ui_oss_description: 'Customize the sign-in UI with your own code.',
     bring_your_ui_oss_card_description:
       'Upload your custom sign-in UI directly on <a>Logto Cloud</a>. No need to fork and redeploy.',
-    bring_your_ui_self_hosted_card_description:
-      'Upload your custom sign-in UI with <selfHosted>self-hosted plans</selfHosted>. You can also upload it directly on <a>Logto Cloud</a>.',
     bring_your_ui_oss_try_cloud: 'Try Cloud',
     preview_with_bring_your_ui_description:
       'Your custom UI assets have been successfully uploaded and are now being served. Consequently, the built-in preview window has been disabled.\nTo test your personalized sign-in UI, click the "Live Preview" button to open it in a new browser tab.',

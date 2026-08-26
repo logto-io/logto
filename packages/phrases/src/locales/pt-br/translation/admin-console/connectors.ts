@@ -87,8 +87,6 @@ const connectors = {
       title: 'Serviço de e-mail integrado do Logto',
       description:
         'Entrega de e-mails sem configuração. Envie códigos de verificação e magic links imediatamente.',
-      self_hosted_description:
-        'Entrega de e-mails sem configuração com o plano Enterprise self-hosted. Envie códigos de verificação e magic links imediatamente, ou experimente o Logto Cloud.',
     },
     standard_connectors: 'Ou você pode personalizar seu conector social por um protocolo padrão.',
   },

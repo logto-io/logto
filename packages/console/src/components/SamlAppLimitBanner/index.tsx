@@ -6,6 +6,7 @@ import LearnMore from '@/components/LearnMore';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import { logtoOssFeatureSupportLink } from '@/consts/external-links';
 import { LinkButton } from '@/ds-components/Button';
+import DangerousRaw from '@/ds-components/DangerousRaw';
 import TextLink from '@/ds-components/TextLink';
 
 import styles from './index.module.scss';
@@ -39,7 +40,23 @@ function SamlAppLimitBanner({ variant, limit, className }: Props) {
         {description}
         <LearnMore href={logtoOssFeatureSupportLink} />
       </div>
-      {variant === 'inline' ? (
+      {content.secondaryHref ? (
+        <div className={styles.actions}>
+          <LinkButton
+            className={styles.primaryAction}
+            size={variant === 'footer' ? 'large' : 'medium'}
+            type="primary"
+            title={
+              <DangerousRaw>{t(content.actionKey, { productName: 'Logto Cloud' })}</DangerousRaw>
+            }
+            href={content.href}
+            targetBlank="noopener"
+          />
+          <TextLink href={content.secondaryHref} targetBlank="noopener">
+            {t(content.secondaryActionKey)}
+          </TextLink>
+        </div>
+      ) : variant === 'inline' ? (
         <TextLink className={styles.inlineAction} href={content.href} targetBlank="noopener">
           {t(content.actionKey)}
         </TextLink>

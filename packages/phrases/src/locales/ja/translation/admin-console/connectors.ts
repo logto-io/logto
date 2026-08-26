@@ -87,8 +87,6 @@ const connectors = {
       title: 'Logto 組み込みメールサービス',
       description:
         '設定不要ですぐにメールを配信できます。認証コードやマジックリンクをそのまま送信できます。',
-      self_hosted_description:
-        'セルフホストの Enterprise プランなら、設定不要ですぐにメールを配信できます。認証コードやマジックリンクをそのまま送信するか、Logto Cloud をお試しください。',
     },
     standard_connectors: 'または標準プロトコルでソーシャルコネクタをカスタマイズできます。',
   },

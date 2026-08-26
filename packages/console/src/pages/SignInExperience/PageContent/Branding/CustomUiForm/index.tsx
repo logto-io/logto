@@ -50,13 +50,6 @@ function OssBringYourUiCard() {
             <Trans
               i18nKey={cardContent.i18nKey}
               components={{
-                selfHosted: (
-                  <TextLink
-                    href={cardContent.href}
-                    targetBlank="noopener"
-                    className={styles.highlight}
-                  />
-                ),
                 a: (
                   <TextLink
                     href={cardContent.cloudHref}
@@ -66,6 +59,18 @@ function OssBringYourUiCard() {
                 ),
               }}
             />
+            {cardContent.hasSelfHostedPlansOption && (
+              <>
+                {' · '}
+                <TextLink
+                  href={cardContent.selfHostedHref}
+                  targetBlank="noopener"
+                  className={styles.highlight}
+                >
+                  <DynamicT forKey="upsell.explore_self_hosted_plans" />
+                </TextLink>
+              </>
+            )}
           </div>
         </div>
       </div>

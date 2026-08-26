@@ -71,9 +71,9 @@ export const getEmailConnectorUpsellCopyKeys = ({
   if (isDevFeaturesEnabled) {
     return {
       title: 'connectors.create_form.email_connector_upsell.title' as const,
-      description: 'connectors.create_form.email_connector_upsell.self_hosted_description' as const,
-      action: 'upsell.explore_self_hosted_plans' as const,
-      cloudAction: 'upsell.try_with_product_name' as const,
+      description: 'connectors.create_form.email_connector_upsell.description' as const,
+      action: 'upsell.try_with_product_name' as const,
+      secondaryAction: 'upsell.explore_self_hosted_plans' as const,
     };
   }
 
@@ -81,7 +81,7 @@ export const getEmailConnectorUpsellCopyKeys = ({
     title: 'connectors.create_form.email_connector_upsell.title' as const,
     description: 'connectors.create_form.email_connector_upsell.description' as const,
     action: 'upsell.try_with_product_name' as const,
-    cloudAction: 'upsell.try_with_product_name' as const,
+    secondaryAction: 'upsell.explore_self_hosted_plans' as const,
   };
 };
 

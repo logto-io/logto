@@ -46,8 +46,6 @@ const sign_in_exp = {
       'Remova "Powered by Logto". Destaque apenas a sua marca com uma experiência de início de sessão limpa e profissional.',
     hide_logto_branding_oss_note:
       'Esta funcionalidade está disponível nativamente no <a>Logto Cloud</a>.',
-    hide_logto_branding_self_hosted_note:
-      'Esta funcionalidade está disponível com os <selfHosted>planos self-hosted</selfHosted>. Também está disponível nativamente no <a>Logto Cloud</a>.',
   },
   branding_uploads: {
     app_logo: {
@@ -99,8 +97,6 @@ const sign_in_exp = {
       'Personalize a interface de início de sessão com o seu próprio código.',
     bring_your_ui_oss_card_description:
       'Carregue a sua interface de início de sessão personalizada diretamente no <a>Logto Cloud</a>. Não é necessário fazer fork nem voltar a implementar.',
-    bring_your_ui_self_hosted_card_description:
-      'Carregue a sua interface de início de sessão personalizada com os <selfHosted>planos self-hosted</selfHosted>. Também a pode carregar diretamente no <a>Logto Cloud</a>.',
     bring_your_ui_oss_try_cloud: 'Experimentar Cloud',
     preview_with_bring_your_ui_description:
       'Os seus recursos de UI personalizados foram carregados com êxito e agora estão sendo servidos. Consequentemente, a janela de visualização incorporada foi desativada.\nPara testar o seu UI de início de sessão personalizado, clique no botão "Visualização ao vivo" para abri-lo num novo separador do navegador.',

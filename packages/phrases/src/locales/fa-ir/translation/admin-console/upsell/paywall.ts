@@ -45,8 +45,6 @@ const paywall = {
     'اپلیکیشن SAML اضافی با پلن Enterprise لاگتو در دسترس است. اگر به کمک نیاز دارید با ما تماس بگیرید.',
   saml_applications_oss_limit_notice:
     'نمونه متن‌باز شما تا {{limit}} اپلیکیشن SAML را پشتیبانی می‌کند. می‌توانید از Logto Cloud استفاده کنید یا برای گزینه‌های بیشتر با ما تماس بگیرید.',
-  saml_applications_oss_limit_notice_self_hosted:
-    'نمونه متن‌باز شما تا {{limit}} اپلیکیشن SAML را پشتیبانی می‌کند. با طرح‌های self-hosted اپلیکیشن‌های SAML بیشتری باز کنید، یا از Logto Cloud استفاده کنید.',
   logto_pricing_button_text: 'قیمت‌گذاری Logto Cloud',
   saml_applications:
     'اپلیکیشن SAML اضافی با پلن Enterprise لاگتو در دسترس است. اگر به کمک نیاز دارید با ما تماس بگیرید.',

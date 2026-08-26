@@ -45,8 +45,6 @@ const paywall = {
     'Ek SAML uygulaması, Logto Enterprise planı ile mevcuttur. Yardıma ihtiyacınız olursa, bizimle iletişime geçin.',
   saml_applications_oss_limit_notice:
     'Açık kaynak örneğiniz en fazla {{limit}} SAML uygulamasını destekler. Ek seçenekler için Logto Cloud’u kullanabilir veya bizimle iletişime geçebilirsiniz.',
-  saml_applications_oss_limit_notice_self_hosted:
-    'Açık kaynak örneğiniz en fazla {{limit}} SAML uygulamasını destekler. Self-hosted planlarla daha fazla SAML uygulamasının kilidini açın veya Logto Cloud’u kullanın.',
   logto_pricing_button_text: 'Logto Bulut Fiyatlandırması',
   saml_applications:
     'Ek SAML uygulaması, Logto Enterprise planı ile mevcuttur. Yardım için bize ulaşın.',

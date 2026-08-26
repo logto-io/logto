@@ -1,7 +1,8 @@
-import { Trans } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
 import { LinkButton } from '@/ds-components/Button';
+import DangerousRaw from '@/ds-components/DangerousRaw';
 import FormField from '@/ds-components/FormField';
 import Switch from '@/ds-components/Switch';
 import TextLink from '@/ds-components/TextLink';
@@ -10,6 +11,7 @@ import { buildCloudUpsellUrl, buildSelfHostedPlansUrl, ossUpsellEntries } from '
 import styles from './index.module.scss';
 
 function OssUpsell() {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const entry = ossUpsellEntries.enterpriseSsoIdpInitiatedOssUpsell;
   const selfHostedPlansUrl = buildSelfHostedPlansUrl(entry);
   const cloudUpsellUrl = buildCloudUpsellUrl(entry);
@@ -28,22 +30,21 @@ function OssUpsell() {
             description="enterprise_sso_details.idp_initiated_auth_config.enable_idp_initiated_sso_description"
           />
         </FormField>
-        <div className={styles.ossNote}>
-          <Trans
-            i18nKey="admin_console.enterprise_sso_details.idp_initiated_auth_config.self_hosted_note"
-            components={{
-              selfHosted: <TextLink href={selfHostedPlansUrl} targetBlank="noopener" />,
-              a: <TextLink href={cloudUpsellUrl} targetBlank="noopener" />,
-            }}
+        <div className={styles.ossActions}>
+          <LinkButton
+            type="primary"
+            title={
+              <DangerousRaw>
+                {t('upsell.try_with_product_name', { productName: 'Logto Cloud' })}
+              </DangerousRaw>
+            }
+            href={cloudUpsellUrl}
+            targetBlank="noopener"
           />
+          <TextLink href={selfHostedPlansUrl} targetBlank="noopener">
+            {t('upsell.explore_self_hosted_plans')}
+          </TextLink>
         </div>
-        <LinkButton
-          className={styles.ossAction}
-          type="primary"
-          title="upsell.explore_self_hosted_plans"
-          href={selfHostedPlansUrl}
-          targetBlank="noopener"
-        />
       </div>
     </FormCard>
   );

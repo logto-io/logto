@@ -43,23 +43,23 @@ describe('getEmailConnectorUpsellCopyKeys', () => {
     });
   });
 
-  test('uses self-hosted plans copy when the self-hosted plans feature is enabled', () => {
+  test('keeps Cloud copy primary when the self-hosted plans feature is enabled', () => {
     const copyKeys = getEmailConnectorUpsellCopyKeys({ isDevFeaturesEnabled: true });
     const titleKey: TFuncKey<'translation', 'admin_console'> = copyKeys.title;
     const descriptionKey: TFuncKey<'translation', 'admin_console'> = copyKeys.description;
     const actionKey: TFuncKey<'translation', 'admin_console'> = copyKeys.action;
-    const cloudActionKey: TFuncKey<'translation', 'admin_console'> = copyKeys.cloudAction;
+    const secondaryActionKey: TFuncKey<'translation', 'admin_console'> = copyKeys.secondaryAction;
 
     expect({
       title: titleKey,
       description: descriptionKey,
       action: actionKey,
-      cloudAction: cloudActionKey,
+      secondaryAction: secondaryActionKey,
     }).toEqual({
       title: 'connectors.create_form.email_connector_upsell.title',
-      description: 'connectors.create_form.email_connector_upsell.self_hosted_description',
-      action: 'upsell.explore_self_hosted_plans',
-      cloudAction: 'upsell.try_with_product_name',
+      description: 'connectors.create_form.email_connector_upsell.description',
+      action: 'upsell.try_with_product_name',
+      secondaryAction: 'upsell.explore_self_hosted_plans',
     });
   });
 });

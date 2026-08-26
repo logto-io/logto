@@ -22,11 +22,7 @@ import TextLink from '@/ds-components/TextLink';
 import type { RequestError } from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import modalStyles from '@/scss/modal.module.scss';
-import {
-  buildCloudUpsellUrl,
-  openSelfHostedPlansUpsell,
-  ossUpsellEntries,
-} from '@/utils/oss-upsell';
+import { buildCloudUpsellUrl, buildSelfHostedPlansUrl, ossUpsellEntries } from '@/utils/oss-upsell';
 
 import { getConnectorGroups } from '../../pages/Connectors/utils';
 
@@ -54,7 +50,9 @@ function EmailConnectorUpsellBanner() {
     keyPrefix: 'admin_console',
   });
   const copyKeys = getEmailConnectorUpsellCopyKeys({ isDevFeaturesEnabled });
-  const cloudUpsellUrl = buildCloudUpsellUrl(ossUpsellEntries.connectorEmailBuiltinUpsellBanner);
+  const entry = ossUpsellEntries.connectorEmailBuiltinUpsellBanner;
+  const cloudUpsellUrl = buildCloudUpsellUrl(entry);
+  const selfHostedPlansUrl = buildSelfHostedPlansUrl(entry);
 
   return (
     <div className={styles.upsellBanner}>
@@ -72,21 +70,13 @@ function EmailConnectorUpsellBanner() {
       <div className={styles.upsellActions}>
         <Button
           className={styles.upsellButton}
-          type="outline"
-          title={
-            <DangerousRaw>
-              {isDevFeaturesEnabled
-                ? t(copyKeys.action)
-                : t(copyKeys.action, { productName: 'Logto Cloud' })}
-            </DangerousRaw>
-          }
+          type={isDevFeaturesEnabled ? 'primary' : 'outline'}
+          title={<DangerousRaw>{t(copyKeys.action, { productName: 'Logto Cloud' })}</DangerousRaw>}
           trailingIcon={<ExternalLink />}
           onClick={() => {
             // DEV: self-hosted plans
             if (isDevFeaturesEnabled) {
-              openSelfHostedPlansUpsell({
-                entry: ossUpsellEntries.connectorEmailBuiltinUpsellBanner,
-              });
+              window.open(cloudUpsellUrl, '_blank', 'noopener,noreferrer');
               return;
             }
 
@@ -94,8 +84,8 @@ function EmailConnectorUpsellBanner() {
           }}
         />
         {isDevFeaturesEnabled && (
-          <TextLink className={styles.cloudAction} href={cloudUpsellUrl} targetBlank="noopener">
-            {t(copyKeys.cloudAction, { productName: 'Logto Cloud' })}
+          <TextLink className={styles.cloudAction} href={selfHostedPlansUrl} targetBlank="noopener">
+            {t(copyKeys.secondaryAction)}
           </TextLink>
         )}
       </div>

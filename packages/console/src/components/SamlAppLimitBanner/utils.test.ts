@@ -25,7 +25,7 @@ describe('getSamlAppLimitBannerContent', () => {
     });
   });
 
-  it('points the applications notice at self-hosted plans when the feature is enabled', () => {
+  it('keeps Cloud primary and self-hosted plans secondary when the feature is enabled', () => {
     const content = getSamlAppLimitBannerContent({
       isDevFeaturesEnabled: true,
       variant: 'inline',
@@ -37,13 +37,17 @@ describe('getSamlAppLimitBannerContent', () => {
       descriptionKey: TFuncKey<'translation', 'admin_console'>;
       actionKey: TFuncKey<'translation', 'admin_console'>;
     } = content;
-    const url = new URL(content.href);
+    const cloudUrl = new URL(content.href);
+    const selfHostedUrl = new URL(content.secondaryHref!);
 
-    expect(descriptionKey).toBe('upsell.paywall.saml_applications_oss_limit_notice_self_hosted');
-    expect(actionKey).toBe('upsell.explore_self_hosted_plans');
-    expect(url.pathname).toBe('/self-hosted-plans');
-    expect(url.searchParams.get('utm_campaign')).toBe('self_hosted_plans');
-    expect(url.searchParams.get('utm_content')).toBe(
+    expect(descriptionKey).toBe('upsell.paywall.saml_applications_oss_limit_notice');
+    expect(actionKey).toBe('upsell.try_with_product_name');
+    expect(content.secondaryActionKey).toBe('upsell.explore_self_hosted_plans');
+    expect(cloudUrl.origin).toBe('https://cloud.logto.io');
+    expect(cloudUrl.searchParams.get('utm_campaign')).toBe('cloud_upsell');
+    expect(selfHostedUrl.pathname).toBe('/self-hosted-plans');
+    expect(selfHostedUrl.searchParams.get('utm_campaign')).toBe('self_hosted_plans');
+    expect(selfHostedUrl.searchParams.get('utm_content')).toBe(
       ossUpsellEntries.samlAppApplicationsLimitNotice
     );
   });
@@ -53,7 +57,7 @@ describe('getSamlAppLimitBannerContent', () => {
       isDevFeaturesEnabled: true,
       variant: 'footer',
     });
-    const url = new URL(content.href);
+    const url = new URL(content.secondaryHref!);
 
     expect(url.searchParams.get('utm_content')).toBe(
       ossUpsellEntries.samlAppCreateModalLimitBanner

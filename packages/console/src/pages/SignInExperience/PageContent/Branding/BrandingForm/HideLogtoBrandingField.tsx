@@ -62,9 +62,6 @@ function HideLogtoBrandingField({ variant, isEnabledInCloud }: Props) {
         <Trans
           i18nKey={ossNote.i18nKey}
           components={{
-            selfHosted: (
-              <TextLink href={ossNote.href} targetBlank="noopener" className={styles.highlight} />
-            ),
             a: (
               <TextLink
                 href={ossNote.cloudHref}
@@ -74,6 +71,18 @@ function HideLogtoBrandingField({ variant, isEnabledInCloud }: Props) {
             ),
           }}
         />
+        {ossNote.hasSelfHostedPlansOption && (
+          <>
+            {' · '}
+            <TextLink
+              href={ossNote.selfHostedHref}
+              targetBlank="noopener"
+              className={styles.highlight}
+            >
+              <DynamicT forKey="upsell.explore_self_hosted_plans" />
+            </TextLink>
+          </>
+        )}
       </div>
     </FormField>
   );

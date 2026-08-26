@@ -46,8 +46,6 @@ const sign_in_exp = {
     hide_logto_branding_description:
       'Entferne "Powered by Logto". Präsentiere deine Marke exklusiv mit einer klaren, professionellen Anmeldeerfahrung.',
     hide_logto_branding_oss_note: 'Diese Funktion ist nativ in <a>Logto Cloud</a> verfügbar.',
-    hide_logto_branding_self_hosted_note:
-      'Diese Funktion ist mit <selfHosted>Self-Hosted-Plänen</selfHosted> verfügbar. Sie ist auch nativ in <a>Logto Cloud</a> verfügbar.',
   },
   branding_uploads: {
     app_logo: {
@@ -98,8 +96,6 @@ const sign_in_exp = {
     bring_your_ui_oss_description: 'Passen Sie die Anmeldeoberfläche mit Ihrem eigenen Code an.',
     bring_your_ui_oss_card_description:
       'Laden Sie Ihre benutzerdefinierte Anmeldeoberfläche direkt in <a>Logto Cloud</a> hoch. Kein Fork und kein erneutes Deployment erforderlich.',
-    bring_your_ui_self_hosted_card_description:
-      'Laden Sie Ihre benutzerdefinierte Anmeldeoberfläche mit <selfHosted>Self-Hosted-Plänen</selfHosted> hoch. Sie können sie auch direkt in <a>Logto Cloud</a> hochladen.',
     bring_your_ui_oss_try_cloud: 'Cloud ausprobieren',
     preview_with_bring_your_ui_description:
       'Ihre benutzerdefinierten UI-Assets wurden erfolgreich hochgeladen und werden jetzt bereitgestellt. Daher wurde das eingebaute Vorschaufenster deaktiviert.\nUm Ihre personalisierte Anmelde-Benutzeroberfläche zu testen, klicken Sie auf die Schaltfläche "Live-Vorschau", um sie in einem neuen Browser-Tab zu öffnen.',

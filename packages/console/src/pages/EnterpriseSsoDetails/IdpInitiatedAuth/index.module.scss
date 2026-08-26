@@ -49,11 +49,10 @@ div[class*='radio'][class*='disabled'] {
   gap: _.unit(4);
 }
 
-.ossNote {
-  font: var(--font-body-2);
-  color: var(--color-text-secondary);
-}
-
-.ossAction {
+.ossActions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: _.unit(2);
   align-self: flex-start;
 }

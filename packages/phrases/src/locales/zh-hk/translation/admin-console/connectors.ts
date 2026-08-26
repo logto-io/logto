@@ -80,8 +80,6 @@ const connectors = {
     email_connector_upsell: {
       title: 'Logto 內置電郵服務',
       description: '零配置電郵傳送，開箱即用即可發送驗證碼和魔法連結。',
-      self_hosted_description:
-        '透過自託管企業方案實現零配置電郵傳送，開箱即用即可發送驗證碼和魔法連結，也可以試用 Logto Cloud。',
     },
     standard_connectors: '或者，你可以通過標準協議自定義你的社交連接器。',
   },
