@@ -155,6 +155,7 @@
 .ossCloudBannerActions {
   display: flex;
   align-items: center;
+  gap: _.unit(4);
   margin-left: auto;
   margin-right: _.unit(4.5);
   flex-shrink: 0;
@@ -164,6 +165,16 @@
   width: 20px;
   height: 20px;
   opacity: 70%;
+}
+
+.selfHostedPlansLink {
+  white-space: nowrap;
+  color: var(--color-text-secondary);
+}
+
+.selfHostedPlansLinkIcon {
+  width: 16px;
+  height: 16px;
 }
 
 .dismissButton {
@@ -275,6 +286,8 @@
   }
 
   .ossCloudBannerActions {
+    flex-direction: column;
+    align-items: flex-start;
     margin-left: 0;
     margin-right: 0;
     width: 100%;
