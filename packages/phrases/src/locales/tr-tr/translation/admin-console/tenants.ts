@@ -16,6 +16,10 @@ const tenants = {
     card_description:
       'Tek bir yönetici hesabını paylaşmadan kiracınıza yöneticiler veya iş birlikçileri ekleyin.',
     card_action: 'Logto Cloud’u keşfedin',
+    self_hosted_card_title: 'Kiracıları self-hosted planlarla daha güvenli yönetin',
+    self_hosted_card_description:
+      'Tek bir yönetici hesabını paylaşmadan kiracınıza yöneticiler veya iş birlikçileri ekleyin.',
+    self_hosted_card_action: 'Self-hosted planları keşfedin',
   },
   settings: {
     title: 'AYARLAR',

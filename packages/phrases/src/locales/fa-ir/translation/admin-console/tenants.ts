@@ -16,6 +16,10 @@ const tenants = {
     card_description:
       'مدیران یا همکاران را به مستأجر خود اضافه کنید بدون اشتراک‌گذاری یک حساب مدیر.',
     card_action: 'کشف Logto Cloud',
+    self_hosted_card_title: 'مدیریت امن‌تر مستأجرها با طرح‌های self-hosted',
+    self_hosted_card_description:
+      'مدیران یا همکاران را به مستأجر خود اضافه کنید بدون اشتراک‌گذاری یک حساب مدیر.',
+    self_hosted_card_action: 'کشف طرح‌های self-hosted',
   },
   settings: {
     title: 'تنظیمات',

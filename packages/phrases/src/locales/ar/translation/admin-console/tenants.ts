@@ -14,6 +14,10 @@ const tenants = {
     card_title: 'أدر المستأجرين بأمان أكبر مع Logto Cloud',
     card_description: 'أضف مسؤولين أو متعاونين إلى المستأجر الخاص بك دون مشاركة حساب مسؤول واحد.',
     card_action: 'استكشف Logto Cloud',
+    self_hosted_card_title: 'أدر المستأجرين بأمان أكبر مع خطط الاستضافة الذاتية',
+    self_hosted_card_description:
+      'أضف مسؤولين أو متعاونين إلى المستأجر الخاص بك دون مشاركة حساب مسؤول واحد.',
+    self_hosted_card_action: 'استكشف خطط الاستضافة الذاتية',
   },
   settings: {
     title: 'الإعدادات',

@@ -16,6 +16,10 @@ const tenants = {
     card_description:
       '1つの管理者アカウントを共有せずに、テナントに管理者やコラボレーターを追加できます。',
     card_action: 'Logto Cloud を見る',
+    self_hosted_card_title: 'セルフホストプランでテナントをより安全に管理',
+    self_hosted_card_description:
+      '1つの管理者アカウントを共有せずに、テナントに管理者やコラボレーターを追加できます。',
+    self_hosted_card_action: 'セルフホストプランを見る',
   },
   settings: {
     title: '設定',

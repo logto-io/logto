@@ -16,6 +16,10 @@ const tenants = {
     card_description:
       'Fügen Sie Ihrem Mandanten Admins oder Mitwirkende hinzu, ohne ein einzelnes Admin-Konto gemeinsam zu nutzen.',
     card_action: 'Logto Cloud entdecken',
+    self_hosted_card_title: 'Verwalten Sie Mandanten sicherer mit Self-Hosted-Plänen',
+    self_hosted_card_description:
+      'Fügen Sie Ihrem Mandanten Admins oder Mitwirkende hinzu, ohne ein einzelnes Admin-Konto gemeinsam zu nutzen.',
+    self_hosted_card_action: 'Self-Hosted-Pläne entdecken',
   },
   settings: {
     title: 'EINSTELLUNGEN',
