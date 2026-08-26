@@ -423,7 +423,7 @@ describe('oidc provider init', () => {
     } as Partial<KoaContextWithOIDC['oidc']>);
 
     await expect(configuration.loadExistingGrant(ctx)).rejects.toMatchError(
-      new errors.InvalidScope('requested scope is not allowed', 'email')
+      new errors.InvalidScope('requested scope is no longer allowed for the client', 'email')
     );
   });
 

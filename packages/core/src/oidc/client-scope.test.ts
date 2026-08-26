@@ -76,6 +76,16 @@ describe('getOidcScopesNoLongerAllowed', () => {
     ).toEqual([]);
   });
 
+  it('reports nothing for a client whose scope metadata is an empty string', () => {
+    expect(
+      getOidcScopesNoLongerAllowed(
+        asGrant([ReservedScope.OpenId, UserScope.Email].join(' ')),
+        asClient(''),
+        new Set([ReservedScope.OpenId, UserScope.Email])
+      )
+    ).toEqual([]);
+  });
+
   it('reports nothing when the request resolved no grant', () => {
     expect(
       getOidcScopesNoLongerAllowed(

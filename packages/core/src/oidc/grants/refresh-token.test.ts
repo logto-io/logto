@@ -142,6 +142,18 @@ const stubAccount = (ctx: KoaContextWithOIDC, overrideAccountId = accountId) => 
   });
 };
 
+/** The real `IdToken` constructor rejects the mocked plain-object client. */
+class StubIdToken {
+  scope?: string;
+  mask?: unknown;
+  rejected?: unknown;
+  set = jest.fn();
+  issue = jest.fn().mockResolvedValue('stub_id_token');
+}
+
+const stubIdToken = (ctx: KoaContextWithOIDC) =>
+  Sinon.stub(ctx.oidc.provider, 'IdToken').value(StubIdToken);
+
 const createAccessDeniedError = (message: string, statusCode: number) => {
   const error = new errors.AccessDenied(message);
   // eslint-disable-next-line @silverhand/fp/no-mutation
@@ -396,15 +408,7 @@ describe('refresh token grant', () => {
     });
     stubGrant(ctx, { getRejectedOIDCClaims: jest.fn().mockReturnValue([]) });
     stubAccount(ctx);
-    /** The real `IdToken` constructor rejects the mocked plain-object client. */
-    class StubIdToken {
-      scope?: string;
-      mask?: unknown;
-      rejected?: unknown;
-      set = jest.fn();
-      issue = jest.fn().mockResolvedValue('stub_id_token');
-    }
-    Sinon.stub(ctx.oidc.provider, 'IdToken').value(StubIdToken);
+    stubIdToken(ctx);
     const tenant = new MockTenant();
 
     await expect(mockHandler(tenant)(ctx)).resolves.toBeUndefined();
@@ -437,15 +441,7 @@ describe('refresh token grant', () => {
       getRejectedOIDCClaims: jest.fn().mockReturnValue([]),
     });
     stubAccount(ctx);
-    /** The real `IdToken` constructor rejects the mocked plain-object client. */
-    class StubIdToken {
-      scope?: string;
-      mask?: unknown;
-      rejected?: unknown;
-      set = jest.fn();
-      issue = jest.fn().mockResolvedValue('stub_id_token');
-    }
-    Sinon.stub(ctx.oidc.provider, 'IdToken').value(StubIdToken);
+    stubIdToken(ctx);
 
     const entityStub = Sinon.stub(ctx.oidc, 'entity');
     await expect(mockHandler()(ctx)).resolves.toBeUndefined();
@@ -478,14 +474,7 @@ describe('refresh token grant', () => {
       getRejectedOIDCClaims: jest.fn().mockReturnValue([]),
     });
     stubAccount(ctx);
-    class StubIdToken {
-      scope?: string;
-      mask?: unknown;
-      rejected?: unknown;
-      set = jest.fn();
-      issue = jest.fn().mockResolvedValue('stub_id_token');
-    }
-    Sinon.stub(ctx.oidc.provider, 'IdToken').value(StubIdToken);
+    stubIdToken(ctx);
 
     const entityStub = Sinon.stub(ctx.oidc, 'entity');
     await expect(mockHandler()(ctx)).resolves.toBeUndefined();

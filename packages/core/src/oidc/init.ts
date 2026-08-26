@@ -373,7 +373,7 @@ export default function initOidc(
 
         if (scopesNoLongerAllowed.length > 0) {
           throw new errors.InvalidScope(
-            'requested scope is not allowed',
+            'requested scope is no longer allowed for the client',
             scopesNoLongerAllowed.join(' ')
           );
         }

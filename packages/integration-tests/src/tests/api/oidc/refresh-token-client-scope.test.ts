@@ -1,30 +1,14 @@
 import { ReservedScope, UserScope } from '@logto/core-kit';
-import { decodeIdToken, fetchTokenByRefreshToken } from '@logto/js';
+import { decodeIdToken } from '@logto/js';
 import { ApplicationUserConsentScopeType } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 
 import { deleteUser } from '#src/api/admin-user.js';
 import { deleteUserConsentScopes } from '#src/api/application-user-consent-scope.js';
 import { deleteApplication } from '#src/api/application.js';
-import { defaultConfig } from '#src/client/index.js';
-import { createAppAndSignInWithPassword } from '#src/helpers/session.js';
+import { createAppAndSignInWithPassword, refreshTokens } from '#src/helpers/session.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
-
-const tokenEndpoint = `${defaultConfig.endpoint}/oidc/token`;
-
-/** Refresh without a `scope` parameter, which is what an SDK sends by default. */
-const refresh = async (clientId: string, refreshToken: string) =>
-  fetchTokenByRefreshToken(
-    { clientId, tokenEndpoint, refreshToken },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async (...args: Parameters<typeof fetch>): Promise<any> => {
-      const response = await fetch(...args);
-      assert(response.ok, new Error(`Refresh token exchange failed with ${response.status}`));
-
-      return response.json();
-    }
-  );
 
 describe('user scopes at refresh', () => {
   beforeAll(async () => {
@@ -45,7 +29,7 @@ describe('user scopes at refresh', () => {
     });
     assert(refreshToken, new Error('No refresh token issued'));
 
-    const granted = await refresh(app.id, refreshToken);
+    const granted = await refreshTokens({ clientId: app.id, refreshToken });
     assert(granted.idToken, new Error('No ID token issued'));
     expect(granted.scope.split(' ')).toContain(UserScope.Email);
     expect(decodeIdToken(granted.idToken)).toHaveProperty('email', userProfile.primaryEmail);
@@ -57,7 +41,10 @@ describe('user scopes at refresh', () => {
     );
 
     // The rotated token, since the first refresh consumed the original one.
-    const narrowed = await refresh(app.id, granted.refreshToken ?? refreshToken);
+    const narrowed = await refreshTokens({
+      clientId: app.id,
+      refreshToken: granted.refreshToken ?? refreshToken,
+    });
     assert(narrowed.idToken, new Error('No ID token issued'));
     expect(narrowed.scope.split(' ')).not.toContain(UserScope.Email);
     expect(decodeIdToken(narrowed.idToken)).not.toHaveProperty('email');
