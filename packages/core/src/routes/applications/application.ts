@@ -50,7 +50,13 @@ const parseIsThirdPartQueryParam = (isThirdPartyQuery: 'true' | 'false' | undefi
   return isThirdPartyQuery === 'true';
 };
 
-/** Third-party applications are not allowed to enable token exchange. */
+/**
+ * Third-party applications are not allowed to enable token exchange — by design, not as a
+ * temporary limitation: token exchange is consent-free impersonation reserved for the tenant's
+ * own services, while third-party access is governed by user consent, and the token exchange
+ * grant performs no per-client scope filtering on that premise. A third party that needs an
+ * exchanged token should obtain it through the tenant's own machine-to-machine backend.
+ */
 const assertThirdPartyApplicationTokenExchangeDisabled = (
   isThirdParty: boolean,
   allowTokenExchange?: boolean
