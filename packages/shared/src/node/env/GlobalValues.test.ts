@@ -70,11 +70,41 @@ describe('SSRF protection', () => {
       expect(createGlobalValues().ssrfAllowedAddresses).toEqual(['127.0.0.1', '10.0.0.0/8', '::1']);
     });
 
+    it('builds the allowlist during initialization', () => {
+      unsetEnvironmentVariable('IS_CLOUD');
+      vi.stubEnv('SSRF_ALLOWED_ADDRESSES', '127.0.0.1,10.0.0.0/8,::1');
+
+      const { ssrfAllowedAddressBlockList } = createGlobalValues();
+
+      expect(ssrfAllowedAddressBlockList?.check('127.0.0.1', 'ipv4')).toBe(true);
+      expect(ssrfAllowedAddressBlockList?.check('10.1.2.3', 'ipv4')).toBe(true);
+      expect(ssrfAllowedAddressBlockList?.check('::1', 'ipv6')).toBe(true);
+      expect(ssrfAllowedAddressBlockList?.check('169.254.169.254', 'ipv4')).toBe(false);
+    });
+
+    it.each([
+      ['not-an-ip', 'Invalid address'],
+      ['127.0.0.0/8/16', 'Invalid address'],
+      ['127.0.0.0/', 'Invalid CIDR prefix'],
+      ['127.0.0.0/abc', 'Invalid CIDR prefix'],
+      ['127.0.0.0/-1', 'Invalid CIDR prefix'],
+      ['127.0.0.0/33', 'Invalid CIDR prefix'],
+      ['::1/129', 'Invalid CIDR prefix'],
+    ])('rejects malformed entry %s during initialization', (entry, message) => {
+      unsetEnvironmentVariable('IS_CLOUD');
+      vi.stubEnv('SSRF_ALLOWED_ADDRESSES', entry);
+
+      expect(() => createGlobalValues()).toThrow(`${message} in \`SSRF_ALLOWED_ADDRESSES\``);
+    });
+
     it('always returns an empty array in Cloud', () => {
       vi.stubEnv('IS_CLOUD', 'true');
       vi.stubEnv('SSRF_ALLOWED_ADDRESSES', '127.0.0.1,10.0.0.0/8');
 
-      expect(createGlobalValues().ssrfAllowedAddresses).toEqual([]);
+      const values = createGlobalValues();
+
+      expect(values.ssrfAllowedAddresses).toEqual([]);
+      expect(values.ssrfAllowedAddressBlockList).toBeUndefined();
     });
   });
 });

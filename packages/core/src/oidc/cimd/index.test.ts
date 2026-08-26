@@ -8,11 +8,17 @@ import type Queries from '#src/tenants/Queries.js';
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
 
-const loadCimdModule = async ({ isSsrfProtectionEnabled = true } = {}) => {
+const loadCimdModule = async ({
+  isSsrfProtectionEnabled = true,
+  ssrfAllowedAddresses = [],
+}: {
+  isSsrfProtectionEnabled?: boolean;
+  ssrfAllowedAddresses?: string[];
+} = {}) => {
   jest.resetModules();
   mockEsm('#src/env-set/index.js', () => ({
     EnvSet: {
-      values: { isSsrfProtectionEnabled },
+      values: { isSsrfProtectionEnabled, ssrfAllowedAddresses },
     },
   }));
 
@@ -95,6 +101,14 @@ describe('isCimdEffectivelyEnabled', () => {
     const { isCimdEffectivelyEnabled } = await loadCimdModule({
       isSsrfProtectionEnabled: false,
     });
+    expect(isCimdEffectivelyEnabled(buildEnvSet(true))).toBe(false);
+  });
+
+  it('is disabled when private addresses are allowlisted', async () => {
+    const { isCimdEffectivelyEnabled } = await loadCimdModule({
+      ssrfAllowedAddresses: ['10.0.0.0/8'],
+    });
+
     expect(isCimdEffectivelyEnabled(buildEnvSet(true))).toBe(false);
   });
 });

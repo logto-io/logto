@@ -1,4 +1,4 @@
-import { type Socket } from 'node:net';
+import { BlockList, isIP, type Socket } from 'node:net';
 
 import Sinon from 'sinon';
 
@@ -10,10 +10,26 @@ const stubSsrfProtection = (
   isSsrfProtectionEnabled: boolean,
   ssrfAllowedAddresses: string[] = []
 ) => {
+  const ssrfAllowedAddressBlockList = new BlockList();
+
+  for (const entry of ssrfAllowedAddresses) {
+    const separator = entry.indexOf('/');
+    const address = separator === -1 ? entry : entry.slice(0, separator);
+    const prefix = separator === -1 ? undefined : entry.slice(separator + 1);
+    const family = isIP(address) === 6 ? 'ipv6' : 'ipv4';
+
+    if (prefix === undefined) {
+      ssrfAllowedAddressBlockList.addAddress(address, family);
+    } else {
+      ssrfAllowedAddressBlockList.addSubnet(address, Number(prefix), family);
+    }
+  }
+
   Sinon.stub(EnvSet, 'values').value({
     ...EnvSet.values,
     isSsrfProtectionEnabled,
     ssrfAllowedAddresses,
+    ssrfAllowedAddressBlockList,
   });
 };
 
@@ -181,27 +197,6 @@ describe('guardSocket', () => {
       expect(guard('169.254.169.254')).toMatchObject({
         message: 'hostname resolves to a special-use IP address',
       });
-    });
-
-    it('rejects a malformed entry instead of silently ignoring it', () => {
-      stubSsrfProtection(true, ['not-an-ip']);
-
-      expect(() => guard('127.0.0.1')).toThrow('Invalid address in `SSRF_ALLOWED_ADDRESSES`');
-    });
-
-    it.each([['127.0.0.0/'], ['127.0.0.0/abc'], ['127.0.0.0/-1'], ['127.0.0.0/33'], ['::1/129']])(
-      'rejects invalid CIDR prefix %s',
-      (entry) => {
-        stubSsrfProtection(true, [entry]);
-
-        expect(() => guard('127.0.0.1')).toThrow('Invalid CIDR prefix in `SSRF_ALLOWED_ADDRESSES`');
-      }
-    );
-
-    it('rejects entries with multiple slashes', () => {
-      stubSsrfProtection(true, ['127.0.0.0/8/16']);
-
-      expect(() => guard('127.0.0.1')).toThrow('Invalid address in `SSRF_ALLOWED_ADDRESSES`');
     });
   });
 });

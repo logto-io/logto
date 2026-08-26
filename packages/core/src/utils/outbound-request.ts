@@ -16,7 +16,7 @@
 
 import http from 'node:http';
 import https from 'node:https';
-import { BlockList, isIP, type Socket } from 'node:net';
+import { isIP, type Socket } from 'node:net';
 
 import { cond, type Optional } from '@silverhand/essentials';
 import { got, type Got } from 'got';
@@ -49,75 +49,9 @@ type DispatcherEmitter = {
   on: (event: string, listener: DispatcherConnectListener) => void;
 };
 
-/**
- * Comma-separated allowlist of otherwise-blocked destinations, as IP addresses or CIDR ranges
- * (`127.0.0.1,10.0.0.0/8,::1`).
- *
- * This is the narrow escape hatch for deployments that must deliver to a known internal host. It
- * is preferable to turning the protection off entirely: naming the destinations keeps every other
- * special-use address, including the cloud metadata endpoint, blocked. Ignored in Cloud.
- */
-const parseAllowedAddresses = (): Optional<BlockList> => {
-  const raw = EnvSet.values.ssrfAllowedAddresses;
-
-  if (raw.length === 0) {
-    return undefined;
-  }
-
-  const list = new BlockList();
-
-  for (const entry of raw) {
-    const segments = entry.trim().split('/');
-
-    assertThat(
-      segments.length === 1 || segments.length === 2,
-      new Error(`Invalid address in \`SSRF_ALLOWED_ADDRESSES\`: ${entry}`)
-    );
-
-    const [address, prefix] = segments;
-
-    // Silently skipping a malformed entry would leave the operator believing a host is reachable.
-    assertThat(
-      address && isIP(address),
-      new Error(`Invalid address in \`SSRF_ALLOWED_ADDRESSES\`: ${entry}`)
-    );
-
-    const family = isIP(address) === 6 ? 'ipv6' : 'ipv4';
-
-    if (prefix === undefined) {
-      list.addAddress(address, family);
-    } else {
-      const maxPrefix = family === 'ipv6' ? 128 : 32;
-      const parsedPrefix = Number(prefix);
-
-      assertThat(
-        /^\d+$/.test(prefix) && parsedPrefix >= 0 && parsedPrefix <= maxPrefix,
-        new Error(`Invalid CIDR prefix in \`SSRF_ALLOWED_ADDRESSES\`: ${entry}`)
-      );
-
-      list.addSubnet(address, parsedPrefix, family);
-    }
-  }
-
-  return list;
-};
-
-/** Parsing is cached against the configured value, which is fixed for the process' lifetime. */
-const allowedAddressesCache = new Map<string, Optional<BlockList>>();
-
-const getAllowedAddresses = (): Optional<BlockList> => {
-  const key = EnvSet.values.ssrfAllowedAddresses.join(',');
-
-  if (!allowedAddressesCache.has(key)) {
-    allowedAddressesCache.set(key, parseAllowedAddresses());
-  }
-
-  return allowedAddressesCache.get(key);
-};
-
 /** Whether the peer is explicitly allowed despite being a special-use address. */
 const isAllowedAddress = (address: string): boolean => {
-  const allowed = getAllowedAddresses();
+  const { ssrfAllowedAddressBlockList: allowed } = EnvSet.values;
 
   return allowed?.check(address, isIP(address) === 6 ? 'ipv6' : 'ipv4') ?? false;
 };

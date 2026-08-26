@@ -17,6 +17,6 @@ Protection is enabled by default. If your deployment intentionally delivers webh
 SSRF_ALLOWED_ADDRESSES=10.0.0.0/8,127.0.0.1
 ```
 
-Allowlisting the destinations is preferable to turning the protection off: every other special-use address, including the cloud metadata endpoint, stays blocked. `SSRF_PROTECTION_DISABLED=true` still disables the protection entirely, but it also disables features that require it, such as CIMD.
+Allowlisting the destinations is preferable to turning the protection off: every other special-use address, including the cloud metadata endpoint, stays blocked. Since CIMD accepts target URLs from unauthenticated callers, configuring an allowlist disables CIMD to prevent those callers from reaching private destinations. `SSRF_PROTECTION_DISABLED=true` also disables CIMD by turning the protection off entirely.
 
 Both variables are only honored in self-hosted deployments. `OIDC_PROVIDER_SSRF_PROTECTION_DISABLED`, which previously covered only the OIDC provider's own requests, keeps working as an alias for `SSRF_PROTECTION_DISABLED`.

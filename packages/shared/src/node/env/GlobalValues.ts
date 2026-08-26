@@ -1,3 +1,5 @@
+import { BlockList, isIP } from 'node:net';
+
 import {
   assertEnv,
   getEnv,
@@ -60,6 +62,51 @@ export const parseNonNegativeIntegerEnv = (value?: string, fallback = 0): number
   const parsed = Number(normalized);
 
   return Number.isSafeInteger(parsed) && parsed >= 0 ? parsed : fallback;
+};
+
+const addSsrfAllowedAddress = (list: BlockList, entry: string) => {
+  const segments = entry.split('/');
+
+  if (segments.length !== 1 && segments.length !== 2) {
+    throw new Error(`Invalid address in \`SSRF_ALLOWED_ADDRESSES\`: ${entry}`);
+  }
+
+  const [address, prefix] = segments;
+  const ipVersion = address && isIP(address);
+
+  if (!address || !ipVersion) {
+    throw new Error(`Invalid address in \`SSRF_ALLOWED_ADDRESSES\`: ${entry}`);
+  }
+
+  const family = ipVersion === 6 ? 'ipv6' : 'ipv4';
+
+  if (prefix === undefined) {
+    list.addAddress(address, family);
+    return;
+  }
+
+  const maxPrefix = family === 'ipv6' ? 128 : 32;
+  const parsedPrefix = Number(prefix);
+
+  if (!/^\d+$/.test(prefix) || parsedPrefix > maxPrefix) {
+    throw new Error(`Invalid CIDR prefix in \`SSRF_ALLOWED_ADDRESSES\`: ${entry}`);
+  }
+
+  list.addSubnet(address, parsedPrefix, family);
+};
+
+const parseSsrfAllowedAddresses = (entries: string[]): Optional<BlockList> => {
+  if (entries.length === 0) {
+    return undefined;
+  }
+
+  const list = new BlockList();
+
+  for (const entry of entries) {
+    addSsrfAllowedAddress(list, entry);
+  }
+
+  return list;
 };
 
 export default class GlobalValues {
@@ -181,12 +228,18 @@ export default class GlobalValues {
    * IP addresses or CIDR ranges (`127.0.0.1,10.0.0.0/8,::1`).
    *
    * Prefer this over `SSRF_PROTECTION_DISABLED` when only a known internal host has to be reached:
-   * naming the destinations keeps every other special-use address blocked, and it does not disable
-   * features that hard-require the protection, such as CIMD. Ignored in Cloud.
+   * naming the destinations keeps every other special-use address blocked. Features that accept
+   * unauthenticated target URLs, such as CIMD, are disabled while an allowlist is configured.
+   * Ignored in Cloud.
    */
   public readonly ssrfAllowedAddresses = this.isCloud
     ? []
     : getEnvAsStringArray('SSRF_ALLOWED_ADDRESSES');
+
+  /** Parsed at startup so malformed entries cannot throw from a socket event listener. */
+  public readonly ssrfAllowedAddressBlockList = parseSsrfAllowedAddresses(
+    this.ssrfAllowedAddresses
+  );
 
   /** Enables protected app local development without Cloud-only behavior. */
   public readonly isProtectedAppLocalDevEnabled =
