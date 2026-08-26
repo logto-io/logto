@@ -37,6 +37,16 @@ describe('oss upsell helpers', () => {
     expect(url.searchParams.get('utm_content')).toBe('tenant_settings_members_oss_upsell');
   });
 
+  it.each([
+    [ossUpsellEntries.ossSidebarCloudCard, 'oss_sidebar_cloud_card'],
+    [ossUpsellEntries.getStartedOssCloudBanner, 'get_started_oss_cloud_banner'],
+  ])('attributes the %s general upsell surface to self-hosted plans', (entry, content) => {
+    const url = new URL(buildSelfHostedPlansUrl(entry));
+
+    expect(url.searchParams.get('utm_campaign')).toBe('self_hosted_plans');
+    expect(url.searchParams.get('utm_content')).toBe(content);
+  });
+
   it('opens the UTM-tagged Cloud URL in a new tab', () => {
     const targetUrl = openCloudUpsell({
       entry: ossUpsellEntries.ossSidebarCloudCard,

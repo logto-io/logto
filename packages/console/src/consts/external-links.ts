@@ -12,6 +12,13 @@ export const pricingLink = `${officialWebsiteLink}/pricing`;
 export const selfHostedPlansLink = `${officialWebsiteLink}/self-hosted-plans`;
 export const logtoCloudConsoleLink = 'https://cloud.logto.io';
 export const officialWebsiteContactPageLink = `${officialWebsiteLink}/contact`;
+export const buildOfficialWebsiteContactPageUrl = (source: string) => {
+  const url = new URL(officialWebsiteContactPageLink);
+
+  url.searchParams.set('src', source);
+
+  return url.toString();
+};
 export const entityPolicyLink = 'https://docs.logto.io/logto-cloud/system-limit';
 export const logtoOssFeatureSupportLink =
   'https://docs.logto.io/logto-oss#feature-supported-by-logto-oss';
