@@ -1,3 +1,4 @@
+import UserAvatar from '@experience/assets/icons/default-user-avatar.svg?react';
 import FlipOnRtl from '@experience/shared/components/FlipOnRtl';
 import { onKeyDownHandler } from '@experience/shared/utils/a11y';
 import { useLogto } from '@logto/react';
@@ -21,12 +22,17 @@ type AvatarProps = {
   readonly initial?: string;
 };
 
-const Avatar = ({ className, avatar, initial }: AvatarProps) =>
-  avatar ? (
-    <img className={className} src={avatar} alt="avatar" referrerPolicy="no-referrer" />
-  ) : (
-    <span className={classNames(className, styles.avatarFallback)}>{initial}</span>
-  );
+const Avatar = ({ className, avatar, initial }: AvatarProps) => {
+  if (avatar) {
+    return <img className={className} src={avatar} alt="avatar" referrerPolicy="no-referrer" />;
+  }
+
+  if (initial) {
+    return <span className={classNames(className, styles.avatarFallback)}>{initial}</span>;
+  }
+
+  return <UserAvatar className={className} />;
+};
 
 const UserMenu = () => {
   const { t } = useTranslation();

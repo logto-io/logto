@@ -77,6 +77,29 @@ describe('<UserMenu />', () => {
     expect(getByRole('button', { name: 'User menu' }).textContent).toBe('A');
   });
 
+  it('falls back to the default user avatar icon when no avatar and no display name exist', () => {
+    const { getByRole, container } = renderWithPageContext(
+      <UserMenu />,
+      {},
+      {
+        pageContext: {
+          userInfo: {
+            ...mockUserInfo,
+            name: null,
+            username: null,
+            primaryEmail: null,
+            primaryPhone: null,
+            avatar: null,
+          },
+        },
+      }
+    );
+
+    expect(container.querySelector('img[alt="avatar"]')).toBeNull();
+    expect(getByRole('button', { name: 'User menu' }).textContent).toBe('');
+    expect(container.querySelector('svg')).not.toBeNull();
+  });
+
   it('renders the avatar image when one is set', () => {
     const { container } = renderWithPageContext(
       <UserMenu />,
