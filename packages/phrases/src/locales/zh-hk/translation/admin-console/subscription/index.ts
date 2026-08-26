@@ -43,6 +43,13 @@ const subscription = {
     },
   },
   quota_item,
+  cancel_feedback_modal: {
+    title: '很遺憾你要離開',
+    description:
+      '你的訂閱已取消。你的意見將幫助我們把 Logto 做得更好。每一條回應我們都會認真閱讀。',
+    what_made_you_cancel: '是什麼讓你決定取消？',
+    how_to_reconsider: '我們做些什麼能讓你重新考慮？',
+  },
   downgrade_modal: {
     title: '確定要降級嗎？',
     description:

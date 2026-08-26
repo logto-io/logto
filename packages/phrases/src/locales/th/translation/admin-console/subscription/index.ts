@@ -43,6 +43,13 @@ const subscription = {
     },
   },
   quota_item,
+  cancel_feedback_modal: {
+    title: 'เสียดายที่คุณต้องไป',
+    description:
+      'การสมัครสมาชิกของคุณถูกยกเลิกแล้ว ความคิดเห็นของคุณช่วยให้เราพัฒนา Logto ให้ดียิ่งขึ้น เราอ่านทุกคำตอบ',
+    what_made_you_cancel: 'อะไรทำให้คุณยกเลิก?',
+    how_to_reconsider: 'เราจะทำอะไรได้บ้างเพื่อให้คุณเปลี่ยนใจ?',
+  },
   downgrade_modal: {
     title: 'คุณแน่ใจหรือว่าต้องการลดระดับ?',
     description:

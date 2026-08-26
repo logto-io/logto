@@ -45,6 +45,13 @@ const subscription = {
     },
   },
   quota_item,
+  cancel_feedback_modal: {
+    title: 'Gittiğinizi görmek üzücü',
+    description:
+      "Aboneliğiniz iptal edildi. Geri bildiriminiz Logto'yu daha iyi hale getirmemize yardımcı oluyor. Her yanıtı okuyoruz.",
+    what_made_you_cancel: 'İptal etmenize ne sebep oldu?',
+    how_to_reconsider: 'Yeniden düşünmeniz için ne yapabiliriz?',
+  },
   downgrade_modal: {
     title: 'Emin misiniz, düşürmek istediğinize?',
     description:

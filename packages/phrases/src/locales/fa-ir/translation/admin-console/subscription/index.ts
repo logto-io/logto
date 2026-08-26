@@ -44,6 +44,13 @@ const subscription = {
     },
   },
   quota_item,
+  cancel_feedback_modal: {
+    title: 'از رفتن شما متأسفیم',
+    description:
+      'اشتراک شما لغو شد. بازخورد شما به ما کمک می‌کند Logto را بهتر کنیم. همه پاسخ‌ها را می‌خوانیم.',
+    what_made_you_cancel: 'چه چیزی باعث شد لغو کنید؟',
+    how_to_reconsider: 'چه کاری می‌توانیم انجام دهیم تا تجدیدنظر کنید؟',
+  },
   downgrade_modal: {
     title: 'آیا مطمئن هستید که می‌خواهید پلن را کاهش دهید؟',
     description:
