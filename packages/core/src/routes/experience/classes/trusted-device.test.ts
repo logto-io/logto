@@ -171,18 +171,18 @@ describe('Experience trusted-device lifecycle events', () => {
     expect(inactive.createLog).not.toHaveBeenCalled();
   });
 
-  it('keeps distinct trusted-device uses observable when they finish out of order', async () => {
-    const earlier = createSubject({
+  it('uses distinct audit-log keys for different interactions', async () => {
+    const first = createSubject({
       data: {},
       updateResult: trustedDevice,
       validateResult: trustedDevice,
-      interactionId: 'earlier-interaction-id',
+      interactionId: 'first-interaction-id',
     });
-    const later = createSubject({
+    const second = createSubject({
       data: {},
       updateResult: trustedDevice,
       validateResult: trustedDevice,
-      interactionId: 'later-interaction-id',
+      interactionId: 'second-interaction-id',
     });
     const options = {
       interactionEvent: InteractionEvent.SignIn,
@@ -190,15 +190,14 @@ describe('Experience trusted-device lifecycle events', () => {
       hasEligibleMfaProof: false,
     };
 
-    await Promise.all([earlier.subject.tryVerifyMfa(userId), later.subject.tryVerifyMfa(userId)]);
-    await later.subject.finalize(options);
-    await earlier.subject.finalize(options);
+    await Promise.all([first.subject.tryVerifyMfa(userId), second.subject.tryVerifyMfa(userId)]);
+    await Promise.all([first.subject.finalize(options), second.subject.finalize(options)]);
 
-    const laterIdempotencyKey = later.createLog.mock.calls[0]?.[1]?.idempotencyKey;
-    const earlierIdempotencyKey = earlier.createLog.mock.calls[0]?.[1]?.idempotencyKey;
-    expect(laterIdempotencyKey).toHaveLength(21);
-    expect(earlierIdempotencyKey).toHaveLength(21);
-    expect(earlierIdempotencyKey).not.toBe(laterIdempotencyKey);
+    const firstIdempotencyKey = first.createLog.mock.calls[0]?.[1]?.idempotencyKey;
+    const secondIdempotencyKey = second.createLog.mock.calls[0]?.[1]?.idempotencyKey;
+    expect(firstIdempotencyKey).toHaveLength(21);
+    expect(secondIdempotencyKey).toHaveLength(21);
+    expect(firstIdempotencyKey).not.toBe(secondIdempotencyKey);
   });
 
   it('clears the request-local device when revalidation fails', async () => {
