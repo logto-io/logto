@@ -85,6 +85,8 @@ const enterprise_sso_details = {
     enable_idp_initiated_sso: "Abilita l'SSO avviato dall'IdP",
     enable_idp_initiated_sso_description:
       'Consenti agli utenti aziendali di avviare il processo di autenticazione direttamente dal portale del fornitore di identità. Si prega di comprendere i potenziali rischi per la sicurezza prima di abilitare questa funzione.',
+    self_hosted_note:
+      "L'SSO avviato dall'IdP è disponibile con i <selfHosted>piani self-hosted</selfHosted>. È anche disponibile in modo nativo su <a>Logto Cloud</a>.",
     default_application: 'Applicazione predefinita',
     default_application_tooltip:
       "Applicazione di destinazione alla quale l'utente sarà reindirizzato dopo l'autenticazione.",

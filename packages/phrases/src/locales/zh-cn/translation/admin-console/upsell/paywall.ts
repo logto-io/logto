@@ -43,6 +43,8 @@ const paywall = {
   saml_applications_oss: '额外的 SAML 应用可用于 Logto Enterprise 计划。如需帮助，请联系我们。',
   saml_applications_oss_limit_notice:
     '你的开源实例最多支持 {{limit}} 个 SAML 应用。你可以使用 Logto Cloud，或联系我们了解更多可选方案。',
+  saml_applications_oss_limit_notice_self_hosted:
+    '你的开源实例最多支持 {{limit}} 个 SAML 应用。可通过自托管套餐解锁更多 SAML 应用，也可以使用 Logto Cloud。',
   logto_pricing_button_text: 'Logto 云定价',
   saml_applications: '额外的 SAML 应用可在 Logto Enterprise 计划中使用。如果需要帮助，请联系我们。',
   saml_applications_add_on:

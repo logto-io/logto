@@ -7,6 +7,7 @@ const upsell = {
   compare_plans: 'Planları Karşılaştır',
   try_with_product_name: '{{productName}} şimdi deneyin',
   view_plans: 'Planları Görüntüle',
+  explore_self_hosted_plans: 'Self-hosted planları keşfedin',
   create_tenant: {
     title: 'Kiracı planınızı seçin',
     description:

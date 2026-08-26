@@ -7,6 +7,7 @@ const upsell = {
   compare_plans: '比較計劃',
   try_with_product_name: '立即試用 {{productName}}',
   view_plans: '查看計劃',
+  explore_self_hosted_plans: '探索自託管方案',
   create_tenant: {
     title: '選擇您的租戶計劃',
     description:

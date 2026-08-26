@@ -87,6 +87,8 @@ const connectors = {
       title: 'Wbudowana usługa e-mail Logto',
       description:
         'Wysyłka e-maili bez konfiguracji. Od razu wysyłaj kody weryfikacyjne i magiczne linki.',
+      self_hosted_description:
+        'Wysyłka e-maili bez konfiguracji w planie self-hosted Enterprise. Od razu wysyłaj kody weryfikacyjne i magiczne linki albo wypróbuj Logto Cloud.',
     },
     standard_connectors:
       'Lub możesz dostosować swój łącznik społecznościowy, korzystając ze standardowego protokołu.',

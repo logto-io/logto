@@ -1,8 +1,4 @@
-import {
-  SsoProviderType,
-  type SignInExperience,
-  type SsoConnectorWithProviderConfig,
-} from '@logto/schemas';
+import { type SignInExperience, type SsoConnectorWithProviderConfig } from '@logto/schemas';
 import { pick } from '@silverhand/essentials';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
@@ -33,6 +29,7 @@ import SsoGuide from './SsoGuide';
 import { enterpriseSsoPathname } from './config';
 import styles from './index.module.scss';
 import useDeleteConnector from './use-delete-connector';
+import { shouldShowIdpInitiatedAuthTab } from './utils';
 
 const getSsoConnectorDetailsPathname = (ssoConnectorId: string, tab: EnterpriseSsoDetailsTabs) =>
   `${enterpriseSsoPathname}/${ssoConnectorId}/${tab}`;
@@ -69,11 +66,13 @@ function EnterpriseSsoDetails() {
 
   const isIdpInitiatedAuthConfigEnabled = useMemo(
     () =>
-      isDevFeaturesEnabled &&
-      isCloud &&
-      ssoConnector?.providerType === SsoProviderType.SAML &&
-      currentSubscriptionQuota.idpInitiatedSsoEnabled,
-    [ssoConnector, currentSubscriptionQuota]
+      shouldShowIdpInitiatedAuthTab({
+        isCloud,
+        isDevFeaturesEnabled,
+        providerType: ssoConnector?.providerType,
+        isIdpInitiatedSsoEnabled: currentSubscriptionQuota.idpInitiatedSsoEnabled,
+      }),
+    [currentSubscriptionQuota.idpInitiatedSsoEnabled, ssoConnector?.providerType]
   );
 
   useEffect(() => {
