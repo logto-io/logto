@@ -2,21 +2,23 @@ import type { VerificationCodeIdentifier } from '@logto/schemas';
 import { InteractionEvent, MfaFactor, VerificationType } from '@logto/schemas';
 import { useCallback, useContext, useMemo } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
-import { validate } from 'superstruct';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
-import { updateProfileWithVerificationCode } from '@/apis/experience';
+import {
+  updateProfileWithVerificationCode,
+  verifyAndUpdateProfileWithVerificationCode,
+} from '@/apis/experience';
 import { bindMfa } from '@/apis/experience/mfa';
 import { getInteractionEventFromState } from '@/apis/utils';
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
+import useMfaFlowState from '@/hooks/use-mfa-factors-state';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { useSieMethods } from '@/hooks/use-sie';
 import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
 import { SearchParameters } from '@/types';
-import { mfaFlowStateGuard } from '@/types/guard';
 
 import useGeneralVerificationCodeErrorHandler from './use-general-verification-code-error-handler';
 import useIdentifierErrorAlert, { IdentifierErrorType } from './use-identifier-error-alert';
@@ -26,13 +28,15 @@ import useSignInWithExistIdentifierConfirmModal from './use-sign-in-with-exist-i
 const useContinueFlowCodeVerification = (
   identifier: VerificationCodeIdentifier,
   verificationId: string,
-  errorCallback?: () => void
+  errorCallback?: () => void,
+  createTrustedDevice = false
 ) => {
   const [searchParameters] = useSearchParams();
   const redirectTo = useGlobalRedirectTo();
   const navigate = useNavigateWithPreservedSearchParams();
 
   const { state } = useLocation();
+  const mfaFlowState = useMfaFlowState();
   const { verificationIdsMap } = useContext(UserInteractionContext);
   const { isVerificationCodeEnabledForSignIn } = useSieMethods();
 
@@ -44,6 +48,7 @@ const useContinueFlowCodeVerification = (
   const handleError = useErrorHandler();
 
   const verifyVerificationCode = useApi(updateProfileWithVerificationCode);
+  const verifyAndUpdateProfile = useApi(verifyAndUpdateProfileWithVerificationCode);
   const asyncBindMfa = useApi(bindMfa);
 
   const { generalVerificationCodeErrorHandlers, errorMessage, clearErrorMessage } =
@@ -118,13 +123,13 @@ const useContinueFlowCodeVerification = (
 
   const onSubmit = useCallback(
     async (code: string) => {
-      const [, mfaFlowState] = validate(state, mfaFlowStateGuard);
-      // Check if this is an email MFA binding flow
-      if (
-        mfaFlowState?.availableFactors.includes(MfaFactor.EmailVerificationCode) &&
+      const factor =
         identifier.type === 'email'
-      ) {
-        const [verifyError] = await verifyVerificationCode(
+          ? MfaFactor.EmailVerificationCode
+          : MfaFactor.PhoneVerificationCode;
+
+      if (mfaFlowState?.availableFactors.includes(factor)) {
+        const [verifyError] = await verifyAndUpdateProfile(
           {
             code,
             identifier,
@@ -140,12 +145,14 @@ const useContinueFlowCodeVerification = (
         }
 
         const [bindError, bindResult] = await asyncBindMfa(
-          MfaFactor.EmailVerificationCode,
-          verificationId
+          factor,
+          verificationId,
+          undefined,
+          createTrustedDevice
         );
 
         if (bindError) {
-          await handleError(bindError);
+          await handleError(bindError, submitInteractionErrorHandler);
           errorCallback?.();
           return;
         }
@@ -180,15 +187,18 @@ const useContinueFlowCodeVerification = (
     },
     [
       asyncBindMfa,
+      createTrustedDevice,
       errorCallback,
       handleError,
       identifier,
       interactionEvent,
+      mfaFlowState,
       redirectTo,
-      state,
+      submitInteractionErrorHandler,
       verificationId,
       verifyVerificationCode,
       verifyVerificationCodeErrorHandlers,
+      verifyAndUpdateProfile,
     ]
   );
 

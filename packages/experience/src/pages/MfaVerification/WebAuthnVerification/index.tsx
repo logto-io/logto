@@ -28,15 +28,14 @@ const WebAuthnVerification = () => {
   );
 
   const handleWebAuthn = useWebAuthnOperation();
-  const { availability, isLoading, isChecked, setIsChecked } =
-    useTrustedDeviceOptIn(isSessionValid);
+  const { durationDays, isChecked, setIsChecked } = useTrustedDeviceOptIn(isSessionValid);
   const [isVerifying, setIsVerifying] = useState(false);
 
   if (!webAuthnState || !verificationId) {
     return <ErrorPage title="error.invalid_session" />;
   }
 
-  const { options, availableFactors, skippable } = webAuthnState;
+  const { options, ...flowState } = webAuthnState;
 
   if (!isWebAuthnOptions(options)) {
     return <ErrorPage title="error.invalid_session" />;
@@ -49,8 +48,7 @@ const WebAuthnVerification = () => {
         description="mfa.verify_via_passkey_description"
       >
         <TrustedDeviceOptIn
-          availability={availability}
-          isLoading={isLoading}
+          durationDays={durationDays}
           isChecked={isChecked}
           className={styles.optIn}
           onChange={setIsChecked}
@@ -66,10 +64,7 @@ const WebAuthnVerification = () => {
           }}
         />
       </SectionLayout>
-      <SwitchMfaFactorsLink
-        flow={UserMfaFlow.MfaVerification}
-        flowState={{ availableFactors, skippable }}
-      />
+      <SwitchMfaFactorsLink flow={UserMfaFlow.MfaVerification} flowState={flowState} />
     </SecondaryPageLayout>
   );
 };
