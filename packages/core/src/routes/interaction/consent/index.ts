@@ -25,7 +25,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { interactionPrefix } from '../const.js';
 
-import { buildConsentOrganizations } from './organizations.js';
+import { getConsentOrganizations, getOrganizationResourceScopes } from './organizations.js';
 import {
   buildResourceScopesToReject,
   filterAndParseMissingResourceScopes,
@@ -368,7 +368,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
         applicationId: clientId,
       });
 
-      const { organizations, organizationResourceScopes } = await buildConsentOrganizations({
+      const organizations = await getConsentOrganizations({
         envSet,
         queries,
         libraries,
@@ -378,8 +378,20 @@ export default function consentRoutes<T extends IRouterParamContext>(
         requestedScope,
         missingOIDCScope,
         allMissingResourceScopes,
-        userMissingResourceScopes: missingResourceScopes,
       });
+
+      /**
+       * The ceiling card renders once above the roster, so it only exists when a registered
+       * third-party roster does; CIMD organizations carry their own scope breakdown instead.
+       */
+      const organizationResourceScopes =
+        cimd || organizations.length === 0
+          ? undefined
+          : await getOrganizationResourceScopes(
+              queries,
+              allMissingResourceScopes,
+              missingResourceScopes
+            );
 
       ctx.body = {
         application,
