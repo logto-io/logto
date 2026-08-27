@@ -29,6 +29,7 @@ const MfaCodeVerification = ({ identifierType, verificationId }: Props) => {
   const [inputErrorMessage, setInputErrorMessage] = useState<string>();
   const [currentVerificationId, setCurrentVerificationId] = useState(verificationId);
   const { durationDays, isChecked, setIsChecked } = useTrustedDeviceOptIn();
+  const isTrustedDeviceOptInVisible = Boolean(durationDays);
 
   useEffect(() => {
     setCurrentVerificationId(verificationId);
@@ -77,7 +78,7 @@ const MfaCodeVerification = ({ identifierType, verificationId }: Props) => {
         error={errorMessage}
         onChange={(code) => {
           setCodeInput(code);
-          if (isCodeReady(code) && !durationDays) {
+          if (isCodeReady(code) && !isTrustedDeviceOptInVisible) {
             void handleSubmit(code);
           }
         }}

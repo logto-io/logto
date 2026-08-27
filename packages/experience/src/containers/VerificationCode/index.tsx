@@ -37,6 +37,7 @@ const VerificationCode = ({
   const { durationDays, isChecked, setIsChecked } = useTrustedDeviceOptIn(
     flow === UserFlow.Continue
   );
+  const isTrustedDeviceOptInVisible = Boolean(durationDays);
 
   const isCodeInputReady = useMemo(
     () => codeInput.length === defaultLength && codeInput.every(Boolean),
@@ -96,10 +97,10 @@ const VerificationCode = ({
   handleSubmitRef.current = handleSubmit;
 
   useEffect(() => {
-    if (isCodeInputReady && !durationDays) {
+    if (isCodeInputReady && !isTrustedDeviceOptInVisible) {
       void handleSubmitRef.current(codeInput);
     }
-  }, [codeInput, durationDays, isCodeInputReady]);
+  }, [codeInput, isCodeInputReady, isTrustedDeviceOptInVisible]);
 
   return (
     <form className={classNames(styles.form, className)}>
