@@ -1209,7 +1209,7 @@ describe('POST /experience/submit', () => {
     });
     expect(response.body).not.toHaveProperty('trustedDeviceFulfillment');
     expect(response.body).not.toHaveProperty('trustedDeviceCreation');
-    expect(getEffectivePolicy).toHaveBeenCalledWith(mockUser.id);
+    expect(getEffectivePolicy).toHaveBeenCalledTimes(1);
   });
 
   it('should expose disabled creation without a duration when effective policy disallows it', async () => {

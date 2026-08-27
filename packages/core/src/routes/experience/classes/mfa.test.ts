@@ -12,7 +12,7 @@ import {
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 
-import { type InteractionContext } from '../types.js';
+import { type InteractionContext, type TrustedDeviceAvailability } from '../types.js';
 
 import { type SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
 import { Mfa } from './mfa.js';
@@ -40,7 +40,7 @@ const createMfa = ({
   user?: Partial<User>;
   currentProfile?: Record<string, unknown>;
   organizations?: Readonly<OrganizationWithRoles[]>;
-  trustedDeviceAvailability?: { canCreate: boolean; durationDays?: number };
+  trustedDeviceAvailability?: TrustedDeviceAvailability | false;
 } = {}) => {
   const getIdentifiedUser = jest.fn(async () => user as User);
   const interactionContext: InteractionContext = {
@@ -53,7 +53,9 @@ const createMfa = ({
       throw new Error('should not be called');
     },
     getCurrentProfile: () => currentProfile,
-    getTrustedDeviceCreationAvailability: jest.fn(async () => trustedDeviceAvailability),
+    getTrustedDeviceCreationAvailability: jest.fn(
+      async () => trustedDeviceAvailability || undefined
+    ),
   };
 
   const getOrganizationsByUserId = jest.fn(async () => organizations);
@@ -207,6 +209,28 @@ describe('Mfa.assertMfaFulfilled', () => {
       data: {
         trustedDevice: { canCreate: true, durationDays: 30 },
       },
+    });
+  });
+
+  it('keeps optional MFA suggestion data absent without trusted-device availability', async () => {
+    const { mfa } = createMfa({
+      mfaSettings: {
+        policy: MfaPolicy.PromptOnlyAtSignIn,
+        factors: [MfaFactor.TOTP],
+        organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+      },
+      user: {
+        id: 'user-id',
+        logtoConfig: { [userMfaDataKey]: { enabled: false } },
+        mfaVerifications: [],
+      },
+      trustedDeviceAvailability: false,
+    });
+
+    await expect(mfa.assertMfaFulfilled()).rejects.toMatchObject({
+      code: 'user.suggest_mfa',
+      status: 422,
+      data: undefined,
     });
   });
 

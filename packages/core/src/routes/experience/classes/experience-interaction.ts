@@ -132,8 +132,8 @@ export default class ExperienceInteraction {
     if (typeof interactionData === 'string') {
       this.#interactionEvent = interactionData;
       this.profile = new Profile(libraries, queries, {}, interactionContext);
-      this.trustedDevice = new TrustedDevice(ctx, tenant, {});
       this.mfa = new Mfa(libraries, queries, {}, interactionContext);
+      this.trustedDevice = new TrustedDevice(ctx, tenant, {});
       return;
     }
 
@@ -161,10 +161,10 @@ export default class ExperienceInteraction {
     this.#interactionEvent = interactionEvent;
     this.userId = userId;
     this.profile = new Profile(libraries, queries, profile, interactionContext);
+    this.mfa = new Mfa(libraries, queries, mfa, interactionContext);
     this.trustedDevice = new TrustedDevice(ctx, tenant, {
       trustedDeviceCreation,
     });
-    this.mfa = new Mfa(libraries, queries, mfa, interactionContext);
     this.captcha = captcha;
     for (const record of verificationRecords) {
       const instance = buildVerificationRecord(libraries, queries, record);
@@ -392,6 +392,7 @@ export default class ExperienceInteraction {
       return;
     }
 
+    const trustedDeviceAvailabilityPromise = this.trustedDevice.getCreationAvailability(user.id);
     const isMfaVerifiedWithTrustedDevice = await this.trustedDevice.tryVerifyMfa(user.id);
 
     this.assignAdaptiveMfaHookResult(user.id, adaptiveMfaResult);
@@ -401,7 +402,7 @@ export default class ExperienceInteraction {
     }
 
     const { primaryEmail, primaryPhone } = user;
-    const trustedDevice = await this.trustedDevice.getCreationAvailability(user.id);
+    const trustedDevice = await trustedDeviceAvailabilityPromise;
     const maskedIdentifiers: Record<string, string> = {
       ...(mfaValidator.availableUserMfaVerificationTypes.includes(
         MfaFactor.EmailVerificationCode

@@ -177,7 +177,7 @@ export type InteractionContext = {
     verificationId: string
   ) => VerificationRecordMap[K];
   getCurrentProfile: () => InteractionProfile;
-  getTrustedDeviceCreationAvailability?: (
+  getTrustedDeviceCreationAvailability: (
     userId: string,
     organizations?: Readonly<OrganizationWithRoles[]>
   ) => Promise<TrustedDeviceAvailability | undefined>;

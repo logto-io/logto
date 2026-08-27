@@ -18,7 +18,11 @@ import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import { type Interaction, type WithHooksAndLogsContext } from '../types.js';
+import {
+  type Interaction,
+  type TrustedDeviceAvailability,
+  type WithHooksAndLogsContext,
+} from '../types.js';
 
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
@@ -110,23 +114,20 @@ const createInteraction = (
 const expectConventionalMfaRequired = async (
   experienceInteraction: InstanceType<typeof ExperienceInteraction>,
   options?: {
-    trustedDeviceAvailability?: { canCreate: boolean; durationDays?: number };
-    includeTrustedDevice?: boolean;
+    trustedDevice?: TrustedDeviceAvailability | false;
   }
 ) => {
-  const trustedDeviceAvailability = options?.trustedDeviceAvailability ?? {
-    canCreate: true,
-    durationDays: 30,
-  };
+  const trustedDevice =
+    options?.trustedDevice === undefined
+      ? { canCreate: true, durationDays: 30 }
+      : options.trustedDevice;
   await expect(experienceInteraction.guardMfaVerificationStatus()).rejects.toMatchError(
     new RequestError(
       { code: 'session.mfa.require_mfa_verification', status: 403 },
       {
         availableFactors: [MfaFactor.TOTP],
         maskedIdentifiers: {},
-        ...(options?.includeTrustedDevice === false
-          ? {}
-          : { trustedDevice: trustedDeviceAvailability }),
+        ...(trustedDevice ? { trustedDevice } : {}),
       }
     )
   );
@@ -192,7 +193,7 @@ describe('ExperienceInteraction trusted-device MFA verification', () => {
 
     await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.toBeUndefined();
 
-    expect(getEffectivePolicy).toHaveBeenCalledWith(mockUserWithMfaVerifications.id);
+    expect(getEffectivePolicy).toHaveBeenCalledTimes(1);
     expect(validateCredential).toHaveBeenCalledWith(ctx, mockUserWithMfaVerifications.id);
     expect(experienceInteraction.toJson()).not.toHaveProperty('trustedDeviceFulfillment');
   });
@@ -208,10 +209,10 @@ describe('ExperienceInteraction trusted-device MFA verification', () => {
     });
 
     await expectConventionalMfaRequired(experienceInteraction, {
-      trustedDeviceAvailability: { canCreate: false },
+      trustedDevice: { canCreate: false },
     });
 
-    expect(getEffectivePolicy).toHaveBeenCalledWith(mockUserWithMfaVerifications.id);
+    expect(getEffectivePolicy).toHaveBeenCalledTimes(1);
     expect(validateCredential).not.toHaveBeenCalled();
   });
 
@@ -231,7 +232,7 @@ describe('ExperienceInteraction trusted-device MFA verification', () => {
 
     await expectConventionalMfaRequired(experienceInteraction);
 
-    expect(getEffectivePolicy).toHaveBeenCalledWith(mockUserWithMfaVerifications.id);
+    expect(getEffectivePolicy).toHaveBeenCalledTimes(1);
     expect(validateCredential).toHaveBeenCalledWith(ctx, mockUserWithMfaVerifications.id);
     expect(experienceInteraction.toJson()).not.toHaveProperty('trustedDeviceFulfillment');
   });
@@ -278,7 +279,7 @@ describe('ExperienceInteraction trusted-device MFA verification', () => {
     validateCredential.mockResolvedValueOnce(trustedDevice);
     const { experienceInteraction } = createInteraction();
 
-    await expectConventionalMfaRequired(experienceInteraction, { includeTrustedDevice: false });
+    await expectConventionalMfaRequired(experienceInteraction, { trustedDevice: false });
 
     expect(getEffectivePolicy).not.toHaveBeenCalled();
     expect(validateCredential).not.toHaveBeenCalled();

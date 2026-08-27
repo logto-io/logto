@@ -53,7 +53,11 @@ type FinalizeOptions = {
 export class TrustedDevice {
   #creation?: InteractionStorage['trustedDeviceCreation'];
   #validatedDeviceId?: string;
-  #effectivePolicy?: Promise<EffectiveTrustedDevicePolicy>;
+  #effectivePolicy?: {
+    userId: string;
+    includesOrganizations: boolean;
+    promise: Promise<EffectiveTrustedDevicePolicy>;
+  };
 
   constructor(
     private readonly ctx: WithHooksAndLogsContext,
@@ -77,10 +81,9 @@ export class TrustedDevice {
 
     const { enabled } = await this.#getEffectivePolicy(userId);
 
-    assertThat(
-      enabled,
-      new RequestError({ code: 'session.mfa.require_mfa_verification', status: 403 })
-    );
+    if (!enabled) {
+      return;
+    }
 
     this.#creation ||= { deviceId: generateStandardId() };
   }
@@ -264,10 +267,34 @@ export class TrustedDevice {
   }
 
   async #getEffectivePolicy(userId: string, organizations?: Readonly<OrganizationWithRoles[]>) {
-    this.#effectivePolicy ??= organizations
-      ? this.tenant.libraries.trustedDevicePolicy.getEffectivePolicy(userId, organizations)
-      : this.tenant.libraries.trustedDevicePolicy.getEffectivePolicy(userId);
+    const cachedPolicy = this.#effectivePolicy;
 
-    return this.#effectivePolicy;
+    if (
+      cachedPolicy?.userId === userId &&
+      (cachedPolicy.includesOrganizations || organizations === undefined)
+    ) {
+      return cachedPolicy.promise;
+    }
+
+    const promise = this.tenant.libraries.trustedDevicePolicy.getEffectivePolicy(
+      userId,
+      organizations
+    );
+    const policyEntry = {
+      userId,
+      includesOrganizations: organizations !== undefined,
+      promise,
+    };
+    this.#effectivePolicy = policyEntry;
+
+    try {
+      return await promise;
+    } catch (error: unknown) {
+      if (this.#effectivePolicy === policyEntry) {
+        this.#effectivePolicy = undefined;
+      }
+
+      throw error;
+    }
   }
 }

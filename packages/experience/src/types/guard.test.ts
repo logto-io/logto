@@ -29,7 +29,7 @@ describe('guard', () => {
     expect(value).toEqual(record);
   });
 
-  it('mfaErrorDataGuard should accept passkey suggestion metadata', () => {
+  it('mfaErrorDataGuard should accept passkey suggestion and trusted-device metadata', () => {
     expect(() => {
       s.assert(
         {
@@ -37,6 +37,7 @@ describe('guard', () => {
           skippable: true,
           suggestion: true,
           isWebAuthnUsedAsSignInPasskey: true,
+          trustedDevice: { canCreate: true, durationDays: 30 },
         },
         mfaErrorDataGuard
       );
