@@ -96,6 +96,7 @@ const description = {
   grant_organization_access: '授予組織訪問權限：',
   authorize_personal_data_usage: '授權使用你的個人數據：',
   authorize_organization_access: '授權訪問指定組織：',
+  authorize_organizations_access: '授權訪問你的組織：',
   user_scopes: '個人用戶數據',
   organization_scopes: '組織訪問',
   authorize_agreement: `通過授權訪問，你同意{{name}}的<link></link>。`,

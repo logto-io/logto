@@ -107,6 +107,7 @@ const description = {
   grant_organization_access: 'منح الوصول إلى المؤسسة:',
   authorize_personal_data_usage: 'السماح باستخدام البيانات الشخصية الخاصة بك:',
   authorize_organization_access: 'السماح بالوصول إلى المؤسسة المحددة:',
+  authorize_organizations_access: 'السماح بالوصول إلى مؤسساتك:',
   user_scopes: 'بيانات المستخدم الشخصية',
   organization_scopes: 'الوصول إلى المؤسسة',
   authorize_agreement: `بالسماح بالوصول، فإنك توافق على <link></link> لـ {{name}}.`,

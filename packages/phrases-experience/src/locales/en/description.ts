@@ -110,6 +110,7 @@ const description = {
   grant_organization_access: 'Grant the organization access:',
   authorize_personal_data_usage: 'Authorize the use of your personal data:',
   authorize_organization_access: 'Authorize access to the specific organization:',
+  authorize_organizations_access: 'Authorize access to your organizations:',
   user_scopes: 'Personal user data',
   organization_scopes: 'Organization access',
   authorize_agreement: `By authorizing the access, you agree to the {{name}}'s <link></link>.`,

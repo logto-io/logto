@@ -113,6 +113,7 @@ const description = {
   grant_organization_access: 'Предоставить доступ организации:',
   authorize_personal_data_usage: 'Авторизовать использование ваших личных данных:',
   authorize_organization_access: 'Авторизовать доступ к конкретной организации:',
+  authorize_organizations_access: 'Авторизовать доступ к вашим организациям:',
   user_scopes: 'Личные данные пользователя',
   organization_scopes: 'Доступ к организации',
   authorize_agreement: `Авторизуя доступ, вы соглашаетесь с <link></link> {{name}}.`,

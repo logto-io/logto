@@ -43,6 +43,18 @@
   input:checked:not(:disabled) ~ .icon > *:nth-child(3) {
     display: block;
   }
+
+  /* A disabled input matches none of the sprite rules above and used to render an empty box; keep the glyph visible, dimmed to the disabled text color. */
+  input:not(:checked):disabled ~ .icon > *:nth-child(1),
+  input:checked:disabled ~ .icon > *:nth-child(2),
+  input:checked:disabled ~ .icon > *:nth-child(3) {
+    display: block;
+  }
+
+  input:disabled ~ .icon > *:nth-child(1),
+  input:disabled ~ .icon > *:nth-child(2) {
+    color: var(--color-type-disable);
+  }
 }
 
 :global(body.mobile) {

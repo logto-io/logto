@@ -107,6 +107,7 @@ const description = {
   grant_organization_access: '組織へのアクセスを許可する：',
   authorize_personal_data_usage: '個人データの使用を承認する：',
   authorize_organization_access: '特定の組織へのアクセスを承認する：',
+  authorize_organizations_access: '組織へのアクセスを承認する：',
   user_scopes: '個人ユーザーデータ',
   organization_scopes: '組織へのアクセス',
   authorize_agreement: `アクセスを承認することで、{{name}} の<link></link>に同意したことになります。`,

@@ -14,6 +14,7 @@ import ErrorPage from '@/pages/ErrorPage';
 import Button from '@/shared/components/Button';
 import { searchKeys } from '@/shared/utils/search-parameters';
 
+import OrganizationRoster from './OrganizationRoster';
 import OrganizationSelector, { type Organization } from './OrganizationSelector';
 import ScopesListCard from './ScopesListCard';
 import UnregisteredClientNotice from './UnregisteredClientNotice';
@@ -45,7 +46,7 @@ const Consent = () => {
   const redirectTo = useGlobalRedirectTo();
 
   const [consentData, setConsentData] = useState<ConsentInfoResponse>();
-  const [selectedOrganization, setSelectedOrganization] = useState<Organization>();
+  const [selectedOrganizations, setSelectedOrganizations] = useState<Organization[]>([]);
   const [isAccessDenied, setIsAccessDenied] = useState(false);
 
   const [isConsentLoading, setIsConsentLoading] = useState(false);
@@ -83,7 +84,7 @@ const Consent = () => {
 
   const consentHandler = useCallback(async () => {
     setIsConsentLoading(true);
-    const [error, result] = await asyncConsent(selectedOrganization?.id);
+    const [error, result] = await asyncConsent(selectedOrganizations.map(({ id }) => id));
     setIsConsentLoading(false);
 
     if (error) {
@@ -95,7 +96,7 @@ const Consent = () => {
     if (result?.redirectTo) {
       await redirectTo(result.redirectTo);
     }
-  }, [asyncConsent, handleConsentError, redirectTo, selectedOrganization?.id]);
+  }, [asyncConsent, handleConsentError, redirectTo, selectedOrganizations]);
 
   useEffect(() => {
     const getConsentInfoHandler = async () => {
@@ -114,7 +115,25 @@ const Consent = () => {
         return;
       }
 
-      setSelectedOrganization(result.organizations[0]);
+      /**
+       * A CIMD authorization consents exactly one organization, so the first stays preselected.
+       * A registered application starts from its consented organizations, which are locked into
+       * the selection; beyond that, a sole organization offers no real choice and stays
+       * preselected, while a roster of several starts empty for the user to pick from.
+       */
+      if (isCimdClientId(result.application.id)) {
+        setSelectedOrganizations(result.organizations.slice(0, 1));
+
+        return;
+      }
+
+      const consentedOrganizations = result.organizations.filter(({ isConsented }) => isConsented);
+
+      setSelectedOrganizations(
+        consentedOrganizations.length > 0 || result.organizations.length > 1
+          ? consentedOrganizations
+          : result.organizations.slice(0, 1)
+      );
     };
 
     void getConsentInfoHandler();
@@ -143,6 +162,24 @@ const Consent = () => {
   } = consentData;
 
   const { unregisteredClientHost, applicationName } = getClientDisplayData(consentData);
+
+  const toggleOrganization = (organization: Organization) => {
+    /**
+     * Consented organizations are locked: a later consent round can only add organizations.
+     * They stay in the submitted selection, which is safe since the consent insert is
+     * idempotent.
+     */
+    if (organization.isConsented) {
+      return;
+    }
+
+    setSelectedOrganizations((selectedOrganizations) =>
+      selectedOrganizations.some(({ id }) => id === organization.id)
+        ? selectedOrganizations.filter(({ id }) => id !== organization.id)
+        : [...selectedOrganizations, organization]
+    );
+  };
+
   const showTerms = Boolean(termsOfUseUrl ?? privacyPolicyUrl);
   const { redirectUri } = consentData;
   const redirectUriOrigin = consentData.redirectUri
@@ -175,14 +212,26 @@ const Consent = () => {
         appName={applicationName}
         className={styles.scopesCard}
       />
-      {consentData.organizations && (
-        <OrganizationSelector
-          className={styles.organizationSelector}
-          organizations={consentData.organizations}
-          selectedOrganization={selectedOrganization}
-          onSelect={setSelectedOrganization}
-        />
-      )}
+      {/* An unregistered (CIMD) client consents a single organization per authorization and keeps its per-organization scope breakdown; a registered client consents an amendable multi-select roster. */}
+      {consentData.organizations &&
+        (unregisteredClientHost ? (
+          <OrganizationSelector
+            className={styles.organizationSelector}
+            organizations={consentData.organizations}
+            selectedOrganization={selectedOrganizations[0]}
+            onSelect={(organization) => {
+              setSelectedOrganizations([organization]);
+            }}
+          />
+        ) : (
+          <OrganizationRoster
+            className={styles.organizationSelector}
+            organizations={consentData.organizations}
+            selectedOrganizations={selectedOrganizations}
+            resourceScopes={consentData.organizationResourceScopes}
+            onToggle={toggleOrganization}
+          />
+        ))}
       <div className={styles.footerButton}>
         {redirectUri && (
           <Button

@@ -110,6 +110,7 @@ const description = {
   grant_organization_access: 'Udělit organizaci přístup:',
   authorize_personal_data_usage: 'Povolit použití tvých osobních údajů:',
   authorize_organization_access: 'Povolit přístup konkrétní organizaci:',
+  authorize_organizations_access: 'Povolit přístup k vašim organizacím:',
   user_scopes: 'Osobní údaje uživatele',
   organization_scopes: 'Přístup organizace',
   authorize_agreement: `Povolením přístupu souhlasíš s {{name}} <link></link>.`,

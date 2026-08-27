@@ -112,6 +112,7 @@ const description = {
   grant_organization_access: 'Надати доступ організації:',
   authorize_personal_data_usage: 'Дозволити використання ваших персональних даних:',
   authorize_organization_access: 'Дозволити доступ до конкретної організації:',
+  authorize_organizations_access: 'Дозволити доступ до ваших організацій:',
   user_scopes: 'Персональні дані користувача',
   organization_scopes: 'Доступ до організації',
   authorize_agreement: 'Авторизуючи доступ, ви погоджуєтесь з <link></link> {{name}}.',

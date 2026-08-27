@@ -107,6 +107,7 @@ const description = {
   grant_organization_access: 'Organizasyon erişimi ver:',
   authorize_personal_data_usage: 'Kişisel verilerinizin kullanımını yetkilendirin:',
   authorize_organization_access: 'Belirli organizasyonlara erişim yetkisi verin:',
+  authorize_organizations_access: 'Organizasyonlarınıza erişim yetkisi verin:',
   user_scopes: 'Kişisel kullanıcı verileri',
   organization_scopes: 'Organizasyon erişimi',
   authorize_agreement: `Erişim yetkisi vererek, {{name}}'nin <link></link> şartlarını kabul etmiş olursunuz.`,

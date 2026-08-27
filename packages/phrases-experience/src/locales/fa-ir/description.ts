@@ -109,6 +109,7 @@ const description = {
   grant_organization_access: 'اعطای دسترسی به سازمان:',
   authorize_personal_data_usage: 'مجوز استفاده از اطلاعات شخصی شما:',
   authorize_organization_access: 'مجوز دسترسی به سازمان خاص:',
+  authorize_organizations_access: 'مجوز دسترسی به سازمان‌های شما:',
   user_scopes: 'اطلاعات شخصی کاربر',
   organization_scopes: 'دسترسی سازمان',
   authorize_agreement: `با مجوز دادن به دسترسی، با <link></link> {{name}} موافقت می‌کنید.`,

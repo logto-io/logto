@@ -206,6 +206,145 @@ describe('Consent', () => {
     });
   });
 
+  describe('organization consent', () => {
+    const organizations = [
+      { id: 'organization_1', name: 'Organization 1' },
+      { id: 'organization_2', name: 'Organization 2' },
+    ];
+
+    it('submits the organizations selected on the roster', async () => {
+      mockedGetConsentInfo.mockResolvedValueOnce({ ...consentInfo, organizations });
+      mockedConsent.mockResolvedValueOnce({ redirectTo: '' });
+
+      const { getByText } = renderConsent();
+
+      await waitFor(() => {
+        expect(getByText('Organization 1')).not.toBeNull();
+      });
+
+      fireEvent.click(getByText('Organization 1'));
+      fireEvent.click(getByText('Organization 2'));
+      fireEvent.click(getByText('action.authorize'));
+
+      await waitFor(() => {
+        expect(mockedConsent).toBeCalledWith(['organization_1', 'organization_2']);
+      });
+    });
+
+    it('deselects a toggled organization on a second click', async () => {
+      mockedGetConsentInfo.mockResolvedValueOnce({ ...consentInfo, organizations });
+      mockedConsent.mockResolvedValueOnce({ redirectTo: '' });
+
+      const { getByText } = renderConsent();
+
+      await waitFor(() => {
+        expect(getByText('Organization 1')).not.toBeNull();
+      });
+
+      fireEvent.click(getByText('Organization 1'));
+      fireEvent.click(getByText('Organization 2'));
+      fireEvent.click(getByText('Organization 1'));
+      fireEvent.click(getByText('action.authorize'));
+
+      await waitFor(() => {
+        expect(mockedConsent).toBeCalledWith(['organization_2']);
+      });
+    });
+
+    it('locks consented organizations while additional ones can be added', async () => {
+      mockedGetConsentInfo.mockResolvedValueOnce({
+        ...consentInfo,
+        organizations: [
+          { id: 'organization_1', name: 'Organization 1', isConsented: true },
+          { id: 'organization_2', name: 'Organization 2' },
+        ],
+      });
+      mockedConsent.mockResolvedValueOnce({ redirectTo: '' });
+
+      const { getByText } = renderConsent();
+
+      await waitFor(() => {
+        expect(getByText('Organization 1')).not.toBeNull();
+      });
+
+      const lockedRow = getByText('Organization 1').closest('[role="checkbox"]');
+      expect(lockedRow?.getAttribute('aria-checked')).toBe('true');
+      expect(lockedRow?.getAttribute('aria-disabled')).toBe('true');
+
+      // A locked organization cannot be deselected
+      fireEvent.click(getByText('Organization 1'));
+      fireEvent.click(getByText('Organization 2'));
+      fireEvent.click(getByText('action.authorize'));
+
+      await waitFor(() => {
+        expect(mockedConsent).toBeCalledWith(['organization_1', 'organization_2']);
+      });
+    });
+
+    it('renders the organization resource scopes once above the roster', async () => {
+      mockedGetConsentInfo.mockResolvedValueOnce({
+        ...consentInfo,
+        organizations,
+        organizationResourceScopes: [
+          {
+            resource: { id: 'resource_1', name: 'Resource 1', indicator: 'https://resource-1.io' },
+            scopes: [{ id: 'scope_1', name: 'read:data', description: 'Read data' }],
+          },
+        ],
+      });
+
+      const { getAllByText, getByText } = renderConsent();
+
+      await waitFor(() => {
+        expect(getByText('Organization 1')).not.toBeNull();
+      });
+
+      expect(getAllByText('Resource 1')).toHaveLength(1);
+      expect(getByText('Read data')).not.toBeNull();
+    });
+
+    it('keeps the single-organization selection with per-organization scopes for a CIMD client', async () => {
+      mockedGetConsentInfo.mockResolvedValueOnce({
+        ...cimdConsentInfo('Fancy client'),
+        organizations: [
+          {
+            id: 'organization_1',
+            name: 'Organization 1',
+            missingResourceScopes: [
+              {
+                resource: {
+                  id: 'resource_1',
+                  name: 'Resource 1',
+                  indicator: 'https://resource-1.io',
+                },
+                scopes: [{ id: 'scope_1', name: 'read:data', description: 'Read data' }],
+              },
+            ],
+          },
+          { id: 'organization_2', name: 'Organization 2' },
+        ],
+      });
+      mockedConsent.mockResolvedValueOnce({ redirectTo: '' });
+
+      const { getByText, queryByText } = renderConsent();
+
+      await waitFor(() => {
+        expect(getByText('Organization 1')).not.toBeNull();
+      });
+
+      // The per-organization scope breakdown of the selected organization stays
+      expect(getByText('Resource 1')).not.toBeNull();
+      // Other organizations stay behind the dropdown
+      expect(queryByText('Organization 2')).toBeNull();
+
+      fireEvent.click(getByText('action.authorize'));
+
+      await waitFor(() => {
+        expect(mockedConsent).toBeCalledWith(['organization_1']);
+      });
+    });
+  });
+
   it('signs out from the access denied page', async () => {
     mockedGetConsentInfo.mockRejectedValueOnce(accessDeniedError());
 

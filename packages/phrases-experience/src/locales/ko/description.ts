@@ -101,6 +101,7 @@ const description = {
   grant_organization_access: '조직 접근 권한 부여:',
   authorize_personal_data_usage: '개인 데이터 사용 권한 부여:',
   authorize_organization_access: '특정 조직에 대한 접근 권한 부여:',
+  authorize_organizations_access: '조직에 대한 접근 권한 부여:',
   user_scopes: '개인 사용자 데이터',
   organization_scopes: '조직 액세스',
   authorize_agreement: `접근을 허용함으로써, {{name}} 의 <link></link>에 동의하게 됩니다.`,
