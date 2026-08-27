@@ -139,7 +139,9 @@ export const createTrustedDeviceLibrary = (
   queries: TrustedDeviceQueries,
   policyLibrary: TrustedDevicePolicyLibrary,
   {
-    isProduction = EnvSet.values.isProduction,
+    // Integration tests run the production build over HTTP. Production cookie attributes are
+    // covered by unit tests, while browser-level tests need a credential the HTTP harness can use.
+    isProduction = EnvSet.values.isProduction && !EnvSet.values.isIntegrationTest,
     cleanupCooldown = trustedDeviceCleanupCooldown,
   }: TrustedDeviceLibraryOptions = {}
 ) => {

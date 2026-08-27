@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import type { TrustedDevice } from '@logto/schemas';
 
 import { createMockTrustedDevice } from '#src/__mocks__/trusted-device.js';
+import { EnvSet } from '#src/env-set/index.js';
 import type { TrustedDeviceQueries } from '#src/queries/trusted-device.js';
 
 import type { createTrustedDevicePolicyLibrary } from './trusted-device-policy.js';
@@ -302,6 +303,36 @@ describe('trusted device library', () => {
       serializeTrustedDeviceCredential(credential),
       expect.objectContaining({ secure: true, signed: false, path: '/' })
     );
+  });
+
+  it('uses an HTTP-compatible cookie in the integration test harness', () => {
+    const originalEnv = {
+      isProduction: EnvSet.values.isProduction,
+      isIntegrationTest: EnvSet.values.isIntegrationTest,
+    };
+    const setEnvFlag = (key: 'isProduction' | 'isIntegrationTest', value: boolean) => {
+      Reflect.set(EnvSet.values, key, value);
+    };
+    setEnvFlag('isProduction', true);
+    setEnvFlag('isIntegrationTest', true);
+
+    try {
+      const queries = createQueries();
+      const { ctx, set } = createCookieContext();
+      const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary());
+      const credential = { id: trustedDeviceId, secret: generateTrustedDeviceSecret() };
+
+      library.writeCredential(ctx, userId, credential, Date.now() + 60_000);
+
+      expect(set).toHaveBeenCalledWith(
+        getTrustedDeviceCookieName(tenantId, userId, false),
+        serializeTrustedDeviceCredential(credential),
+        expect.objectContaining({ secure: false, signed: false, path: '/' })
+      );
+    } finally {
+      setEnvFlag('isProduction', originalEnv.isProduction);
+      setEnvFlag('isIntegrationTest', originalEnv.isIntegrationTest);
+    }
   });
 
   it('queues a redacted deletion webhook only after deleting an existing record', async () => {

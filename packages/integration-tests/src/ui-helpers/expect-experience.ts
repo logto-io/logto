@@ -1,6 +1,5 @@
 import { demoAppApplicationId, type MfaFactor } from '@logto/schemas';
 import { appendPath } from '@silverhand/essentials';
-import { type CDPSession, type Protocol } from 'puppeteer';
 
 import { logtoUrl, mockSocialAuthPageUrl } from '#src/constants.js';
 import { readConnectorMessage } from '#src/helpers/index.js';
@@ -68,7 +67,6 @@ export default class ExpectExperience extends ExpectPage {
   }
 
   #ongoing?: OngoingExperience;
-  #tlsTerminationClient?: CDPSession;
 
   constructor(thePage = global.page, options: ExpectExperienceOptions = {}) {
     super(thePage);
@@ -130,8 +128,6 @@ export default class ExpectExperience extends ExpectPage {
     }
 
     await this.waitForUrl(this.#ongoing.initialUrl);
-
-    await this.#stopTlsTerminationSimulation();
 
     await this.toClick('div[role=button]', /sign out/i);
 
@@ -308,11 +304,6 @@ export default class ExpectExperience extends ExpectPage {
   async toOptInTrustedDevice(durationDays = 365) {
     const text = `Trust this device for ${durationDays} days`;
     await this.toSeeTrustedDeviceOptIn(durationDays);
-    // Integration tests run the production build over HTTP while Logto trusts proxy headers.
-    // Simulate TLS termination only for the interaction submit request so Koa can emit the
-    // production-only Secure credential cookie without affecting WebAuthn ceremonies, document
-    // navigation, or the demo app's authorization-code exchange.
-    await this.#startTlsTerminationSimulation();
     await this.toClick('div[role=checkbox]', text, false);
     await this.toMatchElement('div[role=checkbox][aria-checked=true]', { text });
   }
@@ -449,43 +440,5 @@ export default class ExpectExperience extends ExpectPage {
     return this.throwError(
       'The experience has not started yet. Use `startWith` to start the experience.'
     );
-  }
-
-  async #startTlsTerminationSimulation() {
-    if (this.#tlsTerminationClient) {
-      return;
-    }
-
-    const client = await this.page.target().createCDPSession();
-    const handler = async ({ requestId, request }: Protocol.Fetch.RequestPausedEvent) => {
-      const headers = Object.entries(request.headers)
-        .filter(([name]) => name.toLowerCase() !== 'x-forwarded-proto')
-        .map(([name, value]) => ({ name, value: String(value) }));
-
-      await client.send('Fetch.continueRequest', {
-        requestId,
-        headers: [...headers, { name: 'X-Forwarded-Proto', value: 'https' }],
-      });
-    };
-
-    this.#tlsTerminationClient = client;
-    client.on('Fetch.requestPaused', handler);
-    await client.send('Fetch.enable', {
-      patterns: [{ urlPattern: `${logtoUrl}/api/experience/submit*`, requestStage: 'Request' }],
-    });
-  }
-
-  async #stopTlsTerminationSimulation() {
-    const client = this.#tlsTerminationClient;
-
-    if (!client) {
-      return;
-    }
-
-    await client.send('Fetch.disable');
-    client.removeAllListeners('Fetch.requestPaused');
-    // Leave this page-scoped session attached until the page closes. Detaching it also tears down
-    // the virtual authenticator environment enabled by WebAuthn integration tests on this target.
-    this.#tlsTerminationClient = undefined;
   }
 }
