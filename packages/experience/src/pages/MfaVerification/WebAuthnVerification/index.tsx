@@ -28,8 +28,7 @@ const WebAuthnVerification = () => {
   );
 
   const handleWebAuthn = useWebAuthnOperation();
-  const { availability, isLoading, isChecked, setIsChecked } =
-    useTrustedDeviceOptIn(isSessionValid);
+  const { durationDays, isChecked, setIsChecked } = useTrustedDeviceOptIn(isSessionValid);
   const [isVerifying, setIsVerifying] = useState(false);
 
   if (!webAuthnState || !verificationId) {
@@ -49,8 +48,7 @@ const WebAuthnVerification = () => {
         description="mfa.verify_via_passkey_description"
       >
         <TrustedDeviceOptIn
-          availability={availability}
-          isLoading={isLoading}
+          durationDays={durationDays}
           isChecked={isChecked}
           className={styles.optIn}
           onChange={setIsChecked}

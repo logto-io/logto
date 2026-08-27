@@ -80,7 +80,7 @@ const trustedDeviceAvailabilityGuard = s.object({
 });
 
 const mfaErrorDataShape = {
-  availableFactors: s.optional(mfaFactorsGuard),
+  availableFactors: mfaFactorsGuard,
   skippable: s.optional(s.boolean()),
   maskedIdentifiers: s.optional(s.record(s.enums(mfaFactorEnumValues), s.string())),
   // Whether this MFA flow is an optional suggestion (e.g., add another factor after sign-up)
@@ -92,11 +92,10 @@ const mfaErrorDataShape = {
 
 export const mfaErrorDataGuard = s.object(mfaErrorDataShape);
 
-// MFA route state can include page-specific fields such as WebAuthn options or TOTP secrets.
-export const mfaFlowStateGuard = s.type({
-  ...mfaErrorDataShape,
-  availableFactors: mfaFactorsGuard,
-});
+export const mfaFlowStateGuard = s.object(mfaErrorDataShape);
+
+export const parseGuard = <T, S>(value: unknown, struct: s.Struct<T, S>) =>
+  s.validate(value, struct, { coerce: true, mask: true })[1];
 
 export type MfaFlowState = s.Infer<typeof mfaFlowStateGuard>;
 export type TrustedDeviceAvailability = s.Infer<typeof trustedDeviceAvailabilityGuard>;

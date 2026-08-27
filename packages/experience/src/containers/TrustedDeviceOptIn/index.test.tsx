@@ -8,15 +8,10 @@ import { type TrustedDeviceAvailability } from '@/types/guard';
 import TrustedDeviceOptIn from '.';
 
 const TestOptIn = ({ isEnabled = true }: { readonly isEnabled?: boolean }) => {
-  const { availability, isLoading, isChecked, setIsChecked } = useTrustedDeviceOptIn(isEnabled);
+  const { durationDays, isChecked, setIsChecked } = useTrustedDeviceOptIn(isEnabled);
 
   return (
-    <TrustedDeviceOptIn
-      availability={availability}
-      isLoading={isLoading}
-      isChecked={isChecked}
-      onChange={setIsChecked}
-    />
+    <TrustedDeviceOptIn durationDays={durationDays} isChecked={isChecked} onChange={setIsChecked} />
   );
 };
 

@@ -1,7 +1,7 @@
 import { MfaFactor, VerificationType } from '@logto/schemas';
 import * as s from 'superstruct';
 
-import { mfaErrorDataGuard, mfaFlowStateGuard, verificationIdsMapGuard } from './guard';
+import { mfaErrorDataGuard, verificationIdsMapGuard } from './guard';
 
 describe('guard', () => {
   it.each(Object.values(VerificationType))('verificationIdsMapGuard: %s', (type) => {
@@ -41,19 +41,6 @@ describe('guard', () => {
         },
         mfaErrorDataGuard
       );
-    }).not.toThrow();
-  });
-
-  it('mfaFlowStateGuard should accept page-specific route state', () => {
-    const state = {
-      availableFactors: [MfaFactor.WebAuthn, MfaFactor.BackupCode],
-      maskedIdentifiers: {},
-      trustedDevice: { canCreate: true, durationDays: 365 },
-      options: { challenge: 'challenge' },
-    };
-
-    expect(() => {
-      s.assert(state, mfaFlowStateGuard);
     }).not.toThrow();
   });
 });

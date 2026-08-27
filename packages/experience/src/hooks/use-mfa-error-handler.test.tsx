@@ -1,4 +1,4 @@
-import { type RequestErrorBody } from '@logto/schemas';
+import { MfaFactor, type RequestErrorBody } from '@logto/schemas';
 import { act, renderHook } from '@testing-library/react';
 
 import useMfaErrorHandler from './use-mfa-error-handler';
@@ -44,7 +44,7 @@ describe('useMfaErrorHandler', () => {
     jest.clearAllMocks();
   });
 
-  it('carries trusted-device availability through the suggest-MFA onboarding redirect', async () => {
+  it('does not carry unused error data through the suggest-MFA onboarding redirect', async () => {
     const { result } = renderHook(() => useMfaErrorHandler());
     const error: RequestErrorBody = {
       code: 'user.suggest_mfa',
@@ -58,9 +58,34 @@ describe('useMfaErrorHandler', () => {
 
     expect(mockedNavigate).toHaveBeenCalledWith(
       { pathname: '/mfa-onboarding' },
+      { replace: undefined }
+    );
+  });
+
+  it('masks unknown error data before forwarding MFA flow state', async () => {
+    const { result } = renderHook(() => useMfaErrorHandler());
+    const error: RequestErrorBody = {
+      code: 'user.missing_mfa',
+      message: 'MFA is missing',
+      data: {
+        availableFactors: [MfaFactor.TOTP, MfaFactor.WebAuthn],
+        trustedDevice: { canCreate: true, durationDays: 30 },
+        futureField: 'ignored',
+      },
+    };
+
+    await act(async () => {
+      await result.current['user.missing_mfa']?.(error);
+    });
+
+    expect(mockedNavigate).toHaveBeenCalledWith(
+      { pathname: '/mfa-binding' },
       {
         replace: undefined,
-        state: { trustedDevice: { canCreate: true, durationDays: 30 } },
+        state: {
+          availableFactors: [MfaFactor.TOTP, MfaFactor.WebAuthn],
+          trustedDevice: { canCreate: true, durationDays: 30 },
+        },
       }
     );
   });

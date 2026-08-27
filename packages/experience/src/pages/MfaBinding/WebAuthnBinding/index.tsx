@@ -30,8 +30,7 @@ const WebAuthnBinding = () => {
   );
 
   const handleWebAuthn = useWebAuthnOperation();
-  const { availability, isLoading, isChecked, setIsChecked } =
-    useTrustedDeviceOptIn(isSessionValid);
+  const { durationDays, isChecked, setIsChecked } = useTrustedDeviceOptIn(isSessionValid);
   const skipMfa = useSkipMfa();
   const skipOptionalMfa = useSkipOptionalMfa();
   const [isCreatingPasskey, setIsCreatingPasskey] = useState(false);
@@ -54,8 +53,7 @@ const WebAuthnBinding = () => {
       onSkip={conditional(skippable && (suggestion ? skipOptionalMfa : skipMfa))}
     >
       <TrustedDeviceOptIn
-        availability={availability}
-        isLoading={isLoading}
+        durationDays={durationDays}
         isChecked={isChecked}
         className={styles.optIn}
         onChange={setIsChecked}

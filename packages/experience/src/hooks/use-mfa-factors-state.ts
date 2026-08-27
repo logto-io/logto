@@ -1,14 +1,17 @@
+import { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
-import { validate } from 'superstruct';
 
-import { mfaBindingVerificationCodeStateGuard, mfaFlowStateGuard } from '@/types/guard';
+import { mfaBindingVerificationCodeStateGuard, mfaFlowStateGuard, parseGuard } from '@/types/guard';
 
 const useMfaFlowState = () => {
   const { state } = useLocation();
-  const [, mfaFlowState] = validate(state, mfaFlowStateGuard);
-  const [, verificationCodeState] = validate(state, mfaBindingVerificationCodeStateGuard);
 
-  return mfaFlowState ?? verificationCodeState?.mfaFlowState;
+  return useMemo(
+    () =>
+      parseGuard(state, mfaFlowStateGuard) ??
+      parseGuard(state, mfaBindingVerificationCodeStateGuard)?.mfaFlowState,
+    [state]
+  );
 };
 
 export default useMfaFlowState;

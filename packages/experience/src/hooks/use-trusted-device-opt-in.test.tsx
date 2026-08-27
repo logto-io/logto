@@ -9,8 +9,8 @@ jest.mock('@/constants/env', () => ({
 }));
 
 const TestHook = () => {
-  const { availability } = useTrustedDeviceOptIn();
-  return <span>{JSON.stringify(availability)}</span>;
+  const { durationDays } = useTrustedDeviceOptIn();
+  return <span>{durationDays}</span>;
 };
 
 it('ignores router-state availability when dev features are disabled', () => {

@@ -34,7 +34,7 @@ const VerificationCode = ({
   const [inputErrorMessage, setInputErrorMessage] = useState<string>();
 
   const { t } = useTranslation();
-  const { availability, isLoading, isVisible, isChecked, setIsChecked } = useTrustedDeviceOptIn(
+  const { durationDays, isChecked, setIsChecked } = useTrustedDeviceOptIn(
     flow === UserFlow.Continue
   );
 
@@ -96,10 +96,10 @@ const VerificationCode = ({
   handleSubmitRef.current = handleSubmit;
 
   useEffect(() => {
-    if (isCodeInputReady && !isVisible) {
+    if (isCodeInputReady && !durationDays) {
       void handleSubmitRef.current(codeInput);
     }
-  }, [codeInput, isCodeInputReady, isVisible]);
+  }, [codeInput, durationDays, isCodeInputReady]);
 
   return (
     <form className={classNames(styles.form, className)}>
@@ -143,8 +143,7 @@ const VerificationCode = ({
         />
       )}
       <TrustedDeviceOptIn
-        availability={availability}
-        isLoading={isLoading}
+        durationDays={durationDays}
         isChecked={isChecked}
         className={styles.optIn}
         onChange={setIsChecked}

@@ -11,7 +11,7 @@ const TestHook = () => {
   return <span>{JSON.stringify(flowState)}</span>;
 };
 
-it('reads MFA flow state nested by the verification-code binding route', () => {
+it('reads and masks MFA flow state nested by the verification-code binding route', () => {
   const mfaFlowState = {
     availableFactors: [MfaFactor.EmailVerificationCode],
     trustedDevice: { canCreate: true, durationDays: 365 },
@@ -21,7 +21,35 @@ it('reads MFA flow state nested by the verification-code binding route', () => {
       initialEntries={[
         {
           pathname: '/continue/verification-code',
-          state: { flow: UserMfaFlow.MfaBinding, mfaFlowState },
+          state: {
+            flow: UserMfaFlow.MfaBinding,
+            mfaFlowState: { ...mfaFlowState, futureField: 'ignored' },
+          },
+        },
+      ]}
+    >
+      <TestHook />
+    </MemoryRouter>
+  );
+
+  expect(container.textContent).toBe(JSON.stringify(mfaFlowState));
+});
+
+it('masks page-specific fields from direct MFA flow state', () => {
+  const mfaFlowState = {
+    availableFactors: [MfaFactor.TOTP, MfaFactor.WebAuthn],
+    trustedDevice: { canCreate: true, durationDays: 30 },
+  };
+  const { container } = render(
+    <MemoryRouter
+      initialEntries={[
+        {
+          pathname: '/mfa-binding/totp',
+          state: {
+            ...mfaFlowState,
+            secret: 'secret',
+            secretQrCode: 'data:image/png;base64,qr-code',
+          },
         },
       ]}
     >
