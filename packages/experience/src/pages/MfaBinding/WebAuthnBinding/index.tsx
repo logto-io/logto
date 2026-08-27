@@ -40,7 +40,7 @@ const WebAuthnBinding = () => {
   }
 
   const { options, ...mfaFlowState } = webAuthnState;
-  const { availableFactors, skippable, suggestion } = mfaFlowState;
+  const { skippable, suggestion } = mfaFlowState;
 
   if (!isWebAuthnOptions(options)) {
     return <ErrorPage title="error.invalid_session" />;
