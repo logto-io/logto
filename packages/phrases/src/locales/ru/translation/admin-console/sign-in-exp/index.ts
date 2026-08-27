@@ -46,8 +46,6 @@ const sign_in_exp = {
     hide_logto_branding_description:
       'Удалите надпись "Powered by Logto". Подчеркните только свой бренд с помощью чистого и профессионального процесса входа.',
     hide_logto_branding_oss_note: 'Эта функция нативно доступна в <a>Logto Cloud</a>.',
-    hide_logto_branding_self_hosted_note:
-      'Эта функция доступна с <selfHosted>self-hosted планами</selfHosted>. Она также нативно доступна в <a>Logto Cloud</a>.',
   },
   branding_uploads: {
     app_logo: {
@@ -98,8 +96,6 @@ const sign_in_exp = {
     bring_your_ui_oss_description: 'Настройте интерфейс входа с помощью собственного кода.',
     bring_your_ui_oss_card_description:
       'Загрузите свой пользовательский интерфейс входа прямо в <a>Logto Cloud</a>. Не нужно делать форк и повторно развёртывать.',
-    bring_your_ui_self_hosted_card_description:
-      'Загрузите свой пользовательский интерфейс входа с <selfHosted>self-hosted планами</selfHosted>. Вы также можете загрузить его прямо в <a>Logto Cloud</a>.',
     bring_your_ui_oss_try_cloud: 'Попробовать Cloud',
     preview_with_bring_your_ui_description:
       'Ваши пользовательские ресурсы интерфейса успешно загружены и теперь доступны. Встроенное окно предварительного просмотра отключено.\nДля тестирования персонализированного интерфейса входа нажмите кнопку "Прямая трансляция" для открытия в новой вкладке браузера.',

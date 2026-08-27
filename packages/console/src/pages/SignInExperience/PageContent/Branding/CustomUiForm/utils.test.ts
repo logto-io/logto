@@ -5,15 +5,14 @@ import { ossUpsellEntries } from '@/utils/oss-upsell';
 import { getOssBringYourUiCardContent } from './utils';
 
 describe('getOssBringYourUiCardContent', () => {
-  it('points the OSS card at self-hosted plans and Cloud', () => {
+  it('keeps Cloud first and adds the self-hosted plans option', () => {
     const content = getOssBringYourUiCardContent();
     const { i18nKey }: { i18nKey: TFuncKey } = content;
-    const url = new URL(content.href);
+    const url = new URL(content.selfHostedHref);
     const cloudUrl = new URL(content.cloudHref);
 
-    expect(i18nKey).toBe(
-      'admin_console.sign_in_exp.custom_ui.bring_your_ui_self_hosted_card_description'
-    );
+    expect(i18nKey).toBe('admin_console.sign_in_exp.custom_ui.bring_your_ui_oss_card_description');
+    expect(content.hasSelfHostedPlansOption).toBe(true);
     expect(url.origin).toBe('https://logto.io');
     expect(url.pathname).toBe('/self-hosted-plans');
     expect(url.searchParams.get('utm_campaign')).toBe('self_hosted_plans');

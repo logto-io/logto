@@ -12,37 +12,100 @@ const unsetEnvironmentVariable = (key: string) => {
   Reflect.deleteProperty(process.env, key);
 };
 
-describe('OIDC provider SSRF protection', () => {
+/** The current name, and the narrower one it replaced, which stays supported. */
+const optOutVariables = ['SSRF_PROTECTION_DISABLED', 'OIDC_PROVIDER_SSRF_PROTECTION_DISABLED'];
+
+describe('SSRF protection', () => {
   afterEach(() => {
     vi.unstubAllEnvs();
   });
 
   it('is enabled by default in self-hosted deployments', () => {
     unsetEnvironmentVariable('IS_CLOUD');
-    unsetEnvironmentVariable('OIDC_PROVIDER_SSRF_PROTECTION_DISABLED');
+    for (const variable of optOutVariables) {
+      unsetEnvironmentVariable(variable);
+    }
 
-    expect(createGlobalValues().isOidcProviderSsrfProtectionEnabled).toBe(true);
+    const values = createGlobalValues();
+    expect(values.isSsrfProtectionEnabled).toBe(true);
+    expect(values.isOidcProviderSsrfProtectionEnabled).toBe(true);
   });
 
-  it('can be disabled in self-hosted deployments', () => {
-    unsetEnvironmentVariable('IS_CLOUD');
-    vi.stubEnv('OIDC_PROVIDER_SSRF_PROTECTION_DISABLED', 'true');
+  describe.each(optOutVariables)('%s', (variable) => {
+    it('can disable the protection in self-hosted deployments', () => {
+      unsetEnvironmentVariable('IS_CLOUD');
+      for (const other of optOutVariables) {
+        unsetEnvironmentVariable(other);
+      }
+      vi.stubEnv(variable, 'true');
 
-    expect(createGlobalValues().isOidcProviderSsrfProtectionEnabled).toBe(false);
+      const values = createGlobalValues();
+      expect(values.isSsrfProtectionEnabled).toBe(false);
+      expect(values.isOidcProviderSsrfProtectionEnabled).toBe(false);
+    });
+
+    it.each(['', 'false', 'flase'])('stays enabled when the opt-out value is: %s', (value) => {
+      unsetEnvironmentVariable('IS_CLOUD');
+      for (const other of optOutVariables) {
+        unsetEnvironmentVariable(other);
+      }
+      vi.stubEnv(variable, value);
+
+      expect(createGlobalValues().isSsrfProtectionEnabled).toBe(true);
+    });
+
+    it('stays enabled in Cloud when the environment variable is true', () => {
+      vi.stubEnv('IS_CLOUD', 'true');
+      vi.stubEnv(variable, 'true');
+
+      expect(createGlobalValues().isSsrfProtectionEnabled).toBe(true);
+    });
   });
 
-  it.each(['', 'false', 'flase'])('stays enabled when the opt-out value is: %s', (value) => {
-    unsetEnvironmentVariable('IS_CLOUD');
-    vi.stubEnv('OIDC_PROVIDER_SSRF_PROTECTION_DISABLED', value);
+  describe('ssrfAllowedAddresses', () => {
+    it('parses comma-separated entries with trimming in self-hosted deployments', () => {
+      unsetEnvironmentVariable('IS_CLOUD');
+      vi.stubEnv('SSRF_ALLOWED_ADDRESSES', ' 127.0.0.1, 10.0.0.0/8 , ::1 ');
 
-    expect(createGlobalValues().isOidcProviderSsrfProtectionEnabled).toBe(true);
-  });
+      expect(createGlobalValues().ssrfAllowedAddresses).toEqual(['127.0.0.1', '10.0.0.0/8', '::1']);
+    });
 
-  it('stays enabled in Cloud when the environment variable is true', () => {
-    vi.stubEnv('IS_CLOUD', 'true');
-    vi.stubEnv('OIDC_PROVIDER_SSRF_PROTECTION_DISABLED', 'true');
+    it('builds the allowlist during initialization', () => {
+      unsetEnvironmentVariable('IS_CLOUD');
+      vi.stubEnv('SSRF_ALLOWED_ADDRESSES', '127.0.0.1,10.0.0.0/8,::1');
 
-    expect(createGlobalValues().isOidcProviderSsrfProtectionEnabled).toBe(true);
+      const { ssrfAllowedAddressBlockList } = createGlobalValues();
+
+      expect(ssrfAllowedAddressBlockList?.check('127.0.0.1', 'ipv4')).toBe(true);
+      expect(ssrfAllowedAddressBlockList?.check('10.1.2.3', 'ipv4')).toBe(true);
+      expect(ssrfAllowedAddressBlockList?.check('::1', 'ipv6')).toBe(true);
+      expect(ssrfAllowedAddressBlockList?.check('169.254.169.254', 'ipv4')).toBe(false);
+    });
+
+    it.each([
+      ['not-an-ip', 'Invalid address'],
+      ['127.0.0.0/8/16', 'Invalid address'],
+      ['127.0.0.0/', 'Invalid CIDR prefix'],
+      ['127.0.0.0/abc', 'Invalid CIDR prefix'],
+      ['127.0.0.0/-1', 'Invalid CIDR prefix'],
+      ['127.0.0.0/33', 'Invalid CIDR prefix'],
+      ['::1/129', 'Invalid CIDR prefix'],
+    ])('rejects malformed entry %s during initialization', (entry, message) => {
+      unsetEnvironmentVariable('IS_CLOUD');
+      vi.stubEnv('SSRF_ALLOWED_ADDRESSES', entry);
+
+      expect(() => createGlobalValues()).toThrow(`${message} in \`SSRF_ALLOWED_ADDRESSES\``);
+    });
+
+    it('always returns an empty array in Cloud', () => {
+      vi.stubEnv('IS_CLOUD', 'true');
+      vi.stubEnv('SSRF_ALLOWED_ADDRESSES', '127.0.0.1,10.0.0.0/8');
+
+      const values = createGlobalValues();
+
+      expect(values.ssrfAllowedAddresses).toEqual([]);
+      expect(values.ssrfAllowedAddressBlockList).toBeUndefined();
+    });
   });
 });
 

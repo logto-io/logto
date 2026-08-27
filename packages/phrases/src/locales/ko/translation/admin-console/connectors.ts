@@ -84,8 +84,6 @@ const connectors = {
       title: 'Logto 기본 이메일 서비스',
       description:
         '설정 없이 바로 이메일을 보낼 수 있습니다. 인증 코드와 매직 링크를 즉시 전송하세요.',
-      self_hosted_description:
-        '셀프 호스팅 Enterprise로 설정 없이 바로 이메일을 보낼 수 있습니다. 인증 코드와 매직 링크를 즉시 전송하거나 Logto Cloud를 사용해 보세요.',
     },
     standard_connectors: '또는 표준 프로토콜로 사용자의 소셜 커넥터를 맞춤화할 수 있습니다.',
   },

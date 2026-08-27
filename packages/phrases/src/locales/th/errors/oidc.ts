@@ -1,6 +1,6 @@
 const oidc = {
   aborted: 'ผู้ใช้ยกเลิกการโต้ตอบแล้ว',
-  invalid_scope: 'ขอบเขตไม่ถูกต้อง: {{error_description}}',
+  invalid_scope: 'ขอบเขตไม่ถูกต้อง: {{scope}}',
   invalid_token: 'โทเค็นไม่ถูกต้อง',
   invalid_client_metadata: 'ข้อมูลเมทาดาท่าของไคลเอนต์ไม่ถูกต้อง',
   insufficient_scope: 'โทเค็นไม่มีขอบเขต `{{scope}}`',

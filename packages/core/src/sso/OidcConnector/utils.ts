@@ -1,9 +1,11 @@
 import { parseJson, tokenResponseGuard, type TokenResponse } from '@logto/connector-kit';
 import { assert } from '@silverhand/essentials';
 import camelcaseKeys, { type CamelCaseKeys } from 'camelcase-keys';
-import { got, HTTPError } from 'got';
-import { createRemoteJWKSet, jwtVerify, type JWTVerifyOptions } from 'jose';
+import { HTTPError } from 'got';
+import { createRemoteJWKSet, customFetch, jwtVerify, type JWTVerifyOptions } from 'jose';
 import { z, ZodError } from 'zod';
+
+import { ssrfProtectedFetch, ssrfProtectedGot } from '#src/utils/outbound-request.js';
 
 import {
   SsoConnectorConfigErrorCodes,
@@ -27,7 +29,7 @@ import {
  * @returns The full-list of OIDC config
  */
 export const fetchOidcConfigRaw = async (issuer: string) => {
-  const { body } = await got.get(`${issuer}/.well-known/openid-configuration`);
+  const { body } = await ssrfProtectedGot.get(`${issuer}/.well-known/openid-configuration`);
 
   return camelcaseKeys(oidcConfigResponseGuard.parse(parseJson(body)));
 };
@@ -78,7 +80,7 @@ export const handleTokenExchange = async (
     'Content-Type': 'application/x-www-form-urlencoded',
   };
 
-  const httpResponse = await got.post(tokenEndpoint, {
+  const httpResponse = await ssrfProtectedGot.post(tokenEndpoint, {
     body: tokenRequestParameters.toString(),
     headers,
   });
@@ -148,11 +150,15 @@ export const getIdTokenClaims = async (
   jwtVerifyOptions?: JWTVerifyOptions
 ) => {
   try {
-    const { payload } = await jwtVerify(idToken, createRemoteJWKSet(new URL(config.jwksUri)), {
-      issuer: config.issuer,
-      audience: config.clientId,
-      ...jwtVerifyOptions,
-    });
+    const { payload } = await jwtVerify(
+      idToken,
+      createRemoteJWKSet(new URL(config.jwksUri), { [customFetch]: ssrfProtectedFetch }),
+      {
+        issuer: config.issuer,
+        audience: config.clientId,
+        ...jwtVerifyOptions,
+      }
+    );
 
     if (Math.abs((payload.iat ?? 0) - Date.now() / 1000) > issuedAtTimeTolerance) {
       throw new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
@@ -194,7 +200,7 @@ export const getIdTokenClaims = async (
 };
 
 export const getRawUserInfoResponse = async (accessToken: string, userinfoEndpoint: string) => {
-  const httpResponse = await got.get(userinfoEndpoint, {
+  const httpResponse = await ssrfProtectedGot.get(userinfoEndpoint, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
@@ -252,7 +258,7 @@ export const getTokenByRefreshToken = async (
   };
 
   try {
-    const httpResponse = await got.post(tokenEndpoint, {
+    const httpResponse = await ssrfProtectedGot.post(tokenEndpoint, {
       body: tokenRequestParameters.toString(),
       headers,
     });

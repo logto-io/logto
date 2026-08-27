@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 
 import type { TrustedDevice } from '@logto/schemas';
 
+import { createMockTrustedDevice } from '#src/__mocks__/trusted-device.js';
 import type { TrustedDeviceQueries } from '#src/queries/trusted-device.js';
 
 import type { createTrustedDevicePolicyLibrary } from './trusted-device-policy.js';
@@ -49,19 +50,14 @@ const createPolicyLibrary = ({ enabled = true, durationDays = 30 } = {}) =>
     getEffectivePolicy: jest.fn(async () => ({ enabled, durationDays })),
   }) as unknown as TrustedDevicePolicyLibrary;
 
-const buildTrustedDevice = (secretHash: Uint8Array): TrustedDevice => ({
-  tenantId,
-  id: trustedDeviceId,
-  userId,
-  secretHash: Buffer.from(secretHash),
-  userAgent: null,
-  ip: null,
-  country: null,
-  city: null,
-  createdAt: 1,
-  lastUsedAt: 1,
-  expiresAt: Date.now() + 60_000,
-});
+const buildTrustedDevice = (secretHash: Uint8Array): TrustedDevice =>
+  createMockTrustedDevice({
+    tenantId,
+    id: trustedDeviceId,
+    userId,
+    secretHash: Buffer.from(secretHash),
+    expiresAt: Date.now() + 60_000,
+  });
 
 describe('trusted device credential helpers', () => {
   it('builds deterministic non-identifying per-user cookie names', () => {
@@ -109,6 +105,23 @@ describe('trusted device library', () => {
 
   afterEach(() => {
     jest.restoreAllMocks();
+  });
+
+  it('checks for an unsigned user-specific trusted-device cookie', () => {
+    const queries = createQueries();
+    const { ctx, get } = createCookieContext('credential');
+    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(), {
+      isProduction: false,
+    });
+
+    expect(library.hasCredential(ctx, userId)).toBe(true);
+    expect(get).toHaveBeenCalledWith(getTrustedDeviceCookieName(tenantId, userId, false), {
+      signed: false,
+    });
+
+    const { ctx: emptyContext } = createCookieContext();
+
+    expect(library.hasCredential(emptyContext, userId)).toBe(false);
   });
 
   it('creates a record with only the secret hash and writes an unsigned host-only cookie', async () => {
@@ -185,6 +198,28 @@ describe('trusted device library', () => {
     await expect(
       library.createCredential({ ctx, deviceId: trustedDeviceId, userId })
     ).resolves.toBeUndefined();
+    expect(queries.insertIfNotExists).not.toHaveBeenCalled();
+    expect(set).not.toHaveBeenCalled();
+  });
+
+  it('enforces a request-resolved disabled policy without querying it again', async () => {
+    const queries = createQueries();
+    const policyLibrary = createPolicyLibrary({ enabled: true });
+    const { ctx, set } = createCookieContext();
+    const library = createTrustedDeviceLibrary(tenantId, queries, policyLibrary, {
+      isProduction: false,
+    });
+
+    await expect(
+      library.createCredential({
+        ctx,
+        deviceId: trustedDeviceId,
+        effectivePolicy: { enabled: false, durationDays: 30 },
+        userId,
+      })
+    ).resolves.toBeUndefined();
+
+    expect(policyLibrary.getEffectivePolicy).not.toHaveBeenCalled();
     expect(queries.insertIfNotExists).not.toHaveBeenCalled();
     expect(set).not.toHaveBeenCalled();
   });

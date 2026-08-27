@@ -60,11 +60,18 @@ export const getModalTitle = (connectorType?: ConnectorType): AdminConsoleKey =>
   return 'connectors.setup_title.social';
 };
 
-export const getEmailConnectorUpsellCopyKeys = () => ({
-  title: 'connectors.create_form.email_connector_upsell.title' as const,
-  description: 'connectors.create_form.email_connector_upsell.self_hosted_description' as const,
-  action: 'upsell.explore_self_hosted_plans' as const,
-  cloudAction: 'upsell.try_with_product_name' as const,
+type EmailConnectorUpsellCopyKeys = {
+  readonly title: 'connectors.create_form.email_connector_upsell.title';
+  readonly description: 'connectors.create_form.email_connector_upsell.description';
+  readonly action: 'upsell.try_with_product_name';
+  readonly secondaryAction: 'upsell.explore_self_hosted_plans';
+};
+
+export const getEmailConnectorUpsellCopyKeys = (): EmailConnectorUpsellCopyKeys => ({
+  title: 'connectors.create_form.email_connector_upsell.title',
+  description: 'connectors.create_form.email_connector_upsell.description',
+  action: 'upsell.try_with_product_name',
+  secondaryAction: 'upsell.explore_self_hosted_plans',
 });
 
 type ConnectorSelectionStateOptions = {

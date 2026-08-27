@@ -1,0 +1,130 @@
+@use '@experience/shared/scss/underscore' as _;
+
+.container {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.avatarButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  outline: none;
+  border: 1px solid transparent;
+  transition: border-color 0.2s ease-in-out;
+
+  &:hover,
+  &.active,
+  &:focus-visible {
+    border-color: var(--color-line-divider);
+  }
+}
+
+.avatar,
+.userInfoAvatar {
+  flex-shrink: 0;
+  border-radius: 8px;
+  object-fit: cover;
+  overflow: hidden;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+}
+
+.userInfoAvatar {
+  width: 40px;
+  height: 40px;
+}
+
+/* Applies only to the `<span>` placeholder rendered when the user has no avatar image. */
+.avatarFallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-overlay-brand-focused);
+  color: var(--color-type-link);
+  font: var(--font-label-2);
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + #{_.unit(1)});
+  inset-inline-end: 0;
+  z-index: 103;
+  min-width: 240px;
+  padding: _.unit(1);
+  background: var(--color-bg-float-overlay);
+  border: 1px solid var(--color-line-divider);
+  border-radius: 8px;
+  box-shadow: var(--color-shadow-2);
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: _.unit(3);
+  padding: _.unit(2);
+}
+
+.userInfoText {
+  min-width: 0;
+}
+
+.name {
+  font: var(--font-label-2);
+  color: var(--color-type-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.secondary {
+  font: var(--font-body-3);
+  color: var(--color-type-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.divider {
+  height: 1px;
+  margin: _.unit(1) 0;
+  background: var(--color-line-divider);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: _.unit(3);
+  padding: _.unit(2);
+  border-radius: 6px;
+  font: var(--font-body-2);
+  color: var(--color-type-primary);
+  cursor: pointer;
+  outline: none;
+  border: 1px solid transparent;
+
+  &:hover {
+    background: var(--color-overlay-neutral-hover);
+  }
+
+  &:focus-visible {
+    border-color: var(--color-brand-default);
+  }
+
+  &.disabled {
+    cursor: default;
+    opacity: 60%;
+  }
+}
+
+.itemIcon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: var(--color-type-secondary);
+}

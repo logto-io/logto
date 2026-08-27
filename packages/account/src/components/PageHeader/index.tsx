@@ -4,6 +4,7 @@ import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
+import UserMenu from '@ac/components/UserMenu';
 import { layoutClassNames } from '@ac/constants/layout';
 
 import styles from './index.module.scss';
@@ -31,6 +32,7 @@ const PageHeader = () => {
         )}
         <span className={styles.appName}>{t('account_center.page.title')}</span>
       </div>
+      <UserMenu />
     </header>
   );
 };

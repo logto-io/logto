@@ -15,6 +15,8 @@ const account_center = {
     sidebar_security: 'Sicherheit',
     sidebar_sessions: 'Sitzungen',
     support: 'Hilfe',
+    user_menu: 'Benutzermenü',
+    sign_out: 'Abmelden',
   },
   verification: {
     title: 'Sicherheitsüberprüfung',

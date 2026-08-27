@@ -97,7 +97,7 @@ describe('saveInteractionLastSubmissionToSession while CIMD is effectively enabl
   beforeEach(() => {
     Sinon.stub(EnvSet, 'values').value({
       ...EnvSet.values,
-      isOidcProviderSsrfProtectionEnabled: true,
+      isSsrfProtectionEnabled: true,
     });
   });
 

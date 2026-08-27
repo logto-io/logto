@@ -69,7 +69,7 @@ export default class ExperienceInteraction {
   readonly profile: Profile;
   /** The user linked MFA data in the current interaction that needs to be stored to database. */
   readonly mfa: Mfa;
-  /** Trusted-device intent, fulfillment, and credential lifecycle for the current interaction. */
+  /** Persisted creation intent and request-local trusted-device MFA verification lifecycle. */
   readonly trustedDevice: TrustedDevice;
 
   /** The user verification record list for the current interaction. */
@@ -118,6 +118,8 @@ export default class ExperienceInteraction {
         this.getVerificationRecordByTypeAndId(type, verificationId),
       getVerificationRecordById: (verificationId) => this.getVerificationRecordById(verificationId),
       getCurrentProfile: () => this.profile.data,
+      getTrustedDeviceCreationAvailability: async (userId, organizations) =>
+        this.trustedDevice.getCreationAvailability(userId, organizations),
     };
 
     this.adaptiveMfaValidator = new AdaptiveMfaValidator({
@@ -149,7 +151,6 @@ export default class ExperienceInteraction {
       mfa = {},
       userId,
       trustedDeviceCreation,
-      trustedDeviceFulfillment,
       interactionEvent,
       captcha = {
         verified: false,
@@ -163,7 +164,6 @@ export default class ExperienceInteraction {
     this.mfa = new Mfa(libraries, queries, mfa, interactionContext);
     this.trustedDevice = new TrustedDevice(ctx, tenant, {
       trustedDeviceCreation,
-      trustedDeviceFulfillment,
     });
     this.captcha = captcha;
     for (const record of verificationRecords) {
@@ -392,19 +392,17 @@ export default class ExperienceInteraction {
       return;
     }
 
-    const trustedDeviceFulfillmentStatus = await this.trustedDevice.tryFulfillMfa(user.id);
-
-    if (trustedDeviceFulfillmentStatus === 'stored') {
-      return;
-    }
+    const trustedDeviceAvailabilityPromise = this.trustedDevice.getCreationAvailability(user.id);
+    const isMfaVerifiedWithTrustedDevice = await this.trustedDevice.tryVerifyMfa(user.id);
 
     this.assignAdaptiveMfaHookResult(user.id, adaptiveMfaResult);
 
-    if (trustedDeviceFulfillmentStatus === 'validated') {
+    if (isMfaVerifiedWithTrustedDevice) {
       return;
     }
 
     const { primaryEmail, primaryPhone } = user;
+    const trustedDevice = await trustedDeviceAvailabilityPromise;
     const maskedIdentifiers: Record<string, string> = {
       ...(mfaValidator.availableUserMfaVerificationTypes.includes(
         MfaFactor.EmailVerificationCode
@@ -425,6 +423,7 @@ export default class ExperienceInteraction {
         {
           availableFactors: mfaValidator.availableUserMfaVerificationTypes,
           maskedIdentifiers,
+          ...conditional(trustedDevice && { trustedDevice }),
         }
       )
     );
@@ -442,7 +441,10 @@ export default class ExperienceInteraction {
   /** Record an explicit trusted-device opt-in after validating eligible MFA proof. */
   public async requestTrustedDeviceCreation() {
     const user = await this.getIdentifiedUser();
-    this.trustedDevice.requestCreation(await this.hasEligibleTrustedDeviceProof(user));
+    await this.trustedDevice.requestCreation(
+      user.id,
+      await this.hasEligibleTrustedDeviceProof(user)
+    );
   }
 
   /**
@@ -738,12 +740,8 @@ export default class ExperienceInteraction {
   }
 
   public toSanitizedJson(): SanitizedInteractionStorageData {
-    // Trusted-device intent and fulfillment are internal authentication state.
-    const {
-      trustedDeviceCreation: _,
-      trustedDeviceFulfillment: __,
-      ...interactionStorage
-    } = this.toJson();
+    // Trusted-device creation intent is internal authentication state.
+    const { trustedDeviceCreation: _, ...interactionStorage } = this.toJson();
 
     return {
       ...interactionStorage,

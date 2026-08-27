@@ -43,8 +43,6 @@ const sign_in_exp = {
     hide_logto_branding_description:
       '移除「Powered by Logto」。以乾淨、專業的登入體驗讓你的品牌成為焦點。',
     hide_logto_branding_oss_note: '此功能原生支援於 <a>Logto Cloud</a>。',
-    hide_logto_branding_self_hosted_note:
-      '此功能可透過 <selfHosted>自託管方案</selfHosted> 使用。它也原生支援於 <a>Logto Cloud</a>。',
   },
   branding_uploads: {
     app_logo: {
@@ -95,8 +93,6 @@ const sign_in_exp = {
     bring_your_ui_oss_description: '用你的程式碼自訂登入介面。',
     bring_your_ui_oss_card_description:
       '將你的自訂登入介面直接上傳到 <a>Logto Cloud</a>。無需 fork 和重新部署。',
-    bring_your_ui_self_hosted_card_description:
-      '透過 <selfHosted>自託管方案</selfHosted> 上傳你的自訂登入介面。你也可以直接上傳到 <a>Logto Cloud</a>。',
     bring_your_ui_oss_try_cloud: '試用 Cloud',
     preview_with_bring_your_ui_description:
       '你的自定義界面資源已成功上傳並正在服務。因此，內置預覽窗口已被禁用。\n若要測試你的個性化登錄界面，請點擊「實時預覽」按鈕在新瀏覽器標籤頁中打開。',

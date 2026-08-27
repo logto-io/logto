@@ -77,8 +77,6 @@ const enterprise_sso_details = {
     enable_idp_initiated_sso: '启用 IdP 发起的 SSO',
     enable_idp_initiated_sso_description:
       '允许企业用户直接从身份提供者的门户开始认证流程。请在启用此功能前了解潜在的安全风险。',
-    self_hosted_note:
-      'IdP 发起的 SSO 可通过 <selfHosted>自托管套餐</selfHosted> 使用。它也原生支持于 <a>Logto Cloud</a>。',
     default_application: '默认应用程序',
     default_application_tooltip: '用户进行认证后将被重定向到的目标应用程序。',
     empty_applications_error: '未找到应用程序。请在<a>应用程序</a>部分添加一个。',

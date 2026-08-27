@@ -88,8 +88,6 @@ const connectors = {
       title: "Logto'nun yerleşik e-posta hizmeti",
       description:
         'Yapılandırma gerektirmeden e-posta gönderimi. Doğrulama kodlarını ve sihirli bağlantıları hemen gönderin.',
-      self_hosted_description:
-        'Self-hosted Enterprise ile yapılandırma gerektirmeden e-posta gönderimi. Doğrulama kodlarını ve sihirli bağlantıları hemen gönderin veya Logto Cloud’u deneyin.',
     },
     standard_connectors: 'Veya standart bir protokolle sosyal bağlayıcınızı özelleştirebilirsiniz.',
   },

@@ -39,19 +39,22 @@ const assertClientIdWithinLengthBound = (clientId: string) => {
 };
 
 /**
- * Whether CIMD is effectively enabled for the tenant. Both conditions must hold:
+ * Whether CIMD is effectively enabled for the tenant. All conditions must hold:
  *
  * - The tenant has enabled CIMD in its configs;
- * - The provider SSRF protection is active — CIMD forces outbound fetches, so it hard-requires
- *   the SSRF-protected dispatcher. Disabling the protection (self-hosted only) turns CIMD off
- *   regardless of the stored config: the Management API's enable-time 422 only fails fast on the
- *   honest path, since the env can be flipped after the config is stored.
+ * - The provider SSRF protection is active without an address allowlist — CIMD accepts target URLs
+ *   from unauthenticated callers, so it must not inherit private destinations allowlisted for
+ *   trusted webhook or SSO configurations. Disabling or relaxing the protection (self-hosted only)
+ *   turns CIMD off regardless of the stored config: the Management API's enable-time 422 only fails
+ *   fast on the honest path, since the env can be flipped after the config is stored.
  *
  * Provider construction is the authoritative gate — the tenant is rebuilt when the stored config
  * changes, so every predicate consumer observes the same value for the provider's lifetime.
  */
 export const isCimdEffectivelyEnabled = (envSet: EnvSet): boolean =>
-  envSet.oidc.cimdEnabled && EnvSet.values.isOidcProviderSsrfProtectionEnabled;
+  envSet.oidc.cimdEnabled &&
+  EnvSet.values.isSsrfProtectionEnabled &&
+  EnvSet.values.ssrfAllowedAddresses.length === 0;
 
 /**
  * Whether an identifier presented as a `client_id` should be attributed to a CIMD client —

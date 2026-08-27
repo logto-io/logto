@@ -1,6 +1,6 @@
 const oidc = {
   aborted: 'کاربر نهایی تعامل را لغو کرد.',
-  invalid_scope: 'scope نامعتبر: {{error_description}}.',
+  invalid_scope: 'scope نامعتبر: {{scope}}.',
   invalid_token: 'توکن ارائه‌شده نامعتبر است.',
   invalid_client_metadata: 'متادیتای کلاینت ارائه‌شده نامعتبر است.',
   insufficient_scope: 'توکن فاقد scope `{{scope}}` است.',

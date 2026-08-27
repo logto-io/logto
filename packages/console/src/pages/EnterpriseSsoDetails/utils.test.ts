@@ -35,7 +35,7 @@ describe('shouldShowIdpInitiatedAuthTab', () => {
 });
 
 describe('shouldShowIdpInitiatedAuthUpsell', () => {
-  it('returns true for OSS', () => {
+  it('returns true for OSS when IdP-initiated SSO is not entitled', () => {
     expect(
       shouldShowIdpInitiatedAuthUpsell({
         isCloud: false,

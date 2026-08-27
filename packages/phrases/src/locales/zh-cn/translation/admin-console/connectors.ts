@@ -80,8 +80,6 @@ const connectors = {
     email_connector_upsell: {
       title: 'Logto 内置邮件服务',
       description: '零配置邮件发送，开箱即用即可发送验证码和魔法链接。',
-      self_hosted_description:
-        '通过自托管企业套餐实现零配置邮件发送，开箱即用即可发送验证码和魔法链接，也可以试用 Logto Cloud。',
     },
     standard_connectors: '或者你可以通过标准协议定制你的社交连接器。',
   },

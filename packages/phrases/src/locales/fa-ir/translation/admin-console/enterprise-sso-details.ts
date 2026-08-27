@@ -84,8 +84,6 @@ const enterprise_sso_details = {
     enable_idp_initiated_sso: 'فعال‌سازی SSO آغازشده توسط IdP',
     enable_idp_initiated_sso_description:
       'به کاربران سازمانی اجازه دهید فرایند احراز هویت را مستقیماً از پورتال ارائه‌دهنده هویت شروع کنند. لطفاً قبل از فعال‌سازی این ویژگی، خطرات امنیتی احتمالی را درک کنید.',
-    self_hosted_note:
-      'SSO آغازشده از IdP با <selfHosted>طرح‌های self-hosted</selfHosted> در دسترس است. همچنین به‌صورت بومی در <a>Logto Cloud</a> موجود است.',
     default_application: 'برنامه پیش‌فرض',
     default_application_tooltip: 'برنامه هدفی که کاربر پس از احراز هویت به آن هدایت می‌شود.',
     empty_applications_error:

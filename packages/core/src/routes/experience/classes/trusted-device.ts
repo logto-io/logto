@@ -1,32 +1,30 @@
 import { createHash } from 'node:crypto';
 
 import { appInsights } from '@logto/app-insights/node';
-import { InteractionEvent, type TrustedDevice as TrustedDeviceModel } from '@logto/schemas';
+import {
+  InteractionEvent,
+  type OrganizationWithRoles,
+  type TrustedDevice as TrustedDeviceModel,
+} from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { type EffectiveTrustedDevicePolicy } from '#src/libraries/trusted-device-policy.js';
 import { getTrustedDeviceEventData } from '#src/libraries/trusted-device.js';
 import { type TrustedDeviceMetadata } from '#src/queries/trusted-device.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
-import { type InteractionStorage, type WithHooksAndLogsContext } from '../types.js';
+import {
+  type InteractionStorage,
+  type TrustedDeviceAvailability,
+  type WithHooksAndLogsContext,
+} from '../types.js';
 
-type TrustedDeviceFulfillmentStatus =
-  /** A matching trusted-device fulfillment was restored from interaction storage. */
-  | 'stored'
-  /** A trusted-device credential was validated and stored during the current request. */
-  | 'validated';
-
-type TrustedDeviceData = Pick<
-  InteractionStorage,
-  'trustedDeviceCreation' | 'trustedDeviceFulfillment'
->;
-
-type TrustedDeviceFulfillment = NonNullable<InteractionStorage['trustedDeviceFulfillment']>;
+type TrustedDeviceData = Pick<InteractionStorage, 'trustedDeviceCreation'>;
 
 const buildTrustedDeviceUsageLogId = (tenantId: string, interactionId: string) =>
   createHash('sha256')
@@ -50,11 +48,16 @@ type FinalizeOptions = {
 };
 
 /**
- * Owns trusted-device interaction state and coordinates credential fulfillment and creation.
+ * Coordinates persisted creation intent and the request-local trusted-device credential lifecycle.
  */
 export class TrustedDevice {
   #creation?: InteractionStorage['trustedDeviceCreation'];
-  #fulfillment?: TrustedDeviceFulfillment;
+  #validatedDeviceId?: string;
+  #effectivePolicy?: {
+    userId: string;
+    includesOrganizations: boolean;
+    promise: Promise<EffectiveTrustedDevicePolicy>;
+  };
 
   constructor(
     private readonly ctx: WithHooksAndLogsContext,
@@ -62,21 +65,25 @@ export class TrustedDevice {
     data: TrustedDeviceData
   ) {
     this.#creation = data.trustedDeviceCreation;
-    this.#fulfillment = data.trustedDeviceFulfillment;
   }
 
   get data(): TrustedDeviceData {
     return {
       ...conditional(this.#creation && { trustedDeviceCreation: this.#creation }),
-      ...conditional(this.#fulfillment && { trustedDeviceFulfillment: this.#fulfillment }),
     };
   }
 
-  requestCreation(hasEligibleMfaProof: boolean) {
+  async requestCreation(userId: string, hasEligibleMfaProof: boolean) {
     assertThat(
       hasEligibleMfaProof,
       new RequestError({ code: 'session.mfa.require_mfa_verification', status: 403 })
     );
+
+    const { enabled } = await this.#getEffectivePolicy(userId);
+
+    if (!enabled) {
+      return;
+    }
 
     this.#creation ||= { deviceId: generateStandardId() };
   }
@@ -89,53 +96,65 @@ export class TrustedDevice {
     return creation;
   }
 
-  async getCreationAvailability(userId?: string) {
+  async getCreationAvailability(
+    userId?: string,
+    organizations?: Readonly<OrganizationWithRoles[]>
+  ): Promise<TrustedDeviceAvailability | undefined> {
     // Trusted-device opt-in is under development and must remain isolated from released flows.
     if (!EnvSet.values.isDevFeaturesEnabled || !userId) {
       return;
     }
 
-    const { enabled, durationDays } =
-      await this.tenant.libraries.trustedDevicePolicy.getEffectivePolicy(userId);
+    return trySafe(
+      async () => {
+        const { enabled, durationDays } = await this.#getEffectivePolicy(userId, organizations);
 
-    return {
-      canCreate: enabled,
-      ...conditional(enabled && { durationDays }),
-    };
+        return {
+          canCreate: enabled,
+          ...conditional(enabled && { durationDays }),
+        };
+      },
+      (error) => {
+        void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
+      }
+    );
   }
 
-  async tryFulfillMfa(userId: string): Promise<TrustedDeviceFulfillmentStatus | undefined> {
-    // Trusted-device MFA fulfillment is under development and must remain isolated from released flows.
+  /**
+   * Tries to verify the current MFA requirement with a trusted-device credential.
+   *
+   * @remarks Clears previously validated request-local state. On success, retains the device ID for
+   * post-submit usage finalization.
+   */
+  async tryVerifyMfa(userId: string): Promise<boolean> {
+    // Trusted-device MFA verification is under development and must remain isolated from released flows.
     if (!EnvSet.values.isDevFeaturesEnabled) {
-      return;
+      return false;
     }
 
-    if (this.#fulfillment?.userId === userId) {
-      return 'stored';
+    this.#validatedDeviceId = undefined;
+
+    const { trustedDevices } = this.tenant.libraries;
+
+    if (!trustedDevices.hasCredential(this.ctx, userId)) {
+      return false;
     }
 
-    const {
-      libraries: { trustedDevicePolicy, trustedDevices },
-    } = this.tenant;
-    const { enabled } = await trustedDevicePolicy.getEffectivePolicy(userId);
+    const { enabled } = await this.#getEffectivePolicy(userId);
 
     if (!enabled) {
-      return;
+      return false;
     }
 
     const trustedDevice = await trustedDevices.validateCredential(this.ctx, userId);
 
     if (!trustedDevice) {
-      return;
+      return false;
     }
 
-    this.#fulfillment = {
-      userId,
-      trustedDeviceId: trustedDevice.id,
-      fulfilledAt: Date.now(),
-    };
+    this.#validatedDeviceId = trustedDevice.id;
 
-    return 'validated';
+    return true;
   }
 
   async finalize({
@@ -161,10 +180,10 @@ export class TrustedDevice {
           ...conditional(city && { city }),
         };
 
-        const fulfillment = this.#fulfillment;
+        const validatedDeviceId = this.#validatedDeviceId;
 
-        if (fulfillment?.userId === userId) {
-          await this.#finalizeFulfillment(fulfillment, interactionEvent, userId, metadata);
+        if (validatedDeviceId) {
+          await this.#finalizeUsage(validatedDeviceId, interactionEvent, userId, metadata);
           return;
         }
 
@@ -176,8 +195,8 @@ export class TrustedDevice {
     );
   }
 
-  async #finalizeFulfillment(
-    fulfillment: TrustedDeviceFulfillment,
+  async #finalizeUsage(
+    validatedDeviceId: string,
     interactionEvent: InteractionEvent,
     userId: string,
     metadata: TrustedDeviceMetadata
@@ -187,7 +206,7 @@ export class TrustedDevice {
     }
 
     const trustedDevice = await this.tenant.libraries.trustedDevices.updateMetadata(
-      fulfillment.trustedDeviceId,
+      validatedDeviceId,
       userId,
       metadata
     );
@@ -214,6 +233,7 @@ export class TrustedDevice {
     const trustedDevice = await this.tenant.libraries.trustedDevices.createCredential({
       ctx: this.ctx,
       deviceId: creation.deviceId,
+      effectivePolicy: await this.#getEffectivePolicy(userId),
       userId,
       ...metadata,
     });
@@ -244,5 +264,37 @@ export class TrustedDevice {
     });
 
     log.append({ userId: data.userId, data });
+  }
+
+  async #getEffectivePolicy(userId: string, organizations?: Readonly<OrganizationWithRoles[]>) {
+    const cachedPolicy = this.#effectivePolicy;
+
+    if (
+      cachedPolicy?.userId === userId &&
+      (cachedPolicy.includesOrganizations || organizations === undefined)
+    ) {
+      return cachedPolicy.promise;
+    }
+
+    const promise = this.tenant.libraries.trustedDevicePolicy.getEffectivePolicy(
+      userId,
+      organizations
+    );
+    const policyEntry = {
+      userId,
+      includesOrganizations: organizations !== undefined,
+      promise,
+    };
+    this.#effectivePolicy = policyEntry;
+
+    try {
+      return await promise;
+    } catch (error: unknown) {
+      if (this.#effectivePolicy === policyEntry) {
+        this.#effectivePolicy = undefined;
+      }
+
+      throw error;
+    }
   }
 }

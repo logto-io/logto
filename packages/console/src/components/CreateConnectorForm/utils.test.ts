@@ -30,23 +30,17 @@ describe('shouldShowEmailConnectorUpsellBanner', () => {
 });
 
 describe('getEmailConnectorUpsellCopyKeys', () => {
-  test('uses self-hosted plans copy for the OSS email upsell banner', () => {
+  test('keeps Cloud copy primary and adds the self-hosted plans secondary action', () => {
     const copyKeys = getEmailConnectorUpsellCopyKeys();
     const titleKey: TFuncKey<'translation', 'admin_console'> = copyKeys.title;
     const descriptionKey: TFuncKey<'translation', 'admin_console'> = copyKeys.description;
     const actionKey: TFuncKey<'translation', 'admin_console'> = copyKeys.action;
-    const cloudActionKey: TFuncKey<'translation', 'admin_console'> = copyKeys.cloudAction;
 
-    expect({
-      title: titleKey,
-      description: descriptionKey,
-      action: actionKey,
-      cloudAction: cloudActionKey,
-    }).toEqual({
+    expect({ title: titleKey, description: descriptionKey, action: actionKey }).toEqual({
       title: 'connectors.create_form.email_connector_upsell.title',
-      description: 'connectors.create_form.email_connector_upsell.self_hosted_description',
-      action: 'upsell.explore_self_hosted_plans',
-      cloudAction: 'upsell.try_with_product_name',
+      description: 'connectors.create_form.email_connector_upsell.description',
+      action: 'upsell.try_with_product_name',
     });
+    expect(copyKeys.secondaryAction).toBe('upsell.explore_self_hosted_plans');
   });
 });

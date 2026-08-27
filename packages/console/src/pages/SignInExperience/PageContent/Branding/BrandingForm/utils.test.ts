@@ -5,13 +5,14 @@ import { ossUpsellEntries } from '@/utils/oss-upsell';
 import { getHideLogtoBrandingOssNote } from './utils';
 
 describe('getHideLogtoBrandingOssNote', () => {
-  it('points the OSS note at self-hosted plans and Cloud', () => {
+  it('keeps Cloud first and adds the self-hosted plans option', () => {
     const note = getHideLogtoBrandingOssNote();
     const { i18nKey }: { i18nKey: TFuncKey } = note;
-    const url = new URL(note.href);
+    const url = new URL(note.selfHostedHref);
     const cloudUrl = new URL(note.cloudHref);
 
-    expect(i18nKey).toBe('admin_console.sign_in_exp.branding.hide_logto_branding_self_hosted_note');
+    expect(i18nKey).toBe('admin_console.sign_in_exp.branding.hide_logto_branding_oss_note');
+    expect(note.hasSelfHostedPlansOption).toBe(true);
     expect(url.origin).toBe('https://logto.io');
     expect(url.pathname).toBe('/self-hosted-plans');
     expect(url.searchParams.get('utm_campaign')).toBe('self_hosted_plans');

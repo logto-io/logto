@@ -31,7 +31,6 @@ function Members() {
           trailingIcon={<ExternalLinkIcon />}
           onClick={() => {
             const entry = ossUpsellEntries.tenantSettingsMembersOssUpsell;
-
             openSelfHostedPlansUpsell({ entry });
           }}
         />

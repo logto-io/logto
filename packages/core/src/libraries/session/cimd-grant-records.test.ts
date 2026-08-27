@@ -117,7 +117,7 @@ describe('consent for a cimd client', () => {
   beforeEach(() => {
     Sinon.stub(EnvSet, 'values').value({
       ...EnvSet.values,
-      isOidcProviderSsrfProtectionEnabled: true,
+      isSsrfProtectionEnabled: true,
     });
   });
 

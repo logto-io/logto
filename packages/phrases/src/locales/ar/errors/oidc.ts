@@ -1,6 +1,6 @@
 const oidc = {
   aborted: 'أنهى المستخدم التفاعل.',
-  invalid_scope: 'نطاق غير صالح: {{error_description}}.',
+  invalid_scope: 'نطاق غير صالح: {{scope}}.',
   invalid_token: 'الرمز غير صالح.',
   invalid_client_metadata: 'بيانات العميل غير صالحة.',
   insufficient_scope: 'الرمز ناقص في النطاق `{{scope}}`.',

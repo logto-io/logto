@@ -33,9 +33,7 @@ const mockedUseTotpCodeVerification = jest.mocked(useTotpCodeVerification);
 const renderVerification = (isVisible: boolean) => {
   const onSubmit = jest.fn().mockResolvedValue(undefined);
   mockedUseTrustedDeviceOptIn.mockReturnValue({
-    availability: isVisible ? { canCreate: true, durationDays: 30 } : undefined,
-    isLoading: false,
-    isVisible,
+    durationDays: isVisible ? 30 : undefined,
     isChecked: false,
     setIsChecked: jest.fn(),
   });

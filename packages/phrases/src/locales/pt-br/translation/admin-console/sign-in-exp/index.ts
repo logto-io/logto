@@ -46,8 +46,6 @@ const sign_in_exp = {
     hide_logto_branding_description:
       'Remova "Powered by Logto". Destaque apenas a sua marca com uma experiência de login limpa e profissional.',
     hide_logto_branding_oss_note: 'Este recurso está disponível nativamente no <a>Logto Cloud</a>.',
-    hide_logto_branding_self_hosted_note:
-      'Este recurso está disponível com os <selfHosted>planos self-hosted</selfHosted>. Também está disponível nativamente no <a>Logto Cloud</a>.',
   },
   branding_uploads: {
     app_logo: {
@@ -98,8 +96,6 @@ const sign_in_exp = {
     bring_your_ui_oss_description: 'Personalize a interface de login com o seu próprio código.',
     bring_your_ui_oss_card_description:
       'Envie sua interface de login personalizada diretamente para o <a>Logto Cloud</a>. Não é preciso fazer fork nem implantar novamente.',
-    bring_your_ui_self_hosted_card_description:
-      'Envie sua interface de login personalizada com os <selfHosted>planos self-hosted</selfHosted>. Você também pode enviá-la diretamente para o <a>Logto Cloud</a>.',
     bring_your_ui_oss_try_cloud: 'Experimentar Cloud',
     preview_with_bring_your_ui_description:
       'Seus ativos de UI personalizados foram carregados com sucesso e agora estão sendo servidos. Consequentemente, a janela de visualização interna foi desativada.\nPara testar sua UI de login personalizada, clique no botão "Visualização em tempo real" para abri-la em uma nova aba do navegador.',

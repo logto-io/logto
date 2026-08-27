@@ -1,9 +1,13 @@
-import { defaultTrustedDevicePolicy, type TrustedDevicePolicy } from '@logto/schemas';
+import {
+  defaultTrustedDevicePolicy,
+  type OrganizationWithRoles,
+  type TrustedDevicePolicy,
+} from '@logto/schemas';
 
 import { UserRelationQueries } from '#src/queries/organization/user-relations.js';
 import type Queries from '#src/tenants/Queries.js';
 
-type EffectiveTrustedDevicePolicy = Readonly<Required<TrustedDevicePolicy>>;
+export type EffectiveTrustedDevicePolicy = Readonly<Required<TrustedDevicePolicy>>;
 
 export const resolveEffectiveTrustedDevicePolicy = (
   policy: TrustedDevicePolicy,
@@ -14,10 +18,15 @@ export const resolveEffectiveTrustedDevicePolicy = (
 });
 
 export const createTrustedDevicePolicyLibrary = (queries: Queries) => {
-  const getEffectivePolicy = async (userId: string) => {
+  const getEffectivePolicy = async (
+    userId: string,
+    organizations?: Readonly<OrganizationWithRoles[]>
+  ) => {
     const [signInExperience, hasDisallowedOrganization] = await Promise.all([
       queries.signInExperiences.findDefaultSignInExperience(),
-      new UserRelationQueries(queries.pool).hasUserDisallowedTrustedDeviceOrganization(userId),
+      organizations
+        ? organizations.some(({ isTrustedDeviceAllowed }) => !isTrustedDeviceAllowed)
+        : new UserRelationQueries(queries.pool).hasUserDisallowedTrustedDeviceOrganization(userId),
     ]);
 
     return resolveEffectiveTrustedDevicePolicy(

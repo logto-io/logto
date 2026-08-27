@@ -88,8 +88,6 @@ const connectors = {
       title: 'Integrierter E-Mail-Dienst von Logto',
       description:
         'E-Mail-Zustellung ohne Konfiguration. Versenden Sie Verifizierungscodes und Magic Links sofort einsatzbereit.',
-      self_hosted_description:
-        'E-Mail-Zustellung ohne Konfiguration mit Self-Hosted Enterprise. Versenden Sie Verifizierungscodes und Magic Links sofort einsatzbereit, oder testen Sie Logto Cloud.',
     },
     standard_connectors:
       'Oder Sie können Ihren Social Connector mit einem Standardprotokoll anpassen.',

@@ -87,7 +87,12 @@ const parseMissingResourceScopesInfo = async (
   );
 };
 
-/** Find the requested or snapshot OIDC scopes that the client's current scope no longer allows. */
+/**
+ * Find the requested or snapshot OIDC scopes that the client's current scope no longer allows.
+ *
+ * The issuance-time counterpart is `getOidcScopesNoLongerAllowed` in `#src/oidc/client-scope.js`,
+ * which narrows against an existing Grant instead of this pre-Grant allowlist.
+ */
 export const findStaleOidcScopes = ({
   clientScope,
   requestedScope,

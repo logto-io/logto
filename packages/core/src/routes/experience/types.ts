@@ -3,6 +3,7 @@ import {
   type CreateUser,
   encryptedTokenSetGuard,
   InteractionEvent,
+  type OrganizationWithRoles,
   secretEnterpriseSsoConnectorRelationPayloadGuard,
   secretSocialConnectorRelationPayloadGuard,
   type User,
@@ -176,6 +177,15 @@ export type InteractionContext = {
     verificationId: string
   ) => VerificationRecordMap[K];
   getCurrentProfile: () => InteractionProfile;
+  getTrustedDeviceCreationAvailability: (
+    userId: string,
+    organizations?: Readonly<OrganizationWithRoles[]>
+  ) => Promise<TrustedDeviceAvailability | undefined>;
+};
+
+export type TrustedDeviceAvailability = {
+  canCreate: boolean;
+  durationDays?: number;
 };
 
 export type ExperienceInteractionRouterContext<ContextT extends WithLogContext = WithLogContext> =
@@ -201,11 +211,6 @@ export type InteractionStorage = {
   trustedDeviceCreation?: {
     deviceId: string;
   };
-  trustedDeviceFulfillment?: {
-    userId: string;
-    trustedDeviceId: string;
-    fulfilledAt: number;
-  };
   profile?: InteractionProfile;
   mfa?: MfaData;
   verificationRecords?: VerificationRecordData[];
@@ -224,13 +229,6 @@ export const interactionStorageGuard = z.object({
       deviceId: TrustedDevices.guard.shape.id,
     })
     .optional(),
-  trustedDeviceFulfillment: z
-    .object({
-      userId: z.string(),
-      trustedDeviceId: z.string(),
-      fulfilledAt: z.number(),
-    })
-    .optional(),
   profile: interactionProfileGuard.optional(),
   mfa: mfaDataGuard.optional(),
   verificationRecords: verificationRecordDataGuard.array().optional(),
@@ -246,10 +244,7 @@ export const interactionStorageGuard = z.object({
 export type SanitizedInteractionStorageData = {
   interactionEvent: InteractionEvent;
   userId?: string;
-  trustedDevice?: {
-    canCreate: boolean;
-    durationDays?: number;
-  };
+  trustedDevice?: TrustedDeviceAvailability;
   profile?: SanitizedInteractionProfile;
   verificationRecords?: SanitizedVerificationRecordData[];
   mfa?: SanitizedMfaData;

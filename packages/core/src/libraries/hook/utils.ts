@@ -13,6 +13,7 @@ import { type Context } from 'koa';
 import { type IRouterParamContext } from 'koa-router';
 import ky, { HTTPError, type KyResponse } from 'ky';
 
+import { ssrfProtectedFetch } from '#src/utils/outbound-request.js';
 import { sign } from '#src/utils/sign.js';
 
 export const parseResponse = async (response: KyResponse) => {
@@ -96,6 +97,8 @@ export const sendWebhookRequest = async ({
       ...conditional(signingKey && { 'logto-signature-sha-256': sign(signingKey, payload) }),
     },
     json: payload,
+    // The hook URL is tenant-supplied; keep delivery off the deployment's private network.
+    fetch: ssrfProtectedFetch,
     // Public webhook delivery contract: retry POST requests on HTTP 5xx only.
     // 408 and 429 are intentionally excluded so receivers cannot control this short retry window.
     retry: {

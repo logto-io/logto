@@ -87,8 +87,6 @@ const connectors = {
       title: 'Logto built-in email service',
       description:
         'Zero configuration email delivery. Send verification codes and magic links out of the box.',
-      self_hosted_description:
-        'Zero configuration email delivery with self-hosted Enterprise. Send verification codes and magic links out of the box, or try Logto Cloud.',
     },
     standard_connectors: 'Or you can customize your social connector by a standard protocol.',
   },

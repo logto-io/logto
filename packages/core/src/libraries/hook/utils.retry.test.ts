@@ -3,6 +3,9 @@ import { createServer, type IncomingMessage, type Server, type ServerResponse } 
 import { type AddressInfo } from 'node:net';
 
 import { InteractionHookEvent } from '@logto/schemas';
+import Sinon from 'sinon';
+
+import { EnvSet } from '#src/env-set/index.js';
 
 import { generateHookTestPayload, sendWebhookRequest } from './utils.js';
 
@@ -79,6 +82,22 @@ const withRetryServer = async (
 };
 
 describe('sendWebhookRequest HTTP retries', () => {
+  /**
+   * These fixtures serve from loopback, which the SSRF guard blocks by design. Retry semantics are
+   * the subject here, so take the self-hosted opt-out; the guard itself is covered by
+   * `utils/outbound-request.test.ts`.
+   */
+  beforeEach(() => {
+    Sinon.stub(EnvSet, 'values').value({
+      ...EnvSet.values,
+      isSsrfProtectionEnabled: false,
+    });
+  });
+
+  afterEach(() => {
+    Sinon.restore();
+  });
+
   it.each([500, 501, 599])(
     'retries POST %s responses three times for a total of four attempts',
     async (status) => {

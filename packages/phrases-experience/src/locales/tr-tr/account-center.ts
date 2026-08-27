@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'Sayfa bulunamadı',
@@ -14,6 +15,8 @@ const account_center = {
     sidebar_security: 'Güvenlik',
     sidebar_sessions: 'Oturumlar',
     support: 'Destek',
+    user_menu: 'Kullanıcı menüsü',
+    sign_out: 'Oturumu kapat',
   },
   verification: {
     title: 'Güvenlik doğrulaması',
@@ -298,3 +301,4 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
+/* eslint-enable max-lines */

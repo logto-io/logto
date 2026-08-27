@@ -1,6 +1,6 @@
 const oidc = {
   aborted: 'End 사용자가 상호 작용을 중단했어요.',
-  invalid_scope: '허용되지 않은 범위: {{error_description}}.',
+  invalid_scope: '허용되지 않은 범위: {{scope}}.',
   invalid_token: '유효하지 않은 토큰이 제공되었어요.',
   invalid_client_metadata: '유효하지 않은 클라이언트 메타데이터가 제공되었어요.',
   insufficient_scope: '토큰에 `{{scope}}` 범위가 누락되었어요.',
