@@ -1,6 +1,6 @@
 const oidc = {
   aborted: 'O utilizador final abortou a interação.',
-  invalid_scope: 'Âmbito inválido: {{error_description}}.',
+  invalid_scope: 'Âmbito inválido: {{scope}}.',
   invalid_token: 'O Token fornecido é inválido.',
   invalid_client_metadata: 'Metadados de cliente inválidos fornecidos.',
   insufficient_scope: 'Token em falta com âmbito `{{scope}}`.',

@@ -1,6 +1,6 @@
 const oidc = {
   aborted: "L'utilisateur a abandonné l'interaction.",
-  invalid_scope: 'Scope invalide : {{error_description}}.',
+  invalid_scope: 'Scope invalide : {{scope}}.',
   invalid_token: 'Jeton fourni invalide.',
   invalid_client_metadata: 'Les métadonnées du client fournies sont invalides.',
   insufficient_scope: 'Manque de champ `{{scope}}` dans le jeton.',
