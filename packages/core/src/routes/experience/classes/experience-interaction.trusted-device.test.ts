@@ -108,14 +108,25 @@ const createInteraction = (
 };
 
 const expectConventionalMfaRequired = async (
-  experienceInteraction: InstanceType<typeof ExperienceInteraction>
+  experienceInteraction: InstanceType<typeof ExperienceInteraction>,
+  options?: {
+    trustedDeviceAvailability?: { canCreate: boolean; durationDays?: number };
+    includeTrustedDevice?: boolean;
+  }
 ) => {
+  const trustedDeviceAvailability = options?.trustedDeviceAvailability ?? {
+    canCreate: true,
+    durationDays: 30,
+  };
   await expect(experienceInteraction.guardMfaVerificationStatus()).rejects.toMatchError(
     new RequestError(
       { code: 'session.mfa.require_mfa_verification', status: 403 },
       {
         availableFactors: [MfaFactor.TOTP],
         maskedIdentifiers: {},
+        ...(options?.includeTrustedDevice === false
+          ? {}
+          : { trustedDevice: trustedDeviceAvailability }),
       }
     )
   );
@@ -196,20 +207,22 @@ describe('ExperienceInteraction trusted-device MFA verification', () => {
       },
     });
 
-    await expectConventionalMfaRequired(experienceInteraction);
+    await expectConventionalMfaRequired(experienceInteraction, {
+      trustedDeviceAvailability: { canCreate: false },
+    });
 
     expect(getEffectivePolicy).toHaveBeenCalledWith(mockUserWithMfaVerifications.id);
     expect(validateCredential).not.toHaveBeenCalled();
   });
 
-  it('skips policy and credential validation when no trusted-device cookie is present', async () => {
+  it('resolves advisory availability but skips credential validation when no cookie is present', async () => {
     hasCredential.mockReturnValueOnce(false);
     const { ctx, experienceInteraction } = createInteraction();
 
     await expectConventionalMfaRequired(experienceInteraction);
 
     expect(hasCredential).toHaveBeenCalledWith(ctx, mockUserWithMfaVerifications.id);
-    expect(getEffectivePolicy).not.toHaveBeenCalled();
+    expect(getEffectivePolicy).toHaveBeenCalledTimes(1);
     expect(validateCredential).not.toHaveBeenCalled();
   });
 
@@ -230,7 +243,7 @@ describe('ExperienceInteraction trusted-device MFA verification', () => {
     await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.toBeUndefined();
     await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.toBeUndefined();
 
-    expect(getEffectivePolicy).toHaveBeenCalledTimes(2);
+    expect(getEffectivePolicy).toHaveBeenCalledTimes(1);
     expect(validateCredential).toHaveBeenCalledTimes(2);
     expect(validateCredential).toHaveBeenCalledWith(ctx, mockUserWithMfaVerifications.id);
     expect(experienceInteraction.toJson()).not.toHaveProperty('trustedDeviceFulfillment');
@@ -265,7 +278,7 @@ describe('ExperienceInteraction trusted-device MFA verification', () => {
     validateCredential.mockResolvedValueOnce(trustedDevice);
     const { experienceInteraction } = createInteraction();
 
-    await expectConventionalMfaRequired(experienceInteraction);
+    await expectConventionalMfaRequired(experienceInteraction, { includeTrustedDevice: false });
 
     expect(getEffectivePolicy).not.toHaveBeenCalled();
     expect(validateCredential).not.toHaveBeenCalled();

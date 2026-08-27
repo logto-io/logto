@@ -202,6 +202,28 @@ describe('trusted device library', () => {
     expect(set).not.toHaveBeenCalled();
   });
 
+  it('enforces a request-resolved disabled policy without querying it again', async () => {
+    const queries = createQueries();
+    const policyLibrary = createPolicyLibrary({ enabled: true });
+    const { ctx, set } = createCookieContext();
+    const library = createTrustedDeviceLibrary(tenantId, queries, policyLibrary, {
+      isProduction: false,
+    });
+
+    await expect(
+      library.createCredential({
+        ctx,
+        deviceId: trustedDeviceId,
+        effectivePolicy: { enabled: false, durationDays: 30 },
+        userId,
+      })
+    ).resolves.toBeUndefined();
+
+    expect(policyLibrary.getEffectivePolicy).not.toHaveBeenCalled();
+    expect(queries.insertIfNotExists).not.toHaveBeenCalled();
+    expect(set).not.toHaveBeenCalled();
+  });
+
   it('rechecks the effective policy before each creation attempt', async () => {
     const queries = createQueries();
     const getEffectivePolicy = jest

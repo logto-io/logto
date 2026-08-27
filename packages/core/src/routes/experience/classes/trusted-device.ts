@@ -1,19 +1,28 @@
 import { createHash } from 'node:crypto';
 
 import { appInsights } from '@logto/app-insights/node';
-import { InteractionEvent, type TrustedDevice as TrustedDeviceModel } from '@logto/schemas';
+import {
+  InteractionEvent,
+  type OrganizationWithRoles,
+  type TrustedDevice as TrustedDeviceModel,
+} from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { type EffectiveTrustedDevicePolicy } from '#src/libraries/trusted-device-policy.js';
 import { getTrustedDeviceEventData } from '#src/libraries/trusted-device.js';
 import { type TrustedDeviceMetadata } from '#src/queries/trusted-device.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
-import { type InteractionStorage, type WithHooksAndLogsContext } from '../types.js';
+import {
+  type InteractionStorage,
+  type TrustedDeviceAvailability,
+  type WithHooksAndLogsContext,
+} from '../types.js';
 
 type TrustedDeviceData = Pick<InteractionStorage, 'trustedDeviceCreation'>;
 
@@ -44,6 +53,7 @@ type FinalizeOptions = {
 export class TrustedDevice {
   #creation?: InteractionStorage['trustedDeviceCreation'];
   #validatedDeviceId?: string;
+  #effectivePolicy?: Promise<EffectiveTrustedDevicePolicy>;
 
   constructor(
     private readonly ctx: WithHooksAndLogsContext,
@@ -59,9 +69,16 @@ export class TrustedDevice {
     };
   }
 
-  requestCreation(hasEligibleMfaProof: boolean) {
+  async requestCreation(userId: string, hasEligibleMfaProof: boolean) {
     assertThat(
       hasEligibleMfaProof,
+      new RequestError({ code: 'session.mfa.require_mfa_verification', status: 403 })
+    );
+
+    const { enabled } = await this.#getEffectivePolicy(userId);
+
+    assertThat(
+      enabled,
       new RequestError({ code: 'session.mfa.require_mfa_verification', status: 403 })
     );
 
@@ -76,19 +93,28 @@ export class TrustedDevice {
     return creation;
   }
 
-  async getCreationAvailability(userId?: string) {
+  async getCreationAvailability(
+    userId?: string,
+    organizations?: Readonly<OrganizationWithRoles[]>
+  ): Promise<TrustedDeviceAvailability | undefined> {
     // Trusted-device opt-in is under development and must remain isolated from released flows.
     if (!EnvSet.values.isDevFeaturesEnabled || !userId) {
       return;
     }
 
-    const { enabled, durationDays } =
-      await this.tenant.libraries.trustedDevicePolicy.getEffectivePolicy(userId);
+    return trySafe(
+      async () => {
+        const { enabled, durationDays } = await this.#getEffectivePolicy(userId, organizations);
 
-    return {
-      canCreate: enabled,
-      ...conditional(enabled && { durationDays }),
-    };
+        return {
+          canCreate: enabled,
+          ...conditional(enabled && { durationDays }),
+        };
+      },
+      (error) => {
+        void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
+      }
+    );
   }
 
   /**
@@ -105,15 +131,13 @@ export class TrustedDevice {
 
     this.#validatedDeviceId = undefined;
 
-    const {
-      libraries: { trustedDevicePolicy, trustedDevices },
-    } = this.tenant;
+    const { trustedDevices } = this.tenant.libraries;
 
     if (!trustedDevices.hasCredential(this.ctx, userId)) {
       return false;
     }
 
-    const { enabled } = await trustedDevicePolicy.getEffectivePolicy(userId);
+    const { enabled } = await this.#getEffectivePolicy(userId);
 
     if (!enabled) {
       return false;
@@ -206,6 +230,7 @@ export class TrustedDevice {
     const trustedDevice = await this.tenant.libraries.trustedDevices.createCredential({
       ctx: this.ctx,
       deviceId: creation.deviceId,
+      effectivePolicy: await this.#getEffectivePolicy(userId),
       userId,
       ...metadata,
     });
@@ -236,5 +261,13 @@ export class TrustedDevice {
     });
 
     log.append({ userId: data.userId, data });
+  }
+
+  async #getEffectivePolicy(userId: string, organizations?: Readonly<OrganizationWithRoles[]>) {
+    this.#effectivePolicy ??= organizations
+      ? this.tenant.libraries.trustedDevicePolicy.getEffectivePolicy(userId, organizations)
+      : this.tenant.libraries.trustedDevicePolicy.getEffectivePolicy(userId);
+
+    return this.#effectivePolicy;
   }
 }

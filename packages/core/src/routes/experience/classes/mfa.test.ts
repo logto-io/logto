@@ -3,6 +3,7 @@ import {
   MfaFactor,
   type Mfa as MfaSettings,
   MfaPolicy,
+  type OrganizationWithRoles,
   OrganizationRequiredMfaPolicy,
   userMfaDataKey,
   type User,
@@ -31,11 +32,15 @@ const createMfa = ({
     mfaVerifications: [],
   },
   currentProfile = {},
+  organizations = [],
+  trustedDeviceAvailability = { canCreate: true, durationDays: 30 },
 }: {
   mfaSettings?: MfaSettings;
   interactionEvent?: InteractionEvent;
   user?: Partial<User>;
   currentProfile?: Record<string, unknown>;
+  organizations?: Readonly<OrganizationWithRoles[]>;
+  trustedDeviceAvailability?: { canCreate: boolean; durationDays?: number };
 } = {}) => {
   const getIdentifiedUser = jest.fn(async () => user as User);
   const interactionContext: InteractionContext = {
@@ -48,9 +53,17 @@ const createMfa = ({
       throw new Error('should not be called');
     },
     getCurrentProfile: () => currentProfile,
+    getTrustedDeviceCreationAvailability: jest.fn(async () => trustedDeviceAvailability),
   };
 
-  const mfa = new Mfa({} as Libraries, {} as Queries, {}, interactionContext);
+  const getOrganizationsByUserId = jest.fn(async () => organizations);
+  const getTrustedDeviceCreationAvailability = jest.mocked(
+    interactionContext.getTrustedDeviceCreationAvailability
+  );
+  const queries = {
+    organizations: { relations: { users: { getOrganizationsByUserId } } },
+  } as unknown as Queries;
+  const mfa = new Mfa({} as Libraries, queries, {}, interactionContext);
   const { signInExperienceValidator } = mfa as unknown as {
     signInExperienceValidator: SignInExperienceValidator;
   };
@@ -66,6 +79,8 @@ const createMfa = ({
     getIdentifiedUser,
     getMfaSettings,
     getConfiguredMfaFactors,
+    getOrganizationsByUserId,
+    getTrustedDeviceCreationAvailability,
   };
 };
 
@@ -167,8 +182,56 @@ describe('Mfa.assertMfaFulfilled', () => {
       status: 422,
       data: {
         availableFactors: [MfaFactor.TOTP],
+        trustedDevice: { canCreate: true, durationDays: 30 },
       },
     });
+  });
+
+  it('adds trusted-device availability to the optional MFA suggestion', async () => {
+    const { mfa } = createMfa({
+      mfaSettings: {
+        policy: MfaPolicy.PromptOnlyAtSignIn,
+        factors: [MfaFactor.TOTP],
+        organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+      },
+      user: {
+        id: 'user-id',
+        logtoConfig: { [userMfaDataKey]: { enabled: false } },
+        mfaVerifications: [],
+      },
+    });
+
+    await expect(mfa.assertMfaFulfilled()).rejects.toMatchObject({
+      code: 'user.suggest_mfa',
+      status: 422,
+      data: {
+        trustedDevice: { canCreate: true, durationDays: 30 },
+      },
+    });
+  });
+
+  it('reuses loaded organization rows for MFA and trusted-device eligibility', async () => {
+    const organizations = [
+      { isMfaRequired: true, isTrustedDeviceAllowed: false },
+    ] as unknown as Readonly<OrganizationWithRoles[]>;
+    const { mfa, getOrganizationsByUserId, getTrustedDeviceCreationAvailability } = createMfa({
+      mfaSettings: {
+        policy: MfaPolicy.NoPrompt,
+        factors: [MfaFactor.TOTP],
+        organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.Mandatory,
+      },
+      organizations,
+      trustedDeviceAvailability: { canCreate: false },
+    });
+
+    await expect(mfa.assertMfaFulfilled()).rejects.toMatchObject({
+      code: 'user.missing_mfa',
+      data: {
+        trustedDevice: { canCreate: false },
+      },
+    });
+    expect(getOrganizationsByUserId).toHaveBeenCalledTimes(1);
+    expect(getTrustedDeviceCreationAvailability).toHaveBeenCalledWith('user-id', organizations);
   });
 
   it('skips additional MFA suggestion when user has persisted skipped flag', async () => {

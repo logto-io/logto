@@ -92,6 +92,40 @@ describe('Experience trusted-device lifecycle events', () => {
     jest.restoreAllMocks();
   });
 
+  it('memoizes effective policy across availability and creation finalization', async () => {
+    const creation = createSubject({ data: {}, createResult: trustedDevice });
+
+    await expect(creation.subject.getCreationAvailability(userId)).resolves.toEqual({
+      canCreate: true,
+      durationDays: 30,
+    });
+    await creation.subject.finalize({
+      creation: { deviceId: trustedDeviceId },
+      interactionEvent: InteractionEvent.SignIn,
+      userId,
+      hasEligibleMfaProof: true,
+    });
+
+    expect(creation.getEffectivePolicy).toHaveBeenCalledTimes(1);
+    expect(creation.createCredential).toHaveBeenCalledWith(
+      expect.objectContaining({
+        effectivePolicy: { enabled: true, durationDays: 30 },
+      })
+    );
+  });
+
+  it('rejects creation intent when the current server policy disallows it', async () => {
+    const creation = createSubject({ data: {} });
+    creation.getEffectivePolicy.mockResolvedValueOnce({ enabled: false, durationDays: 30 });
+
+    await expect(creation.subject.requestCreation(userId, true)).rejects.toMatchObject({
+      code: 'session.mfa.require_mfa_verification',
+      status: 403,
+    });
+
+    expect(creation.subject.data).toEqual({});
+  });
+
   it('emits Created audit and webhook events only for the successful insert winner', async () => {
     const winner = createSubject({
       data: {},
