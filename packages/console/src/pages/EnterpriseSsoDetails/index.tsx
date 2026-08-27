@@ -1,6 +1,6 @@
 import { type SignInExperience, type SsoConnectorWithProviderConfig } from '@logto/schemas';
 import { pick } from '@silverhand/essentials';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
@@ -64,16 +64,13 @@ function EnterpriseSsoDetails() {
 
   const isDarkModeEnabled = signInExperience?.color.isDarkModeEnabled ?? false;
 
-  const isIdpInitiatedAuthConfigEnabled = useMemo(
-    () =>
-      shouldShowIdpInitiatedAuthTab({
-        isCloud,
-        isDevFeaturesEnabled,
-        providerType: ssoConnector?.providerType,
-        isIdpInitiatedSsoEnabled: currentSubscriptionQuota.idpInitiatedSsoEnabled,
-      }),
-    [currentSubscriptionQuota.idpInitiatedSsoEnabled, ssoConnector?.providerType]
-  );
+  // `isCloud` and `isDevFeaturesEnabled` are build-time constants, so this does not need memoization.
+  const isIdpInitiatedAuthConfigEnabled = shouldShowIdpInitiatedAuthTab({
+    isCloud,
+    isDevFeaturesEnabled,
+    providerType: ssoConnector?.providerType,
+    isIdpInitiatedSsoEnabled: currentSubscriptionQuota.idpInitiatedSsoEnabled,
+  });
 
   useEffect(() => {
     setIsDeleteAlertOpen(false);
