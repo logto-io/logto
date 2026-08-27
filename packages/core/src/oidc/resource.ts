@@ -1,5 +1,10 @@
 import { ReservedResource } from '@logto/core-kit';
-import { isBuiltInApplicationId, isCimdClientId, type Resource } from '@logto/schemas';
+import {
+  isBuiltInApplicationId,
+  isCimdClientId,
+  Organizations,
+  type Resource,
+} from '@logto/schemas';
 import { trySafe, type Nullable } from '@silverhand/essentials';
 import { type ResourceServer } from 'oidc-provider';
 
@@ -45,6 +50,7 @@ export const findResourceScopes = async ({
   applicationId,
   indicator,
   organizationId,
+  organizationIds,
   findFromOrganizations,
 }: {
   queries: Queries;
@@ -63,6 +69,11 @@ export const findResourceScopes = async ({
   userId?: string;
   applicationId?: string;
   organizationId?: string;
+  /**
+   * Only count organization-role contributions from these organizations (an empty array counts
+   * none); personal role scopes are unaffected. `organizationId` takes precedence when set.
+   */
+  organizationIds?: readonly string[];
 }): Promise<ReadonlyArray<{ name: string; id: string }>> => {
   if (isReservedResource(indicator)) {
     switch (indicator) {
@@ -83,7 +94,7 @@ export const findResourceScopes = async ({
       userId,
       indicator,
       findFromOrganizations,
-      organizationId
+      organizationId ? [organizationId] : organizationIds
     );
   }
 
@@ -260,4 +271,41 @@ export const isOrganizationConsentedToApplication = async (
   organizationId: string
 ) => {
   return userConsentOrganizations.exists({ applicationId, userId: accountId, organizationId });
+};
+
+/**
+ * Find the organizations the user has consented to the application, to bound the
+ * organization-role aggregation at token issuance: the grant records the requested ceiling for
+ * a registered third-party client, so a token without an `organization_id` has no other
+ * consent boundary left. Resolves to `undefined` (no bounding) everywhere else; authorization
+ * and consent rendering keep the full aggregation, which is what builds and displays the
+ * ceiling in the first place. The registered-client path owns the call; CIMD branches off
+ * before it, its grant being per-organization already.
+ */
+export const findIssuanceConsentedOrganizationIds = async (
+  queries: Queries,
+  {
+    isTokenIssuance,
+    isThirdParty,
+    clientId,
+    userId,
+    organizationId,
+  }: {
+    isTokenIssuance: boolean;
+    isThirdParty: boolean;
+    clientId: string | undefined;
+    userId: string | undefined;
+    organizationId: string | undefined;
+  }
+): Promise<readonly string[] | undefined> => {
+  if (!isTokenIssuance || !isThirdParty || !clientId || !userId || organizationId) {
+    return undefined;
+  }
+
+  const [, entities] = await queries.applications.userConsentOrganizations.getEntities(
+    Organizations,
+    { applicationId: clientId, userId }
+  );
+
+  return entities.map(({ id }) => id);
 };

@@ -207,6 +207,76 @@ export const buildResourceScopesToReject = (
   );
 
 /**
+ * Resolve requested scope names to their current entities, dropping the ones that no longer
+ * exist. Role-independent by design, unlike `findResourceScopes`.
+ */
+const resolveRequestedResourceScopes = async (
+  queries: Queries,
+  resourceIndicator: string,
+  scopeNames: string[]
+): Promise<ReadonlyArray<{ name: string; id: string }>> => {
+  if (resourceIndicator === ReservedResource.Organization) {
+    const [, organizationScopes] = await queries.organizations.scopes.findAll();
+    return organizationScopes.filter(({ name }) => scopeNames.includes(name));
+  }
+
+  const resource = await queries.resources.findResourceByIndicator(resourceIndicator);
+
+  if (!resource) {
+    return [];
+  }
+
+  const scopes = await Promise.all(
+    scopeNames.map(async (scopeName) =>
+      queries.scopes.findScopeByNameAndResourceId(scopeName, resource.id)
+    )
+  );
+
+  // eslint-disable-next-line no-implicit-coercion -- filter out removed scopes
+  return scopes.filter((scope): scope is Scope => !!scope);
+};
+
+/**
+ * Re-bound the requested ceiling against the application's current consent configuration.
+ * The prompt snapshot can be as old as the interaction, so a scope the configuration no longer
+ * allows, or that no longer exists, must not be persisted onto the grant. Role filtering is
+ * deliberately absent: per-organization effective access is re-bounded at issuance time.
+ */
+export const revalidateResourceScopeCeiling = async ({
+  queries,
+  libraries,
+  applicationId,
+  resourceScopes,
+}: {
+  queries: Queries;
+  libraries: Libraries;
+  applicationId: string;
+  resourceScopes: Record<string, string[]>;
+}): Promise<Record<string, string[]>> => {
+  /** A first-party application has no consent configuration to revalidate against. */
+  if (!(await isThirdPartyApplication(queries, applicationId))) {
+    return resourceScopes;
+  }
+
+  const entries = await Promise.all(
+    Object.entries(resourceScopes).map(
+      async ([resourceIndicator, scopeNames]): Promise<[string, string[]]> => {
+        const filteredScopes = await filterResourceScopesForTheThirdPartyApplication(
+          libraries,
+          applicationId,
+          resourceIndicator,
+          await resolveRequestedResourceScopes(queries, resourceIndicator, scopeNames)
+        );
+
+        return [resourceIndicator, filteredScopes.map(({ name }) => name)];
+      }
+    )
+  );
+
+  return Object.fromEntries(entries.filter(([, scopes]) => scopes.length > 0));
+};
+
+/**
  * The missingResourceScopes in the prompt details are from `getResourceServerInfo`,
  * which contains resource scopes and organization resource scopes.
  * We need to separate the organization resource scopes from the resource scopes.

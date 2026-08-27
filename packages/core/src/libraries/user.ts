@@ -156,13 +156,14 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
 
   /**
    * Find user scopes for a resource indicator, from roles and organization roles.
-   * Set `organizationId` to narrow down the search to the specific organization, otherwise it will search all organizations.
+   * Set `organizationIds` to only count contributions from those organizations (an empty array
+   * counts none, an omitted value counts all); personal role scopes are unaffected.
    */
   const findUserScopesForResourceIndicator = async (
     userId: string,
     resourceIndicator: string,
     findFromOrganizations = false,
-    organizationId?: string
+    organizationIds?: readonly string[]
   ): Promise<readonly Scope[]> => {
     const usersRoles = await findUsersRolesByUserId(userId);
     const rolesScopes = await findRolesScopesByRoleIds(usersRoles.map(({ roleId }) => roleId));
@@ -170,7 +171,7 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
       ? await organizations.relations.usersRoles.getUserResourceScopes(
           userId,
           resourceIndicator,
-          organizationId
+          organizationIds
         )
       : [];
 

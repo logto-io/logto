@@ -248,9 +248,9 @@ describe('oidc provider init', () => {
         _userId: string,
         _indicator: string,
         _findFromOrganizations?: boolean,
-        orgId?: string
+        organizationIds?: readonly string[]
       ) =>
-        orgId === 'org_2'
+        organizationIds?.includes('org_2')
           ? [buildScope('scope_2', 'write:api')]
           : [buildScope('scope_1', 'read:api')]
     );

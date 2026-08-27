@@ -389,6 +389,11 @@ describe('consent api', () => {
       const accessToken = await client.getAccessToken(resource.indicator, organization.id);
       expect(getAccessTokenPayload(accessToken)).toHaveProperty('scope', scope.name);
 
+      // A token without an organization only aggregates roles from consented organizations,
+      // so the scope carried solely by the unconsented organization stays out
+      const plainAccessToken = await client.getAccessToken(resource.indicator);
+      expect(getAccessTokenPayload(plainAccessToken)).toHaveProperty('scope', scope.name);
+
       await roleApi.addResourceScopes(role.id, [scope2.id]);
       await client.clearAccessToken();
 
@@ -397,6 +402,14 @@ describe('consent api', () => {
       const { scope: refreshedScope } = getAccessTokenPayload(refreshedAccessToken);
       assert(typeof refreshedScope === 'string', new Error('scope must be a string'));
       expect(refreshedScope.split(' ').slice().sort()).toEqual(
+        [scope.name, scope2.name].slice().sort()
+      );
+
+      // The consented organization's role now carries it, so the plain token follows suit
+      const refreshedPlainAccessToken = await client.getAccessToken(resource.indicator);
+      const { scope: refreshedPlainScope } = getAccessTokenPayload(refreshedPlainAccessToken);
+      assert(typeof refreshedPlainScope === 'string', new Error('scope must be a string'));
+      expect(refreshedPlainScope.split(' ').slice().sort()).toEqual(
         [scope.name, scope2.name].slice().sort()
       );
 

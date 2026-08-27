@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- the consent GET and POST handlers share one interaction context */
 import { UserScope } from '@logto/core-kit';
 import {
   ApplicationType,
@@ -30,6 +31,7 @@ import {
   buildResourceScopesToReject,
   filterAndParseMissingResourceScopes,
   revalidateConsentClient,
+  revalidateResourceScopeCeiling,
 } from './utils.js';
 
 const { InvalidClient, InvalidRedirectUri, InvalidRequest } = errors;
@@ -205,12 +207,20 @@ export default function consentRoutes<T extends IRouterParamContext>(
       );
 
       /**
-       * A registered third-party grant records the requested ceiling as-is: per-organization
-       * effective access is re-bounded by the user's roles at issuance time anyway, and
-       * role-filtering the grant here would push requested-but-uncarried scopes into rejections
-       * that a later role change can never lift. CIMD keeps its per-organization narrowing.
+       * A registered grant records the requested ceiling (revalidated against the current
+       * consent configuration) instead of a role-filtered subset: per-organization effective
+       * access is re-bounded by the user's roles at issuance time anyway, and role-filtering
+       * the grant here would push requested-but-uncarried scopes into rejections that a later
+       * role change can never lift. CIMD keeps its per-organization narrowing.
        */
-      const grantedResourceScopes = cimd ? resourceScopesToGrant : allMissingResourceScopes;
+      const grantedResourceScopes = cimd
+        ? resourceScopesToGrant
+        : await revalidateResourceScopeCeiling({
+            queries,
+            libraries,
+            applicationId,
+            resourceScopes: allMissingResourceScopes,
+          });
 
       const resourceScopesToReject = buildResourceScopesToReject(
         allMissingResourceScopes,
@@ -406,3 +416,4 @@ export default function consentRoutes<T extends IRouterParamContext>(
     }
   );
 }
+/* eslint-enable max-lines */

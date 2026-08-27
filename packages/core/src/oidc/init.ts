@@ -69,6 +69,7 @@ import { getProviderFetchConfig } from './fetch.js';
 import { registerGrants } from './grants/index.js';
 import { installWildcardRedirectUriMatching } from './redirect-uri/index.js';
 import {
+  findIssuanceConsentedOrganizationIds,
   findResource,
   findResourceScopes,
   getSharedResourceServerData,
@@ -107,7 +108,7 @@ export default function initOidc(
     indicator: string,
     clientId: string | undefined,
     userId: string | undefined,
-    organizationId: string | undefined
+    { organizationId, isTokenIssuance }: { organizationId?: string; isTokenIssuance: boolean }
   ): Promise<Pick<ResourceServer, 'accessTokenFormat' | 'jwt' | 'accessTokenTTL' | 'scope'>> => {
     const resourceServer = await findResource(queries, indicator);
 
@@ -117,17 +118,17 @@ export default function initOidc(
 
     const { accessTokenTtl: accessTokenTTL } = resourceServer;
 
-    const scopes = await findResourceScopes({
-      queries,
-      libraries,
-      indicator,
-      findFromOrganizations: true,
-      organizationId,
-      applicationId: clientId,
-      userId,
-    });
-
     if (isCimdClient(envSet, clientId)) {
+      const scopes = await findResourceScopes({
+        queries,
+        libraries,
+        indicator,
+        findFromOrganizations: true,
+        organizationId,
+        applicationId: clientId,
+        userId,
+      });
+
       /**
        * CIMD clients are unregistered: the tenant-wide ceiling replaces the per-application
        * consent configuration the third-party filter below reads.
@@ -141,7 +142,27 @@ export default function initOidc(
       };
     }
 
-    if (clientId && (await isThirdPartyApplication(queries, clientId))) {
+    const isThirdParty = Boolean(clientId && (await isThirdPartyApplication(queries, clientId)));
+    const consentedOrganizationIds = await findIssuanceConsentedOrganizationIds(queries, {
+      isTokenIssuance,
+      isThirdParty,
+      clientId,
+      userId,
+      organizationId,
+    });
+
+    const scopes = await findResourceScopes({
+      queries,
+      libraries,
+      indicator,
+      findFromOrganizations: true,
+      organizationId,
+      organizationIds: consentedOrganizationIds,
+      applicationId: clientId,
+      userId,
+    });
+
+    if (clientId && isThirdParty) {
       const filteredScopes = await filterResourceScopesForTheThirdPartyApplication(
         libraries,
         clientId,
@@ -247,12 +268,15 @@ export default function initOidc(
         // Disable the auto use of authorization_code granted resource feature
         useGrantedResource: () => false,
         getResourceServerInfo: async (ctx, indicator) => {
-          const { client, params, session, entities } = ctx.oidc;
+          const { client, params, session, entities, route } = ctx.oidc;
           const userId = session?.accountId ?? entities.Account?.accountId;
           const organizationId =
             typeof params?.organization_id === 'string' ? params.organization_id : undefined;
 
-          return getResourceServerInfoCore(indicator, client?.clientId, userId, organizationId);
+          return getResourceServerInfoCore(indicator, client?.clientId, userId, {
+            organizationId,
+            isTokenIssuance: route === 'token',
+          });
         },
       },
     },
