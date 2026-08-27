@@ -93,6 +93,7 @@ const ResetPassword = () => {
     >
       <SetPassword
         autoFocus
+        isForgotPassword
         errorMessage={errorMessage}
         maxLength={max}
         clearErrorMessage={clearErrorMessage}

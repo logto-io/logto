@@ -20,6 +20,8 @@ type Props = {
   readonly onSubmit: (password: string) => Promise<void>;
   readonly errorMessage?: string;
   readonly clearErrorMessage?: () => void;
+  /** Whether the password is being set in a reset password flow. */
+  readonly isForgotPassword?: boolean;
 };
 
 type FieldState = {
@@ -33,6 +35,7 @@ const SetPassword = ({
   onSubmit,
   errorMessage,
   clearErrorMessage,
+  isForgotPassword,
 }: Props) => {
   const { t } = useTranslation();
 
@@ -68,7 +71,7 @@ const SetPassword = ({
 
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
-      <HiddenIdentifierInput />
+      <HiddenIdentifierInput isForgotPassword={isForgotPassword} />
       <InputField
         className={styles.inputField}
         type={showPassword ? 'text' : 'password'}
