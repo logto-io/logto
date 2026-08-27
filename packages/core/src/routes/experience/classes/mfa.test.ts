@@ -5,6 +5,7 @@ import {
   MfaPolicy,
   type OrganizationWithRoles,
   OrganizationRequiredMfaPolicy,
+  SignInIdentifier,
   userMfaDataKey,
   type User,
 } from '@logto/schemas';
@@ -255,6 +256,44 @@ describe('Mfa.assertMfaFulfilled', () => {
       },
     });
     expect(getOrganizationsByUserId).toHaveBeenCalledTimes(1);
+    expect(getTrustedDeviceCreationAvailability).toHaveBeenCalledWith('user-id', organizations);
+  });
+
+  it('adds trusted-device availability to an additional-factor binding suggestion', async () => {
+    const organizations = [
+      { isMfaRequired: false, isTrustedDeviceAllowed: true },
+    ] as unknown as Readonly<OrganizationWithRoles[]>;
+    const { mfa, getTrustedDeviceCreationAvailability } = createMfa({
+      interactionEvent: InteractionEvent.Register,
+      mfaSettings: {
+        policy: MfaPolicy.Mandatory,
+        factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
+        organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.Mandatory,
+      },
+      organizations,
+      user: {
+        id: 'user-id',
+        logtoConfig: {},
+        primaryEmail: 'foo@example.com',
+        mfaVerifications: [],
+      },
+    });
+    const { signInExperienceValidator } = mfa as unknown as {
+      signInExperienceValidator: SignInExperienceValidator;
+    };
+    jest.spyOn(signInExperienceValidator, 'getSignInExperienceData').mockResolvedValue({
+      signUp: { identifiers: [SignInIdentifier.Email] },
+      passkeySignIn: { enabled: false },
+    } as never);
+
+    await expect(mfa.assertMfaFulfilled()).rejects.toMatchObject({
+      code: 'session.mfa.suggest_additional_mfa',
+      status: 422,
+      data: {
+        availableFactors: [MfaFactor.TOTP, MfaFactor.EmailVerificationCode],
+        trustedDevice: { canCreate: true, durationDays: 30 },
+      },
+    });
     expect(getTrustedDeviceCreationAvailability).toHaveBeenCalledWith('user-id', organizations);
   });
 

@@ -527,7 +527,12 @@ export class Mfa {
     }
 
     // Optional suggestion: Let Mfa decide whether to suggest additional binding during registration
-    await this.guardAdditionalBindingSuggestion(factorsInUser, configuredFactors, identifiedUser);
+    await this.guardAdditionalBindingSuggestion(
+      factorsInUser,
+      configuredFactors,
+      identifiedUser,
+      organizations
+    );
 
     // Assert backup code
     assertThat(
@@ -550,7 +555,8 @@ export class Mfa {
   private async guardAdditionalBindingSuggestion(
     factorsInUser: MfaFactor[],
     availableFactors: MfaFactor[],
-    identifiedUser: User
+    identifiedUser: User,
+    organizations?: Readonly<OrganizationWithRoles[]>
   ) {
     // Respect user's choice to skip suggestion for this interaction.
     if (this.additionalBindingSuggestionSkipped) {
@@ -618,6 +624,10 @@ export class Mfa {
         primaryPhone &&
         maskPhone(primaryPhone),
     });
+    const trustedDevice = await this.getTrustedDeviceCreationAvailability(
+      identifiedUser.id,
+      organizations
+    );
 
     throw new RequestError(
       { code: 'session.mfa.suggest_additional_mfa', status: 422 },
@@ -628,6 +638,7 @@ export class Mfa {
           passkeySignIn.enabled && factorsInUser.includes(MfaFactor.WebAuthn),
         skippable: true,
         suggestion: true,
+        ...conditional(trustedDevice && { trustedDevice }),
       }
     );
   }
