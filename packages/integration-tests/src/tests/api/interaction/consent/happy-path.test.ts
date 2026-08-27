@@ -336,6 +336,77 @@ describe('consent api', () => {
         deleteUser(user.id),
       ]);
     });
+
+    it('grant the requested scope ceiling and issue a scope gained from a later role change without re-consent', async () => {
+      const application = applications.get(thirdPartyApplicationName);
+      assert(application, new Error('application.not_found'));
+
+      const resource = await createResource(generateResourceName(), generateResourceIndicator());
+      const scope = await createScope(resource.id, generateScopeName());
+      const scope2 = await createScope(resource.id, generateScopeName());
+      const roleApi = new OrganizationRoleApiTest();
+      const role = await roleApi.create({
+        name: generateRoleName(),
+        resourceScopeIds: [scope.id],
+      });
+      const role2 = await roleApi.create({
+        name: generateRoleName(),
+        resourceScopeIds: [scope2.id],
+      });
+      const organizationApi = new OrganizationApiTest();
+      const organization = await organizationApi.create({ name: 'test_org_3' });
+      const { userProfile, user } = await generateNewUser({ username: true, password: true });
+      await organizationApi.addUsers(organization.id, [user.id]);
+      await organizationApi.addUserRoles(organization.id, user.id, [role.id]);
+
+      /**
+       * `scope2` enters the requested ceiling through the role in this organization, which stays
+       * unconsented; the consented organization's role does not carry it at consent time.
+       */
+      const organization2 = await organizationApi.create({ name: 'test_org_4' });
+      await organizationApi.addUsers(organization2.id, [user.id]);
+      await organizationApi.addUserRoles(organization2.id, user.id, [role2.id]);
+
+      await assignUserConsentScopes(application.id, {
+        organizationResourceScopes: [scope.id, scope2.id],
+        userScopes: [UserScope.Organizations],
+      });
+
+      const client = await initClientAndSignIn(application, userProfile, {
+        scopes: [UserScope.Organizations, UserScope.Profile, scope.name, scope2.name],
+        resources: [resource.indicator],
+      });
+
+      const { redirectTo } = await client.submitInteraction();
+
+      await client.processSession(redirectTo, false);
+      const { redirectTo: consentRedirectTo } = await client.send(consent, {
+        organizationIds: [organization.id],
+      });
+      await client.manualConsent(consentRedirectTo);
+
+      // The grant records the requested ceiling, but the issued token stays bounded by the role
+      const accessToken = await client.getAccessToken(resource.indicator, organization.id);
+      expect(getAccessTokenPayload(accessToken)).toHaveProperty('scope', scope.name);
+
+      await roleApi.addResourceScopes(role.id, [scope2.id]);
+      await client.clearAccessToken();
+
+      // A fresh token picks up the newly carried scope without another consent round
+      const refreshedAccessToken = await client.getAccessToken(resource.indicator, organization.id);
+      const { scope: refreshedScope } = getAccessTokenPayload(refreshedAccessToken);
+      assert(typeof refreshedScope === 'string', new Error('scope must be a string'));
+      expect(refreshedScope.split(' ').slice().sort()).toEqual(
+        [scope.name, scope2.name].slice().sort()
+      );
+
+      await Promise.all([
+        roleApi.cleanUp(),
+        organizationApi.cleanUp(),
+        deleteResource(resource.id),
+        deleteUser(user.id),
+      ]);
+    });
   });
 
   afterAll(async () => {

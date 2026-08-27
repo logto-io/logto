@@ -204,9 +204,17 @@ export default function consentRoutes<T extends IRouterParamContext>(
         )
       );
 
+      /**
+       * A registered third-party grant records the requested ceiling as-is: per-organization
+       * effective access is re-bounded by the user's roles at issuance time anyway, and
+       * role-filtering the grant here would push requested-but-uncarried scopes into rejections
+       * that a later role change can never lift. CIMD keeps its per-organization narrowing.
+       */
+      const grantedResourceScopes = cimd ? resourceScopesToGrant : allMissingResourceScopes;
+
       const resourceScopesToReject = buildResourceScopesToReject(
         allMissingResourceScopes,
-        resourceScopesToGrant,
+        grantedResourceScopes,
         cimd
       );
 
@@ -217,7 +225,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
         queries,
         interactionDetails,
         missingOIDCScopes: missingOIDCScope,
-        resourceScopesToGrant,
+        resourceScopesToGrant: grantedResourceScopes,
         resourceScopesToReject,
         markAppLevelAccessControlChecked: true,
         cimdOrganizationId: conditional(cimd && organizationIds?.[0]),
