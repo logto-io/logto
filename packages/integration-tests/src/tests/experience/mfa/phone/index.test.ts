@@ -111,13 +111,16 @@ describe('phone MFA binding', () => {
       await experience.toCompleteVerification('continue', ConnectorType.Sms);
       await experience.toClickButton('Continue');
       await experience.verifyThenEnd(false);
+      await experience.clearDemoAppSession();
+      await experience.page.close();
+      const trustedDeviceExperience = new ExpectExperience(await browser.newPage());
 
-      await experience.startWith(demoAppUrl, 'sign-in');
-      await experience.toFillForm(
+      await trustedDeviceExperience.startWith(demoAppUrl, 'sign-in');
+      await trustedDeviceExperience.toFillForm(
         { identifier: userProfile.username, password: userProfile.password },
         { submit: true }
       );
-      await experience.verifyThenEnd();
+      await trustedDeviceExperience.verifyThenEnd();
 
       await deleteUser(user.id);
     });
@@ -139,13 +142,16 @@ describe('phone MFA binding', () => {
       await experience.toOptInTrustedDevice();
       await experience.toCompleteMfaVerification(ConnectorType.Sms, true);
       await experience.verifyThenEnd(false);
+      await experience.clearDemoAppSession();
+      await experience.page.close();
+      const trustedDeviceExperience = new ExpectExperience(await browser.newPage());
 
-      await experience.startWith(demoAppUrl, 'sign-in');
-      await experience.toFillForm(
+      await trustedDeviceExperience.startWith(demoAppUrl, 'sign-in');
+      await trustedDeviceExperience.toFillForm(
         { identifier: userProfile.username, password: userProfile.password },
         { submit: true }
       );
-      await experience.verifyThenEnd();
+      await trustedDeviceExperience.verifyThenEnd();
 
       await deleteUser(user.id);
     });

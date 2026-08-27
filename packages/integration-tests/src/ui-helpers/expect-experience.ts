@@ -67,6 +67,7 @@ export default class ExpectExperience extends ExpectPage {
   }
 
   #ongoing?: OngoingExperience;
+  #isTlsTerminationSimulated = false;
 
   constructor(thePage = global.page, options: ExpectExperienceOptions = {}) {
     super(thePage);
@@ -89,7 +90,7 @@ export default class ExpectExperience extends ExpectPage {
    */
   async startWith(initialUrl = demoAppUrl, type: ExperienceType = 'sign-in') {
     await this.toStart(initialUrl);
-    this.toBeAt('sign-in');
+    await this.waitToBeAt('sign-in');
 
     if (type === 'register') {
       await this.toClick('a', 'Create account');
@@ -128,12 +129,33 @@ export default class ExpectExperience extends ExpectPage {
     }
 
     await this.waitForUrl(this.#ongoing.initialUrl);
+
+    if (this.#isTlsTerminationSimulated) {
+      await this.page.setExtraHTTPHeaders({});
+      this.#isTlsTerminationSimulated = false;
+    }
+
     await this.toClick('div[role=button]', /sign out/i);
 
     this.#ongoing = undefined;
     if (closePage) {
       await this.page.close();
     }
+  }
+
+  /**
+   * Clear the demo app browser storage and session cookies while preserving the trusted-device
+   * credential under test. This guarantees the next visit starts a new sign-in interaction.
+   */
+  async clearDemoAppSession() {
+    await this.page.evaluate(() => {
+      localStorage.clear();
+      sessionStorage.clear();
+    });
+    const cookies = await this.page.cookies();
+    const sessionCookies = cookies.filter(({ name }) => !name.includes('logto-trusted-device-'));
+    await this.page.deleteCookie(...sessionCookies);
+    await this.page.goto('about:blank');
   }
 
   /**
@@ -287,6 +309,10 @@ export default class ExpectExperience extends ExpectPage {
   async toOptInTrustedDevice(durationDays = 365) {
     const text = `Trust this device for ${durationDays} days`;
     await this.toSeeTrustedDeviceOptIn(durationDays);
+    // Integration tests run the production build over HTTP while Logto trusts proxy headers.
+    // Simulate TLS termination so Koa can emit the production-only Secure credential cookie.
+    await this.page.setExtraHTTPHeaders({ 'X-Forwarded-Proto': 'https' });
+    this.#isTlsTerminationSimulated = true;
     await this.toClick('div[role=checkbox]', text, false);
     await this.toMatchElement('div[role=checkbox][aria-checked=true]', { text });
   }

@@ -132,13 +132,16 @@ describe('MFA - TOTP', () => {
         await experience.toOptInTrustedDevice();
         await experience.toBindTotp(true, true);
         await experience.verifyThenEnd(false);
+        await experience.clearDemoAppSession();
+        await experience.page.close();
+        const trustedDeviceExperience = new ExpectTotpExperience(await browser.newPage());
 
-        await experience.startWith(demoAppUrl, 'sign-in');
-        await experience.toFillForm(
+        await trustedDeviceExperience.startWith(demoAppUrl, 'sign-in');
+        await trustedDeviceExperience.toFillForm(
           { identifier: userProfile.username, password: userProfile.password },
           { submit: true }
         );
-        await experience.verifyThenEnd();
+        await trustedDeviceExperience.verifyThenEnd();
 
         await deleteUser(user.id);
       });
@@ -161,13 +164,16 @@ describe('MFA - TOTP', () => {
         await experience.toOptInTrustedDevice();
         await experience.toVerifyTotp(verification.secret, true, true);
         await experience.verifyThenEnd(false);
+        await experience.clearDemoAppSession();
+        await experience.page.close();
+        const trustedDeviceExperience = new ExpectTotpExperience(await browser.newPage());
 
-        await experience.startWith(demoAppUrl, 'sign-in');
-        await experience.toFillForm(
+        await trustedDeviceExperience.startWith(demoAppUrl, 'sign-in');
+        await trustedDeviceExperience.toFillForm(
           { identifier: userProfile.username, password: userProfile.password },
           { submit: true }
         );
-        await experience.verifyThenEnd();
+        await trustedDeviceExperience.verifyThenEnd();
 
         await deleteUser(user.id);
       });

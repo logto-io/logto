@@ -128,14 +128,17 @@ describe('MFA - WebAuthn', () => {
       await experience.toOptInTrustedDevice();
       await experience.toCreatePasskey();
       await experience.verifyThenEnd(false);
+      await experience.clearDemoAppSession();
       await experience.clearVirtualAuthenticator();
+      await experience.page.close();
+      const trustedDeviceExperience = new ExpectWebAuthnExperience(await browser.newPage());
 
-      await experience.startWith(demoAppUrl, 'sign-in');
-      await experience.toFillForm(
+      await trustedDeviceExperience.startWith(demoAppUrl, 'sign-in');
+      await trustedDeviceExperience.toFillForm(
         { identifier: userProfile.username, password: userProfile.password },
         { submit: true }
       );
-      await experience.verifyThenEnd();
+      await trustedDeviceExperience.verifyThenEnd();
 
       await deleteUser(user.id);
     });
@@ -162,17 +165,20 @@ describe('MFA - WebAuthn', () => {
       await experience.toOptInTrustedDevice();
       await experience.toVerifyViaPasskey();
       await experience.verifyThenEnd(false);
+      await experience.clearDemoAppSession();
       await experience.clearVirtualAuthenticator();
+      await experience.page.close();
+      const trustedDeviceExperience = new ExpectWebAuthnExperience(await browser.newPage());
 
-      await experience.startWith(demoAppUrl, 'sign-in');
-      await experience.toFillForm(
+      await trustedDeviceExperience.startWith(demoAppUrl, 'sign-in');
+      await trustedDeviceExperience.toFillForm(
         { identifier: userProfile.username, password: userProfile.password },
         { submit: true }
       );
-      await experience.verifyThenEnd();
+      await trustedDeviceExperience.verifyThenEnd();
 
       await deleteUser(user.id);
-    });
+    }, 90_000);
   });
 });
 
