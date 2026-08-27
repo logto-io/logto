@@ -41,8 +41,6 @@ jobs:
     env:
       INTEGRATION_TEST: true
       DEV_FEATURES_ENABLED: ${{ matrix.dev-features-enabled }}
-      # Allow production-mode tests to simulate TLS termination for Secure cookies.
-      TRUST_PROXY_HEADER: 1
       # Mock servers for backchannel logout and webhook delivery listen on loopback, which the SSRF
       # protection blocks. Allow just those addresses instead of disabling the protection. CIMD
       # cannot be enabled while an allowlist is set.
