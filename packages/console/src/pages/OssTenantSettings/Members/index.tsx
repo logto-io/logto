@@ -1,17 +1,16 @@
 import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
 import MembersBg from '@/assets/icons/members-bg.svg?url';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import DynamicT from '@/ds-components/DynamicT';
-import { openCloudUpsell, openSelfHostedPlansUpsell, ossUpsellEntries } from '@/utils/oss-upsell';
+import { openSelfHostedPlansUpsell, ossUpsellEntries } from '@/utils/oss-upsell';
 
 import { getOssTenantMembersUpsellCopyKeys } from '../utils';
 
 import styles from './index.module.scss';
 
 function Members() {
-  const copyKeys = getOssTenantMembersUpsellCopyKeys({ isDevFeaturesEnabled });
+  const copyKeys = getOssTenantMembersUpsellCopyKeys();
 
   return (
     <Card className={styles.card}>
@@ -32,10 +31,8 @@ function Members() {
           trailingIcon={<ExternalLinkIcon />}
           onClick={() => {
             const entry = ossUpsellEntries.tenantSettingsMembersOssUpsell;
-            // DEV: self-hosted plans
-            const openUpsell = isDevFeaturesEnabled ? openSelfHostedPlansUpsell : openCloudUpsell;
 
-            openUpsell({ entry });
+            openSelfHostedPlansUpsell({ entry });
           }}
         />
       </div>

@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 
 import InfoIcon from '@/assets/icons/info.svg?react';
 import LearnMore from '@/components/LearnMore';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { logtoOssFeatureSupportLink } from '@/consts/external-links';
 import { LinkButton } from '@/ds-components/Button';
 import TextLink from '@/ds-components/TextLink';
@@ -19,7 +18,7 @@ type Props = {
 
 function SamlAppLimitBanner({ variant, limit, className }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const content = getSamlAppLimitBannerContent({ isDevFeaturesEnabled, variant });
+  const content = getSamlAppLimitBannerContent({ variant });
   const description = t(content.descriptionKey, {
     limit,
     defaultValue: '',

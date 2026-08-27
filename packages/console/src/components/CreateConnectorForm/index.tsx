@@ -12,8 +12,7 @@ import ExternalLink from '@/assets/icons/external-link.svg?react';
 import LogtoEmailLogoDark from '@/assets/icons/logto-email-service-dark.svg?url';
 import LogtoEmailLogo from '@/assets/icons/logto-email-service.svg?url';
 import ConnectorLogo from '@/components/ConnectorLogo';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
-import { pricingLink } from '@/consts/external-links';
+import { isCloud } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import DynamicT from '@/ds-components/DynamicT';
@@ -53,7 +52,7 @@ function EmailConnectorUpsellBanner() {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console',
   });
-  const copyKeys = getEmailConnectorUpsellCopyKeys({ isDevFeaturesEnabled });
+  const copyKeys = getEmailConnectorUpsellCopyKeys();
   const cloudUpsellUrl = buildCloudUpsellUrl(ossUpsellEntries.connectorEmailBuiltinUpsellBanner);
 
   return (
@@ -73,31 +72,17 @@ function EmailConnectorUpsellBanner() {
         <Button
           className={styles.upsellButton}
           type="outline"
-          title={
-            <DangerousRaw>
-              {isDevFeaturesEnabled
-                ? t(copyKeys.action)
-                : t(copyKeys.action, { productName: 'Logto Cloud' })}
-            </DangerousRaw>
-          }
+          title={<DangerousRaw>{t(copyKeys.action)}</DangerousRaw>}
           trailingIcon={<ExternalLink />}
           onClick={() => {
-            // DEV: self-hosted plans
-            if (isDevFeaturesEnabled) {
-              openSelfHostedPlansUpsell({
-                entry: ossUpsellEntries.connectorEmailBuiltinUpsellBanner,
-              });
-              return;
-            }
-
-            window.open(pricingLink, '_blank', 'noopener,noreferrer');
+            openSelfHostedPlansUpsell({
+              entry: ossUpsellEntries.connectorEmailBuiltinUpsellBanner,
+            });
           }}
         />
-        {isDevFeaturesEnabled && (
-          <TextLink className={styles.cloudAction} href={cloudUpsellUrl} targetBlank="noopener">
-            {t(copyKeys.cloudAction, { productName: 'Logto Cloud' })}
-          </TextLink>
-        )}
+        <TextLink className={styles.cloudAction} href={cloudUpsellUrl} targetBlank="noopener">
+          {t(copyKeys.cloudAction, { productName: 'Logto Cloud' })}
+        </TextLink>
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import { useContext, useMemo } from 'react';
 import useSWR from 'swr';
 
 import FormCard, { FormCardSkeleton } from '@/components/FormCard';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { type RequestError } from '@/hooks/use-api';
 
@@ -22,7 +22,6 @@ function IdpInitiatedAuth({ ssoConnector }: Props) {
   const { currentSubscriptionQuota } = useContext(SubscriptionDataContext);
   const shouldShowOssUpsell = shouldShowIdpInitiatedAuthUpsell({
     isCloud,
-    isDevFeaturesEnabled,
     isIdpInitiatedSsoEnabled: currentSubscriptionQuota.idpInitiatedSsoEnabled,
   });
 

@@ -8,8 +8,7 @@ import CloudIcon from '@/assets/icons/cloud-icon.svg?react';
 import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
 import LighteningIcon from '@/assets/icons/lightening.svg?react';
 import PrivateCloudIcon from '@/assets/icons/private-cloud.svg?react';
-import { buildOfficialWebsiteContactPageUrl, officialWebsiteContactPageLink } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
+import { buildOfficialWebsiteContactPageUrl } from '@/consts';
 import Button, { LinkButton } from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import IconButton from '@/ds-components/IconButton';
@@ -36,10 +35,7 @@ function OssCloudUpsell({ isBannerVisible, onDismissBanner }: Props) {
   const theme = useTheme();
   const CloudBannerIcon = icons[theme];
   const entry = ossUpsellEntries.getStartedOssCloudBanner;
-  // Self-hosted plans upsell routing attribution.
-  const privateCloudContactHref = isDevFeaturesEnabled
-    ? buildOfficialWebsiteContactPageUrl('private-cloud')
-    : officialWebsiteContactPageLink;
+  const privateCloudContactHref = buildOfficialWebsiteContactPageUrl('private-cloud');
 
   return (
     <>
@@ -73,16 +69,13 @@ function OssCloudUpsell({ isBannerVisible, onDismissBanner }: Props) {
                   openCloudUpsell({ entry });
                 }}
               />
-              {/* Self-hosted plans upsell routing. */}
-              {isDevFeaturesEnabled && (
-                <TextLink
-                  className={styles.selfHostedPlansLink}
-                  href={buildSelfHostedPlansUrl(entry)}
-                  targetBlank="noopener"
-                >
-                  {t('upsell.explore_self_hosted_plans')}
-                </TextLink>
-              )}
+              <TextLink
+                className={styles.selfHostedPlansLink}
+                href={buildSelfHostedPlansUrl(entry)}
+                targetBlank="noopener"
+              >
+                {t('upsell.explore_self_hosted_plans')}
+              </TextLink>
             </div>
           </div>
           <IconButton
