@@ -11,7 +11,6 @@
  */
 
 import { identificationApiPayloadGuard, InteractionEvent } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
@@ -202,14 +201,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
     }),
     async (ctx, next) => {
       const { experienceInteraction } = ctx;
-      const trustedDevice = await experienceInteraction.trustedDevice.getCreationAvailability(
-        experienceInteraction.identifiedUserId
-      );
-
-      ctx.body = {
-        ...experienceInteraction.toSanitizedJson(),
-        ...conditional(trustedDevice && { trustedDevice }),
-      };
+      ctx.body = experienceInteraction.toSanitizedJson();
       ctx.status = 200;
       return next();
     }

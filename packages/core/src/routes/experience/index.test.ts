@@ -1187,60 +1187,7 @@ describe('POST /experience/submit', () => {
     }
   );
 
-  it('should expose only trusted-device creation availability for an identified user', async () => {
-    setDevFeaturesEnabled(true);
-    const { requester, getEffectivePolicy } = createRequesterWithMocks({
-      interactionResult: {
-        trustedDeviceCreation: { deviceId: 'internal-device-id' },
-        trustedDeviceFulfillment: {
-          userId: mockUser.id,
-          trustedDeviceId: 'internal-device-id',
-          fulfilledAt: Date.now(),
-        },
-      },
-      trustedDevicePolicy: { enabled: true, durationDays: 30 },
-    });
-
-    const response = await requester.get('/experience/interaction');
-
-    expect(response.status).toBe(200);
-    expect(response.body).toMatchObject({
-      trustedDevice: { canCreate: true, durationDays: 30 },
-    });
-    expect(response.body).not.toHaveProperty('trustedDeviceFulfillment');
-    expect(response.body).not.toHaveProperty('trustedDeviceCreation');
-    expect(getEffectivePolicy).toHaveBeenCalledTimes(1);
-  });
-
-  it('should expose disabled creation without a duration when effective policy disallows it', async () => {
-    setDevFeaturesEnabled(true);
-    const { requester } = createRequesterWithMocks({
-      trustedDevicePolicy: { enabled: false, durationDays: 30 },
-    });
-
-    const response = await requester.get('/experience/interaction');
-
-    expect(response.status).toBe(200);
-    expect(response.body).toMatchObject({ trustedDevice: { canCreate: false } });
-    expect(response.body.trustedDevice).not.toHaveProperty('durationDays');
-  });
-
-  it('should omit trusted-device availability when the policy lookup fails', async () => {
-    setDevFeaturesEnabled(true);
-    const policyError = new Error('trusted-device policy lookup failed');
-    const trackException = jest.spyOn(appInsights, 'trackException').mockResolvedValue();
-    const { requester, getEffectivePolicy } = createRequesterWithMocks();
-    getEffectivePolicy.mockRejectedValueOnce(policyError);
-
-    const response = await requester.get('/experience/interaction');
-
-    expect(response.status).toBe(200);
-    expect(response.body).not.toHaveProperty('trustedDevice');
-    expect(trackException).toHaveBeenCalledWith(policyError, expect.any(Object));
-    trackException.mockRestore();
-  });
-
-  it('should omit trusted-device interaction data and behavior when dev features are disabled', async () => {
+  it('should disable trusted-device behavior when dev features are disabled', async () => {
     setDevFeaturesEnabled(false);
     const user = {
       ...mockUser,
@@ -1262,15 +1209,12 @@ describe('POST /experience/submit', () => {
       trustedDevicePolicy: { enabled: true, durationDays: 30 },
     });
 
-    const interactionResponse = await requester.get('/experience/interaction');
     const optInResponse = await requester.post('/experience/profile/mfa/trusted-device');
     const submitResponse = await requester
       .post('/experience/submit')
       .set('Content-Type', 'text/plain')
       .send('released submit payload');
 
-    expect(interactionResponse.status).toBe(200);
-    expect(interactionResponse.body).not.toHaveProperty('trustedDevice');
     expect(optInResponse.status).toBe(404);
     expect(submitResponse.status).toBe(200);
     expect(getEffectivePolicy).not.toHaveBeenCalled();
