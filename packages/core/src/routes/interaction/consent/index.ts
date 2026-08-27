@@ -380,18 +380,13 @@ export default function consentRoutes<T extends IRouterParamContext>(
         allMissingResourceScopes,
       });
 
-      /**
-       * The ceiling card renders once above the roster, so it only exists when a registered
-       * third-party roster does; CIMD organizations carry their own scope breakdown instead.
-       */
-      const organizationResourceScopes =
-        cimd || organizations.length === 0
-          ? undefined
-          : await getOrganizationResourceScopes(
-              queries,
-              allMissingResourceScopes,
-              missingResourceScopes
-            );
+      const organizationResourceScopes = await getOrganizationResourceScopes({
+        queries,
+        cimd,
+        organizations,
+        allMissingResourceScopes,
+        userMissingResourceScopes: missingResourceScopes,
+      });
 
       ctx.body = {
         application,

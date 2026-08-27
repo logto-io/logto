@@ -111,19 +111,39 @@ export const getConsentOrganizations = async ({
   }));
 };
 
+type GetOrganizationResourceScopesOptions = {
+  queries: Queries;
+  cimd: boolean;
+  /** The roster the consent page will render. */
+  organizations: PublicOrganization[];
+  /** The requested scope ceiling from the prompt details. */
+  allMissingResourceScopes: Record<string, string[]>;
+  /** The user-level scope card of the consent page, which the organization-facing part excludes. */
+  userMissingResourceScopes: MissingResourceScopes[];
+};
+
 /**
- * The organization-facing part of the requested scope ceiling, shown once above the roster.
+ * The organization-facing part of the requested scope ceiling, or `undefined` when this consent
+ * response carries none: the card renders once above the organization roster, so it only
+ * accompanies a non-empty registered third-party roster — CIMD organizations carry their own
+ * scope breakdown instead.
  *
  * The reserved organization resource always belongs here, as the user-level card filters it out
  * of its own display. API resource scopes can be reachable both directly and through
  * organization roles, so they are deduplicated against what the user-level card already lists,
  * and groups left with no scopes are dropped.
  */
-export const getOrganizationResourceScopes = async (
-  queries: Queries,
-  allMissingResourceScopes: Record<string, string[]>,
-  userMissingResourceScopes: MissingResourceScopes[]
-): Promise<MissingResourceScopes[]> => {
+export const getOrganizationResourceScopes = async ({
+  queries,
+  cimd,
+  organizations,
+  allMissingResourceScopes,
+  userMissingResourceScopes,
+}: GetOrganizationResourceScopesOptions): Promise<MissingResourceScopes[] | undefined> => {
+  if (cimd || organizations.length === 0) {
+    return;
+  }
+
   const requestedResourceScopes = await parseMissingResourceScopesInfo(
     queries,
     allMissingResourceScopes
