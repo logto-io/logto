@@ -152,7 +152,7 @@ const useContinueFlowCodeVerification = (
         );
 
         if (bindError) {
-          await handleError(bindError);
+          await handleError(bindError, submitInteractionErrorHandler);
           errorCallback?.();
           return;
         }
@@ -194,6 +194,7 @@ const useContinueFlowCodeVerification = (
       interactionEvent,
       mfaFlowState,
       redirectTo,
+      submitInteractionErrorHandler,
       verificationId,
       verifyVerificationCode,
       verifyVerificationCodeErrorHandlers,
