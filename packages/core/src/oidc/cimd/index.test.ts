@@ -8,11 +8,17 @@ import type Queries from '#src/tenants/Queries.js';
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
 
-const loadCimdModule = async ({ isOidcProviderSsrfProtectionEnabled = true } = {}) => {
+const loadCimdModule = async ({
+  isSsrfProtectionEnabled = true,
+  ssrfAllowedAddresses = [],
+}: {
+  isSsrfProtectionEnabled?: boolean;
+  ssrfAllowedAddresses?: string[];
+} = {}) => {
   jest.resetModules();
   mockEsm('#src/env-set/index.js', () => ({
     EnvSet: {
-      values: { isOidcProviderSsrfProtectionEnabled },
+      values: { isSsrfProtectionEnabled, ssrfAllowedAddresses },
     },
   }));
 
@@ -81,7 +87,7 @@ const loadEnabledFeature = async ({
 };
 
 describe('isCimdEffectivelyEnabled', () => {
-  it('is enabled only when both conditions hold', async () => {
+  it('is enabled only when the tenant config, SSRF protection, and empty allowlist all hold', async () => {
     const { isCimdEffectivelyEnabled } = await loadCimdModule();
     expect(isCimdEffectivelyEnabled(buildEnvSet(true))).toBe(true);
   });
@@ -93,8 +99,16 @@ describe('isCimdEffectivelyEnabled', () => {
 
   it('is disabled when the provider SSRF protection is off, regardless of the stored config', async () => {
     const { isCimdEffectivelyEnabled } = await loadCimdModule({
-      isOidcProviderSsrfProtectionEnabled: false,
+      isSsrfProtectionEnabled: false,
     });
+    expect(isCimdEffectivelyEnabled(buildEnvSet(true))).toBe(false);
+  });
+
+  it('is disabled when private addresses are allowlisted', async () => {
+    const { isCimdEffectivelyEnabled } = await loadCimdModule({
+      ssrfAllowedAddresses: ['10.0.0.0/8'],
+    });
+
     expect(isCimdEffectivelyEnabled(buildEnvSet(true))).toBe(false);
   });
 });
@@ -115,7 +129,7 @@ describe('shouldAttributeToCimd', () => {
 
   it('attributes even when cimd is not effectively enabled for the tenant', async () => {
     const { shouldAttributeToCimd } = await loadCimdModule({
-      isOidcProviderSsrfProtectionEnabled: false,
+      isSsrfProtectionEnabled: false,
     });
     expect(shouldAttributeToCimd(cimdClientId)).toBe(true);
   });

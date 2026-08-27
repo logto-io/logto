@@ -25,11 +25,15 @@ class MockHttpError {
   constructor(public response: { body: unknown }) {}
 }
 
+const gotMock = {
+  get: getMock,
+  post: postMock,
+  // `outbound-request.js` derives its SSRF-protected instance from `got.extend()`.
+  extend: () => gotMock,
+};
+
 mockEsm('got', () => ({
-  got: {
-    get: getMock,
-    post: postMock,
-  },
+  got: gotMock,
   HTTPError: MockHttpError,
 }));
 

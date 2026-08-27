@@ -1,6 +1,7 @@
 import { cond } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
+import { ssrfProtectedFetch } from '#src/utils/outbound-request.js';
 
 /**
  * The opt-out `fetch` implementation for the provider's outgoing requests (backchannel logout,
@@ -20,10 +21,30 @@ const fetchWithoutSsrfDispatcher: typeof fetch = async (input, init) => {
 };
 
 /**
- * Keep oidc-provider's native fetch implementation whenever SSRF protection is enabled so future
- * upstream fetch hardening is inherited automatically. Only override it for the self-hosted opt-out.
+ * Replaces oidc-provider's dispatcher with ours, which applies the same special-use address check
+ * plus `SSRF_ALLOWED_ADDRESSES`. Needed because the provider's built-in guard hardcodes its check
+ * and has no hook for the allowlist, so a listed address would stay unreachable here while being
+ * reachable everywhere else.
  */
-export const getProviderFetchConfig = () =>
-  cond(!EnvSet.values.isOidcProviderSsrfProtectionEnabled && { fetch: fetchWithoutSsrfDispatcher });
+const fetchWithAllowlistedDispatcher: typeof fetch = async (input, init) => {
+  // eslint-disable-next-line no-restricted-syntax -- The `dispatcher` key is an undici extension absent from `RequestInit`
+  const { dispatcher, ...safeInit } = (init ?? {}) as RequestInit & { dispatcher?: unknown };
+  return ssrfProtectedFetch(input, safeInit);
+};
+
+/**
+ * Keep oidc-provider's native fetch implementation whenever the protection is enabled and no
+ * allowlist applies, so future upstream fetch hardening is inherited automatically. Override it
+ * only for the self-hosted opt-out and for the allowlist, which upstream cannot honor.
+ */
+export const getProviderFetchConfig = () => {
+  const { isSsrfProtectionEnabled, ssrfAllowedAddresses } = EnvSet.values;
+
+  if (!isSsrfProtectionEnabled) {
+    return { fetch: fetchWithoutSsrfDispatcher };
+  }
+
+  return cond(ssrfAllowedAddresses.length > 0 && { fetch: fetchWithAllowlistedDispatcher });
+};
 
 export default fetchWithoutSsrfDispatcher;

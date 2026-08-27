@@ -2,6 +2,8 @@ import { type HookEvent, InteractionHookEvent } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 import ky from 'ky';
 
+import { ssrfProtectedFetch } from '#src/utils/outbound-request.js';
+
 const { jest } = import.meta;
 
 const { mockEsm } = createMockUtils(jest);
@@ -81,6 +83,7 @@ describe('sendWebhookRequest', () => {
 
     expect(post.mock.lastCall?.[0]).toBe('https://logto.gg');
     expect(post.mock.lastCall?.[1]).toMatchObject({
+      fetch: ssrfProtectedFetch,
       headers: {
         'user-agent': 'Logto (https://logto.io/)',
         'logto-signature-sha-256': mockSignature,

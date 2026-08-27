@@ -43,8 +43,10 @@ jobs:
       DEV_FEATURES_ENABLED: ${{ matrix.dev-features-enabled }}
       # Allow production-mode tests to simulate TLS termination for Secure cookies.
       TRUST_PROXY_HEADER: 1
-      # Allow Console tests to use the local backchannel logout mock server.
-      OIDC_PROVIDER_SSRF_PROTECTION_DISABLED: ${{ matrix.target == 'console' }}
+      # Mock servers for backchannel logout and webhook delivery listen on loopback, which the SSRF
+      # protection blocks. Allow just those addresses instead of disabling the protection. CIMD
+      # cannot be enabled while an allowlist is set.
+      SSRF_ALLOWED_ADDRESSES: 127.0.0.0/8,::1
       # Key encryption key (KEK) for the secret vault used in integration tests
       SECRET_VAULT_KEK: DtPWS09unRXGuRScB60qXqCSsrjd22dUlXt/0oZgxSo=
       DB_URL: postgres://postgres:postgres@localhost:5432/postgres

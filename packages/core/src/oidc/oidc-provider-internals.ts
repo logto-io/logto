@@ -31,6 +31,7 @@ export {
 export { default as validatePresence } from 'oidc-provider/lib/helpers/validate_presence.js';
 export { default as checkRar } from 'oidc-provider/lib/shared/check_rar.js';
 export { default as checkResource } from 'oidc-provider/lib/shared/check_resource.js';
+export { isSpecialUseIP } from 'oidc-provider/lib/helpers/fetch_request.js';
 
 /**
  * Since v9, custom grant handlers are the final token-endpoint middleware and receive no `next`
