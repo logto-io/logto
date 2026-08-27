@@ -14,16 +14,60 @@ type BuildConsentOrganizationsOptions = {
   cimd: boolean;
   userId: string;
   applicationId: string;
-  /** The `scope` parameter of the authorization request. */
+  /**
+   * The `scope` parameter of the authorization request. Provider-owned interaction params are
+   * untyped, so the value arrives as `unknown`; a non-string reads as "requested nothing",
+   * matching how `revalidateConsentClient` treats the same parameter.
+   */
   requestedScope: unknown;
   missingOIDCScope?: string[];
   /**
-   * The requested scope ceiling from the prompt details, already bounded at authorization time by
-   * the user's roles across all of their organizations.
+   * The requested scope ceiling from the prompt details, already bounded at authorization time
+   * by the user's roles across all of their organizations.
    */
   allMissingResourceScopes: Record<string, string[]>;
   /** The user-level scope card of the consent page, which the organization-facing part excludes. */
   userMissingResourceScopes: MissingResourceScopes[];
+};
+
+type ConsentOrganizationsInfo = {
+  organizations: PublicOrganization[];
+  organizationResourceScopes?: MissingResourceScopes[];
+};
+
+/**
+ * The organization-facing part of the requested scope ceiling, shown once above the roster.
+ *
+ * The reserved organization resource always belongs here, as the user-level card filters it out
+ * of its own display. API resource scopes can be reachable both directly and through
+ * organization roles, so they are deduplicated against what the user-level card already lists,
+ * and groups left with no scopes are dropped.
+ */
+const buildOrganizationResourceScopes = async (
+  queries: Queries,
+  allMissingResourceScopes: Record<string, string[]>,
+  userMissingResourceScopes: MissingResourceScopes[]
+): Promise<MissingResourceScopes[]> => {
+  const requestedResourceScopes = await parseMissingResourceScopesInfo(
+    queries,
+    allMissingResourceScopes
+  );
+
+  return requestedResourceScopes
+    .map(({ resource, scopes }) => {
+      if (resource.id === ReservedResource.Organization) {
+        return { resource, scopes };
+      }
+
+      const userCardScopes =
+        userMissingResourceScopes.find(({ resource: { id } }) => id === resource.id)?.scopes ?? [];
+
+      return {
+        resource,
+        scopes: scopes.filter((scope) => !userCardScopes.some(({ id }) => id === scope.id)),
+      };
+    })
+    .filter(({ scopes }) => scopes.length > 0);
 };
 
 /**
@@ -32,8 +76,7 @@ type BuildConsentOrganizationsOptions = {
  *
  * A registered third-party consent records an application-wide ceiling plus a roster, so the
  * roster carries no per-organization scope detail: the effective access of each organization is
- * re-bounded by the user's role there at token issuance. CIMD consent is grant-scoped per
- * authorization, and keeps the per-organization breakdown its model displays.
+ * re-bounded by the user's role there at token issuance.
  */
 export const buildConsentOrganizations = async ({
   envSet,
@@ -46,29 +89,20 @@ export const buildConsentOrganizations = async ({
   missingOIDCScope,
   allMissingResourceScopes,
   userMissingResourceScopes,
-}: BuildConsentOrganizationsOptions): Promise<{
-  organizations: PublicOrganization[];
-  organizationResourceScopes?: MissingResourceScopes[];
-}> => {
+}: BuildConsentOrganizationsOptions): Promise<ConsentOrganizationsInfo> => {
   /**
-   * The roster is gated on the requested `organizations` scope rather than on its missing state
-   * alone: after the first grant the scope is never missing again, yet a later consent round
-   * (e.g. a `prompt=consent` re-authorization) must still offer the organizations that are not
-   * consented yet, so the selection stays amendable. The consent prompt trigger itself is
-   * untouched, which keeps the resume flow single-pass. A CIMD authorization consents exactly
-   * one organization to its own grant, so it keeps the missing-scope gate.
+   * CIMD consent is grant-scoped per authorization (one grant carries one organization), so no
+   * cross-grant roster or ceiling concept applies. It keeps the pre-roster behavior verbatim:
+   * the missing-scope gate and a per-organization scope breakdown.
    */
-  const wantsOrganizations =
-    Boolean(missingOIDCScope?.includes(UserScope.Organizations)) ||
-    (!cimd &&
-      typeof requestedScope === 'string' &&
-      requestedScope.split(' ').includes(UserScope.Organizations));
-
-  const organizations = wantsOrganizations
-    ? await queries.organizations.relations.users.getOrganizationsByUserId(userId)
-    : [];
-
   if (cimd) {
+    if (!missingOIDCScope?.includes(UserScope.Organizations)) {
+      return { organizations: [] };
+    }
+
+    const organizations =
+      await queries.organizations.relations.users.getOrganizationsByUserId(userId);
+
     return {
       organizations: await Promise.all(
         organizations.map(async ({ name, id }) => ({
@@ -88,6 +122,23 @@ export const buildConsentOrganizations = async ({
     };
   }
 
+  /**
+   * The roster is gated on the requested `organizations` scope, not on its missing state: after
+   * the first grant the scope is never missing again, yet a later consent round (e.g. a
+   * `prompt=consent` re-authorization) must still offer the organizations that are not consented
+   * yet. Missing scopes are computed from the requested set, so this check subsumes the legacy
+   * missing-state gate. The consent prompt trigger itself is untouched, which keeps the resume
+   * flow single-pass.
+   */
+  const requestedScopes = typeof requestedScope === 'string' ? requestedScope.split(' ') : [];
+
+  if (!requestedScopes.includes(UserScope.Organizations)) {
+    return { organizations: [] };
+  }
+
+  const organizations =
+    await queries.organizations.relations.users.getOrganizationsByUserId(userId);
+
   if (organizations.length === 0) {
     return { organizations: [] };
   }
@@ -99,37 +150,16 @@ export const buildConsentOrganizations = async ({
     });
   const consentedOrganizationIds = new Set(consentedOrganizations.map(({ id }) => id));
 
-  /**
-   * The reserved organization resource always belongs to the organization-facing part; API
-   * resource scopes may be carried by an organization role as well as directly by the user, so
-   * they are deduplicated against what the user-level card already lists.
-   */
-  const requestedResourceScopes = await parseMissingResourceScopesInfo(
-    queries,
-    allMissingResourceScopes
-  );
-  const organizationResourceScopes = requestedResourceScopes
-    .map(({ resource, scopes }) => ({
-      resource,
-      scopes:
-        resource.id === ReservedResource.Organization
-          ? scopes
-          : scopes.filter(
-              (scope) =>
-                !userMissingResourceScopes.some(
-                  ({ resource: userResource, scopes: userScopes }) =>
-                    userResource.id === resource.id && userScopes.some(({ id }) => id === scope.id)
-                )
-            ),
-    }))
-    .filter(({ scopes }) => scopes.length > 0);
-
   return {
     organizations: organizations.map(({ name, id }) => ({
       name,
       id,
       isConsented: consentedOrganizationIds.has(id),
     })),
-    organizationResourceScopes,
+    organizationResourceScopes: await buildOrganizationResourceScopes(
+      queries,
+      allMissingResourceScopes,
+      userMissingResourceScopes
+    ),
   };
 };
