@@ -1,6 +1,6 @@
 import { demoAppApplicationId, type MfaFactor } from '@logto/schemas';
 import { appendPath } from '@silverhand/essentials';
-import { type HTTPRequest } from 'puppeteer';
+import { type CDPSession, type Protocol } from 'puppeteer';
 
 import { logtoUrl, mockSocialAuthPageUrl } from '#src/constants.js';
 import { readConnectorMessage } from '#src/helpers/index.js';
@@ -15,16 +15,6 @@ const defaultUrlWaitTimeout = 30_000;
 
 /** Remove the query string together with the `?` from a URL string. */
 const stripQuery = (url: string) => url.split('?')[0];
-
-const tlsTerminationRequestHandler = async (request: HTTPRequest) => {
-  const isApiRequest = request.resourceType() === 'fetch' || request.resourceType() === 'xhr';
-  await request.continue({
-    headers: {
-      ...request.headers(),
-      ...(isApiRequest && { 'X-Forwarded-Proto': 'https' }),
-    },
-  });
-};
 
 export type ExperienceType = 'sign-in' | 'register' | 'continue' | 'forgot-password';
 
@@ -78,7 +68,7 @@ export default class ExpectExperience extends ExpectPage {
   }
 
   #ongoing?: OngoingExperience;
-  #tlsTerminationRequestHandler?: (request: HTTPRequest) => Promise<void>;
+  #tlsTerminationClient?: CDPSession;
 
   constructor(thePage = global.page, options: ExpectExperienceOptions = {}) {
     super(thePage);
@@ -160,7 +150,8 @@ export default class ExpectExperience extends ExpectPage {
       localStorage.clear();
       sessionStorage.clear();
     });
-    const cookies = await this.page.cookies();
+    const cookies = await this.page.cookies(logtoUrl);
+    expect(cookies.some(({ name }) => name.includes('logto-trusted-device-'))).toBe(true);
     const sessionCookies = cookies.filter(({ name }) => !name.includes('logto-trusted-device-'));
     await this.page.deleteCookie(...sessionCookies);
     await this.page.goto('about:blank');
@@ -318,8 +309,9 @@ export default class ExpectExperience extends ExpectPage {
     const text = `Trust this device for ${durationDays} days`;
     await this.toSeeTrustedDeviceOptIn(durationDays);
     // Integration tests run the production build over HTTP while Logto trusts proxy headers.
-    // Simulate TLS termination only for API calls so Koa can emit the production-only Secure
-    // credential cookie without turning the following HTTP document navigation into HTTPS.
+    // Simulate TLS termination only for the interaction submit request so Koa can emit the
+    // production-only Secure credential cookie without affecting WebAuthn ceremonies, document
+    // navigation, or the demo app's authorization-code exchange.
     await this.#startTlsTerminationSimulation();
     await this.toClick('div[role=checkbox]', text, false);
     await this.toMatchElement('div[role=checkbox][aria-checked=true]', { text });
@@ -460,25 +452,40 @@ export default class ExpectExperience extends ExpectPage {
   }
 
   async #startTlsTerminationSimulation() {
-    if (this.#tlsTerminationRequestHandler) {
+    if (this.#tlsTerminationClient) {
       return;
     }
 
-    await this.page.setRequestInterception(true);
-    const handler = tlsTerminationRequestHandler;
-    this.#tlsTerminationRequestHandler = handler;
-    this.page.on('request', handler);
+    const client = await this.page.target().createCDPSession();
+    const handler = async ({ requestId, request }: Protocol.Fetch.RequestPausedEvent) => {
+      const headers = Object.entries(request.headers)
+        .filter(([name]) => name.toLowerCase() !== 'x-forwarded-proto')
+        .map(([name, value]) => ({ name, value: String(value) }));
+
+      await client.send('Fetch.continueRequest', {
+        requestId,
+        headers: [...headers, { name: 'X-Forwarded-Proto', value: 'https' }],
+      });
+    };
+
+    this.#tlsTerminationClient = client;
+    client.on('Fetch.requestPaused', handler);
+    await client.send('Fetch.enable', {
+      patterns: [{ urlPattern: `${logtoUrl}/api/experience/submit*`, requestStage: 'Request' }],
+    });
   }
 
   async #stopTlsTerminationSimulation() {
-    const handler = this.#tlsTerminationRequestHandler;
+    const client = this.#tlsTerminationClient;
 
-    if (!handler) {
+    if (!client) {
       return;
     }
 
-    await this.page.setRequestInterception(false);
-    this.page.off('request', handler);
-    this.#tlsTerminationRequestHandler = undefined;
+    await client.send('Fetch.disable');
+    client.removeAllListeners('Fetch.requestPaused');
+    // Leave this page-scoped session attached until the page closes. Detaching it also tears down
+    // the virtual authenticator environment enabled by WebAuthn integration tests on this target.
+    this.#tlsTerminationClient = undefined;
   }
 }
