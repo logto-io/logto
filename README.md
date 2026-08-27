@@ -15,7 +15,7 @@
 [![cloud](https://img.shields.io/badge/cloud-available-7958ff)](https://cloud.logto.io/?sign_up=true&utm_source=github&utm_medium=repo_logto)
 [![gitpod](https://img.shields.io/badge/gitpod-available-f09439)](https://gitpod.io/#https://github.com/logto-io/demo)
 [![render](https://img.shields.io/badge/render-deploy-5364e9)](https://render.com/deploy?repo=https://github.com/logto-io/logto)
-[![render](https://img.shields.io/badge/repocloud-deploy-blue)](https://repocloud.io/details/Logto/)
+[![repocloud](https://img.shields.io/badge/repocloud-deploy-blue)](https://repocloud.io/details/Logto/)
 
 # Logto
 
