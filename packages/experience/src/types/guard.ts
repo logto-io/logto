@@ -78,6 +78,12 @@ export const mfaErrorDataGuard = s.object({
   availableFactors: mfaFactorsGuard,
   skippable: s.optional(s.boolean()),
   maskedIdentifiers: s.optional(s.record(s.enums(mfaFactorEnumValues), s.string())),
+  trustedDevice: s.optional(
+    s.object({
+      canCreate: s.boolean(),
+      durationDays: s.optional(s.number()),
+    })
+  ),
   // Whether this MFA flow is an optional suggestion (e.g., add another factor after sign-up)
   suggestion: s.optional(s.boolean()),
   // Whether the current WebAuthn factor is used as a sign-in passkey.

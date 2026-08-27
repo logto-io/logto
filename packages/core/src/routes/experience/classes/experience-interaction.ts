@@ -118,6 +118,8 @@ export default class ExperienceInteraction {
         this.getVerificationRecordByTypeAndId(type, verificationId),
       getVerificationRecordById: (verificationId) => this.getVerificationRecordById(verificationId),
       getCurrentProfile: () => this.profile.data,
+      getTrustedDeviceCreationAvailability: async (userId, organizations) =>
+        this.trustedDevice.getCreationAvailability(userId, organizations),
     };
 
     this.adaptiveMfaValidator = new AdaptiveMfaValidator({
@@ -390,6 +392,7 @@ export default class ExperienceInteraction {
       return;
     }
 
+    const trustedDeviceAvailabilityPromise = this.trustedDevice.getCreationAvailability(user.id);
     const isMfaVerifiedWithTrustedDevice = await this.trustedDevice.tryVerifyMfa(user.id);
 
     this.assignAdaptiveMfaHookResult(user.id, adaptiveMfaResult);
@@ -399,6 +402,7 @@ export default class ExperienceInteraction {
     }
 
     const { primaryEmail, primaryPhone } = user;
+    const trustedDevice = await trustedDeviceAvailabilityPromise;
     const maskedIdentifiers: Record<string, string> = {
       ...(mfaValidator.availableUserMfaVerificationTypes.includes(
         MfaFactor.EmailVerificationCode
@@ -419,6 +423,7 @@ export default class ExperienceInteraction {
         {
           availableFactors: mfaValidator.availableUserMfaVerificationTypes,
           maskedIdentifiers,
+          ...conditional(trustedDevice && { trustedDevice }),
         }
       )
     );
@@ -436,7 +441,10 @@ export default class ExperienceInteraction {
   /** Record an explicit trusted-device opt-in after validating eligible MFA proof. */
   public async requestTrustedDeviceCreation() {
     const user = await this.getIdentifiedUser();
-    this.trustedDevice.requestCreation(await this.hasEligibleTrustedDeviceProof(user));
+    await this.trustedDevice.requestCreation(
+      user.id,
+      await this.hasEligibleTrustedDeviceProof(user)
+    );
   }
 
   /**
