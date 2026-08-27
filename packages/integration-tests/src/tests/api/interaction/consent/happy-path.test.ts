@@ -1,4 +1,5 @@
 import { ReservedResource, UserScope } from '@logto/core-kit';
+import { Prompt } from '@logto/node';
 import { type Application, ApplicationType, SignInIdentifier } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 
@@ -191,8 +192,18 @@ describe('consent api', () => {
       const result = await client.send(getConsentInfo);
 
       expect(result.missingResourceScopes).toHaveLength(0);
-      // Only scope1, scope2 is removed
-      expect(result.organizations?.[0]?.missingResourceScopes).toHaveLength(1);
+      /**
+       * The roster of a registered third-party application carries no per-organization scope
+       * detail; the requested ceiling is shown once above it instead.
+       */
+      expect(result.organizations?.[0]?.missingResourceScopes).toBeUndefined();
+      expect(result.organizations?.[0]?.isConsented).toBe(false);
+      // Only scope1, scope2 is not in the application's consent configuration
+      expect(result.organizationResourceScopes).toHaveLength(1);
+      expect(result.organizationResourceScopes?.[0]?.resource.indicator).toBe(resource.indicator);
+      expect(result.organizationResourceScopes?.[0]?.scopes.map(({ name }) => name)).toEqual([
+        scope.name,
+      ]);
 
       await deleteResource(resource.id);
       await deleteUser(user.id);
@@ -231,8 +242,17 @@ describe('consent api', () => {
       const result = await client.send(getConsentInfo);
 
       expect(result.missingResourceScopes).toHaveLength(0);
-      // No missing resource scopes, because the scope is only assigned to resourceScopes
-      expect(result.organizations?.[0]?.missingResourceScopes).toHaveLength(0);
+      expect(result.organizations?.[0]?.missingResourceScopes).toBeUndefined();
+      /**
+       * The user reaches the scope through an organization role only, so it lands in the
+       * organization-facing part of the ceiling: the user-level card lists nothing to deduplicate
+       * it against.
+       */
+      expect(result.organizationResourceScopes).toHaveLength(1);
+      expect(result.organizationResourceScopes?.[0]?.resource.indicator).toBe(resource.indicator);
+      expect(result.organizationResourceScopes?.[0]?.scopes.map(({ name }) => name)).toEqual([
+        scope.name,
+      ]);
 
       await deleteResource(resource.id);
       await deleteUser(user.id);
@@ -406,6 +426,57 @@ describe('consent api', () => {
         deleteResource(resource.id),
         deleteUser(user.id),
       ]);
+    });
+
+    it('offer the organizations that are not consented yet on a later consent round', async () => {
+      const application = applications.get(thirdPartyApplicationName);
+      assert(application, new Error('application.not_found'));
+
+      const organizationApi = new OrganizationApiTest();
+      const organization = await organizationApi.create({ name: 'test_org_5' });
+      const organization2 = await organizationApi.create({ name: 'test_org_6' });
+      const { userProfile, user } = await generateNewUser({ username: true, password: true });
+      await organizationApi.addUsers(organization.id, [user.id]);
+      await organizationApi.addUsers(organization2.id, [user.id]);
+
+      await assignUserConsentScopes(application.id, {
+        userScopes: [UserScope.Organizations],
+      });
+
+      const client = await initClientAndSignIn(application, userProfile, {
+        scopes: [UserScope.Organizations, UserScope.Profile],
+      });
+
+      const { redirectTo } = await client.submitInteraction();
+
+      await client.processSession(redirectTo, false);
+      const { redirectTo: consentRedirectTo } = await client.send(consent, {
+        organizationIds: [organization.id],
+      });
+      await client.manualConsent(consentRedirectTo);
+
+      const reconsentResponse = await client.startAuthorization(
+        redirectUri,
+        { prompt: Prompt.Consent },
+        client.interactionCookie
+      );
+
+      expect(reconsentResponse.status).toBe(303);
+      expect(reconsentResponse.headers.get('location')).toBe(`/consent?app_id=${application.id}`);
+      client.mergeRawCookies(reconsentResponse.headers.getSetCookie());
+
+      const result = await client.send(getConsentInfo);
+
+      // The scope is granted by now, yet the roster still offers what is left to consent
+      expect(result.missingOIDCScope ?? []).not.toContain(UserScope.Organizations);
+      expect(result.organizations).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ id: organization.id, isConsented: true }),
+          expect.objectContaining({ id: organization2.id, isConsented: false }),
+        ])
+      );
+
+      await Promise.all([organizationApi.cleanUp(), deleteUser(user.id)]);
     });
   });
 

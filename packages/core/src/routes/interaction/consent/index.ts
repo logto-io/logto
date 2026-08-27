@@ -1,4 +1,3 @@
-import { UserScope } from '@logto/core-kit';
 import {
   ApplicationType,
   applicationSignInExperienceGuard,
@@ -26,6 +25,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { interactionPrefix } from '../const.js';
 
+import { buildConsentOrganizations } from './organizations.js';
 import {
   buildResourceScopesToReject,
   filterAndParseMissingResourceScopes,
@@ -252,7 +252,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
 
       const {
         session,
-        params: { client_id: clientId, redirect_uri: redirectUri },
+        params: { client_id: clientId, redirect_uri: redirectUri, scope: requestedScope },
         prompt,
       } = interactionDetails;
 
@@ -368,31 +368,24 @@ export default function consentRoutes<T extends IRouterParamContext>(
         applicationId: clientId,
       });
 
-      // Find the organizations if the application is requesting the organizations scope.
-      const organizations = missingOIDCScope?.includes(UserScope.Organizations)
-        ? await queries.organizations.relations.users.getOrganizationsByUserId(accountId)
-        : [];
-
-      const organizationsWithMissingResourceScopes = await Promise.all(
-        organizations.map(async ({ name, id }) => {
-          const missingResourceScopes = await filterAndParseMissingResourceScopes({
-            resourceScopes: allMissingResourceScopes,
-            envSet,
-            queries,
-            libraries,
-            userId: accountId,
-            organizationId: id,
-            applicationId: clientId,
-          });
-
-          return { name, id, missingResourceScopes };
-        })
-      );
+      const { organizations, organizationResourceScopes } = await buildConsentOrganizations({
+        envSet,
+        queries,
+        libraries,
+        cimd,
+        userId: accountId,
+        applicationId: clientId,
+        requestedScope,
+        missingOIDCScope,
+        allMissingResourceScopes,
+        userMissingResourceScopes: missingResourceScopes,
+      });
 
       ctx.body = {
         application,
         user: publicUserInfoGuard.parse(userInfo),
-        organizations: organizationsWithMissingResourceScopes,
+        organizations,
+        organizationResourceScopes,
         // Filter out the OIDC scopes that are not needed for the consent page.
         missingOIDCScope: missingOIDCScope?.filter(
           (scope) => scope !== 'openid' && scope !== 'offline_access'

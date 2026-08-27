@@ -68,6 +68,11 @@ export const publicOrganizationGuard = Organizations.guard
   })
   .extend({
     missingResourceScopes: missingResourceScopesGuard.array().optional(),
+    /**
+     * Whether the user has already consented this organization to the application. Consented
+     * organizations render pre-selected and locked, so a later consent round can only add.
+     */
+    isConsented: z.boolean().optional(),
   });
 
 export type PublicOrganization = z.infer<typeof publicOrganizationGuard>;
@@ -76,6 +81,12 @@ export const consentInfoResponseGuard = z.object({
   application: publicApplicationGuard.merge(applicationSignInExperienceGuard.partial()),
   user: publicUserInfoGuard,
   organizations: publicOrganizationGuard.array().optional(),
+  /**
+   * The organization-facing part of the requested scope ceiling, shown once above the
+   * organization roster. Effective access per organization is still bounded by the user's role
+   * there at token issuance.
+   */
+  organizationResourceScopes: missingResourceScopesGuard.array().optional(),
   missingOIDCScope: z.string().array().optional(),
   missingResourceScopes: missingResourceScopesGuard.array().optional(),
   // Device flow consent does not require a redirect_uri.

@@ -20,7 +20,7 @@ const { InvalidClient, InvalidRedirectUri, InvalidScope, InvalidTarget } = error
 /**
  * Parse the missing resource scopes info with details. We need to display the resource name and scope details on the consent page.
  */
-const parseMissingResourceScopesInfo = async (
+export const parseMissingResourceScopesInfo = async (
   queries: Queries,
   missingResourceScopes?: Record<string, string[]>
 ): Promise<MissingResourceScopes[]> => {
