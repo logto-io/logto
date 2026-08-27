@@ -1,6 +1,6 @@
 const oidc = {
   aborted: 'Der Endnutzer hat die Interaktion abgebrochen.',
-  invalid_scope: 'Ungültiger Anwendungsbereich: {{error_description}}.',
+  invalid_scope: 'Ungültiger Anwendungsbereich: {{scope}}.',
   invalid_token: 'Ungültiger Token übermittelt.',
   invalid_client_metadata: 'Ungültige Client Metadaten übermittelt.',
   insufficient_scope: 'Token fehlt den Anwendungsbereich `{{scope}}`.',

@@ -1,6 +1,6 @@
 const oidc = {
   aborted: 'エンドユーザが操作を中止しました。',
-  invalid_scope: 'スコープが無効です: {{error_description}}。',
+  invalid_scope: 'スコープが無効です: {{scope}}。',
   invalid_token: '提供されたトークンが無効です。',
   invalid_client_metadata: '提供されたクライアントメタデータが無効です。',
   insufficient_scope: 'トークンにスコープ `{{scope}}` が含まれていません。',
