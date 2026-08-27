@@ -43,7 +43,7 @@ const getTrustedDeviceCookieName = (userId: string) => {
     .update(`${defaultTenantId}:${userId}`)
     .digest('base64url');
 
-  return `__Host-logto-trusted-device-${subjectHash}`;
+  return `logto-trusted-device-${subjectHash}`;
 };
 
 const createCredential = (id: string) => {
@@ -58,7 +58,6 @@ const buildApiWithCredential = (accessToken: string, userId: string, id: string,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       Cookie: `${getTrustedDeviceCookieName(userId)}=${id}.${secret}`,
-      'X-Forwarded-Proto': 'https',
     },
   });
 
