@@ -57,6 +57,7 @@ import {
 } from './application-access-control.js';
 import { buildClientIdMetadataDocumentFeature, isCimdClient } from './cimd/index.js';
 import { filterResourceScopesForTheCimdClient } from './cimd/resource-scopes.js';
+import { getOidcScopesNoLongerAllowed } from './client-scope.js';
 import defaults from './defaults.js';
 import { deviceFlowConfig, defaultDeviceCodeTtl } from './device-flow.js';
 import {
@@ -357,7 +358,27 @@ export default function initOidc(
       }
 
       if (grantId) {
-        return provider.Grant.find(String(grantId));
+        const grant = await provider.Grant.find(String(grantId));
+
+        /**
+         * The resume and device verification stacks reload the client but never re-run
+         * `check_scope`, and the consent prompt counts scopes already in the Grant as encountered.
+         * Reject the way a new authorization request for the same scopes would be.
+         */
+        const scopesNoLongerAllowed = getOidcScopesNoLongerAllowed(
+          grant,
+          client,
+          ctx.oidc.requestParamScopes
+        );
+
+        if (scopesNoLongerAllowed.length > 0) {
+          throw new errors.InvalidScope(
+            'requested scope is no longer allowed for the client',
+            scopesNoLongerAllowed.join(' ')
+          );
+        }
+
+        return grant;
       }
     },
     extraParams: Object.values(ExtraParamsKey),
