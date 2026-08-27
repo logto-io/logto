@@ -1,5 +1,6 @@
 import { demoAppApplicationId, type MfaFactor } from '@logto/schemas';
 import { appendPath } from '@silverhand/essentials';
+import { type HTTPRequest } from 'puppeteer';
 
 import { logtoUrl, mockSocialAuthPageUrl } from '#src/constants.js';
 import { readConnectorMessage } from '#src/helpers/index.js';
@@ -14,6 +15,16 @@ const defaultUrlWaitTimeout = 30_000;
 
 /** Remove the query string together with the `?` from a URL string. */
 const stripQuery = (url: string) => url.split('?')[0];
+
+const tlsTerminationRequestHandler = async (request: HTTPRequest) => {
+  const isApiRequest = request.resourceType() === 'fetch' || request.resourceType() === 'xhr';
+  await request.continue({
+    headers: {
+      ...request.headers(),
+      ...(isApiRequest && { 'X-Forwarded-Proto': 'https' }),
+    },
+  });
+};
 
 export type ExperienceType = 'sign-in' | 'register' | 'continue' | 'forgot-password';
 
@@ -67,7 +78,7 @@ export default class ExpectExperience extends ExpectPage {
   }
 
   #ongoing?: OngoingExperience;
-  #isTlsTerminationSimulated = false;
+  #tlsTerminationRequestHandler?: (request: HTTPRequest) => Promise<void>;
 
   constructor(thePage = global.page, options: ExpectExperienceOptions = {}) {
     super(thePage);
@@ -130,10 +141,7 @@ export default class ExpectExperience extends ExpectPage {
 
     await this.waitForUrl(this.#ongoing.initialUrl);
 
-    if (this.#isTlsTerminationSimulated) {
-      await this.page.setExtraHTTPHeaders({});
-      this.#isTlsTerminationSimulated = false;
-    }
+    await this.#stopTlsTerminationSimulation();
 
     await this.toClick('div[role=button]', /sign out/i);
 
@@ -310,9 +318,9 @@ export default class ExpectExperience extends ExpectPage {
     const text = `Trust this device for ${durationDays} days`;
     await this.toSeeTrustedDeviceOptIn(durationDays);
     // Integration tests run the production build over HTTP while Logto trusts proxy headers.
-    // Simulate TLS termination so Koa can emit the production-only Secure credential cookie.
-    await this.page.setExtraHTTPHeaders({ 'X-Forwarded-Proto': 'https' });
-    this.#isTlsTerminationSimulated = true;
+    // Simulate TLS termination only for API calls so Koa can emit the production-only Secure
+    // credential cookie without turning the following HTTP document navigation into HTTPS.
+    await this.#startTlsTerminationSimulation();
     await this.toClick('div[role=checkbox]', text, false);
     await this.toMatchElement('div[role=checkbox][aria-checked=true]', { text });
   }
@@ -449,5 +457,28 @@ export default class ExpectExperience extends ExpectPage {
     return this.throwError(
       'The experience has not started yet. Use `startWith` to start the experience.'
     );
+  }
+
+  async #startTlsTerminationSimulation() {
+    if (this.#tlsTerminationRequestHandler) {
+      return;
+    }
+
+    await this.page.setRequestInterception(true);
+    const handler = tlsTerminationRequestHandler;
+    this.#tlsTerminationRequestHandler = handler;
+    this.page.on('request', handler);
+  }
+
+  async #stopTlsTerminationSimulation() {
+    const handler = this.#tlsTerminationRequestHandler;
+
+    if (!handler) {
+      return;
+    }
+
+    await this.page.setRequestInterception(false);
+    this.page.off('request', handler);
+    this.#tlsTerminationRequestHandler = undefined;
   }
 }
