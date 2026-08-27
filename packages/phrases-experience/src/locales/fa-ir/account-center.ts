@@ -13,6 +13,8 @@ const account_center = {
     sidebar_security: 'امنیت',
     sidebar_sessions: 'نشست‌ها',
     support: 'پشتیبانی',
+    user_menu: 'منوی کاربر',
+    sign_out: 'خروج',
   },
   verification: {
     title: 'تأیید امنیتی',

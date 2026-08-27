@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'Stránka nenalezena',
@@ -13,6 +14,8 @@ const account_center = {
     sidebar_security: 'Zabezpečení',
     sidebar_sessions: 'Relace',
     support: 'Podpora',
+    user_menu: 'Uživatelská nabídka',
+    sign_out: 'Odhlásit se',
   },
   verification: {
     title: 'Ověření bezpečnosti',
@@ -298,3 +301,4 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
+/* eslint-enable max-lines */

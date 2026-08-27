@@ -13,6 +13,8 @@ const account_center = {
     sidebar_security: '安全',
     sidebar_sessions: '会话',
     support: '支持',
+    user_menu: '用户菜单',
+    sign_out: '退出登录',
   },
   verification: {
     title: '安全验证',

@@ -13,6 +13,8 @@ const account_center = {
     sidebar_security: 'الأمان',
     sidebar_sessions: 'الجلسات',
     support: 'الدعم',
+    user_menu: 'قائمة المستخدم',
+    sign_out: 'تسجيل الخروج',
   },
   verification: {
     title: 'التحقق الأمني',

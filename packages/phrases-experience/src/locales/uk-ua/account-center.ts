@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'Сторінку не знайдено',
@@ -13,6 +14,8 @@ const account_center = {
     sidebar_security: 'Безпека',
     sidebar_sessions: 'Сесії',
     support: 'Підтримка',
+    user_menu: 'Меню користувача',
+    sign_out: 'Вийти',
   },
   verification: {
     title: 'Перевірка безпеки',
@@ -299,3 +302,4 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
+/* eslint-enable max-lines */

@@ -13,6 +13,8 @@ const account_center = {
     sidebar_security: 'セキュリティ',
     sidebar_sessions: 'セッション',
     support: 'サポート',
+    user_menu: 'ユーザーメニュー',
+    sign_out: 'サインアウト',
   },
   verification: {
     title: 'セキュリティ確認',
