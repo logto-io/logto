@@ -1,8 +1,8 @@
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
-import { type TrustedDeviceAvailability } from '@/apis/experience';
 import CheckboxField from '@/components/InputFields/CheckboxField';
+import { type TrustedDeviceAvailability } from '@/types/guard';
 
 import styles from './index.module.scss';
 

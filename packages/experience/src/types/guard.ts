@@ -12,7 +12,7 @@ import * as s from 'superstruct';
 
 import { type IdentifierInputValue } from '@/shared/components/InputFields/SmartInputField';
 
-import { UserFlow } from '.';
+import { UserFlow, UserMfaFlow } from '.';
 
 export const userFlowGuard = s.enums([
   UserFlow.SignIn,
@@ -74,25 +74,37 @@ const mfaFactorEnumValues = [
   MfaFactor.PhoneVerificationCode,
 ] as const;
 
-export const mfaErrorDataGuard = s.object({
-  availableFactors: mfaFactorsGuard,
+const trustedDeviceAvailabilityGuard = s.object({
+  canCreate: s.boolean(),
+  durationDays: s.optional(s.number()),
+});
+
+const mfaErrorDataShape = {
+  availableFactors: s.optional(mfaFactorsGuard),
   skippable: s.optional(s.boolean()),
   maskedIdentifiers: s.optional(s.record(s.enums(mfaFactorEnumValues), s.string())),
-  trustedDevice: s.optional(
-    s.object({
-      canCreate: s.boolean(),
-      durationDays: s.optional(s.number()),
-    })
-  ),
   // Whether this MFA flow is an optional suggestion (e.g., add another factor after sign-up)
   suggestion: s.optional(s.boolean()),
   // Whether the current WebAuthn factor is used as a sign-in passkey.
   isWebAuthnUsedAsSignInPasskey: s.optional(s.boolean()),
+  trustedDevice: s.optional(trustedDeviceAvailabilityGuard),
+};
+
+export const mfaErrorDataGuard = s.object(mfaErrorDataShape);
+
+// MFA route state can include page-specific fields such as WebAuthn options or TOTP secrets.
+export const mfaFlowStateGuard = s.type({
+  ...mfaErrorDataShape,
+  availableFactors: mfaFactorsGuard,
 });
 
-export const mfaFlowStateGuard = mfaErrorDataGuard;
-
 export type MfaFlowState = s.Infer<typeof mfaFlowStateGuard>;
+export type TrustedDeviceAvailability = s.Infer<typeof trustedDeviceAvailabilityGuard>;
+
+export const mfaBindingVerificationCodeStateGuard = s.type({
+  flow: s.literal(UserMfaFlow.MfaBinding),
+  mfaFlowState: mfaFlowStateGuard,
+});
 
 export const totpBindingStateGuard = s.assign(
   s.object({

@@ -128,7 +128,7 @@ export const identifyWithVerificationCode = async (json: VerificationCodePayload
 
 // Profile APIs
 
-export const updateProfileWithVerificationCode = async (
+export const verifyAndUpdateProfileWithVerificationCode = async (
   json: VerificationCodePayload,
   interactionEvent?: ContinueFlowInteractionEvent
 ) => {
@@ -146,6 +146,13 @@ export const updateProfileWithVerificationCode = async (
   if (interactionEvent === InteractionEvent.Register) {
     await identifyUser();
   }
+};
+
+export const updateProfileWithVerificationCode = async (
+  json: VerificationCodePayload,
+  interactionEvent?: ContinueFlowInteractionEvent
+) => {
+  await verifyAndUpdateProfileWithVerificationCode(json, interactionEvent);
 
   return submitInteraction();
 };
