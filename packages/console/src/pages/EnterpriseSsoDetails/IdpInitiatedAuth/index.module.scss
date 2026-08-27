@@ -52,7 +52,7 @@ div[class*='radio'][class*='disabled'] {
 .ossActions {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: _.unit(2);
   align-self: flex-start;
 }
