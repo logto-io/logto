@@ -83,7 +83,7 @@ function EmailConnectorUpsellBanner() {
             window.open(pricingLink, '_blank', 'noopener,noreferrer');
           }}
         />
-        {isDevFeaturesEnabled && (
+        {isDevFeaturesEnabled && copyKeys.secondaryAction && (
           <TextLink className={styles.cloudAction} href={selfHostedPlansUrl} targetBlank="noopener">
             {t(copyKeys.secondaryAction)}
           </TextLink>

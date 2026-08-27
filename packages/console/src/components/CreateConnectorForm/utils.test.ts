@@ -41,6 +41,7 @@ describe('getEmailConnectorUpsellCopyKeys', () => {
       description: 'connectors.create_form.email_connector_upsell.description',
       action: 'upsell.try_with_product_name',
     });
+    expect(copyKeys.secondaryAction).toBeUndefined();
   });
 
   test('keeps Cloud copy primary when the self-hosted plans feature is enabled', () => {
@@ -48,18 +49,12 @@ describe('getEmailConnectorUpsellCopyKeys', () => {
     const titleKey: TFuncKey<'translation', 'admin_console'> = copyKeys.title;
     const descriptionKey: TFuncKey<'translation', 'admin_console'> = copyKeys.description;
     const actionKey: TFuncKey<'translation', 'admin_console'> = copyKeys.action;
-    const secondaryActionKey: TFuncKey<'translation', 'admin_console'> = copyKeys.secondaryAction;
 
-    expect({
-      title: titleKey,
-      description: descriptionKey,
-      action: actionKey,
-      secondaryAction: secondaryActionKey,
-    }).toEqual({
+    expect({ title: titleKey, description: descriptionKey, action: actionKey }).toEqual({
       title: 'connectors.create_form.email_connector_upsell.title',
       description: 'connectors.create_form.email_connector_upsell.description',
       action: 'upsell.try_with_product_name',
-      secondaryAction: 'upsell.explore_self_hosted_plans',
     });
+    expect(copyKeys.secondaryAction).toBe('upsell.explore_self_hosted_plans');
   });
 });

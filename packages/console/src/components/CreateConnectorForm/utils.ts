@@ -64,24 +64,30 @@ type EmailConnectorUpsellCopyOptions = {
   readonly isDevFeaturesEnabled: boolean;
 };
 
+type EmailConnectorUpsellCopyKeys = {
+  readonly title: 'connectors.create_form.email_connector_upsell.title';
+  readonly description: 'connectors.create_form.email_connector_upsell.description';
+  readonly action: 'upsell.try_with_product_name';
+  readonly secondaryAction?: 'upsell.explore_self_hosted_plans';
+};
+
 export const getEmailConnectorUpsellCopyKeys = ({
   isDevFeaturesEnabled,
-}: EmailConnectorUpsellCopyOptions) => {
+}: EmailConnectorUpsellCopyOptions): EmailConnectorUpsellCopyKeys => {
   // DEV: self-hosted plans
   if (isDevFeaturesEnabled) {
     return {
-      title: 'connectors.create_form.email_connector_upsell.title' as const,
-      description: 'connectors.create_form.email_connector_upsell.description' as const,
-      action: 'upsell.try_with_product_name' as const,
-      secondaryAction: 'upsell.explore_self_hosted_plans' as const,
+      title: 'connectors.create_form.email_connector_upsell.title',
+      description: 'connectors.create_form.email_connector_upsell.description',
+      action: 'upsell.try_with_product_name',
+      secondaryAction: 'upsell.explore_self_hosted_plans',
     };
   }
 
   return {
-    title: 'connectors.create_form.email_connector_upsell.title' as const,
-    description: 'connectors.create_form.email_connector_upsell.description' as const,
-    action: 'upsell.try_with_product_name' as const,
-    secondaryAction: 'upsell.explore_self_hosted_plans' as const,
+    title: 'connectors.create_form.email_connector_upsell.title',
+    description: 'connectors.create_form.email_connector_upsell.description',
+    action: 'upsell.try_with_product_name',
   };
 };
 
