@@ -10,7 +10,9 @@
  * The experience APIs can be used by developers to build custom user interaction experiences.
  */
 
+import { appInsights } from '@logto/app-insights/node';
 import { identificationApiPayloadGuard, InteractionEvent } from '@logto/schemas';
+import { trySafe } from '@silverhand/essentials';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
@@ -19,6 +21,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaInteractionDetails from '#src/middleware/koa-interaction-details.js';
 import assertThat from '#src/utils/assert-that.js';
+import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
 import { type AnonymousRouter, type RouterInitArgs } from '../types.js';
 
@@ -187,8 +190,19 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       const log = createLog(`Interaction.${experienceInteraction.interactionEvent}.Submit`);
 
       if (EnvSet.values.isDevFeaturesEnabled && createTrustedDevice !== undefined) {
-        await experienceInteraction.updateTrustedDeviceCreationRequest(createTrustedDevice);
-        await experienceInteraction.save();
+        await trySafe(
+          async () => {
+            await experienceInteraction.updateTrustedDeviceCreationRequest(createTrustedDevice);
+            await experienceInteraction.save();
+          },
+          (error) => {
+            if (error instanceof RequestError) {
+              throw error;
+            }
+
+            void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));
+          }
+        );
       }
 
       await ctx.experienceInteraction.submit(log);

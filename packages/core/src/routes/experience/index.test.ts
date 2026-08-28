@@ -1057,6 +1057,39 @@ describe('POST /experience/submit', () => {
     expect(trackException).toHaveBeenCalledWith(creationError, expect.any(Object));
   });
 
+  it('should keep submit successful when trusted-device creation intent update fails', async () => {
+    setDevFeaturesEnabled(true);
+    const intentUpdateError = new Error('trusted-device creation intent update failed');
+    const trackException = jest.spyOn(appInsights, 'trackException').mockResolvedValue();
+    const user = {
+      ...mockUser,
+      mfaVerifications: [mockUserTotpMfaVerification],
+    };
+    const { requester, getEffectivePolicy, createCredential } = createRequesterWithMocks({
+      user,
+      mfa: { policy: MfaPolicy.Mandatory, factors: [MfaFactor.TOTP] },
+      interactionResult: {
+        verificationRecords: [
+          {
+            id: 'totp-verification-id',
+            type: VerificationType.TOTP,
+            userId: user.id,
+            verified: true,
+          },
+        ],
+      },
+      persistInteractionResult: true,
+      trustedDevicePolicy: { enabled: true, durationDays: 30 },
+    });
+    getEffectivePolicy.mockRejectedValueOnce(intentUpdateError);
+
+    const response = await requester.post('/experience/submit').send({ createTrustedDevice: true });
+
+    expect(response.status).toBe(200);
+    expect(createCredential).not.toHaveBeenCalled();
+    expect(trackException).toHaveBeenCalledWith(intentUpdateError, expect.any(Object));
+  });
+
   it('should keep submit successful when trusted-device proof eligibility fails', async () => {
     setDevFeaturesEnabled(true);
     const eligibilityError = new Error('trusted-device proof eligibility failed');
