@@ -29,7 +29,7 @@ const useContinueFlowCodeVerification = (
   identifier: VerificationCodeIdentifier,
   verificationId: string,
   errorCallback?: () => void,
-  createTrustedDevice = false
+  createTrustedDevice?: boolean
 ) => {
   const [searchParameters] = useSearchParams();
   const redirectTo = useGlobalRedirectTo();

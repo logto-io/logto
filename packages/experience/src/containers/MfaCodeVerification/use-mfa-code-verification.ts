@@ -13,7 +13,7 @@ import useGeneralVerificationCodeErrorHandler from '../VerificationCode/use-gene
 const useMfaCodeVerification = (
   identifierType: SignInIdentifier.Email | SignInIdentifier.Phone,
   verificationId: string,
-  createTrustedDevice: boolean,
+  createTrustedDevice: boolean | undefined,
   errorCallback?: () => void
 ) => {
   const [errorMessage, setErrorMessage] = useState<string>();

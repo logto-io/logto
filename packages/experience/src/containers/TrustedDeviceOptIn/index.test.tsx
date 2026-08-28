@@ -58,6 +58,25 @@ describe('<TrustedDeviceOptIn />', () => {
     expect(checkbox?.getAttribute('aria-checked')).toBe('true');
   });
 
+  it('shows a checked checkbox when creation was requested earlier in the interaction', () => {
+    const { container } = renderOptIn({
+      canCreate: true,
+      durationDays: 30,
+      creationRequested: true,
+    });
+    const checkbox = container.querySelector('[role="checkbox"]');
+
+    expect(checkbox?.getAttribute('aria-checked')).toBe('true');
+
+    act(() => {
+      if (checkbox) {
+        fireEvent.click(checkbox);
+      }
+    });
+
+    expect(checkbox?.getAttribute('aria-checked')).toBe('false');
+  });
+
   it('shows the checkbox when WebAuthn options are included in route state', () => {
     const { container } = renderOptIn(
       { canCreate: true, durationDays: 365, creationRequested: false },

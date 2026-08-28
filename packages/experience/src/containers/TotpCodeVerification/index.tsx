@@ -37,7 +37,7 @@ const TotpCodeVerification = <T extends UserMfaFlow>(props: Props<T>) => {
   }, []);
 
   const { errorMessage: submitErrorMessage, onSubmit } = useTotpCodeVerification(errorCallback);
-  const { durationDays, isChecked, setIsChecked } = useTrustedDeviceOptIn();
+  const { durationDays, isChecked, setIsChecked, createTrustedDevice } = useTrustedDeviceOptIn();
   const isTrustedDeviceOptInVisible = Boolean(durationDays);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -53,10 +53,10 @@ const TotpCodeVerification = <T extends UserMfaFlow>(props: Props<T>) => {
       setInputErrorMessage(undefined);
       setIsSubmitting(true);
 
-      await onSubmit(code.join(''), props, isChecked);
+      await onSubmit(code.join(''), props, createTrustedDevice);
       setIsSubmitting(false);
     },
-    [isChecked, isSubmitting, onSubmit, props]
+    [createTrustedDevice, isSubmitting, onSubmit, props]
   );
 
   return (

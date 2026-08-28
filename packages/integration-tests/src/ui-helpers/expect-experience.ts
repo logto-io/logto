@@ -308,6 +308,11 @@ export default class ExpectExperience extends ExpectPage {
     await this.toMatchElement('div[role=checkbox][aria-checked=true]', { text });
   }
 
+  async toSeeTrustedDeviceOptedIn(durationDays = 365) {
+    const text = `Trust this device for ${durationDays} days`;
+    await this.toMatchElement('div[role=checkbox][aria-checked=true]', { text });
+  }
+
   /**
    * Optionally click the "Continue with [social name]" button on the page, then process the social
    * sign-in flow with the given user social data.

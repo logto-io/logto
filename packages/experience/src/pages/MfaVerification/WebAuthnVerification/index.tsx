@@ -28,7 +28,8 @@ const WebAuthnVerification = () => {
   );
 
   const handleWebAuthn = useWebAuthnOperation();
-  const { durationDays, isChecked, setIsChecked } = useTrustedDeviceOptIn(isSessionValid);
+  const { durationDays, isChecked, setIsChecked, createTrustedDevice } =
+    useTrustedDeviceOptIn(isSessionValid);
   const [isVerifying, setIsVerifying] = useState(false);
 
   if (!webAuthnState || !verificationId) {
@@ -59,7 +60,7 @@ const WebAuthnVerification = () => {
           isLoading={isVerifying}
           onClick={async () => {
             setIsVerifying(true);
-            await handleWebAuthn(options, verificationId, isChecked);
+            await handleWebAuthn(options, verificationId, createTrustedDevice);
             setIsVerifying(false);
           }}
         />

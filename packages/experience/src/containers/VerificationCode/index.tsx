@@ -34,7 +34,7 @@ const VerificationCode = ({
   const [inputErrorMessage, setInputErrorMessage] = useState<string>();
 
   const { t } = useTranslation();
-  const { durationDays, isChecked, setIsChecked } = useTrustedDeviceOptIn(
+  const { durationDays, isChecked, setIsChecked, createTrustedDevice } = useTrustedDeviceOptIn(
     flow === UserFlow.Continue
   );
   const isTrustedDeviceOptInVisible = Boolean(durationDays);
@@ -55,7 +55,7 @@ const VerificationCode = ({
     errorMessage: submitErrorMessage,
     clearErrorMessage,
     onSubmit,
-  } = useVerificationCode(identifier, verificationId, errorCallback, isChecked);
+  } = useVerificationCode(identifier, verificationId, errorCallback, createTrustedDevice);
 
   const errorMessage = inputErrorMessage ?? submitErrorMessage;
 

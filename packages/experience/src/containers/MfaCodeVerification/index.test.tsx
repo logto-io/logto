@@ -39,6 +39,7 @@ const renderVerification = (isVisible: boolean) => {
     durationDays: isVisible ? 30 : undefined,
     isChecked: false,
     setIsChecked: jest.fn(),
+    createTrustedDevice: isVisible ? false : undefined,
   });
   mockedUseMfaCodeVerification.mockReturnValue({ errorMessage: undefined, onSubmit });
   mockedUseResendMfaVerificationCode.mockReturnValue({

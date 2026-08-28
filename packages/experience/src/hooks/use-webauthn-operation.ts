@@ -39,7 +39,7 @@ const useWebAuthnOperation = () => {
      * Therefore, we should avoid asynchronous operations before invoking the WebAuthn API or the os may consider the WebAuthn authorization is not initiated by the user.
      * So, we need to prepare the necessary WebAuthn options before calling the WebAuthn API, this is why we don't generate the options in this function.
      */
-    async (options: WebAuthnOptions, verificationId: string, createTrustedDevice = false) => {
+    async (options: WebAuthnOptions, verificationId: string, createTrustedDevice?: boolean) => {
       if (!browserSupportsWebAuthn()) {
         setToast(t('mfa.webauthn_not_supported'));
         return;

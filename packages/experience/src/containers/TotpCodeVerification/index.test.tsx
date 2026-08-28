@@ -36,6 +36,7 @@ const renderVerification = (isVisible: boolean) => {
     durationDays: isVisible ? 30 : undefined,
     isChecked: false,
     setIsChecked: jest.fn(),
+    createTrustedDevice: isVisible ? false : undefined,
   });
   mockedUseTotpCodeVerification.mockReturnValue({ errorMessage: undefined, onSubmit });
 
@@ -63,7 +64,7 @@ describe('<TotpCodeVerification />', () => {
     fireEvent.click(getByRole('button', { name: 'Fill code' }));
 
     await waitFor(() => {
-      expect(onSubmit).toBeCalledWith('123456', { flow: UserMfaFlow.MfaVerification }, false);
+      expect(onSubmit).toBeCalledWith('123456', { flow: UserMfaFlow.MfaVerification }, undefined);
     });
   });
 });

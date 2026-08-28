@@ -30,7 +30,8 @@ const WebAuthnBinding = () => {
   );
 
   const handleWebAuthn = useWebAuthnOperation();
-  const { durationDays, isChecked, setIsChecked } = useTrustedDeviceOptIn(isSessionValid);
+  const { durationDays, isChecked, setIsChecked, createTrustedDevice } =
+    useTrustedDeviceOptIn(isSessionValid);
   const skipMfa = useSkipMfa();
   const skipOptionalMfa = useSkipOptionalMfa();
   const [isCreatingPasskey, setIsCreatingPasskey] = useState(false);
@@ -63,7 +64,7 @@ const WebAuthnBinding = () => {
         isLoading={isCreatingPasskey}
         onClick={async () => {
           setIsCreatingPasskey(true);
-          await handleWebAuthn(options, verificationId, isChecked);
+          await handleWebAuthn(options, verificationId, createTrustedDevice);
           setIsCreatingPasskey(false);
         }}
       />

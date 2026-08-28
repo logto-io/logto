@@ -6,10 +6,11 @@ import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { demoAppUrl } from '#src/constants.js';
 import { clearConnectorsByTypes, setEmailConnector } from '#src/helpers/connector.js';
 import { resetMfaSettings } from '#src/helpers/sign-in-experience.js';
+import { generateNewUser } from '#src/helpers/user.js';
 import ExpectMfaExperience from '#src/ui-helpers/expect-mfa-experience.js';
 import ExpectTotpExperience from '#src/ui-helpers/expect-totp-experience.js';
 import ExpectWebAuthnExperience from '#src/ui-helpers/expect-webauthn-experience.js';
-import { generateEmail, generateUsername } from '#src/utils.js';
+import { devFeatureTest, generateEmail, generateUsername } from '#src/utils.js';
 
 describe('Experience - suggest additional MFA after email registration', () => {
   beforeAll(async () => {
@@ -122,6 +123,42 @@ describe('Experience - suggest additional MFA after email registration', () => {
     await experience.verifyThenEnd();
     await deleteUser(userId);
   });
+
+  devFeatureTest.it(
+    'keeps trusted-device opt-in selected when suggesting another factor',
+    async () => {
+      await updateSignInExperience({
+        mfa: {
+          factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
+          policy: MfaPolicy.Mandatory,
+        },
+        trustedDevice: { enabled: true, durationDays: 365 },
+      });
+      const { user, userProfile } = await generateNewUser({
+        primaryEmail: true,
+        password: true,
+      });
+      const experience = new ExpectTotpExperience(await browser.newPage());
+
+      await experience.startWith(demoAppUrl, 'sign-in');
+      await experience.toFillForm(
+        { identifier: userProfile.primaryEmail, password: userProfile.password },
+        { submit: true }
+      );
+      await experience.waitForPathname(`mfa-verification/${MfaFactor.EmailVerificationCode}`);
+      await experience.toOptInTrustedDevice();
+      await experience.toCompleteMfaVerification(ConnectorType.Email, true);
+
+      await experience.waitForPathname('mfa-binding');
+      await experience.toClick('button', 'Authenticator app OTP');
+      await experience.waitForPathname(`mfa-binding/${MfaFactor.TOTP}`);
+      await experience.toSeeTrustedDeviceOptedIn();
+
+      await experience.toBindTotp();
+      await experience.verifyThenEnd();
+      await deleteUser(user.id);
+    }
+  );
 
   it('when Email, TOTP and Backup Code are available: skipping TOTP suggestion requires Backup Code', async () => {
     await updateSignInExperience({
