@@ -193,7 +193,7 @@ const account_center = {
   },
   mfa: {
     totp_already_added:
-      'You have already added an authenticator app. Please remove the existing one first.',
+      'Ya has añadido una aplicación de autenticación. Elimina la existente primero.',
     totp_not_enabled:
       'La aplicación de autenticación OTP no está habilitada. Por favor, contacte a su administrador para obtener ayuda.',
     backup_code_already_added:
