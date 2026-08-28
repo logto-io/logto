@@ -16,6 +16,10 @@ const tenants = {
     card_description:
       'Adicione administradores ou colaboradores ao seu inquilino sem partilhar uma única conta de administrador.',
     card_action: 'Explorar o Logto Cloud',
+    self_hosted_card_title: 'Gira inquilinos com mais segurança com os planos self-hosted',
+    self_hosted_card_description:
+      'Adicione administradores ou colaboradores ao seu inquilino sem partilhar uma única conta de administrador.',
+    self_hosted_card_action: 'Explorar os planos self-hosted',
   },
   settings: {
     title: 'DEFINIÇÕES',

@@ -17,6 +17,10 @@ const tenants = {
     card_description:
       'Aggiungi amministratori o collaboratori al tuo tenant senza condividere un unico account amministratore.',
     card_action: 'Esplora Logto Cloud',
+    self_hosted_card_title: 'Gestisci i tenant in modo più sicuro con i piani self-hosted',
+    self_hosted_card_description:
+      'Aggiungi amministratori o collaboratori al tuo tenant senza condividere un unico account amministratore.',
+    self_hosted_card_action: 'Esplora i piani self-hosted',
   },
   settings: {
     title: 'IMPOSTAZIONI',

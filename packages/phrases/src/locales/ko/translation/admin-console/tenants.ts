@@ -15,6 +15,10 @@ const tenants = {
     card_description:
       '하나의 관리자 계정을 공유하지 않고도 테넌트에 관리자나 협업자를 추가할 수 있습니다.',
     card_action: 'Logto Cloud 살펴보기',
+    self_hosted_card_title: '셀프 호스팅 플랜으로 테넌트를 더 안전하게 관리하세요',
+    self_hosted_card_description:
+      '하나의 관리자 계정을 공유하지 않고도 테넌트에 관리자나 협업자를 추가할 수 있습니다.',
+    self_hosted_card_action: '셀프 호스팅 플랜 살펴보기',
   },
   settings: {
     title: '설정',

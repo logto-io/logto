@@ -1,6 +1,6 @@
-import { logtoCloudConsoleLink } from '@/consts/external-links';
+import { logtoCloudConsoleLink, selfHostedPlansLink } from '@/consts/external-links';
 
-type OpenCloudUpsellOptions = {
+type OpenOssUpsellOptions = {
   readonly entry: OssUpsellEntry;
   readonly target?: '_blank' | '_self';
 };
@@ -35,9 +35,18 @@ export const buildCloudUpsellUrl = (entry: OssUpsellEntry) => {
   return url.toString();
 };
 
-export const openCloudUpsell = ({ entry, target = '_blank' }: OpenCloudUpsellOptions) => {
-  const targetUrl = buildCloudUpsellUrl(entry);
+export const buildSelfHostedPlansUrl = (entry: OssUpsellEntry) => {
+  const url = new URL(selfHostedPlansLink);
 
+  url.searchParams.set('utm_source', utmParameters.source);
+  url.searchParams.set('utm_medium', utmParameters.medium);
+  url.searchParams.set('utm_campaign', 'self_hosted_plans');
+  url.searchParams.set('utm_content', entry);
+
+  return url.toString();
+};
+
+const openUpsellUrl = (targetUrl: string, target: '_blank' | '_self') => {
   if (typeof window === 'undefined') {
     return targetUrl;
   }
@@ -51,3 +60,9 @@ export const openCloudUpsell = ({ entry, target = '_blank' }: OpenCloudUpsellOpt
 
   return targetUrl;
 };
+
+export const openCloudUpsell = ({ entry, target = '_blank' }: OpenOssUpsellOptions) =>
+  openUpsellUrl(buildCloudUpsellUrl(entry), target);
+
+export const openSelfHostedPlansUpsell = ({ entry, target = '_blank' }: OpenOssUpsellOptions) =>
+  openUpsellUrl(buildSelfHostedPlansUrl(entry), target);

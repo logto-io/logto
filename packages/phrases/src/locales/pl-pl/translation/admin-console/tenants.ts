@@ -16,6 +16,10 @@ const tenants = {
     card_description:
       'Dodawaj administratorów lub współpracowników do swojego tenantu bez współdzielenia jednego konta administratora.',
     card_action: 'Poznaj Logto Cloud',
+    self_hosted_card_title: 'Zarządzaj tenantami bezpieczniej dzięki planom self-hosted',
+    self_hosted_card_description:
+      'Dodawaj administratorów lub współpracowników do swojego tenantu bez współdzielenia jednego konta administratora.',
+    self_hosted_card_action: 'Poznaj plany self-hosted',
   },
   settings: {
     title: 'USTAWIENIA',

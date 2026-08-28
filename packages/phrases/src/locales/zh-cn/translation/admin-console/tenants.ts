@@ -14,6 +14,9 @@ const tenants = {
     card_title: '通过 Logto Cloud 更安全地管理租户',
     card_description: '无需共享单一管理员账户，也能为您的租户添加管理员或协作者。',
     card_action: '探索 Logto Cloud',
+    self_hosted_card_title: '通过自托管套餐更安全地管理租户',
+    self_hosted_card_description: '无需共享单一管理员账户，也能为您的租户添加管理员或协作者。',
+    self_hosted_card_action: '探索自托管套餐',
   },
   settings: {
     title: '设置',
