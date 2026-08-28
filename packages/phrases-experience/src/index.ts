@@ -8,6 +8,7 @@ import cs from './locales/cs/index.js';
 import de from './locales/de/index.js';
 import en from './locales/en/index.js';
 import es from './locales/es/index.js';
+import esMX from './locales/es-mx/index.js';
 import faIR from './locales/fa-ir/index.js';
 import fr from './locales/fr/index.js';
 import it from './locales/it/index.js';
@@ -35,6 +36,7 @@ export const builtInLanguages = [
   'de',
   'en',
   'es',
+  'es-MX',
   'fa-IR',
   'fr',
   'it',
@@ -69,6 +71,7 @@ const resource: Resource = {
   de,
   en,
   es,
+  'es-MX': esMX,
   'fa-IR': faIR,
   fr,
   it,
