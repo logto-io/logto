@@ -143,6 +143,20 @@ describe('Experience trusted-device lifecycle events', () => {
     });
   });
 
+  it('clears the interaction creation request', async () => {
+    const creation = createSubject({ data: {} });
+
+    await creation.subject.requestCreation(userId, true);
+    creation.subject.cancelCreationRequest();
+
+    expect(creation.subject.data).toEqual({});
+    await expect(creation.subject.getCreationAvailability(userId)).resolves.toEqual({
+      canCreate: true,
+      durationDays: 30,
+      creationRequested: false,
+    });
+  });
+
   it('retries effective policy resolution after a failed availability lookup', async () => {
     const error = new Error('policy lookup failed');
     const trackException = jest.spyOn(appInsights, 'trackException').mockResolvedValue();

@@ -162,28 +162,6 @@
         }
       }
     },
-    "/api/experience/profile/mfa/trusted-device": {
-      "post": {
-        "operationId": "RequestTrustedDeviceCreation",
-        "summary": "Request trusted device creation",
-        "description": "Record the user's explicit opt-in to trust the current device after eligible MFA verification or binding. The trusted-device credential is created only after the interaction is successfully submitted.",
-        "tags": ["Dev feature"],
-        "responses": {
-          "204": {
-            "description": "The trusted-device creation request has been recorded for the current interaction."
-          },
-          "400": {
-            "description": "Trusted-device creation is not supported for the current interaction event."
-          },
-          "403": {
-            "description": "An eligible MFA verification or binding is required before requesting trusted-device creation."
-          },
-          "404": {
-            "description": "The user has not been identified yet."
-          }
-        }
-      }
-    },
     "/api/experience/profile/mfa/mfa-suggestion-skipped": {
       "post": {
         "operationId": "SkipMfaSuggestion",

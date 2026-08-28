@@ -103,6 +103,22 @@
         "operationId": "SubmitInteraction",
         "summary": "Submit interaction",
         "description": "Submit the current interaction. <br/>- Submit the verified user identity to the OIDC provider for further authentication (SignIn and Register). <br/>- Update the user's profile data if any (SignIn and Register). <br/>- Reset the password and clear all the interaction records (ForgotPassword).",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "createTrustedDevice": {
+                    "type": "boolean",
+                    "description": "Whether to trust the current device after the interaction succeeds.",
+                    "x-logto-dev-feature": true
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "The interaction has been successfully submitted."

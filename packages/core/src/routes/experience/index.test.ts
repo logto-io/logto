@@ -581,14 +581,13 @@ describe('POST /experience/submit', () => {
         trustedDevicePolicy: { enabled: true, durationDays: 30 },
       });
 
-      const optInResponse = await requester.post('/experience/profile/mfa/trusted-device');
       const response = await requester
         .post('/experience/submit')
+        .send({ createTrustedDevice: true })
         .set('User-Agent', 'Trusted device test browser')
         .set('x-logto-cf-country', 'us')
         .set('x-logto-cf-city', 'Portland');
 
-      expect(optInResponse.status).toBe(204);
       expect(response.status).toBe(200);
       const payload = createCredential.mock.calls[0]?.[0] as
         | {
@@ -636,24 +635,20 @@ describe('POST /experience/submit', () => {
       trustedDevicePolicy: { enabled: true, durationDays: 30 },
     });
 
-    const optInResponse = await requester.post('/experience/profile/mfa/trusted-device');
-    const repeatedOptInResponse = await requester.post('/experience/profile/mfa/trusted-device');
-    const firstSubmitResponse = await requester.post('/experience/submit');
+    const firstSubmitResponse = await requester
+      .post('/experience/submit')
+      .send({ createTrustedDevice: true });
     const retrySubmitResponse = await requester.post('/experience/submit');
 
-    expect(optInResponse.status).toBe(204);
-    expect(repeatedOptInResponse.status).toBe(204);
     expect(firstSubmitResponse.status).toBe(200);
     expect(retrySubmitResponse.status).toBe(200);
     const interactionResultCalls = (provider.interactionResult as jest.Mock).mock.calls;
-    const firstOptInResult = interactionResultCalls[0]?.[2] as Record<string, unknown> | undefined;
-    const repeatedOptInResult = interactionResultCalls[1]?.[2] as
-      | Record<string, unknown>
+    const savedOptInResult = interactionResultCalls[0]?.[2] as Record<string, unknown> | undefined;
+    const firstSubmitResult = interactionResultCalls[1]?.[2] as Record<string, unknown> | undefined;
+    const savedCreation = savedOptInResult?.trustedDeviceCreation as
+      | { deviceId?: unknown }
       | undefined;
-    const firstSubmitResult = interactionResultCalls[2]?.[2] as Record<string, unknown> | undefined;
-    expect(firstOptInResult?.trustedDeviceCreation).toEqual(
-      repeatedOptInResult?.trustedDeviceCreation
-    );
+    expect(typeof savedCreation?.deviceId).toBe('string');
     expect(firstSubmitResult).not.toHaveProperty('trustedDeviceCreation');
     expect(createCredential).toHaveBeenCalledTimes(1);
     expect(createCredential).toHaveBeenCalledWith(expect.objectContaining({ userId: user.id }));
@@ -661,6 +656,41 @@ describe('POST /experience/submit', () => {
       | { deviceId?: unknown }
       | undefined;
     expect(typeof creationPayload?.deviceId).toBe('string');
+  });
+
+  it('should clear a pending trusted-device creation intent from the latest checkbox value', async () => {
+    setDevFeaturesEnabled(true);
+    const user = {
+      ...mockUser,
+      mfaVerifications: [mockUserTotpMfaVerification],
+    };
+    const { requester, provider, createCredential } = createRequesterWithMocks({
+      user,
+      mfa: { policy: MfaPolicy.Mandatory, factors: [MfaFactor.TOTP] },
+      interactionResult: {
+        trustedDeviceCreation: { deviceId: 'trusted-device-id' },
+        verificationRecords: [
+          {
+            id: 'totp-verification-id',
+            type: VerificationType.TOTP,
+            userId: user.id,
+            verified: true,
+          },
+        ],
+      },
+      persistInteractionResult: true,
+      trustedDevicePolicy: { enabled: true, durationDays: 30 },
+    });
+
+    const response = await requester
+      .post('/experience/submit')
+      .send({ createTrustedDevice: false });
+
+    expect(response.status).toBe(200);
+    expect(createCredential).not.toHaveBeenCalled();
+    expect((provider.interactionResult as jest.Mock).mock.calls[0]?.[2]).not.toHaveProperty(
+      'trustedDeviceCreation'
+    );
   });
 
   it('should use one idempotency key for concurrent submits restored from the same interaction', async () => {
@@ -739,7 +769,7 @@ describe('POST /experience/submit', () => {
       trustedDevicePolicy: { enabled: true, durationDays: 30 },
     });
 
-    const response = await requester.post('/experience/profile/mfa/trusted-device');
+    const response = await requester.post('/experience/submit').send({ createTrustedDevice: true });
 
     expect(response.status).toBe(403);
     expect(response.body).toMatchObject({ code: 'session.mfa.require_mfa_verification' });
@@ -785,10 +815,10 @@ describe('POST /experience/submit', () => {
         trustedDevicePolicy: { enabled: true, durationDays: 30 },
       });
 
-      const optInResponse = await requester.post('/experience/profile/mfa/trusted-device');
-      const response = await requester.post('/experience/submit');
+      const response = await requester
+        .post('/experience/submit')
+        .send({ createTrustedDevice: true });
 
-      expect(optInResponse.status).toBe(204);
       expect(response.status).toBe(200);
       expect(createCredential).toHaveBeenCalledWith(
         expect.objectContaining({ userId: mockUser.id })
@@ -821,7 +851,7 @@ describe('POST /experience/submit', () => {
       trustedDevicePolicy: { enabled: true, durationDays: 30 },
     });
 
-    const response = await requester.post('/experience/profile/mfa/trusted-device');
+    const response = await requester.post('/experience/submit').send({ createTrustedDevice: true });
 
     expect(response.status).toBe(403);
     expect(createCredential).not.toHaveBeenCalled();
@@ -849,7 +879,7 @@ describe('POST /experience/submit', () => {
       trustedDevicePolicy: { enabled: true, durationDays: 30 },
     });
 
-    const response = await requester.post('/experience/profile/mfa/trusted-device');
+    const response = await requester.post('/experience/submit').send({ createTrustedDevice: true });
 
     expect(response.status).toBe(403);
     expect(createCredential).not.toHaveBeenCalled();
@@ -881,7 +911,7 @@ describe('POST /experience/submit', () => {
       trustedDevicePolicy: { enabled: true, durationDays: 30 },
     });
 
-    const response = await requester.post('/experience/profile/mfa/trusted-device');
+    const response = await requester.post('/experience/submit').send({ createTrustedDevice: true });
 
     expect(response.status).toBe(403);
     expect(createCredential).not.toHaveBeenCalled();
@@ -1020,10 +1050,8 @@ describe('POST /experience/submit', () => {
     });
     createCredential.mockRejectedValueOnce(creationError);
 
-    const optInResponse = await requester.post('/experience/profile/mfa/trusted-device');
-    const response = await requester.post('/experience/submit');
+    const response = await requester.post('/experience/submit').send({ createTrustedDevice: true });
 
-    expect(optInResponse.status).toBe(204);
     expect(response.status).toBe(200);
     expect(createCredential).toHaveBeenCalledTimes(1);
     expect(trackException).toHaveBeenCalledWith(creationError, expect.any(Object));
@@ -1060,10 +1088,10 @@ describe('POST /experience/submit', () => {
       trustedDevicePolicy: { enabled: true, durationDays: 30 },
     });
 
-    const optInResponse = await requester.post('/experience/profile/mfa/trusted-device');
-    const submitResponse = await requester.post('/experience/submit');
+    const submitResponse = await requester
+      .post('/experience/submit')
+      .send({ createTrustedDevice: true });
 
-    expect(optInResponse.status).toBe(204);
     expect(submitResponse.status).toBe(200);
     expect(hasEligibleTrustedDeviceVerification).toHaveBeenCalledTimes(2);
     expect(createCredential).not.toHaveBeenCalled();
@@ -1092,14 +1120,12 @@ describe('POST /experience/submit', () => {
       persistInteractionResult: true,
       trustedDevicePolicy: { enabled: true, durationDays: 30 },
     });
-    const optInResponse = await requester.post('/experience/profile/mfa/trusted-device');
-    (provider.interactionResult as jest.Mock).mockRejectedValueOnce(
-      new Error('interaction submission failed')
-    );
+    (provider.interactionResult as jest.Mock)
+      .mockResolvedValueOnce('redirectTo')
+      .mockRejectedValueOnce(new Error('interaction submission failed'));
 
-    const response = await requester.post('/experience/submit');
+    const response = await requester.post('/experience/submit').send({ createTrustedDevice: true });
 
-    expect(optInResponse.status).toBe(204);
     expect(response.status).toBe(500);
     expect(createCredential).not.toHaveBeenCalled();
   });
@@ -1165,11 +1191,10 @@ describe('POST /experience/submit', () => {
       });
       expect(bindResponse.status).toBe(204);
 
-      const optInResponse = await requester.post('/experience/profile/mfa/trusted-device');
       const submitResponse = await requester
         .post('/experience/submit')
+        .send({ createTrustedDevice: true })
         .set('x-logto-cf-bot-score', '10');
-      expect(optInResponse.status).toBe(204);
       expect(submitResponse.status).toBe(200);
 
       expect(users.updateUserById).toHaveBeenCalledWith(

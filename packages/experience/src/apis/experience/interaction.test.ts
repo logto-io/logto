@@ -17,33 +17,31 @@ describe('interaction experience APIs', () => {
     jest.clearAllMocks();
   });
 
-  it('records selected trusted-device intent before submitting the interaction', async () => {
+  it('submits selected trusted-device intent with the interaction', async () => {
     const response = { redirectTo: '/callback' };
     const json = jest.fn().mockResolvedValue(response);
-    mockedApiPost
-      .mockReturnValueOnce({} as ReturnType<typeof api.post>)
-      .mockReturnValueOnce({ json } as unknown as ReturnType<typeof api.post>);
+    mockedApiPost.mockReturnValueOnce({ json } as unknown as ReturnType<typeof api.post>);
 
     await expect(submitInteraction({ createTrustedDevice: true })).resolves.toEqual(response);
 
-    expect(mockedApiPost).toHaveBeenNthCalledWith(1, `${experienceApiRoutes.mfa}/trusted-device`);
-    expect(mockedApiPost).toHaveBeenNthCalledWith(2, experienceApiRoutes.submit);
+    expect(mockedApiPost).toHaveBeenCalledWith(experienceApiRoutes.submit, {
+      json: { createTrustedDevice: true },
+    });
   });
 
-  it('still submits when recording trusted-device intent fails', async () => {
+  it('submits a cleared trusted-device intent with the interaction', async () => {
     const response = { redirectTo: '/callback' };
     const json = jest.fn().mockResolvedValue(response);
-    mockedApiPost
-      .mockRejectedValueOnce(new Error('Failed to record trusted-device intent'))
-      .mockReturnValueOnce({ json } as unknown as ReturnType<typeof api.post>);
+    mockedApiPost.mockReturnValueOnce({ json } as unknown as ReturnType<typeof api.post>);
 
-    await expect(submitInteraction({ createTrustedDevice: true })).resolves.toEqual(response);
+    await expect(submitInteraction({ createTrustedDevice: false })).resolves.toEqual(response);
 
-    expect(mockedApiPost).toHaveBeenNthCalledWith(1, `${experienceApiRoutes.mfa}/trusted-device`);
-    expect(mockedApiPost).toHaveBeenNthCalledWith(2, experienceApiRoutes.submit);
+    expect(mockedApiPost).toHaveBeenCalledWith(experienceApiRoutes.submit, {
+      json: { createTrustedDevice: false },
+    });
   });
 
-  it('submits directly when trusted-device opt-in is not selected', async () => {
+  it('omits trusted-device intent when the current page has no opt-in', async () => {
     const json = jest.fn().mockResolvedValue({ redirectTo: '/callback' });
     mockedApiPost.mockReturnValueOnce({ json } as unknown as ReturnType<typeof api.post>);
 

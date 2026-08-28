@@ -438,9 +438,15 @@ export default class ExperienceInteraction {
     await this.getIdentifiedUser();
   }
 
-  /** Record an explicit trusted-device opt-in after validating eligible MFA proof. */
-  public async requestTrustedDeviceCreation() {
+  /** Update the trusted-device opt-in after validating eligible MFA proof when requested. */
+  public async updateTrustedDeviceCreationRequest(createTrustedDevice: boolean) {
     const user = await this.getIdentifiedUser();
+
+    if (!createTrustedDevice) {
+      this.trustedDevice.cancelCreationRequest();
+      return;
+    }
+
     await this.trustedDevice.requestCreation(
       user.id,
       await this.hasEligibleTrustedDeviceProof(user)
@@ -481,6 +487,9 @@ export default class ExperienceInteraction {
     const { provider } = this.tenant;
     const details = await provider.interactionDetails(this.ctx.req, this.ctx.res);
     const interactionData = this.toJson();
+    const previousResult = Object.fromEntries(
+      Object.entries(details.result ?? {}).filter(([key]) => key !== 'trustedDeviceCreation')
+    );
 
     // `mergeWithLastSubmission` will only merge current request's interaction results.
     // Manually merge with previous interaction results here.
@@ -488,7 +497,7 @@ export default class ExperienceInteraction {
     await provider.interactionResult(
       this.ctx.req,
       this.ctx.res,
-      { ...details.result, ...interactionData },
+      { ...previousResult, ...interactionData },
       { mergeWithLastSubmission: true }
     );
 

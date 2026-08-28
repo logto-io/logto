@@ -88,6 +88,10 @@ export class TrustedDevice {
     this.#creation ||= { deviceId: generateStandardId() };
   }
 
+  cancelCreationRequest() {
+    this.#creation = undefined;
+  }
+
   consumeCreationRequest() {
     const creation = this.#creation;
 
