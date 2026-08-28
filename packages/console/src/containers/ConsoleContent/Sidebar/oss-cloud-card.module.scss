@@ -69,6 +69,10 @@
   color: var(--color-text-link);
 }
 
+.secondaryLink {
+  color: var(--color-text-secondary);
+}
+
 .linkIcon {
   width: _.unit(4);
   height: _.unit(4);
