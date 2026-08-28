@@ -13,6 +13,7 @@ The Microsoft Azure AD connector provides a succinct way for your application to
     - [Tenant ID](#tenant-id)
     - [Prompts](#prompts)
     - [Scopes](#scopes)
+    - [Disable Email Sync](#disable-email-sync)
   - [References](#references)
 
 ## Set up Microsoft Azure AD in the Azure Portal
@@ -25,14 +26,15 @@ The Microsoft Azure AD connector provides a succinct way for your application to
 
 ## Fill in the configuration in Logto
 
-| Name          | Type     |
-| ------------- | -------- |
-| clientId      | string   |
-| clientSecret  | string   |
-| tenantId      | string   |
-| cloudInstance | string   |
-| prompts       | string[] |
-| scopes        | string?  |
+| Name             | Type     |
+| ---------------- | -------- |
+| clientId         | string   |
+| clientSecret     | string   |
+| tenantId         | string   |
+| cloudInstance    | string   |
+| prompts          | string[] |
+| scopes           | string?  |
+| disableEmailSync | boolean? |
 
 ### Client ID
 
@@ -73,6 +75,14 @@ Logto will concatenate the prompts with a space as the value of `prompt` in the 
 The `scopes` field is a space-separated list of scopes the application needs. The list of scopes can be found in the [Microsoft Graph permissions reference](https://learn.microsoft.com/en-us/graph/permissions-reference).
 
 The default scopes are `User.Read`, leave this field empty unless you need other scopes.
+
+### Disable Email Sync
+
+Microsoft Graph returns the user's email address in the `mail` attribute, but reports no verification state for it. `mail` is a directory attribute that an administrator can set to any value, so it is only as trustworthy as the directory it comes from.
+
+Logto syncs that address to the user profile, where it serves as a user identifier. This switch stops it from doing so. It is off by default. Turn it on to leave the raw value in `rawData` only and source the email elsewhere.
+
+Consider turning it on if the connector accepts sign-ins from directories you do not control. This is the case when the app registration's **access type** is anything other than **Accounts in this organizational directory only**, or when **Tenant ID** is set to `organizations`, `common` or `consumers`.
 
 ## References
 

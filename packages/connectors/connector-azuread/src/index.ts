@@ -131,7 +131,7 @@ const getUserInfo =
 
       return {
         id,
-        email: conditional(mail),
+        email: conditional(!config.disableEmailSync && mail),
         name: conditional(displayName),
         rawData,
       };

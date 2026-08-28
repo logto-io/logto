@@ -17,12 +17,14 @@ vi.mock('@azure/msal-node', async () => ({
   },
 }));
 
-const getConnectorConfig = vi.fn().mockResolvedValue({
+const mockedConfig = {
   clientId: 'clientId',
   clientSecret: 'clientSecret',
   cloudInstance: 'https://login.microsoftonline.com',
   tenantId: 'tenantId',
-});
+};
+
+const getConnectorConfig = vi.fn().mockResolvedValue(mockedConfig);
 
 describe('Azure AD connector', () => {
   it('init without exploding', () => {
@@ -51,6 +53,39 @@ describe('getUserInfo', () => {
       id: 'id',
       name: 'displayName',
       email: 'mail',
+      rawData: {
+        id: 'id',
+        displayName: 'displayName',
+        mail: 'mail',
+        userPrincipalName: 'userPrincipalName',
+      },
+    });
+  });
+
+  it('should not return the email when email sync is disabled', async () => {
+    const graphMeUrl = new URL(graphAPIEndpoint);
+    nock(graphMeUrl.origin).get(graphMeUrl.pathname).reply(200, {
+      id: 'id',
+      displayName: 'displayName',
+      mail: 'mail',
+      userPrincipalName: 'userPrincipalName',
+    });
+
+    const connector = await createConnector({
+      getConfig: vi.fn().mockResolvedValue({
+        ...mockedConfig,
+        disableEmailSync: true,
+      }),
+    });
+    const userInfo = await connector.getUserInfo(
+      { code: 'code', redirectUri: 'redirectUri' },
+      vi.fn()
+    );
+
+    expect(userInfo.email).toBeUndefined();
+    expect(userInfo).toEqual({
+      id: 'id',
+      name: 'displayName',
       rawData: {
         id: 'id',
         displayName: 'displayName',
