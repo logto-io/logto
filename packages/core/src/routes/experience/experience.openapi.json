@@ -126,19 +126,7 @@
         "description": "Get the public interaction data.",
         "responses": {
           "200": {
-            "description": "The public interaction data has been successfully retrieved.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "trustedDevice": {
-                      "description": "Dev feature. Trusted-device creation availability for the identified user and current effective policy.",
-                      "x-logto-dev-feature": true
-                    }
-                  }
-                }
-              }
-            }
+            "description": "The public interaction data has been successfully retrieved."
           }
         }
       }

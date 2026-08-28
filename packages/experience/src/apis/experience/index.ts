@@ -21,12 +21,10 @@ import {
 
 export {
   initInteraction,
-  getInteraction,
   submitInteraction,
   identifyUser,
   identifyAndSubmitInteraction,
 } from './interaction';
-export type { TrustedDeviceAvailability, TrustedDeviceInteractionData } from './interaction';
 
 export * from './avatar';
 export * from './mfa';

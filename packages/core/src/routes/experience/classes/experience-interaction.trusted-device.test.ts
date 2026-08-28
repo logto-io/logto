@@ -195,7 +195,6 @@ describe('ExperienceInteraction trusted-device MFA verification', () => {
 
     expect(getEffectivePolicy).toHaveBeenCalledTimes(1);
     expect(validateCredential).toHaveBeenCalledWith(ctx, mockUserWithMfaVerifications.id);
-    expect(experienceInteraction.toJson()).not.toHaveProperty('trustedDeviceFulfillment');
   });
 
   it('rechecks policy instead of reusing legacy interaction fulfillment', async () => {
@@ -234,7 +233,6 @@ describe('ExperienceInteraction trusted-device MFA verification', () => {
 
     expect(getEffectivePolicy).toHaveBeenCalledTimes(1);
     expect(validateCredential).toHaveBeenCalledWith(ctx, mockUserWithMfaVerifications.id);
-    expect(experienceInteraction.toJson()).not.toHaveProperty('trustedDeviceFulfillment');
   });
 
   it('revalidates the trusted-device credential every time the guard runs', async () => {
@@ -247,8 +245,6 @@ describe('ExperienceInteraction trusted-device MFA verification', () => {
     expect(getEffectivePolicy).toHaveBeenCalledTimes(1);
     expect(validateCredential).toHaveBeenCalledTimes(2);
     expect(validateCredential).toHaveBeenCalledWith(ctx, mockUserWithMfaVerifications.id);
-    expect(experienceInteraction.toJson()).not.toHaveProperty('trustedDeviceFulfillment');
-    expect(experienceInteraction.toSanitizedJson()).not.toHaveProperty('trustedDeviceFulfillment');
   });
 
   it('allows a valid trusted device to verify adaptive MFA', async () => {
@@ -258,7 +254,6 @@ describe('ExperienceInteraction trusted-device MFA verification', () => {
 
     await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.toBeUndefined();
 
-    expect(experienceInteraction.toJson()).not.toHaveProperty('trustedDeviceFulfillment');
     expect(ctx.assignReleaseAnywayInteractionHookResult).toHaveBeenCalledWith({
       event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
       payload: {

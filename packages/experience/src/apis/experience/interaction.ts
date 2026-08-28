@@ -13,15 +13,6 @@ type SubmitInteractionResponse = {
   redirectTo: string;
 };
 
-export type TrustedDeviceAvailability = {
-  canCreate: boolean;
-  durationDays?: number;
-};
-
-export type TrustedDeviceInteractionData = {
-  trustedDevice?: TrustedDeviceAvailability;
-};
-
 type SubmitInteractionOptions = {
   createTrustedDevice?: boolean;
 };
@@ -36,9 +27,6 @@ export const initInteraction = async (interactionEvent: InteractionEvent, captch
 
 export const identifyUser = async (payload: IdentificationApiPayload = {}) =>
   api.post(experienceApiRoutes.identification, { json: payload });
-
-export const getInteraction = async (signal?: AbortSignal) =>
-  api.get(experienceApiRoutes.interaction, { signal }).json<TrustedDeviceInteractionData>();
 
 const requestTrustedDeviceCreation = async () =>
   api.post(`${experienceApiRoutes.mfa}/trusted-device`);
