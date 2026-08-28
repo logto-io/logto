@@ -44,6 +44,18 @@
   border-top-right-radius: 0;
 }
 
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: _.unit(2);
+  flex-shrink: 0;
+}
+
+.primaryAction {
+  white-space: nowrap;
+}
+
 .footerAction {
   flex-shrink: 0;
 }

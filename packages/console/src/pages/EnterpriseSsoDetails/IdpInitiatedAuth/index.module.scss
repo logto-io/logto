@@ -42,3 +42,17 @@
 div[class*='radio'][class*='disabled'] {
   color: inherit;
 }
+
+.ossUpsell {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(4);
+}
+
+.ossActions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: _.unit(2);
+  align-self: flex-start;
+}

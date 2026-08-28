@@ -6,7 +6,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import CloudUploadIcon from '@/assets/icons/cloud-upload.svg?react';
 import CustomCssEditorField from '@/components/CustomCssEditorField';
 import { CloudTag } from '@/components/FeatureTag';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Card from '@/ds-components/Card';
@@ -15,16 +15,16 @@ import FormField from '@/ds-components/FormField';
 import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import CustomUiAssetsUploader from '@/pages/SignInExperience/components/CustomUiAssetsUploader';
-import { buildCloudUpsellUrl, ossUpsellEntries } from '@/utils/oss-upsell';
 
 import type { SignInExperienceForm } from '../../../types';
 import FormSectionTitle from '../../components/FormSectionTitle';
 
 import CustomUiCspForm from './CustomUiCspForm';
 import styles from './index.module.scss';
+import { getOssBringYourUiCardContent } from './utils';
 
 function OssBringYourUiCard() {
-  const cloudUpsellUrl = buildCloudUpsellUrl(ossUpsellEntries.signInExpBringYourUiOssCard);
+  const cardContent = getOssBringYourUiCardContent({ isDevFeaturesEnabled });
 
   return (
     <FormField
@@ -48,17 +48,29 @@ function OssBringYourUiCard() {
           </div>
           <div className={styles.ossCardDescription}>
             <Trans
-              i18nKey="admin_console.sign_in_exp.custom_ui.bring_your_ui_oss_card_description"
+              i18nKey={cardContent.i18nKey}
               components={{
                 a: (
                   <TextLink
-                    href={cloudUpsellUrl}
+                    href={cardContent.cloudHref}
                     targetBlank="noopener"
                     className={styles.highlight}
                   />
                 ),
               }}
             />
+            {cardContent.hasSelfHostedPlansOption && (
+              <>
+                {' · '}
+                <TextLink
+                  href={cardContent.selfHostedHref}
+                  targetBlank="noopener"
+                  className={styles.highlight}
+                >
+                  <DynamicT forKey="upsell.explore_self_hosted_plans" />
+                </TextLink>
+              </>
+            )}
           </div>
         </div>
       </div>

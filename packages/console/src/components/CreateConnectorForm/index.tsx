@@ -12,7 +12,7 @@ import ExternalLink from '@/assets/icons/external-link.svg?react';
 import LogtoEmailLogoDark from '@/assets/icons/logto-email-service-dark.svg?url';
 import LogtoEmailLogo from '@/assets/icons/logto-email-service.svg?url';
 import ConnectorLogo from '@/components/ConnectorLogo';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { pricingLink } from '@/consts/external-links';
 import Button from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
@@ -22,6 +22,7 @@ import TextLink from '@/ds-components/TextLink';
 import type { RequestError } from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import modalStyles from '@/scss/modal.module.scss';
+import { buildCloudUpsellUrl, buildSelfHostedPlansUrl, ossUpsellEntries } from '@/utils/oss-upsell';
 
 import { getConnectorGroups } from '../../pages/Connectors/utils';
 
@@ -48,7 +49,10 @@ function EmailConnectorUpsellBanner() {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console',
   });
-  const copyKeys = getEmailConnectorUpsellCopyKeys();
+  const copyKeys = getEmailConnectorUpsellCopyKeys({ isDevFeaturesEnabled });
+  const entry = ossUpsellEntries.connectorEmailBuiltinUpsellBanner;
+  const cloudUpsellUrl = buildCloudUpsellUrl(entry);
+  const selfHostedPlansUrl = buildSelfHostedPlansUrl(entry);
 
   return (
     <div className={styles.upsellBanner}>
@@ -63,15 +67,28 @@ function EmailConnectorUpsellBanner() {
           </div>
         </div>
       </div>
-      <Button
-        className={styles.upsellButton}
-        type="outline"
-        title={<DangerousRaw>{t(copyKeys.action, { productName: 'Logto Cloud' })}</DangerousRaw>}
-        trailingIcon={<ExternalLink />}
-        onClick={() => {
-          window.open(pricingLink, '_blank', 'noopener,noreferrer');
-        }}
-      />
+      <div className={styles.upsellActions}>
+        <Button
+          className={styles.upsellButton}
+          type={isDevFeaturesEnabled ? 'primary' : 'outline'}
+          title={<DangerousRaw>{t(copyKeys.action, { productName: 'Logto Cloud' })}</DangerousRaw>}
+          trailingIcon={<ExternalLink />}
+          onClick={() => {
+            // DEV: self-hosted plans
+            if (isDevFeaturesEnabled) {
+              window.open(cloudUpsellUrl, '_blank', 'noopener,noreferrer');
+              return;
+            }
+
+            window.open(pricingLink, '_blank', 'noopener,noreferrer');
+          }}
+        />
+        {isDevFeaturesEnabled && copyKeys.secondaryAction && (
+          <TextLink className={styles.cloudAction} href={selfHostedPlansUrl} targetBlank="noopener">
+            {t(copyKeys.secondaryAction)}
+          </TextLink>
+        )}
+      </div>
     </div>
   );
 }
