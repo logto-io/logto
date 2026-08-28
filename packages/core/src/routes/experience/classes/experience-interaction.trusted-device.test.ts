@@ -115,7 +115,7 @@ const expectConventionalMfaRequired = async (
 ) => {
   const trustedDevice =
     options?.trustedDevice === undefined
-      ? { canCreate: true, durationDays: 30 }
+      ? { canCreate: true, durationDays: 30, creationRequested: false }
       : options.trustedDevice;
   await expect(experienceInteraction.guardMfaVerificationStatus()).rejects.toMatchError(
     new RequestError(
@@ -202,7 +202,7 @@ describe('ExperienceInteraction trusted-device MFA verification', () => {
     });
 
     await expectConventionalMfaRequired(experienceInteraction, {
-      trustedDevice: { canCreate: false },
+      trustedDevice: { canCreate: false, creationRequested: false },
     });
 
     expect(getEffectivePolicy).toHaveBeenCalledTimes(1);

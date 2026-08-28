@@ -34,7 +34,7 @@ const createMfa = ({
   },
   currentProfile = {},
   organizations = [],
-  trustedDeviceAvailability = { canCreate: true, durationDays: 30 },
+  trustedDeviceAvailability = { canCreate: true, durationDays: 30, creationRequested: false },
 }: {
   mfaSettings?: MfaSettings;
   interactionEvent?: InteractionEvent;
@@ -185,7 +185,7 @@ describe('Mfa.assertMfaFulfilled', () => {
       status: 422,
       data: {
         availableFactors: [MfaFactor.TOTP],
-        trustedDevice: { canCreate: true, durationDays: 30 },
+        trustedDevice: { canCreate: true, durationDays: 30, creationRequested: false },
       },
     });
   });
@@ -208,7 +208,7 @@ describe('Mfa.assertMfaFulfilled', () => {
       code: 'user.suggest_mfa',
       status: 422,
       data: {
-        trustedDevice: { canCreate: true, durationDays: 30 },
+        trustedDevice: { canCreate: true, durationDays: 30, creationRequested: false },
       },
     });
   });
@@ -246,13 +246,13 @@ describe('Mfa.assertMfaFulfilled', () => {
         organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.Mandatory,
       },
       organizations,
-      trustedDeviceAvailability: { canCreate: false },
+      trustedDeviceAvailability: { canCreate: false, creationRequested: false },
     });
 
     await expect(mfa.assertMfaFulfilled()).rejects.toMatchObject({
       code: 'user.missing_mfa',
       data: {
-        trustedDevice: { canCreate: false },
+        trustedDevice: { canCreate: false, creationRequested: false },
       },
     });
     expect(getOrganizationsByUserId).toHaveBeenCalledTimes(1);
@@ -277,6 +277,11 @@ describe('Mfa.assertMfaFulfilled', () => {
         primaryEmail: 'foo@example.com',
         mfaVerifications: [],
       },
+      trustedDeviceAvailability: {
+        canCreate: true,
+        durationDays: 30,
+        creationRequested: true,
+      },
     });
     const { signInExperienceValidator } = mfa as unknown as {
       signInExperienceValidator: SignInExperienceValidator;
@@ -291,7 +296,7 @@ describe('Mfa.assertMfaFulfilled', () => {
       status: 422,
       data: {
         availableFactors: [MfaFactor.TOTP, MfaFactor.EmailVerificationCode],
-        trustedDevice: { canCreate: true, durationDays: 30 },
+        trustedDevice: { canCreate: true, durationDays: 30, creationRequested: true },
       },
     });
     expect(getTrustedDeviceCreationAvailability).toHaveBeenCalledWith('user-id', organizations);

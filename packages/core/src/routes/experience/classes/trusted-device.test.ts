@@ -102,6 +102,7 @@ describe('Experience trusted-device lifecycle events', () => {
     await expect(creation.subject.getCreationAvailability(userId)).resolves.toEqual({
       canCreate: true,
       durationDays: 30,
+      creationRequested: false,
     });
     await creation.subject.finalize({
       creation: { deviceId: trustedDeviceId },
@@ -125,6 +126,21 @@ describe('Experience trusted-device lifecycle events', () => {
     await expect(creation.subject.requestCreation(userId, true)).resolves.toBeUndefined();
 
     expect(creation.subject.data).toEqual({});
+  });
+
+  it('reports and reuses the interaction creation request', async () => {
+    const creation = createSubject({ data: {} });
+
+    await creation.subject.requestCreation(userId, true);
+    const requestedCreation = creation.subject.data.trustedDeviceCreation;
+    await creation.subject.requestCreation(userId, true);
+
+    expect(creation.subject.data.trustedDeviceCreation).toEqual(requestedCreation);
+    await expect(creation.subject.getCreationAvailability(userId)).resolves.toEqual({
+      canCreate: true,
+      durationDays: 30,
+      creationRequested: true,
+    });
   });
 
   it('retries effective policy resolution after a failed availability lookup', async () => {

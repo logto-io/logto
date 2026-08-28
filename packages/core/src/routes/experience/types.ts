@@ -186,6 +186,7 @@ export type InteractionContext = {
 export type TrustedDeviceAvailability = {
   canCreate: boolean;
   durationDays?: number;
+  creationRequested: boolean;
 };
 
 export type ExperienceInteractionRouterContext<ContextT extends WithLogContext = WithLogContext> =

@@ -204,7 +204,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
         {
           availableFactors: [MfaFactor.TOTP],
           maskedIdentifiers: {},
-          trustedDevice: { canCreate: false },
+          trustedDevice: { canCreate: false, creationRequested: false },
         }
       )
     );
@@ -299,7 +299,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
         {
           availableFactors: [MfaFactor.TOTP],
           maskedIdentifiers: {},
-          trustedDevice: { canCreate: false },
+          trustedDevice: { canCreate: false, creationRequested: false },
         }
       )
     );
@@ -965,7 +965,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
         {
           availableFactors: [MfaFactor.TOTP],
           maskedIdentifiers: {},
-          trustedDevice: { canCreate: false },
+          trustedDevice: { canCreate: false, creationRequested: false },
         }
       )
     );

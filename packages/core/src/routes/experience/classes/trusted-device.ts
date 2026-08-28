@@ -112,6 +112,7 @@ export class TrustedDevice {
         return {
           canCreate: enabled,
           ...conditional(enabled && { durationDays }),
+          creationRequested: Boolean(this.#creation),
         };
       },
       (error) => {

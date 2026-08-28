@@ -77,6 +77,7 @@ const mfaFactorEnumValues = [
 const trustedDeviceAvailabilityGuard = s.object({
   canCreate: s.boolean(),
   durationDays: s.optional(s.number()),
+  creationRequested: s.boolean(),
 });
 
 const mfaErrorDataShape = {

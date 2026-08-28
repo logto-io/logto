@@ -21,7 +21,7 @@ it('ignores router-state availability when dev features are disabled', () => {
           pathname: '/',
           state: {
             availableFactors: [MfaFactor.TOTP],
-            trustedDevice: { canCreate: true, durationDays: 30 },
+            trustedDevice: { canCreate: true, durationDays: 30, creationRequested: false },
           },
         },
       ]}

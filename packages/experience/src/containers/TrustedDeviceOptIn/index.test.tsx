@@ -39,7 +39,11 @@ const renderOptIn = (
 
 describe('<TrustedDeviceOptIn />', () => {
   it('shows a default-unchecked checkbox when MFA flow state allows creation', () => {
-    const { container } = renderOptIn({ canCreate: true, durationDays: 30 });
+    const { container } = renderOptIn({
+      canCreate: true,
+      durationDays: 30,
+      creationRequested: false,
+    });
     const checkbox = container.querySelector('[role="checkbox"]');
 
     expect(checkbox).not.toBeNull();
@@ -55,15 +59,19 @@ describe('<TrustedDeviceOptIn />', () => {
   });
 
   it('shows the checkbox when WebAuthn options are included in route state', () => {
-    const { container } = renderOptIn({ canCreate: true, durationDays: 365 }, true, {
-      options: { challenge: 'challenge' },
-    });
+    const { container } = renderOptIn(
+      { canCreate: true, durationDays: 365, creationRequested: false },
+      true,
+      {
+        options: { challenge: 'challenge' },
+      }
+    );
 
     expect(container.querySelector('[role="checkbox"]')).not.toBeNull();
   });
 
   it('stays hidden when MFA flow state disallows creation', () => {
-    const { container } = renderOptIn({ canCreate: false });
+    const { container } = renderOptIn({ canCreate: false, creationRequested: false });
 
     expect(container.querySelector('[role="checkbox"]')).toBeNull();
   });
@@ -75,13 +83,16 @@ describe('<TrustedDeviceOptIn />', () => {
   });
 
   it('stays hidden when an available policy does not include a duration', () => {
-    const { container } = renderOptIn({ canCreate: true });
+    const { container } = renderOptIn({ canCreate: true, creationRequested: false });
 
     expect(container.firstElementChild).toBeNull();
   });
 
   it('stays hidden when the calling page is invalid', () => {
-    const { container } = renderOptIn({ canCreate: true, durationDays: 30 }, false);
+    const { container } = renderOptIn(
+      { canCreate: true, durationDays: 30, creationRequested: false },
+      false
+    );
 
     expect(container.firstElementChild).toBeNull();
   });
