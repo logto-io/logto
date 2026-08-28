@@ -6,7 +6,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import CloudUploadIcon from '@/assets/icons/cloud-upload.svg?react';
 import CustomCssEditorField from '@/components/CustomCssEditorField';
 import { CloudTag } from '@/components/FeatureTag';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Card from '@/ds-components/Card';
@@ -24,7 +24,7 @@ import styles from './index.module.scss';
 import { getOssBringYourUiCardContent } from './utils';
 
 function OssBringYourUiCard() {
-  const cardContent = getOssBringYourUiCardContent({ isDevFeaturesEnabled });
+  const cardContent = getOssBringYourUiCardContent();
 
   return (
     <FormField

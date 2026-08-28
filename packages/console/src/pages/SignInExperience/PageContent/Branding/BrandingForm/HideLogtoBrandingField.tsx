@@ -2,7 +2,6 @@ import { useFormContext } from 'react-hook-form';
 import { Trans } from 'react-i18next';
 
 import { CloudTag } from '@/components/FeatureTag';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
@@ -21,7 +20,7 @@ type Props = {
 
 function HideLogtoBrandingField({ variant, isEnabledInCloud }: Props) {
   const { register } = useFormContext<SignInExperienceForm>();
-  const ossNote = getHideLogtoBrandingOssNote({ isDevFeaturesEnabled });
+  const ossNote = getHideLogtoBrandingOssNote();
 
   if (variant === 'cloud') {
     return (

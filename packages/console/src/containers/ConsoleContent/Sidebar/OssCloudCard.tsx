@@ -92,18 +92,15 @@ function OssCloudCard() {
         >
           {tSidebar('action')}
         </TextLink>
-        {/* Self-hosted plans upsell routing. */}
-        {isDevFeaturesEnabled && (
-          <TextLink
-            isTrailingIcon
-            className={classNames(styles.link, styles.secondaryLink)}
-            href={buildSelfHostedPlansUrl(entry)}
-            icon={<ExternalLinkIcon className={styles.linkIcon} />}
-            targetBlank="noopener"
-          >
-            {tUpsell('explore_self_hosted_plans')}
-          </TextLink>
-        )}
+        <TextLink
+          isTrailingIcon
+          className={classNames(styles.link, styles.secondaryLink)}
+          href={buildSelfHostedPlansUrl(entry)}
+          icon={<ExternalLinkIcon className={styles.linkIcon} />}
+          targetBlank="noopener"
+        >
+          {tUpsell('explore_self_hosted_plans')}
+        </TextLink>
       </div>
     </div>
   );

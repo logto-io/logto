@@ -5,31 +5,8 @@ import { ossUpsellEntries } from '@/utils/oss-upsell';
 import { getSamlAppLimitBannerContent } from './utils';
 
 describe('getSamlAppLimitBannerContent', () => {
-  it('keeps the Cloud pricing CTA when the self-hosted plans feature is disabled', () => {
-    const content = getSamlAppLimitBannerContent({
-      isDevFeaturesEnabled: false,
-      variant: 'inline',
-    });
-    const {
-      descriptionKey,
-      actionKey,
-    }: {
-      descriptionKey: TFuncKey<'translation', 'admin_console'>;
-      actionKey: TFuncKey<'translation', 'admin_console'>;
-    } = content;
-
-    expect({ description: descriptionKey, action: actionKey, href: content.href }).toEqual({
-      description: 'upsell.paywall.saml_applications_oss_limit_notice',
-      action: 'upsell.view_plans',
-      href: 'https://logto.io/pricing',
-    });
-  });
-
-  it('keeps Cloud primary and self-hosted plans secondary when the feature is enabled', () => {
-    const content = getSamlAppLimitBannerContent({
-      isDevFeaturesEnabled: true,
-      variant: 'inline',
-    });
+  it('keeps Cloud primary and self-hosted plans secondary', () => {
+    const content = getSamlAppLimitBannerContent({ variant: 'inline' });
     const {
       descriptionKey,
       actionKey,
@@ -38,7 +15,7 @@ describe('getSamlAppLimitBannerContent', () => {
       actionKey: TFuncKey<'translation', 'admin_console'>;
     } = content;
     const cloudUrl = new URL(content.href);
-    const selfHostedUrl = new URL(content.secondaryHref!);
+    const selfHostedUrl = new URL(content.secondaryHref);
 
     expect(descriptionKey).toBe('upsell.paywall.saml_applications_oss_limit_notice');
     expect(actionKey).toBe('upsell.try_with_product_name');
@@ -53,11 +30,8 @@ describe('getSamlAppLimitBannerContent', () => {
   });
 
   it('uses the create-modal entry for the footer banner', () => {
-    const content = getSamlAppLimitBannerContent({
-      isDevFeaturesEnabled: true,
-      variant: 'footer',
-    });
-    const url = new URL(content.secondaryHref!);
+    const content = getSamlAppLimitBannerContent({ variant: 'footer' });
+    const url = new URL(content.secondaryHref);
 
     expect(url.searchParams.get('utm_content')).toBe(
       ossUpsellEntries.samlAppCreateModalLimitBanner
