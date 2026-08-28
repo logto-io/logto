@@ -134,29 +134,34 @@ describe('Experience - suggest additional MFA after email registration', () => {
         },
         trustedDevice: { enabled: true, durationDays: 365 },
       });
-      const { user, userProfile } = await generateNewUser({
-        primaryEmail: true,
-        password: true,
-      });
-      const experience = new ExpectTotpExperience(await browser.newPage());
 
-      await experience.startWith(demoAppUrl, 'sign-in');
-      await experience.toFillForm(
-        { identifier: userProfile.primaryEmail, password: userProfile.password },
-        { submit: true }
-      );
-      await experience.waitForPathname(`mfa-verification/${MfaFactor.EmailVerificationCode}`);
-      await experience.toOptInTrustedDevice();
-      await experience.toCompleteMfaVerification(ConnectorType.Email, true);
+      try {
+        const { user, userProfile } = await generateNewUser({
+          primaryEmail: true,
+          password: true,
+        });
+        const experience = new ExpectTotpExperience(await browser.newPage());
 
-      await experience.waitForPathname('mfa-binding');
-      await experience.toClick('button', 'Authenticator app OTP');
-      await experience.waitForPathname(`mfa-binding/${MfaFactor.TOTP}`);
-      await experience.toSeeTrustedDeviceOptedIn();
+        await experience.startWith(demoAppUrl, 'sign-in');
+        await experience.toFillForm(
+          { identifier: userProfile.primaryEmail, password: userProfile.password },
+          { submit: true }
+        );
+        await experience.waitForPathname(`mfa-verification/${MfaFactor.EmailVerificationCode}`);
+        await experience.toOptInTrustedDevice();
+        await experience.toCompleteMfaVerification(ConnectorType.Email, true);
 
-      await experience.toBindTotp();
-      await experience.verifyThenEnd();
-      await deleteUser(user.id);
+        await experience.waitForPathname('mfa-binding');
+        await experience.toClick('button', 'Authenticator app OTP');
+        await experience.waitForPathname(`mfa-binding/${MfaFactor.TOTP}`);
+        await experience.toSeeTrustedDeviceOptedIn();
+
+        await experience.toBindTotp(true, true);
+        await experience.verifyThenEnd();
+        await deleteUser(user.id);
+      } finally {
+        await updateSignInExperience({ trustedDevice: { enabled: false } });
+      }
     }
   );
 
