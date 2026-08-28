@@ -89,7 +89,7 @@ export default class ExpectExperience extends ExpectPage {
    */
   async startWith(initialUrl = demoAppUrl, type: ExperienceType = 'sign-in') {
     await this.toStart(initialUrl);
-    this.toBeAt('sign-in');
+    await this.waitToBeAt('sign-in');
 
     if (type === 'register') {
       await this.toClick('a', 'Create account');
@@ -128,12 +128,29 @@ export default class ExpectExperience extends ExpectPage {
     }
 
     await this.waitForUrl(this.#ongoing.initialUrl);
+
     await this.toClick('div[role=button]', /sign out/i);
 
     this.#ongoing = undefined;
     if (closePage) {
       await this.page.close();
     }
+  }
+
+  /**
+   * Clear the demo app browser storage and session cookies while preserving the trusted-device
+   * credential under test. This guarantees the next visit starts a new sign-in interaction.
+   */
+  async clearDemoAppSession() {
+    await this.page.evaluate(() => {
+      localStorage.clear();
+      sessionStorage.clear();
+    });
+    const cookies = await this.page.cookies(logtoUrl);
+    expect(cookies.some(({ name }) => name.includes('logto-trusted-device-'))).toBe(true);
+    const sessionCookies = cookies.filter(({ name }) => !name.includes('logto-trusted-device-'));
+    await this.page.deleteCookie(...sessionCookies);
+    await this.page.goto('about:blank');
   }
 
   /**
@@ -185,6 +202,22 @@ export default class ExpectExperience extends ExpectPage {
     for (const [index, char] of code.split('').entries()) {
       // eslint-disable-next-line no-await-in-loop
       await this.toFillInput(`passcode_${index}`, char);
+    }
+  }
+
+  async toCompleteMfaVerification(
+    connectorType: Parameters<typeof readConnectorMessage>['0'],
+    submitManually = false
+  ) {
+    const { code } = await readConnectorMessage(connectorType);
+
+    for (const [index, char] of code.split('').entries()) {
+      // eslint-disable-next-line no-await-in-loop -- verification inputs must be filled in order
+      await this.toFillInput(`mfaCode_${index}`, char);
+    }
+
+    if (submitManually) {
+      await this.toClickButton('Continue');
     }
   }
 
@@ -261,6 +294,18 @@ export default class ExpectExperience extends ExpectPage {
    */
   async waitForToast(text: string | RegExp) {
     return this.toMatchAndRemove('div[role=toast]', text);
+  }
+
+  async toSeeTrustedDeviceOptIn(durationDays = 365) {
+    const text = `Trust this device for ${durationDays} days`;
+    await this.toMatchElement('div[role=checkbox][aria-checked=false]', { text });
+  }
+
+  async toOptInTrustedDevice(durationDays = 365) {
+    const text = `Trust this device for ${durationDays} days`;
+    await this.toSeeTrustedDeviceOptIn(durationDays);
+    await this.toClick('div[role=checkbox]', text, false);
+    await this.toMatchElement('div[role=checkbox][aria-checked=true]', { text });
   }
 
   /**

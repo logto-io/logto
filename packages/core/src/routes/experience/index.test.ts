@@ -1186,39 +1186,5 @@ describe('POST /experience/submit', () => {
       expect(createCredential).toHaveBeenCalledWith(expect.objectContaining({ userId: user.id }));
     }
   );
-
-  it('should disable trusted-device behavior when dev features are disabled', async () => {
-    setDevFeaturesEnabled(false);
-    const user = {
-      ...mockUser,
-      mfaVerifications: [mockUserTotpMfaVerification],
-    };
-    const { requester, createCredential, getEffectivePolicy } = createRequesterWithMocks({
-      user,
-      mfa: { policy: MfaPolicy.Mandatory, factors: [MfaFactor.TOTP] },
-      interactionResult: {
-        verificationRecords: [
-          {
-            id: 'totp-verification-id',
-            type: VerificationType.TOTP,
-            userId: user.id,
-            verified: true,
-          },
-        ],
-      },
-      trustedDevicePolicy: { enabled: true, durationDays: 30 },
-    });
-
-    const optInResponse = await requester.post('/experience/profile/mfa/trusted-device');
-    const submitResponse = await requester
-      .post('/experience/submit')
-      .set('Content-Type', 'text/plain')
-      .send('released submit payload');
-
-    expect(optInResponse.status).toBe(404);
-    expect(submitResponse.status).toBe(200);
-    expect(getEffectivePolicy).not.toHaveBeenCalled();
-    expect(createCredential).not.toHaveBeenCalled();
-  });
 });
 /* eslint-enable max-lines */

@@ -27,13 +27,9 @@ import {
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
 
-const mockEnvSetValues = {
-  isDevFeaturesEnabled: true,
-};
-
 await mockEsmWithActual('#src/env-set/index.js', () => ({
   EnvSet: {
-    values: mockEnvSetValues,
+    values: { isDevFeaturesEnabled: true },
   },
 }));
 
@@ -136,8 +132,6 @@ const expectConventionalMfaRequired = async (
 describe('ExperienceInteraction trusted-device MFA verification', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle the mocked feature environment per test.
-    mockEnvSetValues.isDevFeaturesEnabled = true;
     findDefaultSignInExperience.mockResolvedValue(requiredMfaSignInExperience);
     findUserById.mockResolvedValue(mockUserWithMfaVerifications);
     getEffectivePolicy.mockResolvedValue({ enabled: true, durationDays: 30 });
@@ -266,17 +260,5 @@ describe('ExperienceInteraction trusted-device MFA verification', () => {
       },
       userId: mockUserWithMfaVerifications.id,
     });
-  });
-
-  it('does not enable trusted-device verification when dev features are disabled', async () => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Verify the feature-level runtime guard.
-    mockEnvSetValues.isDevFeaturesEnabled = false;
-    validateCredential.mockResolvedValueOnce(trustedDevice);
-    const { experienceInteraction } = createInteraction();
-
-    await expectConventionalMfaRequired(experienceInteraction, { trustedDevice: false });
-
-    expect(getEffectivePolicy).not.toHaveBeenCalled();
-    expect(validateCredential).not.toHaveBeenCalled();
   });
 });
