@@ -26,6 +26,8 @@ const localeMap: Record<string, Locale> = {
   de,
   en: enUS,
   es,
+  'es-419': es,
+  'es-es': es,
   'es-mx': es,
   'fa-ir': faIR,
   fr,
