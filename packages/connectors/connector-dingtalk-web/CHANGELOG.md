@@ -1,5 +1,11 @@
 # @logto/connector-dingtalk-web
 
+## 0.4.6
+
+### Patch Changes
+
+- @logto/connector-kit@5.1.1
+
 ## 0.4.5
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @logto/connector-vonage-sms
 
+## 0.2.5
+
+### Patch Changes
+
+- @logto/connector-kit@5.1.1
+
 ## 0.2.4
 
 ### Patch Changes

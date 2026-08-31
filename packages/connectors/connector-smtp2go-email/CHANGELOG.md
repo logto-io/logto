@@ -1,5 +1,11 @@
 # @logto/connector-smtp2go-email
 
+## 1.1.1
+
+### Patch Changes
+
+- @logto/connector-kit@5.1.1
+
 ## 1.1.0
 
 ### Minor Changes

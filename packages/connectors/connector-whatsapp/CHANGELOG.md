@@ -1,5 +1,11 @@
 # @logto/connector-whatsapp-sms
 
+## 1.0.4
+
+### Patch Changes
+
+- @logto/connector-kit@5.1.1
+
 ## 1.0.3
 
 ### Patch Changes

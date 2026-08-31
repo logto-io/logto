@@ -1,5 +1,11 @@
 # @logto/connector-http-email
 
+## 0.4.4
+
+### Patch Changes
+
+- @logto/connector-kit@5.1.1
+
 ## 0.4.3
 
 ### Patch Changes

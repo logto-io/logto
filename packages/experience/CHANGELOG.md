@@ -1,5 +1,30 @@
 # Change Log
 
+## 1.22.0
+
+### Minor Changes
+
+- b64d46d495: unify social callback URI between Sign-in Experience and Account Center
+- 8b2aaab9b0: add dynamic app support (OAuth Client ID Metadata Documents)
+
+  The dynamic app lets compatible public clients, such as MCP clients, connect to your tenant without registering an application. Following the OAuth Client ID Metadata Documents (CIMD) draft, such a client presents a public HTTPS URL as its `client_id`, and Logto fetches the client metadata from that URL.
+
+  Enable it from the dynamic app card in the third-party app section on the create application page in Console. The switch is tenant-level and off by default, and requires the OIDC provider SSRF protection to be active. Control what dynamic app clients can request with the permission settings on the dynamic app page.
+
+### Patch Changes
+
+- 317fa41400: allow users to complete CAPTCHA when switching from passkey to verification code sign-in
+- 7978c638a9: let browsers suggest a strong password when setting a new password
+
+  The sign-in experience keeps a hidden copy of the identifier next to the new password field so password managers can save the credential under the right account. That field carried no `autocomplete` hint and was hidden with the HTML `hidden` attribute, which browsers skip when they look for the username context of a password field. As a result, Safari on iOS and macOS never offered to generate a strong password on the "Set password" step. The field is now marked as the username and hidden visually instead, and it carries the identifier the user actually entered in the current flow, including when resetting a password.
+
+- e6ed7d8be9: remove the unused Experience Springboard route to prevent untrusted redirects
+- c62e043982: validate the URL scheme of the social sign-in redirect target and native callback link
+
+  The social landing page now requires `redirect_to` to be an `http(s)` URL, and accepts a native
+  callback link only when it is a custom app scheme. The callback page re-checks the stored link
+  before handing control back to the native app, and falls back to the web flow otherwise.
+
 ## 1.21.0
 
 ### Minor Changes

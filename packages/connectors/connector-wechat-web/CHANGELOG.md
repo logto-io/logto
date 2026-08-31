@@ -1,5 +1,11 @@
 # @logto/connector-wechat-web
 
+## 1.6.6
+
+### Patch Changes
+
+- @logto/connector-kit@5.1.1
+
 ## 1.6.5
 
 ### Patch Changes

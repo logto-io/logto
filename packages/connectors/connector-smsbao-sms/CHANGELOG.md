@@ -1,5 +1,11 @@
 # @logto/connector-smsbao-sms
 
+## 1.1.2
+
+### Patch Changes
+
+- @logto/connector-kit@5.1.1
+
 ## 1.1.1
 
 ### Patch Changes

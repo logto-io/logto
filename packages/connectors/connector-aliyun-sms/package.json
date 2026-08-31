@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-aliyun-sms",
-  "version": "1.5.5",
+  "version": "1.5.6",
   "description": "Aliyun SMS connector implementation.",
   "dependencies": {
     "@logto/connector-kit": "workspace:^",
