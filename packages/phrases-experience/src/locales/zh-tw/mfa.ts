@@ -64,6 +64,8 @@ const mfa = {
   verify_via_passkey: '通過通行密鑰驗證',
   verify_via_passkey_description:
     '使用通行密鑰通過設備密碼或生物識別、掃描 QR 碼或使用 USB 安全密鑰（如 YubiKey）進行驗證。',
+  trust_this_device_title: '信任此裝置',
+  trust_this_device_description: '日後在此裝置上登入時，可以略過多重要素驗證。',
   trust_this_device_one: '在接下來的 {{count}} 天內信任此裝置',
   trust_this_device_two: '在接下來的 {{count}} 天內信任此裝置',
   trust_this_device_few: '在接下來的 {{count}} 天內信任此裝置',

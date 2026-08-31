@@ -10,6 +10,7 @@ const routes = Object.freeze({
   switchAccount: 'switch-account',
   oneTimeToken: 'one-time-token',
   accountSuspended: 'account-suspended',
+  trustedDevice: 'trusted-device',
 } as const);
 
 export const experience = Object.freeze({

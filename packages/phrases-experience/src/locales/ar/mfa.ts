@@ -68,6 +68,9 @@ const mfa = {
   verify_via_passkey: 'التحقق عبر مفتاح المرور',
   verify_via_passkey_description:
     'استخدم مفتاح المرور للتحقق من خلال كلمة المرور الخاصة بجهازك أو البيومتريات ، أو مسح رمز الاستجابة السريعة ، أو استخدام مفتاح الأمان USB مثل YubiKey.',
+  trust_this_device_title: 'الوثوق بهذا الجهاز',
+  trust_this_device_description:
+    'يمكنك تخطي التحقق متعدد العوامل على هذا الجهاز عند تسجيل الدخول لاحقًا.',
   trust_this_device_one: 'الوثوق بهذا الجهاز لمدة يوم واحد',
   trust_this_device_two: 'الوثوق بهذا الجهاز لمدة يومين',
   trust_this_device_few: 'الوثوق بهذا الجهاز لمدة {{count}} أيام',

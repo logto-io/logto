@@ -64,6 +64,8 @@ const mfa = {
   verify_via_passkey: '通过通行密钥验证',
   verify_via_passkey_description:
     '使用通行密钥通过设备密码或生物识别、扫描 QR 码或使用 USB 安全密钥（如 YubiKey）进行验证。',
+  trust_this_device_title: '信任此设备',
+  trust_this_device_description: '以后在此设备上登录时，可以跳过多重身份验证。',
   trust_this_device_one: '在接下来的 {{count}} 天内信任此设备',
   trust_this_device_two: '在接下来的 {{count}} 天内信任此设备',
   trust_this_device_few: '在接下来的 {{count}} 天内信任此设备',

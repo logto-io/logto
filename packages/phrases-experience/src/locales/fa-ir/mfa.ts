@@ -69,6 +69,9 @@ const mfa = {
   verify_via_passkey: 'تأیید از طریق کلید عبور',
   verify_via_passkey_description:
     'از کلید عبور برای تأیید با رمز عبور دستگاه یا بیومتریک، اسکن کد QR، یا استفاده از کلید امنیتی USB مانند YubiKey استفاده کنید.',
+  trust_this_device_title: 'به این دستگاه اعتماد کنید',
+  trust_this_device_description:
+    'می‌توانید در ورودهای بعدی با این دستگاه از تأیید چندمرحله‌ای صرف‌نظر کنید.',
   trust_this_device_one: 'به این دستگاه برای {{count}} روز اعتماد کنید',
   trust_this_device_two: 'به این دستگاه برای {{count}} روز اعتماد کنید',
   trust_this_device_few: 'به این دستگاه برای {{count}} روز اعتماد کنید',

@@ -67,6 +67,8 @@ const mfa = {
   verify_via_passkey: '패스키로 확인',
   verify_via_passkey_description:
     '디바이스 비밀번호 또는 바이오메트릭스, QR 코드 스캔 또는 YubiKey와 같은 USB 보안 키 사용하여 패스키로 확인하세요.',
+  trust_this_device_title: '이 기기 신뢰하기',
+  trust_this_device_description: '앞으로 이 기기에서 로그인할 때 MFA 인증을 건너뛸 수 있습니다.',
   trust_this_device_one: '이 기기를 {{count}}일 동안 신뢰하기',
   trust_this_device_two: '이 기기를 {{count}}일 동안 신뢰하기',
   trust_this_device_few: '이 기기를 {{count}}일 동안 신뢰하기',

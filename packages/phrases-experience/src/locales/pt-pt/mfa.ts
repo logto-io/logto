@@ -70,6 +70,9 @@ const mfa = {
   verify_via_passkey: 'Verificar através da palavra-passe',
   verify_via_passkey_description:
     'Utilize a palavra-passe para verificar através da senha do seu dispositivo ou biometria, digitalizando o código QR ou utilizando uma chave de segurança USB como a YubiKey.',
+  trust_this_device_title: 'Confiar neste dispositivo',
+  trust_this_device_description:
+    'Pode ignorar a verificação MFA neste dispositivo em futuros inícios de sessão.',
   trust_this_device_one: 'Confiar neste dispositivo durante {{count}} dia',
   trust_this_device_two: 'Confiar neste dispositivo durante {{count}} dias',
   trust_this_device_few: 'Confiar neste dispositivo durante {{count}} dias',

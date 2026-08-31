@@ -88,10 +88,22 @@ export const mfaErrorDataGuard = s.object(mfaErrorDataShape);
 
 export const mfaFlowStateGuard = s.object(mfaErrorDataShape);
 
+export const trustedDeviceOptInErrorDataGuard = s.object({
+  durationDays: s.number(),
+});
+
+export const trustedDeviceOptInStateGuard = s.assign(
+  trustedDeviceOptInErrorDataGuard,
+  s.object({
+    interactionEvent: s.enums([InteractionEvent.SignIn, InteractionEvent.Register]),
+  })
+);
+
 export const parseGuard = <T, S>(value: unknown, struct: s.Struct<T, S>) =>
   s.validate(value, struct, { coerce: true, mask: true })[1];
 
 export type MfaFlowState = s.Infer<typeof mfaFlowStateGuard>;
+export type TrustedDeviceOptInErrorData = s.Infer<typeof trustedDeviceOptInErrorDataGuard>;
 
 export const mfaBindingVerificationCodeStateGuard = s.type({
   flow: s.literal(UserMfaFlow.MfaBinding),

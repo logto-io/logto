@@ -68,6 +68,9 @@ const mfa = {
   verify_via_passkey: 'パスキーで確認',
   verify_via_passkey_description:
     'デバイスのパスワードまたは生体認証、QRコードのスキャン、YubiKeyなどのUSBセキュリティキーを使用してパスキーで確認します。',
+  trust_this_device_title: 'このデバイスを信頼する',
+  trust_this_device_description:
+    '今後このデバイスでサインインする際に、MFA 検証をスキップできます。',
   trust_this_device_one: 'このデバイスを {{count}} 日間信頼する',
   trust_this_device_two: 'このデバイスを {{count}} 日間信頼する',
   trust_this_device_few: 'このデバイスを {{count}} 日間信頼する',

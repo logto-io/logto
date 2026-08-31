@@ -71,6 +71,9 @@ const mfa = {
   verify_via_passkey: 'Über Passkey verifizieren',
   verify_via_passkey_description:
     'Verwenden Sie den Passkey zur Verifizierung durch Ihr Gerätepasswort oder Biometrie, zum Scannen des QR-Codes oder zum Verwenden eines USB-Sicherheitsschlüssels wie YubiKey.',
+  trust_this_device_title: 'Diesem Gerät vertrauen',
+  trust_this_device_description:
+    'Bei zukünftigen Anmeldungen auf diesem Gerät können Sie die MFA-Verifizierung überspringen.',
   trust_this_device_one: 'Diesem Gerät {{count}} Tag lang vertrauen',
   trust_this_device_two: 'Diesem Gerät {{count}} Tage lang vertrauen',
   trust_this_device_few: 'Diesem Gerät {{count}} Tage lang vertrauen',
