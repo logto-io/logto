@@ -1,6 +1,6 @@
-import { ConnectorType, SignInIdentifier } from '@logto/schemas';
+import { ConnectorType, MfaFactor, SignInIdentifier } from '@logto/schemas';
 
-import { deleteUser } from '#src/api/admin-user.js';
+import { createUserMfaVerification, deleteUser } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { demoAppUrl } from '#src/constants.js';
 import { clearConnectorsByTypes } from '#src/helpers/connector.js';
@@ -11,7 +11,7 @@ import {
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
 import ExpectTotpExperience from '#src/ui-helpers/expect-totp-experience.js';
-import { generateUsername } from '#src/utils.js';
+import { devFeatureTest, generateUsername } from '#src/utils.js';
 
 import TotpTestingContext from './totp-testing-context.js';
 
@@ -108,6 +108,75 @@ describe('MFA - TOTP', () => {
 
       // Clean up
       await deleteUser(user.id);
+    });
+
+    devFeatureTest.describe('trusted device opt-in', () => {
+      beforeAll(async () => {
+        await updateSignInExperience({ trustedDevice: { enabled: true, durationDays: 365 } });
+      });
+
+      afterAll(async () => {
+        await updateSignInExperience({ trustedDevice: { enabled: false } });
+      });
+
+      it('creates a trusted device from TOTP binding and skips MFA on the next sign-in', async () => {
+        const { userProfile, user } = await generateNewUser({ username: true, password: true });
+        const experience = new ExpectTotpExperience(await browser.newPage());
+
+        await experience.startWith(demoAppUrl, 'sign-in');
+        await experience.toFillForm(
+          { identifier: userProfile.username, password: userProfile.password },
+          { submit: true }
+        );
+        await experience.waitToBeAt(`mfa-binding/${MfaFactor.TOTP}`);
+        await experience.toBindTotp(false);
+        await experience.toOptInTrustedDevice();
+        await experience.verifyThenEnd(false);
+        await experience.clearDemoAppSession();
+        await experience.page.close();
+        const trustedDeviceExperience = new ExpectTotpExperience(await browser.newPage());
+
+        await trustedDeviceExperience.startWith(demoAppUrl, 'sign-in');
+        await trustedDeviceExperience.toFillForm(
+          { identifier: userProfile.username, password: userProfile.password },
+          { submit: true }
+        );
+        await trustedDeviceExperience.verifyThenEnd();
+
+        await deleteUser(user.id);
+      });
+
+      it('creates a trusted device from TOTP verification and skips MFA on the next sign-in', async () => {
+        const { userProfile, user } = await generateNewUser({ username: true, password: true });
+        const verification = await createUserMfaVerification(user.id, MfaFactor.TOTP);
+
+        if (verification.type !== MfaFactor.TOTP) {
+          throw new Error('unexpected MFA verification type');
+        }
+
+        const experience = new ExpectTotpExperience(await browser.newPage());
+        await experience.startWith(demoAppUrl, 'sign-in');
+        await experience.toFillForm(
+          { identifier: userProfile.username, password: userProfile.password },
+          { submit: true }
+        );
+        await experience.waitToBeAt(`mfa-verification/${MfaFactor.TOTP}`);
+        await experience.toVerifyTotp(verification.secret, false);
+        await experience.toOptInTrustedDevice();
+        await experience.verifyThenEnd(false);
+        await experience.clearDemoAppSession();
+        await experience.page.close();
+        const trustedDeviceExperience = new ExpectTotpExperience(await browser.newPage());
+
+        await trustedDeviceExperience.startWith(demoAppUrl, 'sign-in');
+        await trustedDeviceExperience.toFillForm(
+          { identifier: userProfile.username, password: userProfile.password },
+          { submit: true }
+        );
+        await trustedDeviceExperience.verifyThenEnd();
+
+        await deleteUser(user.id);
+      });
     });
   });
 
