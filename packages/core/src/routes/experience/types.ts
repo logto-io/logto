@@ -198,9 +198,14 @@ export type WithHooksAndLogsContext<ContextT extends WithLogContext = WithLogCon
 export type InteractionStorage = {
   interactionEvent: InteractionEvent;
   userId?: string;
-  trustedDeviceCreation?: {
-    deviceId: string;
-  };
+  trustedDeviceOptIn?:
+    | {
+        trusted: false;
+      }
+    | {
+        trusted: true;
+        deviceId: string;
+      };
   profile?: InteractionProfile;
   mfa?: MfaData;
   verificationRecords?: VerificationRecordData[];
@@ -214,10 +219,14 @@ export type InteractionStorage = {
 export const interactionStorageGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent),
   userId: z.string().optional(),
-  trustedDeviceCreation: z
-    .object({
-      deviceId: TrustedDevices.guard.shape.id,
-    })
+  trustedDeviceOptIn: z
+    .discriminatedUnion('trusted', [
+      z.object({ trusted: z.literal(false) }),
+      z.object({
+        trusted: z.literal(true),
+        deviceId: TrustedDevices.guard.shape.id,
+      }),
+    ])
     .optional(),
   profile: interactionProfileGuard.optional(),
   mfa: mfaDataGuard.optional(),

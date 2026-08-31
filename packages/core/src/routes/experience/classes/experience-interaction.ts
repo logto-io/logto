@@ -69,7 +69,7 @@ export default class ExperienceInteraction {
   readonly profile: Profile;
   /** The user linked MFA data in the current interaction that needs to be stored to database. */
   readonly mfa: Mfa;
-  /** Persisted creation intent and request-local trusted-device MFA verification lifecycle. */
+  /** Persisted opt-in decision and request-local trusted-device MFA verification lifecycle. */
   readonly trustedDevice: TrustedDevice;
 
   /** The user verification record list for the current interaction. */
@@ -148,7 +148,7 @@ export default class ExperienceInteraction {
       profile = {},
       mfa = {},
       userId,
-      trustedDeviceCreation,
+      trustedDeviceOptIn,
       interactionEvent,
       captcha = {
         verified: false,
@@ -161,7 +161,7 @@ export default class ExperienceInteraction {
     this.profile = new Profile(libraries, queries, profile, interactionContext);
     this.mfa = new Mfa(libraries, queries, mfa, interactionContext);
     this.trustedDevice = new TrustedDevice(ctx, tenant, {
-      trustedDeviceCreation,
+      trustedDeviceOptIn,
     });
     this.captcha = captcha;
     for (const record of verificationRecords) {
@@ -433,13 +433,15 @@ export default class ExperienceInteraction {
     await this.getIdentifiedUser();
   }
 
-  /** Record an explicit trusted-device opt-in after validating eligible MFA proof. */
-  public async requestTrustedDeviceCreation() {
+  /** Record an explicit trusted-device decision after validating eligible MFA proof. */
+  public async setTrustedDeviceOptInDecision(trusted: boolean) {
     const user = await this.getIdentifiedUser();
-    await this.trustedDevice.requestCreation(
-      user.id,
-      await this.hasEligibleTrustedDeviceProof(user)
-    );
+    await this.trustedDevice.setOptInDecision({
+      trusted,
+      interactionEvent: this.#interactionEvent,
+      userId: user.id,
+      hasEligibleMfaProof: trusted && (await this.hasEligibleTrustedDeviceProof(user)),
+    });
   }
 
   /**
@@ -566,6 +568,12 @@ export default class ExperienceInteraction {
       await this.mfa.assertMfaFulfilled();
     }
 
+    await this.trustedDevice.assertOptInDecision({
+      interactionEvent: this.#interactionEvent,
+      userId: user.id,
+      getHasEligibleMfaProof: async () => this.hasEligibleTrustedDeviceProof(user),
+    });
+
     const {
       socialIdentity,
       enterpriseSsoIdentity,
@@ -659,10 +667,10 @@ export default class ExperienceInteraction {
     await this.triggerPostSignInAction(user.id);
 
     const { provider } = this.tenant;
-    // Do not persist a fulfilled creation intent in the final interaction result. A failed
-    // interactionResult call leaves the previously stored intent available for a retry, while a
-    // successful call makes subsequent submits a no-op for trusted-device creation.
-    const trustedDeviceCreation = this.trustedDevice.consumeCreationRequest();
+    // Do not persist a fulfilled opt-in decision in the final interaction result. A failed
+    // interactionResult call leaves the previously stored decision available for a retry, while a
+    // successful call makes subsequent submits a no-op for trusted-device finalization.
+    const trustedDeviceOptInDecision = this.trustedDevice.consumeOptInDecision();
 
     const redirectTo = await provider.interactionResult(this.ctx.req, this.ctx.res, {
       login: { accountId: user.id },
@@ -674,11 +682,11 @@ export default class ExperienceInteraction {
     // turn a successful sign-in into an error.
     await trySafe(
       async () => {
-        const hasEligibleMfaProof = trustedDeviceCreation
+        const hasEligibleMfaProof = trustedDeviceOptInDecision?.trusted
           ? await this.hasEligibleTrustedDeviceProof(updatedUser)
           : false;
         await this.trustedDevice.finalize({
-          creation: trustedDeviceCreation,
+          optInDecision: trustedDeviceOptInDecision,
           interactionEvent: this.#interactionEvent,
           userId: user.id,
           hasEligibleMfaProof,
@@ -735,8 +743,8 @@ export default class ExperienceInteraction {
   }
 
   public toSanitizedJson(): SanitizedInteractionStorageData {
-    // Trusted-device creation intent is internal authentication state.
-    const { trustedDeviceCreation: _, ...interactionStorage } = this.toJson();
+    // The trusted-device opt-in decision is internal authentication state.
+    const { trustedDeviceOptIn: _, ...interactionStorage } = this.toJson();
 
     return {
       ...interactionStorage,

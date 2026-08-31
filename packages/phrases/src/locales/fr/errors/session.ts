@@ -51,6 +51,7 @@ const session = {
     suggest_additional_mfa:
       'Pour une meilleure protection, ajoutez une autre méthode MFA. Vous pouvez ignorer cette étape et continuer.',
   },
+  trusted_device_suggest_opt_in: 'Choisissez si vous souhaitez faire confiance à cet appareil.',
   passkey_sign_in: {
     pending_info_not_found:
       'Impossible de trouver les informations de connexion par passkey en attente. Veuillez relancer le flux de connexion.',

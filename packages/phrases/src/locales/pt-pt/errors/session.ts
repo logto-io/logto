@@ -50,6 +50,7 @@ const session = {
     suggest_additional_mfa:
       'Para maior proteção, considere adicionar outro método de MFA. Pode ignorar este passo e continuar.',
   },
+  trusted_device_suggest_opt_in: 'Escolha se pretende confiar neste dispositivo.',
   passkey_sign_in: {
     pending_info_not_found:
       'Não foi possível encontrar as informações pendentes de início de sessão com passkey. Volte a iniciar o fluxo de início de sessão.',

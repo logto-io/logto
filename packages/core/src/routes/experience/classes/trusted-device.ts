@@ -16,7 +16,19 @@ import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
 import { type InteractionStorage, type WithHooksAndLogsContext } from '../types.js';
 
-type TrustedDeviceData = Pick<InteractionStorage, 'trustedDeviceCreation'>;
+type TrustedDeviceData = Pick<InteractionStorage, 'trustedDeviceOptIn'>;
+type OptInDecisionContext = {
+  interactionEvent: InteractionEvent;
+  userId: string;
+};
+
+type AssertOptInDecisionOptions = OptInDecisionContext & {
+  getHasEligibleMfaProof: () => Promise<boolean>;
+};
+
+type OptInDecisionOptions = OptInDecisionContext & {
+  hasEligibleMfaProof: boolean;
+};
 
 const buildTrustedDeviceUsageLogId = (tenantId: string, interactionId: string) =>
   createHash('sha256')
@@ -25,7 +37,7 @@ const buildTrustedDeviceUsageLogId = (tenantId: string, interactionId: string) =
     .slice(0, 21);
 
 type FinalizeOptions = {
-  creation?: InteractionStorage['trustedDeviceCreation'];
+  optInDecision?: InteractionStorage['trustedDeviceOptIn'];
   interactionEvent: InteractionEvent;
   userId: string;
   hasEligibleMfaProof: boolean;
@@ -40,10 +52,10 @@ type FinalizeOptions = {
 };
 
 /**
- * Coordinates persisted creation intent and the request-local trusted-device credential lifecycle.
+ * Coordinates the persisted opt-in decision and request-local trusted-device credential lifecycle.
  */
 export class TrustedDevice {
-  #creation?: InteractionStorage['trustedDeviceCreation'];
+  #optIn?: InteractionStorage['trustedDeviceOptIn'];
   #validatedDeviceId?: string;
   #effectivePolicy?: {
     userId: string;
@@ -55,16 +67,87 @@ export class TrustedDevice {
     private readonly tenant: TenantContext,
     data: TrustedDeviceData
   ) {
-    this.#creation = data.trustedDeviceCreation;
+    this.#optIn = data.trustedDeviceOptIn;
   }
 
   get data(): TrustedDeviceData {
     return {
-      ...conditional(this.#creation && { trustedDeviceCreation: this.#creation }),
+      ...conditional(this.#optIn && { trustedDeviceOptIn: this.#optIn }),
     };
   }
 
-  async requestCreation(userId: string, hasEligibleMfaProof: boolean) {
+  async assertOptInDecision({
+    interactionEvent,
+    userId,
+    getHasEligibleMfaProof,
+  }: AssertOptInDecisionOptions) {
+    if (
+      !EnvSet.values.isDevFeaturesEnabled ||
+      interactionEvent === InteractionEvent.ForgotPassword ||
+      this.#optIn
+    ) {
+      return;
+    }
+
+    if (this.tenant.libraries.trustedDevices.hasOptOut(this.ctx, userId)) {
+      return;
+    }
+
+    if (!(await getHasEligibleMfaProof())) {
+      return;
+    }
+
+    const policy = await trySafe(
+      async () => this.#getEffectivePolicy(userId),
+      (error) => {
+        void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
+      }
+    );
+
+    if (!policy?.enabled) {
+      return;
+    }
+
+    throw new RequestError(
+      { code: 'session.trusted_device_suggest_opt_in', status: 422 },
+      { durationDays: policy.durationDays }
+    );
+  }
+
+  async setOptInDecision({
+    trusted,
+    interactionEvent,
+    userId,
+    hasEligibleMfaProof,
+  }: OptInDecisionOptions & { trusted: boolean }) {
+    // Trusted-device opt-in is under development and must remain isolated from released flows.
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return;
+    }
+
+    assertThat(
+      interactionEvent !== InteractionEvent.ForgotPassword,
+      new RequestError({ code: 'session.not_supported_for_forgot_password', status: 400 })
+    );
+
+    if (!trusted) {
+      this.#optIn = { trusted: false };
+
+      await trySafe(
+        async () => {
+          const policy = await this.#getEffectivePolicy(userId);
+
+          if (policy.enabled) {
+            this.tenant.libraries.trustedDevices.writeOptOut(this.ctx, userId, policy.durationDays);
+          }
+        },
+        (error) => {
+          void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
+        }
+      );
+      return;
+    }
+
     assertThat(
       hasEligibleMfaProof,
       new RequestError({ code: 'session.mfa.require_mfa_verification', status: 403 })
@@ -76,15 +159,18 @@ export class TrustedDevice {
       return;
     }
 
-    this.#creation ||= { deviceId: generateStandardId() };
+    this.#optIn = {
+      trusted: true,
+      deviceId: this.#optIn?.trusted ? this.#optIn.deviceId : generateStandardId(),
+    };
   }
 
-  consumeCreationRequest() {
-    const creation = this.#creation;
+  consumeOptInDecision() {
+    const decision = this.#optIn;
 
-    this.#creation = undefined;
+    this.#optIn = undefined;
 
-    return creation;
+    return decision;
   }
 
   /**
@@ -125,7 +211,7 @@ export class TrustedDevice {
   }
 
   async finalize({
-    creation,
+    optInDecision,
     interactionEvent,
     userId,
     hasEligibleMfaProof,
@@ -154,7 +240,7 @@ export class TrustedDevice {
           return;
         }
 
-        await this.#finalizeCreation(creation, hasEligibleMfaProof, userId, metadata);
+        await this.#finalizeCreation(optInDecision, hasEligibleMfaProof, userId, metadata);
       },
       (error) => {
         void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
@@ -188,18 +274,18 @@ export class TrustedDevice {
   }
 
   async #finalizeCreation(
-    creation: InteractionStorage['trustedDeviceCreation'],
+    optInDecision: InteractionStorage['trustedDeviceOptIn'] | undefined,
     hasEligibleMfaProof: boolean,
     userId: string,
     metadata: TrustedDeviceMetadata
   ) {
-    if (!creation || !hasEligibleMfaProof) {
+    if (!optInDecision?.trusted || !hasEligibleMfaProof) {
       return;
     }
 
     const trustedDevice = await this.tenant.libraries.trustedDevices.createCredential({
       ctx: this.ctx,
-      deviceId: creation.deviceId,
+      deviceId: optInDecision.deviceId,
       effectivePolicy: await this.#getEffectivePolicy(userId),
       userId,
       ...metadata,

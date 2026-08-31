@@ -162,21 +162,34 @@
         }
       }
     },
-    "/api/experience/profile/mfa/trusted-device": {
+    "/api/experience/profile/trusted-device": {
       "post": {
-        "operationId": "RequestTrustedDeviceCreation",
-        "summary": "Request trusted device creation",
-        "description": "Record the user's explicit opt-in to trust the current device after eligible MFA verification or binding. The trusted-device credential is created only after the interaction is successfully submitted.",
+        "operationId": "SetTrustedDeviceOptInDecision",
+        "summary": "Set trusted device opt-in decision",
+        "description": "Record whether the user trusts the current device after eligible MFA verification or binding. A trusted-device credential is created only after the interaction is successfully submitted.",
         "tags": ["Dev feature"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "trusted": {
+                    "description": "Whether to trust the current device."
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "204": {
-            "description": "The trusted-device creation request has been recorded for the current interaction."
+            "description": "The trusted-device opt-in decision has been recorded for the current interaction."
           },
           "400": {
-            "description": "Trusted-device creation is not supported for the current interaction event."
+            "description": "The decision payload is invalid, or trusted-device opt-in is not supported for the current interaction event."
           },
           "403": {
-            "description": "An eligible MFA verification or binding is required before requesting trusted-device creation."
+            "description": "An eligible MFA verification or binding is required before accepting the trusted-device opt-in."
           },
           "404": {
             "description": "The user has not been identified yet."

@@ -12,6 +12,7 @@ import {
   createTrustedDeviceLibrary,
   generateTrustedDeviceSecret,
   getTrustedDeviceCookieName,
+  getTrustedDeviceOptOutCookieName,
   hashTrustedDeviceSecret,
   parseTrustedDeviceCredential,
   serializeTrustedDeviceCredential,
@@ -70,6 +71,14 @@ describe('trusted device credential helpers', () => {
     expect(developmentName).not.toContain(userId);
     expect(productionName).toBe(`__Host-${developmentName}`);
     expect(getTrustedDeviceCookieName(tenantId, 'another-user', false)).not.toBe(developmentName);
+
+    const optOutName = getTrustedDeviceOptOutCookieName(tenantId, userId, false);
+
+    expect(optOutName).toMatch(/^logto-device-trust-opt-out-[\w-]{43}$/);
+    expect(optOutName).not.toContain('logto-trusted-device-');
+    expect(optOutName).not.toBe(developmentName);
+    expect(getTrustedDeviceOptOutCookieName(tenantId, userId, true)).toBe(`__Host-${optOutName}`);
+    expect(getTrustedDeviceOptOutCookieName('another-tenant', userId, false)).not.toBe(optOutName);
   });
 
   it('generates 32-byte secrets and hashes their decoded bytes with SHA-256', () => {
@@ -123,6 +132,45 @@ describe('trusted device library', () => {
     const { ctx: emptyContext } = createCookieContext();
 
     expect(library.hasCredential(emptyContext, userId)).toBe(false);
+  });
+
+  it('reads and writes a policy-duration opt-out cookie', () => {
+    const now = Date.now();
+    const durationDays = 7;
+    const expiresAt = now + durationDays * 24 * 60 * 60 * 1000;
+    const queries = createQueries();
+    const { ctx, get, set } = createCookieContext('1');
+    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(), {
+      isProduction: true,
+    });
+
+    jest.spyOn(Date, 'now').mockReturnValue(now);
+
+    expect(library.hasOptOut(ctx, userId)).toBe(true);
+    expect(get).toHaveBeenCalledWith(getTrustedDeviceOptOutCookieName(tenantId, userId, true), {
+      signed: false,
+    });
+
+    library.writeOptOut(ctx, userId, durationDays);
+
+    expect(set).toHaveBeenCalledWith(
+      getTrustedDeviceOptOutCookieName(tenantId, userId, true),
+      '1',
+      {
+        expires: new Date(expiresAt),
+        httpOnly: true,
+        maxAge: expiresAt - now,
+        overwrite: true,
+        path: '/',
+        sameSite: 'lax',
+        secure: true,
+        signed: false,
+      }
+    );
+
+    const { ctx: otherValueContext } = createCookieContext('true');
+
+    expect(library.hasOptOut(otherValueContext, userId)).toBe(false);
   });
 
   it('creates a record with only the secret hash and writes an unsigned host-only cookie', async () => {

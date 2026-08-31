@@ -46,6 +46,7 @@ const session = {
     suggest_additional_mfa:
       'より強力な保護のため、別のMFA方法の追加を検討してください。この手順はスキップして続行できます。',
   },
+  trusted_device_suggest_opt_in: 'このデバイスを信頼するか選択してください。',
   passkey_sign_in: {
     pending_info_not_found:
       '保留中のパスキーサインイン情報が見つかりません。サインインフローを再開始してください。',

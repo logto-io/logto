@@ -21,6 +21,8 @@ import type {
 const trustedDeviceSecretByteLength = 32;
 const trustedDeviceSecretHashAlgorithm = 'sha256';
 const trustedDeviceCookiePrefix = 'logto-trusted-device-';
+const trustedDeviceOptOutCookiePrefix = 'logto-device-trust-opt-out-';
+const trustedDeviceOptOutCookieValue = '1';
 const trustedDeviceCleanupCooldown = 5 * 60 * 1000;
 const dayInMilliseconds = 24 * 60 * 60 * 1000;
 const trustedDeviceIdPattern = /^[\da-z]+$/;
@@ -57,7 +59,8 @@ export const getTrustedDeviceEventData = ({
   expiresAt,
 }: TrustedDevice): TrustedDeviceEventData => ({ id, userId, expiresAt });
 
-export const getTrustedDeviceCookieName = (
+const getUserScopedCookieName = (
+  prefix: string,
   tenantId: string,
   userId: string,
   isProduction: boolean
@@ -65,10 +68,22 @@ export const getTrustedDeviceCookieName = (
   const subjectHash = createHash(trustedDeviceSecretHashAlgorithm)
     .update(`${tenantId}:${userId}`)
     .digest('base64url');
-  const name = `${trustedDeviceCookiePrefix}${subjectHash}`;
+  const name = `${prefix}${subjectHash}`;
 
   return isProduction ? `__Host-${name}` : name;
 };
+
+export const getTrustedDeviceCookieName = (
+  tenantId: string,
+  userId: string,
+  isProduction: boolean
+) => getUserScopedCookieName(trustedDeviceCookiePrefix, tenantId, userId, isProduction);
+
+export const getTrustedDeviceOptOutCookieName = (
+  tenantId: string,
+  userId: string,
+  isProduction: boolean
+) => getUserScopedCookieName(trustedDeviceOptOutCookiePrefix, tenantId, userId, isProduction);
 
 export const generateTrustedDeviceSecret = () =>
   randomBytes(trustedDeviceSecretByteLength).toString('base64url');
@@ -150,9 +165,15 @@ export const createTrustedDeviceLibrary = (
 
   const getCookieName = (userId: string) =>
     getTrustedDeviceCookieName(tenantId, userId, isProduction);
+  const getOptOutCookieName = (userId: string) =>
+    getTrustedDeviceOptOutCookieName(tenantId, userId, isProduction);
 
   const hasCredential = (ctx: TrustedDeviceCookieContext, userId: string) =>
     Boolean(ctx.cookies.get(getCookieName(userId), { signed: false }));
+
+  const hasOptOut = (ctx: TrustedDeviceCookieContext, userId: string) =>
+    ctx.cookies.get(getOptOutCookieName(userId), { signed: false }) ===
+    trustedDeviceOptOutCookieValue;
 
   const clearCredential = (ctx: TrustedDeviceCookieContext, userId: string) => {
     ctx.cookies.set(getCookieName(userId), '', {
@@ -174,6 +195,21 @@ export const createTrustedDeviceLibrary = (
     expiresAt: number
   ) => {
     ctx.cookies.set(getCookieName(userId), serializeTrustedDeviceCredential(credential), {
+      expires: new Date(expiresAt),
+      httpOnly: true,
+      maxAge: Math.max(0, expiresAt - Date.now()),
+      overwrite: true,
+      path: '/',
+      sameSite: 'lax',
+      secure: isProduction,
+      signed: false,
+    });
+  };
+
+  const writeOptOut = (ctx: TrustedDeviceCookieContext, userId: string, durationDays: number) => {
+    const expiresAt = Date.now() + durationDays * dayInMilliseconds;
+
+    ctx.cookies.set(getOptOutCookieName(userId), trustedDeviceOptOutCookieValue, {
       expires: new Date(expiresAt),
       httpOnly: true,
       maxAge: Math.max(0, expiresAt - Date.now()),
@@ -316,8 +352,10 @@ export const createTrustedDeviceLibrary = (
     deleteByIdAndUserId,
     getCookieName,
     hasCredential,
+    hasOptOut,
     updateMetadata,
     validateCredential,
     writeCredential,
+    writeOptOut,
   };
 };

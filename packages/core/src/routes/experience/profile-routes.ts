@@ -275,13 +275,17 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
   // Trusted-device opt-in is under development. Keep the route out of released API surfaces.
   if (EnvSet.values.isDevFeaturesEnabled) {
     router.post(
-      `${experienceRoutes.mfa}/trusted-device`,
-      koaGuard({ status: [204, 400, 403, 404] }),
+      `${experienceRoutes.profile}/trusted-device`,
+      koaGuard({
+        body: z.object({ trusted: z.boolean() }),
+        status: [204, 400, 403, 404],
+      }),
       verifiedInteractionGuard(),
       async (ctx, next) => {
         const { experienceInteraction } = ctx;
+        const { trusted } = ctx.guard.body;
 
-        await experienceInteraction.requestTrustedDeviceCreation();
+        await experienceInteraction.setTrustedDeviceOptInDecision(trusted);
         await experienceInteraction.save();
 
         ctx.status = 204;
