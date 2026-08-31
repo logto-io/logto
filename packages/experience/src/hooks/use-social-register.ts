@@ -1,18 +1,18 @@
-import { AgreeToTermsPolicy, experience, InteractionEvent } from '@logto/schemas';
+import { AgreeToTermsPolicy, InteractionEvent } from '@logto/schemas';
 import { useCallback } from 'react';
 
 import { registerWithVerifiedIdentifier } from '@/apis/experience';
-import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 
 import useApi from './use-api';
 import useErrorHandler from './use-error-handler';
 import useGlobalRedirectTo from './use-global-redirect-to';
+import useNavigateToSignIn from './use-navigate-to-sign-in';
 import useSubmitInteractionErrorHandler from './use-submit-interaction-error-handler';
 import useTerms from './use-terms';
 
 type Options = {
   readonly replace?: boolean;
-  readonly onEmailBlocked?: () => void;
+  readonly onEmailBlocked?: (errorCode: string) => void;
 };
 
 const useSocialRegister = (connectorId: string, { replace, onEmailBlocked }: Options = {}) => {
@@ -20,7 +20,7 @@ const useSocialRegister = (connectorId: string, { replace, onEmailBlocked }: Opt
   const asyncRegisterWithSocial = useApi(registerWithVerifiedIdentifier);
   const redirectTo = useGlobalRedirectTo();
   const { termsValidation, agreeToTermsPolicy } = useTerms();
-  const navigate = useNavigateWithPreservedSearchParams();
+  const navigateToSignIn = useNavigateToSignIn();
 
   const preRegisterErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.Register, {
     linkSocial: connectorId,
@@ -36,7 +36,7 @@ const useSocialRegister = (connectorId: string, { replace, onEmailBlocked }: Opt
        * Therefore, skip the check for `Manual` policy.
        */
       if (agreeToTermsPolicy !== AgreeToTermsPolicy.Manual && !(await termsValidation())) {
-        navigate('/' + experience.routes.signIn);
+        navigateToSignIn();
         return;
       }
 
@@ -56,7 +56,7 @@ const useSocialRegister = (connectorId: string, { replace, onEmailBlocked }: Opt
       agreeToTermsPolicy,
       asyncRegisterWithSocial,
       handleError,
-      navigate,
+      navigateToSignIn,
       preRegisterErrorHandler,
       redirectTo,
       termsValidation,

@@ -119,6 +119,34 @@
         }
       }
     },
+    "/api/experience/abort": {
+      "post": {
+        "operationId": "AbortInteraction",
+        "summary": "Abort interaction",
+        "description": "Finish the current interaction with an `access_denied` OAuth error and return the URL that resumes the OIDC flow, which redirects the user agent back to the client's redirect URI with the error attached. Intended for flows where the client application owns the sign-in UI (e.g. direct sign-in) and errors should surface there instead of on the hosted experience.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "reason": {
+                    "description": "Optional human-readable reason, forwarded to the client as the `error_description` parameter. Must be at most 256 characters and only contain the characters RFC 6749 allows for `error_description` (printable ASCII except `\"` and `\\`)."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The interaction has been aborted. The response contains the URL to redirect the user agent to."
+          },
+          "400": {
+            "description": "The request body is invalid (e.g. `reason` contains characters outside the allowed set), or the interaction session is not found or is in an invalid state."
+          }
+        }
+      }
+    },
     "/api/experience/interaction": {
       "get": {
         "operationId": "GetInteraction",

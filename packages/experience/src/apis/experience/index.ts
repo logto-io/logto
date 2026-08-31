@@ -24,6 +24,7 @@ export {
   submitInteraction,
   identifyUser,
   identifyAndSubmitInteraction,
+  abortInteraction,
 } from './interaction';
 
 export * from './avatar';

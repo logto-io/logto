@@ -32,6 +32,11 @@ const whiteListedEndpoint = [
     method: 'POST',
     path: `${experienceRoutes.prefix}/preflight/sign-in-passkey/authentication`,
   },
+  // POST /experience/abort:  Finish the interaction with an OAuth error; works regardless of the interaction storage state.
+  {
+    method: 'POST',
+    path: experienceRoutes.abort,
+  },
 ];
 
 /**

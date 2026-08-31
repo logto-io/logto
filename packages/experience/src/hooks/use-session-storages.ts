@@ -18,10 +18,12 @@ export enum StorageKeys {
   IdentifierInputValue = 'identifier-input-value',
   ForgotPasswordIdentifierInputValue = 'forgot-password-identifier-input-value',
   verificationIds = 'verification-ids',
+  DirectSignIn = 'direct-sign-in',
 }
 
 const valueGuard = Object.freeze({
   [StorageKeys.SsoEmail]: s.string(),
+  [StorageKeys.DirectSignIn]: s.string(),
   [StorageKeys.SsoConnectors]: s.array(ssoConnectorMetadataGuard),
   [StorageKeys.IdentifierInputValue]: identifierInputValueGuard,
   [StorageKeys.ForgotPasswordIdentifierInputValue]: identifierInputValueGuard,
