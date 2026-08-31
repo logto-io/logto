@@ -29,11 +29,13 @@ import { getConsoleLogFromContext } from '#src/utils/console.js';
  * and normalizing more merges accounts the lookup keeps apart, so failed attempts against one lock
  * out another.
  *
- * The phone branch knowingly errs toward merging. `findUserByNormalizedPhone` matches both the
- * international and the leading-zero form but then disambiguates on the raw input, so a tenant
- * holding legacy rows for both forms has two accounts that share one bucket here. Creating such a
- * pair is already blocked by `hasUserWithNormalizedPhone`, and the alternative — keying on the raw
- * value — reopens the bypass for every phone identifier.
+ * The phone branch looks like it could merge two accounts, because `findUserByNormalizedPhone`
+ * matches both the international and the leading-zero form but then disambiguates on the raw input.
+ * It cannot: sharing a bucket needs both rows to canonicalize identically, which needs both to
+ * parse, and a leading-zero form that parses is normalized to its canonical spelling on write, so
+ * it never becomes a second row. One that does not parse falls through to the raw value here and
+ * keeps its own bucket. The two conditions are mutually exclusive, so canonicalizing costs nothing
+ * here, while keying on the raw value would reopen the bypass for every phone identifier.
  */
 const resolveLockoutTarget = async (
   queries: Queries,
