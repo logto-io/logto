@@ -5,6 +5,7 @@ import useToast from '@/hooks/use-toast';
 import { SearchParameters } from '@/types';
 import { getSearchParameters } from '@/utils';
 import { storeCallbackLink } from '@/utils/social-connectors';
+import { isValidNativeCallbackLink, isValidWebRedirectUri } from '@/utils/url-scheme';
 
 const useSocialLandingHandler = () => {
   const [loading, setLoading] = useState(true);
@@ -16,7 +17,7 @@ const useSocialLandingHandler = () => {
     (connectorId: string) => {
       const redirectUri = getSearchParameters(search, SearchParameters.RedirectTo);
 
-      if (!redirectUri) {
+      if (!redirectUri || !isValidWebRedirectUri(redirectUri)) {
         setLoading(false);
         setToast(t('error.invalid_connector_request'));
 
@@ -25,7 +26,8 @@ const useSocialLandingHandler = () => {
 
       const nativeCallbackLink = getSearchParameters(search, SearchParameters.NativeCallbackLink);
 
-      if (nativeCallbackLink) {
+      // Drop an invalid link rather than aborting: the web flow below still completes without it.
+      if (nativeCallbackLink && isValidNativeCallbackLink(nativeCallbackLink)) {
         storeCallbackLink(connectorId, nativeCallbackLink);
       }
 
