@@ -28,8 +28,7 @@ import useSignInWithExistIdentifierConfirmModal from './use-sign-in-with-exist-i
 const useContinueFlowCodeVerification = (
   identifier: VerificationCodeIdentifier,
   verificationId: string,
-  errorCallback?: () => void,
-  createTrustedDevice = false
+  errorCallback?: () => void
 ) => {
   const [searchParameters] = useSearchParams();
   const redirectTo = useGlobalRedirectTo();
@@ -144,12 +143,7 @@ const useContinueFlowCodeVerification = (
           return;
         }
 
-        const [bindError, bindResult] = await asyncBindMfa(
-          factor,
-          verificationId,
-          undefined,
-          createTrustedDevice
-        );
+        const [bindError, bindResult] = await asyncBindMfa(factor, verificationId);
 
         if (bindError) {
           await handleError(bindError, submitInteractionErrorHandler);
@@ -187,7 +181,6 @@ const useContinueFlowCodeVerification = (
     },
     [
       asyncBindMfa,
-      createTrustedDevice,
       errorCallback,
       handleError,
       identifier,

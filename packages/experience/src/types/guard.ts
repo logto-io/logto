@@ -74,11 +74,6 @@ const mfaFactorEnumValues = [
   MfaFactor.PhoneVerificationCode,
 ] as const;
 
-const trustedDeviceAvailabilityGuard = s.object({
-  canCreate: s.boolean(),
-  durationDays: s.optional(s.number()),
-});
-
 const mfaErrorDataShape = {
   availableFactors: mfaFactorsGuard,
   skippable: s.optional(s.boolean()),
@@ -87,7 +82,6 @@ const mfaErrorDataShape = {
   suggestion: s.optional(s.boolean()),
   // Whether the current WebAuthn factor is used as a sign-in passkey.
   isWebAuthnUsedAsSignInPasskey: s.optional(s.boolean()),
-  trustedDevice: s.optional(trustedDeviceAvailabilityGuard),
 };
 
 export const mfaErrorDataGuard = s.object(mfaErrorDataShape);
@@ -98,7 +92,6 @@ export const parseGuard = <T, S>(value: unknown, struct: s.Struct<T, S>) =>
   s.validate(value, struct, { coerce: true, mask: true })[1];
 
 export type MfaFlowState = s.Infer<typeof mfaFlowStateGuard>;
-export type TrustedDeviceAvailability = s.Infer<typeof trustedDeviceAvailabilityGuard>;
 
 export const mfaBindingVerificationCodeStateGuard = s.type({
   flow: s.literal(UserMfaFlow.MfaBinding),

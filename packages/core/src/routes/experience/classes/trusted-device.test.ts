@@ -1,9 +1,5 @@
 import { appInsights } from '@logto/app-insights/node';
-import {
-  InteractionEvent,
-  type OrganizationWithRoles,
-  type TrustedDevice as TrustedDeviceModel,
-} from '@logto/schemas';
+import { InteractionEvent, type TrustedDevice as TrustedDeviceModel } from '@logto/schemas';
 
 import { createMockTrustedDevice } from '#src/__mocks__/trusted-device.js';
 import { EnvSet } from '#src/env-set/index.js';
@@ -96,15 +92,12 @@ describe('Experience trusted-device lifecycle events', () => {
     jest.restoreAllMocks();
   });
 
-  it('memoizes effective policy across availability and creation finalization', async () => {
+  it('memoizes effective policy across creation request and finalization', async () => {
     const creation = createSubject({ data: {}, createResult: trustedDevice });
 
-    await expect(creation.subject.getCreationAvailability(userId)).resolves.toEqual({
-      canCreate: true,
-      durationDays: 30,
-    });
+    await creation.subject.requestCreation(userId, true);
     await creation.subject.finalize({
-      creation: { deviceId: trustedDeviceId },
+      creation: creation.subject.data.trustedDeviceCreation,
       interactionEvent: InteractionEvent.SignIn,
       userId,
       hasEligibleMfaProof: true,
@@ -127,33 +120,18 @@ describe('Experience trusted-device lifecycle events', () => {
     expect(creation.subject.data).toEqual({});
   });
 
-  it('retries effective policy resolution after a failed availability lookup', async () => {
+  it('retries effective policy resolution after a failed creation request', async () => {
     const error = new Error('policy lookup failed');
-    const trackException = jest.spyOn(appInsights, 'trackException').mockResolvedValue();
     const creation = createSubject({ data: {} });
     creation.getEffectivePolicy
       .mockRejectedValueOnce(error)
       .mockResolvedValueOnce({ enabled: true, durationDays: 30 });
 
-    await expect(creation.subject.getCreationAvailability(userId)).resolves.toBeUndefined();
+    await expect(creation.subject.requestCreation(userId, true)).rejects.toThrow(error);
     await expect(creation.subject.requestCreation(userId, true)).resolves.toBeUndefined();
 
     expect(creation.getEffectivePolicy).toHaveBeenCalledTimes(2);
     expect(creation.subject.data.trustedDeviceCreation?.deviceId).toEqual(expect.any(String));
-    expect(trackException).toHaveBeenCalledWith(error, expect.any(Object));
-  });
-
-  it('refreshes an unscoped policy memo when loaded organizations are supplied', async () => {
-    const organizations = [{ isTrustedDeviceAllowed: true }] as unknown as Readonly<
-      OrganizationWithRoles[]
-    >;
-    const creation = createSubject({ data: {} });
-
-    await creation.subject.getCreationAvailability(userId);
-    await creation.subject.getCreationAvailability(userId, organizations);
-
-    expect(creation.getEffectivePolicy).toHaveBeenCalledTimes(2);
-    expect(creation.getEffectivePolicy).toHaveBeenNthCalledWith(2, userId, organizations);
   });
 
   it('emits Created audit and webhook events only for the successful insert winner', async () => {

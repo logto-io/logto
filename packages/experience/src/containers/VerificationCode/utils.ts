@@ -10,8 +10,7 @@ import useSignInFlowCodeVerification from './use-sign-in-flow-code-verification'
 type VerificationCodeHook = (
   identifier: VerificationCodeIdentifier,
   verificationId: string,
-  errorCallback?: () => void,
-  createTrustedDevice?: boolean
+  errorCallback?: () => void
 ) => {
   errorMessage: string | undefined;
   clearErrorMessage: () => void;

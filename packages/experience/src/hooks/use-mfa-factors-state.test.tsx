@@ -14,7 +14,7 @@ const TestHook = () => {
 it('reads and masks MFA flow state nested by the verification-code binding route', () => {
   const mfaFlowState = {
     availableFactors: [MfaFactor.EmailVerificationCode],
-    trustedDevice: { canCreate: true, durationDays: 365 },
+    skippable: true,
   };
   const { container } = render(
     <MemoryRouter
@@ -38,7 +38,7 @@ it('reads and masks MFA flow state nested by the verification-code binding route
 it('masks page-specific fields from direct MFA flow state', () => {
   const mfaFlowState = {
     availableFactors: [MfaFactor.TOTP, MfaFactor.WebAuthn],
-    trustedDevice: { canCreate: true, durationDays: 30 },
+    suggestion: true,
   };
   const { container } = render(
     <MemoryRouter

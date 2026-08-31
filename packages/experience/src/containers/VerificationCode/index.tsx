@@ -5,8 +5,6 @@ import { useTranslation, Trans } from 'react-i18next';
 
 import SwitchToVerificationMethodsLink from '@/components/SwitchToVerificationMethodsLink';
 import TextLink from '@/components/TextLink';
-import TrustedDeviceOptIn from '@/containers/TrustedDeviceOptIn';
-import useTrustedDeviceOptIn from '@/hooks/use-trusted-device-opt-in';
 import Button from '@/shared/components/Button';
 import VerificationCodeInput, { defaultLength } from '@/shared/components/VerificationCode';
 import { UserFlow } from '@/types';
@@ -34,10 +32,6 @@ const VerificationCode = ({
   const [inputErrorMessage, setInputErrorMessage] = useState<string>();
 
   const { t } = useTranslation();
-  const { durationDays, isChecked, setIsChecked } = useTrustedDeviceOptIn(
-    flow === UserFlow.Continue
-  );
-  const isTrustedDeviceOptInVisible = Boolean(durationDays);
 
   const isCodeInputReady = useMemo(
     () => codeInput.length === defaultLength && codeInput.every(Boolean),
@@ -55,7 +49,7 @@ const VerificationCode = ({
     errorMessage: submitErrorMessage,
     clearErrorMessage,
     onSubmit,
-  } = useVerificationCode(identifier, verificationId, errorCallback, isChecked);
+  } = useVerificationCode(identifier, verificationId, errorCallback);
 
   const errorMessage = inputErrorMessage ?? submitErrorMessage;
 
@@ -97,10 +91,10 @@ const VerificationCode = ({
   handleSubmitRef.current = handleSubmit;
 
   useEffect(() => {
-    if (isCodeInputReady && !isTrustedDeviceOptInVisible) {
+    if (isCodeInputReady) {
       void handleSubmitRef.current(codeInput);
     }
-  }, [codeInput, isCodeInputReady, isTrustedDeviceOptInVisible]);
+  }, [codeInput, isCodeInputReady]);
 
   return (
     <form className={classNames(styles.form, className)}>
@@ -143,12 +137,6 @@ const VerificationCode = ({
           className={styles.switch}
         />
       )}
-      <TrustedDeviceOptIn
-        durationDays={durationDays}
-        isChecked={isChecked}
-        className={styles.optIn}
-        onChange={setIsChecked}
-      />
       <Button
         title="action.continue"
         type="primary"

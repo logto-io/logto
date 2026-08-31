@@ -451,7 +451,7 @@ export class Mfa {
       return;
     }
 
-    await this.assertMfaEnabledOrSuggest(hasEnabledMfa, userFactors, userId, organizations);
+    this.assertMfaEnabledOrSuggest(hasEnabledMfa, userFactors);
   }
 
   /**
@@ -512,8 +512,6 @@ export class Mfa {
 
     // Assert that the user has at least one of the required factors bound
     if (!configuredFactors.some((factor) => linkedFactors.includes(factor))) {
-      const trustedDevice = await this.getTrustedDeviceCreationAvailability(userId, organizations);
-
       throw new RequestError(
         { code: 'user.missing_mfa', status: 422 },
         {
@@ -521,18 +519,12 @@ export class Mfa {
           ...conditional(
             !isNoSkipMfaPolicy(policy) && !isMfaRequiredByUserOrganizations && { skippable: true }
           ),
-          ...conditional(trustedDevice && { trustedDevice }),
         }
       );
     }
 
     // Optional suggestion: Let Mfa decide whether to suggest additional binding during registration
-    await this.guardAdditionalBindingSuggestion(
-      factorsInUser,
-      configuredFactors,
-      identifiedUser,
-      organizations
-    );
+    await this.guardAdditionalBindingSuggestion(factorsInUser, configuredFactors, identifiedUser);
 
     // Assert backup code
     assertThat(
@@ -555,8 +547,7 @@ export class Mfa {
   private async guardAdditionalBindingSuggestion(
     factorsInUser: MfaFactor[],
     availableFactors: MfaFactor[],
-    identifiedUser: User,
-    organizations?: Readonly<OrganizationWithRoles[]>
+    identifiedUser: User
   ) {
     // Respect user's choice to skip suggestion for this interaction.
     if (this.additionalBindingSuggestionSkipped) {
@@ -624,11 +615,6 @@ export class Mfa {
         primaryPhone &&
         maskPhone(primaryPhone),
     });
-    const trustedDevice = await this.getTrustedDeviceCreationAvailability(
-      identifiedUser.id,
-      organizations
-    );
-
     throw new RequestError(
       { code: 'session.mfa.suggest_additional_mfa', status: 422 },
       {
@@ -638,7 +624,6 @@ export class Mfa {
           passkeySignIn.enabled && factorsInUser.includes(MfaFactor.WebAuthn),
         skippable: true,
         suggestion: true,
-        ...conditional(trustedDevice && { trustedDevice }),
       }
     );
   }
@@ -705,29 +690,12 @@ export class Mfa {
     };
   }
 
-  private async buildMfaSuggestionError(
-    userId: string,
-    organizations?: Readonly<OrganizationWithRoles[]>
-  ) {
-    const trustedDevice = await this.getTrustedDeviceCreationAvailability(userId, organizations);
-
-    return new RequestError(
-      { code: 'user.suggest_mfa', status: 422 },
-      conditional(trustedDevice && { trustedDevice })
-    );
-  }
-
-  private async assertMfaEnabledOrSuggest(
-    hasEnabledMfa: boolean | undefined,
-    userFactors: MfaFactor[],
-    userId: string,
-    organizations?: Readonly<OrganizationWithRoles[]>
-  ) {
+  private assertMfaEnabledOrSuggest(hasEnabledMfa: boolean | undefined, userFactors: MfaFactor[]) {
     // Since MFA `enabled` flag is introduced later, legacy users who don't have the `enabled` flag in their config should
     // be checked if they have any MFA factors bound, in order to determine whether MFA is effectively enabled for them.
     if (hasEnabledMfa === undefined) {
       if (userFactors.length === 0) {
-        throw await this.buildMfaSuggestionError(userId, organizations);
+        throw new RequestError({ code: 'user.suggest_mfa', status: 422 });
       }
 
       // Backfill the `enabled` flag for legacy users to avoid repeated suggestions in future interactions.
@@ -738,15 +706,8 @@ export class Mfa {
     // Suggest MFA binding if the user has not completed MFA binding, even if the policy is not mandatory,
     // to encourage better account security.
     if (!hasEnabledMfa) {
-      throw await this.buildMfaSuggestionError(userId, organizations);
+      throw new RequestError({ code: 'user.suggest_mfa', status: 422 });
     }
-  }
-
-  private async getTrustedDeviceCreationAvailability(
-    userId: string,
-    organizations?: Readonly<OrganizationWithRoles[]>
-  ) {
-    return this.interactionContext.getTrustedDeviceCreationAvailability(userId, organizations);
   }
 
   private async getUserMfaFactors({
