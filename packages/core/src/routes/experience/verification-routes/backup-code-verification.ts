@@ -108,6 +108,7 @@ export default function backupCodeVerificationRoutes<T extends ExperienceInterac
         {
           ctx,
           sentinel,
+          queries,
           action: SentinelActivityAction.MfaBackupCode,
           identifier: {
             type: AdditionalIdentifier.UserId,

@@ -4,6 +4,10 @@ import { z } from 'zod';
 
 import koaGuard from '../middleware/koa-guard.js';
 
+import {
+  canFoldLockoutTargetCase,
+  getLockoutTargetCandidates,
+} from './experience/classes/libraries/sentinel-guard.js';
 import { type RouterInitArgs, type ManagementApiRouter } from './types.js';
 
 export default function sentinelActivitiesRoutes<T extends ManagementApiRouter>(
@@ -30,7 +34,16 @@ export default function sentinelActivitiesRoutes<T extends ManagementApiRouter>(
 
       const { sentinelActivities } = queries;
 
-      const targetHashes = await Promise.all(targets.map(async (target) => sha256(target)));
+      // Admins type identifiers by hand, so also clear the other spellings of what they entered
+      // rather than that spelling alone — but only those that cannot belong to another account.
+      const candidates = await Promise.all(
+        targets.map(async (target) =>
+          getLockoutTargetCandidates(target, await canFoldLockoutTargetCase(queries, target))
+        )
+      );
+      const targetHashes = await Promise.all(
+        candidates.flat().map(async (candidate) => sha256(candidate))
+      );
       await sentinelActivities.deleteActivities(targetType, targetHashes);
 
       ctx.status = 204;

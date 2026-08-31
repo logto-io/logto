@@ -107,6 +107,7 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
         identifier,
         verificationType: codeVerificationIdentifierRecordTypeMap[identifier.type],
         sentinel,
+        queries,
         ctx,
       });
 
@@ -185,6 +186,7 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
         identifier,
         verificationType: mfaVerificationType,
         sentinel,
+        queries,
         ctx,
       });
 

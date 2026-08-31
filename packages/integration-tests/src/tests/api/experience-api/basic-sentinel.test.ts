@@ -1,7 +1,8 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { SignInIdentifier, type SignInExperience } from '@logto/schemas';
+import { type Optional } from '@silverhand/essentials';
 
 import { authedAdminApi } from '#src/api/api.js';
-import { updateSignInExperience } from '#src/api/sign-in-experience.js';
+import { getSignInExperience, updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { initExperienceClient } from '#src/helpers/client.js';
 import { signInWithPassword } from '#src/helpers/experience/index.js';
 import { expectRejects } from '#src/helpers/index.js';
@@ -10,8 +11,16 @@ import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
 import { generateUsername } from '#src/utils.js';
 
 describe('basic sentinel', () => {
+  // eslint-disable-next-line @silverhand/fp/no-let
+  let originalSentinelPolicy: Optional<SignInExperience['sentinelPolicy']>;
+
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
+
+    const signInExperience = await getSignInExperience();
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    originalSentinelPolicy = signInExperience.sentinelPolicy;
+
     /**
      * The default policy settings is way too big for the test.
      * We need to override it to make the test.
@@ -26,6 +35,12 @@ describe('basic sentinel', () => {
         lockoutDuration: 10,
       },
     });
+  });
+
+  afterAll(async () => {
+    // `sentinelPolicy` is tenant-wide, so leaving it tightened makes unrelated suites fail with
+    // spurious lockouts on a reused database.
+    await updateSignInExperience({ sentinelPolicy: originalSentinelPolicy ?? {} });
   });
 
   describe('sign-in with non-existing username and password', () => {
