@@ -49,6 +49,7 @@ const session = {
     suggest_additional_mfa:
       'Für besseren Schutz füge eine weitere MFA-Methode hinzu. Du kannst diesen Schritt überspringen und fortfahren.',
   },
+  trusted_device_suggest_opt_in: 'Wählen Sie, ob Sie diesem Gerät vertrauen möchten.',
   passkey_sign_in: {
     pending_info_not_found:
       'Ausstehende Passkey-Anmeldeinformationen nicht gefunden. Bitte starten Sie den Anmeldeablauf erneut.',

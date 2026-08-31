@@ -1,5 +1,5 @@
 import { ConnectorType } from '@logto/connector-kit';
-import { MfaFactor, SignInIdentifier } from '@logto/schemas';
+import { MfaFactor, MfaPolicy, SignInIdentifier } from '@logto/schemas';
 
 import { deleteUser } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
@@ -8,6 +8,7 @@ import { clearConnectorsByTypes, setEmailConnector } from '#src/helpers/connecto
 import { enableMandatoryMfaWithEmail, resetMfaSettings } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
+import ExpectTotpExperience from '#src/ui-helpers/expect-totp-experience.js';
 import {
   devFeatureTest,
   generateEmail,
@@ -107,9 +108,9 @@ describe('email MFA binding', () => {
       );
       await experience.waitToBeAt(`mfa-binding/${MfaFactor.EmailVerificationCode}`);
       await experience.toFillInput('identifier', generateEmail(), { submit: true });
-      await experience.toOptInTrustedDevice();
       await experience.toCompleteVerification('continue', ConnectorType.Email);
       await experience.toClickButton('Continue');
+      await experience.toOptInTrustedDevice();
       await experience.verifyThenEnd(false);
       await experience.clearDemoAppSession();
       await experience.page.close();
@@ -139,8 +140,8 @@ describe('email MFA binding', () => {
         { submit: true }
       );
       await experience.waitToBeAt(`mfa-verification/${MfaFactor.EmailVerificationCode}`);
-      await experience.toOptInTrustedDevice();
       await experience.toCompleteMfaVerification(ConnectorType.Email, true);
+      await experience.toOptInTrustedDevice();
       await experience.verifyThenEnd(false);
       await experience.clearDemoAppSession();
       await experience.page.close();
@@ -154,6 +155,56 @@ describe('email MFA binding', () => {
       await trustedDeviceExperience.verifyThenEnd();
 
       await deleteUser(user.id);
+    });
+
+    it('shows trusted-device opt-in after email verification and additional TOTP binding', async () => {
+      await updateSignInExperience({
+        signUp: {
+          identifiers: [SignInIdentifier.Email],
+          password: true,
+          verify: true,
+        },
+        mfa: {
+          factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
+          policy: MfaPolicy.Mandatory,
+        },
+      });
+
+      const { userProfile, user } = await generateNewUser({
+        username: true,
+        password: true,
+        primaryEmail: true,
+      });
+      const experience = new ExpectTotpExperience(await browser.newPage());
+
+      try {
+        await experience.startWith(demoAppUrl, 'sign-in');
+        await experience.toFillForm(
+          { identifier: userProfile.username, password: userProfile.password },
+          { submit: true }
+        );
+        await experience.waitToBeAt(`mfa-verification/${MfaFactor.EmailVerificationCode}`);
+        await experience.toCompleteMfaVerification(ConnectorType.Email, true);
+
+        await experience.waitToBeAt('mfa-binding');
+        await experience.toClick('button div[class$=name]', 'Authenticator app OTP');
+        await experience.toBindTotp(false, true);
+
+        await experience.toOptInTrustedDevice();
+        await experience.verifyThenEnd(false);
+        await experience.clearDemoAppSession();
+      } finally {
+        await experience.page.close();
+        await deleteUser(user.id);
+        await enableMandatoryMfaWithEmail();
+        await updateSignInExperience({
+          signUp: {
+            identifiers: [SignInIdentifier.Username],
+            password: true,
+            verify: false,
+          },
+        });
+      }
     });
   });
 });

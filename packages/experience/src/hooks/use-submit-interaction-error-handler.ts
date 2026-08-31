@@ -12,6 +12,7 @@ import useMissingPasskeyErrorHandler from './use-missing-passkey-error-handler';
 import useRequiredProfileErrorHandler, {
   type Options as UseRequiredProfileErrorHandlerOptions,
 } from './use-required-profile-error-handler';
+import useTrustedDeviceOptInErrorHandler from './use-trusted-device-opt-in-error-handler';
 
 type Options = Omit<UseRequiredProfileErrorHandlerOptions, 'interactionEvent'> &
   UseMfaVerificationErrorHandlerOptions & {
@@ -43,6 +44,7 @@ const useSubmitInteractionErrorHandler = (
   const mfaErrorHandler = useMfaErrorHandler({ replace });
   const emailBlockedErrorHandler = useEmailBlockedErrorHandler({ onConfirm: onEmailBlocked });
   const passkeySignInErrorHandler = useMissingPasskeyErrorHandler(interactionEvent);
+  const trustedDeviceOptInErrorHandler = useTrustedDeviceOptInErrorHandler(interactionEvent);
 
   return useMemo(
     () => ({
@@ -50,12 +52,14 @@ const useSubmitInteractionErrorHandler = (
       ...requiredProfileErrorHandler,
       ...mfaErrorHandler,
       ...cond(passkeySignInErrorHandler),
+      ...trustedDeviceOptInErrorHandler,
     }),
     [
       emailBlockedErrorHandler,
       mfaErrorHandler,
       passkeySignInErrorHandler,
       requiredProfileErrorHandler,
+      trustedDeviceOptInErrorHandler,
     ]
   );
 };

@@ -118,8 +118,6 @@ export default class ExperienceInteraction {
         this.getVerificationRecordByTypeAndId(type, verificationId),
       getVerificationRecordById: (verificationId) => this.getVerificationRecordById(verificationId),
       getCurrentProfile: () => this.profile.data,
-      getTrustedDeviceCreationAvailability: async (userId, organizations) =>
-        this.trustedDevice.getCreationAvailability(userId, organizations),
     };
 
     this.adaptiveMfaValidator = new AdaptiveMfaValidator({
@@ -150,7 +148,7 @@ export default class ExperienceInteraction {
       profile = {},
       mfa = {},
       userId,
-      trustedDeviceCreation,
+      trustedDeviceOptIn,
       interactionEvent,
       captcha = {
         verified: false,
@@ -163,7 +161,7 @@ export default class ExperienceInteraction {
     this.profile = new Profile(libraries, queries, profile, interactionContext);
     this.mfa = new Mfa(libraries, queries, mfa, interactionContext);
     this.trustedDevice = new TrustedDevice(ctx, tenant, {
-      trustedDeviceCreation,
+      trustedDeviceOptIn,
     });
     this.captcha = captcha;
     for (const record of verificationRecords) {
@@ -392,7 +390,6 @@ export default class ExperienceInteraction {
       return;
     }
 
-    const trustedDeviceAvailabilityPromise = this.trustedDevice.getCreationAvailability(user.id);
     const isMfaVerifiedWithTrustedDevice = await this.trustedDevice.tryVerifyMfa(user.id);
 
     this.assignAdaptiveMfaHookResult(user.id, adaptiveMfaResult);
@@ -402,7 +399,6 @@ export default class ExperienceInteraction {
     }
 
     const { primaryEmail, primaryPhone } = user;
-    const trustedDevice = await trustedDeviceAvailabilityPromise;
     const maskedIdentifiers: Record<string, string> = {
       ...(mfaValidator.availableUserMfaVerificationTypes.includes(
         MfaFactor.EmailVerificationCode
@@ -423,7 +419,6 @@ export default class ExperienceInteraction {
         {
           availableFactors: mfaValidator.availableUserMfaVerificationTypes,
           maskedIdentifiers,
-          ...conditional(trustedDevice && { trustedDevice }),
         }
       )
     );
@@ -438,13 +433,15 @@ export default class ExperienceInteraction {
     await this.getIdentifiedUser();
   }
 
-  /** Record an explicit trusted-device opt-in after validating eligible MFA proof. */
-  public async requestTrustedDeviceCreation() {
+  /** Record an explicit trusted-device decision after validating eligible MFA proof. */
+  public async setTrustedDeviceOptInDecision(trusted: boolean) {
     const user = await this.getIdentifiedUser();
-    await this.trustedDevice.requestCreation(
-      user.id,
-      await this.hasEligibleTrustedDeviceProof(user)
-    );
+    await this.trustedDevice.setOptInDecision({
+      trusted,
+      interactionEvent: this.#interactionEvent,
+      userId: user.id,
+      hasEligibleMfaProof: await this.hasEligibleTrustedDeviceProof(user),
+    });
   }
 
   /**
@@ -570,6 +567,12 @@ export default class ExperienceInteraction {
     if (!this.hasVerifiedSsoIdentity) {
       await this.mfa.assertMfaFulfilled();
     }
+
+    await this.trustedDevice.assertOptInDecision({
+      interactionEvent: this.#interactionEvent,
+      userId: user.id,
+      hasEligibleMfaProof: await this.hasEligibleTrustedDeviceProof(user),
+    });
 
     const {
       socialIdentity,
@@ -741,7 +744,7 @@ export default class ExperienceInteraction {
 
   public toSanitizedJson(): SanitizedInteractionStorageData {
     // Trusted-device creation intent is internal authentication state.
-    const { trustedDeviceCreation: _, ...interactionStorage } = this.toJson();
+    const { trustedDeviceOptIn: _, ...interactionStorage } = this.toJson();
 
     return {
       ...interactionStorage,

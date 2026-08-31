@@ -48,6 +48,7 @@ const session = {
     suggest_additional_mfa:
       'Per una protezione maggiore, considera di aggiungere un altro metodo MFA. Puoi saltare questo passaggio e continuare.',
   },
+  trusted_device_suggest_opt_in: 'Scegli se considerare attendibile questo dispositivo.',
   passkey_sign_in: {
     pending_info_not_found:
       "Impossibile trovare le informazioni in sospeso per l'accesso con passkey. Riavvia il flusso di accesso.",

@@ -45,6 +45,7 @@ const session = {
     suggest_additional_mfa:
       'For stronger protection, consider adding another MFA method. You can skip this step and continue.',
   },
+  trusted_device_suggest_opt_in: 'Choose whether to trust this device.',
   passkey_sign_in: {
     pending_info_not_found:
       'Pending passkey sign-in info not found. Please re-initiate the sign-in flow.',

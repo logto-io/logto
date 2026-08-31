@@ -1,7 +1,12 @@
-import { MfaFactor, VerificationType } from '@logto/schemas';
+import { InteractionEvent, MfaFactor, VerificationType } from '@logto/schemas';
 import * as s from 'superstruct';
 
-import { mfaErrorDataGuard, verificationIdsMapGuard } from './guard';
+import {
+  mfaErrorDataGuard,
+  trustedDeviceOptInErrorDataGuard,
+  trustedDeviceOptInStateGuard,
+  verificationIdsMapGuard,
+} from './guard';
 
 describe('guard', () => {
   it.each(Object.values(VerificationType))('verificationIdsMapGuard: %s', (type) => {
@@ -29,7 +34,7 @@ describe('guard', () => {
     expect(value).toEqual(record);
   });
 
-  it('mfaErrorDataGuard should accept passkey suggestion and trusted-device metadata', () => {
+  it('mfaErrorDataGuard should accept passkey suggestion metadata', () => {
     expect(() => {
       s.assert(
         {
@@ -37,10 +42,23 @@ describe('guard', () => {
           skippable: true,
           suggestion: true,
           isWebAuthnUsedAsSignInPasskey: true,
-          trustedDevice: { canCreate: true, durationDays: 30 },
         },
         mfaErrorDataGuard
       );
     }).not.toThrow();
+  });
+
+  it('should validate trusted-device error data and page state separately', () => {
+    expect(() => {
+      s.assert({ durationDays: 30 }, trustedDeviceOptInErrorDataGuard);
+      s.assert(
+        { durationDays: 30, interactionEvent: InteractionEvent.Register },
+        trustedDeviceOptInStateGuard
+      );
+    }).not.toThrow();
+
+    expect(() => {
+      s.assert({ durationDays: '30' }, trustedDeviceOptInErrorDataGuard);
+    }).toThrow();
   });
 });

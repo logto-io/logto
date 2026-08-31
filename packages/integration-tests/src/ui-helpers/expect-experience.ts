@@ -31,6 +31,7 @@ export type ExperiencePath =
   | 'identifier-register'
   | 'single-sign-on'
   | 'reset-password'
+  | 'trusted-device'
   | 'sign-in/passkey'
   | 'sign-in/verification-methods';
 
@@ -298,14 +299,19 @@ export default class ExpectExperience extends ExpectPage {
 
   async toSeeTrustedDeviceOptIn(durationDays = 365) {
     const text = `Trust this device for ${durationDays} days`;
-    await this.toMatchElement('div[role=checkbox][aria-checked=false]', { text });
+    await this.waitToBeAt('trusted-device');
+    await this.toMatchElement('button', { text });
   }
 
   async toOptInTrustedDevice(durationDays = 365) {
     const text = `Trust this device for ${durationDays} days`;
     await this.toSeeTrustedDeviceOptIn(durationDays);
-    await this.toClick('div[role=checkbox]', text, false);
-    await this.toMatchElement('div[role=checkbox][aria-checked=true]', { text });
+    await this.toClickButton(text, false);
+  }
+
+  async toSkipTrustedDevice(durationDays = 365) {
+    await this.toSeeTrustedDeviceOptIn(durationDays);
+    await this.toClick('div[role=button][class$=skipButton]', undefined, false);
   }
 
   /**

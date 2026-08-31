@@ -42,6 +42,7 @@ const session = {
     suggest_additional_mfa:
       'برای محافظت قوی‌تر، افزودن روش MFA دیگر را در نظر بگیرید. می‌توانید این مرحله را رد کنید و ادامه دهید.',
   },
+  trusted_device_suggest_opt_in: 'انتخاب کنید که آیا به این دستگاه اعتماد شود.',
   passkey_sign_in: {
     pending_info_not_found:
       'اطلاعات ورود passkey در انتظار یافت نشد. لطفاً جریان ورود را دوباره آغاز کنید.',

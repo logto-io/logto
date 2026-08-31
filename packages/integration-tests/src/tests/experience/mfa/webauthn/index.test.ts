@@ -125,8 +125,8 @@ describe('MFA - WebAuthn', () => {
         { submit: true }
       );
       await experience.waitToBeAt(`mfa-binding/${MfaFactor.WebAuthn}`);
-      await experience.toOptInTrustedDevice();
       await experience.toCreatePasskey();
+      await experience.toOptInTrustedDevice();
       await experience.verifyThenEnd(false);
       await experience.clearDemoAppSession();
       await experience.clearVirtualAuthenticator();
@@ -162,8 +162,8 @@ describe('MFA - WebAuthn', () => {
         { submit: true }
       );
       await experience.waitToBeAt(`mfa-verification/${MfaFactor.WebAuthn}`);
-      await experience.toOptInTrustedDevice();
       await experience.toVerifyViaPasskey();
+      await experience.toOptInTrustedDevice();
       await experience.verifyThenEnd(false);
       await experience.clearDemoAppSession();
       await experience.clearVirtualAuthenticator();

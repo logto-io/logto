@@ -162,15 +162,31 @@
         }
       }
     },
-    "/api/experience/profile/mfa/trusted-device": {
+    "/api/experience/profile/trusted-device": {
       "post": {
-        "operationId": "RequestTrustedDeviceCreation",
-        "summary": "Request trusted device creation",
-        "description": "Record the user's explicit opt-in to trust the current device after eligible MFA verification or binding. The trusted-device credential is created only after the interaction is successfully submitted.",
+        "operationId": "SetTrustedDeviceOptInDecision",
+        "summary": "Set trusted device opt-in decision",
+        "description": "Record whether the user trusts the current device after eligible MFA verification or binding. A trusted-device credential is created only after the interaction is successfully submitted.",
         "tags": ["Dev feature"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "trusted": {
+                    "type": "boolean"
+                  }
+                },
+                "required": ["trusted"]
+              }
+            }
+          }
+        },
         "responses": {
           "204": {
-            "description": "The trusted-device creation request has been recorded for the current interaction."
+            "description": "The trusted-device opt-in decision has been recorded for the current interaction."
           },
           "400": {
             "description": "Trusted-device creation is not supported for the current interaction event."

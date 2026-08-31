@@ -107,9 +107,9 @@ describe('phone MFA binding', () => {
       );
       await experience.waitToBeAt(`mfa-binding/${MfaFactor.PhoneVerificationCode}`);
       await experience.toFillInput('identifier', generatePhone(), { submit: true });
-      await experience.toOptInTrustedDevice();
       await experience.toCompleteVerification('continue', ConnectorType.Sms);
       await experience.toClickButton('Continue');
+      await experience.toOptInTrustedDevice();
       await experience.verifyThenEnd(false);
       await experience.clearDemoAppSession();
       await experience.page.close();
@@ -139,8 +139,8 @@ describe('phone MFA binding', () => {
         { submit: true }
       );
       await experience.waitToBeAt(`mfa-verification/${MfaFactor.PhoneVerificationCode}`);
-      await experience.toOptInTrustedDevice();
       await experience.toCompleteMfaVerification(ConnectorType.Sms, true);
+      await experience.toOptInTrustedDevice();
       await experience.verifyThenEnd(false);
       await experience.clearDemoAppSession();
       await experience.page.close();

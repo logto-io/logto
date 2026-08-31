@@ -74,8 +74,7 @@ export const skipMfaSuggestion = async () => {
 export const bindMfa = async (
   type: MfaFactor,
   verificationId: string,
-  payload?: BindMfaPayload,
-  createTrustedDevice = false
+  payload?: BindMfaPayload
 ) => {
   if (payload) {
     switch (payload.type) {
@@ -106,14 +105,10 @@ export const bindMfa = async (
   }
 
   await addMfa(type, verificationId);
-  return submitInteraction({ createTrustedDevice });
+  return submitInteraction();
 };
 
-export const verifyMfa = async (
-  payload: VerifyMfaPayload,
-  verificationId?: string,
-  createTrustedDevice = false
-) => {
+export const verifyMfa = async (payload: VerifyMfaPayload, verificationId?: string) => {
   switch (payload.type) {
     case MfaFactor.TOTP: {
       const { code } = payload;
@@ -144,7 +139,7 @@ export const verifyMfa = async (
     }
   }
 
-  return submitInteraction({ createTrustedDevice });
+  return submitInteraction();
 };
 
 // Email/Phone MFA verification code
@@ -160,11 +155,10 @@ export const sendMfaVerificationCode = async (
 export const verifyMfaByVerificationCode = async (
   verificationId: string,
   code: string,
-  identifierType: SignInIdentifier.Email | SignInIdentifier.Phone,
-  createTrustedDevice = false
+  identifierType: SignInIdentifier.Email | SignInIdentifier.Phone
 ) => {
   await api.post(`${experienceApiRoutes.verification}/mfa-verification-code/verify`, {
     json: { verificationId, code, identifierType },
   });
-  return submitInteraction({ createTrustedDevice });
+  return submitInteraction();
 };

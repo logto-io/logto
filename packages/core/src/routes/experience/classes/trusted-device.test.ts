@@ -1,9 +1,5 @@
 import { appInsights } from '@logto/app-insights/node';
-import {
-  InteractionEvent,
-  type OrganizationWithRoles,
-  type TrustedDevice as TrustedDeviceModel,
-} from '@logto/schemas';
+import { InteractionEvent, type TrustedDevice as TrustedDeviceModel } from '@logto/schemas';
 
 import { createMockTrustedDevice } from '#src/__mocks__/trusted-device.js';
 import { EnvSet } from '#src/env-set/index.js';
@@ -96,15 +92,29 @@ describe('Experience trusted-device lifecycle events', () => {
     jest.restoreAllMocks();
   });
 
-  it('memoizes effective policy across availability and creation finalization', async () => {
+  it('suggests opt-in after eligible sign-in MFA and reuses policy during finalization', async () => {
     const creation = createSubject({ data: {}, createResult: trustedDevice });
 
-    await expect(creation.subject.getCreationAvailability(userId)).resolves.toEqual({
-      canCreate: true,
-      durationDays: 30,
+    await expect(
+      creation.subject.assertOptInDecision({
+        interactionEvent: InteractionEvent.SignIn,
+        userId,
+        hasEligibleMfaProof: true,
+      })
+    ).rejects.toMatchObject({
+      code: 'session.trusted_device_suggest_opt_in',
+      status: 422,
+      data: { durationDays: 30 },
+    });
+
+    await creation.subject.setOptInDecision({
+      trusted: true,
+      interactionEvent: InteractionEvent.SignIn,
+      userId,
+      hasEligibleMfaProof: true,
     });
     await creation.subject.finalize({
-      creation: { deviceId: trustedDeviceId },
+      creation: creation.subject.consumeCreationRequest(),
       interactionEvent: InteractionEvent.SignIn,
       userId,
       hasEligibleMfaProof: true,
@@ -118,16 +128,7 @@ describe('Experience trusted-device lifecycle events', () => {
     );
   });
 
-  it('ignores creation intent when the current server policy disallows it', async () => {
-    const creation = createSubject({ data: {} });
-    creation.getEffectivePolicy.mockResolvedValueOnce({ enabled: false, durationDays: 30 });
-
-    await expect(creation.subject.requestCreation(userId, true)).resolves.toBeUndefined();
-
-    expect(creation.subject.data).toEqual({});
-  });
-
-  it('retries effective policy resolution after a failed availability lookup', async () => {
+  it('does not suggest opt-in when policy lookup fails and retries on the next request', async () => {
     const error = new Error('policy lookup failed');
     const trackException = jest.spyOn(appInsights, 'trackException').mockResolvedValue();
     const creation = createSubject({ data: {} });
@@ -135,25 +136,88 @@ describe('Experience trusted-device lifecycle events', () => {
       .mockRejectedValueOnce(error)
       .mockResolvedValueOnce({ enabled: true, durationDays: 30 });
 
-    await expect(creation.subject.getCreationAvailability(userId)).resolves.toBeUndefined();
-    await expect(creation.subject.requestCreation(userId, true)).resolves.toBeUndefined();
+    const options = {
+      interactionEvent: InteractionEvent.SignIn,
+      userId,
+      hasEligibleMfaProof: true,
+    };
+
+    await expect(creation.subject.assertOptInDecision(options)).resolves.toBeUndefined();
+    await expect(creation.subject.assertOptInDecision(options)).rejects.toMatchObject({
+      code: 'session.trusted_device_suggest_opt_in',
+    });
 
     expect(creation.getEffectivePolicy).toHaveBeenCalledTimes(2);
-    expect(creation.subject.data.trustedDeviceCreation?.deviceId).toEqual(expect.any(String));
     expect(trackException).toHaveBeenCalledWith(error, expect.any(Object));
   });
 
-  it('refreshes an unscoped policy memo when loaded organizations are supplied', async () => {
-    const organizations = [{ isTrustedDeviceAllowed: true }] as unknown as Readonly<
-      OrganizationWithRoles[]
-    >;
+  it('does not suggest opt-in when the dev feature is disabled', async () => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Exercise the production guard.
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = false;
     const creation = createSubject({ data: {} });
 
-    await creation.subject.getCreationAvailability(userId);
-    await creation.subject.getCreationAvailability(userId, organizations);
+    await expect(
+      creation.subject.assertOptInDecision({
+        interactionEvent: InteractionEvent.SignIn,
+        userId,
+        hasEligibleMfaProof: true,
+      })
+    ).resolves.toBeUndefined();
 
-    expect(creation.getEffectivePolicy).toHaveBeenCalledTimes(2);
-    expect(creation.getEffectivePolicy).toHaveBeenNthCalledWith(2, userId, organizations);
+    expect(creation.getEffectivePolicy).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    { interactionEvent: InteractionEvent.ForgotPassword, hasEligibleMfaProof: true },
+    { interactionEvent: InteractionEvent.SignIn, hasEligibleMfaProof: false },
+  ])('does not suggest opt-in without an eligible authentication proof', async (options) => {
+    const creation = createSubject({ data: {} });
+
+    await expect(
+      creation.subject.assertOptInDecision({ ...options, userId })
+    ).resolves.toBeUndefined();
+
+    expect(creation.getEffectivePolicy).not.toHaveBeenCalled();
+  });
+
+  it('does not suggest opt-in when the effective policy is disabled', async () => {
+    const creation = createSubject({ data: {} });
+    creation.getEffectivePolicy.mockResolvedValueOnce({ enabled: false, durationDays: 30 });
+
+    await expect(
+      creation.subject.assertOptInDecision({
+        interactionEvent: InteractionEvent.SignIn,
+        userId,
+        hasEligibleMfaProof: true,
+      })
+    ).resolves.toBeUndefined();
+  });
+
+  it('persists explicit accept and skip decisions without prompting again', async () => {
+    const creation = createSubject({ data: {} });
+    const options = {
+      interactionEvent: InteractionEvent.SignIn,
+      userId,
+      hasEligibleMfaProof: true,
+    };
+
+    await creation.subject.setOptInDecision({ ...options, trusted: true });
+    const firstDeviceId = creation.subject.data.trustedDeviceOptIn?.trusted
+      ? creation.subject.data.trustedDeviceOptIn.deviceId
+      : undefined;
+    await creation.subject.setOptInDecision({ ...options, trusted: true });
+
+    expect(firstDeviceId).toEqual(expect.any(String));
+    expect(creation.subject.data.trustedDeviceOptIn).toEqual({
+      trusted: true,
+      deviceId: firstDeviceId,
+    });
+    await expect(creation.subject.assertOptInDecision(options)).resolves.toBeUndefined();
+
+    await creation.subject.setOptInDecision({ ...options, trusted: false });
+
+    expect(creation.subject.data).toEqual({ trustedDeviceOptIn: { trusted: false } });
+    expect(creation.subject.consumeCreationRequest()).toBeUndefined();
   });
 
   it('emits Created audit and webhook events only for the successful insert winner', async () => {

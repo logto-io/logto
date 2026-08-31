@@ -1,20 +1,12 @@
 import { SignInIdentifier } from '@logto/schemas';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 
-import useTrustedDeviceOptIn from '@/hooks/use-trusted-device-opt-in';
-
 import MfaCodeVerification from '.';
 import useMfaCodeVerification from './use-mfa-code-verification';
 import useResendMfaVerificationCode from './use-resend-mfa-verification-code';
 
-function mockTrustedDeviceOptIn() {
-  return null;
-}
-
-jest.mock('@/hooks/use-trusted-device-opt-in');
 jest.mock('./use-mfa-code-verification');
 jest.mock('./use-resend-mfa-verification-code');
-jest.mock('@/containers/TrustedDeviceOptIn', () => mockTrustedDeviceOptIn);
 jest.mock('@/shared/components/VerificationCode', () => ({
   __esModule: true,
   default: ({ onChange }: { readonly onChange: (code: string[]) => void }) => (
@@ -29,17 +21,11 @@ jest.mock('@/shared/components/VerificationCode', () => ({
   ),
 }));
 
-const mockedUseTrustedDeviceOptIn = jest.mocked(useTrustedDeviceOptIn);
 const mockedUseMfaCodeVerification = jest.mocked(useMfaCodeVerification);
 const mockedUseResendMfaVerificationCode = jest.mocked(useResendMfaVerificationCode);
 
-const renderVerification = (isVisible: boolean) => {
+const renderVerification = () => {
   const onSubmit = jest.fn().mockResolvedValue(undefined);
-  mockedUseTrustedDeviceOptIn.mockReturnValue({
-    durationDays: isVisible ? 30 : undefined,
-    isChecked: false,
-    setIsChecked: jest.fn(),
-  });
   mockedUseMfaCodeVerification.mockReturnValue({ errorMessage: undefined, onSubmit });
   mockedUseResendMfaVerificationCode.mockReturnValue({
     seconds: 30,
@@ -59,16 +45,8 @@ describe('<MfaCodeVerification />', () => {
     jest.clearAllMocks();
   });
 
-  it('does not auto-submit a complete code while trusted-device opt-in is visible', () => {
-    const { getByRole, onSubmit } = renderVerification(true);
-
-    fireEvent.click(getByRole('button', { name: 'Fill code' }));
-
-    expect(onSubmit).not.toBeCalled();
-  });
-
-  it('keeps the existing auto-submit behavior when trusted-device opt-in is hidden', async () => {
-    const { getByRole, onSubmit } = renderVerification(false);
+  it('auto-submits a complete code', async () => {
+    const { getByRole, onSubmit } = renderVerification();
 
     fireEvent.click(getByRole('button', { name: 'Fill code' }));
 

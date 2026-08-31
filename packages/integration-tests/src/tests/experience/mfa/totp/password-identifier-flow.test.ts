@@ -129,8 +129,8 @@ describe('MFA - TOTP', () => {
           { submit: true }
         );
         await experience.waitToBeAt(`mfa-binding/${MfaFactor.TOTP}`);
+        await experience.toBindTotp(false, true);
         await experience.toOptInTrustedDevice();
-        await experience.toBindTotp(true, true);
         await experience.verifyThenEnd(false);
         await experience.clearDemoAppSession();
         await experience.page.close();
@@ -161,8 +161,8 @@ describe('MFA - TOTP', () => {
           { submit: true }
         );
         await experience.waitToBeAt(`mfa-verification/${MfaFactor.TOTP}`);
+        await experience.toVerifyTotp(verification.secret, false, true);
         await experience.toOptInTrustedDevice();
-        await experience.toVerifyTotp(verification.secret, true, true);
         await experience.verifyThenEnd(false);
         await experience.clearDemoAppSession();
         await experience.page.close();

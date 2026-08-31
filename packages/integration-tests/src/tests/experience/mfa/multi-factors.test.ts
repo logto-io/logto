@@ -119,7 +119,7 @@ describe('MFA - Multi factors', () => {
       await updateSignInExperience({ trustedDevice: { enabled: false } });
     });
 
-    it('keeps trusted-device availability across binding and verification factor switches', async () => {
+    it('shows one trusted-device step after MFA binding and verification factor switches', async () => {
       const { userProfile, user } = await generateNewUser({ username: true, password: true });
       const experience = new ExpectWebAuthnExperience(await browser.newPage());
       await experience.setupVirtualAuthenticator();
@@ -133,24 +133,21 @@ describe('MFA - Multi factors', () => {
 
       await experience.toClick('button div[class$=name]', 'Authenticator app OTP');
       await experience.waitToBeAt(`mfa-binding/${MfaFactor.TOTP}`);
-      await experience.toSeeTrustedDeviceOptIn();
       await experience.toClickSwitchFactorsLink({ isBinding: true });
 
       await experience.toClick('button div[class$=name]', 'Passkey');
       await experience.waitToBeAt(`mfa-binding/${MfaFactor.WebAuthn}`);
-      await experience.toSeeTrustedDeviceOptIn();
       await experience.toClickSwitchFactorsLink({ isBinding: true });
 
       await experience.toClick('button div[class$=name]', 'Authenticator app OTP');
       await experience.waitToBeAt(`mfa-binding/${MfaFactor.TOTP}`);
-      await experience.toSeeTrustedDeviceOptIn();
       await experience.toClickSwitchFactorsLink({ isBinding: true });
 
       await experience.toClick('button div[class$=name]', 'Passkey');
       await experience.waitToBeAt(`mfa-binding/${MfaFactor.WebAuthn}`);
-      await experience.toSeeTrustedDeviceOptIn();
       await experience.toCreatePasskey();
       await experience.toClickButton('Continue');
+      await experience.toSkipTrustedDevice();
       await experience.verifyThenEnd(false);
 
       await experience.startWith(demoAppUrl, 'sign-in');
@@ -159,13 +156,12 @@ describe('MFA - Multi factors', () => {
         { submit: true }
       );
       await experience.waitToBeAt(`mfa-verification/${MfaFactor.WebAuthn}`);
-      await experience.toSeeTrustedDeviceOptIn();
       await experience.toClickSwitchFactorsLink({ isBinding: false });
 
       await experience.toClick('button div[class$=name]', 'Passkey');
       await experience.waitToBeAt(`mfa-verification/${MfaFactor.WebAuthn}`);
-      await experience.toSeeTrustedDeviceOptIn();
       await experience.toVerifyViaPasskey();
+      await experience.toOptInTrustedDevice();
 
       await experience.clearVirtualAuthenticator();
       await experience.verifyThenEnd();

@@ -47,6 +47,7 @@ const session = {
     suggest_additional_mfa:
       'Dla lepszej ochrony rozważ dodanie kolejnej metody MFA. Możesz pominąć ten krok i kontynuować.',
   },
+  trusted_device_suggest_opt_in: 'Wybierz, czy chcesz zaufać temu urządzeniu.',
   passkey_sign_in: {
     pending_info_not_found:
       'Nie znaleziono oczekujących informacji logowania passkey. Uruchom ponownie proces logowania.',
