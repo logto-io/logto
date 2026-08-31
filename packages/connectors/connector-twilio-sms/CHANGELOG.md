@@ -1,5 +1,11 @@
 # @logto/connector-twilio-sms
 
+## 1.4.5
+
+### Patch Changes
+
+- @logto/connector-kit@5.1.1
+
 ## 1.4.4
 
 ### Patch Changes

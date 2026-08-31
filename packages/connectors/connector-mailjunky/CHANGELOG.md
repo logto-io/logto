@@ -1,5 +1,11 @@
 # @logto/connector-mailjunky
 
+## 1.6.2
+
+### Patch Changes
+
+- @logto/connector-kit@5.1.1
+
 ## 1.6.1
 
 ### Patch Changes

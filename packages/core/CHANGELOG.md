@@ -1,5 +1,157 @@
 # Change Log
 
+## 1.43.0
+
+### Minor Changes
+
+- b64d46d495: unify social callback URI between Sign-in Experience and Account Center
+- 8b2aaab9b0: add dynamic app support (OAuth Client ID Metadata Documents)
+
+  The dynamic app lets compatible public clients, such as MCP clients, connect to your tenant without registering an application. Following the OAuth Client ID Metadata Documents (CIMD) draft, such a client presents a public HTTPS URL as its `client_id`, and Logto fetches the client metadata from that URL.
+
+  Enable it from the dynamic app card in the third-party app section on the create application page in Console. The switch is tenant-level and off by default, and requires the OIDC provider SSRF protection to be active. Control what dynamic app clients can request with the permission settings on the dynamic app page.
+
+- 28885b42d5: add optional signed SAML authentication requests for enterprise SSO connectors
+
+  Enterprise SSO SAML connectors can now sign the SAML authentication request (AuthnRequest) sent to the identity provider. Generate a service-provider signing key on the connector, download its certificate and register it at the identity provider, then enable "Sign authentication request". RSA-SHA256 (default) and RSA-SHA512 are supported, and staged keys allow graceful, zero-downtime certificate rotation. Identity-provider metadata advertising `WantAuthnRequestsSigned` no longer breaks SAML sign-in when signing is disabled.
+
+- 860188898f: run Custom JWT and Actions scripts on the consolidated script runtime
+
+  Self-hosted deployments execute Custom JWT and Actions scripts on a pooled worker-thread runner with a 5-second wall-clock deadline and a 128 MB memory budget, so a runaway or never-settling async script fails instead of hanging token issuance. Script return values must be JSON-serializable.
+
+- e516f6eaba: block third-party applications from mutating account data through the Account API and Verification API
+
+  The Account API is the user managing their own account at the identity provider, and was built for the first-party Account Center.
+
+  Third-party applications now receive `403 auth.third_party_application_forbidden` when they try to change account data. First-party applications are unaffected, including Account Center and Console.
+
+  The check fails closed: a client identifier that no longer resolves to an application is treated as third-party. Two cases follow from that. A client identifier document (CIMD) client identifier is a URL and never names a registered application, so CIMD clients are blocked from these routes. An application that has been deleted while its access tokens are still live is blocked as well, because the token keeps authenticating after the application row is gone.
+
+  No read route gained a guard. Three reads do become unreachable for third-party applications as a side effect, because they require a verified user-permission verification record and the routes that mint one are now guarded:
+
+  - `GET /api/my-account/grants`
+  - `GET /api/my-account/sessions`
+  - `GET /api/my-account/mfa-verifications/backup-codes`
+
+  For a third-party application these now return `401 verification_record.permission_denied` whenever Account Center is enabled, and the existing `400 account_center.not_enabled` when it is not. Every other read is unchanged.
+
+### Patch Changes
+
+- 43999c7189: fix consent submission granting user scopes that were removed while the consent screen was open
+- f0d369f377: drop deleted profile fields from account center and sign-up configs on save
+
+  When a custom profile field is removed from Collect user profile, saving Account Center (or sign-up) settings no longer fails with `custom_profile_fields.entity_not_exists_with_names`. Stale field references are ignored on save, and deleted fields remain removable in the Console editor even when their permission control is Off.
+
+- 7bf7131d7b: key identifier lockout on the normalized identifier
+
+  The identifier lockout counter is now keyed on the same form of the identifier that the user lookup matches on, so a single account maps to a single lockout bucket however the identifier was spelled in the request. Previously the counter keyed on the value exactly as submitted while the lookup normalized before matching, which let the two disagree and weakened the configured `maxAttempts` policy.
+
+  Emails are lower-cased and phone numbers canonicalized, matching their lookups. Usernames fold case only when the tenant's username policy is case-insensitive: under the default case-sensitive policy `Alice` and `alice` are different accounts and keep separate buckets, so attempts against one cannot lock out the other.
+
+  Manual unlock (`POST /sentinel-activities/delete`) also clears the other spellings of the submitted identifier, so unblocking works when an admin types an address in a different case. Case is only folded where both spellings must be the same account — always for an email address, and otherwise only when the tenant's username policy is case-insensitive — so an unlock can never reach a different account. Identifiers that are keyed verbatim still have to be submitted as they were typed.
+
+  Note for operators upgrading: lockouts are re-keyed by this change, so an active lockout recorded under a non-canonical spelling stops applying once deployed. Affected users are unblocked early, at most one `lockoutDuration` ahead of schedule; no user becomes more locked out than before, and failure counters older than an hour are already outside the counting window.
+
+- 3e609e9a71: fix revoking a user's third-party app authorization also signing the user out of that browser session
+
+  Revoking now only invalidates the revoked app's tokens and requires it to go through consent again on the next sign-in. The browser's single sign-on session stays intact.
+
+- 42222f07a4: honor Accept-Language quality values written with whitespace before `q=`
+
+  RFC 7231 allows optional whitespace around the quality parameter, so `Accept-Language: en; q=0.7, pl; q=0.9` is a valid way to ask for Polish ahead of English. Logto discarded the weight whenever that whitespace was present and fell back to header order, serving the sign-in experience and the emails it sends in the wrong language. A non-numeric quality value such as `q=high` now falls back to the default weight instead of producing `NaN`.
+
+- 28c3c9283e: treat Gmail address aliases as the same address in custom email allowlist and blocklist rules
+
+  The matcher treats gmail.com and googlemail.com as equivalent and ignores local-part dots. The Console now shows custom email rule examples and Gmail matching behavior in the field descriptions, with shorter input placeholders.
+
+- 6dd496bd2e: fix OIDC scope error messages showing a raw placeholder instead of the rejected scope
+
+  The `invalid_scope` and `insufficient_scope` messages rendered the literal `{{error_description}}` and `{{scope}}` text because the error handler never passed the values in. They now name the scope that was rejected, so an end user who hits a stale scope on the consent page no longer sees a placeholder in the error toast.
+
+- f5289eb78b: fix a 500 error when assigning an empty list of scopes or roles
+
+  Management API endpoints that assign relations, such as `POST /applications/:applicationId/user-consent-scopes` and `POST /organizations/:id/users/:userId/roles`, now accept an empty array and make no changes, instead of responding with a 500 error.
+
+- 7692f43b07: require token exchange subject tokens to come from a first-party application
+
+  Token exchange does not inherit the subject token's audience or scopes — the issued token carries the receiver's authorization for the user, which for a first-party receiver means every scope the user's roles grant. The subject token's issuing client was previously discarded, so an access token held by a third-party application could be presented to any token-exchange-enabled client and converted into the user's full first-party authorization, turning a narrowly consented credential into a much broader one.
+
+  The subject token must now have been issued to a first-party application, on both the opaque and the JWT path. Third-party applications are already barred from enabling token exchange as the receiver; this closes the same boundary on the subject side. A subject token whose issuing client no longer exists is rejected as well.
+
+  **Breaking**: if you deliberately exchange access tokens issued to third-party applications, those requests now fail with `invalid_grant`. Use a first-party application to obtain the subject token instead.
+
+- 6f43932ae9: declare the token signing algorithm that matches the signing key's curve
+
+  Previously, every Elliptic Curve signing key was declared as `ES384` regardless of its curve, so tenants seeded with a custom P-256 or P-521 private key advertised an algorithm their key cannot sign and clients failed validation at the authorization endpoint. The declared algorithm now follows the key's actual curve: P-256 declares `ES256`, P-384 declares `ES384`, and P-521 declares `ES512`. RSA keys keep the `RS256` default.
+
+- 508de60b9f: validate the subject token class in token exchange
+
+  The `access_token` subject path of the token exchange grant falls back to JWT verification when the token is not a known opaque token. That fallback checked only the signature and the issuer, so any JWT signed by the tenant's keys was accepted as an access token — including an OIDC ID token, which is an authentication assertion and carries no API authorization. A client with token exchange enabled could therefore submit an ID token as `subject_token` and receive an API access token for that user.
+
+  The JWT subject token is now required to carry the RFC 9068 `at+jwt` type header and a `client_id` claim before the account is resolved. Both are set unconditionally on every JWT access token Logto issues, so legitimate subject tokens are unaffected; ID tokens are rejected with `invalid_grant`.
+
+- fafc8cd9f3: reject token issuance for suspended users
+
+  Suspending a user revokes their sessions and tokens, but token issuance itself never checked the suspension flag — if revocation partially failed, a surviving refresh token kept working indefinitely. The OIDC `findAccount` hook now rejects suspended users with `invalid_grant`, mirroring how deleted users are handled, so all user token grants (refresh token, authorization code, device code, token exchange) and userinfo reject suspended users regardless of revocation state.
+
+- 16f4b2e732: extend SSRF protection to webhook delivery and enterprise SSO connector requests
+
+  Outbound requests to URLs supplied through the Management API are now blocked when they resolve to a special-use address such as loopback, a private range, or the cloud metadata endpoint (`169.254.169.254`). Previously a tenant admin could point a webhook URL or an enterprise SSO connector at an internal address and read the response back from the API error, letting them reach services on the deployment's own network.
+
+  The check covers webhook delivery (including `POST /api/hooks/:id/test`), OIDC SSO connector discovery, token and userinfo requests, and SAML IdP metadata fetching. It runs when the connection is established, so a hostname that resolves to an internal address is rejected just like a literal IP, and every redirect hop is checked again.
+
+  ## Action required
+
+  Protection is enabled by default. If your deployment intentionally delivers webhooks or reaches SSO endpoints on a private network, list those destinations in `SSRF_ALLOWED_ADDRESSES` before starting Logto, as a comma-separated set of IP addresses or CIDR ranges:
+
+  ```
+  SSRF_ALLOWED_ADDRESSES=10.0.0.0/8,127.0.0.1
+  ```
+
+  Allowlisting the destinations is preferable to turning the protection off: every other special-use address, including the cloud metadata endpoint, stays blocked. Since CIMD accepts target URLs from unauthenticated callers, configuring an allowlist disables CIMD to prevent those callers from reaching private destinations. `SSRF_PROTECTION_DISABLED=true` also disables CIMD by turning the protection off entirely.
+
+  Both variables are only honored in self-hosted deployments. `OIDC_PROVIDER_SSRF_PROTECTION_DISABLED`, which previously covered only the OIDC provider's own requests, keeps working as an alias for `SSRF_PROTECTION_DISABLED`.
+
+- a481ffaba7: stop issuing user scopes a third-party application is no longer configured for
+
+  Removing a user scope from a third-party application's consent settings used to affect only new authorization requests, and scopes already in a user's grant kept being issued. Now a refresh token exchange drops the removed scopes, an authorization resuming on an existing grant fails with `invalid_scope`, and an organization token request is rejected with `insufficient_scope` once the organizations scope is removed.
+
+- 6d9e42c069: retry webhook deliveries on HTTP 5xx responses
+
+  Webhook POST requests now retry up to 3 times when the endpoint returns any 5xx status, matching the documented delivery contract.
+
+  Since retries may deliver the same webhook more than once, webhook receivers should process events idempotently.
+
+- Updated dependencies [c377946617]
+- Updated dependencies [ebfefb513d]
+- Updated dependencies [317fa41400]
+- Updated dependencies [f0d369f377]
+- Updated dependencies [7978c638a9]
+- Updated dependencies [ab106cdb82]
+- Updated dependencies [b64d46d495]
+- Updated dependencies [7464c6a97a]
+- Updated dependencies [28c3c9283e]
+- Updated dependencies [e6ed7d8be9]
+- Updated dependencies [6dd496bd2e]
+- Updated dependencies [8b2aaab9b0]
+- Updated dependencies [28885b42d5]
+- Updated dependencies [860188898f]
+- Updated dependencies [16f4b2e732]
+- Updated dependencies [c62e043982]
+  - @logto/account@0.6.0
+  - @logto/phrases-experience@1.15.0
+  - @logto/core-kit@2.13.0
+  - @logto/experience@1.22.0
+  - @logto/console@1.40.0
+  - @logto/schemas@1.43.0
+  - @logto/language-kit@1.4.0
+  - @logto/phrases@1.31.0
+  - @logto/shared@3.4.3
+  - @logto/cli@1.43.0
+  - @logto/demo-app@1.5.0
+  - @logto/device-demo-app@0.1.0
+  - @logto/connector-kit@5.1.1
+
 ## 1.42.0
 
 ### Minor Changes

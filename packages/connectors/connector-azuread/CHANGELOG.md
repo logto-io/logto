@@ -1,5 +1,17 @@
 # @logto/connector-azuread
 
+## 1.7.0
+
+### Minor Changes
+
+- c81931eab4: add a `disableEmailSync` switch to the Microsoft Azure AD connector
+
+  The connector always synced the `mail` attribute returned by Microsoft Graph to the user profile. This switch makes that configurable, matching the control the Azure OIDC SSO connector already offers. It is off by default, so existing connectors keep their current behavior.
+
+### Patch Changes
+
+- @logto/connector-kit@5.1.1
+
 ## 1.6.5
 
 ### Patch Changes

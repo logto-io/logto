@@ -1,5 +1,11 @@
 # @logto/connector-amazon
 
+## 0.3.6
+
+### Patch Changes
+
+- @logto/connector-kit@5.1.1
+
 ## 0.3.5
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @logto/connector-mailgun
 
+## 1.5.7
+
+### Patch Changes
+
+- @logto/connector-kit@5.1.1
+
 ## 1.5.6
 
 ### Patch Changes

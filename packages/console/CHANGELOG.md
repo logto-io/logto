@@ -1,5 +1,34 @@
 # Change Log
 
+## 1.40.0
+
+### Minor Changes
+
+- b64d46d495: unify social callback URI between Sign-in Experience and Account Center
+- 8b2aaab9b0: add dynamic app support (OAuth Client ID Metadata Documents)
+
+  The dynamic app lets compatible public clients, such as MCP clients, connect to your tenant without registering an application. Following the OAuth Client ID Metadata Documents (CIMD) draft, such a client presents a public HTTPS URL as its `client_id`, and Logto fetches the client metadata from that URL.
+
+  Enable it from the dynamic app card in the third-party app section on the create application page in Console. The switch is tenant-level and off by default, and requires the OIDC provider SSRF protection to be active. Control what dynamic app clients can request with the permission settings on the dynamic app page.
+
+- 28885b42d5: add optional signed SAML authentication requests for enterprise SSO connectors
+
+  Enterprise SSO SAML connectors can now sign the SAML authentication request (AuthnRequest) sent to the identity provider. Generate a service-provider signing key on the connector, download its certificate and register it at the identity provider, then enable "Sign authentication request". RSA-SHA256 (default) and RSA-SHA512 are supported, and staged keys allow graceful, zero-downtime certificate rotation. Identity-provider metadata advertising `WantAuthnRequestsSigned` no longer breaks SAML sign-in when signing is disabled.
+
+- 860188898f: run Custom JWT and Actions scripts on the consolidated script runtime
+
+  Self-hosted deployments execute Custom JWT and Actions scripts on a pooled worker-thread runner with a 5-second wall-clock deadline and a 128 MB memory budget, so a runaway or never-settling async script fails instead of hanging token issuance. Script return values must be JSON-serializable.
+
+### Patch Changes
+
+- f0d369f377: drop deleted profile fields from account center and sign-up configs on save
+
+  When a custom profile field is removed from Collect user profile, saving Account Center (or sign-up) settings no longer fails with `custom_profile_fields.entity_not_exists_with_names`. Stale field references are ignored on save, and deleted fields remain removable in the Console editor even when their permission control is Off.
+
+- 28c3c9283e: treat Gmail address aliases as the same address in custom email allowlist and blocklist rules
+
+  The matcher treats gmail.com and googlemail.com as equivalent and ignores local-part dots. The Console now shows custom email rule examples and Gmail matching behavior in the field descriptions, with shorter input placeholders.
+
 ## 1.39.0
 
 ### Minor Changes

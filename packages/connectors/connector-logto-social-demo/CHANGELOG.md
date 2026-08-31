@@ -1,5 +1,11 @@
 # @logto/connector-logto-social-demo
 
+## 1.3.7
+
+### Patch Changes
+
+- @logto/connector-kit@5.1.1
+
 ## 1.3.6
 
 ### Patch Changes

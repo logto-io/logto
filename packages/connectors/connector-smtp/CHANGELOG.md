@@ -1,5 +1,11 @@
 # @logto/connector-smtp
 
+## 1.5.5
+
+### Patch Changes
+
+- @logto/connector-kit@5.1.1
+
 ## 1.5.4
 
 ### Patch Changes
