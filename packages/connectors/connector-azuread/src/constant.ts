@@ -69,6 +69,17 @@ export const defaultMetadata: ConnectorMetadata = {
       label: 'Scopes',
       placeholder: '<scope1> <scope2>',
     },
+    {
+      key: 'disableEmailSync',
+      type: ConnectorConfigFormItemType.Switch,
+      required: false,
+      label: 'Disable Email Sync',
+      description:
+        'Stop syncing the `mail` attribute returned by Microsoft Graph to the user profile. Turn this on if you do not want Microsoft to supply the email address.',
+      tooltip:
+        'Microsoft Graph reports no verification state for `mail`, and a directory administrator can set it to any value. Turning this on leaves the address in `rawData` only.',
+      defaultValue: false,
+    },
   ],
 };
 
