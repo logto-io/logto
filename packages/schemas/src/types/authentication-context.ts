@@ -160,24 +160,27 @@ export const getAuthenticationMethodReferences = (
 
 /**
  * Build the `amr` claim for a set of counted verification types and the ACR they achieved:
- * the union of each type's references in first-seen order, with `mfa` appended whenever the
- * achieved ACR is {@link LogtoAcr.Mfa}.
+ * the union of each type's references in first-seen order, with `mfa` always last, present
+ * whenever a counted type carries it (WebAuthn) or the achieved ACR is {@link LogtoAcr.Mfa}.
  */
 export const buildAuthenticationMethodReferences = (
   types: Iterable<VerificationType>,
   achievedAcr?: LogtoAcr
 ): AuthenticationMethodReference[] => {
   const references = new Set<AuthenticationMethodReference>();
+  // eslint-disable-next-line @silverhand/fp/no-let
+  let hasMfa = achievedAcr === LogtoAcr.Mfa;
 
   for (const type of types) {
     for (const reference of getAuthenticationMethodReferences(type)) {
-      references.add(reference);
+      if (reference === AuthenticationMethodReference.Mfa) {
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        hasMfa = true;
+      } else {
+        references.add(reference);
+      }
     }
   }
 
-  if (achievedAcr === LogtoAcr.Mfa) {
-    references.add(AuthenticationMethodReference.Mfa);
-  }
-
-  return [...references];
+  return hasMfa ? [...references, AuthenticationMethodReference.Mfa] : [...references];
 };

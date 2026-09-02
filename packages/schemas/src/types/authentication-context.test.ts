@@ -144,6 +144,19 @@ describe('buildAuthenticationMethodReferences', () => {
     ]);
   });
 
+  it('keeps `mfa` last when a WebAuthn record precedes another factor', () => {
+    expect(
+      buildAuthenticationMethodReferences(
+        [VerificationType.WebAuthn, VerificationType.Password],
+        LogtoAcr.Mfa
+      )
+    ).toEqual(['pop', 'user', 'pwd', 'mfa']);
+    // WebAuthn carries `mfa` on its own even when no ACR is passed.
+    expect(
+      buildAuthenticationMethodReferences([VerificationType.WebAuthn, VerificationType.Password])
+    ).toEqual(['pop', 'user', 'pwd', 'mfa']);
+  });
+
   it('keeps `fed` next to an established factor without an ACR', () => {
     expect(
       buildAuthenticationMethodReferences([VerificationType.Social, VerificationType.Password])
