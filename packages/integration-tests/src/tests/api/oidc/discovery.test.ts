@@ -171,6 +171,9 @@ describe('OIDC discovery', () => {
         "claims_parameter_supported": false,
         "claims_supported": [
           "sub",
+          "acr",
+          "amr",
+          "auth_time",
           "name",
           "family_name",
           "given_name",
@@ -199,11 +202,8 @@ describe('OIDC discovery', () => {
           "organizations",
           "organization_data",
           "organization_roles",
-          "acr",
           "sid",
-          "auth_time",
           "iss",
-          "amr",
         ],
         "code_challenge_methods_supported": [
           "S256",

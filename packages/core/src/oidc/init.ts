@@ -440,9 +440,11 @@ export default function initOidc(
     // https://github.com/panva/node-oidc-provider/blob/main/recipes/claim_configuration.md
     // Note node-provider will append `claims` here to the default claims instead of overriding
     claims: EnvSet.values.isDevFeaturesEnabled
-      ? // `amr` is a standalone claim (not bound to a scope); it is advertised in
-        // `claims_supported` and issued from the session's authentication context.
-        { ...userClaims, amr: null }
+      ? // The provider only puts a claim into the ID token when some granted scope lists it (or the
+        // request asks for it through `claims` / `acr_values` / `max_age`). Listing the
+        // authentication context under `openid` makes every ID token carry `acr`, `amr`, and
+        // `auth_time` from the session, and advertises them in `claims_supported`.
+        { ...userClaims, openid: ['sub', 'acr', 'amr', 'auth_time'] }
       : userClaims,
     // Advertise the Logto ACR classes as `acr_values_supported`; the provider also re-adds the
     // built-in `acr` claim to `claims_supported` once at least one value is configured.
