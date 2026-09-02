@@ -1,4 +1,6 @@
-import { demoAppApplicationId, type MfaFactor } from '@logto/schemas';
+import { createHash } from 'node:crypto';
+
+import { defaultTenantId, demoAppApplicationId, type MfaFactor } from '@logto/schemas';
 import { appendPath } from '@silverhand/essentials';
 
 import { logtoUrl, mockSocialAuthPageUrl } from '#src/constants.js';
@@ -11,6 +13,11 @@ const demoAppUrl = appendPath(new URL(logtoUrl), 'demo-app');
 
 /** Aligned with puppeteer's default navigation timeout. */
 const defaultUrlWaitTimeout = 30_000;
+const trustedDeviceCookiePrefix = 'logto-trusted-device-';
+const trustedDeviceOptOutCookiePrefix = 'logto-device-trust-opt-out-';
+
+const isTrustedDeviceCredentialCookie = (name: string) =>
+  name.includes(trustedDeviceCookiePrefix) && !name.includes(trustedDeviceOptOutCookiePrefix);
 
 /** Remove the query string together with the `?` from a URL string. */
 const stripQuery = (url: string) => url.split('?')[0];
@@ -31,6 +38,7 @@ export type ExperiencePath =
   | 'identifier-register'
   | 'single-sign-on'
   | 'reset-password'
+  | 'trusted-device'
   | 'sign-in/passkey'
   | 'sign-in/verification-methods';
 
@@ -147,10 +155,22 @@ export default class ExpectExperience extends ExpectPage {
       sessionStorage.clear();
     });
     const cookies = await this.page.cookies(logtoUrl);
-    expect(cookies.some(({ name }) => name.includes('logto-trusted-device-'))).toBe(true);
-    const sessionCookies = cookies.filter(({ name }) => !name.includes('logto-trusted-device-'));
+    expect(cookies.some(({ name }) => isTrustedDeviceCredentialCookie(name))).toBe(true);
+    const sessionCookies = cookies.filter(({ name }) => !isTrustedDeviceCredentialCookie(name));
     await this.page.deleteCookie(...sessionCookies);
     await this.page.goto('about:blank');
+  }
+
+  /** Clear the persisted trusted-device opt-out preference for the given user. */
+  async clearTrustedDeviceOptOut(userId: string) {
+    const subjectHash = createHash('sha256')
+      .update(`${defaultTenantId}:${userId}`)
+      .digest('base64url');
+    const expectedCookieName = `${trustedDeviceOptOutCookiePrefix}${subjectHash}`;
+    const cookies = await this.page.cookies(logtoUrl);
+    const optOutCookies = cookies.filter(({ name }) => name.endsWith(expectedCookieName));
+    expect(optOutCookies).toHaveLength(1);
+    await this.page.deleteCookie(...optOutCookies);
   }
 
   /**
@@ -287,6 +307,27 @@ export default class ExpectExperience extends ExpectPage {
    */
   async waitForToast(text: string | RegExp) {
     return this.toMatchAndRemove('div[role=toast]', text);
+  }
+
+  async toSeeTrustedDeviceOptIn(durationDays = 365) {
+    const text = `Trust this device for ${durationDays} days`;
+    await this.waitToBeAt('trusted-device');
+    await this.toMatchElement('div[class$=title]', { text: 'Trust this device' });
+    await this.toMatchElement('div[class$=description]', {
+      text: 'You can skip MFA verification on this device during future sign-ins.',
+    });
+    await this.toMatchElement('button', { text });
+  }
+
+  async toOptInTrustedDevice(durationDays = 365) {
+    const text = `Trust this device for ${durationDays} days`;
+    await this.toSeeTrustedDeviceOptIn(durationDays);
+    await this.toClickButton(text, false);
+  }
+
+  async toSkipTrustedDevice(durationDays = 365) {
+    await this.toSeeTrustedDeviceOptIn(durationDays);
+    await this.toClick('div[role=button][class$=skipButton]', undefined, false);
   }
 
   /**
