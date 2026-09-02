@@ -25,6 +25,8 @@ export type SocialVerificationRecordData = {
    * The connector session result
    */
   connectorSession?: ConnectorSession;
+  /** Epoch seconds when the verification succeeded; feeds the `auth_time` claim. */
+  verifiedAt?: number;
 };
 
 export const socialVerificationRecordDataGuard = z.object({
@@ -34,6 +36,7 @@ export const socialVerificationRecordDataGuard = z.object({
   socialUserInfo: socialUserInfoGuard.optional(),
   encryptedTokenSet: encryptedTokenSetGuard.optional(),
   connectorSession: connectorSessionGuard.optional(),
+  verifiedAt: z.number().optional(),
 }) satisfies ToZodObject<SocialVerificationRecordData>;
 
 export type SanitizedSocialVerificationRecordData = Omit<

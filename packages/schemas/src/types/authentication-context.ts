@@ -26,32 +26,6 @@ export enum LogtoAcr {
 /** The ACR values advertised in Discovery as `acr_values_supported`, in the provider order. */
 export const logtoAcrValues = Object.freeze([LogtoAcr.FirstFactor, LogtoAcr.Mfa] as const);
 
-export const isLogtoAcr = (value: unknown): value is LogtoAcr =>
-  typeof value === 'string' && Object.values<string>(LogtoAcr).includes(value);
-
-/**
- * The explicit satisfaction map: each achieved class lists every requested class it satisfies.
- * `mfa → 1fa`; there is no implicit ordering beyond this table.
- */
-const acrSatisfactionMap: Readonly<Record<LogtoAcr, readonly LogtoAcr[]>> = Object.freeze({
-  [LogtoAcr.FirstFactor]: [LogtoAcr.FirstFactor],
-  [LogtoAcr.Mfa]: [LogtoAcr.Mfa, LogtoAcr.FirstFactor],
-});
-
-/**
- * Whether an achieved ACR satisfies a requested one.
- *
- * - An unsupported value on either side never satisfies anything.
- * - A missing achieved ACR (e.g. a social / SSO session) never satisfies anything.
- */
-export const acrSatisfies = (achieved: unknown, requested: unknown): boolean => {
-  if (!isLogtoAcr(achieved) || !isLogtoAcr(requested)) {
-    return false;
-  }
-
-  return acrSatisfactionMap[achieved].includes(requested);
-};
-
 /**
  * The AMR values Logto emits. All except {@link AuthenticationMethodReference.Federated} are
  * registered in RFC 8176; `fed` is the de facto industry value for authentication delegated to an

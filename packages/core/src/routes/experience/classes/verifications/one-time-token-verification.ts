@@ -17,7 +17,7 @@ import assertThat from '#src/utils/assert-that.js';
 import { type InteractionProfile } from '../../types.js';
 import { findUserByIdentifier } from '../utils.js';
 
-import { type IdentifierVerificationRecord } from './verification-record.js';
+import { type IdentifierVerificationRecord, getEpochTime } from './verification-record.js';
 
 export {
   type OneTimeTokenVerificationRecordData,
@@ -44,6 +44,8 @@ export class OneTimeTokenVerification
   readonly type = VerificationType.OneTimeToken;
   readonly id: string;
   readonly identifier: InteractionIdentifier<SignInIdentifier.Email>;
+  /** Epoch seconds when the verification succeeded; feeds the `auth_time` claim. */
+  verifiedAt?: number;
   private context?: OneTimeTokenContext;
   private verified: boolean;
 
@@ -58,11 +60,12 @@ export class OneTimeTokenVerification
     private readonly queries: Queries,
     data: OneTimeTokenVerificationRecordData
   ) {
-    const { id, identifier, verified, oneTimeTokenContext } = data;
+    const { id, identifier, verified, verifiedAt, oneTimeTokenContext } = data;
 
     this.id = id;
     this.identifier = identifier;
     this.verified = verified;
+    this.verifiedAt = verifiedAt;
     this.context = oneTimeTokenContext;
   }
 
@@ -85,6 +88,7 @@ export class OneTimeTokenVerification
       interactionEvent
     );
     this.verified = true;
+    this.verifiedAt = getEpochTime();
     this.context = tokenRecord.context;
   }
 
@@ -129,9 +133,9 @@ export class OneTimeTokenVerification
   }
 
   toJson(): OneTimeTokenVerificationRecordData {
-    const { id, type, identifier, verified, context } = this;
+    const { id, type, identifier, verified, verifiedAt, context } = this;
 
-    return { id, type, identifier, verified, oneTimeTokenContext: context };
+    return { id, type, identifier, verified, verifiedAt, oneTimeTokenContext: context };
   }
 
   toSanitizedJson(): OneTimeTokenVerificationRecordData {

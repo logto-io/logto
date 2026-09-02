@@ -331,6 +331,63 @@ describe('ExperienceInteraction class', () => {
       );
     });
 
+    it('seeds the derived authentication context into the login result when dev features are enabled', async () => {
+      setDevFeaturesEnabled(true);
+      const { experienceInteraction, provider } = createSignInInteraction({
+        interactionResult: {
+          verificationRecords: [
+            {
+              id: 'password',
+              type: VerificationType.Password,
+              identifier: { type: SignInIdentifier.Username, value: mockUser.username },
+              verified: true,
+              verifiedAt: 1_700_000_000,
+            },
+          ],
+        },
+      });
+
+      await experienceInteraction.submit();
+
+      expect(provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({
+          login: {
+            accountId: mockUser.id,
+            acr: 'urn:logto:acr:1fa',
+            amr: ['pwd'],
+            ts: 1_700_000_000,
+          },
+        })
+      );
+    });
+
+    it('finishes with the account id only when dev features are disabled', async () => {
+      setDevFeaturesEnabled(false);
+      const { experienceInteraction, provider } = createSignInInteraction({
+        interactionResult: {
+          verificationRecords: [
+            {
+              id: 'password',
+              type: VerificationType.Password,
+              identifier: { type: SignInIdentifier.Username, value: mockUser.username },
+              verified: true,
+              verifiedAt: 1_700_000_000,
+            },
+          ],
+        },
+      });
+
+      await experienceInteraction.submit();
+
+      expect(provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({ login: { accountId: mockUser.id } })
+      );
+    });
+
     it('does not include password in the PostSignIn action event', async () => {
       const { experienceInteraction, runActionHandler } = createSignInInteraction();
 

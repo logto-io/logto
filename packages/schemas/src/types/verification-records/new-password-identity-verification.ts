@@ -22,6 +22,8 @@ export type NewPasswordIdentityVerificationRecordData = {
   identifier: InteractionIdentifier;
   passwordEncrypted?: string;
   passwordEncryptionMethod?: UsersPasswordEncryptionMethod.Argon2i;
+  /** Epoch seconds when the verification succeeded; feeds the `auth_time` claim. */
+  verifiedAt?: number;
 };
 
 export const newPasswordIdentityVerificationRecordDataGuard = z.object({
@@ -30,6 +32,7 @@ export const newPasswordIdentityVerificationRecordDataGuard = z.object({
   identifier: interactionIdentifierGuard,
   passwordEncrypted: z.string().optional(),
   passwordEncryptionMethod: z.literal(UsersPasswordEncryptionMethod.Argon2i).optional(),
+  verifiedAt: z.number().optional(),
 }) satisfies ToZodObject<NewPasswordIdentityVerificationRecordData>;
 
 export type SanitizedNewPasswordIdentityVerificationRecordData = Omit<

@@ -22,7 +22,7 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { type MfaVerificationRecord } from './verification-record.js';
+import { type MfaVerificationRecord, getEpochTime } from './verification-record.js';
 
 export {
   type TotpVerificationRecordData,
@@ -58,6 +58,8 @@ export class TotpVerification implements MfaVerificationRecord<VerificationType.
   public readonly id: string;
   public readonly type = VerificationType.TOTP;
   public readonly userId: string;
+  /** Epoch seconds when the verification succeeded; feeds the `auth_time` claim. */
+  verifiedAt?: number;
   private verified: boolean;
   #secret?: string;
 
@@ -66,12 +68,14 @@ export class TotpVerification implements MfaVerificationRecord<VerificationType.
     private readonly queries: Queries,
     data: TotpVerificationRecordData
   ) {
-    const { id, userId, secret, verified } = totpVerificationRecordDataGuard.parse(data);
+    const { id, userId, secret, verified, verifiedAt } =
+      totpVerificationRecordDataGuard.parse(data);
 
     this.id = id;
     this.userId = userId;
     this.#secret = secret;
     this.verified = verified;
+    this.verifiedAt = verifiedAt;
   }
 
   get isVerified() {
@@ -116,6 +120,7 @@ export class TotpVerification implements MfaVerificationRecord<VerificationType.
     );
 
     this.verified = true;
+    this.verifiedAt = getEpochTime();
   }
 
   /**
@@ -153,6 +158,7 @@ export class TotpVerification implements MfaVerificationRecord<VerificationType.
     assertThat(updatedUser, 'session.mfa.invalid_totp_code');
 
     this.verified = true;
+    this.verifiedAt = getEpochTime();
   }
 
   toBindMfa(): BindTotp {
@@ -165,7 +171,7 @@ export class TotpVerification implements MfaVerificationRecord<VerificationType.
   }
 
   toJson(): TotpVerificationRecordData {
-    const { id, type, secret, verified, userId } = this;
+    const { id, type, secret, verified, verifiedAt, userId } = this;
 
     return {
       id,
@@ -173,13 +179,14 @@ export class TotpVerification implements MfaVerificationRecord<VerificationType.
       userId,
       secret,
       verified,
+      verifiedAt,
     };
   }
 
   toSanitizedJson(): SanitizedTotpVerificationRecordData {
-    const { id, type, userId, verified } = this;
+    const { id, type, userId, verified, verifiedAt } = this;
 
-    return { id, type, userId, verified };
+    return { id, type, userId, verified, verifiedAt };
   }
 
   /**

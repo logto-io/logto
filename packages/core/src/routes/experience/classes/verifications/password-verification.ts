@@ -14,7 +14,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { findUserByIdentifier } from '../utils.js';
 
-import { type IdentifierVerificationRecord } from './verification-record.js';
+import { type IdentifierVerificationRecord, getEpochTime } from './verification-record.js';
 
 export {
   type PasswordVerificationRecordData,
@@ -37,6 +37,8 @@ export class PasswordVerification
   readonly type = VerificationType.Password;
   readonly identifier: VerificationIdentifier;
   readonly id: string;
+  /** Epoch seconds when the verification succeeded; feeds the `auth_time` claim. */
+  verifiedAt?: number;
   private verified: boolean;
 
   /**
@@ -50,11 +52,12 @@ export class PasswordVerification
     private readonly queries: Queries,
     data: PasswordVerificationRecordData
   ) {
-    const { id, identifier, verified } = data;
+    const { id, identifier, verified, verifiedAt } = data;
 
     this.id = id;
     this.identifier = identifier;
     this.verified = verified;
+    this.verifiedAt = verifiedAt;
   }
 
   /** Returns whether the password verification has succeeded. */
@@ -64,6 +67,7 @@ export class PasswordVerification
 
   markAsVerified(): void {
     this.verified = true;
+    this.verifiedAt = getEpochTime();
   }
 
   /**
@@ -84,6 +88,7 @@ export class PasswordVerification
     );
 
     this.verified = true;
+    this.verifiedAt = getEpochTime();
 
     return verifiedUser;
   }
@@ -110,13 +115,14 @@ export class PasswordVerification
   }
 
   toJson(): PasswordVerificationRecordData {
-    const { id, type, identifier, verified } = this;
+    const { id, type, identifier, verified, verifiedAt } = this;
 
     return {
       id,
       type,
       identifier,
       verified,
+      verifiedAt,
     };
   }
 

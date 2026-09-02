@@ -13,6 +13,7 @@ import {
 import { maskEmail, maskPhone } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { buildUserPasswordPayload } from '#src/libraries/user.utils.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
@@ -39,6 +40,7 @@ import {
 import { validatePostSignInActionResult } from './libraries/action-result-validation.js';
 import { AdaptiveMfaValidator } from './libraries/adaptive-mfa-validator/index.js';
 import { type AdaptiveMfaResult } from './libraries/adaptive-mfa-validator/types.js';
+import { deriveAuthenticationContext } from './libraries/authentication-context.js';
 import { CaptchaValidator } from './libraries/captcha-validator.js';
 import { MfaValidator } from './libraries/mfa-validator.js';
 import { ProvisionLibrary } from './libraries/provision-library.js';
@@ -673,7 +675,17 @@ export default class ExperienceInteraction {
     const trustedDeviceOptInDecision = this.trustedDevice.consumeOptInDecision();
 
     const redirectTo = await provider.interactionResult(this.ctx.req, this.ctx.res, {
-      login: { accountId: user.id },
+      login: {
+        accountId: user.id,
+        // Seed the authentication context this interaction achieved onto the OIDC session, so
+        // the ID token carries `acr` / `amr` / `auth_time`. A sign-in without a counted record
+        // (or a register) seeds nothing and the provider stamps `auth_time` itself.
+        ...conditional(
+          EnvSet.values.isDevFeaturesEnabled &&
+            this.#interactionEvent === InteractionEvent.SignIn &&
+            deriveAuthenticationContext(this.verificationRecordsArray)
+        ),
+      },
       // Persist the interaction status to the OIDC session after interaction submission
       ...this.toJson(),
     });

@@ -10,6 +10,8 @@ export type PasswordVerificationRecordData = {
   type: VerificationType.Password;
   identifier: VerificationIdentifier;
   verified: boolean;
+  /** Epoch seconds when the verification succeeded; feeds the `auth_time` claim. */
+  verifiedAt?: number;
 };
 
 export const passwordVerificationRecordDataGuard = z.object({
@@ -17,4 +19,5 @@ export const passwordVerificationRecordDataGuard = z.object({
   type: z.literal(VerificationType.Password),
   identifier: verificationIdentifierGuard,
   verified: z.boolean(),
+  verifiedAt: z.number().optional(),
 }) satisfies ToZodObject<PasswordVerificationRecordData>;

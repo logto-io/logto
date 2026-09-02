@@ -4,11 +4,9 @@ import {
   AuthenticationFactorClass,
   AuthenticationMethodReference,
   LogtoAcr,
-  acrSatisfies,
   buildAuthenticationMethodReferences,
   getAuthenticationFactorClass,
   getAuthenticationMethodReferences,
-  isLogtoAcr,
   logtoAcrValues,
 } from './authentication-context.js';
 import { VerificationType } from './verification-records/verification-type.js';
@@ -16,36 +14,6 @@ import { VerificationType } from './verification-records/verification-type.js';
 describe('logtoAcrValues', () => {
   it('advertises exactly the two Logto classes in order', () => {
     expect(logtoAcrValues).toEqual(['urn:logto:acr:1fa', 'urn:logto:acr:mfa']);
-  });
-
-  it.each(['urn:logto:acr:1fa', 'urn:logto:acr:mfa'])('recognizes %s', (value) => {
-    expect(isLogtoAcr(value)).toBe(true);
-  });
-
-  it.each(['phr', 'urn:logto:acr:3fa', '', undefined, 1])('rejects %o', (value) => {
-    expect(isLogtoAcr(value)).toBe(false);
-  });
-});
-
-describe('acrSatisfies', () => {
-  it.each([
-    [LogtoAcr.FirstFactor, LogtoAcr.FirstFactor, true],
-    [LogtoAcr.Mfa, LogtoAcr.Mfa, true],
-    [LogtoAcr.Mfa, LogtoAcr.FirstFactor, true],
-    [LogtoAcr.FirstFactor, LogtoAcr.Mfa, false],
-  ])('achieved %s vs requested %s → %s', (achieved, requested, expected) => {
-    expect(acrSatisfies(achieved, requested)).toBe(expected);
-  });
-
-  it('never satisfies an unsupported requested value', () => {
-    expect(acrSatisfies(LogtoAcr.Mfa, 'phr')).toBe(false);
-    expect(acrSatisfies(LogtoAcr.Mfa, 'urn:logto:acr:3fa')).toBe(false);
-  });
-
-  it('never satisfies from an unsupported or missing achieved value', () => {
-    expect(acrSatisfies('phr', LogtoAcr.FirstFactor)).toBe(false);
-    expect(acrSatisfies(undefined, LogtoAcr.FirstFactor)).toBe(false);
-    expect(acrSatisfies('', LogtoAcr.FirstFactor)).toBe(false);
   });
 });
 

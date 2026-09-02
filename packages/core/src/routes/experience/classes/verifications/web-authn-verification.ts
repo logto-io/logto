@@ -31,6 +31,7 @@ import assertThat from '#src/utils/assert-that.js';
 import {
   type IdentifierVerificationRecord,
   type MfaVerificationRecord,
+  getEpochTime,
 } from './verification-record.js';
 
 export {
@@ -46,6 +47,8 @@ abstract class BaseWebAuthnVerification {
   readonly id: string;
   userId?: string;
   verified: boolean;
+  /** Epoch seconds when the verification succeeded; feeds the `auth_time` claim. */
+  verifiedAt?: number;
   registrationChallenge?: string;
   registrationRpId?: string;
   registrationInfo?: BindWebAuthn;
@@ -59,6 +62,7 @@ abstract class BaseWebAuthnVerification {
     this.id = data.id;
     this.userId = data.userId;
     this.verified = data.verified;
+    this.verifiedAt = data.verifiedAt;
     this.registrationChallenge = data.registrationChallenge;
     this.registrationRpId = data.registrationRpId;
     this.registrationInfo = data.registrationInfo;
@@ -133,6 +137,7 @@ abstract class BaseWebAuthnVerification {
     const { credentialID, credentialPublicKey, counter } = registrationInfo;
 
     this.verified = true;
+    this.verifiedAt = getEpochTime();
 
     this.registrationInfo = {
       type: MfaFactor.WebAuthn,
@@ -232,6 +237,7 @@ export class WebAuthnVerification
     assertThat(result, 'session.mfa.webauthn_verification_failed');
 
     this.verified = true;
+    this.verifiedAt = getEpochTime();
 
     await this.queries.users.updateUserById(user.id, {
       mfaVerifications: mfaVerifications.map((mfa) => {
@@ -265,6 +271,7 @@ export class WebAuthnVerification
       type: this.type,
       userId: this.userId,
       verified: this.verified,
+      verifiedAt: this.verifiedAt,
       registrationChallenge: this.registrationChallenge,
       authenticationChallenge: this.authenticationChallenge,
       registrationRpId: this.registrationRpId,
@@ -273,8 +280,8 @@ export class WebAuthnVerification
   }
 
   toSanitizedJson(): SanitizedWebAuthnVerificationRecordData {
-    const { id, type, userId, verified } = this;
-    return { id, type, userId, verified };
+    const { id, type, userId, verified, verifiedAt } = this;
+    return { id, type, userId, verified, verifiedAt };
   }
 }
 
@@ -346,6 +353,7 @@ export class SignInPasskeyVerification
     assertThat(result, 'session.mfa.webauthn_verification_failed');
 
     this.verified = true;
+    this.verifiedAt = getEpochTime();
     this.userId = userId;
 
     await updateUserById(userId, {
@@ -383,6 +391,7 @@ export class SignInPasskeyVerification
       type: this.type,
       userId: this.userId,
       verified: this.verified,
+      verifiedAt: this.verifiedAt,
       registrationChallenge: this.registrationChallenge,
       authenticationChallenge: this.authenticationChallenge,
       registrationRpId: this.registrationRpId,
@@ -392,7 +401,7 @@ export class SignInPasskeyVerification
   }
 
   toSanitizedJson(): SanitizedSignInPasskeyVerificationRecordData {
-    const { id, type, userId, verified } = this;
-    return { id, type, userId, verified };
+    const { id, type, userId, verified, verifiedAt } = this;
+    return { id, type, userId, verified, verifiedAt };
   }
 }

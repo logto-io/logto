@@ -17,6 +17,8 @@ export type EnterpriseSsoVerificationRecordData = {
   enterpriseSsoUserInfo?: ExtendedSocialUserInfo;
   encryptedTokenSet?: EncryptedTokenSet;
   issuer?: string;
+  /** Epoch seconds when the verification succeeded; feeds the `auth_time` claim. */
+  verifiedAt?: number;
 };
 
 export const enterpriseSsoVerificationRecordDataGuard = z.object({
@@ -26,6 +28,7 @@ export const enterpriseSsoVerificationRecordDataGuard = z.object({
   enterpriseSsoUserInfo: extendedSocialUserInfoGuard.optional(),
   encryptedTokenSet: encryptedTokenSetGuard.optional(),
   issuer: z.string().optional(),
+  verifiedAt: z.number().optional(),
 }) satisfies ToZodObject<EnterpriseSsoVerificationRecordData>;
 
 export type SanitizedEnterpriseSsoVerificationRecordData = Omit<

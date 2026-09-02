@@ -13,7 +13,7 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { type MfaVerificationRecord } from './verification-record.js';
+import { type MfaVerificationRecord, getEpochTime } from './verification-record.js';
 
 export {
   type BackupCodeVerificationRecordData,
@@ -40,6 +40,8 @@ export class BackupCodeVerification implements MfaVerificationRecord<Verificatio
   public readonly id: string;
   public readonly type = VerificationType.BackupCode;
   public readonly userId: string;
+  /** Epoch seconds when the verification succeeded; feeds the `auth_time` claim. */
+  verifiedAt?: number;
   private code?: string;
   private backupCodes?: string[];
 
@@ -48,12 +50,13 @@ export class BackupCodeVerification implements MfaVerificationRecord<Verificatio
     private readonly queries: Queries,
     data: BackupCodeVerificationRecordData
   ) {
-    const { id, userId, code, backupCodes } = data;
+    const { id, userId, code, backupCodes, verifiedAt } = data;
 
     this.id = id;
     this.userId = userId;
     this.code = code;
     this.backupCodes = backupCodes;
+    this.verifiedAt = verifiedAt;
   }
 
   get isVerified() {
@@ -117,6 +120,7 @@ export class BackupCodeVerification implements MfaVerificationRecord<Verificatio
     });
 
     this.code = code;
+    this.verifiedAt = getEpochTime();
   }
 
   toBindMfa(): BindBackupCode {
@@ -129,7 +133,7 @@ export class BackupCodeVerification implements MfaVerificationRecord<Verificatio
   }
 
   toJson(): BackupCodeVerificationRecordData {
-    const { id, type, userId, code, backupCodes } = this;
+    const { id, type, userId, code, backupCodes, verifiedAt } = this;
 
     return {
       id,
@@ -137,12 +141,13 @@ export class BackupCodeVerification implements MfaVerificationRecord<Verificatio
       userId,
       code,
       backupCodes,
+      verifiedAt,
     };
   }
 
   toSanitizedJson(): SanitizedBackupCodeVerificationRecordData {
-    const { id, type, userId, code } = this;
+    const { id, type, userId, code, verifiedAt } = this;
 
-    return { id, type, userId, code };
+    return { id, type, userId, code, verifiedAt };
   }
 }
