@@ -69,6 +69,9 @@ const mfa = {
   verify_via_passkey: 'Ověřit pomocí přístupového klíče',
   verify_via_passkey_description:
     'Ověř se pomocí přístupového klíče zadáním hesla zařízení, biometrie, naskenováním QR kódu nebo použitím bezpečnostního USB klíče, např. YubiKey.',
+  trust_this_device_title: 'Důvěřovat tomuto zařízení',
+  trust_this_device_description:
+    'Při budoucím přihlašování na tomto zařízení můžete přeskočit vícefaktorové ověření.',
   trust_this_device_one: 'Důvěřovat tomuto zařízení po dobu {{count}} dne',
   trust_this_device_two: 'Důvěřovat tomuto zařízení po dobu {{count}} dnů',
   trust_this_device_few: 'Důvěřovat tomuto zařízení po dobu {{count}} dnů',

@@ -70,6 +70,9 @@ const mfa = {
   verify_via_passkey: 'Verify via passkey',
   verify_via_passkey_description:
     'Use passkey to verify by your device password or biometrics, scanning QR code, or using USB security key like YubiKey.',
+  trust_this_device_title: 'Trust this device',
+  trust_this_device_description:
+    'You can skip MFA verification on this device during future sign-ins.',
   trust_this_device_one: 'Trust this device for {{count}} day',
   trust_this_device_two: 'Trust this device for {{count}} days',
   trust_this_device_few: 'Trust this device for {{count}} days',

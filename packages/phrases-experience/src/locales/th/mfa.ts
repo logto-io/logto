@@ -68,6 +68,9 @@ const mfa = {
   verify_via_passkey: 'ยืนยันผ่านรหัสผ่านดิจิทัล',
   verify_via_passkey_description:
     'ใช้รหัสผ่านดิจิทัลเพื่อยืนยันโดยรหัสผ่านอุปกรณ์หรือไบโอเมตริกซ์ สแกน QR หรือใช้กุญแจความปลอดภัย USB เช่น YubiKey',
+  trust_this_device_title: 'เชื่อถืออุปกรณ์นี้',
+  trust_this_device_description:
+    'คุณสามารถข้ามการยืนยัน MFA บนอุปกรณ์นี้ในการลงชื่อเข้าใช้ครั้งต่อไปได้',
   trust_this_device_one: 'เชื่อถืออุปกรณ์นี้เป็นเวลา {{count}} วัน',
   trust_this_device_two: 'เชื่อถืออุปกรณ์นี้เป็นเวลา {{count}} วัน',
   trust_this_device_few: 'เชื่อถืออุปกรณ์นี้เป็นเวลา {{count}} วัน',

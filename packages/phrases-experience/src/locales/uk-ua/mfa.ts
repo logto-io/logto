@@ -69,6 +69,9 @@ const mfa = {
   verify_via_passkey: 'Перевірити через ключ доступу',
   verify_via_passkey_description:
     'Використовуйте ключ доступу для перевірки за допомогою пароля пристрою, біометричних даних, сканування QR-коду або USB-ключа безпеки, як-от YubiKey.',
+  trust_this_device_title: 'Довіряти цьому пристрою',
+  trust_this_device_description:
+    'Під час наступних входів на цьому пристрої можна пропустити перевірку MFA.',
   trust_this_device_one: 'Довіряти цьому пристрою протягом {{count}} дня',
   trust_this_device_two: 'Довіряти цьому пристрою протягом {{count}} днів',
   trust_this_device_few: 'Довіряти цьому пристрою протягом {{count}} днів',

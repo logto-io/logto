@@ -1,6 +1,7 @@
 import { MfaFactor, experience } from '@logto/schemas';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 
+import { isDevFeaturesEnabled } from '@/constants/env';
 import { handleSearchParametersData } from '@/shared/utils/search-parameters';
 
 import AppLayout from './Layout/AppLayout';
@@ -52,6 +53,7 @@ import SocialLanding from './pages/SocialLanding';
 import SocialLinkAccount from './pages/SocialLinkAccount';
 import SocialSignInWebCallback from './pages/SocialSignInWebCallback';
 import SwitchAccount from './pages/SwitchAccount';
+import TrustedDevice from './pages/TrustedDevice';
 import VerificationCode from './pages/VerificationCode';
 import { UserMfaFlow } from './types';
 import 'overlayscrollbars/overlayscrollbars.css';
@@ -117,6 +119,11 @@ const App = () => {
 
                       {/* Create passkey for sign-in */}
                       <Route path="create-passkey" element={<PasskeySetup />} />
+
+                      {/* Trusted device */}
+                      {isDevFeaturesEnabled && (
+                        <Route path={experience.routes.trustedDevice} element={<TrustedDevice />} />
+                      )}
 
                       {/* Register */}
                       <Route path={experience.routes.register}>

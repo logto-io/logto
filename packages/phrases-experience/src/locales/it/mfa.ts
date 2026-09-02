@@ -70,6 +70,9 @@ const mfa = {
   verify_via_passkey: 'Verifica tramite chiave di accesso',
   verify_via_passkey_description:
     "Usa la chiave di accesso per verificare tramite la password o le biometrie del tuo dispositivo, la scansione del codice QR o l'uso di una chiave di sicurezza USB come YubiKey.",
+  trust_this_device_title: 'Considera attendibile questo dispositivo',
+  trust_this_device_description:
+    'Puoi saltare la verifica MFA su questo dispositivo per gli accessi futuri.',
   trust_this_device_one: 'Considera attendibile questo dispositivo per {{count}} giorno',
   trust_this_device_two: 'Considera attendibile questo dispositivo per {{count}} giorni',
   trust_this_device_few: 'Considera attendibile questo dispositivo per {{count}} giorni',

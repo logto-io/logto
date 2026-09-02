@@ -69,6 +69,9 @@ const mfa = {
   verify_via_passkey: 'Anahtar ile doğrula',
   verify_via_passkey_description:
     'Anahtar kullanarak cihaz parolanız veya biyometri ile doğrulama, QR kodunu tarama veya YubiKey gibi USB güvenlik anahtarı kullanma.',
+  trust_this_device_title: 'Bu cihaza güven',
+  trust_this_device_description:
+    'Bu cihazda gelecekteki oturum açma işlemlerinde MFA doğrulamasını atlayabilirsiniz.',
   trust_this_device_one: 'Bu cihaza {{count}} gün boyunca güven',
   trust_this_device_two: 'Bu cihaza {{count}} gün boyunca güven',
   trust_this_device_few: 'Bu cihaza {{count}} gün boyunca güven',
