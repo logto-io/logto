@@ -8990,7 +8990,6 @@ packages:
   '@xmldom/xmldom@0.8.15':
     resolution: {integrity: sha512-/5NV/vDALVFDXgLmfsy9TRCBlKwO2LNBFzpzvb9iIj+jR+eSc6DLYYvVOdivT/jm7MtU6TebYuRmzEOI7w40UA==}
     engines: {node: '>=10.0.0'}
-    deprecated: this version has critical issues, please update to the latest version
 
   '@zag-js/dom-query@1.10.0':
     resolution: {integrity: sha512-UQM4pHPPwpPNyuIcaDvuTjI4ntvBCV0oatpd+OcOW8NdUc2VVcPzL4cN6q1h+Q9s0Rpi+q77X0x6t9c1QWj1Iw==}
