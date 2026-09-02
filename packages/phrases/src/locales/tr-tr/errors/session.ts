@@ -46,6 +46,7 @@ const session = {
     suggest_additional_mfa:
       'Daha güçlü koruma için başka bir MFA yöntemi eklemeyi düşünün. Bu adımı atlayıp devam edebilirsiniz.',
   },
+  trusted_device_suggest_opt_in: 'Bu cihaza güvenip güvenmeyeceğinizi seçin.',
   passkey_sign_in: {
     pending_info_not_found:
       'Bekleyen passkey oturum açma bilgisi bulunamadı. Lütfen oturum açma akışını yeniden başlatın.',

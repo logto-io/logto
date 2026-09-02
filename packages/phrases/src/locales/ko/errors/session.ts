@@ -43,6 +43,7 @@ const session = {
     suggest_additional_mfa:
       '보안을 강화하기 위해 다른 MFA 방법을 추가하는 것을 권장합니다. 이 단계는 건너뛰고 계속할 수 있습니다.',
   },
+  trusted_device_suggest_opt_in: '이 기기를 신뢰할지 선택하세요.',
   passkey_sign_in: {
     pending_info_not_found:
       '대기 중인 패스키 로그인 정보를 찾을 수 없습니다. 로그인 흐름을 다시 시작해 주세요.',
