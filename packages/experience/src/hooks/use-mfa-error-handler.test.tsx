@@ -49,7 +49,7 @@ describe('useMfaErrorHandler', () => {
     const error: RequestErrorBody = {
       code: 'user.suggest_mfa',
       message: 'MFA suggested',
-      data: { trustedDevice: { canCreate: true, durationDays: 30 } },
+      data: { futureField: 'ignored' },
     };
 
     await act(async () => {
@@ -69,7 +69,6 @@ describe('useMfaErrorHandler', () => {
       message: 'MFA is missing',
       data: {
         availableFactors: [MfaFactor.TOTP, MfaFactor.WebAuthn],
-        trustedDevice: { canCreate: true, durationDays: 30 },
         futureField: 'ignored',
       },
     };
@@ -84,7 +83,6 @@ describe('useMfaErrorHandler', () => {
         replace: undefined,
         state: {
           availableFactors: [MfaFactor.TOTP, MfaFactor.WebAuthn],
-          trustedDevice: { canCreate: true, durationDays: 30 },
         },
       }
     );

@@ -1,11 +1,7 @@
 import { createHash } from 'node:crypto';
 
 import { appInsights } from '@logto/app-insights/node';
-import {
-  InteractionEvent,
-  type OrganizationWithRoles,
-  type TrustedDevice as TrustedDeviceModel,
-} from '@logto/schemas';
+import { InteractionEvent, type TrustedDevice as TrustedDeviceModel } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
 
@@ -18,11 +14,7 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
-import {
-  type InteractionStorage,
-  type TrustedDeviceAvailability,
-  type WithHooksAndLogsContext,
-} from '../types.js';
+import { type InteractionStorage, type WithHooksAndLogsContext } from '../types.js';
 
 type TrustedDeviceData = Pick<InteractionStorage, 'trustedDeviceCreation'>;
 
@@ -55,7 +47,6 @@ export class TrustedDevice {
   #validatedDeviceId?: string;
   #effectivePolicy?: {
     userId: string;
-    includesOrganizations: boolean;
     promise: Promise<EffectiveTrustedDevicePolicy>;
   };
 
@@ -94,30 +85,6 @@ export class TrustedDevice {
     this.#creation = undefined;
 
     return creation;
-  }
-
-  async getCreationAvailability(
-    userId?: string,
-    organizations?: Readonly<OrganizationWithRoles[]>
-  ): Promise<TrustedDeviceAvailability | undefined> {
-    // Trusted-device opt-in is under development and must remain isolated from released flows.
-    if (!EnvSet.values.isDevFeaturesEnabled || !userId) {
-      return;
-    }
-
-    return trySafe(
-      async () => {
-        const { enabled, durationDays } = await this.#getEffectivePolicy(userId, organizations);
-
-        return {
-          canCreate: enabled,
-          ...conditional(enabled && { durationDays }),
-        };
-      },
-      (error) => {
-        void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
-      }
-    );
   }
 
   /**
@@ -266,23 +233,16 @@ export class TrustedDevice {
     log.append({ userId: data.userId, data });
   }
 
-  async #getEffectivePolicy(userId: string, organizations?: Readonly<OrganizationWithRoles[]>) {
+  async #getEffectivePolicy(userId: string) {
     const cachedPolicy = this.#effectivePolicy;
 
-    if (
-      cachedPolicy?.userId === userId &&
-      (cachedPolicy.includesOrganizations || organizations === undefined)
-    ) {
+    if (cachedPolicy?.userId === userId) {
       return cachedPolicy.promise;
     }
 
-    const promise = this.tenant.libraries.trustedDevicePolicy.getEffectivePolicy(
-      userId,
-      organizations
-    );
+    const promise = this.tenant.libraries.trustedDevicePolicy.getEffectivePolicy(userId);
     const policyEntry = {
       userId,
-      includesOrganizations: organizations !== undefined,
       promise,
     };
     this.#effectivePolicy = policyEntry;

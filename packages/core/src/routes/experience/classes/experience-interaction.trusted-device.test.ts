@@ -18,11 +18,7 @@ import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import {
-  type Interaction,
-  type TrustedDeviceAvailability,
-  type WithHooksAndLogsContext,
-} from '../types.js';
+import { type Interaction, type WithHooksAndLogsContext } from '../types.js';
 
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
@@ -108,22 +104,14 @@ const createInteraction = (
 };
 
 const expectConventionalMfaRequired = async (
-  experienceInteraction: InstanceType<typeof ExperienceInteraction>,
-  options?: {
-    trustedDevice?: TrustedDeviceAvailability | false;
-  }
+  experienceInteraction: InstanceType<typeof ExperienceInteraction>
 ) => {
-  const trustedDevice =
-    options?.trustedDevice === undefined
-      ? { canCreate: true, durationDays: 30 }
-      : options.trustedDevice;
   await expect(experienceInteraction.guardMfaVerificationStatus()).rejects.toMatchError(
     new RequestError(
       { code: 'session.mfa.require_mfa_verification', status: 403 },
       {
         availableFactors: [MfaFactor.TOTP],
         maskedIdentifiers: {},
-        ...(trustedDevice ? { trustedDevice } : {}),
       }
     )
   );
@@ -201,22 +189,20 @@ describe('ExperienceInteraction trusted-device MFA verification', () => {
       },
     });
 
-    await expectConventionalMfaRequired(experienceInteraction, {
-      trustedDevice: { canCreate: false },
-    });
+    await expectConventionalMfaRequired(experienceInteraction);
 
     expect(getEffectivePolicy).toHaveBeenCalledTimes(1);
     expect(validateCredential).not.toHaveBeenCalled();
   });
 
-  it('resolves advisory availability but skips credential validation when no cookie is present', async () => {
+  it('skips policy and credential validation when no cookie is present', async () => {
     hasCredential.mockReturnValueOnce(false);
     const { ctx, experienceInteraction } = createInteraction();
 
     await expectConventionalMfaRequired(experienceInteraction);
 
     expect(hasCredential).toHaveBeenCalledWith(ctx, mockUserWithMfaVerifications.id);
-    expect(getEffectivePolicy).toHaveBeenCalledTimes(1);
+    expect(getEffectivePolicy).not.toHaveBeenCalled();
     expect(validateCredential).not.toHaveBeenCalled();
   });
 

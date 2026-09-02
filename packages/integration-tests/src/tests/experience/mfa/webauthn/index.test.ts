@@ -20,7 +20,7 @@ import {
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
 import ExpectWebAuthnExperience from '#src/ui-helpers/expect-webauthn-experience.js';
-import { devFeatureTest, generateUsername, waitFor } from '#src/utils.js';
+import { generateUsername, waitFor } from '#src/utils.js';
 
 describe('MFA - WebAuthn', () => {
   beforeAll(async () => {
@@ -103,82 +103,6 @@ describe('MFA - WebAuthn', () => {
     await experience.verifyThenEnd();
 
     await deleteUser(user.id);
-  });
-
-  devFeatureTest.describe('trusted device opt-in', () => {
-    beforeAll(async () => {
-      await updateSignInExperience({ trustedDevice: { enabled: true, durationDays: 365 } });
-    });
-
-    afterAll(async () => {
-      await updateSignInExperience({ trustedDevice: { enabled: false } });
-    });
-
-    it('creates a trusted device from WebAuthn binding and skips MFA on the next sign-in', async () => {
-      const { userProfile, user } = await generateNewUser({ username: true, password: true });
-      const experience = new ExpectWebAuthnExperience(await browser.newPage());
-      await experience.setupVirtualAuthenticator();
-
-      await experience.startWith(demoAppUrl, 'sign-in');
-      await experience.toFillForm(
-        { identifier: userProfile.username, password: userProfile.password },
-        { submit: true }
-      );
-      await experience.waitToBeAt(`mfa-binding/${MfaFactor.WebAuthn}`);
-      await experience.toOptInTrustedDevice();
-      await experience.toCreatePasskey();
-      await experience.verifyThenEnd(false);
-      await experience.clearDemoAppSession();
-      await experience.clearVirtualAuthenticator();
-      await experience.page.close();
-      const trustedDeviceExperience = new ExpectWebAuthnExperience(await browser.newPage());
-
-      await trustedDeviceExperience.startWith(demoAppUrl, 'sign-in');
-      await trustedDeviceExperience.toFillForm(
-        { identifier: userProfile.username, password: userProfile.password },
-        { submit: true }
-      );
-      await trustedDeviceExperience.verifyThenEnd();
-
-      await deleteUser(user.id);
-    });
-
-    it('creates a trusted device from WebAuthn verification and skips MFA on the next sign-in', async () => {
-      const { userProfile, user } = await generateNewUser({ username: true, password: true });
-      const experience = new ExpectWebAuthnExperience(await browser.newPage());
-      await experience.setupVirtualAuthenticator();
-
-      await experience.startWith(demoAppUrl, 'sign-in');
-      await experience.toFillForm(
-        { identifier: userProfile.username, password: userProfile.password },
-        { submit: true }
-      );
-      await experience.toCreatePasskey();
-      await experience.verifyThenEnd(false);
-
-      await experience.startWith(demoAppUrl, 'sign-in');
-      await experience.toFillForm(
-        { identifier: userProfile.username, password: userProfile.password },
-        { submit: true }
-      );
-      await experience.waitToBeAt(`mfa-verification/${MfaFactor.WebAuthn}`);
-      await experience.toOptInTrustedDevice();
-      await experience.toVerifyViaPasskey();
-      await experience.verifyThenEnd(false);
-      await experience.clearDemoAppSession();
-      await experience.clearVirtualAuthenticator();
-      await experience.page.close();
-      const trustedDeviceExperience = new ExpectWebAuthnExperience(await browser.newPage());
-
-      await trustedDeviceExperience.startWith(demoAppUrl, 'sign-in');
-      await trustedDeviceExperience.toFillForm(
-        { identifier: userProfile.username, password: userProfile.password },
-        { submit: true }
-      );
-      await trustedDeviceExperience.verifyThenEnd();
-
-      await deleteUser(user.id);
-    }, 90_000);
   });
 });
 

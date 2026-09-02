@@ -123,7 +123,6 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
         const maskedIdentifiers = data?.maskedIdentifiers;
         const suggestion = data?.suggestion;
         const isWebAuthnUsedAsSignInPasskey = data?.isWebAuthnUsedAsSignInPasskey;
-        const trustedDevice = data?.trustedDevice;
 
         if (factors.length === 0) {
           setToast(error.message);
@@ -142,7 +141,6 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
           maskedIdentifiers,
           suggestion,
           isWebAuthnUsedAsSignInPasskey,
-          trustedDevice,
         });
       };
     },

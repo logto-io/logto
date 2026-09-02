@@ -8,7 +8,7 @@ import { clearConnectorsByTypes, setSocialConnector } from '#src/helpers/connect
 import { resetMfaSettings } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
 import ExpectWebAuthnExperience from '#src/ui-helpers/expect-webauthn-experience.js';
-import { devFeatureTest, waitFor } from '#src/utils.js';
+import { waitFor } from '#src/utils.js';
 
 describe('MFA - Multi factors', () => {
   beforeAll(async () => {
@@ -108,68 +108,5 @@ describe('MFA - Multi factors', () => {
     await experience.clearVirtualAuthenticator();
     await experience.verifyThenEnd();
     await deleteUser(user.id);
-  });
-
-  devFeatureTest.describe('trusted device opt-in after switching factors', () => {
-    beforeAll(async () => {
-      await updateSignInExperience({ trustedDevice: { enabled: true, durationDays: 365 } });
-    });
-
-    afterAll(async () => {
-      await updateSignInExperience({ trustedDevice: { enabled: false } });
-    });
-
-    it('keeps trusted-device availability across binding and verification factor switches', async () => {
-      const { userProfile, user } = await generateNewUser({ username: true, password: true });
-      const experience = new ExpectWebAuthnExperience(await browser.newPage());
-      await experience.setupVirtualAuthenticator();
-
-      await experience.startWith(demoAppUrl, 'sign-in');
-      await experience.toFillForm(
-        { identifier: userProfile.username, password: userProfile.password },
-        { submit: true }
-      );
-      await experience.waitToBeAt('mfa-binding');
-
-      await experience.toClick('button div[class$=name]', 'Authenticator app OTP');
-      await experience.waitToBeAt(`mfa-binding/${MfaFactor.TOTP}`);
-      await experience.toSeeTrustedDeviceOptIn();
-      await experience.toClickSwitchFactorsLink({ isBinding: true });
-
-      await experience.toClick('button div[class$=name]', 'Passkey');
-      await experience.waitToBeAt(`mfa-binding/${MfaFactor.WebAuthn}`);
-      await experience.toSeeTrustedDeviceOptIn();
-      await experience.toClickSwitchFactorsLink({ isBinding: true });
-
-      await experience.toClick('button div[class$=name]', 'Authenticator app OTP');
-      await experience.waitToBeAt(`mfa-binding/${MfaFactor.TOTP}`);
-      await experience.toSeeTrustedDeviceOptIn();
-      await experience.toClickSwitchFactorsLink({ isBinding: true });
-
-      await experience.toClick('button div[class$=name]', 'Passkey');
-      await experience.waitToBeAt(`mfa-binding/${MfaFactor.WebAuthn}`);
-      await experience.toSeeTrustedDeviceOptIn();
-      await experience.toCreatePasskey();
-      await experience.toClickButton('Continue');
-      await experience.verifyThenEnd(false);
-
-      await experience.startWith(demoAppUrl, 'sign-in');
-      await experience.toFillForm(
-        { identifier: userProfile.username, password: userProfile.password },
-        { submit: true }
-      );
-      await experience.waitToBeAt(`mfa-verification/${MfaFactor.WebAuthn}`);
-      await experience.toSeeTrustedDeviceOptIn();
-      await experience.toClickSwitchFactorsLink({ isBinding: false });
-
-      await experience.toClick('button div[class$=name]', 'Passkey');
-      await experience.waitToBeAt(`mfa-verification/${MfaFactor.WebAuthn}`);
-      await experience.toSeeTrustedDeviceOptIn();
-      await experience.toVerifyViaPasskey();
-
-      await experience.clearVirtualAuthenticator();
-      await experience.verifyThenEnd();
-      await deleteUser(user.id);
-    });
   });
 });
