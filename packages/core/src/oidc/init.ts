@@ -12,6 +12,7 @@ import {
   extraParamsObjectGuard,
   inSeconds,
   logtoCookieKey,
+  logtoAcrValues,
   ExtraParamsKey,
   type Json,
 } from '@logto/schemas';
@@ -438,7 +439,14 @@ export default function initOidc(
       ctx.URL.origin === origin || isOriginAllowed(origin, client.metadata(), client.redirectUris),
     // https://github.com/panva/node-oidc-provider/blob/main/recipes/claim_configuration.md
     // Note node-provider will append `claims` here to the default claims instead of overriding
-    claims: userClaims,
+    claims: EnvSet.values.isDevFeaturesEnabled
+      ? // `amr` is a standalone claim (not bound to a scope); it is advertised in
+        // `claims_supported` and issued from the session's authentication context.
+        { ...userClaims, amr: null }
+      : userClaims,
+    // Advertise the Logto ACR classes as `acr_values_supported`; the provider also re-adds the
+    // built-in `acr` claim to `claims_supported` once at least one value is configured.
+    ...conditional(EnvSet.values.isDevFeaturesEnabled && { acrValues: [...logtoAcrValues] }),
     // https://github.com/panva/node-oidc-provider/tree/main/docs#findaccount
     findAccount: async (_ctx, sub) => {
       // The user may be deleted after the token is issued

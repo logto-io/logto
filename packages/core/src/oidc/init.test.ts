@@ -781,4 +781,34 @@ describe('findAccount', () => {
     ).rejects.toMatchError(new errors.InvalidGrant('user is suspended'));
   });
 });
+describe('authentication context provider metadata', () => {
+  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+
+  afterEach(() => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
+  });
+
+  it('should advertise the Logto ACR values and the acr / amr / auth_time claims when dev features are enabled', () => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+    const configuration = getProviderConfiguration(createProvider(new MockTenant()));
+    // `claimsSupported` is derived by the provider at construction and is not part of its typings.
+    const claimsSupported: unknown = Reflect.get(configuration, 'claimsSupported');
+
+    expect([...configuration.acrValues]).toEqual(['urn:logto:acr:1fa', 'urn:logto:acr:mfa']);
+    expect(claimsSupported).toContain('acr');
+    expect(claimsSupported).toContain('amr');
+    expect(claimsSupported).toContain('auth_time');
+  });
+
+  it('should keep the provider metadata unchanged when dev features are disabled', () => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+    const configuration = getProviderConfiguration(createProvider(new MockTenant()));
+    const claimsSupported: unknown = Reflect.get(configuration, 'claimsSupported');
+
+    expect([...configuration.acrValues]).toEqual([]);
+    expect(claimsSupported).not.toContain('acr');
+    expect(claimsSupported).not.toContain('amr');
+    expect(claimsSupported).toContain('auth_time');
+  });
+});
 /* eslint-enable max-lines */
