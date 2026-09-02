@@ -28,10 +28,13 @@
  *   grant module, which would pull in the whole grant for one string literal.
  * - The explicit `grantId not found` guard before grant validation is a Logto addition kept
  *   from the v8 fork; upstream relies on the grant lookup failing instead.
+ * - Each rotation kicks off a detached prune of the grant's aged consumed refresh tokens
+ *   (`pruneConsumedRefreshTokensByGrantId`) once the response is built.
  */
 
+import { appInsights } from '@logto/app-insights/node';
 import { ReservedResource, UserScope } from '@logto/core-kit';
-import { noop } from '@silverhand/essentials';
+import { noop, trySafe } from '@silverhand/essentials';
 import { errors, type Provider } from 'oidc-provider';
 
 import { type EnvSet } from '#src/env-set/index.js';
@@ -63,6 +66,8 @@ import {
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
+import { getConsoleLogFromContext } from '#src/utils/console.js';
+import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
 import { handleOrganizationToken, checkOrganizationAccess } from './utils.js';
 
@@ -257,10 +262,12 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx)
   }
   /* === End RFC 0001 === */
 
-  if (
+  const { grantId } = refreshToken;
+  const shouldRotate =
     rotateRefreshToken === true ||
-    (typeof rotateRefreshToken === 'function' && (await rotateRefreshToken(ctx)))
-  ) {
+    (typeof rotateRefreshToken === 'function' && (await rotateRefreshToken(ctx)));
+
+  if (shouldRotate) {
     await refreshToken.consume();
     ctx.oidc.entity('RotatedRefreshToken', refreshToken);
 
@@ -421,5 +428,20 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx)
     source: refreshToken,
     rar: at.rar,
   });
+
+  if (shouldRotate) {
+    // Detached housekeeping, started after the token writes so it never queues ahead of them in
+    // the pool; the refresh never waits on it, and a failed prune never fails it.
+    void trySafe(
+      queries.oidcModelInstances.pruneConsumedRefreshTokensByGrantId(grantId),
+      (error) => {
+        getConsoleLogFromContext(ctx).warn(
+          `Failed to prune consumed refresh tokens of grant ${grantId}:`,
+          error
+        );
+        void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));
+      }
+    );
+  }
 };
 /* eslint-enable complexity, @silverhand/fp/no-let, @typescript-eslint/no-non-null-assertion, @silverhand/fp/no-mutation, unicorn/no-array-method-this-argument */
