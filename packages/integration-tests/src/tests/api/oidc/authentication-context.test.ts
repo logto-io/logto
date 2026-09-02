@@ -35,12 +35,15 @@ const mfaAcr = 'urn:logto:acr:mfa';
 
 const nowInSeconds = () => Math.floor(Date.now() / 1000);
 
-/** Start an authorization that always prompts for sign-in and issues a refresh token. */
+/**
+ * Start an authorization on a fresh client (so a sign-in is always required) that issues a
+ * refresh token: the provider only issues one for `offline_access` under `prompt=consent`.
+ */
 const initClient = async () =>
   initExperienceClient({
     config: {
       appId: demoAppApplicationId,
-      prompt: Prompt.Login,
+      prompt: Prompt.Consent,
       scopes: ['offline_access'],
     },
     redirectUri: demoAppRedirectUri,
