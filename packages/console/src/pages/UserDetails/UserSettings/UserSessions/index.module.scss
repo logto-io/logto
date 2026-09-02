@@ -18,6 +18,11 @@
   }
 }
 
+.action {
+  display: flex;
+  justify-content: center;
+}
+
 /* The session ID has no break opportunities of its own. */
 .tooltip {
   word-break: break-all;

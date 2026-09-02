@@ -124,16 +124,16 @@ function UserTrustedDevices({ userId }: Props) {
                 ),
               },
               {
+                title: t('user_details.personal_access_tokens.expires_at'),
+                dataIndex: 'expiresAt',
+                colSpan: 6,
+                render: ({ expiresAt }) => expiryDateFormatter.format(expiresAt),
+              },
+              {
                 title: t('user_details.sessions.location_column'),
                 dataIndex: 'location',
                 colSpan: 5,
                 render: ({ location }) => location ?? '-',
-              },
-              {
-                title: t('user_details.personal_access_tokens.expires_at'),
-                dataIndex: 'expiresAt',
-                colSpan: 4,
-                render: ({ expiresAt }) => expiryDateFormatter.format(expiresAt),
               },
               {
                 title: null,
