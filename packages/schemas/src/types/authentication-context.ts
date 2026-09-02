@@ -167,20 +167,12 @@ export const buildAuthenticationMethodReferences = (
   types: Iterable<VerificationType>,
   achievedAcr?: LogtoAcr
 ): AuthenticationMethodReference[] => {
-  const references = new Set<AuthenticationMethodReference>();
-  // eslint-disable-next-line @silverhand/fp/no-let
-  let hasMfa = achievedAcr === LogtoAcr.Mfa;
+  const references = [...types].flatMap((type) => getAuthenticationMethodReferences(type));
+  const hasMfa =
+    achievedAcr === LogtoAcr.Mfa || references.includes(AuthenticationMethodReference.Mfa);
 
-  for (const type of types) {
-    for (const reference of getAuthenticationMethodReferences(type)) {
-      if (reference === AuthenticationMethodReference.Mfa) {
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        hasMfa = true;
-      } else {
-        references.add(reference);
-      }
-    }
-  }
-
-  return hasMfa ? [...references, AuthenticationMethodReference.Mfa] : [...references];
+  return [
+    ...new Set(references.filter((reference) => reference !== AuthenticationMethodReference.Mfa)),
+    ...(hasMfa ? [AuthenticationMethodReference.Mfa] : []),
+  ];
 };
