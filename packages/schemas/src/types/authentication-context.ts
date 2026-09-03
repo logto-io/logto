@@ -75,7 +75,8 @@ const authenticationFactorClasses: Readonly<
   [VerificationType.EmailVerificationCode]: AuthenticationFactorClass.FirstFactor,
   [VerificationType.PhoneVerificationCode]: AuthenticationFactorClass.FirstFactor,
   [VerificationType.OneTimeToken]: AuthenticationFactorClass.FirstFactor,
-  // A password established in this interaction counts as a verified first factor.
+  // The class of a password established by a registration. The account does not exist while the
+  // record is verified, so the sign-in derivation in core never counts the record as a proof.
   [VerificationType.NewPasswordIdentity]: AuthenticationFactorClass.FirstFactor,
   [VerificationType.TOTP]: AuthenticationFactorClass.Mfa,
   [VerificationType.MfaEmailVerificationCode]: AuthenticationFactorClass.Mfa,
