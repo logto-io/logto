@@ -65,7 +65,7 @@ test('normalizes setup prompt to adaptive policy when adaptive MFA is enabled', 
   expect(formState.setUpPrompt).toBe(MfaPolicy.PromptAtSignInAndSignUpMandatory);
 });
 
-test('builds payload with adaptive MFA regardless of dev feature flag', () => {
+test('builds payload with adaptive MFA and trusted-device policy', () => {
   const payload = buildMfaPatchPayload({ ...baseForm, adaptiveMfaEnabled: true });
 
   expect(payload).toEqual({
@@ -74,20 +74,20 @@ test('builds payload with adaptive MFA regardless of dev feature flag', () => {
       factors: [MfaFactor.TOTP],
     },
     adaptiveMfa: { enabled: true },
+    trustedDevice: { enabled: false, durationDays: 30 },
   });
 });
 
-test('includes trusted-device policy only when the dev feature is enabled', () => {
+test('includes configured trusted-device policy', () => {
   expect(
-    buildMfaPatchPayload(
-      { ...baseForm, trustedDeviceEnabled: true, trustedDeviceDurationDays: 365 },
-      true
-    )
+    buildMfaPatchPayload({
+      ...baseForm,
+      trustedDeviceEnabled: true,
+      trustedDeviceDurationDays: 365,
+    })
   ).toMatchObject({
     trustedDevice: { enabled: true, durationDays: 365 },
   });
-
-  expect(buildMfaPatchPayload(baseForm)).not.toHaveProperty('trustedDevice');
 });
 
 test('filters organization-required MFA policy when adaptive MFA is enabled', () => {
@@ -103,6 +103,7 @@ test('filters organization-required MFA policy when adaptive MFA is enabled', ()
       factors: [MfaFactor.TOTP],
     },
     adaptiveMfa: { enabled: true },
+    trustedDevice: { enabled: false, durationDays: 30 },
   });
 });
 
@@ -120,6 +121,7 @@ test('filters hidden prompt policies when mandatory MFA is selected', () => {
       factors: [MfaFactor.TOTP],
     },
     adaptiveMfa: { enabled: false },
+    trustedDevice: { enabled: false, durationDays: 30 },
   });
 });
 
@@ -198,5 +200,6 @@ test.each([
     adaptiveMfa: {
       enabled: expectedAdaptiveMfaEnabled,
     },
+    trustedDevice: { enabled: false, durationDays: 30 },
   });
 });

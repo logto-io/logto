@@ -20,13 +20,10 @@ import organizationScopeRoutes from '../organization-scope/index.js';
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
 import applicationRoutes from './application/index.js';
-import { organizationHiddenFields, organizationResponseGuard } from './guards.js';
+import { organizationResponseGuard } from './guards.js';
 import jitRoutes from './jit/index.js';
 import userRoutes from './user/index.js';
 import { errorHandler } from './utils.js';
-
-type OrganizationWithFeaturedResponse = Omit<OrganizationWithFeatured, 'isTrustedDeviceAllowed'> &
-  Partial<Pick<OrganizationWithFeatured, 'isTrustedDeviceAllowed'>>;
 
 export default function organizationRoutes<T extends ManagementApiRouter>(
   ...args: RouterInitArgs<T>
@@ -63,7 +60,6 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
     disabled: { get: true },
     idLength: 12,
     entityGuard: organizationResponseGuard,
-    hiddenFields: organizationHiddenFields,
     hooks: {
       afterInsert: async (ctx) => {
         captureEvent({ tenantId, request: ctx.req }, ProductEvent.OrganizationCreated);
@@ -88,7 +84,7 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
               featuredUsers: featuredUserGuard.array(),
             })
             .partial()
-        ) satisfies z.ZodType<OrganizationWithFeaturedResponse>
+        ) satisfies z.ZodType<OrganizationWithFeatured>
       ).array(),
       status: [200],
     }),

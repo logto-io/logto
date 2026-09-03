@@ -43,13 +43,6 @@ const isNonSkippableMfaPromptPolicy = (policy: MfaPolicy) =>
     policy
   );
 
-// DEV: MFA trusted devices
-const trustedDeviceOmitMask = EnvSet.values.isDevFeaturesEnabled
-  ? {}
-  : { trustedDevice: true as const };
-const signInExperienceResponseGuard = SignInExperiences.guard.omit(trustedDeviceOmitMask);
-const signInExperienceCreateGuard = SignInExperiences.createGuard.omit(trustedDeviceOmitMask);
-
 export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
   ...args: RouterInitArgs<T>
 ) {
@@ -71,7 +64,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
   router.get(
     '/sign-in-exp',
     koaGuard({
-      response: signInExperienceResponseGuard,
+      response: SignInExperiences.guard,
       status: [200, 404],
     }),
     async (ctx, next) => {
@@ -85,7 +78,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
     '/sign-in-exp',
     koaGuard({
       query: z.object({ removeUnusedDemoSocialConnector: z.string().optional() }),
-      body: signInExperienceCreateGuard
+      body: SignInExperiences.createGuard
         .omit({
           id: true,
           termsOfUseUrl: true,
@@ -108,7 +101,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
           })
         )
         .partial(),
-      response: signInExperienceResponseGuard,
+      response: SignInExperiences.guard,
       status: [200, 400, 404, 422, 403, 409],
     }),
     // eslint-disable-next-line complexity

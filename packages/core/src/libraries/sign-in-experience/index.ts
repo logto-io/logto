@@ -11,7 +11,7 @@ import type {
   SsoConnectorMetadata,
 } from '@logto/schemas';
 import { adminTenantId, ConnectorType, ForgotPasswordMethod, TenantTag } from '@logto/schemas';
-import { conditional, deduplicate, trySafe, type Nullable } from '@silverhand/essentials';
+import { deduplicate, trySafe, type Nullable } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
 
 import { type WellKnownCache } from '#src/caches/well-known.js';
@@ -326,7 +326,6 @@ export const createSignInExperienceLibrary = (
     const {
       emailBlocklistPolicy: _emailBlocklistPolicy,
       forgotPasswordMethods: _forgotPasswordMethods,
-      trustedDevice,
       ...publicSignInExperience
     } = deepmerge<SignInExperience, SignInExperienceOverride>(
       deepmerge<SignInExperience, SignInExperienceOverride>(signInExperience, appSignInExperience),
@@ -335,8 +334,6 @@ export const createSignInExperienceLibrary = (
 
     return {
       ...publicSignInExperience,
-      // DEV: MFA trusted devices
-      ...conditional(EnvSet.values.isDevFeaturesEnabled && { trustedDevice }),
       socialConnectors,
       ssoConnectors,
       forgotPassword: getForgotPassword(),

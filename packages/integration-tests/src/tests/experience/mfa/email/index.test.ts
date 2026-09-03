@@ -9,13 +9,7 @@ import { enableMandatoryMfaWithEmail, resetMfaSettings } from '#src/helpers/sign
 import { generateNewUser } from '#src/helpers/user.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
 import ExpectTotpExperience from '#src/ui-helpers/expect-totp-experience.js';
-import {
-  devFeatureTest,
-  generateEmail,
-  generatePassword,
-  generateUsername,
-  waitFor,
-} from '#src/utils.js';
+import { generateEmail, generatePassword, generateUsername, waitFor } from '#src/utils.js';
 
 describe('email MFA binding', () => {
   beforeAll(async () => {
@@ -88,7 +82,7 @@ describe('email MFA binding', () => {
     await deleteUser(user.id);
   });
 
-  devFeatureTest.describe('trusted device opt-in', () => {
+  describe('trusted device opt-in', () => {
     beforeAll(async () => {
       await updateSignInExperience({ trustedDevice: { enabled: true, durationDays: 365 } });
     });

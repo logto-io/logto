@@ -11,7 +11,7 @@ import {
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
 import ExpectTotpExperience from '#src/ui-helpers/expect-totp-experience.js';
-import { devFeatureTest, generateUsername } from '#src/utils.js';
+import { generateUsername } from '#src/utils.js';
 
 import TotpTestingContext from './totp-testing-context.js';
 
@@ -110,7 +110,7 @@ describe('MFA - TOTP', () => {
       await deleteUser(user.id);
     });
 
-    devFeatureTest.describe('trusted device opt-in', () => {
+    describe('trusted device opt-in', () => {
       beforeAll(async () => {
         await updateSignInExperience({ trustedDevice: { enabled: true, durationDays: 365 } });
       });

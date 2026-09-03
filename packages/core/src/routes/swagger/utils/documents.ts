@@ -55,7 +55,7 @@ const managementApiIdentifiableEntityNames = Object.freeze(
     'email-template',
     'one-time-token',
     'session',
-    EnvSet.values.isDevFeaturesEnabled && 'trusted-device',
+    'trusted-device',
     'grant'
   )
 );
@@ -183,15 +183,7 @@ export const buildExperienceApiBaseDocument = (
 
 // ID parameters for account API entities.
 const userApiIdentifiableEntityNames = Object.freeze(
-  condArray<string>(
-    'profile',
-    'verification',
-    'connector',
-    'session',
-    // DEV: MFA trusted device management
-    EnvSet.values.isDevFeaturesEnabled && 'trusted-device',
-    'grant'
-  )
+  condArray<string>('profile', 'verification', 'connector', 'session', 'trusted-device', 'grant')
 );
 
 export const buildUserApiBaseDocument = (

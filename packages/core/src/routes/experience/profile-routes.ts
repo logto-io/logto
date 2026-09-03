@@ -12,7 +12,6 @@ import { type MiddlewareType } from 'koa';
 import type Router from 'koa-router';
 import { object, z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -272,28 +271,25 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
     }
   );
 
-  // Trusted-device opt-in is under development. Keep the route out of released API surfaces.
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    router.post(
-      `${experienceRoutes.profile}/trusted-device`,
-      koaGuard({
-        body: z.object({ trusted: z.boolean() }),
-        status: [204, 400, 403, 404],
-      }),
-      verifiedInteractionGuard(),
-      async (ctx, next) => {
-        const { experienceInteraction } = ctx;
-        const { trusted } = ctx.guard.body;
+  router.post(
+    `${experienceRoutes.profile}/trusted-device`,
+    koaGuard({
+      body: z.object({ trusted: z.boolean() }),
+      status: [204, 400, 403, 404],
+    }),
+    verifiedInteractionGuard(),
+    async (ctx, next) => {
+      const { experienceInteraction } = ctx;
+      const { trusted } = ctx.guard.body;
 
-        await experienceInteraction.setTrustedDeviceOptInDecision(trusted);
-        await experienceInteraction.save();
+      await experienceInteraction.setTrustedDeviceOptInDecision(trusted);
+      await experienceInteraction.save();
 
-        ctx.status = 204;
+      ctx.status = 204;
 
-        return next();
-      }
-    );
-  }
+      return next();
+    }
+  );
 
   // Mark optional additional MFA binding suggestion as skipped.
   router.post(

@@ -293,7 +293,7 @@ describe('POST /experience/profile', () => {
 describe('POST /experience/submit', () => {
   const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
   const setDevFeaturesEnabled = (enabled: boolean) => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Exercise route behavior in the selected feature environment.
     (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = enabled;
   };
 
@@ -581,7 +581,7 @@ describe('POST /experience/submit', () => {
   it.each(eligibleTrustedDeviceVerificationCases)(
     'should create a trusted device after eligible $name verification and explicit opt-in',
     async ({ factor, mfaVerification, verificationRecord }) => {
-      setDevFeaturesEnabled(true);
+      setDevFeaturesEnabled(false);
       const user = {
         ...mockUser,
         mfaVerifications: mfaVerification ? [mfaVerification] : [],
@@ -629,7 +629,7 @@ describe('POST /experience/submit', () => {
   );
 
   it('should consume the trusted-device opt-in decision after a successful submit', async () => {
-    setDevFeaturesEnabled(true);
+    setDevFeaturesEnabled(false);
     const user = {
       ...mockUser,
       mfaVerifications: [mockUserTotpMfaVerification],
@@ -679,7 +679,7 @@ describe('POST /experience/submit', () => {
   });
 
   it('should use one idempotency key for concurrent submits restored from the same interaction', async () => {
-    setDevFeaturesEnabled(true);
+    setDevFeaturesEnabled(false);
     const user = {
       ...mockUser,
       mfaVerifications: [mockUserTotpMfaVerification],
@@ -715,7 +715,7 @@ describe('POST /experience/submit', () => {
   });
 
   it('should suggest a trusted-device opt-in decision before completing an eligible sign-in', async () => {
-    setDevFeaturesEnabled(true);
+    setDevFeaturesEnabled(false);
     const user = {
       ...mockUser,
       mfaVerifications: [mockUserTotpMfaVerification],
@@ -747,7 +747,7 @@ describe('POST /experience/submit', () => {
   });
 
   it('should complete an eligible sign-in without creating a trusted device after opt-in is skipped', async () => {
-    setDevFeaturesEnabled(true);
+    setDevFeaturesEnabled(false);
     const user = {
       ...mockUser,
       mfaVerifications: [mockUserTotpMfaVerification],
@@ -781,7 +781,7 @@ describe('POST /experience/submit', () => {
   });
 
   it('should persist an opt-out decision before eligible MFA proof is available', async () => {
-    setDevFeaturesEnabled(true);
+    setDevFeaturesEnabled(false);
     const user = {
       ...mockUser,
       mfaVerifications: [mockUserTotpMfaVerification],
@@ -802,7 +802,7 @@ describe('POST /experience/submit', () => {
   });
 
   it('should skip the opt-in suggestion when the browser has a persisted opt-out marker', async () => {
-    setDevFeaturesEnabled(true);
+    setDevFeaturesEnabled(false);
     const user = {
       ...mockUser,
       mfaVerifications: [mockUserTotpMfaVerification],
@@ -834,7 +834,7 @@ describe('POST /experience/submit', () => {
   it.each([{}, { trusted: 'true' }])(
     'should reject an invalid trusted-device decision payload %#',
     async (payload) => {
-      setDevFeaturesEnabled(true);
+      setDevFeaturesEnabled(false);
       const response = await createMfaRequiredRequester()
         .post('/experience/profile/trusted-device')
         .send(payload);
@@ -844,7 +844,7 @@ describe('POST /experience/submit', () => {
   );
 
   it('should remove the MFA-nested trusted-device endpoint', async () => {
-    setDevFeaturesEnabled(true);
+    setDevFeaturesEnabled(false);
     const response = await createMfaRequiredRequester()
       .post('/experience/profile/mfa/trusted-device')
       .send({ trusted: true });
@@ -853,7 +853,7 @@ describe('POST /experience/submit', () => {
   });
 
   it('should not treat trusted-device intent as MFA proof', async () => {
-    setDevFeaturesEnabled(true);
+    setDevFeaturesEnabled(false);
     const user = {
       ...mockUser,
       mfaVerifications: [mockUserTotpMfaVerification],
@@ -903,7 +903,7 @@ describe('POST /experience/submit', () => {
   ])(
     'should create a trusted device after eligible $name binding and explicit opt-in',
     async ({ mfaData, factor }) => {
-      setDevFeaturesEnabled(true);
+      setDevFeaturesEnabled(false);
       const { requester, createCredential } = createRequesterWithMocks({
         interactionEvent: InteractionEvent.Register,
         mfa: { policy: MfaPolicy.Mandatory, factors: [factor] },
@@ -926,7 +926,7 @@ describe('POST /experience/submit', () => {
   );
 
   it('should exclude backup-code verification from trusted-device creation', async () => {
-    setDevFeaturesEnabled(true);
+    setDevFeaturesEnabled(false);
     const user = {
       ...mockUser,
       mfaVerifications: [mockUserTotpMfaVerification, mockUserBackupCodeMfaVerification],
@@ -959,7 +959,7 @@ describe('POST /experience/submit', () => {
   });
 
   it('should exclude a verified MFA factor that is disabled in the sign-in experience', async () => {
-    setDevFeaturesEnabled(true);
+    setDevFeaturesEnabled(false);
     const user = {
       ...mockUser,
       mfaVerifications: [mockUserTotpMfaVerification],
@@ -989,7 +989,7 @@ describe('POST /experience/submit', () => {
   });
 
   it('should not treat a BindMfa-templated profile identifier as an MFA binding', async () => {
-    setDevFeaturesEnabled(true);
+    setDevFeaturesEnabled(false);
     const primaryEmail = 'profile-only@logto.dev';
     const user = {
       ...mockUser,
@@ -1023,7 +1023,7 @@ describe('POST /experience/submit', () => {
   });
 
   it('should update a verifying trusted device best effort without creating a duplicate', async () => {
-    setDevFeaturesEnabled(true);
+    setDevFeaturesEnabled(false);
     const metadataError = new Error('trusted-device metadata update failed');
     const trackException = jest.spyOn(appInsights, 'trackException').mockResolvedValue();
     const user = {
@@ -1052,7 +1052,7 @@ describe('POST /experience/submit', () => {
   });
 
   it('should revalidate the trusted-device credential on each Experience request', async () => {
-    setDevFeaturesEnabled(true);
+    setDevFeaturesEnabled(false);
     const user = {
       ...mockUser,
       mfaVerifications: [mockUserTotpMfaVerification],
@@ -1081,7 +1081,7 @@ describe('POST /experience/submit', () => {
   });
 
   it('should require MFA when the trusted device becomes inactive between requests', async () => {
-    setDevFeaturesEnabled(true);
+    setDevFeaturesEnabled(false);
     const user = {
       ...mockUser,
       mfaVerifications: [mockUserTotpMfaVerification],
@@ -1108,7 +1108,7 @@ describe('POST /experience/submit', () => {
   });
 
   it('should omit trusted-device location when the current context has none', async () => {
-    setDevFeaturesEnabled(true);
+    setDevFeaturesEnabled(false);
     const user = {
       ...mockUser,
       mfaVerifications: [mockUserTotpMfaVerification],
@@ -1130,7 +1130,7 @@ describe('POST /experience/submit', () => {
   });
 
   it('should keep submit successful when trusted-device creation fails', async () => {
-    setDevFeaturesEnabled(true);
+    setDevFeaturesEnabled(false);
     const creationError = new Error('trusted-device creation failed');
     const trackException = jest.spyOn(appInsights, 'trackException').mockResolvedValue();
     const user = {
@@ -1167,7 +1167,7 @@ describe('POST /experience/submit', () => {
   });
 
   it('should keep submit successful when trusted-device proof eligibility fails', async () => {
-    setDevFeaturesEnabled(true);
+    setDevFeaturesEnabled(false);
     const eligibilityError = new Error('trusted-device proof eligibility failed');
     const trackException = jest.spyOn(appInsights, 'trackException').mockResolvedValue();
     const hasEligibleTrustedDeviceVerification = jest
@@ -1210,7 +1210,7 @@ describe('POST /experience/submit', () => {
   });
 
   it('should not create a trusted device when the complete interaction fails', async () => {
-    setDevFeaturesEnabled(true);
+    setDevFeaturesEnabled(false);
     const user = {
       ...mockUser,
       mfaVerifications: [mockUserTotpMfaVerification],

@@ -783,7 +783,6 @@
     },
     "/api/my-account/trusted-devices": {
       "get": {
-        "tags": ["Dev feature"],
         "operationId": "GetTrustedDevices",
         "summary": "Get trusted devices",
         "description": "Retrieve all active trusted devices for the signed-in user. A logto-verification-id in header and the trusted-devices scope are required. Each entry includes isCurrent, which is true only when the browser's trusted-device cookie passes full credential validation for that record.",
@@ -799,7 +798,6 @@
     },
     "/api/my-account/trusted-devices/{trustedDeviceId}": {
       "delete": {
-        "tags": ["Dev feature"],
         "operationId": "DeleteTrustedDeviceById",
         "summary": "Delete a trusted device",
         "description": "Delete a trusted device owned by the signed-in user. Deleting the current trusted device clears its cookie without ending the login session.",

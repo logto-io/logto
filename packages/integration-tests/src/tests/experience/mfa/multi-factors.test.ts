@@ -8,7 +8,7 @@ import { clearConnectorsByTypes, setSocialConnector } from '#src/helpers/connect
 import { resetMfaSettings } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
 import ExpectWebAuthnExperience from '#src/ui-helpers/expect-webauthn-experience.js';
-import { devFeatureTest, waitFor } from '#src/utils.js';
+import { waitFor } from '#src/utils.js';
 
 describe('MFA - Multi factors', () => {
   beforeAll(async () => {
@@ -110,7 +110,7 @@ describe('MFA - Multi factors', () => {
     await deleteUser(user.id);
   });
 
-  devFeatureTest.describe('trusted device opt-in after switching factors', () => {
+  describe('trusted device opt-in after switching factors', () => {
     beforeAll(async () => {
       await updateSignInExperience({ trustedDevice: { enabled: true, durationDays: 365 } });
     });

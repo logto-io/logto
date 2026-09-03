@@ -1,13 +1,6 @@
-import {
-  devFeatureHookEvents,
-  type CreateHook,
-  type Hook,
-  type HookConfig,
-  type HookEvent,
-} from '@logto/schemas';
+import { type CreateHook, type Hook, type HookConfig, type HookEvent } from '@logto/schemas';
 
 import { authedAdminApi } from '#src/api/api.js';
-import { isDevFeaturesEnabled } from '#src/constants.js';
 
 type HookCreationPayload = Pick<Hook, 'name' | 'events'> & {
   config: HookConfig;
@@ -25,10 +18,7 @@ export const getHookCreationPayload = (
   },
 });
 
-const devFeatureHookEventSet = new Set<HookEvent>(devFeatureHookEvents);
-
-export const getSupportedHookEvents = (events: HookEvent[]): HookEvent[] =>
-  isDevFeaturesEnabled ? events : events.filter((event) => !devFeatureHookEventSet.has(event));
+export const getSupportedHookEvents = (events: HookEvent[]): HookEvent[] => events;
 
 export class WebHookApiTest {
   readonly #hooks = new Map<string, Hook>();

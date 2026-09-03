@@ -33,10 +33,6 @@ jest.mock('@logto/react', () => ({
   }),
 }));
 
-jest.mock('@ac/constants/env', () => ({
-  isDevFeaturesEnabled: true,
-}));
-
 jest.mock('../../apis/mfa', () => ({
   getMfaSettings: jest.fn(),
   getMfaVerifications: jest.fn(),

@@ -1,7 +1,4 @@
 import type { AdminConsoleKey } from '@logto/phrases';
-import { conditionalArray } from '@silverhand/essentials';
-
-import { isDevFeaturesEnabled } from '@/consts/env';
 
 import type { AccountCenterFieldKey } from '../../types';
 
@@ -62,13 +59,10 @@ export const accountCenterSections: AccountCenterFieldSection[] = [
             key: 'session',
             title: 'sign_in_exp.account_center.fields.sessions',
           },
-          // DEV: MFA trusted device management
-          ...conditionalArray<AccountCenterFieldItem>(
-            isDevFeaturesEnabled && {
-              key: 'trustedDevice',
-              title: 'sign_in_exp.account_center.fields.trusted_devices',
-            }
-          ),
+          {
+            key: 'trustedDevice',
+            title: 'sign_in_exp.account_center.fields.trusted_devices',
+          },
         ],
       },
     ],

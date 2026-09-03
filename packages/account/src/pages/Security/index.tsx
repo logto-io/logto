@@ -2,7 +2,6 @@ import classNames from 'classnames';
 
 import AccountPageHeader from '@ac/components/AccountPageHeader';
 import PageFooter from '@ac/components/PageFooter';
-import { isDevFeaturesEnabled } from '@ac/constants/env';
 import { layoutClassNames } from '@ac/constants/layout';
 
 import styles from '../Home/index.module.scss';
@@ -33,8 +32,7 @@ const Security = () => {
           <PasskeySection />
           <MfaSection />
         </MfaVerificationsProvider>
-        {/* DEV: MFA trusted device management */}
-        {isDevFeaturesEnabled && <TrustedDevicesSection />}
+        <TrustedDevicesSection />
         <DeleteAccountSection />
       </div>
       <PageFooter />

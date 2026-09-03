@@ -2,7 +2,6 @@
   "paths": {
     "/api/users/{userId}/trusted-devices": {
       "get": {
-        "tags": ["Dev feature"],
         "summary": "Get user trusted devices",
         "description": "Retrieve all active trusted devices for the user.",
         "responses": {
@@ -17,7 +16,6 @@
     },
     "/api/users/{userId}/trusted-devices/{trustedDeviceId}": {
       "delete": {
-        "tags": ["Dev feature"],
         "summary": "Delete a user trusted device",
         "description": "Delete a trusted device that belongs to the user.",
         "responses": {
