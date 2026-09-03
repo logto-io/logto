@@ -557,8 +557,8 @@ export default class ExperienceInteraction {
       EnvSet.values.isDevFeaturesEnabled && this.#interactionEvent === InteractionEvent.SignIn
         ? await deriveAuthenticationContext(
             this.verificationRecordsArray,
-            user.id,
-            new MfaValidator(await this.signInExperienceValidator.getMfaSettings(), user)
+            user,
+            await this.signInExperienceValidator.getMfaSettings()
           )
         : undefined;
 

@@ -5,6 +5,7 @@ import {
   GrantType,
   InteractionEvent,
   MfaFactor,
+  MfaPolicy,
   SignInIdentifier,
   demoAppApplicationId,
 } from '@logto/schemas';
@@ -13,7 +14,11 @@ import { isKeyInObject } from '@silverhand/essentials';
 import ky from 'ky';
 import { authenticator } from 'otplib';
 
-import { createUserMfaVerification, deleteUser } from '#src/api/admin-user.js';
+import {
+  createUserMfaVerification,
+  deleteUser,
+  updateUserLogtoConfig,
+} from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { type ExperienceClient } from '#src/client/experience/index.js';
 import { demoAppRedirectUri, logtoUrl } from '#src/constants.js';
@@ -164,6 +169,43 @@ devFeatureTest.describe('authentication context claims on sign-in', () => {
 
     expect(claims).toMatchObject({ acr: mfaAcr, amr: ['pwd', 'otp', 'mfa'] });
     expect(typeof claims.auth_time).toBe('number');
+
+    await logoutClient(client);
+    await resetMfaSettings();
+  });
+
+  it('keeps the proof of the last backup code, which is marked used before submission', async () => {
+    // A sign-in that completes without an MFA challenge, so the consumed code is the only proof.
+    await updateSignInExperience({
+      mfa: { factors: [MfaFactor.TOTP, MfaFactor.BackupCode], policy: MfaPolicy.NoPrompt },
+    });
+    const { username, password } = generateNewUserProfile({ username: true, password: true });
+    const user = await userApi.create({ username, password });
+    await createUserMfaVerification(user.id, MfaFactor.TOTP);
+    const backupCodes = await createUserMfaVerification(user.id, MfaFactor.BackupCode);
+    await updateUserLogtoConfig(user.id, { mfa: { skipMfaOnSignIn: true }, passkeySignIn: {} });
+
+    if (backupCodes.type !== MfaFactor.BackupCode) {
+      throw new TypeError('unexpected mfa type');
+    }
+
+    const [lastCode, ...otherCodes] = backupCodes.codes;
+
+    // Consume every other code first; each verification marks its code used in the database.
+    const consumer = await initClient();
+    await identifyUserWithUsernamePassword(consumer, username, password);
+    for (const code of otherCodes) {
+      // eslint-disable-next-line no-await-in-loop -- Each code must be consumed in sequence.
+      await consumer.verifyBackupCode({ code });
+    }
+
+    const client = await initClient();
+    await identifyUserWithUsernamePassword(client, username, password);
+    await client.verifyBackupCode({ code: lastCode! });
+    const claims = await finishSignIn(client);
+
+    expect(claims.sub).toBe(user.id);
+    expect(claims).toMatchObject({ acr: mfaAcr, amr: ['pwd', 'otp', 'mfa'] });
 
     await logoutClient(client);
     await resetMfaSettings();

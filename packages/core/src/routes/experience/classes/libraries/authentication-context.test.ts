@@ -34,7 +34,6 @@ import {
 } from '../verifications/web-authn-verification.js';
 
 import { deriveAuthenticationContext } from './authentication-context.js';
-import { MfaValidator } from './mfa-validator.js';
 
 const { jest } = import.meta;
 
@@ -54,14 +53,11 @@ const user: User = {
     mockUserBackupCodeMfaVerification,
   ],
 };
-const allFactorsEnabled = new MfaValidator(
-  { ...mockSignInExperience.mfa, factors: Object.values(MfaFactor) },
-  user
-);
-const noFactorEnabled = new MfaValidator({ ...mockSignInExperience.mfa, factors: [] }, user);
+const allFactorsEnabled = { ...mockSignInExperience.mfa, factors: Object.values(MfaFactor) };
+const noFactorEnabled = { ...mockSignInExperience.mfa, factors: [] };
 
 const derive = async (records: Parameters<typeof deriveAuthenticationContext>[0]) =>
-  deriveAuthenticationContext(records, userId, allFactorsEnabled);
+  deriveAuthenticationContext(records, user, allFactorsEnabled);
 
 /** Marks an identifier record that identifies no account. */
 const noAccount = Symbol('no account');
@@ -344,10 +340,41 @@ describe('deriveAuthenticationContext', () => {
       await expect(
         deriveAuthenticationContext(
           [password(100), totp({ verifiedAt: 200 }), mfaEmailCode(300)],
-          userId,
+          user,
           noFactorEnabled
         )
       ).resolves.toEqual({ acr: 'urn:logto:acr:1fa', amr: ['pwd'], ts: 100 });
+      // A backup code set the user never enrolled is not eligible either.
+      await expect(
+        deriveAuthenticationContext(
+          [password(100), backupCode(200)],
+          { ...user, mfaVerifications: [mockUserTotpMfaVerification] },
+          allFactorsEnabled
+        )
+      ).resolves.toEqual({ acr: 'urn:logto:acr:1fa', amr: ['pwd'], ts: 100 });
+    });
+
+    it('keeps the proof of the last backup code once every code is marked used', async () => {
+      // `verify()` marks the code used before the submission reloads the user, so the reloaded
+      // user has no unused code left and would no longer be offered a backup code challenge.
+      const reloadedUser: User = {
+        ...user,
+        mfaVerifications: [
+          mockUserTotpMfaVerification,
+          {
+            ...mockUserBackupCodeMfaVerification,
+            codes: [{ code: 'code', usedAt: new Date().toISOString() }],
+          },
+        ],
+      };
+
+      await expect(
+        deriveAuthenticationContext(
+          [password(100), backupCode(200)],
+          reloadedUser,
+          allFactorsEnabled
+        )
+      ).resolves.toEqual({ acr: 'urn:logto:acr:mfa', amr: ['pwd', 'otp', 'mfa'], ts: 100 });
     });
 
     it('ignores an identifier record that identifies no account', async () => {

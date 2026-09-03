@@ -1,18 +1,22 @@
 import {
   AuthenticationFactorClass,
   LogtoAcr,
+  MfaFactor,
   VerificationType,
   buildAuthenticationMethodReferences,
   getAuthenticationFactorClass,
   type AuthenticationMethodReference,
+  type Mfa,
+  type User,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 
+import { getAllUserEnabledMfaVerifications } from '../helpers.js';
 import { type VerificationRecord } from '../verifications/index.js';
 
-import { isMfaVerificationRecord, type MfaValidator } from './mfa-validator.js';
+import { isMfaVerificationRecord, mfaVerificationTypeToMfaFactorMap } from './mfa-validator.js';
 
 /** The authentication context an interaction achieved, in the shape of the provider's `login` result. */
 type AuthenticationContext = {
@@ -64,10 +68,11 @@ const authenticationFactors: Readonly<Record<VerificationType, AuthenticationFac
  * or an MFA code requested for a factor the user has not enabled. Only a record bound to the
  * identified user counts:
  *
- * - An MFA record (TOTP, backup code, WebAuthn, MFA email / phone code) counts only when the
- *   {@link MfaValidator} accepts it: verified, not a new enrollment, and of a factor enabled for
- *   the user. TOTP, backup code and WebAuthn records are created for a user and must carry that
- *   user's id; MFA email / phone codes are identifier records checked like the ones below.
+ * - An MFA record (TOTP, backup code, WebAuthn, MFA email / phone code) counts only when it is
+ *   not a new enrollment and its factor is eligible for the user; see
+ *   {@link getEligibleMfaFactors}. TOTP, backup code and WebAuthn records are created for a user
+ *   and must carry that user's id; MFA email / phone codes are identifier records checked like
+ *   the ones below.
  * - A sign-in passkey record resolves its `userId` from the asserted credential.
  * - A social or enterprise SSO record contributes only `fed`, never an ACR, so a verified
  *   assertion counts as is. Gating it on the stored identity would drop the very sign-in that
@@ -80,13 +85,17 @@ const authenticationFactors: Readonly<Record<VerificationType, AuthenticationFac
 const isProofOfUser = async (
   record: VerificationRecord,
   userId: string,
-  eligibleMfaRecords: Set<VerificationRecord>
+  eligibleMfaFactors: Set<MfaFactor>
 ): Promise<boolean> => {
   if (!record.isVerified) {
     return false;
   }
 
-  if (isMfaVerificationRecord(record) && !eligibleMfaRecords.has(record)) {
+  if (
+    isMfaVerificationRecord(record) &&
+    (record.isNewBindMfaVerification ||
+      !eligibleMfaFactors.has(mfaVerificationTypeToMfaFactorMap[record.type]))
+  ) {
     return false;
   }
 
@@ -126,6 +135,24 @@ const isProofOfUser = async (
 const isUserVerifiedWebAuthn = ({ type }: VerificationRecord) =>
   type === VerificationType.WebAuthn || type === VerificationType.SignInPasskey;
 
+/**
+ * The MFA factors a completed proof in this interaction can be of: enabled in the sign-in
+ * experience and enrolled by, or implicit for, the user.
+ *
+ * {@link getAllUserEnabledMfaVerifications} decides what a new challenge may offer, so it drops a
+ * backup code set whose codes are all used. A code consumed in this interaction is still a proof,
+ * and the last one is marked used before the submission reloads the user, so the backup code
+ * factor stays eligible as long as it is enabled and enrolled.
+ */
+const getEligibleMfaFactors = (user: User, mfaSettings: Mfa): Set<MfaFactor> =>
+  new Set([
+    ...getAllUserEnabledMfaVerifications(mfaSettings, user),
+    ...(mfaSettings.factors.includes(MfaFactor.BackupCode) &&
+    user.mfaVerifications.some(({ type }) => type === MfaFactor.BackupCode)
+      ? [MfaFactor.BackupCode]
+      : []),
+  ]);
+
 /** The factors with a counted record of the given class. */
 const factorsOfClass = (records: VerificationRecord[], factorClass: AuthenticationFactorClass) =>
   new Set(
@@ -152,14 +179,12 @@ const factorsOfClass = (records: VerificationRecord[], factorClass: Authenticati
  */
 export const deriveAuthenticationContext = async (
   records: VerificationRecord[],
-  userId: string,
-  mfaValidator: MfaValidator
+  user: User,
+  mfaSettings: Mfa
 ): Promise<AuthenticationContext> => {
-  const eligibleMfaRecords = new Set<VerificationRecord>(
-    mfaValidator.getVerifiedMfaVerificationRecords(records)
-  );
+  const eligibleMfaFactors = getEligibleMfaFactors(user, mfaSettings);
   const proofs = await Promise.all(
-    records.map(async (record) => isProofOfUser(record, userId, eligibleMfaRecords))
+    records.map(async (record) => isProofOfUser(record, user.id, eligibleMfaFactors))
   );
   const counted = records.filter((_, index) => proofs[index]);
   const firstFactors = factorsOfClass(counted, AuthenticationFactorClass.FirstFactor);

@@ -38,7 +38,7 @@ type MfaVerificationType =
   | VerificationType.MfaEmailVerificationCode
   | VerificationType.MfaPhoneVerificationCode;
 
-const mfaVerificationTypeToMfaFactorMap = Object.freeze({
+export const mfaVerificationTypeToMfaFactorMap = Object.freeze({
   [VerificationType.TOTP]: MfaFactor.TOTP,
   [VerificationType.BackupCode]: MfaFactor.BackupCode,
   [VerificationType.WebAuthn]: MfaFactor.WebAuthn,
@@ -149,11 +149,7 @@ export class MfaValidator {
     );
   }
 
-  /**
-   * The verified MFA records that count for the user: verified, not a factor enrolled in this
-   * interaction, and of a factor enabled for the user under the sign-in experience settings.
-   */
-  getVerifiedMfaVerificationRecords(
+  private getVerifiedMfaVerificationRecords(
     verificationRecords: VerificationRecord[],
     currentProfile?: InteractionProfile
   ) {
