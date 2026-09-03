@@ -21,7 +21,7 @@ export const totpVerificationRecordDataGuard = z.object({
   userId: z.string(),
   secret: z.string().optional(),
   verified: z.boolean(),
-  verifiedAt: z.number().optional(),
+  verifiedAt: z.number().int().nonnegative().optional(),
 }) satisfies ToZodObject<TotpVerificationRecordData>;
 
 export type SanitizedTotpVerificationRecordData = Omit<TotpVerificationRecordData, 'secret'>;

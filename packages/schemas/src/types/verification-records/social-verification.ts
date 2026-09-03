@@ -36,7 +36,7 @@ export const socialVerificationRecordDataGuard = z.object({
   socialUserInfo: socialUserInfoGuard.optional(),
   encryptedTokenSet: encryptedTokenSetGuard.optional(),
   connectorSession: connectorSessionGuard.optional(),
-  verifiedAt: z.number().optional(),
+  verifiedAt: z.number().int().nonnegative().optional(),
 }) satisfies ToZodObject<SocialVerificationRecordData>;
 
 export type SanitizedSocialVerificationRecordData = Omit<

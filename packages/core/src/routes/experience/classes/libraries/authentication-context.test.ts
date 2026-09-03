@@ -1,5 +1,6 @@
 import { TemplateType } from '@logto/connector-kit';
 import {
+  MfaFactor,
   SignInIdentifier,
   UsersPasswordEncryptionMethod,
   VerificationType,
@@ -35,12 +36,14 @@ import { deriveAuthenticationContext } from './authentication-context.js';
 
 const { libraries, queries } = new MockTenant();
 const userId = mockUser.id;
+const username = 'foo';
 const email = 'foo@bar.com';
 const phone = '+11234567890';
 
 /** A user with every MFA factor enrolled. */
 const user: User = {
   ...mockUser,
+  username,
   primaryEmail: email,
   primaryPhone: phone,
   mfaVerifications: [
@@ -60,6 +63,17 @@ const derive = (
   options: Options = {}
 ) => deriveAuthenticationContext(records, { user, identifiedVerificationIds, ...options });
 
+/** The interaction created `user` from its records, so nothing identified the user. */
+const deriveForNewAccount = (
+  records: Parameters<typeof deriveAuthenticationContext>[0],
+  bindMfaFactors: MfaFactor[] = []
+) =>
+  derive(records, {
+    identifiedVerificationIds: new Set(),
+    isNewAccount: true,
+    bindMfaFactors: new Set(bindMfaFactors),
+  });
+
 const password = ({
   verifiedAt,
   verified = true,
@@ -68,16 +82,16 @@ const password = ({
   new PasswordVerification(libraries, queries, {
     id,
     type: VerificationType.Password,
-    identifier: { type: SignInIdentifier.Username, value: 'foo' },
+    identifier: { type: SignInIdentifier.Username, value: username },
     verified,
     verifiedAt,
   });
 
-const emailCode = (verifiedAt?: number, id = 'email') =>
+const emailCode = (verifiedAt?: number, id = 'email', address = email) =>
   new EmailCodeVerification(libraries, queries, {
     id,
     type: VerificationType.EmailVerificationCode,
-    identifier: { type: SignInIdentifier.Email, value: email },
+    identifier: { type: SignInIdentifier.Email, value: address },
     templateType: TemplateType.SignIn,
     verified: true,
     verifiedAt,
@@ -174,12 +188,12 @@ const social = (verifiedAt?: number) =>
     verifiedAt,
   });
 
-/** A verified registration record: a policy-compliant password proposed for an unused username. */
-const newPasswordIdentity = (verifiedAt?: number) =>
+/** A verified registration record: a policy-compliant password proposed for the given username. */
+const newPasswordIdentity = (verifiedAt?: number, value = 'unused') =>
   new NewPasswordIdentityVerification(libraries, queries, {
     id: 'new-password-identity',
     type: VerificationType.NewPasswordIdentity,
-    identifier: { type: SignInIdentifier.Username, value: 'unused' },
+    identifier: { type: SignInIdentifier.Username, value },
     passwordEncrypted: 'encrypted',
     passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
     verifiedAt,
@@ -319,6 +333,70 @@ describe('deriveAuthenticationContext', () => {
         amr: ['otp', 'pwd', 'mfa'],
         ts: 100,
       });
+    });
+  });
+
+  describe('a new account', () => {
+    it('reaches 1fa with the password the account was created with', () => {
+      expect(deriveForNewAccount([newPasswordIdentity(100, username)])).toEqual({
+        acr: 'urn:logto:acr:1fa',
+        amr: ['pwd'],
+        ts: 100,
+      });
+    });
+
+    it('reaches 1fa with the verified email or phone the account was created with', () => {
+      expect(deriveForNewAccount([emailCode(100)])).toEqual({
+        acr: 'urn:logto:acr:1fa',
+        amr: ['otp'],
+        ts: 100,
+      });
+      expect(deriveForNewAccount([phoneCode(100)])).toEqual({
+        acr: 'urn:logto:acr:1fa',
+        amr: ['sms'],
+        ts: 100,
+      });
+    });
+
+    it('records only fed for a social registration', () => {
+      expect(deriveForNewAccount([social(100)])).toEqual({ amr: ['fed'], ts: 100 });
+    });
+
+    it('counts a factor enrolled in this interaction when the submission binds it', () => {
+      const enrolledTotp = totp({ verifiedAt: 200, secret: 'new' });
+
+      expect(
+        deriveForNewAccount([newPasswordIdentity(100, username), enrolledTotp], [MfaFactor.TOTP])
+      ).toEqual({ acr: 'urn:logto:acr:mfa', amr: ['pwd', 'otp', 'mfa'], ts: 100 });
+      // An mfa-class factor without a Logto-verifiable first factor reaches only 1fa.
+      expect(deriveForNewAccount([social(100), enrolledTotp], [MfaFactor.TOTP])).toEqual({
+        acr: 'urn:logto:acr:1fa',
+        amr: ['fed', 'otp'],
+        ts: 100,
+      });
+    });
+
+    it('ignores an enrollment the submission does not bind', () => {
+      expect(
+        deriveForNewAccount([newPasswordIdentity(100, username), totp({ secret: 'new' })])
+      ).toEqual({ acr: 'urn:logto:acr:1fa', amr: ['pwd'], ts: 100 });
+    });
+
+    it('ignores a verified identifier that was not written to the account', () => {
+      // The user verified a code for one address, then registered with a social identity.
+      expect(deriveForNewAccount([social(100), emailCode(50, 'other', 'other@bar.com')])).toEqual({
+        amr: ['fed'],
+        ts: 100,
+      });
+      expect(deriveForNewAccount([newPasswordIdentity(100)])).toEqual({});
+    });
+
+    it('never counts an enrollment for an existing account', () => {
+      expect(
+        derive([password({ verifiedAt: 100 }), totp({ verifiedAt: 50, secret: 'new' })], {
+          bindMfaFactors: new Set([MfaFactor.TOTP]),
+        })
+      ).toEqual({ acr: 'urn:logto:acr:1fa', amr: ['pwd'], ts: 100 });
     });
   });
 

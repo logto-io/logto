@@ -38,7 +38,7 @@ const basicCodeVerificationRecordDataGuard = z.object({
   id: z.string(),
   templateType: z.nativeEnum(TemplateType),
   verified: z.boolean(),
-  verifiedAt: z.number().optional(),
+  verifiedAt: z.number().int().nonnegative().optional(),
 });
 
 export const emailCodeVerificationRecordDataGuard = basicCodeVerificationRecordDataGuard.extend({

@@ -29,5 +29,5 @@ export const oneTimeTokenVerificationRecordDataGuard = z.object({
     value: z.string(),
   }),
   oneTimeTokenContext: oneTimeTokenContextGuard.optional(),
-  verifiedAt: z.number().optional(),
+  verifiedAt: z.number().int().nonnegative().optional(),
 }) satisfies ToZodObject<OneTimeTokenVerificationRecordData>;

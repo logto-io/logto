@@ -19,5 +19,5 @@ export const passwordVerificationRecordDataGuard = z.object({
   type: z.literal(VerificationType.Password),
   identifier: verificationIdentifierGuard,
   verified: z.boolean(),
-  verifiedAt: z.number().optional(),
+  verifiedAt: z.number().int().nonnegative().optional(),
 }) satisfies ToZodObject<PasswordVerificationRecordData>;

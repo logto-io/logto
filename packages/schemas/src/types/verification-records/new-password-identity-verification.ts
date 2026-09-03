@@ -32,7 +32,7 @@ export const newPasswordIdentityVerificationRecordDataGuard = z.object({
   identifier: interactionIdentifierGuard,
   passwordEncrypted: z.string().optional(),
   passwordEncryptionMethod: z.literal(UsersPasswordEncryptionMethod.Argon2i).optional(),
-  verifiedAt: z.number().optional(),
+  verifiedAt: z.number().int().nonnegative().optional(),
 }) satisfies ToZodObject<NewPasswordIdentityVerificationRecordData>;
 
 export type SanitizedNewPasswordIdentityVerificationRecordData = Omit<

@@ -2,11 +2,13 @@ import {
   AuthenticationFactor,
   AuthenticationFactorClass,
   LogtoAcr,
+  MfaFactor,
   SignInIdentifier,
   VerificationType,
   buildAuthenticationMethodReferences,
   getAuthenticationFactor,
   getAuthenticationFactorClass,
+  type AdditionalIdentifier,
   type AuthenticationMethodReference,
   type User,
 } from '@logto/schemas';
@@ -29,18 +31,80 @@ type IdentifiedUserContext = {
   user: User;
   /** The ids of the verification records that identified the user. */
   identifiedVerificationIds: ReadonlySet<string>;
+  /**
+   * Whether this interaction created `user` (a Register interaction). Every credential on such an
+   * account was written by this interaction, so a record for one of the account's identifiers and
+   * a factor enrolled in this interaction are proofs of it; the interaction is its own subject
+   * proof. Defaults to `false`.
+   */
+  isNewAccount?: boolean;
+  /**
+   * The MFA factors this submission writes to the user (`Mfa.bindMfaFactorsArray`). A factor
+   * enrolled in this interaction counts only when it is one of them; a verified enrollment that
+   * was never bound is not a factor of the account. Defaults to none.
+   */
+  bindMfaFactors?: ReadonlySet<MfaFactor>;
+};
+
+/** Whether the identifier is one of the user's stored sign-in identifiers. */
+const isIdentifierOfUser = (
+  user: User,
+  { type, value }: { type: SignInIdentifier | AdditionalIdentifier; value: string }
+): boolean => {
+  switch (type) {
+    case SignInIdentifier.Username: {
+      return user.username === value;
+    }
+    case SignInIdentifier.Email: {
+      return user.primaryEmail === value;
+    }
+    case SignInIdentifier.Phone: {
+      return user.primaryPhone === value;
+    }
+    default: {
+      return false;
+    }
+  }
+};
+
+/** The factor a new-enrollment MFA record enrolls; only TOTP and WebAuthn records enroll one. */
+const enrolledFactor = ({ type }: VerificationRecord): MfaFactor | undefined => {
+  switch (type) {
+    case VerificationType.TOTP: {
+      return MfaFactor.TOTP;
+    }
+    case VerificationType.WebAuthn: {
+      return MfaFactor.WebAuthn;
+    }
+    default: {
+      return undefined;
+    }
+  }
 };
 
 /**
- * Whether an MFA record is a proof of the user: verified, not a factor enrolled in this
- * interaction, and bound to the user. TOTP, backup code and WebAuthn records are created for a
- * user and carry that user's id. An MFA email / phone code is sent to the identified user's
- * primary contact, which the MFA verification-code route reads from the user, so the record's
- * identifier must be that contact.
+ * Whether an MFA record is a proof of the user: verified and bound to the user. TOTP, backup code
+ * and WebAuthn records are created for a user and carry that user's id. An MFA email / phone code
+ * is sent to the identified user's primary contact, which the MFA verification-code route reads
+ * from the user, so the record's identifier must be that contact.
+ *
+ * A factor enrolled in this interaction counts only for a new account, and only when the
+ * submission binds it (`bindMfaFactors`). Counting an enrollment for an existing account belongs
+ * to the step-up establishment rules and is not part of this derivation yet.
  */
-const isMfaProofOfUser = (record: VerificationRecord, user: User): boolean => {
-  if (!isMfaVerificationRecord(record) || record.isNewBindMfaVerification) {
+const isMfaProofOfUser = (
+  record: VerificationRecord,
+  { user, isNewAccount = false, bindMfaFactors }: IdentifiedUserContext
+): boolean => {
+  if (!isMfaVerificationRecord(record)) {
     return false;
+  }
+
+  if (record.isNewBindMfaVerification) {
+    const factor = enrolledFactor(record);
+    if (!isNewAccount || !factor || !bindMfaFactors?.has(factor)) {
+      return false;
+    }
   }
 
   if ('userId' in record) {
@@ -67,18 +131,19 @@ const isMfaProofOfUser = (record: VerificationRecord, user: User): boolean => {
  *   links the identity (the record resolves no account until the submission writes the link).
  * - Any other record (password, verification code, one-time token, new-password identity) counts
  *   when it is one of the records that identified the user, which the interaction recorded at
- *   identification time.
+ *   identification time. For a new account, which never identifies a user, it counts instead when
+ *   its identifier is one of the account's identifiers: the interaction wrote that identifier,
+ *   with the password of a new-password identity, to the account it created.
  */
-const isProofOfUser = (
-  record: VerificationRecord,
-  { user, identifiedVerificationIds }: IdentifiedUserContext
-): boolean => {
+const isProofOfUser = (record: VerificationRecord, context: IdentifiedUserContext): boolean => {
+  const { user, identifiedVerificationIds, isNewAccount = false } = context;
+
   if (!record.isVerified) {
     return false;
   }
 
   if (isMfaVerificationRecord(record)) {
-    return isMfaProofOfUser(record, user);
+    return isMfaProofOfUser(record, context);
   }
 
   if (record.type === VerificationType.SignInPasskey) {
@@ -89,7 +154,11 @@ const isProofOfUser = (
     return true;
   }
 
-  return identifiedVerificationIds.has(record.id);
+  if (identifiedVerificationIds.has(record.id)) {
+    return true;
+  }
+
+  return isNewAccount && 'identifier' in record && isIdentifierOfUser(user, record.identifier);
 };
 
 /**
@@ -112,6 +181,8 @@ const factorsOfClass = (records: VerificationRecord[], factorClass: Authenticati
  * Derive the authentication context the identified user achieved through the verification records
  * of one interaction. Only records that are proofs of that user count; see {@link isProofOfUser}.
  * The derivation reads only what the interaction already holds and never queries the database.
+ * It runs for a SignIn and for a Register alike: a registration establishes every credential of
+ * the account it creates, and the interaction is its own subject proof.
  *
  * - A `1fa`-class proof (password, primary email / phone code, one-time token) reaches
  *   `urn:logto:acr:1fa`; an `mfa`-class proof alone also reaches only `urn:logto:acr:1fa`.

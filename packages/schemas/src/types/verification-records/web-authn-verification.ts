@@ -26,7 +26,7 @@ const baseWebAuthnVerificationRecordDataGuard = z.object({
   registrationRpId: z.string().optional(),
   authenticationChallenge: z.string().optional(),
   registrationInfo: bindWebAuthnGuard.optional(),
-  verifiedAt: z.number().optional(),
+  verifiedAt: z.number().int().nonnegative().optional(),
 }) satisfies ToZodObject<BaseWebAuthnVerificationRecordData>;
 
 export type WebAuthnVerificationRecordData = BaseWebAuthnVerificationRecordData & {

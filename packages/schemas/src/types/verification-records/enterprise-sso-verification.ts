@@ -28,7 +28,7 @@ export const enterpriseSsoVerificationRecordDataGuard = z.object({
   enterpriseSsoUserInfo: extendedSocialUserInfoGuard.optional(),
   encryptedTokenSet: encryptedTokenSetGuard.optional(),
   issuer: z.string().optional(),
-  verifiedAt: z.number().optional(),
+  verifiedAt: z.number().int().nonnegative().optional(),
 }) satisfies ToZodObject<EnterpriseSsoVerificationRecordData>;
 
 export type SanitizedEnterpriseSsoVerificationRecordData = Omit<

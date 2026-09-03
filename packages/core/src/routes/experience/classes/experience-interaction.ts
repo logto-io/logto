@@ -559,18 +559,22 @@ export default class ExperienceInteraction {
       await this.guardMfaVerificationStatus(log);
     }
 
-    // Derive the authentication context this sign-in achieved before anything is written to the
-    // account, so that a record whose identifier or identity is only being added by this
-    // submission does not count as a proof of the account. It seeds the OIDC session so the ID
-    // token carries `acr` / `amr` / `auth_time`; a sign-in without a proof (or a register) seeds
-    // nothing and the provider stamps `auth_time` itself.
-    const authenticationContext =
-      EnvSet.values.isDevFeaturesEnabled && this.#interactionEvent === InteractionEvent.SignIn
-        ? deriveAuthenticationContext(this.verificationRecordsArray, {
-            user,
-            identifiedVerificationIds: this.identifiedVerificationIds,
-          })
-        : undefined;
+    // Derive the authentication context this sign-in or registration achieved before anything is
+    // written to an existing account, so that a record whose identifier or identity is only being
+    // added by this submission does not count as a proof of that account. A registration is the
+    // opposite case: `createUser()` already created the account from this interaction's records,
+    // so a record for one of its identifiers and a factor this submission binds are proofs of it.
+    // The context seeds the OIDC session so the ID token carries `acr` / `amr` / `auth_time`; an
+    // interaction without a proof seeds nothing and the provider stamps `auth_time` itself.
+    const authenticationContext = conditional(
+      EnvSet.values.isDevFeaturesEnabled &&
+        deriveAuthenticationContext(this.verificationRecordsArray, {
+          user,
+          identifiedVerificationIds: this.identifiedVerificationIds,
+          isNewAccount: this.#interactionEvent === InteractionEvent.Register,
+          bindMfaFactors: new Set(this.mfa.bindMfaFactorsArray.map(({ type }) => type)),
+        })
+    );
 
     // Revalidate the new profile data if any
     await this.profile.validateAvailability();

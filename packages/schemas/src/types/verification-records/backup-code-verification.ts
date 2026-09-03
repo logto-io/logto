@@ -20,7 +20,7 @@ export const backupCodeVerificationRecordDataGuard = z.object({
   userId: z.string(),
   code: z.string().optional(),
   backupCodes: z.string().array().optional(),
-  verifiedAt: z.number().optional(),
+  verifiedAt: z.number().int().nonnegative().optional(),
 }) satisfies ToZodObject<BackupCodeVerificationRecordData>;
 
 export type SanitizedBackupCodeVerificationRecordData = Omit<

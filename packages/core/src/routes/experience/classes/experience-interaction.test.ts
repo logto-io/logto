@@ -377,6 +377,51 @@ describe('ExperienceInteraction class', () => {
       );
     });
 
+    it('seeds the context a registration established into the login result when dev features are enabled', async () => {
+      setDevFeaturesEnabled(true);
+      // `createUser()` already created the account from the registration password; nothing
+      // identified the user, so the record counts because its username is the account's.
+      const { experienceInteraction, provider } = createSignInInteraction({
+        interactionEvent: InteractionEvent.Register,
+        interactionResult: {
+          verificationRecords: [
+            {
+              id: 'new-password-identity',
+              type: VerificationType.NewPasswordIdentity,
+              identifier: { type: SignInIdentifier.Username, value: mockUser.username },
+              passwordEncrypted: 'encrypted',
+              passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+              verifiedAt: 1_700_000_000,
+            },
+            // A code verified for an address that was never written to the account.
+            {
+              id: 'email',
+              type: VerificationType.EmailVerificationCode,
+              identifier: { type: SignInIdentifier.Email, value: 'other@example.com' },
+              templateType: TemplateType.Register,
+              verified: true,
+              verifiedAt: 1_600_000_000,
+            },
+          ],
+        },
+      });
+
+      await experienceInteraction.submit();
+
+      expect(provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({
+          login: {
+            accountId: mockUser.id,
+            acr: 'urn:logto:acr:1fa',
+            amr: ['pwd'],
+            ts: 1_700_000_000,
+          },
+        })
+      );
+    });
+
     it('records every verification record that identified the user', async () => {
       const { experienceInteraction } = createSignInInteraction({
         interactionResult: {
