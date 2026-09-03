@@ -57,13 +57,13 @@ function UserSessions({ userId }: Props) {
               {
                 title: t('user_details.sessions.name_column'),
                 dataIndex: 'name',
-                colSpan: 6,
+                colSpan: 7,
                 render: ({ name }) => name ?? '-',
               },
               {
                 title: t('user_details.sessions.session_id_column'),
                 dataIndex: 'sessionId',
-                colSpan: 5,
+                colSpan: 6,
                 render: ({ sessionId }) => (
                   <div className={styles.sessionId}>
                     <Tooltip
@@ -88,14 +88,16 @@ function UserSessions({ userId }: Props) {
                 dataIndex: 'action',
                 colSpan: 2,
                 render: ({ sessionId }) => (
-                  <Button
-                    title="general.manage"
-                    type="text"
-                    size="small"
-                    onClick={() => {
-                      navigate(`/users/${userId}/sessions/${sessionId}`);
-                    }}
-                  />
+                  <div className={styles.action}>
+                    <Button
+                      title="general.manage"
+                      type="text"
+                      size="small"
+                      onClick={() => {
+                        navigate(`/users/${userId}/sessions/${sessionId}`);
+                      }}
+                    />
+                  </div>
                 ),
               },
             ]}

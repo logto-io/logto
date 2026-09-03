@@ -34,24 +34,28 @@ const TrustedDeviceRow = ({ trustedDevice, isEditable, onRemove }: Props) => {
       <div className={styles.deviceInfo}>
         <div className={styles.deviceTitleLine}>
           <div className={styles.deviceTitle}>{name ?? id}</div>
-          {isCurrent && (
-            <span className={styles.currentTag}>
-              <span className={styles.currentDot} />
-              {t('account_center.security.trusted_devices.current_device')}
-            </span>
-          )}
         </div>
         <div className={styles.meta}>{id}</div>
       </div>
       <div className={styles.deviceDetails}>
-        <div className={styles.expiry}>
-          {t('account_center.security.trusted_devices.expires_on', {
-            date: expiryDateFormatter.format(expiresAt),
-          })}
+        <div className={styles.deviceDetailsColumn}>
+          <div className={styles.expiry}>
+            {t('account_center.security.trusted_devices.expires_on', {
+              date: expiryDateFormatter.format(expiresAt),
+            })}
+          </div>
+          <div className={styles.meta}>
+            {location ?? t('account_center.security.trusted_devices.unknown_location')}
+          </div>
         </div>
-        <div className={styles.meta}>
-          {location ?? t('account_center.security.trusted_devices.unknown_location')}
-        </div>
+        {isCurrent && (
+          <div className={styles.currentTagRow}>
+            <span className={styles.currentTag}>
+              <span className={styles.currentDot} />
+              {t('account_center.security.trusted_devices.current_device')}
+            </span>
+          </div>
+        )}
       </div>
       {isEditable && (
         <button type="button" className={styles.removeButton} onClick={onRemove}>

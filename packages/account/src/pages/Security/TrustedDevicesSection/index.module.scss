@@ -2,10 +2,10 @@
 
 .row {
   display: grid;
-  grid-template-columns: minmax(0, 235px) minmax(0, 1fr) auto;
-  column-gap: _.unit(4);
+  grid-template-columns: minmax(0, 200px) minmax(0, 1fr) auto;
+  column-gap: _.unit(6);
   align-items: center;
-  padding: _.unit(4) _.unit(4);
+  padding: _.unit(5) _.unit(6);
   min-height: 84px;
 
   &:not(:last-child) {
@@ -13,8 +13,16 @@
   }
 }
 
-.deviceInfo,
 .deviceDetails {
+  display: flex;
+  align-items: center;
+  gap: _.unit(6);
+  min-width: 0;
+}
+
+.deviceInfo,
+.deviceDetailsColumn {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: _.unit(1);
@@ -45,10 +53,17 @@
   white-space: nowrap;
 }
 
+.currentTagRow {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: _.unit(2);
+}
+
 .currentTag {
   display: inline-flex;
   align-items: center;
-  gap: _.unit(1);
+  gap: _.unit(2);
   flex-shrink: 0;
   padding: _.unit(0.5) _.unit(2);
   border-radius: 14px;
@@ -59,8 +74,8 @@
 }
 
 .currentDot {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: var(--color-success-default);
 }
@@ -109,6 +124,9 @@
 
   .deviceDetails {
     grid-column: 1;
+    flex-direction: column;
+    align-items: stretch;
+    gap: _.unit(1);
   }
 
   .removeButton {
