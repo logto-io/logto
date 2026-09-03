@@ -5,6 +5,9 @@ type Data<T> = {
   type: T;
 };
 
+/** Epoch seconds, the unit `auth_time` / `verifiedAt` are recorded in. */
+export const getEpochTime = () => Math.floor(Date.now() / 1000);
+
 /** The abstract class for all verification records. */
 export abstract class VerificationRecord<
   T extends VerificationType = VerificationType,

@@ -1,7 +1,7 @@
 /**
- * @file The vocabulary for the authentication context Logto records on a sign-in: the supported
- * Authentication Context Class Reference (ACR) values and the Authentication Methods References
- * (AMR) each verification type contributes.
+ * @file The authoritative vocabulary for the authentication context Logto records on a sign-in or
+ * step-up: the supported Authentication Context Class Reference (ACR) values, their satisfaction
+ * relation, and the Authentication Methods References (AMR) each verification contributes.
  *
  * @see {@link https://openid.net/specs/openid-connect-core-1_0.html#IDToken | OpenID Connect Core `acr` / `amr`}
  * @see {@link https://www.rfc-editor.org/rfc/rfc8176.html | RFC 8176 Authentication Method Reference Values}
@@ -12,13 +12,13 @@ import { VerificationType } from './verification-records/verification-type.js';
 export enum LogtoAcr {
   /**
    * At least one active factor that Logto can directly verify: password, the user's primary
-   * email / phone verification code, or a one-time token. Social and enterprise SSO never satisfy
-   * this class.
+   * email / phone verification code, or an enrolled MFA factor. Social and enterprise SSO never
+   * satisfy this class.
    */
   FirstFactor = 'urn:logto:acr:1fa',
   /**
-   * A {@link LogtoAcr.FirstFactor} context plus a second factor, or a user-verified WebAuthn
-   * assertion alone.
+   * A Logto-verifiable {@link LogtoAcr.FirstFactor} context plus an `mfa`-class record from a
+   * different factor, or WebAuthn / passkey with required user verification alone.
    */
   Mfa = 'urn:logto:acr:mfa',
 }
@@ -42,19 +42,102 @@ export enum AuthenticationMethodReference {
   ProofOfPossession = 'pop',
   /** User presence / verification by the authenticator, e.g. WebAuthn user verification. */
   UserPresence = 'user',
-  /** Multiple-factor authentication; present whenever the achieved ACR is {@link LogtoAcr.Mfa}. */
+  /** Multiple-factor authentication; appended whenever the achieved ACR is {@link LogtoAcr.Mfa}. */
   Mfa = 'mfa',
   /** Federated authentication assertion from a social or enterprise SSO provider. */
   Federated = 'fed',
 }
+
+/** The class a verification record contributes toward an ACR. */
+export enum AuthenticationFactorClass {
+  /** Contributes {@link LogtoAcr.FirstFactor}. */
+  FirstFactor = '1fa',
+  /**
+   * Contributes an `mfa`-class record. Combined with a {@link AuthenticationFactorClass.FirstFactor}
+   * record from a different factor it reaches {@link LogtoAcr.Mfa}; alone it reaches only
+   * {@link LogtoAcr.FirstFactor}, except WebAuthn / passkey with required user verification.
+   */
+  Mfa = 'mfa',
+}
+
+/**
+ * The class each verification type contributes: `1fa`-class, `mfa`-class, or `undefined` for
+ * social / enterprise SSO, which contribute `fed` to AMR but nothing to the ACR.
+ *
+ * The record is keyed by every {@link VerificationType}, so a new type fails at compile time until
+ * it is mapped here. Whether a WebAuthn assertion actually required user verification is decided at
+ * derivation time; this table only says which class the type can contribute.
+ */
+const authenticationFactorClasses: Readonly<
+  Record<VerificationType, AuthenticationFactorClass | undefined>
+> = Object.freeze({
+  [VerificationType.Password]: AuthenticationFactorClass.FirstFactor,
+  [VerificationType.EmailVerificationCode]: AuthenticationFactorClass.FirstFactor,
+  [VerificationType.PhoneVerificationCode]: AuthenticationFactorClass.FirstFactor,
+  [VerificationType.OneTimeToken]: AuthenticationFactorClass.FirstFactor,
+  // The class of a password established by a registration. The account does not exist while the
+  // record is verified, so the sign-in derivation in core never counts the record as a proof.
+  [VerificationType.NewPasswordIdentity]: AuthenticationFactorClass.FirstFactor,
+  [VerificationType.TOTP]: AuthenticationFactorClass.Mfa,
+  [VerificationType.MfaEmailVerificationCode]: AuthenticationFactorClass.Mfa,
+  [VerificationType.MfaPhoneVerificationCode]: AuthenticationFactorClass.Mfa,
+  [VerificationType.BackupCode]: AuthenticationFactorClass.Mfa,
+  [VerificationType.WebAuthn]: AuthenticationFactorClass.Mfa,
+  [VerificationType.SignInPasskey]: AuthenticationFactorClass.Mfa,
+  [VerificationType.Social]: undefined,
+  [VerificationType.EnterpriseSso]: undefined,
+});
+
+/** Classify a verification type; see {@link authenticationFactorClasses}. */
+export const getAuthenticationFactorClass = (
+  type: VerificationType
+): AuthenticationFactorClass | undefined => authenticationFactorClasses[type];
+
+/**
+ * The factor a verification record is a proof of. Repeated proofs of one factor count once, and
+ * {@link LogtoAcr.Mfa} needs a `1fa`-class and an `mfa`-class proof of two different factors: a
+ * one-time token and an MFA email code are two proofs of the same mailbox, not two factors.
+ */
+export enum AuthenticationFactor {
+  Password = 'password',
+  Email = 'email',
+  Phone = 'phone',
+  Totp = 'totp',
+  BackupCode = 'backupCode',
+  WebAuthn = 'webAuthn',
+  Federated = 'federated',
+}
+
+/** Keyed by every {@link VerificationType}, so a new type fails at compile time until mapped. */
+const authenticationFactors: Readonly<Record<VerificationType, AuthenticationFactor>> =
+  Object.freeze({
+    [VerificationType.Password]: AuthenticationFactor.Password,
+    [VerificationType.NewPasswordIdentity]: AuthenticationFactor.Password,
+    [VerificationType.EmailVerificationCode]: AuthenticationFactor.Email,
+    [VerificationType.MfaEmailVerificationCode]: AuthenticationFactor.Email,
+    [VerificationType.OneTimeToken]: AuthenticationFactor.Email,
+    [VerificationType.PhoneVerificationCode]: AuthenticationFactor.Phone,
+    [VerificationType.MfaPhoneVerificationCode]: AuthenticationFactor.Phone,
+    [VerificationType.TOTP]: AuthenticationFactor.Totp,
+    [VerificationType.BackupCode]: AuthenticationFactor.BackupCode,
+    [VerificationType.WebAuthn]: AuthenticationFactor.WebAuthn,
+    [VerificationType.SignInPasskey]: AuthenticationFactor.WebAuthn,
+    [VerificationType.Social]: AuthenticationFactor.Federated,
+    [VerificationType.EnterpriseSso]: AuthenticationFactor.Federated,
+  });
+
+/** The factor a verification type is a proof of; see {@link authenticationFactors}. */
+export const getAuthenticationFactor = (type: VerificationType): AuthenticationFactor =>
+  authenticationFactors[type];
 
 /**
  * The AMR values a single verification type contributes, per the step-up tech design. The record
  * is keyed by every {@link VerificationType}, so a new type fails at compile time until it is
  * mapped here.
  *
- * WebAuthn carries `mfa` inherently: Logto always requires user verification, so a verified
- * passkey assertion is a multi-factor authenticator on its own.
+ * The trailing `mfa` marker for an achieved {@link LogtoAcr.Mfa} is added by
+ * {@link buildAuthenticationMethodReferences}, not here; WebAuthn carries it inherently because a
+ * user-verified passkey is a multi-factor authenticator on its own.
  */
 const authenticationMethodReferences: Readonly<
   Record<VerificationType, readonly AuthenticationMethodReference[]>
@@ -88,36 +171,20 @@ export const getAuthenticationMethodReferences = (
 ): readonly AuthenticationMethodReference[] => authenticationMethodReferences[type];
 
 /**
- * Build the `amr` claim for the verification types that authenticated the user: the union of each
- * type's references in first-seen order, with `mfa` always last when any type carries it.
+ * Build the `amr` claim for a set of counted verification types and the ACR they achieved:
+ * the union of each type's references in first-seen order, with `mfa` always last, present
+ * whenever a counted type carries it (WebAuthn) or the achieved ACR is {@link LogtoAcr.Mfa}.
  */
 export const buildAuthenticationMethodReferences = (
-  types: Iterable<VerificationType>
+  types: Iterable<VerificationType>,
+  achievedAcr?: LogtoAcr
 ): AuthenticationMethodReference[] => {
-  const references = [
-    ...new Set([...types].flatMap((type) => getAuthenticationMethodReferences(type))),
-  ];
-  const hasMfa = references.includes(AuthenticationMethodReference.Mfa);
+  const references = [...types].flatMap((type) => getAuthenticationMethodReferences(type));
+  const hasMfa =
+    achievedAcr === LogtoAcr.Mfa || references.includes(AuthenticationMethodReference.Mfa);
 
   return [
-    ...references.filter((reference) => reference !== AuthenticationMethodReference.Mfa),
+    ...new Set(references.filter((reference) => reference !== AuthenticationMethodReference.Mfa)),
     ...(hasMfa ? [AuthenticationMethodReference.Mfa] : []),
   ];
-};
-
-/**
- * The ACR the `amr` claim achieved: `mfa` marks {@link LogtoAcr.Mfa}; any other reference except
- * `fed` is a factor Logto verified itself and reaches {@link LogtoAcr.FirstFactor}; a federated
- * assertion alone reaches no ACR.
- */
-export const getAchievedAcr = (
-  references: readonly AuthenticationMethodReference[]
-): LogtoAcr | undefined => {
-  if (references.includes(AuthenticationMethodReference.Mfa)) {
-    return LogtoAcr.Mfa;
-  }
-
-  return references.some((reference) => reference !== AuthenticationMethodReference.Federated)
-    ? LogtoAcr.FirstFactor
-    : undefined;
 };

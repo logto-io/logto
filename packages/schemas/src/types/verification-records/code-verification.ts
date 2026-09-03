@@ -30,12 +30,15 @@ export type CodeVerificationRecordData<T extends CodeVerificationType = CodeVeri
   identifier: VerificationCodeIdentifierOf<T>;
   templateType: TemplateType;
   verified: boolean;
+  /** Epoch seconds when the verification succeeded; feeds the `auth_time` claim. */
+  verifiedAt?: number;
 };
 
 const basicCodeVerificationRecordDataGuard = z.object({
   id: z.string(),
   templateType: z.nativeEnum(TemplateType),
   verified: z.boolean(),
+  verifiedAt: z.number().optional(),
 });
 
 export const emailCodeVerificationRecordDataGuard = basicCodeVerificationRecordDataGuard.extend({

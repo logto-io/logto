@@ -1,10 +1,12 @@
 import {
   defaultMessageRateLimitPolicy,
   InteractionEvent,
+  MfaFactor,
   SentinelActivityAction,
   SignInIdentifier,
 } from '@logto/schemas';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 
@@ -28,7 +30,7 @@ async function resolveVoid(): Promise<void> {
   await Promise.resolve();
 }
 
-const { sendCode } = await import('./verification-code-helpers.js');
+const { sendCode, getMfaIdentifier } = await import('./verification-code-helpers.js');
 
 // Provide a permissive activity store so the message rate guard allows sends by default.
 const mockSentinelActivities = {
@@ -399,5 +401,64 @@ describe('sendCode parameter passing', () => {
     expect(
       mockExperienceInteraction.signInExperienceValidator.isRegistrationDisabled
     ).not.toHaveBeenCalled();
+  });
+});
+
+describe('getMfaIdentifier', () => {
+  const findUserById = jest
+    .fn()
+    .mockResolvedValue({ primaryEmail: 'foo@example.com', primaryPhone: '+11234567890' });
+  const queries = { users: { findUserById } } as unknown as Queries;
+
+  beforeEach(() => {
+    findUserById.mockClear();
+  });
+
+  const buildInteraction = (factors: MfaFactor[]) =>
+    ({
+      identifiedUserId: 'identified-user-id',
+      signInExperienceValidator: { getMfaSettings: jest.fn().mockResolvedValue({ factors }) },
+    }) as unknown as Parameters<typeof getMfaIdentifier>[0]['experienceInteraction'];
+
+  it('resolves the primary contact of the identified user when the factor is enabled', async () => {
+    await expect(
+      getMfaIdentifier({
+        identifierType: SignInIdentifier.Email,
+        experienceInteraction: buildInteraction([MfaFactor.EmailVerificationCode]),
+        queries,
+      })
+    ).resolves.toEqual({ type: SignInIdentifier.Email, value: 'foo@example.com' });
+  });
+
+  it.each([
+    [SignInIdentifier.Email, [MfaFactor.PhoneVerificationCode]],
+    [SignInIdentifier.Phone, [MfaFactor.EmailVerificationCode]],
+    [SignInIdentifier.Email, []],
+  ] as const)(
+    'refuses a %s code when the sign-in experience does not enable that factor',
+    async (identifierType, factors) => {
+      await expect(
+        getMfaIdentifier({
+          identifierType,
+          experienceInteraction: buildInteraction([...factors]),
+          queries,
+        })
+      ).rejects.toMatchError(
+        new RequestError({ code: 'session.mfa.mfa_factor_not_enabled', status: 400 })
+      );
+      expect(findUserById).not.toHaveBeenCalled();
+    }
+  );
+
+  it('refuses a code before any user is identified', async () => {
+    await expect(
+      getMfaIdentifier({
+        identifierType: SignInIdentifier.Email,
+        experienceInteraction: {
+          identifiedUserId: undefined,
+        } as unknown as Parameters<typeof getMfaIdentifier>[0]['experienceInteraction'],
+        queries,
+      })
+    ).rejects.toMatchError(new RequestError({ code: 'session.identifier_not_found', status: 400 }));
   });
 });
