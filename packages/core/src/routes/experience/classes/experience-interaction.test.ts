@@ -11,6 +11,7 @@ import {
   SignInIdentifier,
   SignInMode,
   type User,
+  UsersPasswordEncryptionMethod,
   VerificationType,
 } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
@@ -132,6 +133,7 @@ const createSignInInteraction = ({
   const signInUserQueries = {
     ...userQueries,
     findUserById: jest.fn().mockResolvedValue(user),
+    findUserByUsername: jest.fn().mockResolvedValue(user),
     updateUserById: jest.fn().mockResolvedValue(user),
   };
   const runActionHandler = jest.fn(
@@ -342,6 +344,16 @@ describe('ExperienceInteraction class', () => {
               identifier: { type: SignInIdentifier.Username, value: mockUser.username },
               verified: true,
               verifiedAt: 1_700_000_000,
+            },
+            // A registration password proposed for an unused username is not a proof of the
+            // signed-in account and must not reach the login result.
+            {
+              id: 'new-password-identity',
+              type: VerificationType.NewPasswordIdentity,
+              identifier: { type: SignInIdentifier.Username, value: 'unused' },
+              passwordEncrypted: 'encrypted',
+              passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+              verifiedAt: 1_600_000_000,
             },
           ],
         },

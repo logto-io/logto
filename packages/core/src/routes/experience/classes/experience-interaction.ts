@@ -548,6 +548,16 @@ export default class ExperienceInteraction {
       await this.guardMfaVerificationStatus(log);
     }
 
+    // Derive the authentication context this sign-in achieved before anything is written to the
+    // account, so that a record whose identifier or identity is only being added by this
+    // submission does not count as a proof of the account. It seeds the OIDC session so the ID
+    // token carries `acr` / `amr` / `auth_time`; a sign-in without a proof (or a register) seeds
+    // nothing and the provider stamps `auth_time` itself.
+    const authenticationContext =
+      EnvSet.values.isDevFeaturesEnabled && this.#interactionEvent === InteractionEvent.SignIn
+        ? await deriveAuthenticationContext(this.verificationRecordsArray, user.id)
+        : undefined;
+
     // Revalidate the new profile data if any
     await this.profile.validateAvailability();
 
@@ -677,14 +687,7 @@ export default class ExperienceInteraction {
     const redirectTo = await provider.interactionResult(this.ctx.req, this.ctx.res, {
       login: {
         accountId: user.id,
-        // Seed the authentication context this interaction achieved onto the OIDC session, so
-        // the ID token carries `acr` / `amr` / `auth_time`. A sign-in without a counted record
-        // (or a register) seeds nothing and the provider stamps `auth_time` itself.
-        ...conditional(
-          EnvSet.values.isDevFeaturesEnabled &&
-            this.#interactionEvent === InteractionEvent.SignIn &&
-            deriveAuthenticationContext(this.verificationRecordsArray)
-        ),
+        ...authenticationContext,
       },
       // Persist the interaction status to the OIDC session after interaction submission
       ...this.toJson(),
