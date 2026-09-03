@@ -188,17 +188,15 @@ const signInPasskey = (verifiedAt?: number, ownerId = userId) =>
     verifiedAt,
   });
 
-const social = (verifiedAt?: number, identifiedUserId: string | typeof noAccount = userId) =>
-  identifying(
-    new SocialVerification(libraries, queries, {
-      id: 'social',
-      type: VerificationType.Social,
-      connectorId: 'connector',
-      socialUserInfo: { id: 'social-user' },
-      verifiedAt,
-    }),
-    identifiedUserId
-  );
+/** A verified social assertion; whether the identity is linked to the account is irrelevant. */
+const social = (verifiedAt?: number) =>
+  new SocialVerification(libraries, queries, {
+    id: 'social',
+    type: VerificationType.Social,
+    connectorId: 'connector',
+    socialUserInfo: { id: 'social-user' },
+    verifiedAt,
+  });
 
 /** A verified registration record: a policy-compliant password proposed for an unused username. */
 const newPasswordIdentity = (verifiedAt?: number) =>
@@ -363,12 +361,14 @@ describe('deriveAuthenticationContext', () => {
       await expect(derive([emailCode(50, 'someone-else')])).resolves.toEqual({});
     });
 
-    it('ignores a social identity that is not linked to the account', async () => {
-      await expect(derive([password(100), social(50, noAccount)])).resolves.toEqual({
-        acr: 'urn:logto:acr:1fa',
-        amr: ['pwd'],
-        ts: 100,
-      });
+    it('keeps fed for an identity that is only being linked by this submission', async () => {
+      const record = social(50);
+      jest
+        .spyOn(record, 'identifyUser')
+        .mockRejectedValue(new RequestError({ code: 'user.identity_not_exist', status: 404 }));
+
+      await expect(derive([record])).resolves.toEqual({ amr: ['fed'], ts: 50 });
+      expect(record.identifyUser).not.toHaveBeenCalled();
     });
 
     it('ignores factor records created for another user', async () => {

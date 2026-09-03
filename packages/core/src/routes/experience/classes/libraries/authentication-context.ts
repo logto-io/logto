@@ -60,17 +60,20 @@ const authenticationFactors: Readonly<Record<VerificationType, AuthenticationFac
  *
  * A verified record is not a proof by itself. An interaction can hold verified records that never
  * authenticated the identified account: a password proposed for a username nobody owns, a code
- * sent to an address the user is adding to their profile, a social identity being linked, a
- * factor enrolled in this interaction, or an MFA code requested for a factor the user has not
- * enabled. Only a record bound to the identified user counts:
+ * sent to an address the user is adding to their profile, a factor enrolled in this interaction,
+ * or an MFA code requested for a factor the user has not enabled. Only a record bound to the
+ * identified user counts:
  *
  * - An MFA record (TOTP, backup code, WebAuthn, MFA email / phone code) counts only when the
  *   {@link MfaValidator} accepts it: verified, not a new enrollment, and of a factor enabled for
  *   the user. TOTP, backup code and WebAuthn records are created for a user and must carry that
  *   user's id; MFA email / phone codes are identifier records checked like the ones below.
  * - A sign-in passkey record resolves its `userId` from the asserted credential.
- * - An identifier record (password, verification code, one-time token, social, enterprise SSO)
- *   counts when the account it identifies is the identified user.
+ * - A social or enterprise SSO record contributes only `fed`, never an ACR, so a verified
+ *   assertion counts as is. Gating it on the stored identity would drop the very sign-in that
+ *   links the identity (the record resolves no account until the submission writes the link).
+ * - An identifier record (password, verification code, one-time token) counts when the account
+ *   it identifies is the identified user.
  * - A new-password-identity record only proposes a password for an account that does not exist
  *   yet, so it never counts.
  */
@@ -87,13 +90,14 @@ const isProofOfUser = async (
     return false;
   }
 
-  if (
-    record.type === VerificationType.TOTP ||
-    record.type === VerificationType.BackupCode ||
-    record.type === VerificationType.WebAuthn ||
-    record.type === VerificationType.SignInPasskey
-  ) {
+  // TOTP, backup code and WebAuthn records are created for a user; a sign-in passkey record
+  // resolves its user from the asserted credential.
+  if ('userId' in record) {
     return record.userId === userId;
+  }
+
+  if (authenticationFactors[record.type] === AuthenticationFactor.Federated) {
+    return true;
   }
 
   if (!('identifyUser' in record)) {
@@ -104,8 +108,8 @@ const isProofOfUser = async (
     const { id } = await record.identifyUser();
     return id === userId;
   } catch (error: unknown) {
-    // The record identifies no account (a code for an unregistered address, an identity that is
-    // not linked yet): it is not a proof for this user.
+    // The record identifies no account (a code for an unregistered address): it is not a proof
+    // for this user.
     if (error instanceof RequestError) {
       return false;
     }

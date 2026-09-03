@@ -275,6 +275,41 @@ devFeatureTest.describe('authentication context claims on sign-in', () => {
       await logoutClient(client);
     });
 
+    it('keeps fed on the sign-in that links the identity to an existing account', async () => {
+      const { primaryEmail } = generateNewUserProfile({ primaryEmail: true });
+      const existingUser = await userApi.create({ primaryEmail });
+      const linkingSocialUserId = generateStandardId();
+
+      const client = await initClient();
+      const state = 'state';
+      const redirectUri = 'http://localhost:3000';
+      const { verificationId } = await successfullyCreateSocialVerification(client, connectorId, {
+        redirectUri,
+        state,
+      });
+      await successfullyVerifySocialAuthorization(client, connectorId, {
+        verificationId,
+        connectorData: {
+          state,
+          redirectUri,
+          code: 'fake_code',
+          userId: linkingSocialUserId,
+          email: primaryEmail,
+        },
+      });
+      // The identity is not stored yet; the user is identified by the related email and the
+      // link is written by the submission.
+      await client.identifyUser({ verificationId, linkSocialIdentity: true });
+      const claims = await finishSignIn(client);
+
+      expect(claims.sub).toBe(existingUser.id);
+      expect(claims.amr).toEqual(['fed']);
+      expect(claims).not.toHaveProperty('acr');
+      expect(typeof claims.auth_time).toBe('number');
+
+      await logoutClient(client);
+    });
+
     it('does not count an unused registration password as a proof of the account', async () => {
       const client = await identifySocialUser();
       await verifyUnusedRegistrationPassword(client);
