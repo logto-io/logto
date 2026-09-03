@@ -94,6 +94,43 @@ export const getAuthenticationFactorClass = (
 ): AuthenticationFactorClass | undefined => authenticationFactorClasses[type];
 
 /**
+ * The factor a verification record is a proof of. Repeated proofs of one factor count once, and
+ * {@link LogtoAcr.Mfa} needs a `1fa`-class and an `mfa`-class proof of two different factors: a
+ * one-time token and an MFA email code are two proofs of the same mailbox, not two factors.
+ */
+export enum AuthenticationFactor {
+  Password = 'password',
+  Email = 'email',
+  Phone = 'phone',
+  Totp = 'totp',
+  BackupCode = 'backupCode',
+  WebAuthn = 'webAuthn',
+  Federated = 'federated',
+}
+
+/** Keyed by every {@link VerificationType}, so a new type fails at compile time until mapped. */
+const authenticationFactors: Readonly<Record<VerificationType, AuthenticationFactor>> =
+  Object.freeze({
+    [VerificationType.Password]: AuthenticationFactor.Password,
+    [VerificationType.NewPasswordIdentity]: AuthenticationFactor.Password,
+    [VerificationType.EmailVerificationCode]: AuthenticationFactor.Email,
+    [VerificationType.MfaEmailVerificationCode]: AuthenticationFactor.Email,
+    [VerificationType.OneTimeToken]: AuthenticationFactor.Email,
+    [VerificationType.PhoneVerificationCode]: AuthenticationFactor.Phone,
+    [VerificationType.MfaPhoneVerificationCode]: AuthenticationFactor.Phone,
+    [VerificationType.TOTP]: AuthenticationFactor.Totp,
+    [VerificationType.BackupCode]: AuthenticationFactor.BackupCode,
+    [VerificationType.WebAuthn]: AuthenticationFactor.WebAuthn,
+    [VerificationType.SignInPasskey]: AuthenticationFactor.WebAuthn,
+    [VerificationType.Social]: AuthenticationFactor.Federated,
+    [VerificationType.EnterpriseSso]: AuthenticationFactor.Federated,
+  });
+
+/** The factor a verification type is a proof of; see {@link authenticationFactors}. */
+export const getAuthenticationFactor = (type: VerificationType): AuthenticationFactor =>
+  authenticationFactors[type];
+
+/**
  * The AMR values a single verification type contributes, per the step-up tech design. The record
  * is keyed by every {@link VerificationType}, so a new type fails at compile time until it is
  * mapped here.

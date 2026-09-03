@@ -1,21 +1,20 @@
 import {
+  AuthenticationFactor,
   AuthenticationFactorClass,
   LogtoAcr,
-  MfaFactor,
   SignInIdentifier,
   VerificationType,
   buildAuthenticationMethodReferences,
+  getAuthenticationFactor,
   getAuthenticationFactorClass,
   type AuthenticationMethodReference,
-  type Mfa,
   type User,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
-import { getAllUserEnabledMfaVerifications } from '../helpers.js';
 import { type VerificationRecord } from '../verifications/index.js';
 
-import { isMfaVerificationRecord, mfaVerificationTypeToMfaFactorMap } from './mfa-validator.js';
+import { isMfaVerificationRecord } from './mfa-validator.js';
 
 /** The authentication context an interaction achieved, in the shape of the provider's `login` result. */
 type AuthenticationContext = {
@@ -28,82 +27,19 @@ type AuthenticationContext = {
 /** What the derivation knows about the identified user; see `ExperienceInteraction`. */
 type IdentifiedUserContext = {
   user: User;
-  mfaSettings: Mfa;
   /** The ids of the verification records that identified the user. */
   identifiedVerificationIds: ReadonlySet<string>;
 };
 
 /**
- * The factor a verification record is a proof of. Repeated proofs of one factor count once, and
- * `urn:logto:acr:mfa` needs a `1fa`-class and an `mfa`-class proof of two different factors: a
- * primary email code and an MFA email code are two proofs of the same contact, not two factors.
- */
-enum AuthenticationFactor {
-  Password = 'password',
-  Email = 'email',
-  Phone = 'phone',
-  Totp = 'totp',
-  BackupCode = 'backupCode',
-  WebAuthn = 'webAuthn',
-  Federated = 'federated',
-}
-
-/** Keyed by every {@link VerificationType}, so a new type fails at compile time until mapped. */
-const authenticationFactors: Readonly<Record<VerificationType, AuthenticationFactor>> =
-  Object.freeze({
-    [VerificationType.Password]: AuthenticationFactor.Password,
-    [VerificationType.NewPasswordIdentity]: AuthenticationFactor.Password,
-    [VerificationType.EmailVerificationCode]: AuthenticationFactor.Email,
-    [VerificationType.MfaEmailVerificationCode]: AuthenticationFactor.Email,
-    [VerificationType.OneTimeToken]: AuthenticationFactor.Email,
-    [VerificationType.PhoneVerificationCode]: AuthenticationFactor.Phone,
-    [VerificationType.MfaPhoneVerificationCode]: AuthenticationFactor.Phone,
-    [VerificationType.TOTP]: AuthenticationFactor.Totp,
-    [VerificationType.BackupCode]: AuthenticationFactor.BackupCode,
-    [VerificationType.WebAuthn]: AuthenticationFactor.WebAuthn,
-    [VerificationType.SignInPasskey]: AuthenticationFactor.WebAuthn,
-    [VerificationType.Social]: AuthenticationFactor.Federated,
-    [VerificationType.EnterpriseSso]: AuthenticationFactor.Federated,
-  });
-
-/**
- * The MFA factors a completed proof in this interaction can be of: enabled in the sign-in
- * experience and enrolled by, or implicit for, the user.
- *
- * {@link getAllUserEnabledMfaVerifications} decides what a new challenge may offer, so it drops a
- * backup code set whose codes are all used. A code consumed in this interaction is still a proof,
- * and the last one is marked used before the submission reloads the user, so the backup code
- * factor stays eligible as long as it is enabled and enrolled.
- */
-const getEligibleMfaFactors = (user: User, mfaSettings: Mfa): Set<MfaFactor> =>
-  new Set([
-    ...getAllUserEnabledMfaVerifications(mfaSettings, user),
-    ...(mfaSettings.factors.includes(MfaFactor.BackupCode) &&
-    user.mfaVerifications.some(({ type }) => type === MfaFactor.BackupCode)
-      ? [MfaFactor.BackupCode]
-      : []),
-  ]);
-
-/**
  * Whether an MFA record is a proof of the user: verified, not a factor enrolled in this
- * interaction, of an eligible factor (see {@link getEligibleMfaFactors}), and bound to the user.
- * TOTP, backup code and WebAuthn records are created for a user and carry that user's id. An MFA
- * email / phone code is sent to the identified user's primary contact, which the MFA
- * verification-code route reads from the user, so the record's identifier must be that contact.
+ * interaction, and bound to the user. TOTP, backup code and WebAuthn records are created for a
+ * user and carry that user's id. An MFA email / phone code is sent to the identified user's
+ * primary contact, which the MFA verification-code route reads from the user, so the record's
+ * identifier must be that contact.
  */
-const isMfaProofOfUser = (
-  record: VerificationRecord,
-  user: User,
-  eligibleMfaFactors: Set<MfaFactor>
-): boolean => {
-  if (!isMfaVerificationRecord(record)) {
-    return false;
-  }
-
-  if (
-    record.isNewBindMfaVerification ||
-    !eligibleMfaFactors.has(mfaVerificationTypeToMfaFactorMap[record.type])
-  ) {
+const isMfaProofOfUser = (record: VerificationRecord, user: User): boolean => {
+  if (!isMfaVerificationRecord(record) || record.isNewBindMfaVerification) {
     return false;
   }
 
@@ -119,10 +55,9 @@ const isMfaProofOfUser = (
  * Whether a record is a proof that the identified user authenticated in this interaction.
  *
  * A verified record is not a proof by itself. An interaction can hold verified records that never
- * authenticated the identified account: a password proposed for a username nobody owns, a code
- * sent to an address the user is adding to their profile, a factor enrolled in this interaction,
- * or an MFA code requested for a factor the user has not enabled. Only a record bound to the
- * identified user counts:
+ * authenticated the identified account: a code sent to an address the user is adding to their
+ * profile, or a factor enrolled in this interaction. Only a record bound to the identified user
+ * counts:
  *
  * - An MFA record (TOTP, backup code, WebAuthn, MFA email / phone code) counts per
  *   {@link isMfaProofOfUser}.
@@ -130,29 +65,27 @@ const isMfaProofOfUser = (
  * - A social or enterprise SSO record contributes only `fed`, never an ACR, so a verified
  *   assertion counts as is. Gating it on the stored identity would drop the very sign-in that
  *   links the identity (the record resolves no account until the submission writes the link).
- * - An identifier record (password, verification code, one-time token) counts when it is one of
- *   the records that identified the user, which the interaction recorded at identification time.
- * - A new-password-identity record only proposes a password for an account that does not exist
- *   yet; it never identifies a user, so it never counts.
+ * - Any other record (password, verification code, one-time token, new-password identity) counts
+ *   when it is one of the records that identified the user, which the interaction recorded at
+ *   identification time.
  */
 const isProofOfUser = (
   record: VerificationRecord,
-  { user, identifiedVerificationIds }: IdentifiedUserContext,
-  eligibleMfaFactors: Set<MfaFactor>
+  { user, identifiedVerificationIds }: IdentifiedUserContext
 ): boolean => {
   if (!record.isVerified) {
     return false;
   }
 
   if (isMfaVerificationRecord(record)) {
-    return isMfaProofOfUser(record, user, eligibleMfaFactors);
+    return isMfaProofOfUser(record, user);
   }
 
   if (record.type === VerificationType.SignInPasskey) {
     return record.userId === user.id;
   }
 
-  if (authenticationFactors[record.type] === AuthenticationFactor.Federated) {
+  if (getAuthenticationFactor(record.type) === AuthenticationFactor.Federated) {
     return true;
   }
 
@@ -172,7 +105,7 @@ const factorsOfClass = (records: VerificationRecord[], factorClass: Authenticati
   new Set(
     records
       .filter(({ type }) => getAuthenticationFactorClass(type) === factorClass)
-      .map(({ type }) => authenticationFactors[type])
+      .map(({ type }) => getAuthenticationFactor(type))
   );
 
 /**
@@ -184,7 +117,7 @@ const factorsOfClass = (records: VerificationRecord[], factorClass: Authenticati
  *   `urn:logto:acr:1fa`; an `mfa`-class proof alone also reaches only `urn:logto:acr:1fa`.
  * - A `1fa`-class proof plus an `mfa`-class proof of a different factor, or a user-verified
  *   WebAuthn assertion alone, reaches `urn:logto:acr:mfa`. Repeated proofs of one factor count
- *   once, so a primary email code plus an MFA email code stays at `urn:logto:acr:1fa`.
+ *   once, so a one-time token plus an MFA email code stays at `urn:logto:acr:1fa`.
  * - Social / enterprise SSO contribute `fed` to `amr` and nothing to the ACR.
  * - `ts` is the earliest `verifiedAt` among counted records, the most conservative value for a
  *   downstream `max_age` check; it is absent when no counted record carries one.
@@ -193,8 +126,7 @@ export const deriveAuthenticationContext = (
   records: VerificationRecord[],
   context: IdentifiedUserContext
 ): AuthenticationContext => {
-  const eligibleMfaFactors = getEligibleMfaFactors(context.user, context.mfaSettings);
-  const counted = records.filter((record) => isProofOfUser(record, context, eligibleMfaFactors));
+  const counted = records.filter((record) => isProofOfUser(record, context));
   const firstFactors = factorsOfClass(counted, AuthenticationFactorClass.FirstFactor);
   const mfaFactors = factorsOfClass(counted, AuthenticationFactorClass.Mfa);
   const hasDistinctMfaFactor = [...mfaFactors].some(

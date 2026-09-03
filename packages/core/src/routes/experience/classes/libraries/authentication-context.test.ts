@@ -1,13 +1,11 @@
 import { TemplateType } from '@logto/connector-kit';
 import {
-  MfaFactor,
   SignInIdentifier,
   UsersPasswordEncryptionMethod,
   VerificationType,
   type User,
 } from '@logto/schemas';
 
-import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import {
   mockUser,
   mockUserBackupCodeMfaVerification,
@@ -24,6 +22,7 @@ import {
   PhoneCodeVerification,
 } from '../verifications/code-verification.js';
 import { NewPasswordIdentityVerification } from '../verifications/new-password-identity-verification.js';
+import { OneTimeTokenVerification } from '../verifications/one-time-token-verification.js';
 import { PasswordVerification } from '../verifications/password-verification.js';
 import { SocialVerification } from '../verifications/social-verification.js';
 import { TotpVerification } from '../verifications/totp-verification.js';
@@ -39,7 +38,7 @@ const userId = mockUser.id;
 const email = 'foo@bar.com';
 const phone = '+11234567890';
 
-/** A user with every MFA factor enrolled, and the sign-in experience enabling all of them. */
+/** A user with every MFA factor enrolled. */
 const user: User = {
   ...mockUser,
   primaryEmail: email,
@@ -50,24 +49,16 @@ const user: User = {
     mockUserBackupCodeMfaVerification,
   ],
 };
-const allFactorsEnabled = { ...mockSignInExperience.mfa, factors: Object.values(MfaFactor) };
-const noFactorEnabled = { ...mockSignInExperience.mfa, factors: [] };
 
 /** The ids of the identifier records below; the interaction records them at identification. */
-const identifiedVerificationIds = new Set(['password', 'email', 'phone']);
+const identifiedVerificationIds = new Set(['password', 'email', 'phone', 'one-time-token']);
 
 type Options = Partial<Parameters<typeof deriveAuthenticationContext>[1]>;
 
 const derive = (
   records: Parameters<typeof deriveAuthenticationContext>[0],
   options: Options = {}
-) =>
-  deriveAuthenticationContext(records, {
-    user,
-    mfaSettings: allFactorsEnabled,
-    identifiedVerificationIds,
-    ...options,
-  });
+) => deriveAuthenticationContext(records, { user, identifiedVerificationIds, ...options });
 
 const password = ({
   verifiedAt,
@@ -98,6 +89,15 @@ const phoneCode = (verifiedAt?: number) =>
     type: VerificationType.PhoneVerificationCode,
     identifier: { type: SignInIdentifier.Phone, value: phone },
     templateType: TemplateType.SignIn,
+    verified: true,
+    verifiedAt,
+  });
+
+const oneTimeToken = (verifiedAt?: number) =>
+  new OneTimeTokenVerification(libraries, queries, {
+    id: 'one-time-token',
+    type: VerificationType.OneTimeToken,
+    identifier: { type: SignInIdentifier.Email, value: email },
     verified: true,
     verifiedAt,
   });
@@ -218,6 +218,14 @@ describe('deriveAuthenticationContext', () => {
     });
   });
 
+  it('reaches mfa with a password and a backup code', () => {
+    expect(derive([password({ verifiedAt: 100 }), backupCode(200)])).toEqual({
+      acr: 'urn:logto:acr:mfa',
+      amr: ['pwd', 'otp', 'mfa'],
+      ts: 100,
+    });
+  });
+
   it('reaches only 1fa with a TOTP alone', () => {
     expect(derive([totp({ verifiedAt: 100 })])).toEqual({
       acr: 'urn:logto:acr:1fa',
@@ -282,21 +290,23 @@ describe('deriveAuthenticationContext', () => {
   });
 
   describe('one factor never fills both roles', () => {
-    it('stays at 1fa when the MFA code went to the same email as the first factor', () => {
-      expect(derive([emailCode(100), mfaEmailCode(200)])).toEqual({
+    it('stays at 1fa when the MFA code went to the same mailbox as a one-time token', () => {
+      expect(derive([oneTimeToken(100), mfaEmailCode(200)])).toEqual({
         acr: 'urn:logto:acr:1fa',
         amr: ['otp'],
         ts: 100,
       });
     });
 
-    it('stays at 1fa when the MFA code went to the same phone as the first factor', () => {
-      expect(derive([phoneCode(100), mfaPhoneCode(200)])).toEqual({
-        acr: 'urn:logto:acr:1fa',
-        amr: ['sms'],
-        ts: 100,
-      });
-    });
+    it.each([
+      ['email', () => [emailCode(100), mfaEmailCode(200)], ['otp']],
+      ['phone', () => [phoneCode(100), mfaPhoneCode(200)], ['sms']],
+    ] as const)(
+      'stays at 1fa when the MFA code went to the same %s as the first factor',
+      (_, build, amr) => {
+        expect(derive(build())).toEqual({ acr: 'urn:logto:acr:1fa', amr, ts: 100 });
+      }
+    );
 
     it('still reaches mfa when another factor supplies the first factor', () => {
       expect(derive([password({ verifiedAt: 100 }), mfaEmailCode(200)])).toEqual({
@@ -313,16 +323,6 @@ describe('deriveAuthenticationContext', () => {
   });
 
   describe('records that are not proofs of the identified user', () => {
-    it('never counts a new-password-identity record, even next to a real proof', () => {
-      expect(derive([social(100), newPasswordIdentity(50)])).toEqual({ amr: ['fed'], ts: 100 });
-      // Without the registration password, a TOTP alone reaches only 1fa.
-      expect(derive([social(100), newPasswordIdentity(50), totp({ verifiedAt: 200 })])).toEqual({
-        acr: 'urn:logto:acr:1fa',
-        amr: ['fed', 'otp'],
-        ts: 100,
-      });
-    });
-
     it('ignores an identifier record that did not identify the user', () => {
       // A code for an address the user is adding, or a password verified for another account,
       // is never passed to `identifyUser()` for this user.
@@ -333,18 +333,15 @@ describe('deriveAuthenticationContext', () => {
       expect(derive([password({ verifiedAt: 50, id: 'other-account' })])).toEqual({});
     });
 
-    it('ignores an MFA record of a factor the user has not enabled', () => {
-      expect(
-        derive([password({ verifiedAt: 100 }), totp({ verifiedAt: 200 }), mfaEmailCode(300)], {
-          mfaSettings: noFactorEnabled,
-        })
-      ).toEqual({ acr: 'urn:logto:acr:1fa', amr: ['pwd'], ts: 100 });
-      // A backup code set the user never enrolled is not eligible either.
-      expect(
-        derive([password({ verifiedAt: 100 }), backupCode(200)], {
-          user: { ...user, mfaVerifications: [mockUserTotpMfaVerification] },
-        })
-      ).toEqual({ acr: 'urn:logto:acr:1fa', amr: ['pwd'], ts: 100 });
+    it('ignores a registration password that never identified the user', () => {
+      // The route only accepts the record in a Register interaction, and `identifyUser()` never
+      // records it; a stored one from before the route guard still counts nothing.
+      expect(derive([social(100), newPasswordIdentity(50)])).toEqual({ amr: ['fed'], ts: 100 });
+      expect(derive([social(100), newPasswordIdentity(50), totp({ verifiedAt: 200 })])).toEqual({
+        acr: 'urn:logto:acr:1fa',
+        amr: ['fed', 'otp'],
+        ts: 100,
+      });
     });
 
     it('ignores an MFA code that was not sent to the primary contact of the user', () => {
@@ -353,25 +350,6 @@ describe('deriveAuthenticationContext', () => {
         amr: ['pwd'],
         ts: 100,
       });
-    });
-
-    it('keeps the proof of the last backup code once every code is marked used', () => {
-      // `verify()` marks the code used before the submission reloads the user, so the reloaded
-      // user has no unused code left and would no longer be offered a backup code challenge.
-      const reloadedUser: User = {
-        ...user,
-        mfaVerifications: [
-          mockUserTotpMfaVerification,
-          {
-            ...mockUserBackupCodeMfaVerification,
-            codes: [{ code: 'code', usedAt: new Date().toISOString() }],
-          },
-        ],
-      };
-
-      expect(
-        derive([password({ verifiedAt: 100 }), backupCode(200)], { user: reloadedUser })
-      ).toEqual({ acr: 'urn:logto:acr:mfa', amr: ['pwd', 'otp', 'mfa'], ts: 100 });
     });
 
     it('ignores factor records created for another user', () => {

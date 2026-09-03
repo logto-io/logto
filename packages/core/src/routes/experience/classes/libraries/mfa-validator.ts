@@ -38,7 +38,7 @@ type MfaVerificationType =
   | VerificationType.MfaEmailVerificationCode
   | VerificationType.MfaPhoneVerificationCode;
 
-export const mfaVerificationTypeToMfaFactorMap = Object.freeze({
+const mfaVerificationTypeToMfaFactorMap = Object.freeze({
   [VerificationType.TOTP]: MfaFactor.TOTP,
   [VerificationType.BackupCode]: MfaFactor.BackupCode,
   [VerificationType.WebAuthn]: MfaFactor.WebAuthn,

@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  AuthenticationFactor,
   AuthenticationFactorClass,
   AuthenticationMethodReference,
   LogtoAcr,
   buildAuthenticationMethodReferences,
+  getAuthenticationFactor,
   getAuthenticationFactorClass,
   getAuthenticationMethodReferences,
   logtoAcrValues,
@@ -45,6 +47,26 @@ describe('getAuthenticationFactorClass', () => {
       expect(getAuthenticationFactorClass(type)).toBeUndefined();
     }
   );
+});
+
+describe('getAuthenticationFactor', () => {
+  it.each([
+    [VerificationType.Password, AuthenticationFactor.Password],
+    [VerificationType.NewPasswordIdentity, AuthenticationFactor.Password],
+    [VerificationType.EmailVerificationCode, AuthenticationFactor.Email],
+    [VerificationType.MfaEmailVerificationCode, AuthenticationFactor.Email],
+    [VerificationType.OneTimeToken, AuthenticationFactor.Email],
+    [VerificationType.PhoneVerificationCode, AuthenticationFactor.Phone],
+    [VerificationType.MfaPhoneVerificationCode, AuthenticationFactor.Phone],
+    [VerificationType.TOTP, AuthenticationFactor.Totp],
+    [VerificationType.BackupCode, AuthenticationFactor.BackupCode],
+    [VerificationType.WebAuthn, AuthenticationFactor.WebAuthn],
+    [VerificationType.SignInPasskey, AuthenticationFactor.WebAuthn],
+    [VerificationType.Social, AuthenticationFactor.Federated],
+    [VerificationType.EnterpriseSso, AuthenticationFactor.Federated],
+  ])('maps %s to the %s factor', (type, expected) => {
+    expect(getAuthenticationFactor(type)).toBe(expected);
+  });
 });
 
 describe('getAuthenticationMethodReferences', () => {

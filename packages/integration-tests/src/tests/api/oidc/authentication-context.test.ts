@@ -39,11 +39,10 @@ import {
 } from '#src/helpers/experience/social-verification.js';
 import { successfullyVerifyTotp } from '#src/helpers/experience/totp-verification.js';
 import {
-  successfullySendMfaVerificationCode,
   successfullySendVerificationCode,
-  successfullyVerifyMfaVerificationCode,
   successfullyVerifyVerificationCode,
 } from '#src/helpers/experience/verification-code.js';
+import { expectRejects } from '#src/helpers/index.js';
 import {
   enableAllPasswordSignInMethods,
   enableAllVerificationCodeSignInMethods,
@@ -97,18 +96,6 @@ const refreshIdToken = async (client: ExperienceClient) => {
   }
 
   return decodeIdToken(json.id_token);
-};
-
-/**
- * Verify a registration password for an unused username in a sign-in interaction. The route accepts
- * it, but it never authenticates the identified account.
- */
-const verifyUnusedRegistrationPassword = async (client: ExperienceClient) => {
-  const { username, password } = generateNewUserProfile({ username: true, password: true });
-  await client.createNewPasswordIdentityVerification({
-    identifier: { type: SignInIdentifier.Username, value: username },
-    password,
-  });
 };
 
 devFeatureTest.describe('authentication context claims on sign-in', () => {
@@ -224,39 +211,30 @@ devFeatureTest.describe('authentication context claims on sign-in', () => {
     });
 
     it.each([
-      { identifierType: SignInIdentifier.Email, profileKey: 'primaryEmail', amr: ['otp'] },
-      { identifierType: SignInIdentifier.Phone, profileKey: 'primaryPhone', amr: ['sms'] },
+      { identifierType: SignInIdentifier.Email, profileKey: 'primaryEmail' },
+      { identifierType: SignInIdentifier.Phone, profileKey: 'primaryPhone' },
     ] as const)(
-      'does not count an MFA code sent to the same $identifierType as a second factor',
-      async ({ identifierType, profileKey, amr }) => {
+      'refuses an MFA code for the $identifierType that identified the user when the factor is not enabled',
+      async ({ identifierType, profileKey }) => {
         const profile = generateNewUserProfile({ primaryEmail: true, primaryPhone: true });
-        const user = await userApi.create(profile);
+        await userApi.create(profile);
         const identifier = { type: identifierType, value: profile[profileKey] };
 
-        const client = await initClient();
+        const client = await initExperienceClient();
         const { verificationId, code } = await successfullySendVerificationCode(client, {
           identifier,
           interactionEvent: InteractionEvent.SignIn,
         });
         await successfullyVerifyVerificationCode(client, { identifier, verificationId, code });
         await client.identifyUser({ verificationId });
-        // The MFA code route resolves the identified user's primary contact and does not require
-        // the factor to be enabled, so this is a second proof of the same contact.
-        const mfaCode = await successfullySendMfaVerificationCode(client, {
-          identifierType,
-          expectedIdentifierValue: identifier.value,
-        });
-        await successfullyVerifyMfaVerificationCode(client, {
-          identifierType,
-          verificationId: mfaCode.verificationId,
-          code: mfaCode.code,
-        });
-        const claims = await finishSignIn(client);
 
-        expect(claims.sub).toBe(user.id);
-        expect(claims).toMatchObject({ acr: firstFactorAcr, amr });
-
-        await logoutClient(client);
+        // A second code to the same contact would be a second proof of the same factor. The route
+        // refuses it because the sign-in experience does not enable that MFA factor; sign-in with
+        // a contact and MFA through the same contact cannot both be enabled.
+        await expectRejects(client.sendMfaVerificationCode({ identifierType }), {
+          code: 'session.mfa.mfa_factor_not_enabled',
+          status: 400,
+        });
       }
     );
   });
@@ -352,37 +330,26 @@ devFeatureTest.describe('authentication context claims on sign-in', () => {
       await logoutClient(client);
     });
 
-    it('does not count an unused registration password as a proof of the account', async () => {
+    it('refuses a registration password in a sign-in interaction', async () => {
+      const { username, password } = generateNewUserProfile({ username: true, password: true });
       const client = await identifySocialUser();
-      await verifyUnusedRegistrationPassword(client);
-      const claims = await finishSignIn(client);
 
+      // A password proposed for an unused username never authenticates the identified account, so
+      // the route only accepts it in a Register interaction.
+      await expectRejects(
+        client.createNewPasswordIdentityVerification({
+          identifier: { type: SignInIdentifier.Username, value: username },
+          password,
+        }),
+        { code: 'session.invalid_interaction_type', status: 400 }
+      );
+
+      const claims = await finishSignIn(client);
       expect(claims.sub).toBe(userId);
       expect(claims.amr).toEqual(['fed']);
       expect(claims).not.toHaveProperty('acr');
 
       await logoutClient(client);
-    });
-
-    it('reaches only 1fa with a TOTP when the password record is an unused registration one', async () => {
-      const totp = await createUserMfaVerification(userId, MfaFactor.TOTP);
-      await createUserMfaVerification(userId, MfaFactor.BackupCode);
-      await enableMandatoryMfaWithTotpAndBackupCode();
-
-      if (totp.type !== MfaFactor.TOTP) {
-        throw new TypeError('unexpected mfa type');
-      }
-
-      const client = await identifySocialUser();
-      await verifyUnusedRegistrationPassword(client);
-      await successfullyVerifyTotp(client, { code: authenticator.generate(totp.secret) });
-      const claims = await finishSignIn(client);
-
-      expect(claims.sub).toBe(userId);
-      expect(claims).toMatchObject({ acr: firstFactorAcr, amr: ['fed', 'otp'] });
-
-      await logoutClient(client);
-      await resetMfaSettings();
     });
   });
 });
