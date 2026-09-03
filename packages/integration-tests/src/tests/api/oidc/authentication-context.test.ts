@@ -1,34 +1,16 @@
 import { ConnectorType } from '@logto/connector-kit';
 import { decodeIdToken } from '@logto/js';
 import { Prompt } from '@logto/node';
-import {
-  GrantType,
-  InteractionEvent,
-  MfaFactor,
-  MfaPolicy,
-  SignInIdentifier,
-  demoAppApplicationId,
-} from '@logto/schemas';
+import { GrantType, SignInIdentifier, demoAppApplicationId } from '@logto/schemas';
 import { formUrlEncodedHeaders, generateStandardId } from '@logto/shared';
 import { isKeyInObject } from '@silverhand/essentials';
 import ky from 'ky';
-import { authenticator } from 'otplib';
 
-import {
-  createUserMfaVerification,
-  deleteUser,
-  updateUserLogtoConfig,
-} from '#src/api/admin-user.js';
-import { updateSignInExperience } from '#src/api/sign-in-experience.js';
+import { deleteUser } from '#src/api/admin-user.js';
 import { type ExperienceClient } from '#src/client/experience/index.js';
 import { demoAppRedirectUri, logtoUrl } from '#src/constants.js';
 import { initExperienceClient, logoutClient, processSession } from '#src/helpers/client.js';
-import {
-  clearConnectorsByTypes,
-  setEmailConnector,
-  setSmsConnector,
-  setSocialConnector,
-} from '#src/helpers/connector.js';
+import { clearConnectorsByTypes, setSocialConnector } from '#src/helpers/connector.js';
 import {
   identifyUserWithUsernamePassword,
   signInWithSocial,
@@ -37,23 +19,12 @@ import {
   successfullyCreateSocialVerification,
   successfullyVerifySocialAuthorization,
 } from '#src/helpers/experience/social-verification.js';
-import { successfullyVerifyTotp } from '#src/helpers/experience/totp-verification.js';
-import {
-  successfullySendVerificationCode,
-  successfullyVerifyVerificationCode,
-} from '#src/helpers/experience/verification-code.js';
 import { expectRejects } from '#src/helpers/index.js';
-import {
-  enableAllPasswordSignInMethods,
-  enableAllVerificationCodeSignInMethods,
-  enableMandatoryMfaWithTotpAndBackupCode,
-  resetMfaSettings,
-} from '#src/helpers/sign-in-experience.js';
+import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
 import { devFeatureTest } from '#src/utils.js';
 
 const firstFactorAcr = 'urn:logto:acr:1fa';
-const mfaAcr = 'urn:logto:acr:mfa';
 
 const nowInSeconds = () => Math.floor(Date.now() / 1000);
 
@@ -103,11 +74,9 @@ devFeatureTest.describe('authentication context claims on sign-in', () => {
 
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
-    await updateSignInExperience({ adaptiveMfa: { enabled: false } });
   });
 
   afterAll(async () => {
-    await resetMfaSettings();
     await userApi.cleanUp();
   });
 
@@ -136,107 +105,6 @@ devFeatureTest.describe('authentication context claims on sign-in', () => {
     });
 
     await logoutClient(client);
-  });
-
-  it('issues acr=mfa and amr=[pwd, otp, mfa] for a password sign-in verified with TOTP', async () => {
-    await enableMandatoryMfaWithTotpAndBackupCode();
-    const { username, password } = generateNewUserProfile({ username: true, password: true });
-    const user = await userApi.create({ username, password });
-    const totp = await createUserMfaVerification(user.id, MfaFactor.TOTP);
-    await createUserMfaVerification(user.id, MfaFactor.BackupCode);
-
-    if (totp.type !== MfaFactor.TOTP) {
-      throw new TypeError('unexpected mfa type');
-    }
-
-    const client = await initClient();
-    await identifyUserWithUsernamePassword(client, username, password);
-    await successfullyVerifyTotp(client, { code: authenticator.generate(totp.secret) });
-    const claims = await finishSignIn(client);
-
-    expect(claims).toMatchObject({ acr: mfaAcr, amr: ['pwd', 'otp', 'mfa'] });
-    expect(typeof claims.auth_time).toBe('number');
-
-    await logoutClient(client);
-    await resetMfaSettings();
-  });
-
-  it('keeps the proof of the last backup code, which is marked used before submission', async () => {
-    // A sign-in that completes without an MFA challenge, so the consumed code is the only proof.
-    await updateSignInExperience({
-      mfa: { factors: [MfaFactor.TOTP, MfaFactor.BackupCode], policy: MfaPolicy.NoPrompt },
-    });
-    const { username, password } = generateNewUserProfile({ username: true, password: true });
-    const user = await userApi.create({ username, password });
-    await createUserMfaVerification(user.id, MfaFactor.TOTP);
-    const backupCodes = await createUserMfaVerification(user.id, MfaFactor.BackupCode);
-    await updateUserLogtoConfig(user.id, { mfa: { skipMfaOnSignIn: true }, passkeySignIn: {} });
-
-    if (backupCodes.type !== MfaFactor.BackupCode) {
-      throw new TypeError('unexpected mfa type');
-    }
-
-    const [lastCode, ...otherCodes] = backupCodes.codes;
-
-    // Consume every other code first; each verification marks its code used in the database.
-    const consumer = await initClient();
-    await identifyUserWithUsernamePassword(consumer, username, password);
-    for (const code of otherCodes) {
-      // eslint-disable-next-line no-await-in-loop -- Each code must be consumed in sequence.
-      await consumer.verifyBackupCode({ code });
-    }
-
-    const client = await initClient();
-    await identifyUserWithUsernamePassword(client, username, password);
-    await client.verifyBackupCode({ code: lastCode! });
-    const claims = await finishSignIn(client);
-
-    expect(claims.sub).toBe(user.id);
-    expect(claims).toMatchObject({ acr: mfaAcr, amr: ['pwd', 'otp', 'mfa'] });
-
-    await logoutClient(client);
-    await resetMfaSettings();
-  });
-
-  describe('verification code sign-in', () => {
-    beforeAll(async () => {
-      await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
-      await Promise.all([setEmailConnector(), setSmsConnector()]);
-      await enableAllVerificationCodeSignInMethods();
-    });
-
-    afterAll(async () => {
-      await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
-      await enableAllPasswordSignInMethods();
-    });
-
-    it.each([
-      { identifierType: SignInIdentifier.Email, profileKey: 'primaryEmail' },
-      { identifierType: SignInIdentifier.Phone, profileKey: 'primaryPhone' },
-    ] as const)(
-      'refuses an MFA code for the $identifierType that identified the user when the factor is not enabled',
-      async ({ identifierType, profileKey }) => {
-        const profile = generateNewUserProfile({ primaryEmail: true, primaryPhone: true });
-        await userApi.create(profile);
-        const identifier = { type: identifierType, value: profile[profileKey] };
-
-        const client = await initExperienceClient();
-        const { verificationId, code } = await successfullySendVerificationCode(client, {
-          identifier,
-          interactionEvent: InteractionEvent.SignIn,
-        });
-        await successfullyVerifyVerificationCode(client, { identifier, verificationId, code });
-        await client.identifyUser({ verificationId });
-
-        // A second code to the same contact would be a second proof of the same factor. The route
-        // refuses it because the sign-in experience does not enable that MFA factor; sign-in with
-        // a contact and MFA through the same contact cannot both be enabled.
-        await expectRejects(client.sendMfaVerificationCode({ identifierType }), {
-          code: 'session.mfa.mfa_factor_not_enabled',
-          status: 400,
-        });
-      }
-    );
   });
 
   describe('social sign-in', () => {

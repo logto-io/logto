@@ -23,7 +23,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { findUserByIdentifier } from '../utils.js';
 
-import { type IdentifierVerificationRecord, getEpochTime } from './verification-record.js';
+import { type IdentifierVerificationRecord } from './verification-record.js';
 
 export {
   type CodeVerificationRecordData,
@@ -69,8 +69,6 @@ abstract class CodeVerification<T extends CodeVerificationType>
    * The template type for sending the verification code, the connector will use this to get the correct template.
    */
   public readonly templateType: TemplateType;
-  /** Epoch seconds when the verification succeeded; feeds the `auth_time` claim. */
-  verifiedAt?: number;
   public abstract readonly type: T;
   protected verified: boolean;
 
@@ -79,13 +77,12 @@ abstract class CodeVerification<T extends CodeVerificationType>
     private readonly queries: Queries,
     data: CodeVerificationRecordData<T>
   ) {
-    const { id, identifier, verified, verifiedAt, templateType } = data;
+    const { id, identifier, verified, templateType } = data;
 
     this.id = id;
     this.identifier = identifier;
     this.templateType = templateType;
     this.verified = verified;
-    this.verifiedAt = verifiedAt;
   }
 
   /** Returns true if the identifier has been verified by a given code */
@@ -145,7 +142,6 @@ abstract class CodeVerification<T extends CodeVerificationType>
     );
 
     this.verified = true;
-    this.verifiedAt = getEpochTime();
   }
 
   async identifyUser(): Promise<User> {
@@ -170,7 +166,7 @@ abstract class CodeVerification<T extends CodeVerificationType>
   }
 
   toJson(): CodeVerificationRecordData<T> {
-    const { id, type, identifier, templateType, verified, verifiedAt } = this;
+    const { id, type, identifier, templateType, verified } = this;
 
     return {
       id,
@@ -178,7 +174,6 @@ abstract class CodeVerification<T extends CodeVerificationType>
       identifier,
       templateType,
       verified,
-      verifiedAt,
     };
   }
 

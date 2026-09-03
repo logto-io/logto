@@ -11,8 +11,6 @@ export type BackupCodeVerificationRecordData = {
   userId: string;
   code?: string;
   backupCodes?: string[];
-  /** Epoch seconds when the verification succeeded; feeds the `auth_time` claim. */
-  verifiedAt?: number;
 };
 export const backupCodeVerificationRecordDataGuard = z.object({
   id: z.string(),
@@ -20,7 +18,6 @@ export const backupCodeVerificationRecordDataGuard = z.object({
   userId: z.string(),
   code: z.string().optional(),
   backupCodes: z.string().array().optional(),
-  verifiedAt: z.number().optional(),
 }) satisfies ToZodObject<BackupCodeVerificationRecordData>;
 
 export type SanitizedBackupCodeVerificationRecordData = Omit<

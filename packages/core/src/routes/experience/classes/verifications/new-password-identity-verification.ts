@@ -17,7 +17,7 @@ import { ProfileValidator } from '../libraries/profile-validator.js';
 import { SignInExperienceValidator } from '../libraries/sign-in-experience-validator.js';
 import { interactionIdentifierToUserProfile } from '../utils.js';
 
-import { type VerificationRecord, getEpochTime } from './verification-record.js';
+import { type VerificationRecord } from './verification-record.js';
 
 export {
   type NewPasswordIdentityVerificationRecordData,
@@ -49,8 +49,6 @@ export class NewPasswordIdentityVerification
   readonly id: string;
   readonly identifier: InteractionIdentifier;
 
-  /** Epoch seconds when the verification succeeded; feeds the `auth_time` claim. */
-  verifiedAt?: number;
   private passwordEncrypted?: string;
   private passwordEncryptionMethod?: UsersPasswordEncryptionMethod.Argon2i;
 
@@ -62,13 +60,12 @@ export class NewPasswordIdentityVerification
     private readonly queries: Queries,
     data: NewPasswordIdentityVerificationRecordData
   ) {
-    const { id, identifier, passwordEncrypted, passwordEncryptionMethod, verifiedAt } = data;
+    const { id, identifier, passwordEncrypted, passwordEncryptionMethod } = data;
 
     this.id = id;
     this.identifier = identifier;
     this.passwordEncrypted = passwordEncrypted;
     this.passwordEncryptionMethod = passwordEncryptionMethod;
-    this.verifiedAt = verifiedAt;
     this.signInExperienceValidator = new SignInExperienceValidator(libraries, queries);
     this.profileValidator = new ProfileValidator(queries, this.signInExperienceValidator);
   }
@@ -100,7 +97,6 @@ export class NewPasswordIdentityVerification
 
     this.passwordEncrypted = passwordEncrypted;
     this.passwordEncryptionMethod = passwordEncryptionMethod;
-    this.verifiedAt = getEpochTime();
   }
 
   toUserProfile() {
@@ -121,7 +117,7 @@ export class NewPasswordIdentityVerification
   }
 
   toJson(): NewPasswordIdentityVerificationRecordData {
-    const { id, type, identifier, passwordEncrypted, passwordEncryptionMethod, verifiedAt } = this;
+    const { id, type, identifier, passwordEncrypted, passwordEncryptionMethod } = this;
 
     return {
       id,
@@ -129,12 +125,11 @@ export class NewPasswordIdentityVerification
       identifier,
       passwordEncrypted,
       passwordEncryptionMethod,
-      verifiedAt,
     };
   }
 
   toSanitizedJson(): SanitizedNewPasswordIdentityVerificationRecordData {
-    const { id, type, identifier, verifiedAt } = this;
-    return { id, type, identifier, verifiedAt };
+    const { id, type, identifier } = this;
+    return { id, type, identifier };
   }
 }

@@ -15,8 +15,6 @@ type BaseWebAuthnVerificationRecordData = {
   /** The challenge generated for the WebAuthn authentication */
   authenticationChallenge?: string;
   registrationInfo?: BindWebAuthn;
-  /** Epoch seconds when the verification succeeded; feeds the `auth_time` claim. */
-  verifiedAt?: number;
 };
 
 const baseWebAuthnVerificationRecordDataGuard = z.object({
@@ -26,7 +24,6 @@ const baseWebAuthnVerificationRecordDataGuard = z.object({
   registrationRpId: z.string().optional(),
   authenticationChallenge: z.string().optional(),
   registrationInfo: bindWebAuthnGuard.optional(),
-  verifiedAt: z.number().optional(),
 }) satisfies ToZodObject<BaseWebAuthnVerificationRecordData>;
 
 export type WebAuthnVerificationRecordData = BaseWebAuthnVerificationRecordData & {

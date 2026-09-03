@@ -11,8 +11,6 @@ export type TotpVerificationRecordData = {
   userId: string;
   secret?: string;
   verified: boolean;
-  /** Epoch seconds when the verification succeeded; feeds the `auth_time` claim. */
-  verifiedAt?: number;
 };
 
 export const totpVerificationRecordDataGuard = z.object({
@@ -21,7 +19,6 @@ export const totpVerificationRecordDataGuard = z.object({
   userId: z.string(),
   secret: z.string().optional(),
   verified: z.boolean(),
-  verifiedAt: z.number().optional(),
 }) satisfies ToZodObject<TotpVerificationRecordData>;
 
 export type SanitizedTotpVerificationRecordData = Omit<TotpVerificationRecordData, 'secret'>;

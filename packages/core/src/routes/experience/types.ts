@@ -10,6 +10,7 @@ import {
   Users,
   UserSsoIdentities,
   type UserSsoIdentity,
+  VerificationType,
   webAuthnAuthenticationOptionsGuard,
 } from '@logto/schemas';
 import type { Provider } from 'oidc-provider';
@@ -191,6 +192,21 @@ export type WithHooksAndLogsContext<ContextT extends WithLogContext = WithLogCon
   WithExperienceInteractionHooksContext;
 
 /**
+ * A verification that identified the user of the interaction: the type of the record and the
+ * epoch seconds at which it did so. This is what the authentication context (`acr` / `amr` /
+ * `auth_time`) of a sign-in is built from.
+ */
+export type IdentifiedVerification = {
+  type: VerificationType;
+  verifiedAt: number;
+};
+
+export const identifiedVerificationGuard = z.object({
+  type: z.nativeEnum(VerificationType),
+  verifiedAt: z.number().int().nonnegative(),
+}) satisfies ToZodObject<IdentifiedVerification>;
+
+/**
  * Interaction storage is used to store the interaction data during the interaction process.
  * It is used to pass data between different interaction steps and to store the interaction state.
  * It is stored in the oidc provider interaction session.
@@ -198,8 +214,8 @@ export type WithHooksAndLogsContext<ContextT extends WithLogContext = WithLogCon
 export type InteractionStorage = {
   interactionEvent: InteractionEvent;
   userId?: string;
-  /** The ids of the verification records that identified `userId`; see `ExperienceInteraction.identifyUser()`. */
-  identifiedVerificationIds?: string[];
+  /** The verifications that identified `userId`; see `ExperienceInteraction.identifyUser()`. */
+  identifiedVerifications?: IdentifiedVerification[];
   trustedDeviceOptIn?:
     | {
         trusted: false;
@@ -221,7 +237,7 @@ export type InteractionStorage = {
 export const interactionStorageGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent),
   userId: z.string().optional(),
-  identifiedVerificationIds: z.string().array().optional(),
+  identifiedVerifications: identifiedVerificationGuard.array().optional(),
   trustedDeviceOptIn: z
     .discriminatedUnion('trusted', [
       z.object({ trusted: z.literal(false) }),
@@ -246,7 +262,7 @@ export const interactionStorageGuard = z.object({
 export type SanitizedInteractionStorageData = {
   interactionEvent: InteractionEvent;
   userId?: string;
-  identifiedVerificationIds?: string[];
+  identifiedVerifications?: IdentifiedVerification[];
   profile?: SanitizedInteractionProfile;
   verificationRecords?: SanitizedVerificationRecordData[];
   mfa?: SanitizedMfaData;
@@ -264,7 +280,7 @@ export type SanitizedInteractionStorageData = {
 export const sanitizedInteractionStorageGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent),
   userId: z.string().optional(),
-  identifiedVerificationIds: z.string().array().optional(),
+  identifiedVerifications: identifiedVerificationGuard.array().optional(),
   profile: sanitizedInteractionProfileGuard,
   verificationRecords: publicVerificationRecordDataGuard.array().optional(),
   mfa: sanitizedMfaDataGuard.optional(),

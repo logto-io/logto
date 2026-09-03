@@ -24,6 +24,7 @@ import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
 import {
   interactionStorageGuard,
+  type IdentifiedVerification,
   type InteractionStorage,
   type Interaction,
   type InteractionContext,
@@ -40,7 +41,7 @@ import {
 import { validatePostSignInActionResult } from './libraries/action-result-validation.js';
 import { AdaptiveMfaValidator } from './libraries/adaptive-mfa-validator/index.js';
 import { type AdaptiveMfaResult } from './libraries/adaptive-mfa-validator/types.js';
-import { deriveAuthenticationContext } from './libraries/authentication-context.js';
+import { buildAuthenticationContext } from './libraries/authentication-context.js';
 import { CaptchaValidator } from './libraries/captcha-validator.js';
 import { MfaValidator } from './libraries/mfa-validator.js';
 import { ProvisionLibrary } from './libraries/provision-library.js';
@@ -79,11 +80,11 @@ export default class ExperienceInteraction {
   /** The userId of the user for the current interaction. Only available once the user is identified. */
   private userId?: string;
   /**
-   * The ids of the verification records that identified `userId`: the one `identifyUser()` first
-   * identified the user with, and any later one that identified the same user. The
-   * authentication context counts an identifier record as a proof only when it is one of them.
+   * The verifications that identified `userId`: the one `identifyUser()` first identified the user
+   * with, and any later one that identified the same user. A sign-in builds its authentication
+   * context (`acr` / `amr` / `auth_time`) from them.
    */
-  private readonly identifiedVerificationIds = new Set<string>();
+  private readonly identifiedVerifications: IdentifiedVerification[] = [];
   private userCache?: User;
   private readonly adaptiveMfaValidator: AdaptiveMfaValidator;
 
@@ -156,7 +157,7 @@ export default class ExperienceInteraction {
       profile = {},
       mfa = {},
       userId,
-      identifiedVerificationIds = [],
+      identifiedVerifications = [],
       trustedDeviceOptIn,
       interactionEvent,
       captcha = {
@@ -167,7 +168,7 @@ export default class ExperienceInteraction {
 
     this.#interactionEvent = interactionEvent;
     this.userId = userId;
-    this.identifiedVerificationIds = new Set(identifiedVerificationIds);
+    this.identifiedVerifications = identifiedVerifications;
     this.profile = new Profile(libraries, queries, profile, interactionContext);
     this.mfa = new Mfa(libraries, queries, mfa, interactionContext);
     this.trustedDevice = new TrustedDevice(ctx, tenant, {
@@ -265,15 +266,14 @@ export default class ExperienceInteraction {
         this.userId === id,
         new RequestError({ code: 'session.identity_conflict', status: 409 })
       );
-      // The record identified the same user, so it is one of the identifying records as well.
-      this.identifiedVerificationIds.add(verificationId);
+      this.recordIdentifiedVerification(verificationRecord);
       return;
     }
 
     // Update the current interaction with the identified user
     this.userCache = user;
     this.userId = id;
-    this.identifiedVerificationIds.add(verificationId);
+    this.recordIdentifiedVerification(verificationRecord);
 
     // Sync social/enterprise SSO identity profile data.
     // Note: The profile data is not saved to the user profile until the user submits the interaction.
@@ -283,6 +283,12 @@ export default class ExperienceInteraction {
       log.append({ syncedProfile });
       this.profile.unsafeSet(syncedProfile);
     }
+  }
+
+  /** Remember that the record identified the user, together with when it did. */
+  private recordIdentifiedVerification({ type }: VerificationRecord) {
+    // eslint-disable-next-line @silverhand/fp/no-mutating-methods -- The list is interaction state.
+    this.identifiedVerifications.push({ type, verifiedAt: Math.floor(Date.now() / 1000) });
   }
 
   /**
@@ -559,19 +565,6 @@ export default class ExperienceInteraction {
       await this.guardMfaVerificationStatus(log);
     }
 
-    // Derive the authentication context this sign-in achieved before anything is written to the
-    // account, so that a record whose identifier or identity is only being added by this
-    // submission does not count as a proof of the account. It seeds the OIDC session so the ID
-    // token carries `acr` / `amr` / `auth_time`; a sign-in without a proof (or a register) seeds
-    // nothing and the provider stamps `auth_time` itself.
-    const authenticationContext =
-      EnvSet.values.isDevFeaturesEnabled && this.#interactionEvent === InteractionEvent.SignIn
-        ? deriveAuthenticationContext(this.verificationRecordsArray, {
-            user,
-            identifiedVerificationIds: this.identifiedVerificationIds,
-          })
-        : undefined;
-
     // Revalidate the new profile data if any
     await this.profile.validateAvailability();
 
@@ -701,7 +694,14 @@ export default class ExperienceInteraction {
     const redirectTo = await provider.interactionResult(this.ctx.req, this.ctx.res, {
       login: {
         accountId: user.id,
-        ...authenticationContext,
+        // Seed the authentication context of the sign-in into the OIDC session so the ID token
+        // carries `acr` / `amr` / `auth_time`. A register seeds nothing and the provider stamps
+        // `auth_time` itself.
+        ...conditional(
+          EnvSet.values.isDevFeaturesEnabled &&
+            this.#interactionEvent === InteractionEvent.SignIn &&
+            buildAuthenticationContext(this.identifiedVerifications)
+        ),
       },
       // Persist the interaction status to the OIDC session after interaction submission
       ...this.toJson(),
@@ -762,7 +762,7 @@ export default class ExperienceInteraction {
     return {
       interactionEvent,
       userId,
-      identifiedVerificationIds: [...this.identifiedVerificationIds],
+      identifiedVerifications: this.identifiedVerifications,
       ...this.trustedDevice.data,
       profile: this.profile.data,
       mfa: this.mfa.data,

@@ -11,7 +11,6 @@ import {
   SignInIdentifier,
   SignInMode,
   type User,
-  UsersPasswordEncryptionMethod,
   VerificationType,
 } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
@@ -334,29 +333,13 @@ describe('ExperienceInteraction class', () => {
       );
     });
 
-    it('seeds the derived authentication context into the login result when dev features are enabled', async () => {
+    it('seeds the authentication context into the login result when dev features are enabled', async () => {
       setDevFeaturesEnabled(true);
       const { experienceInteraction, provider } = createSignInInteraction({
         interactionResult: {
-          identifiedVerificationIds: ['password'],
-          verificationRecords: [
-            {
-              id: 'password',
-              type: VerificationType.Password,
-              identifier: { type: SignInIdentifier.Username, value: mockUser.username },
-              verified: true,
-              verifiedAt: 1_700_000_000,
-            },
-            // A registration password proposed for an unused username is not a proof of the
-            // signed-in account and must not reach the login result.
-            {
-              id: 'new-password-identity',
-              type: VerificationType.NewPasswordIdentity,
-              identifier: { type: SignInIdentifier.Username, value: 'unused' },
-              passwordEncrypted: 'encrypted',
-              passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
-              verifiedAt: 1_600_000_000,
-            },
+          identifiedVerifications: [
+            { type: VerificationType.Password, verifiedAt: 1_700_000_000 },
+            { type: VerificationType.Social, verifiedAt: 1_700_000_010 },
           ],
         },
       });
@@ -370,14 +353,15 @@ describe('ExperienceInteraction class', () => {
           login: {
             accountId: mockUser.id,
             acr: 'urn:logto:acr:1fa',
-            amr: ['pwd'],
+            amr: ['pwd', 'fed'],
             ts: 1_700_000_000,
           },
         })
       );
     });
 
-    it('records every verification record that identified the user', async () => {
+    it('records every verification that identified the user', async () => {
+      const now = jest.spyOn(Date, 'now').mockReturnValue(1_700_000_000_000);
       const { experienceInteraction } = createSignInInteraction({
         interactionResult: {
           userId: undefined,
@@ -402,30 +386,24 @@ describe('ExperienceInteraction class', () => {
       await experienceInteraction.identifyUser('password');
       expect(experienceInteraction.toJson()).toMatchObject({
         userId: mockUser.id,
-        identifiedVerificationIds: ['password'],
+        identifiedVerifications: [{ type: VerificationType.Password, verifiedAt: 1_700_000_000 }],
       });
 
       // A second record that identifies the same user is recorded as well.
+      now.mockReturnValue(1_700_000_005_000);
       await experienceInteraction.identifyUser('email');
-      expect(experienceInteraction.toJson().identifiedVerificationIds).toEqual([
-        'password',
-        'email',
+      expect(experienceInteraction.toJson().identifiedVerifications).toEqual([
+        { type: VerificationType.Password, verifiedAt: 1_700_000_000 },
+        { type: VerificationType.EmailVerificationCode, verifiedAt: 1_700_000_005 },
       ]);
+      now.mockRestore();
     });
 
     it('finishes with the account id only when dev features are disabled', async () => {
       setDevFeaturesEnabled(false);
       const { experienceInteraction, provider } = createSignInInteraction({
         interactionResult: {
-          verificationRecords: [
-            {
-              id: 'password',
-              type: VerificationType.Password,
-              identifier: { type: SignInIdentifier.Username, value: mockUser.username },
-              verified: true,
-              verifiedAt: 1_700_000_000,
-            },
-          ],
+          identifiedVerifications: [{ type: VerificationType.Password, verifiedAt: 1_700_000_000 }],
         },
       });
 

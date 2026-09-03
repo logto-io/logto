@@ -29,7 +29,7 @@ import { safeParseUnknownJson } from '#src/utils/json.js';
 
 import type { InteractionProfile } from '../../types.js';
 
-import { type IdentifierVerificationRecord, getEpochTime } from './verification-record.js';
+import { type IdentifierVerificationRecord } from './verification-record.js';
 
 export {
   type EnterpriseSsoVerificationRecordData,
@@ -60,8 +60,6 @@ export class EnterpriseSsoVerification
   public enterpriseSsoUserInfo?: ExtendedSocialUserInfo;
   public encryptedTokenSet?: EncryptedTokenSet;
   public issuer?: string;
-  /** Epoch seconds when the verification succeeded; feeds the `auth_time` claim. */
-  verifiedAt?: number;
 
   private connectorDataCache?: SupportedSsoConnector;
 
@@ -70,7 +68,7 @@ export class EnterpriseSsoVerification
     private readonly queries: Queries,
     data: EnterpriseSsoVerificationRecordData
   ) {
-    const { id, connectorId, enterpriseSsoUserInfo, encryptedTokenSet, issuer, verifiedAt } =
+    const { id, connectorId, enterpriseSsoUserInfo, encryptedTokenSet, issuer } =
       enterpriseSsoVerificationRecordDataGuard.parse(data);
 
     this.id = id;
@@ -78,7 +76,6 @@ export class EnterpriseSsoVerification
     this.enterpriseSsoUserInfo = enterpriseSsoUserInfo;
     this.issuer = issuer;
     this.encryptedTokenSet = encryptedTokenSet;
-    this.verifiedAt = verifiedAt;
   }
 
   /** Returns true if the enterprise SSO identity has been verified */
@@ -135,7 +132,6 @@ export class EnterpriseSsoVerification
     this.issuer = issuer;
     this.enterpriseSsoUserInfo = userInfo;
     this.encryptedTokenSet = encryptedTokenSet;
-    this.verifiedAt = getEpochTime();
   }
 
   /**
@@ -240,8 +236,7 @@ export class EnterpriseSsoVerification
   }
 
   toJson(): EnterpriseSsoVerificationRecordData {
-    const { id, type, connectorId, enterpriseSsoUserInfo, encryptedTokenSet, issuer, verifiedAt } =
-      this;
+    const { id, type, connectorId, enterpriseSsoUserInfo, encryptedTokenSet, issuer } = this;
 
     return {
       id,
@@ -250,14 +245,13 @@ export class EnterpriseSsoVerification
       enterpriseSsoUserInfo,
       encryptedTokenSet,
       issuer,
-      verifiedAt,
     };
   }
 
   toSanitizedJson(): SanitizedEnterpriseSsoVerificationRecordData {
-    const { id, type, connectorId, enterpriseSsoUserInfo, issuer, verifiedAt } = this;
+    const { id, type, connectorId, enterpriseSsoUserInfo, issuer } = this;
 
-    return { id, type, connectorId, enterpriseSsoUserInfo, issuer, verifiedAt };
+    return { id, type, connectorId, enterpriseSsoUserInfo, issuer };
   }
 
   private async findUserSsoIdentityByEnterpriseSsoUserInfo(): Promise<

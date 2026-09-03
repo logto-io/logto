@@ -16,8 +16,6 @@ export type OneTimeTokenVerificationRecordData = {
   identifier: InteractionIdentifier<SignInIdentifier.Email>;
   verified: boolean;
   oneTimeTokenContext?: OneTimeTokenContext;
-  /** Epoch seconds when the verification succeeded; feeds the `auth_time` claim. */
-  verifiedAt?: number;
 };
 
 export const oneTimeTokenVerificationRecordDataGuard = z.object({
@@ -29,5 +27,4 @@ export const oneTimeTokenVerificationRecordDataGuard = z.object({
     value: z.string(),
   }),
   oneTimeTokenContext: oneTimeTokenContextGuard.optional(),
-  verifiedAt: z.number().optional(),
 }) satisfies ToZodObject<OneTimeTokenVerificationRecordData>;

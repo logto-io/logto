@@ -53,7 +53,7 @@ type MfaVerificationRecord =
   | MfaEmailCodeVerification
   | MfaPhoneCodeVerification;
 
-export const isMfaVerificationRecord = (
+const isMfaVerificationRecord = (
   verification: VerificationRecord
 ): verification is MfaVerificationRecord => {
   return mfaVerificationTypes.includes(verification.type);

@@ -38,7 +38,7 @@ import { type LogtoConnector } from '#src/utils/connectors/types.js';
 
 import type { InteractionProfile } from '../../types.js';
 
-import { type IdentifierVerificationRecord, getEpochTime } from './verification-record.js';
+import { type IdentifierVerificationRecord } from './verification-record.js';
 
 export {
   type SocialVerificationRecordData,
@@ -72,8 +72,6 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
   public socialUserInfo?: SocialUserInfo;
   public encryptedTokenSet?: EncryptedTokenSet;
   public connectorSession: ConnectorSession;
-  /** Epoch seconds when the verification succeeded; feeds the `auth_time` claim. */
-  verifiedAt?: number;
   private connectorDataCache?: LogtoConnector;
 
   constructor(
@@ -81,13 +79,12 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     private readonly queries: Queries,
     data: SocialVerificationRecordData
   ) {
-    const { id, connectorId, socialUserInfo, encryptedTokenSet, connectorSession, verifiedAt } =
+    const { id, connectorId, socialUserInfo, encryptedTokenSet, connectorSession } =
       socialVerificationRecordDataGuard.parse(data);
 
     this.id = id;
     this.connectorId = connectorId;
     this.socialUserInfo = socialUserInfo;
-    this.verifiedAt = verifiedAt;
     this.encryptedTokenSet = encryptedTokenSet;
     this.connectorSession = connectorSession ?? {};
   }
@@ -174,7 +171,6 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
 
     this.socialUserInfo = userInfo;
     this.encryptedTokenSet = encryptedTokenSet;
-    this.verifiedAt = getEpochTime();
   }
 
   /**
@@ -305,15 +301,7 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
   }
 
   toJson(): SocialVerificationRecordData {
-    const {
-      id,
-      type,
-      connectorId,
-      socialUserInfo,
-      encryptedTokenSet,
-      connectorSession,
-      verifiedAt,
-    } = this;
+    const { id, type, connectorId, socialUserInfo, encryptedTokenSet, connectorSession } = this;
 
     return {
       id,
@@ -322,14 +310,13 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
       socialUserInfo,
       encryptedTokenSet,
       connectorSession,
-      verifiedAt,
     };
   }
 
   toSanitizedJson(): SanitizedSocialVerificationRecordData {
-    const { id, type, connectorId, socialUserInfo, verifiedAt } = this;
+    const { id, type, connectorId, socialUserInfo } = this;
 
-    return { id, type, connectorId, socialUserInfo, verifiedAt };
+    return { id, type, connectorId, socialUserInfo };
   }
 
   private async findUserBySocialIdentity(): Promise<User | undefined> {
