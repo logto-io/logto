@@ -53,7 +53,7 @@ type MfaVerificationRecord =
   | MfaEmailCodeVerification
   | MfaPhoneCodeVerification;
 
-const isMfaVerificationRecord = (
+export const isMfaVerificationRecord = (
   verification: VerificationRecord
 ): verification is MfaVerificationRecord => {
   return mfaVerificationTypes.includes(verification.type);
@@ -149,7 +149,11 @@ export class MfaValidator {
     );
   }
 
-  private getVerifiedMfaVerificationRecords(
+  /**
+   * The verified MFA records that count for the user: verified, not a factor enrolled in this
+   * interaction, and of a factor enabled for the user under the sign-in experience settings.
+   */
+  getVerifiedMfaVerificationRecords(
     verificationRecords: VerificationRecord[],
     currentProfile?: InteractionProfile
   ) {

@@ -1,7 +1,13 @@
 import { ConnectorType } from '@logto/connector-kit';
 import { decodeIdToken } from '@logto/js';
 import { Prompt } from '@logto/node';
-import { GrantType, MfaFactor, SignInIdentifier, demoAppApplicationId } from '@logto/schemas';
+import {
+  GrantType,
+  InteractionEvent,
+  MfaFactor,
+  SignInIdentifier,
+  demoAppApplicationId,
+} from '@logto/schemas';
 import { formUrlEncodedHeaders, generateStandardId } from '@logto/shared';
 import { isKeyInObject } from '@silverhand/essentials';
 import ky from 'ky';
@@ -12,7 +18,12 @@ import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { type ExperienceClient } from '#src/client/experience/index.js';
 import { demoAppRedirectUri, logtoUrl } from '#src/constants.js';
 import { initExperienceClient, logoutClient, processSession } from '#src/helpers/client.js';
-import { clearConnectorsByTypes, setSocialConnector } from '#src/helpers/connector.js';
+import {
+  clearConnectorsByTypes,
+  setEmailConnector,
+  setSmsConnector,
+  setSocialConnector,
+} from '#src/helpers/connector.js';
 import {
   identifyUserWithUsernamePassword,
   signInWithSocial,
@@ -23,7 +34,14 @@ import {
 } from '#src/helpers/experience/social-verification.js';
 import { successfullyVerifyTotp } from '#src/helpers/experience/totp-verification.js';
 import {
+  successfullySendMfaVerificationCode,
+  successfullySendVerificationCode,
+  successfullyVerifyMfaVerificationCode,
+  successfullyVerifyVerificationCode,
+} from '#src/helpers/experience/verification-code.js';
+import {
   enableAllPasswordSignInMethods,
+  enableAllVerificationCodeSignInMethods,
   enableMandatoryMfaWithTotpAndBackupCode,
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
@@ -149,6 +167,56 @@ devFeatureTest.describe('authentication context claims on sign-in', () => {
 
     await logoutClient(client);
     await resetMfaSettings();
+  });
+
+  describe('verification code sign-in', () => {
+    beforeAll(async () => {
+      await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
+      await Promise.all([setEmailConnector(), setSmsConnector()]);
+      await enableAllVerificationCodeSignInMethods();
+    });
+
+    afterAll(async () => {
+      await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
+      await enableAllPasswordSignInMethods();
+    });
+
+    it.each([
+      { identifierType: SignInIdentifier.Email, profileKey: 'primaryEmail', amr: ['otp'] },
+      { identifierType: SignInIdentifier.Phone, profileKey: 'primaryPhone', amr: ['sms'] },
+    ] as const)(
+      'does not count an MFA code sent to the same $identifierType as a second factor',
+      async ({ identifierType, profileKey, amr }) => {
+        const profile = generateNewUserProfile({ primaryEmail: true, primaryPhone: true });
+        const user = await userApi.create(profile);
+        const identifier = { type: identifierType, value: profile[profileKey] };
+
+        const client = await initClient();
+        const { verificationId, code } = await successfullySendVerificationCode(client, {
+          identifier,
+          interactionEvent: InteractionEvent.SignIn,
+        });
+        await successfullyVerifyVerificationCode(client, { identifier, verificationId, code });
+        await client.identifyUser({ verificationId });
+        // The MFA code route resolves the identified user's primary contact and does not require
+        // the factor to be enabled, so this is a second proof of the same contact.
+        const mfaCode = await successfullySendMfaVerificationCode(client, {
+          identifierType,
+          expectedIdentifierValue: identifier.value,
+        });
+        await successfullyVerifyMfaVerificationCode(client, {
+          identifierType,
+          verificationId: mfaCode.verificationId,
+          code: mfaCode.code,
+        });
+        const claims = await finishSignIn(client);
+
+        expect(claims.sub).toBe(user.id);
+        expect(claims).toMatchObject({ acr: firstFactorAcr, amr });
+
+        await logoutClient(client);
+      }
+    );
   });
 
   describe('social sign-in', () => {

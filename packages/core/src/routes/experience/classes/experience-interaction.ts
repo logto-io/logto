@@ -555,7 +555,11 @@ export default class ExperienceInteraction {
     // nothing and the provider stamps `auth_time` itself.
     const authenticationContext =
       EnvSet.values.isDevFeaturesEnabled && this.#interactionEvent === InteractionEvent.SignIn
-        ? await deriveAuthenticationContext(this.verificationRecordsArray, user.id)
+        ? await deriveAuthenticationContext(
+            this.verificationRecordsArray,
+            user.id,
+            new MfaValidator(await this.signInExperienceValidator.getMfaSettings(), user)
+          )
         : undefined;
 
     // Revalidate the new profile data if any
