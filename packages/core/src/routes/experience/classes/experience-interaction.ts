@@ -78,6 +78,12 @@ export default class ExperienceInteraction {
   private readonly verificationRecords = new VerificationRecordsMap();
   /** The userId of the user for the current interaction. Only available once the user is identified. */
   private userId?: string;
+  /**
+   * The ids of the verification records that identified `userId`: the one `identifyUser()` first
+   * identified the user with, and any later one that identified the same user. The
+   * authentication context counts an identifier record as a proof only when it is one of them.
+   */
+  private readonly identifiedVerificationIds = new Set<string>();
   private userCache?: User;
   private readonly adaptiveMfaValidator: AdaptiveMfaValidator;
 
@@ -150,6 +156,7 @@ export default class ExperienceInteraction {
       profile = {},
       mfa = {},
       userId,
+      identifiedVerificationIds = [],
       trustedDeviceOptIn,
       interactionEvent,
       captcha = {
@@ -160,6 +167,7 @@ export default class ExperienceInteraction {
 
     this.#interactionEvent = interactionEvent;
     this.userId = userId;
+    this.identifiedVerificationIds = new Set(identifiedVerificationIds);
     this.profile = new Profile(libraries, queries, profile, interactionContext);
     this.mfa = new Mfa(libraries, queries, mfa, interactionContext);
     this.trustedDevice = new TrustedDevice(ctx, tenant, {
@@ -257,12 +265,15 @@ export default class ExperienceInteraction {
         this.userId === id,
         new RequestError({ code: 'session.identity_conflict', status: 409 })
       );
+      // The record identified the same user, so it is one of the identifying records as well.
+      this.identifiedVerificationIds.add(verificationId);
       return;
     }
 
     // Update the current interaction with the identified user
     this.userCache = user;
     this.userId = id;
+    this.identifiedVerificationIds.add(verificationId);
 
     // Sync social/enterprise SSO identity profile data.
     // Note: The profile data is not saved to the user profile until the user submits the interaction.
@@ -555,11 +566,11 @@ export default class ExperienceInteraction {
     // nothing and the provider stamps `auth_time` itself.
     const authenticationContext =
       EnvSet.values.isDevFeaturesEnabled && this.#interactionEvent === InteractionEvent.SignIn
-        ? await deriveAuthenticationContext(
-            this.verificationRecordsArray,
+        ? deriveAuthenticationContext(this.verificationRecordsArray, {
             user,
-            await this.signInExperienceValidator.getMfaSettings()
-          )
+            mfaSettings: await this.signInExperienceValidator.getMfaSettings(),
+            identifiedVerificationIds: this.identifiedVerificationIds,
+          })
         : undefined;
 
     // Revalidate the new profile data if any
@@ -752,6 +763,7 @@ export default class ExperienceInteraction {
     return {
       interactionEvent,
       userId,
+      identifiedVerificationIds: [...this.identifiedVerificationIds],
       ...this.trustedDevice.data,
       profile: this.profile.data,
       mfa: this.mfa.data,

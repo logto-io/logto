@@ -14,7 +14,6 @@ import {
   mockUserTotpMfaVerification,
   mockUserWebAuthnMfaVerification,
 } from '#src/__mocks__/user.js';
-import RequestError from '#src/errors/RequestError/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
 import { BackupCodeVerification } from '../verifications/backup-code-verification.js';
@@ -35,8 +34,6 @@ import {
 
 import { deriveAuthenticationContext } from './authentication-context.js';
 
-const { jest } = import.meta;
-
 const { libraries, queries } = new MockTenant();
 const userId = mockUser.id;
 const email = 'foo@bar.com';
@@ -56,92 +53,75 @@ const user: User = {
 const allFactorsEnabled = { ...mockSignInExperience.mfa, factors: Object.values(MfaFactor) };
 const noFactorEnabled = { ...mockSignInExperience.mfa, factors: [] };
 
-const derive = async (records: Parameters<typeof deriveAuthenticationContext>[0]) =>
-  deriveAuthenticationContext(records, user, allFactorsEnabled);
+/** The ids of the identifier records below; the interaction records them at identification. */
+const identifiedVerificationIds = new Set(['password', 'email', 'phone']);
 
-/** Marks an identifier record that identifies no account. */
-const noAccount = Symbol('no account');
+type Options = Partial<Parameters<typeof deriveAuthenticationContext>[1]>;
 
-/**
- * Stub which account an identifier record identifies: the given user, or none (the record then
- * rejects the way a real one does for an unregistered identifier or an unlinked identity).
- */
-const identifying = <T extends { identifyUser: () => Promise<User> }>(
-  record: T,
-  identifiedUserId: string | typeof noAccount = userId
-): T => {
-  const target: { identifyUser: () => Promise<User> } = record;
-  jest.spyOn(target, 'identifyUser').mockImplementation(async () => {
-    if (identifiedUserId === noAccount) {
-      throw new RequestError({ code: 'user.user_not_exist', status: 404 });
-    }
-
-    return { ...user, id: identifiedUserId };
+const derive = (
+  records: Parameters<typeof deriveAuthenticationContext>[0],
+  options: Options = {}
+) =>
+  deriveAuthenticationContext(records, {
+    user,
+    mfaSettings: allFactorsEnabled,
+    identifiedVerificationIds,
+    ...options,
   });
 
-  return record;
-};
+const password = ({
+  verifiedAt,
+  verified = true,
+  id = 'password',
+}: { verifiedAt?: number; verified?: boolean; id?: string } = {}) =>
+  new PasswordVerification(libraries, queries, {
+    id,
+    type: VerificationType.Password,
+    identifier: { type: SignInIdentifier.Username, value: 'foo' },
+    verified,
+    verifiedAt,
+  });
 
-const password = (verifiedAt?: number, verified = true) =>
-  identifying(
-    new PasswordVerification(libraries, queries, {
-      id: 'password',
-      type: VerificationType.Password,
-      identifier: { type: SignInIdentifier.Username, value: 'foo' },
-      verified,
-      verifiedAt,
-    })
-  );
-
-const emailCode = (verifiedAt?: number, identifiedUserId: string | typeof noAccount = userId) =>
-  identifying(
-    new EmailCodeVerification(libraries, queries, {
-      id: 'email',
-      type: VerificationType.EmailVerificationCode,
-      identifier: { type: SignInIdentifier.Email, value: email },
-      templateType: TemplateType.SignIn,
-      verified: true,
-      verifiedAt,
-    }),
-    identifiedUserId
-  );
+const emailCode = (verifiedAt?: number, id = 'email') =>
+  new EmailCodeVerification(libraries, queries, {
+    id,
+    type: VerificationType.EmailVerificationCode,
+    identifier: { type: SignInIdentifier.Email, value: email },
+    templateType: TemplateType.SignIn,
+    verified: true,
+    verifiedAt,
+  });
 
 const phoneCode = (verifiedAt?: number) =>
-  identifying(
-    new PhoneCodeVerification(libraries, queries, {
-      id: 'phone',
-      type: VerificationType.PhoneVerificationCode,
-      identifier: { type: SignInIdentifier.Phone, value: phone },
-      templateType: TemplateType.SignIn,
-      verified: true,
-      verifiedAt,
-    })
-  );
+  new PhoneCodeVerification(libraries, queries, {
+    id: 'phone',
+    type: VerificationType.PhoneVerificationCode,
+    identifier: { type: SignInIdentifier.Phone, value: phone },
+    templateType: TemplateType.SignIn,
+    verified: true,
+    verifiedAt,
+  });
 
-/** An MFA code sent to the user's primary email, as the MFA verification-code route creates it. */
-const mfaEmailCode = (verifiedAt?: number) =>
-  identifying(
-    new MfaEmailCodeVerification(libraries, queries, {
-      id: 'mfa-email',
-      type: VerificationType.MfaEmailVerificationCode,
-      identifier: { type: SignInIdentifier.Email, value: email },
-      templateType: TemplateType.MfaVerification,
-      verified: true,
-      verifiedAt,
-    })
-  );
+/** An MFA code sent to the given email, as the MFA verification-code route creates it. */
+const mfaEmailCode = (verifiedAt?: number, address = email) =>
+  new MfaEmailCodeVerification(libraries, queries, {
+    id: 'mfa-email',
+    type: VerificationType.MfaEmailVerificationCode,
+    identifier: { type: SignInIdentifier.Email, value: address },
+    templateType: TemplateType.MfaVerification,
+    verified: true,
+    verifiedAt,
+  });
 
 const mfaPhoneCode = (verifiedAt?: number) =>
-  identifying(
-    new MfaPhoneCodeVerification(libraries, queries, {
-      id: 'mfa-phone',
-      type: VerificationType.MfaPhoneVerificationCode,
-      identifier: { type: SignInIdentifier.Phone, value: phone },
-      templateType: TemplateType.MfaVerification,
-      verified: true,
-      verifiedAt,
-    })
-  );
+  new MfaPhoneCodeVerification(libraries, queries, {
+    id: 'mfa-phone',
+    type: VerificationType.MfaPhoneVerificationCode,
+    identifier: { type: SignInIdentifier.Phone, value: phone },
+    templateType: TemplateType.MfaVerification,
+    verified: true,
+    verifiedAt,
+  });
 
 const totp = ({
   verifiedAt,
@@ -206,48 +186,48 @@ const newPasswordIdentity = (verifiedAt?: number) =>
   });
 
 describe('deriveAuthenticationContext', () => {
-  it('reaches 1fa with a password', async () => {
-    await expect(derive([password(100)])).resolves.toEqual({
+  it('reaches 1fa with a password', () => {
+    expect(derive([password({ verifiedAt: 100 })])).toEqual({
       acr: 'urn:logto:acr:1fa',
       amr: ['pwd'],
       ts: 100,
     });
   });
 
-  it('reaches 1fa with a primary email code', async () => {
-    await expect(derive([emailCode(100)])).resolves.toEqual({
+  it('reaches 1fa with a primary email code', () => {
+    expect(derive([emailCode(100)])).toEqual({
       acr: 'urn:logto:acr:1fa',
       amr: ['otp'],
       ts: 100,
     });
   });
 
-  it('reaches mfa with a password and a TOTP, taking the earliest timestamp', async () => {
-    await expect(derive([password(200), totp({ verifiedAt: 100 })])).resolves.toEqual({
+  it('reaches mfa with a password and a TOTP, taking the earliest timestamp', () => {
+    expect(derive([password({ verifiedAt: 200 }), totp({ verifiedAt: 100 })])).toEqual({
       acr: 'urn:logto:acr:mfa',
       amr: ['pwd', 'otp', 'mfa'],
       ts: 100,
     });
   });
 
-  it('reaches mfa with a primary email code and an MFA phone code', async () => {
-    await expect(derive([emailCode(100), mfaPhoneCode(200)])).resolves.toEqual({
+  it('reaches mfa with a primary email code and an MFA phone code', () => {
+    expect(derive([emailCode(100), mfaPhoneCode(200)])).toEqual({
       acr: 'urn:logto:acr:mfa',
       amr: ['otp', 'sms', 'mfa'],
       ts: 100,
     });
   });
 
-  it('reaches only 1fa with a TOTP alone', async () => {
-    await expect(derive([totp({ verifiedAt: 100 })])).resolves.toEqual({
+  it('reaches only 1fa with a TOTP alone', () => {
+    expect(derive([totp({ verifiedAt: 100 })])).toEqual({
       acr: 'urn:logto:acr:1fa',
       amr: ['otp'],
       ts: 100,
     });
   });
 
-  it('reaches only 1fa with two mfa-class factors and no first factor', async () => {
-    await expect(derive([totp({ verifiedAt: 100 }), backupCode(200)])).resolves.toEqual({
+  it('reaches only 1fa with two mfa-class factors and no first factor', () => {
+    expect(derive([totp({ verifiedAt: 100 }), backupCode(200)])).toEqual({
       acr: 'urn:logto:acr:1fa',
       amr: ['otp'],
       ts: 100,
@@ -256,8 +236,8 @@ describe('deriveAuthenticationContext', () => {
 
   it.each([webAuthn, signInPasskey])(
     'reaches mfa with a user-verified WebAuthn assertion alone',
-    async (build) => {
-      await expect(derive([build(100)])).resolves.toEqual({
+    (build) => {
+      expect(derive([build(100)])).toEqual({
         acr: 'urn:logto:acr:mfa',
         amr: ['pop', 'user', 'mfa'],
         ts: 100,
@@ -265,58 +245,66 @@ describe('deriveAuthenticationContext', () => {
     }
   );
 
-  it('records only fed for a social sign-in', async () => {
-    await expect(derive([social(100)])).resolves.toEqual({ amr: ['fed'], ts: 100 });
+  it('records only fed for a social sign-in', () => {
+    expect(derive([social(100)])).toEqual({ amr: ['fed'], ts: 100 });
   });
 
-  it('keeps fed next to a Logto-verifiable factor', async () => {
-    await expect(derive([social(100), password(200)])).resolves.toEqual({
+  it('keeps fed next to a Logto-verifiable factor', () => {
+    expect(derive([social(100), password({ verifiedAt: 200 })])).toEqual({
       acr: 'urn:logto:acr:1fa',
       amr: ['fed', 'pwd'],
       ts: 100,
     });
   });
 
-  it('ignores unverified records and factors enrolled in this interaction', async () => {
-    await expect(
-      derive([password(100, false), totp({ verifiedAt: 50, secret: 'new' })])
-    ).resolves.toEqual({});
-    await expect(derive([password(100), totp({ verifiedAt: 50, secret: 'new' })])).resolves.toEqual(
-      { acr: 'urn:logto:acr:1fa', amr: ['pwd'], ts: 100 }
-    );
-  });
-
-  it('omits ts when no counted record carries verifiedAt', async () => {
-    await expect(derive([password()])).resolves.toEqual({
-      acr: 'urn:logto:acr:1fa',
-      amr: ['pwd'],
+  it('keeps fed for an identity that is only being linked by this submission', () => {
+    // A linking social record never identified the user through its stored identity.
+    expect(derive([social(50)], { identifiedVerificationIds: new Set() })).toEqual({
+      amr: ['fed'],
+      ts: 50,
     });
   });
 
+  it('ignores unverified records and factors enrolled in this interaction', () => {
+    expect(
+      derive([
+        password({ verifiedAt: 100, verified: false }),
+        totp({ verifiedAt: 50, secret: 'new' }),
+      ])
+    ).toEqual({});
+    expect(
+      derive([password({ verifiedAt: 100 }), totp({ verifiedAt: 50, secret: 'new' })])
+    ).toEqual({ acr: 'urn:logto:acr:1fa', amr: ['pwd'], ts: 100 });
+  });
+
+  it('omits ts when no counted record carries verifiedAt', () => {
+    expect(derive([password()])).toEqual({ acr: 'urn:logto:acr:1fa', amr: ['pwd'] });
+  });
+
   describe('one factor never fills both roles', () => {
-    it('stays at 1fa when the MFA code went to the same email as the first factor', async () => {
-      await expect(derive([emailCode(100), mfaEmailCode(200)])).resolves.toEqual({
+    it('stays at 1fa when the MFA code went to the same email as the first factor', () => {
+      expect(derive([emailCode(100), mfaEmailCode(200)])).toEqual({
         acr: 'urn:logto:acr:1fa',
         amr: ['otp'],
         ts: 100,
       });
     });
 
-    it('stays at 1fa when the MFA code went to the same phone as the first factor', async () => {
-      await expect(derive([phoneCode(100), mfaPhoneCode(200)])).resolves.toEqual({
+    it('stays at 1fa when the MFA code went to the same phone as the first factor', () => {
+      expect(derive([phoneCode(100), mfaPhoneCode(200)])).toEqual({
         acr: 'urn:logto:acr:1fa',
         amr: ['sms'],
         ts: 100,
       });
     });
 
-    it('still reaches mfa when another factor supplies the first factor', async () => {
-      await expect(derive([password(100), mfaEmailCode(200)])).resolves.toEqual({
+    it('still reaches mfa when another factor supplies the first factor', () => {
+      expect(derive([password({ verifiedAt: 100 }), mfaEmailCode(200)])).toEqual({
         acr: 'urn:logto:acr:mfa',
         amr: ['pwd', 'otp', 'mfa'],
         ts: 100,
       });
-      await expect(derive([emailCode(100), password(150), mfaEmailCode(200)])).resolves.toEqual({
+      expect(derive([emailCode(100), password({ verifiedAt: 150 }), mfaEmailCode(200)])).toEqual({
         acr: 'urn:logto:acr:mfa',
         amr: ['otp', 'pwd', 'mfa'],
         ts: 100,
@@ -325,36 +313,49 @@ describe('deriveAuthenticationContext', () => {
   });
 
   describe('records that are not proofs of the identified user', () => {
-    it('never counts a new-password-identity record, even next to a real proof', async () => {
-      await expect(derive([social(100), newPasswordIdentity(50)])).resolves.toEqual({
+    it('never counts a new-password-identity record, even next to a real proof', () => {
+      expect(derive([social(100), newPasswordIdentity(50)])).toEqual({ amr: ['fed'], ts: 100 });
+      // Without the registration password, a TOTP alone reaches only 1fa.
+      expect(derive([social(100), newPasswordIdentity(50), totp({ verifiedAt: 200 })])).toEqual({
+        acr: 'urn:logto:acr:1fa',
+        amr: ['fed', 'otp'],
+        ts: 100,
+      });
+    });
+
+    it('ignores an identifier record that did not identify the user', () => {
+      // A code for an address the user is adding, or a password verified for another account,
+      // is never passed to `identifyUser()` for this user.
+      expect(derive([social(100), emailCode(50, 'added-email')])).toEqual({
         amr: ['fed'],
         ts: 100,
       });
-      // Without the registration password, a TOTP alone reaches only 1fa.
-      await expect(
-        derive([social(100), newPasswordIdentity(50), totp({ verifiedAt: 200 })])
-      ).resolves.toEqual({ acr: 'urn:logto:acr:1fa', amr: ['fed', 'otp'], ts: 100 });
+      expect(derive([password({ verifiedAt: 50, id: 'other-account' })])).toEqual({});
     });
 
-    it('ignores an MFA record of a factor the user has not enabled', async () => {
-      await expect(
-        deriveAuthenticationContext(
-          [password(100), totp({ verifiedAt: 200 }), mfaEmailCode(300)],
-          user,
-          noFactorEnabled
-        )
-      ).resolves.toEqual({ acr: 'urn:logto:acr:1fa', amr: ['pwd'], ts: 100 });
+    it('ignores an MFA record of a factor the user has not enabled', () => {
+      expect(
+        derive([password({ verifiedAt: 100 }), totp({ verifiedAt: 200 }), mfaEmailCode(300)], {
+          mfaSettings: noFactorEnabled,
+        })
+      ).toEqual({ acr: 'urn:logto:acr:1fa', amr: ['pwd'], ts: 100 });
       // A backup code set the user never enrolled is not eligible either.
-      await expect(
-        deriveAuthenticationContext(
-          [password(100), backupCode(200)],
-          { ...user, mfaVerifications: [mockUserTotpMfaVerification] },
-          allFactorsEnabled
-        )
-      ).resolves.toEqual({ acr: 'urn:logto:acr:1fa', amr: ['pwd'], ts: 100 });
+      expect(
+        derive([password({ verifiedAt: 100 }), backupCode(200)], {
+          user: { ...user, mfaVerifications: [mockUserTotpMfaVerification] },
+        })
+      ).toEqual({ acr: 'urn:logto:acr:1fa', amr: ['pwd'], ts: 100 });
     });
 
-    it('keeps the proof of the last backup code once every code is marked used', async () => {
+    it('ignores an MFA code that was not sent to the primary contact of the user', () => {
+      expect(derive([password({ verifiedAt: 100 }), mfaEmailCode(200, 'other@bar.com')])).toEqual({
+        acr: 'urn:logto:acr:1fa',
+        amr: ['pwd'],
+        ts: 100,
+      });
+    });
+
+    it('keeps the proof of the last backup code once every code is marked used', () => {
       // `verify()` marks the code used before the submission reloads the user, so the reloaded
       // user has no unused code left and would no longer be offered a backup code challenge.
       const reloadedUser: User = {
@@ -368,48 +369,16 @@ describe('deriveAuthenticationContext', () => {
         ],
       };
 
-      await expect(
-        deriveAuthenticationContext(
-          [password(100), backupCode(200)],
-          reloadedUser,
-          allFactorsEnabled
-        )
-      ).resolves.toEqual({ acr: 'urn:logto:acr:mfa', amr: ['pwd', 'otp', 'mfa'], ts: 100 });
+      expect(
+        derive([password({ verifiedAt: 100 }), backupCode(200)], { user: reloadedUser })
+      ).toEqual({ acr: 'urn:logto:acr:mfa', amr: ['pwd', 'otp', 'mfa'], ts: 100 });
     });
 
-    it('ignores an identifier record that identifies no account', async () => {
-      await expect(derive([social(100), emailCode(50, noAccount)])).resolves.toEqual({
-        amr: ['fed'],
-        ts: 100,
-      });
-    });
-
-    it('ignores an identifier record that identifies another account', async () => {
-      await expect(derive([emailCode(50, 'someone-else')])).resolves.toEqual({});
-    });
-
-    it('keeps fed for an identity that is only being linked by this submission', async () => {
-      const record = social(50);
-      jest
-        .spyOn(record, 'identifyUser')
-        .mockRejectedValue(new RequestError({ code: 'user.identity_not_exist', status: 404 }));
-
-      await expect(derive([record])).resolves.toEqual({ amr: ['fed'], ts: 50 });
-      expect(record.identifyUser).not.toHaveBeenCalled();
-    });
-
-    it('ignores factor records created for another user', async () => {
-      await expect(
-        derive([password(100), totp({ verifiedAt: 50, ownerId: 'someone-else' })])
-      ).resolves.toEqual({ acr: 'urn:logto:acr:1fa', amr: ['pwd'], ts: 100 });
-      await expect(derive([signInPasskey(100, 'someone-else')])).resolves.toEqual({});
-    });
-
-    it('propagates an unexpected identification failure', async () => {
-      const record = password(100);
-      jest.spyOn(record, 'identifyUser').mockRejectedValue(new Error('database down'));
-
-      await expect(derive([record])).rejects.toThrow('database down');
+    it('ignores factor records created for another user', () => {
+      expect(
+        derive([password({ verifiedAt: 100 }), totp({ verifiedAt: 50, ownerId: 'someone-else' })])
+      ).toEqual({ acr: 'urn:logto:acr:1fa', amr: ['pwd'], ts: 100 });
+      expect(derive([signInPasskey(100, 'someone-else')])).toEqual({});
     });
   });
 });

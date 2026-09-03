@@ -134,6 +134,7 @@ const createSignInInteraction = ({
     ...userQueries,
     findUserById: jest.fn().mockResolvedValue(user),
     findUserByUsername: jest.fn().mockResolvedValue(user),
+    findUserByEmail: jest.fn().mockResolvedValue(user),
     updateUserById: jest.fn().mockResolvedValue(user),
   };
   const runActionHandler = jest.fn(
@@ -337,6 +338,7 @@ describe('ExperienceInteraction class', () => {
       setDevFeaturesEnabled(true);
       const { experienceInteraction, provider } = createSignInInteraction({
         interactionResult: {
+          identifiedVerificationIds: ['password'],
           verificationRecords: [
             {
               id: 'password',
@@ -373,6 +375,42 @@ describe('ExperienceInteraction class', () => {
           },
         })
       );
+    });
+
+    it('records every verification record that identified the user', async () => {
+      const { experienceInteraction } = createSignInInteraction({
+        interactionResult: {
+          userId: undefined,
+          verificationRecords: [
+            {
+              id: 'password',
+              type: VerificationType.Password,
+              identifier: { type: SignInIdentifier.Username, value: mockUser.username },
+              verified: true,
+            },
+            {
+              id: 'email',
+              type: VerificationType.EmailVerificationCode,
+              identifier: { type: SignInIdentifier.Email, value: mockEmail },
+              templateType: TemplateType.SignIn,
+              verified: true,
+            },
+          ],
+        },
+      });
+
+      await experienceInteraction.identifyUser('password');
+      expect(experienceInteraction.toJson()).toMatchObject({
+        userId: mockUser.id,
+        identifiedVerificationIds: ['password'],
+      });
+
+      // A second record that identifies the same user is recorded as well.
+      await experienceInteraction.identifyUser('email');
+      expect(experienceInteraction.toJson().identifiedVerificationIds).toEqual([
+        'password',
+        'email',
+      ]);
     });
 
     it('finishes with the account id only when dev features are disabled', async () => {

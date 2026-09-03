@@ -198,6 +198,8 @@ export type WithHooksAndLogsContext<ContextT extends WithLogContext = WithLogCon
 export type InteractionStorage = {
   interactionEvent: InteractionEvent;
   userId?: string;
+  /** The ids of the verification records that identified `userId`; see `ExperienceInteraction.identifyUser()`. */
+  identifiedVerificationIds?: string[];
   trustedDeviceOptIn?:
     | {
         trusted: false;
@@ -219,6 +221,7 @@ export type InteractionStorage = {
 export const interactionStorageGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent),
   userId: z.string().optional(),
+  identifiedVerificationIds: z.string().array().optional(),
   trustedDeviceOptIn: z
     .discriminatedUnion('trusted', [
       z.object({ trusted: z.literal(false) }),
@@ -243,6 +246,7 @@ export const interactionStorageGuard = z.object({
 export type SanitizedInteractionStorageData = {
   interactionEvent: InteractionEvent;
   userId?: string;
+  identifiedVerificationIds?: string[];
   profile?: SanitizedInteractionProfile;
   verificationRecords?: SanitizedVerificationRecordData[];
   mfa?: SanitizedMfaData;
@@ -260,6 +264,7 @@ export type SanitizedInteractionStorageData = {
 export const sanitizedInteractionStorageGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent),
   userId: z.string().optional(),
+  identifiedVerificationIds: z.string().array().optional(),
   profile: sanitizedInteractionProfileGuard,
   verificationRecords: publicVerificationRecordDataGuard.array().optional(),
   mfa: sanitizedMfaDataGuard.optional(),
