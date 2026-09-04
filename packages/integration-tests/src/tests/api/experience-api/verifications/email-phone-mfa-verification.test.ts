@@ -14,10 +14,14 @@ import {
 import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
 import {
   successfullySendMfaVerificationCode,
+  successfullySendVerificationCode,
   successfullyVerifyMfaVerificationCode,
+  successfullyVerifyVerificationCode,
 } from '#src/helpers/experience/verification-code.js';
+import { expectRejects } from '#src/helpers/index.js';
 import {
   enableAllPasswordSignInMethods,
+  enableAllVerificationCodeSignInMethods,
   enableMandatoryMfaWithEmail,
   enableMandatoryMfaWithPhone,
   resetMfaSettings,
@@ -95,3 +99,48 @@ describe.each(mfaTestCases)(
     });
   }
 );
+
+describe('MFA verification code factor guard', () => {
+  const userApi = new UserApiTest();
+
+  beforeAll(async () => {
+    await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
+    await Promise.all([setEmailConnector(), setSmsConnector()]);
+    await enableAllVerificationCodeSignInMethods();
+    await resetMfaSettings();
+  });
+
+  afterAll(async () => {
+    await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
+    await enableAllPasswordSignInMethods();
+    await userApi.cleanUp();
+  });
+
+  it.each([
+    { identifierType: SignInIdentifier.Email, profileKey: 'primaryEmail' },
+    { identifierType: SignInIdentifier.Phone, profileKey: 'primaryPhone' },
+  ] as const)(
+    'refuses an MFA code for the $identifierType that identified the user when the factor is not enabled',
+    async ({ identifierType, profileKey }) => {
+      const profile = generateNewUserProfile({ primaryEmail: true, primaryPhone: true });
+      await userApi.create(profile);
+      const identifier = { type: identifierType, value: profile[profileKey] };
+
+      const client = await initExperienceClient();
+      const { verificationId, code } = await successfullySendVerificationCode(client, {
+        identifier,
+        interactionEvent: InteractionEvent.SignIn,
+      });
+      await successfullyVerifyVerificationCode(client, { identifier, verificationId, code });
+      await client.identifyUser({ verificationId });
+
+      // A second code to the same contact would only re-prove the contact that already identified
+      // the user. The route refuses it because the sign-in experience does not enable that MFA
+      // factor; sign-in with a contact and MFA through the same contact cannot both be enabled.
+      await expectRejects(client.sendMfaVerificationCode({ identifierType }), {
+        code: 'session.mfa.mfa_factor_not_enabled',
+        status: 400,
+      });
+    }
+  );
+});
