@@ -147,7 +147,7 @@ export class ClientCredentials {
       const abort = createAbortPromise(signal);
 
       try {
-        // Node.js 24 can leave response.json() pending after an aborted, stalled body.
+        // Guard against Response implementations that do not propagate request aborts to json().
         return await Promise.race([this.requestAccessToken(signal), abort.promise]);
       } finally {
         abort.clear();
