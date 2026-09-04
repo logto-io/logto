@@ -48,19 +48,28 @@ export enum AuthenticationMethodReference {
   Federated = 'fed',
 }
 
-/** The class a proof contributes toward an ACR. */
+/**
+ * The role a proof can fill when proofs are combined into an ACR. This is not the ACR a proof
+ * reaches on its own: any proof with a class reaches {@link LogtoAcr.FirstFactor} alone, and the
+ * class only decides which side of the pair the proof can stand on when
+ * {@link LogtoAcr.Mfa} is derived. That level needs a `1fa`-role proof and an `mfa`-role proof of
+ * two different factors, so two `mfa`-class factors, such as a TOTP and a backup code, never reach
+ * it together.
+ */
 export enum AuthenticationFactorClass {
-  /** Contributes {@link LogtoAcr.FirstFactor}. */
+  /** Fills the `1fa` role: a password or a primary email / phone code. */
   FirstFactor = '1fa',
   /**
-   * Contributes an `mfa`-class proof. Combined with a {@link AuthenticationFactorClass.FirstFactor}
-   * proof of a different factor it reaches {@link LogtoAcr.Mfa}; alone it reaches only
-   * {@link LogtoAcr.FirstFactor}.
+   * Fills the `mfa` role: TOTP, a backup code or an MFA email / phone code. Alone it reaches
+   * {@link LogtoAcr.FirstFactor}; paired with a `1fa`-role proof of a different factor it reaches
+   * {@link LogtoAcr.Mfa}.
    */
   Mfa = 'mfa',
   /**
-   * Satisfies the `1fa` and the `mfa` role by itself: a user-verified WebAuthn authenticator is
-   * possession plus user verification in one act, so it reaches {@link LogtoAcr.Mfa} alone.
+   * Fills both roles by itself, so it reaches {@link LogtoAcr.Mfa} alone: a user-verified WebAuthn
+   * authenticator is possession plus user verification in one act. Kept as a class rather than a
+   * special case on the factor so that every "can fill this role" check stays a class comparison
+   * and this table stays the single place that decides.
    */
   Both = 'both',
 }
