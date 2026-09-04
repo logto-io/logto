@@ -1,3 +1,5 @@
+import { createTimeoutSignal, getAbortReason, normalizeTimeout } from './timeout.js';
+
 /** Indicates the number of seconds. */
 type Seconds = number;
 
@@ -32,6 +34,33 @@ export type ClientCredentialsOptions = {
    * @default 10
    */
   tokenRequestTimeout?: Seconds;
+  /**
+   * Returns an optional signal for each token request. The factory is called once per actual token
+   * fetch, so concurrent callers sharing a fetch also share its signal. The signal is composed with
+   * `tokenRequestTimeout`, and the first signal to abort cancels the request.
+   */
+  getTokenRequestSignal?: () => AbortSignal | undefined;
+};
+
+const createAbortPromise = (signal: AbortSignal) => {
+  // eslint-disable-next-line no-use-extend-native/no-use-extend-native -- `Promise.withResolvers` is standard since ES2024; the rule's built-in method list predates it.
+  const { promise, reject } = Promise.withResolvers<never>();
+  const handleAbort = () => {
+    reject(getAbortReason(signal, 'Token request aborted'));
+  };
+
+  if (signal.aborted) {
+    handleAbort();
+  } else {
+    signal.addEventListener('abort', handleAbort, { once: true });
+  }
+
+  return {
+    promise,
+    clear: () => {
+      signal.removeEventListener('abort', handleAbort);
+    },
+  };
 };
 
 /**
@@ -50,13 +79,7 @@ export class ClientCredentials {
   }
 
   get tokenRequestTimeout(): Seconds {
-    const timeout = this.options.tokenRequestTimeout;
-
-    if (timeout === undefined || Number.isNaN(timeout)) {
-      return 10;
-    }
-
-    return Number.isFinite(timeout) && timeout > 0 ? timeout : 0;
+    return normalizeTimeout(this.options.tokenRequestTimeout);
   }
 
   constructor(protected options: ClientCredentialsOptions) {}
@@ -114,23 +137,21 @@ export class ClientCredentials {
   }
 
   private async fetchAccessToken(): Promise<AccessToken> {
-    const controller = new AbortController();
-    const timeoutError = new DOMException('Token request timed out', 'TimeoutError');
-    const timeout =
-      this.tokenRequestTimeout > 0
-        ? setTimeout(() => {
-            controller.abort(timeoutError);
-          }, this.tokenRequestTimeout * 1000)
-        : undefined;
-    const aborted = new Promise<never>((_resolve, reject) => {
-      controller.signal.addEventListener('abort', () => {
-        reject(timeoutError);
-      });
-    });
+    const timeout = createTimeoutSignal(this.tokenRequestTimeout, 'Token request timed out');
 
     try {
-      // Node.js 24 can leave response.json() pending after an aborted, stalled body.
-      return await Promise.race([this.requestAccessToken(controller.signal), aborted]);
+      const customSignal = this.options.getTokenRequestSignal?.();
+      const signal = customSignal
+        ? AbortSignal.any([timeout.signal, customSignal])
+        : timeout.signal;
+      const abort = createAbortPromise(signal);
+
+      try {
+        // Node.js 24 can leave response.json() pending after an aborted, stalled body.
+        return await Promise.race([this.requestAccessToken(signal), abort.promise]);
+      } finally {
+        abort.clear();
+      }
     } catch (error: unknown) {
       if (error instanceof ClientCredentialsError) {
         throw error;
@@ -141,7 +162,7 @@ export class ClientCredentials {
         { cause: error }
       );
     } finally {
-      clearTimeout(timeout);
+      timeout.clear();
     }
   }
 

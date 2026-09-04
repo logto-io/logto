@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { createManagementApi } from './management.js';
+import { getAbortReason } from './timeout.js';
 
 const jsonResponse = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
@@ -107,7 +108,7 @@ describe('Management API token recovery', () => {
               throw new TypeError('Expected a Management API request');
             }
             request.signal.addEventListener('abort', () => {
-              reject(timeoutError);
+              reject(getAbortReason(request.signal, 'Management API request aborted'));
             });
           })
       );
@@ -118,12 +119,13 @@ describe('Management API token recovery', () => {
       requestTimeout: 20,
     });
     const result = apiClient.get('/api/users' as never);
+    const rejection = expect(result).rejects.toBe(timeoutError);
     await vi.waitFor(() => {
       expect(mockFetch).toHaveBeenCalledTimes(2);
     });
 
     expect(timeout).toHaveBeenCalledWith(20_000);
     timeoutController.abort(timeoutError);
-    await expect(result).rejects.toBe(timeoutError);
+    await rejection;
   });
 });

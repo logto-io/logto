@@ -2,6 +2,7 @@ import createClient, { type Client } from 'openapi-fetch';
 
 import { ClientCredentials } from './client-credentials.js';
 import { type paths } from './generated-types/management.js';
+import { normalizeTimeout, toTimeoutMilliseconds } from './timeout.js';
 
 /**
  * Options for creating a Management API client.
@@ -36,7 +37,14 @@ export type CreateManagementApiOptions = {
    */
   tokenRequestTimeout?: number;
   /**
-   * The maximum time in seconds allowed for each Management API request.
+   * Returns an optional signal for each token request. The factory is called once per actual token
+   * fetch, so concurrent callers sharing a fetch also share its signal. The signal is composed with
+   * `tokenRequestTimeout`, and the first signal to abort cancels the request.
+   */
+  getTokenRequestSignal?: () => AbortSignal | undefined;
+  /**
+   * The maximum time in seconds allowed for the Management API network request after token
+   * retrieval. It is composed with per-request signals, and a timeout rejects the API call.
    * Non-positive and infinite values disable the timeout. `NaN` uses the default value.
    * @default 10
    */
@@ -58,7 +66,8 @@ export type CreateApiClientOptions = {
    */
   getToken: () => Promise<string>;
   /**
-   * The maximum time in seconds allowed for each API request.
+   * The maximum time in seconds allowed for the API network request after `getToken()` resolves.
+   * It is composed with per-request signals, and a timeout rejects the API call.
    * Non-positive and infinite values disable the timeout. `NaN` uses the default value.
    * @default 10
    */
@@ -92,32 +101,24 @@ const normalizeBaseUrl = (baseUrl: string) => baseUrl.replace(/\/+$/u, '');
 
 const isWellKnownPath = (schemaPath: string) => schemaPath.includes('/.well-known/');
 
-const getRequestTimeout = (requestTimeout?: number) => {
-  if (requestTimeout === undefined || Number.isNaN(requestTimeout)) {
-    return 10;
-  }
-
-  return Number.isFinite(requestTimeout) && requestTimeout > 0 ? requestTimeout : 0;
-};
-
-const createRequestTimeoutFetch = (requestTimeout: number) => async (request: Request) => {
-  const timeoutSignal = AbortSignal.timeout(requestTimeout * 1000);
-  const signal = AbortSignal.any([request.signal, timeoutSignal]);
-  return fetch(new Request(request, { signal }));
-};
+const createRequestTimeoutFetch =
+  (requestTimeout: number) => async (request: Request, requestInit?: RequestInit) => {
+    const signal = AbortSignal.any([
+      request.signal,
+      AbortSignal.timeout(toTimeoutMilliseconds(requestTimeout)),
+    ]);
+    return fetch(new Request(request, { signal }), { ...requestInit, signal });
+  };
 
 class ScopeMismatchWarner {
-  private warnedScope?: string;
-
-  private hasWarned = false;
+  private readonly warnedScopes = new Set<string | undefined>();
 
   warn(scope?: string): void {
-    if (scope === allScope || (this.hasWarned && scope === this.warnedScope)) {
+    if (scope === allScope || this.warnedScopes.has(scope)) {
       return;
     }
 
-    this.warnedScope = scope;
-    this.hasWarned = true;
+    this.warnedScopes.add(scope);
     console.warn(
       `The scope "${scope}" is not equal to the expected value "${allScope}". This may cause issues with API access. See https://a.logto.io/m2m-mapi to learn more about configuring machine-to-machine access to the Management API.`
     );
@@ -176,7 +177,7 @@ const addLowercaseHttpMethods = (client: Client<paths>): ManagementApiClient => 
  */
 export function createApiClient(options: CreateApiClientOptions): ManagementApiClient {
   const { baseUrl, getToken } = options;
-  const requestTimeout = getRequestTimeout(options.requestTimeout);
+  const requestTimeout = normalizeTimeout(options.requestTimeout);
   const client = createClient<paths>({
     baseUrl: normalizeBaseUrl(baseUrl),
     ...(requestTimeout > 0 && { fetch: createRequestTimeoutFetch(requestTimeout) }),
@@ -255,7 +256,8 @@ export function createManagementApi(
   tenantId: string,
   options: CreateManagementApiOptions
 ): ManagementApiReturnType {
-  const { clientId, clientSecret, tokenRequestTimeout, requestTimeout } = options;
+  const { clientId, clientSecret, tokenRequestTimeout, getTokenRequestSignal, requestTimeout } =
+    options;
   const baseUrl = normalizeBaseUrl(options.baseUrl ?? getBaseUrl(tenantId));
   const apiIndicator = options.apiIndicator ?? getManagementApiIndicator(tenantId);
   const clientCredentials = new ClientCredentials({
@@ -267,6 +269,7 @@ export function createManagementApi(
       scope: allScope,
     },
     tokenRequestTimeout,
+    getTokenRequestSignal,
   });
   const scopeMismatchWarner = new ScopeMismatchWarner();
 

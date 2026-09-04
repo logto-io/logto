@@ -2,6 +2,7 @@ import createClient, { type Middleware } from 'openapi-fetch';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 import { createApiClient } from './management.js';
+import { getAbortReason } from './timeout.js';
 
 vi.mock('openapi-fetch');
 
@@ -79,7 +80,19 @@ describe('createApiClient', () => {
   it('should compose the request timeout with a per-request signal', async () => {
     const timeoutController = new AbortController();
     const timeout = vi.spyOn(AbortSignal, 'timeout').mockReturnValue(timeoutController.signal);
-    const mockFetch = vi.fn<typeof fetch>().mockResolvedValue(new Response());
+    const abortError = new DOMException('Request aborted', 'AbortError');
+    const mockFetch = vi.fn<typeof fetch>().mockImplementation(
+      async (request) =>
+        new Promise<Response>((_resolve, reject) => {
+          if (!(request instanceof Request)) {
+            throw new TypeError('Expected a request');
+          }
+
+          request.signal.addEventListener('abort', () => {
+            reject(getAbortReason(request.signal, 'Request aborted'));
+          });
+        })
+    );
     vi.stubGlobal('fetch', mockFetch);
     createApiClient({
       baseUrl: 'https://test.logto.app',
@@ -89,16 +102,71 @@ describe('createApiClient', () => {
     const clientOptions = mockCreateClient.mock.calls[0]?.[0];
     expect(clientOptions?.fetch).toBeTypeOf('function');
     const requestController = new AbortController();
+    const requestInit = { cache: 'no-store' as const };
+    const timeoutFetch = clientOptions?.fetch as
+      | ((request: Request, requestInit?: RequestInit) => Promise<Response>)
+      | undefined;
 
-    await clientOptions?.fetch?.(
-      new Request('https://test.logto.app/api/users', { signal: requestController.signal })
+    if (!timeoutFetch) {
+      throw new TypeError('Expected a timeout fetch implementation');
+    }
+
+    const result = timeoutFetch(
+      new Request('https://test.logto.app/api/users', { signal: requestController.signal }),
+      requestInit
     );
+    const rejection = expect(result).rejects.toBe(abortError);
+
+    requestController.abort(abortError);
+    await rejection;
 
     expect(timeout).toHaveBeenCalledWith(20_000);
     const calledRequest = mockFetch.mock.calls[0]?.[0];
     expect(calledRequest).toBeInstanceOf(Request);
-    requestController.abort();
     expect(calledRequest instanceof Request && calledRequest.signal.aborted).toBe(true);
+    expect(mockFetch.mock.calls[0]?.[1]).toMatchObject(requestInit);
+  });
+
+  it('should round up sub-millisecond timeouts', async () => {
+    const timeoutController = new AbortController();
+    const timeout = vi.spyOn(AbortSignal, 'timeout').mockReturnValue(timeoutController.signal);
+    const mockFetch = vi.fn<typeof fetch>().mockResolvedValue(new Response());
+    vi.stubGlobal('fetch', mockFetch);
+    createApiClient({
+      baseUrl: 'https://test.logto.app',
+      getToken: async () => 'test-token',
+      requestTimeout: 0.0005,
+    });
+    const timeoutFetch = mockCreateClient.mock.calls[0]?.[0]?.fetch;
+
+    if (!timeoutFetch) {
+      throw new TypeError('Expected a timeout fetch implementation');
+    }
+
+    await timeoutFetch(new Request('https://test.logto.app/api/users'));
+
+    expect(timeout).toHaveBeenCalledWith(1);
+  });
+
+  it('should cap timeout signal delays', async () => {
+    const timeoutController = new AbortController();
+    const timeout = vi.spyOn(AbortSignal, 'timeout').mockReturnValue(timeoutController.signal);
+    const mockFetch = vi.fn<typeof fetch>().mockResolvedValue(new Response());
+    vi.stubGlobal('fetch', mockFetch);
+    createApiClient({
+      baseUrl: 'https://test.logto.app',
+      getToken: async () => 'test-token',
+      requestTimeout: Number.MAX_VALUE,
+    });
+    const timeoutFetch = mockCreateClient.mock.calls[0]?.[0]?.fetch;
+
+    if (!timeoutFetch) {
+      throw new TypeError('Expected a timeout fetch implementation');
+    }
+
+    await timeoutFetch(new Request('https://test.logto.app/api/users'));
+
+    expect(timeout).toHaveBeenCalledWith(2_147_483_647);
   });
 
   it.each([
