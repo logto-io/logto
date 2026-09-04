@@ -21,6 +21,7 @@ export type CreateManagementApiOptions = {
   /**
    * Override the base URL generated from the tenant ID.
    * Useful for testing or custom deployments.
+   * Trailing slashes are ignored.
    */
   baseUrl?: string;
   /**
@@ -28,6 +29,18 @@ export type CreateManagementApiOptions = {
    * Useful for testing or custom deployments.
    */
   apiIndicator?: string;
+  /**
+   * The maximum time in seconds allowed for fetching an access token.
+   * Non-positive and infinite values disable the timeout. `NaN` uses the default value.
+   * @default 10
+   */
+  tokenRequestTimeout?: number;
+  /**
+   * The maximum time in seconds allowed for each Management API request.
+   * Non-positive and infinite values disable the timeout. `NaN` uses the default value.
+   * @default 10
+   */
+  requestTimeout?: number;
 };
 
 /**
@@ -36,6 +49,7 @@ export type CreateManagementApiOptions = {
 export type CreateApiClientOptions = {
   /**
    * The base URL for the Management API.
+   * Trailing slashes are ignored.
    */
   baseUrl: string;
   /**
@@ -43,6 +57,12 @@ export type CreateApiClientOptions = {
    * This function will be called for each request that requires authentication.
    */
   getToken: () => Promise<string>;
+  /**
+   * The maximum time in seconds allowed for each API request.
+   * Non-positive and infinite values disable the timeout. `NaN` uses the default value.
+   * @default 10
+   */
+  requestTimeout?: number;
 };
 
 /**
@@ -66,6 +86,70 @@ export const getManagementApiIndicator = (tenantId: string) => `${getBaseUrl(ten
  */
 export const allScope = 'all';
 
+const bearerTokenPrefix = 'Bearer ';
+
+const normalizeBaseUrl = (baseUrl: string) => baseUrl.replace(/\/+$/u, '');
+
+const isWellKnownPath = (schemaPath: string) => schemaPath.includes('/.well-known/');
+
+const getRequestTimeout = (requestTimeout?: number) => {
+  if (requestTimeout === undefined || Number.isNaN(requestTimeout)) {
+    return 10;
+  }
+
+  return Number.isFinite(requestTimeout) && requestTimeout > 0 ? requestTimeout : 0;
+};
+
+const createRequestTimeoutFetch = (requestTimeout: number) => async (request: Request) => {
+  const timeoutSignal = AbortSignal.timeout(requestTimeout * 1000);
+  const signal = AbortSignal.any([request.signal, timeoutSignal]);
+  return fetch(new Request(request, { signal }));
+};
+
+class ScopeMismatchWarner {
+  private warnedScope?: string;
+
+  private hasWarned = false;
+
+  warn(scope?: string): void {
+    if (scope === allScope || (this.hasWarned && scope === this.warnedScope)) {
+      return;
+    }
+
+    this.warnedScope = scope;
+    this.hasWarned = true;
+    console.warn(
+      `The scope "${scope}" is not equal to the expected value "${allScope}". This may cause issues with API access. See https://a.logto.io/m2m-mapi to learn more about configuring machine-to-machine access to the Management API.`
+    );
+  }
+}
+
+type LowercaseHttpMethods = {
+  get: Client<paths>['GET'];
+  put: Client<paths>['PUT'];
+  post: Client<paths>['POST'];
+  delete: Client<paths>['DELETE'];
+  options: Client<paths>['OPTIONS'];
+  head: Client<paths>['HEAD'];
+  patch: Client<paths>['PATCH'];
+  trace: Client<paths>['TRACE'];
+};
+
+/** A typed Management API client with lowercase HTTP methods. */
+export type ManagementApiClient = Client<paths> & LowercaseHttpMethods;
+
+const addLowercaseHttpMethods = (client: Client<paths>): ManagementApiClient => ({
+  ...client,
+  get: client.GET,
+  put: client.PUT,
+  post: client.POST,
+  delete: client.DELETE,
+  options: client.OPTIONS,
+  head: client.HEAD,
+  patch: client.PATCH,
+  trace: client.TRACE,
+});
+
 /**
  * Creates an API client with custom token authentication.
  *
@@ -85,27 +169,31 @@ export const allScope = 'all';
  *   getToken: async () => getYourToken(),
  * });
  *
- * const response = await client.GET('/api/applications/{id}', {
+ * const response = await client.get('/api/applications/{id}', {
  *   params: { path: { id: 'app-id' } },
  * });
  * ```
  */
-export function createApiClient(options: CreateApiClientOptions): Client<paths> {
+export function createApiClient(options: CreateApiClientOptions): ManagementApiClient {
   const { baseUrl, getToken } = options;
-  const client = createClient<paths>({ baseUrl });
+  const requestTimeout = getRequestTimeout(options.requestTimeout);
+  const client = createClient<paths>({
+    baseUrl: normalizeBaseUrl(baseUrl),
+    ...(requestTimeout > 0 && { fetch: createRequestTimeoutFetch(requestTimeout) }),
+  });
 
   client.use({
     async onRequest({ schemaPath, request }) {
-      if (schemaPath.includes('/.well-known/')) {
+      if (isWellKnownPath(schemaPath)) {
         return;
       }
       const token = await getToken();
-      request.headers.set('Authorization', `Bearer ${token}`);
+      request.headers.set('Authorization', `${bearerTokenPrefix}${token}`);
       return request;
     },
   });
 
-  return client;
+  return addLowercaseHttpMethods(client);
 }
 
 type ManagementApiReturnType = {
@@ -115,7 +203,7 @@ type ManagementApiReturnType = {
    * This client is configured to use the provided client credentials
    * and will automatically include the access token in requests.
    */
-  apiClient: Client<paths>;
+  apiClient: ManagementApiClient;
   /**
    * The client credentials instance used for authentication.
    */
@@ -148,7 +236,7 @@ type ManagementApiReturnType = {
  * });
  *
  * // Use apiClient to make requests to the Management API
- * const response = await apiClient.GET('/api/users');
+ * const response = await apiClient.get('/api/users');
  * console.log(response.data);
  * ```
  *
@@ -167,8 +255,8 @@ export function createManagementApi(
   tenantId: string,
   options: CreateManagementApiOptions
 ): ManagementApiReturnType {
-  const { clientId, clientSecret } = options;
-  const baseUrl = options.baseUrl ?? getBaseUrl(tenantId);
+  const { clientId, clientSecret, tokenRequestTimeout, requestTimeout } = options;
+  const baseUrl = normalizeBaseUrl(options.baseUrl ?? getBaseUrl(tenantId));
   const apiIndicator = options.apiIndicator ?? getManagementApiIndicator(tenantId);
   const clientCredentials = new ClientCredentials({
     clientId,
@@ -178,20 +266,42 @@ export function createManagementApi(
       resource: apiIndicator,
       scope: allScope,
     },
+    tokenRequestTimeout,
   });
+  const scopeMismatchWarner = new ScopeMismatchWarner();
 
   const apiClient = createApiClient({
     baseUrl,
+    requestTimeout,
     getToken: async () => {
       const { value, scope } = await clientCredentials.getAccessToken();
 
-      if (scope !== allScope) {
-        console.warn(
-          `The scope "${scope}" is not equal to the expected value "${allScope}". This may cause issues with API access. See https://a.logto.io/m2m-mapi to learn more about configuring machine-to-machine access to the Management API.`
-        );
-      }
+      scopeMismatchWarner.warn(scope);
 
       return value;
+    },
+  });
+
+  apiClient.use({
+    onResponse({ schemaPath, request, response }) {
+      if (isWellKnownPath(schemaPath)) {
+        return;
+      }
+
+      const authorization = request.headers.get('Authorization');
+
+      if (!authorization?.startsWith(bearerTokenPrefix)) {
+        return;
+      }
+
+      const accessToken = authorization.slice(bearerTokenPrefix.length);
+
+      if (response.status === 401) {
+        // Do not retry here because the request body may have been consumed.
+        clientCredentials.invalidateAccessToken(accessToken);
+      } else if (response.ok) {
+        clientCredentials.markAccessTokenAsValid(accessToken);
+      }
     },
   });
 
