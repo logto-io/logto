@@ -5,6 +5,7 @@ import {
   adminTenantId,
   AuthenticationFactor,
   AuthenticationFactorClass,
+  AuthenticationMethodReference,
   AuthenticationProofRole,
   type AuthenticationProof,
   type CreateUser,
@@ -48,7 +49,7 @@ const passwordProof = (role: AuthenticationProofRole, at: number): Authenticatio
   id: 'password',
   factor: AuthenticationFactor.Password,
   class: AuthenticationFactorClass.FirstFactor,
-  amr: ['pwd'],
+  amr: [AuthenticationMethodReference.Password],
   role,
   at,
 });
