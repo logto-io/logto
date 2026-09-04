@@ -8,13 +8,7 @@ import { clearConnectorsByTypes, setSmsConnector } from '#src/helpers/connector.
 import { enableMandatoryMfaWithPhone, resetMfaSettings } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
-import {
-  devFeatureTest,
-  generatePhone,
-  generatePassword,
-  generateUsername,
-  waitFor,
-} from '#src/utils.js';
+import { generatePhone, generatePassword, generateUsername, waitFor } from '#src/utils.js';
 
 describe('phone MFA binding', () => {
   beforeAll(async () => {
@@ -87,7 +81,7 @@ describe('phone MFA binding', () => {
     await deleteUser(user.id);
   });
 
-  devFeatureTest.describe('trusted device opt-in', () => {
+  describe('trusted device opt-in', () => {
     beforeAll(async () => {
       await updateSignInExperience({ trustedDevice: { enabled: true, durationDays: 365 } });
     });

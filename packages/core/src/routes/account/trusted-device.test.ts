@@ -3,7 +3,6 @@ import { AccountCenterControlValue, type TrustedDevice } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
 import { createMockTrustedDevice, mockUser } from '#src/__mocks__/index.js';
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
@@ -52,12 +51,6 @@ const mockedLibraries = {
   trustedDevices: { validateCredential, deleteByIdAndUserId, clearCredential },
 } satisfies Partial2<Libraries>;
 
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-const setDevFeaturesEnabled = (isDevFeaturesEnabled: boolean) => {
-  // eslint-disable-next-line @silverhand/fp/no-mutation -- Tests cover route registration in both feature states.
-  (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = isDevFeaturesEnabled;
-};
-
 const trustedDeviceRoutes = await pickDefault(import('./trusted-device.js'));
 
 const buildRequester = ({
@@ -65,16 +58,12 @@ const buildRequester = ({
   identityVerified = true,
   scopes = new Set([UserScope.TrustedDevices]),
   clientId,
-  isDevFeaturesEnabled = true,
 }: {
   field?: AccountCenterControlValue;
   identityVerified?: boolean;
   scopes?: Set<string>;
   clientId?: string;
-  isDevFeaturesEnabled?: boolean;
 } = {}) => {
-  setDevFeaturesEnabled(isDevFeaturesEnabled);
-
   return createRequester({
     middlewares: [koaI18next(), koaErrorHandler()],
     authedRoutes: [
@@ -107,7 +96,6 @@ describe('account trusted device routes', () => {
     jest.clearAllMocks();
     validateCredential.mockResolvedValue(trustedDevice);
     deleteByIdAndUserId.mockResolvedValue(trustedDevice);
-    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
   });
 
   it('returns all redacted devices and marks only the validated credential as current', async () => {
@@ -240,15 +228,5 @@ describe('account trusted device routes', () => {
 
     expect(response.status).toBe(404);
     expect(clearCredential).not.toHaveBeenCalled();
-  });
-
-  it('does not register the routes when dev features are disabled', async () => {
-    const response = await buildRequester({ isDevFeaturesEnabled: false }).get(
-      '/my-account/trusted-devices'
-    );
-
-    expect(response.status).toBe(404);
-    expect(validateCredential).not.toHaveBeenCalled();
-    expect(findActiveByUserId).not.toHaveBeenCalled();
   });
 });

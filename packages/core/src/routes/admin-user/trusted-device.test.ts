@@ -2,7 +2,6 @@ import { type TrustedDevice } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
 import { createMockTrustedDevice, mockUser } from '#src/__mocks__/index.js';
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { koaManagementApiHooks } from '#src/middleware/koa-management-api-hooks.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -47,28 +46,17 @@ const { findActiveByUserId, deleteByIdAndUserId: deleteTrustedDeviceRecordByIdAn
   mockedQueries.trustedDevices;
 const { deleteByIdAndUserId } = mockedLibraries.trustedDevices;
 
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-
-const setDevFeaturesEnabled = (isDevFeaturesEnabled: boolean) => {
-  // eslint-disable-next-line @silverhand/fp/no-mutation -- Tests cover route registration in both feature states.
-  (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = isDevFeaturesEnabled;
-};
-
 const adminUserTrustedDeviceRoutes = await pickDefault(import('./trusted-device.js'));
 
-const createTrustedDeviceRequester = (isDevFeaturesEnabled = true) => {
-  setDevFeaturesEnabled(isDevFeaturesEnabled);
-
-  return createRequester({
+const createTrustedDeviceRequester = () =>
+  createRequester({
     authedRoutes: adminUserTrustedDeviceRoutes,
     tenantContext: new MockTenant(undefined, mockedQueries, undefined, mockedLibraries),
   });
-};
 
 describe('admin user trusted device routes', () => {
   afterEach(() => {
     jest.clearAllMocks();
-    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
   });
 
   it('returns all active trusted devices with sensitive fields redacted', async () => {
@@ -177,14 +165,5 @@ describe('admin user trusted device routes', () => {
 
     expect(response.status).toBe(404);
     expect(deleteByIdAndUserId).not.toHaveBeenCalled();
-  });
-
-  it('does not register the routes when dev features are disabled', async () => {
-    const response = await createTrustedDeviceRequester(false).get(
-      `/users/${userId}/trusted-devices`
-    );
-
-    expect(response.status).toBe(404);
-    expect(findUserById).not.toHaveBeenCalled();
   });
 });

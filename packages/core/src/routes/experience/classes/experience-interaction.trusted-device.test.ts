@@ -25,7 +25,7 @@ const { mockEsmWithActual } = createMockUtils(jest);
 
 await mockEsmWithActual('#src/env-set/index.js', () => ({
   EnvSet: {
-    values: { isDevFeaturesEnabled: true },
+    values: { isDevFeaturesEnabled: false },
   },
 }));
 

@@ -1,7 +1,6 @@
 import { MfaFactor, experience } from '@logto/schemas';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 
-import { isDevFeaturesEnabled } from '@/constants/env';
 import { handleSearchParametersData } from '@/shared/utils/search-parameters';
 
 import AppLayout from './Layout/AppLayout';
@@ -121,9 +120,7 @@ const App = () => {
                       <Route path="create-passkey" element={<PasskeySetup />} />
 
                       {/* Trusted device */}
-                      {isDevFeaturesEnabled && (
-                        <Route path={experience.routes.trustedDevice} element={<TrustedDevice />} />
-                      )}
+                      <Route path={experience.routes.trustedDevice} element={<TrustedDevice />} />
 
                       {/* Register */}
                       <Route path={experience.routes.register}>

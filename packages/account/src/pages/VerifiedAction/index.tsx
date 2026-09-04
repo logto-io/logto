@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
-import { isDevFeaturesEnabled } from '@ac/constants/env';
 import { getPasskeyFieldControl, isVisibleField } from '@ac/utils/security-page';
 import { sessionStorage } from '@ac/utils/session-storage';
 import type { PendingVerifiedAction } from '@ac/utils/session-storage';
@@ -68,8 +67,7 @@ const VerifiedAction = () => {
         return isVisibleField(accountCenterSettings.fields.session);
       }
       case 'load-trusted-devices': {
-        // DEV: MFA trusted device management
-        return isDevFeaturesEnabled && isVisibleField(accountCenterSettings.fields.trustedDevice);
+        return isVisibleField(accountCenterSettings.fields.trustedDevice);
       }
       default: {
         return false;

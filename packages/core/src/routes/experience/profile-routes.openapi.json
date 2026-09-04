@@ -167,7 +167,6 @@
         "operationId": "SetTrustedDeviceOptInDecision",
         "summary": "Set trusted device opt-in decision",
         "description": "Record whether the user trusts the current device after eligible MFA verification or binding. A trusted-device credential is created only after the interaction is successfully submitted.",
-        "tags": ["Dev feature"],
         "requestBody": {
           "content": {
             "application/json": {

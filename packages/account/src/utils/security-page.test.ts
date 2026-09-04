@@ -32,8 +32,7 @@ describe('security-page utils', () => {
     };
 
     expect(hasVisibleSessionsPage(settings)).toBe(false);
-    expect(hasVisibleSecuritySection(settings)).toBe(false);
-    expect(hasVisibleSecuritySection(settings, undefined, true)).toBe(true);
+    expect(hasVisibleSecuritySection(settings)).toBe(true);
     expect(
       hasVisibleSessionsPage({
         ...settings,

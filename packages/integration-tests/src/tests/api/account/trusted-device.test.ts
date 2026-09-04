@@ -28,7 +28,6 @@ import {
   initClientAndSignInForDefaultTenant,
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
-import { devFeatureTest } from '#src/utils.js';
 
 type TestUser = Readonly<{
   user: User;
@@ -73,7 +72,7 @@ const createTestUser = async (
   return { user, password, accessToken, api, verificationRecordId };
 };
 
-devFeatureTest.describe('account trusted device management', () => {
+describe('account trusted device management', () => {
   /* eslint-disable @silverhand/fp/no-let -- Integration setup resources are initialized in hooks. */
   let pool: DatabasePool;
   let owner: TestUser;

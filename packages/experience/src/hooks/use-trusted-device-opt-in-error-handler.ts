@@ -1,7 +1,6 @@
 import { experience } from '@logto/schemas';
 import { useMemo } from 'react';
 
-import { isDevFeaturesEnabled } from '@/constants/env';
 import { type ContinueFlowInteractionEvent } from '@/types';
 import { parseGuard, trustedDeviceOptInErrorDataGuard } from '@/types/guard';
 
@@ -18,7 +17,7 @@ const useTrustedDeviceOptInErrorHandler = (interactionEvent: ContinueFlowInterac
       'session.trusted_device_suggest_opt_in': async (error) => {
         const data = parseGuard(error.data, trustedDeviceOptInErrorDataGuard);
 
-        if (!isDevFeaturesEnabled || !data) {
+        if (!data) {
           setToast(error.message);
           return;
         }

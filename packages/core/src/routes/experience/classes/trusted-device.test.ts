@@ -93,8 +93,8 @@ describe('Experience trusted-device lifecycle events', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Exercise the guarded feature in isolation.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Verify trusted-device flows with dev features disabled.
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = false;
   });
 
   afterEach(() => {
@@ -161,39 +161,6 @@ describe('Experience trusted-device lifecycle events', () => {
 
     expect(creation.getEffectivePolicy).toHaveBeenCalledTimes(2);
     expect(trackException).toHaveBeenCalledWith(error, expect.any(Object));
-  });
-
-  it('does not suggest opt-in when the dev feature is disabled', async () => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Exercise the production guard.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = false;
-    const creation = createSubject({ data: {} });
-
-    await expect(
-      creation.subject.assertOptInDecision({
-        interactionEvent: InteractionEvent.SignIn,
-        userId,
-        getHasEligibleMfaProof: async () => true,
-      })
-    ).resolves.toBeUndefined();
-
-    expect(creation.getEffectivePolicy).not.toHaveBeenCalled();
-  });
-
-  it('does not record a decision when the dev feature is disabled', async () => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Exercise the production guard.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = false;
-    const creation = createSubject({ data: {} });
-
-    await creation.subject.setOptInDecision({
-      trusted: false,
-      interactionEvent: InteractionEvent.SignIn,
-      userId,
-      hasEligibleMfaProof: false,
-    });
-
-    expect(creation.subject.data).toEqual({});
-    expect(creation.getEffectivePolicy).not.toHaveBeenCalled();
-    expect(creation.writeOptOut).not.toHaveBeenCalled();
   });
 
   it('uses the standard error when a forgot-password interaction sets a decision', async () => {

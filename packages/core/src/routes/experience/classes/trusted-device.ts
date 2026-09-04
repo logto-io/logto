@@ -5,7 +5,6 @@ import { InteractionEvent, type TrustedDevice as TrustedDeviceModel } from '@log
 import { generateStandardId } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type EffectiveTrustedDevicePolicy } from '#src/libraries/trusted-device-policy.js';
 import { getTrustedDeviceEventData } from '#src/libraries/trusted-device.js';
@@ -81,11 +80,7 @@ export class TrustedDevice {
     userId,
     getHasEligibleMfaProof,
   }: AssertOptInDecisionOptions) {
-    if (
-      !EnvSet.values.isDevFeaturesEnabled ||
-      interactionEvent === InteractionEvent.ForgotPassword ||
-      this.#optIn
-    ) {
+    if (interactionEvent === InteractionEvent.ForgotPassword || this.#optIn) {
       return;
     }
 
@@ -120,11 +115,6 @@ export class TrustedDevice {
     userId,
     hasEligibleMfaProof,
   }: OptInDecisionOptions & { trusted: boolean }) {
-    // Trusted-device opt-in is under development and must remain isolated from released flows.
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return;
-    }
-
     assertThat(
       interactionEvent !== InteractionEvent.ForgotPassword,
       new RequestError({ code: 'session.not_supported_for_forgot_password', status: 400 })
@@ -180,11 +170,6 @@ export class TrustedDevice {
    * post-submit usage finalization.
    */
   async tryVerifyMfa(userId: string): Promise<boolean> {
-    // Trusted-device MFA verification is under development and must remain isolated from released flows.
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return false;
-    }
-
     this.#validatedDeviceId = undefined;
 
     const { trustedDevices } = this.tenant.libraries;
@@ -218,10 +203,6 @@ export class TrustedDevice {
     signInContext,
     location,
   }: FinalizeOptions) {
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return;
-    }
-
     await trySafe(
       async () => {
         const { ip, userAgent } = signInContext ?? {};

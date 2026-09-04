@@ -100,8 +100,7 @@ export const hasConfiguredSecondFactor = (
 
 export const hasVisibleSecuritySection = (
   accountCenterSettings?: SecurityPageSettings,
-  experienceSettings?: SecurityPageExperienceSettings,
-  includeTrustedDevices = false
+  experienceSettings?: SecurityPageExperienceSettings
 ): boolean => {
   if (!accountCenterSettings?.enabled) {
     return false;
@@ -120,7 +119,7 @@ export const hasVisibleSecuritySection = (
     hasVisibleSocialSection(social, experienceSettings) ||
     hasVisibleMfaSection(mfa, experienceSettings) ||
     hasVisiblePasskeySection(getPasskeyFieldControl(passkey, mfa), experienceSettings) ||
-    (includeTrustedDevices && isVisibleField(trustedDevice))
+    isVisibleField(trustedDevice)
   );
 };
 

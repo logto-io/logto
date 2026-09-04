@@ -7,7 +7,6 @@ import {
 import { pick } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { assertFirstPartyClient } from '#src/utils/assert-first-party-client.js';
@@ -20,11 +19,6 @@ import { accountApiPrefix } from './constants.js';
 export default function accountTrustedDeviceRoutes<T extends UserRouter>(
   ...[router, { libraries, queries }]: RouterInitArgs<T>
 ) {
-  // DEV: MFA trusted device management
-  if (!EnvSet.values.isDevFeaturesEnabled) {
-    return;
-  }
-
   const { trustedDevices } = queries;
   const { trustedDevices: trustedDeviceLibrary } = libraries;
 

@@ -811,6 +811,30 @@ describe('PATCH /sign-in-exp', () => {
 });
 
 describe('sign-in experience routes with dev features disabled', () => {
+  it('should include trusted-device policy in GET response', async () => {
+    const trustedDevice = { enabled: true, durationDays: 90 };
+    const { requester } = await createDevFeaturesDisabledRequester({
+      ...mockSignInExperience,
+      trustedDevice,
+    });
+
+    const response = await requester.get('/sign-in-exp');
+
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual(expect.objectContaining({ trustedDevice }));
+  });
+
+  it('should persist trusted-device policy updates', async () => {
+    const { requester, updateDefaultSignInExperience } = await createDevFeaturesDisabledRequester();
+    const trustedDevice = { enabled: true, durationDays: 365 };
+
+    const response = await requester.patch('/sign-in-exp').send({ trustedDevice });
+
+    expect(response.status).toEqual(200);
+    expect(updateDefaultSignInExperience).toHaveBeenCalledWith({ trustedDevice });
+    expect(response.body).toEqual(expect.objectContaining({ trustedDevice }));
+  });
+
   it('should include adaptive mfa in GET response', async () => {
     const { requester } = await createDevFeaturesDisabledRequester();
 

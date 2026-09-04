@@ -20,7 +20,7 @@ import {
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
 import ExpectWebAuthnExperience from '#src/ui-helpers/expect-webauthn-experience.js';
-import { devFeatureTest, generateUsername, waitFor } from '#src/utils.js';
+import { generateUsername, waitFor } from '#src/utils.js';
 
 describe('MFA - WebAuthn', () => {
   beforeAll(async () => {
@@ -105,7 +105,7 @@ describe('MFA - WebAuthn', () => {
     await deleteUser(user.id);
   });
 
-  devFeatureTest.describe('trusted device opt-in', () => {
+  describe('trusted device opt-in', () => {
     beforeAll(async () => {
       await updateSignInExperience({ trustedDevice: { enabled: true, durationDays: 365 } });
     });

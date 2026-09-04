@@ -5,7 +5,6 @@ import { createInterceptorsPreset, createPool, sql, type DatabasePool } from '@s
 
 import { deleteUser, deleteUserTrustedDevice, getUserTrustedDevices } from '#src/api/admin-user.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
-import { devFeatureTest } from '#src/utils.js';
 
 const insertTrustedDevice = async (
   pool: DatabasePool,
@@ -44,8 +43,8 @@ const insertTrustedDevice = async (
     )
   `);
 
-devFeatureTest.describe('admin user trusted devices', () => {
-  // eslint-disable-next-line @silverhand/fp/no-let -- Initialized only when this dev-feature suite runs.
+describe('admin user trusted devices', () => {
+  // eslint-disable-next-line @silverhand/fp/no-let -- Initialized in this suite's setup.
   let pool: DatabasePool;
 
   beforeAll(async () => {
