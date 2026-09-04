@@ -3,10 +3,6 @@ import { act, renderHook } from '@testing-library/react';
 
 import useTrustedDeviceOptInErrorHandler from './use-trusted-device-opt-in-error-handler';
 
-jest.mock('@/constants/env', () => ({
-  isDevFeaturesEnabled: false,
-}));
-
 const mockedNavigate = jest.fn();
 const mockedSetToast = jest.fn();
 
