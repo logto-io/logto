@@ -72,6 +72,7 @@ describe('Management API', () => {
           scope: allScope,
         },
         tokenRequestTimeout: undefined,
+        getTokenRequestSignal: undefined,
       });
 
       expect(mockCreateClient).toHaveBeenCalledWith({
@@ -114,6 +115,7 @@ describe('Management API', () => {
             scope: allScope,
           },
           tokenRequestTimeout: 20,
+          getTokenRequestSignal: undefined,
         });
 
         expect(mockCreateClient).toHaveBeenCalledWith({
@@ -123,6 +125,28 @@ describe('Management API', () => {
         });
       }
     );
+
+    it('should pass the token request signal factory to client credentials', () => {
+      const getTokenRequestSignal = vi.fn(() => new AbortController().signal);
+
+      createManagementApi('test-tenant', {
+        clientId: 'test-client-id',
+        clientSecret: 'test-client-secret',
+        getTokenRequestSignal,
+      });
+
+      expect(MockClientCredentials).toHaveBeenCalledWith({
+        clientId: 'test-client-id',
+        clientSecret: 'test-client-secret',
+        tokenEndpoint: 'https://test-tenant.logto.app/oidc/token',
+        tokenParams: {
+          resource: 'https://test-tenant.logto.app/api',
+          scope: allScope,
+        },
+        tokenRequestTimeout: undefined,
+        getTokenRequestSignal,
+      });
+    });
 
     it('should configure API client middleware correctly', async () => {
       const options: CreateManagementApiOptions = {
@@ -199,8 +223,8 @@ describe('Management API', () => {
       mockClientCredentials.getAccessToken
         .mockResolvedValueOnce({ value: 'first-token', scope: 'limited-scope' })
         .mockResolvedValueOnce({ value: 'first-token', scope: 'limited-scope' })
-        .mockResolvedValueOnce({ value: 'second-token', scope: 'limited-scope' })
-        .mockResolvedValueOnce({ value: 'third-token', scope: 'read-only' });
+        .mockResolvedValueOnce({ value: 'second-token', scope: 'read-only' })
+        .mockResolvedValueOnce({ value: 'third-token', scope: 'limited-scope' });
 
       createManagementApi('test-tenant', options);
 
@@ -235,6 +259,9 @@ describe('Management API', () => {
 
       expect(consoleSpy).toHaveBeenCalledWith(
         `The scope "limited-scope" is not equal to the expected value "${allScope}". This may cause issues with API access. See https://a.logto.io/m2m-mapi to learn more about configuring machine-to-machine access to the Management API.`
+      );
+      expect(consoleSpy).toHaveBeenCalledWith(
+        `The scope "read-only" is not equal to the expected value "${allScope}". This may cause issues with API access. See https://a.logto.io/m2m-mapi to learn more about configuring machine-to-machine access to the Management API.`
       );
       expect(consoleSpy).toHaveBeenCalledTimes(2);
 

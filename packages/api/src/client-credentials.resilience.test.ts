@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 import { ClientCredentials, type ClientCredentialsOptions } from './client-credentials.js';
+import { getAbortReason } from './timeout.js';
 
 const mockFetch = vi.fn();
 
@@ -82,6 +83,72 @@ describe('ClientCredentials token lifecycle', () => {
 
       expect(mockFetch).toHaveBeenCalledTimes(2);
       expect(tokens.map(({ value }) => value)).toEqual(['first-token', 'second-token']);
+    });
+
+    it('should use one custom signal per shared token fetch and recover after cancellation', async () => {
+      const firstTokenController = new AbortController();
+      const secondTokenController = new AbortController();
+      const getTokenRequestSignal = vi
+        .fn<() => AbortSignal>()
+        .mockReturnValueOnce(firstTokenController.signal)
+        .mockReturnValueOnce(secondTokenController.signal);
+      const abortError = new DOMException('Application shutdown', 'AbortError');
+      mockFetch.mockImplementationOnce(async (_url: string, { signal }: RequestInit) => {
+        if (!signal) {
+          throw new Error('Missing abort signal');
+        }
+
+        return new Promise((_resolve, reject) => {
+          signal.addEventListener('abort', () => {
+            reject(getAbortReason(signal, 'Token request aborted'));
+          });
+        });
+      });
+      const credentials = new ClientCredentials({
+        ...defaultOptions,
+        getTokenRequestSignal,
+      });
+      const cancelled = Promise.allSettled([
+        credentials.getAccessToken(),
+        credentials.getAccessToken(),
+      ]);
+
+      firstTokenController.abort(abortError);
+
+      expect(await cancelled).toMatchObject([
+        { status: 'rejected', reason: { cause: abortError } },
+        { status: 'rejected', reason: { cause: abortError } },
+      ]);
+      expect(getTokenRequestSignal).toHaveBeenCalledTimes(1);
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+      expect(vi.getTimerCount()).toBe(0);
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ access_token: 'new-token', expires_in: 3600 }),
+      });
+
+      await expect(credentials.getAccessToken()).resolves.toHaveProperty('value', 'new-token');
+      await expect(credentials.getAccessToken()).resolves.toHaveProperty('value', 'new-token');
+      expect(getTokenRequestSignal).toHaveBeenCalledTimes(2);
+      expect(mockFetch).toHaveBeenCalledTimes(2);
+    });
+
+    it('should wrap token request signal factory errors', async () => {
+      const cause = new Error('Signal unavailable');
+      const credentials = new ClientCredentials({
+        ...defaultOptions,
+        getTokenRequestSignal: () => {
+          throw cause;
+        },
+      });
+
+      await expect(credentials.getAccessToken()).rejects.toMatchObject({
+        name: 'ClientCredentialsError',
+        cause,
+      });
+      expect(mockFetch).not.toHaveBeenCalled();
+      expect(vi.getTimerCount()).toBe(0);
     });
 
     it.each(['network', 'http', 'json', 'validation'])(

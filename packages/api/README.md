@@ -54,10 +54,15 @@ const { apiClient } = createManagementApi('default', {
 
 #### Timeouts
 
-Token fetches and Management API requests have separate 10-second timeouts. Use
-`tokenRequestTimeout` and `requestTimeout` to configure them in seconds. Set either option to `0` or a
-negative value to disable its timeout. A per-request `signal` can cancel an individual request
-earlier.
+Token fetches and Management API network requests have separate 10-second timeouts. The API request
+timeout starts after token retrieval, so a request that needs a new token can use both timeout
+periods. Use `tokenRequestTimeout` and `requestTimeout` to configure them in seconds. Set either option
+to `0` or a negative value to disable its timeout.
+
+Use `getTokenRequestSignal` to return a custom signal for each token request. The signal is composed
+with `tokenRequestTimeout`, and the first one to abort cancels the token request. A per-request
+`signal` is similarly composed with `requestTimeout` for the Management API request. Timeouts and
+custom cancellation reject the API call instead of returning a response object.
 
 #### Token refresh
 
