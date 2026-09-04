@@ -4,7 +4,9 @@ import {
   AuthenticationFactor,
   AuthenticationFactorClass,
   AuthenticationMethodReference,
+  AuthenticationProofRole,
   LogtoAcr,
+  authenticationProofGuard,
   buildAuthenticationMethodReferences,
   getAuthenticationFactor,
   getAuthenticationFactorClass,
@@ -170,5 +172,27 @@ describe('buildAuthenticationMethodReferences', () => {
 
   it('returns nothing for no references', () => {
     expect(buildAuthenticationMethodReferences([])).toEqual([]);
+  });
+});
+
+describe('authenticationProofGuard', () => {
+  it('accepts a proof with and without a class', () => {
+    expect(
+      authenticationProofGuard.safeParse({
+        id: 'totp',
+        factor: AuthenticationFactor.Totp,
+        class: AuthenticationFactorClass.Mfa,
+        amr: ['otp'],
+        role: AuthenticationProofRole.Mfa,
+      }).success
+    ).toBe(true);
+    expect(
+      authenticationProofGuard.safeParse({
+        id: 'social',
+        factor: AuthenticationFactor.Federated,
+        amr: ['fed'],
+        role: AuthenticationProofRole.Identify,
+      }).success
+    ).toBe(true);
   });
 });

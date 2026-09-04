@@ -148,6 +148,7 @@ describe('MFA verification routes sentinel guard', () => {
       experienceInteraction: {
         identifiedUserId: mockUser.id,
         setVerificationRecord: jest.fn(),
+        consumeForMfa: jest.fn(),
         save: jest.fn().mockImplementation(resolveVoid),
       },
       verificationAuditLog: {
@@ -194,6 +195,7 @@ describe('MFA verification routes sentinel guard', () => {
       experienceInteraction: {
         identifiedUserId: mockUser.id,
         setVerificationRecord: jest.fn(),
+        consumeForMfa: jest.fn(),
         save: jest.fn().mockImplementation(resolveVoid),
       },
       verificationAuditLog: {
@@ -244,6 +246,7 @@ describe('MFA verification routes sentinel guard', () => {
       experienceInteraction: {
         identifiedUserId: mockUser.id,
         getVerificationRecordByTypeAndId: jest.fn(() => webAuthnVerificationRecord),
+        consumeForMfa: jest.fn(),
         save: jest.fn().mockImplementation(resolveVoid),
       },
       verificationAuditLog: {
@@ -265,6 +268,10 @@ describe('MFA verification routes sentinel guard', () => {
     await handler(ctx, jest.fn().mockImplementation(resolveVoid));
 
     expect(ctx.experienceInteraction.getVerificationRecordByTypeAndId).toHaveBeenCalledWith(
+      VerificationType.WebAuthn,
+      webAuthnVerificationRecord.id
+    );
+    expect(ctx.experienceInteraction.consumeForMfa).toHaveBeenCalledWith(
       VerificationType.WebAuthn,
       webAuthnVerificationRecord.id
     );

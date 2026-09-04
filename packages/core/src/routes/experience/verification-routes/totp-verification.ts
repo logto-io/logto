@@ -154,6 +154,7 @@ export default function totpVerificationRoutes<T extends ExperienceInteractionRo
       );
 
       ctx.experienceInteraction.setVerificationRecord(totpVerificationRecord);
+      ctx.experienceInteraction.consumeForMfa(VerificationType.TOTP, totpVerificationRecord.id);
 
       await ctx.experienceInteraction.save();
 

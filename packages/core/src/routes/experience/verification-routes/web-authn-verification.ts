@@ -263,6 +263,8 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
         webAuthnVerification.verifyWebAuthnAuthentication(ctx, payload)
       );
 
+      experienceInteraction.consumeForMfa(VerificationType.WebAuthn, webAuthnVerification.id);
+
       await experienceInteraction.save();
 
       ctx.body = {

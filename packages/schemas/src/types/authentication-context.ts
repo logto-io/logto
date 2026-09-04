@@ -1,11 +1,15 @@
 /**
  * @file The authoritative vocabulary for the authentication context Logto records on a sign-in or
- * step-up: the supported Authentication Context Class Reference (ACR) values and the
- * Authentication Methods References (AMR) each verification contributes.
+ * step-up: the supported Authentication Context Class Reference (ACR) values, their satisfaction
+ * relation, and the Authentication Methods References (AMR) each verification contributes.
  *
  * @see {@link https://openid.net/specs/openid-connect-core-1_0.html#IDToken | OpenID Connect Core `acr` / `amr`}
  * @see {@link https://www.rfc-editor.org/rfc/rfc8176.html | RFC 8176 Authentication Method Reference Values}
  */
+import { z } from 'zod';
+
+import { type ToZodObject } from '../utils/zod.js';
+
 import { VerificationType } from './verification-records/verification-type.js';
 
 /** The Logto-defined ACR values. Only these can be requested through `acr_values`. */
@@ -201,3 +205,42 @@ export const buildAuthenticationMethodReferences = (
     ...(hasMfa ? [AuthenticationMethodReference.Mfa] : []),
   ];
 };
+
+/**
+ * Why a proof was recorded: the touchpoint that consumed the credential. Aggregation into `acr` /
+ * `amr` ignores the role; it exists for the MFA gate and for step-up freshness, and never reaches
+ * a token.
+ */
+export enum AuthenticationProofRole {
+  /** `createUser()` created the account from the record. */
+  Create = 'create',
+  /** `identifyUser()` identified the user with the record. */
+  Identify = 'identify',
+  /** The credential or factor was written to the account by this interaction. */
+  Bind = 'bind',
+  /** An MFA challenge was answered with the record. */
+  Mfa = 'mfa',
+}
+
+/**
+ * A proof that the identified user authenticated in the interaction, recorded at the single
+ * touchpoint that consumed the credential. What counts is decided where the interaction relies on
+ * the credential, never by inspecting verification records afterwards.
+ */
+export type AuthenticationProof = {
+  /** The verification record id, or `password` for a password established through the profile. */
+  id: string;
+  factor: AuthenticationFactor;
+  /** Absent for a federated proof, which contributes `fed` to AMR and nothing to the ACR. */
+  class?: AuthenticationFactorClass;
+  amr: AuthenticationMethodReference[];
+  role: AuthenticationProofRole;
+};
+
+export const authenticationProofGuard = z.object({
+  id: z.string(),
+  factor: z.nativeEnum(AuthenticationFactor),
+  class: z.nativeEnum(AuthenticationFactorClass).optional(),
+  amr: z.nativeEnum(AuthenticationMethodReference).array(),
+  role: z.nativeEnum(AuthenticationProofRole),
+}) satisfies ToZodObject<AuthenticationProof>;

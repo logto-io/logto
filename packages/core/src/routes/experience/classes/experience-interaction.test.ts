@@ -3,6 +3,11 @@ import { TemplateType } from '@logto/connector-kit';
 import {
   adminConsoleApplicationId,
   adminTenantId,
+  AuthenticationFactor,
+  AuthenticationFactorClass,
+  AuthenticationMethodReference,
+  AuthenticationProofRole,
+  type AuthenticationProof,
   type CreateUser,
   InteractionEvent,
   LogtoActionKey,
@@ -11,6 +16,7 @@ import {
   SignInIdentifier,
   SignInMode,
   type User,
+  UsersPasswordEncryptionMethod,
   VerificationType,
 } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
@@ -38,6 +44,14 @@ mockEsm('#src/utils/tenant.js', () => ({
 }));
 
 const mockEmail = 'foo@bar.com';
+/** The proof a password records in the given role. */
+const passwordProof = (role: AuthenticationProofRole): AuthenticationProof => ({
+  id: 'password',
+  factor: AuthenticationFactor.Password,
+  class: AuthenticationFactorClass.FirstFactor,
+  amr: [AuthenticationMethodReference.Password],
+  role,
+});
 const userQueries = {
   hasActiveUsers: jest.fn().mockResolvedValue(false),
   hasUserWithEmail: jest.fn().mockResolvedValue(false),
@@ -132,6 +146,8 @@ const createSignInInteraction = ({
   const signInUserQueries = {
     ...userQueries,
     findUserById: jest.fn().mockResolvedValue(user),
+    findUserByUsername: jest.fn().mockResolvedValue(user),
+    findUserByEmail: jest.fn().mockResolvedValue(user),
     updateUserById: jest.fn().mockResolvedValue(user),
   };
   const runActionHandler = jest.fn(
@@ -276,6 +292,17 @@ describe('ExperienceInteraction class', () => {
       experienceInteraction.setVerificationRecord(emailVerificationRecord);
       await experienceInteraction.createUser(emailVerificationRecord.id);
 
+      // Creating the account from the record is the `create` proof of the new account.
+      expect(experienceInteraction.toJson().authenticationProofs).toMatchObject([
+        {
+          id: emailVerificationRecord.id,
+          factor: AuthenticationFactor.Email,
+          class: AuthenticationFactorClass.FirstFactor,
+          amr: ['otp'],
+          role: AuthenticationProofRole.Create,
+        },
+      ]);
+
       expect(userLibraries.insertUser).toHaveBeenCalledWith(
         {
           id: 'uid',
@@ -328,6 +355,209 @@ describe('ExperienceInteraction class', () => {
       });
       expect(runActionHandler.mock.invocationCallOrder[0]).toBeLessThan(
         (provider.interactionResult as jest.Mock).mock.invocationCallOrder[0]!
+      );
+    });
+
+    it('seeds the aggregated authentication context into the login result when dev features are enabled', async () => {
+      setDevFeaturesEnabled(true);
+      const { experienceInteraction, provider } = createSignInInteraction({
+        interactionResult: {
+          authenticationProofs: [passwordProof(AuthenticationProofRole.Identify)],
+          verificationRecords: [
+            {
+              id: 'password',
+              type: VerificationType.Password,
+              identifier: { type: SignInIdentifier.Username, value: mockUser.username },
+              verified: true,
+            },
+            // A verified record that no touchpoint consumed is not a proof and must not reach
+            // the login result.
+            {
+              id: 'new-password-identity',
+              type: VerificationType.NewPasswordIdentity,
+              identifier: { type: SignInIdentifier.Username, value: 'unused' },
+              passwordEncrypted: 'encrypted',
+              passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+            },
+          ],
+        },
+      });
+
+      await experienceInteraction.submit();
+
+      expect(provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({
+          login: {
+            accountId: mockUser.id,
+            acr: 'urn:logto:acr:1fa',
+            amr: ['pwd'],
+          },
+        })
+      );
+    });
+
+    it('seeds the context a registration established into the login result when dev features are enabled', async () => {
+      setDevFeaturesEnabled(true);
+      // An email + password registration: `createUser()` consumed the email code and the profile
+      // established the password.
+      const { experienceInteraction, provider } = createSignInInteraction({
+        interactionEvent: InteractionEvent.Register,
+        interactionResult: {
+          authenticationProofs: [
+            {
+              id: 'email',
+              factor: AuthenticationFactor.Email,
+              class: AuthenticationFactorClass.FirstFactor,
+              amr: ['otp'],
+              role: AuthenticationProofRole.Create,
+            },
+            passwordProof(AuthenticationProofRole.Bind),
+          ],
+        },
+      });
+
+      await experienceInteraction.submit();
+
+      expect(provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({
+          login: {
+            accountId: mockUser.id,
+            acr: 'urn:logto:acr:1fa',
+            amr: ['otp', 'pwd'],
+          },
+        })
+      );
+    });
+
+    it('records an identify proof for every verification record that identified the user', async () => {
+      const { experienceInteraction } = createSignInInteraction({
+        interactionResult: {
+          userId: undefined,
+          verificationRecords: [
+            {
+              id: 'password',
+              type: VerificationType.Password,
+              identifier: { type: SignInIdentifier.Username, value: mockUser.username },
+              verified: true,
+            },
+            {
+              id: 'email',
+              type: VerificationType.EmailVerificationCode,
+              identifier: { type: SignInIdentifier.Email, value: mockEmail },
+              templateType: TemplateType.SignIn,
+              verified: true,
+            },
+          ],
+        },
+      });
+
+      await experienceInteraction.identifyUser('password');
+      expect(experienceInteraction.toJson()).toMatchObject({
+        userId: mockUser.id,
+        authenticationProofs: [passwordProof(AuthenticationProofRole.Identify)],
+      });
+
+      // A second record that identifies the same user is recorded as well.
+      await experienceInteraction.identifyUser('email');
+      expect(experienceInteraction.toJson().authenticationProofs).toMatchObject([
+        { id: 'password', role: AuthenticationProofRole.Identify },
+        { id: 'email', role: AuthenticationProofRole.Identify, factor: AuthenticationFactor.Email },
+      ]);
+    });
+
+    it('records the proof for a password established through the profile once', () => {
+      const { experienceInteraction } = createSignInInteraction();
+      const digest = {
+        passwordEncrypted: 'encrypted',
+        passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+      };
+
+      experienceInteraction.profile.unsafeSet(digest);
+      experienceInteraction.profile.unsafeSet(digest);
+
+      expect(experienceInteraction.toJson().authenticationProofs).toMatchObject([
+        {
+          id: 'password',
+          factor: AuthenticationFactor.Password,
+          class: AuthenticationFactorClass.FirstFactor,
+          amr: ['pwd'],
+          role: AuthenticationProofRole.Bind,
+        },
+      ]);
+    });
+
+    it('clears the proofs when the interaction event changes, like the profile', async () => {
+      const { experienceInteraction } = createSignInInteraction({
+        interactionResult: {
+          authenticationProofs: [passwordProof(AuthenticationProofRole.Identify)],
+        },
+      });
+
+      await experienceInteraction.setInteractionEvent(InteractionEvent.SignIn);
+      expect(experienceInteraction.toJson().authenticationProofs).toHaveLength(1);
+
+      await experienceInteraction.setInteractionEvent(InteractionEvent.Register);
+      expect(experienceInteraction.toJson().authenticationProofs).toEqual([]);
+    });
+
+    it('does not let the proofs outlive the interaction', async () => {
+      const { experienceInteraction, provider } = createSignInInteraction({
+        interactionEvent: InteractionEvent.ForgotPassword,
+        interactionResult: {
+          profile: {
+            passwordEncrypted: 'encrypted',
+            passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+          },
+          authenticationProofs: [passwordProof(AuthenticationProofRole.Bind)],
+        },
+      });
+
+      await experienceInteraction.submit();
+
+      expect(provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        {}
+      );
+      expect(experienceInteraction.toJson().authenticationProofs).toEqual([]);
+    });
+
+    it('keeps the proofs out of the sanitized interaction data', () => {
+      const { experienceInteraction } = createSignInInteraction({
+        interactionResult: {
+          authenticationProofs: [passwordProof(AuthenticationProofRole.Identify)],
+        },
+      });
+
+      expect(experienceInteraction.toJson().authenticationProofs).toHaveLength(1);
+      expect(experienceInteraction.toSanitizedJson()).not.toHaveProperty('authenticationProofs');
+    });
+
+    it('finishes with the account id only when dev features are disabled', async () => {
+      setDevFeaturesEnabled(false);
+      const { experienceInteraction, provider } = createSignInInteraction({
+        interactionResult: {
+          verificationRecords: [
+            {
+              id: 'password',
+              type: VerificationType.Password,
+              identifier: { type: SignInIdentifier.Username, value: mockUser.username },
+              verified: true,
+            },
+          ],
+        },
+      });
+
+      await experienceInteraction.submit();
+
+      expect(provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({ login: { accountId: mockUser.id } })
       );
     });
 

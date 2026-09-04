@@ -122,6 +122,10 @@ export default function backupCodeVerificationRoutes<T extends ExperienceInterac
       );
 
       ctx.experienceInteraction.setVerificationRecord(backupCodeVerificationRecord);
+      ctx.experienceInteraction.consumeForMfa(
+        VerificationType.BackupCode,
+        backupCodeVerificationRecord.id
+      );
 
       await ctx.experienceInteraction.save();
 

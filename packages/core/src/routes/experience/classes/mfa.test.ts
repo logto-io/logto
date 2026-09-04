@@ -45,10 +45,13 @@ const createMfa = ({
   const interactionContext: InteractionContext = {
     getInteractionEvent: () => interactionEvent,
     getIdentifiedUser,
-    getVerificationRecordById: () => {
+    consumeForBind: () => {
       throw new Error('should not be called');
     },
-    getVerificationRecordByTypeAndId: () => {
+    consumeForBindByType: () => {
+      throw new Error('should not be called');
+    },
+    recordEstablishedPassword: () => {
       throw new Error('should not be called');
     },
     getCurrentProfile: () => currentProfile,
