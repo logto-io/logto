@@ -33,8 +33,9 @@ const { apiClient } = createManagementApi('your-tenant-id', {
   clientSecret: 'your-client-secret',
 });
 
-// Make API calls
+// Make API calls with lowercase or uppercase methods
 const response = await apiClient.get('/api/users');
+// const response = await apiClient.GET('/api/users');
 console.log(response.data);
 ```
 
@@ -48,26 +49,21 @@ const { apiClient } = createManagementApi('default', {
   clientSecret: 'your-client-secret',
   baseUrl: 'https://your-logto-instance.com',
   apiIndicator: 'https://your-logto-instance.com/api',
-  requestTimeout: 10,
 });
 ```
 
-`createManagementApi` caches access tokens and shares one token fetch across concurrent requests.
-Token requests reject redirects and time out after 10 seconds by default. Use `tokenRequestTimeout`
-to configure the timeout in seconds. Set it to `0`, a negative value, or `Infinity` to disable the
-timeout. `NaN` falls back to the 10-second default. If an API request returns `401`, the client
-invalidates the matching cached token so the next request fetches a new one. It waits for that
-replacement token to receive a successful API response before allowing another invalidation,
-avoiding repeated token fetches for permanent `401` responses. The failed API request is returned to
-the caller without an automatic retry.
+#### Timeouts
 
-API clients expose lowercase HTTP methods such as `.get()`, `.post()`, and `.delete()`. The existing
-uppercase methods remain available for compatibility.
-
-Management API requests time out after 10 seconds by default. Use `requestTimeout` to configure a
-client-wide timeout in seconds. Set it to `0`, a negative value, or `Infinity` to disable it. `NaN`
-falls back to the 10-second default. A per-request `signal` can still cancel an individual request
+Token fetches and Management API requests have separate 10-second timeouts. Use
+`tokenRequestTimeout` and `requestTimeout` to configure them in seconds. Set either option to `0` or a
+negative value to disable its timeout. A per-request `signal` can cancel an individual request
 earlier.
+
+#### Token refresh
+
+After a Management API request returns `401`, the next request fetches a new token. If the replacement
+token also receives a `401`, it remains cached until a request succeeds or the token expires. The SDK
+does not automatically retry the failed API request.
 
 #### Custom authentication
 
