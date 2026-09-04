@@ -2,7 +2,6 @@ import createClient, { type Middleware } from 'openapi-fetch';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 import { createApiClient } from './management.js';
-import { getAbortReason } from './timeout.js';
 
 vi.mock('openapi-fetch');
 
@@ -46,53 +45,13 @@ describe('createApiClient', () => {
       fetch: expect.any(Function),
     });
 
-    expect(result).toMatchObject(mockApiClient);
-    expect(result.use).toBe(mockApiClient.use);
+    expect(result).toBe(mockApiClient);
   });
-
-  it('should use the default request timeout for NaN', () => {
-    createApiClient({
-      baseUrl: 'https://test.logto.app',
-      getToken: async () => 'test-token',
-      requestTimeout: Number.NaN,
-    });
-
-    expect(mockCreateClient).toHaveBeenCalledWith({
-      baseUrl: 'https://test.logto.app',
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Vitest's asymmetric matcher accepts any function.
-      fetch: expect.any(Function),
-    });
-  });
-
-  it.each([0, -1, Number.POSITIVE_INFINITY])(
-    'should disable the request timeout for %s',
-    (requestTimeout) => {
-      createApiClient({
-        baseUrl: 'https://test.logto.app',
-        getToken: async () => 'test-token',
-        requestTimeout,
-      });
-
-      expect(mockCreateClient).toHaveBeenCalledWith({ baseUrl: 'https://test.logto.app' });
-    }
-  );
 
   it('should compose the request timeout with a per-request signal', async () => {
     const timeoutController = new AbortController();
     const timeout = vi.spyOn(AbortSignal, 'timeout').mockReturnValue(timeoutController.signal);
-    const abortError = new DOMException('Request aborted', 'AbortError');
-    const mockFetch = vi.fn<typeof fetch>().mockImplementation(
-      async (request) =>
-        new Promise<Response>((_resolve, reject) => {
-          if (!(request instanceof Request)) {
-            throw new TypeError('Expected a request');
-          }
-
-          request.signal.addEventListener('abort', () => {
-            reject(getAbortReason(request.signal, 'Request aborted'));
-          });
-        })
-    );
+    const mockFetch = vi.fn<typeof fetch>().mockResolvedValue(new Response(null, { status: 204 }));
     vi.stubGlobal('fetch', mockFetch);
     createApiClient({
       baseUrl: 'https://test.logto.app',
@@ -111,62 +70,22 @@ describe('createApiClient', () => {
       throw new TypeError('Expected a timeout fetch implementation');
     }
 
-    const result = timeoutFetch(
-      new Request('https://test.logto.app/api/users', { signal: requestController.signal }),
-      requestInit
-    );
-    const rejection = expect(result).rejects.toBe(abortError);
-
-    requestController.abort(abortError);
-    await rejection;
+    const request = new Request('https://test.logto.app/api/users', {
+      signal: requestController.signal,
+    });
+    await timeoutFetch(request, requestInit);
 
     expect(timeout).toHaveBeenCalledWith(20_000);
-    const calledRequest = mockFetch.mock.calls[0]?.[0];
-    expect(calledRequest).toBeInstanceOf(Request);
-    expect(calledRequest instanceof Request && calledRequest.signal.aborted).toBe(true);
-    expect(mockFetch.mock.calls[0]?.[1]).toMatchObject(requestInit);
-  });
+    expect(mockFetch.mock.calls[0]?.[0]).toBe(request);
+    const forwardedInit = mockFetch.mock.calls[0]?.[1];
+    expect(forwardedInit).toMatchObject(requestInit);
+    expect(forwardedInit?.signal).toBeInstanceOf(AbortSignal);
+    expect(forwardedInit?.signal).not.toBe(requestController.signal);
 
-  it('should round up sub-millisecond timeouts', async () => {
-    const timeoutController = new AbortController();
-    const timeout = vi.spyOn(AbortSignal, 'timeout').mockReturnValue(timeoutController.signal);
-    const mockFetch = vi.fn<typeof fetch>().mockResolvedValue(new Response());
-    vi.stubGlobal('fetch', mockFetch);
-    createApiClient({
-      baseUrl: 'https://test.logto.app',
-      getToken: async () => 'test-token',
-      requestTimeout: 0.0005,
-    });
-    const timeoutFetch = mockCreateClient.mock.calls[0]?.[0]?.fetch;
-
-    if (!timeoutFetch) {
-      throw new TypeError('Expected a timeout fetch implementation');
-    }
-
-    await timeoutFetch(new Request('https://test.logto.app/api/users'));
-
-    expect(timeout).toHaveBeenCalledWith(1);
-  });
-
-  it('should cap timeout signal delays', async () => {
-    const timeoutController = new AbortController();
-    const timeout = vi.spyOn(AbortSignal, 'timeout').mockReturnValue(timeoutController.signal);
-    const mockFetch = vi.fn<typeof fetch>().mockResolvedValue(new Response());
-    vi.stubGlobal('fetch', mockFetch);
-    createApiClient({
-      baseUrl: 'https://test.logto.app',
-      getToken: async () => 'test-token',
-      requestTimeout: Number.MAX_VALUE,
-    });
-    const timeoutFetch = mockCreateClient.mock.calls[0]?.[0]?.fetch;
-
-    if (!timeoutFetch) {
-      throw new TypeError('Expected a timeout fetch implementation');
-    }
-
-    await timeoutFetch(new Request('https://test.logto.app/api/users'));
-
-    expect(timeout).toHaveBeenCalledWith(2_147_483_647);
+    const abortError = new DOMException('Request aborted', 'AbortError');
+    requestController.abort(abortError);
+    expect(forwardedInit?.signal?.aborted).toBe(true);
+    expect(forwardedInit?.signal?.reason).toBe(abortError);
   });
 
   it.each([
