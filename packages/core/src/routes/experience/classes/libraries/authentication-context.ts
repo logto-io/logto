@@ -8,7 +8,7 @@ import {
 import { conditional } from '@silverhand/essentials';
 
 /** The authentication context an interaction achieved, in the shape of the provider's `login` result. */
-export type AuthenticationContext = {
+type AuthenticationContext = {
   acr?: LogtoAcr;
   amr?: AuthenticationMethodReference[];
   /** Epoch seconds of the authentication event; becomes `auth_time`. */

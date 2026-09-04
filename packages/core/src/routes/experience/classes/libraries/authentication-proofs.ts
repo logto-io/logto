@@ -16,6 +16,8 @@ import { getEpochTime } from '../verifications/verification-record.js';
 /** The id of the proof for a password established through the profile, which has no record. */
 const establishedPasswordProofId = 'password';
 
+const keyOf = ({ id, role }: Pick<AuthenticationProof, 'id' | 'role'>) => `${id}:${role}`;
+
 /**
  * The authentication proofs of one interaction: what the user proved about the account, recorded
  * at the single touchpoint that consumed each credential (`createUser()`, `identifyUser()`, a
@@ -34,12 +36,8 @@ export class AuthenticationProofs {
 
   constructor(data: AuthenticationProof[] = []) {
     for (const proof of data) {
-      this.#proofs.set(AuthenticationProofs.key(proof), proof);
+      this.#proofs.set(keyOf(proof), proof);
     }
-  }
-
-  private static key({ id, role }: Pick<AuthenticationProof, 'id' | 'role'>) {
-    return `${id}:${role}`;
   }
 
   get proofs(): readonly AuthenticationProof[] {
@@ -95,6 +93,6 @@ export class AuthenticationProofs {
   }
 
   private set(proof: AuthenticationProof) {
-    this.#proofs.set(AuthenticationProofs.key(proof), proof);
+    this.#proofs.set(keyOf(proof), proof);
   }
 }

@@ -292,22 +292,6 @@ export class Profile {
   }
 
   /**
-   * The single write path into `#data`. Setting a password is the establishment of that credential
-   * and has no verification record, so the authentication proof is recorded on the transition of
-   * `passwordEncrypted` from unset to set; every path in funnels through here, including any added
-   * later.
-   */
-  private write(data: InteractionProfile) {
-    const isPasswordEstablished = !this.#data.passwordEncrypted && Boolean(data.passwordEncrypted);
-
-    this.#data = data;
-
-    if (isPasswordEstablished) {
-      this.interactionContext.recordEstablishedPassword();
-    }
-  }
-
-  /**
    * Clean up the user related profile data from interaction storage after successfully creating the user,
    * keeping only the `submitted` flag to indicate whether the user has submitted the profile form.
    */
@@ -331,5 +315,21 @@ export class Profile {
     }
 
     return getIdentifiedUser();
+  }
+
+  /**
+   * The single write path into `#data`. Setting a password is the establishment of that credential
+   * and has no verification record, so the authentication proof is recorded on the transition of
+   * `passwordEncrypted` from unset to set; every path in funnels through here, including any added
+   * later.
+   */
+  private write(data: InteractionProfile) {
+    const isPasswordEstablished = !this.#data.passwordEncrypted && Boolean(data.passwordEncrypted);
+
+    this.#data = data;
+
+    if (isPasswordEstablished) {
+      this.interactionContext.recordEstablishedPassword();
+    }
   }
 }

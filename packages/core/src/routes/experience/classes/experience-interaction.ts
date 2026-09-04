@@ -424,22 +424,6 @@ export default class ExperienceInteraction {
     return record;
   }
 
-  /** Fetch a verification record for creating the account from it, recording the `create` proof. */
-  private consumeForCreate(verificationId: string) {
-    const record = this.getVerificationRecordById(verificationId);
-    this.authenticationProofs.stage(record, AuthenticationProofRole.Create);
-
-    return record;
-  }
-
-  /** Fetch a verification record for identifying the user with it, recording the `identify` proof. */
-  private consumeForIdentify(verificationId: string) {
-    const record = this.getVerificationRecordById(verificationId);
-    this.authenticationProofs.stage(record, AuthenticationProofRole.Identify);
-
-    return record;
-  }
-
   /**
    * Validate the interaction verification records against the sign-in experience and user MFA settings.
    * The interaction is verified if at least one user enabled MFA verification record is present and verified.
@@ -970,6 +954,22 @@ export default class ExperienceInteraction {
     );
 
     return verificationRecord;
+  }
+
+  /** Fetch a verification record for creating the account from it, recording the `create` proof. */
+  private consumeForCreate(verificationId: string) {
+    const record = this.getVerificationRecordById(verificationId);
+    this.authenticationProofs.stage(record, AuthenticationProofRole.Create);
+
+    return record;
+  }
+
+  /** Fetch a verification record for identifying the user with it, recording the `identify` proof. */
+  private consumeForIdentify(verificationId: string) {
+    const record = this.getVerificationRecordById(verificationId);
+    this.authenticationProofs.stage(record, AuthenticationProofRole.Identify);
+
+    return record;
   }
 
   private get hasVerifiedSsoIdentity() {

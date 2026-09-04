@@ -16,23 +16,24 @@ const { Create, Identify, Bind } = AuthenticationProofRole;
 const firstFactorAcr = 'urn:logto:acr:1fa';
 const mfaAcr = 'urn:logto:acr:mfa';
 
-let sequence = 0;
-
-/** A proof at a strictly increasing time, so `ts` is always the first proof listed. */
+/** A proof; `at` is assigned by {@link aggregate} from the position in the list. */
 const proof = (
   factor: AuthenticationFactor,
   factorClass: AuthenticationFactorClass | undefined,
   amr: AuthenticationMethodReference[],
   role: AuthenticationProofRole = Identify
 ): AuthenticationProof => ({
-  id: `${factor}-${role}-${sequence}`,
+  id: `${factor}-${role}`,
   factor,
   ...(factorClass && { class: factorClass }),
   amr,
   role,
-  // eslint-disable-next-line @silverhand/fp/no-mutation
-  at: 100 + sequence++,
+  at: 0,
 });
+
+/** Aggregate proofs recorded at strictly increasing times, so `ts` is always the first one. */
+const aggregate = (proofs: AuthenticationProof[]) =>
+  aggregateAuthenticationContext(proofs.map((proof, index) => ({ ...proof, at: 100 + index })));
 
 const password = (role?: AuthenticationProofRole) =>
   proof(AuthenticationFactor.Password, FirstFactor, [Password], role);
@@ -90,13 +91,7 @@ describe('aggregateAuthenticationContext', () => {
         ['fed', 'pop', 'user', 'mfa'],
       ],
     ])('%s', (_, build, acr, amr) => {
-      const proofs = build();
-
-      expect(aggregateAuthenticationContext(proofs)).toEqual({
-        ...(acr && { acr }),
-        amr,
-        ts: proofs[0]!.at,
-      });
+      expect(aggregate(build())).toEqual({ ...(acr && { acr }), amr, ts: 100 });
     });
   });
 
@@ -173,13 +168,7 @@ describe('aggregateAuthenticationContext', () => {
         ['otp', 'pwd', 'mfa'],
       ],
     ])('%s', (_, build, acr, amr) => {
-      const proofs = build();
-
-      expect(aggregateAuthenticationContext(proofs)).toEqual({
-        ...(acr && { acr }),
-        amr,
-        ts: proofs[0]!.at,
-      });
+      expect(aggregate(build())).toEqual({ ...(acr && { acr }), amr, ts: 100 });
     });
   });
 
@@ -188,9 +177,9 @@ describe('aggregateAuthenticationContext', () => {
   });
 
   it('takes the earliest proof as the authentication time regardless of order', () => {
-    const late = totp(AuthenticationProofRole.Mfa);
-    const early = password();
+    const late = { ...totp(AuthenticationProofRole.Mfa), at: 200 };
+    const early = { ...password(), at: 100 };
 
-    expect(aggregateAuthenticationContext([late, early]).ts).toBe(early.at);
+    expect(aggregateAuthenticationContext([late, early]).ts).toBe(100);
   });
 });
