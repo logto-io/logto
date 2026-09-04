@@ -199,7 +199,7 @@ devFeatureTest.describe('authentication context claims on registration', () => {
         primaryEmail: true,
         password: true,
       });
-      const identifier = { type: SignInIdentifier.Email, value: primaryEmail };
+      const identifier = { type: SignInIdentifier.Email, value: primaryEmail } as const;
       const client = await registerClient();
       const { verificationId, code } = await successfullySendVerificationCode(client, {
         identifier,
