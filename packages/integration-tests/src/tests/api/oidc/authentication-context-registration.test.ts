@@ -176,8 +176,8 @@ devFeatureTest.describe('authentication context claims on registration', () => {
 
   describe('verification code and password', () => {
     beforeAll(async () => {
-      await clearConnectorsByTypes([ConnectorType.Email]);
-      await setEmailConnector();
+      await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
+      await Promise.all([setEmailConnector(), setSmsConnector()]);
       await enableAllVerificationCodeSignInMethods({
         identifiers: [SignInIdentifier.Email],
         password: true,
@@ -187,7 +187,7 @@ devFeatureTest.describe('authentication context claims on registration', () => {
     });
 
     afterAll(async () => {
-      await clearConnectorsByTypes([ConnectorType.Email]);
+      await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
       await resetPasswordPolicy();
       await enableAllPasswordSignInMethods();
     });
