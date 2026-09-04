@@ -45,7 +45,7 @@ export class AuthenticationProofs {
   }
 
   get data(): AuthenticationProof[] {
-    return this.proofs.map((proof) => ({ ...proof }));
+    return this.proofs.map((proof) => ({ ...proof, amr: [...proof.amr] }));
   }
 
   /**

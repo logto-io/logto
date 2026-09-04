@@ -320,7 +320,7 @@ export class Profile {
   /**
    * The single write path into `#data`. Setting a password is the establishment of that credential
    * and has no verification record, so the authentication proof is recorded on the transition of
-   * `passwordEncrypted` from unset to set; every path in funnels through here, including any added
+   * `passwordEncrypted` from unset to set; every path funnels through here, including any added
    * later.
    */
   private write(data: InteractionProfile) {
