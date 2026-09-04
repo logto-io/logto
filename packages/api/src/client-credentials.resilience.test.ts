@@ -54,6 +54,26 @@ describe('ClientCredentials token lifecycle', () => {
       expect(vi.getTimerCount()).toBe(0);
     });
 
+    it('should keep token fetches separate for different credentials instances', async () => {
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({ access_token: 'first-token', expires_in: 3600 }),
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({ access_token: 'second-token', expires_in: 3600 }),
+        });
+
+      const tokens = await Promise.all([
+        new ClientCredentials(defaultOptions).getAccessToken(),
+        new ClientCredentials({ ...defaultOptions, clientId: 'another-client' }).getAccessToken(),
+      ]);
+
+      expect(mockFetch).toHaveBeenCalledTimes(2);
+      expect(tokens.map(({ value }) => value)).toEqual(['first-token', 'second-token']);
+    });
+
     it('should use one custom signal per shared token fetch and recover after cancellation', async () => {
       const firstTokenController = new AbortController();
       const secondTokenController = new AbortController();

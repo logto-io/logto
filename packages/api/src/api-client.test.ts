@@ -48,6 +48,19 @@ describe('createApiClient', () => {
     expect(result).toBe(mockApiClient);
   });
 
+  it.each([0, -1, Number.POSITIVE_INFINITY])(
+    'should disable the request timeout for %s',
+    (requestTimeout) => {
+      createApiClient({
+        baseUrl: 'https://test.logto.app',
+        getToken: async () => 'test-token',
+        requestTimeout,
+      });
+
+      expect(mockCreateClient).toHaveBeenCalledWith({ baseUrl: 'https://test.logto.app' });
+    }
+  );
+
   it('should compose the request timeout with a per-request signal', async () => {
     const timeoutController = new AbortController();
     const timeout = vi.spyOn(AbortSignal, 'timeout').mockReturnValue(timeoutController.signal);
