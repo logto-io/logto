@@ -37,3 +37,4 @@ export * from './secrets.js';
 export * from './user-logto-config.js';
 export * from './user-sessions.js';
 export * from './trusted-device.js';
+export * from './authentication-context.js';
