@@ -34,7 +34,7 @@ const { apiClient } = createManagementApi('your-tenant-id', {
 });
 
 // Make API calls
-const response = await apiClient.GET('/api/users');
+const response = await apiClient.get('/api/users');
 console.log(response.data);
 ```
 
@@ -48,8 +48,26 @@ const { apiClient } = createManagementApi('default', {
   clientSecret: 'your-client-secret',
   baseUrl: 'https://your-logto-instance.com',
   apiIndicator: 'https://your-logto-instance.com/api',
+  requestTimeout: 10,
 });
 ```
+
+`createManagementApi` caches access tokens and shares one token fetch across concurrent requests.
+Token requests reject redirects and time out after 10 seconds by default. Use `tokenRequestTimeout`
+to configure the timeout in seconds. Set it to `0`, a negative value, or `Infinity` to disable the
+timeout. `NaN` falls back to the 10-second default. If an API request returns `401`, the client
+invalidates the matching cached token so the next request fetches a new one. It waits for that
+replacement token to receive a successful API response before allowing another invalidation,
+avoiding repeated token fetches for permanent `401` responses. The failed API request is returned to
+the caller without an automatic retry.
+
+API clients expose lowercase HTTP methods such as `.get()`, `.post()`, and `.delete()`. The existing
+uppercase methods remain available for compatibility.
+
+Management API requests time out after 10 seconds by default. Use `requestTimeout` to configure a
+client-wide timeout in seconds. Set it to `0`, a negative value, or `Infinity` to disable it. `NaN`
+falls back to the 10-second default. A per-request `signal` can still cancel an individual request
+earlier.
 
 #### Custom authentication
 
@@ -67,7 +85,7 @@ const client = createApiClient({
 });
 
 // Type-safe API calls
-const response = await client.GET('/api/applications/{id}', {
+const response = await client.get('/api/applications/{id}', {
   params: { path: { id: 'your-app-id' } },
 });
 ```

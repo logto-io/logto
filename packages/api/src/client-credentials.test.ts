@@ -6,10 +6,7 @@ import {
   type ClientCredentialsOptions,
 } from './client-credentials.js';
 
-// Mock fetch globally
 const mockFetch = vi.fn();
-// eslint-disable-next-line @silverhand/fp/no-mutation
-global.fetch = mockFetch;
 
 describe('ClientCredentialsError', () => {
   it('should create error with correct name', () => {
@@ -17,6 +14,13 @@ describe('ClientCredentialsError', () => {
     expect(error.name).toBe('ClientCredentialsError');
     expect(error.message).toBe('test message');
     expect(error).toBeInstanceOf(Error);
+  });
+
+  it('should preserve the error cause', () => {
+    const cause = new TypeError('fetch failed');
+    const error = new ClientCredentialsError('Failed to fetch access token', { cause });
+
+    expect(error.cause).toBe(cause);
   });
 });
 
@@ -28,11 +32,14 @@ describe('ClientCredentials', () => {
   };
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.resetAllMocks();
+    vi.stubGlobal('fetch', mockFetch);
     vi.useFakeTimers();
   });
 
   afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
     vi.useRealTimers();
   });
 
@@ -56,6 +63,55 @@ describe('ClientCredentials', () => {
     });
   });
 
+  describe('tokenRequestTimeout', () => {
+    it('should return the default value of 10 when not specified', () => {
+      expect(new ClientCredentials(defaultOptions).tokenRequestTimeout).toBe(10);
+    });
+
+    it('should return a custom value when specified', () => {
+      expect(
+        new ClientCredentials({ ...defaultOptions, tokenRequestTimeout: 20 }).tokenRequestTimeout
+      ).toBe(20);
+    });
+
+    it('should use the default timeout for NaN', () => {
+      expect(
+        new ClientCredentials({ ...defaultOptions, tokenRequestTimeout: Number.NaN })
+          .tokenRequestTimeout
+      ).toBe(10);
+    });
+
+    it.each([0, -1, Number.POSITIVE_INFINITY])(
+      'should disable the timeout for %s',
+      async (tokenRequestTimeout) => {
+        mockFetch.mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({ access_token: 'test-token', expires_in: 3600 }),
+        });
+        const credentials = new ClientCredentials({ ...defaultOptions, tokenRequestTimeout });
+        const token = credentials.getAccessToken();
+
+        expect(credentials.tokenRequestTimeout).toBe(0);
+        expect(vi.getTimerCount()).toBe(0);
+        await expect(token).resolves.toHaveProperty('value', 'test-token');
+      }
+    );
+  });
+
+  describe('network errors', () => {
+    it('should wrap fetch errors and preserve their cause', async () => {
+      const cause = new TypeError('fetch failed');
+      mockFetch.mockRejectedValueOnce(cause);
+      const credentials = new ClientCredentials(defaultOptions);
+
+      await expect(credentials.getAccessToken()).rejects.toMatchObject({
+        name: 'ClientCredentialsError',
+        message: 'Failed to fetch access token: fetch failed',
+        cause,
+      });
+    });
+  });
+
   describe('getAccessToken', () => {
     it('should fetch and return access token on first call', async () => {
       const mockResponse = {
@@ -74,6 +130,9 @@ describe('ClientCredentials', () => {
       expect(token.scope).toBeUndefined();
       expect(mockFetch).toHaveBeenCalledWith('https://example.com/token', {
         method: 'POST',
+        redirect: 'error',
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Asymmetric matcher for the native signal.
+        signal: expect.any(AbortSignal),
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
@@ -120,6 +179,9 @@ describe('ClientCredentials', () => {
       expect(token.scope).toBe('read write');
       expect(mockFetch).toHaveBeenCalledWith('https://example.com/token', {
         method: 'POST',
+        redirect: 'error',
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Asymmetric matcher for the native signal.
+        signal: expect.any(AbortSignal),
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
