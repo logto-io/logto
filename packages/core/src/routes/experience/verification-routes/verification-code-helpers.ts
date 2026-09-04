@@ -1,5 +1,6 @@
 import {
   InteractionEvent,
+  MfaFactor,
   SentinelActivityAction,
   SignInIdentifier,
   type VerificationCodeIdentifier,
@@ -278,7 +279,9 @@ type GetMfaIdentifierParams = {
 };
 
 /**
- * Helper to get MFA identifier from user profile
+ * Helper to get MFA identifier from user profile. The factor must be enabled in the sign-in
+ * experience: otherwise a sign-in could request a second code for the very contact that already
+ * identified the user, which is a second proof of the same factor and not a second factor.
  * @internal
  */
 export const getMfaIdentifier = async ({
@@ -289,6 +292,19 @@ export const getMfaIdentifier = async ({
   if (!experienceInteraction.identifiedUserId) {
     throw new RequestError({
       code: 'session.identifier_not_found',
+      status: 400,
+    });
+  }
+
+  const { factors } = await experienceInteraction.signInExperienceValidator.getMfaSettings();
+  const factor =
+    identifierType === SignInIdentifier.Email
+      ? MfaFactor.EmailVerificationCode
+      : MfaFactor.PhoneVerificationCode;
+
+  if (!factors.includes(factor)) {
+    throw new RequestError({
+      code: 'session.mfa.mfa_factor_not_enabled',
       status: 400,
     });
   }
