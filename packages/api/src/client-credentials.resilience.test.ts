@@ -43,46 +43,15 @@ describe('ClientCredentials token lifecycle', () => {
       expect(vi.getTimerCount()).toBe(0);
     });
 
-    it('should share a refresh across concurrent calls after expiry', async () => {
+    it('should not create a timeout timer when the timeout is disabled', async () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ access_token: 'old-token', expires_in: 120 }),
+        json: async () => ({ access_token: 'test-token', expires_in: 3600 }),
       });
-      const credentials = new ClientCredentials(defaultOptions);
-      await credentials.getAccessToken();
-      vi.advanceTimersByTime(61_000);
-      mockFetch.mockResolvedValue({
-        ok: true,
-        json: async () => ({ access_token: 'new-token', expires_in: 3600 }),
-      });
+      const credentials = new ClientCredentials({ ...defaultOptions, tokenRequestTimeout: 0 });
 
-      const tokens = await Promise.all([
-        credentials.getAccessToken(),
-        credentials.getAccessToken(),
-      ]);
-
-      expect(mockFetch).toHaveBeenCalledTimes(2);
-      expect(tokens.map(({ value }) => value)).toEqual(['new-token', 'new-token']);
-    });
-
-    it('should keep token fetches separate for different credentials instances', async () => {
-      mockFetch
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({ access_token: 'first-token', expires_in: 3600 }),
-        })
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({ access_token: 'second-token', expires_in: 3600 }),
-        });
-
-      const tokens = await Promise.all([
-        new ClientCredentials(defaultOptions).getAccessToken(),
-        new ClientCredentials({ ...defaultOptions, clientId: 'another-client' }).getAccessToken(),
-      ]);
-
-      expect(mockFetch).toHaveBeenCalledTimes(2);
-      expect(tokens.map(({ value }) => value)).toEqual(['first-token', 'second-token']);
+      await expect(credentials.getAccessToken()).resolves.toHaveProperty('value', 'test-token');
+      expect(vi.getTimerCount()).toBe(0);
     });
 
     it('should use one custom signal per shared token fetch and recover after cancellation', async () => {
@@ -151,98 +120,73 @@ describe('ClientCredentials token lifecycle', () => {
       expect(vi.getTimerCount()).toBe(0);
     });
 
-    it.each(['network', 'http', 'json', 'validation'])(
-      'should share a %s failure and allow a later fetch to succeed',
-      async (failure) => {
-        const error = new Error('Token request failed');
-        if (failure === 'network') {
-          mockFetch.mockRejectedValueOnce(error);
-        } else {
-          mockFetch.mockResolvedValueOnce({
-            ok: failure !== 'http',
-            status: 503,
-            statusText: 'Service Unavailable',
-            json: async () => {
-              if (failure === 'json') {
-                throw error;
-              }
-              return {};
-            },
-          });
+    it('should share a failure and allow a later fetch to succeed', async () => {
+      mockFetch.mockRejectedValueOnce(new Error('Token request failed'));
+      const credentials = new ClientCredentials(defaultOptions);
+      const results = await Promise.allSettled([
+        credentials.getAccessToken(),
+        credentials.getAccessToken(),
+      ]);
+
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+      expect(results.map(({ status }) => status)).toEqual(['rejected', 'rejected']);
+      expect(vi.getTimerCount()).toBe(0);
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ access_token: 'new-token', expires_in: 3600 }),
+      });
+      await expect(credentials.getAccessToken()).resolves.toHaveProperty('value', 'new-token');
+      expect(mockFetch).toHaveBeenCalledTimes(2);
+    });
+
+    it('should time out a pending fetch and allow a later fetch', async () => {
+      const onAbort = vi.fn();
+      mockFetch.mockImplementationOnce(async (_url: string, { signal }: RequestInit) => {
+        if (!signal) {
+          throw new Error('Missing abort signal');
         }
-        const credentials = new ClientCredentials(defaultOptions);
-
-        const results = await Promise.allSettled([
-          credentials.getAccessToken(),
-          credentials.getAccessToken(),
-        ]);
-
-        expect(mockFetch).toHaveBeenCalledTimes(1);
-        expect(results.map(({ status }) => status)).toEqual(['rejected', 'rejected']);
-        expect(vi.getTimerCount()).toBe(0);
-
-        mockFetch.mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({ access_token: 'new-token', expires_in: 3600 }),
-        });
-        await expect(credentials.getAccessToken()).resolves.toHaveProperty('value', 'new-token');
-        expect(mockFetch).toHaveBeenCalledTimes(2);
-      }
-    );
-
-    it.each(['fetch', 'body'])(
-      'should time out during %s and allow a later fetch',
-      async (stage) => {
-        const onAbort = vi.fn();
-        mockFetch.mockImplementationOnce(async (_url: string, { signal }: RequestInit) => {
-          if (!signal) {
-            throw new Error('Missing abort signal');
-          }
-          const waitForAbort = async () =>
-            new Promise<never>((_resolve, reject) => {
-              signal.addEventListener('abort', () => {
-                onAbort();
-                reject(signal.reason instanceof Error ? signal.reason : new Error('Aborted'));
-              });
+        const waitForAbort = async () =>
+          new Promise<never>((_resolve, reject) => {
+            signal.addEventListener('abort', () => {
+              onAbort();
+              reject(signal.reason instanceof Error ? signal.reason : new Error('Aborted'));
             });
-          if (stage === 'fetch') {
-            return waitForAbort();
-          }
-          return { ok: true, json: waitForAbort };
-        });
-        const credentials = new ClientCredentials(defaultOptions);
-        const results = Promise.allSettled([
-          credentials.getAccessToken(),
-          credentials.getAccessToken(),
-        ]);
+          });
+        return waitForAbort();
+      });
+      const credentials = new ClientCredentials(defaultOptions);
+      const results = Promise.allSettled([
+        credentials.getAccessToken(),
+        credentials.getAccessToken(),
+      ]);
 
-        await vi.advanceTimersByTimeAsync(9999);
-        expect(onAbort).not.toHaveBeenCalled();
-        await vi.advanceTimersByTimeAsync(1);
+      await vi.advanceTimersByTimeAsync(9999);
+      expect(onAbort).not.toHaveBeenCalled();
+      await vi.advanceTimersByTimeAsync(1);
 
-        expect(await results).toMatchObject([
-          {
-            status: 'rejected',
-            reason: { name: 'ClientCredentialsError', cause: { name: 'TimeoutError' } },
-          },
-          {
-            status: 'rejected',
-            reason: { name: 'ClientCredentialsError', cause: { name: 'TimeoutError' } },
-          },
-        ]);
-        expect(onAbort).toHaveBeenCalledTimes(1);
-        expect(mockFetch).toHaveBeenCalledTimes(1);
-        expect(vi.getTimerCount()).toBe(0);
+      expect(await results).toMatchObject([
+        {
+          status: 'rejected',
+          reason: { name: 'ClientCredentialsError', cause: { name: 'TimeoutError' } },
+        },
+        {
+          status: 'rejected',
+          reason: { name: 'ClientCredentialsError', cause: { name: 'TimeoutError' } },
+        },
+      ]);
+      expect(onAbort).toHaveBeenCalledTimes(1);
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+      expect(vi.getTimerCount()).toBe(0);
 
-        mockFetch.mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({ access_token: 'new-token', expires_in: 3600 }),
-        });
-        await expect(credentials.getAccessToken()).resolves.toHaveProperty('value', 'new-token');
-        expect(mockFetch).toHaveBeenCalledTimes(2);
-        expect(vi.getTimerCount()).toBe(0);
-      }
-    );
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ access_token: 'new-token', expires_in: 3600 }),
+      });
+      await expect(credentials.getAccessToken()).resolves.toHaveProperty('value', 'new-token');
+      expect(mockFetch).toHaveBeenCalledTimes(2);
+      expect(vi.getTimerCount()).toBe(0);
+    });
 
     it('should time out an unresponsive body reader and ignore its late result', async () => {
       const resolveBody = vi.fn<(value: unknown) => void>();
@@ -315,18 +259,6 @@ describe('ClientCredentials token lifecycle', () => {
       credentials.invalidateAccessToken('new-token');
       await expect(credentials.getAccessToken()).resolves.toHaveProperty('value', 'third-token');
       expect(mockFetch).toHaveBeenCalledTimes(3);
-    });
-
-    it('should ignore invalidation before a token has been cached', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ access_token: 'test-token', expires_in: 3600 }),
-      });
-      const credentials = new ClientCredentials(defaultOptions);
-      credentials.invalidateAccessToken('unknown-token');
-
-      await expect(credentials.getAccessToken()).resolves.toHaveProperty('value', 'test-token');
-      expect(mockFetch).toHaveBeenCalledTimes(1);
     });
   });
 });

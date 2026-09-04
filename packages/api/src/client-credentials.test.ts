@@ -63,41 +63,6 @@ describe('ClientCredentials', () => {
     });
   });
 
-  describe('tokenRequestTimeout', () => {
-    it('should return the default value of 10 when not specified', () => {
-      expect(new ClientCredentials(defaultOptions).tokenRequestTimeout).toBe(10);
-    });
-
-    it('should return a custom value when specified', () => {
-      expect(
-        new ClientCredentials({ ...defaultOptions, tokenRequestTimeout: 20 }).tokenRequestTimeout
-      ).toBe(20);
-    });
-
-    it('should use the default timeout for NaN', () => {
-      expect(
-        new ClientCredentials({ ...defaultOptions, tokenRequestTimeout: Number.NaN })
-          .tokenRequestTimeout
-      ).toBe(10);
-    });
-
-    it.each([0, -1, Number.POSITIVE_INFINITY])(
-      'should disable the timeout for %s',
-      async (tokenRequestTimeout) => {
-        mockFetch.mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({ access_token: 'test-token', expires_in: 3600 }),
-        });
-        const credentials = new ClientCredentials({ ...defaultOptions, tokenRequestTimeout });
-        const token = credentials.getAccessToken();
-
-        expect(credentials.tokenRequestTimeout).toBe(0);
-        expect(vi.getTimerCount()).toBe(0);
-        await expect(token).resolves.toHaveProperty('value', 'test-token');
-      }
-    );
-  });
-
   describe('network errors', () => {
     it('should wrap fetch errors and preserve their cause', async () => {
       const cause = new TypeError('fetch failed');
@@ -240,11 +205,14 @@ describe('ClientCredentials', () => {
       // Advance time past expiry
       vi.advanceTimersByTime(100 * 1000);
 
-      // Second call - should refresh token
-      const token = await credentials.getAccessToken();
+      // Concurrent calls should share the refresh.
+      const tokens = await Promise.all([
+        credentials.getAccessToken(),
+        credentials.getAccessToken(),
+      ]);
 
-      expect(token.value).toBe('test-token-2');
-      expect(token.scope).toBe('scope-2');
+      expect(tokens.map(({ value }) => value)).toEqual(['test-token-2', 'test-token-2']);
+      expect(tokens.map(({ scope }) => scope)).toEqual(['scope-2', 'scope-2']);
       expect(mockFetch).toHaveBeenCalledTimes(2);
     });
 

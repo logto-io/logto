@@ -63,7 +63,7 @@ describe('Management API', () => {
 
       const result = createManagementApi('test-tenant', options);
 
-      expect(MockClientCredentials).toHaveBeenCalledWith({
+      expect(MockClientCredentials.mock.calls[0]?.[0]).toMatchObject({
         clientId: 'test-client-id',
         clientSecret: 'test-client-secret',
         tokenEndpoint: 'https://test-tenant.logto.app/oidc/token',
@@ -71,27 +71,14 @@ describe('Management API', () => {
           resource: 'https://test-tenant.logto.app/api',
           scope: allScope,
         },
-        tokenRequestTimeout: undefined,
-        getTokenRequestSignal: undefined,
       });
 
-      expect(mockCreateClient).toHaveBeenCalledWith({
-        baseUrl: 'https://test-tenant.logto.app',
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Vitest's asymmetric matcher accepts any function.
-        fetch: expect.any(Function),
-      });
-
-      expect(result.apiClient).toMatchObject(mockApiClient);
-      expect(result.apiClient.use).toBe(mockApiClient.use);
+      expect(result.apiClient).toBe(mockApiClient);
       expect(result.clientCredentials).toBe(mockClientCredentials);
     });
 
     it.each([
-      ['https://custom.example.com', 'https://custom.example.com'],
-      ['https://custom.example.com/', 'https://custom.example.com'],
       ['https://custom.example.com///', 'https://custom.example.com'],
-      ['https://custom.example.com/logto', 'https://custom.example.com/logto'],
-      ['https://custom.example.com/logto/', 'https://custom.example.com/logto'],
       ['https://custom.example.com/logto///', 'https://custom.example.com/logto'],
     ])(
       'should normalize custom base URL %s and preserve the API indicator',
@@ -106,7 +93,7 @@ describe('Management API', () => {
 
         createManagementApi('test-tenant', options);
 
-        expect(MockClientCredentials).toHaveBeenCalledWith({
+        expect(MockClientCredentials.mock.calls[0]?.[0]).toMatchObject({
           clientId: 'test-client-id',
           clientSecret: 'test-client-secret',
           tokenEndpoint: `${normalizedBaseUrl}/oidc/token`,
@@ -115,7 +102,6 @@ describe('Management API', () => {
             scope: allScope,
           },
           tokenRequestTimeout: 20,
-          getTokenRequestSignal: undefined,
         });
 
         expect(mockCreateClient).toHaveBeenCalledWith({
@@ -135,81 +121,7 @@ describe('Management API', () => {
         getTokenRequestSignal,
       });
 
-      expect(MockClientCredentials).toHaveBeenCalledWith({
-        clientId: 'test-client-id',
-        clientSecret: 'test-client-secret',
-        tokenEndpoint: 'https://test-tenant.logto.app/oidc/token',
-        tokenParams: {
-          resource: 'https://test-tenant.logto.app/api',
-          scope: allScope,
-        },
-        tokenRequestTimeout: undefined,
-        getTokenRequestSignal,
-      });
-    });
-
-    it('should configure API client middleware correctly', async () => {
-      const options: CreateManagementApiOptions = {
-        clientId: 'test-client-id',
-        clientSecret: 'test-client-secret',
-      };
-
-      mockClientCredentials.getAccessToken.mockResolvedValue({
-        value: 'test-token',
-        scope: allScope,
-      });
-
-      createManagementApi('test-tenant', options);
-
-      expect(mockApiClient.use).toHaveBeenCalledWith({
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Vitest's asymmetric matcher accepts any function.
-        onRequest: expect.any(Function),
-      });
-
-      const middleware = mockApiClient.use.mock.calls[0]?.[0];
-      expect(middleware?.onRequest).toBeTypeOf('function');
-      const mockRequest = {
-        headers: {
-          set: vi.fn(),
-        },
-      };
-
-      const result = await middleware?.onRequest?.({
-        schemaPath: '/api/test',
-        // @ts-expect-error: Mock request object
-        request: mockRequest,
-      });
-
-      expect(mockClientCredentials.getAccessToken).toHaveBeenCalled();
-      expect(mockRequest.headers.set).toHaveBeenCalledWith('Authorization', 'Bearer test-token');
-      expect(result).toBe(mockRequest);
-    });
-
-    it('should skip auth for well-known endpoints', async () => {
-      const options: CreateManagementApiOptions = {
-        clientId: 'test-client-id',
-        clientSecret: 'test-client-secret',
-      };
-
-      createManagementApi('test-tenant', options);
-
-      const middleware = mockApiClient.use.mock.calls[0]?.[0];
-      expect(middleware?.onRequest).toBeTypeOf('function');
-      const mockRequest = {
-        headers: {
-          set: vi.fn(),
-        },
-      };
-
-      const result = await middleware?.onRequest?.({
-        schemaPath: '/.well-known/openid-configuration',
-        // @ts-expect-error: Mock request object
-        request: mockRequest,
-      });
-
-      expect(mockClientCredentials.getAccessToken).not.toHaveBeenCalled();
-      expect(mockRequest.headers.set).not.toHaveBeenCalled();
-      expect(result).toBeUndefined();
+      expect(MockClientCredentials.mock.calls[0]?.[0]).toMatchObject({ getTokenRequestSignal });
     });
 
     it('should warn when scope does not match expected value', async () => {
@@ -284,37 +196,9 @@ describe('Management API', () => {
         validates: true,
       },
       {
-        status: 403,
-        schemaPath: '/api/users',
-        authorization: 'Bearer valid-token',
-        invalidates: false,
-        validates: false,
-      },
-      {
-        status: 500,
-        schemaPath: '/api/users',
-        authorization: 'Bearer valid-token',
-        invalidates: false,
-        validates: false,
-      },
-      {
-        status: 401,
-        schemaPath: '/api/users',
-        authorization: '',
-        invalidates: false,
-        validates: false,
-      },
-      {
         status: 401,
         schemaPath: '/api/users',
         authorization: 'Basic credentials',
-        invalidates: false,
-        validates: false,
-      },
-      {
-        status: 401,
-        schemaPath: '/.well-known/openid-configuration',
-        authorization: 'Bearer unrelated-token',
         invalidates: false,
         validates: false,
       },

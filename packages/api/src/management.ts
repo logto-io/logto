@@ -107,23 +107,8 @@ const createRequestTimeoutFetch =
       request.signal,
       AbortSignal.timeout(toTimeoutMilliseconds(requestTimeout)),
     ]);
-    return fetch(new Request(request, { signal }), { ...requestInit, signal });
+    return fetch(request, { ...requestInit, signal });
   };
-
-class ScopeMismatchWarner {
-  private readonly warnedScopes = new Set<string | undefined>();
-
-  warn(scope?: string): void {
-    if (scope === allScope || this.warnedScopes.has(scope)) {
-      return;
-    }
-
-    this.warnedScopes.add(scope);
-    console.warn(
-      `The scope "${scope}" is not equal to the expected value "${allScope}". This may cause issues with API access. See https://a.logto.io/m2m-mapi to learn more about configuring machine-to-machine access to the Management API.`
-    );
-  }
-}
 
 type LowercaseHttpMethods = {
   get: Client<paths>['GET'];
@@ -139,17 +124,18 @@ type LowercaseHttpMethods = {
 /** A typed Management API client with lowercase HTTP methods. */
 export type ManagementApiClient = Client<paths> & LowercaseHttpMethods;
 
-const addLowercaseHttpMethods = (client: Client<paths>): ManagementApiClient => ({
-  ...client,
-  get: client.GET,
-  put: client.PUT,
-  post: client.POST,
-  delete: client.DELETE,
-  options: client.OPTIONS,
-  head: client.HEAD,
-  patch: client.PATCH,
-  trace: client.TRACE,
-});
+const addLowercaseHttpMethods = (client: Client<paths>): ManagementApiClient =>
+  // eslint-disable-next-line @silverhand/fp/no-mutating-assign -- Keep the original client identity while adding lowercase aliases.
+  Object.assign(client, {
+    get: client.GET,
+    put: client.PUT,
+    post: client.POST,
+    delete: client.DELETE,
+    options: client.OPTIONS,
+    head: client.HEAD,
+    patch: client.PATCH,
+    trace: client.TRACE,
+  });
 
 /**
  * Creates an API client with custom token authentication.
@@ -271,7 +257,7 @@ export function createManagementApi(
     tokenRequestTimeout,
     getTokenRequestSignal,
   });
-  const scopeMismatchWarner = new ScopeMismatchWarner();
+  const warnedScopes = new Set<string | undefined>();
 
   const apiClient = createApiClient({
     baseUrl,
@@ -279,7 +265,12 @@ export function createManagementApi(
     getToken: async () => {
       const { value, scope } = await clientCredentials.getAccessToken();
 
-      scopeMismatchWarner.warn(scope);
+      if (scope !== allScope && !warnedScopes.has(scope)) {
+        warnedScopes.add(scope);
+        console.warn(
+          `The scope "${scope}" is not equal to the expected value "${allScope}". This may cause issues with API access. See https://a.logto.io/m2m-mapi to learn more about configuring machine-to-machine access to the Management API.`
+        );
+      }
 
       return value;
     },

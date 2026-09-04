@@ -102,13 +102,15 @@ describe('Management API token recovery', () => {
         jsonResponse({ access_token: 'test-token', expires_in: 3600, scope: 'all' })
       )
       .mockImplementationOnce(
-        async (request) =>
+        async (_request, requestInit) =>
           new Promise<Response>((_resolve, reject) => {
-            if (!(request instanceof Request)) {
-              throw new TypeError('Expected a Management API request');
+            const signal = requestInit?.signal;
+
+            if (!(signal instanceof AbortSignal)) {
+              throw new TypeError('Expected a Management API request signal');
             }
-            request.signal.addEventListener('abort', () => {
-              reject(getAbortReason(request.signal, 'Management API request aborted'));
+            signal.addEventListener('abort', () => {
+              reject(getAbortReason(signal, 'Management API request aborted'));
             });
           })
       );
