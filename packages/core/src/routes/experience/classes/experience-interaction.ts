@@ -2,6 +2,7 @@
 
 import { appInsights } from '@logto/app-insights/node';
 import {
+  AuthenticationProofRole,
   InteractionEvent,
   InteractionHookEvent,
   LogtoActionKey,
@@ -40,9 +41,10 @@ import {
 import { validatePostSignInActionResult } from './libraries/action-result-validation.js';
 import { AdaptiveMfaValidator } from './libraries/adaptive-mfa-validator/index.js';
 import { type AdaptiveMfaResult } from './libraries/adaptive-mfa-validator/types.js';
-import { deriveAuthenticationContext } from './libraries/authentication-context.js';
+import { aggregateAuthenticationContext } from './libraries/authentication-context.js';
+import { AuthenticationProofs } from './libraries/authentication-proofs.js';
 import { CaptchaValidator } from './libraries/captcha-validator.js';
-import { MfaValidator } from './libraries/mfa-validator.js';
+import { MfaValidator, isMfaVerificationRecord } from './libraries/mfa-validator.js';
 import { ProvisionLibrary } from './libraries/provision-library.js';
 import { SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
 import { UserUpdateLibrary } from './libraries/user-update-library.js';
@@ -79,11 +81,11 @@ export default class ExperienceInteraction {
   /** The userId of the user for the current interaction. Only available once the user is identified. */
   private userId?: string;
   /**
-   * The ids of the verification records that identified `userId`: the one `identifyUser()` first
-   * identified the user with, and any later one that identified the same user. The
-   * authentication context counts an identifier record as a proof only when it is one of them.
+   * What the user proved about the account in this interaction, recorded at the touchpoint that
+   * consumed each credential. Staged like `profile` and `mfa`, persisted by {@link save}, and
+   * cleared wherever `profile.data` is cleared; see {@link AuthenticationProofs}.
    */
-  private readonly identifiedVerificationIds = new Set<string>();
+  private readonly authenticationProofs: AuthenticationProofs;
   private userCache?: User;
   private readonly adaptiveMfaValidator: AdaptiveMfaValidator;
 
@@ -122,9 +124,12 @@ export default class ExperienceInteraction {
     const interactionContext: InteractionContext = {
       getInteractionEvent: () => this.#interactionEvent,
       getIdentifiedUser: async () => this.getIdentifiedUser(),
-      getVerificationRecordByTypeAndId: (type, verificationId) =>
-        this.getVerificationRecordByTypeAndId(type, verificationId),
-      getVerificationRecordById: (verificationId) => this.getVerificationRecordById(verificationId),
+      consumeForBind: (verificationId) => this.consumeForBind(verificationId),
+      consumeForBindByType: (type, verificationId) =>
+        this.consumeForBindByType(type, verificationId),
+      recordEstablishedPassword: () => {
+        this.authenticationProofs.stageEstablishedPassword();
+      },
       getCurrentProfile: () => this.profile.data,
     };
 
@@ -137,6 +142,7 @@ export default class ExperienceInteraction {
 
     if (typeof interactionData === 'string') {
       this.#interactionEvent = interactionData;
+      this.authenticationProofs = new AuthenticationProofs();
       this.profile = new Profile(libraries, queries, {}, interactionContext);
       this.mfa = new Mfa(libraries, queries, {}, interactionContext);
       this.trustedDevice = new TrustedDevice(ctx, tenant, {});
@@ -156,7 +162,7 @@ export default class ExperienceInteraction {
       profile = {},
       mfa = {},
       userId,
-      identifiedVerificationIds = [],
+      authenticationProofs = [],
       trustedDeviceOptIn,
       interactionEvent,
       captcha = {
@@ -167,7 +173,7 @@ export default class ExperienceInteraction {
 
     this.#interactionEvent = interactionEvent;
     this.userId = userId;
-    this.identifiedVerificationIds = new Set(identifiedVerificationIds);
+    this.authenticationProofs = new AuthenticationProofs(authenticationProofs);
     this.profile = new Profile(libraries, queries, profile, interactionContext);
     this.mfa = new Mfa(libraries, queries, mfa, interactionContext);
     this.trustedDevice = new TrustedDevice(ctx, tenant, {
@@ -192,6 +198,8 @@ export default class ExperienceInteraction {
    * Switch the interaction event for the current interaction sign-in <> register
    *
    * - any pending profile data will be cleared
+   * - any authentication proof will be cleared, so that a proof recorded for an abandoned attempt
+   *   at one event can never inflate the context of another
    *
    * @throws RequestError with 403 if the interaction event is not allowed by the `SignInExperienceValidator`
    * @throws RequestError with 400 if the interaction event is `ForgotPassword` and the current interaction event is not `ForgotPassword`
@@ -213,6 +221,7 @@ export default class ExperienceInteraction {
 
     if (this.#interactionEvent !== interactionEvent) {
       this.profile.cleanUp();
+      this.authenticationProofs.clear();
     }
 
     this.#interactionEvent = interactionEvent;
@@ -240,7 +249,7 @@ export default class ExperienceInteraction {
       new RequestError({ code: 'session.invalid_interaction_type', status: 400 })
     );
 
-    const verificationRecord = this.getVerificationRecordById(verificationId);
+    const verificationRecord = this.consumeForIdentify(verificationId);
 
     log?.append({
       verification: verificationRecord.toJson(),
@@ -265,15 +274,12 @@ export default class ExperienceInteraction {
         this.userId === id,
         new RequestError({ code: 'session.identity_conflict', status: 409 })
       );
-      // The record identified the same user, so it is one of the identifying records as well.
-      this.identifiedVerificationIds.add(verificationId);
       return;
     }
 
     // Update the current interaction with the identified user
     this.userCache = user;
     this.userId = id;
-    this.identifiedVerificationIds.add(verificationId);
 
     // Sync social/enterprise SSO identity profile data.
     // Note: The profile data is not saved to the user profile until the user submits the interaction.
@@ -305,7 +311,7 @@ export default class ExperienceInteraction {
     );
 
     if (verificationId) {
-      const verificationRecord = this.getVerificationRecordById(verificationId);
+      const verificationRecord = this.consumeForCreate(verificationId);
       const verificationData = verificationRecord.toJson();
 
       log?.append({
@@ -371,6 +377,70 @@ export default class ExperienceInteraction {
   }
 
   /**
+   * Fetch a verification record for binding the credential it carries to the account, recording
+   * the `bind` proof. This and {@link consumeForBindByType} are the only ways `Profile` and `Mfa`
+   * reach a record, so a bind cannot forget to record its proof; see {@link AuthenticationProofs}.
+   */
+  public consumeForBind(verificationId: string): VerificationRecord {
+    const record = this.getVerificationRecordById(verificationId);
+    this.authenticationProofs.stage(record, AuthenticationProofRole.Bind);
+
+    return record;
+  }
+
+  /** The typed variant of {@link consumeForBind}. */
+  public consumeForBindByType<K extends keyof VerificationRecordMap>(
+    type: K,
+    verificationId: string
+  ): VerificationRecordMap[K] {
+    const record = this.getVerificationRecordByTypeAndId(type, verificationId);
+    this.authenticationProofs.stage(record, AuthenticationProofRole.Bind);
+
+    return record;
+  }
+
+  /**
+   * Record the `mfa` proof for an MFA challenge the user just answered. For a challenge record,
+   * verifying is the use: the MFA gate scans for a verified record and no later step consumes it,
+   * so the verify routes call this right after a successful verification. A new-enrollment record
+   * is never a challenge; its proof is the `bind` one recorded when the factor is added.
+   *
+   * @throws {RequestError} with 404 if the verification record is not found
+   * @throws {RequestError} with 400 if the record is not a verified MFA challenge
+   */
+  public consumeForMfa<K extends keyof VerificationRecordMap>(
+    type: K,
+    verificationId: string
+  ): VerificationRecordMap[K] {
+    const record = this.getVerificationRecordByTypeAndId(type, verificationId);
+
+    assertThat(
+      isMfaVerificationRecord(record) && record.isVerified && !record.isNewBindMfaVerification,
+      new RequestError({ code: 'session.verification_failed', status: 400 })
+    );
+
+    this.authenticationProofs.stage(record, AuthenticationProofRole.Mfa);
+
+    return record;
+  }
+
+  /** Fetch a verification record for creating the account from it, recording the `create` proof. */
+  private consumeForCreate(verificationId: string) {
+    const record = this.getVerificationRecordById(verificationId);
+    this.authenticationProofs.stage(record, AuthenticationProofRole.Create);
+
+    return record;
+  }
+
+  /** Fetch a verification record for identifying the user with it, recording the `identify` proof. */
+  private consumeForIdentify(verificationId: string) {
+    const record = this.getVerificationRecordById(verificationId);
+    this.authenticationProofs.stage(record, AuthenticationProofRole.Identify);
+
+    return record;
+  }
+
+  /**
    * Validate the interaction verification records against the sign-in experience and user MFA settings.
    * The interaction is verified if at least one user enabled MFA verification record is present and verified.
    *
@@ -393,6 +463,8 @@ export default class ExperienceInteraction {
 
     const mfaValidator = new MfaValidator(mfaSettings, user, adaptiveMfaResult);
 
+    // Declared non-proof: an adaptive-MFA non-trigger result skips the gate and proves nothing,
+    // so it records no authentication proof.
     if (!mfaValidator.isMfaRequired) {
       return;
     }
@@ -403,6 +475,8 @@ export default class ExperienceInteraction {
       return;
     }
 
+    // Declared non-proof: a trusted device satisfies the MFA gate but proves nothing now, so it
+    // records no authentication proof and the context stays at what the first factor reached.
     const isMfaVerifiedWithTrustedDevice = await this.trustedDevice.tryVerifyMfa(user.id);
 
     this.assignAdaptiveMfaHookResult(user.id, adaptiveMfaResult);
@@ -559,21 +633,13 @@ export default class ExperienceInteraction {
       await this.guardMfaVerificationStatus(log);
     }
 
-    // Derive the authentication context this sign-in or registration achieved before anything is
-    // written to an existing account, so that a record whose identifier or identity is only being
-    // added by this submission does not count as a proof of that account. A registration is the
-    // opposite case: `createUser()` already created the account from this interaction's records,
-    // so a record for one of its identifiers and a factor this submission binds are proofs of it.
-    // The context seeds the OIDC session so the ID token carries `acr` / `amr` / `auth_time`; an
-    // interaction without a proof seeds nothing and the provider stamps `auth_time` itself.
+    // Aggregate the authentication context this sign-in or registration achieved from the proofs
+    // its touchpoints recorded. The context seeds the OIDC session so the ID token carries `acr` /
+    // `amr` / `auth_time`; an interaction without a proof seeds nothing and the provider stamps
+    // `auth_time` itself.
     const authenticationContext = conditional(
       EnvSet.values.isDevFeaturesEnabled &&
-        deriveAuthenticationContext(this.verificationRecordsArray, {
-          user,
-          identifiedVerificationIds: this.identifiedVerificationIds,
-          isNewAccount: this.#interactionEvent === InteractionEvent.Register,
-          bindMfaFactors: new Set(this.mfa.bindMfaFactorsArray.map(({ type }) => type)),
-        })
+        aggregateAuthenticationContext(this.authenticationProofs.proofs)
     );
 
     // Revalidate the new profile data if any
@@ -766,7 +832,7 @@ export default class ExperienceInteraction {
     return {
       interactionEvent,
       userId,
-      identifiedVerificationIds: [...this.identifiedVerificationIds],
+      authenticationProofs: this.authenticationProofs.data,
       ...this.trustedDevice.data,
       profile: this.profile.data,
       mfa: this.mfa.data,
@@ -777,8 +843,13 @@ export default class ExperienceInteraction {
   }
 
   public toSanitizedJson(): SanitizedInteractionStorageData {
-    // The trusted-device opt-in decision is internal authentication state.
-    const { trustedDeviceOptIn: _, ...interactionStorage } = this.toJson();
+    // The trusted-device opt-in decision and the authentication proofs are internal
+    // authentication state; a proof's role in particular never leaves the server.
+    const {
+      trustedDeviceOptIn: _,
+      authenticationProofs: __,
+      ...interactionStorage
+    } = this.toJson();
 
     return {
       ...interactionStorage,
@@ -922,6 +993,8 @@ export default class ExperienceInteraction {
    */
   private async cleanUp() {
     const { provider } = this.tenant;
+    // Proofs are interaction-scoped and must never be visible to a subsequent interaction.
+    this.authenticationProofs.clear();
     await provider.interactionResult(this.ctx.req, this.ctx.res, {});
   }
 }

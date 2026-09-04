@@ -4,7 +4,9 @@ import {
   AuthenticationFactor,
   AuthenticationFactorClass,
   AuthenticationMethodReference,
+  AuthenticationProofRole,
   LogtoAcr,
+  authenticationProofGuard,
   buildAuthenticationMethodReferences,
   getAuthenticationFactor,
   getAuthenticationFactorClass,
@@ -35,11 +37,18 @@ describe('getAuthenticationFactorClass', () => {
     VerificationType.MfaEmailVerificationCode,
     VerificationType.MfaPhoneVerificationCode,
     VerificationType.BackupCode,
-    VerificationType.WebAuthn,
-    VerificationType.SignInPasskey,
   ])('classifies %s as mfa', (type) => {
     expect(getAuthenticationFactorClass(type)).toBe(AuthenticationFactorClass.Mfa);
   });
+
+  // A user-verified WebAuthn authenticator is possession plus user verification in one act, and
+  // Logto requires user verification for the registration and the authentication ceremony alike.
+  it.each([VerificationType.WebAuthn, VerificationType.SignInPasskey])(
+    'classifies %s as both',
+    (type) => {
+      expect(getAuthenticationFactorClass(type)).toBe(AuthenticationFactorClass.Both);
+    }
+  );
 
   it.each([VerificationType.Social, VerificationType.EnterpriseSso])(
     'gives %s no class',
@@ -107,11 +116,14 @@ describe('getAuthenticationMethodReferences', () => {
   });
 });
 
+const references = (...types: VerificationType[]) =>
+  types.map((type) => getAuthenticationMethodReferences(type));
+
 describe('buildAuthenticationMethodReferences', () => {
   it('unions references in first-seen order without duplicates', () => {
     expect(
       buildAuthenticationMethodReferences(
-        [VerificationType.Password, VerificationType.TOTP, VerificationType.BackupCode],
+        references(VerificationType.Password, VerificationType.TOTP, VerificationType.BackupCode),
         LogtoAcr.FirstFactor
       )
     ).toEqual(['pwd', 'otp']);
@@ -120,37 +132,82 @@ describe('buildAuthenticationMethodReferences', () => {
   it('appends `mfa` when the achieved ACR is mfa', () => {
     expect(
       buildAuthenticationMethodReferences(
-        [VerificationType.Password, VerificationType.TOTP],
+        references(VerificationType.Password, VerificationType.TOTP),
         LogtoAcr.Mfa
       )
     ).toEqual(['pwd', 'otp', 'mfa']);
   });
 
   it('does not duplicate `mfa` for WebAuthn', () => {
-    expect(buildAuthenticationMethodReferences([VerificationType.WebAuthn], LogtoAcr.Mfa)).toEqual([
-      'pop',
-      'user',
-      'mfa',
-    ]);
+    expect(
+      buildAuthenticationMethodReferences(references(VerificationType.WebAuthn), LogtoAcr.Mfa)
+    ).toEqual(['pop', 'user', 'mfa']);
   });
 
   it('keeps `mfa` last when a WebAuthn record precedes another factor', () => {
     expect(
       buildAuthenticationMethodReferences(
-        [VerificationType.WebAuthn, VerificationType.Password],
+        references(VerificationType.WebAuthn, VerificationType.Password),
         LogtoAcr.Mfa
       )
     ).toEqual(['pop', 'user', 'pwd', 'mfa']);
     // WebAuthn carries `mfa` on its own even when no ACR is passed.
     expect(
-      buildAuthenticationMethodReferences([VerificationType.WebAuthn, VerificationType.Password])
+      buildAuthenticationMethodReferences(
+        references(VerificationType.WebAuthn, VerificationType.Password)
+      )
     ).toEqual(['pop', 'user', 'pwd', 'mfa']);
   });
 
   it('keeps `fed` next to an established factor without an ACR', () => {
     expect(
-      buildAuthenticationMethodReferences([VerificationType.Social, VerificationType.Password])
+      buildAuthenticationMethodReferences(
+        references(VerificationType.Social, VerificationType.Password)
+      )
     ).toEqual(['fed', 'pwd']);
-    expect(buildAuthenticationMethodReferences([VerificationType.Social])).toEqual(['fed']);
+    expect(buildAuthenticationMethodReferences(references(VerificationType.Social))).toEqual([
+      'fed',
+    ]);
+  });
+
+  it('returns nothing for no references', () => {
+    expect(buildAuthenticationMethodReferences([])).toEqual([]);
+  });
+});
+
+describe('authenticationProofGuard', () => {
+  it('accepts a proof with and without a class', () => {
+    expect(
+      authenticationProofGuard.safeParse({
+        id: 'totp',
+        factor: AuthenticationFactor.Totp,
+        class: AuthenticationFactorClass.Mfa,
+        amr: ['otp'],
+        role: AuthenticationProofRole.Mfa,
+        at: 1_700_000_000,
+      }).success
+    ).toBe(true);
+    expect(
+      authenticationProofGuard.safeParse({
+        id: 'social',
+        factor: AuthenticationFactor.Federated,
+        amr: ['fed'],
+        role: AuthenticationProofRole.Identify,
+        at: 1_700_000_000,
+      }).success
+    ).toBe(true);
+  });
+
+  it('rejects a non-integer or negative timestamp', () => {
+    const proof = {
+      id: 'password',
+      factor: AuthenticationFactor.Password,
+      class: AuthenticationFactorClass.FirstFactor,
+      amr: ['pwd'],
+      role: AuthenticationProofRole.Identify,
+    };
+
+    expect(authenticationProofGuard.safeParse({ ...proof, at: 1.5 }).success).toBe(false);
+    expect(authenticationProofGuard.safeParse({ ...proof, at: -1 }).success).toBe(false);
   });
 });

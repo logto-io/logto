@@ -255,7 +255,7 @@ export class Mfa {
    * - Any existing TOTP factor will be replaced with the new one.
    */
   async addTotpByVerificationId(verificationId: string, log?: LogEntry) {
-    const verificationRecord = this.interactionContext.getVerificationRecordByTypeAndId(
+    const verificationRecord = this.interactionContext.consumeForBindByType(
       VerificationType.TOTP,
       verificationId
     );
@@ -288,7 +288,7 @@ export class Mfa {
    * @throws {RequestError} with status 400 if WebAuthn is not enabled in the sign-in experience
    */
   async addWebAuthnByVerificationId(verificationId: string, log?: LogEntry) {
-    const verificationRecord = this.interactionContext.getVerificationRecordByTypeAndId(
+    const verificationRecord = this.interactionContext.consumeForBindByType(
       VerificationType.WebAuthn,
       verificationId
     );
@@ -313,7 +313,7 @@ export class Mfa {
    * @throws {RequestError} with status 422 if the backup code is the only MFA factor
    */
   async addBackupCodeByVerificationId(verificationId: string, log?: LogEntry) {
-    const verificationRecord = this.interactionContext.getVerificationRecordByTypeAndId(
+    const verificationRecord = this.interactionContext.consumeForBindByType(
       VerificationType.BackupCode,
       verificationId
     );

@@ -1,440 +1,196 @@
-import { TemplateType } from '@logto/connector-kit';
 import {
-  MfaFactor,
-  SignInIdentifier,
-  UsersPasswordEncryptionMethod,
-  VerificationType,
-  type User,
+  AuthenticationFactor,
+  AuthenticationFactorClass,
+  AuthenticationMethodReference,
+  AuthenticationProofRole,
+  type AuthenticationProof,
 } from '@logto/schemas';
 
-import {
-  mockUser,
-  mockUserBackupCodeMfaVerification,
-  mockUserTotpMfaVerification,
-  mockUserWebAuthnMfaVerification,
-} from '#src/__mocks__/user.js';
-import { MockTenant } from '#src/test-utils/tenant.js';
+import { aggregateAuthenticationContext } from './authentication-context.js';
 
-import { BackupCodeVerification } from '../verifications/backup-code-verification.js';
-import {
-  EmailCodeVerification,
-  MfaEmailCodeVerification,
-  MfaPhoneCodeVerification,
-  PhoneCodeVerification,
-} from '../verifications/code-verification.js';
-import { NewPasswordIdentityVerification } from '../verifications/new-password-identity-verification.js';
-import { OneTimeTokenVerification } from '../verifications/one-time-token-verification.js';
-import { PasswordVerification } from '../verifications/password-verification.js';
-import { SocialVerification } from '../verifications/social-verification.js';
-import { TotpVerification } from '../verifications/totp-verification.js';
-import {
-  SignInPasskeyVerification,
-  WebAuthnVerification,
-} from '../verifications/web-authn-verification.js';
+const { FirstFactor, Mfa, Both } = AuthenticationFactorClass;
+const { Password, Otp, Sms, ProofOfPossession, UserPresence, Federated } =
+  AuthenticationMethodReference;
+const { Create, Identify, Bind } = AuthenticationProofRole;
 
-import { deriveAuthenticationContext } from './authentication-context.js';
+const firstFactorAcr = 'urn:logto:acr:1fa';
+const mfaAcr = 'urn:logto:acr:mfa';
 
-const { libraries, queries } = new MockTenant();
-const userId = mockUser.id;
-const username = 'foo';
-const email = 'foo@bar.com';
-const phone = '+11234567890';
+let sequence = 0;
 
-/** A user with every MFA factor enrolled. */
-const user: User = {
-  ...mockUser,
-  username,
-  primaryEmail: email,
-  primaryPhone: phone,
-  mfaVerifications: [
-    mockUserTotpMfaVerification,
-    mockUserWebAuthnMfaVerification,
-    mockUserBackupCodeMfaVerification,
-  ],
-};
+/** A proof at a strictly increasing time, so `ts` is always the first proof listed. */
+const proof = (
+  factor: AuthenticationFactor,
+  factorClass: AuthenticationFactorClass | undefined,
+  amr: AuthenticationMethodReference[],
+  role: AuthenticationProofRole = Identify
+): AuthenticationProof => ({
+  id: `${factor}-${role}-${sequence}`,
+  factor,
+  ...(factorClass && { class: factorClass }),
+  amr,
+  role,
+  // eslint-disable-next-line @silverhand/fp/no-mutation
+  at: 100 + sequence++,
+});
 
-/** The ids of the identifier records below; the interaction records them at identification. */
-const identifiedVerificationIds = new Set(['password', 'email', 'phone', 'one-time-token']);
-
-type Options = Partial<Parameters<typeof deriveAuthenticationContext>[1]>;
-
-const derive = (
-  records: Parameters<typeof deriveAuthenticationContext>[0],
-  options: Options = {}
-) => deriveAuthenticationContext(records, { user, identifiedVerificationIds, ...options });
-
-/** The interaction created `user` from its records, so nothing identified the user. */
-const deriveForNewAccount = (
-  records: Parameters<typeof deriveAuthenticationContext>[0],
-  bindMfaFactors: MfaFactor[] = []
-) =>
-  derive(records, {
-    identifiedVerificationIds: new Set(),
-    isNewAccount: true,
-    bindMfaFactors: new Set(bindMfaFactors),
-  });
-
-const password = ({
-  verifiedAt,
-  verified = true,
-  id = 'password',
-}: { verifiedAt?: number; verified?: boolean; id?: string } = {}) =>
-  new PasswordVerification(libraries, queries, {
-    id,
-    type: VerificationType.Password,
-    identifier: { type: SignInIdentifier.Username, value: username },
-    verified,
-    verifiedAt,
-  });
-
-const emailCode = (verifiedAt?: number, id = 'email', address = email) =>
-  new EmailCodeVerification(libraries, queries, {
-    id,
-    type: VerificationType.EmailVerificationCode,
-    identifier: { type: SignInIdentifier.Email, value: address },
-    templateType: TemplateType.SignIn,
-    verified: true,
-    verifiedAt,
-  });
-
-const phoneCode = (verifiedAt?: number) =>
-  new PhoneCodeVerification(libraries, queries, {
-    id: 'phone',
-    type: VerificationType.PhoneVerificationCode,
-    identifier: { type: SignInIdentifier.Phone, value: phone },
-    templateType: TemplateType.SignIn,
-    verified: true,
-    verifiedAt,
-  });
-
-const oneTimeToken = (verifiedAt?: number) =>
-  new OneTimeTokenVerification(libraries, queries, {
-    id: 'one-time-token',
-    type: VerificationType.OneTimeToken,
-    identifier: { type: SignInIdentifier.Email, value: email },
-    verified: true,
-    verifiedAt,
-  });
-
-/** An MFA code sent to the given email, as the MFA verification-code route creates it. */
-const mfaEmailCode = (verifiedAt?: number, address = email) =>
-  new MfaEmailCodeVerification(libraries, queries, {
-    id: 'mfa-email',
-    type: VerificationType.MfaEmailVerificationCode,
-    identifier: { type: SignInIdentifier.Email, value: address },
-    templateType: TemplateType.MfaVerification,
-    verified: true,
-    verifiedAt,
-  });
-
-const mfaPhoneCode = (verifiedAt?: number) =>
-  new MfaPhoneCodeVerification(libraries, queries, {
-    id: 'mfa-phone',
-    type: VerificationType.MfaPhoneVerificationCode,
-    identifier: { type: SignInIdentifier.Phone, value: phone },
-    templateType: TemplateType.MfaVerification,
-    verified: true,
-    verifiedAt,
-  });
-
-const totp = ({
-  verifiedAt,
-  secret,
-  ownerId = userId,
-}: { verifiedAt?: number; secret?: string; ownerId?: string } = {}) =>
-  new TotpVerification(libraries, queries, {
-    id: 'totp',
-    type: VerificationType.TOTP,
-    userId: ownerId,
-    verified: true,
-    verifiedAt,
-    secret,
-  });
-
-const backupCode = (verifiedAt?: number) =>
-  new BackupCodeVerification(libraries, queries, {
-    id: 'backup',
-    type: VerificationType.BackupCode,
-    userId,
-    code: 'code',
-    verifiedAt,
-  });
-
-const webAuthn = (verifiedAt?: number) =>
-  new WebAuthnVerification(libraries, queries, {
-    id: 'webauthn',
-    type: VerificationType.WebAuthn,
-    userId,
-    verified: true,
-    verifiedAt,
-  });
-
-const signInPasskey = (verifiedAt?: number, ownerId = userId) =>
-  new SignInPasskeyVerification(libraries, queries, {
-    id: 'passkey',
-    type: VerificationType.SignInPasskey,
-    userId: ownerId,
-    verified: true,
-    verifiedAt,
-  });
-
-/** A verified social assertion; whether the identity is linked to the account is irrelevant. */
-const social = (verifiedAt?: number) =>
-  new SocialVerification(libraries, queries, {
-    id: 'social',
-    type: VerificationType.Social,
-    connectorId: 'connector',
-    socialUserInfo: { id: 'social-user' },
-    verifiedAt,
-  });
-
-/** A verified registration record: a policy-compliant password proposed for the given username. */
-const newPasswordIdentity = (verifiedAt?: number, value = 'unused') =>
-  new NewPasswordIdentityVerification(libraries, queries, {
-    id: 'new-password-identity',
-    type: VerificationType.NewPasswordIdentity,
-    identifier: { type: SignInIdentifier.Username, value },
-    passwordEncrypted: 'encrypted',
-    passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
-    verifiedAt,
-  });
-
-describe('deriveAuthenticationContext', () => {
-  it('reaches 1fa with a password', () => {
-    expect(derive([password({ verifiedAt: 100 })])).toEqual({
-      acr: 'urn:logto:acr:1fa',
-      amr: ['pwd'],
-      ts: 100,
-    });
-  });
-
-  it('reaches 1fa with a primary email code', () => {
-    expect(derive([emailCode(100)])).toEqual({
-      acr: 'urn:logto:acr:1fa',
-      amr: ['otp'],
-      ts: 100,
-    });
-  });
-
-  it('reaches mfa with a password and a TOTP, taking the earliest timestamp', () => {
-    expect(derive([password({ verifiedAt: 200 }), totp({ verifiedAt: 100 })])).toEqual({
-      acr: 'urn:logto:acr:mfa',
-      amr: ['pwd', 'otp', 'mfa'],
-      ts: 100,
-    });
-  });
-
-  it('reaches mfa with a primary email code and an MFA phone code', () => {
-    expect(derive([emailCode(100), mfaPhoneCode(200)])).toEqual({
-      acr: 'urn:logto:acr:mfa',
-      amr: ['otp', 'sms', 'mfa'],
-      ts: 100,
-    });
-  });
-
-  it('reaches mfa with a password and a backup code', () => {
-    expect(derive([password({ verifiedAt: 100 }), backupCode(200)])).toEqual({
-      acr: 'urn:logto:acr:mfa',
-      amr: ['pwd', 'otp', 'mfa'],
-      ts: 100,
-    });
-  });
-
-  it('reaches only 1fa with a TOTP alone', () => {
-    expect(derive([totp({ verifiedAt: 100 })])).toEqual({
-      acr: 'urn:logto:acr:1fa',
-      amr: ['otp'],
-      ts: 100,
-    });
-  });
-
-  it('reaches only 1fa with two mfa-class factors and no first factor', () => {
-    expect(derive([totp({ verifiedAt: 100 }), backupCode(200)])).toEqual({
-      acr: 'urn:logto:acr:1fa',
-      amr: ['otp'],
-      ts: 100,
-    });
-  });
-
-  it.each([webAuthn, signInPasskey])(
-    'reaches mfa with a user-verified WebAuthn assertion alone',
-    (build) => {
-      expect(derive([build(100)])).toEqual({
-        acr: 'urn:logto:acr:mfa',
-        amr: ['pop', 'user', 'mfa'],
-        ts: 100,
-      });
-    }
+const password = (role?: AuthenticationProofRole) =>
+  proof(AuthenticationFactor.Password, FirstFactor, [Password], role);
+const email = (role?: AuthenticationProofRole) =>
+  proof(AuthenticationFactor.Email, FirstFactor, [Otp], role);
+const phone = (role?: AuthenticationProofRole) =>
+  proof(AuthenticationFactor.Phone, FirstFactor, [Sms], role);
+const mfaEmail = (role?: AuthenticationProofRole) =>
+  proof(AuthenticationFactor.Email, Mfa, [Otp], role);
+const totp = (role?: AuthenticationProofRole) => proof(AuthenticationFactor.Totp, Mfa, [Otp], role);
+const backupCode = () =>
+  proof(AuthenticationFactor.BackupCode, Mfa, [Otp], AuthenticationProofRole.Mfa);
+const webAuthn = (role?: AuthenticationProofRole) =>
+  proof(
+    AuthenticationFactor.WebAuthn,
+    Both,
+    [ProofOfPossession, UserPresence, AuthenticationMethodReference.Mfa],
+    role
   );
+const federated = (role?: AuthenticationProofRole) =>
+  proof(AuthenticationFactor.Federated, undefined, [Federated], role);
 
-  it('records only fed for a social sign-in', () => {
-    expect(derive([social(100)])).toEqual({ amr: ['fed'], ts: 100 });
-  });
-
-  it('keeps fed next to a Logto-verifiable factor', () => {
-    expect(derive([social(100), password({ verifiedAt: 200 })])).toEqual({
-      acr: 'urn:logto:acr:1fa',
-      amr: ['fed', 'pwd'],
-      ts: 100,
-    });
-  });
-
-  it('keeps fed for an identity that is only being linked by this submission', () => {
-    // A linking social record never identified the user through its stored identity.
-    expect(derive([social(50)], { identifiedVerificationIds: new Set() })).toEqual({
-      amr: ['fed'],
-      ts: 50,
-    });
-  });
-
-  it('ignores unverified records and factors enrolled in this interaction', () => {
-    expect(
-      derive([
-        password({ verifiedAt: 100, verified: false }),
-        totp({ verifiedAt: 50, secret: 'new' }),
-      ])
-    ).toEqual({});
-    expect(
-      derive([password({ verifiedAt: 100 }), totp({ verifiedAt: 50, secret: 'new' })])
-    ).toEqual({ acr: 'urn:logto:acr:1fa', amr: ['pwd'], ts: 100 });
-  });
-
-  it('omits ts when no counted record carries verifiedAt', () => {
-    expect(derive([password()])).toEqual({ acr: 'urn:logto:acr:1fa', amr: ['pwd'] });
-  });
-
-  describe('one factor never fills both roles', () => {
-    it('stays at 1fa when the MFA code went to the same mailbox as a one-time token', () => {
-      expect(derive([oneTimeToken(100), mfaEmailCode(200)])).toEqual({
-        acr: 'urn:logto:acr:1fa',
-        amr: ['otp'],
-        ts: 100,
-      });
-    });
-
+/**
+ * The case matrix of the ACR / AMR tech design, section 6, row for row. The design is the
+ * specification; a policy change must update both.
+ */
+describe('aggregateAuthenticationContext', () => {
+  describe('registration', () => {
     it.each([
-      ['email', () => [emailCode(100), mfaEmailCode(200)], ['otp']],
-      ['phone', () => [phoneCode(100), mfaPhoneCode(200)], ['sms']],
-    ] as const)(
-      'stays at 1fa when the MFA code went to the same %s as the first factor',
-      (_, build, amr) => {
-        expect(derive(build())).toEqual({ acr: 'urn:logto:acr:1fa', amr, ts: 100 });
-      }
-    );
+      ['Username + password', () => [password(Bind)], firstFactorAcr, ['pwd']],
+      ['Email + password', () => [email(Create), password(Bind)], firstFactorAcr, ['otp', 'pwd']],
+      ['Phone + password', () => [phone(Create), password(Bind)], firstFactorAcr, ['sms', 'pwd']],
+      ['Email code only', () => [email(Create)], firstFactorAcr, ['otp']],
+      ['Social', () => [federated(Create)], undefined, ['fed']],
+      ['Enterprise SSO', () => [federated(Create)], undefined, ['fed']],
+      [
+        'Username + password, then enrol TOTP',
+        () => [password(Bind), totp(Bind)],
+        mfaAcr,
+        ['pwd', 'otp', 'mfa'],
+      ],
+      // A social registration that enrols a TOTP under the tenant's MFA policy: an mfa-class
+      // factor without a Logto-verifiable first factor reaches only 1fa.
+      [
+        'Social, then enrol TOTP',
+        () => [federated(Create), totp(Bind)],
+        firstFactorAcr,
+        ['fed', 'otp'],
+      ],
+      // A user-verified passkey enrolled and bound in the registration is self-sufficient.
+      [
+        'Social, then enrol passkey',
+        () => [federated(Create), webAuthn(Bind)],
+        mfaAcr,
+        ['fed', 'pop', 'user', 'mfa'],
+      ],
+    ])('%s', (_, build, acr, amr) => {
+      const proofs = build();
 
-    it('still reaches mfa when another factor supplies the first factor', () => {
-      expect(derive([password({ verifiedAt: 100 }), mfaEmailCode(200)])).toEqual({
-        acr: 'urn:logto:acr:mfa',
-        amr: ['pwd', 'otp', 'mfa'],
-        ts: 100,
-      });
-      expect(derive([emailCode(100), password({ verifiedAt: 150 }), mfaEmailCode(200)])).toEqual({
-        acr: 'urn:logto:acr:mfa',
-        amr: ['otp', 'pwd', 'mfa'],
-        ts: 100,
+      expect(aggregateAuthenticationContext(proofs)).toEqual({
+        ...(acr && { acr }),
+        amr,
+        ts: proofs[0]!.at,
       });
     });
   });
 
-  describe('a new account', () => {
-    it('reaches 1fa with the password the account was created with', () => {
-      expect(deriveForNewAccount([newPasswordIdentity(100, username)])).toEqual({
-        acr: 'urn:logto:acr:1fa',
-        amr: ['pwd'],
-        ts: 100,
+  describe('sign-in', () => {
+    it.each([
+      ['Password', () => [password()], firstFactorAcr, ['pwd']],
+      ['Email code', () => [email()], firstFactorAcr, ['otp']],
+      [
+        'Password + TOTP',
+        () => [password(), totp(AuthenticationProofRole.Mfa)],
+        mfaAcr,
+        ['pwd', 'otp', 'mfa'],
+      ],
+      ['Password + backup code', () => [password(), backupCode()], mfaAcr, ['pwd', 'otp', 'mfa']],
+      ['Passkey sign-in', () => [webAuthn()], mfaAcr, ['pop', 'user', 'mfa']],
+      [
+        'Password + WebAuthn MFA',
+        () => [password(), webAuthn(AuthenticationProofRole.Mfa)],
+        mfaAcr,
+        ['pwd', 'pop', 'user', 'mfa'],
+      ],
+      ['Social (already linked)', () => [federated()], undefined, ['fed']],
+      ['Social, linking to an existing account', () => [federated()], undefined, ['fed']],
+      ['Enterprise SSO, first sign-in (auto-link)', () => [federated()], undefined, ['fed']],
+      [
+        'Social + TOTP',
+        () => [federated(), totp(AuthenticationProofRole.Mfa)],
+        firstFactorAcr,
+        ['fed', 'otp'],
+      ],
+      [
+        'Password + trusted device (MFA gate bypassed)',
+        () => [password()],
+        firstFactorAcr,
+        ['pwd'],
+      ],
+      [
+        'Password, then bind new TOTP',
+        () => [password(), totp(Bind)],
+        mfaAcr,
+        ['pwd', 'otp', 'mfa'],
+      ],
+      [
+        'Password → set email → bind email MFA',
+        () => [password(), email(Bind), mfaEmail(Bind)],
+        mfaAcr,
+        ['pwd', 'otp', 'mfa'],
+      ],
+      [
+        'Email code + MFA code to the same address',
+        () => [email(), mfaEmail(AuthenticationProofRole.Mfa)],
+        firstFactorAcr,
+        ['otp'],
+      ],
+      // A second proof of the same factor in the other role is still one factor.
+      [
+        'Password + password set again',
+        () => [password(), password(Bind)],
+        firstFactorAcr,
+        ['pwd'],
+      ],
+      ['TOTP alone', () => [totp(AuthenticationProofRole.Mfa)], firstFactorAcr, ['otp']],
+      [
+        'Two mfa-class factors and no first factor',
+        () => [totp(AuthenticationProofRole.Mfa), backupCode()],
+        firstFactorAcr,
+        ['otp'],
+      ],
+      // Another first factor supplies the distinct pair even when the mailbox is repeated.
+      [
+        'Email code + password + MFA code to the same address',
+        () => [email(), password(), mfaEmail(AuthenticationProofRole.Mfa)],
+        mfaAcr,
+        ['otp', 'pwd', 'mfa'],
+      ],
+    ])('%s', (_, build, acr, amr) => {
+      const proofs = build();
+
+      expect(aggregateAuthenticationContext(proofs)).toEqual({
+        ...(acr && { acr }),
+        amr,
+        ts: proofs[0]!.at,
       });
-    });
-
-    it('reaches 1fa with the verified email or phone the account was created with', () => {
-      expect(deriveForNewAccount([emailCode(100)])).toEqual({
-        acr: 'urn:logto:acr:1fa',
-        amr: ['otp'],
-        ts: 100,
-      });
-      expect(deriveForNewAccount([phoneCode(100)])).toEqual({
-        acr: 'urn:logto:acr:1fa',
-        amr: ['sms'],
-        ts: 100,
-      });
-    });
-
-    it('records only fed for a social registration', () => {
-      expect(deriveForNewAccount([social(100)])).toEqual({ amr: ['fed'], ts: 100 });
-    });
-
-    it('counts a factor enrolled in this interaction when the submission binds it', () => {
-      const enrolledTotp = totp({ verifiedAt: 200, secret: 'new' });
-
-      expect(
-        deriveForNewAccount([newPasswordIdentity(100, username), enrolledTotp], [MfaFactor.TOTP])
-      ).toEqual({ acr: 'urn:logto:acr:mfa', amr: ['pwd', 'otp', 'mfa'], ts: 100 });
-      // An mfa-class factor without a Logto-verifiable first factor reaches only 1fa.
-      expect(deriveForNewAccount([social(100), enrolledTotp], [MfaFactor.TOTP])).toEqual({
-        acr: 'urn:logto:acr:1fa',
-        amr: ['fed', 'otp'],
-        ts: 100,
-      });
-    });
-
-    it('ignores an enrollment the submission does not bind', () => {
-      expect(
-        deriveForNewAccount([newPasswordIdentity(100, username), totp({ secret: 'new' })])
-      ).toEqual({ acr: 'urn:logto:acr:1fa', amr: ['pwd'], ts: 100 });
-    });
-
-    it('ignores a verified identifier that was not written to the account', () => {
-      // The user verified a code for one address, then registered with a social identity.
-      expect(deriveForNewAccount([social(100), emailCode(50, 'other', 'other@bar.com')])).toEqual({
-        amr: ['fed'],
-        ts: 100,
-      });
-      expect(deriveForNewAccount([newPasswordIdentity(100)])).toEqual({});
-    });
-
-    it('never counts an enrollment for an existing account', () => {
-      expect(
-        derive([password({ verifiedAt: 100 }), totp({ verifiedAt: 50, secret: 'new' })], {
-          bindMfaFactors: new Set([MfaFactor.TOTP]),
-        })
-      ).toEqual({ acr: 'urn:logto:acr:1fa', amr: ['pwd'], ts: 100 });
     });
   });
 
-  describe('records that are not proofs of the identified user', () => {
-    it('ignores an identifier record that did not identify the user', () => {
-      // A code for an address the user is adding, or a password verified for another account,
-      // is never passed to `identifyUser()` for this user.
-      expect(derive([social(100), emailCode(50, 'added-email')])).toEqual({
-        amr: ['fed'],
-        ts: 100,
-      });
-      expect(derive([password({ verifiedAt: 50, id: 'other-account' })])).toEqual({});
-    });
+  it('seeds nothing for an interaction without a proof', () => {
+    expect(aggregateAuthenticationContext([])).toEqual({});
+  });
 
-    it('ignores a registration password that never identified the user', () => {
-      // The route only accepts the record in a Register interaction, and `identifyUser()` never
-      // records it; a stored one from before the route guard still counts nothing.
-      expect(derive([social(100), newPasswordIdentity(50)])).toEqual({ amr: ['fed'], ts: 100 });
-      expect(derive([social(100), newPasswordIdentity(50), totp({ verifiedAt: 200 })])).toEqual({
-        acr: 'urn:logto:acr:1fa',
-        amr: ['fed', 'otp'],
-        ts: 100,
-      });
-    });
+  it('takes the earliest proof as the authentication time regardless of order', () => {
+    const late = totp(AuthenticationProofRole.Mfa);
+    const early = password();
 
-    it('ignores an MFA code that was not sent to the primary contact of the user', () => {
-      expect(derive([password({ verifiedAt: 100 }), mfaEmailCode(200, 'other@bar.com')])).toEqual({
-        acr: 'urn:logto:acr:1fa',
-        amr: ['pwd'],
-        ts: 100,
-      });
-    });
-
-    it('ignores factor records created for another user', () => {
-      expect(
-        derive([password({ verifiedAt: 100 }), totp({ verifiedAt: 50, ownerId: 'someone-else' })])
-      ).toEqual({ acr: 'urn:logto:acr:1fa', amr: ['pwd'], ts: 100 });
-      expect(derive([signInPasskey(100, 'someone-else')])).toEqual({});
-    });
+    expect(aggregateAuthenticationContext([late, early]).ts).toBe(early.at);
   });
 });

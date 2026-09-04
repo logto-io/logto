@@ -264,6 +264,15 @@ export const verifyCode = async ({
     codeVerificationRecord.verify(identifier, code)
   );
 
+  // For an MFA challenge, verifying is the use: record the `mfa` proof here. A primary email /
+  // phone code is consumed later, by identification or by a profile bind, which records its proof.
+  if (
+    verificationType === VerificationType.MfaEmailVerificationCode ||
+    verificationType === VerificationType.MfaPhoneVerificationCode
+  ) {
+    experienceInteraction.consumeForMfa(verificationType, codeVerificationRecord.id);
+  }
+
   // Save state
   await experienceInteraction.save();
 

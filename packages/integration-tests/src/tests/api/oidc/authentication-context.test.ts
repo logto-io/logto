@@ -37,7 +37,10 @@ import {
   successfullyCreateSocialVerification,
   successfullyVerifySocialAuthorization,
 } from '#src/helpers/experience/social-verification.js';
-import { successfullyVerifyTotp } from '#src/helpers/experience/totp-verification.js';
+import {
+  successfullyCreateAndVerifyTotp,
+  successfullyVerifyTotp,
+} from '#src/helpers/experience/totp-verification.js';
 import {
   successfullySendVerificationCode,
   successfullyVerifyVerificationCode,
@@ -46,6 +49,7 @@ import { expectRejects } from '#src/helpers/index.js';
 import {
   enableAllPasswordSignInMethods,
   enableAllVerificationCodeSignInMethods,
+  enableMandatoryMfaWithTotp,
   enableMandatoryMfaWithTotpAndBackupCode,
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
@@ -156,6 +160,29 @@ devFeatureTest.describe('authentication context claims on sign-in', () => {
 
     expect(claims).toMatchObject({ acr: mfaAcr, amr: ['pwd', 'otp', 'mfa'] });
     expect(typeof claims.auth_time).toBe('number');
+
+    await logoutClient(client);
+    await resetMfaSettings();
+  });
+
+  it('issues acr=mfa and amr=[pwd, otp, mfa] when the sign-in enrolls the first TOTP of the account', async () => {
+    // A factor established by the interaction and written to the account counts like one it
+    // verified; this is what makes an MFA step-up satisfiable for a user without a factor.
+    await enableMandatoryMfaWithTotp();
+    const { username, password } = generateNewUserProfile({ username: true, password: true });
+    await userApi.create({ username, password });
+
+    const client = await initClient();
+    await identifyUserWithUsernamePassword(client, username, password);
+    await expectRejects(client.submitInteraction(), {
+      code: 'user.missing_mfa',
+      status: 422,
+    });
+    const totpVerificationId = await successfullyCreateAndVerifyTotp(client);
+    await client.bindMfa(MfaFactor.TOTP, totpVerificationId);
+    const claims = await finishSignIn(client);
+
+    expect(claims).toMatchObject({ acr: mfaAcr, amr: ['pwd', 'otp', 'mfa'] });
 
     await logoutClient(client);
     await resetMfaSettings();

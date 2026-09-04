@@ -174,6 +174,51 @@ devFeatureTest.describe('authentication context claims on registration', () => {
     );
   });
 
+  describe('verification code and password', () => {
+    beforeAll(async () => {
+      await clearConnectorsByTypes([ConnectorType.Email]);
+      await setEmailConnector();
+      await enableAllVerificationCodeSignInMethods({
+        identifiers: [SignInIdentifier.Email],
+        password: true,
+        verify: true,
+      });
+      await updateSignInExperience({ passwordPolicy: {} });
+    });
+
+    afterAll(async () => {
+      await clearConnectorsByTypes([ConnectorType.Email]);
+      await resetPasswordPolicy();
+      await enableAllPasswordSignInMethods();
+    });
+
+    it('issues acr=1fa and amr=[otp, pwd] for the verified email and the password set on the profile', async () => {
+      // The password is set through the profile and has no verification record; the profile's
+      // password transition records its proof. Two first factors are still one assurance level.
+      const { primaryEmail, password } = generateNewUserProfile({
+        primaryEmail: true,
+        password: true,
+      });
+      const identifier = { type: SignInIdentifier.Email, value: primaryEmail };
+      const client = await registerClient();
+      const { verificationId, code } = await successfullySendVerificationCode(client, {
+        identifier,
+        interactionEvent: InteractionEvent.Register,
+      });
+      await successfullyVerifyVerificationCode(client, { identifier, verificationId, code });
+      await client.identifyUser({ verificationId });
+      await expectRejects(client.submitInteraction(), {
+        code: 'user.missing_profile',
+        status: 422,
+      });
+      await client.updateProfile({ type: 'password', value: password });
+
+      const claims = await finishRegistration(client);
+
+      expect(claims).toMatchObject({ acr: firstFactorAcr, amr: ['otp', 'pwd'] });
+    });
+  });
+
   describe('social', () => {
     // eslint-disable-next-line @silverhand/fp/no-let
     let connectorId: string;

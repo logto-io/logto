@@ -1,5 +1,7 @@
 import { type SocialUserInfo, socialUserInfoGuard, type ToZodObject } from '@logto/connector-kit';
 import {
+  type AuthenticationProof,
+  authenticationProofGuard,
   type CreateUser,
   encryptedTokenSetGuard,
   InteractionEvent,
@@ -165,16 +167,25 @@ const sanitizedInteractionProfileGuard = interactionProfileGuard.omit({
 }) satisfies ToZodObject<SanitizedInteractionProfile>;
 
 /**
- * The interaction context provides the callback functions to get the user and verification record from the interaction
+ * The interaction context provides the callback functions to get the user and verification record from the interaction.
+ *
+ * There is deliberately no raw verification-record getter here. Every time `Profile` or `Mfa`
+ * reaches a record it consumes the record's credential, and the consumer must say so: the
+ * `consumeFor…` methods record the authentication proof for the role they name. Re-adding a raw
+ * getter would let a write path reach a record without recording what it did with it.
  */
 export type InteractionContext = {
   getInteractionEvent: () => InteractionEvent;
   getIdentifiedUser: () => Promise<User>;
-  getVerificationRecordById: (verificationId: string) => VerificationRecord;
-  getVerificationRecordByTypeAndId: <K extends keyof VerificationRecordMap>(
+  /** Fetch a record to bind the credential it carries to the account, recording the `bind` proof. */
+  consumeForBind: (verificationId: string) => VerificationRecord;
+  /** The typed variant of `consumeForBind`. */
+  consumeForBindByType: <K extends keyof VerificationRecordMap>(
     type: K,
     verificationId: string
   ) => VerificationRecordMap[K];
+  /** Record the proof for a password established through the profile, which has no record. */
+  recordEstablishedPassword: () => void;
   getCurrentProfile: () => InteractionProfile;
 };
 
@@ -198,8 +209,8 @@ export type WithHooksAndLogsContext<ContextT extends WithLogContext = WithLogCon
 export type InteractionStorage = {
   interactionEvent: InteractionEvent;
   userId?: string;
-  /** The ids of the verification records that identified `userId`; see `ExperienceInteraction.identifyUser()`. */
-  identifiedVerificationIds?: string[];
+  /** The authentication proofs recorded so far; see `AuthenticationProofs`. */
+  authenticationProofs?: AuthenticationProof[];
   trustedDeviceOptIn?:
     | {
         trusted: false;
@@ -221,7 +232,7 @@ export type InteractionStorage = {
 export const interactionStorageGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent),
   userId: z.string().optional(),
-  identifiedVerificationIds: z.string().array().optional(),
+  authenticationProofs: authenticationProofGuard.array().optional(),
   trustedDeviceOptIn: z
     .discriminatedUnion('trusted', [
       z.object({ trusted: z.literal(false) }),
@@ -246,7 +257,6 @@ export const interactionStorageGuard = z.object({
 export type SanitizedInteractionStorageData = {
   interactionEvent: InteractionEvent;
   userId?: string;
-  identifiedVerificationIds?: string[];
   profile?: SanitizedInteractionProfile;
   verificationRecords?: SanitizedVerificationRecordData[];
   mfa?: SanitizedMfaData;
@@ -264,7 +274,6 @@ export type SanitizedInteractionStorageData = {
 export const sanitizedInteractionStorageGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent),
   userId: z.string().optional(),
-  identifiedVerificationIds: z.string().array().optional(),
   profile: sanitizedInteractionProfileGuard,
   verificationRecords: publicVerificationRecordDataGuard.array().optional(),
   mfa: sanitizedMfaDataGuard.optional(),

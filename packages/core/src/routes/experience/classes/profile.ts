@@ -88,7 +88,7 @@ export class Profile {
     verificationId: string,
     log?: LogEntry
   ) {
-    const verificationRecord = this.interactionContext.getVerificationRecordById(verificationId);
+    const verificationRecord = this.interactionContext.consumeForBind(verificationId);
 
     // Assert the verification record type matches the identifier type
     switch (type) {
@@ -274,10 +274,10 @@ export class Profile {
    * - skip profile existence check in the current user account.
    */
   unsafeSet(profile: InteractionProfile) {
-    this.#data = {
+    this.write({
       ...this.#data,
       ...profile,
-    };
+    });
   }
 
   /**
@@ -285,10 +285,26 @@ export class Profile {
    * Avoid overwriting the existing profile data.
    */
   unsafePrepend(profile: InteractionProfile) {
-    this.#data = {
+    this.write({
       ...profile,
       ...this.#data,
-    };
+    });
+  }
+
+  /**
+   * The single write path into `#data`. Setting a password is the establishment of that credential
+   * and has no verification record, so the authentication proof is recorded on the transition of
+   * `passwordEncrypted` from unset to set; every path in funnels through here, including any added
+   * later.
+   */
+  private write(data: InteractionProfile) {
+    const isPasswordEstablished = !this.#data.passwordEncrypted && Boolean(data.passwordEncrypted);
+
+    this.#data = data;
+
+    if (isPasswordEstablished) {
+      this.interactionContext.recordEstablishedPassword();
+    }
   }
 
   /**

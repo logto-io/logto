@@ -6,6 +6,10 @@
  * @see {@link https://openid.net/specs/openid-connect-core-1_0.html#IDToken | OpenID Connect Core `acr` / `amr`}
  * @see {@link https://www.rfc-editor.org/rfc/rfc8176.html | RFC 8176 Authentication Method Reference Values}
  */
+import { z } from 'zod';
+
+import { type ToZodObject } from '../utils/zod.js';
+
 import { VerificationType } from './verification-records/verification-type.js';
 
 /** The Logto-defined ACR values. Only these can be requested through `acr_values`. */
@@ -48,25 +52,30 @@ export enum AuthenticationMethodReference {
   Federated = 'fed',
 }
 
-/** The class a verification record contributes toward an ACR. */
+/** The class a proof contributes toward an ACR. */
 export enum AuthenticationFactorClass {
   /** Contributes {@link LogtoAcr.FirstFactor}. */
   FirstFactor = '1fa',
   /**
-   * Contributes an `mfa`-class record. Combined with a {@link AuthenticationFactorClass.FirstFactor}
-   * record from a different factor it reaches {@link LogtoAcr.Mfa}; alone it reaches only
-   * {@link LogtoAcr.FirstFactor}, except WebAuthn / passkey with required user verification.
+   * Contributes an `mfa`-class proof. Combined with a {@link AuthenticationFactorClass.FirstFactor}
+   * proof of a different factor it reaches {@link LogtoAcr.Mfa}; alone it reaches only
+   * {@link LogtoAcr.FirstFactor}.
    */
   Mfa = 'mfa',
+  /**
+   * Satisfies the `1fa` and the `mfa` role by itself: a user-verified WebAuthn authenticator is
+   * possession plus user verification in one act, so it reaches {@link LogtoAcr.Mfa} alone.
+   */
+  Both = 'both',
 }
 
 /**
- * The class each verification type contributes: `1fa`-class, `mfa`-class, or `undefined` for
- * social / enterprise SSO, which contribute `fed` to AMR but nothing to the ACR.
+ * The class each verification type contributes: `1fa`-class, `mfa`-class, `both`, or `undefined`
+ * for social / enterprise SSO, which contribute `fed` to AMR but nothing to the ACR.
  *
  * The record is keyed by every {@link VerificationType}, so a new type fails at compile time until
- * it is mapped here. Whether a WebAuthn assertion actually required user verification is decided at
- * derivation time; this table only says which class the type can contribute.
+ * it is mapped here. Logto requires user verification for every WebAuthn ceremony, registration and
+ * authentication alike, so a verified WebAuthn record is user-verified by construction.
  */
 const authenticationFactorClasses: Readonly<
   Record<VerificationType, AuthenticationFactorClass | undefined>
@@ -75,15 +84,14 @@ const authenticationFactorClasses: Readonly<
   [VerificationType.EmailVerificationCode]: AuthenticationFactorClass.FirstFactor,
   [VerificationType.PhoneVerificationCode]: AuthenticationFactorClass.FirstFactor,
   [VerificationType.OneTimeToken]: AuthenticationFactorClass.FirstFactor,
-  // The class of a password established by a registration. The account does not exist while the
-  // record is verified, so the sign-in derivation in core never counts the record as a proof.
+  // A password established by a registration; it is a proof once `createUser()` consumes it.
   [VerificationType.NewPasswordIdentity]: AuthenticationFactorClass.FirstFactor,
   [VerificationType.TOTP]: AuthenticationFactorClass.Mfa,
   [VerificationType.MfaEmailVerificationCode]: AuthenticationFactorClass.Mfa,
   [VerificationType.MfaPhoneVerificationCode]: AuthenticationFactorClass.Mfa,
   [VerificationType.BackupCode]: AuthenticationFactorClass.Mfa,
-  [VerificationType.WebAuthn]: AuthenticationFactorClass.Mfa,
-  [VerificationType.SignInPasskey]: AuthenticationFactorClass.Mfa,
+  [VerificationType.WebAuthn]: AuthenticationFactorClass.Both,
+  [VerificationType.SignInPasskey]: AuthenticationFactorClass.Both,
   [VerificationType.Social]: undefined,
   [VerificationType.EnterpriseSso]: undefined,
 });
@@ -171,20 +179,62 @@ export const getAuthenticationMethodReferences = (
 ): readonly AuthenticationMethodReference[] => authenticationMethodReferences[type];
 
 /**
- * Build the `amr` claim for a set of counted verification types and the ACR they achieved:
- * the union of each type's references in first-seen order, with `mfa` always last, present
- * whenever a counted type carries it (WebAuthn) or the achieved ACR is {@link LogtoAcr.Mfa}.
+ * Build the `amr` claim from the references each counted proof contributes and the ACR they
+ * achieved: the union in first-seen order, with `mfa` always last, present whenever a proof carries
+ * it (WebAuthn) or the achieved ACR is {@link LogtoAcr.Mfa}.
  */
 export const buildAuthenticationMethodReferences = (
-  types: Iterable<VerificationType>,
+  references: Iterable<readonly AuthenticationMethodReference[]>,
   achievedAcr?: LogtoAcr
 ): AuthenticationMethodReference[] => {
-  const references = [...types].flatMap((type) => getAuthenticationMethodReferences(type));
+  const flattened = [...references].flat();
   const hasMfa =
-    achievedAcr === LogtoAcr.Mfa || references.includes(AuthenticationMethodReference.Mfa);
+    achievedAcr === LogtoAcr.Mfa || flattened.includes(AuthenticationMethodReference.Mfa);
 
   return [
-    ...new Set(references.filter((reference) => reference !== AuthenticationMethodReference.Mfa)),
+    ...new Set(flattened.filter((reference) => reference !== AuthenticationMethodReference.Mfa)),
     ...(hasMfa ? [AuthenticationMethodReference.Mfa] : []),
   ];
 };
+
+/**
+ * Why a proof was recorded: the touchpoint that consumed the credential. Aggregation into `acr` /
+ * `amr` ignores the role; it exists for the MFA gate and for step-up freshness, and never reaches
+ * a token.
+ */
+export enum AuthenticationProofRole {
+  /** `createUser()` created the account from the record. */
+  Create = 'create',
+  /** `identifyUser()` identified the user with the record. */
+  Identify = 'identify',
+  /** The credential or factor was written to the account by this interaction. */
+  Bind = 'bind',
+  /** An MFA challenge was answered with the record. */
+  Mfa = 'mfa',
+}
+
+/**
+ * A proof that the identified user authenticated in the interaction, recorded at the single
+ * touchpoint that consumed the credential. What counts is decided where the interaction relies on
+ * the credential, never by inspecting verification records afterwards.
+ */
+export type AuthenticationProof = {
+  /** The verification record id, or `password` for a password established through the profile. */
+  id: string;
+  factor: AuthenticationFactor;
+  /** Absent for a federated proof, which contributes `fed` to AMR and nothing to the ACR. */
+  class?: AuthenticationFactorClass;
+  amr: AuthenticationMethodReference[];
+  role: AuthenticationProofRole;
+  /** Epoch seconds the credential was verified; becomes `auth_time`. */
+  at: number;
+};
+
+export const authenticationProofGuard = z.object({
+  id: z.string(),
+  factor: z.nativeEnum(AuthenticationFactor),
+  class: z.nativeEnum(AuthenticationFactorClass).optional(),
+  amr: z.nativeEnum(AuthenticationMethodReference).array(),
+  role: z.nativeEnum(AuthenticationProofRole),
+  at: z.number().int().nonnegative(),
+}) satisfies ToZodObject<AuthenticationProof>;
