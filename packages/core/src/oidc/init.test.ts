@@ -905,7 +905,10 @@ describe('authentication context extra token claims', () => {
 
   it('should preserve token exchange actor claims without adding authentication context', async () => {
     Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
-    const provider = createProvider(new MockTenant());
+    const tenant = new MockTenant(undefined, undefined, undefined, undefined, {
+      getJwtCustomizer: jest.fn().mockRejectedValue(new Error('Customizer is not configured')),
+    });
+    const provider = createProvider(tenant);
     const configuration = getProviderConfiguration(provider);
     const client = createTestClient();
     assert(client);
