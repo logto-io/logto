@@ -283,6 +283,11 @@ export function createManagementApi(
     tenantIdOrConfig,
     options
   );
+
+  if (tenantId !== undefined && tenantId.trim().length === 0) {
+    throw new TypeError('Tenant ID must not be empty');
+  }
+
   const { clientId, clientSecret, tokenRequestTimeout, getTokenRequestSignal, requestTimeout } =
     resolvedOptions;
   const configuredBaseUrl =
