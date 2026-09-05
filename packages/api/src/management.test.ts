@@ -16,6 +16,11 @@ vi.mock('./client-credentials.js');
 const mockCreateClient = vi.mocked(createClient);
 const MockClientCredentials = vi.mocked(ClientCredentials);
 
+const createManagementApiFromJavaScript = createManagementApi as unknown as (
+  tenantIdOrConfig: unknown,
+  options?: unknown
+) => unknown;
+
 const assertInvalidManagementApiConfig = () => {
   // @ts-expect-error -- Object options without a tenant ID require both explicit endpoints.
   createManagementApi({
@@ -104,7 +109,7 @@ describe('Management API', () => {
       });
     });
 
-    it('should use explicit endpoints without a tenant ID', () => {
+    it('should use an explicit base URL and API indicator without a tenant ID', () => {
       createManagementApi({
         clientId: 'test-client-id',
         clientSecret: 'test-client-secret',
@@ -125,6 +130,25 @@ describe('Management API', () => {
 
     it('should require both explicit endpoints when the tenant ID is omitted', () => {
       expectTypeOf(assertInvalidManagementApiConfig).toBeFunction();
+    });
+
+    it('should reject a positional tenant ID without options at runtime', () => {
+      expect(() => createManagementApiFromJavaScript('test-tenant')).toThrow(
+        'Options are required when creating a Management API client by tenant ID'
+      );
+    });
+
+    it.each([
+      null,
+      {
+        clientId: 'test-client-id',
+        clientSecret: 'test-client-secret',
+        baseUrl: 'https://custom.example.com',
+      },
+    ])('should reject invalid object configuration %# at runtime', (config) => {
+      expect(() => createManagementApiFromJavaScript(config)).toThrow(
+        'Provide a tenant ID or both baseUrl and apiIndicator'
+      );
     });
 
     it.each([

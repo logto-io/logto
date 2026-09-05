@@ -25,7 +25,7 @@ export type CreateManagementApiOptions = {
    */
   baseUrl?: string;
   /**
-   * The API indicator for the Management API. Required when the tenant ID is omitted.
+   * The resource indicator for the Management API. Required when the tenant ID is omitted.
    */
   apiIndicator?: string;
   /**
@@ -50,8 +50,8 @@ export type CreateManagementApiOptions = {
 };
 
 /**
- * Object options for creating a Management API client. Provide a tenant ID to derive the
- * endpoints, or provide both endpoints directly.
+ * Object options for creating a Management API client. Provide a tenant ID to derive the defaults,
+ * or provide both the base URL and API indicator directly.
  */
 export type CreateManagementApiConfig =
   | (CreateManagementApiOptions & { tenantId: string })
@@ -208,22 +208,28 @@ type ManagementApiReturnType = {
 };
 
 const resolveManagementApiArguments = (
-  tenantIdOrConfig: string | CreateManagementApiConfig,
+  tenantIdOrConfig: string | CreateManagementApiConfig | undefined,
   options?: CreateManagementApiOptions
 ) => {
-  if (typeof tenantIdOrConfig !== 'string') {
-    return { tenantId: tenantIdOrConfig.tenantId, options: tenantIdOrConfig };
+  if (typeof tenantIdOrConfig === 'string') {
+    if (!options) {
+      throw new TypeError(
+        'Options are required when creating a Management API client by tenant ID'
+      );
+    }
+
+    return { tenantId: tenantIdOrConfig, options };
   }
 
-  if (!options) {
-    throw new TypeError('Options are required when creating a Management API client by tenant ID');
+  if (!tenantIdOrConfig) {
+    throw new TypeError('Provide a tenant ID or both baseUrl and apiIndicator');
   }
 
-  return { tenantId: tenantIdOrConfig, options };
+  return { tenantId: tenantIdOrConfig.tenantId, options: tenantIdOrConfig };
 };
 
 /**
- * Creates a Management API client from a tenant ID or explicit endpoints.
+ * Creates a Management API client from a tenant ID or an explicit base URL and API indicator.
  *
  * Before using this function, ensure that you have created a machine-to-machine application in
  * Logto and granted it access to the Management API. See the documentation for more details:
@@ -233,8 +239,8 @@ const resolveManagementApiArguments = (
  * This function sets up the API client with the necessary authentication using client credentials.
  * It will automatically handle token retrieval and renewal as needed.
  *
- * @param tenantIdOrConfig A tenant ID, or object options containing a tenant ID or explicit
- * endpoints.
+ * @param tenantIdOrConfig A tenant ID, or object options containing a tenant ID or an explicit base
+ * URL and API indicator.
  * @param options The client options when the first argument is a tenant ID.
  * @returns An object containing the API client and client credentials instance.
  * @example
@@ -242,7 +248,8 @@ const resolveManagementApiArguments = (
  * import { createManagementApi } from '@logto/api/management';
  *
  * // Logto Cloud example
- * const { apiClient, clientCredentials } = createManagementApi('my-tenant-id', {
+ * const { apiClient, clientCredentials } = createManagementApi({
+ *   tenantId: 'my-tenant-id',
  *   clientId: 'my-client-id',
  *   clientSecret: 'my-client-secret',
  * });
@@ -256,10 +263,10 @@ const resolveManagementApiArguments = (
  * ```ts
  * // OSS example
  * const { apiClient, clientCredentials } = createManagementApi({
+ *   tenantId: 'default',
  *   clientId: 'my-client-id',
  *   clientSecret: 'my-client-secret',
  *   baseUrl: 'https://my-oss-logto-instance.com',
- *   apiIndicator: 'https://my-oss-logto-instance.com/api',
  * });
  * ```
  */
@@ -269,7 +276,7 @@ export function createManagementApi(
   options: CreateManagementApiOptions
 ): ManagementApiReturnType;
 export function createManagementApi(
-  tenantIdOrConfig: string | CreateManagementApiConfig,
+  tenantIdOrConfig: string | CreateManagementApiConfig | undefined,
   options?: CreateManagementApiOptions
 ): ManagementApiReturnType {
   const { tenantId, options: resolvedOptions } = resolveManagementApiArguments(

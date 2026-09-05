@@ -27,8 +27,8 @@ For detailed setup instructions, visit: https://a.logto.io/m2m-mapi
 ```ts
 import { createManagementApi } from '@logto/api/management';
 
-// For Logto Cloud
-const { apiClient } = createManagementApi('your-tenant-id', {
+const { apiClient } = createManagementApi({
+  tenantId: 'your-tenant-id',
   clientId: 'your-client-id',
   clientSecret: 'your-client-secret',
 });
@@ -39,18 +39,23 @@ const response = await apiClient.get('/api/users');
 console.log(response.data);
 ```
 
+The positional `createManagementApi(tenantId, options)` form remains supported.
+
 #### Self-hosted / OSS
 
 ```ts
 import { createManagementApi } from '@logto/api/management';
 
 const { apiClient } = createManagementApi({
+  tenantId: 'default',
   clientId: 'your-client-id',
   clientSecret: 'your-client-secret',
   baseUrl: 'https://your-logto-instance.com',
-  apiIndicator: 'https://your-logto-instance.com/api',
 });
 ```
+
+If the Management API indicator cannot be derived from a tenant ID, omit `tenantId` and provide
+both `baseUrl` and `apiIndicator`.
 
 #### Timeouts
 
