@@ -7,6 +7,7 @@ import { errors, type KoaContextWithOIDC } from 'oidc-provider';
 import { mockResource, mockUser } from '#src/__mocks__/index.js';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { JwtCustomizerLibrary } from '#src/libraries/jwt-customizer.js';
 import { getProviderConfiguration } from '#src/oidc/oidc-provider-internals.js';
 import { mockEnvSet } from '#src/test-utils/env-set.js';
 import { createOidcContext } from '#src/test-utils/oidc-provider.js';
@@ -809,6 +810,121 @@ describe('authentication context provider metadata', () => {
     expect(claimsSupported).not.toContain('acr');
     expect(claimsSupported).not.toContain('amr');
     expect(claimsSupported).toContain('auth_time');
+  });
+});
+describe('authentication context extra token claims', () => {
+  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+  const originalIsCloud = EnvSet.values.isCloud;
+
+  afterEach(() => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
+    Reflect.set(EnvSet.values, 'isCloud', originalIsCloud);
+    jest.restoreAllMocks();
+  });
+
+  it.each([true, false])(
+    'should preserve organization claims and apply customizer output last with dev features %s',
+    async (isDevFeaturesEnabled) => {
+      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', isDevFeaturesEnabled);
+      Reflect.set(EnvSet.values, 'isCloud', false);
+      const customizedClaims = { acr: 'custom-acr', auth_time: 3000, custom_claim: true };
+      const runScriptLocally = jest
+        .spyOn(JwtCustomizerLibrary, 'runScriptLocally')
+        .mockResolvedValueOnce({})
+        .mockResolvedValueOnce(customizedClaims);
+      const getJwtCustomizer = jest.fn().mockResolvedValue({ script: 'return {}' });
+      const tenant = new MockTenant(
+        undefined,
+        undefined,
+        undefined,
+        {
+          jwtCustomizers: {
+            getUserContext: jest.fn().mockResolvedValue({ id: accountId }),
+            getApplicationContext: jest.fn(),
+            getOrganizationContext: jest.fn(),
+          },
+        },
+        { getJwtCustomizer }
+      );
+      const provider = createProvider(tenant);
+      const configuration = getProviderConfiguration(provider);
+      const client = createTestClient();
+      assert(client);
+      const tokenProperties = {
+        client,
+        accountId,
+        scope: 'openid',
+        grantId: 'grant-id',
+        gty: GrantType.AuthorizationCode,
+      };
+      const ctx = createOidcContext({
+        provider,
+        client,
+        params: {
+          grant_type: GrantType.AuthorizationCode,
+          resource: indicator,
+          organization_id: 'org-id',
+        },
+        entities: {
+          AuthorizationCode: new provider.AuthorizationCode({
+            ...tokenProperties,
+            acr: 'urn:logto:acr:mfa',
+            amr: ['pwd', 'otp', 'mfa'],
+            authTime: 1000,
+          }),
+        },
+      });
+      Reflect.set(ctx, 'createLog', jest.fn().mockReturnValue({ append: jest.fn() }));
+      Reflect.set(ctx, 'prependAllLogEntries', jest.fn());
+      const token = new provider.AccessToken(tokenProperties);
+      const builtInClaims = {
+        organization_id: 'org-id',
+        ...(isDevFeaturesEnabled && {
+          acr: 'urn:logto:acr:mfa',
+          amr: ['pwd', 'otp', 'mfa'],
+          auth_time: 1000,
+        }),
+      };
+
+      await expect(configuration.extraTokenClaims(ctx, token)).resolves.toEqual(builtInClaims);
+      await expect(configuration.extraTokenClaims(ctx, token)).resolves.toEqual({
+        ...builtInClaims,
+        ...customizedClaims,
+      });
+
+      // Authentication context must also work when no other extra claims are configured.
+      getJwtCustomizer.mockRejectedValueOnce(new Error('Customizer is not configured'));
+      Reflect.set(ctx.oidc, 'params', { grant_type: GrantType.AuthorizationCode });
+      const { organization_id, ...authenticationContextClaims } = builtInClaims;
+      await expect(configuration.extraTokenClaims(ctx, token)).resolves.toEqual(
+        isDevFeaturesEnabled ? authenticationContextClaims : undefined
+      );
+      expect(runScriptLocally).toHaveBeenCalledTimes(2);
+    }
+  );
+
+  it('should preserve token exchange actor claims without adding authentication context', async () => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+    const tenant = new MockTenant(undefined, undefined, undefined, undefined, {
+      getJwtCustomizer: jest.fn().mockRejectedValue(new Error('Customizer is not configured')),
+    });
+    const provider = createProvider(tenant);
+    const configuration = getProviderConfiguration(provider);
+    const client = createTestClient();
+    assert(client);
+    const ctx = createOidcContext({ provider, params: { grant_type: GrantType.TokenExchange } });
+    const token = new provider.AccessToken({
+      client,
+      accountId,
+      scope: 'openid',
+      grantId: 'grant-id',
+      gty: GrantType.TokenExchange,
+      extra: { act: { sub: 'actor-id' } },
+    });
+
+    await expect(configuration.extraTokenClaims(ctx, token)).resolves.toEqual({
+      act: { sub: 'actor-id' },
+    });
   });
 });
 /* eslint-enable max-lines */
