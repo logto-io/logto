@@ -270,15 +270,18 @@ export function createManagementApi(
 ): ManagementApiReturnType;
 export function createManagementApi(
   tenantIdOrConfig: string | CreateManagementApiConfig,
-  legacyOptions?: CreateManagementApiOptions
+  options?: CreateManagementApiOptions
 ): ManagementApiReturnType {
-  const { tenantId, options } = resolveManagementApiArguments(tenantIdOrConfig, legacyOptions);
+  const { tenantId, options: resolvedOptions } = resolveManagementApiArguments(
+    tenantIdOrConfig,
+    options
+  );
   const { clientId, clientSecret, tokenRequestTimeout, getTokenRequestSignal, requestTimeout } =
-    options;
+    resolvedOptions;
   const configuredBaseUrl =
-    options.baseUrl ?? (tenantId === undefined ? undefined : getBaseUrl(tenantId));
+    resolvedOptions.baseUrl ?? (tenantId === undefined ? undefined : getBaseUrl(tenantId));
   const apiIndicator =
-    options.apiIndicator ??
+    resolvedOptions.apiIndicator ??
     (tenantId === undefined ? undefined : getManagementApiIndicator(tenantId));
 
   if (configuredBaseUrl === undefined || apiIndicator === undefined) {
