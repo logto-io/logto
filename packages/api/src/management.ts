@@ -2,6 +2,7 @@ import createClient, { type Client } from 'openapi-fetch';
 
 import { ClientCredentials } from './client-credentials.js';
 import { type paths } from './generated-types/management.js';
+import { normalizeTimeout, toTimeoutMilliseconds } from './timeout.js';
 
 /**
  * Options for creating a Management API client.
@@ -19,16 +20,46 @@ export type CreateManagementApiOptions = {
    */
   clientSecret: string;
   /**
-   * Override the base URL generated from the tenant ID.
-   * Useful for testing or custom deployments.
+   * The base URL for the Logto instance. Required when the tenant ID is omitted.
+   * Trailing slashes are ignored.
    */
   baseUrl?: string;
   /**
-   * Override the API indicator for the management API.
-   * Useful for testing or custom deployments.
+   * The resource indicator for the Management API. Required when the tenant ID is omitted.
    */
   apiIndicator?: string;
+  /**
+   * The maximum time in seconds allowed for fetching an access token.
+   * Non-positive and infinite values disable the timeout. `NaN` uses the default value.
+   * @default 10
+   */
+  tokenRequestTimeout?: number;
+  /**
+   * Returns an optional signal for each token request. The factory is called once per actual token
+   * fetch, so concurrent callers sharing a fetch also share its signal. The signal is composed with
+   * `tokenRequestTimeout`, and the first signal to abort cancels the request.
+   */
+  getTokenRequestSignal?: () => AbortSignal | undefined;
+  /**
+   * The maximum time in seconds allowed for the Management API network request after token
+   * retrieval. It is composed with per-request signals, and a timeout rejects the API call.
+   * Non-positive and infinite values disable the timeout. `NaN` uses the default value.
+   * @default 10
+   */
+  requestTimeout?: number;
 };
+
+/**
+ * Object options for creating a Management API client. Provide a tenant ID to derive the defaults,
+ * or provide both the base URL and API indicator directly.
+ */
+export type CreateManagementApiConfig =
+  | (CreateManagementApiOptions & { tenantId: string })
+  | (CreateManagementApiOptions & {
+      tenantId?: never;
+      baseUrl: string;
+      apiIndicator: string;
+    });
 
 /**
  * Options for creating an API client with custom token authentication.
@@ -36,6 +67,7 @@ export type CreateManagementApiOptions = {
 export type CreateApiClientOptions = {
   /**
    * The base URL for the Management API.
+   * Trailing slashes are ignored.
    */
   baseUrl: string;
   /**
@@ -43,6 +75,13 @@ export type CreateApiClientOptions = {
    * This function will be called for each request that requires authentication.
    */
   getToken: () => Promise<string>;
+  /**
+   * The maximum time in seconds allowed for the API network request after `getToken()` resolves.
+   * It is composed with per-request signals, and a timeout rejects the API call.
+   * Non-positive and infinite values disable the timeout. `NaN` uses the default value.
+   * @default 10
+   */
+  requestTimeout?: number;
 };
 
 /**
@@ -66,6 +105,48 @@ export const getManagementApiIndicator = (tenantId: string) => `${getBaseUrl(ten
  */
 export const allScope = 'all';
 
+const bearerTokenPrefix = 'Bearer ';
+
+const normalizeBaseUrl = (baseUrl: string) => baseUrl.replace(/\/+$/u, '');
+
+const isWellKnownPath = (schemaPath: string) => schemaPath.includes('/.well-known/');
+
+const createRequestTimeoutFetch =
+  (requestTimeout: number) => async (request: Request, requestInit?: RequestInit) => {
+    const signal = AbortSignal.any([
+      request.signal,
+      AbortSignal.timeout(toTimeoutMilliseconds(requestTimeout)),
+    ]);
+    return fetch(request, { ...requestInit, signal });
+  };
+
+type LowercaseHttpMethods = {
+  get: Client<paths>['GET'];
+  put: Client<paths>['PUT'];
+  post: Client<paths>['POST'];
+  delete: Client<paths>['DELETE'];
+  options: Client<paths>['OPTIONS'];
+  head: Client<paths>['HEAD'];
+  patch: Client<paths>['PATCH'];
+  trace: Client<paths>['TRACE'];
+};
+
+/** A typed Management API client with lowercase HTTP methods. */
+export type ManagementApiClient = Client<paths> & LowercaseHttpMethods;
+
+const addLowercaseHttpMethods = (client: Client<paths>): ManagementApiClient =>
+  // eslint-disable-next-line @silverhand/fp/no-mutating-assign -- Keep the original client identity while adding lowercase aliases.
+  Object.assign(client, {
+    get: client.GET,
+    put: client.PUT,
+    post: client.POST,
+    delete: client.DELETE,
+    options: client.OPTIONS,
+    head: client.HEAD,
+    patch: client.PATCH,
+    trace: client.TRACE,
+  });
+
 /**
  * Creates an API client with custom token authentication.
  *
@@ -85,27 +166,31 @@ export const allScope = 'all';
  *   getToken: async () => getYourToken(),
  * });
  *
- * const response = await client.GET('/api/applications/{id}', {
+ * const response = await client.get('/api/applications/{id}', {
  *   params: { path: { id: 'app-id' } },
  * });
  * ```
  */
-export function createApiClient(options: CreateApiClientOptions): Client<paths> {
+export function createApiClient(options: CreateApiClientOptions): ManagementApiClient {
   const { baseUrl, getToken } = options;
-  const client = createClient<paths>({ baseUrl });
+  const requestTimeout = normalizeTimeout(options.requestTimeout);
+  const client = createClient<paths>({
+    baseUrl: normalizeBaseUrl(baseUrl),
+    ...(requestTimeout > 0 && { fetch: createRequestTimeoutFetch(requestTimeout) }),
+  });
 
   client.use({
     async onRequest({ schemaPath, request }) {
-      if (schemaPath.includes('/.well-known/')) {
+      if (isWellKnownPath(schemaPath)) {
         return;
       }
       const token = await getToken();
-      request.headers.set('Authorization', `Bearer ${token}`);
+      request.headers.set('Authorization', `${bearerTokenPrefix}${token}`);
       return request;
     },
   });
 
-  return client;
+  return addLowercaseHttpMethods(client);
 }
 
 type ManagementApiReturnType = {
@@ -115,15 +200,36 @@ type ManagementApiReturnType = {
    * This client is configured to use the provided client credentials
    * and will automatically include the access token in requests.
    */
-  apiClient: Client<paths>;
+  apiClient: ManagementApiClient;
   /**
    * The client credentials instance used for authentication.
    */
   clientCredentials: ClientCredentials;
 };
 
+const resolveManagementApiArguments = (
+  tenantIdOrConfig: string | CreateManagementApiConfig | undefined,
+  options?: CreateManagementApiOptions
+) => {
+  if (typeof tenantIdOrConfig === 'string') {
+    if (!options) {
+      throw new TypeError(
+        'Options are required when creating a Management API client by tenant ID'
+      );
+    }
+
+    return { tenantId: tenantIdOrConfig, options };
+  }
+
+  if (!tenantIdOrConfig) {
+    throw new TypeError('Provide a tenant ID or both baseUrl and apiIndicator');
+  }
+
+  return { tenantId: tenantIdOrConfig.tenantId, options: tenantIdOrConfig };
+};
+
 /**
- * Creates a Management API client with the specified tenant ID and options.
+ * Creates a Management API client from a tenant ID or an explicit base URL and API indicator.
  *
  * Before using this function, ensure that you have created a machine-to-machine application in
  * Logto and granted it access to the Management API. See the documentation for more details:
@@ -133,43 +239,68 @@ type ManagementApiReturnType = {
  * This function sets up the API client with the necessary authentication using client credentials.
  * It will automatically handle token retrieval and renewal as needed.
  *
- * @param tenantId The tenant ID for which to create the Management API client. For OSS deployments,
- * you can pass any string as the tenant ID, for example, 'default'.
- * @param options The options for creating the Management API client, including client ID and secret.
+ * @param tenantIdOrConfig A tenant ID, or object options containing a tenant ID or an explicit base
+ * URL and API indicator.
+ * @param options The client options when the first argument is a tenant ID.
  * @returns An object containing the API client and client credentials instance.
  * @example
  * ```ts
  * import { createManagementApi } from '@logto/api/management';
  *
  * // Logto Cloud example
- * const { apiClient, clientCredentials } = createManagementApi('my-tenant-id', {
+ * const { apiClient, clientCredentials } = createManagementApi({
+ *   tenantId: 'my-tenant-id',
  *   clientId: 'my-client-id',
  *   clientSecret: 'my-client-secret',
  * });
  *
  * // Use apiClient to make requests to the Management API
- * const response = await apiClient.GET('/api/users');
+ * const response = await apiClient.get('/api/users');
  * console.log(response.data);
  * ```
  *
  * @example
  * ```ts
  * // OSS example
- * const { apiClient, clientCredentials } = createManagementApi('default', {
+ * const { apiClient, clientCredentials } = createManagementApi({
+ *   tenantId: 'default',
  *   clientId: 'my-client-id',
  *   clientSecret: 'my-client-secret',
  *   baseUrl: 'https://my-oss-logto-instance.com',
- *   apiIndicator: 'https://default.logto.app/api',
  * });
  * ```
  */
+export function createManagementApi(config: CreateManagementApiConfig): ManagementApiReturnType;
 export function createManagementApi(
   tenantId: string,
   options: CreateManagementApiOptions
+): ManagementApiReturnType;
+export function createManagementApi(
+  tenantIdOrConfig: string | CreateManagementApiConfig | undefined,
+  options?: CreateManagementApiOptions
 ): ManagementApiReturnType {
-  const { clientId, clientSecret } = options;
-  const baseUrl = options.baseUrl ?? getBaseUrl(tenantId);
-  const apiIndicator = options.apiIndicator ?? getManagementApiIndicator(tenantId);
+  const { tenantId, options: resolvedOptions } = resolveManagementApiArguments(
+    tenantIdOrConfig,
+    options
+  );
+
+  if (tenantId !== undefined && tenantId.trim().length === 0) {
+    throw new TypeError('Tenant ID must not be empty');
+  }
+
+  const { clientId, clientSecret, tokenRequestTimeout, getTokenRequestSignal, requestTimeout } =
+    resolvedOptions;
+  const configuredBaseUrl =
+    resolvedOptions.baseUrl ?? (tenantId === undefined ? undefined : getBaseUrl(tenantId));
+  const apiIndicator =
+    resolvedOptions.apiIndicator ??
+    (tenantId === undefined ? undefined : getManagementApiIndicator(tenantId));
+
+  if (configuredBaseUrl === undefined || apiIndicator === undefined) {
+    throw new TypeError('Provide a tenant ID or both baseUrl and apiIndicator');
+  }
+
+  const baseUrl = normalizeBaseUrl(configuredBaseUrl);
   const clientCredentials = new ClientCredentials({
     clientId,
     clientSecret,
@@ -178,20 +309,48 @@ export function createManagementApi(
       resource: apiIndicator,
       scope: allScope,
     },
+    tokenRequestTimeout,
+    getTokenRequestSignal,
   });
+  const warnedScopes = new Set<string | undefined>();
 
   const apiClient = createApiClient({
     baseUrl,
+    requestTimeout,
     getToken: async () => {
       const { value, scope } = await clientCredentials.getAccessToken();
 
-      if (scope !== allScope) {
+      if (scope !== allScope && !warnedScopes.has(scope)) {
+        warnedScopes.add(scope);
         console.warn(
           `The scope "${scope}" is not equal to the expected value "${allScope}". This may cause issues with API access. See https://a.logto.io/m2m-mapi to learn more about configuring machine-to-machine access to the Management API.`
         );
       }
 
       return value;
+    },
+  });
+
+  apiClient.use({
+    onResponse({ schemaPath, request, response }) {
+      if (isWellKnownPath(schemaPath)) {
+        return;
+      }
+
+      const authorization = request.headers.get('Authorization');
+
+      if (!authorization?.startsWith(bearerTokenPrefix)) {
+        return;
+      }
+
+      const accessToken = authorization.slice(bearerTokenPrefix.length);
+
+      if (response.status === 401) {
+        // Do not retry here because the request body may have been consumed.
+        clientCredentials.invalidateAccessToken(accessToken);
+      } else if (response.ok) {
+        clientCredentials.markAccessTokenAsValid(accessToken);
+      }
     },
   });
 
