@@ -1,5 +1,24 @@
 # Change Log
 
+## 1.44.0
+
+### Minor Changes
+
+- c5bd438f79: add MFA trusted devices with configurable policies and device management
+
+  Configure tenant-wide trusted-device policies and organization-level restrictions. After completing MFA, users can choose whether to trust their device on a dedicated page at the end of sign-in or sign-up, then skip repeated MFA on that browser. Manage trusted devices through Console, Account Center, the Management API, and the Account API, and subscribe to device lifecycle webhooks.
+
+### Patch Changes
+
+- Updated dependencies [c5bd438f79]
+  - @logto/experience@1.23.0
+  - @logto/account@0.7.0
+  - @logto/console@1.41.0
+  - @logto/schemas@1.44.0
+  - @logto/cli@1.44.0
+  - @logto/demo-app@1.5.0
+  - @logto/device-demo-app@0.1.0
+
 ## 1.43.0
 
 ### Minor Changes
