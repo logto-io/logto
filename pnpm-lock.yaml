@@ -52,7 +52,7 @@ overrides:
   postcss@<8.5.18: ^8.5.18
   prismjs@<1.30.0: ^1.30.0
   qs@>=6.11.1 <6.15.2: ^6.15.2
-  react-router@>=6.7.0 <6.30.6: ^6.30.6
+  react-router@>=6.7.0 <6.30.6: ^7.18.0
   react-router-dom@>=6.7.0 <6.30.6: ^6.30.6
   rollup@>=4.0.0 <4.59.0: ^4.59.0
   shell-quote@>=1.1.0 <1.9.0: ^1.9.0
@@ -13386,7 +13386,7 @@ packages:
     resolution: {integrity: sha512-uTqF9MuPraAQ+IsnPf366RG4cP9RtUi7MLO1N3KEc+wb0a6yKpeL0lmk2IB1jY5KHPAlTc6T/JRdC/YqxHNwkQ==}
 
   oidc-provider@https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/513c523c0e68ee6112da8c871cce86204a136163:
-    resolution: {gitHosted: true, tarball: https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/513c523c0e68ee6112da8c871cce86204a136163}
+    resolution: {gitHosted: true, integrity: sha512-KaUwCyEEDSZILL2ua2f9SsQ2oSrgq04JAmkQzq2gj7VJyREH3zQS14G7MhfDYxEKjAhO4JZ6bUGzZjW/0Q5pEg==, tarball: https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/513c523c0e68ee6112da8c871cce86204a136163}
     version: 9.11.3
 
   on-finished@2.4.1:
