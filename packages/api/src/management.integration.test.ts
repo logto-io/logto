@@ -3,10 +3,10 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createManagementApi } from './management.js';
 import { getAbortReason } from './timeout.js';
 
-const jsonResponse = (body: unknown, status = 200) =>
+const jsonResponse = (body: unknown, status = 200, headers?: Record<string, string>) =>
   new Response(JSON.stringify(body), {
     status,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', ...headers },
   });
 
 describe('Management API token recovery', () => {
@@ -129,5 +129,57 @@ describe('Management API token recovery', () => {
     expect(timeout).toHaveBeenCalledWith(20_000);
     timeoutController.abort(timeoutError);
     await rejection;
+  });
+
+  it('should authenticate every paginated Management API request', async () => {
+    const mockFetch = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(
+        jsonResponse({ access_token: 'test-token', expires_in: 3600, scope: 'all' })
+      )
+      .mockResolvedValueOnce(
+        jsonResponse([{ id: 'user-1' }], 200, {
+          Link: '<https://test-tenant.logto.app/api/users?page=2&page_size=1>; rel="next"',
+        })
+      )
+      .mockResolvedValueOnce(jsonResponse([{ id: 'user-2' }]));
+    vi.stubGlobal('fetch', mockFetch);
+    const { apiClient } = createManagementApi('test-tenant', {
+      clientId: 'test-client-id',
+      clientSecret: 'test-client-secret',
+    });
+
+    const iterator = apiClient.paginate(
+      '/api/users' as never,
+      {
+        params: { query: { page_size: 1 } },
+      } as never
+    );
+
+    await expect(iterator.next()).resolves.toMatchObject({ done: false, value: { id: 'user-1' } });
+    await expect(iterator.next()).resolves.toMatchObject({ done: false, value: { id: 'user-2' } });
+    await expect(iterator.next()).resolves.toEqual({ done: true, value: undefined });
+
+    expect(mockFetch).toHaveBeenCalledTimes(3);
+    const firstRequest = mockFetch.mock.calls[1]?.[0];
+    const secondRequest = mockFetch.mock.calls[2]?.[0];
+
+    expect(firstRequest).toBeInstanceOf(Request);
+    expect(secondRequest).toBeInstanceOf(Request);
+
+    if (!(firstRequest instanceof Request) || !(secondRequest instanceof Request)) {
+      throw new TypeError('Expected paginated Management API requests');
+    }
+
+    expect(firstRequest.headers.get('Authorization')).toBe('Bearer test-token');
+    expect(secondRequest.headers.get('Authorization')).toBe('Bearer test-token');
+    expect(Object.fromEntries(new URL(firstRequest.url).searchParams)).toEqual({
+      page: '1',
+      page_size: '1',
+    });
+    expect(Object.fromEntries(new URL(secondRequest.url).searchParams)).toEqual({
+      page: '2',
+      page_size: '1',
+    });
   });
 });

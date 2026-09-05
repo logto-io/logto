@@ -41,6 +41,26 @@ console.log(response.data);
 
 The positional `createManagementApi(tenantId, options)` form remains supported.
 
+#### Pagination
+
+Use `paginate()` to iterate over items from a paginated `GET` endpoint. The path, query parameters,
+path parameters, headers, and signal use the same generated types as `get()`.
+
+```ts
+for await (const user of apiClient.paginate('/api/users')) {
+  console.log(user);
+}
+```
+
+The iterator follows the Management API pagination headers and stops when there are no more items.
+It requests 100 items per page unless `page_size` is provided. When an audit log endpoint reports a
+capped total, the iterator continues until it receives an empty page because the final page is
+unknown. Breaking out of the loop stops further requests.
+
+API error responses throw `ManagementApiPaginationError`, which exposes `status`, response metadata
+and headers through `response`, and the parsed API error body as `cause`. The response body has
+already been read. Network, timeout, and abort errors propagate unchanged.
+
 #### Self-hosted / OSS
 
 ```ts
