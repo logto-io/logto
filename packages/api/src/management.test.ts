@@ -109,6 +109,25 @@ describe('Management API', () => {
       });
     });
 
+    it('should combine an explicit base URL with the API indicator derived from the tenant ID', () => {
+      createManagementApi({
+        tenantId: 'default',
+        clientId: 'test-client-id',
+        clientSecret: 'test-client-secret',
+        baseUrl: 'https://my-oss-logto-instance.com/',
+      });
+
+      expect(MockClientCredentials.mock.calls[0]?.[0]).toMatchObject({
+        tokenEndpoint: 'https://my-oss-logto-instance.com/oidc/token',
+        tokenParams: { resource: 'https://default.logto.app/api' },
+      });
+      expect(mockCreateClient).toHaveBeenCalledWith({
+        baseUrl: 'https://my-oss-logto-instance.com',
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Vitest's asymmetric matcher accepts any function.
+        fetch: expect.any(Function),
+      });
+    });
+
     it('should use an explicit base URL and API indicator without a tenant ID', () => {
       createManagementApi({
         clientId: 'test-client-id',
@@ -148,6 +167,17 @@ describe('Management API', () => {
     ])('should reject invalid object configuration %# at runtime', (config) => {
       expect(() => createManagementApiFromJavaScript(config)).toThrow(
         'Provide a tenant ID or both baseUrl and apiIndicator'
+      );
+    });
+
+    it('should reject an empty tenant ID at runtime', () => {
+      const options = { clientId: 'test-client-id', clientSecret: 'test-client-secret' };
+
+      expect(() => createManagementApiFromJavaScript('', options)).toThrow(
+        'Tenant ID must not be empty'
+      );
+      expect(() => createManagementApiFromJavaScript({ tenantId: '', ...options })).toThrow(
+        'Tenant ID must not be empty'
       );
     });
 
