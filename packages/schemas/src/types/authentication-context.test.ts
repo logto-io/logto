@@ -176,6 +176,21 @@ describe('buildAuthenticationMethodReferences', () => {
 });
 
 describe('authenticationProofGuard', () => {
+  it.each([
+    { id: '', amr: ['otp'] },
+    { id: 'totp', amr: [] },
+  ])('rejects a proof with an empty id or AMR list: %j', ({ id, amr }) => {
+    expect(
+      authenticationProofGuard.safeParse({
+        id,
+        factor: AuthenticationFactor.Totp,
+        class: AuthenticationFactorClass.Mfa,
+        amr,
+        role: AuthenticationProofRole.Mfa,
+      }).success
+    ).toBe(false);
+  });
+
   it('accepts a proof with and without a class', () => {
     expect(
       authenticationProofGuard.safeParse({

@@ -238,9 +238,9 @@ export type AuthenticationProof = {
 };
 
 export const authenticationProofGuard = z.object({
-  id: z.string(),
+  id: z.string().min(1),
   factor: z.nativeEnum(AuthenticationFactor),
   class: z.nativeEnum(AuthenticationFactorClass).optional(),
-  amr: z.nativeEnum(AuthenticationMethodReference).array(),
+  amr: z.nativeEnum(AuthenticationMethodReference).array().min(1),
   role: z.nativeEnum(AuthenticationProofRole),
 }) satisfies ToZodObject<AuthenticationProof>;

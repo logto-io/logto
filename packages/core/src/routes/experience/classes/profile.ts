@@ -318,10 +318,10 @@ export class Profile {
   }
 
   /**
-   * The single write path into `#data`. Setting a password is the establishment of that credential
-   * and has no verification record, so the authentication proof is recorded on the transition of
-   * `passwordEncrypted` from unset to set; every path funnels through here, including any added
-   * later.
+   * Shared write path for `unsafeSet()` and `unsafePrepend()`. Setting a password establishes that
+   * credential without a verification record, so record its authentication proof when
+   * `passwordEncrypted` transitions from unset to set. Profile submission and cleanup mutate
+   * `#data` separately and do not establish a password.
    */
   private write(data: InteractionProfile) {
     const isPasswordEstablished = !this.#data.passwordEncrypted && Boolean(data.passwordEncrypted);
