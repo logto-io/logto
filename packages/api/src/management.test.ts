@@ -1,5 +1,5 @@
 import createClient, { type Middleware } from 'openapi-fetch';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, expectTypeOf, vi, beforeEach, afterEach } from 'vitest';
 
 import { ClientCredentials } from './client-credentials.js';
 import {
@@ -15,6 +15,15 @@ vi.mock('./client-credentials.js');
 
 const mockCreateClient = vi.mocked(createClient);
 const MockClientCredentials = vi.mocked(ClientCredentials);
+
+const assertInvalidManagementApiConfig = () => {
+  // @ts-expect-error -- Object options without a tenant ID require both explicit endpoints.
+  createManagementApi({
+    clientId: 'test-client-id',
+    clientSecret: 'test-client-secret',
+    baseUrl: 'https://custom.example.com',
+  });
+};
 
 describe('Management API', () => {
   beforeEach(() => {
@@ -75,6 +84,47 @@ describe('Management API', () => {
 
       expect(result.apiClient).toBe(mockApiClient);
       expect(result.clientCredentials).toBe(mockClientCredentials);
+    });
+
+    it('should derive endpoints from a tenant ID in object options', () => {
+      createManagementApi({
+        tenantId: 'test-tenant',
+        clientId: 'test-client-id',
+        clientSecret: 'test-client-secret',
+      });
+
+      expect(MockClientCredentials.mock.calls[0]?.[0]).toMatchObject({
+        tokenEndpoint: 'https://test-tenant.logto.app/oidc/token',
+        tokenParams: { resource: 'https://test-tenant.logto.app/api' },
+      });
+      expect(mockCreateClient).toHaveBeenCalledWith({
+        baseUrl: 'https://test-tenant.logto.app',
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Vitest's asymmetric matcher accepts any function.
+        fetch: expect.any(Function),
+      });
+    });
+
+    it('should use explicit endpoints without a tenant ID', () => {
+      createManagementApi({
+        clientId: 'test-client-id',
+        clientSecret: 'test-client-secret',
+        baseUrl: 'https://custom.example.com///',
+        apiIndicator: 'https://custom.example.com/custom-api',
+      });
+
+      expect(MockClientCredentials.mock.calls[0]?.[0]).toMatchObject({
+        tokenEndpoint: 'https://custom.example.com/oidc/token',
+        tokenParams: { resource: 'https://custom.example.com/custom-api' },
+      });
+      expect(mockCreateClient).toHaveBeenCalledWith({
+        baseUrl: 'https://custom.example.com',
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Vitest's asymmetric matcher accepts any function.
+        fetch: expect.any(Function),
+      });
+    });
+
+    it('should require both explicit endpoints when the tenant ID is omitted', () => {
+      expectTypeOf(assertInvalidManagementApiConfig).toBeFunction();
     });
 
     it.each([

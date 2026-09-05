@@ -20,14 +20,12 @@ export type CreateManagementApiOptions = {
    */
   clientSecret: string;
   /**
-   * Override the base URL generated from the tenant ID.
-   * Useful for testing or custom deployments.
+   * The base URL for the Logto instance. Required when the tenant ID is omitted.
    * Trailing slashes are ignored.
    */
   baseUrl?: string;
   /**
-   * Override the API indicator for the management API.
-   * Useful for testing or custom deployments.
+   * The API indicator for the Management API. Required when the tenant ID is omitted.
    */
   apiIndicator?: string;
   /**
@@ -50,6 +48,18 @@ export type CreateManagementApiOptions = {
    */
   requestTimeout?: number;
 };
+
+/**
+ * Object options for creating a Management API client. Provide a tenant ID to derive the
+ * endpoints, or provide both endpoints directly.
+ */
+export type CreateManagementApiConfig =
+  | (CreateManagementApiOptions & { tenantId: string })
+  | (CreateManagementApiOptions & {
+      tenantId?: never;
+      baseUrl: string;
+      apiIndicator: string;
+    });
 
 /**
  * Options for creating an API client with custom token authentication.
@@ -197,8 +207,23 @@ type ManagementApiReturnType = {
   clientCredentials: ClientCredentials;
 };
 
+const resolveManagementApiArguments = (
+  tenantIdOrConfig: string | CreateManagementApiConfig,
+  options?: CreateManagementApiOptions
+) => {
+  if (typeof tenantIdOrConfig !== 'string') {
+    return { tenantId: tenantIdOrConfig.tenantId, options: tenantIdOrConfig };
+  }
+
+  if (!options) {
+    throw new TypeError('Options are required when creating a Management API client by tenant ID');
+  }
+
+  return { tenantId: tenantIdOrConfig, options };
+};
+
 /**
- * Creates a Management API client with the specified tenant ID and options.
+ * Creates a Management API client from a tenant ID or explicit endpoints.
  *
  * Before using this function, ensure that you have created a machine-to-machine application in
  * Logto and granted it access to the Management API. See the documentation for more details:
@@ -208,9 +233,9 @@ type ManagementApiReturnType = {
  * This function sets up the API client with the necessary authentication using client credentials.
  * It will automatically handle token retrieval and renewal as needed.
  *
- * @param tenantId The tenant ID for which to create the Management API client. For OSS deployments,
- * you can pass any string as the tenant ID, for example, 'default'.
- * @param options The options for creating the Management API client, including client ID and secret.
+ * @param tenantIdOrConfig A tenant ID, or object options containing a tenant ID or explicit
+ * endpoints.
+ * @param options The client options when the first argument is a tenant ID.
  * @returns An object containing the API client and client credentials instance.
  * @example
  * ```ts
@@ -230,22 +255,37 @@ type ManagementApiReturnType = {
  * @example
  * ```ts
  * // OSS example
- * const { apiClient, clientCredentials } = createManagementApi('default', {
+ * const { apiClient, clientCredentials } = createManagementApi({
  *   clientId: 'my-client-id',
  *   clientSecret: 'my-client-secret',
  *   baseUrl: 'https://my-oss-logto-instance.com',
- *   apiIndicator: 'https://default.logto.app/api',
+ *   apiIndicator: 'https://my-oss-logto-instance.com/api',
  * });
  * ```
  */
+export function createManagementApi(config: CreateManagementApiConfig): ManagementApiReturnType;
 export function createManagementApi(
   tenantId: string,
   options: CreateManagementApiOptions
+): ManagementApiReturnType;
+export function createManagementApi(
+  tenantIdOrConfig: string | CreateManagementApiConfig,
+  legacyOptions?: CreateManagementApiOptions
 ): ManagementApiReturnType {
+  const { tenantId, options } = resolveManagementApiArguments(tenantIdOrConfig, legacyOptions);
   const { clientId, clientSecret, tokenRequestTimeout, getTokenRequestSignal, requestTimeout } =
     options;
-  const baseUrl = normalizeBaseUrl(options.baseUrl ?? getBaseUrl(tenantId));
-  const apiIndicator = options.apiIndicator ?? getManagementApiIndicator(tenantId);
+  const configuredBaseUrl =
+    options.baseUrl ?? (tenantId === undefined ? undefined : getBaseUrl(tenantId));
+  const apiIndicator =
+    options.apiIndicator ??
+    (tenantId === undefined ? undefined : getManagementApiIndicator(tenantId));
+
+  if (configuredBaseUrl === undefined || apiIndicator === undefined) {
+    throw new TypeError('Provide a tenant ID or both baseUrl and apiIndicator');
+  }
+
+  const baseUrl = normalizeBaseUrl(configuredBaseUrl);
   const clientCredentials = new ClientCredentials({
     clientId,
     clientSecret,

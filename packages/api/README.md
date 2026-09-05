@@ -44,7 +44,7 @@ console.log(response.data);
 ```ts
 import { createManagementApi } from '@logto/api/management';
 
-const { apiClient } = createManagementApi('default', {
+const { apiClient } = createManagementApi({
   clientId: 'your-client-id',
   clientSecret: 'your-client-secret',
   baseUrl: 'https://your-logto-instance.com',
