@@ -6,6 +6,7 @@ import {
   updateProfileApiPayloadGuard,
   uploadFileGuard,
   userAssetsGuard,
+  VerificationType,
 } from '@logto/schemas';
 import { addDays, format } from 'date-fns';
 import { type MiddlewareType } from 'koa';
@@ -410,6 +411,12 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
               true
             );
             experienceInteraction.setVerificationRecord(codeVerification);
+            // The email is now an MFA factor of the account: record that `bind` proof next to
+            // the `1fa` one the profile bind recorded for the same mailbox.
+            experienceInteraction.consumeForBindByType(
+              VerificationType.MfaEmailVerificationCode,
+              codeVerification.id
+            );
           }
           break;
         }
@@ -433,6 +440,10 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
               true
             );
             experienceInteraction.setVerificationRecord(codeVerification);
+            experienceInteraction.consumeForBindByType(
+              VerificationType.MfaPhoneVerificationCode,
+              codeVerification.id
+            );
           }
           break;
         }
