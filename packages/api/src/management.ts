@@ -2,7 +2,10 @@ import createClient, { type Client } from 'openapi-fetch';
 
 import { ClientCredentials } from './client-credentials.js';
 import { type paths } from './generated-types/management.js';
+import { createPaginate, type PaginateMethod } from './pagination.js';
 import { normalizeTimeout, toTimeoutMilliseconds } from './timeout.js';
+
+export { ManagementApiPaginationError } from './pagination.js';
 
 /**
  * Options for creating a Management API client.
@@ -131,11 +134,15 @@ type LowercaseHttpMethods = {
   trace: Client<paths>['TRACE'];
 };
 
-/** A typed Management API client with lowercase HTTP methods. */
-export type ManagementApiClient = Client<paths> & LowercaseHttpMethods;
+type PaginationMethod = {
+  paginate: PaginateMethod<paths>;
+};
 
-const addLowercaseHttpMethods = (client: Client<paths>): ManagementApiClient =>
-  // eslint-disable-next-line @silverhand/fp/no-mutating-assign -- Keep the original client identity while adding lowercase aliases.
+/** A typed Management API client with lowercase HTTP methods and pagination support. */
+export type ManagementApiClient = Client<paths> & LowercaseHttpMethods & PaginationMethod;
+
+const addClientMethods = (client: Client<paths>): ManagementApiClient =>
+  // eslint-disable-next-line @silverhand/fp/no-mutating-assign -- Keep the original client identity while adding convenience methods.
   Object.assign(client, {
     get: client.GET,
     put: client.PUT,
@@ -145,6 +152,7 @@ const addLowercaseHttpMethods = (client: Client<paths>): ManagementApiClient =>
     head: client.HEAD,
     patch: client.PATCH,
     trace: client.TRACE,
+    paginate: createPaginate(client.GET),
   });
 
 /**
@@ -190,7 +198,7 @@ export function createApiClient(options: CreateApiClientOptions): ManagementApiC
     },
   });
 
-  return addLowercaseHttpMethods(client);
+  return addClientMethods(client);
 }
 
 type ManagementApiReturnType = {
