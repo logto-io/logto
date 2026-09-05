@@ -206,12 +206,12 @@ devFeatureTest.describe('authentication context claims on registration', () => {
         interactionEvent: InteractionEvent.Register,
       });
       await successfullyVerifyVerificationCode(client, { identifier, verificationId, code });
-      await client.identifyUser({ verificationId });
-      await expectRejects(client.submitInteraction(), {
+      await expectRejects(client.identifyUser({ verificationId }), {
         code: 'user.missing_profile',
         status: 422,
       });
       await client.updateProfile({ type: 'password', value: password });
+      await client.identifyUser();
 
       const claims = await finishRegistration(client);
 
