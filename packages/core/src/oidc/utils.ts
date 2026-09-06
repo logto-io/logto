@@ -9,11 +9,13 @@ import type {
 } from '@logto/schemas';
 import {
   ApplicationType,
+  AuthenticationContextMode,
   customClientMetadataGuard,
   GrantType,
   ExtraParamsKey,
   FirstScreen,
   experience,
+  loginPromptAuthenticationContextDetailsGuard,
 } from '@logto/schemas';
 import { condArray, conditional, removeUndefinedKeys, trySafe } from '@silverhand/essentials';
 import { type AllClientMetadata, type ClientAuthMethod, errors } from 'oidc-provider';
@@ -330,11 +332,43 @@ export const buildSharedExperienceCookie = ({
     uiLocales,
   });
 
+/**
+ * Whether the login prompt details carry a step-up authentication context: an authenticated
+ * session that does not satisfy the requested `acr_values` / `max_age`. The details are the
+ * provider's untyped prompt payload, so anything that does not parse is a regular sign-in.
+ */
+const isStepUpPrompt = (promptDetails: unknown): boolean => {
+  const result = loginPromptAuthenticationContextDetailsGuard.safeParse(promptDetails ?? {});
+
+  return (
+    result.success && result.data.authenticationContext?.mode === AuthenticationContextMode.StepUp
+  );
+};
+
+/**
+ * Build the Experience URL for a login prompt. A step-up prompt lands directly on the `step-up`
+ * route tree: the subject is pinned from the session, so the first screen, direct sign-in, and
+ * identifier hints do not apply and only the shared app, organization, and locale params are
+ * kept. A prompt whose details carry only the requested ACR values (no session) keeps the
+ * regular sign-in URL.
+ */
 // eslint-disable-next-line complexity
 export const buildLoginPromptUrl = (
   params: ExtraParamsObject,
-  sharedParams?: SharedExperienceParams
+  sharedParams?: SharedExperienceParams,
+  promptDetails?: unknown
 ): string => {
+  const searchParams = new URLSearchParams();
+  const getSearchParamString = () => (searchParams.size > 0 ? `?${searchParams.toString()}` : '');
+
+  if (sharedParams) {
+    appendSharedExperienceSearchParams(searchParams, sharedParams);
+  }
+
+  if (isStepUpPrompt(promptDetails)) {
+    return experience.routes.stepUp + getSearchParamString();
+  }
+
   const firstScreenKey =
     params[ExtraParamsKey.FirstScreen] ??
     params[ExtraParamsKey.InteractionMode] ??
@@ -348,18 +382,11 @@ export const buildLoginPromptUrl = (
   const directSignIn = params[ExtraParamsKey.DirectSignIn];
   const googleOneTapCredential = params[ExtraParamsKey.GoogleOneTapCredential];
 
-  const searchParams = new URLSearchParams();
-  const getSearchParamString = () => (searchParams.size > 0 ? `?${searchParams.toString()}` : '');
-
   const appendExtraParam = (key: keyof ExtraParamsObject) => {
     if (params[key]) {
       searchParams.append(key, params[key]);
     }
   };
-
-  if (sharedParams) {
-    appendSharedExperienceSearchParams(searchParams, sharedParams);
-  }
 
   appendExtraParam(ExtraParamsKey.OneTimeToken);
   appendExtraParam(ExtraParamsKey.LoginHint);

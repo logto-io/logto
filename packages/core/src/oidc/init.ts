@@ -34,6 +34,7 @@ import koaOidcPostToGet from '#src/middleware/koa-oidc-post-to-get.js';
 import koaOidcUnrecognizedRoute from '#src/middleware/koa-oidc-unrecognized-route.js';
 import koaResourceParam from '#src/middleware/koa-resource-param.js';
 import postgresAdapter from '#src/oidc/adapter.js';
+import { buildInteractionPolicy } from '#src/oidc/interaction-policy.js';
 import {
   buildSharedExperienceCookie,
   buildConsentPromptUrl,
@@ -269,6 +270,9 @@ export default function initOidc(
       );
     },
     interactions: {
+      // Evaluate `acr_values` and `max_age` strictly and route step-up prompts; without the policy
+      // the provider ignores `acr_values`, which OIDC treats as voluntary.
+      ...conditional(EnvSet.values.isDevFeaturesEnabled && { policy: buildInteractionPolicy() }),
       url: (ctx, { params: { client_id: appId }, prompt }) => {
         const params = trySafe(() => extraParamsObjectGuard.parse(ctx.oidc.params ?? {})) ?? {};
         const resolvedAppId = readOptionalQueryString(appId);
@@ -310,7 +314,7 @@ export default function initOidc(
 
         switch (prompt.name) {
           case 'login': {
-            return '/' + buildLoginPromptUrl(params, sharedParams);
+            return '/' + buildLoginPromptUrl(params, sharedParams, prompt.details);
           }
 
           case 'consent': {

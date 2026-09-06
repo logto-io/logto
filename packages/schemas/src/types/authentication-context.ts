@@ -30,6 +30,73 @@ export enum LogtoAcr {
 /** The ACR values advertised in Discovery as `acr_values_supported`, in the provider order. */
 export const logtoAcrValues = Object.freeze([LogtoAcr.FirstFactor, LogtoAcr.Mfa] as const);
 
+const logtoAcrSet: ReadonlySet<string> = new Set(logtoAcrValues);
+
+/** Whether a value, e.g. one of the requested `acr_values` or a session `acr`, is a Logto ACR. */
+export const isLogtoAcr = (value: unknown): value is LogtoAcr =>
+  typeof value === 'string' && logtoAcrSet.has(value);
+
+/**
+ * The classes each Logto ACR satisfies. Satisfaction is this explicit map, never the provider's
+ * exact match: {@link LogtoAcr.Mfa} is a {@link LogtoAcr.FirstFactor} context plus more, so it
+ * satisfies both classes, while {@link LogtoAcr.FirstFactor} satisfies only itself.
+ */
+const satisfiedAcrs: Readonly<Record<LogtoAcr, readonly LogtoAcr[]>> = Object.freeze({
+  [LogtoAcr.FirstFactor]: [LogtoAcr.FirstFactor],
+  [LogtoAcr.Mfa]: [LogtoAcr.Mfa, LogtoAcr.FirstFactor],
+});
+
+/**
+ * Whether an achieved ACR, e.g. the `acr` recorded on the OIDC session, satisfies a required
+ * class. An achieved value that is not a Logto ACR, including an absent one, satisfies nothing.
+ */
+export const acrSatisfies = (achieved: unknown, required: LogtoAcr): boolean =>
+  isLogtoAcr(achieved) && satisfiedAcrs[achieved].includes(required);
+
+/** How Experience handles a login prompt that carries a requested authentication context. */
+export enum AuthenticationContextMode {
+  /**
+   * An authenticated OIDC session exists but does not satisfy the request: the subject is pinned
+   * from the session and the interaction asks only for the missing assurance.
+   */
+  StepUp = 'stepUp',
+}
+
+/**
+ * The authentication context the OIDC interaction policy writes into the login prompt details
+ * when the authorization request carries supported `acr_values`. Experience reads it at
+ * interaction creation; `interactions.url` routes on {@link RequestedAuthenticationContext.mode}.
+ */
+export type RequestedAuthenticationContext = {
+  /** The supported classes from `acr_values`, in the caller's order. */
+  requestedAcrValues: LogtoAcr[];
+  /**
+   * The first requested class, the minimum the interaction must reach. Present only in step-up
+   * mode; a sign-in without a session applies the same selection rule once the user is identified.
+   */
+  selectedAcr?: LogtoAcr;
+  /** Present only when an authenticated session pins the subject. */
+  mode?: AuthenticationContextMode;
+};
+
+export const requestedAuthenticationContextGuard = z.object({
+  requestedAcrValues: z.nativeEnum(LogtoAcr).array(),
+  selectedAcr: z.nativeEnum(LogtoAcr).optional(),
+  mode: z.nativeEnum(AuthenticationContextMode).optional(),
+}) satisfies ToZodObject<RequestedAuthenticationContext>;
+
+/**
+ * The login prompt details that carry a {@link RequestedAuthenticationContext}. Absent when the
+ * authorization request carried no supported `acr_values`.
+ */
+export type LoginPromptAuthenticationContextDetails = {
+  authenticationContext?: RequestedAuthenticationContext;
+};
+
+export const loginPromptAuthenticationContextDetailsGuard = z.object({
+  authenticationContext: requestedAuthenticationContextGuard.optional(),
+}) satisfies ToZodObject<LoginPromptAuthenticationContextDetails>;
+
 /**
  * The AMR values Logto emits. All except {@link AuthenticationMethodReference.Federated} are
  * registered in RFC 8176; `fed` is the de facto industry value for authentication delegated to an

@@ -5,19 +5,88 @@ import {
   AuthenticationFactorClass,
   AuthenticationMethodReference,
   AuthenticationProofRole,
+  AuthenticationContextMode,
   LogtoAcr,
+  acrSatisfies,
   authenticationProofGuard,
   buildAuthenticationMethodReferences,
   getAuthenticationFactor,
   getAuthenticationFactorClass,
   getAuthenticationMethodReferences,
+  isLogtoAcr,
   logtoAcrValues,
+  requestedAuthenticationContextGuard,
 } from './authentication-context.js';
 import { VerificationType } from './verification-records/verification-type.js';
 
 describe('logtoAcrValues', () => {
   it('advertises exactly the two Logto classes in order', () => {
     expect(logtoAcrValues).toEqual(['urn:logto:acr:1fa', 'urn:logto:acr:mfa']);
+  });
+});
+
+describe('isLogtoAcr', () => {
+  it.each(logtoAcrValues)('accepts %s', (acr) => {
+    expect(isLogtoAcr(acr)).toBe(true);
+  });
+
+  it.each(['urn:logto:acr:2fa', 'phr', '', undefined, null, 1, ['urn:logto:acr:mfa']])(
+    'rejects %j',
+    (value) => {
+      expect(isLogtoAcr(value)).toBe(false);
+    }
+  );
+});
+
+describe('acrSatisfies', () => {
+  it.each([
+    [LogtoAcr.FirstFactor, LogtoAcr.FirstFactor, true],
+    [LogtoAcr.Mfa, LogtoAcr.Mfa, true],
+    // `mfa` is a `1fa` context plus more, so it satisfies the weaker class as well.
+    [LogtoAcr.Mfa, LogtoAcr.FirstFactor, true],
+    [LogtoAcr.FirstFactor, LogtoAcr.Mfa, false],
+  ])('%s satisfies %s: %s', (achieved, required, expected) => {
+    expect(acrSatisfies(achieved, required)).toBe(expected);
+  });
+
+  it.each(['urn:logto:acr:2fa', 'phr', '', undefined])(
+    'never lets the unsupported achieved value %j satisfy a class',
+    (achieved) => {
+      for (const required of logtoAcrValues) {
+        expect(acrSatisfies(achieved, required)).toBe(false);
+      }
+    }
+  );
+});
+
+describe('requestedAuthenticationContextGuard', () => {
+  it('accepts a sign-in context that carries only the requested values', () => {
+    expect(
+      requestedAuthenticationContextGuard.parse({ requestedAcrValues: [LogtoAcr.Mfa] })
+    ).toEqual({ requestedAcrValues: [LogtoAcr.Mfa] });
+  });
+
+  it('accepts a step-up context', () => {
+    const context = {
+      requestedAcrValues: [LogtoAcr.Mfa, LogtoAcr.FirstFactor],
+      selectedAcr: LogtoAcr.Mfa,
+      mode: AuthenticationContextMode.StepUp,
+    };
+
+    expect(requestedAuthenticationContextGuard.parse(context)).toEqual(context);
+  });
+
+  it('rejects unsupported classes and modes', () => {
+    expect(
+      requestedAuthenticationContextGuard.safeParse({ requestedAcrValues: ['urn:logto:acr:2fa'] })
+        .success
+    ).toBe(false);
+    expect(
+      requestedAuthenticationContextGuard.safeParse({
+        requestedAcrValues: [LogtoAcr.Mfa],
+        mode: 'signIn',
+      }).success
+    ).toBe(false);
   });
 });
 
