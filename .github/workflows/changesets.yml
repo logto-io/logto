@@ -8,6 +8,10 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
 
+# Git and API writes ride BOT_PAT, the workflow token only reads
+permissions:
+  contents: read
+
 jobs:
   changesets:
     runs-on: ubuntu-latest

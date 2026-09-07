@@ -14,6 +14,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
+# No checkout and issue writing is disabled, the token is unused
+permissions: {}
+
 jobs:
   zap-scan:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}

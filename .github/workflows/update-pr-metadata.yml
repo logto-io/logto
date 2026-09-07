@@ -11,6 +11,9 @@ concurrency:
 
 jobs:
   update-metadata:
+    permissions:
+      issues: write
+      pull-requests: write
     runs-on: ubuntu-latest
 
     steps:
@@ -30,6 +33,9 @@ jobs:
           assignees: ${{ github.event.pull_request.user.login }}
 
   pr-size-diff:
+    permissions:
+      contents: read
+      pull-requests: write
     runs-on: ubuntu-latest
 
     steps:

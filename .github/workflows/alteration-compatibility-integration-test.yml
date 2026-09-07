@@ -11,6 +11,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   check-alteration-changes:
     runs-on: ubuntu-latest
@@ -94,6 +97,8 @@ jobs:
   # Automatically rerun the workflow since the integration tests are moody
   # From this genius: https://github.com/orgs/community/discussions/67654#discussioncomment-8038649
   rerun-on-failure:
+    permissions:
+      actions: write
     needs: run-logto
     if: failure() && fromJSON(github.run_attempt) < 3
     # An error will occur if we use a newer version of Ubuntu in the CI environment, as it has restrictions on unprivileged user namespaces and sandbox usage, which prevents Chromium (used by Puppeteer) from launching properly during integration tests. So we lock the Ubuntu version to 22.04.

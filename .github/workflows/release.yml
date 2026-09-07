@@ -149,6 +149,9 @@ jobs:
 
   # Publish packages and create git tags if needed
   publish-and-tag:
+    # Publishing and tagging ride BOT_PAT and the npm token
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     env:
       NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTOMATION_TOKEN }}
@@ -186,6 +189,9 @@ jobs:
         run: node .scripts/publish.js
 
   create-github-release:
+    # The release is created with BOT_PAT
+    permissions:
+      contents: read
     environment: release
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')

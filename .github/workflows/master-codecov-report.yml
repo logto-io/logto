@@ -6,6 +6,9 @@ on:
 
 concurrency: ${{ github.workflow }}
 
+permissions:
+  contents: read
+
 jobs:
   report-coverage:
     runs-on: ubuntu-latest
