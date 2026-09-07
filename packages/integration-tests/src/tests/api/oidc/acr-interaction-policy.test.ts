@@ -139,7 +139,7 @@ devFeatureTest.describe('acr_values and max_age interaction policy', () => {
   it('routes an unmet request on an authenticated session to the step-up path', async () => {
     const client = await signInWithPassword();
     const { status, location, setCookies } = await authorize(client, {
-      extraParams: { acr_values: `${unsupportedAcr} ${mfaAcr} ${firstFactorAcr}` },
+      extraParams: { acr_values: `${unsupportedAcr} ${mfaAcr}` },
     });
 
     expect(status).toBe(303);
@@ -149,7 +149,7 @@ devFeatureTest.describe('acr_values and max_age interaction policy', () => {
     expect(prompt.name).toBe('login');
     expect(prompt.reasons).toEqual(['acr_unmet']);
     expect(prompt.details.authenticationContext).toEqual({
-      requestedAcrValues: [mfaAcr, firstFactorAcr],
+      requestedAcrValues: [mfaAcr],
       selectedAcr: mfaAcr,
       mode: 'stepUp',
     });
