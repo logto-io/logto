@@ -12,7 +12,10 @@ import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { AnonymousRouter, RouterInitArgs } from '#src/routes/types.js';
 import { SamlApplication } from '#src/saml-application/SamlApplication/index.js';
-import { generateAutoSubmitForm } from '#src/saml-application/SamlApplication/utils.js';
+import {
+  generateAutoSubmitForm,
+  isForceAuthnRequested,
+} from '#src/saml-application/SamlApplication/utils.js';
 import assertThat from '#src/utils/assert-that.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 
@@ -287,9 +290,13 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         'application.saml.auth_request_issuer_not_match'
       );
 
+      const forceAuthn = isForceAuthnRequested(loginRequestResult.samlContent);
+      log.append({ forceAuthn });
+
       const state = generateStandardId(32);
       const signInUrl = await samlApplication.getSignInUrl({
         state,
+        forceAuthn,
       });
       log.append({ signInUrl: signInUrl.toString() });
 
@@ -381,9 +388,13 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         'application.saml.auth_request_issuer_not_match'
       );
 
+      const forceAuthn = isForceAuthnRequested(loginRequestResult.samlContent);
+      log.append({ forceAuthn });
+
       const state = generateStandardShortId();
       const signInUrl = await samlApplication.getSignInUrl({
         state,
+        forceAuthn,
       });
       log.append({ signInUrl: signInUrl.toString() });
 

@@ -2,6 +2,7 @@ import { NameIdFormat } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { appendPath } from '@silverhand/essentials';
 import camelCase from 'camelcase';
+import saml from 'samlify';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { type IdTokenProfileStandardClaims } from '#src/sso/types/oidc.js';
@@ -118,4 +119,19 @@ export const getSamlAppCallbackUrl = (baseUrl: URL, samlAppId: string) =>
 export const generateSamlAttributeTag = (content: string, prefix = 'attr'): string => {
   const camelContent = camelCase(content, { locale: 'en-us' });
   return prefix + camelContent.charAt(0).toUpperCase() + camelContent.slice(1);
+};
+
+/**
+ * Whether the service provider asked to re-authenticate the user, i.e. its `AuthnRequest` carries
+ * `ForceAuthn="true"` (SAML 2.0 core, section 3.4.1; `xs:boolean` also admits `1`).
+ *
+ * samlify's default login-request extractor does not read this attribute, so it is read from the
+ * decoded request XML.
+ */
+export const isForceAuthnRequested = (authnRequestXml: string): boolean => {
+  const { forceAuthn } = saml.Extractor.extract(authnRequestXml, [
+    { key: 'forceAuthn', localPath: ['AuthnRequest'], attributes: ['ForceAuthn'] },
+  ]);
+
+  return forceAuthn === 'true' || forceAuthn === '1';
 };
