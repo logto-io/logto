@@ -129,7 +129,7 @@ export class ClientCredentials {
     }
   }
 
-  /** Allows a future 401 to invalidate the token after it receives a successful API response. */
+  /** Allows a future 401 to invalidate the token after the API accepts it. */
   markAccessTokenAsValid(token: string): void {
     if (this.accessToken?.value === token) {
       this.awaitingValidationAfterRefresh = false;

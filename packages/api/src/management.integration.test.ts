@@ -92,6 +92,57 @@ describe('Management API token recovery', () => {
     ).toEqual(['Bearer first-token', 'Bearer replacement-token', 'Bearer replacement-token']);
   });
 
+  it('should allow a later 401 to invalidate a replacement token after a non-401 response', async () => {
+    const mockFetch = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(
+        jsonResponse({ access_token: 'first-token', expires_in: 3600, scope: 'all' })
+      )
+      .mockResolvedValueOnce(jsonResponse({ error: 'Unauthorized' }, 401))
+      .mockResolvedValueOnce(
+        jsonResponse({ access_token: 'replacement-token', expires_in: 3600, scope: 'all' })
+      )
+      .mockResolvedValueOnce(jsonResponse({ error: 'Forbidden' }, 403))
+      .mockResolvedValueOnce(jsonResponse({ error: 'Unauthorized' }, 401))
+      .mockResolvedValueOnce(
+        jsonResponse({ access_token: 'third-token', expires_in: 3600, scope: 'all' })
+      )
+      .mockResolvedValueOnce(jsonResponse([]));
+    vi.stubGlobal('fetch', mockFetch);
+    const { apiClient } = createManagementApi('test-tenant', {
+      clientId: 'test-client-id',
+      clientSecret: 'test-client-secret',
+    });
+
+    const firstResult = await apiClient.get('/api/users' as never);
+    const secondResult = await apiClient.get('/api/users' as never);
+    const thirdResult = await apiClient.get('/api/users' as never);
+    const fourthResult = await apiClient.get('/api/users' as never);
+
+    expect(
+      [firstResult, secondResult, thirdResult, fourthResult].map(({ response }) => response.status)
+    ).toEqual([401, 403, 401, 200]);
+    expect(mockFetch).toHaveBeenCalledTimes(7);
+
+    const apiRequests = [
+      mockFetch.mock.calls[1]?.[0],
+      mockFetch.mock.calls[3]?.[0],
+      mockFetch.mock.calls[4]?.[0],
+      mockFetch.mock.calls[6]?.[0],
+    ];
+    expect(apiRequests.every((request) => request instanceof Request)).toBe(true);
+    expect(
+      apiRequests.map((request) =>
+        request instanceof Request ? request.headers.get('Authorization') : undefined
+      )
+    ).toEqual([
+      'Bearer first-token',
+      'Bearer replacement-token',
+      'Bearer replacement-token',
+      'Bearer third-token',
+    ]);
+  });
+
   it('should apply the client request timeout to Management API calls', async () => {
     const timeoutController = new AbortController();
     const timeoutError = new DOMException('Request timed out', 'TimeoutError');

@@ -72,8 +72,8 @@ custom cancellation reject the API call instead of returning a response object.
 #### Token refresh
 
 After a Management API request returns `401`, the next request fetches a new token. If the replacement
-token also receives a `401`, it remains cached until a request succeeds or the token expires. The SDK
-does not automatically retry the failed API request.
+token also receives a `401`, it remains cached until the API returns a non-`401` response or the token
+expires. The SDK does not automatically retry the failed API request.
 
 #### Custom authentication
 

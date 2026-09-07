@@ -348,7 +348,7 @@ export function createManagementApi(
       if (response.status === 401) {
         // Do not retry here because the request body may have been consumed.
         clientCredentials.invalidateAccessToken(accessToken);
-      } else if (response.ok) {
+      } else {
         clientCredentials.markAccessTokenAsValid(accessToken);
       }
     },
