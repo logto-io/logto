@@ -239,15 +239,25 @@ export class SamlApplication {
     return this.getUserInfo({ accessToken });
   };
 
-  public getSignInUrl = async ({ state }: { state?: string }) => {
+  /**
+   * Build the OIDC authorization URL that signs the user in for this SAML application.
+   *
+   * `prompt=login` is only added when the service provider asked for re-authentication with
+   * `ForceAuthn="true"` on its `AuthnRequest` (SAML 2.0 core, section 3.4.1). Otherwise an
+   * existing Logto session is reused, as it is for OIDC applications.
+   */
+  public getSignInUrl = async ({ state, forceAuthn }: { state?: string; forceAuthn?: boolean }) => {
     const { authorizationEndpoint } = await this.fetchOidcConfig();
 
     const queryParameters = new URLSearchParams({
       [QueryKey.ClientId]: this.samlApplicationId,
       [QueryKey.RedirectUri]: this.config.redirectUri,
       [QueryKey.ResponseType]: 'code',
-      [QueryKey.Prompt]: Prompt.Login,
     });
+
+    if (forceAuthn) {
+      queryParameters.append(QueryKey.Prompt, Prompt.Login);
+    }
 
     queryParameters.append(
       QueryKey.Scope,
