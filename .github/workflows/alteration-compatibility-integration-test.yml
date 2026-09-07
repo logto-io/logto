@@ -52,7 +52,7 @@ jobs:
       INTEGRATION_TEST: true
       DEV_FEATURES_ENABLED: false
     steps:
-      - uses: logto-io/actions-package-logto-artifact@v3
+      - uses: logto-io/actions-package-logto-artifact@c6239af6f6969b564aacc2c09c80949058d105ee # v3
         with:
           artifact-name: alteration-integration-test-${{ github.sha }}
           branch: ${{ github.base_ref }}
@@ -81,7 +81,7 @@ jobs:
       STATUS_API_KEY: test-status-api-key
 
     steps:
-      - uses: logto-io/actions-run-logto-integration-tests@v4.1.0
+      - uses: logto-io/actions-run-logto-integration-tests@192bd800da301681d11b391f293fd5847c5fd17a # v4.1.0
         with:
           branch: ${{ github.base_ref }}
           logto-artifact: alteration-integration-test-${{ github.sha }}

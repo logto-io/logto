@@ -24,7 +24,7 @@ jobs:
       DEV_FEATURES_ENABLED: ${{ matrix.dev-features-enabled }}
 
     steps:
-      - uses: logto-io/actions-package-logto-artifact@v3
+      - uses: logto-io/actions-package-logto-artifact@c6239af6f6969b564aacc2c09c80949058d105ee # v3
         with:
           artifact-name: integration-test-${{ github.sha }}-dev-features-${{ matrix.dev-features-enabled }}
           pnpm-version: 10
@@ -52,7 +52,7 @@ jobs:
       STATUS_API_KEY: test-status-api-key
 
     steps:
-      - uses: logto-io/actions-run-logto-integration-tests@v4.0.1
+      - uses: logto-io/actions-run-logto-integration-tests@f2457129b0694c78c4cc811ec025860d4d333a32 # v4.0.1
         with:
           logto-artifact: integration-test-${{ github.sha }}-dev-features-${{ env.DEV_FEATURES_ENABLED }}
           test-target: ${{ matrix.target }}

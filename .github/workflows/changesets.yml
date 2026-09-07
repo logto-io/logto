@@ -18,13 +18,13 @@ jobs:
           token: ${{ secrets.BOT_PAT }}
 
       - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v5
+        uses: silverhand-io/actions-node-pnpm-run-steps@1a627b19475990eb5723cbe3f8e1e2a049d2742d # v5
         with:
           pnpm-version: 10
           node-version: ^22.14.0
 
       - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v6
+        uses: crazy-max/ghaction-import-gpg@e89d40939c28e39f97cf32126055eeae86ba74ec # v6.3.0
         with:
           gpg_private_key: ${{ secrets.BOT_GPG_KEY }}
           passphrase: ${{ secrets.BOT_GPG_PASSPHRASE }}
@@ -39,7 +39,7 @@ jobs:
 
       - name: Create pull request
         if: github.event_name == 'push'
-        uses: changesets/action@v1
+        uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
         with:
           version: node .scripts/version.js
           setupGitUser: false

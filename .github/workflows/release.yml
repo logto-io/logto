@@ -28,7 +28,7 @@ jobs:
 
       - name: Docker meta
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5.10.0
         with:
           images: |
             ghcr.io/logto-io/logto
@@ -45,10 +45,9 @@ jobs:
           : "${LOGTO_OSS_SURVEY_ENDPOINT:?LOGTO_OSS_SURVEY_ENDPOINT is required for release builds}"
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
       - name: Build OSS validation image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
         with:
           context: .
           load: true
@@ -73,23 +72,22 @@ jobs:
             '
 
       - name: Login to DockerHub
-        uses: docker/login-action@v3
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
         with:
           registry: ghcr.io
           username: silverhand-bot
           password: ${{ secrets.BOT_PAT }}
 
       - name: Setup Depot
-        uses: depot/setup-action@v1
-
+        uses: depot/setup-action@91bc8495a33ebfc504ffc89e5674379ccf23c29c # v1.7.2
       - name: Build and push
-        uses: depot/build-push-action@v1
+        uses: depot/build-push-action@98e78adca7817480b8185f474a400b451d74e287 # v1.18.0
         with:
           platforms: linux/amd64, linux/arm64
           project: g902cp6dvv
@@ -116,7 +114,7 @@ jobs:
 
       - name: Docker meta
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5.10.0
         with:
           images: |
             ghcr.io/logto-io/logto
@@ -125,13 +123,13 @@ jobs:
             type=edge
 
       - name: Login to DockerHub
-        uses: docker/login-action@v3
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
         with:
           registry: |
             ghcr.io
@@ -139,10 +137,9 @@ jobs:
           password: ${{ secrets.BOT_PAT }}
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
       - name: Build and push docker image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
         with:
           platforms: linux/amd64
           context: .
@@ -166,13 +163,13 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v5
+        uses: silverhand-io/actions-node-pnpm-run-steps@1a627b19475990eb5723cbe3f8e1e2a049d2742d # v5
         with:
           pnpm-version: 10
           node-version: ^22.14.0
 
       - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v6
+        uses: crazy-max/ghaction-import-gpg@e89d40939c28e39f97cf32126055eeae86ba74ec # v6.3.0
         with:
           gpg_private_key: ${{ secrets.BOT_GPG_KEY }}
           passphrase: ${{ secrets.BOT_GPG_PASSPHRASE }}
@@ -199,7 +196,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v5
+        uses: silverhand-io/actions-node-pnpm-run-steps@1a627b19475990eb5723cbe3f8e1e2a049d2742d # v5
         with:
           pnpm-version: 10
           node-version: ^22.14.0
@@ -211,7 +208,7 @@ jobs:
         run: ./.scripts/package.sh
 
       - name: Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
         with:
           token: ${{ secrets.BOT_PAT }}
           body: ""

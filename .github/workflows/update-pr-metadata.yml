@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Add labels
-        uses: silverhand-io/actions-add-labels-run-steps@v1.2.2
+        uses: silverhand-io/actions-add-labels-run-steps@4f137f97def1e860395b061861bbd9bc7b61041a # v1.2.2
         with:
           title: ${{ github.event.pull_request.title || github.event.issue.title }}
           github-token: ${{ github.token }}
@@ -24,7 +24,7 @@ jobs:
         if: |
           contains(fromJson('["opened", "reopened"]'), github.event.action) &&
           !endsWith(github.event.pull_request.user.login, '[bot]')
-        uses: actions-ecosystem/action-add-assignees@v1
+        uses: actions-ecosystem/action-add-assignees@a5b84af721c4a621eb9c7a4a95ec20a90d0b88e9 # v1.0.1
         with:
           github_token: ${{ github.token }}
           assignees: ${{ github.event.pull_request.user.login }}
@@ -98,7 +98,7 @@ jobs:
               result.length ? `\n<details>\n<summary><b>Diff by File</b></summary>\n\n${filesHeader}${filesData}</details>\n` : ''
             }`;
 
-      - uses: marocchino/sticky-pull-request-comment@v2
+      - uses: marocchino/sticky-pull-request-comment@773744901bac0e8cbb5a0dc842800d45e9b2b405 # v2.9.4
         with:
           message: |
             ${{ steps.message.outputs.result }}

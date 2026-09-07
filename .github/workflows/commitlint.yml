@@ -21,7 +21,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v5
+        uses: silverhand-io/actions-node-pnpm-run-steps@1a627b19475990eb5723cbe3f8e1e2a049d2742d # v5
         with:
           pnpm-version: 10
           node-version: ^22.14.0
