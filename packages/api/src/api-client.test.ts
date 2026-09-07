@@ -119,6 +119,15 @@ describe('createApiClient', () => {
     expect(client[lowercaseMethod]).toBe(mockApiClient[uppercaseMethod]);
   });
 
+  it('should expose the pagination helper', () => {
+    const client = createApiClient({
+      baseUrl: 'https://test.logto.app',
+      getToken: async () => 'test-token',
+    });
+
+    expect(client.paginate).toBeTypeOf('function');
+  });
+
   it('should configure middleware correctly', async () => {
     const getToken = vi.fn().mockResolvedValue('test-token');
 
