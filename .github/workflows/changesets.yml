@@ -19,6 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          persist-credentials: false
           token: ${{ secrets.BOT_PAT }}
 
       - name: Setup Node and pnpm
@@ -40,6 +41,12 @@ jobs:
         run: |
           git config --global user.email bot@silverhand.io
           git config --global user.name silverhand-bot
+
+      - name: Re-attach push credential
+        env:
+          PUSH_TOKEN: ${{ secrets.BOT_PAT }}
+        # Checkout ran with persist-credentials: false, re-attach for the version branch push
+        run: git remote set-url origin "https://x-access-token:${PUSH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
 
       - name: Create pull request
         if: github.event_name == 'push'

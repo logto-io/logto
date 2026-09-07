@@ -24,6 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          persist-credentials: false
           fetch-depth: 0
 
       - name: Docker meta
@@ -110,6 +111,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          persist-credentials: false
           fetch-depth: 0
 
       - name: Docker meta
@@ -161,6 +163,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          persist-credentials: false
           # Set Git operations with the bot PAT since we have tag protection rule
           token: ${{ secrets.BOT_PAT }}
           fetch-depth: 0
@@ -186,7 +189,12 @@ jobs:
           git config --global user.name silverhand-bot
 
       - name: Publish
-        run: node .scripts/publish.js
+        env:
+          PUSH_TOKEN: ${{ secrets.BOT_PAT }}
+        run: |
+          # Checkout ran with persist-credentials: false, re-attach for the tag push
+          git remote set-url origin "https://x-access-token:${PUSH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          node .scripts/publish.js
 
   create-github-release:
     # The release is created with BOT_PAT
@@ -199,6 +207,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          persist-credentials: false
           fetch-depth: 0
 
       - name: Setup Node and pnpm

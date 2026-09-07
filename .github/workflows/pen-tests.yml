@@ -14,8 +14,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
-# No checkout and issue writing is disabled, the token is unused
-permissions: {}
+# Issue writing is disabled, the job only reads the tree
+permissions:
+  contents: read
 
 jobs:
   zap-scan:
@@ -25,7 +26,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
+        with:
+          persist-credentials: false
       - name: Docker Compose up
         run: |
           curl -fsSL https://raw.githubusercontent.com/logto-io/logto/HEAD/docker-compose.yml |\

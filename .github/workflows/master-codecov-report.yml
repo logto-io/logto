@@ -15,7 +15,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
+        with:
+          persist-credentials: false
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@1a627b19475990eb5723cbe3f8e1e2a049d2742d # v5
         with:

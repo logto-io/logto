@@ -20,7 +20,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
+        with:
+          persist-credentials: false
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@1a627b19475990eb5723cbe3f8e1e2a049d2742d # v5
         with:
@@ -42,7 +43,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
+        with:
+          persist-credentials: false
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@1a627b19475990eb5723cbe3f8e1e2a049d2742d # v5
         with:
@@ -57,7 +59,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
+        with:
+          persist-credentials: false
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@1a627b19475990eb5723cbe3f8e1e2a049d2742d # v5
         with:
@@ -75,7 +78,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
+        with:
+          persist-credentials: false
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@1a627b19475990eb5723cbe3f8e1e2a049d2742d # v5
         with:
@@ -96,7 +100,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
+        with:
+          persist-credentials: false
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@1a627b19475990eb5723cbe3f8e1e2a049d2742d # v5
         with:
@@ -133,6 +138,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          persist-credentials: false
           fetch-depth: 0
 
       - name: Set up Docker Buildx
@@ -151,6 +157,7 @@ jobs:
       # ** Checkout fresh and alteration ref **
       - uses: actions/checkout@v4
         with:
+          persist-credentials: false
           fetch-depth: 0
           path: ./fresh
 
@@ -161,6 +168,7 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
+          persist-credentials: false
           ref: ${{ steps.version.outputs.current }}
           path: ./alteration
       # ** End **
