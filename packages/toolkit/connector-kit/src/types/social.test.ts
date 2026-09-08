@@ -33,7 +33,8 @@ describe('oidcPromptsGuard', () => {
 
   it('still accepts an empty array and undefined', () => {
     expect(oidcPromptsGuard.safeParse([]).success).toBe(true);
-    expect(oidcPromptsGuard.safeParse().success).toBe(true);
+    // eslint-disable-next-line unicorn/no-useless-undefined -- `safeParse` requires an argument
+    expect(oidcPromptsGuard.safeParse(undefined).success).toBe(true);
   });
 
   it('still rejects values outside the enum', () => {
