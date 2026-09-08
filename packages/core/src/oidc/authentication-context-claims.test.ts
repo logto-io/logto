@@ -28,13 +28,23 @@ const refreshContext = {
   amr: ['pwd', 'otp', 'mfa'],
   authTime: 2000,
 };
+const deviceContext = {
+  acr: 'urn:logto:acr:1fa',
+  amr: ['otp'],
+  authTime: 2500,
+};
 
 const buildContext = (
   grantType: string | undefined,
   {
     authorizationCode,
+    deviceCode,
     refreshToken,
-  }: { authorizationCode?: AuthenticationContext; refreshToken?: AuthenticationContext } = {}
+  }: {
+    authorizationCode?: AuthenticationContext;
+    deviceCode?: AuthenticationContext;
+    refreshToken?: AuthenticationContext;
+  } = {}
 ) => {
   const session = new provider.Session();
   session.loginAccount({
@@ -61,6 +71,9 @@ const buildContext = (
       ...(refreshToken && {
         RefreshToken: new provider.RefreshToken({ ...tokenProperties, ...refreshToken }),
       }),
+      ...(deviceCode && {
+        DeviceCode: new provider.DeviceCode({ ...tokenProperties, ...deviceCode }),
+      }),
     },
   });
 };
@@ -85,10 +98,12 @@ describe('getExtraTokenClaimsForAuthenticationContext', () => {
   it.each([
     [GrantType.AuthorizationCode, codeContext],
     [GrantType.RefreshToken, refreshContext],
-  ])('should use the %s source when both grant entities are present', (grantType, source) => {
+    [GrantType.DeviceCode, deviceContext],
+  ])('should use the %s source when all grant entities are present', (grantType, source) => {
     const ctx = buildContext(grantType, {
       authorizationCode: codeContext,
       refreshToken: refreshContext,
+      deviceCode: deviceContext,
     });
 
     expect(getExtraTokenClaimsForAuthenticationContext(ctx, createAccessToken())).toEqual({
@@ -98,10 +113,14 @@ describe('getExtraTokenClaimsForAuthenticationContext', () => {
     });
   });
 
-  describe.each([GrantType.AuthorizationCode, GrantType.RefreshToken])('%s', (grantType) => {
+  describe.each([
+    [GrantType.AuthorizationCode, 'authorizationCode'],
+    [GrantType.RefreshToken, 'refreshToken'],
+    [GrantType.DeviceCode, 'deviceCode'],
+  ])('%s', (grantType, sourceKey) => {
     const buildSourceContext = (source: AuthenticationContext) =>
       buildContext(grantType, {
-        [grantType === GrantType.AuthorizationCode ? 'authorizationCode' : 'refreshToken']: source,
+        [sourceKey]: source,
       });
 
     it.each([
@@ -142,12 +161,31 @@ describe('getExtraTokenClaimsForAuthenticationContext', () => {
     });
   });
 
-  it.each([GrantType.ClientCredentials, GrantType.TokenExchange, GrantType.DeviceCode, undefined])(
+  it('should preserve device authentication context when issuing an access token via refresh', () => {
+    const deviceClaims = getExtraTokenClaimsForAuthenticationContext(
+      buildContext(GrantType.DeviceCode, { deviceCode: deviceContext }),
+      createAccessToken()
+    );
+    const refreshClaims = getExtraTokenClaimsForAuthenticationContext(
+      buildContext(GrantType.RefreshToken, { refreshToken: deviceContext }),
+      createAccessToken()
+    );
+
+    expect(deviceClaims).toEqual({
+      acr: deviceContext.acr,
+      amr: deviceContext.amr,
+      auth_time: deviceContext.authTime,
+    });
+    expect(refreshClaims).toEqual(deviceClaims);
+  });
+
+  it.each([GrantType.ClientCredentials, GrantType.TokenExchange, undefined])(
     'should not reuse unrelated authentication context for grant %s',
     (grantType) => {
       const ctx = buildContext(grantType, {
         authorizationCode: codeContext,
         refreshToken: refreshContext,
+        deviceCode: deviceContext,
       });
 
       expect(getExtraTokenClaimsForAuthenticationContext(ctx, createAccessToken())).toBeUndefined();

@@ -17,9 +17,9 @@ export const getExtraTokenClaimsForAuthenticationContext = (
   const { entities, params } = ctx.oidc;
   const grantType = params?.grant_type;
   const source =
-    grantType === GrantType.AuthorizationCode
-      ? entities.AuthorizationCode
-      : conditional(grantType === GrantType.RefreshToken && entities.RefreshToken);
+    conditional(grantType === GrantType.AuthorizationCode && entities.AuthorizationCode) ??
+    conditional(grantType === GrantType.DeviceCode && entities.DeviceCode) ??
+    conditional(grantType === GrantType.RefreshToken && entities.RefreshToken);
 
   // Other grants must not acquire authentication context from the session or subject token.
   if (!source) {
