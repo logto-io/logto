@@ -15,9 +15,22 @@ export enum OidcPrompt {
 
 export type OidcPrompts = OidcPrompt[];
 
+/**
+ * Per OpenID Connect Core 1.0 section 3.1.2.1, `none` requests that no
+ * authentication or consent UI be shown at all, so it cannot be combined with
+ * any other prompt: "If this parameter contains `none` with any other value, an
+ * error is returned."
+ *
+ * Without this check the invalid combination is accepted by the console and
+ * only rejected by the identity provider, at which point the end user gets a
+ * provider error page instead of a sign-in screen.
+ */
 export const oidcPromptsGuard: z.ZodType<Optional<OidcPrompts>> = z
   .nativeEnum(OidcPrompt)
   .array()
+  .refine((prompts) => !prompts.includes(OidcPrompt.None) || prompts.length === 1, {
+    message: 'The `none` prompt cannot be combined with other prompts.',
+  })
   .optional();
 
 // This type definition is for SAML connector
