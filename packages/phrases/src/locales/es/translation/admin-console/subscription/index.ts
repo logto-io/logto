@@ -74,8 +74,8 @@ const subscription = {
   },
   upgrade_success: 'Actualizado con éxito a <name/>',
   downgrade_success: 'Degradado con éxito a <name/>',
-  subscription_check_timeout:
-    'La comprobación de suscripción expiró. Por favor, actualiza más tarde.',
+  subscription_check_pending:
+    'Tu pago se ha procesado. Configurar tu suscripción está tardando más de lo habitual.',
   no_subscription: 'Sin suscripción',
   usage,
   token_usage_notification: {

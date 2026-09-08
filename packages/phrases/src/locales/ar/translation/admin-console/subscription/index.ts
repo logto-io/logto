@@ -70,7 +70,8 @@ const subscription = {
   },
   upgrade_success: 'تم الترقية بنجاح إلى <name/>',
   downgrade_success: 'تم التخفيض بنجاح إلى <name/>',
-  subscription_check_timeout: 'انتهت مهلة فحص الاشتراك. يرجى التحديث في وقت لاحق.',
+  subscription_check_pending:
+    'لقد تمت عملية الدفع الخاصة بك. إعداد اشتراكك يستغرق وقتًا أطول من المعتاد.',
   no_subscription: 'لا يوجد اشتراك',
   usage,
   token_usage_notification: {
