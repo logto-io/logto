@@ -4,10 +4,10 @@
  *
  * Everything here is evaluated on read and never persisted, so a factor the user unbinds during
  * the interaction's lifetime disappears from the next read. Reachability is not restated here: it
- * is a bounded search over `aggregateAuthenticationContext`, the one definition of what a set of
- * contributions reaches, so the methods offered can never disagree with what a submission
- * derives. The candidates are the subject's enrolled methods; later milestones add enrollable
- * factors and establishable first factors as further candidate contributions.
+ * is a bounded search over `achieveAcr`, the one definition of what a set of contributions
+ * reaches, so the methods offered can never disagree with what a submission derives. The
+ * candidates are the subject's enrolled methods; later milestones add enrollable factors and
+ * establishable first factors as further candidate contributions.
  */
 import {
   AuthenticationFactorClass,
@@ -17,17 +17,13 @@ import {
   acrSatisfies,
   getAuthenticationFactor,
   getAuthenticationFactorClass,
-  getAuthenticationMethodReferences,
   type MaskedIdentifiers,
   type Mfa,
   type User,
 } from '@logto/schemas';
 import { maskEmail, maskPhone } from '@logto/shared';
 
-import {
-  aggregateAuthenticationContext,
-  type AuthenticationContribution,
-} from './authentication-context.js';
+import { achieveAcr, type AuthenticationContribution } from './authentication-context.js';
 import { MfaValidator } from './mfa-validator.js';
 
 /** Whether an email / SMS connector is configured; gates every code-based method. */
@@ -120,7 +116,6 @@ const getMfaMethods = (
 const toContribution = (method: VerificationType): AuthenticationContribution => ({
   factor: getAuthenticationFactor(method),
   class: getAuthenticationFactorClass(method),
-  amr: [...getAuthenticationMethodReferences(method)],
 });
 
 const fillsFirstFactorRole = ({ class: factorClass }: AuthenticationContribution) =>
@@ -149,7 +144,7 @@ const distanceTo = (
   },
   steps = maxSteps
 ): number => {
-  if (acrSatisfies(aggregateAuthenticationContext(proofs, carried).acr, target)) {
+  if (acrSatisfies(achieveAcr(proofs, carried), target)) {
     return 0;
   }
 

@@ -10,7 +10,6 @@ import {
   acrSatisfies,
   getAuthenticationFactor,
   getAuthenticationFactorClass,
-  getAuthenticationMethodReferences,
   type AuthenticationProof,
   type Mfa,
   type User,
@@ -23,10 +22,7 @@ import {
   mockUserWebAuthnMfaVerification,
 } from '#src/__mocks__/user.js';
 
-import {
-  aggregateAuthenticationContext,
-  deriveCarriedContributions,
-} from './authentication-context.js';
+import { achieveAcr, deriveCarriedContributions } from './authentication-context.js';
 import { computeStepUpEligibility, type StepUpEligibilityInput } from './step-up-eligibility.js';
 
 const allFactors: Mfa = {
@@ -391,12 +387,9 @@ describe('computeStepUpEligibility', () => {
         const proof = {
           factor: getAuthenticationFactor(method),
           class: getAuthenticationFactorClass(method),
-          amr: [...getAuthenticationMethodReferences(method)],
         };
 
-        expect(
-          acrSatisfies(aggregateAuthenticationContext([proof], passwordSession).acr, LogtoAcr.Mfa)
-        ).toBe(true);
+        expect(acrSatisfies(achieveAcr([proof], passwordSession), LogtoAcr.Mfa)).toBe(true);
       }
     });
   });

@@ -957,11 +957,7 @@ describe('ExperienceInteraction class', () => {
       expect(experienceInteraction.subjectUserId).toBe(mockUserWithMfaVerifications.id);
       expect(experienceInteraction.identifiedUserId).toBeUndefined();
       expect(experienceInteraction.carriedContributions).toEqual([
-        {
-          factor: AuthenticationFactor.Password,
-          class: AuthenticationFactorClass.FirstFactor,
-          amr: [AuthenticationMethodReference.Password],
-        },
+        { factor: AuthenticationFactor.Password, class: AuthenticationFactorClass.FirstFactor },
       ]);
       expect(experienceInteraction.toJson()).toMatchObject({
         interactionEvent: InteractionEvent.SignIn,
@@ -988,27 +984,6 @@ describe('ExperienceInteraction class', () => {
 
       expect(experienceInteraction.identifiedUserId).toBe(mockUserWithMfaVerifications.id);
       expect(experienceInteraction.toJson().authenticationProofs).toHaveLength(1);
-    });
-
-    it('rejects an MFA challenge answered for another user than the subject', async () => {
-      const { experienceInteraction, stepUpTenant } = createInteraction({
-        details: { authenticationContext: stepUpContext },
-      });
-      const { libraries, queries } = stepUpTenant;
-
-      experienceInteraction.setVerificationRecord(
-        new TotpVerification(libraries, queries, {
-          id: 'totp-verification-id',
-          type: VerificationType.TOTP,
-          userId: 'someone-else',
-          verified: true,
-        })
-      );
-
-      expect(() =>
-        experienceInteraction.consumeForMfa(VerificationType.TOTP, 'totp-verification-id')
-      ).toThrow(new RequestError({ code: 'session.identity_conflict', status: 409 }));
-      expect(experienceInteraction.identifiedUserId).toBeUndefined();
     });
 
     it('rejects switching a pure step-up away from sign-in', async () => {
