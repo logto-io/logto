@@ -189,6 +189,33 @@ describe('application protected app metadata routes', () => {
       expect(deleteRemoteAppConfigs).toHaveBeenCalledWith(mockDomainResponse.domain);
     });
 
+    it('should match the domain case-insensitively and clean up with the stored value', async () => {
+      findApplicationById.mockResolvedValueOnce({
+        ...mockProtectedApplication,
+        protectedAppMetadata: {
+          ...mockProtectedApplication.protectedAppMetadata,
+          customDomains: [mockDomainResponse],
+        },
+      });
+      const response = await requester.delete(
+        `/applications/${mockProtectedApplication.id}/protected-app-metadata/custom-domains/App.Example.COM`
+      );
+      expect(response.status).toEqual(204);
+      expect(deleteRemoteAppConfigs).toHaveBeenCalledWith(mockDomain);
+      expect(updateApplicationById).toHaveBeenCalledWith(mockProtectedApplication.id, {
+        protectedAppMetadata: {
+          ...mockProtectedApplication.protectedAppMetadata,
+          customDomains: [],
+        },
+        oidcClientMetadata: {
+          postLogoutRedirectUris: [`https://${mockProtectedApplication.protectedAppMetadata.host}`],
+          redirectUris: [
+            `https://${mockProtectedApplication.protectedAppMetadata.host}/${protectedAppSignInCallbackUrl}`,
+          ],
+        },
+      });
+    });
+
     it('throw when domain exists', async () => {
       findApplicationById.mockResolvedValueOnce({
         ...mockProtectedApplication,
