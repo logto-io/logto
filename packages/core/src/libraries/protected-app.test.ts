@@ -170,6 +170,9 @@ describe('addDomainToRemote()', () => {
     await expect(addDomainToRemote(' protected.app ')).rejects.toMatchError(
       new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
     );
+    await expect(addDomainToRemote('foo.protected.app.')).rejects.toMatchError(
+      new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
+    );
     expect(createCustomHostname).not.toHaveBeenCalled();
   });
 
@@ -193,7 +196,7 @@ describe('addDomainToRemote()', () => {
   });
 
   it('should add a custom hostname for other domains with the lowercased hostname', async () => {
-    await expect(addDomainToRemote('Secure.Example.COM')).resolves.toMatchObject({
+    await expect(addDomainToRemote('Secure.Example.COM.')).resolves.toMatchObject({
       domain: 'secure.example.com',
       cloudflareData: mockCloudflareData,
       status: DomainStatus.PendingVerification,

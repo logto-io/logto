@@ -121,7 +121,7 @@ describe('application protected app metadata routes', () => {
       const response = await requester
         .post(`/applications/${mockProtectedApplication.id}/protected-app-metadata/custom-domains`)
         .send({
-          domain: ' App.Example.COM ',
+          domain: 'App.Example.COM.',
         });
       expect(response.status).toEqual(201);
       expect(addDomainToRemote).toHaveBeenCalledWith(mockDomain);
@@ -142,13 +142,14 @@ describe('application protected app metadata routes', () => {
       );
     });
 
-    it('should reject a whitespace-only domain', async () => {
-      const response = await requester
-        .post(`/applications/${mockProtectedApplication.id}/protected-app-metadata/custom-domains`)
-        .send({
-          domain: '   ',
-        });
-      expect(response.status).toEqual(400);
+    it('should reject a domain that is empty or contains whitespace', async () => {
+      for (const domain of ['   ', 'app example.com', ' app.example.com ']) {
+        // eslint-disable-next-line no-await-in-loop
+        const response = await requester
+          .post(`/applications/${mockProtectedApplication.id}/protected-app-metadata/custom-domains`)
+          .send({ domain });
+        expect(response.status).toEqual(400);
+      }
       expect(addDomainToRemote).not.toHaveBeenCalled();
     });
 
@@ -212,7 +213,7 @@ describe('application protected app metadata routes', () => {
         },
       });
       const response = await requester.delete(
-        `/applications/${mockProtectedApplication.id}/protected-app-metadata/custom-domains/%20App.Example.COM%20`
+        `/applications/${mockProtectedApplication.id}/protected-app-metadata/custom-domains/%20App.Example.COM.%20`
       );
       expect(response.status).toEqual(204);
       expect(deleteRemoteAppConfigs).toHaveBeenCalledWith(mockDomain);

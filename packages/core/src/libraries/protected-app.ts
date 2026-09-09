@@ -29,7 +29,7 @@ import {
   getFallbackOrigin,
   updateProtectedAppSiteConfigs,
 } from '#src/utils/cloudflare/index.js';
-import { isSubdomainOf } from '#src/utils/domain.js';
+import { isSubdomainOf, normalizeHostname } from '#src/utils/domain.js';
 
 export type ProtectedAppLibrary = ReturnType<typeof createProtectedAppLibrary>;
 
@@ -129,9 +129,8 @@ const buildProtectedAppData = async ({
 const addDomainToRemote = async (
   hostname: string
 ): Promise<NonNullable<ProtectedAppMetadata['customDomains']>[number]> => {
-  // DNS hostnames are case-insensitive and cannot carry surrounding whitespace. Normalize so
-  // neither mixed case nor padding can bypass the checks below.
-  const normalizedHostname = hostname.trim().toLowerCase();
+  // Normalize so mixed case, padding, or a trailing dot cannot bypass the checks below.
+  const normalizedHostname = normalizeHostname(hostname);
 
   // The default domain of protected apps is reserved. Hostnames under it are assigned by Logto
   // when an app is created, and adding one as a custom domain creates a custom hostname inside

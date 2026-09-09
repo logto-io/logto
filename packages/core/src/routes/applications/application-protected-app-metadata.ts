@@ -5,6 +5,7 @@ import { protectedAppSignInCallbackUrl } from '#src/constants/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
+import { normalizeHostname } from '#src/utils/domain.js';
 
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
@@ -64,16 +65,16 @@ export default function applicationProtectedAppMetadataRoutes<T extends Manageme
     customDomainsPathname,
     koaGuard({
       params: z.object(params),
-      // Reject whitespace-only input. `.trim()` is not used here because the OpenAPI generator
-      // only understands a fixed set of string checks and would fail on it.
-      body: z.object({ domain: z.string().regex(/\S/) }),
+      // Hostnames cannot contain whitespace. A regex check is used because the OpenAPI generator
+      // only understands a fixed set of string checks (`.trim()` is not one of them).
+      body: z.object({ domain: z.string().regex(/^\S+$/) }),
       status: [201, 400, 404, 422, 501],
     }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
-      // Hostnames are case-insensitive. Trim and lowercase so the stored domain, the site config
-      // key and the redirect URIs all match the host the worker sees at request time.
-      const domain = ctx.guard.body.domain.trim().toLowerCase();
+      // Canonicalize so the stored domain, the site config key and the redirect URIs all match
+      // the host the worker sees at request time.
+      const domain = normalizeHostname(ctx.guard.body.domain);
 
       const { protectedAppMetadata, oidcClientMetadata } = await findApplicationById(id);
       assertThat(protectedAppMetadata, 'application.protected_app_not_configured', 501);
@@ -128,11 +129,11 @@ export default function applicationProtectedAppMetadataRoutes<T extends Manageme
 
       const { protectedAppMetadata, oidcClientMetadata } = await findApplicationById(id);
 
-      // Match case-insensitively so both canonicalized (lowercase) and legacy mixed-case entries
-      // can be removed, then use the stored value for every cleanup step below.
-      const normalizedDomain = rawDomain.trim().toLowerCase();
+      // Match on the normalized form so both canonicalized and legacy entries can be removed,
+      // then use the stored value for every cleanup step below.
+      const normalizedDomain = normalizeHostname(rawDomain);
       const domainObject = protectedAppMetadata?.customDomains?.find(
-        ({ domain: domainName }) => domainName.toLowerCase() === normalizedDomain
+        ({ domain: domainName }) => normalizeHostname(domainName) === normalizedDomain
       );
 
       assertThat(

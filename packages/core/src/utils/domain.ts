@@ -6,6 +6,13 @@ import { type QuotaLibrary } from '../libraries/quota.js';
 import assertThat from './assert-that.js';
 
 /**
+ * Normalizes a user-supplied hostname for storage and comparison: DNS names are case-insensitive,
+ * cannot carry surrounding whitespace, and `example.com.` is equivalent to `example.com`.
+ */
+export const normalizeHostname = (hostname: string): string =>
+  hostname.trim().toLowerCase().replace(/\.$/, '');
+
+/**
  * Checks if the given domain is a subdomain of a domain.
  */
 export const isSubdomainOf = (subdomain: string, domain: string): boolean => {
