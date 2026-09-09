@@ -146,7 +146,9 @@ describe('application protected app metadata routes', () => {
       for (const domain of ['   ', 'app example.com', ' app.example.com ']) {
         // eslint-disable-next-line no-await-in-loop
         const response = await requester
-          .post(`/applications/${mockProtectedApplication.id}/protected-app-metadata/custom-domains`)
+          .post(
+            `/applications/${mockProtectedApplication.id}/protected-app-metadata/custom-domains`
+          )
           .send({ domain });
         expect(response.status).toEqual(400);
       }
