@@ -73,3 +73,20 @@ describe('samlAuthnRequestConfigGuard', () => {
     expect(samlAuthnRequestConfigGuard.safeParse({ forceAuthn: 'true' }).success).toBe(false);
   });
 });
+
+describe('signed AuthnRequest policy', () => {
+  it('requires a signing certificate when signatures are required', () => {
+    expect(
+      samlAuthnRequestConfigGuard.safeParse({ requireSignedAuthnRequests: true }).success
+    ).toBe(false);
+  });
+
+  it('keeps the configured trust certificate', () => {
+    const config = { requireSignedAuthnRequests: true, signingCertificate: 'certificate' };
+    expect(samlAuthnRequestConfigGuard.parse(config)).toEqual(config);
+  });
+
+  it.each(['', '   '])('rejects an empty certificate: %j', (signingCertificate) => {
+    expect(samlAuthnRequestConfigGuard.safeParse({ signingCertificate }).success).toBe(false);
+  });
+});

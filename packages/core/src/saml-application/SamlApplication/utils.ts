@@ -140,3 +140,38 @@ export const isForceAuthnRequested = (authnRequestXml: string): boolean => {
       : forceAuthn;
   return value === 'true' || value === '1';
 };
+
+/** Preserve the raw URL encoding and canonical parameter order required by HTTP-Redirect signatures. */
+export const getSamlRedirectSignatureInput = (querystring: string): string => {
+  const parameters = querystring.split('&');
+  return ['SAMLRequest', 'RelayState', 'SigAlg']
+    .map((name) => parameters.find((parameter) => parameter.startsWith(`${name}=`)))
+    .filter(Boolean)
+    .join('&');
+};
+
+/** SAML POST signatures must cover the enclosing AuthnRequest, not a different XML element. */
+export const assertSamlAuthnRequestSignatureScope = (xml: string): void => {
+  const { id, signature, assertion } = saml.Extractor.extract(xml, [
+    { key: 'id', localPath: ['AuthnRequest'], attributes: ['ID'] },
+    { key: 'signature', localPath: ['AuthnRequest', 'Signature'], attributes: [], context: true },
+    { key: 'assertion', localPath: ['AuthnRequest', 'Assertion'], attributes: [], context: true },
+  ]);
+  assertThat(
+    typeof id === 'string' && id.length > 0 && typeof signature === 'string' && !assertion,
+    'application.saml.invalid_saml_request'
+  );
+  const { reference } = saml.Extractor.extract(signature, [
+    {
+      key: 'reference',
+      localPath: ['Signature', 'SignedInfo', 'Reference'],
+      attributes: [],
+      context: true,
+    },
+  ]);
+  assertThat(typeof reference === 'string', 'application.saml.invalid_saml_request');
+  const { uri } = saml.Extractor.extract(reference, [
+    { key: 'uri', localPath: ['Reference'], attributes: ['URI'] },
+  ]);
+  assertThat(uri === `#${id}`, 'application.saml.invalid_saml_request');
+};

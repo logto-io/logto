@@ -50,10 +50,22 @@ export const samlEncryptionGuard = z
 
 export type SamlEncryption = z.input<typeof samlEncryptionGuard>;
 
-/** IdP-side policy for authenticating users of a SAML application. */
-export const samlAuthnRequestConfigGuard = z.object({
-  forceAuthn: z.boolean().optional(),
-});
+/** Authentication and request-signature policy for a SAML application. */
+export const samlAuthnRequestConfigGuard = z
+  .object({
+    forceAuthn: z.boolean().optional(),
+    requireSignedAuthnRequests: z.boolean().optional(),
+    signingCertificate: z.string().trim().min(1).optional(),
+  })
+  .superRefine(({ requireSignedAuthnRequests, signingCertificate }, ctx) => {
+    if (requireSignedAuthnRequests && !signingCertificate) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['signingCertificate'],
+        message: '`signingCertificate` is required when `requireSignedAuthnRequests` is `true`',
+      });
+    }
+  });
 
 export type SamlAuthnRequestConfig = z.infer<typeof samlAuthnRequestConfigGuard>;
 

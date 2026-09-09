@@ -46,6 +46,7 @@ import {
   buildSamlAssertionNameId,
   getSamlAppCallbackUrl,
   generateSamlAttributeTag,
+  assertSamlAuthnRequestSignatureScope,
 } from './utils.js';
 
 type SamlIdentityProviderConfig = {
@@ -185,7 +186,18 @@ export class SamlApplication {
     binding: 'post' | 'redirect',
     loginRequest: Parameters<typeof saml.IdentityProviderInstance.prototype.parseLoginRequest>[2]
   ) {
-    return this.idp.parseLoginRequest(this.sp, binding, loginRequest);
+    if (!this.config.authnRequestConfig?.requireSignedAuthnRequests) {
+      return this.idp.parseLoginRequest(this.sp, binding, loginRequest);
+    }
+
+    const result = await tryThat(
+      this.idp.parseLoginRequest(this.sp, binding, loginRequest),
+      new RequestError('application.saml.invalid_saml_request')
+    );
+    if (binding === 'post') {
+      assertSamlAuthnRequestSignatureScope(result.samlContent);
+    }
+    return result;
   }
 
   public createSamlResponse = async ({
@@ -309,6 +321,7 @@ export class SamlApplication {
       ],
       privateKey,
       isAssertionEncrypted: encryptSamlAssertion,
+      wantAuthnRequestsSigned: this.config.authnRequestConfig?.requireSignedAuthnRequests ?? false,
       loginResponseTemplate: this.buildLoginResponseTemplate(),
       nameIDFormat: [nameIdFormat],
     });
@@ -325,7 +338,7 @@ export class SamlApplication {
           Location: acsUrl.url,
         },
       ],
-      signingCert: this.config.certificate,
+      signingCert: this.config.authnRequestConfig?.signingCertificate,
       authnRequestsSigned: this.idp.entityMeta.isWantAuthnRequestsSigned(),
       allowCreate: false,
       ...cond(encryptCert && { encryptCert }),

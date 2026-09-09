@@ -48,6 +48,17 @@ const createLibrary = () =>
   );
 
 describe('createSamlApplicationsLibrary()', () => {
+  it('rejects an invalid signing certificate before updating any records', async () => {
+    await expect(
+      createLibrary().updateSamlApplicationById('foo', {
+        name: 'new name',
+        authnRequestConfig: { requireSignedAuthnRequests: true, signingCertificate: 'invalid' },
+      })
+    ).rejects.toThrow();
+    expect(updateSamlApplicationConfig).not.toHaveBeenCalled();
+    expect(updateApplicationById).not.toHaveBeenCalled();
+  });
+
   it.each([{ forceAuthn: true }, null])(
     'persists authentication policy: %j',
     async (authnRequestConfig) => {
