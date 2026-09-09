@@ -50,6 +50,13 @@ export const samlEncryptionGuard = z
 
 export type SamlEncryption = z.input<typeof samlEncryptionGuard>;
 
+/** IdP-side policy for authenticating users of a SAML application. */
+export const samlAuthnRequestConfigGuard = z.object({
+  forceAuthn: z.boolean().optional(),
+});
+
+export type SamlAuthnRequestConfig = z.infer<typeof samlAuthnRequestConfigGuard>;
+
 export enum NameIdFormat {
   /** Uses unique and persistent identifiers for the user. */
   Persistent = 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent',

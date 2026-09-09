@@ -123,7 +123,12 @@ export const assembleSamlApplication = ({
   application: Application;
   samlConfig: Pick<
     SamlApplicationConfig,
-    'attributeMapping' | 'entityId' | 'acsUrl' | 'encryption' | 'nameIdFormat'
+    | 'attributeMapping'
+    | 'entityId'
+    | 'acsUrl'
+    | 'encryption'
+    | 'nameIdFormat'
+    | 'authnRequestConfig'
   >;
 }): SamlApplicationResponse => {
   return {

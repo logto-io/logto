@@ -1,7 +1,10 @@
 import { generateKeyPair, SignJWT, type JWTPayload } from 'jose';
 import nock from 'nock';
 
-import { createMockSamlApplicationDetails, createMockSamlEnvSet } from './__mocks__/index.js';
+import {
+  createMockSamlApplicationDetails,
+  createMockSamlEnvSet,
+} from './__mocks__/saml-application.js';
 import { SamlApplication } from './index.js';
 
 const { privateKey, publicKey } = await generateKeyPair('ES256');

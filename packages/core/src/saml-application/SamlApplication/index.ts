@@ -128,6 +128,10 @@ class SamlApplicationConfig {
     return this._details.encryption;
   }
 
+  public get authnRequestConfig() {
+    return this._details.authnRequestConfig;
+  }
+
   public get attributeMapping() {
     return this._details.attributeMapping;
   }
@@ -252,13 +256,7 @@ export class SamlApplication {
     return { ...userInfo, auth_time: authTime };
   };
 
-  /**
-   * Build the OIDC authorization URL that signs the user in for this SAML application.
-   *
-   * `prompt=login` is only added when the service provider asked for re-authentication with
-   * `ForceAuthn="true"` on its `AuthnRequest` (SAML 2.0 core, section 3.4.1). Otherwise an
-   * existing Logto session is reused, as it is for OIDC applications.
-   */
+  /** Build the internal authorization URL, enforcing both IdP and SP re-authentication policy. */
   public getSignInUrl = async ({ state, forceAuthn }: { state?: string; forceAuthn?: boolean }) => {
     const { authorizationEndpoint } = await this.fetchOidcConfig();
 
@@ -268,7 +266,7 @@ export class SamlApplication {
       [QueryKey.ResponseType]: 'code',
     });
 
-    if (forceAuthn) {
+    if (forceAuthn === true || this.config.authnRequestConfig?.forceAuthn === true) {
       queryParameters.append(QueryKey.Prompt, Prompt.Login);
       queryParameters.append('max_age', '0');
     }
