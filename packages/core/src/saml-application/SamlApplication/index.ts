@@ -13,6 +13,7 @@ import { generateStandardId } from '@logto/shared';
 import { cond, conditional, tryThat, type Nullable, type Optional } from '@silverhand/essentials';
 import camelcaseKeys, { type CamelCaseKeys } from 'camelcase-keys';
 import { XMLValidator } from 'fast-xml-parser';
+import { jwtVerify } from 'jose';
 import saml from 'samlify';
 import { ZodError, z } from 'zod';
 
@@ -61,6 +62,8 @@ type SamlServiceProviderConfig = {
   acsUrl: SamlAcsUrl;
   certificate?: string;
 };
+
+type SamlUserInfo = IdTokenProfileStandardClaims & { auth_time: number };
 
 class SamlApplicationConfig {
   constructor(
@@ -188,7 +191,7 @@ export class SamlApplication {
     sessionId,
     sessionExpiresAt,
   }: {
-    userInfo: IdTokenProfileStandardClaims;
+    userInfo: SamlUserInfo;
     relayState: Nullable<string>;
     samlRequestId: Nullable<string>;
     sessionId: Optional<string>;
@@ -229,14 +232,24 @@ export class SamlApplication {
   // Helper functions for SAML callback
   public handleOidcCallbackAndGetUserInfo = async ({ code }: { code: string }) => {
     // Exchange authorization code for tokens
-    const { accessToken } = await this.exchangeAuthorizationCode({
+    const { accessToken, idToken } = await this.exchangeAuthorizationCode({
       code,
     });
 
     assertThat(accessToken, new RequestError('oidc.access_denied'));
 
-    // Get user info using access token
-    return this.getUserInfo({ accessToken });
+    const { payload } = await jwtVerify(idToken, this.envSet.oidc.localJWKSet, {
+      issuer: this.issuer,
+      audience: this.samlApplicationId,
+      requiredClaims: ['sub', 'iat', 'exp', 'auth_time'],
+    });
+    const { auth_time: authTime } = z
+      .object({ auth_time: z.number().int().nonnegative() })
+      .parse(payload);
+    const userInfo = await this.getUserInfo({ accessToken });
+    assertThat(userInfo.sub === payload.sub, new RequestError('oidc.invalid_token'));
+
+    return { ...userInfo, auth_time: authTime };
   };
 
   /**
@@ -257,6 +270,7 @@ export class SamlApplication {
 
     if (forceAuthn) {
       queryParameters.append(QueryKey.Prompt, Prompt.Login);
+      queryParameters.append('max_age', '0');
     }
 
     queryParameters.append(
@@ -439,7 +453,7 @@ export class SamlApplication {
       sessionId,
       sessionExpiresAt,
     }: {
-      userInfo: IdTokenProfileStandardClaims;
+      userInfo: SamlUserInfo;
       samlRequestId: Nullable<string>;
       sessionId: Optional<string>;
       sessionExpiresAt: Optional<string>;
@@ -470,6 +484,7 @@ export class SamlApplication {
         SubjectRecipient: assertionConsumerServiceUrl,
         Issuer: this.idp.entityMeta.getEntityID(),
         IssueInstant: now.toISOString(),
+        AuthnInstant: new Date(userInfo.auth_time * 1000).toISOString(),
         AssertionConsumerServiceURL: assertionConsumerServiceUrl,
         StatusCode: saml.Constants.StatusCode.Success,
         ConditionsNotBefore: now.toISOString(),
