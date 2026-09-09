@@ -340,8 +340,16 @@ export const buildSharedExperienceCookie = ({
 const isStepUpPrompt = (promptDetails: unknown): boolean => {
   const result = loginPromptAuthenticationContextDetailsGuard.safeParse(promptDetails ?? {});
 
+  if (!result.success || !result.data.authenticationContext) {
+    return false;
+  }
+
+  const { mode, selectedAcr, requestedAcrValues } = result.data.authenticationContext;
+
   return (
-    result.success && result.data.authenticationContext?.mode === AuthenticationContextMode.StepUp
+    mode === AuthenticationContextMode.StepUp &&
+    selectedAcr !== undefined &&
+    requestedAcrValues.includes(selectedAcr)
   );
 };
 

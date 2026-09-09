@@ -56,6 +56,20 @@ describe('buildLoginPromptUrl with login prompt details', () => {
     );
   });
 
+  it.each([
+    { requestedAcrValues: [LogtoAcr.Mfa] },
+    { requestedAcrValues: [LogtoAcr.Mfa], selectedAcr: LogtoAcr.FirstFactor },
+    { requestedAcrValues: [], selectedAcr: LogtoAcr.Mfa },
+  ])('should keep the sign-in url for an invalid step-up selection: %j', (context) => {
+    expect(
+      buildLoginPromptUrl(
+        {},
+        { appId: 'app_123' },
+        { authenticationContext: { ...context, mode: AuthenticationContextMode.StepUp } }
+      )
+    ).toBe('sign-in?app_id=app_123');
+  });
+
   it('should keep the sign-in url for prompts without an authentication context', () => {
     expect(buildLoginPromptUrl({}, { appId: 'app_123' }, { max_age: '600' })).toBe(
       'sign-in?app_id=app_123'
