@@ -129,8 +129,10 @@ const buildProtectedAppData = async ({
 const addDomainToRemote = async (
   hostname: string
 ): Promise<NonNullable<ProtectedAppMetadata['customDomains']>[number]> => {
-  // Normalize so mixed case, padding, or a trailing dot cannot bypass the checks below.
+  // Normalize so mixed case, padding, or a trailing dot cannot bypass the checks below. Inputs
+  // such as `.` normalize to an empty string, which is never a valid hostname.
   const normalizedHostname = normalizeHostname(hostname);
+  assertThat(normalizedHostname, 'domain.domain_is_not_allowed', 422);
 
   // The default domain of protected apps is reserved. Hostnames under it are assigned by Logto
   // when an app is created, and adding one as a custom domain creates a custom hostname inside

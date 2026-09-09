@@ -176,6 +176,16 @@ describe('addDomainToRemote()', () => {
     expect(createCustomHostname).not.toHaveBeenCalled();
   });
 
+  it('should reject a hostname that normalizes to an empty string', async () => {
+    await expect(addDomainToRemote('.')).rejects.toMatchError(
+      new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
+    );
+    await expect(addDomainToRemote(' ... ')).rejects.toMatchError(
+      new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
+    );
+    expect(createCustomHostname).not.toHaveBeenCalled();
+  });
+
   it('should reject the default domain even in local dev mode', async () => {
     // eslint-disable-next-line @silverhand/fp/no-mutation
     SystemContext.shared.protectedAppConfigProviderConfig = undefined;
