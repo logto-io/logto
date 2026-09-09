@@ -31,10 +31,8 @@ export type CodeVerificationRecordData<T extends CodeVerificationType = CodeVeri
   templateType: TemplateType;
   verified: boolean;
   /**
-   * The user the identifier was resolved from, set when the record was created for the subject
-   * the interaction already carries (a pinned-user verification) rather than from a
-   * client-supplied identifier. Such a record identifies that user and never echoes the raw
-   * identifier: the sanitized projection masks it.
+   * The user the identifier was resolved from, when the record was created for the subject the
+   * interaction carries rather than from a client-supplied identifier.
    */
   userId?: string;
 };

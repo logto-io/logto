@@ -66,12 +66,9 @@ const toActionUser = ({
 });
 
 /**
- * The identifier a pinned-user password verification keys its sentinel lockout on. A sign-in keys
- * the lockout on the identifier the user typed, so the subject's identifiers are tried in the
- * order the sign-in experience accepts them with a password, then in the sign-in identifier
- * order: a step-up and a sign-in of the same account then share one bucket, and a session cookie
- * buys no guess that a sign-in would not have consumed. A user with no identifier has no password
- * sign-in to share a bucket with, so the user id keys their own.
+ * The identifier the sentinel lockout is keyed on: the subject's first identifier the sign-in
+ * experience accepts with a password (then any identifier, then the user id), so a step-up and a
+ * sign-in of the same account share one lockout bucket.
  */
 const getLockoutIdentifier = async (
   user: User,
@@ -102,11 +99,8 @@ const getLockoutIdentifier = async (
 };
 
 /**
- * Verify the password of the subject the interaction already carries, a pinned step-up subject or
- * an identified user: the pinned-user variant, `{ password }` with no identifier. The subject is
- * read from the interaction storage, never from the client, and the record verifies against that
- * user's credential. The `PostFirstFactorVerification` action fallback is a sign-in concern and
- * does not run here: a wrong password for a known account is only a wrong password.
+ * Verify the password of the subject the interaction carries (`{ password }` with no identifier).
+ * The `PostFirstFactorVerification` action fallback is a sign-in concern and does not run here.
  *
  * @throws {RequestError} with 404 if the interaction carries no subject
  */
@@ -143,10 +137,7 @@ const verifySubjectPassword = async (
   return { passwordVerification, verifiedUser };
 };
 
-/**
- * Verify the password of the user the client identified. In a sign-in, invalid credentials run
- * the `PostFirstFactorVerification` action, which may provision or update the user instead.
- */
+/** Verify the password of the identifier the client supplied, with the action fallback in sign-in. */
 const verifyIdentifierPassword = async (
   ctx: ExperienceInteractionRouterContext,
   { libraries, queries, sentinel }: VerificationDependencies,
@@ -266,7 +257,7 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
     `${experienceRoutes.verification}/password`,
     koaGuard({
       body: passwordVerificationPayloadGuard,
-      // 404: the pinned-user variant (no identifier) was used before the interaction carries a subject
+      // 404: no identifier given and the interaction carries no subject
       status: [200, 400, 401, 404, 409, 422],
       response: z.object({
         verificationId: z.string(),
@@ -287,8 +278,6 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
         },
       });
 
-      // Without an identifier, the password is verified against the subject the interaction
-      // already carries; see `verifySubjectPassword`.
       const { passwordVerification, verifiedUser } = identifier
         ? await verifyIdentifierPassword(ctx, dependencies, identifier, password)
         : await verifySubjectPassword(ctx, dependencies, password);

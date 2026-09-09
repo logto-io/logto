@@ -162,7 +162,6 @@ describe('PasswordVerification', () => {
       expect(findUserByUsername).not.toHaveBeenCalled();
 
       await expect(verification.identifyUser()).resolves.toEqual(mockUser);
-      // The sanitized projection carries the user id, never an identifier of the user.
       expect(verification.toSanitizedJson().identifier).toEqual({
         type: AdditionalIdentifier.UserId,
         value: mockUser.id,

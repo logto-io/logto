@@ -57,7 +57,6 @@ type CodeVerificationIdentifierMap = {
   [VerificationType.MfaPhoneVerificationCode]: Record<string, unknown>;
 };
 
-/** The masked form of an identifier value, the only form a pinned-user record lets leave the server. */
 const maskIdentifierValue = ({ type, value }: VerificationCodeIdentifier): string =>
   type === SignInIdentifier.Email ? maskEmail(value) : maskPhone(value);
 
@@ -75,11 +74,9 @@ abstract class CodeVerification<T extends CodeVerificationType>
    */
   public readonly templateType: TemplateType;
   /**
-   * The user the identifier was resolved from, when the record was created for the subject the
-   * interaction already carries (the pinned-user variant; see
-   * {@link createSubjectCodeVerificationRecord}) rather than from a client-supplied identifier. Such
-   * a record identifies that user, verifies an enrolled identifier rather than a sign-in method,
-   * and never echoes the raw identifier: {@link toSanitizedJson} masks it.
+   * The user the identifier was resolved from (see {@link createSubjectCodeVerificationRecord}),
+   * if not from a client-supplied identifier. Such a record identifies that user and only exposes
+   * the masked identifier.
    */
   public readonly userId?: string;
   public abstract readonly type: T;
@@ -164,8 +161,6 @@ abstract class CodeVerification<T extends CodeVerificationType>
       new RequestError({ code: 'session.verification_failed', status: 400 })
     );
 
-    // A record created for the subject identifies that subject: the identifier was resolved from
-    // the user, and looking the user up by it again could only echo the identifier in an error.
     if (this.userId) {
       return this.queries.users.findUserById(this.userId);
     }
@@ -198,7 +193,6 @@ abstract class CodeVerification<T extends CodeVerificationType>
     };
   }
 
-  /** The sanitized projection; a record created for the subject exposes only the masked identifier. */
   toSanitizedJson(): CodeVerificationRecordData<T> {
     const data = this.toJson();
 
@@ -343,11 +337,8 @@ export const createNewCodeVerificationRecord = (
 
 /**
  * Factory method to create a new `EmailCodeVerification` / `PhoneCodeVerification` record for the
- * subject the interaction already carries (the pinned-user variant), with the identifier resolved
- * from that user rather than supplied by the client. The record carries the subject, so it
- * identifies that user and never echoes the raw identifier (see `CodeVerification.userId`), and
- * uses the `SignIn` template: it verifies the user's primary email / phone as a first factor and
- * never binds a new identifier.
+ * subject the interaction carries, with the identifier resolved from that user. It always uses the
+ * `SignIn` template: it verifies a primary identifier as a first factor, never binds a new one.
  */
 export const createSubjectCodeVerificationRecord = (
   libraries: Libraries,

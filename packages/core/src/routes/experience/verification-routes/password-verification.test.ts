@@ -623,7 +623,6 @@ describe('password verification route pinned-user variant', () => {
       invalidCredentialsError
     );
 
-    // The failed attempt is still reported to the sentinel.
     expect(withSentinel).toHaveBeenCalledTimes(1);
     await expect(getSentinelPromise()).rejects.toBe(invalidCredentialsError);
     expect(runAction).not.toHaveBeenCalled();

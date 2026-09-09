@@ -1024,7 +1024,6 @@ describe('ExperienceInteraction class', () => {
       const { libraries, queries } = stepUpTenant;
       const someoneElse = { ...mockUser, id: 'someone-else', username: 'someone-else' };
 
-      // A password record for another account resolves to that account at identification.
       jest.mocked(queries.users.findUserByUsername).mockResolvedValueOnce(someoneElse);
       experienceInteraction.setVerificationRecord(
         new PasswordVerification(libraries, queries, {

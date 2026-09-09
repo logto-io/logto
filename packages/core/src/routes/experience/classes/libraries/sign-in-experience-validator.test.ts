@@ -80,7 +80,6 @@ const verificationCodeVerificationRecords = Object.freeze({
   ),
 });
 
-/** The pinned-user records: created for the subject the interaction carries, not from an identifier. */
 const subjectVerificationRecords = Object.freeze({
   password: PasswordVerification.createForUser(
     mockTenant.libraries,
@@ -457,8 +456,6 @@ describe('SignInExperienceValidator', () => {
           },
         ],
       },
-      // A pinned-user record verifies a credential the subject has enrolled, offered by the
-      // step-up eligibility rather than by the sign-in methods, so the sign-in methods never gate it.
       'pinned-user records with no sign-in methods enabled': {
         signInExperience: {
           ...mockSignInExperience,

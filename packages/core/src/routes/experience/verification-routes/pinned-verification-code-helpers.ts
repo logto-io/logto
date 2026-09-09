@@ -1,8 +1,6 @@
 /**
- * @file Identifier resolution for the pinned-user verification code variants: a code request or
- * verification that carries only the identifier type, once the interaction already carries a
- * subject (a pinned step-up subject or an identified user). The subject is read from the
- * interaction storage, never from the client, so neither request carries a raw identifier.
+ * @file Identifier resolution for the pinned-user verification code variants, where the request
+ * carries only the identifier type and the value comes from the subject the interaction carries.
  */
 import {
   SignInIdentifier,
@@ -24,14 +22,10 @@ type GetSubjectIdentifierParams = {
 };
 
 /**
- * Resolve the identifier of a pinned-user code request: the primary email / phone of the subject
- * the interaction already carries, a pinned step-up subject or an identified user. The subject is
- * read from the interaction storage, never from the client, so the request carries no raw
- * identifier; the resolved identifier is what the sentinel lockout is keyed on, so a step-up and a
- * sign-in with that email / phone share one bucket.
+ * Resolve the subject's primary email / phone to send a code to.
  *
- * @throws {RequestError} with 404 if the interaction carries no subject
- * @throws {RequestError} with 404 if the subject has no primary identifier of that type
+ * @throws {RequestError} with 404 if the interaction carries no subject or the subject has no
+ * primary identifier of that type
  * @internal
  */
 export const getSubjectIdentifier = async ({
@@ -64,13 +58,10 @@ type GetSubjectCodeRecordIdentifierParams = {
 };
 
 /**
- * Resolve the identifier of a pinned-user code verification: the identifier the code was sent to
- * by {@link getSubjectIdentifier}, read from the record rather than from the client. The record
- * must have been created for the subject the interaction carries; a record created from a
- * client-supplied identifier keeps its own contract and restates the identifier.
+ * Resolve the identifier a code was sent to by {@link getSubjectIdentifier} from the record.
  *
- * @throws {RequestError} with 404 if the interaction carries no subject
- * @throws {RequestError} with 404 if the record is not found or was not created for the subject
+ * @throws {RequestError} with 404 if the interaction carries no subject, or the record is not
+ * found or was not created for the subject
  * @internal
  */
 export const getSubjectCodeRecordIdentifier = ({

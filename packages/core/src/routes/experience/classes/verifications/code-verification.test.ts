@@ -98,7 +98,6 @@ describe('CodeVerification created for the subject', () => {
       });
       expect(JSON.stringify(verification.toSanitizedJson())).not.toContain(identifier.value);
 
-      // Not verified yet
       await expect(verification.identifyUser()).rejects.toMatchError(
         new RequestError({ code: 'session.verification_failed', status: 400 })
       );
@@ -109,7 +108,6 @@ describe('CodeVerification created for the subject', () => {
         identifier,
         mockUser.id
       );
-      // The round-trip keeps the subject.
       const data = { ...restored.toJson(), verified: true };
       const verified = new EmailCodeVerification(libraries, queries, {
         ...data,

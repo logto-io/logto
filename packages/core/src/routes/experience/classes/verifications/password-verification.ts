@@ -37,10 +37,8 @@ export class PasswordVerification
   }
 
   /**
-   * Factory method to create a new `PasswordVerification` record for a user the interaction
-   * already carries: a pinned step-up subject or an identified user. The record verifies the
-   * password against that user's credential and {@link identifyUser} returns that user, so the
-   * client never supplies a raw identifier; see {@link userId}.
+   * Factory method to create a new `PasswordVerification` record for the subject the interaction
+   * carries: it verifies against that user's credential and {@link identifyUser} returns that user.
    */
   static createForUser(libraries: Libraries, queries: Queries, userId: string) {
     return PasswordVerification.create(libraries, queries, {
@@ -77,11 +75,7 @@ export class PasswordVerification
     return this.verified;
   }
 
-  /**
-   * The user this record was created for (see {@link createForUser}), or `undefined` when it was
-   * created from a client-supplied identifier. A record created for a user verifies an enrolled
-   * credential rather than a sign-in method: the sign-in methods do not gate its identification.
-   */
+  /** The user this record was created for (see {@link createForUser}), if not from an identifier. */
   get userId(): string | undefined {
     return conditional(
       this.identifier.type === AdditionalIdentifier.UserId && this.identifier.value

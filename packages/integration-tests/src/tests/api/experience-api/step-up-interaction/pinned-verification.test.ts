@@ -24,10 +24,7 @@ import { devFeatureTest } from '#src/utils.js';
 
 const firstFactorAcr = 'urn:logto:acr:1fa';
 
-/**
- * Force a `1fa` step-up on the signed-in client and create the interaction. The session already
- * satisfies the class, so every method of the pinned user is offered.
- */
+/** Force a `1fa` step-up on the signed-in client, so every method of the pinned user is offered. */
 const startStepUp = async (client: ExperienceClient) => {
   const { status, location } = await authorizeWithSession(client, {
     prompt: Prompt.Login,
@@ -86,8 +83,6 @@ devFeatureTest.describe('step-up pinned-user verification', () => {
 
     const { verificationId } = await client.verifyPassword({ password: user.password });
 
-    // The record is bound to the subject and carries no raw identifier; verifying does not
-    // identify yet.
     const data = await client.getInteractionData();
     expect(data.userId).toBeUndefined();
     expect(data.verificationRecords).toEqual([
@@ -126,11 +121,9 @@ devFeatureTest.describe('step-up pinned-user verification', () => {
     });
     const { code, address, type } = await readConnectorMessage('Email');
 
-    // The code goes to the subject's primary email with the sign-in template.
     expect(address).toBe(user.primaryEmail);
     expect(type).toBe(TemplateType.SignIn);
 
-    // The record carries the subject and exposes only the masked identifier.
     const data = await client.getInteractionData();
     expect(data.verificationRecords).toEqual([
       expect.objectContaining({
@@ -248,13 +241,12 @@ devFeatureTest.describe('step-up pinned-user verification', () => {
         });
       }
 
-      // The third attempt trips the lockout of the account's sign-in identifier...
       await expectRejects(client.verifyPassword({ password: 'wrong password' }), {
         code: 'session.verification_blocked_too_many_attempts',
         status: 400,
       });
 
-      // ...which a fresh sign-in with that identifier now hits as well, even with the right password.
+      // The lockout is shared with a sign-in of the same account
       const signInClient = await initExperienceClient();
       await expectRejects(
         signInClient.verifyPassword({

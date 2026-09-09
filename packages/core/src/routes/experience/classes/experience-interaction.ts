@@ -411,9 +411,8 @@ export default class ExperienceInteraction {
     const { id, isSuspended } = user;
     assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
 
-    // Throws if the current session has already identified a different user (409), or if a pure
-    // step-up identifies someone other than the subject its session pinned: there the cookie
-    // holder is proving an account that is not theirs to prove, which is forbidden (403)
+    // 409 if the interaction already identified a different user; 403 if a pure step-up identifies
+    // someone other than the subject its session pinned
     assertThat(
       !this.subjectUserId || this.subjectUserId === id,
       new RequestError({ code: 'session.identity_conflict', status: this.isStepUp ? 403 : 409 })
@@ -572,8 +571,6 @@ export default class ExperienceInteraction {
     const { subjectUserId } = this;
 
     if (!this.userId && subjectUserId) {
-      // The subject is only ever pinned by a pure step-up, so a mismatch is the step-up case of
-      // the conflict `identifyUser` rejects: forbidden, not a conflict between two identifications.
       assertThat(
         !('userId' in record) || record.userId === subjectUserId,
         new RequestError({ code: 'session.identity_conflict', status: 403 })
