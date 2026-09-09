@@ -22,7 +22,7 @@
               "schema": {
                 "properties": {
                   "domain": {
-                    "description": "The domain to be added to the application."
+                    "description": "The domain to be added to the application. It must not contain whitespace. The value is canonicalized before it is stored: lowercased, with any trailing dots removed. Hostnames under the reserved Protected App default domain are rejected."
                   }
                 }
               }
@@ -37,7 +37,7 @@
             "description": "The domain already exists."
           },
           "422": {
-            "description": "Exeeded the maximum number of domains allowed or the domain is invalid."
+            "description": "Exceeded the maximum number of domains allowed, the domain is invalid, or the domain is under the reserved Protected App default domain."
           }
         }
       }
