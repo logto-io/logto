@@ -72,7 +72,13 @@ const buildContext = (
         RefreshToken: new provider.RefreshToken({ ...tokenProperties, ...refreshToken }),
       }),
       ...(deviceCode && {
-        DeviceCode: new provider.DeviceCode({ ...tokenProperties, ...deviceCode }),
+        DeviceCode: new provider.DeviceCode({
+          ...tokenProperties,
+          ...deviceCode,
+          params: {},
+          userCode: 'ABCD-EFGH',
+          deviceInfo: {},
+        }),
       }),
     },
   });
