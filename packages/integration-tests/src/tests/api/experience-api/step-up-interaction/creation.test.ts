@@ -15,7 +15,7 @@ import {
 import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
 import {
   enableAllPasswordSignInMethods,
-  enableUserControlledMfaWithTotp,
+  enableUserControlledMfaWithNoPrompt,
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
@@ -66,7 +66,8 @@ devFeatureTest.describe('step-up interaction creation', () => {
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
     await updateSignInExperience({ adaptiveMfa: { enabled: false } });
-    await enableUserControlledMfaWithTotp();
+    // TOTP enabled without an enrollment prompt, so a user with no factor can sign in.
+    await enableUserControlledMfaWithNoPrompt();
     await clearConnectorsByTypes([ConnectorType.Email]);
     await setEmailConnector();
 
