@@ -112,7 +112,8 @@ devFeatureTest.describe('step-up interaction creation', () => {
     const data = await client.getInteractionData();
 
     expect(data.interactionEvent).toBe(InteractionEvent.SignIn);
-    expect(data.userId).toEqual(expect.any(String));
+    // The subject is pinned but not yet verified, so it is not exposed as the identified user.
+    expect(data.userId).toBeUndefined();
     expect(data.authenticationContext).toEqual(expectedContext);
     expect(JSON.stringify(data)).not.toContain(totpUser.primaryEmail);
 
@@ -120,7 +121,6 @@ devFeatureTest.describe('step-up interaction creation', () => {
     await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
     const refetched = await client.getInteractionData();
 
-    expect(refetched.userId).toBe(data.userId);
     expect(refetched.authenticationContext).toEqual(expectedContext);
 
     await logoutClient(client);

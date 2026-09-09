@@ -40,6 +40,7 @@ import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 import { type Interaction, type WithHooksAndLogsContext } from '../types.js';
 
 import { EmailCodeVerification } from './verifications/code-verification.js';
+import { TotpVerification } from './verifications/totp-verification.js';
 import { SignInPasskeyVerification } from './verifications/web-authn-verification.js';
 
 const { jest } = import.meta;
@@ -916,7 +917,9 @@ describe('ExperienceInteraction class', () => {
         params: { client_id: adminConsoleApplicationId },
         prompt: { name: 'login', reasons: ['acr_unmet'], details },
         ...conditional(
-          !withoutSession && { session: { accountId: user.id, acr: LogtoAcr.FirstFactor } }
+          !withoutSession && {
+            session: { accountId: user.id, acr: LogtoAcr.FirstFactor, amr: ['pwd'] },
+          }
         ),
       } as unknown as Interaction;
       const provider = createMockProvider(jest.fn().mockResolvedValue(interactionDetails));
@@ -950,12 +953,77 @@ describe('ExperienceInteraction class', () => {
       });
 
       expect(experienceInteraction.isStepUp).toBe(true);
-      expect(experienceInteraction.identifiedUserId).toBe(mockUserWithMfaVerifications.id);
+      // The subject is readable, but nothing has verified it: `userId` stays unset.
+      expect(experienceInteraction.subjectUserId).toBe(mockUserWithMfaVerifications.id);
+      expect(experienceInteraction.identifiedUserId).toBeUndefined();
+      expect(experienceInteraction.carriedContributions).toEqual([
+        {
+          factor: AuthenticationFactor.Password,
+          class: AuthenticationFactorClass.FirstFactor,
+          amr: [AuthenticationMethodReference.Password],
+        },
+      ]);
       expect(experienceInteraction.toJson()).toMatchObject({
         interactionEvent: InteractionEvent.SignIn,
-        userId: mockUserWithMfaVerifications.id,
         authenticationContext: stepUpContext,
       });
+      expect(experienceInteraction.toJson().userId).toBeUndefined();
+    });
+
+    it('promotes the subject once an MFA challenge is answered for it', async () => {
+      const { experienceInteraction, stepUpTenant } = createInteraction({
+        details: { authenticationContext: stepUpContext },
+      });
+      const { libraries, queries } = stepUpTenant;
+
+      experienceInteraction.setVerificationRecord(
+        new TotpVerification(libraries, queries, {
+          id: 'totp-verification-id',
+          type: VerificationType.TOTP,
+          userId: mockUserWithMfaVerifications.id,
+          verified: true,
+        })
+      );
+      experienceInteraction.consumeForMfa(VerificationType.TOTP, 'totp-verification-id');
+
+      expect(experienceInteraction.identifiedUserId).toBe(mockUserWithMfaVerifications.id);
+      expect(experienceInteraction.toJson().authenticationProofs).toHaveLength(1);
+    });
+
+    it('rejects an MFA challenge answered for another user than the subject', async () => {
+      const { experienceInteraction, stepUpTenant } = createInteraction({
+        details: { authenticationContext: stepUpContext },
+      });
+      const { libraries, queries } = stepUpTenant;
+
+      experienceInteraction.setVerificationRecord(
+        new TotpVerification(libraries, queries, {
+          id: 'totp-verification-id',
+          type: VerificationType.TOTP,
+          userId: 'someone-else',
+          verified: true,
+        })
+      );
+
+      expect(() =>
+        experienceInteraction.consumeForMfa(VerificationType.TOTP, 'totp-verification-id')
+      ).toThrow(new RequestError({ code: 'session.identity_conflict', status: 409 }));
+      expect(experienceInteraction.identifiedUserId).toBeUndefined();
+    });
+
+    it('rejects switching a pure step-up away from sign-in', async () => {
+      const { experienceInteraction } = createInteraction({
+        details: { authenticationContext: stepUpContext },
+      });
+
+      await expect(
+        experienceInteraction.setInteractionEvent(InteractionEvent.Register)
+      ).rejects.toThrow(
+        new RequestError({ code: 'session.step_up.invalid_interaction_event', status: 400 })
+      );
+      await expect(
+        experienceInteraction.setInteractionEvent(InteractionEvent.SignIn)
+      ).resolves.toBeUndefined();
     });
 
     it('stores a requested-only context without pinning', () => {
@@ -1024,7 +1092,8 @@ describe('ExperienceInteraction class', () => {
       } as unknown as Interaction);
 
       expect(restored.isStepUp).toBe(true);
-      expect(restored.identifiedUserId).toBe(mockUserWithMfaVerifications.id);
+      expect(restored.subjectUserId).toBe(mockUserWithMfaVerifications.id);
+      expect(restored.identifiedUserId).toBeUndefined();
       expect(restored.toJson().authenticationContext).toEqual(stepUpContext);
     });
 
@@ -1035,7 +1104,6 @@ describe('ExperienceInteraction class', () => {
       });
 
       await expect(experienceInteraction.toSanitizedJson()).resolves.toMatchObject({
-        userId: mockUserWithMfaVerifications.id,
         authenticationContext: {
           ...stepUpContext,
           availableMethods: [VerificationType.TOTP],

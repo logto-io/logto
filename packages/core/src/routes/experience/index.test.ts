@@ -297,7 +297,9 @@ describe('PUT /experience', () => {
       interactionDetailsOverrides: {
         prompt: { name: 'login', reasons: ['acr_unmet'], details },
         ...conditional(
-          !withoutSession && { session: { accountId: user.id, acr: LogtoAcr.FirstFactor } }
+          !withoutSession && {
+            session: { accountId: user.id, acr: LogtoAcr.FirstFactor, amr: ['pwd'] },
+          }
         ),
       },
       connectors: [{ type: ConnectorType.Email }],
@@ -345,16 +347,20 @@ describe('PUT /experience', () => {
     expect(provider.interactionResult).toHaveBeenCalledWith(
       expect.anything(),
       expect.anything(),
-      expect.objectContaining({ userId: totpUser.id, authenticationContext: stepUpContext }),
+      expect.objectContaining({ authenticationContext: stepUpContext }),
       { mergeWithLastSubmission: true }
     );
+    // The subject is not written into storage: nothing has verified it yet.
+    expect(jest.mocked(provider.interactionResult).mock.calls[0]?.[2]).toMatchObject({
+      userId: undefined,
+    });
 
     const interaction = await requester.get('/experience/interaction');
 
     expect(interaction.status).toBe(200);
+    expect(interaction.body).not.toHaveProperty('userId');
     expect(interaction.body).toMatchObject({
       interactionEvent: InteractionEvent.SignIn,
-      userId: totpUser.id,
       authenticationContext: {
         ...stepUpContext,
         availableMethods: [VerificationType.TOTP],

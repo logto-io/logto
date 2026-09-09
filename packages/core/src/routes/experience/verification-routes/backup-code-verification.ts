@@ -91,7 +91,7 @@ export default function backupCodeVerificationRoutes<T extends ExperienceInterac
       });
 
       assertThat(
-        experienceInteraction.identifiedUserId,
+        experienceInteraction.subjectUserId,
         new RequestError({
           code: 'session.identifier_not_found',
           status: 404,
@@ -101,7 +101,7 @@ export default function backupCodeVerificationRoutes<T extends ExperienceInterac
       const backupCodeVerificationRecord = BackupCodeVerification.create(
         libraries,
         queries,
-        experienceInteraction.identifiedUserId
+        experienceInteraction.subjectUserId
       );
 
       await withSentinel(
@@ -112,7 +112,7 @@ export default function backupCodeVerificationRoutes<T extends ExperienceInterac
           action: SentinelActivityAction.MfaBackupCode,
           identifier: {
             type: AdditionalIdentifier.UserId,
-            value: experienceInteraction.identifiedUserId,
+            value: experienceInteraction.subjectUserId,
           },
           payload: {
             verificationId: backupCodeVerificationRecord.id,

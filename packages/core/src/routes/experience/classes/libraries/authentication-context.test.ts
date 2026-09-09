@@ -6,7 +6,10 @@ import {
   type AuthenticationProof,
 } from '@logto/schemas';
 
-import { aggregateAuthenticationContext } from './authentication-context.js';
+import {
+  aggregateAuthenticationContext,
+  deriveCarriedContributions,
+} from './authentication-context.js';
 
 const { FirstFactor, Mfa, Both } = AuthenticationFactorClass;
 const { Password, Otp, Sms, ProofOfPossession, UserPresence, Federated } =
@@ -29,7 +32,10 @@ const proof = (
   role,
 });
 
-const aggregate = (proofs: AuthenticationProof[]) => aggregateAuthenticationContext(proofs);
+const aggregate = (
+  proofs: AuthenticationProof[],
+  carried: ReturnType<typeof deriveCarriedContributions> = []
+) => aggregateAuthenticationContext(proofs, carried);
 
 const password = (role?: AuthenticationProofRole) =>
   proof(AuthenticationFactor.Password, FirstFactor, [Password], role);
@@ -170,5 +176,52 @@ describe('aggregateAuthenticationContext', () => {
 
   it('seeds nothing for an interaction without a proof', () => {
     expect(aggregateAuthenticationContext([])).toEqual({});
+  });
+
+  describe('carried context of a pure step-up', () => {
+    const passwordSession = deriveCarriedContributions([Password]);
+
+    it('pairs with a proof of this interaction but contributes nothing to amr', () => {
+      expect(aggregate([totp(AuthenticationProofRole.Mfa)], passwordSession)).toEqual({
+        acr: mfaAcr,
+        amr: ['otp', 'mfa'],
+      });
+    });
+
+    it('never achieves anything alone', () => {
+      expect(aggregateAuthenticationContext([], passwordSession)).toEqual({});
+      expect(
+        aggregateAuthenticationContext(
+          [],
+          deriveCarriedContributions([ProofOfPossession, UserPresence])
+        )
+      ).toEqual({});
+    });
+
+    it('counts a repeated factor once', () => {
+      expect(aggregate([password()], passwordSession)).toEqual({
+        acr: firstFactorAcr,
+        amr: ['pwd'],
+      });
+    });
+
+    it('is derived from the session amr by factor', () => {
+      expect(
+        deriveCarriedContributions([Password, Sms, ProofOfPossession, UserPresence, Federated])
+      ).toEqual([
+        { factor: AuthenticationFactor.Password, class: FirstFactor, amr: [Password] },
+        { factor: AuthenticationFactor.Phone, class: FirstFactor, amr: [Sms] },
+        {
+          factor: AuthenticationFactor.WebAuthn,
+          class: Both,
+          amr: [ProofOfPossession, UserPresence, AuthenticationMethodReference.Mfa],
+        },
+        { factor: AuthenticationFactor.Federated, amr: [Federated] },
+      ]);
+      // `otp` identifies no factor (email, TOTP, or backup code) and `mfa` is a summary marker.
+      expect(deriveCarriedContributions([Otp, AuthenticationMethodReference.Mfa])).toEqual([]);
+      expect(deriveCarriedContributions([ProofOfPossession])).toEqual([]);
+      expect(deriveCarriedContributions()).toEqual([]);
+    });
   });
 });

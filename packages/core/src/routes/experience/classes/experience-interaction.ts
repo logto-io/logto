@@ -47,7 +47,11 @@ import {
 import { validatePostSignInActionResult } from './libraries/action-result-validation.js';
 import { AdaptiveMfaValidator } from './libraries/adaptive-mfa-validator/index.js';
 import { type AdaptiveMfaResult } from './libraries/adaptive-mfa-validator/types.js';
-import { aggregateAuthenticationContext } from './libraries/authentication-context.js';
+import {
+  aggregateAuthenticationContext,
+  deriveCarriedContributions,
+  type AuthenticationContribution,
+} from './libraries/authentication-context.js';
 import { AuthenticationProofs } from './libraries/authentication-proofs.js';
 import { CaptchaValidator } from './libraries/captcha-validator.js';
 import { MfaValidator, isMfaVerificationRecord } from './libraries/mfa-validator.js';
@@ -70,11 +74,11 @@ import {
 import { VerificationRecordsMap } from './verifications/verification-records-map.js';
 
 /**
- * The parts of the provider interaction a new experience interaction reads: the login prompt
- * details the OIDC interaction policy wrote, and the session that pins the step-up subject. The
- * provider copies `accountId`, `acr`, and `amr` from the session into the interaction payload.
- * Parsed leniently because the prompt payload is untyped, and anything that does not parse is a
- * regular sign-in.
+ * The parts of the provider interaction a new experience interaction reads at creation: the
+ * login prompt details the OIDC interaction policy wrote, and the session subject a pure step-up
+ * requires (the provider copies the session into the interaction payload). Parsed leniently
+ * because the prompt payload is untyped, and anything that does not parse is a regular sign-in.
+ * The session's `amr` is read separately, on every request, by `stepUpSessionGuard`.
  */
 const loginPromptInteractionGuard = z.object({
   prompt: z.object({
@@ -82,6 +86,12 @@ const loginPromptInteractionGuard = z.object({
     details: loginPromptAuthenticationContextDetailsGuard.optional(),
   }),
   session: z.object({ accountId: z.string().min(1) }).optional(),
+});
+
+/** The session fields a pure step-up reads on every request; see {@link ExperienceInteraction.subjectUserId}. */
+const stepUpSessionGuard = z.object({
+  accountId: z.string().min(1),
+  amr: z.string().array().optional(),
 });
 
 /**
@@ -125,10 +135,14 @@ export default class ExperienceInteraction {
   /** The user verification record list for the current interaction. */
   private readonly verificationRecords = new VerificationRecordsMap();
   /**
-   * The userId of the user for the current interaction. Available once the user is identified, or
-   * from creation when a pure step-up pins the subject from the OIDC session.
+   * The userId of the user for the current interaction. Only ever written by something that
+   * verified: identification, account creation, or an MFA challenge answered for the step-up
+   * subject (see {@link consumeForMfa}). A pure step-up's subject is read through
+   * {@link subjectUserId} until then.
    */
   private userId?: string;
+  /** The step-up decision of this request, computed once and shared by `PUT` and `GET`. */
+  private stepUpDecision?: Promise<StepUpEligibility | undefined>;
   /**
    * The authentication context the OIDC interaction policy wrote into the login prompt details.
    * Copied verbatim at creation and never mutated; see {@link isStepUp}.
@@ -217,6 +231,8 @@ export default class ExperienceInteraction {
       );
       this.authenticationContext = authenticationContext;
 
+      // The subject is not written into `userId`: nothing has been verified yet. It stays
+      // readable through `subjectUserId` until an MFA challenge or an identification proves it.
       if (authenticationContext?.mode === AuthenticationContextMode.StepUp) {
         assertThat(
           interactionData === InteractionEvent.SignIn,
@@ -226,7 +242,6 @@ export default class ExperienceInteraction {
           sessionAccountId,
           new RequestError({ code: 'session.step_up.subject_not_found', status: 400 })
         );
-        this.userId = sessionAccountId;
       }
 
       return;
@@ -289,6 +304,31 @@ export default class ExperienceInteraction {
   }
 
   /**
+   * The user this interaction is about: the identified user, or in a pure step-up the subject the
+   * OIDC session pinned, read from the provider's interaction record (the session is copied into
+   * it at creation, so it survives a save). Challenge paths read this to know whose secret to
+   * check; it never grants the "identified" guarantee that {@link identifiedUserId} carries.
+   */
+  get subjectUserId(): string | undefined {
+    return this.userId ?? this.stepUpSession?.accountId;
+  }
+
+  /**
+   * The context the OIDC session carries into a pure step-up, derived from its `amr`; empty for
+   * every other interaction. The single place the session's context is read.
+   */
+  get carriedContributions(): AuthenticationContribution[] {
+    return deriveCarriedContributions(this.stepUpSession?.amr);
+  }
+
+  /** The session of a pure step-up, from the provider's interaction record. */
+  private get stepUpSession(): z.infer<typeof stepUpSessionGuard> | undefined {
+    const result = stepUpSessionGuard.safeParse(this.ctx.interactionDetails.session);
+
+    return conditional(this.isStepUp && result.success && result.data);
+  }
+
+  /**
    * Switch the interaction event for the current interaction sign-in <> register
    *
    * - any pending profile data will be cleared
@@ -296,10 +336,18 @@ export default class ExperienceInteraction {
    *   at one event can never inflate the context of another
    *
    * @throws RequestError with 403 if the interaction event is not allowed by the `SignInExperienceValidator`
+   * @throws RequestError with 400 if a pure step-up switches away from `SignIn`
    * @throws RequestError with 400 if the interaction event is `ForgotPassword` and the current interaction event is not `ForgotPassword`
    * @throws RequestError with 400 if the interaction event is not `ForgotPassword` and the current interaction event is `ForgotPassword`
    */
   public async setInteractionEvent(interactionEvent: InteractionEvent) {
+    // A pure step-up is a `SignIn` from creation to completion: switching the event would walk
+    // past the creation assertion and reach registration with a session-pinned subject.
+    assertThat(
+      !this.isStepUp || interactionEvent === InteractionEvent.SignIn,
+      new RequestError({ code: 'session.step_up.invalid_interaction_event', status: 400 })
+    );
+
     await this.signInExperienceValidator.guardInteractionEvent(
       interactionEvent,
       this.verificationRecords.get(VerificationType.OneTimeToken)?.isVerified
@@ -362,12 +410,14 @@ export default class ExperienceInteraction {
     const { id, isSuspended } = user;
     assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
 
-    // Throws an 409 error if the current session has already identified a different user
+    // Throws an 409 error if the current session has already identified a different user, or if
+    // a pure step-up identifies someone other than the subject its session pinned
+    assertThat(
+      !this.subjectUserId || this.subjectUserId === id,
+      new RequestError({ code: 'session.identity_conflict', status: 409 })
+    );
+
     if (this.userId) {
-      assertThat(
-        this.userId === id,
-        new RequestError({ code: 'session.identity_conflict', status: 409 })
-      );
       return;
     }
 
@@ -499,8 +549,12 @@ export default class ExperienceInteraction {
    * so the verify routes call this right after a successful verification. A new-enrollment record
    * is never a challenge; its proof is the `bind` one recorded when the factor is added.
    *
+   * In a pure step-up the answered challenge is what proves the pinned subject, so it promotes
+   * {@link subjectUserId} into `userId`, mirroring the conflict check {@link identifyUser} does.
+   *
    * @throws {RequestError} with 404 if the verification record is not found
    * @throws {RequestError} with 400 if the record is not a verified MFA challenge
+   * @throws {RequestError} with 409 if the challenge was answered for a user other than the subject
    */
   public consumeForMfa<K extends keyof VerificationRecordMap>(
     type: K,
@@ -512,6 +566,16 @@ export default class ExperienceInteraction {
       isMfaVerificationRecord(record) && record.isVerified && !record.isNewBindMfaVerification,
       new RequestError({ code: 'session.verification_failed', status: 400 })
     );
+
+    const { subjectUserId } = this;
+
+    if (!this.userId && subjectUserId) {
+      assertThat(
+        !('userId' in record) || record.userId === subjectUserId,
+        new RequestError({ code: 'session.identity_conflict', status: 409 })
+      );
+      this.userId = subjectUserId;
+    }
 
     this.authenticationProofs.stage(record, AuthenticationProofRole.Mfa);
 
@@ -652,9 +716,9 @@ export default class ExperienceInteraction {
       return;
     }
 
-    const eligibility = await this.getStepUpEligibility();
+    const decision = await this.getStepUpDecision();
 
-    if (eligibility?.isReachable) {
+    if (decision?.isReachable) {
       return;
     }
 
@@ -1048,22 +1112,30 @@ export default class ExperienceInteraction {
   }
 
   /**
-   * Compute the step-up eligibility of the pinned (or identified) user for the selected class,
-   * evaluated on read and never persisted. `undefined` while no user is identified or the
-   * interaction carries no requested class. A pure step-up reads the session's `acr`; a sign-in
-   * with requested ACR has no session to read, and its selected class is the first requested one.
+   * The step-up decision for the subject and the selected class: what `PUT /experience` acts on
+   * and `GET /experience/interaction` projects, computed once per request from the same inputs so
+   * the two cannot disagree. Evaluated on read and never persisted. `undefined` while no subject
+   * is known or the interaction carries no requested class. A pure step-up pairs the context its
+   * session carries; a sign-in with requested ACR has no session, and its selected class is the
+   * first requested one.
    */
-  private async getStepUpEligibility(): Promise<StepUpEligibility | undefined> {
-    const { authenticationContext, userId } = this;
+  private async getStepUpDecision(): Promise<StepUpEligibility | undefined> {
+    this.stepUpDecision ??= this.computeStepUpDecision();
+
+    return this.stepUpDecision;
+  }
+
+  private async computeStepUpDecision(): Promise<StepUpEligibility | undefined> {
+    const { authenticationContext, subjectUserId } = this;
     const selectedAcr =
       authenticationContext?.selectedAcr ?? authenticationContext?.requestedAcrValues[0];
 
-    if (!selectedAcr || !userId) {
+    if (!selectedAcr || !subjectUserId) {
       return;
     }
 
     const [user, mfaSettings, connectors] = await Promise.all([
-      this.getIdentifiedUser(),
+      this.getSubjectUser(subjectUserId),
       this.signInExperienceValidator.getMfaSettings(),
       this.tenant.connectors.getLogtoConnectors(),
     ]);
@@ -1076,9 +1148,24 @@ export default class ExperienceInteraction {
         email: connectors.some(({ type }) => type === ConnectorType.Email),
         sms: connectors.some(({ type }) => type === ConnectorType.Sms),
       },
-      sessionAcr: conditional(this.isStepUp && this.ctx.interactionDetails.session?.acr),
+      carried: this.carriedContributions,
       proofs: this.authenticationProofs.proofs,
     });
+  }
+
+  /**
+   * Fetch the subject to compute the decision from, sharing the identified user's cache. Unlike
+   * {@link getIdentifiedUser}, this grants nothing: the subject may still be unproven.
+   */
+  private async getSubjectUser(subjectUserId: string): Promise<User> {
+    if (this.userCache?.id === subjectUserId) {
+      return this.userCache;
+    }
+
+    const user = await this.tenant.queries.users.findUserById(subjectUserId);
+    this.userCache = user;
+
+    return user;
   }
 
   /**
@@ -1089,15 +1176,15 @@ export default class ExperienceInteraction {
   private async toSanitizedAuthenticationContext(
     authenticationContext: RequestedAuthenticationContext
   ): Promise<InteractionAuthenticationContext> {
-    const eligibility = await this.getStepUpEligibility();
+    const decision = await this.getStepUpDecision();
 
     return {
       ...authenticationContext,
-      availableMethods: eligibility?.availableMethods ?? [],
+      availableMethods: decision?.availableMethods ?? [],
       establishableMethods: [],
       enrollableFactors: [],
       subjectProofConnectors: [],
-      maskedIdentifiers: eligibility?.maskedIdentifiers ?? {},
+      maskedIdentifiers: decision?.maskedIdentifiers ?? {},
     };
   }
 

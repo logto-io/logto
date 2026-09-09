@@ -167,7 +167,7 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
       const { experienceInteraction } = ctx;
 
       assertThat(
-        experienceInteraction.identifiedUserId,
+        experienceInteraction.subjectUserId,
         new RequestError({
           code: 'session.identifier_not_found',
           status: 404,
@@ -177,7 +177,7 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
       const webAuthnVerification = WebAuthnVerification.create(
         libraries,
         queries,
-        experienceInteraction.identifiedUserId
+        experienceInteraction.subjectUserId
       );
 
       const authenticationOptions =
@@ -226,7 +226,7 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
       });
 
       assertThat(
-        experienceInteraction.identifiedUserId,
+        experienceInteraction.subjectUserId,
         new RequestError({
           code: 'session.identifier_not_found',
           status: 404,
@@ -239,7 +239,7 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
       );
 
       assertThat(
-        experienceInteraction.identifiedUserId === webAuthnVerification.userId,
+        experienceInteraction.subjectUserId === webAuthnVerification.userId,
         new RequestError({
           code: 'session.identity_conflict',
           status: 404,
@@ -254,7 +254,7 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
           action: SentinelActivityAction.WebAuthn,
           identifier: {
             type: AdditionalIdentifier.UserId,
-            value: experienceInteraction.identifiedUserId,
+            value: experienceInteraction.subjectUserId,
           },
           payload: {
             verificationId: webAuthnVerification.id,

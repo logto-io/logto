@@ -417,6 +417,7 @@ describe('getMfaIdentifier', () => {
   const buildInteraction = (factors: MfaFactor[]) =>
     ({
       identifiedUserId: 'identified-user-id',
+      subjectUserId: 'identified-user-id',
       signInExperienceValidator: { getMfaSettings: jest.fn().mockResolvedValue({ factors }) },
     }) as unknown as Parameters<typeof getMfaIdentifier>[0]['experienceInteraction'];
 

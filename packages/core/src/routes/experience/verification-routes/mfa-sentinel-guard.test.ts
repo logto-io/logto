@@ -147,6 +147,7 @@ describe('MFA verification routes sentinel guard', () => {
     const ctx = {
       experienceInteraction: {
         identifiedUserId: mockUser.id,
+        subjectUserId: mockUser.id,
         setVerificationRecord: jest.fn(),
         consumeForMfa: jest.fn(),
         save: jest.fn().mockImplementation(resolveVoid),
@@ -194,6 +195,7 @@ describe('MFA verification routes sentinel guard', () => {
     const ctx = {
       experienceInteraction: {
         identifiedUserId: mockUser.id,
+        subjectUserId: mockUser.id,
         setVerificationRecord: jest.fn(),
         consumeForMfa: jest.fn(),
         save: jest.fn().mockImplementation(resolveVoid),
@@ -245,6 +247,7 @@ describe('MFA verification routes sentinel guard', () => {
     const ctx = {
       experienceInteraction: {
         identifiedUserId: mockUser.id,
+        subjectUserId: mockUser.id,
         getVerificationRecordByTypeAndId: jest.fn(() => webAuthnVerificationRecord),
         consumeForMfa: jest.fn(),
         save: jest.fn().mockImplementation(resolveVoid),

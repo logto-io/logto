@@ -1,11 +1,13 @@
 /**
- * @file Eligible-method computation for step-up: which of the pinned user's already-enrolled
- * methods can still contribute to the selected ACR, and whether the user can reach it at all.
+ * @file Eligible-method computation for step-up: which of the subject's already-enrolled methods
+ * can still contribute to the selected ACR, and whether the subject can reach it at all.
  *
  * Everything here is evaluated on read and never persisted, so a factor the user unbinds during
- * the interaction's lifetime disappears from the next read. The result reads only the user's
- * enrolled methods, the tenant's MFA settings, the message connectors, the session's `acr`, and
- * the proofs this interaction recorded; it never reads verification records directly.
+ * the interaction's lifetime disappears from the next read. Reachability is not restated here: it
+ * is a bounded search over `aggregateAuthenticationContext`, the one definition of what a set of
+ * contributions reaches, so the methods offered can never disagree with what a submission
+ * derives. The candidates are the subject's enrolled methods; later milestones add enrollable
+ * factors and establishable first factors as further candidate contributions.
  */
 import {
   AuthenticationFactorClass,
@@ -15,15 +17,17 @@ import {
   acrSatisfies,
   getAuthenticationFactor,
   getAuthenticationFactorClass,
-  type AuthenticationFactor,
-  type AuthenticationProof,
+  getAuthenticationMethodReferences,
   type MaskedIdentifiers,
   type Mfa,
   type User,
 } from '@logto/schemas';
 import { maskEmail, maskPhone } from '@logto/shared';
 
-import { aggregateAuthenticationContext } from './authentication-context.js';
+import {
+  aggregateAuthenticationContext,
+  type AuthenticationContribution,
+} from './authentication-context.js';
 import { MfaValidator } from './mfa-validator.js';
 
 /** Whether an email / SMS connector is configured; gates every code-based method. */
@@ -39,25 +43,26 @@ export type StepUpEligibilityInput = {
   /** The minimum class the interaction must reach. */
   selectedAcr: LogtoAcr;
   /**
-   * The `acr` of the OIDC session that pinned the subject. Only pure step-up passes it: a
-   * Logto-verifiable `1fa` on the session skips the first-factor prompt for a user who has an MFA
-   * factor to verify with, and contributes nothing else.
+   * The context the OIDC session carries in, derived from its `amr`; see
+   * `deriveCarriedContributions`. Only pure step-up carries anything. It pairs with a proof of
+   * this interaction and never satisfies the class alone.
    */
-  sessionAcr?: string;
+  carried: readonly AuthenticationContribution[];
   /** The proofs this interaction recorded so far. */
-  proofs: readonly AuthenticationProof[];
+  proofs: readonly AuthenticationContribution[];
 };
 
 export type StepUpEligibility = {
   /**
-   * The methods that can still contribute to {@link StepUpEligibilityInput.selectedAcr} from where
-   * the interaction stands; empty once the class is reached or when nothing helps.
+   * The methods that make progress toward {@link StepUpEligibilityInput.selectedAcr} from where the
+   * interaction stands: the next step of a shortest path to the class. Empty once the class is
+   * reached or when nothing helps.
    */
   availableMethods: VerificationType[];
   /**
-   * Whether the user can reach the selected class with the methods they have, combined with the
-   * session's `1fa` where it counts. Decided from the eligibility table alone, before any
-   * verification, so creation can fast-fail instead of the UI.
+   * Whether the subject can reach the selected class with the methods they have, combined with
+   * the carried context where it pairs. Decided before any verification, so creation can
+   * fast-fail instead of the UI.
    */
   isReachable: boolean;
   maskedIdentifiers: MaskedIdentifiers;
@@ -73,8 +78,7 @@ const mfaFactorToVerificationType = Object.freeze({
 
 /**
  * The `1fa`-role methods of the eligibility table: password when the user has one, the primary
- * email / phone code when the identifier is set and its connector is configured. Each reaches
- * `urn:logto:acr:1fa` alone and fills the `1fa` side of an `urn:logto:acr:mfa` pair.
+ * email / phone code when the identifier is set and its connector is configured.
  */
 const getFirstFactorMethods = (
   { passwordEncrypted, primaryEmail, primaryPhone }: User,
@@ -89,9 +93,7 @@ const getFirstFactorMethods = (
  * The `mfa`-role methods: the user's enrolled factors that the tenant enables, reusing
  * `MfaValidator.availableUserMfaVerificationTypes` (which already drops exhausted backup codes
  * and orders WebAuthn first and backup code last). `MfaValidator` does not check connector
- * availability, so the connector gate for the code-based factors is added here. Each reaches
- * `urn:logto:acr:1fa` alone; WebAuthn (user verification required) reaches `urn:logto:acr:mfa`
- * alone.
+ * availability, so the connector gate for the code-based factors is added here.
  */
 const getMfaMethods = (
   user: User,
@@ -114,137 +116,115 @@ const getMfaMethods = (
     })
     .map((factor) => mfaFactorToVerificationType[factor]);
 
-const isSelfSufficient = (method: VerificationType) =>
-  getAuthenticationFactorClass(method) === AuthenticationFactorClass.Both;
+/** What verifying a method would contribute; the same shape a recorded proof takes. */
+const toContribution = (method: VerificationType): AuthenticationContribution => ({
+  factor: getAuthenticationFactor(method),
+  class: getAuthenticationFactorClass(method),
+  amr: [...getAuthenticationMethodReferences(method)],
+});
+
+const fillsFirstFactorRole = ({ class: factorClass }: AuthenticationContribution) =>
+  factorClass === AuthenticationFactorClass.FirstFactor ||
+  factorClass === AuthenticationFactorClass.Both;
+
+/** A class is reached with at most two verifications: a `1fa`-role one and an `mfa`-role one. */
+const maxSteps = 2;
 
 /**
- * Whether the methods can reach the selected class, by the combination rule: any method reaches
- * `urn:logto:acr:1fa`; `urn:logto:acr:mfa` needs a self-sufficient method, or an `mfa`-role
- * method paired with a Logto-verifiable `1fa` context of a different factor, which the session
- * provides when it satisfies `1fa` and a `1fa`-role method provides otherwise. A user whose only
- * Logto-verifiable method is one MFA factor therefore reaches `1fa` but never `mfa`.
+ * The number of further verifications needed to reach the target from the current proofs, on
+ * top of the carried context: `0` when reached, `Infinity` when no combination of the remaining
+ * candidates reaches it.
  */
-const canReach = (
-  selectedAcr: LogtoAcr,
-  firstFactorMethods: VerificationType[],
-  mfaMethods: VerificationType[],
-  hasSessionFirstFactor: boolean
-): boolean => {
-  if (selectedAcr === LogtoAcr.FirstFactor) {
-    return firstFactorMethods.length + mfaMethods.length > 0;
-  }
-
-  return mfaMethods.some(
-    (mfaMethod) =>
-      isSelfSufficient(mfaMethod) ||
-      hasSessionFirstFactor ||
-      firstFactorMethods.some(
-        (firstFactorMethod) =>
-          getAuthenticationFactor(firstFactorMethod) !== getAuthenticationFactor(mfaMethod)
-      )
-  );
-};
-
-const factorsOf = (
-  proofs: readonly AuthenticationProof[],
-  predicate: (factorClass?: AuthenticationFactorClass) => boolean
-): ReadonlySet<AuthenticationFactor> =>
-  new Set(
-    proofs.filter(({ class: factorClass }) => predicate(factorClass)).map(({ factor }) => factor)
-  );
-
-const excludeFactors = (
-  methods: VerificationType[],
-  factors: ReadonlySet<AuthenticationFactor>
-): VerificationType[] => methods.filter((method) => !factors.has(getAuthenticationFactor(method)));
-
-/**
- * The next eligible methods for the selected class.
- *
- * - Nothing once the context achieved in this interaction already satisfies the class.
- * - For `urn:logto:acr:1fa`, every method of the table.
- * - For `urn:logto:acr:mfa`, the MFA subset when the user has an enrolled factor and a
- *   Logto-verifiable `1fa` context exists, from the session or from this interaction, minus the
- *   factor whose record already supplies that context (a single factor never fills both roles).
- *   Otherwise the `1fa`-role methods, plus any self-sufficient method (WebAuthn): a social / SSO
- *   session must establish `1fa` before an MFA factor counts, and a user with no enrolled factor
- *   must complete a fresh `1fa` verification before enrollment is offered; the session's `1fa`
- *   never skips that fresh verification.
- */
-const getAvailableMethods = ({
-  selectedAcr,
-  firstFactorMethods,
-  mfaMethods,
-  hasSessionFirstFactor,
-  proofs,
-}: {
-  selectedAcr: LogtoAcr;
-  firstFactorMethods: VerificationType[];
-  mfaMethods: VerificationType[];
-  hasSessionFirstFactor: boolean;
-  proofs: readonly AuthenticationProof[];
-}): VerificationType[] => {
-  const { acr: achievedAcr } = aggregateAuthenticationContext(proofs);
-
-  if (acrSatisfies(achievedAcr, selectedAcr)) {
-    return [];
-  }
-
-  if (selectedAcr === LogtoAcr.FirstFactor) {
-    return [...firstFactorMethods, ...mfaMethods];
-  }
-
-  const provenFirstFactors = factorsOf(
+const distanceTo = (
+  {
+    target,
+    carried,
     proofs,
-    (factorClass) =>
-      factorClass === AuthenticationFactorClass.FirstFactor ||
-      factorClass === AuthenticationFactorClass.Both
+    candidates,
+  }: {
+    target: LogtoAcr;
+    carried: readonly AuthenticationContribution[];
+    proofs: readonly AuthenticationContribution[];
+    candidates: readonly VerificationType[];
+  },
+  steps = maxSteps
+): number => {
+  if (acrSatisfies(aggregateAuthenticationContext(proofs, carried).acr, target)) {
+    return 0;
+  }
+
+  if (steps === 0) {
+    return Number.POSITIVE_INFINITY;
+  }
+
+  return Math.min(
+    ...candidates.map(
+      (candidate, index) =>
+        1 +
+        distanceTo(
+          {
+            target,
+            carried,
+            proofs: [...proofs, toContribution(candidate)],
+            candidates: candidates.filter((_, otherIndex) => otherIndex !== index),
+          },
+          steps - 1
+        )
+    ),
+    Number.POSITIVE_INFINITY
   );
-  const provenFactors = factorsOf(proofs, (factorClass) => factorClass !== undefined);
-
-  if (mfaMethods.length === 0) {
-    // A fresh first factor is the precondition for enrolling a factor; once verified, only
-    // enrollment can move the interaction forward.
-    return provenFirstFactors.size > 0 ? [] : firstFactorMethods;
-  }
-
-  if (hasSessionFirstFactor || provenFirstFactors.size > 0) {
-    return excludeFactors(mfaMethods, provenFirstFactors);
-  }
-
-  // A self-sufficient method reaches `mfa` alone, so it is offered alongside the `1fa` methods.
-  return [
-    ...excludeFactors(firstFactorMethods, provenFactors),
-    ...mfaMethods.filter((method) => isSelfSufficient(method)),
-  ];
 };
 
 /**
- * Compute the step-up eligibility of the pinned user for the selected class; see the file
- * overview and the eligibility table of the Experience step-up flow design.
+ * Compute the step-up eligibility of the subject for the selected class; see the file overview
+ * and the eligibility table of the Experience step-up flow design.
+ *
+ * `availableMethods` is the next step of a shortest path to the class, so a password session with
+ * an enrolled TOTP requesting `mfa` is offered the TOTP only. When the class is `mfa` and no
+ * Logto-verifiable `1fa` context exists yet, in the carried context or in this interaction, the
+ * `1fa`-role methods are offered before the `mfa`-role ones: a social / SSO session establishes
+ * `1fa` before an MFA factor counts. The carried context never satisfies the class alone, so a
+ * forced step-up (`prompt=login`) always asks for a fresh verification.
  */
 export const computeStepUpEligibility = ({
   user,
   mfaSettings,
   connectors,
   selectedAcr,
-  sessionAcr,
+  carried,
   proofs,
 }: StepUpEligibilityInput): StepUpEligibility => {
-  const firstFactorMethods = getFirstFactorMethods(user, connectors);
-  const mfaMethods = getMfaMethods(user, mfaSettings, connectors);
-  const hasSessionFirstFactor = acrSatisfies(sessionAcr, LogtoAcr.FirstFactor);
+  const candidates = [
+    ...getFirstFactorMethods(user, connectors),
+    ...getMfaMethods(user, mfaSettings, connectors),
+  ];
+  const distance = distanceTo({ target: selectedAcr, carried, proofs, candidates });
+  const nextSteps = Number.isFinite(distance)
+    ? candidates.filter(
+        (candidate, index) =>
+          distanceTo({
+            target: selectedAcr,
+            carried,
+            proofs: [...proofs, toContribution(candidate)],
+            candidates: candidates.filter((_, otherIndex) => otherIndex !== index),
+          }) ===
+          distance - 1
+      )
+    : [];
+  const hasFirstFactorContext = [...carried, ...proofs].some((contribution) =>
+    fillsFirstFactorRole(contribution)
+  );
+  const firstFactorSteps = nextSteps.filter((method) =>
+    fillsFirstFactorRole(toContribution(method))
+  );
   const { primaryEmail, primaryPhone } = user;
 
   return {
-    availableMethods: getAvailableMethods({
-      selectedAcr,
-      firstFactorMethods,
-      mfaMethods,
-      hasSessionFirstFactor,
-      proofs,
-    }),
-    isReachable: canReach(selectedAcr, firstFactorMethods, mfaMethods, hasSessionFirstFactor),
+    availableMethods:
+      selectedAcr === LogtoAcr.Mfa && !hasFirstFactorContext && firstFactorSteps.length > 0
+        ? firstFactorSteps
+        : nextSteps,
+    isReachable: Number.isFinite(distance),
     // Only identifiers a code method can be sent to are hinted, and only in masked form.
     maskedIdentifiers: {
       ...(primaryEmail && connectors.email ? { email: maskEmail(primaryEmail) } : {}),

@@ -7,6 +7,10 @@ import {
   MfaFactor,
   MfaPolicy,
   VerificationType,
+  acrSatisfies,
+  getAuthenticationFactor,
+  getAuthenticationFactorClass,
+  getAuthenticationMethodReferences,
   type AuthenticationProof,
   type Mfa,
   type User,
@@ -19,6 +23,10 @@ import {
   mockUserWebAuthnMfaVerification,
 } from '#src/__mocks__/user.js';
 
+import {
+  aggregateAuthenticationContext,
+  deriveCarriedContributions,
+} from './authentication-context.js';
 import { computeStepUpEligibility, type StepUpEligibilityInput } from './step-up-eligibility.js';
 
 const allFactors: Mfa = {
@@ -89,12 +97,16 @@ const mfaEmailCodeProof = proof(
   [AuthenticationMethodReference.Otp]
 );
 
+/** The context a password session carries in. */
+const passwordSession = deriveCarriedContributions([AuthenticationMethodReference.Password]);
+
 const compute = (input: Partial<StepUpEligibilityInput> = {}) =>
   computeStepUpEligibility({
     user: passwordUser,
     mfaSettings: allFactors,
     connectors: bothConnectors,
     selectedAcr: LogtoAcr.FirstFactor,
+    carried: [],
     proofs: [],
     ...input,
   });
@@ -215,7 +227,7 @@ describe('computeStepUpEligibility', () => {
       const { availableMethods, isReachable } = compute({
         user: withTotp(passwordUser),
         selectedAcr: LogtoAcr.Mfa,
-        sessionAcr: LogtoAcr.FirstFactor,
+        carried: passwordSession,
       });
 
       expect(availableMethods).toEqual([
@@ -228,7 +240,7 @@ describe('computeStepUpEligibility', () => {
 
     it('exposes the `1fa` methods first on a social session, then the MFA subset', () => {
       const user = withTotp({ ...socialOnlyUser, primaryEmail: mockUser.primaryEmail });
-      const before = compute({ user, selectedAcr: LogtoAcr.Mfa, sessionAcr: undefined });
+      const before = compute({ user, selectedAcr: LogtoAcr.Mfa });
 
       expect(before.availableMethods).toEqual([VerificationType.EmailVerificationCode]);
       expect(before.isReachable).toBe(true);
@@ -239,28 +251,35 @@ describe('computeStepUpEligibility', () => {
       expect(after.availableMethods).toEqual([VerificationType.TOTP]);
     });
 
-    it('never skips a fresh `1fa` verification for a user with no enrolled factor', () => {
+    it('finds nothing eligible for a user with no enrolled factor', () => {
       const totpOnly: Mfa = { policy: MfaPolicy.UserControlled, factors: [MfaFactor.TOTP] };
-      const before = compute({
-        mfaSettings: totpOnly,
-        selectedAcr: LogtoAcr.Mfa,
-        sessionAcr: LogtoAcr.FirstFactor,
+
+      // No method pairs into `mfa`; enrolling a factor is a later milestone's candidate.
+      expect(
+        compute({ mfaSettings: totpOnly, selectedAcr: LogtoAcr.Mfa, carried: passwordSession })
+      ).toMatchObject({ availableMethods: [], isReachable: false });
+      expect(
+        compute({ mfaSettings: totpOnly, selectedAcr: LogtoAcr.Mfa, proofs: [passwordProof] })
+      ).toMatchObject({ availableMethods: [], isReachable: false });
+    });
+
+    it('never lets the carried context satisfy the class alone', () => {
+      // `prompt=login` on a satisfied session still asks for a fresh verification.
+      const { availableMethods, isReachable } = compute({
+        user: withTotp(passwordUser),
+        selectedAcr: LogtoAcr.FirstFactor,
+        carried: passwordSession,
       });
 
-      expect(before.availableMethods).toEqual([
+      expect(availableMethods).toEqual([
         VerificationType.Password,
         VerificationType.EmailVerificationCode,
         VerificationType.PhoneVerificationCode,
+        VerificationType.TOTP,
+        VerificationType.MfaPhoneVerificationCode,
+        VerificationType.MfaEmailVerificationCode,
       ]);
-      // Nothing to verify with; enrollment is a later milestone.
-      expect(before.isReachable).toBe(false);
-
-      const after = compute({
-        mfaSettings: totpOnly,
-        selectedAcr: LogtoAcr.Mfa,
-        proofs: [passwordProof],
-      });
-      expect(after.availableMethods).toEqual([]);
+      expect(isReachable).toBe(true);
     });
 
     it('finds nothing eligible for a user whose only method is one MFA factor', () => {
@@ -281,16 +300,27 @@ describe('computeStepUpEligibility', () => {
     it('cannot pair an MFA code with the primary code of the same identifier', () => {
       const user: User = { ...socialOnlyUser, primaryEmail: mockUser.primaryEmail };
 
+      // Nothing pairs into `mfa`, so nothing is offered: no dead-end verification.
       expect(compute({ user, selectedAcr: LogtoAcr.Mfa })).toMatchObject({
-        availableMethods: [VerificationType.EmailVerificationCode],
+        availableMethods: [],
         isReachable: false,
       });
-      // A session `1fa` provides the other side of the pair.
-      expect(
-        compute({ user, selectedAcr: LogtoAcr.Mfa, sessionAcr: LogtoAcr.FirstFactor })
-      ).toMatchObject({
+      // A password session provides the other side of the pair.
+      expect(compute({ user, selectedAcr: LogtoAcr.Mfa, carried: passwordSession })).toMatchObject({
         availableMethods: [VerificationType.MfaEmailVerificationCode],
         isReachable: true,
+      });
+      // A session whose `1fa` could only have come from that same email code does not: `otp`
+      // carries no factor identity, so nothing is carried and the pair never forms.
+      expect(
+        compute({
+          user,
+          selectedAcr: LogtoAcr.Mfa,
+          carried: deriveCarriedContributions([AuthenticationMethodReference.Otp]),
+        })
+      ).toMatchObject({
+        availableMethods: [],
+        isReachable: false,
       });
     });
 
@@ -331,15 +361,43 @@ describe('computeStepUpEligibility', () => {
       ]);
     });
 
-    it('ignores a session `acr` that is not a Logto ACR', () => {
+    it('carries nothing from a federated session', () => {
       expect(
-        compute({ user: withTotp(passwordUser), selectedAcr: LogtoAcr.Mfa, sessionAcr: 'phr' })
-          .availableMethods
+        compute({
+          user: withTotp(passwordUser),
+          selectedAcr: LogtoAcr.Mfa,
+          carried: deriveCarriedContributions([AuthenticationMethodReference.Federated]),
+        }).availableMethods
       ).toEqual([
         VerificationType.Password,
         VerificationType.EmailVerificationCode,
         VerificationType.PhoneVerificationCode,
       ]);
+    });
+
+    it('offers only methods a submission would derive to the class', () => {
+      // Eligibility is a search over the aggregator, so every offered method, once verified on
+      // top of the carried context, reaches the class it was offered for.
+      const user = withTotp(passwordUser);
+      const { availableMethods } = compute({
+        user,
+        selectedAcr: LogtoAcr.Mfa,
+        carried: passwordSession,
+      });
+
+      expect(availableMethods.length).toBeGreaterThan(0);
+
+      for (const method of availableMethods) {
+        const proof = {
+          factor: getAuthenticationFactor(method),
+          class: getAuthenticationFactorClass(method),
+          amr: [...getAuthenticationMethodReferences(method)],
+        };
+
+        expect(
+          acrSatisfies(aggregateAuthenticationContext([proof], passwordSession).acr, LogtoAcr.Mfa)
+        ).toBe(true);
+      }
     });
   });
 
@@ -356,9 +414,15 @@ describe('computeStepUpEligibility', () => {
       ).toEqual([]);
     });
 
-    it('does not let the achieved context change reachability', () => {
+    it('counts the proofs of this interaction toward reachability', () => {
       expect(compute({ proofs: [passwordProof] }).isReachable).toBe(true);
-      expect(compute({ user: socialOnlyUser, proofs: [passwordProof] }).isReachable).toBe(false);
+      expect(compute({ user: socialOnlyUser, proofs: [passwordProof] })).toMatchObject({
+        availableMethods: [],
+        isReachable: true,
+      });
+      expect(
+        compute({ user: socialOnlyUser, selectedAcr: LogtoAcr.Mfa, proofs: [passwordProof] })
+      ).toMatchObject({ availableMethods: [], isReachable: false });
     });
   });
 });
