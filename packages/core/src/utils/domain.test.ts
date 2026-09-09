@@ -19,10 +19,15 @@ const createQuotaLibraryMock = () => {
 };
 
 describe('normalizeHostname()', () => {
-  it('should trim, lowercase, and strip a single trailing dot', () => {
+  it('should trim, lowercase, and strip trailing dots', () => {
     expect(normalizeHostname(' App.Example.COM. ')).toBe('app.example.com');
     expect(normalizeHostname('app.example.com')).toBe('app.example.com');
-    expect(normalizeHostname('app.example.com..')).toBe('app.example.com.');
+    expect(normalizeHostname('app.example.com..')).toBe('app.example.com');
+  });
+
+  it('should be idempotent', () => {
+    const normalized = normalizeHostname(' App.Example.COM.. ');
+    expect(normalizeHostname(normalized)).toBe(normalized);
   });
 });
 

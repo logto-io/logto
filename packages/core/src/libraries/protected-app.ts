@@ -135,10 +135,10 @@ const addDomainToRemote = async (
   // The default domain of protected apps is reserved. Hostnames under it are assigned by Logto
   // when an app is created, and adding one as a custom domain creates a custom hostname inside
   // our own zone that never gets a matching site config.
-  const { domain: defaultDomain } = await getProviderConfig();
+  const { domain } = await getProviderConfig();
+  const defaultDomain = normalizeHostname(domain);
   assertThat(
-    normalizedHostname !== defaultDomain.toLowerCase() &&
-      !isSubdomainOf(normalizedHostname, defaultDomain.toLowerCase()),
+    normalizedHostname !== defaultDomain && !isSubdomainOf(normalizedHostname, defaultDomain),
     'domain.domain_is_not_allowed',
     422
   );
@@ -156,11 +156,12 @@ const addDomainToRemote = async (
   const hostnameProviderConfig = await getHostnameProviderConfig();
   const { blockedDomains } = hostnameProviderConfig;
   assertThat(
-    !(blockedDomains ?? []).some(
-      (domain) =>
-        normalizedHostname === domain.toLowerCase() ||
-        isSubdomainOf(normalizedHostname, domain.toLowerCase())
-    ),
+    !(blockedDomains ?? [])
+      .map(normalizeHostname)
+      .some(
+        (blockedDomain) =>
+          normalizedHostname === blockedDomain || isSubdomainOf(normalizedHostname, blockedDomain)
+      ),
     'domain.domain_is_not_allowed',
     422
   );
