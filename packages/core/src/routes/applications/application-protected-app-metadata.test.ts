@@ -113,6 +113,31 @@ describe('application protected app metadata routes', () => {
       expect(syncAppConfigsToRemote).toHaveBeenCalledWith(mockProtectedApplication.id);
     });
 
+    it('should canonicalize the domain to lowercase', async () => {
+      const response = await requester
+        .post(`/applications/${mockProtectedApplication.id}/protected-app-metadata/custom-domains`)
+        .send({
+          domain: 'App.Example.COM',
+        });
+      expect(response.status).toEqual(201);
+      expect(addDomainToRemote).toHaveBeenCalledWith(mockDomain);
+      expect(updateApplicationById).toHaveBeenCalledWith(
+        mockProtectedApplication.id,
+        expect.objectContaining({
+          oidcClientMetadata: {
+            postLogoutRedirectUris: [
+              `https://${mockProtectedApplication.protectedAppMetadata.host}`,
+              `https://${mockDomain}`,
+            ],
+            redirectUris: [
+              `https://${mockProtectedApplication.protectedAppMetadata.host}/${protectedAppSignInCallbackUrl}`,
+              `https://${mockDomain}/${protectedAppSignInCallbackUrl}`,
+            ],
+          },
+        })
+      );
+    });
+
     it('throw when domain exists', async () => {
       findApplicationById.mockResolvedValueOnce({
         ...mockProtectedApplication,
