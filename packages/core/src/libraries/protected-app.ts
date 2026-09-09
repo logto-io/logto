@@ -145,7 +145,7 @@ const addDomainToRemote = async (
 
   if (EnvSet.values.isProtectedAppLocalDevEnabled) {
     return {
-      domain: hostname,
+      domain: normalizedHostname,
       cloudflareData: null,
       status: DomainStatus.Active,
       errorMessage: null,
@@ -167,18 +167,18 @@ const addDomainToRemote = async (
 
   const [fallbackOrigin, cloudflareData] = await Promise.all([
     getFallbackOrigin(hostnameProviderConfig),
-    createCustomHostname(hostnameProviderConfig, hostname),
+    createCustomHostname(hostnameProviderConfig, normalizedHostname),
   ]);
 
   return {
-    domain: hostname,
+    domain: normalizedHostname,
     cloudflareData,
     status: DomainStatus.PendingVerification,
     errorMessage: null,
     dnsRecords: [
       {
         type: 'CNAME',
-        name: hostname,
+        name: normalizedHostname,
         value: fallbackOrigin,
       },
     ],

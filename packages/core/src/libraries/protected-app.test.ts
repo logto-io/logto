@@ -189,8 +189,8 @@ describe('addDomainToRemote()', () => {
     expect(createCustomHostname).not.toHaveBeenCalled();
   });
 
-  it('should add a custom hostname for other domains', async () => {
-    await expect(addDomainToRemote('secure.example.com')).resolves.toMatchObject({
+  it('should add a custom hostname for other domains with the lowercased hostname', async () => {
+    await expect(addDomainToRemote('Secure.Example.COM')).resolves.toMatchObject({
       domain: 'secure.example.com',
       cloudflareData: mockCloudflareData,
       status: DomainStatus.PendingVerification,
