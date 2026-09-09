@@ -129,6 +129,16 @@ const buildProtectedAppData = async ({
 const addDomainToRemote = async (
   hostname: string
 ): Promise<NonNullable<ProtectedAppMetadata['customDomains']>[number]> => {
+  // The default domain of protected apps is reserved. Hostnames under it are assigned by Logto
+  // when an app is created, and adding one as a custom domain creates a custom hostname inside
+  // our own zone that never gets a matching site config.
+  const { domain: defaultDomain } = await getProviderConfig();
+  assertThat(
+    hostname !== defaultDomain && !isSubdomainOf(hostname, defaultDomain),
+    'domain.domain_is_not_allowed',
+    422
+  );
+
   if (EnvSet.values.isProtectedAppLocalDevEnabled) {
     return {
       domain: hostname,
