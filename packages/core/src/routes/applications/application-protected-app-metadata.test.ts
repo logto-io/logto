@@ -143,7 +143,7 @@ describe('application protected app metadata routes', () => {
     });
 
     it('should reject a domain that is empty or contains whitespace', async () => {
-      for (const domain of ['   ', 'app example.com', ' app.example.com ']) {
+      for (const domain of ['', '   ', 'app example.com', ' app.example.com ']) {
         // eslint-disable-next-line no-await-in-loop
         const response = await requester
           .post(
