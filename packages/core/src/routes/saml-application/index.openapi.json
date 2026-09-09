@@ -48,6 +48,15 @@
                 "type": "boolean",
                 "default": false,
                 "description": "Require fresh authentication for every sign-in to this application, even when the SP omits ForceAuthn."
+              },
+              "requireSignedAuthnRequests": {
+                "type": "boolean",
+                "default": false,
+                "description": "Require signed AuthnRequests for both HTTP-POST and HTTP-Redirect bindings. Defaults to false."
+              },
+              "signingCertificate": {
+                "type": "string",
+                "description": "PEM-encoded RSA X.509 signing certificate of the service provider. Required when requireSignedAuthnRequests is true. Used independently of the assertion encryption certificate."
               }
             }
           }
@@ -112,6 +121,15 @@
                         "type": "boolean",
                         "default": false,
                         "description": "Require fresh authentication for every sign-in to this application, even when the SP omits ForceAuthn."
+                      },
+                      "requireSignedAuthnRequests": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Require signed AuthnRequests for both HTTP-POST and HTTP-Redirect bindings. Defaults to false."
+                      },
+                      "signingCertificate": {
+                        "type": "string",
+                        "description": "PEM-encoded RSA X.509 signing certificate of the service provider. Required when requireSignedAuthnRequests is true. Used independently of the assertion encryption certificate."
                       }
                     }
                   }
@@ -184,6 +202,15 @@
                         "type": "boolean",
                         "default": false,
                         "description": "Require fresh authentication for every sign-in to this application, even when the SP omits ForceAuthn."
+                      },
+                      "requireSignedAuthnRequests": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Require signed AuthnRequests for both HTTP-POST and HTTP-Redirect bindings. Defaults to false."
+                      },
+                      "signingCertificate": {
+                        "type": "string",
+                        "description": "PEM-encoded RSA X.509 signing certificate of the service provider. Required when requireSignedAuthnRequests is true. Used independently of the assertion encryption certificate."
                       }
                     }
                   }

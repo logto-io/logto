@@ -15,6 +15,7 @@ import { SamlApplication } from '#src/saml-application/SamlApplication/index.js'
 import {
   generateAutoSubmitForm,
   isForceAuthnRequested,
+  getSamlRedirectSignatureInput,
 } from '#src/saml-application/SamlApplication/utils.js';
 import assertThat from '#src/utils/assert-that.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
@@ -256,10 +257,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
       const details = await getSamlApplicationDetailsById(id);
       const samlApplication = new SamlApplication(details, id, envSet);
 
-      const octetString = Object.keys(ctx.request.query)
-        // eslint-disable-next-line no-restricted-syntax
-        .map((key) => key + '=' + encodeURIComponent(ctx.request.query[key] as string))
-        .join('&');
+      const octetString = getSamlRedirectSignatureInput(ctx.request.querystring);
       const { SAMLRequest, SigAlg } = rest;
 
       // Parse login request

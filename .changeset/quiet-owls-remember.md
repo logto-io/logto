@@ -12,3 +12,5 @@ The SAML authentication endpoints now force re-authentication when required by t
 SAML assertions report the actual authentication time when reusing an existing session.
 
 To require fresh authentication independently of the service provider, set `authnRequestConfig.forceAuthn` to `true` using the SAML application Management API. The default is `false`.
+
+To require signed authentication requests, set `authnRequestConfig.requireSignedAuthnRequests` to `true` and provide the service provider’s PEM-encoded RSA X.509 certificate in `authnRequestConfig.signingCertificate`. Both HTTP-POST and HTTP-Redirect signatures are verified. Unsigned requests remain accepted by default.
