@@ -811,6 +811,22 @@ describe('authentication context provider metadata', () => {
     expect(claimsSupported).not.toContain('amr');
     expect(claimsSupported).toContain('auth_time');
   });
+
+  it('should evaluate acr_values first in the login prompt when dev features are enabled', () => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+    const { interactions } = getProviderConfiguration(createProvider(new MockTenant()));
+    const loginPrompt = interactions.policy.find(({ name }) => name === 'login');
+
+    expect(loginPrompt?.checks[0]?.reason).toBe('acr_unmet');
+  });
+
+  it('should keep the default interaction policy when dev features are disabled', () => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+    const { interactions } = getProviderConfiguration(createProvider(new MockTenant()));
+    const loginPrompt = interactions.policy.find(({ name }) => name === 'login');
+
+    expect(loginPrompt?.checks[0]?.reason).toBe('login_prompt');
+  });
 });
 describe('authentication context extra token claims', () => {
   const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
