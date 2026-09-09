@@ -101,7 +101,8 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       if (redirectTo) {
         log.append({
           interaction: experienceInteraction.toJson(),
-          userId: experienceInteraction.identifiedUserId,
+          // The subject is pinned but unverified, so `identifiedUserId` is unset here.
+          userId: experienceInteraction.subjectUserId,
           error: 'unmet_authentication_requirements',
         });
 
