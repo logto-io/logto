@@ -2,7 +2,10 @@ import { UserScope, ReservedScope } from '@logto/core-kit';
 import { NameIdFormat } from '@logto/schemas';
 import nock from 'nock';
 
-import { createMockSamlApplicationDetails, createMockSamlEnvSet } from './__mocks__/index.js';
+import {
+  createMockSamlApplicationDetails,
+  createMockSamlEnvSet,
+} from './__mocks__/saml-application.js';
 import { SamlApplication } from './index.js';
 
 const { jest } = import.meta;

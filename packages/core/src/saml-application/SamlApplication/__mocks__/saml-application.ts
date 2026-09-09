@@ -18,6 +18,7 @@ export const createMockSamlApplicationDetails = (
   nameIdFormat: NameIdFormat.Persistent,
   attributeMapping: {},
   encryption: null,
+  authnRequestConfig: null,
   active: true,
   expiresAt: null,
   ...overrides,

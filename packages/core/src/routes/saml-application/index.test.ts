@@ -22,6 +22,7 @@ const mockSamlApplication = {
   },
   attributeMapping: {},
   encryption: {},
+  authnRequestConfig: null,
   nameIdFormat: NameIdFormat.Persistent,
 };
 
@@ -62,6 +63,26 @@ const buildAccessControl = (
 });
 
 describe('SAML application route', () => {
+  it.each([{ forceAuthn: true }, { forceAuthn: false }, null])(
+    'PATCH persists authentication policy: %j',
+    async (authnRequestConfig) => {
+      const response = await createSamlApplicationRequest()
+        .patch('/saml-applications/foo')
+        .send({ authnRequestConfig });
+      expect(response.status).toBe(200);
+      expect(updateSamlApplicationById).toHaveBeenCalledWith('foo', { authnRequestConfig });
+      expect(response.body.authnRequestConfig).toEqual(authnRequestConfig);
+    }
+  );
+
+  it('PATCH rejects an invalid authentication policy', async () => {
+    const response = await createSamlApplicationRequest()
+      .patch('/saml-applications/foo')
+      .send({ authnRequestConfig: { forceAuthn: 'true' } });
+    expect(response.status).toBe(400);
+    expect(updateSamlApplicationById).not.toHaveBeenCalled();
+  });
+
   afterEach(() => {
     updateSamlApplicationById.mockClear();
     findApplicationAccessControl.mockClear();

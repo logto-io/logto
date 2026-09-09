@@ -13,6 +13,7 @@ const samlAppConfigGuard = SamlApplicationConfigs.guard.pick({
   entityId: true,
   acsUrl: true,
   encryption: true,
+  authnRequestConfig: true,
   nameIdFormat: true,
 });
 

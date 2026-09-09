@@ -38,6 +38,18 @@
             "type": "string",
             "format": "date-time",
             "description": "The creation time of the SAML application."
+          },
+          "authnRequestConfig": {
+            "type": "object",
+            "nullable": true,
+            "description": "IdP-side authentication policy. Null or an empty object allows session reuse unless the SP requests ForceAuthn. PATCH replaces this object.",
+            "properties": {
+              "forceAuthn": {
+                "type": "boolean",
+                "default": false,
+                "description": "Require fresh authentication for every sign-in to this application, even when the SP omits ForceAuthn."
+              }
+            }
           }
         }
       }
@@ -90,6 +102,18 @@
                   "acsUrl": {
                     "type": "string",
                     "description": "The Assertion Consumer Service (ACS) URL where the SAML response will be sent."
+                  },
+                  "authnRequestConfig": {
+                    "type": "object",
+                    "nullable": true,
+                    "description": "IdP-side authentication policy. Null or an empty object allows session reuse unless the SP requests ForceAuthn. PATCH replaces this object.",
+                    "properties": {
+                      "forceAuthn": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Require fresh authentication for every sign-in to this application, even when the SP omits ForceAuthn."
+                      }
+                    }
                   }
                 }
               }
@@ -150,6 +174,18 @@
                   "acsUrl": {
                     "type": "string",
                     "description": "The Assertion Consumer Service (ACS) URL."
+                  },
+                  "authnRequestConfig": {
+                    "type": "object",
+                    "nullable": true,
+                    "description": "IdP-side authentication policy. Null or an empty object allows session reuse unless the SP requests ForceAuthn. PATCH replaces this object.",
+                    "properties": {
+                      "forceAuthn": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Require fresh authentication for every sign-in to this application, even when the SP omits ForceAuthn."
+                      }
+                    }
                   }
                 }
               }
@@ -171,7 +207,6 @@
       "delete": {
         "summary": "Delete SAML application",
         "description": "Delete a SAML application by ID.",
-
         "responses": {
           "204": {
             "description": "The SAML application was deleted successfully."

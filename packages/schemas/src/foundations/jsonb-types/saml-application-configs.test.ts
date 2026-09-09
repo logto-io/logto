@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { samlEncryptionGuard } from './saml-application-configs.js';
+import { samlEncryptionGuard, samlAuthnRequestConfigGuard } from './saml-application-configs.js';
 
 describe('samlEncryptionGuard', () => {
   // Test valid configurations
@@ -57,5 +57,19 @@ describe('samlEncryptionGuard', () => {
         '`encryptThenSign` and `certificate` are required when `encryptAssertion` is `true`'
       );
     }
+  });
+});
+
+describe('samlAuthnRequestConfigGuard', () => {
+  it('keeps the per-application force-login setting', () => {
+    expect(samlAuthnRequestConfigGuard.parse({ forceAuthn: true })).toEqual({ forceAuthn: true });
+  });
+
+  it('allows default session reuse', () => {
+    expect(samlAuthnRequestConfigGuard.parse({})).toEqual({});
+  });
+
+  it('rejects a non-boolean force-login setting', () => {
+    expect(samlAuthnRequestConfigGuard.safeParse({ forceAuthn: 'true' }).success).toBe(false);
   });
 });

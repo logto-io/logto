@@ -21,6 +21,7 @@ const mockSamlConfig = {
   },
   attributeMapping: {},
   encryption: {},
+  authnRequestConfig: null,
   nameIdFormat: NameIdFormat.Persistent,
 };
 
@@ -47,6 +48,20 @@ const createLibrary = () =>
   );
 
 describe('createSamlApplicationsLibrary()', () => {
+  it.each([{ forceAuthn: true }, null])(
+    'persists authentication policy: %j',
+    async (authnRequestConfig) => {
+      const result = await createLibrary().updateSamlApplicationById('foo', { authnRequestConfig });
+      expect(updateSamlApplicationConfig).toHaveBeenCalledWith({
+        set: { ...mockSamlConfig, authnRequestConfig },
+        where: { applicationId: 'foo' },
+        jsonbMode: 'replace',
+      });
+      expect(result.authnRequestConfig).toEqual(authnRequestConfig);
+      expect(updateApplicationById).not.toHaveBeenCalled();
+    }
+  );
+
   afterEach(() => {
     jest.clearAllMocks();
   });
