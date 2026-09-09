@@ -69,6 +69,10 @@ const applicationProtectedAppMetadataRoutes = await pickDefault(
 describe('application protected app metadata routes', () => {
   afterEach(() => {
     updateApplicationById.mockClear();
+    addDomainToRemote.mockClear();
+    syncAppConfigsToRemote.mockClear();
+    deleteDomainFromRemote.mockClear();
+    deleteRemoteAppConfigs.mockClear();
   });
 
   const requester = createRequester({
@@ -117,7 +121,7 @@ describe('application protected app metadata routes', () => {
       const response = await requester
         .post(`/applications/${mockProtectedApplication.id}/protected-app-metadata/custom-domains`)
         .send({
-          domain: 'App.Example.COM',
+          domain: ' App.Example.COM ',
         });
       expect(response.status).toEqual(201);
       expect(addDomainToRemote).toHaveBeenCalledWith(mockDomain);

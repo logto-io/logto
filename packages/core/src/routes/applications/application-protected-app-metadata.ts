@@ -69,9 +69,9 @@ export default function applicationProtectedAppMetadataRoutes<T extends Manageme
     }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
-      // Hostnames are case-insensitive. Canonicalize to lowercase so the stored domain, the site
-      // config key and the redirect URIs all match the host the worker sees at request time.
-      const domain = ctx.guard.body.domain.toLowerCase();
+      // Hostnames are case-insensitive. Trim and lowercase so the stored domain, the site config
+      // key and the redirect URIs all match the host the worker sees at request time.
+      const domain = ctx.guard.body.domain.trim().toLowerCase();
 
       const { protectedAppMetadata, oidcClientMetadata } = await findApplicationById(id);
       assertThat(protectedAppMetadata, 'application.protected_app_not_configured', 501);
