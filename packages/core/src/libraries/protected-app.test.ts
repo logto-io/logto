@@ -163,6 +163,9 @@ describe('addDomainToRemote()', () => {
     await expect(addDomainToRemote('foo.dev.protected.app')).rejects.toMatchError(
       new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
     );
+    await expect(addDomainToRemote('Foo.Dev.Protected.App')).rejects.toMatchError(
+      new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
+    );
     expect(createCustomHostname).not.toHaveBeenCalled();
   });
 
@@ -177,6 +180,9 @@ describe('addDomainToRemote()', () => {
 
   it('should reject blocked domains', async () => {
     await expect(addDomainToRemote('foo.blocked.com')).rejects.toMatchError(
+      new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
+    );
+    await expect(addDomainToRemote('Foo.Blocked.COM')).rejects.toMatchError(
       new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
     );
     expect(createCustomHostname).not.toHaveBeenCalled();
