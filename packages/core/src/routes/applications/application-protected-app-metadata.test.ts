@@ -142,6 +142,16 @@ describe('application protected app metadata routes', () => {
       );
     });
 
+    it('should reject a whitespace-only domain', async () => {
+      const response = await requester
+        .post(`/applications/${mockProtectedApplication.id}/protected-app-metadata/custom-domains`)
+        .send({
+          domain: '   ',
+        });
+      expect(response.status).toEqual(400);
+      expect(addDomainToRemote).not.toHaveBeenCalled();
+    });
+
     it('throw when domain exists', async () => {
       findApplicationById.mockResolvedValueOnce({
         ...mockProtectedApplication,
