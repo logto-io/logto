@@ -64,14 +64,16 @@ export default function applicationProtectedAppMetadataRoutes<T extends Manageme
     customDomainsPathname,
     koaGuard({
       params: z.object(params),
-      body: z.object({ domain: z.string().trim().min(1) }),
+      // Reject whitespace-only input. `.trim()` is not used here because the OpenAPI generator
+      // only understands a fixed set of string checks and would fail on it.
+      body: z.object({ domain: z.string().regex(/\S/) }),
       status: [201, 400, 404, 422, 501],
     }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
-      // Hostnames are case-insensitive. The guard trims the input; lowercase it so the stored
-      // domain, the site config key and the redirect URIs all match the host the worker sees.
-      const domain = ctx.guard.body.domain.toLowerCase();
+      // Hostnames are case-insensitive. Trim and lowercase so the stored domain, the site config
+      // key and the redirect URIs all match the host the worker sees at request time.
+      const domain = ctx.guard.body.domain.trim().toLowerCase();
 
       const { protectedAppMetadata, oidcClientMetadata } = await findApplicationById(id);
       assertThat(protectedAppMetadata, 'application.protected_app_not_configured', 501);
