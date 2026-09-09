@@ -142,6 +142,39 @@ describe('PasswordVerification', () => {
     );
   });
 
+  describe('createForUser', () => {
+    it('should verify against the user and identify that user without a raw identifier', async () => {
+      const verification = PasswordVerification.createForUser(
+        tenant.libraries,
+        tenant.queries,
+        mockUser.id
+      );
+
+      expect(verification.userId).toBe(mockUser.id);
+      expect(verification.identifier).toEqual({
+        type: AdditionalIdentifier.UserId,
+        value: mockUser.id,
+      });
+
+      await expect(verification.verify(password)).resolves.toEqual(mockUser);
+      expect(findUserById).toHaveBeenCalledWith(mockUser.id);
+      expect(verifyUserPassword).toHaveBeenCalledWith(mockUser, password);
+      expect(findUserByUsername).not.toHaveBeenCalled();
+
+      await expect(verification.identifyUser()).resolves.toEqual(mockUser);
+      // The sanitized projection carries the user id, never an identifier of the user.
+      expect(verification.toSanitizedJson().identifier).toEqual({
+        type: AdditionalIdentifier.UserId,
+        value: mockUser.id,
+      });
+      expect(JSON.stringify(verification.toSanitizedJson())).not.toContain(mockUser.primaryEmail!);
+    });
+
+    it('should carry no user for a record created from a client-supplied identifier', () => {
+      expect(createVerification().userId).toBeUndefined();
+    });
+  });
+
   it('should throw 422 when password expiration is enabled without validPeriodDays', async () => {
     findDefaultSignInExperience.mockResolvedValueOnce({
       ...mockSignInExperience,

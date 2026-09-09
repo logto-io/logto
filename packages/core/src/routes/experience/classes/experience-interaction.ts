@@ -384,6 +384,7 @@ export default class ExperienceInteraction {
    * @throws {RequestError} with 404 if the user is not found
    * @throws {RequestError} with 401 if the user is suspended
    * @throws {RequestError} with 409 if the current session has already identified a different user
+   * @throws {RequestError} with 403 if a pure step-up identifies someone other than the pinned subject
    **/
   public async identifyUser(verificationId: string, linkSocialIdentity?: boolean, log?: LogEntry) {
     assertThat(
@@ -410,11 +411,12 @@ export default class ExperienceInteraction {
     const { id, isSuspended } = user;
     assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
 
-    // Throws an 409 error if the current session has already identified a different user, or if
-    // a pure step-up identifies someone other than the subject its session pinned
+    // Throws if the current session has already identified a different user (409), or if a pure
+    // step-up identifies someone other than the subject its session pinned: there the cookie
+    // holder is proving an account that is not theirs to prove, which is forbidden (403)
     assertThat(
       !this.subjectUserId || this.subjectUserId === id,
-      new RequestError({ code: 'session.identity_conflict', status: 409 })
+      new RequestError({ code: 'session.identity_conflict', status: this.isStepUp ? 403 : 409 })
     );
 
     if (this.userId) {
@@ -554,7 +556,7 @@ export default class ExperienceInteraction {
    *
    * @throws {RequestError} with 404 if the verification record is not found
    * @throws {RequestError} with 400 if the record is not a verified MFA challenge
-   * @throws {RequestError} with 409 if the challenge was answered for a user other than the subject
+   * @throws {RequestError} with 403 if the challenge was answered for a user other than the subject
    */
   public consumeForMfa<K extends keyof VerificationRecordMap>(
     type: K,
@@ -570,9 +572,11 @@ export default class ExperienceInteraction {
     const { subjectUserId } = this;
 
     if (!this.userId && subjectUserId) {
+      // The subject is only ever pinned by a pure step-up, so a mismatch is the step-up case of
+      // the conflict `identifyUser` rejects: forbidden, not a conflict between two identifications.
       assertThat(
         !('userId' in record) || record.userId === subjectUserId,
-        new RequestError({ code: 'session.identity_conflict', status: 409 })
+        new RequestError({ code: 'session.identity_conflict', status: 403 })
       );
       this.userId = subjectUserId;
     }

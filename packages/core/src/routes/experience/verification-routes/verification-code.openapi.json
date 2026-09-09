@@ -4,14 +4,14 @@
       "post": {
         "operationId": "CreateAndSendVerificationCode",
         "summary": "Create and send verification code",
-        "description": "Create a new `CodeVerification` record and sends the code to the specified identifier. The code verification can be used to verify the given identifier.",
+        "description": "Create a new `CodeVerification` record and sends the code to the specified identifier. The code verification can be used to verify the given identifier. Once the interaction already carries a subject (the subject pinned by a step-up authentication, or an identified user), the identifier may carry only its `type`: the code is then sent to that user's primary email or phone with the `SignIn` template, the subject is read from the interaction storage, and the request never carries a raw identifier. This variant is only accepted with the `SignIn` interaction event.",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "properties": {
                   "identifier": {
-                    "description": "The identifier (email address or phone number) to send the verification code to."
+                    "description": "The identifier (email address or phone number) to send the verification code to. Once the interaction carries a subject, `{ \"type\": \"email\" }` or `{ \"type\": \"phone\" }` without a `value` sends the code to that user's primary email or phone."
                   },
                   "interactionEvent": {
                     "description": "The interaction event for which the verification code will be used. Supported values are `SignIn`, `Register`, and `ForgotPassword`. This determines the template for the verification code."
@@ -39,6 +39,9 @@
           "400": {
             "description": "An invalid identifier was provided."
           },
+          "404": {
+            "description": "The identifier carried only its type but the interaction carries no subject, or the subject has no primary identifier of that type (`session.identifier_not_found`)."
+          },
           "501": {
             "description": "The connector for sending the verification code is not configured."
           }
@@ -49,7 +52,7 @@
       "post": {
         "operationId": "VerifyVerificationCodeVerification",
         "summary": "Verify verification code",
-        "description": "Verify the provided verification code against the user's identifier. If successful, the verification record will be marked as verified.",
+        "description": "Verify the provided verification code against the user's identifier. If successful, the verification record will be marked as verified. For a code sent to the subject the interaction carries (an identifier with only its `type`), the identifier likewise carries only its `type`: the code is verified against the identifier the record was sent to, and the request never carries a raw identifier.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -59,7 +62,7 @@
                     "description": "The verification code to be verified."
                   },
                   "identifier": {
-                    "description": "The identifier (email address or phone number) to verify the code against. Must match the identifier used to send the verification code."
+                    "description": "The identifier (email address or phone number) to verify the code against. Must match the identifier used to send the verification code. For a code sent to the subject the interaction carries, only the `type` is given."
                   },
                   "verificationId": {
                     "description": "The verification ID of the CodeVerification record."
@@ -88,7 +91,7 @@
             "description": "The verification code is invalid or the maximum number of attempts has been exceeded. Check the error message for details."
           },
           "404": {
-            "description": "Verification record not found."
+            "description": "Verification record not found, or the identifier carried only its type but the interaction carries no subject or the record was not created for the subject."
           },
           "501": {
             "description": "The connector for sending the verification code is not configured."

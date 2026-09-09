@@ -414,9 +414,14 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
 
             const { authenticationOptions } = authenticationOptionsParseResult.data.signInPasskey;
 
+            // A discoverable credential resolves its own account, and the record only rejects a
+            // mismatch when it already carries a user: seeding the subject the interaction
+            // carries makes a credential of another account fail here, at verification, rather
+            // than at identification.
             return new SignInPasskeyVerification(libraries, queries, {
               id: generateStandardId(),
               type: VerificationType.SignInPasskey,
+              userId: experienceInteraction.subjectUserId,
               verified: false,
               authenticationChallenge: authenticationOptions.challenge,
               authenticationRpId: authenticationOptions.rpId,

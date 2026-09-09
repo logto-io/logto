@@ -30,12 +30,20 @@ export type CodeVerificationRecordData<T extends CodeVerificationType = CodeVeri
   identifier: VerificationCodeIdentifierOf<T>;
   templateType: TemplateType;
   verified: boolean;
+  /**
+   * The user the identifier was resolved from, set when the record was created for the subject
+   * the interaction already carries (a pinned-user verification) rather than from a
+   * client-supplied identifier. Such a record identifies that user and never echoes the raw
+   * identifier: the sanitized projection masks it.
+   */
+  userId?: string;
 };
 
 const basicCodeVerificationRecordDataGuard = z.object({
   id: z.string(),
   templateType: z.nativeEnum(TemplateType),
   verified: z.boolean(),
+  userId: z.string().optional(),
 });
 
 export const emailCodeVerificationRecordDataGuard = basicCodeVerificationRecordDataGuard.extend({

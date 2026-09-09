@@ -405,6 +405,13 @@ export class SignInExperienceValidator {
       case VerificationType.Password:
       case VerificationType.EmailVerificationCode:
       case VerificationType.PhoneVerificationCode: {
+        // A pinned-user record was created for the subject the interaction already carries and
+        // verifies a credential the user has enrolled, offered by the step-up eligibility rather
+        // than by the sign-in methods, so the sign-in methods do not gate it.
+        if (verificationRecord.userId) {
+          break;
+        }
+
         const {
           identifier: { type },
         } = verificationRecord;

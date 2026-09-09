@@ -1,10 +1,12 @@
 import {
+  AdditionalIdentifier,
   type VerificationIdentifier,
   VerificationType,
   type User,
   type PasswordVerificationRecordData,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
+import { conditional } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { verifyPasswordExpirationPolicy } from '#src/libraries/password-expiration.js';
@@ -34,6 +36,19 @@ export class PasswordVerification
     });
   }
 
+  /**
+   * Factory method to create a new `PasswordVerification` record for a user the interaction
+   * already carries: a pinned step-up subject or an identified user. The record verifies the
+   * password against that user's credential and {@link identifyUser} returns that user, so the
+   * client never supplies a raw identifier; see {@link userId}.
+   */
+  static createForUser(libraries: Libraries, queries: Queries, userId: string) {
+    return PasswordVerification.create(libraries, queries, {
+      type: AdditionalIdentifier.UserId,
+      value: userId,
+    });
+  }
+
   readonly type = VerificationType.Password;
   readonly identifier: VerificationIdentifier;
   readonly id: string;
@@ -60,6 +75,17 @@ export class PasswordVerification
   /** Returns whether the password verification has succeeded. */
   get isVerified() {
     return this.verified;
+  }
+
+  /**
+   * The user this record was created for (see {@link createForUser}), or `undefined` when it was
+   * created from a client-supplied identifier. A record created for a user verifies an enrolled
+   * credential rather than a sign-in method: the sign-in methods do not gate its identification.
+   */
+  get userId(): string | undefined {
+    return conditional(
+      this.identifier.type === AdditionalIdentifier.UserId && this.identifier.value
+    );
   }
 
   markAsVerified(): void {

@@ -7,7 +7,7 @@ import {
   type MfaFactor,
   type PasswordVerificationPayload,
   type UpdateProfileApiPayload,
-  type VerificationCodeIdentifier,
+  type VerificationCodeIdentifierPayload,
   type WebAuthnAuthenticationOptions,
   type WebAuthnVerificationPayload,
 } from '@logto/schemas';
@@ -100,7 +100,7 @@ export class ExperienceClient extends MockClient {
   }
 
   public async sendVerificationCode(payload: {
-    identifier: VerificationCodeIdentifier;
+    identifier: VerificationCodeIdentifierPayload;
     interactionEvent: InteractionEvent;
   }) {
     return this.api
@@ -112,7 +112,7 @@ export class ExperienceClient extends MockClient {
   }
 
   public async verifyVerificationCode(payload: {
-    identifier: VerificationCodeIdentifier;
+    identifier: VerificationCodeIdentifierPayload;
     verificationId: string;
     code: string;
   }) {

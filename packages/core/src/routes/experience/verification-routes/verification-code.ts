@@ -2,8 +2,10 @@ import { TemplateType } from '@logto/connector-kit';
 import {
   AlternativeSignUpIdentifier,
   InteractionEvent,
+  pinnedVerificationCodeIdentifierGuard,
   SignInIdentifier,
   verificationCodeIdentifierGuard,
+  verificationCodeIdentifierPayloadGuard,
 } from '@logto/schemas';
 import type Router from 'koa-router';
 import { z } from 'zod';
@@ -15,11 +17,16 @@ import { codeVerificationIdentifierRecordTypeMap } from '../classes/utils.js';
 import {
   createNewCodeVerificationRecord,
   createNewMfaCodeVerificationRecord,
+  createSubjectCodeVerificationRecord,
   getTemplateTypeByEvent,
 } from '../classes/verifications/code-verification.js';
 import { experienceRoutes } from '../const.js';
 import { type ExperienceInteractionRouterContext } from '../types.js';
 
+import {
+  getSubjectCodeRecordIdentifier,
+  getSubjectIdentifier,
+} from './pinned-verification-code-helpers.js';
 import {
   sendCode,
   verifyCode,
@@ -34,18 +41,56 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
   router.post(
     `${experienceRoutes.verification}/verification-code`,
     koaGuard({
-      body: z.object({
-        identifier: verificationCodeIdentifierGuard,
-        interactionEvent: z.nativeEnum(InteractionEvent),
-      }),
+      body: z.union([
+        z.object({
+          identifier: verificationCodeIdentifierGuard,
+          interactionEvent: z.nativeEnum(InteractionEvent),
+        }),
+        // The pinned-user variant: a code to the subject's primary email / phone, as a sign-in
+        // first factor only.
+        z.object({
+          identifier: pinnedVerificationCodeIdentifierGuard,
+          interactionEvent: z.literal(InteractionEvent.SignIn),
+        }),
+      ]),
       response: z.object({
         verificationId: z.string(),
       }),
+      // 404: the pinned-user variant was used before the interaction carries a subject;
       // 429: rate limited; 501: connector not found
       status: [200, 400, 404, 422, 429, 501],
     }),
     async (ctx, next) => {
-      const { identifier, interactionEvent } = ctx.guard.body;
+      const { identifier: identifierPayload, interactionEvent } = ctx.guard.body;
+      const { experienceInteraction } = ctx;
+
+      // The pinned-user variant: the code goes to the subject's primary identifier with the
+      // `SignIn` template, never to a client-supplied address, and the record carries the subject
+      // so that it identifies that user and never echoes the raw identifier. The subject is
+      // already authenticated and the sentinel rate-limits the code, so no captcha applies.
+      if (identifierPayload.value === undefined) {
+        const { userId, identifier } = await getSubjectIdentifier({
+          identifierType: identifierPayload.type,
+          experienceInteraction,
+          queries,
+        });
+
+        ctx.body = await sendCode({
+          identifier,
+          interactionEvent,
+          createVerificationRecord: () =>
+            createSubjectCodeVerificationRecord(libraries, queries, identifier, userId),
+          libraries,
+          queries,
+          ctx,
+        });
+
+        await next();
+        return;
+      }
+
+      const identifier = identifierPayload;
+
       // Require captcha if the user is not identified.
       if (!ctx.experienceInteraction.identifiedUserId) {
         await ctx.experienceInteraction.guardCaptcha();
@@ -88,24 +133,37 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
     `${experienceRoutes.verification}/verification-code/verify`,
     koaGuard({
       body: z.object({
-        identifier: verificationCodeIdentifierGuard,
+        identifier: verificationCodeIdentifierPayloadGuard,
         verificationId: z.string(),
         code: z.string(),
       }),
       response: z.object({
         verificationId: z.string(),
       }),
-      // 501: connector not found
+      // 404: verification record not found, or the pinned-user variant was used before the
+      // interaction carries a subject; 501: connector not found
       status: [200, 400, 404, 501],
     }),
     async (ctx, next) => {
-      const { verificationId, code, identifier } = ctx.guard.body;
+      const { verificationId, code, identifier: identifierPayload } = ctx.guard.body;
+      const verificationType = codeVerificationIdentifierRecordTypeMap[identifierPayload.type];
+
+      // The pinned-user variant verifies the record sent to the subject: the identifier is the
+      // one resolved from the subject when the code was sent, never a client-supplied value.
+      const identifier =
+        identifierPayload.value === undefined
+          ? getSubjectCodeRecordIdentifier({
+              verificationType,
+              verificationId,
+              experienceInteraction: ctx.experienceInteraction,
+            })
+          : identifierPayload;
 
       ctx.body = await verifyCode({
         verificationId,
         code,
         identifier,
-        verificationType: codeVerificationIdentifierRecordTypeMap[identifier.type],
+        verificationType,
         sentinel,
         queries,
         ctx,

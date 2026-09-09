@@ -14,7 +14,10 @@ import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
-import { createNewCodeVerificationRecord } from '../verifications/code-verification.js';
+import {
+  createNewCodeVerificationRecord,
+  createSubjectCodeVerificationRecord,
+} from '../verifications/code-verification.js';
 import { EnterpriseSsoVerification } from '../verifications/enterprise-sso-verification.js';
 import { type VerificationRecord } from '../verifications/index.js';
 import { OneTimeTokenVerification } from '../verifications/one-time-token-verification.js';
@@ -74,6 +77,27 @@ const verificationCodeVerificationRecords = Object.freeze({
       value: 'value',
     },
     TemplateType.SignIn
+  ),
+});
+
+/** The pinned-user records: created for the subject the interaction carries, not from an identifier. */
+const subjectVerificationRecords = Object.freeze({
+  password: PasswordVerification.createForUser(
+    mockTenant.libraries,
+    mockTenant.queries,
+    'subject-user-id'
+  ),
+  [SignInIdentifier.Email]: createSubjectCodeVerificationRecord(
+    mockTenant.libraries,
+    mockTenant.queries,
+    { type: SignInIdentifier.Email, value: `subject@${emailDomain}` },
+    'subject-user-id'
+  ),
+  [SignInIdentifier.Phone]: createSubjectCodeVerificationRecord(
+    mockTenant.libraries,
+    mockTenant.queries,
+    { type: SignInIdentifier.Phone, value: 'value' },
+    'subject-user-id'
   ),
 });
 
@@ -430,6 +454,27 @@ describe('SignInExperienceValidator', () => {
           {
             verificationRecord: verificationCodeVerificationRecords[SignInIdentifier.Phone],
             accepted: false,
+          },
+        ],
+      },
+      // A pinned-user record verifies a credential the subject has enrolled, offered by the
+      // step-up eligibility rather than by the sign-in methods, so the sign-in methods never gate it.
+      'pinned-user records with no sign-in methods enabled': {
+        signInExperience: {
+          ...mockSignInExperience,
+          signIn: {
+            methods: [],
+          },
+        },
+        cases: [
+          { verificationRecord: subjectVerificationRecords.password, accepted: true },
+          {
+            verificationRecord: subjectVerificationRecords[SignInIdentifier.Email],
+            accepted: true,
+          },
+          {
+            verificationRecord: subjectVerificationRecords[SignInIdentifier.Phone],
+            accepted: true,
           },
         ],
       },

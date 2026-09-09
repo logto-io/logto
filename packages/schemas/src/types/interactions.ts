@@ -73,6 +73,31 @@ export const verificationCodeIdentifierGuard = z.discriminatedUnion('type', [
   }),
 ]) satisfies z.ZodType<VerificationCodeIdentifier>;
 
+/**
+ * The identifier of a pinned-user verification code request: the type alone. Accepted only once
+ * the interaction carries a subject (a pinned step-up subject or an identified user); core fills
+ * the value from that user's primary email / phone, so the request never carries a raw
+ * identifier. A present `value` is rejected rather than ignored, so a malformed full identifier
+ * can never be mistaken for this shape.
+ */
+export type PinnedVerificationCodeIdentifier = {
+  type: VerificationCodeSignInIdentifier;
+  value?: undefined;
+};
+export const pinnedVerificationCodeIdentifierGuard = z.object({
+  type: z.enum([SignInIdentifier.Email, SignInIdentifier.Phone]),
+  value: z.undefined(),
+}) satisfies ToZodObject<PinnedVerificationCodeIdentifier>;
+
+/** A verification code identifier as the client sends it: the full identifier, or the pinned-user shape. */
+export type VerificationCodeIdentifierPayload =
+  | VerificationCodeIdentifier
+  | PinnedVerificationCodeIdentifier;
+export const verificationCodeIdentifierPayloadGuard = z.union([
+  verificationCodeIdentifierGuard,
+  pinnedVerificationCodeIdentifierGuard,
+]) satisfies z.ZodType<VerificationCodeIdentifierPayload>;
+
 // REMARK: API payload guard
 
 /** Payload type for `POST /api/experience/verification/{social|sso}/:connectorId/authorization-uri`. */
@@ -106,11 +131,16 @@ export const socialVerificationCallbackPayloadGuard = z.object({
 
 /** Payload type for `POST /api/experience/verification/password`. */
 export type PasswordVerificationPayload = {
-  identifier: InteractionIdentifier;
+  /**
+   * The identifier of the user whose password is verified. Optional once the interaction carries
+   * a subject (a pinned step-up subject or an identified user): the password is then verified
+   * against that user, and the request never carries a raw identifier.
+   */
+  identifier?: InteractionIdentifier;
   password: string;
 };
 export const passwordVerificationPayloadGuard = z.object({
-  identifier: interactionIdentifierGuard,
+  identifier: interactionIdentifierGuard.optional(),
   password: z.string().min(1),
 }) satisfies ToZodObject<PasswordVerificationPayload>;
 
