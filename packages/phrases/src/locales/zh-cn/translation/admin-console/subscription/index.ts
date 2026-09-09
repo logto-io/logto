@@ -71,7 +71,7 @@ const subscription = {
   },
   upgrade_success: '成功升级到 <name/>',
   downgrade_success: '成功降级到 <name/>',
-  subscription_check_timeout: '订阅检查超时，请稍后刷新。',
+  subscription_check_pending: '您的付款已处理。设置您的订阅比平时需要更长时间。',
   no_subscription: '无订阅',
   usage,
   token_usage_notification: {

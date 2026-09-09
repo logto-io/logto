@@ -73,8 +73,7 @@ const subscription = {
   },
   upgrade_success: 'با موفقیت به <name/> ارتقا یافت',
   downgrade_success: 'با موفقیت به <name/> کاهش یافت',
-  subscription_check_timeout:
-    'بررسی اشتراک با تایم‌اوت مواجه شد. لطفاً بعداً صفحه را بارگذاری کنید.',
+  subscription_check_pending: 'پرداخت شما انجام شد. تنظیم اشتراک شما بیشتر از حد معمول طول می‌کشد.',
   no_subscription: 'بدون اشتراک',
   usage,
   token_usage_notification: {
