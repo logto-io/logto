@@ -72,7 +72,8 @@ const subscription = {
   },
   upgrade_success: 'อัปเกรดเป็น <name/> สำเร็จแล้ว',
   downgrade_success: 'ลดระดับเป็น <name/> สำเร็จแล้ว',
-  subscription_check_timeout: 'การตรวจสอบการสมัครสมาชิกหมดเวลา กรุณารีเฟรชใหม่ภายหลัง',
+  subscription_check_pending:
+    'การชำระเงินของคุณผ่านเรียบร้อยแล้ว การตั้งค่าการสมัครใช้บริการของคุณใช้เวลานานกว่าปกติ',
   no_subscription: 'ไม่มีการสมัครสมาชิก',
   usage,
   token_usage_notification: {

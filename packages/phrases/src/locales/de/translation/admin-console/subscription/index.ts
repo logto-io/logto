@@ -74,7 +74,8 @@ const subscription = {
   },
   upgrade_success: 'Erfolgreich auf <name/> hochgestuft',
   downgrade_success: 'Erfolgreich auf <name/> herabgestuft',
-  subscription_check_timeout: 'Abo-Überprüfung ist abgelaufen. Bitte später aktualisieren.',
+  subscription_check_pending:
+    'Deine Zahlung wurde abgeschlossen. Das Einrichten deines Abonnements dauert länger als gewöhnlich.',
   no_subscription: 'Kein Abonnement',
   usage,
   token_usage_notification: {

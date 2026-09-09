@@ -1,9 +1,11 @@
 import { Prompt, type SignInOptions } from '@logto/node';
-import { InteractionEvent, defaultTenantId, demoAppApplicationId } from '@logto/schemas';
+import { InteractionEvent, MfaFactor, defaultTenantId, demoAppApplicationId } from '@logto/schemas';
 import { assertEnv } from '@silverhand/essentials';
 import { createInterceptorsPreset, createPool, sql, type DatabasePool } from '@silverhand/slonik';
 import ky from 'ky';
+import { authenticator } from 'otplib';
 
+import { createUserMfaVerification } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { ExperienceClient } from '#src/client/experience/index.js';
 import { demoAppRedirectUri } from '#src/constants.js';
@@ -14,8 +16,10 @@ import {
   getInteractionId,
 } from '#src/helpers/experience/authorization.js';
 import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
+import { successfullyVerifyTotp } from '#src/helpers/experience/totp-verification.js';
 import {
   enableAllPasswordSignInMethods,
+  enableMandatoryMfaWithTotp,
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
@@ -209,6 +213,65 @@ devFeatureTest.describe('acr_values and max_age interaction policy', () => {
     expectRedirectedError(noSession.location, 'login_required');
 
     await logoutClient(client);
+  });
+
+  it('issues an authorization code after a step-up interaction achieves the selected ACR', async () => {
+    // Keep MFA enrollment separate from the shared password-only user.
+    const profile = generateNewUserProfile({ username: true, password: true });
+    const user = await userApi.create(profile);
+    const client = await initExperienceClient();
+
+    try {
+      await identifyUserWithUsernamePassword(client, profile.username, profile.password);
+      const { redirectTo: signInRedirectTo } = await client.submitInteraction();
+      await processSession(client, signInRedirectTo);
+      expect(await client.getIdTokenClaims()).toMatchObject({
+        sub: user.id,
+        acr: firstFactorAcr,
+        amr: ['pwd'],
+      });
+
+      // Enroll the factor after the password sign-in so the step-up has an MFA method to verify;
+      // a user with no enrolled factor cannot reach `mfa` until enrollment lands in M5.
+      await enableMandatoryMfaWithTotp();
+      const totp = await createUserMfaVerification(user.id, MfaFactor.TOTP);
+      if (totp.type !== MfaFactor.TOTP) {
+        throw new Error('unexpected mfa type');
+      }
+      const { status, location, setCookies } = await authorize(client, {
+        extraParams: { acr_values: mfaAcr },
+      });
+
+      expect(status).toBe(303);
+      expect(location).toBe(`/step-up?app_id=${demoAppApplicationId}`);
+
+      const { prompt, session } = await findInteraction(getInteractionId(setCookies));
+      expect(prompt.reasons).toEqual(['acr_unmet']);
+      expect(prompt.details.authenticationContext).toEqual({
+        requestedAcrValues: [mfaAcr],
+        selectedAcr: mfaAcr,
+        mode: 'stepUp',
+      });
+      expect(session?.accountId).toBe(user.id);
+
+      // The step-up pins the session subject. Submission does not yet derive the context from the
+      // session, so the first factor is verified again in the interaction alongside the TOTP.
+      await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
+      await identifyUserWithUsernamePassword(client, profile.username, profile.password);
+      await successfullyVerifyTotp(client, { code: authenticator.generate(totp.secret) });
+      const { redirectTo } = await client.submitInteraction();
+
+      // Complete any consent prompt after login resumes, then exchange the authorization code.
+      await processSession(client, redirectTo);
+      expect(await client.getIdTokenClaims()).toMatchObject({
+        sub: user.id,
+        acr: mfaAcr,
+        amr: ['pwd', 'otp', 'mfa'],
+      });
+    } finally {
+      await resetMfaSettings();
+      await logoutClient(client);
+    }
   });
 
   it('fails after the interaction resumes with an insufficient context instead of prompting again', async () => {

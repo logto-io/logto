@@ -76,8 +76,8 @@ const subscription = {
   },
   upgrade_success: "Başarıyla <name/>'e yükseltildi",
   downgrade_success: "Başarıyla <name/>'e düşürüldü",
-  subscription_check_timeout:
-    'Abonelik kontrolü zaman aşımına uğradı. Lütfen daha sonra yenileyin.',
+  subscription_check_pending:
+    'Ödemeniz alındı. Aboneliğinizi ayarlamak beklenenden daha uzun sürüyor.',
   no_subscription: 'Abonelik bulunamadı',
   usage,
   token_usage_notification: {

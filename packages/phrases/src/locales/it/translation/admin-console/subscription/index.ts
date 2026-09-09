@@ -74,8 +74,8 @@ const subscription = {
   },
   upgrade_success: 'Aggiornamento effettuato con successo a <name/>',
   downgrade_success: 'Degrado effettuato con successo a <name/>',
-  subscription_check_timeout:
-    "Il controllo dell'abbonamento è scaduto. Si prega di riprovare più tardi.",
+  subscription_check_pending:
+    'Il tuo pagamento è andato a buon fine. La configurazione del tuo abbonamento sta richiedendo più tempo del solito.',
   no_subscription: 'Nessuna sottoscrizione',
   usage,
   token_usage_notification: {

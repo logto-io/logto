@@ -73,7 +73,8 @@ const subscription = {
   },
   upgrade_success: 'Successfully upgraded to <name/>',
   downgrade_success: 'Successfully downgraded to <name/>',
-  subscription_check_timeout: 'Subscription check timed out. Please refresh later.',
+  subscription_check_pending:
+    'Your payment went through. Setting up your subscription is taking longer than usual.',
   no_subscription: 'No subscription',
   usage,
   token_usage_notification: {

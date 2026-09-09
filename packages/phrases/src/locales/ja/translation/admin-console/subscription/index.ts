@@ -74,8 +74,8 @@ const subscription = {
   },
   upgrade_success: '正常に<name/>にアップグレードされました',
   downgrade_success: '正常に<name/>にダウングレードされました',
-  subscription_check_timeout:
-    'サブスクリプションのチェックがタイムアウトしました。後でもう一度更新してください。',
+  subscription_check_pending:
+    'お支払いは完了しました。サブスクリプションの設定に通常より時間がかかっています。',
   no_subscription: '契約なし',
   usage,
   token_usage_notification: {
