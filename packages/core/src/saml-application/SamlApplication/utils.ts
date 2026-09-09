@@ -133,5 +133,10 @@ export const isForceAuthnRequested = (authnRequestXml: string): boolean => {
     { key: 'forceAuthn', localPath: ['AuthnRequest'], attributes: ['ForceAuthn'] },
   ]);
 
-  return forceAuthn === 'true' || forceAuthn === '1';
+  // Xs:boolean collapses XML whitespace, not arbitrary Unicode whitespace.
+  const value =
+    typeof forceAuthn === 'string'
+      ? forceAuthn.replaceAll(/^[\t\n\r ]+|[\t\n\r ]+$/g, '')
+      : forceAuthn;
+  return value === 'true' || value === '1';
 };
