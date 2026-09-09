@@ -55,7 +55,7 @@ const signInWithPassword = async ({
   return client;
 };
 
-devFeatureTest.describe('step-up pinned-user verification', () => {
+devFeatureTest.describe('step-up subject-bound verification', () => {
   const userApi = new UserApiTest();
   const user = generateNewUserProfile({ username: true, password: true, primaryEmail: true });
   // eslint-disable-next-line @silverhand/fp/no-let -- Assigned once the fixture is created.
@@ -178,7 +178,7 @@ devFeatureTest.describe('step-up pinned-user verification', () => {
       }),
       { code: 'session.identifier_not_found', status: 404 }
     );
-    // The pinned-user code is a sign-in first factor only.
+    // The subject-bound code is a sign-in first factor only.
     await expectRejects(
       client.sendVerificationCode({
         identifier: { type: SignInIdentifier.Email },
@@ -226,7 +226,7 @@ devFeatureTest.describe('step-up pinned-user verification', () => {
       await updateSignInExperience({ sentinelPolicy: originalSentinelPolicy ?? {} });
     });
 
-    it('counts failed pinned-user password attempts against the sign-in budget of the account', async () => {
+    it('counts failed subject-bound password attempts against the sign-in budget of the account', async () => {
       const lockedUser = generateNewUserProfile({ username: true, password: true });
       await userApi.create(lockedUser);
 

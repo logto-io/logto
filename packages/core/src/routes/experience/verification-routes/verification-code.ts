@@ -2,7 +2,7 @@ import { TemplateType } from '@logto/connector-kit';
 import {
   AlternativeSignUpIdentifier,
   InteractionEvent,
-  pinnedVerificationCodeIdentifierGuard,
+  subjectVerificationCodeIdentifierGuard,
   SignInIdentifier,
   verificationCodeIdentifierGuard,
   verificationCodeIdentifierPayloadGuard,
@@ -26,7 +26,7 @@ import { type ExperienceInteractionRouterContext } from '../types.js';
 import {
   getSubjectCodeRecordIdentifier,
   getSubjectIdentifier,
-} from './pinned-verification-code-helpers.js';
+} from './subject-verification-code-helpers.js';
 import {
   sendCode,
   verifyCode,
@@ -46,23 +46,23 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
           identifier: verificationCodeIdentifierGuard,
           interactionEvent: z.nativeEnum(InteractionEvent),
         }),
-        // The pinned-user variant: the subject's primary email / phone, sign-in only
+        // The subject-bound variant: the subject's primary email / phone, sign-in only
         z.object({
-          identifier: pinnedVerificationCodeIdentifierGuard,
+          identifier: subjectVerificationCodeIdentifierGuard,
           interactionEvent: z.literal(InteractionEvent.SignIn),
         }),
       ]),
       response: z.object({
         verificationId: z.string(),
       }),
-      // 404: pinned-user variant without a subject; 429: rate limited; 501: connector not found
+      // 404: subject-bound variant without a subject; 429: rate limited; 501: connector not found
       status: [200, 400, 404, 422, 429, 501],
     }),
     async (ctx, next) => {
       const { identifier: identifierPayload, interactionEvent } = ctx.guard.body;
       const { experienceInteraction } = ctx;
 
-      // The pinned-user variant: the subject is already authenticated, so no captcha applies
+      // The subject is already authenticated, so no captcha applies
       if (identifierPayload.value === undefined) {
         const { userId, identifier } = await getSubjectIdentifier({
           identifierType: identifierPayload.type,

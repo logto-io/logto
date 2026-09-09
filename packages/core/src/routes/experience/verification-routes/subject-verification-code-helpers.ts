@@ -1,5 +1,5 @@
 /**
- * @file Identifier resolution for the pinned-user verification code variants, where the request
+ * @file Identifier resolution for the subject-bound verification code variants, where the request
  * carries only the identifier type and the value comes from the subject the interaction carries.
  */
 import {

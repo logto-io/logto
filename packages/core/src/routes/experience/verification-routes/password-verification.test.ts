@@ -495,7 +495,7 @@ describe('password verification route PostFirstFactorVerification fallback', () 
     expect(updateUser).not.toHaveBeenCalled();
   });
 });
-describe('password verification route pinned-user variant', () => {
+describe('password verification route subject-bound variant', () => {
   const subject = { ...mockUser, id: 'subject-user-id' };
   const passwordSignInMethod = (identifier: SignInIdentifier) => ({
     identifier,

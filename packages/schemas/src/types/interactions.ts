@@ -74,26 +74,26 @@ export const verificationCodeIdentifierGuard = z.discriminatedUnion('type', [
 ]) satisfies z.ZodType<VerificationCodeIdentifier>;
 
 /**
- * The pinned-user verification code identifier: the type alone. Accepted once the interaction
+ * The subject-bound verification code identifier: the type alone. Accepted once the interaction
  * carries a subject; core fills the value from that user's primary email / phone. A present
  * `value` is rejected so a malformed full identifier is never mistaken for this shape.
  */
-export type PinnedVerificationCodeIdentifier = {
+export type SubjectVerificationCodeIdentifier = {
   type: VerificationCodeSignInIdentifier;
   value?: undefined;
 };
-export const pinnedVerificationCodeIdentifierGuard = z.object({
+export const subjectVerificationCodeIdentifierGuard = z.object({
   type: z.enum([SignInIdentifier.Email, SignInIdentifier.Phone]),
   value: z.undefined(),
-}) satisfies ToZodObject<PinnedVerificationCodeIdentifier>;
+}) satisfies ToZodObject<SubjectVerificationCodeIdentifier>;
 
-/** The full identifier, or the pinned-user shape. */
+/** The full identifier, or the subject-bound shape. */
 export type VerificationCodeIdentifierPayload =
   | VerificationCodeIdentifier
-  | PinnedVerificationCodeIdentifier;
+  | SubjectVerificationCodeIdentifier;
 export const verificationCodeIdentifierPayloadGuard = z.union([
   verificationCodeIdentifierGuard,
-  pinnedVerificationCodeIdentifierGuard,
+  subjectVerificationCodeIdentifierGuard,
 ]) satisfies z.ZodType<VerificationCodeIdentifierPayload>;
 
 // REMARK: API payload guard

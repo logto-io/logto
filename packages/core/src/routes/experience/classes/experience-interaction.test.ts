@@ -1040,7 +1040,7 @@ describe('ExperienceInteraction class', () => {
       expect(experienceInteraction.identifiedUserId).toBeUndefined();
     });
 
-    it('identifies the subject through a pinned-user password record without a sign-in method', async () => {
+    it('identifies the subject through a subject-bound password record without a sign-in method', async () => {
       const { experienceInteraction, stepUpTenant } = createInteraction({
         details: { authenticationContext: stepUpContext },
       });

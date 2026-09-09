@@ -456,7 +456,7 @@ describe('SignInExperienceValidator', () => {
           },
         ],
       },
-      'pinned-user records with no sign-in methods enabled': {
+      'subject-bound records with no sign-in methods enabled': {
         signInExperience: {
           ...mockSignInExperience,
           signIn: {

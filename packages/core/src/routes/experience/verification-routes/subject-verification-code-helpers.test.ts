@@ -8,7 +8,7 @@ import type ExperienceInteraction from '../classes/experience-interaction.js';
 import {
   getSubjectCodeRecordIdentifier,
   getSubjectIdentifier,
-} from './pinned-verification-code-helpers.js';
+} from './subject-verification-code-helpers.js';
 
 const { jest } = import.meta;
 
@@ -48,7 +48,7 @@ describe('getSubjectIdentifier', () => {
     expect(findUserById).toHaveBeenCalledWith(subjectUserId);
   });
 
-  it('refuses the pinned-user shape before the interaction carries a subject', async () => {
+  it('refuses the subject-bound shape before the interaction carries a subject', async () => {
     await expect(
       getSubjectIdentifier({
         identifierType: SignInIdentifier.Email,
@@ -92,7 +92,7 @@ describe('getSubjectCodeRecordIdentifier', () => {
     );
   });
 
-  it('refuses the pinned-user shape before the interaction carries a subject', () => {
+  it('refuses the subject-bound shape before the interaction carries a subject', () => {
     expect(() =>
       getSubjectCodeRecordIdentifier({
         verificationType: VerificationType.EmailVerificationCode,
