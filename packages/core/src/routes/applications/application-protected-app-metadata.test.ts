@@ -212,7 +212,7 @@ describe('application protected app metadata routes', () => {
         },
       });
       const response = await requester.delete(
-        `/applications/${mockProtectedApplication.id}/protected-app-metadata/custom-domains/App.Example.COM`
+        `/applications/${mockProtectedApplication.id}/protected-app-metadata/custom-domains/%20App.Example.COM%20`
       );
       expect(response.status).toEqual(204);
       expect(deleteRemoteAppConfigs).toHaveBeenCalledWith(mockDomain);

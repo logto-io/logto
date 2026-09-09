@@ -130,8 +130,9 @@ export default function applicationProtectedAppMetadataRoutes<T extends Manageme
 
       // Match case-insensitively so both canonicalized (lowercase) and legacy mixed-case entries
       // can be removed, then use the stored value for every cleanup step below.
+      const normalizedDomain = rawDomain.trim().toLowerCase();
       const domainObject = protectedAppMetadata?.customDomains?.find(
-        ({ domain: domainName }) => domainName.toLowerCase() === rawDomain.toLowerCase()
+        ({ domain: domainName }) => domainName.toLowerCase() === normalizedDomain
       );
 
       assertThat(

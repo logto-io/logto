@@ -167,6 +167,9 @@ describe('addDomainToRemote()', () => {
     await expect(addDomainToRemote('Foo.Dev.Protected.App')).rejects.toMatchError(
       new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
     );
+    await expect(addDomainToRemote(' protected.app ')).rejects.toMatchError(
+      new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
+    );
     expect(createCustomHostname).not.toHaveBeenCalled();
   });
 

@@ -129,8 +129,9 @@ const buildProtectedAppData = async ({
 const addDomainToRemote = async (
   hostname: string
 ): Promise<NonNullable<ProtectedAppMetadata['customDomains']>[number]> => {
-  // DNS hostnames are case-insensitive, compare in lowercase so mixed case cannot bypass the checks.
-  const normalizedHostname = hostname.toLowerCase();
+  // DNS hostnames are case-insensitive and cannot carry surrounding whitespace. Normalize so
+  // neither mixed case nor padding can bypass the checks below.
+  const normalizedHostname = hostname.trim().toLowerCase();
 
   // The default domain of protected apps is reserved. Hostnames under it are assigned by Logto
   // when an app is created, and adding one as a custom domain creates a custom hostname inside
