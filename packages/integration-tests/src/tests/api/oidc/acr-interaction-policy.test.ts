@@ -1,5 +1,5 @@
 import { Prompt, type SignInOptions } from '@logto/node';
-import { InteractionEvent, defaultTenantId, demoAppApplicationId } from '@logto/schemas';
+import { InteractionEvent, MfaFactor, defaultTenantId, demoAppApplicationId } from '@logto/schemas';
 import { assert, assertEnv } from '@silverhand/essentials';
 import { createInterceptorsPreset, createPool, sql, type DatabasePool } from '@silverhand/slonik';
 import ky from 'ky';
@@ -9,8 +9,10 @@ import { ExperienceClient } from '#src/client/experience/index.js';
 import { demoAppRedirectUri } from '#src/constants.js';
 import { initExperienceClient, logoutClient, processSession } from '#src/helpers/client.js';
 import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
+import { successfullyCreateAndVerifyTotp } from '#src/helpers/experience/totp-verification.js';
 import {
   enableAllPasswordSignInMethods,
+  enableMandatoryMfaWithTotp,
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
@@ -240,6 +242,61 @@ devFeatureTest.describe('acr_values and max_age interaction policy', () => {
     expectRedirectedError(noSession.location, 'login_required');
 
     await logoutClient(client);
+  });
+
+  it('issues an authorization code after a step-up interaction achieves the selected ACR', async () => {
+    // Keep MFA enrollment separate from the shared password-only user.
+    const profile = generateNewUserProfile({ username: true, password: true });
+    const user = await userApi.create(profile);
+    const client = await initExperienceClient();
+
+    try {
+      await identifyUserWithUsernamePassword(client, profile.username, profile.password);
+      const { redirectTo: signInRedirectTo } = await client.submitInteraction();
+      await processSession(client, signInRedirectTo);
+      expect(await client.getIdTokenClaims()).toMatchObject({
+        sub: user.id,
+        acr: firstFactorAcr,
+        amr: ['pwd'],
+      });
+
+      await enableMandatoryMfaWithTotp();
+      const { status, location, setCookies } = await authorize(client, {
+        extraParams: { acr_values: mfaAcr },
+      });
+
+      expect(status).toBe(303);
+      expect(location).toBe(`/step-up?app_id=${demoAppApplicationId}`);
+
+      const { prompt, session } = await findInteraction(getInteractionId(setCookies));
+      expect(prompt.reasons).toEqual(['acr_unmet']);
+      expect(prompt.details.authenticationContext).toEqual({
+        requestedAcrValues: [mfaAcr],
+        selectedAcr: mfaAcr,
+        mode: 'stepUp',
+      });
+      expect(session?.accountId).toBe(user.id);
+
+      // Experience does not yet inherit the session subject or its first-factor proof.
+      await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
+      await identifyUserWithUsernamePassword(client, profile.username, profile.password);
+      const verificationId = await successfullyCreateAndVerifyTotp(client);
+      await client.bindMfa(MfaFactor.TOTP, verificationId);
+      const { redirectTo } = await client.submitInteraction();
+
+      const response = await ky.get(redirectTo, {
+        headers: { cookie: client.getCookieHeader(new URL(redirectTo).pathname) },
+        redirect: 'manual',
+        throwHttpErrors: false,
+      });
+      client.mergeRawCookies(response.headers.getSetCookie());
+
+      expect(response.status).toBe(303);
+      expectAuthorizationCode(response.headers.get('location') ?? '');
+    } finally {
+      await resetMfaSettings();
+      await logoutClient(client);
+    }
   });
 
   it('fails after the interaction resumes with an insufficient context instead of prompting again', async () => {
