@@ -1,5 +1,5 @@
 import { ConnectorType } from '@logto/connector-kit';
-import { decodeIdToken } from '@logto/js';
+import { decodeAccessToken, decodeIdToken } from '@logto/js';
 import { Prompt } from '@logto/node';
 import { GrantType, MfaFactor, MfaPolicy, demoAppApplicationId } from '@logto/schemas';
 import { formUrlEncodedHeaders, generateStandardId } from '@logto/shared';
@@ -12,6 +12,7 @@ import {
   deleteUser,
   updateUserLogtoConfig,
 } from '#src/api/admin-user.js';
+import { createResource, deleteResource } from '#src/api/resource.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { type ExperienceClient } from '#src/client/experience/index.js';
 import { demoAppRedirectUri, logtoUrl } from '#src/constants.js';
@@ -48,12 +49,13 @@ const nowInSeconds = () => Math.floor(Date.now() / 1000);
  * Start an authorization on a fresh client (so a sign-in is always required) that issues a
  * refresh token: the provider only issues one for `offline_access` under `prompt=consent`.
  */
-const initClient = async () =>
+const initClient = async (resources?: string[]) =>
   initExperienceClient({
     config: {
       appId: demoAppApplicationId,
       prompt: Prompt.Consent,
       scopes: ['offline_access'],
+      resources,
     },
     redirectUri: demoAppRedirectUri,
   });
@@ -236,8 +238,8 @@ devFeatureTest.describe('authentication context claims on sign-in', () => {
     });
 
     /** Start a sign-in on a fresh client and identify the social user without submitting. */
-    const identifySocialUser = async () => {
-      const client = await initClient();
+    const identifySocialUser = async (resources?: string[]) => {
+      const client = await initClient(resources);
       const state = 'state';
       const redirectUri = 'http://localhost:3000';
       const { verificationId } = await successfullyCreateSocialVerification(client, connectorId, {
@@ -252,16 +254,32 @@ devFeatureTest.describe('authentication context claims on sign-in', () => {
       return client;
     };
 
-    it('issues amr=[fed] and no acr', async () => {
-      const client = await identifySocialUser();
-      const claims = await finishSignIn(client);
+    it('issues amr=[fed] and no acr in ID and JWT access tokens', async () => {
+      const resource = await createResource();
 
-      expect(claims.sub).toBe(userId);
-      expect(claims.amr).toEqual(['fed']);
-      expect(claims).not.toHaveProperty('acr');
-      expect(typeof claims.auth_time).toBe('number');
+      try {
+        const client = await identifySocialUser([resource.indicator]);
+        const claims = await finishSignIn(client);
 
-      await logoutClient(client);
+        expect(claims.sub).toBe(userId);
+        expect(claims.amr).toEqual(['fed']);
+        expect(claims).not.toHaveProperty('acr');
+        expect(typeof claims.auth_time).toBe('number');
+
+        const accessTokenClaims = decodeAccessToken(
+          await client.getAccessToken(resource.indicator)
+        );
+        expect(accessTokenClaims).toMatchObject({
+          sub: userId,
+          amr: ['fed'],
+          auth_time: claims.auth_time,
+        });
+        expect(accessTokenClaims).not.toHaveProperty('acr');
+
+        await logoutClient(client);
+      } finally {
+        await deleteResource(resource.id);
+      }
     });
 
     it('keeps fed on the sign-in that links the identity to an existing account', async () => {

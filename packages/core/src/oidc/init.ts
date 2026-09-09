@@ -56,6 +56,7 @@ import {
   hasAppLevelAccessControlChecked,
   markAppLevelAccessControlCheckedForOidcContext,
 } from './application-access-control.js';
+import { getExtraTokenClaimsForAuthenticationContext } from './authentication-context-claims.js';
 import { buildClientIdMetadataDocumentFeature, isCimdClient } from './cimd/index.js';
 import { filterResourceScopesForTheCimdClient } from './cimd/resource-scopes.js';
 import { getOidcScopesNoLongerAllowed } from './client-scope.js';
@@ -384,6 +385,7 @@ export default function initOidc(
     },
     extraParams: Object.values(ExtraParamsKey),
     extraTokenClaims: async (ctx, token) => {
+      const authenticationContextClaims = getExtraTokenClaimsForAuthenticationContext(ctx, token);
       const [tokenExchangeClaims, organizationApiResourceClaims, jwtCustomizedClaims] =
         await Promise.all([
           getExtraTokenClaimsForTokenExchange(ctx, token),
@@ -401,13 +403,19 @@ export default function initOidc(
           ),
         ]);
 
-      if (!organizationApiResourceClaims && !jwtCustomizedClaims && !tokenExchangeClaims) {
+      if (
+        !authenticationContextClaims &&
+        !organizationApiResourceClaims &&
+        !jwtCustomizedClaims &&
+        !tokenExchangeClaims
+      ) {
         return;
       }
 
       return {
         ...tokenExchangeClaims,
         ...organizationApiResourceClaims,
+        ...authenticationContextClaims,
         ...jwtCustomizedClaims,
       };
     },
