@@ -51,6 +51,12 @@ const session = {
       'Para maior proteção, considere adicionar outro método de MFA. Pode ignorar este passo e continuar.',
   },
   trusted_device_suggest_opt_in: 'Escolha se pretende confiar neste dispositivo.',
+  step_up: {
+    invalid_interaction_event:
+      'A autenticação step-up só está disponível para interações de início de sessão.',
+    subject_not_found:
+      'Não foi encontrada nenhuma sessão autenticada para a autenticação step-up. Inicie sessão novamente.',
+  },
   passkey_sign_in: {
     pending_info_not_found:
       'Não foi possível encontrar as informações pendentes de início de sessão com passkey. Volte a iniciar o fluxo de início de sessão.',

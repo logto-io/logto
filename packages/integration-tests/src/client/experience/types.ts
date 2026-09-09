@@ -1,5 +1,6 @@
 import { type TemplateType, type SocialUserInfo } from '@logto/connector-kit';
 import {
+  type InteractionAuthenticationContext,
   type VerificationType,
   type InteractionEvent,
   type User,
@@ -16,6 +17,7 @@ export type RedirectResponse = {
 export type SanitizedInteractionStorageData = {
   interactionEvent: InteractionEvent;
   userId?: string;
+  authenticationContext?: InteractionAuthenticationContext;
   profile?: Partial<
     Pick<
       User,

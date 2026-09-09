@@ -47,13 +47,28 @@ export class ExperienceClient extends MockClient {
       .json();
   }
 
-  public async initInteraction(payload: CreateExperienceApiPayload) {
+  /**
+   * Init the interaction. Resolves with the redirect response when a step-up interaction was
+   * finished at creation because the pinned user cannot reach the requested authentication
+   * context, and with `undefined` otherwise.
+   */
+  public async initInteraction(
+    payload: CreateExperienceApiPayload
+  ): Promise<RedirectResponse | undefined> {
     const response = await this.api.put(experienceRoutes.prefix, {
       headers: this.headers,
       json: payload,
     });
 
     this.mergeRawCookies(response.headers.getSetCookie());
+
+    if (response.status === 204) {
+      return;
+    }
+
+    const data: unknown = await response.json();
+
+    return isRedirectResponse(data) ? data : undefined;
   }
 
   public override async submitInteraction(): Promise<RedirectResponse> {

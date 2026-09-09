@@ -38,6 +38,10 @@ const session = {
     suggest_additional_mfa: '為更強的保護，建議新增另一種多重驗證方式。你可略過此步驟並繼續。',
   },
   trusted_device_suggest_opt_in: '請選擇是否信任此裝置。',
+  step_up: {
+    invalid_interaction_event: '升級認證僅適用於登入互動。',
+    subject_not_found: '找不到用於升級認證的已認證會話。請重新登入。',
+  },
   passkey_sign_in: {
     pending_info_not_found: '未找到待處理的 Passkey 登入資訊。請重新啟動登入流程。',
     conflict_rp_id: 'Relying Party ID 不相符。請使用正確的用戶端登入。',

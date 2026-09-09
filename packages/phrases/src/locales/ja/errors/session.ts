@@ -47,6 +47,12 @@ const session = {
       'より強力な保護のため、別のMFA方法の追加を検討してください。この手順はスキップして続行できます。',
   },
   trusted_device_suggest_opt_in: 'このデバイスを信頼するか選択してください。',
+  step_up: {
+    invalid_interaction_event:
+      'ステップアップ認証はサインインのインタラクションでのみ利用できます。',
+    subject_not_found:
+      'ステップアップ認証のための認証済みセッションが見つかりません。もう一度サインインしてください。',
+  },
   passkey_sign_in: {
     pending_info_not_found:
       '保留中のパスキーサインイン情報が見つかりません。サインインフローを再開始してください。',

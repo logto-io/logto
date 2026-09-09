@@ -38,6 +38,10 @@ const session = {
     suggest_additional_mfa: '为更强的安全性，建议添加另一种多因素认证方式。你可以跳过此步骤继续。',
   },
   trusted_device_suggest_opt_in: '请选择是否信任此设备。',
+  step_up: {
+    invalid_interaction_event: '升级认证仅适用于登录交互。',
+    subject_not_found: '未找到用于升级认证的已认证会话。请重新登录。',
+  },
   passkey_sign_in: {
     pending_info_not_found: '未找到待处理的 Passkey 登录信息。请重新发起登录流程。',
     conflict_rp_id: 'Relying Party ID 不匹配。请使用正确的客户端登录。',

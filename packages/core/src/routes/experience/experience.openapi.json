@@ -10,10 +10,19 @@
       "put": {
         "operationId": "InitInteraction",
         "summary": "Init new interaction",
-        "description": "Init a new experience interaction with the given interaction type. Any existing interaction data will be cleared.",
+        "description": "Init a new experience interaction with the given interaction type. Any existing interaction data will be cleared. When the login prompt carries a step-up authentication context (an authenticated session that does not satisfy the requested `acr_values`), the interaction pins the session subject; if the pinned user has no method that can reach the selected authentication context class, the interaction is finished with `unmet_authentication_requirements` and a redirect URL is returned instead.",
         "responses": {
           "204": {
             "description": "A new experience interaction has been successfully initiated."
+          },
+          "200": {
+            "description": "The step-up interaction was finished with `unmet_authentication_requirements` because the pinned user has no method that can reach the requested authentication context; follow `redirectTo` to return to the application."
+          },
+          "400": {
+            "description": "A step-up interaction was requested with a non-sign-in event, or the session has no subject to pin."
+          },
+          "422": {
+            "description": "The captcha verification failed."
           }
         }
       }
@@ -123,7 +132,7 @@
       "get": {
         "operationId": "GetInteraction",
         "summary": "Get public interaction data",
-        "description": "Get the public interaction data.",
+        "description": "Get the public interaction data. When the interaction was created from a login prompt that carries requested `acr_values`, the response includes the `authenticationContext` with the methods that can still contribute to the selected class, evaluated on every read.",
         "responses": {
           "200": {
             "description": "The public interaction data has been successfully retrieved."

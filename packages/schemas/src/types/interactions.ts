@@ -11,6 +11,10 @@ import {
 } from '../foundations/index.js';
 import { type ToZodObject } from '../utils/zod.js';
 
+import {
+  requestedAuthenticationContextGuard,
+  type RequestedAuthenticationContext,
+} from './authentication-context.js';
 import { InteractionEvent } from './interaction-event.js';
 import type {
   EmailVerificationCodePayload,
@@ -20,6 +24,7 @@ import {
   emailVerificationCodePayloadGuard,
   phoneVerificationCodePayloadGuard,
 } from './verification-code.js';
+import { VerificationType } from './verification-records/verification-type.js';
 
 export { eventGuard, InteractionEvent } from './interaction-event.js';
 
@@ -303,6 +308,50 @@ export enum MissingProfile {
   emailOrPhone = 'emailOrPhone',
   extraProfile = 'extraProfile',
 }
+
+/** A social or enterprise SSO connector linked to the pinned user that can serve as subject proof. */
+export type SubjectProofConnector = {
+  type: 'social' | 'sso';
+  connectorId: string;
+};
+
+/**
+ * The masked primary identifiers of the pinned user. Only the masked values ever leave the
+ * server: the step-up UI shows them as hints and never supplies a raw identifier.
+ */
+export type MaskedIdentifiers = {
+  email?: string;
+  phone?: string;
+};
+
+/**
+ * The authentication context `GET /api/experience/interaction` exposes when the interaction was
+ * created from a login prompt that carries requested `acr_values`. The requested part is copied
+ * verbatim from the prompt details at creation and never mutated; the lists are evaluated on
+ * every read from the pinned user's enrolled methods and the context the interaction achieved so
+ * far, and are never persisted, so a factor change during the interaction's lifetime is reflected.
+ */
+export type InteractionAuthenticationContext = RequestedAuthenticationContext & {
+  /** The methods that can still contribute to the selected class from where the interaction stands. */
+  availableMethods: VerificationType[];
+  /** The first factors the user may establish under a fresh subject proof; `[]` until enrollment lands. */
+  establishableMethods: MissingProfile[];
+  /** The MFA factors the user may enroll after a fresh first factor; `[]` until enrollment lands. */
+  enrollableFactors: MfaFactor[];
+  /** The linked connectors that can serve as subject proof in pure step-up; `[]` until enrollment lands. */
+  subjectProofConnectors: SubjectProofConnector[];
+  maskedIdentifiers: MaskedIdentifiers;
+};
+
+export const interactionAuthenticationContextGuard = requestedAuthenticationContextGuard.extend({
+  availableMethods: z.nativeEnum(VerificationType).array(),
+  establishableMethods: z.nativeEnum(MissingProfile).array(),
+  enrollableFactors: z.nativeEnum(MfaFactor).array(),
+  subjectProofConnectors: z
+    .object({ type: z.enum(['social', 'sso']), connectorId: z.string() })
+    .array(),
+  maskedIdentifiers: z.object({ email: z.string().optional(), phone: z.string().optional() }),
+}) satisfies ToZodObject<InteractionAuthenticationContext>;
 
 export const bindTotpPayloadGuard = z.object({
   // Unlike identifier payload which has indicator like "email",

@@ -5,6 +5,10 @@ import {
   type CreateUser,
   encryptedTokenSetGuard,
   InteractionEvent,
+  type InteractionAuthenticationContext,
+  interactionAuthenticationContextGuard,
+  type RequestedAuthenticationContext,
+  requestedAuthenticationContextGuard,
   secretEnterpriseSsoConnectorRelationPayloadGuard,
   secretSocialConnectorRelationPayloadGuard,
   type User,
@@ -209,6 +213,13 @@ export type WithHooksAndLogsContext<ContextT extends WithLogContext = WithLogCon
 export type InteractionStorage = {
   interactionEvent: InteractionEvent;
   userId?: string;
+  /**
+   * The authentication context the OIDC interaction policy wrote into the login prompt details
+   * when the authorization request carried supported `acr_values`. Copied verbatim at creation
+   * and never mutated; `mode: 'stepUp'` marks a pure step-up whose subject is pinned from the
+   * OIDC session. Optional so in-flight interactions created before it existed still parse.
+   */
+  authenticationContext?: RequestedAuthenticationContext;
   /** The authentication proofs recorded so far; see `AuthenticationProofs`. */
   authenticationProofs?: AuthenticationProof[];
   trustedDeviceOptIn?:
@@ -232,6 +243,7 @@ export type InteractionStorage = {
 export const interactionStorageGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent),
   userId: z.string().optional(),
+  authenticationContext: requestedAuthenticationContextGuard.optional(),
   authenticationProofs: authenticationProofGuard.array().optional(),
   trustedDeviceOptIn: z
     .discriminatedUnion('trusted', [
@@ -257,6 +269,11 @@ export const interactionStorageGuard = z.object({
 export type SanitizedInteractionStorageData = {
   interactionEvent: InteractionEvent;
   userId?: string;
+  /**
+   * Present when the interaction carries a requested authentication context; the computed lists
+   * are evaluated on every read. See `InteractionAuthenticationContext`.
+   */
+  authenticationContext?: InteractionAuthenticationContext;
   profile?: SanitizedInteractionProfile;
   verificationRecords?: SanitizedVerificationRecordData[];
   mfa?: SanitizedMfaData;
@@ -274,6 +291,7 @@ export type SanitizedInteractionStorageData = {
 export const sanitizedInteractionStorageGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent),
   userId: z.string().optional(),
+  authenticationContext: interactionAuthenticationContextGuard.optional(),
   profile: sanitizedInteractionProfileGuard,
   verificationRecords: publicVerificationRecordDataGuard.array().optional(),
   mfa: sanitizedMfaDataGuard.optional(),
