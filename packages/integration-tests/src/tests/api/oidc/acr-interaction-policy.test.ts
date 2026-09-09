@@ -284,15 +284,13 @@ devFeatureTest.describe('acr_values and max_age interaction policy', () => {
       await client.bindMfa(MfaFactor.TOTP, verificationId);
       const { redirectTo } = await client.submitInteraction();
 
-      const response = await ky.get(redirectTo, {
-        headers: { cookie: client.getCookieHeader(new URL(redirectTo).pathname) },
-        redirect: 'manual',
-        throwHttpErrors: false,
+      // Complete any consent prompt after login resumes, then exchange the authorization code.
+      await processSession(client, redirectTo);
+      expect(await client.getIdTokenClaims()).toMatchObject({
+        sub: user.id,
+        acr: mfaAcr,
+        amr: ['pwd', 'otp', 'mfa'],
       });
-      client.mergeRawCookies(response.headers.getSetCookie());
-
-      expect(response.status).toBe(303);
-      expectAuthorizationCode(response.headers.get('location') ?? '');
     } finally {
       await resetMfaSettings();
       await logoutClient(client);
