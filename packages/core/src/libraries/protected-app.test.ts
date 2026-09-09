@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- the addDomainToRemote cases share the library mock harness with the sync tests; splitting fragments the setup */
 import { UserScope } from '@logto/core-kit';
 import {
   ApplicationType,
