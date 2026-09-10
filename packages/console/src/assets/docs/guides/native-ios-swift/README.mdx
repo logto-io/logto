@@ -25,8 +25,8 @@ Since Xcode 11, you can [directly import a swift package](https://developer.appl
 
 Logto Swift SDK comes in two major versions:
 
+- **v2**: Opens the sign-in experience in [ASWebAuthenticationSession](https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession) (the system browser), which unlocks passkey sign-in and shares the browser session. Note that v2 removes support for the [WeChat (Native)](https://docs.logto.io/integrations/wechat-native) and [Alipay (Native)](https://docs.logto.io/integrations/alipay-native) connectors; you can use [WeChat (Web)](https://docs.logto.io/integrations/wechat-web) and [Alipay (Web)](https://docs.logto.io/integrations/alipay-web) instead, which work through the browser. If you depend on the native connectors, stay on v1.
 - **v1**: Opens the sign-in experience in an embedded WebView, which is required by the native social connectors, but does not support [passkey sign-in](https://docs.logto.io/end-user-flows/sign-up-and-sign-in/passkey-sign-in) (WebView does not support WebAuthn, the underlying standard of passkeys).
-- **v2 (beta)**: Opens the sign-in experience in [ASWebAuthenticationSession](https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession) (the system browser), which unlocks passkey sign-in and shares the browser session. Note that v2 removes support for the [WeChat (Native)](https://docs.logto.io/integrations/wechat-native) and [Alipay (Native)](https://docs.logto.io/integrations/alipay-native) connectors; you can use [WeChat (Web)](https://docs.logto.io/integrations/wechat-web) and [Alipay (Web)](https://docs.logto.io/integrations/alipay-web) instead, which work through the browser. If you depend on the native connectors, stay on v1.
 
 This guide covers both versions.
 
@@ -34,19 +34,19 @@ When Xcode asks for the package version, select the version according to the SDK
 
 <Tabs groupId="swift-sdk-version">
 
-<TabItem value="v2" label="v2 (beta)">
+<TabItem value="v2" label="v2">
 
-v2 is released as `v2.0.0-beta.x` prerelease tags until GA. Use the latest prerelease tag:
+Use the latest v2 release. The latest v2 version is:
 
 ```text
-v2.0.0-beta.1
+v2.0.0
 ```
 
 </TabItem>
 
 <TabItem value="v1" label="v1">
 
-Use the latest stable v1 release:
+Use the latest v1 release if you need the native social connectors. The latest v1 version is:
 
 ```text
 v1.2.0
@@ -124,7 +124,7 @@ let config = try? LogtoConfig(
 
 <Tabs groupId="swift-sdk-version">
 
-<TabItem value="v2" label="v2 (beta)">
+<TabItem value="v2" label="v2">
 
 In v2, the sign-in experience opens in `ASWebAuthenticationSession` (the system browser), and the redirect is routed back to your app through the redirect URI. For a custom scheme redirect URI, register only the scheme part in your app's `Info.plist`, not the full redirect URI.
 
@@ -189,7 +189,7 @@ For example, in a SwiftUI app:
 
 <Tabs groupId="swift-sdk-version">
 
-<TabItem value="v2" label="v2 (beta)">
+<TabItem value="v2" label="v2">
 
 In v2, `client.signOut(postLogoutRedirectUri:)` performs a complete sign-out: it clears the local credentials, revokes the refresh token, and ends the Logto session by opening the end session endpoint in the browser. The browser then navigates back to your app through the post sign-out redirect URI. If the post sign-out redirect URI uses a custom scheme, register that scheme in `Info.plist` as well. Let's configure it first:
 
