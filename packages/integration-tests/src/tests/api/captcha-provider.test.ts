@@ -32,6 +32,7 @@ describe('captcha provider', () => {
         siteKey: 'site_key',
         secretKey: 'secret_key',
         projectId: 'project_id',
+        scoreThreshold: 0.7,
       },
     });
 
@@ -43,8 +44,27 @@ describe('captcha provider', () => {
         siteKey: 'site_key',
         secretKey: 'secret_key',
         projectId: 'project_id',
+        scoreThreshold: 0.7,
       },
     });
+  });
+
+  it('should reject an out-of-range score threshold', async () => {
+    await expectRejects(
+      updateCaptchaProvider({
+        config: {
+          type: CaptchaType.RecaptchaEnterprise,
+          siteKey: 'site_key',
+          secretKey: 'secret_key',
+          projectId: 'project_id',
+          scoreThreshold: 1.5,
+        },
+      }),
+      {
+        code: 'guard.invalid_input',
+        status: 400,
+      }
+    );
   });
 
   it('should delete captcha provider successfully', async () => {

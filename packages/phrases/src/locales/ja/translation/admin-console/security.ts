@@ -59,6 +59,10 @@ const security = {
     mode_checkbox: 'チェックボックス',
     mode_notice:
       '認証モードは Google Cloud Console の reCAPTCHA キー設定で定義されています。ここでモードを変更するには、一致するキータイプが必要です。',
+    score_threshold: 'スコアしきい値',
+    score_threshold_description:
+      'しきい値を下回るスコアは拒否されます。0.0 はすべてを許可し、1.0 は完全なスコアのみを許可します。デフォルトは 0.5 です。',
+    score_threshold_error: 'スコアしきい値は 0 から 1 の間である必要があります。',
   },
   password_policy: {
     password_requirements: 'パスワードの要件',

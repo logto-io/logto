@@ -59,6 +59,10 @@ const security = {
     mode_checkbox: 'Onay kutusu',
     mode_notice:
       "Doğrulama modu, Google Cloud Console'daki reCAPTCHA anahtar ayarlarında tanımlanır. Buradaki modu değiştirmek için eşleşen bir anahtar türü gerekir.",
+    score_threshold: 'Puan eşiği',
+    score_threshold_description:
+      "Eşiğin altındaki puanlar reddedilir. 0.0 tümünü kabul eder, 1.0 yalnızca mükemmel puanları kabul eder. Varsayılan değer 0.5'tir.",
+    score_threshold_error: 'Puan eşiği 0 ile 1 arasında olmalıdır.',
   },
   password_policy: {
     password_requirements: 'Parola gereksinimleri',

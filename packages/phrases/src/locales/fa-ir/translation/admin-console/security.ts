@@ -61,6 +61,10 @@ const security = {
     mode_checkbox: 'چک‌باکس',
     mode_notice:
       'حالت تأیید در تنظیمات کلید reCAPTCHA شما در Google Cloud Console تعریف می‌شود. تغییر حالت در اینجا نیاز به نوع کلید متناظر دارد.',
+    score_threshold: 'آستانه امتیاز',
+    score_threshold_description:
+      'امتیازهای کمتر از آستانه رد می‌شوند. 0.0 همه را مجاز می‌کند، 1.0 فقط امتیازهای کامل را مجاز می‌کند. پیش‌فرض 0.5 است.',
+    score_threshold_error: 'آستانه امتیاز باید بین 0 و 1 باشد.',
   },
   password_policy: {
     password_requirements: 'الزامات رمز عبور',

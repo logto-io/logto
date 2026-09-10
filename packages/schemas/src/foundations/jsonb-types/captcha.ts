@@ -25,6 +25,7 @@ export const recaptchaEnterpriseConfigGuard = z.object({
   projectId: z.string(),
   domain: z.string().optional(),
   mode: z.nativeEnum(RecaptchaEnterpriseMode).optional(),
+  scoreThreshold: z.number().min(0).max(1).optional(),
 });
 
 export type RecaptchaEnterpriseConfig = z.infer<typeof recaptchaEnterpriseConfigGuard>;

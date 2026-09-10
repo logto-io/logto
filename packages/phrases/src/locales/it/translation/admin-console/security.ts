@@ -59,6 +59,10 @@ const security = {
     mode_checkbox: 'Casella di controllo',
     mode_notice:
       'La modalità di verifica è definita nelle impostazioni della chiave reCAPTCHA in Google Cloud Console. Per cambiare la modalità qui è necessario un tipo di chiave corrispondente.',
+    score_threshold: 'Soglia del punteggio',
+    score_threshold_description:
+      'I punteggi inferiori alla soglia vengono rifiutati. 0.0 consente tutti, 1.0 solo punteggi perfetti. Il valore predefinito è 0.5.',
+    score_threshold_error: 'La soglia del punteggio deve essere compresa tra 0 e 1.',
   },
   password_policy: {
     password_requirements: 'Requisiti per la password',

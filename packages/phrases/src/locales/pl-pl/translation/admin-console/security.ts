@@ -59,6 +59,10 @@ const security = {
     mode_checkbox: 'Pole wyboru',
     mode_notice:
       'Tryb weryfikacji jest zdefiniowany w ustawieniach klucza reCAPTCHA w Google Cloud Console. Zmiana trybu tutaj wymaga odpowiedniego typu klucza.',
+    score_threshold: 'Próg punktacji',
+    score_threshold_description:
+      'Wyniki poniżej progu są odrzucane. 0.0 pozwala na wszystkie, 1.0 tylko na idealne wyniki. Domyślnie 0.5.',
+    score_threshold_error: 'Próg punktacji musi wynosić od 0 do 1.',
   },
   password_policy: {
     password_requirements: 'Wymagania dotyczące hasła',

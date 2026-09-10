@@ -59,6 +59,10 @@ const security = {
     mode_checkbox: 'Caixa de seleção',
     mode_notice:
       'O modo de verificação é definido nas definições da chave reCAPTCHA na Google Cloud Console. Alterar o modo aqui requer um tipo de chave correspondente.',
+    score_threshold: 'Limiar de pontuação',
+    score_threshold_description:
+      'Pontuações abaixo do limiar são rejeitadas. 0.0 permite todas, 1.0 apenas pontuações perfeitas. O valor predefinido é 0.5.',
+    score_threshold_error: 'O limiar de pontuação deve estar entre 0 e 1.',
   },
   password_policy: {
     password_requirements: 'Requisitos de password',
