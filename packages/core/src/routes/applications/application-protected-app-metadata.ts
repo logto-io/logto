@@ -69,7 +69,9 @@ export default function applicationProtectedAppMetadataRoutes<T extends Manageme
     }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
-      const { domain } = ctx.guard.body;
+      // Hostnames are case-insensitive. Store in lowercase so the site config key and the
+      // redirect URIs match the request host the worker sees.
+      const domain = ctx.guard.body.domain.toLowerCase();
 
       const { protectedAppMetadata, oidcClientMetadata } = await findApplicationById(id);
       assertThat(protectedAppMetadata, 'application.protected_app_not_configured', 501);
@@ -120,12 +122,13 @@ export default function applicationProtectedAppMetadataRoutes<T extends Manageme
       status: [204, 404, 501],
     }),
     async (ctx, next) => {
-      const { id, domain } = ctx.guard.params;
+      const { id, domain: rawDomain } = ctx.guard.params;
 
       const { protectedAppMetadata, oidcClientMetadata } = await findApplicationById(id);
 
+      // Match case-insensitively, then use the stored value for every cleanup step below.
       const domainObject = protectedAppMetadata?.customDomains?.find(
-        ({ domain: domainName }) => domainName === domain
+        ({ domain: domainName }) => domainName.toLowerCase() === rawDomain.toLowerCase()
       );
 
       assertThat(
@@ -135,6 +138,8 @@ export default function applicationProtectedAppMetadataRoutes<T extends Manageme
           status: 404,
         })
       );
+
+      const { domain } = domainObject;
 
       // Remove domain from Cloudflare
       if (domainObject.cloudflareData?.id) {

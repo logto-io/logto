@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- the addDomainToRemote cases share the library mock harness with the sync tests; splitting fragments the setup */
 import { UserScope } from '@logto/core-kit';
 import {
   ApplicationType,
@@ -29,15 +30,14 @@ import { mockFallbackOrigin } from '#src/utils/cloudflare/mock.js';
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
 
-const { updateProtectedAppSiteConfigs, deleteCustomHostname } = await mockEsmWithActual(
-  '#src/utils/cloudflare/index.js',
-  () => ({
+const { updateProtectedAppSiteConfigs, deleteCustomHostname, createCustomHostname } =
+  await mockEsmWithActual('#src/utils/cloudflare/index.js', () => ({
     updateProtectedAppSiteConfigs: jest.fn(),
     getCustomHostname: jest.fn(async () => mockCloudflareData),
     getFallbackOrigin: jest.fn(async () => mockFallbackOrigin),
+    createCustomHostname: jest.fn(async () => mockCloudflareData),
     deleteCustomHostname: jest.fn(),
-  })
-);
+  }));
 
 const { MockQueries } = await import('#src/test-utils/tenant.js');
 const { createProtectedAppLibrary } = await import('./protected-app.js');
@@ -77,6 +77,7 @@ const {
   buildProtectedAppData,
   syncAppCustomDomainStatus,
   getDefaultDomain,
+  addDomainToRemote,
   deleteDomainFromRemote,
 } = createProtectedAppLibrary(
   new MockQueries({
@@ -149,6 +150,69 @@ afterEach(() => {
   findAllDomains.mockReset();
   findAllDomains.mockResolvedValue([]);
   findActiveSecretByApplicationId.mockClear();
+  createCustomHostname.mockClear();
+});
+
+describe('addDomainToRemote()', () => {
+  it('should reject the default domain and its subdomains', async () => {
+    for (const hostname of ['protected.app', 'foo.protected.app', 'Foo.Dev.Protected.App']) {
+      // eslint-disable-next-line no-await-in-loop -- the cases are independent; run them one by one for readable failures
+      await expect(addDomainToRemote(hostname)).rejects.toMatchError(
+        new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
+      );
+    }
+    expect(createCustomHostname).not.toHaveBeenCalled();
+  });
+
+  it('should compare the configured domains case-insensitively', async () => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- the shared singleton is restored in afterEach
+    SystemContext.shared.protectedAppConfigProviderConfig = {
+      ...protectedAppConfigProviderConfig,
+      domain: 'Protected.App',
+    };
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- the shared singleton is restored in afterEach
+    SystemContext.shared.protectedAppHostnameProviderConfig = {
+      zoneId: 'fake_zone_id',
+      apiToken: '',
+      blockedDomains: ['Blocked.COM'],
+    };
+    await expect(addDomainToRemote('foo.protected.app')).rejects.toMatchError(
+      new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
+    );
+    await expect(addDomainToRemote('foo.blocked.com')).rejects.toMatchError(
+      new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
+    );
+    expect(createCustomHostname).not.toHaveBeenCalled();
+  });
+
+  it('should reject the default domain in local dev mode', async () => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- the shared singleton is restored in afterEach
+    SystemContext.shared.protectedAppConfigProviderConfig = undefined;
+    setProtectedAppLocalDevEnabled(true);
+    await expect(addDomainToRemote('foo.protected-app.localhost')).rejects.toMatchError(
+      new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
+    );
+  });
+
+  it('should reject blocked domains', async () => {
+    await expect(addDomainToRemote('foo.blocked.com')).rejects.toMatchError(
+      new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
+    );
+    expect(createCustomHostname).not.toHaveBeenCalled();
+  });
+
+  it('should add a custom hostname in lowercase for other domains', async () => {
+    await expect(addDomainToRemote('Secure.Example.COM')).resolves.toMatchObject({
+      domain: 'secure.example.com',
+      cloudflareData: mockCloudflareData,
+      status: DomainStatus.PendingVerification,
+      dnsRecords: [{ type: 'CNAME', name: 'secure.example.com', value: mockFallbackOrigin }],
+    });
+    expect(createCustomHostname).toHaveBeenCalledWith(
+      SystemContext.shared.protectedAppHostnameProviderConfig,
+      'secure.example.com'
+    );
+  });
 });
 
 describe('syncAppConfigsToRemote()', () => {
@@ -438,3 +502,4 @@ describe('deleteDomainFromRemote()', () => {
     expect(deleteCustomHostname).toHaveBeenCalled();
   });
 });
+/* eslint-enable max-lines */
