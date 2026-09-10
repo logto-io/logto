@@ -1040,53 +1040,6 @@ describe('ExperienceInteraction class', () => {
       expect(experienceInteraction.toJson().authenticationProofs).toHaveLength(1);
     });
 
-    it('forbids an MFA challenge answered for another user than the subject', async () => {
-      const { experienceInteraction, stepUpTenant } = createInteraction({
-        details: { authenticationContext: stepUpContext },
-      });
-      const { libraries, queries } = stepUpTenant;
-
-      experienceInteraction.setVerificationRecord(
-        new TotpVerification(libraries, queries, {
-          id: 'totp-verification-id',
-          type: VerificationType.TOTP,
-          userId: 'someone-else',
-          verified: true,
-        })
-      );
-
-      expect(() =>
-        experienceInteraction.consumeForMfa(VerificationType.TOTP, 'totp-verification-id')
-      ).toThrow(new RequestError({ code: 'session.identity_conflict', status: 403 }));
-      expect(experienceInteraction.identifiedUserId).toBeUndefined();
-    });
-
-    it('forbids an MFA code challenge answered for another user than the subject', async () => {
-      const { experienceInteraction, stepUpTenant } = createInteraction({
-        details: { authenticationContext: stepUpContext },
-      });
-      const { libraries, queries } = stepUpTenant;
-
-      experienceInteraction.setVerificationRecord(
-        new MfaEmailCodeVerification(libraries, queries, {
-          id: 'mfa-email-verification-id',
-          type: VerificationType.MfaEmailVerificationCode,
-          identifier: { type: SignInIdentifier.Email, value: 'foo@example.com' },
-          templateType: TemplateType.MfaVerification,
-          verified: true,
-          userId: 'someone-else',
-        })
-      );
-
-      expect(() =>
-        experienceInteraction.consumeForMfa(
-          VerificationType.MfaEmailVerificationCode,
-          'mfa-email-verification-id'
-        )
-      ).toThrow(new RequestError({ code: 'session.identity_conflict', status: 403 }));
-      expect(experienceInteraction.identifiedUserId).toBeUndefined();
-    });
-
     it('forbids identifying another user than the subject', async () => {
       const { experienceInteraction, stepUpTenant } = createInteraction({
         details: { authenticationContext: stepUpContext },

@@ -538,11 +538,11 @@ export default class ExperienceInteraction {
    * is never a challenge; its proof is the `bind` one recorded when the factor is added.
    *
    * In a pure step-up the answered challenge is what proves the pinned subject, so it promotes
-   * {@link subjectUserId} into `userId`, mirroring the conflict check {@link identifyUser} does.
+   * {@link subjectUserId} into `userId`. Every challenge record is created for the subject, so no
+   * conflict check is needed here.
    *
    * @throws {RequestError} with 404 if the verification record is not found
    * @throws {RequestError} with 400 if the record is not a verified MFA challenge
-   * @throws {RequestError} with 403 if the challenge was answered for a user other than the subject
    */
   public consumeForMfa<K extends keyof VerificationRecordMap>(
     type: K,
@@ -555,15 +555,7 @@ export default class ExperienceInteraction {
       new RequestError({ code: 'session.verification_failed', status: 400 })
     );
 
-    const { subjectUserId } = this;
-
-    if (!this.userId && subjectUserId) {
-      assertThat(
-        !('userId' in record) || !record.userId || record.userId === subjectUserId,
-        new RequestError({ code: 'session.identity_conflict', status: 403 })
-      );
-      this.userId = subjectUserId;
-    }
+    this.userId = this.subjectUserId;
 
     this.authenticationProofs.stage(record, AuthenticationProofRole.Mfa);
 

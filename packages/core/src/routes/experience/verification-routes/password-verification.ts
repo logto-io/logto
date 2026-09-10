@@ -5,6 +5,7 @@ import {
   passwordVerificationPayloadGuard,
   SentinelActivityAction,
   SignInIdentifier,
+  subjectPasswordVerificationPayloadGuard,
   type ActionUser,
   type InteractionIdentifier,
   type PostFirstFactorVerificationEvent,
@@ -17,6 +18,7 @@ import { conditional, deduplicate, type Nullable } from '@silverhand/essentials'
 import type Router from 'koa-router';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { getClientIdentifierPayload } from '#src/oidc/cimd/index.js';
@@ -101,7 +103,9 @@ const getLockoutIdentifier = async (
 /**
  * Verify the password of the subject the interaction carries (`{ password }` with no identifier).
  * The `PostFirstFactorVerification` action fallback is a sign-in concern and does not run here.
+ * The variant is only accepted in a `SignIn`, matching the subject-bound code variant.
  *
+ * @throws {RequestError} with 400 if the interaction is not a sign-in
  * @throws {RequestError} with 404 if the interaction carries no subject
  */
 const verifySubjectPassword = async (
@@ -111,6 +115,11 @@ const verifySubjectPassword = async (
 ): Promise<VerifiedPassword> => {
   const { experienceInteraction } = ctx;
   const { subjectUserId } = experienceInteraction;
+
+  assertThat(
+    experienceInteraction.interactionEvent === InteractionEvent.SignIn,
+    new RequestError({ code: 'session.invalid_interaction_type', status: 400 })
+  );
 
   assertThat(
     subjectUserId,
@@ -253,12 +262,20 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
 ) {
   const dependencies: VerificationDependencies = { libraries, queries, sentinel };
 
+  // The subject-bound variant is part of the unreleased step-up feature: outside it the request
+  // contract keeps requiring an identifier, and the OpenAPI document omits the variant.
+  const bodyGuard = EnvSet.values.isDevFeaturesEnabled
+    ? z.union([passwordVerificationPayloadGuard, subjectPasswordVerificationPayloadGuard])
+    : passwordVerificationPayloadGuard;
+
   router.post(
     `${experienceRoutes.verification}/password`,
     koaGuard({
-      body: passwordVerificationPayloadGuard,
+      body: bodyGuard,
       // 404: no identifier given and the interaction carries no subject
-      status: [200, 400, 401, 404, 409, 422],
+      status: EnvSet.values.isDevFeaturesEnabled
+        ? [200, 400, 401, 404, 409, 422]
+        : [200, 400, 401, 409, 422],
       response: z.object({
         verificationId: z.string(),
       }),

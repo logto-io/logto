@@ -10,6 +10,7 @@ import {
 import type Router from 'koa-router';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
@@ -38,20 +39,28 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
   router: Router<unknown, T>,
   { libraries, queries, sentinel }: TenantContext
 ) {
+  // The subject-bound variant is part of the unreleased step-up feature: outside it the request
+  // contract keeps requiring an identifier with a value, and the OpenAPI document omits the
+  // variant.
+  const stableBodyGuard = z.object({
+    identifier: verificationCodeIdentifierGuard,
+    interactionEvent: z.nativeEnum(InteractionEvent),
+  });
+  const subjectBodyGuard = z.object({
+    identifier: subjectVerificationCodeIdentifierGuard,
+    interactionEvent: z.literal(InteractionEvent.SignIn),
+  });
+  const bodyGuard = EnvSet.values.isDevFeaturesEnabled
+    ? z.union([stableBodyGuard, subjectBodyGuard])
+    : stableBodyGuard;
+  const verifyIdentifierGuard = EnvSet.values.isDevFeaturesEnabled
+    ? verificationCodeIdentifierPayloadGuard
+    : verificationCodeIdentifierGuard;
+
   router.post(
     `${experienceRoutes.verification}/verification-code`,
     koaGuard({
-      body: z.union([
-        z.object({
-          identifier: verificationCodeIdentifierGuard,
-          interactionEvent: z.nativeEnum(InteractionEvent),
-        }),
-        // The subject-bound variant: the subject's primary email / phone, sign-in only
-        z.object({
-          identifier: subjectVerificationCodeIdentifierGuard,
-          interactionEvent: z.literal(InteractionEvent.SignIn),
-        }),
-      ]),
+      body: bodyGuard,
       response: z.object({
         verificationId: z.string(),
       }),
@@ -128,7 +137,7 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
     `${experienceRoutes.verification}/verification-code/verify`,
     koaGuard({
       body: z.object({
-        identifier: verificationCodeIdentifierPayloadGuard,
+        identifier: verifyIdentifierGuard,
         verificationId: z.string(),
         code: z.string(),
       }),

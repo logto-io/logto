@@ -129,14 +129,31 @@ export const socialVerificationCallbackPayloadGuard = z.object({
 
 /** Payload type for `POST /api/experience/verification/password`. */
 export type PasswordVerificationPayload = {
-  /** Optional once the interaction carries a subject: the password is then verified against that user. */
-  identifier?: InteractionIdentifier;
+  identifier: InteractionIdentifier;
   password: string;
 };
 export const passwordVerificationPayloadGuard = z.object({
-  identifier: interactionIdentifierGuard.optional(),
+  identifier: interactionIdentifierGuard,
   password: z.string().min(1),
 }) satisfies ToZodObject<PasswordVerificationPayload>;
+
+/**
+ * The subject-bound password payload: the password alone. Accepted only when the interaction
+ * carries a subject; the password is then verified against that user's credential.
+ */
+export type SubjectPasswordVerificationPayload = {
+  identifier?: undefined;
+  password: string;
+};
+export const subjectPasswordVerificationPayloadGuard = z.object({
+  identifier: z.undefined(),
+  password: z.string().min(1),
+}) satisfies ToZodObject<SubjectPasswordVerificationPayload>;
+
+/** The full password payload, or the subject-bound shape. */
+export type PasswordVerificationRequestBody =
+  | PasswordVerificationPayload
+  | SubjectPasswordVerificationPayload;
 
 /** Payload type for `POST /api/experience/verification/totp/verify`. */
 export type TotpVerificationVerifyPayload = {

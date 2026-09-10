@@ -11,6 +11,7 @@ import {
 import { createMockUtils } from '@logto/shared/esm';
 
 import { mockUser } from '#src/__mocks__/user.js';
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 
 const { jest } = import.meta;
@@ -124,6 +125,17 @@ const getSentinelPromise = async () => {
   }
 
   return sentinelPromise;
+};
+
+const getLastGuardConfig = () => {
+  const lastCall = koaGuard.mock.calls.at(-1) as unknown[] | undefined;
+
+  return lastCall?.[0] as
+    | {
+        body: { safeParse: (value: unknown) => { success: boolean } };
+        status: number[];
+      }
+    | undefined;
 };
 
 const runAction = jest.fn();
@@ -554,6 +566,25 @@ describe('password verification route subject-bound variant', () => {
     expect(ctx.experienceInteraction.setVerificationRecord).not.toHaveBeenCalled();
   });
 
+  it.each([InteractionEvent.Register, InteractionEvent.ForgotPassword])(
+    'rejects the identifier-less payload in %s',
+    async (interactionEvent) => {
+      const handler = registerRoute();
+      const ctx = createContext(interactionEvent, {
+        subjectUserId: subject.id,
+        body: { password },
+      });
+
+      await expect(handler(ctx, jest.fn().mockImplementation(resolveVoid))).rejects.toMatchError(
+        new RequestError({ code: 'session.invalid_interaction_type', status: 400 })
+      );
+
+      expect(withSentinel).not.toHaveBeenCalled();
+      expect(createPasswordVerificationForUser).not.toHaveBeenCalled();
+      expect(ctx.experienceInteraction.setVerificationRecord).not.toHaveBeenCalled();
+    }
+  );
+
   it.each([
     {
       name: 'the first identifier the sign-in experience accepts with a password',
@@ -650,6 +681,37 @@ describe('password verification route subject-bound variant', () => {
       expect.objectContaining({ identifier }),
       expect.any(Promise)
     );
+  });
+});
+
+describe('password verification route dev feature gate', () => {
+  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+
+  afterEach(() => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore the process-wide flag.
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
+      originalIsDevFeaturesEnabled;
+  });
+
+  it('rejects the identifier-less payload and omits the 404 status when dev features are disabled', () => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Exercise the released contract.
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = false;
+    registerRoute();
+
+    const config = getLastGuardConfig();
+    expect(config?.body.safeParse({ password }).success).toBe(false);
+    expect(config?.body.safeParse({ identifier, password }).success).toBe(true);
+    expect(config?.status).not.toContain(404);
+  });
+
+  it('accepts the identifier-less payload and declares the 404 status when dev features are enabled', () => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Exercise the dev-only contract.
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
+    registerRoute();
+
+    const config = getLastGuardConfig();
+    expect(config?.body.safeParse({ password }).success).toBe(true);
+    expect(config?.status).toContain(404);
   });
 });
 /* eslint-enable max-lines */

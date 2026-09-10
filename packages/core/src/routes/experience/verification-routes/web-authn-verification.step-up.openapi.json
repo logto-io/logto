@@ -1,0 +1,27 @@
+{
+  "tags": [
+    {
+      "name": "Dev feature"
+    }
+  ],
+  "paths": {
+    "/api/experience/verification/web-authn/authentication/verify": {
+      "post": {
+        "responses": {
+          "403": {
+            "description": "Identity conflict in step-up authentication. <br/> - `session.identity_conflict:` The user associated with the verified WebAuthn credential does not match the pinned subject in the current step-up interaction."
+          }
+        }
+      }
+    },
+    "/api/experience/verification/sign-in-passkey/authentication/verify": {
+      "post": {
+        "responses": {
+          "403": {
+            "description": "Identity conflict in step-up authentication. <br/> - `session.identity_conflict:` The user associated with the verified WebAuthn credential does not match the pinned subject in the current step-up interaction."
+          }
+        }
+      }
+    }
+  }
+}
