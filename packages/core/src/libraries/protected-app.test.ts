@@ -156,7 +156,7 @@ afterEach(() => {
 describe('addDomainToRemote()', () => {
   it('should reject the default domain and its subdomains', async () => {
     for (const hostname of ['protected.app', 'foo.protected.app', 'Foo.Dev.Protected.App']) {
-      // eslint-disable-next-line no-await-in-loop
+      // eslint-disable-next-line no-await-in-loop -- the cases are independent; run them one by one for readable failures
       await expect(addDomainToRemote(hostname)).rejects.toMatchError(
         new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
       );
@@ -164,8 +164,29 @@ describe('addDomainToRemote()', () => {
     expect(createCustomHostname).not.toHaveBeenCalled();
   });
 
+  it('should compare the configured domains case-insensitively', async () => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- the shared singleton is restored in afterEach
+    SystemContext.shared.protectedAppConfigProviderConfig = {
+      ...protectedAppConfigProviderConfig,
+      domain: 'Protected.App',
+    };
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- the shared singleton is restored in afterEach
+    SystemContext.shared.protectedAppHostnameProviderConfig = {
+      zoneId: 'fake_zone_id',
+      apiToken: '',
+      blockedDomains: ['Blocked.COM'],
+    };
+    await expect(addDomainToRemote('foo.protected.app')).rejects.toMatchError(
+      new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
+    );
+    await expect(addDomainToRemote('foo.blocked.com')).rejects.toMatchError(
+      new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
+    );
+    expect(createCustomHostname).not.toHaveBeenCalled();
+  });
+
   it('should reject the default domain in local dev mode', async () => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- the shared singleton is restored in afterEach
     SystemContext.shared.protectedAppConfigProviderConfig = undefined;
     setProtectedAppLocalDevEnabled(true);
     await expect(addDomainToRemote('foo.protected-app.localhost')).rejects.toMatchError(
