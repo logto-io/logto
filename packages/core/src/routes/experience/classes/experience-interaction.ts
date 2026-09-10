@@ -559,7 +559,7 @@ export default class ExperienceInteraction {
 
     if (!this.userId && subjectUserId) {
       assertThat(
-        !('userId' in record) || record.userId === subjectUserId,
+        !('userId' in record) || !record.userId || record.userId === subjectUserId,
         new RequestError({ code: 'session.identity_conflict', status: 403 })
       );
       this.userId = subjectUserId;
@@ -976,7 +976,8 @@ export default class ExperienceInteraction {
   }
 
   async guardCaptcha() {
-    if (this.captcha.verified || this.captcha.skipped) {
+    // Pure step-up already has an authenticated OIDC session.
+    if (this.isStepUp || this.captcha.verified || this.captcha.skipped) {
       return;
     }
 

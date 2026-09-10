@@ -40,7 +40,10 @@ import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import { type Interaction, type WithHooksAndLogsContext } from '../types.js';
 
-import { EmailCodeVerification } from './verifications/code-verification.js';
+import {
+  EmailCodeVerification,
+  MfaEmailCodeVerification,
+} from './verifications/code-verification.js';
 import { PasswordVerification } from './verifications/password-verification.js';
 import { TotpVerification } from './verifications/totp-verification.js';
 import { SignInPasskeyVerification } from './verifications/web-authn-verification.js';
@@ -972,6 +975,27 @@ describe('ExperienceInteraction class', () => {
       expect(experienceInteraction.toJson().userId).toBeUndefined();
     });
 
+    it.each([true, false])(
+      'guards captcha unless the interaction is pure step-up (%s)',
+      async (isStepUp) => {
+        const { experienceInteraction, stepUpTenant } = createInteraction({
+          details: { authenticationContext: isStepUp ? stepUpContext : requestedOnlyContext },
+        });
+        jest
+          .spyOn(stepUpTenant.queries.signInExperiences, 'findDefaultSignInExperience')
+          .mockResolvedValue({
+            ...mockSignInExperience,
+            captchaPolicy: { enabled: true },
+          });
+
+        await (isStepUp
+          ? expect(experienceInteraction.guardCaptcha()).resolves.toBeUndefined()
+          : expect(experienceInteraction.guardCaptcha()).rejects.toMatchError(
+              new RequestError({ code: 'session.captcha_required', status: 422 })
+            ));
+      }
+    );
+
     it('promotes the subject once an MFA challenge is answered for it', async () => {
       const { experienceInteraction, stepUpTenant } = createInteraction({
         details: { authenticationContext: stepUpContext },
@@ -987,6 +1011,30 @@ describe('ExperienceInteraction class', () => {
         })
       );
       experienceInteraction.consumeForMfa(VerificationType.TOTP, 'totp-verification-id');
+
+      expect(experienceInteraction.identifiedUserId).toBe(mockUserWithMfaVerifications.id);
+      expect(experienceInteraction.toJson().authenticationProofs).toHaveLength(1);
+    });
+
+    it('promotes the subject once an MFA challenge with an unassigned userId is answered for it', async () => {
+      const { experienceInteraction, stepUpTenant } = createInteraction({
+        details: { authenticationContext: stepUpContext },
+      });
+      const { libraries, queries } = stepUpTenant;
+
+      experienceInteraction.setVerificationRecord(
+        new MfaEmailCodeVerification(libraries, queries, {
+          id: 'mfa-email-verification-id',
+          type: VerificationType.MfaEmailVerificationCode,
+          identifier: { type: SignInIdentifier.Email, value: 'foo@example.com' },
+          templateType: TemplateType.MfaVerification,
+          verified: true,
+        })
+      );
+      experienceInteraction.consumeForMfa(
+        VerificationType.MfaEmailVerificationCode,
+        'mfa-email-verification-id'
+      );
 
       expect(experienceInteraction.identifiedUserId).toBe(mockUserWithMfaVerifications.id);
       expect(experienceInteraction.toJson().authenticationProofs).toHaveLength(1);
@@ -1009,6 +1057,32 @@ describe('ExperienceInteraction class', () => {
 
       expect(() =>
         experienceInteraction.consumeForMfa(VerificationType.TOTP, 'totp-verification-id')
+      ).toThrow(new RequestError({ code: 'session.identity_conflict', status: 403 }));
+      expect(experienceInteraction.identifiedUserId).toBeUndefined();
+    });
+
+    it('forbids an MFA code challenge answered for another user than the subject', async () => {
+      const { experienceInteraction, stepUpTenant } = createInteraction({
+        details: { authenticationContext: stepUpContext },
+      });
+      const { libraries, queries } = stepUpTenant;
+
+      experienceInteraction.setVerificationRecord(
+        new MfaEmailCodeVerification(libraries, queries, {
+          id: 'mfa-email-verification-id',
+          type: VerificationType.MfaEmailVerificationCode,
+          identifier: { type: SignInIdentifier.Email, value: 'foo@example.com' },
+          templateType: TemplateType.MfaVerification,
+          verified: true,
+          userId: 'someone-else',
+        })
+      );
+
+      expect(() =>
+        experienceInteraction.consumeForMfa(
+          VerificationType.MfaEmailVerificationCode,
+          'mfa-email-verification-id'
+        )
       ).toThrow(new RequestError({ code: 'session.identity_conflict', status: 403 }));
       expect(experienceInteraction.identifiedUserId).toBeUndefined();
     });

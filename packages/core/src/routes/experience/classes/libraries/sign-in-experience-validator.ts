@@ -408,7 +408,7 @@ export class SignInExperienceValidator {
         // A record created for the subject verifies an enrolled credential offered by the step-up
         // eligibility, not a sign-in method.
         if (verificationRecord.userId) {
-          break;
+          return;
         }
 
         const {

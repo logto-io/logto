@@ -383,7 +383,7 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
       response: z.object({
         verificationId: z.string(),
       }),
-      status: [200, 400, 404, 409],
+      status: [200, 400, 403, 404, 409],
     }),
     koaExperienceVerificationsAuditLog({
       type: VerificationType.SignInPasskey,
@@ -432,7 +432,19 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
         },
       });
 
-      await webAuthnVerification.verifyWebAuthnAuthentication(ctx, payload);
+      try {
+        await webAuthnVerification.verifyWebAuthnAuthentication(ctx, payload);
+      } catch (error: unknown) {
+        if (
+          experienceInteraction.isStepUp &&
+          error instanceof RequestError &&
+          error.code === 'session.identity_conflict'
+        ) {
+          throw new RequestError({ code: 'session.identity_conflict', status: 403 });
+        }
+
+        throw error;
+      }
 
       experienceInteraction.setVerificationRecord(webAuthnVerification);
 

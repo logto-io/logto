@@ -594,6 +594,22 @@ describe('SignInExperienceValidator', () => {
       ).rejects.toMatchError(expectError);
     });
 
+    it('should not throw for subject-bound email verification code record', async () => {
+      ssoConnectors.getAvailableSsoConnectors.mockResolvedValueOnce([mockSsoConnector]);
+
+      const signInExperienceSettings = new SignInExperienceValidator(
+        mockTenant.libraries,
+        mockTenant.queries
+      );
+
+      await expect(
+        signInExperienceSettings.guardIdentificationMethod(
+          InteractionEvent.SignIn,
+          subjectVerificationRecords[SignInIdentifier.Email]
+        )
+      ).resolves.not.toThrow();
+    });
+
     it('should throw when SSO user tries to sign in with passkey', async () => {
       const findUserSsoIdentitiesByUserId = jest.fn().mockResolvedValue([
         {
