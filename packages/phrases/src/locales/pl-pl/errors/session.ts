@@ -48,6 +48,12 @@ const session = {
       'Dla lepszej ochrony rozważ dodanie kolejnej metody MFA. Możesz pominąć ten krok i kontynuować.',
   },
   trusted_device_suggest_opt_in: 'Wybierz, czy chcesz zaufać temu urządzeniu.',
+  step_up: {
+    invalid_interaction_event:
+      'Uwierzytelnianie step-up jest dostępne tylko dla interakcji logowania.',
+    subject_not_found:
+      'Nie znaleziono uwierzytelnionej sesji dla uwierzytelniania step-up. Zaloguj się ponownie.',
+  },
   passkey_sign_in: {
     pending_info_not_found:
       'Nie znaleziono oczekujących informacji logowania passkey. Uruchom ponownie proces logowania.',

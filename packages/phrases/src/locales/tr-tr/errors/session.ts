@@ -47,6 +47,12 @@ const session = {
       'Daha güçlü koruma için başka bir MFA yöntemi eklemeyi düşünün. Bu adımı atlayıp devam edebilirsiniz.',
   },
   trusted_device_suggest_opt_in: 'Bu cihaza güvenip güvenmeyeceğinizi seçin.',
+  step_up: {
+    invalid_interaction_event:
+      'Yükseltilmiş kimlik doğrulama yalnızca oturum açma etkileşimleri için kullanılabilir.',
+    subject_not_found:
+      'Yükseltilmiş kimlik doğrulama için kimliği doğrulanmış bir oturum bulunamadı. Lütfen tekrar oturum açın.',
+  },
   passkey_sign_in: {
     pending_info_not_found:
       'Bekleyen passkey oturum açma bilgisi bulunamadı. Lütfen oturum açma akışını yeniden başlatın.',

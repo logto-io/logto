@@ -298,7 +298,7 @@ export const getMfaIdentifier = async ({
   experienceInteraction,
   queries,
 }: GetMfaIdentifierParams): Promise<VerificationCodeIdentifier> => {
-  if (!experienceInteraction.identifiedUserId) {
+  if (!experienceInteraction.subjectUserId) {
     throw new RequestError({
       code: 'session.identifier_not_found',
       status: 400,
@@ -318,7 +318,7 @@ export const getMfaIdentifier = async ({
     });
   }
 
-  const user = await queries.users.findUserById(experienceInteraction.identifiedUserId);
+  const user = await queries.users.findUserById(experienceInteraction.subjectUserId);
   const identifierValue =
     identifierType === SignInIdentifier.Email ? user.primaryEmail : user.primaryPhone;
 

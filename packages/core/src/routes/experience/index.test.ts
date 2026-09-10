@@ -2,7 +2,10 @@
 import { appInsights } from '@logto/app-insights/node';
 import { TemplateType } from '@logto/connector-kit';
 import {
+  AuthenticationContextMode,
+  ConnectorType,
   InteractionEvent,
+  LogtoAcr,
   MfaFactor,
   MfaPolicy,
   SignInIdentifier,
@@ -12,6 +15,7 @@ import {
   type User,
 } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
+import { conditional } from '@silverhand/essentials';
 import type { Middleware } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 
@@ -120,6 +124,8 @@ const createRequesterWithMocks = ({
   persistInteractionResult = false,
   trustedDevicePolicy = { enabled: false, durationDays: 30 },
   trustedDeviceOptedOut = false,
+  interactionDetailsOverrides = {},
+  connectors = [],
 }: {
   interactionEvent?: InteractionEvent;
   adaptiveMfaEnabled?: boolean;
@@ -131,6 +137,9 @@ const createRequesterWithMocks = ({
   persistInteractionResult?: boolean;
   trustedDevicePolicy?: { enabled: boolean; durationDays: number };
   trustedDeviceOptedOut?: boolean;
+  /** Extra provider interaction fields, e.g. the login `prompt` and the `session`. */
+  interactionDetailsOverrides?: Record<string, unknown>;
+  connectors?: Array<{ type: ConnectorType }>;
 } = {}) => {
   const mockedInteractionDetails: {
     params: { client_id: string };
@@ -144,6 +153,7 @@ const createRequesterWithMocks = ({
       userId: user.id,
       ...interactionResult,
     },
+    ...interactionDetailsOverrides,
   };
   const interactionDetails = jest.fn().mockImplementation(async () => mockedInteractionDetails);
   const provider = createMockProvider(interactionDetails);
@@ -205,7 +215,7 @@ const createRequesterWithMocks = ({
       userGeoLocations,
       userSignInCountries,
     },
-    undefined,
+    { getLogtoConnectors: jest.fn().mockResolvedValue(connectors) },
     {
       trustedDevicePolicy: {
         getEffectivePolicy,
@@ -258,6 +268,151 @@ const createMfaRequiredRequester = () => {
     },
   }).requester;
 };
+
+describe('PUT /experience', () => {
+  const stepUpContext = {
+    requestedAcrValues: [LogtoAcr.Mfa],
+    selectedAcr: LogtoAcr.Mfa,
+    mode: AuthenticationContextMode.StepUp,
+  };
+  const totpUser = { ...mockUser, mfaVerifications: [mockUserTotpMfaVerification] };
+  const totpMfa: Mfa = { policy: MfaPolicy.UserControlled, factors: [MfaFactor.TOTP] };
+
+  const createStepUpRequester = ({
+    user = totpUser,
+    withoutSession = false,
+    details = { authenticationContext: stepUpContext },
+  }: {
+    user?: User;
+    /** Create the interaction without an authenticated session. */
+    withoutSession?: boolean;
+    details?: Record<string, unknown>;
+  } = {}) =>
+    createRequesterWithMocks({
+      user,
+      mfa: totpMfa,
+      persistInteractionResult: true,
+      // A fresh provider interaction: nothing has been stored yet.
+      interactionResult: { interactionEvent: undefined, userId: undefined },
+      interactionDetailsOverrides: {
+        prompt: { name: 'login', reasons: ['acr_unmet'], details },
+        ...conditional(
+          !withoutSession && {
+            session: { accountId: user.id, acr: LogtoAcr.FirstFactor, amr: ['pwd'] },
+          }
+        ),
+      },
+      connectors: [{ type: ConnectorType.Email }],
+    });
+
+  it('should create a plain sign-in interaction', async () => {
+    const { requester, provider } = createRequesterWithMocks({
+      persistInteractionResult: true,
+      interactionResult: { interactionEvent: undefined, userId: undefined },
+      interactionDetailsOverrides: {
+        prompt: { name: 'login', reasons: ['no_session'], details: {} },
+      },
+    });
+
+    const response = await requester
+      .put('/experience')
+      .send({ interactionEvent: InteractionEvent.SignIn });
+
+    expect(response.status).toBe(204);
+    expect(provider.interactionResult).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.objectContaining({ interactionEvent: InteractionEvent.SignIn }),
+      { mergeWithLastSubmission: true }
+    );
+    expect(jest.mocked(provider.interactionResult).mock.calls[0]?.[2]).not.toHaveProperty(
+      'authenticationContext'
+    );
+
+    const interaction = await requester.get('/experience/interaction');
+
+    expect(interaction.status).toBe(200);
+    expect(interaction.body).not.toHaveProperty('userId');
+    expect(interaction.body).not.toHaveProperty('authenticationContext');
+  });
+
+  it('should pin the subject of a step-up and expose the context', async () => {
+    const { requester, provider } = createStepUpRequester();
+
+    const response = await requester
+      .put('/experience')
+      .send({ interactionEvent: InteractionEvent.SignIn });
+
+    expect(response.status).toBe(204);
+    expect(provider.interactionResult).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.objectContaining({ authenticationContext: stepUpContext }),
+      { mergeWithLastSubmission: true }
+    );
+    // The subject is not written into storage: nothing has verified it yet.
+    expect(jest.mocked(provider.interactionResult).mock.calls[0]?.[2]).toMatchObject({
+      userId: undefined,
+    });
+
+    const interaction = await requester.get('/experience/interaction');
+
+    expect(interaction.status).toBe(200);
+    expect(interaction.body).not.toHaveProperty('userId');
+    expect(interaction.body).toMatchObject({
+      interactionEvent: InteractionEvent.SignIn,
+      authenticationContext: {
+        ...stepUpContext,
+        availableMethods: [VerificationType.TOTP],
+        establishableMethods: [],
+        enrollableFactors: [],
+        subjectProofConnectors: [],
+        maskedIdentifiers: { email: '****@logto.io' },
+      },
+    });
+  });
+
+  it('should finish a step-up the pinned user cannot reach with unmet_authentication_requirements', async () => {
+    const { requester, provider } = createStepUpRequester({ user: mockUser });
+
+    const response = await requester
+      .put('/experience')
+      .send({ interactionEvent: InteractionEvent.SignIn });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ redirectTo: 'redirectTo' });
+    expect(provider.interactionResult).toHaveBeenCalledTimes(1);
+    expect(provider.interactionResult).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.objectContaining({ error: 'unmet_authentication_requirements' })
+    );
+  });
+
+  it('should reject a step-up with a non-sign-in event', async () => {
+    const { requester, provider } = createStepUpRequester();
+
+    const response = await requester
+      .put('/experience')
+      .send({ interactionEvent: InteractionEvent.Register });
+
+    expect(response.status).toBe(400);
+    expect(response.body).toMatchObject({ code: 'session.step_up.invalid_interaction_event' });
+    expect(provider.interactionResult).not.toHaveBeenCalled();
+  });
+
+  it('should reject a step-up without a session subject', async () => {
+    const { requester, provider } = createStepUpRequester({ withoutSession: true });
+
+    const response = await requester
+      .put('/experience')
+      .send({ interactionEvent: InteractionEvent.SignIn });
+
+    expect(response.status).toBe(400);
+    expect(response.body).toMatchObject({ code: 'session.step_up.subject_not_found' });
+    expect(provider.interactionResult).not.toHaveBeenCalled();
+  });
+});
 
 describe('POST /experience/profile', () => {
   it('should keep MFA guard for non-social profile updates during sign-in', async () => {

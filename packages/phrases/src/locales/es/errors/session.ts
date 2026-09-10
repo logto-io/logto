@@ -51,6 +51,12 @@ const session = {
       'Para mayor protección, considera agregar otro método de MFA. Puedes omitir este paso y continuar.',
   },
   trusted_device_suggest_opt_in: 'Elige si quieres confiar en este dispositivo.',
+  step_up: {
+    invalid_interaction_event:
+      'La autenticación reforzada solo está disponible para interacciones de inicio de sesión.',
+    subject_not_found:
+      'No se encontró una sesión autenticada para la autenticación reforzada. Inicia sesión de nuevo.',
+  },
   passkey_sign_in: {
     pending_info_not_found:
       'No se encontró la información pendiente de inicio de sesión con passkey. Vuelve a iniciar el flujo de inicio de sesión.',

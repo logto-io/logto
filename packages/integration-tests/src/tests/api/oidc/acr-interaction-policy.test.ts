@@ -1,22 +1,29 @@
 import { Prompt, type SignInOptions } from '@logto/node';
 import { InteractionEvent, MfaFactor, defaultTenantId, demoAppApplicationId } from '@logto/schemas';
-import { assert, assertEnv } from '@silverhand/essentials';
+import { assertEnv } from '@silverhand/essentials';
 import { createInterceptorsPreset, createPool, sql, type DatabasePool } from '@silverhand/slonik';
 import ky from 'ky';
+import { authenticator } from 'otplib';
 
+import { createUserMfaVerification } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { ExperienceClient } from '#src/client/experience/index.js';
 import { demoAppRedirectUri } from '#src/constants.js';
 import { initExperienceClient, logoutClient, processSession } from '#src/helpers/client.js';
+import {
+  authorizeWithSession as authorize,
+  expectRedirectedError,
+  getInteractionId,
+} from '#src/helpers/experience/authorization.js';
 import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
-import { successfullyCreateAndVerifyTotp } from '#src/helpers/experience/totp-verification.js';
+import { successfullyVerifyTotp } from '#src/helpers/experience/totp-verification.js';
 import {
   enableAllPasswordSignInMethods,
   enableMandatoryMfaWithTotp,
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest, parseInteractionCookie } from '#src/utils.js';
+import { devFeatureTest } from '#src/utils.js';
 
 const firstFactorAcr = 'urn:logto:acr:1fa';
 const mfaAcr = 'urn:logto:acr:mfa';
@@ -32,42 +39,6 @@ type LoginPrompt = {
 type InteractionPayload = {
   prompt: LoginPrompt;
   session?: { accountId?: string };
-};
-
-/** Start an authorization on the client's current cookie jar and merge the cookies it sets. */
-const authorize = async (
-  client: ExperienceClient,
-  options: Omit<SignInOptions, 'redirectUri'> = {}
-) => {
-  const response = await client.startAuthorization(
-    demoAppRedirectUri,
-    options,
-    client.getCookieHeader('/oidc/auth')
-  );
-  const setCookies = response.headers.getSetCookie();
-  client.mergeRawCookies(setCookies);
-
-  return { status: response.status, location: response.headers.get('location') ?? '', setCookies };
-};
-
-/** The id of the interaction the authorization response just started. */
-const getInteractionId = (setCookies: string[]) => {
-  const interactionCookie = setCookies
-    .map((cookie) => cookie.split(';')[0]?.trim() ?? '')
-    .find((cookie) => cookie.startsWith('_interaction='));
-  assert(interactionCookie, new Error('No interaction cookie was set'));
-  const interactionId = parseInteractionCookie(interactionCookie.slice('_interaction='.length))[
-    demoAppApplicationId
-  ];
-  assert(interactionId, new Error('No interaction id for the demo app'));
-
-  return interactionId;
-};
-
-const expectRedirectedError = (location: string, error: string) => {
-  expect(location.startsWith(demoAppRedirectUri)).toBe(true);
-  expect(new URL(location).searchParams.get('error')).toBe(error);
-  expect(new URL(location).searchParams.has('code')).toBe(false);
 };
 
 const expectAuthorizationCode = (location: string) => {
@@ -260,7 +231,13 @@ devFeatureTest.describe('acr_values and max_age interaction policy', () => {
         amr: ['pwd'],
       });
 
+      // Enroll the factor after the password sign-in so the step-up has an MFA method to verify;
+      // a user with no enrolled factor cannot reach `mfa` until enrollment lands in M5.
       await enableMandatoryMfaWithTotp();
+      const totp = await createUserMfaVerification(user.id, MfaFactor.TOTP);
+      if (totp.type !== MfaFactor.TOTP) {
+        throw new Error('unexpected mfa type');
+      }
       const { status, location, setCookies } = await authorize(client, {
         extraParams: { acr_values: mfaAcr },
       });
@@ -277,11 +254,11 @@ devFeatureTest.describe('acr_values and max_age interaction policy', () => {
       });
       expect(session?.accountId).toBe(user.id);
 
-      // Experience does not yet inherit the session subject or its first-factor proof.
+      // The step-up pins the session subject. Submission does not yet derive the context from the
+      // session, so the first factor is verified again in the interaction alongside the TOTP.
       await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
       await identifyUserWithUsernamePassword(client, profile.username, profile.password);
-      const verificationId = await successfullyCreateAndVerifyTotp(client);
-      await client.bindMfa(MfaFactor.TOTP, verificationId);
+      await successfullyVerifyTotp(client, { code: authenticator.generate(totp.secret) });
       const { redirectTo } = await client.submitInteraction();
 
       // Complete any consent prompt after login resumes, then exchange the authorization code.

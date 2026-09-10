@@ -3,15 +3,20 @@ import { TemplateType } from '@logto/connector-kit';
 import {
   adminConsoleApplicationId,
   adminTenantId,
+  AuthenticationContextMode,
   AuthenticationFactor,
   AuthenticationFactorClass,
   AuthenticationMethodReference,
   AuthenticationProofRole,
   type AuthenticationProof,
+  ConnectorType,
   type CreateUser,
   InteractionEvent,
+  LogtoAcr,
   LogtoActionKey,
   type JwtCustomizerUserContext,
+  MfaFactor,
+  MfaPolicy,
   type SignInExperience,
   SignInIdentifier,
   SignInMode,
@@ -20,6 +25,7 @@ import {
   VerificationType,
 } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
+import { conditional } from '@silverhand/essentials';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import { mockUser, mockUserWithMfaVerifications } from '#src/__mocks__/user.js';
@@ -34,6 +40,7 @@ import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 import { type Interaction, type WithHooksAndLogsContext } from '../types.js';
 
 import { EmailCodeVerification } from './verifications/code-verification.js';
+import { TotpVerification } from './verifications/totp-verification.js';
 import { SignInPasskeyVerification } from './verifications/web-authn-verification.js';
 
 const { jest } = import.meta;
@@ -526,7 +533,7 @@ describe('ExperienceInteraction class', () => {
       expect(experienceInteraction.toJson().authenticationProofs).toEqual([]);
     });
 
-    it('keeps the proofs out of the sanitized interaction data', () => {
+    it('keeps the proofs out of the sanitized interaction data', async () => {
       const { experienceInteraction } = createSignInInteraction({
         interactionResult: {
           authenticationProofs: [passwordProof(AuthenticationProofRole.Identify)],
@@ -534,7 +541,9 @@ describe('ExperienceInteraction class', () => {
       });
 
       expect(experienceInteraction.toJson().authenticationProofs).toHaveLength(1);
-      expect(experienceInteraction.toSanitizedJson()).not.toHaveProperty('authenticationProofs');
+      await expect(experienceInteraction.toSanitizedJson()).resolves.not.toHaveProperty(
+        'authenticationProofs'
+      );
     });
 
     it('finishes with the account id only when dev features are disabled', async () => {
@@ -878,6 +887,256 @@ describe('ExperienceInteraction class', () => {
         -122.4194
       );
       expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(mockUser.id, 'US');
+    });
+  });
+
+  describe('step-up creation', () => {
+    const stepUpContext = {
+      requestedAcrValues: [LogtoAcr.Mfa],
+      selectedAcr: LogtoAcr.Mfa,
+      mode: AuthenticationContextMode.StepUp,
+    };
+    const requestedOnlyContext = { requestedAcrValues: [LogtoAcr.Mfa, LogtoAcr.FirstFactor] };
+
+    const createInteraction = ({
+      interactionEvent = InteractionEvent.SignIn,
+      details,
+      withoutSession = false,
+      user = mockUserWithMfaVerifications,
+      connectors = [],
+    }: {
+      interactionEvent?: InteractionEvent;
+      details?: Record<string, unknown>;
+      /** Create the interaction without an authenticated session. */
+      withoutSession?: boolean;
+      user?: User;
+      connectors?: Array<{ type: ConnectorType }>;
+    } = {}) => {
+      const interactionDetails = {
+        jti: 'session-id',
+        params: { client_id: adminConsoleApplicationId },
+        prompt: { name: 'login', reasons: ['acr_unmet'], details },
+        ...conditional(
+          !withoutSession && {
+            session: { accountId: user.id, acr: LogtoAcr.FirstFactor, amr: ['pwd'] },
+          }
+        ),
+      } as unknown as Interaction;
+      const provider = createMockProvider(jest.fn().mockResolvedValue(interactionDetails));
+      const stepUpTenant = new MockTenant(
+        provider,
+        {
+          users: { ...userQueries, findUserById: jest.fn().mockResolvedValue(user) },
+          signInExperiences: {
+            findDefaultSignInExperience: jest.fn().mockResolvedValue({
+              ...mockSignInExperience,
+              mfa: { policy: MfaPolicy.UserControlled, factors: [MfaFactor.TOTP] },
+            }),
+          },
+        },
+        { getLogtoConnectors: jest.fn().mockResolvedValue(connectors) },
+        { users: userLibraries, ssoConnectors }
+      );
+      const stepUpCtx: WithHooksAndLogsContext = { ...ctx, interactionDetails };
+
+      return {
+        provider,
+        stepUpTenant,
+        stepUpCtx,
+        experienceInteraction: new ExperienceInteraction(stepUpCtx, stepUpTenant, interactionEvent),
+      };
+    };
+
+    it('pins the subject and sets the mode from a step-up prompt', async () => {
+      const { experienceInteraction } = createInteraction({
+        details: { authenticationContext: stepUpContext },
+      });
+
+      expect(experienceInteraction.isStepUp).toBe(true);
+      // The subject is readable, but nothing has verified it: `userId` stays unset.
+      expect(experienceInteraction.subjectUserId).toBe(mockUserWithMfaVerifications.id);
+      expect(experienceInteraction.identifiedUserId).toBeUndefined();
+      expect(experienceInteraction.carriedContributions).toEqual([
+        { factor: AuthenticationFactor.Password, class: AuthenticationFactorClass.FirstFactor },
+      ]);
+      expect(experienceInteraction.toJson()).toMatchObject({
+        interactionEvent: InteractionEvent.SignIn,
+        authenticationContext: stepUpContext,
+      });
+      expect(experienceInteraction.toJson().userId).toBeUndefined();
+    });
+
+    it('promotes the subject once an MFA challenge is answered for it', async () => {
+      const { experienceInteraction, stepUpTenant } = createInteraction({
+        details: { authenticationContext: stepUpContext },
+      });
+      const { libraries, queries } = stepUpTenant;
+
+      experienceInteraction.setVerificationRecord(
+        new TotpVerification(libraries, queries, {
+          id: 'totp-verification-id',
+          type: VerificationType.TOTP,
+          userId: mockUserWithMfaVerifications.id,
+          verified: true,
+        })
+      );
+      experienceInteraction.consumeForMfa(VerificationType.TOTP, 'totp-verification-id');
+
+      expect(experienceInteraction.identifiedUserId).toBe(mockUserWithMfaVerifications.id);
+      expect(experienceInteraction.toJson().authenticationProofs).toHaveLength(1);
+    });
+
+    it('rejects switching a pure step-up away from sign-in', async () => {
+      const { experienceInteraction } = createInteraction({
+        details: { authenticationContext: stepUpContext },
+      });
+
+      await expect(
+        experienceInteraction.setInteractionEvent(InteractionEvent.Register)
+      ).rejects.toThrow(
+        new RequestError({ code: 'session.step_up.invalid_interaction_event', status: 400 })
+      );
+      await expect(
+        experienceInteraction.setInteractionEvent(InteractionEvent.SignIn)
+      ).resolves.toBeUndefined();
+    });
+
+    it('stores a requested-only context without pinning', () => {
+      const { experienceInteraction } = createInteraction({
+        details: { authenticationContext: requestedOnlyContext },
+        withoutSession: true,
+      });
+
+      expect(experienceInteraction.isStepUp).toBe(false);
+      expect(experienceInteraction.identifiedUserId).toBeUndefined();
+      expect(experienceInteraction.toJson().authenticationContext).toEqual(requestedOnlyContext);
+    });
+
+    it.each([
+      { name: 'no context', details: {} },
+      { name: 'unparsable context', details: { authenticationContext: { mode: 'stepUp' } } },
+      { name: 'no details', details: undefined },
+    ])('creates a plain sign-in with $name', ({ details }) => {
+      const { experienceInteraction } = createInteraction({ details });
+      const plain = new ExperienceInteraction(ctx, tenant, InteractionEvent.SignIn);
+
+      expect(experienceInteraction.isStepUp).toBe(false);
+      expect(experienceInteraction.identifiedUserId).toBeUndefined();
+      expect(experienceInteraction.toJson()).toEqual(plain.toJson());
+      expect(experienceInteraction.toJson()).not.toHaveProperty('authenticationContext');
+    });
+
+    it('ignores the prompt details when dev features are disabled', () => {
+      setDevFeaturesEnabled(false);
+
+      const { experienceInteraction } = createInteraction({
+        details: { authenticationContext: stepUpContext },
+      });
+
+      expect(experienceInteraction.isStepUp).toBe(false);
+      expect(experienceInteraction.identifiedUserId).toBeUndefined();
+    });
+
+    it('rejects a pure step-up with a non-sign-in event', () => {
+      expect(() =>
+        createInteraction({
+          interactionEvent: InteractionEvent.Register,
+          details: { authenticationContext: stepUpContext },
+        })
+      ).toThrow(
+        new RequestError({ code: 'session.step_up.invalid_interaction_event', status: 400 })
+      );
+    });
+
+    it('rejects a pure step-up without a session subject', () => {
+      expect(() =>
+        createInteraction({
+          details: { authenticationContext: stepUpContext },
+          withoutSession: true,
+        })
+      ).toThrow(new RequestError({ code: 'session.step_up.subject_not_found', status: 400 }));
+    });
+
+    it('keeps the mode and the pinned subject across the storage round-trip', () => {
+      const { experienceInteraction, stepUpCtx, stepUpTenant } = createInteraction({
+        details: { authenticationContext: stepUpContext },
+      });
+      const restored = new ExperienceInteraction(stepUpCtx, stepUpTenant, {
+        ...stepUpCtx.interactionDetails,
+        result: experienceInteraction.toJson(),
+      } as unknown as Interaction);
+
+      expect(restored.isStepUp).toBe(true);
+      expect(restored.subjectUserId).toBe(mockUserWithMfaVerifications.id);
+      expect(restored.identifiedUserId).toBeUndefined();
+      expect(restored.toJson().authenticationContext).toEqual(stepUpContext);
+    });
+
+    it('exposes the computed context through the sanitized data', async () => {
+      const { experienceInteraction } = createInteraction({
+        details: { authenticationContext: stepUpContext },
+        connectors: [{ type: ConnectorType.Email }],
+      });
+
+      await expect(experienceInteraction.toSanitizedJson()).resolves.toMatchObject({
+        authenticationContext: {
+          ...stepUpContext,
+          availableMethods: [VerificationType.TOTP],
+          establishableMethods: [],
+          enrollableFactors: [],
+          subjectProofConnectors: [],
+          maskedIdentifiers: { email: '****@logto.io' },
+        },
+      });
+    });
+
+    it('exposes the requested-only context with nothing computed before identification', async () => {
+      const { experienceInteraction } = createInteraction({
+        details: { authenticationContext: requestedOnlyContext },
+        withoutSession: true,
+      });
+
+      await expect(experienceInteraction.toSanitizedJson()).resolves.toMatchObject({
+        authenticationContext: {
+          ...requestedOnlyContext,
+          availableMethods: [],
+          maskedIdentifiers: {},
+        },
+      });
+    });
+
+    it('leaves the sanitized data of a plain interaction unchanged', async () => {
+      const plain = new ExperienceInteraction(ctx, tenant, InteractionEvent.SignIn);
+
+      await expect(plain.toSanitizedJson()).resolves.not.toHaveProperty('authenticationContext');
+    });
+
+    it('finishes an unreachable step-up as unmet and leaves a reachable one alone', async () => {
+      const unreachable = createInteraction({
+        details: { authenticationContext: stepUpContext },
+        user: mockUser,
+      });
+
+      await expect(unreachable.experienceInteraction.finishUnreachableStepUp()).resolves.toBe(
+        'redirectTo'
+      );
+      expect(unreachable.provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({ error: 'unmet_authentication_requirements' })
+      );
+
+      const reachable = createInteraction({ details: { authenticationContext: stepUpContext } });
+
+      await expect(
+        reachable.experienceInteraction.finishUnreachableStepUp()
+      ).resolves.toBeUndefined();
+      expect(reachable.provider.interactionResult).not.toHaveBeenCalled();
+
+      const plain = createInteraction({ details: { authenticationContext: requestedOnlyContext } });
+
+      await expect(plain.experienceInteraction.finishUnreachableStepUp()).resolves.toBeUndefined();
+      expect(plain.provider.interactionResult).not.toHaveBeenCalled();
     });
   });
 

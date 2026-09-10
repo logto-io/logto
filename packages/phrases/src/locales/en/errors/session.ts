@@ -46,6 +46,11 @@ const session = {
       'For stronger protection, consider adding another MFA method. You can skip this step and continue.',
   },
   trusted_device_suggest_opt_in: 'Choose whether to trust this device.',
+  step_up: {
+    invalid_interaction_event: 'Step-up authentication is only available for sign-in interactions.',
+    subject_not_found:
+      'No authenticated session was found for step-up authentication. Please sign in again.',
+  },
   passkey_sign_in: {
     pending_info_not_found:
       'Pending passkey sign-in info not found. Please re-initiate the sign-in flow.',

@@ -66,15 +66,24 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
         interactionEvent: z.nativeEnum(InteractionEvent),
         captchaToken: z.string().optional(),
       }),
+      response: z
+        .object({
+          redirectTo: z.string(),
+        })
+        .optional(),
+      // 200 is returned when a pure step-up cannot proceed and the interaction was finished with
+      // `unmet_authentication_requirements`; 400 is returned if a pure step-up cannot be created;
       // 422 is returned if the captcha verification fails
-      status: [204, 422],
+      status: [200, 204, 400, 422],
     }),
     async (ctx, next) => {
       const { interactionEvent, captchaToken } = ctx.guard.body;
       const { createLog } = ctx;
 
-      createLog(`Interaction.${interactionEvent}.Create`);
+      const log = createLog(`Interaction.${interactionEvent}.Create`);
 
+      // Detects a pure step-up from the login prompt details and pins the subject from the
+      // session; the prompt details never change, so a retry re-derives the same mode.
       const experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionEvent);
 
       // Verify the captcha if provided, this is optional,
@@ -83,11 +92,29 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
         await experienceInteraction.verifyCaptcha(captchaToken);
       }
 
+      ctx.experienceInteraction = experienceInteraction;
+
+      // A pure step-up whose pinned user has no method that can reach the selected class is
+      // finished here, and the client is sent back to the application with the OIDC error.
+      const redirectTo = await experienceInteraction.finishUnreachableStepUp();
+
+      if (redirectTo) {
+        log.append({
+          interaction: experienceInteraction.toJson(),
+          // The subject is pinned but unverified, so `identifiedUserId` is unset here.
+          userId: experienceInteraction.subjectUserId,
+          error: 'unmet_authentication_requirements',
+        });
+
+        ctx.body = { redirectTo };
+        ctx.status = 200;
+
+        return next();
+      }
+
       // Save new experience interaction instance.
       // This will overwrite any existing interaction data in the storage.
       await experienceInteraction.save();
-
-      ctx.experienceInteraction = experienceInteraction;
 
       ctx.status = 204;
 
@@ -201,7 +228,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
     }),
     async (ctx, next) => {
       const { experienceInteraction } = ctx;
-      ctx.body = experienceInteraction.toSanitizedJson();
+      ctx.body = await experienceInteraction.toSanitizedJson();
       ctx.status = 200;
       return next();
     }

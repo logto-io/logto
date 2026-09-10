@@ -49,6 +49,12 @@ const session = {
       'Per una protezione maggiore, considera di aggiungere un altro metodo MFA. Puoi saltare questo passaggio e continuare.',
   },
   trusted_device_suggest_opt_in: 'Scegli se considerare attendibile questo dispositivo.',
+  step_up: {
+    invalid_interaction_event:
+      "L'autenticazione step-up è disponibile solo per le interazioni di accesso.",
+    subject_not_found:
+      "Nessuna sessione autenticata trovata per l'autenticazione step-up. Effettua di nuovo l'accesso.",
+  },
   passkey_sign_in: {
     pending_info_not_found:
       "Impossibile trovare le informazioni in sospeso per l'accesso con passkey. Riavvia il flusso di accesso.",
