@@ -5,7 +5,7 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 
 import ExperienceInteraction from '../classes/experience-interaction.js';
 import { experienceRoutes } from '../const.js';
-import { type WithHooksAndLogsContext } from '../types.js';
+import { interactionStorageGuard, type WithHooksAndLogsContext } from '../types.js';
 
 export type WithExperienceInteractionContext<
   ContextT extends IRouterParamContext = IRouterParamContext,
@@ -54,9 +54,16 @@ export default function koaExperienceInteraction<
       request: { method, path },
     } = ctx;
 
-    // Skip initializing `ExperienceInteraction` for white-listed endpoints.
+    const normalizedPath = path.toLowerCase().replace(/\/$/, '');
+
+    // Anonymous endpoints still restore existing storage so the step-up route policy applies.
+    // Creation must remain independent of any previous interaction data.
     if (
-      whiteListedEndpoint.some((endpoint) => endpoint.method === method && endpoint.path === path)
+      whiteListedEndpoint.some(
+        (endpoint) => endpoint.method === method && endpoint.path === normalizedPath
+      ) &&
+      ((method === 'PUT' && normalizedPath === experienceRoutes.prefix) ||
+        !interactionStorageGuard.safeParse(interactionDetails.result ?? {}).success)
     ) {
       return next();
     }

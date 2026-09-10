@@ -55,6 +55,9 @@ const session = {
       'Die Step-up-Authentifizierung ist nur für Anmeldeinteraktionen verfügbar.',
     subject_not_found:
       'Für die Step-up-Authentifizierung wurde keine authentifizierte Sitzung gefunden. Bitte melde dich erneut an.',
+    forbidden_route: 'Diese Route ist während der Step-up-Authentifizierung nicht erlaubt.',
+    require_verification:
+      'Eine zusätzliche Verifizierung ist erforderlich, um den angeforderten Authentifizierungskontext zu erfüllen.',
   },
   passkey_sign_in: {
     pending_info_not_found:

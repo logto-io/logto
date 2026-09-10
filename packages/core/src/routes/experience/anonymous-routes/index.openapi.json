@@ -29,6 +29,9 @@
           },
           "400": {
             "description": "The email address is invalid, can not extract a valid domain from it."
+          },
+          "403": {
+            "description": "Forbidden in pure step-up authentication mode. <br/> - `session.step_up.forbidden_route:` This route is forbidden in pure step-up authentication mode."
           }
         }
       }
@@ -55,6 +58,9 @@
           },
           "400": {
             "description": "Invalid request."
+          },
+          "403": {
+            "description": "Forbidden in pure step-up authentication mode. <br/> - `session.step_up.forbidden_route:` This route is forbidden in pure step-up authentication mode."
           },
           "404": {
             "description": "Verification session not found."

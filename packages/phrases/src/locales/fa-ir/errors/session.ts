@@ -47,6 +47,8 @@ const session = {
     invalid_interaction_event: 'احراز هویت تقویتی فقط برای تعامل‌های ورود در دسترس است.',
     subject_not_found:
       'هیچ نشست احراز هویت‌شده‌ای برای احراز هویت تقویتی یافت نشد. لطفاً دوباره وارد شوید.',
+    forbidden_route: 'این مسیر در طول احراز هویت تقویتی مجاز نیست.',
+    require_verification: 'تأیید اضافی برای برآورده کردن زمینه احراز هویت درخواستی الزامی است.',
   },
   passkey_sign_in: {
     pending_info_not_found:

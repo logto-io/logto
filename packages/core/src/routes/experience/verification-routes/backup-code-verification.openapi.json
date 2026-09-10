@@ -23,6 +23,9 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden in pure step-up authentication mode. <br/> - `session.step_up.forbidden_route:` This route is forbidden in pure step-up authentication mode."
+          },
           "404": {
             "description": "The current interaction is not identified yet. All MFA verification records must be associated with a identified user."
           }

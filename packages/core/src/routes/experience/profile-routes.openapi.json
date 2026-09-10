@@ -38,7 +38,7 @@
             "description": "Entity not found. <br/> - `session.identifier_not_found:` (`SignIn` interaction only) The current interaction is not identified yet. All profile data must be associated with a identified user. <br/>- `session.verification_session_not_found:` The verification record is not found."
           },
           "403": {
-            "description": "`SignIn` interaction only: MFA is enabled for the user but has not been verified. The user must verify MFA before updating non-social profile data."
+            "description": "Permission denied or forbidden in pure step-up mode. <br/> - `session.step_up.forbidden_route:` This route is forbidden in pure step-up authentication mode. <br/> - `SignIn` interaction only: MFA is enabled for the user but has not been verified. The user must verify MFA before updating non-social profile data."
           },
           "422": {
             "description": "The user profile can not been processed, check error message for more details. <br/>- The profile data is invalid or conflicts with existing user data. <br/>- The profile data is already in use by another user account. <br/>- The email address is enterprise SSO enabled, can only be linked through the SSO connector."
@@ -72,7 +72,7 @@
             "description": "Invalid request. <br/>- The current interaction event is not `Register`. <br/>- The file is invalid, exceeds the maximum size, has a disallowed image type, or storage is not configured."
           },
           "403": {
-            "description": "Permission denied for the current interaction state."
+            "description": "Permission denied for the current interaction state. <br/> - `session.step_up.forbidden_route:` This route is forbidden in pure step-up authentication mode."
           },
           "404": {
             "description": "Entity not found related to the current interaction."
@@ -108,6 +108,9 @@
           "400": {
             "description": "The current interaction event is not `ForgotPassword`. The password can only be updated through the `ForgotPassword` interaction."
           },
+          "403": {
+            "description": "Forbidden in pure step-up authentication mode. <br/> - `session.step_up.forbidden_route:` This route is forbidden in pure step-up authentication mode."
+          },
           "404": {
             "description": "The user has not been identified yet. The user must be identified before updating the password."
           },
@@ -130,7 +133,7 @@
             "description": "Not supported for the current interaction event. The MFA profile API can only be used in the `SignIn` or `Register` interaction."
           },
           "403": {
-            "description": "MFA verification is required but has not been completed. The user must verify the existing MFA before updating MFA settings."
+            "description": "MFA verification is required or route is forbidden in pure step-up mode. <br/> - `session.step_up.forbidden_route:` This route is forbidden in pure step-up authentication mode. <br/> - MFA verification is required but has not been completed. The user must verify the existing MFA before updating MFA settings."
           },
           "404": {
             "description": "The user has not been identified yet. The `mfa-enabled` configuration must be associated with an identified user."
@@ -151,7 +154,7 @@
             "description": "Not supported for the current interaction event. The MFA profile API can only be used in the `SignIn` or `Register` interaction."
           },
           "403": {
-            "description": "Some MFA factors has already been enabled for the user. The user must verify the MFA before updating the MFA settings."
+            "description": "MFA verification required or route forbidden in pure step-up mode. <br/> - `session.step_up.forbidden_route:` This route is forbidden in pure step-up authentication mode. <br/> - Some MFA factors has already been enabled for the user. The user must verify the MFA before updating the MFA settings."
           },
           "404": {
             "description": "The user has not been identified yet. The `mfa-skipped` configuration must be associated with an identified user."
@@ -188,7 +191,7 @@
             "description": "The decision payload is invalid, or trusted-device opt-in is not supported for the current interaction event."
           },
           "403": {
-            "description": "An eligible MFA verification or binding is required before accepting the trusted-device opt-in."
+            "description": "Eligible MFA verification required or route forbidden in pure step-up mode. <br/> - `session.step_up.forbidden_route:` This route is forbidden in pure step-up authentication mode. <br/> - An eligible MFA verification or binding is required before accepting the trusted-device opt-in."
           },
           "404": {
             "description": "The user has not been identified yet."
@@ -209,7 +212,7 @@
             "description": "Not supported for the current interaction event. The MFA profile API can only be used in the `SignIn` or `Register` interaction."
           },
           "403": {
-            "description": "Some MFA factors have already been enabled for the user. The user must verify MFA before updating related settings."
+            "description": "MFA verification required or route forbidden in pure step-up mode. <br/> - `session.step_up.forbidden_route:` This route is forbidden in pure step-up authentication mode. <br/> - Some MFA factors have already been enabled for the user. The user must verify MFA before updating related settings."
           },
           "404": {
             "description": "The user has not been identified yet. The suggestion state must be associated with an identified user."
@@ -248,6 +251,9 @@
           "400": {
             "description": "Invalid request. <br/>- `session.verification_failed:` The MFA verification record is invalid or not verified. <br/>- `session.mfa.mfa_factor_not_enabled:` The MFA factor is not enabled in the sign-in experience settings. <br/>- `session.mfa.pending_info_not_found:` The MFA verification record does not have the required information to bind the MFA verification."
           },
+          "403": {
+            "description": "Forbidden in pure step-up authentication mode. <br/> - `session.step_up.forbidden_route:` This route is forbidden in pure step-up authentication mode."
+          },
           "404": {
             "description": "Entity not found. <br/> - `session.identifier_not_found:` The user has not been identified yet. The MFA verification can only be added to a identified user. <br/>- `session.verification_session_not_found:` The MFA verification record is not found."
           },
@@ -268,6 +274,9 @@
           },
           "400": {
             "description": "Not supported for the current interaction event. This API can only be used in the `SignIn` or `Register` interaction."
+          },
+          "403": {
+            "description": "Forbidden in pure step-up authentication mode. <br/> - `session.step_up.forbidden_route:` This route is forbidden in pure step-up authentication mode."
           },
           "404": {
             "description": "The user has not been identified yet. The `passkey-skipped` configuration must be associated with a identified user."
@@ -299,6 +308,9 @@
           },
           "400": {
             "description": "Invalid request. <br/>- `session.verification_failed:` The WebAuthn verification record is invalid or not verified. <br/>- `session.mfa.pending_info_not_found:` The verification record does not have the required registration data."
+          },
+          "403": {
+            "description": "Forbidden in pure step-up authentication mode. <br/> - `session.step_up.forbidden_route:` This route is forbidden in pure step-up authentication mode."
           },
           "404": {
             "description": "Entity not found. <br/>- `session.identifier_not_found:` The user has not been identified yet. <br/>- `session.verification_session_not_found:` The WebAuthn verification record is not found."

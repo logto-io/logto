@@ -2,7 +2,7 @@
   "tags": [
     {
       "name": "Experience",
-      "description": "The Experience endpoints allow end-users to interact with Logto for identity verification and profile completion."
+      "description": "The Experience endpoints allow end-users to interact with Logto for identity verification and profile completion. In pure step-up authentication mode (`mode: 'stepUp'`), only the following allowlisted routes are permitted: <br/>- `GET /experience/interaction` <br/>- `POST /experience/submit` <br/>- `POST /experience/identification` <br/>- `POST /experience/verification/password` (subject-only password) <br/>- `POST /experience/verification/verification-code` (primary verification-code send) <br/>- `POST /experience/verification/verification-code/verify` (primary verification-code verify) <br/>- `POST /experience/verification/mfa-verification-code` (send MFA verification code) <br/>- `POST /experience/verification/mfa-verification-code/verify` (verify MFA verification code) <br/>- `POST /experience/verification/totp/verify` (existing factor only, no verificationId enrollment variant) <br/>- `POST /experience/verification/backup-code/verify` <br/>- `POST /experience/verification/web-authn/authentication` <br/>- `POST /experience/verification/web-authn/authentication/verify` <br/>`PUT /experience` (interaction creation and retry) is unchanged. All other registered experience routes are forbidden in pure step-up mode with a 403 response (`session.step_up.forbidden_route`), including anonymous preflight and SSO connectors. Normal SignIn interactions (including those with requested ACR) are unaffected."
     }
   ],
   "paths": {
@@ -53,7 +53,7 @@
             "description": "The interaction event is invalid or cannot be updated.  Only `SignIn` and `Register` are interchangeable. If the current interaction event is `ForgotPassword`, it cannot be updated."
           },
           "403": {
-            "description": "The given interaction event is not enabled in the sign-in experience settings."
+            "description": "The given interaction event is not enabled in the sign-in experience settings. <br/> - `session.step_up.forbidden_route:` This route is forbidden in pure step-up authentication mode."
           }
         }
       }
@@ -62,7 +62,7 @@
       "post": {
         "operationId": "IdentifyUser",
         "summary": "Identify user for the current interaction",
-        "description": "This API identifies the user based on the verificationId within the current experience interaction: <br/>- `SignIn` and `ForgotPassword` interactions: Verifies the user's identity using the provided `verificationId`. <br/>- `Register` interaction: Creates a new user account using the profile data from the current interaction. If a verificationId is provided, the profile data will first be updated with the verification record before creating the account. If not, the account is created directly from the stored profile data.",
+        "description": "This API identifies the user based on the verificationId within the current experience interaction: <br/>- `SignIn` and `ForgotPassword` interactions: Verifies the user's identity using the provided `verificationId`. In step-up authentication, the identified user must match the pinned subject; resolving a foreign subject returns 403 `session.identity_conflict`. <br/>- `Register` interaction: Creates a new user account using the profile data from the current interaction. If a verificationId is provided, the profile data will first be updated with the verification record before creating the account. If not, the account is created directly from the stored profile data.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -93,13 +93,13 @@
             "description": "The user is suspended or banned from the service. (SignIn and ForgotPassword only)"
           },
           "403": {
-            "description": "The `SignIn` or `Register` interaction is disabled in the experience settings."
+            "description": "The `SignIn` or `Register` interaction is disabled in the experience settings, or identity conflict in step-up authentication. <br/>- `session.identity_conflict:` In a step-up interaction, the user identified by the verification record does not match the pinned subject."
           },
           "404": {
             "description": "Entity not found. <br/>- `session.verification_session_not_found:` The verification record is not found.  <br/>- `user.user_not_exist:` The user account is not found (SignIn and ForgotPassword only).  "
           },
           "409": {
-            "description": "The interaction has already been identified with a different user account."
+            "description": "The interaction has already been identified with a different user account. <br/>- `session.identity_conflict:` The user identified by the verification record does not match the already identified user in the current interaction."
           },
           "422": {
             "description": "The user account cannot be created due to validation errors, check error message for more details (Register only). <br/>- `user.<identifier>_already_in_use:` The given identifier is already in use by another user account. <br/>- `user.missing_profile:` Sign-in experience required user identifier or profile data is missing. (Register only)"

@@ -56,6 +56,9 @@ const session = {
       'La autenticación reforzada solo está disponible para interacciones de inicio de sesión.',
     subject_not_found:
       'No se encontró una sesión autenticada para la autenticación reforzada. Inicia sesión de nuevo.',
+    forbidden_route: 'Esta ruta no está permitida durante la autenticación reforzada.',
+    require_verification:
+      'Se requiere verificación adicional para satisfacer el contexto de autenticación solicitado.',
   },
   passkey_sign_in: {
     pending_info_not_found:

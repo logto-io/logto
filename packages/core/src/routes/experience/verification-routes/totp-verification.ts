@@ -79,7 +79,7 @@ export default function totpVerificationRoutes<T extends ExperienceInteractionRo
       response: z.object({
         verificationId: z.string(),
       }),
-      status: [200, 400, 404],
+      status: [200, 400, 403, 404],
     }),
     koaExperienceVerificationsAuditLog({
       type: VerificationType.TOTP,
@@ -88,6 +88,11 @@ export default function totpVerificationRoutes<T extends ExperienceInteractionRo
     async (ctx, next) => {
       const { experienceInteraction, verificationAuditLog } = ctx;
       const { verificationId, code } = ctx.guard.body;
+
+      assertThat(
+        !experienceInteraction.isStepUp || verificationId === undefined,
+        new RequestError({ code: 'session.step_up.forbidden_route', status: 403 })
+      );
 
       verificationAuditLog.append({
         payload: {

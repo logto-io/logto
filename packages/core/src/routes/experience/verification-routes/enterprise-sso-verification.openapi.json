@@ -39,6 +39,9 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden in pure step-up authentication mode. <br/> - `session.step_up.forbidden_route:` This route is forbidden in pure step-up authentication mode."
+          },
           "404": {
             "description": "The SSO connector is not found."
           },
@@ -86,6 +89,9 @@
           },
           "400": {
             "description": "The SSO authorization response is invalid or cannot be verified."
+          },
+          "403": {
+            "description": "Forbidden in pure step-up authentication mode. <br/> - `session.step_up.forbidden_route:` This route is forbidden in pure step-up authentication mode."
           },
           "404": {
             "description": "The verification record or the SSO connector is not found."

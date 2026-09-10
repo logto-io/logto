@@ -39,6 +39,9 @@
           "400": {
             "description": "The one-time token is invalid or the maximum number of attempts has been exceeded. Check the error message for details."
           },
+          "403": {
+            "description": "Forbidden in pure step-up authentication mode. <br/> - `session.step_up.forbidden_route:` This route is forbidden in pure step-up authentication mode."
+          },
           "404": {
             "description": "Verification record not found."
           }

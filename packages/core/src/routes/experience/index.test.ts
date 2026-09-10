@@ -2,6 +2,7 @@
 import { appInsights } from '@logto/app-insights/node';
 import { TemplateType } from '@logto/connector-kit';
 import {
+  AdditionalIdentifier,
   AuthenticationContextMode,
   ConnectorType,
   InteractionEvent,
@@ -269,42 +270,44 @@ const createMfaRequiredRequester = () => {
   }).requester;
 };
 
+const stepUpContext = {
+  requestedAcrValues: [LogtoAcr.Mfa],
+  selectedAcr: LogtoAcr.Mfa,
+  mode: AuthenticationContextMode.StepUp,
+};
+const totpUser = { ...mockUser, mfaVerifications: [mockUserTotpMfaVerification] };
+const totpMfa: Mfa = { policy: MfaPolicy.UserControlled, factors: [MfaFactor.TOTP] };
+
+const createStepUpRequester = ({
+  user = totpUser,
+  withoutSession = false,
+  details = { authenticationContext: stepUpContext },
+  interactionResult = {},
+}: {
+  user?: User;
+  /** Create the interaction without an authenticated session. */
+  withoutSession?: boolean;
+  details?: Record<string, unknown>;
+  interactionResult?: Record<string, unknown>;
+} = {}) =>
+  createRequesterWithMocks({
+    user,
+    mfa: totpMfa,
+    persistInteractionResult: true,
+    // A fresh provider interaction: nothing has been stored yet.
+    interactionResult: { interactionEvent: undefined, userId: undefined, ...interactionResult },
+    interactionDetailsOverrides: {
+      prompt: { name: 'login', reasons: ['acr_unmet'], details },
+      ...conditional(
+        !withoutSession && {
+          session: { accountId: user.id, acr: LogtoAcr.FirstFactor, amr: ['pwd'] },
+        }
+      ),
+    },
+    connectors: [{ type: ConnectorType.Email }],
+  });
+
 describe('PUT /experience', () => {
-  const stepUpContext = {
-    requestedAcrValues: [LogtoAcr.Mfa],
-    selectedAcr: LogtoAcr.Mfa,
-    mode: AuthenticationContextMode.StepUp,
-  };
-  const totpUser = { ...mockUser, mfaVerifications: [mockUserTotpMfaVerification] };
-  const totpMfa: Mfa = { policy: MfaPolicy.UserControlled, factors: [MfaFactor.TOTP] };
-
-  const createStepUpRequester = ({
-    user = totpUser,
-    withoutSession = false,
-    details = { authenticationContext: stepUpContext },
-  }: {
-    user?: User;
-    /** Create the interaction without an authenticated session. */
-    withoutSession?: boolean;
-    details?: Record<string, unknown>;
-  } = {}) =>
-    createRequesterWithMocks({
-      user,
-      mfa: totpMfa,
-      persistInteractionResult: true,
-      // A fresh provider interaction: nothing has been stored yet.
-      interactionResult: { interactionEvent: undefined, userId: undefined },
-      interactionDetailsOverrides: {
-        prompt: { name: 'login', reasons: ['acr_unmet'], details },
-        ...conditional(
-          !withoutSession && {
-            session: { accountId: user.id, acr: LogtoAcr.FirstFactor, amr: ['pwd'] },
-          }
-        ),
-      },
-      connectors: [{ type: ConnectorType.Email }],
-    });
-
   it('should create a plain sign-in interaction', async () => {
     const { requester, provider } = createRequesterWithMocks({
       persistInteractionResult: true,
@@ -411,6 +414,367 @@ describe('PUT /experience', () => {
     expect(response.status).toBe(400);
     expect(response.body).toMatchObject({ code: 'session.step_up.subject_not_found' });
     expect(provider.interactionResult).not.toHaveBeenCalled();
+  });
+});
+
+describe('pure step-up route guard and restrictions', () => {
+  describe('forbidden routes in pure step-up', () => {
+    const forbiddenRoutes: Array<[method: 'get' | 'post' | 'put', path: string]> = [
+      ['put', '/experience/interaction-event'],
+      ['post', '/experience/profile'],
+      ['put', '/experience/profile/password'],
+      ['post', '/experience/profile/mfa'],
+      ['post', '/experience/profile/mfa/mfa-enabled'],
+      ['post', '/experience/profile/mfa/mfa-skipped'],
+      ['post', '/experience/profile/mfa/mfa-suggestion-skipped'],
+      ['post', '/experience/profile/mfa/passkey-skipped'],
+      ['post', '/experience/profile/mfa/passkey'],
+      ['post', '/experience/profile/trusted-device'],
+      ['post', '/experience/user-assets/avatar'],
+      ['get', '/experience/sso-connectors'],
+      ['post', '/experience/preflight/sign-in-passkey/authentication'],
+      ['post', '/experience/verification/social/github/authorization-uri'],
+      ['post', '/experience/verification/social/github/verify'],
+      ['post', '/experience/verification/sso/saml/authorization-uri'],
+      ['post', '/experience/verification/sso/saml/verify'],
+      ['post', '/experience/verification/totp/secret'],
+      ['post', '/experience/verification/backup-code/generate'],
+      ['post', '/experience/verification/web-authn/registration'],
+      ['post', '/experience/verification/web-authn/registration/verify'],
+      ['post', '/experience/verification/sign-in-passkey/authentication'],
+      ['post', '/experience/verification/sign-in-passkey/authentication/verify'],
+      ['post', '/experience/verification/new-password-identity'],
+      ['post', '/experience/verification/one-time-token/verify'],
+      ['put', '/EXPERIENCE/INTERACTION-EVENT/'],
+      ['get', '/EXPERIENCE/SSO-CONNECTORS/'],
+    ];
+
+    it.each(forbiddenRoutes)(
+      'rejects %s %s with 403 forbidden_route before payload validation',
+      async (method, path) => {
+        const { requester, mockAppend } = createStepUpRequester({
+          interactionResult: {
+            interactionEvent: InteractionEvent.SignIn,
+            authenticationContext: stepUpContext,
+          },
+        });
+        const appendCountBefore = mockAppend.mock.calls.length;
+
+        const response = await requester[method](path);
+
+        expect(response.status).toBe(403);
+        expect(response.body).toMatchObject({ code: 'session.step_up.forbidden_route' });
+        expect(mockAppend.mock.calls.length).toBe(appendCountBefore);
+      }
+    );
+  });
+
+  describe('anonymous sso-connectors and preflight endpoints', () => {
+    it('rejects even a no-op interaction event switch', async () => {
+      const { requester, provider } = createStepUpRequester({
+        interactionResult: {
+          interactionEvent: InteractionEvent.SignIn,
+          authenticationContext: stepUpContext,
+        },
+      });
+      const response = await requester
+        .put('/experience/interaction-event')
+        .send({ interactionEvent: InteractionEvent.SignIn });
+
+      expect(response.status).toBe(403);
+      expect(response.body).toMatchObject({ code: 'session.step_up.forbidden_route' });
+      expect(provider.interactionResult).not.toHaveBeenCalled();
+    });
+
+    it('blocks anonymous endpoints in step-up mode without side effects', async () => {
+      const { requester, provider } = createStepUpRequester({
+        interactionResult: {
+          interactionEvent: InteractionEvent.SignIn,
+          authenticationContext: stepUpContext,
+        },
+      });
+      const callCountBefore = (provider.interactionResult as jest.Mock).mock.calls.length;
+
+      const ssoResponse = await requester
+        .get('/experience/sso-connectors')
+        .query({ email: 'user@logto.io' });
+      expect(ssoResponse.status).toBe(403);
+      expect(ssoResponse.body).toMatchObject({ code: 'session.step_up.forbidden_route' });
+
+      const preflightResponse = await requester.post(
+        '/experience/preflight/sign-in-passkey/authentication'
+      );
+      expect(preflightResponse.status).toBe(403);
+      expect(preflightResponse.body).toMatchObject({ code: 'session.step_up.forbidden_route' });
+      expect((provider.interactionResult as jest.Mock).mock.calls.length).toBe(callCountBefore);
+    });
+
+    it('allows anonymous sso-connectors when interaction storage has not been initialized', async () => {
+      const { requester } = createRequesterWithMocks({
+        persistInteractionResult: true,
+        interactionResult: { interactionEvent: undefined, userId: undefined },
+      });
+
+      const ssoResponse = await requester
+        .get('/experience/sso-connectors')
+        .query({ email: 'user@logto.io' });
+      expect(ssoResponse.status).toBe(200);
+      expect(ssoResponse.body).toEqual({ connectorIds: [] });
+    });
+  });
+
+  describe('normal and requested-only behavior', () => {
+    it('does not restrict routes in normal sign-in interaction', async () => {
+      const { requester } = createRequesterWithMocks({
+        persistInteractionResult: true,
+        interactionResult: { interactionEvent: undefined, userId: undefined },
+        interactionDetailsOverrides: {
+          prompt: { name: 'login', reasons: ['no_session'], details: {} },
+        },
+      });
+      await requester.put('/experience').send({ interactionEvent: InteractionEvent.SignIn });
+
+      const socialResponse = await requester
+        .post('/experience/verification/social/github/authorization-uri')
+        .send({});
+      expect(socialResponse.status).toBe(400);
+      expect(socialResponse.body).not.toMatchObject({ code: 'session.step_up.forbidden_route' });
+
+      const ssoResponse = await requester
+        .get('/experience/sso-connectors')
+        .query({ email: 'user@logto.io' });
+      expect(ssoResponse.status).toBe(200);
+    });
+
+    it('does not restrict routes in requested-only authentication context', async () => {
+      const requestedOnlyContext = {
+        requestedAcrValues: [LogtoAcr.Mfa],
+      };
+      const { requester } = createRequesterWithMocks({
+        user: totpUser,
+        mfa: totpMfa,
+        persistInteractionResult: true,
+        interactionResult: { interactionEvent: undefined, userId: undefined },
+        interactionDetailsOverrides: {
+          prompt: {
+            name: 'login',
+            reasons: ['acr_unmet'],
+            details: { authenticationContext: requestedOnlyContext },
+          },
+        },
+      });
+      await requester.put('/experience').send({ interactionEvent: InteractionEvent.SignIn });
+
+      const socialResponse = await requester
+        .post('/experience/verification/social/github/authorization-uri')
+        .send({});
+      expect(socialResponse.status).toBe(400);
+      expect(socialResponse.body).not.toMatchObject({ code: 'session.step_up.forbidden_route' });
+
+      const ssoResponse = await requester
+        .get('/experience/sso-connectors')
+        .query({ email: 'user@logto.io' });
+      expect(ssoResponse.status).toBe(200);
+    });
+  });
+
+  describe('body restrictions in pure step-up', () => {
+    it('rejects password verification with raw identifier in step-up mode', async () => {
+      const { requester } = createStepUpRequester({
+        interactionResult: {
+          interactionEvent: InteractionEvent.SignIn,
+          authenticationContext: stepUpContext,
+        },
+      });
+
+      const response = await requester.post('/experience/verification/password').send({
+        identifier: { type: SignInIdentifier.Username, value: 'alice' },
+        password: 'Password1!',
+      });
+
+      expect(response.status).toBe(403);
+      expect(response.body).toMatchObject({ code: 'session.step_up.forbidden_route' });
+    });
+
+    it('rejects verification code send with identifier value in step-up mode', async () => {
+      const { requester } = createStepUpRequester({
+        interactionResult: {
+          interactionEvent: InteractionEvent.SignIn,
+          authenticationContext: stepUpContext,
+        },
+      });
+
+      const response = await requester.post('/experience/verification/verification-code').send({
+        identifier: { type: SignInIdentifier.Email, value: 'alice@logto.io' },
+        interactionEvent: InteractionEvent.SignIn,
+      });
+
+      expect(response.status).toBe(403);
+      expect(response.body).toMatchObject({ code: 'session.step_up.forbidden_route' });
+    });
+
+    it('rejects verification code verify with identifier value in step-up mode', async () => {
+      const { requester } = createStepUpRequester({
+        interactionResult: {
+          interactionEvent: InteractionEvent.SignIn,
+          authenticationContext: stepUpContext,
+        },
+      });
+
+      const response = await requester
+        .post('/experience/verification/verification-code/verify')
+        .send({
+          identifier: { type: SignInIdentifier.Email, value: 'alice@logto.io' },
+          verificationId: 'some-code-verification-id',
+          code: '123456',
+        });
+
+      expect(response.status).toBe(403);
+      expect(response.body).toMatchObject({ code: 'session.step_up.forbidden_route' });
+    });
+
+    it('rejects TOTP enrollment via secret route in step-up mode', async () => {
+      const { requester } = createStepUpRequester({
+        interactionResult: {
+          interactionEvent: InteractionEvent.SignIn,
+          authenticationContext: stepUpContext,
+        },
+      });
+
+      const response = await requester.post('/experience/verification/totp/secret');
+
+      expect(response.status).toBe(403);
+      expect(response.body).toMatchObject({ code: 'session.step_up.forbidden_route' });
+    });
+
+    it('rejects TOTP verify with verificationId (enrollment variant) in step-up mode', async () => {
+      const { requester } = createStepUpRequester({
+        interactionResult: {
+          interactionEvent: InteractionEvent.SignIn,
+          authenticationContext: stepUpContext,
+        },
+      });
+
+      const response = await requester.post('/experience/verification/totp/verify').send({
+        verificationId: 'new-totp-verification-id',
+        code: '123456',
+      });
+
+      expect(response.status).toBe(403);
+      expect(response.body).toMatchObject({ code: 'session.step_up.forbidden_route' });
+    });
+  });
+
+  describe('GET/PUT retry and identification conflict in pure step-up', () => {
+    it('allows GET /experience/interaction retry and reflects step-up state', async () => {
+      const { requester } = createStepUpRequester({
+        interactionResult: {
+          interactionEvent: InteractionEvent.SignIn,
+          authenticationContext: stepUpContext,
+        },
+      });
+
+      const firstGet = await requester.get('/experience/interaction');
+      expect(firstGet.status).toBe(200);
+      expect(firstGet.body).toMatchObject({
+        interactionEvent: InteractionEvent.SignIn,
+        authenticationContext: { mode: AuthenticationContextMode.StepUp },
+      });
+
+      const secondGet = await requester.get('/experience/interaction');
+      expect(secondGet.status).toBe(200);
+      expect(secondGet.body).toEqual(firstGet.body);
+    });
+
+    it('allows PUT /experience retry and re-derives step-up mode from prompt', async () => {
+      const { requester } = createStepUpRequester({
+        interactionResult: {
+          interactionEvent: InteractionEvent.SignIn,
+          authenticationContext: stepUpContext,
+        },
+      });
+
+      const retryResponse = await requester
+        .put('/experience')
+        .send({ interactionEvent: InteractionEvent.SignIn });
+      expect(retryResponse.status).toBe(204);
+
+      const interaction = await requester.get('/experience/interaction');
+      expect(interaction.status).toBe(200);
+      expect(interaction.body).toMatchObject({
+        interactionEvent: InteractionEvent.SignIn,
+        authenticationContext: { mode: AuthenticationContextMode.StepUp },
+      });
+    });
+
+    it('rejects identification with a mismatching user verification record with 403 identity_conflict', async () => {
+      const someoneElse = { ...mockUser, id: 'someone-else-user-id' };
+      const mismatchVerificationId = 'mismatch-verification-id';
+
+      const { requester, users } = createStepUpRequester({
+        interactionResult: {
+          interactionEvent: InteractionEvent.SignIn,
+          authenticationContext: stepUpContext,
+          verificationRecords: [
+            {
+              id: mismatchVerificationId,
+              type: VerificationType.Password,
+              identifier: { type: AdditionalIdentifier.UserId, value: someoneElse.id },
+              verified: true,
+            },
+          ],
+        },
+      });
+
+      users.findUserById.mockImplementation(async (id: string) =>
+        id === someoneElse.id ? someoneElse : totpUser
+      );
+
+      const response = await requester.post('/experience/identification').send({
+        verificationId: mismatchVerificationId,
+      });
+
+      expect(response.status).toBe(403);
+      expect(response.body).toMatchObject({ code: 'session.identity_conflict' });
+
+      const interaction = await requester.get('/experience/interaction');
+      expect(interaction.body).not.toHaveProperty('userId');
+    });
+
+    it('allows identification with a matching user verification record', async () => {
+      const matchingVerificationId = 'matching-verification-id';
+
+      const { requester, users } = createStepUpRequester({
+        interactionResult: {
+          interactionEvent: InteractionEvent.SignIn,
+          authenticationContext: stepUpContext,
+          verificationRecords: [
+            {
+              id: matchingVerificationId,
+              type: VerificationType.Password,
+              identifier: { type: AdditionalIdentifier.UserId, value: totpUser.id },
+              verified: true,
+            },
+          ],
+        },
+      });
+
+      users.findUserById.mockImplementation(async (id: string) =>
+        id === totpUser.id ? totpUser : null
+      );
+
+      const response = await requester.post('/experience/identification').send({
+        verificationId: matchingVerificationId,
+      });
+
+      expect(response.status).toBe(204);
+
+      const interaction = await requester.get('/experience/interaction');
+      expect(interaction.status).toBe(200);
+      expect(interaction.body).toMatchObject({
+        userId: totpUser.id,
+      });
+    });
   });
 });
 

@@ -23,6 +23,9 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden in pure step-up authentication mode. <br/> - `session.step_up.forbidden_route:` This route is forbidden in pure step-up authentication mode."
+          },
           "404": {
             "description": "Entity not found. <br/> - `session.identifier_not_found:` The current interaction is not identified yet. All MFA verification records must be associated with a identified user."
           }
@@ -67,6 +70,9 @@
           },
           "400": {
             "description": "Invalid request. <br/>  - `session.mfa.pending_info_not_found:` The WebAuthn registration challenge is missing from the current verification record. <br/>- `session.mfa.webauthn_verification_failed:` The WebAuthn attestation response is invalid or cannot be verified."
+          },
+          "403": {
+            "description": "Forbidden in pure step-up authentication mode. <br/> - `session.step_up.forbidden_route:` This route is forbidden in pure step-up authentication mode."
           },
           "404": {
             "description": "Verification record not found."
@@ -193,6 +199,9 @@
           "400": {
             "description": "Invalid request."
           },
+          "403": {
+            "description": "Forbidden in pure step-up authentication mode. <br/> - `session.step_up.forbidden_route:` This route is forbidden in pure step-up authentication mode."
+          },
           "404": {
             "description": "User not found."
           }
@@ -239,7 +248,7 @@
             "description": "Invalid request. <br/> - `session.mfa.pending_info_not_found:` The WebAuthn authentication challenge is missing in the current verification record. <br/>- `session.mfa.webauthn_verification_failed:` The WebAuthn assertion response is invalid or cannot be verified."
           },
           "403": {
-            "description": "Identity conflict in step-up authentication. <br/> - `session.identity_conflict:` The user associated with the verified WebAuthn credential does not match the pinned subject in the current step-up interaction."
+            "description": "Forbidden route or identity conflict in pure step-up authentication. <br/> - `session.step_up.forbidden_route:` This route is forbidden in pure step-up authentication mode. <br/> - `session.identity_conflict:` The user associated with the verified WebAuthn credential does not match the pinned subject in the current step-up interaction."
           },
           "404": {
             "description": "Verification session not found."

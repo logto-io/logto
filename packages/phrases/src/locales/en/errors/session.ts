@@ -50,6 +50,9 @@ const session = {
     invalid_interaction_event: 'Step-up authentication is only available for sign-in interactions.',
     subject_not_found:
       'No authenticated session was found for step-up authentication. Please sign in again.',
+    forbidden_route: 'This route is not allowed during step-up authentication.',
+    require_verification:
+      'Additional verification is required to satisfy the requested authentication context.',
   },
   passkey_sign_in: {
     pending_info_not_found:

@@ -190,22 +190,20 @@ devFeatureTest.describe('step-up subject-bound verification', () => {
     );
   });
 
-  it('forbids identifying another account than the pinned subject', async () => {
+  it('forbids verifying another account by raw identifier in pure step-up', async () => {
     const other = generateNewUserProfile({ username: true, password: true });
     await userApi.create(other);
 
     const client = await signInWithPassword(user);
     await startStepUp(client);
 
-    const { verificationId } = await client.verifyPassword({
-      identifier: { type: SignInIdentifier.Username, value: other.username },
-      password: other.password,
-    });
-
-    await expectRejects(client.identifyUser({ verificationId }), {
-      code: 'session.identity_conflict',
-      status: 403,
-    });
+    await expectRejects(
+      client.verifyPassword({
+        identifier: { type: SignInIdentifier.Username, value: other.username },
+        password: other.password,
+      }),
+      { code: 'session.step_up.forbidden_route', status: 403 }
+    );
     const { userId: identifiedUserId } = await client.getInteractionData();
     expect(identifiedUserId).toBeUndefined();
 

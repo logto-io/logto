@@ -54,6 +54,9 @@ const session = {
       "L'autenticazione step-up è disponibile solo per le interazioni di accesso.",
     subject_not_found:
       "Nessuna sessione autenticata trovata per l'autenticazione step-up. Effettua di nuovo l'accesso.",
+    forbidden_route: "Questo percorso non è consentito durante l'autenticazione step-up.",
+    require_verification:
+      "È richiesta un'ulteriore verifica per soddisfare il contesto di autenticazione richiesto.",
   },
   passkey_sign_in: {
     pending_info_not_found:

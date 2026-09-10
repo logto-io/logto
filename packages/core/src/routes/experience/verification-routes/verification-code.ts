@@ -10,8 +10,10 @@ import {
 import type Router from 'koa-router';
 import { z } from 'zod';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
+import assertThat from '#src/utils/assert-that.js';
 
 import { codeVerificationIdentifierRecordTypeMap } from '../classes/utils.js';
 import {
@@ -56,11 +58,16 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
         verificationId: z.string(),
       }),
       // 404: subject-bound variant without a subject; 429: rate limited; 501: connector not found
-      status: [200, 400, 404, 422, 429, 501],
+      status: [200, 400, 403, 404, 422, 429, 501],
     }),
     async (ctx, next) => {
       const { identifier: identifierPayload, interactionEvent } = ctx.guard.body;
       const { experienceInteraction } = ctx;
+
+      assertThat(
+        !experienceInteraction.isStepUp || identifierPayload.value === undefined,
+        new RequestError({ code: 'session.step_up.forbidden_route', status: 403 })
+      );
 
       // The subject is already authenticated, so no captcha applies
       if (identifierPayload.value === undefined) {
@@ -136,10 +143,15 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
         verificationId: z.string(),
       }),
       // 501: connector not found
-      status: [200, 400, 404, 501],
+      status: [200, 400, 403, 404, 501],
     }),
     async (ctx, next) => {
       const { verificationId, code, identifier: identifierPayload } = ctx.guard.body;
+      assertThat(
+        !ctx.experienceInteraction.isStepUp || identifierPayload.value === undefined,
+        new RequestError({ code: 'session.step_up.forbidden_route', status: 403 })
+      );
+
       const verificationType = codeVerificationIdentifierRecordTypeMap[identifierPayload.type];
 
       const identifier =

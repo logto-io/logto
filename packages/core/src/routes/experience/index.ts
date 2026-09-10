@@ -27,6 +27,7 @@ import { experienceRoutes } from './const.js';
 import koaExperienceAuditLog from './middleware/koa-experience-audit-log.js';
 import { koaExperienceInteractionHooks } from './middleware/koa-experience-interaction-hooks.js';
 import koaExperienceInteraction from './middleware/koa-experience-interaction.js';
+import koaStepUpRouteGuard from './middleware/koa-step-up-route-guard.js';
 import profileRoutes from './profile-routes.js';
 import {
   sanitizedInteractionStorageGuard,
@@ -56,7 +57,8 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       koaInteractionDetails(provider),
       koaExperienceInteractionHooks(libraries),
       koaExperienceInteraction(tenant),
-      koaExperienceAuditLog()
+      koaExperienceAuditLog(),
+      koaStepUpRouteGuard()
     );
 
   experienceRouter.put(
