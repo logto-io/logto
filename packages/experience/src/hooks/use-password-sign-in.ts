@@ -78,7 +78,7 @@ const usePasswordSignIn = () => {
   );
 
   const onSubmit = useCallback(
-    async (payload: PasswordVerificationPayload) => {
+    async (payload: Required<PasswordVerificationPayload>) => {
       const { identifier } = payload;
       const captchaToken = await executeCaptcha();
 

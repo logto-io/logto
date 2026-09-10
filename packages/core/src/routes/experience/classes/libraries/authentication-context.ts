@@ -15,12 +15,13 @@ type AuthenticationContext = {
 };
 
 /**
- * What a credential contributes to the authentication context: the factor it is a proof of, the
- * role that factor can fill, and the AMR values it carries. A recorded {@link AuthenticationProof}
- * is a contribution with an id and a role; a candidate method and the context carried by the OIDC
- * session are contributions too, so eligibility and aggregation read one shape.
+ * What a credential contributes to the ACR: the factor it is a proof of and the role that factor
+ * can fill. A recorded {@link AuthenticationProof} is a contribution with an id, a role, and the
+ * AMR values it carries; a candidate method and the context carried by the OIDC session are
+ * contributions too, so eligibility and aggregation read one shape. `amr` is not part of it:
+ * only the proofs of this interaction contribute to `amr`.
  */
-export type AuthenticationContribution = Pick<AuthenticationProof, 'factor' | 'class' | 'amr'>;
+export type AuthenticationContribution = Pick<AuthenticationProof, 'factor' | 'class'>;
 
 /** The distinct factors of the contributions whose class fills the given role. */
 const factorsOfRole = (
@@ -54,6 +55,17 @@ const reachAcr = (contributions: readonly AuthenticationContribution[]): LogtoAc
 };
 
 /**
+ * The ACR the proofs of this interaction achieve on top of the carried context, if any. The one
+ * definition of "what a set of contributions reaches", read by the aggregation below and by the
+ * step-up eligibility search, so the methods offered can never disagree with what a submission
+ * derives.
+ */
+export const achieveAcr = (
+  proofs: readonly AuthenticationContribution[],
+  carried: readonly AuthenticationContribution[] = []
+): LogtoAcr | undefined => conditional(proofs.length > 0 && reachAcr([...carried, ...proofs]));
+
+/**
  * Aggregate the authentication context an interaction achieved from the proofs it recorded, on
  * top of the context carried by the OIDC session. The aggregation reads nothing but these lists:
  * which credentials count was decided at the touchpoints that recorded them (see
@@ -74,10 +86,10 @@ const reachAcr = (contributions: readonly AuthenticationContribution[]): LogtoAc
  * - No `ts` is seeded: the provider stamps `auth_time` with the submission time itself.
  */
 export const aggregateAuthenticationContext = (
-  proofs: readonly AuthenticationContribution[],
+  proofs: ReadonlyArray<Pick<AuthenticationProof, 'factor' | 'class' | 'amr'>>,
   carried: readonly AuthenticationContribution[] = []
 ): AuthenticationContext => {
-  const acr = conditional(proofs.length > 0 && reachAcr([...carried, ...proofs]));
+  const acr = achieveAcr(proofs, carried);
   const amr = buildAuthenticationMethodReferences(
     proofs.map(({ amr }) => amr),
     acr
@@ -114,39 +126,17 @@ export const deriveCarriedContributions = (
 
   return [
     ...(references.has(AuthenticationMethodReference.Password)
-      ? [
-          {
-            factor: AuthenticationFactor.Password,
-            class: AuthenticationFactorClass.FirstFactor,
-            amr: [AuthenticationMethodReference.Password],
-          },
-        ]
+      ? [{ factor: AuthenticationFactor.Password, class: AuthenticationFactorClass.FirstFactor }]
       : []),
     ...(references.has(AuthenticationMethodReference.Sms)
-      ? [
-          {
-            factor: AuthenticationFactor.Phone,
-            class: AuthenticationFactorClass.FirstFactor,
-            amr: [AuthenticationMethodReference.Sms],
-          },
-        ]
+      ? [{ factor: AuthenticationFactor.Phone, class: AuthenticationFactorClass.FirstFactor }]
       : []),
     ...(references.has(AuthenticationMethodReference.ProofOfPossession) &&
     references.has(AuthenticationMethodReference.UserPresence)
-      ? [
-          {
-            factor: AuthenticationFactor.WebAuthn,
-            class: AuthenticationFactorClass.Both,
-            amr: [
-              AuthenticationMethodReference.ProofOfPossession,
-              AuthenticationMethodReference.UserPresence,
-              AuthenticationMethodReference.Mfa,
-            ],
-          },
-        ]
+      ? [{ factor: AuthenticationFactor.WebAuthn, class: AuthenticationFactorClass.Both }]
       : []),
     ...(references.has(AuthenticationMethodReference.Federated)
-      ? [{ factor: AuthenticationFactor.Federated, amr: [AuthenticationMethodReference.Federated] }]
+      ? [{ factor: AuthenticationFactor.Federated }]
       : []),
   ];
 };

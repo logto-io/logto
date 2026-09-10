@@ -74,45 +74,37 @@ import {
 import { VerificationRecordsMap } from './verifications/verification-records-map.js';
 
 /**
- * The parts of the provider interaction a new experience interaction reads at creation: the
- * login prompt details the OIDC interaction policy wrote, and the session subject a pure step-up
- * requires (the provider copies the session into the interaction payload). Parsed leniently
- * because the prompt payload is untyped, and anything that does not parse is a regular sign-in.
- * The session's `amr` is read separately, on every request, by `stepUpSessionGuard`.
+ * The login prompt details the OIDC interaction policy wrote, read from the provider interaction
+ * at creation. Parsed leniently because the prompt payload is untyped, and anything that does not
+ * parse is a regular sign-in.
  */
 const loginPromptInteractionGuard = z.object({
   prompt: z.object({
     name: z.literal('login'),
     details: loginPromptAuthenticationContextDetailsGuard.optional(),
   }),
-  session: z.object({ accountId: z.string().min(1) }).optional(),
 });
 
-/** The session fields a pure step-up reads on every request; see {@link ExperienceInteraction.subjectUserId}. */
+/**
+ * The session fields a pure step-up reads on every request (the provider copies the session into
+ * the interaction payload); see {@link ExperienceInteraction.subjectUserId}.
+ */
 const stepUpSessionGuard = z.object({
   accountId: z.string().min(1),
   amr: z.string().array().optional(),
 });
 
 /**
- * Read the requested authentication context from the login prompt details, and the session
- * subject alongside it. `PUT /experience` always re-derives the context from the prompt details,
- * which never change, so a retry or double-mount cannot drop the step-up flag and land the user in
- * an unpinned sign-in.
+ * Read the requested authentication context from the login prompt details. `PUT /experience`
+ * always re-derives the context from the prompt details, which never change, so a retry or
+ * double-mount cannot drop the step-up flag and land the user in an unpinned sign-in.
  */
 const readLoginPromptAuthenticationContext = (
   interactionDetails: unknown
-): { authenticationContext?: RequestedAuthenticationContext; sessionAccountId?: string } => {
+): RequestedAuthenticationContext | undefined => {
   const result = loginPromptInteractionGuard.safeParse(interactionDetails);
 
-  if (!result.success) {
-    return {};
-  }
-
-  return {
-    authenticationContext: result.data.prompt.details?.authenticationContext,
-    sessionAccountId: result.data.session?.accountId,
-  };
+  return conditional(result.success && result.data.prompt.details?.authenticationContext);
 };
 
 /**
@@ -141,8 +133,6 @@ export default class ExperienceInteraction {
    * {@link subjectUserId} until then.
    */
   private userId?: string;
-  /** The step-up decision of this request, computed once and shared by `PUT` and `GET`. */
-  private stepUpDecision?: Promise<StepUpEligibility | undefined>;
   /**
    * The authentication context the OIDC interaction policy wrote into the login prompt details.
    * Copied verbatim at creation and never mutated; see {@link isStepUp}.
@@ -226,20 +216,17 @@ export default class ExperienceInteraction {
         return;
       }
 
-      const { authenticationContext, sessionAccountId } = readLoginPromptAuthenticationContext(
-        ctx.interactionDetails
-      );
-      this.authenticationContext = authenticationContext;
+      this.authenticationContext = readLoginPromptAuthenticationContext(ctx.interactionDetails);
 
       // The subject is not written into `userId`: nothing has been verified yet. It stays
       // readable through `subjectUserId` until an MFA challenge or an identification proves it.
-      if (authenticationContext?.mode === AuthenticationContextMode.StepUp) {
+      if (this.isStepUp) {
         assertThat(
           interactionData === InteractionEvent.SignIn,
           new RequestError({ code: 'session.step_up.invalid_interaction_event', status: 400 })
         );
         assertThat(
-          sessionAccountId,
+          this.subjectUserId,
           new RequestError({ code: 'session.step_up.subject_not_found', status: 400 })
         );
       }
@@ -1114,19 +1101,13 @@ export default class ExperienceInteraction {
 
   /**
    * The step-up decision for the subject and the selected class: what `PUT /experience` acts on
-   * and `GET /experience/interaction` projects, computed once per request from the same inputs so
-   * the two cannot disagree. Evaluated on read and never persisted. `undefined` while no subject
+   * and `GET /experience/interaction` projects, computed from the same inputs so the two cannot
+   * disagree. Evaluated on read and never persisted. `undefined` while no subject
    * is known or the interaction carries no requested class. A pure step-up pairs the context its
    * session carries; a sign-in with requested ACR has no session, and its selected class is the
    * first requested one.
    */
   private async getStepUpDecision(): Promise<StepUpEligibility | undefined> {
-    this.stepUpDecision ??= this.computeStepUpDecision();
-
-    return this.stepUpDecision;
-  }
-
-  private async computeStepUpDecision(): Promise<StepUpEligibility | undefined> {
     const { authenticationContext, subjectUserId } = this;
     const selectedAcr =
       authenticationContext?.selectedAcr ?? authenticationContext?.requestedAcrValues[0];
@@ -1135,8 +1116,10 @@ export default class ExperienceInteraction {
       return;
     }
 
+    // The subject is fetched without touching the identified user's cache: it may be unproven,
+    // and `getIdentifiedUser` must keep failing until something verified it.
     const [user, mfaSettings, connectors] = await Promise.all([
-      this.getSubjectUser(subjectUserId),
+      this.tenant.queries.users.findUserById(subjectUserId),
       this.signInExperienceValidator.getMfaSettings(),
       this.tenant.connectors.getLogtoConnectors(),
     ]);
@@ -1152,21 +1135,6 @@ export default class ExperienceInteraction {
       carried: this.carriedContributions,
       proofs: this.authenticationProofs.proofs,
     });
-  }
-
-  /**
-   * Fetch the subject to compute the decision from, sharing the identified user's cache. Unlike
-   * {@link getIdentifiedUser}, this grants nothing: the subject may still be unproven.
-   */
-  private async getSubjectUser(subjectUserId: string): Promise<User> {
-    if (this.userCache?.id === subjectUserId) {
-      return this.userCache;
-    }
-
-    const user = await this.tenant.queries.users.findUserById(subjectUserId);
-    this.userCache = user;
-
-    return user;
   }
 
   /**

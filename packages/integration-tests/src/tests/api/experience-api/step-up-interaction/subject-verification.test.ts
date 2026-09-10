@@ -101,7 +101,8 @@ devFeatureTest.describe('step-up subject-bound verification', () => {
     expect(identifiedUserId).toBe(userId);
 
     const { redirectTo } = await client.submitInteraction();
-    await processSession(client, redirectTo);
+    // The existing grant skips consent when the step-up resumes authorization.
+    await client.manualConsent(redirectTo);
     expect(await client.getIdTokenClaims()).toMatchObject({
       sub: userId,
       acr: firstFactorAcr,
@@ -146,7 +147,8 @@ devFeatureTest.describe('step-up subject-bound verification', () => {
     expect(identifiedUserId).toBe(userId);
 
     const { redirectTo } = await client.submitInteraction();
-    await processSession(client, redirectTo);
+    // The existing grant skips consent when the step-up resumes authorization.
+    await client.manualConsent(redirectTo);
     expect(await client.getIdTokenClaims()).toMatchObject({
       sub: userId,
       acr: firstFactorAcr,

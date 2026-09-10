@@ -963,11 +963,7 @@ describe('ExperienceInteraction class', () => {
       expect(experienceInteraction.subjectUserId).toBe(mockUserWithMfaVerifications.id);
       expect(experienceInteraction.identifiedUserId).toBeUndefined();
       expect(experienceInteraction.carriedContributions).toEqual([
-        {
-          factor: AuthenticationFactor.Password,
-          class: AuthenticationFactorClass.FirstFactor,
-          amr: [AuthenticationMethodReference.Password],
-        },
+        { factor: AuthenticationFactor.Password, class: AuthenticationFactorClass.FirstFactor },
       ]);
       expect(experienceInteraction.toJson()).toMatchObject({
         interactionEvent: InteractionEvent.SignIn,

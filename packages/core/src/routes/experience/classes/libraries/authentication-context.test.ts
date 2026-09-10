@@ -209,14 +209,10 @@ describe('aggregateAuthenticationContext', () => {
       expect(
         deriveCarriedContributions([Password, Sms, ProofOfPossession, UserPresence, Federated])
       ).toEqual([
-        { factor: AuthenticationFactor.Password, class: FirstFactor, amr: [Password] },
-        { factor: AuthenticationFactor.Phone, class: FirstFactor, amr: [Sms] },
-        {
-          factor: AuthenticationFactor.WebAuthn,
-          class: Both,
-          amr: [ProofOfPossession, UserPresence, AuthenticationMethodReference.Mfa],
-        },
-        { factor: AuthenticationFactor.Federated, amr: [Federated] },
+        { factor: AuthenticationFactor.Password, class: FirstFactor },
+        { factor: AuthenticationFactor.Phone, class: FirstFactor },
+        { factor: AuthenticationFactor.WebAuthn, class: Both },
+        { factor: AuthenticationFactor.Federated },
       ]);
       // `otp` identifies no factor (email, TOTP, or backup code) and `mfa` is a summary marker.
       expect(deriveCarriedContributions([Otp, AuthenticationMethodReference.Mfa])).toEqual([]);
