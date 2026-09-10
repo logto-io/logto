@@ -19,9 +19,15 @@ mockEsm('#src/middleware/koa-guard.js', () => ({ default: koaGuard }));
 mockEsm('../middleware/koa-experience-verifications-audit-log.js', () => ({
   default: () => passThroughMiddleware,
 }));
+mockEsm('../classes/libraries/sentinel-guard.js', () => ({
+  withSentinel: jest.fn(
+    async (_options: unknown, verificationPromise: Promise<unknown>) => verificationPromise
+  ),
+}));
 
 const verificationRecord = {
-  id: 'passkey-verification-id',
+  id: 'webauthn-verification-id',
+  userId: 'pinned-subject-id',
   verifyWebAuthnAuthentication: jest.fn(),
 };
 
@@ -32,21 +38,22 @@ mockEsm('../classes/verifications/web-authn-verification.js', () => ({
 
 const { default: webAuthnVerificationRoute } = await import('./web-authn-verification.js');
 
+const passkeyVerifyPath = '/experience/verification/sign-in-passkey/authentication/verify';
+const mfaVerifyPath = '/experience/verification/web-authn/authentication/verify';
+
 const createRouter = (): RouterLike => ({
   post: jest.fn<void, [string, ...unknown[]]>(),
 });
 
-const getRouteHandler = (router: RouterLike): RouteHandler => {
-  const route = router.post.mock.calls.find(
-    ([path]) => path === '/experience/verification/sign-in-passkey/authentication/verify'
-  );
+const getRouteHandler = (router: RouterLike, path: string): RouteHandler => {
+  const route = router.post.mock.calls.find(([registeredPath]) => registeredPath === path);
   if (!route || typeof route.at(-1) !== 'function') {
-    throw new TypeError('Route handler not found');
+    throw new TypeError(`Route handler not found for ${path}`);
   }
   return route.at(-1) as RouteHandler;
 };
 
-const registerRoute = () => {
+const registerRoute = (path: string = passkeyVerifyPath) => {
   const router = createRouter();
   webAuthnVerificationRoute(
     router as never,
@@ -65,17 +72,13 @@ const registerRoute = () => {
       },
     } as never
   );
-  return getRouteHandler(router);
+  return getRouteHandler(router, path);
 };
 
 const mockPayload = {
   id: 'credential-id',
   rawId: 'credential-id',
-  response: {
-    authenticatorData: 'auth-data',
-    clientDataJSON: 'client-data',
-    signature: 'signature',
-  },
+  response: { clientDataJSON: 'client-data' },
   type: 'public-key',
 };
 
@@ -87,17 +90,23 @@ const identityConflictError = new RequestError({
 const createContext = ({
   isStepUp,
   verificationId,
+  recordUserId = 'pinned-subject-id',
 }: {
   isStepUp: boolean;
   verificationId?: string;
+  recordUserId?: string;
 }) => ({
   req: {},
   res: {},
   experienceInteraction: {
     isStepUp,
     subjectUserId: 'pinned-subject-id',
-    getVerificationRecordByTypeAndId: jest.fn(() => verificationRecord),
+    getVerificationRecordByTypeAndId: jest.fn(() => ({
+      ...verificationRecord,
+      userId: recordUserId,
+    })),
     setVerificationRecord: jest.fn(),
+    consumeForMfa: jest.fn(),
     skipCaptcha: jest.fn(),
     save: jest.fn().mockImplementation(resolveVoid),
   },
@@ -110,17 +119,20 @@ const createContext = ({
   },
 });
 
-describe('webAuthn verification route passkey verify', () => {
+describe('webAuthn verification routes verify', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     verificationRecord.verifyWebAuthnAuthentication.mockReset();
     verificationRecord.verifyWebAuthnAuthentication.mockRejectedValue(identityConflictError);
   });
 
-  it('allows the step-up 403 and identity conflict 409 response statuses in koaGuard', () => {
+  it('allows step-up 403 and identity conflict response statuses in koaGuard', () => {
     registerRoute();
     expect(koaGuard).toHaveBeenCalledWith(
       expect.objectContaining({ status: [200, 400, 403, 404, 409] })
+    );
+    expect(koaGuard).toHaveBeenCalledWith(
+      expect.objectContaining({ status: [200, 400, 403, 404] })
     );
   });
 
@@ -130,10 +142,29 @@ describe('webAuthn verification route passkey verify', () => {
     { isStepUp: false, verificationId: 'existing-id', expectedStatus: 409 },
     { isStepUp: false, verificationId: undefined, expectedStatus: 409 },
   ])(
-    'returns $expectedStatus for identity conflict (isStepUp: $isStepUp, verificationId: $verificationId)',
+    'passkey verify returns $expectedStatus for identity conflict (isStepUp: $isStepUp, verificationId: $verificationId)',
     async ({ isStepUp, verificationId, expectedStatus }) => {
-      const handler = registerRoute();
+      const handler = registerRoute(passkeyVerifyPath);
       const ctx = createContext({ isStepUp, verificationId });
+
+      await expect(handler(ctx, jest.fn().mockImplementation(resolveVoid))).rejects.toMatchError(
+        new RequestError({ code: 'session.identity_conflict', status: expectedStatus })
+      );
+    }
+  );
+
+  it.each([
+    { isStepUp: true, expectedStatus: 403 },
+    { isStepUp: false, expectedStatus: 404 },
+  ])(
+    'MFA verify returns $expectedStatus for identity conflict (isStepUp: $isStepUp)',
+    async ({ isStepUp, expectedStatus }) => {
+      const handler = registerRoute(mfaVerifyPath);
+      const ctx = createContext({
+        isStepUp,
+        verificationId: 'mfa-verification-id',
+        recordUserId: 'different-user-id',
+      });
 
       await expect(handler(ctx, jest.fn().mockImplementation(resolveVoid))).rejects.toMatchError(
         new RequestError({ code: 'session.identity_conflict', status: expectedStatus })

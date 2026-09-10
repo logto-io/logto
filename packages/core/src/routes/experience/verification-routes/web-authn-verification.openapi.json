@@ -145,6 +145,9 @@
           "400": {
             "description": "Invalid request. <br/> - `session.mfa.pending_info_not_found:` The WebAuthn authentication challenge is missing in the current verification record. <br/>- `session.mfa.webauthn_verification_failed:` The WebAuthn assertion response is invalid or cannot be verified."
           },
+          "403": {
+            "description": "Identity conflict in step-up authentication. <br/> - `session.identity_conflict:` The user associated with the verified WebAuthn credential does not match the pinned subject in the current step-up interaction."
+          },
           "404": {
             "description": "Verification record not found."
           }

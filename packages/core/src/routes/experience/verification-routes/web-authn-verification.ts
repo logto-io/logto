@@ -208,7 +208,7 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
       response: z.object({
         verificationId: z.string(),
       }),
-      status: [200, 400, 404],
+      status: [200, 400, 403, 404],
     }),
     koaExperienceVerificationsAuditLog({
       type: VerificationType.WebAuthn,
@@ -242,7 +242,7 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
         experienceInteraction.subjectUserId === webAuthnVerification.userId,
         new RequestError({
           code: 'session.identity_conflict',
-          status: 404,
+          status: experienceInteraction.isStepUp ? 403 : 404,
         })
       );
 
