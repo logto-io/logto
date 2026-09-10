@@ -1,0 +1,284 @@
+import { type ParameterizedContext } from 'koa';
+import { type RequestMethod } from 'node-mocks-http';
+
+import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
+
+import { experienceRoutes } from '../const.js';
+import { type ExperienceInteractionRouterContext } from '../types.js';
+
+import koaStepUpRouteGuard from './koa-step-up-route-guard.js';
+
+const { jest } = import.meta;
+
+type GuardContext = ParameterizedContext<unknown, ExperienceInteractionRouterContext>;
+
+const createMockContext = ({
+  method,
+  path,
+  isStepUp,
+}: {
+  method: string;
+  path: string;
+  isStepUp?: boolean;
+}) =>
+  ({
+    ...createContextWithRouteParameters({ url: path, method: method as RequestMethod }),
+    // The Koa context delegates `method` to the prototype, so the spread drops it.
+    method: method as RequestMethod,
+    // Missing when the interaction middleware whitelists the route.
+    ...(isStepUp === undefined
+      ? {}
+      : {
+          experienceInteraction: { isStepUp },
+        }),
+  }) as unknown as GuardContext;
+
+// The full experience route catalog, with the pure step-up enforcement expected on each. Routes
+// outside the allow-list must fail with 403 `session.step_up.forbidden_route`.
+const routeCases: Array<{ method: string; path: string; allowed: boolean; name: string }> = [
+  { method: 'GET', path: experienceRoutes.interaction, allowed: true, name: 'read interaction' },
+  { method: 'POST', path: `${experienceRoutes.prefix}/submit`, allowed: true, name: 'submit' },
+  { method: 'POST', path: experienceRoutes.identification, allowed: true, name: 'identification' },
+  {
+    method: 'PUT',
+    path: `${experienceRoutes.prefix}/interaction-event`,
+    allowed: false,
+    name: 'interaction-event switching',
+  },
+  {
+    method: 'POST',
+    path: `${experienceRoutes.verification}/password`,
+    allowed: true,
+    name: 'pinned-user password',
+  },
+  {
+    method: 'POST',
+    path: `${experienceRoutes.verification}/verification-code`,
+    allowed: true,
+    name: 'pinned-user code send',
+  },
+  {
+    method: 'POST',
+    path: `${experienceRoutes.verification}/verification-code/verify`,
+    allowed: true,
+    name: 'pinned-user code verify',
+  },
+  {
+    method: 'POST',
+    path: `${experienceRoutes.verification}/mfa-verification-code`,
+    allowed: true,
+    name: 'MFA code send',
+  },
+  {
+    method: 'POST',
+    path: `${experienceRoutes.verification}/mfa-verification-code/verify`,
+    allowed: true,
+    name: 'MFA code verify',
+  },
+  {
+    method: 'POST',
+    path: `${experienceRoutes.verification}/social/connector-id/authorization-uri`,
+    allowed: false,
+    name: 'social authorization uri',
+  },
+  {
+    method: 'POST',
+    path: `${experienceRoutes.verification}/social/connector-id/verify`,
+    allowed: false,
+    name: 'social verify',
+  },
+  {
+    method: 'POST',
+    path: `${experienceRoutes.verification}/sso/connector-id/authorization-uri`,
+    allowed: false,
+    name: 'SSO authorization uri',
+  },
+  {
+    method: 'POST',
+    path: `${experienceRoutes.verification}/sso/connector-id/verify`,
+    allowed: false,
+    name: 'SSO verify',
+  },
+  {
+    method: 'POST',
+    path: `${experienceRoutes.verification}/totp/secret`,
+    allowed: false,
+    name: 'TOTP enrollment',
+  },
+  {
+    method: 'POST',
+    path: `${experienceRoutes.verification}/totp/verify`,
+    allowed: true,
+    name: 'TOTP verify',
+  },
+  {
+    method: 'POST',
+    path: `${experienceRoutes.verification}/web-authn/registration`,
+    allowed: false,
+    name: 'WebAuthn enrollment',
+  },
+  {
+    method: 'POST',
+    path: `${experienceRoutes.verification}/web-authn/registration/verify`,
+    allowed: false,
+    name: 'WebAuthn enrollment verify',
+  },
+  {
+    method: 'POST',
+    path: `${experienceRoutes.verification}/web-authn/authentication`,
+    allowed: true,
+    name: 'WebAuthn authentication',
+  },
+  {
+    method: 'POST',
+    path: `${experienceRoutes.verification}/web-authn/authentication/verify`,
+    allowed: true,
+    name: 'WebAuthn authentication verify',
+  },
+  {
+    method: 'POST',
+    path: `${experienceRoutes.verification}/sign-in-passkey/authentication`,
+    allowed: false,
+    name: 'sign-in passkey authentication',
+  },
+  {
+    method: 'POST',
+    path: `${experienceRoutes.verification}/sign-in-passkey/authentication/verify`,
+    allowed: false,
+    name: 'sign-in passkey authentication verify',
+  },
+  {
+    method: 'POST',
+    path: `${experienceRoutes.verification}/backup-code/generate`,
+    allowed: false,
+    name: 'backup code enrollment',
+  },
+  {
+    method: 'POST',
+    path: `${experienceRoutes.verification}/backup-code/verify`,
+    allowed: true,
+    name: 'backup code verify',
+  },
+  {
+    method: 'POST',
+    path: `${experienceRoutes.verification}/new-password-identity`,
+    allowed: false,
+    name: 'new-password identity',
+  },
+  {
+    method: 'POST',
+    path: `${experienceRoutes.verification}/one-time-token/verify`,
+    allowed: false,
+    name: 'one-time token',
+  },
+  { method: 'POST', path: experienceRoutes.profile, allowed: false, name: 'profile update' },
+  {
+    method: 'POST',
+    path: `${experienceRoutes.prefix}/user-assets/avatar`,
+    allowed: false,
+    name: 'user assets',
+  },
+  {
+    method: 'PUT',
+    path: `${experienceRoutes.profile}/password`,
+    allowed: false,
+    name: 'forgot-password reset',
+  },
+  {
+    method: 'POST',
+    path: `${experienceRoutes.mfa}/mfa-enabled`,
+    allowed: false,
+    name: 'MFA enabled',
+  },
+  {
+    method: 'POST',
+    path: `${experienceRoutes.mfa}/mfa-skipped`,
+    allowed: false,
+    name: 'MFA skipped',
+  },
+  {
+    method: 'POST',
+    path: `${experienceRoutes.profile}/trusted-device`,
+    allowed: false,
+    name: 'trusted device',
+  },
+  {
+    method: 'POST',
+    path: `${experienceRoutes.mfa}/mfa-suggestion-skipped`,
+    allowed: false,
+    name: 'MFA suggestion skipped',
+  },
+  {
+    method: 'POST',
+    path: `${experienceRoutes.mfa}/passkey-skipped`,
+    allowed: false,
+    name: 'passkey skipped',
+  },
+  {
+    method: 'POST',
+    path: `${experienceRoutes.mfa}/passkey`,
+    allowed: false,
+    name: 'sign-in passkey binding',
+  },
+  { method: 'POST', path: experienceRoutes.mfa, allowed: false, name: 'MFA binding' },
+];
+
+describe('koaStepUpRouteGuard', () => {
+  it.each(routeCases)(
+    '$name ($method $path) is $allowed in pure step-up',
+    async ({ method, path, allowed }) => {
+      const ctx = createMockContext({ method, path, isStepUp: true });
+      const next = jest.fn();
+      const guard = koaStepUpRouteGuard();
+
+      if (allowed) {
+        await expect(guard(ctx, next)).resolves.toBeUndefined();
+        expect(next).toHaveBeenCalledTimes(1);
+        return;
+      }
+
+      await expect(guard(ctx, next)).rejects.toMatchObject({
+        code: 'session.step_up.forbidden_route',
+        status: 403,
+      });
+      expect(next).not.toHaveBeenCalled();
+    }
+  );
+
+  it.each(routeCases)(
+    '$name ($method $path) is not restricted outside pure step-up',
+    async ({ method, path }) => {
+      const ctx = createMockContext({ method, path, isStepUp: false });
+      const next = jest.fn();
+
+      await expect(koaStepUpRouteGuard()(ctx, next)).resolves.toBeUndefined();
+      expect(next).toHaveBeenCalledTimes(1);
+    }
+  );
+
+  it('does not restrict routes that carry no interaction', async () => {
+    const ctx = createMockContext({
+      method: 'POST',
+      path: `${experienceRoutes.verification}/totp/secret`,
+    });
+    const next = jest.fn();
+
+    await expect(koaStepUpRouteGuard()(ctx, next)).resolves.toBeUndefined();
+    expect(next).toHaveBeenCalledTimes(1);
+  });
+
+  it('denies a route that is not in the catalog in pure step-up', async () => {
+    const ctx = createMockContext({
+      method: 'GET',
+      path: `${experienceRoutes.prefix}/unknown`,
+      isStepUp: true,
+    });
+    const next = jest.fn();
+
+    await expect(koaStepUpRouteGuard()(ctx, next)).rejects.toMatchObject({
+      code: 'session.step_up.forbidden_route',
+      status: 403,
+    });
+    expect(next).not.toHaveBeenCalled();
+  });
+});

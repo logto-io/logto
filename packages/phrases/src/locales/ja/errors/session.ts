@@ -52,6 +52,7 @@ const session = {
       'ステップアップ認証はサインインのインタラクションでのみ利用できます。',
     subject_not_found:
       'ステップアップ認証のための認証済みセッションが見つかりません。もう一度サインインしてください。',
+    forbidden_route: 'このルートはステップアップ認証中は許可されていません。',
   },
   passkey_sign_in: {
     pending_info_not_found:

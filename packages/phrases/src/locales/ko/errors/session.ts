@@ -47,6 +47,7 @@ const session = {
   step_up: {
     invalid_interaction_event: '스텝업 인증은 로그인 상호작용에서만 사용할 수 있습니다.',
     subject_not_found: '스텝업 인증을 위한 인증된 세션을 찾을 수 없습니다. 다시 로그인해 주세요.',
+    forbidden_route: '이 경로는 스텝업 인증 중에 허용되지 않습니다.',
   },
   passkey_sign_in: {
     pending_info_not_found:

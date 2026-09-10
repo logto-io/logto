@@ -53,6 +53,7 @@ const session = {
       'Uwierzytelnianie step-up jest dostępne tylko dla interakcji logowania.',
     subject_not_found:
       'Nie znaleziono uwierzytelnionej sesji dla uwierzytelniania step-up. Zaloguj się ponownie.',
+    forbidden_route: 'Ta trasa nie jest dozwolona podczas uwierzytelniania step-up.',
   },
   passkey_sign_in: {
     pending_info_not_found:

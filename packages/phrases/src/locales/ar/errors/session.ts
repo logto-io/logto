@@ -44,6 +44,7 @@ const session = {
     invalid_interaction_event: 'المصادقة المعززة متاحة فقط لتفاعلات تسجيل الدخول.',
     subject_not_found:
       'لم يتم العثور على جلسة مصادق عليها للمصادقة المعززة. يرجى تسجيل الدخول مرة أخرى.',
+    forbidden_route: 'هذا المسار غير مسموح به أثناء المصادقة المعززة.',
   },
   passkey_sign_in: {
     pending_info_not_found:

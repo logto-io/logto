@@ -272,9 +272,10 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
     `${experienceRoutes.verification}/password`,
     koaGuard({
       body: bodyGuard,
+      // 403: a pure step-up supplied a raw identifier
       // 404: no identifier given and the interaction carries no subject
       status: EnvSet.values.isDevFeaturesEnabled
-        ? [200, 400, 401, 404, 409, 422]
+        ? [200, 400, 401, 403, 404, 409, 422]
         : [200, 400, 401, 409, 422],
       response: z.object({
         verificationId: z.string(),
@@ -287,6 +288,11 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
     async (ctx, next) => {
       const { experienceInteraction } = ctx;
       const { identifier, password } = ctx.guard.body;
+
+      assertThat(
+        !experienceInteraction.isStepUp || !identifier,
+        new RequestError({ code: 'session.step_up.forbidden_route', status: 403 })
+      );
 
       ctx.verificationAuditLog.append({
         payload: {
