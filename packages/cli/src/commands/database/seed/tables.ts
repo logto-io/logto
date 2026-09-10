@@ -40,7 +40,7 @@ import type { DatabaseTransactionConnection } from '@silverhand/slonik';
 import { sql } from '@silverhand/slonik';
 
 import { insertInto } from '../../../database.js';
-import { assertNoExistingTenantRoles, getDatabaseName } from '../../../queries/database.js';
+import { getDatabaseName } from '../../../queries/database.js';
 import { updateDatabaseTimestamp } from '../../../queries/system.js';
 import { convertToIdentifiers } from '../../../sql.js';
 import { consoleLog, getPathInModule } from '../../../utils.js';
@@ -94,9 +94,6 @@ export const createTables = async (
   connection: DatabaseTransactionConnection,
   encryptBaseRole: boolean
 ): Promise<{ password: string }> => {
-  const database = await getDatabaseName(connection, true);
-  await assertNoExistingTenantRoles(connection, database);
-
   const tableDirectory = getPathInModule('@logto/schemas', 'tables');
   const directoryFiles = await readdir(tableDirectory);
   const tableFiles = directoryFiles.filter((file) => file.endsWith('.sql'));
@@ -132,6 +129,7 @@ export const createTables = async (
     ...queries.filter(([file]) => !lifecycleNames.includes(file.slice(1, -4))),
   ];
   const sorted = allQueries.slice().sort(compareQuery);
+  const database = await getDatabaseName(connection, true);
   const password = encryptBaseRole ? generateStandardId(32) : '';
 
   await runLifecycleQuery('before_all', { database, password });

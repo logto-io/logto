@@ -1,3 +1,4 @@
+import { createTenantDatabaseMetadata } from '@logto/core-kit';
 import { adminTenantId, defaultTenantId } from '@logto/schemas';
 import type { CommonQueryMethods } from '@silverhand/slonik';
 import { sql } from '@silverhand/slonik';
@@ -11,7 +12,7 @@ export const getDatabaseName = async (pool: CommonQueryMethods, normalized = fal
 };
 
 /**
- * Check the roles that a fresh Logto database needs before creating any tables.
+ * Check the roles that a fresh Logto database needs before the seed opens its transaction.
  *
  * PostgreSQL roles are shared by the whole cluster, so dropping a database does not remove the
  * roles that were created for it. Reusing an existing role could change the permissions of another
@@ -19,11 +20,11 @@ export const getDatabaseName = async (pool: CommonQueryMethods, normalized = fal
  * roles instead.
  */
 export const assertNoExistingTenantRoles = async (pool: CommonQueryMethods, database: string) => {
-  const roleNames = [
-    `logto_tenant_${database}`,
-    `logto_tenant_${database}_${defaultTenantId}`,
-    `logto_tenant_${database}_${adminTenantId}`,
-  ];
+  // Derive the names from the same helper `createTenant()` uses at seed time, so this check keeps
+  // matching if the naming scheme ever changes.
+  const defaultTenant = createTenantDatabaseMetadata(database, defaultTenantId);
+  const adminTenant = createTenantDatabaseMetadata(database, adminTenantId);
+  const roleNames = [defaultTenant.parentRole, defaultTenant.role, adminTenant.role];
 
   const existingRoles = await pool.any<{ roleName: string }>(sql`
     select rolname as "roleName"
