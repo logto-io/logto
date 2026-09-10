@@ -281,4 +281,38 @@ describe('koaStepUpRouteGuard', () => {
     });
     expect(next).not.toHaveBeenCalled();
   });
+
+  it.each([
+    { name: 'a case variant', path: `${experienceRoutes.verification}/PASSWORD` },
+    { name: 'a trailing slash', path: `${experienceRoutes.verification}/password/` },
+    { name: 'both', path: `${experienceRoutes.verification}/Password/` },
+  ])('normalizes $name of an allowed path like the router', async ({ path }) => {
+    const ctx = createMockContext({
+      method: 'POST',
+      path,
+      isStepUp: true,
+    });
+    const next = jest.fn();
+
+    await expect(koaStepUpRouteGuard()(ctx, next)).resolves.toBeUndefined();
+    expect(next).toHaveBeenCalledTimes(1);
+  });
+
+  it.each([
+    { name: 'a case variant', path: `${experienceRoutes.prefix}/INTERACTION-EVENT` },
+    { name: 'a trailing slash', path: `${experienceRoutes.prefix}/interaction-event/` },
+  ])('still denies $name of a forbidden path', async ({ path }) => {
+    const ctx = createMockContext({
+      method: 'PUT',
+      path,
+      isStepUp: true,
+    });
+    const next = jest.fn();
+
+    await expect(koaStepUpRouteGuard()(ctx, next)).rejects.toMatchObject({
+      code: 'session.step_up.forbidden_route',
+      status: 403,
+    });
+    expect(next).not.toHaveBeenCalled();
+  });
 });

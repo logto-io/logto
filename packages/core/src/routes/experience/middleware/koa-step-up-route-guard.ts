@@ -45,8 +45,12 @@ export default function koaStepUpRouteGuard<
       return next();
     }
 
+    // Mirror the router's default normalization so an allow-listed route is not denied by its
+    // spelling: koa-router matches case-insensitively and tolerates a trailing slash.
+    const path = ctx.path.toLowerCase().replace(/\/$/, '');
+
     assertThat(
-      allowedStepUpRoutes.has(`${ctx.method.toUpperCase()} ${ctx.path}`),
+      allowedStepUpRoutes.has(`${ctx.method.toUpperCase()} ${path}`),
       new RequestError({ code: 'session.step_up.forbidden_route', status: 403 })
     );
 
