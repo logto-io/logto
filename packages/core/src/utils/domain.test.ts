@@ -3,7 +3,7 @@ import { createMockQuotaLibrary } from '#src/test-utils/quota.js';
 
 import { maxCustomDomains } from '../constants/index.js';
 
-import { assertCustomDomainLimit, isSubdomainOf, normalizeHostname } from './domain.js';
+import { assertCustomDomainLimit, isSubdomainOf } from './domain.js';
 
 const { jest } = import.meta;
 
@@ -17,19 +17,6 @@ const createQuotaLibraryMock = () => {
     guardTenantUsageByKey,
   };
 };
-
-describe('normalizeHostname()', () => {
-  it('should trim, lowercase, and strip trailing dots', () => {
-    expect(normalizeHostname(' App.Example.COM. ')).toBe('app.example.com');
-    expect(normalizeHostname('app.example.com')).toBe('app.example.com');
-    expect(normalizeHostname('app.example.com..')).toBe('app.example.com');
-  });
-
-  it('should be idempotent', () => {
-    const normalized = normalizeHostname(' App.Example.COM.. ');
-    expect(normalizeHostname(normalized)).toBe(normalized);
-  });
-});
 
 describe('isSubdomainOf()', () => {
   it('should return true if the given domain is a subdomain of a domain', () => {

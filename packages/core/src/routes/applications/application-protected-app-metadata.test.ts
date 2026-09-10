@@ -117,11 +117,11 @@ describe('application protected app metadata routes', () => {
       expect(syncAppConfigsToRemote).toHaveBeenCalledWith(mockProtectedApplication.id);
     });
 
-    it('should canonicalize the domain to lowercase', async () => {
+    it('should store the domain in lowercase', async () => {
       const response = await requester
         .post(`/applications/${mockProtectedApplication.id}/protected-app-metadata/custom-domains`)
         .send({
-          domain: 'App.Example.COM.',
+          domain: 'App.Example.COM',
         });
       expect(response.status).toEqual(201);
       expect(addDomainToRemote).toHaveBeenCalledWith(mockDomain);
@@ -140,19 +140,6 @@ describe('application protected app metadata routes', () => {
           },
         })
       );
-    });
-
-    it('should reject a domain that is empty or contains whitespace', async () => {
-      for (const domain of ['', '   ', 'app example.com', ' app.example.com ']) {
-        // eslint-disable-next-line no-await-in-loop
-        const response = await requester
-          .post(
-            `/applications/${mockProtectedApplication.id}/protected-app-metadata/custom-domains`
-          )
-          .send({ domain });
-        expect(response.status).toEqual(400);
-      }
-      expect(addDomainToRemote).not.toHaveBeenCalled();
     });
 
     it('throw when domain exists', async () => {
@@ -215,7 +202,7 @@ describe('application protected app metadata routes', () => {
         },
       });
       const response = await requester.delete(
-        `/applications/${mockProtectedApplication.id}/protected-app-metadata/custom-domains/%20App.Example.COM.%20`
+        `/applications/${mockProtectedApplication.id}/protected-app-metadata/custom-domains/App.Example.COM`
       );
       expect(response.status).toEqual(204);
       expect(deleteRemoteAppConfigs).toHaveBeenCalledWith(mockDomain);

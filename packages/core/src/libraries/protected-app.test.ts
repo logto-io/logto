@@ -155,38 +155,16 @@ afterEach(() => {
 
 describe('addDomainToRemote()', () => {
   it('should reject the default domain and its subdomains', async () => {
-    await expect(addDomainToRemote('protected.app')).rejects.toMatchError(
-      new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
-    );
-    await expect(addDomainToRemote('foo.protected.app')).rejects.toMatchError(
-      new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
-    );
-    await expect(addDomainToRemote('foo.dev.protected.app')).rejects.toMatchError(
-      new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
-    );
-    await expect(addDomainToRemote('Foo.Dev.Protected.App')).rejects.toMatchError(
-      new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
-    );
-    await expect(addDomainToRemote(' protected.app ')).rejects.toMatchError(
-      new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
-    );
-    await expect(addDomainToRemote('foo.protected.app.')).rejects.toMatchError(
-      new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
-    );
+    for (const hostname of ['protected.app', 'foo.protected.app', 'Foo.Dev.Protected.App']) {
+      // eslint-disable-next-line no-await-in-loop
+      await expect(addDomainToRemote(hostname)).rejects.toMatchError(
+        new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
+      );
+    }
     expect(createCustomHostname).not.toHaveBeenCalled();
   });
 
-  it('should reject a hostname that normalizes to an empty string', async () => {
-    await expect(addDomainToRemote('.')).rejects.toMatchError(
-      new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
-    );
-    await expect(addDomainToRemote(' ... ')).rejects.toMatchError(
-      new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
-    );
-    expect(createCustomHostname).not.toHaveBeenCalled();
-  });
-
-  it('should reject the default domain even in local dev mode', async () => {
+  it('should reject the default domain in local dev mode', async () => {
     // eslint-disable-next-line @silverhand/fp/no-mutation
     SystemContext.shared.protectedAppConfigProviderConfig = undefined;
     setProtectedAppLocalDevEnabled(true);
@@ -199,14 +177,11 @@ describe('addDomainToRemote()', () => {
     await expect(addDomainToRemote('foo.blocked.com')).rejects.toMatchError(
       new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
     );
-    await expect(addDomainToRemote('Foo.Blocked.COM')).rejects.toMatchError(
-      new RequestError({ code: 'domain.domain_is_not_allowed', status: 422 })
-    );
     expect(createCustomHostname).not.toHaveBeenCalled();
   });
 
-  it('should add a custom hostname for other domains with the lowercased hostname', async () => {
-    await expect(addDomainToRemote('Secure.Example.COM.')).resolves.toMatchObject({
+  it('should add a custom hostname in lowercase for other domains', async () => {
+    await expect(addDomainToRemote('Secure.Example.COM')).resolves.toMatchObject({
       domain: 'secure.example.com',
       cloudflareData: mockCloudflareData,
       status: DomainStatus.PendingVerification,

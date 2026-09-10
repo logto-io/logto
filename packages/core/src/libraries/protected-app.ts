@@ -29,7 +29,7 @@ import {
   getFallbackOrigin,
   updateProtectedAppSiteConfigs,
 } from '#src/utils/cloudflare/index.js';
-import { isSubdomainOf, normalizeHostname } from '#src/utils/domain.js';
+import { isSubdomainOf } from '#src/utils/domain.js';
 
 export type ProtectedAppLibrary = ReturnType<typeof createProtectedAppLibrary>;
 
@@ -129,19 +129,19 @@ const buildProtectedAppData = async ({
 const addDomainToRemote = async (
   hostname: string
 ): Promise<NonNullable<ProtectedAppMetadata['customDomains']>[number]> => {
-  // Normalize so mixed case, padding, or a trailing dot cannot bypass the checks below. Inputs
-  // such as `.` normalize to an empty string, which is never a valid hostname.
-  const normalizedHostname = normalizeHostname(hostname);
-  assertThat(normalizedHostname, 'domain.domain_is_not_allowed', 422);
+  // Hostnames are case-insensitive. Compare and store in lowercase so the stored domain matches
+  // the request host the worker sees.
+  const normalizedHostname = hostname.toLowerCase();
 
   // The default domain of protected apps is reserved. Hostnames under it are assigned by Logto
   // when an app is created, and adding one as a custom domain creates a custom hostname inside
   // our own zone that never gets a matching site config.
-  const { domain: providerDomain } = await getProviderConfig();
-  const defaultDomain = normalizeHostname(providerDomain);
-  const matches = (domain: string) =>
-    normalizedHostname === domain || isSubdomainOf(normalizedHostname, domain);
-  assertThat(!matches(defaultDomain), 'domain.domain_is_not_allowed', 422);
+  const { domain: defaultDomain } = await getProviderConfig();
+  assertThat(
+    normalizedHostname !== defaultDomain && !isSubdomainOf(normalizedHostname, defaultDomain),
+    'domain.domain_is_not_allowed',
+    422
+  );
 
   if (EnvSet.values.isProtectedAppLocalDevEnabled) {
     return {
@@ -154,11 +154,11 @@ const addDomainToRemote = async (
   }
 
   const hostnameProviderConfig = await getHostnameProviderConfig();
-  const blockedDomains = (hostnameProviderConfig.blockedDomains ?? []).map((blocked) =>
-    normalizeHostname(blocked)
-  );
+  const { blockedDomains } = hostnameProviderConfig;
   assertThat(
-    !blockedDomains.some((blocked) => matches(blocked)),
+    !(blockedDomains ?? []).some(
+      (domain) => normalizedHostname === domain || isSubdomainOf(normalizedHostname, domain)
+    ),
     'domain.domain_is_not_allowed',
     422
   );
