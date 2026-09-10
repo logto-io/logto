@@ -60,6 +60,8 @@ const session = {
     forbidden_route: "Cette route n'est pas autorisée pendant l'authentification renforcée.",
     forbidden_identifier:
       "Un identifiant n'est pas autorisé pendant l'authentification renforcée. Réessayez sans le champ identifiant.",
+    acr_not_satisfied:
+      "La vérification effectuée ne satisfait pas le contexte d'authentification demandé. Veuillez vérifier une autre méthode.",
   },
   passkey_sign_in: {
     pending_info_not_found:

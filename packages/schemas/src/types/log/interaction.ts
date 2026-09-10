@@ -17,6 +17,11 @@ export enum Field {
   Verification = 'Verification',
   Captcha = 'Captcha',
   SignInPasskey = 'SignInPasskey',
+  /**
+   * A pure step-up submission: an authenticated session re-proved its subject to reach a requested
+   * authentication context class. Not a sign-in, so it never shares `SignIn.Submit`.
+   */
+  StepUp = 'StepUp',
 }
 
 /** Method to verify the identifier */
@@ -103,6 +108,14 @@ export type DeprecatedInteractionLogKey =
  * - Indicates an identifier method is being created or submitted to an interaction.
  *   - When {@link Method} is `VerificationCode`, {@link Action} can be `Create` (generate and send a code) or `Submit` (verify and submit to the identifiers);
  *   - Otherwise, {@link Action} is fixed to `Submit` (other methods can be verified on submitting).
+ *
+ * ```ts
+ * `Interaction.${InteractionEvent}.${Field.StepUp}.${Action.Submit}`
+ * ```
+ *
+ * - Indicates a pure step-up interaction is submitted: an authenticated session re-proved its
+ *   subject to reach the requested authentication context class. Its payload records the requested
+ *   and achieved classes and the factor families that were proved, never a credential.
  */
 export type LogKey =
   | `${Prefix}.${Action.Create | Action.End}`
@@ -113,6 +126,7 @@ export type LogKey =
   | `${Prefix}.${InteractionEvent}.${Field.SignInPasskey}.${Action.Submit}`
   | `${Prefix}.${InteractionEvent}.${Field.Verification}.${VerificationType}.${Action}`
   | `${Prefix}.${InteractionEvent}.${Field.Identifier}.${Action.Submit}`
+  | `${Prefix}.${InteractionEvent}.${Field.StepUp}.${Action.Submit}`
   // IdpInitiatedSingleSignOn log, used upon receiving a SAML request from the IdP
   | `${Prefix}.${InteractionEvent.SignIn}.${Field.Verification}.IdpInitiatedSso.${Action.Create}`
   | DeprecatedInteractionLogKey;

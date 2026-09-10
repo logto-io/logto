@@ -17,6 +17,7 @@ export const auditLogEventTitle = Object.freeze({
   'Interaction.Register.Update': 'Update register interaction',
   'Interaction.SignIn.Profile.Update': 'Patch update sign-in interaction profile',
   'Interaction.SignIn.Submit': 'Submit sign-in interaction',
+  'Interaction.SignIn.StepUp.Submit': 'Submit step-up authentication',
   'Interaction.SignIn.Update': 'Update sign-in interaction',
   'Interaction.Register.Create': 'Create new register interaction',
   'Interaction.SignIn.Create': 'Create new sign-in interaction',

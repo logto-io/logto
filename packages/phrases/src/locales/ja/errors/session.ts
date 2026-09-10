@@ -55,6 +55,8 @@ const session = {
     forbidden_route: 'このルートはステップアップ認証中は許可されていません。',
     forbidden_identifier:
       'ステップアップ認証中は識別子を指定できません。識別子フィールドを省略して再試行してください。',
+    acr_not_satisfied:
+      '完了した認証は要求された認証コンテキストを満たしていません。別の方法で認証してください。',
   },
   passkey_sign_in: {
     pending_info_not_found:

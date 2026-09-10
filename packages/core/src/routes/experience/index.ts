@@ -208,10 +208,19 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
     }),
     async (ctx, next) => {
       const { createLog, experienceInteraction } = ctx;
+      const { interactionEvent, isStepUp } = experienceInteraction;
 
-      const log = createLog(`Interaction.${experienceInteraction.interactionEvent}.Submit`);
+      // A pure step-up completes through its own allow-list path and has its own audit key, so a
+      // step-up submission is never mistaken for a sign-in in the audit log.
+      const log = createLog(
+        isStepUp
+          ? `Interaction.${interactionEvent}.StepUp.Submit`
+          : `Interaction.${interactionEvent}.Submit`
+      );
 
-      await ctx.experienceInteraction.submit(log);
+      await (isStepUp
+        ? experienceInteraction.submitStepUp(log)
+        : experienceInteraction.submit(log));
 
       log.append({
         interaction: ctx.experienceInteraction.toJson(),

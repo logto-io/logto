@@ -58,6 +58,8 @@ const session = {
     forbidden_route: 'Diese Route ist während der Step-up-Authentifizierung nicht zulässig.',
     forbidden_identifier:
       'Ein Identifier ist während der Step-up-Authentifizierung nicht zulässig. Sende die Anfrage ohne das Identifier-Feld erneut.',
+    acr_not_satisfied:
+      'Die abgeschlossene Verifizierung erfüllt nicht den angeforderten Authentifizierungskontext. Bitte verifiziere eine andere Methode.',
   },
   passkey_sign_in: {
     pending_info_not_found:

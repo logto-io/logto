@@ -10,13 +10,17 @@ import { parseInteractionCookie } from '#src/utils.js';
  * Start an authorization on the client's current cookie jar (so an existing OIDC session is
  * presented) and merge the cookies it sets, so the client can continue with the interaction the
  * authorization started.
+ *
+ * `redirectUri` defaults to the demo app callback; a client built on another application must pass
+ * the callback it registered.
  */
 export const authorizeWithSession = async (
   client: ExperienceClient,
-  options: Omit<SignInOptions, 'redirectUri'> = {}
+  options: Omit<SignInOptions, 'redirectUri'> = {},
+  redirectUri = demoAppRedirectUri
 ) => {
   const response = await client.startAuthorization(
-    demoAppRedirectUri,
+    redirectUri,
     options,
     client.getCookieHeader('/oidc/auth')
   );

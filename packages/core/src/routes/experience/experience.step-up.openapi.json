@@ -1,0 +1,19 @@
+{
+  "tags": [
+    {
+      "name": "Dev feature"
+    }
+  ],
+  "paths": {
+    "/api/experience/submit": {
+      "post": {
+        "description": "Submit the current interaction. <br/>- Submit the verified user identity to the OIDC provider for further authentication (SignIn and Register). <br/>- Update the user's profile data if any (SignIn and Register). <br/>- Reset the password and clear all the interaction records (ForgotPassword). <br/>- Complete a step-up interaction: the interaction must have reached the authentication context class the authorization request selected, and only the methods it established are written to the account, with no sign-in side effect.",
+        "responses": {
+          "403": {
+            "description": "Multi-Factor Authentication (MFA) is enabled for the user but has not been verified (SignIn and Register). <br/>- A step-up interaction did not reach the requested authentication context class (`session.step_up.acr_not_satisfied`); no interaction result is written."
+          }
+        }
+      }
+    }
+  }
+}

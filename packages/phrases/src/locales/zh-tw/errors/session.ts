@@ -43,6 +43,7 @@ const session = {
     subject_not_found: '找不到用於升級驗證的已驗證工作階段。請重新登入。',
     forbidden_route: '升級驗證期間不允許存取此路由。',
     forbidden_identifier: '升級驗證期間不允許提供識別碼。請移除 identifier 欄位後重試。',
+    acr_not_satisfied: '已完成的驗證不符合要求的驗證情境，請驗證其他方式。',
   },
   passkey_sign_in: {
     pending_info_not_found: '未找到待處理的 Passkey 登入資訊。請重新啟動登入流程。',
