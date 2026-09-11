@@ -224,5 +224,23 @@ describe('SignInPasskeyVerification', () => {
       expect(verification.isVerified).toBe(true);
       expect(updateUserById).toHaveBeenCalled();
     });
+
+    it('should throw 409 identity conflict when user id does not match verification record', async () => {
+      const verification = new SignInPasskeyVerification(tenant.libraries, tenant.queries, {
+        id: 'v-id',
+        type: VerificationType.SignInPasskey,
+        userId: 'different-user-id',
+        verified: false,
+        authenticationChallenge: 'auth-challenge',
+        authenticationRpId: rpId,
+      });
+
+      await expect(
+        verification.verifyWebAuthnAuthentication(baseCtx, {
+          ...mockWebAuthnVerificationPayload,
+          id: mockUserWebAuthnMfaVerification.credentialId,
+        })
+      ).rejects.toMatchError(new RequestError({ code: 'session.identity_conflict', status: 409 }));
+    });
   });
 });

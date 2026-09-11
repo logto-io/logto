@@ -1,7 +1,9 @@
 /* eslint-disable max-lines -- Password verification fallback scenarios share extensive route mocks. */
 import {
+  AdditionalIdentifier,
   InteractionEvent,
   LogtoActionKey,
+  SentinelActivityAction,
   SignInIdentifier,
   UsersPasswordEncryptionMethod,
   VerificationType,
@@ -9,6 +11,7 @@ import {
 import { createMockUtils } from '@logto/shared/esm';
 
 import { mockUser } from '#src/__mocks__/user.js';
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 
 const { jest } = import.meta;
@@ -51,10 +54,12 @@ const passwordVerificationRecord = {
 };
 
 const createPasswordVerification = jest.fn(() => passwordVerificationRecord);
+const createPasswordVerificationForUser = jest.fn(() => passwordVerificationRecord);
 
 mockEsm('../classes/verifications/password-verification.js', () => ({
   PasswordVerification: {
     create: createPasswordVerification,
+    createForUser: createPasswordVerificationForUser,
   },
 }));
 
@@ -122,8 +127,21 @@ const getSentinelPromise = async () => {
   return sentinelPromise;
 };
 
+const getLastGuardConfig = () => {
+  const lastCall = koaGuard.mock.calls.at(-1) as unknown[] | undefined;
+
+  return lastCall?.[0] as
+    | {
+        body: { safeParse: (value: unknown) => { success: boolean } };
+        status: number[];
+      }
+    | undefined;
+};
+
 const runAction = jest.fn();
 const findUserByEmail = jest.fn();
+const findUserById = jest.fn();
+const getSignInExperienceData = jest.fn();
 const createUser = jest.fn();
 const updateUser = jest.fn();
 const createLog = jest.fn();
@@ -133,9 +151,13 @@ const sessionId = 'session-id';
 type PasswordVerificationRouteContext = {
   experienceInteraction: {
     interactionEvent: InteractionEvent;
+    subjectUserId?: string;
     provisionLibrary: {
       createUser: typeof createUser;
       updateUser: typeof updateUser;
+    };
+    signInExperienceValidator: {
+      getSignInExperienceData: typeof getSignInExperienceData;
     };
     setVerificationRecord: jest.Mock;
     save: jest.Mock;
@@ -152,7 +174,7 @@ type PasswordVerificationRouteContext = {
   };
   guard: {
     body: {
-      identifier: typeof identifier;
+      identifier?: typeof identifier;
       password: string;
     };
   };
@@ -174,6 +196,7 @@ const registerRoute = () => {
       queries: {
         users: {
           findUserByEmail,
+          findUserById,
         },
       },
       sentinel: {},
@@ -184,13 +207,24 @@ const registerRoute = () => {
 };
 
 const createContext = (
-  interactionEvent = InteractionEvent.SignIn
+  interactionEvent = InteractionEvent.SignIn,
+  {
+    subjectUserId,
+    body = { identifier, password },
+  }: {
+    subjectUserId?: string;
+    body?: PasswordVerificationRouteContext['guard']['body'];
+  } = {}
 ): PasswordVerificationRouteContext => ({
   experienceInteraction: {
     interactionEvent,
+    subjectUserId,
     provisionLibrary: {
       createUser,
       updateUser,
+    },
+    signInExperienceValidator: {
+      getSignInExperienceData,
     },
     setVerificationRecord: jest.fn(),
     save: jest.fn().mockImplementation(resolveVoid),
@@ -206,10 +240,7 @@ const createContext = (
     },
   },
   guard: {
-    body: {
-      identifier,
-      password,
-    },
+    body,
   },
 });
 
@@ -231,11 +262,11 @@ describe('password verification route PostFirstFactorVerification fallback', () 
     updateUser.mockResolvedValue(updatedUser);
   });
 
-  it('allows the identity conflict response status', () => {
+  it('allows the identity conflict and missing subject response statuses', () => {
     registerRoute();
 
     expect(koaGuard).toHaveBeenCalledWith(
-      expect.objectContaining({ status: [200, 400, 401, 409, 422] })
+      expect.objectContaining({ status: [200, 400, 401, 404, 409, 422] })
     );
   });
 
@@ -474,6 +505,213 @@ describe('password verification route PostFirstFactorVerification fallback', () 
     expect(runAction).not.toHaveBeenCalled();
     expect(createUser).not.toHaveBeenCalled();
     expect(updateUser).not.toHaveBeenCalled();
+  });
+});
+describe('password verification route subject-bound variant', () => {
+  const subject = { ...mockUser, id: 'subject-user-id' };
+  const passwordSignInMethod = (identifier: SignInIdentifier) => ({
+    identifier,
+    password: true,
+    verificationCode: false,
+    isPasswordPrimary: true,
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    passwordVerificationRecord.verify.mockResolvedValue(subject);
+    passwordVerificationRecord.verifyPasswordExpiration.mockImplementation(resolveVoid);
+    findUserById.mockResolvedValue(subject);
+    getSignInExperienceData.mockResolvedValue({
+      signIn: { methods: [passwordSignInMethod(SignInIdentifier.Email)] },
+    });
+  });
+
+  it('verifies against the subject the interaction carries when no identifier is given', async () => {
+    const handler = registerRoute();
+    const ctx = createContext(InteractionEvent.SignIn, {
+      subjectUserId: subject.id,
+      body: { password },
+    });
+
+    await handler(ctx, jest.fn().mockImplementation(resolveVoid));
+
+    expect(findUserById).toHaveBeenCalledWith(subject.id);
+    expect(createPasswordVerificationForUser).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      subject.id
+    );
+    expect(createPasswordVerification).not.toHaveBeenCalled();
+    expect(passwordVerificationRecord.verify).toHaveBeenCalledWith(password);
+    expect(passwordVerificationRecord.verifyPasswordExpiration).toHaveBeenCalledWith(subject);
+    expect(ctx.experienceInteraction.setVerificationRecord).toHaveBeenCalledWith(
+      passwordVerificationRecord
+    );
+    expect(ctx.experienceInteraction.save).toHaveBeenCalled();
+    expect(ctx.body).toEqual({ verificationId: passwordVerificationRecord.id });
+    expect(ctx.status).toBe(200);
+  });
+
+  it('rejects the identifier-less payload before the interaction carries a subject', async () => {
+    const handler = registerRoute();
+    const ctx = createContext(InteractionEvent.SignIn, { body: { password } });
+
+    await expect(handler(ctx, jest.fn().mockImplementation(resolveVoid))).rejects.toMatchError(
+      new RequestError({ code: 'session.identifier_not_found', status: 404 })
+    );
+
+    expect(withSentinel).not.toHaveBeenCalled();
+    expect(createPasswordVerificationForUser).not.toHaveBeenCalled();
+    expect(ctx.experienceInteraction.setVerificationRecord).not.toHaveBeenCalled();
+  });
+
+  it.each([InteractionEvent.Register, InteractionEvent.ForgotPassword])(
+    'rejects the identifier-less payload in %s',
+    async (interactionEvent) => {
+      const handler = registerRoute();
+      const ctx = createContext(interactionEvent, {
+        subjectUserId: subject.id,
+        body: { password },
+      });
+
+      await expect(handler(ctx, jest.fn().mockImplementation(resolveVoid))).rejects.toMatchError(
+        new RequestError({ code: 'session.invalid_interaction_type', status: 400 })
+      );
+
+      expect(withSentinel).not.toHaveBeenCalled();
+      expect(createPasswordVerificationForUser).not.toHaveBeenCalled();
+      expect(ctx.experienceInteraction.setVerificationRecord).not.toHaveBeenCalled();
+    }
+  );
+
+  it.each([
+    {
+      name: 'the first identifier the sign-in experience accepts with a password',
+      methods: [
+        passwordSignInMethod(SignInIdentifier.Phone),
+        passwordSignInMethod(SignInIdentifier.Email),
+      ],
+      user: subject,
+      expected: { type: SignInIdentifier.Phone, value: subject.primaryPhone },
+    },
+    {
+      name: 'the next identifier the subject has when the first is unset',
+      methods: [
+        passwordSignInMethod(SignInIdentifier.Phone),
+        passwordSignInMethod(SignInIdentifier.Email),
+      ],
+      user: { ...subject, primaryPhone: null },
+      expected: { type: SignInIdentifier.Email, value: subject.primaryEmail },
+    },
+    {
+      name: 'an identifier of the subject in sign-in identifier order when none is a password sign-in method',
+      methods: [{ ...passwordSignInMethod(SignInIdentifier.Email), password: false }],
+      user: subject,
+      expected: { type: SignInIdentifier.Username, value: subject.username },
+    },
+    {
+      name: 'the user id when the subject has no identifier',
+      methods: [passwordSignInMethod(SignInIdentifier.Email)],
+      user: { ...subject, username: null, primaryEmail: null, primaryPhone: null },
+      expected: { type: AdditionalIdentifier.UserId, value: subject.id },
+    },
+  ])('keys the sentinel lockout on $name', async ({ methods, user, expected }) => {
+    const handler = registerRoute();
+    const ctx = createContext(InteractionEvent.SignIn, {
+      subjectUserId: subject.id,
+      body: { password },
+    });
+
+    findUserById.mockResolvedValueOnce(user);
+    getSignInExperienceData.mockResolvedValueOnce({ signIn: { methods } });
+
+    await handler(ctx, jest.fn().mockImplementation(resolveVoid));
+
+    expect(withSentinel).toHaveBeenCalledWith(
+      expect.objectContaining({
+        action: SentinelActivityAction.Password,
+        identifier: expected,
+        payload: {
+          event: InteractionEvent.SignIn,
+          verificationId: passwordVerificationRecord.id,
+        },
+      }),
+      expect.any(Promise)
+    );
+  });
+
+  it('does not run the action fallback for a wrong password of the subject', async () => {
+    const handler = registerRoute();
+    const ctx = createContext(InteractionEvent.SignIn, {
+      subjectUserId: subject.id,
+      body: { password },
+    });
+
+    passwordVerificationRecord.verify.mockRejectedValueOnce(invalidCredentialsError);
+
+    await expect(handler(ctx, jest.fn().mockImplementation(resolveVoid))).rejects.toBe(
+      invalidCredentialsError
+    );
+
+    expect(withSentinel).toHaveBeenCalledTimes(1);
+    await expect(getSentinelPromise()).rejects.toBe(invalidCredentialsError);
+    expect(runAction).not.toHaveBeenCalled();
+    expect(createUser).not.toHaveBeenCalled();
+    expect(updateUser).not.toHaveBeenCalled();
+    expect(ctx.experienceInteraction.setVerificationRecord).not.toHaveBeenCalled();
+  });
+
+  it('keeps the identifier path when an identifier is given alongside a subject', async () => {
+    const handler = registerRoute();
+    const ctx = createContext(InteractionEvent.SignIn, { subjectUserId: subject.id });
+
+    passwordVerificationRecord.verify.mockResolvedValueOnce(mockUser);
+
+    await handler(ctx, jest.fn().mockImplementation(resolveVoid));
+
+    expect(createPasswordVerification).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      identifier
+    );
+    expect(createPasswordVerificationForUser).not.toHaveBeenCalled();
+    expect(findUserById).not.toHaveBeenCalled();
+    expect(withSentinel).toHaveBeenCalledWith(
+      expect.objectContaining({ identifier }),
+      expect.any(Promise)
+    );
+  });
+});
+
+describe('password verification route dev feature gate', () => {
+  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+
+  afterEach(() => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore the process-wide flag.
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
+      originalIsDevFeaturesEnabled;
+  });
+
+  it('rejects the identifier-less payload and omits the 404 status when dev features are disabled', () => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Exercise the released contract.
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = false;
+    registerRoute();
+
+    const config = getLastGuardConfig();
+    expect(config?.body.safeParse({ password }).success).toBe(false);
+    expect(config?.body.safeParse({ identifier, password }).success).toBe(true);
+    expect(config?.status).not.toContain(404);
+  });
+
+  it('accepts the identifier-less payload and declares the 404 status when dev features are enabled', () => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Exercise the dev-only contract.
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
+    registerRoute();
+
+    const config = getLastGuardConfig();
+    expect(config?.body.safeParse({ password }).success).toBe(true);
+    expect(config?.status).toContain(404);
   });
 });
 /* eslint-enable max-lines */

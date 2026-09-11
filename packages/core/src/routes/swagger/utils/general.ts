@@ -92,6 +92,10 @@ export const findSupplementFiles = async (
     }
   }
 
+  // Supplements may annotate the same operation (e.g. a dev-feature variant overriding the public
+  // description); a deterministic order makes the later, more specific document win.
+  result.sort();
+
   return result;
 };
 /* eslint-enable @silverhand/fp/no-mutating-methods, no-await-in-loop */

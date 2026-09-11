@@ -371,6 +371,7 @@ export default class ExperienceInteraction {
    * @throws {RequestError} with 404 if the user is not found
    * @throws {RequestError} with 401 if the user is suspended
    * @throws {RequestError} with 409 if the current session has already identified a different user
+   * @throws {RequestError} with 403 if a pure step-up identifies someone other than the pinned subject
    **/
   public async identifyUser(verificationId: string, linkSocialIdentity?: boolean, log?: LogEntry) {
     assertThat(
@@ -397,11 +398,11 @@ export default class ExperienceInteraction {
     const { id, isSuspended } = user;
     assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
 
-    // Throws an 409 error if the current session has already identified a different user, or if
-    // a pure step-up identifies someone other than the subject its session pinned
+    // 409 if the interaction already identified a different user; 403 if a pure step-up identifies
+    // someone other than the subject its session pinned
     assertThat(
       !this.subjectUserId || this.subjectUserId === id,
-      new RequestError({ code: 'session.identity_conflict', status: 409 })
+      new RequestError({ code: 'session.identity_conflict', status: this.isStepUp ? 403 : 409 })
     );
 
     if (this.userId) {
@@ -537,9 +538,8 @@ export default class ExperienceInteraction {
    * is never a challenge; its proof is the `bind` one recorded when the factor is added.
    *
    * In a pure step-up the answered challenge is what proves the pinned subject, so it promotes
-   * {@link subjectUserId} into `userId`. The challenge routes create every record for the subject
-   * (WebAuthn asserts the resolved account is the subject before consuming), so no conflict check
-   * is needed here.
+   * {@link subjectUserId} into `userId`. Every challenge record is created for the subject, so no
+   * conflict check is needed here.
    *
    * @throws {RequestError} with 404 if the verification record is not found
    * @throws {RequestError} with 400 if the record is not a verified MFA challenge
@@ -556,6 +556,7 @@ export default class ExperienceInteraction {
     );
 
     this.userId = this.subjectUserId;
+
     this.authenticationProofs.stage(record, AuthenticationProofRole.Mfa);
 
     return record;
@@ -967,7 +968,8 @@ export default class ExperienceInteraction {
   }
 
   async guardCaptcha() {
-    if (this.captcha.verified || this.captcha.skipped) {
+    // Pure step-up already has an authenticated OIDC session.
+    if (this.isStepUp || this.captcha.verified || this.captcha.skipped) {
       return;
     }
 

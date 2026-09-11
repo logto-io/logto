@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 import { TemplateType } from '@logto/connector-kit';
 import {
+  AdditionalIdentifier,
   adminConsoleApplicationId,
   adminTenantId,
   AuthenticationContextMode,
@@ -39,7 +40,11 @@ import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import { type Interaction, type WithHooksAndLogsContext } from '../types.js';
 
-import { EmailCodeVerification } from './verifications/code-verification.js';
+import {
+  EmailCodeVerification,
+  MfaEmailCodeVerification,
+} from './verifications/code-verification.js';
+import { PasswordVerification } from './verifications/password-verification.js';
 import { TotpVerification } from './verifications/totp-verification.js';
 import { SignInPasskeyVerification } from './verifications/web-authn-verification.js';
 
@@ -926,7 +931,11 @@ describe('ExperienceInteraction class', () => {
       const stepUpTenant = new MockTenant(
         provider,
         {
-          users: { ...userQueries, findUserById: jest.fn().mockResolvedValue(user) },
+          users: {
+            ...userQueries,
+            findUserById: jest.fn().mockResolvedValue(user),
+            findUserByUsername: jest.fn().mockResolvedValue(user),
+          },
           signInExperiences: {
             findDefaultSignInExperience: jest.fn().mockResolvedValue({
               ...mockSignInExperience,
@@ -966,6 +975,27 @@ describe('ExperienceInteraction class', () => {
       expect(experienceInteraction.toJson().userId).toBeUndefined();
     });
 
+    it.each([true, false])(
+      'guards captcha unless the interaction is pure step-up (%s)',
+      async (isStepUp) => {
+        const { experienceInteraction, stepUpTenant } = createInteraction({
+          details: { authenticationContext: isStepUp ? stepUpContext : requestedOnlyContext },
+        });
+        jest
+          .spyOn(stepUpTenant.queries.signInExperiences, 'findDefaultSignInExperience')
+          .mockResolvedValue({
+            ...mockSignInExperience,
+            captchaPolicy: { enabled: true },
+          });
+
+        await (isStepUp
+          ? expect(experienceInteraction.guardCaptcha()).resolves.toBeUndefined()
+          : expect(experienceInteraction.guardCaptcha()).rejects.toMatchError(
+              new RequestError({ code: 'session.captcha_required', status: 422 })
+            ));
+      }
+    );
+
     it('promotes the subject once an MFA challenge is answered for it', async () => {
       const { experienceInteraction, stepUpTenant } = createInteraction({
         details: { authenticationContext: stepUpContext },
@@ -984,6 +1014,77 @@ describe('ExperienceInteraction class', () => {
 
       expect(experienceInteraction.identifiedUserId).toBe(mockUserWithMfaVerifications.id);
       expect(experienceInteraction.toJson().authenticationProofs).toHaveLength(1);
+    });
+
+    it('promotes the subject once an MFA challenge with an unassigned userId is answered for it', async () => {
+      const { experienceInteraction, stepUpTenant } = createInteraction({
+        details: { authenticationContext: stepUpContext },
+      });
+      const { libraries, queries } = stepUpTenant;
+
+      experienceInteraction.setVerificationRecord(
+        new MfaEmailCodeVerification(libraries, queries, {
+          id: 'mfa-email-verification-id',
+          type: VerificationType.MfaEmailVerificationCode,
+          identifier: { type: SignInIdentifier.Email, value: 'foo@example.com' },
+          templateType: TemplateType.MfaVerification,
+          verified: true,
+        })
+      );
+      experienceInteraction.consumeForMfa(
+        VerificationType.MfaEmailVerificationCode,
+        'mfa-email-verification-id'
+      );
+
+      expect(experienceInteraction.identifiedUserId).toBe(mockUserWithMfaVerifications.id);
+      expect(experienceInteraction.toJson().authenticationProofs).toHaveLength(1);
+    });
+
+    it('forbids identifying another user than the subject', async () => {
+      const { experienceInteraction, stepUpTenant } = createInteraction({
+        details: { authenticationContext: stepUpContext },
+      });
+      const { libraries, queries } = stepUpTenant;
+      const someoneElse = { ...mockUser, id: 'someone-else', username: 'someone-else' };
+
+      jest.mocked(queries.users.findUserByUsername).mockResolvedValueOnce(someoneElse);
+      experienceInteraction.setVerificationRecord(
+        new PasswordVerification(libraries, queries, {
+          id: 'password-verification-id',
+          type: VerificationType.Password,
+          identifier: { type: SignInIdentifier.Username, value: someoneElse.username },
+          verified: true,
+        })
+      );
+
+      await expect(
+        experienceInteraction.identifyUser('password-verification-id')
+      ).rejects.toMatchError(new RequestError({ code: 'session.identity_conflict', status: 403 }));
+      expect(experienceInteraction.identifiedUserId).toBeUndefined();
+    });
+
+    it('identifies the subject through a subject-bound password record without a sign-in method', async () => {
+      const { experienceInteraction, stepUpTenant } = createInteraction({
+        details: { authenticationContext: stepUpContext },
+      });
+      const { libraries, queries } = stepUpTenant;
+
+      experienceInteraction.setVerificationRecord(
+        new PasswordVerification(libraries, queries, {
+          id: 'password-verification-id',
+          type: VerificationType.Password,
+          identifier: { type: AdditionalIdentifier.UserId, value: mockUserWithMfaVerifications.id },
+          verified: true,
+        })
+      );
+
+      await expect(
+        experienceInteraction.identifyUser('password-verification-id')
+      ).resolves.toBeUndefined();
+      expect(experienceInteraction.identifiedUserId).toBe(mockUserWithMfaVerifications.id);
+      expect(experienceInteraction.toJson().authenticationProofs).toEqual([
+        expect.objectContaining({ factor: AuthenticationFactor.Password }),
+      ]);
     });
 
     it('rejects switching a pure step-up away from sign-in', async () => {

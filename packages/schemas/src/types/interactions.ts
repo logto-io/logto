@@ -73,6 +73,29 @@ export const verificationCodeIdentifierGuard = z.discriminatedUnion('type', [
   }),
 ]) satisfies z.ZodType<VerificationCodeIdentifier>;
 
+/**
+ * The subject-bound verification code identifier: the type alone. Accepted once the interaction
+ * carries a subject; core fills the value from that user's primary email / phone. A present
+ * `value` is rejected so a malformed full identifier is never mistaken for this shape.
+ */
+export type SubjectVerificationCodeIdentifier = {
+  type: VerificationCodeSignInIdentifier;
+  value?: undefined;
+};
+export const subjectVerificationCodeIdentifierGuard = z.object({
+  type: z.enum([SignInIdentifier.Email, SignInIdentifier.Phone]),
+  value: z.undefined(),
+}) satisfies ToZodObject<SubjectVerificationCodeIdentifier>;
+
+/** The full identifier, or the subject-bound shape. */
+export type VerificationCodeIdentifierPayload =
+  | VerificationCodeIdentifier
+  | SubjectVerificationCodeIdentifier;
+export const verificationCodeIdentifierPayloadGuard = z.union([
+  verificationCodeIdentifierGuard,
+  subjectVerificationCodeIdentifierGuard,
+]) satisfies z.ZodType<VerificationCodeIdentifierPayload>;
+
 // REMARK: API payload guard
 
 /** Payload type for `POST /api/experience/verification/{social|sso}/:connectorId/authorization-uri`. */
@@ -113,6 +136,24 @@ export const passwordVerificationPayloadGuard = z.object({
   identifier: interactionIdentifierGuard,
   password: z.string().min(1),
 }) satisfies ToZodObject<PasswordVerificationPayload>;
+
+/**
+ * The subject-bound password payload: the password alone. Accepted only when the interaction
+ * carries a subject; the password is then verified against that user's credential.
+ */
+export type SubjectPasswordVerificationPayload = {
+  identifier?: undefined;
+  password: string;
+};
+export const subjectPasswordVerificationPayloadGuard = z.object({
+  identifier: z.undefined(),
+  password: z.string().min(1),
+}) satisfies ToZodObject<SubjectPasswordVerificationPayload>;
+
+/** The full password payload, or the subject-bound shape. */
+export type PasswordVerificationRequestBody =
+  | PasswordVerificationPayload
+  | SubjectPasswordVerificationPayload;
 
 /** Payload type for `POST /api/experience/verification/totp/verify`. */
 export type TotpVerificationVerifyPayload = {

@@ -9,7 +9,8 @@ import {
   type VerificationCodeIdentifier,
   type CodeVerificationRecordData,
 } from '@logto/schemas';
-import { generateStandardId } from '@logto/shared';
+import { generateStandardId, maskEmail, maskPhone } from '@logto/shared';
+import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -56,6 +57,9 @@ type CodeVerificationIdentifierMap = {
   [VerificationType.MfaPhoneVerificationCode]: Record<string, unknown>;
 };
 
+const maskIdentifierValue = ({ type, value }: VerificationCodeIdentifier): string =>
+  type === SignInIdentifier.Email ? maskEmail(value) : maskPhone(value);
+
 /**
  * This is the parent class for `EmailCodeVerification` and `PhoneCodeVerification`. Not publicly exposed.
  */
@@ -69,6 +73,12 @@ abstract class CodeVerification<T extends CodeVerificationType>
    * The template type for sending the verification code, the connector will use this to get the correct template.
    */
   public readonly templateType: TemplateType;
+  /**
+   * The user the identifier was resolved from (see {@link createSubjectCodeVerificationRecord}),
+   * if not from a client-supplied identifier. Such a record identifies that user and only exposes
+   * the masked identifier.
+   */
+  public readonly userId?: string;
   public abstract readonly type: T;
   protected verified: boolean;
 
@@ -77,12 +87,13 @@ abstract class CodeVerification<T extends CodeVerificationType>
     private readonly queries: Queries,
     data: CodeVerificationRecordData<T>
   ) {
-    const { id, identifier, verified, templateType } = data;
+    const { id, identifier, verified, templateType, userId } = data;
 
     this.id = id;
     this.identifier = identifier;
     this.templateType = templateType;
     this.verified = verified;
+    this.userId = userId;
   }
 
   /** Returns true if the identifier has been verified by a given code */
@@ -150,6 +161,10 @@ abstract class CodeVerification<T extends CodeVerificationType>
       new RequestError({ code: 'session.verification_failed', status: 400 })
     );
 
+    if (this.userId) {
+      return this.queries.users.findUserById(this.userId);
+    }
+
     const user = await findUserByIdentifier(this.queries, this.identifier);
 
     assertThat(
@@ -166,7 +181,7 @@ abstract class CodeVerification<T extends CodeVerificationType>
   }
 
   toJson(): CodeVerificationRecordData<T> {
-    const { id, type, identifier, templateType, verified } = this;
+    const { id, type, identifier, templateType, verified, userId } = this;
 
     return {
       id,
@@ -174,11 +189,19 @@ abstract class CodeVerification<T extends CodeVerificationType>
       identifier,
       templateType,
       verified,
+      ...conditional(userId && { userId }),
     };
   }
 
   toSanitizedJson(): CodeVerificationRecordData<T> {
-    return this.toJson();
+    const data = this.toJson();
+
+    return data.userId
+      ? {
+          ...data,
+          identifier: { ...data.identifier, value: maskIdentifierValue(data.identifier) },
+        }
+      : data;
   }
 
   abstract toUserProfile(): CodeVerificationIdentifierMap[T];
@@ -266,16 +289,15 @@ export class MfaPhoneCodeVerification extends CodeVerification<VerificationType.
   }
 }
 
-/**
- * Factory method to create a new `EmailCodeVerification` / `PhoneCodeVerification` record using the given identifier.
- */
-export const createNewCodeVerificationRecord = (
+type IdentifierCodeVerificationIdentifier =
+  | VerificationCodeIdentifier<SignInIdentifier.Email>
+  | VerificationCodeIdentifier<SignInIdentifier.Phone>;
+
+const buildCodeVerificationRecord = (
   libraries: Libraries,
   queries: Queries,
-  identifier:
-    | VerificationCodeIdentifier<SignInIdentifier.Email>
-    | VerificationCodeIdentifier<SignInIdentifier.Phone>,
-  templateType: TemplateType
+  identifier: IdentifierCodeVerificationIdentifier,
+  { templateType, userId }: { templateType: TemplateType; userId?: string }
 ) => {
   const { type } = identifier;
 
@@ -287,6 +309,7 @@ export const createNewCodeVerificationRecord = (
         identifier,
         templateType,
         verified: false,
+        ...conditional(userId && { userId }),
       });
     }
     case SignInIdentifier.Phone: {
@@ -296,10 +319,37 @@ export const createNewCodeVerificationRecord = (
         identifier,
         templateType,
         verified: false,
+        ...conditional(userId && { userId }),
       });
     }
   }
 };
+
+/**
+ * Factory method to create a new `EmailCodeVerification` / `PhoneCodeVerification` record using the given identifier.
+ */
+export const createNewCodeVerificationRecord = (
+  libraries: Libraries,
+  queries: Queries,
+  identifier: IdentifierCodeVerificationIdentifier,
+  templateType: TemplateType
+) => buildCodeVerificationRecord(libraries, queries, identifier, { templateType });
+
+/**
+ * Factory method to create a new `EmailCodeVerification` / `PhoneCodeVerification` record for the
+ * subject the interaction carries, with the identifier resolved from that user. It always uses the
+ * `SignIn` template: it verifies a primary identifier as a first factor, never binds a new one.
+ */
+export const createSubjectCodeVerificationRecord = (
+  libraries: Libraries,
+  queries: Queries,
+  identifier: IdentifierCodeVerificationIdentifier,
+  userId: string
+) =>
+  buildCodeVerificationRecord(libraries, queries, identifier, {
+    templateType: TemplateType.SignIn,
+    userId,
+  });
 
 /**
  * Factory method to create a new `MfaEmailCodeVerification` / `MfaPhoneCodeVerification` record using the given identifier.

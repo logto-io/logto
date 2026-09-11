@@ -14,6 +14,7 @@ import { generateStandardId } from '@logto/shared';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { generateWebAuthnAuthenticationOptions } from '#src/libraries/verification-helpers/webauthn.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -208,7 +209,8 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
       response: z.object({
         verificationId: z.string(),
       }),
-      status: [200, 400, 404],
+      // 403: identity conflict in a pure step-up, a dev-only mode
+      status: EnvSet.values.isDevFeaturesEnabled ? [200, 400, 403, 404] : [200, 400, 404],
     }),
     koaExperienceVerificationsAuditLog({
       type: VerificationType.WebAuthn,
@@ -242,7 +244,7 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
         experienceInteraction.subjectUserId === webAuthnVerification.userId,
         new RequestError({
           code: 'session.identity_conflict',
-          status: 404,
+          status: experienceInteraction.isStepUp ? 403 : 404,
         })
       );
 
@@ -383,7 +385,8 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
       response: z.object({
         verificationId: z.string(),
       }),
-      status: [200, 400, 404, 409],
+      // 403: identity conflict in a pure step-up, a dev-only mode
+      status: EnvSet.values.isDevFeaturesEnabled ? [200, 400, 403, 404, 409] : [200, 400, 404, 409],
     }),
     koaExperienceVerificationsAuditLog({
       type: VerificationType.SignInPasskey,
@@ -414,9 +417,11 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
 
             const { authenticationOptions } = authenticationOptionsParseResult.data.signInPasskey;
 
+            // Seed the subject so a discoverable credential of another account fails at verification
             return new SignInPasskeyVerification(libraries, queries, {
               id: generateStandardId(),
               type: VerificationType.SignInPasskey,
+              userId: experienceInteraction.subjectUserId,
               verified: false,
               authenticationChallenge: authenticationOptions.challenge,
               authenticationRpId: authenticationOptions.rpId,
@@ -430,7 +435,19 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
         },
       });
 
-      await webAuthnVerification.verifyWebAuthnAuthentication(ctx, payload);
+      try {
+        await webAuthnVerification.verifyWebAuthnAuthentication(ctx, payload);
+      } catch (error: unknown) {
+        if (
+          experienceInteraction.isStepUp &&
+          error instanceof RequestError &&
+          error.code === 'session.identity_conflict'
+        ) {
+          throw new RequestError({ code: 'session.identity_conflict', status: 403 });
+        }
+
+        throw error;
+      }
 
       experienceInteraction.setVerificationRecord(webAuthnVerification);
 
