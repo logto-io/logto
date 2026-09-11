@@ -1179,6 +1179,18 @@ export default class ExperienceInteraction {
       return;
     }
 
+    // Revalidate what is about to be written, exactly as `submit()` does: everything here was
+    // staged by an earlier request, so an identifier can have been taken by another account, or a
+    // factor disabled, in between. The step-up allow-list keeps the establishment and enrollment
+    // routes closed until M5, so nothing reaches this write yet; the guards are here so that the
+    // milestone which opens them cannot skip the uniqueness check and turn a duplicate identifier
+    // into a raw unique-constraint error instead of the 422 the API promises.
+    await this.profile.validateAvailability();
+
+    if (mfaVerifications.length > 0) {
+      await this.mfa.checkAvailability();
+    }
+
     await this.tenant.queries.users.updateUserById(user.id, established);
   }
 

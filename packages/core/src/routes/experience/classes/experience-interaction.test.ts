@@ -1249,6 +1249,14 @@ describe('ExperienceInteraction class', () => {
       mode: AuthenticationContextMode.StepUp,
     };
 
+    /** The account shape a step-up establishes methods for: no password, no primary identifier. */
+    const userWithoutMethods: User = {
+      ...mockUserWithMfaVerifications,
+      passwordEncrypted: null,
+      primaryEmail: null,
+      primaryPhone: null,
+    };
+
     /** A pure step-up whose pinned subject already answered a subject-bound password challenge. */
     const createIdentifiedStepUp = async ({
       details = { authenticationContext: firstFactorContext },
@@ -1388,9 +1396,25 @@ describe('ExperienceInteraction class', () => {
       expect(JSON.stringify(log.payload)).not.toContain('password-verification-id');
     });
 
+    it('revalidates the identifier it is about to write', async () => {
+      const { experienceInteraction, stepUpTenant } = await createIdentifiedStepUp({
+        user: userWithoutMethods,
+      });
+
+      jest.mocked(stepUpTenant.queries.users.hasUserWithEmail).mockResolvedValueOnce(true);
+      experienceInteraction.profile.unsafeSet({ primaryEmail: 'taken@example.com' });
+
+      await expect(experienceInteraction.submitStepUp()).rejects.toMatchError(
+        new RequestError({ code: 'user.email_already_in_use', status: 422 })
+      );
+      expect(stepUpTenant.queries.users.updateUserById).not.toHaveBeenCalled();
+    });
+
     it('writes only what the interaction established and never `lastSignInAt`', async () => {
       jest.clearAllMocks();
-      const { experienceInteraction, stepUpTenant, stepUpCtx } = await createIdentifiedStepUp();
+      const { experienceInteraction, stepUpTenant, stepUpCtx } = await createIdentifiedStepUp({
+        user: userWithoutMethods,
+      });
       const updateUserById = jest.mocked(stepUpTenant.queries.users.updateUserById);
 
       await experienceInteraction.submitStepUp();
