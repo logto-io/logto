@@ -22,6 +22,18 @@ import { getConsoleLogFromContext } from '#src/utils/console.js';
 
 import { verifyAndGetSamlSessionData } from './utils.js';
 
+/**
+ * The service provider initiates this flow, so the browser reaches the callback through a
+ * cross-site navigation. `strict` withholds the cookie for every hop of that navigation, including
+ * the same-site redirects, which leaves the callback without a session. CSRF is covered by matching
+ * the OIDC `state` against the stored session.
+ */
+const spInitiatedSessionCookieOptions = Object.freeze({
+  httpOnly: true,
+  sameSite: 'lax',
+  overwrite: true,
+} as const);
+
 const samlApplicationSignInCallbackQueryParametersGuard = z
   .object({
     code: z.string(),
@@ -317,10 +329,8 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
 
       // Set the session ID to cookie for later use.
       ctx.cookies.set(spInitiatedSamlSsoSessionCookieName, insertSamlAppSession.id, {
-        httpOnly: true,
-        sameSite: 'strict',
+        ...spInitiatedSessionCookieOptions,
         expires: expiresAt,
-        overwrite: true,
       });
 
       log.append({
@@ -416,10 +426,8 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
 
       // Set the session ID to cookie for later use.
       ctx.cookies.set(spInitiatedSamlSsoSessionCookieName, insertSamlAppSession.id, {
-        httpOnly: true,
-        sameSite: 'strict',
+        ...spInitiatedSessionCookieOptions,
         expires: expiresAt,
-        overwrite: true,
       });
 
       log.append({
