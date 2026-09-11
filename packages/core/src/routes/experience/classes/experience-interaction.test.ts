@@ -1396,6 +1396,25 @@ describe('ExperienceInteraction class', () => {
       expect(JSON.stringify(log.payload)).not.toContain('password-verification-id');
     });
 
+    it('rejects a submission whose counted proof never identified the subject', async () => {
+      const { experienceInteraction, provider, stepUpTenant } = createInteraction({
+        details: { authenticationContext: firstFactorContext },
+      });
+
+      // Establishing a method records its proof without identifying anyone. The allow-list keeps
+      // the establishment route closed, so this is the shape the 404 guard is here for.
+      experienceInteraction.profile.unsafeSet({
+        passwordEncrypted: 'new-encrypted-password',
+        passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+      });
+
+      await expect(experienceInteraction.submitStepUp()).rejects.toMatchError(
+        new RequestError({ code: 'session.identifier_not_found', status: 404 })
+      );
+      expect(provider.interactionResult).not.toHaveBeenCalled();
+      expect(stepUpTenant.queries.users.updateUserById).not.toHaveBeenCalled();
+    });
+
     it('revalidates the identifier it is about to write', async () => {
       const { experienceInteraction, stepUpTenant } = await createIdentifiedStepUp({
         user: userWithoutMethods,

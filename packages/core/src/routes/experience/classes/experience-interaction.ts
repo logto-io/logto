@@ -1022,8 +1022,12 @@ export default class ExperienceInteraction {
    * `triggerPostSignInAction`, and data-hook contexts.
    *
    * @throws {RequestError} with 400 if the interaction is not a pure step-up
-   * @throws {RequestError} with 403 if the achieved context does not satisfy `selectedAcr`
-   * @throws {RequestError} with 404 if nothing in the interaction verified the pinned subject
+   * @throws {RequestError} with 403 if the achieved context does not satisfy `selectedAcr`; the
+   * assertion runs before the subject is read, so a submission that counted no verification ends
+   * here rather than as a missing subject
+   * @throws {RequestError} with 404 if a counted proof never identified the subject, which the
+   * allow-list blocks today: identification and an answered MFA challenge both set the user, and
+   * the only proof that does not is a `bind`
    */
   public async submitStepUp(log?: LogEntry) {
     const { authenticationContext, authenticationProofs } = this;
