@@ -23,8 +23,10 @@ describe('useStepUpErrorHandler', () => {
   });
 
   it.each<LogtoErrorCode>([
+    'session.not_found',
     'session.interaction_not_found',
     'session.step_up.subject_not_found',
+    'session.step_up.invalid_interaction_event',
     'session.identity_conflict',
     'session.step_up.forbidden_route',
   ])('replaces the current entry with the invalid-session page on %s', async (code) => {
@@ -72,8 +74,10 @@ describe('useStepUpErrorHandler', () => {
       new Set([
         'session.identity_conflict',
         'session.interaction_not_found',
+        'session.not_found',
         'session.step_up.acr_not_satisfied',
         'session.step_up.forbidden_route',
+        'session.step_up.invalid_interaction_event',
         'session.step_up.subject_not_found',
       ])
     );

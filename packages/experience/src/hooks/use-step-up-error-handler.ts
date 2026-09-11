@@ -1,9 +1,24 @@
 import { useMemo } from 'react';
 
-import { stepUpRoutes, unknownSessionRoute } from '@/constants/step-up';
+import {
+  stepUpRoutes,
+  stepUpSessionGoneErrorCodes,
+  unknownSessionRoute,
+} from '@/constants/step-up';
 
 import type { ErrorHandlers } from './use-error-handler';
 import useNavigateWithPreservedSearchParams from './use-navigate-with-preserved-search-params';
+
+/**
+ * The errors that land on the invalid-session page: a session that is gone, and a session that
+ * the request cannot belong to (the verified identity is not the pinned subject, or the route is
+ * not allowed in step-up).
+ */
+const invalidSessionErrorCodes = Object.freeze([
+  ...stepUpSessionGoneErrorCodes,
+  'session.identity_conflict',
+  'session.step_up.forbidden_route',
+] as const);
 
 /**
  * The error handlers shared by the step-up screens. Compose them into the handlers of every call
@@ -18,26 +33,18 @@ import useNavigateWithPreservedSearchParams from './use-navigate-with-preserved-
 const useStepUpErrorHandler = (): ErrorHandlers => {
   const navigate = useNavigateWithPreservedSearchParams();
 
-  return useMemo(
-    () => ({
-      'session.interaction_not_found': () => {
-        navigate(unknownSessionRoute, { replace: true });
-      },
-      'session.step_up.subject_not_found': () => {
-        navigate(unknownSessionRoute, { replace: true });
-      },
-      'session.identity_conflict': () => {
-        navigate(unknownSessionRoute, { replace: true });
-      },
-      'session.step_up.forbidden_route': () => {
-        navigate(unknownSessionRoute, { replace: true });
-      },
+  return useMemo(() => {
+    const showInvalidSession = () => {
+      navigate(unknownSessionRoute, { replace: true });
+    };
+
+    return {
+      ...Object.fromEntries(invalidSessionErrorCodes.map((code) => [code, showInvalidSession])),
       'session.step_up.acr_not_satisfied': () => {
         navigate(stepUpRoutes.landing, { replace: true });
       },
-    }),
-    [navigate]
-  );
+    };
+  }, [navigate]);
 };
 
 export default useStepUpErrorHandler;

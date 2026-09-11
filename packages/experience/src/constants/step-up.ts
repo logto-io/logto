@@ -1,3 +1,4 @@
+import { type LogtoErrorCode } from '@logto/phrases';
 import { experience } from '@logto/schemas';
 
 /**
@@ -13,3 +14,15 @@ export const stepUpRoutes = Object.freeze({
 
 /** The route that renders the invalid-session error page (registered in `App.tsx`). */
 export const unknownSessionRoute = '/unknown-session';
+
+/**
+ * The errors that mean the OIDC interaction, the step-up interaction, or the subject it pins is
+ * gone. Nothing on the client can recover from them: the guard and the step-up error handlers
+ * both land on the invalid-session page, and the guard shows no toast for them.
+ */
+export const stepUpSessionGoneErrorCodes = Object.freeze([
+  'session.not_found',
+  'session.interaction_not_found',
+  'session.step_up.subject_not_found',
+  'session.step_up.invalid_interaction_event',
+] as const satisfies readonly LogtoErrorCode[]);

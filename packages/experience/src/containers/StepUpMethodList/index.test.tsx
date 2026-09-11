@@ -86,8 +86,10 @@ const verificationId = 'vid';
 
 /** The error codes `useStepUpErrorHandler` handles; every step-up call composes them. */
 const stepUpErrorCodes = new Set([
+  'session.not_found',
   'session.interaction_not_found',
   'session.step_up.subject_not_found',
+  'session.step_up.invalid_interaction_event',
   'session.identity_conflict',
   'session.step_up.forbidden_route',
   'session.step_up.acr_not_satisfied',
