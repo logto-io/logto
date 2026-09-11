@@ -34,9 +34,10 @@ const allowedStepUpRoutes = new Set([
 ]);
 
 /**
- * Deny-by-default route guard for pure step-up interactions. The mode is classified from the
- * interaction record `koaInteractionDetails` provides, which every experience request carries,
- * including the routes `koaExperienceInteraction` whitelists.
+ * Deny-by-default route guard for pure step-up interactions. The mode comes from the
+ * `ctx.experienceInteraction` instance wherever one exists; the three routes
+ * `koaExperienceInteraction` whitelists carry none, so they are classified from the interaction
+ * record `koaInteractionDetails` provides.
  */
 export default function koaStepUpRouteGuard<
   StateT,
@@ -44,7 +45,12 @@ export default function koaStepUpRouteGuard<
   ResponseT,
 >(): MiddlewareType<StateT, ContextT, ResponseT> {
   return async (ctx, next) => {
-    const isStepUp = isStepUpInteractionDetails(ctx.interactionDetails);
+    // The instance is the single source of the mode, so the guard does not re-parse the storage on
+    // the routes that have one.
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- absent on the routes `koaExperienceInteraction` whitelists
+    const isStepUp = ctx.experienceInteraction
+      ? ctx.experienceInteraction.isStepUp
+      : isStepUpInteractionDetails(ctx.interactionDetails);
 
     if (!isStepUp) {
       return next();

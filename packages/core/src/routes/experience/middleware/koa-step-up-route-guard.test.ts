@@ -14,12 +14,24 @@ const { jest } = import.meta;
 type GuardContext = ParameterizedContext<unknown, ExperienceInteractionRouterContext>;
 
 /** Where the stored interaction record carries the pure step-up mode. */
-type StepUpSource = 'none' | 'prompt' | 'result';
+type StepUpSource = 'none' | 'prompt' | 'result' | 'invalid-result';
 
 const stepUpContext = {
   requestedAcrValues: [LogtoAcr.FirstFactor],
   selectedAcr: LogtoAcr.FirstFactor,
   mode: AuthenticationContextMode.StepUp,
+};
+
+/** A stored context this build cannot read: an ACR value a newer node wrote. */
+const unreadableStepUpContext = { requestedAcrValues: ['urn:logto:acr:unknown'] };
+
+/** The stored result each {@link StepUpSource} restores from, when it has one. */
+const storedResults: Partial<Record<StepUpSource, Record<string, unknown>>> = {
+  result: { interactionEvent: InteractionEvent.SignIn, authenticationContext: stepUpContext },
+  'invalid-result': {
+    interactionEvent: InteractionEvent.SignIn,
+    authenticationContext: unreadableStepUpContext,
+  },
 };
 
 const createMockContext = ({
@@ -51,14 +63,7 @@ const createMockContext = ({
         details: storedStepUp === 'prompt' ? { authenticationContext: stepUpContext } : {},
       },
       // Only the stored result an interaction is restored from, without the prompt details.
-      ...(storedStepUp === 'result'
-        ? {
-            result: {
-              interactionEvent: InteractionEvent.SignIn,
-              authenticationContext: stepUpContext,
-            },
-          }
-        : {}),
+      ...(storedResults[storedStepUp] ? { result: storedResults[storedStepUp] } : {}),
     },
   }) as unknown as GuardContext;
 
@@ -259,10 +264,15 @@ const routeCases: Array<{ method: string; path: string; allowed: boolean; name: 
 ];
 
 describe('koaStepUpRouteGuard', () => {
-  it.each(routeCases)(
-    '$name ($method $path) is $allowed in pure step-up',
-    async ({ method, path, allowed }) => {
-      const ctx = createMockContext({ method, path, isStepUp: true, storedStepUp: 'prompt' });
+  // The mode comes from the interaction instance wherever `koaExperienceInteraction` built one,
+  // even though the interaction record carries no context of its own; the prompt path only exists
+  // on the whitelisted routes, which the cases below cover.
+  it.each(
+    routeCases.map((routeCase) => ({ ...routeCase, isStepUp: true, storedStepUp: 'none' as const }))
+  )(
+    '$name ($method $path) is $allowed in pure step-up via the instance',
+    async ({ method, path, allowed, isStepUp, storedStepUp }) => {
+      const ctx = createMockContext({ method, path, isStepUp, storedStepUp });
       const next = jest.fn();
       const guard = koaStepUpRouteGuard();
 
@@ -363,6 +373,21 @@ describe('koaStepUpRouteGuard', () => {
 
     await expect(koaStepUpRouteGuard()(ctx, next)).resolves.toBeUndefined();
     expect(next).toHaveBeenCalledTimes(1);
+  });
+
+  it('denies a whitelisted route whose stored record cannot be read', async () => {
+    const ctx = createMockContext({
+      method: 'GET',
+      path: `${experienceRoutes.prefix}/sso-connectors`,
+      storedStepUp: 'invalid-result',
+    });
+    const next = jest.fn();
+
+    await expect(koaStepUpRouteGuard()(ctx, next)).rejects.toMatchObject({
+      code: 'session.interaction_not_found',
+      status: 404,
+    });
+    expect(next).not.toHaveBeenCalled();
   });
 
   it('denies a route that is not in the catalog in pure step-up', async () => {
