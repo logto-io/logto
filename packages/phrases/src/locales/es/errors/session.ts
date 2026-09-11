@@ -61,6 +61,8 @@ const session = {
       'No se permite un identificador durante la autenticación reforzada. Vuelve a intentarlo sin el campo de identificador.',
     acr_not_satisfied:
       'La verificación completada no cumple con el contexto de autenticación solicitado. Verifica otro método.',
+    require_verification:
+      'Se requiere la verificación con uno de tus métodos existentes para alcanzar el contexto de autenticación solicitado.',
   },
   passkey_sign_in: {
     pending_info_not_found:

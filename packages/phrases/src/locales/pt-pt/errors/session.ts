@@ -61,6 +61,8 @@ const session = {
       'Não é permitido um identificador durante a autenticação step-up. Tente novamente sem o campo identificador.',
     acr_not_satisfied:
       'A verificação concluída não satisfaz o contexto de autenticação solicitado. Verifique outro método.',
+    require_verification:
+      'É necessária a verificação com um dos seus métodos existentes para atingir o contexto de autenticação solicitado.',
   },
   passkey_sign_in: {
     pending_info_not_found:

@@ -44,6 +44,7 @@ const session = {
     forbidden_route: '升級認證期間不允許存取此路由。',
     forbidden_identifier: '升級認證期間不允許提供標識符。請移除 identifier 欄位後重試。',
     acr_not_satisfied: '已完成的驗證不符合要求的認證情境，請驗證其他方式。',
+    require_verification: '你需要使用其中一種現有的驗證方式進行驗證，才能達到要求的認證情境。',
   },
   passkey_sign_in: {
     pending_info_not_found: '未找到待處理的 Passkey 登入資訊。請重新啟動登入流程。',
