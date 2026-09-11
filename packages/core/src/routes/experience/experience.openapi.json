@@ -21,6 +21,9 @@
           "400": {
             "description": "A step-up interaction was requested with a non-sign-in event, or the session has no subject to pin."
           },
+          "404": {
+            "description": "The pinned subject of the step-up interaction no longer exists."
+          },
           "422": {
             "description": "The captcha verification failed."
           }
@@ -136,6 +139,9 @@
         "responses": {
           "200": {
             "description": "The public interaction data has been successfully retrieved."
+          },
+          "404": {
+            "description": "The pinned subject of the step-up interaction no longer exists."
           }
         }
       }
