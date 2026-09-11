@@ -45,12 +45,13 @@ const redirectUri = 'https://step-up.example.com/callback';
 const stepUpLogKey = 'Interaction.SignIn.StepUp.Submit';
 
 /**
- * Submit the step-up and exchange the authorization code it hands back. The sign-in already
- * granted this client consent, so the resumed authorization goes straight to the callback.
+ * Submit the step-up and exchange the authorization code it hands back. The resumed authorization
+ * either goes straight to the client callback or asks for consent once more, depending on whether
+ * the request forced reauthentication.
  */
 const submitStepUp = async (client: ExperienceClient) => {
   const { redirectTo } = await client.submitInteraction();
-  await client.manualConsent(redirectTo);
+  await client.resumeAuthorization(redirectTo);
 
   return client.getIdTokenClaims();
 };
@@ -81,8 +82,6 @@ const startStepUp = async (
 
 devFeatureTest.describe('pure step-up submission', () => {
   const userApi = new UserApiTest();
-  /** A password user with a primary email and an enrolled TOTP factor. */
-  const totpUser = generateNewUserProfile({ username: true, password: true, primaryEmail: true });
   /** A password user with a primary email and no enrolled factor. */
   const passwordUser = generateNewUserProfile({
     username: true,
@@ -94,10 +93,6 @@ devFeatureTest.describe('pure step-up submission', () => {
   let application: Application;
   // eslint-disable-next-line @silverhand/fp/no-let
   let passwordUserId = '';
-  // eslint-disable-next-line @silverhand/fp/no-let
-  let totpUserId = '';
-  // eslint-disable-next-line @silverhand/fp/no-let
-  let totpSecret = '';
 
   const createClient = async () =>
     initExperienceClient({
@@ -105,12 +100,35 @@ devFeatureTest.describe('pure step-up submission', () => {
       redirectUri,
     });
 
+  /**
+   * A fresh user with a password and an enrolled TOTP factor. TOTP codes are single-use per time
+   * step, so every test that verifies one enrolls its own account instead of sharing a secret.
+   */
+  const createTotpUser = async () => {
+    const profile = generateNewUserProfile({ username: true, password: true, primaryEmail: true });
+    const user = await userApi.create(profile);
+    const totp = await createUserMfaVerification(user.id, MfaFactor.TOTP);
+
+    if (totp.type !== MfaFactor.TOTP) {
+      throw new Error('unexpected MFA factor type');
+    }
+
+    // Let the password sign-in establish the session without a TOTP challenge. A requested `mfa`
+    // in the step-up ignores this preference, so the factor still has to be verified there.
+    await updateUserLogtoConfig(user.id, {
+      mfa: { skipMfaOnSignIn: true },
+      passkeySignIn: {},
+    });
+
+    return { profile, id: user.id, code: authenticator.generate(totp.secret) };
+  };
+
   /** Sign in with the password through the created application, leaving an OIDC session behind. */
-  const signInWithPassword = async (profile: typeof passwordUser) => {
+  const signInWithPassword = async ({ username, password }: typeof passwordUser) => {
     const client = await createClient();
     const { verificationId } = await client.verifyPassword({
-      identifier: { type: SignInIdentifier.Username, value: profile.username },
-      password: profile.password,
+      identifier: { type: SignInIdentifier.Username, value: username },
+      password,
     });
     await client.identifyUser({ verificationId });
 
@@ -120,8 +138,8 @@ devFeatureTest.describe('pure step-up submission', () => {
     return client;
   };
 
-  const verifyPassword = async (client: ExperienceClient, profile: typeof passwordUser) => {
-    const { verificationId } = await client.verifyPassword({ password: profile.password });
+  const verifyPassword = async (client: ExperienceClient, { password }: typeof passwordUser) => {
+    const { verificationId } = await client.verifyPassword({ password });
     await client.identifyUser({ verificationId });
   };
 
@@ -134,9 +152,8 @@ devFeatureTest.describe('pure step-up submission', () => {
     await clearConnectorsByTypes([ConnectorType.Email]);
     await setEmailConnector();
 
-    const [createdPasswordUser, createdTotpUser, createdApplication] = await Promise.all([
+    const [createdPasswordUser, createdApplication] = await Promise.all([
       userApi.create(passwordUser),
-      userApi.create(totpUser),
       createApplication(generateTestName(), ApplicationType.SPA, {
         oidcClientMetadata: { redirectUris: [redirectUri], postLogoutRedirectUris: [] },
       }),
@@ -144,25 +161,7 @@ devFeatureTest.describe('pure step-up submission', () => {
     // eslint-disable-next-line @silverhand/fp/no-mutation
     passwordUserId = createdPasswordUser.id;
     // eslint-disable-next-line @silverhand/fp/no-mutation
-    totpUserId = createdTotpUser.id;
-    // eslint-disable-next-line @silverhand/fp/no-mutation
     application = createdApplication;
-
-    const totp = await createUserMfaVerification(totpUserId, MfaFactor.TOTP);
-
-    if (totp.type !== MfaFactor.TOTP) {
-      throw new Error('unexpected MFA factor type');
-    }
-
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    totpSecret = totp.secret;
-
-    // Let the password sign-in establish the session without a TOTP challenge. A requested `mfa`
-    // in the step-up ignores this preference, so the factor still has to be verified there.
-    await updateUserLogtoConfig(totpUserId, {
-      mfa: { skipMfaOnSignIn: true },
-      passkeySignIn: {},
-    });
   });
 
   afterAll(async () => {
@@ -226,7 +225,8 @@ devFeatureTest.describe('pure step-up submission', () => {
   });
 
   it('reaches mfa by verifying only the enrolled factor on a 1fa session', async () => {
-    const client = await signInWithPassword(totpUser);
+    const { profile, id, code } = await createTotpUser();
+    const client = await signInWithPassword(profile);
     await startStepUp(client, { acrValues: mfaAcr });
 
     const { authenticationContext } = await client.getInteractionData();
@@ -236,16 +236,17 @@ devFeatureTest.describe('pure step-up submission', () => {
       availableMethods: [VerificationType.TOTP],
     });
 
-    await successfullyVerifyTotp(client, { code: authenticator.generate(totpSecret) });
+    await successfullyVerifyTotp(client, { code });
     const claims = await submitStepUp(client);
 
-    expect(claims).toMatchObject({ sub: totpUserId, acr: mfaAcr, amr: ['otp', 'mfa'] });
+    expect(claims).toMatchObject({ sub: id, acr: mfaAcr, amr: ['otp', 'mfa'] });
   });
 
   it('rejects a submission that reaches only 1fa when mfa was selected, then completes it', async () => {
-    const client = await signInWithPassword(totpUser);
+    const { profile, id, code } = await createTotpUser();
+    const client = await signInWithPassword(profile);
     await startStepUp(client, { acrValues: mfaAcr });
-    await verifyPassword(client, totpUser);
+    await verifyPassword(client, profile);
 
     // The UI only offers sufficient methods; a client that submits anyway writes no result.
     await expectRejects(client.submitInteraction(), {
@@ -254,55 +255,58 @@ devFeatureTest.describe('pure step-up submission', () => {
     });
 
     // The rejected submission leaves the interaction usable: the missing factor completes it.
-    await successfullyVerifyTotp(client, { code: authenticator.generate(totpSecret) });
+    await successfullyVerifyTotp(client, { code });
     const claims = await submitStepUp(client);
 
-    expect(claims).toMatchObject({ sub: totpUserId, acr: mfaAcr, amr: ['pwd', 'otp', 'mfa'] });
+    expect(claims).toMatchObject({ sub: id, acr: mfaAcr, amr: ['pwd', 'otp', 'mfa'] });
   });
 
   it('forces an active verification without forcing the password', async () => {
-    const client = await signInWithPassword(totpUser);
+    const { profile, id, code } = await createTotpUser();
+    const client = await signInWithPassword(profile);
 
     // The session already satisfies `1fa`; `max_age=0` is what demands a fresh verification, and it
     // does not demand a first factor: the enrolled factor alone completes the interaction.
     await startStepUp(client, { acrValues: firstFactorAcr, maxAge: '0' });
-    await successfullyVerifyTotp(client, { code: authenticator.generate(totpSecret) });
+    await successfullyVerifyTotp(client, { code });
     const claims = await submitStepUp(client);
 
     // The achieved class may be stronger than the selected one: the factor pairs with the `1fa`
     // context the session carried in.
-    expect(claims).toMatchObject({ sub: totpUserId, acr: mfaAcr, amr: ['otp', 'mfa'] });
+    expect(claims).toMatchObject({ sub: id, acr: mfaAcr, amr: ['otp', 'mfa'] });
   });
 
   it('replaces the session context instead of merging it', async () => {
-    const client = await signInWithPassword(totpUser);
+    const { profile, id, code } = await createTotpUser();
+    const client = await signInWithPassword(profile);
     await startStepUp(client, { acrValues: mfaAcr });
-    await successfullyVerifyTotp(client, { code: authenticator.generate(totpSecret) });
+    await successfullyVerifyTotp(client, { code });
 
     const elevated = await submitStepUp(client);
     expect(elevated).toMatchObject({ acr: mfaAcr, amr: ['otp', 'mfa'] });
 
     // A later step-up that only re-verifies the password drops the previous MFA information.
     await startStepUp(client, { acrValues: firstFactorAcr, prompt: Prompt.Login });
-    await verifyPassword(client, totpUser);
+    await verifyPassword(client, profile);
     const reauthenticated = await submitStepUp(client);
 
-    expect(reauthenticated).toMatchObject({ acr: firstFactorAcr, amr: ['pwd'] });
+    expect(reauthenticated).toMatchObject({ sub: id, acr: firstFactorAcr, amr: ['pwd'] });
   });
 
   it('applies no tenant MFA policy', async () => {
-    const client = await signInWithPassword(totpUser);
+    const { profile, id } = await createTotpUser();
+    const client = await signInWithPassword(profile);
     await enableMandatoryMfaWithTotp();
 
     try {
       await startStepUp(client, { acrValues: firstFactorAcr, prompt: Prompt.Login });
-      await verifyPassword(client, totpUser);
+      await verifyPassword(client, profile);
 
       // A mandatory MFA policy never reaches step-up; the requested class alone decides.
       const claims = await submitStepUp(client);
-      expect(claims).toMatchObject({ sub: totpUserId, acr: firstFactorAcr, amr: ['pwd'] });
+      expect(claims).toMatchObject({ sub: id, acr: firstFactorAcr, amr: ['pwd'] });
     } finally {
-      await resetMfaSettings();
+      await enableUserControlledMfaWithNoPrompt();
     }
   });
 
@@ -328,9 +332,10 @@ devFeatureTest.describe('pure step-up submission', () => {
   });
 
   it('records successful and rejected submissions under the step-up audit key without secrets', async () => {
-    const rejectedClient = await signInWithPassword(totpUser);
+    const { profile } = await createTotpUser();
+    const rejectedClient = await signInWithPassword(profile);
     await startStepUp(rejectedClient, { acrValues: mfaAcr });
-    await verifyPassword(rejectedClient, totpUser);
+    await verifyPassword(rejectedClient, profile);
     await expectRejects(rejectedClient.submitInteraction(), {
       code: 'session.step_up.acr_not_satisfied',
       status: 403,
@@ -371,7 +376,7 @@ devFeatureTest.describe('pure step-up submission', () => {
     for (const log of [accepted, rejected]) {
       const serialized = JSON.stringify(log);
       expect(serialized).not.toContain(passwordUser.password);
-      expect(serialized).not.toContain(totpUser.password);
+      expect(serialized).not.toContain(profile.password);
     }
 
     expect(JSON.stringify(accepted)).not.toContain(verificationId);
