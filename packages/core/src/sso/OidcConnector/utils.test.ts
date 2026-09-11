@@ -22,7 +22,7 @@ const getMock = jest.fn();
 const postMock = jest.fn();
 
 class MockHttpError {
-  constructor(public response: { body: unknown }) {}
+  constructor(public response: { body: unknown; statusCode: number }) {}
 }
 
 const gotMock = {
@@ -63,17 +63,49 @@ const baseOidcConfig: BaseOidcConfig = {
 };
 
 describe('fetchOidcConfig', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should throw connector error if the discovery endpoint is not found', async () => {
-    getMock.mockRejectedValueOnce(new MockHttpError({ body: 'invalid endpoint' }));
+    getMock.mockRejectedValueOnce(new MockHttpError({ body: 'invalid endpoint', statusCode: 404 }));
 
     await expect(fetchOidcConfig(issuer)).rejects.toMatchError(
       new SsoConnectorError(SsoConnectorErrorCodes.InvalidConfig, {
         config: { issuer },
         message: SsoConnectorConfigErrorCodes.FailToFetchConfig,
-        error: 'invalid endpoint',
+        error: { statusCode: 404, body: 'invalid endpoint' },
       })
     );
     expect(getMock).toBeCalledWith(`${issuer}/.well-known/openid-configuration`);
+  });
+
+  it('should keep a transport error readable instead of serializing it to an empty object', async () => {
+    getMock.mockRejectedValueOnce(new Error('hostname resolves to a special-use IP address'));
+
+    await expect(fetchOidcConfig(issuer)).rejects.toMatchError(
+      new SsoConnectorError(SsoConnectorErrorCodes.InvalidConfig, {
+        config: { issuer },
+        message: SsoConnectorConfigErrorCodes.FailToFetchConfig,
+        error: 'Error: hostname resolves to a special-use IP address',
+      })
+    );
+  });
+
+  it('should not double the slash when the issuer ends with one', async () => {
+    getMock.mockResolvedValueOnce({ body: JSON.stringify(oidcConfigResponse) });
+
+    await expect(fetchOidcConfig(`${issuer}/`)).resolves.toEqual(oidcConfigResponseCamelCase);
+    expect(getMock).toBeCalledWith(`${issuer}/.well-known/openid-configuration`);
+  });
+
+  it('should keep the issuer path when appending the discovery path', async () => {
+    getMock.mockResolvedValueOnce({ body: JSON.stringify(oidcConfigResponse) });
+
+    await expect(fetchOidcConfig(`${issuer}/tenant/`)).resolves.toEqual(
+      oidcConfigResponseCamelCase
+    );
+    expect(getMock).toBeCalledWith(`${issuer}/tenant/.well-known/openid-configuration`);
   });
 
   it('should throw connector error if the discovery endpoint returns invalid config', async () => {
@@ -145,12 +177,14 @@ describe('fetchToken', () => {
   });
 
   it('should throw connector error if the token endpoint throws HTTPError', async () => {
-    postMock.mockRejectedValueOnce(new MockHttpError({ body: 'invalid response' }));
+    postMock.mockRejectedValueOnce(
+      new MockHttpError({ body: 'invalid response', statusCode: 400 })
+    );
 
     await expect(fetchToken(baseOidcConfig, data, redirectUri)).rejects.toMatchError(
       new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
         message: 'Fail to fetch token',
-        error: 'invalid response',
+        error: { statusCode: 400, body: 'invalid response' },
       })
     );
 
