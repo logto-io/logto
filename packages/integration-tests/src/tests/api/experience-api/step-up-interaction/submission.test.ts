@@ -18,10 +18,9 @@ import {
   VerificationType,
   type Application,
 } from '@logto/schemas';
-import ky from 'ky';
 import { authenticator } from 'otplib';
 
-import { createUserMfaVerification, getUser } from '#src/api/admin-user.js';
+import { createUserMfaVerification, getUser, updateUserLogtoConfig } from '#src/api/admin-user.js';
 import { createApplication, deleteApplication } from '#src/api/application.js';
 import { getAuditLogs } from '#src/api/logs.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
@@ -46,24 +45,14 @@ const redirectUri = 'https://step-up.example.com/callback';
 const stepUpLogKey = 'Interaction.SignIn.StepUp.Submit';
 
 /**
- * Resume the authorization a finished interaction handed back and exchange the code. The existing
- * grant is normally reused, so the resume goes straight to the client callback; if the request
- * still needs consent, `processSession()` drives it.
+ * Submit the step-up and exchange the authorization code it hands back. The sign-in already
+ * granted this client consent, so the resumed authorization goes straight to the callback.
  */
-const resumeAuthorization = async (client: ExperienceClient, redirectTo: string) => {
-  const response = await ky.get(redirectTo, {
-    headers: { cookie: client.getCookieHeader(new URL(redirectTo).pathname) },
-    redirect: 'manual',
-    throwHttpErrors: false,
-  });
-
-  if (response.status === 303 && response.headers.get('location')?.startsWith('/consent')) {
-    await client.processSession(redirectTo);
-
-    return;
-  }
-
+const submitStepUp = async (client: ExperienceClient) => {
+  const { redirectTo } = await client.submitInteraction();
   await client.manualConsent(redirectTo);
+
+  return client.getIdTokenClaims();
 };
 
 /** Start a step-up authorization on the signed-in client and land on the step-up path. */
@@ -88,14 +77,6 @@ const startStepUp = async (
   await expect(
     client.initInteraction({ interactionEvent: InteractionEvent.SignIn })
   ).resolves.toBeUndefined();
-};
-
-/** Submit the step-up and exchange the authorization code it hands back. */
-const submitStepUp = async (client: ExperienceClient) => {
-  const { redirectTo } = await client.submitInteraction();
-  await resumeAuthorization(client, redirectTo);
-
-  return client.getIdTokenClaims();
 };
 
 devFeatureTest.describe('pure step-up submission', () => {
@@ -175,6 +156,13 @@ devFeatureTest.describe('pure step-up submission', () => {
 
     // eslint-disable-next-line @silverhand/fp/no-mutation
     totpSecret = totp.secret;
+
+    // Let the password sign-in establish the session without a TOTP challenge. A requested `mfa`
+    // in the step-up ignores this preference, so the factor still has to be verified there.
+    await updateUserLogtoConfig(totpUserId, {
+      mfa: { skipMfaOnSignIn: true },
+      passkeySignIn: {},
+    });
   });
 
   afterAll(async () => {
