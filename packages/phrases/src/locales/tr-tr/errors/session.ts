@@ -57,6 +57,8 @@ const session = {
       'Yükseltilmiş kimlik doğrulama sırasında tanımlayıcı kullanılamaz. Tanımlayıcı alanı olmadan tekrar deneyin.',
     acr_not_satisfied:
       'Tamamlanan doğrulama, istenen kimlik doğrulama bağlamını karşılamıyor. Lütfen başka bir yöntemi doğrulayın.',
+    require_verification:
+      'İstenen kimlik doğrulama bağlamına ulaşmak için mevcut yöntemlerinizden biriyle doğrulama yapmanız gerekir.',
   },
   passkey_sign_in: {
     pending_info_not_found:

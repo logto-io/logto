@@ -4,7 +4,7 @@ import { useCallback, useContext, useState } from 'react';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { sendMfaVerificationCode } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
-import useErrorHandler from '@/hooks/use-error-handler';
+import useErrorHandler, { type ErrorHandlers } from '@/hooks/use-error-handler';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { type VerificationCodeIdentifier } from '@/types';
 import { type MfaFlowState } from '@/types/guard';
@@ -13,9 +13,11 @@ import { codeVerificationTypeMap } from '@/utils/sign-in-experience';
 type Options = {
   /** Whether to replace the current page in the history stack on navigation. */
   replace?: boolean;
+  /** Handlers for the errors of sending the code, on top of the default toast. */
+  errorHandlers?: ErrorHandlers;
 };
 
-const useSendMfaVerificationCode = ({ replace }: Options = {}) => {
+const useSendMfaVerificationCode = ({ replace, errorHandlers }: Options = {}) => {
   const [errorMessage, setErrorMessage] = useState<string>();
   const navigate = useNavigateWithPreservedSearchParams();
 
@@ -32,7 +34,7 @@ const useSendMfaVerificationCode = ({ replace }: Options = {}) => {
       const [error, result] = await asyncSendVerificationCode(identifier);
 
       if (error) {
-        await handleError(error);
+        await handleError(error, errorHandlers);
 
         return;
       }
@@ -47,7 +49,7 @@ const useSendMfaVerificationCode = ({ replace }: Options = {}) => {
         );
       }
     },
-    [asyncSendVerificationCode, handleError, navigate, replace, setVerificationId]
+    [asyncSendVerificationCode, errorHandlers, handleError, navigate, replace, setVerificationId]
   );
 
   return {

@@ -11,6 +11,7 @@ import PageContextProvider from './Providers/PageContextProvider';
 import SettingsProvider from './Providers/SettingsProvider';
 import UserInteractionContextProvider from './Providers/UserInteractionContextProvider';
 import DevelopmentTenantNotification from './containers/DevelopmentTenantNotification';
+import StepUpGuard from './containers/StepUpGuard';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
 import Continue from './pages/Continue';
@@ -51,6 +52,7 @@ import SingleSignOnLanding from './pages/SingleSignOnLanding';
 import SocialLanding from './pages/SocialLanding';
 import SocialLinkAccount from './pages/SocialLinkAccount';
 import SocialSignInWebCallback from './pages/SocialSignInWebCallback';
+import StepUp from './pages/StepUp';
 import SwitchAccount from './pages/SwitchAccount';
 import TrustedDevice from './pages/TrustedDevice';
 import VerificationCode from './pages/VerificationCode';
@@ -175,6 +177,15 @@ const App = () => {
                       {/* Continue set up missing profile */}
                       <Route path="continue">
                         <Route path=":method" element={<Continue />} />
+                      </Route>
+
+                      {/*
+                       * Step-up: an authenticated session proves the missing assurance. The guard
+                       * loads the server-driven context; the pinned-user first-factor pages are
+                       * registered under this tree by the slices that implement them.
+                       */}
+                      <Route path={experience.routes.stepUp} element={<StepUpGuard />}>
+                        <Route index element={<StepUp />} />
                       </Route>
 
                       {/* Social sign-in pages */}

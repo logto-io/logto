@@ -52,6 +52,8 @@ const session = {
       '스텝업 인증 중에는 식별자를 사용할 수 없습니다. 식별자 필드를 제거하고 다시 시도해 주세요.',
     acr_not_satisfied:
       '완료된 인증이 요청된 인증 컨텍스트를 충족하지 않습니다. 다른 방법으로 인증해 주세요.',
+    require_verification:
+      '요청된 인증 컨텍스트에 도달하려면 기존 인증 방법 중 하나로 인증해야 합니다.',
   },
   passkey_sign_in: {
     pending_info_not_found:

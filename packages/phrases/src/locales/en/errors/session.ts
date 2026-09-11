@@ -55,6 +55,8 @@ const session = {
       'An identifier is not allowed during step-up authentication. Retry without the identifier field.',
     acr_not_satisfied:
       'The completed verification does not satisfy the requested authentication context. Please verify another method.',
+    require_verification:
+      'Verification with one of your existing methods is required to reach the requested authentication context.',
   },
   passkey_sign_in: {
     pending_info_not_found:
