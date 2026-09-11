@@ -28,6 +28,7 @@ import {
   mockUserWebAuthnMfaVerification,
 } from '#src/__mocks__/user.js';
 import { EnvSet } from '#src/env-set/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
@@ -411,6 +412,41 @@ describe('PUT /experience', () => {
     expect(response.status).toBe(400);
     expect(response.body).toMatchObject({ code: 'session.step_up.subject_not_found' });
     expect(provider.interactionResult).not.toHaveBeenCalled();
+  });
+
+  describe('when the pinned subject no longer exists', () => {
+    // `findUserById` uses `pool.one`, whose `NotFoundError` is mapped to this error by
+    // `koaSlonikErrorHandler` when the user row has been deleted.
+    const subjectNotFound = new RequestError({ code: 'entity.not_found', status: 404 });
+
+    it('should respond 404 on creation', async () => {
+      const { requester, provider, users } = createStepUpRequester();
+      users.findUserById.mockRejectedValueOnce(subjectNotFound);
+
+      const response = await requester
+        .put('/experience')
+        .send({ interactionEvent: InteractionEvent.SignIn });
+
+      expect(response.status).toBe(404);
+      expect(response.body).toMatchObject({ code: 'entity.not_found' });
+      expect(provider.interactionResult).not.toHaveBeenCalled();
+    });
+
+    it('should respond 404 on fetching the interaction', async () => {
+      const { requester, users } = createStepUpRequester();
+
+      const created = await requester
+        .put('/experience')
+        .send({ interactionEvent: InteractionEvent.SignIn });
+      expect(created.status).toBe(204);
+
+      users.findUserById.mockRejectedValueOnce(subjectNotFound);
+
+      const response = await requester.get('/experience/interaction');
+
+      expect(response.status).toBe(404);
+      expect(response.body).toMatchObject({ code: 'entity.not_found' });
+    });
   });
 });
 

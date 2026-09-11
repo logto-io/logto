@@ -73,8 +73,9 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
         .optional(),
       // 200 is returned when a pure step-up cannot proceed and the interaction was finished with
       // `unmet_authentication_requirements`; 400 is returned if a pure step-up cannot be created;
-      // 422 is returned if the captcha verification fails
-      status: [200, 204, 400, 422],
+      // 404 is returned if the pinned subject of a pure step-up no longer exists; 422 is returned
+      // if the captcha verification fails
+      status: [200, 204, 400, 404, 422],
     }),
     async (ctx, next) => {
       const { interactionEvent, captchaToken } = ctx.guard.body;
@@ -223,7 +224,8 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
   experienceRouter.get(
     `${experienceRoutes.interaction}`,
     koaGuard({
-      status: [200],
+      // 404 is returned if the pinned subject of a pure step-up no longer exists
+      status: [200, 404],
       response: sanitizedInteractionStorageGuard,
     }),
     async (ctx, next) => {
