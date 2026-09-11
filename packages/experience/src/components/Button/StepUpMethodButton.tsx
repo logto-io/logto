@@ -15,7 +15,7 @@ import DynamicT from '@/shared/components/DynamicT';
 import FlipOnRtl from '@/shared/components/FlipOnRtl';
 import { type StepUpMethod } from '@/utils/step-up';
 
-import stepUpMethodButtonStyles from './StepUpMethodButton.module.scss';
+import factorButtonStyles from './MfaFactorButton.module.scss';
 
 export type Props = {
   readonly method: StepUpMethod;
@@ -63,8 +63,8 @@ const emailCodeMethods: ReadonlySet<StepUpMethod> = new Set([
 ]);
 
 /**
- * One entry of the step-up method list, modeled on `MfaFactorButton` and keyed by the
- * verification types Core can offer for step-up.
+ * One entry of the step-up method list, modeled on `MfaFactorButton` (whose styles it shares) and
+ * keyed by the verification types Core can offer for step-up.
  */
 const StepUpMethodButton = ({ method, maskedIdentifier, onClick }: Props) => {
   const { t } = useTranslation();
@@ -76,17 +76,17 @@ const StepUpMethodButton = ({ method, maskedIdentifier, onClick }: Props) => {
         styles.button,
         styles.secondary,
         styles.large,
-        stepUpMethodButtonStyles.stepUpMethodButton
+        factorButtonStyles.mfaFactorButton
       )}
       type="button"
       onClick={onClick}
     >
-      <Icon className={stepUpMethodButtonStyles.icon} />
-      <div className={stepUpMethodButtonStyles.title}>
-        <div className={stepUpMethodButtonStyles.name}>
+      <Icon className={factorButtonStyles.icon} />
+      <div className={factorButtonStyles.title}>
+        <div className={factorButtonStyles.name}>
           <DynamicT forKey={methodName[method]} />
         </div>
-        <div className={stepUpMethodButtonStyles.description}>
+        <div className={factorButtonStyles.description}>
           {maskedIdentifier ? (
             <span>
               {t(emailCodeMethods.has(method) ? 'mfa.send_to_email' : 'mfa.send_to_phone', {
@@ -99,7 +99,7 @@ const StepUpMethodButton = ({ method, maskedIdentifier, onClick }: Props) => {
         </div>
       </div>
       <FlipOnRtl>
-        <ArrowNext className={stepUpMethodButtonStyles.icon} />
+        <ArrowNext className={factorButtonStyles.icon} />
       </FlipOnRtl>
     </button>
   );

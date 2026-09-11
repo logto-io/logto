@@ -5,7 +5,7 @@ import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } fro
 import { useLocation, useMatch } from 'react-router-dom';
 
 import { getStepUpContext, initStepUp } from '@/apis/experience';
-import { stepUpRoutes } from '@/constants/step-up';
+import { stepUpRoutes, stepUpSessionGoneErrorCodes } from '@/constants/step-up';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
@@ -19,16 +19,7 @@ type Props = {
 /** The interaction storage holds nothing for this interaction yet, so it has to be created. */
 const interactionNotFoundCode: LogtoErrorCode = 'session.interaction_not_found';
 
-/**
- * Errors that mean the interaction, or the subject it pins, is gone. Nothing on the client can
- * recover from them, so they land on the invalid-session page without a toast.
- */
-const sessionGoneErrorCodes: ReadonlySet<string> = new Set<LogtoErrorCode>([
-  'session.not_found',
-  interactionNotFoundCode,
-  'session.step_up.subject_not_found',
-  'session.step_up.invalid_interaction_event',
-]);
+const sessionGoneErrorCodes: ReadonlySet<string> = new Set(stepUpSessionGoneErrorCodes);
 
 /** Read the Logto error code from a failed request without consuming the response body. */
 const getErrorCode = async (error: unknown): Promise<string | undefined> => {
@@ -67,6 +58,8 @@ const StepUpContextProvider = ({ children }: Props) => {
   const [loadedLandingKey, setLoadedLandingKey] = useState<string>();
   const handledLandingKeyRef = useRef<string>();
   const hasLoadedRef = useRef(false);
+  /** The id of the latest load; an older load that settles later must not overwrite it. */
+  const loadIdRef = useRef(0);
 
   const asyncGetStepUpContext = useApi(getStepUpContext);
   const asyncInitStepUp = useApi(initStepUp);
@@ -77,67 +70,85 @@ const StepUpContextProvider = ({ children }: Props) => {
   // The location key identifies one arrival at the landing page, so each arrival loads once.
   const landingKey = isLanding ? key : undefined;
 
-  const settleWithError = useCallback(
+  /** A session that is gone lands on the invalid-session page silently; anything else also toasts. */
+  const reportError = useCallback(
     async (error: unknown) => {
       const code = await getErrorCode(error);
 
       if (!code || !sessionGoneErrorCodes.has(code)) {
         await handleError(error);
       }
-
-      setAuthenticationContext(undefined);
-      setIsFetching(false);
     },
     [handleError]
   );
 
+  /**
+   * Load the context, creating the interaction first when asked and storage holds nothing for
+   * it. Resolves with whether this load was still the latest one when it settled: a load that a
+   * newer one superseded writes nothing, so the state always reflects the latest arrival.
+   */
   const load = useCallback(
-    async (shouldInitialize: boolean) => {
+    async (shouldInitialize: boolean): Promise<boolean> => {
       // eslint-disable-next-line @silverhand/fp/no-mutation
       hasLoadedRef.current = true;
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      loadIdRef.current += 1;
+      const loadId = loadIdRef.current;
+      const isCurrent = () => loadIdRef.current === loadId;
+      const settle = (context?: InteractionAuthenticationContext) => {
+        if (isCurrent()) {
+          setAuthenticationContext(context);
+          setIsFetching(false);
+        }
+
+        return isCurrent();
+      };
+      const fail = async (error: unknown) => {
+        await reportError(error);
+
+        return settle(undefined);
+      };
+
       setIsFetching(true);
 
       const [error, context] = await asyncGetStepUpContext();
 
       if (!error) {
-        setAuthenticationContext(context);
-        setIsFetching(false);
-        return;
+        return settle(context);
       }
 
       if (!shouldInitialize || (await getErrorCode(error)) !== interactionNotFoundCode) {
-        await settleWithError(error);
-        return;
+        return fail(error);
       }
 
       const [initError, result] = await asyncInitStepUp();
 
       if (initError) {
-        await settleWithError(initError);
-        return;
+        return fail(initError);
       }
 
       if (result?.redirectTo) {
         // The interaction was finished with `unmet_authentication_requirements`; the application
         // explains it. The redirect unloads the page, so this never resolves.
         await redirectTo(result.redirectTo);
-        return;
+
+        return false;
       }
 
       const [contextError, initializedContext] = await asyncGetStepUpContext();
 
       if (contextError) {
-        await settleWithError(contextError);
-        return;
+        return fail(contextError);
       }
 
-      setAuthenticationContext(initializedContext);
-      setIsFetching(false);
+      return settle(initializedContext);
     },
-    [asyncGetStepUpContext, asyncInitStepUp, redirectTo, settleWithError]
+    [asyncGetStepUpContext, asyncInitStepUp, redirectTo, reportError]
   );
 
-  const refetch = useCallback(async () => load(false), [load]);
+  const refetch = useCallback(async () => {
+    await load(false);
+  }, [load]);
 
   useEffect(() => {
     if (landingKey === undefined) {
@@ -156,8 +167,9 @@ const StepUpContextProvider = ({ children }: Props) => {
     handledLandingKeyRef.current = landingKey;
 
     const loadLanding = async () => {
-      await load(true);
-      setLoadedLandingKey(landingKey);
+      if (await load(true)) {
+        setLoadedLandingKey(landingKey);
+      }
     };
 
     void loadLanding();
