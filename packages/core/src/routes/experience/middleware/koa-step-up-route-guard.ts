@@ -3,6 +3,7 @@ import type { MiddlewareType } from 'koa';
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { isStepUpInteractionDetails } from '../classes/experience-interaction.js';
 import { experienceRoutes } from '../const.js';
 import { type ExperienceInteractionRouterContext } from '../types.js';
 
@@ -11,9 +12,13 @@ import { type ExperienceInteractionRouterContext } from '../types.js';
  * everything else fails with 403 `session.step_up.forbidden_route`. A SignIn with a requested ACR
  * is not a pure step-up and is never restricted.
  *
+ * `PUT /experience` stays reachable: it is how the interaction is created, and a re-mounted client
+ * calls it again for the same step-up.
+ *
  * The enrollment, establishment, and subject-proof rows land with M5.
  */
 const allowedStepUpRoutes = new Set([
+  `PUT ${experienceRoutes.prefix}`,
   `GET ${experienceRoutes.interaction}`,
   `POST ${experienceRoutes.prefix}/submit`,
   `POST ${experienceRoutes.identification}`,
@@ -29,8 +34,9 @@ const allowedStepUpRoutes = new Set([
 ]);
 
 /**
- * Deny-by-default route guard for pure step-up interactions. Whitelisted routes of
- * `koaExperienceInteraction` carry no interaction and therefore can never be a pure step-up.
+ * Deny-by-default route guard for pure step-up interactions. The mode is classified from the
+ * interaction record `koaInteractionDetails` provides, which every experience request carries,
+ * including the routes `koaExperienceInteraction` whitelists.
  */
 export default function koaStepUpRouteGuard<
   StateT,
@@ -38,10 +44,9 @@ export default function koaStepUpRouteGuard<
   ResponseT,
 >(): MiddlewareType<StateT, ContextT, ResponseT> {
   return async (ctx, next) => {
-    const { experienceInteraction } = ctx;
+    const isStepUp = isStepUpInteractionDetails(ctx.interactionDetails);
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- whitelisted routes have no interaction
-    if (!experienceInteraction?.isStepUp) {
+    if (!isStepUp) {
       return next();
     }
 

@@ -108,6 +108,27 @@ const readLoginPromptAuthenticationContext = (
 };
 
 /**
+ * Whether the provider interaction record belongs to a pure step-up. Reads the same two sources
+ * the interaction instance does: the login prompt details it derives the mode from at creation,
+ * and the stored result it restores from. The route guard classifies the routes that carry no
+ * instance (`koaExperienceInteraction` skips them), so the mode cannot be read from the instance
+ * there. The prompt details never change, so neither source can disagree with the instance.
+ */
+export const isStepUpInteractionDetails = (interactionDetails: Interaction): boolean => {
+  const promptContext = readLoginPromptAuthenticationContext(interactionDetails);
+
+  if (promptContext) {
+    return promptContext.mode === AuthenticationContextMode.StepUp;
+  }
+
+  const stored = interactionStorageGuard.safeParse(interactionDetails.result ?? {});
+
+  return (
+    stored.success && stored.data.authenticationContext?.mode === AuthenticationContextMode.StepUp
+  );
+};
+
+/**
  * Interaction is a short-lived session session that is initiated when a user starts an interaction flow with the Logto platform.
  * This class is used to manage all the interaction data and status.
  *

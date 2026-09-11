@@ -93,6 +93,9 @@ devFeatureTest.describe('step-up route allow-list', () => {
       })
     );
 
+    // The endpoints whitelisted by `koaExperienceInteraction` must not bypass the guard.
+    await expectForbidden(client.getAvailableSsoConnectors(user.primaryEmail));
+
     await logoutClient(client);
   });
 
