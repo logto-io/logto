@@ -1,6 +1,10 @@
 import { NameIdFormat } from '@logto/schemas';
 
-import { generateAutoSubmitForm, buildSamlAssertionNameId } from './utils.js';
+import {
+  generateAutoSubmitForm,
+  buildSamlAssertionNameId,
+  isForceAuthnRequested,
+} from './utils.js';
 
 describe('buildSamlAssertionNameId', () => {
   it('should use email when email_verified is true', () => {
@@ -182,5 +186,37 @@ describe('generateAutoSubmitForm', () => {
     expect(() =>
       generateAutoSubmitForm('https://example.com/acs', samlResponse)
     ).not.toThrowError();
+  });
+});
+
+const buildAuthnRequest = (extraAttributes = '') =>
+  `<samlp:AuthnRequest xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="_request-id" Version="2.0" IssueInstant="2025-01-01T00:00:00Z" AssertionConsumerServiceURL="https://sp.example.com/acs"${extraAttributes}><saml:Issuer>https://sp.example.com</saml:Issuer></samlp:AuthnRequest>`;
+
+describe('isForceAuthnRequested', () => {
+  it.each([' true ', ' 1 ', '&#x9;true&#xA;'])('normalizes XML whitespace: %s', (value) => {
+    expect(isForceAuthnRequested(buildAuthnRequest(` ForceAuthn="${value}"`))).toBe(true);
+  });
+
+  it.each(['0', ' false ', 'TRUE', 'tr ue', '\u00A0true\u00A0'])(
+    'does not accept a false or invalid boolean: %s',
+    (value) => {
+      expect(isForceAuthnRequested(buildAuthnRequest(` ForceAuthn="${value}"`))).toBe(false);
+    }
+  );
+
+  it('should be false when the request does not carry ForceAuthn', () => {
+    expect(isForceAuthnRequested(buildAuthnRequest())).toBe(false);
+  });
+
+  it('should be true when ForceAuthn is "true"', () => {
+    expect(isForceAuthnRequested(buildAuthnRequest(' ForceAuthn="true"'))).toBe(true);
+  });
+
+  it('should be true when ForceAuthn is "1"', () => {
+    expect(isForceAuthnRequested(buildAuthnRequest(' ForceAuthn="1"'))).toBe(true);
+  });
+
+  it('should be false when ForceAuthn is "false"', () => {
+    expect(isForceAuthnRequested(buildAuthnRequest(' ForceAuthn="false"'))).toBe(false);
   });
 });

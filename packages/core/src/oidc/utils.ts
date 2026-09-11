@@ -61,6 +61,7 @@ export const getConstantClientMetadata = (
     userinfo_signed_response_alg: jwkSigningAlg,
     id_token_signed_response_alg: jwkSigningAlg,
     introspection_signed_response_alg: jwkSigningAlg,
+    ...conditional(type === ApplicationType.SAML && { require_auth_time: true }),
   };
 
   /**

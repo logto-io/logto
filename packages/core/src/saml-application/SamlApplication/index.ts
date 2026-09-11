@@ -13,6 +13,7 @@ import { generateStandardId } from '@logto/shared';
 import { cond, conditional, tryThat, type Nullable, type Optional } from '@silverhand/essentials';
 import camelcaseKeys, { type CamelCaseKeys } from 'camelcase-keys';
 import { XMLValidator } from 'fast-xml-parser';
+import { jwtVerify } from 'jose';
 import saml from 'samlify';
 import { ZodError, z } from 'zod';
 
@@ -45,6 +46,7 @@ import {
   buildSamlAssertionNameId,
   getSamlAppCallbackUrl,
   generateSamlAttributeTag,
+  assertSamlAuthnRequestSignatureScope,
 } from './utils.js';
 
 type SamlIdentityProviderConfig = {
@@ -61,6 +63,8 @@ type SamlServiceProviderConfig = {
   acsUrl: SamlAcsUrl;
   certificate?: string;
 };
+
+type SamlUserInfo = IdTokenProfileStandardClaims & { auth_time: number };
 
 class SamlApplicationConfig {
   constructor(
@@ -125,6 +129,10 @@ class SamlApplicationConfig {
     return this._details.encryption;
   }
 
+  public get authnRequestConfig() {
+    return this._details.authnRequestConfig;
+  }
+
   public get attributeMapping() {
     return this._details.attributeMapping;
   }
@@ -178,7 +186,18 @@ export class SamlApplication {
     binding: 'post' | 'redirect',
     loginRequest: Parameters<typeof saml.IdentityProviderInstance.prototype.parseLoginRequest>[2]
   ) {
-    return this.idp.parseLoginRequest(this.sp, binding, loginRequest);
+    if (!this.config.authnRequestConfig?.requireSignedAuthnRequests) {
+      return this.idp.parseLoginRequest(this.sp, binding, loginRequest);
+    }
+
+    const result = await tryThat(
+      this.idp.parseLoginRequest(this.sp, binding, loginRequest),
+      new RequestError('application.saml.invalid_saml_request')
+    );
+    if (binding === 'post') {
+      assertSamlAuthnRequestSignatureScope(result.samlContent);
+    }
+    return result;
   }
 
   public createSamlResponse = async ({
@@ -188,7 +207,7 @@ export class SamlApplication {
     sessionId,
     sessionExpiresAt,
   }: {
-    userInfo: IdTokenProfileStandardClaims;
+    userInfo: SamlUserInfo;
     relayState: Nullable<string>;
     samlRequestId: Nullable<string>;
     sessionId: Optional<string>;
@@ -229,25 +248,40 @@ export class SamlApplication {
   // Helper functions for SAML callback
   public handleOidcCallbackAndGetUserInfo = async ({ code }: { code: string }) => {
     // Exchange authorization code for tokens
-    const { accessToken } = await this.exchangeAuthorizationCode({
+    const { accessToken, idToken } = await this.exchangeAuthorizationCode({
       code,
     });
 
     assertThat(accessToken, new RequestError('oidc.access_denied'));
 
-    // Get user info using access token
-    return this.getUserInfo({ accessToken });
+    const { payload } = await jwtVerify(idToken, this.envSet.oidc.localJWKSet, {
+      issuer: this.issuer,
+      audience: this.samlApplicationId,
+      requiredClaims: ['sub', 'iat', 'exp', 'auth_time'],
+    });
+    const { auth_time: authTime } = z
+      .object({ auth_time: z.number().int().nonnegative() })
+      .parse(payload);
+    const userInfo = await this.getUserInfo({ accessToken });
+    assertThat(userInfo.sub === payload.sub, new RequestError('oidc.invalid_token'));
+
+    return { ...userInfo, auth_time: authTime };
   };
 
-  public getSignInUrl = async ({ state }: { state?: string }) => {
+  /** Build the internal authorization URL, enforcing both IdP and SP re-authentication policy. */
+  public getSignInUrl = async ({ state, forceAuthn }: { state?: string; forceAuthn?: boolean }) => {
     const { authorizationEndpoint } = await this.fetchOidcConfig();
 
     const queryParameters = new URLSearchParams({
       [QueryKey.ClientId]: this.samlApplicationId,
       [QueryKey.RedirectUri]: this.config.redirectUri,
       [QueryKey.ResponseType]: 'code',
-      [QueryKey.Prompt]: Prompt.Login,
     });
+
+    if (forceAuthn === true || this.config.authnRequestConfig?.forceAuthn === true) {
+      queryParameters.append(QueryKey.Prompt, Prompt.Login);
+      queryParameters.append('max_age', '0');
+    }
 
     queryParameters.append(
       QueryKey.Scope,
@@ -287,6 +321,7 @@ export class SamlApplication {
       ],
       privateKey,
       isAssertionEncrypted: encryptSamlAssertion,
+      wantAuthnRequestsSigned: this.config.authnRequestConfig?.requireSignedAuthnRequests ?? false,
       loginResponseTemplate: this.buildLoginResponseTemplate(),
       nameIDFormat: [nameIdFormat],
     });
@@ -303,7 +338,7 @@ export class SamlApplication {
           Location: acsUrl.url,
         },
       ],
-      signingCert: this.config.certificate,
+      signingCert: this.config.authnRequestConfig?.signingCertificate,
       authnRequestsSigned: this.idp.entityMeta.isWantAuthnRequestsSigned(),
       allowCreate: false,
       ...cond(encryptCert && { encryptCert }),
@@ -429,7 +464,7 @@ export class SamlApplication {
       sessionId,
       sessionExpiresAt,
     }: {
-      userInfo: IdTokenProfileStandardClaims;
+      userInfo: SamlUserInfo;
       samlRequestId: Nullable<string>;
       sessionId: Optional<string>;
       sessionExpiresAt: Optional<string>;
@@ -460,6 +495,7 @@ export class SamlApplication {
         SubjectRecipient: assertionConsumerServiceUrl,
         Issuer: this.idp.entityMeta.getEntityID(),
         IssueInstant: now.toISOString(),
+        AuthnInstant: new Date(userInfo.auth_time * 1000).toISOString(),
         AssertionConsumerServiceURL: assertionConsumerServiceUrl,
         StatusCode: saml.Constants.StatusCode.Success,
         ConditionsNotBefore: now.toISOString(),

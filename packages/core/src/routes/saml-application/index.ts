@@ -16,6 +16,7 @@ import {
   calculateCertificateFingerprints,
   assembleSamlApplication,
   validateAcsUrl,
+  validateSamlAuthnRequestConfig,
 } from '#src/libraries/saml-application/utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { koaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
@@ -92,6 +93,8 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
       const { name, description, customData, ...config } = samlApplicationCreateGuard.parse(
         ctx.guard.body
       );
+
+      validateSamlAuthnRequestConfig(config.authnRequestConfig);
 
       if (config.acsUrl) {
         validateAcsUrl(config.acsUrl);

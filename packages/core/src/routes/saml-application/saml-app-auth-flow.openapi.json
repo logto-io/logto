@@ -40,7 +40,7 @@
     "/api/saml/{id}/authn": {
       "get": {
         "summary": "Handle SAML authentication request (Redirect binding)",
-        "description": "Process SAML authentication request using HTTP Redirect binding.",
+        "description": "Process SAML authentication request using HTTP Redirect binding. The application policy or ForceAuthn can require fresh authentication; otherwise an existing session may be reused. The response assertion preserves the actual authentication time. When authnRequestConfig.requireSignedAuthnRequests is true, the request must be signed using the configured service provider signing certificate.",
         "parameters": [
           {
             "name": "SAMLRequest",
@@ -89,7 +89,7 @@
       },
       "post": {
         "summary": "Handle SAML authentication request (POST binding)",
-        "description": "Process SAML authentication request using HTTP POST binding.",
+        "description": "Process SAML authentication request using HTTP POST binding. The application policy or ForceAuthn can require fresh authentication; otherwise an existing session may be reused. The response assertion preserves the actual authentication time. When authnRequestConfig.requireSignedAuthnRequests is true, the request must be signed using the configured service provider signing certificate.",
         "parameters": [],
         "requestBody": {
           "required": true,

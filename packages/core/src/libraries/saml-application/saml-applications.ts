@@ -17,7 +17,11 @@ import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { assembleSamlApplication, generateKeyPairAndCertificate } from './utils.js';
+import {
+  assembleSamlApplication,
+  generateKeyPairAndCertificate,
+  validateSamlAuthnRequestConfig,
+} from './utils.js';
 
 const consoleLog = new ConsoleLog(chalk.magenta('SAML app custom domain'));
 
@@ -105,6 +109,8 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
 
     // Can not put this in a single Promise.all with `findApplicationById()` we want to API to throw SAML app only error before throwing other errors.
     const originalAppConfig = await findSamlApplicationConfigByApplicationId(id);
+
+    validateSamlAuthnRequestConfig(config.authnRequestConfig);
 
     const [updatedApplication, upToDateSamlConfig] = await Promise.all([
       Object.keys(applicationData).length > 0
