@@ -57,6 +57,9 @@ const session = {
       "L'authentification renforcée n'est disponible que pour les interactions de connexion.",
     subject_not_found:
       "Aucune session authentifiée n'a été trouvée pour l'authentification renforcée. Veuillez vous reconnecter.",
+    forbidden_route: "Cette route n'est pas autorisée pendant l'authentification renforcée.",
+    forbidden_identifier:
+      "Un identifiant n'est pas autorisé pendant l'authentification renforcée. Réessayez sans le champ identifiant.",
   },
   passkey_sign_in: {
     pending_info_not_found:

@@ -18,7 +18,7 @@
       "post": {
         "responses": {
           "403": {
-            "description": "Identity conflict in step-up authentication. <br/> - `session.identity_conflict:` The user associated with the verified WebAuthn credential does not match the pinned subject in the current step-up interaction."
+            "description": "Passkey sign-in is not available in a pure step-up: the route is not on the step-up route allow-list and fails with `session.step_up.forbidden_route` before the credential is verified."
           }
         }
       }

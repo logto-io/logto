@@ -52,6 +52,9 @@ const session = {
       'Yükseltilmiş kimlik doğrulama yalnızca oturum açma etkileşimleri için kullanılabilir.',
     subject_not_found:
       'Yükseltilmiş kimlik doğrulama için kimliği doğrulanmış bir oturum bulunamadı. Lütfen tekrar oturum açın.',
+    forbidden_route: 'Bu yol, yükseltilmiş kimlik doğrulama sırasında izin verilmez.',
+    forbidden_identifier:
+      'Yükseltilmiş kimlik doğrulama sırasında tanımlayıcı kullanılamaz. Tanımlayıcı alanı olmadan tekrar deneyin.',
   },
   passkey_sign_in: {
     pending_info_not_found:

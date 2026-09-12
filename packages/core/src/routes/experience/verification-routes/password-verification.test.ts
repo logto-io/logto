@@ -151,6 +151,7 @@ const sessionId = 'session-id';
 type PasswordVerificationRouteContext = {
   experienceInteraction: {
     interactionEvent: InteractionEvent;
+    isStepUp: boolean;
     subjectUserId?: string;
     provisionLibrary: {
       createUser: typeof createUser;
@@ -210,14 +211,17 @@ const createContext = (
   interactionEvent = InteractionEvent.SignIn,
   {
     subjectUserId,
+    isStepUp = false,
     body = { identifier, password },
   }: {
     subjectUserId?: string;
+    isStepUp?: boolean;
     body?: PasswordVerificationRouteContext['guard']['body'];
   } = {}
 ): PasswordVerificationRouteContext => ({
   experienceInteraction: {
     interactionEvent,
+    isStepUp,
     subjectUserId,
     provisionLibrary: {
       createUser,
@@ -266,7 +270,7 @@ describe('password verification route PostFirstFactorVerification fallback', () 
     registerRoute();
 
     expect(koaGuard).toHaveBeenCalledWith(
-      expect.objectContaining({ status: [200, 400, 401, 404, 409, 422] })
+      expect.objectContaining({ status: [200, 400, 401, 403, 404, 409, 422] })
     );
   });
 
@@ -662,7 +666,25 @@ describe('password verification route subject-bound variant', () => {
     expect(ctx.experienceInteraction.setVerificationRecord).not.toHaveBeenCalled();
   });
 
-  it('keeps the identifier path when an identifier is given alongside a subject', async () => {
+  it('rejects a raw identifier in a pure step-up before any verification', async () => {
+    const handler = registerRoute();
+    const ctx = createContext(InteractionEvent.SignIn, {
+      subjectUserId: subject.id,
+      isStepUp: true,
+      body: { identifier, password },
+    });
+
+    await expect(handler(ctx, jest.fn().mockImplementation(resolveVoid))).rejects.toMatchError(
+      new RequestError({ code: 'session.step_up.forbidden_identifier', status: 403 })
+    );
+
+    expect(withSentinel).not.toHaveBeenCalled();
+    expect(runAction).not.toHaveBeenCalled();
+    expect(createPasswordVerification).not.toHaveBeenCalled();
+    expect(createPasswordVerificationForUser).not.toHaveBeenCalled();
+  });
+
+  it('keeps the identifier path when an identifier is given alongside a subject outside pure step-up', async () => {
     const handler = registerRoute();
     const ctx = createContext(InteractionEvent.SignIn, { subjectUserId: subject.id });
 

@@ -13,6 +13,7 @@ import {
   type InteractionAuthenticationContext,
   type PostSignInEvent,
   type RequestedAuthenticationContext,
+  requestedAuthenticationContextGuard,
   VerificationType,
   type User,
 } from '@logto/schemas';
@@ -105,6 +106,45 @@ const readLoginPromptAuthenticationContext = (
   const result = loginPromptInteractionGuard.safeParse(interactionDetails);
 
   return conditional(result.success && result.data.prompt.details?.authenticationContext);
+};
+
+/**
+ * The stored fields {@link isStepUpInteractionDetails} classifies on when the prompt carries no
+ * context. Deliberately narrower than `interactionStorageGuard`: a field that guard rejects for
+ * reasons unrelated to the mode would read as "not a step-up" and lift the route restriction, and
+ * it requires `interactionEvent`, which a fresh interaction has not saved yet.
+ */
+const stepUpModeGuard = z.object({
+  authenticationContext: requestedAuthenticationContextGuard.optional(),
+});
+
+/**
+ * Whether the provider interaction record belongs to a pure step-up. Reads the same two sources
+ * the interaction instance does: the login prompt details it derives the mode from at creation,
+ * and the stored result it restores from. Only the routes that carry no instance
+ * (`koaExperienceInteraction` skips them) are classified here; every other route reads
+ * {@link ExperienceInteraction.isStepUp}. The prompt details never change, so neither source can
+ * disagree with the instance.
+ *
+ * @throws {RequestError} with 404 if the stored result cannot be read: `false` lifts every route
+ * restriction, so an unreadable record must not be mistaken for one that is not a step-up.
+ */
+export const isStepUpInteractionDetails = (interactionDetails: Interaction): boolean => {
+  const promptContext = readLoginPromptAuthenticationContext(interactionDetails);
+
+  if (promptContext) {
+    return promptContext.mode === AuthenticationContextMode.StepUp;
+  }
+
+  const stored = stepUpModeGuard.safeParse(interactionDetails.result ?? {});
+
+  // A record we cannot read is not a record we can clear.
+  assertThat(
+    stored.success,
+    new RequestError({ code: 'session.interaction_not_found', status: 404 })
+  );
+
+  return stored.data.authenticationContext?.mode === AuthenticationContextMode.StepUp;
 };
 
 /**

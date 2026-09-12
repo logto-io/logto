@@ -270,6 +270,10 @@ const createMfaRequiredRequester = () => {
   }).requester;
 };
 
+/** A requester whose provider interaction already stores the given authentication context. */
+const createStoredContextRequester = (authenticationContext: Record<string, unknown>) =>
+  createRequesterWithMocks({ interactionResult: { authenticationContext } });
+
 describe('PUT /experience', () => {
   const stepUpContext = {
     requestedAcrValues: [LogtoAcr.Mfa],
@@ -447,6 +451,114 @@ describe('PUT /experience', () => {
       expect(response.status).toBe(404);
       expect(response.body).toMatchObject({ code: 'entity.not_found' });
     });
+  });
+});
+
+describe('step-up route allow-list', () => {
+  const stepUpContext = {
+    requestedAcrValues: [LogtoAcr.FirstFactor],
+    selectedAcr: LogtoAcr.FirstFactor,
+    mode: AuthenticationContextMode.StepUp,
+  };
+
+  const forbiddenPostRoutes = [
+    '/experience/verification/totp/secret',
+    '/experience/verification/backup-code/generate',
+    '/experience/verification/web-authn/registration',
+    '/experience/verification/one-time-token/verify',
+    '/experience/verification/new-password-identity',
+    '/experience/verification/sign-in-passkey/authentication',
+    '/experience/verification/social/connector-id/authorization-uri',
+    '/experience/verification/sso/connector-id/authorization-uri',
+    '/experience/profile',
+    '/experience/profile/mfa/mfa-skipped',
+    '/experience/profile/mfa/mfa-enabled',
+    '/experience/profile/trusted-device',
+    '/experience/user-assets/avatar',
+  ];
+
+  it.each(forbiddenPostRoutes)('should return 403 for %s in pure step-up', async (path) => {
+    const { requester } = createStoredContextRequester(stepUpContext);
+    const response = await requester.post(path).send();
+
+    expect(response.status).toBe(403);
+    expect(response.body).toMatchObject({ code: 'session.step_up.forbidden_route' });
+  });
+
+  it('should return 403 for interaction-event switching in pure step-up', async () => {
+    const { requester } = createStoredContextRequester(stepUpContext);
+    const response = await requester
+      .put('/experience/interaction-event')
+      .send({ interactionEvent: InteractionEvent.Register });
+
+    expect(response.status).toBe(403);
+    expect(response.body).toMatchObject({ code: 'session.step_up.forbidden_route' });
+  });
+
+  it('should return 403 for a raw identifier on the password route in pure step-up', async () => {
+    const { requester } = createStoredContextRequester(stepUpContext);
+    const response = await requester.post('/experience/verification/password').send({
+      identifier: { type: SignInIdentifier.Email, value: mockUser.primaryEmail },
+      password: 'Password123',
+    });
+
+    expect(response.status).toBe(403);
+    expect(response.body).toMatchObject({ code: 'session.step_up.forbidden_identifier' });
+  });
+
+  it('should return 403 for raw identifier payloads on the verification code routes in pure step-up', async () => {
+    const { requester } = createStoredContextRequester(stepUpContext);
+
+    const sendResponse = await requester.post('/experience/verification/verification-code').send({
+      identifier: { type: SignInIdentifier.Email, value: mockUser.primaryEmail },
+      interactionEvent: InteractionEvent.SignIn,
+    });
+
+    expect(sendResponse.status).toBe(403);
+    expect(sendResponse.body).toMatchObject({ code: 'session.step_up.forbidden_identifier' });
+
+    const verifyResponse = await requester
+      .post('/experience/verification/verification-code/verify')
+      .send({
+        identifier: { type: SignInIdentifier.Email, value: mockUser.primaryEmail },
+        verificationId: 'verification-id',
+        code: '000000',
+      });
+
+    expect(verifyResponse.status).toBe(403);
+    expect(verifyResponse.body).toMatchObject({ code: 'session.step_up.forbidden_identifier' });
+  });
+
+  it('should allow reading the interaction in pure step-up', async () => {
+    const { requester } = createStoredContextRequester(stepUpContext);
+    const response = await requester.get('/experience/interaction');
+
+    expect(response.status).toBe(200);
+  });
+
+  it('should not forbid submitting in pure step-up', async () => {
+    const { requester } = createStoredContextRequester(stepUpContext);
+    const response = await requester.post('/experience/submit');
+
+    expect(response.status).not.toBe(403);
+  });
+
+  it('should not restrict a SignIn with a requested ACR', async () => {
+    const { requester } = createStoredContextRequester({ requestedAcrValues: [LogtoAcr.Mfa] });
+    const response = await requester
+      .put('/experience/interaction-event')
+      .send({ interactionEvent: InteractionEvent.SignIn });
+
+    expect(response.status).toBe(204);
+  });
+
+  it('should not restrict a plain interaction', async () => {
+    const { requester } = createRequesterWithMocks();
+    const response = await requester
+      .put('/experience/interaction-event')
+      .send({ interactionEvent: InteractionEvent.SignIn });
+
+    expect(response.status).toBe(204);
   });
 });
 

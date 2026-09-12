@@ -41,6 +41,8 @@ const session = {
   step_up: {
     invalid_interaction_event: '升級認證僅適用於登入互動。',
     subject_not_found: '找不到用於升級認證的已認證會話。請重新登入。',
+    forbidden_route: '升級認證期間不允許存取此路由。',
+    forbidden_identifier: '升級認證期間不允許提供標識符。請移除 identifier 欄位後重試。',
   },
   passkey_sign_in: {
     pending_info_not_found: '未找到待處理的 Passkey 登入資訊。請重新啟動登入流程。',

@@ -254,10 +254,12 @@ devFeatureTest.describe('acr_values and max_age interaction policy', () => {
       });
       expect(session?.accountId).toBe(user.id);
 
-      // The step-up pins the session subject. Submission does not yet derive the context from the
-      // session, so the first factor is verified again in the interaction alongside the TOTP.
+      // The step-up pins the session subject and only accepts the subject-bound password variant.
+      // Submission does not yet derive the context from the session, so the first factor is
+      // verified again in the interaction alongside the TOTP.
       await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
-      await identifyUserWithUsernamePassword(client, profile.username, profile.password);
+      const { verificationId } = await client.verifyPassword({ password: profile.password });
+      await client.identifyUser({ verificationId });
       await successfullyVerifyTotp(client, { code: authenticator.generate(totp.secret) });
       const { redirectTo } = await client.submitInteraction();
 
