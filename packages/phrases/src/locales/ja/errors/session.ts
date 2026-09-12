@@ -57,6 +57,8 @@ const session = {
       'ステップアップ認証中は識別子を指定できません。識別子フィールドを省略して再試行してください。',
     acr_not_satisfied:
       '完了した認証は要求された認証コンテキストを満たしていません。別の方法で認証してください。',
+    require_verification:
+      '要求された認証コンテキストに到達するには、既存のいずれかの方法による認証が必要です。',
   },
   passkey_sign_in: {
     pending_info_not_found:

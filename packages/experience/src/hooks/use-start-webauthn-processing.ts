@@ -8,9 +8,14 @@ import { UserMfaFlow } from '@/types';
 import { type WebAuthnState, type MfaFlowState } from '@/types/guard';
 
 import useApi from './use-api';
-import useErrorHandler from './use-error-handler';
+import useErrorHandler, { type ErrorHandlers } from './use-error-handler';
 
-const useStartWebAuthnProcessing = () => {
+type Options = {
+  /** Handlers for the errors of creating the WebAuthn options, on top of the default toast. */
+  errorHandlers?: ErrorHandlers;
+};
+
+const useStartWebAuthnProcessing = ({ errorHandlers }: Options = {}) => {
   const navigate = useNavigateWithPreservedSearchParams();
   const asyncCreateRegistrationOptions = useApi(createWebAuthnRegistration);
   const asyncGenerateAuthnOptions = useApi(createWebAuthnAuthentication);
@@ -25,7 +30,7 @@ const useStartWebAuthnProcessing = () => {
           : await asyncGenerateAuthnOptions();
 
       if (error) {
-        await handleError(error);
+        await handleError(error, errorHandlers);
         return;
       }
 
@@ -44,6 +49,7 @@ const useStartWebAuthnProcessing = () => {
     [
       asyncCreateRegistrationOptions,
       asyncGenerateAuthnOptions,
+      errorHandlers,
       handleError,
       navigate,
       setVerificationId,
