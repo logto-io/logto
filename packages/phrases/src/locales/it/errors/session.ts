@@ -55,6 +55,8 @@ const session = {
     subject_not_found:
       "Nessuna sessione autenticata trovata per l'autenticazione step-up. Effettua di nuovo l'accesso.",
     forbidden_route: "Questa route non è consentita durante l'autenticazione step-up.",
+    forbidden_identifier:
+      "Un identificatore non è consentito durante l'autenticazione step-up. Riprova senza il campo identificatore.",
   },
   passkey_sign_in: {
     pending_info_not_found:

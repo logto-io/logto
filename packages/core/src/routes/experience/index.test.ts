@@ -503,7 +503,7 @@ describe('step-up route allow-list', () => {
     });
 
     expect(response.status).toBe(403);
-    expect(response.body).toMatchObject({ code: 'session.step_up.forbidden_route' });
+    expect(response.body).toMatchObject({ code: 'session.step_up.forbidden_identifier' });
   });
 
   it('should return 403 for raw identifier payloads on the verification code routes in pure step-up', async () => {
@@ -515,7 +515,7 @@ describe('step-up route allow-list', () => {
     });
 
     expect(sendResponse.status).toBe(403);
-    expect(sendResponse.body).toMatchObject({ code: 'session.step_up.forbidden_route' });
+    expect(sendResponse.body).toMatchObject({ code: 'session.step_up.forbidden_identifier' });
 
     const verifyResponse = await requester
       .post('/experience/verification/verification-code/verify')
@@ -526,7 +526,7 @@ describe('step-up route allow-list', () => {
       });
 
     expect(verifyResponse.status).toBe(403);
-    expect(verifyResponse.body).toMatchObject({ code: 'session.step_up.forbidden_route' });
+    expect(verifyResponse.body).toMatchObject({ code: 'session.step_up.forbidden_identifier' });
   });
 
   it('should allow reading the interaction in pure step-up', async () => {

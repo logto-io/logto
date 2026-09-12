@@ -57,6 +57,8 @@ const session = {
     subject_not_found:
       'No se encontró una sesión autenticada para la autenticación reforzada. Inicia sesión de nuevo.',
     forbidden_route: 'Esta ruta no está permitida durante la autenticación reforzada.',
+    forbidden_identifier:
+      'No se permite un identificador durante la autenticación reforzada. Vuelve a intentarlo sin el campo de identificador.',
   },
   passkey_sign_in: {
     pending_info_not_found:

@@ -199,14 +199,14 @@ devFeatureTest.describe('step-up subject-bound verification', () => {
         identifier: { type: SignInIdentifier.Username, value: user.username },
         password: user.password,
       }),
-      { code: 'session.step_up.forbidden_route', status: 403 }
+      { code: 'session.step_up.forbidden_identifier', status: 403 }
     );
     await expectRejects(
       client.sendVerificationCode({
         identifier: { type: SignInIdentifier.Email, value: user.primaryEmail },
         interactionEvent: InteractionEvent.SignIn,
       }),
-      { code: 'session.step_up.forbidden_route', status: 403 }
+      { code: 'session.step_up.forbidden_identifier', status: 403 }
     );
     await expectRejects(
       client.verifyVerificationCode({
@@ -214,7 +214,7 @@ devFeatureTest.describe('step-up subject-bound verification', () => {
         verificationId: 'unknown',
         code: '000000',
       }),
-      { code: 'session.step_up.forbidden_route', status: 403 }
+      { code: 'session.step_up.forbidden_identifier', status: 403 }
     );
 
     await logoutClient(client);

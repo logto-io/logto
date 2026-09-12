@@ -675,7 +675,7 @@ describe('password verification route subject-bound variant', () => {
     });
 
     await expect(handler(ctx, jest.fn().mockImplementation(resolveVoid))).rejects.toMatchError(
-      new RequestError({ code: 'session.step_up.forbidden_route', status: 403 })
+      new RequestError({ code: 'session.step_up.forbidden_identifier', status: 403 })
     );
 
     expect(withSentinel).not.toHaveBeenCalled();

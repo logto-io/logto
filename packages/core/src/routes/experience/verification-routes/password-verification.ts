@@ -291,7 +291,7 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
 
       assertThat(
         !experienceInteraction.isStepUp || !identifier,
-        new RequestError({ code: 'session.step_up.forbidden_route', status: 403 })
+        new RequestError({ code: 'session.step_up.forbidden_identifier', status: 403 })
       );
 
       ctx.verificationAuditLog.append({

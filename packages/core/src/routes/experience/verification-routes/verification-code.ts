@@ -76,7 +76,7 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
 
       assertThat(
         !experienceInteraction.isStepUp || identifierPayload.value === undefined,
-        new RequestError({ code: 'session.step_up.forbidden_route', status: 403 })
+        new RequestError({ code: 'session.step_up.forbidden_identifier', status: 403 })
       );
 
       // The subject is already authenticated, so no captcha applies
@@ -161,7 +161,7 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
 
       assertThat(
         !ctx.experienceInteraction.isStepUp || identifierPayload.value === undefined,
-        new RequestError({ code: 'session.step_up.forbidden_route', status: 403 })
+        new RequestError({ code: 'session.step_up.forbidden_identifier', status: 403 })
       );
 
       const identifier =

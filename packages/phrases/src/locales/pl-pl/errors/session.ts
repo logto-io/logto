@@ -54,6 +54,8 @@ const session = {
     subject_not_found:
       'Nie znaleziono uwierzytelnionej sesji dla uwierzytelniania step-up. Zaloguj się ponownie.',
     forbidden_route: 'Ta trasa nie jest dozwolona podczas uwierzytelniania step-up.',
+    forbidden_identifier:
+      'Identyfikator nie jest dozwolony podczas uwierzytelniania step-up. Spróbuj ponownie bez pola identyfikatora.',
   },
   passkey_sign_in: {
     pending_info_not_found:
