@@ -99,19 +99,25 @@ const buildTrustedDevice = (userId: string): TrustedDevice =>
 
 const createLogMiddleware = (): {
   middleware: Middleware<unknown, IRouterParamContext>;
+  createLog: jest.Mock;
   mockAppend: jest.Mock;
 } => {
-  const { createLog, prependAllLogEntries, mockAppend } = createMockLogContext();
+  const logContext = createMockLogContext();
 
   const middleware: Middleware<unknown, IRouterParamContext> = async (ctx, next) => {
     // @ts-expect-error -- mock log context
-    ctx.createLog = createLog;
+    ctx.createLog = logContext.createLog;
     // @ts-expect-error -- mock log context
-    ctx.prependAllLogEntries = prependAllLogEntries;
+    ctx.prependAllLogEntries = logContext.prependAllLogEntries;
     return next();
   };
 
-  return { middleware, mockAppend };
+  // `createMockLogContext` types `createLog` as the context member, while it really is a jest mock.
+  return {
+    middleware,
+    createLog: jest.mocked(logContext.createLog),
+    mockAppend: logContext.mockAppend,
+  };
 };
 
 const createRequesterWithMocks = ({
@@ -232,7 +238,7 @@ const createRequesterWithMocks = ({
     }
   );
 
-  const { middleware: logMiddleware, mockAppend } = createLogMiddleware();
+  const { middleware: logMiddleware, createLog, mockAppend } = createLogMiddleware();
   const requester = createRequester({
     anonymousRoutes: experienceRoutes,
     tenantContext: tenant,
@@ -243,6 +249,7 @@ const createRequesterWithMocks = ({
     requester,
     userGeoLocations,
     userSignInCountries,
+    createLog,
     mockAppend,
     users,
     provider,
@@ -540,7 +547,8 @@ describe('step-up route allow-list', () => {
     const { requester } = createStoredContextRequester(stepUpContext);
     const response = await requester.post('/experience/submit');
 
-    expect(response.status).not.toBe(403);
+    // The route stays reachable; the submission itself fails the ACR assertion, not the allow-list.
+    expect(response.body).not.toMatchObject({ code: 'session.step_up.forbidden_route' });
   });
 
   it('should not restrict a SignIn with a requested ACR', async () => {
@@ -604,6 +612,33 @@ describe('POST /experience/submit', () => {
     setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
     jest.useRealTimers();
     jest.restoreAllMocks();
+  });
+
+  it('should submit a pure step-up under the step-up audit key and reject an unmet context', async () => {
+    const { requester, createLog } = createRequesterWithMocks({
+      interactionResult: {
+        authenticationContext: {
+          requestedAcrValues: [LogtoAcr.Mfa],
+          selectedAcr: LogtoAcr.Mfa,
+          mode: AuthenticationContextMode.StepUp,
+        },
+      },
+    });
+
+    const response = await requester.post('/experience/submit');
+
+    expect(response.status).toBe(403);
+    expect(response.body).toMatchObject({ code: 'session.step_up.acr_not_satisfied' });
+    expect(createLog).toHaveBeenCalledWith('Interaction.SignIn.StepUp.Submit');
+  });
+
+  it('should keep the sign-in submit path and audit key for a non-step-up interaction', async () => {
+    const { requester, createLog } = createRequesterWithMocks();
+
+    const response = await requester.post('/experience/submit');
+
+    expect(response.status).toBe(200);
+    expect(createLog).toHaveBeenCalledWith('Interaction.SignIn.Submit');
   });
 
   it('should record geo context when dev features are disabled', async () => {

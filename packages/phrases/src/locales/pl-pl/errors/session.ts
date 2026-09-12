@@ -56,6 +56,8 @@ const session = {
     forbidden_route: 'Ta trasa nie jest dozwolona podczas uwierzytelniania step-up.',
     forbidden_identifier:
       'Identyfikator nie jest dozwolony podczas uwierzytelniania step-up. Spróbuj ponownie bez pola identyfikatora.',
+    acr_not_satisfied:
+      'Ukończona weryfikacja nie spełnia wymaganego kontekstu uwierzytelniania. Zweryfikuj inną metodę.',
   },
   passkey_sign_in: {
     pending_info_not_found:

@@ -233,6 +233,39 @@ export default class MockClient {
     return this.logto.handleSignInCallback(signInCallbackUri);
   }
 
+  /**
+   * Complete the authorization a finished interaction handed back, from a single request.
+   *
+   * A resumed request either asks for consent once more — a 303 to the consent page, which
+   * `consent()` drives — or reuses the existing grant and goes straight back to the client
+   * callback. `processSession()` and `manualConsent()` each assume one of those shapes, and
+   * re-requesting the authorization URL after it already handed back a callback consumes it a
+   * second time.
+   */
+  public async resumeAuthorization(redirectTo: string) {
+    const authCodeResponse = await ky.get(redirectTo, {
+      headers: {
+        cookie: this.getCookieHeader(new URL(redirectTo).pathname),
+      },
+      redirect: 'manual',
+      throwHttpErrors: false,
+    });
+    const location = authCodeResponse.headers.get('location');
+
+    assert(
+      authCodeResponse.status === 303 && location,
+      new Error(`Resume authorization failed: ${authCodeResponse.status} ${location ?? ''}`)
+    );
+
+    if (location.startsWith('/consent')) {
+      this.mergeRawCookies(authCodeResponse.headers.getSetCookie());
+
+      return this.logto.handleSignInCallback(await this.consent());
+    }
+
+    return this.logto.handleSignInCallback(location);
+  }
+
   public async getAccessToken(resource?: string, organizationId?: string) {
     return this.logto.getAccessToken(resource, organizationId);
   }

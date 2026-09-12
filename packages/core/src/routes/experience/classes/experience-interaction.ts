@@ -8,6 +8,7 @@ import {
   InteractionEvent,
   InteractionHookEvent,
   LogtoActionKey,
+  acrSatisfies,
   loginPromptAuthenticationContextDetailsGuard,
   MfaFactor,
   type InteractionAuthenticationContext,
@@ -1007,6 +1008,81 @@ export default class ExperienceInteraction {
     }
   }
 
+  /**
+   * Complete a pure step-up interaction.
+   *
+   * This is an allow-list, never a `submit()` with exemptions: a sign-in guard or side effect added
+   * later cannot reach a step-up by default. It asserts the interaction reached the class the
+   * authorization request selected, writes only what the interaction established to the account,
+   * records the payload of the dedicated step-up audit key, and finishes the provider interaction.
+   *
+   * Deliberately not run, unlike {@link submit}: the captcha guard, the tenant MFA and profile
+   * policies, the passkey suggestion, every other `updateUserById` field including `lastSignInAt`,
+   * SSO identity synchronization, social / SSO token-set upserts, JIT organization provisioning,
+   * `triggerPostSignInAction`, and data-hook contexts.
+   *
+   * @throws {RequestError} with 400 if the interaction is not a pure step-up
+   * @throws {RequestError} with 403 if the achieved context does not satisfy `selectedAcr`; the
+   * assertion runs before the subject is read, so a submission that counted no verification ends
+   * here rather than as a missing subject
+   * @throws {RequestError} with 404 if a counted proof never identified the subject, which the
+   * allow-list blocks today: identification and an answered MFA challenge both set the user, and
+   * the only proof that does not is a `bind`
+   */
+  public async submitStepUp(log?: LogEntry) {
+    const { authenticationContext, authenticationProofs } = this;
+
+    // Only a pure step-up completes here: the OIDC policy writes the mode and `selectedAcr`
+    // together, and a `SignIn` with a requested ACR keeps neither.
+    assertThat(
+      this.isStepUp && authenticationContext?.selectedAcr,
+      new RequestError({ code: 'session.step_up.invalid_interaction_event', status: 400 })
+    );
+
+    const { requestedAcrValues, selectedAcr } = authenticationContext;
+
+    // The session's carried context only ever pairs with a proof of this interaction, so a
+    // submission that counted no verification derives nothing and fails the assertion below.
+    const achievedContext = aggregateAuthenticationContext(
+      authenticationProofs.proofs,
+      this.carriedContributions
+    );
+
+    log?.append({
+      requestedAcrValues,
+      selectedAcr,
+      achievedAcr: achievedContext.acr,
+      // The factor families the interaction proved. Auditable and unambiguous, unlike `amr`, where
+      // `otp` alone cannot tell an email code from a TOTP or a backup code. Credentials never reach
+      // the log; the audit-log filters already cover passwords, codes, WebAuthn and backup codes.
+      factors: [...new Set(authenticationProofs.proofs.map(({ factor }) => factor))],
+    });
+
+    // The UI only offers sufficient methods; this is defense in depth. Thrown before anything is
+    // written, so a rejected submission leaves no interaction result behind.
+    assertThat(
+      acrSatisfies(achievedContext.acr, selectedAcr),
+      new RequestError({ code: 'session.step_up.acr_not_satisfied', status: 403 })
+    );
+
+    const user = await this.getIdentifiedUser();
+
+    await this.persistEstablishedMethods(user);
+
+    const { provider } = this.tenant;
+
+    const redirectTo = await provider.interactionResult(this.ctx.req, this.ctx.res, {
+      login: {
+        accountId: user.id,
+        ...achievedContext,
+      },
+      // Persist the interaction status to the OIDC session after interaction submission
+      ...this.toJson(),
+    });
+
+    this.ctx.body = { redirectTo };
+  }
+
   async guardCaptcha() {
     // Pure step-up already has an authenticated OIDC session.
     if (this.isStepUp || this.captcha.verified || this.captcha.skipped) {
@@ -1061,6 +1137,65 @@ export default class ExperienceInteraction {
       mfa: this.mfa.sanitizedData,
       verificationRecords: this.verificationRecordsArray.map((record) => record.toSanitizedJson()),
     };
+  }
+
+  /**
+   * Write only what the interaction established to the account: the MFA factors it bound, and the
+   * first factor (password or primary email / phone) it staged on the profile. Establishing is
+   * wired in a later milestone, so a step-up that only verified existing methods has nothing here
+   * and no query runs at all. Nothing else about the user is touched: in particular `lastSignInAt`
+   * keeps the value the sign-in wrote, because a step-up is not a sign-in.
+   */
+  private async persistEstablishedMethods(user: User) {
+    const { passwordEncrypted, passwordEncryptionMethod, primaryEmail, primaryPhone } =
+      this.profile.data;
+    const userMfaVerifications = this.mfa.toUserMfaVerifications();
+    const { mfaVerifications } = userMfaVerifications;
+
+    const established = {
+      ...conditional(
+        passwordEncrypted &&
+          passwordEncryptionMethod &&
+          buildUserPasswordPayload({
+            passwordEncrypted,
+            passwordEncryptionMethod,
+          })
+      ),
+      ...conditional(primaryEmail && { primaryEmail }),
+      ...conditional(primaryPhone && { primaryPhone }),
+      ...conditional(
+        mfaVerifications.length > 0 && {
+          mfaVerifications: mergeUserMfaVerifications(user.mfaVerifications, mfaVerifications),
+          // Only written together with a bound factor: it is the persisted state of the MFA setup
+          // this interaction completed, not a sign-in side effect.
+          logtoConfig: {
+            ...parseMfaPropertiesToUserConfig(
+              user.logtoConfig,
+              userMfaVerifications,
+              InteractionEvent.SignIn
+            ),
+          },
+        }
+      ),
+    };
+
+    if (Object.keys(established).length === 0) {
+      return;
+    }
+
+    // Revalidate what is about to be written, exactly as `submit()` does: everything here was
+    // staged by an earlier request, so an identifier can have been taken by another account, or a
+    // factor disabled, in between. The step-up allow-list keeps the establishment and enrollment
+    // routes closed until M5, so nothing reaches this write yet; the guards are here so that the
+    // milestone which opens them cannot skip the uniqueness check and turn a duplicate identifier
+    // into a raw unique-constraint error instead of the 422 the API promises.
+    await this.profile.validateAvailability();
+
+    if (mfaVerifications.length > 0) {
+      await this.mfa.checkAvailability();
+    }
+
+    await this.tenant.queries.users.updateUserById(user.id, established);
   }
 
   private async hasEligibleTrustedDeviceProof(user: User) {
