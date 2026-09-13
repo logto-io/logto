@@ -3,6 +3,8 @@ const step_up = {
   choose_method_description: 'للمتابعة، أكّد أنك أنت باستخدام إحدى الطرق التالية.',
   password: 'كلمة المرور',
   password_description: 'أدخل كلمة مرور حسابك',
+  enter_password_description: 'أدخل كلمة مرور حسابك للمتابعة.',
+  enter_verification_code_description: 'أدخل رمز التحقق المُرسل إلى {{identifier}}.',
   subject_proof_description:
     'للمتابعة، أكّد أنك أنت من خلال حساب مرتبط بحسابك. يمكنك بعد ذلك إعداد طريقة تحقق.',
   no_method_available: 'لا توجد طريقة تحقق متاحة',
