@@ -1,9 +1,10 @@
-import { type SsoConnectorMetadata, type SubjectProofConnector } from '@logto/schemas';
+import { type SsoConnectorMetadata } from '@logto/schemas';
 import { act, fireEvent, screen, within } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { mockSignInExperienceSettings, socialConnectors } from '@/__mocks__/logto';
+import { type ResolvedSubjectProofConnector } from '@/hooks/use-connectors';
 import { type SignInExperienceResponse } from '@/types';
 
 import StepUpSubjectProofList from '.';
@@ -45,10 +46,10 @@ const settings: SignInExperienceResponse = {
   ssoConnectors: [ssoConnector],
 };
 
-const socialProof: SubjectProofConnector = { type: 'social', connectorId: githubConnector.id };
-const ssoProof: SubjectProofConnector = { type: 'sso', connectorId: ssoConnector.id };
+const socialProof: ResolvedSubjectProofConnector = { type: 'social', connector: githubConnector };
+const ssoProof: ResolvedSubjectProofConnector = { type: 'sso', connector: ssoConnector };
 
-const renderList = (connectors: readonly SubjectProofConnector[]) =>
+const renderList = (connectors: readonly ResolvedSubjectProofConnector[]) =>
   renderWithPageContext(
     <SettingsProvider settings={settings}>
       <StepUpSubjectProofList connectors={connectors} />
@@ -99,9 +100,9 @@ describe('StepUpSubjectProofList', () => {
   });
 
   it('renders every social connector the sign-in experience knows', () => {
-    const proofs = socialConnectors.map<SubjectProofConnector>(({ id }) => ({
+    const proofs = socialConnectors.map<ResolvedSubjectProofConnector>((connector) => ({
       type: 'social',
-      connectorId: id,
+      connector,
     }));
 
     renderList(proofs);
@@ -111,35 +112,6 @@ describe('StepUpSubjectProofList', () => {
     expect(buttons.map((button) => getButtonLogo(button).alt)).toEqual(
       socialConnectors.map(({ target }) => target)
     );
-  });
-
-  it.each<{ readonly unknown: SubjectProofConnector; readonly expectedAlt: string }>([
-    {
-      unknown: { type: 'social', connectorId: 'unknown-social-connector' },
-      expectedAlt: ssoConnector.connectorName,
-    },
-    {
-      unknown: { type: 'sso', connectorId: 'unknown-sso-connector' },
-      expectedAlt: githubConnector.target,
-    },
-  ])('skips an unknown $unknown.type connector id', ({ unknown, expectedAlt }) => {
-    const known = unknown.type === 'social' ? ssoProof : socialProof;
-
-    renderList([unknown, known]);
-
-    const buttons = screen.getAllByRole('button');
-    expect(buttons).toHaveLength(1);
-    expect(getButtonLogo(buttons[0]!).alt).toBe(expectedAlt);
-  });
-
-  it('renders no button when none of the connector ids is known', () => {
-    const { container } = renderList([
-      { type: 'social', connectorId: 'unknown-social-connector' },
-      { type: 'sso', connectorId: 'unknown-sso-connector' },
-    ]);
-
-    expect(screen.queryByRole('button')).toBeNull();
-    expect(container.querySelector('img')).toBeNull();
   });
 
   it('invokes social sign-in with the full connector object from the settings', async () => {

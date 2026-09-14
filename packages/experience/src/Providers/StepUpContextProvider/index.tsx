@@ -2,10 +2,9 @@ import { type LogtoErrorCode } from '@logto/phrases';
 import { type InteractionAuthenticationContext, type RequestErrorBody } from '@logto/schemas';
 import { HTTPError } from 'ky';
 import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useLocation, useMatch } from 'react-router-dom';
 
 import { getStepUpContext, initStepUp } from '@/apis/experience';
-import { stepUpRoutes, stepUpSessionGoneErrorCodes } from '@/constants/step-up';
+import { stepUpSessionGoneErrorCodes } from '@/constants/step-up';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
@@ -54,10 +53,8 @@ const getErrorCode = async (error: unknown): Promise<string | undefined> => {
 const StepUpContextProvider = ({ children }: Props) => {
   const [authenticationContext, setAuthenticationContext] =
     useState<InteractionAuthenticationContext>();
-  const [isFetching, setIsFetching] = useState(true);
-  const [loadedLandingKey, setLoadedLandingKey] = useState<string>();
-  const handledLandingKeyRef = useRef<string>();
-  const hasLoadedRef = useRef(false);
+  const [isFetching, setIsFetching] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   /** The id of the latest load; an older load that settles later must not overwrite it. */
   const loadIdRef = useRef(0);
 
@@ -65,22 +62,6 @@ const StepUpContextProvider = ({ children }: Props) => {
   const asyncInitStepUp = useApi(initStepUp);
   const handleError = useErrorHandler();
   const redirectTo = useGlobalRedirectTo();
-  const { key } = useLocation();
-  const isLanding = Boolean(useMatch(stepUpRoutes.landing));
-  // The location key identifies one arrival at the landing page, so each arrival loads once.
-  const landingKey = isLanding ? key : undefined;
-
-  /** A session that is gone lands on the invalid-session page silently; anything else also toasts. */
-  const reportError = useCallback(
-    async (error: unknown) => {
-      const code = await getErrorCode(error);
-
-      if (!code || !sessionGoneErrorCodes.has(code)) {
-        await handleError(error);
-      }
-    },
-    [handleError]
-  );
 
   /**
    * Load the context, creating the interaction first when asked and storage holds nothing for
@@ -88,9 +69,7 @@ const StepUpContextProvider = ({ children }: Props) => {
    * newer one superseded writes nothing, so the state always reflects the latest arrival.
    */
   const load = useCallback(
-    async (shouldInitialize: boolean): Promise<boolean> => {
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      hasLoadedRef.current = true;
+    async (shouldInitialize = false): Promise<boolean> => {
       // eslint-disable-next-line @silverhand/fp/no-mutation
       loadIdRef.current += 1;
       const loadId = loadIdRef.current;
@@ -99,17 +78,35 @@ const StepUpContextProvider = ({ children }: Props) => {
         if (isCurrent()) {
           setAuthenticationContext(context);
           setIsFetching(false);
+          setIsLoaded(true);
         }
 
         return isCurrent();
       };
       const fail = async (error: unknown) => {
+        const code = await getErrorCode(error);
+        const isSessionGone =
+          code === interactionNotFoundCode ||
+          (code !== undefined && sessionGoneErrorCodes.has(code));
+
         // A superseded load reports nothing: the newer load owns the screen and its errors.
-        if (isCurrent()) {
-          await reportError(error);
+        // A session that is gone lands on the invalid-session page silently; anything else also toasts.
+        if (isCurrent() && !isSessionGone) {
+          await handleError(error);
         }
 
-        return settle(undefined);
+        // Only clear the context if the session is gone. For transient failures (5xx, network error),
+        // preserve the previous context so child pages don't swap to the invalid session error page.
+        if (isSessionGone) {
+          return settle(undefined);
+        }
+
+        if (isCurrent()) {
+          setIsFetching(false);
+          setIsLoaded(true);
+        }
+
+        return isCurrent();
       };
 
       setIsFetching(true);
@@ -154,7 +151,7 @@ const StepUpContextProvider = ({ children }: Props) => {
 
       return settle(initializedContext);
     },
-    [asyncGetStepUpContext, asyncInitStepUp, redirectTo, reportError]
+    [asyncGetStepUpContext, asyncInitStepUp, handleError, redirectTo]
   );
 
   const refetch = useCallback(async () => {
@@ -170,40 +167,15 @@ const StepUpContextProvider = ({ children }: Props) => {
     []
   );
 
-  useEffect(() => {
-    if (landingKey === undefined) {
-      if (!hasLoadedRef.current) {
-        void load(false);
-      }
-
-      return;
-    }
-
-    if (handledLandingKeyRef.current === landingKey) {
-      return;
-    }
-
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    handledLandingKeyRef.current = landingKey;
-
-    const loadLanding = async () => {
-      if (await load(true)) {
-        setLoadedLandingKey(landingKey);
-      }
-    };
-
-    void loadLanding();
-  }, [landingKey, load]);
-
   const stepUpContext = useMemo<StepUpContextType>(
     () => ({
       authenticationContext,
-      // A new arrival at the landing page is loading from its first render, before the effect
-      // runs, so the landing page never dispatches on the context of a previous visit.
-      isLoading: isFetching || (landingKey !== undefined && loadedLandingKey !== landingKey),
+      isLoading: isFetching,
+      isLoaded,
+      load,
       refetch,
     }),
-    [authenticationContext, isFetching, landingKey, loadedLandingKey, refetch]
+    [authenticationContext, isFetching, isLoaded, load, refetch]
   );
 
   return <StepUpContext.Provider value={stepUpContext}>{children}</StepUpContext.Provider>;

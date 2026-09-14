@@ -6,7 +6,7 @@ import {
 } from '@logto/schemas';
 import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import { HTTPError } from 'ky';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, Route, Routes, useNavigate } from 'react-router-dom';
 
 import StepUpContextProvider from '@/Providers/StepUpContextProvider';
@@ -79,21 +79,45 @@ const createRequestError = (code: string, status = 404) => {
 const renderMethods = (context?: InteractionAuthenticationContext) =>
   context?.availableMethods.join(',') ?? 'none';
 
-/** Mirrors the real landing page: it waits for `isLoading` before reading the context. */
+/** Mirrors the real landing page: it loads on mount and waits for it before reading the context. */
 const Landing = () => {
-  const { authenticationContext, isLoading } = useStepUpContext();
-  const text = isLoading ? 'landing:loading' : `landing:${renderMethods(authenticationContext)}`;
+  const { authenticationContext, isLoading, load } = useStepUpContext();
+  const [isLandingLoading, setIsLandingLoading] = useState(true);
+
+  useEffect(() => {
+    const init = async () => {
+      setIsLandingLoading(true);
+      await load(true);
+      setIsLandingLoading(false);
+    };
+    void init();
+  }, [load]);
+
+  const isCurrentLoading = isLoading || isLandingLoading;
+  const text = isCurrentLoading
+    ? 'landing:loading'
+    : `landing:${renderMethods(authenticationContext)}`;
   mockLandingRender(text);
+
+  if (isCurrentLoading || !authenticationContext) {
+    return null;
+  }
 
   return <div>{text}</div>;
 };
 
 const Child = () => {
-  const { authenticationContext, refetch } = useStepUpContext();
+  const { authenticationContext, load, refetch } = useStepUpContext();
 
   useEffect(() => {
     mockChildMount();
   }, []);
+
+  useEffect(() => {
+    if (!authenticationContext) {
+      void load(false);
+    }
+  }, [authenticationContext, load]);
 
   return (
     <div>
@@ -114,11 +138,17 @@ const Child = () => {
 /** Arrives at the landing page again while the previous arrival may still be loading. */
 const NavigateToLandingAgain = () => {
   const navigate = useNavigate();
+  const { load } = useStepUpContext();
+
+  useEffect(() => {
+    void load(true);
+  }, [load]);
 
   return (
     <button
       type="button"
       onClick={() => {
+        void load(true);
         navigate(`${stepUpRoutes.landing}?again=1`);
       }}
     >

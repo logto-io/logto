@@ -6,7 +6,7 @@ import PageContext from '@/Providers/PageContextProvider/PageContext';
 
 import { useSieMethods } from './use-sie';
 
-type FindConnectorByIdResult =
+export type FindConnectorByIdResult =
   | {
       connector: ExperienceSocialConnector;
       type: 'social';
@@ -15,6 +15,8 @@ type FindConnectorByIdResult =
       connector: SsoConnectorMetadata;
       type: 'sso';
     };
+
+export type ResolvedSubjectProofConnector = FindConnectorByIdResult;
 
 const useConnectors = () => {
   const { socialConnectors, ssoConnectors } = useSieMethods();

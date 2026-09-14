@@ -5,13 +5,13 @@ import useStepUpContext from '@/hooks/use-step-up-context';
 import ErrorPage from '@/pages/ErrorPage';
 
 const StepUpOutlet = () => {
-  const { authenticationContext, isLoading } = useStepUpContext();
+  const { authenticationContext, isLoaded, isLoading } = useStepUpContext();
 
-  if (!authenticationContext) {
+  if (isLoaded && !isLoading && !authenticationContext) {
     // The interaction is gone (404 `session.interaction_not_found`), or it carries no
     // authentication context: neither can enter the route tree. This is the page the
     // `unknown-session` route renders, where the step-up error handlers also land.
-    return isLoading ? null : <ErrorPage message="error.invalid_session" />;
+    return <ErrorPage message="error.invalid_session" />;
   }
 
   // A later refetch keeps the current page mounted; the pages read the fresh context themselves.

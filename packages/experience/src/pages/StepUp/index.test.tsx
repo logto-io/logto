@@ -4,7 +4,6 @@ import {
   InteractionEvent,
   LogtoAcr,
   MissingProfile,
-  type SubjectProofConnector,
   VerificationType,
 } from '@logto/schemas';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
@@ -15,6 +14,7 @@ import StepUpContext, {
 } from '@/Providers/StepUpContextProvider/StepUpContext';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import type useSelectStepUpMethod from '@/containers/StepUpMethodList/use-select-step-up-method';
+import { type ResolvedSubjectProofConnector } from '@/hooks/use-connectors';
 import { type StepUpMethod } from '@/utils/step-up';
 
 import StepUp from '.';
@@ -22,10 +22,40 @@ import StepUp from '.';
 type SelectStepUpMethodOptions = Parameters<typeof useSelectStepUpMethod>[0];
 
 const mockedNavigate = jest.fn();
+const mockRedirectTo = jest.fn();
+const mockedSubmitInteraction = jest.fn();
 const mockedSelectMethod = jest.fn<Promise<void>, [StepUpMethod]>();
 const mockedUseSelectStepUpMethod = jest.fn<typeof mockedSelectMethod, [SelectStepUpMethodOptions]>(
   () => mockedSelectMethod
 );
+
+const mockSocialConnector = { id: 'c1', target: 'c1' };
+const mockSsoConnector = { id: 'sso-1', connectorName: 'sso-1' };
+
+const mockFindConnectorById = jest.fn((id?: string): ResolvedSubjectProofConnector | undefined => {
+  if (id === 'c1') {
+    return { type: 'social', connector: mockSocialConnector as never };
+  }
+  if (id === 'sso-1') {
+    return { type: 'sso', connector: mockSsoConnector as never };
+  }
+});
+
+jest.mock('@/hooks/use-connectors', () => ({
+  __esModule: true,
+  default: () => ({
+    findConnectorById: mockFindConnectorById,
+  }),
+}));
+
+jest.mock('@/apis/experience', () => ({
+  submitInteraction: () => mockedSubmitInteraction(),
+}));
+
+jest.mock('@/hooks/use-global-redirect-to', () => ({
+  __esModule: true,
+  default: () => mockRedirectTo,
+}));
 
 jest.mock('@/hooks/use-navigate-with-preserved-search-params', () => ({
   __esModule: true,
@@ -50,14 +80,16 @@ jest.mock('@/containers/StepUpMethodList', () => ({
 
 jest.mock('@/containers/StepUpSubjectProofList', () => ({
   __esModule: true,
-  default: ({ connectors }: { readonly connectors: readonly SubjectProofConnector[] }) => (
+  default: ({ connectors }: { readonly connectors: readonly ResolvedSubjectProofConnector[] }) => (
     <ul data-testid="step-up-subject-proof-list">
-      {connectors.map(({ type, connectorId }) => (
-        <li key={connectorId}>{`${type}:${connectorId}`}</li>
+      {connectors.map(({ type, connector }) => (
+        <li key={connector.id}>{`${type}:${connector.id}`}</li>
       ))}
     </ul>
   ),
 }));
+
+const mockLoad = jest.fn(async () => true);
 
 const refetch = jest.fn(async () => {
   // The landing page never refetches on its own.
@@ -79,7 +111,9 @@ const createAuthenticationContext = (
 
 const renderStepUp = (value: Partial<StepUpContextType>) =>
   renderWithPageContext(
-    <StepUpContext.Provider value={{ isLoading: false, refetch, ...value }}>
+    <StepUpContext.Provider
+      value={{ isLoading: false, isLoaded: true, load: mockLoad, refetch, ...value }}
+    >
       <StepUp />
     </StepUpContext.Provider>
   );
@@ -92,7 +126,7 @@ const LoadingThenSettled = ({
 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const value = useMemo(
-    () => ({ authenticationContext, isLoading, refetch }),
+    () => ({ authenticationContext, isLoading, isLoaded: !isLoading, load: mockLoad, refetch }),
     [authenticationContext, isLoading]
   );
 
@@ -121,7 +155,13 @@ const Refetchable = ({
 }) => {
   const [context, setContext] = useState(authenticationContext);
   const value = useMemo(
-    () => ({ authenticationContext: context, isLoading: false, refetch }),
+    () => ({
+      authenticationContext: context,
+      isLoading: false,
+      isLoaded: true,
+      load: mockLoad,
+      refetch,
+    }),
     [context]
   );
 
@@ -162,6 +202,7 @@ describe('StepUp', () => {
   beforeEach(() => {
     // Every test starts from a forward that settles, so test order cannot change behavior.
     mockedSelectMethod.mockImplementation(settlesWithoutNavigating);
+    mockedSubmitInteraction.mockRejectedValue(new Error('acr not satisfied'));
   });
 
   afterEach(() => {
@@ -338,14 +379,41 @@ describe('StepUp', () => {
     expect(mockedSelectMethod).not.toHaveBeenCalled();
   });
 
-  it('renders the no-method error page when nothing is available', () => {
+  it('renders the no-method error page when nothing is available', async () => {
     renderStepUp({ authenticationContext: createAuthenticationContext() });
 
-    expect(screen.getByText('step_up.no_method_available')).not.toBeNull();
+    expect(await screen.findByText('step_up.no_method_available')).not.toBeNull();
     expect(screen.getByText('step_up.no_method_available_description')).not.toBeNull();
     expect(screen.queryByText('step_up.verify_your_identity')).toBeNull();
     expect(mockedSelectMethod).not.toHaveBeenCalled();
     expect(mockedNavigate).not.toHaveBeenCalled();
+  });
+
+  it('attempts submission when nothing is available and redirects if already satisfied', async () => {
+    mockedSubmitInteraction.mockResolvedValue({ redirectTo: 'https://callback.example.com' });
+
+    renderStepUp({ authenticationContext: createAuthenticationContext() });
+
+    await waitFor(() => {
+      expect(mockRedirectTo).toHaveBeenCalledWith('https://callback.example.com');
+    });
+    expect(screen.queryByText('step_up.no_method_available')).toBeNull();
+  });
+
+  it('skips disabled subject-proof connectors and falls back to an establishable method', () => {
+    renderStepUp({
+      authenticationContext: createAuthenticationContext({
+        establishableMethods: [MissingProfile.password],
+        subjectProofConnectors: [{ type: 'social', connectorId: 'disabled-connector' }],
+      }),
+    });
+
+    expect(mockedNavigate).toHaveBeenCalledTimes(1);
+    expect(mockedNavigate).toHaveBeenCalledWith('/continue/password', {
+      replace: true,
+      state: { interactionEvent: InteractionEvent.SignIn },
+    });
+    expect(screen.queryByTestId('step-up-subject-proof-list')).toBeNull();
   });
 
   it('drops WebAuthn on a native webview and auto-forwards to the remaining method', () => {

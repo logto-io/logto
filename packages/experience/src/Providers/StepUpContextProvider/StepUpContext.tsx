@@ -13,13 +13,24 @@ export type StepUpContextType = {
    * context never decides where the user goes.
    */
   isLoading: boolean;
+  /** Whether a load has settled at least once. */
+  isLoaded: boolean;
+  /**
+   * Load the authoritative context from interaction storage.
+   *
+   * @param shouldInitialize Whether to initialize the interaction with `PUT /experience` if
+   * storage holds nothing yet (404). Only the landing page sets this.
+   */
+  load: (shouldInitialize?: boolean) => Promise<boolean>;
   /** Re-read the authoritative context from interaction storage. */
   refetch: () => Promise<void>;
 };
 
 export default createContext<StepUpContextType>({
   authenticationContext: undefined,
-  isLoading: true,
+  isLoading: false,
+  isLoaded: false,
+  load: async () => false,
   refetch: async () => {
     // eslint-disable-next-line unicorn/no-useless-undefined -- the default no-op must resolve to a promise
     return undefined;
