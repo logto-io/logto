@@ -77,6 +77,32 @@ describe('getProviderFetchConfig', () => {
       expect(init).toMatchObject({ method: 'POST', dispatcher });
     });
 
+    it('should keep the options carried by a Request input', async () => {
+      Sinon.stub(EnvSet, 'values').value({
+        ...EnvSet.values,
+        isSsrfProtectionEnabled: true,
+        ssrfAllowedAddresses: [],
+        openAiCimdRelayUrl,
+      });
+      const fetchStub = Sinon.stub(globalThis, 'fetch').resolves(new Response());
+      const config = getProviderFetchConfig();
+
+      await config?.fetch(
+        new Request('https://chatgpt.com/oauth/codex/client.json', {
+          method: 'POST',
+          headers: { accept: 'application/json' },
+        })
+      );
+
+      const [input] = fetchStub.firstCall.args;
+      expect(input).toBeInstanceOf(Request);
+      expect(input).toMatchObject({
+        url: 'https://oai.logto.io/oauth/codex/client.json',
+        method: 'POST',
+      });
+      expect(input instanceof Request && input.headers.get('accept')).toBe('application/json');
+    });
+
     it('should leave requests to other hosts untouched', async () => {
       Sinon.stub(EnvSet, 'values').value({
         ...EnvSet.values,

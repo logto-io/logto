@@ -45,10 +45,13 @@ const withOpenAiCimdRelay =
   async (input, init) => {
     const url = new URL(input instanceof Request ? input.url : input);
 
-    return baseFetch(
-      url.origin === chatGptOrigin ? new URL(`${url.pathname}${url.search}`, relayUrl) : input,
-      init
-    );
+    if (url.origin !== chatGptOrigin) {
+      return baseFetch(input, init);
+    }
+
+    const relayed = new URL(`${url.pathname}${url.search}`, relayUrl);
+
+    return baseFetch(input instanceof Request ? new Request(relayed, input) : relayed, init);
   };
 
 /**
