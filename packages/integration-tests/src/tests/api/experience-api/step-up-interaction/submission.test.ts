@@ -102,7 +102,8 @@ devFeatureTest.describe('pure step-up submission', () => {
 
   /**
    * A fresh user with a password and an enrolled TOTP factor. TOTP codes are single-use per time
-   * step, so every test that verifies one enrolls its own account instead of sharing a secret.
+   * step, so every test that verifies one enrolls its own account instead of sharing a secret and
+   * generates its code immediately before verifying it.
    */
   const createTotpUser = async () => {
     const profile = generateNewUserProfile({ username: true, password: true, primaryEmail: true });
@@ -120,7 +121,7 @@ devFeatureTest.describe('pure step-up submission', () => {
       passkeySignIn: {},
     });
 
-    return { profile, id: user.id, code: authenticator.generate(totp.secret) };
+    return { profile, id: user.id, secret: totp.secret };
   };
 
   /** Sign in with the password through the created application, leaving an OIDC session behind. */
@@ -225,7 +226,7 @@ devFeatureTest.describe('pure step-up submission', () => {
   });
 
   it('reaches mfa by verifying only the enrolled factor on a 1fa session', async () => {
-    const { profile, id, code } = await createTotpUser();
+    const { profile, id, secret } = await createTotpUser();
     const client = await signInWithPassword(profile);
     await startStepUp(client, { acrValues: mfaAcr });
 
@@ -236,14 +237,14 @@ devFeatureTest.describe('pure step-up submission', () => {
       availableMethods: [VerificationType.TOTP],
     });
 
-    await successfullyVerifyTotp(client, { code });
+    await successfullyVerifyTotp(client, { code: authenticator.generate(secret) });
     const claims = await submitStepUp(client);
 
     expect(claims).toMatchObject({ sub: id, acr: mfaAcr, amr: ['otp', 'mfa'] });
   });
 
   it('rejects a submission that reaches only 1fa when mfa was selected, then completes it', async () => {
-    const { profile, id, code } = await createTotpUser();
+    const { profile, id, secret } = await createTotpUser();
     const client = await signInWithPassword(profile);
     await startStepUp(client, { acrValues: mfaAcr });
     await verifyPassword(client, profile);
@@ -255,20 +256,20 @@ devFeatureTest.describe('pure step-up submission', () => {
     });
 
     // The rejected submission leaves the interaction usable: the missing factor completes it.
-    await successfullyVerifyTotp(client, { code });
+    await successfullyVerifyTotp(client, { code: authenticator.generate(secret) });
     const claims = await submitStepUp(client);
 
     expect(claims).toMatchObject({ sub: id, acr: mfaAcr, amr: ['pwd', 'otp', 'mfa'] });
   });
 
   it('forces an active verification without forcing the password', async () => {
-    const { profile, id, code } = await createTotpUser();
+    const { profile, id, secret } = await createTotpUser();
     const client = await signInWithPassword(profile);
 
     // The session already satisfies `1fa`; `max_age=0` is what demands a fresh verification, and it
     // does not demand a first factor: the enrolled factor alone completes the interaction.
     await startStepUp(client, { acrValues: firstFactorAcr, maxAge: '0' });
-    await successfullyVerifyTotp(client, { code });
+    await successfullyVerifyTotp(client, { code: authenticator.generate(secret) });
     const claims = await submitStepUp(client);
 
     // The achieved class may be stronger than the selected one: the factor pairs with the `1fa`
@@ -277,10 +278,10 @@ devFeatureTest.describe('pure step-up submission', () => {
   });
 
   it('replaces the session context instead of merging it', async () => {
-    const { profile, id, code } = await createTotpUser();
+    const { profile, id, secret } = await createTotpUser();
     const client = await signInWithPassword(profile);
     await startStepUp(client, { acrValues: mfaAcr });
-    await successfullyVerifyTotp(client, { code });
+    await successfullyVerifyTotp(client, { code: authenticator.generate(secret) });
 
     const elevated = await submitStepUp(client);
     expect(elevated).toMatchObject({ acr: mfaAcr, amr: ['otp', 'mfa'] });
