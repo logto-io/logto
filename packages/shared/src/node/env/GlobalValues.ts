@@ -109,6 +109,27 @@ const parseSsrfAllowedAddresses = (entries: string[]): Optional<BlockList> => {
   return list;
 };
 
+/**
+ * The relay must be a bare `https:` origin so that mirroring a chatgpt.com path onto it is
+ * unambiguous, and so the setting can only change where a request connects to, never what it
+ * requests.
+ */
+const parseOpenAiCimdRelayUrl = (value: string): Optional<string> => {
+  if (!value) {
+    return undefined;
+  }
+
+  try {
+    const url = new URL(value);
+
+    if (url.protocol === 'https:' && url.href === `${url.origin}/`) {
+      return url.origin;
+    }
+  } catch {}
+
+  throw new Error(`Invalid value in \`OPENAI_CIMD_RELAY_URL\`: ${value}`);
+};
+
 export default class GlobalValues {
   public readonly isProduction = getEnv('NODE_ENV') === 'production';
   public readonly isIntegrationTest = yes(getEnv('INTEGRATION_TEST'));
@@ -240,6 +261,19 @@ export default class GlobalValues {
   public readonly ssrfAllowedAddressBlockList = parseSsrfAllowedAddresses(
     this.ssrfAllowedAddresses
   );
+
+  /**
+   * A relay that mirrors chatgpt.com paths, as a bare `https:` origin (`https://oai.logto.io`).
+   * While set, oidc-provider's outgoing requests to chatgpt.com, in practice the client metadata
+   * documents of ChatGPT and Codex, go to the relay with the same path and query instead.
+   *
+   * A stopgap for chatgpt.com rejecting the platform's shared egress addresses outright: a relay
+   * on a dedicated address is the only way through without changing the egress of every other
+   * outbound request. The SSRF protection still applies to the relay. Ignored outside Cloud.
+   */
+  public readonly openAiCimdRelayUrl: Optional<string> = this.isCloud
+    ? parseOpenAiCimdRelayUrl(getEnv('OPENAI_CIMD_RELAY_URL'))
+    : undefined;
 
   /** Enables protected app local development without Cloud-only behavior. */
   public readonly isProtectedAppLocalDevEnabled =

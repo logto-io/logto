@@ -56,4 +56,59 @@ describe('getProviderFetchConfig', () => {
     expect(init).toMatchObject({ method: 'POST' });
     expect(init).not.toHaveProperty('dispatcher');
   });
+
+  describe('OpenAI CIMD relay', () => {
+    const openAiCimdRelayUrl = 'https://oai.logto.io';
+
+    it('should send chatgpt.com requests to the relay with the options untouched', async () => {
+      Sinon.stub(EnvSet, 'values').value({
+        ...EnvSet.values,
+        isSsrfProtectionEnabled: true,
+        ssrfAllowedAddresses: [],
+        openAiCimdRelayUrl,
+      });
+      const fetchStub = Sinon.stub(globalThis, 'fetch').resolves(new Response());
+      const config = getProviderFetchConfig();
+
+      await config?.fetch('https://chatgpt.com/oauth/codex/client.json?v=1', requestInit);
+
+      const [input, init] = fetchStub.firstCall.args;
+      expect(String(input)).toBe('https://oai.logto.io/oauth/codex/client.json?v=1');
+      expect(init).toMatchObject({ method: 'POST', dispatcher });
+    });
+
+    it('should leave requests to other hosts untouched', async () => {
+      Sinon.stub(EnvSet, 'values').value({
+        ...EnvSet.values,
+        isSsrfProtectionEnabled: true,
+        ssrfAllowedAddresses: [],
+        openAiCimdRelayUrl,
+      });
+      const fetchStub = Sinon.stub(globalThis, 'fetch').resolves(new Response());
+      const config = getProviderFetchConfig();
+
+      await config?.fetch('https://rp.example.com/jwks', requestInit);
+
+      const [input, init] = fetchStub.firstCall.args;
+      expect(input).toBe('https://rp.example.com/jwks');
+      expect(init).toMatchObject({ method: 'POST', dispatcher });
+    });
+
+    it('should apply the relay on top of the SSRF opt-out', async () => {
+      Sinon.stub(EnvSet, 'values').value({
+        ...EnvSet.values,
+        isSsrfProtectionEnabled: false,
+        ssrfAllowedAddresses: [],
+        openAiCimdRelayUrl,
+      });
+      const fetchStub = Sinon.stub(globalThis, 'fetch').resolves(new Response());
+      const config = getProviderFetchConfig();
+
+      await config?.fetch('https://chatgpt.com/oauth/codex/client.json', requestInit);
+
+      const [input, init] = fetchStub.firstCall.args;
+      expect(String(input)).toBe('https://oai.logto.io/oauth/codex/client.json');
+      expect(init).not.toHaveProperty('dispatcher');
+    });
+  });
 });

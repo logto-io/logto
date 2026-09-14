@@ -153,3 +153,45 @@ describe('parseNonNegativeIntegerEnv', () => {
     expect(parseNonNegativeIntegerEnv(' 14400 ')).toBe(14_400);
   });
 });
+
+describe('openAiCimdRelayUrl', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it('parses a bare https origin in Cloud', () => {
+    vi.stubEnv('IS_CLOUD', 'true');
+    vi.stubEnv('OPENAI_CIMD_RELAY_URL', 'https://OAI.logto.io/');
+
+    expect(createGlobalValues().openAiCimdRelayUrl).toBe('https://oai.logto.io');
+  });
+
+  it.each([
+    'oai.logto.io',
+    'http://oai.logto.io',
+    'https://oai.logto.io/oauth',
+    'https://oai.logto.io?relay=1',
+    'https://user:pass@oai.logto.io',
+  ])('rejects malformed value %s during initialization', (value) => {
+    vi.stubEnv('IS_CLOUD', 'true');
+    vi.stubEnv('OPENAI_CIMD_RELAY_URL', value);
+
+    expect(() => createGlobalValues()).toThrow(
+      `Invalid value in \`OPENAI_CIMD_RELAY_URL\`: ${value}`
+    );
+  });
+
+  it('is undefined when the variable is unset in Cloud', () => {
+    vi.stubEnv('IS_CLOUD', 'true');
+    unsetEnvironmentVariable('OPENAI_CIMD_RELAY_URL');
+
+    expect(createGlobalValues().openAiCimdRelayUrl).toBeUndefined();
+  });
+
+  it('is ignored outside Cloud', () => {
+    unsetEnvironmentVariable('IS_CLOUD');
+    vi.stubEnv('OPENAI_CIMD_RELAY_URL', 'https://oai.logto.io');
+
+    expect(createGlobalValues().openAiCimdRelayUrl).toBeUndefined();
+  });
+});

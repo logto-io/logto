@@ -1,4 +1,4 @@
-import { cond } from '@silverhand/essentials';
+import { cond, type Optional } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { ssrfProtectedFetch } from '#src/utils/outbound-request.js';
@@ -32,19 +32,54 @@ const fetchWithAllowlistedDispatcher: typeof fetch = async (input, init) => {
   return ssrfProtectedFetch(input, safeInit);
 };
 
+/** Every OpenAI client metadata document, for ChatGPT and Codex alike, is served from here. */
+const chatGptOrigin = 'https://chatgpt.com';
+
+/**
+ * Sends requests to chatgpt.com through the relay instead, keeping path and query. The request
+ * options pass through untouched, so the dispatcher and timeout the provider set for chatgpt.com
+ * apply to the relay as well.
+ */
+const withOpenAiCimdRelay =
+  (relayUrl: string, baseFetch: typeof fetch): typeof fetch =>
+  async (input, init) => {
+    const url = new URL(input instanceof Request ? input.url : input);
+
+    return baseFetch(
+      url.origin === chatGptOrigin ? new URL(`${url.pathname}${url.search}`, relayUrl) : input,
+      init
+    );
+  };
+
 /**
  * Keep oidc-provider's native fetch implementation whenever the protection is enabled and no
  * allowlist applies, so future upstream fetch hardening is inherited automatically. Override it
  * only for the self-hosted opt-out and for the allowlist, which upstream cannot honor.
  */
-export const getProviderFetchConfig = () => {
+const getBaseFetch = (): Optional<typeof fetch> => {
   const { isSsrfProtectionEnabled, ssrfAllowedAddresses } = EnvSet.values;
 
   if (!isSsrfProtectionEnabled) {
-    return { fetch: fetchWithoutSsrfDispatcher };
+    return fetchWithoutSsrfDispatcher;
   }
 
-  return cond(ssrfAllowedAddresses.length > 0 && { fetch: fetchWithAllowlistedDispatcher });
+  return cond(ssrfAllowedAddresses.length > 0 && fetchWithAllowlistedDispatcher);
+};
+
+export const getProviderFetchConfig = () => {
+  const { openAiCimdRelayUrl } = EnvSet.values;
+  const baseFetch = getBaseFetch();
+
+  if (openAiCimdRelayUrl) {
+    return {
+      fetch: withOpenAiCimdRelay(
+        openAiCimdRelayUrl,
+        baseFetch ?? (async (input, init) => fetch(input, init))
+      ),
+    };
+  }
+
+  return cond(baseFetch && { fetch: baseFetch });
 };
 
 export default fetchWithoutSsrfDispatcher;
