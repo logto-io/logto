@@ -58,7 +58,7 @@ describe('getProviderFetchConfig', () => {
   });
 
   describe('OpenAI CIMD relay', () => {
-    const openAiCimdRelayUrl = 'https://oai.logto.io';
+    const openAiCimdRelayUrl = 'https://relay.example.com';
 
     it('should send chatgpt.com requests to the relay with the options untouched', async () => {
       Sinon.stub(EnvSet, 'values').value({
@@ -73,7 +73,7 @@ describe('getProviderFetchConfig', () => {
       await config?.fetch('https://chatgpt.com/oauth/codex/client.json?v=1', requestInit);
 
       const [input, init] = fetchStub.firstCall.args;
-      expect(String(input)).toBe('https://oai.logto.io/oauth/codex/client.json?v=1');
+      expect(String(input)).toBe('https://relay.example.com/oauth/codex/client.json?v=1');
       expect(init).toMatchObject({ method: 'POST', dispatcher });
     });
 
@@ -97,7 +97,7 @@ describe('getProviderFetchConfig', () => {
       const [input] = fetchStub.firstCall.args;
       expect(input).toBeInstanceOf(Request);
       expect(input).toMatchObject({
-        url: 'https://oai.logto.io/oauth/codex/client.json',
+        url: 'https://relay.example.com/oauth/codex/client.json',
         method: 'POST',
       });
       expect(input instanceof Request && input.headers.get('accept')).toBe('application/json');
@@ -133,7 +133,7 @@ describe('getProviderFetchConfig', () => {
       await config?.fetch('https://chatgpt.com/oauth/codex/client.json', requestInit);
 
       const [input, init] = fetchStub.firstCall.args;
-      expect(String(input)).toBe('https://oai.logto.io/oauth/codex/client.json');
+      expect(String(input)).toBe('https://relay.example.com/oauth/codex/client.json');
       expect(init).not.toHaveProperty('dispatcher');
     });
   });

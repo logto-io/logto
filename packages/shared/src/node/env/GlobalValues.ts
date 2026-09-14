@@ -264,7 +264,7 @@ export default class GlobalValues {
 
   /**
    * Temporary workaround for OpenAI clients: a relay that mirrors chatgpt.com paths, as a bare
-   * `https:` origin (`https://oai.logto.io`). While set, oidc-provider's outgoing requests to
+   * `https:` origin (`https://relay.example.com`). While set, oidc-provider's outgoing requests to
    * chatgpt.com, in practice the client metadata documents of ChatGPT and Codex, go to the relay
    * with the same path and query instead.
    *

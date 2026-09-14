@@ -161,17 +161,17 @@ describe('openAiCimdRelayUrl', () => {
 
   it('parses a bare https origin in Cloud', () => {
     vi.stubEnv('IS_CLOUD', 'true');
-    vi.stubEnv('OPENAI_CIMD_RELAY_URL', 'https://OAI.logto.io/');
+    vi.stubEnv('OPENAI_CIMD_RELAY_URL', 'https://RELAY.example.com/');
 
-    expect(createGlobalValues().openAiCimdRelayUrl).toBe('https://oai.logto.io');
+    expect(createGlobalValues().openAiCimdRelayUrl).toBe('https://relay.example.com');
   });
 
   it.each([
-    'oai.logto.io',
-    'http://oai.logto.io',
-    'https://oai.logto.io/oauth',
-    'https://oai.logto.io?relay=1',
-    'https://user:pass@oai.logto.io',
+    'relay.example.com',
+    'http://relay.example.com',
+    'https://relay.example.com/oauth',
+    'https://relay.example.com?relay=1',
+    'https://user:pass@relay.example.com',
   ])('rejects malformed value %s during initialization', (value) => {
     vi.stubEnv('IS_CLOUD', 'true');
     vi.stubEnv('OPENAI_CIMD_RELAY_URL', value);
@@ -190,7 +190,7 @@ describe('openAiCimdRelayUrl', () => {
 
   it('is ignored outside Cloud', () => {
     unsetEnvironmentVariable('IS_CLOUD');
-    vi.stubEnv('OPENAI_CIMD_RELAY_URL', 'https://oai.logto.io');
+    vi.stubEnv('OPENAI_CIMD_RELAY_URL', 'https://relay.example.com');
 
     expect(createGlobalValues().openAiCimdRelayUrl).toBeUndefined();
   });
