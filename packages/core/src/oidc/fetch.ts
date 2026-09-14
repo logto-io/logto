@@ -32,7 +32,14 @@ const fetchWithAllowlistedDispatcher: typeof fetch = async (input, init) => {
   return ssrfProtectedFetch(input, safeInit);
 };
 
-/** Every OpenAI client metadata document, for ChatGPT and Codex alike, is served from here. */
+/**
+ * Temporary workaround for OpenAI clients. The client metadata documents of ChatGPT and Codex are
+ * all served from chatgpt.com, and chatgpt.com rejects requests from the platform's shared egress
+ * addresses outright, so CIMD sign-in with those clients fails before the document is even read.
+ * Until OpenAI stops blocking them, Cloud can send these fetches through a relay on a dedicated
+ * address. The relay wrapper below and the `OPENAI_CIMD_RELAY_URL` setting go away together once
+ * the block is lifted.
+ */
 const chatGptOrigin = 'https://chatgpt.com';
 
 /**

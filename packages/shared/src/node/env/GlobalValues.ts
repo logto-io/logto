@@ -263,13 +263,15 @@ export default class GlobalValues {
   );
 
   /**
-   * A relay that mirrors chatgpt.com paths, as a bare `https:` origin (`https://oai.logto.io`).
-   * While set, oidc-provider's outgoing requests to chatgpt.com, in practice the client metadata
-   * documents of ChatGPT and Codex, go to the relay with the same path and query instead.
+   * Temporary workaround for OpenAI clients: a relay that mirrors chatgpt.com paths, as a bare
+   * `https:` origin (`https://oai.logto.io`). While set, oidc-provider's outgoing requests to
+   * chatgpt.com, in practice the client metadata documents of ChatGPT and Codex, go to the relay
+   * with the same path and query instead.
    *
-   * A stopgap for chatgpt.com rejecting the platform's shared egress addresses outright: a relay
+   * chatgpt.com rejects requests from the platform's shared egress addresses outright, and a relay
    * on a dedicated address is the only way through without changing the egress of every other
-   * outbound request. The SSRF protection still applies to the relay. Ignored outside Cloud.
+   * outbound request. The SSRF protection still applies to the relay. Only read in Cloud, and
+   * unset means no relay; remove the setting once OpenAI lifts the block.
    */
   public readonly openAiCimdRelayUrl: Optional<string> = this.isCloud
     ? parseOpenAiCimdRelayUrl(getEnv('OPENAI_CIMD_RELAY_URL'))
