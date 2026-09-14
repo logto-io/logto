@@ -20,5 +20,8 @@ export type StepUpContextType = {
 export default createContext<StepUpContextType>({
   authenticationContext: undefined,
   isLoading: true,
-  refetch: async () => {},
+  refetch: async () => {
+    // eslint-disable-next-line unicorn/no-useless-undefined -- the default no-op must resolve to a promise
+    return undefined;
+  },
 });
