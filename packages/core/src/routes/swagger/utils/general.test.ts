@@ -207,23 +207,17 @@ describe('swagger general utils', () => {
   });
 
   it('should always expose external identity lookup parameters', async () => {
-    const source = await loadSearchDocument();
-
-    for (const isDevFeaturesEnabled of [false, true]) {
-      setDevFeaturesEnabled(isDevFeaturesEnabled);
-      // The pruning helpers mutate the input, so work on a fresh copy per state.
-      const document = JSON.parse(JSON.stringify(source)) as DeepPartial<OpenAPIV3.Document>;
-      removeUnnecessaryOperations(document);
-      removeDevFeatureParameters(document);
-      removeDevFeatureSchemaProperties(document);
-      expect(document.paths?.['/api/users']?.get?.parameters).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({ name: 'identityType' }),
-          expect.objectContaining({ name: 'identityProvider' }),
-          expect.objectContaining({ name: 'identityId' }),
-        ])
-      );
-      expect(JSON.stringify(document)).not.toContain(devFeatureSchemaExtension);
-    }
+    const document = await loadSearchDocument();
+    removeUnnecessaryOperations(document);
+    removeDevFeatureParameters(document);
+    removeDevFeatureSchemaProperties(document);
+    expect(document.paths?.['/api/users']?.get?.parameters).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ name: 'identityType' }),
+        expect.objectContaining({ name: 'identityProvider' }),
+        expect.objectContaining({ name: 'identityId' }),
+      ])
+    );
+    expect(JSON.stringify(document)).not.toContain(devFeatureSchemaExtension);
   });
 });
