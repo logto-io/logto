@@ -2,4 +2,4 @@
 "@logto/connector-kit": patch
 ---
 
-disallow `none` combined with other prompts in `oidcPromptsGuard`
+disallow combining the `none` prompt with other prompt values in OIDC configuration
