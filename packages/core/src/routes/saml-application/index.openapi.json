@@ -42,12 +42,12 @@
           "authnRequestConfig": {
             "type": "object",
             "nullable": true,
-            "description": "IdP-side authentication policy. Null or an empty object allows session reuse unless the SP requests ForceAuthn. PATCH replaces this object.",
+            "description": "IdP-side authentication policy. Fresh authentication is forced unless forceAuthn is explicitly false, including when this object is null or empty. PATCH replaces this object.",
             "properties": {
               "forceAuthn": {
                 "type": "boolean",
-                "default": false,
-                "description": "Require fresh authentication for every sign-in to this application, even when the SP omits ForceAuthn."
+                "default": true,
+                "description": "Require fresh authentication for every sign-in to this application. Set to false to reuse an existing session unless the SP requests ForceAuthn."
               },
               "requireSignedAuthnRequests": {
                 "type": "boolean",
@@ -115,12 +115,12 @@
                   "authnRequestConfig": {
                     "type": "object",
                     "nullable": true,
-                    "description": "IdP-side authentication policy. Null or an empty object allows session reuse unless the SP requests ForceAuthn. PATCH replaces this object.",
+                    "description": "IdP-side authentication policy. Fresh authentication is forced unless forceAuthn is explicitly false, including when this object is null or empty. PATCH replaces this object.",
                     "properties": {
                       "forceAuthn": {
                         "type": "boolean",
-                        "default": false,
-                        "description": "Require fresh authentication for every sign-in to this application, even when the SP omits ForceAuthn."
+                        "default": true,
+                        "description": "Require fresh authentication for every sign-in to this application. Set to false to reuse an existing session unless the SP requests ForceAuthn."
                       },
                       "requireSignedAuthnRequests": {
                         "type": "boolean",
@@ -196,12 +196,12 @@
                   "authnRequestConfig": {
                     "type": "object",
                     "nullable": true,
-                    "description": "IdP-side authentication policy. Null or an empty object allows session reuse unless the SP requests ForceAuthn. PATCH replaces this object.",
+                    "description": "IdP-side authentication policy. Fresh authentication is forced unless forceAuthn is explicitly false, including when this object is null or empty. PATCH replaces this object.",
                     "properties": {
                       "forceAuthn": {
                         "type": "boolean",
-                        "default": false,
-                        "description": "Require fresh authentication for every sign-in to this application, even when the SP omits ForceAuthn."
+                        "default": true,
+                        "description": "Require fresh authentication for every sign-in to this application. Set to false to reuse an existing session unless the SP requests ForceAuthn."
                       },
                       "requireSignedAuthnRequests": {
                         "type": "boolean",

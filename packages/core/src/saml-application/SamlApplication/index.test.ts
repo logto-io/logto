@@ -332,7 +332,7 @@ describe('SamlApplication', () => {
       nock.cleanAll();
     });
 
-    it('should reuse the existing session by default (no prompt parameter)', async () => {
+    it('should force re-authentication by default', async () => {
       const url = await samlApp.getSignInUrl({ state: 'state-value' });
 
       expect(`${url.origin}${url.pathname}`).toBe(mockAuthEndpoint);
@@ -340,7 +340,7 @@ describe('SamlApplication', () => {
       expect(url.searchParams.get('redirect_uri')).toBe(samlApp.config.redirectUri);
       expect(url.searchParams.get('response_type')).toBe('code');
       expect(url.searchParams.get('state')).toBe('state-value');
-      expect(url.searchParams.has('prompt')).toBe(false);
+      expect(url.searchParams.get('prompt')).toBe('login');
     });
 
     it('should force re-authentication when the service provider requested it', async () => {

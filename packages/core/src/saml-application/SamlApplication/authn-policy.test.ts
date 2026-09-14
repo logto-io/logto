@@ -17,18 +17,19 @@ class TestSamlApplication extends SamlApplication {
 
 describe('SAML authentication policy', () => {
   it.each([
-    { configured: false, requested: false, expected: false },
-    { configured: true, requested: false, expected: true },
-    { configured: false, requested: true, expected: true },
-    { configured: true, requested: true, expected: true },
-  ])('applies the IdP and SP requirements: %j', async ({ configured, requested, expected }) => {
-    const details = {
-      ...createMockSamlApplicationDetails(),
-      authnRequestConfig: { forceAuthn: configured },
-    };
-    const application = new TestSamlApplication(details, 'saml-app-id', createMockSamlEnvSet());
-    const url = await application.getSignInUrl({ forceAuthn: requested });
-    expect(url.searchParams.get('prompt')).toBe(expected ? 'login' : null);
-    expect(url.searchParams.get('max_age')).toBe(expected ? '0' : null);
-  });
+    { authnRequestConfig: null, requested: false, expected: true },
+    { authnRequestConfig: {}, requested: false, expected: true },
+    { authnRequestConfig: { forceAuthn: true }, requested: false, expected: true },
+    { authnRequestConfig: { forceAuthn: false }, requested: false, expected: false },
+    { authnRequestConfig: { forceAuthn: false }, requested: true, expected: true },
+  ])(
+    'applies the IdP and SP requirements: %j',
+    async ({ authnRequestConfig, requested, expected }) => {
+      const details = { ...createMockSamlApplicationDetails(), authnRequestConfig };
+      const application = new TestSamlApplication(details, 'saml-app-id', createMockSamlEnvSet());
+      const url = await application.getSignInUrl({ forceAuthn: requested });
+      expect(url.searchParams.get('prompt')).toBe(expected ? 'login' : null);
+      expect(url.searchParams.get('max_age')).toBe(expected ? '0' : null);
+    }
+  );
 });

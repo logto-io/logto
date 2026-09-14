@@ -8,6 +8,7 @@ import {
   BindingType,
   NameIdFormat,
   type SamlAttributeMapping,
+  isSamlForceAuthnEnabled,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { cond, conditional, tryThat, type Nullable, type Optional } from '@silverhand/essentials';
@@ -278,7 +279,7 @@ export class SamlApplication {
       [QueryKey.ResponseType]: 'code',
     });
 
-    if (forceAuthn === true || this.config.authnRequestConfig?.forceAuthn === true) {
+    if (forceAuthn === true || isSamlForceAuthnEnabled(this.config.authnRequestConfig)) {
       queryParameters.append(QueryKey.Prompt, Prompt.Login);
       queryParameters.append('max_age', '0');
     }
