@@ -14,7 +14,8 @@ const { mockEsm } = createMockUtils(jest);
 
 const pool = createMockPool({ query: jest.fn() });
 
-const findSystemByKey = jest.fn(async (_key: string): Promise<unknown> => undefined);
+// `maybeOne` resolves to `null` when the row is absent.
+const findSystemByKey = jest.fn(async (_key: string): Promise<unknown> => null);
 mockEsm('#src/queries/system.js', () => ({
   createSystemsQuery: () => ({ findSystemByKey }),
 }));
@@ -28,7 +29,7 @@ const installedAt = '2026-09-14T00:00:00.000Z';
 /** Put a license key into the `systems` table, as `PUT /api/systems/license` does. */
 const install = (jwt: string) => {
   findSystemByKey.mockImplementation(async (key) =>
-    key === LicenseKey.License ? { value: { jwt, installedAt } } : undefined
+    key === LicenseKey.License ? { value: { jwt, installedAt } } : null
   );
 };
 
@@ -45,7 +46,7 @@ describe('LicenseReader', () => {
     Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', isDevFeaturesEnabled);
     jest.clearAllMocks();
     findSystemByKey.mockReset();
-    findSystemByKey.mockResolvedValue(undefined);
+    findSystemByKey.mockResolvedValue(null);
     reader.invalidate();
   });
 

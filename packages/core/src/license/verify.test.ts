@@ -51,7 +51,8 @@ describe('verifyLicenseKey()', () => {
   });
 
   it('should reject a key whose claims were edited after signing', async () => {
-    const [header, , signature] = (await signLicenseKey(buildLicensePayload())).split('.');
+    const licenseKey = await signLicenseKey(buildLicensePayload());
+    const [header, , signature] = licenseKey.split('.');
     const forged = Buffer.from(
       JSON.stringify(buildLicensePayload({ plan: ReservedPlanId.SelfHostedEnterprise }))
     ).toString('base64url');

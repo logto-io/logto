@@ -77,14 +77,16 @@ export default class LicenseReader {
     const reading = this.#read(pool);
     this.#cache = reading;
 
-    // A database failure is transient; caching the rejection would keep answering with it.
-    return reading.catch((error: unknown) => {
+    try {
+      return await reading;
+    } catch (error: unknown) {
+      // A database failure is transient; caching the rejection would keep answering with it.
       if (this.#cache === reading) {
         this.#cache = undefined;
       }
 
       throw error;
-    });
+    }
   }
 
   /** Drop the cached license so the next read goes back to the database. */
@@ -126,8 +128,6 @@ export default class LicenseReader {
       licenseConsoleLog.error(
         `The installed license key could not be verified (${error.code}) and was ignored. The self-hosted defaults apply.`
       );
-
-      return;
     }
   }
 }
