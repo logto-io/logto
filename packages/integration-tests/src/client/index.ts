@@ -257,9 +257,11 @@ export default class MockClient {
       new Error(`Resume authorization failed: ${authCodeResponse.status} ${location ?? ''}`)
     );
 
-    if (location.startsWith('/consent')) {
-      this.mergeRawCookies(authCodeResponse.headers.getSetCookie());
+    // The resumed authorization refreshes the OIDC session, which now carries the context the
+    // interaction achieved; without these cookies a later request presents the session it replaced.
+    this.mergeRawCookies(authCodeResponse.headers.getSetCookie());
 
+    if (location.startsWith('/consent')) {
       return this.logto.handleSignInCallback(await this.consent());
     }
 
