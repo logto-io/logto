@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { oidcPromptsGuard, OidcPrompt } from './social.js';
 
 describe('oidcPromptsGuard', () => {
-  it('allows single prompt values including none', () => {
+  it('allows valid prompt configurations, including undefined, single prompts, and combinations without none', () => {
     expect(oidcPromptsGuard.safeParse([OidcPrompt.None]).success).toBe(true);
     expect(oidcPromptsGuard.safeParse([OidcPrompt.Consent]).success).toBe(true);
     expect(oidcPromptsGuard.safeParse([OidcPrompt.SelectAccount, OidcPrompt.Consent]).success).toBe(true);
