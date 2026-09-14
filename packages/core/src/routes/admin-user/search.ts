@@ -1,7 +1,6 @@
 import { OrganizationUserRelations, UsersRoles } from '@logto/schemas';
 import { type Nullable, tryThat, yes } from '@silverhand/essentials';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -46,11 +45,6 @@ const getIdentityCondition = (searchParams: URLSearchParams): UserConditions['id
 
   if (type === null && provider === null && identityId === null) {
     return undefined;
-  }
-
-  // DEV: Look up users by external social or enterprise SSO identity.
-  if (!EnvSet.values.isDevFeaturesEnabled) {
-    throw new TypeError('External identity user lookup is not enabled.');
   }
 
   if (!type || !provider || !identityId) {

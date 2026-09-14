@@ -94,6 +94,11 @@ const createDevFeatureOperationDocument = (): DeepPartial<OpenAPIV3.Document> =>
   },
 });
 
+const loadSearchDocument = async (): Promise<DeepPartial<OpenAPIV3.Document>> =>
+  JSON.parse(
+    await fs.readFile(new URL('../../admin-user/search.openapi.json', import.meta.url), 'utf8')
+  ) as DeepPartial<OpenAPIV3.Document>;
+
 describe('swagger general utils', () => {
   afterEach(() => {
     Reflect.set(EnvSet.values, 'isCloud', originalIsCloud);
@@ -201,29 +206,24 @@ describe('swagger general utils', () => {
     expect(document.paths).not.toHaveProperty('/api/dev');
   });
 
-  it('should expose external identity lookup parameters only when dev features are enabled', async () => {
-    const loadDocument = async () =>
-      JSON.parse(
-        await fs.readFile(new URL('../../admin-user/search.openapi.json', import.meta.url), 'utf8')
-      ) as DeepPartial<OpenAPIV3.Document>;
+  it('should always expose external identity lookup parameters', async () => {
+    const source = await loadSearchDocument();
 
-    setDevFeaturesEnabled(false);
-    const stableDocument = removeUnnecessaryOperations(await loadDocument());
-    removeDevFeatureParameters(stableDocument);
-    removeDevFeatureSchemaProperties(stableDocument);
-    expect(stableDocument.paths?.['/api/users']?.get?.parameters).toEqual([]);
-
-    setDevFeaturesEnabled(true);
-    const devDocument = removeUnnecessaryOperations(await loadDocument());
-    removeDevFeatureParameters(devDocument);
-    removeDevFeatureSchemaProperties(devDocument);
-    expect(devDocument.paths?.['/api/users']?.get?.parameters).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ name: 'identityType' }),
-        expect.objectContaining({ name: 'identityProvider' }),
-        expect.objectContaining({ name: 'identityId' }),
-      ])
-    );
-    expect(JSON.stringify(devDocument)).not.toContain(devFeatureSchemaExtension);
+    for (const isDevFeaturesEnabled of [false, true]) {
+      setDevFeaturesEnabled(isDevFeaturesEnabled);
+      // The pruning helpers mutate the input, so work on a fresh copy per state.
+      const document = JSON.parse(JSON.stringify(source)) as DeepPartial<OpenAPIV3.Document>;
+      removeUnnecessaryOperations(document);
+      removeDevFeatureParameters(document);
+      removeDevFeatureSchemaProperties(document);
+      expect(document.paths?.['/api/users']?.get?.parameters).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ name: 'identityType' }),
+          expect.objectContaining({ name: 'identityProvider' }),
+          expect.objectContaining({ name: 'identityId' }),
+        ])
+      );
+      expect(JSON.stringify(document)).not.toContain(devFeatureSchemaExtension);
+    }
   });
 });

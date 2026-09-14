@@ -4,7 +4,6 @@ import { pickDefault } from '@logto/shared/esm';
 import { removeUndefinedKeys } from '@silverhand/essentials';
 
 import { mockUser, mockUserList, mockUserListResponse } from '#src/__mocks__/index.js';
-import { EnvSet } from '#src/env-set/index.js';
 import { type InsertUserResult } from '#src/libraries/user.js';
 import { type UserConditions } from '#src/queries/user.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -73,7 +72,6 @@ const usersLibraries = {
 } satisfies Partial<Libraries['users']>;
 
 const adminUserRoutes = await pickDefault(import('./search.js'));
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
 
 describe('adminUserRoutes', () => {
   const tenantContext = new MockTenant(undefined, mockedQueries, undefined, {
@@ -81,16 +79,8 @@ describe('adminUserRoutes', () => {
   });
   const userRequest = createRequester({ authedRoutes: adminUserRoutes, tenantContext });
 
-  beforeEach(() => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
-  });
-
   afterEach(() => {
     jest.clearAllMocks();
-  });
-
-  afterAll(() => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
   });
 
   it('GET /users', async () => {
@@ -229,19 +219,6 @@ describe('adminUserRoutes', () => {
       identityType: 'oidc',
       identityProvider: 'https://example.com/issuer',
       identityId: 'enterprise-user-id',
-    });
-
-    expect(response.status).toEqual(400);
-    expect(mockedQueries.users.countUsers).not.toHaveBeenCalled();
-  });
-
-  it('GET /users should reject identity lookup when dev features are disabled', async () => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
-
-    const response = await userRequest.get('/users').query({
-      identityType: 'social',
-      identityProvider: 'dingtalk',
-      identityId: 'dingtalk-open-id',
     });
 
     expect(response.status).toEqual(400);
