@@ -163,7 +163,7 @@ const TestRig = ({
 };
 
 const setNativeSdk = (platform: 'android' | 'ios') => {
-  // eslint-disable-next-line @silverhand/fp/no-mutation
+  // eslint-disable-next-line @silverhand/fp/no-mutation -- tests stage the native SDK global
   window.logtoNativeSdk = {
     platform,
     callbackLink: 'logto://callback',
@@ -193,7 +193,7 @@ describe('StepUp', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
-    // eslint-disable-next-line @silverhand/fp/no-mutation
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- tests reset the native SDK global
     window.logtoNativeSdk = undefined;
   });
 
@@ -385,7 +385,7 @@ describe('StepUp', () => {
     mockLoad.mockImplementationOnce(
       async () =>
         new Promise<boolean>((resolve) => {
-          // eslint-disable-next-line @silverhand/fp/no-mutation
+          // eslint-disable-next-line @silverhand/fp/no-mutation -- tests control the deferred arrival-load settlement
           deferred.resolve = () => {
             resolve(true);
           };

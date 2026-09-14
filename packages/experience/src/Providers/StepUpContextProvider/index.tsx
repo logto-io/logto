@@ -70,7 +70,7 @@ const StepUpContextProvider = ({ children }: Props) => {
    */
   const load = useCallback(
     async (shouldInitialize = false): Promise<boolean> => {
-      // eslint-disable-next-line @silverhand/fp/no-mutation
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- bump the latest load id to invalidate stale arrivals
       loadIdRef.current += 1;
       const loadId = loadIdRef.current;
       const isCurrent = () => loadIdRef.current === loadId;
@@ -161,7 +161,7 @@ const StepUpContextProvider = ({ children }: Props) => {
   useEffect(
     () => () => {
       // Invalidate any in-flight load, so one that settles after unmount cannot toast or redirect.
-      // eslint-disable-next-line @silverhand/fp/no-mutation
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- invalidate in-flight loads on unmount
       loadIdRef.current += 1;
     },
     []

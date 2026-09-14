@@ -59,7 +59,7 @@ const StepUp = () => {
   useEffect(
     () => () => {
       // Invalidate on unmount so an in-flight load cannot update state after the page left.
-      // eslint-disable-next-line @silverhand/fp/no-mutation
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- mark unmounted so the in-flight arrival load cannot settle state
       isMountedRef.current = false;
     },
     []
@@ -96,7 +96,7 @@ const StepUp = () => {
     const [establishableMethod] = establishableMethods;
 
     if (methods.length === 1 && onlyMethod) {
-      // eslint-disable-next-line @silverhand/fp/no-mutation
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- guard against repeated automatic dispatch
       hasForwardedRef.current = true;
       // A method that starts with a request (sending a code, WebAuthn options) can fail; the
       // chooser then renders the single method so the user can retry.
@@ -114,7 +114,7 @@ const StepUp = () => {
 
     if (methods.length === 0 && resolvedConnectors.length === 0) {
       if (establishableMethod) {
-        // eslint-disable-next-line @silverhand/fp/no-mutation
+        // eslint-disable-next-line @silverhand/fp/no-mutation -- guard against repeated navigation to the continue page
         hasForwardedRef.current = true;
         navigate(`/${UserFlow.Continue}/${establishableMethod}`, {
           replace: true,
@@ -125,7 +125,7 @@ const StepUp = () => {
 
       // A satisfied interaction returns empty availableMethods. If submit failed transiently or the
       // user re-entered /step-up, attempt submitting before rendering the terminal no-method error.
-      // eslint-disable-next-line @silverhand/fp/no-mutation
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- guard against repeated submit attempts
       hasForwardedRef.current = true;
       const attemptSubmit = async () => {
         const [error, result] = await asyncSubmitInteraction();

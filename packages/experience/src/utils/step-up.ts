@@ -109,7 +109,7 @@ export const toMfaFlowState = (
     availableFactors,
     // The MFA flow state guard infers a full record, while only the enrolled code factors carry
     // an identifier; the MFA pages read it per factor, so a partial record is what they expect.
-    // eslint-disable-next-line no-restricted-syntax
+    // eslint-disable-next-line no-restricted-syntax -- the MFA pages expect a partial identifier record per factor
     maskedIdentifiers: maskedFactorIdentifiers as MfaFlowState['maskedIdentifiers'],
   };
 };
