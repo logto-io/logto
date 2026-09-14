@@ -104,7 +104,10 @@ const StepUpContextProvider = ({ children }: Props) => {
         return isCurrent();
       };
       const fail = async (error: unknown) => {
-        await reportError(error);
+        // A superseded load reports nothing: the newer load owns the screen and its errors.
+        if (isCurrent()) {
+          await reportError(error);
+        }
 
         return settle(undefined);
       };
@@ -121,6 +124,12 @@ const StepUpContextProvider = ({ children }: Props) => {
         return fail(error);
       }
 
+      // A newer load started while this one was reading: initializing now would overwrite the
+      // interaction storage the newer flow is building.
+      if (!isCurrent()) {
+        return false;
+      }
+
       const [initError, result] = await asyncInitStepUp();
 
       if (initError) {
@@ -130,7 +139,9 @@ const StepUpContextProvider = ({ children }: Props) => {
       if (result?.redirectTo) {
         // The interaction was finished with `unmet_authentication_requirements`; the application
         // explains it. The redirect unloads the page, so this never resolves.
-        await redirectTo(result.redirectTo);
+        if (isCurrent()) {
+          await redirectTo(result.redirectTo);
+        }
 
         return false;
       }
@@ -149,6 +160,15 @@ const StepUpContextProvider = ({ children }: Props) => {
   const refetch = useCallback(async () => {
     await load(false);
   }, [load]);
+
+  useEffect(
+    () => () => {
+      // Invalidate any in-flight load, so one that settles after unmount cannot toast or redirect.
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      loadIdRef.current += 1;
+    },
+    []
+  );
 
   useEffect(() => {
     if (landingKey === undefined) {

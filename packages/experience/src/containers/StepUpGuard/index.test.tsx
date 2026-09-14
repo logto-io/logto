@@ -4,11 +4,12 @@ import {
   LogtoAcr,
   VerificationType,
 } from '@logto/schemas';
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import { HTTPError } from 'ky';
 import { useEffect } from 'react';
-import { Link, Route, Routes } from 'react-router-dom';
+import { Link, Route, Routes, useNavigate } from 'react-router-dom';
 
+import StepUpContextProvider from '@/Providers/StepUpContextProvider';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import { getStepUpContext, initStepUp } from '@/apis/experience';
 import { stepUpRoutes } from '@/constants/step-up';
@@ -110,6 +111,22 @@ const Child = () => {
   );
 };
 
+/** Arrives at the landing page again while the previous arrival may still be loading. */
+const NavigateToLandingAgain = () => {
+  const navigate = useNavigate();
+
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        navigate(`${stepUpRoutes.landing}?again=1`);
+      }}
+    >
+      arrive again
+    </button>
+  );
+};
+
 const renderGuard = (initialEntry: string) =>
   renderWithPageContext(
     <Routes>
@@ -149,6 +166,52 @@ describe('StepUpGuard', () => {
 
       expect(mockHandleError).not.toHaveBeenCalled();
       expect(mockRedirectTo).not.toHaveBeenCalled();
+    });
+
+    it('does not initialize again when a newer arrival superseded the load', async () => {
+      mockedGetStepUpContext
+        // The first arrival reads slowly, so the second arrival settles before it does.
+        .mockImplementationOnce(async () => {
+          await new Promise((resolve) => {
+            setTimeout(resolve, 0);
+          });
+          throw createRequestError('session.interaction_not_found');
+        })
+        .mockRejectedValueOnce(createRequestError('session.interaction_not_found'))
+        .mockResolvedValueOnce(stepUpContext);
+      mockedInitStepUp.mockResolvedValue({});
+
+      renderWithPageContext(
+        <Routes>
+          <Route
+            path={stepUpRoutes.landing}
+            element={
+              <StepUpContextProvider>
+                <NavigateToLandingAgain />
+              </StepUpContextProvider>
+            }
+          />
+        </Routes>,
+        { initialEntries: [stepUpRoutes.landing] }
+      );
+
+      fireEvent.click(screen.getByText('arrive again'));
+
+      await waitFor(() => {
+        expect(mockedInitStepUp).toHaveBeenCalledTimes(1);
+      });
+
+      // Let the superseded arrival resume after the newer one created the interaction.
+      await act(async () => {
+        await new Promise((resolve) => {
+          setTimeout(resolve, 0);
+        });
+      });
+
+      // It must not initialize again (the PUT overwrites interaction storage) nor report its
+      // stale error.
+      expect(mockedInitStepUp).toHaveBeenCalledTimes(1);
+      expect(mockHandleError).not.toHaveBeenCalled();
     });
 
     it('keeps the existing interaction on refresh and never calls initStepUp', async () => {

@@ -1,6 +1,7 @@
 import { MfaFactor, experience } from '@logto/schemas';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 
+import { isDevFeaturesEnabled } from '@/constants/env';
 import { handleSearchParametersData } from '@/shared/utils/search-parameters';
 
 import AppLayout from './Layout/AppLayout';
@@ -182,11 +183,14 @@ const App = () => {
                       {/*
                        * Step-up: an authenticated session proves the missing assurance. The guard
                        * loads the server-driven context; the pinned-user first-factor pages are
-                       * registered under this tree by the slices that implement them.
+                       * registered under this tree by the slices that implement them. Dev-only
+                       * feature: remove the flag when the flow is released.
                        */}
-                      <Route path={experience.routes.stepUp} element={<StepUpGuard />}>
-                        <Route index element={<StepUp />} />
-                      </Route>
+                      {isDevFeaturesEnabled && (
+                        <Route path={experience.routes.stepUp} element={<StepUpGuard />}>
+                          <Route index element={<StepUp />} />
+                        </Route>
+                      )}
 
                       {/* Social sign-in pages */}
                       <Route path="social">
