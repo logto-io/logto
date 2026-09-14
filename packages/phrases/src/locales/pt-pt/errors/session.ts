@@ -59,6 +59,8 @@ const session = {
     forbidden_route: 'Esta rota não é permitida durante a autenticação step-up.',
     forbidden_identifier:
       'Não é permitido um identificador durante a autenticação step-up. Tente novamente sem o campo identificador.',
+    acr_not_satisfied:
+      'A verificação concluída não satisfaz o contexto de autenticação solicitado. Verifique outro método.',
   },
   passkey_sign_in: {
     pending_info_not_found:

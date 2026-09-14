@@ -59,6 +59,8 @@ const session = {
     forbidden_route: 'Esta ruta no está permitida durante la autenticación reforzada.',
     forbidden_identifier:
       'No se permite un identificador durante la autenticación reforzada. Vuelve a intentarlo sin el campo de identificador.',
+    acr_not_satisfied:
+      'La verificación completada no cumple con el contexto de autenticación solicitado. Verifica otro método.',
   },
   passkey_sign_in: {
     pending_info_not_found:

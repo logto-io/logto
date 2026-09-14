@@ -55,6 +55,8 @@ const session = {
     forbidden_route: 'Bu yol, yükseltilmiş kimlik doğrulama sırasında izin verilmez.',
     forbidden_identifier:
       'Yükseltilmiş kimlik doğrulama sırasında tanımlayıcı kullanılamaz. Tanımlayıcı alanı olmadan tekrar deneyin.',
+    acr_not_satisfied:
+      'Tamamlanan doğrulama, istenen kimlik doğrulama bağlamını karşılamıyor. Lütfen başka bir yöntemi doğrulayın.',
   },
   passkey_sign_in: {
     pending_info_not_found:

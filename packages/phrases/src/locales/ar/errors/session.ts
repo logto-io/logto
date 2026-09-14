@@ -47,6 +47,7 @@ const session = {
     forbidden_route: 'هذا المسار غير مسموح به أثناء المصادقة المعززة.',
     forbidden_identifier:
       'لا يُسمح بتضمين المعرّف أثناء المصادقة المعززة. أعد المحاولة بدون حقل المعرّف.',
+    acr_not_satisfied: 'التحقق المكتمل لا يفي بسياق المصادقة المطلوب. يرجى التحقق بطريقة أخرى.',
   },
   passkey_sign_in: {
     pending_info_not_found:
