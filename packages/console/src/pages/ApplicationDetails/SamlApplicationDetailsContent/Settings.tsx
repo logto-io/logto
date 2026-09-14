@@ -57,6 +57,7 @@ export type SamlApplicationFormData = Pick<
   encryptSamlAssertion: boolean;
   encryptThenSignSamlAssertion: boolean;
   certificate?: string;
+  forceAuthn: boolean;
 };
 
 type Props = {
@@ -121,7 +122,10 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
         return;
       }
 
-      const { id, payload } = parseFormDataToSamlApplicationRequest(formData);
+      const { id, payload } = parseFormDataToSamlApplicationRequest(
+        formData,
+        data.authnRequestConfig
+      );
 
       const updated = await api
         .patch(`api/saml-applications/${id}`, { json: payload })
@@ -351,6 +355,17 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
                   onChange={onChange}
                 />
               )}
+            />
+          </FormField>
+          <FormField
+            title="application_details.saml_idp_authentication.always_force_authn"
+            tip={t('application_details.saml_idp_authentication.always_force_authn_tip')}
+          >
+            <Switch
+              label={t(
+                'application_details.saml_idp_authentication.always_force_authn_description'
+              )}
+              {...register('forceAuthn')}
             />
           </FormField>
           <FormField title="application_details.saml_encryption_config.encrypt_assertion">
