@@ -1,14 +1,11 @@
+import { findSupportedLanguageTag } from '@logto/language-kit';
+import { builtInLanguages } from '@logto/phrases';
 import type { i18n } from 'i18next';
 import type { MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 
 import detectLanguage from '#src/i18n/detect-language.js';
 import { i18next } from '#src/utils/i18n.js';
-
-type LanguageUtils = {
-  formatLanguageCode(code: string): string;
-  isSupportedCode(code: string): boolean;
-};
 
 export type WithI18nContext<ContextT extends IRouterParamContext = IRouterParamContext> =
   ContextT & {
@@ -23,12 +20,7 @@ export default function koaI18next<
 >(): MiddlewareType<StateT, WithI18nContext<ContextT>, ResponseBodyT> {
   return async (ctx, next) => {
     const languages = detectLanguage(ctx);
-    // Cannot patch type def directly, see https://github.com/microsoft/TypeScript/issues/36146
-    // eslint-disable-next-line no-restricted-syntax
-    const languageUtils = i18next.services.languageUtils as LanguageUtils;
-    const foundLanguage = languages
-      .map((code) => languageUtils.formatLanguageCode(code))
-      .find((code) => languageUtils.isSupportedCode(code));
+    const foundLanguage = findSupportedLanguageTag(languages, builtInLanguages);
 
     // Async requests may change the language, so we need to clone a new instance instead of directly updating
     // the global i18next instance. Keep the i18n context scoped to the request.
