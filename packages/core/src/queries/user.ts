@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import type { User, CreateUser } from '@logto/schemas';
-import { MfaFactor, Users } from '@logto/schemas';
+import { MfaFactor, Users, UserSsoIdentities } from '@logto/schemas';
 import { PhoneNumberParser } from '@logto/shared';
 import { cond, conditionalArray, type Nullable, pick } from '@silverhand/essentials';
 import type { CommonQueryMethods } from '@silverhand/slonik';
@@ -27,6 +27,8 @@ const { table, fields } = convertToIdentifiers(Users);
  * - `relation`: The relation conditions. It can be used to find users that have or don't
  * have a relation with another table. Note that the relation field is the raw field name
  * in the database, not the camel case one.
+ * - `identity`: The exact external identity condition. Social identities are matched by connector
+ * target and social user ID; enterprise SSO identities are matched by issuer and identity ID.
  *
  * @example
  * ```ts
@@ -37,6 +39,11 @@ const { table, fields } = convertToIdentifiers(Users);
  */
 export type UserConditions = {
   search?: Search;
+  identity?: {
+    type: 'social' | 'sso';
+    provider: string;
+    identityId: string;
+  };
   relation?: {
     table: string;
     field: string;
@@ -300,9 +307,34 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
    *
    * @see {@link UserConditions} for more information about the conditions.
    */
-  const buildUserConditions = ({ search, relation }: UserConditions) => {
+  const buildUserConditions = ({ search, identity, relation }: UserConditions) => {
     const hasSearch = search?.matches.length;
     const id = sql.identifier;
+    const buildIdentityCondition = () => {
+      if (!identity) {
+        return;
+      }
+
+      if (identity.type === 'social') {
+        return sql`${fields.identities}::json#>>array[${identity.provider}, 'userId'] = ${identity.identityId}`;
+      }
+
+      return sql`exists (
+        select 1
+        from ${id([UserSsoIdentities.table])}
+        where ${id([UserSsoIdentities.table, UserSsoIdentities.fields.issuer])} = ${
+          identity.provider
+        }
+        and ${id([UserSsoIdentities.table, UserSsoIdentities.fields.identityId])} = ${
+          identity.identityId
+        }
+        and ${id([UserSsoIdentities.table, UserSsoIdentities.fields.userId])} = ${id([
+          Users.table,
+          Users.fields.id,
+        ])}
+      )`;
+    };
+
     const buildRelationCondition = () => {
       if (!relation) {
         return;
@@ -321,6 +353,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     };
 
     const conditions = conditionalArray(
+      buildIdentityCondition(),
       buildRelationCondition(),
       hasSearch && sql`(${buildConditionsFromSearch(search, userSearchFields)})`
     );

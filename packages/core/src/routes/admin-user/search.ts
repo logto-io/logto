@@ -1,6 +1,7 @@
 import { OrganizationUserRelations, UsersRoles } from '@logto/schemas';
 import { type Nullable, tryThat, yes } from '@silverhand/essentials';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -38,6 +39,33 @@ const getQueryRelation = (
   return undefined;
 };
 
+const getIdentityCondition = (searchParams: URLSearchParams): UserConditions['identity'] => {
+  const type = searchParams.get('identityType');
+  const provider = searchParams.get('identityProvider');
+  const identityId = searchParams.get('identityId');
+
+  if (type === null && provider === null && identityId === null) {
+    return undefined;
+  }
+
+  // DEV: Look up users by external social or enterprise SSO identity.
+  if (!EnvSet.values.isDevFeaturesEnabled) {
+    throw new TypeError('External identity user lookup is not enabled.');
+  }
+
+  if (!type || !provider || !identityId) {
+    throw new TypeError(
+      'Parameters `identityType`, `identityProvider`, and `identityId` must be provided together and must not be empty.'
+    );
+  }
+
+  if (type !== 'social' && type !== 'sso') {
+    throw new TypeError('Parameter `identityType` must be either `social` or `sso`.');
+  }
+
+  return { type, provider, identityId };
+};
+
 export default function adminUserSearchRoutes<T extends ManagementApiRouter>(
   ...[router, { queries }]: RouterInitArgs<T>
 ) {
@@ -72,6 +100,7 @@ export default function adminUserSearchRoutes<T extends ManagementApiRouter>(
 
           const conditions: UserConditions = {
             search: parseSearchParamsForSearch(searchParams),
+            identity: getIdentityCondition(searchParams),
             relation: getQueryRelation(excludeRoleId, excludeOrganizationId),
           };
 

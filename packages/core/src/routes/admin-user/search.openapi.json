@@ -2,6 +2,36 @@
   "paths": {
     "/api/users": {
       "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "identityType",
+            "description": "The external identity type to use for an exact user lookup. Use `social` for a social connector identity or `sso` for an enterprise SSO identity. Must be provided together with `identityProvider` and `identityId`. External identity filters are combined with other user filters using AND logic.",
+            "schema": {
+              "type": "string",
+              "enum": ["social", "sso"],
+              "x-logto-dev-feature": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "identityProvider",
+            "description": "The connector target for a social identity (for example, `dingtalk`), or the issuer for an enterprise SSO identity. Must be provided together with `identityType` and `identityId`.",
+            "schema": {
+              "type": "string",
+              "x-logto-dev-feature": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "identityId",
+            "description": "The user identifier issued by the external identity provider, such as a DingTalk OpenID. Must be provided together with `identityType` and `identityProvider`.",
+            "schema": {
+              "type": "string",
+              "x-logto-dev-feature": true
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "An array of users that match the given criteria.",
