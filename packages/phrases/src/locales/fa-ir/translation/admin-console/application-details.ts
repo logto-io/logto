@@ -297,6 +297,13 @@ const application_details = {
     email_address: 'آدرس ایمیل',
     email_address_description: 'استفاده از آدرس ایمیل به عنوان شناسه نام',
   },
+  saml_idp_authentication: {
+    always_force_authn: 'همیشه احراز هویت اجباری',
+    always_force_authn_description:
+      'کاربران را ملزم می‌کند تا هر بار که به این برنامه دسترسی پیدا می‌کنند، دوباره وارد سیستم شوند، حتی اگر جلسه Logto داشته باشند.',
+    always_force_authn_tip:
+      'هنگامی که فعال باشد، Logto همیشه از کاربران می‌خواهد که دوباره برای این برنامه وارد سیستم شوند. وقتی غیرفعال است، اگر سرویس‌دهنده درخواست احراز هویت تازه با ForceAuthn نکند، از جلسه موجود Logto استفاده می‌شود.',
+  },
   saml_encryption_config: {
     encrypt_assertion: 'رمزگذاری ادعای SAML',
     encrypt_assertion_description: 'با فعال‌سازی این گزینه، ادعای SAML رمزگذاری خواهد شد.',

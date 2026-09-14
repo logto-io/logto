@@ -304,6 +304,13 @@ const application_details = {
     email_address: 'Indirizzo email',
     email_address_description: "Usa l'indirizzo email come Name ID",
   },
+  saml_idp_authentication: {
+    always_force_authn: "Forza sempre l'autenticazione",
+    always_force_authn_description:
+      'Richiedi agli utenti di accedere nuovamente ogni volta che accedono a questa applicazione, anche se hanno già una sessione Logto.',
+    always_force_authn_tip:
+      'Quando abilitato, Logto chiede sempre agli utenti di accedere nuovamente per questa applicazione. Quando disabilitato, una sessione Logto esistente viene riutilizzata a meno che il provider di servizi richieda una nuova autenticazione con ForceAuthn.',
+  },
   saml_encryption_config: {
     encrypt_assertion: 'Cifra dichiarazione SAML',
     encrypt_assertion_description:

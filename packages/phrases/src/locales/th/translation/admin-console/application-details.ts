@@ -294,6 +294,13 @@ const application_details = {
     email_address: 'อีเมล',
     email_address_description: 'ใช้อีเมลเป็น Name ID',
   },
+  saml_idp_authentication: {
+    always_force_authn: 'บังคับการตรวจสอบตัวตนเสมอ',
+    always_force_authn_description:
+      'บังคับให้ผู้ใช้ลงชื่อเข้าใช้อีกครั้งทุกครั้งที่เข้าใช้แอปพลิเคชันนี้ แม้ว่าจะมีเซสชัน Logto อยู่แล้วก็ตาม',
+    always_force_authn_tip:
+      'เมื่อเปิดใช้งาน Logto จะบังคับให้ผู้ใช้ลงชื่อเข้าใช้อีกครั้งสำหรับแอปพลิเคชันนี้เสมอ เมื่อปิดใช้งาน จะใช้เซสชัน Logto ที่มีอยู่เว้นแต่ผู้ให้บริการต้องการการตรวจสอบตัวตนใหม่ด้วย ForceAuthn.',
+  },
   saml_encryption_config: {
     encrypt_assertion: 'เข้ารหัส SAML assertion',
     encrypt_assertion_description: 'เมื่อเปิดใช้งาน SAML assertion จะถูกเข้ารหัส',
