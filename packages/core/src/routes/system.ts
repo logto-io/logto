@@ -61,7 +61,6 @@ export default function systemRoutes<T extends ManagementApiRouter>(
   ...[
     router,
     {
-      queries: { pool },
       libraries: { protectedApps },
     },
   ]: RouterInitArgs<T>
@@ -95,7 +94,7 @@ export default function systemRoutes<T extends ManagementApiRouter>(
       async (ctx, next) => {
         assertNotCloud();
 
-        const license = await LicenseReader.shared.read(pool);
+        const license = await LicenseReader.shared.read(await EnvSet.sharedPool);
 
         assertThat(license, new RequestError({ code: 'license.not_installed', status: 404 }));
 
@@ -127,7 +126,12 @@ export default function systemRoutes<T extends ManagementApiRouter>(
         // expiration, so installing is the one place the claim is checked.
         assertThat(exp * 1000 > Date.now(), new RequestError({ code: 'license.expired_key' }));
 
-        const { upsertSystem } = createSystemsQuery(pool);
+        /**
+         * The `systems` table is global and revoked from the row-level-security restricted tenant
+         * role, so the license is read and written through the shared pool, like
+         * `SystemContext`'s provider configs.
+         */
+        const { upsertSystem } = createSystemsQuery(await EnvSet.sharedPool);
 
         await upsertSystem(LicenseKey.License, {
           jwt: license,
