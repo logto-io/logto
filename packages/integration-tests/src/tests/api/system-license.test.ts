@@ -41,7 +41,7 @@ const license = await signTestLicenseKey(payload);
   it('should return the entitlements of the installed license', async () => {
     const { installedAt, ...entitlements } = await getSystemLicense();
 
-    expect(entitlements).toStrictEqual({
+    expect(entitlements).toEqual({
       plan: ReservedPlanId.SelfHostedPro,
       env: LicenseEnv.Production,
       quota: {
@@ -51,13 +51,19 @@ const license = await signTestLicenseKey(payload);
       },
       expiresAt: new Date(payload.exp * 1000).toISOString(),
     });
-    expect(installedAt).toEqual(expect.any(String));
+    expect(new Date(installedAt).toISOString()).toEqual(installedAt);
   });
 
   it('should never return the raw license key', async () => {
     const response = await getSystemLicense();
 
-    expect(response).not.toHaveProperty('jwt');
+    expect(Object.keys(response).slice().sort()).toEqual([
+      'env',
+      'expiresAt',
+      'installedAt',
+      'plan',
+      'quota',
+    ]);
     expect(JSON.stringify(response)).not.toContain(license);
   });
 
@@ -102,12 +108,12 @@ const license = await signTestLicenseKey(payload);
 
     const { installedAt, ...entitlements } = await getSystemLicense();
 
-    expect(entitlements).toStrictEqual({
+    expect(entitlements).toEqual({
       plan: ReservedPlanId.SelfHostedEnterprise,
       env: LicenseEnv.NonProduction,
       quota: ossDefaultQuota,
       expiresAt: new Date(replacement.exp * 1000).toISOString(),
     });
-    expect(installedAt).toEqual(expect.any(String));
+    expect(new Date(installedAt).toISOString()).toEqual(installedAt);
   });
 });
