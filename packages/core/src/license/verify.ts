@@ -8,6 +8,8 @@ import { getLicensePublicKey } from './public-key.js';
 export enum LicenseVerificationErrorCode {
   /** This build trusts no license public key, so nothing can be verified against it. */
   NoPublicKey = 'no_public_key',
+  /** The public key this instance is configured with is not a usable Ed25519 key. */
+  InvalidPublicKey = 'invalid_public_key',
   /** The key is not a compact JWS, or its signature does not match the public key. */
   InvalidSignature = 'invalid_signature',
   /** The signature is good, but the claims are not a license payload. */
@@ -35,11 +37,19 @@ export class LicenseVerificationError extends Error {
  * entitlements between the renewal and the next refresh. Installing a key is the one place `exp`
  * matters, and `PUT /api/systems/license` checks it there.
  *
- * @throws {LicenseVerificationError} When the key is not signed by the trusted key, or its claims
- * are not a license payload.
+ * Every failure is a {@link LicenseVerificationError}, a misconfigured public key included: the
+ * caller reads entitlements on the request path and has one thing to do with all of them — fall
+ * back to the self-hosted defaults — so none of them may reach it as a raw error.
+ *
+ * @throws {LicenseVerificationError} When no usable public key is configured, the key is not
+ * signed by it, or its claims are not a license payload.
  */
 export const verifyLicenseKey = async (licenseKey: string): Promise<LicensePayload> => {
-  const publicKey = await getLicensePublicKey();
+  const publicKey = await getLicensePublicKey().catch((error: unknown) => {
+    throw new LicenseVerificationError(LicenseVerificationErrorCode.InvalidPublicKey, {
+      cause: error,
+    });
+  });
 
   if (!publicKey) {
     throw new LicenseVerificationError(LicenseVerificationErrorCode.NoPublicKey);

@@ -89,6 +89,14 @@ describe('LicenseReader', () => {
     expect(error).toHaveBeenCalledTimes(1);
   });
 
+  it('should ignore an unusable public key, rather than fail the request', async () => {
+    install(await signLicenseKey(buildLicensePayload()));
+    process.env[licensePublicKeyEnvKey] = 'not a jwk';
+
+    await expect(reader.read(pool)).resolves.toBeUndefined();
+    expect(error).toHaveBeenCalledTimes(1);
+  });
+
   it('should read the database once until it is invalidated', async () => {
     install(await signLicenseKey(buildLicensePayload()));
 
@@ -115,5 +123,52 @@ describe('LicenseReader', () => {
 
     await expect(reader.read(pool)).resolves.toBeUndefined();
     expect(findSystemByKey).not.toHaveBeenCalled();
+  });
+});
+
+describe('LicenseReader cache expiry', () => {
+  const reader = new LicenseReader();
+  const startedAt = Date.now();
+
+  /**
+   * The cache only reads the clock, so moving `Date.now` is enough — and it leaves the timers
+   * alone, which the asynchronous signing and verification below run on.
+   */
+  const now = jest.spyOn(Date, 'now');
+
+  beforeEach(() => {
+    now.mockReturnValue(startedAt);
+    process.env[licensePublicKeyEnvKey] = licenseFixtureKeyPair.publicKey;
+  });
+
+  afterEach(() => {
+    process.env[licensePublicKeyEnvKey] = '';
+    jest.clearAllMocks();
+    findSystemByKey.mockReset();
+    findSystemByKey.mockResolvedValue(null);
+    reader.invalidate();
+  });
+
+  // `mockReset()` would leave `Date.now` answering `undefined`; hand the real clock back instead.
+  afterAll(() => {
+    now.mockRestore();
+  });
+
+  it('should expire the cache, so an instance that handled no write still sees a change', async () => {
+    install(await signLicenseKey(buildLicensePayload()));
+
+    await expect(reader.read(pool)).resolves.toBeDefined();
+    expect(findSystemByKey).toHaveBeenCalledTimes(1);
+
+    now.mockReturnValue(startedAt + 30_000);
+    await expect(reader.read(pool)).resolves.toBeDefined();
+    expect(findSystemByKey).toHaveBeenCalledTimes(1);
+
+    // Another instance removed the license; `invalidate()` there never reached this process.
+    now.mockReturnValue(startedAt + 60_001);
+    findSystemByKey.mockResolvedValue(null);
+
+    await expect(reader.read(pool)).resolves.toBeUndefined();
+    expect(findSystemByKey).toHaveBeenCalledTimes(2);
   });
 });

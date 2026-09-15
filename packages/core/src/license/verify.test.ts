@@ -88,4 +88,11 @@ describe('verifyLicenseKey()', () => {
 
     await expectVerificationError(licenseKey, LicenseVerificationErrorCode.NoPublicKey);
   });
+
+  it('should report an unusable public key as a verification error, not raise it', async () => {
+    const licenseKey = await signLicenseKey(buildLicensePayload());
+    process.env[licensePublicKeyEnvKey] = 'not a jwk';
+
+    await expectVerificationError(licenseKey, LicenseVerificationErrorCode.InvalidPublicKey);
+  });
 });

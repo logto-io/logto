@@ -5,6 +5,7 @@ import {
   installedLicenseGuard,
   resolveLicenseQuota,
 } from '@logto/schemas';
+import { TtlCache } from '@logto/shared';
 import { type Optional } from '@silverhand/essentials';
 import { type CommonQueryMethods } from '@silverhand/slonik';
 
@@ -28,6 +29,20 @@ export type VerifiedLicense = {
 };
 
 /**
+ * How long a process may answer from its cached license before going back to the database.
+ *
+ * `invalidate()` only reaches the process that handled the write, so on a deployment running
+ * several instances every other one has to notice a change by itself. The same 60 seconds the
+ * well-known cache uses: entitlements change rarely, one `systems` row read per process per minute
+ * costs nothing, and it bounds how long an instance can serve a license that was replaced or
+ * removed elsewhere.
+ */
+const licenseCacheTtl = 60_000;
+
+/** The reader caches one license, so the key only has to be stable. */
+const cacheKey = 'license';
+
+/**
  * Reads the license installed on this deployment and verifies it offline.
  *
  * A license is installed into the global `systems` table, so — like `SystemContext` — there is one
@@ -36,6 +51,7 @@ export type VerifiedLicense = {
  *
  * The read is lazy and cached: a license can be installed at any time through
  * `PUT /api/systems/license`, which calls `invalidate()` so the next read picks the new key up.
+ * That only reaches one process, so the cache also expires on its own — see {@link licenseCacheTtl}.
  *
  * Entitlements are consulted on the request path, so nothing here ever fails a request: a key that
  * no longer verifies drops the deployment back to the self-hosted defaults and is reported, and
@@ -46,9 +62,9 @@ export default class LicenseReader {
 
   /**
    * The in-flight or resolved read, so concurrent requests share one database round trip and one
-   * signature verification. `undefined` means the next read starts a new one.
+   * signature verification. Empty means the next read starts a new one.
    */
-  #cache: Optional<Promise<Optional<VerifiedLicense>>>;
+  readonly #cache = new TtlCache<string, Promise<Optional<VerifiedLicense>>>(licenseCacheTtl);
 
   /**
    * The verified license installed on this deployment, or `undefined` when there is none, it does
@@ -56,7 +72,7 @@ export default class LicenseReader {
    * of those means the same thing to a caller: the self-hosted defaults apply.
    *
    * @param pool Any pool for the Logto database. The `systems` table is global, so whichever pool
-   * reads first answers every caller until the cache is invalidated.
+   * reads first answers every caller until the cache is invalidated or expires.
    */
   async read(pool: CommonQueryMethods): Promise<Optional<VerifiedLicense>> {
     /**
@@ -68,21 +84,21 @@ export default class LicenseReader {
       return;
     }
 
-    const cached = this.#cache;
+    const cached = this.#cache.get(cacheKey);
 
     if (cached) {
       return cached;
     }
 
     const reading = this.#read(pool);
-    this.#cache = reading;
+    this.#cache.set(cacheKey, reading);
 
     try {
       return await reading;
     } catch (error: unknown) {
       // A database failure is transient; caching the rejection would keep answering with it.
-      if (this.#cache === reading) {
-        this.#cache = undefined;
+      if (this.#cache.get(cacheKey) === reading) {
+        this.#cache.delete(cacheKey);
       }
 
       throw error;
@@ -91,7 +107,7 @@ export default class LicenseReader {
 
   /** Drop the cached license so the next read goes back to the database. */
   invalidate() {
-    this.#cache = undefined;
+    this.#cache.clear();
   }
 
   async #read(pool: CommonQueryMethods): Promise<Optional<VerifiedLicense>> {
@@ -106,7 +122,7 @@ export default class LicenseReader {
 
     if (!installed.success) {
       licenseConsoleLog.error(
-        'The installed license is malformed and was ignored. Install the license key again from Logto Cloud.'
+        'The installed license is malformed and was ignored. Install the license key again.'
       );
 
       return;
