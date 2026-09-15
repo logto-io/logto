@@ -68,7 +68,7 @@ import {
   getExtraTokenClaimsForOrganizationApiResource,
   getExtraTokenClaimsForTokenExchange,
 } from './extra-token-claims.js';
-import { getProviderFetchConfig } from './fetch.js';
+import { getOidcProviderFetch } from './fetch.js';
 import { registerGrants } from './grants/index.js';
 import { installWildcardRedirectUriMatching } from './redirect-uri/index.js';
 import {
@@ -168,6 +168,8 @@ export default function initOidc(
 
   // Do NOT deconstruct variables from `envSet` earlier, since we might reload `envSet` on the fly,
   // and keeping the reference of the `envSet` object helps dynamically update oidc provider configs.
+  const oidcProviderFetch = getOidcProviderFetch();
+
   const oidc = new Provider(envSet.oidc.issuer, {
     adapter: postgresAdapter.bind(null, envSet, queries),
     // Align the error response regardless of the request format. It will be `application/json` by default.
@@ -207,7 +209,7 @@ export default function initOidc(
       introspectionSigningAlgValues: [...supportedSigningAlgs],
     },
     conformIdTokenClaims: false,
-    ...getProviderFetchConfig(),
+    ...conditional(oidcProviderFetch && { fetch: oidcProviderFetch }),
     features: {
       userinfo: { enabled: true },
       revocation: { enabled: true },

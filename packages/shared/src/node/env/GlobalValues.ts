@@ -2,6 +2,7 @@ import { BlockList, isIP } from 'node:net';
 
 import {
   assertEnv,
+  conditional,
   getEnv,
   getEnvAsStringArray,
   tryThat,
@@ -239,6 +240,20 @@ export default class GlobalValues {
   /** Parsed at startup so malformed entries cannot throw from a socket event listener. */
   public readonly ssrfAllowedAddressBlockList = parseSsrfAllowedAddresses(
     this.ssrfAllowedAddresses
+  );
+
+  /**
+   * Temporary workaround for OpenAI clients: the origin of a relay that mirrors chatgpt.com paths
+   * (`https://relay.example.com`). While set, oidc-provider fetches the client metadata documents
+   * of ChatGPT and Codex from the relay with the same path and query instead of chatgpt.com.
+   *
+   * chatgpt.com rejects requests from the platform's shared egress addresses outright, and a relay
+   * on a dedicated address is the only way through without changing the egress of every other
+   * outbound request. The SSRF protection still applies to the relay. Only read in Cloud, and
+   * unset means no relay; remove the setting once OpenAI lifts the block.
+   */
+  public readonly openAiCimdRelayOrigin = conditional(
+    this.isCloud && getEnv('OPENAI_CIMD_RELAY_ORIGIN')
   );
 
   /** Enables protected app local development without Cloud-only behavior. */

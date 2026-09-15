@@ -153,3 +153,36 @@ describe('parseNonNegativeIntegerEnv', () => {
     expect(parseNonNegativeIntegerEnv(' 14400 ')).toBe(14_400);
   });
 });
+
+describe('openAiCimdRelayOrigin', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it('reads the relay in Cloud', () => {
+    vi.stubEnv('IS_CLOUD', 'true');
+    vi.stubEnv('OPENAI_CIMD_RELAY_ORIGIN', 'https://relay.example.com');
+
+    expect(createGlobalValues().openAiCimdRelayOrigin).toBe('https://relay.example.com');
+  });
+
+  it('never coexists with the SSRF opt-outs', () => {
+    vi.stubEnv('IS_CLOUD', 'true');
+    vi.stubEnv('OPENAI_CIMD_RELAY_ORIGIN', 'https://relay.example.com');
+    vi.stubEnv('SSRF_PROTECTION_DISABLED', 'true');
+    vi.stubEnv('SSRF_ALLOWED_ADDRESSES', '127.0.0.1');
+
+    const values = createGlobalValues();
+
+    expect(values.openAiCimdRelayOrigin).toBe('https://relay.example.com');
+    expect(values.isSsrfProtectionEnabled).toBe(true);
+    expect(values.ssrfAllowedAddresses).toEqual([]);
+  });
+
+  it('is ignored outside Cloud', () => {
+    unsetEnvironmentVariable('IS_CLOUD');
+    vi.stubEnv('OPENAI_CIMD_RELAY_ORIGIN', 'https://relay.example.com');
+
+    expect(createGlobalValues().openAiCimdRelayOrigin).toBeUndefined();
+  });
+});
