@@ -261,22 +261,6 @@ export default class GlobalValues {
   /** @deprecated Use the built-in user default role configuration (`Roles.isDefault`) instead. */
   public readonly userDefaultRoleNames = getEnvAsStringArray('USER_DEFAULT_ROLE_NAMES');
   public readonly developmentUserId = getEnv('DEVELOPMENT_USER_ID');
-
-  /**
-   * The public key self-hosted license keys are verified against, as a serialized Ed25519 public
-   * JWK. It replaces the public key built into Logto, so unit and integration tests — and a
-   * developer running the Logto Cloud license service locally — can install keys they signed
-   * themselves.
-   *
-   * Ignored in production, on the same terms as `DEVELOPMENT_USER_ID`: the consumer decides
-   * whether to honor it, so that the reason it is ignored can be reported where it is read. Anyone
-   * who can set an environment variable on a self-hosted instance can also patch its code, so this
-   * is a guardrail against an accidental or copy-pasted configuration rather than a security
-   * boundary: it keeps "which keys does this instance trust" answerable from the Logto version
-   * alone.
-   */
-  public readonly selfHostedLicensePublicKey = getEnv('SELF_HOSTED_LICENSE_PUBLIC_KEY');
-
   public readonly trustProxyHeader = yes(getEnv('TRUST_PROXY_HEADER'));
   public readonly ignoreConnectorVersionCheck = yes(getEnv('IGNORE_CONNECTOR_VERSION_CHECK'));
   public readonly injectedHeaderMappingJson = getEnv('INJECTED_HEADER_MAPPING_JSON');

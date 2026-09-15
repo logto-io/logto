@@ -1,7 +1,8 @@
 import { LicenseKey, ossDefaultQuota } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
-import { noop, type Optional } from '@silverhand/essentials';
+import { noop } from '@silverhand/essentials';
 import { createMockPool } from '@silverhand/slonik';
+import { type CryptoKey, type JWK, importJWK } from 'jose';
 
 import { EnvSet } from '#src/env-set/index.js';
 import {
@@ -25,13 +26,14 @@ mockEsm('#src/queries/system.js', () => ({
 
 const error = jest.spyOn(licenseConsoleLog, 'error').mockImplementation(noop);
 
-const LicenseReader = await pickDefault(import('./LicenseReader.js'));
-
 const keyPair = await createLicenseKeyPair();
 
-/** The override is read from `EnvSet.values`, so an empty value reads the same as an unset one. */
-const setPublicKey = (value: Optional<string>) =>
-  Reflect.set(EnvSet.values, 'selfHostedLicensePublicKey', value);
+/** The public key the mocked build trusts, so a test can sign licenses this instance accepts. */
+const trustedKey = await importJWK(JSON.parse(keyPair.publicKey) as JWK, 'EdDSA');
+const getLicensePublicKey: () => Promise<CryptoKey | Uint8Array> = async () => trustedKey;
+mockEsm('./public-key.js', () => ({ getLicensePublicKey }));
+
+const LicenseReader = await pickDefault(import('./LicenseReader.js'));
 
 const installedAt = '2026-09-14T00:00:00.000Z';
 
@@ -46,12 +48,7 @@ describe('LicenseReader', () => {
   const reader = new LicenseReader();
   const { isDevFeaturesEnabled } = EnvSet.values;
 
-  beforeEach(() => {
-    setPublicKey(keyPair.publicKey);
-  });
-
   afterEach(() => {
-    setPublicKey(undefined);
     Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', isDevFeaturesEnabled);
     jest.clearAllMocks();
     findSystemByKey.mockReset();
@@ -98,14 +95,6 @@ describe('LicenseReader', () => {
     expect(error).toHaveBeenCalledTimes(1);
   });
 
-  it('should ignore an unusable public key, rather than fail the request', async () => {
-    install(await signLicenseKey(buildLicensePayload(), keyPair.privateKey));
-    setPublicKey('not a jwk');
-
-    await expect(reader.read(pool)).resolves.toBeUndefined();
-    expect(error).toHaveBeenCalledTimes(1);
-  });
-
   it('should read the database once until it is invalidated', async () => {
     install(await signLicenseKey(buildLicensePayload(), keyPair.privateKey));
 
@@ -147,11 +136,9 @@ describe('LicenseReader cache expiry', () => {
 
   beforeEach(() => {
     now.mockReturnValue(startedAt);
-    setPublicKey(keyPair.publicKey);
   });
 
   afterEach(() => {
-    setPublicKey(undefined);
     jest.clearAllMocks();
     findSystemByKey.mockReset();
     findSystemByKey.mockResolvedValue(null);
