@@ -5,12 +5,15 @@ import {
   VerificationType,
 } from '@logto/schemas';
 import { act, fireEvent, screen, waitFor } from '@testing-library/react';
+import { Route, Routes } from 'react-router-dom';
 
 import StepUpContext, {
   type StepUpContextType,
 } from '@/Providers/StepUpContextProvider/StepUpContext';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import { verifyStepUpPassword } from '@/apis/experience';
+import { getStepUpContext, initStepUp, verifyStepUpPassword } from '@/apis/experience';
+import { stepUpRoutes } from '@/constants/step-up';
+import StepUpGuard from '@/containers/StepUpGuard';
 import { type ErrorHandlers } from '@/hooks/use-error-handler';
 
 import StepUpPassword from '.';
@@ -44,12 +47,16 @@ jest.mock('@/hooks/use-global-redirect-to', () => ({
 
 jest.mock('@/apis/experience', () => ({
   ...jest.requireActual('@/apis/experience'),
+  getStepUpContext: jest.fn(),
+  initStepUp: jest.fn(),
   verifyStepUpPassword: jest.fn(),
 }));
 
 const mockedVerifyStepUpPassword = verifyStepUpPassword as jest.MockedFunction<
   typeof verifyStepUpPassword
 >;
+const mockedGetStepUpContext = getStepUpContext as jest.MockedFunction<typeof getStepUpContext>;
+const mockedInitStepUp = initStepUp as jest.MockedFunction<typeof initStepUp>;
 
 const mockLoad = jest.fn(async () => true);
 const refetch = jest.fn(async () => {
@@ -132,6 +139,30 @@ describe('<StepUpPassword />', () => {
     expect(getPasswordInput(container)).not.toBeNull();
     expect(screen.getByText('action.continue')).not.toBeNull();
     expect(screen.getByText('step_up.enter_password_description')).not.toBeNull();
+  });
+
+  it('loads the context and recovers the form when the route is refreshed', async () => {
+    mockedGetStepUpContext.mockResolvedValue(createAuthenticationContext());
+
+    const { container } = renderWithPageContext(
+      <Routes>
+        <Route path={stepUpRoutes.landing} element={<StepUpGuard />}>
+          <Route path="password" element={<StepUpPassword />} />
+        </Route>
+      </Routes>,
+      { initialEntries: [stepUpRoutes.password] }
+    );
+
+    // The invalid-session page must not flash while the arrival load is in flight.
+    expect(screen.queryByText('error.invalid_session')).toBeNull();
+
+    await waitFor(() => {
+      expect(getPasswordInput(container)).not.toBeNull();
+    });
+
+    expect(mockedGetStepUpContext).toHaveBeenCalledTimes(1);
+    // A child arrival refreshes the context; it never creates the interaction.
+    expect(mockedInitStepUp).not.toHaveBeenCalled();
   });
 
   it('offers no forgot-password link and no account switching', () => {

@@ -6,7 +6,7 @@ import {
   VerificationType,
 } from '@logto/schemas';
 import { noop } from '@silverhand/essentials';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import { Route, Routes } from 'react-router-dom';
 
 import StepUpContext, {
@@ -16,6 +16,9 @@ import UserInteractionContext, {
   type UserInteractionContextType,
 } from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
+import { getStepUpContext, initStepUp } from '@/apis/experience';
+import { stepUpRoutes } from '@/constants/step-up';
+import StepUpGuard from '@/containers/StepUpGuard';
 import { type VerificationCodeIdentifier } from '@/types';
 
 import StepUpVerificationCode from '.';
@@ -30,6 +33,12 @@ jest.mock('react-i18next', () => ({
   Trans: ({ children }: { readonly children: React.ReactNode }) => children,
 }));
 
+jest.mock('@/apis/experience', () => ({
+  ...jest.requireActual('@/apis/experience'),
+  getStepUpContext: jest.fn(),
+  initStepUp: jest.fn(),
+}));
+
 jest.mock('@/containers/StepUpCodeVerification', () => ({
   __esModule: true,
   default: ({
@@ -40,6 +49,9 @@ jest.mock('@/containers/StepUpCodeVerification', () => ({
     readonly verificationId: string;
   }) => <div data-testid="step-up-code-verification">{`${identifierType}:${verificationId}`}</div>,
 }));
+
+const mockedGetStepUpContext = getStepUpContext as jest.MockedFunction<typeof getStepUpContext>;
+const mockedInitStepUp = initStepUp as jest.MockedFunction<typeof initStepUp>;
 
 const email = 'f***@logto.io';
 const phone = '+1******1234';
@@ -147,6 +159,38 @@ describe('<StepUpVerificationCode />', () => {
       ).not.toBeNull();
     }
   );
+
+  it('loads the context and recovers the code input when the route is refreshed', async () => {
+    mockedGetStepUpContext.mockResolvedValue(createAuthenticationContext());
+
+    renderWithPageContext(
+      <UserInteractionContext.Provider
+        value={userInteractionContext({
+          [VerificationType.EmailVerificationCode]: 'email-verification-id',
+        })}
+      >
+        <Routes>
+          <Route path={stepUpRoutes.landing} element={<StepUpGuard />}>
+            <Route path="verification-code/:type" element={<StepUpVerificationCode />} />
+          </Route>
+        </Routes>
+      </UserInteractionContext.Provider>,
+      { initialEntries: [`${stepUpRoutes.verificationCode}/${SignInIdentifier.Email}`] }
+    );
+
+    // The invalid-session page must not flash while the arrival load is in flight.
+    expect(screen.queryByText('error.invalid_session')).toBeNull();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('step-up-code-verification').textContent).toBe(
+        `${SignInIdentifier.Email}:email-verification-id`
+      );
+    });
+
+    expect(mockedGetStepUpContext).toHaveBeenCalledTimes(1);
+    // A child arrival refreshes the context; it never creates the interaction.
+    expect(mockedInitStepUp).not.toHaveBeenCalled();
+  });
 
   it('renders the error page for an identifier type that takes no code', () => {
     renderPage({ type: SignInIdentifier.Username });
