@@ -154,6 +154,16 @@ class StubIdToken {
 const stubIdToken = (ctx: KoaContextWithOIDC) =>
   Sinon.stub(ctx.oidc.provider, 'IdToken').value(StubIdToken);
 
+const mockPrune = (implementation: () => Promise<number>) => {
+  const pruneConsumedRefreshTokensByGrantId = jest
+    .fn<Promise<number>, [string]>()
+    .mockImplementation(implementation);
+  const tenant = new MockTenant(undefined, {
+    oidcModelInstances: { pruneConsumedRefreshTokensByGrantId },
+  });
+  return { tenant, pruneConsumedRefreshTokensByGrantId };
+};
+
 const createAccessDeniedError = (message: string, statusCode: number) => {
   const error = new errors.AccessDenied(message);
   // eslint-disable-next-line @silverhand/fp/no-mutation
@@ -166,6 +176,29 @@ const createPreparedContext = () => {
   stubRefreshToken(ctx);
   stubGrant(ctx);
   stubAccount(ctx);
+  return ctx;
+};
+
+/** A plain refresh (no `organization_id`) that reaches token rotation and ID token issuance. */
+const createRotationContext = (client = validClient) => {
+  const ctx = createOidcContext({
+    ...validOidcContext,
+    client,
+    entities: { ...validOidcContext.entities, Client: client },
+    requestParamScopes: new Set(['openid', ...requestScopes]),
+    params: {
+      refresh_token: 'some_refresh_token',
+      scope: ['openid', ...requestScopes].join(' '),
+    },
+    account: { accountId, claims: jest.fn().mockResolvedValue({ sub: accountId }) },
+  });
+  stubRefreshToken(ctx, {
+    scope: ['openid', ...requestScopes].join(' '),
+    scopes: new Set(['openid', ...requestScopes]),
+  });
+  stubGrant(ctx, { getRejectedOIDCClaims: jest.fn().mockReturnValue([]) });
+  stubAccount(ctx);
+  stubIdToken(ctx);
   return ctx;
 };
 
@@ -416,6 +449,40 @@ describe('refresh token grant', () => {
     expect(claims).toHaveBeenCalledTimes(1);
     expect(claims.mock.calls[0][0]).toBe('id_token');
     expect(claims.mock.calls[0][1]).toBe(requestScope);
+  });
+
+  describe('consumed refresh token pruning', () => {
+    it('should prune the grant on rotation', async () => {
+      const ctx = createRotationContext();
+      const { tenant, pruneConsumedRefreshTokensByGrantId } = mockPrune(async () => 0);
+
+      await expect(mockHandler(tenant)(ctx)).resolves.toBeUndefined();
+      expect(pruneConsumedRefreshTokensByGrantId).toHaveBeenCalledTimes(1);
+      expect(pruneConsumedRefreshTokensByGrantId).toHaveBeenCalledWith(grantId);
+    });
+
+    it('should not prune when the refresh token is not rotated', async () => {
+      // A confidential client early in the token lifetime does not rotate under the default policy.
+      const ctx = createRotationContext({
+        ...validClient,
+        clientAuthMethod: 'client_secret_basic',
+      } as unknown as Client);
+      const { tenant, pruneConsumedRefreshTokensByGrantId } = mockPrune(async () => 0);
+
+      await expect(mockHandler(tenant)(ctx)).resolves.toBeUndefined();
+      expect(pruneConsumedRefreshTokensByGrantId).not.toHaveBeenCalled();
+    });
+
+    it('should still issue tokens when pruning fails', async () => {
+      const ctx = createRotationContext();
+      const { tenant, pruneConsumedRefreshTokensByGrantId } = mockPrune(async () => {
+        throw new Error('statement timeout');
+      });
+
+      await expect(mockHandler(tenant)(ctx)).resolves.toBeUndefined();
+      expect(pruneConsumedRefreshTokensByGrantId).toHaveBeenCalledTimes(1);
+      expect(ctx.body).toHaveProperty('access_token');
+    });
   });
 
   it('should stop issuing a user scope the client is no longer configured for', async () => {
