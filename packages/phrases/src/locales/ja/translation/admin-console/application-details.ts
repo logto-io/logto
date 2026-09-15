@@ -300,6 +300,13 @@ const application_details = {
     email_address: 'メールアドレス',
     email_address_description: 'メールアドレスを Name ID として使用',
   },
+  saml_idp_authentication: {
+    always_force_authn: '常に認証を強制する',
+    always_force_authn_description:
+      'すでに Logto セッションを持っていても、このアプリケーションにアクセスするたびにユーザーに再びサインインを要求します。',
+    always_force_authn_tip:
+      '有効にすると、Logto はユーザーにこのアプリケーションのために再度サインインするように求めます。無効にすると、サービスプロバイダーが ForceAuthn で新規認証を要求しない限り、既存の Logto セッションが再利用されます。',
+  },
   saml_encryption_config: {
     encrypt_assertion: 'SAML アサーションを暗号化',
     encrypt_assertion_description:

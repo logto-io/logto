@@ -308,6 +308,13 @@ const application_details = {
     email_address: 'E-Mail-Adresse',
     email_address_description: 'Verwende E-Mail-Adresse als Name ID',
   },
+  saml_idp_authentication: {
+    always_force_authn: 'Immer Authentifizierung erzwingen',
+    always_force_authn_description:
+      'Verlangen Sie von Benutzern, sich bei jedem Zugriff auf diese Anwendung erneut anzumelden, auch wenn sie bereits eine Logto-Sitzung haben.',
+    always_force_authn_tip:
+      'Wenn aktiviert, fordert Logto die Benutzer immer auf, sich für diese Anwendung erneut anzumelden. Wenn deaktiviert, wird eine vorhandene Logto-Sitzung wiederverwendet, es sei denn, der Dienstanbieter fordert eine frische Authentifizierung mit ForceAuthn an.',
+  },
   saml_encryption_config: {
     encrypt_assertion: 'Verschlüssele SAML-Aussage',
     encrypt_assertion_description:

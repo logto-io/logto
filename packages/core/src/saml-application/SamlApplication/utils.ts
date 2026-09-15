@@ -2,6 +2,7 @@ import { NameIdFormat } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { appendPath } from '@silverhand/essentials';
 import camelCase from 'camelcase';
+import saml from 'samlify';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { type IdTokenProfileStandardClaims } from '#src/sso/types/oidc.js';
@@ -118,4 +119,59 @@ export const getSamlAppCallbackUrl = (baseUrl: URL, samlAppId: string) =>
 export const generateSamlAttributeTag = (content: string, prefix = 'attr'): string => {
   const camelContent = camelCase(content, { locale: 'en-us' });
   return prefix + camelContent.charAt(0).toUpperCase() + camelContent.slice(1);
+};
+
+/**
+ * Whether the service provider asked to re-authenticate the user, i.e. its `AuthnRequest` carries
+ * `ForceAuthn="true"` (SAML 2.0 core, section 3.4.1; `xs:boolean` also admits `1`).
+ *
+ * samlify's default login-request extractor does not read this attribute, so it is read from the
+ * decoded request XML.
+ */
+export const isForceAuthnRequested = (authnRequestXml: string): boolean => {
+  const { forceAuthn } = saml.Extractor.extract(authnRequestXml, [
+    { key: 'forceAuthn', localPath: ['AuthnRequest'], attributes: ['ForceAuthn'] },
+  ]);
+
+  // Xs:boolean collapses XML whitespace, not arbitrary Unicode whitespace.
+  const value =
+    typeof forceAuthn === 'string'
+      ? forceAuthn.replaceAll(/^[\t\n\r ]+|[\t\n\r ]+$/g, '')
+      : forceAuthn;
+  return value === 'true' || value === '1';
+};
+
+/** Preserve the raw URL encoding and canonical parameter order required by HTTP-Redirect signatures. */
+export const getSamlRedirectSignatureInput = (querystring: string): string => {
+  const parameters = querystring.split('&');
+  return ['SAMLRequest', 'RelayState', 'SigAlg']
+    .map((name) => parameters.find((parameter) => parameter.startsWith(`${name}=`)))
+    .filter(Boolean)
+    .join('&');
+};
+
+/** SAML POST signatures must cover the enclosing AuthnRequest, not a different XML element. */
+export const assertSamlAuthnRequestSignatureScope = (xml: string): void => {
+  const { id, signature, assertion } = saml.Extractor.extract(xml, [
+    { key: 'id', localPath: ['AuthnRequest'], attributes: ['ID'] },
+    { key: 'signature', localPath: ['AuthnRequest', 'Signature'], attributes: [], context: true },
+    { key: 'assertion', localPath: ['AuthnRequest', 'Assertion'], attributes: [], context: true },
+  ]);
+  assertThat(
+    typeof id === 'string' && id.length > 0 && typeof signature === 'string' && !assertion,
+    'application.saml.invalid_saml_request'
+  );
+  const { reference } = saml.Extractor.extract(signature, [
+    {
+      key: 'reference',
+      localPath: ['Signature', 'SignedInfo', 'Reference'],
+      attributes: [],
+      context: true,
+    },
+  ]);
+  assertThat(typeof reference === 'string', 'application.saml.invalid_saml_request');
+  const { uri } = saml.Extractor.extract(reference, [
+    { key: 'uri', localPath: ['Reference'], attributes: ['URI'] },
+  ]);
+  assertThat(uri === `#${id}`, 'application.saml.invalid_saml_request');
 };

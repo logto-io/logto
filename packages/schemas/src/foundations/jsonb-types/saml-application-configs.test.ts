@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { samlEncryptionGuard } from './saml-application-configs.js';
+import { samlEncryptionGuard, samlAuthnRequestConfigGuard } from './saml-application-configs.js';
 
 describe('samlEncryptionGuard', () => {
   // Test valid configurations
@@ -57,5 +57,36 @@ describe('samlEncryptionGuard', () => {
         '`encryptThenSign` and `certificate` are required when `encryptAssertion` is `true`'
       );
     }
+  });
+});
+
+describe('samlAuthnRequestConfigGuard', () => {
+  it('keeps the per-application force-login setting', () => {
+    expect(samlAuthnRequestConfigGuard.parse({ forceAuthn: true })).toEqual({ forceAuthn: true });
+  });
+
+  it('allows default session reuse', () => {
+    expect(samlAuthnRequestConfigGuard.parse({})).toEqual({});
+  });
+
+  it('rejects a non-boolean force-login setting', () => {
+    expect(samlAuthnRequestConfigGuard.safeParse({ forceAuthn: 'true' }).success).toBe(false);
+  });
+});
+
+describe('signed AuthnRequest policy', () => {
+  it('requires a signing certificate when signatures are required', () => {
+    expect(
+      samlAuthnRequestConfigGuard.safeParse({ requireSignedAuthnRequests: true }).success
+    ).toBe(false);
+  });
+
+  it('keeps the configured trust certificate', () => {
+    const config = { requireSignedAuthnRequests: true, signingCertificate: 'certificate' };
+    expect(samlAuthnRequestConfigGuard.parse(config)).toEqual(config);
+  });
+
+  it.each(['', '   '])('rejects an empty certificate: %j', (signingCertificate) => {
+    expect(samlAuthnRequestConfigGuard.safeParse({ signingCertificate }).success).toBe(false);
   });
 });

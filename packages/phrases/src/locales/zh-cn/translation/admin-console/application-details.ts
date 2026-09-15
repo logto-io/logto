@@ -278,6 +278,13 @@ const application_details = {
     email_address: '电子邮件地址',
     email_address_description: '使用电子邮件地址作为名称 ID',
   },
+  saml_idp_authentication: {
+    always_force_authn: '总是强制认证',
+    always_force_authn_description:
+      '要求用户每次访问此应用时重新登录，即使他们已经有一个 Logto 会话。',
+    always_force_authn_tip:
+      '启用后，Logto 总是要求用户为此应用重新登录。禁用时，除非服务提供者请求新的认证（使用 ForceAuthn），否则将重用现有的 Logto 会话。',
+  },
   saml_encryption_config: {
     encrypt_assertion: '加密 SAML 断言',
     encrypt_assertion_description: '启用此选项后，SAML 断言将被加密。',

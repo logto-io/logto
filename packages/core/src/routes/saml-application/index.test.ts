@@ -8,6 +8,7 @@ import {
 import { pickDefault } from '@logto/shared/esm';
 
 import { mockApplication } from '#src/__mocks__/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
 const { jest } = import.meta;
@@ -22,6 +23,7 @@ const mockSamlApplication = {
   },
   attributeMapping: {},
   encryption: {},
+  authnRequestConfig: null,
   nameIdFormat: NameIdFormat.Persistent,
 };
 
@@ -34,6 +36,9 @@ const findApplicationAccessControl = jest.fn(async () => createDefaultApplicatio
 const tenantContext = new MockTenant(
   undefined,
   {
+    applications: {
+      countApplications: jest.fn(async () => ({ count: 0 })),
+    },
     applicationAccessControl: {
       findApplicationAccessControl,
     },
@@ -62,6 +67,49 @@ const buildAccessControl = (
 });
 
 describe('SAML application route', () => {
+  it('POST rejects an invalid signing certificate', async () => {
+    const response = await createSamlApplicationRequest()
+      .post('/saml-applications')
+      .send({
+        name: 'SAML app',
+        authnRequestConfig: { requireSignedAuthnRequests: true, signingCertificate: 'invalid' },
+      });
+    expect(response.status).toBe(400);
+    expect(response.text).toBe(
+      new RequestError('application.saml.invalid_certificate_pem_format').message
+    );
+  });
+
+  it('PATCH requires a certificate to enable signature enforcement', async () => {
+    const response = await createSamlApplicationRequest()
+      .patch('/saml-applications/foo')
+      .send({
+        authnRequestConfig: { requireSignedAuthnRequests: true },
+      });
+    expect(response.status).toBe(400);
+    expect(updateSamlApplicationById).not.toHaveBeenCalled();
+  });
+
+  it.each([{ forceAuthn: true }, { forceAuthn: false }, null])(
+    'PATCH persists authentication policy: %j',
+    async (authnRequestConfig) => {
+      const response = await createSamlApplicationRequest()
+        .patch('/saml-applications/foo')
+        .send({ authnRequestConfig });
+      expect(response.status).toBe(200);
+      expect(updateSamlApplicationById).toHaveBeenCalledWith('foo', { authnRequestConfig });
+      expect(response.body.authnRequestConfig).toEqual(authnRequestConfig);
+    }
+  );
+
+  it('PATCH rejects an invalid authentication policy', async () => {
+    const response = await createSamlApplicationRequest()
+      .patch('/saml-applications/foo')
+      .send({ authnRequestConfig: { forceAuthn: 'true' } });
+    expect(response.status).toBe(400);
+    expect(updateSamlApplicationById).not.toHaveBeenCalled();
+  });
+
   afterEach(() => {
     updateSamlApplicationById.mockClear();
     findApplicationAccessControl.mockClear();
