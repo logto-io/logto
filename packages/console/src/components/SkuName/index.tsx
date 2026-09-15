@@ -12,6 +12,8 @@ const registeredPlanNamePhraseMap: Record<
   [ReservedPlanId.Pro202509]: 'pro_plan',
   [ReservedPlanId.Development]: 'dev_plan',
   [ReservedPlanId.Admin]: 'admin_plan',
+  [ReservedPlanId.SelfHostedPro]: 'pro_plan',
+  [ReservedPlanId.SelfHostedEnterprise]: 'enterprise',
 } satisfies Record<ReservedPlanId, TFuncKey<'translation', 'admin_console.subscription'>>;
 
 const getRegisteredSkuNamePhrase = (

@@ -11,3 +11,4 @@ export * from './verification-code.js';
 export * from './product-event.js';
 export * from './application.js';
 export * from './social-state.js';
+export * from './license.js';
