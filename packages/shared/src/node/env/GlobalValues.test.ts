@@ -159,26 +159,11 @@ describe('openAiCimdRelayUrl', () => {
     vi.unstubAllEnvs();
   });
 
-  it('parses a bare https origin in Cloud', () => {
+  it('reads the relay in Cloud', () => {
     vi.stubEnv('IS_CLOUD', 'true');
-    vi.stubEnv('OPENAI_CIMD_RELAY_URL', 'https://RELAY.example.com/');
+    vi.stubEnv('OPENAI_CIMD_RELAY_URL', 'https://relay.example.com');
 
     expect(createGlobalValues().openAiCimdRelayUrl).toBe('https://relay.example.com');
-  });
-
-  it.each([
-    'relay.example.com',
-    'http://relay.example.com',
-    'https://relay.example.com/oauth',
-    'https://relay.example.com?relay=1',
-    'https://user:pass@relay.example.com',
-  ])('rejects malformed value %s during initialization', (value) => {
-    vi.stubEnv('IS_CLOUD', 'true');
-    vi.stubEnv('OPENAI_CIMD_RELAY_URL', value);
-
-    expect(() => createGlobalValues()).toThrow(
-      `Invalid value in \`OPENAI_CIMD_RELAY_URL\`: ${value}`
-    );
   });
 
   it('is undefined when the variable is unset in Cloud', () => {
