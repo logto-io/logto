@@ -48,6 +48,7 @@ const session = {
     forbidden_identifier:
       'لا يُسمح بتضمين المعرّف أثناء المصادقة المعززة. أعد المحاولة بدون حقل المعرّف.',
     acr_not_satisfied: 'التحقق المكتمل لا يفي بسياق المصادقة المطلوب. يرجى التحقق بطريقة أخرى.',
+    require_verification: 'يلزم التحقق بإحدى طرقك الحالية للوصول إلى سياق المصادقة المطلوب.',
   },
   passkey_sign_in: {
     pending_info_not_found:

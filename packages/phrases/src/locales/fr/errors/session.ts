@@ -62,6 +62,8 @@ const session = {
       "Un identifiant n'est pas autorisé pendant l'authentification renforcée. Réessayez sans le champ identifiant.",
     acr_not_satisfied:
       "La vérification effectuée ne satisfait pas le contexte d'authentification demandé. Veuillez vérifier une autre méthode.",
+    require_verification:
+      "Une vérification avec l'une de vos méthodes existantes est requise pour atteindre le contexte d'authentification demandé.",
   },
   passkey_sign_in: {
     pending_info_not_found:

@@ -60,6 +60,8 @@ const session = {
       'Ein Identifier ist während der Step-up-Authentifizierung nicht zulässig. Sende die Anfrage ohne das Identifier-Feld erneut.',
     acr_not_satisfied:
       'Die abgeschlossene Verifizierung erfüllt nicht den angeforderten Authentifizierungskontext. Bitte verifiziere eine andere Methode.',
+    require_verification:
+      'Um den angeforderten Authentifizierungskontext zu erreichen, ist eine Verifizierung mit einer deiner vorhandenen Methoden erforderlich.',
   },
   passkey_sign_in: {
     pending_info_not_found:
