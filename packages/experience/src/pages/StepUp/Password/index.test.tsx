@@ -51,6 +51,7 @@ const mockedVerifyStepUpPassword = verifyStepUpPassword as jest.MockedFunction<
   typeof verifyStepUpPassword
 >;
 
+const mockLoad = jest.fn(async () => true);
 const refetch = jest.fn(async () => {
   // The page never refetches on its own.
 });
@@ -94,6 +95,8 @@ const renderPage = (value: Partial<StepUpContextType> = {}) =>
       value={{
         authenticationContext: createAuthenticationContext(),
         isLoading: false,
+        isLoaded: true,
+        load: mockLoad,
         refetch,
         ...value,
       }}

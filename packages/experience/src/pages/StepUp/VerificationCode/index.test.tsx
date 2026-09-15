@@ -44,6 +44,7 @@ jest.mock('@/containers/StepUpCodeVerification', () => ({
 const email = 'f***@logto.io';
 const phone = '+1******1234';
 
+const mockLoad = jest.fn(async () => true);
 const refetch = jest.fn(async () => {
   // The page never refetches on its own.
 });
@@ -97,6 +98,8 @@ const renderPage = ({
         value={{
           authenticationContext: createAuthenticationContext(),
           isLoading: false,
+          isLoaded: true,
+          load: mockLoad,
           refetch,
           ...stepUp,
         }}
