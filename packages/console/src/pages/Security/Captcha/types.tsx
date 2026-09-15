@@ -6,4 +6,5 @@ export type CaptchaFormType = {
   projectId: string;
   domain?: string;
   mode?: RecaptchaEnterpriseMode;
+  scoreThreshold?: number;
 };

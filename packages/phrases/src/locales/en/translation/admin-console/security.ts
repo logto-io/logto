@@ -61,6 +61,10 @@ const security = {
     mode_checkbox: 'Checkbox',
     mode_notice:
       'The verification mode is defined in your reCAPTCHA key settings in Google Cloud Console. Changing the mode here requires a matching key type.',
+    score_threshold: 'Score threshold',
+    score_threshold_description:
+      'Scores below the threshold are rejected. 0.0 allows all, 1.0 only allows perfect scores. Default is 0.5.',
+    score_threshold_error: 'Score threshold must be between 0 and 1.',
   },
   password_policy: {
     password_requirements: 'Password requirements',

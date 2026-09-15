@@ -58,6 +58,10 @@ const security = {
     mode_checkbox: 'مربع اختيار',
     mode_notice:
       'يتم تحديد وضع التحقق في إعدادات مفتاح reCAPTCHA في Google Cloud Console. يتطلب تغيير الوضع هنا نوع مفتاح مطابق.',
+    score_threshold: 'حد النتيجة',
+    score_threshold_description:
+      'يتم رفض النتائج الأقل من الحد الأدنى. 0.0 يسمح بجميع النتائج، 1.0 يسمح فقط بالنتائج المثالية. القيمة الافتراضية هي 0.5.',
+    score_threshold_error: 'يجب أن يكون حد النتيجة بين 0 و 1.',
   },
   password_policy: {
     password_requirements: 'متطلبات كلمة المرور',
