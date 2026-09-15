@@ -37,64 +37,61 @@ const fetchWithAllowlistedDispatcher: typeof fetch = async (input, init) => {
  * all served from chatgpt.com, and chatgpt.com rejects requests from the platform's shared egress
  * addresses outright, so CIMD sign-in with those clients fails before the document is even read.
  * Until OpenAI stops blocking them, Cloud can send these fetches through a relay on a dedicated
- * address. The relay wrapper below and the `OPENAI_CIMD_RELAY_URL` setting go away together once
- * the block is lifted.
+ * address. The relay below and the `OPENAI_CIMD_RELAY_ORIGIN` setting go away together once the
+ * block is lifted.
  */
 const chatGptOrigin = 'https://chatgpt.com';
 
 /**
- * Sends requests to chatgpt.com through the relay instead, keeping path and query. The request
- * options pass through untouched, so the dispatcher and timeout the provider set for chatgpt.com
- * apply to the relay as well.
+ * The client metadata documents of ChatGPT (`/oauth/client.json`, `/oauth/<id>/client.json`) and
+ * Codex (`/oauth/codex/client.json`, `/oauth/codex/<id>/client.json`). Only these go through the
+ * relay; any other request to chatgpt.com is left alone.
  */
-const withOpenAiCimdRelay =
-  (relayUrl: string, baseFetch: typeof fetch): typeof fetch =>
+const openAiCimdDocumentPath = /^\/oauth\/(?:codex\/)?(?:[^/]+\/)?client\.json$/;
+
+/**
+ * Fetches the OpenAI client metadata documents from the relay instead of chatgpt.com, keeping
+ * path and query. The request options pass through untouched, so the dispatcher and timeout the
+ * provider set for chatgpt.com apply to the relay as well.
+ */
+const createFetchWithOpenAiCimdRelay =
+  (relayOrigin: string): typeof fetch =>
   async (input, init) => {
     const url = new URL(input instanceof Request ? input.url : input);
 
-    if (url.origin !== chatGptOrigin) {
-      return baseFetch(input, init);
+    if (url.origin !== chatGptOrigin || !openAiCimdDocumentPath.test(url.pathname)) {
+      return fetch(input, init);
     }
 
     /**
      * Concatenated onto the relay origin rather than resolved against it as a base: a pathname
      * starting with `//` would otherwise be read as a network-path reference and replace the relay
-     * host with attacker-chosen path content.
+     * host with path content.
      */
-    const relayed = new URL(`${relayUrl}${url.pathname}${url.search}`);
+    const relayed = new URL(`${relayOrigin}${url.pathname}${url.search}`);
 
-    return baseFetch(input instanceof Request ? new Request(relayed, input) : relayed, init);
+    return fetch(input instanceof Request ? new Request(relayed, input) : relayed, init);
   };
 
 /**
- * Keep oidc-provider's native fetch implementation whenever the protection is enabled and no
- * allowlist applies, so future upstream fetch hardening is inherited automatically. Override it
- * only for the self-hosted opt-out and for the allowlist, which upstream cannot honor.
+ * The `fetch` for oidc-provider's outgoing requests, or `undefined` to keep the provider's native
+ * implementation so future upstream fetch hardening is inherited automatically.
+ *
+ * The overrides never coexist: the first two are self-hosted opt-outs, while the relay is only
+ * read in Cloud, where the protection is always on with no allowlist.
  */
-const getBaseFetch = (): Optional<typeof fetch> => {
-  const { isSsrfProtectionEnabled, ssrfAllowedAddresses } = EnvSet.values;
+export const getOidcProviderFetch = (): Optional<typeof fetch> => {
+  const { isSsrfProtectionEnabled, ssrfAllowedAddresses, openAiCimdRelayOrigin } = EnvSet.values;
 
   if (!isSsrfProtectionEnabled) {
     return fetchWithoutSsrfDispatcher;
   }
 
-  return cond(ssrfAllowedAddresses.length > 0 && fetchWithAllowlistedDispatcher);
-};
-
-export const getProviderFetchConfig = () => {
-  const { openAiCimdRelayUrl } = EnvSet.values;
-  const baseFetch = getBaseFetch();
-
-  if (openAiCimdRelayUrl) {
-    return {
-      fetch: withOpenAiCimdRelay(
-        openAiCimdRelayUrl,
-        baseFetch ?? (async (input, init) => fetch(input, init))
-      ),
-    };
+  if (ssrfAllowedAddresses.length > 0) {
+    return fetchWithAllowlistedDispatcher;
   }
 
-  return cond(baseFetch && { fetch: baseFetch });
+  return cond(openAiCimdRelayOrigin && createFetchWithOpenAiCimdRelay(openAiCimdRelayOrigin));
 };
 
 export default fetchWithoutSsrfDispatcher;
