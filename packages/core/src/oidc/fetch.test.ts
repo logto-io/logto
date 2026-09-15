@@ -77,6 +77,22 @@ describe('getProviderFetchConfig', () => {
       expect(init).toMatchObject({ method: 'POST', dispatcher });
     });
 
+    it('should keep the relay host when the path starts with a double slash', async () => {
+      Sinon.stub(EnvSet, 'values').value({
+        ...EnvSet.values,
+        isSsrfProtectionEnabled: true,
+        ssrfAllowedAddresses: [],
+        openAiCimdRelayUrl,
+      });
+      const fetchStub = Sinon.stub(globalThis, 'fetch').resolves(new Response());
+      const config = getProviderFetchConfig();
+
+      await config?.fetch('https://chatgpt.com//evil.example/client.json', requestInit);
+
+      const [input] = fetchStub.firstCall.args;
+      expect(String(input)).toBe('https://relay.example.com//evil.example/client.json');
+    });
+
     it('should keep the options carried by a Request input', async () => {
       Sinon.stub(EnvSet, 'values').value({
         ...EnvSet.values,

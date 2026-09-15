@@ -56,7 +56,12 @@ const withOpenAiCimdRelay =
       return baseFetch(input, init);
     }
 
-    const relayed = new URL(`${url.pathname}${url.search}`, relayUrl);
+    /**
+     * Concatenated onto the relay origin rather than resolved against it as a base: a pathname
+     * starting with `//` would otherwise be read as a network-path reference and replace the relay
+     * host with attacker-chosen path content.
+     */
+    const relayed = new URL(`${relayUrl}${url.pathname}${url.search}`);
 
     return baseFetch(input instanceof Request ? new Request(relayed, input) : relayed, init);
   };
