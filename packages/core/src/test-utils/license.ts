@@ -14,9 +14,9 @@ type LicenseKeyPair = {
  * Generate a throwaway Ed25519 key pair, so a test can sign license keys that this instance
  * accepts.
  *
- * Nothing is committed: a test generates a pair, points `SELF_HOSTED_LICENSE_PUBLIC_KEY` at
- * `publicKey`, and signs with `privateKey`, and the pair only has to live for that test run. Real
- * keys are signed by the Logto Cloud license service, whose private half never leaves its
+ * Nothing is committed: a test generates a pair, points `EnvSet.values.selfHostedLicensePublicKey`
+ * at `publicKey`, and signs with `privateKey`, and the pair only has to live for that test run.
+ * Real keys are signed by the Logto Cloud license service, whose private half never leaves its
  * environment.
  */
 export const createLicenseKeyPair = async (): Promise<LicenseKeyPair> => {

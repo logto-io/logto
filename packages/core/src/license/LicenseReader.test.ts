@@ -1,6 +1,6 @@
 import { LicenseKey, ossDefaultQuota } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
-import { noop } from '@silverhand/essentials';
+import { noop, type Optional } from '@silverhand/essentials';
 import { createMockPool } from '@silverhand/slonik';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -11,7 +11,6 @@ import {
 } from '#src/test-utils/license.js';
 
 import { licenseConsoleLog } from './console.js';
-import { licensePublicKeyEnvKey } from './public-key.js';
 
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
@@ -30,6 +29,10 @@ const LicenseReader = await pickDefault(import('./LicenseReader.js'));
 
 const keyPair = await createLicenseKeyPair();
 
+/** The override is read from `EnvSet.values`, so an empty value reads the same as an unset one. */
+const setPublicKey = (value: Optional<string>) =>
+  Reflect.set(EnvSet.values, 'selfHostedLicensePublicKey', value);
+
 const installedAt = '2026-09-14T00:00:00.000Z';
 
 /** Put a license key into the `systems` table, as `PUT /api/systems/license` does. */
@@ -44,11 +47,11 @@ describe('LicenseReader', () => {
   const { isDevFeaturesEnabled } = EnvSet.values;
 
   beforeEach(() => {
-    process.env[licensePublicKeyEnvKey] = keyPair.publicKey;
+    setPublicKey(keyPair.publicKey);
   });
 
   afterEach(() => {
-    process.env[licensePublicKeyEnvKey] = '';
+    setPublicKey(undefined);
     Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', isDevFeaturesEnabled);
     jest.clearAllMocks();
     findSystemByKey.mockReset();
@@ -97,7 +100,7 @@ describe('LicenseReader', () => {
 
   it('should ignore an unusable public key, rather than fail the request', async () => {
     install(await signLicenseKey(buildLicensePayload(), keyPair.privateKey));
-    process.env[licensePublicKeyEnvKey] = 'not a jwk';
+    setPublicKey('not a jwk');
 
     await expect(reader.read(pool)).resolves.toBeUndefined();
     expect(error).toHaveBeenCalledTimes(1);
@@ -144,11 +147,11 @@ describe('LicenseReader cache expiry', () => {
 
   beforeEach(() => {
     now.mockReturnValue(startedAt);
-    process.env[licensePublicKeyEnvKey] = keyPair.publicKey;
+    setPublicKey(keyPair.publicKey);
   });
 
   afterEach(() => {
-    process.env[licensePublicKeyEnvKey] = '';
+    setPublicKey(undefined);
     jest.clearAllMocks();
     findSystemByKey.mockReset();
     findSystemByKey.mockResolvedValue(null);

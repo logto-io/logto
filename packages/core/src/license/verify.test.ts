@@ -1,12 +1,13 @@
 import { LicenseEnv, ReservedPlanId } from '@logto/schemas';
+import { type Optional } from '@silverhand/essentials';
 
+import { EnvSet } from '#src/env-set/index.js';
 import {
   buildLicensePayload,
   createLicenseKeyPair,
   signLicenseKey,
 } from '#src/test-utils/license.js';
 
-import { licensePublicKeyEnvKey } from './public-key.js';
 import {
   LicenseVerificationError,
   LicenseVerificationErrorCode,
@@ -16,6 +17,10 @@ import {
 const keyPair = await createLicenseKeyPair();
 const anotherKeyPair = await createLicenseKeyPair();
 
+/** The override is read from `EnvSet.values`, so an empty value reads the same as an unset one. */
+const setPublicKey = (value: Optional<string>) =>
+  Reflect.set(EnvSet.values, 'selfHostedLicensePublicKey', value);
+
 const expectVerificationError = async (licenseKey: string, code: LicenseVerificationErrorCode) => {
   await expect(verifyLicenseKey(licenseKey)).rejects.toThrow(LicenseVerificationError);
   await expect(verifyLicenseKey(licenseKey)).rejects.toMatchObject({ code });
@@ -23,11 +28,11 @@ const expectVerificationError = async (licenseKey: string, code: LicenseVerifica
 
 describe('verifyLicenseKey()', () => {
   beforeEach(() => {
-    process.env[licensePublicKeyEnvKey] = keyPair.publicKey;
+    setPublicKey(keyPair.publicKey);
   });
 
   afterEach(() => {
-    process.env[licensePublicKeyEnvKey] = '';
+    setPublicKey(undefined);
   });
 
   it('should read the claims of a key signed by the trusted key', async () => {
@@ -92,14 +97,14 @@ describe('verifyLicenseKey()', () => {
 
   it('should reject every key when the build trusts no public key', async () => {
     const licenseKey = await signLicenseKey(buildLicensePayload(), keyPair.privateKey);
-    process.env[licensePublicKeyEnvKey] = '';
+    setPublicKey(undefined);
 
     await expectVerificationError(licenseKey, LicenseVerificationErrorCode.NoPublicKey);
   });
 
   it('should report an unusable public key as a verification error, not raise it', async () => {
     const licenseKey = await signLicenseKey(buildLicensePayload(), keyPair.privateKey);
-    process.env[licensePublicKeyEnvKey] = 'not a jwk';
+    setPublicKey('not a jwk');
 
     await expectVerificationError(licenseKey, LicenseVerificationErrorCode.InvalidPublicKey);
   });

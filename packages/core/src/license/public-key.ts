@@ -1,4 +1,4 @@
-import { type Optional, getEnv, trySafe } from '@silverhand/essentials';
+import { type Optional, trySafe } from '@silverhand/essentials';
 import { type CryptoKey, importJWK } from 'jose';
 import { z } from 'zod';
 
@@ -13,20 +13,11 @@ import { licenseConsoleLog } from './console.js';
  * verify a license fully offline while never being able to mint one. The pair is generated with
  * that service, so this constant has no value until it exists; while it has none, no license
  * verifies, which is the right answer for a release where none has been issued.
+ *
+ * `EnvSet.values.selfHostedLicensePublicKey` replaces it — see there for the terms it is honored
+ * on.
  */
 const bakedInPublicKey: Optional<string> = undefined;
-
-/**
- * Environment variable that replaces {@link bakedInPublicKey} with the public half of a test key
- * pair, so unit and integration tests — and a developer running the license service locally — can
- * install keys they signed themselves.
- *
- * Ignored in production, on the same terms as `DEVELOPMENT_USER_ID`. Anyone who can set an
- * environment variable on a self-hosted instance can also patch its code, so this is a guardrail
- * against an accidental or copy-pasted configuration rather than a security boundary: it keeps
- * "which keys does this instance trust" answerable from the Logto version alone.
- */
-export const licensePublicKeyEnvKey = 'SELF_HOSTED_LICENSE_PUBLIC_KEY';
 
 /**
  * An Ed25519 public key in JWK form, i.e. what `jose` exports an `EdDSA` public key to.
@@ -51,7 +42,7 @@ const ed25519PublicKeyGuard = z.object({
 const importedKeys = new Map<string, Promise<CryptoKey | Uint8Array>>();
 
 const readPublicKeyJwk = (): Optional<string> => {
-  const override = getEnv(licensePublicKeyEnvKey);
+  const override = EnvSet.values.selfHostedLicensePublicKey;
 
   if (!override) {
     return bakedInPublicKey;
@@ -61,7 +52,7 @@ const readPublicKeyJwk = (): Optional<string> => {
 
   if (isProduction && !isIntegrationTest) {
     licenseConsoleLog.warn(
-      `\`${licensePublicKeyEnvKey}\` is ignored in production. Licenses are verified against the public key built into Logto.`
+      '`SELF_HOSTED_LICENSE_PUBLIC_KEY` is ignored in production. Licenses are verified against the public key built into Logto.'
     );
 
     return bakedInPublicKey;
