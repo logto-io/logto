@@ -1,14 +1,16 @@
 import { noop } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
+import { createLicenseKeyPair } from '#src/test-utils/license.js';
 
 import { licenseConsoleLog } from './console.js';
-import { licenseFixtureKeyPair } from './fixture.js';
 import { getLicensePublicKey, licensePublicKeyEnvKey } from './public-key.js';
 
 const { jest } = import.meta;
 
 const warn = jest.spyOn(licenseConsoleLog, 'warn').mockImplementation(noop);
+
+const keyPair = await createLicenseKeyPair();
 
 describe('getLicensePublicKey()', () => {
   const { isProduction, isIntegrationTest } = EnvSet.values;
@@ -26,14 +28,14 @@ describe('getLicensePublicKey()', () => {
   });
 
   it('should import the key from the environment variable outside production', async () => {
-    process.env[licensePublicKeyEnvKey] = licenseFixtureKeyPair.publicKey;
+    process.env[licensePublicKeyEnvKey] = keyPair.publicKey;
 
     await expect(getLicensePublicKey()).resolves.toBeDefined();
     expect(warn).not.toHaveBeenCalled();
   });
 
   it('should import a key only once', async () => {
-    process.env[licensePublicKeyEnvKey] = licenseFixtureKeyPair.publicKey;
+    process.env[licensePublicKeyEnvKey] = keyPair.publicKey;
 
     const [first, second] = await Promise.all([getLicensePublicKey(), getLicensePublicKey()]);
 
@@ -43,7 +45,7 @@ describe('getLicensePublicKey()', () => {
   it('should ignore the environment variable in production and say so', async () => {
     Reflect.set(EnvSet.values, 'isProduction', true);
     Reflect.set(EnvSet.values, 'isIntegrationTest', false);
-    process.env[licensePublicKeyEnvKey] = licenseFixtureKeyPair.publicKey;
+    process.env[licensePublicKeyEnvKey] = keyPair.publicKey;
 
     await expect(getLicensePublicKey()).resolves.toBeUndefined();
     expect(warn).toHaveBeenCalledTimes(1);
@@ -52,7 +54,7 @@ describe('getLicensePublicKey()', () => {
   it('should honor the environment variable in an integration test', async () => {
     Reflect.set(EnvSet.values, 'isProduction', true);
     Reflect.set(EnvSet.values, 'isIntegrationTest', true);
-    process.env[licensePublicKeyEnvKey] = licenseFixtureKeyPair.publicKey;
+    process.env[licensePublicKeyEnvKey] = keyPair.publicKey;
 
     await expect(getLicensePublicKey()).resolves.toBeDefined();
   });

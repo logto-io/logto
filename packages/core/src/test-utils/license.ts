@@ -1,26 +1,36 @@
 import { LicenseEnv, type LicensePayload, ReservedPlanId } from '@logto/schemas';
-import { type JWTPayload, SignJWT, importJWK } from 'jose';
+import { type JWTPayload, SignJWT, exportJWK, generateKeyPair, importJWK } from 'jose';
 import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 
+/** A serialized Ed25519 key pair: the private half signs a license, the public half verifies it. */
+type LicenseKeyPair = {
+  publicKey: string;
+  privateKey: string;
+};
+
 /**
- * A throwaway Ed25519 key pair, so tests and local development can sign license keys that this
- * instance accepts.
+ * Generate a throwaway Ed25519 key pair, so a test can sign license keys that this instance
+ * accepts.
  *
- * It is committed on purpose and grants nothing on its own: an instance only trusts it while
- * `SELF_HOSTED_LICENSE_PUBLIC_KEY` points at its public half, which production ignores. Real keys
- * are signed by the Logto Cloud license service, whose private key exists only in its environment.
+ * Nothing is committed: a test generates a pair, points `SELF_HOSTED_LICENSE_PUBLIC_KEY` at
+ * `publicKey`, and signs with `privateKey`, and the pair only has to live for that test run. Real
+ * keys are signed by the Logto Cloud license service, whose private half never leaves its
+ * environment.
  */
-export const licenseFixtureKeyPair = Object.freeze({
-  publicKey: '{"crv":"Ed25519","x":"GBjEEUwYdTISvftUrKQgKZA5rouxLM-FILycyHSHvpw","kty":"OKP"}',
-  privateKey:
-    '{"crv":"Ed25519","d":"gYcIUlixGjbEC0wnCPwFK0nkGR0wcH8efUGe-3JpgJA","x":"GBjEEUwYdTISvftUrKQgKZA5rouxLM-FILycyHSHvpw","kty":"OKP"}',
-});
+export const createLicenseKeyPair = async (): Promise<LicenseKeyPair> => {
+  const { publicKey, privateKey } = await generateKeyPair('Ed25519', { extractable: true });
+
+  return {
+    publicKey: JSON.stringify(await exportJWK(publicKey)),
+    privateKey: JSON.stringify(await exportJWK(privateKey)),
+  };
+};
 
 const oneYearInSeconds = 365 * 24 * 60 * 60;
 
-/** An Ed25519 private key in JWK form, i.e. the shape of the fixture key pair above. */
+/** An Ed25519 private key in JWK form, i.e. the shape of the `privateKey` above. */
 const ed25519PrivateKeyGuard = z.object({
   kty: z.literal('OKP'),
   crv: z.literal('Ed25519'),
@@ -40,8 +50,8 @@ export const buildLicensePayload = (overrides?: Partial<LicensePayload>): Licens
   return {
     plan: ReservedPlanId.SelfHostedPro,
     env: LicenseEnv.Production,
-    customerId: 'fixture_customer',
-    licenseId: 'fixture_license',
+    customerId: 'test_customer',
+    licenseId: 'test_license',
     iat: issuedAt,
     exp: issuedAt + oneYearInSeconds,
     quota: {},
@@ -53,18 +63,19 @@ export const buildLicensePayload = (overrides?: Partial<LicensePayload>): Licens
  * Sign a license key the way the Logto Cloud license service does, for tests and local
  * development.
  *
- * Pass another private key to produce a key this instance must reject. The claims are signed as
- * given, including a malformed payload, so the verification path can be tested from the outside.
+ * Pass the private half of another pair to produce a key this instance must reject. The claims are
+ * signed as given, including a malformed payload, so the verification path can be tested from the
+ * outside.
  */
 export const signLicenseKey = async (
   payload: JWTPayload,
-  privateKeyJwk: string = licenseFixtureKeyPair.privateKey
+  privateKeyJwk: string
 ): Promise<string> => {
   const { isProduction, isIntegrationTest } = EnvSet.values;
 
   if (isProduction && !isIntegrationTest) {
     throw new Error(
-      'License keys are signed by the Logto Cloud license service. The fixture signer is for tests and local development only.'
+      'License keys are signed by the Logto Cloud license service. This signer is for tests and local development only.'
     );
   }
 

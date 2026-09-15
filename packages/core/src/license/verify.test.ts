@@ -1,7 +1,11 @@
 import { LicenseEnv, ReservedPlanId } from '@logto/schemas';
-import { exportJWK, generateKeyPair } from 'jose';
 
-import { buildLicensePayload, licenseFixtureKeyPair, signLicenseKey } from './fixture.js';
+import {
+  buildLicensePayload,
+  createLicenseKeyPair,
+  signLicenseKey,
+} from '#src/test-utils/license.js';
+
 import { licensePublicKeyEnvKey } from './public-key.js';
 import {
   LicenseVerificationError,
@@ -9,8 +13,8 @@ import {
   verifyLicenseKey,
 } from './verify.js';
 
-const { privateKey } = await generateKeyPair('Ed25519', { extractable: true });
-const anotherPrivateKey = JSON.stringify(await exportJWK(privateKey));
+const keyPair = await createLicenseKeyPair();
+const anotherKeyPair = await createLicenseKeyPair();
 
 const expectVerificationError = async (licenseKey: string, code: LicenseVerificationErrorCode) => {
   await expect(verifyLicenseKey(licenseKey)).rejects.toThrow(LicenseVerificationError);
@@ -19,7 +23,7 @@ const expectVerificationError = async (licenseKey: string, code: LicenseVerifica
 
 describe('verifyLicenseKey()', () => {
   beforeEach(() => {
-    process.env[licensePublicKeyEnvKey] = licenseFixtureKeyPair.publicKey;
+    process.env[licensePublicKeyEnvKey] = keyPair.publicKey;
   });
 
   afterEach(() => {
@@ -33,12 +37,14 @@ describe('verifyLicenseKey()', () => {
       quota: { hideLogtoBranding: true, samlApplicationsLimit: null },
     });
 
-    await expect(verifyLicenseKey(await signLicenseKey(payload))).resolves.toEqual(payload);
+    await expect(
+      verifyLicenseKey(await signLicenseKey(payload, keyPair.privateKey))
+    ).resolves.toEqual(payload);
   });
 
   it('should strip claims it does not know, so a newer license service can add one', async () => {
     const payload = buildLicensePayload();
-    const licenseKey = await signLicenseKey({ ...payload, seats: 42 });
+    const licenseKey = await signLicenseKey({ ...payload, seats: 42 }, keyPair.privateKey);
 
     await expect(verifyLicenseKey(licenseKey)).resolves.toEqual(payload);
   });
@@ -47,11 +53,13 @@ describe('verifyLicenseKey()', () => {
     const issuedAt = Math.floor(Date.now() / 1000) - 3600;
     const payload = buildLicensePayload({ iat: issuedAt, exp: issuedAt + 60 });
 
-    await expect(verifyLicenseKey(await signLicenseKey(payload))).resolves.toEqual(payload);
+    await expect(
+      verifyLicenseKey(await signLicenseKey(payload, keyPair.privateKey))
+    ).resolves.toEqual(payload);
   });
 
   it('should reject a key whose claims were edited after signing', async () => {
-    const licenseKey = await signLicenseKey(buildLicensePayload());
+    const licenseKey = await signLicenseKey(buildLicensePayload(), keyPair.privateKey);
     const [header, , signature] = licenseKey.split('.');
     const forged = Buffer.from(
       JSON.stringify(buildLicensePayload({ plan: ReservedPlanId.SelfHostedEnterprise }))
@@ -64,7 +72,7 @@ describe('verifyLicenseKey()', () => {
   });
 
   it('should reject a key signed by another key pair', async () => {
-    const licenseKey = await signLicenseKey(buildLicensePayload(), anotherPrivateKey);
+    const licenseKey = await signLicenseKey(buildLicensePayload(), anotherKeyPair.privateKey);
 
     await expectVerificationError(licenseKey, LicenseVerificationErrorCode.InvalidSignature);
   });
@@ -77,20 +85,20 @@ describe('verifyLicenseKey()', () => {
   });
 
   it('should reject a properly signed key whose claims are not a license payload', async () => {
-    const licenseKey = await signLicenseKey({ hello: 'world' });
+    const licenseKey = await signLicenseKey({ hello: 'world' }, keyPair.privateKey);
 
     await expectVerificationError(licenseKey, LicenseVerificationErrorCode.InvalidPayload);
   });
 
   it('should reject every key when the build trusts no public key', async () => {
-    const licenseKey = await signLicenseKey(buildLicensePayload());
+    const licenseKey = await signLicenseKey(buildLicensePayload(), keyPair.privateKey);
     process.env[licensePublicKeyEnvKey] = '';
 
     await expectVerificationError(licenseKey, LicenseVerificationErrorCode.NoPublicKey);
   });
 
   it('should report an unusable public key as a verification error, not raise it', async () => {
-    const licenseKey = await signLicenseKey(buildLicensePayload());
+    const licenseKey = await signLicenseKey(buildLicensePayload(), keyPair.privateKey);
     process.env[licensePublicKeyEnvKey] = 'not a jwk';
 
     await expectVerificationError(licenseKey, LicenseVerificationErrorCode.InvalidPublicKey);

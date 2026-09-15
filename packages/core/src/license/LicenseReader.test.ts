@@ -4,9 +4,13 @@ import { noop } from '@silverhand/essentials';
 import { createMockPool } from '@silverhand/slonik';
 
 import { EnvSet } from '#src/env-set/index.js';
+import {
+  buildLicensePayload,
+  createLicenseKeyPair,
+  signLicenseKey,
+} from '#src/test-utils/license.js';
 
 import { licenseConsoleLog } from './console.js';
-import { buildLicensePayload, licenseFixtureKeyPair, signLicenseKey } from './fixture.js';
 import { licensePublicKeyEnvKey } from './public-key.js';
 
 const { jest } = import.meta;
@@ -24,6 +28,8 @@ const error = jest.spyOn(licenseConsoleLog, 'error').mockImplementation(noop);
 
 const LicenseReader = await pickDefault(import('./LicenseReader.js'));
 
+const keyPair = await createLicenseKeyPair();
+
 const installedAt = '2026-09-14T00:00:00.000Z';
 
 /** Put a license key into the `systems` table, as `PUT /api/systems/license` does. */
@@ -38,7 +44,7 @@ describe('LicenseReader', () => {
   const { isDevFeaturesEnabled } = EnvSet.values;
 
   beforeEach(() => {
-    process.env[licensePublicKeyEnvKey] = licenseFixtureKeyPair.publicKey;
+    process.env[licensePublicKeyEnvKey] = keyPair.publicKey;
   });
 
   afterEach(() => {
@@ -62,7 +68,7 @@ describe('LicenseReader', () => {
     const payload = buildLicensePayload({
       quota: { hideLogtoBranding: true, samlApplicationsLimit: null },
     });
-    install(await signLicenseKey(payload));
+    install(await signLicenseKey(payload, keyPair.privateKey));
 
     await expect(reader.read(pool)).resolves.toEqual({
       payload,
@@ -90,7 +96,7 @@ describe('LicenseReader', () => {
   });
 
   it('should ignore an unusable public key, rather than fail the request', async () => {
-    install(await signLicenseKey(buildLicensePayload()));
+    install(await signLicenseKey(buildLicensePayload(), keyPair.privateKey));
     process.env[licensePublicKeyEnvKey] = 'not a jwk';
 
     await expect(reader.read(pool)).resolves.toBeUndefined();
@@ -98,7 +104,7 @@ describe('LicenseReader', () => {
   });
 
   it('should read the database once until it is invalidated', async () => {
-    install(await signLicenseKey(buildLicensePayload()));
+    install(await signLicenseKey(buildLicensePayload(), keyPair.privateKey));
 
     await Promise.all([reader.read(pool), reader.read(pool)]);
     await reader.read(pool);
@@ -118,7 +124,7 @@ describe('LicenseReader', () => {
   });
 
   it('should grant nothing while the self-hosted plans feature is not launched', async () => {
-    install(await signLicenseKey(buildLicensePayload()));
+    install(await signLicenseKey(buildLicensePayload(), keyPair.privateKey));
     Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
 
     await expect(reader.read(pool)).resolves.toBeUndefined();
@@ -138,7 +144,7 @@ describe('LicenseReader cache expiry', () => {
 
   beforeEach(() => {
     now.mockReturnValue(startedAt);
-    process.env[licensePublicKeyEnvKey] = licenseFixtureKeyPair.publicKey;
+    process.env[licensePublicKeyEnvKey] = keyPair.publicKey;
   });
 
   afterEach(() => {
@@ -155,7 +161,7 @@ describe('LicenseReader cache expiry', () => {
   });
 
   it('should expire the cache, so an instance that handled no write still sees a change', async () => {
-    install(await signLicenseKey(buildLicensePayload()));
+    install(await signLicenseKey(buildLicensePayload(), keyPair.privateKey));
 
     await expect(reader.read(pool)).resolves.toBeDefined();
     expect(findSystemByKey).toHaveBeenCalledTimes(1);
