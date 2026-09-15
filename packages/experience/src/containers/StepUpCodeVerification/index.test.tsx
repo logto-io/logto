@@ -260,6 +260,33 @@ describe('<StepUpCodeVerification />', () => {
     }
   );
 
+  it('clears a server-side code error when the code is resent', async () => {
+    mockedVerifyStepUpVerificationCode.mockRejectedValueOnce(new Error('Code expired'));
+    mockedHandleError.mockImplementationOnce(async (_error, errorHandlers) => {
+      await errorHandlers?.['verification_code.expired']?.({
+        code: 'verification_code.expired',
+        message: 'The code has expired.',
+        data: {},
+      });
+    });
+    mockedSendStepUpVerificationCode.mockResolvedValueOnce({ verificationId: 'resent-id' });
+    renderContainer();
+
+    await enterCode();
+
+    await waitFor(() => {
+      expect(screen.getByText('The code has expired.')).not.toBeNull();
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getByText('description.resend_passcode'));
+    });
+
+    expect(mockedSendStepUpVerificationCode).toHaveBeenCalledTimes(1);
+    // The error described the previous code; the new one must start clean.
+    expect(screen.queryByText('The code has expired.')).toBeNull();
+  });
+
   it('hands a failed resend to the error handler with the step-up handlers and keeps the old id', async () => {
     const error = new Error('Failed to send the code');
     mockedSendStepUpVerificationCode.mockRejectedValueOnce(error);

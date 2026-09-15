@@ -38,11 +38,11 @@ const StepUpCodeVerification = ({ identifierType, verificationId }: Props) => {
     setInputErrorMessage(undefined);
   }, []);
 
-  const { errorMessage: submitErrorMessage, onSubmit } = useStepUpCodeVerification(
-    identifierType,
-    currentVerificationId,
-    errorCallback
-  );
+  const {
+    errorMessage: submitErrorMessage,
+    clearErrorMessage,
+    onSubmit,
+  } = useStepUpCodeVerification(identifierType, currentVerificationId, errorCallback);
 
   const { seconds, isRunning, onResendVerificationCode } =
     useResendStepUpVerificationCode(identifierType);
@@ -95,6 +95,8 @@ const StepUpCodeVerification = ({ identifierType, verificationId }: Props) => {
                 <TextLink
                   className={styles.link}
                   onClick={async () => {
+                    // A new code invalidates an error about the old one, on either side.
+                    clearErrorMessage();
                     setInputErrorMessage(undefined);
                     setCodeInput([]);
 
