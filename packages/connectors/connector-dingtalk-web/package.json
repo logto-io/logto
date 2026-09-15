@@ -7,7 +7,7 @@
     "@silverhand/essentials": "^2.9.1",
     "dayjs": "^1.10.5",
     "got": "^14.0.0",
-    "iconv-lite": "^0.6.3",
+    "iconv-lite": "^0.7.0",
     "snakecase-keys": "^8.0.1",
     "zod": "3.24.3"
   },
