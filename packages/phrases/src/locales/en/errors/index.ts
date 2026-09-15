@@ -9,6 +9,7 @@ import entity from './entity.js';
 import guard from './guard.js';
 import hook from './hook.js';
 import jwt_customizer from './jwt-customizer.js';
+import license from './license.js';
 import localization from './localization.js';
 import log from './log.js';
 import oidc from './oidc.js';
@@ -64,6 +65,7 @@ const errors = {
   one_time_token,
   custom_profile_fields,
   secrets,
+  license,
 };
 
 export default Object.freeze(errors);

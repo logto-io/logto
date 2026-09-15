@@ -2,6 +2,10 @@ import { type Optional, trySafe } from '@silverhand/essentials';
 import { type CryptoKey, importJWK } from 'jose';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
+
+import { licenseConsoleLog } from './console.js';
+
 /**
  * The Ed25519 public key every self-hosted license key is verified against, as a serialized JWK.
  *
@@ -9,6 +13,9 @@ import { z } from 'zod';
  * verify a license fully offline while never being able to mint one. The pair is generated with
  * that service, so this constant has no value until it exists; while it has none, no license
  * verifies, which is the right answer for a release where none has been issued.
+ *
+ * `EnvSet.values.selfHostedLicensePublicKey` replaces it — see there for the terms it is honored
+ * on.
  */
 const bakedInPublicKey: Optional<string> = undefined;
 
@@ -57,15 +64,39 @@ const importPublicKey = async (jwk: string): Promise<CryptoKey | Uint8Array> => 
 };
 
 /**
+ * The JWK to verify against: the built-in key, or the non-production override that lets tests and
+ * local development install keys they signed themselves.
+ */
+const readPublicKeyJwk = (): Optional<string> => {
+  const override = EnvSet.values.selfHostedLicensePublicKey;
+
+  if (!override) {
+    return bakedInPublicKey;
+  }
+
+  const { isProduction, isIntegrationTest } = EnvSet.values;
+
+  if (isProduction && !isIntegrationTest) {
+    licenseConsoleLog.warn(
+      '`SELF_HOSTED_LICENSE_PUBLIC_KEY` is ignored in production. Licenses are verified against the public key built into Logto.'
+    );
+
+    return bakedInPublicKey;
+  }
+
+  return override;
+};
+
+/**
  * The public key to verify license keys against, or `undefined` when this build trusts no key at
  * all — in which case no license can be installed or read.
  *
- * @throws {TypeError} When the built-in key is not a serialized Ed25519 public JWK.
+ * @throws {TypeError} When the configured key is not a serialized Ed25519 public JWK.
  */
 export const getLicensePublicKey = async (): Promise<Optional<CryptoKey | Uint8Array>> => {
+  const jwk = readPublicKeyJwk();
+
   // The built-in key is empty until a license service can sign with its other half. The check is
   // what turns that into "this build trusts no key", so it stays until the key lands.
-  //
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- `bakedInPublicKey` is a placeholder that is always empty in this release, which is exactly why nothing verifies.
-  return bakedInPublicKey ? importPublicKey(bakedInPublicKey) : undefined;
+  return jwk ? importPublicKey(jwk) : undefined;
 };
