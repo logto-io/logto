@@ -12,8 +12,13 @@ const registeredPlanNamePhraseMap: Record<
   [ReservedPlanId.Pro202509]: 'pro_plan',
   [ReservedPlanId.Development]: 'dev_plan',
   [ReservedPlanId.Admin]: 'admin_plan',
-  [ReservedPlanId.SelfHostedPro]: 'pro_plan',
-  [ReservedPlanId.SelfHostedEnterprise]: 'enterprise',
+  /**
+   * Named apart from the Cloud plans on purpose: a self-hosted license and a Cloud subscription can
+   * both belong to one account, and the Cloud Console lists them side by side, where two rows
+   * reading "Pro plan" would be indistinguishable.
+   */
+  [ReservedPlanId.SelfHostedPro]: 'self_hosted_pro_plan',
+  [ReservedPlanId.SelfHostedEnterprise]: 'self_hosted_enterprise_plan',
 } satisfies Record<ReservedPlanId, TFuncKey<'translation', 'admin_console.subscription'>>;
 
 const getRegisteredSkuNamePhrase = (

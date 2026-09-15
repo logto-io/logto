@@ -11,6 +11,8 @@ const subscription = {
   enterprise_description: 'Для больших команд и компаний с корпоративными требованиями.',
   admin_plan: 'План администратора',
   dev_plan: 'План для разработки',
+  self_hosted_pro_plan: 'Self-hosted Про план',
+  self_hosted_enterprise_plan: 'Self-hosted Корпоративный план',
   current_plan: 'Текущий план',
   current_plan_description:
     'Вот ваш текущий тарифный план. Вы можете легко просмотреть использование вашего тарифа, проверить предстоящий счет и вносить изменения в тариф по мере необходимости.',

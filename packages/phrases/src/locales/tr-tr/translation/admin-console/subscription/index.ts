@@ -12,6 +12,8 @@ const subscription = {
   enterprise_description: 'Büyük ekipler ve kurumsal gereksinimleri olan işletmeler için.',
   admin_plan: 'Yönetici planı',
   dev_plan: 'Geliştirme planı',
+  self_hosted_pro_plan: 'Self-hosted Pro plan',
+  self_hosted_enterprise_plan: 'Self-hosted Kurumsal plan',
   current_plan: 'Mevcut Plan',
   current_plan_description:
     'İşte mevcut planınız. Plan kullanımınızı kolayca görebilir, önümüzdeki faturanızı kontrol edebilir ve ihtiyaç duydukça planınızda değişiklikler yapabilirsiniz.',

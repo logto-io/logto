@@ -11,6 +11,8 @@ const subscription = {
   enterprise_description: 'For large teams and businesses with enterprise-grade requirements.',
   admin_plan: 'Admin plan',
   dev_plan: 'Development plan',
+  self_hosted_pro_plan: 'Self-hosted Pro plan',
+  self_hosted_enterprise_plan: 'Self-hosted Enterprise plan',
   current_plan: 'Current plan',
   current_plan_description:
     'Here’s your current plan. You can easily see your plan usage, check your upcoming bill, and make changes to your plan as needed.',

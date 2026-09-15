@@ -12,6 +12,8 @@ const subscription = {
   enterprise_description: '大規模なチームおよび企業グレードの要件を持つ企業向け。',
   admin_plan: '管理者プラン',
   dev_plan: '開発プラン',
+  self_hosted_pro_plan: 'セルフホストプロプラン',
+  self_hosted_enterprise_plan: 'セルフホストエンタープライズプラン',
   current_plan: '現在のプラン',
   current_plan_description:
     '現在のプランはこちらです。プランの使用状況を簡単に確認したり、次回の請求を確認したり、必要に応じてプランを変更したりできます。',

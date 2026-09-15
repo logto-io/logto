@@ -11,6 +11,8 @@ const subscription = {
   enterprise_description: '適用於具有企業級要求的大型團隊和企業。',
   admin_plan: '管理員方案',
   dev_plan: '開發方案',
+  self_hosted_pro_plan: '自託管專業方案',
+  self_hosted_enterprise_plan: '自託管企業方案',
   current_plan: '當前方案',
   current_plan_description:
     '這是您目前的方案。您可以輕鬆查看您的方案使用情況，檢查即將到來的帳單，並根據需要進行變更。',

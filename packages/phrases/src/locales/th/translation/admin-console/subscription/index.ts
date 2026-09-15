@@ -11,6 +11,8 @@ const subscription = {
   enterprise_description: 'สำหรับทีมและธุรกิจขนาดใหญ่ที่ต้องการฟีเจอร์มาตรฐานองค์กร',
   admin_plan: 'แผนผู้ดูแลระบบ',
   dev_plan: 'แผนพัฒนา',
+  self_hosted_pro_plan: 'แผน Pro แบบ self-hosted',
+  self_hosted_enterprise_plan: 'แผนองค์กรแบบ self-hosted',
   current_plan: 'แผนปัจจุบัน',
   current_plan_description:
     'นี่คือแผนปัจจุบันของคุณ คุณสามารถตรวจสอบการใช้งานแผน ดูบิลถัดไป และเปลี่ยนแผนได้ตามที่ต้องการ',

@@ -13,6 +13,8 @@ const subscription = {
     'Pour les grandes équipes et les entreprises avec des exigences de niveau entreprise.',
   admin_plan: 'Plan Admin',
   dev_plan: 'Plan Développement',
+  self_hosted_pro_plan: 'Plan Professionnel auto-hébergé',
+  self_hosted_enterprise_plan: 'Plan Entreprise auto-hébergé',
   current_plan: 'Plan Actuel',
   current_plan_description:
     "Voici votre plan actuel. Vous pouvez facilement consulter l'utilisation de votre plan, vérifier votre prochaine facture et apporter des modifications à votre plan si nécessaire.",
