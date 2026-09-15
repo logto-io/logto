@@ -21,6 +21,7 @@ import DeleteCard from './DeleteCard';
 import DeleteModal from './DeleteModal';
 import LeaveCard from './LeaveCard';
 import ProfileForm from './ProfileForm';
+import { useTenantMfaFeature } from './ProfileForm/TenantMfa/index.js';
 import styles from './index.module.scss';
 import { type TenantSettingsForm } from './types.js';
 
@@ -39,6 +40,7 @@ function TenantBasicSettings() {
     removeTenant,
     navigateTenant,
   } = useContext(TenantsContext);
+  const { isFeatureAvailable: isMfaFeatureAvailable } = useTenantMfaFeature();
   const [isDeletionModalOpen, setIsDeletionModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const { show: showModal } = useConfirmModal();
@@ -62,7 +64,7 @@ function TenantBasicSettings() {
     watch,
     reset,
     handleSubmit,
-    formState: { isDirty, isSubmitting },
+    formState: { isDirty, isSubmitting, dirtyFields },
   } = methods;
 
   useEffect(() => {
@@ -84,22 +86,27 @@ function TenantBasicSettings() {
       } = formData;
 
       const profileData = { name, tag };
+      const shouldUpdateMfaSettings = isMfaFeatureAvailable && Boolean(dirtyFields.isMfaRequired);
       const [{ name: updatedName, tag: updatedTag }, updatedTenantSettings] = await Promise.all([
         api.patch(`/api/tenants/:tenantId`, {
           params: { tenantId: currentTenantId },
           body: profileData,
         }),
-        cloudApi.patch(`/api/tenants/:tenantId/settings`, {
-          params: { tenantId: currentTenantId },
-          body: { isMfaRequired },
-        }),
+        shouldUpdateMfaSettings
+          ? cloudApi.patch(`/api/tenants/:tenantId/settings`, {
+              params: { tenantId: currentTenantId },
+              body: { isMfaRequired },
+            })
+          : undefined,
       ]);
 
       reset({
         profile: { name: updatedName, tag: updatedTag },
-        isMfaRequired: updatedTenantSettings.isMfaRequired,
+        isMfaRequired: updatedTenantSettings?.isMfaRequired ?? isMfaRequired,
       });
-      void mutateTenantSettings(updatedTenantSettings);
+      if (updatedTenantSettings) {
+        void mutateTenantSettings(updatedTenantSettings);
+      }
       toast.success(t('tenants.settings.tenant_info_saved'));
       updateTenant(currentTenantId, profileData);
     })
