@@ -61,10 +61,12 @@ export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
    * `throwByDifference` below requires this dictionary to match the routes that are actually built,
    * so their IDs are only reserved when the routes are registered.
    */
-  ...conditional(EnvSet.values.isDevFeaturesEnabled && {
-    'get /systems/license': 'GetSystemLicense',
-    'put /systems/license': 'InstallSystemLicense',
-  }),
+  ...conditional(
+    EnvSet.values.isDevFeaturesEnabled && {
+      'get /systems/license': 'GetSystemLicense',
+      'put /systems/license': 'InstallSystemLicense',
+    }
+  ),
   // Applications
   'post /applications/:applicationId/roles': 'AssignApplicationRoles',
   'get /applications/:id/protected-app-metadata/custom-domains':
