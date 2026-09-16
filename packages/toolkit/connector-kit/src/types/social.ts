@@ -18,6 +18,9 @@ export type OidcPrompts = OidcPrompt[];
 export const oidcPromptsGuard: z.ZodType<Optional<OidcPrompts>> = z
   .nativeEnum(OidcPrompt)
   .array()
+  .refine((prompts) => !prompts.includes(OidcPrompt.None) || prompts.length === 1, {
+    message: 'The `none` prompt cannot be combined with other prompts.',
+  })
   .optional();
 
 // This type definition is for SAML connector
