@@ -3,6 +3,8 @@ const step_up = {
   choose_method_description: '若要繼續，請使用以下任一方式確認是您本人。',
   password: '密碼',
   password_description: '輸入您的帳戶密碼',
+  enter_password_description: '輸入您的帳戶密碼以繼續。',
+  enter_verification_code_description: '輸入發送至 {{identifier}} 的驗證碼。',
   subject_proof_description:
     '若要繼續，請透過與您帳戶連結的另一個帳戶確認是您本人。之後即可設定驗證方式。',
   no_method_available: '沒有可用的驗證方式',

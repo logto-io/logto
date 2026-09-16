@@ -3,6 +3,8 @@ const step_up = {
   choose_method_description: 'Pro pokračování potvrď, že jsi to ty, jednou z následujících metod.',
   password: 'Heslo',
   password_description: 'Zadej heslo ke svému účtu',
+  enter_password_description: 'Pokračuj zadáním hesla ke svému účtu.',
+  enter_verification_code_description: 'Zadej ověřovací kód odeslaný na {{identifier}}.',
   subject_proof_description:
     'Pro pokračování potvrď, že jsi to ty, pomocí účtu propojeného s tím tvým. Poté si můžeš nastavit metodu ověření.',
   no_method_available: 'Není k dispozici žádná metoda ověření',

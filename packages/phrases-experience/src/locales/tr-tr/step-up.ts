@@ -4,6 +4,8 @@ const step_up = {
     'Devam etmek için aşağıdaki yöntemlerden biriyle siz olduğunuzu doğrulayın.',
   password: 'Şifre',
   password_description: 'Hesap şifrenizi girin',
+  enter_password_description: 'Devam etmek için hesap şifrenizi girin.',
+  enter_verification_code_description: '{{identifier}} adresine gönderilen doğrulama kodunu girin.',
   subject_proof_description:
     'Devam etmek için hesabınıza bağlı bir hesap üzerinden siz olduğunuzu doğrulayın. Ardından bir doğrulama yöntemi ayarlayabilirsiniz.',
   no_method_available: 'Kullanılabilir doğrulama yöntemi yok',

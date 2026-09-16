@@ -1,11 +1,28 @@
-import { Outlet } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Outlet, useMatch } from 'react-router-dom';
 
 import StepUpContextProvider from '@/Providers/StepUpContextProvider';
+import { stepUpRoutes } from '@/constants/step-up';
 import useStepUpContext from '@/hooks/use-step-up-context';
 import ErrorPage from '@/pages/ErrorPage';
 
 const StepUpOutlet = () => {
-  const { authenticationContext, isLoaded, isLoading } = useStepUpContext();
+  const { authenticationContext, isLoaded, isLoading, load } = useStepUpContext();
+  /** Only the landing initializes the interaction; every other route refreshes it. */
+  const isLanding = Boolean(useMatch({ path: stepUpRoutes.landing, end: true }));
+
+  useEffect(() => {
+    // A child route can be the first mount after a refresh, so it loads the context itself. The
+    // landing already does this in its own arrival effect, with `load(true)`.
+    if (!isLanding && !isLoaded && !isLoading) {
+      void load(false);
+    }
+  }, [isLanding, isLoaded, isLoading, load]);
+
+  // Wait for the arrival load before deciding anything, so the invalid-session page never flashes.
+  if (!isLanding && !isLoaded) {
+    return null;
+  }
 
   if (isLoaded && !isLoading && !authenticationContext) {
     // The interaction is gone (404 `session.interaction_not_found`), or it carries no

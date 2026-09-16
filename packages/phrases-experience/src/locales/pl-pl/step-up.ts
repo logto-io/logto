@@ -4,6 +4,8 @@ const step_up = {
     'Aby kontynuować, potwierdź swoją tożsamość za pomocą jednej z poniższych metod.',
   password: 'Hasło',
   password_description: 'Wprowadź hasło do swojego konta',
+  enter_password_description: 'Wprowadź hasło do swojego konta, aby kontynuować.',
+  enter_verification_code_description: 'Wprowadź kod weryfikacyjny wysłany na {{identifier}}.',
   subject_proof_description:
     'Aby kontynuować, potwierdź swoją tożsamość za pomocą konta powiązanego z Twoim. Następnie możesz skonfigurować metodę weryfikacji.',
   no_method_available: 'Brak dostępnej metody weryfikacji',

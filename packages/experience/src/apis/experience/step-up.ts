@@ -9,6 +9,7 @@ import { type VerificationCodeIdentifier } from '@/types';
 import api from '../api';
 
 import { experienceApiRoutes, type VerificationResponse } from './const';
+import { identifyAndSubmitInteraction } from './interaction';
 
 type StepUpInitResult = {
   /**
@@ -62,3 +63,43 @@ export const sendStepUpVerificationCode = async (type: VerificationCodeIdentifie
       json: { interactionEvent: InteractionEvent.SignIn, identifier: { type } },
     })
     .json<VerificationResponse>();
+
+/**
+ * Verify the pinned subject's password and complete the interaction.
+ *
+ * Only the password is sent: Core verifies it against the pinned subject's credential, so no
+ * identifier — raw or masked — leaves the browser. The verified record then identifies that same
+ * subject through the existing identification and submission pair.
+ */
+export const verifyStepUpPassword = async (password: string) => {
+  const { verificationId } = await api
+    .post(`${experienceApiRoutes.verification}/password`, { json: { password } })
+    .json<VerificationResponse>();
+
+  return identifyAndSubmitInteraction({ verificationId });
+};
+
+type StepUpVerificationCodePayload = {
+  type: VerificationCodeIdentifier;
+  code: string;
+  verificationId: string;
+};
+
+/**
+ * Verify a code sent to the pinned subject's primary email or phone, and complete the
+ * interaction. As when sending it, only the identifier type travels; Core reads the value it
+ * challenged from the verification record.
+ */
+export const verifyStepUpVerificationCode = async ({
+  type,
+  code,
+  verificationId,
+}: StepUpVerificationCodePayload) => {
+  const { verificationId: verifiedVerificationId } = await api
+    .post(`${experienceApiRoutes.verification}/verification-code/verify`, {
+      json: { identifier: { type }, code, verificationId },
+    })
+    .json<VerificationResponse>();
+
+  return identifyAndSubmitInteraction({ verificationId: verifiedVerificationId });
+};

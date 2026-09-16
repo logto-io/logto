@@ -271,23 +271,23 @@ describe('StepUpMethodList', () => {
         method: VerificationType.EmailVerificationCode,
         nameKey: 'mfa.email_verification_code',
         identifier: SignInIdentifier.Email,
+        route: '/step-up/verification-code/email',
       },
       {
         method: VerificationType.PhoneVerificationCode,
         nameKey: 'mfa.phone_verification_code',
         identifier: SignInIdentifier.Phone,
+        route: '/step-up/verification-code/phone',
       },
     ])(
-      'sends the pinned-user code by type only, stores its id, then opens the code page for $method',
-      async ({ method, nameKey, identifier }) => {
+      'sends the pinned-user code by type only, stores its id, then opens the $identifier code page',
+      async ({ method, nameKey, identifier, route }) => {
         renderList(firstFactorMethods);
 
         await clickMethod(nameKey);
 
         await waitFor(() => {
-          expect(mockedNavigate).toHaveBeenCalledWith('/step-up/verification-code', {
-            replace: undefined,
-          });
+          expect(mockedNavigate).toHaveBeenCalledWith(route, { replace: undefined });
         });
         expect(mockedNavigate).toHaveBeenCalledTimes(1);
         expect(mockedSendStepUpVerificationCode).toHaveBeenCalledTimes(1);

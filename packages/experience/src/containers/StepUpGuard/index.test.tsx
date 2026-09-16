@@ -107,17 +107,11 @@ const Landing = () => {
 };
 
 const Child = () => {
-  const { authenticationContext, load, refetch } = useStepUpContext();
+  const { authenticationContext, refetch } = useStepUpContext();
 
   useEffect(() => {
     mockChildMount();
   }, []);
-
-  useEffect(() => {
-    if (!authenticationContext) {
-      void load(false);
-    }
-  }, [authenticationContext, load]);
 
   return (
     <div>
@@ -343,7 +337,7 @@ describe('StepUpGuard', () => {
   });
 
   describe('child route', () => {
-    it('reads the context once and never calls initStepUp', async () => {
+    it('loads the context once on a direct arrival and never calls initStepUp', async () => {
       mockedGetStepUpContext.mockResolvedValue(stepUpContext);
 
       renderGuard(stepUpRoutes.password);
@@ -353,6 +347,29 @@ describe('StepUpGuard', () => {
       expect(mockedGetStepUpContext).toHaveBeenCalledTimes(1);
       expect(mockedInitStepUp).not.toHaveBeenCalled();
       expect(mockHandleError).not.toHaveBeenCalled();
+    });
+
+    it('renders nothing while the arrival load is in flight', async () => {
+      const deferred: { resolve?: (context: InteractionAuthenticationContext) => void } = {};
+      mockedGetStepUpContext.mockImplementationOnce(
+        async () =>
+          new Promise<InteractionAuthenticationContext>((resolve) => {
+            // eslint-disable-next-line @silverhand/fp/no-mutation -- the test controls the deferred arrival-load settlement
+            deferred.resolve = resolve;
+          })
+      );
+
+      renderGuard(stepUpRoutes.password);
+
+      // Neither the page nor the invalid-session page renders before the context arrives.
+      expect(screen.queryByText(/^child:/)).toBeNull();
+      expect(screen.queryByText('error.invalid_session')).toBeNull();
+
+      await act(async () => {
+        deferred.resolve?.(stepUpContext);
+      });
+
+      expect(await screen.findByText('child:Password,EmailVerificationCode')).not.toBeNull();
     });
 
     it('renders the invalid-session page without a toast when the interaction is gone', async () => {
