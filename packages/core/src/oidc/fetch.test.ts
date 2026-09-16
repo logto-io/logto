@@ -122,5 +122,23 @@ describe('getOidcProviderFetch', () => {
       expect(input).toBe(url);
       expect(init).toBe(providerOptions);
     });
+
+    /**
+     * GlobalValues rules this combination out today. What this pins is the composition, not the
+     * configuration: a change to the dispatcher policy can never skip the relay.
+     */
+    it('should relay on top of the allowlisted fetch', async () => {
+      stubValues({
+        isSsrfProtectionEnabled: true,
+        ssrfAllowedAddresses: ['127.0.0.1'],
+        openAiCimdRelayHost,
+      });
+
+      await getOidcProviderFetch()('https://chatgpt.com/oauth/codex/client.json', providerOptions);
+
+      const [input, init] = ssrfProtectedFetch.mock.calls[0] ?? [];
+      expect(String(input)).toBe(`https://${openAiCimdRelayHost}/oauth/codex/client.json`);
+      expect(init).not.toHaveProperty('dispatcher');
+    });
   });
 });

@@ -60,33 +60,29 @@ const chatGptOrigin = 'https://chatgpt.com';
 const openAiCimdDocumentPath = /^\/oauth\/(?:codex\/)?(?:[^/]+\/)?client\.json$/;
 
 /**
- * Fetches the OpenAI client metadata documents from the relay instead of chatgpt.com, keeping
- * path and query. The request options pass through untouched, so the dispatcher and timeout the
- * provider set for chatgpt.com apply to the relay as well.
+ * Rewrites the OpenAI client metadata document URLs to the relay, keeping path and query. Anything
+ * else, including inputs outside the provider convention, is returned as is.
  */
-const createFetchWithOpenAiCimdRelay =
-  (relayHost: string): typeof fetch =>
-  async (input, init) => {
-    const url = typeof input === 'string' ? new URL(input) : undefined;
+const relayOpenAiCimdDocument = (input: Parameters<typeof fetch>[0], relayHost: string) => {
+  const url = typeof input === 'string' ? new URL(input) : undefined;
 
-    if (!url || url.origin !== chatGptOrigin || !openAiCimdDocumentPath.test(url.pathname)) {
-      return fetch(input, init);
-    }
+  if (!url || url.origin !== chatGptOrigin || !openAiCimdDocumentPath.test(url.pathname)) {
+    return input;
+  }
 
-    const relayed = new URL(url);
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    relayed.host = relayHost;
+  const relayed = new URL(url);
+  // eslint-disable-next-line @silverhand/fp/no-mutation
+  relayed.host = relayHost;
 
-    return fetch(relayed, init);
-  };
+  return relayed;
+};
 
 /**
- * The `fetch` for oidc-provider's outgoing requests. The overrides never coexist: the first two
- * are self-hosted opt-outs, while the relay is only read in Cloud, where the protection is always
- * on with no allowlist. The fallback is what the pinned provider does on its own.
+ * How the provider's requests go out: which dispatcher, if any, replaces the provider's own. The
+ * first two are self-hosted opt-outs; the fallback is what the pinned provider does on its own.
  */
-export const getOidcProviderFetch = (): typeof fetch => {
-  const { isSsrfProtectionEnabled, ssrfAllowedAddresses, openAiCimdRelayHost } = EnvSet.values;
+const getFetchWithDispatcherPolicy = (): typeof fetch => {
+  const { isSsrfProtectionEnabled, ssrfAllowedAddresses } = EnvSet.values;
 
   if (!isSsrfProtectionEnabled) {
     return fetchWithoutSsrfDispatcher;
@@ -96,16 +92,34 @@ export const getOidcProviderFetch = (): typeof fetch => {
     return fetchWithAllowlistedDispatcher;
   }
 
-  if (openAiCimdRelayHost) {
-    return createFetchWithOpenAiCimdRelay(openAiCimdRelayHost);
-  }
-
   /**
    * A wrapper rather than the bare `fetch`: it resolves the global on every call, exactly like the
    * provider's own default, so a `fetch` replaced after initialization (test stubs, instrumentation)
    * is still honored.
    */
   return async (input, init) => fetch(input, init);
+};
+
+/**
+ * The `fetch` for oidc-provider's outgoing requests. Where a request goes (the relay) and how it
+ * goes (the dispatcher policy) are composed rather than ordered, so neither depends on how the
+ * other is configured, and the options the provider set, dispatcher and timeout included, reach the
+ * policy untouched.
+ *
+ * Today the relay only ever meets the plain policy: it is read in Cloud alone, and CIMD itself is
+ * off under the opt-out and the allowlist (see `isCimdEffectivelyEnabled`), so composing over every
+ * policy changes nothing there.
+ */
+export const getOidcProviderFetch = (): typeof fetch => {
+  const { openAiCimdRelayHost } = EnvSet.values;
+  const fetchWithDispatcherPolicy = getFetchWithDispatcherPolicy();
+
+  if (!openAiCimdRelayHost) {
+    return fetchWithDispatcherPolicy;
+  }
+
+  return async (input, init) =>
+    fetchWithDispatcherPolicy(relayOpenAiCimdDocument(input, openAiCimdRelayHost), init);
 };
 
 export default fetchWithoutSsrfDispatcher;
