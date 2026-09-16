@@ -3,6 +3,9 @@ const step_up = {
   choose_method_description: 'Para continuar, confirme que é você com um dos métodos a seguir.',
   password: 'Senha',
   password_description: 'Digite a senha da sua conta',
+  enter_password_description: 'Digite a senha da sua conta para continuar.',
+  enter_verification_code_description:
+    'Digite o código de verificação enviado para {{identifier}}.',
   subject_proof_description:
     'Para continuar, confirme que é você por meio de uma conta vinculada à sua. Depois, você poderá configurar um método de verificação.',
   no_method_available: 'Nenhum método de verificação disponível',

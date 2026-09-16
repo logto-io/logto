@@ -8,7 +8,7 @@ import { useCallback, useContext, useMemo } from 'react';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { sendStepUpVerificationCode } from '@/apis/experience';
-import { stepUpRoutes } from '@/constants/step-up';
+import { getStepUpVerificationCodeRoute, stepUpRoutes } from '@/constants/step-up';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
@@ -65,7 +65,7 @@ const useSelectStepUpMethod = ({ methods, authenticationContext, replace }: Opti
 
       if (result) {
         setVerificationId(codeVerificationTypeMap[type], result.verificationId);
-        navigate(stepUpRoutes.verificationCode, { replace });
+        navigate(getStepUpVerificationCodeRoute(type), { replace });
       }
     },
     [

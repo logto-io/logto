@@ -54,6 +54,8 @@ import SocialLanding from './pages/SocialLanding';
 import SocialLinkAccount from './pages/SocialLinkAccount';
 import SocialSignInWebCallback from './pages/SocialSignInWebCallback';
 import StepUp from './pages/StepUp';
+import StepUpPassword from './pages/StepUp/Password';
+import StepUpVerificationCode from './pages/StepUp/VerificationCode';
 import SwitchAccount from './pages/SwitchAccount';
 import TrustedDevice from './pages/TrustedDevice';
 import VerificationCode from './pages/VerificationCode';
@@ -182,13 +184,18 @@ const App = () => {
 
                       {/*
                        * Step-up: an authenticated session proves the missing assurance. The guard
-                       * loads the server-driven context; the pinned-user first-factor pages are
-                       * registered under this tree by the slices that implement them. Dev-only
+                       * loads the server-driven context, the landing dispatches on it, and the
+                       * pinned-user first-factor pages verify the pinned subject. Dev-only
                        * feature: remove the flag when the flow is released.
                        */}
                       {isDevFeaturesEnabled && (
                         <Route path={experience.routes.stepUp} element={<StepUpGuard />}>
                           <Route index element={<StepUp />} />
+                          <Route path="password" element={<StepUpPassword />} />
+                          <Route
+                            path="verification-code/:type"
+                            element={<StepUpVerificationCode />}
+                          />
                         </Route>
                       )}
 

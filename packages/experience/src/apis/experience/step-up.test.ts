@@ -12,7 +12,19 @@ import {
 import api from '../api';
 
 import { experienceApiRoutes } from './const';
-import { getStepUpContext, initStepUp, sendStepUpVerificationCode } from './step-up';
+import { identifyAndSubmitInteraction } from './interaction';
+import {
+  getStepUpContext,
+  initStepUp,
+  sendStepUpVerificationCode,
+  verifyStepUpPassword,
+  verifyStepUpVerificationCode,
+} from './step-up';
+
+jest.mock('./interaction', () => ({
+  __esModule: true,
+  identifyAndSubmitInteraction: jest.fn(),
+}));
 
 jest.mock('../api', () => ({
   __esModule: true,
@@ -26,6 +38,9 @@ jest.mock('../api', () => ({
 const mockedApiPut = api.put as jest.MockedFunction<typeof api.put>;
 const mockedApiGet = api.get as jest.MockedFunction<typeof api.get>;
 const mockedApiPost = api.post as jest.MockedFunction<typeof api.post>;
+const mockedIdentifyAndSubmitInteraction = identifyAndSubmitInteraction as jest.MockedFunction<
+  typeof identifyAndSubmitInteraction
+>;
 
 /** The fields the guard requires; `selectedAcr` and `mode` are optional on the wire. */
 const requiredContext = {
@@ -48,6 +63,13 @@ const mockPutResponse = (status: number, body?: unknown) => {
   mockedApiPut.mockResolvedValueOnce({ status, json } as unknown as Awaited<
     ReturnType<typeof api.put>
   >);
+
+  return json;
+};
+
+const mockPostResponse = (body: unknown) => {
+  const json = jest.fn().mockResolvedValue(body);
+  mockedApiPost.mockReturnValueOnce({ json } as unknown as ReturnType<typeof api.post>);
 
   return json;
 };
@@ -183,5 +205,78 @@ describe('step-up experience APIs', () => {
         });
       }
     );
+  });
+  describe('verifyStepUpPassword', () => {
+    it('sends the password alone and completes the interaction with the verified record', async () => {
+      const submitResult = { redirectTo: 'https://logto.io/callback' };
+      mockPostResponse({ verificationId: 'password-verification-id' });
+      mockedIdentifyAndSubmitInteraction.mockResolvedValueOnce(submitResult);
+
+      await expect(verifyStepUpPassword('password')).resolves.toEqual(submitResult);
+
+      expect(mockedApiPost).toBeCalledTimes(1);
+      const [url, options] = mockedApiPost.mock.calls[0] ?? [];
+      expect(url).toBe(`${experienceApiRoutes.verification}/password`);
+      // Pinned strictly: no identifier, raw or masked, rides along with the password.
+      expect(options).toStrictEqual({ json: { password: 'password' } });
+      expect(mockedIdentifyAndSubmitInteraction).toBeCalledTimes(1);
+      expect(mockedIdentifyAndSubmitInteraction).toBeCalledWith({
+        verificationId: 'password-verification-id',
+      });
+    });
+
+    it('does not identify or submit when the password is rejected', async () => {
+      const error = new Error('Invalid credentials');
+      const json = jest.fn().mockRejectedValue(error);
+      mockedApiPost.mockReturnValueOnce({ json } as unknown as ReturnType<typeof api.post>);
+
+      await expect(verifyStepUpPassword('wrong')).rejects.toThrow(error);
+
+      expect(mockedIdentifyAndSubmitInteraction).not.toBeCalled();
+    });
+  });
+
+  describe('verifyStepUpVerificationCode', () => {
+    it.each([SignInIdentifier.Email, SignInIdentifier.Phone] as const)(
+      'verifies the %s code by identifier type only and completes the interaction',
+      async (type) => {
+        const submitResult = { redirectTo: 'https://logto.io/callback' };
+        mockPostResponse({ verificationId: 'verified-verification-id' });
+        mockedIdentifyAndSubmitInteraction.mockResolvedValueOnce(submitResult);
+
+        await expect(
+          verifyStepUpVerificationCode({ type, code: '123456', verificationId: 'sent-id' })
+        ).resolves.toEqual(submitResult);
+
+        expect(mockedApiPost).toBeCalledTimes(1);
+        const [url, options] = mockedApiPost.mock.calls[0] ?? [];
+        expect(url).toBe(`${experienceApiRoutes.verification}/verification-code/verify`);
+        // The raw primary email / phone never leaves the server, on the verify call either.
+        expect(options).toStrictEqual({
+          json: { identifier: { type }, code: '123456', verificationId: 'sent-id' },
+        });
+        // The record the verify call returns is the one that identifies the pinned subject.
+        expect(mockedIdentifyAndSubmitInteraction).toBeCalledTimes(1);
+        expect(mockedIdentifyAndSubmitInteraction).toBeCalledWith({
+          verificationId: 'verified-verification-id',
+        });
+      }
+    );
+
+    it('does not identify or submit when the code is rejected', async () => {
+      const error = new Error('Code mismatch');
+      const json = jest.fn().mockRejectedValue(error);
+      mockedApiPost.mockReturnValueOnce({ json } as unknown as ReturnType<typeof api.post>);
+
+      await expect(
+        verifyStepUpVerificationCode({
+          type: SignInIdentifier.Email,
+          code: '000000',
+          verificationId: 'sent-id',
+        })
+      ).rejects.toThrow(error);
+
+      expect(mockedIdentifyAndSubmitInteraction).not.toBeCalled();
+    });
   });
 });
