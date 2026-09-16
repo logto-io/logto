@@ -44,7 +44,7 @@ export default function koaTokenUsageGuard<StateT, ContextT, ResponseBodyT>(
         currentPeriodEnd,
         currentPeriodStart,
         quota: { tokenLimit },
-      } = await subscriptionLibrary.getSubscriptionData();
+      } = await subscriptionLibrary.getCloudSubscriptionData();
 
       // Skip the token usage guard for paid plans.
       if (isReportablePlan(planId, isEnterprisePlan)) {

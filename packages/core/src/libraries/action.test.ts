@@ -23,8 +23,8 @@ import type { SubscriptionLibrary } from './subscription.js';
 const { jest } = import.meta;
 
 const getAction = jest.fn() as jest.MockedFunction<LogtoConfigLibrary['getAction']>;
-const getSubscriptionData = jest.fn() as jest.MockedFunction<
-  SubscriptionLibrary['getSubscriptionData']
+const getCloudSubscriptionData = jest.fn() as jest.MockedFunction<
+  SubscriptionLibrary['getCloudSubscriptionData']
 >;
 const trackMetric = jest.fn();
 const originalAppInsightsClient = appInsights.client;
@@ -48,7 +48,7 @@ const createLibrary = (tenantId = 'tenant_id') =>
   new ActionLibrary(
     tenantId,
     { getAction } as unknown as LogtoConfigLibrary,
-    { getSubscriptionData } as unknown as SubscriptionLibrary,
+    { getCloudSubscriptionData } as unknown as SubscriptionLibrary,
     {} as CloudConnectionLibrary
   );
 
@@ -75,11 +75,11 @@ describe('ActionLibrary', () => {
       trackMetric,
       trackException: jest.fn(),
     } as unknown as NonNullable<typeof appInsights.client>;
-    getSubscriptionData.mockResolvedValue({
+    getCloudSubscriptionData.mockResolvedValue({
       quota: {
         actionsEnabled: true,
       },
-    } as Awaited<ReturnType<SubscriptionLibrary['getSubscriptionData']>>);
+    } as Awaited<ReturnType<SubscriptionLibrary['getCloudSubscriptionData']>>);
   });
 
   afterEach(() => {
@@ -551,11 +551,11 @@ describe('ActionLibrary', () => {
   it('does not run when actions quota is disabled', async () => {
     const getEvent = jest.fn().mockResolvedValue({});
     setIsCloud(true);
-    getSubscriptionData.mockResolvedValueOnce({
+    getCloudSubscriptionData.mockResolvedValueOnce({
       quota: {
         actionsEnabled: false,
       },
-    } as Awaited<ReturnType<SubscriptionLibrary['getSubscriptionData']>>);
+    } as Awaited<ReturnType<SubscriptionLibrary['getCloudSubscriptionData']>>);
     getAction.mockResolvedValueOnce({
       enabled: true,
       script: `

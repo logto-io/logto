@@ -270,7 +270,7 @@ export class JwtCustomizerLibrary {
       return true;
     }
 
-    const { quota } = await this.subscription.getSubscriptionData();
+    const { quota } = await this.subscription.getCloudSubscriptionData();
 
     return quota.customJwtEnabled;
   }

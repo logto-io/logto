@@ -161,7 +161,7 @@ export class QuotaLibrary {
       return;
     }
 
-    const subscriptionData = await this.subscription.getSubscriptionData();
+    const subscriptionData = await this.subscription.getCloudSubscriptionData();
 
     const tenantUsageQuery = new TenantUsageQuery(
       this.tenantId,
@@ -208,7 +208,7 @@ export class QuotaLibrary {
       return;
     }
 
-    const { planId, isEnterprisePlan } = await this.subscription.getSubscriptionData();
+    const { planId, isEnterprisePlan } = await this.subscription.getCloudSubscriptionData();
 
     if (this.shouldReportSubscriptionUpdates(planId, isEnterprisePlan, key)) {
       await reportSubscriptionUpdates(this.cloudConnection, key);

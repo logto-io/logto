@@ -80,7 +80,7 @@ describe('koaTokenUsageGuard mounted on the OIDC provider', () => {
     stubIsCloud(true);
     const tenant = new MockTenant();
 
-    Sinon.stub(tenant.subscription, 'getSubscriptionData').resolves(
+    Sinon.stub(tenant.subscription, 'getCloudSubscriptionData').resolves(
       buildSubscription(ReservedPlanId.Free)
     );
     Sinon.stub(tenant.subscription, 'getTenantTokenUsage').resolves(buildTokenUsage(tokenLimit));
@@ -95,7 +95,7 @@ describe('koaTokenUsageGuard mounted on the OIDC provider', () => {
     stubIsCloud(true);
     const tenant = new MockTenant();
 
-    Sinon.stub(tenant.subscription, 'getSubscriptionData').resolves(
+    Sinon.stub(tenant.subscription, 'getCloudSubscriptionData').resolves(
       buildSubscription(ReservedPlanId.Free)
     );
     const getTenantTokenUsage = Sinon.stub(tenant.subscription, 'getTenantTokenUsage').resolves(
@@ -114,7 +114,7 @@ describe('koaTokenUsageGuard mounted on the OIDC provider', () => {
     stubIsCloud(true);
     const tenant = new MockTenant();
     const subscription = createSubscriptionLibrary(tenant, adminTenantId);
-    const getSubscriptionData = Sinon.stub(subscription, 'getSubscriptionData').resolves(
+    const getCloudSubscriptionData = Sinon.stub(subscription, 'getCloudSubscriptionData').resolves(
       buildSubscription(ReservedPlanId.Free)
     );
 
@@ -122,7 +122,7 @@ describe('koaTokenUsageGuard mounted on the OIDC provider', () => {
       '/oidc/token'
     );
 
-    expect(getSubscriptionData.called).toBe(false);
+    expect(getCloudSubscriptionData.called).toBe(false);
     expect(response.status).toBe(400);
   });
 
@@ -130,7 +130,7 @@ describe('koaTokenUsageGuard mounted on the OIDC provider', () => {
     stubIsCloud(true);
     const tenant = new MockTenant();
 
-    Sinon.stub(tenant.subscription, 'getSubscriptionData').resolves(
+    Sinon.stub(tenant.subscription, 'getCloudSubscriptionData').resolves(
       buildSubscription(ReservedPlanId.Pro)
     );
     const getTenantTokenUsage = Sinon.stub(tenant.subscription, 'getTenantTokenUsage').resolves(
@@ -147,30 +147,32 @@ describe('koaTokenUsageGuard mounted on the OIDC provider', () => {
     stubIsCloud(true);
     const tenant = new MockTenant();
 
-    const getSubscriptionData = Sinon.stub(tenant.subscription, 'getSubscriptionData').resolves(
-      buildSubscription(ReservedPlanId.Free)
-    );
+    const getCloudSubscriptionData = Sinon.stub(
+      tenant.subscription,
+      'getCloudSubscriptionData'
+    ).resolves(buildSubscription(ReservedPlanId.Free));
     Sinon.stub(tenant.subscription, 'getTenantTokenUsage').resolves(buildTokenUsage(tokenLimit));
 
     const response = await createRequester(createProvider(tenant)).get(
       '/oidc/.well-known/openid-configuration'
     );
 
-    expect(getSubscriptionData.called).toBe(false);
+    expect(getCloudSubscriptionData.called).toBe(false);
     expect(response.status).toBe(200);
   });
 
   it('should not mount the token usage guard outside of Cloud', async () => {
     stubIsCloud(false);
     const tenant = new MockTenant();
-    const getSubscriptionData = Sinon.stub(tenant.subscription, 'getSubscriptionData').resolves(
-      buildSubscription(ReservedPlanId.Free)
-    );
+    const getCloudSubscriptionData = Sinon.stub(
+      tenant.subscription,
+      'getCloudSubscriptionData'
+    ).resolves(buildSubscription(ReservedPlanId.Free));
     Sinon.stub(tenant.subscription, 'getTenantTokenUsage').resolves(buildTokenUsage(tokenLimit));
 
     const response = await createRequester(createProvider(tenant)).post('/oidc/token');
 
-    expect(getSubscriptionData.called).toBe(false);
+    expect(getCloudSubscriptionData.called).toBe(false);
     expect(response.status).toBe(400);
   });
 });

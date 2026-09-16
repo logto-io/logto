@@ -1,5 +1,6 @@
-import { ReservedPlanId } from '@logto/schemas';
-import { createMockUtils } from '@logto/shared/esm';
+import { ReservedPlanId, ossDefaultQuota, resolveLicenseQuota } from '@logto/schemas';
+import { TtlCache } from '@logto/shared';
+import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
 import { mockSubscriptionData } from '#src/__mocks__/cloud-connection.js';
 
@@ -28,6 +29,34 @@ await mockEsmWithActual('#src/utils/subscription/index.js', () => ({
 }));
 
 const { MockTenant } = await import('#src/test-utils/tenant.js');
+const { EnvSet } = await import('#src/env-set/index.js');
+const { buildLicensePayload } = await import('#src/test-utils/license.js');
+const { SubscriptionLibrary } = await import('./subscription.js');
+const LicenseReader = await pickDefault(import('#src/license/LicenseReader.js'));
+
+const originalIsCloud = EnvSet.values.isCloud;
+
+/**
+ * One `MockTenant` serves both entitlement sources, so the flag is flipped per test instead of
+ * being read once when the library is constructed.
+ */
+const setIsCloud = (isCloud: boolean) => {
+  Reflect.set(EnvSet.values, 'isCloud', isCloud);
+};
+
+/** The reader is the source of the license; stubbing it keeps the database out of these tests. */
+const readLicense = jest.spyOn(LicenseReader.shared, 'read');
+
+beforeEach(() => {
+  // Every test below the self-hosted describe exercises the Cloud branch unless it says otherwise.
+  setIsCloud(true);
+  mockGetTenantSubscription.mockClear();
+  readLicense.mockReset();
+});
+
+afterEach(() => {
+  setIsCloud(originalIsCloud);
+});
 
 describe('get subscription data', () => {
   const { subscription } = new MockTenant(undefined);
@@ -159,6 +188,96 @@ describe('get subscription data with cache expiration', () => {
       planId: ReservedPlanId.Pro202509,
     });
     expect(mockGetTenantSubscription).toHaveBeenCalled();
+  });
+});
+
+describe('get self-hosted subscription data', () => {
+  const { subscription } = new MockTenant(undefined);
+
+  beforeEach(() => {
+    setIsCloud(false);
+  });
+
+  it('should derive the subscription from the installed license', async () => {
+    const payload = buildLicensePayload({
+      plan: ReservedPlanId.SelfHostedPro,
+      quota: { hideLogtoBranding: true, samlApplicationsLimit: null },
+    });
+    readLicense.mockResolvedValueOnce({
+      payload,
+      installedAt: '2026-09-14T00:00:00.000Z',
+      quota: resolveLicenseQuota(payload.quota),
+    });
+
+    const subscriptionData = await subscription.getSubscriptionData();
+
+    expect(subscriptionData).toEqual({
+      planId: ReservedPlanId.SelfHostedPro,
+      currentPeriodStart: new Date(payload.iat * 1000).toISOString(),
+      currentPeriodEnd: new Date(payload.exp * 1000).toISOString(),
+      isEnterprisePlan: false,
+      status: 'active',
+      quota: {
+        ...ossDefaultQuota,
+        hideLogtoBranding: true,
+        samlApplicationsLimit: null,
+      },
+      systemLimit: {},
+    });
+    // The license belongs to the deployment rather than to a tenant, so it is read through the
+    // shared pool, which is the only one that can reach the global `systems` table.
+    expect(readLicense).toHaveBeenCalledWith(await EnvSet.sharedPool);
+  });
+
+  it('should mark the self-hosted enterprise plan', async () => {
+    readLicense.mockResolvedValueOnce({
+      payload: buildLicensePayload({ plan: ReservedPlanId.SelfHostedEnterprise }),
+      installedAt: '2026-09-14T00:00:00.000Z',
+      quota: resolveLicenseQuota(),
+    });
+
+    const { planId, isEnterprisePlan } = await subscription.getSubscriptionData();
+
+    expect(planId).toBe(ReservedPlanId.SelfHostedEnterprise);
+    expect(isEnterprisePlan).toBe(true);
+  });
+
+  it('should fall back to the OSS defaults without a license', async () => {
+    // eslint-disable-next-line unicorn/no-useless-undefined -- `undefined` is the reader's answer for a deployment with no license key installed, not a redundant argument.
+    readLicense.mockResolvedValueOnce(undefined);
+
+    const subscriptionData = await subscription.getSubscriptionData();
+
+    expect(subscriptionData).toMatchObject({
+      planId: ReservedPlanId.Development,
+      isEnterprisePlan: false,
+      status: 'active',
+      quota: ossDefaultQuota,
+      systemLimit: {},
+    });
+  });
+
+  it('should leave the tenant subscription cache alone', async () => {
+    const cache = new TtlCache<string, string>(60_000);
+    const getFromCache = jest.spyOn(cache, 'get');
+    const setToCache = jest.spyOn(cache, 'set');
+    const library = new SubscriptionLibrary(
+      subscription.tenantId,
+      subscription.queries,
+      subscription.cloudConnection,
+      cache
+    );
+
+    // eslint-disable-next-line unicorn/no-useless-undefined -- `undefined` is the reader's answer for a deployment with no license key installed, not a redundant argument.
+    readLicense.mockResolvedValue(undefined);
+    await library.getSubscriptionData();
+    await library.getSubscriptionData();
+
+    expect(getFromCache).not.toHaveBeenCalled();
+    expect(setToCache).not.toHaveBeenCalled();
+    expect(mockGetTenantSubscription).not.toHaveBeenCalled();
+    // Caching outside Cloud is the reader's job; it keeps its own in-memory copy of the key.
+    expect(readLicense).toHaveBeenCalledTimes(2);
   });
 });
 

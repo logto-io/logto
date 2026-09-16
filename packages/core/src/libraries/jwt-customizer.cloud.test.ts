@@ -16,7 +16,7 @@ import type { UserLibrary } from './user.js';
 const { jest } = import.meta;
 
 const post = jest.fn();
-const getSubscriptionData = jest.fn(async () => ({ quota: { customJwtEnabled: true } }));
+const getCloudSubscriptionData = jest.fn(async () => ({ quota: { customJwtEnabled: true } }));
 const getWorkerAccessToken = jest.fn(async () => 'worker-access-token');
 
 const scriptRunnerEndpoint = 'http://script-runner.example.com';
@@ -32,7 +32,7 @@ const createLibrary = (tenantId = 'test-tenant') =>
     tenantId,
     {} as Queries,
     cloudConnection,
-    { getSubscriptionData } as unknown as SubscriptionLibrary,
+    { getCloudSubscriptionData } as unknown as SubscriptionLibrary,
     {} as UserLibrary,
     {} as ScopeLibrary
   );
@@ -150,14 +150,14 @@ describe('JwtCustomizerLibrary.runScriptRemotely quota', () => {
   });
 
   it('skips the run when the plan does not include custom JWT', async () => {
-    getSubscriptionData.mockResolvedValueOnce({ quota: { customJwtEnabled: false } });
+    getCloudSubscriptionData.mockResolvedValueOnce({ quota: { customJwtEnabled: false } });
 
     await expect(library.runScriptRemotely(payload)).resolves.toBeUndefined();
     expect(getWorkerAccessToken).not.toHaveBeenCalled();
   });
 
   it('runs when the plan includes custom JWT', async () => {
-    getSubscriptionData.mockResolvedValueOnce({ quota: { customJwtEnabled: true } });
+    getCloudSubscriptionData.mockResolvedValueOnce({ quota: { customJwtEnabled: true } });
     mockScriptRun().reply(200, { ok: true, value: { foo: 'bar' } });
 
     await expect(library.runScriptRemotely(payload)).resolves.toEqual({ foo: 'bar' });
@@ -168,7 +168,7 @@ describe('JwtCustomizerLibrary.runScriptRemotely quota', () => {
     mockScriptRun().reply(200, { ok: true, value: { foo: 'bar' } });
 
     await expect(adminLibrary.runScriptRemotely(payload)).resolves.toEqual({ foo: 'bar' });
-    expect(getSubscriptionData).not.toHaveBeenCalled();
+    expect(getCloudSubscriptionData).not.toHaveBeenCalled();
   });
 
   it('skips the Azure Functions fallback when the plan does not include custom JWT', async () => {
@@ -180,7 +180,7 @@ describe('JwtCustomizerLibrary.runScriptRemotely quota', () => {
     jest
       .spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get')
       .mockReturnValue('function-key');
-    getSubscriptionData.mockResolvedValueOnce({ quota: { customJwtEnabled: false } });
+    getCloudSubscriptionData.mockResolvedValueOnce({ quota: { customJwtEnabled: false } });
 
     await expect(library.runScriptRemotely(payload)).resolves.toBeUndefined();
     expect(remoteRunner.isDone()).toBe(false);
@@ -190,7 +190,7 @@ describe('JwtCustomizerLibrary.runScriptRemotely quota', () => {
     jest.spyOn(EnvSet.values, 'scriptRunnerEndpoint', 'get').mockReturnValue('');
     jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue('');
     jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get').mockReturnValue('');
-    getSubscriptionData.mockResolvedValueOnce({ quota: { customJwtEnabled: false } });
+    getCloudSubscriptionData.mockResolvedValueOnce({ quota: { customJwtEnabled: false } });
 
     await expect(library.runScriptRemotely(payload)).resolves.toBeUndefined();
   });
