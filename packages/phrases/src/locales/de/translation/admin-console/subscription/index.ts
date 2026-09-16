@@ -12,6 +12,8 @@ const subscription = {
     'Für große Teams und Unternehmen mit Anforderungen in Unternehmensqualität.',
   admin_plan: 'Admin-Plan',
   dev_plan: 'Entwicklungsplan',
+  self_hosted_pro_plan: 'Self-Hosted Pro-Plan',
+  self_hosted_enterprise_plan: 'Self-Hosted Enterprise-Plan',
   current_plan: 'Aktueller Plan',
   current_plan_description:
     'Hier ist dein aktueller Tarif. Du kannst einfach deinen Tarifverbrauch einsehen, deine anstehende Rechnung überprüfen und bei Bedarf Änderungen an deinem Tarif vornehmen.',

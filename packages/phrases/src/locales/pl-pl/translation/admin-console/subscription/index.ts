@@ -12,6 +12,8 @@ const subscription = {
   enterprise_description: 'Dla dużych zespołów i firm z wymaganiami klasy enterprise.',
   admin_plan: 'Plan administracyjny',
   dev_plan: 'Plan deweloperski',
+  self_hosted_pro_plan: 'Plan Pro self-hosted',
+  self_hosted_enterprise_plan: 'Plan Przedsiębiorstwo self-hosted',
   current_plan: 'Obecny plan',
   current_plan_description:
     'Oto Twój obecny plan. Łatwo możesz sprawdzić wykorzystanie swojego planu, sprawdzić nadchodzący rachunek i dokonać zmian w planie, jeśli jest to konieczne.',

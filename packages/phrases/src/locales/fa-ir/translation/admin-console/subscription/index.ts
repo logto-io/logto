@@ -11,6 +11,8 @@ const subscription = {
   enterprise_description: 'برای تیم‌های بزرگ و کسب‌وکارهایی با نیازهای سطح سازمانی.',
   admin_plan: 'پلن مدیریت',
   dev_plan: 'پلن توسعه',
+  self_hosted_pro_plan: 'پلن حرفه‌ای self-hosted',
+  self_hosted_enterprise_plan: 'پلن سازمانی self-hosted',
   current_plan: 'پلن فعلی',
   current_plan_description:
     'این پلن فعلی شماست. می‌توانید میزان استفاده از پلن، صورت‌حساب آینده و تغییرات پلن را به راحتی مشاهده کنید.',

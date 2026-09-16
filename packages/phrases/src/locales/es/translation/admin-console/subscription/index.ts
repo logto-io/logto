@@ -12,6 +12,8 @@ const subscription = {
   enterprise_description: 'Para grandes equipos y empresas con requisitos de nivel empresarial.',
   admin_plan: 'Plan de administrador',
   dev_plan: 'Plan de desarrollo',
+  self_hosted_pro_plan: 'Plan Pro autoalojado',
+  self_hosted_enterprise_plan: 'Plan Empresa autoalojado',
   current_plan: 'Plan Actual',
   current_plan_description:
     'Aquí está tu plan actual. Puedes ver fácilmente el uso de tu plan, revisar tu próxima factura y hacer cambios en tu plan según sea necesario.',

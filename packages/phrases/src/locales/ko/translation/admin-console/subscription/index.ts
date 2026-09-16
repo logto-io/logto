@@ -11,6 +11,8 @@ const subscription = {
   enterprise_description: '대규모 팀 및 엔터프라이즈급 요구 사항이 있는 비즈니스를 위한 것입니다.',
   admin_plan: '관리자 플랜',
   dev_plan: '개발 플랜',
+  self_hosted_pro_plan: '셀프 호스팅 프로 요금제',
+  self_hosted_enterprise_plan: '셀프 호스팅 엔터프라이즈 플랜',
   current_plan: '현재 요금제',
   current_plan_description:
     '현재 사용중인 요금제 정보입니다. 요금제 사용 내역을 쉽게 확인하고, 다가오는 청구서를 확인하며 필요에 따라 요금제를 변경할 수 있습니다.',
