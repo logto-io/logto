@@ -1,5 +1,46 @@
 # Change Log
 
+## 1.44.0
+
+### Minor Changes
+
+- c8d00ee8dc: support looking up users by external identity in the Management API
+
+  `GET /api/users` now accepts `identityType`, `identityProvider`, and `identityId` query parameters for exact user lookup. Use `identityType=social` with a connector target (such as `dingtalk`), or `identityType=sso` with an enterprise SSO issuer, together with the user identifier issued by the external provider. The identity filter is combined with other search filters using AND logic
+
+- 3f9fd15331: add authentication policies for SAML applications
+
+  SAML applications force fresh authentication by default, as before. To let a SAML application reuse an existing Logto session, turn off "Always force authentication" in the application settings, or set `authnRequestConfig.forceAuthn` to `false` using the SAML application Management API. The service provider can still require fresh authentication for a single sign-in with `ForceAuthn="true"` (SAML 2.0 core, section 3.4.1).
+
+  SAML assertions report the actual authentication time.
+
+  To require signed authentication requests, set `authnRequestConfig.requireSignedAuthnRequests` to `true` and provide the service provider’s PEM-encoded RSA X.509 certificate in `authnRequestConfig.signingCertificate`. Both HTTP-POST and HTTP-Redirect signatures are verified. Unsigned requests remain accepted by default.
+
+- c5bd438f79: add MFA trusted devices with configurable policies and device management
+
+  Configure tenant-wide trusted-device policies and organization-level restrictions. After completing MFA, users can choose whether to trust their device on a dedicated page at the end of sign-in or sign-up, then skip repeated MFA on that browser. Manage trusted devices through Console, Account Center, the Management API, and the Account API, and subscribe to device lifecycle webhooks.
+
+### Patch Changes
+
+- 7d54310ee0: use a supported base language for API error messages when the requested regional language is unavailable
+- 3da75ce7cf: support a trailing slash in the issuer of OIDC enterprise SSO connectors
+
+  The discovery path is now joined onto the connector's `Issuer`, so `https://idp.example.com/` and `https://idp.example.com` both resolve to `https://idp.example.com/.well-known/openid-configuration`. The stored issuer value stays exactly as configured, so existing SSO identities keep resolving.
+
+  Failed outbound requests made by an OIDC SSO connector now report a concise reason: the error message, or the status code alongside the response body for an HTTP failure.
+
+- Updated dependencies [3f9fd15331]
+- Updated dependencies [a2d6e83a4f]
+- Updated dependencies [c5bd438f79]
+  - @logto/console@1.41.0
+  - @logto/phrases@1.32.0
+  - @logto/schemas@1.44.0
+  - @logto/cli@1.44.0
+  - @logto/experience@1.23.0
+  - @logto/account@0.7.0
+  - @logto/demo-app@1.5.0
+  - @logto/device-demo-app@0.1.0
+
 ## 1.43.0
 
 ### Minor Changes
