@@ -1,11 +1,8 @@
 /**
  * @fileoverview Fetch overrides specific to oidc-provider.
  *
- * The pinned provider calls `fetch(url, options)`, passing a URL string and supplying its SSRF
- * dispatcher through `options.dispatcher`. The opt-out and relay paths rely on this convention and
- * are not general-purpose fetch replacements.
- *
- * Recheck this assumption when upgrading oidc-provider.
+ * The pinned provider calls `fetch(url, options)` with a URL string and its SSRF dispatcher in
+ * `options.dispatcher`; the overrides below rely on that convention. Recheck it when upgrading.
  *
  * @see https://github.com/logto-io/node-oidc-provider/blob/513c523c0e68ee6112da8c871cce86204a136163/lib/helpers/fetch_request.js
  */
@@ -43,26 +40,13 @@ const fetchWithAllowlistedDispatcher: typeof fetch = async (input, init) => {
 };
 
 /**
- * Temporary workaround for OpenAI clients. The client metadata documents of ChatGPT and Codex are
- * all served from chatgpt.com, and chatgpt.com rejects requests from the platform's shared egress
- * addresses outright, so CIMD sign-in with those clients fails before the document is even read.
- * Until OpenAI stops blocking them, Cloud can send these fetches through a relay on a dedicated
- * address. The relay below and the `OPENAI_CIMD_RELAY_HOST` setting go away together once the
- * block is lifted.
+ * Temporary: chatgpt.com rejects requests from the platform's shared egress addresses, so Cloud
+ * fetches the OpenAI client metadata documents through a relay on a dedicated address until the
+ * block is lifted. Only those documents are rewritten; other requests to chatgpt.com stay direct.
  */
 const chatGptOrigin = 'https://chatgpt.com';
-
-/**
- * The client metadata documents of ChatGPT (`/oauth/client.json`, `/oauth/<id>/client.json`) and
- * Codex (`/oauth/codex/client.json`, `/oauth/codex/<id>/client.json`). Only these go through the
- * relay; any other request to chatgpt.com is left alone.
- */
 const openAiCimdDocumentPath = /^\/oauth\/(?:codex\/)?(?:[^/]+\/)?client\.json$/;
 
-/**
- * Rewrites the OpenAI client metadata document URLs to the relay, keeping path and query. Anything
- * else, including inputs outside the provider convention, is returned as is.
- */
 const relayOpenAiCimdDocument = (input: Parameters<typeof fetch>[0], relayHost: string) => {
   const url = typeof input === 'string' ? new URL(input) : undefined;
 
@@ -77,10 +61,6 @@ const relayOpenAiCimdDocument = (input: Parameters<typeof fetch>[0], relayHost: 
   return relayed;
 };
 
-/**
- * How the provider's requests go out: which dispatcher, if any, replaces the provider's own. The
- * first two are self-hosted opt-outs; the fallback is what the pinned provider does on its own.
- */
 const getFetchWithDispatcherPolicy = (): typeof fetch => {
   const { isSsrfProtectionEnabled, ssrfAllowedAddresses } = EnvSet.values;
 
@@ -93,22 +73,16 @@ const getFetchWithDispatcherPolicy = (): typeof fetch => {
   }
 
   /**
-   * A wrapper rather than the bare `fetch`: it resolves the global on every call, exactly like the
-   * provider's own default, so a `fetch` replaced after initialization (test stubs, instrumentation)
-   * is still honored.
+   * Same as the provider's own default, which also resolves the global `fetch` per call, so a
+   * `fetch` replaced after initialization (test stubs, instrumentation) is still honored.
    */
   return async (input, init) => fetch(input, init);
 };
 
 /**
- * The `fetch` for oidc-provider's outgoing requests. Where a request goes (the relay) and how it
- * goes (the dispatcher policy) are composed rather than ordered, so neither depends on how the
- * other is configured, and the options the provider set, dispatcher and timeout included, reach the
- * policy untouched.
- *
- * Today the relay only ever meets the plain policy: it is read in Cloud alone, and CIMD itself is
- * off under the opt-out and the allowlist (see `isCimdEffectivelyEnabled`), so composing over every
- * policy changes nothing there.
+ * The relay is composed over the dispatcher policy rather than ordered before it, so neither
+ * depends on how the other is configured. Today they never meet anyway: CIMD is off under the
+ * opt-out and the allowlist (see `isCimdEffectivelyEnabled`).
  */
 export const getOidcProviderFetch = (): typeof fetch => {
   const { openAiCimdRelayHost } = EnvSet.values;

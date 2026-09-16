@@ -7,9 +7,8 @@ const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
 
 /**
- * The allowlisted fetch builds its dispatcher from the `undici` global dispatcher, which a Jest VM
- * context does not have, so the hand-off is asserted on a stub. The dispatcher itself is covered by
- * the `outbound-request` suite.
+ * A Jest VM context has no `undici` global dispatcher, so the allowlisted fetch cannot run for real
+ * here and its hand-off is asserted on a stub.
  */
 const { ssrfProtectedFetch } = mockEsm('#src/utils/outbound-request.js', () => ({
   ssrfProtectedFetch: jest.fn<Promise<Response>, Parameters<typeof fetch>>(
@@ -123,10 +122,7 @@ describe('getOidcProviderFetch', () => {
       expect(init).toBe(providerOptions);
     });
 
-    /**
-     * GlobalValues rules this combination out today. What this pins is the composition, not the
-     * configuration: a change to the dispatcher policy can never skip the relay.
-     */
+    /** GlobalValues rules this combination out today; what this pins is the composition, not the configuration. */
     it('should relay on top of the allowlisted fetch', async () => {
       stubValues({
         isSsrfProtectionEnabled: true,
