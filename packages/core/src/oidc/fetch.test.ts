@@ -5,9 +5,18 @@ import { EnvSet } from '#src/env-set/index.js';
 import fetchWithoutSsrfDispatcher, { getOidcProviderFetch } from './fetch.js';
 
 const dispatcher = Symbol('dispatcher');
-const requestInit: RequestInit & { dispatcher?: unknown } = {
-  method: 'POST',
+
+/** What the pinned provider passes on every outgoing request, see the file overview of `fetch.ts`. */
+const providerOptions: RequestInit & { dispatcher?: unknown } = {
+  method: 'GET',
+  headers: new Headers({ accept: 'application/json', 'user-agent': '' }),
+  redirect: 'manual',
+  signal: AbortSignal.timeout(2500),
   dispatcher,
+};
+
+const stubValues = (values: Partial<typeof EnvSet.values>) => {
+  Sinon.stub(EnvSet, 'values').value({ ...EnvSet.values, ...values });
 };
 
 describe('getOidcProviderFetch', () => {
@@ -15,59 +24,55 @@ describe('getOidcProviderFetch', () => {
     Sinon.restore();
   });
 
-  it('should preserve the provider native fetch when SSRF protection is enabled', () => {
-    Sinon.stub(EnvSet, 'values').value({
-      ...EnvSet.values,
+  it('should pass requests through with the provider options when nothing applies', async () => {
+    stubValues({
       isSsrfProtectionEnabled: true,
       ssrfAllowedAddresses: [],
-      openAiCimdRelayOrigin: undefined,
+      openAiCimdRelayHost: undefined,
     });
+    const fetchStub = Sinon.stub(globalThis, 'fetch').resolves(new Response());
 
-    expect(getOidcProviderFetch()).toBeUndefined();
+    await getOidcProviderFetch()('https://rp.example.com/jwks', providerOptions);
+
+    const [input, init] = fetchStub.firstCall.args;
+    expect(input).toBe('https://rp.example.com/jwks');
+    expect(init).toBe(providerOptions);
   });
 
   /**
    * The provider's built-in guard has no hook for the allowlist, so a listed address would stay
    * unreachable on this path while being reachable through webhooks and SSO connectors.
    */
-  it('should override the provider fetch when an allowlist is configured', () => {
-    Sinon.stub(EnvSet, 'values').value({
-      ...EnvSet.values,
-      isSsrfProtectionEnabled: true,
-      ssrfAllowedAddresses: ['127.0.0.1'],
-    });
+  it('should swap in the allowlisted dispatcher when an allowlist is configured', async () => {
+    stubValues({ isSsrfProtectionEnabled: true, ssrfAllowedAddresses: ['127.0.0.1'] });
+    const fetchStub = Sinon.stub(globalThis, 'fetch').resolves(new Response());
 
-    expect(getOidcProviderFetch()).toBeDefined();
+    await getOidcProviderFetch()('https://rp.example.com/jwks', providerOptions);
+
+    const [, init] = fetchStub.firstCall.args;
+    expect(init).toMatchObject({ method: 'GET', redirect: 'manual' });
+    expect(init).toHaveProperty('dispatcher');
+    expect(init).not.toHaveProperty('dispatcher', dispatcher);
   });
 
   it('should drop the SSRF-protecting dispatcher when protection is disabled', async () => {
-    Sinon.stub(EnvSet, 'values').value({
-      ...EnvSet.values,
-      isSsrfProtectionEnabled: false,
-      ssrfAllowedAddresses: [],
-    });
+    stubValues({ isSsrfProtectionEnabled: false, ssrfAllowedAddresses: [] });
     const fetchStub = Sinon.stub(globalThis, 'fetch').resolves(new Response());
     const providerFetch = getOidcProviderFetch();
 
     expect(providerFetch).toBe(fetchWithoutSsrfDispatcher);
-    await providerFetch?.('https://rp.example.com/backchannel-logout', requestInit);
+    await providerFetch('https://rp.example.com/backchannel-logout', providerOptions);
 
-    expect(fetchStub.calledOnce).toBe(true);
     const [, init] = fetchStub.firstCall.args;
-    expect(init).toMatchObject({ method: 'POST' });
+    expect(init).toMatchObject({ method: 'GET', redirect: 'manual' });
     expect(init).not.toHaveProperty('dispatcher');
   });
 
   describe('OpenAI CIMD relay', () => {
-    const openAiCimdRelayOrigin = 'https://relay.example.com';
+    const openAiCimdRelayHost = 'relay.example.com';
 
     const stubRelay = () => {
-      Sinon.stub(EnvSet, 'values').value({
-        ...EnvSet.values,
-        isSsrfProtectionEnabled: true,
-        ssrfAllowedAddresses: [],
-        openAiCimdRelayOrigin,
-      });
+      stubValues({ isSsrfProtectionEnabled: true, ssrfAllowedAddresses: [], openAiCimdRelayHost });
 
       return Sinon.stub(globalThis, 'fetch').resolves(new Response());
     };
@@ -80,32 +85,11 @@ describe('getOidcProviderFetch', () => {
     ])('should fetch the document %s from the relay with the options untouched', async (url) => {
       const fetchStub = stubRelay();
 
-      await getOidcProviderFetch()?.(`${url}?v=1`, requestInit);
+      await getOidcProviderFetch()(`${url}?v=1`, providerOptions);
 
       const [input, init] = fetchStub.firstCall.args;
-      expect(String(input)).toBe(
-        `${url.replace('https://chatgpt.com', openAiCimdRelayOrigin)}?v=1`
-      );
-      expect(init).toMatchObject({ method: 'POST', dispatcher });
-    });
-
-    it('should keep the options carried by a Request input', async () => {
-      const fetchStub = stubRelay();
-
-      await getOidcProviderFetch()?.(
-        new Request('https://chatgpt.com/oauth/codex/client.json', {
-          method: 'POST',
-          headers: { accept: 'application/json' },
-        })
-      );
-
-      const [input] = fetchStub.firstCall.args;
-      expect(input).toBeInstanceOf(Request);
-      expect(input).toMatchObject({
-        url: 'https://relay.example.com/oauth/codex/client.json',
-        method: 'POST',
-      });
-      expect(input instanceof Request && input.headers.get('accept')).toBe('application/json');
+      expect(String(input)).toBe(`${url.replace('chatgpt.com', openAiCimdRelayHost)}?v=1`);
+      expect(init).toBe(providerOptions);
     });
 
     it.each([
@@ -116,11 +100,11 @@ describe('getOidcProviderFetch', () => {
     ])('should leave %s untouched', async (url) => {
       const fetchStub = stubRelay();
 
-      await getOidcProviderFetch()?.(url, requestInit);
+      await getOidcProviderFetch()(url, providerOptions);
 
       const [input, init] = fetchStub.firstCall.args;
       expect(input).toBe(url);
-      expect(init).toMatchObject({ method: 'POST', dispatcher });
+      expect(init).toBe(providerOptions);
     });
   });
 });

@@ -1,4 +1,14 @@
-import { cond, type Optional } from '@silverhand/essentials';
+/**
+ * @fileoverview Fetch overrides specific to oidc-provider.
+ *
+ * The pinned provider calls `fetch(url, options)`, passing a URL string and supplying its SSRF
+ * dispatcher through `options.dispatcher`. The opt-out and relay paths rely on this convention and
+ * are not general-purpose fetch replacements.
+ *
+ * Recheck this assumption when upgrading oidc-provider.
+ *
+ * @see https://github.com/logto-io/node-oidc-provider/blob/513c523c0e68ee6112da8c871cce86204a136163/lib/helpers/fetch_request.js
+ */
 
 import { EnvSet } from '#src/env-set/index.js';
 import { ssrfProtectedFetch } from '#src/utils/outbound-request.js';
@@ -37,7 +47,7 @@ const fetchWithAllowlistedDispatcher: typeof fetch = async (input, init) => {
  * all served from chatgpt.com, and chatgpt.com rejects requests from the platform's shared egress
  * addresses outright, so CIMD sign-in with those clients fails before the document is even read.
  * Until OpenAI stops blocking them, Cloud can send these fetches through a relay on a dedicated
- * address. The relay below and the `OPENAI_CIMD_RELAY_ORIGIN` setting go away together once the
+ * address. The relay below and the `OPENAI_CIMD_RELAY_HOST` setting go away together once the
  * block is lifted.
  */
 const chatGptOrigin = 'https://chatgpt.com';
@@ -55,33 +65,28 @@ const openAiCimdDocumentPath = /^\/oauth\/(?:codex\/)?(?:[^/]+\/)?client\.json$/
  * provider set for chatgpt.com apply to the relay as well.
  */
 const createFetchWithOpenAiCimdRelay =
-  (relayOrigin: string): typeof fetch =>
+  (relayHost: string): typeof fetch =>
   async (input, init) => {
-    const url = new URL(input instanceof Request ? input.url : input);
+    const url = typeof input === 'string' ? new URL(input) : undefined;
 
-    if (url.origin !== chatGptOrigin || !openAiCimdDocumentPath.test(url.pathname)) {
+    if (!url || url.origin !== chatGptOrigin || !openAiCimdDocumentPath.test(url.pathname)) {
       return fetch(input, init);
     }
 
-    /**
-     * Concatenated onto the relay origin rather than resolved against it as a base: a pathname
-     * starting with `//` would otherwise be read as a network-path reference and replace the relay
-     * host with path content.
-     */
-    const relayed = new URL(`${relayOrigin}${url.pathname}${url.search}`);
+    const relayed = new URL(url);
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    relayed.host = relayHost;
 
-    return fetch(input instanceof Request ? new Request(relayed, input) : relayed, init);
+    return fetch(relayed, init);
   };
 
 /**
- * The `fetch` for oidc-provider's outgoing requests, or `undefined` to keep the provider's native
- * implementation so future upstream fetch hardening is inherited automatically.
- *
- * The overrides never coexist: the first two are self-hosted opt-outs, while the relay is only
- * read in Cloud, where the protection is always on with no allowlist.
+ * The `fetch` for oidc-provider's outgoing requests. The overrides never coexist: the first two
+ * are self-hosted opt-outs, while the relay is only read in Cloud, where the protection is always
+ * on with no allowlist. The fallback is what the pinned provider does on its own.
  */
-export const getOidcProviderFetch = (): Optional<typeof fetch> => {
-  const { isSsrfProtectionEnabled, ssrfAllowedAddresses, openAiCimdRelayOrigin } = EnvSet.values;
+export const getOidcProviderFetch = (): typeof fetch => {
+  const { isSsrfProtectionEnabled, ssrfAllowedAddresses, openAiCimdRelayHost } = EnvSet.values;
 
   if (!isSsrfProtectionEnabled) {
     return fetchWithoutSsrfDispatcher;
@@ -91,7 +96,11 @@ export const getOidcProviderFetch = (): Optional<typeof fetch> => {
     return fetchWithAllowlistedDispatcher;
   }
 
-  return cond(openAiCimdRelayOrigin && createFetchWithOpenAiCimdRelay(openAiCimdRelayOrigin));
+  if (openAiCimdRelayHost) {
+    return createFetchWithOpenAiCimdRelay(openAiCimdRelayHost);
+  }
+
+  return async (input, init) => fetch(input, init);
 };
 
 export default fetchWithoutSsrfDispatcher;

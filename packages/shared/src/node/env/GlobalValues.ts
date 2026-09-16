@@ -243,17 +243,18 @@ export default class GlobalValues {
   );
 
   /**
-   * Temporary workaround for OpenAI clients: the origin of a relay that mirrors chatgpt.com paths
-   * (`https://relay.example.com`). While set, oidc-provider fetches the client metadata documents
-   * of ChatGPT and Codex from the relay with the same path and query instead of chatgpt.com.
+   * Temporary workaround for OpenAI clients: the host of a relay that mirrors chatgpt.com paths, as
+   * a hostname with an optional port (`relay.example.com`). While set, oidc-provider fetches the
+   * client metadata documents of ChatGPT and Codex from `https://<host>` with the same path and
+   * query instead of chatgpt.com.
    *
    * chatgpt.com rejects requests from the platform's shared egress addresses outright, and a relay
    * on a dedicated address is the only way through without changing the egress of every other
    * outbound request. The SSRF protection still applies to the relay. Only read in Cloud, and
    * unset means no relay; remove the setting once OpenAI lifts the block.
    */
-  public readonly openAiCimdRelayOrigin = conditional(
-    this.isCloud && getEnv('OPENAI_CIMD_RELAY_ORIGIN')
+  public readonly openAiCimdRelayHost = conditional(
+    this.isCloud && getEnv('OPENAI_CIMD_RELAY_HOST')
   );
 
   /** Enables protected app local development without Cloud-only behavior. */
