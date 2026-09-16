@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- `translate="no"`: browser auto-translation rewrites text nodes, which breaks React's
+     DOM bookkeeping and unmounts the app mid-flow. The experience is localized per tenant. -->
+<html lang="en" translate="no">
 
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow" />
+  <meta name="google" content="notranslate" />
   <title></title>
   <script>
     /* See {@link packages/schemas/src/types/ssr.ts} */
