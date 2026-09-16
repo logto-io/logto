@@ -100,6 +100,11 @@ export const getOidcProviderFetch = (): typeof fetch => {
     return createFetchWithOpenAiCimdRelay(openAiCimdRelayHost);
   }
 
+  /**
+   * A wrapper rather than the bare `fetch`: it resolves the global on every call, exactly like the
+   * provider's own default, so a `fetch` replaced after initialization (test stubs, instrumentation)
+   * is still honored.
+   */
   return async (input, init) => fetch(input, init);
 };
 

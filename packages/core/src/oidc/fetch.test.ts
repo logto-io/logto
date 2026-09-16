@@ -1,8 +1,23 @@
+import { createMockUtils } from '@logto/shared/esm';
 import Sinon from 'sinon';
 
 import { EnvSet } from '#src/env-set/index.js';
 
-import fetchWithoutSsrfDispatcher, { getOidcProviderFetch } from './fetch.js';
+const { jest } = import.meta;
+const { mockEsm } = createMockUtils(jest);
+
+/**
+ * The allowlisted fetch builds its dispatcher from the `undici` global dispatcher, which a Jest VM
+ * context does not have, so the hand-off is asserted on a stub. The dispatcher itself is covered by
+ * the `outbound-request` suite.
+ */
+const { ssrfProtectedFetch } = mockEsm('#src/utils/outbound-request.js', () => ({
+  ssrfProtectedFetch: jest.fn<Promise<Response>, Parameters<typeof fetch>>(
+    async () => new Response()
+  ),
+}));
+
+const { default: fetchWithoutSsrfDispatcher, getOidcProviderFetch } = await import('./fetch.js');
 
 const dispatcher = Symbol('dispatcher');
 
@@ -22,6 +37,7 @@ const stubValues = (values: Partial<typeof EnvSet.values>) => {
 describe('getOidcProviderFetch', () => {
   afterEach(() => {
     Sinon.restore();
+    ssrfProtectedFetch.mockClear();
   });
 
   it('should pass requests through with the provider options when nothing applies', async () => {
@@ -43,16 +59,16 @@ describe('getOidcProviderFetch', () => {
    * The provider's built-in guard has no hook for the allowlist, so a listed address would stay
    * unreachable on this path while being reachable through webhooks and SSO connectors.
    */
-  it('should swap in the allowlisted dispatcher when an allowlist is configured', async () => {
+  it('should hand requests to the allowlisted fetch without the provider dispatcher', async () => {
     stubValues({ isSsrfProtectionEnabled: true, ssrfAllowedAddresses: ['127.0.0.1'] });
-    const fetchStub = Sinon.stub(globalThis, 'fetch').resolves(new Response());
 
     await getOidcProviderFetch()('https://rp.example.com/jwks', providerOptions);
 
-    const [, init] = fetchStub.firstCall.args;
+    expect(ssrfProtectedFetch).toHaveBeenCalledTimes(1);
+    const [input, init] = ssrfProtectedFetch.mock.calls[0] ?? [];
+    expect(input).toBe('https://rp.example.com/jwks');
     expect(init).toMatchObject({ method: 'GET', redirect: 'manual' });
-    expect(init).toHaveProperty('dispatcher');
-    expect(init).not.toHaveProperty('dispatcher', dispatcher);
+    expect(init).not.toHaveProperty('dispatcher');
   });
 
   it('should drop the SSRF-protecting dispatcher when protection is disabled', async () => {
