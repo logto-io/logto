@@ -34,6 +34,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.integration
+      args:
+        # Forwarded so `DEV_FEATURES_ENABLED=1 pnpm test:integration api` exercises the dev-feature
+        # APIs, matching the flag the test process reads.
+        dev_features_enabled: ${DEV_FEATURES_ENABLED:-}
     depends_on:
       postgres:
         condition: service_healthy
