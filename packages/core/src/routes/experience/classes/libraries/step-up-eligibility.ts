@@ -3,10 +3,10 @@
  * can still contribute to the selected ACR, and whether the subject can reach it at all.
  *
  * Everything here is evaluated on read and never persisted, so a factor the user unbinds during
- * the interaction's lifetime disappears from the next read. Reachability is not restated here: it
- * is a bounded search over `achieveAcr`, the one definition of what a set of contributions
- * reaches, so the methods offered can never disagree with what a submission derives. The
- * candidates are the subject's enrolled methods; later milestones add enrollable factors and
+ * the interaction's lifetime disappears from the next read. Neither reachability nor eligibility is
+ * restated here: both are bounded searches over `achieveAcr`, the one definition of what a set of
+ * contributions reaches, so the methods offered can never disagree with what a submission derives.
+ * The candidates are the subject's enrolled methods; later milestones add enrollable factors and
  * establishable first factors as further candidate contributions.
  */
 import {
@@ -50,9 +50,10 @@ export type StepUpEligibilityInput = {
 
 export type StepUpEligibility = {
   /**
-   * The methods that make progress toward {@link StepUpEligibilityInput.selectedAcr} from where the
-   * interaction stands: the next step of a shortest path to the class. Empty once the class is
-   * reached or when nothing helps.
+   * The methods that can still contribute to {@link StepUpEligibilityInput.selectedAcr} from where
+   * the interaction stands: every method that some path to the class needs and no shorter method of
+   * the same factor beats, shortest path first. Empty once the class is reached or when nothing
+   * helps.
    */
   availableMethods: VerificationType[];
   /**
@@ -171,11 +172,66 @@ const distanceTo = (
 };
 
 /**
+ * Whether the candidate lies on a path to the target on which it is not redundant: some completion
+ * drawn from the remaining candidates reaches the class with it and falls short without it.
+ *
+ * This is what "can still contribute" means, and it is the reason a method is offered. A candidate
+ * every path reaches the class without is never offered, so a role the carried context already
+ * fills is not asked for again: on a password session the password completes nothing the session
+ * does not already supply, while an MFA factor does. A candidate only a longer path needs is still
+ * offered, so a `both`-class passkey no longer hides the two-step password + TOTP path behind
+ * itself and leaves a user whose passkey is on another device with nothing to pick.
+ */
+const contributesTo = (
+  {
+    target,
+    carried,
+    proofs,
+    candidate,
+    others,
+  }: {
+    target: LogtoAcr;
+    carried: readonly AuthenticationContribution[];
+    proofs: readonly AuthenticationContribution[];
+    candidate: VerificationType;
+    others: readonly VerificationType[];
+  },
+  steps = maxSteps - 1
+): boolean => {
+  if (
+    acrSatisfies(achieveAcr([...proofs, toContribution(candidate)], carried), target) &&
+    !acrSatisfies(achieveAcr(proofs, carried), target)
+  ) {
+    return true;
+  }
+
+  if (steps === 0) {
+    return false;
+  }
+
+  return others.some((other, index) =>
+    contributesTo(
+      {
+        target,
+        carried,
+        proofs: [...proofs, toContribution(other)],
+        candidate,
+        others: others.filter((_, otherIndex) => otherIndex !== index),
+      },
+      steps - 1
+    )
+  );
+};
+
+/**
  * Compute the step-up eligibility of the subject for the selected class; see the file overview
  * and the eligibility table of the Experience step-up flow design.
  *
- * `availableMethods` is the next step of a shortest path to the class, so a password session with
- * an enrolled TOTP requesting `mfa` is offered the TOTP only. When the class is `mfa` and no
+ * `availableMethods` is every method that can still contribute (see {@link contributesTo}) and that
+ * no shorter method of the same factor beats, ordered by how many verifications remain after it. So
+ * a password session with an enrolled TOTP requesting `mfa` is still offered the MFA subset only,
+ * while a user whose passkey reaches `mfa` alone is offered the passkey first and the password +
+ * TOTP path behind it. When the class is `mfa` and no
  * Logto-verifiable `1fa` context exists yet, in the carried context or in this interaction, the
  * `1fa`-role methods are offered before the `mfa`-role ones: a social / SSO session establishes
  * `1fa` before an MFA factor counts. The carried context never satisfies the class alone, so a
@@ -194,18 +250,45 @@ export const computeStepUpEligibility = ({
     ...getMfaMethods(user, mfaSettings, connectors),
   ];
   const distance = distanceTo({ target: selectedAcr, carried, proofs, candidates });
-  const nextSteps = Number.isFinite(distance)
-    ? candidates.filter(
-        (candidate, index) =>
-          distanceTo({
-            target: selectedAcr,
-            carried,
-            proofs: [...proofs, toContribution(candidate)],
-            candidates: candidates.filter((_, otherIndex) => otherIndex !== index),
-          }) ===
-          distance - 1
-      )
-    : [];
+  const remainingCandidates = (index: number) =>
+    candidates.filter((_, otherIndex) => otherIndex !== index);
+  // No finiteness guard is needed: reaching the class is what makes a candidate contribute, so an
+  // unreachable class leaves every candidate out on its own.
+  const contributing = candidates.flatMap((candidate, index) =>
+    contributesTo({
+      target: selectedAcr,
+      carried,
+      proofs,
+      candidate,
+      others: remainingCandidates(index),
+    })
+      ? [
+          {
+            candidate,
+            factor: getAuthenticationFactor(candidate),
+            remaining: distanceTo({
+              target: selectedAcr,
+              carried,
+              proofs: [...proofs, toContribution(candidate)],
+              candidates: remainingCandidates(index),
+            }),
+          },
+        ]
+      : []
+  );
+  const nextSteps = contributing
+    // Drop a method that another offered method of the same factor beats. Both ask the user for the
+    // same credential or channel, and the shorter one gets to the class first, so the longer one
+    // adds nothing they could act on. This is what keeps the primary code and the MFA code of one
+    // identifier from being offered together when only one of them finishes.
+    .filter(
+      ({ factor, remaining }) =>
+        !contributing.some((other) => other.factor === factor && other.remaining < remaining)
+    )
+    // Shortest path first; the sort is stable, so methods that leave the same number of steps keep
+    // the order of the eligibility table.
+    .toSorted((left, right) => left.remaining - right.remaining)
+    .map(({ candidate }) => candidate);
   const hasFirstFactorContext = [...carried, ...proofs].some((contribution) =>
     fillsFirstFactorRole(contribution)
   );
