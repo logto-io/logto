@@ -5,3 +5,10 @@
   color: var(--color-text-secondary);
   white-space: pre-line;
 }
+
+.purchase {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: _.unit(4);
+}
