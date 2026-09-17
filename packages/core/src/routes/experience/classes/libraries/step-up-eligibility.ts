@@ -51,9 +51,9 @@ export type StepUpEligibilityInput = {
 export type StepUpEligibility = {
   /**
    * The methods that can still contribute to {@link StepUpEligibilityInput.selectedAcr} from where
-   * the interaction stands: every method that some path to the class needs and no shorter method of
-   * the same factor beats, shortest path first. Empty once the class is reached or when nothing
-   * helps.
+   * the interaction stands: every method that some path to the class needs and no other offered
+   * method of the same factor beats, shortest path first. Empty once the class is reached or when
+   * nothing helps.
    */
   availableMethods: VerificationType[];
   /**
@@ -228,10 +228,10 @@ const contributesTo = (
  * and the eligibility table of the Experience step-up flow design.
  *
  * `availableMethods` is every method that can still contribute (see {@link contributesTo}) and that
- * no shorter method of the same factor beats, ordered by how many verifications remain after it. So
- * a password session with an enrolled TOTP requesting `mfa` is still offered the MFA subset only,
- * while a user whose passkey reaches `mfa` alone is offered the passkey first and the password +
- * TOTP path behind it. When the class is `mfa` and no
+ * no other offered method of the same factor beats, ordered by how many verifications remain after
+ * it. So a password session with an enrolled TOTP requesting `mfa` is still offered the MFA subset
+ * only, while a user whose passkey reaches `mfa` alone is offered the passkey first and the
+ * password + TOTP path behind it. When the class is `mfa` and no
  * Logto-verifiable `1fa` context exists yet, in the carried context or in this interaction, the
  * `1fa`-role methods are offered before the `mfa`-role ones: a social / SSO session establishes
  * `1fa` before an MFA factor counts. The carried context never satisfies the class alone, so a
@@ -278,12 +278,17 @@ export const computeStepUpEligibility = ({
   );
   const nextSteps = contributing
     // Drop a method that another offered method of the same factor beats. Both ask the user for the
-    // same credential or channel, and the shorter one gets to the class first, so the longer one
-    // adds nothing they could act on. This is what keeps the primary code and the MFA code of one
-    // identifier from being offered together when only one of them finishes.
+    // same credential or channel, so a second method of that factor adds nothing they could act on:
+    // a strictly shorter one gets to the class first, and a remaining-count tie is the same action
+    // finishing on its own (the primary code and the MFA code of one identifier for `1fa`). The
+    // first candidate in the eligibility table wins a tie, so the 1fa-role variant is kept.
     .filter(
-      ({ factor, remaining }) =>
-        !contributing.some((other) => other.factor === factor && other.remaining < remaining)
+      ({ factor, remaining }, index) =>
+        !contributing.some(
+          (other, otherIndex) =>
+            other.factor === factor &&
+            (other.remaining < remaining || (other.remaining === remaining && otherIndex < index))
+        )
     )
     // Shortest path first; the sort is stable, so methods that leave the same number of steps keep
     // the order of the eligibility table.
