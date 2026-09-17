@@ -64,6 +64,14 @@ const importPublicKey = async (jwk: string): Promise<CryptoKey | Uint8Array> => 
 };
 
 /**
+ * The overrides that have already been reported as ignored.
+ *
+ * The key is read on every install and on every reader cache miss, so warning on each read would
+ * repeat the same line for as long as the instance runs.
+ */
+const warnedIgnoredOverrides = new Set<string>();
+
+/**
  * The JWK to verify against: the built-in key, or the non-production override that lets tests and
  * local development install keys they signed themselves.
  */
@@ -77,9 +85,12 @@ const readPublicKeyJwk = (): Optional<string> => {
   const { isProduction, isIntegrationTest } = EnvSet.values;
 
   if (isProduction && !isIntegrationTest) {
-    licenseConsoleLog.warn(
-      '`SELF_HOSTED_LICENSE_PUBLIC_KEY` is ignored in production. Licenses are verified against the public key built into Logto.'
-    );
+    if (!warnedIgnoredOverrides.has(override)) {
+      warnedIgnoredOverrides.add(override);
+      licenseConsoleLog.warn(
+        '`SELF_HOSTED_LICENSE_PUBLIC_KEY` is ignored in production. Licenses are verified against the public key built into Logto.'
+      );
+    }
 
     return bakedInPublicKey;
   }

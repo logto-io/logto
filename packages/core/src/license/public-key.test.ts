@@ -45,11 +45,12 @@ describe('getLicensePublicKey()', () => {
     expect(first).toBe(second);
   });
 
-  it('should ignore the environment variable in production and say so', async () => {
+  it('should ignore the environment variable in production and say so once', async () => {
     Reflect.set(EnvSet.values, 'isProduction', true);
     Reflect.set(EnvSet.values, 'isIntegrationTest', false);
     setPublicKey(keyPair.publicKey);
 
+    await expect(getLicensePublicKey()).resolves.toBeUndefined();
     await expect(getLicensePublicKey()).resolves.toBeUndefined();
     expect(warn).toHaveBeenCalledTimes(1);
   });
