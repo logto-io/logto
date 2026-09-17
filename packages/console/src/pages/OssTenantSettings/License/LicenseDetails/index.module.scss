@@ -5,9 +5,11 @@
   color: var(--color-text);
 }
 
+/* Matches the gap `FormField` puts between the fields above, so the action is not closer to the
+   last field than the fields are to each other. */
 .replace {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-top: _.unit(4);
+  margin-top: _.unit(6);
 }
