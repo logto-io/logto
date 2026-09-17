@@ -12,9 +12,10 @@ export const loopbackHostnames = new Set(['localhost', '127.0.0.1', '[::1]']);
 
 export const parseUrl = (value: string) => trySafe(() => new URL(value));
 
-const escapeRegExp = (value: string) => value.replaceAll(/[$()*+.?[\\\]^{|}]/g, String.raw`\$&`);
+export const escapeRegExp = (value: string) =>
+  value.replaceAll(/[$()*+.?[\\\]^{|}]/g, String.raw`\$&`);
 
-const getEffectivePort = (protocol: string, port: string) => {
+export const getEffectivePort = (protocol: string, port: string) => {
   if (port) {
     return port;
   }
