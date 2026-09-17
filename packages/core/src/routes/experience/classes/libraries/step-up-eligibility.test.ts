@@ -132,6 +132,8 @@ describe('computeStepUpEligibility', () => {
         ],
       };
 
+      // Both code variants of an identifier stay: for `1fa` each finishes on its own, so neither
+      // beats the other and the same-factor rule drops nothing.
       expect(compute({ user }).availableMethods).toEqual([
         VerificationType.Password,
         VerificationType.EmailVerificationCode,
@@ -389,15 +391,16 @@ describe('computeStepUpEligibility', () => {
 
     it('offers a way round an MFA factor the session collides with', () => {
       // The session's phone fills the `1fa` role, so the phone MFA code is the same factor and
-      // cannot pair with it: only the email code finishes in one step. The password and the primary
-      // email code each pair with the phone MFA code instead, so a user who cannot reach that
-      // mailbox is no longer forwarded straight into the one method that fails them.
+      // cannot pair with it: only the email code finishes in one step. The password pairs with the
+      // phone MFA code instead, so a user who cannot reach that mailbox is no longer forwarded
+      // straight into the one method that fails them. The primary email code is not offered: it
+      // asks for the same mailbox as the MFA email code and takes one more step, so anyone who
+      // could complete it could have finished with the MFA code already.
       expect(
         compute({ selectedAcr: LogtoAcr.Mfa, carried: phoneSession }).availableMethods
       ).toEqual([
         VerificationType.MfaEmailVerificationCode,
         VerificationType.Password,
-        VerificationType.EmailVerificationCode,
         VerificationType.MfaPhoneVerificationCode,
       ]);
     });
