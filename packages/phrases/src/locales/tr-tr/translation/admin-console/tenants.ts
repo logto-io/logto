@@ -10,6 +10,31 @@ const tenants = {
     oidc_configs: 'OIDC yapılandırmaları',
     subscription: 'Plan ve faturalandırma',
     billing_history: 'Fatura geçmişi',
+    license: 'Lisans',
+  },
+  license: {
+    purchase_title: 'SELF-HOSTED PLANLAR',
+    purchase_description:
+      'Self-hosted Pro ve Kurumsal planlar, kendi örneğinizde Logto markasını gizleme, kendi arayüzünüzü kullanma, IdP tarafından başlatılan SSO, konsolda iş birliği ve sınırsız SAML uygulaması gibi ücretli özellikleri açar. Lisans anahtarınızı almak için bir plan satın alın.',
+    purchase_button: 'Self-hosted planlara göz at',
+    install_title: 'LİSANS KURULUMU',
+    install_description:
+      'Self-hosted plan satın aldıktan sonra aldığınız lisans anahtarını yapıştırın.',
+    install_button: 'Lisansı kur',
+    key_field: 'Lisans anahtarı',
+    key_field_description:
+      'Anahtar örneğinizde doğrulanır ve oradan hiç çıkmaz. Elinizdeki anahtarın süresi dolduysa Logto hesabınızdan yeni bir anahtar alın.',
+    key_placeholder: 'Lisans anahtarınızı buraya yapıştırın',
+    installed_toast: 'Lisans başarıyla kuruldu.',
+    details_title: 'LİSANS',
+    details_description: 'Bu örneğe kurulu lisans ve neleri kapsadığı.',
+    plan_field: 'Plan',
+    environment_field: 'Ortam',
+    environment_production: 'Üretim',
+    environment_non_production: 'Üretim dışı',
+    expires_at_field: 'Bitiş tarihi',
+    installed_at_field: 'Kurulum tarihi',
+    replace_button: 'Lisansı değiştir',
   },
   members: {
     card_title: 'Kiracıları Logto Cloud ile daha güvenli yönetin',

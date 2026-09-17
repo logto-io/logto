@@ -1,15 +1,20 @@
 import { Outlet } from 'react-router-dom';
 
 import { TenantSettingsTabs } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import CardTitle from '@/ds-components/CardTitle';
 import DynamicT from '@/ds-components/DynamicT';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 
 import styles from './index.module.scss';
-import { shouldShowOssTenantMembersTab } from './utils';
+import { shouldShowOssTenantLicenseTab, shouldShowOssTenantMembersTab } from './utils';
 
 function OssTenantSettings() {
   const shouldShowMembersTab = shouldShowOssTenantMembersTab({ isCloud: false });
+  const shouldShowLicenseTab = shouldShowOssTenantLicenseTab({
+    isCloud: false,
+    isDevFeaturesEnabled,
+  });
 
   return (
     <div className={styles.container}>
@@ -25,6 +30,11 @@ function OssTenantSettings() {
         {shouldShowMembersTab && (
           <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.Members}`}>
             <DynamicT forKey="tenants.tabs.members" />
+          </TabNavItem>
+        )}
+        {shouldShowLicenseTab && (
+          <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.License}`}>
+            <DynamicT forKey="tenants.tabs.license" />
           </TabNavItem>
         )}
       </TabNav>

@@ -10,6 +10,31 @@ const tenants = {
     oidc_configs: 'پیکربندی OIDC',
     subscription: 'طرح و صورتحساب',
     billing_history: 'تاریخچه صورتحساب',
+    license: 'مجوز',
+  },
+  license: {
+    purchase_title: 'پلن‌های self-hosted',
+    purchase_description:
+      'پلن‌های حرفه‌ای و سازمانی self-hosted قابلیت‌های پولی را روی نمونه خودتان باز می‌کنند؛ مانند پنهان کردن برند Logto، استفاده از رابط کاربری خودتان، SSO آغازشده توسط IdP، همکاری در کنسول و برنامه‌های SAML نامحدود. برای دریافت کلید مجوز، یک پلن بخرید.',
+    purchase_button: 'مشاهده پلن‌های self-hosted',
+    install_title: 'نصب مجوز',
+    install_description:
+      'کلید مجوزی را که پس از خرید پلن self-hosted دریافت کرده‌اید جای‌گذاری کنید.',
+    install_button: 'نصب مجوز',
+    key_field: 'کلید مجوز',
+    key_field_description:
+      'کلید روی نمونه شما بررسی می‌شود و هرگز از آن خارج نمی‌شود. اگر کلید فعلی منقضی شده است، کلید تازه‌ای را از حساب Logto خود بگیرید.',
+    key_placeholder: 'کلید مجوز خود را اینجا جای‌گذاری کنید',
+    installed_toast: 'مجوز با موفقیت نصب شد.',
+    details_title: 'مجوز',
+    details_description: 'مجوز نصب‌شده روی این نمونه و آنچه اعطا می‌کند.',
+    plan_field: 'پلن',
+    environment_field: 'محیط',
+    environment_production: 'تولید',
+    environment_non_production: 'غیرتولیدی',
+    expires_at_field: 'تاریخ انقضا',
+    installed_at_field: 'تاریخ نصب',
+    replace_button: 'جایگزینی مجوز',
   },
   members: {
     card_title: 'مدیریت امن‌تر مستأجرها با Logto Cloud',
