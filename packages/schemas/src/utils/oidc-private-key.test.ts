@@ -144,6 +144,15 @@ describe('OIDC private key helpers', () => {
     ]);
   });
 
+  it('returns the original keys when there is no staged Next key', () => {
+    const privateKeys = [
+      createPrivateKey('current', 2, OidcSigningKeyStatus.Current),
+      createPrivateKey('previous', 1, OidcSigningKeyStatus.Previous),
+    ];
+
+    expect(rotateOidcPrivateKeyStatuses(privateKeys)).toBe(privateKeys);
+  });
+
   it('preserves status order when deleting Previous', () => {
     expect(
       getOidcPrivateKeysAfterDeletion(
