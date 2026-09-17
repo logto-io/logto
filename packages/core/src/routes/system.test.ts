@@ -24,7 +24,7 @@ const keyPair = await createLicenseKeyPair();
 
 /** The public key the mocked build trusts, so a test can install licenses this instance accepts. */
 const trustedKey = await importJWK(JSON.parse(keyPair.publicKey) as JWK, 'EdDSA');
-const getLicensePublicKey = async () => trustedKey;
+const getLicensePublicKey = jest.fn(async (): Promise<unknown> => trustedKey);
 mockEsm('#src/license/public-key.js', () => ({ getLicensePublicKey }));
 
 /**
@@ -171,6 +171,18 @@ describe('system license route', () => {
 
     expect(response.status).toEqual(400);
     expect(response.body).toMatchObject({ code: 'license.invalid_key' });
+    expect(upsertSystem).not.toHaveBeenCalled();
+  });
+
+  it('PUT /systems/license should not blame the key when this build trusts none', async () => {
+    // eslint-disable-next-line unicorn/no-useless-undefined -- the mocked return value is what this asserts on
+    getLicensePublicKey.mockImplementationOnce(async () => undefined);
+    const jwt = await signLicenseKey(buildLicensePayload(), keyPair.privateKey);
+
+    const response = await systemRequest.put('/systems/license').send({ license: jwt });
+
+    expect(response.status).toEqual(500);
+    expect(response.body).not.toMatchObject({ code: 'license.invalid_key' });
     expect(upsertSystem).not.toHaveBeenCalled();
   });
 

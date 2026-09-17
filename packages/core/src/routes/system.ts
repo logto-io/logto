@@ -4,7 +4,11 @@ import { z } from 'zod';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import LicenseReader from '#src/license/LicenseReader.js';
-import { LicenseVerificationError, verifyLicenseKey } from '#src/license/verify.js';
+import {
+  LicenseVerificationError,
+  LicenseVerificationErrorCode,
+  verifyLicenseKey,
+} from '#src/license/verify.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { createSystemsQuery } from '#src/queries/system.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -16,15 +20,12 @@ import type { ManagementApiRouter, RouterInitArgs } from './types.js';
  * caller cannot copy it to another deployment.
  */
 const licenseResponseGuard = z.object({
-  /** The plan the key grants. */
   plan: z.enum(selfHostedPlanIds),
-  /** The deployment the key was issued for, as declared by whoever installed it. */
+  /** The environment the key was issued for. Not checked against this deployment. */
   env: z.nativeEnum(LicenseEnv),
   /** The effective entitlements: the self-hosted defaults with the key's overrides applied. */
   quota: licenseQuotaGuard,
-  /** When the key expires, as an ISO 8601 timestamp. */
   expiresAt: z.string(),
-  /** When the installed key was installed, as an ISO 8601 timestamp. */
   installedAt: z.string(),
 });
 
@@ -39,8 +40,17 @@ const assertNotCloud = () => {
   );
 };
 
+/** The verification failures the submitted key is responsible for. */
+const invalidKeyErrorCodes = Object.freeze([
+  LicenseVerificationErrorCode.InvalidSignature,
+  LicenseVerificationErrorCode.InvalidPayload,
+]);
+
 /**
  * Verify a license key against the public key this build trusts and read its claims.
+ *
+ * A public key this build does not have or cannot use is a server misconfiguration rather than a
+ * bad key, so it surfaces as a server error instead of telling the caller their key is invalid.
  *
  * @throws {RequestError} `license.invalid_key` when the key is not signed by a trusted key or its
  * claims are not a license payload.
@@ -49,7 +59,7 @@ const readLicensePayload = async (license: string) => {
   try {
     return await verifyLicenseKey(license);
   } catch (error: unknown) {
-    if (error instanceof LicenseVerificationError) {
+    if (error instanceof LicenseVerificationError && invalidKeyErrorCodes.includes(error.code)) {
       throw new RequestError({ code: 'license.invalid_key' });
     }
 
