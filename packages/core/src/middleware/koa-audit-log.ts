@@ -10,10 +10,10 @@ import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import { getInjectedHeaderValues } from '#src/utils/injected-header-mapping.js';
 import {
-  isRecord,
   sanitizeSensitiveDataRecord,
   stripNullCharactersFromString,
 } from '#src/utils/sensitive-data.js';
+import { isRecord } from '#src/utils/type.js';
 
 const removeUndefinedKeys = (object: Record<string, unknown>) =>
   Object.fromEntries(Object.entries(object).filter(([, value]) => value !== undefined));
