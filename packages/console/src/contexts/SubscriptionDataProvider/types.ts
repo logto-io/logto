@@ -6,10 +6,18 @@ import {
   type SubscriptionResourceScopeUsage,
   type SubscriptionRoleScopeUsage,
 } from '@/cloud/types/router';
+import { type License } from '@/types/license';
 
 type BaseContext = {
   currentSubscription: Subscription;
   onCurrentSubscriptionUpdated: (subscription?: Subscription) => void;
+  /**
+   * The license installed on this self-hosted deployment, or `undefined` when there is none or
+   * when running on Cloud, where the subscription is the entitlement source.
+   */
+  license?: License;
+  /** Re-read the installed license, e.g. after installing or replacing one. */
+  mutateLicense: () => void;
 };
 
 export type SubscriptionUsageOptions<T extends keyof SubscriptionCountBasedUsage> = {
