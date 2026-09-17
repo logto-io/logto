@@ -13,7 +13,7 @@ function PurchaseCard() {
       <div className={styles.description}>
         <DynamicT forKey="tenants.license.purchase_description" />
       </div>
-      <div>
+      <div className={styles.purchase}>
         <Button
           type="primary"
           title="tenants.license.purchase_button"
