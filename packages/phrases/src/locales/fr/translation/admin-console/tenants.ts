@@ -10,6 +10,31 @@ const tenants = {
     oidc_configs: 'Configurations OIDC',
     subscription: 'Plan et facturation',
     billing_history: 'Historique de facturation',
+    license: 'Licence',
+  },
+  license: {
+    purchase_title: 'PLANS AUTO-HÉBERGÉS',
+    purchase_description:
+      'Les plans Professionnel et Entreprise auto-hébergés débloquent des fonctionnalités payantes sur votre propre instance : masquer la marque Logto, utiliser votre propre interface, le SSO initié par l’IdP, la collaboration dans la console et des applications SAML illimitées. Achetez un plan pour obtenir votre clé de licence.',
+    purchase_button: 'Voir les plans auto-hébergés',
+    install_title: 'INSTALLER LA LICENCE',
+    install_description:
+      'Collez la clé de licence que vous avez reçue après l’achat d’un plan auto-hébergé.',
+    install_button: 'Installer la licence',
+    key_field: 'Clé de licence',
+    key_field_description:
+      'La clé est vérifiée sur votre instance et n’en sort jamais. Obtenez une nouvelle clé depuis votre compte Logto si la vôtre a expiré.',
+    key_placeholder: 'Collez votre clé de licence ici',
+    installed_toast: 'Licence installée avec succès.',
+    details_title: 'LICENCE',
+    details_description: 'La licence installée sur cette instance et ce qu’elle accorde.',
+    plan_field: 'Plan',
+    environment_field: 'Environnement',
+    environment_production: 'Production',
+    environment_non_production: 'Hors production',
+    expires_at_field: 'Expire le',
+    installed_at_field: 'Installée le',
+    replace_button: 'Remplacer la licence',
   },
   members: {
     card_title: 'Gérez vos locataires plus sûrement avec Logto Cloud',
