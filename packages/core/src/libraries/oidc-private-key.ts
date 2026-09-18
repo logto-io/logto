@@ -18,16 +18,6 @@ import type Queries from '#src/tenants/Queries.js';
 import { syncSigningKeyRotationStateCache } from '#src/tenants/signing-key-rotation-state.js';
 import { exportJWK } from '#src/utils/jwks.js';
 
-export {
-  getCanonicalOidcPrivateKeys,
-  getCurrentOidcPrivateKey,
-  getImmediatelyRotatedOidcPrivateKeys,
-  getOidcPrivateKeysAfterDeletion,
-  getOidcProviderPrivateKeys,
-  getStagedRotatedOidcPrivateKeys,
-  normalizeOidcPrivateKeys,
-} from '@logto/schemas';
-
 /**
  * Export public JWKS from private signing keys in oidc-provider key order.
  */
