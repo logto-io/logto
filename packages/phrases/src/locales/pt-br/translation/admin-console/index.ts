@@ -1,4 +1,3 @@
-import console_sso from './console-sso.js';
 import actions from './actions.js';
 import api_resource_details from './api-resource-details.js';
 import api_resources from './api-resources.js';
@@ -8,6 +7,7 @@ import cloud from './cloud.js';
 import components from './components.js';
 import connector_details from './connector-details.js';
 import connectors from './connectors.js';
+import console_sso from './console-sso.js';
 import contact from './contact.js';
 import dashboard from './dashboard.js';
 import domain from './domain.js';
