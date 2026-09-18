@@ -1,0 +1,19 @@
+@use '@/scss/underscore' as _;
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.domains {
+  display: flex;
+  flex-wrap: wrap;
+  gap: _.unit(1);
+}
+
+.connector {
+  display: flex;
+  align-items: center;
+  gap: _.unit(3);
+}

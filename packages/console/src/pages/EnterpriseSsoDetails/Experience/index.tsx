@@ -1,4 +1,4 @@
-/* eslint-disable max-lines */
+/* eslint-disable max-lines -- Shared SSO experience form keeps related field validation together. */
 import {
   type SsoConnector,
   type SsoConnectorWithProviderConfig,
@@ -9,7 +9,7 @@ import { generateStandardShortId } from '@logto/shared/universal';
 import { conditional } from '@silverhand/essentials';
 import cleanDeep from 'clean-deep';
 import { HTTPError } from 'ky';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useForm, Controller, FormProvider } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
@@ -54,9 +54,15 @@ type DataType = Pick<
 >;
 
 type Props = {
+  readonly onSave?: (
+    data: Partial<Pick<SsoConnector, 'branding' | 'syncProfile' | 'enableTokenStorage'>>
+  ) => Promise<void>;
+  readonly domainField?: React.ReactNode;
+  readonly isConnectorNameEditable?: boolean;
+  readonly isLogoUploadEnabled?: boolean;
   readonly isDeleted: boolean;
   readonly data: DataType;
-  readonly onUpdated: (data: DataType) => void;
+  readonly onUpdated?: (data: DataType) => void;
   readonly isDarkModeEnabled: boolean;
 };
 
@@ -101,9 +107,18 @@ const formDataToSsoConnectorParser = (
   };
 };
 
-function Experience({ data, isDeleted, onUpdated, isDarkModeEnabled }: Props) {
+function Experience({
+  data,
+  isDeleted,
+  onUpdated,
+  isDarkModeEnabled,
+  onSave,
+  domainField,
+  isConnectorNameEditable = true,
+  isLogoUploadEnabled = true,
+}: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { isReady: isUserAssetsServiceReady } = useUserAssetsService();
+  const { isReady: isUserAssetsServiceReady } = useUserAssetsService(isLogoUploadEnabled);
   const api = useApi({ hideErrorToast: true });
   const { getDocumentationUrl } = useDocumentationUrl();
 
@@ -140,6 +155,16 @@ function Experience({ data, isDeleted, onUpdated, isDarkModeEnabled }: Props) {
       }
 
       try {
+        if (onSave) {
+          const { branding, syncProfile, enableTokenStorage } =
+            formDataToSsoConnectorParser(formData);
+          await onSave(
+            cleanDeep({ branding, syncProfile, enableTokenStorage }, { emptyObjects: false })
+          );
+          reset(formData);
+          toast.success(t('general.saved'));
+          return;
+        }
         const updatedSsoConnector = await api
           // TODO: @darcyYe add console test case of clean up `branding` config.
           // Only keep non-empty values since PATCH operation performs a merge scheme.
@@ -153,7 +178,7 @@ function Experience({ data, isDeleted, onUpdated, isDarkModeEnabled }: Props) {
 
         reset(dataToFormParser(updatedSsoConnector));
         toast.success(t('general.saved'));
-        onUpdated(updatedSsoConnector);
+        onUpdated?.(updatedSsoConnector);
       } catch (error: unknown) {
         if (error instanceof HTTPError) {
           const { response } = error;
@@ -192,6 +217,12 @@ function Experience({ data, isDeleted, onUpdated, isDarkModeEnabled }: Props) {
     })
   );
 
+  useEffect(() => {
+    if (onSave) {
+      reset(dataToFormParser(data));
+    }
+  }, [data, onSave, reset]);
+
   const isTokenStorageEnabled = watch('enableTokenStorage');
 
   return (
@@ -207,47 +238,53 @@ function Experience({ data, isDeleted, onUpdated, isDarkModeEnabled }: Props) {
           description="enterprise_sso_details.general_settings_description"
           learnMoreLink={{ href: spInitiatedSsoFlow }}
         >
-          <FormField isRequired title="enterprise_sso_details.connector_name_field_name">
-            <TextInput
-              {...register('connectorName', { required: true })}
-              error={errors.connectorName?.message}
-            />
-          </FormField>
-          {!defaultValues?.domains?.length && (
-            <InlineNotification className={styles.inlineNotification} severity="alert">
-              {t('enterprise_sso_details.configure_domain_field_info_text')}
-            </InlineNotification>
+          {isConnectorNameEditable && (
+            <FormField isRequired title="enterprise_sso_details.connector_name_field_name">
+              <TextInput
+                {...register('connectorName', { required: true })}
+                error={errors.connectorName?.message}
+              />
+            </FormField>
           )}
-          <FormField isRequired title="enterprise_sso_details.email_domain_field_name">
-            <Controller
-              name="domains"
-              control={control}
-              rules={{
-                validate: (value) => {
-                  if (value.length === 0) {
-                    return t('enterprise_sso_details.email_domain_field_required');
-                  }
-                  const { errorMessage } = domainOptionsParser(value);
-                  if (errorMessage) {
-                    return errorMessage;
-                  }
-                  return true;
-                },
-              }}
-              render={({ field: { onChange, value } }) => (
-                <DomainsInput
-                  values={value}
-                  // Per previous error handling on submitting, error message will be truthy.
-                  error={errors.domains?.message}
-                  placeholder="enterprise_sso_details.email_domain_field_placeholder"
-                  onChange={onChange}
-                />
+          {domainField ?? (
+            <>
+              {!defaultValues?.domains?.length && (
+                <InlineNotification className={styles.inlineNotification} severity="alert">
+                  {t('enterprise_sso_details.configure_domain_field_info_text')}
+                </InlineNotification>
               )}
-            />
-            <div className={styles.description}>
-              {t('enterprise_sso_details.email_domain_field_description')}
-            </div>
-          </FormField>
+              <FormField isRequired title="enterprise_sso_details.email_domain_field_name">
+                <Controller
+                  name="domains"
+                  control={control}
+                  rules={{
+                    validate: (value) => {
+                      if (value.length === 0) {
+                        return t('enterprise_sso_details.email_domain_field_required');
+                      }
+                      const { errorMessage } = domainOptionsParser(value);
+                      if (errorMessage) {
+                        return errorMessage;
+                      }
+                      return true;
+                    },
+                  }}
+                  render={({ field: { onChange, value } }) => (
+                    <DomainsInput
+                      values={value}
+                      // Per previous error handling on submitting, error message will be truthy.
+                      error={errors.domains?.message}
+                      placeholder="enterprise_sso_details.email_domain_field_placeholder"
+                      onChange={onChange}
+                    />
+                  )}
+                />
+                <div className={styles.description}>
+                  {t('enterprise_sso_details.email_domain_field_description')}
+                </div>
+              </FormField>
+            </>
+          )}
           <FormField title="enterprise_sso_details.sync_profile_field_name">
             <Controller
               name="syncProfile"

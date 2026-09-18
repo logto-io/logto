@@ -1,3 +1,4 @@
+import console_sso from './console-sso.js';
 import actions from './actions.js';
 import api_resource_details from './api-resource-details.js';
 import api_resources from './api-resources.js';
@@ -113,6 +114,7 @@ const admin_console = {
   inkeep_ai_bot,
   user_identity_details,
   enterprise_subscription,
+  console_sso,
 };
 
 export default Object.freeze(admin_console);

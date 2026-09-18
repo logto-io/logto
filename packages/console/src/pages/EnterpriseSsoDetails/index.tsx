@@ -173,8 +173,8 @@ function EnterpriseSsoDetails() {
             <Connection
               data={ssoConnector}
               isDeleted={isDeleted}
-              onUpdated={(ssoConnector) => {
-                void mutate(ssoConnector);
+              onUpdated={(updated) => {
+                void mutate({ ...ssoConnector, ...updated });
               }}
             />
           )}

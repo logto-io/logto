@@ -1,5 +1,9 @@
 import type router from '@logto/cloud/routes';
-import { type emailLogsRouter, type tenantAuthRouter } from '@logto/cloud/routes';
+import {
+  type consoleSsoRouter,
+  type emailLogsRouter,
+  type tenantAuthRouter,
+} from '@logto/cloud/routes';
 import { type GuardedResponse, type RouterRoutes } from '@withtyped/client';
 
 type GetRoutes = RouterRoutes<typeof router>['get'];
@@ -102,4 +106,12 @@ export type LogtoEnterpriseSubscriptionResponse = GuardedResponse<
 
 export type LogtoEnterpriseSubscriptionInvoiceResponse = GetArrayElementType<
   GuardedResponse<GetRoutes['/api/me/logto-enterprises/:id/invoices']>['invoices']
+>;
+
+export type ConsoleSsoConnector = GuardedResponse<
+  RouterRoutes<typeof consoleSsoRouter>['get']['/api/me/console-sso/connectors/:connectorId']
+>;
+
+export type ConsoleSsoContext = GuardedResponse<
+  RouterRoutes<typeof consoleSsoRouter>['get']['/api/me/console-sso/context']
 >;

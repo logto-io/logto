@@ -11,8 +11,9 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 import { type RequestError } from './use-api';
 
 const useCustomDomain = (autoSync = false) => {
+  const { currentTenantId } = useContext(TenantsContext);
   const { data, error, mutate } = useSWR<Domain[], RequestError>(
-    isCloud && 'api/domains',
+    isCloud && currentTenantId && 'api/domains',
     conditional(
       autoSync && {
         refreshInterval: customDomainSyncInterval * 1000,
