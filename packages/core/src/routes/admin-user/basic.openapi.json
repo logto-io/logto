@@ -215,6 +215,9 @@
               "schema": {
                 "description": "User data to create a new user. All properties are optional.",
                 "properties": {
+                  "id": {
+                    "description": "OSS only. The unique ID for the user, up to 12 characters of letters, numbers, underscores, and hyphens. If not provided, a random ID will be generated. Useful for keeping existing user IDs when migrating from another identity provider. Not supported in Logto Cloud."
+                  },
                   "primaryPhone": {
                     "description": "Primary phone number for the user. It should be unique across all users."
                   },

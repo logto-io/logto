@@ -1,4 +1,5 @@
 const user = {
+  id_already_in_use: "Cet identifiant d'utilisateur est déjà utilisé.",
   username_already_in_use: "Ce nom d'utilisateur est déjà utilisé.",
   username_starts_with_number: "Le nom d'utilisateur ne peut pas commencer par un chiffre.",
   username_invalid_charset_hard:

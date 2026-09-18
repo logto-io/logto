@@ -1,4 +1,5 @@
 const user = {
+  id_already_in_use: 'Bu kullanıcı kimliği zaten kullanımda.',
   username_already_in_use: 'Bu kullanıcı adı zaten kullanımda.',
   username_starts_with_number: 'Kullanıcı adı bir sayı ile başlayamaz.',
   username_invalid_charset_hard: 'Kullanıcı adı yalnızca harfler, sayılar ve alt çizgi içerebilir.',
