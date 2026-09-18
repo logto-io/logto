@@ -28,6 +28,7 @@ const profile = {
       quit_tenant_other: 'Stai per lasciare i seguenti tenant:',
     },
     issues: {
+      console_sso: 'Rimuovi tutti i connettori Console SSO del tuo account prima di eliminarlo.',
       paid_plan:
         "Il seguente tenant ha un piano a pagamento, per favore annulla prima l'abbonamento:",
       paid_plan_other:
