@@ -243,20 +243,48 @@ describe('adminUserRoutes', () => {
       expect(usersLibraries.insertUser).not.toHaveBeenCalled();
     });
 
-    it.each(['', 'a'.repeat(13), 'has space', 'slash/id', 'dot.id'])(
-      'should reject invalid id %p',
-      async (id) => {
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        (EnvSet.values as { isCloud: boolean }).isCloud = false;
+    it.each([
+      'auth0|5f7c8ec7c33c6c004bbafe82',
+      'google-oauth2|103547991597142817347',
+      'user@example.com',
+      'first.last+tag@example.com',
+      '3f2504e0-4f89-11d3-9a0c-0305e82c3301',
+      'user_01H8MZ2QK3V4X5Y6Z7',
+      'org:acme:user',
+      'dXNlcg==',
+      'a'.repeat(128),
+    ])('should accept id %p', async (id) => {
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      (EnvSet.values as { isCloud: boolean }).isCloud = false;
 
-        const response = await userRequest
-          .post('/users')
-          .send({ id, username: 'MJAtLogto', name: 'Michael' });
+      const response = await userRequest
+        .post('/users')
+        .send({ id, username: 'MJAtLogto', name: 'Michael' });
 
-        expect(response.status).toEqual(400);
-        expect(usersLibraries.insertUser).not.toHaveBeenCalled();
-      }
-    );
+      expect(response.status).toEqual(200);
+      expect(response.body).toHaveProperty('id', id);
+    });
+
+    it.each([
+      '',
+      'a'.repeat(129),
+      'has space',
+      'slash/id',
+      'back\\slash',
+      'query?id',
+      'hash#id',
+      'percent%20id',
+    ])('should reject invalid id %p', async (id) => {
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      (EnvSet.values as { isCloud: boolean }).isCloud = false;
+
+      const response = await userRequest
+        .post('/users')
+        .send({ id, username: 'MJAtLogto', name: 'Michael' });
+
+      expect(response.status).toEqual(400);
+      expect(usersLibraries.insertUser).not.toHaveBeenCalled();
+    });
   });
 
   it('POST /users should throw if username exists', async () => {

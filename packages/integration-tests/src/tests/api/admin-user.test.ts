@@ -142,8 +142,13 @@ describe('admin console user management', () => {
   });
 
   describe('create user with custom id', () => {
-    it('should create user with the given id', async () => {
-      const id = `mig_${randomString().slice(0, 8)}`;
+    it.each([
+      (suffix: string) => `mig_${suffix}`,
+      (suffix: string) => `auth0|${suffix}`,
+      (suffix: string) => `${suffix}@example.com`,
+      (suffix: string) => `3f2504e0-4f89-11d3-9a0c-${suffix.slice(0, 12)}`,
+    ])('should create user with the given id (%p)', async (buildId) => {
+      const id = buildId(randomString());
       const user = await createUserByAdmin({ id });
       expect(user.id).toBe(id);
 
@@ -165,7 +170,7 @@ describe('admin console user management', () => {
     });
 
     it('should fail when the given id is invalid', async () => {
-      await expectRejects(createUserByAdmin({ id: 'a'.repeat(13) }), {
+      await expectRejects(createUserByAdmin({ id: 'a'.repeat(129) }), {
         code: 'guard.invalid_input',
         status: 400,
       });

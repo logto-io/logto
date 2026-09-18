@@ -38,8 +38,13 @@ import {
 } from '../../utils/user.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
-/** Matches the `users.id` column width (`varchar(12)`) and keeps IDs safe to embed in URL paths. */
-const customUserIdRegEx = /^[\w-]{1,12}$/;
+/**
+ * Accepts the ID shapes commonly exported by other identity providers (e.g. `auth0|abc123`,
+ * `user@example.com`, UUIDs, `user_01H...`, `org:user`) while rejecting characters that break URL
+ * paths such as whitespace, `/`, `?`, `#`, `%`, and `\`. The length bound matches the `users.id`
+ * column width.
+ */
+const customUserIdRegEx = /^[\w+.:=@|-]{1,128}$/;
 
 export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
   ...args: RouterInitArgs<T>
