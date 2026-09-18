@@ -1,4 +1,5 @@
 const user = {
+  id_already_in_use: 'این شناسه کاربری از قبل در حال استفاده است.',
   username_already_in_use: 'این نام کاربری از قبل در حال استفاده است.',
   username_starts_with_number: 'نام کاربری نمی‌تواند با عدد شروع شود.',
   username_invalid_charset_hard: 'نام کاربری فقط می‌تواند شامل حروف، اعداد و زیرخط باشد.',

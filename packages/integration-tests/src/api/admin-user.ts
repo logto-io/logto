@@ -24,6 +24,7 @@ import { conditional, type Nullable } from '@silverhand/essentials';
 import { authedAdminApi } from './api.js';
 
 export type CreateUserPayload = Partial<{
+  id: string;
   primaryEmail: string;
   primaryPhone: string;
   username: string;

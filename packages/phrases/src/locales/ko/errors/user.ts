@@ -1,4 +1,5 @@
 const user = {
+  id_already_in_use: '이 사용자 ID는 이미 사용 중이에요.',
   username_already_in_use: '이 사용자 이름은 다른 사람이 이미 사용 중이에요.',
   username_starts_with_number: '사용자 이름은 숫자로 시작할 수 없습니다.',
   username_invalid_charset_hard: '사용자 이름에는 문자, 숫자 및 밑줄만 포함될 수 있습니다.',
