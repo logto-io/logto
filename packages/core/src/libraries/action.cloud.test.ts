@@ -16,8 +16,8 @@ import type { SubscriptionLibrary } from './subscription.js';
 const { jest } = import.meta;
 
 const getAction = jest.fn() as jest.MockedFunction<LogtoConfigLibrary['getAction']>;
-const getCloudSubscriptionData = jest.fn() as jest.MockedFunction<
-  SubscriptionLibrary['getCloudSubscriptionData']
+const getSubscriptionData = jest.fn() as jest.MockedFunction<
+  SubscriptionLibrary['getSubscriptionData']
 >;
 const post = jest.fn();
 const trackMetric = jest.fn();
@@ -40,7 +40,7 @@ const createLibrary = (tenantId = 'tenant_id') =>
   new ActionLibrary(
     tenantId,
     { getAction } as unknown as LogtoConfigLibrary,
-    { getCloudSubscriptionData } as unknown as SubscriptionLibrary,
+    { getSubscriptionData } as unknown as SubscriptionLibrary,
     cloudConnection
   );
 
@@ -81,11 +81,11 @@ describe('ActionLibrary Cloud execution routing', () => {
       trackMetric,
       trackException: jest.fn(),
     } as unknown as NonNullable<typeof appInsights.client>;
-    getCloudSubscriptionData.mockResolvedValue({
+    getSubscriptionData.mockResolvedValue({
       quota: {
         actionsEnabled: true,
       },
-    } as Awaited<ReturnType<SubscriptionLibrary['getCloudSubscriptionData']>>);
+    } as Awaited<ReturnType<SubscriptionLibrary['getSubscriptionData']>>);
   });
 
   afterEach(() => {
@@ -427,11 +427,11 @@ describe('ActionLibrary Cloud execution routing on the Azure Functions fallback'
       trackMetric,
       trackException: jest.fn(),
     } as unknown as NonNullable<typeof appInsights.client>;
-    getCloudSubscriptionData.mockResolvedValue({
+    getSubscriptionData.mockResolvedValue({
       quota: {
         actionsEnabled: true,
       },
-    } as Awaited<ReturnType<SubscriptionLibrary['getCloudSubscriptionData']>>);
+    } as Awaited<ReturnType<SubscriptionLibrary['getSubscriptionData']>>);
   });
 
   afterEach(() => {

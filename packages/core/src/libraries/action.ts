@@ -515,7 +515,7 @@ export class ActionLibrary {
       return true;
     }
 
-    const { quota } = await this.subscription.getCloudSubscriptionData();
+    const { quota } = await this.subscription.getSubscriptionData();
 
     return quota.actionsEnabled;
   }

@@ -9,11 +9,7 @@ import LicenseReader from '#src/license/LicenseReader.js';
 import { type TokenUsageCounts, tokenUsageCountsGuard } from '#src/queries/daily-token-usage.js';
 import type Queries from '#src/tenants/Queries.js';
 import { getTenantSubscription } from '#src/utils/subscription/index.js';
-import {
-  type SelfHostedSubscription,
-  type Subscription,
-  type SubscriptionData,
-} from '#src/utils/subscription/types.js';
+import { type SelfHostedSubscription, type Subscription } from '#src/utils/subscription/types.js';
 
 import { type CloudConnectionLibrary } from './cloud-connection.js';
 
@@ -48,83 +44,19 @@ const getTokenUsageCacheTtl = (to: Date) => {
   return Math.min(expiration, tokenUsageCacheTtl);
 };
 
-/**
- * Derive the entitlements of a self-hosted deployment from the license installed on it.
- *
- * Without a license the deployment is plain OSS: the fixed defaults in `ossDefaultQuota` under the
- * development plan, which is what every quota guard already assumes outside Cloud, since all of
- * them short-circuit before reading a subscription there.
- *
- * The license belongs to the deployment rather than to a tenant, so this never touches the
- * Redis-backed `TenantSubscriptionCache`. `LicenseReader` caches the verified key in memory, and
- * that read is the only work involved.
- */
-const getSelfHostedSubscription = async (): Promise<SelfHostedSubscription> => {
-  /**
-   * The license lives in the global `systems` table, which only the shared pool can reach: a tenant
-   * pool connects as the row-level-security restricted role, which has no privileges on it.
-   */
-  const license = await LicenseReader.shared.read(await EnvSet.sharedPool);
-
-  if (!license) {
-    const now = new Date().toISOString();
-
-    // There is no period without a license; the values only keep the envelope complete.
-    return {
-      planId: ReservedPlanId.Development,
-      currentPeriodStart: now,
-      currentPeriodEnd: now,
-      isEnterprisePlan: false,
-      status: 'active',
-      quota: { ...ossDefaultQuota },
-      systemLimit: {},
-    };
-  }
-
-  const { plan, iat, exp } = license.payload;
-
-  return {
-    planId: plan,
-    /**
-     * A license carries no period of its own. `iat` is when the key was signed and `exp` is the end
-     * of the yearly period it covers, so the pair is the closest thing to a period the payload has.
-     */
-    currentPeriodStart: new Date(iat * 1000).toISOString(),
-    currentPeriodEnd: new Date(exp * 1000).toISOString(),
-    isEnterprisePlan: plan === ReservedPlanId.SelfHostedEnterprise,
-    status: 'active',
-    quota: license.quota,
-    systemLimit: {},
-  };
-};
-
 export class SubscriptionLibrary {
-  /**
-   * Get the subscription data of this deployment, from whichever source entitles it.
-   *
-   * @remarks
-   * - On Cloud it is the tenant subscription, retrieved from the Cloud service with redis caching.
-   * - Everywhere else it is derived from the license installed on the deployment, or from the OSS
-   *   defaults when there is none. The license is global rather than per tenant, so the reader's
-   *   in-memory cache keeps this cheap instead of the tenant cache.
-   *
-   * Cloud-only callers read {@link getCloudSubscriptionData} instead, so they keep the Cloud quota
-   * shape.
-   */
-  public readonly getSubscriptionData: () => Promise<SubscriptionData>;
-
   /**
    * Get the Cloud subscription of this tenant with caching.
    *
    * @remarks
    * Cloud only, and every caller is already behind an `isCloud` check: outside Cloud there is no
    * tenant subscription to fetch. Callers that also run on a self-hosted deployment read
-   * {@link getSubscriptionData} instead.
+   * {@link getSelfHostedSubscription} instead.
    *
    * - The cache will be automatically invalidated when the subscription period ends.
    * - Any tenant subscription updates at the Cloud service side will also invalidate the cache.
    */
-  public readonly getCloudSubscriptionData: () => Promise<Subscription>;
+  public readonly getSubscriptionData: () => Promise<Subscription>;
 
   /**
    * Tenant subscription data redis cache.
@@ -148,22 +80,62 @@ export class SubscriptionLibrary {
   ) {
     this.subscriptionCache = new TenantSubscriptionCache(tenantId, cache);
 
-    this.getCloudSubscriptionData = this.subscriptionCache.memoize(
+    this.getSubscriptionData = this.subscriptionCache.memoize(
       async () => getTenantSubscription(this.cloudConnection),
       [SubscriptionRedisCacheKey.Subscription],
       ({ currentPeriodEnd }) => getSubscriptionCacheExpiration(currentPeriodEnd)
     );
+  }
 
-    this.getSubscriptionData = async () => {
+  /**
+   * Get the entitlements of this self-hosted deployment, derived from the license installed on it.
+   *
+   * @remarks
+   * Outside Cloud only: on Cloud the tenant subscription is the entitlement source, read through
+   * {@link getSubscriptionData}. Without a license the deployment is plain OSS: the fixed defaults
+   * in `ossDefaultQuota` under the development plan, which is what every quota guard already assumes
+   * outside Cloud, since all of them short-circuit before reading a subscription there.
+   *
+   * The license belongs to the deployment rather than to a tenant, so this never touches the
+   * Redis-backed `TenantSubscriptionCache`. `LicenseReader` caches the verified key in memory, and
+   * that read is the only work involved.
+   */
+  public async getSelfHostedSubscription(): Promise<SelfHostedSubscription> {
+    /**
+     * The license lives in the global `systems` table, which only the shared pool can reach: a tenant
+     * pool connects as the row-level-security restricted role, which has no privileges on it.
+     */
+    const license = await LicenseReader.shared.read(await EnvSet.sharedPool);
+
+    if (!license) {
+      const now = new Date().toISOString();
+
+      // There is no period without a license; the values only keep the envelope complete.
+      return {
+        planId: ReservedPlanId.Development,
+        currentPeriodStart: now,
+        currentPeriodEnd: now,
+        isEnterprisePlan: false,
+        status: 'active',
+        quota: { ...ossDefaultQuota },
+        systemLimit: {},
+      };
+    }
+
+    const { plan, iat, exp } = license.payload;
+
+    return {
+      planId: plan,
       /**
-       * Read the flag on every call instead of once in the constructor: it comes from the
-       * environment, and tests flip it to exercise both sources.
+       * A license carries no period of its own. `iat` is when the key was signed and `exp` is the end
+       * of the yearly period it covers, so the pair is the closest thing to a period the payload has.
        */
-      if (EnvSet.values.isCloud) {
-        return this.getCloudSubscriptionData();
-      }
-
-      return getSelfHostedSubscription();
+      currentPeriodStart: new Date(iat * 1000).toISOString(),
+      currentPeriodEnd: new Date(exp * 1000).toISOString(),
+      isEnterprisePlan: plan === ReservedPlanId.SelfHostedEnterprise,
+      status: 'active',
+      quota: license.quota,
+      systemLimit: {},
     };
   }
 

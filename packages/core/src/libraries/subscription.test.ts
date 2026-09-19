@@ -34,28 +34,12 @@ const { buildLicensePayload } = await import('#src/test-utils/license.js');
 const { SubscriptionLibrary } = await import('./subscription.js');
 const LicenseReader = await pickDefault(import('#src/license/LicenseReader.js'));
 
-const originalIsCloud = EnvSet.values.isCloud;
-
-/**
- * One `MockTenant` serves both entitlement sources, so the flag is flipped per test instead of
- * being read once when the library is constructed.
- */
-const setIsCloud = (isCloud: boolean) => {
-  Reflect.set(EnvSet.values, 'isCloud', isCloud);
-};
-
 /** The reader is the source of the license; stubbing it keeps the database out of these tests. */
 const readLicense = jest.spyOn(LicenseReader.shared, 'read');
 
 beforeEach(() => {
-  // Every test below the self-hosted describe exercises the Cloud branch unless it says otherwise.
-  setIsCloud(true);
   mockGetTenantSubscription.mockClear();
   readLicense.mockReset();
-});
-
-afterEach(() => {
-  setIsCloud(originalIsCloud);
 });
 
 describe('get subscription data', () => {
@@ -194,10 +178,6 @@ describe('get subscription data with cache expiration', () => {
 describe('get self-hosted subscription data', () => {
   const { subscription } = new MockTenant(undefined);
 
-  beforeEach(() => {
-    setIsCloud(false);
-  });
-
   it('should derive the subscription from the installed license', async () => {
     const payload = buildLicensePayload({
       plan: ReservedPlanId.SelfHostedPro,
@@ -209,7 +189,7 @@ describe('get self-hosted subscription data', () => {
       quota: resolveLicenseQuota(payload.quota),
     });
 
-    const subscriptionData = await subscription.getSubscriptionData();
+    const subscriptionData = await subscription.getSelfHostedSubscription();
 
     expect(subscriptionData).toEqual({
       planId: ReservedPlanId.SelfHostedPro,
@@ -236,7 +216,7 @@ describe('get self-hosted subscription data', () => {
       quota: resolveLicenseQuota(),
     });
 
-    const { planId, isEnterprisePlan } = await subscription.getSubscriptionData();
+    const { planId, isEnterprisePlan } = await subscription.getSelfHostedSubscription();
 
     expect(planId).toBe(ReservedPlanId.SelfHostedEnterprise);
     expect(isEnterprisePlan).toBe(true);
@@ -246,7 +226,7 @@ describe('get self-hosted subscription data', () => {
     // eslint-disable-next-line unicorn/no-useless-undefined -- `undefined` is the reader's answer for a deployment with no license key installed, not a redundant argument.
     readLicense.mockResolvedValueOnce(undefined);
 
-    const subscriptionData = await subscription.getSubscriptionData();
+    const subscriptionData = await subscription.getSelfHostedSubscription();
 
     expect(subscriptionData).toMatchObject({
       planId: ReservedPlanId.Development,
@@ -270,8 +250,8 @@ describe('get self-hosted subscription data', () => {
 
     // eslint-disable-next-line unicorn/no-useless-undefined -- `undefined` is the reader's answer for a deployment with no license key installed, not a redundant argument.
     readLicense.mockResolvedValue(undefined);
-    await library.getSubscriptionData();
-    await library.getSubscriptionData();
+    await library.getSelfHostedSubscription();
+    await library.getSelfHostedSubscription();
 
     expect(getFromCache).not.toHaveBeenCalled();
     expect(setToCache).not.toHaveBeenCalled();

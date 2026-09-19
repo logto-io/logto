@@ -49,21 +49,25 @@ export type Subscription = Omit<
 
 /**
  * The entitlements of a self-hosted deployment, derived from the license installed on it instead of
- * fetched from the Cloud.
+ * fetched from the Cloud. Read through `SubscriptionLibrary.getSelfHostedSubscription()`; the Cloud
+ * shape stays with `SubscriptionLibrary.getSubscriptionData()`.
  *
- * The envelope mirrors {@link Subscription}, so a caller that only reads `planId`, the period or
- * `status` works the same on either source. The quota deliberately does not: a license grants a
- * small, fixed set of self-hosted entitlements rather than a Cloud SKU quota, and the two
- * vocabularies are disjoint apart from `samlApplicationsLimit`. The names follow the license
+ * The envelope mirrors {@link Subscription}, so a caller that only reads `planId`,
+ * `isEnterprisePlan` or `status` can treat either source the same. The quota deliberately does not:
+ * a license grants a small, fixed set of self-hosted entitlements rather than a Cloud SKU quota, and
+ * the two vocabularies are disjoint apart from `samlApplicationsLimit`. The names follow the license
  * payload (`bringYourUi`, not `bringYourUiEnabled`), and `licenseQuotaGuard` in `@logto/schemas` is
  * their single definition.
  */
 export type SelfHostedSubscription = {
   /** The self-hosted plan a license grants, or the OSS default without one. */
   planId: SelfHostedPlanId | ReservedPlanId.Development;
-  /** When the installed key was signed, in ISO 8601 format. */
+  /**
+   * When the installed key was signed, in ISO 8601 format. Without a license there is no period: both
+   * ends are the time of the read rather than a window, so no entitlement can be read out of them.
+   */
   currentPeriodStart: string;
-  /** When the installed key expires, in ISO 8601 format. */
+  /** When the installed key expires, in ISO 8601 format. Without a license, the time of the read. */
   currentPeriodEnd: string;
   /** Whether the plan is the self-hosted Enterprise one. */
   isEnterprisePlan: boolean;
@@ -74,16 +78,6 @@ export type SelfHostedSubscription = {
   /** Empty: system limits only exist on Cloud. Carried so the envelope matches {@link Subscription}. */
   systemLimit: SystemLimit;
 };
-
-/**
- * The subscription of a deployment, from whichever source entitles it.
- *
- * On Cloud it is the tenant subscription returned by the Cloud API; everywhere else it is derived
- * from the installed license, or from the OSS defaults when there is none. Cloud-only callers —
- * every one of them is already behind an `isCloud` check — read the Cloud shape through
- * `SubscriptionLibrary.getCloudSubscriptionData` instead.
- */
-export type SubscriptionData = Subscription | SelfHostedSubscription;
 
 export type SubscriptionUsage = Omit<
   CompleteSubscriptionUsage['usage'],
