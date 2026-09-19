@@ -12,7 +12,12 @@ import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import IconButton from '@/ds-components/IconButton';
 import TextLink from '@/ds-components/TextLink';
 import useTheme from '@/hooks/use-theme';
-import { buildCloudUpsellUrl, buildSelfHostedPlansUrl, ossUpsellEntries } from '@/utils/oss-upsell';
+import {
+  buildCloudUpsellUrl,
+  buildSelfHostedPlansUrl,
+  ossUpsellEntries,
+  getSelfHostedPlansUpsellTargetBlank,
+} from '@/utils/oss-upsell';
 
 import {
   ossCloudSidebarCardDismissDuration,
@@ -97,7 +102,7 @@ function OssCloudCard() {
           className={classNames(styles.link, styles.secondaryLink)}
           href={buildSelfHostedPlansUrl(entry)}
           icon={<ExternalLinkIcon className={styles.linkIcon} />}
-          targetBlank="noopener"
+          targetBlank={getSelfHostedPlansUpsellTargetBlank()}
         >
           {tUpsell('explore_self_hosted_plans')}
         </TextLink>

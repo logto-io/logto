@@ -1,4 +1,9 @@
-import { buildCloudUpsellUrl, buildSelfHostedPlansUrl, ossUpsellEntries } from '@/utils/oss-upsell';
+import {
+  buildCloudUpsellUrl,
+  buildSelfHostedPlansUrl,
+  ossUpsellEntries,
+  getSelfHostedPlansUpsellTargetBlank,
+} from '@/utils/oss-upsell';
 
 type SamlAppLimitBannerVariant = 'inline' | 'footer';
 
@@ -20,5 +25,6 @@ export const getSamlAppLimitBannerContent = ({ variant }: SamlAppLimitBannerCont
     href: buildCloudUpsellUrl(entry),
     secondaryActionKey: 'upsell.explore_self_hosted_plans' as const,
     secondaryHref: buildSelfHostedPlansUrl(entry),
+    secondaryTargetBlank: getSelfHostedPlansUpsellTargetBlank(),
   };
 };
