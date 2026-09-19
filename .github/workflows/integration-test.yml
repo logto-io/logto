@@ -50,6 +50,11 @@ jobs:
       DB_URL: postgres://postgres:postgres@localhost:5432/postgres
       # Mock key for authorized status API access during integration tests
       STATUS_API_KEY: test-status-api-key
+      # The public half of the fixture Ed25519 key pair the self-hosted license tests sign with, so
+      # the instance under test can install a license. See
+      # `packages/integration-tests/src/helpers/license.ts`; honored outside production and during
+      # integration tests.
+      SELF_HOSTED_LICENSE_PUBLIC_KEY: '{"crv":"Ed25519","x":"kW7_S4kvfOBm8dRpABVDK3TU7AReEPzqb4s3FDRBWzg","kty":"OKP"}'
 
     steps:
       - uses: logto-io/actions-run-logto-integration-tests@v4.0.1

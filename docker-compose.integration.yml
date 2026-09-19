@@ -49,6 +49,10 @@ services:
       SECRET_VAULT_KEK: DtPWS09unRXGuRScB60qXqCSsrjd22dUlXt/0oZgxSo=
       STATUS_API_KEY: test-status-api-key
       TRUST_PROXY_HEADER: "1"
+      # The public half of the fixture Ed25519 key pair the self-hosted license tests sign with, so
+      # the instance trusts the licenses those tests install. See
+      # `packages/integration-tests/src/helpers/license.ts`.
+      SELF_HOSTED_LICENSE_PUBLIC_KEY: '{"crv":"Ed25519","x":"kW7_S4kvfOBm8dRpABVDK3TU7AReEPzqb4s3FDRBWzg","kty":"OKP"}'
       # Webhook deliveries target the host through `host.docker.internal`, which resolves to the
       # private bridge gateway. Allow the Docker bridge ranges rather than disabling the SSRF
       # protection. CIMD cannot be enabled while an allowlist is set.

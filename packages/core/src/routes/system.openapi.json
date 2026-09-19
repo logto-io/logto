@@ -16,6 +16,53 @@
           }
         }
       }
+    },
+    "/api/systems/license": {
+      "get": {
+        "tags": ["Dev feature"],
+        "summary": "Get the installed license.",
+        "description": "Get the license installed on this self-hosted deployment, i.e. the plan it grants, the entitlements it unlocks, and its expiration. The license key itself is never returned. Returns 404 when no license is installed, and 501 on Logto Cloud.",
+        "responses": {
+          "200": {
+            "description": "The installed license."
+          },
+          "404": {
+            "description": "No license is installed on this deployment."
+          },
+          "501": {
+            "description": "Licenses are only available on self-hosted deployments."
+          }
+        }
+      },
+      "put": {
+        "tags": ["Dev feature"],
+        "summary": "Install a license.",
+        "description": "Install a license key on this self-hosted deployment, replacing the installed license if there is one. The key's signature is verified against the public key built into Logto before it is saved, and a key past its expiration is rejected as a stale copy. Returns 501 on Logto Cloud.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "license": {
+                    "description": "The license key to install, as issued by Logto Cloud."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The license has been installed."
+          },
+          "400": {
+            "description": "The license key is invalid or has been tampered with, or it has expired."
+          },
+          "501": {
+            "description": "Licenses are only available on self-hosted deployments."
+          }
+        }
+      }
     }
   }
 }

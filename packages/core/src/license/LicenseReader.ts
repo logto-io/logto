@@ -71,8 +71,9 @@ export default class LicenseReader {
    * not verify against the trusted public key, or its claims are not a license payload. Every one
    * of those means the same thing to a caller: the self-hosted defaults apply.
    *
-   * @param pool Any pool for the Logto database. The `systems` table is global, so whichever pool
-   * reads first answers every caller until the cache is invalidated or expires.
+   * @param pool A pool that can reach the global `systems` table, i.e. `EnvSet.sharedPool`. Tenant
+   * pools connect as the row-level-security restricted role, which has no privileges on that table.
+   * Whichever pool reads first answers every caller until the cache is invalidated or expires.
    */
   async read(pool: CommonQueryMethods): Promise<Optional<VerifiedLicense>> {
     /**
