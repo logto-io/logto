@@ -1,4 +1,5 @@
 import {
+  AuthenticationContextMode,
   MfaFactor,
   webAuthnRegistrationOptionsGuard,
   type WebAuthnAuthenticationOptions,
@@ -17,6 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { UserMfaFlow } from '@/types';
 
 import useSendMfaPayload from './use-send-mfa-payload';
+import useStepUpContext from './use-step-up-context';
 import useToast from './use-toast';
 
 type WebAuthnOptions = WebAuthnRegistrationOptions | WebAuthnAuthenticationOptions;
@@ -31,6 +33,8 @@ const useWebAuthnOperation = () => {
   const { t } = useTranslation();
   const { setToast } = useToast();
   const sendMfaPayload = useSendMfaPayload();
+  const { authenticationContext } = useStepUpContext();
+  const isStepUp = authenticationContext?.mode === AuthenticationContextMode.StepUp;
 
   return useCallback(
     /**
@@ -49,13 +53,13 @@ const useWebAuthnOperation = () => {
 
       const response = await trySafe(
         async () =>
-          parsedRegistrationOptions.success
+          !isStepUp && parsedRegistrationOptions.success
             ? startRegistration(parsedRegistrationOptions.data)
             : startAuthentication(options),
         () => {
           setToast(
             t(
-              parsedRegistrationOptions.success
+              !isStepUp && parsedRegistrationOptions.success
                 ? 'mfa.webauthn_failed_to_create'
                 : 'mfa.webauthn_failed_to_verify'
             )
@@ -84,7 +88,7 @@ const useWebAuthnOperation = () => {
             }
       );
     },
-    [sendMfaPayload, setToast, t]
+    [isStepUp, sendMfaPayload, setToast, t]
   );
 };
 

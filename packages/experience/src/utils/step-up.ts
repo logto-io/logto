@@ -83,8 +83,8 @@ export const getMaskedIdentifier = (
 /**
  * The flow state the existing MFA verification pages expect, built from the displayed methods:
  * the enrolled factors Core offers, with the masked identifiers keyed the way those pages read
- * them. Until the MFA pages read the server context themselves, this is what they receive
- * through `location.state`.
+ * them. The navigation hint makes the shared MFA route reload Core's context even when it has
+ * route state; eligibility and mode always come from that fresh response.
  */
 export const toMfaFlowState = (
   methods: readonly StepUpMethod[],
@@ -106,6 +106,7 @@ export const toMfaFlowState = (
   };
 
   return {
+    isStepUp: true,
     availableFactors,
     // The MFA flow state guard infers a full record, while only the enrolled code factors carry
     // an identifier; the MFA pages read it per factor, so a partial record is what they expect.

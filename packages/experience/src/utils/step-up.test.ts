@@ -211,6 +211,7 @@ describe('toMfaFlowState', () => {
         { maskedIdentifiers: {} }
       )
     ).toEqual({
+      isStepUp: true,
       availableFactors: [
         MfaFactor.BackupCode,
         MfaFactor.PhoneVerificationCode,
@@ -232,9 +233,10 @@ describe('toMfaFlowState', () => {
         ],
         { maskedIdentifiers: { email, phone } }
       )
-    ).toEqual({ availableFactors: [], maskedIdentifiers: {} });
+    ).toEqual({ isStepUp: true, availableFactors: [], maskedIdentifiers: {} });
 
     expect(toMfaFlowState([], { maskedIdentifiers: { email, phone } })).toEqual({
+      isStepUp: true,
       availableFactors: [],
       maskedIdentifiers: {},
     });
@@ -247,6 +249,7 @@ describe('toMfaFlowState', () => {
         { maskedIdentifiers: { email, phone } }
       )
     ).toEqual({
+      isStepUp: true,
       availableFactors: [MfaFactor.EmailVerificationCode, MfaFactor.PhoneVerificationCode],
       maskedIdentifiers: {
         [MfaFactor.EmailVerificationCode]: email,
@@ -261,6 +264,7 @@ describe('toMfaFlowState', () => {
         maskedIdentifiers: { email, phone },
       })
     ).toEqual({
+      isStepUp: true,
       availableFactors: [MfaFactor.TOTP, MfaFactor.EmailVerificationCode],
       maskedIdentifiers: { [MfaFactor.EmailVerificationCode]: email },
     });
@@ -271,7 +275,7 @@ describe('toMfaFlowState', () => {
       toMfaFlowState([VerificationType.EmailVerificationCode, VerificationType.TOTP], {
         maskedIdentifiers: { email },
       })
-    ).toEqual({ availableFactors: [MfaFactor.TOTP], maskedIdentifiers: {} });
+    ).toEqual({ isStepUp: true, availableFactors: [MfaFactor.TOTP], maskedIdentifiers: {} });
   });
 
   it('omits the identifier of an offered code factor when the server did not provide one', () => {
@@ -281,6 +285,7 @@ describe('toMfaFlowState', () => {
         { maskedIdentifiers: { phone } }
       )
     ).toEqual({
+      isStepUp: true,
       availableFactors: [MfaFactor.EmailVerificationCode, MfaFactor.PhoneVerificationCode],
       maskedIdentifiers: { [MfaFactor.PhoneVerificationCode]: phone },
     });
@@ -289,6 +294,10 @@ describe('toMfaFlowState', () => {
       toMfaFlowState([VerificationType.MfaEmailVerificationCode], {
         maskedIdentifiers: { email: '' },
       })
-    ).toEqual({ availableFactors: [MfaFactor.EmailVerificationCode], maskedIdentifiers: {} });
+    ).toEqual({
+      isStepUp: true,
+      availableFactors: [MfaFactor.EmailVerificationCode],
+      maskedIdentifiers: {},
+    });
   });
 });

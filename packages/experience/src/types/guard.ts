@@ -76,6 +76,8 @@ const mfaFactorEnumValues = [
 
 const mfaErrorDataShape = {
   availableFactors: mfaFactorsGuard,
+  // Navigation hint only; Core's authentication context determines the actual mode.
+  isStepUp: s.optional(s.boolean()),
   skippable: s.optional(s.boolean()),
   maskedIdentifiers: s.optional(s.record(s.enums(mfaFactorEnumValues), s.string())),
   // Whether this MFA flow is an optional suggestion (e.g., add another factor after sign-up)
