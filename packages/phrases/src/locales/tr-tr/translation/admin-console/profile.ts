@@ -28,6 +28,8 @@ const profile = {
       quit_tenant_other: 'Aşağıdaki kiracılardan çıkmak üzeresin:',
     },
     issues: {
+      console_sso:
+        'Hesabınızı silmeden önce hesabınıza ait tüm Console SSO bağlayıcılarını kaldırın.',
       paid_plan: 'Aşağıdaki kiracıda ücretli bir plan var, lütfen önce aboneliği iptal et:',
       paid_plan_other:
         'Aşağıdaki kiracılarda ücretli planlar var, lütfen önce abonelikleri iptal et:',

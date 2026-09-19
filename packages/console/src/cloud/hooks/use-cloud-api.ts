@@ -14,6 +14,7 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 
 const responseErrorBodyGuard = z.object({
   message: z.string(),
+  error: z.unknown().optional(),
 });
 
 export const tryReadResponseErrorBody = async (error: ResponseError) =>

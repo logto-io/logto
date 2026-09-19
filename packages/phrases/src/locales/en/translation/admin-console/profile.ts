@@ -28,6 +28,8 @@ const profile = {
       quit_tenant_other: 'You are about to quit the following tenants:',
     },
     issues: {
+      console_sso:
+        'Remove all Console SSO connectors owned by your account before deleting your account.',
       paid_plan: 'The following tenant has a paid plan, please cancel the subscription first:',
       paid_plan_other:
         'The following tenants have paid plans, please cancel the subscription first:',
