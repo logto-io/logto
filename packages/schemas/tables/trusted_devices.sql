@@ -5,7 +5,7 @@ create table trusted_devices (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
   id varchar(21) not null,
-  user_id varchar(12) not null
+  user_id varchar(128) not null
     references users (id) on update cascade on delete cascade,
   secret_hash bytea /* @use BufferLike */ not null,
   user_agent text,
