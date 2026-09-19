@@ -122,7 +122,7 @@ const compute = (input: Partial<StepUpEligibilityInput> = {}) =>
 
 describe('computeStepUpEligibility', () => {
   describe('eligibility table', () => {
-    it('lists every method of a fully enrolled user for `1fa`', () => {
+    it('lists each factor once for a fully enrolled user requesting `1fa`', () => {
       const user: User = {
         ...withTotp(passwordUser),
         mfaVerifications: [
@@ -132,17 +132,23 @@ describe('computeStepUpEligibility', () => {
         ],
       };
 
-      // Both code variants of an identifier stay: for `1fa` each finishes on its own, so neither
-      // beats the other and the same-factor rule drops nothing.
+      // A remaining-count tie of the same factor keeps the earlier candidate: for `1fa` the
+      // primary code and the MFA code each finish on their own, so the 1fa-role variant is kept.
       expect(compute({ user }).availableMethods).toEqual([
         VerificationType.Password,
         VerificationType.EmailVerificationCode,
         VerificationType.PhoneVerificationCode,
         VerificationType.WebAuthn,
         VerificationType.TOTP,
-        VerificationType.MfaPhoneVerificationCode,
-        VerificationType.MfaEmailVerificationCode,
         VerificationType.BackupCode,
+      ]);
+    });
+
+    it('keeps the primary code over the MFA code of the same identifier for `1fa`', () => {
+      expect(compute().availableMethods).toEqual([
+        VerificationType.Password,
+        VerificationType.EmailVerificationCode,
+        VerificationType.PhoneVerificationCode,
       ]);
     });
 
@@ -156,8 +162,6 @@ describe('computeStepUpEligibility', () => {
       expect(compute({ user }).availableMethods).toEqual([
         VerificationType.EmailVerificationCode,
         VerificationType.PhoneVerificationCode,
-        VerificationType.MfaPhoneVerificationCode,
-        VerificationType.MfaEmailVerificationCode,
       ]);
     });
 
@@ -169,7 +173,6 @@ describe('computeStepUpEligibility', () => {
       expect(availableMethods).toEqual([
         VerificationType.Password,
         VerificationType.EmailVerificationCode,
-        VerificationType.MfaEmailVerificationCode,
       ]);
       expect(maskedIdentifiers).toEqual({ email: '****@logto.io' });
     });
@@ -287,8 +290,6 @@ describe('computeStepUpEligibility', () => {
         VerificationType.EmailVerificationCode,
         VerificationType.PhoneVerificationCode,
         VerificationType.TOTP,
-        VerificationType.MfaPhoneVerificationCode,
-        VerificationType.MfaEmailVerificationCode,
       ]);
       expect(isReachable).toBe(true);
     });
