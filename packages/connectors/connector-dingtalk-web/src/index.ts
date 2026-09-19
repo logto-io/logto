@@ -18,6 +18,7 @@ import {
   validateConfig,
   ConnectorType,
   parseJson,
+  parseJsonObject,
 } from '@logto/connector-kit';
 
 import {
@@ -59,7 +60,7 @@ const getAuthorizationUri =
 export const getAccessToken = async (
   code: string,
   config: DingtalkConfig
-): Promise<{ accessToken: string }> => {
+): Promise<{ accessToken: string; corpId?: string }> => {
   const { clientId, clientSecret } = config;
 
   const httpResponse = await got.post(accessTokenEndpoint, {
@@ -78,9 +79,9 @@ export const getAccessToken = async (
     throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
   }
 
-  const { accessToken } = result.data;
+  const { accessToken, corpId } = result.data;
 
-  return { accessToken };
+  return { accessToken, corpId };
 };
 
 const getUserInfo =
@@ -89,7 +90,7 @@ const getUserInfo =
     const { code } = await authorizationCallbackHandler(data);
     const config = await getConfig(defaultMetadata.id);
     validateConfig(config, dingtalkConfigGuard);
-    const { accessToken } = await getAccessToken(code, config);
+    const { accessToken, corpId } = await getAccessToken(code, config);
 
     try {
       const httpResponse = await got.get(userInfoEndpoint, {
@@ -98,7 +99,7 @@ const getUserInfo =
         },
         timeout: { request: defaultTimeout },
       });
-      const rawData = parseJson(httpResponse.body);
+      const rawData = parseJsonObject(httpResponse.body);
       const result = userInfoResponseGuard.safeParse(rawData);
 
       if (!result.success) {
@@ -112,7 +113,7 @@ const getUserInfo =
         phone: stateCode && mobile ? `${stateCode}${mobile}` : undefined,
         email,
         name,
-        rawData,
+        rawData: corpId ? { ...rawData, corpId } : rawData,
       };
     } catch (error: unknown) {
       return getUserInfoErrorHandler(error);
