@@ -76,6 +76,29 @@ export const formatPeriod = ({ periodStart, periodEnd, displayYear }: FormatPeri
   return `${formattedStart} - ${formattedEnd}`;
 };
 
+type InvoicePeriod = {
+  periodStart: Date;
+  periodEnd: Date;
+  servicePeriodStart: Nullable<Date>;
+  servicePeriodEnd: Nullable<Date>;
+};
+
+/**
+ * Show the cycle the invoice covers instead of the header period, which is only the metered-usage
+ * window. Cloud leaves the service period `null` when it cannot derive it, so keep the fallback.
+ */
+export const formatInvoicePeriod = ({
+  periodStart,
+  periodEnd,
+  servicePeriodStart,
+  servicePeriodEnd,
+}: InvoicePeriod) =>
+  formatPeriod({
+    periodStart: servicePeriodStart ?? periodStart,
+    periodEnd: servicePeriodEnd ?? periodEnd,
+    displayYear: true,
+  });
+
 // Duplication of `parseExceededQuotaLimitError` with different keys.
 // `parseExceededQuotaLimitError` will be removed soon.
 export const parseExceededSkuQuotaLimitError = async (
