@@ -1,5 +1,5 @@
 import { type LogtoErrorCode } from '@logto/phrases';
-import { type RequestErrorBody } from '@logto/schemas';
+import { type JsonObject, type RequestErrorBody } from '@logto/schemas';
 import cleanDeep from 'clean-deep';
 import { HTTPError } from 'ky';
 import { useEffect, useMemo } from 'react';
@@ -28,14 +28,24 @@ import SamlConnectorSpInfo from './ServiceProviderInfo/SamlConnectorSpInfo';
 import styles from './index.module.scss';
 
 type Props = {
+  readonly onSave?: (config: JsonObject) => Promise<void>;
+  readonly isSigningKeyManagementEnabled?: boolean;
+  readonly isDomainSelectionEnabled?: boolean;
   readonly isDeleted: boolean;
   readonly data: SamlSsoConnectorWithProviderConfig;
-  readonly onUpdated: (data: SamlSsoConnectorWithProviderConfig) => void;
+  readonly onUpdated?: (data: SamlSsoConnectorWithProviderConfig) => void;
 };
 
 const manualHandleErrorCodes: LogtoErrorCode[] = [invalidConfigErrorCode, invalidMetadataErrorCode];
 
-function SamlConnectorForm({ isDeleted, data, onUpdated }: Props) {
+function SamlConnectorForm({
+  isDeleted,
+  data,
+  onUpdated,
+  onSave,
+  isSigningKeyManagementEnabled = true,
+  isDomainSelectionEnabled = true,
+}: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const api = useApi({ hideErrorToast: manualHandleErrorCodes });
@@ -83,6 +93,12 @@ function SamlConnectorForm({ isDeleted, data, onUpdated }: Props) {
       }
 
       try {
+        if (onSave) {
+          await onSave(cleanDeep(formData));
+          reset(formData);
+          toast.success(t('general.saved'));
+          return;
+        }
         const result = await api
           .patch(`api/sso-connectors/${connectorId}`, {
             json: { config: cleanDeep(formData) },
@@ -91,10 +107,14 @@ function SamlConnectorForm({ isDeleted, data, onUpdated }: Props) {
 
         toast.success(t('general.saved'));
 
-        onUpdated(result);
+        onUpdated?.(result);
 
         reset(result.config);
       } catch (error: unknown) {
+        if (onSave) {
+          // The external save handler reports the error and reloads authoritative state.
+          return;
+        }
         if (error instanceof HTTPError) {
           const errorBody = await error.response.clone().json<RequestErrorBody>();
 
@@ -135,8 +155,11 @@ function SamlConnectorForm({ isDeleted, data, onUpdated }: Props) {
             protocol: 'SAML 2.0',
           }}
         >
-          <SamlConnectorSpInfo samlProviderConfig={samlProviderConfig} />
-          <SamlSigningKeySection connectorId={connectorId} />
+          <SamlConnectorSpInfo
+            samlProviderConfig={samlProviderConfig}
+            isDomainSelectionEnabled={isDomainSelectionEnabled}
+          />
+          {isSigningKeyManagementEnabled && <SamlSigningKeySection connectorId={connectorId} />}
         </FormCard>
         <FormCard
           title="enterprise_sso_details.attribute_mapping_title"

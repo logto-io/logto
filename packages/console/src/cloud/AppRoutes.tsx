@@ -4,6 +4,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import DelayedSuspenseFallback from '@/components/DelayedSuspenseFallback';
 import RedirectToAccountCenter from '@/components/RedirectToAccountCenter';
 import { EnterpriseSubscriptionTabs } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import ProtectedRoutes from '@/containers/ProtectedRoutes';
 import { GlobalAnonymousRoute, GlobalRoute } from '@/contexts/TenantsProvider';
 import { OnboardingApp } from '@/onboarding';
@@ -14,6 +15,9 @@ import ExternalGoogleOneTapLanding from '@/pages/ExternalGoogleOneTapLanding';
 import OneTimeTokenLanding from '@/pages/OneTimeTokenLanding';
 
 import styles from './AppRoutes.module.scss';
+import ConsoleSso from './pages/ConsoleSso';
+import ConsoleSsoDetails from './pages/ConsoleSso/Details';
+import SubscriptionLanding from './pages/ConsoleSso/SubscriptionLanding';
 import DeleteAccount from './pages/DeleteAccount';
 import EnterpriseSubscription from './pages/EnterpriseSubscription';
 import BillingHistory from './pages/EnterpriseSubscription/BillingHistory';
@@ -50,6 +54,18 @@ function AppRoutes() {
             <Route path={GlobalRoute.Onboarding + '/*'} element={<OnboardingApp />} />
             <Route path={GlobalRoute.DeleteAccount} element={<DeleteAccount />} />
             <Route index element={<Main />} />
+            {/* Console SSO configuration is available globally during development. */}
+            {isDevFeaturesEnabled && (
+              <Route path={GlobalRoute.EnterpriseSubscription} element={<EnterpriseSubscription />}>
+                <Route index element={<SubscriptionLanding />} />
+                <Route path="console-sso" element={<ConsoleSso />} />
+                <Route
+                  path="console-sso/:connectorId"
+                  element={<Navigate replace to="connection" />}
+                />
+                <Route path="console-sso/:connectorId/:tab" element={<ConsoleSsoDetails />} />
+              </Route>
+            )}
             <Route
               path={`${GlobalRoute.EnterpriseSubscription}/:logtoEnterpriseId`}
               element={<EnterpriseSubscription />}

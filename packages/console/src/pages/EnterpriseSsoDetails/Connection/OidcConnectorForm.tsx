@@ -1,4 +1,4 @@
-import { type RequestErrorBody } from '@logto/schemas';
+import { type JsonObject, type RequestErrorBody } from '@logto/schemas';
 import cleanDeep from 'clean-deep';
 import { HTTPError } from 'ky';
 import { useEffect, useMemo } from 'react';
@@ -10,6 +10,7 @@ import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
+import { trySubmitSafe } from '@/utils/form';
 
 import { invalidConfigErrorCode } from '../config';
 import {
@@ -23,12 +24,14 @@ import OidcMetadataForm from './OidcMetadataForm';
 import OidcConnectorSpInfo from './ServiceProviderInfo/OidcConnectorSpInfo';
 
 type Props = {
+  readonly onSave?: (config: JsonObject) => Promise<void>;
+  readonly serviceProviderInfo?: React.ReactNode;
   readonly isDeleted: boolean;
   readonly data: OidcSsoConnectorWithProviderConfig;
-  readonly onUpdated: (data: OidcSsoConnectorWithProviderConfig) => void;
+  readonly onUpdated?: (data: OidcSsoConnectorWithProviderConfig) => void;
 };
 
-function OidcConnectorForm({ isDeleted, data, onUpdated }: Props) {
+function OidcConnectorForm({ isDeleted, data, onUpdated, onSave, serviceProviderInfo }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useApi({ hideErrorToast: [invalidConfigErrorCode] });
 
@@ -64,42 +67,54 @@ function OidcConnectorForm({ isDeleted, data, onUpdated }: Props) {
     reset(oidcConnectorConfig);
   }, [oidcConnectorConfig, reset]);
 
-  const onSubmit = handleSubmit(async (formData) => {
-    if (isSubmitting) {
-      return;
-    }
-
-    try {
-      const result = await api
-        .patch(`api/sso-connectors/${connectorId}`, {
-          json: {
-            config: cleanDeep(formData),
-          },
-        })
-        .json<OidcSsoConnectorWithProviderConfig>();
-
-      toast.success(t('general.saved'));
-
-      onUpdated(result);
-
-      reset(result.config);
-    } catch (error: unknown) {
-      if (error instanceof HTTPError) {
-        const errorBody = await error.response.clone().json<RequestErrorBody>();
-
-        // Manually handle the error to show the error message in the form.
-        if (errorBody.code === invalidConfigErrorCode) {
-          setError('issuer', {
-            type: 'custom',
-            message: errorBody.message,
-          });
-          return;
-        }
+  const onSubmit = handleSubmit(
+    trySubmitSafe(async (formData) => {
+      if (isSubmitting) {
+        return;
       }
 
-      throw error;
-    }
-  });
+      try {
+        if (onSave) {
+          await onSave(cleanDeep(formData));
+          reset(formData);
+          toast.success(t('general.saved'));
+          return;
+        }
+        const result = await api
+          .patch(`api/sso-connectors/${connectorId}`, {
+            json: {
+              config: cleanDeep(formData),
+            },
+          })
+          .json<OidcSsoConnectorWithProviderConfig>();
+
+        toast.success(t('general.saved'));
+
+        onUpdated?.(result);
+
+        reset(result.config);
+      } catch (error: unknown) {
+        if (onSave) {
+          // The external save handler reports the error and reloads authoritative state.
+          return;
+        }
+        if (error instanceof HTTPError) {
+          const errorBody = await error.response.clone().json<RequestErrorBody>();
+
+          // Manually handle the error to show the error message in the form.
+          if (errorBody.code === invalidConfigErrorCode) {
+            setError('issuer', {
+              type: 'custom',
+              message: errorBody.message,
+            });
+            return;
+          }
+        }
+
+        throw error;
+      }
+    })
+  );
 
   return (
     <FormProvider {...methods}>
@@ -127,7 +142,7 @@ function OidcConnectorForm({ isDeleted, data, onUpdated }: Props) {
             protocol: 'OIDC',
           }}
         >
-          <OidcConnectorSpInfo ssoConnectorId={connectorId} />
+          {serviceProviderInfo ?? <OidcConnectorSpInfo ssoConnectorId={connectorId} />}
         </FormCard>
       </DetailsForm>
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />

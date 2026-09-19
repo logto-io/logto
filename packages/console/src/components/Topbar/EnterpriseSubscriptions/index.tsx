@@ -4,6 +4,7 @@ import useSWR from 'swr';
 import CardIcon from '@/assets/icons/card.svg?react';
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type LogtoEnterpriseResponse } from '@/cloud/types/router';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { GlobalRoute } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import TextLink from '@/ds-components/TextLink';
@@ -22,15 +23,16 @@ function EnterpriseSubscriptions({ className }: Props) {
     async () => cloudApi.get('/api/me/logto-enterprises')
   );
 
-  if (!data || data.logtoEnterprises.length === 0) {
+  // Console SSO exposes global subscriptions independently of tenant plans.
+  if (!isDevFeaturesEnabled && (!data || data.logtoEnterprises.length === 0)) {
     return null;
   }
 
   // Currently only support one enterprise subscription per user
   // If there are multiple, consider adding a dropdown selector in the future
-  const defaultEnterpriseSubscription = data.logtoEnterprises[0];
+  const defaultEnterpriseSubscription = data?.logtoEnterprises[0];
 
-  if (!defaultEnterpriseSubscription) {
+  if (!isDevFeaturesEnabled && !defaultEnterpriseSubscription) {
     return null;
   }
 
@@ -39,7 +41,11 @@ function EnterpriseSubscriptions({ className }: Props) {
       className={classNames(styles.button, className)}
       icon={<CardIcon className={styles.icon} />}
       onClick={() => {
-        window.open(`${GlobalRoute.EnterpriseSubscription}/${defaultEnterpriseSubscription.id}`);
+        window.open(
+          isDevFeaturesEnabled
+            ? GlobalRoute.EnterpriseSubscription
+            : `${GlobalRoute.EnterpriseSubscription}/${defaultEnterpriseSubscription?.id}`
+        );
       }}
     >
       <DynamicT forKey="topbar.subscription" />

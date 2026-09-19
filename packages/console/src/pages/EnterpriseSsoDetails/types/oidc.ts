@@ -4,7 +4,7 @@ import { z } from 'zod';
 /* Oidc Connectors */
 export type OidcSsoConnectorWithProviderConfig = Omit<
   SsoConnectorWithProviderConfig,
-  'providerType'
+  'providerType' | 'tenantId' | 'createdAt' | 'domains'
 > & {
   providerType: SsoProviderType.OIDC;
 };

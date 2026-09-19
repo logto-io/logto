@@ -4,7 +4,7 @@ import { z } from 'zod';
 /* Saml Connectors */
 export type SamlSsoConnectorWithProviderConfig = Omit<
   SsoConnectorWithProviderConfig,
-  'providerType'
+  'providerType' | 'tenantId' | 'createdAt' | 'domains'
 > & {
   providerType: SsoProviderType.SAML;
 };
