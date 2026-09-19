@@ -57,6 +57,10 @@ const security = {
     mode_checkbox: '复选框验证',
     mode_notice:
       '验证模式在 Google Cloud Console 的 reCAPTCHA 密钥设置中定义。更改此处的模式需要匹配的密钥类型。',
+    score_threshold: '分数阈值',
+    score_threshold_description:
+      '低于阈值的分数将被拒绝。0.0 允许所有分数，1.0 只允许满分。默认值为 0.5。',
+    score_threshold_error: '分数阈值必须在 0 到 1 之间。',
   },
   password_policy: {
     password_requirements: '密码要求',

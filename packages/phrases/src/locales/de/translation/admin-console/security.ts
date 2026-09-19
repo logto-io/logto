@@ -59,6 +59,10 @@ const security = {
     mode_checkbox: 'Kontrollkästchen',
     mode_notice:
       'Der Überprüfungsmodus wird in Ihren reCAPTCHA-Schlüsseleinstellungen in der Google Cloud Console definiert. Zum Ändern des Modus hier ist ein passender Schlüsseltyp erforderlich.',
+    score_threshold: 'Punkteschwelle',
+    score_threshold_description:
+      'Bewertungen unterhalb des Schwellenwerts werden abgelehnt. 0.0 erlaubt alle, 1.0 nur perfekte Bewertungen. Standard ist 0.5.',
+    score_threshold_error: 'Die Punkteschwelle muss zwischen 0 und 1 liegen.',
   },
   password_policy: {
     password_requirements: 'Passwortanforderungen',
