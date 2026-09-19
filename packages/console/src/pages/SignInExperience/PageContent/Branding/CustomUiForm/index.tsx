@@ -64,7 +64,7 @@ function OssBringYourUiCard() {
                 {' · '}
                 <TextLink
                   href={cardContent.selfHostedHref}
-                  targetBlank="noopener"
+                  targetBlank={cardContent.selfHostedTargetBlank}
                   className={styles.highlight}
                 >
                   <DynamicT forKey="upsell.explore_self_hosted_plans" />

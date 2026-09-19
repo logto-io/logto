@@ -6,7 +6,12 @@ import DangerousRaw from '@/ds-components/DangerousRaw';
 import FormField from '@/ds-components/FormField';
 import Switch from '@/ds-components/Switch';
 import TextLink from '@/ds-components/TextLink';
-import { buildCloudUpsellUrl, buildSelfHostedPlansUrl, ossUpsellEntries } from '@/utils/oss-upsell';
+import {
+  buildCloudUpsellUrl,
+  buildSelfHostedPlansUrl,
+  ossUpsellEntries,
+  getSelfHostedPlansUpsellTargetBlank,
+} from '@/utils/oss-upsell';
 
 import styles from './index.module.scss';
 
@@ -41,7 +46,7 @@ function OssUpsell() {
             href={cloudUpsellUrl}
             targetBlank="noopener"
           />
-          <TextLink href={selfHostedPlansUrl} targetBlank="noopener">
+          <TextLink href={selfHostedPlansUrl} targetBlank={getSelfHostedPlansUpsellTargetBlank()}>
             {t('upsell.explore_self_hosted_plans')}
           </TextLink>
         </div>

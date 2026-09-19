@@ -16,7 +16,12 @@ import Spacer from '@/ds-components/Spacer';
 import Tag from '@/ds-components/Tag';
 import TextLink from '@/ds-components/TextLink';
 import useTheme from '@/hooks/use-theme';
-import { buildSelfHostedPlansUrl, openCloudUpsell, ossUpsellEntries } from '@/utils/oss-upsell';
+import {
+  buildSelfHostedPlansUrl,
+  openCloudUpsell,
+  ossUpsellEntries,
+  getSelfHostedPlansUpsellTargetBlank,
+} from '@/utils/oss-upsell';
 
 import styles from './index.module.scss';
 
@@ -72,7 +77,7 @@ function OssCloudUpsell({ isBannerVisible, onDismissBanner }: Props) {
               <TextLink
                 className={styles.selfHostedPlansLink}
                 href={buildSelfHostedPlansUrl(entry)}
-                targetBlank="noopener"
+                targetBlank={getSelfHostedPlansUpsellTargetBlank()}
               >
                 {t('upsell.explore_self_hosted_plans')}
               </TextLink>
