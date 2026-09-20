@@ -1,4 +1,5 @@
 import { type IdTokenClaims, Prompt, useLogto } from '@logto/react';
+import { logtoAcrValues } from '@logto/schemas';
 import { useEffect, useState, type FormEventHandler } from 'react';
 
 import styles from './App.module.scss';
@@ -6,7 +7,7 @@ import { getLocalData, setLocalData } from './utils';
 
 const StepUpForm = () => {
   const config = getLocalData('stepUp');
-  const { signIn, getIdTokenClaims, error } = useLogto();
+  const { signIn, getIdTokenClaims } = useLogto();
   const [claims, setClaims] = useState<IdTokenClaims>();
 
   useEffect(() => {
@@ -47,7 +48,7 @@ const StepUpForm = () => {
           id="step-up-acr-values"
           name="acrValues"
           defaultValue={config.acrValues}
-          placeholder="urn:logto:acr:1fa urn:logto:acr:mfa"
+          placeholder={logtoAcrValues.join(' ')}
         />
       </div>
       <div className={styles.item}>
@@ -78,7 +79,6 @@ const StepUpForm = () => {
       <button type="submit" className={styles.button}>
         Request step-up
       </button>
-      {error && <div role="alert">{error.message}</div>}
       <div className={styles.item}>
         <div className={styles.text}>Current ID token authentication context</div>
         <pre className={styles.authenticationContext} aria-label="Current authentication context">

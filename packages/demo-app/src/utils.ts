@@ -1,9 +1,10 @@
 import { Prompt, UserScope } from '@logto/react';
 import { LogtoAcr } from '@logto/schemas';
+import { yes } from '@silverhand/essentials';
 import { z } from 'zod';
 
 export const isDevFeaturesEnabled =
-  import.meta.env.DEV || ['1', 'true'].includes(String(import.meta.env.DEV_FEATURES_ENABLED));
+  import.meta.env.DEV || yes(String(import.meta.env.DEV_FEATURES_ENABLED));
 
 type ToZodObject<T> = z.ZodObject<{
   [K in keyof T]-?: z.ZodType<T[K]>;

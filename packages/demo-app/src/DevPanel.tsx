@@ -18,7 +18,7 @@ const safeDecodeJwt = (token: string) => {
 const DevPanel = () => {
   const config = getLocalData('config');
   const [showSaved, setShowSaved] = useState(false);
-  const { getAccessToken, getIdTokenClaims, fetchUserInfo } = useLogto();
+  const { getAccessToken, getIdTokenClaims, fetchUserInfo, error } = useLogto();
 
   const submitConfig: FormEventHandler<HTMLFormElement> = useCallback((event) => {
     event.preventDefault();
@@ -49,6 +49,7 @@ const DevPanel = () => {
   return (
     <div className={[styles.card, styles.devPanel].join(' ')}>
       {/* Step-up testing tools. */}
+      {isDevFeaturesEnabled && error && <div role="alert">Last SDK error: {error.message}</div>}
       {isDevFeaturesEnabled && <StepUpForm />}
       <form onSubmit={submitConfig}>
         <div className={styles.title}>Logto config</div>
