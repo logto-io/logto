@@ -4,7 +4,7 @@ create table users_roles (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
   id varchar(21) not null,
-  user_id varchar(21) not null
+  user_id varchar(128) not null
     references users (id) on update cascade on delete cascade,
   role_id varchar(21) not null
     references roles (id) on update cascade on delete cascade,

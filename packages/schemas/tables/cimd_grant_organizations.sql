@@ -15,7 +15,7 @@ create table cimd_grant_organizations (
   grant_model_name varchar(64) not null default 'Grant',
   organization_id varchar(21) not null,
   /** The user the grant was issued to and the membership FK's target. Must match the Grant payload's `accountId` (unreachable by FK) — the consent write enforces the pairing. */
-  user_id varchar(21) not null,
+  user_id varchar(128) not null,
   primary key (tenant_id, grant_id),
   constraint cimd_grant_organizations__grant_model_name
     check (grant_model_name = 'Grant'),
