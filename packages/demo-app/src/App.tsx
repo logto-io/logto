@@ -13,7 +13,7 @@ import DevPanel from './DevPanel';
 import congratsDark from './assets/congrats-dark.svg';
 import congrats from './assets/congrats.svg';
 import initI18n from './i18n/init';
-import { getLocalData, setLocalData } from './utils';
+import { getLocalData, isDevFeaturesEnabled, setLocalData } from './utils';
 
 void initI18n();
 
@@ -119,6 +119,19 @@ const Main = () => {
             <br />
             {errorDescription}
           </p>
+          {/* Step-up testing keeps the previous tokens when authorization fails. */}
+          {isDevFeaturesEnabled && isAuthenticated && (
+            <p>
+              <button
+                className={styles.button}
+                onClick={() => {
+                  window.location.assign(window.location.pathname);
+                }}
+              >
+                Back to demo app
+              </button>
+            </p>
+          )}
           <button
             className={styles.button}
             onClick={() => {

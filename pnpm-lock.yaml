@@ -4455,6 +4455,9 @@ importers:
       '@silverhand/eslint-config-react':
         specifier: 6.0.2
         version: 6.0.2(eslint@8.57.0)(postcss@8.5.23)(prettier@3.5.3)(stylelint@15.11.0(typescript@5.5.3))(typescript@5.5.3)
+      '@silverhand/essentials':
+        specifier: ^2.9.3
+        version: 2.9.3
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.5.3)
