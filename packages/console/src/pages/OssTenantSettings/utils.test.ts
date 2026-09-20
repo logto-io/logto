@@ -1,6 +1,10 @@
 import type { TFuncKey } from 'i18next';
 
-import { getOssTenantMembersUpsellCopyKeys, shouldShowOssTenantMembersTab } from './utils';
+import {
+  getOssTenantMembersUpsellCopyKeys,
+  shouldShowOssTenantLicenseTab,
+  shouldShowOssTenantMembersTab,
+} from './utils';
 
 describe('shouldShowOssTenantMembersTab', () => {
   it('returns true for OSS', () => {
@@ -9,6 +13,26 @@ describe('shouldShowOssTenantMembersTab', () => {
 
   it('returns false for cloud', () => {
     expect(shouldShowOssTenantMembersTab({ isCloud: true })).toBe(false);
+  });
+});
+
+describe('shouldShowOssTenantLicenseTab', () => {
+  it('shows the tab on a self-hosted instance', () => {
+    expect(shouldShowOssTenantLicenseTab({ isCloud: false, isDevFeaturesEnabled: true })).toBe(
+      true
+    );
+  });
+
+  it('hides the tab on cloud, where the subscription is the entitlement source', () => {
+    expect(shouldShowOssTenantLicenseTab({ isCloud: true, isDevFeaturesEnabled: true })).toBe(
+      false
+    );
+  });
+
+  it('hides the tab while the self-hosted plans are unreleased', () => {
+    expect(shouldShowOssTenantLicenseTab({ isCloud: false, isDevFeaturesEnabled: false })).toBe(
+      false
+    );
   });
 });
 

@@ -45,6 +45,7 @@ export enum TenantSettingsTabs {
   OidcConfigs = 'oidc-configs',
   Subscription = 'subscription',
   BillingHistory = 'billing-history',
+  License = 'license',
 }
 
 export enum EnterpriseSsoDetailsTabs {

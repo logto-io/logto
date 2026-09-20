@@ -4,16 +4,20 @@ import { Navigate, type RouteObject } from 'react-router-dom';
 import { safeLazy } from 'react-safe-lazy';
 
 import { TenantSettingsTabs } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import NotFound from '@/pages/NotFound';
-import { shouldShowOssTenantMembersTab } from '@/pages/OssTenantSettings/utils';
+import {
+  shouldShowOssTenantLicenseTab,
+  shouldShowOssTenantMembersTab,
+} from '@/pages/OssTenantSettings/utils';
 
 const TenantSettings = safeLazy(async () => import('@/pages/TenantSettings'));
 const OssTenantSettings = safeLazy(async () => import('@/pages/OssTenantSettings'));
 const OssTenantMembers = safeLazy(async () => import('@/pages/OssTenantSettings/Members'));
+const OssTenantLicense = safeLazy(async () => import('@/pages/OssTenantSettings/License'));
 const TenantBasicSettings = safeLazy(
   async () => import('@/pages/TenantSettings/TenantBasicSettings')
 );
@@ -85,6 +89,10 @@ const useCloudTenantSettings = () => {
 const useOssTenantSettings = (): RouteObject =>
   useMemo(() => {
     const shouldShowMembersTab = shouldShowOssTenantMembersTab({ isCloud: false });
+    const shouldShowLicenseTab = shouldShowOssTenantLicenseTab({
+      isCloud: false,
+      isDevFeaturesEnabled,
+    });
 
     return {
       path: 'tenant-settings',
@@ -103,6 +111,14 @@ const useOssTenantSettings = (): RouteObject =>
             {
               path: TenantSettingsTabs.Members,
               element: <OssTenantMembers />,
+            },
+          ]
+        ),
+        ...condArray(
+          shouldShowLicenseTab && [
+            {
+              path: TenantSettingsTabs.License,
+              element: <OssTenantLicense />,
             },
           ]
         ),
