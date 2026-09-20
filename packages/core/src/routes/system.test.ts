@@ -12,8 +12,6 @@ import {
   signLicenseKey,
 } from '#src/test-utils/license.js';
 import { mockIdGenerators } from '#src/test-utils/nanoid.js';
-import { createMockQuotaLibrary } from '#src/test-utils/quota.js';
-import { MockTenant } from '#src/test-utils/tenant.js';
 
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
@@ -36,6 +34,14 @@ const upsertSystem = jest.fn(async (key: string, value: unknown) => ({ key, valu
 mockEsm('#src/queries/system.js', () => ({
   createSystemsQuery: () => ({ findSystemByKey, upsertSystem }),
 }));
+
+/**
+ * Imported after the mocks: `mockEsm` only affects modules imported afterwards, and the tenant
+ * builds a `SubscriptionLibrary` whose self-hosted accessor reads the installed license, so it
+ * pulls in the public key the reader verifies against.
+ */
+const { MockTenant } = await import('#src/test-utils/tenant.js');
+const { createMockQuotaLibrary } = await import('#src/test-utils/quota.js');
 
 /**
  * Imported after the mocks: `mockEsm` only affects modules imported afterwards, and the reader
