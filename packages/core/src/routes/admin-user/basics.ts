@@ -42,9 +42,9 @@ import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
  * Accepts the ID shapes commonly exported by other identity providers (e.g. `auth0|abc123`,
  * `user@example.com`, UUIDs, `user_01H...`, `org:user`) while rejecting characters that break URL
  * paths such as whitespace, `/`, `?`, `#`, `%`, and `\`. The length bound matches the `users.id`
- * column width.
+ * column width. The dot segments `.` and `..` are excluded to prevent URL path normalization.
  */
-const customUserIdRegEx = /^[\w+.:=@|-]{1,128}$/;
+const customUserIdRegEx = /^(?!\.{1,2}$)[\w+.:=@|-]{1,128}$/;
 
 export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
   ...args: RouterInitArgs<T>
@@ -244,7 +244,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         profile: userProfileGuard,
       }).partial(),
       response: adminUserProfileResponseGuard,
-      status: [200, 400, 404, 422],
+      status: [200, 400, 404, 422, 501],
     }),
     // eslint-disable-next-line complexity
     async (ctx, next) => {
@@ -267,8 +267,8 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       assertThat(
         !customId || !EnvSet.values.isCloud,
         new RequestError({
-          code: 'request.invalid_input',
-          details: 'Custom user ID is not supported in Logto Cloud.',
+          code: 'request.feature_not_supported',
+          status: 501,
         })
       );
       assertThat(

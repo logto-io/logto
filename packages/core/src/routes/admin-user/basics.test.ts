@@ -226,7 +226,8 @@ describe('adminUserRoutes', () => {
         .post('/users')
         .send({ id: 'legacy_id-01', username: 'MJAtLogto', name: 'Michael' });
 
-      expect(response.status).toEqual(400);
+      expect(response.status).toEqual(501);
+      expect(response.body).toHaveProperty('code', 'request.feature_not_supported');
       expect(usersLibraries.insertUser).not.toHaveBeenCalled();
     });
 
@@ -252,6 +253,9 @@ describe('adminUserRoutes', () => {
       'user_01H8MZ2QK3V4X5Y6Z7',
       'org:acme:user',
       'dXNlcg==',
+      '...',
+      '.hidden',
+      'a..b',
       'a'.repeat(128),
     ])('should accept id %p', async (id) => {
       // eslint-disable-next-line @silverhand/fp/no-mutation
@@ -267,6 +271,8 @@ describe('adminUserRoutes', () => {
 
     it.each([
       '',
+      '.',
+      '..',
       'a'.repeat(129),
       'has space',
       'slash/id',
