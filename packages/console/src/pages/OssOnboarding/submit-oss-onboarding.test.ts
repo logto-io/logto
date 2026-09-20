@@ -1,13 +1,9 @@
 import { CompanySize, Project, type OssUserOnboardingData } from '@logto/schemas';
 import type { Options } from 'ky';
 
-import type { OssOnboardingFormData } from './utils';
+import { mockEnv, resetMockEnv, type EnvTestUtils } from '@/test-utils/env';
 
-// Module-level mocks for env constants. Must be declared before importing the module under test.
-// eslint-disable-next-line @silverhand/fp/no-let
-let mockIsDevFeaturesEnabled = true;
-// eslint-disable-next-line @silverhand/fp/no-let
-let mockOssSurveyEndpoint: string | undefined = 'https://survey.example.com';
+import type { OssOnboardingFormData } from './utils';
 
 const mockKyPost = jest.fn<Promise<{ ok: boolean }>, [URL, Options?]>();
 const mockKyOptions: { current?: Options } = {};
@@ -44,14 +40,7 @@ jest.mock('ky', () => ({
   },
 }));
 
-jest.mock('@/consts/env', () => ({
-  get isDevFeaturesEnabled() {
-    return mockIsDevFeaturesEnabled;
-  },
-  get ossSurveyEndpoint() {
-    return mockOssSurveyEndpoint;
-  },
-}));
+jest.mock('@/consts/env', () => jest.requireActual<EnvTestUtils>('@/test-utils/env').mockEnvModule);
 
 const mockFormData: OssOnboardingFormData = {
   emailAddress: 'Dev@Example.COM',
@@ -93,14 +82,12 @@ describe('submitOssOnboarding', () => {
     mockKyPost.mockResolvedValue({ ok: true });
     // eslint-disable-next-line @silverhand/fp/no-mutation
     mockKyOptions.current = undefined;
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    mockIsDevFeaturesEnabled = true;
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    mockOssSurveyEndpoint = 'https://survey.example.com';
   });
 
   beforeEach(() => {
     mockKyPost.mockResolvedValue({ ok: true });
+    resetMockEnv();
+    mockEnv({ isDevFeaturesEnabled: true, ossSurveyEndpoint: 'https://survey.example.com' });
   });
 
   it('configures the OSS survey client with ky retry options', () => {
@@ -227,8 +214,7 @@ describe('submitOssOnboarding', () => {
     const update = jest.fn<Promise<void>, [Partial<OssUserOnboardingData>]>();
     const navigate = jest.fn<void, [string, { replace: boolean }]>();
 
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    mockOssSurveyEndpoint = 'https://survey.example.com/';
+    mockEnv({ ossSurveyEndpoint: 'https://survey.example.com/' });
     update.mockResolvedValue();
 
     await submitOssOnboarding({
@@ -317,8 +303,7 @@ describe('submitOssOnboarding', () => {
     const update = jest.fn<Promise<void>, [Partial<OssUserOnboardingData>]>();
     const navigate = jest.fn<void, [string, { replace: boolean }]>();
 
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    mockIsDevFeaturesEnabled = false;
+    mockEnv({ isDevFeaturesEnabled: false });
     update.mockResolvedValue();
 
     await submitOssOnboarding({
@@ -336,8 +321,7 @@ describe('submitOssOnboarding', () => {
     const update = jest.fn<Promise<void>, [Partial<OssUserOnboardingData>]>();
     const navigate = jest.fn<void, [string, { replace: boolean }]>();
 
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    mockOssSurveyEndpoint = undefined;
+    mockEnv({ ossSurveyEndpoint: undefined });
     update.mockResolvedValue();
 
     await submitOssOnboarding({
@@ -355,8 +339,7 @@ describe('submitOssOnboarding', () => {
     const update = jest.fn<Promise<void>, [Partial<OssUserOnboardingData>]>();
     const navigate = jest.fn<void, [string, { replace: boolean }]>();
 
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    mockOssSurveyEndpoint = 'not a valid URL';
+    mockEnv({ ossSurveyEndpoint: 'not a valid URL' });
     update.mockResolvedValue();
 
     await submitOssOnboarding({

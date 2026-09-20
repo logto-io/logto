@@ -1,24 +1,14 @@
 import type { TFuncKey } from 'i18next';
 
+import { mockEnv, resetMockEnv, type EnvTestUtils } from '@/test-utils/env';
 import { ossUpsellEntries } from '@/utils/oss-upsell';
 
 import { getOssBringYourUiCardContent } from './utils';
 
-// Module-level mock for the env constant. Must be declared before importing the module under test.
-// eslint-disable-next-line @silverhand/fp/no-let
-let mockIsDevFeaturesEnabled = false;
-
-jest.mock('@/consts/env', () => ({
-  get isDevFeaturesEnabled() {
-    return mockIsDevFeaturesEnabled;
-  },
-}));
+jest.mock('@/consts/env', () => jest.requireActual<EnvTestUtils>('@/test-utils/env').mockEnvModule);
 
 describe('getOssBringYourUiCardContent', () => {
-  beforeEach(() => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    mockIsDevFeaturesEnabled = false;
-  });
+  beforeEach(resetMockEnv);
 
   it('keeps Cloud first and adds the self-hosted plans option', () => {
     const content = getOssBringYourUiCardContent();
@@ -38,8 +28,7 @@ describe('getOssBringYourUiCardContent', () => {
   });
 
   it('routes the self-hosted plans option to the License page in the same tab when available', () => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    mockIsDevFeaturesEnabled = true;
+    mockEnv({ isDevFeaturesEnabled: true });
 
     const content = getOssBringYourUiCardContent();
     const url = new URL(content.selfHostedHref, 'https://example.com');
