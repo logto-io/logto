@@ -84,7 +84,8 @@ describe('useResendMfaVerificationCode', () => {
       expect(await result.current.onResendVerificationCode()).toBeUndefined();
     });
 
-    expect(handleError).toHaveBeenCalledWith(error);
+    expect(handleError).toHaveBeenCalledTimes(1);
+    expect(handleError.mock.calls[0]?.[0]).toBe(error);
     expect(JSON.parse(sessionStorage.getItem(storageKey) ?? '{}')).toEqual(previousIds);
   });
 });
