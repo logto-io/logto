@@ -1,5 +1,9 @@
 import { Prompt, UserScope } from '@logto/react';
+import { LogtoAcr } from '@logto/schemas';
 import { z } from 'zod';
+
+export const isDevFeaturesEnabled =
+  import.meta.env.DEV || ['1', 'true'].includes(String(import.meta.env.DEV_FEATURES_ENABLED));
 
 type ToZodObject<T> = z.ZodObject<{
   [K in keyof T]-?: z.ZodType<T[K]>;
@@ -33,13 +37,20 @@ const localUiConfigGuard = z
   })
   .partial() satisfies ToZodObject<LocalUiConfig>;
 
-type Key = 'config' | 'ui';
+const stepUpConfigGuard = z.object({
+  acrValues: z.string(),
+  maxAge: z.string(),
+  prompt: z.union([z.nativeEnum(Prompt), z.literal('')]),
+});
+
+type Key = 'config' | 'ui' | 'stepUp';
 
 const keyPrefix = 'logto:demo-app:dev:';
 
 type KeyToType = {
   config: LocalLogtoConfig;
   ui: LocalUiConfig;
+  stepUp: z.infer<typeof stepUpConfigGuard>;
 };
 
 const keyToGuard: Readonly<{
@@ -47,6 +58,7 @@ const keyToGuard: Readonly<{
 }> = Object.freeze({
   config: localLogtoConfigGuard,
   ui: localUiConfigGuard,
+  stepUp: stepUpConfigGuard,
 });
 
 const keyToDefault = Object.freeze({
@@ -55,6 +67,7 @@ const keyToDefault = Object.freeze({
     scope: [UserScope.Organizations, UserScope.OrganizationRoles].join(' '),
   },
   ui: {},
+  stepUp: { acrValues: LogtoAcr.Mfa, maxAge: '', prompt: Prompt.Login },
 } satisfies Record<Key, unknown>);
 
 const safeJsonParse = (value: string): unknown => {

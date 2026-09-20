@@ -4,7 +4,8 @@ import { decodeJwt } from 'jose';
 import { useCallback, useState, type FormEventHandler } from 'react';
 
 import styles from './App.module.scss';
-import { getLocalData, setLocalData } from './utils';
+import StepUpForm from './StepUpForm';
+import { getLocalData, isDevFeaturesEnabled, setLocalData } from './utils';
 
 const safeDecodeJwt = (token: string) => {
   try {
@@ -47,6 +48,8 @@ const DevPanel = () => {
 
   return (
     <div className={[styles.card, styles.devPanel].join(' ')}>
+      {/* Step-up testing tools. */}
+      {isDevFeaturesEnabled && <StepUpForm />}
       <form onSubmit={submitConfig}>
         <div className={styles.title}>Logto config</div>
         <div className={styles.item}>

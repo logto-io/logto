@@ -3,7 +3,8 @@
 @use '@logto/core-kit/scss/console-themes' as themes;
 
 .app {
-  input {
+  input,
+  select {
     background-color: var(--color-layer-1);
     font: var(--font-body-2);
     color: var(--color-text);
@@ -102,6 +103,14 @@
 
       .button {
         align-self: flex-end;
+      }
+
+      .authenticationContext {
+        margin: 0;
+        padding: _.unit(2);
+        overflow-x: auto;
+        background: var(--color-layer-2);
+        border-radius: 6px;
       }
 
       .action {
