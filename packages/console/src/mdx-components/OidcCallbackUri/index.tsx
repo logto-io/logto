@@ -10,7 +10,7 @@ import { applyDomain } from '@/utils/url';
 import styles from './index.module.scss';
 
 function OidcCallbackUri() {
-  const { ssoConnector } = useContext(SsoConnectorContext);
+  const { ssoConnector, redirectUri, isGlobal } = useContext(SsoConnectorContext);
   const { tenantEndpoint } = useContext(AppDataContext);
   const availableDomains = useAvailableDomains();
 
@@ -26,14 +26,18 @@ function OidcCallbackUri() {
       className={styles.inputField}
     >
       <div className={styles.uriList}>
-        {availableDomains.map((domain) => (
-          <CopyToClipboard
-            key={domain}
-            displayType="block"
-            variant="border"
-            value={applyDomain(new URL(`/callback/${id}`, tenantEndpoint).toString(), domain)}
-          />
-        ))}
+        {isGlobal
+          ? redirectUri && (
+              <CopyToClipboard displayType="block" variant="border" value={redirectUri} />
+            )
+          : availableDomains.map((domain) => (
+              <CopyToClipboard
+                key={domain}
+                displayType="block"
+                variant="border"
+                value={applyDomain(new URL(`/callback/${id}`, tenantEndpoint).toString(), domain)}
+              />
+            ))}
       </div>
     </FormField>
   );

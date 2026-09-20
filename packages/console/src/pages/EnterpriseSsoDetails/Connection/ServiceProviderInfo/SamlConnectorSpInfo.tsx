@@ -13,10 +13,11 @@ import { type SamlProviderConfig } from '../../types/saml';
 import styles from './ConnectorSpInfo.module.scss';
 
 type Props = {
+  readonly isDomainSelectionEnabled?: boolean;
   readonly samlProviderConfig?: SamlProviderConfig;
 };
 
-function SamlConnectorSpInfo({ samlProviderConfig }: Props) {
+function SamlConnectorSpInfo({ samlProviderConfig, isDomainSelectionEnabled = true }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [selectedDomain, setSelectedDomain] = useDomainSelection();
   /**
@@ -25,7 +26,7 @@ function SamlConnectorSpInfo({ samlProviderConfig }: Props) {
    */
   return (
     <>
-      {isCloud && (
+      {isCloud && isDomainSelectionEnabled && (
         <DomainSelector
           tip={t('domain.switch_saml_connector_domain_tip')}
           value={selectedDomain}
@@ -41,7 +42,7 @@ function SamlConnectorSpInfo({ samlProviderConfig }: Props) {
               samlProviderConfig?.serviceProvider &&
                 applyDomain(
                   samlProviderConfig.serviceProvider.assertionConsumerServiceUrl,
-                  selectedDomain
+                  isDomainSelectionEnabled ? selectedDomain : undefined
                 )
             )}
           />
@@ -53,7 +54,10 @@ function SamlConnectorSpInfo({ samlProviderConfig }: Props) {
           variant="border"
           value={conditionalString(
             samlProviderConfig?.serviceProvider &&
-              applyDomain(samlProviderConfig.serviceProvider.entityId, selectedDomain)
+              applyDomain(
+                samlProviderConfig.serviceProvider.entityId,
+                isDomainSelectionEnabled ? selectedDomain : undefined
+              )
           )}
         />
       </FormField>

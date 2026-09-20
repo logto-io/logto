@@ -26,7 +26,7 @@ const samlProviderConfigGuard = z.object({
 
 function SsoSamlSpMetadata() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { ssoConnector } = useContext(SsoConnectorContext);
+  const { ssoConnector, isGlobal } = useContext(SsoConnectorContext);
   const [selectedDomain, setSelectedDomain] = useDomainSelection();
 
   const serviceProviderMetadata = useMemo(() => {
@@ -50,7 +50,7 @@ function SsoSamlSpMetadata() {
 
   return (
     <div>
-      {isCloud && (
+      {isCloud && !isGlobal && (
         <DomainSelector
           value={selectedDomain}
           className={styles.domainSelector}
@@ -67,7 +67,7 @@ function SsoSamlSpMetadata() {
           variant="border"
           value={conditionalString(
             serviceProviderMetadata?.entityId &&
-              applyDomain(serviceProviderMetadata.entityId, selectedDomain)
+              applyDomain(serviceProviderMetadata.entityId, isGlobal ? undefined : selectedDomain)
           )}
         />
       </FormField>
@@ -80,7 +80,10 @@ function SsoSamlSpMetadata() {
           variant="border"
           value={conditionalString(
             serviceProviderMetadata?.assertionConsumerServiceUrl &&
-              applyDomain(serviceProviderMetadata.assertionConsumerServiceUrl, selectedDomain)
+              applyDomain(
+                serviceProviderMetadata.assertionConsumerServiceUrl,
+                isGlobal ? undefined : selectedDomain
+              )
           )}
         />
       </FormField>

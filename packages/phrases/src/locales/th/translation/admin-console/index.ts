@@ -7,6 +7,7 @@ import cloud from './cloud.js';
 import components from './components.js';
 import connector_details from './connector-details.js';
 import connectors from './connectors.js';
+import console_sso from './console-sso.js';
 import contact from './contact.js';
 import dashboard from './dashboard.js';
 import domain from './domain.js';
@@ -113,6 +114,7 @@ const admin_console = {
   inkeep_ai_bot,
   user_identity_details,
   enterprise_subscription,
+  console_sso,
 };
 
 export default Object.freeze(admin_console);

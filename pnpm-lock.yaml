@@ -3777,8 +3777,8 @@ importers:
         specifier: ^29.5.0
         version: 29.6.3
       '@logto/cloud':
-        specifier: 0.2.5-bb0b0a2
-        version: 0.2.5-bb0b0a2(zod@3.24.3)
+        specifier: 0.2.5-0017c4b
+        version: 0.2.5-0017c4b(zod@3.24.3)
       '@logto/connector-kit':
         specifier: workspace:^
         version: link:../toolkit/connector-kit
@@ -6588,6 +6588,10 @@ packages:
 
   '@logto/client@3.1.8':
     resolution: {integrity: sha512-f6NcPOV/K1IpPm4ccARWeYpQVMeN4mfikGg+5Qw1rcIPYPUpD5BmDsQbVTAnDepCMbC7syzRerZmbwL8S3UL+A==}
+
+  '@logto/cloud@0.2.5-0017c4b':
+    resolution: {integrity: sha512-GQ4HcGjRMJXufrooAxDSXM98TUKhrKPjC7IJaiMcBvcOAvPNFzIGgFlfjmjXdb7lf6MwGEd6qRTmd+oJDgEuOA==}
+    engines: {node: ^22.14.0}
 
   '@logto/cloud@0.2.5-bb0b0a2':
     resolution: {integrity: sha512-c5YkjZgvv58AiRTuHBp/u7IVxS+MBVnhEHF8VxB3ba4+C4xzeQqjWMN1wvHHHd7Aw7/kddQebwOXsLKEBq92vg==}
@@ -17763,6 +17767,13 @@ snapshots:
       '@silverhand/essentials': 2.9.3
       camelcase-keys: 9.1.3
       jose: 5.9.6
+
+  '@logto/cloud@0.2.5-0017c4b(zod@3.24.3)':
+    dependencies:
+      '@silverhand/essentials': 2.9.3
+      '@withtyped/server': 0.14.0(zod@3.24.3)
+    transitivePeerDependencies:
+      - zod
 
   '@logto/cloud@0.2.5-bb0b0a2(zod@3.24.3)':
     dependencies:
