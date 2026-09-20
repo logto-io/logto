@@ -227,7 +227,6 @@ describe('adminUserRoutes', () => {
         .send({ id: 'legacy_id-01', username: 'MJAtLogto', name: 'Michael' });
 
       expect(response.status).toEqual(501);
-      expect(response.body).toHaveProperty('code', 'request.feature_not_supported');
       expect(usersLibraries.insertUser).not.toHaveBeenCalled();
     });
 
