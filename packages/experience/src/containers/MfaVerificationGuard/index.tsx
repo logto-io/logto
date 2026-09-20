@@ -20,7 +20,7 @@ import StepUpMethodList from '../StepUpMethodList';
 import useSelectStepUpMethod from '../StepUpMethodList/use-select-step-up-method';
 
 const MfaVerificationOutlet = () => {
-  const { authenticationContext, isLoaded, load } = useStepUpContext();
+  const { authenticationContext, isLoaded, loadError, load } = useStepUpContext();
   const { pathname, state } = useLocation();
   const flowState = parseGuard(state, mfaFlowStateGuard);
   const shouldLoad = !flowState || Boolean(flowState.isStepUp);
@@ -83,15 +83,36 @@ const MfaVerificationOutlet = () => {
     return null;
   }
 
-  // The step-up chooser is also used by SignIn-with-ACR, whose context has no mode.
-  if (flowState?.isStepUp && !authenticationContext) {
-    return <ErrorPage message="error.invalid_session" />;
+  if (!authenticationContext) {
+    if (loadError) {
+      return (
+        <ErrorPage
+          isNavbarHidden
+          title="error.something_went_wrong"
+          primaryAction={{
+            title: 'action.continue',
+            onClick: () => {
+              void load(false);
+            },
+          }}
+        />
+      );
+    }
+
+    // The step-up chooser is also used by SignIn-with-ACR, whose context has no mode.
+    if (flowState?.isStepUp) {
+      return <ErrorPage message="error.invalid_session" />;
+    }
   }
 
   if (isStepUp && needsChallenge) {
     // A transient send/options failure leaves the methods available for a deliberate retry.
     return recoveryAttempted ? (
-      <SecondaryPageLayout title="step_up.verify_your_identity">
+      <SecondaryPageLayout
+        isNavBarHidden
+        title="step_up.verify_your_identity"
+        description="step_up.choose_method_description"
+      >
         <StepUpMethodList methods={methods} authenticationContext={authenticationContext} />
       </SecondaryPageLayout>
     ) : null;

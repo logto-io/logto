@@ -8,6 +8,7 @@ import {
 } from '@logto/schemas';
 import { startAuthentication, startRegistration } from '@simplewebauthn/browser';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { HTTPError } from 'ky';
 import { Route, Routes } from 'react-router-dom';
 
 import UserInteractionContextProvider from '@/Providers/UserInteractionContextProvider';
@@ -228,6 +229,64 @@ it('does not trust a step-up navigation hint without server context', async () =
   expect(screen.queryByText('mfa.enter_one_time_code')).toBeNull();
 });
 
+it.each([true, false])(
+  'allows retry after the first context load fails (route state: %s)',
+  async (hasState) => {
+    const error = new Error('network');
+    mockedGet.mockReturnValueOnce({
+      json: async () => {
+        throw error;
+      },
+    } as unknown as ReturnType<typeof api.get>);
+    renderPage(
+      MfaFactor.TOTP,
+      hasState ? { isStepUp: true, availableFactors: [MfaFactor.TOTP] } : undefined
+    );
+
+    await screen.findByText('error.something_went_wrong');
+    expect(screen.queryByText('error.invalid_session')).toBeNull();
+    expect(screen.queryByText('mfa.enter_one_time_code')).toBeNull();
+    expect(mockHandleError).toHaveBeenCalledWith(error);
+    expect(mockedGet).toHaveBeenCalledTimes(1);
+
+    fireEvent.click(screen.getByRole('button', { name: 'action.continue' }));
+    await screen.findByText('mfa.enter_one_time_code');
+    expect(screen.queryByText('error.something_went_wrong')).toBeNull();
+    expect(mockedGet).toHaveBeenCalledTimes(2);
+    expect(api.put).not.toHaveBeenCalled();
+    expect(mockedPost).not.toHaveBeenCalled();
+  }
+);
+
+it('clears a transient load error when retry confirms the interaction is gone', async () => {
+  mockedGet.mockReturnValueOnce({
+    json: async () => {
+      throw new Error('network');
+    },
+  } as unknown as ReturnType<typeof api.get>);
+  renderPage(MfaFactor.TOTP, { isStepUp: true, availableFactors: [MfaFactor.TOTP] });
+  await screen.findByText('error.something_went_wrong');
+
+  // Jsdom has no Response global; the provider only needs clone().json() and HTTP status.
+  const response = {
+    status: 404,
+    statusText: 'Not Found',
+    clone: () => ({ json: async () => ({ code: 'session.interaction_not_found' }) }),
+  } as unknown as Response;
+  mockedGet.mockReturnValueOnce({
+    json: async () => {
+      throw new HTTPError(response, {} as Request, {} as never);
+    },
+  } as unknown as ReturnType<typeof api.get>);
+  fireEvent.click(screen.getByRole('button', { name: 'action.continue' }));
+
+  await screen.findByText('error.invalid_session');
+  expect(screen.queryByText('error.something_went_wrong')).toBeNull();
+  expect(screen.queryByText('mfa.enter_one_time_code')).toBeNull();
+  expect(mockHandleError).toHaveBeenCalledTimes(1);
+  expect(api.put).not.toHaveBeenCalled();
+});
+
 it('keeps SignIn-with-ACR in the normal MFA flow even when arriving from the step-up chooser', async () => {
   setContext({ ...context, mode: undefined, selectedAcr: undefined });
   renderPage(MfaFactor.TOTP, {
@@ -262,21 +321,12 @@ it.each([
   expect(handlers).not.toHaveProperty('session.trusted_device_suggest_opt_in');
 });
 
-it('keeps the latest resent code ID across a state-less refresh without sending again', async () => {
+it('restores a saved code ID without sending again', async () => {
+  sessionStorage.setItem(
+    `logto:${window.location.origin}:verification-ids`,
+    JSON.stringify({ EmailVerificationCode: 'saved-code-id' })
+  );
   setContext({ ...context, availableMethods: [VerificationType.MfaEmailVerificationCode] });
-  const { unmount } = renderPage(MfaFactor.EmailVerificationCode);
-  await screen.findByText('mfa.enter_email_verification_code');
-  mockedPost.mockReturnValueOnce({
-    json: async () => ({ verificationId: 'resent-code-id' }),
-  } as unknown as ReturnType<typeof api.post>);
-  fireEvent.click(screen.getByText('Resend code'));
-  await waitFor(() => {
-    expect(sessionStorage.getItem(`logto:${window.location.origin}:verification-ids`)).toContain(
-      'resent-code-id'
-    );
-  });
-  unmount();
-  mockedPost.mockClear();
   const { container } = renderPage(MfaFactor.EmailVerificationCode);
   await screen.findByText('mfa.enter_email_verification_code');
   expect(mockedPost).not.toHaveBeenCalled();
@@ -285,7 +335,7 @@ it('keeps the latest resent code ID across a state-less refresh without sending 
     expect(mockedPost).toHaveBeenCalledWith(
       '/api/experience/verification/mfa-verification-code/verify',
       {
-        json: { verificationId: 'resent-code-id', code: '384729', identifierType: 'email' },
+        json: { verificationId: 'saved-code-id', code: '384729', identifierType: 'email' },
       }
     );
   });
@@ -354,6 +404,10 @@ it('offers a deliberate retry when recovering a challenge fails', async () => {
   } as unknown as ReturnType<typeof api.post>);
   renderPage(MfaFactor.WebAuthn);
   await screen.findByText('mfa.webauthn');
+  expect(screen.getByText('step_up.choose_method_description')).not.toBeNull();
+  expect(screen.getByText('action.nav_back').closest('.navBar')?.classList.contains('hidden')).toBe(
+    true
+  );
   expect(mockedPost).toHaveBeenCalledTimes(1);
   fireEvent.click(screen.getByText('mfa.webauthn'));
   await screen.findByText('mfa.verify_via_passkey');
