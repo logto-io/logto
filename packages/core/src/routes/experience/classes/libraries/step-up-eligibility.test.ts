@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- the eligibility table and the combination cases are one behaviour table; splitting them separates cases that have to be read against each other. */
 import {
   AuthenticationFactor,
   AuthenticationFactorClass,
@@ -54,6 +55,10 @@ const withTotp = (user: User): User => ({
   ...user,
   mfaVerifications: [...user.mfaVerifications, mockUserTotpMfaVerification],
 });
+const withWebAuthn = (user: User): User => ({
+  ...user,
+  mfaVerifications: [...user.mfaVerifications, mockUserWebAuthnMfaVerification],
+});
 
 const proof = (
   type: VerificationType,
@@ -93,8 +98,16 @@ const mfaEmailCodeProof = proof(
   [AuthenticationMethodReference.Otp]
 );
 
+/** What verifying a method would contribute, the shape the eligibility search works in. */
+const contributionOf = (method: VerificationType) => ({
+  factor: getAuthenticationFactor(method),
+  class: getAuthenticationFactorClass(method),
+});
+
 /** The context a password session carries in. */
 const passwordSession = deriveCarriedContributions([AuthenticationMethodReference.Password]);
+/** The context a phone-code session carries in; it collides with the phone MFA factor. */
+const phoneSession = deriveCarriedContributions([AuthenticationMethodReference.Sms]);
 
 const compute = (input: Partial<StepUpEligibilityInput> = {}) =>
   computeStepUpEligibility({
@@ -109,7 +122,7 @@ const compute = (input: Partial<StepUpEligibilityInput> = {}) =>
 
 describe('computeStepUpEligibility', () => {
   describe('eligibility table', () => {
-    it('lists every method of a fully enrolled user for `1fa`', () => {
+    it('lists each factor once for a fully enrolled user requesting `1fa`', () => {
       const user: User = {
         ...withTotp(passwordUser),
         mfaVerifications: [
@@ -119,15 +132,23 @@ describe('computeStepUpEligibility', () => {
         ],
       };
 
+      // A remaining-count tie of the same factor keeps the earlier candidate: for `1fa` the
+      // primary code and the MFA code each finish on their own, so the 1fa-role variant is kept.
       expect(compute({ user }).availableMethods).toEqual([
         VerificationType.Password,
         VerificationType.EmailVerificationCode,
         VerificationType.PhoneVerificationCode,
         VerificationType.WebAuthn,
         VerificationType.TOTP,
-        VerificationType.MfaPhoneVerificationCode,
-        VerificationType.MfaEmailVerificationCode,
         VerificationType.BackupCode,
+      ]);
+    });
+
+    it('keeps the primary code over the MFA code of the same identifier for `1fa`', () => {
+      expect(compute().availableMethods).toEqual([
+        VerificationType.Password,
+        VerificationType.EmailVerificationCode,
+        VerificationType.PhoneVerificationCode,
       ]);
     });
 
@@ -141,8 +162,6 @@ describe('computeStepUpEligibility', () => {
       expect(compute({ user }).availableMethods).toEqual([
         VerificationType.EmailVerificationCode,
         VerificationType.PhoneVerificationCode,
-        VerificationType.MfaPhoneVerificationCode,
-        VerificationType.MfaEmailVerificationCode,
       ]);
     });
 
@@ -154,7 +173,6 @@ describe('computeStepUpEligibility', () => {
       expect(availableMethods).toEqual([
         VerificationType.Password,
         VerificationType.EmailVerificationCode,
-        VerificationType.MfaEmailVerificationCode,
       ]);
       expect(maskedIdentifiers).toEqual({ email: '****@logto.io' });
     });
@@ -272,8 +290,6 @@ describe('computeStepUpEligibility', () => {
         VerificationType.EmailVerificationCode,
         VerificationType.PhoneVerificationCode,
         VerificationType.TOTP,
-        VerificationType.MfaPhoneVerificationCode,
-        VerificationType.MfaEmailVerificationCode,
       ]);
       expect(isReachable).toBe(true);
     });
@@ -340,14 +356,89 @@ describe('computeStepUpEligibility', () => {
       ]);
     });
 
-    it('excludes the factor already verified in the `mfa` role from the `1fa` methods', () => {
+    it('offers the longer path behind a passkey that reaches `mfa` alone', () => {
+      const user = withWebAuthn(withTotp(passwordUser));
+
+      // The passkey reaches the class on its own and is offered first, but password + TOTP is a
+      // longer path rather than no path, so its first step is offered too. Offering the passkey
+      // alone made the step-up screen a dead end for a user whose passkey is on another device,
+      // because the SPA forwards to a single method.
+      expect(compute({ user, selectedAcr: LogtoAcr.Mfa })).toMatchObject({
+        availableMethods: [
+          VerificationType.WebAuthn,
+          VerificationType.Password,
+          VerificationType.EmailVerificationCode,
+          VerificationType.PhoneVerificationCode,
+        ],
+        isReachable: true,
+      });
+
+      // Without a connector the password is the only fallback left behind the passkey.
+      expect(
+        compute({ user, selectedAcr: LogtoAcr.Mfa, connectors: noConnectors }).availableMethods
+      ).toEqual([VerificationType.WebAuthn, VerificationType.Password]);
+
+      // A session that fills the `1fa` role leaves no path needing a first-factor method, so none
+      // is offered: a longer path is offered where it is a path, never as a repeat of the context.
+      expect(
+        compute({ user, selectedAcr: LogtoAcr.Mfa, carried: passwordSession }).availableMethods
+      ).toEqual([
+        VerificationType.WebAuthn,
+        VerificationType.TOTP,
+        VerificationType.MfaPhoneVerificationCode,
+        VerificationType.MfaEmailVerificationCode,
+      ]);
+    });
+
+    it('offers a way round an MFA factor the session collides with', () => {
+      // The session's phone fills the `1fa` role, so the phone MFA code is the same factor and
+      // cannot pair with it: only the email code finishes in one step. The password pairs with the
+      // phone MFA code instead, so a user who cannot reach that mailbox is no longer forwarded
+      // straight into the one method that fails them. The primary email code is not offered: it
+      // asks for the same mailbox as the MFA email code and takes one more step, so anyone who
+      // could complete it could have finished with the MFA code already.
+      expect(
+        compute({ selectedAcr: LogtoAcr.Mfa, carried: phoneSession }).availableMethods
+      ).toEqual([
+        VerificationType.MfaEmailVerificationCode,
+        VerificationType.Password,
+        VerificationType.MfaPhoneVerificationCode,
+      ]);
+    });
+
+    it('never offers a method that leads to a dead end', () => {
+      const user = withWebAuthn(withTotp(passwordUser));
+      const { availableMethods } = compute({ user, selectedAcr: LogtoAcr.Mfa });
+
+      expect(availableMethods.length).toBeGreaterThan(0);
+
+      for (const method of availableMethods) {
+        const proofs = [contributionOf(method)];
+
+        // Every offered method either reaches the class by itself or leaves something else to pick.
+        expect(
+          acrSatisfies(achieveAcr(proofs), LogtoAcr.Mfa) ||
+            compute({ user, selectedAcr: LogtoAcr.Mfa, proofs }).availableMethods.length > 0
+        ).toBe(true);
+      }
+    });
+
+    it('orders the `1fa` methods behind the ones that pair with an `mfa` proof', () => {
       const user = withTotp(passwordUser);
 
-      // An MFA email code verified first reaches only `1fa`; the primary email code of the same
-      // mailbox cannot be the other side of the pair.
+      // An MFA email code verified first reaches only `1fa`. The password and the phone code are a
+      // different factor, so they pair with it and finish in one step. The primary email code of
+      // the same mailbox cannot be the other side of that pair, but it can still fill the `1fa`
+      // role next to the enrolled TOTP, so it is offered last rather than dropped. The flow does not
+      // reach this state on its own: the `1fa`-first rule offers a first-factor method before any
+      // MFA code to a user who has one.
       expect(
         compute({ user, selectedAcr: LogtoAcr.Mfa, proofs: [mfaEmailCodeProof] }).availableMethods
-      ).toEqual([VerificationType.Password, VerificationType.PhoneVerificationCode]);
+      ).toEqual([
+        VerificationType.Password,
+        VerificationType.PhoneVerificationCode,
+        VerificationType.EmailVerificationCode,
+      ]);
       expect(
         compute({ user, selectedAcr: LogtoAcr.Mfa, proofs: [totpProof] }).availableMethods
       ).toEqual([
@@ -371,9 +462,11 @@ describe('computeStepUpEligibility', () => {
       ]);
     });
 
-    it('offers only methods a submission would derive to the class', () => {
-      // Eligibility is a search over the aggregator, so every offered method, once verified on
-      // top of the carried context, reaches the class it was offered for.
+    it('offers methods that finish in one step when the session fills the other role', () => {
+      // Eligibility is a search over the aggregator, so an offered method never leads somewhere a
+      // submission would not derive. Here the carried `1fa` fills the other role, so every offered
+      // method reaches the class on its own; where a longer path is offered, the guarantee is the
+      // weaker one the dead-end test above pins.
       const user = withTotp(passwordUser);
       const { availableMethods } = compute({
         user,
@@ -384,12 +477,9 @@ describe('computeStepUpEligibility', () => {
       expect(availableMethods.length).toBeGreaterThan(0);
 
       for (const method of availableMethods) {
-        const proof = {
-          factor: getAuthenticationFactor(method),
-          class: getAuthenticationFactorClass(method),
-        };
-
-        expect(acrSatisfies(achieveAcr([proof], passwordSession), LogtoAcr.Mfa)).toBe(true);
+        expect(
+          acrSatisfies(achieveAcr([contributionOf(method)], passwordSession), LogtoAcr.Mfa)
+        ).toBe(true);
       }
     });
   });
@@ -419,3 +509,4 @@ describe('computeStepUpEligibility', () => {
     });
   });
 });
+/* eslint-enable max-lines */

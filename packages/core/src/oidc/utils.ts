@@ -22,6 +22,8 @@ import { type AllClientMetadata, type ClientAuthMethod, errors } from 'oidc-prov
 
 import type { EnvSet } from '#src/env-set/index.js';
 
+import { escapeRegExp, getEffectivePort } from './redirect-uri/utils.js';
+
 /**
  * Build constant client metadata for an application based on its type and optional flags.
  *
@@ -150,28 +152,6 @@ export const isOriginAllowed = (
 
   return false;
 };
-
-const getEffectivePort = (protocol: string, port: string) => {
-  if (port) {
-    return port;
-  }
-
-  switch (protocol) {
-    case 'http:': {
-      return '80';
-    }
-
-    case 'https:': {
-      return '443';
-    }
-
-    default: {
-      return '';
-    }
-  }
-};
-
-const escapeRegExp = (value: string) => value.replaceAll(/[$()*+.?[\\\]^{|}]/g, '\\$&');
 
 const matchHostnameLabel = (pattern: string, actual: string) => {
   if (!pattern.includes('*')) {

@@ -4,7 +4,12 @@ import Sinon from 'sinon';
 
 import { EnvSet } from '#src/env-set/index.js';
 
-import { guardSocket, ssrfProtectedFetch, ssrfProtectedGot } from './outbound-request.js';
+import {
+  getUndiciGlobalDispatcher,
+  guardSocket,
+  ssrfProtectedFetch,
+  ssrfProtectedGot,
+} from './outbound-request.js';
 
 const stubSsrfProtection = (
   isSsrfProtectionEnabled: boolean,
@@ -106,6 +111,13 @@ describe('ssrfProtectedGot', () => {
     stubSsrfProtection(false);
 
     expect(await captureGotAgent()).toMatchObject({ http: undefined, https: undefined });
+  });
+});
+
+describe('getUndiciGlobalDispatcher', () => {
+  /** The premise of the fail-closed test below and of the stubs in the `oidc/fetch` suite. */
+  it('is undefined inside a Jest VM context', () => {
+    expect(getUndiciGlobalDispatcher()).toBeUndefined();
   });
 });
 

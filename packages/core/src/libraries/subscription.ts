@@ -1,13 +1,15 @@
-import { SubscriptionRedisCacheKey } from '@logto/schemas';
+import { ReservedPlanId, SubscriptionRedisCacheKey, ossDefaultQuota } from '@logto/schemas';
 import { TtlCache } from '@logto/shared';
 
 import { TenantSubscriptionCache } from '#src/caches/tenant-subscription.js';
 import { type CacheStore } from '#src/caches/types.js';
 import { cacheConsole } from '#src/caches/utils.js';
+import { EnvSet } from '#src/env-set/index.js';
+import LicenseReader from '#src/license/LicenseReader.js';
 import { type TokenUsageCounts, tokenUsageCountsGuard } from '#src/queries/daily-token-usage.js';
 import type Queries from '#src/tenants/Queries.js';
 import { getTenantSubscription } from '#src/utils/subscription/index.js';
-import { type Subscription } from '#src/utils/subscription/types.js';
+import { type SelfHostedSubscription, type Subscription } from '#src/utils/subscription/types.js';
 
 import { type CloudConnectionLibrary } from './cloud-connection.js';
 
@@ -44,11 +46,12 @@ const getTokenUsageCacheTtl = (to: Date) => {
 
 export class SubscriptionLibrary {
   /**
-   * Get the subscription data for the tenant with caching.
+   * Get the Cloud subscription of this tenant with caching.
    *
    * @remarks
-   * This method will retrieve the subscription data (without usages) from the Cloud service
-   * with redis caching.
+   * Cloud only, and every caller is already behind an `isCloud` check: outside Cloud there is no
+   * tenant subscription to fetch. Callers that also run on a self-hosted deployment read
+   * {@link getSelfHostedSubscription} instead.
    *
    * - The cache will be automatically invalidated when the subscription period ends.
    * - Any tenant subscription updates at the Cloud service side will also invalidate the cache.
@@ -82,6 +85,58 @@ export class SubscriptionLibrary {
       [SubscriptionRedisCacheKey.Subscription],
       ({ currentPeriodEnd }) => getSubscriptionCacheExpiration(currentPeriodEnd)
     );
+  }
+
+  /**
+   * Get the entitlements of this self-hosted deployment, derived from the license installed on it.
+   *
+   * @remarks
+   * Outside Cloud only: on Cloud the tenant subscription is the entitlement source, read through
+   * {@link getSubscriptionData}. Without a license the deployment is plain OSS: the fixed defaults
+   * in `ossDefaultQuota` under the development plan, which is what every quota guard already assumes
+   * outside Cloud, since all of them short-circuit before reading a subscription there.
+   *
+   * The license belongs to the deployment rather than to a tenant, so this never touches the
+   * Redis-backed `TenantSubscriptionCache`. `LicenseReader` caches the verified key in memory, and
+   * that read is the only work involved.
+   */
+  public async getSelfHostedSubscription(): Promise<SelfHostedSubscription> {
+    /**
+     * The license lives in the global `systems` table, which only the shared pool can reach: a tenant
+     * pool connects as the row-level-security restricted role, which has no privileges on it.
+     */
+    const license = await LicenseReader.shared.read(await EnvSet.sharedPool);
+
+    if (!license) {
+      const now = new Date().toISOString();
+
+      // There is no period without a license; the values only keep the envelope complete.
+      return {
+        planId: ReservedPlanId.Development,
+        currentPeriodStart: now,
+        currentPeriodEnd: now,
+        isEnterprisePlan: false,
+        status: 'active',
+        quota: { ...ossDefaultQuota },
+        systemLimit: {},
+      };
+    }
+
+    const { plan, iat, exp } = license.payload;
+
+    return {
+      planId: plan,
+      /**
+       * A license carries no period of its own. `iat` is when the key was signed and `exp` is the end
+       * of the yearly period it covers, so the pair is the closest thing to a period the payload has.
+       */
+      currentPeriodStart: new Date(iat * 1000).toISOString(),
+      currentPeriodEnd: new Date(exp * 1000).toISOString(),
+      isEnterprisePlan: plan === ReservedPlanId.SelfHostedEnterprise,
+      status: 'active',
+      quota: license.quota,
+      systemLimit: {},
+    };
   }
 
   /**

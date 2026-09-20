@@ -12,7 +12,7 @@ import PageMeta from '@/components/PageMeta';
 import DynamicT from '@/ds-components/DynamicT';
 import Table from '@/ds-components/Table';
 import InvoiceStatusTag from '@/pages/TenantSettings/BillingHistory/InvoiceStatusTag';
-import { formatPeriod } from '@/utils/subscription';
+import { formatInvoicePeriod } from '@/utils/subscription';
 
 function BillingHistory() {
   const { logtoEnterpriseId = '' } = useParams();
@@ -57,10 +57,8 @@ function BillingHistory() {
           {
             title: <DynamicT forKey="subscription.billing_history.invoice_column" />,
             dataIndex: 'basicSkuId',
-            render: ({ periodStart, periodEnd }) => {
-              return (
-                <ItemPreview title={formatPeriod({ periodStart, periodEnd, displayYear: true })} />
-              );
+            render: (invoice) => {
+              return <ItemPreview title={formatInvoicePeriod(invoice)} />;
             },
           },
           {

@@ -140,27 +140,29 @@ class SsrfProtectedHttpsAgent extends https.Agent {
  */
 const isEnabled = () => EnvSet.values.isSsrfProtectionEnabled;
 
+/** The global dispatcher is an `Agent`; its class is what the guarded dispatcher is built from. */
+type UndiciGlobalDispatcher = { constructor?: new () => DispatcherEmitter };
+
 /**
- * `undici` `Agent` constructor, taken from the global dispatcher the way oidc-provider does, so the
- * dispatcher is built from the same bundled `undici` that the global `fetch` dispatches through.
- * Mixing an `undici` copy from `node_modules` with node's bundled one yields incompatible
- * `Dispatcher` instances.
+ * Read from the symbols node's bundled `undici` sets rather than imported from `undici`: mixing a
+ * `node_modules` copy with the bundled one yields incompatible `Dispatcher` instances.
  */
-const getUndiciAgent = (): Optional<new () => DispatcherEmitter> => {
+export const getUndiciGlobalDispatcher = (): Optional<UndiciGlobalDispatcher> => {
   // Referencing `Response` triggers node's lazy `undici` initialization that sets these symbols.
   void Response;
 
   // eslint-disable-next-line no-restricted-syntax -- internal `undici` symbols are untyped
-  const globals = globalThis as Record<
-    symbol,
-    Optional<{ constructor?: new () => DispatcherEmitter }>
-  >;
-  const globalDispatcher =
-    globals[Symbol.for('undici.globalDispatcher.2')] ??
-    globals[Symbol.for('undici.globalDispatcher.1')];
+  const globals = globalThis as Record<symbol, Optional<UndiciGlobalDispatcher>>;
 
-  return globalDispatcher?.constructor;
+  return (
+    globals[Symbol.for('undici.globalDispatcher.2')] ??
+    globals[Symbol.for('undici.globalDispatcher.1')]
+  );
 };
+
+/** `undici` `Agent` constructor, taken from the global dispatcher the way oidc-provider does. */
+const getUndiciAgent = (): Optional<new () => DispatcherEmitter> =>
+  getUndiciGlobalDispatcher()?.constructor;
 
 /**
  * The socket an undici client holds is stored under a symbol-keyed property, the way

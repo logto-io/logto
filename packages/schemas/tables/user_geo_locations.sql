@@ -4,7 +4,7 @@
 create table user_geo_locations (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
-  user_id varchar(12) not null
+  user_id varchar(128) not null
     references users (id) on update cascade on delete cascade,
   latitude numeric(9,6),
   longitude numeric(9,6),
