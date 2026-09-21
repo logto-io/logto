@@ -3,8 +3,8 @@ import { useContext, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { validate } from 'superstruct';
 
-import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import SectionLayout from '@/Layout/SectionLayout';
+import VerificationPageLayout from '@/Layout/VerificationPageLayout';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
 import useWebAuthnOperation from '@/hooks/use-webauthn-operation';
@@ -35,7 +35,7 @@ const WebAuthnVerification = () => {
   }
 
   return (
-    <SecondaryPageLayout title="mfa.verify_mfa_factors">
+    <VerificationPageLayout title="mfa.verify_mfa_factors">
       <SectionLayout
         title="mfa.verify_via_passkey"
         description="mfa.verify_via_passkey_description"
@@ -52,7 +52,7 @@ const WebAuthnVerification = () => {
         />
       </SectionLayout>
       <SwitchMfaFactorsLink flow={UserMfaFlow.MfaVerification} flowState={flowState} />
-    </SecondaryPageLayout>
+    </VerificationPageLayout>
   );
 };
 

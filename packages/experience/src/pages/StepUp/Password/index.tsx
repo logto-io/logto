@@ -1,6 +1,6 @@
 import { VerificationType } from '@logto/schemas';
 
-import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
+import VerificationPageLayout from '@/Layout/VerificationPageLayout';
 import useStepUpContext from '@/hooks/use-step-up-context';
 import ErrorPage from '@/pages/ErrorPage';
 
@@ -22,12 +22,12 @@ const Password = () => {
   }
 
   return (
-    <SecondaryPageLayout
+    <VerificationPageLayout
       title="step_up.verify_your_identity"
       description="step_up.enter_password_description"
     >
       <PasswordForm />
-    </SecondaryPageLayout>
+    </VerificationPageLayout>
   );
 };
 

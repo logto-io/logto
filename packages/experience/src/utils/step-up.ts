@@ -60,6 +60,10 @@ export const getDisplayedStepUpMethods = (
     : methods;
 };
 
+export const hasAlternativeStepUpMethod = (
+  availableMethods: readonly VerificationType[]
+): boolean => getDisplayedStepUpMethods(availableMethods).length >= 2;
+
 /** The masked identifier a code method sends to, from the server-provided masked identifiers. */
 export const getMaskedIdentifier = (
   method: StepUpMethod,

@@ -2,7 +2,7 @@ import { SignInIdentifier, VerificationType } from '@logto/schemas';
 import { useContext } from 'react';
 import { useParams } from 'react-router-dom';
 
-import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
+import VerificationPageLayout from '@/Layout/VerificationPageLayout';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import StepUpCodeVerification from '@/containers/StepUpCodeVerification';
 import useStepUpContext from '@/hooks/use-step-up-context';
@@ -60,7 +60,7 @@ const VerificationCode = () => {
   }
 
   return (
-    <SecondaryPageLayout
+    <VerificationPageLayout
       title="step_up.verify_your_identity"
       description="step_up.enter_verification_code_description"
       descriptionProps={{
@@ -68,7 +68,7 @@ const VerificationCode = () => {
       }}
     >
       <StepUpCodeVerification identifierType={type} verificationId={verificationId} />
-    </SecondaryPageLayout>
+    </VerificationPageLayout>
   );
 };
 
