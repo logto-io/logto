@@ -74,8 +74,10 @@ function HideLogtoBrandingField({ variant, isEnabledInCloud }: Props) {
           <>
             {' · '}
             <TextLink
-              href={ossNote.selfHostedHref}
-              targetBlank="noopener"
+              {...(ossNote.selfHostedTargetBlank
+                ? { href: ossNote.selfHostedHref }
+                : { to: ossNote.selfHostedHref })}
+              targetBlank={ossNote.selfHostedTargetBlank}
               className={styles.highlight}
             >
               <DynamicT forKey="upsell.explore_self_hosted_plans" />

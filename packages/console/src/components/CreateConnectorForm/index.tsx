@@ -21,7 +21,12 @@ import TextLink from '@/ds-components/TextLink';
 import type { RequestError } from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import modalStyles from '@/scss/modal.module.scss';
-import { buildCloudUpsellUrl, buildSelfHostedPlansUrl, ossUpsellEntries } from '@/utils/oss-upsell';
+import {
+  buildCloudUpsellUrl,
+  buildSelfHostedPlansUrl,
+  ossUpsellEntries,
+  getSelfHostedPlansUpsellTargetBlank,
+} from '@/utils/oss-upsell';
 
 import { getConnectorGroups } from '../../pages/Connectors/utils';
 
@@ -76,7 +81,13 @@ function EmailConnectorUpsellBanner() {
             window.open(cloudUpsellUrl, '_blank', 'noopener,noreferrer');
           }}
         />
-        <TextLink className={styles.cloudAction} href={selfHostedPlansUrl} targetBlank="noopener">
+        <TextLink
+          className={styles.cloudAction}
+          {...(getSelfHostedPlansUpsellTargetBlank()
+            ? { href: selfHostedPlansUrl }
+            : { to: selfHostedPlansUrl })}
+          targetBlank={getSelfHostedPlansUpsellTargetBlank()}
+        >
           {t(copyKeys.secondaryAction)}
         </TextLink>
       </div>

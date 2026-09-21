@@ -1,4 +1,9 @@
+import { ossConsolePath } from '@logto/schemas';
+import { joinPath } from '@silverhand/essentials';
+
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { logtoCloudConsoleLink, selfHostedPlansLink } from '@/consts/external-links';
+import { TenantSettingsTabs } from '@/consts/page-tabs';
 
 type OpenOssUpsellOptions = {
   readonly entry: OssUpsellEntry;
@@ -36,7 +41,37 @@ export const buildCloudUpsellUrl = (entry: OssUpsellEntry) => {
   return url.toString();
 };
 
+/**
+ * Whether the self-hosted plans touchpoints lead to the License page inside Console instead of
+ * the plans page on the website.
+ */
+const isSelfHostedPlansUpsellInConsole = () =>
+  // Self-hosted plans: the license page ships with the unlaunched self-hosted Pro and Enterprise
+  // plans. Removed together with the other self-hosted plans guards at launch.
+  isDevFeaturesEnabled;
+
+/**
+ * The `targetBlank` prop of a self-hosted plans touchpoint link: a new tab for the website, the
+ * same tab for the License page inside Console.
+ */
+export const getSelfHostedPlansUpsellTargetBlank = () =>
+  isSelfHostedPlansUpsellInConsole() ? false : ('noopener' as const);
+
+/**
+ * Builds the destination of a self-hosted plans touchpoint.
+ *
+ * With the License page available, the destination is that page: an in-Console path (including
+ * the OSS console segment, since the router has no basename) tagged only with `utm_content` so the
+ * entries stay distinguishable. Otherwise it is the plans page on the website with the full UTM
+ * set, as before.
+ */
 export const buildSelfHostedPlansUrl = (entry: OssUpsellEntry) => {
+  if (isSelfHostedPlansUpsellInConsole()) {
+    const searchParams = new URLSearchParams({ utm_content: entry });
+
+    return `${joinPath(ossConsolePath, 'tenant-settings', TenantSettingsTabs.License)}?${searchParams.toString()}`;
+  }
+
   const url = new URL(selfHostedPlansLink);
 
   url.searchParams.set('utm_source', utmParameters.source);
@@ -65,5 +100,8 @@ const openUpsellUrl = (targetUrl: string, target: '_blank' | '_self') => {
 export const openCloudUpsell = ({ entry, target = '_blank' }: OpenOssUpsellOptions) =>
   openUpsellUrl(buildCloudUpsellUrl(entry), target);
 
-export const openSelfHostedPlansUpsell = ({ entry, target = '_blank' }: OpenOssUpsellOptions) =>
-  openUpsellUrl(buildSelfHostedPlansUrl(entry), target);
+/** Opens the self-hosted plans destination; in the same tab when it is the in-Console License page. */
+export const openSelfHostedPlansUpsell = ({
+  entry,
+  target = isSelfHostedPlansUpsellInConsole() ? '_self' : '_blank',
+}: OpenOssUpsellOptions) => openUpsellUrl(buildSelfHostedPlansUrl(entry), target);
