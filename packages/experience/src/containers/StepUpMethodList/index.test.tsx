@@ -140,6 +140,7 @@ const mfaMethods: StepUpMethod[] = [
 
 /** What the MFA pages receive when {@link mfaMethods} are displayed with both identifiers. */
 const mfaFlowState: MfaFlowState = {
+  isStepUp: true,
   availableFactors: [
     MfaFactor.TOTP,
     MfaFactor.WebAuthn,
@@ -396,6 +397,7 @@ describe('StepUpMethodList', () => {
         {
           replace: undefined,
           state: {
+            isStepUp: true,
             availableFactors: [MfaFactor.TOTP, MfaFactor.EmailVerificationCode],
             maskedIdentifiers: {},
           },

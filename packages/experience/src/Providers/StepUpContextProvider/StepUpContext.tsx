@@ -15,6 +15,8 @@ export type StepUpContextType = {
   isLoading: boolean;
   /** Whether a load has settled at least once. */
   isLoaded: boolean;
+  /** A transient load failure, cleared by a successful load or a confirmed lost session. */
+  loadError?: unknown;
   /**
    * Load the authoritative context from interaction storage.
    *

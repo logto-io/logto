@@ -1,4 +1,4 @@
-import { InteractionEvent, type SignInIdentifier } from '@logto/schemas';
+import { type SignInIdentifier } from '@logto/schemas';
 import { useCallback, useMemo, useState } from 'react';
 
 import { verifyMfaByVerificationCode } from '@/apis/experience';
@@ -6,7 +6,7 @@ import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
-import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
+import useMfaSubmitErrorHandler from '@/hooks/use-mfa-submit-error-handler';
 
 import useGeneralVerificationCodeErrorHandler from '../VerificationCode/use-general-verification-code-error-handler';
 
@@ -23,10 +23,7 @@ const useMfaCodeVerification = (
   const { generalVerificationCodeErrorHandlers, errorMessage: generalErrorMessage } =
     useGeneralVerificationCodeErrorHandler();
 
-  // In sign-in event, submitting interaction shares same error handling
-  const submitInteractionErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.SignIn, {
-    replace: true,
-  });
+  const submitInteractionErrorHandler = useMfaSubmitErrorHandler();
 
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({

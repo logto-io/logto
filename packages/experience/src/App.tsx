@@ -12,6 +12,7 @@ import PageContextProvider from './Providers/PageContextProvider';
 import SettingsProvider from './Providers/SettingsProvider';
 import UserInteractionContextProvider from './Providers/UserInteractionContextProvider';
 import DevelopmentTenantNotification from './containers/DevelopmentTenantNotification';
+import MfaVerificationGuard from './containers/MfaVerificationGuard';
 import StepUpGuard from './containers/StepUpGuard';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
@@ -162,7 +163,11 @@ const App = () => {
                       </Route>
 
                       {/* Mfa verification */}
-                      <Route path={UserMfaFlow.MfaVerification}>
+                      <Route
+                        path={UserMfaFlow.MfaVerification}
+                        // Step-up MFA pages recover their state from the interaction.
+                        element={isDevFeaturesEnabled ? <MfaVerificationGuard /> : undefined}
+                      >
                         <Route index element={<MfaVerification />} />
                         <Route path={MfaFactor.TOTP} element={<TotpVerification />} />
                         <Route path={MfaFactor.WebAuthn} element={<WebAuthnVerification />} />
