@@ -1,5 +1,6 @@
 import { noop } from '@silverhand/essentials';
 import { render, screen, waitFor } from '@testing-library/react';
+import i18next from 'i18next';
 import { type HTMLAttributes, useContext } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -12,6 +13,7 @@ const mockSignIn = jest.fn();
 const mockIsAuthenticated = jest.fn(() => true);
 const mockGetTenants = jest.fn(async () => []);
 const mockApi = { get: mockGetTenants };
+const mockLanguage = jest.fn(() => 'en');
 
 jest.mock('@/consts', () => ({
   ...jest.requireActual('@/consts/page-tabs'),
@@ -19,6 +21,11 @@ jest.mock('@/consts', () => ({
 }));
 
 jest.mock('@/components/FeatureTag', () => ({ CombinedAddOnAndFeatureTag: () => null }));
+jest.mock('@/hooks/use-theme', () => ({ __esModule: true, default: () => 'light' }));
+jest.mock('@/hooks/use-user-preferences', () => ({
+  __esModule: true,
+  default: () => ({ data: { language: mockLanguage() } }),
+}));
 
 jest.mock('@/consts/env', () => ({
   isCloud: true,
@@ -104,6 +111,30 @@ describe('Console SSO global route', () => {
     jest.clearAllMocks();
     mockIsDevFeaturesEnabled.mockReturnValue(true);
     mockIsAuthenticated.mockReturnValue(true);
+    mockLanguage.mockReturnValue('en');
+  });
+
+  afterEach(async () => {
+    await i18next.changeLanguage('en');
+  });
+
+  it('applies the saved language and updates it when the preference changes', async () => {
+    const { rerender } = renderRoute();
+    expect(await screen.findByText('admin_console.cloud.console_sso.title')).toBeTruthy();
+    expect(i18next.language).toBe('en');
+
+    mockLanguage.mockReturnValue('zh-CN');
+    rerender(
+      <MemoryRouter>
+        <TenantsProvider>
+          <AppRoutes />
+        </TenantsProvider>
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      expect(i18next.language).toBe('zh-CN');
+    });
   });
 
   it.each(['/console-sso', '/console-sso/'])('renders %s without any tenant', async (path) => {
