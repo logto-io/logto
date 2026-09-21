@@ -2,7 +2,7 @@
 create table aggregated_daily_active_users (
   tenant_id varchar(21) not null,
   activity_date date not null,
-  user_id varchar(21) not null,
+  user_id varchar(128) not null,
   activity_count integer not null,
   primary key (tenant_id, activity_date, user_id)
 );

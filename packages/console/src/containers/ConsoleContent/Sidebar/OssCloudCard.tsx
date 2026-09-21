@@ -100,7 +100,9 @@ function OssCloudCard() {
         <TextLink
           isTrailingIcon
           className={classNames(styles.link, styles.secondaryLink)}
-          href={buildSelfHostedPlansUrl(entry)}
+          {...(getSelfHostedPlansUpsellTargetBlank()
+            ? { href: buildSelfHostedPlansUrl(entry) }
+            : { to: buildSelfHostedPlansUrl(entry) })}
           icon={<ExternalLinkIcon className={styles.linkIcon} />}
           targetBlank={getSelfHostedPlansUpsellTargetBlank()}
         >

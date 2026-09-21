@@ -1,5 +1,6 @@
 import type router from '@logto/cloud/routes';
 import { type ToZodObject } from '@logto/connector-kit';
+import { type LicenseQuota, type ReservedPlanId, type SelfHostedPlanId } from '@logto/schemas';
 import { type RouterRoutes } from '@withtyped/client';
 import { z, type ZodType } from 'zod';
 
@@ -44,6 +45,38 @@ export type Subscription = Omit<
   currentPeriodStart: string;
   currentPeriodEnd: string;
   quota: SubscriptionQuota;
+};
+
+/**
+ * The entitlements of a self-hosted deployment, derived from the license installed on it instead of
+ * fetched from the Cloud. Read through `SubscriptionLibrary.getSelfHostedSubscription()`; the Cloud
+ * shape stays with `SubscriptionLibrary.getSubscriptionData()`.
+ *
+ * The envelope mirrors {@link Subscription}, so a caller that only reads `planId`,
+ * `isEnterprisePlan` or `status` can treat either source the same. The quota deliberately does not:
+ * a license grants a small, fixed set of self-hosted entitlements rather than a Cloud SKU quota, and
+ * the two vocabularies are disjoint apart from `samlApplicationsLimit`. The names follow the license
+ * payload (`bringYourUi`, not `bringYourUiEnabled`), and `licenseQuotaGuard` in `@logto/schemas` is
+ * their single definition.
+ */
+export type SelfHostedSubscription = {
+  /** The self-hosted plan a license grants, or the OSS default without one. */
+  planId: SelfHostedPlanId | ReservedPlanId.Development;
+  /**
+   * When the installed key was signed, in ISO 8601 format. Without a license there is no period: both
+   * ends are the time of the read rather than a window, so no entitlement can be read out of them.
+   */
+  currentPeriodStart: string;
+  /** When the installed key expires, in ISO 8601 format. Without a license, the time of the read. */
+  currentPeriodEnd: string;
+  /** Whether the plan is the self-hosted Enterprise one. */
+  isEnterprisePlan: boolean;
+  /** An installed license keeps its entitlements until the refresh grace runs out. */
+  status: 'active';
+  /** The effective entitlements: the OSS defaults with the key's overrides applied. */
+  quota: LicenseQuota;
+  /** Empty: system limits only exist on Cloud. Carried so the envelope matches {@link Subscription}. */
+  systemLimit: SystemLimit;
 };
 
 export type SubscriptionUsage = Omit<

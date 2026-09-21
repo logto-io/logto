@@ -1,9 +1,6 @@
+import { isArray, isRecord } from '#src/utils/type.js';
+
 const sensitiveDataMask = '******';
-
-export const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === 'object' && value !== null && !Array.isArray(value);
-
-export const isArray = (value: unknown): value is unknown[] => Array.isArray(value);
 
 const nullCharacter = String.fromCodePoint(0);
 const safeSensitiveDataKeys = new Set(['passwordverified', 'haspassword']);

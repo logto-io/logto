@@ -11,7 +11,7 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import Table from '@/ds-components/Table';
 import useInvoices from '@/hooks/use-invoices';
-import { formatPeriod } from '@/utils/subscription';
+import { formatInvoicePeriod } from '@/utils/subscription';
 
 import InvoiceStatusTag from './InvoiceStatusTag';
 
@@ -64,11 +64,11 @@ function BillingHistory() {
           {
             title: <DynamicT forKey="subscription.billing_history.invoice_column" />,
             dataIndex: 'planName',
-            render: ({ skuId, periodStart, periodEnd }) => {
+            render: (invoice) => {
               return (
                 <ItemPreview
-                  title={formatPeriod({ periodStart, periodEnd, displayYear: true })}
-                  subtitle={conditional(skuId && <SkuName skuId={skuId} />)}
+                  title={formatInvoicePeriod(invoice)}
+                  subtitle={conditional(invoice.skuId && <SkuName skuId={invoice.skuId} />)}
                 />
               );
             },

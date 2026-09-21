@@ -66,8 +66,9 @@ describe('Dingtalk connector', () => {
         corpId: 'corpId',
       });
 
-      const { accessToken } = await getAccessToken('code', mockedConfig);
+      const { accessToken, corpId } = await getAccessToken('code', mockedConfig);
       expect(accessToken).toEqual('accessToken');
+      expect(corpId).toEqual('corpId');
     });
   });
 
@@ -86,7 +87,49 @@ describe('Dingtalk connector', () => {
       vi.clearAllMocks();
     });
 
-    it('should get valid SocialUserInfo', async () => {
+    it('should get valid SocialUserInfo with corpId in rawData', async () => {
+      nock(userInfoEndpoint).get('').reply(200, {
+        nick: 'zhangsan',
+        avatarUrl: 'https://xxx',
+        mobile: '150xxxx9144',
+        openId: '123',
+        unionId: '123',
+        email: 'zhangsan@alibaba-inc.com',
+        stateCode: '86',
+      });
+      const connector = await createConnector({ getConfig });
+      const socialUserInfo = await connector.getUserInfo(
+        {
+          code: 'code',
+        },
+        vi.fn()
+      );
+      expect(socialUserInfo).toStrictEqual({
+        id: '123',
+        avatar: 'https://xxx',
+        email: 'zhangsan@alibaba-inc.com',
+        name: 'zhangsan',
+        phone: '86150xxxx9144',
+        rawData: {
+          nick: 'zhangsan',
+          avatarUrl: 'https://xxx',
+          mobile: '150xxxx9144',
+          openId: '123',
+          unionId: '123',
+          email: 'zhangsan@alibaba-inc.com',
+          stateCode: '86',
+          corpId: 'corpId',
+        },
+      });
+    });
+
+    it('should get valid SocialUserInfo without corpId when omitted in token response', async () => {
+      nock.cleanAll();
+      nock(accessTokenEndpoint).post('').reply(200, {
+        accessToken: 'accessToken',
+        refreshToken: 'scope',
+        expires_in: 7200,
+      });
       nock(userInfoEndpoint).get('').reply(200, {
         nick: 'zhangsan',
         avatarUrl: 'https://xxx',
