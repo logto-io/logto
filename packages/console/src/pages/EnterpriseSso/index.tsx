@@ -70,7 +70,7 @@ function EnterpriseSso() {
           learnMoreLink={{ href: enterpriseSso }}
           hasAddOnTag={isPaidTenant}
         />
-        {ssoConnectors?.length && (
+        {Boolean(ssoConnectors?.length) && (
           <Button
             icon={<Plus />}
             type="primary"
