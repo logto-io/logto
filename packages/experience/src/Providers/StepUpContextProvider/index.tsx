@@ -55,6 +55,7 @@ const StepUpContextProvider = ({ children }: Props) => {
     useState<InteractionAuthenticationContext>();
   const [isFetching, setIsFetching] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [loadError, setLoadError] = useState<unknown>();
   /** The id of the latest load; an older load that settles later must not overwrite it. */
   const loadIdRef = useRef(0);
 
@@ -77,6 +78,7 @@ const StepUpContextProvider = ({ children }: Props) => {
       const settle = (context?: InteractionAuthenticationContext) => {
         if (isCurrent()) {
           setAuthenticationContext(context);
+          setLoadError(undefined);
           setIsFetching(false);
           setIsLoaded(true);
         }
@@ -102,6 +104,7 @@ const StepUpContextProvider = ({ children }: Props) => {
         }
 
         if (isCurrent()) {
+          setLoadError(error);
           setIsFetching(false);
           setIsLoaded(true);
         }
@@ -172,10 +175,11 @@ const StepUpContextProvider = ({ children }: Props) => {
       authenticationContext,
       isLoading: isFetching,
       isLoaded,
+      loadError,
       load,
       refetch,
     }),
-    [authenticationContext, isFetching, isLoaded, load, refetch]
+    [authenticationContext, isFetching, isLoaded, loadError, load, refetch]
   );
 
   return <StepUpContext.Provider value={stepUpContext}>{children}</StepUpContext.Provider>;

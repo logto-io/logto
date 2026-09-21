@@ -21,6 +21,11 @@ jest.mock('@/hooks/use-error-handler', () => ({
   default: () => handleError,
 }));
 
+jest.mock('@/hooks/use-step-up-error-handler', () => ({
+  __esModule: true,
+  default: () => jest.fn(),
+}));
+
 jest.mock('@/hooks/use-toast', () => ({
   __esModule: true,
   default: () => ({ setToast: jest.fn() }),
