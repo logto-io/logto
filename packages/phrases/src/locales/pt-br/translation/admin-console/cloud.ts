@@ -2,7 +2,7 @@ const cloud = {
   console_sso: {
     title: 'SSO do console',
     description:
-      'O SSO do console se aplica ao login no Logto Cloud em todos os seus locatários. O acesso aos locatários é gerenciado separadamente.',
+      'Configure seu próprio provedor de identidade para entrar no Logto Console com login único.',
   },
   general: {
     onboarding: 'Integração',

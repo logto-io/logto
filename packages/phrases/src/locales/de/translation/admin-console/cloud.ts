@@ -2,7 +2,7 @@ const cloud = {
   console_sso: {
     title: 'Konsolen-SSO',
     description:
-      'Konsolen-SSO gilt für die Anmeldung bei Logto Cloud über alle deine Mandanten hinweg. Der Mandantenzugriff wird separat verwaltet.',
+      'Konfiguriere deinen eigenen Identitätsanbieter, um dich per Single Sign-on bei der Logto Console anzumelden.',
   },
   general: {
     onboarding: 'Einführung',

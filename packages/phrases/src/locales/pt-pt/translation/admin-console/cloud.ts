@@ -2,7 +2,7 @@ const cloud = {
   console_sso: {
     title: 'SSO da consola',
     description:
-      'O SSO da consola aplica-se ao início de sessão no Logto Cloud em todos os seus inquilinos. O acesso aos inquilinos é gerido separadamente.',
+      'Configure o seu próprio fornecedor de identidade para aceder ao Logto Console com início de sessão único.',
   },
   general: {
     onboarding: 'Introdução',

@@ -2,7 +2,7 @@ const cloud = {
   console_sso: {
     title: 'Console SSO',
     description:
-      'Console SSO applies to Logto Cloud sign-in across your tenants. Tenant access is managed separately.',
+      'Configure your own identity provider to sign in to Logto Console with single sign-on.',
   },
   general: {
     onboarding: 'Onboarding',
