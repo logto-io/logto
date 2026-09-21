@@ -1,24 +1,14 @@
 import type { TFuncKey } from 'i18next';
 
+import { mockEnv, resetMockEnv, type EnvTestUtils } from '@/test-utils/env';
 import { ossUpsellEntries } from '@/utils/oss-upsell';
 
 import { getSamlAppLimitBannerContent } from './utils';
 
-// Module-level mock for the env constant. Must be declared before importing the module under test.
-// eslint-disable-next-line @silverhand/fp/no-let
-let mockIsDevFeaturesEnabled = false;
-
-jest.mock('@/consts/env', () => ({
-  get isDevFeaturesEnabled() {
-    return mockIsDevFeaturesEnabled;
-  },
-}));
+jest.mock('@/consts/env', () => jest.requireActual<EnvTestUtils>('@/test-utils/env').mockEnvModule);
 
 describe('getSamlAppLimitBannerContent', () => {
-  beforeEach(() => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    mockIsDevFeaturesEnabled = false;
-  });
+  beforeEach(resetMockEnv);
 
   it('keeps Cloud primary and self-hosted plans secondary', () => {
     const content = getSamlAppLimitBannerContent({ variant: 'inline' });
@@ -55,8 +45,7 @@ describe('getSamlAppLimitBannerContent', () => {
   });
 
   it('routes the secondary action to the License page in the same tab when available', () => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    mockIsDevFeaturesEnabled = true;
+    mockEnv({ isDevFeaturesEnabled: true });
 
     const content = getSamlAppLimitBannerContent({ variant: 'inline' });
     const selfHostedUrl = new URL(content.secondaryHref, 'https://example.com');

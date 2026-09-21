@@ -1,3 +1,5 @@
+import { mockEnv, resetMockEnv, type EnvTestUtils } from '@/test-utils/env';
+
 import {
   buildCloudUpsellUrl,
   buildSelfHostedPlansUrl,
@@ -7,15 +9,7 @@ import {
   ossUpsellEntries,
 } from './oss-upsell';
 
-// Module-level mock for the env constant. Must be declared before importing the module under test.
-// eslint-disable-next-line @silverhand/fp/no-let
-let mockIsDevFeaturesEnabled = true;
-
-jest.mock('@/consts/env', () => ({
-  get isDevFeaturesEnabled() {
-    return mockIsDevFeaturesEnabled;
-  },
-}));
+jest.mock('@/consts/env', () => jest.requireActual<EnvTestUtils>('@/test-utils/env').mockEnvModule);
 
 describe('oss upsell helpers', () => {
   const mockWindowOpen = jest.fn<ReturnType<typeof window.open>, Parameters<typeof window.open>>();
@@ -26,8 +20,7 @@ describe('oss upsell helpers', () => {
     jest.spyOn(window, 'open').mockImplementation(mockWindowOpen);
     mockWindowOpen.mockReset();
     mockLocationAssign.mockReset();
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    mockIsDevFeaturesEnabled = true;
+    resetMockEnv();
   });
 
   it('builds a Cloud upsell URL with the standard UTM parameters', () => {
@@ -42,6 +35,10 @@ describe('oss upsell helpers', () => {
   });
 
   describe('with the License page available', () => {
+    beforeEach(() => {
+      mockEnv({ isDevFeaturesEnabled: true });
+    });
+
     it('builds an in-Console License page path tagged with the entry only', () => {
       const href = buildSelfHostedPlansUrl(ossUpsellEntries.tenantSettingsMembersOssUpsell);
       const url = new URL(href, 'https://example.com');
@@ -84,11 +81,6 @@ describe('oss upsell helpers', () => {
   });
 
   describe('without the License page', () => {
-    beforeEach(() => {
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      mockIsDevFeaturesEnabled = false;
-    });
-
     it('builds a self-hosted plans URL with a dedicated campaign value', () => {
       const url = new URL(buildSelfHostedPlansUrl(ossUpsellEntries.tenantSettingsMembersOssUpsell));
 
