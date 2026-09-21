@@ -1,4 +1,9 @@
 const cloud = {
+  console_sso: {
+    title: 'Konsol SSO',
+    description:
+      'Konsol SSO, tüm kiracılarınızda Logto Cloud oturum açma işlemlerine uygulanır. Kiracı erişimi ayrı olarak yönetilir.',
+  },
   general: {
     onboarding: 'Başlatma',
   },

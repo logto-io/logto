@@ -1,4 +1,8 @@
 const cloud = {
+  console_sso: {
+    title: '主控台 SSO',
+    description: '主控台 SSO 適用於跨租用戶的 Logto Cloud 登入。租用戶存取權限另行管理。',
+  },
   general: {
     onboarding: '入門',
   },

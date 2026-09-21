@@ -1,4 +1,9 @@
 const cloud = {
+  console_sso: {
+    title: '콘솔 SSO',
+    description:
+      '콘솔 SSO는 모든 테넌트의 Logto Cloud 로그인에 적용됩니다. 테넌트 접근 권한은 별도로 관리됩니다.',
+  },
   general: {
     onboarding: '온보딩',
   },

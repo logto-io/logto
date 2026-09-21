@@ -1,4 +1,5 @@
 const menu = {
+  single_sign_on: 'ورود یکپارچه',
   profile: 'پروفایل',
   language: 'زبان',
   appearance: {

@@ -1,4 +1,9 @@
 const cloud = {
+  console_sso: {
+    title: 'SSO konsoli',
+    description:
+      'SSO konsoli dotyczy logowania do Logto Cloud we wszystkich Twoich dzierżawach. Dostęp do dzierżaw jest zarządzany oddzielnie.',
+  },
   general: {
     onboarding: 'Wdrażanie',
   },

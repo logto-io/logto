@@ -9,9 +9,12 @@ import Globe from '@/assets/icons/globe.svg?react';
 import Palette from '@/assets/icons/palette.svg?react';
 import Profile from '@/assets/icons/profile.svg?react';
 import SignOut from '@/assets/icons/sign-out.svg?react';
+import SingleSignOn from '@/assets/icons/single-sign-on.svg?react';
 import UserAvatar from '@/components/UserAvatar';
 import UserInfoCard from '@/components/UserInfoCard';
 import { adminTenantEndpoint } from '@/consts';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { GlobalRoute } from '@/contexts/TenantsProvider';
 import Divider from '@/ds-components/Divider';
 import Dropdown, { DropdownItem } from '@/ds-components/Dropdown';
 import FlipOnRtl from '@/ds-components/FlipOnRtl';
@@ -74,6 +77,24 @@ function UserInfo() {
       >
         <UserInfoCard className={styles.userInfo} user={user} avatarSize="large" />
         <Divider />
+        {/* Console SSO */}
+        {isCloud && isDevFeaturesEnabled && (
+          <DropdownItem
+            className={classNames(styles.dropdownItem, isLoading && styles.loading)}
+            icon={<SingleSignOn className={styles.icon} />}
+            onClick={() => {
+              window.open(GlobalRoute.ConsoleSso, '_blank', 'noopener,noreferrer');
+            }}
+          >
+            {t('menu.single_sign_on')}
+            <Spacer />
+            <div className={styles.icon}>
+              <FlipOnRtl>
+                <ExternalLinkIcon />
+              </FlipOnRtl>
+            </div>
+          </DropdownItem>
+        )}
         <DropdownItem
           className={classNames(styles.dropdownItem, isLoading && styles.loading)}
           icon={<Profile className={styles.icon} />}

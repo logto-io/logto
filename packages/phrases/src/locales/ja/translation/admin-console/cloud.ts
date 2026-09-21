@@ -1,4 +1,9 @@
 const cloud = {
+  console_sso: {
+    title: 'コンソール SSO',
+    description:
+      'コンソール SSO は、すべてのテナントにわたる Logto Cloud へのサインインに適用されます。テナントへのアクセスは個別に管理されます。',
+  },
   general: {
     onboarding: 'オンボーディング',
   },

@@ -1,4 +1,9 @@
 const cloud = {
+  console_sso: {
+    title: 'SSO консоли',
+    description:
+      'SSO консоли применяется ко входу в Logto Cloud во всех ваших арендаторах. Доступ к арендаторам управляется отдельно.',
+  },
   general: {
     onboarding: 'Вводный курс',
   },

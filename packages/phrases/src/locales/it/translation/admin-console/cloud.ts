@@ -1,4 +1,9 @@
 const cloud = {
+  console_sso: {
+    title: 'SSO della console',
+    description:
+      'Il SSO della console si applica all’accesso a Logto Cloud per tutti i tuoi tenant. L’accesso ai tenant viene gestito separatamente.',
+  },
   general: {
     onboarding: 'Inizio',
   },

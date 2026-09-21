@@ -4,6 +4,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import DelayedSuspenseFallback from '@/components/DelayedSuspenseFallback';
 import RedirectToAccountCenter from '@/components/RedirectToAccountCenter';
 import { EnterpriseSubscriptionTabs } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import ProtectedRoutes from '@/containers/ProtectedRoutes';
 import { GlobalAnonymousRoute, GlobalRoute } from '@/contexts/TenantsProvider';
 import { OnboardingApp } from '@/onboarding';
@@ -14,6 +15,7 @@ import ExternalGoogleOneTapLanding from '@/pages/ExternalGoogleOneTapLanding';
 import OneTimeTokenLanding from '@/pages/OneTimeTokenLanding';
 
 import styles from './AppRoutes.module.scss';
+import ConsoleSso from './pages/ConsoleSso';
 import DeleteAccount from './pages/DeleteAccount';
 import EnterpriseSubscription from './pages/EnterpriseSubscription';
 import BillingHistory from './pages/EnterpriseSubscription/BillingHistory';
@@ -42,6 +44,10 @@ function AppRoutes() {
             element={<AcceptInvitation />}
           />
           <Route element={<ProtectedRoutes />}>
+            {/* Console SSO */}
+            {isDevFeaturesEnabled && (
+              <Route path={GlobalRoute.ConsoleSso} element={<ConsoleSso />} />
+            )}
             <Route path={GlobalRoute.Profile + '/*'} element={<RedirectToAccountCenter />} />
             <Route
               path={GlobalRoute.CheckoutSuccessCallback}
