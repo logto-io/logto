@@ -51,7 +51,12 @@ function SamlAppLimitBanner({ variant, limit, className }: Props) {
             href={content.href}
             targetBlank="noopener"
           />
-          <TextLink href={content.secondaryHref} targetBlank={content.secondaryTargetBlank}>
+          <TextLink
+            {...(content.secondaryTargetBlank
+              ? { href: content.secondaryHref }
+              : { to: content.secondaryHref })}
+            targetBlank={content.secondaryTargetBlank}
+          >
             {t(content.secondaryActionKey)}
           </TextLink>
         </div>

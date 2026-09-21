@@ -46,7 +46,12 @@ function OssUpsell() {
             href={cloudUpsellUrl}
             targetBlank="noopener"
           />
-          <TextLink href={selfHostedPlansUrl} targetBlank={getSelfHostedPlansUpsellTargetBlank()}>
+          <TextLink
+            {...(getSelfHostedPlansUpsellTargetBlank()
+              ? { href: selfHostedPlansUrl }
+              : { to: selfHostedPlansUrl })}
+            targetBlank={getSelfHostedPlansUpsellTargetBlank()}
+          >
             {t('upsell.explore_self_hosted_plans')}
           </TextLink>
         </div>

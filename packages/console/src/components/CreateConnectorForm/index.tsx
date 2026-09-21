@@ -83,7 +83,9 @@ function EmailConnectorUpsellBanner() {
         />
         <TextLink
           className={styles.cloudAction}
-          href={selfHostedPlansUrl}
+          {...(getSelfHostedPlansUpsellTargetBlank()
+            ? { href: selfHostedPlansUrl }
+            : { to: selfHostedPlansUrl })}
           targetBlank={getSelfHostedPlansUpsellTargetBlank()}
         >
           {t(copyKeys.secondaryAction)}

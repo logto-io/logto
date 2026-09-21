@@ -76,7 +76,9 @@ function OssCloudUpsell({ isBannerVisible, onDismissBanner }: Props) {
               />
               <TextLink
                 className={styles.selfHostedPlansLink}
-                href={buildSelfHostedPlansUrl(entry)}
+                {...(getSelfHostedPlansUpsellTargetBlank()
+                  ? { href: buildSelfHostedPlansUrl(entry) }
+                  : { to: buildSelfHostedPlansUrl(entry) })}
                 targetBlank={getSelfHostedPlansUpsellTargetBlank()}
               >
                 {t('upsell.explore_self_hosted_plans')}

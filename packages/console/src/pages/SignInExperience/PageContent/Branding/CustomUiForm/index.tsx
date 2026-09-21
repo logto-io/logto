@@ -63,7 +63,9 @@ function OssBringYourUiCard() {
               <>
                 {' · '}
                 <TextLink
-                  href={cardContent.selfHostedHref}
+                  {...(cardContent.selfHostedTargetBlank
+                    ? { href: cardContent.selfHostedHref }
+                    : { to: cardContent.selfHostedHref })}
                   targetBlank={cardContent.selfHostedTargetBlank}
                   className={styles.highlight}
                 >
