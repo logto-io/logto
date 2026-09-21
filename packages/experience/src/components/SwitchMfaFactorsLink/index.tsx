@@ -5,7 +5,7 @@ import useStepUpContext from '@/hooks/use-step-up-context';
 import SwitchIcon from '@/shared/assets/icons/switch-icon.svg?react';
 import { UserMfaFlow } from '@/types';
 import { type MfaFlowState } from '@/types/guard';
-import { getDisplayedStepUpMethods } from '@/utils/step-up';
+import { hasAlternativeStepUpMethod } from '@/utils/step-up';
 
 import TextLink from '../TextLink';
 
@@ -19,11 +19,11 @@ const SwitchMfaFactorsLink = ({ flow, flowState, className }: Props) => {
   const { availableFactors } = flowState;
   const { authenticationContext } = useStepUpContext();
   const isStepUp = authenticationContext?.mode === AuthenticationContextMode.StepUp;
-  const methodCount = isStepUp
-    ? getDisplayedStepUpMethods(authenticationContext.availableMethods).length
-    : availableFactors.length;
+  const hasAlternativeMethod = isStepUp
+    ? hasAlternativeStepUpMethod(authenticationContext.availableMethods)
+    : availableFactors.length >= 2;
 
-  if (methodCount < 2) {
+  if (!hasAlternativeMethod) {
     return null;
   }
 

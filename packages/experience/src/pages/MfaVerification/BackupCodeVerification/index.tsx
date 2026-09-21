@@ -3,8 +3,8 @@ import { t } from 'i18next';
 import { useCallback, type FormEvent } from 'react';
 import { useForm } from 'react-hook-form';
 
-import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import SectionLayout from '@/Layout/SectionLayout';
+import VerificationPageLayout from '@/Layout/VerificationPageLayout';
 import { InputField } from '@/components/InputFields';
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
 import useMfaFlowState from '@/hooks/use-mfa-factors-state';
@@ -45,7 +45,7 @@ const BackupCodeVerification = () => {
   }
 
   return (
-    <SecondaryPageLayout title="mfa.verify_mfa_factors">
+    <VerificationPageLayout title="mfa.verify_mfa_factors">
       <SectionLayout
         title="mfa.enter_a_backup_code"
         description="mfa.enter_backup_code_description"
@@ -65,7 +65,7 @@ const BackupCodeVerification = () => {
         flowState={flowState}
         className={styles.switchFactorLink}
       />
-    </SecondaryPageLayout>
+    </VerificationPageLayout>
   );
 };
 

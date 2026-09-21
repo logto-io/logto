@@ -18,6 +18,7 @@ type Props = {
   readonly descriptionProps?: Record<string, unknown>;
   readonly notification?: TFuncKey;
   readonly onSkip?: () => void;
+  readonly onBack?: () => void;
   readonly isNavBarHidden?: boolean;
   readonly children: React.ReactNode;
 };
@@ -29,6 +30,7 @@ const SecondaryPageLayout = ({
   descriptionProps,
   notification,
   onSkip,
+  onBack,
   isNavBarHidden,
   children,
 }: Props) => {
@@ -41,9 +43,12 @@ const SecondaryPageLayout = ({
       <NavBar
         isHidden={isNavBarHidden}
         onSkip={onSkip}
-        onBack={() => {
-          navigate(-1);
-        }}
+        onBack={
+          onBack ??
+          (() => {
+            navigate(-1);
+          })
+        }
       />
       {isMobile && notification && (
         <InlineNotification message={notification} className={styles.notification} />
