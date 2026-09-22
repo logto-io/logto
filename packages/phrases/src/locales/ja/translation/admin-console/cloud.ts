@@ -1,8 +1,16 @@
 const cloud = {
   console_sso: {
+    create: 'コネクターを追加',
     title: 'コンソール SSO',
     description:
       '独自のアイデンティティプロバイダーを設定して、シングルサインオンで Logto Console にサインインできます。',
+    domain_bound: '検証済み',
+    domain_pending: '検証待ち',
+    start_over: '最初からやり直す',
+    start_over_confirmation:
+      '最初からやり直しても、すでに作成されている可能性のあるコネクターは削除されません。続行すると、別のコネクターが作成される可能性があります。続行しますか？',
+    resume_creation:
+      '未完了の作成操作が見つかりました。同じプロバイダーで続行して、このコネクターを復元してください。',
   },
   general: {
     onboarding: 'オンボーディング',

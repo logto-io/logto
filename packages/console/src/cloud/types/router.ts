@@ -1,5 +1,6 @@
 import type router from '@logto/cloud/routes';
 import {
+  type consoleSsoRouter,
   type emailLogsRouter,
   type tenantAuthRouter,
   type userStripeCustomersRouter,
@@ -123,3 +124,8 @@ export type LogtoEnterpriseSubscriptionResponse = GuardedResponse<
 export type LogtoEnterpriseSubscriptionInvoiceResponse = GetArrayElementType<
   GuardedResponse<GetRoutes['/api/me/logto-enterprises/:id/invoices']>['invoices']
 >;
+
+/** A customer-owned connector returned by the global Console SSO API. */
+export type ConsoleSsoConnector = GuardedResponse<
+  RouterRoutes<typeof consoleSsoRouter>['get']['/api/me/console-sso/connectors']
+>[number];
