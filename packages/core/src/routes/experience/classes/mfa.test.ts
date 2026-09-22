@@ -95,7 +95,7 @@ describe('Mfa.assertMfaFulfilled', () => {
 
     await mfa.assertMfaFulfilled();
 
-    expect(mandatorySpy).toHaveBeenCalledWith(expect.any(Object));
+    expect(mandatorySpy).toHaveBeenCalledWith(expect.any(Object), false);
   });
 
   it('reuses submit async context during mandatory check', async () => {
@@ -180,6 +180,53 @@ describe('Mfa.assertMfaFulfilled', () => {
       data: {
         availableFactors: [MfaFactor.TOTP],
       },
+    });
+  });
+
+  it('applies no skip and omits `skippable` for a no-skip mandatory requirement', async () => {
+    const { mfa } = createMfa({
+      // A skippable policy the user has already opted out of: only the requirement itself is
+      // mandatory, and it neither suggests nor stays skippable.
+      mfaSettings: {
+        policy: MfaPolicy.PromptAtSignInAndSignUp,
+        factors: [MfaFactor.TOTP],
+        organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+      },
+      user: {
+        id: 'user-id',
+        logtoConfig: { [userMfaDataKey]: { enabled: true, skipped: true } },
+        mfaVerifications: [],
+      },
+    });
+
+    const assertion = mfa.assertMfaFulfilled({ asNoSkipMandatoryPolicy: true });
+
+    await expect(assertion).rejects.toMatchObject({
+      code: 'user.missing_mfa',
+      status: 422,
+      data: { availableFactors: [MfaFactor.TOTP] },
+    });
+    await expect(assertion).rejects.not.toHaveProperty('data.skippable');
+  });
+
+  it('honors the policy skips and marks the requirement skippable without the option', async () => {
+    const { mfa } = createMfa({
+      mfaSettings: {
+        policy: MfaPolicy.PromptAtSignInAndSignUp,
+        factors: [MfaFactor.TOTP],
+        organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+      },
+      user: {
+        id: 'user-id',
+        logtoConfig: { [userMfaDataKey]: { enabled: true } },
+        mfaVerifications: [],
+      },
+    });
+
+    await expect(mfa.assertMfaFulfilled()).rejects.toMatchObject({
+      code: 'user.missing_mfa',
+      status: 422,
+      data: { availableFactors: [MfaFactor.TOTP], skippable: true },
     });
   });
 
