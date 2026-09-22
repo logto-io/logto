@@ -76,6 +76,7 @@ const subscription = {
     description: '選擇為該訂閱支付的帳單賬戶，或創建一個新的。你可以在下一頁更改付款詳情。',
     account: '帳單賬戶',
     new_account: '新的帳單賬戶',
+    default_account: '默認',
   },
   upgrade_success: '升級成功至 <name/>',
   downgrade_success: '成功降級至 <name/>',

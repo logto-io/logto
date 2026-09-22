@@ -80,6 +80,7 @@ const subscription = {
       'このサブスクリプションの支払いをする請求アカウントを選択するか、新しいアカウントを開始します。次のページで支払いの詳細を変更できます。',
     account: '請求アカウント',
     new_account: '新しい請求アカウント',
+    default_account: 'デフォルト',
   },
   upgrade_success: '正常に<name/>にアップグレードされました',
   downgrade_success: '正常に<name/>にダウングレードされました',

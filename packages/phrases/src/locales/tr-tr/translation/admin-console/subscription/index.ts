@@ -82,6 +82,7 @@ const subscription = {
       'Bu aboneliğin ödeme işlemleri için fatura hesabını seçin ya da yeni bir hesap başlatın. Ödeme bilgilerini bir sonraki sayfada değiştirebilirsiniz.',
     account: 'Fatura hesabı',
     new_account: 'Yeni fatura hesabı',
+    default_account: 'Varsayılan',
   },
   upgrade_success: "Başarıyla <name/>'e yükseltildi",
   downgrade_success: "Başarıyla <name/>'e düşürüldü",

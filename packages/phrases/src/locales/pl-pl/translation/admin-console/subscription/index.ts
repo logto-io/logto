@@ -80,6 +80,7 @@ const subscription = {
       'Wybierz konto rozliczeniowe, które płaci za tę subskrypcję, lub rozpocznij nowe. Możesz zmienić szczegóły płatności na następnej stronie.',
     account: 'Konto rozliczeniowe',
     new_account: 'Nowe konto rozliczeniowe',
+    default_account: 'Domyślne',
   },
   upgrade_success: 'Pomyślnie uaktualniono do <name/>',
   downgrade_success: 'Pomyślnie zdegradowano do <name/>',

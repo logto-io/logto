@@ -80,6 +80,7 @@ const subscription = {
       'Selecione a conta de faturação que paga esta subscrição, ou inicie uma nova. Pode alterar os detalhes de pagamento na próxima página.',
     account: 'Conta de faturação',
     new_account: 'Nova conta de faturação',
+    default_account: 'Padrão',
   },
   upgrade_success: 'Atualizou com sucesso para <name/>',
   downgrade_success: 'Downgrade concluído com sucesso para <name/>',

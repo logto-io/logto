@@ -79,6 +79,7 @@ const subscription = {
       'Select the billing account that pays for this subscription, or start a new one. You can change payment details on the next page.',
     account: 'Billing account',
     new_account: 'New billing account',
+    default_account: 'Default',
   },
   upgrade_success: 'Successfully upgraded to <name/>',
   downgrade_success: 'Successfully downgraded to <name/>',

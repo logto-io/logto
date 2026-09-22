@@ -80,6 +80,7 @@ const subscription = {
       'Wähle das Abrechnungskonto aus, das für dieses Abonnement zahlt, oder starte ein neues. Du kannst die Zahlungsdetails auf der nächsten Seite ändern.',
     account: 'Abrechnungskonto',
     new_account: 'Neues Abrechnungskonto',
+    default_account: 'Standard',
   },
   upgrade_success: 'Erfolgreich auf <name/> hochgestuft',
   downgrade_success: 'Erfolgreich auf <name/> herabgestuft',

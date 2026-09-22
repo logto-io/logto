@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { type BillingCustomer } from '@/cloud/types/router';
 import FormField from '@/ds-components/FormField';
 import Select from '@/ds-components/Select';
+import Tag from '@/ds-components/Tag';
 
 import styles from './index.module.scss';
 import { newBillingCustomer } from './utils';
@@ -26,7 +27,16 @@ function BillingCustomerPicker({ customers, defaultValue, onChange }: Props) {
   const options = [
     ...customers.map((customer) => ({
       value: customer.customerId,
-      title: customerTitle(customer),
+      title: (
+        <>
+          {customerTitle(customer)}
+          {customer.isDefault && (
+            <Tag variant="cell" size="small" className={styles.defaultTag}>
+              {t('default_account')}
+            </Tag>
+          )}
+        </>
+      ),
     })),
     { value: newBillingCustomer, title: t('new_account') },
   ];

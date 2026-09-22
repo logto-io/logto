@@ -76,6 +76,7 @@ const subscription = {
     description: '请选择为此订阅付款的计费账户，或开始一个新的。你可以在下一页更改付款详情。',
     account: '计费账户',
     new_account: '新计费账户',
+    default_account: '默认',
   },
   upgrade_success: '成功升级到 <name/>',
   downgrade_success: '成功降级到 <name/>',

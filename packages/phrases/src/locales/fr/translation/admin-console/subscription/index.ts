@@ -81,6 +81,7 @@ const subscription = {
       'Sélectionnez le compte de facturation qui paie pour cet abonnement, ou commencez-en un nouveau. Vous pouvez modifier les détails de paiement sur la page suivante.',
     account: 'Compte de facturation',
     new_account: 'Nouveau compte de facturation',
+    default_account: 'Par défaut',
   },
   upgrade_success: 'Passé avec succès à <name/>',
   downgrade_success: 'Rétrogradé avec succès à <name/>',
