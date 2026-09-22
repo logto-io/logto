@@ -1,16 +1,22 @@
 import {
   LicenseKey,
+  licenseRefreshStateGuard,
   type LicensePayload,
   type LicenseQuota,
+  type InstalledLicense,
   installedLicenseGuard,
   resolveLicenseQuota,
 } from '@logto/schemas';
 import { TtlCache } from '@logto/shared';
 import { type Optional } from '@silverhand/essentials';
 import { type CommonQueryMethods } from '@silverhand/slonik';
+import { got } from 'got';
+import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { createSystemsQuery } from '#src/queries/system.js';
+
+import packageJson from '../../package.json' with { type: 'json' };
 
 import { licenseConsoleLog } from './console.js';
 import { LicenseVerificationError, verifyLicenseKey } from './verify.js';
@@ -26,6 +32,12 @@ export type VerifiedLicense = {
    * everything the key does not override.
    */
   quota: LicenseQuota;
+  /** The last successful refresh, used as the start of the offline grace period. */
+  lastRefreshedAt: string;
+  /** The end of the offline grace period. */
+  graceEndsAt: string;
+  /** The last refusal reason returned by the license service, if any. */
+  refusalReason?: string;
 };
 
 /**
@@ -41,6 +53,35 @@ const licenseCacheTtl = 60_000;
 
 /** The reader caches one license, so the key only has to be stable. */
 const cacheKey = 'license';
+
+const refreshInterval = 7 * 24 * 60 * 60 * 1000;
+const refreshAttemptInterval = 60 * 60 * 1000;
+export const licenseGracePeriod = 30 * 24 * 60 * 60 * 1000;
+
+/** The production license service is fixed; development uses the configured Cloud endpoint. */
+export const selfHostedLicenseServiceUrl = new URL('https://cloud.logto.io');
+
+const refreshResponseGuard = z.object({ license: z.string().min(1) });
+const refreshRefusalGuard = z.object({ reason: z.string().min(1) });
+
+const getLicenseServiceUrl = () =>
+  EnvSet.values.isProduction ? selfHostedLicenseServiceUrl : EnvSet.values.cloudUrlSet.endpoint;
+
+const getGraceEndsAt = (lastRefreshedAt: string) =>
+  new Date(new Date(lastRefreshedAt).getTime() + licenseGracePeriod).toISOString();
+
+const isOlderThan = (value: string | undefined, age: number) =>
+  value === undefined || Date.parse(value) + age <= Date.now();
+
+type RefreshState = z.infer<typeof licenseRefreshStateGuard>;
+
+type RefreshContext = {
+  pool: CommonQueryMethods;
+  license: VerifiedLicense;
+  deploymentId: string;
+  refreshState: RefreshState;
+  installedJwt: string;
+};
 
 /**
  * Reads the license installed on this deployment and verifies it offline.
@@ -65,6 +106,9 @@ export default class LicenseReader {
    * signature verification. Empty means the next read starts a new one.
    */
   readonly #cache = new TtlCache<string, Promise<Optional<VerifiedLicense>>>(licenseCacheTtl);
+
+  /** A refresh is intentionally not awaited by a request, but only one may run per instance. */
+  #refreshing?: Promise<void>;
 
   /**
    * The verified license installed on this deployment, or `undefined` when there is none, it does
@@ -113,7 +157,11 @@ export default class LicenseReader {
 
   async #read(pool: CommonQueryMethods): Promise<Optional<VerifiedLicense>> {
     const { findSystemByKey } = createSystemsQuery(pool);
-    const record = await findSystemByKey(LicenseKey.License);
+    const [record, refreshStateRecord, deploymentIdRecord] = await Promise.all([
+      findSystemByKey(LicenseKey.License),
+      findSystemByKey(LicenseKey.LicenseRefreshState),
+      findSystemByKey(LicenseKey.LicenseDeploymentId),
+    ]);
 
     if (!record) {
       return;
@@ -129,14 +177,55 @@ export default class LicenseReader {
       return;
     }
 
-    try {
-      const payload = await verifyLicenseKey(installed.data.jwt);
+    return this.#readVerifiedLicense(
+      pool,
+      installed.data,
+      refreshStateRecord ?? undefined,
+      deploymentIdRecord ?? undefined
+    );
+  }
 
-      return {
+  async #readVerifiedLicense(
+    pool: CommonQueryMethods,
+    installed: InstalledLicense,
+    refreshStateRecord: Record<string, unknown> | undefined,
+    deploymentIdRecord: Record<string, unknown> | undefined
+  ): Promise<VerifiedLicense | undefined> {
+    try {
+      const payload = await verifyLicenseKey(installed.jwt);
+      const parsedRefreshState = licenseRefreshStateGuard.safeParse(refreshStateRecord?.value);
+      const refreshState: RefreshState = parsedRefreshState.success
+        ? parsedRefreshState.data
+        : { lastRefreshedAt: new Date(payload.iat * 1000).toISOString() };
+      const deploymentValue = deploymentIdRecord?.value;
+      const deploymentId = typeof deploymentValue === 'string' ? deploymentValue : undefined;
+      const { lastRefreshedAt } = refreshState;
+      const license = {
         payload,
-        installedAt: installed.data.installedAt,
+        installedAt: installed.installedAt,
         quota: resolveLicenseQuota(payload.quota),
+        lastRefreshedAt,
+        graceEndsAt: getGraceEndsAt(lastRefreshedAt),
+        ...(refreshState.refusalReason && { refusalReason: refreshState.refusalReason }),
       };
+
+      // A newly installed key has no attempt timestamp, so the first read registers it immediately.
+      const shouldRefresh =
+        refreshState.lastAttemptAt === undefined ||
+        (isOlderThan(lastRefreshedAt, refreshInterval) &&
+          isOlderThan(refreshState.lastAttemptAt, refreshAttemptInterval));
+
+      if (deploymentId && shouldRefresh) {
+        this.#startRefresh({
+          pool,
+          license,
+          deploymentId,
+          refreshState,
+          installedJwt: installed.jwt,
+        });
+      }
+
+      return license;
     } catch (error: unknown) {
       if (!(error instanceof LicenseVerificationError)) {
         throw error;
@@ -144,6 +233,90 @@ export default class LicenseReader {
 
       licenseConsoleLog.error(
         `The installed license key could not be verified (${error.code}) and was ignored. The self-hosted defaults apply.`
+      );
+    }
+  }
+
+  #startRefresh(context: RefreshContext) {
+    if (this.#refreshing) {
+      return;
+    }
+
+    const refreshing = this.#refresh(context);
+    this.#refreshing = refreshing;
+    void this.#clearRefresh(refreshing);
+  }
+
+  async #clearRefresh(refreshing: Promise<void>) {
+    try {
+      await refreshing;
+    } finally {
+      if (this.#refreshing === refreshing) {
+        this.#refreshing = undefined;
+      }
+    }
+  }
+
+  async #refresh({ pool, license, deploymentId, refreshState, installedJwt }: RefreshContext) {
+    const { upsertSystem } = createSystemsQuery(pool);
+    const lastAttemptAt = new Date().toISOString();
+
+    try {
+      await upsertSystem(LicenseKey.LicenseRefreshState, {
+        ...refreshState,
+        lastAttemptAt,
+      });
+
+      const response = await got.post(
+        new URL(
+          `/api/self-hosted-licenses/${encodeURIComponent(license.payload.licenseId)}/refresh`,
+          getLicenseServiceUrl()
+        ),
+        {
+          json: {
+            license: installedJwt,
+            deploymentId,
+            logtoVersion: packageJson.version,
+          },
+          responseType: 'json',
+          throwHttpErrors: false,
+        }
+      );
+
+      if (response.statusCode === 403) {
+        const refusal = refreshRefusalGuard.safeParse(response.body);
+        const refusalReason = refusal.success ? refusal.data.reason : 'unknown';
+
+        await upsertSystem(LicenseKey.LicenseRefreshState, {
+          ...refreshState,
+          lastAttemptAt,
+          refusalReason,
+        });
+        this.invalidate();
+        return;
+      }
+
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        throw new Error(`License refresh failed with status ${response.statusCode}.`);
+      }
+
+      const refreshed = refreshResponseGuard.parse(response.body);
+      const refreshedPayload = await verifyLicenseKey(refreshed.license);
+      const lastRefreshedAt = new Date(refreshedPayload.iat * 1000).toISOString();
+
+      await upsertSystem(LicenseKey.License, {
+        jwt: refreshed.license,
+        installedAt: license.installedAt,
+      });
+      await upsertSystem(LicenseKey.LicenseRefreshState, {
+        lastRefreshedAt,
+        lastAttemptAt,
+      });
+      this.invalidate();
+    } catch (error: unknown) {
+      licenseConsoleLog.warn(
+        'Unable to refresh the self-hosted license; the current key remains active.',
+        error
       );
     }
   }

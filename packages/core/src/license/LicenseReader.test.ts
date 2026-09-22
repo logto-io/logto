@@ -1,8 +1,9 @@
-import { LicenseKey, ossDefaultQuota } from '@logto/schemas';
+import { LicenseKey, licenseRefreshStateGuard, ossDefaultQuota } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import { noop } from '@silverhand/essentials';
 import { createMockPool } from '@silverhand/slonik';
 import { type CryptoKey, type JWK, importJWK } from 'jose';
+import nock from 'nock';
 
 import { EnvSet } from '#src/env-set/index.js';
 import {
@@ -20,8 +21,9 @@ const pool = createMockPool({ query: jest.fn() });
 
 // `maybeOne` resolves to `null` when the row is absent.
 const findSystemByKey = jest.fn(async (_key: string): Promise<unknown> => null);
+const upsertSystem = jest.fn(async (key: string, value: unknown) => ({ key, value }));
 mockEsm('#src/queries/system.js', () => ({
-  createSystemsQuery: () => ({ findSystemByKey }),
+  createSystemsQuery: () => ({ findSystemByKey, upsertSystem }),
 }));
 
 const error = jest.spyOn(licenseConsoleLog, 'error').mockImplementation(noop);
@@ -37,6 +39,21 @@ const LicenseReader = await pickDefault(import('./LicenseReader.js'));
 
 const installedAt = '2026-09-14T00:00:00.000Z';
 
+const waitFor = async (condition: () => boolean, attempts = 100): Promise<void> => {
+  if (condition()) {
+    return;
+  }
+
+  if (attempts === 0) {
+    throw new Error('Timed out waiting for the license refresh.');
+  }
+
+  await new Promise((resolve) => {
+    setTimeout(resolve, 5);
+  });
+  return waitFor(condition, attempts - 1);
+};
+
 /** Put a license key into the `systems` table, as `PUT /api/systems/license` does. */
 const install = (jwt: string) => {
   findSystemByKey.mockImplementation(async (key) =>
@@ -51,8 +68,10 @@ describe('LicenseReader', () => {
   afterEach(() => {
     Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', isDevFeaturesEnabled);
     jest.clearAllMocks();
+    nock.cleanAll();
     findSystemByKey.mockReset();
     findSystemByKey.mockResolvedValue(null);
+    upsertSystem.mockReset();
     reader.invalidate();
   });
 
@@ -78,6 +97,8 @@ describe('LicenseReader', () => {
         hideLogtoBranding: true,
         samlApplicationsLimit: null,
       },
+      lastRefreshedAt: new Date(payload.iat * 1000).toISOString(),
+      graceEndsAt: new Date(payload.iat * 1000 + 30 * 24 * 60 * 60 * 1000).toISOString(),
     });
   });
 
@@ -100,11 +121,117 @@ describe('LicenseReader', () => {
 
     await Promise.all([reader.read(pool), reader.read(pool)]);
     await reader.read(pool);
-    expect(findSystemByKey).toHaveBeenCalledTimes(1);
+    expect(findSystemByKey).toHaveBeenCalledTimes(3);
 
     reader.invalidate();
     await reader.read(pool);
-    expect(findSystemByKey).toHaveBeenCalledTimes(2);
+    expect(findSystemByKey).toHaveBeenCalledTimes(6);
+  });
+
+  it('should refresh an installed key asynchronously on the first read', async () => {
+    const issuedAt = Math.floor(Date.now() / 1000) - 8 * 24 * 60 * 60;
+    const payload = buildLicensePayload({ iat: issuedAt, exp: issuedAt - 1 });
+    const refreshedPayload = buildLicensePayload();
+    const jwt = await signLicenseKey(payload, keyPair.privateKey);
+    const refreshedJwt = await signLicenseKey(refreshedPayload, keyPair.privateKey);
+    const refreshState = {
+      lastRefreshedAt: new Date(issuedAt * 1000).toISOString(),
+      lastAttemptAt: new Date(issuedAt * 1000).toISOString(),
+    };
+
+    findSystemByKey.mockImplementation(async (key) => {
+      if (key === LicenseKey.License) {
+        return { value: { jwt, installedAt } };
+      }
+      if (key === LicenseKey.LicenseRefreshState) {
+        return { value: refreshState };
+      }
+      if (key === LicenseKey.LicenseDeploymentId) {
+        return { value: 'deployment_1' };
+      }
+      return null;
+    });
+
+    const { endpoint } = EnvSet.values.cloudUrlSet;
+    const request = nock(endpoint.origin)
+      .post(
+        `/api/self-hosted-licenses/${payload.licenseId}/refresh`,
+        (body: { license: string; deploymentId: string; logtoVersion: string }) =>
+          body.license === jwt &&
+          body.deploymentId === 'deployment_1' &&
+          body.logtoVersion.length > 0
+      )
+      .reply(200, { license: refreshedJwt });
+
+    const [firstResult, secondResult] = await Promise.all([reader.read(pool), reader.read(pool)]);
+
+    expect(firstResult?.payload).toEqual(payload);
+    expect(secondResult?.payload).toEqual(payload);
+
+    await waitFor(() => request.isDone());
+    await waitFor(() => upsertSystem.mock.calls.some(([key]) => key === LicenseKey.License));
+
+    expect(request.isDone()).toBe(true);
+    const refreshStateWrite = upsertSystem.mock.calls.find(
+      ([key]) => key === LicenseKey.LicenseRefreshState
+    );
+    expect(refreshStateWrite).toBeDefined();
+    const parsedRefreshState = licenseRefreshStateGuard.parse(refreshStateWrite?.[1]);
+    expect(typeof parsedRefreshState.lastAttemptAt).toBe('string');
+    expect(upsertSystem).toHaveBeenCalledWith(LicenseKey.License, {
+      jwt: refreshedJwt,
+      installedAt,
+    });
+  });
+
+  it('should keep the last successful refresh when the service refuses a refresh', async () => {
+    const issuedAt = Math.floor(Date.now() / 1000) - 8 * 24 * 60 * 60;
+    const payload = buildLicensePayload({ iat: issuedAt, exp: issuedAt - 1 });
+    const jwt = await signLicenseKey(payload, keyPair.privateKey);
+    const lastRefreshedAt = new Date(issuedAt * 1000).toISOString();
+
+    findSystemByKey.mockImplementation(async (key) => {
+      if (key === LicenseKey.License) {
+        return { value: { jwt, installedAt } };
+      }
+      if (key === LicenseKey.LicenseRefreshState) {
+        return { value: { lastRefreshedAt, lastAttemptAt: lastRefreshedAt } };
+      }
+      if (key === LicenseKey.LicenseDeploymentId) {
+        return { value: 'deployment_1' };
+      }
+      return null;
+    });
+
+    const request = nock(EnvSet.values.cloudUrlSet.endpoint.origin)
+      .post(`/api/self-hosted-licenses/${payload.licenseId}/refresh`)
+      .reply(403, { reason: 'canceled' });
+
+    await reader.read(pool);
+    await waitFor(() => request.isDone());
+    await waitFor(() =>
+      upsertSystem.mock.calls.some(
+        ([key, value]) =>
+          key === LicenseKey.LicenseRefreshState &&
+          typeof value === 'object' &&
+          value !== null &&
+          'refusalReason' in value
+      )
+    );
+
+    expect(request.isDone()).toBe(true);
+    const refreshStateWrite = upsertSystem.mock.calls.find(
+      ([key, value]) =>
+        key === LicenseKey.LicenseRefreshState &&
+        typeof value === 'object' &&
+        value !== null &&
+        'refusalReason' in value
+    );
+    expect(refreshStateWrite).toBeDefined();
+    const parsedRefreshState = licenseRefreshStateGuard.parse(refreshStateWrite?.[1]);
+    expect(parsedRefreshState).toMatchObject({ lastRefreshedAt, refusalReason: 'canceled' });
+    expect(typeof parsedRefreshState.lastAttemptAt).toBe('string');
+    expect(upsertSystem).not.toHaveBeenCalledWith(LicenseKey.License, expect.anything());
   });
 
   it('should not cache a failed database read', async () => {
@@ -112,7 +239,7 @@ describe('LicenseReader', () => {
 
     await expect(reader.read(pool)).rejects.toThrow('Connection terminated');
     await expect(reader.read(pool)).resolves.toBeUndefined();
-    expect(findSystemByKey).toHaveBeenCalledTimes(2);
+    expect(findSystemByKey).toHaveBeenCalledTimes(6);
   });
 
   it('should grant nothing while the self-hosted plans feature is not launched', async () => {
@@ -154,17 +281,17 @@ describe('LicenseReader cache expiry', () => {
     install(await signLicenseKey(buildLicensePayload(), keyPair.privateKey));
 
     await expect(reader.read(pool)).resolves.toBeDefined();
-    expect(findSystemByKey).toHaveBeenCalledTimes(1);
+    expect(findSystemByKey).toHaveBeenCalledTimes(3);
 
     now.mockReturnValue(startedAt + 30_000);
     await expect(reader.read(pool)).resolves.toBeDefined();
-    expect(findSystemByKey).toHaveBeenCalledTimes(1);
+    expect(findSystemByKey).toHaveBeenCalledTimes(3);
 
     // Another instance removed the license; `invalidate()` there never reached this process.
     now.mockReturnValue(startedAt + 60_001);
     findSystemByKey.mockResolvedValue(null);
 
     await expect(reader.read(pool)).resolves.toBeUndefined();
-    expect(findSystemByKey).toHaveBeenCalledTimes(2);
+    expect(findSystemByKey).toHaveBeenCalledTimes(6);
   });
 });
