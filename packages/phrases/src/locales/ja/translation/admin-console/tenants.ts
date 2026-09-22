@@ -33,6 +33,20 @@ const tenants = {
     environment_non_production: '非本番',
     expires_at_field: '有効期限',
     installed_at_field: 'インストール日',
+    last_refreshed_at_field: '最終更新日時',
+    grace_ends_at_field: '猶予期間の終了日',
+    refresh_expired_description:
+      'ライセンスキーは {{expiresAt}} に期限切れになりました。Logto が更新を試みている間、ライセンス機能は {{graceEndsAt}} まで利用できます。',
+    refresh_refused_description:
+      'ライセンスが{{reason}}のため、更新が拒否されました。ライセンス機能は {{graceEndsAt}} まで利用できます。',
+    refusal_reason_canceled: 'キャンセル済み',
+    refusal_reason_unpaid: '未払い',
+    refusal_reason_expired: '期限切れ',
+    refusal_reason_revoked: '取り消し済み',
+    refusal_reason_unknown: '利用できない状態',
+    grace_expired_description:
+      'ライセンスの猶予期間は {{graceEndsAt}} に終了しました。このインスタンスは OSS のデフォルトに戻っています。Logto Cloud から新しいライセンスキーを取得して再インストールしてください。',
+    get_fresh_key_button: '新しいライセンスキーを取得',
     replace_button: 'ライセンスを差し替える',
   },
   members: {

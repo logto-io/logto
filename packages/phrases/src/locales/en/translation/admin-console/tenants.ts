@@ -33,6 +33,20 @@ const tenants = {
     environment_non_production: 'Non-production',
     expires_at_field: 'Expires on',
     installed_at_field: 'Installed on',
+    last_refreshed_at_field: 'Last refreshed on',
+    grace_ends_at_field: 'Grace period ends on',
+    refresh_expired_description:
+      'The license key expired on {{expiresAt}}. Licensed features remain available until {{graceEndsAt}} while Logto tries to refresh it.',
+    refresh_refused_description:
+      'The license refresh was refused because the license is {{reason}}. Licensed features remain available until {{graceEndsAt}}.',
+    refusal_reason_canceled: 'canceled',
+    refusal_reason_unpaid: 'unpaid',
+    refusal_reason_expired: 'expired',
+    refusal_reason_revoked: 'revoked',
+    refusal_reason_unknown: 'not available',
+    grace_expired_description:
+      'The license grace period ended on {{graceEndsAt}}. This deployment has reverted to OSS defaults. Get a fresh license key from Logto Cloud and install it again.',
+    get_fresh_key_button: 'Get a fresh license key',
     replace_button: 'Replace license',
   },
   members: {

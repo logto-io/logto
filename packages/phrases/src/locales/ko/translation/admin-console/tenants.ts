@@ -32,6 +32,20 @@ const tenants = {
     environment_non_production: '비프로덕션',
     expires_at_field: '만료일',
     installed_at_field: '설치일',
+    last_refreshed_at_field: '마지막 새로 고침 시간',
+    grace_ends_at_field: '유예 기간 종료일',
+    refresh_expired_description:
+      '라이선스 키가 {{expiresAt}}에 만료되었습니다. Logto가 갱신을 시도하는 동안 라이선스 기능은 {{graceEndsAt}}까지 계속 사용할 수 있습니다.',
+    refresh_refused_description:
+      '라이선스가 {{reason}} 상태이므로 라이선스 갱신이 거부되었습니다. 라이선스 기능은 {{graceEndsAt}}까지 계속 사용할 수 있습니다.',
+    refusal_reason_canceled: '취소됨',
+    refusal_reason_unpaid: '미납',
+    refusal_reason_expired: '만료됨',
+    refusal_reason_revoked: '취소됨',
+    refusal_reason_unknown: '사용할 수 없음',
+    grace_expired_description:
+      '라이선스 유예 기간이 {{graceEndsAt}}에 끝났습니다. 이 배포는 OSS 기본값으로 되돌아갔습니다. Logto Cloud에서 새 라이선스 키를 받아 다시 설치하세요.',
+    get_fresh_key_button: '새 라이선스 키 받기',
     replace_button: '라이선스 교체',
   },
   members: {

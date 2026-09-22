@@ -32,6 +32,20 @@ const tenants = {
     environment_non_production: '非生產',
     expires_at_field: '到期日',
     installed_at_field: '安裝日期',
+    last_refreshed_at_field: '上次更新時間',
+    grace_ends_at_field: '寬限期結束日期',
+    refresh_expired_description:
+      '授權金鑰已於 {{expiresAt}} 到期。Logto 嘗試更新金鑰期間，授權功能仍可使用至 {{graceEndsAt}}。',
+    refresh_refused_description:
+      '授權更新被拒絕，因為授權已{{reason}}。授權功能仍可使用至 {{graceEndsAt}}。',
+    refusal_reason_canceled: '取消',
+    refusal_reason_unpaid: '未付款',
+    refusal_reason_expired: '到期',
+    refusal_reason_revoked: '撤銷',
+    refusal_reason_unknown: '不可用',
+    grace_expired_description:
+      '授權寬限期已於 {{graceEndsAt}} 結束。此實例已恢復為 OSS 預設值。請從 Logto Cloud 取得新的授權金鑰並重新安裝。',
+    get_fresh_key_button: '取得新的授權金鑰',
     replace_button: '更換授權',
   },
   members: {

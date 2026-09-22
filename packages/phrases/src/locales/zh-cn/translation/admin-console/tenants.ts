@@ -32,6 +32,20 @@ const tenants = {
     environment_non_production: '非生产',
     expires_at_field: '到期时间',
     installed_at_field: '安装时间',
+    last_refreshed_at_field: '上次刷新时间',
+    grace_ends_at_field: '宽限期结束时间',
+    refresh_expired_description:
+      '许可证密钥已于 {{expiresAt}} 过期。在 Logto 尝试刷新密钥期间，许可证功能仍可使用至 {{graceEndsAt}}。',
+    refresh_refused_description:
+      '许可证刷新被拒绝，因为许可证{{reason}}。许可证功能仍可使用至 {{graceEndsAt}}。',
+    refusal_reason_canceled: '已取消',
+    refusal_reason_unpaid: '未付款',
+    refusal_reason_expired: '已过期',
+    refusal_reason_revoked: '已撤销',
+    refusal_reason_unknown: '不可用',
+    grace_expired_description:
+      '许可证宽限期已于 {{graceEndsAt}} 结束。此实例已恢复为 OSS 默认设置。请从 Logto Cloud 获取新的许可证密钥并重新安装。',
+    get_fresh_key_button: '获取新的许可证密钥',
     replace_button: '更换许可证',
   },
   members: {

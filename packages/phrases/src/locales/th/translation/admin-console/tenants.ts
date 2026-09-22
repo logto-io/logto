@@ -33,6 +33,20 @@ const tenants = {
     environment_non_production: 'ไม่ใช่โปรดักชัน',
     expires_at_field: 'หมดอายุวันที่',
     installed_at_field: 'ติดตั้งเมื่อ',
+    last_refreshed_at_field: 'รีเฟรชล่าสุดเมื่อ',
+    grace_ends_at_field: 'ระยะเวลาผ่อนผันสิ้นสุดวันที่',
+    refresh_expired_description:
+      'คีย์ใบอนุญาตหมดอายุเมื่อ {{expiresAt}} ฟีเจอร์ที่ได้รับอนุญาตจะยังใช้งานได้จนถึง {{graceEndsAt}} ขณะที่ Logto พยายามรีเฟรชคีย์',
+    refresh_refused_description:
+      'การรีเฟรชใบอนุญาตถูกปฏิเสธ เนื่องจากใบอนุญาต{{reason}} ฟีเจอร์ที่ได้รับอนุญาตจะยังใช้งานได้จนถึง {{graceEndsAt}}',
+    refusal_reason_canceled: 'ถูกยกเลิก',
+    refusal_reason_unpaid: 'ยังไม่ได้ชำระเงิน',
+    refusal_reason_expired: 'หมดอายุ',
+    refusal_reason_revoked: 'ถูกเพิกถอน',
+    refusal_reason_unknown: 'ไม่พร้อมใช้งาน',
+    grace_expired_description:
+      'ระยะเวลาผ่อนผันของใบอนุญาตสิ้นสุดเมื่อ {{graceEndsAt}} การติดตั้งนี้กลับไปใช้ค่าเริ่มต้นของ OSS แล้ว รับคีย์ใบอนุญาตใหม่จาก Logto Cloud และติดตั้งอีกครั้ง',
+    get_fresh_key_button: 'รับคีย์ใบอนุญาตใหม่',
     replace_button: 'เปลี่ยนใบอนุญาต',
   },
   members: {
