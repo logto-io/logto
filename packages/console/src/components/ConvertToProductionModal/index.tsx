@@ -48,13 +48,15 @@ function ConvertToProductionModal({ isOpen, onClose }: Props) {
     }
     setIsLoading(true);
     try {
-      await subscribe({
+      const isCheckoutOpened = await subscribe({
         skuId: proSku.id,
         planId: proSku.id,
         tenantId: currentTenantId,
       });
 
-      onClose();
+      if (isCheckoutOpened) {
+        onClose();
+      }
     } catch (error: unknown) {
       void toastResponseError(error);
     } finally {

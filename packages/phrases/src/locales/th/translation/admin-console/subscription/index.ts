@@ -72,6 +72,14 @@ const subscription = {
     upgrade_help_tip: 'ต้องการความช่วยเหลือเลื่อนระดับ? <a>ติดต่อเรา</a>',
     a_maximum_of: 'สูงสุด <item/>',
   },
+  billing_customer_modal: {
+    title: 'เลือกบัญชีชำระเงิน',
+    description:
+      'เลือกบัญชีชำระเงินที่จ่ายสำหรับการสมัครสมาชิกนี้ หรือเริ่มบัญชีใหม่ คุณสามารถเปลี่ยนแปลงรายละเอียดการชำระเงินในหน้าถัดไป',
+    account: 'บัญชีชำระเงิน',
+    new_account: 'บัญชีชำระเงินใหม่',
+    default_account: 'บัญชีปกติ',
+  },
   upgrade_success: 'อัปเกรดเป็น <name/> สำเร็จแล้ว',
   downgrade_success: 'ลดระดับเป็น <name/> สำเร็จแล้ว',
   subscription_check_pending:

@@ -71,6 +71,13 @@ const subscription = {
     upgrade_help_tip: '需要升级帮助？<a>联系我们</a>。',
     a_maximum_of: '最多<item/>',
   },
+  billing_customer_modal: {
+    title: '选择一个计费账户',
+    description: '请选择为此订阅付款的计费账户，或开始一个新的。你可以在下一页更改付款详情。',
+    account: '计费账户',
+    new_account: '新计费账户',
+    default_account: '默认',
+  },
   upgrade_success: '成功升级到 <name/>',
   downgrade_success: '成功降级到 <name/>',
   subscription_check_pending: '您的付款已处理。设置您的订阅比平时需要更长时间。',

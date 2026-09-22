@@ -73,6 +73,14 @@ const subscription = {
     upgrade_help_tip: 'Нужна помощь в повышении? <a>Свяжитесь с нами</a>.',
     a_maximum_of: 'Максимум <item/>',
   },
+  billing_customer_modal: {
+    title: 'Выберите счет для оплаты',
+    description:
+      'Выберите счет для оплаты этой подписки или начните новый. Вы можете изменить платежные данные на следующей странице.',
+    account: 'Счет для оплаты',
+    new_account: 'Новый счет для оплаты',
+    default_account: 'По умолчанию',
+  },
   upgrade_success: 'Успешно повышен до <name/>',
   downgrade_success: 'Успешно понижен до <name/>',
   subscription_check_pending:

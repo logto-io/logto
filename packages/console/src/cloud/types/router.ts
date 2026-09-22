@@ -1,10 +1,16 @@
 import type router from '@logto/cloud/routes';
-import { type emailLogsRouter, type tenantAuthRouter } from '@logto/cloud/routes';
-import { type GuardedResponse, type RouterRoutes } from '@withtyped/client';
+import {
+  type emailLogsRouter,
+  type tenantAuthRouter,
+  type userStripeCustomersRouter,
+} from '@logto/cloud/routes';
+import { type GuardedPayload, type GuardedResponse, type RouterRoutes } from '@withtyped/client';
 
 type GetRoutes = RouterRoutes<typeof router>['get'];
+type PostRoutes = RouterRoutes<typeof router>['post'];
 type GetTenantAuthRoutes = RouterRoutes<typeof tenantAuthRouter>['get'];
 type GetEmailLogsRoutes = RouterRoutes<typeof emailLogsRouter>['get'];
+type GetUserStripeCustomersRoutes = RouterRoutes<typeof userStripeCustomersRouter>['get'];
 
 /** The paginated hosted-email log page returned by the cloud email-logs endpoint. */
 export type TenantEmailLogsResponse = GuardedResponse<
@@ -17,6 +23,20 @@ export type TenantEmailLog = TenantEmailLogsResponse['logs'][number];
 export type GetArrayElementType<T> = T extends Array<infer U> ? U : never;
 
 export type Subscription = GuardedResponse<GetRoutes['/api/tenants/:tenantId/subscription']>;
+
+/**
+ * A billing Customer linked to the current user. `name` and `email` are `null` when the Stripe
+ * Customer has none, and absent when Stripe could not be reached.
+ */
+export type BillingCustomer = GetArrayElementType<
+  GuardedResponse<GetUserStripeCustomersRoutes['/api/me/stripe-customers']>
+>;
+
+/** The Checkout body fields that carry the caller's billing Customer choice; the route refuses both at once. */
+export type CheckoutCustomerChoice = Pick<
+  GuardedPayload<PostRoutes['/api/checkout-session']>['body'],
+  'customerId' | 'newCustomer'
+>;
 
 export type TenantUsageAddOnSkus = GuardedResponse<
   GetRoutes['/api/tenants/:tenantId/subscription/add-on-skus']

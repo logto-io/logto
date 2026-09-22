@@ -73,6 +73,14 @@ const subscription = {
     upgrade_help_tip: 'به کمک برای ارتقا نیاز دارید؟ <a>با ما تماس بگیرید</a>.',
     a_maximum_of: 'حداکثر <item/>',
   },
+  billing_customer_modal: {
+    title: 'انتخاب یک حساب پرداخت',
+    description:
+      'حساب پرداختی را انتخاب کنید که این اشتراک را پرداخت می‌کند، یا یک حساب جدید ایجاد کنید. می‌توانید جزئیات پرداخت را در صفحه بعدی تغییر دهید.',
+    account: 'حساب پرداخت',
+    new_account: 'حساب پرداخت جدید',
+    default_account: 'پیش‌فرض',
+  },
   upgrade_success: 'با موفقیت به <name/> ارتقا یافت',
   downgrade_success: 'با موفقیت به <name/> کاهش یافت',
   subscription_check_pending: 'پرداخت شما انجام شد. تنظیم اشتراک شما بیشتر از حد معمول طول می‌کشد.',

@@ -74,6 +74,14 @@ const subscription = {
     upgrade_help_tip: "Hai bisogno di aiuto per l'aggiornamento? <a>Contattaci</a>.",
     a_maximum_of: 'Un massimo di <item/>',
   },
+  billing_customer_modal: {
+    title: 'Scegli un account di fatturazione',
+    description:
+      "Seleziona l'account di fatturazione che paga per questo abbonamento o inizia un nuovo account. Puoi modificare i dettagli del pagamento nella pagina successiva.",
+    account: 'Account di fatturazione',
+    new_account: 'Nuovo account di fatturazione',
+    default_account: 'Predefinito',
+  },
   upgrade_success: 'Aggiornamento effettuato con successo a <name/>',
   downgrade_success: 'Degrado effettuato con successo a <name/>',
   subscription_check_pending:

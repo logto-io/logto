@@ -70,6 +70,14 @@ const subscription = {
     upgrade_help_tip: 'هل تحتاج إلى مساعدة في الترقية؟ <a>اتصل بنا</a>.',
     a_maximum_of: 'الحد الأقصى لـ <item/>',
   },
+  billing_customer_modal: {
+    title: 'اختر حساب الفواتير',
+    description:
+      'اختر حساب الفواتير الذي يدفع لهذه الاشتراك، أو ابدأ حسابًا جديدًا. يمكنك تغيير تفاصيل الدفع في الصفحة التالية.',
+    account: 'حساب الفواتير',
+    new_account: 'حساب فواتير جديد',
+    default_account: 'افتراضي',
+  },
   upgrade_success: 'تم الترقية بنجاح إلى <name/>',
   downgrade_success: 'تم التخفيض بنجاح إلى <name/>',
   subscription_check_pending:

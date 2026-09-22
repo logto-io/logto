@@ -76,6 +76,14 @@ const subscription = {
       'Yükseltme konusunda yardıma mı ihtiyacınız var? <a>Bizimle iletişime geçin</a>.',
     a_maximum_of: '<item/> için maksimum',
   },
+  billing_customer_modal: {
+    title: 'Bir fatura hesabı seçin',
+    description:
+      'Bu aboneliğin ödeme işlemleri için fatura hesabını seçin ya da yeni bir hesap başlatın. Ödeme bilgilerini bir sonraki sayfada değiştirebilirsiniz.',
+    account: 'Fatura hesabı',
+    new_account: 'Yeni fatura hesabı',
+    default_account: 'Varsayılan',
+  },
   upgrade_success: "Başarıyla <name/>'e yükseltildi",
   downgrade_success: "Başarıyla <name/>'e düşürüldü",
   subscription_check_pending:

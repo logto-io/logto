@@ -202,6 +202,7 @@ export const subscriptionCacheGuard = z.object({
   // Optional so cache entries written before Cloud started returning `isDevPlan` still parse; the
   // field is otherwise always present. Kept so a cached read preserves it for the hosted-email guard.
   isDevPlan: z.boolean().optional(),
+  hasBillingCustomer: z.boolean().optional(),
   status: subscriptionStatusGuard,
   upcomingInvoice: upcomingInvoiceGuard.nullable().optional(),
   quota: logtoSkuQuotaGuard,
