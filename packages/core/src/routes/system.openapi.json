@@ -24,55 +24,7 @@
         "description": "Get the license installed on this self-hosted deployment, i.e. the plan it grants, the entitlements it unlocks, its expiration, and its refresh/grace status. The license key itself is never returned. Returns 404 when no license is installed, and 501 on Logto Cloud.",
         "responses": {
           "200": {
-            "description": "The installed license.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "plan",
-                    "env",
-                    "quota",
-                    "expiresAt",
-                    "installedAt",
-                    "lastRefreshedAt",
-                    "graceEndsAt"
-                  ],
-                  "properties": {
-                    "plan": {
-                      "type": "string",
-                      "enum": ["self-hosted-pro", "self-hosted-enterprise"]
-                    },
-                    "env": {
-                      "type": "string",
-                      "enum": ["production", "non-production"]
-                    },
-                    "quota": {
-                      "type": "object"
-                    },
-                    "expiresAt": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "installedAt": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "lastRefreshedAt": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "graceEndsAt": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "refusalReason": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "The installed license."
           },
           "404": {
             "description": "No license is installed on this deployment."
