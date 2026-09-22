@@ -1,4 +1,5 @@
 const user = {
+  id_already_in_use: 'معرّف المستخدم هذا مستخدم بالفعل.',
   username_already_in_use: 'اسم المستخدم هذا مستخدم بالفعل.',
   username_starts_with_number: 'لا يمكن أن يبدأ اسم المستخدم برقم.',
   username_invalid_charset_hard: 'اسم المستخدم يمكن أن يحتوي فقط على حروف وأرقام وشرطات سفلية.',

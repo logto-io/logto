@@ -215,6 +215,9 @@
               "schema": {
                 "description": "User data to create a new user. All properties are optional.",
                 "properties": {
+                  "id": {
+                    "description": "The unique ID for the user, up to 128 characters of letters, numbers, and `_ - . @ : + = |`, excluding `.` and `..`. If not provided, a random ID will be generated. Useful for keeping existing user IDs when migrating from another identity provider."
+                  },
                   "primaryPhone": {
                     "description": "Primary phone number for the user. It should be unique across all users."
                   },

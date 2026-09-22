@@ -1,4 +1,5 @@
 const user = {
+  id_already_in_use: 'To ID użytkownika jest już zajęte.',
   username_already_in_use: 'Nazwa użytkownika jest już zajęta.',
   username_starts_with_number: 'Nazwa użytkownika nie może zaczynać się od cyfry.',
   username_invalid_charset_hard:

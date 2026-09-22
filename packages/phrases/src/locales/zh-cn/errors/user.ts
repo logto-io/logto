@@ -1,4 +1,5 @@
 const user = {
+  id_already_in_use: '该用户 ID 已被使用。',
   username_already_in_use: '该用户名已被使用。',
   username_starts_with_number: '用户名不能以数字开头。',
   username_invalid_charset_hard: '用户名只能包含字母、数字和下划线。',

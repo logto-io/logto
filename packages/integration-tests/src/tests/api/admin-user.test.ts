@@ -141,6 +141,46 @@ describe('admin console user management', () => {
     expect({ ...profile }).toStrictEqual({ gender: 'neutral' });
   });
 
+  describe('create user with custom id', () => {
+    it.each([
+      (suffix: string) => `mig_${suffix}`,
+      (suffix: string) => `auth0|${suffix}`,
+      (suffix: string) => `${suffix}@example.com`,
+      (suffix: string) => `3f2504e0-4f89-11d3-9a0c-${suffix.slice(0, 12)}`,
+    ])('should create user with the given id (%p)', async (buildId) => {
+      const id = buildId(randomString());
+      const user = await createUserByAdmin({ id });
+      expect(user.id).toBe(id);
+
+      const userDetails = await getUser(id);
+      expect(userDetails.id).toBe(id);
+
+      await deleteUser(id);
+    });
+
+    it('should fail when the given id is already in use', async () => {
+      const user = await createUserByAdmin();
+
+      await expectRejects(createUserByAdmin({ id: user.id }), {
+        code: 'user.id_already_in_use',
+        status: 422,
+      });
+
+      await deleteUser(user.id);
+    });
+
+    it('should fail when the given id is invalid', async () => {
+      await expectRejects(createUserByAdmin({ id: 'a'.repeat(129) }), {
+        code: 'guard.invalid_input',
+        status: 400,
+      });
+      await expectRejects(createUserByAdmin({ id: 'has/slash' }), {
+        code: 'guard.invalid_input',
+        status: 400,
+      });
+    });
+  });
+
   it('should fail when create user with conflict identifiers', async () => {
     const [username, password, primaryEmail, primaryPhone] = [
       generateUsername(),
