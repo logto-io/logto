@@ -15,7 +15,7 @@
     "copy:apidocs": "rsync -a -m --include '*/' --include '*.openapi.json' --exclude '*' src/routes/ build/routes/",
     "check": "tsc --noEmit",
     "build": "tsup",
-    "build:test": "rm -rf build/ && tsc -p tsconfig.test.json && cp -a build/src/. build/ && rm -rf build/src && pnpm copy:apidocs",
+    "build:test": "rm -rf build/ && tsc -p tsconfig.test.json && pnpm copy:apidocs",
     "build:instrument": "rm -rf build/ && tsc -p tsconfig.integration.json && nyc instrument build/ --in-place && pnpm copy:apidocs",
     "lint": "eslint --ext .ts --ext .json src",
     "lint:report": "pnpm lint --format json --output-file report.json",
