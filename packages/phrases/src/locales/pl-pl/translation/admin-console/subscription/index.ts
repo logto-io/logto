@@ -74,6 +74,13 @@ const subscription = {
     upgrade_help_tip: 'Potrzebna pomoc przy zwiększaniu? <a>Skontaktuj się z nami</a>.',
     a_maximum_of: 'Maksymalnie <item/>',
   },
+  billing_customer_modal: {
+    title: 'Wybierz konto rozliczeniowe',
+    description:
+      'Wybierz konto rozliczeniowe, które płaci za tę subskrypcję, lub rozpocznij nowe. Możesz zmienić szczegóły płatności na następnej stronie.',
+    account: 'Konto rozliczeniowe',
+    new_account: 'Nowe konto rozliczeniowe',
+  },
   upgrade_success: 'Pomyślnie uaktualniono do <name/>',
   downgrade_success: 'Pomyślnie zdegradowano do <name/>',
   subscription_check_pending:

@@ -71,6 +71,12 @@ const subscription = {
     upgrade_help_tip: '需要升級幫助？<a>聯絡我們</a>。',
     a_maximum_of: '最多<item/>',
   },
+  billing_customer_modal: {
+    title: '選擇一個付款帳戶',
+    description: '選擇支付該訂閱費用的帳戶，或者開始一個新的帳戶。你可以在下一頁更改付款詳情。',
+    account: '付款帳戶',
+    new_account: '新付款帳戶',
+  },
   upgrade_success: '已成功升級到 <name/>',
   downgrade_success: '已成功降級到 <name/>',
   subscription_check_pending: '你的付款已成功。設置你的訂閱比平時花費的時間更長。',

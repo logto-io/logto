@@ -74,6 +74,13 @@ const subscription = {
     upgrade_help_tip: 'Hilfe beim Upgrade benötigt? <a>Kontaktieren Sie uns</a>.',
     a_maximum_of: 'Maximal <item/>',
   },
+  billing_customer_modal: {
+    title: 'Wähle ein Abrechnungskonto',
+    description:
+      'Wähle das Abrechnungskonto aus, das für dieses Abonnement zahlt, oder starte ein neues. Du kannst die Zahlungsdetails auf der nächsten Seite ändern.',
+    account: 'Abrechnungskonto',
+    new_account: 'Neues Abrechnungskonto',
+  },
   upgrade_success: 'Erfolgreich auf <name/> hochgestuft',
   downgrade_success: 'Erfolgreich auf <name/> herabgestuft',
   subscription_check_pending:

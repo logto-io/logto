@@ -74,6 +74,13 @@ const subscription = {
     upgrade_help_tip: 'アップグレードのヘルプが必要ですか？<a>お問い合わせください</a>。',
     a_maximum_of: '<item/>の最大数',
   },
+  billing_customer_modal: {
+    title: '請求アカウントを選択する',
+    description:
+      'このサブスクリプションの支払いをする請求アカウントを選択するか、新しいアカウントを開始します。次のページで支払いの詳細を変更できます。',
+    account: '請求アカウント',
+    new_account: '新しい請求アカウント',
+  },
   upgrade_success: '正常に<name/>にアップグレードされました',
   downgrade_success: '正常に<name/>にダウングレードされました',
   subscription_check_pending:

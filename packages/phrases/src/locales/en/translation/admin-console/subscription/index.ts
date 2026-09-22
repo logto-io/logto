@@ -73,6 +73,13 @@ const subscription = {
     upgrade_help_tip: 'Need help upgrading? <a>Contact us</a>.',
     a_maximum_of: 'A maximum of <item/>',
   },
+  billing_customer_modal: {
+    title: 'Choose a billing account',
+    description:
+      'Select the billing account that pays for this subscription, or start a new one. You can change payment details on the next page.',
+    account: 'Billing account',
+    new_account: 'New billing account',
+  },
   upgrade_success: 'Successfully upgraded to <name/>',
   downgrade_success: 'Successfully downgraded to <name/>',
   subscription_check_pending:

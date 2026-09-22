@@ -74,6 +74,13 @@ const subscription = {
     upgrade_help_tip: '¿Necesitas ayuda para cambiar de plan? <a>Contáctenos</a>.',
     a_maximum_of: 'Un máximo de <item/>',
   },
+  billing_customer_modal: {
+    title: 'Elige una cuenta de facturación',
+    description:
+      'Selecciona la cuenta de facturación que paga por esta suscripción, o comienza una nueva. Puedes cambiar los detalles de pago en la siguiente página.',
+    account: 'Cuenta de facturación',
+    new_account: 'Nueva cuenta de facturación',
+  },
   upgrade_success: 'Actualizado con éxito a <name/>',
   downgrade_success: 'Degradado con éxito a <name/>',
   subscription_check_pending:

@@ -72,6 +72,13 @@ const subscription = {
     upgrade_help_tip: '업그레이드 도움이 필요하세요? <a>문의하세요</a>.',
     a_maximum_of: '<item/> 최대 한도',
   },
+  billing_customer_modal: {
+    title: '결제 계정 선택',
+    description:
+      '이 구독의 결제를 담당할 계정을 선택하거나 새 계정을 시작하세요. 다음 페이지에서 결제 세부 정보를 변경할 수 있습니다.',
+    account: '결제 계정',
+    new_account: '새 결제 계정',
+  },
   upgrade_success: '성공적으로 <name/>으로 업그레이드되었습니다.',
   downgrade_success: '성공적으로 <name/>으로 다운그레이드되었습니다.',
   subscription_check_pending:
