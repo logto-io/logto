@@ -8,7 +8,7 @@ const cloud = {
     domain_pending: 'In attesa di verifica',
     start_over: 'Ricomincia',
     start_over_confirmation:
-      'Ricominciare non annullerà un connettore che potrebbe essere già stato creato. Continuando potresti creare un altro connettore. Vuoi davvero continuare?',
+      'Ricominciare potrebbe eliminare la configurazione SSO incompleta. Vuoi continuare?',
     resume_creation:
       'È stata trovata una creazione incompleta. Continua con lo stesso provider per recuperare questo connettore.',
   },

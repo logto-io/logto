@@ -8,7 +8,7 @@ const cloud = {
     domain_pending: 'Doğrulama bekleniyor',
     start_over: 'Yeniden başla',
     start_over_confirmation:
-      'Yeniden başlamak, daha önce oluşturulmuş olabilecek bir bağlayıcıyı geri almaz. Devam etmek başka bir bağlayıcı oluşturabilir. Devam etmek istediğinizden emin misiniz?',
+      'Baştan başlamak, tamamlanmamış SSO yapılandırmanızı silebilir. Devam etmek istiyor musunuz?',
     resume_creation:
       'Tamamlanmamış bir oluşturma işlemi bulundu. Bu bağlayıcıyı kurtarmak için aynı sağlayıcıyla devam edin.',
   },

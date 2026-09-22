@@ -8,7 +8,7 @@ const cloud = {
     domain_pending: 'Pending verification',
     start_over: 'Start over',
     start_over_confirmation:
-      'Starting over will not undo any connector that may already have been created. Continuing may create another connector. Are you sure you want to continue?',
+      'Starting over may delete your incomplete SSO configuration. Do you want to continue?',
     resume_creation:
       'An unfinished creation was found. Continue with the same provider to recover this connector.',
   },

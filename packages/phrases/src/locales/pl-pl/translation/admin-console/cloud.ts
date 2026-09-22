@@ -8,7 +8,7 @@ const cloud = {
     domain_pending: 'Oczekuje na weryfikację',
     start_over: 'Zacznij od nowa',
     start_over_confirmation:
-      'Rozpoczęcie od nowa nie usunie konektora, który mógł już zostać utworzony. Kontynuowanie może utworzyć kolejny konektor. Czy na pewno chcesz kontynuować?',
+      'Rozpoczęcie od nowa może usunąć niedokończoną konfigurację SSO. Czy chcesz kontynuować?',
     resume_creation:
       'Znaleziono niedokończone tworzenie. Kontynuuj z tym samym dostawcą, aby odzyskać ten konektor.',
   },

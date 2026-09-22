@@ -8,7 +8,7 @@ const cloud = {
     domain_pending: 'En attente de vérification',
     start_over: 'Recommencer',
     start_over_confirmation:
-      'Recommencer ne supprimera pas un connecteur qui a peut-être déjà été créé. Continuer pourrait créer un autre connecteur. Voulez-vous vraiment continuer ?',
+      'Recommencer peut supprimer votre configuration SSO inachevée. Voulez-vous continuer ?',
     resume_creation:
       'Une création inachevée a été trouvée. Continuez avec le même fournisseur pour récupérer ce connecteur.',
   },

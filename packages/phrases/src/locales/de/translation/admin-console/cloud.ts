@@ -8,7 +8,7 @@ const cloud = {
     domain_pending: 'Verifizierung ausstehend',
     start_over: 'Neu beginnen',
     start_over_confirmation:
-      'Ein Neustart macht einen möglicherweise bereits erstellten Konnektor nicht rückgängig. Wenn du fortfährst, wird möglicherweise ein weiterer Konnektor erstellt. Möchtest du wirklich fortfahren?',
+      'Wenn Sie von vorne beginnen, wird Ihre unvollständige SSO-Konfiguration möglicherweise gelöscht. Möchten Sie fortfahren?',
     resume_creation:
       'Eine unvollständige Erstellung wurde gefunden. Fahre mit demselben Anbieter fort, um diesen Konnektor wiederherzustellen.',
   },

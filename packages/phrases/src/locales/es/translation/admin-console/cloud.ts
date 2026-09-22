@@ -8,7 +8,7 @@ const cloud = {
     domain_pending: 'Verificación pendiente',
     start_over: 'Empezar de nuevo',
     start_over_confirmation:
-      'Empezar de nuevo no deshará ningún conector que ya se haya creado. Continuar podría crear otro conector. ¿Seguro que quieres continuar?',
+      'Empezar de nuevo puede eliminar tu configuración de SSO incompleta. ¿Quieres continuar?',
     resume_creation:
       'Se encontró una creación sin finalizar. Continúa con el mismo proveedor para recuperar este conector.',
   },

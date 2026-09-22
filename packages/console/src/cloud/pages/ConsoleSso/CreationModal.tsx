@@ -1,8 +1,9 @@
 import { type consoleSsoRouter } from '@logto/cloud/routes';
 import { SsoProviderName } from '@logto/schemas';
 import Client, {
+  type ClientConfig,
   type GuardedResponse,
-  type ResponseError,
+  ResponseError,
   type RouterRoutes,
 } from '@withtyped/client';
 import { useState } from 'react';
@@ -57,6 +58,15 @@ function CreationModal({ onClose, userId }: Props) {
   const radioGroupSize = getConnectorRadioGroupSize(
     enterpriseProviders.length + standardProviders.length
   );
+  const getCreationApiConfig = (key: string): ClientConfig => ({
+    ...api.config,
+    headers: async (url, method) => ({
+      ...(typeof api.config.headers === 'function'
+        ? await api.config.headers(url, method)
+        : api.config.headers),
+      'Idempotency-Key': key,
+    }),
+  });
   const create = async () => {
     if (isSubmitting || !selected) {
       return;
@@ -68,15 +78,7 @@ function CreationModal({ onClose, userId }: Props) {
         z.nativeEnum(SsoProviderName).parse(selected)
       );
       setOperation(current);
-      const createApi = new Client<typeof consoleSsoRouter>({
-        ...api.config,
-        headers: async (url, method) => ({
-          ...(typeof api.config.headers === 'function'
-            ? await api.config.headers(url, method)
-            : api.config.headers),
-          'Idempotency-Key': current.key,
-        }),
-      });
+      const createApi = new Client<typeof consoleSsoRouter>(getCreationApiConfig(current.key));
       const connector = await createApi.post('/api/me/console-sso/connectors', {
         body: { providerName: current.providerName },
       });
@@ -98,6 +100,9 @@ function CreationModal({ onClose, userId }: Props) {
   const isProviderDisabled = (providerName: string) =>
     isSubmitting || Boolean(operation && operation.providerName !== providerName);
   const startOver = async () => {
+    if (!operation || isSubmitting) {
+      return;
+    }
     const [confirmed] = await show({
       title: 'cloud.console_sso.start_over',
       confirmButtonText: 'cloud.console_sso.start_over',
@@ -107,12 +112,29 @@ function CreationModal({ onClose, userId }: Props) {
     if (!confirmed) {
       return;
     }
+    setIsSubmitting(true);
     try {
+      // The cleanup route has no response body and is not in the published Cloud types yet.
+      const config = getCreationApiConfig(operation.key);
+      const url = new URL('/api/me/console-sso/connector-creation', config.baseUrl);
+      const response = await fetch(url, {
+        method: 'DELETE',
+        headers:
+          typeof config.headers === 'function'
+            ? await config.headers(url, 'delete')
+            : config.headers,
+      });
+      if (!response.ok) {
+        throw new ResponseError(response);
+      }
       clearPendingConnectorCreation(userId);
       setOperation(undefined);
       setSelected(undefined);
     } catch (error) {
       await toastResponseError(error);
+    } finally {
+      await Promise.allSettled([mutate()]);
+      setIsSubmitting(false);
     }
   };
   return (
