@@ -64,16 +64,33 @@ const replaceSearchParameters = (parameters: URLSearchParams) => {
 
 export const handleSearchParametersData = () => {
   const { search } = window.location;
+  const parameters = new URLSearchParams(search);
+
+  /**
+   * The theme override belongs to the authentication request that carried it, so every document
+   * load reconciles it against the URL — including a load with no search params at all, which
+   * Core produces for a fresh flow (`buildDeviceFlowPageUrl({})` returns a bare `/device`).
+   * Leaving it to the loop below would let such an entry inherit the previous flow's theme, and
+   * the pre-render script would faithfully paint that stale value.
+   */
+  if (isDevFeaturesEnabled) {
+    const theme = parameters.get(themeSearchKey);
+
+    if (theme) {
+      sessionStorage.setItem(themeSearchKey, theme);
+      parameters.delete(themeSearchKey);
+    } else {
+      sessionStorage.removeItem(themeSearchKey);
+    }
+  }
 
   if (!search) {
     return;
   }
 
-  const parameters = new URLSearchParams(search);
-
   // Store known search keys to the session storage and remove them from the URL to keep the URL
   // clean.
-  for (const key of persistedSearchKeys) {
+  for (const key of Object.values(searchKeys)) {
     const value = parameters.get(key);
     if (value) {
       sessionStorage.setItem(key, value);

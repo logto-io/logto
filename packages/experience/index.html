@@ -36,14 +36,13 @@
         var prefersDark = typeof window.matchMedia === 'function'
           && window.matchMedia('(prefers-color-scheme: dark)').matches;
         // Theme control from the authentication request is only available with dev features
-        // enabled. Mirror the startup handling in `shared/utils/search-parameters.ts`: a URL
-        // carrying search params is authoritative, so a new flow without `theme` must not
-        // inherit the previous flow's stored value. Only a URL with no search params falls back
-        // to the stored one, which is how an in-app navigation keeps the override after the
-        // param has been stripped.
-        var search = window.location.search;
+        // enabled. The URL alone decides, matching the startup reconciliation in
+        // `shared/utils/search-parameters.ts`: an override belongs to the request that carried
+        // it, so a document load without `theme` renders the OS theme instead of inheriting a
+        // previous flow's value. In-app navigation keeps the override through React state, not
+        // through this script, which only runs on a document load.
         var override = (typeof ssr === 'object' && ssr !== null && ssr.isDevFeaturesEnabled)
-          ? (search ? new URLSearchParams(search).get('theme') : sessionStorage.getItem('theme'))
+          ? new URLSearchParams(window.location.search).get('theme')
           : null;
         var preferred = (override === 'dark' || override === 'light')
           ? override

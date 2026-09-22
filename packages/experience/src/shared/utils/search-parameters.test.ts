@@ -30,6 +30,17 @@ describe('search parameters utils', () => {
     expect(getThemeOverride()).toBeUndefined();
   });
 
+  it('clears a stored theme when a fresh flow arrives with no search params at all', () => {
+    // Core redirects a plain device flow to a bare `/device`, which must not inherit the theme
+    // of whatever flow ran in this tab before it.
+    sessionStorage.setItem('theme', Theme.Dark);
+    window.history.pushState(window.history.state, '', '/device');
+
+    handleSearchParametersData();
+
+    expect(getThemeOverride()).toBeUndefined();
+  });
+
   it('ignores an unsupported theme value', () => {
     window.history.pushState(window.history.state, '', '/sign-in?theme=sepia');
 
