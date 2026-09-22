@@ -4,7 +4,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import DelayedSuspenseFallback from '@/components/DelayedSuspenseFallback';
 import RedirectToAccountCenter from '@/components/RedirectToAccountCenter';
 import { EnterpriseSubscriptionTabs } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import ProtectedRoutes from '@/containers/ProtectedRoutes';
 import { GlobalAnonymousRoute, GlobalRoute } from '@/contexts/TenantsProvider';
 import { OnboardingApp } from '@/onboarding';
@@ -45,7 +45,7 @@ function AppRoutes() {
           />
           <Route element={<ProtectedRoutes />}>
             {/* Console SSO */}
-            {isDevFeaturesEnabled && (
+            {isCloud && isDevFeaturesEnabled && (
               <Route path={GlobalRoute.ConsoleSso} element={<ConsoleSso />} />
             )}
             <Route path={GlobalRoute.Profile + '/*'} element={<RedirectToAccountCenter />} />
