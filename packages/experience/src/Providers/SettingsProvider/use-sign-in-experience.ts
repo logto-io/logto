@@ -4,7 +4,7 @@ import PageContext from '@/Providers/PageContextProvider/PageContext';
 import initI18n from '@/i18n/init';
 import { getSignInExperienceSettings } from '@/utils/sign-in-experience';
 
-import useTheme, { getThemeBySystemConfiguration } from './use-theme';
+import useTheme, { getPreferredTheme } from './use-theme';
 
 const useSignInExperience = () => {
   const { isPreview, setExperienceSettings, setTheme } = useContext(PageContext);
@@ -17,7 +17,7 @@ const useSignInExperience = () => {
 
       // Ensure theme is set before page rendering with new settings to avoid page flashing
       if (settings.color.isDarkModeEnabled) {
-        setTheme(getThemeBySystemConfiguration());
+        setTheme(getPreferredTheme());
       }
 
       // Init the page settings and render the page content

@@ -47,6 +47,7 @@ describe('getSignInExperienceSettings SSR context matching', () => {
       },
     },
     phrases: { lng: 'en', data: resource.en },
+    isDevFeaturesEnabled: true,
   });
 
   /** Clear up front — earlier describe blocks in this file leave calls on the shared API mock. */

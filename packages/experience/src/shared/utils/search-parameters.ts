@@ -1,4 +1,7 @@
+import { Theme } from '@logto/schemas';
 import { condString } from '@silverhand/essentials';
+
+import { isDevFeaturesEnabled } from '@/constants/env';
 
 export const searchKeysCamelCase = Object.freeze(['organizationId', 'appId', 'uiLocales'] as const);
 
@@ -19,6 +22,32 @@ export const searchKeys = Object.freeze({
    */
   uiLocales: 'ui_locales',
 } satisfies Record<SearchKeysCamelCase, string>);
+
+/**
+ * Overrides the theme the app would otherwise resolve from the end-user's OS settings. Kept out
+ * of {@link searchKeys} because those keys are also sent to the sign-in experience API and
+ * compared against the SSR payload, neither of which knows about the theme.
+ */
+export const themeSearchKey = 'theme';
+
+/** All search keys that are persisted to the session storage at app startup. */
+export const persistedSearchKeys = Object.freeze([
+  ...Object.values(searchKeys),
+  // Theme control from the authentication request is only available with dev features enabled.
+  ...(isDevFeaturesEnabled ? [themeSearchKey] : []),
+] as const);
+
+/** The theme override from the search params, or `undefined` when absent or unsupported. */
+export const getThemeOverride = (): Theme | undefined => {
+  // Theme control from the authentication request is only available with dev features enabled.
+  if (!isDevFeaturesEnabled) {
+    return undefined;
+  }
+
+  const value = sessionStorage.getItem(themeSearchKey);
+
+  return value === Theme.Light || value === Theme.Dark ? value : undefined;
+};
 
 const replaceSearchParameters = (parameters: URLSearchParams) => {
   const parameterString = parameters.toString();
@@ -44,7 +73,7 @@ export const handleSearchParametersData = () => {
 
   // Store known search keys to the session storage and remove them from the URL to keep the URL
   // clean.
-  for (const key of Object.values(searchKeys)) {
+  for (const key of persistedSearchKeys) {
     const value = parameters.get(key);
     if (value) {
       sessionStorage.setItem(key, value);

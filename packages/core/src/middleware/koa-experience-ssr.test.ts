@@ -1,6 +1,7 @@
 import { ssrPlaceholder } from '@logto/schemas';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
+import { EnvSet } from '#src/env-set/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
@@ -80,6 +81,7 @@ describe('koaExperienceSsr()', () => {
     expect(JSON.parse(serialized!)).toEqual({
       signInExperience: { data: mockSignInExperience },
       phrases: { lng: 'en', data: phrases },
+      isDevFeaturesEnabled: EnvSet.values.isDevFeaturesEnabled,
     });
   });
 

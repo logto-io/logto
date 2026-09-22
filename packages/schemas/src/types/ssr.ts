@@ -18,6 +18,11 @@ export type SsrData = {
     lng: string;
     data: LocalePhrase;
   };
+  /**
+   * Whether the server runs with dev features enabled. The pre-render script cannot read the
+   * build-time flag the app modules use, so guarded behavior it needs to know about travels here.
+   */
+  isDevFeaturesEnabled?: boolean;
 };
 
 /**

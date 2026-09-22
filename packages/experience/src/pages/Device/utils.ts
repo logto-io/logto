@@ -2,7 +2,7 @@ import { deviceFlowXsrfCookieKey, oidcRoutes } from '@logto/schemas';
 import type { To } from 'react-router-dom';
 import { getCookie } from 'tiny-cookie';
 
-import { searchKeys } from '@/shared/utils/search-parameters';
+import { persistedSearchKeys } from '@/shared/utils/search-parameters';
 
 export type DeviceFlowContext = {
   readonly inputCode?: string;
@@ -70,7 +70,7 @@ export const createDeviceFlowRequestBody = ({
 const buildDeviceFlowSubmitUrl = (): string => {
   const url = new URL(deviceFlowSubmitPath, window.location.origin);
 
-  for (const [, snakeKey] of Object.entries(searchKeys)) {
+  for (const snakeKey of persistedSearchKeys) {
     const value = sessionStorage.getItem(snakeKey);
     if (value) {
       url.searchParams.set(snakeKey, value);

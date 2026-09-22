@@ -41,6 +41,7 @@ import {
   buildLoginPromptUrl,
   isOriginAllowed,
   readOptionalQueryString,
+  readOptionalTheme,
   validateCustomClientMetadata,
 } from '#src/oidc/utils.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -280,6 +281,7 @@ export default function initOidc(
           appId: resolvedAppId,
           organizationId: params.organization_id,
           uiLocales: params.ui_locales,
+          theme: readOptionalTheme(params.theme),
         };
 
         /**

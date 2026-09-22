@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { deviceFlowXsrfCookieKey, experience, oidcRoutes } from '@logto/schemas';
+import { deviceFlowXsrfCookieKey, experience, oidcRoutes, Theme } from '@logto/schemas';
 import { act, fireEvent, waitFor } from '@testing-library/react';
 import { Route, Routes } from 'react-router-dom';
 
@@ -308,6 +308,7 @@ describe('<Device />', () => {
     sessionStorage.setItem('app_id', 'app_123');
     sessionStorage.setItem('organization_id', 'org_123');
     sessionStorage.setItem('ui_locales', 'fr-CA fr');
+    sessionStorage.setItem('theme', Theme.Dark);
 
     const { container } = renderDeviceRoutes({});
 
@@ -334,7 +335,7 @@ describe('<Device />', () => {
     const requestBody = String(request?.body ?? '');
 
     expect(requestUrl).toBe(
-      `${oidcRoutes.codeVerification}?organization_id=org_123&app_id=app_123&ui_locales=fr-CA+fr`
+      `${oidcRoutes.codeVerification}?organization_id=org_123&app_id=app_123&ui_locales=fr-CA+fr&theme=dark`
     );
     expect(requestBody).toContain('xsrf=foo');
     expect(requestBody).toContain('user_code=AB12-CD34');
