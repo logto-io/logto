@@ -1,7 +1,8 @@
-import { type LogtoErrorCode } from '@logto/phrases';
+import { type AdminConsoleKey, type LogtoErrorCode } from '@logto/phrases';
 import { LicenseEnv } from '@logto/schemas';
 
-import { selfHostedPlansLink } from '@/consts/external-links';
+import { logtoCloudConsoleLink, selfHostedPlansLink } from '@/consts/external-links';
+import { type License } from '@/types/license';
 
 /**
  * The install failures the submitted key is responsible for.
@@ -34,6 +35,49 @@ export const buildLicensePurchaseUrl = () => {
   url.searchParams.set('utm_content', 'tenant_settings_license_page');
 
   return url.toString();
+};
+
+/** Where an operator gets a fresh key after the installed license leaves its grace period. */
+export const buildLicenseManagementUrl = () => {
+  const url = new URL(`${logtoCloudConsoleLink}/self-hosted-licenses`);
+
+  url.searchParams.set('utm_source', 'logto_oss');
+  url.searchParams.set('utm_medium', 'console');
+  url.searchParams.set('utm_campaign', 'self_hosted_plans');
+  url.searchParams.set('utm_content', 'tenant_settings_license_refresh');
+
+  return url.toString();
+};
+
+type LicenseStatus = 'active' | 'refresh_required' | 'grace_expired';
+
+type LicenseStatusInput = Pick<License, 'expiresAt' | 'graceEndsAt' | 'refusalReason'>;
+
+/**
+ * Resolve the page state from the server timestamps. A refused refresh takes precedence over an
+ * expired key while both are inside grace, because it explains why the refresh has not succeeded.
+ */
+export const getLicenseStatus = (license: LicenseStatusInput, now = Date.now()): LicenseStatus => {
+  if (Date.parse(license.graceEndsAt) <= now) {
+    return 'grace_expired';
+  }
+
+  if (Boolean(license.refusalReason) || Date.parse(license.expiresAt) <= now) {
+    return 'refresh_required';
+  }
+
+  return 'active';
+};
+
+const licenseRefusalReasonPhraseKeys: Partial<Record<string, AdminConsoleKey>> = Object.freeze({
+  canceled: 'tenants.license.refusal_reason_canceled',
+  unpaid: 'tenants.license.refusal_reason_unpaid',
+  expired: 'tenants.license.refusal_reason_expired',
+  revoked: 'tenants.license.refusal_reason_revoked',
+} as const);
+
+export const getLicenseRefusalReasonPhraseKey = (reason?: string) => {
+  return licenseRefusalReasonPhraseKeys[reason ?? ''] ?? 'tenants.license.refusal_reason_unknown';
 };
 
 /** The phrase describing the environment the installed key declares. */

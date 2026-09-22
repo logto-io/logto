@@ -33,6 +33,20 @@ const tenants = {
     environment_non_production: 'Не продакшн',
     expires_at_field: 'Действует до',
     installed_at_field: 'Установлена',
+    last_refreshed_at_field: 'Последнее обновление',
+    grace_ends_at_field: 'Льготный период заканчивается',
+    refresh_expired_description:
+      'Срок действия лицензионного ключа истёк {{expiresAt}}. Лицензионные функции будут доступны до {{graceEndsAt}}, пока Logto пытается обновить ключ.',
+    refresh_refused_description:
+      'Обновление лицензии отклонено, поскольку лицензия {{reason}}. Лицензионные функции будут доступны до {{graceEndsAt}}.',
+    refusal_reason_canceled: 'отменена',
+    refusal_reason_unpaid: 'не оплачена',
+    refusal_reason_expired: 'истекла',
+    refusal_reason_revoked: 'отозвана',
+    refusal_reason_unknown: 'недоступна',
+    grace_expired_description:
+      'Льготный период лицензии закончился {{graceEndsAt}}. Этот экземпляр вернулся к настройкам OSS по умолчанию. Получите новый ключ в Logto Cloud и установите его снова.',
+    get_fresh_key_button: 'Получить новый лицензионный ключ',
     replace_button: 'Заменить лицензию',
   },
   members: {
