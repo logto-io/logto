@@ -1,4 +1,8 @@
 const cloud = {
+  console_sso: {
+    title: '콘솔 SSO',
+    description: '자체 ID 제공자를 구성하여 싱글 사인온으로 Logto Console에 로그인하세요.',
+  },
   general: {
     onboarding: '온보딩',
   },

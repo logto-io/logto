@@ -1,4 +1,9 @@
 const cloud = {
+  console_sso: {
+    title: 'コンソール SSO',
+    description:
+      '独自のアイデンティティプロバイダーを設定して、シングルサインオンで Logto Console にサインインできます。',
+  },
   general: {
     onboarding: 'オンボーディング',
   },

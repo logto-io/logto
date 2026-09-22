@@ -1,4 +1,9 @@
 const cloud = {
+  console_sso: {
+    title: 'SSO консоли',
+    description:
+      'Настройте своего поставщика удостоверений для входа в Logto Console с помощью единого входа.',
+  },
   general: {
     onboarding: 'Вводный курс',
   },

@@ -1,4 +1,5 @@
 const menu = {
+  single_sign_on: '單一登入',
   profile: '帳戶管理',
   language: '語言',
   appearance: {

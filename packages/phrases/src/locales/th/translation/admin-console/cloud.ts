@@ -1,4 +1,9 @@
 const cloud = {
+  console_sso: {
+    title: 'SSO ของคอนโซล',
+    description:
+      'กำหนดค่าผู้ให้บริการข้อมูลประจำตัวของคุณเองเพื่อลงชื่อเข้าใช้ Logto Console ด้วยการลงชื่อเข้าใช้ครั้งเดียว',
+  },
   general: {
     onboarding: 'เริ่มต้นใช้งาน',
   },

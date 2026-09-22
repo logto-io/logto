@@ -1,4 +1,5 @@
 const menu = {
+  single_sign_on: 'تسجيل الدخول الموحّد',
   profile: 'الملف الشخصي',
   language: 'اللغة',
   appearance: {

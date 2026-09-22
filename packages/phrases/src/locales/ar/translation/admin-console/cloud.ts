@@ -1,4 +1,9 @@
 const cloud = {
+  console_sso: {
+    title: 'تسجيل الدخول الموحّد لوحدة التحكم',
+    description:
+      'قم بتكوين موفّر الهوية الخاص بك لتسجيل الدخول إلى Logto Console باستخدام تسجيل الدخول الموحّد.',
+  },
   general: {
     onboarding: 'عملية التسجيل',
   },

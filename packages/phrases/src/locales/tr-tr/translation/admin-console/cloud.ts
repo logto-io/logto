@@ -1,4 +1,9 @@
 const cloud = {
+  console_sso: {
+    title: 'Konsol SSO',
+    description:
+      'Logto Console’da tek oturum açma ile oturum açmak için kendi kimlik sağlayıcınızı yapılandırın.',
+  },
   general: {
     onboarding: 'Başlatma',
   },

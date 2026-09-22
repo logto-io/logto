@@ -1,4 +1,9 @@
 const cloud = {
+  console_sso: {
+    title: 'ورود یکپارچه کنسول',
+    description:
+      'ارائه‌دهنده هویت خود را پیکربندی کنید تا با ورود یکپارچه به Logto Console وارد شوید.',
+  },
   general: {
     onboarding: 'آشنایی با سیستم',
   },

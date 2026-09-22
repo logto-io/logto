@@ -1,4 +1,9 @@
 const cloud = {
+  console_sso: {
+    title: 'Konsolen-SSO',
+    description:
+      'Konfiguriere deinen eigenen Identitätsanbieter, um dich per Single Sign-on bei der Logto Console anzumelden.',
+  },
   general: {
     onboarding: 'Einführung',
   },

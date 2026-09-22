@@ -1,4 +1,5 @@
 const menu = {
+  single_sign_on: 'Single sign-on',
   profile: 'Profile',
   language: 'Language',
   appearance: {
