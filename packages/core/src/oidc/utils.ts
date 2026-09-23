@@ -295,7 +295,7 @@ export const parseSharedExperienceParams = (
  */
 export const appendSharedExperienceSearchParams = (
   searchParams: URLSearchParams,
-  { appId, organizationId, uiLocales, theme }: SharedExperienceParams
+  { appId, organizationId, uiLocales }: SharedExperienceParams
 ) => {
   if (appId) {
     searchParams.append('app_id', appId);
@@ -308,10 +308,6 @@ export const appendSharedExperienceSearchParams = (
   if (uiLocales) {
     searchParams.append(ExtraParamsKey.UiLocales, uiLocales);
   }
-
-  if (theme) {
-    searchParams.append(ExtraParamsKey.Theme, theme);
-  }
 };
 
 /**
@@ -323,11 +319,13 @@ export const buildSharedExperienceCookie = ({
   appId,
   organizationId,
   uiLocales,
+  theme,
 }: SharedExperienceParams): LogtoUiCookie =>
   removeUndefinedKeys({
     appId,
     organizationId,
     uiLocales,
+    theme,
   });
 
 /**

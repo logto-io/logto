@@ -2,7 +2,8 @@ import { deviceFlowXsrfCookieKey, oidcRoutes } from '@logto/schemas';
 import type { To } from 'react-router-dom';
 import { getCookie } from 'tiny-cookie';
 
-import { persistedSearchKeys } from '@/shared/utils/search-parameters';
+import { searchKeys } from '@/shared/utils/search-parameters';
+import { getThemeOverride } from '@/shared/utils/theme';
 
 export type DeviceFlowContext = {
   readonly inputCode?: string;
@@ -70,11 +71,22 @@ export const createDeviceFlowRequestBody = ({
 const buildDeviceFlowSubmitUrl = (): string => {
   const url = new URL(deviceFlowSubmitPath, window.location.origin);
 
-  for (const snakeKey of persistedSearchKeys) {
+  for (const snakeKey of Object.values(searchKeys)) {
     const value = sessionStorage.getItem(snakeKey);
     if (value) {
       url.searchParams.set(snakeKey, value);
     }
+  }
+
+  /**
+   * The theme rides the flow cookie rather than session storage, but an invalid-code round-trip
+   * rebuilds that cookie from this request's query alone — so it has to be repeated here or the
+   * next device page renders without the override.
+   */
+  const theme = getThemeOverride();
+
+  if (theme) {
+    url.searchParams.set('theme', theme);
   }
 
   return `${url.pathname}${url.search}`;

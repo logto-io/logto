@@ -427,7 +427,8 @@ describe('buildLoginPromptUrl', () => {
         { first_screen: FirstScreen.SignIn },
         { appId: 'app_123', organizationId: 'org_123', uiLocales: 'fr-CA fr', theme: Theme.Dark }
       )
-    ).toBe('sign-in?app_id=app_123&organization_id=org_123&ui_locales=fr-CA+fr&theme=dark');
+      // The theme is carried by the flow cookie, not the page URL.
+    ).toBe('sign-in?app_id=app_123&organization_id=org_123&ui_locales=fr-CA+fr');
   });
 });
 

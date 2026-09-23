@@ -35,15 +35,13 @@
           && ssr.signInExperience.data.color.isDarkModeEnabled;
         var prefersDark = typeof window.matchMedia === 'function'
           && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        // Theme control from the authentication request is only available with dev features
-        // enabled. The URL alone decides, matching the startup reconciliation in
-        // `shared/utils/search-parameters.ts`: an override belongs to the request that carried
-        // it, so a document load without `theme` renders the OS theme instead of inheriting a
-        // previous flow's value. In-app navigation keeps the override through React state, not
-        // through this script, which only runs on a document load.
-        var override = (typeof ssr === 'object' && ssr !== null && ssr.isDevFeaturesEnabled)
-          ? new URLSearchParams(window.location.search).get('theme')
-          : null;
+        // The theme override of the current authentication request, which the server resolves
+        // from the `_logto` flow cookie. Reading it from the same payload React reads keeps the
+        // first paint and the rendered app in agreement on every document load of the flow, and
+        // the server applies the dev-feature guard before it gets here.
+        var override = (typeof ssr === 'object' && ssr !== null && ssr.signInExperience)
+          ? ssr.signInExperience.theme
+          : undefined;
         var preferred = (override === 'dark' || override === 'light')
           ? override
           : (prefersDark ? 'dark' : 'light');

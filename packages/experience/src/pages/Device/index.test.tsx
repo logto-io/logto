@@ -1,5 +1,11 @@
 /* eslint-disable max-lines */
-import { deviceFlowXsrfCookieKey, experience, oidcRoutes, Theme } from '@logto/schemas';
+import {
+  deviceFlowXsrfCookieKey,
+  experience,
+  oidcRoutes,
+  ssrPlaceholder,
+  Theme,
+} from '@logto/schemas';
 import { act, fireEvent, waitFor } from '@testing-library/react';
 import { Route, Routes } from 'react-router-dom';
 
@@ -206,6 +212,8 @@ describe('<Device />', () => {
     fetchMock.mockReset();
     clearDeviceFlowXsrfCookie();
     sessionStorage.clear();
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- tests stage the SSR global
+    window.logtoSsr = ssrPlaceholder;
   });
 
   afterAll(() => {
@@ -308,7 +316,9 @@ describe('<Device />', () => {
     sessionStorage.setItem('app_id', 'app_123');
     sessionStorage.setItem('organization_id', 'org_123');
     sessionStorage.setItem('ui_locales', 'fr-CA fr');
-    sessionStorage.setItem('theme', Theme.Dark);
+    // The theme rides the flow cookie into the SSR payload, not session storage.
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- tests stage the SSR global
+    window.logtoSsr = { signInExperience: { theme: Theme.Dark } } as unknown as typeof logtoSsr;
 
     const { container } = renderDeviceRoutes({});
 
