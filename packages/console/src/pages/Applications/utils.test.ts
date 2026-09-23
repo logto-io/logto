@@ -1,7 +1,8 @@
-import { ossSamlApplicationsLimit } from '@/consts/application-limits';
+import { ossDefaultQuota } from '@logto/schemas';
 
 import { shouldListDynamicApp, shouldShowSamlAppLimitNotice } from './utils';
 
+const ossSamlApplicationsLimit = ossDefaultQuota.samlApplicationsLimit;
 const belowSamlLimit = ossSamlApplicationsLimit - 1;
 
 describe('shouldShowSamlAppLimitNotice', () => {
@@ -10,17 +11,52 @@ describe('shouldShowSamlAppLimitNotice', () => {
       shouldShowSamlAppLimitNotice({
         isCloud: false,
         isThirdPartyTab: false,
+        samlAppLimit: ossSamlApplicationsLimit,
         samlAppTotalCount: ossSamlApplicationsLimit,
       })
     ).toBe(true);
   });
 
-  it('returns false when the SAML app count is below the OSS limit', () => {
+  it('returns false when the SAML app count is below the limit', () => {
     expect(
       shouldShowSamlAppLimitNotice({
         isCloud: false,
         isThirdPartyTab: false,
+        samlAppLimit: ossSamlApplicationsLimit,
         samlAppTotalCount: belowSamlLimit,
+      })
+    ).toBe(false);
+  });
+
+  it('follows a limit granted by a license', () => {
+    expect(
+      shouldShowSamlAppLimitNotice({
+        isCloud: false,
+        isThirdPartyTab: false,
+        samlAppLimit: 10,
+        samlAppTotalCount: ossSamlApplicationsLimit,
+      })
+    ).toBe(false);
+  });
+
+  it('returns false when a license lifts the limit', () => {
+    expect(
+      shouldShowSamlAppLimitNotice({
+        isCloud: false,
+        isThirdPartyTab: false,
+        samlAppLimit: null,
+        samlAppTotalCount: 100,
+      })
+    ).toBe(false);
+  });
+
+  it('returns false on Cloud', () => {
+    expect(
+      shouldShowSamlAppLimitNotice({
+        isCloud: true,
+        isThirdPartyTab: false,
+        samlAppLimit: ossSamlApplicationsLimit,
+        samlAppTotalCount: ossSamlApplicationsLimit,
       })
     ).toBe(false);
   });
@@ -30,6 +66,7 @@ describe('shouldShowSamlAppLimitNotice', () => {
       shouldShowSamlAppLimitNotice({
         isCloud: false,
         isThirdPartyTab: true,
+        samlAppLimit: ossSamlApplicationsLimit,
         samlAppTotalCount: ossSamlApplicationsLimit,
       })
     ).toBe(false);

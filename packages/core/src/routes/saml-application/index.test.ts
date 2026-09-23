@@ -36,9 +36,6 @@ const findApplicationAccessControl = jest.fn(async () => createDefaultApplicatio
 const tenantContext = new MockTenant(
   undefined,
   {
-    applications: {
-      countApplications: jest.fn(async () => ({ count: 0 })),
-    },
     applicationAccessControl: {
       findApplicationAccessControl,
     },
@@ -47,6 +44,12 @@ const tenantContext = new MockTenant(
   {
     samlApplications: {
       updateSamlApplicationById,
+    },
+    // The SAML application cap is covered by the quota library tests.
+    quota: {
+      guardTenantUsageByKey: jest.fn(async () => {
+        // Always within the cap.
+      }),
     },
   }
 );

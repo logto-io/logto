@@ -1,6 +1,8 @@
+import { useContext } from 'react';
+
 import SamlAppLimitBanner from '@/components/SamlAppLimitBanner';
-import { ossSamlApplicationsLimit } from '@/consts/application-limits';
 import { isCloud } from '@/consts/env';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 
 import styles from '../../index.module.scss';
 import { shouldShowSamlAppLimitNotice } from '../../utils';
@@ -11,22 +13,24 @@ type Props = {
 };
 
 function SamlAppLimitNotice({ isThirdPartyTab, samlAppTotalCount }: Props) {
-  const isVisible = shouldShowSamlAppLimitNotice({
-    isCloud,
-    isThirdPartyTab,
-    samlAppTotalCount,
-  });
+  const {
+    currentSubscriptionQuota: { samlApplicationsLimit },
+  } = useContext(SubscriptionDataContext);
 
-  if (!isVisible) {
+  if (
+    samlApplicationsLimit === null ||
+    !shouldShowSamlAppLimitNotice({
+      isCloud,
+      isThirdPartyTab,
+      samlAppLimit: samlApplicationsLimit,
+      samlAppTotalCount,
+    })
+  ) {
     return null;
   }
 
   return (
-    <SamlAppLimitBanner
-      className={styles.notice}
-      variant="inline"
-      limit={ossSamlApplicationsLimit}
-    />
+    <SamlAppLimitBanner className={styles.notice} variant="inline" limit={samlApplicationsLimit} />
   );
 }
 
