@@ -5,8 +5,25 @@ const cloud = {
     title: 'ورود یکپارچه کنسول',
     description:
       'ارائه‌دهنده هویت خود را پیکربندی کنید تا با ورود یکپارچه به Logto Console وارد شوید.',
-    domain_bound: 'تأییدشده',
-    domain_pending: 'در انتظار تأیید',
+    domain_bound: 'متصل',
+    domain_pending: 'در حال تأیید',
+    domain_add_placeholder: 'افزودن دامنه ایمیل',
+    domain_membership_notice:
+      'دامنه\u200Cهای تأییدشده شناسایی SSO در Logto Cloud Console را کنترل می\u200Cکنند و عضویت در مستأجر اعطا نمی\u200Cکنند.',
+    domain_bound_description:
+      'این دامنه برای Console SSO فعال است. رکورد TXT تأیید آن حذف شده است.',
+    domain_dns_instructions:
+      'برای تأیید مالکیت دامنه، این رکورد TXT را نزد ارائه\u200Cدهنده DNS خود اضافه کنید.',
+    domain_waiting_for_dns: 'در انتظار رکورد TXT. هر ۱۰ ثانیه دوباره بررسی می\u200Cکنیم.',
+    domain_proven_unbound:
+      'مالکیت دامنه تأیید شده، اما اتصال کامل نشده است. مشکل را برطرف کرده و دوباره تلاش کنید.',
+    domain_remove_description:
+      '{{domain}} از Console SSO حذف شود؟ حذف دامنه متصل، شناسایی SSO را برای نشانی\u200Cهای ایمیل آن متوقف می\u200Cکند.',
+    domain_invalid: 'یک دامنه ایمیل معتبر وارد کنید.',
+    domain_conflict: 'این دامنه قبلاً به رابط Console SSO دیگری متصل شده است.',
+    domain_invalid_provider: 'پیش از اتصال این دامنه، تنظیمات اتصال را کامل کنید.',
+    domain_dns_timeout: 'بررسی DNS ناموفق بود. به\u200Cطور خودکار دوباره تلاش می\u200Cکنیم.',
+    domain_recovery: 'تغییر دامنه کامل نشده است. برای تکمیل، تأیید را دوباره امتحان کنید.',
     start_over: 'شروع دوباره',
     start_over_confirmation:
       'شروع دوباره ممکن است پیکربندی ناتمام SSO شما را حذف کند. آیا می‌خواهید ادامه دهید؟',

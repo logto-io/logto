@@ -5,8 +5,27 @@ const cloud = {
     title: 'SSO de la console',
     description:
       'Configurez votre propre fournisseur d’identité pour vous connecter à Logto Console avec l’authentification unique.',
-    domain_bound: 'Vérifié',
-    domain_pending: 'En attente de vérification',
+    domain_bound: 'Associé',
+    domain_pending: 'Vérification en cours',
+    domain_add_placeholder: 'Ajouter un domaine de messagerie',
+    domain_membership_notice:
+      'Les domaines vérifiés contrôlent la découverte SSO de Logto Cloud Console. Ils ne donnent pas accès aux tenants.',
+    domain_bound_description:
+      'Ce domaine est actif pour Console SSO. Son enregistrement TXT de vérification a été supprimé.',
+    domain_dns_instructions:
+      'Ajoutez cet enregistrement TXT chez votre fournisseur DNS pour vérifier la propriété du domaine.',
+    domain_waiting_for_dns:
+      'En attente de l’enregistrement TXT. Nous vérifions à nouveau toutes les 10 secondes.',
+    domain_proven_unbound:
+      'La propriété du domaine est vérifiée, mais son association est incomplète. Résolvez le problème et réessayez.',
+    domain_remove_description:
+      'Supprimer {{domain}} de Console SSO ? La suppression d’un domaine associé arrête la découverte SSO pour ses adresses e-mail.',
+    domain_invalid: 'Saisissez un domaine de messagerie valide.',
+    domain_conflict: 'Ce domaine est déjà associé à un autre connecteur Console SSO.',
+    domain_invalid_provider: 'Terminez la configuration de connexion avant d’associer ce domaine.',
+    domain_dns_timeout: 'La vérification DNS a échoué. Nous réessaierons automatiquement.',
+    domain_recovery:
+      'La modification du domaine est incomplète. Relancez la vérification pour la terminer.',
     start_over: 'Recommencer',
     start_over_confirmation:
       'Recommencer peut supprimer votre configuration SSO inachevée. Voulez-vous continuer ?',

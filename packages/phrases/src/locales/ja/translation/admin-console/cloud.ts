@@ -5,8 +5,25 @@ const cloud = {
     title: 'コンソール SSO',
     description:
       '独自のアイデンティティプロバイダーを設定して、シングルサインオンで Logto Console にサインインできます。',
-    domain_bound: '検証済み',
-    domain_pending: '検証待ち',
+    domain_bound: 'バインド済み',
+    domain_pending: '検証中',
+    domain_add_placeholder: 'メールドメインを追加',
+    domain_membership_notice:
+      '検証済みドメインは Logto Cloud Console SSO の検出に使用されます。テナントのメンバー権限は付与されません。',
+    domain_bound_description:
+      'このドメインは Console SSO で有効です。TXT 検証レコードは削除されました。',
+    domain_dns_instructions:
+      'ドメインの所有権を検証するため、DNS プロバイダーにこの TXT レコードを追加してください。',
+    domain_waiting_for_dns: 'TXT レコードを待機中です。10 秒ごとに再確認します。',
+    domain_proven_unbound:
+      'ドメインの所有権は検証済みですが、バインドは未完了です。問題を解決して再試行してください。',
+    domain_remove_description:
+      '{{domain}} を Console SSO から削除しますか？バインド済みドメインを削除すると、そのメールアドレスの SSO 検出が停止します。',
+    domain_invalid: '有効なメールドメインを入力してください。',
+    domain_conflict: 'このドメインは別の Console SSO コネクターに既にバインドされています。',
+    domain_invalid_provider: 'このドメインをバインドする前に接続設定を完了してください。',
+    domain_dns_timeout: 'DNS の確認に失敗しました。自動的に再試行します。',
+    domain_recovery: 'ドメインの変更は未完了です。検証を再試行して完了してください。',
     start_over: '最初からやり直す',
     start_over_confirmation:
       '最初からやり直すと、未完了の SSO 設定が削除される場合があります。続行しますか？',

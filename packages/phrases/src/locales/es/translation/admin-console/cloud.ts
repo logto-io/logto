@@ -5,8 +5,27 @@ const cloud = {
     title: 'SSO de la consola',
     description:
       'Configura tu propio proveedor de identidad para acceder a Logto Console mediante el inicio de sesión único.',
-    domain_bound: 'Verificado',
-    domain_pending: 'Verificación pendiente',
+    domain_bound: 'Vinculado',
+    domain_pending: 'Verificando',
+    domain_add_placeholder: 'Añadir un dominio de correo',
+    domain_membership_notice:
+      'Los dominios verificados controlan la detección de SSO en Logto Cloud Console. No otorgan acceso como miembro a ningún tenant.',
+    domain_bound_description:
+      'Este dominio está activo para Console SSO. Se ha eliminado su registro TXT de verificación.',
+    domain_dns_instructions:
+      'Añade este registro TXT en tu proveedor de DNS para verificar la propiedad del dominio.',
+    domain_waiting_for_dns: 'Esperando el registro TXT. Volveremos a comprobarlo cada 10 segundos.',
+    domain_proven_unbound:
+      'Se verificó la propiedad del dominio, pero no se completó la vinculación. Resuelve el problema y vuelve a intentarlo.',
+    domain_remove_description:
+      '¿Quitar {{domain}} de Console SSO? Al quitar un dominio vinculado, sus direcciones de correo dejarán de encontrarse mediante SSO.',
+    domain_invalid: 'Introduce un dominio de correo válido.',
+    domain_conflict: 'Este dominio ya está vinculado a otro conector de Console SSO.',
+    domain_invalid_provider:
+      'Completa la configuración de conexión antes de vincular este dominio.',
+    domain_dns_timeout: 'La comprobación de DNS falló. Lo intentaremos de nuevo automáticamente.',
+    domain_recovery:
+      'El cambio de dominio está incompleto. Reintenta la verificación para terminarlo.',
     start_over: 'Empezar de nuevo',
     start_over_confirmation:
       'Empezar de nuevo puede eliminar tu configuración de SSO incompleta. ¿Quieres continuar?',

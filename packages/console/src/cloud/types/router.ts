@@ -129,3 +129,10 @@ export type LogtoEnterpriseSubscriptionInvoiceResponse = GetArrayElementType<
 export type ConsoleSsoConnector = GuardedResponse<
   RouterRoutes<typeof consoleSsoRouter>['get']['/api/me/console-sso/connectors']
 >[number];
+
+/** A domain challenge or an authoritative Core binding returned by the global Console SSO API. */
+export type ConsoleSsoDomain = GuardedResponse<
+  RouterRoutes<
+    typeof consoleSsoRouter
+  >['post']['/api/me/console-sso/connectors/:connectorId/domains']
+>;

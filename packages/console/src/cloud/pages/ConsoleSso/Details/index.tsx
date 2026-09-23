@@ -153,7 +153,12 @@ function Details() {
                     <Connection data={data} isDeleted={isDeleted} onUpdated={refresh} />
                   )}
                   {tab === ConsoleSsoDetailsTab.Experience && (
-                    <Experience data={data} isDeleted={isDeleted} onUpdated={refresh} />
+                    <Experience
+                      key={data.id}
+                      data={data}
+                      isDeleted={isDeleted}
+                      onUpdated={refresh}
+                    />
                   )}
                   <ConfirmModal
                     isOpen={isDeleteAlertOpen}
