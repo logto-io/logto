@@ -59,6 +59,10 @@ const security = {
     mode_checkbox: '체크박스',
     mode_notice:
       '인증 모드는 Google Cloud Console의 reCAPTCHA 키 설정에서 정의됩니다. 여기서 모드를 변경하려면 일치하는 키 유형이 필요합니다.',
+    score_threshold: '점수 임계값',
+    score_threshold_description:
+      '임계값보다 낮은 점수는 거부됩니다. 0.0은 모든 점수를 허용하고 1.0은 완벽한 점수만 허용합니다. 기본값은 0.5입니다.',
+    score_threshold_error: '점수 임계값은 0에서 1 사이여야 합니다.',
   },
   password_policy: {
     password_requirements: '비밀번호 요구사항',

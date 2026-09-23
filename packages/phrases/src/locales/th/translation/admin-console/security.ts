@@ -59,6 +59,10 @@ const security = {
     mode_checkbox: 'ช่องทำเครื่องหมาย',
     mode_notice:
       'โหมดการตรวจสอบถูกกำหนดในการตั้งค่าคีย์ reCAPTCHA ใน Google Cloud Console การเปลี่ยนโหมดที่นี่ต้องใช้ประเภทคีย์ที่ตรงกัน',
+    score_threshold: 'คะแนนขั้นต่ำ',
+    score_threshold_description:
+      'คะแนนที่ต่ำกว่าเกณฑ์จะถูกปฏิเสธ 0.0 อนุญาตทั้งหมด 1.0 อนุญาตเฉพาะคะแนนเต็ม ค่าเริ่มต้นคือ 0.5',
+    score_threshold_error: 'คะแนนขั้นต่ำต้องอยู่ระหว่าง 0 ถึง 1',
   },
   password_policy: {
     password_requirements: 'ข้อกำหนดรหัสผ่าน',
