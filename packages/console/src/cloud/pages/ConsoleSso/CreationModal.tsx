@@ -3,7 +3,7 @@ import { SsoProviderName } from '@logto/schemas';
 import Client, {
   type ClientConfig,
   type GuardedResponse,
-  ResponseError,
+  type ResponseError,
   type RouterRoutes,
 } from '@withtyped/client';
 import { useState } from 'react';
@@ -114,19 +114,8 @@ function CreationModal({ onClose, userId }: Props) {
     }
     setIsSubmitting(true);
     try {
-      // The cleanup route has no response body and is not in the published Cloud types yet.
-      const config = getCreationApiConfig(operation.key);
-      const url = new URL('/api/me/console-sso/connector-creation', config.baseUrl);
-      const response = await fetch(url, {
-        method: 'DELETE',
-        headers:
-          typeof config.headers === 'function'
-            ? await config.headers(url, 'delete')
-            : config.headers,
-      });
-      if (!response.ok) {
-        throw new ResponseError(response);
-      }
+      const cleanupApi = new Client<typeof consoleSsoRouter>(getCreationApiConfig(operation.key));
+      await cleanupApi.delete('/api/me/console-sso/connector-creation');
       clearPendingConnectorCreation(userId);
       setOperation(undefined);
       setSelected(undefined);
