@@ -3,6 +3,7 @@ import { Readable } from 'node:stream';
 import { StorageProvider } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import SystemContext from '#src/tenants/SystemContext.js';
 import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-context.js';
@@ -33,6 +34,17 @@ await mockEsmWithActual('#src/utils/storage/azure-storage.js', () => ({
     downloadFile: mockedDownloadFile,
     isFileExisted: mockedIsFileExisted,
     getFileProperties: mockedGetFileProperties,
+  })),
+}));
+
+const mockedS3DownloadFile = jest.fn();
+
+await mockEsmWithActual('#src/utils/storage/s3-storage.js', () => ({
+  buildS3Storage: jest.fn(() => ({
+    uploadFile: jest.fn(),
+    downloadFile: mockedS3DownloadFile,
+    isFileExisted: jest.fn(async () => true),
+    getFileProperties: jest.fn(),
   })),
 }));
 
@@ -179,5 +191,57 @@ describe('koaServeCustomUiAssets middleware', () => {
     await expect(koaServeCustomUiAssets('custom-ui-asset-id')(ctx, next)).rejects.toMatchError(
       new RequestError({ code: 'request.range_not_satisfiable', status: 416 })
     );
+  });
+
+  describe('with an S3-compatible storage', () => {
+    beforeEach(() => {
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      SystemContext.shared.experienceBlobsProviderConfig = {
+        provider: StorageProvider.S3Storage,
+        endpoint: 'http://localhost:9000',
+        bucket: 'bucket',
+        accessKeyId: 'accessKeyId',
+        accessSecretKey: 'accessSecretKey',
+      };
+    });
+
+    afterEach(() => {
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      SystemContext.shared.experienceBlobsProviderConfig = experienceBlobsProviderConfig;
+    });
+
+    it('should serve the file from the configured storage', async () => {
+      const mockBodyStream = Readable.from('<html></html>');
+      mockedS3DownloadFile.mockResolvedValueOnce({
+        contentType: 'text/html',
+        contentLength: 13,
+        readableStreamBody: mockBodyStream,
+      });
+      const ctx = createMockContext({ url: '/sign-in' });
+
+      await koaServeCustomUiAssets('custom-ui-asset-id')(ctx, next);
+
+      expect(mockedS3DownloadFile).toHaveBeenCalledWith(
+        'default/custom-ui-asset-id/index.html',
+        undefined,
+        undefined
+      );
+      expect(mockedDownloadFile).not.toHaveBeenCalled();
+      expect(ctx.type).toEqual('text/html');
+      expect(ctx.body).toEqual(mockBodyStream);
+    });
+
+    it('should only serve from Azure storage without dev features', async () => {
+      const { isDevFeaturesEnabled } = EnvSet.values;
+      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+
+      try {
+        expect(() => koaServeCustomUiAssets('custom-ui-asset-id')).toThrowError(
+          new RequestError({ code: 'storage.not_configured', status: 400 })
+        );
+      } finally {
+        Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', isDevFeaturesEnabled);
+      }
+    });
   });
 });

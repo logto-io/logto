@@ -20,6 +20,13 @@ services:
       timeout: 3s
       retries: 20
 
+  # An S3-compatible storage for the self-hosted Bring your UI tests, configured as the experience
+  # blobs provider through `EXPERIENCE_BLOBS_PROVIDER` below.
+  s3mock:
+    image: adobe/s3mock:4.7.0
+    environment:
+      COM_ADOBE_TESTING_S3MOCK_STORE_INITIAL_BUCKETS: experience-blobs
+
   logto:
     stop_signal: SIGINT
     volumes:
@@ -43,6 +50,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      s3mock:
+        condition: service_started
     environment:
       DB_URL: postgres://postgres:p0stgr3s@postgres:5432/postgres
       REDIS_URL: redis://redis:6379
@@ -57,6 +66,9 @@ services:
       # private bridge gateway. Allow the Docker bridge ranges rather than disabling the SSRF
       # protection. CIMD cannot be enabled while an allowlist is set.
       SSRF_ALLOWED_ADDRESSES: 172.16.0.0/12,192.168.0.0/16,10.0.0.0/8
+      # Written to the `systems` table by the bootstrap script before Logto starts, since provider
+      # configs are only loaded on startup. See `sign-in-experience.custom-ui-assets.test.ts`.
+      EXPERIENCE_BLOBS_PROVIDER: '{"provider":"S3Storage","endpoint":"http://s3mock:9090","bucket":"experience-blobs","forcePathStyle":true,"accessKeyId":"s3mock","accessSecretKey":"s3mock"}'
       COVERAGE: ${COVERAGE:-0}
       COVERAGE_REPORT_DIR: /coverage/report
       COVERAGE_TEMP_DIR: /coverage/raw

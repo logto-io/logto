@@ -1,6 +1,18 @@
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import {
+  GetObjectCommand,
+  HeadObjectCommand,
+  PutObjectCommand,
+  S3Client,
+  S3ServiceException,
+} from '@aws-sdk/client-s3';
 
-import type { UploadFile } from './types.js';
+import type {
+  DownloadFile,
+  GetFileProperties,
+  IsFileExisted,
+  Storage,
+  UploadFile,
+} from './types.js';
 
 const getRegionFromEndpoint = (endpoint?: string) => {
   if (!endpoint) {
@@ -44,13 +56,19 @@ export const buildS3Storage = ({
     },
   });
 
-  const uploadFile: UploadFile = async (data, objectKey, { contentType, publicUrl } = {}) => {
+  const uploadFile: UploadFile = async (
+    data,
+    objectKey,
+    { contentType, publicUrl, isPublic = true } = {}
+  ) => {
     const command = new PutObjectCommand({
       Bucket: bucket,
       Key: objectKey,
       Body: data,
       ContentType: contentType,
-      ACL: 'public-read',
+      // Buckets created with ACLs disabled (the AWS default) reject any ACL, so only send one when
+      // the object has to be publicly readable.
+      ACL: isPublic ? 'public-read' : undefined,
     });
 
     await client.send(command);
@@ -86,5 +104,57 @@ export const buildS3Storage = ({
     };
   };
 
-  return { uploadFile };
+  const downloadFile: DownloadFile = async (objectKey, offset, count) => {
+    const { Body, ContentLength, ContentType } = await client.send(
+      new GetObjectCommand({
+        Bucket: bucket,
+        Key: objectKey,
+        Range: buildRange(offset, count),
+      })
+    );
+
+    return {
+      contentLength: ContentLength,
+      contentType: ContentType,
+      // The Node.js runtime of the SDK always answers with a Node.js readable stream.
+      // eslint-disable-next-line no-restricted-syntax -- See above.
+      readableStreamBody: Body as NodeJS.ReadableStream | undefined,
+    };
+  };
+
+  const isFileExisted: IsFileExisted = async (objectKey) => {
+    try {
+      await client.send(new HeadObjectCommand({ Bucket: bucket, Key: objectKey }));
+
+      return true;
+    } catch (error: unknown) {
+      // `HeadObject` has no response body, so a missing object only shows as a 404.
+      if (error instanceof S3ServiceException && error.$metadata.httpStatusCode === 404) {
+        return false;
+      }
+
+      throw error;
+    }
+  };
+
+  const getFileProperties: GetFileProperties = async (objectKey) => {
+    const { ContentLength } = await client.send(
+      new HeadObjectCommand({ Bucket: bucket, Key: objectKey })
+    );
+
+    return { contentLength: ContentLength };
+  };
+
+  return { uploadFile, downloadFile, isFileExisted, getFileProperties } satisfies Storage;
+};
+
+/** The HTTP `Range` of `count` bytes starting at `offset`, like the Azure Blob `download()`. */
+const buildRange = (offset?: number, count?: number) => {
+  if (offset === undefined && count === undefined) {
+    return;
+  }
+
+  const start = offset ?? 0;
+
+  return `bytes=${start}-${count === undefined ? '' : start + count - 1}`;
 };
