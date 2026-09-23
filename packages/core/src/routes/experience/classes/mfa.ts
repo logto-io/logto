@@ -525,14 +525,30 @@ export class Mfa {
 
     const { userFactors: factorsInUser } = submitMfaValidationContext;
     const factorsInBind = this.bindMfaFactorsArray.map(({ type }) => type);
-    const linkedFactors = deduplicate([...factorsInUser, ...factorsInBind]);
+    // A requested `mfa` reaching this check means the proofs are still below the class, and the
+    // implicit email / phone factors derived from the primary identifiers cannot lift them: a
+    // registration has no MFA challenge, and after an email or phone sign-in they are the same
+    // factor as the first one. Only stored and newly bound factors count, so the user is asked to
+    // enroll one that completes the pair.
+    const isPairableFactor = (factor: MfaFactor) =>
+      !asNoSkipMandatoryPolicy ||
+      (factor !== MfaFactor.EmailVerificationCode && factor !== MfaFactor.PhoneVerificationCode);
+    const requiredFactors = configuredFactors.filter((factor) => isPairableFactor(factor));
+    const linkedFactors = deduplicate([
+      ...factorsInUser.filter((factor) => isPairableFactor(factor)),
+      ...factorsInBind,
+    ]);
 
-    // Assert that the user has at least one of the required factors bound
-    if (!configuredFactors.some((factor) => linkedFactors.includes(factor))) {
+    // Assert that the user has at least one of the required factors bound. With no pairable factor
+    // to offer, a requested `mfa` is left to the assertion in `submit()`.
+    if (
+      requiredFactors.length > 0 &&
+      !requiredFactors.some((factor) => linkedFactors.includes(factor))
+    ) {
       throw new RequestError(
         { code: 'user.missing_mfa', status: 422 },
         {
-          availableFactors: configuredFactors,
+          availableFactors: requiredFactors,
           ...conditional(
             !asNoSkipMandatoryPolicy &&
               !isNoSkipMfaPolicy(policy) &&
