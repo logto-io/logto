@@ -109,7 +109,7 @@ function Experience({ data, isDeleted, onUpdated }: Props) {
           {/* TODO (LOG-14204): Replace this placeholder with verified-domain management. */}
           <FormField title="enterprise_sso_details.email_domain_field_name">
             <InlineNotification severity="info">
-              {t('cloud.console_sso.domain_placeholder')}
+              Email domain verification will be available here.
             </InlineNotification>
           </FormField>
           <FormField title="enterprise_sso_details.sync_profile_field_name">

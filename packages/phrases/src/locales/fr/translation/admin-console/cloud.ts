@@ -1,7 +1,6 @@
 const cloud = {
   console_sso: {
     back_to_list: 'Retour au SSO de la console',
-    domain_placeholder: 'La vérification des domaines de messagerie sera bientôt disponible ici.',
     create: 'Ajouter un connecteur',
     title: 'SSO de la console',
     description:

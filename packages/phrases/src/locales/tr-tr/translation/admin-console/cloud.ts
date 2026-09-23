@@ -1,7 +1,6 @@
 const cloud = {
   console_sso: {
     back_to_list: "Console SSO'ya dön",
-    domain_placeholder: 'E-posta etki alanı doğrulaması burada kullanılabilecek.',
     create: 'Bağlayıcı ekle',
     title: 'Konsol SSO',
     description:

@@ -1,7 +1,6 @@
 const cloud = {
   console_sso: {
     back_to_list: 'Console SSO로 돌아가기',
-    domain_placeholder: '이메일 도메인 인증은 여기에서 사용할 수 있게 됩니다.',
     create: '커넥터 추가',
     title: '콘솔 SSO',
     description: '자체 ID 제공자를 구성하여 싱글 사인온으로 Logto Console에 로그인하세요.',

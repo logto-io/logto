@@ -1,7 +1,6 @@
 const cloud = {
   console_sso: {
     back_to_list: '返回控制台 SSO',
-    domain_placeholder: '電郵網域驗證功能將會在此提供。',
     create: '新增連接器',
     title: '控制台 SSO',
     description: '設定你自己的身份提供者，透過單一登入存取 Logto Console。',

@@ -1,7 +1,6 @@
 const cloud = {
   console_sso: {
     back_to_list: 'العودة إلى تسجيل الدخول الموحد لوحدة التحكم',
-    domain_placeholder: 'ستتوفر إدارة التحقق من نطاق البريد الإلكتروني هنا.',
     create: 'إضافة موصل',
     title: 'تسجيل الدخول الموحّد لوحدة التحكم',
     description:

@@ -161,7 +161,7 @@ it('keeps the internal name and domains read-only while editing display name', a
   });
   render(<Experience data={oidcConnector} isDeleted={false} onUpdated={onUpdated} />);
   expect(screen.getByText('server-generated-name')).toBeTruthy();
-  expect(screen.getByText('admin_console.cloud.console_sso.domain_placeholder')).toBeTruthy();
+  expect(screen.getByText('Email domain verification will be available here.')).toBeTruthy();
   expect(screen.queryByDisplayValue('server-generated-name')).toBeNull();
   fireEvent.change(screen.getByLabelText('enterprise_sso_details.display_name_field_name'), {
     target: { value: 'New display name' },

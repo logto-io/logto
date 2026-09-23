@@ -1,7 +1,6 @@
 const cloud = {
   console_sso: {
     back_to_list: 'Voltar para o SSO do Console',
-    domain_placeholder: 'A verificação de domínio de e-mail estará disponível aqui.',
     create: 'Adicionar conector',
     title: 'SSO do console',
     description:

@@ -1,7 +1,6 @@
 const cloud = {
   console_sso: {
     back_to_list: 'Вернуться к SSO консоли',
-    domain_placeholder: 'Проверка домена электронной почты будет доступна здесь.',
     create: 'Добавить коннектор',
     title: 'SSO консоли',
     description:
