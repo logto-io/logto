@@ -19,6 +19,8 @@ import TextInput from '@/ds-components/TextInput';
 import { SyncProfileMode } from '@/types/connector';
 import { uriValidator } from '@/utils/validator';
 
+import styles from './index.module.scss';
+
 type Props = {
   readonly data: ConsoleSsoConnector;
   readonly isDeleted: boolean;
@@ -122,12 +124,14 @@ function Experience({ data, isDeleted, onUpdated }: Props) {
             />
           </FormField>
           {data.providerType === SsoProviderType.OIDC && (
-            <FormField title="connectors.guide.enable_token_storage.title">
+            <div className={styles.tokenStorage}>
               <Controller
                 name="enableTokenStorage"
                 control={control}
                 render={({ field: { value, onChange } }) => (
                   <Switch
+                    description="connectors.guide.enable_token_storage.title"
+                    aria-label={t('connectors.guide.enable_token_storage.title')}
                     checked={value}
                     onChange={({ currentTarget }) => {
                       onChange(currentTarget.checked);
@@ -135,7 +139,7 @@ function Experience({ data, isDeleted, onUpdated }: Props) {
                   />
                 )}
               />
-            </FormField>
+            </div>
           )}
         </FormCard>
         <FormCard
