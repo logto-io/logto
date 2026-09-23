@@ -15,7 +15,12 @@ function DomainTags({ data: { boundDomains, domainVerifications } }: Props) {
   return (
     <div className={styles.domains}>
       {boundDomains.map((domain) => (
-        <span key={domain} title={t('domain_bound')} aria-label={`${domain}: ${t('domain_bound')}`}>
+        <span
+          key={domain}
+          role="img"
+          title={t('domain_bound')}
+          aria-label={`${domain}: ${t('domain_bound')}`}
+        >
           <Tag type="state" status="success" variant="cell">
             {domain}
           </Tag>
@@ -24,6 +29,7 @@ function DomainTags({ data: { boundDomains, domainVerifications } }: Props) {
       {pending.map(({ domain }) => (
         <span
           key={domain}
+          role="img"
           title={t('domain_pending')}
           aria-label={`${domain}: ${t('domain_pending')}`}
         >
