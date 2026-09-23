@@ -14,7 +14,7 @@ const cloud = {
       'Añade este registro TXT en tu proveedor de DNS para verificar la propiedad del dominio.',
     domain_waiting_for_dns: 'Esperando el registro TXT. Volveremos a comprobarlo cada 10 segundos.',
     domain_proven_unbound:
-      'Se verificó la propiedad del dominio, pero no se completó la vinculación. Resuelve el problema y vuelve a intentarlo.',
+      'Se verificó la propiedad del dominio, pero no se completó la vinculación.',
     domain_remove_description:
       '¿Quitar {{domain}} de Console SSO? Al quitar un dominio vinculado, sus direcciones de correo dejarán de encontrarse mediante SSO.',
     domain_invalid: 'Introduce un dominio de correo válido.',
@@ -22,8 +22,7 @@ const cloud = {
     domain_invalid_provider:
       'Completa la configuración de conexión antes de vincular este dominio.',
     domain_dns_timeout: 'La comprobación de DNS falló. Lo intentaremos de nuevo automáticamente.',
-    domain_recovery:
-      'El cambio de dominio está incompleto. Reintenta la verificación para terminarlo.',
+    domain_recovery: 'El cambio de dominio está incompleto.',
     start_over: 'Empezar de nuevo',
     start_over_confirmation:
       'Empezar de nuevo puede eliminar tu configuración de SSO incompleta. ¿Quieres continuar?',

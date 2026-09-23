@@ -14,7 +14,7 @@ const cloud = {
       'Aggiungi questo record TXT al tuo provider DNS per verificare la proprietà del dominio.',
     domain_waiting_for_dns: 'In attesa del record TXT. Controlleremo di nuovo ogni 10 secondi.',
     domain_proven_unbound:
-      'La proprietà del dominio è verificata, ma il collegamento non è completo. Risolvi il problema e riprova.',
+      'La proprietà del dominio è verificata, ma il collegamento non è completo.',
     domain_remove_description:
       'Rimuovere {{domain}} da Console SSO? La rimozione di un dominio associato interrompe il rilevamento SSO per i suoi indirizzi email.',
     domain_invalid: 'Inserisci un dominio email valido.',
@@ -22,7 +22,7 @@ const cloud = {
     domain_invalid_provider:
       'Completa le impostazioni di connessione prima di associare questo dominio.',
     domain_dns_timeout: 'Il controllo DNS non è riuscito. Riproveremo automaticamente.',
-    domain_recovery: 'La modifica del dominio è incompleta. Riprova la verifica per completarla.',
+    domain_recovery: 'La modifica del dominio è incompleta.',
     start_over: 'Ricomincia',
     start_over_confirmation:
       'Ricominciare potrebbe eliminare la configurazione SSO incompleta. Vuoi continuare?',

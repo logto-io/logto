@@ -14,14 +14,14 @@ const cloud = {
       'Dodaj ten rekord TXT u dostawcy DNS, aby potwierdzić własność domeny.',
     domain_waiting_for_dns: 'Oczekiwanie na rekord TXT. Sprawdzamy ponownie co 10 sekund.',
     domain_proven_unbound:
-      'Własność domeny została potwierdzona, ale powiązanie nie jest ukończone. Rozwiąż problem i spróbuj ponownie.',
+      'Własność domeny została potwierdzona, ale powiązanie nie jest ukończone.',
     domain_remove_description:
       'Usunąć {{domain}} z Console SSO? Usunięcie powiązanej domeny zatrzyma wykrywanie SSO dla jej adresów e-mail.',
     domain_invalid: 'Wprowadź prawidłową domenę e-mail.',
     domain_conflict: 'Ta domena jest już powiązana z innym łącznikiem Console SSO.',
     domain_invalid_provider: 'Ukończ ustawienia połączenia przed powiązaniem tej domeny.',
     domain_dns_timeout: 'Sprawdzanie DNS nie powiodło się. Spróbujemy ponownie automatycznie.',
-    domain_recovery: 'Zmiana domeny jest nieukończona. Ponów weryfikację, aby ją zakończyć.',
+    domain_recovery: 'Zmiana domeny jest nieukończona.',
     start_over: 'Zacznij od nowa',
     start_over_confirmation:
       'Rozpoczęcie od nowa może usunąć niedokończoną konfigurację SSO. Czy chcesz kontynuować?',

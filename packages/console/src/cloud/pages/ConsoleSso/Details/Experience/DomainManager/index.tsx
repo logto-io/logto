@@ -10,6 +10,8 @@ import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
+import { Ring } from '@/ds-components/Spinner';
+import Tag from '@/ds-components/Tag';
 import TextInput from '@/ds-components/TextInput';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import DnsRecordsTable from '@/pages/TenantSettings/TenantDomainSettings/CustomDomain/ActivationProcess/DnsRecordsTable';
@@ -53,9 +55,7 @@ type CardProps = {
   readonly isExpanded: boolean;
   readonly error?: DomainError;
   readonly isChecking: boolean;
-  readonly isDeleting: boolean;
   readonly onToggle: () => void;
-  readonly onVerify: () => Promise<void>;
   readonly onRemove: () => Promise<void>;
 };
 
@@ -65,9 +65,7 @@ function DomainCard({
   isExpanded,
   error,
   isChecking,
-  isDeleting,
   onToggle,
-  onVerify,
   onRemove,
 }: CardProps) {
   const { domain, isBound } = status;
@@ -82,14 +80,13 @@ function DomainCard({
           onClick={onToggle}
         >
           <span className={styles.domain}>{domain}</span>
-          <span className={styles.status}>
-            <span className={isBound ? styles.boundDot : styles.pendingDot} />
+          <Tag status={isBound ? 'success' : 'alert'} type="state" variant="plain">
             <DynamicT
               forKey={
                 isBound ? 'cloud.console_sso.domain_bound' : 'cloud.console_sso.domain_pending'
               }
             />
-          </span>
+          </Tag>
           <ArrowDown className={isExpanded ? styles.expandedChevron : styles.chevron} />
         </button>
         <CopyToClipboard value={domain} variant="icon" />
@@ -105,6 +102,11 @@ function DomainCard({
       </div>
       {isExpanded && (
         <div className={styles.cardContent}>
+          {error && (
+            <InlineNotification severity="error">
+              <DomainErrorText error={error} />
+            </InlineNotification>
+          )}
           {isBound ? (
             <div className={styles.statusText}>
               <DynamicT
@@ -122,6 +124,7 @@ function DomainCard({
                 tip="cloud.console_sso.domain_dns_instructions"
               />
               <div className={styles.statusText}>
+                {isChecking && <Ring className={styles.loadingIcon} />}
                 <DynamicT
                   forKey={
                     status.verifiedAt === null
@@ -131,20 +134,6 @@ function DomainCard({
                 />
               </div>
             </>
-          )}
-          {error && (
-            <InlineNotification severity="error" className={styles.error}>
-              <DomainErrorText error={error} />
-            </InlineNotification>
-          )}
-          {(!isBound || error !== undefined || hasPendingCleanup) && (
-            <Button
-              type="outline"
-              title="domain.custom.verify_domain"
-              isLoading={isChecking}
-              disabled={isDeleting}
-              onClick={onVerify}
-            />
           )}
         </div>
       )}
@@ -164,9 +153,7 @@ function DomainManager({ data, onUpdated }: Props) {
     errors,
     isAdding,
     checking,
-    deleting,
     add,
-    verify,
     toggle,
     remove,
   } = useDomainManager({ data, onUpdated });
@@ -223,12 +210,8 @@ function DomainManager({ data, onUpdated }: Props) {
               isExpanded={expanded === status.domain}
               error={errors[status.domain]}
               isChecking={checking === status.domain}
-              isDeleting={deleting === status.domain}
               onToggle={() => {
                 toggle(status.domain);
-              }}
-              onVerify={async () => {
-                await verify(status.domain);
               }}
               onRemove={async () => {
                 await confirmRemove(status.domain);

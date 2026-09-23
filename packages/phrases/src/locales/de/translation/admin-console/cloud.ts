@@ -14,7 +14,7 @@ const cloud = {
       'Füge diesen TXT-Eintrag bei deinem DNS-Anbieter hinzu, um die Domaininhaberschaft zu bestätigen.',
     domain_waiting_for_dns: 'Wir warten auf den TXT-Eintrag und prüfen alle 10 Sekunden erneut.',
     domain_proven_unbound:
-      'Die Domaininhaberschaft ist bestätigt, aber die Bindung ist unvollständig. Behebe das Problem und versuche es erneut.',
+      'Die Domaininhaberschaft ist bestätigt, aber die Bindung ist unvollständig.',
     domain_remove_description:
       '{{domain}} aus Console SSO entfernen? Nach dem Entfernen einer gebundenen Domain funktioniert die SSO-Erkennung für deren E-Mail-Adressen nicht mehr.',
     domain_invalid: 'Gib eine gültige E-Mail-Domain ein.',
@@ -22,8 +22,7 @@ const cloud = {
     domain_invalid_provider:
       'Schließe die Verbindungseinstellungen ab, bevor du diese Domain bindest.',
     domain_dns_timeout: 'Die DNS-Prüfung ist fehlgeschlagen. Wir versuchen es automatisch erneut.',
-    domain_recovery:
-      'Die Domainänderung ist unvollständig. Wiederhole die Verifizierung, um sie abzuschließen.',
+    domain_recovery: 'Die Domainänderung ist unvollständig.',
     start_over: 'Neu beginnen',
     start_over_confirmation:
       'Wenn Sie von vorne beginnen, wird Ihre unvollständige SSO-Konfiguration möglicherweise gelöscht. Möchten Sie fortfahren?',

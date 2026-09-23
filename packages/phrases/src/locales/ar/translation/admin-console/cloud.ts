@@ -12,15 +12,14 @@ const cloud = {
       'هذا النطاق نشط لتسجيل الدخول الموحد إلى Console. تمت إزالة سجل TXT الخاص بالتحقق.',
     domain_dns_instructions: 'أضف سجل TXT هذا لدى مزود DNS للتحقق من ملكية النطاق.',
     domain_waiting_for_dns: 'بانتظار سجل TXT. نتحقق مرة أخرى كل 10 ثوانٍ.',
-    domain_proven_unbound:
-      'تم التحقق من ملكية النطاق، لكن الربط لم يكتمل. عالج المشكلة ثم أعد المحاولة.',
+    domain_proven_unbound: 'تم التحقق من ملكية النطاق، لكن الربط لم يكتمل.',
     domain_remove_description:
       'هل تريد إزالة {{domain}} من Console SSO؟ ستؤدي إزالة نطاق مرتبط إلى إيقاف اكتشاف SSO لعناوين البريد الإلكتروني الخاصة به.',
     domain_invalid: 'أدخل نطاق بريد إلكتروني صالحًا.',
     domain_conflict: 'هذا النطاق مرتبط بالفعل بموصل Console SSO آخر.',
     domain_invalid_provider: 'أكمل إعدادات الاتصال قبل ربط هذا النطاق.',
     domain_dns_timeout: 'فشل التحقق من DNS. سنعيد المحاولة تلقائيًا.',
-    domain_recovery: 'لم يكتمل تغيير النطاق. أعد محاولة التحقق لإتمامه.',
+    domain_recovery: 'لم يكتمل تغيير النطاق.',
     start_over: 'البدء من جديد',
     start_over_confirmation: 'قد تؤدي إعادة البدء إلى حذف إعداد SSO غير المكتمل. هل تريد المتابعة؟',
     resume_creation:

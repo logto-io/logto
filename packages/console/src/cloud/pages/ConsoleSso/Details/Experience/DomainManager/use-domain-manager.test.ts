@@ -139,6 +139,7 @@ it('adds or resumes a challenge without writing the free-form connector domain f
 });
 
 it('uses POST only for verification, and keeps GET refresh read-only', async () => {
+  jest.useFakeTimers();
   api.get.mockResolvedValue(pending);
   api.post.mockResolvedValue(bound);
   const data = { ...connector, domainVerifications: [pending] };
@@ -157,7 +158,8 @@ it('uses POST only for verification, and keeps GET refresh read-only', async () 
   expect(api.post).not.toHaveBeenCalled();
 
   await act(async () => {
-    await result.current.verify('example.com');
+    jest.advanceTimersByTime(10_000);
+    await Promise.resolve();
   });
   expect(api.post).toHaveBeenCalledWith(
     '/api/me/console-sso/connectors/:connectorId/domains/:domain/verify',
@@ -166,12 +168,12 @@ it('uses POST only for verification, and keeps GET refresh read-only', async () 
   expect(result.current.domains).toEqual([bound]);
 });
 
-it('waits at least 10 seconds between checks and does not overlap manual verification', async () => {
+it('waits at least 10 seconds between checks and does not overlap verification requests', async () => {
   jest.useFakeTimers();
   const now = Date.now();
   expect(getPollDelay(now)).toBe(10_000);
   api.get.mockResolvedValue(pending);
-  // eslint-disable-next-line @silverhand/fp/no-let -- Hold the verification response to exercise concurrent timer and manual actions.
+  // eslint-disable-next-line @silverhand/fp/no-let -- Hold the verification response to exercise concurrent timer actions.
   let completeVerification: (status: ConsoleSsoDomain) => void;
   api.post.mockImplementation(
     async () =>
@@ -194,8 +196,8 @@ it('waits at least 10 seconds between checks and does not overlap manual verific
     await Promise.resolve();
   });
   expect(api.post).toHaveBeenCalledTimes(1);
-  await act(async () => {
-    await result.current.verify('example.com');
+  act(() => {
+    jest.advanceTimersByTime(20_000);
   });
   expect(api.post).toHaveBeenCalledTimes(1);
   await act(async () => {
@@ -206,10 +208,12 @@ it('waits at least 10 seconds between checks and does not overlap manual verific
   act(() => {
     jest.advanceTimersByTime(20_000);
   });
-  expect(api.post).toHaveBeenCalledTimes(1);
+  expect(api.post).toHaveBeenCalledTimes(2);
 });
 
 it('ignores a late verification after removal and starts a fresh challenge on re-add', async () => {
+  jest.useFakeTimers();
+  api.get.mockResolvedValue(pending);
   // eslint-disable-next-line @silverhand/fp/no-let -- Hold a server response until after removal.
   let completeVerification: (status: ConsoleSsoDomain) => void;
   api.post.mockImplementationOnce(
@@ -224,7 +228,14 @@ it('ignores a late verification after removal and starts a fresh challenge on re
   const { result } = renderHook(() => useDomainManager({ data, onUpdated }));
 
   act(() => {
-    void result.current.verify('example.com');
+    result.current.toggle('example.com');
+  });
+  await act(async () => {
+    await Promise.resolve();
+  });
+  await act(async () => {
+    jest.advanceTimersByTime(10_000);
+    await Promise.resolve();
   });
   await act(async () => {
     await result.current.remove('example.com');
@@ -250,7 +261,7 @@ it('ignores a late verification after removal and starts a fresh challenge on re
   expect(result.current.domains).toEqual([replacement]);
 });
 
-it('treats DNS failure as retryable polling and provider failure as blocking', async () => {
+it('preserves DNS and provider error details for inline feedback', async () => {
   const dnsError = new ResponseError({
     status: 502,
     clone: () => ({
@@ -269,11 +280,13 @@ it('treats DNS failure as retryable polling and provider failure as blocking', a
       }),
     }),
   } as Response);
-  expect(await readDomainError(dnsError)).toMatchObject({ blocksPolling: false });
-  expect(await readDomainError(providerError)).toMatchObject({ blocksPolling: true });
+  expect(await readDomainError(dnsError)).toMatchObject({ code: 'console_sso.dns_lookup_failed' });
+  expect(await readDomainError(providerError)).toMatchObject({
+    code: 'console_sso.invalid_config',
+  });
 });
 
-it('preserves proven but unbound status and pauses automatic checks on a provider error', async () => {
+it('preserves proven but unbound status and retries after a provider error', async () => {
   jest.useFakeTimers();
   const providerError = new ResponseError({
     status: 400,
@@ -289,22 +302,25 @@ it('preserves proven but unbound status and pauses automatic checks on a provide
   const data = { ...connector, domainVerifications: [pending] };
   const { result } = renderHook(() => useDomainManager({ data, onUpdated }));
 
-  await act(async () => {
-    await result.current.verify('example.com');
-  });
-  expect(result.current.domains[0]).toMatchObject({ isBound: false, verifiedAt: 123 });
-  expect(result.current.errors['example.com']).toMatchObject({
-    code: 'console_sso.invalid_config',
-    blocksPolling: true,
-  });
   act(() => {
     result.current.toggle('example.com');
   });
   await act(async () => {
-    jest.advanceTimersByTime(30_000);
     await Promise.resolve();
   });
-  expect(api.post).toHaveBeenCalledTimes(1);
+  await act(async () => {
+    jest.advanceTimersByTime(10_000);
+    await Promise.resolve();
+  });
+  expect(result.current.domains[0]).toMatchObject({ isBound: false, verifiedAt: 123 });
+  expect(result.current.errors['example.com']).toMatchObject({
+    code: 'console_sso.invalid_config',
+  });
+  await act(async () => {
+    jest.advanceTimersByTime(10_000);
+    await Promise.resolve();
+  });
+  expect(api.post).toHaveBeenCalledTimes(2);
 });
 
 it('stops pending verification polling when the page unmounts', async () => {
@@ -350,6 +366,7 @@ it('expands the pending row to show the TXT record and copies its exact value', 
   });
   expect(header.getAttribute('aria-expanded')).toBe('true');
   expect(screen.getByText('_logto-cloud-sso.example.com')).not.toBeNull();
+  expect(screen.queryByText('admin_console.domain.custom.verify_domain')).toBeNull();
   const value = screen.getByText('stable-token');
   const copyButton = value.closest('[role="button"]')?.querySelector('button');
   if (!copyButton) {
@@ -384,6 +401,7 @@ it('expands an already bound domain without inventing a TXT challenge', async ()
 });
 
 it('offers cleanup recovery when Core is bound but its temporary proof remains', async () => {
+  jest.useFakeTimers();
   api.get.mockResolvedValue(bound);
   api.post.mockResolvedValue(bound);
   render(
@@ -404,8 +422,9 @@ it('offers cleanup recovery when Core is bound but its temporary proof remains',
   expect(screen.getByText('admin_console.cloud.console_sso.domain_recovery')).not.toBeNull();
   expect(api.post).not.toHaveBeenCalled();
 
+  expect(screen.queryByText('admin_console.domain.custom.verify_domain')).toBeNull();
   await act(async () => {
-    fireEvent.click(screen.getByText('admin_console.domain.custom.verify_domain'));
+    jest.advanceTimersByTime(10_000);
     await Promise.resolve();
   });
   expect(api.post).toHaveBeenCalledTimes(1);

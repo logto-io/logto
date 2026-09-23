@@ -12,16 +12,14 @@ const cloud = {
     domain_dns_instructions:
       'Alan adı sahipliğini doğrulamak için bu TXT kaydını DNS sağlayıcınıza ekleyin.',
     domain_waiting_for_dns: 'TXT kaydı bekleniyor. Her 10 saniyede bir yeniden kontrol ediyoruz.',
-    domain_proven_unbound:
-      'Alan adı sahipliği doğrulandı ancak bağlama tamamlanmadı. Sorunu giderip yeniden deneyin.',
+    domain_proven_unbound: 'Alan adı sahipliği doğrulandı ancak bağlama tamamlanmadı.',
     domain_remove_description:
       '{{domain}} Console SSO üzerinden kaldırılsın mı? Bağlı bir alan adının kaldırılması, e-posta adresleri için SSO keşfini durdurur.',
     domain_invalid: 'Geçerli bir e-posta alan adı girin.',
     domain_conflict: 'Bu alan adı başka bir Console SSO bağlayıcısına zaten bağlı.',
     domain_invalid_provider: 'Bu alan adını bağlamadan önce Bağlantı ayarlarını tamamlayın.',
     domain_dns_timeout: 'DNS kontrolü başarısız oldu. Otomatik olarak yeniden deneyeceğiz.',
-    domain_recovery:
-      'Alan adı değişikliği tamamlanmadı. Bitirmek için doğrulamayı yeniden deneyin.',
+    domain_recovery: 'Alan adı değişikliği tamamlanmadı.',
     start_over: 'Yeniden başla',
     start_over_confirmation:
       'Baştan başlamak, tamamlanmamış SSO yapılandırmanızı silebilir. Devam etmek istiyor musunuz?',

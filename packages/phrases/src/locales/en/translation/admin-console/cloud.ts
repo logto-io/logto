@@ -12,15 +12,14 @@ const cloud = {
       'This domain is active for Console SSO. Its TXT challenge has been removed.',
     domain_dns_instructions: 'Add this TXT record to your DNS provider to verify domain ownership.',
     domain_waiting_for_dns: 'Waiting for the TXT record. We check again every 10 seconds.',
-    domain_proven_unbound:
-      'Domain ownership is verified, but binding is incomplete. Retry after resolving the issue.',
+    domain_proven_unbound: 'Domain ownership is verified, but binding is incomplete.',
     domain_remove_description:
       'Remove {{domain}} from Console SSO? Removing a bound domain stops SSO discovery for its email addresses.',
     domain_invalid: 'Enter a valid email domain.',
     domain_conflict: 'This domain is already bound to another Console SSO connector.',
     domain_invalid_provider: 'Complete the Connection settings before binding this domain.',
     domain_dns_timeout: 'The DNS check failed. We will retry automatically.',
-    domain_recovery: 'The domain change is incomplete. Retry verification to finish it.',
+    domain_recovery: 'The domain change is incomplete.',
     start_over: 'Start over',
     start_over_confirmation:
       'Starting over may delete your incomplete SSO configuration. Do you want to continue?',

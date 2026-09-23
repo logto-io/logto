@@ -9,7 +9,6 @@ import useCurrentUser from '@/hooks/use-current-user';
 export type DomainError = {
   code?: string;
   message: string;
-  blocksPolling: boolean;
 };
 
 const checkInterval = 10_000;
@@ -36,13 +35,11 @@ export const readDomainError = async (error: unknown): Promise<DomainError> => {
       return {
         message: body.message,
         ...(typeof code === 'string' && { code }),
-        blocksPolling: code !== 'console_sso.dns_lookup_failed',
       };
     }
   }
   return {
     message: error instanceof Error ? error.message : String(error),
-    blocksPolling: true,
   };
 };
 
@@ -95,6 +92,9 @@ export const useDomainManager = ({ data, onUpdated }: Props) => {
   }, [data, localDomains, removed]);
 
   const active = domains.find(({ domain }) => domain === expanded);
+  const activeVerification = data.domainVerifications.find(
+    ({ domain }) => domain === active?.domain
+  );
 
   const refreshDomain = useCallback(
     async (domain: string, epoch: number) => {
@@ -127,7 +127,7 @@ export const useDomainManager = ({ data, onUpdated }: Props) => {
       if (inFlight.current) {
         return;
       }
-      // eslint-disable-next-line @silverhand/fp/no-mutation -- The ref prevents overlapping manual and timer requests.
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- The ref prevents overlapping timer requests.
       inFlight.current = true;
       const epoch = requestEpoch.current;
       setChecking(domain);
@@ -163,21 +163,21 @@ export const useDomainManager = ({ data, onUpdated }: Props) => {
   );
 
   useEffect(() => {
-    if (
-      !active ||
-      active.isBound ||
-      deleting !== undefined ||
-      errors[active.domain]?.blocksPolling === true
-    ) {
+    if (!active || (active.isBound && !activeVerification) || deleting !== undefined || checking) {
       return;
     }
-    const timer = window.setTimeout(() => {
-      void verify(active.domain);
-    }, getPollDelay(active.lastCheckedAt));
+    const timer = window.setTimeout(
+      () => {
+        void verify(active.domain);
+      },
+      getPollDelay(
+        active.isBound ? (activeVerification?.lastCheckedAt ?? null) : active.lastCheckedAt
+      )
+    );
     return () => {
       window.clearTimeout(timer);
     };
-  }, [active, checking, deleting, errors, verify]);
+  }, [active, activeVerification, checking, deleting, verify]);
 
   const add = async () => {
     const domain = normalizeDomain(input);
@@ -264,7 +264,6 @@ export const useDomainManager = ({ data, onUpdated }: Props) => {
     checking,
     deleting,
     add,
-    verify,
     toggle,
     remove,
   };

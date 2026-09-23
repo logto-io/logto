@@ -15,15 +15,14 @@ const cloud = {
     domain_waiting_for_dns:
       'Aguardando o registro TXT. Verificaremos novamente a cada 10 segundos.',
     domain_proven_unbound:
-      'A propriedade do domínio foi verificada, mas a vinculação está incompleta. Resolva o problema e tente novamente.',
+      'A propriedade do domínio foi verificada, mas a vinculação está incompleta.',
     domain_remove_description:
       'Remover {{domain}} do Console SSO? A remoção de um domínio vinculado interrompe a descoberta de SSO para seus endereços de e-mail.',
     domain_invalid: 'Insira um domínio de e-mail válido.',
     domain_conflict: 'Este domínio já está vinculado a outro conector do Console SSO.',
     domain_invalid_provider: 'Conclua as configurações de conexão antes de vincular este domínio.',
     domain_dns_timeout: 'A verificação de DNS falhou. Tentaremos novamente automaticamente.',
-    domain_recovery:
-      'A alteração do domínio está incompleta. Tente verificar novamente para concluí-la.',
+    domain_recovery: 'A alteração do domínio está incompleta.',
     start_over: 'Recomeçar',
     start_over_confirmation:
       'Recomeçar pode excluir sua configuração de SSO incompleta. Deseja continuar?',
