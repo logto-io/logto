@@ -24,10 +24,17 @@ export const shouldShowIdpInitiatedAuthTab = ({
 
 type ShouldShowIdpInitiatedAuthUpsellOptions = {
   readonly isCloud: boolean;
-  readonly isIdpInitiatedSsoEnabled: boolean;
+  /** Whether the license installed on this self-hosted deployment grants `idpInitiatedSso`. */
+  readonly isIdpInitiatedSsoLicensed: boolean;
 };
 
+/**
+ * Whether the IdP-initiated SSO tab shows the self-hosted upsell instead of the config form.
+ *
+ * On Cloud the tab only appears when the subscription entitles it, so there is never an upsell. On
+ * a self-hosted deployment the installed license decides; without one, the upsell is shown.
+ */
 export const shouldShowIdpInitiatedAuthUpsell = ({
   isCloud,
-  isIdpInitiatedSsoEnabled,
-}: ShouldShowIdpInitiatedAuthUpsellOptions) => !isCloud && !isIdpInitiatedSsoEnabled;
+  isIdpInitiatedSsoLicensed,
+}: ShouldShowIdpInitiatedAuthUpsellOptions) => !isCloud && !isIdpInitiatedSsoLicensed;
