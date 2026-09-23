@@ -17,7 +17,6 @@ import styles from './index.module.scss';
 
 type Props = {
   readonly backLink: To;
-  readonly isGlobal?: boolean;
   readonly backLinkTitle?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   readonly isLoading?: boolean;
   readonly error?: RequestError;
@@ -28,7 +27,6 @@ type Props = {
 
 function DetailsPage({
   backLink,
-  isGlobal,
   backLinkTitle,
   isLoading,
   error,
@@ -40,7 +38,6 @@ function DetailsPage({
     <div className={classNames(styles.container, className)}>
       <TextLink
         to={backLink}
-        isGlobal={isGlobal}
         icon={
           <FlipOnRtl>
             <Back />

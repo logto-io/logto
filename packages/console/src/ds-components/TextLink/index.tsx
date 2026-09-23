@@ -13,7 +13,6 @@ import styles from './index.module.scss';
 export type Props = AnchorHTMLAttributes<HTMLAnchorElement> &
   Partial<LinkProps> & {
     readonly icon?: ReactNode;
-    readonly isGlobal?: boolean;
     readonly isTrailingIcon?: boolean;
     /**
      * If the link will be opened in a new tab. This prop will override the `target`
@@ -33,7 +32,6 @@ function TextLink({
   to,
   children,
   icon,
-  isGlobal = false,
   isTrailingIcon = false,
   className,
   targetBlank,
@@ -55,7 +53,7 @@ function TextLink({
 
   if (to) {
     return (
-      <Link to={isGlobal ? to : getTo(to)} {...props}>
+      <Link to={getTo(to)} {...props}>
         {icon}
         {children}
       </Link>

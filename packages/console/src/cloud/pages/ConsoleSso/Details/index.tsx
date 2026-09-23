@@ -85,7 +85,6 @@ function Details() {
         <OverlayScrollbar className={styles.scrollable}>
           <div className={styles.wrapper}>
             <DetailsPage
-              isGlobal
               backLink={GlobalRoute.ConsoleSso}
               backLinkTitle="cloud.console_sso.back_to_list"
             >
@@ -137,11 +136,14 @@ function Details() {
                     ]}
                   />
                   <TabNav>
-                    <TabNavItem isGlobal href={getConsoleSsoDetailsPath(connectorId)}>
+                    <TabNavItem
+                      isActive={tab === ConsoleSsoDetailsTab.Connection}
+                      href={getConsoleSsoDetailsPath(connectorId)}
+                    >
                       <DynamicT forKey="enterprise_sso_details.tab_connection" />
                     </TabNavItem>
                     <TabNavItem
-                      isGlobal
+                      isActive={tab === ConsoleSsoDetailsTab.Experience}
                       href={getConsoleSsoDetailsPath(connectorId, ConsoleSsoDetailsTab.Experience)}
                     >
                       <DynamicT forKey="enterprise_sso_details.tab_experience" />
