@@ -1,5 +1,7 @@
 const cloud = {
   console_sso: {
+    back_to_list: 'Console SSO に戻る',
+    domain_placeholder: 'メールドメインの検証はここで利用できるようになります。',
     create: 'コネクターを追加',
     title: 'コンソール SSO',
     description:

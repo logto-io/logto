@@ -16,6 +16,7 @@ import OneTimeTokenLanding from '@/pages/OneTimeTokenLanding';
 
 import styles from './AppRoutes.module.scss';
 import ConsoleSso from './pages/ConsoleSso';
+import ConsoleSsoDetails from './pages/ConsoleSso/Details';
 import DeleteAccount from './pages/DeleteAccount';
 import EnterpriseSubscription from './pages/EnterpriseSubscription';
 import BillingHistory from './pages/EnterpriseSubscription/BillingHistory';
@@ -46,7 +47,13 @@ function AppRoutes() {
           <Route element={<ProtectedRoutes />}>
             {/* Console SSO */}
             {isCloud && isDevFeaturesEnabled && (
-              <Route path={GlobalRoute.ConsoleSso} element={<ConsoleSso />} />
+              <>
+                <Route path={GlobalRoute.ConsoleSso} element={<ConsoleSso />} />
+                <Route
+                  path={`${GlobalRoute.ConsoleSso}/:connectorId/:tab?`}
+                  element={<ConsoleSsoDetails />}
+                />
+              </>
             )}
             <Route path={GlobalRoute.Profile + '/*'} element={<RedirectToAccountCenter />} />
             <Route

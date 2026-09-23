@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import useMatchTenantPath from '@/hooks/use-tenant-pathname';
 import { onKeyDownHandler } from '@/utils/a11y';
@@ -9,6 +9,7 @@ import styles from './TabNavItem.module.scss';
 
 type BaseProps = {
   isActive?: boolean;
+  isGlobal?: boolean;
   errorCount?: number;
   children: React.ReactNode;
 };
@@ -29,20 +30,22 @@ function TabNavItem<Paths extends string>({
   children,
   href,
   isActive,
+  isGlobal = false,
   errorCount = 0,
   onClick,
 }: Props<Paths>) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { match, getTo } = useMatchTenantPath();
+  const { pathname } = useLocation();
   // `isActive` is used to override the default behavior of `match` when the
   // tab is not a link or the link is a relative path.
-  const selected = isActive ?? (href ? match(href) : false);
+  const selected = isActive ?? (href ? (isGlobal ? pathname === href : match(href)) : false);
 
   return (
     <div className={styles.item}>
       <div className={classNames(styles.link, selected && styles.selected)}>
         {href ? (
-          <Link to={getTo(href)}>{children}</Link>
+          <Link to={isGlobal ? href : getTo(href)}>{children}</Link>
         ) : (
           // eslint-disable-next-line jsx-a11y/anchor-is-valid
           <a role="tab" tabIndex={0} onKeyDown={onKeyDownHandler(onClick)} onClick={onClick}>

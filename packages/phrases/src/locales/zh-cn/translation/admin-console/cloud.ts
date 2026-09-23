@@ -1,5 +1,7 @@
 const cloud = {
   console_sso: {
+    back_to_list: '返回控制台 SSO',
+    domain_placeholder: '邮箱域名验证功能将在此处提供。',
     create: '添加连接器',
     title: '控制台 SSO',
     description: '配置你自己的身份提供商，通过单点登录访问 Logto Console。',

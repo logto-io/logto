@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import Plus from '@/assets/icons/plus.svg?react';
 import EnterpriseSsoConnectorEmptyDark from '@/assets/images/sso-connector-empty-dark.svg?react';
@@ -19,11 +20,13 @@ import connectorStyles from '@/pages/EnterpriseSso/index.module.scss';
 import pageLayout from '@/scss/page-layout.module.scss';
 
 import CreationModal from './CreationModal';
+import { getConsoleSsoDetailsPath } from './Details/paths';
 import DomainTags from './DomainTags';
 import styles from './index.module.scss';
 import { useConsoleSsoConnectors } from './use-console-sso';
 
 function ConsoleSso() {
+  const navigate = useNavigate();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { user, error: userError, reload } = useCurrentUser();
   const { data, error, isLoading, mutate } = useConsoleSsoConnectors();
@@ -93,8 +96,8 @@ function ConsoleSso() {
                   render: (connector) => <DomainTags data={connector} />,
                 },
               ]}
-              rowClickHandler={() => {
-                // TODO (LOG-14299): Navigate to this connector's configuration details.
+              rowClickHandler={({ id }) => {
+                navigate(getConsoleSsoDetailsPath(id));
               }}
               placeholder={
                 <TablePlaceholder
@@ -116,9 +119,11 @@ function ConsoleSso() {
           <CreationModal
             key={user.id}
             userId={user.id}
-            onClose={() => {
+            onClose={(id) => {
               setCreationUserId(undefined);
-              // TODO (LOG-14299): Navigate to the created connector's configuration details.
+              if (id) {
+                navigate(getConsoleSsoDetailsPath(id));
+              }
             }}
           />
         )}
