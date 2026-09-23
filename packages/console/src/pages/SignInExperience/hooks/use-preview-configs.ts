@@ -1,11 +1,12 @@
 import type { SignInExperience } from '@logto/schemas';
 import { useEffect, useState, useMemo } from 'react';
 
-import { isCloud } from '@/consts/env';
 import useDebounce from '@/hooks/use-debounce';
 
 import { sieFormDataParser } from '../PageContent/utils/parser';
 import type { SignInExperienceForm } from '../types';
+
+import useBrandingEntitlements from './use-branding-entitlements';
 
 const usePreviewConfigs = (
   formData: SignInExperienceForm,
@@ -14,6 +15,7 @@ const usePreviewConfigs = (
   timeDelay = 400 // Render the preview after the user stops typing in the custom CSS editing box for two seconds.
 ) => {
   const debounce = useDebounce(timeDelay);
+  const { isHideLogtoBrandingAvailable } = useBrandingEntitlements();
   const { customCss, ...restFormData } = formData;
   const [debouncedCustomCss, setDebouncedCustomCss] = useState(customCss);
 
@@ -33,9 +35,9 @@ const usePreviewConfigs = (
         ...restFormData,
         customCss: debouncedCustomCss,
       },
-      { isCloud }
+      { isHideLogtoBrandingAvailable }
     );
-  }, [restFormData, debouncedCustomCss, isDirty, data]);
+  }, [isDirty, restFormData, debouncedCustomCss, isHideLogtoBrandingAvailable, data]);
 };
 
 export default usePreviewConfigs;

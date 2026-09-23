@@ -6,6 +6,7 @@ import type { EnvSet } from '#src/env-set/index.js';
 import type { CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
 import type { LogtoConfigLibrary } from '#src/libraries/logto-config.js';
+import type { SubscriptionLibrary } from '#src/libraries/subscription.js';
 
 import type Libraries from './Libraries.js';
 import type Queries from './Queries.js';
@@ -21,6 +22,7 @@ export default abstract class TenantContext {
   public abstract readonly connectors: ConnectorLibrary;
   public abstract readonly libraries: Libraries;
   public abstract readonly sentinel: Sentinel;
+  public abstract readonly subscription: SubscriptionLibrary;
   public abstract invalidateCache(): Promise<void>;
   public abstract scheduleSigningKeyRotation(timestamp: number): Promise<void>;
 }

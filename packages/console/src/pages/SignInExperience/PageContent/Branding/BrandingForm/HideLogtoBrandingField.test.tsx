@@ -43,7 +43,7 @@ function Editor() {
   return (
     <FormProvider {...form}>
       <input aria-label="Name" {...form.register('name')} />
-      <HideLogtoBrandingField variant="oss" isEnabledInCloud={false} />
+      <HideLogtoBrandingField variant="oss-upsell" isEnabled={false} />
       <UnsavedChangesAlertModal
         hasUnsavedChanges={form.formState.isDirty}
         parentPath="/console/sign-in-experience"

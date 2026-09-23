@@ -4,7 +4,9 @@ import {
   ForgotPasswordMethod,
   MfaFactor,
   MfaPolicy,
+  resolveLicenseQuota,
   type AccountCenter,
+  type LicenseQuota,
   type SignInExperience,
   type CreateSignInExperience,
 } from '@logto/schemas';
@@ -28,6 +30,8 @@ import {
   mockDemoSocialConnector,
 } from '#src/__mocks__/index.js';
 import { EnvSet } from '#src/env-set/index.js';
+import LicenseReader from '#src/license/LicenseReader.js';
+import { buildLicensePayload } from '#src/test-utils/license.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -174,6 +178,20 @@ const createSignUpProfileFieldsRequester = (
   });
 
   return { requester, updateDefaultSignInExperience, normalizeProfileFields };
+};
+
+/**
+ * Install a license on the self-hosted deployment under test, granting the given entitlements.
+ * Stubbing the reader keeps the database and the signature check out of these route tests.
+ */
+const installLicense = (quota: Partial<LicenseQuota>) => {
+  const payload = buildLicensePayload({ quota });
+
+  jest.spyOn(LicenseReader.shared, 'read').mockResolvedValue({
+    payload,
+    installedAt: new Date().toISOString(),
+    quota: resolveLicenseQuota(payload.quota),
+  });
 };
 
 const createCustomUiCspRequester = async ({
@@ -950,6 +968,7 @@ describe('PATCH /sign-in-exp signUpProfileFields', () => {
 
 describe('PATCH /sign-in-exp customUiCsp', () => {
   afterEach(() => {
+    jest.restoreAllMocks();
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after each feature-gate test.
     (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
       originalIsDevFeaturesEnabled;
@@ -1060,6 +1079,79 @@ describe('PATCH /sign-in-exp customUiCsp', () => {
     expect(response.status).toEqual(400);
     expect(updateDefaultSignInExperience).not.toHaveBeenCalled();
     expect(guardTenantUsageByKey).not.toHaveBeenCalled();
+  });
+
+  it('should reject hiding the Logto branding outside Cloud without a license', async () => {
+    const { requester, updateDefaultSignInExperience } = await createCustomUiCspRequester({
+      isCloud: false,
+    });
+
+    const response = await requester.patch('/sign-in-exp').send({ hideLogtoBranding: true });
+
+    expect(response.status).toEqual(400);
+    expect(updateDefaultSignInExperience).not.toHaveBeenCalled();
+  });
+
+  it('should allow hiding the Logto branding outside Cloud with a license that grants it', async () => {
+    installLicense({ hideLogtoBranding: true });
+    const { requester, updateDefaultSignInExperience } = await createCustomUiCspRequester({
+      isCloud: false,
+    });
+
+    const response = await requester.patch('/sign-in-exp').send({ hideLogtoBranding: true });
+
+    expect(response.status).toEqual(200);
+    expect(updateDefaultSignInExperience).toHaveBeenCalledWith({ hideLogtoBranding: true });
+  });
+
+  it('should reject hiding the Logto branding outside Cloud with a license that only grants Bring your UI', async () => {
+    installLicense({ bringYourUi: true });
+    const { requester, updateDefaultSignInExperience } = await createCustomUiCspRequester({
+      isCloud: false,
+    });
+
+    const response = await requester.patch('/sign-in-exp').send({ hideLogtoBranding: true });
+
+    expect(response.status).toEqual(400);
+    expect(updateDefaultSignInExperience).not.toHaveBeenCalled();
+  });
+
+  it('should allow non-empty Custom UI CSP updates outside Cloud with a license that grants Bring your UI', async () => {
+    installLicense({ bringYourUi: true });
+    const { requester, updateDefaultSignInExperience } = await createCustomUiCspRequester({
+      isCloud: false,
+    });
+    const customUiCsp = { scriptSrc: ['https://example.com'] };
+
+    const response = await requester.patch('/sign-in-exp').send({ customUiCsp });
+
+    expect(response.status).toEqual(200);
+    expect(updateDefaultSignInExperience).toHaveBeenCalledWith({ customUiCsp });
+  });
+
+  it('should reject non-empty Custom UI CSP updates outside Cloud with a license that only grants hiding the branding', async () => {
+    installLicense({ hideLogtoBranding: true });
+    const { requester, updateDefaultSignInExperience } = await createCustomUiCspRequester({
+      isCloud: false,
+    });
+
+    const response = await requester.patch('/sign-in-exp').send({
+      customUiCsp: { scriptSrc: ['https://example.com'] },
+    });
+
+    expect(response.status).toEqual(400);
+    expect(updateDefaultSignInExperience).not.toHaveBeenCalled();
+  });
+
+  it('should not read the license on Cloud', async () => {
+    const read = jest.spyOn(LicenseReader.shared, 'read');
+    const { requester, guardTenantUsageByKey } = await createCustomUiCspRequester();
+
+    const response = await requester.patch('/sign-in-exp').send({ hideLogtoBranding: true });
+
+    expect(response.status).toEqual(200);
+    expect(read).not.toHaveBeenCalled();
+    expect(guardTenantUsageByKey).toHaveBeenCalledWith('bringYourUiEnabled');
   });
 
   it('should allow clearing Custom UI CSP config without checking quota', async () => {
