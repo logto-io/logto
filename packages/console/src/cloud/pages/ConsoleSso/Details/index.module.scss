@@ -9,11 +9,14 @@
 }
 
 .scrollable {
+  flex: 1;
+  min-height: 0;
   width: 100%;
 }
 
 .wrapper {
   @include _.main-content-width;
+  height: 100%;
   width: 100%;
-  padding: _.unit(3) _.unit(6);
+  padding: _.unit(3) _.unit(6) 0;
 }
