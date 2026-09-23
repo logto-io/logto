@@ -27,7 +27,7 @@ import {
   samlProviderConfigGuard,
 } from '@/pages/EnterpriseSsoDetails/types/saml';
 
-import styles from './Connection.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly data: ConsoleSsoConnector;
