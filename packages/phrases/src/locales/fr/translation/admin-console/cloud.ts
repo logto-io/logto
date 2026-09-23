@@ -8,8 +8,6 @@ const cloud = {
     domain_bound: 'Associé',
     domain_pending: 'Vérification en cours',
     domain_add_placeholder: 'Ajouter un domaine de messagerie',
-    domain_membership_notice:
-      'Les domaines vérifiés contrôlent la découverte SSO de Logto Cloud Console. Ils ne donnent pas accès aux tenants.',
     domain_bound_description:
       'Ce domaine est actif pour Console SSO. Son enregistrement TXT de vérification a été supprimé.',
     domain_dns_instructions:

@@ -8,8 +8,6 @@ const cloud = {
     domain_bound: 'Bound',
     domain_pending: 'Verifying',
     domain_add_placeholder: 'Add an email domain',
-    domain_membership_notice:
-      'Verified domains control Logto Cloud Console SSO discovery. They do not grant tenant membership.',
     domain_bound_description:
       'This domain is active for Console SSO. Its TXT challenge has been removed.',
     domain_dns_instructions: 'Add this TXT record to your DNS provider to verify domain ownership.',

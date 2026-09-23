@@ -7,8 +7,6 @@ const cloud = {
     domain_bound: '연결됨',
     domain_pending: '확인 중',
     domain_add_placeholder: '이메일 도메인 추가',
-    domain_membership_notice:
-      '확인된 도메인은 Logto Cloud Console SSO 검색에 사용되며 테넌트 멤버십을 부여하지 않습니다.',
     domain_bound_description:
       '이 도메인은 Console SSO에서 활성 상태입니다. TXT 확인 레코드는 삭제되었습니다.',
     domain_dns_instructions: '도메인 소유권을 확인하려면 DNS 공급자에 이 TXT 레코드를 추가하세요.',

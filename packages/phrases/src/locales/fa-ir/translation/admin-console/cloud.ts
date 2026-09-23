@@ -8,8 +8,6 @@ const cloud = {
     domain_bound: 'متصل',
     domain_pending: 'در حال تأیید',
     domain_add_placeholder: 'افزودن دامنه ایمیل',
-    domain_membership_notice:
-      'دامنه\u200Cهای تأییدشده شناسایی SSO در Logto Cloud Console را کنترل می\u200Cکنند و عضویت در مستأجر اعطا نمی\u200Cکنند.',
     domain_bound_description:
       'این دامنه برای Console SSO فعال است. رکورد TXT تأیید آن حذف شده است.',
     domain_dns_instructions:

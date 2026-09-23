@@ -8,8 +8,6 @@ const cloud = {
     domain_bound: 'Привязан',
     domain_pending: 'Проверяется',
     domain_add_placeholder: 'Добавить домен электронной почты',
-    domain_membership_notice:
-      'Проверенные домены управляют обнаружением SSO в Logto Cloud Console. Они не предоставляют членство в арендаторе.',
     domain_bound_description:
       'Этот домен активен для Console SSO. Его TXT-запись для проверки удалена.',
     domain_dns_instructions:

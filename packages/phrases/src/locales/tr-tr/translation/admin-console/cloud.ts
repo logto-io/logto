@@ -8,8 +8,6 @@ const cloud = {
     domain_bound: 'Bağlandı',
     domain_pending: 'Doğrulanıyor',
     domain_add_placeholder: 'E-posta alan adı ekle',
-    domain_membership_notice:
-      'Doğrulanmış alan adları Logto Cloud Console SSO keşfini kontrol eder. Kiracı üyeliği vermezler.',
     domain_bound_description: 'Bu alan adı Console SSO için etkin. TXT doğrulama kaydı kaldırıldı.',
     domain_dns_instructions:
       'Alan adı sahipliğini doğrulamak için bu TXT kaydını DNS sağlayıcınıza ekleyin.',

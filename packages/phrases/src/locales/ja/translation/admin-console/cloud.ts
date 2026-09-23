@@ -8,8 +8,6 @@ const cloud = {
     domain_bound: 'バインド済み',
     domain_pending: '検証中',
     domain_add_placeholder: 'メールドメインを追加',
-    domain_membership_notice:
-      '検証済みドメインは Logto Cloud Console SSO の検出に使用されます。テナントのメンバー権限は付与されません。',
     domain_bound_description:
       'このドメインは Console SSO で有効です。TXT 検証レコードは削除されました。',
     domain_dns_instructions:

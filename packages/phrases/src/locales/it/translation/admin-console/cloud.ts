@@ -8,8 +8,6 @@ const cloud = {
     domain_bound: 'Associato',
     domain_pending: 'Verifica in corso',
     domain_add_placeholder: 'Aggiungi un dominio email',
-    domain_membership_notice:
-      'I domini verificati controllano il rilevamento SSO di Logto Cloud Console. Non concedono accesso come membro di un tenant.',
     domain_bound_description:
       'Questo dominio è attivo per Console SSO. Il suo record TXT di verifica è stato rimosso.',
     domain_dns_instructions:

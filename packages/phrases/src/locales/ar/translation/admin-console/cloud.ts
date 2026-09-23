@@ -8,8 +8,6 @@ const cloud = {
     domain_bound: 'مرتبط',
     domain_pending: 'جارٍ التحقق',
     domain_add_placeholder: 'إضافة نطاق بريد إلكتروني',
-    domain_membership_notice:
-      'تتحكم النطاقات المتحقق منها في اكتشاف تسجيل الدخول الموحد إلى Logto Cloud Console. وهي لا تمنح عضوية المستأجر.',
     domain_bound_description:
       'هذا النطاق نشط لتسجيل الدخول الموحد إلى Console. تمت إزالة سجل TXT الخاص بالتحقق.',
     domain_dns_instructions: 'أضف سجل TXT هذا لدى مزود DNS للتحقق من ملكية النطاق.',

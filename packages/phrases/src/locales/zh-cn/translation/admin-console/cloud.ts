@@ -7,8 +7,6 @@ const cloud = {
     domain_bound: '已绑定',
     domain_pending: '验证中',
     domain_add_placeholder: '添加邮箱域名',
-    domain_membership_notice:
-      '已验证的域名用于 Logto Cloud Console SSO 发现，不会授予租户成员身份。',
     domain_bound_description: '此域名已用于 Console SSO。TXT 验证记录已被移除。',
     domain_dns_instructions: '在 DNS 服务商处添加此 TXT 记录以验证域名所有权。',
     domain_waiting_for_dns: '等待 TXT 记录生效。我们每 10 秒检查一次。',

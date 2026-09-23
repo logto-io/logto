@@ -8,8 +8,6 @@ const cloud = {
     domain_bound: 'ผูกแล้ว',
     domain_pending: 'กำลังตรวจสอบ',
     domain_add_placeholder: 'เพิ่มโดเมนอีเมล',
-    domain_membership_notice:
-      'โดเมนที่ยืนยันแล้วใช้ควบคุมการค้นพบ SSO ใน Logto Cloud Console และไม่ได้ให้สิทธิ์สมาชิกในเทนเนนต์',
     domain_bound_description:
       'โดเมนนี้ใช้งานกับ Console SSO แล้ว และได้ลบระเบียน TXT สำหรับยืนยันแล้ว',
     domain_dns_instructions:

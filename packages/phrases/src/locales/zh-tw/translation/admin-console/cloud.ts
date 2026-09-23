@@ -7,8 +7,6 @@ const cloud = {
     domain_bound: '已綁定',
     domain_pending: '驗證中',
     domain_add_placeholder: '新增電子郵件網域',
-    domain_membership_notice:
-      '已驗證的網域用於 Logto Cloud Console SSO 探索，不會授予租戶成員資格。',
     domain_bound_description: '此網域已用於 Console SSO。TXT 驗證記錄已移除。',
     domain_dns_instructions: '請在 DNS 服務供應商新增此 TXT 記錄，以驗證網域擁有權。',
     domain_waiting_for_dns: '正在等待 TXT 記錄。我們每 10 秒檢查一次。',

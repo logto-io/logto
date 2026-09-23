@@ -185,10 +185,7 @@ function DomainManager({ data, onUpdated }: Props) {
   };
 
   return (
-    <FormField
-      title="enterprise_sso_details.email_domain_field_name"
-      description="cloud.console_sso.domain_membership_notice"
-    >
+    <FormField title="enterprise_sso_details.email_domain_field_name">
       <div className={styles.addRow}>
         <TextInput
           value={input}

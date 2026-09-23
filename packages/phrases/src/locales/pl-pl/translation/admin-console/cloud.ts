@@ -8,8 +8,6 @@ const cloud = {
     domain_bound: 'Powiązana',
     domain_pending: 'Weryfikowanie',
     domain_add_placeholder: 'Dodaj domenę e-mail',
-    domain_membership_notice:
-      'Zweryfikowane domeny sterują wykrywaniem SSO w Logto Cloud Console. Nie przyznają członkostwa w dzierżawie.',
     domain_bound_description:
       'Ta domena jest aktywna dla Console SSO. Jej rekord TXT został usunięty.',
     domain_dns_instructions:
