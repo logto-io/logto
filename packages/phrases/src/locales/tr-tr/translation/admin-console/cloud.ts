@@ -1,8 +1,16 @@
 const cloud = {
   console_sso: {
+    create: 'Bağlayıcı ekle',
     title: 'Konsol SSO',
     description:
       'Logto Console’da tek oturum açma ile oturum açmak için kendi kimlik sağlayıcınızı yapılandırın.',
+    domain_bound: 'Doğrulandı',
+    domain_pending: 'Doğrulama bekleniyor',
+    start_over: 'Yeniden başla',
+    start_over_confirmation:
+      'Baştan başlamak, tamamlanmamış SSO yapılandırmanızı silebilir. Devam etmek istiyor musunuz?',
+    resume_creation:
+      'Tamamlanmamış bir oluşturma işlemi bulundu. Bu bağlayıcıyı kurtarmak için aynı sağlayıcıyla devam edin.',
   },
   general: {
     onboarding: 'Başlatma',

@@ -77,9 +77,10 @@ function Radio({
         isDisabled && styles.disabled,
         className
       )}
-      // eslint-disable-next-line jsx-a11y/role-has-required-aria-props
       role="radio"
-      tabIndex={tabIndex}
+      aria-checked={Boolean(isChecked)}
+      aria-disabled={isDisabled ? true : undefined}
+      tabIndex={isDisabled ? -1 : tabIndex}
       onClick={isDisabled ? undefined : onClick}
       onKeyPress={handleKeyPress}
     >

@@ -13,10 +13,19 @@ type Props = {
   readonly className?: string;
   readonly size: ConnectorRadioGroupSize;
   readonly connectors: SsoConnectorProviderDetail[];
+  readonly isProviderDisabled?: (providerName: string) => boolean;
   readonly onChange: (providerName: string) => void;
 };
 
-function SsoConnectorRadioGroup({ name, value, className, size, connectors, onChange }: Props) {
+function SsoConnectorRadioGroup({
+  name,
+  value,
+  className,
+  size,
+  connectors,
+  isProviderDisabled,
+  onChange,
+}: Props) {
   return (
     <RadioGroup
       name={name}
@@ -26,7 +35,11 @@ function SsoConnectorRadioGroup({ name, value, className, size, connectors, onCh
       onChange={onChange}
     >
       {connectors.map((data) => (
-        <Radio key={data.providerName} value={data.providerName}>
+        <Radio
+          key={data.providerName}
+          value={data.providerName}
+          isDisabled={isProviderDisabled?.(data.providerName)}
+        >
           <SsoConnectorRadio data={data} />
         </Radio>
       ))}
