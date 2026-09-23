@@ -51,6 +51,8 @@ export type FullSignInExperience = Omit<
   captchaConfig?: {
     type: CaptchaType;
     siteKey: string;
+    /** The Cap Standalone instance URL, only available for {@link CaptchaType.Cap}. */
+    endpoint?: string;
     domain?: string;
     mode?: RecaptchaEnterpriseMode;
   };
@@ -87,6 +89,7 @@ export const fullSignInExperienceGuard = SignInExperiences.guard
       .object({
         type: z.nativeEnum(CaptchaType),
         siteKey: z.string(),
+        endpoint: z.string().optional(),
         domain: z.string().optional(),
         mode: z.nativeEnum(RecaptchaEnterpriseMode).optional(),
       })

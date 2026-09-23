@@ -36,6 +36,11 @@ const security = {
       description:
         "Cloudflare'in akıllı CAPTCHA alternatifi, görsel bulmaca olmadan kullanıcı dostu bir deneyim sunarken aynı zamanda bot koruması sağlar.",
     },
+    cap: {
+      name: 'Cap',
+      description:
+        'Görsel bulmaca veya üçüncü taraf hizmet gerektirmeyen, iş kanıtı tabanlı, açık kaynaklı ve kendi sunucunuzda barındırılan CAPTCHA; diğer CAPTCHA hizmetlerine erişilemeyen bölgeler için idealdir.',
+    },
   },
   captcha_details: {
     back_to_security: 'Güvenliğe dön',
@@ -51,6 +56,8 @@ const security = {
     domain_placeholder: 'www.google.com (varsayılan) veya recaptcha.net',
     recaptcha_key_id: 'reCAPTCHA anahtar ID',
     recaptcha_api_key: 'Projenin API anahtarı',
+    cap_endpoint: 'Cap uç noktası',
+    cap_endpoint_placeholder: 'https://cap.example.com',
     deletion_description: 'Bu CAPTCHA sağlayıcısını silmek istediğinizden emin misiniz?',
     captcha_deleted: 'CAPTCHA sağlayıcısı başarıyla silindi',
     setup_captcha: "CAPTCHA'yı ayarla",

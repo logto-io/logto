@@ -383,6 +383,26 @@ describe('findCaptchaPublicConfig', () => {
     });
   });
 
+  it('should return the endpoint for Cap', async () => {
+    findCaptchaProvider.mockResolvedValueOnce({
+      ...mockCaptchaProvider,
+      config: {
+        type: CaptchaType.Cap,
+        endpoint: 'https://cap.example.com',
+        siteKey: 'captcha_site_key',
+        secretKey: 'captcha_secret_key',
+      },
+    });
+
+    const captchaPublicConfig = await findCaptchaPublicConfig();
+
+    expect(captchaPublicConfig).toEqual({
+      type: CaptchaType.Cap,
+      siteKey: 'captcha_site_key',
+      endpoint: 'https://cap.example.com',
+    });
+  });
+
   it('should return undefined if captcha provider is not found', async () => {
     // eslint-disable-next-line unicorn/no-useless-undefined
     findCaptchaProvider.mockResolvedValueOnce(undefined);

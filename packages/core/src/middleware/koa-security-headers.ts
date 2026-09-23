@@ -2,7 +2,7 @@ import { type IncomingMessage, type ServerResponse } from 'node:http';
 import { promisify } from 'node:util';
 
 import type { CustomUiCsp } from '@logto/schemas';
-import { conditionalArray } from '@silverhand/essentials';
+import { conditional, conditionalArray } from '@silverhand/essentials';
 import helmet, { type HelmetOptions } from 'helmet';
 import type { MiddlewareType } from 'koa';
 
@@ -42,7 +42,10 @@ type SecurityHeaderSettings = {
   readonly consoleSecurityHeaderSettings: HelmetOptions;
   readonly accountCenterSecurityHeaderSettings: HelmetOptions;
   readonly defaultExperienceSecurityHeaderSettings: HelmetOptions;
-  readonly getExperienceSecurityHeaderSettings: (customUiCsp?: CustomUiCsp) => HelmetOptions;
+  readonly getExperienceSecurityHeaderSettings: (
+    customUiCsp?: CustomUiCsp,
+    capEndpoint?: string
+  ) => HelmetOptions;
 };
 
 const appendCustomSources = (sources: string[], customSources: string[] = []) => [
@@ -158,7 +161,20 @@ const createSecurityHeaderSettings = (tenantId: string): SecurityHeaderSettings 
     ...developmentOrigins,
   ];
 
-  const getExperienceSecurityHeaderSettings = (customUiCsp: CustomUiCsp = {}) => {
+  /**
+   * @param customUiCsp Extra sources for the Bring your UI assets.
+   * @param capEndpoint The Cap Standalone endpoint if Cap is the configured captcha provider. The
+   * Cap widget calls the instance directly, solves the proof-of-work in `blob:` workers with
+   * WebAssembly, and runs the instance's instrumentation challenge (which evaluates scripts to
+   * fingerprint the browser) in a sandboxed `srcdoc` iframe that inherits this policy. These
+   * sources are only allowed while Cap is configured.
+   */
+  const getExperienceSecurityHeaderSettings = (
+    customUiCsp: CustomUiCsp = {},
+    capEndpoint?: string
+  ) => {
+    const capOrigin = capEndpoint && new URL(capEndpoint).origin;
+
     // @ts-expect-error: helmet typings has lots of {A?: T, B?: never} | {A?: never, B?: T} options definitions. Optional settings type can not inferred correctly.
     const settings: HelmetOptions = {
       ...basicSecurityHeaderSettings,
@@ -173,9 +189,19 @@ const createSecurityHeaderSettings = (tenantId: string): SecurityHeaderSettings 
         directives: {
           'upgrade-insecure-requests': null,
           imgSrc: avatarCropImageSources,
-          scriptSrc: appendCustomSources(experienceScriptSource, customUiCsp.scriptSrc),
+          scriptSrc: appendCustomSources(
+            [
+              ...experienceScriptSource,
+              ...conditionalArray(capOrigin && ["'wasm-unsafe-eval'", "'unsafe-eval'"]),
+            ],
+            customUiCsp.scriptSrc
+          ),
           scriptSrcAttr: ["'unsafe-inline'"],
-          connectSrc: appendCustomSources(experienceConnectSource, customUiCsp.connectSrc),
+          connectSrc: appendCustomSources(
+            [...experienceConnectSource, ...conditionalArray(capOrigin)],
+            customUiCsp.connectSrc
+          ),
+          ...(capOrigin && { workerSrc: ["'self'", 'blob:'] }),
           // WARNING (high risk): Need to allow self-hosted terms of use page loaded in an iframe
           frameSrc: ["'self'", 'https:', gsiOrigin],
           // Allow being loaded by console preview iframe
@@ -266,12 +292,17 @@ export const koaExperienceSecurityHeaders = <StateT, ContextT, ResponseBodyT>(
     }
 
     const { req, res } = ctx;
-    const { customUiAssets, customUiCsp } =
-      await queries.signInExperiences.findDefaultSignInExperience();
+    const [{ customUiAssets, customUiCsp }, capEndpoint] = await Promise.all([
+      queries.signInExperiences.findDefaultSignInExperience(),
+      queries.captchaProviders.findCapEndpoint(),
+    ]);
 
     await helmetPromise(
-      customUiAssets
-        ? getExperienceSecurityHeaderSettings(customUiCsp)
+      (customUiAssets ?? capEndpoint)
+        ? getExperienceSecurityHeaderSettings(
+            conditional(customUiAssets && customUiCsp),
+            capEndpoint ?? undefined
+          )
         : defaultExperienceSecurityHeaderSettings,
       req,
       res

@@ -12,9 +12,25 @@ type LogtoNativeSdkInfo = {
 
 type LogtoSsr = string | Readonly<SsrData> | undefined;
 
+type CapWidgetAttributes = React.DetailedHTMLProps<
+  React.HTMLAttributes<HTMLElement>,
+  HTMLElement
+> & {
+  // React 18 passes `class` (not `className`) through to custom elements
+  class?: string;
+  'data-cap-api-endpoint': string;
+  'data-cap-lang'?: string;
+};
+
 declare global {
   const logtoNativeSdk: LogtoNativeSdkInfo | undefined;
   const logtoSsr: LogtoSsr;
+
+  namespace JSX {
+    interface IntrinsicElements {
+      'cap-widget': CapWidgetAttributes;
+    }
+  }
 
   interface Window {
     logtoNativeSdk: LogtoNativeSdkInfo | undefined;

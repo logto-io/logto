@@ -7,6 +7,7 @@ import useToast from '@/hooks/use-toast';
 import PageContext from '../PageContextProvider/PageContext';
 
 import CaptchaContext, { type CaptchaContextType } from './CaptchaContext';
+import { loadCapWidget, solveCapWidget } from './cap';
 import { scriptId } from './constant';
 import { getScript } from './utils';
 
@@ -30,6 +31,11 @@ const CaptchaContextProvider = ({ children }: Props) => {
       return;
     }
 
+    if (captchaConfig.type === CaptchaType.Cap) {
+      void loadCapWidget();
+      return;
+    }
+
     if (document.querySelector(`#${scriptId}`)) {
       return;
     }
@@ -47,6 +53,19 @@ const CaptchaContextProvider = ({ children }: Props) => {
   const executeCaptcha = useCallback(async () => {
     if (!isCaptchaRequired || !captchaConfig) {
       return;
+    }
+
+    if (captchaConfig.type === CaptchaType.Cap) {
+      if (!widgetRef.current) {
+        return;
+      }
+
+      try {
+        return await solveCapWidget(widgetRef.current);
+      } catch (error: unknown) {
+        setToast(t('error.captcha_verification_failed'));
+        throw error;
+      }
     }
 
     if (captchaConfig.type === CaptchaType.Turnstile) {

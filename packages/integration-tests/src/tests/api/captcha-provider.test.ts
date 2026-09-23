@@ -47,6 +47,33 @@ describe('captcha provider', () => {
     });
   });
 
+  it('should update and get Cap captcha provider successfully', async () => {
+    const config = {
+      type: CaptchaType.Cap,
+      endpoint: 'https://cap.example.com',
+      siteKey: 'site_key',
+      secretKey: 'secret_key',
+    } as const;
+
+    await updateCaptchaProvider({ config });
+
+    await expect(getCaptchaProvider()).resolves.toMatchObject({ config });
+  });
+
+  it('should reject Cap captcha provider with a non-HTTP endpoint', async () => {
+    await expectRejects(
+      updateCaptchaProvider({
+        config: {
+          type: CaptchaType.Cap,
+          endpoint: 'ftp://cap.example.com',
+          siteKey: 'site_key',
+          secretKey: 'secret_key',
+        },
+      }),
+      { code: 'guard.invalid_input', status: 400 }
+    );
+  });
+
   it('should delete captcha provider successfully', async () => {
     await updateCaptchaProvider({
       config: {

@@ -36,6 +36,11 @@ const security = {
       description:
         'Alternativa inteligente de CAPTCHA da Cloudflare que oferece proteção contra bots sem interrupções, garantindo uma experiência de usuário perfeita sem quebra-cabeças visuais.',
     },
+    cap: {
+      name: 'Cap',
+      description:
+        'CAPTCHA de código aberto e auto-hospedado baseado em prova de trabalho, sem quebra-cabeças visuais ou serviços de terceiros, ideal para regiões onde outros serviços de CAPTCHA não estão acessíveis.',
+    },
   },
   captcha_details: {
     back_to_security: 'Voltar para Segurança',
@@ -51,6 +56,8 @@ const security = {
     domain_placeholder: 'www.google.com (padrão) ou recaptcha.net',
     recaptcha_key_id: 'ID da chave reCAPTCHA',
     recaptcha_api_key: 'Chave da API do projeto',
+    cap_endpoint: 'Endpoint do Cap',
+    cap_endpoint_placeholder: 'https://cap.example.com',
     deletion_description: 'Tem certeza de que deseja excluir este provedor de CAPTCHA?',
     captcha_deleted: 'Provedor de CAPTCHA excluído com sucesso',
     setup_captcha: 'Configurar CAPTCHA',

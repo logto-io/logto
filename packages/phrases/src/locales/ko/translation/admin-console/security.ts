@@ -36,6 +36,11 @@ const security = {
       description:
         'Cloudflare의 스마트 CAPTCHA 대안으로, 시각적 퍼즐 없이 원활한 사용자 경험을 보장하면서 비침투적인 봇 보호를 제공합니다.',
     },
+    cap: {
+      name: 'Cap',
+      description:
+        '시각적 퍼즐이나 타사 서비스 없이 작업 증명을 사용하는 오픈 소스 자체 호스팅 CAPTCHA로, 다른 CAPTCHA 서비스에 접근할 수 없는 지역에 적합합니다.',
+    },
   },
   captcha_details: {
     back_to_security: '보안으로 돌아가기',
@@ -51,6 +56,8 @@ const security = {
     domain_placeholder: 'www.google.com (기본값) 또는 recaptcha.net',
     recaptcha_key_id: 'reCAPTCHA 키 ID',
     recaptcha_api_key: '프로젝트의 API 키',
+    cap_endpoint: 'Cap 엔드포인트',
+    cap_endpoint_placeholder: 'https://cap.example.com',
     deletion_description: '이 CAPTCHA 제공자를 삭제하시겠습니까?',
     captcha_deleted: 'CAPTCHA 제공자가 성공적으로 삭제되었습니다',
     setup_captcha: 'CAPTCHA 설정',

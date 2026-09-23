@@ -35,6 +35,11 @@ const security = {
       description:
         'بديل CAPTCHA الذكي من Cloudflare الذي يوفر حماية ضد الروبوتات دون إزعاج، مما يضمن تجربة مستخدم سلسة دون ألغاز بصرية.',
     },
+    cap: {
+      name: 'Cap',
+      description:
+        'CAPTCHA مفتوح المصدر ومستضاف ذاتيًا يعتمد على إثبات العمل دون ألغاز بصرية أو خدمات خارجية، مثالي للمناطق التي يتعذر فيها الوصول إلى خدمات CAPTCHA الأخرى.',
+    },
   },
   captcha_details: {
     back_to_security: 'العودة إلى الأمان',
@@ -50,6 +55,8 @@ const security = {
     domain_placeholder: 'www.google.com (افتراضي) أو recaptcha.net',
     recaptcha_key_id: 'معرّف مفتاح reCAPTCHA',
     recaptcha_api_key: 'مفتاح API للمشروع',
+    cap_endpoint: 'نقطة نهاية Cap',
+    cap_endpoint_placeholder: 'https://cap.example.com',
     deletion_description: 'هل أنت متأكد أنك تريد حذف مزود CAPTCHA هذا؟',
     captcha_deleted: 'تم حذف موفر CAPTCHA بنجاح',
     setup_captcha: 'إعداد CAPTCHA',

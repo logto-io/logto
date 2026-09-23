@@ -5,5 +5,6 @@ export type CaptchaFormType = {
   secretKey: string;
   projectId: string;
   domain?: string;
+  endpoint?: string;
   mode?: RecaptchaEnterpriseMode;
 };
