@@ -1,6 +1,5 @@
 import { LicenseEnv } from '@logto/schemas';
-import dayjs from 'dayjs';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
@@ -27,12 +26,22 @@ type Props = {
 };
 
 function LicenseDetails({ license }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isReplacing, setIsReplacing] = useState(false);
   const status = getLicenseStatus(license);
-  const formattedExpiresAt = dayjs(license.expiresAt).format('MMM D, YYYY');
-  const formattedGraceEndsAt = dayjs(license.graceEndsAt).format('MMM D, YYYY');
-  const formattedLastRefreshedAt = dayjs(license.lastRefreshedAt).format('MMM D, YYYY, h:mm A');
+  const { dateFormatter, dateTimeFormatter } = useMemo(
+    () => ({
+      dateFormatter: new Intl.DateTimeFormat(i18n.language, { dateStyle: 'medium' }),
+      dateTimeFormatter: new Intl.DateTimeFormat(i18n.language, {
+        dateStyle: 'medium',
+        timeStyle: 'short',
+      }),
+    }),
+    [i18n.language]
+  );
+  const formattedExpiresAt = dateFormatter.format(new Date(license.expiresAt));
+  const formattedGraceEndsAt = dateFormatter.format(new Date(license.graceEndsAt));
+  const formattedLastRefreshedAt = dateTimeFormatter.format(new Date(license.lastRefreshedAt));
 
   return (
     <>
@@ -88,7 +97,7 @@ function LicenseDetails({ license }: Props) {
           <div className={styles.value}>{formattedExpiresAt}</div>
         </FormField>
         <FormField title="tenants.license.installed_at_field">
-          <div className={styles.value}>{dayjs(license.installedAt).format('MMM D, YYYY')}</div>
+          <div className={styles.value}>{dateFormatter.format(new Date(license.installedAt))}</div>
         </FormField>
         <FormField title="tenants.license.last_refreshed_at_field">
           <div className={styles.value}>{formattedLastRefreshedAt}</div>
