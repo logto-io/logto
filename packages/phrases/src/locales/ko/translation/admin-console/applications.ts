@@ -112,6 +112,14 @@ const applications = {
       permission_delete_confirm:
         '이 작업은 다이나믹 앱에서 해당 권한을 제거하여 OAuth 클라이언트가 이에 대한 사용자 승인을 요청할 수 없게 합니다. 계속 진행하시겠습니까?',
     },
+    client_compatibility: {
+      title: '클라이언트 호환성',
+      description:
+        'OpenID Connect를 아직 완전히 지원하지 않는 OAuth 클라이언트의 권한 부여 요청을 Logto가 처리하는 방식을 조정합니다. 이 설정은 실험적이며 변경되거나 제거될 수 있습니다.',
+      add_consent_prompt_for_offline_access: '오프라인 액세스에 동의 프롬프트 추가',
+      add_consent_prompt_for_offline_access_description:
+        'OAuth 클라이언트가 `prompt=consent` 없이 `offline_access`를 요청하면 Logto가 동의 프롬프트를 추가하여 클라이언트가 Refresh 토큰을 받을 수 있게 합니다. ChatGPT, Codex 등의 클라이언트에 권장됩니다.',
+    },
   },
   guide: {
     third_party: {

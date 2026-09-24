@@ -112,6 +112,14 @@ const applications = {
       permission_delete_confirm:
         'This action will remove the permission from the dynamic app, preventing OAuth clients from requesting user authorization for it. Are you sure you want to continue?',
     },
+    client_compatibility: {
+      title: 'Client compatibility',
+      description:
+        "Adjust how Logto handles authorization requests from OAuth clients that don't yet fully support OpenID Connect. These settings are experimental and may change or be removed.",
+      add_consent_prompt_for_offline_access: 'Add consent prompt for offline access',
+      add_consent_prompt_for_offline_access_description:
+        'When an OAuth client requests `offline_access` without `prompt=consent`, Logto adds the consent prompt so the client can receive a refresh token. Recommended for clients such as ChatGPT and Codex.',
+    },
   },
   guide: {
     third_party: {
