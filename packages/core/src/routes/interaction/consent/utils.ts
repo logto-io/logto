@@ -128,7 +128,7 @@ export const revalidateConsentClient = async ({
   provider,
   queries,
   applicationId,
-  cimd,
+  treatAsCimdClient,
   redirectUri,
   requestedScope,
   missingOIDCScope,
@@ -136,20 +136,20 @@ export const revalidateConsentClient = async ({
   provider: Provider;
   queries: Queries;
   applicationId: string;
-  cimd: boolean;
+  treatAsCimdClient: boolean;
   redirectUri: unknown;
   requestedScope: unknown;
   missingOIDCScope: string[];
 }) => {
   /** A CIMD client is third-party by definition; only registered ids consult the classifier. */
-  if (!cimd && !(await isThirdPartyApplication(queries, applicationId))) {
+  if (!treatAsCimdClient && !(await isThirdPartyApplication(queries, applicationId))) {
     return;
   }
 
   const client = await provider.Client.find(applicationId);
   assertThat(client, new InvalidClient('client must be available'));
 
-  if (cimd) {
+  if (treatAsCimdClient) {
     /**
      * The oidc-provider resume path re-runs `checkClient` (re-fetching the metadata document
      * when its cache has expired) but not `check_redirect_uri`, so a URI removed from the
@@ -192,14 +192,14 @@ export const revalidateConsentClient = async ({
 export const buildResourceScopesToReject = (
   allMissingResourceScopes: Record<string, string[]>,
   resourceScopesToGrant: Record<string, string[]>,
-  cimd: boolean
+  treatAsCimdClient: boolean
 ): Record<string, string[]> =>
   Object.fromEntries(
     Object.entries(allMissingResourceScopes).map(([resourceIndicator, scopes]) => {
       const resource = resourceScopesToGrant[resourceIndicator];
 
       if (!resource) {
-        return [resourceIndicator, cimd ? scopes : []];
+        return [resourceIndicator, treatAsCimdClient ? scopes : []];
       }
 
       return [resourceIndicator, scopes.filter((scope) => !resource.includes(scope))];

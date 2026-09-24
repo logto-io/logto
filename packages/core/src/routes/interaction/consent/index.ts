@@ -75,7 +75,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
 
       const { accountId: userId } = session;
 
-      const cimd = shouldTreatAsCimdClient(envSet, applicationId);
+      const treatAsCimdClient = shouldTreatAsCimdClient(envSet, applicationId);
 
       const { missingOIDCScope = [], missingResourceScopes: allMissingResourceScopes = {} } =
         getMissingScopes(prompt);
@@ -84,7 +84,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
         provider,
         queries,
         applicationId,
-        cimd,
+        treatAsCimdClient,
         redirectUri,
         requestedScope: scope,
         missingOIDCScope,
@@ -93,7 +93,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
       // Grant the organizations to the application if the user has selected the organizations
       if (organizationIds?.length) {
         /** One grant carries one organization for a CIMD client. */
-        if (cimd) {
+        if (treatAsCimdClient) {
           assertThat(
             organizationIds.length === 1,
             new InvalidRequest('at most one organization can be consented to a CIMD client')
@@ -104,7 +104,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
         await validateUserConsentOrganizationMembership(userId, organizationIds);
 
         /** The CIMD counterpart is grant-keyed — `consent()` writes it after `grant.save()`. */
-        if (!cimd) {
+        if (!treatAsCimdClient) {
           await queries.applications.userConsentOrganizations.insert(
             ...organizationIds.map((organizationId) => ({
               applicationId,
@@ -124,7 +124,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
        * A CIMD authorization is served by its own grant alone, so the just-validated selection
        * is its whole organization set; registered applications re-query the cross-grant relation.
        */
-      const organizations = cimd
+      const organizations = treatAsCimdClient
         ? await Promise.all(
             (organizationIds ?? []).map(async (organizationId) =>
               queries.organizations.findById(organizationId)
@@ -207,7 +207,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
       const resourceScopesToReject = buildResourceScopesToReject(
         allMissingResourceScopes,
         resourceScopesToGrant,
-        cimd
+        treatAsCimdClient
       );
 
       const redirectTo = await consent({
@@ -220,7 +220,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
         resourceScopesToGrant,
         resourceScopesToReject,
         markAppLevelAccessControlChecked: true,
-        cimdOrganizationId: conditional(cimd && organizationIds?.[0]),
+        cimdOrganizationId: conditional(treatAsCimdClient && organizationIds?.[0]),
       });
 
       ctx.body = { redirectTo };
@@ -257,7 +257,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
 
       const { accountId } = session;
 
-      const cimd = shouldTreatAsCimdClient(envSet, clientId);
+      const treatAsCimdClient = shouldTreatAsCimdClient(envSet, clientId);
 
       /**
        * CIMD clients are unregistered: display data comes from the provider-resolved metadata
@@ -268,7 +268,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
         application: ConsentInfoResponse['application'];
         isDeviceFlowApplication: boolean;
       }> => {
-        if (cimd) {
+        if (treatAsCimdClient) {
           const client = await provider.Client.find(clientId);
           assertThat(client, new InvalidClient('client must be available'));
 
