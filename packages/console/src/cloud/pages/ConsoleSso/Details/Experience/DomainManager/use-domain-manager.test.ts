@@ -49,6 +49,7 @@ jest.mock(
 jest.mock('@/cloud/hooks/use-cloud-api', () => ({
   useCloudApi: jest.fn(),
   toastResponseError: jest.fn(),
+  tryReadResponseErrorBody: jest.fn(async (error: ResponseError) => error.response.clone().json()),
 }));
 jest.mock('@/hooks/use-current-user', () => ({ __esModule: true, default: jest.fn() }));
 jest.mock('@/consts/env', () => ({ isCloud: true }));

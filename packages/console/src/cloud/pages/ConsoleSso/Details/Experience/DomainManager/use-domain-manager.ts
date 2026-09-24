@@ -2,7 +2,11 @@ import { type consoleSsoRouter } from '@logto/cloud/routes';
 import { ResponseError } from '@withtyped/client';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { toastResponseError, useCloudApi } from '@/cloud/hooks/use-cloud-api';
+import {
+  toastResponseError,
+  tryReadResponseErrorBody,
+  useCloudApi,
+} from '@/cloud/hooks/use-cloud-api';
 import { type ConsoleSsoConnector, type ConsoleSsoDomain } from '@/cloud/types/router';
 import useCurrentUser from '@/hooks/use-current-user';
 
@@ -25,16 +29,11 @@ export const getDomains = (data: ConsoleSsoConnector): ConsoleSsoDomain[] => [
 
 export const readDomainError = async (error: unknown): Promise<DomainError> => {
   if (error instanceof ResponseError) {
-    const body: unknown = await error.response
-      .clone()
-      .json()
-      .catch(() => null);
-    if (body && typeof body === 'object' && 'message' in body && typeof body.message === 'string') {
-      const detail = 'error' in body && body.error;
-      const code = detail && typeof detail === 'object' && 'code' in detail && detail.code;
+    const body = await tryReadResponseErrorBody(error);
+    if (body) {
       return {
         message: body.message,
-        ...(typeof code === 'string' && { code }),
+        ...(body.error?.code !== undefined && { code: body.error.code }),
       };
     }
   }
