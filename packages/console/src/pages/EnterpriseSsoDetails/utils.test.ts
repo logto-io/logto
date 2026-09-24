@@ -35,20 +35,29 @@ describe('shouldShowIdpInitiatedAuthTab', () => {
 });
 
 describe('shouldShowIdpInitiatedAuthUpsell', () => {
-  it('returns true for OSS when IdP-initiated SSO is not entitled', () => {
+  it('returns false on Cloud', () => {
+    expect(
+      shouldShowIdpInitiatedAuthUpsell({
+        isCloud: true,
+        isIdpInitiatedSsoLicensed: false,
+      })
+    ).toBe(false);
+  });
+
+  it('returns true for OSS without a license granting IdP-initiated SSO', () => {
     expect(
       shouldShowIdpInitiatedAuthUpsell({
         isCloud: false,
-        isIdpInitiatedSsoEnabled: false,
+        isIdpInitiatedSsoLicensed: false,
       })
     ).toBe(true);
   });
 
-  it('returns false on Cloud even when the quota is entitled', () => {
+  it('returns false for OSS with a license granting IdP-initiated SSO', () => {
     expect(
       shouldShowIdpInitiatedAuthUpsell({
-        isCloud: true,
-        isIdpInitiatedSsoEnabled: true,
+        isCloud: false,
+        isIdpInitiatedSsoLicensed: true,
       })
     ).toBe(false);
   });
