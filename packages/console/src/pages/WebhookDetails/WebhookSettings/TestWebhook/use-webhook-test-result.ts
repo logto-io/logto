@@ -16,25 +16,30 @@ const webhookTestResultGuard = z.object({
 
 type WebhookTestResult = z.infer<typeof webhookTestResultGuard>;
 
-const readResult = () => {
+const getStorageKey = (hookId: string) => `${storageKeys.webhookTestResult}:${hookId}`;
+
+const readResult = (hookId: string) => {
   const parsedJson = safeParseJson(
-    conditionalString(sessionStorage.getItem(storageKeys.webhookTestResult))
+    conditionalString(sessionStorage.getItem(getStorageKey(hookId)))
   );
 
   return conditional(parsedJson.success && webhookTestResultGuard.parse(parsedJson.data));
 };
 
-const useWebhookTestResult = () => {
-  const [testResult, setTestResult] = useState<WebhookTestResult | undefined>(readResult());
+const useWebhookTestResult = (hookId: string) => {
+  const [testResult, setTestResult] = useState<WebhookTestResult | undefined>(() =>
+    readResult(hookId)
+  );
 
   return {
     result: testResult,
     setResult: (result?: WebhookTestResult) => {
       setTestResult(result);
+      const storageKey = getStorageKey(hookId);
       if (result) {
-        sessionStorage.setItem(storageKeys.webhookTestResult, JSON.stringify(result));
+        sessionStorage.setItem(storageKey, JSON.stringify(result));
       } else {
-        sessionStorage.removeItem(storageKeys.webhookTestResult);
+        sessionStorage.removeItem(storageKey);
       }
     },
   };
