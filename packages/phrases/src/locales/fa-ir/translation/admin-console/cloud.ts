@@ -7,6 +7,8 @@ const cloud = {
       'ارائه‌دهنده هویت خود را پیکربندی کنید تا با ورود یکپارچه به Logto Console وارد شوید.',
     domain_bound: 'متصل',
     domain_pending: 'در حال تأیید',
+    domain_verify_step: 'دامنه خود را تأیید کنید',
+    domain_bind_step: 'اتصال دامنه ایمیل',
     domain_add_placeholder: 'افزودن دامنه ایمیل',
     domain_bound_description:
       'این دامنه برای Console SSO فعال است. رکورد TXT تأیید آن حذف شده است.',
@@ -14,6 +16,8 @@ const cloud = {
       'برای تأیید مالکیت دامنه، این رکورد TXT را نزد ارائه\u200Cدهنده DNS خود اضافه کنید.',
     domain_waiting_for_dns: 'در انتظار رکورد TXT. هر ۱۰ ثانیه دوباره بررسی می\u200Cکنیم.',
     domain_proven_unbound: 'مالکیت دامنه تأیید شده، اما اتصال کامل نشده است.',
+    domain_verified: 'مالکیت دامنه تأیید شد.',
+    domain_binding_pending: 'اتصال پس از تأیید به‌صورت خودکار آغاز می‌شود.',
     domain_remove_description:
       '{{domain}} از Console SSO حذف شود؟ حذف دامنه متصل، شناسایی SSO را برای نشانی\u200Cهای ایمیل آن متوقف می\u200Cکند.',
     domain_invalid: 'یک دامنه ایمیل معتبر وارد کنید.',

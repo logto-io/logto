@@ -7,6 +7,8 @@ const cloud = {
       'Skonfiguruj własnego dostawcę tożsamości, aby logować się do Logto Console za pomocą jednokrotnego logowania.',
     domain_bound: 'Powiązana',
     domain_pending: 'Weryfikowanie',
+    domain_verify_step: 'Zweryfikuj domenę',
+    domain_bind_step: 'Powiąż domenę e-mail',
     domain_add_placeholder: 'Dodaj domenę e-mail',
     domain_bound_description:
       'Ta domena jest aktywna dla Console SSO. Jej rekord TXT został usunięty.',
@@ -15,6 +17,8 @@ const cloud = {
     domain_waiting_for_dns: 'Oczekiwanie na rekord TXT. Sprawdzamy ponownie co 10 sekund.',
     domain_proven_unbound:
       'Własność domeny została potwierdzona, ale powiązanie nie jest ukończone.',
+    domain_verified: 'Własność domeny została zweryfikowana.',
+    domain_binding_pending: 'Powiązanie rozpocznie się automatycznie po weryfikacji.',
     domain_remove_description:
       'Usunąć {{domain}} z Console SSO? Usunięcie powiązanej domeny zatrzyma wykrywanie SSO dla jej adresów e-mail.',
     domain_invalid: 'Wprowadź prawidłową domenę e-mail.',

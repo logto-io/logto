@@ -7,6 +7,8 @@ const cloud = {
       'Configurez votre propre fournisseur d’identité pour vous connecter à Logto Console avec l’authentification unique.',
     domain_bound: 'Associé',
     domain_pending: 'Vérification en cours',
+    domain_verify_step: 'Vérifier votre domaine',
+    domain_bind_step: 'Associer le domaine de messagerie',
     domain_add_placeholder: 'Ajouter un domaine de messagerie',
     domain_bound_description:
       'Ce domaine est actif pour Console SSO. Son enregistrement TXT de vérification a été supprimé.',
@@ -16,6 +18,8 @@ const cloud = {
       'En attente de l’enregistrement TXT. Nous vérifions à nouveau toutes les 10 secondes.',
     domain_proven_unbound:
       'La propriété du domaine est vérifiée, mais son association est incomplète.',
+    domain_verified: 'La propriété du domaine a été vérifiée.',
+    domain_binding_pending: 'L’association démarre automatiquement après la vérification.',
     domain_remove_description:
       'Supprimer {{domain}} de Console SSO ? La suppression d’un domaine associé arrête la découverte SSO pour ses adresses e-mail.',
     domain_invalid: 'Saisissez un domaine de messagerie valide.',

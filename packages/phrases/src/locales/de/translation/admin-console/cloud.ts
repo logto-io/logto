@@ -7,6 +7,8 @@ const cloud = {
       'Konfiguriere deinen eigenen Identitätsanbieter, um dich per Single Sign-on bei der Logto Console anzumelden.',
     domain_bound: 'Gebunden',
     domain_pending: 'Wird überprüft',
+    domain_verify_step: 'Domain verifizieren',
+    domain_bind_step: 'E-Mail-Domain verknüpfen',
     domain_add_placeholder: 'E-Mail-Domain hinzufügen',
     domain_bound_description:
       'Diese Domain ist für Console SSO aktiv. Ihre TXT-Challenge wurde entfernt.',
@@ -15,6 +17,8 @@ const cloud = {
     domain_waiting_for_dns: 'Wir warten auf den TXT-Eintrag und prüfen alle 10 Sekunden erneut.',
     domain_proven_unbound:
       'Die Domaininhaberschaft ist bestätigt, aber die Bindung ist unvollständig.',
+    domain_verified: 'Domaininhaberschaft bestätigt.',
+    domain_binding_pending: 'Die Verknüpfung beginnt nach der Verifizierung automatisch.',
     domain_remove_description:
       '{{domain}} aus Console SSO entfernen? Nach dem Entfernen einer gebundenen Domain funktioniert die SSO-Erkennung für deren E-Mail-Adressen nicht mehr.',
     domain_invalid: 'Gib eine gültige E-Mail-Domain ein.',

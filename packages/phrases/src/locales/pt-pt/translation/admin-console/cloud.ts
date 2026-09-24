@@ -7,6 +7,8 @@ const cloud = {
       'Configure o seu próprio fornecedor de identidade para aceder ao Logto Console com início de sessão único.',
     domain_bound: 'Associado',
     domain_pending: 'A verificar',
+    domain_verify_step: 'Verifique o seu domínio',
+    domain_bind_step: 'Associar domínio de e-mail',
     domain_add_placeholder: 'Adicionar um domínio de e-mail',
     domain_bound_description:
       'Este domínio está ativo para Console SSO. O registo TXT de verificação foi removido.',
@@ -15,6 +17,8 @@ const cloud = {
     domain_waiting_for_dns: 'A aguardar o registo TXT. Voltaremos a verificar a cada 10 segundos.',
     domain_proven_unbound:
       'A propriedade do domínio foi verificada, mas a associação está incompleta.',
+    domain_verified: 'A propriedade do domínio foi verificada.',
+    domain_binding_pending: 'A associação começa automaticamente após a verificação.',
     domain_remove_description:
       'Remover {{domain}} do Console SSO? A remoção de um domínio associado interrompe a descoberta de SSO para os seus endereços de e-mail.',
     domain_invalid: 'Introduza um domínio de e-mail válido.',

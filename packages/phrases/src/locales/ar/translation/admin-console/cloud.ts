@@ -7,12 +7,16 @@ const cloud = {
       'قم بتكوين موفّر الهوية الخاص بك لتسجيل الدخول إلى Logto Console باستخدام تسجيل الدخول الموحّد.',
     domain_bound: 'مرتبط',
     domain_pending: 'جارٍ التحقق',
+    domain_verify_step: 'تحقق من نطاقك',
+    domain_bind_step: 'ربط نطاق البريد الإلكتروني',
     domain_add_placeholder: 'إضافة نطاق بريد إلكتروني',
     domain_bound_description:
       'هذا النطاق نشط لتسجيل الدخول الموحد إلى Console. تمت إزالة سجل TXT الخاص بالتحقق.',
     domain_dns_instructions: 'أضف سجل TXT هذا لدى مزود DNS للتحقق من ملكية النطاق.',
     domain_waiting_for_dns: 'بانتظار سجل TXT. نتحقق مرة أخرى كل 10 ثوانٍ.',
     domain_proven_unbound: 'تم التحقق من ملكية النطاق، لكن الربط لم يكتمل.',
+    domain_verified: 'تم التحقق من ملكية النطاق.',
+    domain_binding_pending: 'يبدأ الربط تلقائيًا بعد التحقق.',
     domain_remove_description:
       'هل تريد إزالة {{domain}} من Console SSO؟ ستؤدي إزالة نطاق مرتبط إلى إيقاف اكتشاف SSO لعناوين البريد الإلكتروني الخاصة به.',
     domain_invalid: 'أدخل نطاق بريد إلكتروني صالحًا.',

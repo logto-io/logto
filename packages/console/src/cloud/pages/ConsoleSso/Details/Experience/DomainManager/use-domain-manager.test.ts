@@ -348,7 +348,7 @@ it('expands the pending row to show the TXT record and copies its exact value', 
   });
   // eslint-disable-next-line @silverhand/fp/no-mutating-methods -- Supply the browser clipboard for the copy control.
   Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText } });
-  render(
+  const { container } = render(
     createElement(DomainManager, {
       data: { ...connector, domainVerifications: [pending] },
       onUpdated,
@@ -366,7 +366,9 @@ it('expands the pending row to show the TXT record and copies its exact value', 
   });
   expect(header.getAttribute('aria-expanded')).toBe('true');
   expect(screen.getByText('_logto-cloud-sso.example.com')).not.toBeNull();
-  expect(screen.queryByText('admin_console.domain.custom.verify_domain')).toBeNull();
+  expect(container.querySelector('svg[viewBox="0 0 16 16"]')).not.toBeNull();
+  expect(screen.getByText('admin_console.cloud.console_sso.domain_bind_step')).not.toBeNull();
+  expect(screen.getByText('2')).not.toBeNull();
   const value = screen.getByText('stable-token');
   const copyButton = value.closest('[role="button"]')?.querySelector('button');
   if (!copyButton) {
@@ -376,12 +378,11 @@ it('expands the pending row to show the TXT record and copies its exact value', 
   await waitFor(() => {
     expect(writeText).toHaveBeenCalledWith('stable-token');
   });
-  expect(header.getAttribute('aria-expanded')).toBe('true');
 });
 
 it('expands an already bound domain without inventing a TXT challenge', async () => {
   api.get.mockResolvedValue(bound);
-  render(
+  const { container } = render(
     createElement(DomainManager, {
       data: { ...connector, boundDomains: ['example.com'] },
       onUpdated,
@@ -395,8 +396,11 @@ it('expands an already bound domain without inventing a TXT challenge', async ()
     fireEvent.click(header);
     await Promise.resolve();
   });
-  expect(header.getAttribute('aria-expanded')).toBe('true');
   expect(screen.queryByText('_logto-cloud-sso.example.com')).toBeNull();
+  expect(screen.getByText('admin_console.cloud.console_sso.domain_verified')).not.toBeNull();
+  expect(screen.getByText('admin_console.cloud.console_sso.domain_bind_step')).not.toBeNull();
+  expect(screen.queryByText('2')).toBeNull();
+  expect(container.querySelector('svg[viewBox="0 0 16 16"]')).toBeNull();
   expect(api.post).not.toHaveBeenCalled();
 });
 
@@ -422,7 +426,6 @@ it('offers cleanup recovery when Core is bound but its temporary proof remains',
   expect(screen.getByText('admin_console.cloud.console_sso.domain_recovery')).not.toBeNull();
   expect(api.post).not.toHaveBeenCalled();
 
-  expect(screen.queryByText('admin_console.domain.custom.verify_domain')).toBeNull();
   await act(async () => {
     jest.advanceTimersByTime(10_000);
     await Promise.resolve();

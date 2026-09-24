@@ -6,12 +6,16 @@ const cloud = {
     description: '자체 ID 제공자를 구성하여 싱글 사인온으로 Logto Console에 로그인하세요.',
     domain_bound: '연결됨',
     domain_pending: '확인 중',
+    domain_verify_step: '도메인 확인',
+    domain_bind_step: '이메일 도메인 연결',
     domain_add_placeholder: '이메일 도메인 추가',
     domain_bound_description:
       '이 도메인은 Console SSO에서 활성 상태입니다. TXT 확인 레코드는 삭제되었습니다.',
     domain_dns_instructions: '도메인 소유권을 확인하려면 DNS 공급자에 이 TXT 레코드를 추가하세요.',
     domain_waiting_for_dns: 'TXT 레코드를 기다리는 중입니다. 10초마다 다시 확인합니다.',
     domain_proven_unbound: '도메인 소유권은 확인되었지만 연결이 완료되지 않았습니다.',
+    domain_verified: '도메인 소유권이 확인되었습니다.',
+    domain_binding_pending: '확인 후 연결이 자동으로 시작됩니다.',
     domain_remove_description:
       'Console SSO에서 {{domain}}을(를) 제거하시겠어요? 연결된 도메인을 제거하면 해당 이메일 주소의 SSO 검색이 중단됩니다.',
     domain_invalid: '올바른 이메일 도메인을 입력하세요.',

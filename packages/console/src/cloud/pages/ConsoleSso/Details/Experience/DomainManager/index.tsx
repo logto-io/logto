@@ -1,3 +1,4 @@
+import { DomainStatus } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
 import Delete from '@/assets/icons/delete.svg?react';
@@ -10,11 +11,11 @@ import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
-import { Ring } from '@/ds-components/Spinner';
 import Tag from '@/ds-components/Tag';
 import TextInput from '@/ds-components/TextInput';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import DnsRecordsTable from '@/pages/TenantSettings/TenantDomainSettings/CustomDomain/ActivationProcess/DnsRecordsTable';
+import Step from '@/pages/TenantSettings/TenantDomainSettings/CustomDomain/ActivationProcess/Step';
 
 import styles from './index.module.scss';
 import { type DomainError, useDomainManager } from './use-domain-manager';
@@ -54,7 +55,6 @@ type CardProps = {
   readonly hasPendingCleanup: boolean;
   readonly isExpanded: boolean;
   readonly error?: DomainError;
-  readonly isChecking: boolean;
   readonly onToggle: () => void;
   readonly onRemove: () => Promise<void>;
 };
@@ -64,11 +64,15 @@ function DomainCard({
   hasPendingCleanup,
   isExpanded,
   error,
-  isChecking,
   onToggle,
   onRemove,
 }: CardProps) {
   const { domain, isBound } = status;
+  const domainStatus = isBound
+    ? DomainStatus.Active
+    : status.verifiedAt === null
+      ? DomainStatus.PendingVerification
+      : DomainStatus.PendingSsl;
 
   return (
     <div className={styles.card}>
@@ -103,38 +107,52 @@ function DomainCard({
       {isExpanded && (
         <div className={styles.cardContent}>
           {error && (
-            <InlineNotification severity="error">
+            <InlineNotification className={styles.errorNotification} severity="error">
               <DomainErrorText error={error} />
             </InlineNotification>
           )}
-          {isBound ? (
+          <Step
+            step={1}
+            title="cloud.console_sso.domain_verify_step"
+            tip="cloud.console_sso.domain_dns_instructions"
+            domainStatus={domainStatus}
+          >
+            {isBound || status.verifiedAt !== null ? (
+              <div className={styles.statusText}>
+                <DynamicT forKey="cloud.console_sso.domain_verified" />
+              </div>
+            ) : (
+              <>
+                <DnsRecordsTable
+                  records={status.dnsRecords}
+                  tip="cloud.console_sso.domain_dns_instructions"
+                />
+                <div className={styles.statusText}>
+                  <DynamicT forKey="cloud.console_sso.domain_waiting_for_dns" />
+                </div>
+              </>
+            )}
+          </Step>
+          <Step
+            step={2}
+            title="cloud.console_sso.domain_bind_step"
+            tip="cloud.console_sso.domain_binding_pending"
+            domainStatus={domainStatus}
+          >
             <div className={styles.statusText}>
               <DynamicT
                 forKey={
-                  hasPendingCleanup
-                    ? 'cloud.console_sso.domain_recovery'
-                    : 'cloud.console_sso.domain_bound_description'
+                  isBound
+                    ? hasPendingCleanup
+                      ? 'cloud.console_sso.domain_recovery'
+                      : 'cloud.console_sso.domain_bound_description'
+                    : status.verifiedAt === null
+                      ? 'cloud.console_sso.domain_binding_pending'
+                      : 'cloud.console_sso.domain_proven_unbound'
                 }
               />
             </div>
-          ) : (
-            <>
-              <DnsRecordsTable
-                records={status.dnsRecords}
-                tip="cloud.console_sso.domain_dns_instructions"
-              />
-              <div className={styles.statusText}>
-                {isChecking && <Ring className={styles.loadingIcon} />}
-                <DynamicT
-                  forKey={
-                    status.verifiedAt === null
-                      ? 'cloud.console_sso.domain_waiting_for_dns'
-                      : 'cloud.console_sso.domain_proven_unbound'
-                  }
-                />
-              </div>
-            </>
-          )}
+          </Step>
         </div>
       )}
     </div>
@@ -144,19 +162,8 @@ function DomainCard({
 function DomainManager({ data, onUpdated }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { show } = useConfirmModal();
-  const {
-    domains,
-    input,
-    setInput,
-    inputError,
-    expanded,
-    errors,
-    isAdding,
-    checking,
-    add,
-    toggle,
-    remove,
-  } = useDomainManager({ data, onUpdated });
+  const { domains, input, setInput, inputError, expanded, errors, isAdding, add, toggle, remove } =
+    useDomainManager({ data, onUpdated });
 
   const confirmRemove = async (domain: string) => {
     const [confirmed] = await show({
@@ -209,7 +216,6 @@ function DomainManager({ data, onUpdated }: Props) {
               }
               isExpanded={expanded === status.domain}
               error={errors[status.domain]}
-              isChecking={checking === status.domain}
               onToggle={() => {
                 toggle(status.domain);
               }}
