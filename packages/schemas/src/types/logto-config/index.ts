@@ -188,6 +188,7 @@ export type SigningKeyRotationState = z.infer<typeof signingKeyRotationStateGuar
  */
 export const cimdConfigGuard = z.object({
   enabled: z.boolean(),
+  addConsentPromptForOfflineAccess: z.boolean().optional(),
 });
 export type CimdConfig = z.infer<typeof cimdConfigGuard>;
 

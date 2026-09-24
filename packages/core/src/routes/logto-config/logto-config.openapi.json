@@ -560,16 +560,57 @@
         "description": "Get the tenant-level OAuth Client ID Metadata Document (CIMD) configuration. A missing configuration resolves to the disabled state.",
         "responses": {
           "200": {
-            "description": "The CIMD configuration."
+            "description": "The CIMD configuration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "addConsentPromptForOfflineAccess": {
+                      "description": "Dev feature. Experimental. When enabled, Logto adds `consent` to the `prompt` parameter of CIMD authorization requests that include the `offline_access` scope without it, so the client can receive a refresh token. Requests with `prompt=none` are not changed. Defaults to `false`.",
+                      "x-logto-dev-feature": true
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
       "patch": {
         "summary": "Update CIMD config",
-        "description": "Update the tenant-level OAuth Client ID Metadata Document (CIMD) switch. Enabling requires the OIDC provider SSRF protection to be active.",
+        "description": "Update the tenant-level OAuth Client ID Metadata Document (CIMD) configuration. Enabling requires the OIDC provider SSRF protection to be active.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "enabled": {
+                    "description": "Whether CIMD is enabled for the tenant."
+                  },
+                  "addConsentPromptForOfflineAccess": {
+                    "description": "Dev feature. Experimental. When enabled, Logto adds `consent` to the `prompt` parameter of CIMD authorization requests that include the `offline_access` scope without it, so the client can receive a refresh token. Requests with `prompt=none` are not changed. Defaults to `false`.",
+                    "x-logto-dev-feature": true
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": "The updated CIMD configuration."
+            "description": "The updated CIMD configuration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "addConsentPromptForOfflineAccess": {
+                      "description": "Dev feature. Experimental. When enabled, Logto adds `consent` to the `prompt` parameter of CIMD authorization requests that include the `offline_access` scope without it, so the client can receive a refresh token. Requests with `prompt=none` are not changed. Defaults to `false`.",
+                      "x-logto-dev-feature": true
+                    }
+                  }
+                }
+              }
+            }
           },
           "422": {
             "description": "The OIDC provider SSRF protection is disabled, so CIMD cannot be enabled."
