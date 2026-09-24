@@ -109,6 +109,14 @@ const applications = {
       permission_delete_confirm:
         'การดำเนินการนี้จะลบสิทธิ์ออกจากแอปแบบไดนามิก ทำให้ไคลเอนต์ OAuth ไม่สามารถขออนุญาตผู้ใช้สำหรับสิทธิ์นี้ได้ คุณแน่ใจหรือไม่ว่าต้องการดำเนินการต่อ?',
     },
+    client_compatibility: {
+      title: 'ความเข้ากันได้ของไคลเอนต์',
+      description:
+        'ปรับวิธีที่ Logto จัดการคำขอการอนุญาตจากไคลเอนต์ OAuth ที่ยังไม่รองรับ OpenID Connect อย่างสมบูรณ์ การตั้งค่าเหล่านี้อยู่ในขั้นทดลองและอาจเปลี่ยนแปลงหรือถูกนำออก',
+      add_consent_prompt_for_offline_access: 'เพิ่มการขอความยินยอมสำหรับการเข้าถึงแบบออฟไลน์',
+      add_consent_prompt_for_offline_access_description:
+        'เมื่อไคลเอนต์ OAuth ขอ `offline_access` โดยไม่มี `prompt=consent` Logto จะเพิ่มการขอความยินยอม เพื่อให้ไคลเอนต์สามารถรับ refresh token ได้ แนะนำสำหรับไคลเอนต์อย่าง ChatGPT และ Codex',
+    },
   },
   guide: {
     third_party: {

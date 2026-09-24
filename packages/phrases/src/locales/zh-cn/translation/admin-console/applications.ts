@@ -108,6 +108,14 @@ const applications = {
       permission_delete_confirm:
         '此操作将从动态应用中移除该权限，阻止 OAuth 客户端就该权限请求用户授权。你确定要继续吗？',
     },
+    client_compatibility: {
+      title: '客户端兼容性',
+      description:
+        '针对尚未完整支持 OpenID Connect 的 OAuth 客户端，调整 Logto 处理其授权请求的方式。这些设置处于实验阶段，可能会变更或被移除。',
+      add_consent_prompt_for_offline_access: '为离线访问添加同意提示',
+      add_consent_prompt_for_offline_access_description:
+        '当 OAuth 客户端请求 `offline_access` 但未携带 `prompt=consent` 时，Logto 会添加同意提示，以便客户端获得刷新令牌。建议在接入 ChatGPT、Codex 等客户端时开启。',
+    },
   },
   guide: {
     third_party: {
