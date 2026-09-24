@@ -1,5 +1,6 @@
 import { type consoleSsoRouter } from '@logto/cloud/routes';
 import { SsoProviderType } from '@logto/schemas';
+import cleanDeep from 'clean-deep';
 import { useEffect, useMemo } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -77,7 +78,7 @@ function Experience({ data, isDeleted, onUpdated }: Props) {
       const updated = await api.patch('/api/me/console-sso/connectors/:connectorId', {
         params: { connectorId: data.id },
         body: {
-          branding: formData.branding,
+          branding: cleanDeep(formData.branding, { emptyObjects: false }),
           syncProfile: formData.syncProfile === SyncProfileMode.EachSignIn,
           ...(data.providerType === SsoProviderType.OIDC && {
             enableTokenStorage: formData.enableTokenStorage,
