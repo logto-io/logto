@@ -21,6 +21,7 @@ const profile = {
       quit_tenant_other: '你將退出以下租戶：',
     },
     issues: {
+      console_sso: '刪除帳戶前，請先移除屬於此帳戶的所有 Console SSO 連接器。',
       paid_plan: '以下租戶有付費方案，請先取消訂閱：',
       paid_plan_other: '以下租戶有付費方案，請先取消訂閱：',
       subscription_status: '以下租戶有訂閱狀態問題：',
