@@ -1,8 +1,16 @@
 const cloud = {
   console_sso: {
+    create: 'Ajouter un connecteur',
     title: 'SSO de la console',
     description:
       'Configurez votre propre fournisseur d’identité pour vous connecter à Logto Console avec l’authentification unique.',
+    domain_bound: 'Vérifié',
+    domain_pending: 'En attente de vérification',
+    start_over: 'Recommencer',
+    start_over_confirmation:
+      'Recommencer peut supprimer votre configuration SSO inachevée. Voulez-vous continuer ?',
+    resume_creation:
+      'Une création inachevée a été trouvée. Continuez avec le même fournisseur pour récupérer ce connecteur.',
   },
   general: {
     onboarding: 'Intégration',

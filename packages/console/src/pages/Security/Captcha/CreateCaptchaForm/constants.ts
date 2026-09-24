@@ -136,6 +136,12 @@ export const captchaProviders: CaptchaProviderMetadata[] = [
         placeholder: 'security.captcha_details.domain_placeholder',
         isOptional: true,
       },
+      {
+        field: 'scoreThreshold',
+        label: 'security.captcha_details.score_threshold',
+        placeholder: 'security.captcha_details.score_threshold',
+        isOptional: true,
+      },
     ],
   },
   {

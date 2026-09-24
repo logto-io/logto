@@ -1,5 +1,11 @@
 import { RecaptchaEnterpriseMode } from '@logto/schemas';
-import { type UseFormRegister, type FieldErrors, Controller, type Control } from 'react-hook-form';
+import {
+  type UseFormRegister,
+  type FieldErrors,
+  Controller,
+  type Control,
+  useWatch,
+} from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import FormField from '@/ds-components/FormField';
@@ -30,6 +36,10 @@ function CaptchaFormFields({ metadata, errors, register, control }: Props) {
   const domainField = metadata.requiredFields.find((field) => field.field === 'domain');
   const modeField = metadata.requiredFields.find((field) => field.field === 'mode');
   const endpointField = metadata.requiredFields.find((field) => field.field === 'endpoint');
+  const scoreThresholdField = metadata.requiredFields.find(
+    (field) => field.field === 'scoreThreshold'
+  );
+  const mode = useWatch({ control, name: 'mode' });
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -52,6 +62,32 @@ function CaptchaFormFields({ metadata, errors, register, control }: Props) {
             })}
           />
         </FormField>
+      )}
+      {modeField && (
+        <>
+          <FormField title={modeField.label}>
+            <Controller
+              name="mode"
+              control={control}
+              defaultValue={RecaptchaEnterpriseMode.Invisible}
+              render={({ field: { onChange, value } }) => (
+                <RadioGroup name="mode" value={value} onChange={onChange}>
+                  <Radio
+                    title="security.captcha_details.mode_invisible"
+                    value={RecaptchaEnterpriseMode.Invisible}
+                  />
+                  <Radio
+                    title="security.captcha_details.mode_checkbox"
+                    value={RecaptchaEnterpriseMode.Checkbox}
+                  />
+                </RadioGroup>
+              )}
+            />
+          </FormField>
+          <InlineNotification className={styles.modeNotice} severity="alert">
+            {t('security.captcha_details.mode_notice')}
+          </InlineNotification>
+        </>
       )}
       {siteKeyField && (
         <FormField isRequired title={siteKeyField.label}>
@@ -89,31 +125,29 @@ function CaptchaFormFields({ metadata, errors, register, control }: Props) {
           />
         </FormField>
       )}
-      {modeField && (
-        <>
-          <FormField title={modeField.label}>
-            <Controller
-              name="mode"
-              control={control}
-              defaultValue={RecaptchaEnterpriseMode.Invisible}
-              render={({ field: { onChange, value } }) => (
-                <RadioGroup name="mode" value={value} onChange={onChange}>
-                  <Radio
-                    title="security.captcha_details.mode_invisible"
-                    value={RecaptchaEnterpriseMode.Invisible}
-                  />
-                  <Radio
-                    title="security.captcha_details.mode_checkbox"
-                    value={RecaptchaEnterpriseMode.Checkbox}
-                  />
-                </RadioGroup>
-              )}
-            />
-          </FormField>
-          <InlineNotification className={styles.modeNotice} severity="alert">
-            {t('security.captcha_details.mode_notice')}
-          </InlineNotification>
-        </>
+      {mode !== RecaptchaEnterpriseMode.Checkbox && scoreThresholdField && (
+        <FormField
+          isRequired={!scoreThresholdField.isOptional}
+          title={scoreThresholdField.label}
+          description="security.captcha_details.score_threshold_description"
+        >
+          <TextInput
+            type="number"
+            min={0}
+            max={1}
+            step={0.01}
+            error={errors.scoreThreshold && t('security.captcha_details.score_threshold_error')}
+            placeholder="0.5"
+            {...register('scoreThreshold', {
+              shouldUnregister: true,
+              required: !scoreThresholdField.isOptional,
+              min: 0,
+              max: 1,
+              setValueAs: (value) => (value === '' || value === null ? undefined : Number(value)),
+              validate: (value) => value === undefined || Number.isFinite(value),
+            })}
+          />
+        </FormField>
       )}
     </>
   );

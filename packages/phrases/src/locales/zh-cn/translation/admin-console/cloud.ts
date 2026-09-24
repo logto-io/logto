@@ -1,7 +1,13 @@
 const cloud = {
   console_sso: {
+    create: '添加连接器',
     title: '控制台 SSO',
     description: '配置你自己的身份提供商，通过单点登录访问 Logto Console。',
+    domain_bound: '已验证',
+    domain_pending: '待验证',
+    start_over: '重新开始',
+    start_over_confirmation: '重新开始可能会删除尚未完成的 SSO 配置。是否继续？',
+    resume_creation: '发现未完成的创建操作。请使用同一身份提供商继续，以恢复此连接器。',
   },
   general: {
     onboarding: '入门',

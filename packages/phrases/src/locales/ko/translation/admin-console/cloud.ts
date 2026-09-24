@@ -1,7 +1,15 @@
 const cloud = {
   console_sso: {
+    create: '커넥터 추가',
     title: '콘솔 SSO',
     description: '자체 ID 제공자를 구성하여 싱글 사인온으로 Logto Console에 로그인하세요.',
+    domain_bound: '인증됨',
+    domain_pending: '인증 대기 중',
+    start_over: '다시 시작',
+    start_over_confirmation:
+      '다시 시작하면 완료되지 않은 SSO 구성이 삭제될 수 있습니다. 계속하시겠습니까?',
+    resume_creation:
+      '완료되지 않은 생성 작업이 있습니다. 동일한 공급자로 계속하여 이 커넥터를 복구하세요.',
   },
   general: {
     onboarding: '온보딩',

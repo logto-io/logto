@@ -1,8 +1,16 @@
 const cloud = {
   console_sso: {
+    create: 'Dodaj konektor',
     title: 'SSO konsoli',
     description:
       'Skonfiguruj własnego dostawcę tożsamości, aby logować się do Logto Console za pomocą jednokrotnego logowania.',
+    domain_bound: 'Zweryfikowano',
+    domain_pending: 'Oczekuje na weryfikację',
+    start_over: 'Zacznij od nowa',
+    start_over_confirmation:
+      'Rozpoczęcie od nowa może usunąć niedokończoną konfigurację SSO. Czy chcesz kontynuować?',
+    resume_creation:
+      'Znaleziono niedokończone tworzenie. Kontynuuj z tym samym dostawcą, aby odzyskać ten konektor.',
   },
   general: {
     onboarding: 'Wdrażanie',

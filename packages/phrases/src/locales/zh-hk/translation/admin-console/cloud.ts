@@ -1,7 +1,13 @@
 const cloud = {
   console_sso: {
+    create: '新增連接器',
     title: '控制台 SSO',
     description: '設定你自己的身份提供者，透過單一登入存取 Logto Console。',
+    domain_bound: '已驗證',
+    domain_pending: '待驗證',
+    start_over: '重新開始',
+    start_over_confirmation: '重新開始可能會刪除尚未完成的 SSO 設定。是否繼續？',
+    resume_creation: '發現未完成的建立操作。請使用相同的身分提供者繼續，以復原此連接器。',
   },
   general: {
     onboarding: '入門',
