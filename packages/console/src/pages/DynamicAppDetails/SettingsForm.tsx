@@ -6,7 +6,6 @@ import { useSWRConfig } from 'swr';
 
 import DetailsForm from '@/components/DetailsForm';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import useApi from '@/hooks/use-api';
 import { cimdConfigEndpoint } from '@/hooks/use-dynamic-app';
 import { trySubmitSafe } from '@/utils/form';
@@ -58,8 +57,7 @@ function SettingsForm({ data, oidcConfig }: Props) {
         >
           <Settings />
           <EndpointsAndCredentials oidcConfig={oidcConfig} />
-          {/* DEV: MCP client compatibility */}
-          {isDevFeaturesEnabled && <ClientCompatibility />}
+          <ClientCompatibility />
         </DetailsForm>
       </FormProvider>
       <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} onConfirm={reset} />

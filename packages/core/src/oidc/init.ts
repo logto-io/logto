@@ -647,11 +647,8 @@ export default function initOidc(
    */
   oidc.use(koaBodyEtag());
   oidc.use(koaOidcPostToGet());
-  // DEV: MCP client compatibility
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    // Register after `koaOidcPostToGet()` so form POST authorization requests are covered too.
-    oidc.use(koaCimdOfflineAccessConsentPrompt(envSet, queries));
-  }
+  // Register after `koaOidcPostToGet()` so form POST authorization requests are covered too.
+  oidc.use(koaCimdOfflineAccessConsentPrompt(envSet, queries));
   /**
    * Check if the request URL contains comma separated `resource` query parameter. If yes, split the values and
    * reconstruct the URL with multiple `resource` query parameters.

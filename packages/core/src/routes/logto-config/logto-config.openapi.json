@@ -566,8 +566,7 @@
                 "schema": {
                   "properties": {
                     "addConsentPromptForOfflineAccess": {
-                      "description": "Dev feature. Experimental. When enabled, Logto adds `consent` to the `prompt` parameter of CIMD authorization requests that include the `offline_access` scope without it, so the client can receive a refresh token. Requests with `prompt=none` are not changed. Defaults to `false`.",
-                      "x-logto-dev-feature": true
+                      "description": "Experimental. When enabled, Logto adds `consent` to the `prompt` parameter of CIMD authorization requests that include the `offline_access` scope without it, so the client can receive a refresh token. Requests with `prompt=none` are not changed. Defaults to `false`."
                     }
                   }
                 }
@@ -588,8 +587,7 @@
                     "description": "Whether CIMD is enabled for the tenant."
                   },
                   "addConsentPromptForOfflineAccess": {
-                    "description": "Dev feature. Experimental. When enabled, Logto adds `consent` to the `prompt` parameter of CIMD authorization requests that include the `offline_access` scope without it, so the client can receive a refresh token. Requests with `prompt=none` are not changed. Defaults to `false`.",
-                    "x-logto-dev-feature": true
+                    "description": "Experimental. When enabled, Logto adds `consent` to the `prompt` parameter of CIMD authorization requests that include the `offline_access` scope without it, so the client can receive a refresh token. Requests with `prompt=none` are not changed. Defaults to `false`."
                   }
                 }
               }
@@ -604,8 +602,7 @@
                 "schema": {
                   "properties": {
                     "addConsentPromptForOfflineAccess": {
-                      "description": "Dev feature. Experimental. When enabled, Logto adds `consent` to the `prompt` parameter of CIMD authorization requests that include the `offline_access` scope without it, so the client can receive a refresh token. Requests with `prompt=none` are not changed. Defaults to `false`.",
-                      "x-logto-dev-feature": true
+                      "description": "Experimental. When enabled, Logto adds `consent` to the `prompt` parameter of CIMD authorization requests that include the `offline_access` scope without it, so the client can receive a refresh token. Requests with `prompt=none` are not changed. Defaults to `false`."
                     }
                   }
                 }
