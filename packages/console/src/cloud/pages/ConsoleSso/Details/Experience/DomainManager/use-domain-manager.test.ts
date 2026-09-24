@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Keep domain hook and UI interaction tests with their shared mocks. */
 import { act, fireEvent, render, renderHook, screen, waitFor } from '@testing-library/react';
 import { ResponseError } from '@withtyped/client';
 import { createElement } from 'react';
@@ -212,10 +213,10 @@ it('waits at least 10 seconds between checks and does not overlap verification r
   expect(api.post).toHaveBeenCalledTimes(2);
 });
 
-it('ignores a late verification after removal and starts a fresh challenge on re-add', async () => {
+it('blocks removal during verification, then allows it before the next check', async () => {
   jest.useFakeTimers();
   api.get.mockResolvedValue(pending);
-  // eslint-disable-next-line @silverhand/fp/no-let -- Hold a server response until after removal.
+  // eslint-disable-next-line @silverhand/fp/no-let -- Hold a server response while removal is attempted.
   let completeVerification: (status: ConsoleSsoDomain) => void;
   api.post.mockImplementationOnce(
     async () =>
@@ -238,12 +239,18 @@ it('ignores a late verification after removal and starts a fresh challenge on re
     jest.advanceTimersByTime(10_000);
     await Promise.resolve();
   });
+  expect(result.current.checking).toBe('example.com');
   await act(async () => {
     await result.current.remove('example.com');
   });
+  expect(api.delete).not.toHaveBeenCalled();
   await act(async () => {
-    completeVerification(bound);
+    completeVerification(pending);
     await Promise.resolve();
+  });
+  expect(result.current.checking).toBeUndefined();
+  await act(async () => {
+    await result.current.remove('example.com');
   });
   expect(result.current.domains).toEqual([]);
   expect(api.delete).toHaveBeenCalledWith(
@@ -342,6 +349,53 @@ it('stops pending verification polling when the page unmounts', async () => {
   expect(api.post).not.toHaveBeenCalled();
 });
 
+it('disables the delete menu item only while verification is in flight', async () => {
+  jest.useFakeTimers();
+  api.get.mockResolvedValue(pending);
+  // eslint-disable-next-line @silverhand/fp/no-let -- Hold the verification response while checking the menu state.
+  let completeVerification: (status: ConsoleSsoDomain) => void;
+  api.post.mockImplementation(
+    async () =>
+      new Promise<ConsoleSsoDomain>((resolve) => {
+        // eslint-disable-next-line @silverhand/fp/no-mutation -- Capture the deferred test resolver.
+        completeVerification = resolve;
+      })
+  );
+  const { container } = render(
+    createElement(DomainManager, {
+      data: { ...connector, domainVerifications: [pending] },
+      onUpdated,
+    })
+  );
+  const menuButton = container.querySelector('.moreIcon')?.closest('button');
+  if (!menuButton) {
+    throw new Error('Domain action menu not found.');
+  }
+  fireEvent.click(menuButton);
+  const deleteItem = screen.getByRole('menuitem', { name: 'admin_console.general.delete' });
+  expect(deleteItem.getAttribute('aria-disabled')).toBe('false');
+
+  const header = screen.getByText('example.com').closest('button');
+  if (!header) {
+    throw new Error('Domain header not found.');
+  }
+  await act(async () => {
+    fireEvent.click(header);
+    await Promise.resolve();
+  });
+  await act(async () => {
+    jest.advanceTimersByTime(10_000);
+    await Promise.resolve();
+  });
+  expect(deleteItem.getAttribute('aria-disabled')).toBe('true');
+
+  await act(async () => {
+    completeVerification(pending);
+    await Promise.resolve();
+  });
+  expect(deleteItem.getAttribute('aria-disabled')).toBe('false');
+});
+
 it('expands the pending row to show the TXT record and copies its exact value', async () => {
   api.get.mockResolvedValue(pending);
   const writeText = jest.fn(async () => {
@@ -433,3 +487,4 @@ it('offers cleanup recovery when Core is bound but its temporary proof remains',
   });
   expect(api.post).toHaveBeenCalledTimes(1);
 });
+/* eslint-enable max-lines */

@@ -54,6 +54,7 @@ type CardProps = {
   readonly status: ConsoleSsoDomain;
   readonly hasPendingCleanup: boolean;
   readonly isExpanded: boolean;
+  readonly isRemoveDisabled: boolean;
   readonly error?: DomainError;
   readonly onToggle: () => void;
   readonly onRemove: () => Promise<void>;
@@ -63,6 +64,7 @@ function DomainCard({
   status,
   hasPendingCleanup,
   isExpanded,
+  isRemoveDisabled,
   error,
   onToggle,
   onRemove,
@@ -99,7 +101,12 @@ function DomainCard({
           iconSize="small"
           title={<DynamicT forKey="general.more_options" />}
         >
-          <ActionMenuItem icon={<Delete />} type="danger" onClick={onRemove}>
+          <ActionMenuItem
+            icon={<Delete />}
+            type="danger"
+            isDisabled={isRemoveDisabled}
+            onClick={onRemove}
+          >
             <DynamicT forKey="general.delete" />
           </ActionMenuItem>
         </ActionMenu>
@@ -162,8 +169,20 @@ function DomainCard({
 function DomainManager({ data, onUpdated }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { show } = useConfirmModal();
-  const { domains, input, setInput, inputError, expanded, errors, isAdding, add, toggle, remove } =
-    useDomainManager({ data, onUpdated });
+  const {
+    domains,
+    input,
+    setInput,
+    inputError,
+    expanded,
+    errors,
+    isAdding,
+    checking,
+    deleting,
+    add,
+    toggle,
+    remove,
+  } = useDomainManager({ data, onUpdated });
 
   const confirmRemove = async (domain: string) => {
     const [confirmed] = await show({
@@ -215,6 +234,7 @@ function DomainManager({ data, onUpdated }: Props) {
                 data.domainVerifications.some(({ domain }) => domain === status.domain)
               }
               isExpanded={expanded === status.domain}
+              isRemoveDisabled={checking !== undefined || deleting !== undefined}
               error={errors[status.domain]}
               onToggle={() => {
                 toggle(status.domain);

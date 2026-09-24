@@ -219,7 +219,7 @@ export const useDomainManager = ({ data, onUpdated }: Props) => {
   };
 
   const remove = async (domain: string) => {
-    if (deleting) {
+    if (deleting !== undefined || inFlight.current) {
       return;
     }
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Stop polling and ignore an older verification response before deletion.
