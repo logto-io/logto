@@ -16,4 +16,10 @@ export type License = {
   expiresAt: string;
   /** When the key was installed on this deployment, in ISO 8601 format. */
   installedAt: string;
+  /** When the deployment last refreshed the key successfully, in ISO 8601 format. */
+  lastRefreshedAt: string;
+  /** When the deployment stops honoring the license after unsuccessful refreshes, in ISO 8601 format. */
+  graceEndsAt: string;
+  /** Why the last refresh was refused by the license service, if applicable. */
+  refusalReason?: string;
 };

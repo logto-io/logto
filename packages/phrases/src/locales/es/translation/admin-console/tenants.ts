@@ -33,6 +33,20 @@ const tenants = {
     environment_non_production: 'No producción',
     expires_at_field: 'Caduca el',
     installed_at_field: 'Instalada el',
+    last_refreshed_at_field: 'Última actualización',
+    grace_ends_at_field: 'El periodo de gracia termina el',
+    refresh_expired_description:
+      'La clave de licencia caducó el {{expiresAt}}. Las funciones con licencia seguirán disponibles hasta {{graceEndsAt}} mientras Logto intenta actualizarla.',
+    refresh_refused_description:
+      'Se rechazó la actualización porque la licencia está {{reason}}. Las funciones con licencia seguirán disponibles hasta {{graceEndsAt}}.',
+    refusal_reason_canceled: 'cancelada',
+    refusal_reason_unpaid: 'impagada',
+    refusal_reason_expired: 'caducada',
+    refusal_reason_revoked: 'revocada',
+    refusal_reason_unknown: 'no disponible',
+    grace_expired_description:
+      'El periodo de gracia de la licencia terminó el {{graceEndsAt}}. Esta implementación volvió a los valores predeterminados de OSS. Obtén una clave nueva desde Logto Cloud e instálala de nuevo.',
+    get_fresh_key_button: 'Obtener una clave nueva',
     replace_button: 'Reemplazar licencia',
   },
   members: {

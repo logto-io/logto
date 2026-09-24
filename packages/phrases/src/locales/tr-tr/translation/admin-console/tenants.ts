@@ -34,6 +34,20 @@ const tenants = {
     environment_non_production: 'Üretim dışı',
     expires_at_field: 'Bitiş tarihi',
     installed_at_field: 'Kurulum tarihi',
+    last_refreshed_at_field: 'Son yenileme tarihi',
+    grace_ends_at_field: 'Ek süre bitiş tarihi',
+    refresh_expired_description:
+      'Lisans anahtarının süresi {{expiresAt}} tarihinde doldu. Logto anahtarı yenilemeyi denerken lisanslı özellikler {{graceEndsAt}} tarihine kadar kullanılabilir.',
+    refresh_refused_description:
+      'Lisans {{reason}} olduğu için lisans yenileme reddedildi. Lisanslı özellikler {{graceEndsAt}} tarihine kadar kullanılabilir.',
+    refusal_reason_canceled: 'iptal edildi',
+    refusal_reason_unpaid: 'ödenmedi',
+    refusal_reason_expired: 'süresi doldu',
+    refusal_reason_revoked: 'geri alındı',
+    refusal_reason_unknown: 'kullanılamıyor',
+    grace_expired_description:
+      'Lisansın ek süresi {{graceEndsAt}} tarihinde sona erdi. Bu örnek OSS varsayılanlarına döndü. Logto Cloud’dan yeni bir lisans anahtarı alın ve yeniden kurun.',
+    get_fresh_key_button: 'Yeni lisans anahtarı al',
     replace_button: 'Lisansı değiştir',
   },
   members: {

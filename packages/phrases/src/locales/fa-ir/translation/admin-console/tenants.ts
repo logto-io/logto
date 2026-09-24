@@ -34,6 +34,20 @@ const tenants = {
     environment_non_production: 'غیرتولیدی',
     expires_at_field: 'تاریخ انقضا',
     installed_at_field: 'تاریخ نصب',
+    last_refreshed_at_field: 'آخرین به‌روزرسانی در',
+    grace_ends_at_field: 'پایان مهلت ارفاقی در',
+    refresh_expired_description:
+      'کلید مجوز در {{expiresAt}} منقضی شد. تا زمانی که Logto تلاش می‌کند آن را به‌روزرسانی کند، قابلیت‌های دارای مجوز تا {{graceEndsAt}} در دسترس می‌مانند.',
+    refresh_refused_description:
+      'به‌روزرسانی مجوز رد شد، زیرا مجوز {{reason}} است. قابلیت‌های دارای مجوز تا {{graceEndsAt}} در دسترس می‌مانند.',
+    refusal_reason_canceled: 'لغوشده',
+    refusal_reason_unpaid: 'پرداخت‌نشده',
+    refusal_reason_expired: 'منقضی‌شده',
+    refusal_reason_revoked: 'باطل‌شده',
+    refusal_reason_unknown: 'در دسترس نیست',
+    grace_expired_description:
+      'مهلت ارفاقی مجوز در {{graceEndsAt}} پایان یافت. این استقرار به پیش‌فرض‌های OSS بازگشته است. یک کلید مجوز تازه از Logto Cloud بگیرید و دوباره آن را نصب کنید.',
+    get_fresh_key_button: 'دریافت کلید مجوز تازه',
     replace_button: 'جایگزینی مجوز',
   },
   members: {

@@ -34,6 +34,20 @@ const tenants = {
     environment_non_production: 'Nicht-Produktion',
     expires_at_field: 'Läuft ab am',
     installed_at_field: 'Installiert am',
+    last_refreshed_at_field: 'Zuletzt aktualisiert am',
+    grace_ends_at_field: 'Kulanzzeit endet am',
+    refresh_expired_description:
+      'Der Lizenzschlüssel ist am {{expiresAt}} abgelaufen. Lizenzierte Funktionen bleiben bis {{graceEndsAt}} verfügbar, während Logto versucht, ihn zu aktualisieren.',
+    refresh_refused_description:
+      'Die Lizenzaktualisierung wurde abgelehnt, weil die Lizenz {{reason}} ist. Lizenzierte Funktionen bleiben bis {{graceEndsAt}} verfügbar.',
+    refusal_reason_canceled: 'gekündigt',
+    refusal_reason_unpaid: 'unbezahlt',
+    refusal_reason_expired: 'abgelaufen',
+    refusal_reason_revoked: 'widerrufen',
+    refusal_reason_unknown: 'nicht verfügbar',
+    grace_expired_description:
+      'Die Kulanzzeit der Lizenz endete am {{graceEndsAt}}. Diese Bereitstellung verwendet wieder die OSS-Standards. Hole einen neuen Lizenzschlüssel aus Logto Cloud und installiere ihn erneut.',
+    get_fresh_key_button: 'Neuen Lizenzschlüssel abrufen',
     replace_button: 'Lizenz ersetzen',
   },
   members: {
