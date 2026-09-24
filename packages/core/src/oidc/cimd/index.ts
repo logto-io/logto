@@ -82,14 +82,15 @@ export const getClientIdentifierPayload = (clientId?: string): ClientIdentifierP
   shouldAttributeToCimd(clientId) ? { cimdClientId: clientId } : { applicationId: clientId };
 
 /**
- * Whether the identifier names a CIMD client on this tenant's provider: the URL shape only
- * routes while the feature is effectively enabled, so a URL-shaped identifier stays an ordinary
- * (and unresolvable) client id otherwise.
+ * Whether the tenant handles the identifier through the CIMD client path. This is a tenant-scoped
+ * decision rather than a property of the identifier: the URL shape only routes while the feature
+ * is effectively enabled, so a URL-shaped identifier keeps the registered-client path otherwise,
+ * where it stays an ordinary (and unresolvable) client id.
  *
- * Callers that hold an optional identifier can pass it directly — an absent identifier is never
- * a CIMD client.
+ * Callers that hold an optional identifier can pass it directly; an absent identifier never takes
+ * the CIMD path.
  */
-export const isCimdClient = (envSet: EnvSet, clientId?: string): boolean =>
+export const shouldTreatAsCimdClient = (envSet: EnvSet, clientId?: string): boolean =>
   clientId !== undefined && isCimdEffectivelyEnabled(envSet) && isCimdClientId(clientId);
 
 /**

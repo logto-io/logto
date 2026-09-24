@@ -160,27 +160,27 @@ describe('getClientIdentifierPayload', () => {
   });
 });
 
-describe('isCimdClient', () => {
+describe('shouldTreatAsCimdClient', () => {
   const cimdClientId = 'https://client.example.com/client-metadata.json';
 
-  it('is a cimd client when the feature is effective and the identifier is url-shaped', async () => {
-    const { isCimdClient } = await loadCimdModule();
-    expect(isCimdClient(buildEnvSet(true), cimdClientId)).toBe(true);
+  it('treats a url-shaped identifier as a cimd client when the feature is effective', async () => {
+    const { shouldTreatAsCimdClient } = await loadCimdModule();
+    expect(shouldTreatAsCimdClient(buildEnvSet(true), cimdClientId)).toBe(true);
   });
 
-  it('is not a cimd client for a registered application id', async () => {
-    const { isCimdClient } = await loadCimdModule();
-    expect(isCimdClient(buildEnvSet(true), 'registered_client_id')).toBe(false);
+  it('does not treat a registered application id as a cimd client', async () => {
+    const { shouldTreatAsCimdClient } = await loadCimdModule();
+    expect(shouldTreatAsCimdClient(buildEnvSet(true), 'registered_client_id')).toBe(false);
   });
 
-  it('is not a cimd client without an identifier', async () => {
-    const { isCimdClient } = await loadCimdModule();
-    expect(isCimdClient(buildEnvSet(true))).toBe(false);
+  it('does not treat a missing identifier as a cimd client', async () => {
+    const { shouldTreatAsCimdClient } = await loadCimdModule();
+    expect(shouldTreatAsCimdClient(buildEnvSet(true))).toBe(false);
   });
 
-  it('is not a cimd client when the feature is not effectively enabled', async () => {
-    const { isCimdClient } = await loadCimdModule();
-    expect(isCimdClient(buildEnvSet(false), cimdClientId)).toBe(false);
+  it('does not treat a url-shaped identifier as a cimd client when the feature is not effectively enabled', async () => {
+    const { shouldTreatAsCimdClient } = await loadCimdModule();
+    expect(shouldTreatAsCimdClient(buildEnvSet(false), cimdClientId)).toBe(false);
   });
 });
 

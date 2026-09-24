@@ -59,7 +59,7 @@ import {
   markAppLevelAccessControlCheckedForOidcContext,
 } from './application-access-control.js';
 import { getExtraTokenClaimsForAuthenticationContext } from './authentication-context-claims.js';
-import { buildClientIdMetadataDocumentFeature, isCimdClient } from './cimd/index.js';
+import { buildClientIdMetadataDocumentFeature, shouldTreatAsCimdClient } from './cimd/index.js';
 import { filterResourceScopesForTheCimdClient } from './cimd/resource-scopes.js';
 import { getOidcScopesNoLongerAllowed } from './client-scope.js';
 import defaults from './defaults.js';
@@ -131,7 +131,7 @@ export default function initOidc(
       userId,
     });
 
-    if (isCimdClient(envSet, clientId)) {
+    if (shouldTreatAsCimdClient(envSet, clientId)) {
       /**
        * CIMD clients are unregistered: the tenant-wide ceiling replaces the per-application
        * consent configuration the third-party filter below reads.
@@ -289,7 +289,7 @@ export default function initOidc(
          * consumers (experience SSR, verification-code template context) fall back to the
          * tenant default sign-in experience without any application lookup.
          */
-        const cookieParams = isCimdClient(envSet, resolvedAppId)
+        const cookieParams = shouldTreatAsCimdClient(envSet, resolvedAppId)
           ? { ...sharedParams, appId: undefined }
           : sharedParams;
 
@@ -330,7 +330,7 @@ export default function initOidc(
     },
     loadExistingGrant: async (ctx) => {
       const { account, client, provider, result, session } = ctx.oidc;
-      const cimd = isCimdClient(envSet, client?.clientId);
+      const cimd = shouldTreatAsCimdClient(envSet, client?.clientId);
       /**
        * CIMD organization access is grant-scoped, so a Grant must never serve more than one
        * authorization — skip the session grant reuse. The `result.consent.grantId` branch

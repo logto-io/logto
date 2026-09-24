@@ -20,7 +20,7 @@ import { consent, getMissingScopes } from '#src/libraries/session/index.js';
 import koaAppAccessControl from '#src/middleware/koa-app-access-control.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
-import { isCimdClient } from '#src/oidc/cimd/index.js';
+import { shouldTreatAsCimdClient } from '#src/oidc/cimd/index.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -75,7 +75,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
 
       const { accountId: userId } = session;
 
-      const cimd = isCimdClient(envSet, applicationId);
+      const cimd = shouldTreatAsCimdClient(envSet, applicationId);
 
       const { missingOIDCScope = [], missingResourceScopes: allMissingResourceScopes = {} } =
         getMissingScopes(prompt);
@@ -257,7 +257,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
 
       const { accountId } = session;
 
-      const cimd = isCimdClient(envSet, clientId);
+      const cimd = shouldTreatAsCimdClient(envSet, clientId);
 
       /**
        * CIMD clients are unregistered: display data comes from the provider-resolved metadata

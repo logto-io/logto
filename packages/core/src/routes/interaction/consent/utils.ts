@@ -4,7 +4,7 @@ import { deduplicate } from '@silverhand/essentials';
 import { type Provider, errors } from 'oidc-provider';
 
 import { type EnvSet } from '#src/env-set/index.js';
-import { isCimdClient } from '#src/oidc/cimd/index.js';
+import { shouldTreatAsCimdClient } from '#src/oidc/cimd/index.js';
 import { filterResourceScopesForTheCimdClient } from '#src/oidc/cimd/resource-scopes.js';
 import {
   filterResourceScopesForTheThirdPartyApplication,
@@ -244,7 +244,7 @@ export const filterAndParseMissingResourceScopes = async ({
             organizationId,
           });
 
-          if (isCimdClient(envSet, applicationId)) {
+          if (shouldTreatAsCimdClient(envSet, applicationId)) {
             /**
              * CIMD clients are unregistered: the tenant-wide ceiling replaces the
              * per-application consent configuration the third-party filter reads.
