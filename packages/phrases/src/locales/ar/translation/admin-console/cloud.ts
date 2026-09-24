@@ -1,5 +1,6 @@
 const cloud = {
   console_sso: {
+    back_to_list: 'العودة إلى تسجيل الدخول الموحد لوحدة التحكم',
     create: 'إضافة موصل',
     title: 'تسجيل الدخول الموحّد لوحدة التحكم',
     description:

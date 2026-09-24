@@ -1,5 +1,6 @@
 const cloud = {
   console_sso: {
+    back_to_list: '返回控制台 SSO',
     create: '添加连接器',
     title: '控制台 SSO',
     description: '配置你自己的身份提供商，通过单点登录访问 Logto Console。',

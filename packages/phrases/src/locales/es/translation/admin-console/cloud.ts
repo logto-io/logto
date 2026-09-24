@@ -1,5 +1,6 @@
 const cloud = {
   console_sso: {
+    back_to_list: 'Volver a SSO de la consola',
     create: 'Añadir conector',
     title: 'SSO de la consola',
     description:

@@ -1,5 +1,6 @@
 const cloud = {
   console_sso: {
+    back_to_list: 'Wróć do Console SSO',
     create: 'Dodaj konektor',
     title: 'SSO konsoli',
     description:

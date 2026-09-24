@@ -1,5 +1,6 @@
 const cloud = {
   console_sso: {
+    back_to_list: 'กลับไปที่ Console SSO',
     create: 'เพิ่มตัวเชื่อมต่อ',
     title: 'SSO ของคอนโซล',
     description:

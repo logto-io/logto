@@ -16,3 +16,19 @@ export const useConsoleSsoConnectors = () => {
   );
   return { ...result, data: userError ? undefined : result.data, error: userError ?? result.error };
 };
+
+export const useConsoleSsoConnector = (connectorId?: string) => {
+  const { user, error: userError } = useCurrentUser();
+  const api = useCloudApi<typeof consoleSsoRouter>({ hideErrorToast: true });
+  const result = useSWR<ConsoleSsoConnector, ResponseError>(
+    user &&
+      !userError &&
+      connectorId && ['/api/me/console-sso/connectors/:connectorId', user.id, connectorId],
+    async () =>
+      api.get('/api/me/console-sso/connectors/:connectorId', {
+        params: { connectorId: connectorId ?? '' },
+      }),
+    { keepPreviousData: false }
+  );
+  return { ...result, data: userError ? undefined : result.data, error: userError ?? result.error };
+};

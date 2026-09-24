@@ -1,5 +1,6 @@
 const cloud = {
   console_sso: {
+    back_to_list: 'بازگشت به ورود یکپارچه کنسول',
     create: 'افزودن اتصال\u200Cدهنده',
     title: 'ورود یکپارچه کنسول',
     description:
