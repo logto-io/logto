@@ -28,6 +28,7 @@ import { type LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import koaAppSecretTranspilation from '#src/middleware/koa-app-secret-transpilation.js';
 import koaAuditLog, { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
+import koaCimdOfflineAccessConsentPrompt from '#src/middleware/koa-cimd-offline-access-consent-prompt.js';
 import koaJwksCacheControl from '#src/middleware/koa-jwks-cache-control.js';
 import koaOidcCookies from '#src/middleware/koa-oidc-cookies.js';
 import koaOidcPostToGet from '#src/middleware/koa-oidc-post-to-get.js';
@@ -646,6 +647,11 @@ export default function initOidc(
    */
   oidc.use(koaBodyEtag());
   oidc.use(koaOidcPostToGet());
+  // DEV: MCP client compatibility
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    // Register after `koaOidcPostToGet()` so form POST authorization requests are covered too.
+    oidc.use(koaCimdOfflineAccessConsentPrompt(envSet, queries));
+  }
   /**
    * Check if the request URL contains comma separated `resource` query parameter. If yes, split the values and
    * reconstruct the URL with multiple `resource` query parameters.

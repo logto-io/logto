@@ -9,8 +9,8 @@ import { captureEvent } from '#src/utils/posthog.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 /**
- * Routes for the OAuth Client ID Metadata Document (CIMD) enablement switch, stored as the
- * optional `cimd` tenant config object.
+ * Routes for the OAuth Client ID Metadata Document (CIMD) settings, stored as the optional `cimd`
+ * tenant config object.
  */
 export default function logtoConfigCimdRoutes<T extends ManagementApiRouter>(
   ...[router, tenant]: RouterInitArgs<T>
