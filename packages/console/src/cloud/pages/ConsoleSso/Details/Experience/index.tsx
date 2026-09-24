@@ -13,13 +13,13 @@ import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
-import InlineNotification from '@/ds-components/InlineNotification';
 import Select from '@/ds-components/Select';
 import Switch from '@/ds-components/Switch';
 import TextInput from '@/ds-components/TextInput';
 import { SyncProfileMode } from '@/types/connector';
 import { uriValidator } from '@/utils/validator';
 
+import DomainManager from './DomainManager';
 import styles from './index.module.scss';
 
 type Props = {
@@ -34,7 +34,9 @@ type FormType = {
   enableTokenStorage: boolean;
 };
 
-const dataToForm = (data: ConsoleSsoConnector): FormType => ({
+const dataToForm = (
+  data: Pick<ConsoleSsoConnector, 'branding' | 'syncProfile' | 'enableTokenStorage'>
+): FormType => ({
   branding: {
     displayName: data.branding.displayName ?? '',
     logo: data.branding.logo ?? '',
@@ -45,6 +47,8 @@ const dataToForm = (data: ConsoleSsoConnector): FormType => ({
 });
 
 function Experience({ data, isDeleted, onUpdated }: Props) {
+  const { branding, syncProfile, enableTokenStorage } = data;
+  const { displayName, logo, darkLogo } = branding;
   const api = useCloudApi<typeof consoleSsoRouter>({ hideErrorToast: true });
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const methods = useForm<FormType>({ defaultValues: dataToForm(data) });
@@ -69,9 +73,15 @@ function Experience({ data, isDeleted, onUpdated }: Props) {
     [t]
   );
 
+  const formValues = useMemo(
+    () =>
+      dataToForm({ branding: { displayName, logo, darkLogo }, syncProfile, enableTokenStorage }),
+    [displayName, logo, darkLogo, syncProfile, enableTokenStorage]
+  );
+
   useEffect(() => {
-    reset(dataToForm(data));
-  }, [data, reset]);
+    reset(formValues);
+  }, [formValues, reset]);
 
   const onSubmit = handleSubmit(async (formData) => {
     try {
@@ -109,12 +119,7 @@ function Experience({ data, isDeleted, onUpdated }: Props) {
           <FormField title="enterprise_sso_details.connector_name_field_name">
             <CopyToClipboard displayType="block" variant="border" value={data.connectorName} />
           </FormField>
-          {/* TODO (LOG-14204): Replace this placeholder with verified-domain management. */}
-          <FormField title="enterprise_sso_details.email_domain_field_name">
-            <InlineNotification severity="info">
-              Email domain verification will be available here.
-            </InlineNotification>
-          </FormField>
+          <DomainManager data={data} onUpdated={onUpdated} />
           <FormField title="enterprise_sso_details.sync_profile_field_name">
             <Controller
               name="syncProfile"

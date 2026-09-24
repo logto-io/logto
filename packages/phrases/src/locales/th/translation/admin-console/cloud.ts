@@ -5,8 +5,26 @@ const cloud = {
     title: 'SSO ของคอนโซล',
     description:
       'กำหนดค่าผู้ให้บริการข้อมูลประจำตัวของคุณเองเพื่อลงชื่อเข้าใช้ Logto Console ด้วยการลงชื่อเข้าใช้ครั้งเดียว',
-    domain_bound: 'ยืนยันแล้ว',
-    domain_pending: 'รอการยืนยัน',
+    domain_bound: 'ผูกแล้ว',
+    domain_pending: 'กำลังตรวจสอบ',
+    domain_verify_step: 'ยืนยันโดเมนของคุณ',
+    domain_bind_step: 'ผูกโดเมนอีเมล',
+    domain_add_placeholder: 'เพิ่มโดเมนอีเมล',
+    domain_bound_description:
+      'โดเมนนี้ใช้งานกับ Console SSO แล้ว และได้ลบระเบียน TXT สำหรับยืนยันแล้ว',
+    domain_dns_instructions:
+      'เพิ่มระเบียน TXT นี้กับผู้ให้บริการ DNS เพื่อยืนยันความเป็นเจ้าของโดเมน',
+    domain_waiting_for_dns: 'กำลังรอระเบียน TXT เราจะตรวจสอบอีกครั้งทุก 10 วินาที',
+    domain_proven_unbound: 'ยืนยันความเป็นเจ้าของโดเมนแล้ว แต่ยังผูกโดเมนไม่สำเร็จ',
+    domain_verified: 'ยืนยันความเป็นเจ้าของโดเมนแล้ว',
+    domain_binding_pending: 'การผูกโดเมนจะเริ่มโดยอัตโนมัติหลังการยืนยัน',
+    domain_remove_description:
+      'นำ {{domain}} ออกจาก Console SSO หรือไม่? การนำโดเมนที่ผูกแล้วออกจะหยุดการค้นพบ SSO สำหรับที่อยู่อีเมลของโดเมนนั้น',
+    domain_invalid: 'ป้อนโดเมนอีเมลที่ถูกต้อง',
+    domain_conflict: 'โดเมนนี้ผูกกับตัวเชื่อมต่อ Console SSO อื่นแล้ว',
+    domain_invalid_provider: 'ตั้งค่าการเชื่อมต่อให้เสร็จก่อนผูกโดเมนนี้',
+    domain_dns_timeout: 'การตรวจสอบ DNS ล้มเหลว เราจะลองอีกครั้งโดยอัตโนมัติ',
+    domain_recovery: 'การเปลี่ยนโดเมนยังไม่เสร็จ',
     start_over: 'เริ่มใหม่',
     start_over_confirmation:
       'การเริ่มใหม่อาจลบการกำหนดค่า SSO ที่ยังไม่เสร็จสมบูรณ์ของคุณ ต้องการดำเนินการต่อหรือไม่?',

@@ -1,3 +1,4 @@
+import { type AdminConsoleKey } from '@logto/phrases';
 import { type DomainDnsRecords } from '@logto/schemas';
 
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
@@ -9,13 +10,14 @@ import styles from './index.module.scss';
 
 type Props = {
   readonly records: DomainDnsRecords;
+  readonly tip?: AdminConsoleKey;
 };
 
-function DnsRecordsTable({ records }: Props) {
+function DnsRecordsTable({ records, tip = 'domain.custom.add_dns_records' }: Props) {
   return (
     <div>
       <div className={styles.tip}>
-        <DynamicT forKey="domain.custom.add_dns_records" />
+        <DynamicT forKey={tip} />
       </div>
       <div className={styles.container}>
         {records.length === 0 ? (

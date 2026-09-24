@@ -5,8 +5,25 @@ const cloud = {
     title: 'Console SSO',
     description:
       'Configure your own identity provider to sign in to Logto Console with single sign-on.',
-    domain_bound: 'Verified',
-    domain_pending: 'Pending verification',
+    domain_bound: 'Bound',
+    domain_pending: 'Verifying',
+    domain_verify_step: 'Verify your domain',
+    domain_bind_step: 'Bind email domain',
+    domain_add_placeholder: 'Add an email domain',
+    domain_bound_description:
+      'This domain is active for Console SSO. Its TXT challenge has been removed.',
+    domain_dns_instructions: 'Add this TXT record to your DNS provider to verify domain ownership.',
+    domain_waiting_for_dns: 'Waiting for the TXT record. We check again every 10 seconds.',
+    domain_proven_unbound: 'Domain ownership is verified, but binding is incomplete.',
+    domain_verified: 'Domain ownership verified.',
+    domain_binding_pending: 'Binding starts automatically after verification.',
+    domain_remove_description:
+      'Remove {{domain}} from Console SSO? Removing a bound domain stops SSO discovery for its email addresses.',
+    domain_invalid: 'Enter a valid email domain.',
+    domain_conflict: 'This domain is already bound to another Console SSO connector.',
+    domain_invalid_provider: 'Complete the Connection settings before binding this domain.',
+    domain_dns_timeout: 'The DNS check failed. We will retry automatically.',
+    domain_recovery: 'The domain change is incomplete.',
     start_over: 'Start over',
     start_over_confirmation:
       'Starting over may delete your incomplete SSO configuration. Do you want to continue?',

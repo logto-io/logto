@@ -1,0 +1,85 @@
+@use '@/scss/underscore' as _;
+
+.addRow {
+  display: flex;
+  align-items: flex-start;
+  gap: _.unit(3);
+
+  > :first-child {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(3);
+  margin-top: _.unit(4);
+}
+
+.card {
+  border: 1px solid var(--color-divider);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: _.unit(6);
+  padding: _.unit(5) _.unit(6);
+}
+
+.cardToggle {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: _.unit(6);
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-text);
+  text-align: start;
+  cursor: pointer;
+}
+
+.domain {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font: var(--font-title-2);
+}
+
+.chevron,
+.expandedChevron {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  color: var(--color-text-secondary);
+}
+
+.expandedChevron {
+  transform: rotate(180deg);
+}
+
+.moreIcon {
+  width: 16px;
+  height: 16px;
+  color: var(--color-text-secondary);
+}
+
+.cardContent {
+  padding: _.unit(5) _.unit(6) 0;
+  border-top: 1px solid var(--color-divider);
+}
+
+.errorNotification {
+  margin-bottom: _.unit(6);
+}
+
+.statusText {
+  color: var(--color-text-secondary);
+  font: var(--font-body-2);
+}
