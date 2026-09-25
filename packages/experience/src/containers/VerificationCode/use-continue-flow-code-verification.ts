@@ -64,14 +64,13 @@ const useContinueFlowCodeVerification = (
   const identifierExistsErrorHandler = useCallback(async () => {
     const linkSocial = searchParameters.get(SearchParameters.LinkSocial);
     const socialVerificationId = verificationIdsMap[VerificationType.Social];
+    const { type, value } = identifier;
 
     // Show bind with social confirm modal
-    if (linkSocial && socialVerificationId) {
+    if (linkSocial && socialVerificationId && isVerificationCodeEnabledForSignIn(type)) {
       await showLinkSocialConfirmModal(identifier, verificationId, socialVerificationId);
       return;
     }
-
-    const { type, value } = identifier;
 
     // This is to ensure a consistent user experience during the registration process.
     // If email or phone number has been enabled as additional sign-up identifiers,
