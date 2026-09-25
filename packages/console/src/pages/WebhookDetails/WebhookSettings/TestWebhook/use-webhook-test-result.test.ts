@@ -14,6 +14,11 @@ const testResult = {
   requestTime: 0,
 };
 
+const anotherTestResult = {
+  ...testResult,
+  endpointUrl: 'https://example.com/another-webhook',
+};
+
 describe('useWebhookTestResult', () => {
   beforeEach(() => {
     sessionStorage.clear();
@@ -57,5 +62,43 @@ describe('useWebhookTestResult', () => {
     const { result } = renderHook(() => useWebhookTestResult('hook-a'));
 
     expect(result.current.result).toEqual(testResult);
+  });
+
+  it('reads the new scoped result when the hook id changes without remounting', () => {
+    sessionStorage.setItem(getStorageKey('hook-a'), JSON.stringify(testResult));
+    sessionStorage.setItem(getStorageKey('hook-b'), JSON.stringify(anotherTestResult));
+
+    const { result, rerender } = renderHook(
+      ({ hookId }: { readonly hookId: string }) => useWebhookTestResult(hookId),
+      { initialProps: { hookId: 'hook-a' } }
+    );
+
+    expect(result.current.result).toEqual(testResult);
+
+    rerender({ hookId: 'hook-b' });
+
+    expect(result.current.result).toEqual(anotherTestResult);
+
+    act(() => {
+      result.current.setResult(undefined);
+    });
+
+    expect(sessionStorage.getItem(getStorageKey('hook-b'))).toBeNull();
+    expect(sessionStorage.getItem(getStorageKey('hook-a'))).toBe(JSON.stringify(testResult));
+  });
+
+  it('does not show a stale result when the new hook has no result', () => {
+    sessionStorage.setItem(getStorageKey('hook-a'), JSON.stringify(testResult));
+
+    const { result, rerender } = renderHook(
+      ({ hookId }: { readonly hookId: string }) => useWebhookTestResult(hookId),
+      { initialProps: { hookId: 'hook-a' } }
+    );
+
+    expect(result.current.result).toEqual(testResult);
+
+    rerender({ hookId: 'hook-b' });
+
+    expect(result.current.result).toBeUndefined();
   });
 });

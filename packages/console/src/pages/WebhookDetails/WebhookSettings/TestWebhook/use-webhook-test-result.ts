@@ -16,6 +16,11 @@ const webhookTestResultGuard = z.object({
 
 type WebhookTestResult = z.infer<typeof webhookTestResultGuard>;
 
+type TestResultState = {
+  readonly hookId: string;
+  readonly result?: WebhookTestResult;
+};
+
 const getStorageKey = (hookId: string) => `${storageKeys.webhookTestResult}:${hookId}`;
 
 const readResult = (hookId: string) => {
@@ -27,14 +32,19 @@ const readResult = (hookId: string) => {
 };
 
 const useWebhookTestResult = (hookId: string) => {
-  const [testResult, setTestResult] = useState<WebhookTestResult | undefined>(() =>
-    readResult(hookId)
-  );
+  const [state, setState] = useState<TestResultState>(() => ({
+    hookId,
+    result: readResult(hookId),
+  }));
+
+  if (state.hookId !== hookId) {
+    setState({ hookId, result: readResult(hookId) });
+  }
 
   return {
-    result: testResult,
+    result: state.result,
     setResult: (result?: WebhookTestResult) => {
-      setTestResult(result);
+      setState({ hookId, result });
       const storageKey = getStorageKey(hookId);
       if (result) {
         sessionStorage.setItem(storageKey, JSON.stringify(result));
