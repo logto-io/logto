@@ -84,9 +84,13 @@ function CustomUiForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
   const { control } = useFormContext<SignInExperienceForm>();
-  const { currentSubscriptionQuota } = useContext(SubscriptionDataContext);
+  const { currentSubscriptionQuota, license } = useContext(SubscriptionDataContext);
   const isBringYourUiEnabled = currentSubscriptionQuota.bringYourUiEnabled;
-  const shouldShowOssBringYourUi = !isCloud;
+  // A self-hosted license that grants Bring your UI unlocks the upload, onto the storage the
+  // deployment has configured. The license is only read while self-hosted plans are a dev feature.
+  const isLicensedBringYourUi = !isCloud && Boolean(license?.quota.bringYourUi);
+  const shouldShowUploader = isCloud || isLicensedBringYourUi;
+  const shouldShowOssBringYourUi = !shouldShowUploader;
 
   return (
     <>
@@ -99,7 +103,7 @@ function CustomUiForm() {
           title="custom_ui.bring_your_ui_title"
           featureTag={cond(isCloud && { isVisible: !isBringYourUiEnabled, plan: latestProPlanId })}
         />
-        {isCloud && (
+        {shouldShowUploader && (
           <FormField
             title="sign_in_exp.custom_ui.bring_your_ui_upload_title"
             description={
@@ -123,7 +127,7 @@ function CustomUiForm() {
               control={control}
               render={({ field: { onChange, value } }) => (
                 <CustomUiAssetsUploader
-                  disabled={!isBringYourUiEnabled}
+                  disabled={isCloud && !isBringYourUiEnabled}
                   value={value}
                   onChange={onChange}
                 />
