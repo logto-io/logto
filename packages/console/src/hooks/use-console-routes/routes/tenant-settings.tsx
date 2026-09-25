@@ -9,6 +9,7 @@ import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import NotFound from '@/pages/NotFound';
+import useShouldShowOssTenantSettingsTab from '@/pages/OssTenantSettings/use-should-show-settings-tab';
 import {
   shouldShowOssTenantLicenseTab,
   shouldShowOssTenantMembersTab,
@@ -18,6 +19,7 @@ const TenantSettings = safeLazy(async () => import('@/pages/TenantSettings'));
 const OssTenantSettings = safeLazy(async () => import('@/pages/OssTenantSettings'));
 const OssTenantMembers = safeLazy(async () => import('@/pages/OssTenantSettings/Members'));
 const OssTenantLicense = safeLazy(async () => import('@/pages/OssTenantSettings/License'));
+const OssTenantBasicSettings = safeLazy(async () => import('@/pages/OssTenantSettings/Settings'));
 const TenantBasicSettings = safeLazy(
   async () => import('@/pages/TenantSettings/TenantBasicSettings')
 );
@@ -86,8 +88,10 @@ const useCloudTenantSettings = () => {
   return tenantSettings;
 };
 
-const useOssTenantSettings = (): RouteObject =>
-  useMemo(() => {
+const useOssTenantSettings = (): RouteObject => {
+  const shouldShowSettingsTab = useShouldShowOssTenantSettingsTab();
+
+  return useMemo(() => {
     const shouldShowMembersTab = shouldShowOssTenantMembersTab({ isCloud: false });
     const shouldShowLicenseTab = shouldShowOssTenantLicenseTab({
       isCloud: false,
@@ -102,6 +106,14 @@ const useOssTenantSettings = (): RouteObject =>
           index: true,
           element: <Navigate replace to={TenantSettingsTabs.OidcConfigs} />,
         },
+        ...condArray(
+          shouldShowSettingsTab && [
+            {
+              path: TenantSettingsTabs.Settings,
+              element: <OssTenantBasicSettings />,
+            },
+          ]
+        ),
         {
           path: TenantSettingsTabs.OidcConfigs,
           element: <OidcConfigs />,
@@ -124,6 +136,7 @@ const useOssTenantSettings = (): RouteObject =>
         ),
       ],
     };
-  }, []);
+  }, [shouldShowSettingsTab]);
+};
 
 export const useTenantSettings = isCloud ? useCloudTenantSettings : useOssTenantSettings;

@@ -70,6 +70,16 @@ const tenants = {
     tenant_mfa: 'Çok faktörlü kimlik doğrulama',
     tenant_mfa_description:
       'Üyelerinizin bu kiracıya erişmek için çok faktörlü kimlik doğrulamayı yapılandırmasını zorunlu kılın.',
+    oss_description: 'Üyelerin bu örnekte Konsol’a nasıl eriştiğini yönetin.',
+    tenant_mfa_confirm_title: 'Tüm üyeler için MFA zorunlu olsun mu?',
+    tenant_mfa_confirm_description:
+      'Bu üyeler henüz MFA yapılandırmadı. Oturumları açık kalır ve bir sonraki girişlerinde yapılandırmaları istenir:',
+    tenant_mfa_confirm_self:
+      'Siz de henüz MFA yapılandırmadınız. Bir sonraki girişinizden önce hesap ayarlarınızdan yapılandırın.',
+    tenant_mfa_confirm_button: 'MFA’yı zorunlu kıl',
+    tenant_mfa_setup_required:
+      'Bu kiracı çok faktörlü kimlik doğrulama gerektiriyor. Şimdi yapılandırın, aksi halde bir sonraki girişinizde istenecek.',
+    tenant_mfa_setup_action: 'MFA yapılandır',
     enterprise_sso: 'Enterprise SSO',
     enterprise_sso_description:
       'Ücretli planlarda kullanılabilir. Tüm üyelerin kuruluşunuzun kimlik sağlayıcısını kullanarak Logto Cloud Konsoluna giriş yapabilmesi için Enterprise SSO etkinleştirmek üzere bizimle iletişime geçin.',

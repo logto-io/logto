@@ -1,0 +1,6 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  // Same placement as the hosted email cap banner: a direct child of ConsoleContent's `.main`.
+  padding-block: _.unit(4);
+}

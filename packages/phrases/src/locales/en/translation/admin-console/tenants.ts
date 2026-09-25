@@ -68,6 +68,16 @@ const tenants = {
     tenant_mfa: 'Multi-factor authentication',
     tenant_mfa_description:
       'Require your members to set up multi-factor authentication to access this tenant.',
+    oss_description: 'Manage how members access Console on this instance.',
+    tenant_mfa_confirm_title: 'Require MFA for all members?',
+    tenant_mfa_confirm_description:
+      'These members have not set up MFA yet. They stay signed in, and will be asked to set it up the next time they sign in:',
+    tenant_mfa_confirm_self:
+      'You have not set up MFA either. Set it up in your account settings before your next sign-in.',
+    tenant_mfa_confirm_button: 'Require MFA',
+    tenant_mfa_setup_required:
+      'This tenant requires multi-factor authentication. Set it up now, or you will be asked to at your next sign-in.',
+    tenant_mfa_setup_action: 'Set up MFA',
     enterprise_sso: 'Enterprise SSO',
     enterprise_sso_description:
       "Available on paid plans. Contact us to enable enterprise SSO so all members can sign in to the Logto Cloud Console using your organization's identity provider.",

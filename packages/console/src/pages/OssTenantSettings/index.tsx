@@ -7,6 +7,7 @@ import DynamicT from '@/ds-components/DynamicT';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 
 import styles from './index.module.scss';
+import useShouldShowOssTenantSettingsTab from './use-should-show-settings-tab';
 import { shouldShowOssTenantLicenseTab, shouldShowOssTenantMembersTab } from './utils';
 
 function OssTenantSettings() {
@@ -15,6 +16,7 @@ function OssTenantSettings() {
     isCloud: false,
     isDevFeaturesEnabled,
   });
+  const shouldShowSettingsTab = useShouldShowOssTenantSettingsTab();
 
   return (
     <div className={styles.container}>
@@ -24,6 +26,11 @@ function OssTenantSettings() {
         subtitle="tenants.oss_description"
       />
       <TabNav className={styles.tabs}>
+        {shouldShowSettingsTab && (
+          <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.Settings}`}>
+            <DynamicT forKey="tenants.tabs.settings" />
+          </TabNavItem>
+        )}
         <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.OidcConfigs}`}>
           <DynamicT forKey="tenants.tabs.oidc_configs" />
         </TabNavItem>
