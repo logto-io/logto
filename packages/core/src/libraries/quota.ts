@@ -151,8 +151,15 @@ export class QuotaLibrary {
   ) => {
     const { isCloud } = EnvSet.values;
 
-    // Cloud only feature, skip in non-cloud environments
     if (!isCloud) {
+      /**
+       * Self-hosted plans: the SAML application cap is the only limit enforced outside Cloud, and
+       * it follows the installed license (the OSS default without one). Every other key is a Cloud
+       * only quota.
+       */
+      if (key === 'samlApplicationsLimit') {
+        await this.assertSelfHostedSamlApplicationsLimit(consumeUsageCount);
+      }
       return;
     }
 
@@ -226,6 +233,34 @@ export class QuotaLibrary {
     isEnterprisePlan: boolean,
     key: keyof SubscriptionQuota
   ) => isReportablePlan(planId, isEnterprisePlan) && isReportSubscriptionUpdatesUsageKey(key);
+
+  /**
+   * Enforce the SAML application cap of a self-hosted deployment: `samlApplicationsLimit` of the
+   * installed license, or the OSS default (`ossDefaultQuota`) without one. `null` means unlimited.
+   *
+   * Keeps the `application.saml.reach_oss_limit` error OSS has always answered with.
+   */
+  private readonly assertSelfHostedSamlApplicationsLimit = async (consumeUsageCount: number) => {
+    const {
+      quota: { samlApplicationsLimit: limit },
+    } = await this.subscription.getSelfHostedSubscription();
+
+    if (limit === null) {
+      return;
+    }
+
+    const usage = await this.queries.tenantUsage.getSelfComputedUsageByKey(
+      this.tenantId,
+      'samlApplicationsLimit',
+      // eslint-disable-next-line unicorn/no-useless-undefined -- The usage query signature requires an explicit entity ID, which tenant-level keys leave undefined.
+      undefined
+    );
+
+    assertThat(
+      usage + consumeUsageCount <= limit,
+      new RequestError({ code: 'application.saml.reach_oss_limit', status: 403, limit })
+    );
+  };
 
   private readonly assertSystemLimit = async ({
     key,
