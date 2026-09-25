@@ -353,14 +353,24 @@ export class Mfa {
     await this.checkMfaFactorsEnabledInSignInExperience(newBindMfaFactors);
   }
 
-  /** Assert MFA fulfillment for the current interaction submit. */
-  async assertMfaFulfilled() {
+  /**
+   * Assert MFA fulfillment for the current interaction submit.
+   *
+   * @param asNoSkipMandatoryPolicy Run the check exactly as a no-skip mandatory policy would:
+   * neither the policy's nor the user's skips apply and `user.missing_mfa` is thrown without
+   * `skippable`. A requested `mfa` is enforced this way, since the relying party asked for the
+   * class; the tenant's backup-code and additional-factor rules apply unchanged.
+   */
+  async assertMfaFulfilled({ asNoSkipMandatoryPolicy = false } = {}) {
     const submitMfaValidationContext = await this.buildSubmitMfaValidationContext();
 
     // For optional MFA, prompt an MFA enrollment page in prior if user hasn't set up or skipped MFA binding yet.
-    await this.assertOptionalMfaEnablement(submitMfaValidationContext);
+    // A no-skip mandatory requirement has no optional step to offer, exactly as its policy bypasses this check.
+    if (!asNoSkipMandatoryPolicy) {
+      await this.assertOptionalMfaEnablement(submitMfaValidationContext);
+    }
 
-    await this.assertUserMandatoryMfaFulfilled(submitMfaValidationContext);
+    await this.assertUserMandatoryMfaFulfilled(submitMfaValidationContext, asNoSkipMandatoryPolicy);
   }
 
   async assertPasskeySignInFulfilled() {
@@ -461,7 +471,8 @@ export class Mfa {
    */
   // eslint-disable-next-line complexity
   private async assertUserMandatoryMfaFulfilled(
-    submitMfaValidationContext: SubmitMfaValidationContext
+    submitMfaValidationContext: SubmitMfaValidationContext,
+    asNoSkipMandatoryPolicy = false
   ) {
     const { mfaSettings, organizations } = submitMfaValidationContext;
     const { policy, factors } = mfaSettings;
@@ -473,6 +484,7 @@ export class Mfa {
 
     // If the policy is prompt only at sign-in, and the event is register, skip the check
     if (
+      !asNoSkipMandatoryPolicy &&
       this.interactionContext.getInteractionEvent() === InteractionEvent.Register &&
       isPromptOnlyAtSignInPolicy(policy)
     ) {
@@ -489,13 +501,18 @@ export class Mfa {
     );
 
     // If the policy is no prompt, and mfa is not required by the user organizations, then there is nothing to check
-    if (policy === MfaPolicy.NoPrompt && !isMfaRequiredByUserOrganizations) {
+    if (
+      !asNoSkipMandatoryPolicy &&
+      policy === MfaPolicy.NoPrompt &&
+      !isMfaRequiredByUserOrganizations
+    ) {
       return;
     }
 
     // If the policy is not mandatory and the user has skipped MFA,
     // and MFA is not required by the user organizations, then there is nothing to check
     if (
+      !asNoSkipMandatoryPolicy &&
       !isNoSkipMfaPolicy(policy) &&
       (this.#mfaSkipped ?? isMfaSkipped(logtoConfig)) &&
       !isMfaRequiredByUserOrganizations
@@ -508,16 +525,34 @@ export class Mfa {
 
     const { userFactors: factorsInUser } = submitMfaValidationContext;
     const factorsInBind = this.bindMfaFactorsArray.map(({ type }) => type);
-    const linkedFactors = deduplicate([...factorsInUser, ...factorsInBind]);
+    // A requested `mfa` reaching this check means the proofs are still below the class, and the
+    // implicit email / phone factors derived from the primary identifiers cannot lift them: a
+    // registration has no MFA challenge, and after an email or phone sign-in they are the same
+    // factor as the first one. Only stored and newly bound factors count, so the user is asked to
+    // enroll one that completes the pair.
+    const isPairableFactor = (factor: MfaFactor) =>
+      !asNoSkipMandatoryPolicy ||
+      (factor !== MfaFactor.EmailVerificationCode && factor !== MfaFactor.PhoneVerificationCode);
+    const requiredFactors = configuredFactors.filter((factor) => isPairableFactor(factor));
+    const linkedFactors = deduplicate([
+      ...factorsInUser.filter((factor) => isPairableFactor(factor)),
+      ...factorsInBind,
+    ]);
 
-    // Assert that the user has at least one of the required factors bound
-    if (!configuredFactors.some((factor) => linkedFactors.includes(factor))) {
+    // Assert that the user has at least one of the required factors bound. With no pairable factor
+    // to offer, a requested `mfa` is left to the assertion in `submit()`.
+    if (
+      requiredFactors.length > 0 &&
+      !requiredFactors.some((factor) => linkedFactors.includes(factor))
+    ) {
       throw new RequestError(
         { code: 'user.missing_mfa', status: 422 },
         {
-          availableFactors: configuredFactors,
+          availableFactors: requiredFactors,
           ...conditional(
-            !isNoSkipMfaPolicy(policy) && !isMfaRequiredByUserOrganizations && { skippable: true }
+            !asNoSkipMandatoryPolicy &&
+              !isNoSkipMfaPolicy(policy) &&
+              !isMfaRequiredByUserOrganizations && { skippable: true }
           ),
         }
       );
