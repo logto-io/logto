@@ -4,6 +4,7 @@ import Sinon from 'sinon';
 
 import { RedisCache } from '#src/caches/index.js';
 import { WellKnownCache } from '#src/caches/well-known.js';
+import { AdminApps, EnvSet, UserApps } from '#src/env-set/index.js';
 import { createLogtoConfigQueries } from '#src/queries/logto-config.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createMockCommonQueryMethods, expectSqlString } from '#src/test-utils/query.js';
@@ -52,6 +53,18 @@ mockEsmDefault('#src/oidc/init.js', () => () => createMockProvider());
 
 const Tenant = await pickDefault(import('./Tenant.js'));
 
+const readMountedApps = (): readonly string[] => {
+  const spaProxy = middlewareList.find(([name]) => name === 'spa-proxy')?.[1];
+  const calls = spaProxy?.mock.calls as unknown as
+    | Array<[{ readonly mountedApps: readonly string[] }]>
+    | undefined;
+  const mountedApps = calls?.[0]?.[0].mountedApps;
+
+  expect(mountedApps).toBeDefined();
+
+  return mountedApps ?? [];
+};
+
 describe('Tenant', () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -68,6 +81,8 @@ describe('Tenant', () => {
         expect(middleware).not.toBeCalled();
       }
     }
+
+    expect(readMountedApps()).toEqual(Object.values(UserApps));
   });
 
   it('should call middleware factories for the admin tenant', async () => {
@@ -79,6 +94,25 @@ describe('Tenant', () => {
       } else {
         expect(middleware).not.toBeCalled();
       }
+    }
+
+    // Welcome is not mounted, so `/welcome` must stay an Experience fallback.
+    expect(readMountedApps()).toEqual([
+      ...Object.values(UserApps),
+      AdminApps.Me,
+      AdminApps.Console,
+    ]);
+  });
+
+  it('omits Console from the mounted app set when multi-tenancy skips that mount', async () => {
+    const isMultiTenancy = jest.spyOn(EnvSet.values, 'isMultiTenancy', 'get').mockReturnValue(true);
+
+    try {
+      await Tenant.create({ id: adminTenantId, redisCache: new RedisCache() });
+
+      expect(readMountedApps()).toEqual([...Object.values(UserApps), AdminApps.Me]);
+    } finally {
+      isMultiTenancy.mockRestore();
     }
   });
 });

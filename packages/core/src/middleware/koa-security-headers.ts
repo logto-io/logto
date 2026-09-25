@@ -298,8 +298,9 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
 
     // Admin Console
     if (
-      requestPath.startsWith(`/${AdminApps.Console}`) ||
-      requestPath.startsWith(`/${AdminApps.Welcome}`)
+      (mountedApps.includes(AdminApps.Console) &&
+        requestPath.startsWith(`/${AdminApps.Console}`)) ||
+      (mountedApps.includes(AdminApps.Welcome) && requestPath.startsWith(`/${AdminApps.Welcome}`))
     ) {
       await helmetPromise(consoleSecurityHeaderSettings, req, res);
 

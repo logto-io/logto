@@ -8,11 +8,12 @@ import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-contex
 
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
+const mockEnvSetValues = new GlobalValues();
 
 await mockEsmWithActual('#src/env-set/index.js', () => ({
   EnvSet: {
     get values() {
-      return new GlobalValues();
+      return mockEnvSetValues;
     },
   },
   AdminApps: { Console: 'console', Welcome: 'welcome' },
@@ -187,4 +188,115 @@ describe('koaSecurityHeaders() middleware — experience CSP', () => {
     expect(scriptSource).not.toContain(customScriptSource);
     expect(queries.signInExperiences.findDefaultSignInExperience).not.toHaveBeenCalled();
   });
+});
+
+describe('koaSecurityHeaders() middleware — production admin CSP selection', () => {
+  const { isProduction } = mockEnvSetValues;
+
+  beforeEach(() => {
+    // eslint-disable-next-line @silverhand/fp/no-mutating-assign -- Toggle production mode for CSP selection tests.
+    Object.assign(mockEnvSetValues, { isProduction: true });
+  });
+
+  afterEach(() => {
+    // eslint-disable-next-line @silverhand/fp/no-mutating-assign -- Restore the shared environment after each test.
+    Object.assign(mockEnvSetValues, { isProduction });
+  });
+
+  it.each([
+    { path: '/console', mountedApp: 'console' },
+    { path: '/welcome', mountedApp: 'welcome' },
+  ])('uses the Console CSP for mounted $path routes', async ({ path, mountedApp }) => {
+    const run = koaSecurityHeaders([mountedApp], 'default');
+    const ctx = createMockContext({ method: 'GET', url: path });
+
+    await run(ctx, koaNoop);
+
+    const scriptSource = getCspDirective(ctx, 'script-src');
+
+    expect(scriptSource).toContain("'self'");
+    expect(scriptSource).toContain('https://cdn.jsdelivr.net/');
+    expect(scriptSource).toContain('blob:');
+    expect(scriptSource).not.toContain("'unsafe-inline'");
+  });
+
+  it.each([{ path: '/console' }, { path: '/welcome' }])(
+    'uses the Experience CSP for unmounted $path routes',
+    async ({ path }) => {
+      const run = koaSecurityHeaders([], 'default');
+      const ctx = createMockContext({ method: 'GET', url: path });
+
+      await run(ctx, koaNoop);
+
+      const scriptSource = getCspDirective(ctx, 'script-src');
+
+      expect(scriptSource).toContain("'self'");
+      expect(scriptSource).toContain("'unsafe-inline'");
+      expect(scriptSource).not.toContain('https://cdn.jsdelivr.net/');
+      expect(scriptSource).not.toContain('blob:');
+    }
+  );
+
+  it('uses the Experience CSP for /welcome when only Console is mounted', async () => {
+    const run = koaSecurityHeaders(['me', 'console'], 'admin');
+    const ctx = createMockContext({ method: 'GET', url: '/welcome' });
+
+    await run(ctx, koaNoop);
+
+    const scriptSource = getCspDirective(ctx, 'script-src');
+
+    expect(scriptSource).toContain("'unsafe-inline'");
+    expect(scriptSource).not.toContain('https://cdn.jsdelivr.net/');
+    expect(scriptSource).not.toContain('blob:');
+  });
+
+  it('uses the Experience CSP for /console when Console is not mounted', async () => {
+    const run = koaSecurityHeaders(['me'], 'admin');
+    const ctx = createMockContext({ method: 'GET', url: '/console' });
+
+    await run(ctx, koaNoop);
+
+    const scriptSource = getCspDirective(ctx, 'script-src');
+
+    expect(scriptSource).toContain("'unsafe-inline'");
+    expect(scriptSource).not.toContain('https://cdn.jsdelivr.net/');
+    expect(scriptSource).not.toContain('blob:');
+  });
+
+  it('keeps the Console CSP for the mounted Console welcome route', async () => {
+    const run = koaSecurityHeaders(['me', 'console'], 'admin');
+    const ctx = createMockContext({ method: 'GET', url: '/console/welcome' });
+
+    await run(ctx, koaNoop);
+
+    const scriptSource = getCspDirective(ctx, 'script-src');
+
+    expect(scriptSource).toContain('https://cdn.jsdelivr.net/');
+    expect(scriptSource).toContain('blob:');
+    expect(scriptSource).not.toContain("'unsafe-inline'");
+  });
+
+  it.each(['/welcome', '/console'])(
+    'keeps an SSR-safe Experience CSP for unmounted %s after both header middlewares',
+    async (path) => {
+      // Admin APIs can be mounted without Console or Welcome.
+      const mountedApps = ['api', 'me'];
+      const queries = createQueries();
+      const runSecurityHeaders = koaSecurityHeaders(mountedApps, 'admin');
+      const runExperienceSecurityHeaders = koaExperienceSecurityHeaders(
+        'admin',
+        queries,
+        mountedApps
+      );
+      const ctx = createMockContext({ method: 'GET', url: path });
+
+      await runSecurityHeaders(ctx, async () => runExperienceSecurityHeaders(ctx, koaNoop));
+
+      const scriptSource = getCspDirective(ctx, 'script-src');
+
+      expect(scriptSource).toContain("'unsafe-inline'");
+      expect(scriptSource).not.toContain('https://cdn.jsdelivr.net/');
+      expect(queries.signInExperiences.findDefaultSignInExperience).toHaveBeenCalled();
+    }
+  );
 });
