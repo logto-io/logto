@@ -2,6 +2,7 @@ import { type SsrData, logtoCookieKey, logtoUiCookieGuard, ssrPlaceholder } from
 import { pick, trySafe } from '@silverhand/essentials';
 import type { MiddlewareType } from 'koa';
 
+import { readOptionalTheme } from '#src/oidc/utils.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import { getExperienceLanguage } from '#src/utils/i18n.js';
@@ -107,6 +108,7 @@ export default function koaExperienceSsr<StateT, ContextT extends WithI18nContex
         `Object.freeze(${serializeSsrData({
           signInExperience: {
             ...pick(logtoUiCookie, 'appId', 'organizationId'),
+            theme: readOptionalTheme(logtoUiCookie.theme),
             data: signInExperience,
           },
           phrases: { lng: language, data: phrases },

@@ -35,7 +35,17 @@
           && ssr.signInExperience.data.color.isDarkModeEnabled;
         var prefersDark = typeof window.matchMedia === 'function'
           && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        theme = (darkOk && prefersDark) ? 'dark' : 'light';
+        // The theme override of the current authentication request, which the server resolves
+        // from the `_logto` flow cookie. Reading it from the same payload React reads keeps the
+        // first paint and the rendered app in agreement on every document load of the flow, and
+        // the server applies the dev-feature guard before it gets here.
+        var override = (typeof ssr === 'object' && ssr !== null && ssr.signInExperience)
+          ? ssr.signInExperience.theme
+          : undefined;
+        var preferred = (override === 'dark' || override === 'light')
+          ? override
+          : (prefersDark ? 'dark' : 'light');
+        theme = darkOk ? preferred : 'light';
         document.documentElement.setAttribute('data-theme', theme);
         if (typeof ssr === 'object' && ssr !== null && ssr.signInExperience
           && ssr.signInExperience.data && ssr.signInExperience.data.color) {

@@ -16,11 +16,12 @@ import {
   FirstScreen,
   experience,
   loginPromptAuthenticationContextDetailsGuard,
+  Theme,
 } from '@logto/schemas';
 import { condArray, conditional, removeUndefinedKeys, trySafe } from '@silverhand/essentials';
 import { type AllClientMetadata, type ClientAuthMethod, errors } from 'oidc-provider';
 
-import type { EnvSet } from '#src/env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 
 import { escapeRegExp, getEffectivePort } from './redirect-uri/utils.js';
 
@@ -255,6 +256,7 @@ export type SharedExperienceParams = Readonly<{
   appId?: string;
   organizationId?: string;
   uiLocales?: string;
+  theme?: Theme;
 }>;
 
 /**
@@ -265,6 +267,16 @@ export type SharedExperienceParams = Readonly<{
 export const readOptionalQueryString = (value: unknown): string | undefined =>
   typeof value === 'string' && value.length > 0 ? value : undefined;
 
+/** Read a query value as a supported {@link Theme}, ignoring anything else. */
+export const readOptionalTheme = (value: unknown): Theme | undefined => {
+  // Theme control from the authentication request is only available with dev features enabled.
+  if (!EnvSet.values.isDevFeaturesEnabled) {
+    return undefined;
+  }
+
+  return value === Theme.Light || value === Theme.Dark ? value : undefined;
+};
+
 export const parseSharedExperienceParams = (
   source: Record<string, unknown>
 ): SharedExperienceParams =>
@@ -272,6 +284,7 @@ export const parseSharedExperienceParams = (
     appId: readOptionalQueryString(source.app_id),
     organizationId: readOptionalQueryString(source.organization_id),
     uiLocales: readOptionalQueryString(source.ui_locales),
+    theme: readOptionalTheme(source.theme),
   });
 
 /**
@@ -306,11 +319,13 @@ export const buildSharedExperienceCookie = ({
   appId,
   organizationId,
   uiLocales,
+  theme,
 }: SharedExperienceParams): LogtoUiCookie =>
   removeUndefinedKeys({
     appId,
     organizationId,
     uiLocales,
+    theme,
   });
 
 /**

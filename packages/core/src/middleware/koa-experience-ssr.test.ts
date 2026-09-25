@@ -1,4 +1,4 @@
-import { ssrPlaceholder } from '@logto/schemas';
+import { Theme, ssrPlaceholder } from '@logto/schemas';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -7,6 +7,12 @@ import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 import koaExperienceSsr from './koa-experience-ssr.js';
 
 const { jest } = import.meta;
+
+const readSsrData = (body: string): Record<string, unknown> => {
+  const serialized = /Object\.freeze\((?<json>[\S\s]+)\);/.exec(body)?.groups?.json;
+
+  return JSON.parse(serialized!) as Record<string, unknown>;
+};
 
 describe('koaExperienceSsr()', () => {
   const phrases = { foo: 'bar' };
@@ -32,6 +38,13 @@ describe('koaExperienceSsr()', () => {
   );
 
   const next = jest.fn().mockReturnValue(Promise.resolve());
+
+  const ctxWithCookie = (cookie: string) => ({
+    ...baseCtx,
+    path: '/',
+    body: `<script>const logtoSsr=${ssrPlaceholder};</script>`,
+    cookies: { ...baseCtx.cookies, get: jest.fn().mockReturnValue(cookie) },
+  });
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -80,6 +93,36 @@ describe('koaExperienceSsr()', () => {
     expect(JSON.parse(serialized!)).toEqual({
       signInExperience: { data: mockSignInExperience },
       phrases: { lng: 'en', data: phrases },
+    });
+  });
+
+  describe('theme override from the flow cookie', () => {
+    it('should surface the theme so every page of the flow renders with it', async () => {
+      const ctx = ctxWithCookie(JSON.stringify({ appId: 'app_123', theme: Theme.Dark }));
+      await koaExperienceSsr(tenant.libraries, tenant.queries)(ctx, next);
+
+      expect(readSsrData(ctx.body)).toMatchObject({
+        signInExperience: { appId: 'app_123', theme: Theme.Dark },
+      });
+    });
+
+    it('should omit the theme when the flow carries none', async () => {
+      const ctx = ctxWithCookie(JSON.stringify({ appId: 'app_123' }));
+      await koaExperienceSsr(tenant.libraries, tenant.queries)(ctx, next);
+
+      expect(readSsrData(ctx.body).signInExperience).not.toHaveProperty('theme');
+    });
+
+    it('should keep the other overrides when the cookie theme was tampered with', async () => {
+      const ctx = ctxWithCookie(JSON.stringify({ appId: 'app_123', theme: 'sepia' }));
+      await koaExperienceSsr(tenant.libraries, tenant.queries)(ctx, next);
+
+      const { signInExperience } = readSsrData(ctx.body) as {
+        signInExperience: Record<string, unknown>;
+      };
+
+      expect(signInExperience.appId).toBe('app_123');
+      expect(signInExperience.theme).toBeUndefined();
     });
   });
 

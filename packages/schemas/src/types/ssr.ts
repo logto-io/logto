@@ -3,6 +3,7 @@ import { type LocalePhrase } from '@logto/phrases-experience';
 import { type SignInExperience } from '../db-entries/index.js';
 
 import { type FullSignInExperience } from './sign-in-experience.js';
+import { type Theme } from './theme.js';
 
 /**
  * The server-side rendering data type for **experience**.
@@ -12,6 +13,7 @@ export type SsrData = {
     appId?: string;
     organizationId?: string;
     uiLocales?: string;
+    theme?: Theme;
     data: FullSignInExperience;
   };
   phrases: {
