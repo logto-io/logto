@@ -36,7 +36,7 @@ import { errors, type Provider } from 'oidc-provider';
 
 import { type EnvSet } from '#src/env-set/index.js';
 import { assertUserHasApplicationAccessForOidc } from '#src/oidc/application-access-control.js';
-import { isCimdClient } from '#src/oidc/cimd/index.js';
+import { shouldTreatAsCimdClient } from '#src/oidc/cimd/index.js';
 import { getOidcScopesNoLongerAllowed } from '#src/oidc/client-scope.js';
 import {
   applyMtlsBinding,
@@ -224,7 +224,7 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx)
    * access-control library's fallback lookup would query the applications table with the CIMD
    * identifier URL and deny on not-found.
    */
-  if (!isCimdClient(envSet, client.clientId)) {
+  if (!shouldTreatAsCimdClient(envSet, client.clientId)) {
     await assertUserHasApplicationAccessForOidc(
       appAccess,
       client.clientId,
@@ -350,7 +350,7 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx)
      * same-named organization scope. Registered applications are governed by their own consent
      * configuration.
      */
-    const availableScopes = isCimdClient(envSet, client.clientId)
+    const availableScopes = shouldTreatAsCimdClient(envSet, client.clientId)
       ? await queries.cimd.organizationScopes.findAll().then((ceiling) => {
           const ceilingNames = new Set(ceiling.map(({ name }) => name));
           // `getResourceScope` returns `''` when the Grant carries no record for the resource.
