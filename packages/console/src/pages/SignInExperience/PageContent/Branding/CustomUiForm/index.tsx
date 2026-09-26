@@ -16,6 +16,7 @@ import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import CustomUiAssetsUploader from '@/pages/SignInExperience/components/CustomUiAssetsUploader';
 
+import useBrandingEntitlements from '../../../hooks/use-branding-entitlements';
 import type { SignInExperienceForm } from '../../../types';
 import FormSectionTitle from '../../components/FormSectionTitle';
 
@@ -86,7 +87,11 @@ function CustomUiForm() {
   const { control } = useFormContext<SignInExperienceForm>();
   const { currentSubscriptionQuota } = useContext(SubscriptionDataContext);
   const isBringYourUiEnabled = currentSubscriptionQuota.bringYourUiEnabled;
+  const { isCustomUiCspEnabled } = useBrandingEntitlements();
   const shouldShowOssBringYourUi = !isCloud;
+  // A self-hosted license that grants Bring your UI unlocks the Custom UI CSP. The upload itself
+  // still needs Cloud storage, so the OSS card stays next to it.
+  const shouldShowCustomUiCspForm = isCloud || isCustomUiCspEnabled;
 
   return (
     <>
@@ -131,7 +136,7 @@ function CustomUiForm() {
             />
           </FormField>
         )}
-        {isCloud && <CustomUiCspForm isDisabled={!isBringYourUiEnabled} />}
+        {shouldShowCustomUiCspForm && <CustomUiCspForm isDisabled={!isCustomUiCspEnabled} />}
         {shouldShowOssBringYourUi && <OssBringYourUiCard />}
       </Card>
     </>
