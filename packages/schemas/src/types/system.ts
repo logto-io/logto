@@ -241,16 +241,39 @@ export type InstalledLicense = z.infer<typeof installedLicenseGuard>;
 
 export enum LicenseKey {
   License = 'license',
+  LicenseRefreshState = 'licenseRefreshState',
+  LicenseDeploymentId = 'licenseDeploymentId',
 }
 
 export type LicenseType = {
   [LicenseKey.License]: InstalledLicense;
+  [LicenseKey.LicenseRefreshState]: LicenseRefreshState;
+  [LicenseKey.LicenseDeploymentId]: LicenseDeploymentId;
 };
+
+/** The state shared by all instances while they lazily refresh the installed license. */
+export const licenseRefreshStateGuard = z.object({
+  /** The last successful refresh, or the `iat` of the installed key. */
+  lastRefreshedAt: z.string(),
+  /** The last refresh attempt. Absent before the first read after installation. */
+  lastAttemptAt: z.string().optional(),
+  /** The refusal reason returned by the license service, if the last attempt was refused. */
+  refusalReason: z.string().optional(),
+});
+
+export type LicenseRefreshState = z.infer<typeof licenseRefreshStateGuard>;
+
+/** The stable identifier shared by every Core instance using this `systems` table. */
+export const licenseDeploymentIdGuard = z.string().min(1);
+
+export type LicenseDeploymentId = z.infer<typeof licenseDeploymentIdGuard>;
 
 export const licenseGuard: Readonly<{
   [key in LicenseKey]: ZodType<LicenseType[key]>;
 }> = Object.freeze({
   [LicenseKey.License]: installedLicenseGuard,
+  [LicenseKey.LicenseRefreshState]: licenseRefreshStateGuard,
+  [LicenseKey.LicenseDeploymentId]: licenseDeploymentIdGuard,
 });
 
 // Summary
