@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.1.2
+
+### Patch Changes
+
+- 1326394: disallow combining the `none` prompt with other prompt values in OIDC configuration
+
 ## 5.1.1
 
 ### Patch Changes
@@ -75,9 +81,9 @@
 
   ```ts
   await logtoClient.signIn({
-    redirectUri: "https://your.app/callback",
+    redirectUri: 'https://your.app/callback',
     extraParams: {
-      ui_locales: "fr-CA fr en",
+      ui_locales: 'fr-CA fr en',
     },
   });
   ```
@@ -135,8 +141,8 @@ If you are using Email/SMS as a MFA method, you should update your connector con
   1. Direct replacement
 
   ```ts
-  replaceSendMessageKeysWithPayload("Your verification code is {{code}}", {
-    code: "123456",
+  replaceSendMessageKeysWithPayload('Your verification code is {{code}}', {
+    code: '123456',
   });
   // 'Your verification code is 123456'
   ```
@@ -144,30 +150,25 @@ If you are using Email/SMS as a MFA method, you should update your connector con
   2. Deep property access
 
   ```ts
-  replaceSendMessageKeysWithPayload(
-    "Your logo is {{organization.branding.logoUrl}}",
-    { organization: { branding: { logoUrl: "https://example.com/logo.png" } } },
-  );
+  replaceSendMessageKeysWithPayload('Your logo is {{organization.branding.logoUrl}}', {
+    organization: { branding: { logoUrl: 'https://example.com/logo.png' } },
+  });
   // 'Your logo is https://example.com/logo.png'
   ```
 
   3. Missing properties
 
   ```ts
-  replaceSendMessageKeysWithPayload(
-    "Your logo is {{organization.branding.logoUrl}}",
-    { organization: { name: "foo" } },
-  );
+  replaceSendMessageKeysWithPayload('Your logo is {{organization.branding.logoUrl}}', {
+    organization: { name: 'foo' },
+  });
   // 'Your logo is '
   ```
 
   4. Preservation of missing variables
 
   ```ts
-  replaceSendMessageKeysWithPayload(
-    "Your application is {{application.name}}",
-    {},
-  );
+  replaceSendMessageKeysWithPayload('Your application is {{application.name}}', {});
   // 'Your application is {{application.name}}'
   ```
 

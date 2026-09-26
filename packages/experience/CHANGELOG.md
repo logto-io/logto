@@ -1,5 +1,21 @@
 # Change Log
 
+## 1.23.0
+
+### Minor Changes
+
+- c5bd438: add MFA trusted devices with configurable policies and device management
+
+  Configure tenant-wide trusted-device policies and organization-level restrictions. After completing MFA, users can choose whether to trust their device on a dedicated page at the end of sign-in or sign-up, then skip repeated MFA on that browser. Manage trusted devices through Console, Account Center, the Management API, and the Account API, and subscribe to device lifecycle webhooks.
+
+### Patch Changes
+
+- e11805c: opt the sign-in experience out of browser auto-translation
+
+  Browser auto-translation replaces the text nodes React created (`<font><font>…</font></font>`). React's DOM bookkeeping no longer matches the document, so the next update throws `NotFoundError: Failed to execute 'removeChild' on 'Node'`; the experience app has no error boundary, so the whole tree unmounts and the user is left on a blank page in the middle of signing in or signing up — a reload is the only way out.
+
+  The experience is already localized per tenant (custom phrases plus language detection), so the page now ships `translate="no"` and `<meta name="google" content="notranslate">`, which is what Chrome, Edge and Safari read before offering or applying a translation.
+
 ## 1.22.0
 
 ### Minor Changes
@@ -244,9 +260,9 @@
 
   ```ts
   await logtoClient.signIn({
-    redirectUri: "https://your.app/callback",
+    redirectUri: 'https://your.app/callback',
     extraParams: {
-      ui_locales: "fr-CA fr en",
+      ui_locales: 'fr-CA fr en',
     },
   });
   ```
@@ -561,13 +577,13 @@
   // Example usage (React project using React SDK)
   void signIn({
     redirectUri,
-    firstScreen: "identifier:sign_in",
+    firstScreen: 'identifier:sign_in',
     /**
      * Optional. Specifies which sign-in methods to display on the identifier sign-in page.
      * If not specified, the default sign-in experience configuration will be used.
      * This option is effective when the `firstScreen` value is `identifier:sign_in`, `identifier:register`, or `reset_password`.
      */
-    identifiers: ["email", "phone"],
+    identifiers: ['email', 'phone'],
   });
   ```
 
@@ -581,8 +597,8 @@
   // Example usage (React project using React SDK)
   void signIn({
     redirectUri,
-    loginHint: "user@example.com",
-    firstScreen: "signIn", // or 'register'
+    loginHint: 'user@example.com',
+    firstScreen: 'signIn', // or 'register'
   });
   ```
 
@@ -634,14 +650,14 @@
   For example, in the JavaScript SDK:
 
   ```ts
-  import LogtoClient from "@logto/client";
+  import LogtoClient from '@logto/client';
 
   const logtoClient = new LogtoClient(/* your configuration */);
 
   logtoClient.signIn({
-    redirectUri: "https://your-app.com/callback",
+    redirectUri: 'https://your-app.com/callback',
     extraParams: {
-      organization_id: "<organization-id>",
+      organization_id: '<organization-id>',
     },
   });
   ```
