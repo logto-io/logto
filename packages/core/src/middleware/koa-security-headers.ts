@@ -292,10 +292,13 @@ export const koaExperienceSecurityHeaders = <StateT, ContextT, ResponseBodyT>(
     }
 
     const { req, res } = ctx;
-    const [{ customUiAssets, customUiCsp }, capEndpoint] = await Promise.all([
-      queries.signInExperiences.findDefaultSignInExperience(),
-      queries.captchaProviders.findCapEndpoint(),
-    ]);
+    const [{ customUiAssets, customUiCsp, captchaPolicy }, configuredCapEndpoint] =
+      await Promise.all([
+        queries.signInExperiences.findDefaultSignInExperience(),
+        queries.captchaProviders.findCapEndpoint(),
+      ]);
+    // The Cap widget is only loaded when CAPTCHA is enabled, so only relax the CSP in that case
+    const capEndpoint = captchaPolicy.enabled ? configuredCapEndpoint : null;
 
     await helmetPromise(
       (customUiAssets ?? capEndpoint)
