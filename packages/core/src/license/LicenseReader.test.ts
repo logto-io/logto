@@ -23,7 +23,11 @@ const pool = createMockPool({ query: jest.fn() });
 const findSystemByKey = jest.fn(async (_key: string): Promise<unknown> => null);
 const upsertSystem = jest.fn(async (key: string, value: unknown) => ({ key, value }));
 mockEsm('#src/queries/system.js', () => ({
-  createSystemsQuery: () => ({ findSystemByKey, upsertSystem }),
+  createSystemsQuery: () => ({
+    findSystemByKey,
+    findSystemByKeyForUpdate: findSystemByKey,
+    upsertSystem,
+  }),
 }));
 
 const error = jest.spyOn(licenseConsoleLog, 'error').mockImplementation(noop);
@@ -231,6 +235,48 @@ describe('LicenseReader', () => {
     const parsedRefreshState = licenseRefreshStateGuard.parse(refreshStateWrite?.[1]);
     expect(parsedRefreshState).toMatchObject({ lastRefreshedAt, refusalReason: 'canceled' });
     expect(typeof parsedRefreshState.lastAttemptAt).toBe('string');
+    expect(upsertSystem).not.toHaveBeenCalledWith(LicenseKey.License, expect.anything());
+  });
+
+  it('should drop a refresh response once the installed key has been replaced', async () => {
+    const issuedAt = Math.floor(Date.now() / 1000) - 8 * 24 * 60 * 60;
+    const payload = buildLicensePayload({ iat: issuedAt });
+    const jwt = await signLicenseKey(payload, keyPair.privateKey);
+    const replacementJwt = await signLicenseKey(buildLicensePayload(), keyPair.privateKey);
+    const refreshedJwt = await signLicenseKey(buildLicensePayload(), keyPair.privateKey);
+    const lastRefreshedAt = new Date(issuedAt * 1000).toISOString();
+    const installed = { jwt };
+
+    findSystemByKey.mockImplementation(async (key) => {
+      if (key === LicenseKey.License) {
+        return { value: { jwt: installed.jwt, installedAt } };
+      }
+      if (key === LicenseKey.LicenseRefreshState) {
+        return { value: { lastRefreshedAt, lastAttemptAt: lastRefreshedAt } };
+      }
+      if (key === LicenseKey.LicenseDeploymentId) {
+        return { value: 'deployment_1' };
+      }
+      return null;
+    });
+
+    const request = nock(EnvSet.values.cloudUrlSet.endpoint.origin)
+      .post(`/api/self-hosted-licenses/${payload.licenseId}/refresh`)
+      .reply(() => {
+        // An admin installs another key while the refresh is in flight.
+        // eslint-disable-next-line @silverhand/fp/no-mutation -- simulates a concurrent install
+        installed.jwt = replacementJwt;
+        return [200, { license: refreshedJwt }];
+      });
+
+    await reader.read(pool);
+    await waitFor(() => request.isDone());
+    // Let the refresh settle after the response.
+    await new Promise((resolve) => {
+      setTimeout(resolve, 50);
+    });
+
+    expect(upsertSystem).toHaveBeenCalledTimes(1);
     expect(upsertSystem).not.toHaveBeenCalledWith(LicenseKey.License, expect.anything());
   });
 

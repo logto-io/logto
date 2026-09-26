@@ -257,15 +257,47 @@ export default class LicenseReader {
     }
   }
 
+  /**
+   * Run `write` only while `installedJwt` is still the installed key, holding its row lock so a
+   * concurrent `PUT /api/systems/license` cannot be overwritten by a refresh started for the
+   * previous key. Returns whether the write ran.
+   */
+  async #writeIfInstalled(
+    pool: CommonQueryMethods,
+    installedJwt: string,
+    write: (queries: ReturnType<typeof createSystemsQuery>) => Promise<unknown>
+  ) {
+    return pool.transaction(async (connection) => {
+      const queries = createSystemsQuery(connection);
+      const record = await queries.findSystemByKeyForUpdate(LicenseKey.License);
+      const current = installedLicenseGuard.safeParse(record?.value);
+
+      if (!current.success || current.data.jwt !== installedJwt) {
+        return false;
+      }
+
+      await write(queries);
+      return true;
+    });
+  }
+
   async #refresh({ pool, license, deploymentId, refreshState, installedJwt }: RefreshContext) {
-    const { upsertSystem } = createSystemsQuery(pool);
     const lastAttemptAt = new Date().toISOString();
 
     try {
-      await upsertSystem(LicenseKey.LicenseRefreshState, {
-        ...refreshState,
-        lastAttemptAt,
-      });
+      const isInstalled = await this.#writeIfInstalled(
+        pool,
+        installedJwt,
+        async ({ upsertSystem }) =>
+          upsertSystem(LicenseKey.LicenseRefreshState, {
+            ...refreshState,
+            lastAttemptAt,
+          })
+      );
+
+      if (!isInstalled) {
+        return;
+      }
 
       const response = await got.post(
         new URL(
@@ -287,11 +319,13 @@ export default class LicenseReader {
         const refusal = refreshRefusalGuard.safeParse(response.body);
         const refusalReason = refusal.success ? refusal.data.reason : 'unknown';
 
-        await upsertSystem(LicenseKey.LicenseRefreshState, {
-          ...refreshState,
-          lastAttemptAt,
-          refusalReason,
-        });
+        await this.#writeIfInstalled(pool, installedJwt, async ({ upsertSystem }) =>
+          upsertSystem(LicenseKey.LicenseRefreshState, {
+            ...refreshState,
+            lastAttemptAt,
+            refusalReason,
+          })
+        );
         this.invalidate();
         return;
       }
@@ -304,13 +338,16 @@ export default class LicenseReader {
       const refreshedPayload = await verifyLicenseKey(refreshed.license);
       const lastRefreshedAt = new Date(refreshedPayload.iat * 1000).toISOString();
 
-      await upsertSystem(LicenseKey.License, {
-        jwt: refreshed.license,
-        installedAt: license.installedAt,
-      });
-      await upsertSystem(LicenseKey.LicenseRefreshState, {
-        lastRefreshedAt,
-        lastAttemptAt,
+      // The key may have been replaced while the request was in flight; drop a stale response.
+      await this.#writeIfInstalled(pool, installedJwt, async ({ upsertSystem }) => {
+        await upsertSystem(LicenseKey.License, {
+          jwt: refreshed.license,
+          installedAt: license.installedAt,
+        });
+        await upsertSystem(LicenseKey.LicenseRefreshState, {
+          lastRefreshedAt,
+          lastAttemptAt,
+        });
       });
       this.invalidate();
     } catch (error: unknown) {
