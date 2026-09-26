@@ -125,7 +125,7 @@ Please note the hierarchical relationships between the following items and folde
 - `SignUpForm`, `SignInForm` correspond to folder `SignUpAndSignIn`
 - `SignUpIdentifier`, `AuthenticationSettings` correspond to folder `SignUpForm`
 
-### Use folder if a sub-page or page componet have more then one file
+### Use folder if a sub-page or page component have more then one file
 
 Bad:
 

@@ -4,7 +4,7 @@ The Kakao connector provides a succinct way for your application to use Kakao’
 
 **Table of contents**
 - [Kakao Connector](#kakao-connector)
-  - [Set up a project in the Kakao Devlopers Console](#set-up-a-project-in-the-kakao-devlopers-console)
+  - [Set up a project in the Kakao Developers Console](#set-up-a-project-in-the-kakao-developers-console)
   - [Configure Kakao Login](#configure-kakao-login)
     - [Activate Kakao Login](#activate-kakao-login)
     - [Privacy Setting](#privacy-setting)
@@ -12,9 +12,9 @@ The Kakao connector provides a succinct way for your application to use Kakao’
   - [Configure Logto](#configure-logto)
     - [Config types](#config-types)
       - [clientId](#clientid)
-      - [clientSeceret](#clientseceret)
+      - [clientSecret](#clientsecret)
 
-## Set up a project in the Kakao Devlopers Console
+## Set up a project in the Kakao Developers Console
 - Visit the [Kakao Developers Console](https://developers.kakao.com/console/app) and sign in with your Kakao account.
 - Click the **Add an application** to create new project or choose exist project.
 
@@ -50,6 +50,6 @@ The Kakao connector provides a succinct way for your application to use Kakao’
 `clientId` is `REST API key` of your project.
 (You can find it from `summary` of your project from Kakao developers console.)
 
-#### clientSeceret
+#### clientSecret
 `clientSecret` is `Secret Code` of your project.
 (Please check [Security Setting (Optional)](#security-setting-optional))
