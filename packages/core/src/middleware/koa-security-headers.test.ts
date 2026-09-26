@@ -32,15 +32,26 @@ const customUiAssets = Object.freeze({ id: 'custom_ui_assets_id', createdAt: 1 }
 type CustomUiSettings = {
   readonly customUiAssets?: { readonly id: string; readonly createdAt: number };
   readonly customUiCsp?: Record<string, string[]>;
+  readonly capEndpoint?: string;
+  readonly isCaptchaEnabled?: boolean;
 };
 
-const createQueries = ({ customUiAssets, customUiCsp = {} }: CustomUiSettings = {}) =>
+const createQueries = ({
+  customUiAssets,
+  customUiCsp = {},
+  capEndpoint,
+  isCaptchaEnabled = true,
+}: CustomUiSettings = {}) =>
   ({
     signInExperiences: {
       findDefaultSignInExperience: jest.fn(async () => ({
         customUiAssets: customUiAssets ?? null,
         customUiCsp,
+        captchaPolicy: { enabled: isCaptchaEnabled },
       })),
+    },
+    captchaProviders: {
+      findCapEndpoint: jest.fn(async () => capEndpoint ?? null),
     },
   }) as unknown as Queries;
 
@@ -93,6 +104,66 @@ describe('koaSecurityHeaders() middleware — experience CSP', () => {
     expect(imageSource).toContain('https:');
     expect(imageSource).toContain('http://localhost:9000');
     expect(imageSource).toContain('http://127.0.0.1:9000');
+  });
+
+  it('allows the Cap Standalone instance when Cap is the captcha provider', async () => {
+    const run = koaExperienceSecurityHeaders(
+      'default',
+      createQueries({ capEndpoint: 'https://cap.example.com/base/' })
+    );
+    const ctx = createMockContext({ method: 'GET', url: '/sign-in' });
+
+    await run(ctx, koaNoop);
+
+    expect(getCspDirective(ctx, 'connect-src')).toContain('https://cap.example.com');
+    expect(getCspDirective(ctx, 'connect-src')).not.toContain('https://cap.example.com/base');
+    expect(getCspDirective(ctx, 'script-src')).toContain("'wasm-unsafe-eval'");
+    expect(getCspDirective(ctx, 'script-src')).toContain("'unsafe-eval'");
+    expect(getCspDirective(ctx, 'worker-src')).toBe("worker-src 'self' blob:");
+  });
+
+  it('keeps Custom UI CSP sources along with the Cap sources', async () => {
+    const run = koaExperienceSecurityHeaders(
+      'default',
+      createQueries({
+        customUiAssets,
+        customUiCsp: { connectSrc: [customConnectSource] },
+        capEndpoint: 'https://cap.example.com',
+      })
+    );
+    const ctx = createMockContext({ method: 'GET', url: '/sign-in' });
+
+    await run(ctx, koaNoop);
+
+    const connectSource = getCspDirective(ctx, 'connect-src');
+
+    expect(connectSource).toContain(customConnectSource);
+    expect(connectSource).toContain('https://cap.example.com');
+  });
+
+  it('does not allow Cap sources when Cap is not the captcha provider', async () => {
+    const run = koaExperienceSecurityHeaders('default', createQueries());
+    const ctx = createMockContext({ method: 'GET', url: '/sign-in' });
+
+    await run(ctx, koaNoop);
+
+    // `'unsafe-eval'` is always allowed outside production, so only check the Cap-specific sources
+    expect(getCspDirective(ctx, 'script-src')).not.toContain("'wasm-unsafe-eval'");
+    expect(getCspDirective(ctx, 'worker-src')).toBeUndefined();
+  });
+
+  it('does not allow Cap sources when CAPTCHA is disabled', async () => {
+    const run = koaExperienceSecurityHeaders(
+      'default',
+      createQueries({ capEndpoint: 'https://cap.example.com', isCaptchaEnabled: false })
+    );
+    const ctx = createMockContext({ method: 'GET', url: '/sign-in' });
+
+    await run(ctx, koaNoop);
+
+    expect(getCspDirective(ctx, 'connect-src')).not.toContain('https://cap.example.com');
+    expect(getCspDirective(ctx, 'script-src')).not.toContain("'wasm-unsafe-eval'");
+    expect(getCspDirective(ctx, 'worker-src')).toBeUndefined();
   });
 
   it('does not add Custom UI CSP sources when Custom UI assets are not configured', async () => {

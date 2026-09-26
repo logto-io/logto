@@ -12,11 +12,15 @@ import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import TextInput from '@/ds-components/TextInput';
+import { uriValidator } from '@/utils/validator';
 
 import { type CaptchaProviderMetadata } from '../CreateCaptchaForm/types';
 import { type CaptchaFormType } from '../types';
 
 import styles from './index.module.scss';
+
+const httpUriValidator = (value: string) =>
+  uriValidator(value) && ['http:', 'https:'].includes(new URL(value).protocol);
 
 type Props = {
   readonly metadata: CaptchaProviderMetadata;
@@ -31,6 +35,7 @@ function CaptchaFormFields({ metadata, errors, register, control }: Props) {
   const projectIdField = metadata.requiredFields.find((field) => field.field === 'projectId');
   const domainField = metadata.requiredFields.find((field) => field.field === 'domain');
   const modeField = metadata.requiredFields.find((field) => field.field === 'mode');
+  const endpointField = metadata.requiredFields.find((field) => field.field === 'endpoint');
   const scoreThresholdField = metadata.requiredFields.find(
     (field) => field.field === 'scoreThreshold'
   );
@@ -39,6 +44,25 @@ function CaptchaFormFields({ metadata, errors, register, control }: Props) {
 
   return (
     <>
+      {endpointField && (
+        <FormField isRequired title={endpointField.label}>
+          <TextInput
+            error={
+              errors.endpoint?.type === 'required'
+                ? true
+                : typeof errors.endpoint?.message === 'string'
+                  ? errors.endpoint.message
+                  : undefined
+            }
+            placeholder={String(t(endpointField.placeholder))}
+            {...register('endpoint', {
+              required: true,
+              validate: (value) =>
+                !value || httpUriValidator(value) || t('errors.invalid_uri_format'),
+            })}
+          />
+        </FormField>
+      )}
       {modeField && (
         <>
           <FormField title={modeField.label}>

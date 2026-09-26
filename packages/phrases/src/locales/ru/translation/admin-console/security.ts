@@ -36,6 +36,11 @@ const security = {
       description:
         'Альтернатива CAPTCHA от Cloudflare, которая обеспечивает ненавязчивую защиту от ботов, гарантируя при этом беспрепятственный пользовательский опыт без визуальных головоломок.',
     },
+    cap: {
+      name: 'Cap',
+      description:
+        'CAPTCHA с открытым исходным кодом и собственным хостингом на основе доказательства работы, без визуальных головоломок и сторонних сервисов — идеально для регионов, где другие CAPTCHA-сервисы недоступны.',
+    },
   },
   captcha_details: {
     back_to_security: 'Назад к безопасности',
@@ -51,6 +56,8 @@ const security = {
     domain_placeholder: 'www.google.com (по умолчанию) или recaptcha.net',
     recaptcha_key_id: 'ID ключа reCAPTCHA',
     recaptcha_api_key: 'API-ключ проекта',
+    cap_endpoint: 'Конечная точка Cap',
+    cap_endpoint_placeholder: 'https://cap.example.com',
     deletion_description: 'Вы уверены, что хотите удалить этого поставщика CAPTCHA?',
     captcha_deleted: 'Поставщик CAPTCHA успешно удалён',
     setup_captcha: 'Настройка CAPTCHA',

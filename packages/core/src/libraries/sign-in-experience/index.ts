@@ -217,6 +217,7 @@ export const createSignInExperienceLibrary = (
       ...(type === 'RecaptchaEnterprise' &&
         'mode' in provider.config &&
         provider.config.mode && { mode: provider.config.mode }),
+      ...(type === 'Cap' && { endpoint: provider.config.endpoint }),
     };
   };
 

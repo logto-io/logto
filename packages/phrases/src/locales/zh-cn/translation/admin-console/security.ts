@@ -34,6 +34,11 @@ const security = {
       description:
         'Cloudflare 的智能验证码替代方案，提供非侵入性的机器人保护，同时确保无视觉难题的无缝用户体验。',
     },
+    cap: {
+      name: 'Cap',
+      description:
+        '开源、可自托管的工作量证明验证码，无需视觉谜题或第三方服务，适合无法访问其他验证码服务的地区。',
+    },
   },
   captcha_details: {
     back_to_security: '返回安全',
@@ -49,6 +54,8 @@ const security = {
     domain_placeholder: 'www.google.com（默认）或 recaptcha.net',
     recaptcha_key_id: 'reCAPTCHA 密钥 ID',
     recaptcha_api_key: '项目的 API 密钥',
+    cap_endpoint: 'Cap 端点',
+    cap_endpoint_placeholder: 'https://cap.example.com',
     deletion_description: '你确定要删除此验证码提供商吗？',
     captcha_deleted: '验证码提供商删除成功',
     setup_captcha: '设置验证码',
