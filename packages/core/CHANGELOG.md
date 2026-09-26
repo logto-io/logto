@@ -1,5 +1,64 @@
 # Change Log
 
+## 1.44.0
+
+### Minor Changes
+
+- 0f1af96: support custom user ID when creating a user via the Management API
+
+  This capability is available in Logto Open Source only and is not supported in Logto Cloud.
+
+  `POST /api/users` now accepts an optional `id` (up to 128 characters of letters, numbers, and `_ - . @ : + = |`). This lets you preserve existing user IDs, such as `auth0|abc123` or UUIDs, when migrating users from another identity provider. If the ID is already taken, the request fails with `user.id_already_in_use`.
+
+- 9af3b69: allow user IDs up to 128 characters
+
+  `users.id` and every column referencing it were limited to 12 or 21 characters. They now accept up to 128 characters, so users migrated from another identity provider can keep their original IDs.
+
+- c8d00ee: support looking up users by external identity in the Management API
+
+  `GET /api/users` now accepts `identityType`, `identityProvider`, and `identityId` query parameters for exact user lookup. Use `identityType=social` with a connector target (such as `dingtalk`), or `identityType=sso` with an enterprise SSO issuer, together with the user identifier issued by the external provider. The identity filter is combined with other search filters using AND logic
+
+- 022317f: add a client compatibility setting so dynamic app clients such as ChatGPT and Codex can receive refresh tokens
+
+  These clients request `offline_access` without `prompt=consent`, so they don't receive a refresh token and users have to sign in again whenever the access token expires. Turn on "Add consent prompt for offline access" under Client compatibility in the dynamic app settings, and Logto adds the consent prompt to these requests. The setting is experimental and off by default, and audit logs show the added `consent` in `prompt`.
+
+- 5bd627f: add a configurable score threshold for reCAPTCHA Enterprise so admins can control how strict CAPTCHA verification is
+- 3f9fd15: add authentication policies for SAML applications
+
+  SAML applications force fresh authentication by default, as before. To let a SAML application reuse an existing Logto session, turn off "Always force authentication" in the application settings, or set `authnRequestConfig.forceAuthn` to `false` using the SAML application Management API. The service provider can still require fresh authentication for a single sign-in with `ForceAuthn="true"` (SAML 2.0 core, section 3.4.1).
+
+  SAML assertions report the actual authentication time.
+
+  To require signed authentication requests, set `authnRequestConfig.requireSignedAuthnRequests` to `true` and provide the service provider’s PEM-encoded RSA X.509 certificate in `authnRequestConfig.signingCertificate`. Both HTTP-POST and HTTP-Redirect signatures are verified. Unsigned requests remain accepted by default.
+
+- c5bd438: add MFA trusted devices with configurable policies and device management
+
+  Configure tenant-wide trusted-device policies and organization-level restrictions. After completing MFA, users can choose whether to trust their device on a dedicated page at the end of sign-in or sign-up, then skip repeated MFA on that browser. Manage trusted devices through Console, Account Center, the Management API, and the Account API, and subscribe to device lifecycle webhooks.
+
+### Patch Changes
+
+- 7d54310: use a supported base language for API error messages when the requested regional language is unavailable
+- 3da75ce: support a trailing slash in the issuer of OIDC enterprise SSO connectors
+
+  The discovery path is now joined onto the connector's `Issuer`, so `https://idp.example.com/` and `https://idp.example.com` both resolve to `https://idp.example.com/.well-known/openid-configuration`. The stored issuer value stays exactly as configured, so existing SSO identities keep resolving.
+
+  Failed outbound requests made by an OIDC SSO connector now report a concise reason: the error message, or the status code alongside the response body for an HTTP failure.
+
+- Updated dependencies [0f1af96]
+- Updated dependencies [9af3b69]
+- Updated dependencies [e11805c]
+- Updated dependencies [022317f]
+- Updated dependencies [5bd627f]
+- Updated dependencies [3f9fd15]
+- Updated dependencies [a2d6e83]
+- Updated dependencies [c5bd438]
+  - @logto/phrases@1.32.0
+  - @logto/schemas@1.44.0
+  - @logto/experience@1.23.0
+  - @logto/console@1.41.0
+  - @logto/cli@1.44.0
+  - @logto/account@0.7.0
+
 ## 1.43.0
 
 ### Minor Changes
@@ -1026,9 +1085,9 @@
 
   ```ts
   await logtoClient.signIn({
-    redirectUri: "https://your.app/callback",
+    redirectUri: 'https://your.app/callback',
     extraParams: {
-      ui_locales: "fr-CA fr en",
+      ui_locales: 'fr-CA fr en',
     },
   });
   ```
@@ -1245,14 +1304,11 @@
   Developers can read the verification records from the interaction context. If an Enterprise SSO verification record is found, they can pass the user profile from the Enterprise SSO identities as additional token claims.
 
   ```ts
-  const ssoVerification = verifications.find(
-    (record) => record.type === "EnterpriseSso",
-  );
+  const ssoVerification = verifications.find((record) => record.type === 'EnterpriseSso');
 
   if (ssoVerification) {
     return {
-      enterpriseSsoIdentityId:
-        enterpriseSsoVerification?.enterpriseSsoUserInfo?.id,
+      enterpriseSsoIdentityId: enterpriseSsoVerification?.enterpriseSsoUserInfo?.id,
       familyName: enterpriseSsoVerification?.enterpriseSsoUserInfo?.familyName,
     };
   }
@@ -1636,11 +1692,7 @@
   For example, if you are using SHA256 with a salt, you can store the password in the following format:
 
   ```json
-  [
-    "sha256",
-    ["salt123", "@"],
-    "c465f66c6ac481a7a17e9ed5b4e2e7e7288d892f12bf1c95c140901e9a70436e"
-  ]
+  ["sha256", ["salt123", "@"], "c465f66c6ac481a7a17e9ed5b4e2e7e7288d892f12bf1c95c140901e9a70436e"]
   ```
 
   Then when the user uses the password (`password123`), the `legacyVerify` function will use the `sha256` algorithm with the `salt123` and the input password to verify the password.
@@ -1648,9 +1700,9 @@
   In this case, `salt123` is the first argument, `@` is the input password, then the following code will be executed:
 
   ```ts
-  const hash = crypto.createHash("sha256");
-  hash.update("salt123" + "password123");
-  const expectedHashedValue = hash.digest("hex");
+  const hash = crypto.createHash('sha256');
+  hash.update('salt123' + 'password123');
+  const expectedHashedValue = hash.digest('hex');
   ```
 
 - 03ea1f96c: feat: custom email templates in multiple languages via Management API
@@ -2040,13 +2092,13 @@
   // Example usage (React project using React SDK)
   void signIn({
     redirectUri,
-    firstScreen: "identifier:sign_in",
+    firstScreen: 'identifier:sign_in',
     /**
      * Optional. Specifies which sign-in methods to display on the identifier sign-in page.
      * If not specified, the default sign-in experience configuration will be used.
      * This option is effective when the `firstScreen` value is `identifier:sign_in`, `identifier:register`, or `reset_password`.
      */
-    identifiers: ["email", "phone"],
+    identifiers: ['email', 'phone'],
   });
   ```
 
@@ -2060,8 +2112,8 @@
   // Example usage (React project using React SDK)
   void signIn({
     redirectUri,
-    loginHint: "user@example.com",
-    firstScreen: "signIn", // or 'register'
+    loginHint: 'user@example.com',
+    firstScreen: 'signIn', // or 'register'
   });
   ```
 
@@ -2186,14 +2238,14 @@
   For example, in the JavaScript SDK:
 
   ```ts
-  import LogtoClient from "@logto/client";
+  import LogtoClient from '@logto/client';
 
   const logtoClient = new LogtoClient(/* your configuration */);
 
   logtoClient.signIn({
-    redirectUri: "https://your-app.com/callback",
+    redirectUri: 'https://your-app.com/callback',
     extraParams: {
-      organization_id: "<organization-id>",
+      organization_id: '<organization-id>',
     },
   });
   ```

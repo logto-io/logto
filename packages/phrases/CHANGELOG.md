@@ -1,5 +1,30 @@
 # Change Log
 
+## 1.32.0
+
+### Minor Changes
+
+- 022317f: add a client compatibility setting so dynamic app clients such as ChatGPT and Codex can receive refresh tokens
+
+  These clients request `offline_access` without `prompt=consent`, so they don't receive a refresh token and users have to sign in again whenever the access token expires. Turn on "Add consent prompt for offline access" under Client compatibility in the dynamic app settings, and Logto adds the consent prompt to these requests. The setting is experimental and off by default, and audit logs show the added `consent` in `prompt`.
+
+- 5bd627f: add a configurable score threshold for reCAPTCHA Enterprise so admins can control how strict CAPTCHA verification is
+- 3f9fd15: add authentication policies for SAML applications
+
+  SAML applications force fresh authentication by default, as before. To let a SAML application reuse an existing Logto session, turn off "Always force authentication" in the application settings, or set `authnRequestConfig.forceAuthn` to `false` using the SAML application Management API. The service provider can still require fresh authentication for a single sign-in with `ForceAuthn="true"` (SAML 2.0 core, section 3.4.1).
+
+  SAML assertions report the actual authentication time.
+
+  To require signed authentication requests, set `authnRequestConfig.requireSignedAuthnRequests` to `true` and provide the service provider’s PEM-encoded RSA X.509 certificate in `authnRequestConfig.signingCertificate`. Both HTTP-POST and HTTP-Redirect signatures are verified. Unsigned requests remain accepted by default.
+
+### Patch Changes
+
+- 0f1af96: support custom user ID when creating a user via the Management API
+
+  This capability is available in Logto Open Source only and is not supported in Logto Cloud.
+
+  `POST /api/users` now accepts an optional `id` (up to 128 characters of letters, numbers, and `_ - . @ : + = |`). This lets you preserve existing user IDs, such as `auth0|abc123` or UUIDs, when migrating users from another identity provider. If the ID is already taken, the request fails with `user.id_already_in_use`.
+
 ## 1.31.0
 
 ### Minor Changes
@@ -445,14 +470,14 @@
   For example, in the JavaScript SDK:
 
   ```ts
-  import LogtoClient from "@logto/client";
+  import LogtoClient from '@logto/client';
 
   const logtoClient = new LogtoClient(/* your configuration */);
 
   logtoClient.signIn({
-    redirectUri: "https://your-app.com/callback",
+    redirectUri: 'https://your-app.com/callback',
     extraParams: {
-      organization_id: "<organization-id>",
+      organization_id: '<organization-id>',
     },
   });
   ```
