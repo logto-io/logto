@@ -3,7 +3,7 @@ import { Prompt } from '@logto/js';
 import type { MiddlewareType } from 'koa';
 
 import type { EnvSet } from '#src/env-set/index.js';
-import { isCimdClient } from '#src/oidc/cimd/index.js';
+import { shouldTreatAsCimdClient } from '#src/oidc/cimd/index.js';
 import type Queries from '#src/tenants/Queries.js';
 
 /**
@@ -25,7 +25,7 @@ export default function koaCimdOfflineAccessConsentPrompt<StateT, ContextT, Resp
       typeof clientId !== 'string' ||
       typeof scope !== 'string' ||
       typeof prompt !== 'string' ||
-      !isCimdClient(envSet, clientId) ||
+      !shouldTreatAsCimdClient(envSet, clientId) ||
       !scope.split(' ').includes(ReservedScope.OfflineAccess)
     ) {
       return next();

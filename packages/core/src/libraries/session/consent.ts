@@ -7,7 +7,7 @@ import { z } from 'zod';
 
 import { type EnvSet } from '#src/env-set/index.js';
 import { markAppLevelAccessControlChecked } from '#src/oidc/application-access-control.js';
-import { isCimdClient } from '#src/oidc/cimd/index.js';
+import { shouldTreatAsCimdClient } from '#src/oidc/cimd/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -37,7 +37,9 @@ type ClientIdentifiers = {
  * on every consent submission for the same verdict.
  */
 const identifyClient = (envSet: EnvSet, clientId: string): ClientIdentifiers =>
-  isCimdClient(envSet, clientId) ? { cimdClientId: clientId } : { registeredClientId: clientId };
+  shouldTreatAsCimdClient(envSet, clientId)
+    ? { cimdClientId: clientId }
+    : { registeredClientId: clientId };
 
 /**
  * `users.application_id` and `users.cimd_client_id` form a single first-consent attribution,

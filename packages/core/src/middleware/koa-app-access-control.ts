@@ -5,7 +5,7 @@ import { type EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import { hasAppLevelAccessControlChecked } from '#src/oidc/application-access-control.js';
-import { isCimdClient } from '#src/oidc/cimd/index.js';
+import { shouldTreatAsCimdClient } from '#src/oidc/cimd/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -26,7 +26,7 @@ export default function koaAppAccessControl<
       new errors.InvalidClient('client must be available')
     );
 
-    if (isCimdClient(envSet, clientId)) {
+    if (shouldTreatAsCimdClient(envSet, clientId)) {
       /**
        * Application-level access control only applies to registered applications; the library's
        * fallback lookup would query the applications table with the identifier URL and deny on

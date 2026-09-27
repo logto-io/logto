@@ -7,7 +7,7 @@ import { type EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { isCimdClient } from '../cimd/index.js';
+import { shouldTreatAsCimdClient } from '../cimd/index.js';
 import {
   getSharedResourceServerData,
   isOrganizationConsentedToApplication,
@@ -54,7 +54,7 @@ const isOrganizationGrantedToClient = async (
    * ever is not: at an authorization boundary a broken contract must not be distinguishable
    * from a plain denial.
    */
-  if (isCimdClient(envSet, clientId)) {
+  if (shouldTreatAsCimdClient(envSet, clientId)) {
     const grantId = ctx.oidc.entities.RefreshToken?.grantId;
 
     return grantId !== undefined && queries.cimd.grantOrganizations.exists(grantId, organizationId);
