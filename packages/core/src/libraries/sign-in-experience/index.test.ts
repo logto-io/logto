@@ -1,8 +1,10 @@
+/* eslint-disable max-lines -- getFullSignInExperience cases share the library mocks set up in this file. */
 import type { LanguageTag } from '@logto/language-kit';
 import { builtInLanguages } from '@logto/phrases-experience';
 import {
   CaptchaType,
   ForgotPasswordMethod,
+  ossDefaultQuota,
   type CreateSignInExperience,
   type SignInExperience,
 } from '@logto/schemas';
@@ -22,7 +24,9 @@ import {
   wellConfiguredSsoConnector,
 } from '#src/__mocks__/index.js';
 import { WellKnownCache } from '#src/caches/well-known.js';
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import type { SubscriptionLibrary } from '#src/libraries/subscription.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
 import { mockSsoConnectorLibrary } from '#src/test-utils/mock-libraries.js';
 
@@ -72,6 +76,12 @@ const connectorLibrary = createConnectorLibrary(queries, {
 
 const getLogtoConnectors = jest.spyOn(connectorLibrary, 'getLogtoConnectors');
 
+const getSelfHostedSubscription = jest.fn(async () => ({
+  quota: { ...ossDefaultQuota, hideLogtoBranding: false as boolean },
+}));
+// Only the self-hosted entitlement reader is used by the sign-in experience library.
+const subscription = { getSelfHostedSubscription } as unknown as SubscriptionLibrary;
+
 const { createSignInExperienceLibrary, getForgotPasswordAvailability } = await import('./index.js');
 const {
   validateLanguageInfo,
@@ -84,7 +94,8 @@ const {
   queries,
   connectorLibrary,
   mockSsoConnectorLibrary,
-  new WellKnownCache('foo', new TtlCache())
+  new WellKnownCache('foo', new TtlCache()),
+  subscription
 );
 
 const getPublicSignInExperience = (signInExperience: SignInExperience) => {
@@ -269,6 +280,52 @@ describe('getFullSignInExperience()', () => {
   });
 });
 
+const setIsCloud = (isCloud: boolean) => {
+  // eslint-disable-next-line @silverhand/fp/no-mutation -- Switch the environment under test.
+  (EnvSet.values as { isCloud: boolean }).isCloud = isCloud;
+};
+
+describe('getFullSignInExperience() hideLogtoBranding', () => {
+  const originalIsCloud = EnvSet.values.isCloud;
+
+  beforeEach(() => {
+    findDefaultSignInExperience.mockResolvedValueOnce({
+      ...mockSignInExperience,
+      hideLogtoBranding: true,
+    });
+    getLogtoConnectors.mockResolvedValueOnce([]);
+    findAllCustomProfileFields.mockResolvedValueOnce([]);
+    mockSsoConnectorLibrary.getAvailableSsoConnectors.mockResolvedValueOnce([]);
+  });
+
+  afterEach(() => {
+    setIsCloud(originalIsCloud);
+  });
+
+  it.each([false, true])(
+    'should mask the saved value by the license outside Cloud (granted: %s)',
+    async (granted) => {
+      setIsCloud(false);
+      getSelfHostedSubscription.mockResolvedValueOnce({
+        quota: { ...ossDefaultQuota, hideLogtoBranding: granted },
+      });
+
+      const { hideLogtoBranding } = await getFullSignInExperience({ locale: 'en' });
+
+      expect(hideLogtoBranding).toBe(granted);
+    }
+  );
+
+  it('should not read the license on Cloud', async () => {
+    setIsCloud(true);
+
+    const { hideLogtoBranding } = await getFullSignInExperience({ locale: 'en' });
+
+    expect(hideLogtoBranding).toBe(true);
+    expect(getSelfHostedSubscription).not.toHaveBeenCalled();
+  });
+});
+
 describe('getForgotPasswordAvailability()', () => {
   it('should return connector-based availability when forgotPasswordMethods is null', () => {
     expect(
@@ -426,3 +483,4 @@ describe('forgot password methods', () => {
     });
   });
 });
+/* eslint-enable max-lines */

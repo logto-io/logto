@@ -20,6 +20,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
 import { resolveSignUpCustomProfileFields } from '#src/libraries/custom-profile-fields/utils.js';
 import type { SsoConnectorLibrary } from '#src/libraries/sso-connector.js';
+import type { SubscriptionLibrary } from '#src/libraries/subscription.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -58,7 +59,8 @@ export const createSignInExperienceLibrary = (
   queries: Queries,
   { getLogtoConnectors }: ConnectorLibrary,
   { getAvailableSsoConnectors }: SsoConnectorLibrary,
-  wellKnownCache: WellKnownCache
+  wellKnownCache: WellKnownCache,
+  subscription: SubscriptionLibrary
 ) => {
   const {
     tenants: { findTenantMetadataById },
@@ -220,6 +222,11 @@ export const createSignInExperienceLibrary = (
     };
   };
 
+  const isHideLogtoBrandingGrantedByLicense = async () => {
+    const { quota } = await subscription.getSelfHostedSubscription();
+    return quota.hideLogtoBranding;
+  };
+
   const getFullSignInExperience = async ({
     locale,
     organizationId,
@@ -332,8 +339,18 @@ export const createSignInExperienceLibrary = (
       organizationOverride
     );
 
+    /**
+     * Outside Cloud, hiding the Logto branding is a license entitlement that is only checked when the
+     * setting is written. Mask it here as well, so the branding comes back once the license expires
+     * or is removed, and a saved value applies again if the license is reinstalled.
+     */
+    const hideLogtoBranding =
+      publicSignInExperience.hideLogtoBranding &&
+      (EnvSet.values.isCloud || (await isHideLogtoBrandingGrantedByLicense()));
+
     return {
       ...publicSignInExperience,
+      hideLogtoBranding,
       socialConnectors,
       ssoConnectors,
       forgotPassword: getForgotPassword(),
