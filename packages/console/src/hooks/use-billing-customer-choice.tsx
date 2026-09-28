@@ -6,7 +6,6 @@ import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type CheckoutCustomerChoice } from '@/cloud/types/router';
 import BillingCustomerPicker from '@/components/BillingCustomerPicker';
 import { defaultBillingChoice, toCustomerChoice } from '@/components/BillingCustomerPicker/utils';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 
 import { useConfirmModal } from './use-confirm-modal';
@@ -31,11 +30,6 @@ export const useBillingCustomerChoice = () => {
   const chooseBillingCustomer = async (
     tenantId?: string
   ): Promise<CheckoutCustomerChoice | undefined> => {
-    // Billing Customer picker on Checkout (dev feature)
-    if (!isDevFeaturesEnabled) {
-      return {};
-    }
-
     // A tenant that has billed before keeps its Customer; an unknown flag is treated the same.
     if (tenantId && currentSubscription.hasBillingCustomer !== false) {
       return {};
