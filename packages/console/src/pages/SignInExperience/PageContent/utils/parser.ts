@@ -205,9 +205,9 @@ export const sieFormDataParser = {
   toSignInExperience: (
     formData: SignInExperienceForm,
     {
-      isCloud = true,
+      isHideLogtoBrandingAvailable = true,
       isCustomUiCspEnabled = false,
-    }: { isCloud?: boolean; isCustomUiCspEnabled?: boolean } = {}
+    }: { isHideLogtoBrandingAvailable?: boolean; isCustomUiCspEnabled?: boolean } = {}
   ): SignInExperiencePageManagedData => {
     const {
       branding,
@@ -237,7 +237,7 @@ export const sieFormDataParser = {
           customUiCsp: normalizeCustomUiCspForSubmit(customUiCsp),
         }
       ),
-      ...conditional(isCloud && { hideLogtoBranding }),
+      ...conditional(isHideLogtoBrandingAvailable && { hideLogtoBranding }),
     };
   },
 };
@@ -267,9 +267,9 @@ export const sieFormDataParser = {
 export const signInExperienceToUpdatedDataParser = (
   data: SignInExperience,
   {
-    isCloud = true,
+    isHideLogtoBrandingAvailable = true,
     isCustomUiCspEnabled = false,
-  }: { isCloud?: boolean; isCustomUiCspEnabled?: boolean } = {}
+  }: { isHideLogtoBrandingAvailable?: boolean; isCustomUiCspEnabled?: boolean } = {}
 ): SignInExperiencePageManagedData => {
   const {
     signUp,
@@ -300,6 +300,6 @@ export const signInExperienceToUpdatedDataParser = (
         customUiCsp: normalizeCustomUiCspForSubmit(normalizeCustomUiCspForForm(customUiCsp)),
       }
     ),
-    ...conditional(isCloud && { hideLogtoBranding }),
+    ...conditional(isHideLogtoBrandingAvailable && { hideLogtoBranding }),
   };
 };

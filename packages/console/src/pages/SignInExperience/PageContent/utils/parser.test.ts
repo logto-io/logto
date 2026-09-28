@@ -234,10 +234,12 @@ describe('sign-in experience parser', () => {
     expect(sieFormDataParser.toSignInExperience(formData).signUpProfileFields).toEqual([]);
   });
 
-  it('should omit hideLogtoBranding from OSS payloads', () => {
+  it('should omit hideLogtoBranding from payloads where it is unavailable', () => {
     const formData = sieFormDataParser.fromSignInExperience(mockSignInExperience);
 
-    const payload = sieFormDataParser.toSignInExperience(formData, { isCloud: false });
+    const payload = sieFormDataParser.toSignInExperience(formData, {
+      isHideLogtoBrandingAvailable: false,
+    });
 
     expect(payload).not.toHaveProperty('hideLogtoBranding');
   });
@@ -289,9 +291,9 @@ describe('sign-in experience parser', () => {
     ).toEqual([]);
   });
 
-  it('should omit hideLogtoBranding from OSS compare payloads', () => {
+  it('should omit hideLogtoBranding from compare payloads where it is unavailable', () => {
     const comparePayload = signInExperienceToUpdatedDataParser(mockSignInExperience, {
-      isCloud: false,
+      isHideLogtoBrandingAvailable: false,
     });
 
     expect(comparePayload).not.toHaveProperty('hideLogtoBranding');

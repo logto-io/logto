@@ -14,27 +14,32 @@ import styles from './index.module.scss';
 import { getHideLogtoBrandingOssNote } from './utils';
 
 type Props = {
-  readonly variant: 'cloud' | 'oss';
-  readonly isEnabledInCloud: boolean;
+  /**
+   * `switch` when hiding the branding is available: on Cloud, or on a self-hosted deployment whose
+   * license grants it. `oss-upsell` otherwise, which shows a locked switch and the upsell note.
+   */
+  readonly variant: 'switch' | 'oss-upsell';
+  /** Whether the switch can be turned on. Only read by the `switch` variant. */
+  readonly isEnabled: boolean;
 };
 
-function HideLogtoBrandingField({ variant, isEnabledInCloud }: Props) {
+function HideLogtoBrandingField({ variant, isEnabled }: Props) {
   const { register } = useFormContext<SignInExperienceForm>();
   const ossNote = getHideLogtoBrandingOssNote();
 
-  if (variant === 'cloud') {
+  if (variant === 'switch') {
     return (
       <FormField
         title="sign_in_exp.branding.hide_logto_branding"
         featureTag={{
-          isVisible: !isEnabledInCloud,
+          isVisible: !isEnabled,
           plan: latestProPlanId,
         }}
       >
         <Switch
           description="sign_in_exp.branding.hide_logto_branding_description"
           {...register('hideLogtoBranding')}
-          disabled={!isEnabledInCloud}
+          disabled={!isEnabled}
         />
       </FormField>
     );

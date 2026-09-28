@@ -159,6 +159,7 @@ export default class Tenant implements TenantContext {
       libraries,
       envSet,
       sentinel,
+      subscription,
       invalidateCache: this.invalidateCache.bind(this),
       scheduleSigningKeyRotation: this.scheduleSigningKeyRotation.bind(this),
     };
