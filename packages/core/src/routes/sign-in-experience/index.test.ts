@@ -191,6 +191,8 @@ const installLicense = (quota: Partial<LicenseQuota>) => {
     payload,
     installedAt: new Date().toISOString(),
     quota: resolveLicenseQuota(payload.quota),
+    lastRefreshedAt: new Date().toISOString(),
+    graceEndsAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
   });
 };
 
