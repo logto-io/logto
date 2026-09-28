@@ -32,6 +32,20 @@ const tenants = {
     environment_non_production: 'غير الإنتاج',
     expires_at_field: 'ينتهي في',
     installed_at_field: 'تم التثبيت في',
+    last_refreshed_at_field: 'آخر تحديث في',
+    grace_ends_at_field: 'تنتهي فترة السماح في',
+    refresh_expired_description:
+      'انتهت صلاحية مفتاح الترخيص في {{expiresAt}}. ستبقى الميزات المرخصة متاحة حتى {{graceEndsAt}} بينما يحاول Logto تحديثه.',
+    refresh_refused_description:
+      'تم رفض تحديث الترخيص لأن حالة الترخيص هي {{reason}}. ستبقى الميزات المرخصة متاحة حتى {{graceEndsAt}}.',
+    refusal_reason_canceled: 'ملغى',
+    refusal_reason_unpaid: 'غير مدفوع',
+    refusal_reason_expired: 'منتهي الصلاحية',
+    refusal_reason_revoked: 'مسحوب',
+    refusal_reason_unknown: 'غير متاح',
+    grace_expired_description:
+      'انتهت فترة السماح للترخيص في {{graceEndsAt}}. عاد هذا النشر إلى إعدادات OSS الافتراضية. احصل على مفتاح ترخيص جديد من Logto Cloud وثبّته مرة أخرى.',
+    get_fresh_key_button: 'الحصول على مفتاح ترخيص جديد',
     replace_button: 'استبدال الترخيص',
   },
   members: {

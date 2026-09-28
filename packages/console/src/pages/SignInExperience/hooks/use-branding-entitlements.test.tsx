@@ -35,6 +35,8 @@ const withLicense = (quota: Partial<LicenseQuota>): Partial<FullContext> => ({
     quota: { ...ossDefaultQuota, ...quota },
     expiresAt: '2027-01-01T00:00:00.000Z',
     installedAt: '2026-01-01T00:00:00.000Z',
+    lastRefreshedAt: '2026-01-01T00:00:00.000Z',
+    graceEndsAt: '2026-01-31T00:00:00.000Z',
   },
 });
 

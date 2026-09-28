@@ -34,6 +34,20 @@ const tenants = {
     environment_non_production: 'Não produção',
     expires_at_field: 'Expira em',
     installed_at_field: 'Instalada em',
+    last_refreshed_at_field: 'Última atualização em',
+    grace_ends_at_field: 'O período de tolerância termina em',
+    refresh_expired_description:
+      'A chave de licença expirou em {{expiresAt}}. Os recursos licenciados continuam disponíveis até {{graceEndsAt}} enquanto o Logto tenta atualizá-la.',
+    refresh_refused_description:
+      'A atualização da licença foi recusada porque a licença está {{reason}}. Os recursos licenciados continuam disponíveis até {{graceEndsAt}}.',
+    refusal_reason_canceled: 'cancelada',
+    refusal_reason_unpaid: 'não paga',
+    refusal_reason_expired: 'expirada',
+    refusal_reason_revoked: 'revogada',
+    refusal_reason_unknown: 'indisponível',
+    grace_expired_description:
+      'O período de tolerância da licença terminou em {{graceEndsAt}}. Esta instância voltou aos padrões do OSS. Obtenha uma nova chave no Logto Cloud e instale-a novamente.',
+    get_fresh_key_button: 'Obter uma nova chave de licença',
     replace_button: 'Substituir licença',
   },
   members: {

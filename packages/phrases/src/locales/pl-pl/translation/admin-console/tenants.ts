@@ -33,6 +33,20 @@ const tenants = {
     environment_non_production: 'Nieprodukcyjne',
     expires_at_field: 'Wygasa',
     installed_at_field: 'Zainstalowano',
+    last_refreshed_at_field: 'Ostatnio odświeżono',
+    grace_ends_at_field: 'Okres karencji kończy się',
+    refresh_expired_description:
+      'Klucz licencyjny wygasł {{expiresAt}}. Funkcje objęte licencją pozostaną dostępne do {{graceEndsAt}}, gdy Logto będzie próbować go odświeżyć.',
+    refresh_refused_description:
+      'Odświeżenie licencji odrzucono, ponieważ licencja jest {{reason}}. Funkcje objęte licencją pozostaną dostępne do {{graceEndsAt}}.',
+    refusal_reason_canceled: 'anulowana',
+    refusal_reason_unpaid: 'nieopłacona',
+    refusal_reason_expired: 'wygasła',
+    refusal_reason_revoked: 'unieważniona',
+    refusal_reason_unknown: 'niedostępna',
+    grace_expired_description:
+      'Okres karencji licencji zakończył się {{graceEndsAt}}. Ta instancja wróciła do domyślnych ustawień OSS. Pobierz nowy klucz z Logto Cloud i zainstaluj go ponownie.',
+    get_fresh_key_button: 'Pobierz nowy klucz licencyjny',
     replace_button: 'Zmień licencję',
   },
   members: {
