@@ -65,7 +65,7 @@ export type StepUpEligibility = {
   maskedIdentifiers: MaskedIdentifiers;
 };
 
-const mfaFactorToVerificationType = Object.freeze({
+export const mfaFactorToVerificationType = Object.freeze({
   [MfaFactor.TOTP]: VerificationType.TOTP,
   [MfaFactor.WebAuthn]: VerificationType.WebAuthn,
   [MfaFactor.BackupCode]: VerificationType.BackupCode,
