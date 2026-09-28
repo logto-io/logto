@@ -24,10 +24,18 @@ const getEventDetail = (event: Event, key: string): string | undefined => {
  * WebAssembly is served by the experience app itself instead of the default CDN, so the widget
  * keeps working where the CDN is unreachable.
  */
+// eslint-disable-next-line @silverhand/fp/no-let -- Memoizes the single widget loading promise
+let capWidgetLoader: Promise<void> | undefined;
+
 export const loadCapWidget = async () => {
-  // eslint-disable-next-line @silverhand/fp/no-mutation
-  window.CAP_CUSTOM_WASM_URL = wasmUrl;
-  await import('cap-widget');
+  // eslint-disable-next-line @silverhand/fp/no-mutation -- Memoizes the single widget loading promise
+  capWidgetLoader ??= (async () => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- The widget reads the WASM URL from this global
+    window.CAP_CUSTOM_WASM_URL = wasmUrl;
+    await import('cap-widget');
+  })();
+
+  return capWidgetLoader;
 };
 
 /**
@@ -39,8 +47,12 @@ export const loadCapWidget = async () => {
  * `solve()` resolves to `undefined` when a solve (e.g. triggered by the user clicking the widget)
  * is already in progress.
  */
-export const solveCapWidget = async (container: HTMLElement) =>
-  new Promise<string>((resolve, reject) => {
+export const solveCapWidget = async (container: HTMLElement) => {
+  // The widget is a plain un-upgraded element until its chunk is loaded, so wait for it first
+  await loadCapWidget();
+  await customElements.whenDefined(capWidgetTagName);
+
+  return new Promise<string>((resolve, reject) => {
     const widget = container.querySelector<CapWidgetElement>(capWidgetTagName);
 
     if (!widget) {
@@ -85,10 +97,15 @@ export const solveCapWidget = async (container: HTMLElement) =>
     widget.addEventListener('solve', onSolve);
     widget.addEventListener('error', onError);
 
-    // Errors are reported through the `error` event
+    // Errors are usually reported through the `error` event as well, but `solve()` may also throw
+    // without dispatching it, so reject here to make sure the flow always ends
     void (async () => {
       try {
         await widget.solve();
-      } catch {}
+      } catch (error: unknown) {
+        cleanup();
+        reject(error instanceof Error ? error : new Error('Cap widget failed to solve'));
+      }
     })();
   });
+};
