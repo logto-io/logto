@@ -100,6 +100,27 @@ describe('unzipCustomUiAssets()', () => {
     expect(uploadFile).not.toHaveBeenCalled();
   });
 
+  it('should reject a file of 10 MB or more that declares a size of 0', async () => {
+    const zip = new AdmZip();
+    zip.addFile('large.bin', Buffer.alloc(10 * 1024 * 1024));
+    const buffer = zip.toBuffer();
+
+    // Patch the declared uncompressed size to 0 in the local and central directory headers, the
+    // way a crafted zip bypasses the declared size check.
+    for (const [signature, sizeOffset] of [
+      ['PK\u0003\u0004', 22],
+      ['PK\u0001\u0002', 24],
+    ] as const) {
+      const headerOffset = buffer.indexOf(signature, 0, 'latin1');
+      buffer.writeUInt32LE(0, headerOffset + sizeOffset);
+    }
+
+    await expect(unzipCustomUiAssets(buffer, 'prefix', uploadFile)).rejects.toThrow(
+      'File large.bin is too large'
+    );
+    expect(uploadFile).not.toHaveBeenCalled();
+  });
+
   it.each(['../evil.txt', 'root/../evil.txt', 'root\\..\\evil.txt'])(
     'should reject the entry path `%s` before uploading anything',
     async (entryName) => {

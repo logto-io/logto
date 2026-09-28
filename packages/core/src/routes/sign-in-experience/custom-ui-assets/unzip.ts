@@ -1,6 +1,8 @@
 import path from 'node:path';
+import { promisify } from 'node:util';
+import { inflateRaw } from 'node:zlib';
 
-import AdmZip from 'adm-zip';
+import AdmZip, { type IZipEntry } from 'adm-zip';
 import mime from 'mime';
 import pMap from 'p-map';
 
@@ -13,6 +15,11 @@ import { type UploadFile } from '#src/utils/storage/types.js';
 const maxEntryCount = 200;
 const maxEntrySize = 10 * 1024 * 1024; // 10 MB
 const uploadConcurrency = 10;
+
+const zipMethodStored = 0;
+const zipMethodDeflated = 8;
+
+const inflateRawAsync = promisify(inflateRaw);
 
 /** Metadata such as `__MACOSX/._index.html` or `.DS_Store` is never part of the UI. */
 const isHidden = (entryName: string) => entryName.split('/').some((part) => part.startsWith('.'));
@@ -64,11 +71,52 @@ const assertEntrySize = (entryName: string, size: number) => {
 };
 
 /**
+ * The content of an entry, never larger than the limit whatever size the header declares.
+ *
+ * adm-zip only caps the inflate when the declared size is positive, so an entry declaring 0 could
+ * inflate without limit. Inflate it ourselves with a hard cap, off the event loop.
+ *
+ * @throws {Error} When the entry is too large or uses an unsupported compression method.
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types -- Passed to `UploadFile<Buffer>`, see below
+const readEntry = async (entry: IZipEntry): Promise<Buffer> => {
+  const { entryName, header } = entry;
+
+  if (header.method === zipMethodStored) {
+    // Stored data is copied as is, so it is bounded by the zip size.
+    const data = entry.getData();
+    assertEntrySize(entryName, data.length);
+    return data;
+  }
+
+  if (header.method !== zipMethodDeflated) {
+    throw new Error(`File ${entryName} uses an unsupported compression method`);
+  }
+
+  try {
+    return await inflateRawAsync(entry.getCompressedData(), { maxOutputLength: maxEntrySize - 1 });
+  } catch (error: unknown) {
+    // Matched by code: zlib errors may come from another realm (e.g. Jest VM), failing `instanceof`.
+    if (
+      typeof error === 'object' &&
+      error !== null &&
+      'code' in error &&
+      error.code === 'ERR_BUFFER_TOO_LARGE'
+    ) {
+      throw new Error(`File ${entryName} is too large, must be less than 10MB`);
+    }
+
+    throw error;
+  }
+};
+
+/**
  * Extract the custom UI assets zip and upload every file under `keyPrefix`, which is how the assets
  * are served afterwards. Mirrors the Logto Cloud unzip function, which does the same through an
  * Azure blob trigger.
  *
- * Every entry is validated before anything is uploaded, so a rejected zip leaves nothing behind.
+ * Entry paths and declared sizes are validated before anything is uploaded, so a zip rejected
+ * for them leaves nothing behind.
  *
  * @throws {Error} With a message fit for the user when the zip is invalid or breaks a limit.
  */
@@ -104,16 +152,14 @@ export const unzipCustomUiAssets = async (
     .filter(({ entry }) => !isHidden(entry.entryName));
 
   for (const { entry } of files) {
-    // Checked against the declared size before inflating, so a crafted entry cannot make the
-    // extraction allocate more than the limit.
+    // A quick rejection on the declared size; the real size is enforced when inflating.
     assertEntrySize(entry.entryName, entry.header.size);
   }
 
   await pMap(
     files,
     async ({ entry, objectKey }) => {
-      const data = entry.getData();
-      assertEntrySize(entry.entryName, data.length);
+      const data = await readEntry(entry);
 
       await uploadFile(data, objectKey, {
         contentType: mime.getType(entry.entryName) ?? 'application/octet-stream',
