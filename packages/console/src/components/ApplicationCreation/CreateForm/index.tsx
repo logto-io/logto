@@ -13,7 +13,6 @@ import { GtagConversionId, reportToGoogle } from '@/components/Conversion/utils'
 import LearnMore from '@/components/LearnMore';
 import SamlAppLimitBanner from '@/components/SamlAppLimitBanner';
 import { defaultPageSize, integrateLogto, thirdPartyApp } from '@/consts';
-import { ossSamlApplicationsLimit } from '@/consts/application-limits';
 import { isCloud } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
@@ -29,6 +28,7 @@ import useApi from '@/hooks/use-api';
 import useApplicationsUsage from '@/hooks/use-applications-usage';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import TypeDescription from '@/pages/Applications/components/TypeDescription';
+import { isSamlAppLimitReached } from '@/pages/Applications/utils';
 import modalStyles from '@/scss/modal.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { trySubmitSafe } from '@/utils/form';
@@ -95,6 +95,7 @@ function CreateForm({
   const [_, samlAppTotalCount] = data ?? [];
   const {
     currentSubscription: { planId, isEnterprisePlan },
+    currentSubscriptionQuota: { samlApplicationsLimit },
   } = useContext(SubscriptionDataContext);
   const { currentTenant } = useContext(TenantsContext);
   const { mutate: mutateGlobal } = useSWRConfig();
@@ -255,11 +256,14 @@ function CreateForm({
         hasAddOnTag={hasAddOnTag}
         size={defaultCreateType ? 'medium' : 'large'}
         footer={
-          !isCloud &&
           defaultCreateType === ApplicationType.SAML &&
-          typeof samlAppTotalCount === 'number' &&
-          samlAppTotalCount >= ossSamlApplicationsLimit ? (
-            <SamlAppLimitBanner variant="footer" limit={ossSamlApplicationsLimit} />
+          samlApplicationsLimit !== null &&
+          isSamlAppLimitReached({
+            isCloud,
+            samlAppLimit: samlApplicationsLimit,
+            samlAppTotalCount,
+          }) ? (
+            <SamlAppLimitBanner variant="footer" limit={samlApplicationsLimit} />
           ) : (
             <Footer
               selectedType={value}

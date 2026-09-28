@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
-import { ConnectorType, ReservedPlanId } from '@logto/schemas';
+import { ConnectorType, ReservedPlanId, ossDefaultQuota } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
+import { type Nullable } from '@silverhand/essentials';
 
 import { mockSubscriptionData } from '#src/__mocks__/cloud-connection.js';
 
@@ -499,6 +500,86 @@ describe('guardTenantUsageByKey', () => {
       code: 'system_limit.limit_exceeded',
       status: 403,
     });
+  });
+});
+
+const createSelfHostedQuotaLibrary = ({
+  samlApplicationsLimit,
+  usage,
+}: {
+  samlApplicationsLimit: Nullable<number>;
+  usage: number;
+}) => {
+  setEnvFlag('isCloud', false);
+
+  const getSelfComputedUsageByKey = jest.fn().mockResolvedValue(usage);
+  const { tenant, quotaLibrary } = createQuotaLibrary({
+    queriesOverride: { tenantUsage: { getSelfComputedUsageByKey } },
+  });
+  // Stub the license-derived entitlements, keeping the license reader and the database out.
+  jest.spyOn(tenant.subscription, 'getSelfHostedSubscription').mockResolvedValue({
+    planId: ReservedPlanId.Development,
+    currentPeriodStart: new Date().toISOString(),
+    currentPeriodEnd: new Date().toISOString(),
+    isEnterprisePlan: false,
+    status: 'active',
+    quota: { ...ossDefaultQuota, samlApplicationsLimit },
+    systemLimit: {},
+  });
+
+  return { tenant, quotaLibrary, getSelfComputedUsageByKey };
+};
+
+describe('guardTenantUsageByKey samlApplicationsLimit outside Cloud', () => {
+  it('rejects a fourth SAML application under the OSS default cap', async () => {
+    const { tenant, quotaLibrary, getSelfComputedUsageByKey } = createSelfHostedQuotaLibrary({
+      samlApplicationsLimit: ossDefaultQuota.samlApplicationsLimit,
+      usage: 3,
+    });
+
+    await expect(quotaLibrary.guardTenantUsageByKey('samlApplicationsLimit')).rejects.toMatchObject(
+      { code: 'application.saml.reach_oss_limit', status: 403 }
+    );
+    expect(getSelfComputedUsageByKey).toHaveBeenCalledWith(
+      tenant.id,
+      'samlApplicationsLimit',
+      undefined
+    );
+    expect(mockGetTenantSubscription).not.toHaveBeenCalled();
+  });
+
+  it('allows a SAML application below the OSS default cap', async () => {
+    const { quotaLibrary } = createSelfHostedQuotaLibrary({
+      samlApplicationsLimit: ossDefaultQuota.samlApplicationsLimit,
+      usage: 2,
+    });
+
+    await expect(
+      quotaLibrary.guardTenantUsageByKey('samlApplicationsLimit')
+    ).resolves.not.toThrow();
+  });
+
+  it('allows any number of SAML applications with a license that lifts the cap', async () => {
+    const { quotaLibrary, getSelfComputedUsageByKey } = createSelfHostedQuotaLibrary({
+      samlApplicationsLimit: null,
+      usage: 10,
+    });
+
+    await expect(
+      quotaLibrary.guardTenantUsageByKey('samlApplicationsLimit')
+    ).resolves.not.toThrow();
+    expect(getSelfComputedUsageByKey).not.toHaveBeenCalled();
+  });
+
+  it('keeps every other key unguarded', async () => {
+    const { tenant, quotaLibrary, getSelfComputedUsageByKey } = createSelfHostedQuotaLibrary({
+      samlApplicationsLimit: 0,
+      usage: 10,
+    });
+
+    await expect(quotaLibrary.guardTenantUsageByKey('applicationsLimit')).resolves.not.toThrow();
+    expect(tenant.subscription.getSelfHostedSubscription).not.toHaveBeenCalled();
+    expect(getSelfComputedUsageByKey).not.toHaveBeenCalled();
   });
 });
 
