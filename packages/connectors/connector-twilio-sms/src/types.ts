@@ -28,6 +28,14 @@ const templateGuard = z.object({
 });
 
 export const twilioSmsConfigGuard = z.object({
+  host: z
+    .string()
+    .max(253)
+    .regex(
+      /^api(?:\.[\da-z](?:[\da-z-]{0,61}[\da-z])?)*\.twilio\.com$/i,
+      'Expected a Twilio API hostname, such as api.twilio.com or api.dublin.ie1.twilio.com'
+    )
+    .optional(),
   accountSID: z.string(),
   authToken: z.string(),
   fromMessagingServiceSID: z.string(),

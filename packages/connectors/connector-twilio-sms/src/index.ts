@@ -16,7 +16,7 @@ import {
   getConfigTemplateByType,
 } from '@logto/connector-kit';
 
-import { defaultMetadata, endpoint } from './constant.js';
+import { defaultHost, defaultMetadata, endpoint } from './constant.js';
 import type { PublicParameters } from './types.js';
 import { twilioSmsConfigGuard } from './types.js';
 
@@ -31,6 +31,7 @@ const sendMessage =
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, twilioSmsConfigGuard);
     const { accountSID, authToken, fromMessagingServiceSID, disableRiskCheck } = config;
+    const host = config.host?.toLowerCase() ?? defaultHost;
     const template = getConfigTemplateByType(type, config);
 
     assert(
@@ -45,18 +46,34 @@ const sendMessage =
       To: toE164PhoneNumber(to),
       MessagingServiceSid: fromMessagingServiceSID,
       Body: replaceSendMessageHandlebars(template.content, payload),
-      RiskCheck: disableRiskCheck ? 'disable' : 'enable',
+      // Twilio SMS Pumping Protection is unavailable in IE1.
+      ...(host.endsWith('.ie1.twilio.com')
+        ? {}
+        : { RiskCheck: disableRiskCheck ? 'disable' : 'enable' }),
     };
 
     try {
-      return await got.post(endpoint.replaceAll('{{accountSID}}', accountSID), {
-        headers: {
-          Authorization:
-            'Basic ' + Buffer.from([accountSID, authToken].join(':')).toString('base64'),
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams(parameters).toString(),
-      });
+      const response = await got.post(
+        endpoint.replaceAll('{{host}}', host).replaceAll('{{accountSID}}', accountSID),
+        {
+          // Keep regional requests on the configured host, including on redirect responses.
+          ...(config.host && { followRedirect: false }),
+          headers: {
+            Authorization:
+              'Basic ' + Buffer.from([accountSID, authToken].join(':')).toString('base64'),
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams(parameters).toString(),
+        }
+      );
+
+      // Got accepts 3xx responses when redirects are disabled, but no SMS was sent.
+      assert(
+        !config.host || response.statusCode < 300,
+        new ConnectorError(ConnectorErrorCodes.General, response.body)
+      );
+
+      return response;
     } catch (error: unknown) {
       if (error instanceof HTTPError) {
         const {

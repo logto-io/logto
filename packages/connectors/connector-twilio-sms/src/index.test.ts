@@ -1,15 +1,28 @@
 import nock from 'nock';
 
-import { TemplateType } from '@logto/connector-kit';
+import { ConnectorErrorCodes, TemplateType } from '@logto/connector-kit';
 
 import createConnector from './index.js';
 import { mockedConfig } from './mock.js';
+import { twilioSmsConfigGuard } from './types.js';
 
 const getConfig = vi.fn().mockResolvedValue(mockedConfig);
 
 describe('Twilio SMS connector', () => {
+  beforeAll(() => {
+    nock.disableNetConnect();
+  });
+
+  beforeEach(() => {
+    getConfig.mockReset().mockResolvedValue(mockedConfig);
+  });
+
   afterEach(() => {
     nock.cleanAll();
+  });
+
+  afterAll(() => {
+    nock.enableNetConnect();
   });
 
   it('init without throwing errors', async () => {
@@ -44,5 +57,115 @@ describe('Twilio SMS connector', () => {
     );
 
     expect(mockedPost.isDone()).toBe(true);
+  });
+
+  const message = {
+    to: '353861234567',
+    type: TemplateType.Generic,
+    payload: { code: '123456' },
+  };
+
+  it.each([
+    { host: undefined, disableRiskCheck: undefined, riskCheck: 'enable' },
+    { host: 'api.twilio.com', disableRiskCheck: false, riskCheck: 'enable' },
+    { host: 'api.twilio.com', disableRiskCheck: true, riskCheck: 'disable' },
+    { host: 'api.dublin.ie1.twilio.com', disableRiskCheck: undefined, riskCheck: undefined },
+    { host: 'api.dublin.ie1.twilio.com', disableRiskCheck: false, riskCheck: undefined },
+    { host: 'API.DUBLIN.IE1.TWILIO.COM', disableRiskCheck: true, riskCheck: undefined },
+  ])('sends with saved config %j', async ({ host, disableRiskCheck, riskCheck }) => {
+    getConfig.mockResolvedValue({ ...mockedConfig, host, disableRiskCheck });
+    const scope = nock(`https://${host?.toLowerCase() ?? 'api.twilio.com'}`)
+      .post('/2010-04-01/Accounts/account-sid/Messages.json', (body) => {
+        expect(body).toEqual({
+          To: '+353861234567',
+          MessagingServiceSid: mockedConfig.fromMessagingServiceSID,
+          Body: 'This is for testing purposes only. Your verification code is 123456.',
+          ...(riskCheck && { RiskCheck: riskCheck }),
+        });
+        return true;
+      })
+      .basicAuth({ user: mockedConfig.accountSID, pass: mockedConfig.authToken })
+      .reply(201, { sid: 'SMxxxx' });
+
+    const connector = await createConnector({ getConfig });
+    await connector.sendMessage(message);
+
+    expect(scope.isDone()).toBe(true);
+  });
+
+  it('uses the supplied host and regional credentials before saving', async () => {
+    const scope = nock('https://api.dublin.ie1.twilio.com')
+      .post('/2010-04-01/Accounts/ie1-account-sid/Messages.json', {
+        To: '+353861234567',
+        MessagingServiceSid: 'ie1-messaging-service-sid',
+        Body: 'IE1 code 123456',
+      })
+      .basicAuth({ user: 'ie1-account-sid', pass: 'ie1-auth-token' })
+      .reply(201, { sid: 'SMxxxx' });
+
+    const connector = await createConnector({ getConfig });
+    await connector.sendMessage(message, {
+      ...mockedConfig,
+      host: 'api.dublin.ie1.twilio.com',
+      accountSID: 'ie1-account-sid',
+      authToken: 'ie1-auth-token',
+      fromMessagingServiceSID: 'ie1-messaging-service-sid',
+      templates: mockedConfig.templates.map((template) => ({
+        ...template,
+        content: 'IE1 code {{code}}',
+      })),
+    });
+
+    expect(scope.isDone()).toBe(true);
+    expect(getConfig).not.toHaveBeenCalled();
+  });
+
+  it.each([302, 307, 401, 500])('does not fall back to US on HTTP %s', async (status) => {
+    const usScope = nock('https://api.twilio.com')
+      .post('/2010-04-01/Accounts/account-sid/Messages.json')
+      .reply(201, { sid: 'SMxxxx' });
+    const ie1Scope = nock('https://api.dublin.ie1.twilio.com')
+      .post('/2010-04-01/Accounts/account-sid/Messages.json')
+      .reply(status, 'Regional request failed', {
+        Location: 'https://api.twilio.com/2010-04-01/Accounts/account-sid/Messages.json',
+      });
+
+    const connector = await createConnector({ getConfig });
+    await expect(
+      connector.sendMessage(message, { ...mockedConfig, host: 'api.dublin.ie1.twilio.com' })
+    ).rejects.toMatchObject({ code: ConnectorErrorCodes.General });
+
+    expect(ie1Scope.isDone()).toBe(true);
+    expect(usScope.isDone()).toBe(false);
+  });
+
+  it.each([
+    '',
+    ' ',
+    'https://api.dublin.ie1.twilio.com',
+    'api.dublin.ie1.twilio.com:443',
+    'api.dublin.ie1.twilio.com/path',
+    'api.dublin.ie1.twilio.com?query=1',
+    'api.dublin.ie1.twilio.com#fragment',
+    'user@api.dublin.ie1.twilio.com',
+    'api.twilio.com.example.com',
+    'api.example.com',
+    '127.0.0.1',
+    'api..twilio.com',
+    'api.-dublin.ie1.twilio.com',
+    'api.dublin-.ie1.twilio.com',
+    'api.dub_lin.ie1.twilio.com',
+    'api.twilio.com\n',
+    `api.${'a'.repeat(64)}.twilio.com`,
+    null,
+    123,
+  ])('rejects invalid host %j before sending', async (host) => {
+    const config = { ...mockedConfig, host };
+    expect(twilioSmsConfigGuard.safeParse(config).success).toBe(false);
+
+    const connector = await createConnector({ getConfig });
+    await expect(connector.sendMessage(message, config)).rejects.toMatchObject({
+      code: ConnectorErrorCodes.InvalidConfig,
+    });
   });
 });
