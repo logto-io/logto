@@ -1400,9 +1400,14 @@ export default class ExperienceInteraction {
   /**
    * The factors that can fill the `mfa` side of a pair with the first factor this interaction has
    * proven: a factor of the same kind as a first-factor proof is dropped. With no first-factor
-   * proof yet, every factor is kept.
+   * proof, none is kept: {@link guardFirstFactor} runs first, so reaching the MFA gate without one
+   * means no first factor can be proven, and an `mfa`-class proof alone never lifts the context.
    */
   private getPairableMfaFactors(factors: readonly MfaFactor[]): MfaFactor[] {
+    if (!this.hasFreshFirstFactor) {
+      return [];
+    }
+
     const firstFactors = new Set(
       this.authenticationProofs.proofs
         .filter(({ class: factorClass }) => factorClass === AuthenticationFactorClass.FirstFactor)

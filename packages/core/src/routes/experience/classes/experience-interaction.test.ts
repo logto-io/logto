@@ -1872,6 +1872,42 @@ describe('ExperienceInteraction class', () => {
       });
     });
 
+    it('stops asking for an MFA factor when no first factor can be proven', async () => {
+      setDevFeaturesEnabled(true);
+      const { experienceInteraction, provider } = createSignInInteraction({
+        // An enrolled TOTP but no password and no connector: no first factor can be proven.
+        user: {
+          ...mockUserWithMfaVerifications,
+          passwordEncrypted: null,
+          passwordEncryptionMethod: null,
+        },
+        signInExperienceOverrides: {
+          mfa: { policy: MfaPolicy.UserControlled, factors: [MfaFactor.TOTP] },
+        },
+        interactionResult: {
+          authenticationContext: { requestedAcrValues: [LogtoAcr.Mfa] },
+          // A social sign-in followed by a verified TOTP: only `1fa`.
+          authenticationProofs: [
+            federatedProof(AuthenticationProofRole.Identify),
+            {
+              id: 'totp',
+              factor: AuthenticationFactor.Totp,
+              class: AuthenticationFactorClass.Mfa,
+              amr: [AuthenticationMethodReference.Otp],
+              role: AuthenticationProofRole.Mfa,
+            },
+          ],
+        },
+      });
+
+      // Another TOTP challenge cannot help, so the submission falls through to the final assertion.
+      await expect(experienceInteraction.submit()).rejects.toMatchObject({
+        code: 'session.step_up.acr_not_satisfied',
+        status: 403,
+      });
+      expect(provider.interactionResult).not.toHaveBeenCalled();
+    });
+
     it('keeps the tenant MFA requirement skippable when nothing requested mfa', async () => {
       setDevFeaturesEnabled(true);
       const { experienceInteraction } = createSignInInteraction({
