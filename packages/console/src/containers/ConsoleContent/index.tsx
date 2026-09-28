@@ -4,6 +4,7 @@ import { safeLazy } from 'react-safe-lazy';
 
 import DelayedSuspenseFallback from '@/components/DelayedSuspenseFallback';
 import HostedEmailCapBanner from '@/components/HostedEmailCapBanner';
+import OssTenantMfaBanner from '@/components/OssTenantMfaBanner';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
@@ -38,6 +39,7 @@ function ConsoleContent() {
         <div ref={scrollableContent} className={styles.main}>
           {/* Key by tenant so the banner's per-session dismissal state resets on tenant switch. */}
           <HostedEmailCapBanner key={currentTenantId} />
+          <OssTenantMfaBanner />
           <Suspense fallback={<DelayedSuspenseFallback />}>{routes}</Suspense>
         </div>
       </OverlayScrollbar>

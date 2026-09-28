@@ -66,6 +66,16 @@ const tenants = {
     tenant_info_saved: '테넌트 정보가 성공적으로 저장되었습니다.',
     tenant_mfa: '다단계 인증',
     tenant_mfa_description: '이 테넌트에 접근하려면 구성원이 다단계 인증을 설정해야 합니다.',
+    oss_description: '이 인스턴스에서 구성원이 콘솔에 접근하는 방식을 관리합니다.',
+    tenant_mfa_confirm_title: '모든 구성원에게 MFA를 요구하시겠습니까?',
+    tenant_mfa_confirm_description:
+      '다음 구성원은 아직 MFA를 설정하지 않았습니다. 로그인 상태는 유지되며, 다음 로그인 시 설정하라는 요청을 받게 됩니다:',
+    tenant_mfa_confirm_self:
+      '회원님도 아직 MFA를 설정하지 않았습니다. 다음 로그인 전에 계정 설정에서 설정하세요.',
+    tenant_mfa_confirm_button: 'MFA 요구',
+    tenant_mfa_setup_required:
+      '이 테넌트는 다단계 인증을 요구합니다. 지금 설정하지 않으면 다음 로그인 시 설정하라는 요청을 받게 됩니다.',
+    tenant_mfa_setup_action: 'MFA 설정',
     enterprise_sso: '엔터프라이즈 SSO',
     enterprise_sso_description:
       '유료 플랜에서 사용 가능합니다. 엔터프라이즈 SSO를 활성화하여 모든 구성원이 조직의 ID 공급자를 사용하여 Logto Cloud 콘솔에 로그인할 수 있도록 하려면 문의해 주세요.',

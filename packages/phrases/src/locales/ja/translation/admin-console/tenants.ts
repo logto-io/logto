@@ -68,6 +68,16 @@ const tenants = {
     tenant_mfa: '多要素認証',
     tenant_mfa_description:
       'メンバーがこのテナントにアクセスするために多要素認証を設定することを要求します。',
+    oss_description: 'このインスタンスでメンバーがコンソールにアクセスする方法を管理します。',
+    tenant_mfa_confirm_title: 'すべてのメンバーに MFA を必須にしますか？',
+    tenant_mfa_confirm_description:
+      '以下のメンバーはまだ MFA を設定していません。サインイン状態は維持され、次回のサインイン時に設定を求められます：',
+    tenant_mfa_confirm_self:
+      'あなたもまだ MFA を設定していません。次回のサインインまでにアカウント設定で設定してください。',
+    tenant_mfa_confirm_button: 'MFA を必須にする',
+    tenant_mfa_setup_required:
+      'このテナントでは多要素認証が必須です。今すぐ設定してください。設定しない場合、次回のサインイン時に求められます。',
+    tenant_mfa_setup_action: 'MFA を設定',
     enterprise_sso: 'エンタープライズ SSO',
     enterprise_sso_description:
       '有料プランで利用可能です。お問い合わせいただくと、すべてのメンバーが組織のアイデンティティプロバイダーを使用して Logto Cloud コンソールにサインインできるようになります。',

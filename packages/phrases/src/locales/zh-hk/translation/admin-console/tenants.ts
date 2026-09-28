@@ -62,6 +62,14 @@ const tenants = {
     tenant_info_saved: '租戶信息成功保存。',
     tenant_mfa: '多因素認證',
     tenant_mfa_description: '要求成員設置多因素認證才能訪問此租戶。',
+    oss_description: '管理成員訪問此實例控制台的方式。',
+    tenant_mfa_confirm_title: '要求所有成員啟用 MFA？',
+    tenant_mfa_confirm_description:
+      '以下成員尚未設置 MFA。他們會保持登入狀態，並在下次登入時被要求設置：',
+    tenant_mfa_confirm_self: '你亦尚未設置 MFA。請在下次登入前到帳戶設定中完成設置。',
+    tenant_mfa_confirm_button: '要求 MFA',
+    tenant_mfa_setup_required: '此租戶要求多因素認證。請立即設置，否則將在下次登入時被要求設置。',
+    tenant_mfa_setup_action: '設置 MFA',
     enterprise_sso: '企業 SSO',
     enterprise_sso_description:
       '僅限付費計劃。聯繫我們啟用企業 SSO，讓所有成員可以使用您組織的身份提供商登錄 Logto Cloud 控制台。',

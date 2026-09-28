@@ -71,6 +71,16 @@ const tenants = {
     tenant_mfa: 'Autenticação multifator',
     tenant_mfa_description:
       'Exija que seus membros configurem a autenticação multifator para acessar este locatário.',
+    oss_description: 'Gerencie como os membros acessam o Console nesta instância.',
+    tenant_mfa_confirm_title: 'Exigir MFA para todos os membros?',
+    tenant_mfa_confirm_description:
+      'Estes membros ainda não configuraram a MFA. Eles continuam conectados e precisarão configurá-la no próximo login:',
+    tenant_mfa_confirm_self:
+      'Você também ainda não configurou a MFA. Configure-a nas configurações da sua conta antes do seu próximo login.',
+    tenant_mfa_confirm_button: 'Exigir MFA',
+    tenant_mfa_setup_required:
+      'Este locatário exige autenticação multifator. Configure-a agora ou ela será solicitada no seu próximo login.',
+    tenant_mfa_setup_action: 'Configurar MFA',
     enterprise_sso: 'Enterprise SSO',
     enterprise_sso_description:
       'Disponível em planos pagos. Entre em contato conosco para habilitar o Enterprise SSO para que todos os membros possam fazer login no console Logto Cloud usando o provedor de identidade da sua organização.',

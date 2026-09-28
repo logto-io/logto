@@ -70,6 +70,17 @@ const tenants = {
     tenant_mfa: 'Uwierzytelnianie wieloskładnikowe',
     tenant_mfa_description:
       'Wymagaj od członków skonfigurowania uwierzytelniania wieloskładnikowego, aby uzyskać dostęp do tego najemcy.',
+    oss_description:
+      'Zarządzaj sposobem, w jaki członkowie uzyskują dostęp do Konsoli na tej instancji.',
+    tenant_mfa_confirm_title: 'Wymagać MFA od wszystkich członków?',
+    tenant_mfa_confirm_description:
+      'Ci członkowie nie skonfigurowali jeszcze MFA. Pozostaną zalogowani i zostaną poproszeni o jego skonfigurowanie przy następnym logowaniu:',
+    tenant_mfa_confirm_self:
+      'Ty również nie skonfigurowałeś MFA. Skonfiguruj je w ustawieniach konta przed następnym logowaniem.',
+    tenant_mfa_confirm_button: 'Wymagaj MFA',
+    tenant_mfa_setup_required:
+      'Ten najemca wymaga uwierzytelniania wieloskładnikowego. Skonfiguruj je teraz, w przeciwnym razie zostaniesz o to poproszony przy następnym logowaniu.',
+    tenant_mfa_setup_action: 'Skonfiguruj MFA',
     enterprise_sso: 'Enterprise SSO',
     enterprise_sso_description:
       'Dostępne w płatnych planach. Skontaktuj się z nami, aby włączyć Enterprise SSO, dzięki czemu wszyscy członkowie będą mogli logować się do konsoli Logto Cloud za pomocą dostawcy tożsamości Twojej organizacji.',

@@ -18,6 +18,7 @@ const TenantSettings = safeLazy(async () => import('@/pages/TenantSettings'));
 const OssTenantSettings = safeLazy(async () => import('@/pages/OssTenantSettings'));
 const OssTenantMembers = safeLazy(async () => import('@/pages/OssTenantSettings/Members'));
 const OssTenantLicense = safeLazy(async () => import('@/pages/OssTenantSettings/License'));
+const OssTenantBasicSettings = safeLazy(async () => import('@/pages/OssTenantSettings/Settings'));
 const TenantBasicSettings = safeLazy(
   async () => import('@/pages/TenantSettings/TenantBasicSettings')
 );
@@ -102,6 +103,17 @@ const useOssTenantSettings = (): RouteObject =>
           index: true,
           element: <Navigate replace to={TenantSettingsTabs.OidcConfigs} />,
         },
+        // Self-hosted plans: mandatory Console MFA ships with the unlaunched self-hosted Pro and
+        // Enterprise plans. The route does not follow the async entitlement and requirement state,
+        // which only decide the tab link, so the page never turns into NotFound while in use.
+        ...condArray(
+          isDevFeaturesEnabled && [
+            {
+              path: TenantSettingsTabs.Settings,
+              element: <OssTenantBasicSettings />,
+            },
+          ]
+        ),
         {
           path: TenantSettingsTabs.OidcConfigs,
           element: <OidcConfigs />,
