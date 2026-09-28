@@ -9,7 +9,6 @@ import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import NotFound from '@/pages/NotFound';
-import useShouldShowOssTenantSettingsTab from '@/pages/OssTenantSettings/use-should-show-settings-tab';
 import {
   shouldShowOssTenantLicenseTab,
   shouldShowOssTenantMembersTab,
@@ -88,10 +87,8 @@ const useCloudTenantSettings = () => {
   return tenantSettings;
 };
 
-const useOssTenantSettings = (): RouteObject => {
-  const shouldShowSettingsTab = useShouldShowOssTenantSettingsTab();
-
-  return useMemo(() => {
+const useOssTenantSettings = (): RouteObject =>
+  useMemo(() => {
     const shouldShowMembersTab = shouldShowOssTenantMembersTab({ isCloud: false });
     const shouldShowLicenseTab = shouldShowOssTenantLicenseTab({
       isCloud: false,
@@ -106,8 +103,11 @@ const useOssTenantSettings = (): RouteObject => {
           index: true,
           element: <Navigate replace to={TenantSettingsTabs.OidcConfigs} />,
         },
+        // Self-hosted plans: mandatory Console MFA ships with the unlaunched self-hosted Pro and
+        // Enterprise plans. The route does not follow the async entitlement and requirement state,
+        // which only decide the tab link, so the page never turns into NotFound while in use.
         ...condArray(
-          shouldShowSettingsTab && [
+          isDevFeaturesEnabled && [
             {
               path: TenantSettingsTabs.Settings,
               element: <OssTenantBasicSettings />,
@@ -136,7 +136,6 @@ const useOssTenantSettings = (): RouteObject => {
         ),
       ],
     };
-  }, [shouldShowSettingsTab]);
-};
+  }, []);
 
 export const useTenantSettings = isCloud ? useCloudTenantSettings : useOssTenantSettings;

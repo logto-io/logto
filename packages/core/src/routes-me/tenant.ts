@@ -66,8 +66,13 @@ export default function tenantRoutes<T extends AuthedMeRouter>(
       userId,
     });
 
+  // Not `auth.forbidden`: Console signs the user out on it, while a demoted admin should only
+  // see the request fail.
   const assertAdmin = async (userId: string) => {
-    assertThat(await isAdmin(userId), new RequestError({ code: 'auth.forbidden', status: 403 }));
+    assertThat(
+      await isAdmin(userId),
+      new RequestError({ code: 'auth.expected_role_not_found', status: 403 })
+    );
   };
 
   /**

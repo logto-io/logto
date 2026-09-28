@@ -113,12 +113,12 @@ devFeatureTest.describe('me tenant MFA', () => {
         headers: getMember(TenantRole.Collaborator).headers,
         json: { isMfaRequired: true },
       }),
-      { code: 'auth.forbidden', status: 403 }
+      { code: 'auth.expected_role_not_found', status: 403 }
     );
     await expectRejects(
       ky.get(membersWithoutMfaUrl, { headers: getMember(TenantRole.Collaborator).headers }),
       {
-        code: 'auth.forbidden',
+        code: 'auth.expected_role_not_found',
         status: 403,
       }
     );

@@ -12,7 +12,7 @@ import { getUserTitle } from '@/utils/user';
 
 import styles from './index.module.scss';
 
-/** Tenant settings of a self-hosted deployment. Only reachable when the license carries them. */
+/** Tenant settings of a self-hosted deployment. Its tab link shows when the license carries them. */
 function Settings() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { license } = useContext(SubscriptionDataContext);

@@ -188,7 +188,7 @@ describe('me tenant routes', () => {
       const response = await request.patch('/tenant/mfa').send({ isMfaRequired: true });
 
       expect(response.status).toBe(403);
-      expect(response.body).toMatchObject({ code: 'auth.forbidden' });
+      expect(response.body).toMatchObject({ code: 'auth.expected_role_not_found' });
       expect(updateById).not.toHaveBeenCalled();
     });
 
