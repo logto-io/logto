@@ -2,7 +2,6 @@ import { render, renderHook } from '@testing-library/react';
 import type * as React from 'react';
 
 import { type BillingCustomer } from '@/cloud/types/router';
-import { type EnvTestUtils, mockEnv, resetMockEnv } from '@/test-utils/env';
 
 import { useBillingCustomerChoice } from './use-billing-customer-choice';
 
@@ -10,8 +9,6 @@ const mockGet = jest.fn();
 const mockShow = jest.fn();
 const mockPicker = jest.fn();
 const mockSubscription = { hasBillingCustomer: undefined as boolean | undefined };
-
-jest.mock('@/consts/env', () => jest.requireActual<EnvTestUtils>('@/test-utils/env').mockEnvModule);
 
 jest.mock('@/cloud/hooks/use-cloud-api', () => ({
   useCloudApi: () => ({ get: mockGet }),
@@ -56,20 +53,10 @@ const choose = async (tenantId?: string) => {
 describe('useBillingCustomerChoice', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    resetMockEnv();
-    mockEnv({ isDevFeaturesEnabled: true });
     // eslint-disable-next-line @silverhand/fp/no-mutation -- test state
     mockSubscription.hasBillingCustomer = undefined;
     mockGet.mockResolvedValue([customer('cus_default', true)]);
     mockShow.mockResolvedValue([true]);
-  });
-
-  it('sends nothing without asking when dev features are off', async () => {
-    mockEnv({ isDevFeaturesEnabled: false });
-
-    await expect(choose()).resolves.toEqual({});
-    expect(mockGet).not.toHaveBeenCalled();
-    expect(mockShow).not.toHaveBeenCalled();
   });
 
   it.each([true, undefined])(
