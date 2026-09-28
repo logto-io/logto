@@ -58,6 +58,8 @@ const security = {
     recaptcha_api_key: '프로젝트의 API 키',
     cap_endpoint: 'Cap 엔드포인트',
     cap_endpoint_placeholder: 'https://cap.example.com',
+    cap_endpoint_http_notice:
+      '이 엔드포인트는 HTTP를 사용하므로 로컬 개발에만 적합합니다. 브라우저는 HTTPS 로그인 페이지의 HTTP 요청을 차단하며, 시크릿 키가 암호화되지 않은 채 전송됩니다. 프로덕션에서는 HTTPS를 사용하세요.',
     deletion_description: '이 CAPTCHA 제공자를 삭제하시겠습니까?',
     captcha_deleted: 'CAPTCHA 제공자가 성공적으로 삭제되었습니다',
     setup_captcha: 'CAPTCHA 설정',

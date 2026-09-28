@@ -58,6 +58,8 @@ const security = {
     recaptcha_api_key: 'Projenin API anahtarı',
     cap_endpoint: 'Cap uç noktası',
     cap_endpoint_placeholder: 'https://cap.example.com',
+    cap_endpoint_http_notice:
+      'Bu uç nokta HTTP kullanıyor ve yalnızca yerel geliştirme için uygundur. Tarayıcılar HTTPS oturum açma sayfasından yapılan HTTP isteklerini engeller ve gizli anahtar şifrelenmeden gönderilir. Üretimde HTTPS kullanın.',
     deletion_description: 'Bu CAPTCHA sağlayıcısını silmek istediğinizden emin misiniz?',
     captcha_deleted: 'CAPTCHA sağlayıcısı başarıyla silindi',
     setup_captcha: "CAPTCHA'yı ayarla",

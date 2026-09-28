@@ -58,6 +58,8 @@ const security = {
     recaptcha_api_key: 'API-ключ проекта',
     cap_endpoint: 'Конечная точка Cap',
     cap_endpoint_placeholder: 'https://cap.example.com',
+    cap_endpoint_http_notice:
+      'Эта конечная точка использует HTTP, что подходит только для локальной разработки. Браузеры блокируют HTTP-запросы со страницы входа по HTTPS, а секретный ключ будет передаваться без шифрования. В продакшене используйте HTTPS.',
     deletion_description: 'Вы уверены, что хотите удалить этого поставщика CAPTCHA?',
     captcha_deleted: 'Поставщик CAPTCHA успешно удалён',
     setup_captcha: 'Настройка CAPTCHA',

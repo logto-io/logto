@@ -56,6 +56,8 @@ const security = {
     recaptcha_api_key: '项目的 API 密钥',
     cap_endpoint: 'Cap 端点',
     cap_endpoint_placeholder: 'https://cap.example.com',
+    cap_endpoint_http_notice:
+      '此端点使用 HTTP，仅适用于本地开发。浏览器会拦截 HTTPS 登录页发出的 HTTP 请求，且密钥将以明文传输。生产环境请使用 HTTPS。',
     deletion_description: '你确定要删除此验证码提供商吗？',
     captcha_deleted: '验证码提供商删除成功',
     setup_captcha: '设置验证码',

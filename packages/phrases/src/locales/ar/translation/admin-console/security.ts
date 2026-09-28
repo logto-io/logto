@@ -57,6 +57,8 @@ const security = {
     recaptcha_api_key: 'مفتاح API للمشروع',
     cap_endpoint: 'نقطة نهاية Cap',
     cap_endpoint_placeholder: 'https://cap.example.com',
+    cap_endpoint_http_notice:
+      'تستخدم نقطة النهاية هذه HTTP، وهو مناسب للتطوير المحلي فقط. تحظر المتصفحات طلبات HTTP من صفحة تسجيل دخول تعمل عبر HTTPS، وسيتم إرسال المفتاح السري دون تشفير. استخدم HTTPS في بيئة الإنتاج.',
     deletion_description: 'هل أنت متأكد أنك تريد حذف مزود CAPTCHA هذا؟',
     captcha_deleted: 'تم حذف موفر CAPTCHA بنجاح',
     setup_captcha: 'إعداد CAPTCHA',

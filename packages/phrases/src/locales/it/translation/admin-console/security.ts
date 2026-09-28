@@ -58,6 +58,8 @@ const security = {
     recaptcha_api_key: 'Chiave API del progetto',
     cap_endpoint: 'Endpoint di Cap',
     cap_endpoint_placeholder: 'https://cap.example.com',
+    cap_endpoint_http_notice:
+      'Questo endpoint usa HTTP, adatto solo allo sviluppo locale. I browser bloccano le richieste HTTP da una pagina di accesso HTTPS e la chiave segreta verrebbe inviata non crittografata. Usa HTTPS in produzione.',
     deletion_description: 'Sei sicuro di voler eliminare questo fornitore di CAPTCHA?',
     captcha_deleted: 'Fornitore di CAPTCHA eliminato con successo',
     setup_captcha: 'Configura CAPTCHA',

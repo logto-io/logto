@@ -56,6 +56,8 @@ const security = {
     recaptcha_api_key: '項目的 API 金鑰',
     cap_endpoint: 'Cap 端點',
     cap_endpoint_placeholder: 'https://cap.example.com',
+    cap_endpoint_http_notice:
+      '此端點使用 HTTP，僅適用於本地開發。瀏覽器會攔截 HTTPS 登入頁發出的 HTTP 請求，且密鑰將以明文傳輸。生產環境請使用 HTTPS。',
     deletion_description: '你確定要刪除此 CAPTCHA 供應商嗎？',
     captcha_deleted: 'CAPTCHA 供應商已成功刪除',
     setup_captcha: '設定 CAPTCHA',

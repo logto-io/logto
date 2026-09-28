@@ -22,6 +22,9 @@ import styles from './index.module.scss';
 const httpUriValidator = (value: string) =>
   uriValidator(value) && ['http:', 'https:'].includes(new URL(value).protocol);
 
+const isInsecureHttpUri = (value?: string) =>
+  Boolean(value && httpUriValidator(value) && new URL(value).protocol === 'http:');
+
 type Props = {
   readonly metadata: CaptchaProviderMetadata;
   readonly errors: FieldErrors;
@@ -40,6 +43,7 @@ function CaptchaFormFields({ metadata, errors, register, control }: Props) {
     (field) => field.field === 'scoreThreshold'
   );
   const mode = useWatch({ control, name: 'mode' });
+  const endpoint = useWatch({ control, name: 'endpoint' });
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -61,6 +65,11 @@ function CaptchaFormFields({ metadata, errors, register, control }: Props) {
                 !value || httpUriValidator(value) || t('errors.invalid_uri_format'),
             })}
           />
+          {isInsecureHttpUri(endpoint) && (
+            <InlineNotification className={styles.modeNotice} severity="alert">
+              {t('security.captcha_details.cap_endpoint_http_notice')}
+            </InlineNotification>
+          )}
         </FormField>
       )}
       {modeField && (

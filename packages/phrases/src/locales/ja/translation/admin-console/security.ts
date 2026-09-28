@@ -58,6 +58,8 @@ const security = {
     recaptcha_api_key: 'プロジェクトの API キー',
     cap_endpoint: 'Cap エンドポイント',
     cap_endpoint_placeholder: 'https://cap.example.com',
+    cap_endpoint_http_notice:
+      'このエンドポイントは HTTP を使用しており、ローカル開発にのみ適しています。ブラウザーは HTTPS のサインインページからの HTTP リクエストをブロックし、シークレットキーは暗号化されずに送信されます。本番環境では HTTPS を使用してください。',
     deletion_description: 'この CAPTCHA プロバイダーを削除してもよろしいですか？',
     captcha_deleted: 'CAPTCHA プロバイダーが正常に削除されました',
     setup_captcha: 'CAPTCHA をセットアップ',

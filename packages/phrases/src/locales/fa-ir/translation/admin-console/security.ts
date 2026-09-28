@@ -60,6 +60,8 @@ const security = {
     recaptcha_api_key: 'کلید API پروژه',
     cap_endpoint: 'نقطه پایانی Cap',
     cap_endpoint_placeholder: 'https://cap.example.com',
+    cap_endpoint_http_notice:
+      'این نقطه پایانی از HTTP استفاده می‌کند که فقط برای توسعه محلی مناسب است. مرورگرها درخواست‌های HTTP از صفحه ورود HTTPS را مسدود می‌کنند و کلید مخفی بدون رمزگذاری ارسال می‌شود. در محیط تولید از HTTPS استفاده کنید.',
     deletion_description: 'آیا مطمئن هستید که می‌خواهید این ارائه‌دهنده CAPTCHA را حذف کنید؟',
     captcha_deleted: 'ارائه‌دهنده CAPTCHA با موفقیت حذف شد',
     setup_captcha: 'راه‌اندازی CAPTCHA',
