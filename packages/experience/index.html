@@ -37,8 +37,7 @@
           && window.matchMedia('(prefers-color-scheme: dark)').matches;
         // The theme override of the current authentication request, which the server resolves
         // from the `_logto` flow cookie. Reading it from the same payload React reads keeps the
-        // first paint and the rendered app in agreement on every document load of the flow, and
-        // the server applies the dev-feature guard before it gets here.
+        // first paint and the rendered app in agreement on every document load of the flow.
         var override = (typeof ssr === 'object' && ssr !== null && ssr.signInExperience)
           ? ssr.signInExperience.theme
           : undefined;

@@ -72,7 +72,7 @@ const getDeviceFlowInputCode = (error?: Error | errors.OIDCProviderError): strin
 
 /**
  * Device flow only replays the subset of Experience parameters that login and device pages truly
- * share: app, organization, and locale. Keeping that subset explicit avoids turning route-specific
+ * share: app, organization, locale, and theme. Keeping that subset explicit avoids turning route-specific
  * login prompt parameters into accidental global state for the device page.
  */
 const setDeviceFlowUiCookie = (ctx: KoaContextWithOIDC, sharedParams: SharedExperienceParams) => {
@@ -85,7 +85,8 @@ const setDeviceFlowUiCookie = (ctx: KoaContextWithOIDC, sharedParams: SharedExpe
 
 /**
  * Device-flow source callbacks only send two buckets of state back to the Experience SPA:
- * shared cross-page params (app / organization / locale) and device-page state (code / error).
+ * shared cross-page params (app / organization / locale) and device-page state (code / error);
+ * the theme override rides the flow cookie instead (see `setDeviceFlowUiCookie`).
  * The xsrf secret is bridged separately through a short-lived cookie, so the page URL stays
  * focused on recoverable UI state rather than submission credentials.
  */
@@ -128,7 +129,7 @@ export const buildDeviceFlowSuccessPageUrl = (): string => `/${experience.routes
  * Device flow normally renders provider-owned HTML source pages. We redirect every state back into
  * the Experience SPA with a structured bridge query so input, error, and success all stay in one
  * UI shell without shipping raw provider HTML through the browser URL. The same redirect also
- * replays the shared app / organization / locale params so `/device` stays aligned with the rest
+ * replays the shared app / organization / locale / theme params so `/device` stays aligned with the rest
  * of Experience without inheriting login-only prompt parameters.
  */
 export const deviceFlowConfig = {

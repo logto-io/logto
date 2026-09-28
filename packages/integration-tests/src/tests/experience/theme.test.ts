@@ -3,15 +3,17 @@ import { type Color, Theme } from '@logto/schemas';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { demoAppUrl } from '#src/constants.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
-import { devFeatureTest } from '#src/utils.js';
 
 /**
  * Load the demo app with the given `theme` search param (forwarded to the authentication request
- * as an extra param) and report the theme the experience app actually rendered with.
+ * as an extra param) and report the theme the experience app actually rendered with. With
+ * `reload`, the experience page is reloaded first, so the override must survive a later document
+ * load of the same flow (the URL no longer carries `theme` by then).
  */
 const getRenderedTheme = async (
   theme: string | undefined,
-  systemPrefers: 'light' | 'dark'
+  systemPrefers: 'light' | 'dark',
+  reload = false
 ): Promise<string | undefined> => {
   const experience = new ExpectExperience(await browser.newPage());
   await experience.page.emulateMediaFeatures([
@@ -25,6 +27,11 @@ const getRenderedTheme = async (
   }
 
   await experience.page.goto(url.href, { waitUntil: 'networkidle0' });
+
+  if (reload) {
+    await experience.page.reload({ waitUntil: 'networkidle0' });
+  }
+
   const rendered = await experience.page.evaluate(
     () => document.documentElement.dataset.theme ?? undefined
   );
@@ -33,7 +40,7 @@ const getRenderedTheme = async (
   return rendered;
 };
 
-devFeatureTest.describe('theme authentication parameter', () => {
+describe('theme authentication parameter', () => {
   const color = Object.freeze({
     primaryColor: '#6139f6',
     darkPrimaryColor: '#8768f8',
@@ -51,6 +58,10 @@ devFeatureTest.describe('theme authentication parameter', () => {
 
     it('should render light when the parameter asks for it against a dark system setting', async () => {
       await expect(getRenderedTheme(Theme.Light, 'dark')).resolves.toBe(Theme.Light);
+    });
+
+    it('should keep the requested theme after reloading the page', async () => {
+      await expect(getRenderedTheme(Theme.Dark, 'light', true)).resolves.toBe(Theme.Dark);
     });
 
     it('should fall back to the system setting without the parameter', async () => {

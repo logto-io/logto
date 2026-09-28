@@ -21,7 +21,7 @@ import {
 import { condArray, conditional, removeUndefinedKeys, trySafe } from '@silverhand/essentials';
 import { type AllClientMetadata, type ClientAuthMethod, errors } from 'oidc-provider';
 
-import { EnvSet } from '#src/env-set/index.js';
+import type { EnvSet } from '#src/env-set/index.js';
 
 import { escapeRegExp, getEffectivePort } from './redirect-uri/utils.js';
 
@@ -268,14 +268,8 @@ export const readOptionalQueryString = (value: unknown): string | undefined =>
   typeof value === 'string' && value.length > 0 ? value : undefined;
 
 /** Read a query value as a supported {@link Theme}, ignoring anything else. */
-export const readOptionalTheme = (value: unknown): Theme | undefined => {
-  // Theme control from the authentication request is only available with dev features enabled.
-  if (!EnvSet.values.isDevFeaturesEnabled) {
-    return undefined;
-  }
-
-  return value === Theme.Light || value === Theme.Dark ? value : undefined;
-};
+export const readOptionalTheme = (value: unknown): Theme | undefined =>
+  value === Theme.Light || value === Theme.Dark ? value : undefined;
 
 export const parseSharedExperienceParams = (
   source: Record<string, unknown>
