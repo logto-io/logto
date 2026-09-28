@@ -121,28 +121,6 @@ describe('Twilio SMS connector', () => {
     expect(getConfig).not.toHaveBeenCalled();
   });
 
-  it.each([302, 307, 401, 500])(
-    'does not fall back to the default host on HTTP %s',
-    async (status) => {
-      const defaultScope = nock('https://api.twilio.com')
-        .post('/2010-04-01/Accounts/account-sid/Messages.json')
-        .reply(201, { sid: 'SMxxxx' });
-      const customScope = nock('https://api.custom.twilio.com')
-        .post('/2010-04-01/Accounts/account-sid/Messages.json')
-        .reply(status, 'Request failed', {
-          Location: 'https://api.twilio.com/2010-04-01/Accounts/account-sid/Messages.json',
-        });
-
-      const connector = await createConnector({ getConfig });
-      await expect(
-        connector.sendMessage(message, { ...mockedConfig, host: 'api.custom.twilio.com' })
-      ).rejects.toMatchObject({ code: ConnectorErrorCodes.General });
-
-      expect(customScope.isDone()).toBe(true);
-      expect(defaultScope.isDone()).toBe(false);
-    }
-  );
-
   it.each([
     '',
     ' ',

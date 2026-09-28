@@ -65,7 +65,7 @@ The optional `host` field selects the Twilio API hostname. When omitted, it defa
 
 Enter a hostname, **not a full URL**. It must start with `api.`, end with `.twilio.com`, and contain only DNS labels made of ASCII letters, digits, and internal hyphens. Labels may contain up to 63 characters, and the hostname up to 253 characters. Hostnames are case-insensitive. Schemes (`https://`), ports, paths, credentials, whitespace, queries, and fragments are not accepted.
 
-Requests use `https://{host}/2010-04-01/Accounts/{accountSID}/Messages.json`. When a host is configured, the connector does not follow redirects or fall back to another host on failure.
+Requests use `https://{host}/2010-04-01/Accounts/{accountSID}/Messages.json`.
 
 ### Test Twilio SMS connector
 

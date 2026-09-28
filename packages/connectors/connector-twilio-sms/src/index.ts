@@ -50,11 +50,9 @@ const sendMessage =
     };
 
     try {
-      const response = await got.post(
+      return await got.post(
         endpoint.replaceAll('{{host}}', host).replaceAll('{{accountSID}}', accountSID),
         {
-          // Keep requests on the configured host, including on redirect responses.
-          ...(config.host && { followRedirect: false }),
           headers: {
             Authorization:
               'Basic ' + Buffer.from([accountSID, authToken].join(':')).toString('base64'),
@@ -63,14 +61,6 @@ const sendMessage =
           body: new URLSearchParams(parameters).toString(),
         }
       );
-
-      // Got accepts 3xx responses when redirects are disabled, but no SMS was sent.
-      assert(
-        !config.host || response.statusCode < 300,
-        new ConnectorError(ConnectorErrorCodes.General, response.body)
-      );
-
-      return response;
     } catch (error: unknown) {
       if (error instanceof HTTPError) {
         const {
