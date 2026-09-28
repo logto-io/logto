@@ -41,7 +41,7 @@
     "@types/adm-zip": "^0.5.5",
     "@types/jest": "^29.4.0",
     "@types/node": "^22.14.0",
-    "adm-zip": "^0.6.0",
+    "adm-zip": "^0.6.1",
     "dotenv": "^16.4.5",
     "eslint": "^8.56.0",
     "expect-puppeteer": "^10.1.4",
