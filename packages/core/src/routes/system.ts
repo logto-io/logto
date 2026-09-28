@@ -1,4 +1,11 @@
-import { LicenseEnv, LicenseKey, licenseQuotaGuard, selfHostedPlanIds } from '@logto/schemas';
+import {
+  LicenseEnv,
+  LicenseKey,
+  licenseDeploymentIdGuard,
+  licenseQuotaGuard,
+  selfHostedPlanIds,
+} from '@logto/schemas';
+import { generateStandardId } from '@logto/shared';
 import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -27,6 +34,9 @@ const licenseResponseGuard = z.object({
   quota: licenseQuotaGuard,
   expiresAt: z.string(),
   installedAt: z.string(),
+  lastRefreshedAt: z.string(),
+  graceEndsAt: z.string(),
+  refusalReason: z.string().optional(),
 });
 
 /**
@@ -114,6 +124,9 @@ export default function systemRoutes<T extends ManagementApiRouter>(
           quota: license.quota,
           expiresAt: new Date(license.payload.exp * 1000).toISOString(),
           installedAt: license.installedAt,
+          lastRefreshedAt: license.lastRefreshedAt,
+          graceEndsAt: license.graceEndsAt,
+          ...(license.refusalReason && { refusalReason: license.refusalReason }),
         };
 
         return next();
@@ -130,7 +143,7 @@ export default function systemRoutes<T extends ManagementApiRouter>(
         assertNotCloud();
 
         const { license } = ctx.guard.body;
-        const { exp } = await readLicensePayload(license);
+        const { iat, exp } = await readLicensePayload(license);
 
         // A key past `exp` is a stale copy. An installed key keeps its entitlements past its own
         // expiration, so installing is the one place the claim is checked.
@@ -141,12 +154,23 @@ export default function systemRoutes<T extends ManagementApiRouter>(
          * role, so the license is read and written through the shared pool, like
          * `SystemContext`'s provider configs.
          */
-        const { upsertSystem } = createSystemsQuery(await EnvSet.sharedPool);
+        const { findSystemByKey, upsertSystem } = createSystemsQuery(await EnvSet.sharedPool);
+        const deploymentIdRecord = await findSystemByKey(LicenseKey.LicenseDeploymentId);
+        const deploymentIdResult = licenseDeploymentIdGuard.safeParse(deploymentIdRecord?.value);
+        const deploymentId = deploymentIdResult.success
+          ? deploymentIdResult.data
+          : generateStandardId();
 
         await upsertSystem(LicenseKey.License, {
           jwt: license,
           installedAt: new Date().toISOString(),
         });
+        await upsertSystem(LicenseKey.LicenseRefreshState, {
+          lastRefreshedAt: new Date(iat * 1000).toISOString(),
+        });
+        if (!deploymentIdResult.success) {
+          await upsertSystem(LicenseKey.LicenseDeploymentId, deploymentId);
+        }
         LicenseReader.shared.invalidate();
 
         ctx.status = 204;

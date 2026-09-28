@@ -187,6 +187,8 @@ describe('get self-hosted subscription data', () => {
       payload,
       installedAt: '2026-09-14T00:00:00.000Z',
       quota: resolveLicenseQuota(payload.quota),
+      lastRefreshedAt: new Date(payload.iat * 1000).toISOString(),
+      graceEndsAt: new Date(payload.iat * 1000 + 30 * 24 * 60 * 60 * 1000).toISOString(),
     });
 
     const subscriptionData = await subscription.getSelfHostedSubscription();
@@ -214,6 +216,8 @@ describe('get self-hosted subscription data', () => {
       payload: buildLicensePayload({ plan: ReservedPlanId.SelfHostedEnterprise }),
       installedAt: '2026-09-14T00:00:00.000Z',
       quota: resolveLicenseQuota(),
+      lastRefreshedAt: new Date().toISOString(),
+      graceEndsAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
     });
 
     const { planId, isEnterprisePlan } = await subscription.getSelfHostedSubscription();
@@ -234,6 +238,40 @@ describe('get self-hosted subscription data', () => {
       status: 'active',
       quota: ossDefaultQuota,
       systemLimit: {},
+    });
+  });
+
+  it('should remain entitled when the signed key is past exp but still within grace', async () => {
+    const payload = buildLicensePayload({ exp: Math.floor(Date.now() / 1000) - 1 });
+    const lastRefreshedAt = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    readLicense.mockResolvedValueOnce({
+      payload,
+      installedAt: '2026-09-14T00:00:00.000Z',
+      quota: { ...ossDefaultQuota, hideLogtoBranding: true },
+      lastRefreshedAt,
+      graceEndsAt: new Date(Date.now() + 29 * 24 * 60 * 60 * 1000).toISOString(),
+    });
+
+    await expect(subscription.getSelfHostedSubscription()).resolves.toMatchObject({
+      planId: ReservedPlanId.SelfHostedPro,
+      quota: { hideLogtoBranding: true },
+    });
+  });
+
+  it('should fall back to OSS defaults after the refresh grace period', async () => {
+    const payload = buildLicensePayload({ quota: { hideLogtoBranding: true } });
+    const graceEndsAt = new Date(Date.now() - 1).toISOString();
+    readLicense.mockResolvedValueOnce({
+      payload,
+      installedAt: '2026-09-14T00:00:00.000Z',
+      quota: { ...ossDefaultQuota, hideLogtoBranding: true },
+      lastRefreshedAt: new Date(Date.now() - 31 * 24 * 60 * 60 * 1000).toISOString(),
+      graceEndsAt,
+    });
+
+    await expect(subscription.getSelfHostedSubscription()).resolves.toMatchObject({
+      planId: ReservedPlanId.Development,
+      quota: ossDefaultQuota,
     });
   });
 

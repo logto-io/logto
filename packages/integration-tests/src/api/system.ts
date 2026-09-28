@@ -14,6 +14,9 @@ export type SystemLicenseResponse = {
   quota: LicenseQuota;
   expiresAt: string;
   installedAt: string;
+  lastRefreshedAt: string;
+  graceEndsAt: string;
+  refusalReason?: string;
 };
 
 export const getSystemLicense = async () =>

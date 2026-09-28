@@ -39,7 +39,7 @@ devFeatureTest.describe('self-hosted license', () => {
   });
 
   it('should return the entitlements of the installed license', async () => {
-    const { installedAt, ...entitlements } = await getSystemLicense();
+    const { installedAt, lastRefreshedAt, graceEndsAt, ...entitlements } = await getSystemLicense();
 
     expect(entitlements).toEqual({
       plan: ReservedPlanId.SelfHostedPro,
@@ -52,6 +52,8 @@ devFeatureTest.describe('self-hosted license', () => {
       expiresAt: new Date(payload.exp * 1000).toISOString(),
     });
     expect(new Date(installedAt).toISOString()).toEqual(installedAt);
+    expect(new Date(lastRefreshedAt).toISOString()).toEqual(lastRefreshedAt);
+    expect(new Date(graceEndsAt).toISOString()).toEqual(graceEndsAt);
   });
 
   it('should never return the raw license key', async () => {
@@ -60,7 +62,9 @@ devFeatureTest.describe('self-hosted license', () => {
     expect(Object.keys(response).slice().sort()).toEqual([
       'env',
       'expiresAt',
+      'graceEndsAt',
       'installedAt',
+      'lastRefreshedAt',
       'plan',
       'quota',
     ]);
@@ -106,7 +110,7 @@ devFeatureTest.describe('self-hosted license', () => {
 
     expect(response.status).toEqual(204);
 
-    const { installedAt, ...entitlements } = await getSystemLicense();
+    const { installedAt, lastRefreshedAt, graceEndsAt, ...entitlements } = await getSystemLicense();
 
     expect(entitlements).toEqual({
       plan: ReservedPlanId.SelfHostedEnterprise,
@@ -115,5 +119,7 @@ devFeatureTest.describe('self-hosted license', () => {
       expiresAt: new Date(replacement.exp * 1000).toISOString(),
     });
     expect(new Date(installedAt).toISOString()).toEqual(installedAt);
+    expect(new Date(lastRefreshedAt).toISOString()).toEqual(lastRefreshedAt);
+    expect(new Date(graceEndsAt).toISOString()).toEqual(graceEndsAt);
   });
 });

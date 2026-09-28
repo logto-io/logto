@@ -107,7 +107,7 @@ export class SubscriptionLibrary {
      */
     const license = await LicenseReader.shared.read(await EnvSet.sharedPool);
 
-    if (!license) {
+    if (!license || Date.parse(license.graceEndsAt) <= Date.now()) {
       const now = new Date().toISOString();
 
       // There is no period without a license; the values only keep the envelope complete.

@@ -86,7 +86,7 @@ const installLicense = async (payload = buildLicensePayload()) => {
 
 /** Point the mocked `systems` row at what the last `PUT` wrote. */
 const useInstalledLicenseFromLastPut = () => {
-  const [, installed] = upsertSystem.mock.calls.at(-1) ?? [];
+  const [, installed] = upsertSystem.mock.calls.find(([key]) => key === LicenseKey.License) ?? [];
   findSystemByKey.mockResolvedValue({ value: installed });
 };
 
@@ -132,6 +132,11 @@ describe('system license route', () => {
 
     expect(key).toEqual(LicenseKey.License);
     expect(installed).toMatchObject({ jwt });
+    expect(upsertSystem).toHaveBeenCalledWith(
+      LicenseKey.LicenseRefreshState,
+      expect.objectContaining({ lastRefreshedAt: new Date(payload.iat * 1000).toISOString() })
+    );
+    expect(upsertSystem).toHaveBeenCalledWith(LicenseKey.LicenseDeploymentId, expect.any(String));
 
     useInstalledLicenseFromLastPut();
 
