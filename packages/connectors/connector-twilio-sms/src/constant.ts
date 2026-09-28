@@ -31,9 +31,8 @@ export const defaultMetadata: ConnectorMetadata = {
       type: ConnectorConfigFormItemType.Text,
       required: false,
       placeholder: defaultHost,
-      description:
-        'Twilio API hostname only, without https://, port, or path. Defaults to api.twilio.com. For Ireland (IE1), use api.dublin.ie1.twilio.com.',
-      // Twilio regional SMS configuration uses the Console isDevFeaturesEnabled guard.
+      description: 'Twilio API hostname only, without https://, port, or path.',
+      // Twilio API host configuration uses the Console isDevFeaturesEnabled guard.
       isDevFeature: true,
     },
     {

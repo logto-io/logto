@@ -46,17 +46,14 @@ const sendMessage =
       To: toE164PhoneNumber(to),
       MessagingServiceSid: fromMessagingServiceSID,
       Body: replaceSendMessageHandlebars(template.content, payload),
-      // Twilio SMS Pumping Protection is unavailable in IE1.
-      ...(host.endsWith('.ie1.twilio.com')
-        ? {}
-        : { RiskCheck: disableRiskCheck ? 'disable' : 'enable' }),
+      RiskCheck: disableRiskCheck ? 'disable' : 'enable',
     };
 
     try {
       const response = await got.post(
         endpoint.replaceAll('{{host}}', host).replaceAll('{{accountSID}}', accountSID),
         {
-          // Keep regional requests on the configured host, including on redirect responses.
+          // Keep requests on the configured host, including on redirect responses.
           ...(config.host && { followRedirect: false }),
           headers: {
             Authorization:

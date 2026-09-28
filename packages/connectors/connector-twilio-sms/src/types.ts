@@ -33,7 +33,7 @@ export const twilioSmsConfigGuard = z.object({
     .max(253)
     .regex(
       /^api(?:\.[\da-z](?:[\da-z-]{0,61}[\da-z])?)*\.twilio\.com$/i,
-      'Expected a Twilio API hostname, such as api.twilio.com or api.dublin.ie1.twilio.com'
+      'Expected a Twilio API hostname, such as api.twilio.com'
     )
     .optional(),
   accountSID: z.string(),
