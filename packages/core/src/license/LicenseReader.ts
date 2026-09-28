@@ -57,6 +57,8 @@ const cacheKey = 'license';
 const refreshInterval = 7 * 24 * 60 * 60 * 1000;
 const refreshAttemptInterval = 60 * 60 * 1000;
 export const licenseGracePeriod = 30 * 24 * 60 * 60 * 1000;
+/** A hung request would otherwise hold the per-instance refresh slot until restart. */
+export const licenseRefreshTimeout = 10_000;
 
 /** The production license service is fixed; development uses the configured Cloud endpoint. */
 export const selfHostedLicenseServiceUrl = new URL('https://cloud.logto.io');
@@ -260,13 +262,13 @@ export default class LicenseReader {
   /**
    * Run `write` only while `installedJwt` is still the installed key, holding its row lock so a
    * concurrent `PUT /api/systems/license` cannot be overwritten by a refresh started for the
-   * previous key. Returns whether the write ran.
+   * previous key. Returns whether the write ran; `write` may return `false` to report a skip.
    */
   async #writeIfInstalled(
     pool: CommonQueryMethods,
     installedJwt: string,
     write: (queries: ReturnType<typeof createSystemsQuery>) => Promise<unknown>
-  ) {
+  ): Promise<boolean> {
     return pool.transaction(async (connection) => {
       const queries = createSystemsQuery(connection);
       const record = await queries.findSystemByKeyForUpdate(LicenseKey.License);
@@ -276,8 +278,7 @@ export default class LicenseReader {
         return false;
       }
 
-      await write(queries);
-      return true;
+      return (await write(queries)) !== false;
     });
   }
 
@@ -285,17 +286,27 @@ export default class LicenseReader {
     const lastAttemptAt = new Date().toISOString();
 
     try {
-      const isInstalled = await this.#writeIfInstalled(
+      const shouldRequest = await this.#writeIfInstalled(
         pool,
         installedJwt,
-        async ({ upsertSystem }) =>
-          upsertSystem(LicenseKey.LicenseRefreshState, {
+        async ({ findSystemByKey, upsertSystem }) => {
+          // Another instance may have claimed this attempt since our cached read; the license row
+          // lock serializes the claim, so only one instance of the deployment sends the request.
+          const currentRecord = await findSystemByKey(LicenseKey.LicenseRefreshState);
+          const current = licenseRefreshStateGuard.safeParse(currentRecord?.value);
+
+          if (current.success && current.data.lastAttemptAt !== refreshState.lastAttemptAt) {
+            return false;
+          }
+
+          await upsertSystem(LicenseKey.LicenseRefreshState, {
             ...refreshState,
             lastAttemptAt,
-          })
+          });
+        }
       );
 
-      if (!isInstalled) {
+      if (!shouldRequest) {
         return;
       }
 
@@ -312,6 +323,7 @@ export default class LicenseReader {
           },
           responseType: 'json',
           throwHttpErrors: false,
+          timeout: { request: licenseRefreshTimeout },
         }
       );
 

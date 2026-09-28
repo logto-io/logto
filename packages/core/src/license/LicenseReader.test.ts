@@ -40,6 +40,7 @@ const getLicensePublicKey: () => Promise<CryptoKey | Uint8Array> = async () => t
 mockEsm('./public-key.js', () => ({ getLicensePublicKey }));
 
 const LicenseReader = await pickDefault(import('./LicenseReader.js'));
+const { licenseRefreshTimeout } = await import('./LicenseReader.js');
 
 const installedAt = '2026-09-14T00:00:00.000Z';
 
@@ -278,6 +279,101 @@ describe('LicenseReader', () => {
 
     expect(upsertSystem).toHaveBeenCalledTimes(1);
     expect(upsertSystem).not.toHaveBeenCalledWith(LicenseKey.License, expect.anything());
+  });
+
+  it('should skip a refresh another instance has already claimed', async () => {
+    const issuedAt = Math.floor(Date.now() / 1000) - 8 * 24 * 60 * 60;
+    const payload = buildLicensePayload({ iat: issuedAt });
+    const jwt = await signLicenseKey(payload, keyPair.privateKey);
+    const lastRefreshedAt = new Date(issuedAt * 1000).toISOString();
+    const refreshStateReads = { count: 0 };
+
+    findSystemByKey.mockImplementation(async (key) => {
+      if (key === LicenseKey.License) {
+        return { value: { jwt, installedAt } };
+      }
+      if (key === LicenseKey.LicenseRefreshState) {
+        // Another instance records its attempt after this instance cached the refresh state.
+        // eslint-disable-next-line @silverhand/fp/no-mutation -- counts reads to simulate it
+        const isCachedRead = refreshStateReads.count++ === 0;
+        return {
+          value: {
+            lastRefreshedAt,
+            lastAttemptAt: isCachedRead ? lastRefreshedAt : new Date().toISOString(),
+          },
+        };
+      }
+      if (key === LicenseKey.LicenseDeploymentId) {
+        return { value: 'deployment_1' };
+      }
+      return null;
+    });
+
+    const request = nock(EnvSet.values.cloudUrlSet.endpoint.origin)
+      .post(`/api/self-hosted-licenses/${payload.licenseId}/refresh`)
+      .reply(200, {});
+
+    await reader.read(pool);
+    await waitFor(() => refreshStateReads.count > 1);
+    await new Promise((resolve) => {
+      setTimeout(resolve, 50);
+    });
+
+    expect(request.isDone()).toBe(false);
+    expect(upsertSystem).not.toHaveBeenCalled();
+  });
+
+  it('should time out a hung refresh so a later read can try again', async () => {
+    const issuedAt = Math.floor(Date.now() / 1000) - 8 * 24 * 60 * 60;
+    const payload = buildLicensePayload({ iat: issuedAt });
+    const jwt = await signLicenseKey(payload, keyPair.privateKey);
+    const lastRefreshedAt = new Date(issuedAt * 1000).toISOString();
+
+    findSystemByKey.mockImplementation(async (key) => {
+      if (key === LicenseKey.License) {
+        return { value: { jwt, installedAt } };
+      }
+      if (key === LicenseKey.LicenseRefreshState) {
+        return { value: { lastRefreshedAt, lastAttemptAt: lastRefreshedAt } };
+      }
+      if (key === LicenseKey.LicenseDeploymentId) {
+        return { value: 'deployment_1' };
+      }
+      return null;
+    });
+
+    const warn = jest.spyOn(licenseConsoleLog, 'warn').mockImplementation(noop);
+    const path = `/api/self-hosted-licenses/${payload.licenseId}/refresh`;
+    const { origin } = EnvSet.values.cloudUrlSet.endpoint;
+    const hung = nock(origin)
+      .post(path)
+      .delay(licenseRefreshTimeout * 2)
+      .reply(200, {});
+
+    jest.useFakeTimers({ doNotFake: ['nextTick', 'setImmediate'] });
+
+    try {
+      await reader.read(pool);
+      // Step the clock while letting the request's I/O callbacks run in between.
+      for (const _ of Array.from({ length: (licenseRefreshTimeout + 1000) / 500 })) {
+        jest.advanceTimersByTime(500);
+        // eslint-disable-next-line no-await-in-loop -- each step must settle before the next
+        await new Promise((resolve) => {
+          setImmediate(resolve);
+        });
+      }
+      expect(hung.isDone()).toBe(true);
+      expect(warn).toHaveBeenCalled();
+    } finally {
+      jest.useRealTimers();
+      // Drop nock's delayed reply timer for the hung request.
+      nock.abortPendingRequests();
+    }
+
+    const retried = nock(origin).post(path).reply(200, {});
+    reader.invalidate();
+    await reader.read(pool);
+    await waitFor(() => retried.isDone());
   });
 
   it('should not cache a failed database read', async () => {
