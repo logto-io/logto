@@ -26,16 +26,6 @@ export const defaultMetadata: ConnectorMetadata = {
   readme: './README.md',
   formItems: [
     {
-      key: 'host',
-      label: 'API host',
-      type: ConnectorConfigFormItemType.Text,
-      required: false,
-      placeholder: defaultHost,
-      description: 'Twilio API hostname only, without https://, port, or path.',
-      // Twilio API host configuration uses the Console isDevFeaturesEnabled guard.
-      isDevFeature: true,
-    },
-    {
       key: 'accountSID',
       label: 'Account SID',
       type: ConnectorConfigFormItemType.Text,
@@ -55,6 +45,14 @@ export const defaultMetadata: ConnectorMetadata = {
       type: ConnectorConfigFormItemType.Text,
       required: true,
       placeholder: '<from-messaging-service-sid>',
+    },
+    {
+      key: 'host',
+      label: 'API host',
+      type: ConnectorConfigFormItemType.Text,
+      required: false,
+      placeholder: defaultHost,
+      description: 'Twilio API hostname only, without https://, port, or path.',
     },
     {
       key: 'disableRiskCheck',
