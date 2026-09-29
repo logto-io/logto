@@ -94,18 +94,29 @@ const getLastSubmittedLoginAccountId = (lastSubmission: unknown) => {
   return result.data.login.accountId;
 };
 
-const isUserNotFoundOrEmailMissingError = (error: unknown) =>
-  error instanceof NotFoundError ||
-  (error instanceof RequestError && error.code === 'user.email_not_exist');
+/**
+ * The primary email of a user, if any. An account without an email, e.g. a username-only one, is
+ * simply another account than the one a token is for, and gets the switch-account page rather than
+ * an error.
+ */
+const findPrimaryEmail = async (queries: Queries, userId: string) => {
+  const { primaryEmail } = await queries.users.findUserById(userId);
+
+  return primaryEmail ?? undefined;
+};
+
+/** Emails are matched case-insensitively, as users are looked up by them. */
+const isSameEmail = (email: string | undefined, loginHint: string) =>
+  email?.toLowerCase() === loginHint.toLowerCase();
 
 const doesLastSubmittedLoginMatchLoginHint = async ({
   loginHint,
   lastSubmission,
-  getPrimaryEmailByUserId,
+  queries,
 }: {
   loginHint: string;
   lastSubmission: unknown;
-  getPrimaryEmailByUserId: (userId: string) => Promise<string>;
+  queries: Queries;
 }) => {
   const submittedAccountId = getLastSubmittedLoginAccountId(lastSubmission);
 
@@ -114,25 +125,15 @@ const doesLastSubmittedLoginMatchLoginHint = async ({
   }
 
   try {
-    return (await getPrimaryEmailByUserId(submittedAccountId)) === loginHint;
+    return isSameEmail(await findPrimaryEmail(queries, submittedAccountId), loginHint);
   } catch (error: unknown) {
-    if (isUserNotFoundOrEmailMissingError(error)) {
+    if (error instanceof NotFoundError) {
       return false;
     }
 
     throw error;
   }
 };
-
-const shouldContinueWithConsumedOneTimeToken = ({
-  primaryEmail,
-  loginHint,
-  hasMatchingLastSubmittedLogin,
-}: {
-  primaryEmail: string;
-  loginHint: string;
-  hasMatchingLastSubmittedLogin: boolean;
-}) => primaryEmail === loginHint || hasMatchingLastSubmittedLogin;
 
 /**
  * Guard before allowing auto-consent.
@@ -163,21 +164,17 @@ export default function koaConsentGuard<
     }
 
     const { token: signInOneTimeToken, loginHint, prompt } = oneTimeTokenParams;
-    const getPrimaryEmailByUserId = async (userId: string) => {
-      const { primaryEmail } = await queries.users.findUserById(userId);
-
-      assertThat(primaryEmail, 'user.email_not_exist');
-
-      return primaryEmail;
-    };
-    const primaryEmail = await getPrimaryEmailByUserId(session.accountId);
+    const isSessionForLoginHint = isSameEmail(
+      await findPrimaryEmail(queries, session.accountId),
+      loginHint
+    );
     const hasMatchingLastSubmittedLogin = await doesLastSubmittedLoginMatchLoginHint({
       loginHint,
       lastSubmission: ctx.interactionDetails.lastSubmission,
-      getPrimaryEmailByUserId,
+      queries,
     });
 
-    if (primaryEmail !== loginHint && !hasLoginPrompt(prompt) && !hasMatchingLastSubmittedLogin) {
+    if (!isSessionForLoginHint && !hasLoginPrompt(prompt) && !hasMatchingLastSubmittedLogin) {
       ctx.redirect(
         buildExperienceUrl(experience.routes.switchAccount, signInOneTimeToken, loginHint)
       );
@@ -190,11 +187,7 @@ export default function koaConsentGuard<
       if (error instanceof RequestError) {
         if (
           error.code === 'one_time_token.token_consumed' &&
-          shouldContinueWithConsumedOneTimeToken({
-            primaryEmail,
-            loginHint,
-            hasMatchingLastSubmittedLogin,
-          })
+          (isSessionForLoginHint || hasMatchingLastSubmittedLogin)
         ) {
           return next();
         }

@@ -72,7 +72,13 @@ const SwitchAccount = () => {
         <div className={styles.title}>
           <DynamicT
             forKey="description.switch_account_title"
-            interpolation={{ account: consentData.user.primaryEmail }}
+            interpolation={{
+              // The current account may have no email, e.g. a username-only one.
+              account:
+                consentData.user.primaryEmail ??
+                consentData.user.username ??
+                consentData.user.primaryPhone,
+            }}
           />
         </div>
         <UserProfile user={consentData.user} className={styles.userProfile} />

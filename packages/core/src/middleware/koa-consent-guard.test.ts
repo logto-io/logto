@@ -167,6 +167,57 @@ describe('koaConsentGuard middleware', () => {
     );
   });
 
+  it('should redirect a session account without an email to the switch account page', async () => {
+    findUserById.mockResolvedValue({ primaryEmail: null, username: 'admin' });
+    const ctx = createContext({
+      params: { one_time_token: 'token_value', login_hint: 'foo@example.com' },
+      // @ts-expect-error -- Only accountId is needed by this middleware.
+      session: { accountId: 'admin' },
+    });
+    const guard = koaConsentGuard(mockTenant.libraries, mockTenant.queries);
+
+    await guard(ctx, next);
+
+    expect(ctx.redirect).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'switch-account?login_hint=foo%40example.com&one_time_token=token_value'
+      )
+    );
+  });
+
+  it('should match the session email and the login hint case-insensitively', async () => {
+    findUserById.mockResolvedValue({ primaryEmail: 'Foo@Example.com' });
+    const ctx = createContext({
+      params: { one_time_token: 'token_value', login_hint: 'foo@example.com' },
+      // @ts-expect-error -- Only accountId is needed by this middleware.
+      session: { accountId: 'foo' },
+    });
+    const guard = koaConsentGuard(mockTenant.libraries, mockTenant.queries);
+
+    await guard(ctx, next);
+
+    expect(ctx.redirect).toHaveBeenCalledWith(
+      expect.stringContaining('one-time-token?login_hint=foo%40example.com')
+    );
+  });
+
+  it('should continue with a consumed token once the case-insensitively matching account signed in', async () => {
+    findUserById.mockResolvedValue({ primaryEmail: 'Foo@Example.com' });
+    checkOneTimeToken.mockRejectedValueOnce(
+      new RequestError({ code: 'one_time_token.token_consumed' })
+    );
+    const ctx = createContext({
+      params: { one_time_token: 'token_value', login_hint: 'foo@example.com' },
+      // @ts-expect-error -- Only accountId is needed by this middleware.
+      session: { accountId: 'foo' },
+    });
+    const guard = koaConsentGuard(mockTenant.libraries, mockTenant.queries);
+
+    await guard(ctx, next);
+
+    expect(next).toHaveBeenCalled();
+  });
+
   it('should redirect to one-time-token page if valid token matches the current session user', async () => {
     const ctx = createContext({
       params: { one_time_token: 'token_value', login_hint: 'foo@example.com' },
