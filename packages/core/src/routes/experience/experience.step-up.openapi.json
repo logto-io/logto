@@ -14,6 +14,15 @@
           }
         }
       }
+    },
+    "/api/experience/identification": {
+      "post": {
+        "responses": {
+          "403": {
+            "description": "The `SignIn` or `Register` interaction is disabled in the experience settings. <br/>- In a step-up authentication, the verification resolves to an account other than the pinned subject, or a social or enterprise SSO verification resolves to no account or asks to link the identity (`session.identity_conflict`); a step-up never registers or links an account."
+          }
+        }
+      }
     }
   }
 }

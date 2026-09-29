@@ -1,0 +1,27 @@
+{
+  "tags": [
+    {
+      "name": "Dev feature"
+    }
+  ],
+  "paths": {
+    "/api/experience/profile": {
+      "post": {
+        "responses": {
+          "403": {
+            "description": "`SignIn` interaction only: MFA is enabled for the user but has not been verified. The user must verify MFA before updating non-social profile data. <br/>- In a step-up authentication, only a `password`, `email`, or `phone` the user may establish is accepted (`session.step_up.forbidden_route`): the user has no verifiable method at all and the interaction holds a fresh subject proof."
+          }
+        }
+      }
+    },
+    "/api/experience/profile/mfa": {
+      "post": {
+        "responses": {
+          "403": {
+            "description": "In a step-up authentication, a factor can only be enrolled after a first factor was verified or established in the same interaction (`session.step_up.forbidden_route`)."
+          }
+        }
+      }
+    }
+  }
+}

@@ -2,6 +2,7 @@ import { TemplateType } from '@logto/connector-kit';
 import {
   AlternativeSignUpIdentifier,
   InteractionEvent,
+  MissingProfile,
   subjectVerificationCodeIdentifierGuard,
   SignInIdentifier,
   verificationCodeIdentifierGuard,
@@ -16,6 +17,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import type ExperienceInteraction from '../classes/experience-interaction.js';
 import { codeVerificationIdentifierRecordTypeMap } from '../classes/utils.js';
 import {
   createNewCodeVerificationRecord,
@@ -36,6 +38,32 @@ import {
   getMfaIdentifier,
   getMfaVerificationType,
 } from './verification-code-helpers.js';
+
+/**
+ * A pure step-up never accepts a raw identifier to verify with: the subject-bound variant reads
+ * it from the pinned user. The one exception is establishing a first factor: a user with no
+ * eligible method may prove control of a new email or phone, which `POST /profile` then stages,
+ * but only while that identifier type is in `establishableMethods`.
+ *
+ * @throws {RequestError} with 403 if a pure step-up supplies an identifier it cannot establish
+ */
+const assertStepUpIdentifierAllowed = async (
+  experienceInteraction: ExperienceInteraction,
+  { type, value }: { type: SignInIdentifier.Email | SignInIdentifier.Phone; value?: string }
+) => {
+  if (!experienceInteraction.isStepUp || value === undefined) {
+    return;
+  }
+
+  const eligibility = await experienceInteraction.getStepUpEligibility();
+
+  assertThat(
+    eligibility?.establishableMethods.includes(
+      type === SignInIdentifier.Email ? MissingProfile.email : MissingProfile.phone
+    ),
+    new RequestError({ code: 'session.step_up.forbidden_identifier', status: 403 })
+  );
+};
 
 export default function verificationCodeRoutes<T extends ExperienceInteractionRouterContext>(
   router: Router<unknown, T>,
@@ -74,10 +102,7 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
       const { identifier: identifierPayload, interactionEvent } = ctx.guard.body;
       const { experienceInteraction } = ctx;
 
-      assertThat(
-        !experienceInteraction.isStepUp || identifierPayload.value === undefined,
-        new RequestError({ code: 'session.step_up.forbidden_identifier', status: 403 })
-      );
+      await assertStepUpIdentifierAllowed(experienceInteraction, identifierPayload);
 
       // The subject is already authenticated, so no captcha applies
       if (identifierPayload.value === undefined) {
@@ -159,10 +184,7 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
       const { verificationId, code, identifier: identifierPayload } = ctx.guard.body;
       const verificationType = codeVerificationIdentifierRecordTypeMap[identifierPayload.type];
 
-      assertThat(
-        !ctx.experienceInteraction.isStepUp || identifierPayload.value === undefined,
-        new RequestError({ code: 'session.step_up.forbidden_identifier', status: 403 })
-      );
+      await assertStepUpIdentifierAllowed(ctx.experienceInteraction, identifierPayload);
 
       const identifier =
         identifierPayload.value === undefined

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- the eligibility search and the enrollment preconditions it counts are one decision; splitting them separates rules that have to be read against each other */
 /**
  * @file Eligible-method computation for step-up: which of the subject's already-enrolled methods
  * can still contribute to the selected ACR, and whether the subject can reach it at all.
@@ -6,19 +7,22 @@
  * the interaction's lifetime disappears from the next read. Neither reachability nor eligibility is
  * restated here: both are bounded searches over `achieveAcr`, the one definition of what a set of
  * contributions reaches, so the methods offered can never disagree with what a submission derives.
- * The candidates are the subject's enrolled methods; later milestones add enrollable factors and
- * establishable first factors as further candidate contributions.
+ * The candidates are the subject's enrolled methods. Establishable first factors and enrollable
+ * factors stay behind their own preconditions and in their own lists: they are never offered as a
+ * peer of verifying a method the user already has, and only `isReachable` counts them.
  */
 import {
   AuthenticationFactorClass,
   LogtoAcr,
   MfaFactor,
+  MissingProfile,
   VerificationType,
   acrSatisfies,
   getAuthenticationFactor,
   getAuthenticationFactorClass,
   type MaskedIdentifiers,
   type Mfa,
+  type SubjectProofConnector,
   type User,
 } from '@logto/schemas';
 import { maskEmail, maskPhone } from '@logto/shared';
@@ -46,7 +50,39 @@ export type StepUpEligibilityInput = {
   carried: readonly AuthenticationContribution[];
   /** The proofs this interaction recorded so far. */
   proofs: readonly AuthenticationContribution[];
+  /**
+   * Whether the interaction holds a fresh subject proof: a Logto-verifiable verification, or an
+   * upstream social / SSO authentication that resolved to the subject. Never the session alone.
+   */
+  hasFreshSubjectProof?: boolean;
+  /**
+   * Whether the interaction proved or established a Logto-verifiable first factor. Never the
+   * session alone, and never an `mfa`-class proof.
+   */
+  hasFreshFirstFactor?: boolean;
+  /**
+   * The first factors the tenant lets a user establish: password when the sign-in experience
+   * enables password, email / phone when that identifier is enabled and its connector configured.
+   */
+  tenantEstablishableMethods?: readonly EstablishableMethod[];
+  /** The MFA factors the tenant lets a user enroll. */
+  tenantEnrollableFactors?: readonly MfaFactor[];
+  /** The subject's linked social / SSO connectors that could serve as subject proof. */
+  linkedConnectors?: readonly SubjectProofConnector[];
 };
+
+/** The first factors a user without any eligible method may establish. */
+export type EstablishableMethod =
+  | MissingProfile.password
+  | MissingProfile.email
+  | MissingProfile.phone;
+
+/** The verification an established first factor is recorded as. */
+const establishableMethodToVerificationType = Object.freeze({
+  [MissingProfile.password]: VerificationType.Password,
+  [MissingProfile.email]: VerificationType.EmailVerificationCode,
+  [MissingProfile.phone]: VerificationType.PhoneVerificationCode,
+}) satisfies Record<EstablishableMethod, VerificationType>;
 
 export type StepUpEligibility = {
   /**
@@ -58,10 +94,27 @@ export type StepUpEligibility = {
   availableMethods: VerificationType[];
   /**
    * Whether the subject can reach the selected class with the methods they have, combined with
-   * the carried context where it pairs. Decided before any verification, so creation can
+   * the carried context where it pairs, or by establishing a first factor and enrolling a factor
+   * under the preconditions below (establishing counts only when a subject proof is held or a
+   * linked connector can provide one). Decided before any verification, so creation can
    * fast-fail instead of the UI.
    */
   isReachable: boolean;
+  /**
+   * The first factors the user may establish: non-empty only under a fresh subject proof, when the
+   * user has no eligible method at all and the class is not reached yet.
+   */
+  establishableMethods: EstablishableMethod[];
+  /**
+   * The factors the user may enroll: non-empty only after a fresh first factor, when no enrolled
+   * factor can reach the class. Limited to the factors that reach it on top of what is proven.
+   */
+  enrollableFactors: MfaFactor[];
+  /**
+   * The linked connectors that can provide the subject proof establishing needs: non-empty only
+   * while no subject proof exists and establishing a method can reach the class.
+   */
+  subjectProofConnectors: SubjectProofConnector[];
   maskedIdentifiers: MaskedIdentifiers;
 };
 
@@ -112,6 +165,19 @@ const getMfaMethods = (
       }
     })
     .map((factor) => mfaFactorToVerificationType[factor]);
+
+/**
+ * Every method the user can verify with, in the eligibility-table order: the `1fa`-role methods,
+ * then the enrolled MFA factors the tenant enables.
+ */
+export const getEligibleMethods = (
+  user: User,
+  mfaSettings: Mfa,
+  connectors: MessageConnectorAvailability
+): VerificationType[] => [
+  ...getFirstFactorMethods(user, connectors),
+  ...getMfaMethods(user, mfaSettings, connectors),
+];
 
 /** What verifying a method would contribute; the same shape a recorded proof takes. */
 const toContribution = (method: VerificationType): AuthenticationContribution => ({
@@ -223,6 +289,116 @@ const contributesTo = (
   );
 };
 
+/** The factors that reach the class once enrolled on top of what is proven. */
+const filterFactorsReaching = (
+  factors: readonly MfaFactor[],
+  {
+    selectedAcr,
+    carried,
+    proofs,
+  }: Pick<StepUpEligibilityInput, 'selectedAcr' | 'carried' | 'proofs'>
+) =>
+  factors.filter((factor) =>
+    acrSatisfies(
+      achieveAcr([...proofs, toContribution(mfaFactorToVerificationType[factor])], carried),
+      selectedAcr
+    )
+  );
+
+/** Whether establishing and enrolling what is on offer reaches the class. */
+const isReachableByEnrollment = ({
+  selectedAcr,
+  carried,
+  proofs,
+  candidates,
+  established,
+  enrollable,
+  canProveFirstFactor,
+}: Pick<StepUpEligibilityInput, 'selectedAcr' | 'carried' | 'proofs'> & {
+  candidates: readonly VerificationType[];
+  established: readonly EstablishableMethod[];
+  enrollable: readonly MfaFactor[];
+  canProveFirstFactor: boolean;
+}) =>
+  Number.isFinite(
+    distanceTo({
+      target: selectedAcr,
+      carried,
+      proofs,
+      candidates: [
+        ...candidates,
+        ...established.map((method) => establishableMethodToVerificationType[method]),
+        ...(canProveFirstFactor ||
+        candidates.some((candidate) => fillsFirstFactorRole(toContribution(candidate)))
+          ? enrollable.map((factor) => mfaFactorToVerificationType[factor])
+          : []),
+      ],
+    })
+  );
+
+/**
+ * What establishing a first factor and enrolling a factor add to the eligibility: the lists they
+ * are offered in, and whether they make the class reachable. They are never folded into the
+ * candidates `availableMethods` is drawn from, because establishing or enrolling is never an
+ * alternative to verifying a method the user already has; only reachability counts them.
+ */
+// eslint-disable-next-line complexity -- each list is one precondition of the design, read side by side
+const computeEnrollment = ({
+  candidates,
+  isReachableWithEnrolled,
+  selectedAcr,
+  carried,
+  proofs,
+  hasFreshSubjectProof,
+  hasFreshFirstFactor,
+  tenantEstablishableMethods,
+  tenantEnrollableFactors,
+  linkedConnectors,
+}: Required<Omit<StepUpEligibilityInput, 'user' | 'mfaSettings' | 'connectors'>> & {
+  candidates: readonly VerificationType[];
+  isReachableWithEnrolled: boolean;
+}) => {
+  // Establishing is only possible for a user with no eligible method at all, and only under a
+  // subject proof held or obtainable. Once a first factor is proven or established there is
+  // nothing left to establish.
+  const establishable =
+    candidates.length > 0 || hasFreshFirstFactor ? [] : [...tenantEstablishableMethods];
+  const canEstablish =
+    establishable.length > 0 && (hasFreshSubjectProof || linkedConnectors.length > 0);
+  const isReachable =
+    isReachableWithEnrolled ||
+    isReachableByEnrollment({
+      selectedAcr,
+      carried,
+      proofs,
+      candidates,
+      established: canEstablish ? establishable : [],
+      enrollable: tenantEnrollableFactors,
+      // Enrolling needs a fresh first factor, so it only counts when one is proven, or can be:
+      // by verifying an eligible first-factor method or by establishing one.
+      canProveFirstFactor: hasFreshFirstFactor || canEstablish,
+    });
+
+  return {
+    isReachable,
+    establishableMethods: hasFreshSubjectProof ? establishable : [],
+    // None while an enrolled factor can still reach the class.
+    enrollableFactors:
+      hasFreshFirstFactor && !isReachableWithEnrolled
+        ? filterFactorsReaching(tenantEnrollableFactors, { selectedAcr, carried, proofs })
+        : [],
+    subjectProofConnectors:
+      !hasFreshSubjectProof && canEstablish && isReachable ? [...linkedConnectors] : [],
+    // A user whose enrolled methods cannot reach the class but who may enroll a factor after a
+    // fresh first factor is offered their first-factor methods first: enrolling is only offered
+    // once one of them is verified in this interaction.
+    firstFactorBeforeEnrollment:
+      isReachable && !isReachableWithEnrolled && !hasFreshFirstFactor
+        ? candidates.filter((candidate) => fillsFirstFactorRole(toContribution(candidate)))
+        : [],
+  };
+};
+
 /**
  * Compute the step-up eligibility of the subject for the selected class; see the file overview
  * and the eligibility table of the Experience step-up flow design.
@@ -241,14 +417,10 @@ export const computeStepUpEligibility = ({
   user,
   mfaSettings,
   connectors,
-  selectedAcr,
-  carried,
-  proofs,
+  ...input
 }: StepUpEligibilityInput): StepUpEligibility => {
-  const candidates = [
-    ...getFirstFactorMethods(user, connectors),
-    ...getMfaMethods(user, mfaSettings, connectors),
-  ];
+  const { selectedAcr, carried, proofs } = input;
+  const candidates = getEligibleMethods(user, mfaSettings, connectors);
   const distance = distanceTo({ target: selectedAcr, carried, proofs, candidates });
   const remainingCandidates = (index: number) =>
     candidates.filter((_, otherIndex) => otherIndex !== index);
@@ -302,12 +474,30 @@ export const computeStepUpEligibility = ({
   );
   const { primaryEmail, primaryPhone } = user;
 
+  const enrollment = computeEnrollment({
+    // Nothing is established or enrolled unless the caller says what the interaction holds.
+    hasFreshSubjectProof: false,
+    hasFreshFirstFactor: false,
+    tenantEstablishableMethods: [],
+    tenantEnrollableFactors: [],
+    linkedConnectors: [],
+    ...input,
+    candidates,
+    isReachableWithEnrolled: Number.isFinite(distance),
+  });
+  const { isReachable, firstFactorBeforeEnrollment } = enrollment;
+
   return {
     availableMethods:
-      selectedAcr === LogtoAcr.Mfa && !hasFirstFactorContext && firstFactorSteps.length > 0
-        ? firstFactorSteps
-        : nextSteps,
-    isReachable: Number.isFinite(distance),
+      firstFactorBeforeEnrollment.length > 0
+        ? firstFactorBeforeEnrollment
+        : selectedAcr === LogtoAcr.Mfa && !hasFirstFactorContext && firstFactorSteps.length > 0
+          ? firstFactorSteps
+          : nextSteps,
+    isReachable,
+    establishableMethods: enrollment.establishableMethods,
+    enrollableFactors: enrollment.enrollableFactors,
+    subjectProofConnectors: enrollment.subjectProofConnectors,
     // Only identifiers a code method can be sent to are hinted, and only in masked form.
     maskedIdentifiers: {
       ...(primaryEmail && connectors.email ? { email: maskEmail(primaryEmail) } : {}),
@@ -315,3 +505,4 @@ export const computeStepUpEligibility = ({
     },
   };
 };
+/* eslint-enable max-lines */
