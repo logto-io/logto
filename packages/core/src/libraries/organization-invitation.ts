@@ -3,6 +3,7 @@ import { ConnectorType, type SendMessagePayload, TemplateType } from '@logto/con
 import {
   OrganizationInvitationStatus,
   OrganizationInvitations,
+  Organizations,
   SentinelActivityAction,
   type CreateOrganizationInvitation,
   type OrganizationInvitationEntity,
@@ -174,9 +175,21 @@ export class OrganizationInvitationLibrary {
 
       // Lock the invitation before reading its status, so of two concurrent changes, e.g. an
       // acceptance and a revocation, the second one sees the first one's result and fails.
-      const { table, fields } = convertToIdentifiers(OrganizationInvitations);
+      // Share-lock its organization first, as the membership inserts of an acceptance would
+      // through their foreign key: transactions that lock the organization and then the
+      // invitation, like deleting the organization, then wait for this one instead of deadlocking.
+      const invitations = convertToIdentifiers(OrganizationInvitations);
+      const organizations = convertToIdentifiers(Organizations);
       await transaction.query(sql`
-        select 1 from ${table} where ${fields.id} = ${id} for update
+        select 1 from ${organizations.table}
+        where ${organizations.fields.id} = (
+          select ${invitations.fields.organizationId} from ${invitations.table}
+          where ${invitations.fields.id} = ${id}
+        )
+        for key share
+      `);
+      await transaction.query(sql`
+        select 1 from ${invitations.table} where ${invitations.fields.id} = ${id} for update
       `);
       const entity = await organizationQueries.invitations.findById(id);
 
