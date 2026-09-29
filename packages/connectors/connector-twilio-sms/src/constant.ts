@@ -32,8 +32,6 @@ export const defaultMetadata: ConnectorMetadata = {
       required: false,
       placeholder: defaultHost,
       description: 'Twilio API hostname only, without https://, port, or path.',
-      // Twilio API host configuration uses the Console isDevFeaturesEnabled guard.
-      isDevFeature: true,
     },
     {
       key: 'accountSID',
