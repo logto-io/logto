@@ -9,6 +9,7 @@ import { EnvSet } from '#src/env-set/index.js';
 
 import Tenant from './Tenant.js';
 import { TenantNotFoundError } from './utils.js';
+import { type WithTenant } from './with-tenant.js';
 
 const consoleLog = new ConsoleLog(chalk.magenta('tenant'));
 
@@ -119,6 +120,22 @@ class TenantPool {
 
     return this.getWithAttempts(cacheKey, tenantId, customDomain, 0, 0);
   }
+
+  /**
+   * Run a task against a tenant, holding its request slot the way a request does, so its database
+   * pool stays open until the task settles.
+   *
+   * @see {@link WithTenant}
+   */
+  withTenant: WithTenant = async (tenantId, run) => {
+    const tenant = await this.get(tenantId);
+
+    try {
+      return await run(tenant);
+    } finally {
+      tenant.requestEnd();
+    }
+  };
 
   async endAll(): Promise<void> {
     await Promise.all(
@@ -274,7 +291,12 @@ class TenantPool {
     action: 'Init' | 'Reload'
   ): { tenantPromise: Promise<Tenant> } {
     consoleLog.info(`${action} tenant:`, tenantId, 'Custom domain:', customDomain);
-    const newTenantPromise = Tenant.create({ id: tenantId, redisCache, customDomain });
+    const newTenantPromise = Tenant.create({
+      id: tenantId,
+      redisCache,
+      customDomain,
+      withTenant: this.withTenant,
+    });
     this.cache.set(cacheKey, newTenantPromise);
 
     return { tenantPromise: newTenantPromise };

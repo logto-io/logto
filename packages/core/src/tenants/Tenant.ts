@@ -50,6 +50,7 @@ import {
   syncSigningKeyRotationStateCache,
 } from './signing-key-rotation-state.js';
 import { getTenantDatabaseDsn } from './utils.js';
+import { type WithTenant } from './with-tenant.js';
 
 const consoleLog = new ConsoleLog('tenant');
 // Keep tenant disposal draining longer than the HTTP server timeout (120s in app/init.ts) so
@@ -64,10 +65,15 @@ type CreateTenant = {
   redisCache: CacheStore;
   /** The custom domain of the tenant, if applicable. */
   customDomain?: string;
+  /**
+   * Run a task against another tenant of this deployment. Injected by the tenant pool, which owns
+   * the tenant instances.
+   */
+  withTenant: WithTenant;
 };
 
 export default class Tenant implements TenantContext {
-  static async create({ id, redisCache, customDomain }: CreateTenant): Promise<Tenant> {
+  static async create({ id, redisCache, customDomain, withTenant }: CreateTenant): Promise<Tenant> {
     // Try to avoid unexpected "triggerUncaughtException" by using try-catch block
     try {
       // Treat the default database URL as the management URL
@@ -76,7 +82,7 @@ export default class Tenant implements TenantContext {
       // Custom endpoint is used for building OIDC issuer URL when the request is a custom domain
       await envSet.load(customDomain);
 
-      return new Tenant(envSet, id, customDomain, new WellKnownCache(id, redisCache));
+      return new Tenant(envSet, id, customDomain, withTenant, new WellKnownCache(id, redisCache));
     } catch (error) {
       consoleLog.error('Failed to create tenant:', id, error);
       throw error;
@@ -102,6 +108,7 @@ export default class Tenant implements TenantContext {
     public readonly envSet: EnvSet,
     public readonly id: string,
     private readonly customDomain: string | undefined,
+    public readonly withTenant: WithTenant,
     public readonly wellKnownCache: WellKnownCache,
     public readonly queries = new Queries(envSet.pool, wellKnownCache),
     public readonly logtoConfigs = createLogtoConfigLibrary(queries),
@@ -160,6 +167,7 @@ export default class Tenant implements TenantContext {
       envSet,
       sentinel,
       subscription,
+      withTenant,
       invalidateCache: this.invalidateCache.bind(this),
       scheduleSigningKeyRotation: this.scheduleSigningKeyRotation.bind(this),
     };
