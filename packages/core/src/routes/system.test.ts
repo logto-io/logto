@@ -185,9 +185,8 @@ describe('system license route', () => {
     expect(upsertSystem).not.toHaveBeenCalled();
   });
 
-  it('PUT /systems/license should not blame the key when this build trusts none', async () => {
-    // eslint-disable-next-line unicorn/no-useless-undefined -- the mocked return value is what this asserts on
-    getLicensePublicKey.mockImplementationOnce(async () => undefined);
+  it('PUT /systems/license should not blame the key when the public key cannot be loaded', async () => {
+    getLicensePublicKey.mockRejectedValueOnce(new TypeError('Invalid license public key'));
     const jwt = await signLicenseKey(buildLicensePayload(), keyPair.privateKey);
 
     const response = await systemRequest.put('/systems/license').send({ license: jwt });
