@@ -9,7 +9,7 @@ import {
   type GuardedKeys,
 } from '#src/caches/generation.js';
 import { redisCache } from '#src/caches/index.js';
-import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
+import { AdminApps, EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import { createDomainsQueries } from '#src/queries/domains.js';
 
 import { devConsole } from './console.js';
@@ -111,6 +111,36 @@ const getTenantIdFromCustomDomain = async (
   return domain.tenantId;
 };
 
+// eslint-disable-next-line @silverhand/fp/no-let -- One Console origin warning per process.
+let hasWarnedUnmatchedConsoleOrigin = false;
+
+export const resetUnmatchedConsoleOriginWarning = () => {
+  // eslint-disable-next-line @silverhand/fp/no-mutation -- Test-only reset of the one-time guard.
+  hasWarnedUnmatchedConsoleOrigin = false;
+};
+
+const isConsolePath = (pathname: string) =>
+  pathname === `/${AdminApps.Console}` || pathname.startsWith(`/${AdminApps.Console}/`);
+
+const warnUnmatchedConsoleOrigin = (url: URL, adminUrlSet: UrlSet) => {
+  if (hasWarnedUnmatchedConsoleOrigin || !isConsolePath(url.pathname)) {
+    return;
+  }
+
+  // eslint-disable-next-line @silverhand/fp/no-mutation -- Warn once per process.
+  hasWarnedUnmatchedConsoleOrigin = true;
+
+  const configured = process.env.ADMIN_ENDPOINT
+    ? adminUrlSet.origins.join(', ')
+    : 'ADMIN_ENDPOINT is not set';
+
+  devConsole.warn(
+    `Request to ${url.pathname} from origin ${url.origin} does not match the configured admin ` +
+      `endpoints (${configured}), so it is served by the default tenant. ` +
+      'Set ADMIN_ENDPOINT to the external Console origin (the URL browsers use to open /console).'
+  );
+};
+
 /**
  * Get tenant ID from the current request's URL.
  *
@@ -145,6 +175,8 @@ export const getTenantId = async (
   }
 
   if (!isMultiTenancy) {
+    warnUnmatchedConsoleOrigin(url, adminUrlSet);
+
     return [defaultTenantId, false];
   }
 

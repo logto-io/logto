@@ -51,23 +51,6 @@ import {
 } from './signing-key-rotation-state.js';
 import { getTenantDatabaseDsn } from './utils.js';
 
-/**
- * Apps whose paths are actually mounted for this tenant.
- *
- * `welcome` has no mount, and Console is skipped in multi-tenancy mode. Listing either path would
- * make a `/welcome` or `/console` Experience fallback select the strict Console CSP and block the
- * SSR bootstrap.
- */
-const getMountedApps = (tenantId: string, isMultiTenancy: boolean): string[] => {
-  const isAdminTenant = tenantId === adminTenantId;
-
-  return [
-    ...Object.values(UserApps),
-    ...(isAdminTenant ? [AdminApps.Me] : []),
-    ...(isAdminTenant && !isMultiTenancy ? [AdminApps.Console] : []),
-  ];
-};
-
 const consoleLog = new ConsoleLog('tenant');
 // Keep tenant disposal draining longer than the HTTP server timeout (120s in app/init.ts) so
 // ordinary in-flight requests can finish before the database pool is closed.
@@ -140,7 +123,11 @@ export default class Tenant implements TenantContext {
     ),
     public readonly sentinel = new BasicSentinel(envSet.pool, queries)
   ) {
-    const mountedApps = getMountedApps(id, EnvSet.values.isMultiTenancy);
+    const isAdminTenant = id === adminTenantId;
+    const mountedApps = [
+      ...Object.values(UserApps),
+      ...(isAdminTenant ? Object.values(AdminApps) : []),
+    ];
 
     this.envSet = envSet;
 
