@@ -29,7 +29,7 @@ function TestWebhook({ hookId }: Props) {
   } = useFormContext<WebhookDetailsFormType>();
   const testResultRef = useRef<HTMLDivElement>(null);
 
-  const { result, setResult } = useWebhookTestResult();
+  const { result, setResult } = useWebhookTestResult(hookId);
 
   const [isSendingPayload, setIsSendingPayload] = useState(false);
   const api = useApi({
