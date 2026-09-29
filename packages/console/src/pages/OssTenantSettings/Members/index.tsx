@@ -1,42 +1,31 @@
-import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
-import MembersBg from '@/assets/icons/members-bg.svg?url';
-import Button from '@/ds-components/Button';
-import Card from '@/ds-components/Card';
-import DynamicT from '@/ds-components/DynamicT';
-import { openSelfHostedPlansUpsell, ossUpsellEntries } from '@/utils/oss-upsell';
+import { useContext } from 'react';
 
-import { getOssTenantMembersUpsellCopyKeys } from '../utils';
+import { isDevFeaturesEnabled } from '@/consts/env';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
+import TenantMembers from '@/pages/TenantSettings/TenantMembers';
 
-import styles from './index.module.scss';
+import { shouldShowOssTenantMembersPage } from '../utils';
 
+import MembersUpsell from './MembersUpsell';
+
+/**
+ * The members and invitations of a self-hosted deployment, the same pages Cloud tenants use, when
+ * the license grants Console collaboration; the self-hosted plans upsell otherwise.
+ */
 function Members() {
-  const copyKeys = getOssTenantMembersUpsellCopyKeys();
+  const { license } = useContext(SubscriptionDataContext);
 
-  return (
-    <Card className={styles.card}>
-      <div className={styles.content}>
-        <img alt="" className={styles.image} src={MembersBg} />
-        <div className={styles.textContent}>
-          <div className={styles.title}>
-            <DynamicT forKey={copyKeys.title} />
-          </div>
-          <div className={styles.description}>
-            <DynamicT forKey={copyKeys.description} />
-          </div>
-        </div>
-        <Button
-          className={styles.action}
-          type="primary"
-          title={copyKeys.action}
-          trailingIcon={<ExternalLinkIcon />}
-          onClick={() => {
-            const entry = ossUpsellEntries.tenantSettingsMembersOssUpsell;
-            openSelfHostedPlansUpsell({ entry });
-          }}
-        />
-      </div>
-    </Card>
-  );
+  if (
+    !shouldShowOssTenantMembersPage({
+      isCloud: false,
+      isDevFeaturesEnabled,
+      isConsoleCollaborationEntitled: Boolean(license?.quota.consoleCollaboration),
+    })
+  ) {
+    return <MembersUpsell />;
+  }
+
+  return <TenantMembers />;
 }
 
 export default Members;

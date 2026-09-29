@@ -12,6 +12,8 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import socialRoutes from './social.js';
+import tenantInvitationRoutes from './tenant-invitations.js';
+import tenantMemberRoutes from './tenant-members.js';
 import tenantRoutes from './tenant.js';
 import userAssetsRoutes from './user-assets.js';
 import userRoutes from './user.js';
@@ -42,12 +44,14 @@ export default function initMeApis(tenant: TenantContext): Koa {
   userAssetsRoutes(meRouter, tenant);
 
   /**
-   * Self-hosted plans: tenant settings managed by the tenant members of a self-hosted deployment,
-   * starting with mandatory Console MFA. Removed together with the other self-hosted plans guards
-   * at launch.
+   * Self-hosted plans: tenant settings managed by the tenant members of a self-hosted deployment:
+   * mandatory Console MFA, and the members and invitations. Removed together with the other
+   * self-hosted plans guards at launch.
    */
   if (EnvSet.values.isDevFeaturesEnabled) {
     tenantRoutes(meRouter, tenant);
+    tenantMemberRoutes(meRouter, tenant);
+    tenantInvitationRoutes(meRouter, tenant);
   }
 
   const meApp = new Koa();

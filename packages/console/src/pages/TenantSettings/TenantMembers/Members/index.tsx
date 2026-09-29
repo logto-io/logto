@@ -4,14 +4,12 @@ import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
-import { useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantMemberResponse } from '@/cloud/types/router';
 import ActionsButton from '@/components/ActionsButton';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import UserPreview from '@/components/ItemPreview/UserPreview';
 import { RoleOption } from '@/components/OrganizationRolesSelect';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
-import { TenantsContext } from '@/contexts/TenantsProvider';
 import Table from '@/ds-components/Table';
 import Tag from '@/ds-components/Tag';
 import { type RequestError } from '@/hooks/use-api';
@@ -19,11 +17,11 @@ import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useCurrentUser from '@/hooks/use-current-user';
 
 import EditMemberModal from '../EditMemberModal';
+import useTenantMembersApi from '../use-tenant-members-api';
 
 function Members() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.tenant_members' });
-  const cloudApi = useAuthedCloudApi();
-  const { currentTenantId } = useContext(TenantsContext);
+  const { membersKey, getMembers, removeMember } = useTenantMembersApi();
   const { user: currentUser } = useCurrentUser();
   const {
     access: { canRemoveMember, canUpdateMemberRole },
@@ -31,9 +29,8 @@ function Members() {
   const { mutateSubscriptionQuotaAndUsages } = useContext(SubscriptionDataContext);
 
   const { data, error, isLoading, mutate } = useSWR<TenantMemberResponse[], RequestError>(
-    `api/tenants/${currentTenantId}/members`,
-    async () =>
-      cloudApi.get('/api/tenants/:tenantId/members', { params: { tenantId: currentTenantId } })
+    membersKey,
+    getMembers
   );
 
   const [userToBeEdited, setUserToBeEdited] = useState<TenantMemberResponse>();
@@ -98,9 +95,7 @@ function Members() {
                         // Cannot remove self from members list
                         currentUser?.id !== user.id &&
                         (async () => {
-                          await cloudApi.delete(`/api/tenants/:tenantId/members/:userId`, {
-                            params: { tenantId: currentTenantId, userId: user.id },
-                          });
+                          await removeMember(user.id);
                           void mutate();
                           mutateSubscriptionQuotaAndUsages();
                         })
