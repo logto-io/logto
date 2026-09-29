@@ -1,14 +1,12 @@
 import classNames from 'classnames';
-import { startTransition, useContext, useState } from 'react';
+import { startTransition, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import useSWRMutation from 'swr/mutation';
 
 import InvitationIcon from '@/assets/icons/invitation.svg?react';
 import MembersIcon from '@/assets/icons/members.svg?react';
 import PlusIcon from '@/assets/icons/plus.svg?react';
-import { useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { TenantSettingsTabs } from '@/consts';
-import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import Spacer from '@/ds-components/Spacer';
 import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
@@ -16,6 +14,7 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 
 import InviteMemberModal from './InviteMemberModal';
 import styles from './index.module.scss';
+import useTenantMembersApi from './use-tenant-members-api';
 
 function TenantMembers() {
   const { navigate, match } = useTenantPathname();
@@ -26,13 +25,8 @@ function TenantMembers() {
 
   const isInvitationTab = match(`/tenant-settings/${TenantSettingsTabs.Members}/invitations`);
 
-  const { currentTenantId } = useContext(TenantsContext);
-  const cloudApi = useAuthedCloudApi();
-  const { trigger: mutateInvitations } = useSWRMutation(
-    `api/tenants/${currentTenantId}/invitations`,
-    async () =>
-      cloudApi.get('/api/tenants/:tenantId/invitations', { params: { tenantId: currentTenantId } })
-  );
+  const { invitationsKey, getInvitations } = useTenantMembersApi();
+  const { trigger: mutateInvitations } = useSWRMutation(invitationsKey, getInvitations);
 
   return (
     <div className={styles.container}>

@@ -1,12 +1,10 @@
 import { TenantRole } from '@logto/schemas';
 import { getUserDisplayName } from '@logto/shared/universal';
-import { useContext, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
-import { useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantMemberResponse } from '@/cloud/types/router';
-import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
@@ -16,6 +14,7 @@ import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import modalStyles from '@/scss/modal.module.scss';
 
 import styles from '../index.module.scss';
+import useTenantMembersApi from '../use-tenant-members-api';
 
 type Props = {
   readonly user: TenantMemberResponse;
@@ -25,13 +24,12 @@ type Props = {
 
 function EditMemberModal({ user, isOpen, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.tenant_members' });
-  const { currentTenantId } = useContext(TenantsContext);
   const { mutate: mutateUserTenantScopes } = useCurrentTenantScopes();
 
   const [isLoading, setIsLoading] = useState(false);
   const [role, setRole] = useState(TenantRole.Collaborator);
   const { show } = useConfirmModal();
-  const cloudApi = useAuthedCloudApi();
+  const { updateMemberRole } = useTenantMembersApi();
 
   const roleOptions: Array<Option<TenantRole>> = useMemo(
     () => [
@@ -59,10 +57,7 @@ function EditMemberModal({ user, isOpen, onClose }: Props) {
 
     setIsLoading(true);
     try {
-      await cloudApi.put(`/api/tenants/:tenantId/members/:userId/roles`, {
-        params: { tenantId: currentTenantId, userId: user.id },
-        body: { roleName: role },
-      });
+      await updateMemberRole(user.id, role);
       void mutateUserTenantScopes();
       onClose();
     } finally {
