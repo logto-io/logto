@@ -36,6 +36,11 @@ const security = {
       description:
         'Cloudflare のスマート CAPTCHA 代替案。視覚的パズルを用いず、シームレスなユーザー体験を提供しながらボット保護を実現します。',
     },
+    cap: {
+      name: 'Cap',
+      description:
+        '視覚的パズルやサードパーティサービスを使わない、オープンソースでセルフホスト型のプルーフ・オブ・ワーク CAPTCHA。他の CAPTCHA サービスにアクセスできない地域に最適です。',
+    },
   },
   captcha_details: {
     back_to_security: 'セキュリティへ戻る',
@@ -51,6 +56,10 @@ const security = {
     domain_placeholder: 'www.google.com（デフォルト）または recaptcha.net',
     recaptcha_key_id: 'reCAPTCHA キー ID',
     recaptcha_api_key: 'プロジェクトの API キー',
+    cap_endpoint: 'Cap エンドポイント',
+    cap_endpoint_placeholder: 'https://cap.example.com',
+    cap_endpoint_http_notice:
+      'このエンドポイントは HTTP を使用しており、ローカル開発にのみ適しています。ブラウザーは HTTPS のサインインページからの HTTP リクエストをブロックし、シークレットキーは暗号化されずに送信されます。本番環境では HTTPS を使用してください。',
     deletion_description: 'この CAPTCHA プロバイダーを削除してもよろしいですか？',
     captcha_deleted: 'CAPTCHA プロバイダーが正常に削除されました',
     setup_captcha: 'CAPTCHA をセットアップ',

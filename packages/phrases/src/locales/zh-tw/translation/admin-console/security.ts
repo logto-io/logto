@@ -34,6 +34,11 @@ const security = {
       description:
         'Cloudflare 的智慧型 CAPTCHA 替代方案，提供非侵入性的機器人保護，同時確保不需要視覺拼圖的無縫使用者體驗。',
     },
+    cap: {
+      name: 'Cap',
+      description:
+        '開源、可自行託管的工作量證明 CAPTCHA，不需要視覺拼圖或第三方服務，適合無法存取其他 CAPTCHA 服務的地區。',
+    },
   },
   captcha_details: {
     back_to_security: '返回安全',
@@ -49,6 +54,10 @@ const security = {
     domain_placeholder: 'www.google.com（預設）或 recaptcha.net',
     recaptcha_key_id: 'reCAPTCHA 金鑰 ID',
     recaptcha_api_key: '專案的 API 金鑰',
+    cap_endpoint: 'Cap 端點',
+    cap_endpoint_placeholder: 'https://cap.example.com',
+    cap_endpoint_http_notice:
+      '此端點使用 HTTP，僅適用於本機開發。瀏覽器會封鎖 HTTPS 登入頁發出的 HTTP 請求，且密鑰將以明文傳輸。正式環境請使用 HTTPS。',
     deletion_description: '你確定要刪除此 CAPTCHA 提供商嗎？',
     captcha_deleted: 'CAPTCHA 提供商刪除成功',
     setup_captcha: '設定 CAPTCHA',

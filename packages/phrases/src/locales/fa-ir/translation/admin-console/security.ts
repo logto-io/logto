@@ -38,6 +38,11 @@ const security = {
       description:
         'جایگزین هوشمند CAPTCHA از Cloudflare که محافظت غیرمزاحم در برابر ربات را با تجربه کاربری روان بدون پازل بصری فراهم می‌کند.',
     },
+    cap: {
+      name: 'Cap',
+      description:
+        'CAPTCHA متن‌باز و خودمیزبان مبتنی بر اثبات کار، بدون پازل بصری یا سرویس شخص ثالث؛ مناسب برای مناطقی که سرویس‌های CAPTCHA دیگر در دسترس نیستند.',
+    },
   },
   captcha_details: {
     back_to_security: 'بازگشت به امنیت',
@@ -53,6 +58,10 @@ const security = {
     domain_placeholder: 'www.google.com (پیش‌فرض) یا recaptcha.net',
     recaptcha_key_id: 'شناسه کلید reCAPTCHA',
     recaptcha_api_key: 'کلید API پروژه',
+    cap_endpoint: 'نقطه پایانی Cap',
+    cap_endpoint_placeholder: 'https://cap.example.com',
+    cap_endpoint_http_notice:
+      'این نقطه پایانی از HTTP استفاده می‌کند که فقط برای توسعه محلی مناسب است. مرورگرها درخواست‌های HTTP از صفحه ورود HTTPS را مسدود می‌کنند و کلید مخفی بدون رمزگذاری ارسال می‌شود. در محیط تولید از HTTPS استفاده کنید.',
     deletion_description: 'آیا مطمئن هستید که می‌خواهید این ارائه‌دهنده CAPTCHA را حذف کنید؟',
     captcha_deleted: 'ارائه‌دهنده CAPTCHA با موفقیت حذف شد',
     setup_captcha: 'راه‌اندازی CAPTCHA',

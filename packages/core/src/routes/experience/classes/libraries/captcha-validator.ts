@@ -1,4 +1,5 @@
 import {
+  type CapConfig,
   CaptchaType,
   RecaptchaEnterpriseMode,
   type CaptchaProvider,
@@ -9,6 +10,7 @@ import ky from 'ky';
 import { z } from 'zod';
 
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
+import { ssrfProtectedFetch } from '#src/utils/outbound-request.js';
 
 const DEFAULT_SCORE_THRESHOLD = 0.5;
 
@@ -16,6 +18,10 @@ function isRecaptchaEnterprise(
   config: CaptchaProvider['config']
 ): config is RecaptchaEnterpriseConfig {
   return config.type === CaptchaType.RecaptchaEnterprise;
+}
+
+function isCap(config: CaptchaProvider['config']): config is CapConfig {
+  return config.type === CaptchaType.Cap;
 }
 
 function isTurnstile(config: CaptchaProvider['config']): config is TurnstileConfig {
@@ -56,6 +62,10 @@ export class CaptchaValidator {
       return this.verifyTurnstile(config, captchaToken);
     }
 
+    if (isCap(config)) {
+      return this.verifyCap(config, captchaToken);
+    }
+
     throw new Error('Invalid captcha provider');
   }
 
@@ -88,6 +98,52 @@ export class CaptchaValidator {
       this.log.append({
         success: false,
         errorMessage: 'Failed to get the result from Cloudflare Turnstile',
+      });
+
+      return false;
+    }
+  }
+
+  /**
+   * Verify the token against the tenant's self-hosted Cap Standalone instance.
+   *
+   * @see https://capjs.js.org/guide/standalone/#server-side
+   */
+  private async verifyCap(config: CapConfig, captchaToken: string) {
+    try {
+      const url = `${config.endpoint.replace(/\/+$/, '')}/${encodeURIComponent(
+        config.siteKey
+      )}/siteverify`;
+
+      const result = await ky
+        .post(url, {
+          json: { secret: config.secretKey, response: captchaToken },
+          // Cap responds with a 4xx status and an error message for invalid or expired tokens.
+          throwHttpErrors: false,
+          retry: 0,
+          timeout: 10_000,
+          // The endpoint is tenant-supplied; keep the request off the deployment's private network.
+          fetch: ssrfProtectedFetch,
+        })
+        .json();
+
+      const responseGuard = z.object({
+        success: z.boolean(),
+        error: z.string().optional(),
+      });
+
+      const response = responseGuard.parse(result);
+
+      this.log.append({
+        success: response.success,
+        errorMessage: response.error,
+      });
+
+      return response.success;
+    } catch {
+      this.log.append({
+        success: false,
+        errorMessage: 'Failed to get the result from Cap',
       });
 
       return false;

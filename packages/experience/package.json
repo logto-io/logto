@@ -20,6 +20,7 @@
     "test": "jest"
   },
   "devDependencies": {
+    "@cap.js/wasm": "0.0.7",
     "@jest/types": "^29.5.0",
     "@logto/connector-kit": "workspace:^",
     "@logto/core-kit": "workspace:^",
@@ -52,6 +53,7 @@
     "browserslist": "^4.28.7",
     "browserslist-to-esbuild": "^2.1.1",
     "camelcase-keys": "^9.1.3",
+    "cap-widget": "0.1.57",
     "classnames": "^2.3.1",
     "color": "^4.2.3",
     "core-js": "^3.34.0",

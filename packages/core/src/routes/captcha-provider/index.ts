@@ -15,6 +15,7 @@ export default function captchaProviderRoutes<T extends ManagementApiRouter>(
   const { findCaptchaProvider, upsertCaptchaProvider, deleteCaptchaProvider } =
     queries.captchaProviders;
   const { updateDefaultSignInExperience } = queries.signInExperiences;
+
   router.get(
     '/captcha-provider',
     koaGuard({

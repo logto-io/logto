@@ -36,6 +36,11 @@ const security = {
       description:
         'ทางเลือก CAPTCHA อัจฉริยะจาก Cloudflare ที่ป้องกันบอทโดยไม่ก่อให้เกิดอุปสรรคต่อผู้ใช้และไม่มีปริศนาภาพ',
     },
+    cap: {
+      name: 'Cap',
+      description:
+        'CAPTCHA แบบโอเพนซอร์สที่โฮสต์เองโดยใช้ proof-of-work ไม่มีปริศนาภาพหรือบริการภายนอก เหมาะสำหรับภูมิภาคที่ไม่สามารถเข้าถึงบริการ CAPTCHA อื่นได้',
+    },
   },
   captcha_details: {
     back_to_security: 'กลับไปที่การรักษาความปลอดภัย',
@@ -51,6 +56,10 @@ const security = {
     domain_placeholder: 'www.google.com (default) or recaptcha.net',
     recaptcha_key_id: 'reCAPTCHA key ID',
     recaptcha_api_key: 'API key ของโปรเจกต์',
+    cap_endpoint: 'เอนด์พอยต์ของ Cap',
+    cap_endpoint_placeholder: 'https://cap.example.com',
+    cap_endpoint_http_notice:
+      'ปลายทางนี้ใช้ HTTP ซึ่งเหมาะสำหรับการพัฒนาในเครื่องเท่านั้น เบราว์เซอร์จะบล็อกคำขอ HTTP จากหน้าลงชื่อเข้าใช้ที่เป็น HTTPS และคีย์ลับจะถูกส่งโดยไม่เข้ารหัส โปรดใช้ HTTPS ในการใช้งานจริง',
     deletion_description: 'คุณแน่ใจหรือไม่ว่าต้องการลบผู้ให้บริการ CAPTCHA นี้?',
     captcha_deleted: 'ลบผู้ให้บริการ CAPTCHA เรียบร้อยแล้ว',
     setup_captcha: 'ตั้งค่า CAPTCHA',

@@ -38,6 +38,11 @@ const security = {
       description:
         "Cloudflare's smart CAPTCHA alternative that provides non-intrusive bot protection while ensuring a seamless user experience without visual puzzles.",
     },
+    cap: {
+      name: 'Cap',
+      description:
+        'Open-source, self-hosted proof-of-work CAPTCHA without visual puzzles or third-party services, ideal for regions where other CAPTCHA services are unreachable.',
+    },
   },
   captcha_details: {
     back_to_security: 'Back to security',
@@ -53,6 +58,10 @@ const security = {
     domain_placeholder: 'www.google.com (default) or recaptcha.net',
     recaptcha_key_id: 'reCAPTCHA key ID',
     recaptcha_api_key: 'API key of the project',
+    cap_endpoint: 'Cap endpoint',
+    cap_endpoint_placeholder: 'https://cap.example.com',
+    cap_endpoint_http_notice:
+      'This endpoint uses HTTP, which is only suitable for local development. Browsers block HTTP requests from an HTTPS sign-in page, and the secret key would be sent unencrypted. Use HTTPS in production.',
     deletion_description: 'Are you sure you want to delete this CAPTCHA provider?',
     captcha_deleted: 'CAPTCHA provider deleted successfully',
     setup_captcha: 'Setup CAPTCHA',
