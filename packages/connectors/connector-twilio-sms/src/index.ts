@@ -16,7 +16,7 @@ import {
   getConfigTemplateByType,
 } from '@logto/connector-kit';
 
-import { defaultMetadata, endpoint } from './constant.js';
+import { defaultHost, defaultMetadata, endpoint } from './constant.js';
 import type { PublicParameters } from './types.js';
 import { twilioSmsConfigGuard } from './types.js';
 
@@ -31,6 +31,7 @@ const sendMessage =
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, twilioSmsConfigGuard);
     const { accountSID, authToken, fromMessagingServiceSID, disableRiskCheck } = config;
+    const host = config.host?.toLowerCase() ?? defaultHost;
     const template = getConfigTemplateByType(type, config);
 
     assert(
@@ -49,14 +50,17 @@ const sendMessage =
     };
 
     try {
-      return await got.post(endpoint.replaceAll('{{accountSID}}', accountSID), {
-        headers: {
-          Authorization:
-            'Basic ' + Buffer.from([accountSID, authToken].join(':')).toString('base64'),
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams(parameters).toString(),
-      });
+      return await got.post(
+        endpoint.replaceAll('{{host}}', host).replaceAll('{{accountSID}}', accountSID),
+        {
+          headers: {
+            Authorization:
+              'Basic ' + Buffer.from([accountSID, authToken].join(':')).toString('base64'),
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams(parameters).toString(),
+        }
+      );
     } catch (error: unknown) {
       if (error instanceof HTTPError) {
         const {
