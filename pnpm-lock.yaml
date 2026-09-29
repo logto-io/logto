@@ -4152,8 +4152,8 @@ importers:
         specifier: ^0.8.8
         version: 0.8.8(zod@3.24.3)
       adm-zip:
-        specifier: ^0.6.0
-        version: 0.6.0
+        specifier: ^0.6.1
+        version: 0.6.1
       camelcase:
         specifier: ^8.0.0
         version: 8.0.0
@@ -4944,8 +4944,8 @@ importers:
         specifier: ^22.14.0
         version: 22.14.1
       adm-zip:
-        specifier: ^0.6.0
-        version: 0.6.0
+        specifier: ^0.6.1
+        version: 0.6.1
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
@@ -5440,8 +5440,8 @@ importers:
         specifier: ^2.9.1
         version: 2.9.2
       adm-zip:
-        specifier: ^0.6.0
-        version: 0.6.0
+        specifier: ^0.6.1
+        version: 0.6.1
       chalk:
         specifier: ^5.3.0
         version: 5.3.0
@@ -9084,8 +9084,8 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
-  adm-zip@0.6.0:
-    resolution: {integrity: sha512-XleryMhbuksdKtofnWZ9Sk+4CUTbms4Mb/EU32SZwToAyZ5RgVos/ki8n+yr0LWHOGKuakbXTuuYNHLQjhddgg==}
+  adm-zip@0.6.1:
+    resolution: {integrity: sha512-Xwrja8nx9e5o2N1my4DsKCeKpdrnACyr1wtbPxBDgGzKzKyE9kRtBFA8mWldI+RVlD7CBZNWY/wQ2+ydwOR6kQ==}
     engines: {node: '>=14.0'}
 
   agent-base@6.0.2:
@@ -20881,7 +20881,7 @@ snapshots:
 
   acorn@8.17.0: {}
 
-  adm-zip@0.6.0: {}
+  adm-zip@0.6.1: {}
 
   agent-base@6.0.2:
     dependencies:
