@@ -2,12 +2,14 @@ import { appInsights } from '@logto/app-insights/node';
 import { ConnectorType, type SendMessagePayload, TemplateType } from '@logto/connector-kit';
 import {
   OrganizationInvitationStatus,
+  OrganizationInvitations,
   SentinelActivityAction,
   type CreateOrganizationInvitation,
   type OrganizationInvitationEntity,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, type Nullable, removeUndefinedKeys } from '@silverhand/essentials';
+import { sql, type DatabaseTransactionConnection } from '@silverhand/slonik';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import OrganizationQueries from '#src/queries/organization/index.js';
@@ -19,6 +21,7 @@ import {
   buildUserContextInfo,
 } from '#src/utils/connectors/extra-information.js';
 import { type OrganizationInvitationContextInfo } from '#src/utils/connectors/types.js';
+import { convertToIdentifiers } from '#src/utils/sql.js';
 
 import { type ConnectorLibrary } from './connector.js';
 
@@ -125,12 +128,16 @@ export class OrganizationInvitationLibrary {
    *
    * @param id The ID of the invitation.
    * @param status The new status of the invitation.
+   * @param acceptedUserId Unused for revocation.
+   * @param connection A transaction to run in, instead of a new one.
    * @returns A promise that resolves to the updated invitation.
    * @see {@link endingStatuses} for the ending statuses.
    */
   async updateStatus(
     id: string,
-    status: OrganizationInvitationStatus.Revoked
+    status: OrganizationInvitationStatus.Revoked,
+    acceptedUserId?: undefined,
+    connection?: DatabaseTransactionConnection
   ): Promise<OrganizationInvitationEntity>;
   /**
    * Updates the status of an organization invitation to `Accepted`, and assigns the user to the
@@ -144,33 +151,42 @@ export class OrganizationInvitationLibrary {
    * @param id The ID of the invitation.
    * @param status The new status of the invitation (`Accepted`).
    * @param acceptedUserId The user ID of the user who accepted the invitation.
+   * @param connection A transaction to run in, instead of a new one.
    * @returns A promise that resolves to the updated invitation.
    * @see {@link endingStatuses} for the ending statuses.
    */
   async updateStatus(
     id: string,
     status: OrganizationInvitationStatus.Accepted,
-    acceptedUserId: string
+    acceptedUserId: string,
+    connection?: DatabaseTransactionConnection
   ): Promise<OrganizationInvitationEntity>;
   // TODO: Error i18n
   async updateStatus(
     id: string,
     status: OrganizationInvitationStatus,
-    acceptedUserId?: string
+    acceptedUserId?: string,
+    connection?: DatabaseTransactionConnection
   ): Promise<OrganizationInvitationEntity> {
-    const entity = await this.queries.organizations.invitations.findById(id);
+    const run = async (transaction: DatabaseTransactionConnection) => {
+      const organizationQueries = new OrganizationQueries(transaction);
+      const userQueries = createUserQueries(transaction);
 
-    if (endingStatuses.includes(entity.status)) {
-      throw new RequestError({
-        status: 422,
-        code: 'request.invalid_input',
-        details: 'The status of the invitation cannot be changed anymore.',
-      });
-    }
+      // Lock the invitation before reading its status, so of two concurrent changes, e.g. an
+      // acceptance and a revocation, the second one sees the first one's result and fails.
+      const { table, fields } = convertToIdentifiers(OrganizationInvitations);
+      await transaction.query(sql`
+        select 1 from ${table} where ${fields.id} = ${id} for update
+      `);
+      const entity = await organizationQueries.invitations.findById(id);
 
-    return this.queries.pool.transaction(async (connection) => {
-      const organizationQueries = new OrganizationQueries(connection);
-      const userQueries = createUserQueries(connection);
+      if (endingStatuses.includes(entity.status)) {
+        throw new RequestError({
+          status: 422,
+          code: 'request.invalid_input',
+          details: 'The status of the invitation cannot be changed anymore.',
+        });
+      }
 
       switch (status) {
         case OrganizationInvitationStatus.Accepted: {
@@ -221,7 +237,9 @@ export class OrganizationInvitationLibrary {
       await organizationQueries.invitations.updateById(id, updated);
 
       return { ...entity, ...removeUndefinedKeys(updated) };
-    });
+    };
+
+    return connection ? run(connection) : this.queries.pool.transaction(run);
   }
 
   async getOrganizationInvitationTemplateContext(
