@@ -20,11 +20,11 @@ const importPublicKey = async (serializedKeyPair: string): Promise<CryptoKey | U
 /**
  * The public key the module under test verifies against.
  *
- * A test drives it with `mockResolvedValue` for the key it expects, and for the two ways a key can
- * be unusable: no key at all, and a key this build cannot load.
+ * It resolves to the test pair's public half; a test drives it with `mockRejectedValue` for a key
+ * this build cannot load.
  */
-const getLicensePublicKey = jest.fn<Promise<CryptoKey | Uint8Array | undefined>, never[]>(
-  async () => importPublicKey(keyPair.publicKey)
+const getLicensePublicKey = jest.fn<Promise<CryptoKey | Uint8Array>, never[]>(async () =>
+  importPublicKey(keyPair.publicKey)
 );
 
 mockEsm('./public-key.js', () => ({ getLicensePublicKey }));
@@ -98,15 +98,6 @@ describe('verifyLicenseKey()', () => {
     const licenseKey = await signLicenseKey({ hello: 'world' }, keyPair.privateKey);
 
     await expectVerificationError(licenseKey, LicenseVerificationErrorCode.InvalidPayload);
-  });
-
-  it('should reject every key when the build trusts no public key', async () => {
-    const licenseKey = await signLicenseKey(buildLicensePayload(), keyPair.privateKey);
-    // A build with no key built in, which the mock takes as an explicit `undefined`.
-    // eslint-disable-next-line unicorn/no-useless-undefined -- `undefined` is the no-key result under test
-    getLicensePublicKey.mockResolvedValue(undefined);
-
-    await expectVerificationError(licenseKey, LicenseVerificationErrorCode.NoPublicKey);
   });
 
   it('should report a public key it cannot load as a verification error, not raise it', async () => {

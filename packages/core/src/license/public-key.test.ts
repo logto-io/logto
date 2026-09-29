@@ -26,8 +26,13 @@ describe('getLicensePublicKey()', () => {
     Reflect.set(EnvSet.values, 'isIntegrationTest', isIntegrationTest);
   });
 
-  it('should trust no key when none is configured', async () => {
-    await expect(getLicensePublicKey()).resolves.toBeUndefined();
+  it('should trust the built-in key when none is configured', async () => {
+    const builtIn = await getLicensePublicKey();
+
+    expect(builtIn).toBeDefined();
+
+    setPublicKey(keyPair.publicKey);
+    await expect(getLicensePublicKey()).resolves.not.toBe(builtIn);
   });
 
   it('should import the key from the environment variable outside production', async () => {
@@ -48,10 +53,11 @@ describe('getLicensePublicKey()', () => {
   it('should ignore the environment variable in production and say so once', async () => {
     Reflect.set(EnvSet.values, 'isProduction', true);
     Reflect.set(EnvSet.values, 'isIntegrationTest', false);
+    const builtIn = await getLicensePublicKey();
     setPublicKey(keyPair.publicKey);
 
-    await expect(getLicensePublicKey()).resolves.toBeUndefined();
-    await expect(getLicensePublicKey()).resolves.toBeUndefined();
+    await expect(getLicensePublicKey()).resolves.toBe(builtIn);
+    await expect(getLicensePublicKey()).resolves.toBe(builtIn);
     expect(warn).toHaveBeenCalledTimes(1);
   });
 

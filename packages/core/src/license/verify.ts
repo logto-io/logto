@@ -6,8 +6,6 @@ import { getLicensePublicKey } from './public-key.js';
 
 /** Why a license key could not be turned into a payload this instance trusts. */
 export enum LicenseVerificationErrorCode {
-  /** This build trusts no license public key, so nothing can be verified against it. */
-  NoPublicKey = 'no_public_key',
   /** The public key this instance is configured with is not a usable Ed25519 key. */
   InvalidPublicKey = 'invalid_public_key',
   /** The key is not a compact JWS, or its signature does not match the public key. */
@@ -41,7 +39,7 @@ export class LicenseVerificationError extends Error {
  * caller reads entitlements on the request path and has one thing to do with all of them — fall
  * back to the self-hosted defaults — so none of them may reach it as a raw error.
  *
- * @throws {LicenseVerificationError} When no usable public key is configured, the key is not
+ * @throws {LicenseVerificationError} When the configured public key is unusable, the key is not
  * signed by it, or its claims are not a license payload.
  */
 export const verifyLicenseKey = async (licenseKey: string): Promise<LicensePayload> => {
@@ -50,10 +48,6 @@ export const verifyLicenseKey = async (licenseKey: string): Promise<LicensePaylo
       cause: error,
     });
   });
-
-  if (!publicKey) {
-    throw new LicenseVerificationError(LicenseVerificationErrorCode.NoPublicKey);
-  }
 
   const { payload } = await compactVerify(licenseKey, publicKey, {
     algorithms: ['EdDSA'],

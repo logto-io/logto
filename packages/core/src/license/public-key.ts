@@ -1,4 +1,4 @@
-import { type Optional, trySafe } from '@silverhand/essentials';
+import { trySafe } from '@silverhand/essentials';
 import { type CryptoKey, importJWK } from 'jose';
 import { z } from 'zod';
 
@@ -9,15 +9,14 @@ import { licenseConsoleLog } from './console.js';
 /**
  * The Ed25519 public key every self-hosted license key is verified against, as a serialized JWK.
  *
- * Its private half never leaves the Logto Cloud license service, which is what lets an instance
- * verify a license fully offline while never being able to mint one. The pair is generated with
- * that service, so this constant has no value until it exists; while it has none, no license
- * verifies, which is the right answer for a release where none has been issued.
+ * Its private half is held outside this repository by the Logto license issuer, which is what lets
+ * an instance verify a license fully offline while never being able to mint one.
  *
  * `EnvSet.values.selfHostedLicensePublicKey` replaces it — see there for the terms it is honored
  * on.
  */
-const bakedInPublicKey: Optional<string> = undefined;
+const bakedInPublicKey =
+  '{"crv":"Ed25519","x":"B-GbBl3jWlwMasSUnG_q61q5a_lwTCKOyfm7arFia94","kty":"OKP"}';
 
 /**
  * An Ed25519 public key in JWK form, i.e. what `jose` exports an `EdDSA` public key to.
@@ -75,7 +74,7 @@ const warnedIgnoredOverrides = new Set<string>();
  * The JWK to verify against: the built-in key, or the non-production override that lets tests and
  * local development install keys they signed themselves.
  */
-const readPublicKeyJwk = (): Optional<string> => {
+const readPublicKeyJwk = (): string => {
   const override = EnvSet.values.selfHostedLicensePublicKey;
 
   if (!override) {
@@ -99,15 +98,9 @@ const readPublicKeyJwk = (): Optional<string> => {
 };
 
 /**
- * The public key to verify license keys against, or `undefined` when this build trusts no key at
- * all — in which case no license can be installed or read.
+ * The public key to verify license keys against.
  *
  * @throws {TypeError} When the configured key is not a serialized Ed25519 public JWK.
  */
-export const getLicensePublicKey = async (): Promise<Optional<CryptoKey | Uint8Array>> => {
-  const jwk = readPublicKeyJwk();
-
-  // The built-in key is empty until a license service can sign with its other half. The check is
-  // what turns that into "this build trusts no key", so it stays until the key lands.
-  return jwk ? importPublicKey(jwk) : undefined;
-};
+export const getLicensePublicKey = async (): Promise<CryptoKey | Uint8Array> =>
+  importPublicKey(readPublicKeyJwk());
