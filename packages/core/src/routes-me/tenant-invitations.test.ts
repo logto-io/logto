@@ -84,9 +84,8 @@ const findUserById = jest.fn(async (id: string) => ({
 
 const sendMessage = jest.fn();
 const getMessageConnector = jest.fn(async () => ({ sendMessage }));
-const withTenant = jest.fn(
-  async (_tenantId: string, run: (tenant: TenantContext) => Promise<unknown>) =>
-    run({ connectors: { getMessageConnector } } as unknown as TenantContext)
+const withDefaultTenant = jest.fn(async (run: (tenant: TenantContext) => Promise<unknown>) =>
+  run({ connectors: { getMessageConnector } } as unknown as TenantContext)
 );
 
 const organizations = {
@@ -149,7 +148,8 @@ const mockedLibraries = {
 
 const tenantContext = new MockTenant(undefined, mockedQueries, undefined, mockedLibraries);
 // eslint-disable-next-line @silverhand/fp/no-mutation -- Replace the tenant accessor of the mock.
-tenantContext.withTenant = withTenant as unknown as TenantContext['withTenant'];
+tenantContext.withDefaultTenant =
+  withDefaultTenant as unknown as TenantContext['withDefaultTenant'];
 
 const request = createRequester({
   middlewares: [koaI18next(), koaErrorHandler()],
@@ -166,7 +166,10 @@ const request = createRequester({
 });
 
 const installLicense = (consoleCollaboration: boolean) => {
-  read.mockResolvedValue({ quota: { consoleCollaboration } });
+  read.mockResolvedValue({
+    quota: { consoleCollaboration },
+    graceEndsAt: new Date(Date.now() + 60_000).toISOString(),
+  });
 };
 
 describe('me tenant invitation routes', () => {
@@ -204,7 +207,7 @@ describe('me tenant invitation routes', () => {
         }),
         false
       );
-      expect(withTenant).toHaveBeenCalledWith(defaultTenantId, expect.any(Function));
+      expect(withDefaultTenant).toHaveBeenCalledWith(expect.any(Function));
       expect(getMessageConnector).toHaveBeenCalledWith(ConnectorType.Email);
       expect(sendMessage).toHaveBeenCalledTimes(2);
 

@@ -2,7 +2,6 @@ import { ConnectorType, TemplateType } from '@logto/connector-kit';
 import {
   OrganizationInvitationStatus,
   TenantRole,
-  defaultTenantId,
   getTenantRole,
   organizationInvitationEntityGuard,
   ossConsolePath,
@@ -63,7 +62,7 @@ export default function tenantInvitationRoutes<T extends AuthedMeRouter>(
   const {
     queries: { organizations, users, oneTimeTokens },
     libraries: { organizationInvitations },
-    withTenant,
+    withDefaultTenant,
   } = tenant;
   const { invitations } = organizations;
   const { assertAdmin } = createTenantMemberAuthorization(tenant);
@@ -147,7 +146,7 @@ export default function tenantInvitationRoutes<T extends AuthedMeRouter>(
     ]);
 
     try {
-      await withTenant(defaultTenantId, async ({ connectors }) => {
+      await withDefaultTenant(async ({ connectors }) => {
         const emailConnector = await connectors.getMessageConnector(ConnectorType.Email);
 
         await emailConnector.sendMessage({
