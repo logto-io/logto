@@ -1,5 +1,6 @@
 import {
   TenantRole,
+  Users,
   defaultTenantId,
   getTenantOrganizationId,
   getTenantRole,
@@ -52,8 +53,8 @@ export const createTenantMemberAuthorization = ({
       userId,
     });
 
-  // Not `auth.forbidden`: Console signs the user out on it, while a demoted admin should only see the
-  // request fail.
+  // Not `auth.forbidden`: Console signs the user out on it, while a demoted admin or a removed
+  // member should only see the request fail.
   const assertAdmin = async (userId: string) => {
     assertThat(
       await isAdmin(userId),
@@ -61,5 +62,33 @@ export const createTenantMemberAuthorization = ({
     );
   };
 
-  return { isAdmin, assertAdmin };
+  const assertMember = async (userId: string) => {
+    assertThat(
+      await organizations.relations.users.exists({ organizationId: tenantOrganizationId, userId }),
+      new RequestError({ code: 'auth.expected_role_not_found', status: 403 })
+    );
+  };
+
+  /** Refuse to take the Admin role away from the only admin left. */
+  const assertNotLastAdmin = async (userId: string, action: string) => {
+    const [count, admins] = await organizations.relations.usersRoles.getEntities(
+      Users,
+      {
+        organizationId: tenantOrganizationId,
+        organizationRoleId: getTenantRole(TenantRole.Admin).id,
+      },
+      { limit: 2, offset: 0 }
+    );
+
+    assertThat(
+      count > 1 || admins[0]?.id !== userId,
+      new RequestError({
+        code: 'request.invalid_input',
+        status: 422,
+        details: `You cannot ${action} the last admin.`,
+      })
+    );
+  };
+
+  return { isAdmin, assertAdmin, assertMember, assertNotLastAdmin };
 };
