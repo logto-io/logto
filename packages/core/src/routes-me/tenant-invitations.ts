@@ -1,4 +1,3 @@
-import { ConnectorType, TemplateType } from '@logto/connector-kit';
 import {
   OrganizationInvitationStatus,
   TenantRole,
@@ -126,11 +125,13 @@ export default function tenantInvitationRoutes<T extends AuthedMeRouter>(
   };
 
   /**
-   * Send the invitation email through the default tenant's email connector, since the admin tenant
-   * has none. Fails with `connector.not_found` (501) when the default tenant has none either.
+   * Send the invitation email through the default tenant, since the admin tenant has no email
+   * connector. Fails with `connector.not_found` (501) when the default tenant has none either, and
+   * with `request.message_rate_limited` (429) when the invitee has been emailed too often.
    *
    * The payload is the usual organization invitation template context, so a template written for
-   * organization invitations works here too.
+   * organization invitations works here too. Once the email is out, the links sent earlier to the
+   * same invitee stop working.
    */
   const sendInvitation = async (
     invitation: OrganizationInvitationEntity,
@@ -145,21 +146,33 @@ export default function tenantInvitationRoutes<T extends AuthedMeRouter>(
       ),
     ]);
 
-    try {
-      await withDefaultTenant(async ({ connectors }) => {
-        const emailConnector = await connectors.getMessageConnector(ConnectorType.Email);
+    const payload = { ...context, link, locale };
 
-        await emailConnector.sendMessage({
-          to: invitation.invitee,
-          type: TemplateType.OrganizationInvitation,
-          payload: { ...context, link, locale },
-        });
-      });
+    try {
+      await withDefaultTenant(async ({ libraries }) =>
+        libraries.organizationInvitations.sendEmail(invitation.invitee, payload)
+      );
     } catch (error: unknown) {
       // The link was not delivered, so its sign-in token must not stay usable.
       await oneTimeTokens.deleteOneTimeTokenById(oneTimeTokenId);
       throw error;
     }
+
+    await oneTimeTokens.revokeActiveOneTimeTokensByEmail(invitation.invitee, oneTimeTokenId);
+  };
+
+  /** Refuse an invitee who is already a member or already has a pending invitation. */
+  const assertInvitable = async (invitee: string) => {
+    const [isMember, existing] = await Promise.all([
+      organizations.relations.users.isMember(tenantOrganizationId, invitee),
+      invitations.findEntities({ organizationId: tenantOrganizationId, invitee }),
+    ]);
+    const details = `${invitee} is already a member or has a pending invitation.`;
+
+    assertThat(
+      !isMember && existing.every(({ status }) => status !== OrganizationInvitationStatus.Pending),
+      new RequestError({ code: 'request.invalid_input', status: 422, details })
+    );
   };
 
   router.get(
@@ -188,7 +201,11 @@ export default function tenantInvitationRoutes<T extends AuthedMeRouter>(
 
   /**
    * Invite people to the tenant by email, with one tenant role. Each invitee gets their own
-   * invitation and email; the first failure stops the rest.
+   * invitation and email.
+   *
+   * Every invitee is checked before anything is created, so an existing member or a pending
+   * invitation fails the whole request. A delivery failure can only surface at send time: it stops
+   * the rest and drops that invitation, while the ones emailed before it stay.
    */
   router.post(
     '/tenant/invitations',
@@ -208,6 +225,8 @@ export default function tenantInvitationRoutes<T extends AuthedMeRouter>(
       const { invitee, roleName } = ctx.guard.body;
       const invitees = [...new Set([invitee].flat().map((email) => email.toLowerCase()))];
       const expiresAt = addDays(new Date(), invitationTtlDays).getTime();
+
+      await Promise.all(invitees.map(async (email) => assertInvitable(email)));
 
       const created: OrganizationInvitationEntity[] = [];
 
@@ -249,7 +268,7 @@ export default function tenantInvitationRoutes<T extends AuthedMeRouter>(
   /** Send the invitation email again, with a new sign-in link, as the current admin. */
   router.post(
     '/tenant/invitations/:invitationId/message',
-    koaGuard({ params: invitationIdGuard, status: [204, 403, 404, 422, 501] }),
+    koaGuard({ params: invitationIdGuard, status: [204, 403, 404, 422, 429, 501] }),
     async (ctx, next) => {
       assertNotCloud();
       await assertAdmin(ctx.auth.id);
@@ -290,7 +309,9 @@ export default function tenantInvitationRoutes<T extends AuthedMeRouter>(
       // Serialized with acceptance, so an invitation is never both revoked and accepted.
       ctx.body = await withTenantMembership(tenant, async (membership) => {
         await membership.assertAdmin(ctx.auth.id);
-        await findTenantInvitation(invitationId, membership.organizations);
+        const { invitee } = await findTenantInvitation(invitationId, membership.organizations);
+        // The sign-in link must not outlive the invitation that carried it.
+        await membership.oneTimeTokens.revokeActiveOneTimeTokensByEmail(invitee);
 
         return organizationInvitations.updateStatus(
           invitationId,
@@ -315,8 +336,14 @@ export default function tenantInvitationRoutes<T extends AuthedMeRouter>(
       // Serialized with acceptance, so an invitation being accepted is not deleted under it.
       await withTenantMembership(tenant, async (membership) => {
         await membership.assertAdmin(ctx.auth.id);
-        await findTenantInvitation(invitationId, membership.organizations);
+        const invitation = await findTenantInvitation(invitationId, membership.organizations);
         await membership.organizations.invitations.deleteById(invitationId);
+
+        // The sign-in link must not outlive the invitation that carried it. Another pending
+        // invitation cannot exist for the same invitee, so no live link is lost.
+        if (invitation.status === OrganizationInvitationStatus.Pending) {
+          await membership.oneTimeTokens.revokeActiveOneTimeTokensByEmail(invitation.invitee);
+        }
       });
 
       ctx.status = 204;
@@ -365,7 +392,7 @@ export default function tenantInvitationRoutes<T extends AuthedMeRouter>(
       // One transaction: joining the tenant and getting Console access never happen apart, and a
       // concurrent removal or revocation waits for it, then sees its result.
       await withTenantMembership(tenant, async (membership) => {
-        await findOwnInvitation(invitationId, userId, membership);
+        const { invitee } = await findOwnInvitation(invitationId, userId, membership);
 
         await organizationInvitations.updateStatus(
           invitationId,
@@ -373,6 +400,8 @@ export default function tenantInvitationRoutes<T extends AuthedMeRouter>(
           userId,
           membership.connection
         );
+        // The links of this invitation have served their purpose.
+        await membership.oneTimeTokens.revokeActiveOneTimeTokensByEmail(invitee);
         await membership.consoleAccess.grant(userId);
 
         const { customData } = await membership.users.findUserById(userId);

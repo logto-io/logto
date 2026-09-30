@@ -73,8 +73,22 @@ export const createOneTimeTokenQueries = (pool: CommonQueryMethods) => {
       returning *
     `);
 
+  /**
+   * Revoke the active tokens issued for an email, compared case-insensitively, except the one with
+   * `exceptId` if given.
+   */
+  const revokeActiveOneTimeTokensByEmail = async (email: string, exceptId?: string) =>
+    pool.query(sql`
+      update ${table}
+      set ${fields.status} = ${OneTimeTokenStatus.Revoked}
+      where ${fields.status} = ${OneTimeTokenStatus.Active}
+      and lower(${fields.email}) = lower(${email})
+      ${conditionalSql(exceptId, (id) => sql`and ${fields.id} <> ${id}`)}
+    `);
+
   return {
     deleteOneTimeTokenById,
+    revokeActiveOneTimeTokensByEmail,
     findTotalNumberOfOneTimeTokens,
     getOneTimeTokens,
     getOneTimeTokenById,
