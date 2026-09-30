@@ -10,7 +10,7 @@ import type { SubscriptionLibrary } from '#src/libraries/subscription.js';
 
 import type Libraries from './Libraries.js';
 import type Queries from './Queries.js';
-import type { WithTenant } from './with-tenant.js';
+import type { WithDefaultTenant } from './with-default-tenant.js';
 
 export default abstract class TenantContext {
   public abstract readonly id: string;
@@ -24,8 +24,8 @@ export default abstract class TenantContext {
   public abstract readonly libraries: Libraries;
   public abstract readonly sentinel: Sentinel;
   public abstract readonly subscription: SubscriptionLibrary;
-  /** Run a task against another tenant of this deployment. */
-  public abstract readonly withTenant: WithTenant;
+  /** Run a task against the default tenant of this deployment. */
+  public abstract readonly withDefaultTenant: WithDefaultTenant;
   public abstract invalidateCache(): Promise<void>;
   public abstract scheduleSigningKeyRotation(timestamp: number): Promise<void>;
 }

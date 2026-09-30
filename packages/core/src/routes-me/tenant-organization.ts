@@ -27,12 +27,15 @@ export const assertNotCloud = () => {
   );
 };
 
-/** Refuse a change the installed license does not grant. */
+/**
+ * Refuse a change the installed license does not grant. A license past its grace period grants
+ * nothing, the same as in `SubscriptionLibrary.getSelfHostedSubscription`.
+ */
 export const assertLicenseGrants = async (feature: keyof LicenseQuota) => {
   const license = await LicenseReader.shared.read(await EnvSet.sharedPool);
 
   assertThat(
-    license?.quota[feature],
+    license && Date.parse(license.graceEndsAt) > Date.now() && license.quota[feature],
     new RequestError({ code: 'subscription.limit_exceeded', status: 403, data: { key: feature } })
   );
 };
