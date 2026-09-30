@@ -218,6 +218,17 @@ describe('LicenseReader', () => {
 
       await reader.read(pool);
       await waitFor(() => request.isDone());
+      // Let the refresh record the refusal and release the reader's refresh slot, which the next
+      // test's reader would otherwise find taken and skip its refresh.
+      await waitFor(() =>
+        upsertSystem.mock.calls.some(
+          ([key, value]) =>
+            key === LicenseKey.LicenseRefreshState &&
+            typeof value === 'object' &&
+            value !== null &&
+            'refusalReason' in value
+        )
+      );
 
       expect(request.isDone()).toBe(true);
     }
