@@ -40,6 +40,8 @@ const tenant_members = {
   delete_user_confirm: 'Czy na pewno chcesz usunąć tego użytkownika z tej dzierżawy?',
   assign_admin_confirm:
     'Czy na pewno chcesz uczynić wybranego użytkownika/ów administratorem? Przyznanie uprawnień administratora spowoduje nadanie użytkownikowi/om następujących uprawnień.<ul><li>Zmiana planu rozliczeniowego dzierżawy</li><li>Dodawanie lub usuwanie współpracowników</li><li>Usunięcie dzierżawy</li></ul>',
+  assign_admin_confirm_oss:
+    'Czy na pewno chcesz uczynić wybranego użytkownika/ów administratorem? Przyznanie uprawnień administratora spowoduje nadanie użytkownikowi/om następujących uprawnień.<ul><li>Zapraszanie lub usuwanie członków</li><li>Zmiana ról członków</li><li>Wymaganie MFA od wszystkich członków</li></ul>',
   revoke_invitation_confirm: 'Czy na pewno chcesz anulować to zaproszenie?',
   delete_invitation_confirm: 'Czy na pewno chcesz usunąć ten rekord zaproszenia?',
   messages: {

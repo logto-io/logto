@@ -5,6 +5,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import { contactEmailLink } from '@/consts';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button, { LinkButton } from '@/ds-components/Button';
@@ -27,7 +28,8 @@ function Footer({ newInvitationCount = 0, isLoading, onSubmit }: Props) {
 
   const { hasTenantMembersReachedLimit, limit, usage } = useTenantMembersUsage();
 
-  if (currentSku.id === ReservedPlanId.Free && hasTenantMembersReachedLimit) {
+  // Member limits are Cloud billing; a self-hosted deployment's license has none.
+  if (isCloud && currentSku.id === ReservedPlanId.Free && hasTenantMembersReachedLimit) {
     return (
       <QuotaGuardFooter>
         <Trans
@@ -41,7 +43,11 @@ function Footer({ newInvitationCount = 0, isLoading, onSubmit }: Props) {
     );
   }
 
-  if (isDevTenant && (hasTenantMembersReachedLimit || usage + newInvitationCount > limit)) {
+  if (
+    isCloud &&
+    isDevTenant &&
+    (hasTenantMembersReachedLimit || usage + newInvitationCount > limit)
+  ) {
     // Display a custom "Contact us" footer instead of asking for upgrade
     return (
       <div className={styles.container}>

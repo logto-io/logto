@@ -40,6 +40,8 @@ const tenant_members = {
   delete_user_confirm: 'Bu kullanıcıyı kiracıdan kaldırmak istediğinizden emin misiniz?',
   assign_admin_confirm:
     'Seçilen kullanıcı(ları) yönetici yapmak istediğinizden emin misiniz? Yönetici erişimi vermek aşağıdaki izinleri verecektir.<ul><li>Kiracı fatura planını değiştirme</li><li>İşbirlikçileri ekleme veya kaldırma</li><li>Kiracıyı silme</li></ul>',
+  assign_admin_confirm_oss:
+    'Seçilen kullanıcı(ları) yönetici yapmak istediğinizden emin misiniz? Yönetici erişimi vermek aşağıdaki izinleri verecektir.<ul><li>Üye davet etme veya kaldırma</li><li>Üye rollerini değiştirme</li><li>Tüm üyeler için MFA zorunlu kılma</li></ul>',
   revoke_invitation_confirm: 'Bu daveti iptal etmek istediğinizden emin misiniz?',
   delete_invitation_confirm: 'Bu davet kaydını silmek istediğinizden emin misiniz?',
   messages: {

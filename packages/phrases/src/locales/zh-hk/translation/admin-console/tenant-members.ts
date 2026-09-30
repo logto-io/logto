@@ -39,6 +39,8 @@ const tenant_members = {
   delete_user_confirm: '您確定要從此租戶中刪除此用戶嗎？',
   assign_admin_confirm:
     '您確定要將所選用戶設為管理員嗎？授予管理員訪問權限將賦予用戶如下權限。<ul><li>更改租戶計費計劃</li><li>添加或移除協作者</li><li>刪除租戶</li></ul>',
+  assign_admin_confirm_oss:
+    '您確定要將所選用戶設為管理員嗎？授予管理員訪問權限將賦予用戶如下權限。<ul><li>邀請或移除成員</li><li>更改成員角色</li><li>要求所有成員啟用 MFA</li></ul>',
   revoke_invitation_confirm: '您確定要撤銷此邀請嗎？',
   delete_invitation_confirm: '您確定要刪除此邀請記錄嗎？',
   messages: {
