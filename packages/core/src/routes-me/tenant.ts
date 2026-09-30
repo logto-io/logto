@@ -1,39 +1,21 @@
-import {
-  TenantRole,
-  defaultTenantId,
-  getTenantOrganizationId,
-  getTenantRole,
-  Users,
-} from '@logto/schemas';
+import { Users } from '@logto/schemas';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
-import RequestError from '#src/errors/RequestError/index.js';
-import LicenseReader from '#src/license/LicenseReader.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { RouterInitArgs } from '#src/routes/types.js';
-import assertThat from '#src/utils/assert-that.js';
 
+import {
+  assertLicenseGrants,
+  assertNotCloud,
+  createTenantMemberAuthorization,
+  tenantOrganizationId,
+} from './tenant-organization.js';
 import type { AuthedMeRouter } from './types.js';
-
-/**
- * The organization in the admin tenant that represents the only tenant of a self-hosted
- * deployment. Its members are the people who can sign in to Console.
- */
-const tenantOrganizationId = getTenantOrganizationId(defaultTenantId);
 
 const tenantMfaGuard = z.object({
   /** Whether every member must set up MFA to sign in to Console. */
   isMfaRequired: z.boolean(),
 });
-
-/** Tenant organizations on Cloud are managed by the Cloud service, not by their members here. */
-const assertNotCloud = () => {
-  assertThat(
-    !EnvSet.values.isCloud,
-    new RequestError({ code: 'request.feature_not_supported', status: 501 })
-  );
-};
 
 const userWithoutMfaGuard = Users.guard.pick({
   id: true,
@@ -59,21 +41,7 @@ export default function tenantRoutes<T extends AuthedMeRouter>(
     queries: { organizations },
   } = tenant;
 
-  const isAdmin = async (userId: string) =>
-    organizations.relations.usersRoles.exists({
-      organizationId: tenantOrganizationId,
-      organizationRoleId: getTenantRole(TenantRole.Admin).id,
-      userId,
-    });
-
-  // Not `auth.forbidden`: Console signs the user out on it, while a demoted admin should only
-  // see the request fail.
-  const assertAdmin = async (userId: string) => {
-    assertThat(
-      await isAdmin(userId),
-      new RequestError({ code: 'auth.expected_role_not_found', status: 403 })
-    );
-  };
+  const { isAdmin, assertAdmin } = createTenantMemberAuthorization(tenant);
 
   /**
    * The MFA requirement of the tenant, and where the caller stands with it.
@@ -150,16 +118,7 @@ export default function tenantRoutes<T extends AuthedMeRouter>(
 
       // Turning the requirement off is always allowed, so a lapsed license never locks it on.
       if (isMfaRequired) {
-        const license = await LicenseReader.shared.read(await EnvSet.sharedPool);
-
-        assertThat(
-          license?.quota.mandatoryMfa,
-          new RequestError({
-            code: 'subscription.limit_exceeded',
-            status: 403,
-            data: { key: 'mandatoryMfa' },
-          })
-        );
+        await assertLicenseGrants('mandatoryMfa');
       }
 
       const organization = await organizations.updateById(tenantOrganizationId, {
