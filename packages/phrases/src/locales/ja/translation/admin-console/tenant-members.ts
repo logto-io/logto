@@ -40,6 +40,8 @@ const tenant_members = {
   delete_user_confirm: 'このユーザーをこのテナントから削除してもよろしいですか？',
   assign_admin_confirm:
     '選択したユーザーを管理者にすることを確認しますか？ 管理者アクセスを付与すると、次の権限がユーザーに付与されます。<ul><li>テナントの課金プランを変更</li><li>共同作業者の追加または削除</li><li>テナントの削除</li></ul>',
+  assign_admin_confirm_oss:
+    '選択したユーザーを管理者にすることを確認しますか？ 管理者アクセスを付与すると、次の権限がユーザーに付与されます。<ul><li>メンバーの招待または削除</li><li>メンバーのロールの変更</li><li>すべてのメンバーに MFA を必須化</li></ul>',
   revoke_invitation_confirm: 'この招待を取り消してもよろしいですか？',
   delete_invitation_confirm: 'この招待レコードを削除してもよろしいですか？',
   messages: {

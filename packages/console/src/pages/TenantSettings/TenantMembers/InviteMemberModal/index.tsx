@@ -87,7 +87,12 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
       const [result] = await show({
         ModalContent: () => (
           <Trans components={{ ul: <ul className={styles.list} />, li: <li /> }}>
-            {t('tenant_members.assign_admin_confirm')}
+            {/* A self-hosted admin has no billing plan or tenant deletion to manage. */}
+            {t(
+              isCloud
+                ? 'tenant_members.assign_admin_confirm'
+                : 'tenant_members.assign_admin_confirm_oss'
+            )}
           </Trans>
         ),
         confirmButtonText: 'general.confirm',
