@@ -40,7 +40,7 @@ const getLicensePublicKey: () => Promise<CryptoKey | Uint8Array> = async () => t
 mockEsm('./public-key.js', () => ({ getLicensePublicKey }));
 
 const LicenseReader = await pickDefault(import('./LicenseReader.js'));
-const { licenseRefreshTimeout } = await import('./LicenseReader.js');
+const { licenseRefreshTimeout, selfHostedLicenseServiceUrl } = await import('./LicenseReader.js');
 
 const installedAt = '2026-09-14T00:00:00.000Z';
 
@@ -68,10 +68,12 @@ const install = (jwt: string) => {
 
 describe('LicenseReader', () => {
   const reader = new LicenseReader();
-  const { isDevFeaturesEnabled } = EnvSet.values;
+  const { isDevFeaturesEnabled, isProduction, isIntegrationTest } = EnvSet.values;
 
   afterEach(() => {
     Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', isDevFeaturesEnabled);
+    Reflect.set(EnvSet.values, 'isProduction', isProduction);
+    Reflect.set(EnvSet.values, 'isIntegrationTest', isIntegrationTest);
     jest.clearAllMocks();
     nock.cleanAll();
     findSystemByKey.mockReset();
@@ -188,6 +190,49 @@ describe('LicenseReader', () => {
       installedAt,
     });
   });
+
+  it.each([
+    { isIntegrationTest: false, serviceUrl: () => selfHostedLicenseServiceUrl },
+    { isIntegrationTest: true, serviceUrl: () => EnvSet.values.cloudUrlSet.endpoint },
+  ])(
+    'should refresh against the right service in production (integration test: $isIntegrationTest)',
+    async ({ isIntegrationTest, serviceUrl }) => {
+      const payload = buildLicensePayload();
+      const jwt = await signLicenseKey(payload, keyPair.privateKey);
+
+      findSystemByKey.mockImplementation(async (key) => {
+        if (key === LicenseKey.License) {
+          return { value: { jwt, installedAt } };
+        }
+        if (key === LicenseKey.LicenseDeploymentId) {
+          return { value: 'deployment_1' };
+        }
+        return null;
+      });
+      Reflect.set(EnvSet.values, 'isProduction', true);
+      Reflect.set(EnvSet.values, 'isIntegrationTest', isIntegrationTest);
+
+      const request = nock(serviceUrl().origin)
+        .post(`/api/self-hosted-licenses/${payload.licenseId}/refresh`)
+        .reply(403, { reason: 'expired' });
+
+      await reader.read(pool);
+      await waitFor(() => request.isDone());
+      // Let the refresh record the refusal and release the reader's refresh slot, which the next
+      // test's reader would otherwise find taken and skip its refresh.
+      await waitFor(() =>
+        upsertSystem.mock.calls.some(
+          ([key, value]) =>
+            key === LicenseKey.LicenseRefreshState &&
+            typeof value === 'object' &&
+            value !== null &&
+            'refusalReason' in value
+        )
+      );
+
+      expect(request.isDone()).toBe(true);
+    }
+  );
 
   it('should keep the last successful refresh when the service refuses a refresh', async () => {
     const issuedAt = Math.floor(Date.now() / 1000) - 8 * 24 * 60 * 60;
