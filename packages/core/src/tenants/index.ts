@@ -1,5 +1,6 @@
 import { setTimeout } from 'node:timers/promises';
 
+import { defaultTenantId } from '@logto/schemas';
 import { ConsoleLog } from '@logto/shared';
 import chalk from 'chalk';
 import { LRUCache } from 'lru-cache';
@@ -9,7 +10,7 @@ import { EnvSet } from '#src/env-set/index.js';
 
 import Tenant from './Tenant.js';
 import { TenantNotFoundError } from './utils.js';
-import { type WithTenant } from './with-tenant.js';
+import { type WithDefaultTenant } from './with-default-tenant.js';
 
 const consoleLog = new ConsoleLog(chalk.magenta('tenant'));
 
@@ -122,13 +123,13 @@ class TenantPool {
   }
 
   /**
-   * Run a task against a tenant, holding its request slot the way a request does, so its database
-   * pool stays open until the task settles.
+   * Run a task against the default tenant, holding its request slot the way a request does, so its
+   * database pool stays open until the task settles.
    *
-   * @see {@link WithTenant}
+   * @see {@link WithDefaultTenant}
    */
-  withTenant: WithTenant = async (tenantId, run) => {
-    const tenant = await this.get(tenantId);
+  withDefaultTenant: WithDefaultTenant = async (run) => {
+    const tenant = await this.get(defaultTenantId);
 
     try {
       return await run(tenant);
@@ -295,7 +296,7 @@ class TenantPool {
       id: tenantId,
       redisCache,
       customDomain,
-      withTenant: this.withTenant,
+      withDefaultTenant: this.withDefaultTenant,
     });
     this.cache.set(cacheKey, newTenantPromise);
 

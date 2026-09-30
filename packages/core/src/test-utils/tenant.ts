@@ -11,7 +11,7 @@ import { createLogtoConfigLibrary, type LogtoConfigLibrary } from '#src/librarie
 import Libraries from '#src/tenants/Libraries.js';
 import Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
-import { type WithTenant } from '#src/tenants/with-tenant.js';
+import { type WithDefaultTenant } from '#src/tenants/with-default-tenant.js';
 
 import { SubscriptionLibrary } from '../libraries/subscription.js';
 
@@ -81,7 +81,7 @@ export class MockTenant implements TenantContext {
   public sentinel: Sentinel;
   public readonly subscription: SubscriptionLibrary;
   /** Runs the task against this mock tenant unless a test replaces it. */
-  public withTenant: WithTenant;
+  public withDefaultTenant: WithDefaultTenant;
 
   // eslint-disable-next-line max-params
   constructor(
@@ -91,7 +91,7 @@ export class MockTenant implements TenantContext {
     librariesOverride?: Partial2<Libraries>,
     logtoConfigsOverride?: Partial<LogtoConfigLibrary>
   ) {
-    this.withTenant = async (_tenantId, run) => run(this);
+    this.withDefaultTenant = async (run) => run(this);
     this.wellKnownCache = new MockWellKnownCache();
     this.queries = new MockQueries(queriesOverride, this.wellKnownCache);
 
