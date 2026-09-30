@@ -77,6 +77,16 @@ export enum ExtraParamsKey {
    * The Google One Tap credential JWT token for external website integration.
    */
   GoogleOneTapCredential = 'google_one_tap_credential',
+  /**
+   * Overrides the theme that the sign-in experience would otherwise resolve from the end-user's
+   * OS settings, so an application with its own light / dark toggle can keep Logto in sync.
+   *
+   * The parameter is ignored when dark mode is disabled in the sign-in experience configuration,
+   * and an unrecognized value is ignored without affecting the other parameters.
+   *
+   * The available values are `light` and `dark`.
+   */
+  Theme = 'theme',
 }
 
 /** @deprecated Use {@link FirstScreen} instead. */
@@ -107,6 +117,7 @@ export const extraParamsObjectGuard = z
     [ExtraParamsKey.Identifier]: z.string(),
     [ExtraParamsKey.OneTimeToken]: z.string(),
     [ExtraParamsKey.GoogleOneTapCredential]: z.string(),
+    [ExtraParamsKey.Theme]: z.string(),
   })
   .partial() satisfies ToZodObject<ExtraParamsObject>;
 
@@ -120,4 +131,5 @@ export type ExtraParamsObject = Partial<{
   [ExtraParamsKey.Identifier]: string;
   [ExtraParamsKey.OneTimeToken]: string;
   [ExtraParamsKey.GoogleOneTapCredential]: string;
+  [ExtraParamsKey.Theme]: string;
 }>;
