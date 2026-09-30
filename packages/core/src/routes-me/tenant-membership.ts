@@ -6,6 +6,7 @@ import {
   type DatabaseTransactionConnection,
 } from '@silverhand/slonik';
 
+import { createOneTimeTokenQueries } from '#src/queries/one-time-tokens.js';
 import OrganizationQueries from '#src/queries/organization/index.js';
 import { createRolesQueries } from '#src/queries/roles.js';
 import { createUserQueries } from '#src/queries/user.js';
@@ -63,6 +64,7 @@ const createTenantMembershipTransaction = (connection: DatabaseTransactionConnec
     connection,
     organizations,
     users: createUserQueries(connection),
+    oneTimeTokens: createOneTimeTokenQueries(connection),
     consoleAccess: createConsoleAccessLibrary(connection),
     ...createTenantMemberAuthorization({ queries: { organizations } }),
   };

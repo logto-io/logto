@@ -1,4 +1,3 @@
-import { ConnectorType, TemplateType } from '@logto/connector-kit';
 import {
   OrganizationInvitationStatus,
   TenantRole,
@@ -73,6 +72,7 @@ const insertOneTimeToken = jest.fn(
   async ({ id, token }: { id: string; token: string; email: string }) => ({ id, token })
 );
 const deleteOneTimeTokenById = jest.fn();
+const revokeActiveOneTimeTokensByEmail = jest.fn();
 const grantConsoleAccess = jest.fn();
 const updateUserById = jest.fn();
 const findUserById = jest.fn(async (id: string) => ({
@@ -82,22 +82,25 @@ const findUserById = jest.fn(async (id: string) => ({
   customData: { keep: true, ossOnboarding: { questionnaire: { project: 'personal' } } },
 }));
 
-const sendMessage = jest.fn();
-const getMessageConnector = jest.fn(async () => ({ sendMessage }));
-const withTenant = jest.fn(
-  async (_tenantId: string, run: (tenant: TenantContext) => Promise<unknown>) =>
-    run({ connectors: { getMessageConnector } } as unknown as TenantContext)
+const sendEmail = jest.fn();
+const withDefaultTenant = jest.fn(async (run: (tenant: TenantContext) => Promise<unknown>) =>
+  run({ libraries: { organizationInvitations: { sendEmail } } } as unknown as TenantContext)
 );
 
 const organizations = {
   findById: jest.fn(async () => ({ id: tenantOrganizationId, name: 'Tenant default' })),
   invitations: {
     findById: findInvitationById,
-    findEntities: jest.fn(async () => [...invitationsById.values()]),
+    findEntities: jest.fn(async ({ invitee }: { invitee?: string }) =>
+      [...invitationsById.values()].filter(
+        (invitation) => !invitee || invitation.invitee.toLowerCase() === invitee.toLowerCase()
+      )
+    ),
     deleteById: deleteInvitationById,
   },
   relations: {
     usersRoles: { exists: hasRole },
+    users: { isMember: jest.fn(async (): Promise<boolean> => false) },
   },
 };
 const findUserByEmail = jest.fn(async (): Promise<unknown> => null);
@@ -111,7 +114,7 @@ const users = {
 const mockedQueries = {
   organizations,
   users,
-  oneTimeTokens: { insertOneTimeToken, deleteOneTimeTokenById },
+  oneTimeTokens: { insertOneTimeToken, deleteOneTimeTokenById, revokeActiveOneTimeTokensByEmail },
 } as unknown as Partial2<Queries>;
 
 const membershipConnection = { name: 'membership transaction' };
@@ -125,6 +128,7 @@ const withTenantMembership = jest.fn(
       connection: membershipConnection,
       organizations,
       users,
+      oneTimeTokens: { revokeActiveOneTimeTokensByEmail },
       consoleAccess: { grant: grantConsoleAccess, revoke: jest.fn() },
 
       ...createTenantMemberAuthorization({ queries: { organizations } } as never),
@@ -149,7 +153,8 @@ const mockedLibraries = {
 
 const tenantContext = new MockTenant(undefined, mockedQueries, undefined, mockedLibraries);
 // eslint-disable-next-line @silverhand/fp/no-mutation -- Replace the tenant accessor of the mock.
-tenantContext.withTenant = withTenant as unknown as TenantContext['withTenant'];
+tenantContext.withDefaultTenant =
+  withDefaultTenant as unknown as TenantContext['withDefaultTenant'];
 
 const request = createRequester({
   middlewares: [koaI18next(), koaErrorHandler()],
@@ -166,7 +171,10 @@ const request = createRequester({
 });
 
 const installLicense = (consoleCollaboration: boolean) => {
-  read.mockResolvedValue({ quota: { consoleCollaboration } });
+  read.mockResolvedValue({
+    quota: { consoleCollaboration },
+    graceEndsAt: new Date(Date.now() + 60_000).toISOString(),
+  });
 };
 
 describe('me tenant invitation routes', () => {
@@ -191,37 +199,59 @@ describe('me tenant invitation routes', () => {
     it('should invite each email with the role, and email a sign-in link through the default tenant', async () => {
       const response = await request
         .post('/tenant/invitations')
-        .send({ invitee: ['Foo@example.com', 'bar@example.com'], roleName: TenantRole.Admin });
+        .send({ invitee: ['Baz@example.com', 'bar@example.com'], roleName: TenantRole.Admin });
 
       expect(response.status).toBe(201);
       expect(response.body).toHaveLength(2);
       expect(insertInvitation).toHaveBeenCalledWith(
         expect.objectContaining({
-          invitee: 'foo@example.com',
+          invitee: 'baz@example.com',
           inviterId: callerId,
           organizationId: tenantOrganizationId,
           organizationRoleIds: [TenantRole.Admin],
         }),
         false
       );
-      expect(withTenant).toHaveBeenCalledWith(defaultTenantId, expect.any(Function));
-      expect(getMessageConnector).toHaveBeenCalledWith(ConnectorType.Email);
-      expect(sendMessage).toHaveBeenCalledTimes(2);
+      expect(withDefaultTenant).toHaveBeenCalledWith(expect.any(Function));
+      // Through the invitation library of the default tenant, which applies the send rate guard.
+      expect(sendEmail).toHaveBeenCalledTimes(2);
 
-      const [firstMessage] = sendMessage.mock.calls[0] as [
-        { to: string; type: TemplateType; payload: { link: string } },
+      const [to, payload] = sendEmail.mock.calls[0] as [string, { link: string }];
+      const [firstToken] = insertOneTimeToken.mock.calls[0] as [
+        { id: string; token: string; email: string },
       ];
-      const [firstToken] = insertOneTimeToken.mock.calls[0] as [{ token: string; email: string }];
-      const { to, type, payload } = firstMessage;
-      const { token, email } = firstToken;
+      const { id, token, email } = firstToken;
       const link = new URL(payload.link);
 
-      expect(to).toBe('foo@example.com');
-      expect(type).toBe(TemplateType.OrganizationInvitation);
-      expect(link.pathname).toBe('/console/accept/new-foo');
+      expect(to).toBe('baz@example.com');
+      expect(link.pathname).toBe('/console/accept/new-baz');
       expect(link.searchParams.get('one_time_token')).toBe(token);
-      expect(link.searchParams.get('email')).toBe('foo@example.com');
-      expect(email).toBe('foo@example.com');
+      expect(link.searchParams.get('email')).toBe('baz@example.com');
+      expect(email).toBe('baz@example.com');
+      // Links sent earlier to the invitee stop working once the new one is out.
+      expect(revokeActiveOneTimeTokensByEmail).toHaveBeenCalledWith('baz@example.com', id);
+    });
+
+    it('should create nothing when any invitee already has a pending invitation', async () => {
+      const response = await request
+        .post('/tenant/invitations')
+        .send({ invitee: ['bar@example.com', 'Foo@example.com'], roleName: TenantRole.Admin });
+
+      expect(response.status).toBe(422);
+      expect(insertInvitation).not.toHaveBeenCalled();
+      expect(sendEmail).not.toHaveBeenCalled();
+    });
+
+    it('should create nothing when any invitee is already a member', async () => {
+      organizations.relations.users.isMember.mockResolvedValueOnce(true);
+
+      const response = await request
+        .post('/tenant/invitations')
+        .send({ invitee: ['bar@example.com', 'baz@example.com'], roleName: TenantRole.Admin });
+
+      expect(response.status).toBe(422);
+      expect(insertInvitation).not.toHaveBeenCalled();
+      expect(sendEmail).not.toHaveBeenCalled();
     });
 
     it('should reject a collaborator', async () => {
@@ -250,16 +280,16 @@ describe('me tenant invitation routes', () => {
     });
 
     it('should drop the invitation when its email cannot be sent', async () => {
-      getMessageConnector.mockRejectedValueOnce(
-        new RequestError({ code: 'connector.not_found', status: 501 })
+      sendEmail.mockRejectedValueOnce(
+        new RequestError({ code: 'request.message_rate_limited', status: 429 })
       );
 
       const response = await request
         .post('/tenant/invitations')
-        .send({ invitee: 'foo@example.com', roleName: TenantRole.Collaborator });
+        .send({ invitee: 'baz@example.com', roleName: TenantRole.Collaborator });
 
-      expect(response.status).toBe(501);
-      expect(deleteInvitationById).toHaveBeenCalledWith('new-foo');
+      expect(response.status).toBe(429);
+      expect(deleteInvitationById).toHaveBeenCalledWith('new-baz');
       // The undelivered link must not stay usable.
       const [issuedToken] = insertOneTimeToken.mock.calls[0] ?? [];
       expect(deleteOneTimeTokenById).toHaveBeenCalledWith(issuedToken?.id);
@@ -274,12 +304,12 @@ describe('me tenant invitation routes', () => {
       .send({ invitee: 'alice@example.com', roleName: TenantRole.Collaborator });
 
     const [issuedToken] = insertOneTimeToken.mock.calls[0] ?? [];
-    const [message] = sendMessage.mock.calls[0] as [{ to: string; payload: { link: string } }];
+    const [to, payload] = sendEmail.mock.calls[0] as [string, { link: string }];
 
     // The sign-in compares the token email with the account's verbatim.
     expect(issuedToken?.email).toBe('Alice@Example.com');
-    expect(new URL(message.payload.link).searchParams.get('email')).toBe('Alice@Example.com');
-    expect(message.to).toBe('alice@example.com');
+    expect(new URL(payload.link).searchParams.get('email')).toBe('Alice@Example.com');
+    expect(to).toBe('alice@example.com');
   });
 
   describe('GET /tenant/invitations', () => {
@@ -315,6 +345,15 @@ describe('me tenant invitation routes', () => {
         undefined,
         membershipConnection
       );
+      expect(revokeActiveOneTimeTokensByEmail).toHaveBeenCalledWith('foo@example.com');
+    });
+
+    it('should revoke the sign-in link of a deleted pending invitation', async () => {
+      const response = await request.delete('/tenant/invitations/pending');
+
+      expect(response.status).toBe(204);
+      expect(deleteInvitationById).toHaveBeenCalledWith('pending');
+      expect(revokeActiveOneTimeTokensByEmail).toHaveBeenCalledWith('foo@example.com');
     });
 
     it('should resend a pending invitation with a new link', async () => {
@@ -322,7 +361,13 @@ describe('me tenant invitation routes', () => {
 
       expect(response.status).toBe(204);
       expect(insertOneTimeToken).toHaveBeenCalledTimes(1);
-      expect(sendMessage).toHaveBeenCalledWith(expect.objectContaining({ to: 'foo@example.com' }));
+      expect(sendEmail).toHaveBeenCalledWith('foo@example.com', expect.anything());
+
+      const [issuedToken] = insertOneTimeToken.mock.calls[0] ?? [];
+      expect(revokeActiveOneTimeTokensByEmail).toHaveBeenCalledWith(
+        'foo@example.com',
+        issuedToken?.id
+      );
     });
 
     it('should not touch an invitation to another organization', async () => {
@@ -350,7 +395,7 @@ describe('me tenant invitation routes', () => {
         403
       );
       expect(deleteInvitationById).not.toHaveBeenCalled();
-      expect(sendMessage).not.toHaveBeenCalled();
+      expect(sendEmail).not.toHaveBeenCalled();
     });
   });
 
@@ -375,6 +420,7 @@ describe('me tenant invitation routes', () => {
         membershipConnection
       );
       expect(grantConsoleAccess).toHaveBeenCalledWith(callerId);
+      expect(revokeActiveOneTimeTokensByEmail).toHaveBeenCalledWith('CALLER@example.com');
       expect(updateUserById).toHaveBeenCalledWith(callerId, {
         customData: {
           keep: true,

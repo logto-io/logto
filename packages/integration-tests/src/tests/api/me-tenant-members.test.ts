@@ -251,6 +251,81 @@ devFeatureTest.describe('me tenant members and invitations', () => {
     expect(rolesAfter.map(({ name }) => name)).not.toContain(defaultManagementApiAdminName);
   });
 
+  it('should stop the sign-in links of a resent or revoked invitation from working', async () => {
+    await installLicense(true);
+    const { headers } = getMember(TenantRole.Admin);
+    const email = `${generateUsername()}@example.com`;
+
+    const [invitation] = await ky
+      .post(meUrl('tenant/invitations'), {
+        headers,
+        json: { invitee: email, roleName: TenantRole.Collaborator },
+      })
+      .json<Array<{ id: string }>>();
+    assert(invitation, new Error('No invitation is created.'));
+    const { payload: first } = await readConnectorMessage('Email');
+
+    await ky.post(meUrl(`tenant/invitations/${invitation.id}/message`), { headers });
+    const { payload: second } = await readConnectorMessage('Email');
+
+    await ky.patch(meUrl(`tenant/invitations/${invitation.id}/status`), {
+      headers,
+      json: { status: OrganizationInvitationStatus.Revoked },
+    });
+
+    for (const { link } of [first, second]) {
+      assert(typeof link === 'string', new Error('The invitation email has no link.'));
+      const token = new URL(link).searchParams.get('one_time_token');
+      assert(token, new Error('The invitation link carries no one-time token.'));
+
+      // eslint-disable-next-line no-await-in-loop
+      const client = await initExperienceClient({
+        interactionEvent: InteractionEvent.SignIn,
+        config: {
+          endpoint: logtoConsoleUrl,
+          appId: adminConsoleApplicationId,
+          resources: [resourceMe],
+          scopes: [PredefinedScope.All],
+        },
+        redirectUri: adminConsoleRedirectUri,
+        api: adminTenantApi,
+      });
+      // eslint-disable-next-line no-await-in-loop
+      await expectRejects(
+        client.verifyOneTimeToken({
+          token,
+          identifier: { type: SignInIdentifier.Email, value: email },
+        }),
+        { code: 'one_time_token.token_revoked', status: 400 }
+      );
+    }
+  });
+
+  it('should refuse the whole request when any invitee already has a pending invitation', async () => {
+    await installLicense(true);
+    const { headers } = getMember(TenantRole.Admin);
+    const pendingEmail = `${generateUsername()}@example.com`;
+    const freshEmail = `${generateUsername()}@example.com`;
+
+    await ky.post(meUrl('tenant/invitations'), {
+      headers,
+      json: { invitee: pendingEmail, roleName: TenantRole.Collaborator },
+    });
+
+    await expectRejects(
+      ky.post(meUrl('tenant/invitations'), {
+        headers,
+        json: { invitee: [freshEmail, pendingEmail], roleName: TenantRole.Collaborator },
+      }),
+      { code: 'request.invalid_input', status: 422 }
+    );
+
+    const invitations = await ky
+      .get(meUrl('tenant/invitations'), { headers })
+      .json<Array<{ invitee: string }>>();
+    expect(invitations.map(({ invitee }) => invitee)).not.toContain(freshEmail);
+  });
+
   it('should never both revoke and accept one invitation', async () => {
     await installLicense(true);
     const { headers } = getMember(TenantRole.Admin);

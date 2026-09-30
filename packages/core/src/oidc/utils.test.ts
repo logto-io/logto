@@ -4,6 +4,7 @@ import {
   FirstScreen,
   GrantType,
   InteractionMode,
+  Theme,
   demoAppApplicationId,
 } from '@logto/schemas';
 
@@ -424,13 +425,19 @@ describe('buildLoginPromptUrl', () => {
     expect(
       buildLoginPromptUrl(
         { first_screen: FirstScreen.SignIn },
-        { appId: 'app_123', organizationId: 'org_123', uiLocales: 'fr-CA fr' }
+        { appId: 'app_123', organizationId: 'org_123', uiLocales: 'fr-CA fr', theme: Theme.Dark }
       )
+      // The theme is carried by the flow cookie, not the page URL.
     ).toBe('sign-in?app_id=app_123&organization_id=org_123&ui_locales=fr-CA+fr');
   });
 });
 
 describe('parseSharedExperienceParams', () => {
+  it('should keep a supported theme and drop an unsupported one', () => {
+    expect(parseSharedExperienceParams({ theme: 'dark' })).toEqual({ theme: Theme.Dark });
+    expect(parseSharedExperienceParams({ theme: 'sepia' })).toEqual({});
+  });
+
   it('should ignore repeated query values instead of throwing', () => {
     expect(
       parseSharedExperienceParams({

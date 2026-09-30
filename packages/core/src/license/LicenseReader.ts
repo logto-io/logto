@@ -60,14 +60,24 @@ export const licenseGracePeriod = 30 * 24 * 60 * 60 * 1000;
 /** A hung request would otherwise hold the per-instance refresh slot until restart. */
 export const licenseRefreshTimeout = 10_000;
 
-/** The production license service is fixed; development uses the configured Cloud endpoint. */
+/**
+ * The production license service is fixed; development and integration tests use the configured
+ * Cloud endpoint.
+ */
 export const selfHostedLicenseServiceUrl = new URL('https://cloud.logto.io');
 
 const refreshResponseGuard = z.object({ license: z.string().min(1) });
 const refreshRefusalGuard = z.object({ reason: z.string().min(1) });
 
-const getLicenseServiceUrl = () =>
-  EnvSet.values.isProduction ? selfHostedLicenseServiceUrl : EnvSet.values.cloudUrlSet.endpoint;
+/**
+ * Integration tests run a production build that trusts a fixture public key (see
+ * `./public-key.ts`), so their keys must never reach the production license service either.
+ */
+const getLicenseServiceUrl = () => {
+  const { isProduction, isIntegrationTest, cloudUrlSet } = EnvSet.values;
+
+  return isProduction && !isIntegrationTest ? selfHostedLicenseServiceUrl : cloudUrlSet.endpoint;
+};
 
 const getGraceEndsAt = (lastRefreshedAt: string) =>
   new Date(new Date(lastRefreshedAt).getTime() + licenseGracePeriod).toISOString();
