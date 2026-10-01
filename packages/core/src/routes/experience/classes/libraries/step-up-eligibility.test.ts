@@ -7,6 +7,7 @@ import {
   LogtoAcr,
   MfaFactor,
   MfaPolicy,
+  MissingProfile,
   VerificationType,
   acrSatisfies,
   getAuthenticationFactor,
@@ -24,7 +25,11 @@ import {
 } from '#src/__mocks__/user.js';
 
 import { achieveAcr, deriveCarriedContributions } from './authentication-context.js';
-import { computeStepUpEligibility, type StepUpEligibilityInput } from './step-up-eligibility.js';
+import {
+  computeStepUpEligibility,
+  type EstablishableMethod,
+  type StepUpEligibilityInput,
+} from './step-up-eligibility.js';
 
 const allFactors: Mfa = {
   policy: MfaPolicy.UserControlled,
@@ -223,6 +228,9 @@ describe('computeStepUpEligibility', () => {
       expect(compute({ user: socialOnlyUser })).toEqual({
         availableMethods: [],
         isReachable: false,
+        establishableMethods: [],
+        enrollableFactors: [],
+        subjectProofConnectors: [],
         maskedIdentifiers: {},
       });
     });
@@ -300,6 +308,9 @@ describe('computeStepUpEligibility', () => {
       expect(compute({ user, selectedAcr: LogtoAcr.Mfa })).toEqual({
         availableMethods: [],
         isReachable: false,
+        establishableMethods: [],
+        enrollableFactors: [],
+        subjectProofConnectors: [],
         maskedIdentifiers: {},
       });
       // The same factor reaches `1fa` alone.
@@ -481,6 +492,183 @@ describe('computeStepUpEligibility', () => {
           acrSatisfies(achieveAcr([contributionOf(method)], passwordSession), LogtoAcr.Mfa)
         ).toBe(true);
       }
+    });
+  });
+
+  describe('establishing a first factor and enrolling a factor', () => {
+    const github = { type: 'social' as const, connectorId: 'github' };
+    const tenantEstablishableMethods: EstablishableMethod[] = [
+      MissingProfile.password,
+      MissingProfile.email,
+    ];
+    const tenantEnrollableFactors = [MfaFactor.TOTP, MfaFactor.WebAuthn];
+    const federatedProof = proof(
+      VerificationType.Social,
+      AuthenticationFactor.Federated,
+      undefined,
+      [AuthenticationMethodReference.Federated]
+    );
+    const establishedPasswordProof: AuthenticationProof = {
+      ...passwordProof,
+      role: AuthenticationProofRole.Bind,
+    };
+
+    it('offers subject proof, then establishing, to a social-only user with a linked connector', () => {
+      const before = compute({
+        user: socialOnlyUser,
+        tenantEstablishableMethods,
+        linkedConnectors: [github],
+      });
+
+      // Creation succeeds: establishing under a subject proof the linked connector can provide
+      // reaches the class.
+      expect(before).toMatchObject({
+        availableMethods: [],
+        isReachable: true,
+        establishableMethods: [],
+        subjectProofConnectors: [github],
+      });
+
+      const after = compute({
+        user: socialOnlyUser,
+        proofs: [federatedProof],
+        hasFreshSubjectProof: true,
+        tenantEstablishableMethods,
+        linkedConnectors: [github],
+      });
+
+      expect(after).toMatchObject({
+        availableMethods: [],
+        isReachable: true,
+        establishableMethods: tenantEstablishableMethods,
+        subjectProofConnectors: [],
+      });
+    });
+
+    it('is unreachable when the tenant enables nothing establishable', () => {
+      expect(compute({ user: socialOnlyUser, linkedConnectors: [github] })).toMatchObject({
+        isReachable: false,
+        subjectProofConnectors: [],
+      });
+    });
+
+    it('is unreachable without a subject proof or a linked connector to provide one', () => {
+      expect(compute({ user: socialOnlyUser, tenantEstablishableMethods })).toMatchObject({
+        isReachable: false,
+        establishableMethods: [],
+        subjectProofConnectors: [],
+      });
+    });
+
+    it('never offers establishing to a user with any verifiable method', () => {
+      for (const user of [
+        passwordUser,
+        { ...socialOnlyUser, primaryEmail: mockUser.primaryEmail },
+        withTotp(socialOnlyUser),
+      ]) {
+        expect(
+          compute({
+            user,
+            hasFreshSubjectProof: true,
+            tenantEstablishableMethods,
+            linkedConnectors: [github],
+          })
+        ).toMatchObject({ establishableMethods: [], subjectProofConnectors: [] });
+      }
+    });
+
+    it('stops offering establishing once a first factor is established', () => {
+      expect(
+        compute({
+          user: socialOnlyUser,
+          proofs: [federatedProof, establishedPasswordProof],
+          hasFreshSubjectProof: true,
+          hasFreshFirstFactor: true,
+          tenantEstablishableMethods,
+        })
+      ).toMatchObject({ establishableMethods: [], isReachable: true });
+    });
+
+    /** A tenant that enables TOTP and WebAuthn, and no factor the user holds implicitly. */
+    const enrollableMfaSettings: Mfa = {
+      policy: MfaPolicy.UserControlled,
+      factors: [MfaFactor.TOTP, MfaFactor.WebAuthn],
+    };
+
+    it('offers enrolling only after a fresh first factor, on a password session included', () => {
+      const input = {
+        mfaSettings: enrollableMfaSettings,
+        selectedAcr: LogtoAcr.Mfa,
+        carried: passwordSession,
+        tenantEnrollableFactors,
+      };
+
+      // The session's context never licenses enrolling, so a first factor is asked for first.
+      expect(compute(input)).toMatchObject({
+        availableMethods: [
+          VerificationType.Password,
+          VerificationType.EmailVerificationCode,
+          VerificationType.PhoneVerificationCode,
+        ],
+        isReachable: true,
+        enrollableFactors: [],
+      });
+      expect(
+        compute({ ...input, proofs: [passwordProof], hasFreshFirstFactor: true })
+      ).toMatchObject({
+        availableMethods: [],
+        isReachable: true,
+        enrollableFactors: tenantEnrollableFactors,
+      });
+    });
+
+    it('offers no enrolling to a user whose enrolled factor can reach the class', () => {
+      expect(
+        compute({
+          user: withTotp(passwordUser),
+          mfaSettings: enrollableMfaSettings,
+          selectedAcr: LogtoAcr.Mfa,
+          proofs: [passwordProof],
+          hasFreshFirstFactor: true,
+          tenantEnrollableFactors,
+        })
+      ).toMatchObject({ availableMethods: [VerificationType.TOTP], enrollableFactors: [] });
+    });
+
+    it('offers only the factors that pair with what is proven', () => {
+      // After an email code, a TOTP pairs but a passkey reaches `mfa` alone as well; both help.
+      expect(
+        compute({
+          user: { ...socialOnlyUser, primaryEmail: mockUser.primaryEmail },
+          selectedAcr: LogtoAcr.Mfa,
+          proofs: [emailCodeProof],
+          hasFreshFirstFactor: true,
+          tenantEnrollableFactors: [MfaFactor.TOTP, MfaFactor.WebAuthn],
+        }).enrollableFactors
+      ).toEqual([MfaFactor.TOTP, MfaFactor.WebAuthn]);
+    });
+
+    it('is unreachable for `mfa` when the tenant enables no enrollable factor', () => {
+      expect(
+        compute({
+          mfaSettings: enrollableMfaSettings,
+          selectedAcr: LogtoAcr.Mfa,
+          carried: passwordSession,
+          tenantEnrollableFactors: [],
+        })
+      ).toMatchObject({ isReachable: false, availableMethods: [] });
+    });
+
+    it('reaches `mfa` for a social-only user through establishing and then enrolling', () => {
+      expect(
+        compute({
+          user: socialOnlyUser,
+          selectedAcr: LogtoAcr.Mfa,
+          tenantEstablishableMethods: [MissingProfile.password],
+          tenantEnrollableFactors: [MfaFactor.TOTP],
+          linkedConnectors: [github],
+        })
+      ).toMatchObject({ isReachable: true, subjectProofConnectors: [github] });
     });
   });
 

@@ -24,6 +24,9 @@
         "responses": {
           "404": {
             "description": "The identifier carried only its type but the interaction carries no subject, or the subject has no primary identifier of that type (`session.identifier_not_found`)."
+          },
+          "403": {
+            "description": "A step-up authentication supplied an identifier value (`session.step_up.forbidden_identifier`), unless the user is establishing that type of identifier as their first factor."
           }
         }
       }

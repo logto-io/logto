@@ -59,7 +59,12 @@ function verifiedInteractionGuard<
       })
     );
 
-    if (experienceInteraction.interactionEvent === InteractionEvent.SignIn) {
+    // A pure step-up applies no tenant MFA policy: its enrollment routes are gated by the step-up
+    // route guard on the predicate that also decides whether an enrolled factor counts.
+    if (
+      experienceInteraction.interactionEvent === InteractionEvent.SignIn &&
+      !experienceInteraction.isStepUp
+    ) {
       await experienceInteraction.guardMfaVerificationStatus();
     }
 
@@ -93,7 +98,20 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
         })
       );
 
-      if (interactionEvent === InteractionEvent.SignIn) {
+      // A pure step-up only stages a first factor it may establish: the route guard opens this
+      // route while `establishableMethods` is non-empty, and the staged type must be one of them.
+      if (experienceInteraction.isStepUp) {
+        const eligibility = await experienceInteraction.getStepUpEligibility();
+
+        assertThat(
+          eligibility?.establishableMethods.some(
+            (method): boolean => String(method) === profilePayload.type
+          ),
+          new RequestError({ code: 'session.step_up.forbidden_route', status: 403 })
+        );
+      }
+
+      if (interactionEvent === InteractionEvent.SignIn && !experienceInteraction.isStepUp) {
         // Note:
         // We intentionally allow social profile staging before MFA verification.
         // This endpoint only writes to the interaction session, while `submit()` is the
@@ -373,6 +391,17 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
       const log = ctx.createLog(
         `Interaction.${experienceInteraction.interactionEvent}.BindMfa.${type}.Submit`
       );
+
+      // A pure step-up only writes the factors it may enroll, plus backup codes to go with them;
+      // the email / phone factors would bind an identifier, which is only ever established.
+      if (experienceInteraction.isStepUp && type !== MfaFactor.BackupCode) {
+        const eligibility = await experienceInteraction.getStepUpEligibility();
+
+        assertThat(
+          eligibility?.enrollableFactors.includes(type),
+          new RequestError({ code: 'session.step_up.forbidden_route', status: 403 })
+        );
+      }
 
       log.append({
         verificationId,
