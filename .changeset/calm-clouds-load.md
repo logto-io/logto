@@ -2,4 +2,4 @@
 "@logto/core": patch
 ---
 
-Warn once when a `/console` request reaches the default tenant because the request origin does not match `ADMIN_ENDPOINT`, telling operators to set `ADMIN_ENDPOINT` to the external Admin Console origin
+Warn once when a `/console` request reaches the default tenant because the request origin does not match any configured admin endpoint, asking operators to check the Console URL and `ADMIN_ENDPOINT`

@@ -135,9 +135,10 @@ const warnUnmatchedConsoleOrigin = (url: URL, adminUrlSet: UrlSet) => {
     : 'ADMIN_ENDPOINT is not set';
 
   devConsole.warn(
-    `Request to ${url.pathname} from origin ${url.origin} does not match the configured admin ` +
-      `endpoints (${configured}), so it is served by the default tenant. ` +
-      'Set ADMIN_ENDPOINT to the external Console origin (the URL browsers use to open /console).'
+    'This request does not match any configured admin endpoint and will be served by the ' +
+      'default tenant, which does not host the Console. Check that you are using the intended ' +
+      'Console URL and that ADMIN_ENDPOINT matches your deployment. ' +
+      `(request: ${url.origin}${url.pathname}; configured admin endpoints: ${configured})`
   );
 };
 
