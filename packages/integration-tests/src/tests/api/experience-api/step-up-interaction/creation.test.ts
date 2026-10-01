@@ -66,8 +66,6 @@ devFeatureTest.describe('step-up interaction creation', () => {
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
     await updateSignInExperience({ adaptiveMfa: { enabled: false } });
-    // TOTP enabled without an enrollment prompt, so a user with no factor can sign in.
-    await enableUserControlledMfaWithNoPrompt();
     await clearConnectorsByTypes([ConnectorType.Email]);
     await setEmailConnector();
 
@@ -82,6 +80,11 @@ devFeatureTest.describe('step-up interaction creation', () => {
       mfa: { skipMfaOnSignIn: true },
       passkeySignIn: {},
     });
+  });
+
+  beforeEach(async () => {
+    // TOTP enabled without an enrollment prompt, so a user with no factor can sign in.
+    await enableUserControlledMfaWithNoPrompt();
   });
 
   afterAll(async () => {
@@ -147,7 +150,30 @@ devFeatureTest.describe('step-up interaction creation', () => {
     await logoutClient(client);
   });
 
-  it('finishes with unmet_authentication_requirements when the pinned user has no reachable method', async () => {
+  it('offers password verification before enrollment when the pinned user has no enrolled factor', async () => {
+    const client = await signInWithPassword(passwordOnlyUser);
+    await startStepUp(client, mfaAcr);
+
+    await expect(
+      client.initInteraction({ interactionEvent: InteractionEvent.SignIn })
+    ).resolves.toBeUndefined();
+
+    const { authenticationContext } = await client.getInteractionData();
+
+    expect(authenticationContext).toMatchObject({
+      mode: 'stepUp',
+      selectedAcr: mfaAcr,
+      availableMethods: [VerificationType.Password],
+      establishableMethods: [],
+      enrollableFactors: [],
+      subjectProofConnectors: [],
+    });
+
+    await logoutClient(client);
+  });
+
+  it('finishes with unmet_authentication_requirements when no MFA factor can be verified or enrolled', async () => {
+    await resetMfaSettings();
     const client = await signInWithPassword(passwordOnlyUser);
     await startStepUp(client, mfaAcr);
 
