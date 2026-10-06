@@ -89,6 +89,10 @@ const hasUserWithIdentifier = async (
   return queries.users.hasUserWithNormalizedPhone(value);
 };
 
+type SendCodeContext = Pick<SendCodeParams, 'queries' | 'identifier' | 'interactionEvent'> & {
+  experienceInteraction: ExperienceInteraction;
+};
+
 /**
  * Whether to create the passcode record but suppress delivery, for a recipient with no legitimate
  * reason to receive a code (anti-enumeration / anti-spam). The record is still created, so a later
@@ -99,23 +103,51 @@ const hasUserWithIdentifier = async (
  *   disabled; identified sessions always deliver.
  */
 const shouldSkipDelivery = async (
-  experienceInteraction: ExperienceInteraction,
-  queries: Queries,
-  identifier: VerificationCodeIdentifier,
-  interactionEvent?: InteractionEvent
+  { experienceInteraction, queries, identifier, interactionEvent }: SendCodeContext,
+  registrationDisabled?: boolean
 ): Promise<boolean> => {
   if (interactionEvent === InteractionEvent.ForgotPassword) {
     return !(await hasUserWithIdentifier(queries, identifier));
   }
 
   if (interactionEvent === InteractionEvent.SignIn && !experienceInteraction.identifiedUserId) {
-    const registrationDisabled =
-      await experienceInteraction.signInExperienceValidator.isRegistrationDisabled();
+    const isRegistrationDisabled =
+      registrationDisabled ??
+      (await experienceInteraction.signInExperienceValidator.isRegistrationDisabled());
 
-    return registrationDisabled && !(await hasUserWithIdentifier(queries, identifier));
+    return isRegistrationDisabled && !(await hasUserWithIdentifier(queries, identifier));
   }
 
   return false;
+};
+
+/**
+ * Whether the code will be used to register the identifier, so the email blocklist applies before
+ * delivery: an explicit Register event, or an identifier-first sign-in from an unidentified session
+ * whose email no user owns while registration is enabled (the interaction can only become a
+ * Register after the code is verified).
+ */
+const willCodeRegisterEmail = async (
+  { experienceInteraction, queries, identifier, interactionEvent }: SendCodeContext,
+  registrationDisabled?: boolean
+): Promise<boolean> => {
+  if (identifier.type !== SignInIdentifier.Email) {
+    return false;
+  }
+
+  if (interactionEvent === InteractionEvent.Register) {
+    return true;
+  }
+
+  if (interactionEvent !== InteractionEvent.SignIn || experienceInteraction.identifiedUserId) {
+    return false;
+  }
+
+  const isRegistrationDisabled =
+    registrationDisabled ??
+    (await experienceInteraction.signInExperienceValidator.isRegistrationDisabled());
+
+  return !isRegistrationDisabled && !(await hasUserWithIdentifier(queries, identifier));
 };
 
 /**
@@ -143,20 +175,28 @@ export const sendCode = async ({
 
   const codeVerification = createVerificationRecord();
 
-  // Pre-validate email against blocklist for registration
-  if (
-    interactionEvent === InteractionEvent.Register &&
-    identifier.type === SignInIdentifier.Email
-  ) {
-    await experienceInteraction.signInExperienceValidator.guardEmailBlocklist(codeVerification);
-  }
-
-  const skipDelivery = await shouldSkipDelivery(
+  // Pre-validate email against the blocklist before delivering the code whenever it will register
+  // the identifier; otherwise the blocklist would only reject after the email was already sent.
+  // The registration mode is resolved once and shared with the delivery-suppression decision below.
+  const sendCodeContext: SendCodeContext = {
     experienceInteraction,
     queries,
     identifier,
-    interactionEvent
-  );
+    interactionEvent,
+  };
+  const isIdentifierFirstEmailSignIn =
+    identifier.type === SignInIdentifier.Email &&
+    interactionEvent === InteractionEvent.SignIn &&
+    !experienceInteraction.identifiedUserId;
+  const registrationDisabled = isIdentifierFirstEmailSignIn
+    ? await experienceInteraction.signInExperienceValidator.isRegistrationDisabled()
+    : undefined;
+
+  if (await willCodeRegisterEmail(sendCodeContext, registrationDisabled)) {
+    await experienceInteraction.signInExperienceValidator.guardEmailBlocklist(codeVerification);
+  }
+
+  const skipDelivery = await shouldSkipDelivery(sendCodeContext, registrationDisabled);
 
   const payload = skipDelivery
     ? undefined
