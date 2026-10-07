@@ -199,7 +199,7 @@ describe('sendCode parameter passing', () => {
     );
   });
 
-  it('should not check user existence for non-ForgotPassword events', async () => {
+  it('should not check user existence for identified sign-in sessions', async () => {
     const mockQueriesTracking = {
       sentinelActivities: mockSentinelActivities,
       logtoConfigs: mockLogtoConfigs,
@@ -212,7 +212,10 @@ describe('sendCode parameter passing', () => {
     const ctx = {
       request: { ip: '127.0.0.1' },
       createLog: jest.fn(() => ({ append: jest.fn().mockImplementation(resolveVoid) })),
-      experienceInteraction: mockExperienceInteraction,
+      experienceInteraction: {
+        ...mockExperienceInteraction,
+        identifiedUserId: 'identified-user-id',
+      },
       emailI18n: {},
     };
 
