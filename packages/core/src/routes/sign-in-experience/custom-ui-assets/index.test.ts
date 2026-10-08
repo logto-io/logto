@@ -248,6 +248,32 @@ describe('POST /sign-in-exp/default/custom-ui-assets', () => {
       expect(mockedAzureUploadFile).not.toHaveBeenCalled();
     });
 
+    it('should reject a zip without index.html before uploading any assets', async () => {
+      withLicense(true);
+      const pathToInvalidZip = path.join(testFilesPath, 'missing-index.zip');
+      const zip = new AdmZip();
+      zip.addFile('app.js', Buffer.from('console.log("custom UI");'));
+      await zip.writeZipPromise(pathToInvalidZip);
+      const response = await upload(pathToInvalidZip);
+
+      expect(response.status).toBe(400);
+      expect(response.text).toBe(
+        'Input is invalid. The custom UI zip must contain an index.html file at the asset root.'
+      );
+      expect(response.body.customUiAssetId).toBeUndefined();
+      expect(mockedS3UploadFile).not.toHaveBeenCalled();
+      expect(mockedAzureUploadFile).not.toHaveBeenCalled();
+    });
+
+    it('should preserve storage errors when uploading a valid zip fails', async () => {
+      withLicense(true);
+      mockedS3UploadFile.mockRejectedValueOnce(new Error('Storage unavailable'));
+      const response = await upload(pathToZip);
+
+      expect(response.status).toBe(500);
+      expect(response.text).toBe('Failed to upload file to the storage provider.');
+    });
+
     it('should fail when the zip cannot be unzipped', async () => {
       withLicense(true);
       const pathToEmptyZip = path.join(testFilesPath, 'empty.zip');

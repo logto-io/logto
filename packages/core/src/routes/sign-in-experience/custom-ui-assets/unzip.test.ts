@@ -72,6 +72,20 @@ describe('unzipCustomUiAssets()', () => {
     expect(getUploadedKeys()).toEqual(['tenant/asset/assets/index.js', 'tenant/asset/index.html']);
   });
 
+  it.each<Record<string, string>>([
+    { 'app.js': '' },
+    { 'index.html/': '', 'app.js': '' },
+    { '.hidden/index.html': '', 'app.js': '' },
+    { 'Index.html': '', 'app.js': '' },
+    { 'dist/nested/index.html': '', 'dist/app.js': '' },
+    { 'dist/index.html': '', 'README.txt': '' },
+  ])('should reject a zip without an asset-root index.html: %j', async (entries) => {
+    await expect(
+      unzipCustomUiAssets(buildZip(entries), 'tenant/asset', uploadFile)
+    ).rejects.toMatchObject({ code: 'request.invalid_input', status: 400 });
+    expect(uploadFile).not.toHaveBeenCalled();
+  });
+
   it('should reject an empty zip', async () => {
     await expect(
       unzipCustomUiAssets(new AdmZip().toBuffer(), 'prefix', uploadFile)
@@ -102,11 +116,11 @@ describe('unzipCustomUiAssets()', () => {
 
   it('should reject a file of 10 MB or more that declares a size of 0', async () => {
     const zip = new AdmZip();
-    zip.addFile('large.bin', Buffer.alloc(10 * 1024 * 1024));
+    zip.addFile('a-large.bin', Buffer.alloc(10 * 1024 * 1024));
+    zip.addFile('index.html', Buffer.from(''));
     const buffer = zip.toBuffer();
 
-    // Patch the declared uncompressed size to 0 in the local and central directory headers, the
-    // way a crafted zip bypasses the declared size check.
+    // A-large.bin sorts first. Patch its declared size in both headers to bypass the size check.
     for (const [signature, sizeOffset] of [
       ['PK\u0003\u0004', 22],
       ['PK\u0001\u0002', 24],
@@ -116,9 +130,14 @@ describe('unzipCustomUiAssets()', () => {
     }
 
     await expect(unzipCustomUiAssets(buffer, 'prefix', uploadFile)).rejects.toThrow(
-      'File large.bin is too large'
+      'File a-large.bin is too large'
     );
-    expect(uploadFile).not.toHaveBeenCalled();
+    // Other files may upload concurrently, but the oversized entry must never reach storage.
+    expect(uploadFile).not.toHaveBeenCalledWith(
+      expect.anything(),
+      'prefix/a-large.bin',
+      expect.anything()
+    );
   });
 
   it.each(['../evil.txt', 'root/../evil.txt', 'root\\..\\evil.txt'])(

@@ -17,7 +17,7 @@
               "schema": {
                 "properties": {
                   "file": {
-                    "description": "The zip file containing custom web assets such as HTML, CSS, and JavaScript files."
+                    "description": "The zip file containing custom web assets such as HTML, CSS, and JavaScript files. Include an index.html file at the asset root, either directly in the archive root or inside a single enclosing folder containing all non-hidden entries."
                   }
                 }
               }
@@ -29,7 +29,7 @@
             "description": "An JSON object containing the custom UI assets ID."
           },
           "400": {
-            "description": "Bad request. The request body is invalid."
+            "description": "Bad request. The request body is invalid, or a self-hosted upload is missing index.html at the asset root."
           },
           "500": {
             "description": "Failed to unzip or upload the custom UI assets to storage provider."
