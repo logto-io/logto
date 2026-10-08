@@ -4,6 +4,16 @@ import type { ReactNode } from 'react';
 import Table from '.';
 import type { Column } from './types';
 
+jest.mock('@/hooks/use-tenant-pathname', () => ({
+  __esModule: true,
+  default: () => ({ getTo: (path: string) => path }),
+}));
+
+jest.mock('@/hooks/use-theme', () => ({
+  __esModule: true,
+  default: () => 'light',
+}));
+
 jest.mock('@/ds-components/OverlayScrollbar', () => ({
   __esModule: true,
   default: ({ children }: { readonly children: ReactNode }) => <div>{children}</div>,
