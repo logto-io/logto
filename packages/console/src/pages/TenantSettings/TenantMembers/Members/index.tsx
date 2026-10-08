@@ -9,6 +9,7 @@ import ActionsButton from '@/components/ActionsButton';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import UserPreview from '@/components/ItemPreview/UserPreview';
 import { RoleOption } from '@/components/OrganizationRolesSelect';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Table from '@/ds-components/Table';
 import Tag from '@/ds-components/Tag';
@@ -75,33 +76,43 @@ function Members() {
                 dataIndex: 'actions',
                 title: null,
                 colSpan: 1,
-                render: (user: TenantMemberResponse) => (
-                  <ActionsButton
-                    deleteConfirmation="tenant_members.delete_user_confirm"
-                    fieldName="tenant_members.user"
-                    textOverrides={{
-                      edit: 'tenant_members.menu_options.edit',
-                      delete: 'tenant_members.menu_options.delete',
-                      deleteConfirmation: 'general.remove',
-                    }}
-                    onEdit={conditional(
-                      canUpdateMemberRole &&
-                        (() => {
-                          setUserToBeEdited(user);
-                        })
-                    )}
-                    onDelete={conditional(
-                      canRemoveMember &&
-                        // Cannot remove self from members list
-                        currentUser?.id !== user.id &&
-                        (async () => {
-                          await removeMember(user.id);
-                          void mutate();
-                          mutateSubscriptionQuotaAndUsages();
-                        })
-                    )}
-                  />
-                ),
+                render: (user: TenantMemberResponse) => {
+                  const canEdit =
+                    canUpdateMemberRole &&
+                    (isCloud || !user.organizationRoles.some(({ id }) => id === TenantRole.Admin));
+                  // Cannot remove self from members list.
+                  const canRemove = canRemoveMember && currentUser?.id !== user.id;
+
+                  if (!canEdit && !canRemove) {
+                    return null;
+                  }
+
+                  return (
+                    <ActionsButton
+                      deleteConfirmation="tenant_members.delete_user_confirm"
+                      fieldName="tenant_members.user"
+                      textOverrides={{
+                        edit: 'tenant_members.menu_options.edit',
+                        delete: 'tenant_members.menu_options.delete',
+                        deleteConfirmation: 'general.remove',
+                      }}
+                      onEdit={conditional(
+                        canEdit &&
+                          (() => {
+                            setUserToBeEdited(user);
+                          })
+                      )}
+                      onDelete={conditional(
+                        canRemove &&
+                          (async () => {
+                            await removeMember(user.id);
+                            void mutate();
+                            mutateSubscriptionQuotaAndUsages();
+                          })
+                      )}
+                    />
+                  );
+                },
               },
             ]
           ),

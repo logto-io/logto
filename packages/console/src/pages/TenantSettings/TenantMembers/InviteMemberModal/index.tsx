@@ -54,7 +54,7 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
   const formMethods = useForm<InviteMemberForm>({
     defaultValues: {
       emails: [],
-      role: TenantRole.Collaborator,
+      role: isCloud ? TenantRole.Collaborator : TenantRole.Admin,
     },
   });
 
@@ -135,7 +135,11 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
         title={isCloud ? 'tenant_members.invite_modal.title' : 'tenant_members.invite_members'}
         paywall={conditional(isCloud && !isPaidTenant && latestProPlanId)}
         hasAddOnTag={isCloud && isPaidTenant && hasTenantMembersReachedLimit}
-        subtitle="tenant_members.invite_modal.subtitle"
+        subtitle={
+          isCloud
+            ? 'tenant_members.invite_modal.subtitle'
+            : 'tenant_members.invite_modal.subtitle_oss'
+        }
         footer={
           conditional(
             isCloud &&
@@ -199,15 +203,17 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
               )}
             />
           </FormField>
-          <FormField title="tenant_members.roles">
-            <Controller
-              name="role"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <Select options={roleOptions} value={value} onChange={onChange} />
-              )}
-            />
-          </FormField>
+          {isCloud && (
+            <FormField title="tenant_members.roles">
+              <Controller
+                name="role"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <Select options={roleOptions} value={value} onChange={onChange} />
+                )}
+              />
+            </FormField>
+          )}
         </FormProvider>
       </ModalLayout>
     </ReactModal>

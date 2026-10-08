@@ -12,6 +12,7 @@ const tenant_members = {
   invite_modal: {
     title: '邀請加入 Logto Cloud',
     subtitle: '要邀請組織成員，他們必須接受邀請。',
+    subtitle_oss: '受邀成員將獲得此 Logto 實例的完整管理員權限。',
     to: '到',
     added_as: '被添加為角色',
     email_input_placeholder: 'johndoe@example.com',
@@ -40,7 +41,7 @@ const tenant_members = {
   assign_admin_confirm:
     '您確定要將所選用戶設為管理員嗎？授予管理員訪問權限將賦予用戶如下權限。<ul><li>更改租戶計費計劃</li><li>添加或移除協作者</li><li>刪除租戶</li></ul>',
   assign_admin_confirm_oss:
-    '您確定要將所選用戶設為管理員嗎？授予管理員訪問權限將賦予用戶如下權限。<ul><li>邀請或移除成員</li><li>更改成員角色</li><li>要求所有成員啟用 MFA</li></ul>',
+    '您確定要將所選用戶設為管理員嗎？授予管理員訪問權限將賦予用戶如下權限。<ul><li>管理所有租戶資源和設定</li><li>邀請或移除成員</li><li>要求所有成員啟用 MFA</li></ul>',
   revoke_invitation_confirm: '您確定要撤銷此邀請嗎？',
   delete_invitation_confirm: '您確定要刪除此邀請記錄嗎？',
   messages: {

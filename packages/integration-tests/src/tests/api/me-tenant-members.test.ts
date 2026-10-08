@@ -152,7 +152,7 @@ devFeatureTest.describe('me tenant members and invitations', () => {
     await expectRejects(
       ky.post(meUrl('tenant/invitations'), {
         headers,
-        json: { invitee: inviteeEmail, roleName: TenantRole.Collaborator },
+        json: { invitee: inviteeEmail, roleName: TenantRole.Admin },
       }),
       { code: 'auth.expected_role_not_found', status: 403 }
     );
@@ -163,7 +163,7 @@ devFeatureTest.describe('me tenant members and invitations', () => {
     await expectRejects(
       ky.put(meUrl(`tenant/members/${admin.user.id}/roles`), {
         headers,
-        json: { roleName: TenantRole.Collaborator },
+        json: { roleName: TenantRole.Admin },
       }),
       { code: 'auth.expected_role_not_found', status: 403 }
     );
@@ -183,13 +183,13 @@ devFeatureTest.describe('me tenant members and invitations', () => {
     await expectRejects(
       ky.post(meUrl('tenant/invitations'), {
         headers: getMember(TenantRole.Admin).headers,
-        json: { invitee: inviteeEmail, roleName: TenantRole.Collaborator },
+        json: { invitee: inviteeEmail, roleName: TenantRole.Admin },
       }),
       { code: 'subscription.limit_exceeded', status: 403 }
     );
   });
 
-  it('should invite, let the invitee sign up and accept, list them with the role, and remove them', async () => {
+  it('should invite an admin by default, let them sign up and accept, and remove their access', async () => {
     await installLicense(true);
     const { headers } = getMember(TenantRole.Admin);
 
@@ -197,7 +197,7 @@ devFeatureTest.describe('me tenant members and invitations', () => {
     const [invitation] = await ky
       .post(meUrl('tenant/invitations'), {
         headers,
-        json: { invitee: inviteeEmail, roleName: TenantRole.Collaborator },
+        json: { invitee: inviteeEmail },
       })
       .json<Array<{ id: string }>>();
     assert(invitation, new Error('No invitation is created.'));
@@ -237,10 +237,15 @@ devFeatureTest.describe('me tenant members and invitations', () => {
     // Listed with the invited role, and with Console access to the default tenant.
     const listed = await ky.get(meUrl('tenant/members'), { headers }).json<Member[]>();
     expect(listed.find(({ id }) => id === userId)?.organizationRoles).toEqual([
-      expect.objectContaining({ id: TenantRole.Collaborator }),
+      expect.objectContaining({ id: TenantRole.Admin }),
     ]);
     const userRoles = await authedAdminTenantApi.get(`users/${userId}/roles`).json<Role[]>();
     expect(userRoles.map(({ name }) => name)).toContain(defaultManagementApiAdminName);
+
+    // Invited admins can manage invitations, just like the original admin.
+    await expect(
+      ky.get(meUrl('tenant/invitations'), { headers: inviteeHeaders })
+    ).resolves.toHaveProperty('status', 200);
 
     // Remove: the member leaves the tenant, and loses Console access with it.
     await ky.delete(meUrl(`tenant/members/${userId}`), { headers });
@@ -259,7 +264,7 @@ devFeatureTest.describe('me tenant members and invitations', () => {
     const [invitation] = await ky
       .post(meUrl('tenant/invitations'), {
         headers,
-        json: { invitee: email, roleName: TenantRole.Collaborator },
+        json: { invitee: email, roleName: TenantRole.Admin },
       })
       .json<Array<{ id: string }>>();
     assert(invitation, new Error('No invitation is created.'));
@@ -309,13 +314,13 @@ devFeatureTest.describe('me tenant members and invitations', () => {
 
     await ky.post(meUrl('tenant/invitations'), {
       headers,
-      json: { invitee: pendingEmail, roleName: TenantRole.Collaborator },
+      json: { invitee: pendingEmail, roleName: TenantRole.Admin },
     });
 
     await expectRejects(
       ky.post(meUrl('tenant/invitations'), {
         headers,
-        json: { invitee: [freshEmail, pendingEmail], roleName: TenantRole.Collaborator },
+        json: { invitee: [freshEmail, pendingEmail], roleName: TenantRole.Admin },
       }),
       { code: 'request.invalid_input', status: 422 }
     );
@@ -334,7 +339,7 @@ devFeatureTest.describe('me tenant members and invitations', () => {
     const [invitation] = await ky
       .post(meUrl('tenant/invitations'), {
         headers,
-        json: { invitee: email, roleName: TenantRole.Collaborator },
+        json: { invitee: email, roleName: TenantRole.Admin },
       })
       .json<Array<{ id: string }>>();
     assert(invitation, new Error('No invitation is created.'));
@@ -372,13 +377,67 @@ devFeatureTest.describe('me tenant members and invitations', () => {
     }
   });
 
-  it('should keep one admin when two admins demote each other at once', async () => {
+  it('should preserve a legacy invitation role until an admin explicitly promotes the member', async () => {
+    await installLicense(true);
+    const { headers, user } = getMember(TenantRole.Admin);
+    const email = `${generateUsername()}@example.com`;
+
+    // Seed a pending invitation as stored before invitations became admin-only.
+    const invitation = await authedAdminTenantApi
+      .post('organization-invitations', {
+        json: {
+          inviterId: user.id,
+          invitee: email,
+          organizationId: tenantOrganizationId,
+          organizationRoleIds: [getTenantRole(TenantRole.Collaborator).id],
+          expiresAt: Date.now() + 86_400_000,
+          messagePayload: false,
+        },
+      })
+      .json<{ id: string }>();
+
+    await ky.post(meUrl(`tenant/invitations/${invitation.id}/message`), { headers });
+    const { payload } = await readConnectorMessage('Email');
+    assert(typeof payload.link === 'string', new Error('The invitation email has no link.'));
+    const { client, userId } = await signUpWithInvitationLink(payload.link, email);
+    // eslint-disable-next-line @silverhand/fp/no-mutating-methods -- Track the fixture user for cleanup.
+    createdUserIds.push(userId);
+    const inviteeHeaders = { authorization: `Bearer ${await client.getAccessToken(resourceMe)}` };
+
+    await ky.patch(meUrl(`invitations/${invitation.id}/status`), {
+      headers: inviteeHeaders,
+      json: { status: OrganizationInvitationStatus.Accepted },
+    });
+    const listed = await ky.get(meUrl('tenant/members'), { headers }).json<Member[]>();
+    expect(listed.find(({ id }) => id === userId)?.organizationRoles).toEqual([
+      expect.objectContaining({ id: TenantRole.Collaborator }),
+    ]);
+    await expectRejects(ky.get(meUrl('tenant/invitations'), { headers: inviteeHeaders }), {
+      code: 'auth.expected_role_not_found',
+      status: 403,
+    });
+
+    await ky.put(meUrl(`tenant/members/${userId}/roles`), {
+      headers,
+      json: { roleName: TenantRole.Admin },
+    });
+    const promoted = await ky.get(meUrl('tenant/members'), { headers }).json<Member[]>();
+    expect(promoted.find(({ id }) => id === userId)?.organizationRoles).toEqual([
+      expect.objectContaining({ id: TenantRole.Admin }),
+    ]);
+    await expect(
+      ky.get(meUrl('tenant/invitations'), { headers: inviteeHeaders })
+    ).resolves.toHaveProperty('status', 200);
+    await ky.delete(meUrl(`tenant/members/${userId}`), { headers });
+  });
+
+  it('should keep one admin when two admins leave at once', async () => {
     const first = getMember(TenantRole.Admin);
     const second = await createTenantMember(TenantRole.Admin);
     // eslint-disable-next-line @silverhand/fp/no-mutating-methods
     createdUserIds.push(second.user.id);
 
-    // Only these two admins, so that at most one of the demotions may pass.
+    // Only these two admins, so that at most one removal may pass.
     const listed = await ky
       .get(meUrl('tenant/members'), { headers: first.headers })
       .json<Member[]>();
@@ -389,30 +448,38 @@ devFeatureTest.describe('me tenant members and invitations', () => {
     );
     await Promise.all(
       otherAdmins.map(async ({ id }) =>
-        ky.put(meUrl(`tenant/members/${id}/roles`), {
-          headers: first.headers,
-          json: { roleName: TenantRole.Collaborator },
+        // Adjust the fixture directly; the Console API no longer permits demotion.
+        authedAdminTenantApi.put(`organizations/${tenantOrganizationId}/users/${id}/roles`, {
+          json: { organizationRoleIds: [getTenantRole(TenantRole.Collaborator).id] },
         })
       )
     );
 
-    const results = await Promise.allSettled([
-      ky.put(meUrl(`tenant/members/${second.user.id}/roles`), {
-        headers: first.headers,
-        json: { roleName: TenantRole.Collaborator },
-      }),
-      ky.put(meUrl(`tenant/members/${first.user.id}/roles`), {
-        headers: second.headers,
-        json: { roleName: TenantRole.Collaborator },
-      }),
-    ]);
+    try {
+      const results = await Promise.allSettled([
+        ky.delete(meUrl(`tenant/members/${first.user.id}`), {
+          headers: first.headers,
+        }),
+        ky.delete(meUrl(`tenant/members/${second.user.id}`), {
+          headers: second.headers,
+        }),
+      ]);
 
-    expect(results.filter(({ status }) => status === 'fulfilled')).toHaveLength(1);
-    const after = await authedAdminTenantApi
-      .get(`organizations/${tenantOrganizationId}/users`, {
-        searchParams: { organizationRoleId: getTenantRole(TenantRole.Admin).id },
-      })
-      .json<Array<{ id: string }>>();
-    expect(after.length).toBeGreaterThan(0);
+      expect(results.filter(({ status }) => status === 'fulfilled')).toHaveLength(1);
+      const after = await authedAdminTenantApi
+        .get(`organizations/${tenantOrganizationId}/users`, {
+          searchParams: { organizationRoleId: getTenantRole(TenantRole.Admin).id },
+        })
+        .json<Array<{ id: string }>>();
+      expect(after).toHaveLength(1);
+    } finally {
+      await Promise.all(
+        otherAdmins.map(async ({ id, organizationRoles }) =>
+          authedAdminTenantApi.put(`organizations/${tenantOrganizationId}/users/${id}/roles`, {
+            json: { organizationRoleIds: organizationRoles.map(({ id }) => id) },
+          })
+        )
+      );
+    }
   });
 });

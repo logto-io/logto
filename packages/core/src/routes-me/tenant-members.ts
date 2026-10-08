@@ -37,8 +37,9 @@ const memberPageSize = 100;
  * The members of a self-hosted deployment's tenant, managed by the members themselves.
  *
  * Mirrors the tenant member routes of Logto Cloud, so Console can manage the members of either
- * with the same pages. Every member may list the members; only admins may change them, and the
- * last admin can be neither removed nor demoted, so the tenant always keeps someone who can.
+ * with the same pages. New members are admins; existing collaborators keep their roles until an
+ * admin promotes them. Every member may list the members; only admins may change them, and the
+ * last admin cannot be removed, so the tenant always keeps someone who can.
  *
  * @see {@link tenantRoutes} for why these routes live on `/me`.
  */
@@ -129,12 +130,12 @@ export default function tenantMemberRoutes<T extends AuthedMeRouter>(
     }
   );
 
-  /** Give a member exactly one tenant role. */
+  /** Promote an existing collaborator to admin without silently elevating existing memberships. */
   router.put(
     '/tenant/members/:userId/roles',
     koaGuard({
       params: z.object({ userId: z.string().min(1) }),
-      body: z.object({ roleName: z.nativeEnum(TenantRole) }),
+      body: z.object({ roleName: z.literal(TenantRole.Admin) }),
       status: [204, 403, 404, 422, 501],
     }),
     async (ctx, next) => {
@@ -155,10 +156,6 @@ export default function tenantMemberRoutes<T extends AuthedMeRouter>(
           }),
           new RequestError({ code: 'entity.not_found', status: 404 })
         );
-
-        if (roleName !== TenantRole.Admin) {
-          await membership.assertNotLastAdmin(userId, 'change the role of');
-        }
 
         // Within the membership transaction: `usersRoles.replace()` opens a nested transaction,
         // i.e. a savepoint, on it.

@@ -12,6 +12,7 @@ const tenant_members = {
   invite_modal: {
     title: "Logto Cloud'e Kişileri Davet Et",
     subtitle: 'Bir kuruluşa üye davet etmek için daveti kabul etmeleri gerekmektedir.',
+    subtitle_oss: 'Davet edilen üyeler bu Logto örneğine tam yönetici erişimi elde eder.',
     to: 'Kime',
     added_as: 'Şu rollerle eklendi',
     email_input_placeholder: 'johndoe@example.com',
@@ -41,7 +42,7 @@ const tenant_members = {
   assign_admin_confirm:
     'Seçilen kullanıcı(ları) yönetici yapmak istediğinizden emin misiniz? Yönetici erişimi vermek aşağıdaki izinleri verecektir.<ul><li>Kiracı fatura planını değiştirme</li><li>İşbirlikçileri ekleme veya kaldırma</li><li>Kiracıyı silme</li></ul>',
   assign_admin_confirm_oss:
-    'Seçilen kullanıcı(ları) yönetici yapmak istediğinizden emin misiniz? Yönetici erişimi vermek aşağıdaki izinleri verecektir.<ul><li>Üye davet etme veya kaldırma</li><li>Üye rollerini değiştirme</li><li>Tüm üyeler için MFA zorunlu kılma</li></ul>',
+    'Seçilen kullanıcı(ları) yönetici yapmak istediğinizden emin misiniz? Yönetici erişimi vermek aşağıdaki izinleri verecektir.<ul><li>Tüm kiracı kaynaklarını ve ayarlarını yönetme</li><li>Üye davet etme veya kaldırma</li><li>Tüm üyeler için MFA zorunlu kılma</li></ul>',
   revoke_invitation_confirm: 'Bu daveti iptal etmek istediğinizden emin misiniz?',
   delete_invitation_confirm: 'Bu davet kaydını silmek istediğinizden emin misiniz?',
   messages: {

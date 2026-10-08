@@ -28,7 +28,7 @@ function EditMemberModal({ user, isOpen, onClose }: Props) {
   const { mutate: mutateUserTenantScopes } = useCurrentTenantScopes();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [role, setRole] = useState(TenantRole.Collaborator);
+  const [role, setRole] = useState(isCloud ? TenantRole.Collaborator : TenantRole.Admin);
   const { show } = useConfirmModal();
   const { updateMemberRole } = useTenantMembersApi();
 
@@ -88,15 +88,19 @@ function EditMemberModal({ user, isOpen, onClose }: Props) {
         onClose={onClose}
       >
         <FormField title="tenant_members.roles">
-          <Select
-            options={roleOptions}
-            value={role}
-            onChange={(value) => {
-              if (value) {
-                setRole(value);
-              }
-            }}
-          />
+          {isCloud ? (
+            <Select
+              options={roleOptions}
+              value={role}
+              onChange={(value) => {
+                if (value) {
+                  setRole(value);
+                }
+              }}
+            />
+          ) : (
+            t('admin')
+          )}
         </FormField>
       </ModalLayout>
     </ReactModal>

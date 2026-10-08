@@ -185,7 +185,7 @@ describe('me tenant member routes', () => {
   });
 
   describe('PUT /tenant/members/:userId/roles', () => {
-    it('should give a member exactly the new role', async () => {
+    it('should promote an existing collaborator to admin', async () => {
       const response = await request
         .put('/tenant/members/collaborator/roles')
         .send({ roleName: TenantRole.Admin });
@@ -207,21 +207,20 @@ describe('me tenant member routes', () => {
       expect(replaceRoles).not.toHaveBeenCalled();
     });
 
-    it('should refuse to demote the last admin', async () => {
-      memberRoles.delete('other-admin');
-
+    it('should refuse to demote an admin even when another admin remains', async () => {
       const response = await request
         .put(`/tenant/members/${callerId}/roles`)
         .send({ roleName: TenantRole.Collaborator });
 
-      expect(response.status).toBe(422);
+      expect(response.status).toBe(400);
+      expect(response.body).toMatchObject({ code: 'guard.invalid_input' });
       expect(replaceRoles).not.toHaveBeenCalled();
     });
 
     it('should reject a user outside the tenant', async () => {
       const response = await request
         .put('/tenant/members/stranger/roles')
-        .send({ roleName: TenantRole.Collaborator });
+        .send({ roleName: TenantRole.Admin });
 
       expect(response.status).toBe(404);
       expect(replaceRoles).not.toHaveBeenCalled();

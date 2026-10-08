@@ -12,6 +12,8 @@ const tenant_members = {
   invite_modal: {
     title: 'Inviter des personnes à Logto Cloud',
     subtitle: "Pour inviter des membres à une organisation, ils doivent accepter l'invitation.",
+    subtitle_oss:
+      'Les membres invités disposent de tous les droits administrateur sur cette instance Logto.',
     to: 'À',
     added_as: 'Ajouté en tant que rôles',
     email_input_placeholder: 'johndoe@example.com',
@@ -41,7 +43,7 @@ const tenant_members = {
   assign_admin_confirm:
     "Êtes-vous sûr de vouloir rendre le(s) utilisateur(s) sélectionné(s) administrateur? Accorder l'accès administrateur donnera au(x) utilisateur(s) les autorisations suivantes.<ul><li>Modifier le plan de facturation du locataire</li><li>Ajouter ou supprimer des collaborateurs</li><li>Supprimer le locataire</li></ul>",
   assign_admin_confirm_oss:
-    "Êtes-vous sûr de vouloir rendre le(s) utilisateur(s) sélectionné(s) administrateur? Accorder l'accès administrateur donnera au(x) utilisateur(s) les autorisations suivantes.<ul><li>Inviter ou retirer des membres</li><li>Modifier les rôles des membres</li><li>Exiger la MFA pour tous les membres</li></ul>",
+    "Êtes-vous sûr de vouloir rendre le(s) utilisateur(s) sélectionné(s) administrateur? Accorder l'accès administrateur donnera au(x) utilisateur(s) les autorisations suivantes.<ul><li>Gérer toutes les ressources et tous les paramètres du locataire</li><li>Inviter ou retirer des membres</li><li>Exiger la MFA pour tous les membres</li></ul>",
   revoke_invitation_confirm: 'Êtes-vous sûr de vouloir révoquer cette invitation?',
   delete_invitation_confirm: "Êtes-vous sûr de vouloir supprimer cet enregistrement d'invitation?",
   messages: {

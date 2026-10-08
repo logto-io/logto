@@ -12,6 +12,7 @@ const tenant_members = {
   invite_modal: {
     title: 'Logto Cloud로 사람 초대',
     subtitle: '조직에 멤버를 초대하려면 초대를 수락해야 합니다.',
+    subtitle_oss: '초대된 멤버는 이 Logto 인스턴스에 대한 전체 관리자 권한을 받습니다.',
     to: '받는 사람',
     added_as: '역할로 추가됨',
     email_input_placeholder: 'johndoe@example.com',
@@ -41,7 +42,7 @@ const tenant_members = {
   assign_admin_confirm:
     '선택한 사용자를 관리자로 지정하시겠습니까? 관리자 액세스 부여시 다음 권한이 부여됩니다.<ul><li>테넌트 요금제 변경</li><li>협력자 추가 또는 제거</li><li>테넌트 삭제</li></ul>',
   assign_admin_confirm_oss:
-    '선택한 사용자를 관리자로 지정하시겠습니까? 관리자 액세스 부여시 다음 권한이 부여됩니다.<ul><li>멤버 초대 또는 제거</li><li>멤버 역할 변경</li><li>모든 멤버에게 MFA 필수화</li></ul>',
+    '선택한 사용자를 관리자로 지정하시겠습니까? 관리자 액세스 부여시 다음 권한이 부여됩니다.<ul><li>모든 테넌트 리소스 및 설정 관리</li><li>멤버 초대 또는 제거</li><li>모든 멤버에게 MFA 필수화</li></ul>',
   revoke_invitation_confirm: '이 초대를 철회하시겠습니까?',
   delete_invitation_confirm: '이 초대 기록을 삭제하시겠습니까?',
   messages: {

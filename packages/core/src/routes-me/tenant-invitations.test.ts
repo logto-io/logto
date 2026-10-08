@@ -196,40 +196,54 @@ describe('me tenant invitation routes', () => {
   });
 
   describe('POST /tenant/invitations', () => {
-    it('should invite each email with the role, and email a sign-in link through the default tenant', async () => {
+    it.each([undefined, TenantRole.Admin])(
+      'should invite admins and send sign-in links with roleName %s',
+      async (roleName) => {
+        const response = await request
+          .post('/tenant/invitations')
+          .send({ invitee: ['Baz@example.com', 'bar@example.com'], roleName });
+
+        expect(response.status).toBe(201);
+        expect(response.body).toHaveLength(2);
+        expect(insertInvitation).toHaveBeenCalledWith(
+          expect.objectContaining({
+            invitee: 'baz@example.com',
+            inviterId: callerId,
+            organizationId: tenantOrganizationId,
+            organizationRoleIds: [TenantRole.Admin],
+          }),
+          false
+        );
+        expect(withDefaultTenant).toHaveBeenCalledWith(expect.any(Function));
+        // Through the invitation library of the default tenant, which applies the send rate guard.
+        expect(sendEmail).toHaveBeenCalledTimes(2);
+
+        const [to, payload] = sendEmail.mock.calls[0] as [string, { link: string }];
+        const [firstToken] = insertOneTimeToken.mock.calls[0] as [
+          { id: string; token: string; email: string },
+        ];
+        const { id, token, email } = firstToken;
+        const link = new URL(payload.link);
+
+        expect(to).toBe('baz@example.com');
+        expect(link.pathname).toBe('/console/accept/new-baz');
+        expect(link.searchParams.get('one_time_token')).toBe(token);
+        expect(link.searchParams.get('email')).toBe('baz@example.com');
+        expect(email).toBe('baz@example.com');
+        // Links sent earlier to the invitee stop working once the new one is out.
+        expect(revokeActiveOneTimeTokensByEmail).toHaveBeenCalledWith('baz@example.com', id);
+      }
+    );
+
+    it('should reject an explicit collaborator role without creating or emailing an invitation', async () => {
       const response = await request
         .post('/tenant/invitations')
-        .send({ invitee: ['Baz@example.com', 'bar@example.com'], roleName: TenantRole.Admin });
+        .send({ invitee: 'baz@example.com', roleName: TenantRole.Collaborator });
 
-      expect(response.status).toBe(201);
-      expect(response.body).toHaveLength(2);
-      expect(insertInvitation).toHaveBeenCalledWith(
-        expect.objectContaining({
-          invitee: 'baz@example.com',
-          inviterId: callerId,
-          organizationId: tenantOrganizationId,
-          organizationRoleIds: [TenantRole.Admin],
-        }),
-        false
-      );
-      expect(withDefaultTenant).toHaveBeenCalledWith(expect.any(Function));
-      // Through the invitation library of the default tenant, which applies the send rate guard.
-      expect(sendEmail).toHaveBeenCalledTimes(2);
-
-      const [to, payload] = sendEmail.mock.calls[0] as [string, { link: string }];
-      const [firstToken] = insertOneTimeToken.mock.calls[0] as [
-        { id: string; token: string; email: string },
-      ];
-      const { id, token, email } = firstToken;
-      const link = new URL(payload.link);
-
-      expect(to).toBe('baz@example.com');
-      expect(link.pathname).toBe('/console/accept/new-baz');
-      expect(link.searchParams.get('one_time_token')).toBe(token);
-      expect(link.searchParams.get('email')).toBe('baz@example.com');
-      expect(email).toBe('baz@example.com');
-      // Links sent earlier to the invitee stop working once the new one is out.
-      expect(revokeActiveOneTimeTokensByEmail).toHaveBeenCalledWith('baz@example.com', id);
+      expect(response.status).toBe(400);
+      expect(response.body).toMatchObject({ code: 'guard.invalid_input' });
+      expect(insertInvitation).not.toHaveBeenCalled();
+      expect(sendEmail).not.toHaveBeenCalled();
     });
 
     it('should create nothing when any invitee already has a pending invitation', async () => {
@@ -260,7 +274,7 @@ describe('me tenant invitation routes', () => {
 
       const response = await request
         .post('/tenant/invitations')
-        .send({ invitee: 'foo@example.com', roleName: TenantRole.Collaborator });
+        .send({ invitee: 'foo@example.com', roleName: TenantRole.Admin });
 
       expect(response.status).toBe(403);
       expect(response.body).toMatchObject({ code: 'auth.expected_role_not_found' });
@@ -272,7 +286,7 @@ describe('me tenant invitation routes', () => {
 
       const response = await request
         .post('/tenant/invitations')
-        .send({ invitee: 'foo@example.com', roleName: TenantRole.Collaborator });
+        .send({ invitee: 'foo@example.com', roleName: TenantRole.Admin });
 
       expect(response.status).toBe(403);
       expect(response.body).toMatchObject({ code: 'subscription.limit_exceeded' });
@@ -286,7 +300,7 @@ describe('me tenant invitation routes', () => {
 
       const response = await request
         .post('/tenant/invitations')
-        .send({ invitee: 'baz@example.com', roleName: TenantRole.Collaborator });
+        .send({ invitee: 'baz@example.com', roleName: TenantRole.Admin });
 
       expect(response.status).toBe(429);
       expect(deleteInvitationById).toHaveBeenCalledWith('new-baz');
@@ -301,7 +315,7 @@ describe('me tenant invitation routes', () => {
 
     await request
       .post('/tenant/invitations')
-      .send({ invitee: 'alice@example.com', roleName: TenantRole.Collaborator });
+      .send({ invitee: 'alice@example.com', roleName: TenantRole.Admin });
 
     const [issuedToken] = insertOneTimeToken.mock.calls[0] ?? [];
     const [to, payload] = sendEmail.mock.calls[0] as [string, { link: string }];

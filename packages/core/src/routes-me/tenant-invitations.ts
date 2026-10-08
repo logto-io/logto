@@ -200,7 +200,7 @@ export default function tenantInvitationRoutes<T extends AuthedMeRouter>(
   );
 
   /**
-   * Invite people to the tenant by email, with one tenant role. Each invitee gets their own
+   * Invite people to the tenant by email as admins. Each invitee gets their own
    * invitation and email.
    *
    * Every invitee is checked before anything is created, so an existing member or a pending
@@ -212,7 +212,8 @@ export default function tenantInvitationRoutes<T extends AuthedMeRouter>(
     koaGuard({
       body: z.object({
         invitee: z.string().email().or(z.string().email().array().nonempty()),
-        roleName: z.nativeEnum(TenantRole),
+        // Reject an explicitly requested lesser role instead of silently granting admin access.
+        roleName: z.literal(TenantRole.Admin).default(TenantRole.Admin),
       }),
       response: organizationInvitationEntityGuard.array(),
       status: [201, 403, 422, 429, 501],
