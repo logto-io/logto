@@ -131,7 +131,10 @@ const warnUnmatchedConsoleOrigin = (url: URL, adminUrlSet: UrlSet) => {
   hasWarnedUnmatchedConsoleOrigin = true;
 
   const configured = process.env.ADMIN_ENDPOINT
-    ? adminUrlSet.origins.join(', ')
+    ? adminUrlSet
+        .deduplicated()
+        .map(({ href }) => href)
+        .join(', ')
     : 'ADMIN_ENDPOINT is not set';
 
   devConsole.warn(

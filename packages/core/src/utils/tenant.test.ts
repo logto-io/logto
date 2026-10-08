@@ -258,7 +258,7 @@ describe('getTenantId()', () => {
 
     it('warns for nested console paths and names a mismatched ADMIN_ENDPOINT', async () => {
       useProductionEnv({
-        ADMIN_ENDPOINT: 'https://internal.example.com',
+        ADMIN_ENDPOINT: 'https://internal.example.com/app',
         ADMIN_DISABLE_LOCALHOST: '1',
       });
       const url = new URL('https://alb.example.com/console/applications');
@@ -266,7 +266,9 @@ describe('getTenantId()', () => {
       await expect(getTenantId(url)).resolves.toEqual([defaultTenantId, false]);
       expect(warnSpy).toHaveBeenCalledTimes(1);
       expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('https://alb.example.com'));
-      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('https://internal.example.com'));
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('https://internal.example.com/app')
+      );
       expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('ADMIN_ENDPOINT'));
     });
 
