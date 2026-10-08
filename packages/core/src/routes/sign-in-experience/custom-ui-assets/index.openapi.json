@@ -31,6 +31,9 @@
           "400": {
             "description": "Bad request. The request body is invalid."
           },
+          "403": {
+            "description": "Bring your UI is not available under the current entitlements, including when the self-hosted license grace period has ended."
+          },
           "500": {
             "description": "Failed to unzip or upload the custom UI assets to storage provider."
           }
