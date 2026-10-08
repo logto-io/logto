@@ -1,12 +1,9 @@
 @use '@/scss/underscore' as _;
 
 .value {
-  font: var(--font-body-2);
   color: var(--color-text-secondary);
 }
 
-/* Matches the gap `FormField` puts between the fields above, so the action is not closer to the
-   last field than the fields are to each other. */
 .replace {
   display: flex;
   flex-direction: column;

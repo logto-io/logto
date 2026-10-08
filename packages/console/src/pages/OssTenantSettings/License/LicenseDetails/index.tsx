@@ -6,8 +6,8 @@ import FormCard from '@/components/FormCard';
 import SkuName from '@/components/SkuName';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
-import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
+import Table from '@/ds-components/Table';
 import Tag from '@/ds-components/Tag';
 import { type License } from '@/types/license';
 
@@ -42,6 +42,46 @@ function LicenseDetails({ license }: Props) {
   const formattedExpiresAt = dateFormatter.format(new Date(license.expiresAt));
   const formattedGraceEndsAt = dateFormatter.format(new Date(license.graceEndsAt));
   const formattedLastRefreshedAt = dateTimeFormatter.format(new Date(license.lastRefreshedAt));
+  const rows = [
+    {
+      key: 'plan',
+      label: t('tenants.license.plan_field'),
+      value: <SkuName skuId={license.plan} />,
+    },
+    {
+      key: 'environment',
+      label: t('tenants.license.environment_field'),
+      value: (
+        <Tag
+          type="state"
+          status={license.env === LicenseEnv.Production ? 'success' : 'info'}
+          size="medium"
+        >
+          <DynamicT forKey={licenseEnvPhraseKeys[license.env]} />
+        </Tag>
+      ),
+    },
+    {
+      key: 'expiresAt',
+      label: t('tenants.license.expires_at_field'),
+      value: formattedExpiresAt,
+    },
+    {
+      key: 'installedAt',
+      label: t('tenants.license.installed_at_field'),
+      value: dateFormatter.format(new Date(license.installedAt)),
+    },
+    {
+      key: 'lastRefreshedAt',
+      label: t('tenants.license.last_refreshed_at_field'),
+      value: formattedLastRefreshedAt,
+    },
+    {
+      key: 'graceEndsAt',
+      label: t('tenants.license.grace_ends_at_field'),
+      value: formattedGraceEndsAt,
+    },
+  ];
 
   return (
     <>
@@ -77,34 +117,25 @@ function LicenseDetails({ license }: Props) {
         title="tenants.license.details_title"
         description="tenants.license.details_description"
       >
-        <FormField title="tenants.license.plan_field">
-          <div className={styles.value}>
-            <SkuName skuId={license.plan} />
-          </div>
-        </FormField>
-        <FormField title="tenants.license.environment_field">
-          <div>
-            <Tag
-              type="state"
-              status={license.env === LicenseEnv.Production ? 'success' : 'info'}
-              size="medium"
-            >
-              <DynamicT forKey={licenseEnvPhraseKeys[license.env]} />
-            </Tag>
-          </div>
-        </FormField>
-        <FormField title="tenants.license.expires_at_field">
-          <div className={styles.value}>{formattedExpiresAt}</div>
-        </FormField>
-        <FormField title="tenants.license.installed_at_field">
-          <div className={styles.value}>{dateFormatter.format(new Date(license.installedAt))}</div>
-        </FormField>
-        <FormField title="tenants.license.last_refreshed_at_field">
-          <div className={styles.value}>{formattedLastRefreshedAt}</div>
-        </FormField>
-        <FormField title="tenants.license.grace_ends_at_field">
-          <div className={styles.value}>{formattedGraceEndsAt}</div>
-        </FormField>
+        <Table
+          hasBorder
+          isRowHoverEffectDisabled
+          rowGroups={[{ key: 'license', data: rows }]}
+          rowIndexKey="key"
+          columns={[
+            {
+              title: null,
+              dataIndex: 'label',
+              render: ({ label }) => label,
+            },
+            {
+              title: null,
+              dataIndex: 'value',
+              className: styles.value,
+              render: ({ value }) => value,
+            },
+          ]}
+        />
         <div className={styles.replace}>
           {isReplacing ? (
             <InstallForm
