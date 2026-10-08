@@ -1,7 +1,4 @@
-import { useContext } from 'react';
-
 import { isDevFeaturesEnabled } from '@/consts/env';
-import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import TenantMembers from '@/pages/TenantSettings/TenantMembers';
 
 import { shouldShowOssTenantMembersPage } from '../utils';
@@ -9,17 +6,14 @@ import { shouldShowOssTenantMembersPage } from '../utils';
 import MembersUpsell from './MembersUpsell';
 
 /**
- * The members and invitations of a self-hosted deployment, the same pages Cloud tenants use, when
- * the license grants Console collaboration; the self-hosted plans upsell otherwise.
+ * Keep existing members and invitations manageable after a license lapses. Only adding members
+ * requires the Console collaboration entitlement.
  */
 function Members() {
-  const { license } = useContext(SubscriptionDataContext);
-
   if (
     !shouldShowOssTenantMembersPage({
       isCloud: false,
       isDevFeaturesEnabled,
-      isConsoleCollaborationEntitled: Boolean(license?.quota.consoleCollaboration),
     })
   ) {
     return <MembersUpsell />;

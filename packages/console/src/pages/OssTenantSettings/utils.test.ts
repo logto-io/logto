@@ -76,17 +76,10 @@ describe('shouldShowOssTenantMembersPage', () => {
   const options = {
     isCloud: false,
     isDevFeaturesEnabled: true,
-    isConsoleCollaborationEntitled: true,
   };
 
-  it('shows the members when the license grants Console collaboration', () => {
+  it('keeps existing members manageable independently of the license entitlement', () => {
     expect(shouldShowOssTenantMembersPage(options)).toBe(true);
-  });
-
-  it('keeps the upsell without the entitlement', () => {
-    expect(
-      shouldShowOssTenantMembersPage({ ...options, isConsoleCollaborationEntitled: false })
-    ).toBe(false);
   });
 
   it('keeps the upsell on cloud and while the self-hosted plans are unreleased', () => {
