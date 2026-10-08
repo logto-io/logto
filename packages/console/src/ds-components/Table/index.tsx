@@ -189,11 +189,20 @@ function Table<
                           )}
                           onClick={onClick}
                         >
-                          {columns.map(({ dataIndex, colSpan, className, render }) => (
-                            <td key={dataIndex} colSpan={colSpan} className={className}>
-                              {render(row, rowIndex)}
-                            </td>
-                          ))}
+                          {columns.map(({ dataIndex, colSpan, className, render, isRowHeader }) => {
+                            const Cell = isRowHeader ? 'th' : 'td';
+
+                            return (
+                              <Cell
+                                key={dataIndex}
+                                colSpan={colSpan}
+                                className={className}
+                                scope={isRowHeader ? 'row' : undefined}
+                              >
+                                {render(row, rowIndex)}
+                              </Cell>
+                            );
+                          })}
                         </tr>
                       );
                     })}

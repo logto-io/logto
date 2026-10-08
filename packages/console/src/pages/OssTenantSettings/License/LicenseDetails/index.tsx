@@ -126,6 +126,7 @@ function LicenseDetails({ license }: Props) {
             {
               title: null,
               dataIndex: 'label',
+              isRowHeader: true,
               render: ({ label }) => label,
             },
             {
