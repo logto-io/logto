@@ -61,7 +61,7 @@ export const getTenantOrganizationCreateData = (tenantId: string): Readonly<Crea
 export enum TenantScope {
   /** Read the tenant data. */
   ReadData = 'read:data',
-  /** Write the tenant data, including creating and updating the tenant. */
+  /** Write the tenant data. */
   WriteData = 'write:data',
   /** Delete data of the tenant. */
   DeleteData = 'delete:data',
@@ -107,7 +107,7 @@ export const getTenantScope = (scope: TenantScope): Readonly<OrganizationScope> 
 
 const tenantScopeDescriptions: Readonly<Record<TenantScope, string>> = Object.freeze({
   [TenantScope.ReadData]: 'Read the tenant data.',
-  [TenantScope.WriteData]: 'Write the tenant data, including creating and updating the tenant.',
+  [TenantScope.WriteData]: 'Write the tenant data.',
   [TenantScope.DeleteData]: 'Delete data of the tenant.',
   [TenantScope.ReadMember]: 'Read members of the tenant.',
   [TenantScope.InviteMember]: 'Invite members to the tenant.',
@@ -127,12 +127,16 @@ export enum TenantRole {
   Admin = 'admin',
   /** Collaborator of the tenant, who has permissions to operate the tenant data, but not the tenant settings. */
   Collaborator = 'collaborator',
+  /** Viewer of the tenant, who can read the tenant data and members but cannot change anything. */
+  Viewer = 'viewer',
 }
 
 const tenantRoleDescriptions: Readonly<Record<TenantRole, string>> = Object.freeze({
   [TenantRole.Admin]: 'Admin of the tenant, who has all permissions.',
   [TenantRole.Collaborator]:
     'Collaborator of the tenant, who has permissions to operate the tenant data, but not the tenant settings.',
+  [TenantRole.Viewer]:
+    'Viewer of the tenant, who can read the tenant data and members but cannot change anything.',
 });
 
 /**
@@ -176,4 +180,5 @@ export const tenantRoleScopes: Readonly<Record<TenantRole, Readonly<TenantScope[
       TenantScope.DeleteData,
       TenantScope.ReadMember,
     ],
+    [TenantRole.Viewer]: [TenantScope.ReadData, TenantScope.ReadMember],
   });
