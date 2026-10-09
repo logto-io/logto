@@ -15,6 +15,7 @@ import {
   InteractionEvent,
   LogtoAcr,
   LogtoActionKey,
+  MissingProfile,
   type JwtCustomizerUserContext,
   MfaFactor,
   MfaPolicy,
@@ -47,6 +48,7 @@ import {
   MfaEmailCodeVerification,
 } from './verifications/code-verification.js';
 import { PasswordVerification } from './verifications/password-verification.js';
+import { SocialVerification } from './verifications/social-verification.js';
 import { TotpVerification } from './verifications/totp-verification.js';
 import { SignInPasskeyVerification } from './verifications/web-authn-verification.js';
 
@@ -931,6 +933,8 @@ describe('ExperienceInteraction class', () => {
     withoutSession = false,
     user = mockUserWithMfaVerifications,
     connectors = [],
+    mfaFactors = [MfaFactor.TOTP],
+    signInExperienceOverrides = {},
   }: {
     interactionEvent?: InteractionEvent;
     details?: Record<string, unknown>;
@@ -938,6 +942,8 @@ describe('ExperienceInteraction class', () => {
     withoutSession?: boolean;
     user?: User;
     connectors?: Array<{ type: ConnectorType }>;
+    mfaFactors?: MfaFactor[];
+    signInExperienceOverrides?: Partial<SignInExperience>;
   } = {}) => {
     const interactionDetails = {
       jti: 'session-id',
@@ -961,9 +967,11 @@ describe('ExperienceInteraction class', () => {
         signInExperiences: {
           findDefaultSignInExperience: jest.fn().mockResolvedValue({
             ...mockSignInExperience,
-            mfa: { policy: MfaPolicy.UserControlled, factors: [MfaFactor.TOTP] },
+            mfa: { policy: MfaPolicy.UserControlled, factors: mfaFactors },
+            ...signInExperienceOverrides,
           }),
         },
+        userSsoIdentities: { findUserSsoIdentitiesByUserId: jest.fn().mockResolvedValue([]) },
       },
       { getLogtoConnectors: jest.fn().mockResolvedValue(connectors) },
       { users: userLibraries, ssoConnectors }
@@ -1236,9 +1244,12 @@ describe('ExperienceInteraction class', () => {
     });
 
     it('finishes an unreachable step-up as unmet and leaves a reachable one alone', async () => {
+      // A password user without a factor can reach `mfa` only by enrolling one, which the tenant
+      // does not enable here.
       const unreachable = createInteraction({
         details: { authenticationContext: stepUpContext },
         user: mockUser,
+        mfaFactors: [],
       });
 
       await expect(unreachable.experienceInteraction.finishUnreachableStepUp()).resolves.toBe(
@@ -1482,6 +1493,331 @@ describe('ExperienceInteraction class', () => {
       expect(updateUserById).toHaveBeenCalledTimes(1);
       // `lastSignInAt` is the sign-in's to write; a step-up leaves it where the sign-in left it.
       expect(updateUserById.mock.calls[0]?.[1]).not.toHaveProperty('lastSignInAt');
+    });
+  });
+
+  describe('establishing and enrolling inside pure step-up', () => {
+    const socialOnlyUser: User = {
+      ...mockUser,
+      passwordEncrypted: null,
+      passwordEncryptionMethod: null,
+      primaryEmail: null,
+      primaryPhone: null,
+      identities: { github: { userId: 'github-user', details: {} } },
+      mfaVerifications: [],
+    };
+    const firstFactorContext = {
+      requestedAcrValues: [LogtoAcr.FirstFactor],
+      selectedAcr: LogtoAcr.FirstFactor,
+      mode: AuthenticationContextMode.StepUp,
+    };
+    const githubConnector = {
+      type: ConnectorType.Social,
+      metadata: { target: 'github' },
+      dbEntry: { id: 'github-connector' },
+    };
+    const socialSession = { accountId: socialOnlyUser.id, amr: ['fed'] };
+
+    /** Record a verified social record resolving to the given user as the subject proof. */
+    const proveSubjectWithSocial = async (
+      experienceInteraction: InstanceType<typeof ExperienceInteraction>,
+      stepUpTenant: MockTenant,
+      resolvedUser?: User
+    ) => {
+      const { libraries, queries } = stepUpTenant;
+      const record = new SocialVerification(libraries, queries, {
+        id: 'social-verification-id',
+        type: VerificationType.Social,
+        connectorId: 'github-connector',
+        socialUserInfo: { id: 'github-user' },
+      });
+      jest.spyOn(record, 'identifyUser').mockImplementation(async () => {
+        if (!resolvedUser) {
+          throw new RequestError({ code: 'user.identity_not_exist', status: 404 });
+        }
+
+        return resolvedUser;
+      });
+      experienceInteraction.setVerificationRecord(record);
+
+      return experienceInteraction.identifyUser('social-verification-id');
+    };
+
+    const createSocialOnlyStepUp = ({
+      signInExperienceOverrides,
+    }: { signInExperienceOverrides?: Partial<SignInExperience> } = {}) => {
+      const result = createInteraction({
+        details: { authenticationContext: firstFactorContext },
+        user: socialOnlyUser,
+
+        connectors: [githubConnector as unknown as { type: ConnectorType }],
+        signInExperienceOverrides,
+      });
+      // The session a social sign-in left behind.
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      (result.stepUpCtx.interactionDetails as { session: unknown }).session = socialSession;
+
+      return result;
+    };
+
+    it('holds neither predicate on the session cookie alone', async () => {
+      const { experienceInteraction } = createInteraction({
+        details: { authenticationContext: stepUpContext },
+        user: mockUser,
+      });
+
+      // The session carries `pwd`, but only the proofs of this interaction count.
+      expect(experienceInteraction.hasFreshFirstFactor).toBe(false);
+      await expect(experienceInteraction.getStepUpEligibility()).resolves.toMatchObject({
+        establishableMethods: [],
+        enrollableFactors: [],
+        availableMethods: [VerificationType.Password],
+      });
+    });
+
+    it('holds neither predicate on a trusted device', async () => {
+      const { experienceInteraction } = createInteraction({
+        details: { authenticationContext: stepUpContext },
+        user: mockUser,
+      });
+      jest.spyOn(experienceInteraction.trustedDevice, 'tryVerifyMfa').mockResolvedValue(true);
+
+      // A trusted device is not an authentication event of this request and records no proof.
+      await expect(experienceInteraction.trustedDevice.tryVerifyMfa(mockUser.id)).resolves.toBe(
+        true
+      );
+      expect(experienceInteraction.hasFreshFirstFactor).toBe(false);
+      await expect(experienceInteraction.getStepUpEligibility()).resolves.toMatchObject({
+        enrollableFactors: [],
+      });
+    });
+
+    it('does not let an enrolled factor supply the fresh first factor', async () => {
+      const { experienceInteraction } = createInteraction({
+        details: { authenticationContext: stepUpContext },
+        user: mockUser,
+      });
+
+      experienceInteraction.profile.unsafeSet({});
+      // A passkey enrolled here is `both`-class but a `bind`: it never licenses itself.
+      experienceInteraction.setVerificationRecord(
+        new TotpVerification(libraries, queries, {
+          id: 'totp-enroll-id',
+          type: VerificationType.TOTP,
+          userId: mockUser.id,
+          secret: 'secret',
+          verified: true,
+        })
+      );
+      experienceInteraction.consumeForBindByType(VerificationType.TOTP, 'totp-enroll-id');
+
+      expect(experienceInteraction.hasFreshFirstFactor).toBe(false);
+    });
+
+    it('offers subject-proof connectors, then the establishable methods after a subject proof', async () => {
+      const { experienceInteraction, stepUpTenant } = createSocialOnlyStepUp();
+
+      await expect(experienceInteraction.finishUnreachableStepUp()).resolves.toBeUndefined();
+      await expect(experienceInteraction.getStepUpEligibility()).resolves.toMatchObject({
+        availableMethods: [],
+        establishableMethods: [],
+        subjectProofConnectors: [{ type: 'social', connectorId: 'github-connector' }],
+      });
+
+      await proveSubjectWithSocial(experienceInteraction, stepUpTenant, socialOnlyUser);
+
+      expect(experienceInteraction.identifiedUserId).toBe(socialOnlyUser.id);
+      await expect(experienceInteraction.getStepUpEligibility()).resolves.toMatchObject({
+        establishableMethods: [MissingProfile.password],
+        subjectProofConnectors: [],
+      });
+    });
+
+    it('finishes as unmet when the tenant enables nothing establishable', async () => {
+      const { experienceInteraction, provider } = createSocialOnlyStepUp({
+        signInExperienceOverrides: {
+          signIn: {
+            methods: [
+              {
+                identifier: SignInIdentifier.Username,
+                password: false,
+                verificationCode: false,
+                isPasswordPrimary: false,
+              },
+            ],
+          },
+        },
+      });
+
+      await expect(experienceInteraction.finishUnreachableStepUp()).resolves.toBe('redirectTo');
+      expect(provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({ error: 'unmet_authentication_requirements' })
+      );
+    });
+
+    it.each([
+      { name: 'another account', resolvedUser: { ...mockUser, id: 'someone-else' } },
+      { name: 'no account', resolvedUser: undefined },
+    ])('rejects a subject proof that resolves to $name with 403', async ({ resolvedUser }) => {
+      const { experienceInteraction, stepUpTenant, provider } = createSocialOnlyStepUp();
+
+      // Never a registration or an account link: the request fails before anything is saved,
+      // so the staged proof evaporates with it.
+      await expect(
+        proveSubjectWithSocial(experienceInteraction, stepUpTenant, resolvedUser)
+      ).rejects.toMatchError(new RequestError({ code: 'session.identity_conflict', status: 403 }));
+      expect(experienceInteraction.identifiedUserId).toBeUndefined();
+      expect(provider.interactionResult).not.toHaveBeenCalled();
+      expect(userLibraries.insertUser).not.toHaveBeenCalled();
+    });
+
+    it('never links a social identity as subject proof', async () => {
+      const { experienceInteraction, stepUpTenant } = createSocialOnlyStepUp();
+      const { libraries, queries } = stepUpTenant;
+
+      experienceInteraction.setVerificationRecord(
+        new SocialVerification(libraries, queries, {
+          id: 'social-verification-id',
+          type: VerificationType.Social,
+          connectorId: 'github-connector',
+          socialUserInfo: { id: 'github-user' },
+        })
+      );
+
+      await expect(
+        experienceInteraction.identifyUser('social-verification-id', true)
+      ).rejects.toMatchError(new RequestError({ code: 'session.identity_conflict', status: 403 }));
+    });
+
+    it('achieves 1fa with `fed` and `pwd` for a social-only user who established a password', async () => {
+      jest.clearAllMocks();
+      const { experienceInteraction, stepUpTenant, provider } = createSocialOnlyStepUp();
+
+      await proveSubjectWithSocial(experienceInteraction, stepUpTenant, socialOnlyUser);
+      experienceInteraction.profile.unsafeSet({
+        passwordEncrypted: 'new-encrypted-password',
+        passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+      });
+
+      await experienceInteraction.submitStepUp();
+
+      expect(provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({
+          login: {
+            accountId: socialOnlyUser.id,
+            acr: LogtoAcr.FirstFactor,
+            amr: [AuthenticationMethodReference.Federated, AuthenticationMethodReference.Password],
+          },
+        })
+      );
+      // The established password is the only user write; the social profile is not synced.
+      expect(stepUpTenant.queries.users.updateUserById).toHaveBeenCalledTimes(1);
+      expect(
+        Object.keys(
+          jest.mocked(stepUpTenant.queries.users.updateUserById).mock.calls[0]?.[1] ?? {}
+        ).toSorted()
+      ).toEqual([
+        'isPasswordExpired',
+        'passwordEncrypted',
+        'passwordEncryptionMethod',
+        'passwordUpdatedAt',
+      ]);
+    });
+
+    /** A verified TOTP enrollment, bound to the step-up subject. */
+    const bindNewTotp = async (
+      experienceInteraction: InstanceType<typeof ExperienceInteraction>,
+      stepUpTenant: MockTenant
+    ) => {
+      const { libraries, queries } = stepUpTenant;
+
+      experienceInteraction.setVerificationRecord(
+        new TotpVerification(libraries, queries, {
+          id: 'totp-enroll-id',
+          type: VerificationType.TOTP,
+          userId: mockUser.id,
+          secret: 'new-secret',
+          verified: true,
+        })
+      );
+      await experienceInteraction.mfa.addTotpByVerificationId('totp-enroll-id');
+    };
+
+    it('achieves mfa with a password and a newly enrolled TOTP, and persists only the factor', async () => {
+      jest.clearAllMocks();
+      const { experienceInteraction, stepUpTenant, provider } = createInteraction({
+        details: { authenticationContext: stepUpContext },
+        user: mockUser,
+      });
+      const { libraries, queries } = stepUpTenant;
+
+      experienceInteraction.setVerificationRecord(
+        new PasswordVerification(libraries, queries, {
+          id: 'password-verification-id',
+          type: VerificationType.Password,
+          identifier: { type: AdditionalIdentifier.UserId, value: mockUser.id },
+          verified: true,
+        })
+      );
+      await experienceInteraction.identifyUser('password-verification-id');
+
+      expect(experienceInteraction.hasFreshFirstFactor).toBe(true);
+      await expect(experienceInteraction.getStepUpEligibility()).resolves.toMatchObject({
+        enrollableFactors: [MfaFactor.TOTP],
+      });
+
+      await bindNewTotp(experienceInteraction, stepUpTenant);
+      await experienceInteraction.submitStepUp();
+
+      expect(provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({
+          login: {
+            accountId: mockUser.id,
+            acr: LogtoAcr.Mfa,
+            amr: [
+              AuthenticationMethodReference.Password,
+              AuthenticationMethodReference.Otp,
+              AuthenticationMethodReference.Mfa,
+            ],
+          },
+        })
+      );
+
+      const updateUserById = jest.mocked(stepUpTenant.queries.users.updateUserById);
+      expect(updateUserById).toHaveBeenCalledTimes(1);
+      const written = updateUserById.mock.calls[0]?.[1];
+      expect(Object.keys(written ?? {}).toSorted()).toEqual(['logtoConfig', 'mfaVerifications']);
+      expect(written?.mfaVerifications).toEqual([
+        expect.objectContaining({ type: MfaFactor.TOTP, key: 'new-secret' }),
+      ]);
+    });
+
+    it('does not count a factor enrolled without a fresh first factor', async () => {
+      const created = createInteraction({
+        details: { authenticationContext: firstFactorContext },
+        user: mockUser,
+      });
+      const { stepUpTenant, stepUpCtx, provider } = created;
+      // An interaction that carries the subject but proved nothing in it. Enrolling here is only
+      // reachable by bypassing the route guard; the derivation still refuses to count it.
+      const experienceInteraction = new ExperienceInteraction(stepUpCtx, stepUpTenant, {
+        ...stepUpCtx.interactionDetails,
+        result: { ...created.experienceInteraction.toJson(), userId: mockUser.id },
+      } as unknown as Interaction);
+
+      expect(experienceInteraction.hasFreshFirstFactor).toBe(false);
+      await bindNewTotp(experienceInteraction, stepUpTenant);
+
+      await expect(experienceInteraction.submitStepUp()).rejects.toMatchError(
+        new RequestError({ code: 'session.step_up.acr_not_satisfied', status: 403 })
+      );
+      expect(provider.interactionResult).not.toHaveBeenCalled();
     });
   });
 

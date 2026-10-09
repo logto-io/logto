@@ -294,15 +294,17 @@ describe('PUT /experience', () => {
     user = totpUser,
     withoutSession = false,
     details = { authenticationContext: stepUpContext },
+    mfa = totpMfa,
   }: {
     user?: User;
+    mfa?: Mfa;
     /** Create the interaction without an authenticated session. */
     withoutSession?: boolean;
     details?: Record<string, unknown>;
   } = {}) =>
     createRequesterWithMocks({
       user,
-      mfa: totpMfa,
+      mfa,
       persistInteractionResult: true,
       // A fresh provider interaction: nothing has been stored yet.
       interactionResult: { interactionEvent: undefined, userId: undefined },
@@ -385,7 +387,12 @@ describe('PUT /experience', () => {
   });
 
   it('should finish a step-up the pinned user cannot reach with unmet_authentication_requirements', async () => {
-    const { requester, provider } = createStepUpRequester({ user: mockUser });
+    // A password user without a factor can reach `mfa` only by enrolling one, which the tenant
+    // does not enable here.
+    const { requester, provider } = createStepUpRequester({
+      user: mockUser,
+      mfa: { policy: MfaPolicy.UserControlled, factors: [] },
+    });
 
     const response = await requester
       .put('/experience')
