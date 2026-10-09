@@ -52,6 +52,7 @@ export const mockQuota = {
   organizationsEnabled: false,
   organizationsLimit: 0,
   enterpriseSsoLimit: 0,
+  consoleSsoConnectorLimit: 0,
   thirdPartyApplicationsLimit: 0,
   tenantMembersLimit: 1,
   customJwtEnabled: false,

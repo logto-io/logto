@@ -55,6 +55,8 @@ export const hiddenQuotaDiffUsageKeys: Array<keyof LogtoSkuQuota> = [
   // Hosted-email caps are surfaced in Connector details, not the plan quota UI.
   'hostedEmailLimit',
   'hostedEmailDailyLimit',
+  // Console SSO quotas belong to the shared Enterprise plan, not individual tenants.
+  'consoleSsoConnectorLimit',
   'scopesPerResourceLimit',
   'userRolesLimit',
   'machineToMachineRolesLimit',
