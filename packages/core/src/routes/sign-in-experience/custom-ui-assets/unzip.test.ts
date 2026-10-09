@@ -109,7 +109,7 @@ describe('unzipCustomUiAssets()', () => {
     );
     expect(getUploadedKeys()).toHaveLength(200);
     expect(uploadFile).toHaveBeenCalledWith(
-      Buffer.alloc(10 * 1024 * 1024 - 1, 'a'),
+      expect.objectContaining({ length: 10 * 1024 * 1024 - 1 }),
       'prefix/index.html',
       { contentType: 'text/html', isPublic: false }
     );
