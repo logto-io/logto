@@ -338,7 +338,7 @@ describe('POST /sign-in-exp/default/custom-ui-assets', () => {
 
       expect(response.status).toBe(400);
       expect(response.text).toBe(
-        'The archive could not be read. Create a new, non-empty ZIP file and upload it again.'
+        'The archive could not be read. Create a non-empty ZIP using Deflate or no compression, then upload it again.'
       );
       expect(mockedS3UploadFile).not.toHaveBeenCalled();
     });
@@ -359,7 +359,7 @@ describe('POST /sign-in-exp/default/custom-ui-assets', () => {
       expect(response.body).toEqual({
         code: 'storage.invalid_custom_ui_zip',
         message:
-          'The archive could not be read. Create a new, non-empty ZIP file and upload it again.',
+          'The archive could not be read. Create a non-empty ZIP using Deflate or no compression, then upload it again.',
       });
     });
 

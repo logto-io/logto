@@ -66,9 +66,9 @@ const getRelativePath = (entryName: string, rootFolder?: string) => {
   return path.posix.normalize(posixName);
 };
 
-const assertEntrySize = (size: number) => {
+const assertEntrySize = (entryName: string, size: number) => {
   if (size >= maxEntrySize) {
-    throw new RequestError('storage.custom_ui_file_too_large');
+    throw new RequestError({ code: 'storage.custom_ui_file_too_large', name: entryName });
   }
 };
 
@@ -82,13 +82,13 @@ const assertEntrySize = (size: number) => {
  */
 // eslint-disable-next-line @typescript-eslint/ban-types -- Passed to `UploadFile<Buffer>`, see below
 const readEntry = async (entry: IZipEntry): Promise<Buffer> => {
-  const { header } = entry;
+  const { entryName, header } = entry;
 
   try {
     if (header.method === zipMethodStored) {
       // Stored data is copied as is, so it is bounded by the zip size.
       const data = entry.getData();
-      assertEntrySize(data.length);
+      assertEntrySize(entryName, data.length);
       return data;
     }
 
@@ -109,7 +109,7 @@ const readEntry = async (entry: IZipEntry): Promise<Buffer> => {
       'code' in error &&
       error.code === 'ERR_BUFFER_TOO_LARGE'
     ) {
-      throw new RequestError('storage.custom_ui_file_too_large');
+      throw new RequestError({ code: 'storage.custom_ui_file_too_large', name: entryName });
     }
 
     throw new RequestError('storage.invalid_custom_ui_zip');
@@ -164,7 +164,7 @@ export const unzipCustomUiAssets = async (
 
   for (const { entry } of files) {
     // A quick rejection on the declared size; the real size is enforced when inflating.
-    assertEntrySize(entry.header.size);
+    assertEntrySize(entry.entryName, entry.header.size);
   }
 
   await pMap(

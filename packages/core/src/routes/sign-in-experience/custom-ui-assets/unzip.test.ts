@@ -136,12 +136,12 @@ describe('unzipCustomUiAssets()', () => {
       zip.addFile('index.html', Buffer.from(''));
       zip.addFile('large.bin', Buffer.alloc(size));
 
-      await expect(unzipCustomUiAssets(zip.toBuffer(), 'prefix', uploadFile)).rejects.toMatchObject(
-        {
-          status: 400,
-          code: 'storage.custom_ui_file_too_large',
-        }
-      );
+      const result = unzipCustomUiAssets(zip.toBuffer(), 'prefix', uploadFile);
+      await expect(result).rejects.toMatchObject({
+        status: 400,
+        code: 'storage.custom_ui_file_too_large',
+      });
+      await expect(result).rejects.toThrow('large.bin');
       expect(uploadFile).not.toHaveBeenCalled();
     }
   );
@@ -161,10 +161,12 @@ describe('unzipCustomUiAssets()', () => {
       buffer.writeUInt32LE(0, headerOffset + sizeOffset);
     }
 
-    await expect(unzipCustomUiAssets(buffer, 'prefix', uploadFile)).rejects.toMatchObject({
+    const result = unzipCustomUiAssets(buffer, 'prefix', uploadFile);
+    await expect(result).rejects.toMatchObject({
       status: 400,
       code: 'storage.custom_ui_file_too_large',
     });
+    await expect(result).rejects.toThrow('a-large.bin');
     // Other files may upload concurrently, but the oversized entry must never reach storage.
     expect(uploadFile).not.toHaveBeenCalledWith(
       expect.anything(),
