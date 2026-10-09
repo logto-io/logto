@@ -42,8 +42,6 @@ const tenant_members = {
   delete_user_confirm: 'Sei sicuro di voler rimuovere questo utente da questo inquilino?',
   assign_admin_confirm:
     "Sei sicuro di voler rendere amministratore i(e) ​​utente(i)​​ selezionato(i)​​? Concedere l'accesso da amministratore fornirà al(i)​​ utente(i)​​ le seguenti autorizzazioni.<ul><li>Cambiare piano di fatturazione dell'inquilino</li><li>Aggiungere o rimuovere collaboratori</li><li>Eliminare l'inquilino</li></ul>",
-  assign_admin_confirm_oss:
-    "Sei sicuro di voler rendere amministratore i(e) ​​utente(i)​​ selezionato(i)​​? Concedere l'accesso da amministratore fornirà al(i)​​ utente(i)​​ le seguenti autorizzazioni.<ul><li>Gestire tutte le risorse e le impostazioni dell'inquilino</li><li>Invitare o rimuovere membri</li><li>Richiedere l'MFA a tutti i membri</li></ul>",
   revoke_invitation_confirm: 'Sei sicuro di voler revocare questo invito?',
   delete_invitation_confirm: 'Sei sicuro di voler eliminare questo record di invito?',
   messages: {

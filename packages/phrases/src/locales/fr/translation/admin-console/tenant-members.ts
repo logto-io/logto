@@ -42,8 +42,6 @@ const tenant_members = {
   delete_user_confirm: 'Êtes-vous sûr de vouloir supprimer cet utilisateur de ce locataire?',
   assign_admin_confirm:
     "Êtes-vous sûr de vouloir rendre le(s) utilisateur(s) sélectionné(s) administrateur? Accorder l'accès administrateur donnera au(x) utilisateur(s) les autorisations suivantes.<ul><li>Modifier le plan de facturation du locataire</li><li>Ajouter ou supprimer des collaborateurs</li><li>Supprimer le locataire</li></ul>",
-  assign_admin_confirm_oss:
-    "Êtes-vous sûr de vouloir rendre le(s) utilisateur(s) sélectionné(s) administrateur? Accorder l'accès administrateur donnera au(x) utilisateur(s) les autorisations suivantes.<ul><li>Gérer toutes les ressources et tous les paramètres du locataire</li><li>Inviter ou retirer des membres</li><li>Exiger la MFA pour tous les membres</li></ul>",
   revoke_invitation_confirm: 'Êtes-vous sûr de vouloir révoquer cette invitation?',
   delete_invitation_confirm: "Êtes-vous sûr de vouloir supprimer cet enregistrement d'invitation?",
   messages: {

@@ -42,8 +42,6 @@ const tenant_members = {
   delete_user_confirm: 'Tem certeza de que deseja remover este usuário deste locatário?',
   assign_admin_confirm:
     'Tem certeza de que deseja tornar o(s) usuário(s) selecionado(s) como administrador? Conceder acesso de administrador dará ao(s) usuário(s) as seguintes permissões.<ul><li>Alterar o plano de cobrança do locatário</li><li>Adicionar ou remover colaboradores</li><li>Excluir o locatário</li></ul>',
-  assign_admin_confirm_oss:
-    'Tem certeza de que deseja tornar o(s) usuário(s) selecionado(s) como administrador? Conceder acesso de administrador dará ao(s) usuário(s) as seguintes permissões.<ul><li>Gerenciar todos os recursos e configurações do locatário</li><li>Convidar ou remover membros</li><li>Exigir MFA de todos os membros</li></ul>',
   revoke_invitation_confirm: 'Tem certeza de que deseja revogar este convite?',
   delete_invitation_confirm: 'Tem certeza de que deseja excluir este registro de convite?',
   messages: {

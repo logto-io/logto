@@ -16,7 +16,6 @@ const callerId = 'caller';
 /** The tenant roles of each member, keyed by user ID. The caller is an admin by default. */
 const memberRoles = new Map<string, TenantRole>();
 
-const isMember = jest.fn(async ({ userId }: { userId: string }) => memberRoles.has(userId));
 const hasRole = jest.fn(
   async ({ userId, organizationRoleId }: { userId: string; organizationRoleId: string }) =>
     memberRoles.get(userId) === organizationRoleId
@@ -26,7 +25,6 @@ const getAdmins = jest.fn(async () => {
   return [admins.length, admins.slice(0, 2).map(([id]) => ({ id }))];
 });
 const deleteMember = jest.fn();
-const replaceRoles = jest.fn();
 const buildMember = (id: string) => ({
   id,
   avatar: null,
@@ -48,8 +46,8 @@ const revokeConsoleAccess = jest.fn();
 
 const organizations = {
   relations: {
-    users: { exists: isMember, delete: deleteMember, getUsersByOrganizationId },
-    usersRoles: { exists: hasRole, getEntities: getAdmins, replace: replaceRoles, getUserScopes },
+    users: { delete: deleteMember, getUsersByOrganizationId },
+    usersRoles: { exists: hasRole, getEntities: getAdmins, getUserScopes },
   },
 };
 
@@ -95,7 +93,6 @@ describe('me tenant member routes', () => {
     memberRoles.clear();
     memberRoles.set(callerId, TenantRole.Admin);
     memberRoles.set('other-admin', TenantRole.Admin);
-    memberRoles.set('collaborator', TenantRole.Collaborator);
   });
 
   afterEach(() => {
@@ -104,13 +101,11 @@ describe('me tenant member routes', () => {
   });
 
   describe('GET /tenant/members', () => {
-    it('should list the members to a collaborator', async () => {
-      memberRoles.set(callerId, TenantRole.Collaborator);
-
+    it('should list the members to an admin', async () => {
       const response = await request.get('/tenant/members');
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveLength(3);
+      expect(response.body).toHaveLength(2);
     });
 
     it('should reject a Console user outside the tenant', async () => {
@@ -139,18 +134,18 @@ describe('me tenant member routes', () => {
 
   describe('DELETE /tenant/members/:userId', () => {
     it('should remove a member and their Console access', async () => {
-      const response = await request.delete('/tenant/members/collaborator');
+      const response = await request.delete('/tenant/members/other-admin');
 
       expect(response.status).toBe(204);
       expect(deleteMember).toHaveBeenCalledWith({
         organizationId: tenantOrganizationId,
-        userId: 'collaborator',
+        userId: 'other-admin',
       });
-      expect(revokeConsoleAccess).toHaveBeenCalledWith('collaborator');
+      expect(revokeConsoleAccess).toHaveBeenCalledWith('other-admin');
     });
 
-    it('should reject a collaborator removing someone else', async () => {
-      memberRoles.set(callerId, TenantRole.Collaborator);
+    it('should reject a non-member removing someone else', async () => {
+      memberRoles.delete(callerId);
 
       const response = await request.delete('/tenant/members/other-admin');
 
@@ -158,9 +153,7 @@ describe('me tenant member routes', () => {
       expect(deleteMember).not.toHaveBeenCalled();
     });
 
-    it('should let a collaborator leave', async () => {
-      memberRoles.set(callerId, TenantRole.Collaborator);
-
+    it('should let an admin leave while another admin remains', async () => {
       const response = await request.delete(`/tenant/members/${callerId}`);
 
       expect(response.status).toBe(204);
@@ -176,55 +169,6 @@ describe('me tenant member routes', () => {
       expect(deleteMember).not.toHaveBeenCalled();
       expect(revokeConsoleAccess).not.toHaveBeenCalled();
     });
-
-    it('should remove an admin while another admin is left', async () => {
-      const response = await request.delete('/tenant/members/other-admin');
-
-      expect(response.status).toBe(204);
-    });
-  });
-
-  describe('PUT /tenant/members/:userId/roles', () => {
-    it('should promote an existing collaborator to admin', async () => {
-      const response = await request
-        .put('/tenant/members/collaborator/roles')
-        .send({ roleName: TenantRole.Admin });
-
-      expect(response.status).toBe(204);
-      expect(replaceRoles).toHaveBeenCalledWith(tenantOrganizationId, 'collaborator', [
-        TenantRole.Admin,
-      ]);
-    });
-
-    it('should reject a collaborator', async () => {
-      memberRoles.set(callerId, TenantRole.Collaborator);
-
-      const response = await request
-        .put('/tenant/members/collaborator/roles')
-        .send({ roleName: TenantRole.Admin });
-
-      expect(response.status).toBe(403);
-      expect(replaceRoles).not.toHaveBeenCalled();
-    });
-
-    it('should refuse to demote an admin even when another admin remains', async () => {
-      const response = await request
-        .put(`/tenant/members/${callerId}/roles`)
-        .send({ roleName: TenantRole.Collaborator });
-
-      expect(response.status).toBe(400);
-      expect(response.body).toMatchObject({ code: 'guard.invalid_input' });
-      expect(replaceRoles).not.toHaveBeenCalled();
-    });
-
-    it('should reject a user outside the tenant', async () => {
-      const response = await request
-        .put('/tenant/members/stranger/roles')
-        .send({ roleName: TenantRole.Admin });
-
-      expect(response.status).toBe(404);
-      expect(replaceRoles).not.toHaveBeenCalled();
-    });
   });
 
   it('should check the caller and the last admin within the membership transaction', async () => {
@@ -232,7 +176,7 @@ describe('me tenant member routes', () => {
       throw new Error('The transaction is not reached.');
     });
 
-    const response = await request.delete('/tenant/members/collaborator');
+    const response = await request.delete('/tenant/members/other-admin');
 
     expect(response.status).toBe(500);
     expect(hasRole).not.toHaveBeenCalled();
@@ -245,7 +189,7 @@ describe('me tenant member routes', () => {
 
     await expect(request.get('/tenant/members')).resolves.toHaveProperty('status', 501);
     await expect(request.get('/tenant/scopes')).resolves.toHaveProperty('status', 501);
-    await expect(request.delete('/tenant/members/collaborator')).resolves.toHaveProperty(
+    await expect(request.delete('/tenant/members/other-admin')).resolves.toHaveProperty(
       'status',
       501
     );

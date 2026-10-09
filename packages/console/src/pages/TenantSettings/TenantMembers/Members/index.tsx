@@ -48,28 +48,30 @@ function Members() {
           {
             dataIndex: 'user',
             title: t('user'),
-            colSpan: 4,
+            colSpan: isCloud ? 4 : 10,
             render: (user) => <UserPreview user={user} showLink={false} />,
           },
-          {
-            dataIndex: 'roles',
-            title: t('roles'),
-            colSpan: 6,
-            render: ({ organizationRoles }) => {
-              if (organizationRoles.length === 0) {
-                return '-';
-              }
+          ...condArray(
+            isCloud && {
+              dataIndex: 'roles',
+              title: t('roles'),
+              colSpan: 6,
+              render: ({ organizationRoles }: TenantMemberResponse) => {
+                if (organizationRoles.length === 0) {
+                  return '-';
+                }
 
-              return organizationRoles.map(({ id }) => (
-                <Tag key={id} variant="cell">
-                  <RoleOption
-                    value={id}
-                    title={t(id === TenantRole.Admin ? 'admin' : 'collaborator')}
-                  />
-                </Tag>
-              ));
-            },
-          },
+                return organizationRoles.map(({ id }) => (
+                  <Tag key={id} variant="cell">
+                    <RoleOption
+                      value={id}
+                      title={t(id === TenantRole.Admin ? 'admin' : 'collaborator')}
+                    />
+                  </Tag>
+                ));
+              },
+            }
+          ),
           ...condArray(
             (canUpdateMemberRole || canRemoveMember) && [
               {
@@ -77,9 +79,7 @@ function Members() {
                 title: null,
                 colSpan: 1,
                 render: (user: TenantMemberResponse) => {
-                  const canEdit =
-                    canUpdateMemberRole &&
-                    (isCloud || !user.organizationRoles.some(({ id }) => id === TenantRole.Admin));
+                  const canEdit = isCloud && canUpdateMemberRole;
                   // Cannot remove self from members list.
                   const canRemove = canRemoveMember && currentUser?.id !== user.id;
 
@@ -119,7 +119,7 @@ function Members() {
         ]}
         rowIndexKey="id"
       />
-      {canUpdateMemberRole && userToBeEdited && (
+      {isCloud && canUpdateMemberRole && userToBeEdited && (
         <EditMemberModal
           isOpen
           user={userToBeEdited}

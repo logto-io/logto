@@ -41,8 +41,6 @@ const tenant_members = {
   delete_user_confirm: '이 사용자를 이 테넌트에서 제거하시겠습니까?',
   assign_admin_confirm:
     '선택한 사용자를 관리자로 지정하시겠습니까? 관리자 액세스 부여시 다음 권한이 부여됩니다.<ul><li>테넌트 요금제 변경</li><li>협력자 추가 또는 제거</li><li>테넌트 삭제</li></ul>',
-  assign_admin_confirm_oss:
-    '선택한 사용자를 관리자로 지정하시겠습니까? 관리자 액세스 부여시 다음 권한이 부여됩니다.<ul><li>모든 테넌트 리소스 및 설정 관리</li><li>멤버 초대 또는 제거</li><li>모든 멤버에게 MFA 필수화</li></ul>',
   revoke_invitation_confirm: '이 초대를 철회하시겠습니까?',
   delete_invitation_confirm: '이 초대 기록을 삭제하시겠습니까?',
   messages: {

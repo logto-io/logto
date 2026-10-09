@@ -54,7 +54,7 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
   const formMethods = useForm<InviteMemberForm>({
     defaultValues: {
       emails: [],
-      role: isCloud ? TenantRole.Collaborator : TenantRole.Admin,
+      role: TenantRole.Collaborator,
     },
   });
 
@@ -83,16 +83,11 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
   const hasTenantMembersReachedLimit = hasReachedSubscriptionQuotaLimit('tenantMembersLimit');
 
   const onSubmit = handleSubmit(async ({ emails, role }) => {
-    if (role === TenantRole.Admin) {
+    if (isCloud && role === TenantRole.Admin) {
       const [result] = await show({
         ModalContent: () => (
           <Trans components={{ ul: <ul className={styles.list} />, li: <li /> }}>
-            {/* A self-hosted admin has no billing plan or tenant deletion to manage. */}
-            {t(
-              isCloud
-                ? 'tenant_members.assign_admin_confirm'
-                : 'tenant_members.assign_admin_confirm_oss'
-            )}
+            {t('tenant_members.assign_admin_confirm')}
           </Trans>
         ),
         confirmButtonText: 'general.confirm',

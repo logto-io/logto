@@ -1,16 +1,12 @@
 import {
   OrganizationScopes,
-  TenantRole,
-  getTenantRole,
   type UserWithOrganizationRoles,
   userWithOrganizationRolesGuard,
 } from '@logto/schemas';
 import { z } from 'zod';
 
-import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { RouterInitArgs } from '#src/routes/types.js';
-import assertThat from '#src/utils/assert-that.js';
 
 import { withTenantMembership } from './tenant-membership.js';
 import {
@@ -36,10 +32,8 @@ const memberPageSize = 100;
 /**
  * The members of a self-hosted deployment's tenant, managed by the members themselves.
  *
- * Mirrors the tenant member routes of Logto Cloud, so Console can manage the members of either
- * with the same pages. New members are admins; existing collaborators keep their roles until an
- * admin promotes them. Every member may list the members; only admins may change them, and the
- * last admin cannot be removed, so the tenant always keeps someone who can.
+ * Every member is an admin with full Console access. Members can invite and remove other
+ * members, but the last admin cannot be removed so the tenant always remains accessible.
  *
  * @see {@link tenantRoutes} for why these routes live on `/me`.
  */
@@ -49,7 +43,7 @@ export default function tenantMemberRoutes<T extends AuthedMeRouter>(
   const {
     queries: { organizations },
   } = tenant;
-  const { assertMember } = createTenantMemberAuthorization(tenant);
+  const { assertAdmin } = createTenantMemberAuthorization(tenant);
 
   const listMembers = async (offset = 0): Promise<UserWithOrganizationRoles[]> => {
     const [, page] = await organizations.relations.users.getUsersByOrganizationId(
@@ -87,7 +81,7 @@ export default function tenantMemberRoutes<T extends AuthedMeRouter>(
     koaGuard({ response: tenantMemberGuard.array(), status: [200, 403, 501] }),
     async (ctx, next) => {
       assertNotCloud();
-      await assertMember(ctx.auth.id);
+      await assertAdmin(ctx.auth.id);
 
       ctx.body = await listMembers();
 
@@ -96,8 +90,8 @@ export default function tenantMemberRoutes<T extends AuthedMeRouter>(
   );
 
   /**
-   * Remove a member from the tenant, together with their Console access. Admins may remove anyone
-   * but the last admin; any member may leave.
+   * Remove a member from the tenant, together with their Console access. Members may remove
+   * anyone, including themselves, but not the last admin.
    */
   router.delete(
     '/tenant/members/:userId',
@@ -111,57 +105,14 @@ export default function tenantMemberRoutes<T extends AuthedMeRouter>(
       const { userId } = ctx.guard.params;
 
       await withTenantMembership(tenant, async (membership) => {
-        if (userId !== ctx.auth.id) {
-          await membership.assertAdmin(ctx.auth.id);
-        }
-
-        await membership.assertNotLastAdmin(userId, 'remove');
+        await membership.assertAdmin(ctx.auth.id);
+        await membership.assertNotLastAdmin(userId);
         // Removing the membership cascades to the member's tenant roles.
         await membership.organizations.relations.users.delete({
           organizationId: tenantOrganizationId,
           userId,
         });
         await membership.consoleAccess.revoke(userId);
-      });
-
-      ctx.status = 204;
-
-      return next();
-    }
-  );
-
-  /** Promote an existing collaborator to admin without silently elevating existing memberships. */
-  router.put(
-    '/tenant/members/:userId/roles',
-    koaGuard({
-      params: z.object({ userId: z.string().min(1) }),
-      body: z.object({ roleName: z.literal(TenantRole.Admin) }),
-      status: [204, 403, 404, 422, 501],
-    }),
-    async (ctx, next) => {
-      assertNotCloud();
-
-      const {
-        params: { userId },
-        body: { roleName },
-      } = ctx.guard;
-
-      await withTenantMembership(tenant, async (membership) => {
-        await membership.assertAdmin(ctx.auth.id);
-
-        assertThat(
-          await membership.organizations.relations.users.exists({
-            organizationId: tenantOrganizationId,
-            userId,
-          }),
-          new RequestError({ code: 'entity.not_found', status: 404 })
-        );
-
-        // Within the membership transaction: `usersRoles.replace()` opens a nested transaction,
-        // i.e. a savepoint, on it.
-        await membership.organizations.relations.usersRoles.replace(tenantOrganizationId, userId, [
-          getTenantRole(roleName).id,
-        ]);
       });
 
       ctx.status = 204;
