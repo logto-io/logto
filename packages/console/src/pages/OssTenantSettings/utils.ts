@@ -53,21 +53,13 @@ export const shouldShowOssTenantSettingsTab = ({
 }: OssTenantSettingsAvailabilityOptions) =>
   !isCloud && isDevFeaturesEnabled && (isMandatoryMfaEntitled || isMfaRequired);
 
-type OssTenantMembersPageOptions = OssTenantLicenseAvailabilityOptions & {
-  /** Whether the installed license grants Console collaboration. */
-  readonly isConsoleCollaborationEntitled: boolean;
-};
-
 /**
- * Whether the Members tab shows the members and invitations, rather than the self-hosted plans
- * upsell. It follows the license entitlement: without it there is a single Console user, and
- * nothing to manage.
+ * Existing members and invitations remain manageable without a license entitlement. Only the
+ * actions that add collaborators require one.
  */
 export const shouldShowOssTenantMembersPage = ({
   isCloud,
   // Self-hosted plans: Console members and invitations ship with the unlaunched self-hosted Pro
   // and Enterprise plans. Removed together with the other self-hosted plans guards at launch.
   isDevFeaturesEnabled,
-  isConsoleCollaborationEntitled,
-}: OssTenantMembersPageOptions) =>
-  !isCloud && isDevFeaturesEnabled && isConsoleCollaborationEntitled;
+}: OssTenantLicenseAvailabilityOptions) => !isCloud && isDevFeaturesEnabled;

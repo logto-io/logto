@@ -5,6 +5,7 @@ import useSWR from 'swr';
 import { useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { adminTenantEndpoint, meApi } from '@/consts';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
 import { type RequestError, useStaticApi } from './use-api';
@@ -19,6 +20,7 @@ const shouldFetchOssTenantScopes = !isCloud && isDevFeaturesEnabled;
 
 const useCurrentTenantScopes = () => {
   const { currentTenantId } = useContext(TenantsContext);
+  const { licenseQuota } = useContext(SubscriptionDataContext);
   const cloudApi = useAuthedCloudApi();
   const meApiClient = useStaticApi({
     prefixUrl: adminTenantEndpoint,
@@ -51,12 +53,14 @@ const useCurrentTenantScopes = () => {
 
   const access = useMemo(
     () => ({
-      canInviteMember: Boolean(scopes?.includes(TenantScope.InviteMember)),
+      canInviteMember:
+        Boolean(scopes?.includes(TenantScope.InviteMember)) &&
+        (isCloud || licenseQuota.consoleCollaboration),
       canRemoveMember: Boolean(scopes?.includes(TenantScope.RemoveMember)),
       canUpdateMemberRole: Boolean(scopes?.includes(TenantScope.UpdateMemberRole)),
       canManageTenant: Boolean(scopes?.includes(TenantScope.ManageTenant)),
     }),
-    [scopes]
+    [licenseQuota.consoleCollaboration, scopes]
   );
 
   return useMemo(

@@ -15,7 +15,7 @@ import styles from './index.module.scss';
 /** Tenant settings of a self-hosted deployment. Its tab link shows when the license carries them. */
 function Settings() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { license } = useContext(SubscriptionDataContext);
+  const { licenseQuota } = useContext(SubscriptionDataContext);
   const { show } = useConfirmModal();
   const { data, updateMfaRequirement, getMembersWithoutMfa } = useOssTenantMfa();
   const [isUpdating, setIsUpdating] = useState(false);
@@ -23,7 +23,7 @@ function Settings() {
   const isMfaRequired = data?.isMfaRequired ?? false;
   // Turning the requirement off stays possible without the entitlement, e.g. after the license
   // lapses, so it can never be stuck on.
-  const canEnable = Boolean(license?.quota.mandatoryMfa);
+  const canEnable = licenseQuota.mandatoryMfa;
   const isDisabled = !data?.isAdmin || isUpdating || (!isMfaRequired && !canEnable);
 
   /**
