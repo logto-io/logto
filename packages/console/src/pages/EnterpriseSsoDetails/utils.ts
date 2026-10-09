@@ -10,9 +10,8 @@ type ShouldShowIdpInitiatedAuthTabOptions = {
 /**
  * Whether the connector details page shows the IdP-initiated SSO tab.
  *
- * On Cloud the subscription entitlement decides. Outside Cloud the tab follows the feature itself,
- * which Core only ships behind `isDevFeaturesEnabled` (its routes are not registered otherwise), so
- * there is neither a config form nor an upsell for a feature that is not available yet.
+ * On both Cloud and self-hosted deployments, the feature is dev-only because Core does not register
+ * its routes otherwise. On Cloud the subscription must also grant the entitlement.
  */
 export const shouldShowIdpInitiatedAuthTab = ({
   isCloud,
@@ -24,12 +23,16 @@ export const shouldShowIdpInitiatedAuthTab = ({
     return false;
   }
 
+  // IdP-initiated SSO is not ready for release; keep it hidden outside dev mode.
+  if (!isDevFeaturesEnabled) {
+    return false;
+  }
+
   if (isCloud) {
     return isIdpInitiatedSsoEnabled;
   }
 
-  // IdP-initiated SSO is not ready for release; keep it hidden outside dev mode.
-  return isDevFeaturesEnabled;
+  return true;
 };
 
 type ShouldShowIdpInitiatedAuthUpsellOptions = {

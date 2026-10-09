@@ -3,11 +3,22 @@ import { SsoProviderType } from '@logto/schemas';
 import { shouldShowIdpInitiatedAuthTab, shouldShowIdpInitiatedAuthUpsell } from './utils';
 
 describe('shouldShowIdpInitiatedAuthTab', () => {
-  it('returns true for Cloud SAML connectors when IdP-initiated SSO is entitled', () => {
+  it('returns false for entitled Cloud SAML connectors when dev features are disabled', () => {
     expect(
       shouldShowIdpInitiatedAuthTab({
         isCloud: true,
         isDevFeaturesEnabled: false,
+        providerType: SsoProviderType.SAML,
+        isIdpInitiatedSsoEnabled: true,
+      })
+    ).toBe(false);
+  });
+
+  it('returns true for entitled Cloud SAML connectors when dev features are enabled', () => {
+    expect(
+      shouldShowIdpInitiatedAuthTab({
+        isCloud: true,
+        isDevFeaturesEnabled: true,
         providerType: SsoProviderType.SAML,
         isIdpInitiatedSsoEnabled: true,
       })
