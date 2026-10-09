@@ -14,6 +14,8 @@ import Invitations from './Invitations';
 
 jest.mock('@/consts/env', () => jest.requireActual<EnvTestUtils>('@/test-utils/env').mockEnvModule);
 
+jest.mock('@/components/Region', () => ({ defaultRegionName: 'EU' }));
+
 jest.mock('@/contexts/AppThemeProvider', () => ({
   AppThemeContext: jest.requireActual<typeof React>('react').createContext({ theme: 'light' }),
 }));
