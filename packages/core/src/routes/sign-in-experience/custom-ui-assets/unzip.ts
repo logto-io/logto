@@ -121,8 +121,8 @@ const readEntry = async (entry: IZipEntry): Promise<Buffer> => {
  * are served afterwards. Mirrors the Logto Cloud unzip function, which does the same through an
  * Azure blob trigger.
  *
- * Entry paths and declared sizes are validated before anything is uploaded, so a zip rejected
- * for them leaves nothing behind.
+ * Entry paths, the required index.html and declared sizes are validated before anything is uploaded,
+ * so a zip rejected for them leaves nothing behind.
  *
  * @throws {RequestError} When the zip is invalid or breaks a limit. Storage errors pass through.
  */
@@ -154,6 +154,13 @@ export const unzipCustomUiAssets = async (
       objectKey: path.posix.join(keyPrefix, getRelativePath(entry.entryName, rootFolder)),
     }))
     .filter(({ entry }) => !isHidden(entry.entryName));
+
+  if (!files.some(({ objectKey }) => objectKey === path.posix.join(keyPrefix, 'index.html'))) {
+    throw new RequestError({
+      code: 'request.invalid_input',
+      details: 'The custom UI zip must contain an index.html file at the asset root.',
+    });
+  }
 
   for (const { entry } of files) {
     // A quick rejection on the declared size; the real size is enforced when inflating.

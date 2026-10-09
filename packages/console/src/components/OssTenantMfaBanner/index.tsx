@@ -26,12 +26,10 @@ function OssTenantMfaBanner() {
   return (
     <div className={styles.container}>
       <InlineNotification
+        hrefTargetBlank
         severity="alert"
         action="tenants.settings.tenant_mfa_setup_action"
-        onClick={() => {
-          // Account Center is a separate app on the admin tenant, not a Console route.
-          window.location.assign(accountSecurityUrl);
-        }}
+        href={accountSecurityUrl}
       >
         <DynamicT forKey="tenants.settings.tenant_mfa_setup_required" />
       </InlineNotification>

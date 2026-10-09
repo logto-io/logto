@@ -13,6 +13,8 @@ const tenant_members = {
     title: 'Lade Leute zu Logto Cloud ein',
     subtitle:
       'Um Mitglieder zu einer Organisation einzuladen, müssen sie die Einladung akzeptieren.',
+    subtitle_oss:
+      'Eingeladene Mitglieder erhalten vollen Administratorzugriff auf diese Logto-Instanz.',
     to: 'An',
     added_as: 'Hinzugefügt als Rollen',
     email_input_placeholder: 'johndoe@example.com',
@@ -41,8 +43,6 @@ const tenant_members = {
   delete_user_confirm: 'Möchten Sie diesen Benutzer wirklich aus diesem Mandanten entfernen?',
   assign_admin_confirm:
     'Möchten Sie sicher den/die ausgewählten Benutzer zum Administrator machen? Die Gewährung von Administratorzugriff gewährt den folgenden Berechtigungen:<ul><li>Ändern des Mandantenabrechnungsplans</li><li>Hinzufügen oder Entfernen von Mitarbeitern</li><li>Löschen des Mandanten</li></ul>',
-  assign_admin_confirm_oss:
-    'Möchten Sie sicher den/die ausgewählten Benutzer zum Administrator machen? Die Gewährung von Administratorzugriff gewährt den folgenden Berechtigungen:<ul><li>Mitglieder einladen oder entfernen</li><li>Rollen von Mitgliedern ändern</li><li>MFA für alle Mitglieder verlangen</li></ul>',
   revoke_invitation_confirm: 'Möchten Sie diese Einladung wirklich zurückziehen?',
   delete_invitation_confirm: 'Möchten Sie diesen Einladungsdatensatz wirklich löschen?',
   messages: {

@@ -1,10 +1,11 @@
 import { type Nullable } from '@silverhand/essentials';
 import { HTTPError } from 'ky';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import useSWR from 'swr';
 
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { type License } from '@/types/license';
+import { getEffectiveLicenseQuota } from '@/utils/license';
 import { shouldRetryOnError } from '@/utils/request';
 
 import useApi, { RequestError } from './use-api';
@@ -54,8 +55,31 @@ const useLicense = () => {
     { shouldRetryOnError: shouldRetryOnError({ ignore: [401, 403] }) }
   );
 
+  const [now, setNow] = useState(Date.now);
+
+  useEffect(() => {
+    const remaining = data ? Date.parse(data.graceEndsAt) - Date.now() : 0;
+
+    if (remaining <= 0) {
+      return;
+    }
+
+    // A grace period can exceed the browser's signed 32-bit timeout limit. Re-arm if needed.
+    const timer = window.setTimeout(
+      () => {
+        setNow(Date.now());
+      },
+      Math.min(remaining, 2_147_483_647)
+    );
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [data, now]);
+
   return {
     license: data ?? undefined,
+    licenseQuota: getEffectiveLicenseQuota(data ?? undefined),
     // A retry after a failure is not the first load and must not send Console back to its loading
     // screen.
     isLoading: isLoading && !error,

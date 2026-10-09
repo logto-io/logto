@@ -50,7 +50,7 @@ const invitationIdGuard = z.object({ invitationId: z.string().min(1) });
  * signs in with it. The Console accept page then accepts the invitation as the signed-in invitee.
  *
  * Inviting someone and accepting an invitation take the `consoleCollaboration` license entitlement,
- * since both add a collaborator; revoking and deleting an invitation do not, so a lapsed license
+ * since both add a member; revoking and deleting an invitation do not, so a lapsed license
  * can still be cleaned up after.
  *
  * @see {@link tenantRoutes} for why these routes live on `/me`.
@@ -200,7 +200,7 @@ export default function tenantInvitationRoutes<T extends AuthedMeRouter>(
   );
 
   /**
-   * Invite people to the tenant by email, with one tenant role. Each invitee gets their own
+   * Invite people to the tenant by email as admins. Each invitee gets their own
    * invitation and email.
    *
    * Every invitee is checked before anything is created, so an existing member or a pending
@@ -212,7 +212,6 @@ export default function tenantInvitationRoutes<T extends AuthedMeRouter>(
     koaGuard({
       body: z.object({
         invitee: z.string().email().or(z.string().email().array().nonempty()),
-        roleName: z.nativeEnum(TenantRole),
       }),
       response: organizationInvitationEntityGuard.array(),
       status: [201, 403, 422, 429, 501],
@@ -222,7 +221,7 @@ export default function tenantInvitationRoutes<T extends AuthedMeRouter>(
       await assertAdmin(ctx.auth.id);
       await assertLicenseGrants('consoleCollaboration');
 
-      const { invitee, roleName } = ctx.guard.body;
+      const { invitee } = ctx.guard.body;
       const invitees = [...new Set([invitee].flat().map((email) => email.toLowerCase()))];
       const expiresAt = addDays(new Date(), invitationTtlDays).getTime();
 
@@ -239,7 +238,7 @@ export default function tenantInvitationRoutes<T extends AuthedMeRouter>(
             invitee: email,
             organizationId: tenantOrganizationId,
             expiresAt,
-            organizationRoleIds: [getTenantRole(roleName).id],
+            organizationRoleIds: [getTenantRole(TenantRole.Admin).id],
           },
           false
         );
@@ -370,7 +369,7 @@ export default function tenantInvitationRoutes<T extends AuthedMeRouter>(
   );
 
   /**
-   * Accept the invitation as the invitee it is addressed to: join the tenant with the invited role,
+   * Accept the invitation as the invitee it is addressed to: join the tenant as an admin,
    * and get the Console access that comes with it. The invitee joins a deployment someone else has
    * set up, so the onboarding questionnaire about it is skipped for them.
    */

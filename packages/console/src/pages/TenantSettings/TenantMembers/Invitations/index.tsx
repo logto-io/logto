@@ -16,6 +16,7 @@ import UsersEmpty from '@/assets/images/users-empty.svg?react';
 import type { InvitationResponse, TenantInvitationResponse } from '@/cloud/types/router';
 import Breakable from '@/components/Breakable';
 import { RoleOption } from '@/components/OrganizationRolesSelect';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
 import Button from '@/ds-components/Button';
@@ -106,7 +107,11 @@ function Invitations() {
             image={<UsersEmpty />}
             imageDark={<UsersEmptyDark />}
             title="tenant_members.invitation_empty_placeholder.title"
-            description="tenant_members.invitation_empty_placeholder.description"
+            description={
+              isCloud
+                ? 'tenant_members.invitation_empty_placeholder.description'
+                : 'tenant_members.invite_modal.subtitle_oss'
+            }
             action={conditional(
               canInviteMember && (
                 <Button
@@ -128,29 +133,31 @@ function Invitations() {
         columns={[
           {
             dataIndex: 'user',
-            colSpan: 2,
+            colSpan: isCloud ? 2 : 4,
             title: t('user'),
             render: ({ invitee }) => <Breakable>{invitee}</Breakable>,
           },
-          {
-            dataIndex: 'roles',
-            colSpan: 2,
-            title: t('roles'),
-            render: ({ organizationRoles }) => {
-              if (organizationRoles.length === 0) {
-                return '-';
-              }
+          ...condArray(
+            isCloud && {
+              dataIndex: 'roles',
+              colSpan: 2,
+              title: t('roles'),
+              render: ({ organizationRoles }: TenantInvitationResponse) => {
+                if (organizationRoles.length === 0) {
+                  return '-';
+                }
 
-              return organizationRoles.map(({ id }) => (
-                <Tag key={id} variant="cell">
-                  <RoleOption
-                    value={id}
-                    title={t(id === TenantRole.Admin ? 'admin' : 'collaborator')}
-                  />
-                </Tag>
-              ));
-            },
-          },
+                return organizationRoles.map(({ id }) => (
+                  <Tag key={id} variant="cell">
+                    <RoleOption
+                      value={id}
+                      title={t(id === TenantRole.Admin ? 'admin' : 'collaborator')}
+                    />
+                  </Tag>
+                ));
+              },
+            }
+          ),
           {
             dataIndex: 'status',
             colSpan: 2,

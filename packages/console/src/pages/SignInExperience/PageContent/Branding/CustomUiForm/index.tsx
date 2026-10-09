@@ -85,13 +85,13 @@ function CustomUiForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
   const { control } = useFormContext<SignInExperienceForm>();
-  const { currentSubscriptionQuota, license } = useContext(SubscriptionDataContext);
+  const { currentSubscriptionQuota, licenseQuota } = useContext(SubscriptionDataContext);
   const isBringYourUiEnabled = currentSubscriptionQuota.bringYourUiEnabled;
   const { isCustomUiCspEnabled } = useBrandingEntitlements();
   // A self-hosted license that grants Bring your UI unlocks the upload, onto the storage the
   // deployment has configured, and the Custom UI CSP. The license is only read while self-hosted
   // plans are a dev feature.
-  const isLicensedBringYourUi = !isCloud && Boolean(license?.quota.bringYourUi);
+  const isLicensedBringYourUi = !isCloud && licenseQuota.bringYourUi;
   const shouldShowUploader = isCloud || isLicensedBringYourUi;
   const shouldShowOssBringYourUi = !shouldShowUploader;
   const shouldShowCustomUiCspForm = isCloud || isCustomUiCspEnabled;
