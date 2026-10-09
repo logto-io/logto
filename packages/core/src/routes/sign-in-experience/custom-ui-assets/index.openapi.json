@@ -29,7 +29,7 @@
             "description": "An JSON object containing the custom UI assets ID."
           },
           "400": {
-            "description": "Bad request. The request body is invalid. On self-hosted deployments, an unreadable or empty ZIP returns storage.invalid_custom_ui_zip, an extracted file of 10 MiB or more returns storage.custom_ui_file_too_large, and more than 200 entries (including folders) returns storage.custom_ui_too_many_entries. These validation errors include a localized message."
+            "description": "Bad request. The request body is invalid."
           },
           "403": {
             "description": "Bring your UI is not available under the current entitlements, including when the self-hosted license grace period has ended."
