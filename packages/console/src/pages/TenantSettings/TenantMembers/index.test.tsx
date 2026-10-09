@@ -18,6 +18,8 @@ jest.mock('@/cloud/hooks/use-cloud-api', () => ({ tryReadResponseErrorBody: jest
 
 jest.mock('@/consts/env', () => jest.requireActual<EnvTestUtils>('@/test-utils/env').mockEnvModule);
 
+jest.mock('@/scss/modal.module.scss', () => ({}));
+
 jest.mock('@/components/Region', () => ({ defaultRegionName: 'EU' }));
 
 jest.mock('@/contexts/AppThemeProvider', () => ({
