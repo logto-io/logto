@@ -12,6 +12,10 @@ import type { EnvTestUtils } from '@/test-utils/env';
 import TenantMembers from '.';
 import Invitations from './Invitations';
 
+// The subscription helpers import this ESM-only client, which Jest cannot resolve.
+jest.mock('@withtyped/client', () => ({ ResponseError: jest.fn() }), { virtual: true });
+jest.mock('@/cloud/hooks/use-cloud-api', () => ({ tryReadResponseErrorBody: jest.fn() }));
+
 jest.mock('@/consts/env', () => jest.requireActual<EnvTestUtils>('@/test-utils/env').mockEnvModule);
 
 jest.mock('@/components/Region', () => ({ defaultRegionName: 'EU' }));
