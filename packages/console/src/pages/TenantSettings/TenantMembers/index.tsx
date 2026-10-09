@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { startTransition, useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import useSWRMutation from 'swr/mutation';
+import { useSWRConfig } from 'swr';
 
 import InvitationIcon from '@/assets/icons/invitation.svg?react';
 import MembersIcon from '@/assets/icons/members.svg?react';
@@ -25,8 +25,8 @@ function TenantMembers() {
 
   const isInvitationTab = match(`/tenant-settings/${TenantSettingsTabs.Members}/invitations`);
 
-  const { invitationsKey, getInvitations } = useTenantMembersApi();
-  const { trigger: mutateInvitations } = useSWRMutation(invitationsKey, getInvitations);
+  const { invitationsKey } = useTenantMembersApi();
+  const { mutate } = useSWRConfig();
 
   return (
     <div className={styles.container}>
@@ -71,8 +71,10 @@ function TenantMembers() {
               return;
             }
 
+            // Refresh the shared cache even before the invitations list mounts.
+            void mutate(invitationsKey);
+
             if (isInvitationTab) {
-              void mutateInvitations();
               return;
             }
 
