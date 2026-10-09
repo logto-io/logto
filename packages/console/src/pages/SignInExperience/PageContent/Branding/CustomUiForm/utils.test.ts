@@ -17,7 +17,6 @@ describe('getOssBringYourUiCardContent', () => {
     const cloudUrl = new URL(content.cloudHref);
 
     expect(i18nKey).toBe('admin_console.sign_in_exp.custom_ui.bring_your_ui_oss_card_description');
-    expect(content.hasSelfHostedPlansOption).toBe(true);
     expect(content.selfHostedTargetBlank).toBe('noopener');
     expect(url.origin).toBe('https://logto.io');
     expect(url.pathname).toBe('/self-hosted-plans');

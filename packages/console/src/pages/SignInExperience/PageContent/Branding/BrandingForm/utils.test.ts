@@ -17,7 +17,6 @@ describe('getHideLogtoBrandingOssNote', () => {
     const cloudUrl = new URL(note.cloudHref);
 
     expect(i18nKey).toBe('admin_console.sign_in_exp.branding.hide_logto_branding_oss_note');
-    expect(note.hasSelfHostedPlansOption).toBe(true);
     expect(note.selfHostedTargetBlank).toBe('noopener');
     expect(url.origin).toBe('https://logto.io');
     expect(url.pathname).toBe('/self-hosted-plans');

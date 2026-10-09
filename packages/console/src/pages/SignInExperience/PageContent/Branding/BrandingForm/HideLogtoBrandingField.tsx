@@ -73,22 +73,17 @@ function HideLogtoBrandingField({ variant, isEnabled }: Props) {
                 className={styles.highlight}
               />
             ),
+            selfHosted: (
+              <TextLink
+                {...(ossNote.selfHostedTargetBlank
+                  ? { href: ossNote.selfHostedHref }
+                  : { to: ossNote.selfHostedHref })}
+                targetBlank={ossNote.selfHostedTargetBlank}
+                className={styles.highlight}
+              />
+            ),
           }}
         />
-        {ossNote.hasSelfHostedPlansOption && (
-          <>
-            {' · '}
-            <TextLink
-              {...(ossNote.selfHostedTargetBlank
-                ? { href: ossNote.selfHostedHref }
-                : { to: ossNote.selfHostedHref })}
-              targetBlank={ossNote.selfHostedTargetBlank}
-              className={styles.highlight}
-            >
-              <DynamicT forKey="upsell.explore_self_hosted_plans" />
-            </TextLink>
-          </>
-        )}
       </div>
     </FormField>
   );
