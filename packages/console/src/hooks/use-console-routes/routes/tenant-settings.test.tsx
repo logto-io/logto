@@ -7,6 +7,7 @@ import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import { useTenantSettings } from './tenant-settings';
 
 jest.mock('@/consts/env', () => ({ isCloud: false, isDevFeaturesEnabled: true }));
+jest.mock('@/components/Region', () => ({ defaultRegionName: 'US' }));
 jest.mock('@/contexts/SubscriptionDataProvider', () => ({}));
 jest.mock('@/contexts/TenantsProvider', () => ({}));
 jest.mock('@/hooks/use-current-tenant-scopes', () => jest.fn());
