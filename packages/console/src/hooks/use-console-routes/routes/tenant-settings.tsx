@@ -89,7 +89,7 @@ const useCloudTenantSettings = () => {
 
 const useOssTenantSettings = (): RouteObject => {
   const {
-    access: { canInviteMember },
+    access: { canRemoveMember },
   } = useCurrentTenantScopes();
 
   return useMemo(() => {
@@ -127,13 +127,12 @@ const useOssTenantSettings = (): RouteObject => {
             {
               path: `${TenantSettingsTabs.Members}/*`,
               element: <OssTenantMembers />,
-              // Only rendered when the license grants Console collaboration; the upsell has no
-              // child routes.
+              // Existing invitations remain manageable after the collaboration entitlement lapses.
               children: [
                 { path: '*', element: <NotFound /> },
                 { index: true, element: <Members /> },
                 ...condArray(
-                  canInviteMember && [{ path: 'invitations', element: <Invitations /> }]
+                  canRemoveMember && [{ path: 'invitations', element: <Invitations /> }]
                 ),
               ],
             },
@@ -149,7 +148,7 @@ const useOssTenantSettings = (): RouteObject => {
         ),
       ],
     };
-  }, [canInviteMember]);
+  }, [canRemoveMember]);
 };
 
 export const useTenantSettings = isCloud ? useCloudTenantSettings : useOssTenantSettings;
