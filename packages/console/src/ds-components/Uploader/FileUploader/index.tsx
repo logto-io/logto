@@ -1,7 +1,8 @@
-import type { AllowedUploadMimeType, UserAssets } from '@logto/schemas';
+import { type LogtoErrorCode } from '@logto/phrases';
+import type { AllowedUploadMimeType, RequestErrorBody, UserAssets } from '@logto/schemas';
 import { maxUploadFileSize } from '@logto/schemas';
 import classNames from 'classnames';
-import { type KyInstance } from 'ky';
+import { HTTPError, type KyInstance } from 'ky';
 import { useCallback, useEffect, useState } from 'react';
 import { type FileRejection, useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
@@ -29,6 +30,8 @@ export type Props<T extends Record<string, unknown> = UserAssets> = {
   readonly onUploadComplete?: (response: T) => void;
   readonly onUploadErrorChange: (errorMessage?: string, files?: File[]) => void;
   readonly className?: string;
+  /** Only these validation codes may display the API's localized message, never error details. */
+  readonly allowedErrorCodes?: readonly LogtoErrorCode[];
   /**
    * Specify which API instance to use for the upload request. For example, you can use admin tenant API instead.
    * The `timeout` prop will not be applied to this instance.
@@ -51,6 +54,7 @@ function FileUploader<T extends Record<string, unknown> = UserAssets>({
   onUploadComplete,
   onUploadErrorChange,
   className,
+  allowedErrorCodes,
   apiInstance,
   uploadUrl = 'api/user-assets',
 }: Props<T>) {
@@ -127,12 +131,39 @@ function FileUploader<T extends Record<string, unknown> = UserAssets>({
         if (error instanceof Error && error.name === 'AbortError') {
           return;
         }
+
+        if (error instanceof HTTPError && error.response.status === 400 && allowedErrorCodes) {
+          const body = await error.response
+            .clone()
+            .json<Partial<RequestErrorBody>>()
+            .catch(() => null);
+
+          if (
+            body?.code &&
+            allowedErrorCodes.includes(body.code) &&
+            typeof body.message === 'string'
+          ) {
+            setUploadError(body.message);
+            return;
+          }
+        }
+
         setUploadError(t('components.uploader.error_upload'));
       } finally {
         setIsUploading(false);
       }
     },
-    [api, apiInstance, allowedMimeTypes, maxSize, onUploadComplete, onUploadStart, t, uploadUrl]
+    [
+      api,
+      apiInstance,
+      allowedMimeTypes,
+      allowedErrorCodes,
+      maxSize,
+      onUploadComplete,
+      onUploadStart,
+      t,
+      uploadUrl,
+    ]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({

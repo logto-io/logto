@@ -3,6 +3,10 @@ const storage = {
   missing_parameter: '存儲提供程序缺少參數 {{parameter}}。',
   upload_error: '無法將文件上載到存儲提供程序。',
   download_error: 'Failed to download file from the storage provider.',
+  invalid_custom_ui_zip: '無法讀取壓縮檔。請重新建立一個非空的 ZIP 檔案並上載。',
+  custom_ui_file_too_large: '解壓後的每個檔案必須小於 10 MiB。請縮小檔案後重新上載。',
+  custom_ui_too_many_entries:
+    'ZIP 壓縮檔中的項目過多。請將檔案和資料夾的總數減至最多 200 個後重新上載。',
 };
 
 export default Object.freeze(storage);

@@ -1,3 +1,4 @@
+import { type LogtoErrorCode } from '@logto/phrases';
 import { type CustomUiAssets, maxUploadFileSize, type AllowedUploadMimeType } from '@logto/schemas';
 import { type Nullable } from '@silverhand/essentials';
 import { format } from 'date-fns/fp';
@@ -25,6 +26,11 @@ type Props = {
 };
 
 const allowedMimeTypes: AllowedUploadMimeType[] = ['application/zip'];
+const allowedErrorCodes: LogtoErrorCode[] = [
+  'storage.invalid_custom_ui_zip',
+  'storage.custom_ui_file_too_large',
+  'storage.custom_ui_too_many_entries',
+];
 
 function CustomUiAssetsUploader({ disabled, value, onChange }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -34,7 +40,11 @@ function CustomUiAssetsUploader({ disabled, value, onChange }: Props) {
   const showUploader = !value?.id && !file && !error;
   const { setIsUploading, setCancelUpload } = useContext(SignInExperienceContext);
 
-  const api = useApi({ timeout: requestTimeout, signal: abortController.signal });
+  const api = useApi({
+    timeout: requestTimeout,
+    signal: abortController.signal,
+    hideErrorToast: allowedErrorCodes,
+  });
 
   useEffect(() => {
     setCancelUpload(() => {
@@ -56,12 +66,13 @@ function CustomUiAssetsUploader({ disabled, value, onChange }: Props) {
     (errorMessage?: string, files?: File[]) => {
       if (errorMessage) {
         setError(errorMessage);
+        setIsUploading(false);
       }
       if (files?.length) {
         setFile(files[0]);
       }
     },
-    [setError, setFile]
+    [setError, setFile, setIsUploading]
   );
 
   if (showUploader) {
@@ -70,6 +81,7 @@ function CustomUiAssetsUploader({ disabled, value, onChange }: Props) {
         apiInstance={api}
         disabled={disabled}
         allowedMimeTypes={allowedMimeTypes}
+        allowedErrorCodes={allowedErrorCodes}
         maxSize={maxUploadFileSize}
         uploadUrl="api/sign-in-exp/default/custom-ui-assets"
         onUploadStart={() => {
