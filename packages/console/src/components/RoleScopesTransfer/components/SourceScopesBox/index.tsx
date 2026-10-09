@@ -1,5 +1,5 @@
 import type { ResourceResponse, Scope, ScopeResponse } from '@logto/schemas';
-import { isManagementApi, PredefinedScope, RoleType } from '@logto/schemas';
+import { PredefinedScope, RoleType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import type { ChangeEvent } from 'react';
@@ -13,6 +13,7 @@ import type { DetailedResourceResponse } from '@/components/RoleScopesTransfer/t
 import TextInput from '@/ds-components/TextInput';
 import type { RequestError } from '@/hooks/use-api';
 import transferLayout from '@/scss/transfer.module.scss';
+import { buildUrl } from '@/utils/url';
 
 import ResourceItem from '../ResourceItem';
 
@@ -31,7 +32,15 @@ function SourceScopesBox({ roleId, roleType, selectedScopes, onChange }: Props) 
   const { data: allResources, error: fetchAllResourcesError } = useSWR<
     ResourceResponse[],
     RequestError
-  >('api/resources?includeScopes=true');
+  >(
+    buildUrl('api/resources', {
+      includeScopes: String(true),
+      // Management API scopes are only assignable to machine-to-machine roles
+      ...conditional(
+        roleType !== RoleType.MachineToMachine && { excludeManagementApis: String(true) }
+      ),
+    })
+  );
 
   const { data: roleScopes, error: fetchRoleScopesError } = useSWR<Scope[], RequestError>(
     roleId && `api/roles/${roleId}/scopes`
@@ -84,12 +93,7 @@ function SourceScopesBox({ roleId, roleType, selectedScopes, onChange }: Props) 
     const excludeScopeIds = new Set([...existingScopeIds, PredefinedScope.All]);
 
     return allResources
-      .filter(
-        ({ indicator, scopes }) =>
-          /** Should show management API scopes for machine-to-machine roles */
-          (roleType === RoleType.MachineToMachine || !isManagementApi(indicator)) &&
-          scopes.some(({ id }) => !excludeScopeIds.has(id))
-      )
+      .filter(({ scopes }) => scopes.some(({ id }) => !excludeScopeIds.has(id)))
       .map(({ scopes, ...resource }) => ({
         ...resource,
         scopes: scopes
@@ -99,7 +103,7 @@ function SourceScopesBox({ roleId, roleType, selectedScopes, onChange }: Props) 
             resource,
           })),
       }));
-  }, [allResources, roleType, roleId, roleScopes]);
+  }, [allResources, roleId, roleScopes]);
 
   const dataSource = useMemo(() => {
     const lowerCasedKeyword = keyword.toLowerCase();

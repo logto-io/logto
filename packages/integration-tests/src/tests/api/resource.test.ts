@@ -67,6 +67,23 @@ describe('admin console api resources', () => {
     expect(resources.findIndex(({ name }) => name === resourceName)).not.toBe(-1);
   });
 
+  it('should exclude management api resources when requested', async () => {
+    const resource = await createResource();
+
+    const [allResourceIds, filteredResourceIds] = await Promise.all([
+      getResources().then((resources) => resources.map(({ id }) => id)),
+      getResources({ excludeManagementApis: 'true' }).then((resources) =>
+        resources.map(({ id }) => id)
+      ),
+    ]);
+
+    expect(allResourceIds).toContain(defaultManagementApi.resource.id);
+    expect(filteredResourceIds).not.toContain(defaultManagementApi.resource.id);
+    expect(filteredResourceIds).toContain(resource.id);
+
+    await deleteResource(resource.id);
+  });
+
   it('should update api resource details successfully', async () => {
     const resource = await createResource();
 
