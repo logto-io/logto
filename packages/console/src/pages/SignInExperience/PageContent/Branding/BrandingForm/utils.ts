@@ -13,6 +13,5 @@ export const getHideLogtoBrandingOssNote = () => {
     selfHostedHref: buildSelfHostedPlansUrl(entry),
     selfHostedTargetBlank: getSelfHostedPlansUpsellTargetBlank(),
     cloudHref: buildCloudUpsellUrl(entry),
-    hasSelfHostedPlansOption: true,
   };
 };

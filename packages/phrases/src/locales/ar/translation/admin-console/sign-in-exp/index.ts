@@ -43,7 +43,8 @@ const sign_in_exp = {
     hide_logto_branding: 'إخفاء علامة Logto التجارية',
     hide_logto_branding_description:
       'أزل عبارة "مدعوم من Logto". سلّط الضوء على علامتك فقط مع تجربة تسجيل دخول نظيفة واحترافية.',
-    hide_logto_branding_oss_note: 'هذه الميزة متاحة بشكل أصلي في <a>Logto Cloud</a>.',
+    hide_logto_branding_oss_note:
+      'هذه الميزة متاحة في <a>Logto Cloud</a> أو ضمن <selfHosted>خطط الاستضافة الذاتية</selfHosted>.',
   },
   branding_uploads: {
     app_logo: {
@@ -93,7 +94,7 @@ const sign_in_exp = {
       'قم بتحميل حزمة مضغوطة (.zip) لاستبدال واجهة المستخدم المُعدة مسبقًا في Logto بالشفرة الخاصة بك. <a>تعلم المزيد</a>',
     bring_your_ui_oss_description: 'خصّص واجهة تسجيل الدخول باستخدام الشيفرة الخاصة بك.',
     bring_your_ui_oss_card_description:
-      'حمّل واجهة تسجيل الدخول المخصصة الخاصة بك مباشرةً إلى <a>Logto Cloud</a>. لا حاجة إلى عمل fork أو إعادة النشر.',
+      'رفع واجهة مستخدم مخصصة متاح في <a>Logto Cloud</a> أو ضمن <selfHosted>خطط الاستضافة الذاتية</selfHosted>. لا حاجة إلى عمل fork أو إعادة النشر.',
     bring_your_ui_oss_try_cloud: 'جرّب Cloud',
     preview_with_bring_your_ui_description:
       'تم تحميل أصول واجهة المستخدم المخصصة الخاصة بك بنجاح ويتم تقديمها الآن. وبالتالي ، تم تعطيل نافذة المعاينة المدمجة.\nلتجربة واجهة تسجيل الدخول المخصصة الخاصة بك ، انقر فوق زر "المعاينة المباشرة" لفتحها في علامة تبويب مستعرض جديدة.',

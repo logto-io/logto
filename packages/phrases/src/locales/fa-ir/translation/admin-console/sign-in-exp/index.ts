@@ -45,7 +45,8 @@ const sign_in_exp = {
     hide_logto_branding: 'پنهان کردن برندینگ Logto',
     hide_logto_branding_description:
       'عبارت "Powered by Logto" را حذف کنید. برند خود را با یک تجربه ورود تمیز و حرفه‌ای برجسته کنید.',
-    hide_logto_branding_oss_note: 'این ویژگی به طور بومی در <a>Logto Cloud</a> موجود است.',
+    hide_logto_branding_oss_note:
+      'این ویژگی در <a>Logto Cloud</a> یا <selfHosted>طرح‌های self-hosted</selfHosted> در دسترس است.',
   },
   branding_uploads: {
     app_logo: {
@@ -95,7 +96,7 @@ const sign_in_exp = {
       'یک بسته فشرده (.zip) آپلود کنید تا رابط کاربری از پیش‌ساخته Logto را با کد خود جایگزین کنید. <a>بیشتر بدانید</a>',
     bring_your_ui_oss_description: 'رابط کاربری ورود را با کد خود سفارشی کنید.',
     bring_your_ui_oss_card_description:
-      'رابط کاربری ورود سفارشی خود را مستقیماً در <a>Logto Cloud</a> آپلود کنید. نیازی به fork و استقرار مجدد نیست.',
+      'آپلود رابط کاربری سفارشی در <a>Logto Cloud</a> یا <selfHosted>طرح‌های self-hosted</selfHosted> در دسترس است. نیازی به fork و استقرار مجدد نیست.',
     bring_your_ui_oss_try_cloud: 'امتحان Cloud',
     preview_with_bring_your_ui_description:
       'دارایی‌های رابط کاربری سفارشی شما با موفقیت آپلود شده و در حال ارائه هستند. در نتیجه، پنجره پیش‌نمایش داخلی غیرفعال شده است.\nبرای آزمایش رابط کاربری ورود شخصی‌سازی‌شده خود، روی دکمه "پیش‌نمایش زنده" کلیک کنید تا در یک تب جدید مرورگر باز شود.',

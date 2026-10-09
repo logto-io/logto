@@ -14,6 +14,5 @@ export const getOssBringYourUiCardContent = () => {
     selfHostedHref: buildSelfHostedPlansUrl(entry),
     selfHostedTargetBlank: getSelfHostedPlansUpsellTargetBlank(),
     cloudHref,
-    hasSelfHostedPlansOption: true,
   };
 };

@@ -58,22 +58,17 @@ function OssBringYourUiCard() {
                     className={styles.highlight}
                   />
                 ),
+                selfHosted: (
+                  <TextLink
+                    {...(cardContent.selfHostedTargetBlank
+                      ? { href: cardContent.selfHostedHref }
+                      : { to: cardContent.selfHostedHref })}
+                    targetBlank={cardContent.selfHostedTargetBlank}
+                    className={styles.highlight}
+                  />
+                ),
               }}
             />
-            {cardContent.hasSelfHostedPlansOption && (
-              <>
-                {' · '}
-                <TextLink
-                  {...(cardContent.selfHostedTargetBlank
-                    ? { href: cardContent.selfHostedHref }
-                    : { to: cardContent.selfHostedHref })}
-                  targetBlank={cardContent.selfHostedTargetBlank}
-                  className={styles.highlight}
-                >
-                  <DynamicT forKey="upsell.explore_self_hosted_plans" />
-                </TextLink>
-              </>
-            )}
           </div>
         </div>
       </div>
