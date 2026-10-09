@@ -103,7 +103,7 @@ export const createScopeQueries = (pool: CommonQueryMethods) => {
       ? pool.any<Scope>(sql`
         select ${sql.join(Object.values(fields), sql`, `)}
         from ${table}
-        where ${fields.resourceId} in (${sql.join(resourceIds, sql`, `)})
+        where ${fields.resourceId} = any(${sql.array(resourceIds, 'varchar')})
       `)
       : [];
 
