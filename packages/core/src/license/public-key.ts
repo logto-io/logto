@@ -7,28 +7,31 @@ import { EnvSet } from '#src/env-set/index.js';
 import { licenseConsoleLog } from './console.js';
 
 /**
- * The Ed25519 public key every self-hosted license key is verified against, as a serialized JWK.
+ * The ES256 (ECDSA P-256) public key every self-hosted license key is verified against, as a
+ * serialized JWK.
  *
- * Its private half is held outside this repository by the Logto license issuer, which is what lets
- * an instance verify a license fully offline while never being able to mint one.
+ * Its private half is generated inside, and never leaves, a hardware-backed key vault operated by
+ * the Logto license issuer, which is what lets an instance verify a license fully offline while
+ * never being able to mint one.
  *
  * `EnvSet.values.selfHostedLicensePublicKey` replaces it — see there for the terms it is honored
  * on.
  */
 const bakedInPublicKey =
-  '{"crv":"Ed25519","x":"B-GbBl3jWlwMasSUnG_q61q5a_lwTCKOyfm7arFia94","kty":"OKP"}';
+  '{"kty":"EC","crv":"P-256","x":"7eLZmvg2Ii9CMbshTaZAk23W41RSeAm08MvkTe70wWI","y":"-ldoara_xCa6Vm3SWYtJoAE8up3NI3cK685nhWiE7oQ"}';
 
 /**
- * An Ed25519 public key in JWK form, i.e. what `jose` exports an `EdDSA` public key to.
+ * An ES256 public key in JWK form, i.e. what `jose` exports an `ES256` public key to.
  *
- * Only these three fields are read. A serialized private key keeps its `x` and loses its `d` here,
- * so it is imported as the public key it contains rather than becoming a signing key held by the
- * instance.
+ * Only these four fields are read. A serialized private key keeps its `x` and `y` and loses its
+ * `d` here, so it is imported as the public key it contains rather than becoming a signing key
+ * held by the instance.
  */
-const ed25519PublicKeyGuard = z.object({
-  kty: z.literal('OKP'),
-  crv: z.literal('Ed25519'),
+const es256PublicKeyGuard = z.object({
+  kty: z.literal('EC'),
+  crv: z.literal('P-256'),
   x: z.string(),
+  y: z.string(),
 });
 
 /**
@@ -39,7 +42,7 @@ const ed25519PublicKeyGuard = z.object({
 const importedKeys = new Map<string, Promise<CryptoKey | Uint8Array>>();
 
 /**
- * @throws {TypeError} When `jwk` is not a serialized Ed25519 public JWK.
+ * @throws {TypeError} When `jwk` is not a serialized ES256 public JWK.
  */
 const importPublicKey = async (jwk: string): Promise<CryptoKey | Uint8Array> => {
   const cached = importedKeys.get(jwk);
@@ -48,15 +51,15 @@ const importPublicKey = async (jwk: string): Promise<CryptoKey | Uint8Array> => 
     return cached;
   }
 
-  const result = ed25519PublicKeyGuard.safeParse(trySafe<unknown>(() => JSON.parse(jwk)));
+  const result = es256PublicKeyGuard.safeParse(trySafe<unknown>(() => JSON.parse(jwk)));
 
   if (!result.success) {
-    throw new TypeError('Invalid license public key: expected a serialized Ed25519 public JWK.', {
+    throw new TypeError('Invalid license public key: expected a serialized ES256 public JWK.', {
       cause: result.error,
     });
   }
 
-  const imported = importJWK(result.data, 'EdDSA');
+  const imported = importJWK(result.data, 'ES256');
   importedKeys.set(jwk, imported);
 
   return imported;
@@ -100,7 +103,7 @@ const readPublicKeyJwk = (): string => {
 /**
  * The public key to verify license keys against.
  *
- * @throws {TypeError} When the configured key is not a serialized Ed25519 public JWK.
+ * @throws {TypeError} When the configured key is not a serialized ES256 public JWK.
  */
 export const getLicensePublicKey = async (): Promise<CryptoKey | Uint8Array> =>
   importPublicKey(readPublicKeyJwk());

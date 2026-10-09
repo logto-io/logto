@@ -231,7 +231,7 @@ export const cloudflareGuard: Readonly<{
  * one license no matter how many instances share the database.
  */
 export const installedLicenseGuard = z.object({
-  /** The raw Ed25519-signed license key JWT, exactly as it was installed. */
+  /** The raw ES256-signed license key JWT, exactly as it was installed. */
   jwt: z.string(),
   /** When the key was installed, as an ISO 8601 timestamp. */
   installedAt: z.string(),

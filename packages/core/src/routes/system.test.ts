@@ -21,7 +21,7 @@ await mockIdGenerators();
 const keyPair = await createLicenseKeyPair();
 
 /** The public key the mocked build trusts, so a test can install licenses this instance accepts. */
-const trustedKey = await importJWK(JSON.parse(keyPair.publicKey) as JWK, 'EdDSA');
+const trustedKey = await importJWK(JSON.parse(keyPair.publicKey) as JWK, 'ES256');
 const getLicensePublicKey = jest.fn(async (): Promise<unknown> => trustedKey);
 mockEsm('#src/license/public-key.js', () => ({ getLicensePublicKey }));
 

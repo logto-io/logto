@@ -9,7 +9,7 @@ const oneYearInSeconds = 365 * 24 * 60 * 60;
 
 /**
  * Flip the first character of the signature, so the key no longer verifies. The last character is
- * no good for this: the final base64url character of a 64-byte Ed25519 signature only carries
+ * no good for this: the final base64url character of a 64-byte ES256 signature only carries
  * padding bits, and changing it can leave the decoded signature untouched.
  */
 const tamper = (license: string) => {
