@@ -34,7 +34,7 @@ export type PaywallPlanId = Extract<
 export type Props = {
   /**
    * Whether the tag should be visible. It should be `true` if the tenant's subscription
-   * plan has NO access to the feature (paywall), but it will always be visible for dev
+   * plan has NO access to the feature (paywall), but it will always be visible for Cloud dev
    * tenants.
    */
   readonly isVisible: boolean;
@@ -62,7 +62,7 @@ export type Props = {
  *
  * The tag will be visible if `isVisible` is `true`, which means that
  * the tenant's subscription plan has no access to the feature (paywall). However, it will always
- * be visible for dev tenants since they have access to almost all features, and it's useful for
+ * be visible for Cloud dev tenants since they have access to almost all features, and it's useful for
  * developers to know which features need to be paid for in production.
  *
  * CAUTION: You should only render this component when the feature has a paywall.
@@ -73,7 +73,7 @@ export type Props = {
  * // In a production tenant, the tag will be visible when there's no access to the feature
  * <FeatureTag isVisible={noAccessToFeature} plan={ReservedPlanId.Pro} />
  *
- * // In a dev tenant, the tag will always be visible even if `isVisible` is `false`
+ * // In a Cloud dev tenant, the tag will always be visible even if `isVisible` is `false`
  * <FeatureTag isVisible={false} plan={ReservedPlanId.Pro} />
  *
  * // For conditionally rendering the tag, usually in an iteration on a list which contains
@@ -90,9 +90,9 @@ function FeatureTag(props: Props) {
 
   const { isVisible } = props;
 
-  // Dev tenant should always see the tag since they have access to almost all features, and it's
-  // useful for developers to know which features need to be paid for in production.
-  if (!isDevTenant && !isVisible) {
+  // Only Cloud dev tenants always see paid feature tags. OSS also uses a dev tenant fallback,
+  // but its tags should follow the feature's entitlement instead.
+  if (!(isCloud && isDevTenant) && !isVisible) {
     return null;
   }
 
