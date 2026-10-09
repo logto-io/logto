@@ -12,6 +12,8 @@ import { type Response } from 'supertest';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { type VerifiedLicense } from '#src/license/LicenseReader.js';
+import koaErrorHandler from '#src/middleware/koa-error-handler.js';
+import koaI18next from '#src/middleware/koa-i18next.js';
 import SystemContext from '#src/tenants/SystemContext.js';
 import { buildLicensePayload } from '#src/test-utils/license.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -334,9 +336,40 @@ describe('POST /sign-in-exp/default/custom-ui-assets', () => {
       await new AdmZip().writeZipPromise(pathToEmptyZip);
       const response = await upload(pathToEmptyZip);
 
+      expect(response.status).toBe(400);
+      expect(response.text).toBe(
+        'The archive could not be read. Create a non-empty ZIP using Deflate or no compression, then upload it again.'
+      );
+      expect(mockedS3UploadFile).not.toHaveBeenCalled();
+    });
+
+    it('should serialize localized validation errors without internal details', async () => {
+      withLicense(true);
+      const requester = createRequester({
+        authedRoutes: signInExperiencesRoutes,
+        tenantContext,
+        middlewares: [koaI18next(), koaErrorHandler()],
+      });
+      const response = await requester
+        .post('/sign-in-exp/default/custom-ui-assets')
+        .set('Accept-Language', 'en')
+        .attach('file', Buffer.from('not-a-zip'), 'assets.zip');
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({
+        code: 'storage.invalid_custom_ui_zip',
+        message:
+          'The archive could not be read. Create a non-empty ZIP using Deflate or no compression, then upload it again.',
+      });
+    });
+
+    it('should preserve storage failures instead of classifying them as invalid archives', async () => {
+      withLicense(true);
+      mockedS3UploadFile.mockRejectedValueOnce(new Error('Internal storage failure'));
+      const response = await upload(pathToZip);
+
       expect(response.status).toBe(500);
       expect(response.text).toBe('Failed to upload file to the storage provider.');
-      expect(mockedS3UploadFile).not.toHaveBeenCalled();
     });
 
     it('should fail when the blobs storage is not configured', async () => {

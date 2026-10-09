@@ -86,10 +86,16 @@ describe('unzipCustomUiAssets()', () => {
     expect(uploadFile).not.toHaveBeenCalled();
   });
 
-  it('should reject an empty zip', async () => {
-    await expect(
-      unzipCustomUiAssets(new AdmZip().toBuffer(), 'prefix', uploadFile)
-    ).rejects.toThrow('Zip file is empty');
+  it.each([
+    new AdmZip().toBuffer(),
+    Buffer.from('not-a-zip'),
+    buildZip({ 'index.html': '' }).subarray(0, 20),
+  ])('should reject an unreadable or empty zip', async (buffer) => {
+    await expect(unzipCustomUiAssets(buffer, 'prefix', uploadFile)).rejects.toMatchObject({
+      status: 400,
+      code: 'storage.invalid_custom_ui_zip',
+    });
+    expect(uploadFile).not.toHaveBeenCalled();
   });
 
   it('should reject a zip with too many entries', async () => {
@@ -97,22 +103,48 @@ describe('unzipCustomUiAssets()', () => {
       Array.from({ length: 201 }, (_, index) => [`${index}.txt`, ''])
     );
 
-    await expect(unzipCustomUiAssets(buildZip(entries), 'prefix', uploadFile)).rejects.toThrow(
-      'Zip file contains too many entries'
-    );
+    await expect(
+      unzipCustomUiAssets(buildZip(entries), 'prefix', uploadFile)
+    ).rejects.toMatchObject({
+      status: 400,
+      code: 'storage.custom_ui_too_many_entries',
+    });
     expect(uploadFile).not.toHaveBeenCalled();
   });
 
-  it('should reject a file of 10 MB or more', async () => {
-    const zip = new AdmZip();
-    zip.addFile('index.html', Buffer.from(''));
-    zip.addFile('large.bin', Buffer.alloc(10 * 1024 * 1024));
-
-    await expect(unzipCustomUiAssets(zip.toBuffer(), 'prefix', uploadFile)).rejects.toThrow(
-      'File large.bin is too large'
+  it('should accept 200 entries and a file one byte below 10 MiB', async () => {
+    const entries = Object.fromEntries(
+      Array.from({ length: 199 }, (_, index) => [`${index}.txt`, ''])
     );
-    expect(uploadFile).not.toHaveBeenCalled();
+    await unzipCustomUiAssets(
+      buildZip({ ...entries, 'index.html': 'a'.repeat(10 * 1024 * 1024 - 1) }),
+      'prefix',
+      uploadFile
+    );
+    expect(getUploadedKeys()).toHaveLength(200);
+    expect(uploadFile).toHaveBeenCalledWith(
+      expect.objectContaining({ length: 10 * 1024 * 1024 - 1 }),
+      'prefix/index.html',
+      { contentType: 'text/html', isPublic: false }
+    );
   });
+
+  it.each([10 * 1024 * 1024, 10 * 1024 * 1024 + 1])(
+    'should reject a file of %i bytes',
+    async (size) => {
+      const zip = new AdmZip();
+      zip.addFile('index.html', Buffer.from(''));
+      zip.addFile('large.bin', Buffer.alloc(size));
+
+      const result = unzipCustomUiAssets(zip.toBuffer(), 'prefix', uploadFile);
+      await expect(result).rejects.toMatchObject({
+        status: 400,
+        code: 'storage.custom_ui_file_too_large',
+      });
+      await expect(result).rejects.toThrow('large.bin');
+      expect(uploadFile).not.toHaveBeenCalled();
+    }
+  );
 
   it('should reject a file of 10 MB or more that declares a size of 0', async () => {
     const zip = new AdmZip();
@@ -129,9 +161,12 @@ describe('unzipCustomUiAssets()', () => {
       buffer.writeUInt32LE(0, headerOffset + sizeOffset);
     }
 
-    await expect(unzipCustomUiAssets(buffer, 'prefix', uploadFile)).rejects.toThrow(
-      'File a-large.bin is too large'
-    );
+    const result = unzipCustomUiAssets(buffer, 'prefix', uploadFile);
+    await expect(result).rejects.toMatchObject({
+      status: 400,
+      code: 'storage.custom_ui_file_too_large',
+    });
+    await expect(result).rejects.toThrow('a-large.bin');
     // Other files may upload concurrently, but the oversized entry must never reach storage.
     expect(uploadFile).not.toHaveBeenCalledWith(
       expect.anything(),
@@ -151,8 +186,11 @@ describe('unzipCustomUiAssets()', () => {
       // eslint-disable-next-line @silverhand/fp/no-mutation -- Craft a malicious entry name.
       crafted!.entryName = entryName;
 
-      await expect(unzipCustomUiAssets(zip.toBuffer(), 'prefix', uploadFile)).rejects.toThrow(
-        'Invalid zip entry path'
+      await expect(unzipCustomUiAssets(zip.toBuffer(), 'prefix', uploadFile)).rejects.toMatchObject(
+        {
+          status: 400,
+          code: 'storage.invalid_custom_ui_zip',
+        }
       );
       expect(uploadFile).not.toHaveBeenCalled();
     }
