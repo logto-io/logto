@@ -1,0 +1,6 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  // Match the other global banners at the top of ConsoleContent.
+  padding-block: _.unit(4);
+}
