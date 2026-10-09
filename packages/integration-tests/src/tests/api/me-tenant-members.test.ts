@@ -410,15 +410,18 @@ devFeatureTest.describe('me tenant members and invitations', () => {
         .json<Array<{ id: string }>>();
       expect(after).toHaveLength(1);
     } finally {
-      await authedAdminTenantApi.post(`organizations/${tenantOrganizationId}/users`, {
-        json: { userIds: otherMembers.map(({ id }) => id) },
-      });
       await Promise.all(
-        otherMembers.map(async ({ id, organizationRoles }) =>
-          authedAdminTenantApi.put(`organizations/${tenantOrganizationId}/users/${id}/roles`, {
-            json: { organizationRoleIds: organizationRoles.map(({ id }) => id) },
-          })
-        )
+        otherMembers.map(async ({ id, organizationRoles }) => {
+          await authedAdminTenantApi.post(`organizations/${tenantOrganizationId}/users`, {
+            json: { userIds: [id] },
+          });
+          await authedAdminTenantApi.put(
+            `organizations/${tenantOrganizationId}/users/${id}/roles`,
+            {
+              json: { organizationRoleIds: organizationRoles.map(({ id }) => id) },
+            }
+          );
+        })
       );
     }
   });
