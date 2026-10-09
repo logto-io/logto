@@ -9,6 +9,11 @@ import useOssTenantMfa from '@/hooks/use-oss-tenant-mfa';
 
 import Settings from '.';
 
+jest.mock('@/scss/modal.module.scss', () => ({}));
+// The Cloud client is ESM-only; this OSS form submits through Ky.
+jest.mock('@withtyped/client', () => ({ ResponseError: class extends Error {} }), {
+  virtual: true,
+});
 jest.mock('@/hooks/use-oss-tenant-mfa', () => ({ __esModule: true, default: jest.fn() }));
 jest.mock('@/hooks/use-tenant-pathname', () => ({ __esModule: true, default: jest.fn() }));
 jest.mock('@/components/FeatureTag', () => ({
