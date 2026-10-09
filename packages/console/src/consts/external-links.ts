@@ -38,6 +38,7 @@ export const organizationBrandingLink =
 export const organizationLogosForExperienceLink =
   '/docs/recipes/customize-sie/match-your-brand/#organization-specific-logos';
 export const signingKeysLink = '/docs/references/openid-connect/signing-keys-rotation/';
+export const selfHostedLicenseGuideLink = '/logto-oss/self-hosted-license';
 export const organizationTemplateLink = '/authorization/organization-template';
 export const organizationRoleLink =
   '/docs/recipes/organizations/understand-how-it-works/#organization-role';

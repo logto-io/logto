@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
 import SkuName from '@/components/SkuName';
+import { selfHostedLicenseGuideLink } from '@/consts/external-links';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -116,6 +117,7 @@ function LicenseDetails({ license }: Props) {
       <FormCard
         title="tenants.license.details_title"
         description="tenants.license.details_description"
+        learnMoreLink={{ href: selfHostedLicenseGuideLink }}
       >
         <Table
           hasBorder
