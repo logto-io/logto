@@ -1,13 +1,18 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
+import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import PageMeta from '@/components/PageMeta';
+import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import FormField from '@/ds-components/FormField';
 import Switch from '@/ds-components/Switch';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useOssTenantMfa from '@/hooks/use-oss-tenant-mfa';
+import { trySubmitSafe } from '@/utils/form';
 import { getUserTitle } from '@/utils/user';
 
 import styles from './index.module.scss';
@@ -18,7 +23,19 @@ function Settings() {
   const { license } = useContext(SubscriptionDataContext);
   const { show } = useConfirmModal();
   const { data, updateMfaRequirement, getMembersWithoutMfa } = useOssTenantMfa();
-  const [isUpdating, setIsUpdating] = useState(false);
+  const {
+    control,
+    reset,
+    handleSubmit,
+    formState: { isDirty, isSubmitting: isUpdating },
+  } = useForm({ defaultValues: { isMfaRequired: data?.isMfaRequired ?? false } });
+
+  useEffect(() => {
+    // Keep in-progress edits when SWR revalidates the saved setting.
+    if (data && !isDirty) {
+      reset({ isMfaRequired: data.isMfaRequired });
+    }
+  }, [data, isDirty, reset]);
 
   const isMfaRequired = data?.isMfaRequired ?? false;
   // Turning the requirement off stays possible without the entitlement, e.g. after the license
@@ -59,34 +76,52 @@ function Settings() {
     return result;
   };
 
-  const onToggle = async (checked: boolean) => {
-    setIsUpdating(true);
-
-    try {
-      if (checked && !(await confirmEnabling())) {
+  const onSubmit = handleSubmit(
+    trySubmitSafe(async (formData) => {
+      if (!data?.isAdmin || isUpdating || !isDirty) {
         return;
       }
 
-      await updateMfaRequirement(checked);
-    } finally {
-      setIsUpdating(false);
-    }
-  };
+      if (formData.isMfaRequired && !(await confirmEnabling())) {
+        return;
+      }
+
+      await updateMfaRequirement(formData.isMfaRequired);
+      reset(formData);
+      toast.success(t('general.saved'));
+    })
+  );
 
   return (
-    <FormCard title="tenants.settings.title" description="tenants.settings.oss_description">
+    <>
       <PageMeta titleKey={['tenants.tabs.settings', 'tenants.title']} />
-      <FormField title="tenants.settings.tenant_mfa">
-        <Switch
-          label={t('tenants.settings.tenant_mfa_description')}
-          disabled={isDisabled}
-          checked={isMfaRequired}
-          onChange={({ currentTarget: { checked } }) => {
-            void onToggle(checked);
-          }}
-        />
-      </FormField>
-    </FormCard>
+      <DetailsForm
+        isDirty={isDirty && Boolean(data?.isAdmin)}
+        isSubmitting={isUpdating}
+        onSubmit={onSubmit}
+        onDiscard={reset}
+      >
+        <FormCard title="tenants.settings.title" description="tenants.settings.oss_description">
+          <FormField title="tenants.settings.tenant_mfa">
+            <Controller
+              name="isMfaRequired"
+              control={control}
+              render={({ field: { value, onChange } }) => (
+                <Switch
+                  label={t('tenants.settings.tenant_mfa_description')}
+                  disabled={isDisabled}
+                  checked={value}
+                  onChange={({ currentTarget: { checked } }) => {
+                    onChange(checked);
+                  }}
+                />
+              )}
+            />
+          </FormField>
+        </FormCard>
+      </DetailsForm>
+      <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />
+    </>
   );
 }
 
