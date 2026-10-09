@@ -1,5 +1,7 @@
+import resources from '@logto/phrases';
 import { LicenseEnv, ReservedPlanId, ossDefaultQuota } from '@logto/schemas';
 import { fireEvent, render, screen } from '@testing-library/react';
+import i18next from 'i18next';
 import { useContext, useMemo } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
@@ -49,6 +51,10 @@ function Preview({
 }
 
 describe('OssLicenseBanner', () => {
+  beforeAll(() => {
+    i18next.addResourceBundle('en', 'translation', resources.en.translation, true);
+  });
+
   beforeEach(() => {
     resetMockEnv();
     mockEnv({ isDevFeaturesEnabled: true });
@@ -68,26 +74,29 @@ describe('OssLicenseBanner', () => {
   });
 
   it.each([
-    { overrides: { refusalReason: 'unpaid' }, message: 'refresh_refused_description' },
+    {
+      overrides: { refusalReason: 'unpaid' },
+      message: /The license refresh was refused because the license is unpaid\./,
+    },
     {
       overrides: { expiresAt: '2026-10-09T00:00:00.000Z' },
-      message: 'refresh_expired_description',
+      message: /The license key expired on Oct 9, 2026\./,
     },
     {
       overrides: { graceEndsAt: '2026-10-09T00:00:00.000Z', refusalReason: 'unpaid' },
-      message: 'grace_expired_description',
+      message: /The license grace period ended on Oct 9, 2026\./,
     },
   ])('shows $message and links internally to License', ({ overrides, message }) => {
     render(<Preview installedLicense={{ ...license, ...overrides }} />);
-    expect(screen.getByText(`tenants.license.${message}`)).not.toBeNull();
+    expect(screen.getByText(message)).not.toBeNull();
 
-    const link = screen.getByRole('link', { name: 'tenants.tabs.license' });
+    const link = screen.getByRole('link', { name: 'License' });
     expect(link.getAttribute('href')).toBe('/console/tenant-settings/license');
     expect(link.getAttribute('target')).toBeNull();
     fireEvent.click(link);
 
     expect(screen.getByText('License page')).not.toBeNull();
-    expect(screen.queryByText(`tenants.license.${message}`)).toBeNull();
+    expect(screen.queryByText(message)).toBeNull();
   });
 
   it.each([
@@ -116,7 +125,7 @@ describe('OssLicenseBanner', () => {
     const { rerender } = render(
       <Preview installedLicense={{ ...license, refusalReason: 'expired' }} />
     );
-    expect(screen.getByText('tenants.license.refresh_refused_description')).not.toBeNull();
+    expect(screen.getByText(/The license refresh was refused/)).not.toBeNull();
 
     rerender(<Preview installedLicense={license} />);
     expect(screen.queryByRole('link')).toBeNull();
