@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
 import SkuName from '@/components/SkuName';
+import { selfHostedLicenseGuideLink } from '@/consts/external-links';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
@@ -76,6 +77,7 @@ function LicenseDetails({ license }: Props) {
       <FormCard
         title="tenants.license.details_title"
         description="tenants.license.details_description"
+        learnMoreLink={{ href: selfHostedLicenseGuideLink }}
       >
         <FormField title="tenants.license.plan_field">
           <div className={styles.value}>
