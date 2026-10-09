@@ -83,16 +83,11 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
   const hasTenantMembersReachedLimit = hasReachedSubscriptionQuotaLimit('tenantMembersLimit');
 
   const onSubmit = handleSubmit(async ({ emails, role }) => {
-    if (role === TenantRole.Admin) {
+    if (isCloud && role === TenantRole.Admin) {
       const [result] = await show({
         ModalContent: () => (
           <Trans components={{ ul: <ul className={styles.list} />, li: <li /> }}>
-            {/* A self-hosted admin has no billing plan or tenant deletion to manage. */}
-            {t(
-              isCloud
-                ? 'tenant_members.assign_admin_confirm'
-                : 'tenant_members.assign_admin_confirm_oss'
-            )}
+            {t('tenant_members.assign_admin_confirm')}
           </Trans>
         ),
         confirmButtonText: 'general.confirm',
@@ -135,7 +130,11 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
         title={isCloud ? 'tenant_members.invite_modal.title' : 'tenant_members.invite_members'}
         paywall={conditional(isCloud && !isPaidTenant && latestProPlanId)}
         hasAddOnTag={isCloud && isPaidTenant && hasTenantMembersReachedLimit}
-        subtitle="tenant_members.invite_modal.subtitle"
+        subtitle={
+          isCloud
+            ? 'tenant_members.invite_modal.subtitle'
+            : 'tenant_members.invite_modal.subtitle_oss'
+        }
         footer={
           conditional(
             isCloud &&
@@ -199,15 +198,17 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
               )}
             />
           </FormField>
-          <FormField title="tenant_members.roles">
-            <Controller
-              name="role"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <Select options={roleOptions} value={value} onChange={onChange} />
-              )}
-            />
-          </FormField>
+          {isCloud && (
+            <FormField title="tenant_members.roles">
+              <Controller
+                name="role"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <Select options={roleOptions} value={value} onChange={onChange} />
+                )}
+              />
+            </FormField>
+          )}
         </FormProvider>
       </ModalLayout>
     </ReactModal>

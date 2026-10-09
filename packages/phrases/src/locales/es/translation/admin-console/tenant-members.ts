@@ -12,6 +12,8 @@ const tenant_members = {
   invite_modal: {
     title: 'Invitar personas a Logto Cloud',
     subtitle: 'Para invitar miembros a una organización, deben aceptar la invitación.',
+    subtitle_oss:
+      'Los miembros invitados reciben acceso completo de administrador a esta instancia de Logto.',
     to: 'Para',
     added_as: 'Añadido como roles',
     email_input_placeholder: 'johndoe@example.com',
@@ -40,8 +42,6 @@ const tenant_members = {
   delete_user_confirm: '¿Estás seguro de que quieres eliminar a este usuario de este inquilino?',
   assign_admin_confirm:
     '¿Estás seguro de que deseas hacer que el/los usuario(s) seleccionado(s) sea(n) administrador(es)? Otorgar acceso de administrador dará al usuario/los usuarios los siguientes permisos.<ul><li>Cambiar el plan de facturación del inquilino</li><li>Agregar o eliminar colaboradores</li><li>Eliminar el inquilino</li></ul>',
-  assign_admin_confirm_oss:
-    '¿Estás seguro de que deseas hacer que el/los usuario(s) seleccionado(s) sea(n) administrador(es)? Otorgar acceso de administrador dará al usuario/los usuarios los siguientes permisos.<ul><li>Invitar o eliminar miembros</li><li>Cambiar los roles de los miembros</li><li>Exigir MFA a todos los miembros</li></ul>',
   revoke_invitation_confirm: '¿Estás seguro de que quieres revocar esta invitación?',
   delete_invitation_confirm: '¿Estás seguro de que quieres eliminar este registro de invitación?',
   messages: {

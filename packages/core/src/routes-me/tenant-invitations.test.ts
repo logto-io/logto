@@ -38,7 +38,7 @@ const buildInvitation = (id: string, invitee: string, organizationId = tenantOrg
   createdAt: 0,
   updatedAt: 0,
   expiresAt: Date.now() + 1000,
-  organizationRoles: [{ id: TenantRole.Collaborator, name: TenantRole.Collaborator }],
+  organizationRoles: [{ id: TenantRole.Admin, name: TenantRole.Admin }],
 });
 
 const invitationsById = new Map<string, ReturnType<typeof buildInvitation>>();
@@ -196,10 +196,10 @@ describe('me tenant invitation routes', () => {
   });
 
   describe('POST /tenant/invitations', () => {
-    it('should invite each email with the role, and email a sign-in link through the default tenant', async () => {
+    it('should invite admins and send sign-in links', async () => {
       const response = await request
         .post('/tenant/invitations')
-        .send({ invitee: ['Baz@example.com', 'bar@example.com'], roleName: TenantRole.Admin });
+        .send({ invitee: ['Baz@example.com', 'bar@example.com'] });
 
       expect(response.status).toBe(201);
       expect(response.body).toHaveLength(2);
@@ -235,7 +235,7 @@ describe('me tenant invitation routes', () => {
     it('should create nothing when any invitee already has a pending invitation', async () => {
       const response = await request
         .post('/tenant/invitations')
-        .send({ invitee: ['bar@example.com', 'Foo@example.com'], roleName: TenantRole.Admin });
+        .send({ invitee: ['bar@example.com', 'Foo@example.com'] });
 
       expect(response.status).toBe(422);
       expect(insertInvitation).not.toHaveBeenCalled();
@@ -247,20 +247,20 @@ describe('me tenant invitation routes', () => {
 
       const response = await request
         .post('/tenant/invitations')
-        .send({ invitee: ['bar@example.com', 'baz@example.com'], roleName: TenantRole.Admin });
+        .send({ invitee: ['bar@example.com', 'baz@example.com'] });
 
       expect(response.status).toBe(422);
       expect(insertInvitation).not.toHaveBeenCalled();
       expect(sendEmail).not.toHaveBeenCalled();
     });
 
-    it('should reject a collaborator', async () => {
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      callerRole.current = TenantRole.Collaborator;
+    it('should reject a non-member', async () => {
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- Simulate a caller outside the tenant.
+      callerRole.current = undefined;
 
       const response = await request
         .post('/tenant/invitations')
-        .send({ invitee: 'foo@example.com', roleName: TenantRole.Collaborator });
+        .send({ invitee: 'foo@example.com' });
 
       expect(response.status).toBe(403);
       expect(response.body).toMatchObject({ code: 'auth.expected_role_not_found' });
@@ -272,7 +272,7 @@ describe('me tenant invitation routes', () => {
 
       const response = await request
         .post('/tenant/invitations')
-        .send({ invitee: 'foo@example.com', roleName: TenantRole.Collaborator });
+        .send({ invitee: 'foo@example.com' });
 
       expect(response.status).toBe(403);
       expect(response.body).toMatchObject({ code: 'subscription.limit_exceeded' });
@@ -286,7 +286,7 @@ describe('me tenant invitation routes', () => {
 
       const response = await request
         .post('/tenant/invitations')
-        .send({ invitee: 'baz@example.com', roleName: TenantRole.Collaborator });
+        .send({ invitee: 'baz@example.com' });
 
       expect(response.status).toBe(429);
       expect(deleteInvitationById).toHaveBeenCalledWith('new-baz');
@@ -299,9 +299,7 @@ describe('me tenant invitation routes', () => {
   it('should issue the sign-in link for the spelling of an existing account email', async () => {
     findUserByEmail.mockResolvedValueOnce({ id: 'alice', primaryEmail: 'Alice@Example.com' });
 
-    await request
-      .post('/tenant/invitations')
-      .send({ invitee: 'alice@example.com', roleName: TenantRole.Collaborator });
+    await request.post('/tenant/invitations').send({ invitee: 'alice@example.com' });
 
     const [issuedToken] = insertOneTimeToken.mock.calls[0] ?? [];
     const [to, payload] = sendEmail.mock.calls[0] as [string, { link: string }];
@@ -322,9 +320,9 @@ describe('me tenant invitation routes', () => {
       );
     });
 
-    it('should reject a collaborator', async () => {
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      callerRole.current = TenantRole.Collaborator;
+    it('should reject a non-member', async () => {
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- Simulate a caller outside the tenant.
+      callerRole.current = undefined;
 
       await expect(request.get('/tenant/invitations')).resolves.toHaveProperty('status', 403);
     });
@@ -382,9 +380,9 @@ describe('me tenant invitation routes', () => {
       expect(deleteInvitationById).not.toHaveBeenCalled();
     });
 
-    it('should reject a collaborator', async () => {
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      callerRole.current = TenantRole.Collaborator;
+    it('should reject a non-member', async () => {
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- Simulate a caller outside the tenant.
+      callerRole.current = undefined;
 
       await expect(request.delete('/tenant/invitations/pending')).resolves.toHaveProperty(
         'status',
