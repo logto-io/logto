@@ -2,12 +2,21 @@ import { SsoProviderType } from '@logto/schemas';
 
 type ShouldShowIdpInitiatedAuthTabOptions = {
   readonly isCloud: boolean;
+  readonly isDevFeaturesEnabled: boolean;
   readonly providerType?: SsoProviderType;
   readonly isIdpInitiatedSsoEnabled: boolean;
 };
 
+/**
+ * Whether the connector details page shows the IdP-initiated SSO tab.
+ *
+ * On Cloud the subscription entitlement decides. Outside Cloud the tab follows the feature itself,
+ * which Core only ships behind `isDevFeaturesEnabled` (its routes are not registered otherwise), so
+ * there is neither a config form nor an upsell for a feature that is not available yet.
+ */
 export const shouldShowIdpInitiatedAuthTab = ({
   isCloud,
+  isDevFeaturesEnabled,
   providerType,
   isIdpInitiatedSsoEnabled,
 }: ShouldShowIdpInitiatedAuthTabOptions) => {
@@ -19,7 +28,8 @@ export const shouldShowIdpInitiatedAuthTab = ({
     return isIdpInitiatedSsoEnabled;
   }
 
-  return true;
+  // IdP-initiated SSO is not ready for release; keep it hidden outside dev mode.
+  return isDevFeaturesEnabled;
 };
 
 type ShouldShowIdpInitiatedAuthUpsellOptions = {

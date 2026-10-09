@@ -7,16 +7,40 @@ describe('shouldShowIdpInitiatedAuthTab', () => {
     expect(
       shouldShowIdpInitiatedAuthTab({
         isCloud: true,
+        isDevFeaturesEnabled: false,
         providerType: SsoProviderType.SAML,
         isIdpInitiatedSsoEnabled: true,
       })
     ).toBe(true);
   });
 
-  it('returns true for OSS SAML connectors', () => {
+  it('returns false for Cloud SAML connectors when IdP-initiated SSO is not entitled', () => {
+    expect(
+      shouldShowIdpInitiatedAuthTab({
+        isCloud: true,
+        isDevFeaturesEnabled: true,
+        providerType: SsoProviderType.SAML,
+        isIdpInitiatedSsoEnabled: false,
+      })
+    ).toBe(false);
+  });
+
+  it('returns false for OSS SAML connectors when dev features are disabled', () => {
     expect(
       shouldShowIdpInitiatedAuthTab({
         isCloud: false,
+        isDevFeaturesEnabled: false,
+        providerType: SsoProviderType.SAML,
+        isIdpInitiatedSsoEnabled: false,
+      })
+    ).toBe(false);
+  });
+
+  it('returns true for OSS SAML connectors when dev features are enabled', () => {
+    expect(
+      shouldShowIdpInitiatedAuthTab({
+        isCloud: false,
+        isDevFeaturesEnabled: true,
         providerType: SsoProviderType.SAML,
         isIdpInitiatedSsoEnabled: false,
       })
@@ -27,6 +51,7 @@ describe('shouldShowIdpInitiatedAuthTab', () => {
     expect(
       shouldShowIdpInitiatedAuthTab({
         isCloud: false,
+        isDevFeaturesEnabled: true,
         providerType: SsoProviderType.OIDC,
         isIdpInitiatedSsoEnabled: false,
       })

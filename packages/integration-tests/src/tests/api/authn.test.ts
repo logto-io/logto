@@ -1,4 +1,4 @@
-import { ApplicationType } from '@logto/schemas';
+import { ApplicationType, ossDefaultQuota } from '@logto/schemas';
 
 import {
   mockOktaSamlConnectorMetadata,
@@ -7,9 +7,18 @@ import {
 import { createApplication, deleteApplication } from '#src/api/application.js';
 import { postSamlAssertion } from '#src/api/interaction-sso.js';
 import { SsoConnectorApi } from '#src/api/sso-connector.js';
+import { putSystemLicense } from '#src/api/system.js';
 import { initExperienceClient } from '#src/helpers/client.js';
 import { expectRejects } from '#src/helpers/index.js';
+import { buildTestLicensePayload, signTestLicenseKey } from '#src/helpers/license.js';
 import { devFeatureTest, randomString } from '#src/utils.js';
+
+const installLicense = async (idpInitiatedSso: boolean) =>
+  putSystemLicense(
+    await signTestLicenseKey(
+      buildTestLicensePayload({ quota: { ...ossDefaultQuota, idpInitiatedSso } })
+    )
+  );
 
 describe('SAML SSO ACS endpoint', () => {
   const ssoConnectorApi = new SsoConnectorApi();
@@ -65,6 +74,11 @@ describe('SAML SSO ACS endpoint', () => {
   });
 
   devFeatureTest.describe('IdP initiated SSO', () => {
+    afterAll(async () => {
+      // No license can be uninstalled; leave one that grants nothing beyond the OSS defaults.
+      await installLicense(false);
+    });
+
     it('should throw 404 if no relayState is provided, and IdP initiated SSO is not enabled', async () => {
       const connectorId = ssoConnectorApi.firstConnectorId!;
 
@@ -95,6 +109,7 @@ describe('SAML SSO ACS endpoint', () => {
         }
       );
 
+      await installLicense(true);
       await ssoConnectorApi.setSsoConnectorIdpInitiatedAuthConfig({
         connectorId,
         defaultApplicationId: application.id,
@@ -107,6 +122,17 @@ describe('SAML SSO ACS endpoint', () => {
         {
           code: 'connector.authorization_failed',
           status: 401,
+        }
+      );
+
+      // The config outlives the entitlement: once the license no longer grants IdP-initiated SSO,
+      // the assertion is refused before it is processed.
+      await installLicense(false);
+      await expectRejects(
+        postSamlAssertion({ connectorId, RelayState: '', SAMLResponse: encodedSamlAssertion }),
+        {
+          code: 'subscription.limit_exceeded',
+          status: 403,
         }
       );
 

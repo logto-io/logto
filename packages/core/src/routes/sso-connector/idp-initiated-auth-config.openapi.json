@@ -53,6 +53,9 @@
           "200": {
             "description": "The updated IdP initiated auth config."
           },
+          "403": {
+            "description": "IdP initiated SSO is not included in the current plan. On a self-hosted deployment, the installed license does not grant it."
+          },
           "404": {
             "description": "SSO connector or application not found."
           },
