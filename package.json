@@ -55,7 +55,7 @@
       "baseline-browser-mapping@>=2.0.0 <2.11.0": "^2.11.0",
       "basic-ftp@<=5.2.2": "^5.3.0",
       "brace-expansion@<1.1.18": "^1.1.18",
-      "brace-expansion@>=2.0.0 <2.1.4": "^2.1.4",
+      "brace-expansion@>=2.0.0 <2.1.4": "^5.0.12",
       "brace-expansion@>=4.0.0 <5.0.9": "^5.0.9",
       "browserslist@<4.28.7": "^4.28.7",
       "colord@<2.9.4": "^2.9.4",
