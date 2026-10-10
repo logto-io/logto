@@ -35,6 +35,11 @@ $dropdown-item-height: 40px;
     @include _.text-ellipsis;
   }
 
+  .viewOnlyTag {
+    // Truncate the tenant name, not the tag, when the card reaches its max width.
+    flex-shrink: 0;
+  }
+
   .redDot {
     width: 10px;
     height: 10px;

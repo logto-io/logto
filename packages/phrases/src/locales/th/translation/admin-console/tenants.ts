@@ -100,6 +100,11 @@ const tenants = {
     development: 'ทดสอบ',
     production: 'โปรดักชั่น',
   },
+  view_only: {
+    tag: 'ดูได้อย่างเดียว',
+    notification:
+      'คุณมีสิทธิ์ดูได้อย่างเดียวในผู้เช่านี้ หากต้องการเปลี่ยนแปลง โปรดติดต่อผู้ดูแลผู้เช่า',
+  },
   deletion_card: {
     title: 'ลบ',
     tenant_deletion: 'ลบผู้เช่า',

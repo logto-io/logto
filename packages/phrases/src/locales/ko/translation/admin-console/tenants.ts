@@ -98,6 +98,11 @@ const tenants = {
     development: '개발',
     production: '프로드',
   },
+  view_only: {
+    tag: '보기 전용',
+    notification:
+      '이 테넌트에 대한 보기 전용 액세스 권한이 있습니다. 변경이 필요하면 테넌트 관리자에게 요청하세요.',
+  },
   deletion_card: {
     title: '삭제',
     tenant_deletion: '테넌트 삭제',

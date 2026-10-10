@@ -7,10 +7,12 @@ import PlusSign from '@/assets/icons/plus.svg?react';
 import { type TenantResponse } from '@/cloud/types/router';
 import CreateTenantModal from '@/components/CreateTenantModal';
 import TenantEnvTag from '@/components/TenantEnvTag';
+import { useReadOnlyAccess } from '@/contexts/ReadOnlyAccessProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Divider from '@/ds-components/Divider';
 import Dropdown from '@/ds-components/Dropdown';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
+import Tag from '@/ds-components/Tag';
 import useUserDefaultTenantId from '@/hooks/use-user-default-tenant-id';
 import useUserInvitations from '@/hooks/use-user-invitations';
 import { onKeyDownHandler } from '@/utils/a11y';
@@ -29,6 +31,7 @@ export default function TenantSelector() {
     navigateTenant,
   } = useContext(TenantsContext);
   const { data: pendingInvitations } = useUserInvitations(OrganizationInvitationStatus.Pending);
+  const isReadOnly = useReadOnlyAccess();
 
   const anchorRef = useRef<HTMLDivElement>(null);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -55,6 +58,11 @@ export default function TenantSelector() {
       >
         <div className={styles.name}>{currentTenantInfo.name}</div>
         <TenantEnvTag tag={currentTenantInfo.tag} />
+        {isReadOnly && (
+          <Tag size="small" className={styles.viewOnlyTag}>
+            {t('tenants.view_only.tag')}
+          </Tag>
+        )}
         {Boolean(pendingInvitations?.length) && <div className={styles.redDot} />}
         <KeyboardArrowDown className={styles.arrowIcon} />
       </div>

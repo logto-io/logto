@@ -92,6 +92,10 @@ const tenants = {
     development: '開發',
     production: '生產',
   },
+  view_only: {
+    tag: '僅檢視',
+    notification: '你對此租戶只有檢視權限。如需更改，請聯絡租戶管理員。',
+  },
   deletion_card: {
     title: '刪除',
     tenant_deletion: '刪除租戶',
