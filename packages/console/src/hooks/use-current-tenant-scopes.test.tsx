@@ -74,4 +74,21 @@ describe('useCurrentTenantScopes', () => {
     mockEnv({ isCloud: true });
     expect(renderWithEntitlement(false).canInviteMember).toBe(true);
   });
+
+  it('refetches cached scopes on mount only on Cloud', () => {
+    renderWithEntitlement(true);
+    expect(useSWR).toHaveBeenLastCalledWith(
+      expect.anything(),
+      expect.any(Function),
+      expect.objectContaining({ revalidateIfStale: false })
+    );
+
+    mockEnv({ isCloud: true });
+    renderWithEntitlement(true);
+    expect(useSWR).toHaveBeenLastCalledWith(
+      expect.anything(),
+      expect.any(Function),
+      expect.objectContaining({ revalidateIfStale: true })
+    );
+  });
 });

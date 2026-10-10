@@ -34,6 +34,7 @@ const mockAccess = (canInviteMember: boolean, canRemoveMember: boolean) => {
       canRemoveMember,
       canUpdateMemberRole: canRemoveMember,
       canManageTenant: canRemoveMember,
+      isReadOnly: false,
     },
   });
 };

@@ -103,6 +103,11 @@ const tenants = {
     development: 'Développement',
     production: 'Production',
   },
+  view_only: {
+    tag: 'Lecture seule',
+    notification:
+      'Vous avez un accès en lecture seule à ce locataire. Demandez à un administrateur du locataire si vous devez effectuer des modifications.',
+  },
   deletion_card: {
     title: 'SUPPRIMER',
     tenant_deletion: 'Supprimer le locataire',

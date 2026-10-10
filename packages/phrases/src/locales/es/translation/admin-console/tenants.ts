@@ -103,6 +103,11 @@ const tenants = {
     development: 'Desarrollo',
     production: 'Producción',
   },
+  view_only: {
+    tag: 'Solo lectura',
+    notification:
+      'Tienes acceso de solo lectura a este inquilino. Pide a un administrador del inquilino si necesitas hacer cambios.',
+  },
   deletion_card: {
     title: 'ELIMINAR',
     tenant_deletion: 'Eliminar inquilino',

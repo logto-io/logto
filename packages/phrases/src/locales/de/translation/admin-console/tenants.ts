@@ -103,6 +103,11 @@ const tenants = {
     development: 'Entwicklung',
     production: 'Produktion',
   },
+  view_only: {
+    tag: 'Nur Ansicht',
+    notification:
+      'Sie haben nur Ansichtszugriff auf diesen Mieter. Wenden Sie sich an einen Mieter-Administrator, wenn Sie Änderungen vornehmen müssen.',
+  },
   deletion_card: {
     title: 'LÖSCHEN',
     tenant_deletion: 'Mieter löschen',
