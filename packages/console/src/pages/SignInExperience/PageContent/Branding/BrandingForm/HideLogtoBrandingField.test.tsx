@@ -12,6 +12,11 @@ import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 
 import HideLogtoBrandingField from './HideLogtoBrandingField';
 
+jest.mock('@/hooks/use-current-tenant-scopes', () => ({
+  __esModule: true,
+  default: () => ({ access: { isReadOnly: false } }),
+}));
+
 jest.mock('@/consts/env', () => ({
   isCloud: false,
   isDevFeaturesEnabled: false,
