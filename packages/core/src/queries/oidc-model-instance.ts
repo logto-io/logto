@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- every OIDC model query lives here */
 import type { Application, OidcModelInstance, OidcModelInstancePayload } from '@logto/schemas';
 import { Applications, CimdGrantClientSnapshots, OidcModelInstances } from '@logto/schemas';
 import { ConsoleLog } from '@logto/shared';
@@ -6,7 +7,7 @@ import { conditional } from '@silverhand/essentials';
 import type { CommonQueryMethods, SqlSqlToken, ValueExpression } from '@silverhand/slonik';
 import { sql } from '@silverhand/slonik';
 import chalk from 'chalk';
-import { addSeconds, isBefore } from 'date-fns';
+import { addSeconds, isBefore, subHours } from 'date-fns';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { convertToIdentifiers, convertToTimestamp } from '#src/utils/sql.js';
@@ -39,6 +40,16 @@ const refreshTokenReuseInterval = 3;
  * the statement timeout.
  */
 const revokeInstanceBatchSize = 500;
+/** Small because it runs on every refresh token rotation. */
+const pruneConsumedRefreshTokenBatchSize = 100;
+/**
+ * How long a consumed refresh token is kept before a later rotation of the same grant prunes it.
+ * Consumed tokens exist to detect reuse, so this is also the reuse-detection window: a token
+ * replayed after it is still rejected, but the grant may no longer be revoked.
+ */
+const consumedRefreshTokenRetentionDays = 7;
+/** Prunes run detached from the token response; this bounds the pool connections they can hold. */
+const maxConcurrentPrunes = 4;
 /** Safety valve so a revocation request stays bounded even for pathological instance counts. */
 const maxRevokeInstanceBatches = 1000;
 /** Fixed-length array to drive the bounded batch loop without a mutable counter. */
@@ -70,6 +81,10 @@ const withConsumed = <T>(
 // eslint-disable-next-line @typescript-eslint/ban-types
 const convertResult = (result: QueryResult | null, modelName: string) =>
   conditional(result && withConsumed(result.payload, modelName, result.consumedAt));
+
+/** Matches the partial grant-id index, which requires the key-existence clause. */
+const grantIdCondition = (grantId: string) => sql`${fields.payload} ? 'grantId'
+  and ${fields.payload}->>'grantId'=${grantId}`;
 
 const findByModel = (modelName: string) => sql`
   select ${fields.payload}, ${fields.consumedAt}
@@ -232,12 +247,7 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
   };
 
   const revokeInstanceByGrantId = async (modelName: string, grantId: string) =>
-    revokeInstancesInBatches(
-      modelName,
-      `grantId ${grantId}`,
-      sql`${fields.payload} ? 'grantId'
-          and ${fields.payload}->>'grantId'=${grantId}`
-    );
+    revokeInstancesInBatches(modelName, `grantId ${grantId}`, grantIdCondition(grantId));
 
   const revokeInstanceByUserId = async (modelName: string, userId: string) =>
     revokeInstancesInBatches(
@@ -246,6 +256,43 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
       sql`${fields.payload} ? 'accountId'
           and ${fields.payload}->>'accountId'=${userId}`
     );
+
+  /**
+   * Delete one bounded batch of the grant's refresh tokens consumed longer ago than
+   * `consumedRefreshTokenRetentionDays`. Rows locked by a concurrent revocation are skipped rather
+   * than waited for, since that revocation deletes them anyway.
+   */
+  /** Grants of this tenant with a prune in flight; a skipped prune is retried on the next rotation. */
+  const pruningGrantIds = new Set<string>();
+
+  const pruneConsumedRefreshTokensByGrantId = async (grantId: string) => {
+    if (pruningGrantIds.has(grantId) || pruningGrantIds.size >= maxConcurrentPrunes) {
+      return 0;
+    }
+
+    pruningGrantIds.add(grantId);
+
+    try {
+      // Hours rather than days so the window is exact across daylight-saving changes.
+      const consumedBefore = subHours(new Date(), consumedRefreshTokenRetentionDays * 24);
+      const { rowCount } = await pool.query(sql`
+        delete from ${table}
+        where ${fields.id} in (
+          select ${fields.id}
+          from ${table}
+          where ${fields.modelName}='RefreshToken'
+          and ${grantIdCondition(grantId)}
+          and ${fields.consumedAt} < ${convertToTimestamp(consumedBefore)}
+          limit ${pruneConsumedRefreshTokenBatchSize}
+          for update skip locked
+        )
+      `);
+
+      return rowCount;
+    } finally {
+      pruningGrantIds.delete(grantId);
+    }
+  };
 
   const findUserActiveApplicationGrants = async (
     userId: string,
@@ -372,9 +419,11 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
     destroyInstanceById,
     revokeInstanceByGrantId,
     revokeInstanceByUserId,
+    pruneConsumedRefreshTokensByGrantId,
     findUserActiveApplicationGrants,
     findUserActiveCimdGrants,
     findUserActiveGrantsByClientId,
     findUserActiveSessionUidByGrantId,
   };
 };
+/* eslint-enable max-lines */
