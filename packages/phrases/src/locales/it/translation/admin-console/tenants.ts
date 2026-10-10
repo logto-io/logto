@@ -16,7 +16,7 @@ const tenants = {
   license: {
     purchase_title: 'PIANI SELF-HOSTED',
     purchase_description:
-      'I piani Pro e Azienda self-hosted sbloccano funzionalità a pagamento sulla tua istanza, come nascondere il branding Logto, usare la tua UI, il SSO avviato dall’IdP, la collaborazione nella console e applicazioni SAML illimitate. Acquista un piano per ottenere la tua chiave di licenza.',
+      'I piani Pro e Azienda self-hosted sbloccano funzionalità a pagamento sulla tua istanza, come nascondere il branding Logto, usare la tua UI, la collaborazione nella console e applicazioni SAML illimitate. Acquista un piano per ottenere la tua chiave di licenza.',
     purchase_button: 'Vedi i piani self-hosted',
     install_title: 'INSTALLA LICENZA',
     install_description:
@@ -24,7 +24,7 @@ const tenants = {
     install_button: 'Installa licenza',
     key_field: 'Chiave di licenza',
     key_field_description:
-      'La chiave viene verificata sulla tua istanza e non la lascia mai. Ottieni una chiave nuova dal tuo account Logto se quella che hai è scaduta.',
+      'La chiave viene verificata sulla tua istanza e non la lascia mai. Contatta Logto per ottenere una chiave nuova se quella che hai è scaduta.',
     key_placeholder: 'Incolla qui la tua chiave di licenza',
     installed_toast: 'Licenza installata con successo.',
     details_title: 'LICENZA',
@@ -47,7 +47,7 @@ const tenants = {
     refusal_reason_revoked: 'revocata',
     refusal_reason_unknown: 'non disponibile',
     grace_expired_description:
-      'Il periodo di tolleranza della licenza è terminato il {{graceEndsAt}}. Questa istanza è tornata ai valori predefiniti OSS. Ottieni una nuova chiave da Logto Cloud e installala di nuovo.',
+      'Il periodo di tolleranza della licenza è terminato il {{graceEndsAt}}. Questa distribuzione è tornata ai valori predefiniti OSS. Contatta Logto per ottenere una nuova chiave di licenza e installala di nuovo.',
     get_fresh_key_button: 'Ottieni una nuova chiave',
     replace_button: 'Sostituisci licenza',
   },

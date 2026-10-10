@@ -15,7 +15,7 @@ const tenants = {
   license: {
     purchase_title: 'PLANS AUTO-HÉBERGÉS',
     purchase_description:
-      'Les plans Professionnel et Entreprise auto-hébergés débloquent des fonctionnalités payantes sur votre propre instance : masquer la marque Logto, utiliser votre propre interface, le SSO initié par l’IdP, la collaboration dans la console et des applications SAML illimitées. Achetez un plan pour obtenir votre clé de licence.',
+      'Les plans Professionnel et Entreprise auto-hébergés débloquent des fonctionnalités payantes sur votre propre instance : masquer la marque Logto, utiliser votre propre interface, la collaboration dans la console et des applications SAML illimitées. Achetez un plan pour obtenir votre clé de licence.',
     purchase_button: 'Voir les plans auto-hébergés',
     install_title: 'INSTALLER LA LICENCE',
     install_description:
@@ -23,7 +23,7 @@ const tenants = {
     install_button: 'Installer la licence',
     key_field: 'Clé de licence',
     key_field_description:
-      'La clé est vérifiée sur votre instance et n’en sort jamais. Obtenez une nouvelle clé depuis votre compte Logto si la vôtre a expiré.',
+      'La clé est vérifiée sur votre instance et n’en sort jamais. Contactez Logto pour obtenir une nouvelle clé si la vôtre a expiré.',
     key_placeholder: 'Collez votre clé de licence ici',
     installed_toast: 'Licence installée avec succès.',
     details_title: 'LICENCE',
@@ -46,7 +46,7 @@ const tenants = {
     refusal_reason_revoked: 'révoquée',
     refusal_reason_unknown: 'indisponible',
     grace_expired_description:
-      'La période de grâce de la licence s’est terminée le {{graceEndsAt}}. Cette instance est revenue aux valeurs OSS par défaut. Obtenez une nouvelle clé depuis Logto Cloud et installez-la à nouveau.',
+      'La période de grâce de la licence s’est terminée le {{graceEndsAt}}. Ce déploiement est revenu aux valeurs OSS par défaut. Contactez Logto pour obtenir une nouvelle clé de licence et installez-la à nouveau.',
     get_fresh_key_button: 'Obtenir une nouvelle clé',
     replace_button: 'Remplacer la licence',
   },
