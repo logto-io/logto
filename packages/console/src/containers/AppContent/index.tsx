@@ -6,7 +6,7 @@ import { type SubscriptionCountBasedUsage } from '@/cloud/types/router';
 import AppLoading from '@/components/AppLoading';
 import Topbar from '@/components/Topbar';
 import { isCloud } from '@/consts/env';
-import ReadOnlyAccessProvider from '@/contexts/ReadOnlyAccessProvider';
+import ReadOnlyAccessProvider from '@/contexts/ReadOnlyAccessProvider/ReadOnlyAccessProvider';
 import SubscriptionDataProvider from '@/contexts/SubscriptionDataProvider';
 import useSubscriptionData from '@/contexts/SubscriptionDataProvider/use-subscription-data';
 import {

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Delete from '@/assets/icons/delete.svg?react';
 import Edit from '@/assets/icons/edit.svg?react';
 import More from '@/assets/icons/more.svg?react';
+import { useReadOnlyAccess } from '@/contexts/ReadOnlyAccessProvider';
 import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import DynamicT from '@/ds-components/DynamicT';
@@ -42,10 +43,13 @@ type Props = {
  *
  * - Edit (optional)
  * - Delete
+ *
+ * Renders nothing for a read-only member, since every option changes data.
  */
 function ActionsButton({ onDelete, onEdit, deleteConfirmation, fieldName, textOverrides }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const tAction = useActionTranslation();
+  const isReadOnly = useReadOnlyAccess();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -62,6 +66,10 @@ function ActionsButton({ onDelete, onEdit, deleteConfirmation, fieldName, textOv
       setIsModalOpen(false);
     }
   }, [onDelete]);
+
+  if (isReadOnly) {
+    return null;
+  }
 
   return (
     <>
