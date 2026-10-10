@@ -7,10 +7,15 @@ import useCurrentUser from '@/hooks/use-current-user';
 
 import Details from './Details';
 
-// Jest's CommonJS resolver needs a virtual module for the ESM-only client used by plan badges.
-jest.mock('@withtyped/client', () => ({ ResponseError: class extends Error {} }), {
-  virtual: true,
-});
+// Account-level licenses do not use tenant subscription badges or their Cloud SDK dependencies.
+jest.mock('@/components/FeatureTag', () => ({
+  __esModule: true,
+  default: () => null,
+  BetaTag: () => null,
+  CombinedAddOnAndFeatureTag: () => null,
+}));
+// The alias mapper resolves this stylesheet before Jest's generic CSS mapper.
+jest.mock('@/scss/modal.module.scss', () => ({}));
 jest.mock('@/hooks/use-api', () => ({ useStaticApi: jest.fn() }));
 jest.mock('@/hooks/use-current-user', () => ({ __esModule: true, default: jest.fn() }));
 jest.mock('@/consts/env', () => ({ isCloud: true, isDevFeaturesEnabled: true }));
