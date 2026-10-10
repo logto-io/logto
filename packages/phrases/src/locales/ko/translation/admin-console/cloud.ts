@@ -12,6 +12,8 @@ const cloud = {
     production_key: '프로덕션 키',
     non_production_key: '비프로덕션 키',
     keys_unavailable: '이 라이선스의 키를 사용할 수 없습니다. 도움이 필요하면 지원팀에 문의하세요.',
+    issue_keys: '두 라이선스 키 발급',
+    issue_error: '라이선스 키를 발급할 수 없습니다. 다시 시도해 주세요.',
     install_title: '라이선스 설치',
     install_description:
       '두 키는 동일한 기능과 할당량을 제공합니다. 설치한 키에 따라 배포가 프로덕션 또는 비프로덕션 환경으로 구분됩니다.',

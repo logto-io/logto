@@ -5,11 +5,10 @@ import FormCard, { FormCardSkeleton } from '@/components/FormCard';
 import SkuName from '@/components/SkuName';
 import { selfHostedLicenseGuideLink } from '@/consts/external-links';
 import { GlobalRoute } from '@/contexts/TenantsProvider';
-import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import DynamicT from '@/ds-components/DynamicT';
-import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 
+import Keys from './Keys';
 import Status from './Status';
 import styles from './index.module.scss';
 import { useSelfHostedLicense } from './use-self-hosted-licenses';
@@ -18,7 +17,7 @@ type Props = { readonly id: string };
 
 function Details({ id }: Props) {
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data, error, isLoading, isValidating, mutate } = useSelfHostedLicense(id);
+  const { data, error, isLoading, mutate, userId } = useSelfHostedLicense(id);
 
   return (
     <DetailsPage
@@ -58,25 +57,9 @@ function Details({ id }: Props) {
             title="cloud.self_hosted_licenses.keys_title"
             description="cloud.self_hosted_licenses.keys_description"
           >
-            {isValidating ? (
-              <FormCardSkeleton />
-            ) : data.productionKey && data.nonProductionKey ? (
-              <div className={styles.keys}>
-                <FormField title="cloud.self_hosted_licenses.production_key">
-                  <CopyToClipboard
-                    hasVisibilityToggle
-                    displayType="block"
-                    value={data.productionKey}
-                  />
-                </FormField>
-                <FormField title="cloud.self_hosted_licenses.non_production_key">
-                  <CopyToClipboard
-                    hasVisibilityToggle
-                    displayType="block"
-                    value={data.nonProductionKey}
-                  />
-                </FormField>
-              </div>
+            {data.status === 'active' && !data.keyUnavailableReason && userId ? (
+              // Keep issued keys local to this account and license, including in-flight responses.
+              <Keys key={`${userId}:${id}`} id={id} />
             ) : (
               <InlineNotification severity="alert">
                 <DynamicT forKey="cloud.self_hosted_licenses.keys_unavailable" />

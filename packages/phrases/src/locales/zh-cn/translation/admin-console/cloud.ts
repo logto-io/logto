@@ -11,6 +11,8 @@ const cloud = {
     production_key: '生产环境密钥',
     non_production_key: '非生产环境密钥',
     keys_unavailable: '此许可证的密钥不可用。如需帮助，请联系支持团队。',
+    issue_keys: '签发两种许可证密钥',
+    issue_error: '无法签发许可证密钥，请重试。',
     install_title: '安装许可证',
     install_description:
       '两种密钥提供相同的功能和配额。安装的密钥用于标识你的部署是生产环境还是非生产环境。',

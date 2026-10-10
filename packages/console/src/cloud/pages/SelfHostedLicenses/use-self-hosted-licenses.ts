@@ -1,10 +1,7 @@
 import useSWR from 'swr';
 import { type z } from 'zod';
 
-import {
-  selfHostedLicenseDetailsGuard,
-  selfHostedLicenseSummaryGuard,
-} from '@/cloud/types/self-hosted-license';
+import { selfHostedLicenseSummaryGuard } from '@/cloud/types/self-hosted-license';
 import { cloudApi } from '@/consts';
 import { useStaticApi } from '@/hooks/use-api';
 import useCurrentUser from '@/hooks/use-current-user';
@@ -34,14 +31,15 @@ export const useSelfHostedLicense = (id: string) => {
   const { user, error: userError } = useCurrentUser();
   const api = useStaticApi({ resourceIndicator: cloudApi.indicator, hideErrorToast: true });
   const path = `/api/me/self-hosted-licenses/${encodeURIComponent(id)}`;
-  const result = useSWR<z.infer<typeof selfHostedLicenseDetailsGuard>, Error>(
+  const result = useSWR<z.infer<typeof selfHostedLicenseSummaryGuard>, Error>(
     user && !userError && [path, user.id],
     async () =>
-      selfHostedLicenseDetailsGuard.parse(await api.get(path, { cache: 'no-store' }).json()),
+      selfHostedLicenseSummaryGuard.parse(await api.get(path, { cache: 'no-store' }).json()),
     { keepPreviousData: false, revalidateOnMount: true }
   );
   return {
     ...result,
+    userId: user?.id,
     error: userError ?? result.error,
     isLoading: (!user && !userError) || result.isLoading,
   };

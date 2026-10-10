@@ -14,6 +14,8 @@ const cloud = {
     production_key: 'Production key',
     non_production_key: 'Non-production key',
     keys_unavailable: 'Keys are unavailable for this license. Contact support if you need help.',
+    issue_keys: 'Issue both license keys',
+    issue_error: 'Unable to issue license keys. Please try again.',
     install_title: 'Install your license',
     install_description:
       'Both keys provide the same features and quotas. The key you install identifies your deployment as production or non-production.',

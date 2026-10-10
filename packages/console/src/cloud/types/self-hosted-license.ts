@@ -2,7 +2,7 @@ import { selfHostedPlanIds } from '@logto/schemas';
 import { z } from 'zod';
 
 /**
- * Wire contract for the account-level read API. Keep in sync with Cloud's
+ * Wire contract for the account-level license API. Keep in sync with Cloud's
  * `me/self-hosted-licenses` response until its standalone router is published in @logto/cloud.
  */
 export const selfHostedLicenseSummaryGuard = z.object({
@@ -16,9 +16,9 @@ export const selfHostedLicenseSummaryGuard = z.object({
   keyUnavailableReason: z.enum(['canceled', 'unpaid', 'expired', 'revoked']).nullable(),
 });
 
-export const selfHostedLicenseDetailsGuard = selfHostedLicenseSummaryGuard.extend({
-  productionKey: z.string().optional(),
-  nonProductionKey: z.string().optional(),
+export const selfHostedLicenseKeysGuard = z.object({
+  productionKey: z.string(),
+  nonProductionKey: z.string(),
 });
 
 export type SelfHostedLicenseSummary = z.infer<typeof selfHostedLicenseSummaryGuard>;

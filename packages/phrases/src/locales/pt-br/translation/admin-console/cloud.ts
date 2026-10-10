@@ -14,6 +14,8 @@ const cloud = {
     non_production_key: 'Chave de não produção',
     keys_unavailable:
       'As chaves desta licença estão indisponíveis. Entre em contato com o suporte se precisar de ajuda.',
+    issue_keys: 'Emitir ambas as chaves de licença',
+    issue_error: 'Não foi possível emitir as chaves de licença. Tente novamente.',
     install_title: 'Instale sua licença',
     install_description:
       'Ambas as chaves oferecem os mesmos recursos e cotas. A chave instalada identifica sua implantação como de produção ou de não produção.',

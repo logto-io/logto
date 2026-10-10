@@ -15,6 +15,8 @@ const cloud = {
     non_production_key: 'Clé hors production',
     keys_unavailable:
       'Les clés de cette licence sont indisponibles. Contactez le support si nécessaire.',
+    issue_keys: 'Émettre les deux clés de licence',
+    issue_error: 'Impossible d’émettre les clés de licence. Veuillez réessayer.',
     install_title: 'Installer votre licence',
     install_description:
       'Les deux clés offrent les mêmes fonctionnalités et quotas. La clé installée identifie votre déploiement comme étant en production ou hors production.',
