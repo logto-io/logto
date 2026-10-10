@@ -12,13 +12,9 @@ import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 
 import HideLogtoBrandingField from './HideLogtoBrandingField';
 
-const mockIsDevFeaturesEnabled = jest.fn(() => true);
-
 jest.mock('@/consts/env', () => ({
   isCloud: false,
-  get isDevFeaturesEnabled() {
-    return mockIsDevFeaturesEnabled();
-  },
+  isDevFeaturesEnabled: false,
 }));
 
 jest.mock('@/contexts/TenantsProvider', () => {
@@ -86,10 +82,6 @@ describe('self-hosted plans navigation from the branding editor', () => {
     Reflect.set(globalThis, 'Request', originalRequest);
   });
 
-  beforeEach(() => {
-    mockIsDevFeaturesEnabled.mockReturnValue(true);
-  });
-
   it('keeps unsaved edits on cancel and navigates only after confirming', async () => {
     const router = renderEditor();
     fireEvent.change(screen.getByRole('textbox', { name: 'Name' }), {
@@ -128,8 +120,7 @@ describe('self-hosted plans navigation from the branding editor', () => {
     expect(screen.queryByRole('dialog')).toBeNull();
   });
 
-  it('keeps the external website link in a new tab when dev features are disabled', () => {
-    mockIsDevFeaturesEnabled.mockReturnValue(false);
+  it('links to License internally and leaves the Cloud link unchanged', () => {
     renderEditor();
     const link = screen.getByRole('link', { name: linkName });
 
@@ -139,10 +130,7 @@ describe('self-hosted plans navigation from the branding editor', () => {
     expect(screen.getByRole('link', { name: 'Logto Cloud' }).getAttribute('href')).toBe(
       `https://cloud.logto.io/?utm_source=logto_oss&utm_medium=console&utm_campaign=cloud_upsell&utm_content=${entry}`
     );
-    expect(link.getAttribute('href')).toBe(
-      `https://logto.io/self-hosted-plans?utm_source=logto_oss&utm_medium=console&utm_campaign=self_hosted_plans&utm_content=${entry}`
-    );
-    expect(link.getAttribute('target')).toBe('_blank');
-    expect(link.getAttribute('rel')).toBe('noopener');
+    expect(link.getAttribute('href')).toBe(`${licensePath}?utm_content=${entry}`);
+    expect(link.getAttribute('target')).toBeNull();
   });
 });

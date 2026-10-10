@@ -1,4 +1,3 @@
-import { conditional } from '@silverhand/essentials';
 import camelcase from 'camelcase';
 import { OpenAPIV3 } from 'openapi-types';
 import pluralize from 'pluralize';
@@ -56,17 +55,8 @@ export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   'patch /configs/admin-console': 'UpdateAdminConsoleConfig',
   // Systems
   'get /systems/application': 'GetSystemApplicationConfig',
-  /**
-   * Self-hosted plans: the license routes only exist while the feature is unlaunched, and
-   * `throwByDifference` below requires this dictionary to match the routes that are actually built,
-   * so their IDs are only reserved when the routes are registered.
-   */
-  ...conditional(
-    EnvSet.values.isDevFeaturesEnabled && {
-      'get /systems/license': 'GetSystemLicense',
-      'put /systems/license': 'InstallSystemLicense',
-    }
-  ),
+  'get /systems/license': 'GetSystemLicense',
+  'put /systems/license': 'InstallSystemLicense',
   // Applications
   'post /applications/:applicationId/roles': 'AssignApplicationRoles',
   'get /applications/:id/protected-app-metadata/custom-domains':

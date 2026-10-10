@@ -3,6 +3,7 @@ import Validator from 'openapi-schema-validator';
 import { type OpenAPIV3 } from 'openapi-types';
 
 import { adminTenantApi } from '#src/api/api.js';
+import { isDevFeaturesEnabled } from '#src/constants.js';
 
 const { default: OpenApiSchemaValidator } = Validator;
 
@@ -19,6 +20,23 @@ describe('.well-known openapi.json endpoints', () => {
     const result = validator.validate(json);
     expect(result.errors).toEqual([]);
     await expect(SwaggerParser.default.validate(json)).resolves.not.toThrow();
+  });
+
+  it('publishes license operations without releasing IdP-initiated SSO', async () => {
+    const json = await adminTenantApi
+      .get('.well-known/management.openapi.json')
+      .json<OpenAPIV3.Document>();
+
+    expect(json.paths['/api/systems/license']?.get).toMatchObject({
+      operationId: 'GetSystemLicense',
+    });
+    expect(json.paths['/api/systems/license']?.put).toMatchObject({
+      operationId: 'InstallSystemLicense',
+    });
+
+    if (!isDevFeaturesEnabled) {
+      expect(json.paths['/api/sso-connectors/{id}/idp-initiated-auth-config']).toBeUndefined();
+    }
   });
 
   // Arbitrary JSON object fields must declare `additionalProperties` so that

@@ -194,7 +194,10 @@ describe('koaServeCustomUiAssets middleware', () => {
   });
 
   describe('with an S3-compatible storage', () => {
+    const { isDevFeaturesEnabled } = EnvSet.values;
+
     beforeEach(() => {
+      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
       // eslint-disable-next-line @silverhand/fp/no-mutation
       SystemContext.shared.experienceBlobsProviderConfig = {
         provider: StorageProvider.S3Storage,
@@ -206,6 +209,7 @@ describe('koaServeCustomUiAssets middleware', () => {
     });
 
     afterEach(() => {
+      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', isDevFeaturesEnabled);
       // eslint-disable-next-line @silverhand/fp/no-mutation
       SystemContext.shared.experienceBlobsProviderConfig = experienceBlobsProviderConfig;
     });
@@ -229,19 +233,6 @@ describe('koaServeCustomUiAssets middleware', () => {
       expect(mockedDownloadFile).not.toHaveBeenCalled();
       expect(ctx.type).toEqual('text/html');
       expect(ctx.body).toEqual(mockBodyStream);
-    });
-
-    it('should only serve from Azure storage without dev features', async () => {
-      const { isDevFeaturesEnabled } = EnvSet.values;
-      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
-
-      try {
-        expect(() => koaServeCustomUiAssets('custom-ui-asset-id')).toThrowError(
-          new RequestError({ code: 'storage.not_configured', status: 400 })
-        );
-      } finally {
-        Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', isDevFeaturesEnabled);
-      }
     });
   });
 });

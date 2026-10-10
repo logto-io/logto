@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { TenantSettingsTabs } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import InlineNotification from '@/ds-components/InlineNotification';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
@@ -20,9 +20,8 @@ function OssLicenseBanner() {
   const { match } = useTenantPathname();
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  // Self-hosted plans: keep the global warning behind the same guard as the License page.
-  // That page already shows the detailed warning and recovery action.
-  if (isCloud || !isDevFeaturesEnabled || !license || match(licensePage)) {
+  // The License page already shows the detailed warning and recovery action.
+  if (isCloud || !license || match(licensePage)) {
     return null;
   }
 

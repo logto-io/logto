@@ -1,47 +1,8 @@
-import type { TFuncKey } from 'i18next';
-
-import {
-  getOssTenantMembersUpsellCopyKeys,
-  shouldShowOssTenantLicenseTab,
-  shouldShowOssTenantMembersPage,
-  shouldShowOssTenantMembersTab,
-  shouldShowOssTenantSettingsTab,
-} from './utils';
-
-describe('shouldShowOssTenantMembersTab', () => {
-  it('returns true for OSS', () => {
-    expect(shouldShowOssTenantMembersTab({ isCloud: false })).toBe(true);
-  });
-
-  it('returns false for cloud', () => {
-    expect(shouldShowOssTenantMembersTab({ isCloud: true })).toBe(false);
-  });
-});
-
-describe('shouldShowOssTenantLicenseTab', () => {
-  it('shows the tab on a self-hosted instance', () => {
-    expect(shouldShowOssTenantLicenseTab({ isCloud: false, isDevFeaturesEnabled: true })).toBe(
-      true
-    );
-  });
-
-  it('hides the tab on cloud, where the subscription is the entitlement source', () => {
-    expect(shouldShowOssTenantLicenseTab({ isCloud: true, isDevFeaturesEnabled: true })).toBe(
-      false
-    );
-  });
-
-  it('hides the tab while the self-hosted plans are unreleased', () => {
-    expect(shouldShowOssTenantLicenseTab({ isCloud: false, isDevFeaturesEnabled: false })).toBe(
-      false
-    );
-  });
-});
+import { shouldShowOssTenantSettingsTab } from './utils';
 
 describe('shouldShowOssTenantSettingsTab', () => {
   const options = {
     isCloud: false,
-    isDevFeaturesEnabled: true,
     isMandatoryMfaEntitled: true,
     isMfaRequired: false,
   };
@@ -66,39 +27,7 @@ describe('shouldShowOssTenantSettingsTab', () => {
     ).toBe(true);
   });
 
-  it('hides the tab on cloud and while the self-hosted plans are unreleased', () => {
+  it('hides the tab on cloud', () => {
     expect(shouldShowOssTenantSettingsTab({ ...options, isCloud: true })).toBe(false);
-    expect(shouldShowOssTenantSettingsTab({ ...options, isDevFeaturesEnabled: false })).toBe(false);
-  });
-});
-
-describe('shouldShowOssTenantMembersPage', () => {
-  const options = {
-    isCloud: false,
-    isDevFeaturesEnabled: true,
-  };
-
-  it('keeps existing members manageable independently of the license entitlement', () => {
-    expect(shouldShowOssTenantMembersPage(options)).toBe(true);
-  });
-
-  it('keeps the upsell on cloud and while the self-hosted plans are unreleased', () => {
-    expect(shouldShowOssTenantMembersPage({ ...options, isCloud: true })).toBe(false);
-    expect(shouldShowOssTenantMembersPage({ ...options, isDevFeaturesEnabled: false })).toBe(false);
-  });
-});
-
-describe('getOssTenantMembersUpsellCopyKeys', () => {
-  it('uses self-hosted plans copy for the OSS members upsell card', () => {
-    const copyKeys = getOssTenantMembersUpsellCopyKeys();
-    const titleKey: TFuncKey<'translation', 'admin_console'> = copyKeys.title;
-    const descriptionKey: TFuncKey<'translation', 'admin_console'> = copyKeys.description;
-    const actionKey: TFuncKey<'translation', 'admin_console'> = copyKeys.action;
-
-    expect({ title: titleKey, description: descriptionKey, action: actionKey }).toEqual({
-      title: 'tenants.members.self_hosted_card_title',
-      description: 'tenants.members.self_hosted_card_description',
-      action: 'tenants.members.self_hosted_card_action',
-    });
   });
 });

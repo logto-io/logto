@@ -5,12 +5,13 @@ import {
   type Application,
 } from '@logto/schemas';
 
+import { authedAdminApi } from '#src/api/api.js';
 import { createApplication, deleteApplication } from '#src/api/application.js';
 import { SsoConnectorApi } from '#src/api/sso-connector.js';
 import { putSystemLicense } from '#src/api/system.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { buildTestLicensePayload, signTestLicenseKey } from '#src/helpers/license.js';
-import { devFeatureTest, randomString } from '#src/utils.js';
+import { devFeatureDisabledTest, devFeatureTest, randomString } from '#src/utils.js';
 
 const installLicense = async (idpInitiatedSso: boolean) =>
   putSystemLicense(
@@ -18,6 +19,30 @@ const installLicense = async (idpInitiatedSso: boolean) =>
       buildTestLicensePayload({ quota: { ...ossDefaultQuota, idpInitiatedSso } })
     )
   );
+
+devFeatureDisabledTest.it(
+  'keeps IdP-initiated config routes unavailable with a license',
+  async () => {
+    const ssoConnectorsApi = new SsoConnectorApi();
+
+    try {
+      await installLicense(true);
+      const { id } = await ssoConnectorsApi.createMockSamlConnector(['example.com']);
+
+      for (const method of ['get', 'put', 'delete'] as const) {
+        // eslint-disable-next-line no-await-in-loop -- Check each method against the same existing connector.
+        const response = await authedAdminApi[method](
+          `sso-connectors/${id}/idp-initiated-auth-config`,
+          { throwHttpErrors: false }
+        );
+        expect(response.status).toBe(404);
+      }
+    } finally {
+      await ssoConnectorsApi.cleanUp();
+      await installLicense(false);
+    }
+  }
+);
 
 devFeatureTest.describe('SAML IdP initiated authentication config', () => {
   const ssoConnectorsApi = new SsoConnectorApi();

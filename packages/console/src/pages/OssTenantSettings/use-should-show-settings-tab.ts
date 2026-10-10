@@ -1,6 +1,5 @@
 import { useContext } from 'react';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import useOssTenantMfa from '@/hooks/use-oss-tenant-mfa';
 
@@ -13,7 +12,6 @@ const useShouldShowOssTenantSettingsTab = () => {
 
   return shouldShowOssTenantSettingsTab({
     isCloud: false,
-    isDevFeaturesEnabled,
     isMandatoryMfaEntitled: licenseQuota.mandatoryMfa,
     isMfaRequired: Boolean(data?.isMfaRequired),
   });

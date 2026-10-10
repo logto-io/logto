@@ -100,83 +100,77 @@ export default function systemRoutes<T extends ManagementApiRouter>(
     }
   );
 
-  /**
-   * Self-hosted plans: the license is the entitlement source of the unlaunched self-hosted Pro and
-   * Enterprise plans. Removed together with the other self-hosted plans guards at launch.
-   */
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    router.get(
-      '/systems/license',
-      koaGuard({
-        response: licenseResponseGuard,
-        status: [200, 404, 501],
-      }),
-      async (ctx, next) => {
-        assertNotCloud();
+  router.get(
+    '/systems/license',
+    koaGuard({
+      response: licenseResponseGuard,
+      status: [200, 404, 501],
+    }),
+    async (ctx, next) => {
+      assertNotCloud();
 
-        const license = await LicenseReader.shared.read(await EnvSet.sharedPool);
+      const license = await LicenseReader.shared.read(await EnvSet.sharedPool);
 
-        assertThat(license, new RequestError({ code: 'license.not_installed', status: 404 }));
+      assertThat(license, new RequestError({ code: 'license.not_installed', status: 404 }));
 
-        ctx.body = {
-          plan: license.payload.plan,
-          env: license.payload.env,
-          quota: license.quota,
-          expiresAt: new Date(license.payload.exp * 1000).toISOString(),
-          installedAt: license.installedAt,
-          lastRefreshedAt: license.lastRefreshedAt,
-          graceEndsAt: license.graceEndsAt,
-          ...(license.refusalReason && { refusalReason: license.refusalReason }),
-        };
+      ctx.body = {
+        plan: license.payload.plan,
+        env: license.payload.env,
+        quota: license.quota,
+        expiresAt: new Date(license.payload.exp * 1000).toISOString(),
+        installedAt: license.installedAt,
+        lastRefreshedAt: license.lastRefreshedAt,
+        graceEndsAt: license.graceEndsAt,
+        ...(license.refusalReason && { refusalReason: license.refusalReason }),
+      };
 
-        return next();
+      return next();
+    }
+  );
+
+  router.put(
+    '/systems/license',
+    koaGuard({
+      body: z.object({ license: z.string().min(1) }),
+      status: [204, 400, 501],
+    }),
+    async (ctx, next) => {
+      assertNotCloud();
+
+      const { license } = ctx.guard.body;
+      const { iat, exp } = await readLicensePayload(license);
+
+      // A key past `exp` is a stale copy. An installed key keeps its entitlements past its own
+      // expiration, so installing is the one place the claim is checked.
+      assertThat(exp * 1000 > Date.now(), new RequestError({ code: 'license.expired_key' }));
+
+      /**
+       * The `systems` table is global and revoked from the row-level-security restricted tenant
+       * role, so the license is read and written through the shared pool, like
+       * `SystemContext`'s provider configs.
+       */
+      const { findSystemByKey, upsertSystem } = createSystemsQuery(await EnvSet.sharedPool);
+      const deploymentIdRecord = await findSystemByKey(LicenseKey.LicenseDeploymentId);
+      const deploymentIdResult = licenseDeploymentIdGuard.safeParse(deploymentIdRecord?.value);
+      const deploymentId = deploymentIdResult.success
+        ? deploymentIdResult.data
+        : generateStandardId();
+
+      await upsertSystem(LicenseKey.License, {
+        jwt: license,
+        installedAt: new Date().toISOString(),
+      });
+      await upsertSystem(LicenseKey.LicenseRefreshState, {
+        lastRefreshedAt: new Date(iat * 1000).toISOString(),
+      });
+      if (!deploymentIdResult.success) {
+        await upsertSystem(LicenseKey.LicenseDeploymentId, deploymentId);
       }
-    );
+      LicenseReader.shared.invalidate();
 
-    router.put(
-      '/systems/license',
-      koaGuard({
-        body: z.object({ license: z.string().min(1) }),
-        status: [204, 400, 501],
-      }),
-      async (ctx, next) => {
-        assertNotCloud();
+      ctx.status = 204;
 
-        const { license } = ctx.guard.body;
-        const { iat, exp } = await readLicensePayload(license);
-
-        // A key past `exp` is a stale copy. An installed key keeps its entitlements past its own
-        // expiration, so installing is the one place the claim is checked.
-        assertThat(exp * 1000 > Date.now(), new RequestError({ code: 'license.expired_key' }));
-
-        /**
-         * The `systems` table is global and revoked from the row-level-security restricted tenant
-         * role, so the license is read and written through the shared pool, like
-         * `SystemContext`'s provider configs.
-         */
-        const { findSystemByKey, upsertSystem } = createSystemsQuery(await EnvSet.sharedPool);
-        const deploymentIdRecord = await findSystemByKey(LicenseKey.LicenseDeploymentId);
-        const deploymentIdResult = licenseDeploymentIdGuard.safeParse(deploymentIdRecord?.value);
-        const deploymentId = deploymentIdResult.success
-          ? deploymentIdResult.data
-          : generateStandardId();
-
-        await upsertSystem(LicenseKey.License, {
-          jwt: license,
-          installedAt: new Date().toISOString(),
-        });
-        await upsertSystem(LicenseKey.LicenseRefreshState, {
-          lastRefreshedAt: new Date(iat * 1000).toISOString(),
-        });
-        if (!deploymentIdResult.success) {
-          await upsertSystem(LicenseKey.LicenseDeploymentId, deploymentId);
-        }
-        LicenseReader.shared.invalidate();
-
-        ctx.status = 204;
-
-        return next();
-      }
-    );
-  }
+      return next();
+    }
+  );
 }
