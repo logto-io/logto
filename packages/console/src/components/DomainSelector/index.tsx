@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import { useMemo } from 'react';
 
 import Tip from '@/assets/icons/tip.svg?react';
+import { EditableFieldScope } from '@/contexts/ReadOnlyAccessProvider';
 import IconButton from '@/ds-components/IconButton';
 import Select from '@/ds-components/Select';
 import type { Props as ToggleTipProps } from '@/ds-components/Tip/ToggleTip';
@@ -31,13 +32,16 @@ function DomainSelector({ value, onChange, tip, className }: Props) {
 
   return (
     <div className={classNames(styles.domainSelector, className)}>
-      <Select
-        value={value}
-        options={options}
-        className={styles.selector}
-        isReadOnly={options.length <= 1}
-        onChange={onChange}
-      />
+      {/* Exempt because the choice only rewrites displayed URLs; callers must not persist it. */}
+      <EditableFieldScope>
+        <Select
+          value={value}
+          options={options}
+          className={styles.selector}
+          isReadOnly={options.length <= 1}
+          onChange={onChange}
+        />
+      </EditableFieldScope>
       {tip && (
         <ToggleTip anchorClassName={styles.toggleTipButton} content={tip} horizontalAlign="start">
           <IconButton size="small">

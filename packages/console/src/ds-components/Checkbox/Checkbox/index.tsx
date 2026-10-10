@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { useLayoutEffect, useState } from 'react';
 
 import Tip from '@/assets/icons/tip.svg?react';
+import { useReadOnlyField } from '@/contexts/ReadOnlyAccessProvider';
 import IconButton from '@/ds-components/IconButton';
 import { ToggleTip, Tooltip } from '@/ds-components/Tip';
 import { onKeyDownHandler } from '@/utils/a11y';
@@ -32,6 +33,8 @@ function Checkbox({
   tooltip,
   suffixTooltip,
 }: Props) {
+  const isReadOnlyField = useReadOnlyField();
+  const isDisabled = disabled || isReadOnlyField;
   const [isIndeterminate, setIsIndeterminate] = useState(indeterminate);
 
   useLayoutEffect(() => {
@@ -39,7 +42,7 @@ function Checkbox({
   }, [indeterminate]);
 
   const handleChange = () => {
-    if (disabled) {
+    if (isDisabled) {
       return;
     }
 
@@ -52,7 +55,7 @@ function Checkbox({
   };
 
   return (
-    <div className={classNames(styles.checkbox, disabled && styles.disabled, className)}>
+    <div className={classNames(styles.checkbox, isDisabled && styles.disabled, className)}>
       <div
         aria-checked={checked}
         className={styles.wrapper}
@@ -66,7 +69,7 @@ function Checkbox({
             className={classNames(
               styles.icon,
               (Boolean(checked) || isIndeterminate) && styles.checked,
-              disabled && styles.disabled
+              isDisabled && styles.disabled
             )}
             width="20"
             height="20"

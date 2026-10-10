@@ -3,6 +3,7 @@ import { useRef, type ComponentProps } from 'react';
 
 import CaretDown from '@/assets/icons/caret-down.svg?react';
 import CaretUp from '@/assets/icons/caret-up.svg?react';
+import { useReadOnlyField } from '@/contexts/ReadOnlyAccessProvider';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import styles from './NumericInput.module.scss';
@@ -47,6 +48,7 @@ type Props = Omit<ComponentProps<typeof TextInput>, 'type' | 'suffix'> & {
 
 /** A numeric text input with up and down buttons for incrementing and decrementing the value. */
 function NumericInput({ onValueUp, onValueDown, ...props }: Props) {
+  const isReadOnlyField = useReadOnlyField();
   const isDisabled = Boolean(props.disabled) || Boolean(props.readOnly);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -57,38 +59,40 @@ function NumericInput({ onValueUp, onValueDown, ...props }: Props) {
       alwaysShowSuffix
       type="number"
       suffix={
-        <div className={styles.container}>
-          <Button
-            className={styles.up}
-            isDisabled={
-              isDisabled ||
-              (props.value !== undefined &&
-                props.max !== undefined &&
-                Number(props.value) >= Number(props.max))
-            }
-            onTrigger={(event) => {
-              inputRef.current?.focus();
-              onValueUp?.(event);
-            }}
-          >
-            <CaretUp />
-          </Button>
-          <Button
-            className={styles.down}
-            isDisabled={
-              isDisabled ||
-              (props.value !== undefined &&
-                props.min !== undefined &&
-                Number(props.value) <= Number(props.min))
-            }
-            onTrigger={(event) => {
-              inputRef.current?.focus();
-              onValueDown?.(event);
-            }}
-          >
-            <CaretDown />
-          </Button>
-        </div>
+        isReadOnlyField ? undefined : (
+          <div className={styles.container}>
+            <Button
+              className={styles.up}
+              isDisabled={
+                isDisabled ||
+                (props.value !== undefined &&
+                  props.max !== undefined &&
+                  Number(props.value) >= Number(props.max))
+              }
+              onTrigger={(event) => {
+                inputRef.current?.focus();
+                onValueUp?.(event);
+              }}
+            >
+              <CaretUp />
+            </Button>
+            <Button
+              className={styles.down}
+              isDisabled={
+                isDisabled ||
+                (props.value !== undefined &&
+                  props.min !== undefined &&
+                  Number(props.value) <= Number(props.min))
+              }
+              onTrigger={(event) => {
+                inputRef.current?.focus();
+                onValueDown?.(event);
+              }}
+            >
+              <CaretDown />
+            </Button>
+          </div>
+        )
       }
     />
   );

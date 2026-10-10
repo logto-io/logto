@@ -8,6 +8,7 @@ import { type FileRejection, useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
 
 import UploaderIcon from '@/assets/icons/upload.svg?react';
+import { useReadOnlyField } from '@/contexts/ReadOnlyAccessProvider';
 import useApi from '@/hooks/use-api';
 import { convertToFileExtensionArray, formatBytes } from '@/utils/uploader';
 
@@ -59,6 +60,8 @@ function FileUploader<T extends Record<string, unknown> = UserAssets>({
   uploadUrl = 'api/user-assets',
 }: Props<T>) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const isReadOnlyField = useReadOnlyField();
+  const isDisabled = Boolean(disabled) || isReadOnlyField;
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string>();
 
@@ -168,7 +171,7 @@ function FileUploader<T extends Record<string, unknown> = UserAssets>({
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    disabled: isUploading || disabled,
+    disabled: isUploading || isDisabled,
     multiple: false,
     accept: Object.fromEntries(allowedMimeTypes.map((mimeType) => [mimeType, []])),
   });
@@ -180,7 +183,7 @@ function FileUploader<T extends Record<string, unknown> = UserAssets>({
         styles.uploader,
         Boolean(uploadError) && styles.uploaderError,
         isDragActive && styles.dragActive,
-        disabled && styles.disabled,
+        isDisabled && styles.disabled,
         className
       )}
     >

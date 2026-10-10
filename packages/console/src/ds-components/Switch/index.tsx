@@ -4,6 +4,8 @@ import type { HTMLProps, ReactElement, ReactNode, Ref } from 'react';
 import { forwardRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useReadOnlyField } from '@/contexts/ReadOnlyAccessProvider';
+
 import DynamicT from '../DynamicT';
 import Tooltip from '../Tip/Tooltip';
 
@@ -28,10 +30,16 @@ type Props =
 function Switch(props: Props, ref?: Ref<HTMLInputElement>) {
   const { label, hasError, tooltip, ...rest } = props;
   const { i18n } = useTranslation();
+  const isReadOnlyField = useReadOnlyField();
 
   const switchElement = (
     <label className={classNames(styles.switch, styles[i18n.dir()])}>
-      <input type="checkbox" {...rest} ref={ref} />
+      <input
+        type="checkbox"
+        {...rest}
+        ref={ref}
+        disabled={Boolean(rest.disabled) || isReadOnlyField}
+      />
       <span className={styles.slider} />
     </label>
   );

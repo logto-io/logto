@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Close from '@/assets/icons/close.svg?react';
+import { useReadOnlyField } from '@/contexts/ReadOnlyAccessProvider';
 import { Ring as Spinner } from '@/ds-components/Spinner';
 import { onKeyDownHandler } from '@/utils/a11y';
 
@@ -44,6 +45,8 @@ function MultiSelect<T extends string>({
   isOptionsLoading,
   renderOption = ({ title, value }) => title ?? value,
 }: Props<T>) {
+  const isReadOnlyField = useReadOnlyField();
+  const isSelectionReadOnly = Boolean(isReadOnly) || isReadOnlyField;
   const inputRef = useRef<HTMLInputElement>(null);
   const selectRef = useRef<HTMLDivElement>(null);
   const [keyword, setKeyword] = useState('');
@@ -79,7 +82,7 @@ function MultiSelect<T extends string>({
     }
   }, []);
 
-  const isOpen = !isReadOnly && isInputFocused && !focusedValue;
+  const isOpen = !isSelectionReadOnly && isInputFocused && !focusedValue;
   const filteredOptions = options.filter(({ value: current }) => {
     return !value.some(({ value }) => value === current);
   });
@@ -91,19 +94,19 @@ function MultiSelect<T extends string>({
         styles.select,
         styles.multiple,
         isOpen && styles.open,
-        isReadOnly && styles.readOnly,
+        isSelectionReadOnly && styles.readOnly,
         Boolean(error) && styles.error,
         className
       )}
       role="button"
       tabIndex={0}
       onKeyDown={onKeyDownHandler(() => {
-        if (!isReadOnly) {
+        if (!isSelectionReadOnly) {
           inputRef.current?.focus();
         }
       })}
       onClick={() => {
-        if (!isReadOnly) {
+        if (!isSelectionReadOnly) {
           inputRef.current?.focus();
         }
       }}
@@ -119,18 +122,20 @@ function MultiSelect<T extends string>({
             }}
           >
             {renderOption(option)}
-            <IconButton
-              className={styles.delete}
-              size="small"
-              onClick={() => {
-                handleDelete(option);
-              }}
-              onKeyDown={onKeyDownHandler(() => {
-                handleDelete(option);
-              })}
-            >
-              <Close className={styles.close} />
-            </IconButton>
+            {!isSelectionReadOnly && (
+              <IconButton
+                className={styles.delete}
+                size="small"
+                onClick={() => {
+                  handleDelete(option);
+                }}
+                onKeyDown={onKeyDownHandler(() => {
+                  handleDelete(option);
+                })}
+              >
+                <Close className={styles.close} />
+              </IconButton>
+            )}
           </Tag>
         );
       })}
@@ -139,8 +144,9 @@ function MultiSelect<T extends string>({
         type="text"
         placeholder={cond(value.length === 0 && placeholder && String(t(placeholder)))}
         value={keyword}
+        readOnly={isSelectionReadOnly}
         onKeyDown={(event) => {
-          if (event.key === 'Backspace' && keyword === '') {
+          if (event.key === 'Backspace' && keyword === '' && !isSelectionReadOnly) {
             if (focusedValue) {
               onChange(value.filter(({ value }) => value !== focusedValue));
               setFocusedValue(null);

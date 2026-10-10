@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import CirclePlus from '@/assets/icons/circle-plus.svg?react';
 import Minus from '@/assets/icons/minus.svg?react';
+import { useReadOnlyField } from '@/contexts/ReadOnlyAccessProvider';
 
 import Button from '../Button';
 import ConfirmModal from '../ConfirmModal';
@@ -38,6 +39,7 @@ function MultiTextInput({
   isDisabled = false,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const isReadOnlyField = useReadOnlyField();
 
   const [deleteFieldIndex, setDeleteFieldIndex] = useState<number>();
 
@@ -82,7 +84,7 @@ function MultiTextInput({
               }}
               onKeyPress={onKeyPress}
             />
-            {fieldIndex > 0 && (
+            {fieldIndex > 0 && !isReadOnlyField && (
               <IconButton
                 disabled={isDisabled}
                 onClick={() => {
@@ -105,15 +107,17 @@ function MultiTextInput({
           )}
         </div>
       ))}
-      <Button
-        size="small"
-        type="text"
-        title="general.add_another"
-        className={styles.addAnother}
-        icon={<CirclePlus />}
-        disabled={isDisabled}
-        onClick={handleAdd}
-      />
+      {!isReadOnlyField && (
+        <Button
+          size="small"
+          type="text"
+          title="general.add_another"
+          className={styles.addAnother}
+          icon={<CirclePlus />}
+          disabled={isDisabled}
+          onClick={handleAdd}
+        />
+      )}
       <ConfirmModal
         isOpen={deleteFieldIndex !== undefined}
         confirmButtonText="general.delete"

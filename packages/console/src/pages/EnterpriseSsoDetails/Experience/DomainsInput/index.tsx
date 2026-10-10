@@ -7,6 +7,7 @@ import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import Close from '@/assets/icons/close.svg?react';
+import { useReadOnlyField } from '@/contexts/ReadOnlyAccessProvider';
 import IconButton from '@/ds-components/IconButton';
 import Tag from '@/ds-components/Tag';
 import { onKeyDownHandler } from '@/utils/a11y';
@@ -30,6 +31,7 @@ type Props = {
 // TODO: @Charles refactor me, use `<MultiOptionInput />` instead.
 function DomainsInput({ className, values, onChange: rawOnChange, error, placeholder }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const isReadOnlyField = useReadOnlyField();
   const [focusedValueId, setFocusedValueId] = useState<Nullable<string>>(null);
   const [currentValue, setCurrentValue] = useState('');
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -96,23 +98,26 @@ function DomainsInput({ className, values, onChange: rawOnChange, error, placeho
               }}
             >
               {option.value}
-              <IconButton
-                className={styles.delete}
-                size="small"
-                onClick={() => {
-                  handleDelete(option);
-                }}
-                onKeyDown={onKeyDownHandler(() => {
-                  handleDelete(option);
-                })}
-              >
-                <Close className={styles.close} />
-              </IconButton>
+              {!isReadOnlyField && (
+                <IconButton
+                  className={styles.delete}
+                  size="small"
+                  onClick={() => {
+                    handleDelete(option);
+                  }}
+                  onKeyDown={onKeyDownHandler(() => {
+                    handleDelete(option);
+                  })}
+                >
+                  <Close className={styles.close} />
+                </IconButton>
+              )}
             </Tag>
           );
         })}
         <input
           ref={inputRef}
+          disabled={isReadOnlyField}
           // Need to use t() to complete the translation with prefix, use String() to convert the result to string.
           // Should not show placeholder when there are values.
           placeholder={conditional(values.length === 0 && placeholder && String(t(placeholder)))}
