@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import useSWR from 'swr';
 
 import { adminTenantEndpoint, meApi } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 
 import { useStaticApi, type RequestError } from './use-api';
 import useSwrFetcher from './use-swr-fetcher';
@@ -23,14 +23,6 @@ type MemberWithoutMfa = Pick<User, 'id' | 'username' | 'primaryEmail' | 'name' |
 
 const tenantMfaPath = 'me/tenant/mfa';
 
-/**
- * Self-hosted plans: mandatory Console MFA ships with the unlaunched self-hosted Pro and Enterprise
- * plans. Removed together with the other self-hosted plans guards at launch.
- *
- * On Cloud the tenant MFA requirement is a Cloud tenant setting instead.
- */
-const shouldFetchTenantMfa = !isCloud && isDevFeaturesEnabled;
-
 /** A Ky instance for the tenant routes on `/me`, which the admin tenant serves. */
 const useMeApi = () =>
   useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
@@ -43,7 +35,7 @@ const useOssTenantMfa = () => {
   const api = useMeApi();
   const fetcher = useSwrFetcher<TenantMfa>(api);
   const { data, error, isLoading, mutate } = useSWR<TenantMfa, RequestError>(
-    shouldFetchTenantMfa && tenantMfaPath,
+    !isCloud && tenantMfaPath,
     fetcher
   );
 

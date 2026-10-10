@@ -429,12 +429,15 @@ describe('LicenseReader', () => {
     expect(findSystemByKey).toHaveBeenCalledTimes(6);
   });
 
-  it('should grant nothing while the self-hosted plans feature is not launched', async () => {
-    install(await signLicenseKey(buildLicensePayload(), keyPair.privateKey));
+  it('should read licensed entitlements without dev features', async () => {
+    const payload = buildLicensePayload({ quota: { bringYourUi: true } });
+    install(await signLicenseKey(payload, keyPair.privateKey));
     Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
 
-    await expect(reader.read(pool)).resolves.toBeUndefined();
-    expect(findSystemByKey).not.toHaveBeenCalled();
+    await expect(reader.read(pool)).resolves.toMatchObject({
+      payload,
+      quota: { ...ossDefaultQuota, bringYourUi: true },
+    });
   });
 });
 

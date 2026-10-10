@@ -2,7 +2,6 @@ import { isFileAssetPath, parseRange } from '@logto/core-kit';
 import { tryThat } from '@silverhand/essentials';
 import type { MiddlewareType } from 'koa';
 
-import { EnvSet } from '#src/env-set/index.js';
 import SystemContext from '#src/tenants/SystemContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { isTransientAzureStorageError } from '#src/utils/storage/azure-storage.js';
@@ -27,16 +26,7 @@ const buildStorageDownloadError = (error: unknown) =>
  */
 export default function koaServeCustomUiAssets(customUiAssetId: string) {
   const { experienceBlobsProviderConfig } = SystemContext.shared;
-  assertThat(
-    experienceBlobsProviderConfig &&
-      /**
-       * Self-hosted plans: Bring your UI on the deployment's own storage, served from any
-       * provider. Removed together with the other self-hosted plans guards at launch.
-       */
-      (EnvSet.values.isDevFeaturesEnabled ||
-        experienceBlobsProviderConfig.provider === 'AzureStorage'),
-    'storage.not_configured'
-  );
+  assertThat(experienceBlobsProviderConfig, 'storage.not_configured');
 
   const serve: MiddlewareType = async (ctx, next) => {
     const [tenantId] = await getTenantId(ctx.URL);

@@ -1,15 +1,10 @@
-import { mockEnv, resetMockEnv, type EnvTestUtils } from '@/test-utils/env';
-
 import {
   buildCloudUpsellUrl,
   buildSelfHostedPlansUrl,
-  getSelfHostedPlansUpsellTargetBlank,
   openCloudUpsell,
   openSelfHostedPlansUpsell,
   ossUpsellEntries,
 } from './oss-upsell';
-
-jest.mock('@/consts/env', () => jest.requireActual<EnvTestUtils>('@/test-utils/env').mockEnvModule);
 
 describe('oss upsell helpers', () => {
   const mockWindowOpen = jest.fn<ReturnType<typeof window.open>, Parameters<typeof window.open>>();
@@ -20,7 +15,6 @@ describe('oss upsell helpers', () => {
     jest.spyOn(window, 'open').mockImplementation(mockWindowOpen);
     mockWindowOpen.mockReset();
     mockLocationAssign.mockReset();
-    resetMockEnv();
   });
 
   it('builds a Cloud upsell URL with the standard UTM parameters', () => {
@@ -35,10 +29,6 @@ describe('oss upsell helpers', () => {
   });
 
   describe('with the License page available', () => {
-    beforeEach(() => {
-      mockEnv({ isDevFeaturesEnabled: true });
-    });
-
     it('builds an in-Console License page path tagged with the entry only', () => {
       const href = buildSelfHostedPlansUrl(ossUpsellEntries.tenantSettingsMembersOssUpsell);
       const url = new URL(href, 'https://example.com');
@@ -58,10 +48,6 @@ describe('oss upsell helpers', () => {
       expect(url.searchParams.get('utm_content')).toBe(entry);
     });
 
-    it('renders touchpoint links in the same tab', () => {
-      expect(getSelfHostedPlansUpsellTargetBlank()).toBe(false);
-    });
-
     it('navigates to the License page in the same tab', () => {
       jest.spyOn(window, 'location', 'get').mockReturnValue({
         ...window.location,
@@ -77,46 +63,6 @@ describe('oss upsell helpers', () => {
       );
       expect(mockLocationAssign).toHaveBeenCalledWith(targetUrl);
       expect(mockWindowOpen).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('without the License page', () => {
-    it('builds a self-hosted plans URL with a dedicated campaign value', () => {
-      const url = new URL(buildSelfHostedPlansUrl(ossUpsellEntries.tenantSettingsMembersOssUpsell));
-
-      expect(url.origin).toBe('https://logto.io');
-      expect(url.pathname).toBe('/self-hosted-plans');
-      expect(url.searchParams.get('utm_source')).toBe('logto_oss');
-      expect(url.searchParams.get('utm_medium')).toBe('console');
-      expect(url.searchParams.get('utm_campaign')).toBe('self_hosted_plans');
-      expect(url.searchParams.get('utm_content')).toBe('tenant_settings_members_oss_upsell');
-    });
-
-    it.each([
-      [ossUpsellEntries.ossSidebarCloudCard, 'oss_sidebar_cloud_card'],
-      [ossUpsellEntries.getStartedOssCloudBanner, 'get_started_oss_cloud_banner'],
-    ])('attributes the %s general upsell surface to self-hosted plans', (entry, content) => {
-      const url = new URL(buildSelfHostedPlansUrl(entry));
-
-      expect(url.searchParams.get('utm_campaign')).toBe('self_hosted_plans');
-      expect(url.searchParams.get('utm_content')).toBe(content);
-    });
-
-    it('renders touchpoint links in a new tab', () => {
-      expect(getSelfHostedPlansUpsellTargetBlank()).toBe('noopener');
-    });
-
-    it('opens the UTM-tagged self-hosted plans URL in a new tab', () => {
-      const targetUrl = openSelfHostedPlansUpsell({
-        entry: ossUpsellEntries.tenantSettingsMembersOssUpsell,
-      });
-
-      expect(targetUrl).toContain('https://logto.io/self-hosted-plans');
-      expect(targetUrl).toContain('utm_source=logto_oss');
-      expect(targetUrl).toContain('utm_medium=console');
-      expect(targetUrl).toContain('utm_campaign=self_hosted_plans');
-      expect(targetUrl).toContain('utm_content=tenant_settings_members_oss_upsell');
-      expect(mockWindowOpen).toHaveBeenCalledWith(targetUrl, '_blank', 'noopener,noreferrer');
     });
   });
 

@@ -6,7 +6,7 @@ import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
 import { useTenantSettings } from './tenant-settings';
 
-jest.mock('@/consts/env', () => ({ isCloud: false, isDevFeaturesEnabled: true }));
+jest.mock('@/consts/env', () => ({ isCloud: false, isDevFeaturesEnabled: false }));
 jest.mock('@/components/Region', () => ({ defaultRegionName: 'US' }));
 jest.mock('@/contexts/SubscriptionDataProvider', () => ({}));
 jest.mock('@/contexts/TenantsProvider', () => ({}));
@@ -16,7 +16,8 @@ jest.mock('react-safe-lazy', () => ({
 }));
 jest.mock('@/pages/NotFound', () => () => <div>Not found</div>);
 jest.mock('@/pages/OssTenantSettings', () => () => <Outlet />);
-jest.mock('@/pages/OssTenantSettings/Members', () => () => <Outlet />);
+jest.mock('@/pages/TenantSettings/TenantMembers', () => () => <Outlet />);
+jest.mock('@/pages/OssTenantSettings/License', () => () => <div>License</div>);
 jest.mock('@/pages/TenantSettings/TenantMembers/Invitations', () => () => <div>Invitations</div>);
 
 function TenantSettingsRoutes() {
@@ -48,6 +49,18 @@ function InvitationsPage() {
 }
 
 describe('self-hosted tenant settings routes', () => {
+  it('makes License available without dev features', async () => {
+    mockAccess(false, false);
+    render(
+      <MemoryRouter initialEntries={['/tenant-settings/license']}>
+        <Suspense fallback={null}>
+          <TenantSettingsRoutes />
+        </Suspense>
+      </MemoryRouter>
+    );
+    expect(await screen.findByText('License')).not.toBeNull();
+  });
+
   it('keeps invitations accessible when the collaboration entitlement lapses', async () => {
     mockAccess(true, true);
     const { rerender } = render(<InvitationsPage />);

@@ -30,7 +30,7 @@ import { initExperienceClient, processSession } from '#src/helpers/client.js';
 import { clearConnectorsByTypes, setEmailConnector } from '#src/helpers/connector.js';
 import { expectRejects, readConnectorMessage } from '#src/helpers/index.js';
 import { buildTestLicensePayload, signTestLicenseKey } from '#src/helpers/license.js';
-import { devFeatureTest, generatePassword, generateUsername } from '#src/utils.js';
+import { generatePassword, generateUsername } from '#src/utils.js';
 
 const tenantOrganizationId = getTenantOrganizationId(defaultTenantId);
 const meUrl = (path: string) => new URL(`/me/${path}`, logtoConsoleUrl).href;
@@ -111,9 +111,7 @@ const signUpWithInvitationLink = async (link: string, email: string) => {
   return { client, userId };
 };
 
-// The tenant routes and the license are behind the self-hosted plans feature, which the instance
-// under test only enables with `DEV_FEATURES_ENABLED`.
-devFeatureTest.describe('me tenant members and invitations', () => {
+describe('me tenant members and invitations', () => {
   const inviteeEmail = `${generateUsername()}@example.com`;
   const createdUserIds: string[] = [];
   const users: Partial<
