@@ -2,6 +2,7 @@ import { type FieldError } from 'react-hook-form';
 
 import CirclePlus from '@/assets/icons/circle-plus.svg?react';
 import Minus from '@/assets/icons/minus.svg?react';
+import { useReadOnlyField } from '@/contexts/ReadOnlyAccessProvider';
 import Button from '@/ds-components/Button';
 import IconButton from '@/ds-components/IconButton';
 import TextInput, { type Props as TextInputProps } from '@/ds-components/TextInput';
@@ -68,6 +69,8 @@ function KeyValueInputField({
   onRemove,
   onAppend,
 }: Props) {
+  const isReadOnlyField = useReadOnlyField();
+
   return (
     <div className={className}>
       {fields.map((field, index) => {
@@ -87,7 +90,7 @@ function KeyValueInputField({
                 error={Boolean(errors?.[index]?.value)}
                 {...getInputFieldProps.value(index)}
               />
-              {fields.length > 1 && (
+              {fields.length > 1 && !isReadOnlyField && (
                 <IconButton
                   onClick={() => {
                     onRemove(index);
@@ -102,15 +105,17 @@ function KeyValueInputField({
           </div>
         );
       })}
-      <Button
-        size="small"
-        type="text"
-        title="general.add_another"
-        icon={<CirclePlus />}
-        onClick={() => {
-          onAppend({ key: '', value: '' });
-        }}
-      />
+      {!isReadOnlyField && (
+        <Button
+          size="small"
+          type="text"
+          title="general.add_another"
+          icon={<CirclePlus />}
+          onClick={() => {
+            onAppend({ key: '', value: '' });
+          }}
+        />
+      )}
     </div>
   );
 }

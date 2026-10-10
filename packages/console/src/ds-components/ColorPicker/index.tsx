@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import { useRef, useState } from 'react';
 import { ColorPicker as ColorPalette, useColor } from 'react-color-palette';
 
+import { useReadOnlyField } from '@/contexts/ReadOnlyAccessProvider';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import Dropdown from '../Dropdown';
@@ -18,18 +19,22 @@ function ColorPicker({ name, onChange, value = '#000000' }: Props) {
   const anchorRef = useRef<HTMLSpanElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [color] = useColor(value);
+  const isReadOnlyField = useReadOnlyField();
+
+  const open = () => {
+    if (!isReadOnlyField) {
+      setIsOpen(true);
+    }
+  };
 
   return (
     <div
       tabIndex={0}
       role="button"
+      aria-disabled={isReadOnlyField || undefined}
       className={classNames(styles.container, isOpen && styles.highlight)}
-      onClick={() => {
-        setIsOpen(true);
-      }}
-      onKeyDown={onKeyDownHandler(() => {
-        setIsOpen(true);
-      })}
+      onClick={open}
+      onKeyDown={onKeyDownHandler(open)}
     >
       <input hidden readOnly name={name} value={value} />
       <span ref={anchorRef} className={styles.brick} style={{ backgroundColor: value }} />

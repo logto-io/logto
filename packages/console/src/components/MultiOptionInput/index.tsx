@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { type ReactNode, useRef, useState, useCallback } from 'react';
 
 import Close from '@/assets/icons/close.svg?react';
+import { useReadOnlyField } from '@/contexts/ReadOnlyAccessProvider';
 import IconButton from '@/ds-components/IconButton';
 import Tag from '@/ds-components/Tag';
 import { onKeyDownHandler } from '@/utils/a11y';
@@ -43,6 +44,8 @@ function MultiOptionInput<T>({
   disabled,
 }: Props<T>) {
   const ref = useRef<HTMLInputElement>(null);
+  const isReadOnlyField = useReadOnlyField();
+  const isDisabled = Boolean(disabled) || isReadOnlyField;
   const [focusedValueId, setFocusedValueId] = useState<Nullable<string>>(null);
   const [currentValue, setCurrentValue] = useState('');
   const getId = useCallback(
@@ -88,19 +91,19 @@ function MultiOptionInput<T>({
         className={classNames(
           styles.input,
           Boolean(error) && styles.error,
-          disabled && styles.disabled,
+          isDisabled && styles.disabled,
           className
         )}
         role="button"
         tabIndex={0}
         onKeyDown={onKeyDownHandler(() => {
-          if (disabled) {
+          if (isDisabled) {
             return;
           }
           ref.current?.focus();
         })}
         onClick={() => {
-          if (disabled) {
+          if (isDisabled) {
             return;
           }
           ref.current?.focus();
@@ -124,23 +127,25 @@ function MultiOptionInput<T>({
               }}
             >
               {renderValue(option)}
-              <IconButton
-                className={styles.delete}
-                size="small"
-                onClick={() => {
-                  handleDelete(option);
-                }}
-                onKeyDown={onKeyDownHandler(() => {
-                  handleDelete(option);
-                })}
-              >
-                <Close className={styles.close} />
-              </IconButton>
+              {!isReadOnlyField && (
+                <IconButton
+                  className={styles.delete}
+                  size="small"
+                  onClick={() => {
+                    handleDelete(option);
+                  }}
+                  onKeyDown={onKeyDownHandler(() => {
+                    handleDelete(option);
+                  })}
+                >
+                  <Close className={styles.close} />
+                </IconButton>
+              )}
             </Tag>
           ))}
           <input
             ref={ref}
-            disabled={disabled}
+            disabled={isDisabled}
             value={currentValue}
             onKeyDown={async (event) => {
               switch (event.key) {

@@ -2,6 +2,7 @@ import type { AllowedUploadMimeType } from '@logto/schemas';
 import classNames from 'classnames';
 
 import Delete from '@/assets/icons/delete.svg?react';
+import { useReadOnlyField } from '@/contexts/ReadOnlyAccessProvider';
 import ImageWithErrorFallback from '@/ds-components/ImageWithErrorFallback';
 import useImageMimeTypes, { maxImageSizeLimit } from '@/hooks/use-image-mime-types';
 
@@ -30,6 +31,7 @@ function ImageUploader({
   ...rest
 }: Props) {
   const { allowedMimeTypes } = useImageMimeTypes(imageMimeTypes);
+  const isReadOnlyField = useReadOnlyField();
 
   return value ? (
     <div className={classNames(styles.imageUploader, className, uploadedClassName)}>
@@ -44,14 +46,16 @@ function ImageUploader({
          */
         referrerPolicy="no-referrer"
       />
-      <IconButton
-        className={styles.delete}
-        onClick={() => {
-          onDelete();
-        }}
-      >
-        <Delete />
-      </IconButton>
+      {!isReadOnlyField && (
+        <IconButton
+          className={styles.delete}
+          onClick={() => {
+            onDelete();
+          }}
+        >
+          <Delete />
+        </IconButton>
+      )}
     </div>
   ) : (
     <FileUploader

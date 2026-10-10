@@ -8,6 +8,7 @@ import Delete from '@/assets/icons/delete.svg?react';
 import FileIconDark from '@/assets/icons/file-icon-dark.svg?react';
 import FileIcon from '@/assets/icons/file-icon.svg?react';
 import UploaderIcon from '@/assets/icons/upload.svg?react';
+import { useReadOnlyField } from '@/contexts/ReadOnlyAccessProvider';
 import Button from '@/ds-components/Button';
 import IconButton from '@/ds-components/IconButton';
 import useTheme from '@/hooks/use-theme';
@@ -33,6 +34,7 @@ export type Props = {
 
 function FileReader({ onChange, value, attributes, fieldError, setError }: Props) {
   const theme = useTheme();
+  const isReadOnlyField = useReadOnlyField();
 
   const { accept, buttonTitle, defaultFilename, defaultFileMimeType } = attributes;
 
@@ -74,6 +76,7 @@ function FileReader({ onChange, value, attributes, fieldError, setError }: Props
     maxSize: fileSizeLimit,
     multiple: false, // Upload only one file at a time.
     accept,
+    disabled: isReadOnlyField,
   });
 
   return (
@@ -88,19 +91,26 @@ function FileReader({ onChange, value, attributes, fieldError, setError }: Props
               calculateFileSize(value, defaultFilename, defaultFileMimeType) / 1024
             ).toFixed(2)} KB`}</span>
           </div>
-          <IconButton
-            className={styles.delete}
-            onClick={() => {
-              handleRemove();
-            }}
-          >
-            <Delete className={styles.icon} />
-          </IconButton>
+          {!isReadOnlyField && (
+            <IconButton
+              className={styles.delete}
+              onClick={() => {
+                handleRemove();
+              }}
+            >
+              <Delete className={styles.icon} />
+            </IconButton>
+          )}
         </div>
       ) : (
         <>
           <div {...getRootProps()}>
-            <Button icon={<UploaderIcon />} title={buttonTitle} size="large" />
+            <Button
+              icon={<UploaderIcon />}
+              title={buttonTitle}
+              size="large"
+              disabled={isReadOnlyField}
+            />
             <input {...getInputProps({ className: styles.fileInput })} />
           </div>
           {Boolean(fieldError) && <div className={styles.error}>{fieldError?.message}</div>}

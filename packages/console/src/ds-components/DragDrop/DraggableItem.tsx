@@ -4,6 +4,8 @@ import type { ReactNode } from 'react';
 import { useContext, useEffect, useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 
+import { useReadOnlyField } from '@/contexts/ReadOnlyAccessProvider';
+
 import { DragDropContext } from './DragDropProvider';
 
 type Props = {
@@ -35,6 +37,7 @@ function DraggableItem({
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const { setIsDragging } = useContext(DragDropContext);
+  const isReadOnlyField = useReadOnlyField();
   const [{ handlerId }, drop] = useDrop<DragItemProps, void, { handlerId: Nullable<Identifier> }>({
     accept: dragType,
     collect(monitor) {
@@ -98,7 +101,7 @@ function DraggableItem({
     item: () => {
       return { id, sortIndex };
     },
-    canDrag: () => !isDragDisabled,
+    canDrag: () => !isDragDisabled && !isReadOnlyField,
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),

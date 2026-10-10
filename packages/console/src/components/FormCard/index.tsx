@@ -1,6 +1,7 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import type { ReactElement, ReactNode } from 'react';
 
+import { ReadOnlyFieldScope } from '@/contexts/ReadOnlyAccessProvider';
 import type DangerousRaw from '@/ds-components/DangerousRaw';
 import DynamicT from '@/ds-components/DynamicT';
 
@@ -47,7 +48,7 @@ function FormCard({
         </>
       }
     >
-      {children}
+      <ReadOnlyFieldScope>{children}</ReadOnlyFieldScope>
     </FormCardLayout>
   );
 }

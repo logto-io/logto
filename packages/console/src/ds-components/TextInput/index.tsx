@@ -14,6 +14,7 @@ import {
 
 import EyeClosed from '@/assets/icons/eye-closed.svg?react';
 import Eye from '@/assets/icons/eye.svg?react';
+import { useReadOnlyField } from '@/contexts/ReadOnlyAccessProvider';
 import IconButton from '@/ds-components/IconButton';
 
 import styles from './index.module.scss';
@@ -53,6 +54,8 @@ function TextInput(
 ) {
   const innerRef = useRef<HTMLInputElement>(null);
   const [isContentHidden, setIsContentHidden] = useState(true);
+  const isReadOnlyField = useReadOnlyField();
+  const isReadOnly = Boolean(readOnly) || isReadOnlyField;
 
   const toggleHiddenContent = () => {
     setIsContentHidden((previous) => !previous);
@@ -100,12 +103,12 @@ function TextInput(
           isConfidential && isContentHidden && type === 'text' && styles.hideTextContainerContent,
           icon && styles.withIcon,
           disabled && styles.disabled,
-          readOnly && styles.readOnly,
+          isReadOnly && styles.readOnly,
           inputContainerClassName
         )}
       >
         {icon && <span className={styles.icon}>{icon}</span>}
-        <input type={type} {...rest} ref={innerRef} disabled={disabled} readOnly={readOnly} />
+        <input type={type} {...rest} ref={innerRef} disabled={disabled} readOnly={isReadOnly} />
         {suffixIcon &&
           cloneElement(suffixIcon, {
             className: classNames(
