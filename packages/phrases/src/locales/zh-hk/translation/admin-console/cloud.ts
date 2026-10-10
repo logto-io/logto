@@ -1,4 +1,33 @@
 const cloud = {
+  self_hosted_licenses: {
+    title: '自託管授權',
+    description: '查看此帳戶擁有的授權，並複製用於自託管部署的金鑰。',
+    empty_title: '暫無自託管授權',
+    empty_description: '分配給此帳戶的授權會顯示在這裏，無需建立 Cloud 租戶。',
+    load_error: '無法載入授權，請重試。',
+    period_end: '目前週期結束日期',
+    keys_title: '授權金鑰',
+    keys_description: '請妥善保管金鑰，並使用與你的部署環境相符的金鑰。',
+    production_key: '正式環境金鑰',
+    non_production_key: '非正式環境金鑰',
+    keys_unavailable: '此授權的金鑰無法使用。如需協助，請聯絡支援團隊。',
+    issue_keys: '簽發兩種授權金鑰',
+    issue_error: '無法簽發授權金鑰，請重試。',
+    install_title: '安裝授權',
+    install_description:
+      '兩種金鑰提供相同的功能和配額。安裝的金鑰用於識別你的部署是正式環境還是非正式環境。',
+    install_copy: '正式部署請複製正式環境金鑰，開發及測試請複製非正式環境金鑰。',
+    install_paste: '在自託管控制台中開啟「設定 → 授權」，貼上金鑰並安裝。',
+    status: {
+      active: '有效',
+      past_due: '付款逾期',
+      canceling: '週期結束時取消',
+      canceled: '已取消',
+      unpaid: '未付款',
+      expired: '已過期',
+      revoked: '已撤銷',
+    },
+  },
   console_sso: {
     back_to_list: '返回控制台 SSO',
     create: '新增連接器',

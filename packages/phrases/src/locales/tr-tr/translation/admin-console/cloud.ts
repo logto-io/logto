@@ -1,4 +1,36 @@
 const cloud = {
+  self_hosted_licenses: {
+    title: 'Kendi sunucunda barındırma lisansları',
+    description:
+      'Hesabının lisanslarını görüntüle ve kendi sunucundaki dağıtımlar için anahtarları kopyala.',
+    empty_title: 'Henüz kendi sunucunda barındırma lisansı yok',
+    empty_description: 'Bu hesaba atanan lisanslar burada görünür. Cloud kiracısı gerekmez.',
+    load_error: 'Lisanslar yüklenemedi. Lütfen tekrar dene.',
+    period_end: 'Geçerli dönem sonu',
+    keys_title: 'Lisans anahtarları',
+    keys_description: 'Bu anahtarları gizli tut. Dağıtım ortamına uygun anahtarı kullan.',
+    production_key: 'Üretim anahtarı',
+    non_production_key: 'Üretim dışı anahtar',
+    keys_unavailable: 'Bu lisansın anahtarları kullanılamıyor. Yardım için destek ekibine ulaş.',
+    issue_keys: 'Her iki lisans anahtarını oluştur',
+    issue_error: 'Lisans anahtarları oluşturulamadı. Lütfen tekrar dene.',
+    install_title: 'Lisansını yükle',
+    install_description:
+      'Her iki anahtar da aynı özellikleri ve kotaları sağlar. Yüklediğin anahtar, dağıtımını üretim veya üretim dışı olarak tanımlar.',
+    install_copy:
+      'Üretim dağıtımı için üretim anahtarını, geliştirme ve test için üretim dışı anahtarı kopyala.',
+    install_paste:
+      'Kendi sunucundaki konsolda Ayarlar → Lisans bölümünü aç, anahtarı yapıştır ve yükle.',
+    status: {
+      active: 'Etkin',
+      past_due: 'Ödeme gecikmiş',
+      canceling: 'Dönem sonunda iptal edilir',
+      canceled: 'İptal edildi',
+      unpaid: 'Ödenmemiş',
+      expired: 'Süresi dolmuş',
+      revoked: 'Geri alınmış',
+    },
+  },
   console_sso: {
     back_to_list: "Console SSO'ya dön",
     create: 'Bağlayıcı ekle',

@@ -1,4 +1,37 @@
 const cloud = {
+  self_hosted_licenses: {
+    title: 'Licenças autoalojadas',
+    description:
+      'Consulta as licenças da tua conta e copia as chaves para as tuas implementações autoalojadas.',
+    empty_title: 'Ainda não há licenças autoalojadas',
+    empty_description:
+      'As licenças atribuídas a esta conta aparecerão aqui. Não é necessário um tenant Cloud.',
+    load_error: 'Não foi possível carregar as licenças. Tenta novamente.',
+    period_end: 'Fim do período atual',
+    keys_title: 'Chaves de licença',
+    keys_description: 'Mantém estas chaves em segredo. Usa a chave adequada ao teu ambiente.',
+    production_key: 'Chave de produção',
+    non_production_key: 'Chave de não produção',
+    keys_unavailable:
+      'As chaves desta licença estão indisponíveis. Contacta o suporte se precisares de ajuda.',
+    issue_keys: 'Emitir ambas as chaves de licença',
+    issue_error: 'Não foi possível emitir as chaves de licença. Tenta novamente.',
+    install_title: 'Instala a tua licença',
+    install_description:
+      'Ambas as chaves oferecem as mesmas funcionalidades e quotas. A chave instalada identifica a tua implementação como de produção ou de não produção.',
+    install_copy:
+      'Copia a chave de produção para produção ou a chave de não produção para desenvolvimento e testes.',
+    install_paste: 'Na consola autoalojada, abre Definições → Licença, cola a chave e instala-a.',
+    status: {
+      active: 'Ativa',
+      past_due: 'Pagamento em atraso',
+      canceling: 'Cancela no fim do período',
+      canceled: 'Cancelada',
+      unpaid: 'Não paga',
+      expired: 'Expirada',
+      revoked: 'Revogada',
+    },
+  },
   console_sso: {
     back_to_list: 'Voltar ao SSO da Consola',
     create: 'Adicionar conector',

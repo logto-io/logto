@@ -1,4 +1,34 @@
 const cloud = {
+  self_hosted_licenses: {
+    title: '자체 호스팅 라이선스',
+    description: '계정이 소유한 라이선스를 확인하고 자체 호스팅 배포용 키를 복사하세요.',
+    empty_title: '아직 자체 호스팅 라이선스가 없습니다',
+    empty_description:
+      '이 계정에 할당된 라이선스가 여기에 표시됩니다. Cloud 테넌트는 필요하지 않습니다.',
+    load_error: '라이선스를 불러올 수 없습니다. 다시 시도해 주세요.',
+    period_end: '현재 기간 종료일',
+    keys_title: '라이선스 키',
+    keys_description: '키를 안전하게 보관하고 배포 환경에 맞는 키를 사용하세요.',
+    production_key: '프로덕션 키',
+    non_production_key: '비프로덕션 키',
+    keys_unavailable: '이 라이선스의 키를 사용할 수 없습니다. 도움이 필요하면 지원팀에 문의하세요.',
+    issue_keys: '두 라이선스 키 발급',
+    issue_error: '라이선스 키를 발급할 수 없습니다. 다시 시도해 주세요.',
+    install_title: '라이선스 설치',
+    install_description:
+      '두 키는 동일한 기능과 할당량을 제공합니다. 설치한 키에 따라 배포가 프로덕션 또는 비프로덕션 환경으로 구분됩니다.',
+    install_copy: '프로덕션 배포에는 프로덕션 키를, 개발 및 테스트에는 비프로덕션 키를 복사하세요.',
+    install_paste: '자체 호스팅 콘솔에서 설정 → 라이선스를 열고 키를 붙여 넣어 설치하세요.',
+    status: {
+      active: '활성',
+      past_due: '결제 연체',
+      canceling: '기간 종료 시 취소',
+      canceled: '취소됨',
+      unpaid: '미결제',
+      expired: '만료됨',
+      revoked: '철회됨',
+    },
+  },
   console_sso: {
     back_to_list: 'Console SSO로 돌아가기',
     create: '커넥터 추가',

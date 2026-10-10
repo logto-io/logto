@@ -1,4 +1,38 @@
 const cloud = {
+  self_hosted_licenses: {
+    title: 'Self-hosted licenses',
+    description:
+      'View the licenses owned by your account and copy keys for your self-hosted deployments.',
+    empty_title: 'No self-hosted licenses yet',
+    empty_description:
+      'Licenses assigned to this account will appear here. No Cloud tenant is required.',
+    load_error: 'Unable to load licenses. Please try again.',
+    period_end: 'Current period ends',
+    keys_title: 'License keys',
+    keys_description:
+      'Keep these keys private. Use the key that matches your deployment environment.',
+    production_key: 'Production key',
+    non_production_key: 'Non-production key',
+    keys_unavailable: 'Keys are unavailable for this license. Contact support if you need help.',
+    issue_keys: 'Issue both license keys',
+    issue_error: 'Unable to issue license keys. Please try again.',
+    install_title: 'Install your license',
+    install_description:
+      'Both keys provide the same features and quotas. The key you install identifies your deployment as production or non-production.',
+    install_copy:
+      'Copy the production key for a production deployment, or the non-production key for development and testing.',
+    install_paste:
+      'In your self-hosted Console, open Settings → License, paste the key, and install it.',
+    status: {
+      active: 'Active',
+      past_due: 'Past due',
+      canceling: 'Cancels at period end',
+      canceled: 'Canceled',
+      unpaid: 'Unpaid',
+      expired: 'Expired',
+      revoked: 'Revoked',
+    },
+  },
   console_sso: {
     back_to_list: 'Back to Console SSO',
     create: 'Add connector',

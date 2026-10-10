@@ -1,4 +1,39 @@
 const cloud = {
+  self_hosted_licenses: {
+    title: 'Licences auto-hébergées',
+    description:
+      'Consultez les licences de votre compte et copiez les clés pour vos déploiements auto-hébergés.',
+    empty_title: 'Aucune licence auto-hébergée pour le moment',
+    empty_description:
+      'Les licences attribuées à ce compte apparaîtront ici. Aucun locataire Cloud requis.',
+    load_error: 'Impossible de charger les licences. Veuillez réessayer.',
+    period_end: 'Fin de la période actuelle',
+    keys_title: 'Clés de licence',
+    keys_description:
+      'Gardez ces clés confidentielles. Utilisez la clé adaptée à votre environnement.',
+    production_key: 'Clé de production',
+    non_production_key: 'Clé hors production',
+    keys_unavailable:
+      'Les clés de cette licence sont indisponibles. Contactez le support si nécessaire.',
+    issue_keys: 'Émettre les deux clés de licence',
+    issue_error: 'Impossible d’émettre les clés de licence. Veuillez réessayer.',
+    install_title: 'Installer votre licence',
+    install_description:
+      'Les deux clés offrent les mêmes fonctionnalités et quotas. La clé installée identifie votre déploiement comme étant en production ou hors production.',
+    install_copy:
+      'Copiez la clé de production pour la production, ou la clé hors production pour le développement et les tests.',
+    install_paste:
+      'Dans votre console auto-hébergée, ouvrez Paramètres → Licence, collez la clé et installez-la.',
+    status: {
+      active: 'Active',
+      past_due: 'Paiement en retard',
+      canceling: 'Annulation en fin de période',
+      canceled: 'Annulée',
+      unpaid: 'Impayée',
+      expired: 'Expirée',
+      revoked: 'Révoquée',
+    },
+  },
   console_sso: {
     back_to_list: 'Retour au SSO de la console',
     create: 'Ajouter un connecteur',

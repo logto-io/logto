@@ -31,6 +31,7 @@ export enum GlobalRoute {
   AcceptInvitation = '/accept',
   Profile = '/profile',
   ConsoleSso = '/console-sso',
+  SelfHostedLicenses = '/self-hosted-licenses',
 
   EnterpriseSubscription = '/subscriptions',
   DeleteAccount = '/delete-account',

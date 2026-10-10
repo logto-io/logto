@@ -1,4 +1,33 @@
 const cloud = {
+  self_hosted_licenses: {
+    title: '自托管许可证',
+    description: '查看此账户拥有的许可证，并复制用于自托管部署的密钥。',
+    empty_title: '暂无自托管许可证',
+    empty_description: '分配给此账户的许可证会显示在这里，无需创建 Cloud 租户。',
+    load_error: '无法加载许可证，请重试。',
+    period_end: '当前周期结束日期',
+    keys_title: '许可证密钥',
+    keys_description: '请妥善保管密钥，并使用与你的部署环境相匹配的密钥。',
+    production_key: '生产环境密钥',
+    non_production_key: '非生产环境密钥',
+    keys_unavailable: '此许可证的密钥不可用。如需帮助，请联系支持团队。',
+    issue_keys: '签发两种许可证密钥',
+    issue_error: '无法签发许可证密钥，请重试。',
+    install_title: '安装许可证',
+    install_description:
+      '两种密钥提供相同的功能和配额。安装的密钥用于标识你的部署是生产环境还是非生产环境。',
+    install_copy: '生产部署请复制生产环境密钥，开发和测试请复制非生产环境密钥。',
+    install_paste: '在自托管控制台中打开「设置 → 许可证」，粘贴密钥并安装。',
+    status: {
+      active: '有效',
+      past_due: '付款逾期',
+      canceling: '周期结束时取消',
+      canceled: '已取消',
+      unpaid: '未付款',
+      expired: '已过期',
+      revoked: '已撤销',
+    },
+  },
   console_sso: {
     back_to_list: '返回控制台 SSO',
     create: '添加连接器',
