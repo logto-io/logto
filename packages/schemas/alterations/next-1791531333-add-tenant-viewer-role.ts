@@ -4,6 +4,15 @@ import type { AlterationScript } from '../lib/types/alteration.js';
 
 const alteration: AlterationScript = {
   up: async (pool) => {
+    // Cloud region databases other than the admin tenant's own have no `admin` tenant to hold the role.
+    const adminTenant = await pool.maybeOne(sql`
+      select id from tenants where id = 'admin'
+    `);
+
+    if (!adminTenant) {
+      return;
+    }
+
     await pool.query(sql`
       update organization_scopes
         set description = 'Write the tenant data.'
