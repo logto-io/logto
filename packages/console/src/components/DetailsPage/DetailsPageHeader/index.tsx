@@ -11,6 +11,7 @@ import {
 import { useTranslation } from 'react-i18next';
 
 import More from '@/assets/icons/more.svg?react';
+import { useReadOnlyAccess } from '@/contexts/ReadOnlyAccessProvider';
 import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
 import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
@@ -88,7 +89,8 @@ type Props = {
    */
   readonly additionalCustomElement?: ReactElement<ResponsiveCustomElement>;
   /**
-   * Dropdown action menu items nested in the "...(More)" button
+   * Dropdown action menu items nested in the "...(More)" button. Hidden for a read-only member, so
+   * only pass items that change data.
    */
   readonly actionMenuItems?: MenuItem[];
 };
@@ -105,6 +107,7 @@ function DetailsPageHeader({
   actionMenuItems,
 }: Props) {
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const isReadOnly = useReadOnlyAccess();
   const [showIcon, setShowIcon] = useState(true);
   const [isCompact, setIsCompact] = useState(false);
   const [showAdditionalCustomElement, setShowAdditionalCustomElement] = useState(true);
@@ -257,7 +260,7 @@ function DetailsPageHeader({
             onClick={additionalActionButton.onClick}
           />
         )}
-        {actionMenuItems && actionMenuItems.length > 0 && (
+        {!isReadOnly && actionMenuItems && actionMenuItems.length > 0 && (
           <ActionMenu
             buttonProps={{ icon: <More />, size: 'large' }}
             title={t('general.more_options')}

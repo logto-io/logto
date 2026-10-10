@@ -1,6 +1,7 @@
 import { type AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 
+import { useReadOnlyAccess } from '@/contexts/ReadOnlyAccessProvider';
 import Button from '@/ds-components/Button';
 
 import styles from './index.module.scss';
@@ -24,6 +25,12 @@ function SubmitFormChangesActionBar({
   onDiscard,
   className,
 }: Props) {
+  const isReadOnly = useReadOnlyAccess();
+
+  if (isReadOnly) {
+    return null;
+  }
+
   return (
     <div className={classNames(styles.container, isOpen && styles.active, className)}>
       <div className={styles.actionBar}>
