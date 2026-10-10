@@ -7,6 +7,10 @@ import useCurrentUser from '@/hooks/use-current-user';
 
 import Details from './Details';
 
+// Jest's CommonJS resolver needs a virtual module for the ESM-only client used by plan badges.
+jest.mock('@withtyped/client', () => ({ ResponseError: class extends Error {} }), {
+  virtual: true,
+});
 jest.mock('@/hooks/use-api', () => ({ useStaticApi: jest.fn() }));
 jest.mock('@/hooks/use-current-user', () => ({ __esModule: true, default: jest.fn() }));
 jest.mock('@/consts/env', () => ({ isCloud: true, isDevFeaturesEnabled: true }));
