@@ -1,4 +1,32 @@
 const cloud = {
+  self_hosted_licenses: {
+    title: 'セルフホストライセンス',
+    description: 'アカウントが所有するライセンスを確認し、セルフホスト環境用のキーをコピーします。',
+    empty_title: 'セルフホストライセンスはまだありません',
+    empty_description:
+      'このアカウントに割り当てられたライセンスがここに表示されます。Cloud テナントは不要です。',
+    load_error: 'ライセンスを読み込めませんでした。もう一度お試しください。',
+    period_end: '現在の期間の終了日',
+    keys_title: 'ライセンスキー',
+    keys_description: 'キーは秘密に保管し、デプロイ環境に合ったキーを使用してください。',
+    production_key: '本番環境用キー',
+    non_production_key: '非本番環境用キー',
+    keys_unavailable: 'このライセンスのキーは利用できません。サポートにお問い合わせください。',
+    install_title: 'ライセンスのインストール',
+    install_description: 'セルフホストの Logto Console にキーをインストールします。',
+    install_copy: '本番環境には本番環境用キーを、開発・テストには非本番環境用キーをコピーします。',
+    install_paste:
+      'セルフホストのコンソールで「設定 → ライセンス」を開き、キーを貼り付けてインストールします。',
+    status: {
+      active: '有効',
+      past_due: '支払い期限超過',
+      canceling: '期間終了時にキャンセル',
+      canceled: 'キャンセル済み',
+      unpaid: '未払い',
+      expired: '期限切れ',
+      revoked: '取り消し済み',
+    },
+  },
   console_sso: {
     back_to_list: 'Console SSO に戻る',
     create: 'コネクターを追加',

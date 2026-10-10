@@ -1,4 +1,34 @@
 const cloud = {
+  self_hosted_licenses: {
+    title: 'Licencje self-hosted',
+    description: 'Przeglądaj licencje swojego konta i kopiuj klucze dla własnych wdrożeń.',
+    empty_title: 'Nie masz jeszcze licencji self-hosted',
+    empty_description:
+      'Tutaj pojawią się licencje przypisane do tego konta. Dzierżawca Cloud nie jest wymagany.',
+    load_error: 'Nie udało się wczytać licencji. Spróbuj ponownie.',
+    period_end: 'Koniec bieżącego okresu',
+    keys_title: 'Klucze licencyjne',
+    keys_description:
+      'Zachowaj klucze w tajemnicy. Użyj klucza odpowiedniego dla środowiska wdrożenia.',
+    production_key: 'Klucz produkcyjny',
+    non_production_key: 'Klucz nieprodukcyjny',
+    keys_unavailable:
+      'Klucze tej licencji są niedostępne. W razie potrzeby skontaktuj się ze wsparciem.',
+    install_title: 'Zainstaluj licencję',
+    install_description: 'Zainstaluj klucz we własnej Logto Console.',
+    install_copy:
+      'Skopiuj klucz produkcyjny dla produkcji lub klucz nieprodukcyjny do prac programistycznych i testów.',
+    install_paste: 'We własnej konsoli otwórz Ustawienia → Licencja, wklej klucz i zainstaluj go.',
+    status: {
+      active: 'Aktywna',
+      past_due: 'Zaległa płatność',
+      canceling: 'Anulowanie na koniec okresu',
+      canceled: 'Anulowana',
+      unpaid: 'Nieopłacona',
+      expired: 'Wygasła',
+      revoked: 'Cofnięta',
+    },
+  },
   console_sso: {
     back_to_list: 'Wróć do Console SSO',
     create: 'Dodaj konektor',

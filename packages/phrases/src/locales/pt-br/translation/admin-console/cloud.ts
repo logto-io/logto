@@ -1,4 +1,35 @@
 const cloud = {
+  self_hosted_licenses: {
+    title: 'Licenças auto-hospedadas',
+    description:
+      'Veja as licenças da sua conta e copie as chaves para suas implantações auto-hospedadas.',
+    empty_title: 'Ainda não há licenças auto-hospedadas',
+    empty_description:
+      'As licenças atribuídas a esta conta aparecerão aqui. Não é necessário um tenant Cloud.',
+    load_error: 'Não foi possível carregar as licenças. Tente novamente.',
+    period_end: 'Fim do período atual',
+    keys_title: 'Chaves de licença',
+    keys_description: 'Mantenha estas chaves em sigilo. Use a chave adequada ao seu ambiente.',
+    production_key: 'Chave de produção',
+    non_production_key: 'Chave de não produção',
+    keys_unavailable:
+      'As chaves desta licença estão indisponíveis. Entre em contato com o suporte se precisar de ajuda.',
+    install_title: 'Instale sua licença',
+    install_description: 'Instale a chave no seu Logto Console auto-hospedado.',
+    install_copy:
+      'Copie a chave de produção para produção ou a chave de não produção para desenvolvimento e testes.',
+    install_paste:
+      'No console auto-hospedado, abra Configurações → Licença, cole a chave e instale-a.',
+    status: {
+      active: 'Ativa',
+      past_due: 'Pagamento atrasado',
+      canceling: 'Cancela ao final do período',
+      canceled: 'Cancelada',
+      unpaid: 'Não paga',
+      expired: 'Expirada',
+      revoked: 'Revogada',
+    },
+  },
   console_sso: {
     back_to_list: 'Voltar para o SSO do Console',
     create: 'Adicionar conector',

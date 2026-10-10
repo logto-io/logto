@@ -1,4 +1,35 @@
 const cloud = {
+  self_hosted_licenses: {
+    title: 'Licencias autoalojadas',
+    description:
+      'Consulta las licencias de tu cuenta y copia las claves para tus implementaciones autoalojadas.',
+    empty_title: 'Aún no hay licencias autoalojadas',
+    empty_description:
+      'Las licencias asignadas a esta cuenta aparecerán aquí. No se requiere un inquilino de Cloud.',
+    load_error: 'No se pudieron cargar las licencias. Inténtalo de nuevo.',
+    period_end: 'Fin del período actual',
+    keys_title: 'Claves de licencia',
+    keys_description: 'Mantén estas claves en privado. Usa la clave que corresponda a tu entorno.',
+    production_key: 'Clave de producción',
+    non_production_key: 'Clave de no producción',
+    keys_unavailable:
+      'Las claves de esta licencia no están disponibles. Contacta con soporte si necesitas ayuda.',
+    install_title: 'Instala tu licencia',
+    install_description: 'Instala la clave en tu Logto Console autoalojada.',
+    install_copy:
+      'Copia la clave de producción para producción o la clave de no producción para desarrollo y pruebas.',
+    install_paste:
+      'En tu consola autoalojada, abre Configuración → Licencia, pega la clave e instálala.',
+    status: {
+      active: 'Activa',
+      past_due: 'Pago vencido',
+      canceling: 'Se cancela al final del período',
+      canceled: 'Cancelada',
+      unpaid: 'Sin pagar',
+      expired: 'Caducada',
+      revoked: 'Revocada',
+    },
+  },
   console_sso: {
     back_to_list: 'Volver a SSO de la consola',
     create: 'Añadir conector',
