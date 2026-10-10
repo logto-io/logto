@@ -6,6 +6,7 @@ import { type SubscriptionCountBasedUsage } from '@/cloud/types/router';
 import AppLoading from '@/components/AppLoading';
 import Topbar from '@/components/Topbar';
 import { isCloud } from '@/consts/env';
+import ReadOnlyAccessProvider from '@/contexts/ReadOnlyAccessProvider';
 import SubscriptionDataProvider from '@/contexts/SubscriptionDataProvider';
 import useSubscriptionData from '@/contexts/SubscriptionDataProvider/use-subscription-data';
 import {
@@ -77,14 +78,16 @@ export default function AppContent() {
         },
       }}
     >
-      <div className={styles.app}>
-        <Topbar className={conditional(scrollTop && styles.topbarShadow)} />
-        {isTenantSuspended && <TenantSuspendedPage />}
-        {!isTenantSuspended && (
-          <Outlet context={{ scrollableContent } satisfies AppContentOutletContext} />
-        )}
-      </div>
-      <TenantNotificationContainer />
+      <ReadOnlyAccessProvider>
+        <div className={styles.app}>
+          <Topbar className={conditional(scrollTop && styles.topbarShadow)} />
+          {isTenantSuspended && <TenantSuspendedPage />}
+          {!isTenantSuspended && (
+            <Outlet context={{ scrollableContent } satisfies AppContentOutletContext} />
+          )}
+        </div>
+        <TenantNotificationContainer />
+      </ReadOnlyAccessProvider>
     </SubscriptionDataProvider>
   );
 }

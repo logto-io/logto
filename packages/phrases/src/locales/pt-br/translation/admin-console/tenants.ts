@@ -103,6 +103,11 @@ const tenants = {
     development: 'Desenvolvimento',
     production: 'Produção',
   },
+  view_only: {
+    tag: 'Somente visualização',
+    notification:
+      'Você tem acesso somente de visualização a este locatário. Peça a um administrador do locatário se precisar fazer alterações.',
+  },
   deletion_card: {
     title: 'EXCLUIR',
     tenant_deletion: 'Excluir locatário',
