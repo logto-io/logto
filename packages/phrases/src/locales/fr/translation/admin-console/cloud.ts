@@ -16,7 +16,8 @@ const cloud = {
     keys_unavailable:
       'Les clés de cette licence sont indisponibles. Contactez le support si nécessaire.',
     install_title: 'Installer votre licence',
-    install_description: 'Installez la clé dans votre Logto Console auto-hébergée.',
+    install_description:
+      'Les deux clés offrent les mêmes fonctionnalités et quotas. La clé installée identifie votre déploiement comme étant en production ou hors production.',
     install_copy:
       'Copiez la clé de production pour la production, ou la clé hors production pour le développement et les tests.',
     install_paste:

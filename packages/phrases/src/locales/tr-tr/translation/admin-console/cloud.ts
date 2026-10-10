@@ -13,7 +13,8 @@ const cloud = {
     non_production_key: 'Üretim dışı anahtar',
     keys_unavailable: 'Bu lisansın anahtarları kullanılamıyor. Yardım için destek ekibine ulaş.',
     install_title: 'Lisansını yükle',
-    install_description: 'Anahtarı kendi sunucundaki Logto Console üzerinden yükle.',
+    install_description:
+      'Her iki anahtar da aynı özellikleri ve kotaları sağlar. Yüklediğin anahtar, dağıtımını üretim veya üretim dışı olarak tanımlar.',
     install_copy:
       'Üretim dağıtımı için üretim anahtarını, geliştirme ve test için üretim dışı anahtarı kopyala.',
     install_paste:

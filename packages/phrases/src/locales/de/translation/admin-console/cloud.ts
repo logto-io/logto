@@ -16,7 +16,8 @@ const cloud = {
     keys_unavailable:
       'Für diese Lizenz sind keine Schlüssel verfügbar. Wende dich bei Bedarf an den Support.',
     install_title: 'Lizenz installieren',
-    install_description: 'Installiere den Schlüssel in deiner selbst gehosteten Logto Console.',
+    install_description:
+      'Beide Schlüssel bieten dieselben Funktionen und Kontingente. Der installierte Schlüssel kennzeichnet deine Bereitstellung als Produktions- oder Nichtproduktionsumgebung.',
     install_copy:
       'Kopiere den Produktionsschlüssel für den Produktivbetrieb oder den Nichtproduktionsschlüssel für Entwicklung und Tests.',
     install_paste:

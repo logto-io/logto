@@ -13,7 +13,8 @@ const cloud = {
     non_production_key: '비프로덕션 키',
     keys_unavailable: '이 라이선스의 키를 사용할 수 없습니다. 도움이 필요하면 지원팀에 문의하세요.',
     install_title: '라이선스 설치',
-    install_description: '자체 호스팅 Logto Console에서 키를 설치하세요.',
+    install_description:
+      '두 키는 동일한 기능과 할당량을 제공합니다. 설치한 키에 따라 배포가 프로덕션 또는 비프로덕션 환경으로 구분됩니다.',
     install_copy: '프로덕션 배포에는 프로덕션 키를, 개발 및 테스트에는 비프로덕션 키를 복사하세요.',
     install_paste: '자체 호스팅 콘솔에서 설정 → 라이선스를 열고 키를 붙여 넣어 설치하세요.',
     status: {

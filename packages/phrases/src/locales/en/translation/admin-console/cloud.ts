@@ -15,7 +15,8 @@ const cloud = {
     non_production_key: 'Non-production key',
     keys_unavailable: 'Keys are unavailable for this license. Contact support if you need help.',
     install_title: 'Install your license',
-    install_description: 'Install the key in your self-hosted Logto Console.',
+    install_description:
+      'Both keys provide the same features and quotas. The key you install identifies your deployment as production or non-production.',
     install_copy:
       'Copy the production key for a production deployment, or the non-production key for development and testing.',
     install_paste:

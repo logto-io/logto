@@ -15,7 +15,8 @@ const cloud = {
     keys_unavailable:
       'Las claves de esta licencia no están disponibles. Contacta con soporte si necesitas ayuda.',
     install_title: 'Instala tu licencia',
-    install_description: 'Instala la clave en tu Logto Console autoalojada.',
+    install_description:
+      'Ambas claves ofrecen las mismas funciones y cuotas. La clave que instales identifica tu implementación como de producción o de no producción.',
     install_copy:
       'Copia la clave de producción para producción o la clave de no producción para desarrollo y pruebas.',
     install_paste:

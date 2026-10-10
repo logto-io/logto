@@ -15,7 +15,8 @@ const cloud = {
     keys_unavailable:
       'Klucze tej licencji są niedostępne. W razie potrzeby skontaktuj się ze wsparciem.',
     install_title: 'Zainstaluj licencję',
-    install_description: 'Zainstaluj klucz we własnej Logto Console.',
+    install_description:
+      'Oba klucze zapewniają te same funkcje i limity. Zainstalowany klucz oznacza wdrożenie jako produkcyjne lub nieprodukcyjne.',
     install_copy:
       'Skopiuj klucz produkcyjny dla produkcji lub klucz nieprodukcyjny do prac programistycznych i testów.',
     install_paste: 'We własnej konsoli otwórz Ustawienia → Licencja, wklej klucz i zainstaluj go.',

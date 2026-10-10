@@ -13,7 +13,8 @@ const cloud = {
     non_production_key: '非本番環境用キー',
     keys_unavailable: 'このライセンスのキーは利用できません。サポートにお問い合わせください。',
     install_title: 'ライセンスのインストール',
-    install_description: 'セルフホストの Logto Console にキーをインストールします。',
+    install_description:
+      'どちらのキーも同じ機能とクォータを提供します。インストールするキーによって、デプロイが本番環境か非本番環境かを識別します。',
     install_copy: '本番環境には本番環境用キーを、開発・テストには非本番環境用キーをコピーします。',
     install_paste:
       'セルフホストのコンソールで「設定 → ライセンス」を開き、キーを貼り付けてインストールします。',

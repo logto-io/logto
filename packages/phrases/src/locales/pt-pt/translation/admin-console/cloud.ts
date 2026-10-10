@@ -15,7 +15,8 @@ const cloud = {
     keys_unavailable:
       'As chaves desta licença estão indisponíveis. Contacta o suporte se precisares de ajuda.',
     install_title: 'Instala a tua licença',
-    install_description: 'Instala a chave na tua Logto Console autoalojada.',
+    install_description:
+      'Ambas as chaves oferecem as mesmas funcionalidades e quotas. A chave instalada identifica a tua implementação como de produção ou de não produção.',
     install_copy:
       'Copia a chave de produção para produção ou a chave de não produção para desenvolvimento e testes.',
     install_paste: 'Na consola autoalojada, abre Definições → Licença, cola a chave e instala-a.',

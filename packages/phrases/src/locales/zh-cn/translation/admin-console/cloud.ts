@@ -12,7 +12,8 @@ const cloud = {
     non_production_key: '非生产环境密钥',
     keys_unavailable: '此许可证的密钥不可用。如需帮助，请联系支持团队。',
     install_title: '安装许可证',
-    install_description: '在自托管 Logto Console 中安装密钥。',
+    install_description:
+      '两种密钥提供相同的功能和配额。安装的密钥用于标识你的部署是生产环境还是非生产环境。',
     install_copy: '生产部署请复制生产环境密钥，开发和测试请复制非生产环境密钥。',
     install_paste: '在自托管控制台中打开「设置 → 许可证」，粘贴密钥并安装。',
     status: {

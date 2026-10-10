@@ -12,7 +12,8 @@ const cloud = {
     non_production_key: '非正式環境金鑰',
     keys_unavailable: '此授權的金鑰無法使用。如需協助，請聯絡支援團隊。',
     install_title: '安裝授權',
-    install_description: '在自託管 Logto Console 中安裝金鑰。',
+    install_description:
+      '兩種金鑰提供相同的功能和配額。安裝的金鑰用於識別你的部署是正式環境還是非正式環境。',
     install_copy: '正式部署請複製正式環境金鑰，開發及測試請複製非正式環境金鑰。',
     install_paste: '在自託管控制台中開啟「設定 → 授權」，貼上金鑰並安裝。',
     status: {
