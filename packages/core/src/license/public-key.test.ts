@@ -69,12 +69,16 @@ describe('getLicensePublicKey()', () => {
     await expect(getLicensePublicKey()).resolves.toBeDefined();
   });
 
-  it.each(['not json', '{"kty":"RSA","n":"foo","e":"AQAB"}', '{"kty":"OKP","crv":"X25519"}'])(
-    'should reject `%s`, which is not an Ed25519 public JWK',
-    async (value) => {
-      setPublicKey(value);
+  it.each([
+    'not json',
+    '{"kty":"RSA","n":"foo","e":"AQAB"}',
+    // The previous algorithm: an Ed25519 key must no longer be accepted.
+    '{"kty":"OKP","crv":"Ed25519","x":"B-GbBl3jWlwMasSUnG_q61q5a_lwTCKOyfm7arFia94"}',
+    // Right key type, wrong curve.
+    '{"kty":"EC","crv":"P-384","x":"foo","y":"bar"}',
+  ])('should reject `%s`, which is not an ES256 public JWK', async (value) => {
+    setPublicKey(value);
 
-      await expect(getLicensePublicKey()).rejects.toThrow(TypeError);
-    }
-  );
+    await expect(getLicensePublicKey()).rejects.toThrow(TypeError);
+  });
 });

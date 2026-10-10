@@ -6,7 +6,7 @@ import { getLicensePublicKey } from './public-key.js';
 
 /** Why a license key could not be turned into a payload this instance trusts. */
 export enum LicenseVerificationErrorCode {
-  /** The public key this instance is configured with is not a usable Ed25519 key. */
+  /** The public key this instance is configured with is not a usable ES256 key. */
   InvalidPublicKey = 'invalid_public_key',
   /** The key is not a compact JWS, or its signature does not match the public key. */
   InvalidSignature = 'invalid_signature',
@@ -50,7 +50,7 @@ export const verifyLicenseKey = async (licenseKey: string): Promise<LicensePaylo
   });
 
   const { payload } = await compactVerify(licenseKey, publicKey, {
-    algorithms: ['EdDSA'],
+    algorithms: ['ES256'],
   }).catch((error: unknown) => {
     throw new LicenseVerificationError(LicenseVerificationErrorCode.InvalidSignature, {
       cause: error,

@@ -4,14 +4,14 @@ import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 
-/** A serialized Ed25519 key pair: the private half signs a license, the public half verifies it. */
+/** A serialized ES256 key pair: the private half signs a license, the public half verifies it. */
 type LicenseKeyPair = {
   publicKey: string;
   privateKey: string;
 };
 
 /**
- * Generate a throwaway Ed25519 key pair, so a test can sign license keys that this instance
+ * Generate a throwaway ES256 key pair, so a test can sign license keys that this instance
  * accepts.
  *
  * Nothing is committed: a test generates a pair, has the license module trust `publicKey`, and
@@ -19,7 +19,7 @@ type LicenseKeyPair = {
  * the Logto Cloud license service, whose private half never leaves its environment.
  */
 export const createLicenseKeyPair = async (): Promise<LicenseKeyPair> => {
-  const { publicKey, privateKey } = await generateKeyPair('Ed25519', { extractable: true });
+  const { publicKey, privateKey } = await generateKeyPair('ES256', { extractable: true });
 
   return {
     publicKey: JSON.stringify(await exportJWK(publicKey)),
@@ -29,11 +29,12 @@ export const createLicenseKeyPair = async (): Promise<LicenseKeyPair> => {
 
 const oneYearInSeconds = 365 * 24 * 60 * 60;
 
-/** An Ed25519 private key in JWK form, i.e. the shape of the `privateKey` above. */
-const ed25519PrivateKeyGuard = z.object({
-  kty: z.literal('OKP'),
-  crv: z.literal('Ed25519'),
+/** An ES256 private key in JWK form, i.e. the shape of the `privateKey` above. */
+const es256PrivateKeyGuard = z.object({
+  kty: z.literal('EC'),
+  crv: z.literal('P-256'),
   x: z.string(),
+  y: z.string(),
   d: z.string(),
 });
 
@@ -79,9 +80,9 @@ export const signLicenseKey = async (
   }
 
   const privateKey = await importJWK(
-    ed25519PrivateKeyGuard.parse(JSON.parse(privateKeyJwk)),
-    'EdDSA'
+    es256PrivateKeyGuard.parse(JSON.parse(privateKeyJwk)),
+    'ES256'
   );
 
-  return new SignJWT(payload).setProtectedHeader({ alg: 'EdDSA' }).sign(privateKey);
+  return new SignJWT(payload).setProtectedHeader({ alg: 'ES256' }).sign(privateKey);
 };

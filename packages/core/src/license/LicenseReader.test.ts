@@ -35,7 +35,7 @@ const error = jest.spyOn(licenseConsoleLog, 'error').mockImplementation(noop);
 const keyPair = await createLicenseKeyPair();
 
 /** The public key the mocked build trusts, so a test can sign licenses this instance accepts. */
-const trustedKey = await importJWK(JSON.parse(keyPair.publicKey) as JWK, 'EdDSA');
+const trustedKey = await importJWK(JSON.parse(keyPair.publicKey) as JWK, 'ES256');
 const getLicensePublicKey: () => Promise<CryptoKey | Uint8Array> = async () => trustedKey;
 mockEsm('./public-key.js', () => ({ getLicensePublicKey }));
 
