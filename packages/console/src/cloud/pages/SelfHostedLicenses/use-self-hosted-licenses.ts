@@ -11,7 +11,9 @@ import useCurrentUser from '@/hooks/use-current-user';
 
 export const useSelfHostedLicenses = () => {
   const { user, error: userError } = useCurrentUser();
-  // Use the existing user-token client while @logto/cloud does not yet export these routes.
+  // TODO: Once the Cloud routes are merged and @logto/cloud is published, upgrade the package and
+  // use its typed API client and response types for both hooks, removing the local wire contract.
+  // Use the existing user-token client until then.
   const api = useStaticApi({ resourceIndicator: cloudApi.indicator, hideErrorToast: true });
   const result = useSWR<Array<z.infer<typeof selfHostedLicenseSummaryGuard>>, Error>(
     user && !userError && ['/api/me/self-hosted-licenses', user.id],
