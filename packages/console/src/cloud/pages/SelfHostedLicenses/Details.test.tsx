@@ -11,6 +11,10 @@ jest.mock('@/hooks/use-api', () => ({ useStaticApi: jest.fn() }));
 jest.mock('@/hooks/use-current-user', () => ({ __esModule: true, default: jest.fn() }));
 jest.mock('@/consts/env', () => ({ isCloud: true, isDevFeaturesEnabled: true }));
 jest.mock('@/components/Region', () => ({ defaultRegionName: 'US' }));
+jest.mock('@/hooks/use-theme', () => ({
+  __esModule: true,
+  default: () => 'light',
+}));
 
 const summary = {
   id: 'license-a',
@@ -47,7 +51,7 @@ const api = {
   post: jest.fn(() => ({ json: async () => issue() })),
 };
 const issueButton = () =>
-  screen.getByRole('button', { name: 'cloud.self_hosted_licenses.issue_keys' });
+  screen.getByRole('button', { name: 'admin_console.cloud.self_hosted_licenses.issue_keys' });
 
 const renderDetails = () => {
   const config = {
@@ -102,8 +106,10 @@ it('issues one required pair only on an explicit click, independently of metadat
   await act(async () => {
     resolve();
   });
-  expect(screen.getByText('cloud.self_hosted_licenses.production_key')).toBeTruthy();
-  expect(screen.getByText('cloud.self_hosted_licenses.non_production_key')).toBeTruthy();
+  expect(screen.getByText('admin_console.cloud.self_hosted_licenses.production_key')).toBeTruthy();
+  expect(
+    screen.getByText('admin_console.cloud.self_hosted_licenses.non_production_key')
+  ).toBeTruthy();
   expect(screen.queryByText(pair.productionKey)).toBeNull();
   expect(screen.queryByText(pair.nonProductionKey)).toBeNull();
 
@@ -113,14 +119,14 @@ it('issues one required pair only on an explicit click, independently of metadat
     expect(read.mock.calls.length).toBeGreaterThan(readsBeforeFocus);
   });
   expect(api.post).toHaveBeenCalledTimes(1);
-  expect(screen.getByText('cloud.self_hosted_licenses.production_key')).toBeTruthy();
+  expect(screen.getByText('admin_console.cloud.self_hosted_licenses.production_key')).toBeTruthy();
 });
 
 it('retries metadata without issuing keys', async () => {
   read.mockRejectedValueOnce(new Error('Metadata unavailable'));
   renderDetails();
-  await screen.findByText('cloud.self_hosted_licenses.load_error');
-  fireEvent.click(screen.getByRole('button', { name: 'general.retry' }));
+  await screen.findByText('admin_console.cloud.self_hosted_licenses.load_error');
+  fireEvent.click(screen.getByRole('button', { name: 'admin_console.general.retry' }));
   expect(await screen.findByText('license-a')).toBeTruthy();
   expect(issueButton()).toBeTruthy();
   expect(api.post).not.toHaveBeenCalled();
@@ -131,9 +137,11 @@ it('keeps metadata on signing failure and retries issuance only on another click
   renderDetails();
   await screen.findByText('license-a');
   fireEvent.click(issueButton());
-  expect(await screen.findByText('cloud.self_hosted_licenses.issue_error')).toBeTruthy();
+  expect(
+    await screen.findByText('admin_console.cloud.self_hosted_licenses.issue_error')
+  ).toBeTruthy();
   expect(screen.getByText('license-a')).toBeTruthy();
-  expect(screen.queryByText('cloud.self_hosted_licenses.load_error')).toBeNull();
+  expect(screen.queryByText('admin_console.cloud.self_hosted_licenses.load_error')).toBeNull();
   const readsBeforeFocus = read.mock.calls.length;
   fireEvent.focus(window);
   await waitFor(() => {
@@ -142,7 +150,9 @@ it('keeps metadata on signing failure and retries issuance only on another click
   expect(api.post).toHaveBeenCalledTimes(1);
 
   fireEvent.click(issueButton());
-  expect(await screen.findByText('cloud.self_hosted_licenses.production_key')).toBeTruthy();
+  expect(
+    await screen.findByText('admin_console.cloud.self_hosted_licenses.production_key')
+  ).toBeTruthy();
   expect(api.post).toHaveBeenCalledTimes(2);
 });
 
@@ -151,8 +161,10 @@ it('does not expose an incomplete key pair', async () => {
   renderDetails();
   await screen.findByText('license-a');
   fireEvent.click(issueButton());
-  expect(await screen.findByText('cloud.self_hosted_licenses.issue_error')).toBeTruthy();
-  expect(screen.queryByText('cloud.self_hosted_licenses.production_key')).toBeNull();
+  expect(
+    await screen.findByText('admin_console.cloud.self_hosted_licenses.issue_error')
+  ).toBeTruthy();
+  expect(screen.queryByText('admin_console.cloud.self_hosted_licenses.production_key')).toBeNull();
   expect(screen.queryByText(pair.productionKey)).toBeNull();
 });
 
@@ -177,7 +189,9 @@ it.each(['account', 'license'])(
     await act(async () => {
       resolve();
     });
-    expect(screen.queryByText('cloud.self_hosted_licenses.production_key')).toBeNull();
+    expect(
+      screen.queryByText('admin_console.cloud.self_hosted_licenses.production_key')
+    ).toBeNull();
     expect(issueButton()).toBeTruthy();
     expect(api.post).toHaveBeenCalledTimes(1);
   }
