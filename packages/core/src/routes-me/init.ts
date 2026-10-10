@@ -42,17 +42,9 @@ export default function initMeApis(tenant: TenantContext): Koa {
   socialRoutes(meRouter, tenant);
   verificationCodeRoutes(meRouter, tenant);
   userAssetsRoutes(meRouter, tenant);
-
-  /**
-   * Self-hosted plans: tenant settings managed by the tenant members of a self-hosted deployment:
-   * mandatory Console MFA, and the members and invitations. Removed together with the other
-   * self-hosted plans guards at launch.
-   */
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    tenantRoutes(meRouter, tenant);
-    tenantMemberRoutes(meRouter, tenant);
-    tenantInvitationRoutes(meRouter, tenant);
-  }
+  tenantRoutes(meRouter, tenant);
+  tenantMemberRoutes(meRouter, tenant);
+  tenantInvitationRoutes(meRouter, tenant);
 
   const meApp = new Koa();
   meApp.use(koaCors([EnvSet.values.cloudUrlSet]));

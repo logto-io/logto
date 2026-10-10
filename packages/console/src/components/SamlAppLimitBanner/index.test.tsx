@@ -4,7 +4,7 @@ import i18next from 'i18next';
 import type * as React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
-import { mockEnv, resetMockEnv, type EnvTestUtils } from '@/test-utils/env';
+import { resetMockEnv, type EnvTestUtils } from '@/test-utils/env';
 
 import SamlAppLimitBanner from '.';
 
@@ -37,15 +37,13 @@ describe('SamlAppLimitBanner', () => {
     expect(plansLink.parentElement?.textContent).toContain('7 SAML applications');
     expect(plansLink.parentElement?.textContent).not.toContain('<selfHostedPlans>');
     expect(plansLink.getAttribute('href')).toBe(
-      `https://logto.io/self-hosted-plans?utm_source=logto_oss&utm_medium=console&utm_campaign=self_hosted_plans&utm_content=${entry}`
+      `/console/tenant-settings/license?utm_content=${entry}`
     );
-    expect(plansLink.getAttribute('target')).toBe('_blank');
-    expect(plansLink.getAttribute('rel')).toBe('noopener');
+    expect(plansLink.getAttribute('target')).toBeNull();
     expect(screen.getByRole('link', { name: 'Try Logto Cloud now' }).getAttribute('href')).toBe(
       `https://cloud.logto.io/?utm_source=logto_oss&utm_medium=console&utm_campaign=cloud_upsell&utm_content=${entry}`
     );
 
-    mockEnv({ isDevFeaturesEnabled: true });
     rerender(
       <MemoryRouter>
         <SamlAppLimitBanner variant={variant} limit={11} />

@@ -38,14 +38,7 @@ function SamlAppLimitBanner({ variant, limit, className }: Props) {
       <div className={styles.content}>
         <Trans
           components={{
-            selfHostedPlans: (
-              <TextLink
-                {...(content.secondaryTargetBlank
-                  ? { href: content.secondaryHref }
-                  : { to: content.secondaryHref })}
-                targetBlank={content.secondaryTargetBlank}
-              />
-            ),
+            selfHostedPlans: <TextLink to={content.secondaryHref} />,
           }}
         >
           {description}

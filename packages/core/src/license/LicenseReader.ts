@@ -132,15 +132,6 @@ export default class LicenseReader {
    * Whichever pool reads first answers every caller until the cache is invalidated or expires.
    */
   async read(pool: CommonQueryMethods): Promise<Optional<VerifiedLicense>> {
-    /**
-     * Self-hosted plans: an installed license grants nothing until the feature launches, so a
-     * production build behaves exactly like today's OSS whatever sits in the `systems` table.
-     * Removed together with the other self-hosted plans guards at launch.
-     */
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return;
-    }
-
     const cached = this.#cache.get(cacheKey);
 
     if (cached) {
