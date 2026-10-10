@@ -15,7 +15,8 @@ export const createResource = async (name?: string, indicator?: string) =>
     })
     .json<Resource>();
 
-export const getResources = async () => authedAdminApi.get('resources').json<Resource[]>();
+export const getResources = async (searchParams?: Record<string, string>) =>
+  authedAdminApi.get('resources', { searchParams }).json<Resource[]>();
 
 export const getResource = async (resourceId: string, options?: Options) =>
   authedAdminApi.get(`resources/${resourceId}`, options).json<Resource>();
