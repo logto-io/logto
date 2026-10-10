@@ -31,7 +31,6 @@ import pageLayout from '@/onboarding/scss/layout.module.scss';
 import InviteEmailsInput from '@/pages/TenantSettings/TenantMembers/InviteEmailsInput';
 import { type InviteeEmailItem } from '@/pages/TenantSettings/TenantMembers/types';
 import { trySubmitSafe } from '@/utils/form';
-import { toCloudTenantRole } from '@/utils/tenant-role';
 
 import HearAboutUs, { type HearAboutUsValue, sourcesWithDetail } from './HearAboutUs';
 import styles from './index.module.scss';
@@ -134,7 +133,7 @@ function CreateTenant() {
               params: { tenantId: newTenant.id },
               body: {
                 invitee: collaboratorEmails.map(({ value }) => value),
-                roleName: toCloudTenantRole(TenantRole.Collaborator),
+                roleName: TenantRole.Collaborator,
               },
             });
             toast.success(t('tenant_members.messages.invitation_sent'));

@@ -7,7 +7,6 @@ import { adminTenantEndpoint, meApi } from '@/consts';
 import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import { useStaticApi } from '@/hooks/use-api';
-import { toCloudTenantRole } from '@/utils/tenant-role';
 
 /**
  * The tenant member and invitation operations Console performs, whichever service holds them.
@@ -48,7 +47,7 @@ export const useCloudTenantMembersApi = (): TenantMembersApi & {
       updateMemberRole: async (userId, roleName) => {
         await cloudApi.put('/api/tenants/:tenantId/members/:userId/roles', {
           params: { tenantId, userId },
-          body: { roleName: toCloudTenantRole(roleName) },
+          body: { roleName },
         });
       },
       getInvitations: async () =>
@@ -56,7 +55,7 @@ export const useCloudTenantMembersApi = (): TenantMembersApi & {
       invite: async (invitee, roleName) => {
         await cloudApi.post('/api/tenants/:tenantId/invitations', {
           params: { tenantId },
-          body: { invitee, roleName: toCloudTenantRole(roleName) },
+          body: { invitee, roleName },
         });
       },
       resendInvitation: async (invitationId) => {
