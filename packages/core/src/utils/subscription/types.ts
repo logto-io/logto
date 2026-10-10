@@ -151,6 +151,7 @@ const logtoSkuQuotaGuard = z.object({
   machineToMachineLimit: z.number().nullable(),
   resourcesLimit: z.number().nullable(),
   enterpriseSsoLimit: z.number().nullable(),
+  consoleSsoConnectorLimit: z.number().nullable(),
   tenantMembersLimit: z.number().nullable(),
   mfaEnabled: z.boolean(),
   organizationsEnabled: z.boolean(),
