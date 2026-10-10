@@ -32,6 +32,7 @@ export default function authnRoutes<T extends AnonymousRouter>(
     users: { findUserRoles },
     socials: { getConnector },
     ssoConnectors: ssoConnectorsLibrary,
+    quota,
   } = libraries;
 
   const hasuraResponseGuard = z.object({
@@ -180,7 +181,7 @@ export default function authnRoutes<T extends AnonymousRouter>(
         .object({ RelayState: z.string().optional(), SAMLResponse: z.string() })
         .catchall(z.unknown()),
       params: z.object({ connectorId: z.string().min(1) }),
-      status: [302, 400, 404],
+      status: [302, 400, 403, 404],
     }),
     koaAuditLog(queries),
     async (ctx, next) => {
@@ -218,6 +219,13 @@ export default function authnRoutes<T extends AnonymousRouter>(
             status: 404,
           })
         );
+
+        // Self-hosted plans: the config can outlive the license entitlement (e.g. the license
+        // expired or was replaced), so check it on every IdP initiated request, not only when
+        // saving the config. Cloud is not enforced here.
+        if (!EnvSet.values.isCloud) {
+          await quota.guardTenantUsageByKey('idpInitiatedSsoEnabled');
+        }
 
         const assertionContent = await connectorInstance.parseSamlAssertionContent(body);
 

@@ -505,9 +505,11 @@ describe('guardTenantUsageByKey', () => {
 
 const createSelfHostedQuotaLibrary = ({
   samlApplicationsLimit,
+  idpInitiatedSso = ossDefaultQuota.idpInitiatedSso,
   usage,
 }: {
   samlApplicationsLimit: Nullable<number>;
+  idpInitiatedSso?: boolean;
   usage: number;
 }) => {
   setEnvFlag('isCloud', false);
@@ -523,12 +525,39 @@ const createSelfHostedQuotaLibrary = ({
     currentPeriodEnd: new Date().toISOString(),
     isEnterprisePlan: false,
     status: 'active',
-    quota: { ...ossDefaultQuota, samlApplicationsLimit },
+    quota: { ...ossDefaultQuota, samlApplicationsLimit, idpInitiatedSso },
     systemLimit: {},
   });
 
   return { tenant, quotaLibrary, getSelfComputedUsageByKey };
 };
+
+describe('guardTenantUsageByKey idpInitiatedSsoEnabled outside Cloud', () => {
+  it('rejects IdP-initiated SSO under the OSS default entitlements', async () => {
+    const { quotaLibrary } = createSelfHostedQuotaLibrary({ samlApplicationsLimit: 3, usage: 0 });
+
+    await expect(
+      quotaLibrary.guardTenantUsageByKey('idpInitiatedSsoEnabled')
+    ).rejects.toMatchObject({
+      code: 'subscription.limit_exceeded',
+      status: 403,
+    });
+    expect(mockGetTenantSubscription).not.toHaveBeenCalled();
+  });
+
+  it('allows IdP-initiated SSO with a license that grants it', async () => {
+    const { quotaLibrary } = createSelfHostedQuotaLibrary({
+      samlApplicationsLimit: 3,
+      idpInitiatedSso: true,
+      usage: 0,
+    });
+
+    await expect(
+      quotaLibrary.guardTenantUsageByKey('idpInitiatedSsoEnabled')
+    ).resolves.not.toThrow();
+    expect(mockGetTenantSubscription).not.toHaveBeenCalled();
+  });
+});
 
 describe('guardTenantUsageByKey samlApplicationsLimit outside Cloud', () => {
   it('rejects a fourth SAML application under the OSS default cap', async () => {

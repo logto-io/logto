@@ -1,9 +1,23 @@
-import { ApplicationType, type SsoConnector, type Application } from '@logto/schemas';
+import {
+  ApplicationType,
+  ossDefaultQuota,
+  type SsoConnector,
+  type Application,
+} from '@logto/schemas';
 
 import { createApplication, deleteApplication } from '#src/api/application.js';
 import { SsoConnectorApi } from '#src/api/sso-connector.js';
+import { putSystemLicense } from '#src/api/system.js';
 import { expectRejects } from '#src/helpers/index.js';
+import { buildTestLicensePayload, signTestLicenseKey } from '#src/helpers/license.js';
 import { devFeatureTest, randomString } from '#src/utils.js';
+
+const installLicense = async (idpInitiatedSso: boolean) =>
+  putSystemLicense(
+    await signTestLicenseKey(
+      buildTestLicensePayload({ quota: { ...ossDefaultQuota, idpInitiatedSso } })
+    )
+  );
 
 devFeatureTest.describe('SAML IdP initiated authentication config', () => {
   const ssoConnectorsApi = new SsoConnectorApi();
@@ -12,6 +26,9 @@ devFeatureTest.describe('SAML IdP initiated authentication config', () => {
   const redirectUri = 'https://example.com/callback';
 
   beforeAll(async () => {
+    // Outside Cloud, the installed license has to grant IdP-initiated SSO.
+    await installLicense(true);
+
     const [samlConnector, oidcConnector] = await Promise.all([
       ssoConnectorsApi.createMockSamlConnector(['example.com']),
       ssoConnectorsApi.createMockOidcConnector(['example.com']),
@@ -46,9 +63,30 @@ devFeatureTest.describe('SAML IdP initiated authentication config', () => {
       Array.from(applications.values()).map(async (app) => deleteApplication(app.id))
     );
     await ssoConnectorsApi.cleanUp();
+    // No license can be uninstalled; leave one that grants nothing beyond the OSS defaults.
+    await installLicense(false);
   });
 
   describe('Set IdP-initiated authentication configuration', () => {
+    it('should throw 403 if the installed license does not grant IdP-initiated SSO', async () => {
+      await installLicense(false);
+
+      await expectRejects(
+        ssoConnectorsApi.setSsoConnectorIdpInitiatedAuthConfig({
+          connectorId: ssoConnectors.get('saml')!.id,
+          defaultApplicationId: applications.get('traditional')!.id,
+          autoSendAuthorizationRequest: true,
+          redirectUri,
+        }),
+        {
+          code: 'subscription.limit_exceeded',
+          status: 403,
+        }
+      );
+
+      await installLicense(true);
+    });
+
     it('should throw 404 if the connector is not found', async () => {
       const defaultApplicationId = applications.get('traditional')!.id;
 
