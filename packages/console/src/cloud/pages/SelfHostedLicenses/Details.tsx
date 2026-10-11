@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
 import DetailsPage from '@/components/DetailsPage';
+import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import FormCard, { FormCardSkeleton } from '@/components/FormCard';
 import SkuName from '@/components/SkuName';
 import { selfHostedLicenseGuideLink } from '@/consts/external-links';
@@ -38,21 +39,21 @@ function Details({ id }: Props) {
       )}
       {!error && data && (
         <>
-          <div className={styles.summary}>
-            <h2>
-              <SkuName skuId={data.plan} />
-            </h2>
-            <Status license={data} />
-            <span className={styles.identifier}>{data.id}</span>
-            <span>
-              {t('cloud.self_hosted_licenses.period_end')}:{' '}
-              {data.currentPeriodEnd
-                ? new Date(data.currentPeriodEnd).toLocaleDateString(i18n.language, {
-                    dateStyle: 'medium',
-                  })
-                : '—'}
-            </span>
-          </div>
+          <DetailsPageHeader
+            title={<SkuName skuId={data.plan} />}
+            primaryTag={<Status license={data} />}
+            subtitle={
+              <>
+                {t('cloud.self_hosted_licenses.period_end')}:{' '}
+                {data.currentPeriodEnd
+                  ? new Date(data.currentPeriodEnd).toLocaleDateString(i18n.language, {
+                      dateStyle: 'medium',
+                    })
+                  : '—'}
+              </>
+            }
+            identifier={{ name: 'ID', value: data.id }}
+          />
           <FormCard
             title="cloud.self_hosted_licenses.keys_title"
             description="cloud.self_hosted_licenses.keys_description"

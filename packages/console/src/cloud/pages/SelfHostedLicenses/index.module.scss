@@ -39,13 +39,6 @@
   color: var(--color-text-secondary);
 }
 
-.summary {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: _.unit(3);
-}
-
 .keys {
   display: flex;
   flex-direction: column;
