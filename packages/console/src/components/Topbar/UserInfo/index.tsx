@@ -5,6 +5,7 @@ import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
+import File from '@/assets/icons/file.svg?react';
 import Globe from '@/assets/icons/globe.svg?react';
 import Palette from '@/assets/icons/palette.svg?react';
 import Profile from '@/assets/icons/profile.svg?react';
@@ -77,6 +78,24 @@ function UserInfo() {
       >
         <UserInfoCard className={styles.userInfo} user={user} avatarSize="large" />
         <Divider />
+        {/* Self-hosted license retrieval, independent of future purchasing guards. */}
+        {isCloud && isDevFeaturesEnabled && (
+          <DropdownItem
+            className={classNames(styles.dropdownItem, isLoading && styles.loading)}
+            icon={<File className={styles.icon} />}
+            onClick={() => {
+              window.open(GlobalRoute.SelfHostedLicenses, '_blank', 'noopener,noreferrer');
+            }}
+          >
+            {t('cloud.self_hosted_licenses.title')}
+            <Spacer />
+            <div className={styles.icon}>
+              <FlipOnRtl>
+                <ExternalLinkIcon />
+              </FlipOnRtl>
+            </div>
+          </DropdownItem>
+        )}
         {/* Console SSO */}
         {isCloud && isDevFeaturesEnabled && (
           <DropdownItem

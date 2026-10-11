@@ -39,7 +39,9 @@ export default function ProtectedRoutes() {
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       saveRedirect();
-      const isSignUpMode = yes(searchParameters.get(searchKeys.signUp));
+      const isSignUpMode = yes(
+        searchParameters.get(searchKeys.signUp) ?? searchParameters.get('signUp')
+      );
       void signIn(redirectUri.href, conditional(isSignUpMode && 'signUp'));
     }
   }, [redirectUri, isAuthenticated, isLoading, searchParameters, signIn]);
