@@ -46,8 +46,7 @@ function AppRoutes() {
             element={<AcceptInvitation />}
           />
           <Route element={<ProtectedRoutes />}>
-            {/* Self-hosted license retrieval, independent of future purchasing guards. */}
-            {isCloud && isDevFeaturesEnabled && (
+            {isCloud && (
               <Route
                 path={`${GlobalRoute.SelfHostedLicenses}/:licenseId?`}
                 element={<SelfHostedLicenses />}
