@@ -14,7 +14,7 @@ const cloud = {
     non_production_key: 'Klucz nieprodukcyjny',
     keys_unavailable:
       'Klucze tej licencji są niedostępne. W razie potrzeby skontaktuj się ze wsparciem.',
-    issue_keys: 'Wydaj oba klucze licencyjne',
+    issue_keys: 'Pobierz klucze licencyjne',
     issue_error: 'Nie udało się wydać kluczy licencyjnych. Spróbuj ponownie.',
     install_title: 'Zainstaluj licencję',
     install_description:

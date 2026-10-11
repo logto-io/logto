@@ -12,7 +12,7 @@ const cloud = {
     production_key: 'Üretim anahtarı',
     non_production_key: 'Üretim dışı anahtar',
     keys_unavailable: 'Bu lisansın anahtarları kullanılamıyor. Yardım için destek ekibine ulaş.',
-    issue_keys: 'Her iki lisans anahtarını oluştur',
+    issue_keys: 'Lisans anahtarlarını al',
     issue_error: 'Lisans anahtarları oluşturulamadı. Lütfen tekrar dene.',
     install_title: 'Lisansını yükle',
     install_description:

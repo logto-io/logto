@@ -15,7 +15,7 @@ const cloud = {
     non_production_key: 'Nichtproduktionsschlüssel',
     keys_unavailable:
       'Für diese Lizenz sind keine Schlüssel verfügbar. Wende dich bei Bedarf an den Support.',
-    issue_keys: 'Beide Lizenzschlüssel ausstellen',
+    issue_keys: 'Lizenzschlüssel abrufen',
     issue_error: 'Lizenzschlüssel konnten nicht ausgestellt werden. Bitte versuche es erneut.',
     install_title: 'Lizenz installieren',
     install_description:

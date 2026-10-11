@@ -13,7 +13,7 @@ const cloud = {
     production_key: 'کلید محیط عملیاتی',
     non_production_key: 'کلید محیط غیرعملیاتی',
     keys_unavailable: 'کلیدهای این مجوز در دسترس نیستند. برای کمک با پشتیبانی تماس بگیرید.',
-    issue_keys: 'صدور هر دو کلید مجوز',
+    issue_keys: 'دریافت کلیدهای مجوز',
     issue_error: 'صدور کلیدهای مجوز ممکن نشد. دوباره تلاش کنید.',
     install_title: 'نصب مجوز',
     install_description:

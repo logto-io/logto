@@ -12,7 +12,7 @@ const cloud = {
     production_key: '本番環境用キー',
     non_production_key: '非本番環境用キー',
     keys_unavailable: 'このライセンスのキーは利用できません。サポートにお問い合わせください。',
-    issue_keys: '両方のライセンスキーを発行',
+    issue_keys: 'ライセンスキーを取得',
     issue_error: 'ライセンスキーを発行できませんでした。もう一度お試しください。',
     install_title: 'ライセンスのインストール',
     install_description:

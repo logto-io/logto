@@ -11,7 +11,7 @@ const cloud = {
     production_key: '正式環境金鑰',
     non_production_key: '非正式環境金鑰',
     keys_unavailable: '此授權的金鑰無法使用。如需協助，請聯絡支援團隊。',
-    issue_keys: '簽發兩種授權金鑰',
+    issue_keys: '取得授權金鑰',
     issue_error: '無法簽發授權金鑰，請再試一次。',
     install_title: '安裝授權',
     install_description:

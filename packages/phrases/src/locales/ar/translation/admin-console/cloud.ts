@@ -11,7 +11,7 @@ const cloud = {
     production_key: 'مفتاح الإنتاج',
     non_production_key: 'مفتاح غير الإنتاج',
     keys_unavailable: 'مفاتيح هذا الترخيص غير متاحة. تواصل مع الدعم إذا كنت بحاجة إلى مساعدة.',
-    issue_keys: 'إصدار مفتاحَي الترخيص',
+    issue_keys: 'الحصول على مفاتيح الترخيص',
     issue_error: 'تعذر إصدار مفاتيح الترخيص. يرجى المحاولة مرة أخرى.',
     install_title: 'تثبيت الترخيص',
     install_description:

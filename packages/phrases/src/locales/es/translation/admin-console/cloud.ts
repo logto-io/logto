@@ -14,7 +14,7 @@ const cloud = {
     non_production_key: 'Clave de no producción',
     keys_unavailable:
       'Las claves de esta licencia no están disponibles. Contacta con soporte si necesitas ayuda.',
-    issue_keys: 'Emitir ambas claves de licencia',
+    issue_keys: 'Obtener claves de licencia',
     issue_error: 'No se pudieron emitir las claves de licencia. Inténtalo de nuevo.',
     install_title: 'Instala tu licencia',
     install_description:
