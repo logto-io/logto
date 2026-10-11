@@ -1,23 +1,22 @@
-import { HTTPError } from 'ky';
+import { type selfHostedLicensesRouter } from '@logto/cloud/routes';
+import { ResponseError } from '@withtyped/client';
 import { useRef, useState } from 'react';
-import { type z } from 'zod';
 
-import { selfHostedLicenseKeysGuard } from '@/cloud/types/self-hosted-license';
-import { cloudApi } from '@/consts';
+import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
+import { type SelfHostedLicenseKeys } from '@/cloud/types/router';
 import Button from '@/ds-components/Button';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
-import { useStaticApi } from '@/hooks/use-api';
 
 import styles from './index.module.scss';
 
 type Props = { readonly id: string };
 
 function Keys({ id }: Props) {
-  const api = useStaticApi({ resourceIndicator: cloudApi.indicator, hideErrorToast: true });
-  const [keys, setKeys] = useState<z.infer<typeof selfHostedLicenseKeysGuard>>();
+  const api = useCloudApi<typeof selfHostedLicensesRouter>({ hideErrorToast: true });
+  const [keys, setKeys] = useState<SelfHostedLicenseKeys>();
   const [error, setError] = useState<'unavailable' | 'failed'>();
   const [isIssuing, setIsIssuing] = useState(false);
   const pending = useRef(false);
@@ -33,20 +32,16 @@ function Keys({ id }: Props) {
     setError(undefined);
 
     try {
-      setKeys(
-        selfHostedLicenseKeysGuard.parse(
-          await api
-            .post(`/api/me/self-hosted-licenses/${encodeURIComponent(id)}/keys`, {
-              // Issuance must only happen on an explicit click, never an HTTP retry.
-              retry: 0,
-              cache: 'no-store',
-            })
-            .json()
-        )
-      );
+      // The client does not retry requests; the endpoint returns Cache-Control: no-store.
+      const pair = await api.post('/api/me/self-hosted-licenses/:id/keys', { params: { id } });
+      // Router types do not validate responses at runtime. Never expose a partial pair.
+      if (typeof pair.productionKey !== 'string' || typeof pair.nonProductionKey !== 'string') {
+        throw new TypeError('Incomplete license key pair.');
+      }
+      setKeys(pair);
     } catch (error: unknown) {
       setError(
-        error instanceof HTTPError && error.response.status === 403 ? 'unavailable' : 'failed'
+        error instanceof ResponseError && error.response.status === 403 ? 'unavailable' : 'failed'
       );
     } finally {
       // eslint-disable-next-line @silverhand/fp/no-mutation -- Release the single-flight lock after settlement.

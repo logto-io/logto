@@ -1,23 +1,16 @@
+import { type selfHostedLicensesRouter } from '@logto/cloud/routes';
 import useSWR from 'swr';
-import { type z } from 'zod';
 
-import { selfHostedLicenseSummaryGuard } from '@/cloud/types/self-hosted-license';
-import { cloudApi } from '@/consts';
-import { useStaticApi } from '@/hooks/use-api';
+import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
+import { type SelfHostedLicenseSummary } from '@/cloud/types/router';
 import useCurrentUser from '@/hooks/use-current-user';
 
 export const useSelfHostedLicenses = () => {
   const { user, error: userError } = useCurrentUser();
-  // TODO: Once the Cloud routes are merged and @logto/cloud is published, upgrade the package and
-  // use its typed API client and response types for both hooks, removing the local wire contract.
-  // Use the existing user-token client until then.
-  const api = useStaticApi({ resourceIndicator: cloudApi.indicator, hideErrorToast: true });
-  const result = useSWR<Array<z.infer<typeof selfHostedLicenseSummaryGuard>>, Error>(
+  const api = useCloudApi<typeof selfHostedLicensesRouter>({ hideErrorToast: true });
+  const result = useSWR<SelfHostedLicenseSummary[], Error>(
     user && !userError && ['/api/me/self-hosted-licenses', user.id],
-    async () =>
-      selfHostedLicenseSummaryGuard
-        .array()
-        .parse(await api.get('/api/me/self-hosted-licenses').json()),
+    async () => api.get('/api/me/self-hosted-licenses'),
     { keepPreviousData: false }
   );
   return {
@@ -29,12 +22,10 @@ export const useSelfHostedLicenses = () => {
 
 export const useSelfHostedLicense = (id: string) => {
   const { user, error: userError } = useCurrentUser();
-  const api = useStaticApi({ resourceIndicator: cloudApi.indicator, hideErrorToast: true });
-  const path = `/api/me/self-hosted-licenses/${encodeURIComponent(id)}`;
-  const result = useSWR<z.infer<typeof selfHostedLicenseSummaryGuard>, Error>(
-    user && !userError && [path, user.id],
-    async () =>
-      selfHostedLicenseSummaryGuard.parse(await api.get(path, { cache: 'no-store' }).json()),
+  const api = useCloudApi<typeof selfHostedLicensesRouter>({ hideErrorToast: true });
+  const result = useSWR<SelfHostedLicenseSummary, Error>(
+    user && !userError && ['/api/me/self-hosted-licenses/:id', user.id, id],
+    async () => api.get('/api/me/self-hosted-licenses/:id', { params: { id } }),
     { keepPreviousData: false, revalidateOnMount: true }
   );
   return {

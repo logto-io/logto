@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import { type SelfHostedLicenseSummary } from '@/cloud/types/self-hosted-license';
+import { type SelfHostedLicenseSummary } from '@/cloud/types/router';
 import Tag from '@/ds-components/Tag';
 
 type Props = { readonly license: SelfHostedLicenseSummary };

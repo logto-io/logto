@@ -1,12 +1,25 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { ResponseError } from '@withtyped/client';
 import { MemoryRouter } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
-import { useStaticApi } from '@/hooks/use-api';
+import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import useCurrentUser from '@/hooks/use-current-user';
 
 import Details from './Details';
 
+// Jest's CommonJS resolver needs a virtual module for the ESM-only client package.
+jest.mock(
+  '@withtyped/client',
+  () => ({
+    ResponseError: class extends Error {
+      constructor(readonly response: Response) {
+        super('Response error');
+      }
+    },
+  }),
+  { virtual: true }
+);
 // Account-level licenses do not use tenant subscription badges or their Cloud SDK dependencies.
 jest.mock('@/components/FeatureTag', () => ({
   __esModule: true,
@@ -16,7 +29,7 @@ jest.mock('@/components/FeatureTag', () => ({
 }));
 // The alias mapper resolves this stylesheet before Jest's generic CSS mapper.
 jest.mock('@/scss/modal.module.scss', () => ({}));
-jest.mock('@/hooks/use-api', () => ({ useStaticApi: jest.fn() }));
+jest.mock('@/cloud/hooks/use-cloud-api', () => ({ useCloudApi: jest.fn() }));
 jest.mock('@/hooks/use-current-user', () => ({ __esModule: true, default: jest.fn() }));
 jest.mock('@/consts/env', () => ({ isCloud: true, isDevFeaturesEnabled: true }));
 jest.mock('@/components/Region', () => ({ defaultRegionName: 'US' }));
@@ -56,8 +69,8 @@ const deferredKeys = () => {
 const read = jest.fn();
 const issue = jest.fn();
 const api = {
-  get: jest.fn((path: string) => ({ json: async () => read(path) })),
-  post: jest.fn(() => ({ json: async () => issue() })),
+  get: jest.fn(async (_path: string, { params }: { params: { id: string } }) => read(params.id)),
+  post: jest.fn(async () => issue()),
 };
 const issueButton = () =>
   screen.getByRole('button', { name: 'admin_console.cloud.self_hosted_licenses.issue_keys' });
@@ -87,11 +100,11 @@ const renderDetails = () => {
 
 beforeEach(() => {
   jest.clearAllMocks();
-  jest.mocked(useStaticApi).mockReturnValue(api as unknown as ReturnType<typeof useStaticApi>);
+  jest.mocked(useCloudApi).mockReturnValue(api as unknown as ReturnType<typeof useCloudApi>);
   jest
     .mocked(useCurrentUser)
     .mockReturnValue({ user: { id: 'alice' } } as ReturnType<typeof useCurrentUser>);
-  read.mockImplementation(async (path: string) => ({ ...summary, id: path.split('/').at(-1) }));
+  read.mockImplementation(async (id: string) => ({ ...summary, id }));
   issue.mockResolvedValue(pair);
 });
 
@@ -106,9 +119,8 @@ it('issues one required pair only on an explicit click, independently of metadat
   fireEvent.click(issueButton());
   expect(issueButton().hasAttribute('disabled')).toBe(true);
   expect(api.post).toHaveBeenCalledTimes(1);
-  expect(api.post).toHaveBeenCalledWith('/api/me/self-hosted-licenses/license-a/keys', {
-    retry: 0,
-    cache: 'no-store',
+  expect(api.post).toHaveBeenCalledWith('/api/me/self-hosted-licenses/:id/keys', {
+    params: { id: 'license-a' },
   });
   expect(screen.getByText('license-a')).toBeTruthy();
 
@@ -163,6 +175,21 @@ it('keeps metadata on signing failure and retries issuance only on another click
     await screen.findByText('admin_console.cloud.self_hosted_licenses.production_key')
   ).toBeTruthy();
   expect(api.post).toHaveBeenCalledTimes(2);
+});
+
+it('keeps metadata and stops offering issuance when the typed client returns 403', async () => {
+  issue.mockRejectedValueOnce(new ResponseError({ status: 403 } as Response));
+  renderDetails();
+  await screen.findByText('license-a');
+  fireEvent.click(issueButton());
+  expect(
+    await screen.findByText('admin_console.cloud.self_hosted_licenses.keys_unavailable')
+  ).toBeTruthy();
+  expect(screen.getByText('license-a')).toBeTruthy();
+  expect(screen.queryByText('admin_console.cloud.self_hosted_licenses.issue_error')).toBeNull();
+  expect(
+    screen.queryByRole('button', { name: 'admin_console.cloud.self_hosted_licenses.issue_keys' })
+  ).toBeNull();
 });
 
 it('does not expose an incomplete key pair', async () => {
