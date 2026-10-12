@@ -2,6 +2,7 @@ import { Prompt, type SignInOptions } from '@logto/node';
 import { InteractionEvent, MfaFactor, defaultTenantId, demoAppApplicationId } from '@logto/schemas';
 import { assertEnv } from '@silverhand/essentials';
 import { createInterceptorsPreset, createPool, sql, type DatabasePool } from '@silverhand/slonik';
+import ky from 'ky';
 import { authenticator } from 'otplib';
 
 import { createUserMfaVerification } from '#src/api/admin-user.js';
@@ -16,7 +17,6 @@ import {
 } from '#src/helpers/experience/authorization.js';
 import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
 import { successfullyVerifyTotp } from '#src/helpers/experience/totp-verification.js';
-import { expectRejects } from '#src/helpers/index.js';
 import {
   enableAllPasswordSignInMethods,
   enableMandatoryMfaWithTotp,
@@ -276,21 +276,24 @@ devFeatureTest.describe('acr_values and max_age interaction policy', () => {
     }
   });
 
-  it('rejects a sign-in submission that stays below the requested class', async () => {
+  it('returns an OIDC error redirect when sign-in cannot reach the requested class', async () => {
     // A password sign-in achieves `1fa` only, and with no enrolled factor and nothing enabled to
-    // enroll, `mfa` is out of reach. Experience enforces the requested class at submission, so the
-    // interaction never resumes with a context below it and the request cannot issue a weaker
-    // token. The provider's post-interaction re-check remains the enforcement for completions that
-    // do not come from Experience, such as the legacy interaction routes.
+    // enroll, `mfa` is out of reach. Experience finishes with an OIDC error rather than issuing
+    // a weaker token or leaving the user on a terminal API error.
     const client = await initExperienceClient({
       interactionEvent: InteractionEvent.SignIn,
       options: { extraParams: { acr_values: mfaAcr } },
     });
     await identifyUserWithUsernamePassword(client, username, password);
-    await expectRejects(client.submitInteraction(), {
-      code: 'session.step_up.acr_not_satisfied',
-      status: 403,
+    const { redirectTo } = await client.submitInteraction();
+    const response = await ky.get(redirectTo, {
+      headers: { cookie: client.getCookieHeader(new URL(redirectTo).pathname) },
+      redirect: 'manual',
+      throwHttpErrors: false,
     });
+
+    expect(response.status).toBe(303);
+    expectRedirectedError(response.headers.get('location') ?? '', unmetError);
   });
 
   it('leaves a request without acr_values unchanged', async () => {
