@@ -16,7 +16,7 @@
             "description": "Multi-Factor Authentication (MFA) is enabled for the user but has not been verified (SignIn and Register). <br/>- A sign-in with requested `acr_values` still lacks a Logto-verifiable first factor (`session.step_up.require_verification`); the response data carries the selected authentication context class, the available methods, and the masked identifiers. <br/>- The achieved authentication context does not satisfy the requested authentication context class (`session.step_up.acr_not_satisfied`); no interaction result is written."
           },
           "422": {
-            "description": "The user profile cannot be processed because it is invalid, conflicts with existing data, is already in use, or lacks required fields. <br/>- A sign-in with requested `acr_values` has no eligible method but holds a fresh subject proof (`user.missing_profile`); `data.missingProfile` lists the first-factor methods the tenant allows the user to establish. <br/>- Requested MFA requires enrollment (`user.missing_mfa`); `data.availableFactors` lists the factors to bind, without `skippable`. The tenant's backup-code and additional-factor requirements still apply."
+            "description": "The user profile cannot be processed because it is invalid, conflicts with existing data, is already in use, or lacks required fields. <br/>- A sign-in with requested `acr_values` has no eligible method but holds a fresh subject proof (`user.missing_profile`); `data.missingProfile` lists the first-factor methods the tenant allows the user to establish. <br/>- Requested MFA requires enrollment (`user.missing_mfa`); `data.availableFactors` lists the factors to bind."
           }
         }
       }
