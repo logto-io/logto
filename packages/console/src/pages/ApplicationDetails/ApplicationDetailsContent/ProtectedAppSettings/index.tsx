@@ -29,6 +29,7 @@ import Spacer from '@/ds-components/Spacer';
 import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
 import useApi, { type RequestError } from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import AddDomainForm from '@/pages/TenantSettings/TenantDomainSettings/AddDomainForm';
 import CustomDomain from '@/pages/TenantSettings/TenantDomainSettings/CustomDomain';
@@ -51,6 +52,9 @@ const shouldRejectLocalhostOrigin = (origin: string) =>
 
 function ProtectedAppSettings({ data }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const { getDocumentationUrl } = useDocumentationUrl();
   const { data: oidcConfig } = useSWRImmutable<SnakeCaseOidcConfig, RequestError>(
     openIdProviderConfigPath
@@ -187,7 +191,7 @@ function ProtectedAppSettings({ data }: Props) {
                 <div className={classNames(styles.bone, styles.description)} />
               </div>
             )}
-            {!customDomain && !showCustomDomainLoadingMask && (
+            {!customDomain && !showCustomDomainLoadingMask && !isReadOnly && (
               <AddDomainForm
                 className={styles.customDomain}
                 onSubmitCustomDomain={async (json) => {
@@ -202,6 +206,7 @@ function ProtectedAppSettings({ data }: Props) {
             {customDomain && !showCustomDomainLoadingMask && (
               <CustomDomain
                 hasOpenExternalLink
+                isReadonly={isReadOnly}
                 className={styles.customDomain}
                 customDomain={customDomain}
                 onDeleteCustomDomain={async () => {

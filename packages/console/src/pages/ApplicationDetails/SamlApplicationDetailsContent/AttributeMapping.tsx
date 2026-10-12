@@ -15,6 +15,7 @@ import IconButton from '@/ds-components/IconButton';
 import Select from '@/ds-components/Select';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { trySubmitSafe } from '@/utils/form';
 
@@ -52,6 +53,9 @@ const getOrderedAttributeMapping = (
 function AttributeMapping({ data, mutateApplication }: Props) {
   const { id, attributeMapping } = data;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const { getDocumentationUrl } = useDocumentationUrl();
   const api = useApi();
 
@@ -164,40 +168,44 @@ function AttributeMapping({ data, mutateApplication }: Props) {
                     <TextInput {...register(`${keyPrefix}.${index}.1`)} />
                   </td>
                   <td>
-                    <IconButton
-                      onClick={() => {
-                        const currentValues = [
-                          ...formValues.slice(0, index),
-                          ...formValues.slice(index + 1),
-                        ];
-                        setValue('attributeMapping', currentValues, {
-                          shouldDirty: true,
-                        });
-                      }}
-                    >
-                      <CircleMinus />
-                    </IconButton>
+                    {!isReadOnly && (
+                      <IconButton
+                        onClick={() => {
+                          const currentValues = [
+                            ...formValues.slice(0, index),
+                            ...formValues.slice(index + 1),
+                          ];
+                          setValue('attributeMapping', currentValues, {
+                            shouldDirty: true,
+                          });
+                        }}
+                      >
+                        <CircleMinus />
+                      </IconButton>
+                    )}
                   </td>
                 </tr>
               );
             })}
           </tbody>
         </table>
-        <Button
-          size="small"
-          type="text"
-          disabled={availableKeys.length === 0}
-          icon={<CirclePlus />}
-          title="application_details.saml_app_attribute_mapping.add_button"
-          onClick={() => {
-            const currentValues = [...formValues];
-            // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-            currentValues.push(['', '']);
-            setValue('attributeMapping', currentValues, {
-              shouldDirty: true,
-            });
-          }}
-        />
+        {!isReadOnly && (
+          <Button
+            size="small"
+            type="text"
+            disabled={availableKeys.length === 0}
+            icon={<CirclePlus />}
+            title="application_details.saml_app_attribute_mapping.add_button"
+            onClick={() => {
+              const currentValues = [...formValues];
+              // eslint-disable-next-line @silverhand/fp/no-mutating-methods -- pushes to a fresh copy
+              currentValues.push(['', '']);
+              setValue('attributeMapping', currentValues, {
+                shouldDirty: true,
+              });
+            }}
+          />
+        )}
       </FormCard>
     </DetailsForm>
   );
