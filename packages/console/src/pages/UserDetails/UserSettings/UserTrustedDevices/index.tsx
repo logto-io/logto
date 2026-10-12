@@ -11,6 +11,7 @@ import FormField from '@/ds-components/FormField';
 import Table from '@/ds-components/Table';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
 import styles from './index.module.scss';
 
@@ -61,6 +62,9 @@ function UserTrustedDevices({ userId }: Props) {
 
   const api = useApi();
   const { show: showConfirm } = useConfirmModal();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
 
   const handleRemove = useCallback(
     async (trustedDevice: TrustedDeviceTableRow) => {
@@ -139,19 +143,20 @@ function UserTrustedDevices({ userId }: Props) {
                 title: null,
                 dataIndex: 'action',
                 colSpan: 2,
-                render: (trustedDevice) => (
-                  <div className={styles.action}>
-                    <Button
-                      title="general.remove"
-                      type="text"
-                      size="small"
-                      isLoading={deletingDeviceId === trustedDevice.id}
-                      onClick={() => {
-                        void handleRemove(trustedDevice);
-                      }}
-                    />
-                  </div>
-                ),
+                render: (trustedDevice) =>
+                  isReadOnly ? null : (
+                    <div className={styles.action}>
+                      <Button
+                        title="general.remove"
+                        type="text"
+                        size="small"
+                        isLoading={deletingDeviceId === trustedDevice.id}
+                        onClick={() => {
+                          void handleRemove(trustedDevice);
+                        }}
+                      />
+                    </div>
+                  ),
               },
             ]}
             onRetry={() => {
