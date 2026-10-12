@@ -3,7 +3,7 @@ import { HTTPError } from 'ky';
 import { useCallback, useEffect, useState } from 'react';
 import useSWR from 'swr';
 
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { type License } from '@/types/license';
 import { getEffectiveLicenseQuota } from '@/utils/license';
 import { shouldRetryOnError } from '@/utils/request';
@@ -11,15 +11,6 @@ import { shouldRetryOnError } from '@/utils/request';
 import useApi, { RequestError } from './use-api';
 
 const licenseApiPath = 'api/systems/license';
-
-/**
- * Self-hosted plans: the license is the entitlement source of the unlaunched self-hosted Pro and
- * Enterprise plans. Removed together with the other self-hosted plans guards at launch.
- *
- * On Cloud the subscription is the entitlement source and the route answers 501, so nothing is
- * fetched there.
- */
-const shouldFetchLicense = !isCloud && isDevFeaturesEnabled;
 
 /**
  * Read the license installed on this self-hosted deployment.
@@ -39,8 +30,6 @@ const useLicense = () => {
         throw error;
       }
 
-      // The route itself is missing when Core runs without dev features, and that answers with a
-      // plain-text `404` too. Either way there is no license to read.
       if (error.response.status === 404) {
         return null;
       }
@@ -50,7 +39,8 @@ const useLicense = () => {
   }, [api]);
 
   const { data, error, isLoading, mutate } = useSWR<Nullable<License>, RequestError>(
-    shouldFetchLicense && licenseApiPath,
+    // Cloud uses its subscription instead, and the license route returns 501 there.
+    !isCloud && licenseApiPath,
     fetcher,
     { shouldRetryOnError: shouldRetryOnError({ ignore: [401, 403] }) }
   );

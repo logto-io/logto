@@ -212,7 +212,7 @@ describe('POST /sign-in-exp/default/custom-ui-assets', () => {
     let upload: (filePath: string) => Promise<Response>;
 
     beforeAll(() => {
-      setEnv({ isCloud: false, isDevFeaturesEnabled: true });
+      setEnv({ isCloud: false, isDevFeaturesEnabled: false });
       const requester = createSignInExperienceRequester();
       // eslint-disable-next-line @silverhand/fp/no-mutation
       upload = async (filePath) =>
@@ -223,7 +223,7 @@ describe('POST /sign-in-exp/default/custom-ui-assets', () => {
     });
 
     beforeEach(() => {
-      setEnv({ isCloud: false, isDevFeaturesEnabled: true });
+      setEnv({ isCloud: false, isDevFeaturesEnabled: false });
       jest.spyOn(Date, 'now').mockReturnValue(now);
     });
 

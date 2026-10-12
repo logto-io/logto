@@ -57,7 +57,6 @@ describe('OssLicenseBanner', () => {
 
   beforeEach(() => {
     resetMockEnv();
-    mockEnv({ isDevFeaturesEnabled: true });
     jest.useFakeTimers().setSystemTime(new Date('2026-10-09T00:00:00.000Z'));
   });
 
@@ -99,11 +98,8 @@ describe('OssLicenseBanner', () => {
     expect(screen.queryByText(message)).toBeNull();
   });
 
-  it.each([
-    { isCloud: true, isDevFeaturesEnabled: true },
-    { isCloud: false, isDevFeaturesEnabled: false },
-  ])('does not warn with environment %j', (env) => {
-    mockEnv(env);
+  it('does not warn on Cloud', () => {
+    mockEnv({ isCloud: true });
     const { container } = render(
       <Preview installedLicense={{ ...license, refusalReason: 'revoked' }} />
     );

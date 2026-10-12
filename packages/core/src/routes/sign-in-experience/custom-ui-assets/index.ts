@@ -85,12 +85,7 @@ export default function customUiAssetsRoutes<T extends ManagementApiRouter>(
     },
   ]: RouterInitArgs<T>
 ) {
-  const { isCloud, isDevFeaturesEnabled } = EnvSet.values;
-  /**
-   * Self-hosted plans: Bring your UI on the deployment's own storage, unlocked by the license.
-   * Removed together with the other self-hosted plans guards at launch.
-   */
-  const isSelfHosted = !isCloud && isDevFeaturesEnabled;
+  const isSelfHosted = !EnvSet.values.isCloud;
 
   /**
    * Outside Cloud the quota guard is a no-op. Use effective license entitlements so Bring your UI

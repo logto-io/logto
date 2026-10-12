@@ -24,7 +24,6 @@ import {
 import { initExperienceClient } from '#src/helpers/client.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { buildTestLicensePayload, signTestLicenseKey } from '#src/helpers/license.js';
-import { devFeatureTest } from '#src/utils.js';
 
 const tenantOrganizationId = getTenantOrganizationId(defaultTenantId);
 const tenantMfaUrl = new URL('/me/tenant/mfa', logtoConsoleUrl).href;
@@ -63,9 +62,7 @@ const installLicense = async (mandatoryMfa: boolean) => {
   expect(response.status).toBe(204);
 };
 
-// The tenant routes and the license are behind the self-hosted plans feature, which the instance
-// under test only enables with `DEV_FEATURES_ENABLED`.
-devFeatureTest.describe('me tenant MFA', () => {
+describe('me tenant MFA', () => {
   const members = new Map<TenantRole, Awaited<ReturnType<typeof createTenantMember>>>();
 
   const getMember = (role: TenantRole) => {

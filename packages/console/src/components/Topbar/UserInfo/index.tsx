@@ -78,8 +78,7 @@ function UserInfo() {
       >
         <UserInfoCard className={styles.userInfo} user={user} avatarSize="large" />
         <Divider />
-        {/* Self-hosted license retrieval, independent of future purchasing guards. */}
-        {isCloud && isDevFeaturesEnabled && (
+        {isCloud && (
           <DropdownItem
             className={classNames(styles.dropdownItem, isLoading && styles.loading)}
             icon={<File className={styles.icon} />}

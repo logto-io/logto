@@ -19,7 +19,6 @@
     },
     "/api/systems/license": {
       "get": {
-        "tags": ["Dev feature"],
         "summary": "Get the installed license.",
         "description": "Get the license installed on this self-hosted deployment, i.e. the plan it grants, the entitlements it unlocks, its expiration, and its refresh/grace status. The license key itself is never returned. Returns 404 when no license is installed, and 501 on Logto Cloud.",
         "responses": {
@@ -35,7 +34,6 @@
         }
       },
       "put": {
-        "tags": ["Dev feature"],
         "summary": "Install a license.",
         "description": "Install a license key on this self-hosted deployment, replacing the installed license if there is one. The key's signature is verified against the public key built into Logto before it is saved, and a key past its expiration is rejected as a stale copy. Returns 501 on Logto Cloud.",
         "requestBody": {

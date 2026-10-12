@@ -7,7 +7,7 @@ import { type License } from '@/types/license';
 
 import useLicense from './use-license';
 
-jest.mock('@/consts/env', () => ({ isCloud: false, isDevFeaturesEnabled: true }));
+jest.mock('@/consts/env', () => ({ isCloud: false, isDevFeaturesEnabled: false }));
 jest.mock('@/utils/request', () => ({ shouldRetryOnError: jest.fn() }));
 jest.mock('./use-api', () => ({ __esModule: true, default: jest.fn() }));
 jest.mock('swr', () => jest.fn());

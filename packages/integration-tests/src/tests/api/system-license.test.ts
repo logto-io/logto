@@ -3,7 +3,6 @@ import { LicenseEnv, ReservedPlanId, ossDefaultQuota } from '@logto/schemas';
 import { getSystemLicense, putSystemLicense } from '#src/api/system.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { buildTestLicensePayload, signTestLicenseKey } from '#src/helpers/license.js';
-import { devFeatureTest } from '#src/utils.js';
 
 const oneYearInSeconds = 365 * 24 * 60 * 60;
 
@@ -30,9 +29,7 @@ const payload = buildTestLicensePayload({
 });
 const license = await signTestLicenseKey(payload);
 
-// The license, its routes and the reader are behind the self-hosted plans feature, which the
-// instance under test only enables with `DEV_FEATURES_ENABLED`.
-devFeatureTest.describe('self-hosted license', () => {
+describe('self-hosted license', () => {
   beforeAll(async () => {
     const response = await putSystemLicense(license);
     expect(response.status).toEqual(204);
