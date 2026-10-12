@@ -8,6 +8,11 @@ import Actions from '.';
 import { type ActionConfig, ActionPageMode } from './types';
 import { getActionPagePath } from './utils';
 
+jest.mock('@/hooks/use-current-tenant-scopes', () => ({
+  __esModule: true,
+  default: () => ({ access: { isReadOnly: false } }),
+}));
+
 jest.mock('swr', () => ({
   __esModule: true,
   default: jest.fn(),

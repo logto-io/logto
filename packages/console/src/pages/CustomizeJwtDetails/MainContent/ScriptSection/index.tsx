@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import RunIcon from '@/assets/icons/start.svg?react';
 import Button from '@/ds-components/Button';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import { CodeEditorLoadingContext } from '@/pages/CustomizeJwtDetails/CodeEditorLoadingContext';
 import MonacoCodeEditor, {
   type DashboardProps,
@@ -27,6 +28,9 @@ function ScriptSection() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { watch, control } = useFormContext<JwtCustomizerForm>();
   const tokenType = watch('tokenType');
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
 
   // Need to use useWatch hook to subscribe the mutation of the environmentVariables field
   // Otherwise, the default watch function's return value won't mutate when the environmentVariables field changes
@@ -90,14 +94,16 @@ function ScriptSection() {
               restoreActionTip={t('jwt_claims.restore')}
               restoreActionSuccessTip={t('jwt_claims.restored')}
               actionButtons={
-                <Button
-                  icon={<RunIcon />}
-                  size="small"
-                  title="jwt_claims.tester.run_button"
-                  type="primary"
-                  isLoading={isLoading}
-                  onClick={onTestHandler}
-                />
+                !isReadOnly && (
+                  <Button
+                    icon={<RunIcon />}
+                    size="small"
+                    title="jwt_claims.tester.run_button"
+                    type="primary"
+                    isLoading={isLoading}
+                    onClick={onTestHandler}
+                  />
+                )
               }
               dashboard={dashBoardProps}
               onChange={(newValue) => {
