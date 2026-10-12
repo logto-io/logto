@@ -11,6 +11,7 @@ import Palette from '@/assets/icons/palette.svg?react';
 import Profile from '@/assets/icons/profile.svg?react';
 import SignOut from '@/assets/icons/sign-out.svg?react';
 import SingleSignOn from '@/assets/icons/single-sign-on.svg?react';
+import { useSelfHostedLicenses } from '@/cloud/hooks/use-self-hosted-licenses';
 import UserAvatar from '@/components/UserAvatar';
 import UserInfoCard from '@/components/UserInfoCard';
 import { adminTenantEndpoint } from '@/consts';
@@ -36,6 +37,7 @@ function UserInfo() {
   const { signOut } = useSignOut();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { user, isLoading: isLoadingUser } = useCurrentUser();
+  const { data: selfHostedLicenses, error: selfHostedLicensesError } = useSelfHostedLicenses();
   const anchorRef = useRef<HTMLDivElement>(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const postSignOutRedirectUri = useRedirectUri('signOut');
@@ -78,7 +80,7 @@ function UserInfo() {
       >
         <UserInfoCard className={styles.userInfo} user={user} avatarSize="large" />
         <Divider />
-        {isCloud && (
+        {isCloud && !selfHostedLicensesError && Boolean(selfHostedLicenses?.length) && (
           <DropdownItem
             className={classNames(styles.dropdownItem, isLoading && styles.loading)}
             icon={<File className={styles.icon} />}

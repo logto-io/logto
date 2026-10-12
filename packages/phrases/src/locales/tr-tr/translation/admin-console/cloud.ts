@@ -4,7 +4,8 @@ const cloud = {
     description:
       'Hesabının lisanslarını görüntüle ve kendi sunucundaki dağıtımlar için anahtarları kopyala.',
     empty_title: 'Henüz kendi sunucunda barındırma lisansı yok',
-    empty_description: 'Bu hesaba atanan lisanslar burada görünür. Cloud kiracısı gerekmez.',
+    empty_description:
+      'Bir lisans satın aldıysan, satın alırken kullandığın hesapla oturum açtığından emin ol.',
     load_error: 'Lisanslar yüklenemedi. Lütfen tekrar dene.',
     period_end: 'Geçerli dönem sonu',
     keys_title: 'Lisans anahtarları',

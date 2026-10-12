@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
+import { useSelfHostedLicenses } from '@/cloud/hooks/use-self-hosted-licenses';
 import ItemPreview from '@/components/ItemPreview';
 import SkuName from '@/components/SkuName';
 import { GlobalRoute } from '@/contexts/TenantsProvider';
@@ -9,7 +10,6 @@ import Table from '@/ds-components/Table';
 
 import Status from './Status';
 import styles from './index.module.scss';
-import { useSelfHostedLicenses } from './use-self-hosted-licenses';
 
 function List() {
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });

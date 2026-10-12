@@ -3,8 +3,7 @@ const cloud = {
     title: '자체 호스팅 라이선스',
     description: '계정이 소유한 라이선스를 확인하고 자체 호스팅 배포용 키를 복사하세요.',
     empty_title: '아직 자체 호스팅 라이선스가 없습니다',
-    empty_description:
-      '이 계정에 할당된 라이선스가 여기에 표시됩니다. Cloud 테넌트는 필요하지 않습니다.',
+    empty_description: '라이선스를 구매했다면 구매 시 사용한 계정으로 로그인했는지 확인하세요.',
     load_error: '라이선스를 불러올 수 없습니다. 다시 시도해 주세요.',
     period_end: '현재 기간 종료일',
     keys_title: '라이선스 키',

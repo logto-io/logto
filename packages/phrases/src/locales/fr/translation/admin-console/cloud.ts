@@ -5,7 +5,7 @@ const cloud = {
       'Consultez les licences de votre compte et copiez les clés pour vos déploiements auto-hébergés.',
     empty_title: 'Aucune licence auto-hébergée pour le moment',
     empty_description:
-      'Les licences attribuées à ce compte apparaîtront ici. Aucun locataire Cloud requis.',
+      "Si vous avez acheté une licence, assurez-vous d'être connecté avec le compte utilisé pour l'achat.",
     load_error: 'Impossible de charger les licences. Veuillez réessayer.',
     period_end: 'Fin de la période actuelle',
     keys_title: 'Clés de licence',

@@ -5,7 +5,7 @@ const cloud = {
       'Consulta as licenças da tua conta e copia as chaves para as tuas implementações autoalojadas.',
     empty_title: 'Ainda não há licenças autoalojadas',
     empty_description:
-      'As licenças atribuídas a esta conta aparecerão aqui. Não é necessário um tenant Cloud.',
+      'Se compraste uma licença, certifica-te de que inicias sessão com a conta usada na compra.',
     load_error: 'Não foi possível carregar as licenças. Tenta novamente.',
     period_end: 'Fim do período atual',
     keys_title: 'Chaves de licença',

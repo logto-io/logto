@@ -1,5 +1,6 @@
 import { Trans, useTranslation } from 'react-i18next';
 
+import { useSelfHostedLicense } from '@/cloud/hooks/use-self-hosted-licenses';
 import DetailsPage from '@/components/DetailsPage';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import FormCard, { FormCardSkeleton } from '@/components/FormCard';
@@ -16,7 +17,6 @@ import TextLink from '@/ds-components/TextLink';
 import Keys from './Keys';
 import Status from './Status';
 import styles from './index.module.scss';
-import { useSelfHostedLicense } from './use-self-hosted-licenses';
 
 type Props = { readonly id: string };
 

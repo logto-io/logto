@@ -5,7 +5,7 @@ const cloud = {
       'Veja as licenças da sua conta e copie as chaves para suas implantações auto-hospedadas.',
     empty_title: 'Ainda não há licenças auto-hospedadas',
     empty_description:
-      'As licenças atribuídas a esta conta aparecerão aqui. Não é necessário um tenant Cloud.',
+      'Se você comprou uma licença, certifique-se de entrar com a conta usada na compra.',
     load_error: 'Não foi possível carregar as licenças. Tente novamente.',
     period_end: 'Fim do período atual',
     keys_title: 'Chaves de licença',

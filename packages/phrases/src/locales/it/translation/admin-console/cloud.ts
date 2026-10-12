@@ -5,7 +5,7 @@ const cloud = {
       'Visualizza le licenze del tuo account e copia le chiavi per le tue installazioni self-hosted.',
     empty_title: 'Nessuna licenza self-hosted',
     empty_description:
-      'Le licenze assegnate a questo account appariranno qui. Non è necessario un tenant Cloud.',
+      "Se hai acquistato una licenza, assicurati di accedere con l'account utilizzato per l'acquisto.",
     load_error: 'Impossibile caricare le licenze. Riprova.',
     period_end: 'Fine del periodo corrente',
     keys_title: 'Chiavi di licenza',
