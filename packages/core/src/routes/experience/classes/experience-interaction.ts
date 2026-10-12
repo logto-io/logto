@@ -1665,8 +1665,12 @@ export default class ExperienceInteraction {
       // Only the factors whose enrollment is itself a proof: binding backup codes proves nothing,
       // and the email / phone factors are bound through an identifier, which a pure step-up only
       // accepts for establishing a first factor.
+      // SignIn must offer the configured MFA factors `assertMfaFulfilled` requires, not a
+      // passkey-only suggestion that can be skipped without fulfilling the requested class.
       tenantEnrollableFactors: bindableFactors.filter(
-        (factor) => factor === MfaFactor.TOTP || factor === MfaFactor.WebAuthn
+        (factor) =>
+          (factor === MfaFactor.TOTP || factor === MfaFactor.WebAuthn) &&
+          (this.isStepUp || mfaSettings.factors.includes(factor))
       ),
       linkedConnectors: needsSubjectProof
         ? await this.getLinkedConnectors(user, connectors, singleSignOnEnabled)

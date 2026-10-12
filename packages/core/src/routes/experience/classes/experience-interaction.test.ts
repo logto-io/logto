@@ -2044,13 +2044,19 @@ describe('ExperienceInteraction class', () => {
     it.each([
       { name: 'password sign-in with no MFA configured', social: false, acr: LogtoAcr.Mfa },
       {
+        name: 'password sign-in with only a skippable passkey suggestion',
+        social: false,
+        acr: LogtoAcr.Mfa,
+        passkeyEnabled: true,
+      },
+      {
         name: 'social sign-in with nothing establishable',
         social: true,
         acr: LogtoAcr.FirstFactor,
       },
     ])(
       'finishes an unreachable $name with an OIDC error and no user write',
-      async ({ social, acr }) => {
+      async ({ social, acr, passkeyEnabled = false }) => {
         setDevFeaturesEnabled(true);
         const { experienceInteraction, provider, signInUserQueries, signInContext, runAction } =
           createSignInInteraction({
@@ -2060,9 +2066,11 @@ describe('ExperienceInteraction class', () => {
             signInExperienceOverrides: {
               signIn: { methods: [] },
               mfa: { policy: MfaPolicy.NoPrompt, factors: [] },
+              passkeySignIn: { enabled: passkeyEnabled },
             },
             interactionResult: {
               authenticationContext: { requestedAcrValues: [acr] },
+              mfa: { passkeySkipped: true },
               authenticationProofs: [
                 social
                   ? federatedProof(AuthenticationProofRole.Identify)
