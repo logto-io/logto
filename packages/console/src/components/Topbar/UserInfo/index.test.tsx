@@ -1,5 +1,6 @@
 import { noop } from '@silverhand/essentials';
 import { act, fireEvent, render, screen } from '@testing-library/react';
+import { type ReactNode } from 'react';
 import ReactModal from 'react-modal';
 import { MemoryRouter } from 'react-router-dom';
 import { SWRConfig } from 'swr';
@@ -9,6 +10,13 @@ import useCurrentUser from '@/hooks/use-current-user';
 
 import UserInfo from '.';
 
+// The alias mapper resolves this stylesheet before Jest's generic CSS mapper.
+jest.mock('@/scss/modal.module.scss', () => ({}));
+// Scrollbar geometry is unavailable in jsdom; keep the menu and its contents real.
+jest.mock('@/ds-components/OverlayScrollbar', () => ({
+  __esModule: true,
+  default: ({ children }: { readonly children: ReactNode }) => <div>{children}</div>,
+}));
 jest.mock('@/cloud/hooks/use-cloud-api', () => ({ useCloudApi: jest.fn() }));
 jest.mock('@/hooks/use-current-user', () => ({ __esModule: true, default: jest.fn() }));
 jest.mock('@/hooks/use-sign-out', () => ({
