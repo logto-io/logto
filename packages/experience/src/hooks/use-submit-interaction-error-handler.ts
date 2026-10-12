@@ -56,29 +56,26 @@ const useSubmitInteractionErrorHandler = (
   const stepUpErrorHandlers = useStepUpErrorHandler();
 
   return useMemo(
-    () =>
-      isStepUp
-        ? {
-            ...requiredProfileErrorHandler,
-            ...mfaErrorHandler,
-            ...stepUpErrorHandlers,
-          }
+    () => ({
+      ...requiredProfileErrorHandler,
+      ...mfaErrorHandler,
+      ...(isStepUp
+        ? stepUpErrorHandlers
         : {
             ...emailBlockedErrorHandler,
-            ...requiredProfileErrorHandler,
-            ...mfaErrorHandler,
             ...cond(passkeySignInErrorHandler),
             ...trustedDeviceOptInErrorHandler,
-            /**
-             * A sign-in with requested ACR needs a first factor the user can verify. The error is only a
-             * navigation signal: the step-up landing reads `availableMethods` and the masked identifiers
-             * from `GET /experience/interaction` and forwards to the pinned-user first-factor page, so
-             * the continuation is refresh-safe and carries nothing in `location.state`.
-             */
-            'session.step_up.require_verification': () => {
-              navigate(stepUpRoutes.landing, { replace: true });
-            },
-          },
+          }),
+      /**
+       * A sign-in with requested ACR needs a first factor the user can verify. The error is only a
+       * navigation signal: the step-up landing reads `availableMethods` and the masked identifiers
+       * from `GET /experience/interaction` and forwards to the pinned-user first-factor page, so
+       * the continuation is refresh-safe and carries nothing in `location.state`.
+       */
+      'session.step_up.require_verification': () => {
+        navigate(stepUpRoutes.landing, { replace: true });
+      },
+    }),
     [
       emailBlockedErrorHandler,
       isStepUp,
