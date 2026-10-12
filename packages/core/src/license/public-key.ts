@@ -10,15 +10,15 @@ import { licenseConsoleLog } from './console.js';
  * The ES256 (ECDSA P-256) public key every self-hosted license key is verified against, as a
  * serialized JWK.
  *
- * Its private half is generated inside, and never leaves, a hardware-backed key vault operated by
- * the Logto license issuer, which is what lets an instance verify a license fully offline while
- * never being able to mint one.
+ * Its private half is generated inside, and never leaves, the Azure Key Vault of the Logto license
+ * issuer, which is what lets an instance verify a license fully offline while never being able to
+ * mint one.
  *
  * `EnvSet.values.selfHostedLicensePublicKey` replaces it — see there for the terms it is honored
  * on.
  */
 const bakedInPublicKey =
-  '{"kty":"EC","crv":"P-256","x":"7eLZmvg2Ii9CMbshTaZAk23W41RSeAm08MvkTe70wWI","y":"-ldoara_xCa6Vm3SWYtJoAE8up3NI3cK685nhWiE7oQ"}';
+  '{"kty":"EC","crv":"P-256","x":"KwjnhY3qJ6GjBiYRbeTR50QeHEncCawp_ZMzvYqWDOI","y":"VqTtKHPL3OsJ5ja5aibwZk7aolKMN3BmFEQd_-uO2s8"}';
 
 /**
  * An ES256 public key in JWK form, i.e. what `jose` exports an `ES256` public key to.
