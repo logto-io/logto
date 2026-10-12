@@ -18,11 +18,12 @@ const cloud = {
     issue_error: 'Impossibile emettere le chiavi di licenza. Riprova.',
     install_title: 'Installa la licenza',
     install_description:
-      'Entrambe le chiavi offrono le stesse funzionalità e quote. La chiave installata identifica la tua installazione come ambiente di produzione o non di produzione.',
+      'Entrambe le chiavi offrono le stesse funzionalità e quote. Salvo diversa indicazione nel tuo modulo d’ordine, il tuo abbonamento copre un’installazione di produzione. Usa la chiave di produzione per quella installazione e la chiave non di produzione per le installazioni di sviluppo, test e staging che la supportano e non gestiscono traffico di produzione.',
     install_copy:
       'Copia la chiave di produzione per la produzione o quella non di produzione per sviluppo e test.',
     install_paste:
       'Nella console self-hosted, apri Impostazioni → Licenza, incolla la chiave e installala.',
+    install_terms: 'Consulta i <a>Termini di abbonamento self-hosted</a> per i dettagli.',
     status: {
       active: 'Attiva',
       past_due: 'Pagamento scaduto',

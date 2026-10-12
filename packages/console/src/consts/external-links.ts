@@ -10,6 +10,7 @@ export const officialWebsiteLink = 'https://logto.io';
 export const trustAndSecurityLink = `${officialWebsiteLink}/trust-and-security`;
 export const pricingLink = `${officialWebsiteLink}/pricing`;
 export const selfHostedPlansLink = `${officialWebsiteLink}/self-hosted-plans`;
+export const selfHostedSubscriptionTermsLink = `${officialWebsiteLink}/terms/self-hosted`;
 export const logtoCloudConsoleLink = 'https://cloud.logto.io';
 export const officialWebsiteContactPageLink = `${officialWebsiteLink}/contact`;
 export const buildOfficialWebsiteContactPageUrl = (source: string) => {

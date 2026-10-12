@@ -19,11 +19,13 @@ const cloud = {
     issue_error: 'Lizenzschlüssel konnten nicht ausgestellt werden. Bitte versuche es erneut.',
     install_title: 'Lizenz installieren',
     install_description:
-      'Beide Schlüssel bieten dieselben Funktionen und Kontingente. Der installierte Schlüssel kennzeichnet deine Bereitstellung als Produktions- oder Nichtproduktionsumgebung.',
+      'Beide Schlüssel bieten dieselben Funktionen und Kontingente. Sofern dein Bestellformular nichts anderes vorsieht, deckt dein Abonnement eine Produktionsbereitstellung ab. Verwende den Produktionsschlüssel für diese Bereitstellung und den Nichtproduktionsschlüssel für Entwicklungs-, Test- und Staging-Bereitstellungen, die sie unterstützen und keinen Produktionsverkehr bedienen.',
     install_copy:
       'Kopiere den Produktionsschlüssel für den Produktivbetrieb oder den Nichtproduktionsschlüssel für Entwicklung und Tests.',
     install_paste:
       'Öffne in deiner selbst gehosteten Konsole Einstellungen → Lizenz, füge den Schlüssel ein und installiere ihn.',
+    install_terms:
+      'Weitere Informationen findest du in den <a>Self-hosted-Abonnementbedingungen</a>.',
     status: {
       active: 'Aktiv',
       past_due: 'Überfällig',
