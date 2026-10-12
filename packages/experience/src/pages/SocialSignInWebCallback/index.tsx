@@ -1,7 +1,8 @@
-import { experience } from '@logto/schemas';
+import { AuthenticationContextMode, experience } from '@logto/schemas';
 import { Navigate, useParams } from 'react-router-dom';
 
 import useConnectors from '@/hooks/use-connectors';
+import useStepUpContext from '@/hooks/use-step-up-context';
 
 import SingleSignOn from './SingleSignOn';
 import SocialSignIn from './SocialSignIn';
@@ -10,6 +11,7 @@ import SocialSignIn from './SocialSignIn';
 const SocialSignInWebCallback = () => {
   const parameters = useParams<{ connectorId: string }>();
   const { findConnectorById } = useConnectors();
+  const { authenticationContext } = useStepUpContext();
   const result = findConnectorById(parameters.connectorId);
 
   if (result?.type === 'social') {
@@ -21,7 +23,15 @@ const SocialSignInWebCallback = () => {
   }
 
   // Connector not found, return sign in page
-  return <Navigate to={'/' + experience.routes.signIn} />;
+  return (
+    <Navigate
+      to={
+        authenticationContext?.mode === AuthenticationContextMode.StepUp
+          ? '/unknown-session'
+          : '/' + experience.routes.signIn
+      }
+    />
+  );
 };
 
 export default SocialSignInWebCallback;

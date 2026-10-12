@@ -1,5 +1,10 @@
 import type { VerificationCodeIdentifier } from '@logto/schemas';
-import { InteractionEvent, MfaFactor, VerificationType } from '@logto/schemas';
+import {
+  AuthenticationContextMode,
+  InteractionEvent,
+  MfaFactor,
+  VerificationType,
+} from '@logto/schemas';
 import { useCallback, useContext, useMemo } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
@@ -17,6 +22,7 @@ import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import useMfaFlowState from '@/hooks/use-mfa-factors-state';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { useSieMethods } from '@/hooks/use-sie';
+import useStepUpContext from '@/hooks/use-step-up-context';
 import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
 import { SearchParameters } from '@/types';
 
@@ -38,10 +44,15 @@ const useContinueFlowCodeVerification = (
   const mfaFlowState = useMfaFlowState();
   const { verificationIdsMap } = useContext(UserInteractionContext);
   const { isVerificationCodeEnabledForSignIn } = useSieMethods();
+  const { authenticationContext } = useStepUpContext();
+  const isStepUp = authenticationContext?.mode === AuthenticationContextMode.StepUp;
 
   const interactionEvent = useMemo(
-    () => getInteractionEventFromState(state) ?? InteractionEvent.SignIn,
-    [state]
+    () =>
+      isStepUp
+        ? InteractionEvent.SignIn
+        : (getInteractionEventFromState(state) ?? InteractionEvent.SignIn),
+    [isStepUp, state]
   );
 
   const handleError = useErrorHandler();
@@ -67,7 +78,12 @@ const useContinueFlowCodeVerification = (
     const { type, value } = identifier;
 
     // Show bind with social confirm modal
-    if (linkSocial && socialVerificationId && isVerificationCodeEnabledForSignIn(type)) {
+    if (
+      !isStepUp &&
+      linkSocial &&
+      socialVerificationId &&
+      isVerificationCodeEnabledForSignIn(type)
+    ) {
       await showLinkSocialConfirmModal(identifier, verificationId, socialVerificationId);
       return;
     }
@@ -95,6 +111,7 @@ const useContinueFlowCodeVerification = (
   }, [
     identifier,
     interactionEvent,
+    isStepUp,
     isVerificationCodeEnabledForSignIn,
     navigate,
     searchParameters,

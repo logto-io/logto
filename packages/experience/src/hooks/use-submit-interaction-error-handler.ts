@@ -1,3 +1,4 @@
+import { AuthenticationContextMode } from '@logto/schemas';
 import { cond } from '@silverhand/essentials';
 import { useMemo } from 'react';
 
@@ -14,6 +15,8 @@ import useNavigateWithPreservedSearchParams from './use-navigate-with-preserved-
 import useRequiredProfileErrorHandler, {
   type Options as UseRequiredProfileErrorHandlerOptions,
 } from './use-required-profile-error-handler';
+import useStepUpContext from './use-step-up-context';
+import useStepUpErrorHandler from './use-step-up-error-handler';
 import useTrustedDeviceOptInErrorHandler from './use-trusted-device-opt-in-error-handler';
 
 type Options = Omit<UseRequiredProfileErrorHandlerOptions, 'interactionEvent'> &
@@ -48,30 +51,42 @@ const useSubmitInteractionErrorHandler = (
   const emailBlockedErrorHandler = useEmailBlockedErrorHandler({ onConfirm: onEmailBlocked });
   const passkeySignInErrorHandler = useMissingPasskeyErrorHandler(interactionEvent);
   const trustedDeviceOptInErrorHandler = useTrustedDeviceOptInErrorHandler(interactionEvent);
+  const { authenticationContext } = useStepUpContext();
+  const isStepUp = authenticationContext?.mode === AuthenticationContextMode.StepUp;
+  const stepUpErrorHandlers = useStepUpErrorHandler();
 
   return useMemo(
-    () => ({
-      ...emailBlockedErrorHandler,
-      ...requiredProfileErrorHandler,
-      ...mfaErrorHandler,
-      ...cond(passkeySignInErrorHandler),
-      ...trustedDeviceOptInErrorHandler,
-      /**
-       * A sign-in with requested ACR needs a first factor the user can verify. The error is only a
-       * navigation signal: the step-up landing reads `availableMethods` and the masked identifiers
-       * from `GET /experience/interaction` and forwards to the pinned-user first-factor page, so
-       * the continuation is refresh-safe and carries nothing in `location.state`.
-       */
-      'session.step_up.require_verification': () => {
-        navigate(stepUpRoutes.landing, { replace: true });
-      },
-    }),
+    () =>
+      isStepUp
+        ? {
+            ...requiredProfileErrorHandler,
+            ...mfaErrorHandler,
+            ...stepUpErrorHandlers,
+          }
+        : {
+            ...emailBlockedErrorHandler,
+            ...requiredProfileErrorHandler,
+            ...mfaErrorHandler,
+            ...cond(passkeySignInErrorHandler),
+            ...trustedDeviceOptInErrorHandler,
+            /**
+             * A sign-in with requested ACR needs a first factor the user can verify. The error is only a
+             * navigation signal: the step-up landing reads `availableMethods` and the masked identifiers
+             * from `GET /experience/interaction` and forwards to the pinned-user first-factor page, so
+             * the continuation is refresh-safe and carries nothing in `location.state`.
+             */
+            'session.step_up.require_verification': () => {
+              navigate(stepUpRoutes.landing, { replace: true });
+            },
+          },
     [
       emailBlockedErrorHandler,
+      isStepUp,
       mfaErrorHandler,
       navigate,
       passkeySignInErrorHandler,
       requiredProfileErrorHandler,
+      stepUpErrorHandlers,
       trustedDeviceOptInErrorHandler,
     ]
   );

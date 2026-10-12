@@ -1,16 +1,30 @@
-import { AgreeToTermsPolicy, SignInMode, VerificationType, experience } from '@logto/schemas';
+import {
+  AgreeToTermsPolicy,
+  AuthenticationContextMode,
+  SignInMode,
+  VerificationType,
+  experience,
+} from '@logto/schemas';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 
-import { registerWithVerifiedIdentifier, signInWithSso } from '@/apis/experience';
+import {
+  registerWithVerifiedIdentifier,
+  signInWithSso,
+  verifySsoVerification,
+} from '@/apis/experience';
+import { unknownSessionRoute } from '@/constants/step-up';
 import useApi from '@/hooks/use-api';
+import useCompleteStepUpSubjectProof from '@/hooks/use-complete-step-up-subject-proof';
 import useEmailBlockedErrorHandler from '@/hooks/use-email-blocked-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import useRedirectCallbackValidation from '@/hooks/use-redirect-callback-validation';
 import { useSieMethods } from '@/hooks/use-sie';
+import useStepUpContext from '@/hooks/use-step-up-context';
+import useStepUpErrorHandler from '@/hooks/use-step-up-error-handler';
 import useTerms from '@/hooks/use-terms';
 import useToast from '@/hooks/use-toast';
 import { parseQueryParameters } from '@/utils';
@@ -82,6 +96,11 @@ const useSingleSignOnListener = (connectorId: string) => {
   const { setToast } = useToast();
   const redirectTo = useGlobalRedirectTo();
   const { signInMode } = useSieMethods();
+  const { authenticationContext } = useStepUpContext();
+  const isStepUp = authenticationContext?.mode === AuthenticationContextMode.StepUp;
+  const completeSubjectProof = useCompleteStepUpSubjectProof();
+  const stepUpErrorHandlers = useStepUpErrorHandler();
+  const verifySso = useApi(verifySsoVerification);
 
   const { validateAndRestore } = useRedirectCallbackValidation({
     connectorId,
@@ -95,8 +114,8 @@ const useSingleSignOnListener = (connectorId: string) => {
   const singleSignOnAuthorizationRequest = useApi(signInWithSso);
 
   const navigateToSignIn = useCallback(() => {
-    navigate('/' + experience.routes.signIn, { replace: true });
-  }, [navigate]);
+    navigate(isStepUp ? unknownSessionRoute : '/' + experience.routes.signIn, { replace: true });
+  }, [isStepUp, navigate]);
 
   const registerSingleSignOnIdentity = useSingleSignOnRegister({
     onEmailBlocked: navigateToSignIn,
@@ -104,14 +123,25 @@ const useSingleSignOnListener = (connectorId: string) => {
 
   const singleSignOnHandler = useCallback(
     async (connectorId: string, verificationId: string, data: Record<string, unknown>) => {
-      const [error, result] = await singleSignOnAuthorizationRequest(connectorId, {
+      const payload = {
         verificationId,
         connectorData: {
           ...data,
           // For connector validation use
           redirectUri: `${window.location.origin}/callback/${connectorId}`,
         },
-      });
+      };
+
+      if (isStepUp) {
+        const [error] = await verifySso(connectorId, payload);
+        await (error
+          ? handleError(error, { ...stepUpErrorHandlers, global: navigateToSignIn })
+          : completeSubjectProof(verificationId));
+        setLoading(false);
+        return;
+      }
+
+      const [error, result] = await singleSignOnAuthorizationRequest(connectorId, payload);
 
       if (error) {
         setLoading(false);
@@ -140,13 +170,17 @@ const useSingleSignOnListener = (connectorId: string) => {
       }
     },
     [
+      completeSubjectProof,
       handleError,
+      isStepUp,
       navigateToSignIn,
       redirectTo,
       registerSingleSignOnIdentity,
       setToast,
       signInMode,
       singleSignOnAuthorizationRequest,
+      stepUpErrorHandlers,
+      verifySso,
     ]
   );
 

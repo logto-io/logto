@@ -1,7 +1,9 @@
-import { MissingProfile } from '@logto/schemas';
-import { useLocation, useParams } from 'react-router-dom';
+import { AuthenticationContextMode, InteractionEvent, MissingProfile } from '@logto/schemas';
+import { Navigate, useLocation, useParams } from 'react-router-dom';
 import { validate } from 'superstruct';
 
+import { stepUpRoutes } from '@/constants/step-up';
+import useStepUpContext from '@/hooks/use-step-up-context';
 import ErrorPage from '@/pages/ErrorPage';
 import { continueFlowStateGuard } from '@/types/guard';
 
@@ -15,16 +17,26 @@ type Parameters = {
 };
 
 const Continue = () => {
-  const { method = '' } = useParams<Parameters>();
-  const { state } = useLocation();
+  const { method: requestedMethod = '' } = useParams<Parameters>();
+  const { state, search } = useLocation();
+  const { authenticationContext } = useStepUpContext();
+  const isStepUp = authenticationContext?.mode === AuthenticationContextMode.StepUp;
 
   const [, continueFlowState] = validate(state, continueFlowStateGuard);
+  const method = isStepUp
+    ? (authenticationContext.establishableMethods.find((method) => method === requestedMethod) ??
+      authenticationContext.establishableMethods[0])
+    : requestedMethod;
 
-  if (!continueFlowState) {
-    return <ErrorPage title="error.invalid_session" rawMessage="flow state not found" />;
+  if (isStepUp && !method) {
+    return <Navigate replace to={{ pathname: stepUpRoutes.landing, search }} />;
   }
 
-  const { interactionEvent } = continueFlowState;
+  const interactionEvent = isStepUp ? InteractionEvent.SignIn : continueFlowState?.interactionEvent;
+
+  if (!interactionEvent) {
+    return <ErrorPage title="error.invalid_session" rawMessage="flow state not found" />;
+  }
 
   if (method === MissingProfile.password) {
     return <SetPassword interactionEvent={interactionEvent} />;

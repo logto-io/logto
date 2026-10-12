@@ -1,4 +1,4 @@
-import { VerificationType } from '@logto/schemas';
+import { AuthenticationContextMode, VerificationType } from '@logto/schemas';
 import { useCallback, useContext } from 'react';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
@@ -11,9 +11,14 @@ import { buildSocialLandingUri, generateState, storeState } from '@/utils/social
 import { storeRedirectContext } from '@/utils/social-redirect-fallback-context';
 
 import useGlobalRedirectTo from './use-global-redirect-to';
+import useStepUpContext from './use-step-up-context';
+import useStepUpErrorHandler from './use-step-up-error-handler';
 
 const useSingleSignOn = () => {
   const handleError = useErrorHandler();
+  const { authenticationContext } = useStepUpContext();
+  const isSubjectProof = authenticationContext?.mode === AuthenticationContextMode.StepUp;
+  const stepUpErrorHandlers = useStepUpErrorHandler();
   const asyncInvokeSingleSignOn = useApi(getSsoAuthorizationUrl);
   const redirectTo = useGlobalRedirectTo({
     shouldClearInteractionContextSession: false,
@@ -50,13 +55,17 @@ const useSingleSignOn = () => {
       const state = generateState();
       storeState(state, connectorId);
 
-      const [error, result] = await asyncInvokeSingleSignOn(connectorId, {
-        state,
-        redirectUri: `${window.location.origin}/callback/${connectorId}`,
-      });
+      const [error, result] = await asyncInvokeSingleSignOn(
+        connectorId,
+        {
+          state,
+          redirectUri: `${window.location.origin}/callback/${connectorId}`,
+        },
+        isSubjectProof
+      );
 
       if (error) {
-        await handleError(error);
+        await handleError(error, isSubjectProof ? stepUpErrorHandlers : undefined);
 
         return;
       }
@@ -88,7 +97,15 @@ const useSingleSignOn = () => {
       // Invoke Web Sign In flow
       await redirectTo(authorizationUri);
     },
-    [asyncInvokeSingleSignOn, handleError, nativeSignInHandler, redirectTo, setVerificationId]
+    [
+      asyncInvokeSingleSignOn,
+      handleError,
+      isSubjectProof,
+      nativeSignInHandler,
+      redirectTo,
+      setVerificationId,
+      stepUpErrorHandlers,
+    ]
   );
 };
 

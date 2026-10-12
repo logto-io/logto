@@ -3,6 +3,7 @@ import {
   type InteractionAuthenticationContext,
   InteractionEvent,
   LogtoAcr,
+  MfaFactor,
   MissingProfile,
   VerificationType,
 } from '@logto/schemas';
@@ -329,6 +330,13 @@ describe('StepUp', () => {
         subjectProofConnectors: [{ type: 'social' as const, connectorId: 'disabled-connector' }],
       },
     },
+    {
+      name: 'does not substitute a connector of a different type',
+      context: {
+        establishableMethods: [MissingProfile.password],
+        subjectProofConnectors: [{ type: 'sso' as const, connectorId: 'c1' }],
+      },
+    },
   ])('$name', async ({ context }) => {
     const { container } = await renderStepUp({
       authenticationContext: createAuthenticationContext(context),
@@ -340,6 +348,14 @@ describe('StepUp', () => {
     expect(container.innerHTML).toBe('');
     expect(mockedSelectMethod).not.toHaveBeenCalled();
     expect(screen.queryByTestId('step-up-subject-proof-list')).toBeNull();
+  });
+
+  it('forwards to enrollment when a fresh first factor unlocked binding', async () => {
+    await renderStepUp({
+      authenticationContext: createAuthenticationContext({ enrollableFactors: [MfaFactor.TOTP] }),
+    });
+    expect(mockedNavigate).toHaveBeenCalledWith('/mfa-binding', { replace: true });
+    expect(mockedSubmitInteraction).not.toHaveBeenCalled();
   });
 
   it('attempts submission when nothing is available, falling back to no-method page on failure', async () => {

@@ -29,12 +29,14 @@ const isAuthenticationResponseJSON = (
   return 'signature' in responseJson.response;
 };
 
-const useWebAuthnOperation = () => {
+const useWebAuthnOperation = (flow: UserMfaFlow) => {
   const { t } = useTranslation();
   const { setToast } = useToast();
   const sendMfaPayload = useSendMfaPayload();
   const { authenticationContext } = useStepUpContext();
-  const isStepUp = authenticationContext?.mode === AuthenticationContextMode.StepUp;
+  const isStepUpVerification =
+    authenticationContext?.mode === AuthenticationContextMode.StepUp &&
+    flow === UserMfaFlow.MfaVerification;
 
   return useCallback(
     /**
@@ -53,13 +55,13 @@ const useWebAuthnOperation = () => {
 
       const response = await trySafe(
         async () =>
-          !isStepUp && parsedRegistrationOptions.success
+          !isStepUpVerification && parsedRegistrationOptions.success
             ? startRegistration(parsedRegistrationOptions.data)
             : startAuthentication(options),
         () => {
           setToast(
             t(
-              !isStepUp && parsedRegistrationOptions.success
+              !isStepUpVerification && parsedRegistrationOptions.success
                 ? 'mfa.webauthn_failed_to_create'
                 : 'mfa.webauthn_failed_to_verify'
             )
@@ -88,7 +90,7 @@ const useWebAuthnOperation = () => {
             }
       );
     },
-    [isStepUp, sendMfaPayload, setToast, t]
+    [isStepUpVerification, sendMfaPayload, setToast, t]
   );
 };
 

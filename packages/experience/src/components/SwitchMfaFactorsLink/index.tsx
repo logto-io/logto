@@ -19,7 +19,8 @@ const SwitchMfaFactorsLink = ({ flow, flowState, className }: Props) => {
   const { availableFactors } = flowState;
   const { authenticationContext } = useStepUpContext();
   const isStepUp = authenticationContext?.mode === AuthenticationContextMode.StepUp;
-  const hasAlternativeMethod = isStepUp
+  const isStepUpVerification = isStepUp && flow === UserMfaFlow.MfaVerification;
+  const hasAlternativeMethod = isStepUpVerification
     ? hasAlternativeStepUpMethod(authenticationContext.availableMethods)
     : availableFactors.length >= 2;
 
@@ -29,7 +30,7 @@ const SwitchMfaFactorsLink = ({ flow, flowState, className }: Props) => {
 
   return (
     <TextLink
-      to={isStepUp ? stepUpRoutes.landing : `/${flow}`}
+      to={isStepUpVerification ? stepUpRoutes.landing : `/${flow}`}
       text={
         flow === UserMfaFlow.MfaBinding
           ? 'mfa.link_another_mfa_factor'

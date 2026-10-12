@@ -14,7 +14,7 @@ import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-pres
 import useStepUpContext from '@/hooks/use-step-up-context';
 import useStepUpErrorHandler from '@/hooks/use-step-up-error-handler';
 import ErrorPage from '@/pages/ErrorPage';
-import { UserFlow } from '@/types';
+import { UserFlow, UserMfaFlow } from '@/types';
 import { getDisplayedStepUpMethods } from '@/utils/step-up';
 
 const emptyMethods: never[] = [];
@@ -81,7 +81,10 @@ const StepUp = () => {
   const resolvedConnectors = useMemo(
     () =>
       (authenticationContext?.subjectProofConnectors ?? [])
-        .map(({ connectorId }) => findConnectorById(connectorId))
+        .map(({ connectorId, type }) => {
+          const resolved = findConnectorById(connectorId);
+          return resolved?.type === type ? resolved : undefined;
+        })
         .filter((resolved): resolved is NonNullable<typeof resolved> => resolved !== undefined),
     [authenticationContext?.subjectProofConnectors, findConnectorById]
   );
@@ -92,7 +95,7 @@ const StepUp = () => {
     }
 
     const [onlyMethod] = methods;
-    const { establishableMethods } = authenticationContext;
+    const { establishableMethods, enrollableFactors } = authenticationContext;
     const [establishableMethod] = establishableMethods;
 
     if (methods.length === 1 && onlyMethod) {
@@ -120,6 +123,13 @@ const StepUp = () => {
           replace: true,
           state: { interactionEvent: InteractionEvent.SignIn },
         });
+        return;
+      }
+
+      if (enrollableFactors.length > 0) {
+        // eslint-disable-next-line @silverhand/fp/no-mutation -- dispatch enrollment only once per arrival
+        hasForwardedRef.current = true;
+        navigate(`/${UserMfaFlow.MfaBinding}`, { replace: true });
         return;
       }
 
