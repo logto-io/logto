@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import CirclePlus from '@/assets/icons/circle-plus.svg?react';
 import Plus from '@/assets/icons/plus.svg?react';
+import { useReadOnlyField } from '@/contexts/ReadOnlyFieldScope';
 import ActionMenu from '@/ds-components/ActionMenu';
 import type { Props as ButtonProps } from '@/ds-components/Button';
 import { DropdownItem } from '@/ds-components/Dropdown';
@@ -20,8 +21,9 @@ type Props = {
 
 function AddButton({ options, onSelected, hasSelectedIdentifiers }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const isReadOnlyField = useReadOnlyField();
 
-  if (options.length === 0) {
+  if (options.length === 0 || isReadOnlyField) {
     return null;
   }
   const addSignInMethodButtonProps: ButtonProps = {
