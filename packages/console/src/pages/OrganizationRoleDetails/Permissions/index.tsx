@@ -16,6 +16,7 @@ import Search from '@/ds-components/Search';
 import Table from '@/ds-components/Table';
 import Tag from '@/ds-components/Tag';
 import useApi from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 
 import { type OrganizationRoleDetailsOutletContext } from '../types';
@@ -29,6 +30,9 @@ type OrganizationRoleScope = OrganizationScope | Scope;
 const isResourceScope = (scope: OrganizationRoleScope): scope is Scope => 'resourceId' in scope;
 
 function Permissions() {
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const {
     organizationRole: { id: organizationRoleId },
   } = useOutletContext<OrganizationRoleDetailsOutletContext>();
@@ -161,15 +165,17 @@ function Permissions() {
                 updateSearchParameters({ keyword: '' });
               }}
             />
-            <Button
-              title="organization_role_details.permissions.assign_permissions"
-              className={styles.assignButton}
-              type="primary"
-              icon={<Plus />}
-              onClick={() => {
-                setIsAssignScopesModalOpen(true);
-              }}
-            />
+            {!isReadOnly && (
+              <Button
+                title="organization_role_details.permissions.assign_permissions"
+                className={styles.assignButton}
+                type="primary"
+                icon={<Plus />}
+                onClick={() => {
+                  setIsAssignScopesModalOpen(true);
+                }}
+              />
+            )}
           </div>
         }
         placeholder={<EmptyDataPlaceholder />}
@@ -205,13 +211,15 @@ function Permissions() {
           }}
         />
       )}
-      <OrganizationRolePermissionsAssignmentModal
-        organizationRoleId={organizationRoleId}
-        isOpen={isAssignScopesModalOpen}
-        onClose={() => {
-          setIsAssignScopesModalOpen(false);
-        }}
-      />
+      {!isReadOnly && (
+        <OrganizationRolePermissionsAssignmentModal
+          organizationRoleId={organizationRoleId}
+          isOpen={isAssignScopesModalOpen}
+          onClose={() => {
+            setIsAssignScopesModalOpen(false);
+          }}
+        />
+      )}
     </>
   );
 }

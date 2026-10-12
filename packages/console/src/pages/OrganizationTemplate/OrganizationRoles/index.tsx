@@ -21,6 +21,7 @@ import Table from '@/ds-components/Table';
 import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import Tag from '@/ds-components/Tag';
 import { type RequestError } from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
@@ -30,6 +31,9 @@ import CreateOrganizationRoleModal from './CreateOrganizationRoleModal';
 import styles from './index.module.scss';
 
 function OrganizationRoles() {
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
   const { navigate } = useTenantPathname();
@@ -113,14 +117,16 @@ function OrganizationRoles() {
                 updateSearchParameters({ keyword: '' });
               }}
             />
-            <Button
-              title="organization_template.roles.create_title"
-              type="primary"
-              icon={<Plus />}
-              onClick={() => {
-                setIsCreateModalOpen(true);
-              }}
-            />
+            {!isReadOnly && (
+              <Button
+                title="organization_template.roles.create_title"
+                type="primary"
+                icon={<Plus />}
+                onClick={() => {
+                  setIsCreateModalOpen(true);
+                }}
+              />
+            )}
           </div>
         }
         placeholder={
@@ -137,15 +143,17 @@ function OrganizationRoles() {
                 targetBlank: 'noopener',
               }}
               action={
-                <Button
-                  title="organization_template.roles.create_title"
-                  type="primary"
-                  size="large"
-                  icon={<Plus />}
-                  onClick={() => {
-                    setIsCreateModalOpen(true);
-                  }}
-                />
+                !isReadOnly && (
+                  <Button
+                    title="organization_template.roles.create_title"
+                    type="primary"
+                    size="large"
+                    icon={<Plus />}
+                    onClick={() => {
+                      setIsCreateModalOpen(true);
+                    }}
+                  />
+                )
               }
             />
           )
