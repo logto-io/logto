@@ -21,18 +21,6 @@
   }
 }
 
-.licenseLink {
-  color: var(--color-text-link);
-  display: flex;
-  flex-direction: column;
-  gap: _.unit(1);
-}
-
-.identifier {
-  color: var(--color-text-secondary);
-  font: var(--font-body-2);
-}
-
 .empty {
   padding: _.unit(10);
   text-align: center;
@@ -48,6 +36,8 @@
 
 .steps {
   margin: 0;
+  font: var(--font-body-2);
+  color: var(--color-text-primary);
   padding-inline-start: _.unit(5);
 
   li + li {

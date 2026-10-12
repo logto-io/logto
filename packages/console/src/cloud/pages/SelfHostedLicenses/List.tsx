@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
+import ItemPreview from '@/components/ItemPreview';
 import SkuName from '@/components/SkuName';
 import { GlobalRoute } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
@@ -13,6 +14,7 @@ import { useSelfHostedLicenses } from './use-self-hosted-licenses';
 function List() {
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error, isLoading, mutate } = useSelfHostedLicenses();
+  const navigate = useNavigate();
 
   return (
     <Table
@@ -25,12 +27,7 @@ function List() {
           title: t('tenants.license.plan_field'),
           dataIndex: 'plan',
           colSpan: 4,
-          render: ({ id, plan }) => (
-            <Link className={styles.licenseLink} to={`${GlobalRoute.SelfHostedLicenses}/${id}`}>
-              <SkuName skuId={plan} />
-              <span className={styles.identifier}>{id}</span>
-            </Link>
-          ),
+          render: ({ id, plan }) => <ItemPreview title={<SkuName skuId={plan} />} subtitle={id} />,
         },
         {
           title: t('subscription.billing_history.status_column'),
@@ -50,6 +47,9 @@ function List() {
               : '—',
         },
       ]}
+      rowClickHandler={({ id }) => {
+        navigate(`${GlobalRoute.SelfHostedLicenses}/${id}`);
+      }}
       placeholder={
         <div className={styles.empty}>
           <h3>
