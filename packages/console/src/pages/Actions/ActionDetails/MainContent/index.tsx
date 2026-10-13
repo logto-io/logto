@@ -7,6 +7,7 @@ import { useSWRConfig, type KeyedMutator } from 'swr';
 
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import ReadOnlyFieldScope from '@/contexts/ReadOnlyFieldScope/ReadOnlyFieldScope';
 import useApi from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { trySubmitSafe } from '@/utils/form';
@@ -79,8 +80,10 @@ function MainContent({ className, actionType, data, mutate, mode }: Props) {
     <>
       <FormProvider {...methods}>
         <form className={classNames(styles.content, className)}>
-          <ScriptSection />
-          <SettingsSection />
+          <ReadOnlyFieldScope>
+            <ScriptSection />
+            <SettingsSection />
+          </ReadOnlyFieldScope>
         </form>
       </FormProvider>
       <SubmitFormChangesActionBar

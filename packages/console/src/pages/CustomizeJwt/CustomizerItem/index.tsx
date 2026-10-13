@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import DeleteIcon from '@/assets/icons/delete.svg?react';
 import EditIcon from '@/assets/icons/edit.svg?react';
 import Button from '@/ds-components/Button';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { getPagePath } from '@/pages/CustomizeJwt/utils/path';
 import { Action } from '@/pages/CustomizeJwt/utils/type';
@@ -19,6 +20,9 @@ function CustomizerItem({ tokenType, onDelete }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const editLink = getPagePath(tokenType, Action.Edit);
   const { navigate } = useTenantPathname();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
 
   return (
     <div className={styles.container}>
@@ -40,16 +44,18 @@ function CustomizerItem({ tokenType, onDelete }: Props) {
             navigate(editLink);
           }}
         />
-        <Button
-          className={styles.danger}
-          icon={<DeleteIcon className={styles.icon} />}
-          type="text"
-          size="small"
-          title="general.delete"
-          onClick={() => {
-            onDelete(tokenType);
-          }}
-        />
+        {!isReadOnly && (
+          <Button
+            className={styles.danger}
+            icon={<DeleteIcon className={styles.icon} />}
+            type="text"
+            size="small"
+            title="general.delete"
+            onClick={() => {
+              onDelete(tokenType);
+            }}
+          />
+        )}
       </div>
     </div>
   );

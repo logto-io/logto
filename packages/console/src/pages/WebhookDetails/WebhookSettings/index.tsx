@@ -9,6 +9,7 @@ import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { trySubmitSafe } from '@/utils/form';
 
@@ -28,6 +29,9 @@ function WebhookSettings() {
   });
   const { getDocumentationUrl } = useDocumentationUrl();
   const api = useApi();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
 
   const {
     handleSubmit,
@@ -73,9 +77,11 @@ function WebhookSettings() {
             />
             <CustomHeaderField />
           </FormCard>
-          <FormCard title="webhook_details.settings.test">
-            <TestWebhook hookId={hook.id} />
-          </FormCard>
+          {!isReadOnly && (
+            <FormCard title="webhook_details.settings.test">
+              <TestWebhook hookId={hook.id} />
+            </FormCard>
+          )}
         </FormProvider>
       </DetailsForm>
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleting && isDirty} />

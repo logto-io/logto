@@ -12,6 +12,7 @@ import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import useApi from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
 import styles from './index.module.scss';
 
@@ -24,6 +25,9 @@ type Props = {
 function SigningKeyField({ hookId, signingKey, onSigningKeyUpdated }: Props) {
   const { t } = useTranslation(undefined);
   const api = useApi();
+  const {
+    access: { isReadOnly, isWriteAccessConfirmed },
+  } = useCurrentTenantScopes();
   const [isRegenerateFormOpen, setIsRegenerateFormOpen] = useState(false);
   const [isRegenerating, setIsRegenerating] = useState(false);
 
@@ -48,10 +52,10 @@ function SigningKeyField({ hookId, signingKey, onSigningKeyUpdated }: Props) {
   );
 
   useEffect(() => {
-    if (!signingKey) {
+    if (!signingKey && isWriteAccessConfirmed) {
       void regenerateSigningKey(true);
     }
-  }, [regenerateSigningKey, signingKey]);
+  }, [isWriteAccessConfirmed, regenerateSigningKey, signingKey]);
 
   return (
     <FormField
@@ -69,16 +73,18 @@ function SigningKeyField({ hookId, signingKey, onSigningKeyUpdated }: Props) {
         variant="border"
         className={styles.signingKeyField}
       />
-      <Button
-        type="text"
-        size="small"
-        icon={<Redo />}
-        title="webhook_details.settings.regenerate"
-        className={styles.regenerateButton}
-        onClick={() => {
-          setIsRegenerateFormOpen(true);
-        }}
-      />
+      {!isReadOnly && (
+        <Button
+          type="text"
+          size="small"
+          icon={<Redo />}
+          title="webhook_details.settings.regenerate"
+          className={styles.regenerateButton}
+          onClick={() => {
+            setIsRegenerateFormOpen(true);
+          }}
+        />
+      )}
       <ConfirmModal
         isOpen={isRegenerateFormOpen}
         isLoading={isRegenerating}

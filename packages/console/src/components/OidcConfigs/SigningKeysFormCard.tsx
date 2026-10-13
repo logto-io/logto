@@ -24,6 +24,7 @@ import Table from '@/ds-components/Table';
 import type { Column } from '@/ds-components/Table/types';
 import Tag from '@/ds-components/Tag';
 import useApi, { type RequestError } from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 
 import styles from './SigningKeysFormCard.module.scss';
@@ -75,6 +76,9 @@ function SigningKeysFormCard() {
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.signing_keys' });
   const { getDocumentationUrl } = useDocumentationUrl();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const [activeTab, setActiveTab] = useState(LogtoOidcConfigKeyType.PrivateKeys);
   const activeTabConfig =
     activeTab === LogtoOidcConfigKeyType.PrivateKeys ? keyTypeTabs[0] : keyTypeTabs[1];
@@ -166,6 +170,7 @@ function SigningKeysFormCard() {
         dataIndex: 'action',
         colSpan: 2,
         render: ({ id, status }: OidcConfigKeysResponse, rowIndex: number) =>
+          !isReadOnly &&
           ((isPrivateKey && status === OidcSigningKeyStatus.Previous) ||
             (!isPrivateKey && rowIndex !== 0)) && (
             <div className={styles.deleteIcon}>
@@ -180,7 +185,7 @@ function SigningKeysFormCard() {
           ),
       },
     ],
-    [isPrivateKey, now, t]
+    [isPrivateKey, isReadOnly, now, t]
   );
 
   return (
@@ -213,18 +218,22 @@ function SigningKeysFormCard() {
           columns={tableColumns}
         />
       </FormField>
-      <FormField title={`signing_keys.rotate_${keyTypePhrase}_keys`}>
-        <div className={styles.rotateKey}>
-          <div className={styles.description}>{t(`rotate_${keyTypePhrase}_keys_description`)}</div>
-          <Button
-            title={`signing_keys.rotate_${keyTypePhrase}_keys`}
-            type="default"
-            onClick={() => {
-              setShowRotateConfirmModal(true);
-            }}
-          />
-        </div>
-      </FormField>
+      {!isReadOnly && (
+        <FormField title={`signing_keys.rotate_${keyTypePhrase}_keys`}>
+          <div className={styles.rotateKey}>
+            <div className={styles.description}>
+              {t(`rotate_${keyTypePhrase}_keys_description`)}
+            </div>
+            <Button
+              title={`signing_keys.rotate_${keyTypePhrase}_keys`}
+              type="default"
+              onClick={() => {
+                setShowRotateConfirmModal(true);
+              }}
+            />
+          </div>
+        </FormField>
+      )}
       <DangerConfirmModal
         confirmButtonText="signing_keys.rotate_button"
         isOpen={showRotateConfirmModal}
