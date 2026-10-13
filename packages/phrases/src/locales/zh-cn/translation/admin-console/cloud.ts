@@ -3,7 +3,7 @@ const cloud = {
     title: '自托管许可证',
     description: '查看此账户拥有的许可证，并复制用于自托管部署的密钥。',
     empty_title: '暂无自托管许可证',
-    empty_description: '分配给此账户的许可证会显示在这里，无需创建 Cloud 租户。',
+    empty_description: '如果你已购买许可证，请确认登录的是购买时使用的账户。',
     load_error: '无法加载许可证，请重试。',
     period_end: '当前周期结束日期',
     keys_title: '许可证密钥',

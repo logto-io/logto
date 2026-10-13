@@ -4,7 +4,7 @@ const cloud = {
     description: 'Przeglądaj licencje swojego konta i kopiuj klucze dla własnych wdrożeń.',
     empty_title: 'Nie masz jeszcze licencji self-hosted',
     empty_description:
-      'Tutaj pojawią się licencje przypisane do tego konta. Dzierżawca Cloud nie jest wymagany.',
+      'Jeśli masz zakupioną licencję, upewnij się, że logujesz się na konto użyte do jej zakupu.',
     load_error: 'Nie udało się wczytać licencji. Spróbuj ponownie.',
     period_end: 'Koniec bieżącego okresu',
     keys_title: 'Klucze licencyjne',

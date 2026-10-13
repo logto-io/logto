@@ -5,7 +5,7 @@ const cloud = {
       'Consulta las licencias de tu cuenta y copia las claves para tus implementaciones autoalojadas.',
     empty_title: 'Aún no hay licencias autoalojadas',
     empty_description:
-      'Las licencias asignadas a esta cuenta aparecerán aquí. No se requiere un inquilino de Cloud.',
+      'Si has comprado una licencia, asegúrate de iniciar sesión con la cuenta que usaste para comprarla.',
     load_error: 'No se pudieron cargar las licencias. Inténtalo de nuevo.',
     period_end: 'Fin del período actual',
     keys_title: 'Claves de licencia',

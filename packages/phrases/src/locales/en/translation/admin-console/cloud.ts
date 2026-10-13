@@ -5,7 +5,7 @@ const cloud = {
       'View the licenses owned by your account and copy keys for your self-hosted deployments.',
     empty_title: 'No self-hosted licenses yet',
     empty_description:
-      'Licenses assigned to this account will appear here. No Cloud tenant is required.',
+      "If you've purchased a license, make sure you're signed in with the account you used to purchase it.",
     load_error: 'Unable to load licenses. Please try again.',
     period_end: 'Current period ends',
     keys_title: 'License keys',

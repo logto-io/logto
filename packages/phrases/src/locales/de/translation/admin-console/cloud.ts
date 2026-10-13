@@ -5,7 +5,7 @@ const cloud = {
       'Sieh dir die Lizenzen deines Kontos an und kopiere Schlüssel für deine selbst gehosteten Bereitstellungen.',
     empty_title: 'Noch keine Self-hosted-Lizenzen',
     empty_description:
-      'Diesem Konto zugewiesene Lizenzen erscheinen hier. Ein Cloud-Tenant ist nicht erforderlich.',
+      'Wenn du eine Lizenz gekauft hast, melde dich mit dem Konto an, das du für den Kauf verwendet hast.',
     load_error: 'Lizenzen konnten nicht geladen werden. Bitte versuche es erneut.',
     period_end: 'Aktueller Zeitraum endet',
     keys_title: 'Lizenzschlüssel',
