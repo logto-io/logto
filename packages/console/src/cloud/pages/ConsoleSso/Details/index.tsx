@@ -66,10 +66,7 @@ function Details() {
       toast.success(t('enterprise_sso_details.enterprise_sso_deleted'));
       await refresh();
       if (user) {
-        await Promise.allSettled([
-          mutateCache(['/api/me/console-sso/checkout-preview', user.id], undefined, true),
-          mutateCache(['console-sso-coverage', user.id], undefined, true),
-        ]);
+        await Promise.allSettled([mutateCache(['console-sso-coverage', user.id], undefined, true)]);
       }
       setIsDeleted(true);
     } catch (error) {

@@ -33,19 +33,6 @@ const cloud = {
     },
   },
   console_sso: {
-    included_capacity: 'Wspólny limit Enterprise: wykorzystano {{used}} z {{limit}} konektorów.',
-    included_unlimited: 'Nieograniczony limit Enterprise; wykorzystano {{used}} konektorów.',
-    first_price:
-      '128 USD za konektor miesięcznie. Płatność rozpoczyna subskrypcję, nawet jeśli konfiguracja jest nieukończona.',
-    addition_price:
-      '128 USD za konektor miesięcznie. Dodanie do istniejącej subskrypcji; proporcjonalne opłaty zostaną pobrane z następną fakturą.',
-    checkout: 'Przejdź do płatności',
-    payment_pending:
-      'Płatność jest przetwarzana. Sprawdzimy ją ponownie automatycznie. Nie rozpoczynaj kolejnego zakupu.',
-    checkout_expired:
-      'Ten nieopłacony Checkout wygasł. Przejdź do płatności, aby spróbować ponownie.',
-    billing_start_over:
-      'Zacząć od nowa z nowym konektorem? Może to usunąć nieukończoną konfigurację i anulować nieopłacony Checkout. Opłacona subskrypcja nie zostanie anulowana ani zwrócona.',
     back_to_list: 'Wróć do Console SSO',
     create: 'Dodaj konektor',
     title: 'SSO konsoli',
@@ -73,6 +60,8 @@ const cloud = {
     domain_dns_timeout: 'Sprawdzanie DNS nie powiodło się. Spróbujemy ponownie automatycznie.',
     domain_recovery: 'Zmiana domeny jest nieukończona.',
     start_over: 'Zacznij od nowa',
+    start_over_confirmation:
+      'Rozpoczęcie od nowa może usunąć niedokończoną konfigurację SSO. Czy chcesz kontynuować?',
     resume_creation:
       'Znaleziono niedokończone tworzenie. Kontynuuj z tym samym dostawcą, aby odzyskać ten konektor.',
   },

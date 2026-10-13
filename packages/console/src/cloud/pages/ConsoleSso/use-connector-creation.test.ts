@@ -69,9 +69,6 @@ beforeEach(() => {
     .mocked(useCurrentUser)
     .mockReturnValue({ user: { id: 'alice' } } as ReturnType<typeof useCurrentUser>);
   mockApi.get.mockImplementation(async (path: string) => {
-    if (path === '/api/me/console-sso/checkout-preview') {
-      return { status: 'checkout_required' };
-    }
     if (path === '/api/me/logto-enterprises') {
       return { logtoEnterprises: [] };
     }
@@ -103,11 +100,7 @@ it('automatically uses personal billing only after server billing reads finish',
     expect(result.current.billing.isBillingReady).toBe(true);
   });
   expect(result.current.billing.funding).toBe('personal');
-  expect(result.current.billing.hasSubscription).toBe(false);
-  const paths = mockApi.get.mock.calls.map(([path]) => path);
-  expect(paths.indexOf('/api/me/console-sso/checkout-preview')).toBeGreaterThan(
-    paths.indexOf('/api/me/logto-enterprises')
-  );
+  expect(mockApi.get).not.toHaveBeenCalledWith('/api/me/console-sso/checkout-preview');
   expect(mockApi.post).not.toHaveBeenCalled();
 });
 
@@ -123,9 +116,6 @@ it('automatically uses Enterprise allowance before an existing personal subscrip
         usages: { consoleSsoConnectorLimit: 1 },
         subscription: { status: 'active' },
       };
-    }
-    if (path === '/api/me/console-sso/checkout-preview') {
-      return { status: 'subscription_exists', subscriptionId: 'personal-sub' };
     }
     return [];
   });
@@ -159,9 +149,6 @@ it.each([false, true])(
           subscription: { status: 'active' },
         };
       }
-      if (path === '/api/me/console-sso/checkout-preview') {
-        return { status: 'checkout_required' };
-      }
       return [];
     });
     mockApi.post.mockResolvedValue({
@@ -184,16 +171,16 @@ it.each([false, true])(
   }
 );
 
-it('automatically reuses a personal subscription without Checkout when no allowance is available', async () => {
+it('automatically creates on the reusable subscription returned by enrollment', async () => {
   mockApi.get.mockImplementation(async (path: string) => {
     if (path === '/api/me/logto-enterprises') {
       return { logtoEnterprises: [] };
     }
-    if (path === '/api/me/console-sso/checkout-preview') {
-      return { status: 'subscription_exists', subscriptionId: 'personal-sub' };
-    }
     return [];
   });
+  mockApi.post
+    .mockResolvedValueOnce({ status: 'subscription_exists', subscriptionId: 'personal-sub' })
+    .mockResolvedValueOnce({ id: 'connector-one' });
   const { result } = renderCreation();
   await waitFor(() => {
     expect(result.current.billing.isBillingReady).toBe(true);
@@ -202,6 +189,7 @@ it('automatically reuses a personal subscription without Checkout when no allowa
     await result.current.create(SsoProviderName.OIDC);
   });
   expect(mockApi.post.mock.calls).toEqual([
+    ['/api/me/console-sso/checkout-session', { body: { providerName: SsoProviderName.OIDC } }],
     [
       '/api/me/console-sso/connectors',
       { body: { providerName: SsoProviderName.OIDC, stripeUserSubscriptionId: 'personal-sub' } },
@@ -212,9 +200,6 @@ it('automatically reuses a personal subscription without Checkout when no allowa
 it('recovers a closed-tab payment without loading a new checkout preview or allowance', async () => {
   savePendingConnectorCreation('alice', operation);
   mockApi.get.mockImplementation(async (path: string) => {
-    if (path === '/api/me/console-sso/checkout-preview') {
-      throw new Error('Preview unavailable');
-    }
     if (path === '/api/me/logto-enterprises') {
       return { logtoEnterprises: [] };
     }
@@ -238,7 +223,7 @@ it('recovers a closed-tab payment without loading a new checkout preview or allo
   expect(readPendingConnectorCreation('alice')).toBeUndefined();
 });
 
-it('does not reload billing previews after a recovered fulfillment fails', async () => {
+it('does not reload allowance after a recovered fulfillment fails', async () => {
   savePendingConnectorCreation('alice', { ...operation, subscriptionId: 'paid-sub' });
   mockApi.post.mockRejectedValueOnce(new Error('Core unavailable'));
   const { result } = renderCreation();
@@ -258,9 +243,6 @@ it('polls delayed payments and fulfills only after verified payment', async () =
     .mockResolvedValueOnce({ ...paidSession, status: 'payment_pending' })
     .mockResolvedValue(paidSession);
   mockApi.get.mockImplementation(async (path: string) => {
-    if (path === '/api/me/console-sso/checkout-preview') {
-      return { status: 'checkout_required' };
-    }
     if (path === '/api/me/logto-enterprises') {
       return { logtoEnterprises: [] };
     }
@@ -306,7 +288,7 @@ it('enables fresh billing reads after abandoning an old paid intention', async (
     subscriptionId: 'canceled-sub',
   });
   const { result } = renderCreation();
-  expect(result.current.billing.isRecovering).toBe(true);
+  expect(result.current.billing.isBillingReady).toBe(true);
   expect(mockApi.get).not.toHaveBeenCalledWith('/api/me/console-sso/checkout-preview');
   mockApi.get.mockClear();
   await act(async () => {
@@ -314,9 +296,9 @@ it('enables fresh billing reads after abandoning an old paid intention', async (
   });
   expect(result.current.operation).toBeUndefined();
   await waitFor(() => {
-    expect(result.current.billing.preview.data).toBeDefined();
+    expect(result.current.billing.isBillingReady).toBe(true);
   });
   expect(mockApi.get).toHaveBeenCalledWith('/api/me/console-sso/connectors');
-  expect(mockApi.get).toHaveBeenCalledWith('/api/me/console-sso/checkout-preview');
+  expect(mockApi.get).not.toHaveBeenCalledWith('/api/me/console-sso/checkout-preview');
   expect(mockApi.get).toHaveBeenCalledWith('/api/me/logto-enterprises');
 });

@@ -29,16 +29,6 @@ const cloud = {
     },
   },
   console_sso: {
-    included_capacity: 'Enterprise 공유 할당량: 커넥터 {{limit}}개 중 {{used}}개 사용 중.',
-    included_unlimited: 'Enterprise 할당량은 무제한이며 커넥터 {{used}}개를 사용 중입니다.',
-    first_price: '커넥터당 월 128 USD입니다. 설정이 완료되지 않아도 결제 후 구독이 시작됩니다.',
-    addition_price:
-      '커넥터당 월 128 USD입니다. 기존 구독에 추가되며 일할 계산된 요금은 다음 청구서에 반영됩니다.',
-    checkout: '결제 계속하기',
-    payment_pending: '결제를 처리 중입니다. 자동으로 다시 확인합니다. 중복 구매하지 마세요.',
-    checkout_expired: '이 미결제 Checkout이 만료되었습니다. 결제로 이동하여 다시 시도하세요.',
-    billing_start_over:
-      '새 커넥터 생성을 다시 시작할까요? 미완료 설정이 삭제되고 미결제 Checkout이 취소될 수 있습니다. 결제된 구독은 취소되거나 환불되지 않습니다.',
     back_to_list: 'Console SSO로 돌아가기',
     create: '커넥터 추가',
     title: '콘솔 SSO',
@@ -63,6 +53,8 @@ const cloud = {
     domain_dns_timeout: 'DNS 확인에 실패했습니다. 자동으로 다시 시도합니다.',
     domain_recovery: '도메인 변경이 완료되지 않았습니다.',
     start_over: '다시 시작',
+    start_over_confirmation:
+      '다시 시작하면 완료되지 않은 SSO 구성이 삭제될 수 있습니다. 계속하시겠습니까?',
     resume_creation:
       '완료되지 않은 생성 작업이 있습니다. 동일한 공급자로 계속하여 이 커넥터를 복구하세요.',
   },

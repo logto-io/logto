@@ -31,17 +31,6 @@ const cloud = {
     },
   },
   console_sso: {
-    included_capacity: 'Enterprise の共有枠：{{limit}} 個中 {{used}} 個のコネクターを使用中。',
-    included_unlimited: 'Enterprise の利用枠は無制限です。{{used}} 個のコネクターを使用中。',
-    first_price:
-      'コネクター 1 個につき月額 128 米ドル。設定が未完了でも、支払い後にサブスクリプションが開始されます。',
-    addition_price:
-      'コネクター 1 個につき月額 128 米ドル。既存のサブスクリプションに追加され、日割り料金は次回の請求で精算されます。',
-    checkout: '支払いに進む',
-    payment_pending: '支払いを処理中です。自動的に再確認します。重複して購入しないでください。',
-    checkout_expired: 'この未払いの Checkout は期限切れです。支払いに進んで再試行してください。',
-    billing_start_over:
-      '新しいコネクターの作成をやり直しますか？未完了の設定が削除され、未払いの Checkout が取り消される場合があります。支払い済みのサブスクリプションは解約・返金されません。',
     back_to_list: 'Console SSO に戻る',
     create: 'コネクターを追加',
     title: 'コンソール SSO',
@@ -68,6 +57,8 @@ const cloud = {
     domain_dns_timeout: 'DNS の確認に失敗しました。自動的に再試行します。',
     domain_recovery: 'ドメインの変更は未完了です。',
     start_over: '最初からやり直す',
+    start_over_confirmation:
+      '最初からやり直すと、未完了の SSO 設定が削除される場合があります。続行しますか？',
     resume_creation:
       '未完了の作成操作が見つかりました。同じプロバイダーで続行して、このコネクターを復元してください。',
   },

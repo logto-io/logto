@@ -35,20 +35,6 @@ const cloud = {
     },
   },
   console_sso: {
-    included_capacity:
-      'Gemeinsames Enterprise-Kontingent: {{used}} von {{limit}} Konnektoren verwendet.',
-    included_unlimited: 'Unbegrenztes Enterprise-Kontingent; {{used}} Konnektoren verwendet.',
-    first_price:
-      '128 USD pro Konnektor und Monat. Die Zahlung startet das Abonnement, auch wenn die Einrichtung noch nicht abgeschlossen ist.',
-    addition_price:
-      '128 USD pro Konnektor und Monat. Hinzufügen zum bestehenden Abonnement; anteilige Gebühren werden mit der nächsten Rechnung eingezogen.',
-    checkout: 'Weiter zur Zahlung',
-    payment_pending:
-      'Die Zahlung wird verarbeitet. Wir prüfen automatisch erneut. Bitte keinen weiteren Kauf starten.',
-    checkout_expired:
-      'Dieser unbezahlte Checkout ist abgelaufen. Zur Zahlung gehen, um es erneut zu versuchen.',
-    billing_start_over:
-      'Mit einem neuen Konnektor neu beginnen? Unvollständige Konfigurationen können entfernt und ein unbezahlter Checkout abgebrochen werden. Ein bezahltes Abonnement wird weder gekündigt noch erstattet.',
     back_to_list: 'Zurück zu Console SSO',
     create: 'Konnektor hinzufügen',
     title: 'Konsolen-SSO',
@@ -77,6 +63,8 @@ const cloud = {
     domain_dns_timeout: 'Die DNS-Prüfung ist fehlgeschlagen. Wir versuchen es automatisch erneut.',
     domain_recovery: 'Die Domainänderung ist unvollständig.',
     start_over: 'Neu beginnen',
+    start_over_confirmation:
+      'Wenn Sie von vorne beginnen, wird Ihre unvollständige SSO-Konfiguration möglicherweise gelöscht. Möchten Sie fortfahren?',
     resume_creation:
       'Eine unvollständige Erstellung wurde gefunden. Fahre mit demselben Anbieter fort, um diesen Konnektor wiederherzustellen.',
   },

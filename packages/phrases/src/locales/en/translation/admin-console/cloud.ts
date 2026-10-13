@@ -34,18 +34,6 @@ const cloud = {
     },
   },
   console_sso: {
-    included_capacity: 'Shared Enterprise allowance: {{used}} of {{limit}} connectors used.',
-    included_unlimited: 'Unlimited Enterprise allowance; {{used}} connectors used.',
-    first_price:
-      'USD 128 per connector per month. Payment starts the subscription, even if setup is unfinished.',
-    addition_price:
-      'USD 128 per connector per month. Add to your existing subscription; prorated charges are collected on your next bill.',
-    checkout: 'Continue to payment',
-    payment_pending:
-      'Payment is processing. We will check again automatically. Do not start another purchase.',
-    checkout_expired: 'This unpaid Checkout has expired. Continue to payment to try again.',
-    billing_start_over:
-      'Start over with a new connector? This may remove unfinished configuration and cancel an unpaid Checkout. It does not cancel or refund a paid subscription.',
     back_to_list: 'Back to Console SSO',
     create: 'Add connector',
     title: 'Console SSO',
@@ -71,6 +59,8 @@ const cloud = {
     domain_dns_timeout: 'The DNS check failed. We will retry automatically.',
     domain_recovery: 'The domain change is incomplete.',
     start_over: 'Start over',
+    start_over_confirmation:
+      'Starting over may delete your incomplete SSO configuration. Do you want to continue?',
     resume_creation:
       'An unfinished creation was found. Continue with the same provider to recover this connector.',
   },

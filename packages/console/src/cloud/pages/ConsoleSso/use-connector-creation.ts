@@ -47,7 +47,6 @@ export const useConnectorCreation = (userId: string, onCreated: (id: string) => 
   const refresh = useCallback(async () => {
     await Promise.allSettled([
       mutate(),
-      mutateCache(['/api/me/console-sso/checkout-preview', userId], undefined, true),
       mutateCache(['console-sso-coverage', userId], undefined, true),
     ]);
   }, [mutate, mutateCache, userId]);
@@ -111,11 +110,7 @@ export const useConnectorCreation = (userId: string, onCreated: (id: string) => 
       const current = selectCreationFunding(
         userId,
         getOrCreatePendingConnectorCreation(userId, providerName),
-        {
-          funding: billing.funding,
-          ...(billing.funding === 'personal' &&
-            billing.subscriptionId && { subscriptionId: billing.subscriptionId }),
-        }
+        { funding: billing.funding }
       );
       setOperation(current);
       await run(current, true);

@@ -34,18 +34,6 @@ const cloud = {
     },
   },
   console_sso: {
-    included_capacity: 'Quota Enterprise condivisa: {{used}} connettori utilizzati su {{limit}}.',
-    included_unlimited: 'Quota Enterprise illimitata; {{used}} connettori utilizzati.',
-    first_price:
-      '128 USD per connettore al mese. Il pagamento avvia l’abbonamento, anche se la configurazione è incompleta.',
-    addition_price:
-      '128 USD per connettore al mese. Aggiunta all’abbonamento esistente; gli addebiti proporzionali saranno riscossi con la prossima fattura.',
-    checkout: 'Continua al pagamento',
-    payment_pending:
-      'Il pagamento è in elaborazione. Verificheremo di nuovo automaticamente. Non avviare un altro acquisto.',
-    checkout_expired: 'Questo Checkout non pagato è scaduto. Continua al pagamento per riprovare.',
-    billing_start_over:
-      'Ricominciare con un nuovo connettore? Potrebbero essere rimossi i dati di configurazione incompleti e annullato un Checkout non pagato. Un abbonamento pagato non viene annullato né rimborsato.',
     back_to_list: 'Torna a Console SSO',
     create: 'Aggiungi connettore',
     title: 'SSO della console',
@@ -74,6 +62,8 @@ const cloud = {
     domain_dns_timeout: 'Il controllo DNS non è riuscito. Riproveremo automaticamente.',
     domain_recovery: 'La modifica del dominio è incompleta.',
     start_over: 'Ricomincia',
+    start_over_confirmation:
+      'Ricominciare potrebbe eliminare la configurazione SSO incompleta. Vuoi continuare?',
     resume_creation:
       'È stata trovata una creazione incompleta. Continua con lo stesso provider per recuperare questo connettore.',
   },

@@ -33,19 +33,6 @@ const cloud = {
     },
   },
   console_sso: {
-    included_capacity: 'Quota Enterprise partilhada: {{used}} de {{limit}} conectores utilizados.',
-    included_unlimited: 'Quota Enterprise ilimitada; {{used}} conectores utilizados.',
-    first_price:
-      '128 USD por conector por mês. O pagamento inicia a subscrição, mesmo que a configuração esteja incompleta.',
-    addition_price:
-      '128 USD por conector por mês. Adicionado à subscrição existente; os encargos proporcionais serão incluídos na próxima fatura.',
-    checkout: 'Continuar para o pagamento',
-    payment_pending:
-      'O pagamento está a ser processado. Verificaremos novamente de forma automática. Não inicie outra compra.',
-    checkout_expired:
-      'Este Checkout não pago expirou. Continue para o pagamento para tentar novamente.',
-    billing_start_over:
-      'Recomeçar com um novo conector? Isto pode remover configurações incompletas e cancelar um Checkout não pago. Não cancela nem reembolsa uma subscrição paga.',
     back_to_list: 'Voltar ao SSO da Consola',
     create: 'Adicionar conector',
     title: 'SSO da consola',
@@ -73,6 +60,8 @@ const cloud = {
     domain_dns_timeout: 'A verificação DNS falhou. Voltaremos a tentar automaticamente.',
     domain_recovery: 'A alteração do domínio está incompleta.',
     start_over: 'Recomeçar',
+    start_over_confirmation:
+      'Recomeçar pode eliminar a sua configuração de SSO incompleta. Pretende continuar?',
     resume_creation:
       'Foi encontrada uma criação incompleta. Continue com o mesmo fornecedor para recuperar este conector.',
   },

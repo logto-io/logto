@@ -18,8 +18,6 @@ export const getIncludedCapacity = (enterprise?: LogtoEnterpriseSubscriptionResp
     (enterprise.subscription?.status === 'active' ||
       enterprise.subscription?.status === 'trialing');
   return {
-    limit,
-    used,
     isAvailable: Boolean(
       isEligible &&
         typeof used === 'number' &&

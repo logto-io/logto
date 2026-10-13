@@ -33,20 +33,6 @@ const cloud = {
     },
   },
   console_sso: {
-    included_capacity:
-      'Paylaşılan Enterprise kotası: {{limit}} bağlayıcının {{used}} tanesi kullanılıyor.',
-    included_unlimited: 'Sınırsız Enterprise kotası; {{used}} bağlayıcı kullanılıyor.',
-    first_price:
-      'Bağlayıcı başına aylık 128 USD. Kurulum tamamlanmamış olsa bile ödeme aboneliği başlatır.',
-    addition_price:
-      'Bağlayıcı başına aylık 128 USD. Mevcut aboneliğinize eklenir; orantılı ücretler sonraki faturanızda tahsil edilir.',
-    checkout: 'Ödemeye devam et',
-    payment_pending:
-      'Ödeme işleniyor. Otomatik olarak tekrar kontrol edeceğiz. Başka bir satın alma başlatmayın.',
-    checkout_expired:
-      'Bu ödenmemiş Checkout oturumunun süresi doldu. Tekrar denemek için ödemeye devam edin.',
-    billing_start_over:
-      'Yeni bir bağlayıcıyla baştan başlansın mı? Tamamlanmamış yapılandırma silinebilir ve ödenmemiş Checkout iptal edilebilir. Ödenmiş abonelik iptal edilmez veya iade edilmez.',
     back_to_list: "Console SSO'ya dön",
     create: 'Bağlayıcı ekle',
     title: 'Konsol SSO',
@@ -72,6 +58,8 @@ const cloud = {
     domain_dns_timeout: 'DNS kontrolü başarısız oldu. Otomatik olarak yeniden deneyeceğiz.',
     domain_recovery: 'Alan adı değişikliği tamamlanmadı.',
     start_over: 'Yeniden başla',
+    start_over_confirmation:
+      'Baştan başlamak, tamamlanmamış SSO yapılandırmanızı silebilir. Devam etmek istiyor musunuz?',
     resume_creation:
       'Tamamlanmamış bir oluşturma işlemi bulundu. Bu bağlayıcıyı kurtarmak için aynı sağlayıcıyla devam edin.',
   },

@@ -1,5 +1,4 @@
-import { type consoleSsoRouter } from '@logto/cloud/routes';
-import { type GuardedResponse, type ResponseError, type RouterRoutes } from '@withtyped/client';
+import { type ResponseError } from '@withtyped/client';
 import useSWR from 'swr';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
@@ -7,21 +6,6 @@ import useCurrentUser from '@/hooks/use-current-user';
 
 import { type PendingConnectorCreation } from './connector-creation-idempotency';
 import { getIncludedCapacity } from './creation-billing';
-
-const useConsoleSsoCheckoutPreview = (isEnabled: boolean) => {
-  const { user } = useCurrentUser();
-  const api = useCloudApi<typeof consoleSsoRouter>();
-  return useSWR<
-    GuardedResponse<
-      RouterRoutes<typeof consoleSsoRouter>['get']['/api/me/console-sso/checkout-preview']
-    >,
-    ResponseError
-  >(
-    user && isEnabled && ['/api/me/console-sso/checkout-preview', user.id],
-    async () => api.get('/api/me/console-sso/checkout-preview'),
-    { keepPreviousData: false }
-  );
-};
 
 const useConsoleSsoCoverage = (isEnabled: boolean) => {
   const { user } = useCurrentUser();
@@ -48,30 +32,14 @@ const useConsoleSsoCoverage = (isEnabled: boolean) => {
 };
 
 export const useCreationBilling = (operation?: PendingConnectorCreation) => {
-  // Saved payment/fulfillment recovery takes precedence over a new purchase preview.
+  // Saved payment/fulfillment recovery takes precedence over a new funding decision.
   const isRecovering = Boolean(operation?.funding);
   const coverage = useConsoleSsoCoverage(!isRecovering);
-  const preview = useConsoleSsoCheckoutPreview(
-    !isRecovering && !coverage.error && coverage.data?.isAvailable === false
-  );
   const funding = operation?.funding ?? (coverage.data?.isAvailable ? 'included' : 'personal');
-  const subscriptionId =
-    preview.data?.status === 'subscription_exists' ? preview.data.subscriptionId : undefined;
-  const hasSubscription = Boolean(
-    operation?.subscriptionId ?? (!operation?.funding && subscriptionId)
-  );
-  const billingError = isRecovering
-    ? undefined
-    : (coverage.error ?? (funding === 'personal' ? preview.error : undefined));
-  const isBillingReady =
-    isRecovering || Boolean(coverage.data && (funding === 'included' || preview.data));
+  const billingError = isRecovering ? undefined : coverage.error;
+  const isBillingReady = isRecovering || Boolean(coverage.data);
   return {
-    preview,
-    coverage,
     funding,
-    subscriptionId,
-    hasSubscription,
-    isRecovering,
     billingError,
     isBillingReady,
   };

@@ -29,15 +29,6 @@ const cloud = {
     },
   },
   console_sso: {
-    included_capacity: 'Enterprise 共享额度：已使用 {{used}} / {{limit}} 个连接器。',
-    included_unlimited: 'Enterprise 额度不限；已使用 {{used}} 个连接器。',
-    first_price: '每个连接器每月 128 美元。付款后订阅即开始，无论配置是否完成。',
-    addition_price: '每个连接器每月 128 美元。添加到现有订阅，按比例费用计入下一期账单。',
-    checkout: '前往付款',
-    payment_pending: '付款正在处理中，我们会自动再次查询。请勿重复购买。',
-    checkout_expired: '此未付款的 Checkout 已过期。前往付款以重新尝试。',
-    billing_start_over:
-      '重新开始创建连接器？这可能删除未完成的配置并取消未付款的 Checkout，不会取消已付款的订阅或退款。',
     back_to_list: '返回控制台 SSO',
     create: '添加连接器',
     title: '控制台 SSO',
@@ -61,6 +52,7 @@ const cloud = {
     domain_dns_timeout: 'DNS 检查失败。我们会自动重试。',
     domain_recovery: '域名变更尚未完成。',
     start_over: '重新开始',
+    start_over_confirmation: '重新开始可能会删除尚未完成的 SSO 配置。是否继续？',
     resume_creation: '发现未完成的创建操作。请使用同一身份提供商继续，以恢复此连接器。',
   },
   general: {
