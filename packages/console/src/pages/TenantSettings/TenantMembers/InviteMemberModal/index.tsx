@@ -1,6 +1,6 @@
 import { TenantRole } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
@@ -13,7 +13,7 @@ import { latestProPlanId, tenantMembersAddOnUnitPrice } from '@/consts/subscript
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
-import Select, { type Option } from '@/ds-components/Select';
+import Select from '@/ds-components/Select';
 import TextLink from '@/ds-components/TextLink';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useUserPreferences from '@/hooks/use-user-preferences';
@@ -25,6 +25,7 @@ import useEmailInputUtils from '../InviteEmailsInput/hooks';
 import styles from '../index.module.scss';
 import { type InviteMemberForm } from '../types';
 import useTenantMembersApi from '../use-tenant-members-api';
+import useTenantRoleOptions from '../use-tenant-role-options';
 
 import Footer from './Footer';
 
@@ -72,13 +73,7 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
     };
   }, [isOpen, reset]);
 
-  const roleOptions: Array<Option<TenantRole>> = useMemo(
-    () => [
-      { value: TenantRole.Admin, title: t('tenant_members.admin') },
-      { value: TenantRole.Collaborator, title: t('tenant_members.collaborator') },
-    ],
-    [t]
-  );
+  const roleOptions = useTenantRoleOptions();
 
   const hasTenantMembersReachedLimit = hasReachedSubscriptionQuotaLimit('tenantMembersLimit');
 
