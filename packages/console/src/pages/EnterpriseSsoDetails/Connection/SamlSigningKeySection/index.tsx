@@ -14,6 +14,7 @@ import FormField from '@/ds-components/FormField';
 import Switch from '@/ds-components/Switch';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import { type SamlConnectorConfig } from '@/pages/EnterpriseSsoDetails/types/saml';
 
 import styles from './index.module.scss';
@@ -26,6 +27,9 @@ function SamlSigningKeySection({ connectorId }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useApi();
   const { show } = useConfirmModal();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const { control } = useFormContext<SamlConnectorConfig>();
   const signAuthnRequest = useWatch({ control, name: 'signAuthnRequest' });
 
@@ -146,12 +150,14 @@ function SamlSigningKeySection({ connectorId }: Props) {
               <div className={styles.empty}>
                 {t('enterprise_sso.basic_info.saml.signing_keys_empty')}
               </div>
-              <Button
-                icon={<Plus />}
-                title="enterprise_sso.basic_info.saml.generate_signing_key"
-                disabled={isGenerating}
-                onClick={onGenerate}
-              />
+              {!isReadOnly && (
+                <Button
+                  icon={<Plus />}
+                  title="enterprise_sso.basic_info.saml.generate_signing_key"
+                  disabled={isGenerating}
+                  onClick={onGenerate}
+                />
+              )}
             </>
           ) : (
             <>
@@ -164,15 +170,17 @@ function SamlSigningKeySection({ connectorId }: Props) {
                 onActivate={onActivate}
                 onDeactivate={onDeactivate}
               />
-              <Button
-                size="small"
-                type="text"
-                className={styles.add}
-                icon={<CirclePlus />}
-                title="enterprise_sso.basic_info.saml.generate_signing_key"
-                disabled={isGenerating || !signingKeys.data}
-                onClick={onGenerate}
-              />
+              {!isReadOnly && (
+                <Button
+                  size="small"
+                  type="text"
+                  className={styles.add}
+                  icon={<CirclePlus />}
+                  title="enterprise_sso.basic_info.saml.generate_signing_key"
+                  disabled={isGenerating || !signingKeys.data}
+                  onClick={onGenerate}
+                />
+              )}
             </>
           )}
         </FormField>
