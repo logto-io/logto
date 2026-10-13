@@ -101,6 +101,11 @@ const tenants = {
     development: 'توسعه',
     production: 'تولید',
   },
+  view_only: {
+    tag: 'فقط مشاهده',
+    notification:
+      'شما فقط دسترسی مشاهده به این مستأجر دارید. اگر نیاز به ایجاد تغییرات دارید، از مدیر مستأجر بخواهید.',
+  },
   deletion_card: {
     title: 'حذف',
     tenant_deletion: 'حذف مستأجر',
