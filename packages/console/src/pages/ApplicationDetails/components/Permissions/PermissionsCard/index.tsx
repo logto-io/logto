@@ -13,6 +13,7 @@ import FormCard, { type Props as FormCardProps } from '@/components/FormCard';
 import TemplateTable from '@/components/TemplateTable';
 import Tag from '@/ds-components/Tag';
 import { type RequestError } from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
 import { type PermissionsPhraseGroup } from '../types';
 
@@ -34,6 +35,9 @@ type Props = {
 
 function PermissionsCard({ scopesEndpoint, scopeLevel, phraseGroup, learnMoreLink }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
 
   const { data, error, mutate, isLoading } = useSWR<
     ApplicationUserConsentScopesResponse,
@@ -128,7 +132,7 @@ function PermissionsCard({ scopesEndpoint, scopeLevel, phraseGroup, learnMoreLin
         }}
       />
       {/* Render the permissions assignment modal only if the data is fetched properly */}
-      {data && (
+      {data && !isReadOnly && (
         <ApplicationScopesAssignmentModal
           isOpen={isAssignScopesModalOpen}
           scopesEndpoint={scopesEndpoint}
