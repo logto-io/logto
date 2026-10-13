@@ -19,13 +19,11 @@ const cloud = {
     issue_error: 'Impossible d’émettre les clés de licence. Veuillez réessayer.',
     install_title: 'Installer votre licence',
     install_description:
-      'Les deux clés offrent les mêmes fonctionnalités et quotas. Sauf indication contraire dans votre bon de commande, votre abonnement couvre un déploiement en production. Utilisez la clé de production pour ce déploiement et la clé hors production pour les déploiements de développement, de test et de préproduction qui le prennent en charge et ne servent pas de trafic de production.',
+      'Les deux clés offrent les mêmes fonctionnalités et quotas. Sauf indication contraire dans votre bon de commande, votre abonnement couvre un déploiement en production.',
     install_copy:
       'Copiez la clé de production pour la production, ou la clé hors production pour le développement et les tests.',
     install_paste:
       'Dans votre console auto-hébergée, ouvrez Paramètres → Licence, collez la clé et installez-la.',
-    install_terms:
-      'Consultez les <a>Conditions d’abonnement auto-hébergé</a> pour plus de détails.',
     status: {
       active: 'Active',
       past_due: 'Paiement en retard',
