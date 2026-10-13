@@ -7,7 +7,7 @@ import { adminTenantEndpoint, meApi } from '@/consts';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
-import { getIsReadOnlyAccess } from '@/utils/read-only-access';
+import { getIsReadOnlyAccess, getIsWriteAccessConfirmed } from '@/utils/read-only-access';
 
 import { type RequestError, useStaticApi } from './use-api';
 import useCurrentUser from './use-current-user';
@@ -57,8 +57,9 @@ const useCurrentTenantScopes = () => {
       canUpdateMemberRole: Boolean(scopes?.includes(TenantScope.UpdateMemberRole)),
       canManageTenant: Boolean(scopes?.includes(TenantScope.ManageTenant)),
       // Read-only tenant access ships behind dev features: until it is released, no one is
-      // read-only.
+      // read-only and every write is allowed.
       isReadOnly: getIsReadOnlyAccess({ isDevFeaturesEnabled, isCloud, scopes }),
+      isWriteAccessConfirmed: getIsWriteAccessConfirmed({ isDevFeaturesEnabled, isCloud, scopes }),
     }),
     [licenseQuota.consoleCollaboration, scopes]
   );

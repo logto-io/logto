@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import DeleteIcon from '@/assets/icons/delete.svg?react';
 import FileIcon from '@/components/FileIcon';
+import { useReadOnlyField } from '@/contexts/ReadOnlyFieldScope';
 import IconButton from '@/ds-components/IconButton';
 import FileUploader from '@/ds-components/Uploader/FileUploader';
 import useApi from '@/hooks/use-api';
@@ -34,6 +35,7 @@ const allowedErrorCodes: LogtoErrorCode[] = [
 
 function CustomUiAssetsUploader({ disabled, value, onChange }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const isReadOnlyField = useReadOnlyField();
   const [file, setFile] = useState<File>();
   const [error, setError] = useState<string>();
   const [abortController, setAbortController] = useState(new AbortController());
@@ -109,15 +111,17 @@ function CustomUiAssetsUploader({ disabled, value, onChange }: Props) {
           {error && <span className={styles.error}>{error}</span>}
         </div>
       </div>
-      <IconButton
-        onClick={() => {
-          setFile(undefined);
-          setError(undefined);
-          onChange(null);
-        }}
-      >
-        <DeleteIcon />
-      </IconButton>
+      {!isReadOnlyField && (
+        <IconButton
+          onClick={() => {
+            setFile(undefined);
+            setError(undefined);
+            onChange(null);
+          }}
+        >
+          <DeleteIcon />
+        </IconButton>
+      )}
       {file && <div className={styles.progressBar} />}
     </div>
   );
