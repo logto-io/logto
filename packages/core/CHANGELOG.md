@@ -1,5 +1,33 @@
 # Change Log
 
+## 1.45.0
+
+### Minor Changes
+
+- 861d5d7: support license-based entitlements for self-hosted deployments
+
+  Install and replace a license in Console under Tenant settings → License or through the Management API. View its plan, environment, expiration, and refresh status, with weekly refresh and a 30-day grace period before returning to OSS defaults.
+
+  View self-hosted licenses and retrieve production and non-production keys from your account in Logto Cloud Console, without creating a Cloud tenant.
+
+  Licensed deployments can hide Logto branding, upload a custom sign-in UI using their own storage, customize its CSP, increase the SAML application limit, require Console MFA, and invite Console members.
+
+### Patch Changes
+
+- a67d190: fix Console permission pickers timing out on tenants with many Management API resources
+
+  `GET /api/resources` now accepts an `excludeManagementApis` query parameter that filters out Logto Management API resources in the database. The Console permission pickers for third-party apps, dynamic apps, organization roles, and user roles use it instead of loading every resource and filtering in the browser.
+
+- b3ebc8d: speed up `GET /api/resources?includeScopes=true`
+
+  Matching scopes to their API resources no longer slows down quadratically with the number of resources, and the request no longer fails when a tenant has more than 65,535 API resources.
+
+- Updated dependencies [a67d190]
+- Updated dependencies [861d5d7]
+  - @logto/console@1.42.0
+  - @logto/cli@1.45.0
+  - @logto/schemas@1.45.0
+
 ## 1.44.0
 
 ### Minor Changes
