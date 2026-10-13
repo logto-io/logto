@@ -56,6 +56,9 @@ const useCurrentTenantScopes = () => {
       canRemoveMember: Boolean(scopes?.includes(TenantScope.RemoveMember)),
       canUpdateMemberRole: Boolean(scopes?.includes(TenantScope.UpdateMemberRole)),
       canManageTenant: Boolean(scopes?.includes(TenantScope.ManageTenant)),
+      // Until read-only tenant access is released, every member may convert a tenant.
+      canConvertToProduction:
+        !isDevFeaturesEnabled || Boolean(scopes?.includes(TenantScope.ManageTenant)),
       // Read-only tenant access ships behind dev features: until it is released, no one is
       // read-only and every write is allowed.
       isReadOnly: getIsReadOnlyAccess({ isDevFeaturesEnabled, isCloud, scopes }),
