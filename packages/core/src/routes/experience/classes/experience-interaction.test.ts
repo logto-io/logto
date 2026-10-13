@@ -34,6 +34,7 @@ import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import { mockUser, mockUserWithMfaVerifications } from '#src/__mocks__/user.js';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { HookContextManager } from '#src/libraries/hook/context-manager.js';
 import { type InsertUserResult } from '#src/libraries/user.js';
 import { LogEntry } from '#src/middleware/koa-audit-log.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
@@ -976,12 +977,18 @@ describe('ExperienceInteraction class', () => {
       { getLogtoConnectors: jest.fn().mockResolvedValue(connectors) },
       { users: userLibraries, ssoConnectors }
     );
-    const stepUpCtx: WithHooksAndLogsContext = { ...ctx, interactionDetails };
+    const dataHookContext = new HookContextManager({ ip: ctx.ip });
+    const stepUpCtx: WithHooksAndLogsContext = {
+      ...ctx,
+      interactionDetails,
+      appendDataHookContext: dataHookContext.appendDataHookContext.bind(dataHookContext),
+    };
 
     return {
       provider,
       stepUpTenant,
       stepUpCtx,
+      dataHookContext,
       experienceInteraction: new ExperienceInteraction(stepUpCtx, stepUpTenant, interactionEvent),
     };
   };
@@ -1449,9 +1456,9 @@ describe('ExperienceInteraction class', () => {
     });
 
     it('revalidates the identifier it is about to write', async () => {
-      const { experienceInteraction, stepUpTenant } = await createIdentifiedStepUp({
-        user: userWithoutMethods,
-      });
+      const { experienceInteraction, stepUpTenant, dataHookContext } = await createIdentifiedStepUp(
+        { user: userWithoutMethods }
+      );
 
       jest.mocked(stepUpTenant.queries.users.hasUserWithEmail).mockResolvedValueOnce(true);
       experienceInteraction.profile.unsafeSet({ primaryEmail: 'taken@example.com' });
@@ -1460,13 +1467,13 @@ describe('ExperienceInteraction class', () => {
         new RequestError({ code: 'user.email_already_in_use', status: 422 })
       );
       expect(stepUpTenant.queries.users.updateUserById).not.toHaveBeenCalled();
+      expect(dataHookContext.dataHookContextArray).toEqual([]);
     });
 
     it('writes only what the interaction established and never `lastSignInAt`', async () => {
       jest.clearAllMocks();
-      const { experienceInteraction, stepUpTenant, stepUpCtx } = await createIdentifiedStepUp({
-        user: userWithoutMethods,
-      });
+      const { experienceInteraction, stepUpTenant, stepUpCtx, dataHookContext } =
+        await createIdentifiedStepUp({ user: userWithoutMethods });
       const updateUserById = jest.mocked(stepUpTenant.queries.users.updateUserById);
 
       await experienceInteraction.submitStepUp();
@@ -1474,11 +1481,17 @@ describe('ExperienceInteraction class', () => {
       // Verifying an existing method writes nothing: no user row, no hook context.
       expect(updateUserById).not.toHaveBeenCalled();
       expect(stepUpCtx.assignReleaseOnSuccessInteractionHookResult).not.toHaveBeenCalled();
-      expect(stepUpCtx.appendDataHookContext).not.toHaveBeenCalled();
+      expect(dataHookContext.dataHookContextArray).toEqual([]);
 
-      experienceInteraction.profile.unsafeSet({
+      const establishedPassword = {
         passwordEncrypted: 'new-encrypted-password',
         passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+      };
+      experienceInteraction.profile.unsafeSet(establishedPassword);
+      updateUserById.mockResolvedValueOnce({
+        ...userWithoutMethods,
+        ...establishedPassword,
+        updatedAt: userWithoutMethods.updatedAt + 1000,
       });
       await experienceInteraction.submitStepUp();
 
@@ -1493,6 +1506,31 @@ describe('ExperienceInteraction class', () => {
       expect(updateUserById).toHaveBeenCalledTimes(1);
       // `lastSignInAt` is the sign-in's to write; a step-up leaves it where the sign-in left it.
       expect(updateUserById.mock.calls[0]?.[1]).not.toHaveProperty('lastSignInAt');
+      expect(dataHookContext.dataHookContextArray).toHaveLength(1);
+      expect(dataHookContext.dataHookContextArray).toMatchObject([
+        {
+          event: 'User.Data.Updated',
+          data: {
+            id: userWithoutMethods.id,
+            updatedAt: userWithoutMethods.updatedAt + 1000,
+            lastSignInAt: userWithoutMethods.lastSignInAt,
+          },
+        },
+      ]);
+      expect(stepUpCtx.assignReleaseOnSuccessInteractionHookResult).not.toHaveBeenCalled();
+    });
+
+    it('does not queue a data hook when persisting an established method fails', async () => {
+      const { experienceInteraction, stepUpTenant, provider, dataHookContext } =
+        await createIdentifiedStepUp({ user: userWithoutMethods });
+      const error = new Error('User update failed');
+      jest.mocked(stepUpTenant.queries.users.updateUserById).mockRejectedValueOnce(error);
+      experienceInteraction.profile.unsafeSet({ primaryEmail: 'new@example.com' });
+
+      await expect(experienceInteraction.submitStepUp()).rejects.toThrow(error);
+
+      expect(dataHookContext.dataHookContextArray).toEqual([]);
+      expect(provider.interactionResult).not.toHaveBeenCalled();
     });
   });
 

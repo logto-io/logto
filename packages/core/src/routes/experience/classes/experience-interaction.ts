@@ -1214,7 +1214,8 @@ export default class ExperienceInteraction {
    * Deliberately not run, unlike {@link submit}: the captcha guard, the tenant MFA and profile
    * policies, the passkey suggestion, every other `updateUserById` field including `lastSignInAt`,
    * SSO identity synchronization, social / SSO token-set upserts, JIT organization provisioning,
-   * `triggerPostSignInAction`, and data-hook contexts.
+   * and `triggerPostSignInAction`. A `User.Data.Updated` data hook is queued only when established
+   * methods are persisted; no sign-in interaction hook is queued.
    *
    * @throws {RequestError} with 400 if the interaction is not a pure step-up
    * @throws {RequestError} with 403 if the achieved context does not satisfy `selectedAcr`; the
@@ -1394,7 +1395,8 @@ export default class ExperienceInteraction {
       await this.mfa.checkAvailability();
     }
 
-    await this.tenant.queries.users.updateUserById(user.id, established);
+    const updatedUser = await this.tenant.queries.users.updateUserById(user.id, established);
+    this.ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
   }
 
   private async hasEligibleTrustedDeviceProof(user: User) {
