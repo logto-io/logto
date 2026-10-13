@@ -71,7 +71,7 @@ export type StepUpEligibilityInput = {
   linkedConnectors?: readonly SubjectProofConnector[];
 };
 
-/** The first factors a user without any eligible method may establish. */
+/** The first factors a user lacking one to reach the class with may establish. */
 export type EstablishableMethod =
   | MissingProfile.password
   | MissingProfile.email
@@ -101,8 +101,9 @@ export type StepUpEligibility = {
    */
   isReachable: boolean;
   /**
-   * The first factors the user may establish: non-empty only under a fresh subject proof, when the
-   * user has no eligible method at all and the class is not reached yet.
+   * The first factors the user may establish: non-empty only under a fresh subject proof and
+   * before any fresh first factor, when the user has no eligible method at all, or when their
+   * enrolled methods cannot reach the class and none of them fills the first-factor role.
    */
   establishableMethods: EstablishableMethod[];
   /**
@@ -170,7 +171,7 @@ const getMfaMethods = (
  * Every method the user can verify with, in the eligibility-table order: the `1fa`-role methods,
  * then the enrolled MFA factors the tenant enables.
  */
-export const getEligibleMethods = (
+const getEligibleMethods = (
   user: User,
   mfaSettings: Mfa,
   connectors: MessageConnectorAvailability
@@ -289,6 +290,52 @@ const contributesTo = (
   );
 };
 
+/**
+ * Whether the subject is one establishing a first factor is meant for: a user with no eligible
+ * method at all, or one whose enrolled methods cannot reach the class and none of which fills the
+ * first-factor role. The latter is a social-only user with an enrolled TOTP requesting `mfa`: the
+ * TOTP reaches `1fa` only, nothing pairs with it, and enrolling needs a fresh first factor they
+ * cannot give. A first factor is then the missing half of the pair, not an alternative to the
+ * TOTP, which the class still requires. Where an enrolled method reaches the class (the same TOTP
+ * for `1fa`) or can be proven as a first factor, establishing stays off.
+ */
+const lacksFirstFactorFor = ({
+  candidates,
+  isReachableWithEnrolled,
+}: {
+  candidates: readonly VerificationType[];
+  isReachableWithEnrolled: boolean;
+}) =>
+  candidates.length === 0 ||
+  (!isReachableWithEnrolled &&
+    !candidates.some((candidate) => fillsFirstFactorRole(toContribution(candidate))));
+
+/**
+ * {@link lacksFirstFactorFor} from the eligibility inputs, for a caller that decides whether the
+ * preconditions of establishing (the linked connectors a subject proof can come from) are worth
+ * looking up before computing the eligibility.
+ */
+export const mayEstablishFirstFactor = ({
+  user,
+  mfaSettings,
+  connectors,
+  selectedAcr,
+  carried,
+  proofs,
+}: Pick<
+  StepUpEligibilityInput,
+  'user' | 'mfaSettings' | 'connectors' | 'selectedAcr' | 'carried' | 'proofs'
+>) => {
+  const candidates = getEligibleMethods(user, mfaSettings, connectors);
+
+  return lacksFirstFactorFor({
+    candidates,
+    isReachableWithEnrolled: Number.isFinite(
+      distanceTo({ target: selectedAcr, carried, proofs, candidates })
+    ),
+  });
+};
+
 /** The factors that reach the class once enrolled on top of what is proven. */
 const filterFactorsReaching = (
   factors: readonly MfaFactor[],
@@ -358,11 +405,13 @@ const computeEnrollment = ({
   candidates: readonly VerificationType[];
   isReachableWithEnrolled: boolean;
 }) => {
-  // Establishing is only possible for a user with no eligible method at all, and only under a
-  // subject proof held or obtainable. Once a first factor is proven or established there is
-  // nothing left to establish.
+  // Establishing is only possible for a user lacking a first factor to reach the class with (see
+  // `lacksFirstFactorFor`), and only under a subject proof held or obtainable. Once a first factor
+  // is proven or established there is nothing left to establish.
   const establishable =
-    candidates.length > 0 || hasFreshFirstFactor ? [] : [...tenantEstablishableMethods];
+    hasFreshFirstFactor || !lacksFirstFactorFor({ candidates, isReachableWithEnrolled })
+      ? []
+      : [...tenantEstablishableMethods];
   const canEstablish =
     establishable.length > 0 && (hasFreshSubjectProof || linkedConnectors.length > 0);
   const isReachable =

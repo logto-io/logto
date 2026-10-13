@@ -31,7 +31,11 @@ import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import { conditional } from '@silverhand/essentials';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
-import { mockUser, mockUserWithMfaVerifications } from '#src/__mocks__/user.js';
+import {
+  mockUser,
+  mockUserTotpMfaVerification,
+  mockUserWithMfaVerifications,
+} from '#src/__mocks__/user.js';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { HookContextManager } from '#src/libraries/hook/context-manager.js';
@@ -1582,11 +1586,17 @@ describe('ExperienceInteraction class', () => {
     };
 
     const createSocialOnlyStepUp = ({
+      user = socialOnlyUser,
+      authenticationContext = firstFactorContext,
       signInExperienceOverrides,
-    }: { signInExperienceOverrides?: Partial<SignInExperience> } = {}) => {
+    }: {
+      user?: User;
+      authenticationContext?: Record<string, unknown>;
+      signInExperienceOverrides?: Partial<SignInExperience>;
+    } = {}) => {
       const result = createInteraction({
-        details: { authenticationContext: firstFactorContext },
-        user: socialOnlyUser,
+        details: { authenticationContext },
+        user,
 
         connectors: [githubConnector as unknown as { type: ConnectorType }],
         signInExperienceOverrides,
@@ -1796,6 +1806,95 @@ describe('ExperienceInteraction class', () => {
         'passwordEncryptionMethod',
         'passwordUpdatedAt',
       ]);
+    });
+
+    it('lets a social-only user with an enrolled TOTP establish a password and achieve mfa', async () => {
+      jest.clearAllMocks();
+      const user: User = { ...socialOnlyUser, mfaVerifications: [mockUserTotpMfaVerification] };
+      const { experienceInteraction, stepUpTenant, provider } = createSocialOnlyStepUp({
+        user,
+        authenticationContext: stepUpContext,
+      });
+      const { libraries, queries } = stepUpTenant;
+
+      // The TOTP reaches `1fa` only and nothing pairs with it, so establishing a first factor is
+      // what makes the class reachable.
+      await expect(experienceInteraction.finishUnreachableStepUp()).resolves.toBeUndefined();
+      await expect(experienceInteraction.getStepUpEligibility()).resolves.toMatchObject({
+        availableMethods: [],
+        establishableMethods: [],
+        subjectProofConnectors: [{ type: 'social', connectorId: 'github-connector' }],
+      });
+
+      await proveSubjectWithSocial(experienceInteraction, stepUpTenant, user);
+      await expect(experienceInteraction.getStepUpEligibility()).resolves.toMatchObject({
+        establishableMethods: [MissingProfile.password],
+        subjectProofConnectors: [],
+      });
+
+      experienceInteraction.profile.unsafeSet({
+        passwordEncrypted: 'new-encrypted-password',
+        passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+      });
+      await expect(experienceInteraction.getStepUpEligibility()).resolves.toMatchObject({
+        availableMethods: [VerificationType.TOTP],
+        establishableMethods: [],
+      });
+
+      experienceInteraction.setVerificationRecord(
+        new TotpVerification(libraries, queries, {
+          id: 'totp-verification-id',
+          type: VerificationType.TOTP,
+          userId: user.id,
+          verified: true,
+        })
+      );
+      experienceInteraction.consumeForMfa(VerificationType.TOTP, 'totp-verification-id');
+      await experienceInteraction.submitStepUp();
+
+      expect(provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({
+          login: {
+            accountId: user.id,
+            acr: LogtoAcr.Mfa,
+            amr: [
+              AuthenticationMethodReference.Federated,
+              AuthenticationMethodReference.Password,
+              AuthenticationMethodReference.Otp,
+              AuthenticationMethodReference.Mfa,
+            ],
+          },
+        })
+      );
+      // The established password is the only user write; the enrolled TOTP is left as it was.
+      expect(stepUpTenant.queries.users.updateUserById).toHaveBeenCalledTimes(1);
+      expect(
+        Object.keys(
+          jest.mocked(stepUpTenant.queries.users.updateUserById).mock.calls[0]?.[1] ?? {}
+        ).toSorted()
+      ).toEqual([
+        'isPasswordExpired',
+        'passwordEncrypted',
+        'passwordEncryptionMethod',
+        'passwordUpdatedAt',
+      ]);
+    });
+
+    it('never offers establishing to a social-only user whose TOTP reaches 1fa', async () => {
+      const user: User = { ...socialOnlyUser, mfaVerifications: [mockUserTotpMfaVerification] };
+      const { experienceInteraction, stepUpTenant } = createSocialOnlyStepUp({ user });
+
+      await expect(experienceInteraction.getStepUpEligibility()).resolves.toMatchObject({
+        availableMethods: [VerificationType.TOTP],
+        subjectProofConnectors: [],
+      });
+
+      await proveSubjectWithSocial(experienceInteraction, stepUpTenant, user);
+      await expect(experienceInteraction.getStepUpEligibility()).resolves.toMatchObject({
+        establishableMethods: [],
+      });
     });
 
     /** A verified TOTP enrollment, bound to the step-up subject. */
