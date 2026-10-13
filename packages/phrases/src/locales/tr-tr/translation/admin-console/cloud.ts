@@ -45,8 +45,6 @@ const cloud = {
       'Ödeme işleniyor. Otomatik olarak tekrar kontrol edeceğiz. Başka bir satın alma başlatmayın.',
     checkout_expired:
       'Bu ödenmemiş Checkout oturumunun süresi doldu. Tekrar denemek için ödemeye devam edin.',
-    creation_retry:
-      'Oluşturma tamamlanmadı. Tekrar ödeme yapmadan yeniden deneyin. Aboneliğiniz sona erdiyse yeni abonelik satın almak için baştan başlayın.',
     billing_start_over:
       'Yeni bir bağlayıcıyla baştan başlansın mı? Tamamlanmamış yapılandırma silinebilir ve ödenmemiş Checkout iptal edilebilir. Ödenmiş abonelik iptal edilmez veya iade edilmez.',
     back_to_list: "Console SSO'ya dön",

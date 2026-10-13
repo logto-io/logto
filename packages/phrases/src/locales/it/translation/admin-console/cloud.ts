@@ -44,8 +44,6 @@ const cloud = {
     payment_pending:
       'Il pagamento è in elaborazione. Verificheremo di nuovo automaticamente. Non avviare un altro acquisto.',
     checkout_expired: 'Questo Checkout non pagato è scaduto. Continua al pagamento per riprovare.',
-    creation_retry:
-      'La creazione è incompleta. Riprova senza pagare di nuovo. Se l’abbonamento è terminato, ricomincia per acquistarne uno nuovo.',
     billing_start_over:
       'Ricominciare con un nuovo connettore? Potrebbero essere rimossi i dati di configurazione incompleti e annullato un Checkout non pagato. Un abbonamento pagato non viene annullato né rimborsato.',
     back_to_list: 'Torna a Console SSO',

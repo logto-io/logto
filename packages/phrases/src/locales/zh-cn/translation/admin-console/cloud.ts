@@ -36,7 +36,6 @@ const cloud = {
     checkout: '前往付款',
     payment_pending: '付款正在处理中，我们会自动再次查询。请勿重复购买。',
     checkout_expired: '此未付款的 Checkout 已过期。前往付款以重新尝试。',
-    creation_retry: '创建尚未完成，可重试而无需再次付款。如果订阅已终止，请重新开始购买新订阅。',
     billing_start_over:
       '重新开始创建连接器？这可能删除未完成的配置并取消未付款的 Checkout，不会取消已付款的订阅或退款。',
     back_to_list: '返回控制台 SSO',

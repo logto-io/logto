@@ -37,8 +37,6 @@ const cloud = {
     checkout: '결제 계속하기',
     payment_pending: '결제를 처리 중입니다. 자동으로 다시 확인합니다. 중복 구매하지 마세요.',
     checkout_expired: '이 미결제 Checkout이 만료되었습니다. 결제로 이동하여 다시 시도하세요.',
-    creation_retry:
-      '생성이 완료되지 않았습니다. 다시 결제하지 않고 재시도할 수 있습니다. 구독이 종료된 경우 처음부터 시작하여 새 구독을 구매하세요.',
     billing_start_over:
       '새 커넥터 생성을 다시 시작할까요? 미완료 설정이 삭제되고 미결제 Checkout이 취소될 수 있습니다. 결제된 구독은 취소되거나 환불되지 않습니다.',
     back_to_list: 'Console SSO로 돌아가기',

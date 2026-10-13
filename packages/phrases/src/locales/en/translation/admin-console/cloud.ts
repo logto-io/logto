@@ -44,8 +44,6 @@ const cloud = {
     payment_pending:
       'Payment is processing. We will check again automatically. Do not start another purchase.',
     checkout_expired: 'This unpaid Checkout has expired. Continue to payment to try again.',
-    creation_retry:
-      'Creation is incomplete. Retry without paying again. If your subscription has ended, start over to purchase a new subscription.',
     billing_start_over:
       'Start over with a new connector? This may remove unfinished configuration and cancel an unpaid Checkout. It does not cancel or refund a paid subscription.',
     back_to_list: 'Back to Console SSO',

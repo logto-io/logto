@@ -45,17 +45,13 @@ function BillingNotice({ creation }: Props) {
           <DynamicT forKey="general.loading" />
         </InlineNotification>
       )}
-      {status && status !== 'open' && status !== 'error' && (
+      {(status === 'payment_pending' || status === 'expired') && (
         <InlineNotification severity="info">
           <DynamicT
             forKey={
               status === 'payment_pending'
                 ? 'cloud.console_sso.payment_pending'
-                : status === 'expired'
-                  ? 'cloud.console_sso.checkout_expired'
-                  : hasSubscription
-                    ? 'cloud.console_sso.creation_retry'
-                    : 'cloud.console_sso.resume_creation'
+                : 'cloud.console_sso.checkout_expired'
             }
           />
         </InlineNotification>

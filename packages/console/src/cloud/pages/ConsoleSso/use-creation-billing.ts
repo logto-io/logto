@@ -8,7 +8,7 @@ import useCurrentUser from '@/hooks/use-current-user';
 import { type PendingConnectorCreation } from './connector-creation-idempotency';
 import { getIncludedCapacity } from './creation-billing';
 
-const useConsoleSsoCheckoutPreview = () => {
+const useConsoleSsoCheckoutPreview = (isEnabled: boolean) => {
   const { user } = useCurrentUser();
   const api = useCloudApi<typeof consoleSsoRouter>();
   return useSWR<
@@ -17,17 +17,17 @@ const useConsoleSsoCheckoutPreview = () => {
     >,
     ResponseError
   >(
-    user && ['/api/me/console-sso/checkout-preview', user.id],
+    user && isEnabled && ['/api/me/console-sso/checkout-preview', user.id],
     async () => api.get('/api/me/console-sso/checkout-preview'),
     { keepPreviousData: false }
   );
 };
 
-const useConsoleSsoCoverage = () => {
+const useConsoleSsoCoverage = (isEnabled: boolean) => {
   const { user } = useCurrentUser();
   const api = useCloudApi();
   const result = useSWR<ReturnType<typeof getIncludedCapacity>, ResponseError>(
-    user && ['console-sso-coverage', user.id],
+    user && isEnabled && ['console-sso-coverage', user.id],
     async () => {
       // Use the same first Enterprise as connector creation; never combine different contracts.
       const { logtoEnterprises } = await api.get('/api/me/logto-enterprises');
@@ -48,16 +48,18 @@ const useConsoleSsoCoverage = () => {
 };
 
 export const useCreationBilling = (operation?: PendingConnectorCreation) => {
-  const preview = useConsoleSsoCheckoutPreview();
-  const coverage = useConsoleSsoCoverage();
+  // Saved payment/fulfillment recovery takes precedence over a new purchase preview.
+  const isRecovering = Boolean(operation?.funding);
+  const coverage = useConsoleSsoCoverage(!isRecovering);
+  const preview = useConsoleSsoCheckoutPreview(
+    !isRecovering && !coverage.error && coverage.data?.isAvailable === false
+  );
   const funding = operation?.funding ?? (coverage.data?.isAvailable ? 'included' : 'personal');
   const subscriptionId =
     preview.data?.status === 'subscription_exists' ? preview.data.subscriptionId : undefined;
   const hasSubscription = Boolean(
     operation?.subscriptionId ?? (!operation?.funding && subscriptionId)
   );
-  // Saved payment/fulfillment recovery takes precedence over a new purchase preview.
-  const isRecovering = Boolean(operation?.funding);
   const billingError = isRecovering
     ? undefined
     : (coverage.error ?? (funding === 'personal' ? preview.error : undefined));

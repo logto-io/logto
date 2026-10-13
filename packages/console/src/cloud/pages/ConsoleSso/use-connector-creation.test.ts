@@ -104,6 +104,10 @@ it('automatically uses personal billing only after server billing reads finish',
   });
   expect(result.current.billing.funding).toBe('personal');
   expect(result.current.billing.hasSubscription).toBe(false);
+  const paths = mockApi.get.mock.calls.map(([path]) => path);
+  expect(paths.indexOf('/api/me/console-sso/checkout-preview')).toBeGreaterThan(
+    paths.indexOf('/api/me/logto-enterprises')
+  );
   expect(mockApi.post).not.toHaveBeenCalled();
 });
 
@@ -135,6 +139,7 @@ it('automatically uses Enterprise allowance before an existing personal subscrip
   expect(mockApi.post.mock.calls).toEqual([
     ['/api/me/console-sso/connectors', { body: { providerName: SsoProviderName.OIDC } }],
   ]);
+  expect(mockApi.get).not.toHaveBeenCalledWith('/api/me/console-sso/checkout-preview');
 });
 
 it.each([false, true])(
@@ -204,7 +209,7 @@ it('automatically reuses a personal subscription without Checkout when no allowa
   ]);
 });
 
-it('recovers a closed-tab payment even when the checkout preview is unavailable', async () => {
+it('recovers a closed-tab payment without loading a new checkout preview or allowance', async () => {
   savePendingConnectorCreation('alice', operation);
   mockApi.get.mockImplementation(async (path: string) => {
     if (path === '/api/me/console-sso/checkout-preview') {
@@ -219,9 +224,8 @@ it('recovers a closed-tab payment even when the checkout preview is unavailable'
     return [];
   });
   const { result } = renderCreation();
-  await waitFor(() => {
-    expect(result.current.billing.preview.error).toBeDefined();
-  });
+  expect(mockApi.get).not.toHaveBeenCalledWith('/api/me/console-sso/checkout-preview');
+  expect(mockApi.get).not.toHaveBeenCalledWith('/api/me/logto-enterprises');
   expect(result.current.billing.billingError).toBeUndefined();
   expect(result.current.billing.isBillingReady).toBe(true);
   await act(async () => {
@@ -232,6 +236,19 @@ it('recovers a closed-tab payment even when the checkout preview is unavailable'
   });
   expect(onCreated).toHaveBeenCalledWith('connector-one');
   expect(readPendingConnectorCreation('alice')).toBeUndefined();
+});
+
+it('does not reload billing previews after a recovered fulfillment fails', async () => {
+  savePendingConnectorCreation('alice', { ...operation, subscriptionId: 'paid-sub' });
+  mockApi.post.mockRejectedValueOnce(new Error('Core unavailable'));
+  const { result } = renderCreation();
+  await act(async () => {
+    await result.current.create(SsoProviderName.OIDC);
+  });
+  expect(result.current.status).toBe('error');
+  expect(mockApi.get).not.toHaveBeenCalledWith('/api/me/console-sso/checkout-preview');
+  expect(mockApi.get).not.toHaveBeenCalledWith('/api/me/logto-enterprises');
+  expect(result.current.operation?.subscriptionId).toBe('paid-sub');
 });
 
 it('polls delayed payments and fulfills only after verified payment', async () => {
@@ -282,21 +299,23 @@ it('stops payment polling after the creation modal unmounts', async () => {
   expect(mockApi.post).not.toHaveBeenCalled();
 });
 
-it('refreshes connector and billing reads after abandoning an old paid intention', async () => {
+it('enables fresh billing reads after abandoning an old paid intention', async () => {
   savePendingConnectorCreation('alice', {
     ...operation,
     sessionId: undefined,
     subscriptionId: 'canceled-sub',
   });
   const { result } = renderCreation();
-  await waitFor(() => {
-    expect(result.current.billing.preview.data).toBeDefined();
-  });
+  expect(result.current.billing.isRecovering).toBe(true);
+  expect(mockApi.get).not.toHaveBeenCalledWith('/api/me/console-sso/checkout-preview');
   mockApi.get.mockClear();
   await act(async () => {
     await result.current.startOver();
   });
   expect(result.current.operation).toBeUndefined();
+  await waitFor(() => {
+    expect(result.current.billing.preview.data).toBeDefined();
+  });
   expect(mockApi.get).toHaveBeenCalledWith('/api/me/console-sso/connectors');
   expect(mockApi.get).toHaveBeenCalledWith('/api/me/console-sso/checkout-preview');
   expect(mockApi.get).toHaveBeenCalledWith('/api/me/logto-enterprises');

@@ -44,8 +44,6 @@ const cloud = {
       'Płatność jest przetwarzana. Sprawdzimy ją ponownie automatycznie. Nie rozpoczynaj kolejnego zakupu.',
     checkout_expired:
       'Ten nieopłacony Checkout wygasł. Przejdź do płatności, aby spróbować ponownie.',
-    creation_retry:
-      'Tworzenie nie zostało ukończone. Spróbuj ponownie bez ponownej płatności. Jeśli subskrypcja się zakończyła, zacznij od nowa, aby kupić nową.',
     billing_start_over:
       'Zacząć od nowa z nowym konektorem? Może to usunąć nieukończoną konfigurację i anulować nieopłacony Checkout. Opłacona subskrypcja nie zostanie anulowana ani zwrócona.',
     back_to_list: 'Wróć do Console SSO',

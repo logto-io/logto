@@ -2,6 +2,7 @@ import { type consoleSsoRouter } from '@logto/cloud/routes';
 import { type SsoProviderName } from '@logto/schemas';
 import Client from '@withtyped/client';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useSWRConfig } from 'swr';
 
 import { toastResponseError, useCloudApi } from '@/cloud/hooks/use-cloud-api';
 
@@ -24,8 +25,7 @@ export const useConnectorCreation = (userId: string, onCreated: (id: string) => 
   const { mutate } = useConsoleSsoConnectors();
   const [operation, setOperation] = useState(() => readPendingConnectorCreation(userId));
   const billing = useCreationBilling(operation);
-  const { mutate: mutatePreview } = billing.preview;
-  const { mutate: mutateCoverage } = billing.coverage;
+  const { mutate: mutateCache } = useSWRConfig();
   const [status, setStatus] = useState<
     'open' | 'expired' | 'payment_pending' | 'payment_received' | 'error'
   >();
@@ -45,8 +45,12 @@ export const useConnectorCreation = (userId: string, onCreated: (id: string) => 
     [api]
   );
   const refresh = useCallback(async () => {
-    await Promise.allSettled([mutate(), mutatePreview(), mutateCoverage()]);
-  }, [mutate, mutatePreview, mutateCoverage]);
+    await Promise.allSettled([
+      mutate(),
+      mutateCache(['/api/me/console-sso/checkout-preview', userId], undefined, true),
+      mutateCache(['console-sso-coverage', userId], undefined, true),
+    ]);
+  }, [mutate, mutateCache, userId]);
   const run = useCallback(
     async (current: PendingConnectorCreation, redirect: boolean) => {
       if (busy.current) {

@@ -46,8 +46,6 @@ const cloud = {
       'O pagamento está sendo processado. Verificaremos novamente de forma automática. Não inicie outra compra.',
     checkout_expired:
       'Este Checkout não pago expirou. Continue para o pagamento para tentar novamente.',
-    creation_retry:
-      'A criação está incompleta. Tente novamente sem pagar de novo. Se a assinatura tiver terminado, recomece para comprar uma nova.',
     billing_start_over:
       'Recomeçar com um novo conector? Isso pode remover configurações incompletas e cancelar um Checkout não pago. Não cancela nem reembolsa uma assinatura paga.',
     back_to_list: 'Voltar para o SSO do Console',

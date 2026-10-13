@@ -44,8 +44,6 @@ const cloud = {
     payment_pending:
       'El pago se está procesando. Lo comprobaremos de nuevo automáticamente. No inicies otra compra.',
     checkout_expired: 'Este Checkout sin pagar ha caducado. Continúa al pago para reintentarlo.',
-    creation_retry:
-      'La creación está incompleta. Reintenta sin volver a pagar. Si tu suscripción ha terminado, empieza de nuevo para comprar otra.',
     billing_start_over:
       '¿Empezar de nuevo con otro conector? Esto puede eliminar la configuración incompleta y cancelar un Checkout sin pagar. No cancela ni reembolsa una suscripción pagada.',
     back_to_list: 'Volver a SSO de la consola',

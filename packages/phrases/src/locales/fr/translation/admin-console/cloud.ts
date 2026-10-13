@@ -45,8 +45,6 @@ const cloud = {
     payment_pending:
       'Le paiement est en cours de traitement. Nous vérifierons à nouveau automatiquement. Ne lancez pas un autre achat.',
     checkout_expired: 'Ce Checkout impayé a expiré. Continuez vers le paiement pour réessayer.',
-    creation_retry:
-      'La création est inachevée. Réessayez sans payer à nouveau. Si votre abonnement est terminé, recommencez pour en acheter un nouveau.',
     billing_start_over:
       'Recommencer avec un nouveau connecteur ? Cela peut supprimer une configuration inachevée et annuler un Checkout impayé. Un abonnement payé ne sera ni annulé ni remboursé.',
     back_to_list: 'Retour au SSO de la console',
