@@ -34,6 +34,28 @@ const cloud = {
     },
   },
   console_sso: {
+    included: 'Usar a cota Enterprise',
+    personal: 'Compra pessoal',
+    included_capacity:
+      'Cota Enterprise compartilhada: {{used}} de {{limit}} conectores utilizados.',
+    included_unlimited: 'Cota Enterprise ilimitada; {{used}} conectores utilizados.',
+    first_price:
+      '128 USD por conector por mês. O pagamento inicia a assinatura, mesmo que a configuração esteja incompleta.',
+    addition_price:
+      '128 USD por conector por mês. Adicionado à assinatura existente; as cobranças proporcionais serão incluídas na próxima fatura.',
+    checkout: 'Continuar para o pagamento',
+    billing_unavailable:
+      'As informações de cobrança estão indisponíveis. Tente novamente para consultar sua cota e assinatura.',
+    payment_pending:
+      'O pagamento está sendo processado. Verificaremos novamente de forma automática. Não inicie outra compra.',
+    checkout_expired:
+      'Este Checkout não pago expirou. Continue para o pagamento para tentar novamente.',
+    creation_retry:
+      'A criação está incompleta. Tente novamente sem pagar de novo. Se a assinatura tiver terminado, recomece para comprar uma nova.',
+    billing_start_over:
+      'Recomeçar com um novo conector? Isso pode remover configurações incompletas e cancelar um Checkout não pago. Não cancela nem reembolsa uma assinatura paga.',
+    delete_billing:
+      'Excluir conectores pagos pessoalmente reduz a quantidade faturada e aplica créditos proporcionais à próxima fatura. Ao excluir o último conector, a assinatura permanece ativa com quantidade 0.',
     back_to_list: 'Voltar para o SSO do Console',
     create: 'Adicionar conector',
     title: 'SSO do console',

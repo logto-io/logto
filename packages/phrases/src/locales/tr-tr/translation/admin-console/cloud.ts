@@ -33,6 +33,28 @@ const cloud = {
     },
   },
   console_sso: {
+    included: 'Enterprise kotasını kullan',
+    personal: 'Kişisel satın alma',
+    included_capacity:
+      'Paylaşılan Enterprise kotası: {{limit}} bağlayıcının {{used}} tanesi kullanılıyor.',
+    included_unlimited: 'Sınırsız Enterprise kotası; {{used}} bağlayıcı kullanılıyor.',
+    first_price:
+      'Bağlayıcı başına aylık 128 USD. Kurulum tamamlanmamış olsa bile ödeme aboneliği başlatır.',
+    addition_price:
+      'Bağlayıcı başına aylık 128 USD. Mevcut aboneliğinize eklenir; orantılı ücretler sonraki faturanızda tahsil edilir.',
+    checkout: 'Ödemeye devam et',
+    billing_unavailable:
+      'Faturalama bilgileri alınamıyor. Kota ve aboneliğinizi kontrol etmek için tekrar deneyin.',
+    payment_pending:
+      'Ödeme işleniyor. Otomatik olarak tekrar kontrol edeceğiz. Başka bir satın alma başlatmayın.',
+    checkout_expired:
+      'Bu ödenmemiş Checkout oturumunun süresi doldu. Tekrar denemek için ödemeye devam edin.',
+    creation_retry:
+      'Oluşturma tamamlanmadı. Tekrar ödeme yapmadan yeniden deneyin. Aboneliğiniz sona erdiyse yeni abonelik satın almak için baştan başlayın.',
+    billing_start_over:
+      'Yeni bir bağlayıcıyla baştan başlansın mı? Tamamlanmamış yapılandırma silinebilir ve ödenmemiş Checkout iptal edilebilir. Ödenmiş abonelik iptal edilmez veya iade edilmez.',
+    delete_billing:
+      'Kişisel olarak ödenen bağlayıcıların silinmesi faturalandırılan miktarı azaltır ve sonraki faturaya orantılı kredi uygular. Son bağlayıcı silindiğinde abonelik 0 miktarla etkin kalır.',
     back_to_list: "Console SSO'ya dön",
     create: 'Bağlayıcı ekle',
     title: 'Konsol SSO',

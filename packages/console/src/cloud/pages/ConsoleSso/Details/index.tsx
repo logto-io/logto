@@ -25,6 +25,7 @@ import connectorStyles from '@/pages/EnterpriseSsoDetails/index.module.scss';
 
 import { toastResponseError, useCloudApi } from '../../../hooks/use-cloud-api';
 import { useConsoleSsoConnector, useConsoleSsoConnectors } from '../use-console-sso';
+import { useConsoleSsoCheckoutPreview, useConsoleSsoCoverage } from '../use-creation-billing';
 
 import Connection from './Connection';
 import Experience from './Experience';
@@ -38,6 +39,8 @@ function Details() {
   const api = useCloudApi<typeof consoleSsoRouter>({ hideErrorToast: true });
   const { data, error, isLoading, mutate } = useConsoleSsoConnector(connectorId);
   const { mutate: mutateList } = useConsoleSsoConnectors();
+  const { mutate: mutateSubscription } = useConsoleSsoCheckoutPreview();
+  const { mutate: mutateCoverage } = useConsoleSsoCoverage();
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
@@ -50,7 +53,7 @@ function Details() {
   }
 
   const refresh = async () => {
-    await Promise.allSettled([mutate(), mutateList()]);
+    await Promise.allSettled([mutate(), mutateList(), mutateSubscription(), mutateCoverage()]);
   };
   const onDelete = async () => {
     if (isDeleting) {
@@ -171,6 +174,9 @@ function Details() {
                     onConfirm={onDelete}
                   >
                     <DynamicT forKey="enterprise_sso_details.delete_confirm_modal_content" />
+                    <p>
+                      <DynamicT forKey="cloud.console_sso.delete_billing" />
+                    </p>
                   </ConfirmModal>
                 </>
               )}

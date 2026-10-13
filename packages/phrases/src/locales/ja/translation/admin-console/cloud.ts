@@ -31,6 +31,25 @@ const cloud = {
     },
   },
   console_sso: {
+    included: 'Enterprise の利用枠を使用',
+    personal: '個人で購入',
+    included_capacity: 'Enterprise の共有枠：{{limit}} 個中 {{used}} 個のコネクターを使用中。',
+    included_unlimited: 'Enterprise の利用枠は無制限です。{{used}} 個のコネクターを使用中。',
+    first_price:
+      'コネクター 1 個につき月額 128 米ドル。設定が未完了でも、支払い後にサブスクリプションが開始されます。',
+    addition_price:
+      'コネクター 1 個につき月額 128 米ドル。既存のサブスクリプションに追加され、日割り料金は次回の請求で精算されます。',
+    checkout: '支払いに進む',
+    billing_unavailable:
+      '請求情報を取得できません。再試行して利用枠とサブスクリプションを確認してください。',
+    payment_pending: '支払いを処理中です。自動的に再確認します。重複して購入しないでください。',
+    checkout_expired: 'この未払いの Checkout は期限切れです。支払いに進んで再試行してください。',
+    creation_retry:
+      '作成が未完了です。再度支払わずに再試行できます。サブスクリプションが終了している場合は、最初からやり直して新しく購入してください。',
+    billing_start_over:
+      '新しいコネクターの作成をやり直しますか？未完了の設定が削除され、未払いの Checkout が取り消される場合があります。支払い済みのサブスクリプションは解約・返金されません。',
+    delete_billing:
+      '個人で購入したコネクターを削除すると請求数量が減り、日割りの控除額が次回の請求に反映されます。最後のコネクターを削除しても、数量 0 でサブスクリプションは継続します。',
     back_to_list: 'Console SSO に戻る',
     create: 'コネクターを追加',
     title: 'コンソール SSO',

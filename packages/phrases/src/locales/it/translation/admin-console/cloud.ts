@@ -34,6 +34,26 @@ const cloud = {
     },
   },
   console_sso: {
+    included: 'Usa la quota Enterprise',
+    personal: 'Acquisto personale',
+    included_capacity: 'Quota Enterprise condivisa: {{used}} connettori utilizzati su {{limit}}.',
+    included_unlimited: 'Quota Enterprise illimitata; {{used}} connettori utilizzati.',
+    first_price:
+      '128 USD per connettore al mese. Il pagamento avvia l’abbonamento, anche se la configurazione è incompleta.',
+    addition_price:
+      '128 USD per connettore al mese. Aggiunta all’abbonamento esistente; gli addebiti proporzionali saranno riscossi con la prossima fattura.',
+    checkout: 'Continua al pagamento',
+    billing_unavailable:
+      'Le informazioni di fatturazione non sono disponibili. Riprova per verificare quota e abbonamento.',
+    payment_pending:
+      'Il pagamento è in elaborazione. Verificheremo di nuovo automaticamente. Non avviare un altro acquisto.',
+    checkout_expired: 'Questo Checkout non pagato è scaduto. Continua al pagamento per riprovare.',
+    creation_retry:
+      'La creazione è incompleta. Riprova senza pagare di nuovo. Se l’abbonamento è terminato, ricomincia per acquistarne uno nuovo.',
+    billing_start_over:
+      'Ricominciare con un nuovo connettore? Potrebbero essere rimossi i dati di configurazione incompleti e annullato un Checkout non pagato. Un abbonamento pagato non viene annullato né rimborsato.',
+    delete_billing:
+      'Eliminare connettori pagati personalmente riduce la quantità fatturata e applica crediti proporzionali alla prossima fattura. Eliminando l’ultimo connettore, l’abbonamento rimane attivo con quantità 0.',
     back_to_list: 'Torna a Console SSO',
     create: 'Aggiungi connettore',
     title: 'SSO della console',

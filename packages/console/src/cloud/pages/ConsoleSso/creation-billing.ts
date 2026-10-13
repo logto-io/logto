@@ -1,0 +1,153 @@
+import { type consoleSsoRouter } from '@logto/cloud/routes';
+import type Client from '@withtyped/client';
+
+import { type LogtoEnterpriseSubscriptionResponse } from '@/cloud/types/router';
+
+import {
+  clearPendingConnectorCreation,
+  type PendingConnectorCreation,
+  savePendingConnectorCreation,
+} from './connector-creation-idempotency';
+
+/** Match the contract's basic allowance; tenant plans and add-on totals do not grant coverage. */
+export const getIncludedCapacity = (enterprise?: LogtoEnterpriseSubscriptionResponse) => {
+  const limit = enterprise?.quota?.basicQuota.consoleSsoConnectorLimit;
+  const used = enterprise?.usages?.consoleSsoConnectorLimit;
+  const isEligible =
+    enterprise?.quotaScope === 'shared' &&
+    (enterprise.subscription?.status === 'active' ||
+      enterprise.subscription?.status === 'trialing');
+  return {
+    limit,
+    used,
+    isAvailable: Boolean(
+      isEligible &&
+        typeof used === 'number' &&
+        (limit === null || (limit !== undefined && used < limit))
+    ),
+  };
+};
+
+export type CreationFunding = {
+  funding: 'included' | 'personal';
+  subscriptionId?: string;
+};
+
+/** Keep billing selection fixed once a creation request may have reached the server. */
+export const selectCreationFunding = (
+  userId: string,
+  operation: PendingConnectorCreation,
+  funding: CreationFunding
+) =>
+  operation.funding
+    ? operation
+    : savePendingConnectorCreation(userId, { ...operation, ...funding });
+
+/** Resume payment or fulfillment using the persisted intention, never a redirect's payment claim. */
+export const continueConnectorCreation = async (
+  userId: string,
+  operation: PendingConnectorCreation,
+  getApi: (key: string) => Client<typeof consoleSsoRouter>,
+  restartExpired: boolean
+) => {
+  const enroll = async (current: PendingConnectorCreation) =>
+    getApi(current.checkoutKey ?? current.key).post('/api/me/console-sso/checkout-session', {
+      body: { providerName: current.providerName },
+    });
+  const getEnrollment = async () => {
+    if (!operation.sessionId) {
+      return { enrollment: await enroll(operation), current: operation };
+    }
+    const session = await getApi(operation.key).get(
+      '/api/me/console-sso/checkout-session/:sessionId',
+      {
+        params: { sessionId: operation.sessionId },
+      }
+    );
+    if (session.status !== 'expired' || !restartExpired) {
+      return { enrollment: session, current: operation };
+    }
+    // A verified unpaid expiry ends this payment attempt, not the connector creation intention.
+    const { sessionId, ...remaining } = operation;
+    const current = savePendingConnectorCreation(userId, {
+      ...remaining,
+      checkoutKey: crypto.randomUUID(),
+    });
+    return { enrollment: await enroll(current), current };
+  };
+  const createConnector = async (current: PendingConnectorCreation) => {
+    const connector = await getApi(current.key).post('/api/me/console-sso/connectors', {
+      body: {
+        providerName: current.providerName,
+        ...(current.subscriptionId && { stripeUserSubscriptionId: current.subscriptionId }),
+      },
+    });
+    return { status: 'created' as const, id: connector.id };
+  };
+  if (operation.funding === 'included' || operation.subscriptionId) {
+    return createConnector(operation);
+  }
+  if (operation.funding !== 'personal') {
+    throw new Error('Select a funding source before creating a connector.');
+  }
+  const { enrollment, current: enrollmentOperation } = await getEnrollment();
+  if (enrollment.status === 'subscription_exists') {
+    return createConnector(
+      savePendingConnectorCreation(userId, {
+        ...enrollmentOperation,
+        subscriptionId: enrollment.subscriptionId,
+      })
+    );
+  }
+  // Persist before navigation or fulfillment. Only first enrollment has a Checkout session.
+  const current = savePendingConnectorCreation(userId, {
+    ...enrollmentOperation,
+    sessionId: enrollment.sessionId,
+    ...(enrollment.status === 'payment_received' &&
+      enrollment.subscriptionId && {
+        subscriptionId: enrollment.subscriptionId,
+      }),
+  });
+  if (enrollment.status === 'payment_received' && current.subscriptionId) {
+    return createConnector(current);
+  }
+  return enrollment;
+};
+
+/** Settle or expire the saved payment attempt before discarding a connector intention. */
+export const abandonConnectorCreation = async (
+  userId: string,
+  operation: PendingConnectorCreation,
+  getApi: (key: string) => Client<typeof consoleSsoRouter>
+) => {
+  const enrollment =
+    operation.funding === 'personal' && !operation.sessionId && !operation.subscriptionId
+      ? await getApi(operation.checkoutKey ?? operation.key).post(
+          '/api/me/console-sso/checkout-session',
+          {
+            body: { providerName: operation.providerName },
+          }
+        )
+      : undefined;
+  const current =
+    enrollment && enrollment.status !== 'subscription_exists'
+      ? savePendingConnectorCreation(userId, { ...operation, sessionId: enrollment.sessionId })
+      : operation;
+  if (current.sessionId) {
+    const session = await getApi(current.key).delete(
+      '/api/me/console-sso/checkout-session/:sessionId',
+      {
+        params: { sessionId: current.sessionId },
+      }
+    );
+    if (session.status === 'payment_pending' || session.status === 'open') {
+      return session;
+    }
+    if (session.status === 'payment_received' && session.subscriptionId) {
+      savePendingConnectorCreation(userId, { ...current, subscriptionId: session.subscriptionId });
+    }
+  }
+  await getApi(current.key).delete('/api/me/console-sso/connector-creation');
+  clearPendingConnectorCreation(userId);
+  return { status: 'abandoned' as const };
+};

@@ -35,6 +35,28 @@ const cloud = {
     },
   },
   console_sso: {
+    included: 'Enterprise-Kontingent verwenden',
+    personal: 'Persönlicher Kauf',
+    included_capacity:
+      'Gemeinsames Enterprise-Kontingent: {{used}} von {{limit}} Konnektoren verwendet.',
+    included_unlimited: 'Unbegrenztes Enterprise-Kontingent; {{used}} Konnektoren verwendet.',
+    first_price:
+      '128 USD pro Konnektor und Monat. Die Zahlung startet das Abonnement, auch wenn die Einrichtung noch nicht abgeschlossen ist.',
+    addition_price:
+      '128 USD pro Konnektor und Monat. Hinzufügen zum bestehenden Abonnement; anteilige Gebühren werden mit der nächsten Rechnung eingezogen.',
+    checkout: 'Weiter zur Zahlung',
+    billing_unavailable:
+      'Abrechnungsinformationen sind nicht verfügbar. Erneut versuchen, um Kontingent und Abonnement zu prüfen.',
+    payment_pending:
+      'Die Zahlung wird verarbeitet. Wir prüfen automatisch erneut. Bitte keinen weiteren Kauf starten.',
+    checkout_expired:
+      'Dieser unbezahlte Checkout ist abgelaufen. Zur Zahlung gehen, um es erneut zu versuchen.',
+    creation_retry:
+      'Die Erstellung ist unvollständig. Ohne erneute Zahlung wiederholen. Wenn das Abonnement beendet wurde, neu beginnen und ein neues Abonnement kaufen.',
+    billing_start_over:
+      'Mit einem neuen Konnektor neu beginnen? Unvollständige Konfigurationen können entfernt und ein unbezahlter Checkout abgebrochen werden. Ein bezahltes Abonnement wird weder gekündigt noch erstattet.',
+    delete_billing:
+      'Das Löschen persönlich bezahlter Konnektoren reduziert die abgerechnete Anzahl. Anteiliges Guthaben wird mit der nächsten Rechnung verrechnet. Nach dem Löschen des letzten Konnektors bleibt das Abonnement mit Anzahl 0 aktiv.',
     back_to_list: 'Zurück zu Console SSO',
     create: 'Konnektor hinzufügen',
     title: 'Konsolen-SSO',

@@ -34,6 +34,26 @@ const cloud = {
     },
   },
   console_sso: {
+    included: 'Use Enterprise allowance',
+    personal: 'Personal purchase',
+    included_capacity: 'Shared Enterprise allowance: {{used}} of {{limit}} connectors used.',
+    included_unlimited: 'Unlimited Enterprise allowance; {{used}} connectors used.',
+    first_price:
+      'USD 128 per connector per month. Payment starts the subscription, even if setup is unfinished.',
+    addition_price:
+      'USD 128 per connector per month. Add to your existing subscription; prorated charges are collected on your next bill.',
+    checkout: 'Continue to payment',
+    billing_unavailable:
+      'Billing information is unavailable. Retry to check your allowance and subscription.',
+    payment_pending:
+      'Payment is processing. We will check again automatically. Do not start another purchase.',
+    checkout_expired: 'This unpaid Checkout has expired. Continue to payment to try again.',
+    creation_retry:
+      'Creation is incomplete. Retry without paying again. If your subscription has ended, start over to purchase a new subscription.',
+    billing_start_over:
+      'Start over with a new connector? This may remove unfinished configuration and cancel an unpaid Checkout. It does not cancel or refund a paid subscription.',
+    delete_billing:
+      'For personally paid connectors, deletion reduces the billed quantity and applies prorated credits to the next bill. Deleting the last connector keeps the subscription active at quantity 0.',
     back_to_list: 'Back to Console SSO',
     create: 'Add connector',
     title: 'Console SSO',

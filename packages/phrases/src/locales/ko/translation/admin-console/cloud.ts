@@ -29,6 +29,24 @@ const cloud = {
     },
   },
   console_sso: {
+    included: 'Enterprise 할당량 사용',
+    personal: '개인 구매',
+    included_capacity: 'Enterprise 공유 할당량: 커넥터 {{limit}}개 중 {{used}}개 사용 중.',
+    included_unlimited: 'Enterprise 할당량은 무제한이며 커넥터 {{used}}개를 사용 중입니다.',
+    first_price: '커넥터당 월 128 USD입니다. 설정이 완료되지 않아도 결제 후 구독이 시작됩니다.',
+    addition_price:
+      '커넥터당 월 128 USD입니다. 기존 구독에 추가되며 일할 계산된 요금은 다음 청구서에 반영됩니다.',
+    checkout: '결제 계속하기',
+    billing_unavailable:
+      '청구 정보를 불러올 수 없습니다. 다시 시도하여 할당량과 구독을 확인하세요.',
+    payment_pending: '결제를 처리 중입니다. 자동으로 다시 확인합니다. 중복 구매하지 마세요.',
+    checkout_expired: '이 미결제 Checkout이 만료되었습니다. 결제로 이동하여 다시 시도하세요.',
+    creation_retry:
+      '생성이 완료되지 않았습니다. 다시 결제하지 않고 재시도할 수 있습니다. 구독이 종료된 경우 처음부터 시작하여 새 구독을 구매하세요.',
+    billing_start_over:
+      '새 커넥터 생성을 다시 시작할까요? 미완료 설정이 삭제되고 미결제 Checkout이 취소될 수 있습니다. 결제된 구독은 취소되거나 환불되지 않습니다.',
+    delete_billing:
+      '개인 유료 커넥터를 삭제하면 청구 수량이 줄고 일할 계산된 크레딧이 다음 청구서에 반영됩니다. 마지막 커넥터를 삭제해도 수량 0으로 구독이 유지됩니다.',
     back_to_list: 'Console SSO로 돌아가기',
     create: '커넥터 추가',
     title: '콘솔 SSO',

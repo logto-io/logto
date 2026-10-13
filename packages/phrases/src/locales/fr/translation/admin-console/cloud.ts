@@ -35,6 +35,26 @@ const cloud = {
     },
   },
   console_sso: {
+    included: 'Utiliser le quota Enterprise',
+    personal: 'Achat personnel',
+    included_capacity: 'Quota Enterprise partagé : {{used}} connecteurs utilisés sur {{limit}}.',
+    included_unlimited: 'Quota Enterprise illimité ; {{used}} connecteurs utilisés.',
+    first_price:
+      '128 USD par connecteur et par mois. Le paiement démarre l’abonnement, même si la configuration est inachevée.',
+    addition_price:
+      '128 USD par connecteur et par mois. Ajout à votre abonnement existant ; les frais au prorata seront prélevés sur la prochaine facture.',
+    checkout: 'Continuer vers le paiement',
+    billing_unavailable:
+      'Les informations de facturation sont indisponibles. Réessayez pour vérifier votre quota et votre abonnement.',
+    payment_pending:
+      'Le paiement est en cours de traitement. Nous vérifierons à nouveau automatiquement. Ne lancez pas un autre achat.',
+    checkout_expired: 'Ce Checkout impayé a expiré. Continuez vers le paiement pour réessayer.',
+    creation_retry:
+      'La création est inachevée. Réessayez sans payer à nouveau. Si votre abonnement est terminé, recommencez pour en acheter un nouveau.',
+    billing_start_over:
+      'Recommencer avec un nouveau connecteur ? Cela peut supprimer une configuration inachevée et annuler un Checkout impayé. Un abonnement payé ne sera ni annulé ni remboursé.',
+    delete_billing:
+      'La suppression de connecteurs payés personnellement réduit la quantité facturée et applique des crédits au prorata à la prochaine facture. Après la suppression du dernier connecteur, l’abonnement reste actif avec une quantité de 0.',
     back_to_list: 'Retour au SSO de la console',
     create: 'Ajouter un connecteur',
     title: 'SSO de la console',

@@ -29,6 +29,21 @@ const cloud = {
     },
   },
   console_sso: {
+    included: '使用 Enterprise 額度',
+    personal: '個人購買',
+    included_capacity: 'Enterprise 共用額度：已使用 {{used}} / {{limit}} 個連接器。',
+    included_unlimited: 'Enterprise 額度不限；已使用 {{used}} 個連接器。',
+    first_price: '每個連接器每月 128 美元。付款後訂閱即開始，無論設定是否完成。',
+    addition_price: '每個連接器每月 128 美元。加入現有訂閱，按比例費用計入下一期帳單。',
+    checkout: '前往付款',
+    billing_unavailable: '無法取得計費資訊，請重試以查詢額度和訂閱。',
+    payment_pending: '付款正在處理中，我們會自動再次查詢。請勿重複購買。',
+    checkout_expired: '此未付款的 Checkout 已到期。前往付款以重新嘗試。',
+    creation_retry: '建立尚未完成，可重試而無需再次付款。如果訂閱已終止，請重新開始購買新訂閱。',
+    billing_start_over:
+      '重新開始建立連接器？這可能刪除未完成的設定並取消未付款的 Checkout，不會取消已付款的訂閱或退款。',
+    delete_billing:
+      '刪除個人付費連接器會減少計費數量，並將按比例抵扣計入下一期帳單。刪除最後一個連接器後，訂閱仍保持有效，數量為 0。',
     back_to_list: '返回控制台 SSO',
     create: '新增連接器',
     title: '控制台 SSO',

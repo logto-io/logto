@@ -33,6 +33,27 @@ const cloud = {
     },
   },
   console_sso: {
+    included: 'Usar a quota Enterprise',
+    personal: 'Compra pessoal',
+    included_capacity: 'Quota Enterprise partilhada: {{used}} de {{limit}} conectores utilizados.',
+    included_unlimited: 'Quota Enterprise ilimitada; {{used}} conectores utilizados.',
+    first_price:
+      '128 USD por conector por mês. O pagamento inicia a subscrição, mesmo que a configuração esteja incompleta.',
+    addition_price:
+      '128 USD por conector por mês. Adicionado à subscrição existente; os encargos proporcionais serão incluídos na próxima fatura.',
+    checkout: 'Continuar para o pagamento',
+    billing_unavailable:
+      'As informações de faturação estão indisponíveis. Tente novamente para consultar a quota e a subscrição.',
+    payment_pending:
+      'O pagamento está a ser processado. Verificaremos novamente de forma automática. Não inicie outra compra.',
+    checkout_expired:
+      'Este Checkout não pago expirou. Continue para o pagamento para tentar novamente.',
+    creation_retry:
+      'A criação está incompleta. Tente novamente sem voltar a pagar. Se a subscrição tiver terminado, recomece para comprar uma nova.',
+    billing_start_over:
+      'Recomeçar com um novo conector? Isto pode remover configurações incompletas e cancelar um Checkout não pago. Não cancela nem reembolsa uma subscrição paga.',
+    delete_billing:
+      'Eliminar conectores pagos pessoalmente reduz a quantidade faturada e aplica créditos proporcionais à próxima fatura. Ao eliminar o último conector, a subscrição permanece ativa com quantidade 0.',
     back_to_list: 'Voltar ao SSO da Consola',
     create: 'Adicionar conector',
     title: 'SSO da consola',

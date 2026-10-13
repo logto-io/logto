@@ -34,6 +34,26 @@ const cloud = {
     },
   },
   console_sso: {
+    included: 'Usar la cuota Enterprise',
+    personal: 'Compra personal',
+    included_capacity: 'Cuota Enterprise compartida: {{used}} de {{limit}} conectores utilizados.',
+    included_unlimited: 'Cuota Enterprise ilimitada; {{used}} conectores utilizados.',
+    first_price:
+      '128 USD por conector al mes. El pago inicia la suscripción, aunque la configuración esté incompleta.',
+    addition_price:
+      '128 USD por conector al mes. Se añade a tu suscripción existente; los cargos prorrateados se cobrarán en la próxima factura.',
+    checkout: 'Continuar al pago',
+    billing_unavailable:
+      'La información de facturación no está disponible. Reintenta para consultar tu cuota y suscripción.',
+    payment_pending:
+      'El pago se está procesando. Lo comprobaremos de nuevo automáticamente. No inicies otra compra.',
+    checkout_expired: 'Este Checkout sin pagar ha caducado. Continúa al pago para reintentarlo.',
+    creation_retry:
+      'La creación está incompleta. Reintenta sin volver a pagar. Si tu suscripción ha terminado, empieza de nuevo para comprar otra.',
+    billing_start_over:
+      '¿Empezar de nuevo con otro conector? Esto puede eliminar la configuración incompleta y cancelar un Checkout sin pagar. No cancela ni reembolsa una suscripción pagada.',
+    delete_billing:
+      'Eliminar conectores de pago personal reduce la cantidad facturada y aplica créditos prorrateados a la próxima factura. Al eliminar el último conector, la suscripción sigue activa con cantidad 0.',
     back_to_list: 'Volver a SSO de la consola',
     create: 'Añadir conector',
     title: 'SSO de la consola',
