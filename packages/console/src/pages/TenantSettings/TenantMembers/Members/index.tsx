@@ -1,4 +1,3 @@
-import { TenantRole } from '@logto/schemas';
 import { condArray, conditional } from '@silverhand/essentials';
 import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +18,7 @@ import useCurrentUser from '@/hooks/use-current-user';
 
 import EditMemberModal from '../EditMemberModal';
 import useTenantMembersApi from '../use-tenant-members-api';
+import { getTenantRolePhrase } from '../utils';
 
 function Members() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.tenant_members' });
@@ -63,10 +63,7 @@ function Members() {
 
                 return organizationRoles.map(({ id }) => (
                   <Tag key={id} variant="cell">
-                    <RoleOption
-                      value={id}
-                      title={t(id === TenantRole.Admin ? 'admin' : 'collaborator')}
-                    />
+                    <RoleOption value={id} title={t(getTenantRolePhrase(id))} />
                   </Tag>
                 ));
               },

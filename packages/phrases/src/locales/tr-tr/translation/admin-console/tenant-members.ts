@@ -6,6 +6,7 @@ const tenant_members = {
   roles: 'Roller',
   admin: 'Yönetici',
   collaborator: 'İşbirlikçi',
+  viewer: 'Görüntüleyici',
   invitation_status: 'Davet durumu',
   inviter: 'Davet eden',
   expiration_date: 'Son kullanma tarihi',
