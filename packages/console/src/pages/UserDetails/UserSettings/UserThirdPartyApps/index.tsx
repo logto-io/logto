@@ -10,6 +10,7 @@ import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import Table from '@/ds-components/Table';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
 import styles from './index.module.scss';
 import useUserThirdPartyGrants, {
@@ -25,6 +26,9 @@ function UserThirdPartyApps({ userId }: Props) {
     keyPrefix: 'admin_console.user_details.third_party_apps',
   });
   const { show: showConfirm } = useConfirmModal();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const { rowData, hasRows, isLoading, error, mutate, removingApplicationId, removeByApplication } =
     useUserThirdPartyGrants(userId);
 
@@ -103,17 +107,18 @@ function UserThirdPartyApps({ userId }: Props) {
                 title: null,
                 dataIndex: 'action',
                 colSpan: 2,
-                render: (app) => (
-                  <Button
-                    title="general.remove"
-                    type="text"
-                    size="small"
-                    isLoading={removingApplicationId === app.applicationId}
-                    onClick={() => {
-                      void onRemove(app);
-                    }}
-                  />
-                ),
+                render: (app) =>
+                  isReadOnly ? null : (
+                    <Button
+                      title="general.remove"
+                      type="text"
+                      size="small"
+                      isLoading={removingApplicationId === app.applicationId}
+                      onClick={() => {
+                        void onRemove(app);
+                      }}
+                    />
+                  ),
               },
             ]}
             onRetry={async () => mutate(undefined, true)}
