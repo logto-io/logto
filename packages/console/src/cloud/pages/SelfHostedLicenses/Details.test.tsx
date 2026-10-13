@@ -8,6 +8,11 @@ import useCurrentUser from '@/hooks/use-current-user';
 
 import Details from './Details';
 
+jest.mock('@/hooks/use-current-tenant-scopes', () => ({
+  __esModule: true,
+  default: () => ({ access: { isReadOnly: false } }),
+}));
+
 // Jest's CommonJS resolver needs a virtual module for the ESM-only client package.
 jest.mock(
   '@withtyped/client',
