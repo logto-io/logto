@@ -17,12 +17,11 @@ const cloud = {
     issue_error: 'Lisans anahtarları oluşturulamadı. Lütfen tekrar dene.',
     install_title: 'Lisansını yükle',
     install_description:
-      'Her iki anahtar da aynı özellikleri ve kotaları sağlar. Sipariş formunda aksi belirtilmedikçe aboneliğin bir üretim dağıtımını kapsar. Bu dağıtım için üretim anahtarını, onu destekleyen ve üretim trafiğine hizmet vermeyen geliştirme, test ve üretim öncesi dağıtımlar için üretim dışı anahtarı kullan.',
+      'Her iki anahtar da aynı özellikleri ve kotaları sağlar. Sipariş formunda aksi belirtilmedikçe aboneliğin bir üretim dağıtımını kapsar.',
     install_copy:
       'Üretim dağıtımı için üretim anahtarını, geliştirme ve test için üretim dışı anahtarı kopyala.',
     install_paste:
       'Kendi sunucundaki konsolda Ayarlar → Lisans bölümünü aç, anahtarı yapıştır ve yükle.',
-    install_terms: 'Ayrıntılar için <a>Kendi sunucunda barındırma abonelik koşulları</a>na bak.',
     status: {
       active: 'Etkin',
       past_due: 'Ödeme gecikmiş',

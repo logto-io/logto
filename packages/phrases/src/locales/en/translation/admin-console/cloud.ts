@@ -18,12 +18,11 @@ const cloud = {
     issue_error: 'Unable to issue license keys. Please try again.',
     install_title: 'Install your license',
     install_description:
-      'Both keys unlock the same features and quotas. Unless your order form states otherwise, your subscription covers one production deployment. Use the production key for that deployment, and the non-production key for development, testing, and staging deployments that support it and do not serve production traffic.',
+      'Both keys unlock the same features and quotas. Unless your order form states otherwise, your subscription covers one production deployment.',
     install_copy:
       'Copy the production key for a production deployment, or the non-production key for development and testing.',
     install_paste:
       'In your self-hosted Console, open Settings → License, paste the key, and install it.',
-    install_terms: 'See the <a>Self-hosted Subscription Terms</a> for details.',
     status: {
       active: 'Active',
       past_due: 'Past due',

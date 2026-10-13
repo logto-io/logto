@@ -18,12 +18,11 @@ const cloud = {
     issue_error: 'Não foi possível emitir as chaves de licença. Tente novamente.',
     install_title: 'Instale sua licença',
     install_description:
-      'Ambas as chaves oferecem os mesmos recursos e cotas. A menos que seu formulário de pedido indique o contrário, sua assinatura cobre uma implantação de produção. Use a chave de produção para essa implantação e a chave de não produção para as implantações de desenvolvimento, testes e homologação que a apoiam e não atendem tráfego de produção.',
+      'Ambas as chaves oferecem os mesmos recursos e cotas. A menos que seu formulário de pedido indique o contrário, sua assinatura cobre uma implantação de produção.',
     install_copy:
       'Copie a chave de produção para produção ou a chave de não produção para desenvolvimento e testes.',
     install_paste:
       'No console auto-hospedado, abra Configurações → Licença, cole a chave e instale-a.',
-    install_terms: 'Consulte os <a>Termos de assinatura auto-hospedada</a> para mais detalhes.',
     status: {
       active: 'Ativa',
       past_due: 'Pagamento atrasado',
