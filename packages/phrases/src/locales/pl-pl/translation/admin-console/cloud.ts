@@ -33,8 +33,6 @@ const cloud = {
     },
   },
   console_sso: {
-    included: 'Użyj limitu Enterprise',
-    personal: 'Zakup osobisty',
     included_capacity: 'Wspólny limit Enterprise: wykorzystano {{used}} z {{limit}} konektorów.',
     included_unlimited: 'Nieograniczony limit Enterprise; wykorzystano {{used}} konektorów.',
     first_price:
@@ -42,8 +40,6 @@ const cloud = {
     addition_price:
       '128 USD za konektor miesięcznie. Dodanie do istniejącej subskrypcji; proporcjonalne opłaty zostaną pobrane z następną fakturą.',
     checkout: 'Przejdź do płatności',
-    billing_unavailable:
-      'Informacje rozliczeniowe są niedostępne. Spróbuj ponownie, aby sprawdzić limit i subskrypcję.',
     payment_pending:
       'Płatność jest przetwarzana. Sprawdzimy ją ponownie automatycznie. Nie rozpoczynaj kolejnego zakupu.',
     checkout_expired:
@@ -81,8 +77,6 @@ const cloud = {
     domain_dns_timeout: 'Sprawdzanie DNS nie powiodło się. Spróbujemy ponownie automatycznie.',
     domain_recovery: 'Zmiana domeny jest nieukończona.',
     start_over: 'Zacznij od nowa',
-    start_over_confirmation:
-      'Rozpoczęcie od nowa może usunąć niedokończoną konfigurację SSO. Czy chcesz kontynuować?',
     resume_creation:
       'Znaleziono niedokończone tworzenie. Kontynuuj z tym samym dostawcą, aby odzyskać ten konektor.',
   },

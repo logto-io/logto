@@ -1,15 +1,13 @@
-import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import InlineNotification from '@/ds-components/InlineNotification';
-import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 
 import styles from './index.module.scss';
 import { type useConnectorCreation } from './use-connector-creation';
 
 type Props = { readonly creation: ReturnType<typeof useConnectorCreation> };
 
-function BillingOptions({ creation }: Props) {
-  const { operation, status, isSubmitting, billing } = creation;
+function BillingNotice({ creation }: Props) {
+  const { status, billing } = creation;
   const {
     preview,
     coverage,
@@ -18,34 +16,9 @@ function BillingOptions({ creation }: Props) {
     isRecovering,
     billingError,
     isBillingReady,
-    setSelectedFunding,
   } = billing;
   return (
     <div className={styles.creationNotice}>
-      <RadioGroup
-        name="funding"
-        value={funding}
-        onChange={(value) => {
-          if (
-            !operation?.funding &&
-            !isSubmitting &&
-            (value === 'included' || value === 'personal')
-          ) {
-            setSelectedFunding(value);
-          }
-        }}
-      >
-        <Radio
-          value="included"
-          title="cloud.console_sso.included"
-          isDisabled={isSubmitting || Boolean(operation?.funding) || !coverage.data?.isAvailable}
-        />
-        <Radio
-          value="personal"
-          title="cloud.console_sso.personal"
-          isDisabled={isSubmitting || Boolean(operation?.funding)}
-        />
-      </RadioGroup>
       {coverage.data?.used !== undefined && coverage.data.limit !== undefined && (
         <p>
           <DynamicT
@@ -72,20 +45,8 @@ function BillingOptions({ creation }: Props) {
           <DynamicT forKey="general.loading" />
         </InlineNotification>
       )}
-      {billingError && (
-        <InlineNotification severity="error">
-          <DynamicT forKey="cloud.console_sso.billing_unavailable" />
-          <Button
-            title="general.retry"
-            onClick={() => {
-              void preview.mutate();
-              void coverage.mutate();
-            }}
-          />
-        </InlineNotification>
-      )}
-      {status && status !== 'open' && (
-        <InlineNotification severity={status === 'error' ? 'error' : 'info'}>
+      {status && status !== 'open' && status !== 'error' && (
+        <InlineNotification severity="info">
           <DynamicT
             forKey={
               status === 'payment_pending'
@@ -103,4 +64,4 @@ function BillingOptions({ creation }: Props) {
   );
 }
 
-export default BillingOptions;
+export default BillingNotice;

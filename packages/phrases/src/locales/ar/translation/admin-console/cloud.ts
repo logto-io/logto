@@ -30,8 +30,6 @@ const cloud = {
     },
   },
   console_sso: {
-    included: 'استخدام حصة Enterprise',
-    personal: 'شراء شخصي',
     included_capacity: 'حصة Enterprise المشتركة: تم استخدام {{used}} من {{limit}} موصلاً.',
     included_unlimited: 'حصة Enterprise غير محدودة؛ تم استخدام {{used}} موصلاً.',
     first_price:
@@ -39,7 +37,6 @@ const cloud = {
     addition_price:
       '128 دولاراً أمريكياً لكل موصل شهرياً. يُضاف إلى اشتراكك الحالي، وتُحصّل الرسوم التناسبية في الفاتورة التالية.',
     checkout: 'المتابعة إلى الدفع',
-    billing_unavailable: 'معلومات الفوترة غير متاحة. أعد المحاولة للتحقق من الحصة والاشتراك.',
     payment_pending: 'تتم معالجة الدفع. سنتحقق مجدداً تلقائياً. لا تبدأ عملية شراء أخرى.',
     checkout_expired: 'انتهت صلاحية Checkout غير المدفوع. تابع إلى الدفع للمحاولة مجدداً.',
     creation_retry:
@@ -73,7 +70,6 @@ const cloud = {
     domain_dns_timeout: 'فشل التحقق من DNS. سنعيد المحاولة تلقائيًا.',
     domain_recovery: 'لم يكتمل تغيير النطاق.',
     start_over: 'البدء من جديد',
-    start_over_confirmation: 'قد تؤدي إعادة البدء إلى حذف إعداد SSO غير المكتمل. هل تريد المتابعة؟',
     resume_creation:
       'تم العثور على عملية إنشاء غير مكتملة. تابع باستخدام الموفر نفسه لاستعادة هذا الموصل.',
   },

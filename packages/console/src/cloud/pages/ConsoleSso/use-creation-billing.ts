@@ -1,6 +1,5 @@
 import { type consoleSsoRouter } from '@logto/cloud/routes';
 import { type GuardedResponse, type ResponseError, type RouterRoutes } from '@withtyped/client';
-import { useState } from 'react';
 import useSWR from 'swr';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
@@ -11,7 +10,7 @@ import { getIncludedCapacity } from './creation-billing';
 
 export const useConsoleSsoCheckoutPreview = () => {
   const { user } = useCurrentUser();
-  const api = useCloudApi<typeof consoleSsoRouter>({ hideErrorToast: true });
+  const api = useCloudApi<typeof consoleSsoRouter>();
   return useSWR<
     GuardedResponse<
       RouterRoutes<typeof consoleSsoRouter>['get']['/api/me/console-sso/checkout-preview']
@@ -26,7 +25,7 @@ export const useConsoleSsoCheckoutPreview = () => {
 
 export const useConsoleSsoCoverage = () => {
   const { user } = useCurrentUser();
-  const api = useCloudApi({ hideErrorToast: true });
+  const api = useCloudApi();
   const result = useSWR<ReturnType<typeof getIncludedCapacity>, ResponseError>(
     user && ['console-sso-coverage', user.id],
     async () => {
@@ -51,9 +50,7 @@ export const useConsoleSsoCoverage = () => {
 export const useCreationBilling = (operation?: PendingConnectorCreation) => {
   const preview = useConsoleSsoCheckoutPreview();
   const coverage = useConsoleSsoCoverage();
-  const [selectedFunding, setSelectedFunding] = useState<'included' | 'personal'>();
-  const funding =
-    operation?.funding ?? selectedFunding ?? (coverage.data?.isAvailable ? 'included' : 'personal');
+  const funding = operation?.funding ?? (coverage.data?.isAvailable ? 'included' : 'personal');
   const subscriptionId =
     preview.data?.status === 'subscription_exists' ? preview.data.subscriptionId : undefined;
   const hasSubscription = Boolean(
@@ -66,8 +63,6 @@ export const useCreationBilling = (operation?: PendingConnectorCreation) => {
     : (coverage.error ?? (funding === 'personal' ? preview.error : undefined));
   const isBillingReady =
     isRecovering || Boolean(coverage.data && (funding === 'included' || preview.data));
-  const isIncludedUnavailable =
-    funding === 'included' && !isRecovering && !coverage.data?.isAvailable;
   return {
     preview,
     coverage,
@@ -77,7 +72,5 @@ export const useCreationBilling = (operation?: PendingConnectorCreation) => {
     isRecovering,
     billingError,
     isBillingReady,
-    isIncludedUnavailable,
-    setSelectedFunding,
   };
 };

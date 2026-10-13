@@ -29,14 +29,11 @@ const cloud = {
     },
   },
   console_sso: {
-    included: '使用 Enterprise 額度',
-    personal: '個人購買',
     included_capacity: 'Enterprise 共用額度：已使用 {{used}} / {{limit}} 個連接器。',
     included_unlimited: 'Enterprise 額度不限；已使用 {{used}} 個連接器。',
     first_price: '每個連接器每月 128 美元。付款後訂閱即開始，無論設定是否完成。',
     addition_price: '每個連接器每月 128 美元。加入現有訂閱，按比例費用計入下一期帳單。',
     checkout: '前往付款',
-    billing_unavailable: '無法取得計費資訊，請重試以查詢額度和訂閱。',
     payment_pending: '付款正在處理中，我們會自動再次查詢。請勿重複購買。',
     checkout_expired: '此未付款的 Checkout 已到期。前往付款以重新嘗試。',
     creation_retry: '建立尚未完成，可重試而無需再次付款。如果訂閱已終止，請重新開始購買新訂閱。',
@@ -67,7 +64,6 @@ const cloud = {
     domain_dns_timeout: 'DNS 檢查失敗。我們會自動重試。',
     domain_recovery: '網域變更尚未完成。',
     start_over: '重新開始',
-    start_over_confirmation: '重新開始可能會刪除尚未完成的 SSO 設定。是否繼續？',
     resume_creation: '發現未完成的建立操作。請使用相同的身分提供者繼續，以復原此連接器。',
   },
   general: {

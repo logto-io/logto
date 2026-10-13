@@ -15,7 +15,6 @@ import {
   abandonConnectorCreation,
   continueConnectorCreation,
   selectCreationFunding,
-  type CreationFunding,
 } from './creation-billing';
 import { useConsoleSsoConnectors } from './use-console-sso';
 import { useCreationBilling } from './use-creation-billing';
@@ -100,15 +99,19 @@ export const useConnectorCreation = (userId: string, onCreated: (id: string) => 
     };
   }, [isSubmitting, operation, run, status]);
 
-  const create = async (providerName: SsoProviderName, funding: CreationFunding) => {
-    if (busy.current) {
+  const create = async (providerName: SsoProviderName) => {
+    if (busy.current || !billing.isBillingReady || billing.billingError) {
       return;
     }
     try {
       const current = selectCreationFunding(
         userId,
         getOrCreatePendingConnectorCreation(userId, providerName),
-        funding
+        {
+          funding: billing.funding,
+          ...(billing.funding === 'personal' &&
+            billing.subscriptionId && { subscriptionId: billing.subscriptionId }),
+        }
       );
       setOperation(current);
       await run(current, true);

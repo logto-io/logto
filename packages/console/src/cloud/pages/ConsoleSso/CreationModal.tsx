@@ -19,7 +19,7 @@ import creationStyles from '@/pages/EnterpriseSso/SsoCreationModal/index.module.
 import { categorizeSsoConnectorProviders } from '@/pages/EnterpriseSso/SsoCreationModal/utils';
 import modalStyles from '@/scss/modal.module.scss';
 
-import BillingOptions from './BillingOptions';
+import BillingNotice from './BillingNotice';
 import styles from './index.module.scss';
 import { useConnectorCreation } from './use-connector-creation';
 
@@ -33,16 +33,7 @@ function CreationModal({ onClose, userId }: Props) {
   const api = useCloudApi<typeof consoleSsoRouter>({ hideErrorToast: true });
   const creation = useConnectorCreation(userId, onClose);
   const { operation, status, isSubmitting, create, startOver, billing } = creation;
-  const {
-    funding,
-    subscriptionId,
-    hasSubscription,
-    isRecovering,
-    billingError,
-    isBillingReady,
-    isIncludedUnavailable,
-    setSelectedFunding,
-  } = billing;
+  const { funding, hasSubscription, isRecovering, billingError, isBillingReady } = billing;
   const {
     data: providers,
     error,
@@ -62,10 +53,7 @@ function CreationModal({ onClose, userId }: Props) {
     if (!selected) {
       return;
     }
-    await create(z.nativeEnum(SsoProviderName).parse(selected), {
-      funding,
-      ...(funding === 'personal' && subscriptionId && { subscriptionId }),
-    });
+    await create(z.nativeEnum(SsoProviderName).parse(selected));
   };
   const select = (provider: string) => {
     if (!operation && !isSubmitting) {
@@ -83,7 +71,6 @@ function CreationModal({ onClose, userId }: Props) {
     });
     if (confirmed) {
       await startOver();
-      setSelectedFunding(undefined);
     }
   };
   return (
@@ -116,8 +103,7 @@ function CreationModal({ onClose, userId }: Props) {
               Boolean(error) ||
               Boolean(billingError) ||
               !isBillingReady ||
-              status === 'payment_pending' ||
-              isIncludedUnavailable
+              status === 'payment_pending'
             }
             isLoading={isSubmitting}
             onClick={submit}
@@ -141,7 +127,7 @@ function CreationModal({ onClose, userId }: Props) {
             <DynamicT forKey="cloud.console_sso.resume_creation" />
           </InlineNotification>
         )}
-        <BillingOptions creation={creation} />
+        <BillingNotice creation={creation} />
         {!providers && !error && <Skeleton numberOfLoadingConnectors={2} />}
         {error && (
           <InlineNotification className={styles.creationNotice} severity="error">

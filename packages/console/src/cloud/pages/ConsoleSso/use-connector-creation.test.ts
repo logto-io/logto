@@ -90,17 +90,118 @@ beforeEach(() => {
 });
 afterEach(() => {
   jest.useRealTimers();
+  jest.restoreAllMocks();
 });
 
-it('offers an explicit first purchase only after server billing reads finish', async () => {
+it('automatically uses personal billing only after server billing reads finish', async () => {
   const { result } = renderCreation();
   expect(result.current.billing.isBillingReady).toBe(false);
+  await act(async () => {
+    await result.current.create(SsoProviderName.OIDC);
+  });
   await waitFor(() => {
     expect(result.current.billing.isBillingReady).toBe(true);
   });
   expect(result.current.billing.funding).toBe('personal');
   expect(result.current.billing.hasSubscription).toBe(false);
   expect(mockApi.post).not.toHaveBeenCalled();
+});
+
+it('automatically uses Enterprise allowance before an existing personal subscription', async () => {
+  mockApi.get.mockImplementation(async (path: string) => {
+    if (path === '/api/me/logto-enterprises') {
+      return { logtoEnterprises: [{ id: 'enterprise-one' }] };
+    }
+    if (path === '/api/me/logto-enterprises/:id') {
+      return {
+        quotaScope: 'shared',
+        quota: { basicQuota: { consoleSsoConnectorLimit: 2 } },
+        usages: { consoleSsoConnectorLimit: 1 },
+        subscription: { status: 'active' },
+      };
+    }
+    if (path === '/api/me/console-sso/checkout-preview') {
+      return { status: 'subscription_exists', subscriptionId: 'personal-sub' };
+    }
+    return [];
+  });
+  const { result } = renderCreation();
+  await waitFor(() => {
+    expect(result.current.billing.isBillingReady).toBe(true);
+  });
+  await act(async () => {
+    await result.current.create(SsoProviderName.OIDC);
+  });
+  expect(mockApi.post.mock.calls).toEqual([
+    ['/api/me/console-sso/connectors', { body: { providerName: SsoProviderName.OIDC } }],
+  ]);
+});
+
+it.each([false, true])(
+  'automatically starts Checkout when no allowance is available (Enterprise: %s)',
+  async (hasEnterprise) => {
+    const assign = jest.fn();
+    jest.spyOn(window, 'location', 'get').mockReturnValue({ ...window.location, assign });
+    mockApi.get.mockImplementation(async (path: string) => {
+      if (path === '/api/me/logto-enterprises') {
+        return { logtoEnterprises: hasEnterprise ? [{ id: 'enterprise-one' }] : [] };
+      }
+      if (path === '/api/me/logto-enterprises/:id') {
+        return {
+          quotaScope: 'shared',
+          quota: { basicQuota: { consoleSsoConnectorLimit: 1 } },
+          usages: { consoleSsoConnectorLimit: 1 },
+          subscription: { status: 'active' },
+        };
+      }
+      if (path === '/api/me/console-sso/checkout-preview') {
+        return { status: 'checkout_required' };
+      }
+      return [];
+    });
+    mockApi.post.mockResolvedValue({
+      ...paidSession,
+      status: 'open',
+      subscriptionId: null,
+      redirectUri: 'https://checkout.stripe.com/session-one',
+    });
+    const { result } = renderCreation();
+    await waitFor(() => {
+      expect(result.current.billing.isBillingReady).toBe(true);
+    });
+    await act(async () => {
+      await result.current.create(SsoProviderName.OIDC);
+    });
+    expect(mockApi.post.mock.calls).toEqual([
+      ['/api/me/console-sso/checkout-session', { body: { providerName: SsoProviderName.OIDC } }],
+    ]);
+    expect(assign).toHaveBeenCalledWith('https://checkout.stripe.com/session-one');
+  }
+);
+
+it('automatically reuses a personal subscription without Checkout when no allowance is available', async () => {
+  mockApi.get.mockImplementation(async (path: string) => {
+    if (path === '/api/me/logto-enterprises') {
+      return { logtoEnterprises: [] };
+    }
+    if (path === '/api/me/console-sso/checkout-preview') {
+      return { status: 'subscription_exists', subscriptionId: 'personal-sub' };
+    }
+    return [];
+  });
+  const { result } = renderCreation();
+  await waitFor(() => {
+    expect(result.current.billing.isBillingReady).toBe(true);
+  });
+  await act(async () => {
+    await result.current.create(SsoProviderName.OIDC);
+  });
+  expect(mockApi.post.mock.calls).toEqual([
+    [
+      '/api/me/console-sso/connectors',
+      { body: { providerName: SsoProviderName.OIDC, stripeUserSubscriptionId: 'personal-sub' } },
+    ],
+  ]);
 });
 
 it('recovers a closed-tab payment even when the checkout preview is unavailable', async () => {
@@ -124,7 +225,7 @@ it('recovers a closed-tab payment even when the checkout preview is unavailable'
   expect(result.current.billing.billingError).toBeUndefined();
   expect(result.current.billing.isBillingReady).toBe(true);
   await act(async () => {
-    await result.current.create(SsoProviderName.SAML, { funding: 'personal' });
+    await result.current.create(SsoProviderName.SAML);
   });
   expect(mockApi.post).toHaveBeenCalledWith('/api/me/console-sso/connectors', {
     body: { providerName: SsoProviderName.OIDC, stripeUserSubscriptionId: 'paid-sub' },

@@ -33,8 +33,6 @@ const cloud = {
     },
   },
   console_sso: {
-    included: 'Usar a quota Enterprise',
-    personal: 'Compra pessoal',
     included_capacity: 'Quota Enterprise partilhada: {{used}} de {{limit}} conectores utilizados.',
     included_unlimited: 'Quota Enterprise ilimitada; {{used}} conectores utilizados.',
     first_price:
@@ -42,8 +40,6 @@ const cloud = {
     addition_price:
       '128 USD por conector por mês. Adicionado à subscrição existente; os encargos proporcionais serão incluídos na próxima fatura.',
     checkout: 'Continuar para o pagamento',
-    billing_unavailable:
-      'As informações de faturação estão indisponíveis. Tente novamente para consultar a quota e a subscrição.',
     payment_pending:
       'O pagamento está a ser processado. Verificaremos novamente de forma automática. Não inicie outra compra.',
     checkout_expired:
@@ -81,8 +77,6 @@ const cloud = {
     domain_dns_timeout: 'A verificação DNS falhou. Voltaremos a tentar automaticamente.',
     domain_recovery: 'A alteração do domínio está incompleta.',
     start_over: 'Recomeçar',
-    start_over_confirmation:
-      'Recomeçar pode eliminar a sua configuração de SSO incompleta. Pretende continuar?',
     resume_creation:
       'Foi encontrada uma criação incompleta. Continue com o mesmo fornecedor para recuperar este conector.',
   },
