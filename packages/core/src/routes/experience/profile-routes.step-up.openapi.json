@@ -18,7 +18,7 @@
       "post": {
         "responses": {
           "403": {
-            "description": "In a step-up authentication, a factor can only be enrolled after a first factor was verified or established in the same interaction (`session.step_up.forbidden_route`)."
+            "description": "In a step-up authentication, a factor can only be enrolled after a first factor was verified or established in the same interaction, and only a factor listed in `enrollableFactors` of the interaction: none while a factor the user already has can reach the requested authentication context, and never `EmailVerificationCode` or `PhoneVerificationCode`. `BackupCode` is only accepted after a TOTP or WebAuthn factor was enrolled in the same interaction (`session.step_up.forbidden_route`)."
           }
         }
       }

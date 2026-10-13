@@ -1695,6 +1695,20 @@ describe('ExperienceInteraction class', () => {
       );
     });
 
+    it('finishes as unmet when the linked connector is no longer on the sign-in experience', async () => {
+      const { experienceInteraction, provider } = createSocialOnlyStepUp({
+        signInExperienceOverrides: { socialSignInConnectorTargets: ['facebook'] },
+      });
+
+      // The sign-in page cannot render the connector, so it is no subject proof the user can give.
+      await expect(experienceInteraction.finishUnreachableStepUp()).resolves.toBe('redirectTo');
+      expect(provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({ error: 'unmet_authentication_requirements' })
+      );
+    });
+
     it.each([
       { name: 'another account', resolvedUser: { ...mockUser, id: 'someone-else' } },
       { name: 'no account', resolvedUser: undefined },
@@ -1709,6 +1723,24 @@ describe('ExperienceInteraction class', () => {
       expect(experienceInteraction.identifiedUserId).toBeUndefined();
       expect(provider.interactionResult).not.toHaveBeenCalled();
       expect(userLibraries.insertUser).not.toHaveBeenCalled();
+    });
+
+    it('keeps an unexpected error of a subject proof instead of reporting a conflict', async () => {
+      const { experienceInteraction, stepUpTenant } = createSocialOnlyStepUp();
+      const { libraries, queries } = stepUpTenant;
+      const record = new SocialVerification(libraries, queries, {
+        id: 'social-verification-id',
+        type: VerificationType.Social,
+        connectorId: 'github-connector',
+        socialUserInfo: { id: 'github-user' },
+      });
+      const databaseError = new Error('connection terminated');
+      jest.spyOn(record, 'identifyUser').mockRejectedValue(databaseError);
+      experienceInteraction.setVerificationRecord(record);
+
+      await expect(experienceInteraction.identifyUser('social-verification-id')).rejects.toBe(
+        databaseError
+      );
     });
 
     it('never links a social identity as subject proof', async () => {

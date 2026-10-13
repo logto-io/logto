@@ -171,6 +171,11 @@ export class Mfa {
     return [this.#totp, ...(this.#webAuthn ?? []), this.#backupCode].filter(Boolean);
   }
 
+  /** Whether this interaction bound a TOTP or a WebAuthn factor, the factors backup codes back up. */
+  get hasNewAuthenticatorFactor(): boolean {
+    return Boolean(this.#totp ?? this.#webAuthn?.length);
+  }
+
   markMfaEnabled() {
     this.#mfaEnabled = true;
   }
