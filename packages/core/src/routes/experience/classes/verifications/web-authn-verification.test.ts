@@ -20,7 +20,7 @@ await mockEsmWithActual('@simplewebauthn/server', () => ({
     registrationInfo: {
       credential: {
         id: 'credentialId',
-        publicKey: 'publicKey',
+        publicKey: new Uint8Array([0xfb, 0xff]),
         counter: 0,
       },
     },
@@ -31,11 +31,6 @@ await mockEsmWithActual('@simplewebauthn/server', () => ({
   verifyAuthenticationResponse: jest
     .fn()
     .mockResolvedValue({ verified: true, authenticationInfo: { newCounter: 2 } }),
-}));
-
-// Make isoBase64URL.fromBuffer passthrough for simple assertions
-await mockEsmWithActual('@simplewebauthn/server/helpers', () => ({
-  isoBase64URL: { fromBuffer: jest.fn((value) => value), toBuffer: jest.fn((value) => value) },
 }));
 
 const { WebAuthnVerification, SignInPasskeyVerification } = await import(
@@ -126,6 +121,7 @@ describe('WebAuthnVerification', () => {
         type: MfaFactor.WebAuthn,
         rpId,
         credentialId: 'credentialId',
+        publicKey: '-_8',
         counter: 0,
         agent: 'agent-x',
         transports: ['internal', 'hybrid'],

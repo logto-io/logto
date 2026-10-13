@@ -48,17 +48,13 @@ const { verifyWebAuthnAuthentication, verifyWebAuthnRegistration } = mockEsm(
       registrationInfo: {
         credential: {
           id: 'credentialId',
-          publicKey: 'publicKey',
+          publicKey: new Uint8Array([0xfb, 0xff]),
           counter: 0,
         },
       },
     }),
   })
 );
-
-mockEsm('@simplewebauthn/server/helpers', () => ({
-  isoBase64URL: { fromBuffer: jest.fn((value) => value) },
-}));
 
 const { bindMfaPayloadVerification, verifyMfaPayloadVerification } = await import(
   './mfa-payload-verification.js'
@@ -164,6 +160,7 @@ describe('bindMfaPayloadVerification', () => {
       ).resolves.toMatchObject({
         ...mockBindWebAuthn,
         rpId: additionalParameters.rpId,
+        publicKey: '-_8',
       });
 
       expect(verifyWebAuthnRegistration).toHaveBeenCalled();
