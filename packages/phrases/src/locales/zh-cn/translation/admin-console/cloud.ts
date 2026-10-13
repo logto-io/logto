@@ -39,8 +39,6 @@ const cloud = {
     creation_retry: '创建尚未完成，可重试而无需再次付款。如果订阅已终止，请重新开始购买新订阅。',
     billing_start_over:
       '重新开始创建连接器？这可能删除未完成的配置并取消未付款的 Checkout，不会取消已付款的订阅或退款。',
-    delete_billing:
-      '删除个人付费连接器会减少计费数量，并将按比例抵扣计入下一期账单。删除最后一个连接器后，订阅仍保持有效，数量为 0。',
     back_to_list: '返回控制台 SSO',
     create: '添加连接器',
     title: '控制台 SSO',

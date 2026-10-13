@@ -8,7 +8,7 @@ import useCurrentUser from '@/hooks/use-current-user';
 import { type PendingConnectorCreation } from './connector-creation-idempotency';
 import { getIncludedCapacity } from './creation-billing';
 
-export const useConsoleSsoCheckoutPreview = () => {
+const useConsoleSsoCheckoutPreview = () => {
   const { user } = useCurrentUser();
   const api = useCloudApi<typeof consoleSsoRouter>();
   return useSWR<
@@ -23,7 +23,7 @@ export const useConsoleSsoCheckoutPreview = () => {
   );
 };
 
-export const useConsoleSsoCoverage = () => {
+const useConsoleSsoCoverage = () => {
   const { user } = useCurrentUser();
   const api = useCloudApi();
   const result = useSWR<ReturnType<typeof getIncludedCapacity>, ResponseError>(

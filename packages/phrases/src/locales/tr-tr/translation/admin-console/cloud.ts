@@ -49,8 +49,6 @@ const cloud = {
       'Oluşturma tamamlanmadı. Tekrar ödeme yapmadan yeniden deneyin. Aboneliğiniz sona erdiyse yeni abonelik satın almak için baştan başlayın.',
     billing_start_over:
       'Yeni bir bağlayıcıyla baştan başlansın mı? Tamamlanmamış yapılandırma silinebilir ve ödenmemiş Checkout iptal edilebilir. Ödenmiş abonelik iptal edilmez veya iade edilmez.',
-    delete_billing:
-      'Kişisel olarak ödenen bağlayıcıların silinmesi faturalandırılan miktarı azaltır ve sonraki faturaya orantılı kredi uygular. Son bağlayıcı silindiğinde abonelik 0 miktarla etkin kalır.',
     back_to_list: "Console SSO'ya dön",
     create: 'Bağlayıcı ekle',
     title: 'Konsol SSO',

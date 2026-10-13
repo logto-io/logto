@@ -49,8 +49,6 @@ const cloud = {
       'La création est inachevée. Réessayez sans payer à nouveau. Si votre abonnement est terminé, recommencez pour en acheter un nouveau.',
     billing_start_over:
       'Recommencer avec un nouveau connecteur ? Cela peut supprimer une configuration inachevée et annuler un Checkout impayé. Un abonnement payé ne sera ni annulé ni remboursé.',
-    delete_billing:
-      'La suppression de connecteurs payés personnellement réduit la quantité facturée et applique des crédits au prorata à la prochaine facture. Après la suppression du dernier connecteur, l’abonnement reste actif avec une quantité de 0.',
     back_to_list: 'Retour au SSO de la console',
     create: 'Ajouter un connecteur',
     title: 'SSO de la console',

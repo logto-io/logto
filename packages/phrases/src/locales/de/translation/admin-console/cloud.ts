@@ -51,8 +51,6 @@ const cloud = {
       'Die Erstellung ist unvollständig. Ohne erneute Zahlung wiederholen. Wenn das Abonnement beendet wurde, neu beginnen und ein neues Abonnement kaufen.',
     billing_start_over:
       'Mit einem neuen Konnektor neu beginnen? Unvollständige Konfigurationen können entfernt und ein unbezahlter Checkout abgebrochen werden. Ein bezahltes Abonnement wird weder gekündigt noch erstattet.',
-    delete_billing:
-      'Das Löschen persönlich bezahlter Konnektoren reduziert die abgerechnete Anzahl. Anteiliges Guthaben wird mit der nächsten Rechnung verrechnet. Nach dem Löschen des letzten Konnektors bleibt das Abonnement mit Anzahl 0 aktiv.',
     back_to_list: 'Zurück zu Console SSO',
     create: 'Konnektor hinzufügen',
     title: 'Konsolen-SSO',

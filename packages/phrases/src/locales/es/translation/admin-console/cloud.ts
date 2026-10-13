@@ -48,8 +48,6 @@ const cloud = {
       'La creación está incompleta. Reintenta sin volver a pagar. Si tu suscripción ha terminado, empieza de nuevo para comprar otra.',
     billing_start_over:
       '¿Empezar de nuevo con otro conector? Esto puede eliminar la configuración incompleta y cancelar un Checkout sin pagar. No cancela ni reembolsa una suscripción pagada.',
-    delete_billing:
-      'Eliminar conectores de pago personal reduce la cantidad facturada y aplica créditos prorrateados a la próxima factura. Al eliminar el último conector, la suscripción sigue activa con cantidad 0.',
     back_to_list: 'Volver a SSO de la consola',
     create: 'Añadir conector',
     title: 'SSO de la consola',

@@ -28,7 +28,7 @@ export const getIncludedCapacity = (enterprise?: LogtoEnterpriseSubscriptionResp
   };
 };
 
-export type CreationFunding = {
+type CreationFunding = {
   funding: 'included' | 'personal';
   subscriptionId?: string;
 };

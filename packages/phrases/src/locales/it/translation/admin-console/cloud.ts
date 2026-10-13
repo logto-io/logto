@@ -48,8 +48,6 @@ const cloud = {
       'La creazione è incompleta. Riprova senza pagare di nuovo. Se l’abbonamento è terminato, ricomincia per acquistarne uno nuovo.',
     billing_start_over:
       'Ricominciare con un nuovo connettore? Potrebbero essere rimossi i dati di configurazione incompleti e annullato un Checkout non pagato. Un abbonamento pagato non viene annullato né rimborsato.',
-    delete_billing:
-      'Eliminare connettori pagati personalmente riduce la quantità fatturata e applica crediti proporzionali alla prossima fattura. Eliminando l’ultimo connettore, l’abbonamento rimane attivo con quantità 0.',
     back_to_list: 'Torna a Console SSO',
     create: 'Aggiungi connettore',
     title: 'SSO della console',

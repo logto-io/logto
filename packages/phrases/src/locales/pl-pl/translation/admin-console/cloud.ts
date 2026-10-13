@@ -48,8 +48,6 @@ const cloud = {
       'Tworzenie nie zostało ukończone. Spróbuj ponownie bez ponownej płatności. Jeśli subskrypcja się zakończyła, zacznij od nowa, aby kupić nową.',
     billing_start_over:
       'Zacząć od nowa z nowym konektorem? Może to usunąć nieukończoną konfigurację i anulować nieopłacony Checkout. Opłacona subskrypcja nie zostanie anulowana ani zwrócona.',
-    delete_billing:
-      'Usunięcie osobiście opłacanych konektorów zmniejsza rozliczaną liczbę i uwzględnia proporcjonalny kredyt na następnej fakturze. Po usunięciu ostatniego konektora subskrypcja pozostaje aktywna z liczbą 0.',
     back_to_list: 'Wróć do Console SSO',
     create: 'Dodaj konektor',
     title: 'SSO konsoli',

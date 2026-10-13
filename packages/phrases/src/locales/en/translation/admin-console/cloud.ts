@@ -48,8 +48,6 @@ const cloud = {
       'Creation is incomplete. Retry without paying again. If your subscription has ended, start over to purchase a new subscription.',
     billing_start_over:
       'Start over with a new connector? This may remove unfinished configuration and cancel an unpaid Checkout. It does not cancel or refund a paid subscription.',
-    delete_billing:
-      'For personally paid connectors, deletion reduces the billed quantity and applies prorated credits to the next bill. Deleting the last connector keeps the subscription active at quantity 0.',
     back_to_list: 'Back to Console SSO',
     create: 'Add connector',
     title: 'Console SSO',
