@@ -862,7 +862,7 @@ export default class ExperienceInteraction {
     if (decision.establishableMethods.length > 0) {
       throw new RequestError(
         { code: 'user.missing_profile', status: 422 },
-        { missingProfile: decision.establishableMethods }
+        { missingProfile: decision.establishableMethods, isEstablishment: true }
       );
     }
   }
@@ -1029,6 +1029,7 @@ export default class ExperienceInteraction {
     const unmetRedirectTo = await this.guardFirstFactor();
 
     if (unmetRedirectTo) {
+      log?.append({ error: 'unmet_authentication_requirements' });
       this.ctx.body = { redirectTo: unmetRedirectTo };
       return;
     }

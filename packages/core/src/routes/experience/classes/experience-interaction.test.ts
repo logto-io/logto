@@ -2151,7 +2151,7 @@ describe('ExperienceInteraction class', () => {
           await expect(experienceInteraction.submit()).rejects.toMatchObject({
             code: 'user.missing_profile',
             status: 422,
-            data: { missingProfile: [MissingProfile.password] },
+            data: { missingProfile: [MissingProfile.password], isEstablishment: true },
           });
           await expect(experienceInteraction.toSanitizedJson()).resolves.toMatchObject({
             authenticationContext: { establishableMethods: [MissingProfile.password] },

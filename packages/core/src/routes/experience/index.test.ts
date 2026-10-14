@@ -654,7 +654,7 @@ describe('POST /experience/submit', () => {
 
   it('returns 200 with an OIDC error redirect when requested MFA cannot be reached', async () => {
     setDevFeaturesEnabled(true);
-    const { requester, provider, users, userGeoLocations } = createRequesterWithMocks({
+    const { requester, provider, users, userGeoLocations, mockAppend } = createRequesterWithMocks({
       mfa: { policy: MfaPolicy.NoPrompt, factors: [] },
       interactionResult: {
         authenticationContext: { requestedAcrValues: [LogtoAcr.Mfa] },
@@ -681,6 +681,7 @@ describe('POST /experience/submit', () => {
     );
     expect(users.updateUserById).not.toHaveBeenCalled();
     expect(userGeoLocations.upsertUserGeoLocation).not.toHaveBeenCalled();
+    expect(mockAppend).toHaveBeenCalledWith({ error: 'unmet_authentication_requirements' });
   });
 
   it('should record geo context when dev features are disabled', async () => {

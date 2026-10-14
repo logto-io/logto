@@ -10,6 +10,7 @@ import {
   InteractionHookEvent,
   MfaFactor,
   MfaPolicy,
+  MissingProfile,
   SignInIdentifier,
   VerificationType,
 } from '@logto/schemas';
@@ -17,7 +18,7 @@ import { assert, assertEnv } from '@silverhand/essentials';
 import { createInterceptorsPreset, createPool, type DatabasePool } from '@silverhand/slonik';
 import { authenticator } from 'otplib';
 
-import { getUser, updateUserLogtoConfig } from '#src/api/admin-user.js';
+import { getUser, getUserMfaVerifications, updateUserLogtoConfig } from '#src/api/admin-user.js';
 import { getWebhookRecentLogs } from '#src/api/logs.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { ExperienceClient } from '#src/client/experience/index.js';
@@ -41,7 +42,10 @@ import {
   setTrustedDeviceOptInDecision,
   trustDevice,
 } from '#src/helpers/experience/sign-in-with-acr.js';
-import { successfullyVerifyTotp } from '#src/helpers/experience/totp-verification.js';
+import {
+  successfullyCreateAndVerifyTotp,
+  successfullyVerifyTotp,
+} from '#src/helpers/experience/totp-verification.js';
 import { WebHookApiTest } from '#src/helpers/hook.js';
 import { expectRejects, readConnectorMessage } from '#src/helpers/index.js';
 import {
@@ -166,6 +170,49 @@ devFeatureTest.describe('sign-in with requested ACR', () => {
       await clearConnectorsByTypes([ConnectorType.Social, ConnectorType.Email]);
     });
 
+    it('establishes a password after social sign-in to satisfy requested 1fa', async () => {
+      const { username, password } = generateNewUserProfile({ username: true, password: true });
+      const { id: userId } = await userApi.create({ username });
+      const socialUserId = await linkSocialIdentity(userId, connectorId);
+      const issuedAt = nowInSeconds();
+      const client = await initSignInWithAcr(firstFactorAcr);
+      await identifyWithSocial(client, connectorId, socialUserId);
+
+      await expectRejects(client.submitInteraction(), {
+        code: 'user.missing_profile',
+        status: 422,
+        expectData: (data: { missingProfile: MissingProfile[]; isEstablishment?: boolean }) => {
+          expect(data.isEstablishment).toBe(true);
+          expect(data.missingProfile).toEqual(
+            expect.arrayContaining([MissingProfile.password, MissingProfile.email])
+          );
+        },
+      });
+      expect(await getUser(userId)).toMatchObject({ hasPassword: false });
+
+      await client.updateProfile({ type: 'password', value: password });
+      // Staging a credential must not write it before the final submission.
+      expect(await getUser(userId)).toMatchObject({ hasPassword: false });
+
+      expectAuthenticationContext(
+        await finishSignIn(client),
+        { sub: userId, acr: firstFactorAcr, amr: ['fed', 'pwd'] },
+        issuedAt
+      );
+      // One alternative suffices; the email alternative remains unset.
+      expect(await getUser(userId)).toMatchObject({ hasPassword: true, primaryEmail: null });
+      await logoutClient(client);
+
+      const passwordClient = await initSignInWithAcr(firstFactorAcr);
+      await identifyUserWithUsernamePassword(passwordClient, username, password);
+      expect(await finishSignIn(passwordClient)).toMatchObject({
+        sub: userId,
+        acr: firstFactorAcr,
+        amr: ['pwd'],
+      });
+      await logoutClient(passwordClient);
+    });
+
     it('asks for the primary email code on the pinned-user page when 1fa is requested', async () => {
       const { primaryEmail } = generateNewUserProfile({ primaryEmail: true });
       const { id: userId } = await userApi.create({ primaryEmail });
@@ -219,6 +266,37 @@ devFeatureTest.describe('sign-in with requested ACR', () => {
 
       await logoutClient(client);
     });
+  });
+
+  it('enrolls TOTP after password sign-in to satisfy requested mfa', async () => {
+    const { username, password } = generateNewUserProfile({ username: true, password: true });
+    const { id: userId } = await userApi.create({ username, password });
+    const issuedAt = nowInSeconds();
+    const client = await initSignInWithAcr(mfaAcr);
+    await identifyUserWithUsernamePassword(client, username, password);
+
+    await expectRejects(client.submitInteraction(), {
+      code: 'user.missing_mfa',
+      status: 422,
+      expectData: (data: { availableFactors: MfaFactor[]; skippable?: boolean }) => {
+        expect(data.availableFactors).toEqual([MfaFactor.TOTP]);
+        expect(data).not.toHaveProperty('skippable');
+      },
+    });
+
+    const verificationId = await successfullyCreateAndVerifyTotp(client);
+    await client.bindMfa(MfaFactor.TOTP, verificationId);
+    expect(await getUserMfaVerifications(userId)).toEqual([]);
+
+    expectAuthenticationContext(
+      await finishSignIn(client),
+      { sub: userId, acr: mfaAcr, amr: ['pwd', 'otp', 'mfa'] },
+      issuedAt
+    );
+    expect(await getUserMfaVerifications(userId)).toEqual([
+      expect.objectContaining({ type: MfaFactor.TOTP }),
+    ]);
+    await logoutClient(client);
   });
 
   it('completes a password sign-in requesting [mfa, 1fa] immediately', async () => {
