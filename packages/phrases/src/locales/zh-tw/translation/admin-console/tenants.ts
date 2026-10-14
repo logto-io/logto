@@ -95,6 +95,7 @@ const tenants = {
   view_only: {
     tag: '僅檢視',
     notification: '您對此租戶只有檢視權限。如需變更，請聯絡租戶管理員。',
+    hidden: '對檢視者隱藏',
   },
   deletion_card: {
     title: '刪除',

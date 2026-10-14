@@ -102,6 +102,7 @@ const tenants = {
     tag: '보기 전용',
     notification:
       '이 테넌트에 대한 보기 전용 액세스 권한이 있습니다. 변경이 필요하면 테넌트 관리자에게 요청하세요.',
+    hidden: '뷰어에게 숨겨짐',
   },
   deletion_card: {
     title: '삭제',

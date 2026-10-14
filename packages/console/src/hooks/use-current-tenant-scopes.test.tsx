@@ -91,6 +91,22 @@ describe('useCurrentTenantScopes', () => {
     expect(renderWithEntitlement(true).canConvertToProduction).toBe(true);
   });
 
+  it('reads credentials only once Cloud scopes confirm write access', () => {
+    expect(renderWithEntitlement(true).canReadCredentials).toBe(true);
+
+    mockEnv({ isCloud: true, isDevFeaturesEnabled: true });
+    expect(renderWithEntitlement(true).canReadCredentials).toBe(false);
+
+    jest.mocked(useSWR).mockReturnValue({
+      data: [TenantScope.WriteData],
+      error: undefined,
+      isLoading: false,
+      isValidating: false,
+      mutate: jest.fn(),
+    });
+    expect(renderWithEntitlement(true).canReadCredentials).toBe(true);
+  });
+
   it('refetches cached scopes on mount only on Cloud', () => {
     renderWithEntitlement(true);
     expect(useSWR).toHaveBeenLastCalledWith(

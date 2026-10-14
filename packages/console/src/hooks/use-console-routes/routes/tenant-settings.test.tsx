@@ -37,6 +37,7 @@ const mockAccess = (canInviteMember: boolean, canRemoveMember: boolean) => {
       canConvertToProduction: canRemoveMember,
       isReadOnly: false,
       isWriteAccessConfirmed: true,
+      canReadCredentials: true,
     },
   });
 };

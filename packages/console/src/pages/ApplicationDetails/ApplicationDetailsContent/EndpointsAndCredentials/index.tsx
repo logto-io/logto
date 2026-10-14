@@ -43,12 +43,14 @@ function EndpointsAndCredentials({
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
-    access: { isReadOnly },
+    access: { isReadOnly, canReadCredentials },
   } = useCurrentTenantScopes();
 
   const [showCreateSecretModal, setShowCreateSecretModal] = useState(false);
   const [editSecret, setEditSecret] = useState<ApplicationSecretRow>();
-  const secrets = useSWR<ApplicationSecretRow[], RequestError>(`api/applications/${id}/secrets`);
+  const secrets = useSWR<ApplicationSecretRow[], RequestError>(
+    canReadCredentials && `api/applications/${id}/secrets`
+  );
   const shouldShowAppSecrets = hasSecrets(type);
 
   const secretsData = useMemo(
@@ -101,18 +103,18 @@ function EndpointsAndCredentials({
       </FormField>
       {shouldShowAppSecrets && (
         <FormField title="application_details.application_secret_other">
-          {secretsData.length === 0 && !secrets.error ? (
+          {isReadOnly ? (
+            <div className={styles.empty}>{t('tenants.view_only.hidden')}</div>
+          ) : secretsData.length === 0 && !secrets.error ? (
             <>
               <div className={styles.empty}>{t('application_details.secrets.empty')}</div>
-              {!isReadOnly && (
-                <Button
-                  icon={<Plus />}
-                  title="application_details.secrets.create_new_secret"
-                  onClick={() => {
-                    setShowCreateSecretModal(true);
-                  }}
-                />
-              )}
+              <Button
+                icon={<Plus />}
+                title="application_details.secrets.create_new_secret"
+                onClick={() => {
+                  setShowCreateSecretModal(true);
+                }}
+              />
             </>
           ) : (
             <>
@@ -126,18 +128,16 @@ function EndpointsAndCredentials({
                 columns={tableColumns}
                 className={styles.table}
               />
-              {!isReadOnly && (
-                <Button
-                  size="small"
-                  type="text"
-                  className={styles.add}
-                  title="application_details.secrets.create_new_secret"
-                  icon={<CirclePlus />}
-                  onClick={() => {
-                    setShowCreateSecretModal(true);
-                  }}
-                />
-              )}
+              <Button
+                size="small"
+                type="text"
+                className={styles.add}
+                title="application_details.secrets.create_new_secret"
+                icon={<CirclePlus />}
+                onClick={() => {
+                  setShowCreateSecretModal(true);
+                }}
+              />
             </>
           )}
           <CreateSecretModal

@@ -106,6 +106,7 @@ const tenants = {
     tag: 'Yalnızca görüntüleme',
     notification:
       'Bu kiracıya yalnızca görüntüleme erişiminiz var. Değişiklik yapmanız gerekiyorsa bir kiracı yöneticisine başvurun.',
+    hidden: 'Görüntüleyicilerden gizli',
   },
   deletion_card: {
     title: 'SİL',
