@@ -28,6 +28,7 @@ import identitiesRoutes from './identities.js';
 import logtoConfigRoutes from './logto-config.js';
 import mfaVerificationsRoutes from './mfa-verifications.js';
 import koaAccountCenter from './middlewares/koa-account-center.js';
+import accountPersonalAccessTokenRoutes from './personal-access-tokens.js';
 import accountSessionRoutes from './sessions.js';
 import thirdPartyTokensRoutes from './third-party-tokens.js';
 import accountTrustedDeviceRoutes from './trusted-device.js';
@@ -309,6 +310,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
   mfaVerificationsRoutes(...args);
   accountSessionRoutes(...args);
   accountTrustedDeviceRoutes(...args);
+  accountPersonalAccessTokenRoutes(...args);
   accountGrantRoutes(...args);
   accountUserAssetsRoutes(...args);
 }

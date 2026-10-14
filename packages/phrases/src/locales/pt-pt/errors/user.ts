@@ -48,6 +48,10 @@ const user = {
   password_algorithm_required: 'É necessário um algoritmo de senha.',
   password_and_digest: 'Não podes definir tanto a senha em texto simples quanto o resumo da senha.',
   personal_access_token_name_exists: 'O nome do token pessoal de acesso já existe.',
+  personal_access_token_limit_exceeded:
+    'Pode ter no máximo {{limit}} tokens de acesso pessoal ativos.',
+  personal_access_token_invalid_expiration:
+    'A data de expiração deve estar no futuro e não pode ultrapassar {{maxDays}} dias a partir de agora.',
   totp_secret_invalid: 'Foi fornecido um segredo TOTP inválido.',
   wrong_backup_code_format: 'O formato do código de backup é inválido.',
   username_required:
