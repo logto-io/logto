@@ -49,6 +49,9 @@ const user = {
   password_algorithm_required: 'Password algorithm is required.',
   password_and_digest: 'You cannot set both plain text password and password digest.',
   personal_access_token_name_exists: '個人用アクセス トークン名は既に存在します。',
+  personal_access_token_limit_exceeded: '有効な個人用アクセストークンは最大 {{limit}} 個までです。',
+  personal_access_token_invalid_expiration:
+    '有効期限は未来の日時で、現在から {{maxDays}} 日以内である必要があります。',
   totp_secret_invalid: '無効な TOTP シークレットが提供されました。',
   wrong_backup_code_format: 'バックアップコードの形式が無効です。',
   username_required: 'ユーザー名は必須の識別子ですので、null に設定することはできません。',

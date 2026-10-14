@@ -31,6 +31,9 @@ const allowedStepUpRoutes = new Set([
   `POST ${experienceRoutes.verification}/web-authn/authentication/verify`,
 ]);
 
+/** Backup code generation, the one enrollment route with an extra gate. */
+const backupCodeGenerationRoute = `POST ${experienceRoutes.verification}/backup-code/generate`;
+
 /**
  * The MFA enrollment routes: open once the interaction proved or established a fresh first factor
  * (`hasFreshFirstFactor`), the same predicate that decides whether an enrolled factor counts when
@@ -38,12 +41,21 @@ const allowedStepUpRoutes = new Set([
  */
 const enrollmentRoutes = new Set([
   `POST ${experienceRoutes.verification}/totp/secret`,
-  `POST ${experienceRoutes.verification}/backup-code/generate`,
+  backupCodeGenerationRoute,
   `POST ${experienceRoutes.verification}/web-authn/registration`,
   `POST ${experienceRoutes.verification}/web-authn/registration/verify`,
   `POST ${experienceRoutes.mfa}`,
   `POST ${experienceRoutes.mfa}/mfa-enabled`,
 ]);
+
+/**
+ * Whether an enrollment route is open. Backup codes additionally need a TOTP or passkey enrolled
+ * in this interaction, so a first factor alone can never replace the user's existing codes.
+ */
+const isEnrollmentRouteOpen = (
+  route: string,
+  { hasFreshFirstFactor, mfa }: ExperienceInteractionRouterContext['experienceInteraction']
+) => hasFreshFirstFactor && (route !== backupCodeGenerationRoute || mfa.hasNewAuthenticatorFactor);
 
 /**
  * `POST /profile`: open while there is a first factor to establish. Which type may be staged is
@@ -101,7 +113,7 @@ export default function koaStepUpRouteGuard<
     assertThat(experienceInteraction, forbidden);
 
     if (enrollmentRoutes.has(route)) {
-      assertThat(experienceInteraction.hasFreshFirstFactor, forbidden);
+      assertThat(isEnrollmentRouteOpen(route, experienceInteraction), forbidden);
       return next();
     }
 

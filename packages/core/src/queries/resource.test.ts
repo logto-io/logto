@@ -1,4 +1,4 @@
-import { Resources } from '@logto/schemas';
+import { managementApiIndicatorPattern, Resources } from '@logto/schemas';
 import { createMockPool, createMockQueryResult, sql } from '@silverhand/slonik';
 
 import { mockResource } from '#src/__mocks__/index.js';
@@ -52,7 +52,24 @@ describe('resource query', () => {
       return createMockQueryResult([{ count: 10 }]);
     });
 
-    await expect(findTotalNumberOfResources()).resolves.toEqual({ count: 10 });
+    await expect(findTotalNumberOfResources(false)).resolves.toEqual({ count: 10 });
+  });
+
+  it('findTotalNumberOfResources excluding Management API', async () => {
+    const expectSql = sql`
+      select count(*)
+      from ${table}
+      where ${fields.indicator} !~ ${managementApiIndicatorPattern}
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual(expectSql.values);
+
+      return createMockQueryResult([{ count: 10 }]);
+    });
+
+    await expect(findTotalNumberOfResources(true)).resolves.toEqual({ count: 10 });
   });
 
   it('findAllResources', async () => {
@@ -73,7 +90,24 @@ describe('resource query', () => {
       return createMockQueryResult([mockResource]);
     });
 
-    await expect(findAllResources(limit, offset)).resolves.toEqual([mockResource]);
+    await expect(findAllResources(false, limit, offset)).resolves.toEqual([mockResource]);
+  });
+
+  it('findAllResources excluding Management API', async () => {
+    const expectSql = sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      where ${fields.indicator} !~ ${managementApiIndicatorPattern}
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual(expectSql.values);
+
+      return createMockQueryResult([mockResource]);
+    });
+
+    await expect(findAllResources(true)).resolves.toEqual([mockResource]);
   });
 
   it('findResourcesById', async () => {

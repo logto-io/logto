@@ -2,6 +2,7 @@ import type router from '@logto/cloud/routes';
 import {
   type consoleSsoRouter,
   type emailLogsRouter,
+  type selfHostedLicensesRouter,
   type tenantAuthRouter,
   type userStripeCustomersRouter,
 } from '@logto/cloud/routes';
@@ -135,4 +136,14 @@ export type ConsoleSsoDomain = GuardedResponse<
   RouterRoutes<
     typeof consoleSsoRouter
   >['post']['/api/me/console-sso/connectors/:connectorId/domains']
+>;
+
+/** Account-level license metadata, without signed keys. */
+export type SelfHostedLicenseSummary = GuardedResponse<
+  RouterRoutes<typeof selfHostedLicensesRouter>['get']['/api/me/self-hosted-licenses/:id']
+>;
+
+/** The production and non-production keys returned by explicit issuance. */
+export type SelfHostedLicenseKeys = GuardedResponse<
+  RouterRoutes<typeof selfHostedLicensesRouter>['post']['/api/me/self-hosted-licenses/:id/keys']
 >;

@@ -48,6 +48,10 @@ const user = {
   password_algorithm_required: "L'algoritmo della password è richiesto.",
   password_and_digest: 'Non puoi impostare sia la password in chiaro che il digest della password.',
   personal_access_token_name_exists: 'Il nome del token di accesso personale esiste già.',
+  personal_access_token_limit_exceeded:
+    'Puoi avere al massimo {{limit}} token di accesso personali attivi.',
+  personal_access_token_invalid_expiration:
+    'La data di scadenza deve essere futura e non superare {{maxDays}} giorni da adesso.',
   totp_secret_invalid: 'Segreto TOTP fornito non valido.',
   wrong_backup_code_format: 'Il formato del codice di backup è non valido.',
   username_required: 'Il nome utente è un identificatore richiesto, non puoi impostarlo su null.',

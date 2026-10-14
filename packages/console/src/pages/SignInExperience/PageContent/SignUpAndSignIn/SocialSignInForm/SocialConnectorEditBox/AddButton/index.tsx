@@ -4,6 +4,7 @@ import CirclePlus from '@/assets/icons/circle-plus.svg?react';
 import Plus from '@/assets/icons/plus.svg?react';
 import ConnectorLogo from '@/components/ConnectorLogo';
 import UnnamedTrans from '@/components/UnnamedTrans';
+import { useReadOnlyField } from '@/contexts/ReadOnlyFieldScope';
 import ActionMenu from '@/ds-components/ActionMenu';
 import type { Props as ButtonProps } from '@/ds-components/Button';
 import { DropdownItem } from '@/ds-components/Dropdown';
@@ -19,7 +20,9 @@ type Props = {
 };
 
 function AddButton({ options, onSelected, hasSelectedConnectors }: Props) {
-  if (options.length === 0) {
+  const isReadOnlyField = useReadOnlyField();
+
+  if (options.length === 0 || isReadOnlyField) {
     return null;
   }
 

@@ -394,13 +394,20 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
 
       // A pure step-up only writes the factors it may enroll, plus backup codes to go with them;
       // the email / phone factors would bind an identifier, which is only ever established.
-      if (experienceInteraction.isStepUp && type !== MfaFactor.BackupCode) {
-        const eligibility = await experienceInteraction.getStepUpEligibility();
+      if (experienceInteraction.isStepUp) {
+        const forbidden = new RequestError({
+          code: 'session.step_up.forbidden_route',
+          status: 403,
+        });
 
-        assertThat(
-          eligibility?.enrollableFactors.includes(type),
-          new RequestError({ code: 'session.step_up.forbidden_route', status: 403 })
-        );
+        // Backup codes only come with a TOTP or passkey enrolled in this interaction, so a first
+        // factor alone can never replace the user's existing codes.
+        if (type === MfaFactor.BackupCode) {
+          assertThat(experienceInteraction.mfa.hasNewAuthenticatorFactor, forbidden);
+        } else {
+          const eligibility = await experienceInteraction.getStepUpEligibility();
+          assertThat(eligibility?.enrollableFactors.includes(type), forbidden);
+        }
       }
 
       log.append({

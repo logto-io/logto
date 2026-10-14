@@ -13,7 +13,6 @@ import { object, z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import LicenseReader from '#src/license/LicenseReader.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { koaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
 import SystemContext from '#src/tenants/SystemContext.js';
@@ -29,25 +28,6 @@ import { type ManagementApiRouter, type RouterInitArgs } from '../../types.js';
 import { unzipCustomUiAssets } from './unzip.js';
 
 const maxRetryCount = 5;
-
-/**
- * Outside Cloud the quota guard is a no-op, so Bring your UI is gated by the `bringYourUi`
- * entitlement of the installed license instead.
- */
-const koaSelfHostedBringYourUiGuard: MiddlewareType = async (_, next) => {
-  const license = await LicenseReader.shared.read(await EnvSet.sharedPool);
-
-  assertThat(
-    license?.quota.bringYourUi,
-    new RequestError({
-      code: 'subscription.limit_exceeded',
-      status: 403,
-      data: { key: 'bringYourUiEnabled' },
-    })
-  );
-
-  return next();
-};
 
 /**
  * Logto Cloud: upload the zip to the `experience-zips` container, in which a blob trigger is
@@ -101,15 +81,30 @@ export default function customUiAssetsRoutes<T extends ManagementApiRouter>(
     router,
     {
       libraries: { quota },
+      subscription,
     },
   ]: RouterInitArgs<T>
 ) {
-  const { isCloud, isDevFeaturesEnabled } = EnvSet.values;
+  const isSelfHosted = !EnvSet.values.isCloud;
+
   /**
-   * Self-hosted plans: Bring your UI on the deployment's own storage, unlocked by the license.
-   * Removed together with the other self-hosted plans guards at launch.
+   * Outside Cloud the quota guard is a no-op. Use effective license entitlements so Bring your UI
+   * falls back to the OSS default when the offline grace period ends.
    */
-  const isSelfHosted = !isCloud && isDevFeaturesEnabled;
+  const koaSelfHostedBringYourUiGuard: MiddlewareType = async (_, next) => {
+    const { quota: licenseQuota } = await subscription.getSelfHostedSubscription();
+
+    assertThat(
+      licenseQuota.bringYourUi,
+      new RequestError({
+        code: 'subscription.limit_exceeded',
+        status: 403,
+        data: { key: 'bringYourUiEnabled' },
+      })
+    );
+
+    return next();
+  };
 
   router.post(
     '/sign-in-exp/default/custom-ui-assets',
@@ -123,7 +118,7 @@ export default function customUiAssetsRoutes<T extends ManagementApiRouter>(
       response: z.object({
         customUiAssetId: z.string(),
       }),
-      status: [200, 400, 500],
+      status: [200, 400, 403, 500],
     }),
     async (ctx, next) => {
       const { file: bodyFiles } = ctx.guard.files;

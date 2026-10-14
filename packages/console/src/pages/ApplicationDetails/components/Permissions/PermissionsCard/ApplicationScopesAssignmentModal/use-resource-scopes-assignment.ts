@@ -3,7 +3,6 @@ import {
   ApplicationUserConsentScopeType,
   type ApplicationUserConsentScopesResponse,
 } from '@logto/schemas';
-import { isManagementApi } from '@logto/schemas';
 import { useState, useMemo } from 'react';
 import useSWR from 'swr';
 
@@ -31,6 +30,7 @@ const useResourceScopesAssignment: HookType = (assignedResourceScopes, options) 
   const { data: allResources } = useSWR<ResourceResponse[], RequestError>(
     buildUrl('api/resources', {
       includeScopes: String(true),
+      excludeManagementApis: String(true),
     })
   );
 
@@ -39,10 +39,8 @@ const useResourceScopesAssignment: HookType = (assignedResourceScopes, options) 
       return [];
     }
 
-    const resourcesWithScopes: ReturnType<HookType>['availableDataGroups'] = allResources
-      // Filter out the management APIs
-      .filter((resource) => !isManagementApi(resource.indicator))
-      .map(({ name, scopes, id }) => {
+    const resourcesWithScopes: ReturnType<HookType>['availableDataGroups'] = allResources.map(
+      ({ name, scopes, id }) => {
         const assignedResource = assignedResourceScopes?.find(({ resource }) => resource.id === id);
 
         return {
@@ -60,7 +58,8 @@ const useResourceScopesAssignment: HookType = (assignedResourceScopes, options) 
                 : true;
             }),
         };
-      });
+      }
+    );
 
     // Filter out the resources that have no scopes
     return resourcesWithScopes.filter(({ dataList }) => dataList.length > 0);

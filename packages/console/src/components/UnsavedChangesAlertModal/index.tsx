@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useBlocker, useLocation } from 'react-router-dom';
 
 import ConfirmModal from '@/ds-components/ConfirmModal';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
 type Props = {
   readonly hasUnsavedChanges: boolean;
@@ -13,7 +14,11 @@ type Props = {
 function UnsavedChangesAlertModal({ hasUnsavedChanges, parentPath, onConfirm }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { pathname } = useLocation();
-  const blocker = useBlocker(hasUnsavedChanges);
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
+  // A read-only member cannot save, so leaving loses nothing they could keep.
+  const blocker = useBlocker(hasUnsavedChanges && !isReadOnly);
 
   const isNavigatingWithinParent = useCallback(
     (targetPath: string): boolean => {

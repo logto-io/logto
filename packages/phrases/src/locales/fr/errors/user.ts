@@ -52,6 +52,10 @@ const user = {
   password_and_digest:
     'Vous ne pouvez pas définir à la fois un mot de passe en texte brut et un digest de mot de passe.',
   personal_access_token_name_exists: "Le nom du jeton d'accès personnel existe déjà.",
+  personal_access_token_limit_exceeded:
+    "Vous pouvez avoir au maximum {{limit}} jetons d'accès personnels actifs.",
+  personal_access_token_invalid_expiration:
+    "La date d'expiration doit être dans le futur et ne pas dépasser {{maxDays}} jours à partir de maintenant.",
   totp_secret_invalid: 'Le secret TOTP fourni est invalide.',
   wrong_backup_code_format: 'Le format du code de sauvegarde est invalide.',
   username_required:

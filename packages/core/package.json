@@ -1,6 +1,6 @@
 {
   "name": "@logto/core",
-  "version": "1.43.0",
+  "version": "1.45.0",
   "description": "The open source identity solution.",
   "main": "build/index.js",
   "author": "Silverhand Inc. <contact@silverhand.io>",
@@ -49,7 +49,7 @@
     "@logto/shared": "workspace:^",
     "@silverhand/essentials": "^2.9.1",
     "@silverhand/slonik": "31.0.0-beta.2",
-    "@simplewebauthn/server": "^10.0.0",
+    "@simplewebauthn/server": "^13.3.2",
     "@withtyped/client": "^0.8.8",
     "adm-zip": "^0.6.1",
     "camelcase": "^8.0.0",
@@ -102,12 +102,12 @@
     "semver": "^7.3.8",
     "snake-case": "^4.0.0",
     "snakecase-keys": "^8.0.1",
-    "tinypool": "^1.0.2",
+    "tinypool": "^2.1.2",
     "ua-parser-js": "^2.0.3",
     "zod": "3.24.3"
   },
   "devDependencies": {
-    "@logto/cloud": "0.2.5-b618bc1",
+    "@logto/cloud": "0.2.5-006dcd0",
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/ts-config": "6.0.0",
     "@types/adm-zip": "^0.5.5",

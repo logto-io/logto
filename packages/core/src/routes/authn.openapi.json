@@ -53,6 +53,9 @@
           "302": {
             "description": "Redirect to the endpoint to complete the authentication flow."
           },
+          "403": {
+            "description": "IdP-initiated SSO is not available on this self-hosted deployment because the installed license does not grant it."
+          },
           "404": {
             "description": "Invalid SSO connector ID or SSO connector authentication session not found."
           },

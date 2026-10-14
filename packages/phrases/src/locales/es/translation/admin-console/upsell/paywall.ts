@@ -44,7 +44,7 @@ const paywall = {
   saml_applications_oss:
     'La aplicación SAML adicional está disponible con el plan Logto Enterprise. Contáctanos si necesitas asistencia.',
   saml_applications_oss_limit_notice:
-    'Tu instancia de código abierto admite hasta {{limit}} aplicaciones SAML. Puedes usar Logto Cloud o contactarnos para obtener opciones adicionales.',
+    'Tu instancia de código abierto admite hasta {{limit}} aplicaciones SAML. Para añadir más aplicaciones, explora los <selfHostedPlans>planes autoalojados</selfHostedPlans> o usa Logto Cloud.',
   logto_pricing_button_text: 'Precios de Logto Cloud',
   saml_applications:
     'La aplicación SAML adicional está disponible con el plan Logto Enterprise. Contáctanos si necesitas asistencia.',

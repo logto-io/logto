@@ -1,0 +1,46 @@
+@use '@/scss/underscore' as _;
+
+.pageContainer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .scrollable {
+    width: 100%;
+  }
+
+  .wrapper {
+    @include _.main-content-width;
+    width: calc(100% - #{_.unit(12)});
+    padding: _.unit(3) 0;
+    display: flex;
+    flex-direction: column;
+    gap: _.unit(6);
+  }
+}
+
+.empty {
+  padding: _.unit(10);
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+.keys {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(6);
+  min-width: 0;
+}
+
+.steps {
+  margin: 0;
+  font: var(--font-body-2);
+  color: var(--color-text-primary);
+  padding-inline-start: _.unit(5);
+
+  li + li {
+    margin-top: _.unit(3);
+  }
+}

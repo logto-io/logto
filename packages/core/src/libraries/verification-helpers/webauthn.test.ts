@@ -1,5 +1,6 @@
 import { MfaFactor } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
+import { isoBase64URL } from '@simplewebauthn/server/helpers';
 
 import {
   mockUser,
@@ -98,7 +99,17 @@ describe('verifyWebAuthnAuthentication', () => {
       result: { type: MfaFactor.WebAuthn, id: mockUserWebAuthnMfaVerification.id },
       newCounter: 1,
     });
-    expect(verifyAuthenticationResponse).toHaveBeenCalled();
+    expect(verifyAuthenticationResponse).toHaveBeenCalledWith(
+      expect.objectContaining({
+        credential: {
+          id: mockUserWebAuthnMfaVerification.credentialId,
+          publicKey: isoBase64URL.toBuffer(mockUserWebAuthnMfaVerification.publicKey),
+          counter: mockUserWebAuthnMfaVerification.counter,
+          transports: undefined,
+        },
+        requireUserVerification: true,
+      })
+    );
   });
 
   it('should return false result when the corresponding webauthn verification can not be found', async () => {

@@ -21,6 +21,7 @@ import Search from '@/ds-components/Search';
 import Table from '@/ds-components/Table';
 import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import type { RequestError } from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
@@ -38,6 +39,9 @@ const buildDetailsPathname = (id: string) => `${rolesPathname}/${id}`;
 const pageSize = defaultPageSize;
 
 function Roles() {
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { search } = useLocation();
   const { navigate, match } = useTenantPathname();
@@ -79,15 +83,17 @@ function Roles() {
           learnMoreLink={{ href: rbac }}
           hasAddOnTag={isPaidTenant && !hasRolesIncluded}
         />
-        <Button
-          icon={<Plus />}
-          type="primary"
-          size="large"
-          title="roles.create"
-          onClick={() => {
-            navigate({ pathname: createRolePathname, search });
-          }}
-        />
+        {!isReadOnly && (
+          <Button
+            icon={<Plus />}
+            type="primary"
+            size="large"
+            title="roles.create"
+            onClick={() => {
+              navigate({ pathname: createRolePathname, search });
+            }}
+          />
+        )}
       </div>
       <Table
         className={pageLayout.table}
@@ -180,22 +186,24 @@ function Roles() {
                 targetBlank: 'noopener',
               }}
               action={
-                <Button
-                  title="roles.create"
-                  type="primary"
-                  size="large"
-                  icon={<Plus />}
-                  onClick={() => {
-                    navigate({ pathname: createRolePathname, search });
-                  }}
-                />
+                !isReadOnly && (
+                  <Button
+                    title="roles.create"
+                    type="primary"
+                    size="large"
+                    icon={<Plus />}
+                    onClick={() => {
+                      navigate({ pathname: createRolePathname, search });
+                    }}
+                  />
+                )
               }
             />
           )
         }
         onRetry={async () => mutate(undefined, true)}
       />
-      {isCreating && (
+      {isCreating && !isReadOnly && (
         <CreateRoleModal
           onClose={() => {
             navigate({ pathname: rolesPathname, search });

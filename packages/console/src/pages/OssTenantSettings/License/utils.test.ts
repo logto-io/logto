@@ -46,11 +46,11 @@ describe('buildLicensePurchaseUrl', () => {
 });
 
 describe('buildLicenseManagementUrl', () => {
-  it('points at the Cloud self-hosted licenses page with refresh attribution', () => {
+  it('keeps the existing contact flow with refresh attribution until self-service ships', () => {
     const url = new URL(buildLicenseManagementUrl());
 
-    expect(url.origin).toBe('https://cloud.logto.io');
-    expect(url.pathname).toBe('/self-hosted-licenses');
+    expect(url.origin).toBe('https://logto.io');
+    expect(url.pathname).toBe('/self-hosted-plans');
     expect(url.searchParams.get('utm_content')).toBe('tenant_settings_license_refresh');
   });
 });

@@ -45,6 +45,10 @@ const user = {
   password_algorithm_required: 'الگوریتم رمز عبور الزامی است.',
   password_and_digest: 'نمی‌توانید همزمان رمز عبور متنی و digest رمز عبور تنظیم کنید.',
   personal_access_token_name_exists: 'نام توکن دسترسی شخصی از قبل وجود دارد.',
+  personal_access_token_limit_exceeded:
+    'شما حداکثر می‌توانید {{limit}} توکن دسترسی شخصی فعال داشته باشید.',
+  personal_access_token_invalid_expiration:
+    'زمان انقضا باید در آینده باشد و بیش از {{maxDays}} روز از اکنون نباشد.',
   totp_secret_invalid: 'secret TOTP ارائه‌شده نامعتبر است.',
   wrong_backup_code_format: 'قالب کد پشتیبان نامعتبر است.',
   username_required: 'نام کاربری شناسه الزامی است؛ نمی‌توانید آن را null تنظیم کنید.',

@@ -2,6 +2,7 @@ import { useContext } from 'react';
 
 import FormCard from '@/components/FormCard';
 import PageMeta from '@/components/PageMeta';
+import { selfHostedLicenseGuideLink } from '@/consts/external-links';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 
 import InstallForm from './InstallForm';
@@ -23,6 +24,7 @@ function License() {
           <FormCard
             title="tenants.license.install_title"
             description="tenants.license.install_description"
+            learnMoreLink={{ href: selfHostedLicenseGuideLink }}
           >
             <InstallForm isReplacing={false} />
           </FormCard>

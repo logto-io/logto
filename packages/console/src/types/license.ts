@@ -10,7 +10,7 @@ export type License = {
   plan: SelfHostedPlanId;
   /** The environment the installed key was issued for, as the customer declared it. */
   env: LicenseEnv;
-  /** The effective entitlements: the self-hosted defaults with the key's overrides applied. */
+  /** The key's quota with OSS defaults filled in; grace expiry has not been applied. */
   quota: LicenseQuota;
   /** When the installed key expires, in ISO 8601 format. */
   expiresAt: string;

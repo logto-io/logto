@@ -11,6 +11,7 @@ const user_scopes = {
     address: 'Adresin',
     'urn:logto:scope:sessions': 'Aktif oturumların',
     'urn:logto:scope:trusted_devices': 'Güvenilir cihazların',
+    'urn:logto:scope:personal_access_tokens': 'Kişisel erişim belirteçlerin',
   },
 };
 

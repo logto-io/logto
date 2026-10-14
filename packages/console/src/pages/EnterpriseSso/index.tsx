@@ -19,6 +19,7 @@ import Table from '@/ds-components/Table';
 import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import Tag from '@/ds-components/Tag';
 import type { RequestError } from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import pageLayout from '@/scss/page-layout.module.scss';
@@ -37,6 +38,9 @@ const buildDetailsPathname = (id: string) => `${enterpriseSsoPathname}/${id}`;
 function EnterpriseSso() {
   const { pathname } = useLocation();
   const { navigate } = useTenantPathname();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     currentSubscription: { planId, isEnterprisePlan },
@@ -70,7 +74,7 @@ function EnterpriseSso() {
           learnMoreLink={{ href: enterpriseSso }}
           hasAddOnTag={isPaidTenant}
         />
-        {Boolean(ssoConnectors?.length) && (
+        {Boolean(ssoConnectors?.length) && !isReadOnly && (
           <Button
             icon={<Plus />}
             type="primary"
@@ -154,32 +158,36 @@ function EnterpriseSso() {
             title="enterprise_sso.placeholder_title"
             description="enterprise_sso.placeholder_description"
             action={
-              <Button
-                title="enterprise_sso.create"
-                type="primary"
-                size="large"
-                icon={<Plus />}
-                onClick={() => {
-                  navigate(createEnterpriseSsoPathname);
-                }}
-              />
+              !isReadOnly && (
+                <Button
+                  title="enterprise_sso.create"
+                  type="primary"
+                  size="large"
+                  icon={<Plus />}
+                  onClick={() => {
+                    navigate(createEnterpriseSsoPathname);
+                  }}
+                />
+              )
             }
           />
         }
         onRetry={async () => mutate(undefined, true)}
       />
-      <SsoCreationModal
-        isOpen={pathname.endsWith(createEnterpriseSsoPathname)}
-        onClose={(ssoConnector) => {
-          if (ssoConnector) {
-            void mutate();
-            navigate(buildDetailsPathname(ssoConnector.id));
-            return;
-          }
+      {!isReadOnly && (
+        <SsoCreationModal
+          isOpen={pathname.endsWith(createEnterpriseSsoPathname)}
+          onClose={(ssoConnector) => {
+            if (ssoConnector) {
+              void mutate();
+              navigate(buildDetailsPathname(ssoConnector.id));
+              return;
+            }
 
-          navigate(enterpriseSsoPathname);
-        }}
-      />
+            navigate(enterpriseSsoPathname);
+          }}
+        />
+      )}
     </div>
   );
 }

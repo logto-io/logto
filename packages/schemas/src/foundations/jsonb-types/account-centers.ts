@@ -28,6 +28,7 @@ export const accountCenterFieldControlGuard = z
     passkey: z.nativeEnum(AccountCenterControlValue),
     session: z.nativeEnum(AccountCenterControlValue),
     trustedDevice: z.nativeEnum(AccountCenterControlValue),
+    personalAccessToken: z.nativeEnum(AccountCenterControlValue),
   })
   .partial();
 

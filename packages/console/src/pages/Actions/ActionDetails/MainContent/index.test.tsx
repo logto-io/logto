@@ -10,6 +10,11 @@ import { getActionApiPath, getActionPagePath, actionsPath } from '../../utils';
 
 import MainContent from '.';
 
+jest.mock('@/hooks/use-current-tenant-scopes', () => ({
+  __esModule: true,
+  default: () => ({ access: { isReadOnly: false } }),
+}));
+
 jest.mock('swr', () => ({
   ...jest.requireActual('swr'),
   useSWRConfig: jest.fn(),

@@ -6,12 +6,15 @@ const tenant_members = {
   roles: 'Rôles',
   admin: 'Administrateur',
   collaborator: 'Collaborateur',
+  viewer: 'Lecteur',
   invitation_status: "Statut de l'invitation",
   inviter: 'Invitant',
   expiration_date: "Date d'expiration",
   invite_modal: {
     title: 'Inviter des personnes à Logto Cloud',
     subtitle: "Pour inviter des membres à une organisation, ils doivent accepter l'invitation.",
+    subtitle_oss:
+      'Les membres invités disposent de tous les droits administrateur sur cette instance Logto.',
     to: 'À',
     added_as: 'Ajouté en tant que rôles',
     email_input_placeholder: 'johndoe@example.com',

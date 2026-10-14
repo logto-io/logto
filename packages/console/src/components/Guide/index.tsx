@@ -12,6 +12,7 @@ import {
 
 import { guides } from '@/assets/docs/guides';
 import { type GuideMetadata } from '@/assets/docs/guides/types';
+import ReadOnlyFieldScope from '@/contexts/ReadOnlyFieldScope/ReadOnlyFieldScope';
 import Button from '@/ds-components/Button';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import MdxProvider from '@/mdx-components/MdxProvider';
@@ -73,9 +74,11 @@ function Guide({ className, guideId, isEmpty, isLoading, onClose }: Props) {
         {isLoading && <StepsSkeleton />}
         {isEmpty && !guide && <NotFound className={styles.notFound} />}
         <MdxProvider>
-          <Suspense fallback={<StepsSkeleton />}>
-            {GuideComponent && <GuideComponent {...context} />}
-          </Suspense>
+          <ReadOnlyFieldScope>
+            <Suspense fallback={<StepsSkeleton />}>
+              {GuideComponent && <GuideComponent {...context} />}
+            </Suspense>
+          </ReadOnlyFieldScope>
         </MdxProvider>
       </OverlayScrollbar>
       <nav className={styles.actionBar}>

@@ -2,6 +2,7 @@ import { LicenseEnv, ReservedPlanId, ossDefaultQuota } from '@logto/schemas';
 
 import { defaultSubscriptionQuota, defaultTenantResponse } from '@/consts/tenants';
 import { type License } from '@/types/license';
+import { getEffectiveLicenseQuota } from '@/utils/license';
 
 import { buildSelfHostedSubscription, buildSelfHostedSubscriptionQuota } from './license';
 
@@ -45,16 +46,68 @@ describe('buildSelfHostedSubscription', () => {
 
 describe('buildSelfHostedSubscriptionQuota', () => {
   it('applies the OSS default SAML cap without a license', () => {
-    expect(buildSelfHostedSubscriptionQuota()).toStrictEqual({
+    expect(buildSelfHostedSubscriptionQuota(getEffectiveLicenseQuota())).toStrictEqual({
       ...defaultSubscriptionQuota,
       samlApplicationsLimit: ossDefaultQuota.samlApplicationsLimit,
     });
   });
 
   it('carries the SAML cap over from the license and nothing else', () => {
-    expect(buildSelfHostedSubscriptionQuota(license)).toStrictEqual({
+    expect(
+      buildSelfHostedSubscriptionQuota(getEffectiveLicenseQuota(license, Date.parse('2026-01-30')))
+    ).toStrictEqual({
       ...defaultSubscriptionQuota,
       samlApplicationsLimit: null,
     });
+  });
+
+  it('restores the OSS SAML cap at grace expiry, even if the key has not expired', () => {
+    expect(
+      buildSelfHostedSubscriptionQuota(
+        getEffectiveLicenseQuota(license, Date.parse(license.graceEndsAt))
+      )
+    ).toStrictEqual({ ...defaultSubscriptionQuota, samlApplicationsLimit: 3 });
+  });
+});
+
+describe('getEffectiveLicenseQuota', () => {
+  const fullLicense: License = {
+    ...license,
+    quota: {
+      hideLogtoBranding: true,
+      bringYourUi: true,
+      idpInitiatedSso: true,
+      consoleCollaboration: true,
+      mandatoryMfa: true,
+      hostedEmail: false,
+      samlApplicationsLimit: null,
+    },
+  };
+  const graceEndsAt = Date.parse(fullLicense.graceEndsAt);
+
+  it('keeps the licensed quota immediately before grace ends', () => {
+    expect(getEffectiveLicenseQuota(fullLicense, graceEndsAt - 1)).toEqual(fullLicense.quota);
+  });
+
+  it.each([0, 1])('falls back to OSS defaults %i ms after grace ends', (offset) => {
+    expect(getEffectiveLicenseQuota(fullLicense, graceEndsAt + offset)).toEqual({
+      hideLogtoBranding: false,
+      bringYourUi: false,
+      idpInitiatedSso: false,
+      consoleCollaboration: false,
+      mandatoryMfa: false,
+      hostedEmail: false,
+      samlApplicationsLimit: 3,
+    });
+    expect(fullLicense.quota.bringYourUi).toBe(true);
+  });
+
+  it('honors an expired key and a refused refresh while still inside grace', () => {
+    expect(
+      getEffectiveLicenseQuota(
+        { ...fullLicense, expiresAt: '2026-01-15T00:00:00.000Z', refusalReason: 'revoked' },
+        graceEndsAt - 1
+      )
+    ).toEqual(fullLicense.quota);
   });
 });

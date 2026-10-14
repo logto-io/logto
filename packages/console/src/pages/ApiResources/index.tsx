@@ -20,6 +20,7 @@ import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import Table from '@/ds-components/Table';
 import Tag from '@/ds-components/Tag';
 import type { RequestError } from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
@@ -41,6 +42,9 @@ const icons = {
 };
 
 function ApiResources() {
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const { search } = useLocation();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
@@ -71,18 +75,20 @@ function ApiResources() {
           subtitle="api_resources.subtitle"
           learnMoreLink={{ href: apiResourcesDocumentationLink }}
         />
-        <Button
-          icon={<Plus />}
-          type="primary"
-          size="large"
-          title="api_resources.create"
-          onClick={() => {
-            navigate({
-              pathname: createApiResourcePathname,
-              search,
-            });
-          }}
-        />
+        {!isReadOnly && (
+          <Button
+            icon={<Plus />}
+            type="primary"
+            size="large"
+            title="api_resources.create"
+            onClick={() => {
+              navigate({
+                pathname: createApiResourcePathname,
+                search,
+              });
+            }}
+          />
+        )}
       </div>
       <Table
         className={pageLayout.table}
@@ -128,7 +134,7 @@ function ApiResources() {
         }}
         onRetry={async () => mutate(undefined, true)}
       />
-      {isCreating && (
+      {isCreating && !isReadOnly && (
         <CreateForm
           onClose={(newApiResource) => {
             if (newApiResource) {

@@ -10,6 +10,7 @@ import Button from '@/ds-components/Button';
 import Table from '@/ds-components/Table';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import { type UserMfaVerification } from '@/types/mfa';
 
 import styles from './index.module.scss';
@@ -38,6 +39,9 @@ function UserSignInPasskeys({ userId }: Props) {
 
   const api = useApi();
   const { show: showConfirm } = useConfirmModal();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
 
   const handleDelete = useCallback(
     async (mfaVerification: UserMfaVerification) => {
@@ -96,16 +100,17 @@ function UserSignInPasskeys({ userId }: Props) {
               title: null,
               dataIndex: 'action',
               colSpan: 3,
-              render: (mfaVerification) => (
-                <Button
-                  title="general.remove"
-                  type="text"
-                  size="small"
-                  onClick={() => {
-                    void handleDelete(mfaVerification);
-                  }}
-                />
-              ),
+              render: (mfaVerification) =>
+                isReadOnly ? null : (
+                  <Button
+                    title="general.remove"
+                    type="text"
+                    size="small"
+                    onClick={() => {
+                      void handleDelete(mfaVerification);
+                    }}
+                  />
+                ),
             },
           ]}
           onRetry={() => {

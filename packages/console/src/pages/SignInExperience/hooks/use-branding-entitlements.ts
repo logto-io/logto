@@ -13,7 +13,7 @@ import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
  * license, neither is available, as in plain OSS.
  */
 const useBrandingEntitlements = () => {
-  const { currentSubscriptionQuota, license } = useContext(SubscriptionDataContext);
+  const { currentSubscriptionQuota, licenseQuota } = useContext(SubscriptionDataContext);
 
   if (isCloud) {
     const { bringYourUiEnabled } = currentSubscriptionQuota;
@@ -28,12 +28,12 @@ const useBrandingEntitlements = () => {
     };
   }
 
-  const isHideLogtoBrandingEnabled = license?.quota.hideLogtoBranding ?? false;
+  const isHideLogtoBrandingEnabled = licenseQuota.hideLogtoBranding;
 
   return {
     isHideLogtoBrandingAvailable: isHideLogtoBrandingEnabled,
     isHideLogtoBrandingEnabled,
-    isCustomUiCspEnabled: license?.quota.bringYourUi ?? false,
+    isCustomUiCspEnabled: licenseQuota.bringYourUi,
   };
 };
 
