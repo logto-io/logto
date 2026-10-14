@@ -1,5 +1,4 @@
 import {
-  AuthenticationContextMode,
   MfaFactor,
   webAuthnRegistrationOptionsGuard,
   type WebAuthnAuthenticationOptions,
@@ -33,10 +32,8 @@ const useWebAuthnOperation = (flow: UserMfaFlow) => {
   const { t } = useTranslation();
   const { setToast } = useToast();
   const sendMfaPayload = useSendMfaPayload();
-  const { authenticationContext } = useStepUpContext();
-  const isStepUpVerification =
-    authenticationContext?.mode === AuthenticationContextMode.StepUp &&
-    flow === UserMfaFlow.MfaVerification;
+  const { isPureStepUp } = useStepUpContext();
+  const isStepUpVerification = isPureStepUp && flow === UserMfaFlow.MfaVerification;
 
   return useCallback(
     /**

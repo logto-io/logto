@@ -1,4 +1,4 @@
-import { AuthenticationContextMode, VerificationType } from '@logto/schemas';
+import { VerificationType } from '@logto/schemas';
 import { useCallback, useContext } from 'react';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
@@ -16,8 +16,7 @@ import useStepUpErrorHandler from './use-step-up-error-handler';
 
 const useSingleSignOn = () => {
   const handleError = useErrorHandler();
-  const { authenticationContext } = useStepUpContext();
-  const isSubjectProof = authenticationContext?.mode === AuthenticationContextMode.StepUp;
+  const { isPureStepUp } = useStepUpContext();
   const stepUpErrorHandlers = useStepUpErrorHandler();
   const asyncInvokeSingleSignOn = useApi(getSsoAuthorizationUrl);
   const redirectTo = useGlobalRedirectTo({
@@ -61,11 +60,11 @@ const useSingleSignOn = () => {
           state,
           redirectUri: `${window.location.origin}/callback/${connectorId}`,
         },
-        isSubjectProof
+        isPureStepUp
       );
 
       if (error) {
-        await handleError(error, isSubjectProof ? stepUpErrorHandlers : undefined);
+        await handleError(error, isPureStepUp ? stepUpErrorHandlers : undefined);
 
         return;
       }
@@ -100,7 +99,7 @@ const useSingleSignOn = () => {
     [
       asyncInvokeSingleSignOn,
       handleError,
-      isSubjectProof,
+      isPureStepUp,
       nativeSignInHandler,
       redirectTo,
       setVerificationId,

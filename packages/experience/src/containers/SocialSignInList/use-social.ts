@@ -1,6 +1,5 @@
 import {
   AgreeToTermsPolicy,
-  AuthenticationContextMode,
   ConnectorPlatform,
   VerificationType,
   type ExperienceSocialConnector,
@@ -23,8 +22,7 @@ import { storeRedirectContext } from '@/utils/social-redirect-fallback-context';
 
 const useSocial = () => {
   const { experienceSettings, theme } = useContext(PageContext);
-  const { authenticationContext } = useStepUpContext();
-  const isSubjectProof = authenticationContext?.mode === AuthenticationContextMode.StepUp;
+  const { isPureStepUp } = useStepUpContext();
   const stepUpErrorHandlers = useStepUpErrorHandler();
 
   const handleError = useErrorHandler();
@@ -61,7 +59,7 @@ const useSocial = () => {
        * when the policy is set to `Manual`
        */
       if (
-        !isSubjectProof &&
+        !isPureStepUp &&
         agreeToTermsPolicy === AgreeToTermsPolicy.Manual &&
         !(await termsValidation())
       ) {
@@ -77,11 +75,11 @@ const useSocial = () => {
         connectorId,
         state,
         `${window.location.origin}/callback/${connectorId}`,
-        isSubjectProof
+        isPureStepUp
       );
 
       if (error) {
-        await handleError(error, isSubjectProof ? stepUpErrorHandlers : undefined);
+        await handleError(error, isPureStepUp ? stepUpErrorHandlers : undefined);
 
         return;
       }
@@ -119,7 +117,7 @@ const useSocial = () => {
       agreeToTermsPolicy,
       asyncInvokeSocialSignIn,
       handleError,
-      isSubjectProof,
+      isPureStepUp,
       nativeSignInHandler,
       redirectTo,
       setVerificationId,

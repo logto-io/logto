@@ -1,5 +1,3 @@
-import { AuthenticationContextMode } from '@logto/schemas';
-
 import { stepUpRoutes } from '@/constants/step-up';
 import useStepUpContext from '@/hooks/use-step-up-context';
 import SwitchIcon from '@/shared/assets/icons/switch-icon.svg?react';
@@ -17,11 +15,10 @@ type Props = {
 
 const SwitchMfaFactorsLink = ({ flow, flowState, className }: Props) => {
   const { availableFactors } = flowState;
-  const { authenticationContext } = useStepUpContext();
-  const isStepUp = authenticationContext?.mode === AuthenticationContextMode.StepUp;
-  const isStepUpVerification = isStepUp && flow === UserMfaFlow.MfaVerification;
+  const { authenticationContext, isPureStepUp } = useStepUpContext();
+  const isStepUpVerification = isPureStepUp && flow === UserMfaFlow.MfaVerification;
   const hasAlternativeMethod = isStepUpVerification
-    ? hasAlternativeStepUpMethod(authenticationContext.availableMethods)
+    ? hasAlternativeStepUpMethod(authenticationContext?.availableMethods ?? [])
     : availableFactors.length >= 2;
 
   if (!hasAlternativeMethod) {
@@ -38,7 +35,7 @@ const SwitchMfaFactorsLink = ({ flow, flowState, className }: Props) => {
       }
       className={className}
       icon={<SwitchIcon />}
-      state={isStepUp ? undefined : flowState}
+      state={isPureStepUp ? undefined : flowState}
     />
   );
 };

@@ -1,7 +1,6 @@
-import { AuthenticationContextMode, InteractionEvent } from '@logto/schemas';
 import { useCallback } from 'react';
 
-import { getStepUpContext, identifyUser } from '@/apis/experience';
+import { identifyUser } from '@/apis/experience';
 import { stepUpRoutes, unknownSessionRoute } from '@/constants/step-up';
 
 import useErrorHandler from './use-error-handler';
@@ -18,18 +17,7 @@ const useCompleteStepUpSubjectProof = () => {
     async (verificationId: string) => {
       try {
         await identifyUser({ verificationId });
-        const context = await getStepUpContext();
-
-        if (context?.mode !== AuthenticationContextMode.StepUp) {
-          navigate(unknownSessionRoute, { replace: true });
-          return;
-        }
-
-        const [method] = context.establishableMethods;
-        navigate(method ? `/continue/${method}` : stepUpRoutes.landing, {
-          replace: true,
-          state: { interactionEvent: InteractionEvent.SignIn },
-        });
+        navigate(stepUpRoutes.landing, { replace: true });
       } catch (error) {
         await handleError(error, {
           ...stepUpErrorHandlers,

@@ -1,4 +1,3 @@
-import { AuthenticationContextMode } from '@logto/schemas';
 import { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -15,10 +14,10 @@ import useStepUpContext from './use-step-up-context';
 
 const useMfaFlowState = (): MfaFlowState | undefined => {
   const { state, pathname } = useLocation();
-  const { authenticationContext } = useStepUpContext();
+  const { authenticationContext, isPureStepUp } = useStepUpContext();
 
   return useMemo(() => {
-    if (authenticationContext?.mode === AuthenticationContextMode.StepUp) {
+    if (isPureStepUp && authenticationContext) {
       if (!pathname.startsWith(`/${UserMfaFlow.MfaVerification}`)) {
         return {
           availableFactors: authenticationContext.enrollableFactors,
@@ -36,7 +35,7 @@ const useMfaFlowState = (): MfaFlowState | undefined => {
       parseGuard(state, mfaFlowStateGuard) ??
       parseGuard(state, mfaBindingVerificationCodeStateGuard)?.mfaFlowState
     );
-  }, [authenticationContext, pathname, state]);
+  }, [authenticationContext, isPureStepUp, pathname, state]);
 };
 
 export default useMfaFlowState;

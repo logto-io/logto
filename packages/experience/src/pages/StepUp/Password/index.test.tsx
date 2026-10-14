@@ -101,6 +101,7 @@ const renderPage = (value: Partial<StepUpContextType> = {}) =>
     <StepUpContext.Provider
       value={{
         authenticationContext: createAuthenticationContext(),
+        isPureStepUp: true,
         isLoading: false,
         isLoaded: true,
         load: mockLoad,

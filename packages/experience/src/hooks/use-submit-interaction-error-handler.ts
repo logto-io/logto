@@ -1,4 +1,3 @@
-import { AuthenticationContextMode } from '@logto/schemas';
 import { cond } from '@silverhand/essentials';
 import { useMemo } from 'react';
 
@@ -51,17 +50,16 @@ const useSubmitInteractionErrorHandler = (
   const emailBlockedErrorHandler = useEmailBlockedErrorHandler({ onConfirm: onEmailBlocked });
   const passkeySignInErrorHandler = useMissingPasskeyErrorHandler(interactionEvent);
   const trustedDeviceOptInErrorHandler = useTrustedDeviceOptInErrorHandler(interactionEvent);
-  const { authenticationContext } = useStepUpContext();
-  const isStepUp = authenticationContext?.mode === AuthenticationContextMode.StepUp;
+  const { isPureStepUp } = useStepUpContext();
   const stepUpErrorHandlers = useStepUpErrorHandler();
 
   return useMemo(
     () => ({
-      ...requiredProfileErrorHandler,
-      ...mfaErrorHandler,
-      ...(isStepUp
+      ...(isPureStepUp
         ? stepUpErrorHandlers
         : {
+            ...requiredProfileErrorHandler,
+            ...mfaErrorHandler,
             ...emailBlockedErrorHandler,
             ...cond(passkeySignInErrorHandler),
             ...trustedDeviceOptInErrorHandler,
@@ -78,7 +76,7 @@ const useSubmitInteractionErrorHandler = (
     }),
     [
       emailBlockedErrorHandler,
-      isStepUp,
+      isPureStepUp,
       mfaErrorHandler,
       navigate,
       passkeySignInErrorHandler,

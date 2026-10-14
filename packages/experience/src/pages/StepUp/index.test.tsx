@@ -105,11 +105,17 @@ const createAuthenticationContext = (
   overrides?: Partial<InteractionAuthenticationContext>
 ): InteractionAuthenticationContext => ({ ...defaultContext, ...overrides });
 
+const loadedContext = {
+  isPureStepUp: true,
+  isLoading: false,
+  isLoaded: true,
+  load: mockLoad,
+  refetch,
+};
+
 const renderStepUp = async (value: Partial<StepUpContextType>) => {
   const result = renderWithPageContext(
-    <StepUpContext.Provider
-      value={{ isLoading: false, isLoaded: true, load: mockLoad, refetch, ...value }}
-    >
+    <StepUpContext.Provider value={{ ...loadedContext, ...value }}>
       <StepUp />
     </StepUpContext.Provider>
   );
@@ -130,11 +136,10 @@ const TestRig = ({
   const [context, setContext] = useState(authenticationContext);
   const value = useMemo(
     () => ({
+      ...loadedContext,
       authenticationContext: context,
       isLoading,
       isLoaded: !isLoading,
-      load: mockLoad,
-      refetch,
     }),
     [context, isLoading]
   );
@@ -343,7 +348,7 @@ describe('StepUp', () => {
     });
     expect(mockedNavigate).toHaveBeenCalledWith('/continue/password', {
       replace: true,
-      state: { interactionEvent: InteractionEvent.SignIn },
+      state: { interactionEvent: InteractionEvent.SignIn, isStepUp: true },
     });
     expect(container.innerHTML).toBe('');
     expect(mockedSelectMethod).not.toHaveBeenCalled();
@@ -411,9 +416,7 @@ describe('StepUp', () => {
       availableMethods: [VerificationType.Password],
     });
     renderWithPageContext(
-      <StepUpContext.Provider
-        value={{ authenticationContext, isLoading: false, isLoaded: true, load: mockLoad, refetch }}
-      >
+      <StepUpContext.Provider value={{ ...loadedContext, authenticationContext }}>
         <StepUp />
       </StepUpContext.Provider>
     );

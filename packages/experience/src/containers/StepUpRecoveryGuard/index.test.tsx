@@ -31,6 +31,7 @@ import WebAuthnBinding from '@/pages/MfaBinding/WebAuthnBinding';
 import MfaOnboarding from '@/pages/MfaOnboarding';
 import SocialCallback from '@/pages/SocialSignInWebCallback';
 import StepUp from '@/pages/StepUp';
+import { UserMfaFlow } from '@/types';
 import { storeState } from '@/utils/social-connectors';
 
 import StepUpRecoveryGuard from '.';
@@ -79,6 +80,7 @@ const renderPage = (path: string, state?: unknown) =>
             <Route path="/callback/social/:connectorId" element={<SocialCallback />} />
             <Route path="/continue/:method?" element={<Continue />} />
             <Route path="/mfa-onboarding" element={<MfaOnboarding />} />
+            <Route path=":flow/verification-code" element={<div>Code form</div>} />
             <Route path="/mfa-binding" element={<MfaBinding />} />
             <Route path={`/mfa-binding/${MfaFactor.TOTP}`} element={<TotpBinding />} />
             <Route path={`/mfa-binding/${MfaFactor.WebAuthn}`} element={<WebAuthnBinding />} />
@@ -140,7 +142,7 @@ it.each([
   ['/continue/phone', MissingProfile.phone, 'description.link_phone'],
 ] as const)('recovers %s without registration state', async (path, method, title) => {
   setContext({ ...context, establishableMethods: [method] });
-  renderPage(path, { interactionEvent: InteractionEvent.Register });
+  renderPage(path, { interactionEvent: InteractionEvent.Register, isStepUp: true });
   expect(await screen.findByText(title)).not.toBeNull();
   expect(screen.queryByText('action.create_account')).toBeNull();
 });
@@ -253,23 +255,69 @@ it.each([
   }
 );
 
-it('keeps ordinary registration profile completion unchanged', async () => {
-  setContext();
-  jest
-    .mocked(api.post)
-    .mockImplementation(() => response({ redirectTo: 'https://client.example/callback' }));
-  const { container } = renderPage('/continue/password', {
-    interactionEvent: InteractionEvent.Register,
+it.each([InteractionEvent.SignIn, InteractionEvent.Register])(
+  'keeps ordinary %s profile completion independent of context recovery',
+  async (interactionEvent) => {
+    jest.mocked(api.get).mockImplementation(() => {
+      throw new Error('Context unavailable');
+    });
+    jest
+      .mocked(api.post)
+      .mockImplementation(() => response({ redirectTo: 'https://client.example/callback' }));
+    const { container } = renderPage('/continue/password', {
+      interactionEvent,
+    });
+    await screen.findByText('description.set_password');
+    fireEvent.change(container.querySelector('input[name="newPassword"]')!, {
+      target: { value: 'New-password-42!' },
+    });
+    fireEvent.click(screen.getByText('action.save_password'));
+    await waitFor(() => {
+      expect(mockRedirect).toHaveBeenCalledWith('https://client.example/callback');
+    });
+    expect(api.get).not.toHaveBeenCalled();
+    if (interactionEvent === InteractionEvent.Register) {
+      expect(api.post).toHaveBeenCalledWith('/api/experience/identification', { json: {} });
+    } else {
+      expect(api.post).not.toHaveBeenCalledWith(
+        '/api/experience/identification',
+        expect.anything()
+      );
+    }
+  }
+);
+
+it.each([
+  '/sign-in/verification-code',
+  '/register/verification-code',
+  '/forgot-password/verification-code',
+])('renders %s without waiting for context recovery', (path) => {
+  jest.mocked(api.get).mockImplementation(() => {
+    throw new Error('Context unavailable');
   });
-  await screen.findByText('description.set_password');
-  fireEvent.change(container.querySelector('input[name="newPassword"]')!, {
-    target: { value: 'New-password-42!' },
+  renderPage(path);
+  expect(screen.getByText('Code form')).not.toBeNull();
+  expect(api.get).not.toHaveBeenCalled();
+});
+
+it.each([
+  ['/mfa-binding', { availableFactors: [MfaFactor.TOTP], skippable: true }, 'mfa.add_mfa_factors'],
+  ['/continue/verification-code', { interactionEvent: InteractionEvent.Register }, 'Code form'],
+  [
+    '/continue/verification-code',
+    {
+      flow: UserMfaFlow.MfaBinding,
+      mfaFlowState: { availableFactors: [MfaFactor.EmailVerificationCode] },
+    },
+    'Code form',
+  ],
+] as const)('keeps ordinary %s route state without context recovery', (path, state, title) => {
+  jest.mocked(api.get).mockImplementation(() => {
+    throw new Error('Context unavailable');
   });
-  fireEvent.click(screen.getByText('action.save_password'));
-  await waitFor(() => {
-    expect(mockRedirect).toHaveBeenCalledWith('https://client.example/callback');
-  });
-  expect(api.post).toHaveBeenCalledWith('/api/experience/identification', { json: {} });
+  renderPage(path, state);
+  expect(screen.getByText(title)).not.toBeNull();
+  expect(api.get).not.toHaveBeenCalled();
 });
 
 it.each([

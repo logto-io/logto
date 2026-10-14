@@ -3,13 +3,7 @@ import {
   isGoogleOneTap as isGoogleOneTapChecker,
 } from '@logto/connector-kit';
 import type { RequestErrorBody } from '@logto/schemas';
-import {
-  AuthenticationContextMode,
-  InteractionEvent,
-  SignInMode,
-  VerificationType,
-  experience,
-} from '@logto/schemas';
+import { InteractionEvent, SignInMode, VerificationType, experience } from '@logto/schemas';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
@@ -50,8 +44,7 @@ const useSocialSignInListener = (connectorId: string) => {
   const [isConsumed, setIsConsumed] = useState(false);
   const [searchParameters, setSearchParameters] = useSearchParams();
   const { setVerificationId } = useContext(UserInteractionContext);
-  const { authenticationContext } = useStepUpContext();
-  const isStepUp = authenticationContext?.mode === AuthenticationContextMode.StepUp;
+  const { isPureStepUp } = useStepUpContext();
   const completeSubjectProof = useCompleteStepUpSubjectProof();
   const stepUpErrorHandlers = useStepUpErrorHandler();
 
@@ -70,8 +63,10 @@ const useSocialSignInListener = (connectorId: string) => {
   const redirectTo = useGlobalRedirectTo();
 
   const navigateToSignIn = useCallback(() => {
-    navigate(isStepUp ? unknownSessionRoute : '/' + experience.routes.signIn, { replace: true });
-  }, [isStepUp, navigate]);
+    navigate(isPureStepUp ? unknownSessionRoute : '/' + experience.routes.signIn, {
+      replace: true,
+    });
+  }, [isPureStepUp, navigate]);
 
   const registerWithSocial = useSocialRegister(connectorId, {
     replace: true,
@@ -154,7 +149,7 @@ const useSocialSignInListener = (connectorId: string) => {
     async (connectorId: string, data: Record<string, unknown>) => {
       const isGoogleOneTap = isGoogleOneTapChecker(data);
       // Check for external Google One Tap credentials from extraParams
-      if (isGoogleOneTap && !isStepUp) {
+      if (isGoogleOneTap && !isPureStepUp) {
         // External Google One Tap flow - initialize interaction for external scenario
         await asyncInitInteraction(InteractionEvent.SignIn);
       }
@@ -171,7 +166,7 @@ const useSocialSignInListener = (connectorId: string) => {
       if (error || !result) {
         setLoading(false);
         await handleError(error, {
-          ...(isStepUp ? stepUpErrorHandlers : undefined),
+          ...(isPureStepUp ? stepUpErrorHandlers : undefined),
           global: globalErrorHandler,
         });
         return;
@@ -191,7 +186,7 @@ const useSocialSignInListener = (connectorId: string) => {
       asyncInitInteraction,
       globalErrorHandler,
       handleError,
-      isStepUp,
+      isPureStepUp,
       setVerificationId,
       stepUpErrorHandlers,
       verifySocial,
@@ -208,7 +203,7 @@ const useSocialSignInListener = (connectorId: string) => {
         return;
       }
 
-      if (isStepUp) {
+      if (isPureStepUp) {
         await completeSubjectProof(verificationId);
         setLoading(false);
         return;
@@ -231,7 +226,7 @@ const useSocialSignInListener = (connectorId: string) => {
       asyncSignInWithSocial,
       completeSubjectProof,
       handleError,
-      isStepUp,
+      isPureStepUp,
       redirectTo,
       signInWithSocialErrorHandlers,
       verifySocialCallbackData,

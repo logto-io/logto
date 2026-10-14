@@ -8,6 +8,8 @@ export type StepUpContextType = {
    * the first load settles, and when the interaction is gone or carries no context.
    */
   authenticationContext?: InteractionAuthenticationContext;
+  /** Pure step-up only, not a regular sign-in with requested ACR. */
+  isPureStepUp: boolean;
   /**
    * Whether a load is in flight. The landing page waits for it before dispatching, so a stale
    * context never decides where the user goes.
@@ -30,6 +32,7 @@ export type StepUpContextType = {
 
 export default createContext<StepUpContextType>({
   authenticationContext: undefined,
+  isPureStepUp: false,
   isLoading: false,
   isLoaded: false,
   load: async () => false,

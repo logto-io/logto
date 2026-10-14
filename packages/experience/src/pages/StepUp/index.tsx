@@ -33,7 +33,7 @@ const emptyAuthenticationContext = Object.freeze({ maskedIdentifiers: {} });
  * Every decision reads the server-provided lists; nothing here computes eligibility.
  */
 const StepUp = () => {
-  const { authenticationContext, isLoading, load } = useStepUpContext();
+  const { authenticationContext, isPureStepUp, isLoading, load } = useStepUpContext();
   const [isLandingLoading, setIsLandingLoading] = useState(true);
   const navigate = useNavigateWithPreservedSearchParams();
   const redirectTo = useGlobalRedirectTo();
@@ -121,7 +121,7 @@ const StepUp = () => {
         hasForwardedRef.current = true;
         navigate(`/${UserFlow.Continue}/${establishableMethod}`, {
           replace: true,
-          state: { interactionEvent: InteractionEvent.SignIn },
+          state: { interactionEvent: InteractionEvent.SignIn, isStepUp: isPureStepUp },
         });
         return;
       }
@@ -168,6 +168,7 @@ const StepUp = () => {
     handleError,
     isLandingLoading,
     isLoading,
+    isPureStepUp,
     methods,
     navigate,
     redirectTo,

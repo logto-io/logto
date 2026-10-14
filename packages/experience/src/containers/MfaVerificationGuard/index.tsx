@@ -1,8 +1,4 @@
-import {
-  AuthenticationContextMode,
-  VerificationType,
-  webAuthnAuthenticationOptionsGuard,
-} from '@logto/schemas';
+import { VerificationType, webAuthnAuthenticationOptionsGuard } from '@logto/schemas';
 import { useContext, useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
@@ -18,9 +14,10 @@ import { getDisplayedStepUpMethods, stepUpMethodToMfaFactor } from '@/utils/step
 
 import StepUpMethodList from '../StepUpMethodList';
 import useSelectStepUpMethod from '../StepUpMethodList/use-select-step-up-method';
+import LoadErrorPage from '../StepUpRecoveryGuard/LoadErrorPage';
 
 const MfaVerificationOutlet = () => {
-  const { authenticationContext, isLoaded, loadError, load } = useStepUpContext();
+  const { authenticationContext, isPureStepUp, isLoaded, loadError, load } = useStepUpContext();
   const { pathname, state } = useLocation();
   const flowState = parseGuard(state, mfaFlowStateGuard);
   const shouldLoad = !flowState || Boolean(flowState.isStepUp);
@@ -28,7 +25,6 @@ const MfaVerificationOutlet = () => {
   const { verificationIdsMap } = useContext(UserInteractionContext);
   const [recoveryAttempted, setRecoveryAttempted] = useState(false);
   const [isRecovering, setIsRecovering] = useState(false);
-  const isStepUp = authenticationContext?.mode === AuthenticationContextMode.StepUp;
   const methods = getDisplayedStepUpMethods(authenticationContext?.availableMethods ?? []);
   const method = methods.find(
     (candidate) => pathname === `/mfa-verification/${stepUpMethodToMfaFactor[candidate]}`
@@ -56,13 +52,13 @@ const MfaVerificationOutlet = () => {
   }, [load, shouldLoad]);
 
   useEffect(() => {
-    if (isStepUp && !method) {
+    if (isPureStepUp && !method) {
       navigate(stepUpRoutes.landing, { replace: true });
     }
-  }, [isStepUp, method, navigate]);
+  }, [isPureStepUp, method, navigate]);
 
   useEffect(() => {
-    if (!isStepUp || !method || !needsChallenge || recoveryAttempted) {
+    if (!isPureStepUp || !method || !needsChallenge || recoveryAttempted) {
       return;
     }
 
@@ -77,35 +73,26 @@ const MfaVerificationOutlet = () => {
       }
     };
     void recover();
-  }, [isStepUp, method, needsChallenge, recoveryAttempted, selectMethod]);
+  }, [isPureStepUp, method, needsChallenge, recoveryAttempted, selectMethod]);
 
-  if ((shouldLoad && !isLoaded) || (isStepUp && (!method || isRecovering))) {
+  if ((shouldLoad && !isLoaded) || (isPureStepUp && (!method || isRecovering))) {
     return null;
   }
 
   if (!authenticationContext) {
     if (loadError) {
-      return (
-        <ErrorPage
-          isNavbarHidden
-          title="error.something_went_wrong"
-          primaryAction={{
-            title: 'action.continue',
-            onClick: () => {
-              void load(false);
-            },
-          }}
-        />
-      );
+      return <LoadErrorPage />;
     }
 
     // The step-up chooser is also used by SignIn-with-ACR, whose context has no mode.
     if (flowState?.isStepUp) {
       return <ErrorPage message="error.invalid_session" />;
     }
+
+    return <Outlet />;
   }
 
-  if (isStepUp && needsChallenge) {
+  if (isPureStepUp && needsChallenge) {
     // A transient send/options failure leaves the methods available for a deliberate retry.
     return recoveryAttempted ? (
       <SecondaryPageLayout

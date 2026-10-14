@@ -60,6 +60,7 @@ const renderPage = (
     <StepUpContext.Provider
       value={{
         authenticationContext,
+        isPureStepUp: authenticationContext?.mode === AuthenticationContextMode.StepUp,
         isLoading: false,
         isLoaded: true,
         load: jest.fn(),

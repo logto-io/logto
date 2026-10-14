@@ -1,10 +1,4 @@
-import {
-  AgreeToTermsPolicy,
-  AuthenticationContextMode,
-  SignInMode,
-  VerificationType,
-  experience,
-} from '@logto/schemas';
+import { AgreeToTermsPolicy, SignInMode, VerificationType, experience } from '@logto/schemas';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
@@ -96,8 +90,7 @@ const useSingleSignOnListener = (connectorId: string) => {
   const { setToast } = useToast();
   const redirectTo = useGlobalRedirectTo();
   const { signInMode } = useSieMethods();
-  const { authenticationContext } = useStepUpContext();
-  const isStepUp = authenticationContext?.mode === AuthenticationContextMode.StepUp;
+  const { isPureStepUp } = useStepUpContext();
   const completeSubjectProof = useCompleteStepUpSubjectProof();
   const stepUpErrorHandlers = useStepUpErrorHandler();
   const verifySso = useApi(verifySsoVerification);
@@ -114,8 +107,10 @@ const useSingleSignOnListener = (connectorId: string) => {
   const singleSignOnAuthorizationRequest = useApi(signInWithSso);
 
   const navigateToSignIn = useCallback(() => {
-    navigate(isStepUp ? unknownSessionRoute : '/' + experience.routes.signIn, { replace: true });
-  }, [isStepUp, navigate]);
+    navigate(isPureStepUp ? unknownSessionRoute : '/' + experience.routes.signIn, {
+      replace: true,
+    });
+  }, [isPureStepUp, navigate]);
 
   const registerSingleSignOnIdentity = useSingleSignOnRegister({
     onEmailBlocked: navigateToSignIn,
@@ -132,7 +127,7 @@ const useSingleSignOnListener = (connectorId: string) => {
         },
       };
 
-      if (isStepUp) {
+      if (isPureStepUp) {
         const [error] = await verifySso(connectorId, payload);
         await (error
           ? handleError(error, { ...stepUpErrorHandlers, global: navigateToSignIn })
@@ -172,7 +167,7 @@ const useSingleSignOnListener = (connectorId: string) => {
     [
       completeSubjectProof,
       handleError,
-      isStepUp,
+      isPureStepUp,
       navigateToSignIn,
       redirectTo,
       registerSingleSignOnIdentity,

@@ -1,10 +1,5 @@
 import type { VerificationCodeIdentifier } from '@logto/schemas';
-import {
-  AuthenticationContextMode,
-  InteractionEvent,
-  MfaFactor,
-  VerificationType,
-} from '@logto/schemas';
+import { InteractionEvent, MfaFactor, VerificationType } from '@logto/schemas';
 import { useCallback, useContext, useMemo } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
@@ -44,15 +39,14 @@ const useContinueFlowCodeVerification = (
   const mfaFlowState = useMfaFlowState();
   const { verificationIdsMap } = useContext(UserInteractionContext);
   const { isVerificationCodeEnabledForSignIn } = useSieMethods();
-  const { authenticationContext } = useStepUpContext();
-  const isStepUp = authenticationContext?.mode === AuthenticationContextMode.StepUp;
+  const { isPureStepUp } = useStepUpContext();
 
   const interactionEvent = useMemo(
     () =>
-      isStepUp
+      isPureStepUp
         ? InteractionEvent.SignIn
         : (getInteractionEventFromState(state) ?? InteractionEvent.SignIn),
-    [isStepUp, state]
+    [isPureStepUp, state]
   );
 
   const handleError = useErrorHandler();
@@ -79,7 +73,7 @@ const useContinueFlowCodeVerification = (
 
     // Show bind with social confirm modal
     if (
-      !isStepUp &&
+      !isPureStepUp &&
       linkSocial &&
       socialVerificationId &&
       isVerificationCodeEnabledForSignIn(type)
@@ -111,7 +105,7 @@ const useContinueFlowCodeVerification = (
   }, [
     identifier,
     interactionEvent,
-    isStepUp,
+    isPureStepUp,
     isVerificationCodeEnabledForSignIn,
     navigate,
     searchParameters,
