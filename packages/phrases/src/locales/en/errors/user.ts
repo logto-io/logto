@@ -46,6 +46,10 @@ const user = {
   password_algorithm_required: 'Password algorithm is required.',
   password_and_digest: 'You cannot set both plain text password and password digest.',
   personal_access_token_name_exists: 'Personal access token name already exists.',
+  personal_access_token_limit_exceeded:
+    'You can have at most {{limit}} active personal access tokens.',
+  personal_access_token_invalid_expiration:
+    'The expiration time must be in the future and no more than {{maxDays}} days from now.',
   totp_secret_invalid: 'Invalid TOTP secret supplied.',
   wrong_backup_code_format: 'Backup code format is invalid.',
   username_required: 'Username is a required identifier, you can not set it to null.',

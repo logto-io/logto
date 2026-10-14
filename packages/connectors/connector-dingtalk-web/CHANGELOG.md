@@ -1,5 +1,11 @@
 # @logto/connector-dingtalk-web
 
+## 0.4.7
+
+### Patch Changes
+
+- ffe0c65: preserve `corpId` from the DingTalk token response in social user information `rawData`
+
 ## 0.4.6
 
 ### Patch Changes

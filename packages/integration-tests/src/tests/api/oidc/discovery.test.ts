@@ -121,6 +121,7 @@ describe('OIDC discovery', () => {
           "urn:logto:scope:organization_roles",
           "urn:logto:scope:sessions",
           "urn:logto:scope:trusted_devices",
+          "urn:logto:scope:personal_access_tokens",
         ],
         "subject_types_supported": [
           "public",
@@ -252,6 +253,7 @@ describe('OIDC discovery', () => {
           "urn:logto:scope:organization_roles",
           "urn:logto:scope:sessions",
           "urn:logto:scope:trusted_devices",
+          "urn:logto:scope:personal_access_tokens",
         ],
         "subject_types_supported": [
           "public",

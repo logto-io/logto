@@ -9,9 +9,11 @@ export const attachScopesToResources = async (
   const { findScopesByResourceIds } = scopeQueries;
   const resourceIds = resources.map(({ id }) => id);
   const scopes = await findScopesByResourceIds(resourceIds);
+  // eslint-disable-next-line no-use-extend-native/no-use-extend-native -- `Map.groupBy` is standard since ES2024; the rule's built-in method list predates it
+  const scopesByResourceId = Map.groupBy(scopes, ({ resourceId }) => resourceId);
 
   return resources.map((resource) => ({
     ...resource,
-    scopes: scopes.filter(({ resourceId }) => resourceId === resource.id),
+    scopes: scopesByResourceId.get(resource.id) ?? [],
   }));
 };

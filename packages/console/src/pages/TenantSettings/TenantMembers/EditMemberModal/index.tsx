@@ -1,21 +1,22 @@
 import { TenantRole } from '@logto/schemas';
 import { getUserDisplayName } from '@logto/shared/universal';
-import { useContext, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
-import { useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantMemberResponse } from '@/cloud/types/router';
-import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
-import Select, { type Option } from '@/ds-components/Select';
+import Select from '@/ds-components/Select';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import modalStyles from '@/scss/modal.module.scss';
 
 import styles from '../index.module.scss';
+import { useCloudTenantMembersApi } from '../use-tenant-members-api';
+import useTenantRoleOptions from '../use-tenant-role-options';
+import { findTenantRole } from '../utils';
 
 type Props = {
   readonly user: TenantMemberResponse;
@@ -25,23 +26,21 @@ type Props = {
 
 function EditMemberModal({ user, isOpen, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.tenant_members' });
-  const { currentTenantId } = useContext(TenantsContext);
   const { mutate: mutateUserTenantScopes } = useCurrentTenantScopes();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [role, setRole] = useState(TenantRole.Collaborator);
+  const currentRole = findTenantRole(user.organizationRoles[0]?.id);
+  const [role, setRole] = useState(currentRole ?? TenantRole.Collaborator);
   const { show } = useConfirmModal();
-  const cloudApi = useAuthedCloudApi();
-
-  const roleOptions: Array<Option<TenantRole>> = useMemo(
-    () => [
-      { value: TenantRole.Admin, title: t('admin') },
-      { value: TenantRole.Collaborator, title: t('collaborator') },
-    ],
-    [t]
-  );
+  const { updateMemberRole } = useCloudTenantMembersApi();
+  const roleOptions = useTenantRoleOptions();
 
   const onSubmit = async () => {
+    if (role === currentRole) {
+      onClose();
+      return;
+    }
+
     if (role === TenantRole.Admin) {
       const [result] = await show({
         ModalContent: () => (
@@ -59,10 +58,7 @@ function EditMemberModal({ user, isOpen, onClose }: Props) {
 
     setIsLoading(true);
     try {
-      await cloudApi.put(`/api/tenants/:tenantId/members/:userId/roles`, {
-        params: { tenantId: currentTenantId, userId: user.id },
-        body: { roleName: role },
-      });
+      await updateMemberRole(user.id, role);
       void mutateUserTenantScopes();
       onClose();
     } finally {

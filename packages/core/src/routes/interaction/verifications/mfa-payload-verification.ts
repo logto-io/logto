@@ -114,13 +114,13 @@ const verifyBindWebAuthn = async (
   assertThat(verified, 'session.mfa.webauthn_verification_failed');
   assertThat(registrationInfo, 'session.mfa.webauthn_verification_failed');
 
-  const { credentialID, credentialPublicKey, counter } = registrationInfo;
+  const { id: credentialId, publicKey, counter } = registrationInfo.credential;
 
   return {
     type,
     rpId,
-    credentialId: credentialID,
-    publicKey: isoBase64URL.fromBuffer(credentialPublicKey),
+    credentialId,
+    publicKey: isoBase64URL.fromBuffer(publicKey),
     counter,
     agent: userAgent,
     transports: payload.response.transports ?? [],

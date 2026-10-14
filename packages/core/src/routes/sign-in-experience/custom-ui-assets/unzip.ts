@@ -2,10 +2,12 @@ import path from 'node:path';
 import { promisify } from 'node:util';
 import { inflateRaw } from 'node:zlib';
 
+import { trySafe } from '@silverhand/essentials';
 import AdmZip, { type IZipEntry } from 'adm-zip';
 import mime from 'mime';
 import pMap from 'p-map';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import { type UploadFile } from '#src/utils/storage/types.js';
 
 /**
@@ -58,7 +60,7 @@ const getRelativePath = (entryName: string, rootFolder?: string) => {
     path.posix.isAbsolute(posixName) ||
     posixName.split('/').includes('..')
   ) {
-    throw new Error(`Invalid zip entry path: ${entryName}`);
+    throw new RequestError('storage.invalid_custom_ui_zip');
   }
 
   return path.posix.normalize(posixName);
@@ -66,7 +68,7 @@ const getRelativePath = (entryName: string, rootFolder?: string) => {
 
 const assertEntrySize = (entryName: string, size: number) => {
   if (size >= maxEntrySize) {
-    throw new Error(`File ${entryName} is too large, must be less than 10MB`);
+    throw new RequestError({ code: 'storage.custom_ui_file_too_large', name: entryName });
   }
 };
 
@@ -82,20 +84,24 @@ const assertEntrySize = (entryName: string, size: number) => {
 const readEntry = async (entry: IZipEntry): Promise<Buffer> => {
   const { entryName, header } = entry;
 
-  if (header.method === zipMethodStored) {
-    // Stored data is copied as is, so it is bounded by the zip size.
-    const data = entry.getData();
-    assertEntrySize(entryName, data.length);
-    return data;
-  }
-
-  if (header.method !== zipMethodDeflated) {
-    throw new Error(`File ${entryName} uses an unsupported compression method`);
-  }
-
   try {
+    if (header.method === zipMethodStored) {
+      // Stored data is copied as is, so it is bounded by the zip size.
+      const data = entry.getData();
+      assertEntrySize(entryName, data.length);
+      return data;
+    }
+
+    if (header.method !== zipMethodDeflated) {
+      throw new RequestError('storage.invalid_custom_ui_zip');
+    }
+
     return await inflateRawAsync(entry.getCompressedData(), { maxOutputLength: maxEntrySize - 1 });
   } catch (error: unknown) {
+    if (error instanceof RequestError) {
+      throw error;
+    }
+
     // Matched by code: zlib errors may come from another realm (e.g. Jest VM), failing `instanceof`.
     if (
       typeof error === 'object' &&
@@ -103,10 +109,10 @@ const readEntry = async (entry: IZipEntry): Promise<Buffer> => {
       'code' in error &&
       error.code === 'ERR_BUFFER_TOO_LARGE'
     ) {
-      throw new Error(`File ${entryName} is too large, must be less than 10MB`);
+      throw new RequestError({ code: 'storage.custom_ui_file_too_large', name: entryName });
     }
 
-    throw error;
+    throw new RequestError('storage.invalid_custom_ui_zip');
   }
 };
 
@@ -115,10 +121,10 @@ const readEntry = async (entry: IZipEntry): Promise<Buffer> => {
  * are served afterwards. Mirrors the Logto Cloud unzip function, which does the same through an
  * Azure blob trigger.
  *
- * Entry paths and declared sizes are validated before anything is uploaded, so a zip rejected
- * for them leaves nothing behind.
+ * Entry paths, the required index.html and declared sizes are validated before anything is uploaded,
+ * so a zip rejected for them leaves nothing behind.
  *
- * @throws {Error} With a message fit for the user when the zip is invalid or breaks a limit.
+ * @throws {RequestError} When the zip is invalid or breaks a limit. Storage errors pass through.
  */
 export const unzipCustomUiAssets = async (
   zip: Uint8Array,
@@ -126,16 +132,14 @@ export const unzipCustomUiAssets = async (
   // eslint-disable-next-line @typescript-eslint/ban-types -- Google doesn't allow us to use Uint8Array
   uploadFile: UploadFile<Buffer>
 ) => {
-  const entries = new AdmZip(Buffer.from(zip)).getEntries();
+  const entries = trySafe(() => new AdmZip(Buffer.from(zip)).getEntries());
 
-  if (entries.length === 0) {
-    throw new Error('Zip file is empty');
+  if (!entries?.length) {
+    throw new RequestError('storage.invalid_custom_ui_zip');
   }
 
   if (entries.length > maxEntryCount) {
-    throw new Error(
-      `Zip file contains too many entries, must be less than or equal to ${maxEntryCount}`
-    );
+    throw new RequestError('storage.custom_ui_too_many_entries');
   }
 
   const rootFolder = getRootFolder(entries.map(({ entryName }) => entryName));
@@ -150,6 +154,13 @@ export const unzipCustomUiAssets = async (
       objectKey: path.posix.join(keyPrefix, getRelativePath(entry.entryName, rootFolder)),
     }))
     .filter(({ entry }) => !isHidden(entry.entryName));
+
+  if (!files.some(({ objectKey }) => objectKey === path.posix.join(keyPrefix, 'index.html'))) {
+    throw new RequestError({
+      code: 'request.invalid_input',
+      details: 'The custom UI zip must contain an index.html file at the asset root.',
+    });
+  }
 
   for (const { entry } of files) {
     // A quick rejection on the declared size; the real size is enforced when inflating.

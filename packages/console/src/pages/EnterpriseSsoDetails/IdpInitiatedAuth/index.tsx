@@ -19,10 +19,10 @@ type Props = {
 };
 
 function IdpInitiatedAuth({ ssoConnector }: Props) {
-  const { license } = useContext(SubscriptionDataContext);
+  const { licenseQuota } = useContext(SubscriptionDataContext);
   const shouldShowOssUpsell = shouldShowIdpInitiatedAuthUpsell({
     isCloud,
-    isIdpInitiatedSsoLicensed: license?.quota.idpInitiatedSso ?? false,
+    isIdpInitiatedSsoLicensed: licenseQuota.idpInitiatedSso,
   });
 
   const { data: applications, error: applicationError } = useSWR<Application[], RequestError>(

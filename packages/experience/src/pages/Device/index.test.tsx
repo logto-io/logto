@@ -1,5 +1,11 @@
 /* eslint-disable max-lines */
-import { deviceFlowXsrfCookieKey, experience, oidcRoutes } from '@logto/schemas';
+import {
+  deviceFlowXsrfCookieKey,
+  experience,
+  oidcRoutes,
+  ssrPlaceholder,
+  Theme,
+} from '@logto/schemas';
 import { act, fireEvent, waitFor } from '@testing-library/react';
 import { Route, Routes } from 'react-router-dom';
 
@@ -206,6 +212,8 @@ describe('<Device />', () => {
     fetchMock.mockReset();
     clearDeviceFlowXsrfCookie();
     sessionStorage.clear();
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- tests stage the SSR global
+    window.logtoSsr = ssrPlaceholder;
   });
 
   afterAll(() => {
@@ -308,6 +316,9 @@ describe('<Device />', () => {
     sessionStorage.setItem('app_id', 'app_123');
     sessionStorage.setItem('organization_id', 'org_123');
     sessionStorage.setItem('ui_locales', 'fr-CA fr');
+    // The theme rides the flow cookie into the SSR payload, not session storage.
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- tests stage the SSR global
+    window.logtoSsr = { signInExperience: { theme: Theme.Dark } } as unknown as typeof logtoSsr;
 
     const { container } = renderDeviceRoutes({});
 
@@ -334,7 +345,7 @@ describe('<Device />', () => {
     const requestBody = String(request?.body ?? '');
 
     expect(requestUrl).toBe(
-      `${oidcRoutes.codeVerification}?organization_id=org_123&app_id=app_123&ui_locales=fr-CA+fr`
+      `${oidcRoutes.codeVerification}?organization_id=org_123&app_id=app_123&ui_locales=fr-CA+fr&theme=dark`
     );
     expect(requestBody).toContain('xsrf=foo');
     expect(requestBody).toContain('user_code=AB12-CD34');

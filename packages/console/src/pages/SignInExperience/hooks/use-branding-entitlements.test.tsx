@@ -29,6 +29,7 @@ const renderWithContext = (context: Partial<FullContext>) => {
 };
 
 const withLicense = (quota: Partial<LicenseQuota>): Partial<FullContext> => ({
+  licenseQuota: { ...ossDefaultQuota, ...quota },
   license: {
     plan: ReservedPlanId.SelfHostedPro,
     env: LicenseEnv.Production,
@@ -46,6 +47,19 @@ describe('useBrandingEntitlements', () => {
   describe('outside Cloud', () => {
     it('keeps both features locked without a license', () => {
       expect(renderWithContext({})).toStrictEqual({
+        isHideLogtoBrandingAvailable: false,
+        isHideLogtoBrandingEnabled: false,
+        isCustomUiCspEnabled: false,
+      });
+    });
+
+    it('uses effective entitlements even when the installed key still grants the features', () => {
+      expect(
+        renderWithContext({
+          ...withLicense({ hideLogtoBranding: true, bringYourUi: true }),
+          licenseQuota: ossDefaultQuota,
+        })
+      ).toStrictEqual({
         isHideLogtoBrandingAvailable: false,
         isHideLogtoBrandingEnabled: false,
         isCustomUiCspEnabled: false,

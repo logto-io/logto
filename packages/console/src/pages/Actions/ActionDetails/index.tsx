@@ -8,6 +8,7 @@ import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import PageMeta from '@/components/PageMeta';
 import { isCloud } from '@/consts/env';
 import InlineNotification from '@/ds-components/InlineNotification';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
 import { actionCatalog } from '../constants';
 import { ActionPageMode } from '../types';
@@ -95,9 +96,12 @@ function Content({ actionType, mode }: ContentProps) {
 
 function ActionDetails() {
   const { actionType, mode } = useParams();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const params = pageParamsGuard.safeParse({ actionType, mode });
 
-  if (!params.success) {
+  if (!params.success || (isReadOnly && params.data.mode === ActionPageMode.Create)) {
     return <EmptyDataPlaceholder />;
   }
 

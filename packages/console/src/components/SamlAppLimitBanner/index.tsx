@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import InfoIcon from '@/assets/icons/info.svg?react';
 import LearnMore from '@/components/LearnMore';
@@ -36,7 +36,13 @@ function SamlAppLimitBanner({ variant, limit, className }: Props) {
         </div>
       )}
       <div className={styles.content}>
-        {description}
+        <Trans
+          components={{
+            selfHostedPlans: <TextLink to={content.secondaryHref} />,
+          }}
+        >
+          {description}
+        </Trans>
         <LearnMore href={logtoOssFeatureSupportLink} />
       </div>
       {content.secondaryHref ? (
@@ -51,14 +57,6 @@ function SamlAppLimitBanner({ variant, limit, className }: Props) {
             href={content.href}
             targetBlank="noopener"
           />
-          <TextLink
-            {...(content.secondaryTargetBlank
-              ? { href: content.secondaryHref }
-              : { to: content.secondaryHref })}
-            targetBlank={content.secondaryTargetBlank}
-          >
-            {t(content.secondaryActionKey)}
-          </TextLink>
         </div>
       ) : variant === 'inline' ? (
         <TextLink className={styles.inlineAction} href={content.href} targetBlank="noopener">

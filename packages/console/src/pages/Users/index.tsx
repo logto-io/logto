@@ -22,6 +22,7 @@ import Search from '@/ds-components/Search';
 import Table from '@/ds-components/Table';
 import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import type { RequestError } from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import pageLayout from '@/scss/page-layout.module.scss';
@@ -55,6 +56,9 @@ function Users() {
   const { data, error, mutate } = useSWR<[User[], number], RequestError>(url);
   const isLoading = !data && !error;
   const { navigate, match } = useTenantPathname();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const [users, totalCount] = data ?? [];
   const isCreating = match(createUserPathname);
 
@@ -67,18 +71,20 @@ function Users() {
           subtitle="users.subtitle"
           learnMoreLink={{ href: userManagement }}
         />
-        <Button
-          icon={<Plus />}
-          type="primary"
-          size="large"
-          title="users.create"
-          onClick={() => {
-            navigate({
-              pathname: createUserPathname,
-              search,
-            });
-          }}
-        />
+        {!isReadOnly && (
+          <Button
+            icon={<Plus />}
+            type="primary"
+            size="large"
+            title="users.create"
+            onClick={() => {
+              navigate({
+                pathname: createUserPathname,
+                search,
+              });
+            }}
+          />
+        )}
       </div>
       <DevTenantDataRetentionNotice />
       <Table
@@ -156,18 +162,20 @@ function Users() {
               title="users.placeholder_title"
               description="users.placeholder_description"
               action={
-                <Button
-                  title="users.create"
-                  type="primary"
-                  size="large"
-                  icon={<Plus />}
-                  onClick={() => {
-                    navigate({
-                      pathname: createUserPathname,
-                      search,
-                    });
-                  }}
-                />
+                !isReadOnly && (
+                  <Button
+                    title="users.create"
+                    type="primary"
+                    size="large"
+                    icon={<Plus />}
+                    onClick={() => {
+                      navigate({
+                        pathname: createUserPathname,
+                        search,
+                      });
+                    }}
+                  />
+                )
               }
             />
           )
@@ -185,7 +193,7 @@ function Users() {
         }}
         onRetry={async () => mutate(undefined, true)}
       />
-      {isCreating && (
+      {isCreating && !isReadOnly && (
         <CreateForm
           onClose={() => {
             navigate({

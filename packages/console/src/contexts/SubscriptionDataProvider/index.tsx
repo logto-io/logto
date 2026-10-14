@@ -1,3 +1,4 @@
+import { ossDefaultQuota } from '@logto/schemas';
 import { noop } from '@silverhand/essentials';
 import { createContext, type ReactNode } from 'react';
 
@@ -20,6 +21,7 @@ export const SubscriptionDataContext = createContext<FullContext>({
   currentSubscription: defaultSubscription,
   onCurrentSubscriptionUpdated: noop,
   mutateLicense: noop,
+  licenseQuota: ossDefaultQuota,
   /* ==== For new pricing model ==== */
   logtoSkus: [],
   currentSku: defaultLogtoSku,

@@ -21,7 +21,7 @@ await mockIdGenerators();
 const keyPair = await createLicenseKeyPair();
 
 /** The public key the mocked build trusts, so a test can install licenses this instance accepts. */
-const trustedKey = await importJWK(JSON.parse(keyPair.publicKey) as JWK, 'EdDSA');
+const trustedKey = await importJWK(JSON.parse(keyPair.publicKey) as JWK, 'ES256');
 const getLicensePublicKey = jest.fn(async (): Promise<unknown> => trustedKey);
 mockEsm('#src/license/public-key.js', () => ({ getLicensePublicKey }));
 
@@ -56,12 +56,9 @@ const tenantContext = new MockTenant(undefined, undefined, undefined, {
   },
 });
 
-/**
- * The license routes are only registered while the self-hosted plans feature is on, and the flag is
- * read when the routes are registered, i.e. when `createRequester` below runs.
- */
+// Exercise the released routes and license reader without enabling unrelated dev features.
 const { isDevFeaturesEnabled: initialDevFeaturesEnabled } = EnvSet.values;
-Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
 
 const { createRequester } = await import('#src/utils/test-utils.js');
 const systemRoutes = await pickDefault(import('./system.js'));
@@ -243,20 +240,5 @@ describe('system license route', () => {
     expect(getResponse.status).toEqual(501);
     expect(putResponse.status).toEqual(501);
     expect(upsertSystem).not.toHaveBeenCalled();
-  });
-
-  it('should not register the license routes while the self-hosted plans feature is off', async () => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
-    const requestWithoutDevFeatures = createRequester(requesterOptions);
-
-    const getResponse = await requestWithoutDevFeatures.get('/systems/license');
-    const putResponse = await requestWithoutDevFeatures
-      .put('/systems/license')
-      .send({ license: 'foo' });
-
-    expect(getResponse.status).toEqual(404);
-    expect(putResponse.status).toEqual(404);
-
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
   });
 });

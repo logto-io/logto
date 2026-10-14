@@ -11,6 +11,7 @@ const user_scopes = {
     address: '你的地址',
     'urn:logto:scope:sessions': '你的有效會話',
     'urn:logto:scope:trusted_devices': '你的受信任裝置',
+    'urn:logto:scope:personal_access_tokens': '你的個人存取權杖',
   },
 };
 

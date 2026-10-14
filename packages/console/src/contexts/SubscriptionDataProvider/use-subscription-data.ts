@@ -47,7 +47,12 @@ const useSubscriptionData: () => SubscriptionContext & { isLoading: boolean } = 
     mutate: mutateSubscription,
   } = useSubscription(currentTenantId);
 
-  const { license, isLoading: isLicenseLoading, mutate: mutateLicense } = useLicense();
+  const {
+    license,
+    licenseQuota,
+    isLoading: isLicenseLoading,
+    mutate: mutateLicense,
+  } = useLicense();
 
   const {
     data: subscriptionUsageData,
@@ -88,8 +93,8 @@ const useSubscriptionData: () => SubscriptionContext & { isLoading: boolean } = 
     () =>
       isCloud
         ? normalizeSubscriptionQuota(subscriptionUsageData?.quota)
-        : buildSelfHostedSubscriptionQuota(license),
-    [license, subscriptionUsageData?.quota]
+        : buildSelfHostedSubscriptionQuota(licenseQuota),
+    [licenseQuota, subscriptionUsageData?.quota]
   );
 
   const currentSubscriptionBasicQuota = useMemo(
@@ -133,6 +138,7 @@ const useSubscriptionData: () => SubscriptionContext & { isLoading: boolean } = 
       currentSubscriptionResourceScopeUsage: subscriptionUsageData?.resources ?? {},
       currentSubscriptionRoleScopeUsage: subscriptionUsageData?.roles ?? {},
       license,
+      licenseQuota,
       mutateLicense,
     }),
     [
@@ -146,6 +152,7 @@ const useSubscriptionData: () => SubscriptionContext & { isLoading: boolean } = 
       isSubscriptionLoading,
       isSubscriptionUsageDataLoading,
       license,
+      licenseQuota,
       logtoSkus,
       mutateLicense,
       mutateSubscription,

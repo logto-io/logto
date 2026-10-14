@@ -1,7 +1,7 @@
 import { type AdminConsoleKey, type LogtoErrorCode } from '@logto/phrases';
 import { LicenseEnv } from '@logto/schemas';
 
-import { logtoCloudConsoleLink, selfHostedPlansLink } from '@/consts/external-links';
+import { selfHostedPlansLink } from '@/consts/external-links';
 import { type License } from '@/types/license';
 
 /**
@@ -37,9 +37,12 @@ export const buildLicensePurchaseUrl = () => {
   return url.toString();
 };
 
-/** Where an operator gets a fresh key after the installed license leaves its grace period. */
+/**
+ * Where an operator requests a fresh key after grace expires. Keep the existing contact flow
+ * until the Cloud self-service license management page ships.
+ */
 export const buildLicenseManagementUrl = () => {
-  const url = new URL(`${logtoCloudConsoleLink}/self-hosted-licenses`);
+  const url = new URL(selfHostedPlansLink);
 
   url.searchParams.set('utm_source', 'logto_oss');
   url.searchParams.set('utm_medium', 'console');

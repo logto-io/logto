@@ -22,6 +22,7 @@ import Table from '@/ds-components/Table';
 import { Tooltip } from '@/ds-components/Tip';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTheme from '@/hooks/use-theme';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
@@ -34,6 +35,9 @@ const pageSize = defaultPageSize;
 
 function UserRoles() {
   const theme = useTheme();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const { user } = useOutletContext<UserDetailsOutletContext>();
   const { id: userId } = user;
 
@@ -104,17 +108,18 @@ function UserRoles() {
             title: null,
             dataIndex: 'delete',
             colSpan: 1,
-            render: (role) => (
-              <Tooltip content={t('general.remove')}>
-                <IconButton
-                  onClick={() => {
-                    setRoleToBeDeleted(role);
-                  }}
-                >
-                  <Delete />
-                </IconButton>
-              </Tooltip>
-            ),
+            render: (role) =>
+              isReadOnly ? null : (
+                <Tooltip content={t('general.remove')}>
+                  <IconButton
+                    onClick={() => {
+                      setRoleToBeDeleted(role);
+                    }}
+                  >
+                    <Delete />
+                  </IconButton>
+                </Tooltip>
+              ),
           },
         ]}
         filter={
@@ -130,15 +135,17 @@ function UserRoles() {
                 updateSearchParameters({ keyword: '', page: 1 });
               }}
             />
-            <Button
-              title="user_details.roles.assign_button"
-              type="primary"
-              size="large"
-              icon={<Plus />}
-              onClick={() => {
-                setIsAssignRolesModalOpen(true);
-              }}
-            />
+            {!isReadOnly && (
+              <Button
+                title="user_details.roles.assign_button"
+                type="primary"
+                size="large"
+                icon={<Plus />}
+                onClick={() => {
+                  setIsAssignRolesModalOpen(true);
+                }}
+              />
+            )}
           </div>
         }
         pagination={{

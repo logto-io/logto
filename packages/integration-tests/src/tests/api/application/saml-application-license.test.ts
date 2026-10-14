@@ -10,7 +10,7 @@ import {
 import { putSystemLicense } from '#src/api/system.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { buildTestLicensePayload, signTestLicenseKey } from '#src/helpers/license.js';
-import { devFeatureTest, generateTestName } from '#src/utils.js';
+import { generateTestName } from '#src/utils.js';
 
 const installLicense = async (samlApplicationsLimit?: Nullable<number>) => {
   const license = await signTestLicenseKey(
@@ -22,9 +22,7 @@ const installLicense = async (samlApplicationsLimit?: Nullable<number>) => {
   expect(response.status).toEqual(204);
 };
 
-// The license is behind the self-hosted plans feature, which the instance under test only enables
-// with `DEV_FEATURES_ENABLED`.
-devFeatureTest.describe('SAML application cap lifted by a self-hosted license', () => {
+describe('SAML application cap lifted by a self-hosted license', () => {
   const createdIds: string[] = [];
 
   afterAll(async () => {

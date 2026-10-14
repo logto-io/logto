@@ -42,6 +42,17 @@ export class PersonalAccessTokensQueries {
     `);
   }
 
+  async countActiveByUserId(userId: string) {
+    const { count } = await this.pool.one<{ count: string }>(sql`
+      select count(*)
+        from ${table}
+        where ${fields.userId} = ${userId}
+        and (${fields.expiresAt} is null or ${fields.expiresAt} > now())
+    `);
+
+    return Number(count);
+  }
+
   async deleteByName(userId: string, name: string) {
     const { rowCount } = await this.pool.query(sql`
       delete from ${table}

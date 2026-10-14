@@ -51,6 +51,7 @@ export type AccountCenterFieldKey = keyof Pick<
   | 'customData'
   | 'session'
   | 'trustedDevice'
+  | 'personalAccessToken'
 >;
 
 const accountCenterFieldKeys: AccountCenterFieldKey[] = [
@@ -67,6 +68,7 @@ const accountCenterFieldKeys: AccountCenterFieldKey[] = [
   'customData',
   'session',
   'trustedDevice',
+  'personalAccessToken',
 ] as const;
 
 export type AccountCenterFormValues = {
@@ -116,7 +118,7 @@ export const normalizeAccountCenterFieldsForSubmit = (
   fields: AccountCenterFormValues['fields'],
   originalFields?: AccountCenterConfig['fields']
 ): AccountCenterFieldControl => {
-  const { passkey, trustedDevice, ...stableFields } = fields;
+  const { passkey, trustedDevice, personalAccessToken, ...stableFields } = fields;
 
   return {
     ...stableFields,
@@ -126,6 +128,10 @@ export const normalizeAccountCenterFieldsForSubmit = (
     ...(originalFields?.trustedDevice !== undefined ||
     trustedDevice !== AccountCenterControlValue.Off
       ? { trustedDevice }
+      : {}),
+    ...(originalFields?.personalAccessToken !== undefined ||
+    personalAccessToken !== AccountCenterControlValue.Off
+      ? { personalAccessToken }
       : {}),
   };
 };
