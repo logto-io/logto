@@ -99,6 +99,7 @@ function Providers() {
           ...Object.values(TenantScope),
           cloudApi.scopes.CreateTenant,
           cloudApi.scopes.ManageTenantSelf,
+          cloudApi.scopes.ManageAccountSelf,
         ]
       ),
     ],
