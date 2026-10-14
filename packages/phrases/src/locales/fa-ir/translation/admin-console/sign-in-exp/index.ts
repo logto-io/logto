@@ -146,6 +146,9 @@ const sign_in_exp = {
           session_management: {
             title: 'مدیریت نشست',
           },
+          developer_settings: {
+            title: 'تنظیمات توسعه‌دهنده',
+          },
         },
       },
       user_profile: {
@@ -189,6 +192,7 @@ const sign_in_exp = {
       custom_data_description: 'کنترل دسترسی به داده‌های JSON سفارشی ذخیره‌شده روی کاربر.',
       sessions: 'نشست‌ها',
       trusted_devices: 'دستگاه‌های مورد اعتماد',
+      personal_access_tokens: 'توکن‌های دسترسی شخصی',
     },
     profile_fields: {
       title: 'فیلدهای پروفایل برای مرکز حساب از پیش‌ساخته',

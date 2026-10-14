@@ -145,6 +145,9 @@ const sign_in_exp = {
           session_management: {
             title: 'Управление сессиями',
           },
+          developer_settings: {
+            title: 'Настройки разработчика',
+          },
         },
       },
       user_profile: {
@@ -189,6 +192,7 @@ const sign_in_exp = {
         'Управляйте доступом к пользовательским JSON-данным, хранящимся у пользователя.',
       sessions: 'Сессии',
       trusted_devices: 'Доверенные устройства',
+      personal_access_tokens: 'Персональные токены доступа',
     },
     profile_fields: {
       title: 'Поля профиля для готового центра учётной записи',

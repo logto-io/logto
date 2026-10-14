@@ -54,6 +54,10 @@ const user = {
   password_and_digest:
     'Sie können nicht sowohl das Passwort im Klartext als auch den Passwort-Hash festlegen.',
   personal_access_token_name_exists: 'Name des persönlichen Zugriffstokens existiert bereits.',
+  personal_access_token_limit_exceeded:
+    'Sie können höchstens {{limit}} aktive persönliche Zugriffstoken haben.',
+  personal_access_token_invalid_expiration:
+    'Die Ablaufzeit muss in der Zukunft liegen und darf höchstens {{maxDays}} Tage entfernt sein.',
   totp_secret_invalid: 'Ungültiges TOTP-Geheimnis bereitgestellt.',
   wrong_backup_code_format: 'Backup-Code-Format ist ungültig.',
   username_required: 'Benutzername ist ein erforderlicher Bezeichner, er kann nicht null sein.',

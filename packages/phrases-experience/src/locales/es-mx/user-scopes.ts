@@ -11,6 +11,7 @@ const user_scopes = {
     address: 'Tu dirección',
     'urn:logto:scope:sessions': 'Tus sesiones activas',
     'urn:logto:scope:trusted_devices': 'Tus dispositivos de confianza',
+    'urn:logto:scope:personal_access_tokens': 'Tus tokens de acceso personal',
   },
 };
 

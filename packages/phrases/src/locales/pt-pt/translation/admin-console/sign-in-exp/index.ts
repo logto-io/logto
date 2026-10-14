@@ -145,6 +145,9 @@ const sign_in_exp = {
           session_management: {
             title: 'Gestão de sessão',
           },
+          developer_settings: {
+            title: 'Definições de programador',
+          },
         },
       },
       user_profile: {
@@ -190,6 +193,7 @@ const sign_in_exp = {
         'Controle o acesso aos dados JSON personalizados guardados no utilizador.',
       sessions: 'Sessões',
       trusted_devices: 'Dispositivos de confiança',
+      personal_access_tokens: 'Tokens de acesso pessoal',
     },
     profile_fields: {
       title: 'Campos de perfil para o centro de conta pré-construído',

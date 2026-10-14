@@ -145,6 +145,9 @@ const sign_in_exp = {
           session_management: {
             title: 'Oturum yönetimi',
           },
+          developer_settings: {
+            title: 'Geliştirici ayarları',
+          },
         },
       },
       user_profile: {
@@ -188,6 +191,7 @@ const sign_in_exp = {
       custom_data_description: 'Kullanıcıda saklanan özel JSON verilerine erişimi kontrol edin.',
       sessions: 'Oturumlar',
       trusted_devices: 'Güvenilir cihazlar',
+      personal_access_tokens: 'Kişisel erişim belirteçleri',
     },
     profile_fields: {
       title: 'Önceden oluşturulmuş hesap merkezi için profil alanları',

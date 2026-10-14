@@ -45,6 +45,8 @@ const user = {
   password_algorithm_required: '密码算法是必需的。',
   password_and_digest: 'You cannot set both plain text password and password digest.',
   personal_access_token_name_exists: '个人访问令牌名称已存在。',
+  personal_access_token_limit_exceeded: '你最多只能拥有 {{limit}} 个有效的个人访问令牌。',
+  personal_access_token_invalid_expiration: '过期时间必须晚于当前时间，且不能超过 {{maxDays}} 天。',
   totp_secret_invalid: '无效的 TOTP 密钥。',
   wrong_backup_code_format: '备用代码格式无效。',
   username_required: '用户名是必需的标识符，你不能将其设置为 null。',
