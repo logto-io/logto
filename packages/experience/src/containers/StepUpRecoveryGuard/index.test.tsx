@@ -78,9 +78,9 @@ const renderPage = (path: string, state?: unknown) =>
         <Routes>
           <Route element={<StepUpRecoveryGuard />}>
             <Route path="/callback/social/:connectorId" element={<SocialCallback />} />
+            <Route path=":flow/verification-code" element={<div>Code form</div>} />
             <Route path="/continue/:method?" element={<Continue />} />
             <Route path="/mfa-onboarding" element={<MfaOnboarding />} />
-            <Route path=":flow/verification-code" element={<div>Code form</div>} />
             <Route path="/mfa-binding" element={<MfaBinding />} />
             <Route path={`/mfa-binding/${MfaFactor.TOTP}`} element={<TotpBinding />} />
             <Route path={`/mfa-binding/${MfaFactor.WebAuthn}`} element={<WebAuthnBinding />} />
