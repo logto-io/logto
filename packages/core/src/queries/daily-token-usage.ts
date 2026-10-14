@@ -1,4 +1,4 @@
-import { DailyTokenUsage } from '@logto/schemas';
+import { DailyTokenUsage, type LicenseMonthlyUsage } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import type { CommonQueryMethods } from '@silverhand/slonik';
 import { sql } from '@silverhand/slonik';
@@ -93,8 +93,42 @@ export const createDailyTokenUsageQueries = (pool: CommonQueryMethods) => {
       `);
   };
 
+  /**
+   * Sum the token usage of the month starting at `lastMonthStart` and of the month starting at
+   * `monthStart` so far, across every tenant except `excludedTenantId`.
+   *
+   * Only a pool that is not restricted to one tenant, i.e. `EnvSet.sharedPool`, sees every tenant.
+   */
+  const countMonthlyTokenUsageExcludingTenant = async ({
+    lastMonthStart,
+    monthStart,
+    excludedTenantId,
+  }: {
+    lastMonthStart: Date;
+    monthStart: Date;
+    excludedTenantId: string;
+  }): Promise<LicenseMonthlyUsage> => {
+    const monthStartTimestamp = sql`to_timestamp(${monthStart.getTime()}::double precision / 1000)`;
+    const { lastMonth, monthToDate } = await pool.one<
+      Record<keyof LicenseMonthlyUsage, string>
+    >(sql`
+      select
+        coalesce(sum(${fields.usage}) filter (where ${fields.date} < ${monthStartTimestamp}), 0)
+          as last_month,
+        coalesce(sum(${fields.usage}) filter (where ${fields.date} >= ${monthStartTimestamp}), 0)
+          as month_to_date
+      from ${table}
+      where ${fields.date} >= to_timestamp(${lastMonthStart.getTime()}::double precision / 1000)
+        and ${fields.tenantId} <> ${excludedTenantId}
+    `);
+
+    // The sum of a `bigint` column is a `numeric`, which comes back as a string.
+    return { lastMonth: Number(lastMonth), monthToDate: Number(monthToDate) };
+  };
+
   return {
     recordTokenUsage,
     countTokenUsage,
+    countMonthlyTokenUsageExcludingTenant,
   };
 };

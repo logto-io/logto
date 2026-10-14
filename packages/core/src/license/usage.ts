@@ -1,19 +1,17 @@
 import {
-  DailyActiveUsers,
-  DailyTokenUsage,
   LicenseUsageMetric,
   adminTenantId,
-  type LicenseMonthlyUsage,
   type LicenseUsage,
   type LicenseUsageLimits,
   type LicenseUsageWarning,
 } from '@logto/schemas';
-import { Tenants } from '@logto/schemas/models';
 import { TtlCache } from '@logto/shared';
 import { type Optional } from '@silverhand/essentials';
 import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
-import { convertToIdentifiers } from '#src/utils/sql.js';
+import { createDailyActiveUsersQueries } from '#src/queries/daily-active-user.js';
+import { createDailyTokenUsageQueries } from '#src/queries/daily-token-usage.js';
+import createTenantQueries from '#src/queries/tenant.js';
 
 import { licenseConsoleLog } from './console.js';
 
@@ -38,9 +36,6 @@ export const clearLicenseUsageCache = () => {
   cache.clear();
 };
 
-const toUtcTimestamp = (date: Date) =>
-  sql`to_timestamp(${date.getTime()}::double precision / 1000)`;
-
 /**
  * The UTC calendar months usage is counted in: the current month so far, and the last full month
  * before it.
@@ -61,59 +56,23 @@ export const getUsageMonths = (now: Date) => {
 
 const collect = async (pool: CommonQueryMethods, now: Date): Promise<LicenseUsage> => {
   const { month, lastMonthStart, monthStart } = getUsageMonths(now);
-  const activeUsers = convertToIdentifiers(DailyActiveUsers);
-  const tokenUsage = convertToIdentifiers(DailyTokenUsage);
-  const tenants = convertToIdentifiers({ table: Tenants.tableName, fields: Tenants.rawKeys });
+  const monthlyUsageOptions = { lastMonthStart, monthStart, excludedTenantId: adminTenantId };
 
   return pool.transaction(async (connection) => {
     await connection.query(
       sql`set local statement_timeout = ${sql.literalValue(String(licenseUsageTimeout))}`
     );
 
-    // A user ID is only unique within its tenant, so a user is counted per tenant.
-    const { fields: activeUserFields } = activeUsers;
-    const activeUser = sql`(${activeUserFields.tenantId}, ${activeUserFields.userId})`;
-    const mau = await connection.one<Record<keyof LicenseMonthlyUsage, string | number>>(sql`
-      select
-        count(distinct ${activeUser}) filter (
-          where ${activeUserFields.date} < ${toUtcTimestamp(monthStart)}
-        ) as last_month,
-        count(distinct ${activeUser}) filter (
-          where ${activeUserFields.date} >= ${toUtcTimestamp(monthStart)}
-        ) as month_to_date
-      from ${activeUsers.table}
-      where ${activeUserFields.date} >= ${toUtcTimestamp(lastMonthStart)}
-        and ${activeUserFields.tenantId} <> ${adminTenantId}
-    `);
-
-    const { fields: tokenFields } = tokenUsage;
-    const tokens = await connection.one<Record<keyof LicenseMonthlyUsage, string | number>>(sql`
-      select
-        coalesce(sum(${tokenFields.usage}) filter (
-          where ${tokenFields.date} < ${toUtcTimestamp(monthStart)}
-        ), 0) as last_month,
-        coalesce(sum(${tokenFields.usage}) filter (
-          where ${tokenFields.date} >= ${toUtcTimestamp(monthStart)}
-        ), 0) as month_to_date
-      from ${tokenUsage.table}
-      where ${tokenFields.date} >= ${toUtcTimestamp(lastMonthStart)}
-        and ${tokenFields.tenantId} <> ${adminTenantId}
-    `);
-
-    const tenantCount = await connection.oneFirst<string | number>(sql`
-      select count(*) from ${tenants.table}
-      where ${tenants.fields.id} <> ${adminTenantId}
-    `);
-
-    // Counts and sums of `bigint` columns may come back as strings.
     return {
       month,
-      mau: { lastMonth: Number(mau.lastMonth), monthToDate: Number(mau.monthToDate) },
-      monthlyAccessTokens: {
-        lastMonth: Number(tokens.lastMonth),
-        monthToDate: Number(tokens.monthToDate),
-      },
-      tenants: Number(tenantCount),
+      mau: await createDailyActiveUsersQueries(connection).countMonthlyActiveUsersExcludingTenant(
+        monthlyUsageOptions
+      ),
+      monthlyAccessTokens:
+        await createDailyTokenUsageQueries(connection).countMonthlyTokenUsageExcludingTenant(
+          monthlyUsageOptions
+        ),
+      tenants: await createTenantQueries(connection).countTenantsExcluding(adminTenantId),
     };
   });
 };
