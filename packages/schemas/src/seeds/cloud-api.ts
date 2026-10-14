@@ -15,6 +15,8 @@ export enum CloudScope {
   CreateTenant = 'create:tenant',
   /** The user can update or delete its own tenants. */
   ManageTenantSelf = 'manage:tenant:self',
+  /** The user can manage its own Cloud account, Console SSO, licenses, and invitations. */
+  ManageAccountSelf = 'manage:account:self',
   SendSms = 'send:sms',
   SendEmail = 'send:email',
   /**
@@ -57,6 +59,10 @@ export const createCloudApi = (): Readonly<[UpdateAdminData, ...CreateScope[]]> 
         buildScope(
           CloudScope.ManageTenantSelf,
           'Allow managing tenant itself, including update and delete.'
+        ),
+        buildScope(
+          CloudScope.ManageAccountSelf,
+          'Allow managing the user account itself, including account deletion, Console SSO, licenses, and invitations.'
         ),
       ],
       role: {
