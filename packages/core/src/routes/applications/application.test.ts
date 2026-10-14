@@ -18,7 +18,7 @@ import { omitInternalApplicationSecret } from './application-response.js';
 
 const { jest } = import.meta;
 
-const mockApplicationResponse = omitInternalApplicationSecret(mockApplication);
+const mockApplicationResponse = omitInternalApplicationSecret(mockApplication, {});
 
 const findApplicationById = jest.fn(async () => mockApplication);
 const deleteApplicationById = jest.fn();

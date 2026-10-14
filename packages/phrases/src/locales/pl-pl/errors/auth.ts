@@ -10,6 +10,7 @@ const auth = {
   exceed_token_limit: 'Przekroczono limit tokenów. Skontaktuj się z administratorem.',
   third_party_application_forbidden:
     'Aplikacje firm trzecich nie mogą modyfikować danych konta za pomocą tego API.',
+  read_only_access: 'To żądanie nie jest dozwolone przy dostępie tylko do odczytu.',
 };
 
 export default Object.freeze(auth);

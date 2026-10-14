@@ -9,6 +9,7 @@ const auth = {
   exceed_token_limit: 'Token limit exceeded. Please contact your administrator.',
   third_party_application_forbidden:
     'Third-party applications cannot modify account data through this API.',
+  read_only_access: 'This request is not allowed with read-only access.',
 };
 
 export default Object.freeze(auth);
