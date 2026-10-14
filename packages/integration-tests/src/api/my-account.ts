@@ -301,10 +301,16 @@ export const createPersonalAccessToken = async (
 
 export const renamePersonalAccessToken = async (
   api: KyInstance,
-  body: { currentName: string; name: string }
+  body: { currentName: string; name: string },
+  verificationRecordId?: string
 ) =>
   api
-    .patch('api/my-account/personal-access-tokens', { json: body })
+    .patch('api/my-account/personal-access-tokens', {
+      json: body,
+      ...conditional(
+        verificationRecordId && { headers: { [verificationRecordIdHeader]: verificationRecordId } }
+      ),
+    })
     .json<AccountPersonalAccessTokenResponse>();
 
 export const deletePersonalAccessToken = async (

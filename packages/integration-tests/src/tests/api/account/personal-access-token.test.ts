@@ -106,7 +106,7 @@ devFeatureTest.describe('account personal access tokens', () => {
   it('rejects requests without the scope or the account center field', async () => {
     await expectRejects(getPersonalAccessTokens(userWithoutScope.api), {
       code: 'auth.unauthorized',
-      status: 403,
+      status: 401,
     });
     await expectRejects(
       createPersonalAccessToken(
@@ -114,7 +114,7 @@ devFeatureTest.describe('account personal access tokens', () => {
         { name: 'cli', expiresAt: expiresInDays(1) },
         userWithoutScope.verificationRecordId
       ),
-      { code: 'auth.unauthorized', status: 403 }
+      { code: 'auth.unauthorized', status: 401 }
     );
 
     await updateAccountCenter({
@@ -123,7 +123,7 @@ devFeatureTest.describe('account personal access tokens', () => {
     });
     await expectRejects(getPersonalAccessTokens(owner.api), {
       code: 'account_center.field_not_enabled',
-      status: 403,
+      status: 400,
     });
 
     await updateAccountCenter({
@@ -137,11 +137,11 @@ devFeatureTest.describe('account personal access tokens', () => {
         { name: 'cli', expiresAt: expiresInDays(1) },
         owner.verificationRecordId
       ),
-      { code: 'account_center.field_not_editable', status: 403 }
+      { code: 'account_center.field_not_editable', status: 400 }
     );
   });
 
-  it('requires identity verification to create and delete tokens', async () => {
+  it('requires identity verification to create, rename, and delete tokens', async () => {
     await expectRejects(
       createPersonalAccessToken(owner.api, { name: 'cli', expiresAt: expiresInDays(1) }),
       { code: 'verification_record.permission_denied', status: 401 }
@@ -153,6 +153,10 @@ devFeatureTest.describe('account personal access tokens', () => {
       owner.verificationRecordId
     );
 
+    await expectRejects(renamePersonalAccessToken(owner.api, { currentName: 'cli', name: 'x' }), {
+      code: 'verification_record.permission_denied',
+      status: 401,
+    });
     await expectRejects(deletePersonalAccessToken(owner.api, 'cli'), {
       code: 'verification_record.permission_denied',
       status: 401,
@@ -226,7 +230,7 @@ devFeatureTest.describe('account personal access tokens', () => {
     ).resolves.toMatchObject({ name: 'token-20' });
   });
 
-  it('renames a token without re-authentication and keeps names unique', async () => {
+  it('renames a token and keeps names unique', async () => {
     const expiresAt = expiresInDays(10);
     await createPersonalAccessToken(
       owner.api,
@@ -238,16 +242,25 @@ devFeatureTest.describe('account personal access tokens', () => {
       { name: 'second', expiresAt },
       owner.verificationRecordId
     );
+    await expect(getPersonalAccessTokens(owner.api)).resolves.toMatchObject([
+      { name: 'second' },
+      { name: 'first' },
+    ]);
 
-    const renamed = await renamePersonalAccessToken(owner.api, {
-      currentName: 'first',
-      name: 'renamed',
-    });
+    const renamed = await renamePersonalAccessToken(
+      owner.api,
+      { currentName: 'first', name: 'renamed' },
+      owner.verificationRecordId
+    );
     expect(renamed).toMatchObject({ name: 'renamed', expiresAt });
     expect(renamed).not.toHaveProperty('value');
 
     await expectRejects(
-      renamePersonalAccessToken(owner.api, { currentName: 'renamed', name: 'second' }),
+      renamePersonalAccessToken(
+        owner.api,
+        { currentName: 'renamed', name: 'second' },
+        owner.verificationRecordId
+      ),
       { code: 'user.personal_access_token_name_exists', status: 422 }
     );
     await expectRejects(
@@ -259,12 +272,16 @@ devFeatureTest.describe('account personal access tokens', () => {
       { code: 'user.personal_access_token_name_exists', status: 422 }
     );
     await expectRejects(
-      renamePersonalAccessToken(owner.api, { currentName: 'missing', name: 'other' }),
+      renamePersonalAccessToken(
+        owner.api,
+        { currentName: 'missing', name: 'other' },
+        owner.verificationRecordId
+      ),
       { code: 'entity.not_exists', status: 404 }
     );
 
+    // Newest first. Renaming does not change the creation time.
     const tokens = await getPersonalAccessTokens(owner.api);
-    expect(tokens.map(({ name }) => name)).toEqual(expect.arrayContaining(['renamed', 'second']));
-    expect(tokens).toHaveLength(2);
+    expect(tokens.map(({ name }) => name)).toEqual(['second', 'renamed']);
   });
 });

@@ -39,6 +39,7 @@ export class PersonalAccessTokensQueries {
       select ${sql.join(Object.values(fields), sql`, `)}
         from ${table}
         where ${fields.userId} = ${userId}
+        order by ${fields.createdAt} desc
     `);
   }
 

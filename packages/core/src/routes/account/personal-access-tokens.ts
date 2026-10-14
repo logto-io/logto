@@ -40,17 +40,13 @@ const assertFieldAndScope = (
 
   assertThat(
     isAllowed,
-    new RequestError({
-      code:
-        access === AccountCenterControlValue.ReadOnly
-          ? 'account_center.field_not_enabled'
-          : 'account_center.field_not_editable',
-      status: 403,
-    })
+    access === AccountCenterControlValue.ReadOnly
+      ? 'account_center.field_not_enabled'
+      : 'account_center.field_not_editable'
   );
   assertThat(
     scopes.has(UserScope.PersonalAccessTokens),
-    new RequestError({ code: 'auth.unauthorized', status: 403 })
+    new RequestError({ code: 'auth.unauthorized', status: 401 })
   );
 };
 
@@ -76,7 +72,7 @@ export default function accountPersonalAccessTokenRoutes<T extends UserRouter>(
     pathname,
     koaGuard({
       response: accountPersonalAccessTokenResponseGuard.array(),
-      status: [200, 403],
+      status: [200, 400, 401],
     }),
     async (ctx, next) => {
       assertFieldAndScope(
@@ -149,10 +145,10 @@ export default function accountPersonalAccessTokenRoutes<T extends UserRouter>(
     koaGuard({
       body: z.object({ currentName: tokenNameGuard, name: tokenNameGuard }),
       response: accountPersonalAccessTokenResponseGuard,
-      status: [200, 400, 403, 404, 422],
+      status: [200, 400, 401, 403, 404, 422],
     }),
     async (ctx, next) => {
-      const { id: userId, clientId } = ctx.auth;
+      const { id: userId, identityVerified, clientId } = ctx.auth;
       const { currentName, name } = ctx.guard.body;
 
       assertFieldAndScope(
@@ -161,6 +157,7 @@ export default function accountPersonalAccessTokenRoutes<T extends UserRouter>(
         AccountCenterControlValue.Edit
       );
       await assertFirstPartyClient(queries, clientId);
+      assertIdentityVerified(identityVerified);
 
       const token = await personalAccessTokens.updateName(userId, currentName, name);
       ctx.body = pick(token, 'name', 'createdAt', 'expiresAt');
