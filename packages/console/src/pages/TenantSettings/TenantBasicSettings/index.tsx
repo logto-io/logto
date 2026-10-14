@@ -48,7 +48,7 @@ function TenantBasicSettings() {
   const { data: tenantSettings, mutate: mutateTenantSettings } = useSWR<
     TenantSettingsResponse,
     RequestError
-  >(`api/tenants/${currentTenantId}/settings`, async () =>
+  >(canManageTenant && `api/tenants/${currentTenantId}/settings`, async () =>
     cloudApi.get(`/api/tenants/:tenantId/settings`, {
       params: { tenantId: currentTenantId },
     })

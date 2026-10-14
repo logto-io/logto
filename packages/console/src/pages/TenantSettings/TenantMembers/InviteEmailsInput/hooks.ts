@@ -1,32 +1,28 @@
 import { emailRegEx } from '@logto/core-kit';
 import { OrganizationInvitationStatus } from '@logto/schemas';
 import { conditional, conditionalArray, conditionalString } from '@silverhand/essentials';
-import { useCallback, useContext } from 'react';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
-import { useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantInvitationResponse, type TenantMemberResponse } from '@/cloud/types/router';
-import { TenantsContext } from '@/contexts/TenantsProvider';
 import { type RequestError } from '@/hooks/use-api';
 
 import { type InviteeEmailItem } from '../types';
+import useTenantMembersApi from '../use-tenant-members-api';
 
 const useEmailInputUtils = () => {
-  const cloudApi = useAuthedCloudApi();
-  const { currentTenantId } = useContext(TenantsContext);
+  const { membersKey, invitationsKey, getMembers, getInvitations } = useTenantMembersApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const { data: existingMembers = [] } = useSWR<TenantMemberResponse[], RequestError>(
-    `api/tenant/${currentTenantId}/members`,
-    async () =>
-      cloudApi.get('/api/tenants/:tenantId/members', { params: { tenantId: currentTenantId } })
+    membersKey,
+    getMembers
   );
 
   const { data: existingInvitations = [] } = useSWR<TenantInvitationResponse[], RequestError>(
-    `api/tenants/${currentTenantId}/invitations`,
-    async () =>
-      cloudApi.get('/api/tenants/:tenantId/invitations', { params: { tenantId: currentTenantId } })
+    invitationsKey,
+    getInvitations
   );
 
   /**

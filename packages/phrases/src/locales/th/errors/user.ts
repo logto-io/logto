@@ -45,6 +45,10 @@ const user = {
   password_algorithm_required: 'ต้องระบุอัลกอริทึมของรหัสผ่าน',
   password_and_digest: 'ไม่สามารถตั้งค่ารหัสผ่านธรรมดาร่วมกับรหัสผ่านที่เข้ารหัสได้',
   personal_access_token_name_exists: 'มีชื่อ Personal access token นี้แล้ว',
+  personal_access_token_limit_exceeded:
+    'คุณมีโทเค็นการเข้าถึงส่วนบุคคลที่ใช้งานอยู่ได้สูงสุด {{limit}} รายการ',
+  personal_access_token_invalid_expiration:
+    'เวลาหมดอายุต้องเป็นเวลาในอนาคตและไม่เกิน {{maxDays}} วันนับจากนี้',
   totp_secret_invalid: 'รหัสลับ TOTP ไม่ถูกต้อง',
   wrong_backup_code_format: 'รูปแบบรหัสสำรองไม่ถูกต้อง',
   username_required: 'ชื่อผู้ใช้เป็นข้อมูลบังคับ ไม่สามารถตั้งค่าเป็นค่าว่างได้',

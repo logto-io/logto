@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import Draggable from '@/assets/icons/draggable.svg?react';
 import Minus from '@/assets/icons/minus.svg?react';
 import SwitchArrowIcon from '@/assets/icons/switch-arrow.svg?react';
+import { useReadOnlyField } from '@/contexts/ReadOnlyFieldScope';
 import Checkbox from '@/ds-components/Checkbox';
 import IconButton from '@/ds-components/IconButton';
 import { Tooltip } from '@/ds-components/Tip';
@@ -48,6 +49,7 @@ function SignInMethodItem({
   onDelete,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const isReadOnlyField = useReadOnlyField();
 
   return (
     <div>
@@ -73,14 +75,16 @@ function SignInMethodItem({
             />
             {identifier !== SignInIdentifier.Username && (
               <>
-                <Tooltip
-                  anchorClassName={styles.swapButton}
-                  content={t('sign_in_exp.sign_up_and_sign_in.sign_in.auth_swap_tip')}
-                >
-                  <IconButton onClick={onToggleVerificationPrimary}>
-                    <SwitchArrowIcon />
-                  </IconButton>
-                </Tooltip>
+                {!isReadOnlyField && (
+                  <Tooltip
+                    anchorClassName={styles.swapButton}
+                    content={t('sign_in_exp.sign_up_and_sign_in.sign_in.auth_swap_tip')}
+                  >
+                    <IconButton onClick={onToggleVerificationPrimary}>
+                      <SwitchArrowIcon />
+                    </IconButton>
+                  </Tooltip>
+                )}
                 <Checkbox
                   label={t('sign_in_exp.sign_up_and_sign_in.sign_in.verification_code_auth')}
                   checked={verificationCode}
@@ -94,18 +98,20 @@ function SignInMethodItem({
             )}
           </div>
         </div>
-        <Tooltip
-          content={conditional(
-            !isDeletable &&
-              t('sign_in_exp.sign_up_and_sign_in.tip.delete_sign_in_method', {
-                identifier: String(t(signInIdentifierPhrase[identifier])).toLocaleLowerCase(),
-              })
-          )}
-        >
-          <IconButton disabled={!isDeletable} onClick={onDelete}>
-            <Minus />
-          </IconButton>
-        </Tooltip>
+        {!isReadOnlyField && (
+          <Tooltip
+            content={conditional(
+              !isDeletable &&
+                t('sign_in_exp.sign_up_and_sign_in.tip.delete_sign_in_method', {
+                  identifier: String(t(signInIdentifierPhrase[identifier])).toLocaleLowerCase(),
+                })
+            )}
+          >
+            <IconButton disabled={!isDeletable} onClick={onDelete}>
+              <Minus />
+            </IconButton>
+          </Tooltip>
+        )}
       </div>
       {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
       <ConnectorSetupWarning requiredConnectors={requiredConnectors} />

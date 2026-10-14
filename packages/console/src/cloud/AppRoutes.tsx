@@ -22,6 +22,7 @@ import EnterpriseSubscription from './pages/EnterpriseSubscription';
 import BillingHistory from './pages/EnterpriseSubscription/BillingHistory';
 import Subscription from './pages/EnterpriseSubscription/Subscription';
 import Main from './pages/Main';
+import SelfHostedLicenses from './pages/SelfHostedLicenses';
 import SocialDemoCallback from './pages/SocialDemoCallback';
 
 /** Renders necessary routes when the user is not in a tenant context. */
@@ -45,6 +46,12 @@ function AppRoutes() {
             element={<AcceptInvitation />}
           />
           <Route element={<ProtectedRoutes />}>
+            {isCloud && (
+              <Route
+                path={`${GlobalRoute.SelfHostedLicenses}/:licenseId?`}
+                element={<SelfHostedLicenses />}
+              />
+            )}
             {/* Console SSO */}
             {isCloud && isDevFeaturesEnabled && (
               <>

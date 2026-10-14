@@ -44,7 +44,7 @@ const paywall = {
   saml_applications_oss:
     'สามารถใช้งาน SAML app เพิ่มเติมได้เมื่อใช้ Logto Enterprise หากต้องการความช่วยเหลือ กรุณาติดต่อเรา',
   saml_applications_oss_limit_notice:
-    'อินสแตนซ์โอเพนซอร์สของคุณรองรับแอป SAML ได้สูงสุด {{limit}} แอป คุณสามารถใช้ Logto Cloud หรือติดต่อเราเพื่อดูตัวเลือกเพิ่มเติม',
+    'อินสแตนซ์โอเพนซอร์สของคุณรองรับแอป SAML ได้สูงสุด {{limit}} แอป หากต้องการเพิ่มแอป โปรดดู<selfHostedPlans>แผนแบบโฮสต์เอง</selfHostedPlans>หรือใช้ Logto Cloud',
   logto_pricing_button_text: 'Logto Cloud ราคา',
   saml_applications:
     'สามารถใช้งาน SAML app เพิ่มเติมได้เมื่อใช้ Logto Enterprise หากต้องการความช่วยเหลือ กรุณาติดต่อเรา',

@@ -11,7 +11,11 @@ import pRetry from 'p-retry';
 import { type Response } from 'supertest';
 
 import { EnvSet } from '#src/env-set/index.js';
+import { type VerifiedLicense } from '#src/license/LicenseReader.js';
+import koaErrorHandler from '#src/middleware/koa-error-handler.js';
+import koaI18next from '#src/middleware/koa-i18next.js';
 import SystemContext from '#src/tenants/SystemContext.js';
+import { buildLicensePayload } from '#src/test-utils/license.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -68,14 +72,18 @@ await mockEsmWithActual('@logto/shared', () => ({
   generateStandardId: mockedGenerateStandardId,
 }));
 
-const mockedReadLicense = jest.fn();
+const LicenseReader = await pickDefault(import('#src/license/LicenseReader.js'));
+const mockedReadLicense = jest.spyOn(LicenseReader.shared, 'read');
 
-await mockEsmWithActual('#src/license/LicenseReader.js', () => ({
-  default: { shared: { read: mockedReadLicense } },
-}));
-
-const withLicense = (bringYourUi: boolean) => {
-  mockedReadLicense.mockResolvedValue({ quota: { ...ossDefaultQuota, bringYourUi } });
+const withLicense = (bringYourUi: boolean, overrides?: Partial<VerifiedLicense>) => {
+  mockedReadLicense.mockResolvedValue({
+    payload: buildLicensePayload({ quota: { bringYourUi } }),
+    quota: { ...ossDefaultQuota, bringYourUi },
+    installedAt: new Date(Date.now()).toISOString(),
+    lastRefreshedAt: new Date(Date.now()).toISOString(),
+    graceEndsAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+    ...overrides,
+  });
 };
 
 // The Cloud quota guard is covered by its own tests; here it only has to let the request through.
@@ -199,11 +207,12 @@ describe('POST /sign-in-exp/default/custom-ui-assets', () => {
   });
 
   describe('on a self-hosted deployment', () => {
+    const now = Date.parse('2026-10-08T00:00:00.000Z');
     // eslint-disable-next-line @silverhand/fp/no-let
     let upload: (filePath: string) => Promise<Response>;
 
     beforeAll(() => {
-      setEnv({ isCloud: false, isDevFeaturesEnabled: true });
+      setEnv({ isCloud: false, isDevFeaturesEnabled: false });
       const requester = createSignInExperienceRequester();
       // eslint-disable-next-line @silverhand/fp/no-mutation
       upload = async (filePath) =>
@@ -214,11 +223,17 @@ describe('POST /sign-in-exp/default/custom-ui-assets', () => {
     });
 
     beforeEach(() => {
-      setEnv({ isCloud: false, isDevFeaturesEnabled: true });
+      setEnv({ isCloud: false, isDevFeaturesEnabled: false });
+      jest.spyOn(Date, 'now').mockReturnValue(now);
+    });
+
+    afterEach(() => {
+      jest.spyOn(Date, 'now').mockRestore();
     });
 
     it('should reject the upload without a license', async () => {
-      mockedReadLicense.mockResolvedValueOnce(null);
+      // eslint-disable-next-line unicorn/no-useless-undefined -- The reader returns undefined when no license is installed.
+      mockedReadLicense.mockResolvedValueOnce(undefined);
       const response = await upload(pathToZip);
 
       expect(response.status).toBe(403);
@@ -231,6 +246,47 @@ describe('POST /sign-in-exp/default/custom-ui-assets', () => {
 
       expect(response.status).toBe(403);
       expect(mockedS3UploadFile).not.toHaveBeenCalled();
+    });
+
+    it.each([0, 1])('should reject the upload %i ms after grace ends', async (offset) => {
+      withLicense(true, {
+        payload: buildLicensePayload({
+          iat: Math.floor(now / 1000) - 31 * 24 * 60 * 60,
+          quota: { bringYourUi: true },
+        }),
+        lastRefreshedAt: new Date(now - offset - 30 * 24 * 60 * 60 * 1000).toISOString(),
+        graceEndsAt: new Date(now - offset).toISOString(),
+      });
+      const response = await upload(pathToZip);
+
+      expect(response.status).toBe(403);
+      expect(response.text).toBe('You have reached the limit of your subscription plan.');
+      expect(mockedS3UploadFile).not.toHaveBeenCalled();
+      expect(mockedAzureUploadFile).not.toHaveBeenCalled();
+      expect(mockedGenerateStandardId).not.toHaveBeenCalled();
+    });
+
+    it('should allow an expired key and refused refresh immediately before grace ends', async () => {
+      withLicense(true, {
+        payload: buildLicensePayload({
+          iat: Math.floor(now / 1000) - 30 * 24 * 60 * 60,
+          exp: Math.floor(now / 1000) - 1,
+          quota: { bringYourUi: true },
+        }),
+        lastRefreshedAt: new Date(now + 1 - 30 * 24 * 60 * 60 * 1000).toISOString(),
+        graceEndsAt: new Date(now + 1).toISOString(),
+        refusalReason: 'revoked',
+      });
+      const response = await upload(pathToZip);
+
+      expect(response.status).toBe(200);
+      expect(response.body.customUiAssetId).toEqual(expect.any(String));
+      expect(mockedS3UploadFile).toHaveBeenCalledWith(
+        Buffer.from('<html></html>'),
+        `default/${response.body.customUiAssetId}/index.html`,
+        { contentType: 'text/html', isPublic: false }
+      );
+      expect(mockedAzureUploadFile).not.toHaveBeenCalled();
     });
 
     it('should unzip the assets into the blobs storage', async () => {
@@ -248,15 +304,72 @@ describe('POST /sign-in-exp/default/custom-ui-assets', () => {
       expect(mockedAzureUploadFile).not.toHaveBeenCalled();
     });
 
+    it('should reject a zip without index.html before uploading any assets', async () => {
+      withLicense(true);
+      const pathToInvalidZip = path.join(testFilesPath, 'missing-index.zip');
+      const zip = new AdmZip();
+      zip.addFile('app.js', Buffer.from('console.log("custom UI");'));
+      await zip.writeZipPromise(pathToInvalidZip);
+      const response = await upload(pathToInvalidZip);
+
+      expect(response.status).toBe(400);
+      expect(response.text).toBe(
+        'Input is invalid. The custom UI zip must contain an index.html file at the asset root.'
+      );
+      expect(response.body.customUiAssetId).toBeUndefined();
+      expect(mockedS3UploadFile).not.toHaveBeenCalled();
+      expect(mockedAzureUploadFile).not.toHaveBeenCalled();
+    });
+
+    it('should preserve storage errors when uploading a valid zip fails', async () => {
+      withLicense(true);
+      mockedS3UploadFile.mockRejectedValueOnce(new Error('Storage unavailable'));
+      const response = await upload(pathToZip);
+
+      expect(response.status).toBe(500);
+      expect(response.text).toBe('Failed to upload file to the storage provider.');
+    });
+
     it('should fail when the zip cannot be unzipped', async () => {
       withLicense(true);
       const pathToEmptyZip = path.join(testFilesPath, 'empty.zip');
       await new AdmZip().writeZipPromise(pathToEmptyZip);
       const response = await upload(pathToEmptyZip);
 
+      expect(response.status).toBe(400);
+      expect(response.text).toBe(
+        'The archive could not be read. Create a non-empty ZIP using Deflate or no compression, then upload it again.'
+      );
+      expect(mockedS3UploadFile).not.toHaveBeenCalled();
+    });
+
+    it('should serialize localized validation errors without internal details', async () => {
+      withLicense(true);
+      const requester = createRequester({
+        authedRoutes: signInExperiencesRoutes,
+        tenantContext,
+        middlewares: [koaI18next(), koaErrorHandler()],
+      });
+      const response = await requester
+        .post('/sign-in-exp/default/custom-ui-assets')
+        .set('Accept-Language', 'en')
+        .attach('file', Buffer.from('not-a-zip'), 'assets.zip');
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({
+        code: 'storage.invalid_custom_ui_zip',
+        message:
+          'The archive could not be read. Create a non-empty ZIP using Deflate or no compression, then upload it again.',
+      });
+    });
+
+    it('should preserve storage failures instead of classifying them as invalid archives', async () => {
+      withLicense(true);
+      mockedS3UploadFile.mockRejectedValueOnce(new Error('Internal storage failure'));
+      const response = await upload(pathToZip);
+
       expect(response.status).toBe(500);
       expect(response.text).toBe('Failed to upload file to the storage provider.');
-      expect(mockedS3UploadFile).not.toHaveBeenCalled();
     });
 
     it('should fail when the blobs storage is not configured', async () => {

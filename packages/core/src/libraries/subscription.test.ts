@@ -57,6 +57,22 @@ describe('get subscription data', () => {
     expect(subscriptionDataFromCache).toEqual(mockSubscription);
     expect(mockGetTenantSubscription).not.toHaveBeenCalled();
   });
+
+  it.each([0, 2, null])('preserves Console SSO quota %s through the cache', async (limit) => {
+    const { subscription } = new MockTenant(undefined);
+    mockGetTenantSubscription.mockResolvedValueOnce({
+      ...mockSubscription,
+      quota: { ...mockSubscription.quota, consoleSsoConnectorLimit: limit },
+    });
+
+    const subscriptionData = await subscription.getSubscriptionData();
+    expect(subscriptionData.quota.consoleSsoConnectorLimit).toBe(limit);
+
+    mockGetTenantSubscription.mockClear();
+    const cachedSubscriptionData = await subscription.getSubscriptionData();
+    expect(cachedSubscriptionData.quota.consoleSsoConnectorLimit).toBe(limit);
+    expect(mockGetTenantSubscription).not.toHaveBeenCalled();
+  });
 });
 
 describe('get subscription data with cache expiration', () => {

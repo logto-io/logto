@@ -547,6 +547,53 @@ describe('step-up route allow-list', () => {
     expect(verifyResponse.body).toMatchObject({ code: 'session.step_up.forbidden_identifier' });
   });
 
+  it('should bind backup codes in pure step-up only with a TOTP enrolled in the same interaction', async () => {
+    const createRequester = (mfa?: Record<string, unknown>) =>
+      createRequesterWithMocks({
+        user: { ...mockUser, mfaVerifications: [mockUserWebAuthnMfaVerification] },
+        mfa: {
+          policy: MfaPolicy.UserControlled,
+          factors: [MfaFactor.TOTP, MfaFactor.BackupCode],
+        },
+        interactionResult: {
+          authenticationContext: stepUpContext,
+          // A fresh password verification: enough to open the enrollment routes.
+          authenticationProofs: [
+            {
+              id: 'password',
+              factor: AuthenticationFactor.Password,
+              class: AuthenticationFactorClass.FirstFactor,
+              amr: [AuthenticationMethodReference.Password],
+              role: AuthenticationProofRole.Identify,
+            },
+          ],
+          verificationRecords: [
+            {
+              id: 'backup-code-verification-id',
+              type: VerificationType.BackupCode,
+              userId: mockUser.id,
+              backupCodes: ['code-1', 'code-2'],
+            },
+          ],
+          ...conditional(mfa && { mfa }),
+        },
+      }).requester;
+    const bindBackupCode = async (requester: ReturnType<typeof createRequester>) =>
+      requester
+        .post('/experience/profile/mfa')
+        .send({ type: MfaFactor.BackupCode, verificationId: 'backup-code-verification-id' });
+
+    // The user's existing passkey does not let a first factor alone replace their backup codes.
+    const rejected = await bindBackupCode(createRequester());
+    expect(rejected.status).toBe(403);
+    expect(rejected.body).toMatchObject({ code: 'session.step_up.forbidden_route' });
+
+    const accepted = await bindBackupCode(
+      createRequester({ totp: { type: MfaFactor.TOTP, secret: 'secret' } })
+    );
+    expect(accepted.status).toBe(204);
+  });
+
   it('should allow reading the interaction in pure step-up', async () => {
     const { requester } = createStoredContextRequester(stepUpContext);
     const response = await requester.get('/experience/interaction');

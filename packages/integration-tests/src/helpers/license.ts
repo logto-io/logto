@@ -3,7 +3,7 @@ import { SignJWT, importJWK } from 'jose';
 import { z } from 'zod';
 
 /**
- * A throwaway Ed25519 key pair the self-hosted license integration tests sign keys with.
+ * A throwaway ES256 key pair the self-hosted license integration tests sign keys with.
  *
  * The instance under test trusts the public half through `SELF_HOSTED_LICENSE_PUBLIC_KEY`, which is
  * honored outside production and during integration tests (`INTEGRATION_TEST=true`), and which the
@@ -12,9 +12,10 @@ import { z } from 'zod';
  * trusts it: nothing here grants anything to an instance that was not configured to trust it.
  */
 export const testLicenseKeyPair = Object.freeze({
-  publicKey: '{"crv":"Ed25519","x":"kW7_S4kvfOBm8dRpABVDK3TU7AReEPzqb4s3FDRBWzg","kty":"OKP"}',
+  publicKey:
+    '{"kty":"EC","crv":"P-256","x":"r79NM6kQhcFX7GZwo6gh0qGMYapn3XkwwkcdW-EWXC4","y":"XElMflsuc4fEc3iUJc-LLuVpaAWfqm-vZEb_JzZEOi8"}',
   privateKey:
-    '{"crv":"Ed25519","d":"KcJ0wOewFIOrx6K_F5H_AeEyFKoBDmVzSf2l0UK7frg","x":"kW7_S4kvfOBm8dRpABVDK3TU7AReEPzqb4s3FDRBWzg","kty":"OKP"}',
+    '{"kty":"EC","crv":"P-256","x":"r79NM6kQhcFX7GZwo6gh0qGMYapn3XkwwkcdW-EWXC4","y":"XElMflsuc4fEc3iUJc-LLuVpaAWfqm-vZEb_JzZEOi8","d":"I39r98WIlJFdruFxCat-ma1vECPNpvX9LnoNfebGVtk"}',
 });
 
 const oneYearInSeconds = 365 * 24 * 60 * 60;
@@ -35,19 +36,20 @@ export const buildTestLicensePayload = (overrides?: Partial<LicensePayload>): Li
   };
 };
 
-const ed25519PrivateKeyGuard = z.object({
-  kty: z.literal('OKP'),
-  crv: z.literal('Ed25519'),
+const es256PrivateKeyGuard = z.object({
+  kty: z.literal('EC'),
+  crv: z.literal('P-256'),
   x: z.string(),
+  y: z.string(),
   d: z.string(),
 });
 
 /** Sign a license key the way the Logto Cloud license service does, with the fixture private key. */
 export const signTestLicenseKey = async (payload: LicensePayload): Promise<string> => {
   const privateKey = await importJWK(
-    ed25519PrivateKeyGuard.parse(JSON.parse(testLicenseKeyPair.privateKey)),
-    'EdDSA'
+    es256PrivateKeyGuard.parse(JSON.parse(testLicenseKeyPair.privateKey)),
+    'ES256'
   );
 
-  return new SignJWT(payload).setProtectedHeader({ alg: 'EdDSA' }).sign(privateKey);
+  return new SignJWT(payload).setProtectedHeader({ alg: 'ES256' }).sign(privateKey);
 };

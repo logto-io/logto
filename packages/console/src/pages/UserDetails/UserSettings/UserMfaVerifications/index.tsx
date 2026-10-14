@@ -11,6 +11,7 @@ import Button from '@/ds-components/Button';
 import Table from '@/ds-components/Table';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import { type UserMfaVerification } from '@/types/mfa';
 
 import { type UserDetailsOutletContext } from '../../types';
@@ -37,6 +38,9 @@ function UserMfaVerifications({ userId }: Props) {
 
   const api = useApi();
   const { show: showConfirm } = useConfirmModal();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
 
   // Create Email and Phone MFA entries when conditions are met
   const emailPhoneMfaVerifications = useMemo(() => {
@@ -148,6 +152,7 @@ function UserMfaVerifications({ userId }: Props) {
               colSpan: 3,
               render: (mfaVerification) => {
                 if (
+                  isReadOnly ||
                   mfaVerification.id === 'email-factor' ||
                   mfaVerification.id === 'phone-factor' ||
                   (mfaVerification.type === MfaFactor.WebAuthn &&

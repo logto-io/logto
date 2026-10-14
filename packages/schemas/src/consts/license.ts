@@ -81,7 +81,7 @@ export const licenseQuotaOverridesGuard = licenseQuotaGuard.partial();
 export type LicenseQuotaOverrides = z.infer<typeof licenseQuotaOverridesGuard>;
 
 /**
- * The payload of a license key, i.e. the claims of the Ed25519-signed JWT an operator installs on a
+ * The payload of a license key, i.e. the claims of the ES256-signed JWT an operator installs on a
  * self-hosted instance.
  *
  * The signature is what makes the payload trustworthy, so none of it is editable after issuing.

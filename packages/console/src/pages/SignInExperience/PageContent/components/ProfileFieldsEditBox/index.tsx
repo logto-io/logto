@@ -12,6 +12,7 @@ import useSWR from 'swr';
 
 import CirclePlus from '@/assets/icons/circle-plus.svg?react';
 import Plus from '@/assets/icons/plus.svg?react';
+import { useReadOnlyField } from '@/contexts/ReadOnlyFieldScope';
 import ActionMenu from '@/ds-components/ActionMenu';
 import type { Props as ButtonProps } from '@/ds-components/Button';
 import { DragDropProvider, DraggableItem } from '@/ds-components/DragDrop';
@@ -53,6 +54,7 @@ function ProfileFieldsEditBox<
   onFieldsChange,
   getFieldDisabledReason,
 }: Props<TFieldValues, TName>) {
+  const isReadOnlyField = useReadOnlyField();
   const { control } = useFormContext<TFieldValues>();
   const getI18nLabel = useI18nFieldLabel();
 
@@ -161,7 +163,7 @@ function ProfileFieldsEditBox<
           );
         })}
       </DragDropProvider>
-      {availableFields.length > 0 && (
+      {!isReadOnlyField && availableFields.length > 0 && (
         <ActionMenu
           buttonProps={hasSelectedFields ? addAnotherButtonProps : addProfileFieldsButtonProps}
           dropdownHorizontalAlign="start"

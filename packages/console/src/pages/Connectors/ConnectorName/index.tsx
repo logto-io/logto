@@ -12,6 +12,7 @@ import {
 } from '@/consts/connectors';
 import { ConnectorsTabs } from '@/consts/page-tabs';
 import Button from '@/ds-components/Button';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
 import type { ConnectorGroup } from '@/types/connector';
@@ -29,6 +30,9 @@ function ConnectorName({ connectorGroup, isDemo = false }: Props) {
   const { type, connectors } = connectorGroup;
   const connector = connectors[0];
   const { navigate } = useTenantPathname();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const hasNonUniversalConnector = connectors.some(
     ({ platform }) => platform !== ConnectorPlatform.Universal
   );
@@ -41,7 +45,7 @@ function ConnectorName({ connectorGroup, isDemo = false }: Props) {
         title={
           <div className={styles.previewTitle}>
             <div>{t(connectorTitlePlaceHolder[type])}</div>
-            {type !== ConnectorType.Social && (
+            {type !== ConnectorType.Social && !isReadOnly && (
               <Button
                 title="general.set_up"
                 onClick={() => {

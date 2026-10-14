@@ -17,6 +17,7 @@ import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import { type RequestError } from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 import { isPaidPlan } from '@/utils/subscription';
@@ -108,6 +109,9 @@ function TableError({
 }
 
 function CollectUserProfile({ isActive }: Props) {
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { navigate, match } = useTenantPathname();
 
@@ -131,9 +135,11 @@ function CollectUserProfile({ isActive }: Props) {
           />
         )}
         <div className={styles.tableContainer}>
-          <div className={styles.buttonWrapper}>
-            <CreateButton size="medium" />
-          </div>
+          {!isReadOnly && (
+            <div className={styles.buttonWrapper}>
+              <CreateButton size="medium" />
+            </div>
+          )}
           <div className={classNames(styles.row, styles.header)}>
             <div className={styles.cell}>
               {t('sign_in_exp.custom_profile_fields.table.title.field_label')}
@@ -154,7 +160,7 @@ function CollectUserProfile({ isActive }: Props) {
                 title="sign_in_exp.custom_profile_fields.table.placeholder.title"
                 description="sign_in_exp.custom_profile_fields.table.placeholder.description"
                 learnMoreLink={{ href: collectUserProfile }}
-                action={<CreateButton size="large" />}
+                action={!isReadOnly && <CreateButton size="large" />}
                 paywall={cond(!isPaidTenant && latestProPlanId)}
               />
             </EmptyPlaceholder>
@@ -168,7 +174,7 @@ function CollectUserProfile({ isActive }: Props) {
           {data && data.length > 0 && <ProfileFieldList data={data} />}
         </div>
       </SignInExperienceTabWrapper>
-      {isCreating && (
+      {isCreating && !isReadOnly && (
         <CreateProfileFieldModal
           existingFieldNames={data?.map(({ name }) => name) ?? []}
           onClose={(field?: CustomProfileField) => {

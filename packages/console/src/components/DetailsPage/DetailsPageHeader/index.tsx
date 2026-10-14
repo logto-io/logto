@@ -18,6 +18,7 @@ import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import { type Props as DropdownItemProps } from '@/ds-components/Dropdown/DropdownItem';
 import DynamicT from '@/ds-components/DynamicT';
 import Tag, { type Props as TagProps } from '@/ds-components/Tag';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useWindowResize from '@/hooks/use-window-resize';
 
 import styles from './index.module.scss';
@@ -88,7 +89,8 @@ type Props = {
    */
   readonly additionalCustomElement?: ReactElement<ResponsiveCustomElement>;
   /**
-   * Dropdown action menu items nested in the "...(More)" button
+   * Dropdown action menu items nested in the "...(More)" button. Hidden for a read-only member, so
+   * only pass items that change data.
    */
   readonly actionMenuItems?: MenuItem[];
 };
@@ -105,6 +107,9 @@ function DetailsPageHeader({
   actionMenuItems,
 }: Props) {
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const [showIcon, setShowIcon] = useState(true);
   const [isCompact, setIsCompact] = useState(false);
   const [showAdditionalCustomElement, setShowAdditionalCustomElement] = useState(true);
@@ -257,7 +262,7 @@ function DetailsPageHeader({
             onClick={additionalActionButton.onClick}
           />
         )}
-        {actionMenuItems && actionMenuItems.length > 0 && (
+        {!isReadOnly && actionMenuItems && actionMenuItems.length > 0 && (
           <ActionMenu
             buttonProps={{ icon: <More />, size: 'large' }}
             title={t('general.more_options')}

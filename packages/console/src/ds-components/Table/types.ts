@@ -20,6 +20,8 @@ export type Column<TFieldValues extends FieldValues = FieldValues> = {
   colSpan?: number;
   /** The CSS className for the rendered table data cell in the column. */
   className?: string;
+  /** Render this column's body cells as row headers with `scope="row"`. */
+  isRowHeader?: boolean;
 };
 
 /**

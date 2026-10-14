@@ -10,6 +10,7 @@ import MonacoCodeEditor, {
   type ModelSettings,
 } from '@/components/MonacoCodeEditor';
 import Button from '@/ds-components/Button';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
 import { actionCatalog } from '../../../constants';
 import { CodeEditorLoadingContext } from '../../CodeEditorLoadingContext';
@@ -25,6 +26,9 @@ function ScriptSection() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { watch, control } = useFormContext<ActionForm>();
   const actionType = watch('actionType');
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
 
   const envVariables = useWatch({
     control,
@@ -86,14 +90,16 @@ function ScriptSection() {
               restoreActionTip={t('actions.script.restore')}
               restoreActionSuccessTip={t('actions.script.restored')}
               actionButtons={
-                <Button
-                  icon={<RunIcon />}
-                  size="small"
-                  title="actions.tester.run_button"
-                  type="primary"
-                  isLoading={isLoading}
-                  onClick={onTestHandler}
-                />
+                !isReadOnly && (
+                  <Button
+                    icon={<RunIcon />}
+                    size="small"
+                    title="actions.tester.run_button"
+                    type="primary"
+                    isLoading={isLoading}
+                    onClick={onTestHandler}
+                  />
+                )
               }
               dashboard={dashBoardProps}
               onChange={(newValue) => {

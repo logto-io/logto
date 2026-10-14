@@ -67,11 +67,15 @@
       tr {
         cursor: default;
 
-        td {
+        :is(td, th) {
           font: var(--font-body-2);
           border-top: 1px solid var(--color-divider);
           border-bottom: unset;
           padding: _.unit(3);
+        }
+
+        th {
+          text-align: start;
         }
 
         &.clickable {
@@ -125,15 +129,15 @@
         height: 56px;
       }
 
-      tr:first-child td {
+      tr:first-child :is(td, th) {
         border-top: 1px solid transparent;
       }
 
-      tr td:first-child {
+      tr :is(td, th):first-child {
         padding-inline-start: _.unit(7);
       }
 
-      tr td:last-child {
+      tr :is(td, th):last-child {
         padding-inline-end: _.unit(7);
       }
     }
@@ -142,24 +146,24 @@
   .bodyTable tr.hoverEffect:hover {
     background: var(--color-hover);
 
-    td {
+    :is(td, th) {
       border-top: 1px solid transparent;
     }
 
     + tr {
-      td {
+      :is(td, th) {
         border-top: 1px solid transparent;
       }
     }
 
-    td:first-child {
+    :is(td, th):first-child {
       border-start-start-radius: 8px;
       border-start-end-radius: none;
       border-end-end-radius: none;
       border-end-start-radius: 8px;
     }
 
-    td:last-child {
+    :is(td, th):last-child {
       border-start-start-radius: none;
       border-start-end-radius: 8px;
       border-end-end-radius: 8px;
@@ -168,23 +172,23 @@
   }
 
   &.hasBorder .bodyTable tr.hoverEffect:hover {
-    td:first-child,
-    td:last-child {
+    :is(td, th):first-child,
+    :is(td, th):last-child {
       border-radius: 0;
     }
   }
 
   &.hasBorder .bodyTable.roundedTopCorners {
     tr:first-child {
-      td {
+      :is(td, th) {
         border-top: 1px solid var(--color-divider);
       }
 
-      td:first-child {
+      :is(td, th):first-child {
         border-top-left-radius: 12px;
       }
 
-      td:last-child {
+      :is(td, th):last-child {
         border-top-right-radius: 12px;
       }
     }

@@ -4,13 +4,16 @@ import { type LogtoSkuQuota } from '@/types/skus';
 
 type SkuQuotaItemPhraseKey = Exclude<
   keyof LogtoSkuQuota,
-  // Actions availability and hosted-email caps are surfaced in their feature-specific pages,
+  // Actions availability, hosted-email caps, and Console SSO quotas belong to their own features,
   // not the plan quota table.
-  'actionsEnabled' | 'hostedEmailLimit' | 'hostedEmailDailyLimit'
+  'actionsEnabled' | 'hostedEmailLimit' | 'hostedEmailDailyLimit' | 'consoleSsoConnectorLimit'
 >;
 
 export const isSkuQuotaItemPhraseKey = (key: keyof LogtoSkuQuota): key is SkuQuotaItemPhraseKey =>
-  key !== 'actionsEnabled' && key !== 'hostedEmailLimit' && key !== 'hostedEmailDailyLimit';
+  key !== 'actionsEnabled' &&
+  key !== 'hostedEmailLimit' &&
+  key !== 'hostedEmailDailyLimit' &&
+  key !== 'consoleSsoConnectorLimit';
 
 /* === for new pricing model === */
 export const skuQuotaItemPhrasesMap: Record<

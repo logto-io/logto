@@ -46,6 +46,10 @@ const user = {
   password_algorithm_required: '비밀번호 알고리즘이 필요합니다.',
   password_and_digest: '일반 텍스트 비밀번호와 비밀번호 다이제스트를 동시에 설정할 수 없습니다.',
   personal_access_token_name_exists: '개인 액세스 토큰 이름이 이미 존재합니다.',
+  personal_access_token_limit_exceeded:
+    '활성 개인 액세스 토큰은 최대 {{limit}}개까지 보유할 수 있습니다.',
+  personal_access_token_invalid_expiration:
+    '만료 시간은 미래여야 하며 현재로부터 {{maxDays}}일 이내여야 합니다.',
   totp_secret_invalid: '제공된 TOTP 비밀이 잘못되었습니다.',
   wrong_backup_code_format: '백업 코드 형식이 잘못되었습니다.',
   username_required: '사용자 이름은 필수 식별자이며, null로 설정할 수 없습니다.',
