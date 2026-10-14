@@ -145,8 +145,8 @@ const sign_in_exp = {
           session_management: {
             title: 'Oturum yönetimi',
           },
-          api_access: {
-            title: 'API erişimi',
+          developer_settings: {
+            title: 'Geliştirici ayarları',
           },
         },
       },

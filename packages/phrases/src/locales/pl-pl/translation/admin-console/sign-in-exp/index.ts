@@ -145,8 +145,8 @@ const sign_in_exp = {
           session_management: {
             title: 'Zarządzanie sesją',
           },
-          api_access: {
-            title: 'Dostęp do API',
+          developer_settings: {
+            title: 'Ustawienia dewelopera',
           },
         },
       },

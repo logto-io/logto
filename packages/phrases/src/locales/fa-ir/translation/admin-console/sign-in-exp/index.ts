@@ -146,8 +146,8 @@ const sign_in_exp = {
           session_management: {
             title: 'مدیریت نشست',
           },
-          api_access: {
-            title: 'دسترسی API',
+          developer_settings: {
+            title: 'تنظیمات توسعه‌دهنده',
           },
         },
       },

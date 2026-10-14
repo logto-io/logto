@@ -143,8 +143,8 @@ const sign_in_exp = {
           session_management: {
             title: 'إدارة الجلسات',
           },
-          api_access: {
-            title: 'الوصول إلى API',
+          developer_settings: {
+            title: 'إعدادات المطور',
           },
         },
       },

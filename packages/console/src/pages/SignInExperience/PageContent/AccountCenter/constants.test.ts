@@ -33,11 +33,11 @@ describe('Account Center field sections', () => {
     ]);
   });
 
-  it('shows the personal access token permission under API access', async () => {
+  it('shows the personal access token permission under developer settings', async () => {
     const groups = await getAccountSecurityGroups();
-    const apiAccessGroup = groups.find(({ key }) => key === 'apiAccess');
+    const developerSettingsGroup = groups.find(({ key }) => key === 'developerSettings');
 
-    expect(apiAccessGroup?.items.map(({ key }) => key)).toEqual(['personalAccessToken']);
+    expect(developerSettingsGroup?.items.map(({ key }) => key)).toEqual(['personalAccessToken']);
   });
 
   it('hides the personal access token permission when dev features are disabled', async () => {
@@ -45,6 +45,6 @@ describe('Account Center field sections', () => {
 
     const groups = await getAccountSecurityGroups();
 
-    expect(groups.map(({ key }) => key)).not.toContain('apiAccess');
+    expect(groups.map(({ key }) => key)).not.toContain('developerSettings');
   });
 });

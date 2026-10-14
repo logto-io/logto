@@ -71,8 +71,9 @@ export const accountCenterSections: AccountCenterFieldSection[] = [
       // DEV: Self-service personal access tokens
       ...conditionalArray<AccountCenterFieldGroup>(
         isDevFeaturesEnabled && {
-          key: 'apiAccess',
-          title: 'sign_in_exp.account_center.sections.account_security.groups.api_access.title',
+          key: 'developerSettings',
+          title:
+            'sign_in_exp.account_center.sections.account_security.groups.developer_settings.title',
           items: [
             {
               key: 'personalAccessToken',
