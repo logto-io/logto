@@ -1,4 +1,11 @@
-import { AuthenticationContextMode, InteractionEvent, LogtoAcr } from '@logto/schemas';
+/* eslint-disable max-lines -- one route catalog per guard; splitting it separates rows that have to be read against each other */
+import {
+  AuthenticationContextMode,
+  InteractionEvent,
+  LogtoAcr,
+  MissingProfile,
+  type SubjectProofConnector,
+} from '@logto/schemas';
 import { type ParameterizedContext } from 'koa';
 import { type RequestMethod } from 'node-mocks-http';
 
@@ -34,16 +41,31 @@ const storedResults: Partial<Record<StepUpSource, Record<string, unknown>>> = {
   },
 };
 
+/** The predicate and lists the conditional rows are gated on; all closed by default. */
+type StepUpGates = {
+  hasFreshFirstFactor?: boolean;
+  hasNewAuthenticatorFactor?: boolean;
+  establishableMethods?: MissingProfile[];
+  subjectProofConnectors?: SubjectProofConnector[];
+};
+
 const createMockContext = ({
   method,
   path,
   isStepUp,
   storedStepUp = 'none',
+  gates: {
+    hasFreshFirstFactor = false,
+    hasNewAuthenticatorFactor = false,
+    establishableMethods = [],
+    subjectProofConnectors = [],
+  } = {},
 }: {
   method: string;
   path: string;
   isStepUp?: boolean;
   storedStepUp?: StepUpSource;
+  gates?: StepUpGates;
 }) =>
   ({
     ...createContextWithRouteParameters({ url: path, method: method as RequestMethod }),
@@ -53,7 +75,15 @@ const createMockContext = ({
     ...(isStepUp === undefined
       ? {}
       : {
-          experienceInteraction: { isStepUp },
+          experienceInteraction: {
+            isStepUp,
+            hasFreshFirstFactor,
+            mfa: { hasNewAuthenticatorFactor },
+            getStepUpEligibility: jest.fn(async () => ({
+              establishableMethods,
+              subjectProofConnectors,
+            })),
+          },
         }),
     // The stored interaction record, as `koaInteractionDetails` provides it: the login prompt
     // details a step-up interaction carries from creation, and the saved result it restores from.
@@ -263,6 +293,115 @@ const routeCases: Array<{ method: string; path: string; allowed: boolean; name: 
   { method: 'POST', path: experienceRoutes.mfa, allowed: false, name: 'MFA binding' },
 ];
 
+/** The conditional rows: each route and the gate that opens it. */
+const conditionalRouteCases: Array<{
+  method: string;
+  path: string;
+  name: string;
+  open: StepUpGates;
+  /** A gate that opens something else and must not open this route. */
+  other: StepUpGates;
+}> = [
+  {
+    method: 'POST',
+    path: `${experienceRoutes.verification}/backup-code/generate`,
+    name: 'backup code enrollment',
+    open: { hasFreshFirstFactor: true, hasNewAuthenticatorFactor: true },
+    // A fresh first factor alone must not let a step-up replace the user's backup codes.
+    other: { hasFreshFirstFactor: true },
+  },
+  ...[
+    `${experienceRoutes.verification}/totp/secret`,
+    `${experienceRoutes.verification}/web-authn/registration`,
+    `${experienceRoutes.verification}/web-authn/registration/verify`,
+    experienceRoutes.mfa,
+    `${experienceRoutes.mfa}/mfa-enabled`,
+  ].map((path) => ({
+    method: 'POST',
+    path,
+    name: 'MFA enrollment',
+    open: { hasFreshFirstFactor: true },
+    other: { establishableMethods: [MissingProfile.password] },
+  })),
+  {
+    method: 'POST',
+    path: experienceRoutes.profile,
+    name: 'first-factor establishment',
+    open: { establishableMethods: [MissingProfile.password] },
+    other: { hasFreshFirstFactor: true },
+  },
+  ...['authorization-uri', 'verify'].flatMap((action) => [
+    {
+      method: 'POST',
+      path: `${experienceRoutes.verification}/social/github/${action}`,
+      name: 'social subject proof',
+      open: { subjectProofConnectors: [{ type: 'social' as const, connectorId: 'github' }] },
+      other: { subjectProofConnectors: [{ type: 'sso' as const, connectorId: 'github' }] },
+    },
+    {
+      method: 'POST',
+      path: `${experienceRoutes.verification}/sso/okta/${action}`,
+      name: 'SSO subject proof',
+      open: { subjectProofConnectors: [{ type: 'sso' as const, connectorId: 'okta' }] },
+      other: { subjectProofConnectors: [{ type: 'sso' as const, connectorId: 'another' }] },
+    },
+  ]),
+];
+
+describe('koaStepUpRouteGuard conditional rows', () => {
+  it.each(conditionalRouteCases)(
+    '$name ($method $path) opens exactly when its gate does',
+    async ({ method, path, open, other }) => {
+      const guard = koaStepUpRouteGuard();
+
+      // A session cookie alone: no fresh first factor and nothing to establish or prove.
+      for (const gates of [{}, other]) {
+        const next = jest.fn();
+
+        // eslint-disable-next-line no-await-in-loop -- each case is independent
+        await expect(
+          guard(createMockContext({ method, path, isStepUp: true, gates }), next)
+        ).rejects.toMatchObject({ code: 'session.step_up.forbidden_route', status: 403 });
+        expect(next).not.toHaveBeenCalled();
+      }
+
+      const next = jest.fn();
+
+      await expect(
+        guard(createMockContext({ method, path, isStepUp: true, gates: open }), next)
+      ).resolves.toBeUndefined();
+      expect(next).toHaveBeenCalledTimes(1);
+    }
+  );
+
+  it.each([
+    `${experienceRoutes.mfa}/mfa-skipped`,
+    `${experienceRoutes.profile}/trusted-device`,
+    `${experienceRoutes.mfa}/passkey`,
+    `${experienceRoutes.prefix}/user-assets/avatar`,
+  ])('keeps %s closed even when every gate is open', async (path) => {
+    const next = jest.fn();
+
+    await expect(
+      koaStepUpRouteGuard()(
+        createMockContext({
+          method: 'POST',
+          path,
+          isStepUp: true,
+          gates: {
+            hasFreshFirstFactor: true,
+            hasNewAuthenticatorFactor: true,
+            establishableMethods: [MissingProfile.password],
+            subjectProofConnectors: [{ type: 'social', connectorId: 'github' }],
+          },
+        }),
+        next
+      )
+    ).rejects.toMatchObject({ code: 'session.step_up.forbidden_route', status: 403 });
+    expect(next).not.toHaveBeenCalled();
+  });
+});
+
 describe('koaStepUpRouteGuard', () => {
   // The mode comes from the interaction instance wherever `koaExperienceInteraction` built one,
   // even though the interaction record carries no context of its own; the prompt path only exists
@@ -442,3 +581,4 @@ describe('koaStepUpRouteGuard', () => {
     expect(next).not.toHaveBeenCalled();
   });
 });
+/* eslint-enable max-lines */
