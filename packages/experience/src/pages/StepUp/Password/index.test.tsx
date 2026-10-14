@@ -101,6 +101,7 @@ const renderPage = (value: Partial<StepUpContextType> = {}) =>
     <StepUpContext.Provider
       value={{
         authenticationContext: createAuthenticationContext(),
+        isPureStepUp: true,
         isLoading: false,
         isLoaded: true,
         load: mockLoad,
@@ -211,29 +212,47 @@ describe('<StepUpPassword />', () => {
     expect(screen.getByText('error.password_required')).not.toBeNull();
   });
 
-  it('hands a failure to the error handler with the step-up and submission handlers', async () => {
-    const error = new Error('Invalid credentials');
-    mockedVerifyStepUpPassword.mockRejectedValueOnce(error);
-    const { container } = renderPage();
+  it.each([true, false])(
+    'uses the matching submission handlers when isPureStepUp is %s',
+    async (isPureStepUp) => {
+      const error = new Error('Invalid credentials');
+      mockedVerifyStepUpPassword.mockRejectedValueOnce(error);
+      const { container } = renderPage({
+        isPureStepUp,
+        authenticationContext: createAuthenticationContext({
+          mode: isPureStepUp ? AuthenticationContextMode.StepUp : undefined,
+        }),
+      });
 
-    await submitPassword(container, 'wrong');
+      await submitPassword(container, 'wrong');
 
-    await waitFor(() => {
-      expect(mockedHandleError).toHaveBeenCalledTimes(1);
-    });
+      await waitFor(() => {
+        expect(mockedHandleError).toHaveBeenCalledTimes(1);
+      });
 
-    const [handledError, errorHandlers] = mockedHandleError.mock.calls[0] ?? [];
-    expect(handledError).toBe(error);
-    expect(Object.keys(errorHandlers ?? {})).toEqual(
-      expect.arrayContaining([
-        // A wrong password is shown inline rather than toasted.
-        'session.invalid_credentials',
-        ...stepUpErrorCodes,
-        ...submitInteractionErrorCodes,
-      ])
-    );
-    expect(mockedRedirectTo).not.toHaveBeenCalled();
-  });
+      const [handledError, errorHandlers] = mockedHandleError.mock.calls[0] ?? [];
+      expect(handledError).toBe(error);
+      expect(Object.keys(errorHandlers ?? {})).toEqual(
+        expect.arrayContaining([
+          // A wrong password is shown inline rather than toasted.
+          'session.invalid_credentials',
+          ...stepUpErrorCodes,
+          ...(isPureStepUp
+            ? ['session.step_up.require_verification']
+            : submitInteractionErrorCodes),
+        ])
+      );
+      if (isPureStepUp) {
+        expect(Object.keys(errorHandlers ?? {})).not.toEqual(
+          expect.arrayContaining(['user.missing_profile'])
+        );
+        expect(Object.keys(errorHandlers ?? {})).not.toEqual(
+          expect.arrayContaining(['session.mfa.require_mfa_verification'])
+        );
+      }
+      expect(mockedRedirectTo).not.toHaveBeenCalled();
+    }
+  );
 
   it('shows an invalid-credentials message on the form', async () => {
     mockedVerifyStepUpPassword.mockRejectedValueOnce(new Error('Invalid credentials'));

@@ -27,6 +27,9 @@
         "responses": {
           "200": {
             "description": "A list of one-time tokens."
+          },
+          "403": {
+            "description": "The request carries the `logto-read-only-access: true` header, which cannot read one-time tokens."
           }
         }
       },
@@ -66,6 +69,9 @@
         "responses": {
           "200": {
             "description": "The one-time token found by ID."
+          },
+          "403": {
+            "description": "The request carries the `logto-read-only-access: true` header, which cannot read one-time tokens."
           }
         }
       },

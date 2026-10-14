@@ -1,4 +1,4 @@
-import { AuthenticationContextMode, type SignInIdentifier } from '@logto/schemas';
+import { type SignInIdentifier } from '@logto/schemas';
 import { t } from 'i18next';
 import { useCallback, useContext } from 'react';
 import { useTimer } from 'react-timer-hook';
@@ -26,8 +26,7 @@ const useResendMfaVerificationCode = (
   const { setToast } = useToast();
   const handleError = useErrorHandler();
   const stepUpErrorHandlers = useStepUpErrorHandler();
-  const { authenticationContext } = useStepUpContext();
-  const isStepUp = authenticationContext?.mode === AuthenticationContextMode.StepUp;
+  const { isPureStepUp } = useStepUpContext();
   const resend = useApi(sendMfaVerificationCode);
   const { setVerificationId } = useContext(UserInteractionContext);
 
@@ -40,7 +39,7 @@ const useResendMfaVerificationCode = (
     const [error, result] = await resend(identifierType);
 
     if (error) {
-      await handleError(error, isStepUp ? stepUpErrorHandlers : undefined);
+      await handleError(error, isPureStepUp ? stepUpErrorHandlers : undefined);
       return;
     }
 
@@ -54,7 +53,7 @@ const useResendMfaVerificationCode = (
   }, [
     handleError,
     identifierType,
-    isStepUp,
+    isPureStepUp,
     resend,
     restart,
     setToast,

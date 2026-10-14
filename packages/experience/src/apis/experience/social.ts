@@ -15,9 +15,12 @@ import {
 export const getSocialAuthorizationUrl = async (
   connectorId: string,
   state: string,
-  redirectUri: string
+  redirectUri: string,
+  isSubjectProof = false
 ) => {
-  await initInteraction(InteractionEvent.SignIn);
+  if (!isSubjectProof) {
+    await initInteraction(InteractionEvent.SignIn);
+  }
 
   return api
     .post(`${experienceApiRoutes.verification}/social/${connectorId}/authorization-uri`, {
@@ -58,8 +61,14 @@ export const getSsoConnectors = async (email: string) =>
     })
     .json<{ connectorIds: string[] }>();
 
-export const getSsoAuthorizationUrl = async (connectorId: string, payload: unknown) => {
-  await initInteraction(InteractionEvent.SignIn);
+export const getSsoAuthorizationUrl = async (
+  connectorId: string,
+  payload: unknown,
+  isSubjectProof = false
+) => {
+  if (!isSubjectProof) {
+    await initInteraction(InteractionEvent.SignIn);
+  }
 
   return api
     .post(`${experienceApiRoutes.verification}/sso/${connectorId}/authorization-uri`, {
@@ -72,13 +81,19 @@ export const getSsoAuthorizationUrl = async (connectorId: string, payload: unkno
     >();
 };
 
+export const verifySsoVerification = async (
+  connectorId: string,
+  payload: SocialVerificationCallbackPayload & { verificationId: string }
+) =>
+  api.post(`${experienceApiRoutes.verification}/sso/${connectorId}/verify`, {
+    json: payload,
+  });
+
 export const signInWithSso = async (
   connectorId: string,
   payload: SocialVerificationCallbackPayload & { verificationId: string }
 ) => {
-  await api.post(`${experienceApiRoutes.verification}/sso/${connectorId}/verify`, {
-    json: payload,
-  });
+  await verifySsoVerification(connectorId, payload);
 
   return identifyAndSubmitInteraction({ verificationId: payload.verificationId });
 };

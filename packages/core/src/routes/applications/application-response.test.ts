@@ -7,19 +7,37 @@ import { omitInternalApplicationSecret } from './application-response.js';
 describe('omitInternalApplicationSecret', () => {
   it('omits an internal secret', () => {
     expect(
-      omitInternalApplicationSecret({
-        ...mockApplication,
-        secret: `${internalPrefix}secret`,
-      })
+      omitInternalApplicationSecret(
+        {
+          ...mockApplication,
+          secret: `${internalPrefix}secret`,
+        },
+        {}
+      )
     ).not.toHaveProperty('secret');
   });
 
   it('preserves a legacy secret', () => {
     expect(
-      omitInternalApplicationSecret({
-        ...mockApplication,
-        secret: 'legacy-secret',
-      })
+      omitInternalApplicationSecret(
+        {
+          ...mockApplication,
+          secret: 'legacy-secret',
+        },
+        {}
+      )
     ).toMatchObject({ secret: 'legacy-secret' });
+  });
+
+  it('omits a legacy secret for a read-only caller', () => {
+    expect(
+      omitInternalApplicationSecret(
+        {
+          ...mockApplication,
+          secret: 'legacy-secret',
+        },
+        { isReadOnly: true }
+      )
+    ).not.toHaveProperty('secret');
   });
 });

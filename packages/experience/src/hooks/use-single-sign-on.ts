@@ -11,9 +11,13 @@ import { buildSocialLandingUri, generateState, storeState } from '@/utils/social
 import { storeRedirectContext } from '@/utils/social-redirect-fallback-context';
 
 import useGlobalRedirectTo from './use-global-redirect-to';
+import useStepUpContext from './use-step-up-context';
+import useStepUpErrorHandler from './use-step-up-error-handler';
 
 const useSingleSignOn = () => {
   const handleError = useErrorHandler();
+  const { isPureStepUp } = useStepUpContext();
+  const stepUpErrorHandlers = useStepUpErrorHandler();
   const asyncInvokeSingleSignOn = useApi(getSsoAuthorizationUrl);
   const redirectTo = useGlobalRedirectTo({
     shouldClearInteractionContextSession: false,
@@ -50,13 +54,17 @@ const useSingleSignOn = () => {
       const state = generateState();
       storeState(state, connectorId);
 
-      const [error, result] = await asyncInvokeSingleSignOn(connectorId, {
-        state,
-        redirectUri: `${window.location.origin}/callback/${connectorId}`,
-      });
+      const [error, result] = await asyncInvokeSingleSignOn(
+        connectorId,
+        {
+          state,
+          redirectUri: `${window.location.origin}/callback/${connectorId}`,
+        },
+        isPureStepUp
+      );
 
       if (error) {
-        await handleError(error);
+        await handleError(error, isPureStepUp ? stepUpErrorHandlers : undefined);
 
         return;
       }
@@ -88,7 +96,15 @@ const useSingleSignOn = () => {
       // Invoke Web Sign In flow
       await redirectTo(authorizationUri);
     },
-    [asyncInvokeSingleSignOn, handleError, nativeSignInHandler, redirectTo, setVerificationId]
+    [
+      asyncInvokeSingleSignOn,
+      handleError,
+      isPureStepUp,
+      nativeSignInHandler,
+      redirectTo,
+      setVerificationId,
+      stepUpErrorHandlers,
+    ]
   );
 };
 

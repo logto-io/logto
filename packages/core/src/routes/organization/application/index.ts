@@ -153,7 +153,9 @@ export default function applicationRoutes(
         );
 
       ctx.pagination.totalCount = totalCount;
-      ctx.body = entities.map((application) => omitInternalApplicationSecret(application));
+      ctx.body = entities.map((application) =>
+        omitInternalApplicationSecret(application, ctx.auth)
+      );
 
       return next();
     }

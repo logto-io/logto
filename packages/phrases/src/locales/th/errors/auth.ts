@@ -9,6 +9,7 @@ const auth = {
   exceed_token_limit: 'เกินขีดจำกัดโทเค็น กรุณาติดต่อผู้ดูแลระบบของคุณ',
   third_party_application_forbidden:
     'แอปพลิเคชันของบุคคลที่สามไม่สามารถแก้ไขข้อมูลบัญชีผ่าน API นี้ได้',
+  read_only_access: 'ไม่อนุญาตคำขอนี้สำหรับการเข้าถึงแบบอ่านอย่างเดียว',
 };
 
 export default Object.freeze(auth);

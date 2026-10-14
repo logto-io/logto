@@ -10,6 +10,7 @@ const auth = {
   exceed_token_limit: 'Token limiti aşıldı. Lütfen yöneticinizle iletişime geçin.',
   third_party_application_forbidden:
     'Üçüncü taraf uygulamaları bu API üzerinden hesap verilerini değiştiremez.',
+  read_only_access: 'Bu isteğe salt okunur erişimle izin verilmez.',
 };
 
 export default Object.freeze(auth);

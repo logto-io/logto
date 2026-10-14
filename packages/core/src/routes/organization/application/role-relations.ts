@@ -3,6 +3,7 @@ import type Router from 'koa-router';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { type WithAuthContext } from '#src/middleware/koa-auth/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { type WithHookContext } from '#src/middleware/koa-management-api-hooks.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -10,7 +11,7 @@ import type OrganizationQueries from '#src/queries/organization/index.js';
 
 // Consider building a class to handle these relations. See `index.user-role-relations.ts` for more information.
 export default function applicationRoleRelationRoutes(
-  router: Router<unknown, WithHookContext>,
+  router: Router<unknown, WithHookContext & WithAuthContext>,
   organizations: OrganizationQueries
 ) {
   const params = Object.freeze({

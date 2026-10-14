@@ -15,8 +15,10 @@ import {
   initInteraction,
   verifySocialVerification,
 } from '@/apis/experience';
+import { unknownSessionRoute } from '@/constants/step-up';
 import useBindSocialRelatedUser from '@/containers/SocialLinkAccount/use-social-link-related-user';
 import useApi from '@/hooks/use-api';
+import useCompleteStepUpSubjectProof from '@/hooks/use-complete-step-up-subject-proof';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
@@ -24,6 +26,8 @@ import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-pres
 import useRedirectCallbackValidation from '@/hooks/use-redirect-callback-validation';
 import { useSieMethods } from '@/hooks/use-sie';
 import useSocialRegister from '@/hooks/use-social-register';
+import useStepUpContext from '@/hooks/use-step-up-context';
+import useStepUpErrorHandler from '@/hooks/use-step-up-error-handler';
 import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
 import useToast from '@/hooks/use-toast';
 import { socialAccountNotExistErrorDataGuard } from '@/types/guard';
@@ -40,6 +44,9 @@ const useSocialSignInListener = (connectorId: string) => {
   const [isConsumed, setIsConsumed] = useState(false);
   const [searchParameters, setSearchParameters] = useSearchParams();
   const { setVerificationId } = useContext(UserInteractionContext);
+  const { isPureStepUp } = useStepUpContext();
+  const completeSubjectProof = useCompleteStepUpSubjectProof();
+  const stepUpErrorHandlers = useStepUpErrorHandler();
 
   const { verificationIdRef, validateAndRestore } = useRedirectCallbackValidation({
     connectorId,
@@ -56,8 +63,10 @@ const useSocialSignInListener = (connectorId: string) => {
   const redirectTo = useGlobalRedirectTo();
 
   const navigateToSignIn = useCallback(() => {
-    navigate('/' + experience.routes.signIn, { replace: true });
-  }, [navigate]);
+    navigate(isPureStepUp ? unknownSessionRoute : '/' + experience.routes.signIn, {
+      replace: true,
+    });
+  }, [isPureStepUp, navigate]);
 
   const registerWithSocial = useSocialRegister(connectorId, {
     replace: true,
@@ -140,7 +149,7 @@ const useSocialSignInListener = (connectorId: string) => {
     async (connectorId: string, data: Record<string, unknown>) => {
       const isGoogleOneTap = isGoogleOneTapChecker(data);
       // Check for external Google One Tap credentials from extraParams
-      if (isGoogleOneTap) {
+      if (isGoogleOneTap && !isPureStepUp) {
         // External Google One Tap flow - initialize interaction for external scenario
         await asyncInitInteraction(InteractionEvent.SignIn);
       }
@@ -156,7 +165,10 @@ const useSocialSignInListener = (connectorId: string) => {
 
       if (error || !result) {
         setLoading(false);
-        await handleError(error, { global: globalErrorHandler });
+        await handleError(error, {
+          ...(isPureStepUp ? stepUpErrorHandlers : undefined),
+          global: globalErrorHandler,
+        });
         return;
       }
 
@@ -174,7 +186,9 @@ const useSocialSignInListener = (connectorId: string) => {
       asyncInitInteraction,
       globalErrorHandler,
       handleError,
+      isPureStepUp,
       setVerificationId,
+      stepUpErrorHandlers,
       verifySocial,
       verificationIdRef,
     ]
@@ -188,6 +202,13 @@ const useSocialSignInListener = (connectorId: string) => {
       if (!verificationId) {
         return;
       }
+
+      if (isPureStepUp) {
+        await completeSubjectProof(verificationId);
+        setLoading(false);
+        return;
+      }
+
       const [error, result] = await asyncSignInWithSocial({ verificationId });
 
       if (error) {
@@ -203,7 +224,9 @@ const useSocialSignInListener = (connectorId: string) => {
     },
     [
       asyncSignInWithSocial,
+      completeSubjectProof,
       handleError,
+      isPureStepUp,
       redirectTo,
       signInWithSocialErrorHandlers,
       verifySocialCallbackData,
@@ -237,7 +260,7 @@ const useSocialSignInListener = (connectorId: string) => {
 
       if (!result.valid) {
         setToast(t(`error.${result.error}`));
-        navigate('/' + experience.routes.signIn);
+        navigateToSignIn();
         return;
       }
     } else {
@@ -246,7 +269,7 @@ const useSocialSignInListener = (connectorId: string) => {
 
       if (!result.valid) {
         setToast(t(`error.${result.error}`));
-        navigate('/' + experience.routes.signIn);
+        navigateToSignIn();
         return;
       }
     }
@@ -256,7 +279,7 @@ const useSocialSignInListener = (connectorId: string) => {
   }, [
     connectorId,
     isConsumed,
-    navigate,
+    navigateToSignIn,
     searchParameters,
     setSearchParameters,
     setToast,
