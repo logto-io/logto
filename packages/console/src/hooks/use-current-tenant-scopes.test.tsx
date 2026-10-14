@@ -75,6 +75,22 @@ describe('useCurrentTenantScopes', () => {
     expect(renderWithEntitlement(false).canInviteMember).toBe(true);
   });
 
+  it('lets only managers convert to production with dev features', () => {
+    expect(renderWithEntitlement(true).canConvertToProduction).toBe(true);
+
+    mockEnv({ isDevFeaturesEnabled: true });
+    expect(renderWithEntitlement(true).canConvertToProduction).toBe(false);
+
+    jest.mocked(useSWR).mockReturnValue({
+      data: [TenantScope.ManageTenant],
+      error: undefined,
+      isLoading: false,
+      isValidating: false,
+      mutate: jest.fn(),
+    });
+    expect(renderWithEntitlement(true).canConvertToProduction).toBe(true);
+  });
+
   it('refetches cached scopes on mount only on Cloud', () => {
     renderWithEntitlement(true);
     expect(useSWR).toHaveBeenLastCalledWith(

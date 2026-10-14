@@ -47,7 +47,7 @@ const icons = {
 
 function GetStarted() {
   const {
-    access: { isReadOnly },
+    access: { canConvertToProduction, isReadOnly },
   } = useCurrentTenantScopes();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { navigate } = useTenantPathname();
@@ -121,14 +121,20 @@ function GetStarted() {
   );
 
   const shouldShowConvertToProductionCard = useMemo(() => {
-    if (!isCloud || !isDevTenant || !currentTenant || isDevOnlyRegion(currentTenant.regionName)) {
+    if (
+      !isCloud ||
+      !isDevTenant ||
+      !currentTenant ||
+      isDevOnlyRegion(currentTenant.regionName) ||
+      !canConvertToProduction
+    ) {
       return false;
     }
 
     const daysSinceCreation = dayjs().diff(dayjs(currentTenant.createdAt), 'day');
 
     return daysSinceCreation >= convertToProductionThresholdDays;
-  }, [isDevTenant, currentTenant]);
+  }, [isDevTenant, currentTenant, canConvertToProduction]);
 
   const shouldShowOssCloudUpsell = !isCloud;
   const shouldShowOssCloudBanner =
