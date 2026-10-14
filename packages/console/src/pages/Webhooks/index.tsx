@@ -21,6 +21,7 @@ import Table from '@/ds-components/Table';
 import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import Tag from '@/ds-components/Tag';
 import { type RequestError } from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
@@ -40,6 +41,9 @@ function Webhooks() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { search } = useLocation();
   const { navigate, match } = useTenantPathname();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
   });
@@ -66,15 +70,17 @@ function Webhooks() {
           subtitle="webhooks.subtitle"
           learnMoreLink={{ href: webhooksDocumentationLink }}
         />
-        <Button
-          icon={<Plus />}
-          type="primary"
-          size="large"
-          title="webhooks.create"
-          onClick={() => {
-            navigate({ pathname: createWebhookPathname, search });
-          }}
-        />
+        {!isReadOnly && (
+          <Button
+            icon={<Plus />}
+            type="primary"
+            size="large"
+            title="webhooks.create"
+            onClick={() => {
+              navigate({ pathname: createWebhookPathname, search });
+            }}
+          />
+        )}
       </div>
       <Table
         className={pageLayout.table}
@@ -143,15 +149,17 @@ function Webhooks() {
             title="webhooks.placeholder.title"
             description="webhooks.placeholder.description"
             action={
-              <Button
-                title="webhooks.placeholder.create_webhook"
-                type="primary"
-                size="large"
-                icon={<Plus />}
-                onClick={() => {
-                  navigate({ pathname: createWebhookPathname, search });
-                }}
-              />
+              !isReadOnly && (
+                <Button
+                  title="webhooks.placeholder.create_webhook"
+                  type="primary"
+                  size="large"
+                  icon={<Plus />}
+                  onClick={() => {
+                    navigate({ pathname: createWebhookPathname, search });
+                  }}
+                />
+              )
             }
           />
         }
@@ -166,7 +174,7 @@ function Webhooks() {
       />
       {totalCount !== undefined && (
         <CreateFormModal
-          isOpen={isCreating}
+          isOpen={isCreating && !isReadOnly}
           onClose={(createdHook?: Hook) => {
             if (createdHook) {
               void mutate();

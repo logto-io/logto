@@ -3,6 +3,7 @@ import type { KeyboardEvent, ReactNode } from 'react';
 
 import Draggable from '@/assets/icons/draggable.svg?react';
 import Minus from '@/assets/icons/minus.svg?react';
+import { useReadOnlyField } from '@/contexts/ReadOnlyFieldScope';
 import IconButton from '@/ds-components/IconButton';
 import Tooltip from '@/ds-components/Tip/Tooltip';
 
@@ -24,6 +25,7 @@ type Props = {
 };
 
 function ProfileFieldItem({ label, fieldKey, onDelete, isDisabled = false, disabledHint }: Props) {
+  const isReadOnlyField = useReadOnlyField();
   const shouldShowDisabledHint = isDisabled && Boolean(disabledHint);
   const fieldRow = (
     <div
@@ -48,9 +50,11 @@ function ProfileFieldItem({ label, fieldKey, onDelete, isDisabled = false, disab
       ) : (
         fieldRow
       )}
-      <IconButton disabled={isDisabled} onClick={onDelete}>
-        <Minus />
-      </IconButton>
+      {!isReadOnlyField && (
+        <IconButton disabled={isDisabled} onClick={onDelete}>
+          <Minus />
+        </IconButton>
+      )}
     </div>
   );
 }

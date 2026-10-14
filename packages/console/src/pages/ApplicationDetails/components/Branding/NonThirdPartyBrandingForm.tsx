@@ -9,12 +9,16 @@ import LogoAndFavicon from '@/components/ImageInputs/LogoAndFavicon';
 import Button from '@/ds-components/Button';
 import ColorPicker from '@/ds-components/ColorPicker';
 import FormField from '@/ds-components/FormField';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
 import styles from './index.module.scss';
 import { type ApplicationSignInExperienceForm } from './utils';
 
 function NonThirdPartyBrandingForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const {
     control,
     register,
@@ -76,7 +80,7 @@ function NonThirdPartyBrandingForm() {
             </FormField>
           )}
         />
-        {calculatedDarkPrimaryColor !== darkPrimaryColor && (
+        {!isReadOnly && calculatedDarkPrimaryColor !== darkPrimaryColor && (
           <div className={styles.darkModeTip}>
             {t('sign_in_exp.color.dark_mode_reset_tip')}
             <Button

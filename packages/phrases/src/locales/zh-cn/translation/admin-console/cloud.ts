@@ -3,7 +3,7 @@ const cloud = {
     title: '自托管许可证',
     description: '查看此账户拥有的许可证，并复制用于自托管部署的密钥。',
     empty_title: '暂无自托管许可证',
-    empty_description: '分配给此账户的许可证会显示在这里，无需创建 Cloud 租户。',
+    empty_description: '如果你已购买许可证，请确认登录的是购买时使用的账户。',
     load_error: '无法加载许可证，请重试。',
     period_end: '当前周期结束日期',
     keys_title: '许可证密钥',
@@ -15,10 +15,9 @@ const cloud = {
     issue_error: '无法签发许可证密钥，请重试。',
     install_title: '安装许可证',
     install_description:
-      '两种密钥提供相同的功能和配额。除非你的订单另有规定，否则你的订阅涵盖一个生产部署。请为该部署使用生产环境密钥，并为支持该部署且不处理生产流量的开发、测试和预发布部署使用非生产环境密钥。',
+      '两种密钥提供相同的功能和配额。除非你的订单另有规定，否则你的订阅涵盖一个生产部署。',
     install_copy: '生产部署请复制生产环境密钥，开发和测试请复制非生产环境密钥。',
     install_paste: '在自托管控制台中打开「设置 → 许可证」，粘贴密钥并安装。',
-    install_terms: '详情请参阅<a>自托管订阅条款</a>。',
     status: {
       active: '有效',
       past_due: '付款逾期',

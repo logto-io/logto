@@ -3,7 +3,7 @@ const cloud = {
     title: '自託管授權',
     description: '查看此帳戶擁有的授權，並複製用於自託管部署的金鑰。',
     empty_title: '暫無自託管授權',
-    empty_description: '分配給此帳戶的授權會顯示在這裏，無需建立 Cloud 租戶。',
+    empty_description: '如果你已購買授權，請確認登入的是購買時使用的帳戶。',
     load_error: '無法載入授權，請重試。',
     period_end: '目前週期結束日期',
     keys_title: '授權金鑰',
@@ -15,10 +15,9 @@ const cloud = {
     issue_error: '無法簽發授權金鑰，請重試。',
     install_title: '安裝授權',
     install_description:
-      '兩種金鑰提供相同的功能和配額。除非你的訂單另有規定，否則你的訂閱涵蓋一個正式部署。請為該部署使用正式環境金鑰，並為支援該部署且不處理正式環境流量的開發、測試及預備環境部署使用非正式環境金鑰。',
+      '兩種金鑰提供相同的功能和配額。除非你的訂單另有規定，否則你的訂閱涵蓋一個正式部署。',
     install_copy: '正式部署請複製正式環境金鑰，開發及測試請複製非正式環境金鑰。',
     install_paste: '在自託管控制台中開啟「設定 → 授權」，貼上金鑰並安裝。',
-    install_terms: '詳情請參閱<a>自託管訂閱條款</a>。',
     status: {
       active: '有效',
       past_due: '付款逾期',

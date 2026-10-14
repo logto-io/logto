@@ -97,6 +97,11 @@ const tenants = {
     development: 'تطوير',
     production: 'إنتاج',
   },
+  view_only: {
+    tag: 'عرض فقط',
+    notification:
+      'لديك صلاحية العرض فقط لهذا المستأجر. اطلب من مسؤول المستأجر إذا كنت بحاجة إلى إجراء تغييرات.',
+  },
   deletion_card: {
     title: 'حذف',
     tenant_deletion: 'حذف المستأجر',

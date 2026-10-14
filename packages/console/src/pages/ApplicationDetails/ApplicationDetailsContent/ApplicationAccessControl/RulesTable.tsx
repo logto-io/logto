@@ -8,6 +8,7 @@ import ItemPreview from '@/components/ItemPreview';
 import UserAvatar from '@/components/UserAvatar';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import IconButton from '@/ds-components/IconButton';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import AssignedEntities from '@/pages/Roles/components/AssignedEntities';
 
 import styles from './index.module.scss';
@@ -44,6 +45,9 @@ type Props = {
 
 function RulesTable({ accessControl, ruleEntities, onChange }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const [ruleToBeDeleted, setRuleToBeDeleted] = useState<RuleTableRow>();
   const [isDeletingRule, setIsDeletingRule] = useState(false);
 
@@ -280,15 +284,17 @@ function RulesTable({ accessControl, ruleEntities, onChange }: Props) {
                     <td className={styles.ruleName}>{name}</td>
                     <td>{description}</td>
                     <td className={styles.ruleDelete}>
-                      <IconButton
-                        size="small"
-                        aria-label={t('general.remove')}
-                        onClick={() => {
-                          setRuleToBeDeleted(row);
-                        }}
-                      >
-                        <Delete />
-                      </IconButton>
+                      {!isReadOnly && (
+                        <IconButton
+                          size="small"
+                          aria-label={t('general.remove')}
+                          onClick={() => {
+                            setRuleToBeDeleted(row);
+                          }}
+                        >
+                          <Delete />
+                        </IconButton>
+                      )}
                     </td>
                   </tr>
                 );

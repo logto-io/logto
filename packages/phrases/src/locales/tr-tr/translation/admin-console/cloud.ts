@@ -4,7 +4,8 @@ const cloud = {
     description:
       'Hesabının lisanslarını görüntüle ve kendi sunucundaki dağıtımlar için anahtarları kopyala.',
     empty_title: 'Henüz kendi sunucunda barındırma lisansı yok',
-    empty_description: 'Bu hesaba atanan lisanslar burada görünür. Cloud kiracısı gerekmez.',
+    empty_description:
+      'Bir lisans satın aldıysan, satın alırken kullandığın hesapla oturum açtığından emin ol.',
     load_error: 'Lisanslar yüklenemedi. Lütfen tekrar dene.',
     period_end: 'Geçerli dönem sonu',
     keys_title: 'Lisans anahtarları',
@@ -16,12 +17,11 @@ const cloud = {
     issue_error: 'Lisans anahtarları oluşturulamadı. Lütfen tekrar dene.',
     install_title: 'Lisansını yükle',
     install_description:
-      'Her iki anahtar da aynı özellikleri ve kotaları sağlar. Sipariş formunda aksi belirtilmedikçe aboneliğin bir üretim dağıtımını kapsar. Bu dağıtım için üretim anahtarını, onu destekleyen ve üretim trafiğine hizmet vermeyen geliştirme, test ve üretim öncesi dağıtımlar için üretim dışı anahtarı kullan.',
+      'Her iki anahtar da aynı özellikleri ve kotaları sağlar. Sipariş formunda aksi belirtilmedikçe aboneliğin bir üretim dağıtımını kapsar.',
     install_copy:
       'Üretim dağıtımı için üretim anahtarını, geliştirme ve test için üretim dışı anahtarı kopyala.',
     install_paste:
       'Kendi sunucundaki konsolda Ayarlar → Lisans bölümünü aç, anahtarı yapıştır ve yükle.',
-    install_terms: 'Ayrıntılar için <a>Kendi sunucunda barındırma abonelik koşulları</a>na bak.',
     status: {
       active: 'Etkin',
       past_due: 'Ödeme gecikmiş',

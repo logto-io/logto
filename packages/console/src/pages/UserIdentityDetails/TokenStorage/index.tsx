@@ -16,6 +16,7 @@ import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import TextLink from '@/ds-components/TextLink';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import { type TokenStatus } from '@/types/connector';
 import { getTokenStatus } from '@/utils/connector';
 
@@ -59,6 +60,9 @@ function TokenStorage({ type, tokenSecret, connector, mutate }: Props) {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console',
   });
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
 
   const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
 
@@ -177,7 +181,7 @@ function TokenStorage({ type, tokenSecret, connector, mutate }: Props) {
         </>
       )}
 
-      {connector.enableTokenStorage && tokenSecret && (
+      {!isReadOnly && connector.enableTokenStorage && tokenSecret && (
         <FormField title="user_identity_details.delete_tokens.title">
           <div className={styles.deleteCard}>
             <div className={styles.description}>

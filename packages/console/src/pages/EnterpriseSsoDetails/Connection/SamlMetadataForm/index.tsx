@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import TextInput from '@/ds-components/TextInput';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import {
   type SamlConnectorConfig,
   type SamlProviderConfig,
@@ -188,6 +189,9 @@ type SamlMetadataFormProps = {
 function SamlMetadataForm({ config, providerConfig }: SamlMetadataFormProps) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { setValue } = useFormContext<SamlConnectorConfig>();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const identityProviderConfig = providerConfig?.identityProvider;
 
   const isConfigEmpty = !config || Object.keys(config).length === 0;
@@ -275,7 +279,7 @@ function SamlMetadataForm({ config, providerConfig }: SamlMetadataFormProps) {
         identityProviderConfig={identityProviderConfig}
         config={config}
       />
-      <SwitchFormatButton value={formFormat} onChange={onSelect} />
+      {!isReadOnly && <SwitchFormatButton value={formFormat} onChange={onSelect} />}
     </>
   );
 }

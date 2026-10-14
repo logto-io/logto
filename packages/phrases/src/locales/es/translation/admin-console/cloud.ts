@@ -5,7 +5,7 @@ const cloud = {
       'Consulta las licencias de tu cuenta y copia las claves para tus implementaciones autoalojadas.',
     empty_title: 'Aún no hay licencias autoalojadas',
     empty_description:
-      'Las licencias asignadas a esta cuenta aparecerán aquí. No se requiere un inquilino de Cloud.',
+      'Si has comprado una licencia, asegúrate de iniciar sesión con la cuenta que usaste para comprarla.',
     load_error: 'No se pudieron cargar las licencias. Inténtalo de nuevo.',
     period_end: 'Fin del período actual',
     keys_title: 'Claves de licencia',
@@ -18,13 +18,11 @@ const cloud = {
     issue_error: 'No se pudieron emitir las claves de licencia. Inténtalo de nuevo.',
     install_title: 'Instala tu licencia',
     install_description:
-      'Ambas claves ofrecen las mismas funciones y cuotas. Salvo que tu formulario de pedido indique lo contrario, tu suscripción cubre una implementación de producción. Usa la clave de producción para esa implementación y la clave de no producción para las implementaciones de desarrollo, pruebas y preproducción que la apoyan y no atienden tráfico de producción.',
+      'Ambas claves ofrecen las mismas funciones y cuotas. Salvo que tu formulario de pedido indique lo contrario, tu suscripción cubre una implementación de producción.',
     install_copy:
       'Copia la clave de producción para producción o la clave de no producción para desarrollo y pruebas.',
     install_paste:
       'En tu consola autoalojada, abre Configuración → Licencia, pega la clave e instálala.',
-    install_terms:
-      'Consulta los <a>Términos de suscripción autoalojada</a> para obtener más detalles.',
     status: {
       active: 'Activa',
       past_due: 'Pago vencido',

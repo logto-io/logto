@@ -1,9 +1,16 @@
 import { type LogtoErrorCode } from '@logto/phrases';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import ky, { HTTPError, type NormalizedOptions } from 'ky';
 import { useState } from 'react';
 
+import ReadOnlyFieldScope from '@/contexts/ReadOnlyFieldScope/ReadOnlyFieldScope';
+
 import FileUploader from '.';
+
+jest.mock('@/hooks/use-current-tenant-scopes', () => ({
+  __esModule: true,
+  default: () => ({ access: { isReadOnly: true } }),
+}));
 
 jest.mock('@/hooks/use-api', () => ({ __esModule: true, default: () => ky.create({}) }));
 
@@ -71,5 +78,31 @@ describe('FileUploader error messages', () => {
 
     await screen.findByText(genericMessage);
     expect(screen.getByRole('alert').textContent).toBe(genericMessage);
+  });
+});
+
+describe('FileUploader in a read-only field scope', () => {
+  it('does not upload for a read-only member', async () => {
+    const api = ky.create({});
+    const post = jest.spyOn(api, 'post');
+    const { container } = render(
+      <ReadOnlyFieldScope>
+        <FileUploader
+          apiInstance={api}
+          uploadUrl="https://example.com/upload"
+          maxSize={1024}
+          allowedMimeTypes={['application/zip']}
+          onUploadErrorChange={jest.fn()}
+        />
+      </ReadOnlyFieldScope>
+    );
+
+    await act(async () => {
+      fireEvent.change(container.querySelector('input')!, {
+        target: { files: [new File(['zip'], 'assets.zip', { type: 'application/zip' })] },
+      });
+    });
+
+    expect(post).not.toHaveBeenCalled();
   });
 });

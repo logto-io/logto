@@ -13,10 +13,12 @@ import { useParams } from 'react-router-dom';
 
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import ReadOnlyFieldScope from '@/contexts/ReadOnlyFieldScope/ReadOnlyFieldScope';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { trySubmitSafe } from '@/utils/form';
@@ -63,6 +65,9 @@ type Props = {
 
 function PageContent({ data, onSignInExperienceUpdated, onAccountCenterUpdated }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const {
+    access: { isReadOnly, isWriteAccessConfirmed },
+  } = useCurrentTenantScopes();
   const { tab } = useParams();
   const [isSaving, setIsSaving] = useState(false);
   const [isForgotPasswordMigrationNoticeVisible, setIsForgotPasswordMigrationNoticeVisible] =
@@ -198,8 +203,8 @@ function PageContent({ data, onSignInExperienceUpdated, onAccountCenterUpdated }
 
   // Forgot password migration from null to normal array
   useEffect(() => {
-    // Wait for connectors list loading to be ready
-    if (!isConnectorsReady) {
+    // Wait for connectors list loading to be ready, and for the member's access to be known
+    if (!isConnectorsReady || (!isReadOnly && !isWriteAccessConfirmed)) {
       return;
     }
 
@@ -218,8 +223,10 @@ function PageContent({ data, onSignInExperienceUpdated, onAccountCenterUpdated }
           : []),
       ];
 
-      if (initialMethods.length === 0) {
-        setValue('forgotPasswordMethods', []);
+      // A read-only member cannot save the migration, so they only see the methods sign-in derives
+      // from the connectors.
+      if (isReadOnly || initialMethods.length === 0) {
+        setValue('forgotPasswordMethods', initialMethods);
         return;
       }
 
@@ -230,7 +237,16 @@ function PageContent({ data, onSignInExperienceUpdated, onAccountCenterUpdated }
         forgotPasswordMethods: initialMethods,
       });
     }
-  }, [hasPasswordMethod, setValue, isConnectorTypeEnabled, isConnectorsReady, onSubmit, formData]);
+  }, [
+    hasPasswordMethod,
+    setValue,
+    isConnectorTypeEnabled,
+    isConnectorsReady,
+    isReadOnly,
+    isWriteAccessConfirmed,
+    onSubmit,
+    formData,
+  ]);
 
   return (
     <>
@@ -259,11 +275,16 @@ function PageContent({ data, onSignInExperienceUpdated, onAccountCenterUpdated }
         <div className={classNames(styles.contentTop, isDirty && styles.withSubmitActionBar)}>
           <FormProvider {...methods}>
             <form>
-              <Branding isActive={tab === SignInExperienceTab.Branding} />
-              <SignUpAndSignIn isActive={tab === SignInExperienceTab.SignUpAndSignIn} data={data} />
-              <CollectUserProfile isActive={tab === SignInExperienceTab.CollectUserProfile} />
-              <AccountCenter isActive={tab === SignInExperienceTab.AccountCenter} data={data} />
-              <Content isActive={tab === SignInExperienceTab.Content} />
+              <ReadOnlyFieldScope>
+                <Branding isActive={tab === SignInExperienceTab.Branding} />
+                <SignUpAndSignIn
+                  isActive={tab === SignInExperienceTab.SignUpAndSignIn}
+                  data={data}
+                />
+                <CollectUserProfile isActive={tab === SignInExperienceTab.CollectUserProfile} />
+                <AccountCenter isActive={tab === SignInExperienceTab.AccountCenter} data={data} />
+                <Content isActive={tab === SignInExperienceTab.Content} />
+              </ReadOnlyFieldScope>
             </form>
           </FormProvider>
           {formData.id &&

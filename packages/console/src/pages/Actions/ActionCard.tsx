@@ -1,10 +1,12 @@
-import { type MouseEventHandler } from 'react';
+import classNames from 'classnames';
+import { type KeyboardEvent, type MouseEventHandler } from 'react';
 
 import Code from '@/assets/icons/code.svg?react';
 import DeleteIcon from '@/assets/icons/delete.svg?react';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import Tag from '@/ds-components/Tag';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { onKeyDownHandler } from '@/utils/a11y';
 
@@ -20,8 +22,13 @@ type Props = ActionCatalogItem & {
 
 function ActionCard({ actionType, name, description, config, onDelete }: Props) {
   const { navigate } = useTenantPathname();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const isConfigured = Boolean(config);
   const isEnabled = config?.value.enabled === true;
+  // A card that is not set up opens its create page, which a read-only member cannot use.
+  const isClickable = isConfigured || !isReadOnly;
 
   const goToDetail = () => {
     navigate(
@@ -36,19 +43,21 @@ function ActionCard({ actionType, name, description, config, onDelete }: Props) 
 
   return (
     <div
-      role="button"
-      tabIndex={0}
-      className={styles.card}
-      onClick={goToDetail}
-      onKeyDown={(event) => {
-        // Nested controls (e.g. Delete) also bubble Space/Enter; only activate the
-        // card when it is the event target so child buttons keep their own keys.
-        if (event.target !== event.currentTarget) {
-          return;
-        }
+      className={classNames(styles.card, !isClickable && styles.nonClickable)}
+      {...(isClickable && {
+        role: 'button',
+        tabIndex: 0,
+        onClick: goToDetail,
+        onKeyDown: (event: KeyboardEvent<HTMLDivElement>) => {
+          // Nested controls (e.g. Delete) also bubble Space/Enter; only activate the
+          // card when it is the event target so child buttons keep their own keys.
+          if (event.target !== event.currentTarget) {
+            return;
+          }
 
-        onKeyDownHandler(goToDetail)(event);
-      }}
+          onKeyDownHandler(goToDetail)(event);
+        },
+      })}
     >
       <div className={styles.iconContainer}>
         <Code className={styles.icon} />
@@ -85,7 +94,7 @@ function ActionCard({ actionType, name, description, config, onDelete }: Props) 
         <div className={styles.description}>
           <DynamicT forKey={description} />
         </div>
-        {isConfigured && onDelete && (
+        {isConfigured && onDelete && !isReadOnly && (
           <div className={styles.actions}>
             <Button
               className={styles.danger}

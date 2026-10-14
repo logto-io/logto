@@ -9,6 +9,11 @@ import useOssTenantMfa from '@/hooks/use-oss-tenant-mfa';
 
 import Settings from '.';
 
+jest.mock('@/hooks/use-current-tenant-scopes', () => ({
+  __esModule: true,
+  default: () => ({ access: { isReadOnly: false } }),
+}));
+
 jest.mock('@/scss/modal.module.scss', () => ({}));
 // The Cloud client is ESM-only; this OSS form submits through Ky.
 jest.mock('@withtyped/client', () => ({ ResponseError: class extends Error {} }), {

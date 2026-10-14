@@ -5,7 +5,7 @@ const cloud = {
       'Sieh dir die Lizenzen deines Kontos an und kopiere Schlüssel für deine selbst gehosteten Bereitstellungen.',
     empty_title: 'Noch keine Self-hosted-Lizenzen',
     empty_description:
-      'Diesem Konto zugewiesene Lizenzen erscheinen hier. Ein Cloud-Tenant ist nicht erforderlich.',
+      'Wenn du eine Lizenz gekauft hast, melde dich mit dem Konto an, das du für den Kauf verwendet hast.',
     load_error: 'Lizenzen konnten nicht geladen werden. Bitte versuche es erneut.',
     period_end: 'Aktueller Zeitraum endet',
     keys_title: 'Lizenzschlüssel',
@@ -19,13 +19,11 @@ const cloud = {
     issue_error: 'Lizenzschlüssel konnten nicht ausgestellt werden. Bitte versuche es erneut.',
     install_title: 'Lizenz installieren',
     install_description:
-      'Beide Schlüssel bieten dieselben Funktionen und Kontingente. Sofern dein Bestellformular nichts anderes vorsieht, deckt dein Abonnement eine Produktionsbereitstellung ab. Verwende den Produktionsschlüssel für diese Bereitstellung und den Nichtproduktionsschlüssel für Entwicklungs-, Test- und Staging-Bereitstellungen, die sie unterstützen und keinen Produktionsverkehr bedienen.',
+      'Beide Schlüssel bieten dieselben Funktionen und Kontingente. Sofern dein Bestellformular nichts anderes vorsieht, deckt dein Abonnement eine Produktionsbereitstellung ab.',
     install_copy:
       'Kopiere den Produktionsschlüssel für den Produktivbetrieb oder den Nichtproduktionsschlüssel für Entwicklung und Tests.',
     install_paste:
       'Öffne in deiner selbst gehosteten Konsole Einstellungen → Lizenz, füge den Schlüssel ein und installiere ihn.',
-    install_terms:
-      'Weitere Informationen findest du in den <a>Self-hosted-Abonnementbedingungen</a>.',
     status: {
       active: 'Aktiv',
       past_due: 'Überfällig',

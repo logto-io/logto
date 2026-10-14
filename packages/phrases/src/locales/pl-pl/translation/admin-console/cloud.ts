@@ -4,7 +4,7 @@ const cloud = {
     description: 'Przeglądaj licencje swojego konta i kopiuj klucze dla własnych wdrożeń.',
     empty_title: 'Nie masz jeszcze licencji self-hosted',
     empty_description:
-      'Tutaj pojawią się licencje przypisane do tego konta. Dzierżawca Cloud nie jest wymagany.',
+      'Jeśli masz zakupioną licencję, upewnij się, że logujesz się na konto użyte do jej zakupu.',
     load_error: 'Nie udało się wczytać licencji. Spróbuj ponownie.',
     period_end: 'Koniec bieżącego okresu',
     keys_title: 'Klucze licencyjne',
@@ -18,11 +18,10 @@ const cloud = {
     issue_error: 'Nie udało się wydać kluczy licencyjnych. Spróbuj ponownie.',
     install_title: 'Zainstaluj licencję',
     install_description:
-      'Oba klucze zapewniają te same funkcje i limity. O ile formularz zamówienia nie stanowi inaczej, Twoja subskrypcja obejmuje jedno wdrożenie produkcyjne. Użyj klucza produkcyjnego dla tego wdrożenia, a klucza nieprodukcyjnego dla wdrożeń programistycznych, testowych i przedprodukcyjnych, które je wspierają i nie obsługują ruchu produkcyjnego.',
+      'Oba klucze zapewniają te same funkcje i limity. O ile formularz zamówienia nie stanowi inaczej, Twoja subskrypcja obejmuje jedno wdrożenie produkcyjne.',
     install_copy:
       'Skopiuj klucz produkcyjny dla produkcji lub klucz nieprodukcyjny do prac programistycznych i testów.',
     install_paste: 'We własnej konsoli otwórz Ustawienia → Licencja, wklej klucz i zainstaluj go.',
-    install_terms: 'Szczegóły znajdziesz w <a>Warunkach subskrypcji self-hosted</a>.',
     status: {
       active: 'Aktywna',
       past_due: 'Zaległa płatność',

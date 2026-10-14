@@ -1,0 +1,6 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  // A direct child of ConsoleContent's `.main`, which already caps and centers the width.
+  padding-block: _.unit(4);
+}

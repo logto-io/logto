@@ -5,7 +5,7 @@ const cloud = {
       'Consulta as licenças da tua conta e copia as chaves para as tuas implementações autoalojadas.',
     empty_title: 'Ainda não há licenças autoalojadas',
     empty_description:
-      'As licenças atribuídas a esta conta aparecerão aqui. Não é necessário um tenant Cloud.',
+      'Se compraste uma licença, certifica-te de que inicias sessão com a conta usada na compra.',
     load_error: 'Não foi possível carregar as licenças. Tenta novamente.',
     period_end: 'Fim do período atual',
     keys_title: 'Chaves de licença',
@@ -18,11 +18,10 @@ const cloud = {
     issue_error: 'Não foi possível emitir as chaves de licença. Tenta novamente.',
     install_title: 'Instala a tua licença',
     install_description:
-      'Ambas as chaves oferecem as mesmas funcionalidades e quotas. Salvo indicação em contrário no teu formulário de encomenda, a tua subscrição cobre uma implementação de produção. Usa a chave de produção para essa implementação e a chave de não produção para as implementações de desenvolvimento, testes e pré-produção que a apoiam e não servem tráfego de produção.',
+      'Ambas as chaves oferecem as mesmas funcionalidades e quotas. Salvo indicação em contrário no teu formulário de encomenda, a tua subscrição cobre uma implementação de produção.',
     install_copy:
       'Copia a chave de produção para produção ou a chave de não produção para desenvolvimento e testes.',
     install_paste: 'Na consola autoalojada, abre Definições → Licença, cola a chave e instala-a.',
-    install_terms: 'Consulta os <a>Termos de subscrição autoalojada</a> para mais detalhes.',
     status: {
       active: 'Ativa',
       past_due: 'Pagamento em atraso',

@@ -7,6 +7,7 @@ import Key from '@/assets/icons/key.svg?react';
 import UserAccountInformation from '@/components/UserAccountInformation';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import modalStyles from '@/scss/modal.module.scss';
 
 import ResetPasswordForm from '../../components/ResetPasswordForm';
@@ -22,6 +23,9 @@ type Props = {
 function UserPassword({ user, onResetPassword }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { hasPassword = false } = user;
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
 
   const [isResetPasswordFormOpen, setIsResetPasswordFormOpen] = useState(false);
   const [newPassword, setNewPassword] = useState<string>();
@@ -43,17 +47,19 @@ function UserPassword({ user, onResetPassword }: Props) {
             forKey={`user_details.${hasPassword ? 'password_already_set' : 'no_password_set'}`}
           />
         </div>
-        <div className={styles.actionButton}>
-          <Button
-            title={`general.${hasPassword ? 'reset' : 'generate'}`}
-            type="text"
-            size="small"
-            onClick={() => {
-              setIsResetPasswordFormOpen(true);
-            }}
-          />
-          {hasPassword && <ExpirePasswordButton userId={user.id} />}
-        </div>
+        {!isReadOnly && (
+          <div className={styles.actionButton}>
+            <Button
+              title={`general.${hasPassword ? 'reset' : 'generate'}`}
+              type="text"
+              size="small"
+              onClick={() => {
+                setIsResetPasswordFormOpen(true);
+              }}
+            />
+            {hasPassword && <ExpirePasswordButton userId={user.id} />}
+          </div>
+        )}
       </div>
       <ReactModal
         shouldCloseOnEsc

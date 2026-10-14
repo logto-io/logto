@@ -17,6 +17,7 @@ import ColorPicker from '@/ds-components/ColorPicker';
 import FormField from '@/ds-components/FormField';
 import Switch from '@/ds-components/Switch';
 import useApi from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { trySubmitSafe } from '@/utils/form';
 
@@ -33,6 +34,9 @@ function Branding() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useApi();
   const { getDocumentationUrl } = useDocumentationUrl();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const { isDeleting, data, onUpdated } = useOutletContext<OrganizationDetailsOutletContext>();
   const formMethods = useForm<OrganizationBrandingForm>({
     defaultValues: {
@@ -144,7 +148,7 @@ function Branding() {
                   </FormField>
                 )}
               />
-              {calculatedDarkPrimaryColor !== darkPrimaryColor && (
+              {!isReadOnly && calculatedDarkPrimaryColor !== darkPrimaryColor && (
                 <div className={styles.darkModeTip}>
                   {t('sign_in_exp.color.dark_mode_reset_tip')}
                   <Button

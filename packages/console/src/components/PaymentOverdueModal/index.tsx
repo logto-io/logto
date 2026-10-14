@@ -8,6 +8,7 @@ import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import ModalLayout from '@/ds-components/ModalLayout';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useOverdueInvoices from '@/hooks/use-overdue-invoices';
 import useSubscribe from '@/hooks/use-subscribe';
 import modalStyles from '@/scss/modal.module.scss';
@@ -21,6 +22,9 @@ function PaymentOverdueModal() {
   const { currentTenant, currentTenantId } = useContext(TenantsContext);
 
   const { visitManagePaymentPage } = useSubscribe();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const [isActionLoading, setIsActionLoading] = useState(false);
   const [hasClosed, setHasClosed] = useState(false);
 
@@ -49,16 +53,18 @@ function PaymentOverdueModal() {
             <a href={contactEmailLink} className={styles.linkButton} rel="noopener">
               <Button title="general.contact_us_action" />
             </a>
-            <Button
-              type="primary"
-              title="upsell.payment_overdue_modal.update_payment"
-              isLoading={isActionLoading}
-              onClick={async () => {
-                setIsActionLoading(true);
-                await visitManagePaymentPage(currentTenantId);
-                setIsActionLoading(false);
-              }}
-            />
+            {!isReadOnly && (
+              <Button
+                type="primary"
+                title="upsell.payment_overdue_modal.update_payment"
+                isLoading={isActionLoading}
+                onClick={async () => {
+                  setIsActionLoading(true);
+                  await visitManagePaymentPage(currentTenantId);
+                  setIsActionLoading(false);
+                }}
+              />
+            )}
           </>
         }
         onClose={handleCloseModal}

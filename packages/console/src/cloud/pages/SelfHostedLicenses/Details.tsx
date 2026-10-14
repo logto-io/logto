@@ -1,22 +1,18 @@
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
+import { useSelfHostedLicense } from '@/cloud/hooks/use-self-hosted-licenses';
 import DetailsPage from '@/components/DetailsPage';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import FormCard, { FormCardSkeleton } from '@/components/FormCard';
 import SkuName from '@/components/SkuName';
-import {
-  selfHostedLicenseGuideLink,
-  selfHostedSubscriptionTermsLink,
-} from '@/consts/external-links';
+import { selfHostedLicenseGuideLink } from '@/consts/external-links';
 import { GlobalRoute } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import InlineNotification from '@/ds-components/InlineNotification';
-import TextLink from '@/ds-components/TextLink';
 
 import Keys from './Keys';
 import Status from './Status';
 import styles from './index.module.scss';
-import { useSelfHostedLicense } from './use-self-hosted-licenses';
 
 type Props = { readonly id: string };
 
@@ -84,15 +80,6 @@ function Details({ id }: Props) {
                 <DynamicT forKey="cloud.self_hosted_licenses.install_paste" />
               </li>
             </ol>
-            <p>
-              <Trans
-                components={{
-                  a: <TextLink href={selfHostedSubscriptionTermsLink} targetBlank="noopener" />,
-                }}
-              >
-                {t('cloud.self_hosted_licenses.install_terms')}
-              </Trans>
-            </p>
           </FormCard>
         </>
       )}

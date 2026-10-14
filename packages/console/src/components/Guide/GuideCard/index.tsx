@@ -6,6 +6,7 @@ import { type ReactNode, Suspense, useCallback } from 'react';
 import { type Guide, type GuideMetadata } from '@/assets/docs/guides/types';
 import { BetaTag } from '@/components/FeatureTag';
 import Button from '@/ds-components/Button';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useTheme from '@/hooks/use-theme';
 import { dynamicAppGuideId } from '@/types/applications';
 import { onKeyDownHandler } from '@/utils/a11y';
@@ -40,6 +41,9 @@ function GuideCard({ data, onClick, hasBorder, hasButton, paywallTag, isBeta }: 
   const { target, name, description } = metadata;
   const buttonText = getButtonText(id, target);
   const theme = useTheme();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const hasTags = Boolean(paywallTag) || Boolean(isBeta);
 
   const handleClick = useCallback(() => {
@@ -81,7 +85,7 @@ function GuideCard({ data, onClick, hasBorder, hasButton, paywallTag, isBeta }: 
           </div>
         </div>
       </div>
-      {hasButton && <Button title={buttonText} size="small" onClick={handleClick} />}
+      {hasButton && !isReadOnly && <Button title={buttonText} size="small" onClick={handleClick} />}
     </div>
   );
 }

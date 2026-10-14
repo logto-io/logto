@@ -10,6 +10,11 @@ import { useConfirmModal } from '@/hooks/use-confirm-modal';
 
 import UserTrustedDevices from '.';
 
+jest.mock('@/hooks/use-current-tenant-scopes', () => ({
+  __esModule: true,
+  default: () => ({ access: { isReadOnly: false } }),
+}));
+
 const mockDelete = jest.fn();
 const mockMutate = jest.fn();
 const mockShowConfirm = jest.fn();

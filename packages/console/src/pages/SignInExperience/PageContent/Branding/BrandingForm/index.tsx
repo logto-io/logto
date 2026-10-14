@@ -10,6 +10,7 @@ import Card from '@/ds-components/Card';
 import ColorPicker from '@/ds-components/ColorPicker';
 import FormField from '@/ds-components/FormField';
 import Switch from '@/ds-components/Switch';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
 import useBrandingEntitlements from '../../../hooks/use-branding-entitlements';
 import type { SignInExperienceForm } from '../../../types';
@@ -20,6 +21,9 @@ import styles from './index.module.scss';
 
 function BrandingForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const {
     watch,
     register,
@@ -98,7 +102,7 @@ function BrandingForm() {
                 <ColorPicker value={value} onChange={onChange} />
               )}
             />
-            {calculatedDarkPrimaryColor !== darkPrimaryColor && (
+            {!isReadOnly && calculatedDarkPrimaryColor !== darkPrimaryColor && (
               <div className={styles.darkModeTip}>
                 {t('sign_in_exp.color.dark_mode_reset_tip')}
                 <Button
