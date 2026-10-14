@@ -15,7 +15,11 @@ export enum CloudScope {
   CreateTenant = 'create:tenant',
   /** The user can update or delete its own tenants. */
   ManageTenantSelf = 'manage:tenant:self',
-  /** The user can manage its own Cloud account, Console SSO, licenses, and invitations. */
+  /**
+   * The user can manage resources owned by its own Cloud account that are not tied to a tenant,
+   * such as billing, licenses, Console SSO, and invitations. Not requested in personal access
+   * token exchange.
+   */
   ManageAccountSelf = 'manage:account:self',
   SendSms = 'send:sms',
   SendEmail = 'send:email',
@@ -62,7 +66,7 @@ export const createCloudApi = (): Readonly<[UpdateAdminData, ...CreateScope[]]> 
         ),
         buildScope(
           CloudScope.ManageAccountSelf,
-          'Allow managing the user account itself, including account deletion, Console SSO, licenses, and invitations.'
+          'Allow managing account-level resources that are not tied to a tenant, including account deletion, billing, licenses, Console SSO, and invitations.'
         ),
       ],
       role: {

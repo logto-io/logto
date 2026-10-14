@@ -21,7 +21,7 @@ const cloudApiIndicator = 'https://cloud.logto.io/api';
 const userRoleName = 'user';
 const manageAccountSelfScopeName = 'manage:account:self';
 const manageAccountSelfScopeDescription =
-  'Allow managing the user account itself, including account deletion, Console SSO, licenses, and invitations.';
+  'Allow managing account-level resources that are not tied to a tenant, including account deletion, billing, licenses, Console SSO, and invitations.';
 
 const alteration: AlterationScript = {
   up: async (pool) => {
