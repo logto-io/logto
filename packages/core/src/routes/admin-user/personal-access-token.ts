@@ -4,6 +4,7 @@ import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import { assertNotReadOnly } from '#src/middleware/koa-read-only-access.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
@@ -16,9 +17,10 @@ export default function adminUserPersonalAccessTokenRoutes<T extends ManagementA
     koaGuard({
       params: z.object({ userId: z.string() }),
       response: PersonalAccessTokens.guard.array(),
-      status: [200, 404],
+      status: [200, 403, 404],
     }),
     async (ctx, next) => {
+      assertNotReadOnly(ctx.auth);
       const { userId } = ctx.guard.params;
       // Ensure that the user exists.
       await queries.users.findUserById(userId);

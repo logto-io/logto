@@ -103,7 +103,8 @@ export default function adminUserSearchRoutes<T extends ManagementApiRouter>(
             findUsers(limit, offset, conditions),
           ]);
 
-          const includePasswordHash = yes(searchParams.get('includePasswordHash') ?? '');
+          const includePasswordHash =
+            yes(searchParams.get('includePasswordHash') ?? '') && !ctx.auth.isReadOnly;
 
           ctx.pagination.totalCount = count;
           ctx.body = users.map((user) =>
