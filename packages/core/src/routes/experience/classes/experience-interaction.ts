@@ -1609,9 +1609,12 @@ export default class ExperienceInteraction {
         : []),
     ];
 
-    // The linked connectors only matter to a user who may establish a first factor and holds no
-    // subject proof yet, so every other read skips the lookups.
-    const needsSubjectProof = !hasFreshSubjectProof && mayEstablishFirstFactor(input);
+    // The linked connectors only matter to a user who may establish a first factor, holds no
+    // subject proof yet, and has something to establish, so every other read skips the lookups.
+    const needsSubjectProof =
+      tenantEstablishableMethods.length > 0 &&
+      !hasFreshSubjectProof &&
+      mayEstablishFirstFactor(input);
 
     return {
       hasFreshSubjectProof,
