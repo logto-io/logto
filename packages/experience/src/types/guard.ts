@@ -41,6 +41,12 @@ export const missingProfileErrorDataGuard = s.object({
     ])
   ),
   registeredSocialIdentity,
+  /**
+   * Set only when the server offers alternative first-factor methods a sign-in may establish: any
+   * one of `missingProfile` fulfills the requirement, unlike the mandatory profile fields that are
+   * all required when this flag is absent.
+   */
+  isEstablishment: s.optional(s.literal(true)),
 });
 
 export const registeredSocialIdentityStateGuard = s.type({
