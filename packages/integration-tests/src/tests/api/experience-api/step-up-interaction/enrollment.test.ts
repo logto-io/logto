@@ -3,6 +3,7 @@ import { ConnectorType, InteractionEvent, MfaFactor } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import ky from 'ky';
 
+import { mockSocialConnectorTarget } from '#src/__mocks__/connectors-mock.js';
 import {
   enableAllAccountCenterFields,
   getAccountCenter,
@@ -67,12 +68,15 @@ devFeatureTest.describe('establishing and enrolling inside pure step-up', () => 
 
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
-    await updateSignInExperience({ adaptiveMfa: { enabled: false } });
     await enableUserControlledMfaWithNoPrompt();
     await clearConnectorsByTypes([ConnectorType.Social, ConnectorType.Email, ConnectorType.Sms]);
     await setEmailConnector();
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Initialize the connector fixture.
     ({ id: connectorId } = await setSocialConnector());
+    await updateSignInExperience({
+      adaptiveMfa: { enabled: false },
+      socialSignInConnectorTargets: [mockSocialConnectorTarget],
+    });
   });
 
   afterAll(async () => {
