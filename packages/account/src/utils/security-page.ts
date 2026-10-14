@@ -7,6 +7,8 @@ import type {
 } from '@logto/schemas';
 import { AccountCenterControlValue, MfaFactor } from '@logto/schemas';
 
+import { isDevFeaturesEnabled } from '@ac/constants/env';
+
 import { getProfileFieldControlKey } from './profile-field-control';
 import { getAvailableSocialConnectors } from './social-connector.js';
 
@@ -106,8 +108,17 @@ export const hasVisibleSecuritySection = (
     return false;
   }
 
-  const { username, email, phone, password, social, mfa, passkey, trustedDevice } =
-    accountCenterSettings.fields;
+  const {
+    username,
+    email,
+    phone,
+    password,
+    social,
+    mfa,
+    passkey,
+    trustedDevice,
+    personalAccessToken,
+  } = accountCenterSettings.fields;
   const hasDeleteAccountUrl = Boolean(accountCenterSettings.deleteAccountUrl?.trim());
 
   return (
@@ -119,7 +130,9 @@ export const hasVisibleSecuritySection = (
     hasVisibleSocialSection(social, experienceSettings) ||
     hasVisibleMfaSection(mfa, experienceSettings) ||
     hasVisiblePasskeySection(getPasskeyFieldControl(passkey, mfa), experienceSettings) ||
-    isVisibleField(trustedDevice)
+    isVisibleField(trustedDevice) ||
+    // DEV: Self-service personal access tokens
+    (isDevFeaturesEnabled && isVisibleField(personalAccessToken))
   );
 };
 
