@@ -145,6 +145,9 @@ const sign_in_exp = {
           session_management: {
             title: 'セッション管理',
           },
+          api_access: {
+            title: 'API アクセス',
+          },
         },
       },
       user_profile: {
@@ -189,6 +192,7 @@ const sign_in_exp = {
         'ユーザーに保存されているカスタム JSON データへのアクセスを制御します。',
       sessions: 'セッション',
       trusted_devices: '信頼済みデバイス',
+      personal_access_tokens: '個人用アクセストークン',
     },
     profile_fields: {
       title: 'ビルトインアカウントセンターのプロフィールフィールド',

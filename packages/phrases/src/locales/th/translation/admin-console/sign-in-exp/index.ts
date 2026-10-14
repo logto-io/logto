@@ -144,6 +144,9 @@ const sign_in_exp = {
           session_management: {
             title: 'การจัดการเซสชัน',
           },
+          api_access: {
+            title: 'การเข้าถึง API',
+          },
         },
       },
       user_profile: {
@@ -187,6 +190,7 @@ const sign_in_exp = {
       custom_data_description: 'ควบคุมการเข้าถึงข้อมูล JSON แบบกำหนดเองที่เก็บไว้กับผู้ใช้.',
       sessions: 'การจัดการเซสชัน',
       trusted_devices: 'อุปกรณ์ที่เชื่อถือได้',
+      personal_access_tokens: 'โทเค็นการเข้าถึงส่วนบุคคล',
     },
     profile_fields: {
       title: 'ฟิลด์โปรไฟล์สำหรับศูนย์บัญชีที่สร้างไว้ล่วงหน้า',

@@ -141,6 +141,9 @@ const sign_in_exp = {
           session_management: {
             title: '會話管理',
           },
+          api_access: {
+            title: 'API 存取',
+          },
         },
       },
       user_profile: {
@@ -182,6 +185,7 @@ const sign_in_exp = {
       custom_data_description: '控制對儲存在使用者上的自訂 JSON 資料的存取。',
       sessions: '會話',
       trusted_devices: '受信任裝置',
+      personal_access_tokens: '個人存取權杖',
     },
     profile_fields: {
       title: '預建帳戶中心的檔案欄位',

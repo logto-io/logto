@@ -142,6 +142,9 @@ const sign_in_exp = {
           session_management: {
             title: '세션 관리',
           },
+          api_access: {
+            title: 'API 액세스',
+          },
         },
       },
       user_profile: {
@@ -185,6 +188,7 @@ const sign_in_exp = {
       custom_data_description: '사용자에 저장된 사용자 정의 JSON 데이터에 대한 접근을 제어합니다.',
       sessions: '세션',
       trusted_devices: '신뢰할 수 있는 기기',
+      personal_access_tokens: '개인 액세스 토큰',
     },
     profile_fields: {
       title: '사전 구축된 계정 센터의 프로필 필드',

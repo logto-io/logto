@@ -18,6 +18,7 @@ const createAccountCenterFields = (
   customData: AccountCenterControlValue.Off,
   session: AccountCenterControlValue.Off,
   trustedDevice: AccountCenterControlValue.Off,
+  personalAccessToken: AccountCenterControlValue.Off,
   ...overrides,
 });
 
@@ -71,5 +72,24 @@ describe('SignInExperience types utils', () => {
         trustedDevice: AccountCenterControlValue.Off,
       })
     ).toHaveProperty('trustedDevice', AccountCenterControlValue.Off);
+  });
+
+  it('only submits the personal access token field when enabled or already persisted', () => {
+    expect(
+      normalizeAccountCenterFieldsForSubmit(createAccountCenterFields(), {
+        session: AccountCenterControlValue.Edit,
+      })
+    ).not.toHaveProperty('personalAccessToken');
+    expect(
+      normalizeAccountCenterFieldsForSubmit(
+        createAccountCenterFields({ personalAccessToken: AccountCenterControlValue.ReadOnly }),
+        {}
+      )
+    ).toHaveProperty('personalAccessToken', AccountCenterControlValue.ReadOnly);
+    expect(
+      normalizeAccountCenterFieldsForSubmit(createAccountCenterFields(), {
+        personalAccessToken: AccountCenterControlValue.Edit,
+      })
+    ).toHaveProperty('personalAccessToken', AccountCenterControlValue.Off);
   });
 });

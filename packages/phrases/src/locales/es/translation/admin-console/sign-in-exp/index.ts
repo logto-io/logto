@@ -147,6 +147,9 @@ const sign_in_exp = {
           session_management: {
             title: 'Gestión de sesiones',
           },
+          api_access: {
+            title: 'Acceso a la API',
+          },
         },
       },
       user_profile: {
@@ -192,6 +195,7 @@ const sign_in_exp = {
         'Controla el acceso a los datos JSON personalizados almacenados en el usuario.',
       sessions: 'Sesiones',
       trusted_devices: 'Dispositivos de confianza',
+      personal_access_tokens: 'Tokens de acceso personal',
     },
     profile_fields: {
       title: 'Campos de perfil para el centro de cuenta prediseñado',

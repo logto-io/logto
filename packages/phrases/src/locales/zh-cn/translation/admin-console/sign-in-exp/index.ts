@@ -141,6 +141,9 @@ const sign_in_exp = {
           session_management: {
             title: '会话管理',
           },
+          api_access: {
+            title: 'API 访问',
+          },
         },
       },
       user_profile: {
@@ -182,6 +185,7 @@ const sign_in_exp = {
       custom_data_description: '控制对存储在用户上的自定义 JSON 数据的访问。',
       sessions: '会话',
       trusted_devices: '可信设备',
+      personal_access_tokens: '个人访问令牌',
     },
     profile_fields: {
       title: '预构建账户中心的资料字段',
