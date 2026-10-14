@@ -2,6 +2,7 @@ import type router from '@logto/cloud/routes';
 import {
   type consoleSsoRouter,
   type emailLogsRouter,
+  type selfHostedLicensesRouter,
   type tenantAuthRouter,
   type userStripeCustomersRouter,
 } from '@logto/cloud/routes';
@@ -55,7 +56,8 @@ type ConsoleCloudRouter =
   | typeof router
   | typeof emailLogsRouter
   | typeof userStripeCustomersRouter
-  | typeof consoleSsoRouter;
+  | typeof consoleSsoRouter
+  | typeof selfHostedLicensesRouter;
 
 export const useCloudApi = <R extends ConsoleCloudRouter = typeof router>({
   hideErrorToast = false,

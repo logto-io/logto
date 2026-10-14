@@ -15,7 +15,7 @@ const anotherKeyPair = await createLicenseKeyPair();
 
 /** The imported form of a generated key pair's public half, which is what verification takes. */
 const importPublicKey = async (serializedKeyPair: string): Promise<CryptoKey | Uint8Array> =>
-  importJWK(JSON.parse(serializedKeyPair) as JWK, 'EdDSA');
+  importJWK(JSON.parse(serializedKeyPair) as JWK, 'ES256');
 
 /**
  * The public key the module under test verifies against.

@@ -19,6 +19,7 @@ import IconButton from '@/ds-components/IconButton';
 import InlineNotification from '@/ds-components/InlineNotification';
 import TextLink from '@/ds-components/TextLink';
 import { enterpriseSso } from '@/hooks/use-console-routes/routes/enterprise-sso';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import SsoConnectorLogo from '@/pages/EnterpriseSso/SsoConnectorLogo';
 import { domainRegExp } from '@/pages/EnterpriseSsoDetails/Experience/DomainsInput/consts';
@@ -40,6 +41,9 @@ function JitSettings({ form }: Props) {
     watch,
   } = form;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const [emailDomains, ssoConnectorIds] = watch(['jitEmailDomains', 'jitSsoConnectorIds']);
   const [keyword, setKeyword] = useState('');
   // Fetch all SSO connector to show if a domain is configured SSO
@@ -115,20 +119,22 @@ function JitSettings({ form }: Props) {
                               {connector.connectorName} - {connector.providerName}
                             </span>
                           </div>
-                          <IconButton
-                            onClick={() => {
-                              onChange(value.filter((value) => value !== id));
-                            }}
-                          >
-                            <Minus />
-                          </IconButton>
+                          {!isReadOnly && (
+                            <IconButton
+                              onClick={() => {
+                                onChange(value.filter((value) => value !== id));
+                              }}
+                            >
+                              <Minus />
+                            </IconButton>
+                          )}
                         </div>
                       )
                     );
                   })}
                 </div>
               )}
-              {Boolean(filteredSsoConnectors?.length) && (
+              {!isReadOnly && Boolean(filteredSsoConnectors?.length) && (
                 <ActionMenu
                   buttonProps={{
                     className: styles.ssoJitContent,

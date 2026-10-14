@@ -15,6 +15,7 @@ import FormField from '@/ds-components/FormField';
 import Table from '@/ds-components/Table';
 import { type Column } from '@/ds-components/Table/types';
 import useApi, { type RequestError } from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
 import CreateTokenModal from './CreateTokenModal';
 import EditTokenModal from './EditTokenModal';
@@ -31,6 +32,9 @@ function PersonalAccessTokens({ userId }: Props) {
     `api/users/${userId}/personal-access-tokens`
   );
   const api = useApi();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const [editToken, setEditToken] = useState<PersonalAccessToken>();
 
   const tableColumns: Array<Column<Token>> = useMemo(
@@ -97,13 +101,15 @@ function PersonalAccessTokens({ userId }: Props) {
       {data?.length === 0 && !error ? (
         <>
           <div className={styles.empty}>{t('user_details.personal_access_tokens.empty')}</div>
-          <Button
-            icon={<Plus />}
-            title="user_details.personal_access_tokens.create"
-            onClick={() => {
-              setShowCreateTokenModal(true);
-            }}
-          />
+          {!isReadOnly && (
+            <Button
+              icon={<Plus />}
+              title="user_details.personal_access_tokens.create"
+              onClick={() => {
+                setShowCreateTokenModal(true);
+              }}
+            />
+          )}
         </>
       ) : (
         <>
@@ -117,25 +123,29 @@ function PersonalAccessTokens({ userId }: Props) {
             columns={tableColumns}
             className={styles.table}
           />
-          <Button
-            size="small"
-            type="text"
-            title="user_details.personal_access_tokens.create_new_token"
-            icon={<CirclePlus />}
-            onClick={() => {
-              setShowCreateTokenModal(true);
-            }}
-          />
+          {!isReadOnly && (
+            <Button
+              size="small"
+              type="text"
+              title="user_details.personal_access_tokens.create_new_token"
+              icon={<CirclePlus />}
+              onClick={() => {
+                setShowCreateTokenModal(true);
+              }}
+            />
+          )}
         </>
       )}
-      <CreateTokenModal
-        userId={userId}
-        isOpen={showCreateTokenModal}
-        onClose={() => {
-          setShowCreateTokenModal(false);
-          void mutate();
-        }}
-      />
+      {!isReadOnly && (
+        <CreateTokenModal
+          userId={userId}
+          isOpen={showCreateTokenModal}
+          onClose={() => {
+            setShowCreateTokenModal(false);
+            void mutate();
+          }}
+        />
+      )}
       {editToken && (
         <EditTokenModal
           userId={userId}

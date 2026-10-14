@@ -2,6 +2,7 @@ import Draggable from '@/assets/icons/draggable.svg?react';
 import Minus from '@/assets/icons/minus.svg?react';
 import ConnectorLogo from '@/components/ConnectorLogo';
 import UnnamedTrans from '@/components/UnnamedTrans';
+import { useReadOnlyField } from '@/contexts/ReadOnlyFieldScope';
 import IconButton from '@/ds-components/IconButton';
 import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
 import type { ConnectorGroup } from '@/types/connector';
@@ -17,6 +18,8 @@ function SelectedConnectorItem({
   data: { logo, logoDark, target, name, connectors },
   onDelete,
 }: Props) {
+  const isReadOnlyField = useReadOnlyField();
+
   return (
     <div className={styles.item}>
       <div className={styles.info}>
@@ -30,13 +33,15 @@ function SelectedConnectorItem({
             </div>
           ))}
       </div>
-      <IconButton
-        onClick={() => {
-          onDelete(target);
-        }}
-      >
-        <Minus />
-      </IconButton>
+      {!isReadOnlyField && (
+        <IconButton
+          onClick={() => {
+            onDelete(target);
+          }}
+        >
+          <Minus />
+        </IconButton>
+      )}
     </div>
   );
 }

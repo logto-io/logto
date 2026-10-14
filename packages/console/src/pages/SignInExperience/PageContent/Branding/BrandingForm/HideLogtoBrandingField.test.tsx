@@ -1,6 +1,8 @@
 import { runInThisContext } from 'node:vm';
 
+import resources from '@logto/phrases';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import i18next from 'i18next';
 import type * as React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import ReactModal from 'react-modal';
@@ -10,13 +12,14 @@ import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 
 import HideLogtoBrandingField from './HideLogtoBrandingField';
 
-const mockIsDevFeaturesEnabled = jest.fn(() => true);
+jest.mock('@/hooks/use-current-tenant-scopes', () => ({
+  __esModule: true,
+  default: () => ({ access: { isReadOnly: false } }),
+}));
 
 jest.mock('@/consts/env', () => ({
   isCloud: false,
-  get isDevFeaturesEnabled() {
-    return mockIsDevFeaturesEnabled();
-  },
+  isDevFeaturesEnabled: false,
 }));
 
 jest.mock('@/contexts/TenantsProvider', () => {
@@ -35,7 +38,7 @@ jest.mock('@/scss/modal.module.scss', () => ({}));
 const editorPath = '/console/sign-in-experience/branding';
 const licensePath = '/console/tenant-settings/license';
 const entry = 'sign_in_exp_hide_logto_branding_oss_note';
-const linkName = 'admin_console.upsell.explore_self_hosted_plans';
+const linkName = 'self-hosted plans';
 
 function Editor() {
   const form = useForm({ defaultValues: { name: 'Original name' } });
@@ -72,14 +75,16 @@ describe('self-hosted plans navigation from the branding editor', () => {
   beforeAll(() => {
     // JSDOM does not expose Request; use Node's native implementation for the real data router.
     Reflect.set(globalThis, 'Request', runInThisContext('Request'));
+    i18next.addResourceBundle(
+      'en',
+      'translation',
+      { admin_console: { sign_in_exp: resources.en.translation.admin_console.sign_in_exp } },
+      true
+    );
   });
 
   afterAll(() => {
     Reflect.set(globalThis, 'Request', originalRequest);
-  });
-
-  beforeEach(() => {
-    mockIsDevFeaturesEnabled.mockReturnValue(true);
   });
 
   it('keeps unsaved edits on cancel and navigates only after confirming', async () => {
@@ -120,15 +125,17 @@ describe('self-hosted plans navigation from the branding editor', () => {
     expect(screen.queryByRole('dialog')).toBeNull();
   });
 
-  it('keeps the external website link in a new tab when dev features are disabled', () => {
-    mockIsDevFeaturesEnabled.mockReturnValue(false);
+  it('links to License internally and leaves the Cloud link unchanged', () => {
     renderEditor();
     const link = screen.getByRole('link', { name: linkName });
 
-    expect(link.getAttribute('href')).toBe(
-      `https://logto.io/self-hosted-plans?utm_source=logto_oss&utm_medium=console&utm_campaign=self_hosted_plans&utm_content=${entry}`
+    expect(link.parentElement?.textContent).toBe(
+      'This feature is available in Logto Cloud or self-hosted plans.'
     );
-    expect(link.getAttribute('target')).toBe('_blank');
-    expect(link.getAttribute('rel')).toBe('noopener');
+    expect(screen.getByRole('link', { name: 'Logto Cloud' }).getAttribute('href')).toBe(
+      `https://cloud.logto.io/?utm_source=logto_oss&utm_medium=console&utm_campaign=cloud_upsell&utm_content=${entry}`
+    );
+    expect(link.getAttribute('href')).toBe(`${licensePath}?utm_content=${entry}`);
+    expect(link.getAttribute('target')).toBeNull();
   });
 });

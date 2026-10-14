@@ -1,3 +1,5 @@
+import { type LicenseQuota } from '@logto/schemas';
+
 import {
   type LogtoSkuResponse,
   type Subscription,
@@ -16,6 +18,8 @@ type BaseContext = {
    * when running on Cloud, where the subscription is the entitlement source.
    */
   license?: License;
+  /** Entitlements after applying grace expiry, falling back to the OSS defaults. */
+  licenseQuota: LicenseQuota;
   /** Re-read the installed license, e.g. after installing or replacing one. */
   mutateLicense: () => void;
 };

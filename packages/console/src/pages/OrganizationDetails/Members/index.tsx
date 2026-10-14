@@ -18,6 +18,7 @@ import Table from '@/ds-components/Table';
 import Tag from '@/ds-components/Tag';
 import useActionTranslation from '@/hooks/use-action-translation';
 import useApi, { type RequestError } from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import { buildUrl } from '@/utils/url';
 
 import EditOrganizationRolesModal from '../EditOrganizationRolesModal';
@@ -31,6 +32,9 @@ const pageSize = defaultPageSize;
 function Members() {
   const { data: organization } = useOutletContext<OrganizationDetailsOutletContext>();
   const api = useApi();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const [keyword, setKeyword] = useState('');
   const [page, setPage] = useState(1);
   const {
@@ -138,15 +142,17 @@ function Members() {
                 setPage(1);
               }}
             />
-            <Button
-              size="large"
-              title={<DangerousRaw>{tAction('add', 'organization_details.member')}</DangerousRaw>}
-              type="primary"
-              icon={<Plus />}
-              onClick={() => {
-                setIsModalOpen(true);
-              }}
-            />
+            {!isReadOnly && (
+              <Button
+                size="large"
+                title={<DangerousRaw>{tAction('add', 'organization_details.member')}</DangerousRaw>}
+                type="primary"
+                icon={<Plus />}
+                onClick={() => {
+                  setIsModalOpen(true);
+                }}
+              />
+            )}
           </div>
         }
       />

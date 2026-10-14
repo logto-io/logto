@@ -1,6 +1,7 @@
-import { defaultManagementApi } from '@logto/schemas';
+import { defaultManagementApi, type ResourceResponse } from '@logto/schemas';
 import { HTTPError } from 'ky';
 
+import { authedAdminApi } from '#src/api/api.js';
 import {
   createResource,
   getResource,
@@ -9,6 +10,7 @@ import {
   deleteResource,
   setDefaultResource,
 } from '#src/api/index.js';
+import { createScope } from '#src/api/scope.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { generateResourceIndicator, generateResourceName } from '#src/utils.js';
 
@@ -65,6 +67,23 @@ describe('admin console api resources', () => {
 
     expect(resources.length).toBeGreaterThan(0);
     expect(resources.findIndex(({ name }) => name === resourceName)).not.toBe(-1);
+  });
+
+  it('should exclude management api resources when requested', async () => {
+    const resource = await createResource();
+
+    const [allResourceIds, filteredResourceIds] = await Promise.all([
+      getResources().then((resources) => resources.map(({ id }) => id)),
+      getResources({ excludeManagementApis: 'true' }).then((resources) =>
+        resources.map(({ id }) => id)
+      ),
+    ]);
+
+    expect(allResourceIds).toContain(defaultManagementApi.resource.id);
+    expect(filteredResourceIds).not.toContain(defaultManagementApi.resource.id);
+    expect(filteredResourceIds).toContain(resource.id);
+
+    await deleteResource(resource.id);
   });
 
   it('should update api resource details successfully', async () => {
@@ -160,6 +179,26 @@ describe('admin console api resources', () => {
 
     expect(defaultData).toHaveLength(1);
     expect(defaultData[0]?.id).toBe(resource2.id);
+
+    await Promise.all([deleteResource(resource1.id), deleteResource(resource2.id)]);
+  });
+
+  it('should attach each scope to its own resource when including scopes', async () => {
+    const [resource1, resource2] = await Promise.all([createResource(), createResource()]);
+    const [scope1, scope2, scope3] = await Promise.all([
+      createScope(resource1.id),
+      createScope(resource1.id),
+      createScope(resource2.id),
+    ]);
+
+    const resources = await authedAdminApi
+      .get('resources', { searchParams: { includeScopes: 'true' } })
+      .json<ResourceResponse[]>();
+    const getScopeIds = (resourceId: string) =>
+      new Set(resources.find(({ id }) => id === resourceId)?.scopes.map(({ id }) => id));
+
+    expect(getScopeIds(resource1.id)).toEqual(new Set([scope1.id, scope2.id]));
+    expect(getScopeIds(resource2.id)).toEqual(new Set([scope3.id]));
 
     await Promise.all([deleteResource(resource1.id), deleteResource(resource2.id)]);
   });

@@ -7,7 +7,8 @@ import DetailsPage from '@/components/DetailsPage';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import { isCloud } from '@/consts/env';
 import InlineNotification from '@/ds-components/InlineNotification';
-import { type Action } from '@/pages/CustomizeJwt/utils/type';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
+import { Action } from '@/pages/CustomizeJwt/utils/type';
 
 import { CodeEditorLoadingContext } from './CodeEditorLoadingContext';
 import MainContent from './MainContent';
@@ -70,10 +71,13 @@ function Content({ tokenType, action }: Props) {
 // Guard the parameters to ensure they are valid
 function CustomizeJwtDetails() {
   const { tokenType, action } = useParams();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
 
   const params = pageParamsGuard.safeParse({ tokenType, action });
 
-  if (!params.success) {
+  if (!params.success || (isReadOnly && params.data.action === Action.Create)) {
     return <EmptyDataPlaceholder />;
   }
 

@@ -6,6 +6,7 @@ import ActionMenu from '@/ds-components/ActionMenu';
 import { type Props as ButtonProps } from '@/ds-components/Button';
 import { DropdownItem } from '@/ds-components/Dropdown';
 import DynamicT from '@/ds-components/DynamicT';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
 import styles from './index.module.scss';
 import { RuleType } from './types';
@@ -38,6 +39,14 @@ type Props = {
 };
 
 function AddRuleMenu({ hasRules, onSelect }: Props) {
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
+
+  if (isReadOnly) {
+    return null;
+  }
+
   const buttonProps: ButtonProps = hasRules
     ? {
         type: 'text',

@@ -4,6 +4,7 @@ import { type Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useCallback, useEffect, useMemo, useRef, type ReactNode } from 'react';
 
+import { useReadOnlyField } from '@/contexts/ReadOnlyFieldScope';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import useTheme from '@/hooks/use-theme';
 import { onKeyDownHandler } from '@/utils/a11y';
@@ -71,6 +72,7 @@ function MonacoCodeEditor({
   const monaco = useMonaco();
   const editorRef = useRef<Nullable<IStandaloneCodeEditor>>(null);
   const theme = useTheme();
+  const isReadOnlyField = useReadOnlyField();
 
   const activeModel = useMemo(
     () => activeModelName && models.find((model) => model.name === activeModelName),
@@ -179,18 +181,21 @@ function MonacoCodeEditor({
           ))}
         </div>
         <div className={styles.actionButtons}>
-          {enabledActions.includes('restore') && restoreActionTip && restoreActionSuccessTip && (
-            <CodeRestoreButton
-              className={styles.iconButton}
-              actionTip={restoreActionTip}
-              actionSuccessTip={restoreActionSuccessTip}
-              onClick={() => {
-                if (activeModel && value !== activeModel.defaultValue) {
-                  onChange?.(activeModel.defaultValue);
-                }
-              }}
-            />
-          )}
+          {!isReadOnlyField &&
+            enabledActions.includes('restore') &&
+            restoreActionTip &&
+            restoreActionSuccessTip && (
+              <CodeRestoreButton
+                className={styles.iconButton}
+                actionTip={restoreActionTip}
+                actionSuccessTip={restoreActionSuccessTip}
+                onClick={() => {
+                  if (activeModel && value !== activeModel.defaultValue) {
+                    onChange?.(activeModel.defaultValue);
+                  }
+                }}
+              />
+            )}
           {enabledActions.includes('copy') && (
             <CopyToClipboard
               variant="icon"
@@ -214,6 +219,9 @@ function MonacoCodeEditor({
             options={{
               ...defaultOptions,
               ...activeModel.options,
+              // Always set: Monaco keeps an option left out of an update, so a lock would otherwise
+              // outlive the read-only scope.
+              readOnly: isReadOnlyField || Boolean(activeModel.options?.readOnly),
             }}
             // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- empty string is falsy
             value={value || activeModel.defaultValue}

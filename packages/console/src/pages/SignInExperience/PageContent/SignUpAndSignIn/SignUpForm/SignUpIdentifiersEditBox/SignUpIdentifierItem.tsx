@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 import Draggable from '@/assets/icons/draggable.svg?react';
 import Minus from '@/assets/icons/minus.svg?react';
+import { useReadOnlyField } from '@/contexts/ReadOnlyFieldScope';
 import IconButton from '@/ds-components/IconButton';
 
 import ConnectorSetupWarning from '../../components/ConnectorSetupWarning';
@@ -30,6 +31,7 @@ function SignUpIdentifierItem({
   onDelete,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const isReadOnlyField = useReadOnlyField();
 
   return (
     <div>
@@ -42,9 +44,11 @@ function SignUpIdentifierItem({
             }`
           )}
         </div>
-        <IconButton onClick={onDelete}>
-          <Minus />
-        </IconButton>
+        {!isReadOnlyField && (
+          <IconButton onClick={onDelete}>
+            <Minus />
+          </IconButton>
+        )}
       </div>
       {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
       <ConnectorSetupWarning requiredConnectors={requiredConnectors} />

@@ -263,7 +263,7 @@ export default class GlobalValues {
   public readonly developmentUserId = getEnv('DEVELOPMENT_USER_ID');
 
   /**
-   * The public key self-hosted license keys are verified against, as a serialized Ed25519 public
+   * The public key self-hosted license keys are verified against, as a serialized ES256 public
    * JWK. It replaces the public key built into Logto, so unit and integration tests — and a
    * developer running the Logto Cloud license service locally — can install keys they signed
    * themselves.

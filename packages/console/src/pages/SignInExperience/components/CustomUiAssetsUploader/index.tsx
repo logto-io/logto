@@ -1,3 +1,4 @@
+import { type LogtoErrorCode } from '@logto/phrases';
 import { type CustomUiAssets, maxUploadFileSize, type AllowedUploadMimeType } from '@logto/schemas';
 import { type Nullable } from '@silverhand/essentials';
 import { format } from 'date-fns/fp';
@@ -6,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import DeleteIcon from '@/assets/icons/delete.svg?react';
 import FileIcon from '@/components/FileIcon';
+import { useReadOnlyField } from '@/contexts/ReadOnlyFieldScope';
 import IconButton from '@/ds-components/IconButton';
 import FileUploader from '@/ds-components/Uploader/FileUploader';
 import useApi from '@/hooks/use-api';
@@ -25,16 +27,26 @@ type Props = {
 };
 
 const allowedMimeTypes: AllowedUploadMimeType[] = ['application/zip'];
+const allowedErrorCodes: LogtoErrorCode[] = [
+  'storage.invalid_custom_ui_zip',
+  'storage.custom_ui_file_too_large',
+  'storage.custom_ui_too_many_entries',
+];
 
 function CustomUiAssetsUploader({ disabled, value, onChange }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const isReadOnlyField = useReadOnlyField();
   const [file, setFile] = useState<File>();
   const [error, setError] = useState<string>();
   const [abortController, setAbortController] = useState(new AbortController());
   const showUploader = !value?.id && !file && !error;
   const { setIsUploading, setCancelUpload } = useContext(SignInExperienceContext);
 
-  const api = useApi({ timeout: requestTimeout, signal: abortController.signal });
+  const api = useApi({
+    timeout: requestTimeout,
+    signal: abortController.signal,
+    hideErrorToast: allowedErrorCodes,
+  });
 
   useEffect(() => {
     setCancelUpload(() => {
@@ -56,12 +68,13 @@ function CustomUiAssetsUploader({ disabled, value, onChange }: Props) {
     (errorMessage?: string, files?: File[]) => {
       if (errorMessage) {
         setError(errorMessage);
+        setIsUploading(false);
       }
       if (files?.length) {
         setFile(files[0]);
       }
     },
-    [setError, setFile]
+    [setError, setFile, setIsUploading]
   );
 
   if (showUploader) {
@@ -70,6 +83,7 @@ function CustomUiAssetsUploader({ disabled, value, onChange }: Props) {
         apiInstance={api}
         disabled={disabled}
         allowedMimeTypes={allowedMimeTypes}
+        allowedErrorCodes={allowedErrorCodes}
         maxSize={maxUploadFileSize}
         uploadUrl="api/sign-in-exp/default/custom-ui-assets"
         onUploadStart={() => {
@@ -97,15 +111,17 @@ function CustomUiAssetsUploader({ disabled, value, onChange }: Props) {
           {error && <span className={styles.error}>{error}</span>}
         </div>
       </div>
-      <IconButton
-        onClick={() => {
-          setFile(undefined);
-          setError(undefined);
-          onChange(null);
-        }}
-      >
-        <DeleteIcon />
-      </IconButton>
+      {!isReadOnlyField && (
+        <IconButton
+          onClick={() => {
+            setFile(undefined);
+            setError(undefined);
+            onChange(null);
+          }}
+        >
+          <DeleteIcon />
+        </IconButton>
+      )}
       {file && <div className={styles.progressBar} />}
     </div>
   );

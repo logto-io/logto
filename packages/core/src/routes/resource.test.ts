@@ -14,8 +14,8 @@ import { createRequester } from '#src/utils/test-utils.js';
 const { jest } = import.meta;
 
 const resources = {
-  findTotalNumberOfResources: async () => ({ count: 10 }),
-  findAllResources: async (): Promise<Resource[]> => [mockResource],
+  findTotalNumberOfResources: jest.fn(async () => ({ count: 10 })),
+  findAllResources: jest.fn(async (): Promise<Resource[]> => [mockResource]),
   findResourceByIndicator: async (indicator: string): Promise<Nullable<Resource>> => {
     if (indicator === mockResource.indicator) {
       return mockResource;
@@ -67,6 +67,13 @@ describe('resource routes', () => {
     expect(response.status).toEqual(200);
     expect(response.body).toEqual([mockResource]);
     expect(response.header).toHaveProperty('total-number', '10');
+  });
+
+  it('GET /resources?page=1&excludeManagementApis=true', async () => {
+    const response = await resourceRequest.get('/resources?page=1&excludeManagementApis=true');
+    expect(response.status).toEqual(200);
+    expect(resources.findTotalNumberOfResources).toHaveBeenLastCalledWith(true);
+    expect(resources.findAllResources).toHaveBeenLastCalledWith(true, 20, 0);
   });
 
   it('GET /resources?includeScopes=true', async () => {

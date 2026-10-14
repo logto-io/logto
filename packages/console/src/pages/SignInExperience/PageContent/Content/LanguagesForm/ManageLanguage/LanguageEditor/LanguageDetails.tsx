@@ -25,6 +25,7 @@ import Tag from '@/ds-components/Tag';
 import Textarea from '@/ds-components/Textarea';
 import { Tooltip } from '@/ds-components/Tip';
 import useApi, { type RequestError } from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useSwrFetcher from '@/hooks/use-swr-fetcher';
 import useUiLanguages from '@/hooks/use-ui-languages';
 import type { CustomPhraseResponse } from '@/types/custom-phrase';
@@ -40,6 +41,9 @@ const emptyUiTranslation = createEmptyUiTranslation();
 
 function LanguageDetails() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const { data: signInExperience } = useSWR<SignInExperience, RequestError>('api/sign-in-exp');
   const { languages } = useUiLanguages();
   const { selectedLanguage, isDirty, setIsDirty, setSelectedLanguage } =
@@ -191,7 +195,7 @@ function LanguageDetails() {
           <span>{selectedLanguage}</span>
           {isBuiltIn && <Tag>{t('sign_in_exp.content.manage_language.logto_provided')}</Tag>}
         </div>
-        {!isBuiltIn && (
+        {!isBuiltIn && !isReadOnly && (
           <Tooltip content={t('sign_in_exp.content.manage_language.deletion_tip')}>
             <IconButton
               onClick={() => {
@@ -229,23 +233,25 @@ function LanguageDetails() {
               title: (
                 <span className={styles.customValuesColumn}>
                   {t('sign_in_exp.content.manage_language.custom_values')}
-                  <Tooltip
-                    anchorClassName={styles.clearButton}
-                    content={t('sign_in_exp.content.manage_language.clear_all_tip')}
-                  >
-                    <IconButton
-                      size="small"
-                      onClick={() => {
-                        for (const [key, value] of Object.entries(
-                          flattenTranslation(emptyUiTranslation)
-                        )) {
-                          setValue(key, value, { shouldDirty: true });
-                        }
-                      }}
+                  {!isReadOnly && (
+                    <Tooltip
+                      anchorClassName={styles.clearButton}
+                      content={t('sign_in_exp.content.manage_language.clear_all_tip')}
                     >
-                      <Clear className={styles.clearIcon} />
-                    </IconButton>
-                  </Tooltip>
+                      <IconButton
+                        size="small"
+                        onClick={() => {
+                          for (const [key, value] of Object.entries(
+                            flattenTranslation(emptyUiTranslation)
+                          )) {
+                            setValue(key, value, { shouldDirty: true });
+                          }
+                        }}
+                      >
+                        <Clear className={styles.clearIcon} />
+                      </IconButton>
+                    </Tooltip>
+                  )}
                 </span>
               ),
               dataIndex: 'fieldKey',
@@ -256,14 +262,16 @@ function LanguageDetails() {
             },
           ]}
         />
-        <div className={styles.footer}>
-          <Button
-            isLoading={isSubmitting}
-            type="primary"
-            title="general.save"
-            onClick={async () => onSubmit()}
-          />
-        </div>
+        {!isReadOnly && (
+          <div className={styles.footer}>
+            <Button
+              isLoading={isSubmitting}
+              type="primary"
+              title="general.save"
+              onClick={async () => onSubmit()}
+            />
+          </div>
+        )}
       </div>
       <ConfirmModal
         isOpen={isDeletionAlertOpen}

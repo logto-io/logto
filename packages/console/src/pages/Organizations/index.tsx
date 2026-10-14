@@ -11,6 +11,7 @@ import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import CardTitle from '@/ds-components/CardTitle';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import pageLayout from '@/scss/page-layout.module.scss';
 import { isFeatureEnabled, isPaidPlan } from '@/utils/subscription';
@@ -29,6 +30,9 @@ function Organizations() {
   } = useContext(SubscriptionDataContext);
 
   const { navigate } = useTenantPathname();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const [isCreating, setIsCreating] = useState(false);
 
   const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
@@ -65,7 +69,7 @@ function Organizations() {
           subtitle="organizations.subtitle"
           learnMoreLink={{ href: organizationsFeatureLink }}
         />
-        {!isOrganizationsDisabled && (
+        {!isOrganizationsDisabled && !isReadOnly && (
           <Button
             icon={<Plus />}
             type="primary"

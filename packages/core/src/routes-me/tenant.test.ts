@@ -77,8 +77,11 @@ const request = createRequester({
   tenantContext,
 });
 
-const installLicense = (mandatoryMfa: boolean) => {
-  read.mockResolvedValue({ quota: { mandatoryMfa } });
+const installLicense = (mandatoryMfa: boolean, graceEndsAt = Date.now() + 60_000) => {
+  read.mockResolvedValue({
+    quota: { mandatoryMfa },
+    graceEndsAt: new Date(graceEndsAt).toISOString(),
+  });
 };
 
 describe('me tenant routes', () => {
@@ -158,6 +161,16 @@ describe('me tenant routes', () => {
 
     it('should refuse to require MFA without the entitlement', async () => {
       installLicense(false);
+
+      const response = await request.patch('/tenant/mfa').send({ isMfaRequired: true });
+
+      expect(response.status).toBe(403);
+      expect(response.body).toMatchObject({ code: 'subscription.limit_exceeded' });
+      expect(updateById).not.toHaveBeenCalled();
+    });
+
+    it('should refuse to require MFA with a license past its grace period', async () => {
+      installLicense(true, Date.now() - 1);
 
       const response = await request.patch('/tenant/mfa').send({ isMfaRequired: true });
 

@@ -21,6 +21,7 @@ import {
   type InteractionAuthenticationContext,
   type PostSignInEvent,
   type RequestedAuthenticationContext,
+  type SignInExperience,
   type SubjectProofConnector,
   requestedAuthenticationContextGuard,
   VerificationType,
@@ -1214,7 +1215,8 @@ export default class ExperienceInteraction {
    * Deliberately not run, unlike {@link submit}: the captcha guard, the tenant MFA and profile
    * policies, the passkey suggestion, every other `updateUserById` field including `lastSignInAt`,
    * SSO identity synchronization, social / SSO token-set upserts, JIT organization provisioning,
-   * `triggerPostSignInAction`, and data-hook contexts.
+   * and `triggerPostSignInAction`. A `User.Data.Updated` data hook is queued only when established
+   * methods are persisted; no sign-in interaction hook is queued.
    *
    * @throws {RequestError} with 400 if the interaction is not a pure step-up
    * @throws {RequestError} with 403 if the achieved context does not satisfy `selectedAcr`; the
@@ -1394,7 +1396,8 @@ export default class ExperienceInteraction {
       await this.mfa.checkAvailability();
     }
 
-    await this.tenant.queries.users.updateUserById(user.id, established);
+    const updatedUser = await this.tenant.queries.users.updateUserById(user.id, established);
+    this.ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
   }
 
   private async hasEligibleTrustedDeviceProof(user: User) {
@@ -1594,6 +1597,7 @@ export default class ExperienceInteraction {
       {
         signIn: { methods },
         singleSignOnEnabled,
+        socialSignInConnectorTargets,
       },
       bindableFactors,
     ] = await Promise.all([
@@ -1630,16 +1634,25 @@ export default class ExperienceInteraction {
         (factor) => factor === MfaFactor.TOTP || factor === MfaFactor.WebAuthn
       ),
       linkedConnectors: needsSubjectProof
-        ? await this.getLinkedConnectors(user, connectors, singleSignOnEnabled)
+        ? await this.getLinkedConnectors(user, connectors, {
+            singleSignOnEnabled,
+            socialSignInConnectorTargets,
+          })
         : [],
     };
   }
 
-  /** The subject's linked social and enterprise SSO connectors that are still available. */
+  /**
+   * The subject's linked social and enterprise SSO connectors that are still available on the
+   * sign-in experience, so every connector returned is one the sign-in page can render.
+   */
   private async getLinkedConnectors(
     { id, identities }: User,
     connectors: Awaited<ReturnType<TenantContext['connectors']['getLogtoConnectors']>>,
-    singleSignOnEnabled: boolean
+    {
+      singleSignOnEnabled,
+      socialSignInConnectorTargets,
+    }: Pick<SignInExperience, 'singleSignOnEnabled' | 'socialSignInConnectorTargets'>
   ): Promise<SubjectProofConnector[]> {
     const [ssoIdentities, ssoConnectors] = await Promise.all([
       this.tenant.queries.userSsoIdentities.findUserSsoIdentitiesByUserId(id),
@@ -1651,7 +1664,9 @@ export default class ExperienceInteraction {
       ...connectors
         .filter(
           ({ type, metadata: { target } }) =>
-            type === ConnectorType.Social && linkedTargets.has(target)
+            type === ConnectorType.Social &&
+            linkedTargets.has(target) &&
+            socialSignInConnectorTargets.includes(target)
         )
         .map(({ dbEntry }) => ({ type: 'social' as const, connectorId: dbEntry.id })),
       ...ssoConnectors
@@ -1741,9 +1756,20 @@ export default class ExperienceInteraction {
 
     assertThat(!linkSocialIdentity, conflict);
 
-    const user = await trySafe(async () => verificationRecord.identifyUser());
+    // Only an upstream identity linked to no account is a conflict; anything else, such as a
+    // database error, keeps its own error.
+    const user = await verificationRecord.identifyUser().catch((error: unknown) => {
+      if (
+        error instanceof RequestError &&
+        (error.code === 'user.identity_not_exist' || error.code === 'user.sso_identity_not_exist')
+      ) {
+        throw conflict;
+      }
 
-    assertThat(user && user.id === this.subjectUserId, conflict);
+      throw error;
+    });
+
+    assertThat(user.id === this.subjectUserId, conflict);
 
     return user;
   }

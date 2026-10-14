@@ -44,6 +44,7 @@ const storedResults: Partial<Record<StepUpSource, Record<string, unknown>>> = {
 /** The predicate and lists the conditional rows are gated on; all closed by default. */
 type StepUpGates = {
   hasFreshFirstFactor?: boolean;
+  hasNewAuthenticatorFactor?: boolean;
   establishableMethods?: MissingProfile[];
   subjectProofConnectors?: SubjectProofConnector[];
 };
@@ -55,6 +56,7 @@ const createMockContext = ({
   storedStepUp = 'none',
   gates: {
     hasFreshFirstFactor = false,
+    hasNewAuthenticatorFactor = false,
     establishableMethods = [],
     subjectProofConnectors = [],
   } = {},
@@ -76,6 +78,7 @@ const createMockContext = ({
           experienceInteraction: {
             isStepUp,
             hasFreshFirstFactor,
+            mfa: { hasNewAuthenticatorFactor },
             getStepUpEligibility: jest.fn(async () => ({
               establishableMethods,
               subjectProofConnectors,
@@ -299,9 +302,16 @@ const conditionalRouteCases: Array<{
   /** A gate that opens something else and must not open this route. */
   other: StepUpGates;
 }> = [
+  {
+    method: 'POST',
+    path: `${experienceRoutes.verification}/backup-code/generate`,
+    name: 'backup code enrollment',
+    open: { hasFreshFirstFactor: true, hasNewAuthenticatorFactor: true },
+    // A fresh first factor alone must not let a step-up replace the user's backup codes.
+    other: { hasFreshFirstFactor: true },
+  },
   ...[
     `${experienceRoutes.verification}/totp/secret`,
-    `${experienceRoutes.verification}/backup-code/generate`,
     `${experienceRoutes.verification}/web-authn/registration`,
     `${experienceRoutes.verification}/web-authn/registration/verify`,
     experienceRoutes.mfa,
@@ -380,6 +390,7 @@ describe('koaStepUpRouteGuard conditional rows', () => {
           isStepUp: true,
           gates: {
             hasFreshFirstFactor: true,
+            hasNewAuthenticatorFactor: true,
             establishableMethods: [MissingProfile.password],
             subjectProofConnectors: [{ type: 'social', connectorId: 'github' }],
           },
