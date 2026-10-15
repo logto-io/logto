@@ -10,6 +10,7 @@ import {
   InteractionHookEvent,
   MfaFactor,
   MfaPolicy,
+  MissingProfile,
   SignInIdentifier,
   VerificationType,
 } from '@logto/schemas';
@@ -186,8 +187,16 @@ devFeatureTest.describe('sign-in with requested ACR', () => {
         const client = await initSignInWithAcr(acr);
         await identifyWithSocial(client, connectorId, socialUserId);
 
-        // These tests exercise credential staging and token issuance. The SignIn navigation errors
-        // that offer establishment automatically are covered by LOG-14159.
+        await expectRejects(client.submitInteraction(), {
+          code: 'user.missing_profile',
+          status: 422,
+          expectData: (data: { missingProfile: MissingProfile[]; isEstablishment?: boolean }) => {
+            expect(data.isEstablishment).toBe(true);
+            expect(data.missingProfile).toEqual(
+              expect.arrayContaining([MissingProfile.password, MissingProfile.email])
+            );
+          },
+        });
         const password = generatePassword();
         await client.updateProfile({ type: 'password', value: password });
 
@@ -209,6 +218,8 @@ devFeatureTest.describe('sign-in with requested ACR', () => {
         const submittedAt = nowInSeconds();
         expectAuthenticationContext(await finishSignIn(client), { sub: id, acr, amr }, submittedAt);
         await verifyUserPassword(id, password);
+        // One alternative suffices; the email alternative remains unset.
+        expect(await getUser(id)).toMatchObject({ hasPassword: true, primaryEmail: null });
         expect(await getUserMfaVerifications(id)).toEqual(
           enroll ? [expect.objectContaining({ type: MfaFactor.TOTP })] : []
         );
