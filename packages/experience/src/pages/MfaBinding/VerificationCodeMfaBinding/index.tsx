@@ -32,7 +32,7 @@ const VerificationCodeMfaBinding = ({
   descriptionKey,
   invalidInputErrorKey,
 }: Props) => {
-  const mfaFlowState = useMfaFlowState();
+  const mfaFlowState = useMfaFlowState(UserMfaFlow.MfaBinding);
   const { setVerificationId, setIdentifierInputValue } = useContext(UserInteractionContext);
   const navigate = useNavigateWithPreservedSearchParams();
   const [errorMessage, setErrorMessage] = useState<string>();

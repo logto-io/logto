@@ -17,9 +17,8 @@ import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import useMfaFlowState from '@/hooks/use-mfa-factors-state';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { useSieMethods } from '@/hooks/use-sie';
-import useStepUpContext from '@/hooks/use-step-up-context';
 import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
-import { SearchParameters } from '@/types';
+import { SearchParameters, UserMfaFlow } from '@/types';
 
 import useGeneralVerificationCodeErrorHandler from './use-general-verification-code-error-handler';
 import useIdentifierErrorAlert, { IdentifierErrorType } from './use-identifier-error-alert';
@@ -36,17 +35,13 @@ const useContinueFlowCodeVerification = (
   const navigate = useNavigateWithPreservedSearchParams();
 
   const { state } = useLocation();
-  const mfaFlowState = useMfaFlowState();
+  const mfaFlowState = useMfaFlowState(UserMfaFlow.MfaBinding);
   const { verificationIdsMap } = useContext(UserInteractionContext);
   const { isVerificationCodeEnabledForSignIn } = useSieMethods();
-  const { isPureStepUp } = useStepUpContext();
 
   const interactionEvent = useMemo(
-    () =>
-      isPureStepUp
-        ? InteractionEvent.SignIn
-        : (getInteractionEventFromState(state) ?? InteractionEvent.SignIn),
-    [isPureStepUp, state]
+    () => getInteractionEventFromState(state) ?? InteractionEvent.SignIn,
+    [state]
   );
 
   const handleError = useErrorHandler();
@@ -72,12 +67,7 @@ const useContinueFlowCodeVerification = (
     const { type, value } = identifier;
 
     // Show bind with social confirm modal
-    if (
-      !isPureStepUp &&
-      linkSocial &&
-      socialVerificationId &&
-      isVerificationCodeEnabledForSignIn(type)
-    ) {
+    if (linkSocial && socialVerificationId && isVerificationCodeEnabledForSignIn(type)) {
       await showLinkSocialConfirmModal(identifier, verificationId, socialVerificationId);
       return;
     }
@@ -105,7 +95,6 @@ const useContinueFlowCodeVerification = (
   }, [
     identifier,
     interactionEvent,
-    isPureStepUp,
     isVerificationCodeEnabledForSignIn,
     navigate,
     searchParameters,

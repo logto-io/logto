@@ -9,7 +9,7 @@ import { UserMfaFlow } from '@/types';
 import styles from './index.module.scss';
 
 const TotpVerification = () => {
-  const flowState = useMfaFlowState();
+  const flowState = useMfaFlowState(UserMfaFlow.MfaVerification);
 
   if (!flowState) {
     return <ErrorPage title="error.invalid_session" />;
