@@ -193,6 +193,8 @@ const sign_in_exp = {
       sessions: 'セッション',
       trusted_devices: '信頼済みデバイス',
       personal_access_tokens: '個人用アクセストークン',
+      personal_access_tokens_description:
+        'これを有効にすると、ユーザーはサインアウトやパスワードのリセット後も有効な長期の個人用アクセストークンを作成でき、トークン交換が有効な任意のファーストパーティアプリケーションでアクセストークンと交換できるようになります。',
     },
     profile_fields: {
       title: 'ビルトインアカウントセンターのプロフィールフィールド',

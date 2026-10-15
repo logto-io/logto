@@ -193,6 +193,8 @@ const sign_in_exp = {
       sessions: 'Sessions',
       trusted_devices: 'Trusted devices',
       personal_access_tokens: 'Personal access tokens',
+      personal_access_tokens_description:
+        'Enabling this lets users create long-lived personal access tokens that remain active across sign-outs and password resets, and can be exchanged for access tokens by any first-party application with token exchange enabled.',
     },
     profile_fields: {
       title: 'Profile fields for prebuilt account center',

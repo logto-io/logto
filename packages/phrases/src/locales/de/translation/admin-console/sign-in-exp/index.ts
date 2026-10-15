@@ -193,6 +193,8 @@ const sign_in_exp = {
       sessions: 'Sitzungen',
       trusted_devices: 'Vertrauenswürdige Geräte',
       personal_access_tokens: 'Persönliche Zugriffstoken',
+      personal_access_tokens_description:
+        'Wenn aktiviert, können Benutzer langlebige persönliche Zugriffstoken erstellen, die über Abmeldungen und Passwortzurücksetzungen hinweg aktiv bleiben und von jeder First-Party-Anwendung mit aktiviertem Token-Austausch gegen Zugriffstoken eingetauscht werden können.',
     },
     profile_fields: {
       title: 'Profilfelder für vorgefertigtes Konto-Center',

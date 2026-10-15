@@ -186,6 +186,8 @@ const sign_in_exp = {
       sessions: '会话',
       trusted_devices: '可信设备',
       personal_access_tokens: '个人访问令牌',
+      personal_access_tokens_description:
+        '启用后，用户可以创建长期有效的个人访问令牌；这些令牌在退出登录和重置密码后仍然有效，并且可被任何启用了令牌交换的第一方应用兑换为访问令牌。',
     },
     profile_fields: {
       title: '预构建账户中心的资料字段',

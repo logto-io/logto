@@ -189,6 +189,8 @@ const sign_in_exp = {
       sessions: '세션',
       trusted_devices: '신뢰할 수 있는 기기',
       personal_access_tokens: '개인 액세스 토큰',
+      personal_access_tokens_description:
+        '이를 활성화하면 사용자가 로그아웃 및 비밀번호 재설정 후에도 유지되는 장기 개인 액세스 토큰을 생성할 수 있으며, 토큰 교환이 활성화된 모든 퍼스트 파티 애플리케이션에서 이를 액세스 토큰으로 교환할 수 있습니다.',
     },
     profile_fields: {
       title: '사전 구축된 계정 센터의 프로필 필드',
