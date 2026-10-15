@@ -45,47 +45,27 @@ describe('useBrandingEntitlements', () => {
   beforeEach(resetMockEnv);
 
   describe('outside Cloud', () => {
-    it('keeps both features locked without a license', () => {
+    it('keeps hiding the branding available without a license, and the Custom UI CSP locked', () => {
       expect(renderWithContext({})).toStrictEqual({
-        isHideLogtoBrandingAvailable: false,
-        isHideLogtoBrandingEnabled: false,
+        isHideLogtoBrandingAvailable: true,
+        isHideLogtoBrandingEnabled: true,
         isCustomUiCspEnabled: false,
       });
     });
 
-    it('uses effective entitlements even when the installed key still grants the features', () => {
-      expect(
-        renderWithContext({
-          ...withLicense({ hideLogtoBranding: true, bringYourUi: true }),
-          licenseQuota: ossDefaultQuota,
-        })
-      ).toStrictEqual({
-        isHideLogtoBrandingAvailable: false,
-        isHideLogtoBrandingEnabled: false,
-        isCustomUiCspEnabled: false,
-      });
-    });
-
-    it('unlocks both features with a license that grants them', () => {
-      expect(
-        renderWithContext(withLicense({ hideLogtoBranding: true, bringYourUi: true }))
-      ).toStrictEqual({
+    it('unlocks the Custom UI CSP with a license that grants Bring your UI', () => {
+      expect(renderWithContext(withLicense({ bringYourUi: true }))).toStrictEqual({
         isHideLogtoBrandingAvailable: true,
         isHideLogtoBrandingEnabled: true,
         isCustomUiCspEnabled: true,
       });
     });
 
-    it('unlocks each feature by its own license entitlement', () => {
+    it('does not unlock the Custom UI CSP from a license that only grants hiding the branding', () => {
       expect(renderWithContext(withLicense({ hideLogtoBranding: true }))).toStrictEqual({
         isHideLogtoBrandingAvailable: true,
         isHideLogtoBrandingEnabled: true,
         isCustomUiCspEnabled: false,
-      });
-      expect(renderWithContext(withLicense({ bringYourUi: true }))).toStrictEqual({
-        isHideLogtoBrandingAvailable: false,
-        isHideLogtoBrandingEnabled: false,
-        isCustomUiCspEnabled: true,
       });
     });
 
@@ -94,7 +74,7 @@ describe('useBrandingEntitlements', () => {
         renderWithContext({
           currentSubscriptionQuota: { ...defaultSubscriptionQuota, bringYourUiEnabled: true },
         })
-      ).toMatchObject({ isHideLogtoBrandingEnabled: false, isCustomUiCspEnabled: false });
+      ).toMatchObject({ isHideLogtoBrandingEnabled: true, isCustomUiCspEnabled: false });
     });
   });
 

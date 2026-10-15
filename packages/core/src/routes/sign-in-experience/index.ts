@@ -346,33 +346,21 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
       }
 
       /**
-       * On Cloud, both features are gated by the tenant subscription through the
+       * On Cloud, the Custom UI CSP is gated by the tenant subscription through the
        * `bringYourUiEnabled` quota guard below. On a self-hosted deployment that guard is a no-op,
-       * so each feature is gated by its own entitlement in the installed license instead: hiding
-       * the branding by `hideLogtoBranding`, and the Custom UI CSP by `bringYourUi`, which it is
-       * part of. Without a license, neither is available, as in plain OSS.
+       * so the Custom UI CSP is gated by its `bringYourUi` entitlement in the installed license
+       * instead. Hiding the Logto branding is not license-gated in this fork.
        */
-      if (!EnvSet.values.isCloud && (hideLogtoBranding === true || hasCustomUiCsp)) {
+      if (!EnvSet.values.isCloud && hasCustomUiCsp) {
         const { quota: licenseQuota } = await subscription.getSelfHostedSubscription();
 
-        if (hideLogtoBranding) {
-          assertThat(
-            licenseQuota.hideLogtoBranding,
-            new RequestError({
-              code: 'request.invalid_input',
-              details: 'Hide Logto branding is not supported in this environment',
-            })
-          );
-        }
-        if (hasCustomUiCsp) {
-          assertThat(
-            licenseQuota.bringYourUi,
-            new RequestError({
-              code: 'request.invalid_input',
-              details: 'Custom UI CSP configuration is not available',
-            })
-          );
-        }
+        assertThat(
+          licenseQuota.bringYourUi,
+          new RequestError({
+            code: 'request.invalid_input',
+            details: 'Custom UI CSP configuration is not available',
+          })
+        );
       }
       if (hideLogtoBranding === true || hasCustomUiCsp) {
         await quota.guardTenantUsageByKey('bringYourUiEnabled');

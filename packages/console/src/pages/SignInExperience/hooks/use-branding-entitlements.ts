@@ -28,11 +28,10 @@ const useBrandingEntitlements = () => {
     };
   }
 
-  const isHideLogtoBrandingEnabled = licenseQuota.hideLogtoBranding;
-
   return {
-    isHideLogtoBrandingAvailable: isHideLogtoBrandingEnabled,
-    isHideLogtoBrandingEnabled,
+    /** Hiding the branding is not license-gated in this fork. */
+    isHideLogtoBrandingAvailable: true,
+    isHideLogtoBrandingEnabled: true,
     isCustomUiCspEnabled: licenseQuota.bringYourUi,
   };
 };

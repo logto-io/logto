@@ -1088,19 +1088,7 @@ describe('PATCH /sign-in-exp customUiCsp', () => {
     expect(guardTenantUsageByKey).not.toHaveBeenCalled();
   });
 
-  it('should reject hiding the Logto branding outside Cloud without a license', async () => {
-    const { requester, updateDefaultSignInExperience } = await createCustomUiCspRequester({
-      isCloud: false,
-    });
-
-    const response = await requester.patch('/sign-in-exp').send({ hideLogtoBranding: true });
-
-    expect(response.status).toEqual(400);
-    expect(updateDefaultSignInExperience).not.toHaveBeenCalled();
-  });
-
-  it('should allow hiding the Logto branding outside Cloud with a license that grants it', async () => {
-    installLicense({ hideLogtoBranding: true });
+  it('should allow hiding the Logto branding outside Cloud without a license', async () => {
     const { requester, updateDefaultSignInExperience } = await createCustomUiCspRequester({
       isCloud: false,
     });
@@ -1109,18 +1097,6 @@ describe('PATCH /sign-in-exp customUiCsp', () => {
 
     expect(response.status).toEqual(200);
     expect(updateDefaultSignInExperience).toHaveBeenCalledWith({ hideLogtoBranding: true });
-  });
-
-  it('should reject hiding the Logto branding outside Cloud with a license that only grants Bring your UI', async () => {
-    installLicense({ bringYourUi: true });
-    const { requester, updateDefaultSignInExperience } = await createCustomUiCspRequester({
-      isCloud: false,
-    });
-
-    const response = await requester.patch('/sign-in-exp').send({ hideLogtoBranding: true });
-
-    expect(response.status).toEqual(400);
-    expect(updateDefaultSignInExperience).not.toHaveBeenCalled();
   });
 
   it('should allow non-empty Custom UI CSP updates outside Cloud with a license that grants Bring your UI', async () => {
