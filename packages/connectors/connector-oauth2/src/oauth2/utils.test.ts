@@ -1,5 +1,6 @@
 import nock from 'nock';
 
+import { ConnectorErrorCodes } from '@logto/connector-kit';
 import ky from 'ky';
 
 import { ClientSecretJwtSigningAlgorithm, TokenEndpointAuthMethod } from './types.js';
@@ -181,5 +182,28 @@ describe('constructAuthorizationUri', () => {
 
     const result = constructAuthorizationUri(authorizationEndpoint, queryParameters);
     expect(result).toBe(`${authorizationEndpoint}?${expectedParams}`);
+  });
+
+  it('should surface the error response body from the token endpoint', async () => {
+    const errorBody = { status: 403, message: 'invalid client secret' };
+    const failingTokenEndpoint = 'https://failing.example.com/token';
+    nock('https://failing.example.com').post('/token').reply(403, errorBody);
+
+    await expect(
+      requestTokenEndpoint({
+        tokenEndpoint: failingTokenEndpoint,
+        tokenEndpointAuthOptions: { method: TokenEndpointAuthMethod.ClientSecretPost },
+        tokenRequestBody: {
+          grantType: 'authorization_code',
+          code: 'authcode123',
+          redirectUri: 'https://example.com/callback',
+          clientId: 'client123',
+          clientSecret: 'secret123',
+        },
+      })
+    ).rejects.toMatchObject({
+      code: ConnectorErrorCodes.General,
+      data: { message: JSON.stringify(errorBody) },
+    });
   });
 });
