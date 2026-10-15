@@ -12,9 +12,7 @@ import { getDisplayedStepUpMethods, toMfaFlowState } from '@/utils/step-up';
 
 import useStepUpContext from './use-step-up-context';
 
-const useMfaFlowState = (
-  flow: UserMfaFlow = UserMfaFlow.MfaVerification
-): MfaFlowState | undefined => {
+const useMfaFlowState = (flow: UserMfaFlow): MfaFlowState | undefined => {
   const { state } = useLocation();
   const { authenticationContext, isPureStepUp } = useStepUpContext();
 

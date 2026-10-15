@@ -6,7 +6,7 @@ import { UserMfaFlow } from '@/types';
 import ErrorPage from '../ErrorPage';
 
 const MfaVerification = () => {
-  const flowState = useMfaFlowState();
+  const flowState = useMfaFlowState(UserMfaFlow.MfaVerification);
 
   if (!flowState) {
     return <ErrorPage title="error.invalid_session" />;

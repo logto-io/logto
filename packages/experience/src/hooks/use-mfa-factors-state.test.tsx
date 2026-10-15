@@ -7,7 +7,7 @@ import { UserMfaFlow } from '@/types';
 import useMfaFlowState from './use-mfa-factors-state';
 
 const TestHook = () => {
-  const flowState = useMfaFlowState();
+  const flowState = useMfaFlowState(UserMfaFlow.MfaBinding);
   return <span>{JSON.stringify(flowState)}</span>;
 };
 

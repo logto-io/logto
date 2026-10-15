@@ -20,7 +20,7 @@ type FormState = {
 };
 
 const BackupCodeVerification = () => {
-  const flowState = useMfaFlowState();
+  const flowState = useMfaFlowState(UserMfaFlow.MfaVerification);
   const sendMfaPayload = useSendMfaPayload();
   const {
     register,

@@ -14,7 +14,7 @@ import { codeVerificationTypeMap } from '@/utils/sign-in-experience';
 import styles from './index.module.scss';
 
 const PhoneVerificationCode = () => {
-  const flowState = useMfaFlowState();
+  const flowState = useMfaFlowState(UserMfaFlow.MfaVerification);
   const { verificationIdsMap } = useContext(UserInteractionContext);
 
   if (!flowState) {

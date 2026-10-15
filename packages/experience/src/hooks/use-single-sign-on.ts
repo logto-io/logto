@@ -18,13 +18,17 @@ const useSingleSignOn = () => {
   const handleError = useErrorHandler();
   const { isPureStepUp } = useStepUpContext();
   const stepUpErrorHandlers = usePureStepUpErrorHandler();
-  const asyncInvokeSingleSignOn = useApi(async (connectorId: string, payload: unknown) => {
-    if (!isPureStepUp) {
-      await initInteraction(InteractionEvent.SignIn);
-    }
+  const getAuthorizationUrl = useCallback(
+    async (connectorId: string, payload: unknown) => {
+      if (!isPureStepUp) {
+        await initInteraction(InteractionEvent.SignIn);
+      }
 
-    return getSsoAuthorizationUrl(connectorId, payload);
-  });
+      return getSsoAuthorizationUrl(connectorId, payload);
+    },
+    [isPureStepUp]
+  );
+  const asyncInvokeSingleSignOn = useApi(getAuthorizationUrl);
   const redirectTo = useGlobalRedirectTo({
     shouldClearInteractionContextSession: false,
     isReplace: false,

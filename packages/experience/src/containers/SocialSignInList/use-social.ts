@@ -27,15 +27,17 @@ const useSocial = () => {
   const stepUpErrorHandlers = usePureStepUpErrorHandler();
 
   const handleError = useErrorHandler();
-  const asyncInvokeSocialSignIn = useApi(
+  const getAuthorizationUrl = useCallback(
     async (connectorId: string, state: string, redirectUri: string) => {
       if (!isPureStepUp) {
         await initInteraction(InteractionEvent.SignIn);
       }
 
       return getSocialAuthorizationUrl(connectorId, state, redirectUri);
-    }
+    },
+    [isPureStepUp]
   );
+  const asyncInvokeSocialSignIn = useApi(getAuthorizationUrl);
   const { termsValidation, agreeToTermsPolicy } = useTerms();
   const { setVerificationId } = useContext(UserInteractionContext);
 
