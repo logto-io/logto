@@ -9,7 +9,7 @@
       "post": {
         "responses": {
           "403": {
-            "description": "`SignIn` interaction only: MFA is enabled for the user but has not been verified. The user must verify MFA before updating non-social profile data. <br/>- In a step-up authentication, only a `password`, `email`, or `phone` the user may establish is accepted (`session.step_up.forbidden_route`): the user has no verifiable method at all and the interaction holds a fresh subject proof."
+            "description": "`SignIn` interaction only: MFA is enabled for the user but has not been verified. The user must verify MFA before updating non-social profile data. <br/>- In a step-up authentication, only a `password`, `email`, or `phone` the user may establish is accepted (`session.step_up.forbidden_route`): the user has no verifiable method at all, or none that can reach the requested authentication context and none that serves as a first factor, and the interaction holds a fresh subject proof."
           }
         }
       }

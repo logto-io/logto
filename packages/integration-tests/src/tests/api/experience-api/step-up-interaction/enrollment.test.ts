@@ -1,7 +1,8 @@
 import { Prompt } from '@logto/node';
-import { ConnectorType, InteractionEvent, MfaFactor } from '@logto/schemas';
+import { ConnectorType, InteractionEvent, MfaFactor, VerificationType } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import ky from 'ky';
+import { authenticator } from 'otplib';
 
 import { mockSocialConnectorTarget } from '#src/__mocks__/connectors-mock.js';
 import {
@@ -9,7 +10,12 @@ import {
   getAccountCenter,
   updateAccountCenter,
 } from '#src/api/account-center.js';
-import { getUser, getUserMfaVerifications, verifyUserPassword } from '#src/api/admin-user.js';
+import {
+  getUser,
+  getUserMfaVerifications,
+  updateUserLogtoConfig,
+  verifyUserPassword,
+} from '#src/api/admin-user.js';
 import api, { authedAdminApi, baseApi } from '#src/api/api.js';
 import { updatePassword } from '#src/api/my-account.js';
 import { getSignInExperience, updateSignInExperience } from '#src/api/sign-in-experience.js';
@@ -26,6 +32,7 @@ import {
 } from '#src/helpers/experience/authorization.js';
 import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
 import {
+  createTotp,
   expectAuthenticationContext,
   finishSignIn,
   firstFactorAcr,
@@ -34,7 +41,10 @@ import {
   mfaAcr,
   nowInSeconds,
 } from '#src/helpers/experience/sign-in-with-acr.js';
-import { successfullyCreateAndVerifyTotp } from '#src/helpers/experience/totp-verification.js';
+import {
+  successfullyCreateAndVerifyTotp,
+  successfullyVerifyTotp,
+} from '#src/helpers/experience/totp-verification.js';
 import { expectRejects } from '#src/helpers/index.js';
 import {
   enableAllPasswordSignInMethods,
@@ -196,6 +206,67 @@ devFeatureTest.describe('establishing and enrolling inside pure step-up', () => 
       { sub: id, acr: firstFactorAcr, amr: ['fed', 'pwd'] },
       submittedAt
     );
+    expect(await getUser(id)).toEqual({
+      ...before,
+      hasPassword: true,
+      updatedAt: expect.any(Number) as unknown,
+    });
+    await verifyUserPassword(id, password);
+  });
+
+  it('lets a social-only user with an enrolled TOTP establish a password and reach mfa', async () => {
+    const { id } = await userApi.create({});
+    const secret = await createTotp(id);
+    // Let the upstream sign-in establish the session without an MFA challenge; the requested `mfa`
+    // ignores this preference, so the enrolled factor still has to be verified in the step-up.
+    await updateUserLogtoConfig(id, { mfa: { skipMfaOnSignIn: true }, passkeySignIn: {} });
+    const socialUserId = await linkSocialIdentity(id, connectorId);
+    const client = await initExperienceClient();
+    await identifyWithSocial(client, connectorId, socialUserId);
+    expect(await finishSignIn(client)).toMatchObject({ amr: ['fed'] });
+
+    const before = await getUser(id);
+    // The TOTP reaches `1fa` only and nothing pairs with it, so establishing a first factor is the
+    // missing half of the pair: creation must offer it instead of fast-failing.
+    await startStepUp(client, mfaAcr);
+    const unproven = await client.getInteractionData();
+    expect(unproven.authenticationContext).toMatchObject({
+      availableMethods: [],
+      establishableMethods: [],
+      enrollableFactors: [],
+      subjectProofConnectors: [{ type: 'social', connectorId }],
+    });
+
+    await identifyWithSocial(client, connectorId, socialUserId);
+    const proven = await client.getInteractionData();
+    expect(proven.authenticationContext).toMatchObject({
+      establishableMethods: ['password', 'email'],
+      subjectProofConnectors: [],
+    });
+
+    const password = generatePassword();
+    await client.updateProfile({ type: 'password', value: password });
+    expect(await getUser(id)).toEqual(before);
+    // Only the established credential is staged; the enrolled factor is still owed and is the only
+    // method left to offer.
+    const established = await client.getInteractionData();
+    expect(established.authenticationContext).toMatchObject({
+      availableMethods: [VerificationType.TOTP],
+      establishableMethods: [],
+      enrollableFactors: [],
+    });
+    await successfullyVerifyTotp(client, { code: authenticator.generate(secret) });
+
+    const submittedAt = nowInSeconds();
+    expectAuthenticationContext(
+      await submitStepUp(client),
+      { sub: id, acr: mfaAcr, amr: ['fed', 'pwd', 'otp', 'mfa'] },
+      submittedAt
+    );
+    // The established password is the only user write; the enrolled TOTP is left as it was.
+    expect(await getUserMfaVerifications(id)).toEqual([
+      expect.objectContaining({ type: MfaFactor.TOTP }),
+    ]);
     expect(await getUser(id)).toEqual({
       ...before,
       hasPassword: true,
