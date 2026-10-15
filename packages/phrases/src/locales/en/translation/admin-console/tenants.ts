@@ -104,6 +104,7 @@ const tenants = {
     tag: 'View only',
     notification:
       'You have view-only access to this tenant. Ask a tenant admin if you need to make changes.',
+    hidden: 'Hidden for viewers',
   },
   deletion_card: {
     title: 'DELETE',

@@ -63,6 +63,9 @@ const useCurrentTenantScopes = () => {
       // read-only and every write is allowed.
       isReadOnly: getIsReadOnlyAccess({ isDevFeaturesEnabled, isCloud, scopes }),
       isWriteAccessConfirmed: getIsWriteAccessConfirmed({ isDevFeaturesEnabled, isCloud, scopes }),
+      // The Management API refuses credentials to a read-only member, so they are requested only
+      // once the scopes confirm write access.
+      canReadCredentials: getIsWriteAccessConfirmed({ isDevFeaturesEnabled, isCloud, scopes }),
     }),
     [licenseQuota.consoleCollaboration, scopes]
   );

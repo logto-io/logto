@@ -107,6 +107,7 @@ const tenants = {
     tag: 'Lecture seule',
     notification:
       'Vous avez un accès en lecture seule à ce locataire. Demandez à un administrateur du locataire si vous devez effectuer des modifications.',
+    hidden: 'Masqué pour les lecteurs',
   },
   deletion_card: {
     title: 'SUPPRIMER',

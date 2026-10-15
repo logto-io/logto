@@ -107,6 +107,7 @@ const tenants = {
     tag: 'Tylko podgląd',
     notification:
       'Masz dostęp tylko do odczytu do tego najemcy. Poproś administratora najemcy, jeśli musisz wprowadzić zmiany.',
+    hidden: 'Ukryte dla przeglądających',
   },
   deletion_card: {
     title: 'USUWANIE',

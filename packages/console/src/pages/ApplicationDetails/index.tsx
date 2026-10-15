@@ -8,12 +8,19 @@ import PageMeta from '@/components/PageMeta';
 import { openIdProviderConfigPath } from '@/consts/oidc';
 import { Daisy } from '@/ds-components/Spinner';
 import type { RequestError } from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 
 import ApplicationDetailsContent from './ApplicationDetailsContent';
 import { type ApplicationSecretRow } from './ApplicationDetailsContent/EndpointsAndCredentials';
 import GuideModal from './GuideModal';
 import SamlApplicationDetailsContent, { isSamlApplication } from './SamlApplicationDetailsContent';
+
+// Guides put the first secret into their code samples, some through `btoa`, so a read-only member's
+// guides get an ASCII placeholder for the withheld secrets.
+const withheldSecrets: ApplicationSecretRow[] = [
+  { name: 'withheld', value: '<hidden for viewers>', expiresAt: null },
+];
 
 function ApplicationDetails() {
   const { id, guideId } = useParams();
@@ -23,7 +30,14 @@ function ApplicationDetails() {
   const { data, error, mutate } = useSWR<ApplicationResponse, RequestError>(
     id && `api/applications/${id}`
   );
-  const secrets = useSWR<ApplicationSecretRow[], RequestError>(`api/applications/${id}/secrets`);
+  const {
+    access: { isReadOnly, canReadCredentials },
+  } = useCurrentTenantScopes();
+  const secrets = useSWR<ApplicationSecretRow[], RequestError>(
+    canReadCredentials && `api/applications/${id}/secrets`
+  );
+  // Both flags are false until the scopes load, so the page waits for them.
+  const secretRows = isReadOnly ? withheldSecrets : secrets.data;
   const oidcConfig = useSWR<SnakeCaseOidcConfig, RequestError>(openIdProviderConfigPath);
 
   const handleApplicationUpdated = useCallback(
@@ -39,13 +53,11 @@ function ApplicationDetails() {
   );
 
   const isLoading =
-    (!data && !error) ||
-    (!oidcConfig.data && !oidcConfig.error) ||
-    (!secrets.data && !secrets.error);
+    (!data && !error) || (!oidcConfig.data && !oidcConfig.error) || (!secretRows && !secrets.error);
   const requestError = error ?? oidcConfig.error ?? secrets.error;
 
   if (isGuideView) {
-    if (!data || !secrets.data) {
+    if (!data || !secretRows) {
       return <Daisy />;
     }
 
@@ -53,7 +65,7 @@ function ApplicationDetails() {
       <GuideModal
         guideId={guideId}
         app={data}
-        secrets={secrets.data}
+        secrets={secretRows}
         onClose={() => {
           navigate(`/applications/${id}`);
         }}
@@ -76,7 +88,7 @@ function ApplicationDetails() {
       <PageMeta titleKey="application_details.page_title" />
       {data &&
         oidcConfig.data &&
-        secrets.data &&
+        secretRows &&
         (isSamlApplication(data) ? (
           <SamlApplicationDetailsContent
             data={data}
@@ -86,7 +98,7 @@ function ApplicationDetails() {
           <ApplicationDetailsContent
             data={data}
             oidcConfig={oidcConfig.data}
-            secrets={secrets.data}
+            secrets={secretRows}
             onApplicationUpdated={handleApplicationUpdated}
           />
         ))}

@@ -107,6 +107,7 @@ const tenants = {
     tag: 'Somente visualização',
     notification:
       'Você tem acesso somente de visualização a este locatário. Peça a um administrador do locatário se precisar fazer alterações.',
+    hidden: 'Oculto para leitores',
   },
   deletion_card: {
     title: 'EXCLUIR',

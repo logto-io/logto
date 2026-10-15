@@ -28,13 +28,13 @@ type Props = {
 function PersonalAccessTokens({ userId }: Props) {
   const [showCreateTokenModal, setShowCreateTokenModal] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data, mutate, error, isLoading } = useSWR<Token[], RequestError>(
-    `api/users/${userId}/personal-access-tokens`
-  );
   const api = useApi();
   const {
-    access: { isReadOnly },
+    access: { isReadOnly, canReadCredentials },
   } = useCurrentTenantScopes();
+  const { data, mutate, error } = useSWR<Token[], RequestError>(
+    canReadCredentials && `api/users/${userId}/personal-access-tokens`
+  );
   const [editToken, setEditToken] = useState<PersonalAccessToken>();
 
   const tableColumns: Array<Column<Token>> = useMemo(
@@ -98,18 +98,18 @@ function PersonalAccessTokens({ userId }: Props) {
         </>
       }
     >
-      {data?.length === 0 && !error ? (
+      {isReadOnly ? (
+        <div className={styles.empty}>{t('tenants.view_only.hidden')}</div>
+      ) : data?.length === 0 && !error ? (
         <>
           <div className={styles.empty}>{t('user_details.personal_access_tokens.empty')}</div>
-          {!isReadOnly && (
-            <Button
-              icon={<Plus />}
-              title="user_details.personal_access_tokens.create"
-              onClick={() => {
-                setShowCreateTokenModal(true);
-              }}
-            />
-          )}
+          <Button
+            icon={<Plus />}
+            title="user_details.personal_access_tokens.create"
+            onClick={() => {
+              setShowCreateTokenModal(true);
+            }}
+          />
         </>
       ) : (
         <>
@@ -117,35 +117,31 @@ function PersonalAccessTokens({ userId }: Props) {
             hasBorder
             isRowHoverEffectDisabled
             rowIndexKey="name"
-            isLoading={isLoading}
+            isLoading={!data && !error}
             errorMessage={error?.body?.message ?? error?.message}
             rowGroups={[{ key: 'personal_access_tokens', data: data ?? [] }]}
             columns={tableColumns}
             className={styles.table}
           />
-          {!isReadOnly && (
-            <Button
-              size="small"
-              type="text"
-              title="user_details.personal_access_tokens.create_new_token"
-              icon={<CirclePlus />}
-              onClick={() => {
-                setShowCreateTokenModal(true);
-              }}
-            />
-          )}
+          <Button
+            size="small"
+            type="text"
+            title="user_details.personal_access_tokens.create_new_token"
+            icon={<CirclePlus />}
+            onClick={() => {
+              setShowCreateTokenModal(true);
+            }}
+          />
         </>
       )}
-      {!isReadOnly && (
-        <CreateTokenModal
-          userId={userId}
-          isOpen={showCreateTokenModal}
-          onClose={() => {
-            setShowCreateTokenModal(false);
-            void mutate();
-          }}
-        />
-      )}
+      <CreateTokenModal
+        userId={userId}
+        isOpen={showCreateTokenModal}
+        onClose={() => {
+          setShowCreateTokenModal(false);
+          void mutate();
+        }}
+      />
       {editToken && (
         <EditTokenModal
           userId={userId}
