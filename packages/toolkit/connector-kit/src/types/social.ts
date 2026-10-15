@@ -115,12 +115,12 @@ export type TokenResponse = {
 /**
  * Guard for the `scope` field of a token endpoint response. RFC 6749 defines it as a
  * space-delimited string, but some providers (e.g. Twitch) return an array of scopes instead.
- * Arrays are normalized to the space-delimited form so consumers always get a string.
+ * A string array is normalized to the space-delimited form so consumers always get a string.
  */
-export const tokenResponseScopeGuard = z.preprocess(
-  (value) => (Array.isArray(value) ? value.join(' ') : value),
-  z.string()
-);
+export const tokenResponseScopeGuard = z.union([
+  z.string(),
+  z.array(z.string()).transform((scopes) => scopes.join(' ')),
+]);
 
 export const tokenResponseGuard = z.object({
   id_token: z.string().optional(),
