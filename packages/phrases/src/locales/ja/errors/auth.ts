@@ -10,6 +10,7 @@ const auth = {
   exceed_token_limit: 'トークン制限を超えました。管理者に連絡してください。',
   third_party_application_forbidden:
     'サードパーティアプリケーションではこの API を通じてアカウントデータを変更できません。',
+  read_only_access: 'このリクエストは読み取り専用アクセスでは許可されていません。',
 };
 
 export default Object.freeze(auth);

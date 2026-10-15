@@ -104,6 +104,7 @@ const tenants = {
     tag: '閲覧のみ',
     notification:
       'このテナントへのアクセスは閲覧のみです。変更が必要な場合は、テナント管理者に依頼してください。',
+    hidden: '閲覧者には非表示',
   },
   deletion_card: {
     title: '削除',

@@ -95,7 +95,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         ssoIdentities: conditional(
           yes(includeSsoIdentities) && [...(await findUserSsoIdentities(userId))]
         ),
-        includePasswordHash: yes(includePasswordHash),
+        includePasswordHash: yes(includePasswordHash) && !ctx.auth.isReadOnly,
       });
 
       return next();

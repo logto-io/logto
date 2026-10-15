@@ -206,6 +206,8 @@ export type VerificationIdsMap = s.Infer<typeof verificationIdsMapGuard>;
  */
 export const continueFlowStateGuard = s.object({
   interactionEvent: s.enums([InteractionEvent.SignIn, InteractionEvent.Register]),
+  // Navigation hint only; Core's authentication context determines the actual mode.
+  isStepUp: s.optional(s.boolean()),
 });
 
 export type InteractionFlowState = s.Infer<typeof continueFlowStateGuard>;

@@ -107,6 +107,7 @@ const tenants = {
     tag: 'Nur Ansicht',
     notification:
       'Sie haben nur Ansichtszugriff auf diesen Mieter. Wenden Sie sich an einen Mieter-Administrator, wenn Sie Änderungen vornehmen müssen.',
+    hidden: 'Für Betrachter ausgeblendet',
   },
   deletion_card: {
     title: 'LÖSCHEN',

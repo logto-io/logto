@@ -106,6 +106,7 @@ const tenants = {
     tag: 'Apenas visualização',
     notification:
       'Tem acesso apenas de visualização a este inquilino. Peça a um administrador do inquilino se precisar de fazer alterações.',
+    hidden: 'Oculto para leitores',
   },
   deletion_card: {
     title: 'ELIMINAR',

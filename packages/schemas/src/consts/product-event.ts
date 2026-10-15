@@ -92,3 +92,9 @@ export const tenantEventDistinctId = 'TENANT_EVENT';
  * identifying the user who initiated the Management API request proxied by the cloud service.
  */
 export const cloudUserIdHeader = 'logto-cloud-user-id';
+
+/**
+ * The header that Logto Cloud's Management API proxy sets to `true` for a caller without write
+ * access. It only narrows what the Management API returns and accepts.
+ */
+export const readOnlyAccessHeader = 'logto-read-only-access';

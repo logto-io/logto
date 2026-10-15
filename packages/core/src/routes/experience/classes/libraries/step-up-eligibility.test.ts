@@ -560,21 +560,77 @@ describe('computeStepUpEligibility', () => {
       });
     });
 
-    it('never offers establishing to a user with any verifiable method', () => {
-      for (const user of [
-        passwordUser,
-        { ...socialOnlyUser, primaryEmail: mockUser.primaryEmail },
-        withTotp(socialOnlyUser),
+    it('never offers establishing to a user whose methods reach the class or fill the first-factor role', () => {
+      for (const { user, selectedAcr, mfaSettings = allFactors } of [
+        { user: passwordUser, selectedAcr: LogtoAcr.FirstFactor },
+        {
+          user: { ...socialOnlyUser, primaryEmail: mockUser.primaryEmail },
+          selectedAcr: LogtoAcr.FirstFactor,
+        },
+        // The TOTP reaches `1fa` alone, so a first factor would only be an alternative to it.
+        { user: withTotp(socialOnlyUser), selectedAcr: LogtoAcr.FirstFactor },
+        { user: withTotp(passwordUser), selectedAcr: LogtoAcr.Mfa },
+        // The password cannot reach `mfa` without the TOTP the tenant disables, but it is a first
+        // factor the user can verify: enrolling is their path, not establishing.
+        {
+          user: withTotp(passwordUser),
+          selectedAcr: LogtoAcr.Mfa,
+          mfaSettings: { ...allFactors, factors: [MfaFactor.WebAuthn] },
+        },
       ]) {
+        const input = {
+          user,
+          selectedAcr,
+          mfaSettings,
+          tenantEstablishableMethods,
+          linkedConnectors: [github],
+        };
+
+        expect(compute(input)).toMatchObject({ subjectProofConnectors: [] });
         expect(
-          compute({
-            user,
-            hasFreshSubjectProof: true,
-            tenantEstablishableMethods,
-            linkedConnectors: [github],
-          })
+          compute({ ...input, proofs: [federatedProof], hasFreshSubjectProof: true })
         ).toMatchObject({ establishableMethods: [], subjectProofConnectors: [] });
       }
+    });
+
+    it('offers establishing to a social-only user whose TOTP cannot reach `mfa` alone', () => {
+      const input = {
+        user: withTotp(socialOnlyUser),
+        selectedAcr: LogtoAcr.Mfa,
+        tenantEstablishableMethods,
+        linkedConnectors: [github],
+      };
+
+      // The TOTP reaches `1fa` only and nothing pairs with it; establishing a first factor under a
+      // subject proof the linked connector can provide is the missing half of the pair.
+      expect(compute(input)).toMatchObject({
+        availableMethods: [],
+        isReachable: true,
+        establishableMethods: [],
+        subjectProofConnectors: [github],
+      });
+      expect(
+        compute({ ...input, proofs: [federatedProof], hasFreshSubjectProof: true })
+      ).toMatchObject({
+        availableMethods: [],
+        isReachable: true,
+        establishableMethods: tenantEstablishableMethods,
+        subjectProofConnectors: [],
+      });
+      // Once a password is established the TOTP is still required, and nothing else is offered.
+      expect(
+        compute({
+          ...input,
+          proofs: [federatedProof, establishedPasswordProof],
+          hasFreshSubjectProof: true,
+          hasFreshFirstFactor: true,
+        })
+      ).toMatchObject({
+        availableMethods: [VerificationType.TOTP],
+        isReachable: true,
+        establishableMethods: [],
+        subjectProofConnectors: [],
+      });
     });
 
     it('stops offering establishing once a first factor is established', () => {

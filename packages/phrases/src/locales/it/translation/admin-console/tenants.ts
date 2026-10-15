@@ -108,6 +108,7 @@ const tenants = {
     tag: 'Sola lettura',
     notification:
       "Hai accesso in sola lettura a questo inquilino. Chiedi a un amministratore dell'inquilino se devi apportare modifiche.",
+    hidden: 'Nascosto ai visualizzatori',
   },
   deletion_card: {
     title: 'ELIMINA',

@@ -12,6 +12,8 @@ import { getSocialAuthorizationUrl } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
+import useStepUpContext from '@/hooks/use-step-up-context';
+import useStepUpErrorHandler from '@/hooks/use-step-up-error-handler';
 import useTerms from '@/hooks/use-terms';
 import { searchKeys } from '@/shared/utils/search-parameters';
 import { getLogtoNativeSdk, isNativeWebview } from '@/utils/native-sdk';
@@ -20,6 +22,8 @@ import { storeRedirectContext } from '@/utils/social-redirect-fallback-context';
 
 const useSocial = () => {
   const { experienceSettings, theme } = useContext(PageContext);
+  const { isPureStepUp } = useStepUpContext();
+  const stepUpErrorHandlers = useStepUpErrorHandler();
 
   const handleError = useErrorHandler();
   const asyncInvokeSocialSignIn = useApi(getSocialAuthorizationUrl);
@@ -54,7 +58,11 @@ const useSocial = () => {
        * Check if the user has agreed to the terms and privacy policy before navigating to the 3rd-party social sign-in page
        * when the policy is set to `Manual`
        */
-      if (agreeToTermsPolicy === AgreeToTermsPolicy.Manual && !(await termsValidation())) {
+      if (
+        !isPureStepUp &&
+        agreeToTermsPolicy === AgreeToTermsPolicy.Manual &&
+        !(await termsValidation())
+      ) {
         return;
       }
 
@@ -66,11 +74,12 @@ const useSocial = () => {
       const [error, result] = await asyncInvokeSocialSignIn(
         connectorId,
         state,
-        `${window.location.origin}/callback/${connectorId}`
+        `${window.location.origin}/callback/${connectorId}`,
+        isPureStepUp
       );
 
       if (error) {
-        await handleError(error);
+        await handleError(error, isPureStepUp ? stepUpErrorHandlers : undefined);
 
         return;
       }
@@ -108,9 +117,11 @@ const useSocial = () => {
       agreeToTermsPolicy,
       asyncInvokeSocialSignIn,
       handleError,
+      isPureStepUp,
       nativeSignInHandler,
       redirectTo,
       setVerificationId,
+      stepUpErrorHandlers,
       termsValidation,
     ]
   );

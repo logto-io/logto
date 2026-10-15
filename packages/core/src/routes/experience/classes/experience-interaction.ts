@@ -71,7 +71,7 @@ import { ProvisionLibrary } from './libraries/provision-library.js';
 import { SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
 import {
   computeStepUpEligibility,
-  getEligibleMethods,
+  mayEstablishFirstFactor,
   mfaFactorToVerificationType,
   type EstablishableMethod,
   type StepUpEligibility,
@@ -1599,20 +1599,22 @@ export default class ExperienceInteraction {
       sms: connectors.some(({ type }) => type === ConnectorType.Sms),
     };
 
-    return computeStepUpEligibility({
+    const input = {
       user,
       mfaSettings,
       selectedAcr,
       connectors: messageConnectors,
       carried: this.carriedContributions,
       proofs: this.countedAuthenticationProofs,
+    } satisfies StepUpEligibilityInput;
+
+    return computeStepUpEligibility({
+      ...input,
+      // Establishing a first factor and enrolling a factor are offered in pure step-up and in a
+      // sign-in with requested ACR alike; an ordinary sign-in never gets this far, since it
+      // carries no requested class.
       ...((this.isStepUp || this.interactionEvent === InteractionEvent.SignIn) &&
-        (await this.getStepUpEnrollmentInput({
-          user,
-          mfaSettings,
-          connectors,
-          messageConnectors,
-        }))),
+        (await this.getStepUpEnrollmentInput(input, connectors))),
     });
   }
 
@@ -1620,17 +1622,11 @@ export default class ExperienceInteraction {
    * The enrollment inputs shared by pure step-up and SignIn with requested ACR: the predicates
    * read only this interaction's proofs, and the tenant decides what can be established or enrolled.
    */
-  private async getStepUpEnrollmentInput({
-    user,
-    mfaSettings,
-    connectors,
-    messageConnectors,
-  }: {
-    user: User;
-    mfaSettings: StepUpEligibilityInput['mfaSettings'];
-    connectors: Awaited<ReturnType<TenantContext['connectors']['getLogtoConnectors']>>;
-    messageConnectors: StepUpEligibilityInput['connectors'];
-  }): Promise<Partial<StepUpEligibilityInput>> {
+  private async getStepUpEnrollmentInput(
+    input: StepUpEligibilityInput,
+    connectors: Awaited<ReturnType<TenantContext['connectors']['getLogtoConnectors']>>
+  ): Promise<Partial<StepUpEligibilityInput>> {
+    const { user, mfaSettings, connectors: messageConnectors } = input;
     const { hasFreshSubjectProof } = this;
     const [
       {
@@ -1656,12 +1652,13 @@ export default class ExperienceInteraction {
         : []),
     ];
 
-    // The linked connectors only matter to a user with nothing to verify who holds no subject
-    // proof yet, so every other read skips the lookups.
+    // The linked connectors only matter to a pure step-up whose user holds no subject proof yet
+    // and has nothing to verify, so every other read skips the lookups.
     const needsSubjectProof =
       this.isStepUp &&
+      tenantEstablishableMethods.length > 0 &&
       !hasFreshSubjectProof &&
-      getEligibleMethods(user, mfaSettings, messageConnectors).length === 0;
+      mayEstablishFirstFactor(input);
 
     return {
       hasFreshSubjectProof,

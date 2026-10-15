@@ -2,13 +2,14 @@ import { OrganizationJitEmailDomains } from '@logto/schemas';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
+import { type WithAuthContext } from '#src/middleware/koa-auth/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { type WithHookContext } from '#src/middleware/koa-management-api-hooks.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import type OrganizationQueries from '#src/queries/organization/index.js';
 
 export default function emailDomainRoutes(
-  router: Router<unknown, WithHookContext>,
+  router: Router<unknown, WithHookContext & WithAuthContext>,
   organizations: OrganizationQueries
 ) {
   const params = Object.freeze({ id: z.string().min(1) });

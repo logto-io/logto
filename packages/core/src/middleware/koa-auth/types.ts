@@ -13,6 +13,8 @@ type Auth = {
    * interactive (session-backed) flow. Absent for client-credentials tokens.
    */
   sessionUid?: string;
+  /** Set by `koaReadOnlyAccess` for a read-only Management API request. */
+  isReadOnly?: boolean;
 };
 
 export type WithAuthContext<ContextT extends IRouterParamContext = IRouterParamContext> =

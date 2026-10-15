@@ -78,11 +78,14 @@ const hideOidcClientMetadataForSamlApp = (application: Application) => ({
   ),
 });
 
-const buildApplicationResponse = (application: Application) =>
-  omitInternalApplicationSecret(hideOidcClientMetadataForSamlApp(application));
+const buildApplicationResponse = (application: Application, auth: { isReadOnly?: boolean }) =>
+  omitInternalApplicationSecret(hideOidcClientMetadataForSamlApp(application), auth);
 
-const hideOidcClientMetadataForSamlApps = (applications: readonly Application[]) => {
-  return applications.map((application) => buildApplicationResponse(application));
+const hideOidcClientMetadataForSamlApps = (
+  applications: readonly Application[],
+  auth: { isReadOnly?: boolean }
+) => {
+  return applications.map((application) => buildApplicationResponse(application, auth));
 };
 
 const applicationTypeGuard = z.nativeEnum(ApplicationType);
@@ -156,7 +159,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
           types,
           isThirdParty,
         });
-        ctx.body = hideOidcClientMetadataForSamlApps(rawApplications);
+        ctx.body = hideOidcClientMetadataForSamlApps(rawApplications, ctx.auth);
 
         return next();
       }
@@ -183,7 +186,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
 
       // Return totalCount to pagination middleware
       ctx.pagination.totalCount = count;
-      ctx.body = hideOidcClientMetadataForSamlApps(applications);
+      ctx.body = hideOidcClientMetadataForSamlApps(applications, ctx.auth);
 
       return next();
     }
@@ -267,7 +270,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         }
       }
 
-      ctx.body = buildApplicationResponse(application);
+      ctx.body = buildApplicationResponse(application, ctx.auth);
 
       if (rest.type === ApplicationType.MachineToMachine) {
         void quota.reportSubscriptionUpdatesUsage('machineToMachineLimit');
@@ -301,7 +304,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         ? buildBuiltInApplicationDataForTenant(tenantId, id)
         : undefined;
       if (builtInApplication) {
-        ctx.body = { ...buildApplicationResponse(builtInApplication), isAdmin: false };
+        ctx.body = { ...buildApplicationResponse(builtInApplication, ctx.auth), isAdmin: false };
 
         return next();
       }
@@ -311,7 +314,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         await queries.applicationsRoles.findApplicationsRolesByApplicationId(id);
 
       ctx.body = {
-        ...buildApplicationResponse(application),
+        ...buildApplicationResponse(application, ctx.auth),
         isAdmin: includesInternalAdminRole(applicationsRoles),
       };
 
@@ -446,7 +449,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
           ? await queries.applications.updateApplicationById(id, rest, 'replace')
           : (updatedProtectedApplication ?? pendingUpdateApplication);
 
-      ctx.body = buildApplicationResponse(updatedApplication);
+      ctx.body = buildApplicationResponse(updatedApplication, ctx.auth);
 
       return next();
     }

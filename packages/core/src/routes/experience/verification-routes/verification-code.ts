@@ -41,9 +41,9 @@ import {
 
 /**
  * A pure step-up never accepts a raw identifier to verify with: the subject-bound variant reads
- * it from the pinned user. The one exception is establishing a first factor: a user with no
- * eligible method may prove control of a new email or phone, which `POST /profile` then stages,
- * but only while that identifier type is in `establishableMethods`.
+ * it from the pinned user. The one exception is establishing a first factor: a user lacking one
+ * to reach the selected class with may prove control of a new email or phone, which
+ * `POST /profile` then stages, but only while that identifier type is in `establishableMethods`.
  *
  * @throws {RequestError} with 403 if a pure step-up supplies an identifier it cannot establish
  */
