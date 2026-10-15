@@ -2,6 +2,7 @@ import type { DatabasePool } from '@silverhand/slonik';
 import type { CommandModule } from 'yargs';
 
 import { createPoolAndDatabaseIfNeeded } from '../../../database.js';
+import { assertNoExistingTenantRoles, getDatabaseName } from '../../../queries/database.js';
 import { doesConfigsTableExist } from '../../../queries/logto-config.js';
 import { consoleLog, oraPromise } from '../../../utils.js';
 import { getLatestAlterationTimestamp } from '../alteration/index.js';
@@ -26,6 +27,11 @@ export const seedByPool = async (
     disablePwnedPasswordCheck = false,
   }: SeedByPoolOptions = {}
 ) => {
+  // Roles left behind by an old installation are a cluster-level precondition, so fail here before
+  // opening the transaction.
+  const database = await getDatabaseName(pool, true);
+  await assertNoExistingTenantRoles(pool, database);
+
   await pool.transaction(async (connection) => {
     // Check alteration scripts available in order to insert correct timestamp
     const latestTimestamp = await getLatestAlterationTimestamp();

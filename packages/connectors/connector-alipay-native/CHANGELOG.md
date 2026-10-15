@@ -1,5 +1,11 @@
 # @logto/connector-alipay-native
 
+## 1.4.7
+
+### Patch Changes
+
+- @logto/connector-kit@5.1.1
+
 ## 1.4.6
 
 ### Patch Changes

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'Página não encontrada',
@@ -14,6 +15,8 @@ const account_center = {
     sidebar_security: 'Segurança',
     sidebar_sessions: 'Sessões',
     support: 'Suporte',
+    user_menu: 'Menu do usuário',
+    sign_out: 'Sair',
   },
   verification: {
     title: 'Verificação de segurança',
@@ -122,6 +125,21 @@ const account_center = {
     email_removed: 'Endereço de e-mail removido com sucesso.',
     phone_removed: 'Número de telefone removido com sucesso.',
     username_removed: 'Nome de usuário removido com sucesso.',
+    trusted_devices: {
+      title: 'Dispositivos confiáveis de MFA',
+      current_device: 'Dispositivo atual',
+      expires_on: 'Expira em {{date}}',
+      unknown_location: 'Localização desconhecida',
+      remove: 'Remover',
+      removed: 'Dispositivo confiável removido com sucesso.',
+      loading: 'Carregando...',
+      empty: 'Nenhum dispositivo confiável.',
+      load_failed: 'Falha ao carregar dispositivos confiáveis. Tente novamente.',
+      retry: 'Tentar novamente',
+      remove_confirmation_title: 'Remover dispositivo confiável?',
+      remove_confirmation_description:
+        'Você precisará concluir a MFA novamente neste dispositivo na próxima vez que entrar. Sua sessão atual permanecerá ativa.',
+    },
   },
   social: {
     linked: '{{connector}} vinculado com sucesso.',
@@ -287,3 +305,4 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
+/* eslint-enable max-lines */

@@ -11,6 +11,7 @@ const user_scopes = {
     address: 'Tvá adresa',
     'urn:logto:scope:sessions': 'Tvé aktivní relace',
     'urn:logto:scope:trusted_devices': 'Tvá důvěryhodná zařízení',
+    'urn:logto:scope:personal_access_tokens': 'Tvé osobní přístupové tokeny',
   },
 };
 

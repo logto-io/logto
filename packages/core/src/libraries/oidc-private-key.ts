@@ -3,7 +3,6 @@ import crypto from 'node:crypto';
 import type { OidcPrivateKey } from '@logto/schemas';
 import {
   OidcSigningKeyStatus,
-  getCurrentOidcPrivateKey,
   getImmediatelyRotatedOidcPrivateKeys,
   getOidcPrivateKeysAfterDeletion,
   getOidcProviderPrivateKeys,
@@ -18,36 +17,6 @@ import { createLogtoConfigQueries } from '#src/queries/logto-config.js';
 import type Queries from '#src/tenants/Queries.js';
 import { syncSigningKeyRotationStateCache } from '#src/tenants/signing-key-rotation-state.js';
 import { exportJWK } from '#src/utils/jwks.js';
-
-export {
-  getCanonicalOidcPrivateKeys,
-  getCurrentOidcPrivateKey,
-  getImmediatelyRotatedOidcPrivateKeys,
-  getOidcPrivateKeysAfterDeletion,
-  getOidcProviderPrivateKeys,
-  getStagedRotatedOidcPrivateKeys,
-  normalizeOidcPrivateKeys,
-} from '@logto/schemas';
-
-/**
- * Promote a staged Next key into Current and demote the previous Current to Previous.
- * Returns the original normalized key set when no staged activation is pending.
- */
-export const rotateOidcPrivateKeyStatuses = (privateKeys: OidcPrivateKey[]): OidcPrivateKey[] => {
-  const normalizedPrivateKeys = normalizeOidcPrivateKeys(privateKeys);
-  const nextKey = normalizedPrivateKeys.find(({ status }) => status === OidcSigningKeyStatus.Next);
-
-  if (!nextKey) {
-    return privateKeys.every(({ status }) => status) ? privateKeys : normalizedPrivateKeys;
-  }
-
-  const currentKey = getCurrentOidcPrivateKey(normalizedPrivateKeys);
-
-  return [
-    { ...nextKey, status: OidcSigningKeyStatus.Current },
-    { ...currentKey, status: OidcSigningKeyStatus.Previous },
-  ];
-};
 
 /**
  * Export public JWKS from private signing keys in oidc-provider key order.

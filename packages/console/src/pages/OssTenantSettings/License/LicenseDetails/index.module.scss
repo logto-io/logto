@@ -1,0 +1,12 @@
+@use '@/scss/underscore' as _;
+
+.value {
+  color: var(--color-text-secondary);
+}
+
+.replace {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: _.unit(6);
+}

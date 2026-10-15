@@ -13,13 +13,14 @@ import styles from './index.module.scss';
 
 type Props = {
   readonly isDisabled: boolean;
+  readonly isDurationDirty: boolean;
   readonly register: UseFormRegister<MfaConfigForm>;
   readonly errors: FieldErrors<MfaConfigForm>;
 };
 
 const durationRange = Object.freeze({ min: 1, max: 365 });
 
-function TrustedDeviceSettings({ isDisabled, register, errors }: Props) {
+function TrustedDeviceSettings({ isDisabled, isDurationDirty, register, errors }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -46,9 +47,11 @@ function TrustedDeviceSettings({ isDisabled, register, errors }: Props) {
           })}
         />
       </FormField>
-      <InlineNotification className={styles.trustedDeviceDurationNote}>
-        {t('mfa.trusted_device.duration_note')}
-      </InlineNotification>
+      {isDurationDirty && (
+        <InlineNotification className={styles.trustedDeviceDurationNote}>
+          {t('mfa.trusted_device.duration_note')}
+        </InlineNotification>
+      )}
     </FormCard>
   );
 }

@@ -28,7 +28,11 @@
     }
   }
 
-  .notification {
+  .migrationNotice {
     margin-bottom: _.unit(3);
+  }
+
+  .passwordDisabledNotification {
+    margin-top: _.unit(3);
   }
 }

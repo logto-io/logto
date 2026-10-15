@@ -9,6 +9,11 @@ import { ActionPageMode } from '../types';
 import ActionDetails from '.';
 import useDataFetch from './use-data-fetch';
 
+jest.mock('@/hooks/use-current-tenant-scopes', () => ({
+  __esModule: true,
+  default: () => ({ access: { isReadOnly: false } }),
+}));
+
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useParams: jest.fn(),

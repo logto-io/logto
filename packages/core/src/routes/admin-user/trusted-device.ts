@@ -2,11 +2,9 @@ import { trustedDeviceResponseGuard, type TrustedDeviceResponse } from '@logto/s
 import { pick } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
-import koaPagination from '#src/middleware/koa-pagination.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
@@ -14,11 +12,6 @@ import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 export default function adminUserTrustedDeviceRoutes<T extends ManagementApiRouter>(
   ...[router, tenant]: RouterInitArgs<T>
 ) {
-  // DEV: MFA trusted device management
-  if (!EnvSet.values.isDevFeaturesEnabled) {
-    return;
-  }
-
   const {
     queries: {
       trustedDevices,
@@ -29,7 +22,6 @@ export default function adminUserTrustedDeviceRoutes<T extends ManagementApiRout
 
   router.get(
     '/users/:userId/trusted-devices',
-    koaPagination(),
     koaGuard({
       params: z.object({ userId: z.string() }),
       response: trustedDeviceResponseGuard.array(),
@@ -37,15 +29,10 @@ export default function adminUserTrustedDeviceRoutes<T extends ManagementApiRout
     }),
     async (ctx, next) => {
       const { userId } = ctx.guard.params;
-      const { limit, offset } = ctx.pagination;
 
       await findUserById(userId);
-      const [totalNumber, records] = await trustedDevices.findActiveByUserId(userId, {
-        limit,
-        offset,
-      });
+      const records = await trustedDevices.findActiveByUserId(userId);
 
-      ctx.pagination.totalCount = totalNumber;
       ctx.body = records.map(
         (record) =>
           pick(

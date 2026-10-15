@@ -2,21 +2,19 @@ import { InteractionEvent, type SignInIdentifier } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { type TFuncKey } from 'i18next';
 import { useCallback, useContext, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { validate } from 'superstruct';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { sendVerificationCode } from '@/apis/experience';
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
 import useErrorHandler from '@/hooks/use-error-handler';
+import useMfaFlowState from '@/hooks/use-mfa-factors-state';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import useSkipMfa from '@/hooks/use-skip-mfa';
 import useSkipOptionalMfa from '@/hooks/use-skip-optional-mfa';
 import IdentifierProfileForm from '@/pages/Continue/IdentifierProfileForm';
 import ErrorPage from '@/pages/ErrorPage';
 import { UserMfaFlow } from '@/types';
-import { mfaFlowStateGuard } from '@/types/guard';
 import { codeVerificationTypeMap } from '@/utils/sign-in-experience';
 
 import styles from './index.module.scss';
@@ -34,8 +32,7 @@ const VerificationCodeMfaBinding = ({
   descriptionKey,
   invalidInputErrorKey,
 }: Props) => {
-  const { state } = useLocation();
-  const [, mfaFlowState] = validate(state, mfaFlowStateGuard);
+  const mfaFlowState = useMfaFlowState();
   const { setVerificationId, setIdentifierInputValue } = useContext(UserInteractionContext);
   const navigate = useNavigateWithPreservedSearchParams();
   const [errorMessage, setErrorMessage] = useState<string>();

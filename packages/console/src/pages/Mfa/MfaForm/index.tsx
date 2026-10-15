@@ -20,7 +20,7 @@ import FormCard from '@/components/FormCard';
 import InlineUpsell from '@/components/InlineUpsell';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { mfa } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
@@ -79,7 +79,7 @@ function MfaForm({ data, adaptiveMfa, trustedDevice, signInMethods, onMfaUpdated
   const {
     register,
     reset,
-    formState: { isDirty, isSubmitting, errors },
+    formState: { isDirty, isSubmitting, errors, dirtyFields },
     handleSubmit,
     control,
     watch,
@@ -264,7 +264,7 @@ function MfaForm({ data, adaptiveMfa, trustedDevice, signInMethods, onMfaUpdated
         return;
       }
 
-      const payload = buildMfaPatchPayload(formData, isDevFeaturesEnabled);
+      const payload = buildMfaPatchPayload(formData);
       const {
         mfa: updatedMfaConfig,
         adaptiveMfa: updatedAdaptiveMfa,
@@ -455,14 +455,12 @@ function MfaForm({ data, adaptiveMfa, trustedDevice, signInMethods, onMfaUpdated
             </FormField>
           )}
         </FormCard>
-        {/* DEV: MFA trusted devices */}
-        {isDevFeaturesEnabled && (
-          <TrustedDeviceSettings
-            register={register}
-            errors={errors}
-            isDisabled={isPolicySettingsDisabled}
-          />
-        )}
+        <TrustedDeviceSettings
+          register={register}
+          errors={errors}
+          isDisabled={isPolicySettingsDisabled}
+          isDurationDirty={Boolean(dirtyFields.trustedDeviceDurationDays)}
+        />
       </DetailsForm>
       <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />
     </>

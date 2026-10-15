@@ -3,7 +3,6 @@ import {
   Logs,
   ProductEvent,
   type WebhookLogPrefix,
-  devFeatureHookEvents,
   hook,
   hookConfigGuard,
   hookEvents,
@@ -16,7 +15,6 @@ import { conditional, deduplicate, yes } from '@silverhand/essentials';
 import { subDays } from 'date-fns';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -28,18 +26,10 @@ import { captureEvent } from '../utils/posthog.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
-const devFeatureHookEventSet = new Set<string>(devFeatureHookEvents);
-const isHookEventAvailable = (event: string) =>
-  EnvSet.values.isDevFeaturesEnabled || !devFeatureHookEventSet.has(event);
-
 export default function hookRoutes<T extends ManagementApiRouter>(
   ...[router, { id: tenantId, queries, libraries }]: RouterInitArgs<T>
 ) {
-  const availableHookEvents = [
-    hookEvents[0],
-    ...hookEvents.slice(1).filter((event) => isHookEventAvailable(event)),
-  ] satisfies [string, ...string[]];
-  const availableHookEventGuard = z.enum(availableHookEvents);
+  const availableHookEventGuard = z.enum(hookEvents);
   const nonemptyUniqueHookEventsGuard = availableHookEventGuard
     .array()
     .nonempty()

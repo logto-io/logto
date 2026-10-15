@@ -7,7 +7,7 @@ create table application_user_consent_organizations (
   application_id varchar(21) not null
     references applications (id) on update cascade on delete cascade,
   organization_id varchar(21) not null,
-  user_id varchar(21) not null,
+  user_id varchar(128) not null,
   primary key (tenant_id, application_id, organization_id, user_id),
   /** User's consent to an application should be synchronized with the user's membership in the organization. */
   foreign key (tenant_id, organization_id, user_id)

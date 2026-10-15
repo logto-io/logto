@@ -12,6 +12,8 @@ const subscription = {
   enterprise_description: 'Per grandi team e aziende con requisiti di livello aziendale.',
   admin_plan: 'Piano amministratore',
   dev_plan: 'Piano di sviluppo',
+  self_hosted_pro_plan: 'Piano Pro self-hosted',
+  self_hosted_enterprise_plan: 'Piano Azienda self-hosted',
   current_plan: 'Piano attuale',
   current_plan_description:
     "Ecco il tuo piano attuale. Puoi facilmente visualizzare l'utilizzo del tuo piano, controllare la tua prossima fattura e apportare modifiche al piano, se necessario.",
@@ -45,6 +47,13 @@ const subscription = {
     },
   },
   quota_item,
+  cancel_feedback_modal: {
+    title: 'Ci dispiace vederti andare via',
+    description:
+      'Il tuo abbonamento è stato annullato. Il tuo feedback ci aiuta a migliorare Logto. Leggiamo ogni risposta.',
+    what_made_you_cancel: 'Cosa ti ha spinto ad annullare?',
+    how_to_reconsider: 'Cosa potremmo fare per farti riconsiderare?',
+  },
   downgrade_modal: {
     title: 'Sei sicuro di voler effettuare il degrado?',
     description:
@@ -65,10 +74,18 @@ const subscription = {
     upgrade_help_tip: "Hai bisogno di aiuto per l'aggiornamento? <a>Contattaci</a>.",
     a_maximum_of: 'Un massimo di <item/>',
   },
+  billing_customer_modal: {
+    title: 'Scegli un account di fatturazione',
+    description:
+      "Seleziona l'account di fatturazione che paga per questo abbonamento o inizia un nuovo account. Puoi modificare i dettagli del pagamento nella pagina successiva.",
+    account: 'Account di fatturazione',
+    new_account: 'Nuovo account di fatturazione',
+    default_account: 'Predefinito',
+  },
   upgrade_success: 'Aggiornamento effettuato con successo a <name/>',
   downgrade_success: 'Degrado effettuato con successo a <name/>',
-  subscription_check_timeout:
-    "Il controllo dell'abbonamento è scaduto. Si prega di riprovare più tardi.",
+  subscription_check_pending:
+    'Il tuo pagamento è andato a buon fine. La configurazione del tuo abbonamento sta richiedendo più tempo del solito.',
   no_subscription: 'Nessuna sottoscrizione',
   usage,
   token_usage_notification: {

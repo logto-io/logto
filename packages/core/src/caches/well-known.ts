@@ -36,6 +36,7 @@ type WellKnownMap = {
   'account-center': AccountCenter;
   'id-token-config': Nullable<IdTokenConfig>;
   'message-rate-limit-override': Nullable<MessageRateLimitOverride>;
+  'captcha-cap-endpoint': Nullable<string>;
 };
 
 type WellKnownCacheType = keyof WellKnownMap;
@@ -53,6 +54,7 @@ const valueGuards: { [Key in WellKnownCacheType]: ZodType<WellKnownMap[Key]> } =
   'account-center': AccountCenters.guard,
   'id-token-config': idTokenConfigGuard.nullable(),
   'message-rate-limit-override': messageRateLimitOverrideGuard.nullable(),
+  'captcha-cap-endpoint': z.string().nullable(),
 };
 
 // Cannot use generic type here, but direct type works.

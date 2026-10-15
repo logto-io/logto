@@ -112,6 +112,14 @@ const applications = {
       permission_delete_confirm:
         'この操作により、ダイナミックアプリからこの権限が削除され、OAuth クライアントはこの権限に対するユーザー認可を要求できなくなります。続行してもよろしいですか？',
     },
+    client_compatibility: {
+      title: 'クライアントの互換性',
+      description:
+        'OpenID Connect をまだ完全にはサポートしていない OAuth クライアントからの認可リクエストを、Logto がどのように処理するかを調整します。これらの設定は試験的なもので、変更または削除される可能性があります。',
+      add_consent_prompt_for_offline_access: 'オフラインアクセスに同意プロンプトを追加',
+      add_consent_prompt_for_offline_access_description:
+        'OAuth クライアントが `prompt=consent` なしで `offline_access` を要求した場合、Logto は同意プロンプトを追加し、クライアントがリフレッシュトークンを受け取れるようにします。ChatGPT や Codex などのクライアントでの利用を推奨します。',
+    },
   },
   guide: {
     third_party: {

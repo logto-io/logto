@@ -11,6 +11,8 @@ const subscription = {
   enterprise_description: 'For large teams and businesses with enterprise-grade requirements.',
   admin_plan: 'Admin plan',
   dev_plan: 'Development plan',
+  self_hosted_pro_plan: 'Self-hosted Pro plan',
+  self_hosted_enterprise_plan: 'Self-hosted Enterprise plan',
   current_plan: 'Current plan',
   current_plan_description:
     'Here’s your current plan. You can easily see your plan usage, check your upcoming bill, and make changes to your plan as needed.',
@@ -44,6 +46,13 @@ const subscription = {
     },
   },
   quota_item,
+  cancel_feedback_modal: {
+    title: 'Sorry to see you go',
+    description:
+      'Your subscription has been canceled. Your feedback helps us make Logto better. We read every response.',
+    what_made_you_cancel: 'What made you cancel?',
+    how_to_reconsider: 'What could we do to make you reconsider?',
+  },
   downgrade_modal: {
     title: 'Are you sure you want to downgrade?',
     description:
@@ -64,9 +73,18 @@ const subscription = {
     upgrade_help_tip: 'Need help upgrading? <a>Contact us</a>.',
     a_maximum_of: 'A maximum of <item/>',
   },
+  billing_customer_modal: {
+    title: 'Choose a billing account',
+    description:
+      'Select the billing account that pays for this subscription, or start a new one. You can change payment details on the next page.',
+    account: 'Billing account',
+    new_account: 'New billing account',
+    default_account: 'Default',
+  },
   upgrade_success: 'Successfully upgraded to <name/>',
   downgrade_success: 'Successfully downgraded to <name/>',
-  subscription_check_timeout: 'Subscription check timed out. Please refresh later.',
+  subscription_check_pending:
+    'Your payment went through. Setting up your subscription is taking longer than usual.',
   no_subscription: 'No subscription',
   usage,
   token_usage_notification: {

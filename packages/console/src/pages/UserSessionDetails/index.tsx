@@ -26,6 +26,7 @@ import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import { type RequestError } from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useTheme from '@/hooks/use-theme';
 
 import RevokeSessionConfirmModal from './RevokeSessionConfirmModal';
@@ -58,6 +59,9 @@ function UserSessionDetails() {
   const navigate = useNavigate();
   const { mutate: mutateGlobal } = useSWRConfig();
   const { userId, sessionId } = useParams();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
 
   const [showRevokeConfirmModal, setShowRevokeConfirmModal] = useState(false);
 
@@ -200,20 +204,22 @@ function UserSessionDetails() {
             <div className={styles.content}>
               <div className={styles.eventName}>
                 <span>{headerTitle}</span>
-                <ActionMenu
-                  buttonProps={{ icon: <More />, size: 'large' }}
-                  title={<DynamicT forKey="general.more_options" />}
-                >
-                  <ActionMenuItem
-                    icon={<Delete />}
-                    type="danger"
-                    onClick={() => {
-                      setShowRevokeConfirmModal(true);
-                    }}
+                {!isReadOnly && (
+                  <ActionMenu
+                    buttonProps={{ icon: <More />, size: 'large' }}
+                    title={<DynamicT forKey="general.more_options" />}
                   >
-                    <DynamicT forKey="user_details.sessions.revoke_session" />
-                  </ActionMenuItem>
-                </ActionMenu>
+                    <ActionMenuItem
+                      icon={<Delete />}
+                      type="danger"
+                      onClick={() => {
+                        setShowRevokeConfirmModal(true);
+                      }}
+                    >
+                      <DynamicT forKey="user_details.sessions.revoke_session" />
+                    </ActionMenuItem>
+                  </ActionMenu>
+                )}
               </div>
               <div className={styles.basicInfo}>
                 {infoFields.map(({ key, labelKey, value }) => (

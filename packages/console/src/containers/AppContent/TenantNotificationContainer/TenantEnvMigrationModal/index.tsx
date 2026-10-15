@@ -12,6 +12,7 @@ import Button, { LinkButton } from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import ModalLayout from '@/ds-components/ModalLayout';
 import useConfigs from '@/hooks/use-configs';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTheme from '@/hooks/use-theme';
 import modalStyles from '@/scss/modal.module.scss';
@@ -33,6 +34,9 @@ function TenantEnvMigrationModal() {
   const { configs, updateConfigs } = useConfigs();
   const { developmentTenantMigrationNotification: migrationData } = configs ?? {};
   const { getDocumentationUrl } = useDocumentationUrl();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
 
   const onClose = useCallback(async () => {
     if (!migrationData) {
@@ -46,7 +50,8 @@ function TenantEnvMigrationModal() {
     });
   }, [migrationData, updateConfigs]);
 
-  if (!migrationData || migrationData.readAt) {
+  // Dismissing marks the notice read for the whole tenant, which a read-only member cannot save.
+  if (isReadOnly || !migrationData || migrationData.readAt) {
     return null;
   }
 

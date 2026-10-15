@@ -1,6 +1,6 @@
 const oidc = {
   aborted: 'Конечный пользователь прервал взаимодействие.',
-  invalid_scope: 'Недопустимая область: {{error_description}}.',
+  invalid_scope: 'Недопустимая область: {{scope}}.',
   invalid_token: 'Недействительный токен.',
   invalid_client_metadata: 'Недопустимые метаданные клиента.',
   insufficient_scope: 'Отсутствует область токена `{{scope}}`.',

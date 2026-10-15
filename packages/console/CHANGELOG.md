@@ -1,5 +1,87 @@
 # Change Log
 
+## 1.42.0
+
+### Minor Changes
+
+- 861d5d7: support license-based entitlements for self-hosted deployments
+
+  Install and replace a license in Console under Tenant settings → License or through the Management API. View its plan, environment, expiration, and refresh status, with weekly refresh and a 30-day grace period before returning to OSS defaults.
+
+  View self-hosted licenses and retrieve production and non-production keys from your account in Logto Cloud Console, without creating a Cloud tenant.
+
+  Licensed deployments can hide Logto branding, upload a custom sign-in UI using their own storage, customize its CSP, increase the SAML application limit, require Console MFA, and invite Console members.
+
+### Patch Changes
+
+- a67d190: fix Console permission pickers timing out on tenants with many Management API resources
+
+  `GET /api/resources` now accepts an `excludeManagementApis` query parameter that filters out Logto Management API resources in the database. The Console permission pickers for third-party apps, dynamic apps, organization roles, and user roles use it instead of loading every resource and filtering in the browser.
+
+## 1.41.0
+
+### Minor Changes
+
+- 655317e: support Cap as a self-hosted CAPTCHA provider
+
+  [Cap](https://capjs.js.org) is an open-source, self-hosted proof-of-work CAPTCHA. It needs no third-party service, so bot protection keeps working in regions where Cloudflare Turnstile and Google reCAPTCHA are unreachable or unreliable.
+
+  To use it, deploy a publicly reachable [Cap Standalone](https://capjs.js.org/guide/standalone/) instance, create a site key, then go to Console > Security > CAPTCHA and add Cap with the instance endpoint, site key, and secret key. The same configuration is available through the `PUT /api/captcha-provider` Management API with `type: "Cap"`.
+
+  While Cap is the CAPTCHA provider, the sign-in page's Content Security Policy allows the Cap instance and dynamic JavaScript evaluation, which Cap's bot-detection (instrumentation) challenge requires.
+
+- 022317f: add a client compatibility setting so dynamic app clients such as ChatGPT and Codex can receive refresh tokens
+
+  These clients request `offline_access` without `prompt=consent`, so they don't receive a refresh token and users have to sign in again whenever the access token expires. Turn on "Add consent prompt for offline access" under Client compatibility in the dynamic app settings, and Logto adds the consent prompt to these requests. The setting is experimental and off by default, and audit logs show the added `consent` in `prompt`.
+
+- 5bd627f: add a configurable score threshold for reCAPTCHA Enterprise so admins can control how strict CAPTCHA verification is
+- 3f9fd15: add authentication policies for SAML applications
+
+  SAML applications force fresh authentication by default, as before. To let a SAML application reuse an existing Logto session, turn off "Always force authentication" in the application settings, or set `authnRequestConfig.forceAuthn` to `false` using the SAML application Management API. The service provider can still require fresh authentication for a single sign-in with `ForceAuthn="true"` (SAML 2.0 core, section 3.4.1).
+
+  SAML assertions report the actual authentication time.
+
+  To require signed authentication requests, set `authnRequestConfig.requireSignedAuthnRequests` to `true` and provide the service provider’s PEM-encoded RSA X.509 certificate in `authnRequestConfig.signingCertificate`. Both HTTP-POST and HTTP-Redirect signatures are verified. Unsigned requests remain accepted by default.
+
+- c5bd438: add MFA trusted devices with configurable policies and device management
+
+  Configure tenant-wide trusted-device policies and organization-level restrictions. After completing MFA, users can choose whether to trust their device on a dedicated page at the end of sign-in or sign-up, then skip repeated MFA on that browser. Manage trusted devices through Console, Account Center, the Management API, and the Account API, and subscribe to device lifecycle webhooks.
+
+### Patch Changes
+
+- 979e37c: fix webhook test results being displayed on other webhooks' details pages
+
+  Test results are now persisted per webhook, so a test result from one webhook is no longer shown when viewing another webhook.
+
+## 1.40.0
+
+### Minor Changes
+
+- b64d46d495: unify social callback URI between Sign-in Experience and Account Center
+- 8b2aaab9b0: add dynamic app support (OAuth Client ID Metadata Documents)
+
+  The dynamic app lets compatible public clients, such as MCP clients, connect to your tenant without registering an application. Following the OAuth Client ID Metadata Documents (CIMD) draft, such a client presents a public HTTPS URL as its `client_id`, and Logto fetches the client metadata from that URL.
+
+  Enable it from the dynamic app card in the third-party app section on the create application page in Console. The switch is tenant-level and off by default, and requires the OIDC provider SSRF protection to be active. Control what dynamic app clients can request with the permission settings on the dynamic app page.
+
+- 28885b42d5: add optional signed SAML authentication requests for enterprise SSO connectors
+
+  Enterprise SSO SAML connectors can now sign the SAML authentication request (AuthnRequest) sent to the identity provider. Generate a service-provider signing key on the connector, download its certificate and register it at the identity provider, then enable "Sign authentication request". RSA-SHA256 (default) and RSA-SHA512 are supported, and staged keys allow graceful, zero-downtime certificate rotation. Identity-provider metadata advertising `WantAuthnRequestsSigned` no longer breaks SAML sign-in when signing is disabled.
+
+- 860188898f: run Custom JWT and Actions scripts on the consolidated script runtime
+
+  Self-hosted deployments execute Custom JWT and Actions scripts on a pooled worker-thread runner with a 5-second wall-clock deadline and a 128 MB memory budget, so a runaway or never-settling async script fails instead of hanging token issuance. Script return values must be JSON-serializable.
+
+### Patch Changes
+
+- f0d369f377: drop deleted profile fields from account center and sign-up configs on save
+
+  When a custom profile field is removed from Collect user profile, saving Account Center (or sign-up) settings no longer fails with `custom_profile_fields.entity_not_exists_with_names`. Stale field references are ignored on save, and deleted fields remain removable in the Console editor even when their permission control is Off.
+
+- 28c3c9283e: treat Gmail address aliases as the same address in custom email allowlist and blocklist rules
+
+  The matcher treats gmail.com and googlemail.com as equivalent and ignores local-part dots. The Console now shows custom email rule examples and Gmail matching behavior in the field descriptions, with shorter input placeholders.
+
 ## 1.39.0
 
 ### Minor Changes
@@ -734,14 +816,14 @@
   For example, in the JavaScript SDK:
 
   ```ts
-  import LogtoClient from "@logto/client";
+  import LogtoClient from '@logto/client';
 
   const logtoClient = new LogtoClient(/* your configuration */);
 
   logtoClient.signIn({
-    redirectUri: "https://your-app.com/callback",
+    redirectUri: 'https://your-app.com/callback',
     extraParams: {
-      organization_id: "<organization-id>",
+      organization_id: '<organization-id>',
     },
   });
   ```

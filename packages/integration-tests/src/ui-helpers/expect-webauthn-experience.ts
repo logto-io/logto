@@ -50,12 +50,12 @@ export default class ExpectWebAuthnExperience extends ExpectMfaExperience {
   }
 
   async toCreatePasskey() {
-    this.toBeAt('mfa-binding/WebAuthn');
+    await this.waitToBeAt('mfa-binding/WebAuthn');
     await this.toClickCeremonyButton('Create a passkey');
   }
 
   async toVerifyViaPasskey() {
-    this.toBeAt('mfa-verification/WebAuthn');
+    await this.waitToBeAt('mfa-verification/WebAuthn');
     await this.toClickCeremonyButton('Verify via passkey');
   }
 

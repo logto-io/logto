@@ -46,6 +46,20 @@ const session = {
     suggest_additional_mfa:
       'より強力な保護のため、別のMFA方法の追加を検討してください。この手順はスキップして続行できます。',
   },
+  trusted_device_suggest_opt_in: 'このデバイスを信頼するか選択してください。',
+  step_up: {
+    invalid_interaction_event:
+      'ステップアップ認証はサインインのインタラクションでのみ利用できます。',
+    subject_not_found:
+      'ステップアップ認証のための認証済みセッションが見つかりません。もう一度サインインしてください。',
+    forbidden_route: 'このルートはステップアップ認証中は許可されていません。',
+    forbidden_identifier:
+      'ステップアップ認証中は識別子を指定できません。識別子フィールドを省略して再試行してください。',
+    acr_not_satisfied:
+      '完了した認証は要求された認証コンテキストを満たしていません。別の方法で認証してください。',
+    require_verification:
+      '要求された認証コンテキストに到達するには、既存のいずれかの方法による認証が必要です。',
+  },
   passkey_sign_in: {
     pending_info_not_found:
       '保留中のパスキーサインイン情報が見つかりません。サインインフローを再開始してください。',

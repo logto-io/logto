@@ -9,11 +9,11 @@ import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import NotFound from '@/pages/NotFound';
-import { shouldShowOssTenantMembersTab } from '@/pages/OssTenantSettings/utils';
 
 const TenantSettings = safeLazy(async () => import('@/pages/TenantSettings'));
 const OssTenantSettings = safeLazy(async () => import('@/pages/OssTenantSettings'));
-const OssTenantMembers = safeLazy(async () => import('@/pages/OssTenantSettings/Members'));
+const OssTenantLicense = safeLazy(async () => import('@/pages/OssTenantSettings/License'));
+const OssTenantBasicSettings = safeLazy(async () => import('@/pages/OssTenantSettings/Settings'));
 const TenantBasicSettings = safeLazy(
   async () => import('@/pages/TenantSettings/TenantBasicSettings')
 );
@@ -82,10 +82,12 @@ const useCloudTenantSettings = () => {
   return tenantSettings;
 };
 
-const useOssTenantSettings = (): RouteObject =>
-  useMemo(() => {
-    const shouldShowMembersTab = shouldShowOssTenantMembersTab({ isCloud: false });
+const useOssTenantSettings = (): RouteObject => {
+  const {
+    access: { canRemoveMember },
+  } = useCurrentTenantScopes();
 
+  return useMemo(() => {
     return {
       path: 'tenant-settings',
       element: <OssTenantSettings />,
@@ -94,20 +96,33 @@ const useOssTenantSettings = (): RouteObject =>
           index: true,
           element: <Navigate replace to={TenantSettingsTabs.OidcConfigs} />,
         },
+        // The route does not follow the async entitlement and requirement state,
+        // which only decide the tab link, so the page never turns into NotFound while in use.
+        {
+          path: TenantSettingsTabs.Settings,
+          element: <OssTenantBasicSettings />,
+        },
         {
           path: TenantSettingsTabs.OidcConfigs,
           element: <OidcConfigs />,
         },
-        ...condArray(
-          shouldShowMembersTab && [
-            {
-              path: TenantSettingsTabs.Members,
-              element: <OssTenantMembers />,
-            },
-          ]
-        ),
+        {
+          path: `${TenantSettingsTabs.Members}/*`,
+          element: <TenantMembers />,
+          // Existing invitations remain manageable after the collaboration entitlement lapses.
+          children: [
+            { path: '*', element: <NotFound /> },
+            { index: true, element: <Members /> },
+            ...condArray(canRemoveMember && [{ path: 'invitations', element: <Invitations /> }]),
+          ],
+        },
+        {
+          path: TenantSettingsTabs.License,
+          element: <OssTenantLicense />,
+        },
       ],
     };
-  }, []);
+  }, [canRemoveMember]);
+};
 
 export const useTenantSettings = isCloud ? useCloudTenantSettings : useOssTenantSettings;

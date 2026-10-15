@@ -28,6 +28,7 @@ import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import type { RequestError } from '@/hooks/use-api';
 import useConnectorApi from '@/hooks/use-connector-api';
 import useConnectorGroups from '@/hooks/use-connector-groups';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import DemoConnectorNotice from '@/onboarding/components/DemoConnectorNotice';
 import pageLayout from '@/scss/page-layout.module.scss';
@@ -68,6 +69,9 @@ function Connectors() {
   const { tab = ConnectorsTabs.Passwordless, createType, factoryId } = useParams();
   const createConnectorType = parseToConnectorType(createType);
   const { navigate } = useTenantPathname();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const isSocial = tab === ConnectorsTabs.Social;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { createConnector } = useConnectorApi();
@@ -99,10 +103,10 @@ function Connectors() {
   const hasDemoConnector = connectors?.some(({ isDemo }) => isDemo);
 
   const connectorToShowInGuide = useMemo(() => {
-    if (factories && factoryId) {
+    if (factories && factoryId && !isReadOnly) {
       return factories.find(({ id }) => id === factoryId);
     }
-  }, [factoryId, factories]);
+  }, [factoryId, factories, isReadOnly]);
 
   return (
     <div className={classNames(pageLayout.container, styles.container)}>
@@ -113,7 +117,7 @@ function Connectors() {
           subtitle="connectors.subtitle"
           learnMoreLink={{ href: connectorsDocumentLink }}
         />
-        {isSocial && (
+        {isSocial && !isReadOnly && (
           <Button
             icon={<Plus />}
             type="primary"
@@ -155,7 +159,7 @@ function Connectors() {
             dataIndex: 'delete',
             colSpan: 1,
             render: (connectorGroup) =>
-              connectorGroup.isDemo ? (
+              connectorGroup.isDemo && !isReadOnly ? (
                 <ConnectorDeleteButton connectorGroup={connectorGroup} />
               ) : null,
           },
@@ -185,15 +189,17 @@ function Connectors() {
               description="connectors.placeholder_description"
               learnMoreLink={{ href: socialConnectorsDocumentLink }}
               action={
-                <Button
-                  title="connectors.create"
-                  type="primary"
-                  size="large"
-                  icon={<Plus />}
-                  onClick={() => {
-                    navigate(buildCreatePathname(ConnectorType.Social));
-                  }}
-                />
+                !isReadOnly && (
+                  <Button
+                    title="connectors.create"
+                    type="primary"
+                    size="large"
+                    icon={<Plus />}
+                    onClick={() => {
+                      navigate(buildCreatePathname(ConnectorType.Social));
+                    }}
+                  />
+                )
               }
             />
           )
@@ -201,7 +207,7 @@ function Connectors() {
         onRetry={async () => mutate(undefined, true)}
       />
       <CreateConnectorForm
-        isOpen={Boolean(createConnectorType)}
+        isOpen={Boolean(createConnectorType) && !isReadOnly}
         type={createConnectorType}
         onClose={async (id) => {
           if (createConnectorType && id) {

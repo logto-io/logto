@@ -1,0 +1,18 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: _.unit(6);
+  height: 100vh;
+  padding: _.unit(6);
+  color: var(--color-text);
+
+  .message {
+    max-width: 470px;
+    font: var(--font-body-2);
+    text-align: center;
+  }
+}

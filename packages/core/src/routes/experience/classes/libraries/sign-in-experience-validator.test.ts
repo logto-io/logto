@@ -14,7 +14,10 @@ import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
-import { createNewCodeVerificationRecord } from '../verifications/code-verification.js';
+import {
+  createNewCodeVerificationRecord,
+  createSubjectCodeVerificationRecord,
+} from '../verifications/code-verification.js';
 import { EnterpriseSsoVerification } from '../verifications/enterprise-sso-verification.js';
 import { type VerificationRecord } from '../verifications/index.js';
 import { OneTimeTokenVerification } from '../verifications/one-time-token-verification.js';
@@ -74,6 +77,26 @@ const verificationCodeVerificationRecords = Object.freeze({
       value: 'value',
     },
     TemplateType.SignIn
+  ),
+});
+
+const subjectVerificationRecords = Object.freeze({
+  password: PasswordVerification.createForUser(
+    mockTenant.libraries,
+    mockTenant.queries,
+    'subject-user-id'
+  ),
+  [SignInIdentifier.Email]: createSubjectCodeVerificationRecord(
+    mockTenant.libraries,
+    mockTenant.queries,
+    { type: SignInIdentifier.Email, value: `subject@${emailDomain}` },
+    'subject-user-id'
+  ),
+  [SignInIdentifier.Phone]: createSubjectCodeVerificationRecord(
+    mockTenant.libraries,
+    mockTenant.queries,
+    { type: SignInIdentifier.Phone, value: 'value' },
+    'subject-user-id'
   ),
 });
 
@@ -433,6 +456,25 @@ describe('SignInExperienceValidator', () => {
           },
         ],
       },
+      'subject-bound records with no sign-in methods enabled': {
+        signInExperience: {
+          ...mockSignInExperience,
+          signIn: {
+            methods: [],
+          },
+        },
+        cases: [
+          { verificationRecord: subjectVerificationRecords.password, accepted: true },
+          {
+            verificationRecord: subjectVerificationRecords[SignInIdentifier.Email],
+            accepted: true,
+          },
+          {
+            verificationRecord: subjectVerificationRecords[SignInIdentifier.Phone],
+            accepted: true,
+          },
+        ],
+      },
       'single sign-on enabled': {
         signInExperience: {
           ...mockSignInExperience,
@@ -550,6 +592,22 @@ describe('SignInExperienceValidator', () => {
           socialVerificationRecord
         )
       ).rejects.toMatchError(expectError);
+    });
+
+    it('should not throw for subject-bound email verification code record', async () => {
+      ssoConnectors.getAvailableSsoConnectors.mockResolvedValueOnce([mockSsoConnector]);
+
+      const signInExperienceSettings = new SignInExperienceValidator(
+        mockTenant.libraries,
+        mockTenant.queries
+      );
+
+      await expect(
+        signInExperienceSettings.guardIdentificationMethod(
+          InteractionEvent.SignIn,
+          subjectVerificationRecords[SignInIdentifier.Email]
+        )
+      ).resolves.not.toThrow();
     });
 
     it('should throw when SSO user tries to sign in with passkey', async () => {

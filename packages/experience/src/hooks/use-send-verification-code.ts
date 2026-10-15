@@ -11,6 +11,7 @@ import { sendVerificationCodeApi } from '@/apis/utils';
 import useApi from '@/hooks/use-api';
 import useErrorHandler, { type ErrorHandlers } from '@/hooks/use-error-handler';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
+import useStepUpContext from '@/hooks/use-step-up-context';
 import useToast from '@/hooks/use-toast';
 import {
   UserFlow,
@@ -34,6 +35,7 @@ const useSendVerificationCode = (flow: UserFlow, replaceCurrentPage?: boolean) =
   const { t } = useTranslation();
   const asyncSendVerificationCode = useApi(sendVerificationCodeApi);
   const { setVerificationId } = useContext(UserInteractionContext);
+  const { isPureStepUp } = useStepUpContext();
 
   const clearErrorMessage = useCallback(() => {
     setErrorMessage('');
@@ -97,7 +99,7 @@ const useSendVerificationCode = (flow: UserFlow, replaceCurrentPage?: boolean) =
             // Append the interaction event to the state so that we can use it in the next step
             ...conditional(
               flow === UserFlow.Continue && {
-                state: { interactionEvent },
+                state: { interactionEvent, ...conditional(isPureStepUp && { isStepUp: true }) },
               }
             ),
           }
@@ -108,6 +110,7 @@ const useSendVerificationCode = (flow: UserFlow, replaceCurrentPage?: boolean) =
       asyncSendVerificationCode,
       flow,
       handleError,
+      isPureStepUp,
       navigate,
       replaceCurrentPage,
       setVerificationId,

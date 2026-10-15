@@ -44,6 +44,7 @@ function Guide({ type, onClose }: Props) {
       secretKey: '',
       projectId: '',
       mode: RecaptchaEnterpriseMode.Invisible,
+      scoreThreshold: 0.5,
     },
   });
 

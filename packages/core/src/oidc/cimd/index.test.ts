@@ -8,11 +8,17 @@ import type Queries from '#src/tenants/Queries.js';
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
 
-const loadCimdModule = async ({ isOidcProviderSsrfProtectionEnabled = true } = {}) => {
+const loadCimdModule = async ({
+  isSsrfProtectionEnabled = true,
+  ssrfAllowedAddresses = [],
+}: {
+  isSsrfProtectionEnabled?: boolean;
+  ssrfAllowedAddresses?: string[];
+} = {}) => {
   jest.resetModules();
   mockEsm('#src/env-set/index.js', () => ({
     EnvSet: {
-      values: { isOidcProviderSsrfProtectionEnabled },
+      values: { isSsrfProtectionEnabled, ssrfAllowedAddresses },
     },
   }));
 
@@ -81,7 +87,7 @@ const loadEnabledFeature = async ({
 };
 
 describe('isCimdEffectivelyEnabled', () => {
-  it('is enabled only when both conditions hold', async () => {
+  it('is enabled only when the tenant config, SSRF protection, and empty allowlist all hold', async () => {
     const { isCimdEffectivelyEnabled } = await loadCimdModule();
     expect(isCimdEffectivelyEnabled(buildEnvSet(true))).toBe(true);
   });
@@ -93,8 +99,16 @@ describe('isCimdEffectivelyEnabled', () => {
 
   it('is disabled when the provider SSRF protection is off, regardless of the stored config', async () => {
     const { isCimdEffectivelyEnabled } = await loadCimdModule({
-      isOidcProviderSsrfProtectionEnabled: false,
+      isSsrfProtectionEnabled: false,
     });
+    expect(isCimdEffectivelyEnabled(buildEnvSet(true))).toBe(false);
+  });
+
+  it('is disabled when private addresses are allowlisted', async () => {
+    const { isCimdEffectivelyEnabled } = await loadCimdModule({
+      ssrfAllowedAddresses: ['10.0.0.0/8'],
+    });
+
     expect(isCimdEffectivelyEnabled(buildEnvSet(true))).toBe(false);
   });
 });
@@ -115,7 +129,7 @@ describe('shouldAttributeToCimd', () => {
 
   it('attributes even when cimd is not effectively enabled for the tenant', async () => {
     const { shouldAttributeToCimd } = await loadCimdModule({
-      isOidcProviderSsrfProtectionEnabled: false,
+      isSsrfProtectionEnabled: false,
     });
     expect(shouldAttributeToCimd(cimdClientId)).toBe(true);
   });
@@ -146,27 +160,27 @@ describe('getClientIdentifierPayload', () => {
   });
 });
 
-describe('isCimdClient', () => {
+describe('shouldTreatAsCimdClient', () => {
   const cimdClientId = 'https://client.example.com/client-metadata.json';
 
-  it('is a cimd client when the feature is effective and the identifier is url-shaped', async () => {
-    const { isCimdClient } = await loadCimdModule();
-    expect(isCimdClient(buildEnvSet(true), cimdClientId)).toBe(true);
+  it('treats a url-shaped identifier as a cimd client when the feature is effective', async () => {
+    const { shouldTreatAsCimdClient } = await loadCimdModule();
+    expect(shouldTreatAsCimdClient(buildEnvSet(true), cimdClientId)).toBe(true);
   });
 
-  it('is not a cimd client for a registered application id', async () => {
-    const { isCimdClient } = await loadCimdModule();
-    expect(isCimdClient(buildEnvSet(true), 'registered_client_id')).toBe(false);
+  it('does not treat a registered application id as a cimd client', async () => {
+    const { shouldTreatAsCimdClient } = await loadCimdModule();
+    expect(shouldTreatAsCimdClient(buildEnvSet(true), 'registered_client_id')).toBe(false);
   });
 
-  it('is not a cimd client without an identifier', async () => {
-    const { isCimdClient } = await loadCimdModule();
-    expect(isCimdClient(buildEnvSet(true))).toBe(false);
+  it('does not treat a missing identifier as a cimd client', async () => {
+    const { shouldTreatAsCimdClient } = await loadCimdModule();
+    expect(shouldTreatAsCimdClient(buildEnvSet(true))).toBe(false);
   });
 
-  it('is not a cimd client when the feature is not effectively enabled', async () => {
-    const { isCimdClient } = await loadCimdModule();
-    expect(isCimdClient(buildEnvSet(false), cimdClientId)).toBe(false);
+  it('does not treat a url-shaped identifier as a cimd client when the feature is not effectively enabled', async () => {
+    const { shouldTreatAsCimdClient } = await loadCimdModule();
+    expect(shouldTreatAsCimdClient(buildEnvSet(false), cimdClientId)).toBe(false);
   });
 });
 

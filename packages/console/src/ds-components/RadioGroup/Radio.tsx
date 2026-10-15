@@ -3,6 +3,8 @@ import classNames from 'classnames';
 import type { KeyboardEventHandler, ReactElement, ReactNode } from 'react';
 import { useCallback } from 'react';
 
+import { useReadOnlyField } from '@/contexts/ReadOnlyFieldScope';
+
 import type DangerousRaw from '../DangerousRaw';
 import DynamicT from '../DynamicT';
 
@@ -54,9 +56,12 @@ function Radio({
   trailingIcon,
   hasCheckIconForCard = true,
 }: Props) {
+  const isReadOnlyField = useReadOnlyField();
+  const isBlocked = Boolean(isDisabled) || isReadOnlyField;
+
   const handleKeyPress: KeyboardEventHandler<HTMLDivElement> = useCallback(
     (event) => {
-      if (isDisabled) {
+      if (isBlocked) {
         return;
       }
 
@@ -65,7 +70,7 @@ function Radio({
         event.preventDefault();
       }
     },
-    [isDisabled, onClick]
+    [isBlocked, onClick]
   );
 
   return (
@@ -75,12 +80,14 @@ function Radio({
         styles[type],
         isChecked && styles.checked,
         isDisabled && styles.disabled,
+        isReadOnlyField && styles.readOnly,
         className
       )}
-      // eslint-disable-next-line jsx-a11y/role-has-required-aria-props
       role="radio"
-      tabIndex={tabIndex}
-      onClick={isDisabled ? undefined : onClick}
+      aria-checked={Boolean(isChecked)}
+      aria-disabled={isBlocked ? true : undefined}
+      tabIndex={isBlocked ? -1 : tabIndex}
+      onClick={isBlocked ? undefined : onClick}
       onKeyPress={handleKeyPress}
     >
       <div className={styles.content}>

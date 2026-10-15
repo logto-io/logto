@@ -13,6 +13,11 @@
             "in": "query",
             "name": "includeScopes",
             "description": "If it's provided with a truthy value (`true`, `1`, `yes`), the scopes of each resource will be included in the response."
+          },
+          {
+            "in": "query",
+            "name": "excludeManagementApis",
+            "description": "If it's provided with a truthy value (`true`, `1`, `yes`), Logto Management API resources will be excluded from the response."
           }
         ],
         "responses": {

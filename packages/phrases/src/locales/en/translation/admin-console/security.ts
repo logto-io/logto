@@ -38,6 +38,11 @@ const security = {
       description:
         "Cloudflare's smart CAPTCHA alternative that provides non-intrusive bot protection while ensuring a seamless user experience without visual puzzles.",
     },
+    cap: {
+      name: 'Cap',
+      description:
+        'Open-source, self-hosted proof-of-work CAPTCHA without visual puzzles or third-party services, ideal for regions where other CAPTCHA services are unreachable.',
+    },
   },
   captcha_details: {
     back_to_security: 'Back to security',
@@ -53,6 +58,10 @@ const security = {
     domain_placeholder: 'www.google.com (default) or recaptcha.net',
     recaptcha_key_id: 'reCAPTCHA key ID',
     recaptcha_api_key: 'API key of the project',
+    cap_endpoint: 'Cap endpoint',
+    cap_endpoint_placeholder: 'https://cap.example.com',
+    cap_endpoint_http_notice:
+      'This endpoint uses HTTP, which is only suitable for local development. Browsers block HTTP requests from an HTTPS sign-in page, and the secret key would be sent unencrypted. Use HTTPS in production.',
     deletion_description: 'Are you sure you want to delete this CAPTCHA provider?',
     captcha_deleted: 'CAPTCHA provider deleted successfully',
     setup_captcha: 'Setup CAPTCHA',
@@ -61,6 +70,10 @@ const security = {
     mode_checkbox: 'Checkbox',
     mode_notice:
       'The verification mode is defined in your reCAPTCHA key settings in Google Cloud Console. Changing the mode here requires a matching key type.',
+    score_threshold: 'Score threshold',
+    score_threshold_description:
+      'Scores below the threshold are rejected. 0.0 allows all, 1.0 only allows perfect scores. Default is 0.5.',
+    score_threshold_error: 'Score threshold must be between 0 and 1.',
   },
   password_policy: {
     password_requirements: 'Password requirements',

@@ -1,5 +1,62 @@
 # Change Log
 
+## 1.23.0
+
+### Minor Changes
+
+- 655317e: support Cap as a self-hosted CAPTCHA provider
+
+  [Cap](https://capjs.js.org) is an open-source, self-hosted proof-of-work CAPTCHA. It needs no third-party service, so bot protection keeps working in regions where Cloudflare Turnstile and Google reCAPTCHA are unreachable or unreliable.
+
+  To use it, deploy a publicly reachable [Cap Standalone](https://capjs.js.org/guide/standalone/) instance, create a site key, then go to Console > Security > CAPTCHA and add Cap with the instance endpoint, site key, and secret key. The same configuration is available through the `PUT /api/captcha-provider` Management API with `type: "Cap"`.
+
+  While Cap is the CAPTCHA provider, the sign-in page's Content Security Policy allows the Cap instance and dynamic JavaScript evaluation, which Cap's bot-detection (instrumentation) challenge requires.
+
+- c5bd438: add MFA trusted devices with configurable policies and device management
+
+  Configure tenant-wide trusted-device policies and organization-level restrictions. After completing MFA, users can choose whether to trust their device on a dedicated page at the end of sign-in or sign-up, then skip repeated MFA on that browser. Manage trusted devices through Console, Account Center, the Management API, and the Account API, and subscribe to device lifecycle webhooks.
+
+- 0429b3a: support the `theme` authentication parameter to control the sign-in experience theme
+
+  Pass `theme=light` or `theme=dark` as an extra authentication parameter to render the sign-in experience in that theme instead of following the end-user's OS setting, so applications with their own light / dark toggle can keep Logto in sync. The override lasts for the whole authentication flow, including page reloads, social / SSO callbacks, and the consent page. It is ignored when dark mode is disabled in the sign-in experience settings, and unsupported values are ignored.
+
+### Patch Changes
+
+- e11805c: opt the sign-in experience out of browser auto-translation
+
+  Browser auto-translation replaces the text nodes React created (`<font><font>…</font></font>`). React's DOM bookkeeping no longer matches the document, so the next update throws `NotFoundError: Failed to execute 'removeChild' on 'Node'`; the experience app has no error boundary, so the whole tree unmounts and the user is left on a blank page in the middle of signing in or signing up — a reload is the only way out.
+
+  The experience is already localized per tenant (custom phrases plus language detection), so the page now ships `translate="no"` and `<meta name="google" content="notranslate">`, which is what Chrome, Edge and Safari read before offering or applying a translation.
+
+- 8ee61e3: only offer to link a social account to an existing identifier when that identifier can sign in with a verification code
+
+  When a required secondary identifier (such as a phone number) was already used by another account during social sign-up, the "link and continue" modal was shown even if verification code sign-in was disabled for that identifier. Linking then failed with `user.sign_in_method_not_enabled` and left the user stuck. The user is now asked to use another identifier instead.
+
+## 1.22.0
+
+### Minor Changes
+
+- b64d46d495: unify social callback URI between Sign-in Experience and Account Center
+- 8b2aaab9b0: add dynamic app support (OAuth Client ID Metadata Documents)
+
+  The dynamic app lets compatible public clients, such as MCP clients, connect to your tenant without registering an application. Following the OAuth Client ID Metadata Documents (CIMD) draft, such a client presents a public HTTPS URL as its `client_id`, and Logto fetches the client metadata from that URL.
+
+  Enable it from the dynamic app card in the third-party app section on the create application page in Console. The switch is tenant-level and off by default, and requires the OIDC provider SSRF protection to be active. Control what dynamic app clients can request with the permission settings on the dynamic app page.
+
+### Patch Changes
+
+- 317fa41400: allow users to complete CAPTCHA when switching from passkey to verification code sign-in
+- 7978c638a9: let browsers suggest a strong password when setting a new password
+
+  The sign-in experience keeps a hidden copy of the identifier next to the new password field so password managers can save the credential under the right account. That field carried no `autocomplete` hint and was hidden with the HTML `hidden` attribute, which browsers skip when they look for the username context of a password field. As a result, Safari on iOS and macOS never offered to generate a strong password on the "Set password" step. The field is now marked as the username and hidden visually instead, and it carries the identifier the user actually entered in the current flow, including when resetting a password.
+
+- e6ed7d8be9: remove the unused Experience Springboard route to prevent untrusted redirects
+- c62e043982: validate the URL scheme of the social sign-in redirect target and native callback link
+
+  The social landing page now requires `redirect_to` to be an `http(s)` URL, and accepts a native
+  callback link only when it is a custom app scheme. The callback page re-checks the stored link
+  before handing control back to the native app, and falls back to the web flow otherwise.
+
 ## 1.21.0
 
 ### Minor Changes
@@ -219,9 +276,9 @@
 
   ```ts
   await logtoClient.signIn({
-    redirectUri: "https://your.app/callback",
+    redirectUri: 'https://your.app/callback',
     extraParams: {
-      ui_locales: "fr-CA fr en",
+      ui_locales: 'fr-CA fr en',
     },
   });
   ```
@@ -536,13 +593,13 @@
   // Example usage (React project using React SDK)
   void signIn({
     redirectUri,
-    firstScreen: "identifier:sign_in",
+    firstScreen: 'identifier:sign_in',
     /**
      * Optional. Specifies which sign-in methods to display on the identifier sign-in page.
      * If not specified, the default sign-in experience configuration will be used.
      * This option is effective when the `firstScreen` value is `identifier:sign_in`, `identifier:register`, or `reset_password`.
      */
-    identifiers: ["email", "phone"],
+    identifiers: ['email', 'phone'],
   });
   ```
 
@@ -556,8 +613,8 @@
   // Example usage (React project using React SDK)
   void signIn({
     redirectUri,
-    loginHint: "user@example.com",
-    firstScreen: "signIn", // or 'register'
+    loginHint: 'user@example.com',
+    firstScreen: 'signIn', // or 'register'
   });
   ```
 
@@ -609,14 +666,14 @@
   For example, in the JavaScript SDK:
 
   ```ts
-  import LogtoClient from "@logto/client";
+  import LogtoClient from '@logto/client';
 
   const logtoClient = new LogtoClient(/* your configuration */);
 
   logtoClient.signIn({
-    redirectUri: "https://your-app.com/callback",
+    redirectUri: 'https://your-app.com/callback',
     extraParams: {
-      organization_id: "<organization-id>",
+      organization_id: '<organization-id>',
     },
   });
   ```

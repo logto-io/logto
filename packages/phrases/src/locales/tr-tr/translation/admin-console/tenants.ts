@@ -10,12 +10,55 @@ const tenants = {
     oidc_configs: 'OIDC yapılandırmaları',
     subscription: 'Plan ve faturalandırma',
     billing_history: 'Fatura geçmişi',
+    license: 'Lisans',
+  },
+  license: {
+    purchase_title: 'SELF-HOSTED PLANLAR',
+    purchase_description:
+      'Self-hosted Pro ve Kurumsal planlar, kendi örneğinizde Logto markasını gizleme, kendi arayüzünüzü kullanma, konsolda iş birliği ve sınırsız SAML uygulaması gibi ücretli özellikleri açar. Lisans anahtarınızı almak için bir plan satın alın.',
+    purchase_button: 'Self-hosted planlara göz at',
+    install_title: 'LİSANS KURULUMU',
+    install_description:
+      'Self-hosted plan satın aldıktan sonra aldığınız lisans anahtarını yapıştırın.',
+    install_button: 'Lisansı kur',
+    key_field: 'Lisans anahtarı',
+    key_field_description:
+      'Anahtar örneğinizde doğrulanır ve oradan hiç çıkmaz. Elinizdeki anahtarın süresi dolduysa yeni bir anahtar almak için Logto ile iletişime geçin.',
+    key_placeholder: 'Lisans anahtarınızı buraya yapıştırın',
+    installed_toast: 'Lisans başarıyla kuruldu.',
+    details_title: 'LİSANS',
+    details_description: 'Bu örneğe kurulu lisans ve neleri kapsadığı.',
+    plan_field: 'Plan',
+    environment_field: 'Ortam',
+    environment_production: 'Üretim',
+    environment_non_production: 'Üretim dışı',
+    expires_at_field: 'Bitiş tarihi',
+    installed_at_field: 'Kurulum tarihi',
+    last_refreshed_at_field: 'Son yenileme tarihi',
+    grace_ends_at_field: 'Ek süre bitiş tarihi',
+    refresh_expired_description:
+      'Lisans anahtarının süresi {{expiresAt}} tarihinde doldu. Logto anahtarı yenilemeyi denerken lisanslı özellikler {{graceEndsAt}} tarihine kadar kullanılabilir.',
+    refresh_refused_description:
+      'Lisans {{reason}} olduğu için lisans yenileme reddedildi. Lisanslı özellikler {{graceEndsAt}} tarihine kadar kullanılabilir.',
+    refusal_reason_canceled: 'iptal edildi',
+    refusal_reason_unpaid: 'ödenmedi',
+    refusal_reason_expired: 'süresi doldu',
+    refusal_reason_revoked: 'geri alındı',
+    refusal_reason_unknown: 'kullanılamıyor',
+    grace_expired_description:
+      'Lisansın ek süresi {{graceEndsAt}} tarihinde sona erdi. Bu örnek OSS varsayılanlarına döndü. Yeni bir lisans anahtarı almak için Logto ile iletişime geçin ve yeniden kurun.',
+    get_fresh_key_button: 'Yeni lisans anahtarı al',
+    replace_button: 'Lisansı değiştir',
   },
   members: {
     card_title: 'Kiracıları Logto Cloud ile daha güvenli yönetin',
     card_description:
       'Tek bir yönetici hesabını paylaşmadan kiracınıza yöneticiler veya iş birlikçileri ekleyin.',
     card_action: 'Logto Cloud’u keşfedin',
+    self_hosted_card_title: 'Kiracıları self-hosted planlarla daha güvenli yönetin',
+    self_hosted_card_description:
+      'Tek bir yönetici hesabını paylaşmadan kiracınıza yöneticiler veya iş birlikçileri ekleyin.',
+    self_hosted_card_action: 'Self-hosted planları keşfedin',
   },
   settings: {
     title: 'AYARLAR',
@@ -41,6 +84,16 @@ const tenants = {
     tenant_mfa: 'Çok faktörlü kimlik doğrulama',
     tenant_mfa_description:
       'Üyelerinizin bu kiracıya erişmek için çok faktörlü kimlik doğrulamayı yapılandırmasını zorunlu kılın.',
+    oss_description: 'Üyelerin bu örnekte Konsol’a nasıl eriştiğini yönetin.',
+    tenant_mfa_confirm_title: 'Tüm üyeler için MFA zorunlu olsun mu?',
+    tenant_mfa_confirm_description:
+      'Bu üyeler henüz MFA yapılandırmadı. Oturumları açık kalır ve bir sonraki girişlerinde yapılandırmaları istenir:',
+    tenant_mfa_confirm_self:
+      'Siz de henüz MFA yapılandırmadınız. Bir sonraki girişinizden önce hesap ayarlarınızdan yapılandırın.',
+    tenant_mfa_confirm_button: 'MFA’yı zorunlu kıl',
+    tenant_mfa_setup_required:
+      'Bu kiracı çok faktörlü kimlik doğrulama gerektiriyor. Şimdi yapılandırın, aksi halde bir sonraki girişinizde istenecek.',
+    tenant_mfa_setup_action: 'MFA yapılandır',
     enterprise_sso: 'Enterprise SSO',
     enterprise_sso_description:
       'Ücretli planlarda kullanılabilir. Tüm üyelerin kuruluşunuzun kimlik sağlayıcısını kullanarak Logto Cloud Konsoluna giriş yapabilmesi için Enterprise SSO etkinleştirmek üzere bizimle iletişime geçin.',
@@ -48,6 +101,11 @@ const tenants = {
   full_env_tag: {
     development: 'Geliştirme',
     production: 'Prod',
+  },
+  view_only: {
+    tag: 'Yalnızca görüntüleme',
+    notification:
+      'Bu kiracıya yalnızca görüntüleme erişiminiz var. Değişiklik yapmanız gerekiyorsa bir kiracı yöneticisine başvurun.',
   },
   deletion_card: {
     title: 'SİL',

@@ -5,6 +5,7 @@ import {
   getCallbackLinkFromStorage,
   removeCallbackLinkFromStorage,
 } from '@/utils/social-connectors';
+import { isValidNativeCallbackLink } from '@/utils/url-scheme';
 
 const useSocialCallbackHandler = () => {
   const navigate = useNavigateWithPreservedSearchParams();
@@ -24,7 +25,9 @@ const useSocialCallbackHandler = () => {
       const callbackLink = getCallbackLinkFromStorage(connectorId);
       removeCallbackLinkFromStorage(connectorId);
 
-      if (callbackLink) {
+      // Re-check at the navigation sink: `search` carries the authorization code, so a stored value
+      // that is not a native deep link must fall through to the web flow instead.
+      if (callbackLink && isValidNativeCallbackLink(callbackLink)) {
         window.location.replace(new URL(`${callbackLink}${search}`));
 
         return;

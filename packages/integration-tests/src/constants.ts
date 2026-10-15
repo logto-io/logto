@@ -49,3 +49,11 @@ export const newOidcSsoConnectorPayload = {
 } satisfies Partial<CreateSsoConnector>;
 
 export const isDevFeaturesEnabled = yes(getEnv('DEV_FEATURES_ENABLED'));
+
+/**
+ * Whether the instance under test has an S3-compatible experience blobs storage configured, which
+ * the Docker Compose integration setup (`pnpm test:integration`) provides with an S3 mock.
+ */
+export const isExperienceBlobsStorageConfigured = yes(
+  getEnv('INTEGRATION_TESTS_EXPERIENCE_BLOBS_STORAGE')
+);

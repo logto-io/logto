@@ -1,4 +1,69 @@
 const cloud = {
+  self_hosted_licenses: {
+    title: 'Self-hosted licenses',
+    description:
+      'View the licenses owned by your account and copy keys for your self-hosted deployments.',
+    empty_title: 'No self-hosted licenses yet',
+    empty_description:
+      "If you've purchased a license, make sure you're signed in with the account you used to purchase it.",
+    load_error: 'Unable to load licenses. Please try again.',
+    period_end: 'Current period ends',
+    keys_title: 'License keys',
+    keys_description:
+      'Keep these keys private. Use the key that matches your deployment environment.',
+    production_key: 'Production key',
+    non_production_key: 'Non-production key',
+    keys_unavailable: 'Keys are unavailable for this license. Contact support if you need help.',
+    issue_keys: 'Get license keys',
+    issue_error: 'Unable to issue license keys. Please try again.',
+    install_title: 'Install your license',
+    install_description:
+      'Both keys unlock the same features and quotas. Unless your order form states otherwise, your subscription covers one production deployment.',
+    install_copy:
+      'Copy the production key for a production deployment, or the non-production key for development and testing.',
+    install_paste:
+      'In your self-hosted Console, open Settings → License, paste the key, and install it.',
+    status: {
+      active: 'Active',
+      past_due: 'Past due',
+      canceling: 'Cancels at period end',
+      canceled: 'Canceled',
+      unpaid: 'Unpaid',
+      expired: 'Expired',
+      revoked: 'Revoked',
+    },
+  },
+  console_sso: {
+    back_to_list: 'Back to Console SSO',
+    create: 'Add connector',
+    title: 'Console SSO',
+    description:
+      'Configure your own identity provider to sign in to Logto Console with single sign-on.',
+    domain_bound: 'Bound',
+    domain_pending: 'Verifying',
+    domain_verify_step: 'Verify your domain',
+    domain_bind_step: 'Bind email domain',
+    domain_add_placeholder: 'Add an email domain',
+    domain_bound_description:
+      'This domain is active for Console SSO. Its TXT challenge has been removed.',
+    domain_dns_instructions: 'Add this TXT record to your DNS provider to verify domain ownership.',
+    domain_waiting_for_dns: 'Waiting for the TXT record. We check again every 10 seconds.',
+    domain_proven_unbound: 'Domain ownership is verified, but binding is incomplete.',
+    domain_verified: 'Domain ownership verified.',
+    domain_binding_pending: 'Binding starts automatically after verification.',
+    domain_remove_description:
+      'Remove {{domain}} from Console SSO? Removing a bound domain stops SSO discovery for its email addresses.',
+    domain_invalid: 'Enter a valid email domain.',
+    domain_conflict: 'This domain is already bound to another Console SSO connector.',
+    domain_invalid_provider: 'Complete the Connection settings before binding this domain.',
+    domain_dns_timeout: 'The DNS check failed. We will retry automatically.',
+    domain_recovery: 'The domain change is incomplete.',
+    start_over: 'Start over',
+    start_over_confirmation:
+      'Starting over may delete your incomplete SSO configuration. Do you want to continue?',
+    resume_creation:
+      'An unfinished creation was found. Continue with the same provider to recover this connector.',
+  },
   general: {
     onboarding: 'Onboarding',
   },

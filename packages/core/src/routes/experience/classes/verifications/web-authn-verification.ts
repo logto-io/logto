@@ -13,8 +13,8 @@ import {
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
+import { type PublicKeyCredentialRequestOptionsJSON } from '@simplewebauthn/server';
 import { isoBase64URL } from '@simplewebauthn/server/helpers';
-import { type PublicKeyCredentialRequestOptionsJSON } from 'node_modules/@simplewebauthn/server/esm/deps.js';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import {
@@ -130,15 +130,15 @@ abstract class BaseWebAuthnVerification {
     assertThat(verified, 'session.mfa.webauthn_verification_failed');
     assertThat(registrationInfo, 'session.mfa.webauthn_verification_failed');
 
-    const { credentialID, credentialPublicKey, counter } = registrationInfo;
+    const { id: credentialId, publicKey, counter } = registrationInfo.credential;
 
     this.verified = true;
 
     this.registrationInfo = {
       type: MfaFactor.WebAuthn,
       rpId: this.registrationRpId,
-      credentialId: credentialID,
-      publicKey: isoBase64URL.fromBuffer(credentialPublicKey),
+      credentialId,
+      publicKey: isoBase64URL.fromBuffer(publicKey),
       counter,
       agent: userAgent,
       transports: payload.response.transports ?? [],

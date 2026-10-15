@@ -1,0 +1,7 @@
+@use '@/scss/underscore' as _;
+
+.samlMetadataForm {
+  > div:not(:first-child) {
+    margin-top: _.unit(6);
+  }
+}

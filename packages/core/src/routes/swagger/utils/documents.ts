@@ -20,6 +20,7 @@ import {
   devFeatureTag,
   findSupplementFiles,
   pruneSwaggerDocument,
+  removeDevFeatureParameters,
   removeDevFeatureSchemaProperties,
   removeUnnecessaryOperations,
   shouldThrow,
@@ -55,7 +56,7 @@ const managementApiIdentifiableEntityNames = Object.freeze(
     'email-template',
     'one-time-token',
     'session',
-    EnvSet.values.isDevFeaturesEnabled && 'trusted-device',
+    'trusted-device',
     'grant'
   )
 );
@@ -183,15 +184,7 @@ export const buildExperienceApiBaseDocument = (
 
 // ID parameters for account API entities.
 const userApiIdentifiableEntityNames = Object.freeze(
-  condArray<string>(
-    'profile',
-    'verification',
-    'connector',
-    'session',
-    // DEV: MFA trusted device management
-    EnvSet.values.isDevFeaturesEnabled && 'trusted-device',
-    'grant'
-  )
+  condArray<string>('profile', 'verification', 'connector', 'session', 'trusted-device', 'grant')
 );
 
 export const buildUserApiBaseDocument = (
@@ -294,8 +287,10 @@ export const assembleSwaggerDocument = <ContextT extends IRouterParamContext>(
   /**
    * Supplements are pruned before merging, but the base document is generated from the env-free
    * zod guards in `@logto/schemas` and can still carry dev-feature properties — prune the
-   * assembled result as well.
+   * assembled result as well. Parameters must be pruned first, as
+   * `removeDevFeatureSchemaProperties` strips the marker from every record unconditionally.
    */
+  removeDevFeatureParameters(data);
   removeDevFeatureSchemaProperties(data);
   pruneSwaggerDocument(data);
 

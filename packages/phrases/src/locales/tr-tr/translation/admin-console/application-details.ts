@@ -299,6 +299,13 @@ const application_details = {
     email_address: 'E-posta adresi',
     email_address_description: 'E-posta adresini Ad ID olarak kullan',
   },
+  saml_idp_authentication: {
+    always_force_authn: 'Her zaman kimlik doğrulamayı zorla',
+    always_force_authn_description:
+      'Kullanıcıların bu uygulamaya her eriştiklerinde tekrar oturum açmalarını gerektirir, hatta zaten bir Logto oturumu varsa bile.',
+    always_force_authn_tip:
+      'Etkinleştirildiğinde, Logto her zaman bu uygulama için kullanıcıların tekrar oturum açmalarını ister. Devre dışı bırakıldığında, hizmet sağlayıcı ForceAuthn ile taze kimlik doğrulama talep etmedikçe mevcut bir Logto oturumu tekrar kullanılır.',
+  },
   saml_encryption_config: {
     encrypt_assertion: 'SAML beyanını şifrele',
     encrypt_assertion_description: 'Bu seçeneği etkinleştirerek SAML beyanı şifrelenir.',

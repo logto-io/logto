@@ -11,6 +11,8 @@ const subscription = {
   enterprise_description: 'برای تیم‌های بزرگ و کسب‌وکارهایی با نیازهای سطح سازمانی.',
   admin_plan: 'پلن مدیریت',
   dev_plan: 'پلن توسعه',
+  self_hosted_pro_plan: 'پلن حرفه‌ای self-hosted',
+  self_hosted_enterprise_plan: 'پلن سازمانی self-hosted',
   current_plan: 'پلن فعلی',
   current_plan_description:
     'این پلن فعلی شماست. می‌توانید میزان استفاده از پلن، صورت‌حساب آینده و تغییرات پلن را به راحتی مشاهده کنید.',
@@ -44,6 +46,13 @@ const subscription = {
     },
   },
   quota_item,
+  cancel_feedback_modal: {
+    title: 'از رفتن شما متأسفیم',
+    description:
+      'اشتراک شما لغو شد. بازخورد شما به ما کمک می‌کند Logto را بهتر کنیم. همه پاسخ‌ها را می‌خوانیم.',
+    what_made_you_cancel: 'چه چیزی باعث شد لغو کنید؟',
+    how_to_reconsider: 'چه کاری می‌توانیم انجام دهیم تا تجدیدنظر کنید؟',
+  },
   downgrade_modal: {
     title: 'آیا مطمئن هستید که می‌خواهید پلن را کاهش دهید؟',
     description:
@@ -64,10 +73,17 @@ const subscription = {
     upgrade_help_tip: 'به کمک برای ارتقا نیاز دارید؟ <a>با ما تماس بگیرید</a>.',
     a_maximum_of: 'حداکثر <item/>',
   },
+  billing_customer_modal: {
+    title: 'انتخاب یک حساب پرداخت',
+    description:
+      'حساب پرداختی را انتخاب کنید که این اشتراک را پرداخت می‌کند، یا یک حساب جدید ایجاد کنید. می‌توانید جزئیات پرداخت را در صفحه بعدی تغییر دهید.',
+    account: 'حساب پرداخت',
+    new_account: 'حساب پرداخت جدید',
+    default_account: 'پیش‌فرض',
+  },
   upgrade_success: 'با موفقیت به <name/> ارتقا یافت',
   downgrade_success: 'با موفقیت به <name/> کاهش یافت',
-  subscription_check_timeout:
-    'بررسی اشتراک با تایم‌اوت مواجه شد. لطفاً بعداً صفحه را بارگذاری کنید.',
+  subscription_check_pending: 'پرداخت شما انجام شد. تنظیم اشتراک شما بیشتر از حد معمول طول می‌کشد.',
   no_subscription: 'بدون اشتراک',
   usage,
   token_usage_notification: {

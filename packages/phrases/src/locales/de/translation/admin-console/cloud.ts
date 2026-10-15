@@ -1,4 +1,73 @@
 const cloud = {
+  self_hosted_licenses: {
+    title: 'Self-hosted-Lizenzen',
+    description:
+      'Sieh dir die Lizenzen deines Kontos an und kopiere Schlüssel für deine selbst gehosteten Bereitstellungen.',
+    empty_title: 'Noch keine Self-hosted-Lizenzen',
+    empty_description:
+      'Wenn du eine Lizenz gekauft hast, melde dich mit dem Konto an, das du für den Kauf verwendet hast.',
+    load_error: 'Lizenzen konnten nicht geladen werden. Bitte versuche es erneut.',
+    period_end: 'Aktueller Zeitraum endet',
+    keys_title: 'Lizenzschlüssel',
+    keys_description:
+      'Halte diese Schlüssel geheim. Verwende den Schlüssel für deine Bereitstellungsumgebung.',
+    production_key: 'Produktionsschlüssel',
+    non_production_key: 'Nichtproduktionsschlüssel',
+    keys_unavailable:
+      'Für diese Lizenz sind keine Schlüssel verfügbar. Wende dich bei Bedarf an den Support.',
+    issue_keys: 'Lizenzschlüssel abrufen',
+    issue_error: 'Lizenzschlüssel konnten nicht ausgestellt werden. Bitte versuche es erneut.',
+    install_title: 'Lizenz installieren',
+    install_description:
+      'Beide Schlüssel bieten dieselben Funktionen und Kontingente. Sofern dein Bestellformular nichts anderes vorsieht, deckt dein Abonnement eine Produktionsbereitstellung ab.',
+    install_copy:
+      'Kopiere den Produktionsschlüssel für den Produktivbetrieb oder den Nichtproduktionsschlüssel für Entwicklung und Tests.',
+    install_paste:
+      'Öffne in deiner selbst gehosteten Konsole Einstellungen → Lizenz, füge den Schlüssel ein und installiere ihn.',
+    status: {
+      active: 'Aktiv',
+      past_due: 'Überfällig',
+      canceling: 'Kündigung zum Periodenende',
+      canceled: 'Gekündigt',
+      unpaid: 'Unbezahlt',
+      expired: 'Abgelaufen',
+      revoked: 'Widerrufen',
+    },
+  },
+  console_sso: {
+    back_to_list: 'Zurück zu Console SSO',
+    create: 'Konnektor hinzufügen',
+    title: 'Konsolen-SSO',
+    description:
+      'Konfiguriere deinen eigenen Identitätsanbieter, um dich per Single Sign-on bei der Logto Console anzumelden.',
+    domain_bound: 'Gebunden',
+    domain_pending: 'Wird überprüft',
+    domain_verify_step: 'Domain verifizieren',
+    domain_bind_step: 'E-Mail-Domain verknüpfen',
+    domain_add_placeholder: 'E-Mail-Domain hinzufügen',
+    domain_bound_description:
+      'Diese Domain ist für Console SSO aktiv. Ihre TXT-Challenge wurde entfernt.',
+    domain_dns_instructions:
+      'Füge diesen TXT-Eintrag bei deinem DNS-Anbieter hinzu, um die Domaininhaberschaft zu bestätigen.',
+    domain_waiting_for_dns: 'Wir warten auf den TXT-Eintrag und prüfen alle 10 Sekunden erneut.',
+    domain_proven_unbound:
+      'Die Domaininhaberschaft ist bestätigt, aber die Bindung ist unvollständig.',
+    domain_verified: 'Domaininhaberschaft bestätigt.',
+    domain_binding_pending: 'Die Verknüpfung beginnt nach der Verifizierung automatisch.',
+    domain_remove_description:
+      '{{domain}} aus Console SSO entfernen? Nach dem Entfernen einer gebundenen Domain funktioniert die SSO-Erkennung für deren E-Mail-Adressen nicht mehr.',
+    domain_invalid: 'Gib eine gültige E-Mail-Domain ein.',
+    domain_conflict: 'Diese Domain ist bereits an einen anderen Console-SSO-Connector gebunden.',
+    domain_invalid_provider:
+      'Schließe die Verbindungseinstellungen ab, bevor du diese Domain bindest.',
+    domain_dns_timeout: 'Die DNS-Prüfung ist fehlgeschlagen. Wir versuchen es automatisch erneut.',
+    domain_recovery: 'Die Domainänderung ist unvollständig.',
+    start_over: 'Neu beginnen',
+    start_over_confirmation:
+      'Wenn Sie von vorne beginnen, wird Ihre unvollständige SSO-Konfiguration möglicherweise gelöscht. Möchten Sie fortfahren?',
+    resume_creation:
+      'Eine unvollständige Erstellung wurde gefunden. Fahre mit demselben Anbieter fort, um diesen Konnektor wiederherzustellen.',
+  },
   general: {
     onboarding: 'Einführung',
   },

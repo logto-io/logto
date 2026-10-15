@@ -1,4 +1,5 @@
 const user = {
+  id_already_in_use: '該用戶 ID 已被使用。',
   username_already_in_use: '該用戶名已被使用。',
   username_starts_with_number: '用戶名不能以數字開頭。',
   username_invalid_charset_hard: '用戶名只能包含字母、數字和下劃線。',
@@ -44,6 +45,8 @@ const user = {
   password_algorithm_required: 'Password algorithm is required.',
   password_and_digest: 'You cannot set both plain text password and password digest.',
   personal_access_token_name_exists: '個人訪問令牌名稱已存在。',
+  personal_access_token_limit_exceeded: '你最多只能擁有 {{limit}} 個有效的個人存取權杖。',
+  personal_access_token_invalid_expiration: '到期時間必須晚於目前時間，且不能超過 {{maxDays}} 天。',
   totp_secret_invalid: '提供的 TOTP 密鑰無效。',
   wrong_backup_code_format: '備份代碼格式無效。',
   username_required: '用戶名是一個必需的標識符，你不能將其設為 null。',

@@ -4,6 +4,7 @@ import { conditional, type Optional } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { safeParseJson } from '#src/utils/json.js';
+import { isRecord } from '#src/utils/type.js';
 
 type InjectedHeaderMapping = Record<string, string>;
 type InjectedHeaderValues = Record<string, string>;
@@ -18,9 +19,6 @@ export const defaultInjectedHeaderMapping: InjectedHeaderMapping = Object.freeze
 });
 
 const normalizeHeaderName = (headerName: string) => headerName.trim().toLowerCase();
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === 'object' && value !== null && !Array.isArray(value);
 
 const parseInjectedHeaderMapping = (
   rawMapping: Optional<string>

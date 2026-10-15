@@ -1,10 +1,11 @@
 import { type CaptchaProvider } from '@logto/schemas';
-import { useNavigate } from 'react-router-dom';
 
 import Gear from '@/assets/icons/gear.svg?react';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 
+import { SecurityTabs } from '../../types';
 import CaptchaLogo from '../CaptchaLogo';
 import { captchaProviders } from '../CreateCaptchaForm/constants';
 
@@ -18,7 +19,7 @@ function CaptchaCard({ captchaProvider }: Props) {
   const metadata = captchaProviders.find(
     (provider) => provider.type === captchaProvider.config.type
   );
-  const navigate = useNavigate();
+  const { navigate } = useTenantPathname();
 
   if (!metadata) {
     return null;
@@ -35,7 +36,7 @@ function CaptchaCard({ captchaProvider }: Props) {
         icon={<Gear />}
         title="security.bot_protection.settings"
         onClick={() => {
-          navigate('details');
+          navigate(`/security/${SecurityTabs.Captcha}/details`);
         }}
       />
     </div>

@@ -28,6 +28,18 @@ export enum ReservedPlanId {
    * Latest Pro plan ID applied from 2025-09.
    */
   Pro202509 = 'pro-202509',
+  /**
+   * Self-hosted Pro plan, unlocked by installing a license key on a self-hosted instance.
+   *
+   * Unlike the plans above, this one is never returned by the Cloud subscription API: it is carried
+   * in the signed license payload and resolved locally. See `licensePayloadGuard`.
+   */
+  SelfHostedPro = 'self-hosted-pro',
+  /**
+   * Self-hosted Enterprise plan, unlocked by installing a license key on a self-hosted instance.
+   * See {@link SelfHostedPro}.
+   */
+  SelfHostedEnterprise = 'self-hosted-enterprise',
 }
 
 /**

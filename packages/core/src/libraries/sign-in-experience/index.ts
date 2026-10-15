@@ -11,7 +11,7 @@ import type {
   SsoConnectorMetadata,
 } from '@logto/schemas';
 import { adminTenantId, ConnectorType, ForgotPasswordMethod, TenantTag } from '@logto/schemas';
-import { conditional, deduplicate, trySafe, type Nullable } from '@silverhand/essentials';
+import { deduplicate, trySafe, type Nullable } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
 
 import { type WellKnownCache } from '#src/caches/well-known.js';
@@ -20,6 +20,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
 import { resolveSignUpCustomProfileFields } from '#src/libraries/custom-profile-fields/utils.js';
 import type { SsoConnectorLibrary } from '#src/libraries/sso-connector.js';
+import type { SubscriptionLibrary } from '#src/libraries/subscription.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -58,7 +59,8 @@ export const createSignInExperienceLibrary = (
   queries: Queries,
   { getLogtoConnectors }: ConnectorLibrary,
   { getAvailableSsoConnectors }: SsoConnectorLibrary,
-  wellKnownCache: WellKnownCache
+  wellKnownCache: WellKnownCache,
+  subscription: SubscriptionLibrary
 ) => {
   const {
     tenants: { findTenantMetadataById },
@@ -217,7 +219,13 @@ export const createSignInExperienceLibrary = (
       ...(type === 'RecaptchaEnterprise' &&
         'mode' in provider.config &&
         provider.config.mode && { mode: provider.config.mode }),
+      ...(type === 'Cap' && { endpoint: provider.config.endpoint }),
     };
+  };
+
+  const isHideLogtoBrandingGrantedByLicense = async () => {
+    const { quota } = await subscription.getSelfHostedSubscription();
+    return quota.hideLogtoBranding;
   };
 
   const getFullSignInExperience = async ({
@@ -326,17 +334,24 @@ export const createSignInExperienceLibrary = (
     const {
       emailBlocklistPolicy: _emailBlocklistPolicy,
       forgotPasswordMethods: _forgotPasswordMethods,
-      trustedDevice,
       ...publicSignInExperience
     } = deepmerge<SignInExperience, SignInExperienceOverride>(
       deepmerge<SignInExperience, SignInExperienceOverride>(signInExperience, appSignInExperience),
       organizationOverride
     );
 
+    /**
+     * Outside Cloud, hiding the Logto branding is a license entitlement that is only checked when the
+     * setting is written. Mask it here as well, so the branding comes back once the license expires
+     * or is removed, and a saved value applies again if the license is reinstalled.
+     */
+    const hideLogtoBranding =
+      publicSignInExperience.hideLogtoBranding &&
+      (EnvSet.values.isCloud || (await isHideLogtoBrandingGrantedByLicense()));
+
     return {
       ...publicSignInExperience,
-      // DEV: MFA trusted devices
-      ...conditional(EnvSet.values.isDevFeaturesEnabled && { trustedDevice }),
+      hideLogtoBranding,
       socialConnectors,
       ssoConnectors,
       forgotPassword: getForgotPassword(),

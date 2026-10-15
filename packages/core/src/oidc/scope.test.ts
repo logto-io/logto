@@ -140,7 +140,8 @@ describe('OIDC getUserClaims()', () => {
     expect(
       getAcceptedUserClaims({
         use: use.idToken,
-        scope: 'openid profile urn:logto:scope:sessions urn:logto:scope:trusted_devices',
+        scope:
+          'openid profile urn:logto:scope:sessions urn:logto:scope:trusted_devices urn:logto:scope:personal_access_tokens',
         rejected: [],
       })
     ).toEqual(profileExpectation);
@@ -148,7 +149,8 @@ describe('OIDC getUserClaims()', () => {
     expect(
       getAcceptedUserClaims({
         use: use.userinfo,
-        scope: 'openid profile urn:logto:scope:sessions urn:logto:scope:trusted_devices',
+        scope:
+          'openid profile urn:logto:scope:sessions urn:logto:scope:trusted_devices urn:logto:scope:personal_access_tokens',
         rejected: [],
       })
     ).toEqual(profileExpectation);

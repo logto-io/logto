@@ -1,6 +1,6 @@
 {
   "name": "@logto/api",
-  "version": "1.42.0",
+  "version": "1.45.0",
   "description": "Logto API types and clients.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/logto#readme",
@@ -47,13 +47,13 @@
   "devDependencies": {
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/ts-config": "6.0.0",
-    "@vitest/coverage-v8": "^4.1.8",
+    "@vitest/coverage-v8": "^4.1.11",
     "eslint": "^8.57.0",
     "lint-staged": "^15.0.0",
     "openapi-typescript": "^7.8.0",
     "prettier": "^3.5.3",
     "typescript": "^5.5.3",
-    "vitest": "^4.1.8"
+    "vitest": "^4.1.11"
   },
   "eslintConfig": {
     "ignorePatterns": [

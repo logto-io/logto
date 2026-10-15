@@ -1,5 +1,11 @@
 # @logto/connector-google
 
+## 1.8.7
+
+### Patch Changes
+
+- @logto/connector-kit@5.1.1
+
 ## 1.8.6
 
 ### Patch Changes

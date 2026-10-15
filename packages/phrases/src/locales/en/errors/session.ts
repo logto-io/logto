@@ -45,6 +45,19 @@ const session = {
     suggest_additional_mfa:
       'For stronger protection, consider adding another MFA method. You can skip this step and continue.',
   },
+  trusted_device_suggest_opt_in: 'Choose whether to trust this device.',
+  step_up: {
+    invalid_interaction_event: 'Step-up authentication is only available for sign-in interactions.',
+    subject_not_found:
+      'No authenticated session was found for step-up authentication. Please sign in again.',
+    forbidden_route: 'This route is not allowed during step-up authentication.',
+    forbidden_identifier:
+      'An identifier is not allowed during step-up authentication. Retry without the identifier field.',
+    acr_not_satisfied:
+      'The completed verification does not satisfy the requested authentication context. Please verify another method.',
+    require_verification:
+      'Verification with one of your existing methods is required to reach the requested authentication context.',
+  },
   passkey_sign_in: {
     pending_info_not_found:
       'Pending passkey sign-in info not found. Please re-initiate the sign-in flow.',

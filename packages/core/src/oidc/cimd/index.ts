@@ -39,19 +39,22 @@ const assertClientIdWithinLengthBound = (clientId: string) => {
 };
 
 /**
- * Whether CIMD is effectively enabled for the tenant. Both conditions must hold:
+ * Whether CIMD is effectively enabled for the tenant. All conditions must hold:
  *
  * - The tenant has enabled CIMD in its configs;
- * - The provider SSRF protection is active — CIMD forces outbound fetches, so it hard-requires
- *   the SSRF-protected dispatcher. Disabling the protection (self-hosted only) turns CIMD off
- *   regardless of the stored config: the Management API's enable-time 422 only fails fast on the
- *   honest path, since the env can be flipped after the config is stored.
+ * - The provider SSRF protection is active without an address allowlist — CIMD accepts target URLs
+ *   from unauthenticated callers, so it must not inherit private destinations allowlisted for
+ *   trusted webhook or SSO configurations. Disabling or relaxing the protection (self-hosted only)
+ *   turns CIMD off regardless of the stored config: the Management API's enable-time 422 only fails
+ *   fast on the honest path, since the env can be flipped after the config is stored.
  *
  * Provider construction is the authoritative gate — the tenant is rebuilt when the stored config
  * changes, so every predicate consumer observes the same value for the provider's lifetime.
  */
 export const isCimdEffectivelyEnabled = (envSet: EnvSet): boolean =>
-  envSet.oidc.cimdEnabled && EnvSet.values.isOidcProviderSsrfProtectionEnabled;
+  envSet.oidc.cimdEnabled &&
+  EnvSet.values.isSsrfProtectionEnabled &&
+  EnvSet.values.ssrfAllowedAddresses.length === 0;
 
 /**
  * Whether an identifier presented as a `client_id` should be attributed to a CIMD client —
@@ -79,14 +82,15 @@ export const getClientIdentifierPayload = (clientId?: string): ClientIdentifierP
   shouldAttributeToCimd(clientId) ? { cimdClientId: clientId } : { applicationId: clientId };
 
 /**
- * Whether the identifier names a CIMD client on this tenant's provider: the URL shape only
- * routes while the feature is effectively enabled, so a URL-shaped identifier stays an ordinary
- * (and unresolvable) client id otherwise.
+ * Whether the tenant handles the identifier through the CIMD client path. This is a tenant-scoped
+ * decision rather than a property of the identifier: the URL shape only routes while the feature
+ * is effectively enabled, so a URL-shaped identifier keeps the registered-client path otherwise,
+ * where it stays an ordinary (and unresolvable) client id.
  *
- * Callers that hold an optional identifier can pass it directly — an absent identifier is never
- * a CIMD client.
+ * Callers that hold an optional identifier can pass it directly; an absent identifier never takes
+ * the CIMD path.
  */
-export const isCimdClient = (envSet: EnvSet, clientId?: string): boolean =>
+export const shouldTreatAsCimdClient = (envSet: EnvSet, clientId?: string): boolean =>
   clientId !== undefined && isCimdEffectivelyEnabled(envSet) && isCimdClientId(clientId);
 
 /**

@@ -6,13 +6,13 @@ import {
   updateProfileApiPayloadGuard,
   uploadFileGuard,
   userAssetsGuard,
+  VerificationType,
 } from '@logto/schemas';
 import { addDays, format } from 'date-fns';
 import { type MiddlewareType } from 'koa';
 import type Router from 'koa-router';
 import { object, z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -59,7 +59,12 @@ function verifiedInteractionGuard<
       })
     );
 
-    if (experienceInteraction.interactionEvent === InteractionEvent.SignIn) {
+    // A pure step-up applies no tenant MFA policy: its enrollment routes are gated by the step-up
+    // route guard on the predicate that also decides whether an enrolled factor counts.
+    if (
+      experienceInteraction.interactionEvent === InteractionEvent.SignIn &&
+      !experienceInteraction.isStepUp
+    ) {
       await experienceInteraction.guardMfaVerificationStatus();
     }
 
@@ -93,7 +98,20 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
         })
       );
 
-      if (interactionEvent === InteractionEvent.SignIn) {
+      // A pure step-up only stages a first factor it may establish: the route guard opens this
+      // route while `establishableMethods` is non-empty, and the staged type must be one of them.
+      if (experienceInteraction.isStepUp) {
+        const eligibility = await experienceInteraction.getStepUpEligibility();
+
+        assertThat(
+          eligibility?.establishableMethods.some(
+            (method): boolean => String(method) === profilePayload.type
+          ),
+          new RequestError({ code: 'session.step_up.forbidden_route', status: 403 })
+        );
+      }
+
+      if (interactionEvent === InteractionEvent.SignIn && !experienceInteraction.isStepUp) {
         // Note:
         // We intentionally allow social profile staging before MFA verification.
         // This endpoint only writes to the interaction session, while `submit()` is the
@@ -272,24 +290,25 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
     }
   );
 
-  // Trusted-device opt-in is under development. Keep the route out of released API surfaces.
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    router.post(
-      `${experienceRoutes.mfa}/trusted-device`,
-      koaGuard({ status: [204, 400, 403, 404] }),
-      verifiedInteractionGuard(),
-      async (ctx, next) => {
-        const { experienceInteraction } = ctx;
+  router.post(
+    `${experienceRoutes.profile}/trusted-device`,
+    koaGuard({
+      body: z.object({ trusted: z.boolean() }),
+      status: [204, 400, 403, 404],
+    }),
+    verifiedInteractionGuard(),
+    async (ctx, next) => {
+      const { experienceInteraction } = ctx;
+      const { trusted } = ctx.guard.body;
 
-        await experienceInteraction.requestTrustedDeviceCreation();
-        await experienceInteraction.save();
+      await experienceInteraction.setTrustedDeviceOptInDecision(trusted);
+      await experienceInteraction.save();
 
-        ctx.status = 204;
+      ctx.status = 204;
 
-        return next();
-      }
-    );
-  }
+      return next();
+    }
+  );
 
   // Mark optional additional MFA binding suggestion as skipped.
   router.post(
@@ -373,6 +392,24 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
         `Interaction.${experienceInteraction.interactionEvent}.BindMfa.${type}.Submit`
       );
 
+      // A pure step-up only writes the factors it may enroll, plus backup codes to go with them;
+      // the email / phone factors would bind an identifier, which is only ever established.
+      if (experienceInteraction.isStepUp) {
+        const forbidden = new RequestError({
+          code: 'session.step_up.forbidden_route',
+          status: 403,
+        });
+
+        // Backup codes only come with a TOTP or passkey enrolled in this interaction, so a first
+        // factor alone can never replace the user's existing codes.
+        if (type === MfaFactor.BackupCode) {
+          assertThat(experienceInteraction.mfa.hasNewAuthenticatorFactor, forbidden);
+        } else {
+          const eligibility = await experienceInteraction.getStepUpEligibility();
+          assertThat(eligibility?.enrollableFactors.includes(type), forbidden);
+        }
+      }
+
       log.append({
         verificationId,
       });
@@ -410,6 +447,12 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
               true
             );
             experienceInteraction.setVerificationRecord(codeVerification);
+            // The email is now an MFA factor of the account: record that `bind` proof next to
+            // the `1fa` one the profile bind recorded for the same mailbox.
+            experienceInteraction.consumeForBindByType(
+              VerificationType.MfaEmailVerificationCode,
+              codeVerification.id
+            );
           }
           break;
         }
@@ -433,6 +476,10 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
               true
             );
             experienceInteraction.setVerificationRecord(codeVerification);
+            experienceInteraction.consumeForBindByType(
+              VerificationType.MfaPhoneVerificationCode,
+              codeVerification.id
+            );
           }
           break;
         }

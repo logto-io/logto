@@ -124,7 +124,7 @@ describe('koaAppAccessControl middleware', () => {
     beforeEach(() => {
       Sinon.stub(EnvSet, 'values').value({
         ...EnvSet.values,
-        isOidcProviderSsrfProtectionEnabled: true,
+        isSsrfProtectionEnabled: true,
       });
     });
 

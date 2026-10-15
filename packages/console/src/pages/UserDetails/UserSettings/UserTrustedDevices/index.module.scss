@@ -1,19 +1,9 @@
 @use '@/scss/underscore' as _;
 
-.hint {
+.description {
   color: var(--color-text-secondary);
-  font: var(--font-body-3);
-  margin: 0 0 _.unit(3);
-}
-
-.table {
-  min-width: 0;
-}
-
-.tableBody {
-  :global(tbody tr) {
-    height: 80px;
-  }
+  font: var(--font-body-2);
+  margin-bottom: _.unit(2);
 }
 
 .name {
@@ -29,10 +19,6 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-}
-
-.expiresAt {
-  font: var(--font-body-3);
 }
 
 .action {

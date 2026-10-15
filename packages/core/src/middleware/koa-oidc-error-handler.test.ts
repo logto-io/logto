@@ -53,7 +53,17 @@ describe('koaOidcErrorHandler middleware', () => {
     const ctx = createContextWithRouteParameters();
     const error_description = 'Mock scope is invalid';
     const mockScope = 'read:foo';
-    await expectErrorResponse(ctx, new errors.InvalidScope(error_description, mockScope));
+    await expectErrorResponse(ctx, new errors.InvalidScope(error_description, mockScope), {
+      message: 'Invalid scope: read:foo.',
+    });
+  });
+
+  it('should not escape the interpolated scope', async () => {
+    const ctx = createContextWithRouteParameters();
+
+    await expectErrorResponse(ctx, new errors.InvalidScope('Mock scope is invalid', 'read:a&b'), {
+      message: 'Invalid scope: read:a&b.',
+    });
   });
 
   it('should transform session not found error code', async () => {
@@ -71,6 +81,7 @@ describe('koaOidcErrorHandler middleware', () => {
 
     await expectErrorResponse(ctx, new errors.InsufficientScope(error_description, scope), {
       scope,
+      message: 'Token missing scope `read:foo`.',
     });
   });
 

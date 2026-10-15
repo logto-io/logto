@@ -151,6 +151,13 @@ export enum UserScope {
    * Not included in user claims, even when the scope is requested, as it's not meant for ID token or userinfo endpoint.
    */
   TrustedDevices = 'urn:logto:scope:trusted_devices',
+  /**
+   * Scope for user's personal access tokens.
+   *
+   * Only used for personal access token management via account API.
+   * Not included in user claims, even when the scope is requested, as it's not meant for ID token or userinfo endpoint.
+   */
+  PersonalAccessTokens = 'urn:logto:scope:personal_access_tokens',
 }
 
 /**
@@ -194,6 +201,7 @@ export const idTokenClaims: Readonly<Record<UserScope, UserClaim[]>> = Object.fr
   [UserScope.Identities]: [],
   [UserScope.Sessions]: [],
   [UserScope.TrustedDevices]: [],
+  [UserScope.PersonalAccessTokens]: [],
 });
 
 /**

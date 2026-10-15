@@ -1,13 +1,5 @@
-import { Organizations, organizationWithOrganizationRolesGuard } from '@logto/schemas';
+import { Organizations } from '@logto/schemas';
 
-import { EnvSet } from '#src/env-set/index.js';
+export { organizationWithOrganizationRolesGuard as organizationWithRolesResponseGuard } from '@logto/schemas';
 
-// DEV: MFA trusted devices
-export const organizationHiddenFields = EnvSet.values.isDevFeaturesEnabled
-  ? {}
-  : { isTrustedDeviceAllowed: true as const };
-
-export const organizationResponseGuard = Organizations.guard.omit(organizationHiddenFields);
-
-export const organizationWithRolesResponseGuard =
-  organizationWithOrganizationRolesGuard.omit(organizationHiddenFields);
+export const organizationResponseGuard = Organizations.guard;

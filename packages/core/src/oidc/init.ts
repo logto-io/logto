@@ -12,6 +12,7 @@ import {
   extraParamsObjectGuard,
   inSeconds,
   logtoCookieKey,
+  logtoAcrValues,
   ExtraParamsKey,
   type Json,
 } from '@logto/schemas';
@@ -27,18 +28,21 @@ import { type LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import koaAppSecretTranspilation from '#src/middleware/koa-app-secret-transpilation.js';
 import koaAuditLog, { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
+import koaCimdOfflineAccessConsentPrompt from '#src/middleware/koa-cimd-offline-access-consent-prompt.js';
 import koaJwksCacheControl from '#src/middleware/koa-jwks-cache-control.js';
 import koaOidcCookies from '#src/middleware/koa-oidc-cookies.js';
 import koaOidcPostToGet from '#src/middleware/koa-oidc-post-to-get.js';
 import koaOidcUnrecognizedRoute from '#src/middleware/koa-oidc-unrecognized-route.js';
 import koaResourceParam from '#src/middleware/koa-resource-param.js';
 import postgresAdapter from '#src/oidc/adapter.js';
+import { buildInteractionPolicy } from '#src/oidc/interaction-policy.js';
 import {
   buildSharedExperienceCookie,
   buildConsentPromptUrl,
   buildLoginPromptUrl,
   isOriginAllowed,
   readOptionalQueryString,
+  readOptionalTheme,
   validateCustomClientMetadata,
 } from '#src/oidc/utils.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -55,8 +59,10 @@ import {
   hasAppLevelAccessControlChecked,
   markAppLevelAccessControlCheckedForOidcContext,
 } from './application-access-control.js';
-import { buildClientIdMetadataDocumentFeature, isCimdClient } from './cimd/index.js';
+import { getExtraTokenClaimsForAuthenticationContext } from './authentication-context-claims.js';
+import { buildClientIdMetadataDocumentFeature, shouldTreatAsCimdClient } from './cimd/index.js';
 import { filterResourceScopesForTheCimdClient } from './cimd/resource-scopes.js';
+import { getOidcScopesNoLongerAllowed } from './client-scope.js';
 import defaults from './defaults.js';
 import { deviceFlowConfig, defaultDeviceCodeTtl } from './device-flow.js';
 import {
@@ -126,7 +132,7 @@ export default function initOidc(
       userId,
     });
 
-    if (isCimdClient(envSet, clientId)) {
+    if (shouldTreatAsCimdClient(envSet, clientId)) {
       /**
        * CIMD clients are unregistered: the tenant-wide ceiling replaces the per-application
        * consent configuration the third-party filter below reads.
@@ -266,6 +272,9 @@ export default function initOidc(
       );
     },
     interactions: {
+      // Evaluate `acr_values` and `max_age` strictly and route step-up prompts; without the policy
+      // the provider ignores `acr_values`, which OIDC treats as voluntary.
+      ...conditional(EnvSet.values.isDevFeaturesEnabled && { policy: buildInteractionPolicy() }),
       url: (ctx, { params: { client_id: appId }, prompt }) => {
         const params = trySafe(() => extraParamsObjectGuard.parse(ctx.oidc.params ?? {})) ?? {};
         const resolvedAppId = readOptionalQueryString(appId);
@@ -273,6 +282,7 @@ export default function initOidc(
           appId: resolvedAppId,
           organizationId: params.organization_id,
           uiLocales: params.ui_locales,
+          theme: readOptionalTheme(params.theme),
         };
 
         /**
@@ -281,7 +291,7 @@ export default function initOidc(
          * consumers (experience SSR, verification-code template context) fall back to the
          * tenant default sign-in experience without any application lookup.
          */
-        const cookieParams = isCimdClient(envSet, resolvedAppId)
+        const cookieParams = shouldTreatAsCimdClient(envSet, resolvedAppId)
           ? { ...sharedParams, appId: undefined }
           : sharedParams;
 
@@ -307,7 +317,7 @@ export default function initOidc(
 
         switch (prompt.name) {
           case 'login': {
-            return '/' + buildLoginPromptUrl(params, sharedParams);
+            return '/' + buildLoginPromptUrl(params, sharedParams, prompt.details);
           }
 
           case 'consent': {
@@ -322,7 +332,7 @@ export default function initOidc(
     },
     loadExistingGrant: async (ctx) => {
       const { account, client, provider, result, session } = ctx.oidc;
-      const cimd = isCimdClient(envSet, client?.clientId);
+      const treatAsCimdClient = shouldTreatAsCimdClient(envSet, client?.clientId);
       /**
        * CIMD organization access is grant-scoped, so a Grant must never serve more than one
        * authorization — skip the session grant reuse. The `result.consent.grantId` branch
@@ -330,7 +340,8 @@ export default function initOidc(
        */
       const grantId =
         // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- Keep oidc-provider's default loadExistingGrant fallback semantics.
-        result?.consent?.grantId || (client && !cimd && session?.grantIdFor(client.clientId));
+        result?.consent?.grantId ||
+        (client && !treatAsCimdClient && session?.grantIdFor(client.clientId));
       const shouldCheckApplicationAccess =
         account &&
         client &&
@@ -339,7 +350,7 @@ export default function initOidc(
          * access-control library's fallback lookup would query the applications table with the
          * CIMD identifier URL and deny on not-found.
          */
-        !cimd &&
+        !treatAsCimdClient &&
         !hasAppLevelAccessControlChecked(result, client.clientId, account.accountId);
 
       if (grantId && shouldCheckApplicationAccess) {
@@ -357,11 +368,32 @@ export default function initOidc(
       }
 
       if (grantId) {
-        return provider.Grant.find(String(grantId));
+        const grant = await provider.Grant.find(String(grantId));
+
+        /**
+         * The resume and device verification stacks reload the client but never re-run
+         * `check_scope`, and the consent prompt counts scopes already in the Grant as encountered.
+         * Reject the way a new authorization request for the same scopes would be.
+         */
+        const scopesNoLongerAllowed = getOidcScopesNoLongerAllowed(
+          grant,
+          client,
+          ctx.oidc.requestParamScopes
+        );
+
+        if (scopesNoLongerAllowed.length > 0) {
+          throw new errors.InvalidScope(
+            'requested scope is no longer allowed for the client',
+            scopesNoLongerAllowed.join(' ')
+          );
+        }
+
+        return grant;
       }
     },
     extraParams: Object.values(ExtraParamsKey),
     extraTokenClaims: async (ctx, token) => {
+      const authenticationContextClaims = getExtraTokenClaimsForAuthenticationContext(ctx, token);
       const [tokenExchangeClaims, organizationApiResourceClaims, jwtCustomizedClaims] =
         await Promise.all([
           getExtraTokenClaimsForTokenExchange(ctx, token),
@@ -379,13 +411,19 @@ export default function initOidc(
           ),
         ]);
 
-      if (!organizationApiResourceClaims && !jwtCustomizedClaims && !tokenExchangeClaims) {
+      if (
+        !authenticationContextClaims &&
+        !organizationApiResourceClaims &&
+        !jwtCustomizedClaims &&
+        !tokenExchangeClaims
+      ) {
         return;
       }
 
       return {
         ...tokenExchangeClaims,
         ...organizationApiResourceClaims,
+        ...authenticationContextClaims,
         ...jwtCustomizedClaims,
       };
     },
@@ -417,7 +455,16 @@ export default function initOidc(
       ctx.URL.origin === origin || isOriginAllowed(origin, client.metadata(), client.redirectUris),
     // https://github.com/panva/node-oidc-provider/blob/main/recipes/claim_configuration.md
     // Note node-provider will append `claims` here to the default claims instead of overriding
-    claims: userClaims,
+    claims: EnvSet.values.isDevFeaturesEnabled
+      ? // The provider only puts a claim into the ID token when some granted scope lists it (or the
+        // request asks for it through `claims` / `acr_values` / `max_age`). Listing the
+        // authentication context under `openid` makes every ID token carry `acr`, `amr`, and
+        // `auth_time` from the session, and advertises them in `claims_supported`.
+        { ...userClaims, openid: ['sub', 'acr', 'amr', 'auth_time'] }
+      : userClaims,
+    // Advertise the Logto ACR classes as `acr_values_supported`; the provider also re-adds the
+    // built-in `acr` claim to `claims_supported` once at least one value is configured.
+    ...conditional(EnvSet.values.isDevFeaturesEnabled && { acrValues: [...logtoAcrValues] }),
     // https://github.com/panva/node-oidc-provider/tree/main/docs#findaccount
     findAccount: async (_ctx, sub) => {
       // The user may be deleted after the token is issued
@@ -603,6 +650,8 @@ export default function initOidc(
    */
   oidc.use(koaBodyEtag());
   oidc.use(koaOidcPostToGet());
+  // Register after `koaOidcPostToGet()` so form POST authorization requests are covered too.
+  oidc.use(koaCimdOfflineAccessConsentPrompt(envSet, queries));
   /**
    * Check if the request URL contains comma separated `resource` query parameter. If yes, split the values and
    * reconstruct the URL with multiple `resource` query parameters.

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'Sayfa bulunamadı',
@@ -14,6 +15,8 @@ const account_center = {
     sidebar_security: 'Güvenlik',
     sidebar_sessions: 'Oturumlar',
     support: 'Destek',
+    user_menu: 'Kullanıcı menüsü',
+    sign_out: 'Oturumu kapat',
   },
   verification: {
     title: 'Güvenlik doğrulaması',
@@ -120,6 +123,21 @@ const account_center = {
     email_removed: 'E-posta adresi başarıyla kaldırıldı.',
     phone_removed: 'Telefon numarası başarıyla kaldırıldı.',
     username_removed: 'Kullanıcı adı başarıyla kaldırıldı.',
+    trusted_devices: {
+      title: 'MFA güvenilir cihazları',
+      current_device: 'Geçerli cihaz',
+      expires_on: '{{date}} tarihinde sona erer',
+      unknown_location: 'Bilinmeyen konum',
+      remove: 'Kaldır',
+      removed: 'Güvenilir cihaz başarıyla kaldırıldı.',
+      loading: 'Yükleniyor...',
+      empty: 'Güvenilir cihaz yok.',
+      load_failed: 'Güvenilir cihazlar yüklenemedi. Lütfen tekrar deneyin.',
+      retry: 'Tekrar dene',
+      remove_confirmation_title: 'Güvenilir cihaz kaldırılsın mı?',
+      remove_confirmation_description:
+        'Bu cihazda bir sonraki oturum açışınızda MFA işlemini yeniden tamamlamanız gerekecek. Geçerli oturumunuz etkin kalacak.',
+    },
   },
   social: {
     linked: '{{connector}} başarıyla bağlandı.',
@@ -283,3 +301,4 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
+/* eslint-enable max-lines */

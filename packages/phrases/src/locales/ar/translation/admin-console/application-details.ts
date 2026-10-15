@@ -296,6 +296,13 @@ const application_details = {
     email_address: 'البريد الإلكتروني',
     email_address_description: 'استخدام البريد الإلكتروني كاسم المعرف',
   },
+  saml_idp_authentication: {
+    always_force_authn: 'تفعيل المصادقة دائمًا',
+    always_force_authn_description:
+      'تطلب من المستخدمين تسجيل الدخول مرة أخرى في كل مرة يصلون فيها إلى هذا التطبيق، حتى لو كان لديهم جلسة Logto.',
+    always_force_authn_tip:
+      'عند التمكين، يطلب Logto من المستخدمين تسجيل الدخول مجددًا لهذا التطبيق. عند التعطيل، يتم إعادة استخدام جلسة Logto الحالية ما لم يطلب مزود الخدمة مصادقة جديدة باستخدام ForceAuthn.',
+  },
   saml_encryption_config: {
     encrypt_assertion: 'تشفير تأكيد SAML',
     encrypt_assertion_description: 'بتفعيل هذا الخيار، سيتم تشفير تأكيد SAML.',

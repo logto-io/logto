@@ -24,9 +24,8 @@ import useTheme from '@/hooks/use-theme';
 import { applicationTypeI18nKey, dynamicAppId } from '@/types/applications';
 
 import DisableDynamicAppModal from './DisableDynamicAppModal';
-import EndpointsAndCredentials from './EndpointsAndCredentials';
 import Permissions from './Permissions';
-import Settings from './Settings';
+import SettingsForm from './SettingsForm';
 import styles from './index.module.scss';
 
 const thirdPartyApplicationsPathname = '/applications/third-party-applications';
@@ -113,10 +112,9 @@ function DynamicAppDetails() {
         isActive={tab === ApplicationDetailsTabs.Settings}
         className={styles.tabContainer}
       >
-        <div className={styles.container}>
-          <Settings />
-          {oidcConfig.data && <EndpointsAndCredentials oidcConfig={oidcConfig.data} />}
-        </div>
+        {config.data && oidcConfig.data && (
+          <SettingsForm data={config.data} oidcConfig={oidcConfig.data} />
+        )}
       </TabWrapper>
       <TabWrapper
         isActive={tab === ApplicationDetailsTabs.Permissions}

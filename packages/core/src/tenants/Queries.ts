@@ -95,7 +95,7 @@ export default class Queries {
   trustedDevices = new TrustedDeviceQueries(this.pool);
   tenantUsage = new TenantUsageQuery(this.pool);
   emailTemplates = new EmailTemplatesQueries(this.pool, this.wellKnownCache);
-  captchaProviders = new CaptchaProviderQueries(this.pool);
+  captchaProviders = new CaptchaProviderQueries(this.pool, this.wellKnownCache);
   sentinelActivities = createSentinelActivitiesQueries(this.pool);
   oidcSessionExtensions = new OidcSessionExtensionsQueries(this.pool);
   secrets = new SecretQuery(this.pool);

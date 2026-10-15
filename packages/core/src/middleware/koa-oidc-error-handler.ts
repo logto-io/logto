@@ -124,6 +124,7 @@ export default function koaOidcErrorHandler<StateT, ContextT extends WithI18nCon
         .object({
           error: z.string(),
           error_description: z.string().optional(),
+          scope: z.string().optional(),
         })
         .safeParse(ctx.body);
 
@@ -140,6 +141,11 @@ export default function koaOidcErrorHandler<StateT, ContextT extends WithI18nCon
           code,
           message: ctx.i18n.t(['errors:' + code, 'errors:oidc.provider_error_fallback'], {
             code,
+            scope: data.scope,
+            interpolation: {
+              // Disable i18next escape value since it's for API response, we can show HTML tags.
+              escapeValue: false,
+            },
           }),
           error_uri: uri,
           ...ctx.body,

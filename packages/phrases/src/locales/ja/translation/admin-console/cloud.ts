@@ -1,4 +1,67 @@
 const cloud = {
+  self_hosted_licenses: {
+    title: 'セルフホストライセンス',
+    description: 'アカウントが所有するライセンスを確認し、セルフホスト環境用のキーをコピーします。',
+    empty_title: 'セルフホストライセンスはまだありません',
+    empty_description:
+      'ライセンスを購入済みの場合は、購入時に使用したアカウントでサインインしていることを確認してください。',
+    load_error: 'ライセンスを読み込めませんでした。もう一度お試しください。',
+    period_end: '現在の期間の終了日',
+    keys_title: 'ライセンスキー',
+    keys_description: 'キーは秘密に保管し、デプロイ環境に合ったキーを使用してください。',
+    production_key: '本番環境用キー',
+    non_production_key: '非本番環境用キー',
+    keys_unavailable: 'このライセンスのキーは利用できません。サポートにお問い合わせください。',
+    issue_keys: 'ライセンスキーを取得',
+    issue_error: 'ライセンスキーを発行できませんでした。もう一度お試しください。',
+    install_title: 'ライセンスのインストール',
+    install_description:
+      'どちらのキーも同じ機能とクォータを提供します。注文書に別段の定めがない限り、サブスクリプションの対象となる本番デプロイは 1 つです。',
+    install_copy: '本番環境には本番環境用キーを、開発・テストには非本番環境用キーをコピーします。',
+    install_paste:
+      'セルフホストのコンソールで「設定 → ライセンス」を開き、キーを貼り付けてインストールします。',
+    status: {
+      active: '有効',
+      past_due: '支払い期限超過',
+      canceling: '期間終了時にキャンセル',
+      canceled: 'キャンセル済み',
+      unpaid: '未払い',
+      expired: '期限切れ',
+      revoked: '取り消し済み',
+    },
+  },
+  console_sso: {
+    back_to_list: 'Console SSO に戻る',
+    create: 'コネクターを追加',
+    title: 'コンソール SSO',
+    description:
+      '独自のアイデンティティプロバイダーを設定して、シングルサインオンで Logto Console にサインインできます。',
+    domain_bound: 'バインド済み',
+    domain_pending: '検証中',
+    domain_verify_step: 'ドメインを確認',
+    domain_bind_step: 'メールドメインを紐付け',
+    domain_add_placeholder: 'メールドメインを追加',
+    domain_bound_description:
+      'このドメインは Console SSO で有効です。TXT 検証レコードは削除されました。',
+    domain_dns_instructions:
+      'ドメインの所有権を検証するため、DNS プロバイダーにこの TXT レコードを追加してください。',
+    domain_waiting_for_dns: 'TXT レコードを待機中です。10 秒ごとに再確認します。',
+    domain_proven_unbound: 'ドメインの所有権は検証済みですが、バインドは未完了です。',
+    domain_verified: 'ドメインの所有権を確認しました。',
+    domain_binding_pending: '確認後に自動的に紐付けを開始します。',
+    domain_remove_description:
+      '{{domain}} を Console SSO から削除しますか？バインド済みドメインを削除すると、そのメールアドレスの SSO 検出が停止します。',
+    domain_invalid: '有効なメールドメインを入力してください。',
+    domain_conflict: 'このドメインは別の Console SSO コネクターに既にバインドされています。',
+    domain_invalid_provider: 'このドメインをバインドする前に接続設定を完了してください。',
+    domain_dns_timeout: 'DNS の確認に失敗しました。自動的に再試行します。',
+    domain_recovery: 'ドメインの変更は未完了です。',
+    start_over: '最初からやり直す',
+    start_over_confirmation:
+      '最初からやり直すと、未完了の SSO 設定が削除される場合があります。続行しますか？',
+    resume_creation:
+      '未完了の作成操作が見つかりました。同じプロバイダーで続行して、このコネクターを復元してください。',
+  },
   general: {
     onboarding: 'オンボーディング',
   },

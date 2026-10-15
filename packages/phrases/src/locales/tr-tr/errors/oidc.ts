@@ -1,6 +1,6 @@
 const oidc = {
   aborted: 'Son kullanıcı etkileşimi iptal etti.',
-  invalid_scope: 'Kapsam geçersiz: {{error_description}}.',
+  invalid_scope: 'Kapsam geçersiz: {{scope}}.',
   invalid_token: 'Sağlanan belirteç geçersiz.',
   invalid_client_metadata: 'Sağlanan istemci meta verisi geçersiz.',
   insufficient_scope: "Token'ın `{{scope}}` kapsamı eksik.",

@@ -20,6 +20,7 @@ import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useApi from '@/hooks/use-api';
 import { useConnectorFormConfigParser } from '@/hooks/use-connector-form-config-parser';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import { SyncProfileMode } from '@/types/connector';
 import type { ConnectorFormType } from '@/types/connector';
 import { convertResponseToForm } from '@/utils/connector-form';
@@ -41,6 +42,9 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
   const api = useApi();
   const { mutate } = useSWRConfig();
   const { currentTenantId } = useContext(TenantsContext);
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const formData = useMemo(() => convertResponseToForm(connectorData), [connectorData]);
 
   const methods = useForm<ConnectorFormType>({
@@ -167,7 +171,7 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
           </FormCard>
         )}
         {connectorId === GoogleConnector.factoryId && <GoogleOneTapCard />}
-        {!isSocialConnector && (
+        {!isSocialConnector && !isReadOnly && (
           <FormCard title="connector_details.test_connection">
             <ConnectorTester
               connectorFactoryId={connectorId}

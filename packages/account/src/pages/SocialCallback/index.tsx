@@ -11,14 +11,9 @@ import {
 } from '@ac/apis/social';
 import ErrorPage from '@ac/components/ErrorPage';
 import GlobalLoading from '@ac/components/GlobalLoading';
-import {
-  getSocialAddRoute,
-  getSocialCallbackRoute,
-  getSocialChangeRoute,
-} from '@ac/constants/routes';
+import { getSocialAddRoute, getSocialChangeRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
-import { accountCenterBasePath } from '@ac/utils/account-center-route';
 import { canManageSocialIdentitiesWithoutVerification } from '@ac/utils/security-page';
 import { accountStorage } from '@ac/utils/session-storage';
 import { getLocalizedConnectorName } from '@ac/utils/social-connector';
@@ -152,9 +147,7 @@ const SocialCallback = () => {
     };
 
     const completeCallback = async () => {
-      const redirectUri = `${window.location.origin}${accountCenterBasePath}${getSocialCallbackRoute(
-        connectorId
-      )}`;
+      const redirectUri = `${window.location.origin}/callback/${connectorId}`;
       const [verifyError] = await verifySocialVerificationRequest({
         verificationRecordId: storedSocialFlow.verificationRecordId,
         connectorData: {

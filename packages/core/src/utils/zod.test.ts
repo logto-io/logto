@@ -15,6 +15,7 @@ import {
   literal,
   union,
   preprocess,
+  undefined as zUndefined,
 } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -141,6 +142,25 @@ describe('zodTypeToSwagger', () => {
         },
         y: {
           type: 'number',
+        },
+      },
+      required: ['x'],
+    });
+  });
+
+  it('object type with undefined property', () => {
+    expect(
+      zodTypeToSwagger(
+        object({
+          x: string(),
+          y: zUndefined(),
+        })
+      )
+    ).toEqual({
+      type: 'object',
+      properties: {
+        x: {
+          type: 'string',
         },
       },
       required: ['x'],

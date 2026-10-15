@@ -13,6 +13,8 @@ const account_center = {
     sidebar_security: 'ความปลอดภัย',
     sidebar_sessions: 'เซสชัน',
     support: 'ฝ่ายช่วยเหลือ',
+    user_menu: 'เมนูผู้ใช้',
+    sign_out: 'ออกจากระบบ',
   },
   verification: {
     title: 'การยืนยันความปลอดภัย',
@@ -119,6 +121,21 @@ const account_center = {
     email_removed: 'ลบที่อยู่อีเมลเรียบร้อยแล้ว',
     phone_removed: 'ลบหมายเลขโทรศัพท์เรียบร้อยแล้ว',
     username_removed: 'ลบชื่อผู้ใช้เรียบร้อยแล้ว',
+    trusted_devices: {
+      title: 'อุปกรณ์ที่เชื่อถือสำหรับ MFA',
+      current_device: 'อุปกรณ์ปัจจุบัน',
+      expires_on: 'หมดอายุวันที่ {{date}}',
+      unknown_location: 'ไม่ทราบตำแหน่ง',
+      remove: 'ลบ',
+      removed: 'ลบอุปกรณ์ที่เชื่อถือเรียบร้อยแล้ว',
+      loading: 'กำลังโหลด...',
+      empty: 'ไม่มีอุปกรณ์ที่เชื่อถือ',
+      load_failed: 'โหลดอุปกรณ์ที่เชื่อถือไม่สำเร็จ โปรดลองอีกครั้ง',
+      retry: 'ลองอีกครั้ง',
+      remove_confirmation_title: 'ลบอุปกรณ์ที่เชื่อถือหรือไม่?',
+      remove_confirmation_description:
+        'คุณจะต้องทำ MFA อีกครั้งบนอุปกรณ์นี้เมื่อลงชื่อเข้าใช้ครั้งถัดไป เซสชันปัจจุบันของคุณจะยังคงทำงานอยู่',
+    },
   },
   social: {
     linked: 'เชื่อมโยง {{connector}} สำเร็จแล้ว',

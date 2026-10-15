@@ -8,6 +8,7 @@ import {
   type UserWithOrganizationRoles,
   type FeaturedUser,
   userInfoSelectFields,
+  type User,
 } from '@logto/schemas';
 import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
@@ -18,6 +19,8 @@ import { convertToIdentifiers } from '#src/utils/sql.js';
 import { type userSearchKeys } from '../user.js';
 
 import { aggregateRoles } from './utils.js';
+
+type UserWithoutMfa = Pick<User, 'id' | 'username' | 'primaryEmail' | 'name' | 'avatar'>;
 
 /** The query class for the organization - user relation. */
 export class UserRelationQueries extends TwoRelationsQueries<typeof Organizations, typeof Users> {
@@ -76,6 +79,31 @@ export class UserRelationQueries extends TwoRelationsQueries<typeof Organization
         on ${relations.fields.userId} = ${users.fields.id}
       where ${relations.fields.organizationId} = ${organizationId}
       and ${users.fields.primaryEmail} = ${email}
+    `);
+  }
+
+  /**
+   * Find the members of an organization who have no MFA configured, i.e. the members its MFA
+   * requirement will challenge at their next sign-in. "Configured" follows
+   * `OrganizationQueries.getMfaStatus()`: any MFA verification counts.
+   */
+  async getUsersWithoutMfa(organizationId: string): Promise<readonly UserWithoutMfa[]> {
+    const users = convertToIdentifiers(Users, true);
+    const relations = convertToIdentifiers(OrganizationUserRelations, true);
+
+    return this.pool.any<UserWithoutMfa>(sql`
+      select
+        ${users.fields.id},
+        ${users.fields.username},
+        ${users.fields.primaryEmail},
+        ${users.fields.name},
+        ${users.fields.avatar}
+      from ${relations.table}
+      join ${users.table}
+        on ${relations.fields.userId} = ${users.fields.id}
+      where ${relations.fields.organizationId} = ${organizationId}
+        and jsonb_array_length(${users.fields.mfaVerifications}) = 0
+      order by ${users.fields.createdAt}
     `);
   }
 

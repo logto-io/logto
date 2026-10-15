@@ -1,5 +1,6 @@
 import {
   BindingType,
+  isSamlForceAuthnEnabled,
   type PatchSamlApplication,
   type SamlApplicationResponse,
 } from '@logto/schemas';
@@ -10,7 +11,8 @@ import { type SamlApplicationFormData } from './Settings';
 export const parseSamlApplicationResponseToFormData = (
   data: SamlApplicationResponse
 ): SamlApplicationFormData => {
-  const { id, description, name, entityId, acsUrl, encryption, nameIdFormat } = data;
+  const { id, description, name, entityId, acsUrl, encryption, nameIdFormat, authnRequestConfig } =
+    data;
 
   return {
     id,
@@ -22,11 +24,14 @@ export const parseSamlApplicationResponseToFormData = (
     encryptSamlAssertion: encryption?.encryptAssertion ?? false,
     encryptThenSignSamlAssertion: encryption?.encryptThenSign ?? false,
     certificate: encryption?.certificate ?? '',
+    forceAuthn: isSamlForceAuthnEnabled(authnRequestConfig),
   };
 };
 
 export const parseFormDataToSamlApplicationRequest = (
-  data: SamlApplicationFormData
+  data: SamlApplicationFormData,
+  /** PATCH replaces `authnRequestConfig`, so settings the form does not edit are carried over. */
+  authnRequestConfig: SamlApplicationResponse['authnRequestConfig']
 ): {
   id: string;
   payload: PatchSamlApplication;
@@ -41,6 +46,7 @@ export const parseFormDataToSamlApplicationRequest = (
     encryptThenSignSamlAssertion,
     certificate,
     nameIdFormat,
+    forceAuthn,
   } = data;
 
   // If acsUrl value is empty string, it should be removed. Convert it to null.
@@ -54,6 +60,7 @@ export const parseFormDataToSamlApplicationRequest = (
       entityId,
       acsUrl: acsUrlData,
       nameIdFormat,
+      authnRequestConfig: { ...authnRequestConfig, forceAuthn },
       ...cond(
         encryptSamlAssertion
           ? cond(

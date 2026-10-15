@@ -44,6 +44,7 @@ export default function resourceRoutes<T extends ManagementApiRouter>(
     koaGuard({
       query: object({
         includeScopes: string().optional(),
+        excludeManagementApis: string().optional(),
       }),
       response: Resources.guard.extend({ scopes: Scopes.guard.array().optional() }).array(),
       status: [200],
@@ -51,11 +52,12 @@ export default function resourceRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const { limit, offset, disabled } = ctx.pagination;
       const {
-        query: { includeScopes },
+        query: { includeScopes, excludeManagementApis },
       } = ctx.guard;
+      const shouldExcludeManagementApis = yes(excludeManagementApis);
 
       if (disabled) {
-        const resources = await findAllResources();
+        const resources = await findAllResources(shouldExcludeManagementApis);
         ctx.body = yes(includeScopes)
           ? await attachScopesToResources(resources, scopeQueries)
           : resources;
@@ -64,8 +66,8 @@ export default function resourceRoutes<T extends ManagementApiRouter>(
       }
 
       const [{ count }, resources] = await Promise.all([
-        findTotalNumberOfResources(),
-        findAllResources(limit, offset),
+        findTotalNumberOfResources(shouldExcludeManagementApis),
+        findAllResources(shouldExcludeManagementApis, limit, offset),
       ]);
 
       ctx.pagination.totalCount = count;

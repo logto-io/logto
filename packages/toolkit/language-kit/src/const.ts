@@ -29,6 +29,7 @@ export const languages = Object.freeze({
   es: 'Español',
   'es-ES': 'Español (España)',
   'es-419': 'Español (Latinoamérica)',
+  'es-MX': 'Español (México)',
   'et-EE': 'Eesti',
   'eu-ES': 'Euskara',
   'fa-IR': 'فارسی',

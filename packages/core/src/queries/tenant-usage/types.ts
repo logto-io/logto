@@ -46,6 +46,8 @@ export type QuotaUsageKey = Exclude<
   | 'tokenLimit'
   // Exclude tenantMembersLimit as it is checked in Cloud, not in core.
   | 'tenantMembersLimit'
+  // Console SSO usage is counted per Enterprise plan in Cloud, not per tenant.
+  | 'consoleSsoConnectorLimit'
   // Exclude the hosted-email caps as they are enforced at the Cloud `/mails` guard, not in core.
   | 'hostedEmailLimit'
   | 'hostedEmailDailyLimit'

@@ -1,5 +1,11 @@
 # @logto/connector-qq
 
+## 1.1.6
+
+### Patch Changes
+
+- @logto/connector-kit@5.1.1
+
 ## 1.1.5
 
 ### Patch Changes

@@ -12,6 +12,8 @@ const subscription = {
   enterprise_description: 'Büyük ekipler ve kurumsal gereksinimleri olan işletmeler için.',
   admin_plan: 'Yönetici planı',
   dev_plan: 'Geliştirme planı',
+  self_hosted_pro_plan: 'Self-hosted Pro plan',
+  self_hosted_enterprise_plan: 'Self-hosted Kurumsal plan',
   current_plan: 'Mevcut Plan',
   current_plan_description:
     'İşte mevcut planınız. Plan kullanımınızı kolayca görebilir, önümüzdeki faturanızı kontrol edebilir ve ihtiyaç duydukça planınızda değişiklikler yapabilirsiniz.',
@@ -45,6 +47,13 @@ const subscription = {
     },
   },
   quota_item,
+  cancel_feedback_modal: {
+    title: 'Gittiğinizi görmek üzücü',
+    description:
+      "Aboneliğiniz iptal edildi. Geri bildiriminiz Logto'yu daha iyi hale getirmemize yardımcı oluyor. Her yanıtı okuyoruz.",
+    what_made_you_cancel: 'İptal etmenize ne sebep oldu?',
+    how_to_reconsider: 'Yeniden düşünmeniz için ne yapabiliriz?',
+  },
   downgrade_modal: {
     title: 'Emin misiniz, düşürmek istediğinize?',
     description:
@@ -67,10 +76,18 @@ const subscription = {
       'Yükseltme konusunda yardıma mı ihtiyacınız var? <a>Bizimle iletişime geçin</a>.',
     a_maximum_of: '<item/> için maksimum',
   },
+  billing_customer_modal: {
+    title: 'Bir fatura hesabı seçin',
+    description:
+      'Bu aboneliğin ödeme işlemleri için fatura hesabını seçin ya da yeni bir hesap başlatın. Ödeme bilgilerini bir sonraki sayfada değiştirebilirsiniz.',
+    account: 'Fatura hesabı',
+    new_account: 'Yeni fatura hesabı',
+    default_account: 'Varsayılan',
+  },
   upgrade_success: "Başarıyla <name/>'e yükseltildi",
   downgrade_success: "Başarıyla <name/>'e düşürüldü",
-  subscription_check_timeout:
-    'Abonelik kontrolü zaman aşımına uğradı. Lütfen daha sonra yenileyin.',
+  subscription_check_pending:
+    'Ödemeniz alındı. Aboneliğinizi ayarlamak beklenenden daha uzun sürüyor.',
   no_subscription: 'Abonelik bulunamadı',
   usage,
   token_usage_notification: {

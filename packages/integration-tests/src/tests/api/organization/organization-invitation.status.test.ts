@@ -164,4 +164,33 @@ describe('organization invitation status update', () => {
 
     await expectErrorResponse(error, 422, 'request.invalid_input');
   });
+
+  it('should never both accept and revoke an invitation changed at the same time', async () => {
+    const organization = await organizationApi.create({ name: 'test' });
+    const invitation = await invitationApi.create({
+      organizationId: organization.id,
+      invitee: `${randomId()}@example.com`,
+      expiresAt: Date.now() + 1_000_000,
+    });
+    const user = await userApi.create({ primaryEmail: invitation.invitee });
+
+    const [accepted, revoked] = await Promise.allSettled([
+      invitationApi.updateStatus(invitation.id, OrganizationInvitationStatus.Accepted, user.id),
+      invitationApi.updateStatus(invitation.id, OrganizationInvitationStatus.Revoked),
+    ]);
+
+    // Exactly one change wins, and the invitation and the membership follow the winner.
+    expect(accepted.status === 'fulfilled').not.toBe(revoked.status === 'fulfilled');
+    const { status } = await invitationApi.get(invitation.id);
+    const userOrganizations = await organizationApi.getUserOrganizations(user.id);
+
+    expect(status).toBe(
+      accepted.status === 'fulfilled'
+        ? OrganizationInvitationStatus.Accepted
+        : OrganizationInvitationStatus.Revoked
+    );
+    expect(userOrganizations.some(({ id }) => id === organization.id)).toBe(
+      accepted.status === 'fulfilled'
+    );
+  });
 });

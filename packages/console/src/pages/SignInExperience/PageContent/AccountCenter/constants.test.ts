@@ -6,14 +6,11 @@ jest.mock('@/consts/env', () => ({
   },
 }));
 
-const getSessionManagementFieldKeys = async () => {
+const getAccountSecurityGroups = async () => {
   const { accountCenterSections } = await import('./constants');
   const accountSecuritySection = accountCenterSections.find(({ key }) => key === 'accountSecurity');
-  const sessionManagementGroup = accountSecuritySection?.groups.find(
-    ({ key }) => key === 'sessionManagement'
-  );
 
-  return sessionManagementGroup?.items.map(({ key }) => key);
+  return accountSecuritySection?.groups ?? [];
 };
 
 describe('Account Center field sections', () => {
@@ -27,12 +24,27 @@ describe('Account Center field sections', () => {
   });
 
   it('shows an independent trusted-device permission under session management', async () => {
-    await expect(getSessionManagementFieldKeys()).resolves.toEqual(['session', 'trustedDevice']);
+    const groups = await getAccountSecurityGroups();
+    const sessionManagementGroup = groups.find(({ key }) => key === 'sessionManagement');
+
+    expect(sessionManagementGroup?.items.map(({ key }) => key)).toEqual([
+      'session',
+      'trustedDevice',
+    ]);
   });
 
-  it('hides the trusted-device permission when dev features are disabled', async () => {
+  it('shows the personal access token permission under developer settings', async () => {
+    const groups = await getAccountSecurityGroups();
+    const developerSettingsGroup = groups.find(({ key }) => key === 'developerSettings');
+
+    expect(developerSettingsGroup?.items.map(({ key }) => key)).toEqual(['personalAccessToken']);
+  });
+
+  it('hides the personal access token permission when dev features are disabled', async () => {
     mockIsDevFeaturesEnabled.mockReturnValue(false);
 
-    await expect(getSessionManagementFieldKeys()).resolves.toEqual(['session']);
+    const groups = await getAccountSecurityGroups();
+
+    expect(groups.map(({ key }) => key)).not.toContain('developerSettings');
   });
 });

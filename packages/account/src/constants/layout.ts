@@ -20,6 +20,12 @@ export const layoutClassNames = Object.freeze({
   signature: 'logto_ac-signature',
   /** Top-level page header (logo + app name bar). */
   pageHeader: 'logto_ac-page-header',
+  /** User menu (avatar + dropdown) on the right side of the page header. */
+  userMenu: 'logto_ac-user-menu',
+  /** Avatar button that toggles the user menu dropdown. */
+  userMenuAvatar: 'logto_ac-user-menu-avatar',
+  /** Dropdown panel of the user menu. */
+  userMenuDropdown: 'logto_ac-user-menu-dropdown',
   /** Page title text (on Security / Home page). */
   pageTitle: 'logto_ac-page-title',
   /** Page description text (on Security / Home page). */

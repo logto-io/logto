@@ -1,4 +1,73 @@
 const cloud = {
+  self_hosted_licenses: {
+    title: 'Licences auto-hébergées',
+    description:
+      'Consultez les licences de votre compte et copiez les clés pour vos déploiements auto-hébergés.',
+    empty_title: 'Aucune licence auto-hébergée pour le moment',
+    empty_description:
+      "Si vous avez acheté une licence, assurez-vous d'être connecté avec le compte utilisé pour l'achat.",
+    load_error: 'Impossible de charger les licences. Veuillez réessayer.',
+    period_end: 'Fin de la période actuelle',
+    keys_title: 'Clés de licence',
+    keys_description:
+      'Gardez ces clés confidentielles. Utilisez la clé adaptée à votre environnement.',
+    production_key: 'Clé de production',
+    non_production_key: 'Clé hors production',
+    keys_unavailable:
+      'Les clés de cette licence sont indisponibles. Contactez le support si nécessaire.',
+    issue_keys: 'Obtenir les clés de licence',
+    issue_error: 'Impossible d’émettre les clés de licence. Veuillez réessayer.',
+    install_title: 'Installer votre licence',
+    install_description:
+      'Les deux clés offrent les mêmes fonctionnalités et quotas. Sauf indication contraire dans votre bon de commande, votre abonnement couvre un déploiement en production.',
+    install_copy:
+      'Copiez la clé de production pour la production, ou la clé hors production pour le développement et les tests.',
+    install_paste:
+      'Dans votre console auto-hébergée, ouvrez Paramètres → Licence, collez la clé et installez-la.',
+    status: {
+      active: 'Active',
+      past_due: 'Paiement en retard',
+      canceling: 'Annulation en fin de période',
+      canceled: 'Annulée',
+      unpaid: 'Impayée',
+      expired: 'Expirée',
+      revoked: 'Révoquée',
+    },
+  },
+  console_sso: {
+    back_to_list: 'Retour au SSO de la console',
+    create: 'Ajouter un connecteur',
+    title: 'SSO de la console',
+    description:
+      'Configurez votre propre fournisseur d’identité pour vous connecter à Logto Console avec l’authentification unique.',
+    domain_bound: 'Associé',
+    domain_pending: 'Vérification en cours',
+    domain_verify_step: 'Vérifier votre domaine',
+    domain_bind_step: 'Associer le domaine de messagerie',
+    domain_add_placeholder: 'Ajouter un domaine de messagerie',
+    domain_bound_description:
+      'Ce domaine est actif pour Console SSO. Son enregistrement TXT de vérification a été supprimé.',
+    domain_dns_instructions:
+      'Ajoutez cet enregistrement TXT chez votre fournisseur DNS pour vérifier la propriété du domaine.',
+    domain_waiting_for_dns:
+      'En attente de l’enregistrement TXT. Nous vérifions à nouveau toutes les 10 secondes.',
+    domain_proven_unbound:
+      'La propriété du domaine est vérifiée, mais son association est incomplète.',
+    domain_verified: 'La propriété du domaine a été vérifiée.',
+    domain_binding_pending: 'L’association démarre automatiquement après la vérification.',
+    domain_remove_description:
+      'Supprimer {{domain}} de Console SSO ? La suppression d’un domaine associé arrête la découverte SSO pour ses adresses e-mail.',
+    domain_invalid: 'Saisissez un domaine de messagerie valide.',
+    domain_conflict: 'Ce domaine est déjà associé à un autre connecteur Console SSO.',
+    domain_invalid_provider: 'Terminez la configuration de connexion avant d’associer ce domaine.',
+    domain_dns_timeout: 'La vérification DNS a échoué. Nous réessaierons automatiquement.',
+    domain_recovery: 'La modification du domaine est incomplète.',
+    start_over: 'Recommencer',
+    start_over_confirmation:
+      'Recommencer peut supprimer votre configuration SSO inachevée. Voulez-vous continuer ?',
+    resume_creation:
+      'Une création inachevée a été trouvée. Continuez avec le même fournisseur pour récupérer ce connecteur.',
+  },
   general: {
     onboarding: 'Intégration',
   },

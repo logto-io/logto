@@ -1,5 +1,5 @@
 import { ConnectorType } from '@logto/connector-kit';
-import { SignInIdentifier } from '@logto/schemas';
+import { MfaFactor, SignInIdentifier } from '@logto/schemas';
 
 import { deleteUser } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
@@ -79,5 +79,75 @@ describe('phone MFA binding', () => {
     await experience.verifyThenEnd();
 
     await deleteUser(user.id);
+  });
+
+  describe('trusted device opt-in', () => {
+    beforeAll(async () => {
+      await updateSignInExperience({ trustedDevice: { enabled: true, durationDays: 365 } });
+    });
+
+    afterAll(async () => {
+      await updateSignInExperience({ trustedDevice: { enabled: false } });
+    });
+
+    it('creates a trusted device from phone MFA binding and skips MFA on the next sign-in', async () => {
+      const { userProfile, user } = await generateNewUser({ username: true, password: true });
+      const experience = new ExpectExperience(await browser.newPage());
+
+      await experience.startWith(demoAppUrl, 'sign-in');
+      await experience.toFillForm(
+        { identifier: userProfile.username, password: userProfile.password },
+        { submit: true }
+      );
+      await experience.waitToBeAt(`mfa-binding/${MfaFactor.PhoneVerificationCode}`);
+      await experience.toFillInput('identifier', generatePhone(), { submit: true });
+      await experience.toCompleteVerification('continue', ConnectorType.Sms);
+      await experience.toClickButton('Continue');
+      await experience.toOptInTrustedDevice();
+      await experience.verifyThenEnd(false);
+      await experience.clearDemoAppSession();
+      await experience.page.close();
+      const trustedDeviceExperience = new ExpectExperience(await browser.newPage());
+
+      await trustedDeviceExperience.startWith(demoAppUrl, 'sign-in');
+      await trustedDeviceExperience.toFillForm(
+        { identifier: userProfile.username, password: userProfile.password },
+        { submit: true }
+      );
+      await trustedDeviceExperience.verifyThenEnd();
+
+      await deleteUser(user.id);
+    });
+
+    it('creates a trusted device from phone MFA verification and skips MFA on the next sign-in', async () => {
+      const { userProfile, user } = await generateNewUser({
+        username: true,
+        password: true,
+        primaryPhone: true,
+      });
+      const experience = new ExpectExperience(await browser.newPage());
+
+      await experience.startWith(demoAppUrl, 'sign-in');
+      await experience.toFillForm(
+        { identifier: userProfile.username, password: userProfile.password },
+        { submit: true }
+      );
+      await experience.waitToBeAt(`mfa-verification/${MfaFactor.PhoneVerificationCode}`);
+      await experience.toCompleteMfaVerification(ConnectorType.Sms);
+      await experience.toOptInTrustedDevice();
+      await experience.verifyThenEnd(false);
+      await experience.clearDemoAppSession();
+      await experience.page.close();
+      const trustedDeviceExperience = new ExpectExperience(await browser.newPage());
+
+      await trustedDeviceExperience.startWith(demoAppUrl, 'sign-in');
+      await trustedDeviceExperience.toFillForm(
+        { identifier: userProfile.username, password: userProfile.password },
+        { submit: true }
+      );
+      await trustedDeviceExperience.verifyThenEnd();
+
+      await deleteUser(user.id);
+    });
   });
 });

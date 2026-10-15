@@ -9,7 +9,6 @@ import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { organizationsFeatureLink } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -28,14 +27,9 @@ import JitSettings from './JitSettings';
 import TrustedDeviceSettings from './TrustedDeviceSettings';
 import styles from './index.module.scss';
 
-type SignInExperienceResponse = Omit<SignInExperience, 'trustedDevice'> &
-  Partial<Pick<SignInExperience, 'trustedDevice'>>;
-
 function Settings() {
   const { isDeleting, data, jit, onUpdated } = useOutletContext<OrganizationDetailsOutletContext>();
-  const { data: signInExperience } = useSWR<SignInExperienceResponse, RequestError>(
-    'api/sign-in-exp'
-  );
+  const { data: signInExperience } = useSWR<SignInExperience, RequestError>('api/sign-in-exp');
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const form = useForm<FormData>({
     defaultValues: normalizeData(data, {
@@ -53,7 +47,7 @@ function Settings() {
     watch,
   } = form;
   const [isMfaRequired] = watch(['isMfaRequired']);
-  const isGlobalTrustedDevicePolicyEnabled = Boolean(signInExperience?.trustedDevice?.enabled);
+  const isGlobalTrustedDevicePolicyEnabled = Boolean(signInExperience?.trustedDevice.enabled);
   const api = useApi();
 
   const onSubmit = handleSubmit(
@@ -67,7 +61,7 @@ function Settings() {
       const ssoConnectorIds = data.jitSsoConnectorIds;
       const updatedData = await api
         .patch(`api/organizations/${data.id}`, {
-          json: assembleData(data, isDevFeaturesEnabled),
+          json: assembleData(data),
         })
         .json<Organization>();
 
@@ -146,14 +140,11 @@ function Settings() {
             </InlineNotification>
           )}
         </FormField>
-        {/* DEV: MFA trusted devices */}
-        {isDevFeaturesEnabled && (
-          <TrustedDeviceSettings
-            isGlobalPolicyEnabled={isGlobalTrustedDevicePolicyEnabled}
-            isGlobalPolicyLoaded={Boolean(signInExperience)}
-            register={register}
-          />
-        )}
+        <TrustedDeviceSettings
+          isGlobalPolicyEnabled={isGlobalTrustedDevicePolicyEnabled}
+          isGlobalPolicyLoaded={Boolean(signInExperience)}
+          register={register}
+        />
       </FormCard>
       <JitSettings form={form} />
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleting && isDirty} />

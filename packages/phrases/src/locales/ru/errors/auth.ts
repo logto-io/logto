@@ -11,6 +11,7 @@ const auth = {
   exceed_token_limit: 'Превышен лимит токенов. Пожалуйста, свяжитесь с администратором.',
   third_party_application_forbidden:
     'Сторонние приложения не могут изменять данные учётной записи через этот API.',
+  read_only_access: 'Этот запрос не разрешён при доступе только для чтения.',
 };
 
 export default Object.freeze(auth);

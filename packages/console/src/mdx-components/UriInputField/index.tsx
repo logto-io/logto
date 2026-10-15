@@ -17,6 +17,7 @@ import {
 } from '@/ds-components/MultiTextInput/utils';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import type {
   CustomClientMetadataKey,
   GuideForm,
@@ -66,6 +67,9 @@ function UriInputField(props: Props) {
 
   const ref = useRef<HTMLDivElement>(null);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const api = useApi();
   const title: AdminConsoleKey = nameToKey[name];
   const validator =
@@ -97,7 +101,10 @@ function UriInputField(props: Props) {
   const onKeyPress = (event: KeyboardEvent<HTMLInputElement>, value: string[]) => {
     if (event.key === 'Enter') {
       event.preventDefault();
-      void handleSubmit(async () => onSubmit(value))();
+
+      if (!isReadOnly) {
+        void handleSubmit(async () => onSubmit(value))();
+      }
     }
   };
 
@@ -143,14 +150,16 @@ function UriInputField(props: Props) {
                     onKeyPress(event, value);
                   }}
                 />
-                <Button
-                  className={styles.saveButton}
-                  disabled={!isDirty}
-                  isLoading={isSubmitting}
-                  title="general.save"
-                  type="primary"
-                  onClick={handleSubmit(async () => onSubmit(value))}
-                />
+                {!isReadOnly && (
+                  <Button
+                    className={styles.saveButton}
+                    disabled={!isDirty}
+                    isLoading={isSubmitting}
+                    title="general.save"
+                    type="primary"
+                    onClick={handleSubmit(async () => onSubmit(value))}
+                  />
+                )}
               </div>
             );
           }}

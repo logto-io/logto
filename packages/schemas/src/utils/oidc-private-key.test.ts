@@ -34,6 +34,20 @@ describe('OIDC private key helpers', () => {
     ]);
   });
 
+  it('preserves explicit statuses without reordering the input array', () => {
+    expect(
+      normalizeOidcPrivateKeys([
+        createPrivateKey('previous', 3, OidcSigningKeyStatus.Previous),
+        createPrivateKey('current', 2, OidcSigningKeyStatus.Current),
+        createPrivateKey('next', 1, OidcSigningKeyStatus.Next),
+      ])
+    ).toEqual([
+      createPrivateKey('previous', 3, OidcSigningKeyStatus.Previous),
+      createPrivateKey('current', 2, OidcSigningKeyStatus.Current),
+      createPrivateKey('next', 1, OidcSigningKeyStatus.Next),
+    ]);
+  });
+
   it('throws for malformed status configurations', () => {
     expect(() =>
       normalizeOidcPrivateKeys([
@@ -131,6 +145,23 @@ describe('OIDC private key helpers', () => {
     ]);
   });
 
+  it('replaces any existing Next key instead of accumulating a fourth private key', () => {
+    expect(
+      getStagedRotatedOidcPrivateKeys(
+        [
+          createPrivateKey('next', 4, OidcSigningKeyStatus.Next),
+          createPrivateKey('current', 3, OidcSigningKeyStatus.Current),
+          createPrivateKey('previous', 2, OidcSigningKeyStatus.Previous),
+        ],
+        createPrivateKey('replacement', 5)
+      )
+    ).toEqual([
+      createPrivateKey('replacement', 5, OidcSigningKeyStatus.Next),
+      createPrivateKey('current', 3, OidcSigningKeyStatus.Current),
+      createPrivateKey('previous', 2, OidcSigningKeyStatus.Previous),
+    ]);
+  });
+
   it('promotes Next to Current during activation', () => {
     expect(
       rotateOidcPrivateKeyStatuses([
@@ -142,6 +173,38 @@ describe('OIDC private key helpers', () => {
       createPrivateKey('next', 3, OidcSigningKeyStatus.Current),
       createPrivateKey('current', 2, OidcSigningKeyStatus.Previous),
     ]);
+  });
+
+  it('returns the original keys when explicit-status keys have no staged Next key', () => {
+    const privateKeys = [
+      createPrivateKey('current', 2, OidcSigningKeyStatus.Current),
+      createPrivateKey('previous', 1, OidcSigningKeyStatus.Previous),
+    ];
+
+    expect(rotateOidcPrivateKeyStatuses(privateKeys)).toBe(privateKeys);
+  });
+
+  it('returns normalized keys when legacy keys have no staged Next key', () => {
+    const privateKeys = [createPrivateKey('current', 2), createPrivateKey('previous', 1)];
+    const result = rotateOidcPrivateKeyStatuses(privateKeys);
+
+    expect(result).not.toBe(privateKeys);
+    expect(result).toEqual([
+      createPrivateKey('current', 2, OidcSigningKeyStatus.Current),
+      createPrivateKey('previous', 1, OidcSigningKeyStatus.Previous),
+    ]);
+  });
+
+  it('keeps only Current when deleting Previous from a two-key set', () => {
+    expect(
+      getOidcPrivateKeysAfterDeletion(
+        [
+          createPrivateKey('current', 2, OidcSigningKeyStatus.Current),
+          createPrivateKey('previous', 1, OidcSigningKeyStatus.Previous),
+        ],
+        'previous'
+      )
+    ).toEqual([createPrivateKey('current', 2, OidcSigningKeyStatus.Current)]);
   });
 
   it('preserves status order when deleting Previous', () => {

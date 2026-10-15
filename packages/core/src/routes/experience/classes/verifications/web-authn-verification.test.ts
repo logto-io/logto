@@ -18,9 +18,11 @@ await mockEsmWithActual('@simplewebauthn/server', () => ({
   verifyRegistrationResponse: jest.fn().mockResolvedValue({
     verified: true,
     registrationInfo: {
-      credentialID: 'credentialId',
-      credentialPublicKey: 'publicKey',
-      counter: 0,
+      credential: {
+        id: 'credentialId',
+        publicKey: new Uint8Array([0xfb, 0xff]),
+        counter: 0,
+      },
     },
   }),
   generateAuthenticationOptions: jest
@@ -29,11 +31,6 @@ await mockEsmWithActual('@simplewebauthn/server', () => ({
   verifyAuthenticationResponse: jest
     .fn()
     .mockResolvedValue({ verified: true, authenticationInfo: { newCounter: 2 } }),
-}));
-
-// Make isoBase64URL.fromBuffer passthrough for simple assertions
-await mockEsmWithActual('@simplewebauthn/server/helpers', () => ({
-  isoBase64URL: { fromBuffer: jest.fn((value) => value), toBuffer: jest.fn((value) => value) },
 }));
 
 const { WebAuthnVerification, SignInPasskeyVerification } = await import(
@@ -124,6 +121,7 @@ describe('WebAuthnVerification', () => {
         type: MfaFactor.WebAuthn,
         rpId,
         credentialId: 'credentialId',
+        publicKey: '-_8',
         counter: 0,
         agent: 'agent-x',
         transports: ['internal', 'hybrid'],
@@ -223,6 +221,24 @@ describe('SignInPasskeyVerification', () => {
 
       expect(verification.isVerified).toBe(true);
       expect(updateUserById).toHaveBeenCalled();
+    });
+
+    it('should throw 409 identity conflict when user id does not match verification record', async () => {
+      const verification = new SignInPasskeyVerification(tenant.libraries, tenant.queries, {
+        id: 'v-id',
+        type: VerificationType.SignInPasskey,
+        userId: 'different-user-id',
+        verified: false,
+        authenticationChallenge: 'auth-challenge',
+        authenticationRpId: rpId,
+      });
+
+      await expect(
+        verification.verifyWebAuthnAuthentication(baseCtx, {
+          ...mockWebAuthnVerificationPayload,
+          id: mockUserWebAuthnMfaVerification.credentialId,
+        })
+      ).rejects.toMatchError(new RequestError({ code: 'session.identity_conflict', status: 409 }));
     });
   });
 });

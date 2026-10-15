@@ -8,11 +8,14 @@ import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import Divider from '@/components/Divider';
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
+import useMfaFlowState from '@/hooks/use-mfa-factors-state';
 import useSkipMfa from '@/hooks/use-skip-mfa';
 import useSkipOptionalMfa from '@/hooks/use-skip-optional-mfa';
 import ErrorPage from '@/pages/ErrorPage';
 import { UserMfaFlow } from '@/types';
-import { type MfaFlowState, totpBindingStateGuard } from '@/types/guard';
+import { totpBindingStateGuard } from '@/types/guard';
+
+import MfaBinding from '..';
 
 import SecretSection from './SecretSection';
 import VerificationSection from './VerificationSection';
@@ -26,25 +29,15 @@ const TotpBinding = () => {
 
   const skipMfa = useSkipMfa();
   const skipOptionalMfa = useSkipOptionalMfa();
+  const flowState = useMfaFlowState();
 
   if (!totpBindingState || !verificationId) {
-    return <ErrorPage title="error.invalid_session" />;
+    // Secrets are not part of the sanitized context; restart binding from the offered factors.
+    return flowState?.isStepUp ? <MfaBinding /> : <ErrorPage title="error.invalid_session" />;
   }
 
-  const {
-    availableFactors,
-    skippable,
-    suggestion,
-    maskedIdentifiers,
-    isWebAuthnUsedAsSignInPasskey,
-  } = totpBindingState;
-  const mfaFlowState: MfaFlowState = {
-    availableFactors,
-    skippable,
-    suggestion,
-    maskedIdentifiers,
-    isWebAuthnUsedAsSignInPasskey,
-  };
+  const { secret: _secret, secretQrCode: _secretQrCode, ...mfaFlowState } = totpBindingState;
+  const { availableFactors, skippable, suggestion } = flowState ?? mfaFlowState;
 
   return (
     <SecondaryPageLayout
@@ -60,7 +53,7 @@ const TotpBinding = () => {
             <Divider />
             <SwitchMfaFactorsLink
               flow={UserMfaFlow.MfaBinding}
-              flowState={mfaFlowState}
+              flowState={flowState ?? mfaFlowState}
               className={styles.switchLink}
             />
           </>

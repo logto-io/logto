@@ -36,6 +36,11 @@ const security = {
       description:
         'Alternativa inteligente ao CAPTCHA da Cloudflare, que oferece proteção não intrusiva contra bots, garantindo uma experiência de utilizador fluida sem quebra-cabeças visuais.',
     },
+    cap: {
+      name: 'Cap',
+      description:
+        'CAPTCHA de código aberto e auto-alojado baseado em prova de trabalho, sem quebra-cabeças visuais nem serviços de terceiros, ideal para regiões onde outros serviços de CAPTCHA não estão acessíveis.',
+    },
   },
   captcha_details: {
     back_to_security: 'Voltar à Segurança',
@@ -51,6 +56,10 @@ const security = {
     domain_placeholder: 'www.google.com (padrão) ou recaptcha.net',
     recaptcha_key_id: 'ID da chave reCAPTCHA',
     recaptcha_api_key: 'Chave de API do projeto',
+    cap_endpoint: 'Endpoint do Cap',
+    cap_endpoint_placeholder: 'https://cap.example.com',
+    cap_endpoint_http_notice:
+      'Este endpoint utiliza HTTP, o que só é adequado para desenvolvimento local. Os navegadores bloqueiam pedidos HTTP a partir de uma página de início de sessão HTTPS, e a chave secreta seria enviada sem encriptação. Utilize HTTPS em produção.',
     deletion_description: 'Tem a certeza de que deseja eliminar este fornecedor de CAPTCHA?',
     captcha_deleted: 'Fornecedor de CAPTCHA eliminado com sucesso',
     setup_captcha: 'Configurar CAPTCHA',
@@ -59,6 +68,10 @@ const security = {
     mode_checkbox: 'Caixa de seleção',
     mode_notice:
       'O modo de verificação é definido nas definições da chave reCAPTCHA na Google Cloud Console. Alterar o modo aqui requer um tipo de chave correspondente.',
+    score_threshold: 'Limiar de pontuação',
+    score_threshold_description:
+      'Pontuações abaixo do limiar são rejeitadas. 0.0 permite todas, 1.0 apenas pontuações perfeitas. O valor predefinido é 0.5.',
+    score_threshold_error: 'O limiar de pontuação deve estar entre 0 e 1.',
   },
   password_policy: {
     password_requirements: 'Requisitos de password',

@@ -1,4 +1,8 @@
-import { AccountCenterControlValue, type ExperienceSocialConnector } from '@logto/schemas';
+import {
+  AccountCenterControlValue,
+  accountCenterSocialStatePrefix,
+  type ExperienceSocialConnector,
+} from '@logto/schemas';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -13,10 +17,9 @@ import {
 import ErrorPage from '@ac/components/ErrorPage';
 import GlobalLoading from '@ac/components/GlobalLoading';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
-import { getSocialCallbackRoute, securityRoute } from '@ac/constants/routes';
+import { securityRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
-import { accountCenterBasePath } from '@ac/utils/account-center-route';
 import { canManageSocialIdentitiesWithoutVerification } from '@ac/utils/security-page';
 import { accountStorage, sessionStorage } from '@ac/utils/session-storage';
 import { getLocalizedConnectorName } from '@ac/utils/social-connector';
@@ -26,7 +29,8 @@ type Props = {
   readonly mode: 'add' | 'remove' | 'change';
 };
 
-const generateState = () => crypto.randomUUID().replaceAll('-', '');
+const generateState = () =>
+  `${accountCenterSocialStatePrefix}${crypto.randomUUID().replaceAll('-', '')}`;
 
 const SocialFlow = ({ mode }: Props) => {
   const {
@@ -169,9 +173,7 @@ const SocialFlow = ({ mode }: Props) => {
       }
 
       const state = generateState();
-      const redirectUri = `${window.location.origin}${accountCenterBasePath}${getSocialCallbackRoute(
-        connectorId
-      )}`;
+      const redirectUri = `${window.location.origin}/callback/${connectorId}`;
       const [error, result] = await createSocialVerificationRequest({
         connectorId,
         state,
@@ -224,9 +226,7 @@ const SocialFlow = ({ mode }: Props) => {
 
       // Pre-OAuth phase: start add flow to replace existing identity
       const state = generateState();
-      const redirectUri = `${window.location.origin}${accountCenterBasePath}${getSocialCallbackRoute(
-        connectorId
-      )}`;
+      const redirectUri = `${window.location.origin}/callback/${connectorId}`;
       const [error, result] = await createSocialVerificationRequest({
         connectorId,
         state,

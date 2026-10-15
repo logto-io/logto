@@ -114,6 +114,14 @@ const applications = {
       permission_delete_confirm:
         'Bu işlem, izni dinamik uygulamadan kaldıracak ve OAuth istemcilerinin bu izin için kullanıcı yetkilendirmesi istemesini engelleyecektir. Devam etmek istediğinizden emin misiniz?',
     },
+    client_compatibility: {
+      title: 'İstemci uyumluluğu',
+      description:
+        "Logto'nun, OpenID Connect'i henüz tam olarak desteklemeyen OAuth istemcilerinden gelen yetkilendirme isteklerini nasıl işlediğini ayarlayın. Bu ayarlar deneyseldir ve değiştirilebilir veya kaldırılabilir.",
+      add_consent_prompt_for_offline_access: 'Çevrimdışı erişim için onay istemi ekle',
+      add_consent_prompt_for_offline_access_description:
+        'Bir OAuth istemcisi `prompt=consent` olmadan `offline_access` istediğinde Logto, istemcinin bir yenileme belirteci alabilmesi için onay istemini ekler. ChatGPT ve Codex gibi istemciler için önerilir.',
+    },
   },
   guide: {
     third_party: {

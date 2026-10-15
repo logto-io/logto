@@ -24,6 +24,7 @@ import { conditional, type Nullable } from '@silverhand/essentials';
 import { authedAdminApi } from './api.js';
 
 export type CreateUserPayload = Partial<{
+  id: string;
   primaryEmail: string;
   primaryPhone: string;
   username: string;
@@ -219,19 +220,8 @@ export const updatePersonalAccessTokenLegacy = async (
     })
     .json<PersonalAccessToken>();
 
-export const getUserTrustedDevicesResponse = async (
-  userId: string,
-  searchParams?: URLSearchParams
-) =>
-  authedAdminApi.get(`users/${userId}/trusted-devices`, {
-    searchParams,
-  });
-
-export const getUserTrustedDevices = async (userId: string, searchParams?: URLSearchParams) => {
-  const response = await getUserTrustedDevicesResponse(userId, searchParams);
-
-  return response.json<TrustedDeviceResponse[]>();
-};
+export const getUserTrustedDevices = async (userId: string) =>
+  authedAdminApi.get(`users/${userId}/trusted-devices`).json<TrustedDeviceResponse[]>();
 
 export const deleteUserTrustedDevice = async (userId: string, trustedDeviceId: string) =>
   authedAdminApi.delete(`users/${userId}/trusted-devices/${trustedDeviceId}`);

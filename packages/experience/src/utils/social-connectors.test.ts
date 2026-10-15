@@ -1,6 +1,10 @@
 import { GoogleConnector } from '@logto/connector-kit';
 import type { ConnectorMetadata } from '@logto/schemas';
-import { ConnectorPlatform } from '@logto/schemas';
+import {
+  accountCenterSocialStatePrefix,
+  ConnectorPlatform,
+  experienceSocialStatePrefix,
+} from '@logto/schemas';
 import { getCookie } from 'tiny-cookie';
 
 import { SearchParameters } from '@/types';
@@ -10,6 +14,7 @@ import {
   filterSocialConnectors,
   filterPreviewSocialConnectors,
   buildSocialLandingUri,
+  generateState,
   validateState,
   validateGoogleOneTapCredential,
 } from './social-connectors';
@@ -161,6 +166,20 @@ describe('buildSocialLandingUri', () => {
     expect(callbackUri.searchParams.get(SearchParameters.NativeCallbackLink)).toEqual(
       'logto://callback'
     );
+  });
+});
+
+describe('generateState', () => {
+  it('should prefix the state so that it never collides with the account center namespace', () => {
+    const state = generateState();
+
+    expect(state.startsWith(experienceSocialStatePrefix)).toBe(true);
+    expect(state.startsWith(accountCenterSocialStatePrefix)).toBe(false);
+    expect(state.length).toBeGreaterThan(experienceSocialStatePrefix.length);
+  });
+
+  it('should generate a different state on each call', () => {
+    expect(generateState()).not.toEqual(generateState());
   });
 });
 

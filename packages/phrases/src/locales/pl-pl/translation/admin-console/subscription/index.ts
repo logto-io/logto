@@ -12,6 +12,8 @@ const subscription = {
   enterprise_description: 'Dla dużych zespołów i firm z wymaganiami klasy enterprise.',
   admin_plan: 'Plan administracyjny',
   dev_plan: 'Plan deweloperski',
+  self_hosted_pro_plan: 'Plan Pro self-hosted',
+  self_hosted_enterprise_plan: 'Plan Przedsiębiorstwo self-hosted',
   current_plan: 'Obecny plan',
   current_plan_description:
     'Oto Twój obecny plan. Łatwo możesz sprawdzić wykorzystanie swojego planu, sprawdzić nadchodzący rachunek i dokonać zmian w planie, jeśli jest to konieczne.',
@@ -45,6 +47,13 @@ const subscription = {
     },
   },
   quota_item,
+  cancel_feedback_modal: {
+    title: 'Szkoda, że odchodzisz',
+    description:
+      'Twoja subskrypcja została anulowana. Twoja opinia pomaga nam ulepszać Logto. Czytamy każdą odpowiedź.',
+    what_made_you_cancel: 'Co skłoniło Cię do anulowania?',
+    how_to_reconsider: 'Co moglibyśmy zrobić, abyś ponownie rozważył(a) decyzję?',
+  },
   downgrade_modal: {
     title: 'Czy na pewno chcesz zdegradować?',
     description:
@@ -65,9 +74,18 @@ const subscription = {
     upgrade_help_tip: 'Potrzebna pomoc przy zwiększaniu? <a>Skontaktuj się z nami</a>.',
     a_maximum_of: 'Maksymalnie <item/>',
   },
+  billing_customer_modal: {
+    title: 'Wybierz konto rozliczeniowe',
+    description:
+      'Wybierz konto rozliczeniowe, które płaci za tę subskrypcję, lub rozpocznij nowe. Możesz zmienić szczegóły płatności na następnej stronie.',
+    account: 'Konto rozliczeniowe',
+    new_account: 'Nowe konto rozliczeniowe',
+    default_account: 'Domyślne',
+  },
   upgrade_success: 'Pomyślnie uaktualniono do <name/>',
   downgrade_success: 'Pomyślnie zdegradowano do <name/>',
-  subscription_check_timeout: 'Czas sprawdzenia subskrypcji wygasł. Proszę odświeżyć później.',
+  subscription_check_pending:
+    'Twoja płatność została przetworzona. Konfiguracja subskrypcji trwa dłużej niż zwykle.',
   no_subscription: 'Brak subskrypcji',
   usage,
   token_usage_notification: {

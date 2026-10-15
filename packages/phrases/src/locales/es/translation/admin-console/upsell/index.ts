@@ -7,6 +7,7 @@ const upsell = {
   compare_plans: 'Comparar planes',
   try_with_product_name: 'Prueba {{productName}} ahora',
   view_plans: 'Ver planes',
+  explore_self_hosted_plans: 'Explorar los planes autoalojados',
   create_tenant: {
     title: 'Selecciona tu plan de tenant',
     description:

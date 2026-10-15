@@ -36,6 +36,11 @@ const security = {
       description:
         "Cloudflare'in akıllı CAPTCHA alternatifi, görsel bulmaca olmadan kullanıcı dostu bir deneyim sunarken aynı zamanda bot koruması sağlar.",
     },
+    cap: {
+      name: 'Cap',
+      description:
+        'Görsel bulmaca veya üçüncü taraf hizmet gerektirmeyen, iş kanıtı tabanlı, açık kaynaklı ve kendi sunucunuzda barındırılan CAPTCHA; diğer CAPTCHA hizmetlerine erişilemeyen bölgeler için idealdir.',
+    },
   },
   captcha_details: {
     back_to_security: 'Güvenliğe dön',
@@ -51,6 +56,10 @@ const security = {
     domain_placeholder: 'www.google.com (varsayılan) veya recaptcha.net',
     recaptcha_key_id: 'reCAPTCHA anahtar ID',
     recaptcha_api_key: 'Projenin API anahtarı',
+    cap_endpoint: 'Cap uç noktası',
+    cap_endpoint_placeholder: 'https://cap.example.com',
+    cap_endpoint_http_notice:
+      'Bu uç nokta HTTP kullanıyor ve yalnızca yerel geliştirme için uygundur. Tarayıcılar HTTPS oturum açma sayfasından yapılan HTTP isteklerini engeller ve gizli anahtar şifrelenmeden gönderilir. Üretimde HTTPS kullanın.',
     deletion_description: 'Bu CAPTCHA sağlayıcısını silmek istediğinizden emin misiniz?',
     captcha_deleted: 'CAPTCHA sağlayıcısı başarıyla silindi',
     setup_captcha: "CAPTCHA'yı ayarla",
@@ -59,6 +68,10 @@ const security = {
     mode_checkbox: 'Onay kutusu',
     mode_notice:
       "Doğrulama modu, Google Cloud Console'daki reCAPTCHA anahtar ayarlarında tanımlanır. Buradaki modu değiştirmek için eşleşen bir anahtar türü gerekir.",
+    score_threshold: 'Puan eşiği',
+    score_threshold_description:
+      "Eşiğin altındaki puanlar reddedilir. 0.0 tümünü kabul eder, 1.0 yalnızca mükemmel puanları kabul eder. Varsayılan değer 0.5'tir.",
+    score_threshold_error: 'Puan eşiği 0 ile 1 arasında olmalıdır.',
   },
   password_policy: {
     password_requirements: 'Parola gereksinimleri',

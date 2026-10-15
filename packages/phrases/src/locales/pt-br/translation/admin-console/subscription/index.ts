@@ -12,6 +12,8 @@ const subscription = {
   enterprise_description: 'Para grandes equipes e empresas com requisitos de nível empresarial.',
   admin_plan: 'Plano de administrador',
   dev_plan: 'Plano de desenvolvimento',
+  self_hosted_pro_plan: 'Plano Pro self-hosted',
+  self_hosted_enterprise_plan: 'Plano Empresa self-hosted',
   current_plan: 'Plano Atual',
   current_plan_description:
     'Aqui está o seu plano atual. Você pode facilmente ver o uso do seu plano, verificar a sua próxima fatura e fazer alterações no plano, conforme necessário.',
@@ -45,6 +47,13 @@ const subscription = {
     },
   },
   quota_item,
+  cancel_feedback_modal: {
+    title: 'Que pena ver você partir',
+    description:
+      'Sua assinatura foi cancelada. Seu feedback nos ajuda a melhorar o Logto. Lemos todas as respostas.',
+    what_made_you_cancel: 'O que fez você cancelar?',
+    how_to_reconsider: 'O que poderíamos fazer para você reconsiderar?',
+  },
   downgrade_modal: {
     title: 'Tem certeza de que deseja fazer downgrade?',
     description:
@@ -65,10 +74,18 @@ const subscription = {
     upgrade_help_tip: 'Precisa de ajuda com o upgrade? <a>Contate-nos</a>.',
     a_maximum_of: 'Um máximo de <item/>',
   },
+  billing_customer_modal: {
+    title: 'Escolha uma conta de faturamento',
+    description:
+      'Selecione a conta de faturamento que paga por esta assinatura ou inicie uma nova. Você pode alterar os detalhes do pagamento na próxima página.',
+    account: 'Conta de faturamento',
+    new_account: 'Nova conta de faturamento',
+    default_account: 'Padrão',
+  },
   upgrade_success: 'Atualizado com sucesso para <name/>',
   downgrade_success: 'Downgrade realizado com sucesso para <name/>',
-  subscription_check_timeout:
-    'A verificação de assinatura expirou. Por favor, atualize mais tarde.',
+  subscription_check_pending:
+    'Seu pagamento foi processado. Configurar sua assinatura está levando mais tempo que o normal.',
   no_subscription: 'Nenhuma assinatura',
   usage,
   token_usage_notification: {

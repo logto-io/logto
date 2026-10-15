@@ -9,6 +9,7 @@ export const azureADConfigGuard = z.object({
   tenantId: z.string(),
   prompts: oidcPromptsGuard,
   scopes: z.string().optional(),
+  disableEmailSync: z.boolean().optional(),
 });
 
 export type AzureADConfig = z.infer<typeof azureADConfigGuard>;

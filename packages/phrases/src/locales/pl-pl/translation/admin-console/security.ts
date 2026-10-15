@@ -36,6 +36,11 @@ const security = {
       description:
         'Inteligentna alternatywa dla CAPTCHA od Cloudflare, zapewniająca ochronę przed botami bez zakłócania użytkownika i gwarantująca płynne doświadczenie bez wizualnych łamigłówek.',
     },
+    cap: {
+      name: 'Cap',
+      description:
+        'Otwartoźródłowa, samodzielnie hostowana CAPTCHA oparta na proof-of-work, bez wizualnych łamigłówek i usług zewnętrznych – idealna dla regionów, w których inne usługi CAPTCHA są niedostępne.',
+    },
   },
   captcha_details: {
     back_to_security: 'Powrót do bezpieczeństwa',
@@ -51,6 +56,10 @@ const security = {
     domain_placeholder: 'www.google.com (domyślna) lub recaptcha.net',
     recaptcha_key_id: 'ID klucza reCAPTCHA',
     recaptcha_api_key: 'Klucz API projektu',
+    cap_endpoint: 'Endpoint Cap',
+    cap_endpoint_placeholder: 'https://cap.example.com',
+    cap_endpoint_http_notice:
+      'Ten punkt końcowy używa HTTP, co nadaje się tylko do lokalnego programowania. Przeglądarki blokują żądania HTTP ze strony logowania HTTPS, a klucz tajny zostałby wysłany bez szyfrowania. W środowisku produkcyjnym użyj HTTPS.',
     deletion_description: 'Czy na pewno chcesz usunąć tego dostawcę CAPTCHA?',
     captcha_deleted: 'Pomyślnie usunięto dostawcę CAPTCHA',
     setup_captcha: 'Skonfiguruj CAPTCHA',
@@ -59,6 +68,10 @@ const security = {
     mode_checkbox: 'Pole wyboru',
     mode_notice:
       'Tryb weryfikacji jest zdefiniowany w ustawieniach klucza reCAPTCHA w Google Cloud Console. Zmiana trybu tutaj wymaga odpowiedniego typu klucza.',
+    score_threshold: 'Próg punktacji',
+    score_threshold_description:
+      'Wyniki poniżej progu są odrzucane. 0.0 pozwala na wszystkie, 1.0 tylko na idealne wyniki. Domyślnie 0.5.',
+    score_threshold_error: 'Próg punktacji musi wynosić od 0 do 1.',
   },
   password_policy: {
     password_requirements: 'Wymagania dotyczące hasła',

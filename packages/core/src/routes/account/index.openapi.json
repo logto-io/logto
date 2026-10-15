@@ -783,13 +783,12 @@
     },
     "/api/my-account/trusted-devices": {
       "get": {
-        "tags": ["Dev feature"],
         "operationId": "GetTrustedDevices",
         "summary": "Get trusted devices",
-        "description": "Retrieve a paginated list of active trusted devices for the signed-in user. A logto-verification-id in header and the trusted-devices scope are required. Each entry includes isCurrent, which is true only when the browser's trusted-device cookie passes full credential validation for that record.",
+        "description": "Retrieve all active trusted devices for the signed-in user. A logto-verification-id in header and the trusted-devices scope are required. Each entry includes isCurrent, which is true only when the browser's trusted-device cookie passes full credential validation for that record.",
         "responses": {
           "200": {
-            "description": "A paginated list of the signed-in user's active trusted devices."
+            "description": "A list of the signed-in user's active trusted devices."
           },
           "401": {
             "description": "Permission denied, the verification record is invalid or the access token does not include the trusted-devices scope."
@@ -799,7 +798,6 @@
     },
     "/api/my-account/trusted-devices/{trustedDeviceId}": {
       "delete": {
-        "tags": ["Dev feature"],
         "operationId": "DeleteTrustedDeviceById",
         "summary": "Delete a trusted device",
         "description": "Delete a trusted device owned by the signed-in user. Deleting the current trusted device clears its cookie without ending the login session.",
@@ -818,6 +816,138 @@
           },
           "404": {
             "description": "The trusted device was not found or does not belong to the signed-in user."
+          }
+        }
+      }
+    },
+    "/api/my-account/personal-access-tokens": {
+      "get": {
+        "tags": ["Dev feature"],
+        "operationId": "ListMyAccountPersonalAccessTokens",
+        "summary": "List personal access tokens",
+        "description": "List all personal access tokens of the signed-in user, including expired ones. The token secret values are never returned. The personal-access-tokens scope is required.",
+        "responses": {
+          "200": {
+            "description": "A list of the signed-in user's personal access tokens, without their secret values."
+          },
+          "403": {
+            "description": "The personal access token field is not enabled in the account center, or the access token does not include the personal-access-tokens scope."
+          }
+        }
+      },
+      "post": {
+        "tags": ["Dev feature"],
+        "operationId": "CreateMyAccountPersonalAccessToken",
+        "summary": "Create a personal access token",
+        "description": "Create a personal access token for the signed-in user. A logto-verification-id in header and the personal-access-tokens scope are required. The token secret value is returned only in this response. The expiration time is required, must be in the future, and must be at most 365 days from now. A user can have at most 20 unexpired personal access tokens.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "description": "The name of the token. It must be unique among the user's personal access tokens."
+                  },
+                  "expiresAt": {
+                    "description": "The epoch time in milliseconds when the token expires. It must be in the future and at most 365 days from now."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The personal access token was created successfully. The response includes the token secret value, which cannot be retrieved again."
+          },
+          "400": {
+            "description": "The request body is invalid, or the expiration time is not in the future or more than 365 days from now."
+          },
+          "401": {
+            "description": "Permission denied, the verification record is invalid."
+          },
+          "403": {
+            "description": "The personal access token field is not enabled or editable in the account center, the access token does not include the personal-access-tokens scope, or the request was made by a third-party application."
+          },
+          "422": {
+            "description": "The token name already exists, or the user has reached the maximum number of unexpired personal access tokens."
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Dev feature"],
+        "operationId": "UpdateMyAccountPersonalAccessTokenName",
+        "summary": "Rename a personal access token",
+        "description": "Rename a personal access token of the signed-in user. The personal-access-tokens scope is required.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "currentName": {
+                    "description": "The current name of the token to rename."
+                  },
+                  "name": {
+                    "description": "The new name of the token. It must be unique among the user's personal access tokens."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The personal access token was renamed successfully."
+          },
+          "400": {
+            "description": "The request body is invalid."
+          },
+          "403": {
+            "description": "The personal access token field is not enabled or editable in the account center, the access token does not include the personal-access-tokens scope, or the request was made by a third-party application."
+          },
+          "404": {
+            "description": "The personal access token was not found."
+          },
+          "422": {
+            "description": "The new token name already exists."
+          }
+        }
+      }
+    },
+    "/api/my-account/personal-access-tokens/delete": {
+      "post": {
+        "tags": ["Dev feature"],
+        "operationId": "DeleteMyAccountPersonalAccessToken",
+        "summary": "Delete a personal access token",
+        "description": "Delete a personal access token of the signed-in user by name. A logto-verification-id in header and the personal-access-tokens scope are required.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "description": "The name of the token to delete."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The personal access token was deleted successfully."
+          },
+          "400": {
+            "description": "The request body is invalid."
+          },
+          "401": {
+            "description": "Permission denied, the verification record is invalid."
+          },
+          "403": {
+            "description": "The personal access token field is not enabled or editable in the account center, the access token does not include the personal-access-tokens scope, or the request was made by a third-party application."
+          },
+          "404": {
+            "description": "The personal access token was not found."
           }
         }
       }

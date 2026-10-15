@@ -56,14 +56,6 @@ export type ExceptionHookEvent =
 
 export type DataHookEvent = BasicDataHookEvent | DataHookPropertyUpdateEvent;
 
-/** Data hook events that are available only while their feature is under development. */
-export const devFeatureHookEvents = Object.freeze([
-  'TrustedDevice.Created',
-  'TrustedDevice.Deleted',
-] as const satisfies readonly DataHookEvent[]);
-
-export type DevFeatureHookEvent = (typeof devFeatureHookEvents)[number];
-
 /** The hook event values that can be registered. */
 export const hookEvents = Object.freeze([
   InteractionHookEvent.PostRegister,
@@ -74,7 +66,8 @@ export const hookEvents = Object.freeze([
   'User.Deleted',
   'User.Data.Updated',
   'User.SuspensionStatus.Updated',
-  ...devFeatureHookEvents,
+  'TrustedDevice.Created',
+  'TrustedDevice.Deleted',
   'Role.Created',
   'Role.Deleted',
   'Role.Data.Updated',

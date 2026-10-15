@@ -1,11 +1,10 @@
 import { MfaFactor, SignInIdentifier, type RequestErrorBody } from '@logto/schemas';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { validate } from 'superstruct';
 
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { UserMfaFlow } from '@/types';
-import { type MfaFlowState, mfaErrorDataGuard } from '@/types/guard';
+import { type MfaFlowState, mfaErrorDataGuard, parseGuard } from '@/types/guard';
 import { isNativeWebview } from '@/utils/native-sdk';
 
 import type { ErrorHandlers } from './use-error-handler';
@@ -118,7 +117,7 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
           return;
         }
 
-        const [_, data] = validate(error.data, mfaErrorDataGuard);
+        const data = parseGuard(error.data, mfaErrorDataGuard);
         const factors = data?.availableFactors ?? [];
         const skippable = data?.skippable;
         const maskedIdentifiers = data?.maskedIdentifiers;

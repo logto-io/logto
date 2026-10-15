@@ -10,6 +10,7 @@ const auth = {
   exceed_token_limit: 'محدودیت توکن تجاوز شد. لطفاً با مدیر خود تماس بگیرید.',
   third_party_application_forbidden:
     'برنامه‌های شخص ثالث مجاز به تغییر داده‌های حساب از طریق این API نیستند.',
+  read_only_access: 'این درخواست با دسترسی فقط خواندنی مجاز نیست.',
 };
 
 export default Object.freeze(auth);

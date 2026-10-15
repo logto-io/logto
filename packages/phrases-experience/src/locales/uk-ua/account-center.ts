@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'Сторінку не знайдено',
@@ -13,6 +14,8 @@ const account_center = {
     sidebar_security: 'Безпека',
     sidebar_sessions: 'Сесії',
     support: 'Підтримка',
+    user_menu: 'Меню користувача',
+    sign_out: 'Вийти',
   },
   verification: {
     title: 'Перевірка безпеки',
@@ -121,6 +124,21 @@ const account_center = {
     email_removed: 'Адресу електронної пошти успішно видалено.',
     phone_removed: 'Номер телефону успішно видалено.',
     username_removed: "Ім'я користувача успішно видалено.",
+    trusted_devices: {
+      title: 'Довірені пристрої MFA',
+      current_device: 'Поточний пристрій',
+      expires_on: 'Термін дії до {{date}}',
+      unknown_location: 'Невідоме розташування',
+      remove: 'Видалити',
+      removed: 'Довірений пристрій успішно видалено.',
+      loading: 'Завантаження...',
+      empty: 'Немає довірених пристроїв.',
+      load_failed: 'Не вдалося завантажити довірені пристрої. Спробуйте ще раз.',
+      retry: 'Спробувати ще раз',
+      remove_confirmation_title: 'Видалити довірений пристрій?',
+      remove_confirmation_description:
+        'Під час наступного входу на цьому пристрої вам потрібно буде знову пройти MFA. Поточний сеанс залишиться активним.',
+    },
   },
   social: {
     linked: '{{connector}} успішно прив’язано.',
@@ -284,3 +302,4 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
+/* eslint-enable max-lines */

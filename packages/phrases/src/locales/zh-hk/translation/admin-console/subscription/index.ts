@@ -11,6 +11,8 @@ const subscription = {
   enterprise_description: '適用於有企業級要求的大型團隊和企業。',
   admin_plan: '管理員計劃',
   dev_plan: '開發計劃',
+  self_hosted_pro_plan: '自託管專業計劃',
+  self_hosted_enterprise_plan: '自託管企業計劃',
   current_plan: '當前計劃',
   current_plan_description:
     '以下是你目前的計劃。你可以輕鬆查看計劃使用情況，檢查即將到來的帳單，並根據需要進行變更。',
@@ -43,6 +45,13 @@ const subscription = {
     },
   },
   quota_item,
+  cancel_feedback_modal: {
+    title: '很遺憾你要離開',
+    description:
+      '你的訂閱已取消。你的意見將幫助我們把 Logto 做得更好。每一條回應我們都會認真閱讀。',
+    what_made_you_cancel: '是什麼讓你決定取消？',
+    how_to_reconsider: '我們做些什麼能讓你重新考慮？',
+  },
   downgrade_modal: {
     title: '確定要降級嗎？',
     description:
@@ -62,9 +71,16 @@ const subscription = {
     upgrade_help_tip: '需要升級幫助？<a>聯絡我們</a>。',
     a_maximum_of: '最多 <item/>',
   },
+  billing_customer_modal: {
+    title: '選擇一個帳單賬戶',
+    description: '選擇為該訂閱支付的帳單賬戶，或創建一個新的。你可以在下一頁更改付款詳情。',
+    account: '帳單賬戶',
+    new_account: '新的帳單賬戶',
+    default_account: '默認',
+  },
   upgrade_success: '升級成功至 <name/>',
   downgrade_success: '成功降級至 <name/>',
-  subscription_check_timeout: '訂閱檢查已逾時，請稍後重新刷新。',
+  subscription_check_pending: '你的付款已通過。設置你的訂閱比平時花費的時間要長。',
   no_subscription: '沒有訂閱',
   usage,
   token_usage_notification: {

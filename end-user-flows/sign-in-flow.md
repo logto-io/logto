@@ -187,8 +187,19 @@ flowchart TD
     backup_gate -->|yes| backup[Generate and save backup codes]
   end
 
-  mfa_on2 -->|no| submit[Submit interaction]
-  backup_gate -->|no| submit
-  backup --> submit
+  subgraph TrustedDeviceOptIn["Trusted device opt-in"]
+    trusted_device_gate{Trusted-device policy enabled<br/>and eligible MFA proof present?}
+    trusted_device_gate -->|yes| trusted_device_page[Trust this device page]
+    trusted_device_page --> trusted_device_decision{Trust this device?}
+    trusted_device_decision -->|yes| trusted_device_accept[Record opt-in]
+    trusted_device_decision -->|skip| trusted_device_skip[Record skip]
+  end
+
+  mfa_on2 -->|no| trusted_device_gate
+  backup_gate -->|no| trusted_device_gate
+  backup --> trusted_device_gate
+  trusted_device_gate -->|no| submit[Submit interaction]
+  trusted_device_accept --> submit
+  trusted_device_skip --> submit
   submit --> done([OIDC redirect])
 ```

@@ -10,12 +10,55 @@ const tenants = {
     oidc_configs: 'پیکربندی OIDC',
     subscription: 'طرح و صورتحساب',
     billing_history: 'تاریخچه صورتحساب',
+    license: 'مجوز',
+  },
+  license: {
+    purchase_title: 'پلن‌های self-hosted',
+    purchase_description:
+      'پلن‌های حرفه‌ای و سازمانی self-hosted قابلیت‌های پولی را روی نمونه خودتان باز می‌کنند؛ مانند پنهان کردن برند Logto، استفاده از رابط کاربری خودتان، همکاری در کنسول و برنامه‌های SAML نامحدود. برای دریافت کلید مجوز، یک پلن بخرید.',
+    purchase_button: 'مشاهده پلن‌های self-hosted',
+    install_title: 'نصب مجوز',
+    install_description:
+      'کلید مجوزی را که پس از خرید پلن self-hosted دریافت کرده‌اید جای‌گذاری کنید.',
+    install_button: 'نصب مجوز',
+    key_field: 'کلید مجوز',
+    key_field_description:
+      'کلید روی نمونه شما بررسی می‌شود و هرگز از آن خارج نمی‌شود. اگر کلید فعلی منقضی شده است، برای دریافت کلید تازه با Logto تماس بگیرید.',
+    key_placeholder: 'کلید مجوز خود را اینجا جای‌گذاری کنید',
+    installed_toast: 'مجوز با موفقیت نصب شد.',
+    details_title: 'مجوز',
+    details_description: 'مجوز نصب‌شده روی این نمونه و آنچه اعطا می‌کند.',
+    plan_field: 'پلن',
+    environment_field: 'محیط',
+    environment_production: 'تولید',
+    environment_non_production: 'غیرتولیدی',
+    expires_at_field: 'تاریخ انقضا',
+    installed_at_field: 'تاریخ نصب',
+    last_refreshed_at_field: 'آخرین به‌روزرسانی در',
+    grace_ends_at_field: 'پایان مهلت ارفاقی در',
+    refresh_expired_description:
+      'کلید مجوز در {{expiresAt}} منقضی شد. تا زمانی که Logto تلاش می‌کند آن را به‌روزرسانی کند، قابلیت‌های دارای مجوز تا {{graceEndsAt}} در دسترس می‌مانند.',
+    refresh_refused_description:
+      'به‌روزرسانی مجوز رد شد، زیرا مجوز {{reason}} است. قابلیت‌های دارای مجوز تا {{graceEndsAt}} در دسترس می‌مانند.',
+    refusal_reason_canceled: 'لغوشده',
+    refusal_reason_unpaid: 'پرداخت‌نشده',
+    refusal_reason_expired: 'منقضی‌شده',
+    refusal_reason_revoked: 'باطل‌شده',
+    refusal_reason_unknown: 'در دسترس نیست',
+    grace_expired_description:
+      'مهلت ارفاقی مجوز در {{graceEndsAt}} پایان یافت. این استقرار به پیش‌فرض‌های OSS بازگشته است. برای دریافت کلید مجوز تازه با Logto تماس بگیرید و دوباره آن را نصب کنید.',
+    get_fresh_key_button: 'دریافت کلید مجوز تازه',
+    replace_button: 'جایگزینی مجوز',
   },
   members: {
     card_title: 'مدیریت امن‌تر مستأجرها با Logto Cloud',
     card_description:
       'مدیران یا همکاران را به مستأجر خود اضافه کنید بدون اشتراک‌گذاری یک حساب مدیر.',
     card_action: 'کشف Logto Cloud',
+    self_hosted_card_title: 'مدیریت امن‌تر مستأجرها با طرح‌های self-hosted',
+    self_hosted_card_description:
+      'مدیران یا همکاران را به مستأجر خود اضافه کنید بدون اشتراک‌گذاری یک حساب مدیر.',
+    self_hosted_card_action: 'کشف طرح‌های self-hosted',
   },
   settings: {
     title: 'تنظیمات',
@@ -40,6 +83,16 @@ const tenants = {
     tenant_mfa: 'احراز هویت چندعاملی',
     tenant_mfa_description:
       'از اعضای خود بخواهید احراز هویت چندعاملی را برای دسترسی به این مستأجر راه‌اندازی کنند.',
+    oss_description: 'نحوه دسترسی اعضا به کنسول در این نمونه را مدیریت کنید.',
+    tenant_mfa_confirm_title: 'احراز هویت چندعاملی برای همه اعضا الزامی شود؟',
+    tenant_mfa_confirm_description:
+      'این اعضا هنوز احراز هویت چندعاملی را راه‌اندازی نکرده‌اند. آن‌ها وارد سیستم باقی می‌مانند و در ورود بعدی از آن‌ها خواسته می‌شود آن را راه‌اندازی کنند:',
+    tenant_mfa_confirm_self:
+      'شما هم هنوز احراز هویت چندعاملی را راه‌اندازی نکرده‌اید. پیش از ورود بعدی، آن را در تنظیمات حساب خود راه‌اندازی کنید.',
+    tenant_mfa_confirm_button: 'الزامی کردن MFA',
+    tenant_mfa_setup_required:
+      'این مستأجر احراز هویت چندعاملی را الزامی کرده است. اکنون آن را راه‌اندازی کنید، وگرنه در ورود بعدی از شما خواسته می‌شود.',
+    tenant_mfa_setup_action: 'راه‌اندازی MFA',
     enterprise_sso: 'SSO سازمانی',
     enterprise_sso_description:
       'در طرح‌های پولی در دسترس است. برای فعال‌سازی SSO سازمانی تا همه اعضا بتوانند با ارائه‌دهنده هویت سازمان خود به کنسول Logto Cloud وارد شوند، با ما تماس بگیرید.',
@@ -47,6 +100,11 @@ const tenants = {
   full_env_tag: {
     development: 'توسعه',
     production: 'تولید',
+  },
+  view_only: {
+    tag: 'فقط مشاهده',
+    notification:
+      'شما فقط دسترسی مشاهده به این مستأجر دارید. اگر نیاز به ایجاد تغییرات دارید، از مدیر مستأجر بخواهید.',
   },
   deletion_card: {
     title: 'حذف',

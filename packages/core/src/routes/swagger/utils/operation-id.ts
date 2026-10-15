@@ -55,6 +55,8 @@ export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   'patch /configs/admin-console': 'UpdateAdminConsoleConfig',
   // Systems
   'get /systems/application': 'GetSystemApplicationConfig',
+  'get /systems/license': 'GetSystemLicense',
+  'put /systems/license': 'InstallSystemLicense',
   // Applications
   'post /applications/:applicationId/roles': 'AssignApplicationRoles',
   'get /applications/:id/protected-app-metadata/custom-domains':

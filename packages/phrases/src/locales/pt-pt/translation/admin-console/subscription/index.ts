@@ -12,6 +12,8 @@ const subscription = {
   enterprise_description: 'Para grandes equipas e empresas com requisitos de nível empresarial.',
   admin_plan: 'Plano de administrador',
   dev_plan: 'Plano de desenvolvimento',
+  self_hosted_pro_plan: 'Plano Pro self-hosted',
+  self_hosted_enterprise_plan: 'Plano Empresa self-hosted',
   current_plan: 'Plano Atual',
   current_plan_description:
     'Aqui está o seu plano atual. Pode facilmente verificar a utilização do seu plano, verificar a sua próxima fatura e efetuar alterações no seu plano, conforme necessário.',
@@ -45,6 +47,13 @@ const subscription = {
     },
   },
   quota_item,
+  cancel_feedback_modal: {
+    title: 'Lamentamos vê-lo partir',
+    description:
+      'A sua subscrição foi cancelada. O seu feedback ajuda-nos a melhorar o Logto. Lemos todas as respostas.',
+    what_made_you_cancel: 'O que o levou a cancelar?',
+    how_to_reconsider: 'O que poderíamos fazer para que reconsidere?',
+  },
   downgrade_modal: {
     title: 'Tem certeza de que deseja fazer o downgrade?',
     description:
@@ -65,10 +74,18 @@ const subscription = {
     upgrade_help_tip: 'Precisa de ajuda com o upgrade? <a>Contacte-nos</a>.',
     a_maximum_of: 'Um máximo de <item/>',
   },
+  billing_customer_modal: {
+    title: 'Escolher uma conta de faturação',
+    description:
+      'Selecione a conta de faturação que paga esta subscrição, ou inicie uma nova. Pode alterar os detalhes de pagamento na próxima página.',
+    account: 'Conta de faturação',
+    new_account: 'Nova conta de faturação',
+    default_account: 'Padrão',
+  },
   upgrade_success: 'Atualizou com sucesso para <name/>',
   downgrade_success: 'Downgrade concluído com sucesso para <name/>',
-  subscription_check_timeout:
-    'A verificação de subscrição expirou. Por favor, atualize mais tarde.',
+  subscription_check_pending:
+    'O seu pagamento foi realizado. Configurar a sua subscrição está a demorar mais do que o habitual.',
   no_subscription: 'Sem subscrição',
   usage,
   token_usage_notification: {

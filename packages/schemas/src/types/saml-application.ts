@@ -4,7 +4,11 @@ import { z } from 'zod';
 import { Applications } from '../db-entries/application.js';
 import { SamlApplicationConfigs } from '../db-entries/saml-application-config.js';
 import { SamlApplicationSecrets } from '../db-entries/saml-application-secret.js';
-import { nameIdFormatGuard, NameIdFormat } from '../foundations/index.js';
+import {
+  nameIdFormatGuard,
+  NameIdFormat,
+  type SamlAuthnRequestConfig,
+} from '../foundations/index.js';
 
 import { applicationCreateGuard, applicationPatchGuard } from './application.js';
 
@@ -13,6 +17,7 @@ const samlAppConfigGuard = SamlApplicationConfigs.guard.pick({
   entityId: true,
   acsUrl: true,
   encryption: true,
+  authnRequestConfig: true,
   nameIdFormat: true,
 });
 
@@ -91,3 +96,10 @@ export const samlApplicationSecretResponseGuard = SamlApplicationSecrets.guard
   });
 
 export type SamlApplicationSecretResponse = z.infer<typeof samlApplicationSecretResponseGuard>;
+
+/**
+ * Whether a SAML application forces fresh authentication. Forcing is the default; only an explicit
+ * `forceAuthn: false` lets the application reuse an existing session.
+ */
+export const isSamlForceAuthnEnabled = (config?: SamlAuthnRequestConfig | null): boolean =>
+  config?.forceAuthn !== false;

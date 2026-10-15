@@ -1,4 +1,5 @@
 const user = {
+  id_already_in_use: 'Este ID de usuário já está em uso.',
   username_already_in_use: 'Este nome de usuário já está em uso.',
   username_starts_with_number: 'Nome de usuário não pode começar com um número.',
   username_invalid_charset_hard: 'Nome de usuário só pode conter letras, números e underscores.',
@@ -46,6 +47,10 @@ const user = {
   password_algorithm_required: 'Algoritmo de senha é necessário.',
   password_and_digest: 'Você não pode definir tanto senha de texto simples quanto digest de senha.',
   personal_access_token_name_exists: 'O nome do token de acesso pessoal já existe.',
+  personal_access_token_limit_exceeded:
+    'Você pode ter no máximo {{limit}} tokens de acesso pessoal ativos.',
+  personal_access_token_invalid_expiration:
+    'A data de expiração deve estar no futuro e não pode ultrapassar {{maxDays}} dias a partir de agora.',
   totp_secret_invalid: 'Segredo TOTP fornecido é inválido.',
   wrong_backup_code_format: 'Formato do código de backup é inválido.',
   username_required:

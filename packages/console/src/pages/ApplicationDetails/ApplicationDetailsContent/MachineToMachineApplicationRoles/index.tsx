@@ -21,6 +21,7 @@ import Table from '@/ds-components/Table';
 import { Tooltip } from '@/ds-components/Tip';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTheme from '@/hooks/use-theme';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
@@ -34,6 +35,9 @@ type Props = {
 };
 
 function MachineToMachineApplicationRoles({ application }: Props) {
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const theme = useTheme();
 
@@ -108,17 +112,18 @@ function MachineToMachineApplicationRoles({ application }: Props) {
             title: null,
             dataIndex: 'delete',
             colSpan: 1,
-            render: (role) => (
-              <Tooltip content={t('general.remove')}>
-                <IconButton
-                  onClick={() => {
-                    setRoleToBeDeleted(role);
-                  }}
-                >
-                  <Delete />
-                </IconButton>
-              </Tooltip>
-            ),
+            render: (role) =>
+              isReadOnly ? null : (
+                <Tooltip content={t('general.remove')}>
+                  <IconButton
+                    onClick={() => {
+                      setRoleToBeDeleted(role);
+                    }}
+                  >
+                    <Delete />
+                  </IconButton>
+                </Tooltip>
+              ),
           },
         ]}
         filter={
@@ -134,15 +139,17 @@ function MachineToMachineApplicationRoles({ application }: Props) {
                 updateSearchParameters({ keyword: '', page: 1 });
               }}
             />
-            <Button
-              title="application_details.roles.assign_button"
-              type="primary"
-              size="large"
-              icon={<Plus />}
-              onClick={() => {
-                setIsAssignRolesModalOpen(true);
-              }}
-            />
+            {!isReadOnly && (
+              <Button
+                title="application_details.roles.assign_button"
+                type="primary"
+                size="large"
+                icon={<Plus />}
+                onClick={() => {
+                  setIsAssignRolesModalOpen(true);
+                }}
+              />
+            )}
           </div>
         }
         pagination={{

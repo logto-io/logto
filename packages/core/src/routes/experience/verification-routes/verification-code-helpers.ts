@@ -1,5 +1,6 @@
 import {
   InteractionEvent,
+  MfaFactor,
   SentinelActivityAction,
   SignInIdentifier,
   type VerificationCodeIdentifier,
@@ -208,6 +209,7 @@ type VerifyCodeParams = {
     | VerificationType.MfaEmailVerificationCode
     | VerificationType.MfaPhoneVerificationCode;
   sentinel: Sentinel;
+  queries: Queries;
   ctx: ExperienceInteractionRouterContext;
 };
 
@@ -221,6 +223,7 @@ export const verifyCode = async ({
   identifier,
   verificationType,
   sentinel,
+  queries,
   ctx,
 }: VerifyCodeParams): Promise<{ verificationId: string }> => {
   const { experienceInteraction } = ctx;
@@ -250,6 +253,7 @@ export const verifyCode = async ({
     {
       ctx,
       sentinel,
+      queries,
       action: SentinelActivityAction.VerificationCode,
       identifier,
       payload: {
@@ -259,6 +263,15 @@ export const verifyCode = async ({
     },
     codeVerificationRecord.verify(identifier, code)
   );
+
+  // For an MFA challenge, verifying is the use: record the `mfa` proof here. A primary email /
+  // phone code is consumed later, by identification or by a profile bind, which records its proof.
+  if (
+    verificationType === VerificationType.MfaEmailVerificationCode ||
+    verificationType === VerificationType.MfaPhoneVerificationCode
+  ) {
+    experienceInteraction.consumeForMfa(verificationType, codeVerificationRecord.id);
+  }
 
   // Save state
   await experienceInteraction.save();
@@ -275,7 +288,9 @@ type GetMfaIdentifierParams = {
 };
 
 /**
- * Helper to get MFA identifier from user profile
+ * Helper to get MFA identifier from user profile. The factor must be enabled in the sign-in
+ * experience: otherwise a sign-in could request a second code for the very contact that already
+ * identified the user, which is a second proof of the same factor and not a second factor.
  * @internal
  */
 export const getMfaIdentifier = async ({
@@ -283,14 +298,27 @@ export const getMfaIdentifier = async ({
   experienceInteraction,
   queries,
 }: GetMfaIdentifierParams): Promise<VerificationCodeIdentifier> => {
-  if (!experienceInteraction.identifiedUserId) {
+  if (!experienceInteraction.subjectUserId) {
     throw new RequestError({
       code: 'session.identifier_not_found',
       status: 400,
     });
   }
 
-  const user = await queries.users.findUserById(experienceInteraction.identifiedUserId);
+  const { factors } = await experienceInteraction.signInExperienceValidator.getMfaSettings();
+  const factor =
+    identifierType === SignInIdentifier.Email
+      ? MfaFactor.EmailVerificationCode
+      : MfaFactor.PhoneVerificationCode;
+
+  if (!factors.includes(factor)) {
+    throw new RequestError({
+      code: 'session.mfa.mfa_factor_not_enabled',
+      status: 400,
+    });
+  }
+
+  const user = await queries.users.findUserById(experienceInteraction.subjectUserId);
   const identifierValue =
     identifierType === SignInIdentifier.Email ? user.primaryEmail : user.primaryPhone;
 

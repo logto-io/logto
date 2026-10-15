@@ -36,6 +36,11 @@ const security = {
       description:
         'La alternativa inteligente de CAPTCHA de Cloudflare que proporciona protección contra bots no intrusiva mientras garantiza una experiencia de usuario fluida sin acertijos visuales.',
     },
+    cap: {
+      name: 'Cap',
+      description:
+        'CAPTCHA de código abierto y autoalojado basado en prueba de trabajo, sin acertijos visuales ni servicios de terceros, ideal para regiones donde otros servicios de CAPTCHA no son accesibles.',
+    },
   },
   captcha_details: {
     back_to_security: 'Volver a seguridad',
@@ -51,6 +56,10 @@ const security = {
     domain_placeholder: 'www.google.com (predeterminado) o recaptcha.net',
     recaptcha_key_id: 'ID de la clave reCAPTCHA',
     recaptcha_api_key: 'Clave API del proyecto',
+    cap_endpoint: 'Endpoint de Cap',
+    cap_endpoint_placeholder: 'https://cap.example.com',
+    cap_endpoint_http_notice:
+      'Este endpoint usa HTTP, lo que solo es adecuado para el desarrollo local. Los navegadores bloquean las solicitudes HTTP desde una página de inicio de sesión HTTPS y la clave secreta se enviaría sin cifrar. Usa HTTPS en producción.',
     deletion_description: '¿Estás seguro de que quieres eliminar este proveedor de CAPTCHA?',
     captcha_deleted: 'Proveedor de CAPTCHA eliminado con éxito',
     setup_captcha: 'Configurar CAPTCHA',
@@ -59,6 +68,10 @@ const security = {
     mode_checkbox: 'Casilla de verificación',
     mode_notice:
       'El modo de verificación se define en la configuración de tu clave reCAPTCHA en Google Cloud Console. Cambiar el modo aquí requiere un tipo de clave coincidente.',
+    score_threshold: 'Umbral de puntuación',
+    score_threshold_description:
+      'Las puntuaciones por debajo del umbral se rechazan. 0.0 permite todas, 1.0 solo permite puntuaciones perfectas. El valor predeterminado es 0.5.',
+    score_threshold_error: 'El umbral de puntuación debe estar entre 0 y 1.',
   },
   password_policy: {
     password_requirements: 'Requisitos de contraseña',

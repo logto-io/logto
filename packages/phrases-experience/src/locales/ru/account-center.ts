@@ -13,6 +13,8 @@ const account_center = {
     sidebar_security: 'Безопасность',
     sidebar_sessions: 'Сессии',
     support: 'Поддержка',
+    user_menu: 'Меню пользователя',
+    sign_out: 'Выйти',
   },
   verification: {
     title: 'Проверка безопасности',
@@ -119,6 +121,21 @@ const account_center = {
     email_removed: 'Адрес электронной почты успешно удалён.',
     phone_removed: 'Номер телефона успешно удалён.',
     username_removed: 'Имя пользователя успешно удалено.',
+    trusted_devices: {
+      title: 'Доверенные устройства MFA',
+      current_device: 'Текущее устройство',
+      expires_on: 'Срок действия до {{date}}',
+      unknown_location: 'Неизвестное местоположение',
+      remove: 'Удалить',
+      removed: 'Доверенное устройство успешно удалено.',
+      loading: 'Загрузка...',
+      empty: 'Нет доверенных устройств.',
+      load_failed: 'Не удалось загрузить доверенные устройства. Повторите попытку.',
+      retry: 'Повторить',
+      remove_confirmation_title: 'Удалить доверенное устройство?',
+      remove_confirmation_description:
+        'При следующем входе на этом устройстве вам потребуется снова пройти MFA. Текущий сеанс останется активным.',
+    },
   },
   social: {
     linked: '{{connector}} успешно привязан.',

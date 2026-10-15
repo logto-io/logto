@@ -1,8 +1,7 @@
-import { type TrustedDevice, defaultTenantId } from '@logto/schemas';
+import { type TrustedDevice } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
-import { mockUser } from '#src/__mocks__/index.js';
-import { EnvSet } from '#src/env-set/index.js';
+import { createMockTrustedDevice, mockUser } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { koaManagementApiHooks } from '#src/middleware/koa-management-api-hooks.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -14,11 +13,9 @@ const { jest } = import.meta;
 
 const userId = mockUser.id;
 const trustedDeviceId = 'device-id';
-const trustedDevice: TrustedDevice = {
-  tenantId: defaultTenantId,
+const trustedDevice: TrustedDevice = createMockTrustedDevice({
   id: trustedDeviceId,
   userId,
-  secretHash: Buffer.alloc(32, 1),
   userAgent: 'Mozilla/5.0 test browser',
   ip: '192.0.2.1',
   country: 'US',
@@ -26,16 +23,14 @@ const trustedDevice: TrustedDevice = {
   createdAt: 1000,
   lastUsedAt: 2000,
   expiresAt: 3000,
-};
+});
 
 const mockedQueries = {
   users: {
     findUserById: jest.fn(async () => mockUser),
   },
   trustedDevices: {
-    findActiveByUserId: jest.fn(
-      async (): Promise<[number, readonly TrustedDevice[]]> => [1, [trustedDevice]]
-    ),
+    findActiveByUserId: jest.fn(async (): Promise<readonly TrustedDevice[]> => [trustedDevice]),
     deleteByIdAndUserId: jest.fn(async (): Promise<TrustedDevice> => trustedDevice),
   },
 } satisfies Partial2<Queries>;
@@ -51,38 +46,25 @@ const { findActiveByUserId, deleteByIdAndUserId: deleteTrustedDeviceRecordByIdAn
   mockedQueries.trustedDevices;
 const { deleteByIdAndUserId } = mockedLibraries.trustedDevices;
 
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-
-const setDevFeaturesEnabled = (isDevFeaturesEnabled: boolean) => {
-  // eslint-disable-next-line @silverhand/fp/no-mutation -- Tests cover route registration in both feature states.
-  (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = isDevFeaturesEnabled;
-};
-
 const adminUserTrustedDeviceRoutes = await pickDefault(import('./trusted-device.js'));
 
-const createTrustedDeviceRequester = (isDevFeaturesEnabled = true) => {
-  setDevFeaturesEnabled(isDevFeaturesEnabled);
-
-  return createRequester({
+const createTrustedDeviceRequester = () =>
+  createRequester({
     authedRoutes: adminUserTrustedDeviceRoutes,
     tenantContext: new MockTenant(undefined, mockedQueries, undefined, mockedLibraries),
   });
-};
 
 describe('admin user trusted device routes', () => {
   afterEach(() => {
     jest.clearAllMocks();
-    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
   });
 
-  it('returns a paginated and redacted list of active trusted devices', async () => {
-    const response = await createTrustedDeviceRequester()
-      .get(`/users/${userId}/trusted-devices`)
-      .query({ page: 2, page_size: 1 });
+  it('returns all active trusted devices with sensitive fields redacted', async () => {
+    const response = await createTrustedDeviceRequester().get(`/users/${userId}/trusted-devices`);
 
     expect(response.status).toBe(200);
-    expect(response.headers['total-number']).toBe('1');
-    expect(response.headers.link).toContain('rel="first"');
+    expect(response.headers['total-number']).toBeUndefined();
+    expect(response.headers.link).toBeUndefined();
     expect(response.body).toEqual([
       {
         id: trustedDevice.id,
@@ -97,7 +79,7 @@ describe('admin user trusted device routes', () => {
     expect(response.text).not.toContain('secretHash');
     expect(response.text).not.toContain(trustedDevice.ip);
     expect(findUserById).toHaveBeenCalledWith(userId);
-    expect(findActiveByUserId).toHaveBeenCalledWith(userId, { limit: 1, offset: 1 });
+    expect(findActiveByUserId).toHaveBeenCalledWith(userId);
   });
 
   it('returns 404 without querying devices when the user does not exist', async () => {
@@ -106,16 +88,6 @@ describe('admin user trusted device routes', () => {
     const response = await createTrustedDeviceRequester().get(`/users/${userId}/trusted-devices`);
 
     expect(response.status).toBe(404);
-    expect(findActiveByUserId).not.toHaveBeenCalled();
-  });
-
-  it('returns 400 for invalid pagination', async () => {
-    const response = await createTrustedDeviceRequester().get(
-      `/users/${userId}/trusted-devices?page=0`
-    );
-
-    expect(response.status).toBe(400);
-    expect(findUserById).not.toHaveBeenCalled();
     expect(findActiveByUserId).not.toHaveBeenCalled();
   });
 
@@ -193,14 +165,5 @@ describe('admin user trusted device routes', () => {
 
     expect(response.status).toBe(404);
     expect(deleteByIdAndUserId).not.toHaveBeenCalled();
-  });
-
-  it('does not register the routes when dev features are disabled', async () => {
-    const response = await createTrustedDeviceRequester(false).get(
-      `/users/${userId}/trusted-devices`
-    );
-
-    expect(response.status).toBe(404);
-    expect(findUserById).not.toHaveBeenCalled();
   });
 });

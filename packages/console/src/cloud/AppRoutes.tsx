@@ -4,6 +4,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import DelayedSuspenseFallback from '@/components/DelayedSuspenseFallback';
 import RedirectToAccountCenter from '@/components/RedirectToAccountCenter';
 import { EnterpriseSubscriptionTabs } from '@/consts';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import ProtectedRoutes from '@/containers/ProtectedRoutes';
 import { GlobalAnonymousRoute, GlobalRoute } from '@/contexts/TenantsProvider';
 import { OnboardingApp } from '@/onboarding';
@@ -14,11 +15,14 @@ import ExternalGoogleOneTapLanding from '@/pages/ExternalGoogleOneTapLanding';
 import OneTimeTokenLanding from '@/pages/OneTimeTokenLanding';
 
 import styles from './AppRoutes.module.scss';
+import ConsoleSso from './pages/ConsoleSso';
+import ConsoleSsoDetails from './pages/ConsoleSso/Details';
 import DeleteAccount from './pages/DeleteAccount';
 import EnterpriseSubscription from './pages/EnterpriseSubscription';
 import BillingHistory from './pages/EnterpriseSubscription/BillingHistory';
 import Subscription from './pages/EnterpriseSubscription/Subscription';
 import Main from './pages/Main';
+import SelfHostedLicenses from './pages/SelfHostedLicenses';
 import SocialDemoCallback from './pages/SocialDemoCallback';
 
 /** Renders necessary routes when the user is not in a tenant context. */
@@ -42,6 +46,22 @@ function AppRoutes() {
             element={<AcceptInvitation />}
           />
           <Route element={<ProtectedRoutes />}>
+            {isCloud && (
+              <Route
+                path={`${GlobalRoute.SelfHostedLicenses}/:licenseId?`}
+                element={<SelfHostedLicenses />}
+              />
+            )}
+            {/* Console SSO */}
+            {isCloud && isDevFeaturesEnabled && (
+              <>
+                <Route path={GlobalRoute.ConsoleSso} element={<ConsoleSso />} />
+                <Route
+                  path={`${GlobalRoute.ConsoleSso}/:connectorId/:tab?`}
+                  element={<ConsoleSsoDetails />}
+                />
+              </>
+            )}
             <Route path={GlobalRoute.Profile + '/*'} element={<RedirectToAccountCenter />} />
             <Route
               path={GlobalRoute.CheckoutSuccessCallback}

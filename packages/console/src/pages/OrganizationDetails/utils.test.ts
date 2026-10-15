@@ -6,11 +6,7 @@ describe('assembleData', () => {
     isTrustedDeviceAllowed: false,
   };
 
-  it('includes trusted-device policy when the dev feature is enabled', () => {
-    expect(assembleData(formData, true)).toMatchObject({ isTrustedDeviceAllowed: false });
-  });
-
-  it('omits trusted-device policy when the dev feature is disabled', () => {
-    expect(assembleData(formData)).not.toHaveProperty('isTrustedDeviceAllowed');
+  it('includes trusted-device policy', () => {
+    expect(assembleData(formData)).toMatchObject({ isTrustedDeviceAllowed: false });
   });
 });

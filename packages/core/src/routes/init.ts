@@ -6,6 +6,7 @@ import { EnvSet } from '#src/env-set/index.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import { koaManagementApiHooks } from '#src/middleware/koa-management-api-hooks.js';
+import koaReadOnlyAccess from '#src/middleware/koa-read-only-access.js';
 import koaTenantGuard from '#src/middleware/koa-tenant-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
@@ -69,6 +70,7 @@ const createRouters = (tenant: TenantContext) => {
 
   const managementRouter: ManagementApiRouter = new Router();
   managementRouter.use(koaAuth(tenant.envSet, getManagementApiResourceIndicator(tenant.id)));
+  managementRouter.use(koaReadOnlyAccess());
   managementRouter.use(koaTenantGuard(tenant.id, tenant.queries));
   managementRouter.use(koaManagementApiHooks(tenant.libraries.hooks));
 

@@ -1,6 +1,7 @@
 import { TrustedDevices, type TrustedDevice } from '@logto/schemas';
 import { createMockPool, createMockQueryResult, sql } from '@silverhand/slonik';
 
+import { createMockTrustedDevice } from '#src/__mocks__/trusted-device.js';
 import { expandFields } from '#src/database/utils.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
 import type { QueryType } from '#src/utils/test-utils.js';
@@ -18,11 +19,10 @@ const queries = new TrustedDeviceQueries(pool);
 
 const { table, fields } = convertToIdentifiers(TrustedDevices);
 
-const trustedDevice: TrustedDevice = {
+const trustedDevice: TrustedDevice = createMockTrustedDevice({
   tenantId: 'tenant-id',
   id: 'trusted-device-id',
   userId: 'user-id',
-  secretHash: Buffer.alloc(32, 1),
   userAgent: 'user-agent',
   ip: '127.0.0.1',
   country: 'US',
@@ -30,7 +30,7 @@ const trustedDevice: TrustedDevice = {
   createdAt: 1,
   lastUsedAt: 1,
   expiresAt: 2,
-};
+});
 
 describe('trusted device queries', () => {
   beforeEach(() => {
@@ -87,37 +87,24 @@ describe('trusted device queries', () => {
     ).resolves.toBeNull();
   });
 
-  it('uses the same strict active predicate for paginated list and count', async () => {
+  it('returns all active devices in reverse creation order', async () => {
     const listSql = sql`
       select ${expandFields(TrustedDevices)}
       from ${table}
       where ${fields.userId} = $1
         and ${fields.expiresAt} > now()
       order by ${fields.createdAt} desc
-      limit $2 offset $3
-    `;
-    const countSql = sql`
-      select count(*)
-      from ${table}
-      where ${fields.userId} = $1
-        and ${fields.expiresAt} > now()
     `;
 
-    mockQuery
-      .mockImplementationOnce(async (query, values) => {
-        expectSqlAssert(query, countSql.sql);
-        expect(values).toEqual([trustedDevice.userId]);
-        return createMockQueryResult([{ count: '1' }]);
-      })
-      .mockImplementationOnce(async (query, values) => {
-        expectSqlAssert(query, listSql.sql);
-        expect(values).toEqual([trustedDevice.userId, 20, 40]);
-        return createMockQueryResult([trustedDevice]);
-      });
+    mockQuery.mockImplementationOnce(async (query, values) => {
+      expectSqlAssert(query, listSql.sql);
+      expect(values).toEqual([trustedDevice.userId]);
+      return createMockQueryResult([trustedDevice]);
+    });
 
-    await expect(
-      queries.findActiveByUserId(trustedDevice.userId, { limit: 20, offset: 40 })
-    ).resolves.toEqual([1, [trustedDevice]]);
+    await expect(queries.findActiveByUserId(trustedDevice.userId)).resolves.toEqual([
+      trustedDevice,
+    ]);
   });
 
   it('constrains active point lookup by record and user ownership', async () => {

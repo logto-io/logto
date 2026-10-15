@@ -25,7 +25,7 @@ function SignUpAndSignInChangePreview({
     <div className={styles.container}>
       <div className={styles.description}>
         {isForgotPasswordMigrationNoticeVisible && (
-          <InlineNotification severity="alert" className={styles.notification}>
+          <InlineNotification severity="alert" className={styles.migrationNotice}>
             <Trans
               i18nKey="admin_console.sign_in_exp.save_alert.forgot_password_migration_notice"
               components={{ strong: <strong /> }}
@@ -44,7 +44,7 @@ function SignUpAndSignInChangePreview({
           <SignUpAndSignInDiffSection isAfter before={before} after={after} />
         </div>
       </div>
-      <PasswordDisabledNotification after={after} className={styles.notification} />
+      <PasswordDisabledNotification after={after} className={styles.passwordDisabledNotification} />
     </div>
   );
 }

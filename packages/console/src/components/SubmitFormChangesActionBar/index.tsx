@@ -2,6 +2,7 @@ import { type AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 
 import Button from '@/ds-components/Button';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
 import styles from './index.module.scss';
 
@@ -24,6 +25,14 @@ function SubmitFormChangesActionBar({
   onDiscard,
   className,
 }: Props) {
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
+
+  if (isReadOnly) {
+    return null;
+  }
+
   return (
     <div className={classNames(styles.container, isOpen && styles.active, className)}>
       <div className={styles.actionBar}>

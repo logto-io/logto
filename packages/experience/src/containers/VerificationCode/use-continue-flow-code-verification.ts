@@ -2,21 +2,24 @@ import type { VerificationCodeIdentifier } from '@logto/schemas';
 import { InteractionEvent, MfaFactor, VerificationType } from '@logto/schemas';
 import { useCallback, useContext, useMemo } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
-import { validate } from 'superstruct';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
-import { updateProfileWithVerificationCode } from '@/apis/experience';
+import {
+  updateProfileWithVerificationCode,
+  verifyAndUpdateProfileWithVerificationCode,
+} from '@/apis/experience';
 import { bindMfa } from '@/apis/experience/mfa';
 import { getInteractionEventFromState } from '@/apis/utils';
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
+import useMfaFlowState from '@/hooks/use-mfa-factors-state';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { useSieMethods } from '@/hooks/use-sie';
+import useStepUpContext from '@/hooks/use-step-up-context';
 import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
 import { SearchParameters } from '@/types';
-import { mfaFlowStateGuard } from '@/types/guard';
 
 import useGeneralVerificationCodeErrorHandler from './use-general-verification-code-error-handler';
 import useIdentifierErrorAlert, { IdentifierErrorType } from './use-identifier-error-alert';
@@ -33,17 +36,23 @@ const useContinueFlowCodeVerification = (
   const navigate = useNavigateWithPreservedSearchParams();
 
   const { state } = useLocation();
+  const mfaFlowState = useMfaFlowState();
   const { verificationIdsMap } = useContext(UserInteractionContext);
   const { isVerificationCodeEnabledForSignIn } = useSieMethods();
+  const { isPureStepUp } = useStepUpContext();
 
   const interactionEvent = useMemo(
-    () => getInteractionEventFromState(state) ?? InteractionEvent.SignIn,
-    [state]
+    () =>
+      isPureStepUp
+        ? InteractionEvent.SignIn
+        : (getInteractionEventFromState(state) ?? InteractionEvent.SignIn),
+    [isPureStepUp, state]
   );
 
   const handleError = useErrorHandler();
 
   const verifyVerificationCode = useApi(updateProfileWithVerificationCode);
+  const verifyAndUpdateProfile = useApi(verifyAndUpdateProfileWithVerificationCode);
   const asyncBindMfa = useApi(bindMfa);
 
   const { generalVerificationCodeErrorHandlers, errorMessage, clearErrorMessage } =
@@ -60,14 +69,18 @@ const useContinueFlowCodeVerification = (
   const identifierExistsErrorHandler = useCallback(async () => {
     const linkSocial = searchParameters.get(SearchParameters.LinkSocial);
     const socialVerificationId = verificationIdsMap[VerificationType.Social];
+    const { type, value } = identifier;
 
     // Show bind with social confirm modal
-    if (linkSocial && socialVerificationId) {
+    if (
+      !isPureStepUp &&
+      linkSocial &&
+      socialVerificationId &&
+      isVerificationCodeEnabledForSignIn(type)
+    ) {
       await showLinkSocialConfirmModal(identifier, verificationId, socialVerificationId);
       return;
     }
-
-    const { type, value } = identifier;
 
     // This is to ensure a consistent user experience during the registration process.
     // If email or phone number has been enabled as additional sign-up identifiers,
@@ -92,6 +105,7 @@ const useContinueFlowCodeVerification = (
   }, [
     identifier,
     interactionEvent,
+    isPureStepUp,
     isVerificationCodeEnabledForSignIn,
     navigate,
     searchParameters,
@@ -118,13 +132,13 @@ const useContinueFlowCodeVerification = (
 
   const onSubmit = useCallback(
     async (code: string) => {
-      const [, mfaFlowState] = validate(state, mfaFlowStateGuard);
-      // Check if this is an email MFA binding flow
-      if (
-        mfaFlowState?.availableFactors.includes(MfaFactor.EmailVerificationCode) &&
+      const factor =
         identifier.type === 'email'
-      ) {
-        const [verifyError] = await verifyVerificationCode(
+          ? MfaFactor.EmailVerificationCode
+          : MfaFactor.PhoneVerificationCode;
+
+      if (mfaFlowState?.availableFactors.includes(factor)) {
+        const [verifyError] = await verifyAndUpdateProfile(
           {
             code,
             identifier,
@@ -139,13 +153,10 @@ const useContinueFlowCodeVerification = (
           return;
         }
 
-        const [bindError, bindResult] = await asyncBindMfa(
-          MfaFactor.EmailVerificationCode,
-          verificationId
-        );
+        const [bindError, bindResult] = await asyncBindMfa(factor, verificationId);
 
         if (bindError) {
-          await handleError(bindError);
+          await handleError(bindError, submitInteractionErrorHandler);
           errorCallback?.();
           return;
         }
@@ -184,11 +195,13 @@ const useContinueFlowCodeVerification = (
       handleError,
       identifier,
       interactionEvent,
+      mfaFlowState,
       redirectTo,
-      state,
+      submitInteractionErrorHandler,
       verificationId,
       verifyVerificationCode,
       verifyVerificationCodeErrorHandlers,
+      verifyAndUpdateProfile,
     ]
   );
 

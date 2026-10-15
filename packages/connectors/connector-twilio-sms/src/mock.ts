@@ -9,6 +9,9 @@ export const mockedConfig: TwilioSmsConfig = {
   authToken: mockedAuthToken,
   fromMessagingServiceSID: mockedFromMessagingServiceSID,
   templates: [
+    { usageType: 'Register', content: 'code {{code}}' },
+    { usageType: 'SignIn', content: 'code {{code}}' },
+    { usageType: 'ForgotPassword', content: 'code {{code}}' },
     {
       usageType: 'Generic',
       content: 'This is for testing purposes only. Your verification code is {{code}}.',

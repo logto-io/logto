@@ -9,12 +9,54 @@ const tenants = {
     oidc_configs: 'OIDC 구성',
     subscription: '구독 및 청구',
     billing_history: '청구 내역',
+    license: '라이선스',
+  },
+  license: {
+    purchase_title: '셀프 호스팅 요금제',
+    purchase_description:
+      '셀프 호스팅 프로 및 엔터프라이즈 요금제는 Logto 브랜딩 숨기기, 자체 UI 사용, 콘솔 공동 관리, 무제한 SAML 애플리케이션 등 유료 기능을 내 인스턴스에서 사용할 수 있게 합니다. 요금제를 구매하고 라이선스 키를 받아보세요.',
+    purchase_button: '셀프 호스팅 요금제 보기',
+    install_title: '라이선스 설치',
+    install_description: '셀프 호스팅 요금제를 구매한 후 받은 라이선스 키를 붙여넣으세요.',
+    install_button: '라이선스 설치',
+    key_field: '라이선스 키',
+    key_field_description:
+      '키는 내 인스턴스에서 검증되며 외부로 전송되지 않습니다. 가지고 있는 키가 만료되었다면 Logto에 문의하여 새 키를 받으세요.',
+    key_placeholder: '여기에 라이선스 키를 붙여넣으세요',
+    installed_toast: '라이선스를 설치했습니다.',
+    details_title: '라이선스',
+    details_description: '이 인스턴스에 설치된 라이선스와 그 권한입니다.',
+    plan_field: '요금제',
+    environment_field: '환경',
+    environment_production: '프로덕션',
+    environment_non_production: '비프로덕션',
+    expires_at_field: '만료일',
+    installed_at_field: '설치일',
+    last_refreshed_at_field: '마지막 새로 고침 시간',
+    grace_ends_at_field: '유예 기간 종료일',
+    refresh_expired_description:
+      '라이선스 키가 {{expiresAt}}에 만료되었습니다. Logto가 갱신을 시도하는 동안 라이선스 기능은 {{graceEndsAt}}까지 계속 사용할 수 있습니다.',
+    refresh_refused_description:
+      '라이선스가 {{reason}} 상태이므로 라이선스 갱신이 거부되었습니다. 라이선스 기능은 {{graceEndsAt}}까지 계속 사용할 수 있습니다.',
+    refusal_reason_canceled: '취소됨',
+    refusal_reason_unpaid: '미납',
+    refusal_reason_expired: '만료됨',
+    refusal_reason_revoked: '취소됨',
+    refusal_reason_unknown: '사용할 수 없음',
+    grace_expired_description:
+      '라이선스 유예 기간이 {{graceEndsAt}}에 끝났습니다. 이 배포는 OSS 기본값으로 되돌아갔습니다. Logto에 문의하여 새 라이선스 키를 받고 다시 설치하세요.',
+    get_fresh_key_button: '새 라이선스 키 받기',
+    replace_button: '라이선스 교체',
   },
   members: {
     card_title: 'Logto Cloud로 테넌트를 더 안전하게 관리하세요',
     card_description:
       '하나의 관리자 계정을 공유하지 않고도 테넌트에 관리자나 협업자를 추가할 수 있습니다.',
     card_action: 'Logto Cloud 살펴보기',
+    self_hosted_card_title: '셀프 호스팅 플랜으로 테넌트를 더 안전하게 관리하세요',
+    self_hosted_card_description:
+      '하나의 관리자 계정을 공유하지 않고도 테넌트에 관리자나 협업자를 추가할 수 있습니다.',
+    self_hosted_card_action: '셀프 호스팅 플랜 살펴보기',
   },
   settings: {
     title: '설정',
@@ -38,6 +80,16 @@ const tenants = {
     tenant_info_saved: '테넌트 정보가 성공적으로 저장되었습니다.',
     tenant_mfa: '다단계 인증',
     tenant_mfa_description: '이 테넌트에 접근하려면 구성원이 다단계 인증을 설정해야 합니다.',
+    oss_description: '이 인스턴스에서 구성원이 콘솔에 접근하는 방식을 관리합니다.',
+    tenant_mfa_confirm_title: '모든 구성원에게 MFA를 요구하시겠습니까?',
+    tenant_mfa_confirm_description:
+      '다음 구성원은 아직 MFA를 설정하지 않았습니다. 로그인 상태는 유지되며, 다음 로그인 시 설정하라는 요청을 받게 됩니다:',
+    tenant_mfa_confirm_self:
+      '회원님도 아직 MFA를 설정하지 않았습니다. 다음 로그인 전에 계정 설정에서 설정하세요.',
+    tenant_mfa_confirm_button: 'MFA 요구',
+    tenant_mfa_setup_required:
+      '이 테넌트는 다단계 인증을 요구합니다. 지금 설정하지 않으면 다음 로그인 시 설정하라는 요청을 받게 됩니다.',
+    tenant_mfa_setup_action: 'MFA 설정',
     enterprise_sso: '엔터프라이즈 SSO',
     enterprise_sso_description:
       '유료 플랜에서 사용 가능합니다. 엔터프라이즈 SSO를 활성화하여 모든 구성원이 조직의 ID 공급자를 사용하여 Logto Cloud 콘솔에 로그인할 수 있도록 하려면 문의해 주세요.',
@@ -45,6 +97,11 @@ const tenants = {
   full_env_tag: {
     development: '개발',
     production: '프로드',
+  },
+  view_only: {
+    tag: '보기 전용',
+    notification:
+      '이 테넌트에 대한 보기 전용 액세스 권한이 있습니다. 변경이 필요하면 테넌트 관리자에게 요청하세요.',
   },
   deletion_card: {
     title: '삭제',

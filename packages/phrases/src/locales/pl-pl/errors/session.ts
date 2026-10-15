@@ -47,6 +47,20 @@ const session = {
     suggest_additional_mfa:
       'Dla lepszej ochrony rozważ dodanie kolejnej metody MFA. Możesz pominąć ten krok i kontynuować.',
   },
+  trusted_device_suggest_opt_in: 'Wybierz, czy chcesz zaufać temu urządzeniu.',
+  step_up: {
+    invalid_interaction_event:
+      'Uwierzytelnianie step-up jest dostępne tylko dla interakcji logowania.',
+    subject_not_found:
+      'Nie znaleziono uwierzytelnionej sesji dla uwierzytelniania step-up. Zaloguj się ponownie.',
+    forbidden_route: 'Ta trasa nie jest dozwolona podczas uwierzytelniania step-up.',
+    forbidden_identifier:
+      'Identyfikator nie jest dozwolony podczas uwierzytelniania step-up. Spróbuj ponownie bez pola identyfikatora.',
+    acr_not_satisfied:
+      'Ukończona weryfikacja nie spełnia wymaganego kontekstu uwierzytelniania. Zweryfikuj inną metodę.',
+    require_verification:
+      'Aby osiągnąć wymagany kontekst uwierzytelniania, wymagana jest weryfikacja za pomocą jednej z Twoich istniejących metod.',
+  },
   passkey_sign_in: {
     pending_info_not_found:
       'Nie znaleziono oczekujących informacji logowania passkey. Uruchom ponownie proces logowania.',

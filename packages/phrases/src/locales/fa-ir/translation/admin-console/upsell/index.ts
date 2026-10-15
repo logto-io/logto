@@ -7,6 +7,7 @@ const upsell = {
   compare_plans: 'مقایسه پلان‌ها',
   try_with_product_name: '{{productName}} را همین حالا امتحان کنید',
   view_plans: 'مشاهده پلان‌ها',
+  explore_self_hosted_plans: 'کشف طرح‌های self-hosted',
   create_tenant: {
     title: 'پلان tenant خود را انتخاب کنید',
     description:

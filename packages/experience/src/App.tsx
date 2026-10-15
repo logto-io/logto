@@ -1,6 +1,7 @@
 import { MfaFactor, experience } from '@logto/schemas';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 
+import { isDevFeaturesEnabled } from '@/constants/env';
 import { handleSearchParametersData } from '@/shared/utils/search-parameters';
 
 import AppLayout from './Layout/AppLayout';
@@ -11,6 +12,9 @@ import PageContextProvider from './Providers/PageContextProvider';
 import SettingsProvider from './Providers/SettingsProvider';
 import UserInteractionContextProvider from './Providers/UserInteractionContextProvider';
 import DevelopmentTenantNotification from './containers/DevelopmentTenantNotification';
+import MfaVerificationGuard from './containers/MfaVerificationGuard';
+import StepUpGuard from './containers/StepUpGuard';
+import StepUpRecoveryGuard from './containers/StepUpRecoveryGuard';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
 import Continue from './pages/Continue';
@@ -51,7 +55,11 @@ import SingleSignOnLanding from './pages/SingleSignOnLanding';
 import SocialLanding from './pages/SocialLanding';
 import SocialLinkAccount from './pages/SocialLinkAccount';
 import SocialSignInWebCallback from './pages/SocialSignInWebCallback';
+import StepUp from './pages/StepUp';
+import StepUpPassword from './pages/StepUp/Password';
+import StepUpVerificationCode from './pages/StepUp/VerificationCode';
 import SwitchAccount from './pages/SwitchAccount';
+import TrustedDevice from './pages/TrustedDevice';
 import VerificationCode from './pages/VerificationCode';
 import { UserMfaFlow } from './types';
 import 'overlayscrollbars/overlayscrollbars.css';
@@ -72,10 +80,13 @@ const App = () => {
                 <Routes>
                   <Route element={<LoadingLayerProvider />}>
                     <Route path="callback/:connectorId" element={<Callback />} />
-                    <Route
-                      path="callback/social/:connectorId"
-                      element={<SocialSignInWebCallback />}
-                    />
+                    {/* Step-up callbacks recover the mode before consuming upstream proofs. */}
+                    <Route element={isDevFeaturesEnabled ? <StepUpRecoveryGuard /> : undefined}>
+                      <Route
+                        path="callback/social/:connectorId"
+                        element={<SocialSignInWebCallback />}
+                      />
+                    </Route>
                     <Route path="direct/:method/:target?" element={<DirectSignIn />} />
                     <Route path={experience.routes.oneTimeToken} element={<OneTimeToken />} />
                     <Route element={<AppLayout />}>
@@ -118,6 +129,9 @@ const App = () => {
                       {/* Create passkey for sign-in */}
                       <Route path="create-passkey" element={<PasskeySetup />} />
 
+                      {/* Trusted device */}
+                      <Route path={experience.routes.trustedDevice} element={<TrustedDevice />} />
+
                       {/* Register */}
                       <Route path={experience.routes.register}>
                         <Route index element={<Register />} />
@@ -130,30 +144,43 @@ const App = () => {
                         <Route path="reset" element={<ResetPassword />} />
                       </Route>
 
-                      {/* Passwordless verification code */}
-                      <Route path=":flow/verification-code" element={<VerificationCode />} />
+                      {/* Step-up establishment and enrollment reuse the existing pages. */}
+                      <Route element={isDevFeaturesEnabled ? <StepUpRecoveryGuard /> : undefined}>
+                        {/* Passwordless verification code */}
+                        <Route path=":flow/verification-code" element={<VerificationCode />} />
 
-                      {/* Mfa onboarding page. Prompt users to turn on 2-step verification. */}
-                      <Route path="mfa-onboarding" element={<MfaOnboarding />} />
+                        {/* Mfa onboarding page. Prompt users to turn on 2-step verification. */}
+                        <Route path="mfa-onboarding" element={<MfaOnboarding />} />
 
-                      {/* Mfa binding */}
-                      <Route path={UserMfaFlow.MfaBinding}>
-                        <Route index element={<MfaBinding />} />
-                        <Route path={MfaFactor.TOTP} element={<TotpBinding />} />
-                        <Route path={MfaFactor.WebAuthn} element={<WebAuthnBinding />} />
-                        <Route path={MfaFactor.BackupCode} element={<BackupCodeBinding />} />
-                        <Route
-                          path={MfaFactor.EmailVerificationCode}
-                          element={<EmailMfaBinding />}
-                        />
-                        <Route
-                          path={MfaFactor.PhoneVerificationCode}
-                          element={<PhoneMfaBinding />}
-                        />
+                        {/* Mfa binding */}
+                        <Route path={UserMfaFlow.MfaBinding}>
+                          <Route index element={<MfaBinding />} />
+                          <Route path={MfaFactor.TOTP} element={<TotpBinding />} />
+                          <Route path={MfaFactor.WebAuthn} element={<WebAuthnBinding />} />
+                          <Route path={MfaFactor.BackupCode} element={<BackupCodeBinding />} />
+                          <Route
+                            path={MfaFactor.EmailVerificationCode}
+                            element={<EmailMfaBinding />}
+                          />
+                          <Route
+                            path={MfaFactor.PhoneVerificationCode}
+                            element={<PhoneMfaBinding />}
+                          />
+                        </Route>
+
+                        {/* Continue set up missing profile */}
+                        <Route path="continue">
+                          <Route index element={<Continue />} />
+                          <Route path=":method" element={<Continue />} />
+                        </Route>
                       </Route>
 
                       {/* Mfa verification */}
-                      <Route path={UserMfaFlow.MfaVerification}>
+                      <Route
+                        path={UserMfaFlow.MfaVerification}
+                        // Step-up MFA pages recover their state from the interaction.
+                        element={isDevFeaturesEnabled ? <MfaVerificationGuard /> : undefined}
+                      >
                         <Route index element={<MfaVerification />} />
                         <Route path={MfaFactor.TOTP} element={<TotpVerification />} />
                         <Route path={MfaFactor.WebAuthn} element={<WebAuthnVerification />} />
@@ -168,10 +195,22 @@ const App = () => {
                         />
                       </Route>
 
-                      {/* Continue set up missing profile */}
-                      <Route path="continue">
-                        <Route path=":method" element={<Continue />} />
-                      </Route>
+                      {/*
+                       * Step-up: an authenticated session proves the missing assurance. The guard
+                       * loads the server-driven context, the landing dispatches on it, and the
+                       * pinned-user first-factor pages verify the pinned subject. Dev-only
+                       * feature: remove the flag when the flow is released.
+                       */}
+                      {isDevFeaturesEnabled && (
+                        <Route path={experience.routes.stepUp} element={<StepUpGuard />}>
+                          <Route index element={<StepUp />} />
+                          <Route path="password" element={<StepUpPassword />} />
+                          <Route
+                            path="verification-code/:type"
+                            element={<StepUpVerificationCode />}
+                          />
+                        </Route>
+                      )}
 
                       {/* Social sign-in pages */}
                       <Route path="social">

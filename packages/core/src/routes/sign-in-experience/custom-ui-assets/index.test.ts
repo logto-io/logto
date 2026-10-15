@@ -3,42 +3,56 @@ import path from 'node:path';
 import { Readable } from 'node:stream';
 import { fileURLToPath } from 'node:url';
 
-import { StorageProvider } from '@logto/schemas';
+import { StorageProvider, ossDefaultQuota } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import AdmZip from 'adm-zip';
 import pRetry from 'p-retry';
 import { type Response } from 'supertest';
 
+import { EnvSet } from '#src/env-set/index.js';
+import { type VerifiedLicense } from '#src/license/LicenseReader.js';
+import koaErrorHandler from '#src/middleware/koa-error-handler.js';
+import koaI18next from '#src/middleware/koa-i18next.js';
 import SystemContext from '#src/tenants/SystemContext.js';
+import { buildLicensePayload } from '#src/test-utils/license.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
 
-const experienceZipsProviderConfig = {
+// eslint-disable-next-line @silverhand/fp/no-mutation
+SystemContext.shared.experienceZipsProviderConfig = {
   provider: StorageProvider.AzureStorage,
   connectionString: 'connectionString',
-  container: 'container',
-} satisfies {
-  provider: StorageProvider.AzureStorage;
-  connectionString: string;
-  container: string;
+  container: 'zips',
 };
-
 // eslint-disable-next-line @silverhand/fp/no-mutation
-SystemContext.shared.experienceZipsProviderConfig = experienceZipsProviderConfig;
+SystemContext.shared.experienceBlobsProviderConfig = {
+  provider: StorageProvider.S3Storage,
+  endpoint: 'http://localhost:9000',
+  bucket: 'blobs',
+  accessKeyId: 'accessKeyId',
+  accessSecretKey: 'accessSecretKey',
+};
 
 const mockedIsFileExisted = jest.fn(async (filename: string) => false);
 const mockedDownloadFile = jest.fn();
+const mockedAzureUploadFile = jest.fn(async () => ({ url: 'https://fake.url' }));
 
 await mockEsmWithActual('#src/utils/storage/azure-storage.js', () => ({
   buildAzureStorage: () => ({
-    uploadFile: jest.fn(async () => 'https://fake.url'),
+    uploadFile: mockedAzureUploadFile,
     downloadFile: mockedDownloadFile,
     isFileExisted: mockedIsFileExisted,
   }),
+}));
+
+const mockedS3UploadFile = jest.fn(async () => ({ url: 'https://fake.url' }));
+
+await mockEsmWithActual('#src/utils/storage/s3-storage.js', () => ({
+  buildS3Storage: () => ({ uploadFile: mockedS3UploadFile }),
 }));
 
 await mockEsmWithActual('#src/utils/tenant.js', () => ({
@@ -58,93 +72,318 @@ await mockEsmWithActual('@logto/shared', () => ({
   generateStandardId: mockedGenerateStandardId,
 }));
 
-const tenantContext = new MockTenant();
+const LicenseReader = await pickDefault(import('#src/license/LicenseReader.js'));
+const mockedReadLicense = jest.spyOn(LicenseReader.shared, 'read');
+
+const withLicense = (bringYourUi: boolean, overrides?: Partial<VerifiedLicense>) => {
+  mockedReadLicense.mockResolvedValue({
+    payload: buildLicensePayload({ quota: { bringYourUi } }),
+    quota: { ...ossDefaultQuota, bringYourUi },
+    installedAt: new Date(Date.now()).toISOString(),
+    lastRefreshedAt: new Date(Date.now()).toISOString(),
+    graceEndsAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+    ...overrides,
+  });
+};
+
+// The Cloud quota guard is covered by its own tests; here it only has to let the request through.
+const tenantContext = new MockTenant(undefined, undefined, undefined, {
+  quota: { guardTenantUsageByKey: jest.fn() },
+});
 
 const signInExperiencesRoutes = await pickDefault(import('./index.js'));
-const signInExperienceRequester = createRequester({
-  authedRoutes: signInExperiencesRoutes,
-  tenantContext,
-});
+
+/** The routes read the environment when they are built, so build them per environment. */
+const createSignInExperienceRequester = () =>
+  createRequester({ authedRoutes: signInExperiencesRoutes, tenantContext });
 
 const currentPath = path.dirname(fileURLToPath(import.meta.url));
 const testFilesPath = path.join(currentPath, 'test-files');
 const pathToZip = path.join(testFilesPath, 'assets.zip');
 
-const uploadCustomUiAssets = async (filePath: string): Promise<Response> => {
-  const response = await signInExperienceRequester
-    .post('/sign-in-exp/default/custom-ui-assets')
-    .field('name', 'file')
-    .attach('file', filePath);
-
-  return response;
+const setEnv = (values: { isCloud: boolean; isDevFeaturesEnabled?: boolean }) => {
+  for (const [key, value] of Object.entries(values)) {
+    Reflect.set(EnvSet.values, key, value);
+  }
 };
 
 describe('POST /sign-in-exp/default/custom-ui-assets', () => {
+  const { isCloud, isDevFeaturesEnabled } = EnvSet.values;
+
   beforeAll(async () => {
     await fs.mkdir(testFilesPath);
+    const zip = new AdmZip();
+    zip.addFile('index.html', Buffer.from('<html></html>'));
+    await zip.writeZipPromise(pathToZip);
   });
 
   afterEach(() => {
     jest.clearAllMocks();
+    setEnv({ isCloud, isDevFeaturesEnabled });
   });
 
   afterAll(async () => {
     void fs.rm(testFilesPath, { force: true, recursive: true });
   });
 
-  it('should fail if upload file is not a zip', async () => {
-    const pathToTxt = path.join(testFilesPath, 'foo.txt');
-    await fs.writeFile(pathToTxt, 'foo');
-    const response = await uploadCustomUiAssets(pathToTxt);
-
-    expect(response.status).toBe(400);
-  });
-
-  it('should upload custom ui assets', async () => {
-    mockedGenerateStandardId.mockReturnValue('custom-ui-asset-id');
-    const zip = new AdmZip();
-    zip.addFile('index.html', Buffer.from('<html></html>'));
-    await zip.writeZipPromise(pathToZip);
-    const response = await uploadCustomUiAssets(pathToZip);
-
-    expect(response.status).toBe(200);
-    expect(response.body.customUiAssetId).toBe('custom-ui-asset-id');
-  });
-
-  it('should fail if the error.log file exists', async () => {
-    mockedIsFileExisted.mockImplementation(async (filename: string) =>
-      filename.endsWith('error.log')
-    );
-    mockedDownloadFile.mockImplementation(async () => ({
-      readableStreamBody: Readable.from('Failed to unzip files!'),
-    }));
-    const response = await uploadCustomUiAssets(pathToZip);
-    expect(response.status).toBe(500);
-    expect(response.text).toBe('Failed to upload file to the storage provider.');
-  });
-
-  it('should fail if the upload zip always persists (unzipping azure function does not trigger)', async () => {
-    mockedIsFileExisted.mockImplementation(async (filename) => filename.endsWith('assets.zip'));
-    const response = await uploadCustomUiAssets(pathToZip);
-    expect(response.status).toBe(500);
-    expect(response.text).toBe('Failed to upload file to the storage provider.');
-    expect(mockedIsFileExisted).toHaveBeenCalledTimes(12);
-  });
-
-  it('should succeed if the upload zip is removed on the final retry', async () => {
+  describe('on Cloud', () => {
     // eslint-disable-next-line @silverhand/fp/no-let
-    let assetsZipChecks = 0;
-    mockedIsFileExisted.mockImplementation(async (filename) => {
-      if (filename.endsWith('assets.zip')) {
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        assetsZipChecks += 1;
-        return assetsZipChecks < 6;
-      }
+    let upload: (filePath: string) => Promise<Response>;
 
-      return false;
+    beforeAll(() => {
+      setEnv({ isCloud: true });
+      const requester = createSignInExperienceRequester();
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      upload = async (filePath) =>
+        requester
+          .post('/sign-in-exp/default/custom-ui-assets')
+          .field('name', 'file')
+          .attach('file', filePath);
     });
-    const response = await uploadCustomUiAssets(pathToZip);
-    expect(response.status).toBe(200);
-    expect(mockedIsFileExisted).toHaveBeenCalledTimes(12);
+
+    beforeEach(() => {
+      setEnv({ isCloud: true });
+    });
+
+    it('should fail if upload file is not a zip', async () => {
+      const pathToTxt = path.join(testFilesPath, 'foo.txt');
+      await fs.writeFile(pathToTxt, 'foo');
+      const response = await upload(pathToTxt);
+
+      expect(response.status).toBe(400);
+    });
+
+    it('should upload the zip for the Azure function to unzip', async () => {
+      mockedGenerateStandardId.mockReturnValueOnce('custom-ui-asset-id');
+      const response = await upload(pathToZip);
+
+      expect(response.status).toBe(200);
+      expect(response.body.customUiAssetId).toBe('custom-ui-asset-id');
+      expect(mockedAzureUploadFile).toHaveBeenCalledWith(
+        expect.any(Buffer),
+        'default/custom-ui-asset-id/assets.zip',
+        { contentType: 'application/zip' }
+      );
+      expect(mockedS3UploadFile).not.toHaveBeenCalled();
+      expect(mockedReadLicense).not.toHaveBeenCalled();
+    });
+
+    it('should fail if the error.log file exists', async () => {
+      mockedIsFileExisted.mockImplementation(async (filename: string) =>
+        filename.endsWith('error.log')
+      );
+      mockedDownloadFile.mockImplementation(async () => ({
+        readableStreamBody: Readable.from('Failed to unzip files!'),
+      }));
+      const response = await upload(pathToZip);
+      expect(response.status).toBe(500);
+      expect(response.text).toBe('Failed to upload file to the storage provider.');
+    });
+
+    it('should fail if the upload zip always persists (unzipping azure function does not trigger)', async () => {
+      mockedIsFileExisted.mockImplementation(async (filename) => filename.endsWith('assets.zip'));
+      const response = await upload(pathToZip);
+      expect(response.status).toBe(500);
+      expect(response.text).toBe('Failed to upload file to the storage provider.');
+      expect(mockedIsFileExisted).toHaveBeenCalledTimes(12);
+    });
+
+    it('should succeed if the upload zip is removed on the final retry', async () => {
+      // eslint-disable-next-line @silverhand/fp/no-let
+      let assetsZipChecks = 0;
+      mockedIsFileExisted.mockImplementation(async (filename) => {
+        if (filename.endsWith('assets.zip')) {
+          // eslint-disable-next-line @silverhand/fp/no-mutation
+          assetsZipChecks += 1;
+          return assetsZipChecks < 6;
+        }
+
+        return false;
+      });
+      const response = await upload(pathToZip);
+      expect(response.status).toBe(200);
+      expect(mockedIsFileExisted).toHaveBeenCalledTimes(12);
+    });
+  });
+
+  describe('on a self-hosted deployment', () => {
+    const now = Date.parse('2026-10-08T00:00:00.000Z');
+    // eslint-disable-next-line @silverhand/fp/no-let
+    let upload: (filePath: string) => Promise<Response>;
+
+    beforeAll(() => {
+      setEnv({ isCloud: false, isDevFeaturesEnabled: false });
+      const requester = createSignInExperienceRequester();
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      upload = async (filePath) =>
+        requester
+          .post('/sign-in-exp/default/custom-ui-assets')
+          .field('name', 'file')
+          .attach('file', filePath);
+    });
+
+    beforeEach(() => {
+      setEnv({ isCloud: false, isDevFeaturesEnabled: false });
+      jest.spyOn(Date, 'now').mockReturnValue(now);
+    });
+
+    afterEach(() => {
+      jest.spyOn(Date, 'now').mockRestore();
+    });
+
+    it('should reject the upload without a license', async () => {
+      // eslint-disable-next-line unicorn/no-useless-undefined -- The reader returns undefined when no license is installed.
+      mockedReadLicense.mockResolvedValueOnce(undefined);
+      const response = await upload(pathToZip);
+
+      expect(response.status).toBe(403);
+      expect(mockedS3UploadFile).not.toHaveBeenCalled();
+    });
+
+    it('should reject the upload with a license that does not grant Bring your UI', async () => {
+      withLicense(false);
+      const response = await upload(pathToZip);
+
+      expect(response.status).toBe(403);
+      expect(mockedS3UploadFile).not.toHaveBeenCalled();
+    });
+
+    it.each([0, 1])('should reject the upload %i ms after grace ends', async (offset) => {
+      withLicense(true, {
+        payload: buildLicensePayload({
+          iat: Math.floor(now / 1000) - 31 * 24 * 60 * 60,
+          quota: { bringYourUi: true },
+        }),
+        lastRefreshedAt: new Date(now - offset - 30 * 24 * 60 * 60 * 1000).toISOString(),
+        graceEndsAt: new Date(now - offset).toISOString(),
+      });
+      const response = await upload(pathToZip);
+
+      expect(response.status).toBe(403);
+      expect(response.text).toBe('You have reached the limit of your subscription plan.');
+      expect(mockedS3UploadFile).not.toHaveBeenCalled();
+      expect(mockedAzureUploadFile).not.toHaveBeenCalled();
+      expect(mockedGenerateStandardId).not.toHaveBeenCalled();
+    });
+
+    it('should allow an expired key and refused refresh immediately before grace ends', async () => {
+      withLicense(true, {
+        payload: buildLicensePayload({
+          iat: Math.floor(now / 1000) - 30 * 24 * 60 * 60,
+          exp: Math.floor(now / 1000) - 1,
+          quota: { bringYourUi: true },
+        }),
+        lastRefreshedAt: new Date(now + 1 - 30 * 24 * 60 * 60 * 1000).toISOString(),
+        graceEndsAt: new Date(now + 1).toISOString(),
+        refusalReason: 'revoked',
+      });
+      const response = await upload(pathToZip);
+
+      expect(response.status).toBe(200);
+      expect(response.body.customUiAssetId).toEqual(expect.any(String));
+      expect(mockedS3UploadFile).toHaveBeenCalledWith(
+        Buffer.from('<html></html>'),
+        `default/${response.body.customUiAssetId}/index.html`,
+        { contentType: 'text/html', isPublic: false }
+      );
+      expect(mockedAzureUploadFile).not.toHaveBeenCalled();
+    });
+
+    it('should unzip the assets into the blobs storage', async () => {
+      withLicense(true);
+      mockedGenerateStandardId.mockReturnValueOnce('custom-ui-asset-id');
+      const response = await upload(pathToZip);
+
+      expect(response.status).toBe(200);
+      expect(response.body.customUiAssetId).toBe('custom-ui-asset-id');
+      expect(mockedS3UploadFile).toHaveBeenCalledWith(
+        Buffer.from('<html></html>'),
+        'default/custom-ui-asset-id/index.html',
+        { contentType: 'text/html', isPublic: false }
+      );
+      expect(mockedAzureUploadFile).not.toHaveBeenCalled();
+    });
+
+    it('should reject a zip without index.html before uploading any assets', async () => {
+      withLicense(true);
+      const pathToInvalidZip = path.join(testFilesPath, 'missing-index.zip');
+      const zip = new AdmZip();
+      zip.addFile('app.js', Buffer.from('console.log("custom UI");'));
+      await zip.writeZipPromise(pathToInvalidZip);
+      const response = await upload(pathToInvalidZip);
+
+      expect(response.status).toBe(400);
+      expect(response.text).toBe(
+        'Input is invalid. The custom UI zip must contain an index.html file at the asset root.'
+      );
+      expect(response.body.customUiAssetId).toBeUndefined();
+      expect(mockedS3UploadFile).not.toHaveBeenCalled();
+      expect(mockedAzureUploadFile).not.toHaveBeenCalled();
+    });
+
+    it('should preserve storage errors when uploading a valid zip fails', async () => {
+      withLicense(true);
+      mockedS3UploadFile.mockRejectedValueOnce(new Error('Storage unavailable'));
+      const response = await upload(pathToZip);
+
+      expect(response.status).toBe(500);
+      expect(response.text).toBe('Failed to upload file to the storage provider.');
+    });
+
+    it('should fail when the zip cannot be unzipped', async () => {
+      withLicense(true);
+      const pathToEmptyZip = path.join(testFilesPath, 'empty.zip');
+      await new AdmZip().writeZipPromise(pathToEmptyZip);
+      const response = await upload(pathToEmptyZip);
+
+      expect(response.status).toBe(400);
+      expect(response.text).toBe(
+        'The archive could not be read. Create a non-empty ZIP using Deflate or no compression, then upload it again.'
+      );
+      expect(mockedS3UploadFile).not.toHaveBeenCalled();
+    });
+
+    it('should serialize localized validation errors without internal details', async () => {
+      withLicense(true);
+      const requester = createRequester({
+        authedRoutes: signInExperiencesRoutes,
+        tenantContext,
+        middlewares: [koaI18next(), koaErrorHandler()],
+      });
+      const response = await requester
+        .post('/sign-in-exp/default/custom-ui-assets')
+        .set('Accept-Language', 'en')
+        .attach('file', Buffer.from('not-a-zip'), 'assets.zip');
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({
+        code: 'storage.invalid_custom_ui_zip',
+        message:
+          'The archive could not be read. Create a non-empty ZIP using Deflate or no compression, then upload it again.',
+      });
+    });
+
+    it('should preserve storage failures instead of classifying them as invalid archives', async () => {
+      withLicense(true);
+      mockedS3UploadFile.mockRejectedValueOnce(new Error('Internal storage failure'));
+      const response = await upload(pathToZip);
+
+      expect(response.status).toBe(500);
+      expect(response.text).toBe('Failed to upload file to the storage provider.');
+    });
+
+    it('should fail when the blobs storage is not configured', async () => {
+      withLicense(true);
+      const { experienceBlobsProviderConfig } = SystemContext.shared;
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      SystemContext.shared.experienceBlobsProviderConfig = undefined;
+
+      const response = await upload(pathToZip);
+
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      SystemContext.shared.experienceBlobsProviderConfig = experienceBlobsProviderConfig;
+      expect(response.status).toBe(400);
+      expect(response.text).toBe('Storage provider is not configured.');
+    });
   });
 });

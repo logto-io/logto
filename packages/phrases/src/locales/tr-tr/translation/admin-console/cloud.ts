@@ -1,4 +1,68 @@
 const cloud = {
+  self_hosted_licenses: {
+    title: 'Kendi sunucunda barındırma lisansları',
+    description:
+      'Hesabının lisanslarını görüntüle ve kendi sunucundaki dağıtımlar için anahtarları kopyala.',
+    empty_title: 'Henüz kendi sunucunda barındırma lisansı yok',
+    empty_description:
+      'Bir lisans satın aldıysan, satın alırken kullandığın hesapla oturum açtığından emin ol.',
+    load_error: 'Lisanslar yüklenemedi. Lütfen tekrar dene.',
+    period_end: 'Geçerli dönem sonu',
+    keys_title: 'Lisans anahtarları',
+    keys_description: 'Bu anahtarları gizli tut. Dağıtım ortamına uygun anahtarı kullan.',
+    production_key: 'Üretim anahtarı',
+    non_production_key: 'Üretim dışı anahtar',
+    keys_unavailable: 'Bu lisansın anahtarları kullanılamıyor. Yardım için destek ekibine ulaş.',
+    issue_keys: 'Lisans anahtarlarını al',
+    issue_error: 'Lisans anahtarları oluşturulamadı. Lütfen tekrar dene.',
+    install_title: 'Lisansını yükle',
+    install_description:
+      'Her iki anahtar da aynı özellikleri ve kotaları sağlar. Sipariş formunda aksi belirtilmedikçe aboneliğin bir üretim dağıtımını kapsar.',
+    install_copy:
+      'Üretim dağıtımı için üretim anahtarını, geliştirme ve test için üretim dışı anahtarı kopyala.',
+    install_paste:
+      'Kendi sunucundaki konsolda Ayarlar → Lisans bölümünü aç, anahtarı yapıştır ve yükle.',
+    status: {
+      active: 'Etkin',
+      past_due: 'Ödeme gecikmiş',
+      canceling: 'Dönem sonunda iptal edilir',
+      canceled: 'İptal edildi',
+      unpaid: 'Ödenmemiş',
+      expired: 'Süresi dolmuş',
+      revoked: 'Geri alınmış',
+    },
+  },
+  console_sso: {
+    back_to_list: "Console SSO'ya dön",
+    create: 'Bağlayıcı ekle',
+    title: 'Konsol SSO',
+    description:
+      'Logto Console’da tek oturum açma ile oturum açmak için kendi kimlik sağlayıcınızı yapılandırın.',
+    domain_bound: 'Bağlandı',
+    domain_pending: 'Doğrulanıyor',
+    domain_verify_step: 'Alan adınızı doğrulayın',
+    domain_bind_step: 'E-posta alan adını bağla',
+    domain_add_placeholder: 'E-posta alan adı ekle',
+    domain_bound_description: 'Bu alan adı Console SSO için etkin. TXT doğrulama kaydı kaldırıldı.',
+    domain_dns_instructions:
+      'Alan adı sahipliğini doğrulamak için bu TXT kaydını DNS sağlayıcınıza ekleyin.',
+    domain_waiting_for_dns: 'TXT kaydı bekleniyor. Her 10 saniyede bir yeniden kontrol ediyoruz.',
+    domain_proven_unbound: 'Alan adı sahipliği doğrulandı ancak bağlama tamamlanmadı.',
+    domain_verified: 'Alan adı sahipliği doğrulandı.',
+    domain_binding_pending: 'Bağlama işlemi doğrulamadan sonra otomatik olarak başlar.',
+    domain_remove_description:
+      '{{domain}} Console SSO üzerinden kaldırılsın mı? Bağlı bir alan adının kaldırılması, e-posta adresleri için SSO keşfini durdurur.',
+    domain_invalid: 'Geçerli bir e-posta alan adı girin.',
+    domain_conflict: 'Bu alan adı başka bir Console SSO bağlayıcısına zaten bağlı.',
+    domain_invalid_provider: 'Bu alan adını bağlamadan önce Bağlantı ayarlarını tamamlayın.',
+    domain_dns_timeout: 'DNS kontrolü başarısız oldu. Otomatik olarak yeniden deneyeceğiz.',
+    domain_recovery: 'Alan adı değişikliği tamamlanmadı.',
+    start_over: 'Yeniden başla',
+    start_over_confirmation:
+      'Baştan başlamak, tamamlanmamış SSO yapılandırmanızı silebilir. Devam etmek istiyor musunuz?',
+    resume_creation:
+      'Tamamlanmamış bir oluşturma işlemi bulundu. Bu bağlayıcıyı kurtarmak için aynı sağlayıcıyla devam edin.',
+  },
   general: {
     onboarding: 'Başlatma',
   },

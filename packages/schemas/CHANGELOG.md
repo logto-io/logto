@@ -1,5 +1,81 @@
 # Change Log
 
+## 1.45.0
+
+## 1.44.0
+
+### Minor Changes
+
+- 655317e: support Cap as a self-hosted CAPTCHA provider
+
+  [Cap](https://capjs.js.org) is an open-source, self-hosted proof-of-work CAPTCHA. It needs no third-party service, so bot protection keeps working in regions where Cloudflare Turnstile and Google reCAPTCHA are unreachable or unreliable.
+
+  To use it, deploy a publicly reachable [Cap Standalone](https://capjs.js.org/guide/standalone/) instance, create a site key, then go to Console > Security > CAPTCHA and add Cap with the instance endpoint, site key, and secret key. The same configuration is available through the `PUT /api/captcha-provider` Management API with `type: "Cap"`.
+
+  While Cap is the CAPTCHA provider, the sign-in page's Content Security Policy allows the Cap instance and dynamic JavaScript evaluation, which Cap's bot-detection (instrumentation) challenge requires.
+
+- 9af3b69: allow user IDs up to 128 characters
+
+  `users.id` and every column referencing it were limited to 12 or 21 characters. They now accept up to 128 characters, so users migrated from another identity provider can keep their original IDs.
+
+- 022317f: add a client compatibility setting so dynamic app clients such as ChatGPT and Codex can receive refresh tokens
+
+  These clients request `offline_access` without `prompt=consent`, so they don't receive a refresh token and users have to sign in again whenever the access token expires. Turn on "Add consent prompt for offline access" under Client compatibility in the dynamic app settings, and Logto adds the consent prompt to these requests. The setting is experimental and off by default, and audit logs show the added `consent` in `prompt`.
+
+- 5bd627f: add a configurable score threshold for reCAPTCHA Enterprise so admins can control how strict CAPTCHA verification is
+- 3f9fd15: add authentication policies for SAML applications
+
+  SAML applications force fresh authentication by default, as before. To let a SAML application reuse an existing Logto session, turn off "Always force authentication" in the application settings, or set `authnRequestConfig.forceAuthn` to `false` using the SAML application Management API. The service provider can still require fresh authentication for a single sign-in with `ForceAuthn="true"` (SAML 2.0 core, section 3.4.1).
+
+  SAML assertions report the actual authentication time.
+
+  To require signed authentication requests, set `authnRequestConfig.requireSignedAuthnRequests` to `true` and provide the service provider’s PEM-encoded RSA X.509 certificate in `authnRequestConfig.signingCertificate`. Both HTTP-POST and HTTP-Redirect signatures are verified. Unsigned requests remain accepted by default.
+
+- c5bd438: add MFA trusted devices with configurable policies and device management
+
+  Configure tenant-wide trusted-device policies and organization-level restrictions. After completing MFA, users can choose whether to trust their device on a dedicated page at the end of sign-in or sign-up, then skip repeated MFA on that browser. Manage trusted devices through Console, Account Center, the Management API, and the Account API, and subscribe to device lifecycle webhooks.
+
+- 0429b3a: support the `theme` authentication parameter to control the sign-in experience theme
+
+  Pass `theme=light` or `theme=dark` as an extra authentication parameter to render the sign-in experience in that theme instead of following the end-user's OS setting, so applications with their own light / dark toggle can keep Logto in sync. The override lasts for the whole authentication flow, including page reloads, social / SSO callbacks, and the consent page. It is ignored when dark mode is disabled in the sign-in experience settings, and unsupported values are ignored.
+
+### Patch Changes
+
+- Updated dependencies [655317e]
+- Updated dependencies [0f1af96]
+- Updated dependencies [022317f]
+- Updated dependencies [5bd627f]
+- Updated dependencies [3f9fd15]
+  - @logto/phrases@1.32.0
+
+## 1.43.0
+
+### Minor Changes
+
+- b64d46d495: unify social callback URI between Sign-in Experience and Account Center
+- 8b2aaab9b0: add dynamic app support (OAuth Client ID Metadata Documents)
+
+  The dynamic app lets compatible public clients, such as MCP clients, connect to your tenant without registering an application. Following the OAuth Client ID Metadata Documents (CIMD) draft, such a client presents a public HTTPS URL as its `client_id`, and Logto fetches the client metadata from that URL.
+
+  Enable it from the dynamic app card in the third-party app section on the create application page in Console. The switch is tenant-level and off by default, and requires the OIDC provider SSRF protection to be active. Control what dynamic app clients can request with the permission settings on the dynamic app page.
+
+### Patch Changes
+
+- Updated dependencies [c377946617]
+- Updated dependencies [ebfefb513d]
+- Updated dependencies [ab106cdb82]
+- Updated dependencies [7464c6a97a]
+- Updated dependencies [28c3c9283e]
+- Updated dependencies [6dd496bd2e]
+- Updated dependencies [8b2aaab9b0]
+- Updated dependencies [16f4b2e732]
+  - @logto/phrases-experience@1.15.0
+  - @logto/core-kit@2.13.0
+  - @logto/language-kit@1.4.0
+  - @logto/phrases@1.31.0
+  - @logto/shared@3.4.3
+  - @logto/connector-kit@5.1.1
+
 ## 1.42.0
 
 ### Minor Changes
@@ -397,9 +473,9 @@
 
   ```ts
   await logtoClient.signIn({
-    redirectUri: "https://your.app/callback",
+    redirectUri: 'https://your.app/callback',
     extraParams: {
-      ui_locales: "fr-CA fr en",
+      ui_locales: 'fr-CA fr en',
     },
   });
   ```
@@ -737,11 +813,7 @@
   For example, if you are using SHA256 with a salt, you can store the password in the following format:
 
   ```json
-  [
-    "sha256",
-    ["salt123", "@"],
-    "c465f66c6ac481a7a17e9ed5b4e2e7e7288d892f12bf1c95c140901e9a70436e"
-  ]
+  ["sha256", ["salt123", "@"], "c465f66c6ac481a7a17e9ed5b4e2e7e7288d892f12bf1c95c140901e9a70436e"]
   ```
 
   Then when the user uses the password (`password123`), the `legacyVerify` function will use the `sha256` algorithm with the `salt123` and the input password to verify the password.
@@ -749,9 +821,9 @@
   In this case, `salt123` is the first argument, `@` is the input password, then the following code will be executed:
 
   ```ts
-  const hash = crypto.createHash("sha256");
-  hash.update("salt123" + "password123");
-  const expectedHashedValue = hash.digest("hex");
+  const hash = crypto.createHash('sha256');
+  hash.update('salt123' + 'password123');
+  const expectedHashedValue = hash.digest('hex');
   ```
 
 ### Patch Changes
@@ -909,8 +981,8 @@
   // Example usage (React project using React SDK)
   void signIn({
     redirectUri,
-    loginHint: "user@example.com",
-    firstScreen: "signIn", // or 'register'
+    loginHint: 'user@example.com',
+    firstScreen: 'signIn', // or 'register'
   });
   ```
 
@@ -980,14 +1052,14 @@
   For example, in the JavaScript SDK:
 
   ```ts
-  import LogtoClient from "@logto/client";
+  import LogtoClient from '@logto/client';
 
   const logtoClient = new LogtoClient(/* your configuration */);
 
   logtoClient.signIn({
-    redirectUri: "https://your-app.com/callback",
+    redirectUri: 'https://your-app.com/callback',
     extraParams: {
-      organization_id: "<organization-id>",
+      organization_id: '<organization-id>',
     },
   });
   ```

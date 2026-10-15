@@ -2,7 +2,7 @@
  * Setup environment variables for unit test
  */
 
-import { expect } from '@jest/globals';
+import { afterAll, expect } from '@jest/globals';
 import en from '@logto/phrases/lib/locales/en/index.js';
 import { createMockUtils } from '@logto/shared/esm';
 import { init } from 'i18next';
@@ -50,6 +50,13 @@ if (!expect.getState().testPath.endsWith('/env-set/oidc.test.js')) {
 // Logger is not considered in all test cases
 // eslint-disable-next-line unicorn/consistent-function-scoping
 mockEsm('koa-logger', () => ({ default: () => (_, next) => next() }));
+
+// Nock patches the `http` / `https` core modules, which Jest shares across test files in a worker.
+// Restore them after each file so a later file does not run behind stale interceptors.
+afterAll(async () => {
+  const { default: nock } = await import('nock');
+  nock.restore();
+});
 
 // Init i18next and load en locale only
 await init({

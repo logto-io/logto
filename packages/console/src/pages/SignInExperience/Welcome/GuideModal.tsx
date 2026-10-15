@@ -6,7 +6,6 @@ import Modal from 'react-modal';
 import useSWR from 'swr';
 
 import Close from '@/assets/icons/close.svg?react';
-import { isCloud } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
 import IconButton from '@/ds-components/IconButton';
@@ -23,6 +22,7 @@ import LanguagesForm from '../PageContent/Content/LanguagesForm';
 import TermsForm from '../PageContent/Content/TermsForm';
 import { sieFormDataParser } from '../PageContent/utils/parser';
 import Preview from '../components/Preview';
+import useBrandingEntitlements from '../hooks/use-branding-entitlements';
 import usePreviewConfigs from '../hooks/use-preview-configs';
 import type { SignInExperienceForm } from '../types';
 
@@ -47,6 +47,7 @@ function GuideModal({ isOpen, onClose }: Props) {
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const formData = watch();
+  const { isHideLogtoBrandingAvailable } = useBrandingEntitlements();
   const [isLoading, setIsLoading] = useState(false);
 
   const previewConfigs = usePreviewConfigs(formData, isDirty, data);
@@ -69,7 +70,7 @@ function GuideModal({ isOpen, onClose }: Props) {
 
       await Promise.all([
         api.patch('api/sign-in-exp', {
-          json: sieFormDataParser.toSignInExperience(formData, { isCloud }),
+          json: sieFormDataParser.toSignInExperience(formData, { isHideLogtoBrandingAvailable }),
         }),
         updateConfigs({ signInExperienceCustomized: true }),
       ]);

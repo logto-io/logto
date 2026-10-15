@@ -1,4 +1,5 @@
 const user = {
+  id_already_in_use: 'Этот идентификатор пользователя уже используется.',
   username_already_in_use: 'Это имя пользователя уже используется.',
   username_starts_with_number: 'Имя пользователя не может начинаться с цифры.',
   username_invalid_charset_hard:
@@ -48,6 +49,10 @@ const user = {
   password_algorithm_required: 'Требуется алгоритм пароля.',
   password_and_digest: 'Вы не можете установить как обычный пароль, так и дайджест пароля.',
   personal_access_token_name_exists: 'Имя личного токена доступа уже существует.',
+  personal_access_token_limit_exceeded:
+    'У вас может быть не более {{limit}} активных персональных токенов доступа.',
+  personal_access_token_invalid_expiration:
+    'Срок действия должен истекать в будущем и не позднее чем через {{maxDays}} дней.',
   totp_secret_invalid: 'Указан недопустимый секрет TOTP.',
   wrong_backup_code_format: 'Неверный формат резервного кода.',
   username_required:

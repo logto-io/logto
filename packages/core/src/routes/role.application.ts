@@ -54,7 +54,9 @@ export default function roleApplicationRoutes<T extends ManagementApiRouter>(
           ]);
 
           ctx.pagination.totalCount = count;
-          ctx.body = applications.map((application) => omitInternalApplicationSecret(application));
+          ctx.body = applications.map((application) =>
+            omitInternalApplicationSecret(application, ctx.auth)
+          );
 
           return next();
         },

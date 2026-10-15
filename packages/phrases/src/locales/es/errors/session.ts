@@ -50,6 +50,20 @@ const session = {
     suggest_additional_mfa:
       'Para mayor protección, considera agregar otro método de MFA. Puedes omitir este paso y continuar.',
   },
+  trusted_device_suggest_opt_in: 'Elige si quieres confiar en este dispositivo.',
+  step_up: {
+    invalid_interaction_event:
+      'La autenticación reforzada solo está disponible para interacciones de inicio de sesión.',
+    subject_not_found:
+      'No se encontró una sesión autenticada para la autenticación reforzada. Inicia sesión de nuevo.',
+    forbidden_route: 'Esta ruta no está permitida durante la autenticación reforzada.',
+    forbidden_identifier:
+      'No se permite un identificador durante la autenticación reforzada. Vuelve a intentarlo sin el campo de identificador.',
+    acr_not_satisfied:
+      'La verificación completada no cumple con el contexto de autenticación solicitado. Verifica otro método.',
+    require_verification:
+      'Se requiere la verificación con uno de tus métodos existentes para alcanzar el contexto de autenticación solicitado.',
+  },
   passkey_sign_in: {
     pending_info_not_found:
       'No se encontró la información pendiente de inicio de sesión con passkey. Vuelve a iniciar el flujo de inicio de sesión.',

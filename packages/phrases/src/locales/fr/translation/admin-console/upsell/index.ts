@@ -7,6 +7,7 @@ const upsell = {
   compare_plans: 'Comparer les plans',
   try_with_product_name: 'Essayez {{productName}} maintenant',
   view_plans: 'Voir les plans',
+  explore_self_hosted_plans: 'Découvrir les plans auto-hébergés',
   create_tenant: {
     title: 'Sélectionnez votre plan pour le locataire',
     description:

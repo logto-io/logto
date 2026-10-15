@@ -1,4 +1,5 @@
 const menu = {
+  single_sign_on: 'Tek oturum açma',
   profile: 'Profil',
   language: 'Dil',
   appearance: {
