@@ -46,6 +46,10 @@ const user = {
   password_algorithm_required: 'Şifre algoritması gereklidir.',
   password_and_digest: 'Düz metin şifresini ve şifre özetini aynı anda belirleyemezsiniz.',
   personal_access_token_name_exists: 'Kişisel erişim belirteci adı zaten mevcut.',
+  personal_access_token_limit_exceeded:
+    'En fazla {{limit}} etkin kişisel erişim belirtecine sahip olabilirsiniz.',
+  personal_access_token_invalid_expiration:
+    'Son kullanma zamanı gelecekte olmalı ve şu andan itibaren en fazla {{maxDays}} gün sonra olmalıdır.',
   totp_secret_invalid: 'Geçersiz TOTP sırrı sağlandı.',
   wrong_backup_code_format: 'Yedek kod biçimi geçersiz.',
   username_required: 'Kullanıcı adı gerekli bir tanımlayıcıdır, boş bırakılamaz.',

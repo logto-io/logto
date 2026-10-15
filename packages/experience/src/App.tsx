@@ -14,6 +14,7 @@ import UserInteractionContextProvider from './Providers/UserInteractionContextPr
 import DevelopmentTenantNotification from './containers/DevelopmentTenantNotification';
 import MfaVerificationGuard from './containers/MfaVerificationGuard';
 import StepUpGuard from './containers/StepUpGuard';
+import StepUpRecoveryGuard from './containers/StepUpRecoveryGuard';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
 import Continue from './pages/Continue';
@@ -79,10 +80,13 @@ const App = () => {
                 <Routes>
                   <Route element={<LoadingLayerProvider />}>
                     <Route path="callback/:connectorId" element={<Callback />} />
-                    <Route
-                      path="callback/social/:connectorId"
-                      element={<SocialSignInWebCallback />}
-                    />
+                    {/* Step-up callbacks recover the mode before consuming upstream proofs. */}
+                    <Route element={isDevFeaturesEnabled ? <StepUpRecoveryGuard /> : undefined}>
+                      <Route
+                        path="callback/social/:connectorId"
+                        element={<SocialSignInWebCallback />}
+                      />
+                    </Route>
                     <Route path="direct/:method/:target?" element={<DirectSignIn />} />
                     <Route path={experience.routes.oneTimeToken} element={<OneTimeToken />} />
                     <Route element={<AppLayout />}>
@@ -140,26 +144,35 @@ const App = () => {
                         <Route path="reset" element={<ResetPassword />} />
                       </Route>
 
-                      {/* Passwordless verification code */}
-                      <Route path=":flow/verification-code" element={<VerificationCode />} />
+                      {/* Step-up establishment and enrollment reuse the existing pages. */}
+                      <Route element={isDevFeaturesEnabled ? <StepUpRecoveryGuard /> : undefined}>
+                        {/* Passwordless verification code */}
+                        <Route path=":flow/verification-code" element={<VerificationCode />} />
 
-                      {/* Mfa onboarding page. Prompt users to turn on 2-step verification. */}
-                      <Route path="mfa-onboarding" element={<MfaOnboarding />} />
+                        {/* Mfa onboarding page. Prompt users to turn on 2-step verification. */}
+                        <Route path="mfa-onboarding" element={<MfaOnboarding />} />
 
-                      {/* Mfa binding */}
-                      <Route path={UserMfaFlow.MfaBinding}>
-                        <Route index element={<MfaBinding />} />
-                        <Route path={MfaFactor.TOTP} element={<TotpBinding />} />
-                        <Route path={MfaFactor.WebAuthn} element={<WebAuthnBinding />} />
-                        <Route path={MfaFactor.BackupCode} element={<BackupCodeBinding />} />
-                        <Route
-                          path={MfaFactor.EmailVerificationCode}
-                          element={<EmailMfaBinding />}
-                        />
-                        <Route
-                          path={MfaFactor.PhoneVerificationCode}
-                          element={<PhoneMfaBinding />}
-                        />
+                        {/* Mfa binding */}
+                        <Route path={UserMfaFlow.MfaBinding}>
+                          <Route index element={<MfaBinding />} />
+                          <Route path={MfaFactor.TOTP} element={<TotpBinding />} />
+                          <Route path={MfaFactor.WebAuthn} element={<WebAuthnBinding />} />
+                          <Route path={MfaFactor.BackupCode} element={<BackupCodeBinding />} />
+                          <Route
+                            path={MfaFactor.EmailVerificationCode}
+                            element={<EmailMfaBinding />}
+                          />
+                          <Route
+                            path={MfaFactor.PhoneVerificationCode}
+                            element={<PhoneMfaBinding />}
+                          />
+                        </Route>
+
+                        {/* Continue set up missing profile */}
+                        <Route path="continue">
+                          <Route index element={<Continue />} />
+                          <Route path=":method" element={<Continue />} />
+                        </Route>
                       </Route>
 
                       {/* Mfa verification */}
@@ -180,11 +193,6 @@ const App = () => {
                           path={MfaFactor.PhoneVerificationCode}
                           element={<PhoneVerificationCode />}
                         />
-                      </Route>
-
-                      {/* Continue set up missing profile */}
-                      <Route path="continue">
-                        <Route path=":method" element={<Continue />} />
                       </Route>
 
                       {/*

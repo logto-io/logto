@@ -1,5 +1,5 @@
 import { type OrganizationWithFeatured, RoleType } from '@logto/schemas';
-import { joinPath } from '@silverhand/essentials';
+import { cond, joinPath } from '@silverhand/essentials';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
@@ -13,6 +13,7 @@ import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import Search from '@/ds-components/Search';
 import Table from '@/ds-components/Table';
 import { type RequestError } from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import AssignedEntities from '@/pages/Roles/components/AssignedEntities';
 import pageLayout from '@/scss/page-layout.module.scss';
@@ -46,6 +47,9 @@ function OrganizationsTable({ onCreate }: Props) {
   const isTableLoading = !response && !error;
   const [data, totalCount] = response ?? [[], 0];
   const { navigate } = useTenantPathname();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
 
   return (
     <Table
@@ -56,7 +60,9 @@ function OrganizationsTable({ onCreate }: Props) {
           <NotFoundDataPlaceholder />
         ) : (
           <EmptyDataPlaceholder
-            buttonProps={{ title: 'organizations.create_organization', onClick: onCreate }}
+            buttonProps={cond(
+              !isReadOnly && { title: 'organizations.create_organization', onClick: onCreate }
+            )}
           />
         )
       }

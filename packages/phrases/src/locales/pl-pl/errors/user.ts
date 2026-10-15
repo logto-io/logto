@@ -49,6 +49,10 @@ const user = {
   password_and_digest:
     'Nie możesz ustawić zarówno hasła w postaci tekstu jawnego, jak i skrótu hasła.',
   personal_access_token_name_exists: 'Nazwa osobistego tokenu dostępu już istnieje.',
+  personal_access_token_limit_exceeded:
+    'Możesz mieć maksymalnie {{limit}} aktywnych osobistych tokenów dostępu.',
+  personal_access_token_invalid_expiration:
+    'Czas wygaśnięcia musi przypadać w przyszłości i nie później niż {{maxDays}} dni od teraz.',
   totp_secret_invalid: 'Podano nieprawidłowy sekret TOTP.',
   wrong_backup_code_format: 'Format kodu zapasowego jest nieprawidłowy.',
   username_required:

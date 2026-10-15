@@ -41,6 +41,12 @@ export const missingProfileErrorDataGuard = s.object({
     ])
   ),
   registeredSocialIdentity,
+  /**
+   * Set only when the server offers alternative first-factor methods a sign-in may establish: any
+   * one of `missingProfile` fulfills the requirement, unlike the mandatory profile fields that are
+   * all required when this flag is absent.
+   */
+  isEstablishment: s.optional(s.literal(true)),
 });
 
 export const registeredSocialIdentityStateGuard = s.type({
@@ -200,6 +206,8 @@ export type VerificationIdsMap = s.Infer<typeof verificationIdsMapGuard>;
  */
 export const continueFlowStateGuard = s.object({
   interactionEvent: s.enums([InteractionEvent.SignIn, InteractionEvent.Register]),
+  // Navigation hint only; Core's authentication context determines the actual mode.
+  isStepUp: s.optional(s.boolean()),
 });
 
 export type InteractionFlowState = s.Infer<typeof continueFlowStateGuard>;

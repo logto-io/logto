@@ -1,4 +1,5 @@
 import { type AdminConsoleKey } from '@logto/phrases';
+import { conditional } from '@silverhand/essentials';
 import { useMemo } from 'react';
 import { type FieldPath, type FieldValues } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +10,7 @@ import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import Table from '@/ds-components/Table';
 import { type RowGroup, type Column } from '@/ds-components/Table/types';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
 import styles from './index.module.scss';
 
@@ -35,7 +37,7 @@ const pageSize = 10;
 
 /**
  * The table component for organization template editing, such as permissions and roles.
- * If `onAdd` is provided, an add button will be rendered in the bottom.
+ * If `onAdd` is provided, an add button will be rendered in the bottom, except for a read-only member.
  */
 function TemplateTable<
   TFieldValues extends FieldValues = FieldValues,
@@ -52,8 +54,11 @@ function TemplateTable<
   errorMessage,
 }: Props<TFieldValues, TName>) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
 
-  // If there is no data for all row groups, we will render an empty state with an add button.
+  // If there is no data for all row groups, we will render an empty state.
   const noData = !isLoading && !rowGroups.some(({ data }) => data && data.length > 0);
 
   const tablePagination = useMemo(() => pagination && { ...pagination, pageSize }, [pagination]);
@@ -72,7 +77,7 @@ function TemplateTable<
               {t('organizations.empty_placeholder', { entity: String(t(name)).toLowerCase() })}
             </div>
           )}
-          <Button icon={<Plus />} title="general.add" onClick={onAdd} />
+          {!isReadOnly && <Button icon={<Plus />} title="general.add" onClick={onAdd} />}
         </>
       )}
       {noData && errorMessage && <div className={styles.empty}>{errorMessage}</div>}
@@ -86,16 +91,18 @@ function TemplateTable<
           columns={columns}
           rowIndexKey={rowIndexKey}
           pagination={tablePagination}
-          footer={
-            <Button
-              size="small"
-              type="text"
-              className={styles.addAnother}
-              icon={<CirclePlus />}
-              title="general.add_another"
-              onClick={onAdd}
-            />
-          }
+          footer={conditional(
+            !isReadOnly && (
+              <Button
+                size="small"
+                type="text"
+                className={styles.addAnother}
+                icon={<CirclePlus />}
+                title="general.add_another"
+                onClick={onAdd}
+              />
+            )
+          )}
         />
       )}
     </section>

@@ -14,7 +14,7 @@ import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-pres
 import useStepUpContext from '@/hooks/use-step-up-context';
 import useStepUpErrorHandler from '@/hooks/use-step-up-error-handler';
 import ErrorPage from '@/pages/ErrorPage';
-import { UserFlow } from '@/types';
+import { UserFlow, UserMfaFlow } from '@/types';
 import { getDisplayedStepUpMethods } from '@/utils/step-up';
 
 const emptyMethods: never[] = [];
@@ -33,7 +33,7 @@ const emptyAuthenticationContext = Object.freeze({ maskedIdentifiers: {} });
  * Every decision reads the server-provided lists; nothing here computes eligibility.
  */
 const StepUp = () => {
-  const { authenticationContext, isLoading, load } = useStepUpContext();
+  const { authenticationContext, isPureStepUp, isLoading, load } = useStepUpContext();
   const [isLandingLoading, setIsLandingLoading] = useState(true);
   const navigate = useNavigateWithPreservedSearchParams();
   const redirectTo = useGlobalRedirectTo();
@@ -81,7 +81,10 @@ const StepUp = () => {
   const resolvedConnectors = useMemo(
     () =>
       (authenticationContext?.subjectProofConnectors ?? [])
-        .map(({ connectorId }) => findConnectorById(connectorId))
+        .map(({ connectorId, type }) => {
+          const resolved = findConnectorById(connectorId);
+          return resolved?.type === type ? resolved : undefined;
+        })
         .filter((resolved): resolved is NonNullable<typeof resolved> => resolved !== undefined),
     [authenticationContext?.subjectProofConnectors, findConnectorById]
   );
@@ -92,7 +95,7 @@ const StepUp = () => {
     }
 
     const [onlyMethod] = methods;
-    const { establishableMethods } = authenticationContext;
+    const { establishableMethods, enrollableFactors } = authenticationContext;
     const [establishableMethod] = establishableMethods;
 
     if (methods.length === 1 && onlyMethod) {
@@ -118,8 +121,15 @@ const StepUp = () => {
         hasForwardedRef.current = true;
         navigate(`/${UserFlow.Continue}/${establishableMethod}`, {
           replace: true,
-          state: { interactionEvent: InteractionEvent.SignIn },
+          state: { interactionEvent: InteractionEvent.SignIn, isStepUp: isPureStepUp },
         });
+        return;
+      }
+
+      if (enrollableFactors.length > 0) {
+        // eslint-disable-next-line @silverhand/fp/no-mutation -- dispatch enrollment only once per arrival
+        hasForwardedRef.current = true;
+        navigate(`/${UserMfaFlow.MfaBinding}`, { replace: true });
         return;
       }
 
@@ -158,6 +168,7 @@ const StepUp = () => {
     handleError,
     isLandingLoading,
     isLoading,
+    isPureStepUp,
     methods,
     navigate,
     redirectTo,

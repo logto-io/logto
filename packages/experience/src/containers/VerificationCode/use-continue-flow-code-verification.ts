@@ -17,6 +17,7 @@ import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import useMfaFlowState from '@/hooks/use-mfa-factors-state';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { useSieMethods } from '@/hooks/use-sie';
+import useStepUpContext from '@/hooks/use-step-up-context';
 import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
 import { SearchParameters } from '@/types';
 
@@ -38,10 +39,14 @@ const useContinueFlowCodeVerification = (
   const mfaFlowState = useMfaFlowState();
   const { verificationIdsMap } = useContext(UserInteractionContext);
   const { isVerificationCodeEnabledForSignIn } = useSieMethods();
+  const { isPureStepUp } = useStepUpContext();
 
   const interactionEvent = useMemo(
-    () => getInteractionEventFromState(state) ?? InteractionEvent.SignIn,
-    [state]
+    () =>
+      isPureStepUp
+        ? InteractionEvent.SignIn
+        : (getInteractionEventFromState(state) ?? InteractionEvent.SignIn),
+    [isPureStepUp, state]
   );
 
   const handleError = useErrorHandler();
@@ -67,7 +72,12 @@ const useContinueFlowCodeVerification = (
     const { type, value } = identifier;
 
     // Show bind with social confirm modal
-    if (linkSocial && socialVerificationId && isVerificationCodeEnabledForSignIn(type)) {
+    if (
+      !isPureStepUp &&
+      linkSocial &&
+      socialVerificationId &&
+      isVerificationCodeEnabledForSignIn(type)
+    ) {
       await showLinkSocialConfirmModal(identifier, verificationId, socialVerificationId);
       return;
     }
@@ -95,6 +105,7 @@ const useContinueFlowCodeVerification = (
   }, [
     identifier,
     interactionEvent,
+    isPureStepUp,
     isVerificationCodeEnabledForSignIn,
     navigate,
     searchParameters,

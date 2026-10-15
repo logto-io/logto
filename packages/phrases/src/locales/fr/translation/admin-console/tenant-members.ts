@@ -6,6 +6,7 @@ const tenant_members = {
   roles: 'Rôles',
   admin: 'Administrateur',
   collaborator: 'Collaborateur',
+  viewer: 'Lecteur',
   invitation_status: "Statut de l'invitation",
   inviter: 'Invitant',
   expiration_date: "Date d'expiration",

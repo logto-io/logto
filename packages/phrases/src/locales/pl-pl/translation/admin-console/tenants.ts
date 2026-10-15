@@ -103,6 +103,12 @@ const tenants = {
     development: 'Development',
     production: 'Production',
   },
+  view_only: {
+    tag: 'Tylko podgląd',
+    notification:
+      'Masz dostęp tylko do odczytu do tego najemcy. Poproś administratora najemcy, jeśli musisz wprowadzić zmiany.',
+    hidden: 'Ukryte dla przeglądających',
+  },
   deletion_card: {
     title: 'USUWANIE',
     tenant_deletion: 'Usuń najemcę',

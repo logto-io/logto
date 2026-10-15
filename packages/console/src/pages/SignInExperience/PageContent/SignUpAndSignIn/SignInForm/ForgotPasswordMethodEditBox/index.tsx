@@ -3,6 +3,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import Plus from '@/assets/icons/plus.svg?react';
+import { useReadOnlyField } from '@/contexts/ReadOnlyFieldScope';
 import ActionMenu from '@/ds-components/ActionMenu';
 import { DragDropProvider, DraggableItem } from '@/ds-components/DragDrop';
 import { DropdownItem } from '@/ds-components/Dropdown';
@@ -19,6 +20,7 @@ import { forgotPasswordMethodPhrase } from './utils';
 
 function ForgotPasswordMethodEditBox() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const isReadOnlyField = useReadOnlyField();
   const { control } = useFormContext<SignInExperienceForm>();
   const { isConnectorTypeEnabled } = useEnabledConnectorTypes();
 
@@ -106,7 +108,7 @@ function ForgotPasswordMethodEditBox() {
                   );
                 })}
               </DragDropProvider>
-              {availableMethods.length > 0 && (
+              {!isReadOnlyField && availableMethods.length > 0 && (
                 <ActionMenu
                   isDropdownFullWidth
                   buttonProps={{

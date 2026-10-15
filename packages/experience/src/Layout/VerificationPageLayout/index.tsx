@@ -1,4 +1,3 @@
-import { AuthenticationContextMode } from '@logto/schemas';
 import { type ComponentProps } from 'react';
 import { NavigationType, useNavigationType } from 'react-router-dom';
 
@@ -13,11 +12,11 @@ type Props = Omit<ComponentProps<typeof SecondaryPageLayout>, 'onBack' | 'isNavB
 
 /** Factor pages cannot rely on history: step-up dispatch and recovery may replace the chooser. */
 const VerificationPageLayout = (props: Props) => {
-  const { authenticationContext } = useStepUpContext();
+  const { authenticationContext, isPureStepUp } = useStepUpContext();
   const navigate = useNavigateWithPreservedSearchParams();
   const navigationType = useNavigationType();
 
-  if (authenticationContext?.mode !== AuthenticationContextMode.StepUp) {
+  if (!isPureStepUp || !authenticationContext) {
     return <SecondaryPageLayout {...props} />;
   }
 

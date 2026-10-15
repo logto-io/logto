@@ -46,6 +46,9 @@ const user = {
   password_algorithm_required: 'مطلوب خوارزمية كلمة المرور.',
   password_and_digest: 'لا يمكنك تعيين كلمة مرور عادية ومعلومات تجزئة كلمة المرور معًا.',
   personal_access_token_name_exists: 'اسم رمز الوصول الشخصي موجود بالفعل.',
+  personal_access_token_limit_exceeded: 'يمكنك امتلاك {{limit}} رمز وصول شخصي نشط كحد أقصى.',
+  personal_access_token_invalid_expiration:
+    'يجب أن يكون وقت انتهاء الصلاحية في المستقبل وألا يتجاوز {{maxDays}} يومًا من الآن.',
   totp_secret_invalid: 'تم توفير سر TOTP غير صالح.',
   wrong_backup_code_format: 'تنسيق رمز النسخ الاحتياطي غير صالح.',
   username_required: 'اسم المستخدم هو معرف مطلوب، لا يمكنك تعيينه ليكون null.',

@@ -17,6 +17,7 @@ import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
 import Table from '@/ds-components/Table';
 import { type RequestError } from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
 import CreateSecretModal from '../CreateSecretModal';
 import EditSecretModal from '../EditSecretModal';
@@ -41,10 +42,15 @@ function EndpointsAndCredentials({
   onApplicationUpdated,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const {
+    access: { isReadOnly, canReadCredentials },
+  } = useCurrentTenantScopes();
 
   const [showCreateSecretModal, setShowCreateSecretModal] = useState(false);
   const [editSecret, setEditSecret] = useState<ApplicationSecretRow>();
-  const secrets = useSWR<ApplicationSecretRow[], RequestError>(`api/applications/${id}/secrets`);
+  const secrets = useSWR<ApplicationSecretRow[], RequestError>(
+    canReadCredentials && `api/applications/${id}/secrets`
+  );
   const shouldShowAppSecrets = hasSecrets(type);
 
   const secretsData = useMemo(
@@ -97,7 +103,9 @@ function EndpointsAndCredentials({
       </FormField>
       {shouldShowAppSecrets && (
         <FormField title="application_details.application_secret_other">
-          {secretsData.length === 0 && !secrets.error ? (
+          {isReadOnly ? (
+            <div className={styles.empty}>{t('tenants.view_only.hidden')}</div>
+          ) : secretsData.length === 0 && !secrets.error ? (
             <>
               <div className={styles.empty}>{t('application_details.secrets.empty')}</div>
               <Button

@@ -16,6 +16,7 @@ import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import useApi from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import usePaywall from '@/hooks/use-paywall';
 import { trySubmitSafe } from '@/utils/form';
 
@@ -32,6 +33,9 @@ type Props = {
 function CaptchaForm({ captchaProvider, formData }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { isFreeTenant } = usePaywall();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const { mutateSubscriptionQuotaAndUsages } = useContext(SubscriptionDataContext);
 
   const [isCreateCaptchaFormOpen, setIsCreateCaptchaFormOpen] = useState(false);
@@ -88,14 +92,16 @@ function CaptchaForm({ captchaProvider, formData }: Props) {
                 {t('security.bot_protection.captcha.placeholder')}
               </div>
               {isFreeTenant || !captchaProvider ? (
-                <Button
-                  title="security.bot_protection.captcha.add"
-                  icon={<Plus />}
-                  disabled={isFreeTenant}
-                  onClick={() => {
-                    setIsCreateCaptchaFormOpen(true);
-                  }}
-                />
+                !isReadOnly && (
+                  <Button
+                    title="security.bot_protection.captcha.add"
+                    icon={<Plus />}
+                    disabled={isFreeTenant}
+                    onClick={() => {
+                      setIsCreateCaptchaFormOpen(true);
+                    }}
+                  />
+                )
               ) : (
                 <CaptchaCard captchaProvider={captchaProvider} />
               )}

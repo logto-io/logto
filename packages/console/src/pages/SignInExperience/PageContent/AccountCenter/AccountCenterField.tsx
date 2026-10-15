@@ -64,6 +64,9 @@ function AccountCenterField({
     !isMfaEnabled &&
     !isPasskeySignInEnabled;
 
+  const shouldShowFieldDescription =
+    Boolean(item.description) && value !== AccountCenterControlValue.Off && !isGlobalDisabled;
+
   return (
     <div>
       <div className={styles.fieldRow} data-disabled={isGlobalDisabled}>
@@ -105,6 +108,11 @@ function AccountCenterField({
               link: t('sign_in_exp.account_center.fields.mfa'),
             })}
           </Trans>
+        </InlineNotification>
+      )}
+      {shouldShowFieldDescription && item.description && (
+        <InlineNotification className={styles.notice}>
+          <DynamicT forKey={item.description} />
         </InlineNotification>
       )}
     </div>

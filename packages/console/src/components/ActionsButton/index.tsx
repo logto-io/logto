@@ -9,6 +9,7 @@ import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import DynamicT from '@/ds-components/DynamicT';
 import useActionTranslation from '@/hooks/use-action-translation';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
 import styles from './index.module.scss';
 
@@ -42,10 +43,15 @@ type Props = {
  *
  * - Edit (optional)
  * - Delete
+ *
+ * Renders nothing for a read-only member, since every option changes data.
  */
 function ActionsButton({ onDelete, onEdit, deleteConfirmation, fieldName, textOverrides }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const tAction = useActionTranslation();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -62,6 +68,10 @@ function ActionsButton({ onDelete, onEdit, deleteConfirmation, fieldName, textOv
       setIsModalOpen(false);
     }
   }, [onDelete]);
+
+  if (isReadOnly) {
+    return null;
+  }
 
   return (
     <>

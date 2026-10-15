@@ -6,6 +6,7 @@ const tenant_members = {
   roles: 'نقش‌ها',
   admin: 'مدیر',
   collaborator: 'همکار',
+  viewer: 'بیننده',
   invitation_status: 'وضعیت دعوت‌نامه',
   inviter: 'دعوت‌کننده',
   expiration_date: 'تاریخ انقضا',

@@ -6,6 +6,7 @@ const tenant_members = {
   roles: '역할',
   admin: '관리자',
   collaborator: '협력자',
+  viewer: '뷰어',
   invitation_status: '초대 상태',
   inviter: '초대자',
   expiration_date: '만료 날짜',

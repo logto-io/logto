@@ -92,6 +92,11 @@ const tenants = {
     development: '开发',
     production: '产品',
   },
+  view_only: {
+    tag: '仅查看',
+    notification: '您对此租户只有查看权限。如需更改，请联系租户管理员。',
+    hidden: '对查看者隐藏',
+  },
   deletion_card: {
     title: '删除',
     tenant_deletion: '删除租户',

@@ -145,6 +145,9 @@ const sign_in_exp = {
           session_management: {
             title: 'セッション管理',
           },
+          developer_settings: {
+            title: '開発者設定',
+          },
         },
       },
       user_profile: {
@@ -189,6 +192,9 @@ const sign_in_exp = {
         'ユーザーに保存されているカスタム JSON データへのアクセスを制御します。',
       sessions: 'セッション',
       trusted_devices: '信頼済みデバイス',
+      personal_access_tokens: '個人用アクセストークン',
+      personal_access_tokens_description:
+        'これを有効にすると、ユーザーはサインアウトやパスワードのリセット後も有効な長期の個人用アクセストークンを作成でき、トークン交換が有効な任意のファーストパーティアプリケーションでアクセストークンと交換できるようになります。',
     },
     profile_fields: {
       title: 'ビルトインアカウントセンターのプロフィールフィールド',

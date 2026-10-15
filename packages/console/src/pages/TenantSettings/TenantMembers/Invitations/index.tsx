@@ -1,4 +1,4 @@
-import { OrganizationInvitationStatus, TenantRole } from '@logto/schemas';
+import { OrganizationInvitationStatus } from '@logto/schemas';
 import { condArray, conditional } from '@silverhand/essentials';
 import { format } from 'date-fns';
 import { useContext, useState } from 'react';
@@ -30,6 +30,7 @@ import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
 import InviteMemberModal from '../InviteMemberModal';
 import useTenantMembersApi from '../use-tenant-members-api';
+import { getTenantRolePhrase } from '../utils';
 
 const convertInvitationStatusToTagStatus = (
   status: OrganizationInvitationStatus
@@ -149,10 +150,7 @@ function Invitations() {
 
                 return organizationRoles.map(({ id }) => (
                   <Tag key={id} variant="cell">
-                    <RoleOption
-                      value={id}
-                      title={t(id === TenantRole.Admin ? 'admin' : 'collaborator')}
-                    />
+                    <RoleOption value={id} title={t(getTenantRolePhrase(id))} />
                   </Tag>
                 ));
               },

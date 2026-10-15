@@ -143,6 +143,9 @@ const sign_in_exp = {
           session_management: {
             title: 'إدارة الجلسات',
           },
+          developer_settings: {
+            title: 'إعدادات المطور',
+          },
         },
       },
       user_profile: {
@@ -186,6 +189,9 @@ const sign_in_exp = {
       custom_data_description: 'تحكم في الوصول إلى بيانات JSON المخصصة المخزنة للمستخدم.',
       sessions: 'إدارة الجلسات',
       trusted_devices: 'الأجهزة الموثوقة',
+      personal_access_tokens: 'رموز الوصول الشخصية',
+      personal_access_tokens_description:
+        'يتيح تمكين هذا للمستخدمين إنشاء رموز وصول شخصية طويلة الأمد تظل نشطة عبر تسجيلات الخروج وإعادة تعيين كلمة المرور، ويمكن استبدالها برموز وصول بواسطة أي تطبيق طرف أول مع تمكين تبادل الرموز.',
     },
     profile_fields: {
       title: 'حقول الملف الشخصي لمركز الحساب الجاهز',

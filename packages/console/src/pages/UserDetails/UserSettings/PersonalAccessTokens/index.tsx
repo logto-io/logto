@@ -15,6 +15,7 @@ import FormField from '@/ds-components/FormField';
 import Table from '@/ds-components/Table';
 import { type Column } from '@/ds-components/Table/types';
 import useApi, { type RequestError } from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
 import CreateTokenModal from './CreateTokenModal';
 import EditTokenModal from './EditTokenModal';
@@ -27,10 +28,13 @@ type Props = {
 function PersonalAccessTokens({ userId }: Props) {
   const [showCreateTokenModal, setShowCreateTokenModal] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data, mutate, error, isLoading } = useSWR<Token[], RequestError>(
-    `api/users/${userId}/personal-access-tokens`
-  );
   const api = useApi();
+  const {
+    access: { isReadOnly, canReadCredentials },
+  } = useCurrentTenantScopes();
+  const { data, mutate, error } = useSWR<Token[], RequestError>(
+    canReadCredentials && `api/users/${userId}/personal-access-tokens`
+  );
   const [editToken, setEditToken] = useState<PersonalAccessToken>();
 
   const tableColumns: Array<Column<Token>> = useMemo(
@@ -94,7 +98,9 @@ function PersonalAccessTokens({ userId }: Props) {
         </>
       }
     >
-      {data?.length === 0 && !error ? (
+      {isReadOnly ? (
+        <div className={styles.empty}>{t('tenants.view_only.hidden')}</div>
+      ) : data?.length === 0 && !error ? (
         <>
           <div className={styles.empty}>{t('user_details.personal_access_tokens.empty')}</div>
           <Button
@@ -111,7 +117,7 @@ function PersonalAccessTokens({ userId }: Props) {
             hasBorder
             isRowHoverEffectDisabled
             rowIndexKey="name"
-            isLoading={isLoading}
+            isLoading={!data && !error}
             errorMessage={error?.body?.message ?? error?.message}
             rowGroups={[{ key: 'personal_access_tokens', data: data ?? [] }]}
             columns={tableColumns}

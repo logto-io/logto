@@ -3,6 +3,7 @@ import {
   type InteractionAuthenticationContext,
   InteractionEvent,
   LogtoAcr,
+  MfaFactor,
   MissingProfile,
   VerificationType,
 } from '@logto/schemas';
@@ -104,11 +105,17 @@ const createAuthenticationContext = (
   overrides?: Partial<InteractionAuthenticationContext>
 ): InteractionAuthenticationContext => ({ ...defaultContext, ...overrides });
 
+const loadedContext = {
+  isPureStepUp: true,
+  isLoading: false,
+  isLoaded: true,
+  load: mockLoad,
+  refetch,
+};
+
 const renderStepUp = async (value: Partial<StepUpContextType>) => {
   const result = renderWithPageContext(
-    <StepUpContext.Provider
-      value={{ isLoading: false, isLoaded: true, load: mockLoad, refetch, ...value }}
-    >
+    <StepUpContext.Provider value={{ ...loadedContext, ...value }}>
       <StepUp />
     </StepUpContext.Provider>
   );
@@ -129,11 +136,10 @@ const TestRig = ({
   const [context, setContext] = useState(authenticationContext);
   const value = useMemo(
     () => ({
+      ...loadedContext,
       authenticationContext: context,
       isLoading,
       isLoaded: !isLoading,
-      load: mockLoad,
-      refetch,
     }),
     [context, isLoading]
   );
@@ -329,17 +335,32 @@ describe('StepUp', () => {
         subjectProofConnectors: [{ type: 'social' as const, connectorId: 'disabled-connector' }],
       },
     },
+    {
+      name: 'does not substitute a connector of a different type',
+      context: {
+        establishableMethods: [MissingProfile.password],
+        subjectProofConnectors: [{ type: 'sso' as const, connectorId: 'c1' }],
+      },
+    },
   ])('$name', async ({ context }) => {
     const { container } = await renderStepUp({
       authenticationContext: createAuthenticationContext(context),
     });
     expect(mockedNavigate).toHaveBeenCalledWith('/continue/password', {
       replace: true,
-      state: { interactionEvent: InteractionEvent.SignIn },
+      state: { interactionEvent: InteractionEvent.SignIn, isStepUp: true },
     });
     expect(container.innerHTML).toBe('');
     expect(mockedSelectMethod).not.toHaveBeenCalled();
     expect(screen.queryByTestId('step-up-subject-proof-list')).toBeNull();
+  });
+
+  it('forwards to enrollment when a fresh first factor unlocked binding', async () => {
+    await renderStepUp({
+      authenticationContext: createAuthenticationContext({ enrollableFactors: [MfaFactor.TOTP] }),
+    });
+    expect(mockedNavigate).toHaveBeenCalledWith('/mfa-binding', { replace: true });
+    expect(mockedSubmitInteraction).not.toHaveBeenCalled();
   });
 
   it('attempts submission when nothing is available, falling back to no-method page on failure', async () => {
@@ -395,9 +416,7 @@ describe('StepUp', () => {
       availableMethods: [VerificationType.Password],
     });
     renderWithPageContext(
-      <StepUpContext.Provider
-        value={{ authenticationContext, isLoading: false, isLoaded: true, load: mockLoad, refetch }}
-      >
+      <StepUpContext.Provider value={{ ...loadedContext, authenticationContext }}>
         <StepUp />
       </StepUpContext.Provider>
     );

@@ -10,6 +10,7 @@ import {
   InteractionHookEvent,
   MfaFactor,
   MfaPolicy,
+  MissingProfile,
   SignInIdentifier,
   VerificationType,
 } from '@logto/schemas';
@@ -17,7 +18,12 @@ import { assert, assertEnv } from '@silverhand/essentials';
 import { createInterceptorsPreset, createPool, type DatabasePool } from '@silverhand/slonik';
 import { authenticator } from 'otplib';
 
-import { getUser, updateUserLogtoConfig } from '#src/api/admin-user.js';
+import {
+  getUser,
+  getUserMfaVerifications,
+  updateUserLogtoConfig,
+  verifyUserPassword,
+} from '#src/api/admin-user.js';
 import { getWebhookRecentLogs } from '#src/api/logs.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { ExperienceClient } from '#src/client/experience/index.js';
@@ -41,7 +47,10 @@ import {
   setTrustedDeviceOptInDecision,
   trustDevice,
 } from '#src/helpers/experience/sign-in-with-acr.js';
-import { successfullyVerifyTotp } from '#src/helpers/experience/totp-verification.js';
+import {
+  successfullyCreateAndVerifyTotp,
+  successfullyVerifyTotp,
+} from '#src/helpers/experience/totp-verification.js';
 import { WebHookApiTest } from '#src/helpers/hook.js';
 import { expectRejects, readConnectorMessage } from '#src/helpers/index.js';
 import {
@@ -49,7 +58,7 @@ import {
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest, waitFor } from '#src/utils.js';
+import { devFeatureTest, generatePassword, waitFor } from '#src/utils.js';
 
 import WebhookMockServer from '../hook/WebhookMockServer.js';
 
@@ -166,6 +175,58 @@ devFeatureTest.describe('sign-in with requested ACR', () => {
       await clearConnectorsByTypes([ConnectorType.Social, ConnectorType.Email]);
     });
 
+    it.each([
+      { acr: firstFactorAcr, enroll: false, amr: ['fed', 'pwd'] },
+      { acr: mfaAcr, enroll: true, amr: ['fed', 'pwd', 'otp', 'mfa'] },
+    ])(
+      'establishes a password and enrolls as needed to satisfy $acr',
+      async ({ acr, enroll, amr }) => {
+        const { id } = await userApi.create({});
+        const socialUserId = await linkSocialIdentity(id, connectorId);
+        const before = await getUser(id);
+        const client = await initSignInWithAcr(acr);
+        await identifyWithSocial(client, connectorId, socialUserId);
+
+        await expectRejects(client.submitInteraction(), {
+          code: 'user.missing_profile',
+          status: 422,
+          expectData: (data: { missingProfile: MissingProfile[]; isEstablishment?: boolean }) => {
+            expect(data.isEstablishment).toBe(true);
+            expect(data.missingProfile).toEqual(
+              expect.arrayContaining([MissingProfile.password, MissingProfile.email])
+            );
+          },
+        });
+        const password = generatePassword();
+        await client.updateProfile({ type: 'password', value: password });
+
+        if (enroll) {
+          await expectRejects(client.submitInteraction(), {
+            code: 'user.missing_mfa',
+            status: 422,
+            expectData: (data: Record<string, unknown>) => {
+              expect(data).toEqual({ availableFactors: [MfaFactor.TOTP] });
+            },
+          });
+          const verificationId = await successfullyCreateAndVerifyTotp(client);
+          await client.bindMfa(MfaFactor.TOTP, verificationId);
+        }
+
+        // Even a rejected submission must not persist the password, factor, or sign-in effects.
+        expect(await getUser(id)).toEqual(before);
+        expect(await getUserMfaVerifications(id)).toEqual([]);
+        const submittedAt = nowInSeconds();
+        expectAuthenticationContext(await finishSignIn(client), { sub: id, acr, amr }, submittedAt);
+        await verifyUserPassword(id, password);
+        // One alternative suffices; the email alternative remains unset.
+        expect(await getUser(id)).toMatchObject({ hasPassword: true, primaryEmail: null });
+        expect(await getUserMfaVerifications(id)).toEqual(
+          enroll ? [expect.objectContaining({ type: MfaFactor.TOTP })] : []
+        );
+        await logoutClient(client);
+      }
+    );
+
     it('asks for the primary email code on the pinned-user page when 1fa is requested', async () => {
       const { primaryEmail } = generateNewUserProfile({ primaryEmail: true });
       const { id: userId } = await userApi.create({ primaryEmail });
@@ -219,6 +280,36 @@ devFeatureTest.describe('sign-in with requested ACR', () => {
 
       await logoutClient(client);
     });
+  });
+
+  it('satisfies requested mfa by enrolling TOTP after password sign-in under a no-prompt policy', async () => {
+    const profile = generateNewUserProfile({ username: true, password: true });
+    const { id } = await userApi.create(profile);
+    const before = await getUser(id);
+    const client = await initSignInWithAcr(mfaAcr);
+    await identifyUserWithUsernamePassword(client, profile.username, profile.password);
+    await expectRejects(client.submitInteraction(), {
+      code: 'user.missing_mfa',
+      status: 422,
+      expectData: (data: Record<string, unknown>) => {
+        expect(data).toEqual({ availableFactors: [MfaFactor.TOTP] });
+      },
+    });
+    const verificationId = await successfullyCreateAndVerifyTotp(client);
+    await client.bindMfa(MfaFactor.TOTP, verificationId);
+    expect(await getUser(id)).toEqual(before);
+    expect(await getUserMfaVerifications(id)).toEqual([]);
+
+    const submittedAt = nowInSeconds();
+    expectAuthenticationContext(
+      await finishSignIn(client),
+      { sub: id, acr: mfaAcr, amr: ['pwd', 'otp', 'mfa'] },
+      submittedAt
+    );
+    expect(await getUserMfaVerifications(id)).toEqual([
+      expect.objectContaining({ type: MfaFactor.TOTP }),
+    ]);
+    await logoutClient(client);
   });
 
   it('completes a password sign-in requesting [mfa, 1fa] immediately', async () => {

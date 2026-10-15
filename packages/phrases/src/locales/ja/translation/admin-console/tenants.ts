@@ -100,6 +100,12 @@ const tenants = {
     development: '開発',
     production: '本番',
   },
+  view_only: {
+    tag: '閲覧のみ',
+    notification:
+      'このテナントへのアクセスは閲覧のみです。変更が必要な場合は、テナント管理者に依頼してください。',
+    hidden: '閲覧者には非表示',
+  },
   deletion_card: {
     title: '削除',
     tenant_deletion: 'テナントの削除',

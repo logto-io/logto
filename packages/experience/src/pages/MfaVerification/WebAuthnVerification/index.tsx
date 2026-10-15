@@ -21,7 +21,7 @@ const WebAuthnVerification = () => {
   const [, webAuthnState] = validate(state, webAuthnStateGuard);
   const { verificationIdsMap } = useContext(UserInteractionContext);
   const verificationId = verificationIdsMap[VerificationType.WebAuthn];
-  const handleWebAuthn = useWebAuthnOperation();
+  const handleWebAuthn = useWebAuthnOperation(UserMfaFlow.MfaVerification);
   const [isVerifying, setIsVerifying] = useState(false);
 
   if (!webAuthnState || !verificationId) {

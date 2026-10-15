@@ -7,6 +7,7 @@ import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
+import { assertNotReadOnly } from '#src/middleware/koa-read-only-access.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
@@ -42,9 +43,10 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
         status: oneTimeTokenStatusGuard.optional(),
       }),
       response: z.array(OneTimeTokens.guard),
-      status: [200, 400],
+      status: [200, 400, 403],
     }),
     async (ctx, next) => {
+      assertNotReadOnly(ctx.auth);
       const { guard, pagination } = ctx;
       const { email, status } = guard.query;
       const { disabled: isPaginationDisabled } = pagination;
@@ -68,9 +70,10 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
         id: z.string().min(1),
       }),
       response: OneTimeTokens.guard,
-      status: [200, 400, 404],
+      status: [200, 400, 403, 404],
     }),
     async (ctx, next) => {
+      assertNotReadOnly(ctx.auth);
       const { params } = ctx.guard;
       const { id } = params;
 

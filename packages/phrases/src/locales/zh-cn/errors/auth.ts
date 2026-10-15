@@ -8,6 +8,7 @@ const auth = {
   require_re_authentication: '需要重新认证以进行受保护操作。',
   exceed_token_limit: '令牌限制已超出。请联系你的管理员。',
   third_party_application_forbidden: '第三方应用程序不允许通过此 API 修改账户数据。',
+  read_only_access: '只读访问不允许此请求。',
 };
 
 export default Object.freeze(auth);

@@ -146,6 +146,9 @@ const sign_in_exp = {
           session_management: {
             title: 'Gestion des sessions',
           },
+          developer_settings: {
+            title: 'Paramètres développeur',
+          },
         },
       },
       user_profile: {
@@ -191,6 +194,9 @@ const sign_in_exp = {
         'Contrôlez l’accès aux données JSON personnalisées stockées sur l’utilisateur.',
       sessions: 'Sessions',
       trusted_devices: 'Appareils de confiance',
+      personal_access_tokens: "Jetons d'accès personnels",
+      personal_access_tokens_description:
+        "Activer cette option permet aux utilisateurs de créer des jetons d'accès personnels de longue durée qui restent actifs après une déconnexion ou une réinitialisation de mot de passe, et qui peuvent être échangés contre des jetons d'accès par toute application interne ayant activé l'échange de jetons.",
     },
     profile_fields: {
       title: 'Champs de profil pour le centre de compte prédéfini',

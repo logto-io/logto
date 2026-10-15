@@ -39,7 +39,19 @@ export class PersonalAccessTokensQueries {
       select ${sql.join(Object.values(fields), sql`, `)}
         from ${table}
         where ${fields.userId} = ${userId}
+        order by ${fields.createdAt} desc
     `);
+  }
+
+  async countActiveByUserId(userId: string) {
+    const { count } = await this.pool.one<{ count: string }>(sql`
+      select count(*)
+        from ${table}
+        where ${fields.userId} = ${userId}
+        and (${fields.expiresAt} is null or ${fields.expiresAt} > now())
+    `);
+
+    return Number(count);
   }
 
   async deleteByName(userId: string, name: string) {

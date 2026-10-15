@@ -1,5 +1,9 @@
 import { type LogtoErrorCode } from '@logto/phrases';
-import { type InteractionAuthenticationContext, type RequestErrorBody } from '@logto/schemas';
+import {
+  AuthenticationContextMode,
+  type InteractionAuthenticationContext,
+  type RequestErrorBody,
+} from '@logto/schemas';
 import { HTTPError } from 'ky';
 import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -173,6 +177,7 @@ const StepUpContextProvider = ({ children }: Props) => {
   const stepUpContext = useMemo<StepUpContextType>(
     () => ({
       authenticationContext,
+      isPureStepUp: authenticationContext?.mode === AuthenticationContextMode.StepUp,
       isLoading: isFetching,
       isLoaded,
       loadError,

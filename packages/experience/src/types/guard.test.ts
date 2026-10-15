@@ -1,8 +1,9 @@
-import { InteractionEvent, MfaFactor, VerificationType } from '@logto/schemas';
+import { InteractionEvent, MfaFactor, MissingProfile, VerificationType } from '@logto/schemas';
 import * as s from 'superstruct';
 
 import {
   mfaErrorDataGuard,
+  missingProfileErrorDataGuard,
   trustedDeviceOptInErrorDataGuard,
   trustedDeviceOptInStateGuard,
   verificationIdsMapGuard,
@@ -59,6 +60,28 @@ describe('guard', () => {
 
     expect(() => {
       s.assert({ durationDays: '30' }, trustedDeviceOptInErrorDataGuard);
+    }).toThrow();
+  });
+
+  it('missingProfileErrorDataGuard should accept the first-factor establishment payload', () => {
+    // A sign-in with requested ACR offers alternative methods to establish, so the data carries the
+    // flag and `missingProfile` is a pick-one list until then.
+    expect(() => {
+      s.assert(
+        {
+          missingProfile: [MissingProfile.password, MissingProfile.email],
+          isEstablishment: true,
+        },
+        missingProfileErrorDataGuard
+      );
+      s.assert({ missingProfile: [MissingProfile.password] }, missingProfileErrorDataGuard);
+    }).not.toThrow();
+
+    expect(() => {
+      s.assert(
+        { missingProfile: [MissingProfile.password], isEstablishment: false },
+        missingProfileErrorDataGuard
+      );
     }).toThrow();
   });
 });

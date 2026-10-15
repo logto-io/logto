@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import Draggable from '@/assets/icons/draggable.svg?react';
 import Minus from '@/assets/icons/minus.svg?react';
+import { useReadOnlyField } from '@/contexts/ReadOnlyFieldScope';
 import IconButton from '@/ds-components/IconButton';
 
 import ConnectorSetupWarning from '../../components/ConnectorSetupWarning';
@@ -27,6 +28,7 @@ function VerificationMethodItem({
   onRemove,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const isReadOnlyField = useReadOnlyField();
 
   return (
     <div>
@@ -35,9 +37,11 @@ function VerificationMethodItem({
           <Draggable className={styles.draggableIcon} />
           <span className={styles.methodLabel}>{t(forgotPasswordMethodPhrase[method])}</span>
         </div>
-        <IconButton onClick={onRemove}>
-          <Minus />
-        </IconButton>
+        {!isReadOnlyField && (
+          <IconButton onClick={onRemove}>
+            <Minus />
+          </IconButton>
+        )}
       </div>
       {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
       <ConnectorSetupWarning requiredConnectors={requiredConnectors} />

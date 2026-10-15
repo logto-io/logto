@@ -100,6 +100,12 @@ const tenants = {
     development: 'Development',
     production: 'Production',
   },
+  view_only: {
+    tag: 'View only',
+    notification:
+      'You have view-only access to this tenant. Ask a tenant admin if you need to make changes.',
+    hidden: 'Hidden for viewers',
+  },
   deletion_card: {
     title: 'DELETE',
     tenant_deletion: 'Delete tenant',

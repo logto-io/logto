@@ -14,6 +14,8 @@ import useNavigateWithPreservedSearchParams from './use-navigate-with-preserved-
 import useRequiredProfileErrorHandler, {
   type Options as UseRequiredProfileErrorHandlerOptions,
 } from './use-required-profile-error-handler';
+import useStepUpContext from './use-step-up-context';
+import useStepUpErrorHandler from './use-step-up-error-handler';
 import useTrustedDeviceOptInErrorHandler from './use-trusted-device-opt-in-error-handler';
 
 type Options = Omit<UseRequiredProfileErrorHandlerOptions, 'interactionEvent'> &
@@ -48,14 +50,20 @@ const useSubmitInteractionErrorHandler = (
   const emailBlockedErrorHandler = useEmailBlockedErrorHandler({ onConfirm: onEmailBlocked });
   const passkeySignInErrorHandler = useMissingPasskeyErrorHandler(interactionEvent);
   const trustedDeviceOptInErrorHandler = useTrustedDeviceOptInErrorHandler(interactionEvent);
+  const { isPureStepUp } = useStepUpContext();
+  const stepUpErrorHandlers = useStepUpErrorHandler();
 
   return useMemo(
     () => ({
-      ...emailBlockedErrorHandler,
-      ...requiredProfileErrorHandler,
-      ...mfaErrorHandler,
-      ...cond(passkeySignInErrorHandler),
-      ...trustedDeviceOptInErrorHandler,
+      ...(isPureStepUp
+        ? stepUpErrorHandlers
+        : {
+            ...requiredProfileErrorHandler,
+            ...mfaErrorHandler,
+            ...emailBlockedErrorHandler,
+            ...cond(passkeySignInErrorHandler),
+            ...trustedDeviceOptInErrorHandler,
+          }),
       /**
        * A sign-in with requested ACR needs a first factor the user can verify. The error is only a
        * navigation signal: the step-up landing reads `availableMethods` and the masked identifiers
@@ -68,10 +76,12 @@ const useSubmitInteractionErrorHandler = (
     }),
     [
       emailBlockedErrorHandler,
+      isPureStepUp,
       mfaErrorHandler,
       navigate,
       passkeySignInErrorHandler,
       requiredProfileErrorHandler,
+      stepUpErrorHandlers,
       trustedDeviceOptInErrorHandler,
     ]
   );

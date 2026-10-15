@@ -21,6 +21,7 @@ import DynamicT from '@/ds-components/DynamicT';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import Table from '@/ds-components/Table';
 import { type RequestError } from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import pageLayout from '@/scss/page-layout.module.scss';
 import { dynamicAppGuideId, type ApplicationListRow } from '@/types/applications';
@@ -70,7 +71,11 @@ type Props = {
   readonly tab?: keyof typeof tabs;
 };
 
+// eslint-disable-next-line complexity -- page composes the list, tabs, guide library and creation modals
 function Applications({ tab }: Props) {
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const { search } = useLocation();
   const { match, navigate } = useTenantPathname();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -170,7 +175,7 @@ function Applications({ tab }: Props) {
             </>
           }
         />
-        {hasListedApplications(totalCount, applications) && (
+        {!isReadOnly && hasListedApplications(totalCount, applications) && (
           <Button
             icon={<Plus />}
             type="primary"
@@ -252,7 +257,7 @@ function Applications({ tab }: Props) {
         />
       )}
       <GuideLibraryModal
-        isOpen={isCreating}
+        isOpen={isCreating && !isReadOnly}
         onClose={() => {
           navigate(-1);
         }}

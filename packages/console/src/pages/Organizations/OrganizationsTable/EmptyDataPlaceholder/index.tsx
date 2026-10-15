@@ -11,7 +11,7 @@ import useTheme from '@/hooks/use-theme';
 import styles from './index.module.scss';
 
 type Props = {
-  /** Override the default button properties in the placeholder */
+  /** Override the default button properties in the placeholder; no button is rendered without them */
   readonly buttonProps?: ButtonProps;
 };
 
@@ -27,16 +27,20 @@ function EmptyDataPlaceholder({ buttonProps }: Props) {
       <PlaceholderImage className={styles.image} />
       <div className={styles.title}>{t('organization_list_placeholder_title')}</div>
       <div className={styles.text}>{t('organization_list_placeholder_text')}</div>
-      <Button
-        className={styles.button}
-        type="primary"
-        size="large"
-        icon={<Plus />}
-        title={
-          isInitialSetup ? 'organizations.setup_organization' : 'organizations.create_organization'
-        }
-        {...buttonProps}
-      />
+      {buttonProps && (
+        <Button
+          className={styles.button}
+          type="primary"
+          size="large"
+          icon={<Plus />}
+          title={
+            isInitialSetup
+              ? 'organizations.setup_organization'
+              : 'organizations.create_organization'
+          }
+          {...buttonProps}
+        />
+      )}
     </div>
   );
 }

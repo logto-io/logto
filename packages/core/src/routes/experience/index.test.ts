@@ -3,6 +3,10 @@ import { appInsights } from '@logto/app-insights/node';
 import { TemplateType } from '@logto/connector-kit';
 import {
   AuthenticationContextMode,
+  AuthenticationFactor,
+  AuthenticationFactorClass,
+  AuthenticationMethodReference,
+  AuthenticationProofRole,
   ConnectorType,
   InteractionEvent,
   LogtoAcr,
@@ -294,15 +298,17 @@ describe('PUT /experience', () => {
     user = totpUser,
     withoutSession = false,
     details = { authenticationContext: stepUpContext },
+    mfa = totpMfa,
   }: {
     user?: User;
+    mfa?: Mfa;
     /** Create the interaction without an authenticated session. */
     withoutSession?: boolean;
     details?: Record<string, unknown>;
   } = {}) =>
     createRequesterWithMocks({
       user,
-      mfa: totpMfa,
+      mfa,
       persistInteractionResult: true,
       // A fresh provider interaction: nothing has been stored yet.
       interactionResult: { interactionEvent: undefined, userId: undefined },
@@ -385,7 +391,12 @@ describe('PUT /experience', () => {
   });
 
   it('should finish a step-up the pinned user cannot reach with unmet_authentication_requirements', async () => {
-    const { requester, provider } = createStepUpRequester({ user: mockUser });
+    // A password user without a factor can reach `mfa` only by enrolling one, which the tenant
+    // does not enable here.
+    const { requester, provider } = createStepUpRequester({
+      user: mockUser,
+      mfa: { policy: MfaPolicy.UserControlled, factors: [] },
+    });
 
     const response = await requester
       .put('/experience')
@@ -536,6 +547,53 @@ describe('step-up route allow-list', () => {
     expect(verifyResponse.body).toMatchObject({ code: 'session.step_up.forbidden_identifier' });
   });
 
+  it('should bind backup codes in pure step-up only with a TOTP enrolled in the same interaction', async () => {
+    const createRequester = (mfa?: Record<string, unknown>) =>
+      createRequesterWithMocks({
+        user: { ...mockUser, mfaVerifications: [mockUserWebAuthnMfaVerification] },
+        mfa: {
+          policy: MfaPolicy.UserControlled,
+          factors: [MfaFactor.TOTP, MfaFactor.BackupCode],
+        },
+        interactionResult: {
+          authenticationContext: stepUpContext,
+          // A fresh password verification: enough to open the enrollment routes.
+          authenticationProofs: [
+            {
+              id: 'password',
+              factor: AuthenticationFactor.Password,
+              class: AuthenticationFactorClass.FirstFactor,
+              amr: [AuthenticationMethodReference.Password],
+              role: AuthenticationProofRole.Identify,
+            },
+          ],
+          verificationRecords: [
+            {
+              id: 'backup-code-verification-id',
+              type: VerificationType.BackupCode,
+              userId: mockUser.id,
+              backupCodes: ['code-1', 'code-2'],
+            },
+          ],
+          ...conditional(mfa && { mfa }),
+        },
+      }).requester;
+    const bindBackupCode = async (requester: ReturnType<typeof createRequester>) =>
+      requester
+        .post('/experience/profile/mfa')
+        .send({ type: MfaFactor.BackupCode, verificationId: 'backup-code-verification-id' });
+
+    // The user's existing passkey does not let a first factor alone replace their backup codes.
+    const rejected = await bindBackupCode(createRequester());
+    expect(rejected.status).toBe(403);
+    expect(rejected.body).toMatchObject({ code: 'session.step_up.forbidden_route' });
+
+    const accepted = await bindBackupCode(
+      createRequester({ totp: { type: MfaFactor.TOTP, secret: 'secret' } })
+    );
+    expect(accepted.status).toBe(204);
+  });
+
   it('should allow reading the interaction in pure step-up', async () => {
     const { requester } = createStoredContextRequester(stepUpContext);
     const response = await requester.get('/experience/interaction');
@@ -639,6 +697,38 @@ describe('POST /experience/submit', () => {
 
     expect(response.status).toBe(200);
     expect(createLog).toHaveBeenCalledWith('Interaction.SignIn.Submit');
+  });
+
+  it('returns 200 with an OIDC error redirect when requested MFA cannot be reached', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester, provider, users, userGeoLocations, mockAppend } = createRequesterWithMocks({
+      mfa: { policy: MfaPolicy.NoPrompt, factors: [] },
+      interactionResult: {
+        authenticationContext: { requestedAcrValues: [LogtoAcr.Mfa] },
+        authenticationProofs: [
+          {
+            id: 'password',
+            factor: AuthenticationFactor.Password,
+            class: AuthenticationFactorClass.FirstFactor,
+            amr: [AuthenticationMethodReference.Password],
+            role: AuthenticationProofRole.Identify,
+          },
+        ],
+      },
+    });
+
+    const response = await requester.post('/experience/submit');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ redirectTo: 'redirectTo' });
+    expect(provider.interactionResult).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.objectContaining({ error: 'unmet_authentication_requirements' })
+    );
+    expect(users.updateUserById).not.toHaveBeenCalled();
+    expect(userGeoLocations.upsertUserGeoLocation).not.toHaveBeenCalled();
+    expect(mockAppend).toHaveBeenCalledWith({ error: 'unmet_authentication_requirements' });
   });
 
   it('should record geo context when dev features are disabled', async () => {

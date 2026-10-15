@@ -9,6 +9,7 @@ import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import { assertNotReadOnly } from '#src/middleware/koa-read-only-access.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
@@ -51,7 +52,8 @@ export default function applicationSecretRoutes<T extends ManagementApiRouter>(
 
       const secret = generateInternalSecret();
       ctx.body = omitInternalApplicationSecret(
-        await queries.applications.updateApplicationById(id, { secret })
+        await queries.applications.updateApplicationById(id, { secret }),
+        ctx.auth
       );
       return next();
     }
@@ -62,9 +64,10 @@ export default function applicationSecretRoutes<T extends ManagementApiRouter>(
     koaGuard({
       params: z.object({ id: z.string() }),
       response: ApplicationSecrets.guard.array(),
-      status: [200, 404],
+      status: [200, 403, 404],
     }),
     async (ctx, next) => {
+      assertNotReadOnly(ctx.auth);
       const { id } = ctx.guard.params;
       // Ensure that the application exists.
       await queries.applications.findApplicationById(id);

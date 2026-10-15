@@ -141,6 +141,9 @@ const sign_in_exp = {
           session_management: {
             title: '會話管理',
           },
+          developer_settings: {
+            title: '開發者設定',
+          },
         },
       },
       user_profile: {
@@ -182,6 +185,9 @@ const sign_in_exp = {
       custom_data_description: '控制對儲存在使用者上的自訂 JSON 資料的存取權。',
       sessions: '會話',
       trusted_devices: '受信任裝置',
+      personal_access_tokens: '個人存取權杖',
+      personal_access_tokens_description:
+        '啟用後，用戶可以建立長期有效的個人存取權杖；這些權杖在登出和重設密碼後仍然有效，並且可被任何啟用了權杖交換的第一方應用程式兌換為存取權杖。',
     },
     profile_fields: {
       title: '預構建帳戶中心的檔案欄位',

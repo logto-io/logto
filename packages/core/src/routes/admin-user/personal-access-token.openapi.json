@@ -7,6 +7,9 @@
         "responses": {
           "200": {
             "description": "A list of personal access tokens."
+          },
+          "403": {
+            "description": "The request carries the `logto-read-only-access: true` header, which cannot read personal access tokens."
           }
         }
       },

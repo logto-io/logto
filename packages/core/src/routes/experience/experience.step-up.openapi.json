@@ -9,8 +9,23 @@
       "post": {
         "description": "Submit the current interaction. <br/>- Submit the verified user identity to the OIDC provider for further authentication (SignIn and Register). <br/>- Update the user's profile data if any (SignIn and Register). <br/>- Reset the password and clear all the interaction records (ForgotPassword). <br/>- Complete a step-up interaction: the interaction must have reached the authentication context class the authorization request selected, and only the methods it established are written to the account, with no sign-in side effect.",
         "responses": {
+          "200": {
+            "description": "The interaction has been submitted. A sign-in with requested `acr_values` that cannot reach any requested class, even through first-factor establishment or MFA enrollment, finishes with the OIDC error `unmet_authentication_requirements`. Follow `redirectTo` to return the error to the client; no sign-in side effect runs."
+          },
           "403": {
             "description": "Multi-Factor Authentication (MFA) is enabled for the user but has not been verified (SignIn and Register). <br/>- A sign-in with requested `acr_values` still lacks a Logto-verifiable first factor (`session.step_up.require_verification`); the response data carries the selected authentication context class, the available methods, and the masked identifiers. <br/>- The achieved authentication context does not satisfy the requested authentication context class (`session.step_up.acr_not_satisfied`); no interaction result is written."
+          },
+          "422": {
+            "description": "The user profile cannot be processed because it is invalid, conflicts with existing data, is already in use, or lacks required fields. <br/>- A sign-in with requested `acr_values` has no eligible method but holds a fresh subject proof (`user.missing_profile`); `data.isEstablishment` is `true` and `data.missingProfile` lists alternative first-factor methods the tenant allows the user to establish. Establishing any one method fulfills this requirement; tenant-mandated profile fields are checked separately on the next submission. When `data.isEstablishment` is absent, every entry in `data.missingProfile` is required. <br/>- Requested MFA requires enrollment (`user.missing_mfa`); `data.availableFactors` lists the factors to bind."
+          }
+        }
+      }
+    },
+    "/api/experience/identification": {
+      "post": {
+        "responses": {
+          "403": {
+            "description": "The `SignIn` or `Register` interaction is disabled in the experience settings. <br/>- In a step-up authentication, the verification resolves to an account other than the pinned subject, or a social or enterprise SSO verification resolves to no account or asks to link the identity (`session.identity_conflict`); a step-up never registers or links an account."
           }
         }
       }

@@ -1,0 +1,27 @@
+{
+  "tags": [
+    {
+      "name": "Dev feature"
+    }
+  ],
+  "paths": {
+    "/api/experience/verification/sso/{connectorId}/authorization-uri": {
+      "post": {
+        "responses": {
+          "403": {
+            "description": "In a step-up authentication, only a connector listed in `subjectProofConnectors` of the interaction is accepted, as proof of the pinned subject (`session.step_up.forbidden_route`)."
+          }
+        }
+      }
+    },
+    "/api/experience/verification/sso/{connectorId}/verify": {
+      "post": {
+        "responses": {
+          "403": {
+            "description": "In a step-up authentication, only a connector listed in `subjectProofConnectors` of the interaction is accepted, as proof of the pinned subject (`session.step_up.forbidden_route`)."
+          }
+        }
+      }
+    }
+  }
+}

@@ -145,6 +145,9 @@ const sign_in_exp = {
           session_management: {
             title: 'Zarządzanie sesją',
           },
+          developer_settings: {
+            title: 'Ustawienia dewelopera',
+          },
         },
       },
       user_profile: {
@@ -189,6 +192,9 @@ const sign_in_exp = {
         'Kontroluj dostęp do niestandardowych danych JSON przechowywanych przy użytkowniku.',
       sessions: 'Sesje',
       trusted_devices: 'Zaufane urządzenia',
+      personal_access_tokens: 'Osobiste tokeny dostępu',
+      personal_access_tokens_description:
+        'Włączenie tej opcji pozwala użytkownikom tworzyć długoterminowe osobiste tokeny dostępu, które pozostają aktywne po wylogowaniu i zresetowaniu hasła oraz mogą być wymieniane na tokeny dostępu przez dowolną aplikację własną z włączoną wymianą tokenów.',
     },
     profile_fields: {
       title: 'Pola profilu dla gotowego centrum konta',

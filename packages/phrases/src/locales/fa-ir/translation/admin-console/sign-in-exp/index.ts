@@ -146,6 +146,9 @@ const sign_in_exp = {
           session_management: {
             title: 'مدیریت نشست',
           },
+          developer_settings: {
+            title: 'تنظیمات توسعه‌دهنده',
+          },
         },
       },
       user_profile: {
@@ -189,6 +192,9 @@ const sign_in_exp = {
       custom_data_description: 'کنترل دسترسی به داده‌های JSON سفارشی ذخیره‌شده روی کاربر.',
       sessions: 'نشست‌ها',
       trusted_devices: 'دستگاه‌های مورد اعتماد',
+      personal_access_tokens: 'توکن‌های دسترسی شخصی',
+      personal_access_tokens_description:
+        'فعال کردن این گزینه به کاربران امکان می‌دهد توکن‌های دسترسی شخصی بلندمدتی ایجاد کنند که پس از خروج از حساب و بازنشانی رمز عبور همچنان فعال می‌مانند و هر برنامه طرف اولی که تبادل توکن در آن فعال باشد می‌تواند آن‌ها را با توکن دسترسی مبادله کند.',
     },
     profile_fields: {
       title: 'فیلدهای پروفایل برای مرکز حساب از پیش‌ساخته',
