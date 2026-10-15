@@ -1,11 +1,12 @@
-import { Prompt, useLogto } from '@logto/react';
+import { useLogto } from '@logto/react';
 import { conditional, yes } from '@silverhand/essentials';
 import { useContext, useEffect } from 'react';
 import { Outlet, useSearchParams } from 'react-router-dom';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
+import useManageAccountSelfGuard from '@/cloud/hooks/use-manage-account-self-guard';
 import AppLoading from '@/components/AppLoading';
-import { cloudApi, searchKeys } from '@/consts';
+import { searchKeys } from '@/consts';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useRedirectUri from '@/hooks/use-redirect-uri';
 import { saveRedirect } from '@/utils/storage';
@@ -32,9 +33,10 @@ import { saveRedirect } from '@/utils/storage';
 export default function ProtectedRoutes() {
   const api = useCloudApi();
   const [searchParameters] = useSearchParams();
-  const { isAuthenticated, isLoading, clearAllTokens, getAccessTokenClaims, signIn } = useLogto();
+  const { isAuthenticated, isLoading, signIn } = useLogto();
   const { isInitComplete, resetTenants } = useContext(TenantsContext);
   const redirectUri = useRedirectUri();
+  const ensureManageAccountSelf = useManageAccountSelfGuard();
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -49,16 +51,7 @@ export default function ProtectedRoutes() {
   useEffect(() => {
     if (isAuthenticated && !isInitComplete) {
       const loadTenants = async () => {
-        const claims = await getAccessTokenClaims(cloudApi.indicator);
-        const scopes = claims?.scope?.split(' ') ?? [];
-
-        if (!scopes.includes(cloudApi.scopes.ManageAccountSelf)) {
-          saveRedirect();
-          await clearAllTokens();
-          void signIn({
-            redirectUri: redirectUri.href,
-            prompt: Prompt.Consent,
-          });
+        if (!(await ensureManageAccountSelf())) {
           return;
         }
 
@@ -68,16 +61,7 @@ export default function ProtectedRoutes() {
 
       void loadTenants();
     }
-  }, [
-    api,
-    clearAllTokens,
-    getAccessTokenClaims,
-    isAuthenticated,
-    isInitComplete,
-    redirectUri.href,
-    resetTenants,
-    signIn,
-  ]);
+  }, [api, ensureManageAccountSelf, isAuthenticated, isInitComplete, resetTenants]);
 
   if (!isInitComplete || !isAuthenticated) {
     return <AppLoading />;

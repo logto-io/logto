@@ -11,9 +11,9 @@ import ProtectedRoutes from '.';
 const mockGet = jest.fn(async () => []);
 const mockSignIn = jest.fn();
 const mockClearAllTokens = jest.fn();
-const mockGetAccessTokenClaims = jest.fn(async () => ({
-  scope: 'create:tenant manage:tenant:self manage:account:self',
-}));
+const scopesWithManageAccountSelf = 'create:tenant manage:tenant:self manage:account:self';
+const scopesWithoutManageAccountSelf = 'create:tenant manage:tenant:self';
+const mockGetAccessTokenClaims = jest.fn(async () => ({ scope: scopesWithManageAccountSelf }));
 const api = { get: mockGet };
 
 jest.mock('@logto/react', () => ({
@@ -55,6 +55,8 @@ const renderRoute = () =>
 
 beforeEach(() => {
   jest.clearAllMocks();
+  // `jest.clearAllMocks()` keeps implementations, so restore the default explicitly.
+  mockGetAccessTokenClaims.mockImplementation(async () => ({ scope: scopesWithManageAccountSelf }));
   sessionStorage.clear();
 });
 
@@ -101,6 +103,32 @@ it('re-consents when the Cloud API access token lacks ManageAccountSelf', async 
     search: '?foo=bar',
     hash: '#keys',
   });
+});
+
+it('loads tenants without re-consenting again in the same tab session', async () => {
+  // The scope never shows up: re-consenting a second time would loop forever.
+  mockGetAccessTokenClaims.mockImplementation(async () => ({
+    scope: scopesWithoutManageAccountSelf,
+  }));
+  jest.mocked(useLogto).mockReturnValue({
+    isAuthenticated: true,
+    isLoading: false,
+    clearAllTokens: mockClearAllTokens,
+    getAccessTokenClaims: mockGetAccessTokenClaims,
+    signIn: mockSignIn,
+  } as unknown as ReturnType<typeof useLogto>);
+  window.history.replaceState(null, '', '/self-hosted-licenses/license-a');
+
+  const { unmount } = renderRoute();
+  await waitFor(() => {
+    expect(mockSignIn).toHaveBeenCalledTimes(1);
+  });
+  expect(mockGet).not.toHaveBeenCalled();
+  unmount();
+
+  renderRoute();
+  expect(await screen.findByText('Account licenses: no tenant; 0 tenants')).toBeTruthy();
+  expect(mockSignIn).toHaveBeenCalledTimes(1);
 });
 
 it.each(['signUp', 'sign_up'])(

@@ -5,6 +5,7 @@ import { MemoryRouter } from 'react-router-dom';
 import useSWR from 'swr';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
+import { saveRedirect } from '@/utils/storage';
 
 import AcceptInvitation from '.';
 
@@ -14,8 +15,15 @@ jest.mock('swr', () => ({
 }));
 
 jest.mock('@logto/react', () => ({
+  Prompt: { Consent: 'consent' },
   useLogto: jest.fn(),
 }));
+
+const scopesWithManageAccountSelf = 'create:tenant manage:tenant:self manage:account:self';
+const scopesWithoutManageAccountSelf = 'create:tenant manage:tenant:self';
+const mockSignIn = jest.fn();
+const mockClearAllTokens = jest.fn();
+const mockGetAccessTokenClaims = jest.fn(async () => ({ scope: scopesWithManageAccountSelf }));
 
 const mockCloudApi = {
   get: jest.fn(),
@@ -91,11 +99,18 @@ describe('AcceptInvitation', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    // `jest.clearAllMocks()` keeps implementations, so restore the default explicitly.
+    mockGetAccessTokenClaims.mockImplementation(async () => ({
+      scope: scopesWithManageAccountSelf,
+    }));
+    sessionStorage.clear();
     jest.spyOn(HTMLFormElement.prototype, 'requestSubmit').mockImplementation(requestSubmit);
     mockedUseLogto.mockReturnValue({
       isLoading: false,
       isAuthenticated: true,
-      signIn: jest.fn(),
+      clearAllTokens: mockClearAllTokens,
+      getAccessTokenClaims: mockGetAccessTokenClaims,
+      signIn: mockSignIn,
     } as unknown as ReturnType<typeof useLogto>);
   });
 
@@ -146,5 +161,45 @@ describe('AcceptInvitation', () => {
 
     expect(requestSubmit).not.toHaveBeenCalled();
     expect(screen.getByRole('button', { name: 'switch account' })).toBeTruthy();
+  });
+
+  it('re-consents when the Cloud API token lacks ManageAccountSelf', async () => {
+    mockGetAccessTokenClaims.mockImplementation(async () => ({
+      scope: scopesWithoutManageAccountSelf,
+    }));
+    mockedUseSWR.mockReturnValue({
+      error: { status: 403 },
+    } as unknown as ReturnType<typeof useSWR>);
+
+    renderAcceptInvitation('/accept/invitation-id');
+
+    await waitFor(() => {
+      expect(mockClearAllTokens).toHaveBeenCalled();
+      expect(mockSignIn).toHaveBeenCalledWith({
+        redirectUri: 'http://localhost/callback',
+        prompt: 'consent',
+      });
+    });
+    expect(jest.mocked(saveRedirect).mock.calls[0]?.[0]?.href).toBe(
+      'http://localhost/accept/invitation-id'
+    );
+  });
+
+  it('keeps the one-time-token flow when the Cloud API token lacks ManageAccountSelf', async () => {
+    mockGetAccessTokenClaims.mockImplementation(async () => ({
+      scope: scopesWithoutManageAccountSelf,
+    }));
+    mockedUseSWR.mockReturnValue({
+      error: { status: 403 },
+    } as unknown as ReturnType<typeof useSWR>);
+
+    renderAcceptInvitation('/accept/invitation-id?one_time_token=one-time-token');
+
+    await waitFor(() => {
+      expect(requestSubmit).toHaveBeenCalledTimes(1);
+    });
+
+    expect(mockClearAllTokens).not.toHaveBeenCalled();
+    expect(mockSignIn).not.toHaveBeenCalled();
   });
 });
