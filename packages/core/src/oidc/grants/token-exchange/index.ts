@@ -9,8 +9,7 @@
  * helpers from v9's `grant_common.js` through the `oidc-provider-internals.js` seam module, so
  * the sender-constraining (mTLS and DPoP) behavior stays aligned with the forked grants.
  *
- * This grant is deliberately a first-party-only capability: subject tokens are minted through
- * the Management API by the tenant's own trusted backends, and the exchange involves no user
+ * This grant is deliberately a first-party-only capability: the exchange involves no user
  * consent, while third-party access is governed by the consent model — the two are mutually
  * exclusive, so third-party applications can never enable this grant type (enforced when
  * configuring applications, see `assertThirdPartyApplicationTokenExchangeDisabled`). That is
@@ -19,6 +18,13 @@
  * user owns and by the global OIDC scope set. A third party that needs an exchanged token
  * should obtain it from the tenant's own machine-to-machine backend instead of performing the
  * exchange itself.
+ *
+ * Subject tokens are not only minted by the tenant's trusted backends: when the account center
+ * enables the personal access token field, end users can create their own personal access tokens
+ * through the Account API. Any first-party client with this grant enabled, including public
+ * clients, can then exchange such a token for access tokens covering everything the user's roles
+ * grant, until the token expires, independent of the user's sign-in session or MFA. Tenants that
+ * must not expose this (e.g. the admin tenant) should keep that field disabled.
  */
 
 import { buildOrganizationUrn } from '@logto/core-kit';

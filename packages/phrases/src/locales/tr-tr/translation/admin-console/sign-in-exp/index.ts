@@ -192,6 +192,8 @@ const sign_in_exp = {
       sessions: 'Oturumlar',
       trusted_devices: 'Güvenilir cihazlar',
       personal_access_tokens: 'Kişisel erişim belirteçleri',
+      personal_access_tokens_description:
+        'Bunu etkinleştirmek, kullanıcıların oturum kapatma ve parola sıfırlama işlemlerinden sonra bile aktif kalan ve belirteç değişimi etkinleştirilmiş herhangi bir birinci taraf uygulama tarafından erişim belirteçleriyle değiştirilebilenuzun ömürlü kişisel erişim belirteçleri oluşturmasına olanak tanır.',
     },
     profile_fields: {
       title: 'Önceden oluşturulmuş hesap merkezi için profil alanları',

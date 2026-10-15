@@ -186,6 +186,8 @@ const sign_in_exp = {
       sessions: '會話',
       trusted_devices: '受信任裝置',
       personal_access_tokens: '個人存取權杖',
+      personal_access_tokens_description:
+        '啟用後，使用者可以建立長期有效的個人存取權杖；這些權杖在登出和重設密碼後仍然有效，並且可被任何啟用了權杖交換的第一方應用程式兌換為存取權杖。',
     },
     profile_fields: {
       title: '預建帳戶中心的檔案欄位',

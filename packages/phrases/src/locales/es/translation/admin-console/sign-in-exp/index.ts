@@ -196,6 +196,8 @@ const sign_in_exp = {
       sessions: 'Sesiones',
       trusted_devices: 'Dispositivos de confianza',
       personal_access_tokens: 'Tokens de acceso personal',
+      personal_access_tokens_description:
+        'Al habilitar esto, los usuarios pueden crear tokens de acceso personal de larga duración que permanecen activos tras cerrar sesión y restablecer la contraseña, y que cualquier aplicación propia con intercambio de tokens habilitado puede canjear por tokens de acceso.',
     },
     profile_fields: {
       title: 'Campos de perfil para el centro de cuenta prediseñado',

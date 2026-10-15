@@ -825,13 +825,16 @@
         "tags": ["Dev feature"],
         "operationId": "ListMyAccountPersonalAccessTokens",
         "summary": "List personal access tokens",
-        "description": "List all personal access tokens of the signed-in user, including expired ones. The token secret values are never returned. The personal-access-tokens scope is required.",
+        "description": "List all personal access tokens of the signed-in user, including expired ones, sorted by creation time in descending order. The token secret values are never returned. The personal-access-tokens scope is required.",
         "responses": {
           "200": {
             "description": "A list of the signed-in user's personal access tokens, without their secret values."
           },
-          "403": {
-            "description": "The personal access token field is not enabled in the account center, or the access token does not include the personal-access-tokens scope."
+          "400": {
+            "description": "The personal access token field is not enabled in the account center."
+          },
+          "401": {
+            "description": "The access token does not include the personal-access-tokens scope."
           }
         }
       },
@@ -861,13 +864,13 @@
             "description": "The personal access token was created successfully. The response includes the token secret value, which cannot be retrieved again."
           },
           "400": {
-            "description": "The request body is invalid, or the expiration time is not in the future or more than 365 days from now."
+            "description": "The request body is invalid, the personal access token field is not editable in the account center, or the expiration time is not in the future or more than 365 days from now."
           },
           "401": {
-            "description": "Permission denied, the verification record is invalid."
+            "description": "Permission denied, the verification record is invalid or the access token does not include the personal-access-tokens scope."
           },
           "403": {
-            "description": "The personal access token field is not enabled or editable in the account center, the access token does not include the personal-access-tokens scope, or the request was made by a third-party application."
+            "description": "The request was made by a third-party application."
           },
           "422": {
             "description": "The token name already exists, or the user has reached the maximum number of unexpired personal access tokens."
@@ -878,7 +881,7 @@
         "tags": ["Dev feature"],
         "operationId": "UpdateMyAccountPersonalAccessTokenName",
         "summary": "Rename a personal access token",
-        "description": "Rename a personal access token of the signed-in user. The personal-access-tokens scope is required.",
+        "description": "Rename a personal access token of the signed-in user. A logto-verification-id in header and the personal-access-tokens scope are required.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -900,10 +903,13 @@
             "description": "The personal access token was renamed successfully."
           },
           "400": {
-            "description": "The request body is invalid."
+            "description": "The request body is invalid, or the personal access token field is not editable in the account center."
+          },
+          "401": {
+            "description": "Permission denied, the verification record is invalid or the access token does not include the personal-access-tokens scope."
           },
           "403": {
-            "description": "The personal access token field is not enabled or editable in the account center, the access token does not include the personal-access-tokens scope, or the request was made by a third-party application."
+            "description": "The request was made by a third-party application."
           },
           "404": {
             "description": "The personal access token was not found."
@@ -938,13 +944,13 @@
             "description": "The personal access token was deleted successfully."
           },
           "400": {
-            "description": "The request body is invalid."
+            "description": "The request body is invalid, or the personal access token field is not editable in the account center."
           },
           "401": {
-            "description": "Permission denied, the verification record is invalid."
+            "description": "Permission denied, the verification record is invalid or the access token does not include the personal-access-tokens scope."
           },
           "403": {
-            "description": "The personal access token field is not enabled or editable in the account center, the access token does not include the personal-access-tokens scope, or the request was made by a third-party application."
+            "description": "The request was made by a third-party application."
           },
           "404": {
             "description": "The personal access token was not found."

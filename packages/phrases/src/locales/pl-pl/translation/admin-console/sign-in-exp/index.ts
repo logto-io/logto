@@ -193,6 +193,8 @@ const sign_in_exp = {
       sessions: 'Sesje',
       trusted_devices: 'Zaufane urządzenia',
       personal_access_tokens: 'Osobiste tokeny dostępu',
+      personal_access_tokens_description:
+        'Włączenie tej opcji pozwala użytkownikom tworzyć długoterminowe osobiste tokeny dostępu, które pozostają aktywne po wylogowaniu i zresetowaniu hasła oraz mogą być wymieniane na tokeny dostępu przez dowolną aplikację własną z włączoną wymianą tokenów.',
     },
     profile_fields: {
       title: 'Pola profilu dla gotowego centrum konta',

@@ -37,7 +37,13 @@ describe('Account Center field sections', () => {
     const groups = await getAccountSecurityGroups();
     const developerSettingsGroup = groups.find(({ key }) => key === 'developerSettings');
 
-    expect(developerSettingsGroup?.items.map(({ key }) => key)).toEqual(['personalAccessToken']);
+    expect(developerSettingsGroup?.items).toEqual([
+      {
+        key: 'personalAccessToken',
+        title: 'sign_in_exp.account_center.fields.personal_access_tokens',
+        description: 'sign_in_exp.account_center.fields.personal_access_tokens_description',
+      },
+    ]);
   });
 
   it('hides the personal access token permission when dev features are disabled', async () => {
