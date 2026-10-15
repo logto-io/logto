@@ -5,6 +5,7 @@ import { type LogtoEnterpriseSubscriptionResponse } from '@/cloud/types/router';
 
 import {
   clearPendingConnectorCreation,
+  isPendingConnectorCreationCurrent,
   type PendingConnectorCreation,
   savePendingConnectorCreation,
 } from './connector-creation-idempotency';
@@ -41,6 +42,12 @@ export const selectCreationFunding = (
     ? operation
     : savePendingConnectorCreation(userId, { ...operation, ...funding });
 
+const assertCurrentOperation = (userId: string, operation: PendingConnectorCreation) => {
+  if (!isPendingConnectorCreationCurrent(userId, operation)) {
+    throw new DOMException('Connector creation was replaced or cleared.', 'AbortError');
+  }
+};
+
 /** Resume payment or fulfillment using the persisted intention, never a redirect's payment claim. */
 export const continueConnectorCreation = async (
   userId: string,
@@ -48,10 +55,17 @@ export const continueConnectorCreation = async (
   getApi: (key: string) => Client<typeof consoleSsoRouter>,
   restartExpired: boolean
 ) => {
-  const enroll = async (current: PendingConnectorCreation) =>
-    getApi(current.checkoutKey ?? current.key).post('/api/me/console-sso/checkout-session', {
-      body: { providerName: current.providerName },
-    });
+  assertCurrentOperation(userId, operation);
+  const enroll = async (current: PendingConnectorCreation) => {
+    const enrollment = await getApi(current.checkoutKey ?? current.key).post(
+      '/api/me/console-sso/checkout-session',
+      {
+        body: { providerName: current.providerName },
+      }
+    );
+    assertCurrentOperation(userId, current);
+    return enrollment;
+  };
   const getEnrollment = async () => {
     if (!operation.sessionId) {
       return { enrollment: await enroll(operation), current: operation };
@@ -62,6 +76,7 @@ export const continueConnectorCreation = async (
         params: { sessionId: operation.sessionId },
       }
     );
+    assertCurrentOperation(userId, operation);
     if (session.status !== 'expired' || !restartExpired) {
       return { enrollment: session, current: operation };
     }
@@ -74,13 +89,15 @@ export const continueConnectorCreation = async (
     return { enrollment: await enroll(current), current };
   };
   const createConnector = async (current: PendingConnectorCreation) => {
+    assertCurrentOperation(userId, current);
     const connector = await getApi(current.key).post('/api/me/console-sso/connectors', {
       body: {
         providerName: current.providerName,
         ...(current.subscriptionId && { stripeUserSubscriptionId: current.subscriptionId }),
       },
     });
-    return { status: 'created' as const, id: connector.id };
+    assertCurrentOperation(userId, current);
+    return { status: 'created' as const, id: connector.id, operation: current };
   };
   if (operation.funding === 'included' || operation.subscriptionId) {
     return createConnector(operation);
@@ -89,6 +106,7 @@ export const continueConnectorCreation = async (
     throw new Error('Select a funding source before creating a connector.');
   }
   const { enrollment, current: enrollmentOperation } = await getEnrollment();
+  assertCurrentOperation(userId, enrollmentOperation);
   if (enrollment.status === 'subscription_exists') {
     return createConnector(
       savePendingConnectorCreation(userId, {
@@ -109,7 +127,7 @@ export const continueConnectorCreation = async (
   if (enrollment.status === 'payment_received' && current.subscriptionId) {
     return createConnector(current);
   }
-  return enrollment;
+  return { ...enrollment, operation: current };
 };
 
 /** Settle or expire the saved payment attempt before discarding a connector intention. */
@@ -118,6 +136,7 @@ export const abandonConnectorCreation = async (
   operation: PendingConnectorCreation,
   getApi: (key: string) => Client<typeof consoleSsoRouter>
 ) => {
+  assertCurrentOperation(userId, operation);
   const enrollment =
     operation.funding === 'personal' && !operation.sessionId && !operation.subscriptionId
       ? await getApi(operation.checkoutKey ?? operation.key).post(
@@ -127,25 +146,40 @@ export const abandonConnectorCreation = async (
           }
         )
       : undefined;
+  assertCurrentOperation(userId, operation);
   const current =
     enrollment && enrollment.status !== 'subscription_exists'
       ? savePendingConnectorCreation(userId, { ...operation, sessionId: enrollment.sessionId })
       : operation;
-  if (current.sessionId) {
+  const settleSession = async () => {
+    if (!current.sessionId) {
+      return { current };
+    }
     const session = await getApi(current.key).delete(
       '/api/me/console-sso/checkout-session/:sessionId',
       {
         params: { sessionId: current.sessionId },
       }
     );
-    if (session.status === 'payment_pending' || session.status === 'open') {
-      return session;
-    }
-    if (session.status === 'payment_received' && session.subscriptionId) {
-      savePendingConnectorCreation(userId, { ...current, subscriptionId: session.subscriptionId });
-    }
+    assertCurrentOperation(userId, current);
+    return {
+      session,
+      current:
+        session.status === 'payment_received' && session.subscriptionId
+          ? savePendingConnectorCreation(userId, {
+              ...current,
+              subscriptionId: session.subscriptionId,
+            })
+          : current,
+    };
+  };
+  const { session, current: settled } = await settleSession();
+  assertCurrentOperation(userId, settled);
+  if (session?.status === 'payment_pending' || session?.status === 'open') {
+    return session;
   }
-  await getApi(current.key).delete('/api/me/console-sso/connector-creation');
+  await getApi(settled.key).delete('/api/me/console-sso/connector-creation');
+  assertCurrentOperation(userId, settled);
   clearPendingConnectorCreation(userId);
   return { status: 'abandoned' as const };
 };

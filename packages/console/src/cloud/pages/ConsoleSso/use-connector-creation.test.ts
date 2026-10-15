@@ -1,94 +1,17 @@
 import { SsoProviderName } from '@logto/schemas';
-import { act, renderHook, waitFor } from '@testing-library/react';
-import { createElement, type ReactNode } from 'react';
-import { SWRConfig } from 'swr';
-
-import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
-import useCurrentUser from '@/hooks/use-current-user';
+import { act, waitFor } from '@testing-library/react';
 
 import {
   readPendingConnectorCreation,
   savePendingConnectorCreation,
 } from './connector-creation-idempotency';
-import { useConnectorCreation } from './use-connector-creation';
-
-jest.mock(
-  '@withtyped/client',
-  () => ({
-    __esModule: true,
-    default: class {
-      readonly get = mockApi.get;
-      readonly post = mockApi.post;
-      readonly delete = mockApi.delete;
-      constructor(readonly config: unknown) {}
-    },
-  }),
-  { virtual: true }
-);
-jest.mock('@/cloud/hooks/use-cloud-api', () => ({
-  useCloudApi: jest.fn(),
-  toastResponseError: jest.fn(),
-}));
-jest.mock('@/hooks/use-current-user', () => ({ __esModule: true, default: jest.fn() }));
-
-const mockApi = {
-  config: { baseUrl: new URL('https://cloud.example.com') },
-  get: jest.fn(),
-  post: jest.fn(),
-  delete: jest.fn(),
-};
-const onCreated = jest.fn();
-const operation = {
-  key: 'creation-one',
-  funding: 'personal' as const,
-  providerName: SsoProviderName.OIDC,
-  sessionId: 'session-one',
-};
-const paidSession = {
-  status: 'payment_received',
-  sessionId: 'session-one',
-  providerName: SsoProviderName.OIDC,
-  subscriptionId: 'paid-sub',
-  redirectUri: null,
-};
-const renderCreation = () =>
-  renderHook(() => useConnectorCreation('alice', onCreated), {
-    wrapper: ({ children }: { children: ReactNode }) =>
-      createElement(
-        SWRConfig,
-        { value: { provider: () => new Map(), dedupingInterval: 0, shouldRetryOnError: false } },
-        children
-      ),
-  });
-
-beforeEach(() => {
-  localStorage.clear();
-  jest.clearAllMocks();
-  jest.mocked(useCloudApi).mockReturnValue(mockApi as unknown as ReturnType<typeof useCloudApi>);
-  jest
-    .mocked(useCurrentUser)
-    .mockReturnValue({ user: { id: 'alice' } } as ReturnType<typeof useCurrentUser>);
-  mockApi.get.mockImplementation(async (path: string) => {
-    if (path === '/api/me/logto-enterprises') {
-      return { logtoEnterprises: [] };
-    }
-    if (path === '/api/me/console-sso/checkout-session/:sessionId') {
-      return paidSession;
-    }
-    return [];
-  });
-  mockApi.post.mockResolvedValue({ id: 'connector-one' });
-  mockApi.delete.mockResolvedValue({});
-  // eslint-disable-next-line @silverhand/fp/no-mutating-methods -- Supply the browser UUID API in jsdom.
-  Object.defineProperty(crypto, 'randomUUID', {
-    configurable: true,
-    value: jest.fn(() => 'new-creation'),
-  });
-});
-afterEach(() => {
-  jest.useRealTimers();
-  jest.restoreAllMocks();
-});
+import {
+  mockApi,
+  onCreated,
+  operation,
+  paidSession,
+  renderCreation,
+} from './use-connector-creation.test-helpers';
 
 it('automatically uses personal billing only after server billing reads finish', async () => {
   const { result } = renderCreation();
@@ -254,12 +177,12 @@ it('polls delayed payments and fulfills only after verified payment', async () =
   jest.useFakeTimers();
   const { result } = renderCreation();
   await act(async () => {
-    jest.advanceTimersByTime(5000);
+    jest.advanceTimersByTime(0);
   });
   expect(result.current.status).toBe('payment_pending');
   expect(mockApi.post).not.toHaveBeenCalled();
   await act(async () => {
-    jest.advanceTimersByTime(5000);
+    jest.advanceTimersByTime(1000);
   });
   expect(onCreated).toHaveBeenCalledWith('connector-one');
   expect(mockApi.post).toHaveBeenCalledTimes(1);

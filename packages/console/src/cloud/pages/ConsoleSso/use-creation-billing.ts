@@ -26,7 +26,8 @@ const useConsoleSsoCoverage = (isEnabled: boolean) => {
         })
       );
     },
-    { keepPreviousData: false }
+    // Reopening the modal must check current allowance before selecting funding.
+    { dedupingInterval: 0 }
   );
   return result;
 };
@@ -37,7 +38,7 @@ export const useCreationBilling = (operation?: PendingConnectorCreation) => {
   const coverage = useConsoleSsoCoverage(!isRecovering);
   const funding = operation?.funding ?? (coverage.data?.isAvailable ? 'included' : 'personal');
   const billingError = isRecovering ? undefined : coverage.error;
-  const isBillingReady = isRecovering || Boolean(coverage.data);
+  const isBillingReady = isRecovering || (Boolean(coverage.data) && !coverage.isValidating);
   return {
     funding,
     billingError,
