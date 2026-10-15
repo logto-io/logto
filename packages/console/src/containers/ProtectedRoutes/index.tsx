@@ -1,11 +1,11 @@
-import { useLogto } from '@logto/react';
+import { Prompt, useLogto } from '@logto/react';
 import { conditional, yes } from '@silverhand/essentials';
 import { useContext, useEffect } from 'react';
 import { Outlet, useSearchParams } from 'react-router-dom';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import AppLoading from '@/components/AppLoading';
-import { searchKeys } from '@/consts';
+import { cloudApi, searchKeys } from '@/consts';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useRedirectUri from '@/hooks/use-redirect-uri';
 import { saveRedirect } from '@/utils/storage';
@@ -32,7 +32,7 @@ import { saveRedirect } from '@/utils/storage';
 export default function ProtectedRoutes() {
   const api = useCloudApi();
   const [searchParameters] = useSearchParams();
-  const { isAuthenticated, isLoading, signIn } = useLogto();
+  const { isAuthenticated, isLoading, clearAllTokens, getAccessTokenClaims, signIn } = useLogto();
   const { isInitComplete, resetTenants } = useContext(TenantsContext);
   const redirectUri = useRedirectUri();
 
@@ -49,13 +49,35 @@ export default function ProtectedRoutes() {
   useEffect(() => {
     if (isAuthenticated && !isInitComplete) {
       const loadTenants = async () => {
+        const claims = await getAccessTokenClaims(cloudApi.indicator);
+        const scopes = claims?.scope?.split(' ') ?? [];
+
+        if (!scopes.includes(cloudApi.scopes.ManageAccountSelf)) {
+          saveRedirect();
+          await clearAllTokens();
+          void signIn({
+            redirectUri: redirectUri.href,
+            prompt: Prompt.Consent,
+          });
+          return;
+        }
+
         const data = await api.get('/api/tenants');
         resetTenants(data);
       };
 
       void loadTenants();
     }
-  }, [api, isAuthenticated, isInitComplete, resetTenants]);
+  }, [
+    api,
+    clearAllTokens,
+    getAccessTokenClaims,
+    isAuthenticated,
+    isInitComplete,
+    redirectUri.href,
+    resetTenants,
+    signIn,
+  ]);
 
   if (!isInitComplete || !isAuthenticated) {
     return <AppLoading />;

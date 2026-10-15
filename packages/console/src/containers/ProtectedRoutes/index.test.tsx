@@ -10,9 +10,16 @@ import ProtectedRoutes from '.';
 
 const mockGet = jest.fn(async () => []);
 const mockSignIn = jest.fn();
+const mockClearAllTokens = jest.fn();
+const mockGetAccessTokenClaims = jest.fn(async () => ({
+  scope: 'create:tenant manage:tenant:self manage:account:self',
+}));
 const api = { get: mockGet };
 
-jest.mock('@logto/react', () => ({ useLogto: jest.fn() }));
+jest.mock('@logto/react', () => ({
+  Prompt: { Consent: 'consent' },
+  useLogto: jest.fn(),
+}));
 jest.mock('@/cloud/hooks/use-cloud-api', () => ({ useCloudApi: () => api }));
 jest.mock('@/consts/env', () => ({ isCloud: true, isDevFeaturesEnabled: true }));
 jest.mock('@/components/Region', () => ({ defaultRegionName: 'US' }));
@@ -57,6 +64,8 @@ it.each(['/self-hosted-licenses', '/self-hosted-licenses/license-a'])(
     jest.mocked(useLogto).mockReturnValue({
       isAuthenticated: true,
       isLoading: false,
+      clearAllTokens: mockClearAllTokens,
+      getAccessTokenClaims: mockGetAccessTokenClaims,
       signIn: mockSignIn,
     } as unknown as ReturnType<typeof useLogto>);
     window.history.replaceState(null, '', path);
@@ -66,12 +75,42 @@ it.each(['/self-hosted-licenses', '/self-hosted-licenses/license-a'])(
   }
 );
 
+it('re-consents when the Cloud API access token lacks ManageAccountSelf', async () => {
+  mockGetAccessTokenClaims.mockResolvedValueOnce({
+    scope: 'create:tenant manage:tenant:self',
+  });
+  jest.mocked(useLogto).mockReturnValue({
+    isAuthenticated: true,
+    isLoading: false,
+    clearAllTokens: mockClearAllTokens,
+    getAccessTokenClaims: mockGetAccessTokenClaims,
+    signIn: mockSignIn,
+  } as unknown as ReturnType<typeof useLogto>);
+  window.history.replaceState(null, '', '/self-hosted-licenses/license-a?foo=bar#keys');
+  renderRoute();
+  await waitFor(() => {
+    expect(mockClearAllTokens).toHaveBeenCalled();
+    expect(mockSignIn).toHaveBeenCalledWith({
+      redirectUri: 'http://localhost/callback',
+      prompt: 'consent',
+    });
+  });
+  expect(mockGet).not.toHaveBeenCalled();
+  expect(JSON.parse(sessionStorage.getItem(storageKeys.redirectAfterSignIn) ?? 'null')).toEqual({
+    pathname: '/self-hosted-licenses/license-a',
+    search: '?foo=bar',
+    hash: '#keys',
+  });
+});
+
 it.each(['signUp', 'sign_up'])(
   'preserves the license URL and supports %s before sign-up',
   async (parameter) => {
     jest.mocked(useLogto).mockReturnValue({
       isAuthenticated: false,
       isLoading: false,
+      clearAllTokens: mockClearAllTokens,
+      getAccessTokenClaims: mockGetAccessTokenClaims,
       signIn: mockSignIn,
     } as unknown as ReturnType<typeof useLogto>);
     const search = `?${parameter}=true&utm_source=license`;
