@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { tokenResponseScopeGuard } from '@logto/connector-kit';
+
 /**
  * OAuth 2.0 Client Authentication methods that are used by Clients to authenticate to the Authorization Server when using the Token Endpoint.
  */
@@ -63,7 +65,7 @@ export const oauth2AccessTokenResponseGuard = z.object({
   token_type: z.string(),
   expires_in: z.number().optional(),
   refresh_token: z.string().optional(),
-  scope: z.string().optional(),
+  scope: tokenResponseScopeGuard.optional(),
 });
 
 export type Oauth2AccessTokenResponse = z.infer<typeof oauth2AccessTokenResponseGuard>;

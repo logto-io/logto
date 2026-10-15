@@ -93,4 +93,29 @@ describe('getUserInfo', () => {
     );
     expect(userInfo).toStrictEqual({ id: userId, rawData: { sub: userId, foo: 'bar' } });
   });
+
+  it('should accept a token response with an array `scope`', async () => {
+    const userId = 'userId';
+    const tokenEndpointUrl = new URL(mockConfig.tokenEndpoint);
+    nock(tokenEndpointUrl.origin)
+      .post(tokenEndpointUrl.pathname)
+      .query(true)
+      .reply(200, {
+        access_token: 'access_token',
+        token_type: 'bearer',
+        scope: ['chat:read', 'chat:edit'],
+      });
+    const userInfoEndpointUrl = new URL(mockConfig.userInfoEndpoint);
+    nock(userInfoEndpointUrl.origin).get(userInfoEndpointUrl.pathname).query(true).reply(200, {
+      sub: userId,
+    });
+    const connector = await createConnector({ getConfig });
+    const userInfo = await connector.getUserInfo(
+      { code: 'code' },
+      vi.fn().mockImplementationOnce(() => {
+        return { redirectUri: 'http://localhost:3001/callback' };
+      })
+    );
+    expect(userInfo).toStrictEqual({ id: userId, rawData: { sub: userId } });
+  });
 });
