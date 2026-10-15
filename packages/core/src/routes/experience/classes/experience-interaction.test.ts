@@ -2566,10 +2566,11 @@ describe('ExperienceInteraction class', () => {
       });
     });
 
-    it('stops asking for an MFA factor when no first factor can be proven', async () => {
+    it('offers to establish the missing first factor of an mfa pair', async () => {
       setDevFeaturesEnabled(true);
       const { experienceInteraction, provider } = createSignInInteraction({
-        // An enrolled TOTP but no password and no connector: no first factor can be proven.
+        // An enrolled TOTP but no password: the TOTP fills the `mfa` role only, so a first factor is
+        // the missing half of the pair and establishing it is what reaches the class.
         user: {
           ...mockUserWithMfaVerifications,
           passwordEncrypted: null,
@@ -2594,13 +2595,14 @@ describe('ExperienceInteraction class', () => {
         },
       });
 
-      // Another TOTP challenge cannot help, and establishing cannot replace an existing method.
-      await experienceInteraction.submit();
-      expect(provider.interactionResult).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.anything(),
-        expect.objectContaining({ error: 'unmet_authentication_requirements' })
-      );
+      // Another TOTP challenge cannot help, and verifying an existing method is not an alternative
+      // to establishing the first factor the pair is missing.
+      await expect(experienceInteraction.submit()).rejects.toMatchObject({
+        code: 'user.missing_profile',
+        status: 422,
+        data: { missingProfile: [MissingProfile.password], isEstablishment: true },
+      });
+      expect(provider.interactionResult).not.toHaveBeenCalled();
     });
 
     it('keeps the tenant MFA requirement skippable when nothing requested mfa', async () => {
