@@ -140,6 +140,8 @@ const account_center = {
     },
     personal_access_tokens: {
       title: 'Kişisel erişim belirteçleri',
+      description:
+        "API'lerle kendi adınıza kimlik doğrulaması yapmak için kişisel erişim belirteçlerini kullanın. Oturumu kapatsanız veya parolanızı değiştirseniz bile süresi dolana ya da siz iptal edene kadar etkin kalırlar.",
       create: 'Yeni belirteç oluştur',
       created_at: '{{date}} tarihinde oluşturuldu',
       expires_on: '{{date}} tarihinde sona eriyor',

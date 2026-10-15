@@ -136,6 +136,8 @@ const account_center = {
     },
     personal_access_tokens: {
       title: '個人存取權杖',
+      description:
+        '使用個人存取權杖代表你向 API 進行身分驗證。即使你登出或更改密碼，它們仍會保持有效，直到過期或被你撤銷。',
       create: '建立新權杖',
       created_at: '建立於 {{date}}',
       expires_on: '於 {{date}} 到期',

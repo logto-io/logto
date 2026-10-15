@@ -145,6 +145,8 @@ const account_center = {
     },
     personal_access_tokens: {
       title: "Jetons d'accès personnel",
+      description:
+        "Utilisez des jetons d'accès personnels pour vous authentifier auprès des API en votre nom. Ils restent actifs jusqu'à leur expiration ou leur révocation, même si vous vous déconnectez ou modifiez votre mot de passe.",
       create: 'Créer un nouveau jeton',
       created_at: 'Créé le {{date}}',
       expires_on: 'Expire le {{date}}',

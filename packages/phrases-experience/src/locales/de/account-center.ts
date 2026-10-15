@@ -147,6 +147,8 @@ const account_center = {
     },
     personal_access_tokens: {
       title: 'Persönliche Zugriffstoken',
+      description:
+        'Verwenden Sie persönliche Zugriffstoken, um sich in Ihrem Namen bei APIs zu authentifizieren. Sie bleiben aktiv, bis sie ablaufen oder von Ihnen widerrufen werden, selbst wenn Sie sich abmelden oder Ihr Passwort ändern.',
       create: 'Neues Token erstellen',
       created_at: 'Erstellt am {{date}}',
       expires_on: 'Läuft ab am {{date}}',

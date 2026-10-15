@@ -140,6 +140,8 @@ const account_center = {
     },
     personal_access_tokens: {
       title: 'Osobiste tokeny dostępu',
+      description:
+        'Używaj osobistych tokenów dostępu do uwierzytelniania się w interfejsach API w swoim imieniu. Pozostają aktywne do momentu wygaśnięcia lub unieważnienia, nawet po wylogowaniu się lub zmianie hasła.',
       create: 'Utwórz nowy token',
       created_at: 'Utworzono {{date}}',
       expires_on: 'Wygasa {{date}}',

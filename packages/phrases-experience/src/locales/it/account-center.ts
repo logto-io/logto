@@ -144,6 +144,8 @@ const account_center = {
     },
     personal_access_tokens: {
       title: 'Token di accesso personale',
+      description:
+        'Usa i token di accesso personali per autenticarti con le API a tuo nome. Rimangono attivi fino alla scadenza o alla revoca, anche se ti disconnetti o cambi la password.',
       create: 'Crea nuovo token',
       created_at: 'Creato il {{date}}',
       expires_on: 'Scade il {{date}}',

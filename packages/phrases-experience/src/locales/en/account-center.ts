@@ -140,6 +140,8 @@ const account_center = {
     },
     personal_access_tokens: {
       title: 'Personal access tokens',
+      description:
+        'Use personal access tokens to authenticate with APIs on your behalf. They remain active until they expire or you revoke them, even if you sign out or change your password.',
       create: 'Create new token',
       created_at: 'Created {{date}}',
       expires_on: 'Expires on {{date}}',

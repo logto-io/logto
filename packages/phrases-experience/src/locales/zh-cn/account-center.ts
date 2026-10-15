@@ -134,6 +134,8 @@ const account_center = {
     },
     personal_access_tokens: {
       title: '个人访问令牌',
+      description:
+        '使用个人访问令牌代表你向 API 进行身份验证。即使你退出登录或更改密码，它们仍会保持有效，直到过期或被你撤销。',
       create: '创建新令牌',
       created_at: '创建于 {{date}}',
       expires_on: '于 {{date}} 到期',

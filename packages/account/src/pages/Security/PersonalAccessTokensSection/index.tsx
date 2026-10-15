@@ -250,7 +250,10 @@ const PersonalAccessTokensSection = () => {
 
   return (
     <>
-      <SecuritySection title={t('account_center.security.personal_access_tokens.title')}>
+      <SecuritySection
+        title={t('account_center.security.personal_access_tokens.title')}
+        description={t('account_center.security.personal_access_tokens.description')}
+      >
         {isLoading ? (
           <div className={styles.state}>
             {t('account_center.security.personal_access_tokens.loading')}

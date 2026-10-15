@@ -119,6 +119,8 @@ describe('<PersonalAccessTokensSection />', () => {
           security: {
             personal_access_tokens: {
               title: 'Personal access tokens',
+              description:
+                'Use personal access tokens to authenticate with APIs on your behalf. They remain active until they expire or you revoke them, even if you sign out or change your password.',
               create: 'Create new token',
               created_at: 'Created {{date}}',
               expires_on: 'Expires on {{date}}',
@@ -196,6 +198,11 @@ describe('<PersonalAccessTokensSection />', () => {
       expect(getByText('ci-runner')).toBeTruthy();
     });
 
+    expect(
+      getByText(
+        'Use personal access tokens to authenticate with APIs on your behalf. They remain active until they expire or you revoke them, even if you sign out or change your password.'
+      )
+    ).toBeTruthy();
     expect(getByText('Expires on Jul 1, 2027')).toBeTruthy();
     expect(getByText('old-script')).toBeTruthy();
     expect(getByText('Expired on Apr 1, 2025')).toBeTruthy();

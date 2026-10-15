@@ -138,6 +138,8 @@ const account_center = {
     },
     personal_access_tokens: {
       title: '개인용 액세스 토큰',
+      description:
+        '개인 액세스 토큰을 사용하여 사용자를 대신해 API에 인증할 수 있습니다. 로그아웃하거나 비밀번호를 변경하더라도 만료되거나 폐기할 때까지 활성 상태로 유지됩니다.',
       create: '새 토큰 만들기',
       created_at: '{{date}}에 생성됨',
       expires_on: '{{date}}에 만료',

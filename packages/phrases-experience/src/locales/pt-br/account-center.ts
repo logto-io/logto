@@ -142,6 +142,8 @@ const account_center = {
     },
     personal_access_tokens: {
       title: 'Tokens de acesso pessoal',
+      description:
+        'Use tokens de acesso pessoal para se autenticar em APIs em seu nome. Eles permanecem ativos até expirarem ou serem revogados, mesmo que você saia da conta ou altere sua senha.',
       create: 'Criar novo token',
       created_at: 'Criado em {{date}}',
       expires_on: 'Expira em {{date}}',

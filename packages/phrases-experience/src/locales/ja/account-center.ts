@@ -139,6 +139,8 @@ const account_center = {
     },
     personal_access_tokens: {
       title: 'パーソナルアクセストークン',
+      description:
+        '個人用アクセストークンを使用して、あなたに代わって API で認証できます。サインアウトやパスワード変更を行っても、有効期限が切れるか失効させるまで有効なままになります。',
       create: '新しいトークンを作成',
       created_at: '{{date}} に作成',
       expires_on: '{{date}} に期限切れ',

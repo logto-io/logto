@@ -139,6 +139,8 @@ const account_center = {
     },
     personal_access_tokens: {
       title: 'Osobní přístupové tokeny',
+      description:
+        'Osobní přístupové tokeny slouží k ověřování vůči rozhraním API vaším jménem. Zůstávají aktivní, dokud nevyprší jejich platnost nebo dokud je neodvoláte, a to i po odhlášení nebo změně hesla.',
       create: 'Vytvořit nový token',
       created_at: 'Vytvořeno {{date}}',
       expires_on: 'Vyprší {{date}}',
