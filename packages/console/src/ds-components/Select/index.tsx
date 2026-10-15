@@ -140,7 +140,8 @@ function Select<T extends string>({
           className
         )}
         role="button"
-        tabIndex={0}
+        aria-disabled={isSelectionReadOnly ? true : undefined}
+        tabIndex={isSelectionReadOnly ? -1 : 0}
         onKeyDown={onKeyDownHandler(() => {
           if (!isSelectionReadOnly) {
             setIsOpen(true);
