@@ -1,6 +1,6 @@
 import { adminTenantId, defaultTenantId } from '@logto/schemas';
 import { type UrlSet } from '@logto/shared';
-import { conditionalString, trySafe } from '@silverhand/essentials';
+import { conditionalString, once, trySafe } from '@silverhand/essentials';
 import { type CommonQueryMethods } from '@silverhand/slonik';
 
 import {
@@ -111,25 +111,11 @@ const getTenantIdFromCustomDomain = async (
   return domain.tenantId;
 };
 
-// eslint-disable-next-line @silverhand/fp/no-let -- One Console origin warning per process.
-let hasWarnedUnmatchedConsoleOrigin = false;
-
-export const resetUnmatchedConsoleOriginWarning = () => {
-  // eslint-disable-next-line @silverhand/fp/no-mutation -- Test-only reset of the one-time guard.
-  hasWarnedUnmatchedConsoleOrigin = false;
-};
-
 const isConsolePath = (pathname: string) =>
   pathname === `/${AdminApps.Console}` || pathname.startsWith(`/${AdminApps.Console}/`);
 
-const warnUnmatchedConsoleOrigin = (url: URL, adminUrlSet: UrlSet) => {
-  if (hasWarnedUnmatchedConsoleOrigin || !isConsolePath(url.pathname)) {
-    return;
-  }
-
-  // eslint-disable-next-line @silverhand/fp/no-mutation -- Warn once per process.
-  hasWarnedUnmatchedConsoleOrigin = true;
-
+/** Warn once per process, since a misconfigured deployment would otherwise log on every request. */
+const warnUnmatchedConsoleOrigin = once((url: URL, adminUrlSet: UrlSet) => {
   const configured = process.env.ADMIN_ENDPOINT
     ? adminUrlSet
         .deduplicated()
@@ -143,7 +129,7 @@ const warnUnmatchedConsoleOrigin = (url: URL, adminUrlSet: UrlSet) => {
       'Console URL and that ADMIN_ENDPOINT matches your deployment. ' +
       `(request: ${url.origin}${url.pathname}; configured admin endpoints: ${configured})`
   );
-};
+});
 
 /**
  * Get tenant ID from the current request's URL.
@@ -179,7 +165,9 @@ export const getTenantId = async (
   }
 
   if (!isMultiTenancy) {
-    warnUnmatchedConsoleOrigin(url, adminUrlSet);
+    if (isConsolePath(url.pathname)) {
+      warnUnmatchedConsoleOrigin(url, adminUrlSet);
+    }
 
     return [defaultTenantId, false];
   }
