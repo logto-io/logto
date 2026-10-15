@@ -12,7 +12,7 @@ import { UserMfaFlow } from '@/types';
 import ErrorPage from '../ErrorPage';
 
 const MfaBinding = () => {
-  const flowState = useMfaFlowState();
+  const flowState = useMfaFlowState(UserMfaFlow.MfaBinding);
   const skipMfa = useSkipMfa();
   const skipOptionalMfa = useSkipOptionalMfa();
   const { search } = useLocation();

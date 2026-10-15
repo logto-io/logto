@@ -30,7 +30,7 @@ const WebAuthnBinding = () => {
   const skipMfa = useSkipMfa();
   const skipOptionalMfa = useSkipOptionalMfa();
   const [isCreatingPasskey, setIsCreatingPasskey] = useState(false);
-  const flowState = useMfaFlowState();
+  const flowState = useMfaFlowState(UserMfaFlow.MfaBinding);
 
   if (!webAuthnState || !verificationId) {
     return flowState?.isStepUp ? <MfaBinding /> : <ErrorPage title="error.invalid_session" />;

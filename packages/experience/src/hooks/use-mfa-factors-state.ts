@@ -12,13 +12,15 @@ import { getDisplayedStepUpMethods, toMfaFlowState } from '@/utils/step-up';
 
 import useStepUpContext from './use-step-up-context';
 
-const useMfaFlowState = (): MfaFlowState | undefined => {
-  const { state, pathname } = useLocation();
+const useMfaFlowState = (
+  flow: UserMfaFlow = UserMfaFlow.MfaVerification
+): MfaFlowState | undefined => {
+  const { state } = useLocation();
   const { authenticationContext, isPureStepUp } = useStepUpContext();
 
   return useMemo(() => {
     if (isPureStepUp && authenticationContext) {
-      if (!pathname.startsWith(`/${UserMfaFlow.MfaVerification}`)) {
+      if (flow === UserMfaFlow.MfaBinding) {
         return {
           availableFactors: authenticationContext.enrollableFactors,
           isStepUp: true,
@@ -35,7 +37,7 @@ const useMfaFlowState = (): MfaFlowState | undefined => {
       parseGuard(state, mfaFlowStateGuard) ??
       parseGuard(state, mfaBindingVerificationCodeStateGuard)?.mfaFlowState
     );
-  }, [authenticationContext, isPureStepUp, pathname, state]);
+  }, [authenticationContext, flow, isPureStepUp, state]);
 };
 
 export default useMfaFlowState;

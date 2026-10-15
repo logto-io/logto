@@ -29,7 +29,7 @@ const TotpBinding = () => {
 
   const skipMfa = useSkipMfa();
   const skipOptionalMfa = useSkipOptionalMfa();
-  const flowState = useMfaFlowState();
+  const flowState = useMfaFlowState(UserMfaFlow.MfaBinding);
 
   if (!totpBindingState || !verificationId) {
     // Secrets are not part of the sanitized context; restart binding from the offered factors.

@@ -8,6 +8,7 @@ import {
 
 import type { ErrorHandlers } from './use-error-handler';
 import useNavigateWithPreservedSearchParams from './use-navigate-with-preserved-search-params';
+import useStepUpContext from './use-step-up-context';
 
 /**
  * The errors that land on the invalid-session page: a session that is gone, and a session that
@@ -45,6 +46,17 @@ const useStepUpErrorHandler = (): ErrorHandlers => {
       },
     };
   }, [navigate]);
+};
+
+/**
+ * Returns {@link useStepUpErrorHandler} in pure step-up mode and `undefined` otherwise, for hooks
+ * shared between regular sign-in and pure step-up.
+ */
+export const usePureStepUpErrorHandler = (): ErrorHandlers | undefined => {
+  const { isPureStepUp } = useStepUpContext();
+  const stepUpErrorHandlers = useStepUpErrorHandler();
+
+  return isPureStepUp ? stepUpErrorHandlers : undefined;
 };
 
 export default useStepUpErrorHandler;

@@ -1,8 +1,8 @@
-import { VerificationType } from '@logto/schemas';
+import { InteractionEvent, VerificationType } from '@logto/schemas';
 import { useCallback, useContext } from 'react';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
-import { getSsoAuthorizationUrl } from '@/apis/experience';
+import { getSsoAuthorizationUrl, initInteraction } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import { searchKeys } from '@/shared/utils/search-parameters';
@@ -12,13 +12,19 @@ import { storeRedirectContext } from '@/utils/social-redirect-fallback-context';
 
 import useGlobalRedirectTo from './use-global-redirect-to';
 import useStepUpContext from './use-step-up-context';
-import useStepUpErrorHandler from './use-step-up-error-handler';
+import { usePureStepUpErrorHandler } from './use-step-up-error-handler';
 
 const useSingleSignOn = () => {
   const handleError = useErrorHandler();
   const { isPureStepUp } = useStepUpContext();
-  const stepUpErrorHandlers = useStepUpErrorHandler();
-  const asyncInvokeSingleSignOn = useApi(getSsoAuthorizationUrl);
+  const stepUpErrorHandlers = usePureStepUpErrorHandler();
+  const asyncInvokeSingleSignOn = useApi(async (connectorId: string, payload: unknown) => {
+    if (!isPureStepUp) {
+      await initInteraction(InteractionEvent.SignIn);
+    }
+
+    return getSsoAuthorizationUrl(connectorId, payload);
+  });
   const redirectTo = useGlobalRedirectTo({
     shouldClearInteractionContextSession: false,
     isReplace: false,
@@ -54,17 +60,13 @@ const useSingleSignOn = () => {
       const state = generateState();
       storeState(state, connectorId);
 
-      const [error, result] = await asyncInvokeSingleSignOn(
-        connectorId,
-        {
-          state,
-          redirectUri: `${window.location.origin}/callback/${connectorId}`,
-        },
-        isPureStepUp
-      );
+      const [error, result] = await asyncInvokeSingleSignOn(connectorId, {
+        state,
+        redirectUri: `${window.location.origin}/callback/${connectorId}`,
+      });
 
       if (error) {
-        await handleError(error, isPureStepUp ? stepUpErrorHandlers : undefined);
+        await handleError(error, stepUpErrorHandlers);
 
         return;
       }
@@ -99,7 +101,6 @@ const useSingleSignOn = () => {
     [
       asyncInvokeSingleSignOn,
       handleError,
-      isPureStepUp,
       nativeSignInHandler,
       redirectTo,
       setVerificationId,
