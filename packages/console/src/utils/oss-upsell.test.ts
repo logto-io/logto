@@ -20,7 +20,7 @@ describe('oss upsell helpers', () => {
   it('builds a Cloud upsell URL with the standard UTM parameters', () => {
     const url = new URL(buildCloudUpsellUrl(ossUpsellEntries.getStartedOssCloudBanner));
 
-    expect(url.origin).toBe('https://cloud.logto.io');
+    expect(url.origin).toBe('https://cloud.meshx.app');
     expect(url.pathname).toBe('/');
     expect(url.searchParams.get('utm_source')).toBe('logto_oss');
     expect(url.searchParams.get('utm_medium')).toBe('console');

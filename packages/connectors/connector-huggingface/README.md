@@ -57,7 +57,7 @@ Fill out the `clientId` and `clientSecret` field with _Client ID_ and _App Secre
 
 ## Test Hugging Face connector
 
-That's it. The Hugging Face connector should be available now. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/recipes/configure-connectors/social-connector/enable-social-sign-in/).
+That's it. The Hugging Face connector should be available now. Don't forget to [Enable connector in sign-in experience](https://docs.meshx.io/docs/recipes/configure-connectors/social-connector/enable-social-sign-in/).
 
 ## Reference
 

@@ -361,7 +361,7 @@
   - Organizations
   - Organization roles
 
-  Refer to the documentation for more details: https://docs.logto.io/integrate-logto/app-level-access-control
+  Refer to the documentation for more details: https://docs.meshx.io/integrate-logto/app-level-access-control
 
 - c1ff0c114: release account center profile page, custom profile fields at sign-up, and experience/account avatar upload from dev feature gates
 
@@ -517,7 +517,7 @@
 
   Each delta array is capped silently at 5000 entries; for bulk operations that exceed the cap, consumers should reconcile authoritative membership via `GET /organizations/:id/users` or `GET /organizations/:id/applications`. Empty deltas are omitted from the payload entirely, and consumers must treat a missing field as "no change on that side," not as "an empty change." The `PUT` replace handlers report the truly-new and truly-removed IDs (not the entire declared set). Re-accepting an invitation by a user who is already a member still produces the legacy `{ organizationId }`-only shape.
 
-  No breaking change: the four delta fields are additive optional fields; the previously emitted `data: null` field is unchanged. See the [webhook reference](https://docs.logto.io/developers/webhooks/webhooks-request#organizationmembershipupdated-payload) for the full payload contract.
+  No breaking change: the four delta fields are additive optional fields; the previously emitted `data: null` field is unchanged. See the [webhook reference](https://docs.meshx.io/developers/webhooks/webhooks-request#organizationmembershipupdated-payload) for the full payload contract.
 
   Supersedes #8752, thanks @chiche84.
 
@@ -599,7 +599,7 @@
 
   After the grace period ends, the new private signing key will transition to "Current" state, and the old signing key will be marked as "Previous".
 
-  Check out the [documentation](https://docs.logto.io/logto-oss/using-cli/rotate-signing-keys) for more details.
+  Check out the [documentation](https://docs.meshx.io/logto-oss/using-cli/rotate-signing-keys) for more details.
 
 ### Patch Changes
 
@@ -686,7 +686,7 @@
   - Updated OIDC provider initialization logic to respect `oidc.session.ttl` from `logto-config` instead of using only a hard-coded session TTL.
     When `oidc.session.ttl` is provided, it overrides the default session TTL.
   - The custom session TTL is loaded during OIDC provider initialization.
-    For OSS deployments, restart the service instance after config changes so the server can pick up the latest OIDC config updates. To apply OIDC config updates automatically without restarting the service, [enable central redis cache](https://docs.logto.io/logto-oss/central-cache).
+    For OSS deployments, restart the service instance after config changes so the server can pick up the latest OIDC config updates. To apply OIDC config updates automatically without restarting the service, [enable central redis cache](https://docs.meshx.io/logto-oss/central-cache).
   - Added management APIs to manage OIDC session config (currently `ttl` only):
     - `GET /api/configs/oidc/session`
     - `PATCH /api/configs/oidc/session`
@@ -734,7 +734,7 @@
   2. **Identifier-first flow (button hidden)**: When **Show passkey sign-in button** is disabled, sign-in follows an identifier-first flow. Users first enter an identifier (for example email or username) on the first screen. On the next step, the flow prioritizes passkey and prompts users to **Verify via passkey** before falling back to password or verification code when needed.
   3. **Allow autofill**: When **Allow autofill** is enabled, supported browsers can show passkey suggestions directly from the identifier input on the sign-in page. Users can select a previously saved passkey from the autofill popup and sign in with minimal extra input.
 
-  Check out our [documentation](https://docs.logto.io/end-user-flows/sign-up-and-sign-in/passkey-sign-in) for more details.
+  Check out our [documentation](https://docs.meshx.io/end-user-flows/sign-up-and-sign-in/passkey-sign-in) for more details.
 
 - 74c993a91e: introduce session management endpoints for account and management APIs, with optional grants revocation and richer session context.
 
@@ -837,7 +837,7 @@
   - Provide MFA management for TOTP, backup codes (download/regenerate), and passkeys (WebAuthn), including rename and delete actions.
   - Gate sensitive operations behind password/email/phone verification and surface dedicated success screens.
 
-  To learn more about this feature, please refer to the documentation: https://docs.logto.io/end-user-flows/account-settings/by-account-api
+  To learn more about this feature, please refer to the documentation: https://docs.meshx.io/end-user-flows/account-settings/by-account-api
 
 - eced1f02d4: add application context to JWT customizer
 
@@ -1136,7 +1136,7 @@
   });
   ```
 
-  Refer to the [documentation](https://docs.logto.io/end-user-flows/authentication-parameters/ui-locales) for more details.
+  Refer to the [documentation](https://docs.meshx.io/end-user-flows/authentication-parameters/ui-locales) for more details.
 
 - 1fb8593659: add email/phone MFA via verification codes
 
@@ -1148,7 +1148,7 @@
   - Update Console to configure these factors and surface guidance/conflict warnings.
   - Support customizing forgot password methods in Sign-in Experience (related).
 
-  To learn more about this feature, please refer to the documentation: https://docs.logto.io/end-user-flows/mfa
+  To learn more about this feature, please refer to the documentation: https://docs.meshx.io/end-user-flows/mfa
 
 - 0ef4260e34: unify branding customization options between applications and organizations
 
@@ -1224,7 +1224,7 @@
   3. Test by signing up a new user in the demo app; a "Tell us about yourself" step will appear with your fields.
   4. Registration completes only after all required fields are filled.
 
-  Check out our [docs](https://docs.logto.io/end-user-flows/collect-user-profile) for more details.
+  Check out our [docs](https://docs.meshx.io/end-user-flows/collect-user-profile) for more details.
 
 ### Patch Changes
 
@@ -1275,7 +1275,7 @@
 
 - 0343699d7: feat: introduce Logto Secret Vault and federated token set storage
 
-  This update introduces the new [Secret vault](https://docs.logto.io/secret-vault/) feature in Logto.
+  This update introduces the new [Secret vault](https://docs.meshx.io/secret-vault/) feature in Logto.
 
   The Secret Vault is designed to securely store sensitive user data — such as access tokens, API keys, passcodes, and other confidential information. These secrets are typically used to access third-party services on behalf of users, making secure storage essential.
 
@@ -1290,10 +1290,10 @@
   2. Once enabled, Logto will automatically store the token set issued by the provider after a successful user authentication.
   3. After the token set is stored, you can retrieve the access token via the Logto Account API for the user. This allows your application to access third-party APIs without requiring the user to reauthenticate.
 
-  For more details, please check the [Federated token set storage](https://docs.logto.io/secret-vault/federated-token-set) documentation.
+  For more details, please check the [Federated token set storage](https://docs.meshx.io/secret-vault/federated-token-set) documentation.
 
   Note:
-  For OSS users, to enable the Secret Vault feature, you must set the `SECRET_VAULT_KEK` environment variable to a valid base64 enabled secret key. This key is used to encrypt and decrypt the secrets stored in the vault. For more information, please refer to the [configuration variables](https://docs.logto.io/concepts/core-service/configuration#variables) documentation.
+  For OSS users, to enable the Secret Vault feature, you must set the `SECRET_VAULT_KEK` environment variable to a valid base64 enabled secret key. This key is used to encrypt and decrypt the secrets stored in the vault. For more information, please refer to the [configuration variables](https://docs.meshx.io/concepts/core-service/configuration#variables) documentation.
 
 ### Patch Changes
 
@@ -1327,7 +1327,7 @@
 
   We implemented [Related Origin Requests](https://passkeys.dev/docs/advanced/related-origins/) so that you can manage the WebAuthn passkeys in your website which has a different domain from the Logto's sign-in page.
 
-  To learn more, checkout the [documentation](https://docs.logto.io/end-user-flows/account-settings/by-account-api).
+  To learn more, checkout the [documentation](https://docs.meshx.io/end-user-flows/account-settings/by-account-api).
 
 - db77aad7a: feat: add user interaction details to the custom token claims context
 
@@ -1488,7 +1488,7 @@
   https://yourapp.com/landing-page?token=YHwbXSXxQfL02IoxFqr1hGvkB13uTqcd&email=user@example.com
   ```
 
-  Refer to [our docs](https://docs.logto.io/docs/end-user-flows/one-time-token) for more details.
+  Refer to [our docs](https://docs.meshx.io/docs/end-user-flows/one-time-token) for more details.
 
 - e69ea0373: feat: support custom identifier lockout (sentinel) settings
 
@@ -1704,7 +1704,7 @@
 
   Note: If username is the only sign-up identifier, users without a password will not be able to sign in. Developers or administrators should carefully configure the sign-up and sign-in settings to ensure a smooth user experience.
 
-  Users can still set password via [account API](https://docs.logto.io/end-user-flows/account-settings/by-account-api) after sign-up.
+  Users can still set password via [account API](https://docs.meshx.io/end-user-flows/account-settings/by-account-api) after sign-up.
 
   2. The requirement that all sign-up identifiers must also be enabled as sign-in identifiers has been removed.
 
@@ -1808,7 +1808,7 @@
   | UserPermissionValidation | During app usage, there may be some high-risk operations or operations with a relatively high risk level that require additional user verification, such as bank transfers, deleting resources in use, and canceling memberships. The `UserPermissionValidation` template can be used to define the content of the email verification code users receive in these situations. | code: string<br/>user: `UserInfo`<br/>application?: `ApplicationInfo`                 |
   | BindNewIdentifier        | When a user modifies their profile, they may bind an email address to their current account. In this case, the `BindNewIdentifier` template can be used to customize the content of the verification email.                                                                                                                                                                   | code: string<br/>user: `UserInfo`<br/>application?: `ApplicationInfo`                 |
 
-  Check [Email templates](https://docs.logto.io/connectors/email-connectors/email-templates) for more information on how to use these new context variables in your email templates.
+  Check [Email templates](https://docs.meshx.io/connectors/email-connectors/email-templates) for more information on how to use these new context variables in your email templates.
 
 - c87424025: feat: support role names alongside role IDs in organization user role assignment/replacement with merge capability
 
@@ -1930,7 +1930,7 @@
   - Metadata auto-configuration support
   - Enterprise-grade encryption and signing
 
-  [View full documentation](https://docs.logto.io/integrate-logto/saml-app) for more details.
+  [View full documentation](https://docs.meshx.io/integrate-logto/saml-app) for more details.
 
 ### Patch Changes
 
@@ -3015,7 +3015,7 @@
 
   Plus, we also introduce the concept of "organization template". It is a set of permissions and roles that applies to all organizations, while a user can have different roles in different organizations.
 
-  See [🏢 Organizations (Multi-tenancy)](https://docs.logto.io/docs/recipes/organizations/) for more details.
+  See [🏢 Organizations (Multi-tenancy)](https://docs.meshx.io/docs/recipes/organizations/) for more details.
 
 ### Patch Changes
 

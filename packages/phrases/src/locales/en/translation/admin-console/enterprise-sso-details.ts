@@ -59,10 +59,10 @@ const enterprise_sso_details = {
   upload_oidc_idp_info_text: 'Fill in the information from the identity provider to connect.',
   service_provider_property_title: 'Configure in the IdP',
   service_provider_property_description:
-    'Set up an application integration using {{protocol}} in your identity provider. Enter the details provided by Logto.',
+    'Set up an application integration using {{protocol}} in your identity provider. Enter the details provided by MeshX.',
   attribute_mapping_title: 'Attribute mappings',
   attribute_mapping_description:
-    'Sync user profiles from the identity provider by configuring user attribute mapping either on the identity provider to Logto side.',
+    'Sync user profiles from the identity provider by configuring user attribute mapping either on the identity provider to MeshX side.',
   saml_preview: {
     sign_on_url: 'Sign on URL',
     entity_id: 'Issuer',
@@ -103,7 +103,7 @@ const enterprise_sso_details = {
       'The client callback URI to initiate a SP-initiated SSO authentication flow. An ssoConnectorId will be appended to the URI as a query parameter. (e.g., https://your.domain/sso/callback?connectorId={{ssoConnectorId}})',
     redirect_uri: 'Post sign-in redirect URI',
     redirect_uri_tooltip:
-      'The redirect URI to redirect users after successful sign-in. Logto will use this URI as the OIDC redirect URI in the authorization request. Use a dedicated URI for the IdP-initiated SSO authentication flow for better security.',
+      'The redirect URI to redirect users after successful sign-in. MeshX will use this URI as the OIDC redirect URI in the authorization request. Use a dedicated URI for the IdP-initiated SSO authentication flow for better security.',
     empty_redirect_uris_error:
       'No redirect URI has been registered for the application. Please add one first.',
     redirect_uri_placeholder: 'Select a post sign-in redirect URI',
@@ -115,9 +115,9 @@ const enterprise_sso_details = {
   trust_unverified_email_label:
     'Always trust the unverified email addresses returned from the identity provider',
   trust_unverified_email_tip:
-    'The Entra ID (OIDC) connector does not return the `email_verified` claim, meaning that email addresses from Azure are not guaranteed to be verified. By default, Logto will not sync unverified email addresses to the user profile. Enable this option only if you trust all the email addresses from the Entra ID directory.',
+    'The Entra ID (OIDC) connector does not return the `email_verified` claim, meaning that email addresses from Azure are not guaranteed to be verified. By default, MeshX will not sync unverified email addresses to the user profile. Enable this option only if you trust all the email addresses from the Entra ID directory.',
   trust_unverified_email_tip_oidc:
-    'The OIDC connector may not return the `email_verified` claim, meaning that email addresses from the identity provider are not guaranteed to be verified. By default, Logto will not sync unverified email addresses to the user profile. Enable this option only if you trust all the email addresses from the identity provider.',
+    'The OIDC connector may not return the `email_verified` claim, meaning that email addresses from the identity provider are not guaranteed to be verified. By default, MeshX will not sync unverified email addresses to the user profile. Enable this option only if you trust all the email addresses from the identity provider.',
   offline_access: {
     label: 'Refresh access token',
     description:

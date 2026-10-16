@@ -34,14 +34,14 @@ const organizations = {
     title: 'Start with guides',
     subtitle: 'Jumpstart your organization settings with our guides',
     introduction: {
-      title: "Let's understand how organization works in Logto",
+      title: "Let's understand how organization works in MeshX",
       section_1: {
         title: 'An organization is a group of users (identities)',
       },
       section_2: {
         title: 'Organization template is designed for multi-tenant apps access control',
         description:
-          'In multi-tenant SaaS applications, multiple organizations often share the same access control template, which includes permissions and roles. In Logto, we call it "organization template."',
+          'In multi-tenant SaaS applications, multiple organizations often share the same access control template, which includes permissions and roles. In MeshX, we call it "organization template."',
         permission_description:
           'Organization permission refers to the authorization to access a resource in the context of organization.',
         role_description_deprecated:
@@ -52,7 +52,7 @@ const organizations = {
       section_3: {
         title: 'Can I assign API permissions to organization roles?',
         description:
-          "Yes, you can assign API permissions to organization roles. Logto offers the flexibility to manage your organization's roles effectively, allowing you to include both organization permissions and API permissions within those roles.",
+          "Yes, you can assign API permissions to organization roles. MeshX offers the flexibility to manage your organization's roles effectively, allowing you to include both organization permissions and API permissions within those roles.",
       },
       section_4: {
         title: 'Interact with the illustration to see how everything connects',

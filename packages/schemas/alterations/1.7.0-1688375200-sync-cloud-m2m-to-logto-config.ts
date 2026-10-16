@@ -6,7 +6,7 @@ const adminTenantId = 'admin';
 
 const cloudServiceApplicationName = 'Cloud Service';
 
-const cloudConnectionResourceIndicator = 'https://cloud.logto.io/api';
+const cloudConnectionResourceIndicator = 'https://cloud.meshx.app/api';
 
 enum ApplicationType {
   Native = 'Native',

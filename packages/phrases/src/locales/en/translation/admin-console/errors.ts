@@ -21,7 +21,7 @@ const errors = {
   unexpected_error: 'An unexpected error occurred.',
   not_found: '404 not found',
   create_internal_role_violation:
-    'You are creating a new internal role which is forbidden by Logto. Try another name that does not start with "#internal:".',
+    'You are creating a new internal role which is forbidden by MeshX. Try another name that does not start with "#internal:".',
   should_be_an_integer: 'Should be an integer.',
   number_should_be_between_inclusive:
     'Then number should be between {{min}} and {{max}} (both inclusive).',

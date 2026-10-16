@@ -20,7 +20,7 @@ const protected_app = {
     domain_field_description_short:
       'This URL serves as an authentication protection proxy for the original URL.',
     domain_field_tooltip:
-      "Apps protected by Logto will be hosted at 'your-domain.{{domain}}' by default. Custom domain can be applied after creation.",
+      "Apps protected by MeshX will be hosted at 'your-domain.{{domain}}' by default. Custom domain can be applied after creation.",
     create_application: 'Create application',
     create_protected_app: 'Fast create',
     errors: {

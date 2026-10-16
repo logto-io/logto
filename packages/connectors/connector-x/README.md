@@ -63,7 +63,7 @@ In your Logto connector configuration, fill out the following fields with the va
 
 ## Test X connector
 
-That's it! The X connector should now be available for end-users to sign in with their X accounts. Don't forget to [Enable the connector in the sign-in experience](https://docs.logto.io/docs/recipes/configure-connectors/social-connector/enable-social-sign-in/).
+That's it! The X connector should now be available for end-users to sign in with their X accounts. Don't forget to [Enable the connector in the sign-in experience](https://docs.meshx.io/docs/recipes/configure-connectors/social-connector/enable-social-sign-in/).
 
 ## Reference
 

@@ -80,7 +80,7 @@ The connector renders `subject` and `content`, then sends JSON including `from`,
 
 ## Test the connector
 
-Use the **Send** test in the connector detail page with a real inbox you can access. Then enable the connector in [Sign-in experience → Connectors](https://docs.logto.io/docs/recipes/configure-connectors/email-connector/enable-email-sign-in/).
+Use the **Send** test in the connector detail page with a real inbox you can access. Then enable the connector in [Sign-in experience → Connectors](https://docs.meshx.io/docs/recipes/configure-connectors/email-connector/enable-email-sign-in/).
 
 ## Config types
 

@@ -88,7 +88,7 @@
   });
   ```
 
-  Refer to the [documentation](https://docs.logto.io/end-user-flows/authentication-parameters/ui-locales) for more details.
+  Refer to the [documentation](https://docs.meshx.io/end-user-flows/authentication-parameters/ui-locales) for more details.
 
 - 5da6792d40: add bindMFA to template type
 

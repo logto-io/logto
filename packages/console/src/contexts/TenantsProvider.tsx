@@ -49,7 +49,7 @@ const reservedRoutes: Readonly<string[]> = Object.freeze([
  *
  * @example
  * ```md
- * [Console > Applications](https://cloud.logto.io/to/applications)
+ * [Console > Applications](https://cloud.meshx.app/to/applications)
  * ```
  */
 export const reservedTenantIdWildcard = 'to';

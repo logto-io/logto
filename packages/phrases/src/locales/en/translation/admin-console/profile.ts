@@ -17,7 +17,7 @@ const profile = {
       check_information:
         "We're sorry to hear that you want to delete your account. Please check the following information carefully before you proceed.",
       remove_all_data:
-        'Deleting your account will permanently remove all data about you in Logto Cloud. So please make sure to backup any important data before proceeding.',
+        'Deleting your account will permanently remove all data about you in MeshX Cloud. So please make sure to backup any important data before proceeding.',
       confirm_information:
         'Please confirm that the information above is what you expected. Once you delete your account, we will not be able to recover it.',
       has_admin_role:
@@ -40,7 +40,7 @@ const profile = {
     error_occurred_description: 'Sorry, something went wrong while deleting your account:',
     request_id: 'Request ID: {{requestId}}',
     try_again_later:
-      'Please try again later. If the problem persists, please contact Logto team with the request ID.',
+      'Please try again later. If the problem persists, please contact MeshX team with the request ID.',
     final_confirmation: 'Final confirmation',
     about_to_start_deletion:
       'You are about to start the deletion process and this action cannot be undone.',

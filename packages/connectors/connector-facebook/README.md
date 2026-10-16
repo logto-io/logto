@@ -22,7 +22,7 @@ The Facebook connector enables OAuth 2.0 integration to let your application:
 - Add “Sign-in with Facebook” authentication
 - Link user accounts to Facebook identities
 - Sync user profile info from Facebook
-- Access Facebook APIs through secure token storage in Logto [Secret Vault](https://docs.logto.io/secret-vault) for automation tasks (e.g., reply to thread; publish content and videos in your app)
+- Access Facebook APIs through secure token storage in Logto [Secret Vault](https://docs.meshx.io/secret-vault) for automation tasks (e.g., reply to thread; publish content and videos in your app)
 
 ## Step 1: Set up an app on Facebook App Dashboard
 
@@ -73,7 +73,7 @@ Choose one or more of the following approaches based on your needs:
 
 **Option 3: Request incremental scopes later**
 
-- After the user signs in, you can [request additional scopes](https://docs.logto.io/secret-vault/federated-token-set#reauthentication-and-token-renewal) on demand by reinitiating a federated social authorization flow and updating users' stored token set.
+- After the user signs in, you can [request additional scopes](https://docs.meshx.io/secret-vault/federated-token-set#reauthentication-and-token-renewal) on demand by reinitiating a federated social authorization flow and updating users' stored token set.
 - These additional scopes do not need to be filled in the `Scopes` field in your Logto Facebook connector, and can be achieved through Logto's Social Verification API.
 
 By following these steps, your Logto Facebook connector requests exactly the permissions your app needs - no more, no less.
@@ -96,7 +96,7 @@ In the Facebook connector, you can set the policy for syncing profile informatio
 If you want to access Facebook APIs and perform actions with user authorization (whether via social sign-in or account linking), Logto needs to get specific API scopes and store tokens.
 
 1. Add the required scopes following the tutorial above.
-2. Enable **Store tokens for persistent API access** in the Logto Facebook connector. Logto will securely [store Facebook access tokens](https://docs.logto.io/secret-vault/federated-token-set) in the Secret Vault.
+2. Enable **Store tokens for persistent API access** in the Logto Facebook connector. Logto will securely [store Facebook access tokens](https://docs.meshx.io/secret-vault/federated-token-set) in the Secret Vault.
 
 **Note**: Facebook doesn't provide refresh tokens. However, when token storage is enabled, Logto automatically requests a long-lived access token (60 days) upon user authentication. During this period, users can manually revoke access tokens, but otherwise won't need re-authorization to access Facebook APIs. Note: Don't add `offline_access` to the `Scope` field as this may cause errors.
 
@@ -123,28 +123,28 @@ Once you've created a Facebook connector and connected it to Facebook, you can i
 
 ### Enable "Sign-in with Facebook"
 
-1. In Logto Console, go to [Sign-in experience > Sign-up and sign-in](https://cloud.logto.io/to/sign-in-experience/sign-up-and-sign-in).
+1. In Logto Console, go to [Sign-in experience > Sign-up and sign-in](https://cloud.meshx.app/to/sign-in-experience/sign-up-and-sign-in).
 2. Add the Facebook connector under **Social sign-in** section to let users authenticate with Facebook.
 
-Learn more about [social sign-in experience](https://docs.logto.io/end-user-flows/sign-up-and-sign-in/social-sign-in).
+Learn more about [social sign-in experience](https://docs.meshx.io/end-user-flows/sign-up-and-sign-in/social-sign-in).
 
 ### Link or unlink a Facebook account
 
-Use the Account API to build a custom Account Center in your app that lets signed-in users link or unlink their Facebook account. [Follow the Account API tutorial](https://docs.logto.io/end-user-flows/account-settings/by-account-api#link-a-new-social-connection)
+Use the Account API to build a custom Account Center in your app that lets signed-in users link or unlink their Facebook account. [Follow the Account API tutorial](https://docs.meshx.io/end-user-flows/account-settings/by-account-api#link-a-new-social-connection)
 
 **Tip**: It's allowed to enable the Facebook connector only for account linking and API access, without enabling it for social sign-in.
 
 ### Access Facebook API and perform actions
 
-Your application can retrieve stored Facebook access tokens from the Secret Vault to call Facebook APIs and automate backend tasks (for example, publishing content or managing posts). [Refer to the guide](https://docs.logto.io/secret-vault/federated-token-set) on retrieving stored tokens for API access.
+Your application can retrieve stored Facebook access tokens from the Secret Vault to call Facebook APIs and automate backend tasks (for example, publishing content or managing posts). [Refer to the guide](https://docs.meshx.io/secret-vault/federated-token-set) on retrieving stored tokens for API access.
 
 ## Manage user's Facebook identity
 
 After a user links their Facebook account, admins can manage that connection in the Logto Console:
 
-1. Navigate to [Logto console > User management](https://cloud.logto.io/to/users) and open the user's profile.
+1. Navigate to [Logto console > User management](https://cloud.meshx.app/to/users) and open the user's profile.
 2. Under **Social connections**, locate the Facebook item and click **Manage**.
-3. On this page, admins can manage the user's Facebook connection, see all profile information granted and synced from their Facebook account, and check the [access token status](https://docs.logto.io/secret-vault/federated-token-set#token-storage-status).
+3. On this page, admins can manage the user's Facebook connection, see all profile information granted and synced from their Facebook account, and check the [access token status](https://docs.meshx.io/secret-vault/federated-token-set#token-storage-status).
 
 **Note**: Facebook's access token response does not include the specific scope information, so Logto cannot directly display the list of permissions granted by the user. However, as long as the user has consented to the requested scopes during authorization, your application will have the corresponding permissions when accessing the Facebook API. It is recommended to accurately configure the required scopes in both the Facebook Developer Console and Logto to ensure your app has the necessary access.
 

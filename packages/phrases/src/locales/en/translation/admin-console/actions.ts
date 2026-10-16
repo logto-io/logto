@@ -2,7 +2,7 @@ const actions = {
   page_title: 'Actions',
   title: 'Actions',
   subtitle:
-    'Run custom code at specific points in the authentication flow to extend Logto behavior.',
+    'Run custom code at specific points in the authentication flow to extend MeshX behavior.',
   status: {
     not_configured: 'Not configured',
     configured: 'Configured',
@@ -28,7 +28,7 @@ const actions = {
   },
   result_data: {
     title: 'Action result',
-    subtitle: 'Return a result object that Logto understands for this action type.',
+    subtitle: 'Return a result object that MeshX understands for this action type.',
   },
   environment_variables: {
     title: 'Set environment variables',
@@ -51,11 +51,11 @@ const actions = {
     },
     on_execution_error: {
       title: 'On script error',
-      description: 'Choose how Logto should behave when the script fails at runtime.',
+      description: 'Choose how MeshX should behave when the script fails at runtime.',
       block: 'Block the authentication flow',
       allow: 'Allow the authentication flow to continue',
       post_first_factor_description:
-        'When this script fails, Logto always rejects invalid credentials so password verification cannot be bypassed.',
+        'When this script fails, MeshX always rejects invalid credentials so password verification cannot be bypassed.',
     },
   },
   test_context: {
@@ -77,12 +77,12 @@ const actions = {
   sandbox_and_security_warning: {
     title: 'Scripts run with server privileges',
     description:
-      'On self-hosted Logto, this script runs in the same environment as Logto itself: it can read server environment variables and reach services on your internal network. It is not sandboxed. Only give access to this page to people you would trust with access to the server. This action runs only after local password verification fails — return `passwordVerified: true` only after independently verifying the submitted password. Users provisioned by this action bypass registration-only guards, including email blocklist, SSO-only domain, sign-up-disabled mode, and registration mandatory-profile checks. Existing-user profile and password writes also occur before MFA completes.',
+      'On self-hosted MeshX, this script runs in the same environment as MeshX itself: it can read server environment variables and reach services on your internal network. It is not sandboxed. Only give access to this page to people you would trust with access to the server. This action runs only after local password verification fails — return `passwordVerified: true` only after independently verifying the submitted password. Users provisioned by this action bypass registration-only guards, including email blocklist, SSO-only domain, sign-up-disabled mode, and registration mandatory-profile checks. Existing-user profile and password writes also occur before MFA completes.',
   },
   sandbox_warning: {
     title: 'Scripts run with server privileges',
     description:
-      'On self-hosted Logto, this script runs in the same environment as Logto itself: it can read server environment variables and reach services on your internal network. It is not sandboxed. Only give access to this page to people you would trust with access to the server.',
+      'On self-hosted MeshX, this script runs in the same environment as MeshX itself: it can read server environment variables and reach services on your internal network. It is not sandboxed. Only give access to this page to people you would trust with access to the server.',
   },
   security_warning: {
     title: 'Security warning',

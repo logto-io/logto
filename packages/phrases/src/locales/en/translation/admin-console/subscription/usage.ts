@@ -10,9 +10,9 @@ const usage = {
   mau: {
     title: 'MAU',
     tooltip:
-      'A MAU is a unique user who has exchanged at least one token with Logto within a billing cycle. Unlimited for the Pro Plan. <a>Learn more</a>',
+      'A MAU is a unique user who has exchanged at least one token with MeshX within a billing cycle. Unlimited for the Pro Plan. <a>Learn more</a>',
     tooltip_for_enterprise:
-      'A MAU is a unique user who has exchanged at least one token with Logto within a billing cycle. Unlimited for the Enterprise Plan.',
+      'A MAU is a unique user who has exchanged at least one token with MeshX within a billing cycle. Unlimited for the Enterprise Plan.',
   },
   organizations: {
     title: 'Organizations',

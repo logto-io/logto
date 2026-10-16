@@ -64,7 +64,7 @@ export const licenseRefreshTimeout = 10_000;
  * The production license service is fixed; development and integration tests use the configured
  * Cloud endpoint.
  */
-export const selfHostedLicenseServiceUrl = new URL('https://cloud.logto.io');
+export const selfHostedLicenseServiceUrl = new URL('https://cloud.meshx.app');
 
 const refreshResponseGuard = z.object({ license: z.string().min(1) });
 const refreshRefusalGuard = z.object({ reason: z.string().min(1) });

@@ -72,7 +72,7 @@ const parseMainlandChinaPhoneNumber = (phone: string): string => {
  * the number is a valid +86 number before sending the request.
  *
  * Logto uses a fixed 10-minute verification code expiration time:
- * @see https://docs.logto.io/zh-CN/connectors/sms-connectors/sms-templates
+ * @see https://docs.meshx.io/zh-CN/connectors/sms-connectors/sms-templates
  */
 const sendMessage =
   (getConfig: GetConnectorConfig): SendMessageFunction =>

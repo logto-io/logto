@@ -55,7 +55,7 @@ Fill out the clientId and clientSecret field with Client ID and Client Secret yo
 
 ## Test KOOK connector
 
-That's it. The KOOK connector should be available now. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/recipes/configure-connectors/social-connector/enable-social-sign-in/).
+That's it. The KOOK connector should be available now. Don't forget to [Enable connector in sign-in experience](https://docs.meshx.io/docs/recipes/configure-connectors/social-connector/enable-social-sign-in/).
 
 ## Reference
 
@@ -94,7 +94,7 @@ That's it. The KOOK connector should be available now. Don't forget to [Enable c
 
 ## 测试 KOOK 连接器
 
-大功告成。别忘了 [在登录体验中启用本连接器](https://docs.logto.io/docs/recipes/configure-connectors/social-connector/enable-social-sign-in/)。
+大功告成。别忘了 [在登录体验中启用本连接器](https://docs.meshx.io/docs/recipes/configure-connectors/social-connector/enable-social-sign-in/)。
 
 在 KOOK 连接器启用后，你可以构建并运行你的应用看看是否生效。
 

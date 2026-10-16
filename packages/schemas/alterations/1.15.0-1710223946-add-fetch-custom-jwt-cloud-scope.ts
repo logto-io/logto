@@ -26,7 +26,7 @@ type Role = {
   description: string;
 };
 
-const cloudApiIndicator = 'https://cloud.logto.io/api';
+const cloudApiIndicator = 'https://cloud.meshx.app/api';
 
 const cloudConnectionAppRoleName = 'tenantApplication';
 

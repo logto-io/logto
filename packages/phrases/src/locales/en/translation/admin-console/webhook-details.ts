@@ -21,12 +21,12 @@ const webhook_details = {
     settings_description:
       'Webhooks allow you to receive real-time updates on specific events as they happen, by sending a POST request to your endpoint URL. This enables you to take immediate actions based on the new information received.',
     events: 'Events',
-    events_description: 'Select the trigger events which Logto will send the POST request.',
+    events_description: 'Select the trigger events which MeshX will send the POST request.',
     name: 'Name',
     endpoint_url: 'Endpoint URL',
     signing_key: 'Signing key',
     signing_key_tip:
-      'Add the secret key provided by Logto to your endpoint as a request header to ensure the authenticity of the webhook’s payload.',
+      'Add the secret key provided by MeshX to your endpoint as a request header to ensure the authenticity of the webhook’s payload.',
     regenerate: 'Regenerate',
     regenerate_key_title: 'Regenerate signing key',
     regenerate_key_reminder:

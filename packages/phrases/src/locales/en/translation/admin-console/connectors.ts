@@ -15,7 +15,7 @@ const connectors = {
   connector_type: 'Type',
   placeholder_title: 'Social connector',
   placeholder_description:
-    'Logto has provided many widely used social sign-in connectors meantime you can create your own with standard protocols.',
+    'MeshX has provided many widely used social sign-in connectors meantime you can create your own with standard protocols.',
   save_and_done: 'Save and Done',
   type: {
     email: 'Email connector',
@@ -45,7 +45,7 @@ const connectors = {
     target_tip_standard:
       'The value of “IdP name” can be a unique identifier string to distinguish your social identifies. This setting cannot be changed after the connector is built.',
     target_tooltip:
-      '"IdP name" in Logto social connectors refers to the "source" of your social identities. In Logto design, we do not accept the same "IdP name" of a specific platform to avoid conflicts. You should be very careful before you add a connector since you CAN NOT change its value once you create it. <a>Learn more</a>',
+      '"IdP name" in MeshX social connectors refers to the "source" of your social identities. In MeshX design, we do not accept the same "IdP name" of a specific platform to avoid conflicts. You should be very careful before you add a connector since you CAN NOT change its value once you create it. <a>Learn more</a>',
     target_conflict:
       'The IdP name entered matches the existing <span>name</span> connector. Using the same idp name may cause unexpected sign-in behavior where users may access the same account through two different connectors.',
     target_conflict_line2:
@@ -67,7 +67,7 @@ const connectors = {
     callback_uri_description:
       "Redirect URIs are where users are redirected after social authorization. Add all displayed URIs to your IdP's configuration.",
     callback_uri_custom_domain_description:
-      'If you use multiple <a>custom domains</a> in Logto, be sure to add all corresponding callback URIs to your IdP to make social login work across every domain.\n\nThe default Logto domain (*.logto.app) is always valid — include it only if you also wish to support logins under that domain.',
+      'If you use multiple <a>custom domains</a> in MeshX, be sure to add all corresponding callback URIs to your IdP to make social login work across every domain.\n\nThe default MeshX domain (*.logto.app) is always valid — include it only if you also wish to support logins under that domain.',
     acs_url: 'Assertion consumer service URL',
   },
   platform: {
@@ -84,7 +84,7 @@ const connectors = {
     third_party_connectors:
       'Integrate third-party providers for quick social sign-in, social account linking, and API access. <a>Learn more</a>',
     email_connector_upsell: {
-      title: 'Logto built-in email service',
+      title: 'MeshX built-in email service',
       description:
         'Zero configuration email delivery. Send verification codes and magic links out of the box.',
     },

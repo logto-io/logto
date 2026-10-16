@@ -41,7 +41,7 @@ describe('SamlAppLimitBanner', () => {
     );
     expect(plansLink.getAttribute('target')).toBeNull();
     expect(screen.getByRole('link', { name: 'Try Logto Cloud now' }).getAttribute('href')).toBe(
-      `https://cloud.logto.io/?utm_source=logto_oss&utm_medium=console&utm_campaign=cloud_upsell&utm_content=${entry}`
+      `https://cloud.meshx.app/?utm_source=logto_oss&utm_medium=console&utm_campaign=cloud_upsell&utm_content=${entry}`
     );
 
     rerender(

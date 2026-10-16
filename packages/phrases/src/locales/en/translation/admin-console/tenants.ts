@@ -15,14 +15,14 @@ const tenants = {
   license: {
     purchase_title: 'SELF-HOSTED PLANS',
     purchase_description:
-      'Self-hosted Pro and Enterprise unlock paid features on your own instance, such as hiding the Logto branding, bringing your own UI, Console collaboration, and unlimited SAML applications. Buy a plan to get your license key.',
+      'Self-hosted Pro and Enterprise unlock paid features on your own instance, such as hiding the MeshX branding, bringing your own UI, Console collaboration, and unlimited SAML applications. Buy a plan to get your license key.',
     purchase_button: 'View self-hosted plans',
     install_title: 'INSTALL LICENSE',
     install_description: 'Paste the license key you got after purchasing a self-hosted plan.',
     install_button: 'Install license',
     key_field: 'License key',
     key_field_description:
-      'The key is verified on your instance and never leaves it. Contact Logto for a fresh key if the one you have has expired.',
+      'The key is verified on your instance and never leaves it. Contact MeshX for a fresh key if the one you have has expired.',
     key_placeholder: 'Paste your license key here',
     installed_toast: 'License installed successfully.',
     details_title: 'LICENSE',
@@ -36,7 +36,7 @@ const tenants = {
     last_refreshed_at_field: 'Last refreshed on',
     grace_ends_at_field: 'Grace period ends on',
     refresh_expired_description:
-      'The license key expired on {{expiresAt}}. Licensed features remain available until {{graceEndsAt}} while Logto tries to refresh it.',
+      'The license key expired on {{expiresAt}}. Licensed features remain available until {{graceEndsAt}} while MeshX tries to refresh it.',
     refresh_refused_description:
       'The license refresh was refused because the license is {{reason}}. Licensed features remain available until {{graceEndsAt}}.',
     refusal_reason_canceled: 'canceled',
@@ -45,15 +45,15 @@ const tenants = {
     refusal_reason_revoked: 'revoked',
     refusal_reason_unknown: 'not available',
     grace_expired_description:
-      'The license grace period ended on {{graceEndsAt}}. This deployment has reverted to OSS defaults. Contact Logto for a fresh license key and install it again.',
+      'The license grace period ended on {{graceEndsAt}}. This deployment has reverted to OSS defaults. Contact MeshX for a fresh license key and install it again.',
     get_fresh_key_button: 'Get a fresh license key',
     replace_button: 'Replace license',
   },
   members: {
-    card_title: 'Manage tenants more securely with Logto Cloud',
+    card_title: 'Manage tenants more securely with MeshX Cloud',
     card_description:
       'Add admins or collaborators to your tenant without sharing a single admin account.',
-    card_action: 'Explore Logto Cloud',
+    card_action: 'Explore MeshX Cloud',
     self_hosted_card_title: 'Manage tenants more securely with self-hosted plans',
     self_hosted_card_description:
       'Add admins or collaborators to your tenant without sharing a single admin account.',
@@ -66,7 +66,7 @@ const tenants = {
     tenant_name: 'Tenant name',
     tenant_instance: 'Select your instance',
     tenant_instance_description:
-      'Select where your tenant will be hosted. Choose Logto Cloud for public shared infrastructure, or a private instance for dedicated resources.',
+      'Select where your tenant will be hosted. Choose MeshX Cloud for public shared infrastructure, or a private instance for dedicated resources.',
     tenant_region: 'Data region',
     tenant_region_description:
       'The physical location where your tenant resources (users, apps, etc.) are hosted. This cannot be changed after creation.',
@@ -94,7 +94,7 @@ const tenants = {
     tenant_mfa_setup_action: 'Set up MFA',
     enterprise_sso: 'Enterprise SSO',
     enterprise_sso_description:
-      "Available on paid plans. Contact us to enable enterprise SSO so all members can sign in to the Logto Cloud Console using your organization's identity provider.",
+      "Available on paid plans. Contact us to enable enterprise SSO so all members can sign in to the MeshX Cloud Console using your organization's identity provider.",
   },
   full_env_tag: {
     development: 'Development',
@@ -142,7 +142,7 @@ const tenants = {
       'Tenant ID can only contain lowercase letters, numbers, and hyphens, and must not exceed {{max}} characters.',
     tenant_id_placeholder: 'Your tenant ID',
     tenant_id_tip:
-      'Customize the Tenant ID. If left empty, Logto will generate a default ID. The Tenant ID cannot be changed after creation.',
+      'Customize the Tenant ID. If left empty, MeshX will generate a default ID. The Tenant ID cannot be changed after creation.',
   },
   dev_tenant_migration: {
     title: 'You can now try our Pro features for free by creating a new "Development tenant"!',
@@ -174,7 +174,7 @@ const tenants = {
   tenant_landing_page: {
     title: "You haven't created a tenant yet",
     description:
-      'To start configuring your project with Logto, please create a new tenant. If you need to log out or delete your account, just click on the avatar button in the top right corner.',
+      'To start configuring your project with MeshX, please create a new tenant. If you need to log out or delete your account, just click on the avatar button in the top right corner.',
     create_tenant_button: 'Create tenant',
   },
   status: {

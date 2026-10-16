@@ -71,7 +71,7 @@ Requests use `https://{host}/2010-04-01/Accounts/{accountSID}/Messages.json`.
 
 You can enter a phone number and click on "Send" to see whether the settings can work before "Save and Done".
 
-That's it. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/recipes/configure-connectors/sms-connector/enable-SMS-sign-in/).
+That's it. Don't forget to [Enable connector in sign-in experience](https://docs.meshx.io/docs/recipes/configure-connectors/sms-connector/enable-SMS-sign-in/).
 
 ### Config types
 

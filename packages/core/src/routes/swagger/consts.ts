@@ -1,4 +1,4 @@
-export const managementApiAuthDescription = `Logto Management API is a comprehensive set of REST APIs that gives you the full control over Logto to suit your product needs and tech stack. To see the full guide on Management API interactions, visit [Interact with Management API](https://docs.logto.io/docs/recipes/interact-with-management-api/).
+export const managementApiAuthDescription = `Logto Management API is a comprehensive set of REST APIs that gives you the full control over Logto to suit your product needs and tech stack. To see the full guide on Management API interactions, visit [Interact with Management API](https://docs.meshx.io/docs/recipes/interact-with-management-api/).
 
 ### Get started
 
@@ -15,7 +15,7 @@ To fetch an access token, you need to make a \`POST\` request to the \`/oidc/tok
 
 For Logto Cloud users, the base URL is your Logto endpoint, i.e. \`https://[tenant-id].logto.app\`. The tenant ID can be found in the following places:
 
-- The first path segment of the URL when you are signed in to Logto Cloud. For example, if the URL is \`https://cloud.logto.io/foo/get-started\`, the tenant ID is \`foo\`.
+- The first path segment of the URL when you are signed in to Logto Cloud. For example, if the URL is \`https://cloud.meshx.app/foo/get-started\`, the tenant ID is \`foo\`.
 - In the "Settings" tab of Logto Cloud.
 
 The request should follow the OAuth 2.0 [client credentials](https://datatracker.ietf.org/doc/html/rfc6749#section-4.4) grant type. Here is a non-normative example of how to fetch an access token:

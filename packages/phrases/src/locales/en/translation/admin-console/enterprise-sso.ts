@@ -9,7 +9,7 @@ const enterprise_sso = {
 
   placeholder_title: 'Enterprise connector',
   placeholder_description:
-    'Logto has provided many built-in enterprise identity providers to connect, meantime you can create your own with SAML and OIDC protocols.',
+    'MeshX has provided many built-in enterprise identity providers to connect, meantime you can create your own with SAML and OIDC protocols.',
   create_modal: {
     title: 'Add enterprise connector',
     text_divider: 'Or you can customize your connector by a standard protocol.',
@@ -35,7 +35,7 @@ const enterprise_sso = {
       entity_id_field_placeholder: 'urn:your-domain.com:sp:saml:{serviceProviderId}',
       sign_auth_request: 'Sign authentication request',
       sign_auth_request_tooltip:
-        'Logto signs SAML authentication requests with a generated certificate. Enable only if your identity provider is configured to verify signed requests.',
+        'MeshX signs SAML authentication requests with a generated certificate. Enable only if your identity provider is configured to verify signed requests.',
       signing_certificate_field_name: 'Request signing certificate',
       signing_keys_empty: 'No signing keys have been generated.',
       generate_signing_key: 'Generate new key',
@@ -51,14 +51,14 @@ const enterprise_sso = {
       redirect_uri_field_description:
         "Redirect URI is where users are redirected after SSO authentication. Add this URI to your IdP's configuration.",
       redirect_uri_field_custom_domain_description:
-        'If you use multiple <a>custom domains</a> in Logto, be sure to add all corresponding callback URIs to your IdP to make SSO work across every domain.\n\nThe default Logto domain (*.logto.app) is always valid — include it only if you also wish to support SSO under that domain.',
+        'If you use multiple <a>custom domains</a> in MeshX, be sure to add all corresponding callback URIs to your IdP to make SSO work across every domain.\n\nThe default MeshX domain (*.logto.app) is always valid — include it only if you also wish to support SSO under that domain.',
     },
   },
   attribute_mapping: {
     title: 'Attribute mappings',
     description:
       '`id` and `email` are required to sync user profile from IdP. Enter the following claim name and value in your IdP.',
-    col_sp_claims: 'Value of service provider (Logto)',
+    col_sp_claims: 'Value of service provider (MeshX)',
     col_idp_claims: 'Claim name of identity provider',
     idp_claim_tooltip: 'The claim name of the identity provider',
   },

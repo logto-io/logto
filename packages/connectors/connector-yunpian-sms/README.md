@@ -57,4 +57,4 @@ Visit [Yunpian's website](https://www.yunpian.com/) to register an account and c
 ## References
 
 - [Yunpian Development Documentation](https://www.yunpian.com/official/document/sms/zh_CN/introduction_brief)
-- [Logto SMS Connector Guide](https://docs.logto.io/docs/recipes/configure-connectors/sms-connector/)
+- [Logto SMS Connector Guide](https://docs.meshx.io/docs/recipes/configure-connectors/sms-connector/)

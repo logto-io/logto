@@ -66,7 +66,7 @@ After finishing setup, there are two different ways to test:
 
 You can type in an email address and click on "Send" to see whether the settings can work before "Save and Done".
 
-That's it. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/recipes/configure-connectors/email-connector/enable-email-sign-in/).
+That's it. Don't forget to [Enable connector in sign-in experience](https://docs.meshx.io/docs/recipes/configure-connectors/email-connector/enable-email-sign-in/).
 
 ### Config types
 
@@ -132,7 +132,7 @@ That's it. Don't forget to [Enable connector in sign-in experience](https://docs
 
 你可以在「保存并完成」之前输入一个邮件地址并点按「发送」来测试配置是否可以正常工作。
 
-大功告成！快去 [启用邮件验证码登录](https://docs.logto.io/docs/recipes/configure-connectors/email-connector/enable-email-sign-in/) 吧。
+大功告成！快去 [启用邮件验证码登录](https://docs.meshx.io/docs/recipes/configure-connectors/email-connector/enable-email-sign-in/) 吧。
 
 ### 配置类型
 

@@ -21,7 +21,7 @@ const connector_details = {
   test_sms_placeholder: '+1 555-123-4567',
   test_message_sent: 'Test message sent',
   test_sender_description:
-    'Logto uses the "Generic" template for testing. You will receive a message if your connector is rightly configured.',
+    'MeshX uses the "Generic" template for testing. You will receive a message if your connector is rightly configured.',
   options_change_email: 'Change email connector',
   options_change_sms: 'Change SMS connector',
   connector_deleted: 'The connector has been successfully deleted',
@@ -37,7 +37,7 @@ const connector_details = {
   logto_email: {
     total_email_sent: 'Total email sent: {{value, number}}',
     total_email_sent_tip:
-      'Logto utilizes SendGrid for secure and stable built-in email. It’s completely free to use. <a>Learn more</a>',
+      'MeshX utilizes SendGrid for secure and stable built-in email. It’s completely free to use. <a>Learn more</a>',
     hosted_email_usage: {
       daily: 'Daily <value>{{usage, number}}</value> / {{limit, number}}',
       daily_unlimited: 'Daily <value>{{usage, number}}</value>',
@@ -46,9 +46,9 @@ const connector_details = {
       tip: 'Free and Development plans include daily and monthly built-in email service limits.',
       banner: {
         approaching:
-          "You're approaching your Logto built-in email service sending limit. <provider>Connect your own email provider</provider>, or <upgrade>upgrade your plan</upgrade> to keep using the Logto built-in email service.",
+          "You're approaching your MeshX built-in email service sending limit. <provider>Connect your own email provider</provider>, or <upgrade>upgrade your plan</upgrade> to keep using the MeshX built-in email service.",
         reached:
-          "You've reached your Logto built-in email service sending limit, which may interrupt sign-in emails. <provider>Connect your own email provider</provider>, or <upgrade>upgrade your plan</upgrade> to keep using the Logto built-in email service.",
+          "You've reached your MeshX built-in email service sending limit, which may interrupt sign-in emails. <provider>Connect your own email provider</provider>, or <upgrade>upgrade your plan</upgrade> to keep using the MeshX built-in email service.",
       },
     },
     email_template_title: 'Email Template',
@@ -69,7 +69,7 @@ const connector_details = {
     email_logo_tip:
       'Display your brand logo in the top of emails. Use the same image for both light mode and dark mode.',
     urls_not_allowed: 'URLs are not allowed',
-    test_notes: 'Logto uses the “Generic” template for testing.',
+    test_notes: 'MeshX uses the “Generic” template for testing.',
   },
   google_one_tap: {
     title: 'Google One Tap',

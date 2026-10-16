@@ -8,7 +8,7 @@ import type { UpdateAdminData } from './management-api.js';
 import { adminTenantId } from './tenant.js';
 
 /** The API Resource Indicator for Logto Cloud. It's only useful when domain-based multi-tenancy is enabled. */
-export const cloudApiIndicator = 'https://cloud.logto.io/api';
+export const cloudApiIndicator = 'https://cloud.meshx.app/api';
 
 export enum CloudScope {
   /** The user can create a user tenant. */

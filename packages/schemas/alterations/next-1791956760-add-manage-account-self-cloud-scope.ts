@@ -17,7 +17,7 @@ type Scope = {
 };
 
 const adminTenantId = 'admin';
-const cloudApiIndicator = 'https://cloud.logto.io/api';
+const cloudApiIndicator = 'https://cloud.meshx.app/api';
 const userRoleName = 'user';
 const manageAccountSelfScopeName = 'manage:account:self';
 const manageAccountSelfScopeDescription =

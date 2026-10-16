@@ -2,7 +2,7 @@
   "tags": [
     {
       "name": "Configs",
-      "description": "Endpoints for managing Logto global configurations for the tenant, such as admin console config and OIDC signing keys.\n\nSee [🔑 Signing keys](https://docs.logto.io/docs/recipes/signing-keys-rotation/) to learn more about signing keys and key rotation."
+      "description": "Endpoints for managing Logto global configurations for the tenant, such as admin console config and OIDC signing keys.\n\nSee [🔑 Signing keys](https://docs.meshx.io/docs/recipes/signing-keys-rotation/) to learn more about signing keys and key rotation."
     }
   ],
   "paths": {

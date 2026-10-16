@@ -27,7 +27,7 @@ const guide = {
     modal_subtitle: 'Jumpstart your app development process with our pre-built SDK and tutorials.',
     select_a_framework: 'Select a framework',
     continue_without_framework: 'Create app without framework',
-    describe_guide_looking_for_placeholder: 'E.g., I want to integrate Logto into my Angular app.',
+    describe_guide_looking_for_placeholder: 'E.g., I want to integrate MeshX into my Angular app.',
   },
   api: {
     modal_title: 'Start with tutorials',

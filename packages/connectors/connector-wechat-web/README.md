@@ -29,7 +29,7 @@ The official Logto connector for WeChat social sign-in in web apps.
 
 ## Get started
 
-If you don't know the concept of the connector or don't know how to add this connector to your Sign-in experience, please see [Logto tutorial](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in).
+If you don't know the concept of the connector or don't know how to add this connector to your Sign-in experience, please see [Logto tutorial](https://docs.meshx.io/docs/tutorials/get-started/enable-social-sign-in).
 
 > **⚠️ Caution**
 > 
@@ -77,7 +77,7 @@ Fill out the `scope` field with either 'snsapi_userinfo' or 'snsapi_base'. You c
 
 ### Test WeChat web connector
 
-That's it. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/recipes/configure-connectors/social-connector/enable-social-sign-in/).
+That's it. Don't forget to [Enable connector in sign-in experience](https://docs.meshx.io/docs/recipes/configure-connectors/social-connector/enable-social-sign-in/).
 
 Once WeChat web connector is enabled, you can sign in to your app again to see if it works.
 
@@ -85,7 +85,7 @@ Once WeChat web connector is enabled, you can sign in to your app again to see i
 
 ## 开始上手
 
-如果你还不知道连接器的概念，或者还不知道如何将本连接器添加至你的「登录体验」，请先参见 [Logto 教程](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-social-sign-in)。
+如果你还不知道连接器的概念，或者还不知道如何将本连接器添加至你的「登录体验」，请先参见 [Logto 教程](https://docs.meshx.io/zh-cn/docs/tutorials/get-started/enable-social-sign-in)。
 
 > **⚠️ Caution**
 > 
@@ -133,6 +133,6 @@ Once WeChat web connector is enabled, you can sign in to your app again to see i
 
 ### 测试微信网页连接器
 
-大功告成。别忘了 [在登录体验中启用本连接器](https://docs.logto.io/docs/recipes/configure-connectors/social-connector/enable-social-sign-in/)。
+大功告成。别忘了 [在登录体验中启用本连接器](https://docs.meshx.io/docs/recipes/configure-connectors/social-connector/enable-social-sign-in/)。
 
 在微信原生连接器启用后，你可以构建并运行你的应用看看是否生效。

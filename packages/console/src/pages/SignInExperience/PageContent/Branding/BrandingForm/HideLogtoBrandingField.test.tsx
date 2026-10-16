@@ -130,10 +130,10 @@ describe('self-hosted plans navigation from the branding editor', () => {
     const link = screen.getByRole('link', { name: linkName });
 
     expect(link.parentElement?.textContent).toBe(
-      'This feature is available in Logto Cloud or self-hosted plans.'
+      'This feature is available in MeshX Cloud or self-hosted plans.'
     );
-    expect(screen.getByRole('link', { name: 'Logto Cloud' }).getAttribute('href')).toBe(
-      `https://cloud.logto.io/?utm_source=logto_oss&utm_medium=console&utm_campaign=cloud_upsell&utm_content=${entry}`
+    expect(screen.getByRole('link', { name: 'MeshX Cloud' }).getAttribute('href')).toBe(
+      `https://cloud.meshx.app/?utm_source=logto_oss&utm_medium=console&utm_campaign=cloud_upsell&utm_content=${entry}`
     );
     expect(link.getAttribute('href')).toBe(`${licensePath}?utm_content=${entry}`);
     expect(link.getAttribute('target')).toBeNull();

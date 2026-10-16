@@ -1,7 +1,7 @@
 const get_started = {
   page_title: 'Get started',
   title: 'Something to help you succeed',
-  subtitle: 'A few things you can do to quickly get value of Logto',
+  subtitle: 'A few things you can do to quickly get value of MeshX',
   develop: {
     title: 'Develop: Take 5 minutes to integrate your app',
     title_cloud: 'Develop: Securely integrate your app in minutes',
@@ -13,7 +13,7 @@ const get_started = {
     title: 'Customize: Deliver a great sign-in experience',
     preview: {
       title: 'Check the live preview of the sign-in experience you just customized',
-      subtitle: 'Try Logto sign-in experience now to see how it works',
+      subtitle: 'Try MeshX sign-in experience now to see how it works',
     },
     connector: {
       title: 'Add more connectors to support more social sign-in methods',
@@ -44,22 +44,22 @@ const get_started = {
   },
   oss_cloud: {
     try: {
-      title: 'Skip the ops work — try Logto Cloud free',
+      title: 'Skip the ops work — try MeshX Cloud free',
       badge: 'Recommended',
       description:
-        'Get a fully managed Logto with zero maintenance — plus MCP-powered quick integration, multi-tenant support, team collaboration, and all premium features included. Free to start, no credit card required.',
-      action: 'Explore Logto Cloud',
+        'Get a fully managed MeshX with zero maintenance — plus MCP-powered quick integration, multi-tenant support, team collaboration, and all premium features included. Free to start, no credit card required.',
+      action: 'Explore MeshX Cloud',
     },
     private_cloud: {
       title: 'Need compliance or custom deployment?',
       card_title: 'Private cloud',
       description:
-        'Get a dedicated Logto instance with full data isolation, custom domain, and SLA guarantees. Perfect for enterprises with strict data residency or compliance requirements. We handle the infrastructure so you can focus on your product.',
+        'Get a dedicated MeshX instance with full data isolation, custom domain, and SLA guarantees. Perfect for enterprises with strict data residency or compliance requirements. We handle the infrastructure so you can focus on your product.',
     },
     sidebar: {
       title: 'Focus on building, not hosting.',
-      description: 'Let Logto Cloud handle auth infrastructure for you.',
-      action: 'Try Logto Cloud',
+      description: 'Let MeshX Cloud handle auth infrastructure for you.',
+      action: 'Try MeshX Cloud',
     },
   },
   view_all: 'View all →',

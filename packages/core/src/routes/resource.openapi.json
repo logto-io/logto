@@ -2,7 +2,7 @@
   "tags": [
     {
       "name": "Resources",
-      "description": "Resources (API resources) represent the APIs that you want to protect with Logto. Each resource has a unique indicator (URI) and a set of scopes (permissions). The resources will be used in the authorization process which conforms to [RFC 8707: Resource Indicators for OAuth 2.0](https://www.rfc-editor.org/rfc/rfc8707.html).\n\nSee [⚔️ Protect your API](https://docs.logto.io/docs/recipes/protect-your-api/) to learn more about how to define API resources and protect your APIs with Logto."
+      "description": "Resources (API resources) represent the APIs that you want to protect with Logto. Each resource has a unique indicator (URI) and a set of scopes (permissions). The resources will be used in the authorization process which conforms to [RFC 8707: Resource Indicators for OAuth 2.0](https://www.rfc-editor.org/rfc/rfc8707.html).\n\nSee [⚔️ Protect your API](https://docs.meshx.io/docs/recipes/protect-your-api/) to learn more about how to define API resources and protect your APIs with Logto."
     }
   ],
   "paths": {
@@ -126,7 +126,7 @@
           }
         },
         "summary": "Set API resource as default",
-        "description": "Set an API resource as the default resource for the current tenant.\n\nEach tenant can have only one default API resource. If an API resource is set as default, the previously set default API resource will be set as non-default. See [this section](https://docs.logto.io/docs/references/resources/#default-api) for more information."
+        "description": "Set an API resource as the default resource for the current tenant.\n\nEach tenant can have only one default API resource. If an API resource is set as default, the previously set default API resource will be set as non-default. See [this section](https://docs.meshx.io/docs/references/resources/#default-api) for more information."
       }
     },
     "/api/resources/{resourceId}/scopes": {

@@ -15,7 +15,7 @@
   - Organizations
   - Organization roles
 
-  Refer to the documentation for more details: https://docs.logto.io/integrate-logto/app-level-access-control
+  Refer to the documentation for more details: https://docs.meshx.io/integrate-logto/app-level-access-control
 
 ### Patch Changes
 
@@ -91,7 +91,7 @@
   2. **Identifier-first flow (button hidden)**: When **Show passkey sign-in button** is disabled, sign-in follows an identifier-first flow. Users first enter an identifier (for example email or username) on the first screen. On the next step, the flow prioritizes passkey and prompts users to **Verify via passkey** before falling back to password or verification code when needed.
   3. **Allow autofill**: When **Allow autofill** is enabled, supported browsers can show passkey suggestions directly from the identifier input on the sign-in page. Users can select a previously saved passkey from the autofill popup and sign in with minimal extra input.
 
-  Check out our [documentation](https://docs.logto.io/end-user-flows/sign-up-and-sign-in/passkey-sign-in) for more details.
+  Check out our [documentation](https://docs.meshx.io/end-user-flows/sign-up-and-sign-in/passkey-sign-in) for more details.
 
 ## 1.19.0
 
@@ -201,7 +201,7 @@
   3. Test by signing up a new user in the demo app; a "Tell us about yourself" step will appear with your fields.
   4. Registration completes only after all required fields are filled.
 
-  Check out our [docs](https://docs.logto.io/end-user-flows/collect-user-profile) for more details.
+  Check out our [docs](https://docs.meshx.io/end-user-flows/collect-user-profile) for more details.
 
 ## 1.13.1
 
@@ -258,7 +258,7 @@
   https://yourapp.com/landing-page?token=YHwbXSXxQfL02IoxFqr1hGvkB13uTqcd&email=user@example.com
   ```
 
-  Refer to [our docs](https://docs.logto.io/docs/end-user-flows/one-time-token) for more details.
+  Refer to [our docs](https://docs.meshx.io/docs/end-user-flows/one-time-token) for more details.
 
 - 2961d355d: bump node version to ^22.14.0
 

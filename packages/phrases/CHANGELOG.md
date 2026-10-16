@@ -95,7 +95,7 @@
   - Organizations
   - Organization roles
 
-  Refer to the documentation for more details: https://docs.logto.io/integrate-logto/app-level-access-control
+  Refer to the documentation for more details: https://docs.meshx.io/integrate-logto/app-level-access-control
 
 - c2016a044c: add a configurable per-tenant password expiration policy
 
@@ -139,7 +139,7 @@
 
   After the grace period ends, the new private signing key will transition to "Current" state, and the old signing key will be marked as "Previous".
 
-  Check out the [documentation](https://docs.logto.io/logto-oss/using-cli/rotate-signing-keys) for more details.
+  Check out the [documentation](https://docs.meshx.io/logto-oss/using-cli/rotate-signing-keys) for more details.
 
 ## 1.27.0
 
@@ -273,7 +273,7 @@
   - Update Console to configure these factors and surface guidance/conflict warnings.
   - Support customizing forgot password methods in Sign-in Experience (related).
 
-  To learn more about this feature, please refer to the documentation: https://docs.logto.io/end-user-flows/mfa
+  To learn more about this feature, please refer to the documentation: https://docs.meshx.io/end-user-flows/mfa
 
 - 0ef4260e34: unify branding customization options between applications and organizations
 
@@ -344,7 +344,7 @@
   - Metadata auto-configuration support
   - Enterprise-grade encryption and signing
 
-  [View full documentation](https://docs.logto.io/integrate-logto/saml-app) for more details.
+  [View full documentation](https://docs.meshx.io/integrate-logto/saml-app) for more details.
 
 ## 1.16.0
 
@@ -710,7 +710,7 @@
 
   Plus, we also introduce the concept of "organization template". It is a set of permissions and roles that applies to all organizations, while a user can have different roles in different organizations.
 
-  See [🏢 Organizations (Multi-tenancy)](https://docs.logto.io/docs/recipes/organizations/) for more details.
+  See [🏢 Organizations (Multi-tenancy)](https://docs.meshx.io/docs/recipes/organizations/) for more details.
 
 ## 1.7.0
 

@@ -58,7 +58,7 @@ const sign_up_and_sign_in = {
     settings_title: 'Social sign-in experience',
     automatic_account_linking: 'Automatically link accounts with the same identifier',
     automatic_account_linking_tip:
-      'When enabled, if a user signs in with a new social identity and there is exactly one existing account with the same identifier (e.g., an email address), Logto will automatically link the social identity to that account. The user will not be asked to choose whether to link accounts.',
+      'When enabled, if a user signs in with a new social identity and there is exactly one existing account with the same identifier (e.g., an email address), MeshX will automatically link the social identity to that account. The user will not be asked to choose whether to link accounts.',
     required_sign_up_identifiers: 'Require users to provide missing sign-up identifier',
     required_sign_up_identifiers_tip:
       'When enabled, users logging in via social providers must fill in any missing required sign-up identifier (such as email) before completing their login. \n\nIf disabled, users can proceed without providing missing identifiers, even if the social account didn’t sync them.',
@@ -106,7 +106,7 @@ const sign_up_and_sign_in = {
       'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.',
     unknown_session_redirect_url: 'Unknown session redirect URL',
     unknown_session_redirect_url_tip:
-      'Sometimes, Logto may not recognize a user’s session on the sign-in page, like when a session expires or the user bookmarks or shares the sign-in link. By default, an “unknown session” 404 error appears. To enhance user experience, set a fallback URL to redirect users back to your app and restart authentication.',
+      'Sometimes, MeshX may not recognize a user’s session on the sign-in page, like when a session expires or the user bookmarks or shares the sign-in link. By default, an “unknown session” 404 error appears. To enhance user experience, set a fallback URL to redirect users back to your app and restart authentication.',
   },
   username_policy: {
     title: 'Username policy',

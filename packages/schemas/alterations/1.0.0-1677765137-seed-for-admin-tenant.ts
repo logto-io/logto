@@ -31,7 +31,7 @@ const addApiData = async (pool: CommonQueryMethods) => {
       ), (
         ${adminTenantId},
         ${cloudApi.resourceId},
-        'https://cloud.logto.io/api',
+        'https://cloud.meshx.app/api',
         'Logto Cloud API'
       );
   `);
@@ -109,7 +109,7 @@ const alteration: AlterationScript = {
     await pool.query(sql`
       delete from resources
         where tenant_id = ${adminTenantId}
-        and indicator in ('https://admin.logto.app/api', 'https://cloud.logto.io/api');
+        and indicator in ('https://admin.logto.app/api', 'https://cloud.meshx.app/api');
     `);
     await pool.query(sql`
       delete from roles

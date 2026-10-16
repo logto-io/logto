@@ -10,7 +10,7 @@ export const officialWebsiteLink = 'https://logto.io';
 export const trustAndSecurityLink = `${officialWebsiteLink}/trust-and-security`;
 export const pricingLink = `${officialWebsiteLink}/pricing`;
 export const selfHostedPlansLink = `${officialWebsiteLink}/self-hosted-plans`;
-export const logtoCloudConsoleLink = 'https://cloud.logto.io';
+export const logtoCloudConsoleLink = 'https://cloud.meshx.app';
 export const officialWebsiteContactPageLink = `${officialWebsiteLink}/contact`;
 export const buildOfficialWebsiteContactPageUrl = (source: string) => {
   const url = new URL(officialWebsiteContactPageLink);
@@ -19,9 +19,9 @@ export const buildOfficialWebsiteContactPageUrl = (source: string) => {
 
   return url.toString();
 };
-export const entityPolicyLink = 'https://docs.logto.io/logto-cloud/system-limit';
+export const entityPolicyLink = 'https://docs.meshx.io/logto-cloud/system-limit';
 export const logtoOssFeatureSupportLink =
-  'https://docs.logto.io/logto-oss#feature-supported-by-logto-oss';
+  'https://docs.meshx.io/logto-oss#feature-supported-by-logto-oss';
 
 /** Docs link */
 export const organizationsFeatureLink = '/organizations';
@@ -99,7 +99,7 @@ export const customDomain = '/logto-cloud/custom-domain#use-custom-domain';
 export const customDomainFeatureLink = '/logto-cloud/custom-domain';
 export const retrieveTokenStorage = '/secret-vault/federated-token-set#token-retrieval';
 
-export const addOnPricingExplanationLink = 'https://docs.logto.io/logto-cloud/billing-and-pricing';
-export const logtoCloudConsoleUrl = 'https://cloud.logto.io';
+export const addOnPricingExplanationLink = 'https://docs.meshx.io/logto-cloud/billing-and-pricing';
+export const logtoCloudConsoleUrl = 'https://cloud.meshx.app';
 
 export const dateFnsDocumentationLink = 'https://date-fns.org/v2.30.0/docs/format';

@@ -42,12 +42,12 @@ const paywall = {
   scopes_per_role_other:
     '{{count, number}} permissions per role of <planName/> limit reached. Upgrade plan to add additional roles and permissions. For any assistance, feel free to <a>contact us</a>.',
   saml_applications_oss:
-    'The additional SAML app is available with the Logto Enterprise plan. Contact us if you need assistance.',
+    'The additional SAML app is available with the MeshX Enterprise plan. Contact us if you need assistance.',
   saml_applications_oss_limit_notice:
-    'Your open-source instance supports up to {{limit}} SAML applications. For more applications, explore <selfHostedPlans>self-hosted plans</selfHostedPlans> or use Logto Cloud.',
-  logto_pricing_button_text: 'Logto Cloud Pricing',
+    'Your open-source instance supports up to {{limit}} SAML applications. For more applications, explore <selfHostedPlans>self-hosted plans</selfHostedPlans> or use MeshX Cloud.',
+  logto_pricing_button_text: 'MeshX Cloud Pricing',
   saml_applications:
-    'The additional SAML app is available with the Logto Enterprise plan. Contact us if you need assistance.',
+    'The additional SAML app is available with the MeshX Enterprise plan. Contact us if you need assistance.',
   saml_applications_add_on:
     'Unlock SAML app feature by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
   hooks:
@@ -58,7 +58,7 @@ const paywall = {
   organizations:
     'Unlock organizations by upgrading to a paid plan. Don’t hesitate to <a>contact us</a> if you need any assistance.',
   third_party_apps:
-    'Unlock Logto as IdP for third-party apps by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
+    'Unlock MeshX as IdP for third-party apps by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
   sso_connectors:
     'Unlock enterprise sso by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
   tenant_members:
@@ -71,7 +71,7 @@ const paywall = {
       "Upgrade to a paid plan for custom JWT functionality and premium benefits. Don't hesitate to <a>contact us</a> if you have any questions.",
   },
   branding_customization:
-    'Unlock complete branding control with "Hide Logto branding" and "Bring your UI" features by upgrading your plan.',
+    'Unlock complete branding control with "Hide MeshX branding" and "Bring your UI" features by upgrading your plan.',
   bring_your_ui:
     'Upgrade to a paid plan for bring your custom UI functionality and premium benefits.',
   security_features:

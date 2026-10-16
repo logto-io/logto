@@ -85,7 +85,7 @@ function CreateRoleForm({ onClose }: Props) {
       subtitle="roles.create_role_description"
       hasAddOnTag={isPaidTenant && !hasRolesIncluded}
       learnMoreLink={{
-        href: 'https://docs.logto.io/docs/recipes/rbac/manage-permissions-and-roles#manage-roles',
+        href: 'https://docs.meshx.io/docs/recipes/rbac/manage-permissions-and-roles#manage-roles',
         targetBlank: 'noopener',
       }}
       size="large"

@@ -1,12 +1,12 @@
 const inkeep_ai_bot = {
   intro_message:
-    "Hi, I'm Logto AI!\n\nI'm an AI assistant trained on documentation, help articles, and other content.\n\nAsk me anything about `Logto`.",
-  chat_placeholder: 'Ask Logto AI your question for a step-by-step guide',
-  disclaimer_label: 'Logto AI disclaimer',
+    "Hi, I'm MeshX AI!\n\nI'm an AI assistant trained on documentation, help articles, and other content.\n\nAsk me anything about `MeshX`.",
+  chat_placeholder: 'Ask MeshX AI your question for a step-by-step guide',
+  disclaimer_label: 'MeshX AI disclaimer',
   disclaimer_tooltip: 'Responses are AI-generated and may require verification.',
   example_questions_label: 'Example questions',
   example_questions: [
-    'Quickstart guide for Logto setup',
+    'Quickstart guide for MeshX setup',
     'Configure multi-tenancy architecture',
     'How to integrate user profile?',
   ],

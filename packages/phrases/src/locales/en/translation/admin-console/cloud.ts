@@ -38,7 +38,7 @@ const cloud = {
     create: 'Add connector',
     title: 'Console SSO',
     description:
-      'Configure your own identity provider to sign in to Logto Console with single sign-on.',
+      'Configure your own identity provider to sign in to MeshX Console with single sign-on.',
     domain_bound: 'Bound',
     domain_pending: 'Verifying',
     domain_verify_step: 'Verify your domain',
@@ -71,17 +71,17 @@ const cloud = {
     page_title: 'Create tenant',
     title: 'Create your first tenant',
     description:
-      'A tenant is an isolated environment where you can manage user identities, applications, and all other Logto resources.',
+      'A tenant is an isolated environment where you can manage user identities, applications, and all other MeshX resources.',
     invite_collaborators: 'Invite your collaborators by email',
     hear_about_us: {
-      title: 'How did you first hear about Logto?',
+      title: 'How did you first hear about MeshX?',
       detail_placeholder: 'Tell us more (optional)',
       options: {
         search_engine: 'Search engine (Google, Bing...)',
         ai_assistant: 'AI assistant (ChatGPT, Claude, Gemini...)',
         github_oss: 'GitHub or open-source directories',
         friend_colleague: 'A friend or colleague',
-        powered_by: 'Sign-in page of an app using Logto',
+        powered_by: 'Sign-in page of an app using MeshX',
         content_social: 'Social media, article, or video (YouTube, X, Reddit...)',
         other: 'Other',
       },
@@ -90,7 +90,7 @@ const cloud = {
   social_callback: {
     title: "You've successfully signed in",
     description:
-      'You have successfully signed in using your social account. To ensure seamless integration and access to all the features of Logto, we recommend that you proceed to configure your own social connector.',
+      'You have successfully signed in using your social account. To ensure seamless integration and access to all the features of MeshX, we recommend that you proceed to configure your own social connector.',
     notice:
       "Please avoid using the demo connector for production purposes. Once you've completed testing, kindly delete the demo connector and set up your own connector with your credentials.",
   },

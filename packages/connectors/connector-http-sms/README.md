@@ -30,4 +30,4 @@ The HTTP SMS connector will send the following payload to the endpoint when it n
 }
 ```
 
-You can find all of the types in https://docs.logto.io/docs/recipes/configure-connectors/sms-connector/configure-popular-sms-service/#sms-template, and the full type definition of `SendMessageData` in [connector-kit](https://github.com/logto-io/logto/tree/master/packages/toolkit/connector-kit/src/types/passwordless.ts). 
+You can find all of the types in https://docs.meshx.io/docs/recipes/configure-connectors/sms-connector/configure-popular-sms-service/#sms-template, and the full type definition of `SendMessageData` in [connector-kit](https://github.com/logto-io/logto/tree/master/packages/toolkit/connector-kit/src/types/passwordless.ts). 

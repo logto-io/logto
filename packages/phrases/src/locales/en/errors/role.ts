@@ -8,7 +8,7 @@ const role = {
   default_role_missing:
     'Some of the default roleNames does not exist in database, please ensure to create roles first',
   internal_role_violation:
-    'You may be trying to update or delete an internal role which is forbidden by Logto. If you are creating a new role, try another name that does not start with "#internal:".',
+    'You may be trying to update or delete an internal role which is forbidden by MeshX. If you are creating a new role, try another name that does not start with "#internal:".',
 };
 
 export default Object.freeze(role);

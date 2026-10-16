@@ -11,7 +11,7 @@ const upsell = {
   create_tenant: {
     title: 'Select your tenant plan',
     description:
-      'Logto provides competitive plan options with innovative and affordable pricing designed for growing companies. <a>Learn more</a>',
+      'MeshX provides competitive plan options with innovative and affordable pricing designed for growing companies. <a>Learn more</a>',
     base_price: 'Base price',
     monthly_price: '{{value, number}}/mo',
     view_all_features: 'View all features',
@@ -24,18 +24,18 @@ const upsell = {
   mau_exceeded_modal: {
     title: 'MAU has exceeded the limit. Upgrade your plan.',
     notification:
-      'Your current MAU has exceeded the limit of <planName/>. Please upgrade your plan to premium promptly to avoid suspension of Logto service. ',
+      'Your current MAU has exceeded the limit of <planName/>. Please upgrade your plan to premium promptly to avoid suspension of MeshX service. ',
     update_plan: 'Update Plan',
   },
   token_exceeded_modal: {
     title: 'Token usage exceeded the limit. Upgrade your plan.',
     notification:
-      'You have exceeded your <planName/> token usage limit. Users will not be able to access the Logto service properly. Please upgrade your plan to premium promptly to avoid any inconvenience.',
+      'You have exceeded your <planName/> token usage limit. Users will not be able to access the MeshX service properly. Please upgrade your plan to premium promptly to avoid any inconvenience.',
   },
   payment_overdue_modal: {
     title: 'Bill payment overdue',
     notification:
-      'Oops! Payment for tenant <span>{{name}}</span> bill failed. Please pay the bill promptly to avoid suspension of Logto service.',
+      'Oops! Payment for tenant <span>{{name}}</span> bill failed. Please pay the bill promptly to avoid suspension of MeshX service.',
     unpaid_bills: 'Unpaid bills',
     update_payment: 'Update Payment',
   },
@@ -46,7 +46,7 @@ const upsell = {
     tenant_member: 'tenant member',
   },
   charge_notification_for_quota_limit:
-    'You have surpassed your {{item}} quota limit. Logto will add charges for the usage beyond your quota limit. Charging will commence on the day the new add-on pricing design is released. <a>Learn more</a>',
+    'You have surpassed your {{item}} quota limit. MeshX will add charges for the usage beyond your quota limit. Charging will commence on the day the new add-on pricing design is released. <a>Learn more</a>',
   paywall,
   featured_plan_content,
   add_on,

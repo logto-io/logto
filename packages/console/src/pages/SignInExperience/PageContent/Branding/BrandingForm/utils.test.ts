@@ -16,7 +16,7 @@ describe('getHideLogtoBrandingOssNote', () => {
     expect(url.searchParams.get('utm_content')).toBe(
       ossUpsellEntries.signInExpHideLogtoBrandingOssNote
     );
-    expect(cloudUrl.origin).toBe('https://cloud.logto.io');
+    expect(cloudUrl.origin).toBe('https://cloud.meshx.app');
     expect(cloudUrl.searchParams.get('utm_campaign')).toBe('cloud_upsell');
   });
 });

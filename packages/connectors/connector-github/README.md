@@ -22,7 +22,7 @@ The GitHub connector enables OAuth 2.0 integration to let your application:
 - Add "Sign-in with GitHub" authentication
 - Link user accounts to GitHub identities
 - Sync user profile info from GitHub
-- Access GitHub APIs through secure token storage in Logto [Secret Vault](https://docs.logto.io/secret-vault/federated-token-set) for automation tasks (e.g., creating GitHub issues, managing repositories from your app)
+- Access GitHub APIs through secure token storage in Logto [Secret Vault](https://docs.meshx.io/secret-vault/federated-token-set) for automation tasks (e.g., creating GitHub issues, managing repositories from your app)
 
 ## Step 1: Create an OAuth app on GitHub
 
@@ -78,7 +78,7 @@ Use the `Scopes` field in Logto to request extra permissions from GitHub. Choose
 
 ### Option 3: Request incremental scopes later
 
-- After the user signs in, you can [request additional scopes](https://docs.logto.io/secret-vault/federated-token-set#reauthentication-and-token-renewal) on demand by reinitiating a federated social authorization flow and updating users' stored token set.
+- After the user signs in, you can [request additional scopes](https://docs.meshx.io/secret-vault/federated-token-set#reauthentication-and-token-renewal) on demand by reinitiating a federated social authorization flow and updating users' stored token set.
 - These additional scopes do not need to be filled in the `Scopes` field in your Logto GitHub connector, and can be achieved through Logto's Social Verification API.
 
 By following these steps, your Logto GitHub connector requests exactly the permissions your app needs - no more, no less.
@@ -101,7 +101,7 @@ In the GitHub connector, you can set the policy for syncing profile information,
 If you want to access GitHub APIs and perform actions with user authorization (whether via social sign-in or account linking), Logto needs to get specific API scopes and store tokens.
 
 1. Add the required scopes following the instructions above.
-2. Enable **Store tokens for persistent API access** in the Logto GitHub connector. Logto will securely store GitHub access tokens in the [Secret Vault](https://docs.logto.io/secret-vault/federated-token-set).
+2. Enable **Store tokens for persistent API access** in the Logto GitHub connector. Logto will securely store GitHub access tokens in the [Secret Vault](https://docs.meshx.io/secret-vault/federated-token-set).
 
 **Note**:
 
@@ -126,14 +126,14 @@ Once you've created a GitHub connector and connected it to GitHub, you can incor
 
 ### Enable "Sign-in with GitHub"
 
-1. In Logto Console, go to [Sign-in experience > Sign-up and sign-in](https://cloud.logto.io/to/sign-in-experience/sign-up-and-sign-in).
+1. In Logto Console, go to [Sign-in experience > Sign-up and sign-in](https://cloud.meshx.app/to/sign-in-experience/sign-up-and-sign-in).
 2. Add the GitHub connector under **Social sign-in** section to let users authenticate with GitHub.
 
-Learn more about [social sign-in experience](https://docs.logto.io//end-user-flows/sign-up-and-sign-in/social-sign-in).
+Learn more about [social sign-in experience](https://docs.meshx.io//end-user-flows/sign-up-and-sign-in/social-sign-in).
 
 ### Link or unlink a GitHub account
 
-Use the Account API to build a custom Account Center in your app that lets signed-in users link or unlink their GitHub account. [Follow the Account API tutorial](https://docs.logto.io//end-user-flows/account-settings/by-account-api#link-a-new-social-connection)
+Use the Account API to build a custom Account Center in your app that lets signed-in users link or unlink their GitHub account. [Follow the Account API tutorial](https://docs.meshx.io//end-user-flows/account-settings/by-account-api#link-a-new-social-connection)
 
 **Tip**: It's allowed to enable the GitHub connector only for account linking and API access, without enabling it for social sign-in.
 
@@ -145,9 +145,9 @@ Your application can retrieve stored GitHub access tokens from the Secret Vault 
 
 After a user links their GitHub account, admins can manage that connection in the Logto Console:
 
-1. Navigate to [Logto console > User management](https://cloud.logto.io/to/users) and open the user's profile.
+1. Navigate to [Logto console > User management](https://cloud.meshx.app/to/users) and open the user's profile.
 2. Under **Social connections**, locate the GitHub item and click **Manage**.
-3. On this page, admins can manage the user's GitHub connection, see all profile information granted and synced from their GitHub account, and check the [access token status](https://docs.logto.io/secret-vault/federated-token-set#token-storage-status).
+3. On this page, admins can manage the user's GitHub connection, see all profile information granted and synced from their GitHub account, and check the [access token status](https://docs.meshx.io/secret-vault/federated-token-set#token-storage-status).
 
 **Note**: GitHub's access token response does not include the specific scope information, so Logto cannot directly display the list of permissions granted by the user. However, as long as the user has consented to the requested scopes during authorization, your application will have the corresponding permissions when accessing the GitHub API.
 

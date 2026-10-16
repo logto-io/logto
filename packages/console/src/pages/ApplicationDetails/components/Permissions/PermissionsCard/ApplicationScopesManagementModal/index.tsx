@@ -81,7 +81,7 @@ function ApplicationScopesManagementModal({ scope, onClose, onSubmit }: Props) {
           learnMoreLink={
             scope.type === ApplicationUserConsentScopeType.ResourceScopes
               ? {
-                  href: 'https://docs.logto.io/docs/recipes/rbac/manage-permissions-and-roles#manage-role-permissions',
+                  href: 'https://docs.meshx.io/docs/recipes/rbac/manage-permissions-and-roles#manage-role-permissions',
                   targetBlank: 'noopener',
                 }
               : undefined

@@ -1,6 +1,6 @@
 const system_limit = {
   limit_exceeded:
-    "This <planName/> tenant has reached its {{entity}} limit under <a>Logto's entity policy</a>.",
+    "This <planName/> tenant has reached its {{entity}} limit under <a>MeshX's entity policy</a>.",
   entities: {
     application: 'application',
     third_party_application: 'third-party application',

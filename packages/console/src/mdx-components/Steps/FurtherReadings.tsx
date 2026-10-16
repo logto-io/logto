@@ -11,7 +11,7 @@ type Props = Omit<StepProps, 'children'> & {
   readonly furtherReadings: GuideMetadata['furtherReadings'];
 };
 
-const quickStartsUrl = new URL('https://docs.logto.io/quick-starts/');
+const quickStartsUrl = new URL('https://docs.meshx.io/quick-starts/');
 
 function FurtherReadings(props: Props, ref?: Ref<HTMLDivElement>) {
   const { fullGuide, furtherReadings, ...stepProps } = props;
@@ -33,13 +33,13 @@ function FurtherReadings(props: Props, ref?: Ref<HTMLDivElement>) {
           </li>
         ))}
         <li>
-          <TextLink href="https://docs.logto.io/docs/recipes/customize-sie/" targetBlank="noopener">
+          <TextLink href="https://docs.meshx.io/docs/recipes/customize-sie/" targetBlank="noopener">
             Customize sign-in experience
           </TextLink>
         </li>
         <li>
           <TextLink
-            href="https://docs.logto.io/docs/recipes/configure-connectors/"
+            href="https://docs.meshx.io/docs/recipes/configure-connectors/"
             targetBlank="noopener"
           >
             Configure connectors
@@ -47,7 +47,7 @@ function FurtherReadings(props: Props, ref?: Ref<HTMLDivElement>) {
         </li>
         <li>
           <TextLink
-            href="https://docs.logto.io/docs/recipes/rbac/protect-resource/#client"
+            href="https://docs.meshx.io/docs/recipes/rbac/protect-resource/#client"
             targetBlank="noopener"
           >
             Configure client to use RBAC

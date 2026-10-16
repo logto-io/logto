@@ -23,7 +23,7 @@ The Google connector enables OAuth 2.0 integration to let your application:
 - Add "Sign-in with Google" authentication
 - Link user accounts to Google identities
 - Sync user profile info from Google
-- Access Google APIs through secure token storage in Logto [Secret Vault](https://docs.logto.io/secret-vault/federated-token-set) for automation tasks (e.g., editing Google Docs, managing Calendar events in your app)
+- Access Google APIs through secure token storage in Logto [Secret Vault](https://docs.meshx.io/secret-vault/federated-token-set) for automation tasks (e.g., editing Google Docs, managing Calendar events in your app)
 
 ## Step 1: Create a project on Google Auth Platform
 
@@ -97,7 +97,7 @@ Choose one or more of the following approaches based on your needs:
 
 **Option 3: Request incremental scopes later**
 
-- After the user signs in, you can [request additional scopes](https://docs.logto.io/secret-vault/federated-token-set#reauthentication-and-token-renewal) on demand by reinitiating a federated social authorization flow and updating users' stored token set.
+- After the user signs in, you can [request additional scopes](https://docs.meshx.io/secret-vault/federated-token-set#reauthentication-and-token-renewal) on demand by reinitiating a federated social authorization flow and updating users' stored token set.
 - These additional scopes do not need to be filled in the `Scopes` field in your Logto Google connector, and can be achieved through Logto's Social Verification API.
 
 By following these steps, your Logto Google connector requests exactly the permissions your app needs - no more, no less.
@@ -155,7 +155,7 @@ If you enable **Store tokens for persistent API access** along with **Google One
 
 Google One Tap sign-in (unlike the standard "Sign in with Google" button) does **not** issue an OAuth access token. It only returns an ID token (a signed JWT) that verifies the user's identity, but does not grant API access.
 
-To access Google APIs with Google One Tap users, you can use [Logto's Social Verification API](https://openapi.logto.io/operation/operation-createverificationbysocial) to [reinitiate a federated social authorization flow](https://docs.logto.io/secret-vault/federated-token-set#reauthentication-and-token-renewal) after the user signs in with Google One Tap. This allows you to request additional scopes as needed and update the user's stored token set, without requiring the scopes to be pre-filled in the Logto Google connector. This approach enables incremental authorization, so users are only prompted for extra permissions when your app actually needs them.
+To access Google APIs with Google One Tap users, you can use [Logto's Social Verification API](https://openapi.logto.io/operation/operation-createverificationbysocial) to [reinitiate a federated social authorization flow](https://docs.meshx.io/secret-vault/federated-token-set#reauthentication-and-token-renewal) after the user signs in with Google One Tap. This allows you to request additional scopes as needed and update the user's stored token set, without requiring the scopes to be pre-filled in the Logto Google connector. This approach enables incremental authorization, so users are only prompted for extra permissions when your app actually needs them.
 
 Learn more about [Google One Tap limitations](https://developers.google.com/identity/gsi/web/guides/overview) in the official documentation.
 
@@ -180,29 +180,29 @@ Once you've created a Google connector and connected it to Google, you can incor
 
 ### Enable "Sign-in with Google"
 
-1. In Logto Console, go to [Sign-in experience > Sign-up and sign-in](https://cloud.logto.io/to/sign-in-experience/sign-up-and-sign-in).
+1. In Logto Console, go to [Sign-in experience > Sign-up and sign-in](https://cloud.meshx.app/to/sign-in-experience/sign-up-and-sign-in).
 2. Add the Google connector under **Social sign-in** section to let users authenticate with Google.
 3. Optionally enable **Google One Tap** on the sign-in and sign-up pages for a streamlined authentication experience.
 
-Learn more about [social sign-in experience](https://docs.logto.io//end-user-flows/sign-up-and-sign-in/social-sign-in).
+Learn more about [social sign-in experience](https://docs.meshx.io//end-user-flows/sign-up-and-sign-in/social-sign-in).
 
 ### Link or unlink a Google account
 
-Use the Account API to build a custom Account Center in your app that lets signed-in users link or unlink their Google account. [Follow the Account API tutorial](https://docs.logto.io//end-user-flows/account-settings/by-account-api#link-a-new-social-connection)
+Use the Account API to build a custom Account Center in your app that lets signed-in users link or unlink their Google account. [Follow the Account API tutorial](https://docs.meshx.io//end-user-flows/account-settings/by-account-api#link-a-new-social-connection)
 
 **Tip**: It's allowed to enable the Google connector only for account linking and API access, without enabling it for social sign-in.
 
 ### Access Google APIs and perform actions
 
-Your application can retrieve stored Google access tokens from the [Secret Vault](https://docs.logto.io/secret-vault) to call Google APIs and automate backend tasks (for example, managing Google Drive files, creating Calendar events, or sending emails through Gmail). [Refer to the guide](https://docs.logto.io/secret-vault/federated-token-set) on retrieving stored tokens for API access.
+Your application can retrieve stored Google access tokens from the [Secret Vault](https://docs.meshx.io/secret-vault) to call Google APIs and automate backend tasks (for example, managing Google Drive files, creating Calendar events, or sending emails through Gmail). [Refer to the guide](https://docs.meshx.io/secret-vault/federated-token-set) on retrieving stored tokens for API access.
 
 ## Manage user's Google identity
 
 After a user links their Google account, admins can manage that connection in the Logto Console:
 
-1. Navigate to [Logto console > User management](https://cloud.logto.io/to/users) and open the user's profile.
+1. Navigate to [Logto console > User management](https://cloud.meshx.app/to/users) and open the user's profile.
 2. Under **Social connections**, locate the Google item and click **Manage**.
-3. On this page, admins can manage the user's Google connection, see all profile information granted and synced from their Google account, and check the [access token status](https://docs.logto.io/secret-vault/federated-token-set#token-storage-status).
+3. On this page, admins can manage the user's Google connection, see all profile information granted and synced from their Google account, and check the [access token status](https://docs.meshx.io/secret-vault/federated-token-set#token-storage-status).
 
 ## Reference
 

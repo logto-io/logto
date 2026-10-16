@@ -4,9 +4,9 @@ import usage from './usage.js';
 
 const subscription = {
   free_plan: 'Free plan',
-  free_plan_description: 'For side projects and initial Logto trials. No credit card.',
+  free_plan_description: 'For side projects and initial MeshX trials. No credit card.',
   pro_plan: 'Pro plan',
-  pro_plan_description: 'For businesses benefit worry-free with Logto.',
+  pro_plan_description: 'For businesses benefit worry-free with MeshX.',
   enterprise: 'Enterprise plan',
   enterprise_description: 'For large teams and businesses with enterprise-grade requirements.',
   admin_plan: 'Admin plan',
@@ -28,7 +28,7 @@ const subscription = {
   upgrade_pro: 'Upgrade to Pro',
   update_payment: 'Update payment',
   payment_error:
-    'Payment issue detected. Unable to process ${{price, number}} for previous cycle. Update payment to avoid Logto service suspension.',
+    'Payment issue detected. Unable to process ${{price, number}} for previous cycle. Update payment to avoid MeshX service suspension.',
   downgrade: 'Downgrade',
   current: 'Current',
   upgrade: 'Upgrade',
@@ -49,7 +49,7 @@ const subscription = {
   cancel_feedback_modal: {
     title: 'Sorry to see you go',
     description:
-      'Your subscription has been canceled. Your feedback helps us make Logto better. We read every response.',
+      'Your subscription has been canceled. Your feedback helps us make MeshX better. We read every response.',
     what_made_you_cancel: 'What made you cancel?',
     how_to_reconsider: 'What could we do to make you reconsider?',
   },
@@ -68,7 +68,7 @@ const subscription = {
     downgrade_help_tip: 'Need help downgrading? <a>Contact us</a>.',
     upgrade_title: 'Friendly reminder for our honoured early adopters',
     upgrade_description:
-      'You’re currently using more than what the <name /> allows. Logto is now official, including features tailored to each plan. Before you consider upgrading to the <name />, make sure you meet the following criteria before upgrading.',
+      'You’re currently using more than what the <name /> allows. MeshX is now official, including features tailored to each plan. Before you consider upgrading to the <name />, make sure you meet the following criteria before upgrading.',
     upgrade_pro_tip: ' Or considering upgrading to Pro plan.',
     upgrade_help_tip: 'Need help upgrading? <a>Contact us</a>.',
     a_maximum_of: 'A maximum of <item/>',
@@ -91,8 +91,8 @@ const subscription = {
     exceeded:
       'You have exceeded 100% of your quota limit. Users will no longer be able to log in properly. Please upgrade immediately to avoid any inconvenience.',
     close_to_limit:
-      'You almost reached your token usage limit. Logto will stop granting token if your usage exceeds 100%. Please upgrade Free plan to avoid any inconvenience.',
-    dev_plan_exceeded: "This tenant has reached the token limit per Logto's entity limit policy.",
+      'You almost reached your token usage limit. MeshX will stop granting token if your usage exceeds 100%. Please upgrade Free plan to avoid any inconvenience.',
+    dev_plan_exceeded: "This tenant has reached the token limit per MeshX's entity limit policy.",
   },
 };
 

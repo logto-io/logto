@@ -30,7 +30,7 @@ const sign_in_exp = {
     dark_primary_color: 'Brand color (dark)',
     dark_mode: 'Enable dark mode',
     dark_mode_description:
-      'Your app will have an auto-generated dark mode theme based on your brand color and Logto algorithm. You are free to customize.',
+      'Your app will have an auto-generated dark mode theme based on your brand color and MeshX algorithm. You are free to customize.',
     dark_mode_reset_tip: 'Recalculate dark mode color based on brand color.',
     reset: 'Recalculate',
   },
@@ -42,11 +42,11 @@ const sign_in_exp = {
     app_logo_and_favicon: 'App logo and favicon',
     company_logo_and_favicon: 'Company logo and favicon',
     organization_logo_and_favicon: 'Organization logo and favicon',
-    hide_logto_branding: 'Hide Logto branding',
+    hide_logto_branding: 'Hide MeshX branding',
     hide_logto_branding_description:
-      'Remove "Powered by Logto". Spotlight your brand exclusively with a clean, professional sign-in experience.',
+      'Remove "Powered by MeshX". Spotlight your brand exclusively with a clean, professional sign-in experience.',
     hide_logto_branding_oss_note:
-      'This feature is available in <a>Logto Cloud</a> or <selfHosted>self-hosted plans</selfHosted>.',
+      'This feature is available in <a>MeshX Cloud</a> or <selfHosted>self-hosted plans</selfHosted>.',
   },
   branding_uploads: {
     app_logo: {
@@ -93,10 +93,10 @@ const sign_in_exp = {
     bring_your_ui_title: 'Bring your UI',
     bring_your_ui_upload_title: 'Upload custom UI assets',
     bring_your_ui_description:
-      'Upload a compressed package (.zip) to replace the Logto prebuilt UI with your own code. <a>Learn more</a>',
+      'Upload a compressed package (.zip) to replace the MeshX prebuilt UI with your own code. <a>Learn more</a>',
     bring_your_ui_oss_description: 'Customize the sign-in UI with your own code.',
     bring_your_ui_oss_card_description:
-      'Custom UI upload is available in <a>Logto Cloud</a> or <selfHosted>self-hosted plans</selfHosted>. No need to fork and redeploy.',
+      'Custom UI upload is available in <a>MeshX Cloud</a> or <selfHosted>self-hosted plans</selfHosted>. No need to fork and redeploy.',
     bring_your_ui_oss_try_cloud: 'Try Cloud',
     preview_with_bring_your_ui_description:
       'Your custom UI assets have been successfully uploaded and are now being served. Consequently, the built-in preview window has been disabled.\nTo test your personalized sign-in UI, click the "Live Preview" button to open it in a new browser tab.',
@@ -118,7 +118,7 @@ const sign_in_exp = {
       'Implement your account center for end users to manage account security and profile information.',
     enable_account_api: 'Enable account center and Account API',
     enable_account_api_description:
-      "Turn on both the user-facing Account API and Logto's out-of-the-box account center. When off, both features are unavailable.",
+      "Turn on both the user-facing Account API and MeshX's out-of-the-box account center. When off, both features are unavailable.",
     field_options: {
       off: 'Off',
       edit: 'Edit',

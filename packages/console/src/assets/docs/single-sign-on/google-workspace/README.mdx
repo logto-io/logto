@@ -118,7 +118,7 @@ Scopes define the permissions your app requests from users and control which dat
 If you want to access [Google APIs](https://console.cloud.google.com/apis/library) and perform actions with user authorization, Logto needs to get specific API scopes and store tokens.
 
 1. Add the required scopes in your Google Cloud Console OAuth consent screen configuration and Logto Google connector.
-2. Enable **Store tokens for persistent API access** in Logto Google connector. Logto will securely [store Google access and refresh tokens in the Secret Vault](https://docs.logto.io/secret-vault/federated-token-set/token-retrieval).
+2. Enable **Store tokens for persistent API access** in Logto Google connector. Logto will securely [store Google access and refresh tokens in the Secret Vault](https://docs.meshx.io/secret-vault/federated-token-set/token-retrieval).
 3. To ensure refresh tokens are returned, configure your Logto Google connector to enable **Offline Access**.
 
 **Warning**: You do not need to add `offline_access` in the Logto `Scope` field — doing so may cause an error. Google uses `access_type=offline` automatically when offline access is enabled.

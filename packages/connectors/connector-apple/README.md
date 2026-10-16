@@ -18,7 +18,7 @@ The official Logto connector for Apple social sign-in.
 
 ## Get started
 
-If you don't know the concept of the connector or don't know how to add this connector to your Sign-in experience, please see [Logto tutorial](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in).
+If you don't know the concept of the connector or don't know how to add this connector to your Sign-in experience, please see [Logto tutorial](https://docs.meshx.io/docs/tutorials/get-started/enable-social-sign-in).
 
 > ℹ️ **Note**
 >
@@ -99,7 +99,7 @@ See developer discussion [here](https://forums.developer.apple.com/forums/thread
 
 ## Test Apple connector
 
-That's it. The Apple connector should be available in both web and native apps. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/recipes/configure-connectors/social-connector/enable-social-sign-in/).
+That's it. The Apple connector should be available in both web and native apps. Don't forget to [Enable connector in sign-in experience](https://docs.meshx.io/docs/recipes/configure-connectors/social-connector/enable-social-sign-in/).
 
 ## Troubleshooting
 

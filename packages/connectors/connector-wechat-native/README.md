@@ -34,7 +34,7 @@ The official Logto connector for WeChat social sign-in in native apps (iOS and A
 
 ## Get started
 
-If you don't know the concept of the connector or don't know how to add this connector to your Sign-in experience, please see [Logto tutorial](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in).
+If you don't know the concept of the connector or don't know how to add this connector to your Sign-in experience, please see [Logto tutorial](https://docs.meshx.io/docs/tutorials/get-started/enable-social-sign-in).
 
 In native apps, you cannot use the web as a sign-in method of WeChat: navigation to the WeChat app is required, and it also requires using their SDK.
 
@@ -123,7 +123,7 @@ We suspect the reviewer is allocated randomly on each submission since the stand
 
 ### iOS
 
-We assume you have integrated [Logto iOS SDK](https://docs.logto.io/docs/recipes/integrate-logto/ios) in your app. In this case, things are pretty simple, and you don't even need to read the WeChat SDK doc:
+We assume you have integrated [Logto iOS SDK](https://docs.meshx.io/docs/recipes/integrate-logto/ios) in your app. In this case, things are pretty simple, and you don't even need to read the WeChat SDK doc:
 
 **1. Configure universal link and URL scheme in your Xcode project**
 
@@ -187,7 +187,7 @@ func application(_ app: UIApplication, open url: URL, options: /*...*/) -> Bool 
 
 ### Android
 
-We assume you have integrated [Logto Android SDK](https://docs.logto.io/docs/recipes/integrate-logto/android) in your app. In this case, things are pretty simple, and you don't even need to read the WeChat SDK doc:
+We assume you have integrated [Logto Android SDK](https://docs.meshx.io/docs/recipes/integrate-logto/android) in your app. In this case, things are pretty simple, and you don't even need to read the WeChat SDK doc:
 
 **1. Add `Wechat Open SDK` to your project**
 
@@ -258,7 +258,7 @@ Add the following line to your `AndroidManifest.xml`:
 
 ## Test WeChat native connector
 
-That's it. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/recipes/configure-connectors/social-connector/enable-social-sign-in/).
+That's it. Don't forget to [Enable connector in sign-in experience](https://docs.meshx.io/docs/recipes/configure-connectors/social-connector/enable-social-sign-in/).
 
 Once WeChat native connector is enabled, you can build and run your app to see if it works.
 
@@ -270,7 +270,7 @@ Once WeChat native connector is enabled, you can build and run your app to see i
 
 ## 开始上手
 
-如果你还不知道连接器的概念，或者还不知道如何将本连接器添加至你的「登录体验」，请先参见 [Logto 教程](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-social-sign-in)。
+如果你还不知道连接器的概念，或者还不知道如何将本连接器添加至你的「登录体验」，请先参见 [Logto 教程](https://docs.meshx.io/zh-cn/docs/tutorials/get-started/enable-social-sign-in)。
 
 在原生应用中，你无法通过 web 进行微信登录：必须跳转至微信 app，并使用他们提供的 SDK 才能完成。
 
@@ -358,7 +358,7 @@ Once WeChat native connector is enabled, you can build and run your app to see i
 
 ### iOS
 
-我们假设你已经在你的应用中集成了 [Logto iOS SDK](https://docs.logto.io/docs/recipes/integrate-logto/ios)。之后的流程很简单，你甚至不需要阅读微信 SDK 文档：
+我们假设你已经在你的应用中集成了 [Logto iOS SDK](https://docs.meshx.io/docs/recipes/integrate-logto/ios)。之后的流程很简单，你甚至不需要阅读微信 SDK 文档：
 
 **1. 在你的 Xcode 工程中配置 universal link 与 URL scheme**
 
@@ -422,7 +422,7 @@ func application(_ app: UIApplication, open url: URL, options: /*...*/) -> Bool 
 
 ### Android
 
-我们假设你已经在你的应用中集成了 [Logto Android SDK](https://docs.logto.io/docs/recipes/integrate-logto/android)。之后的流程很简单，你甚至不需要阅读微信 SDK 文档：
+我们假设你已经在你的应用中集成了 [Logto Android SDK](https://docs.meshx.io/docs/recipes/integrate-logto/android)。之后的流程很简单，你甚至不需要阅读微信 SDK 文档：
 
 **1. 添加 `Wechat Open SDK` 到你的项目中**
 
@@ -494,7 +494,7 @@ src/main/kotlin/com/sample/app/wxapi/WXEntryActivity.kt
 
 ## 测试微信原生连接器
 
-大功告成。别忘了 [在登录体验中启用本连接器](https://docs.logto.io/docs/recipes/configure-connectors/social-connector/enable-social-sign-in/)。
+大功告成。别忘了 [在登录体验中启用本连接器](https://docs.meshx.io/docs/recipes/configure-connectors/social-connector/enable-social-sign-in/)。
 
 在微信原生连接器启用后，你可以构建并运行你的应用看看是否生效。
 

@@ -19,7 +19,7 @@ export const throwErrorWithDsnMessage = (error: unknown) => {
           'npm run cli db seed'
         )} before setting env ${chalk.green(key)}.\n\n` +
         `  Visit ${chalk.blue(
-          'https://docs.logto.io/docs/references/core/configuration'
+          'https://docs.meshx.io/docs/references/core/configuration'
         )} for more info about setting up env.\n`
     );
   }

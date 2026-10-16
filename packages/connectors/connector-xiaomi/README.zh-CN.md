@@ -63,7 +63,7 @@
 
 ## 测试小米连接器
 
-大功告成！别忘了在[登录体验](https://docs.logto.io/zh-CN/connectors/social-connectors#enable-social-sign-in)中启用该连接器。
+大功告成！别忘了在[登录体验](https://docs.meshx.io/zh-CN/connectors/social-connectors#enable-social-sign-in)中启用该连接器。
 
 ## 参考
 

@@ -61,7 +61,7 @@ Multiple scopes can be configured by separating them with spaces, e.g.: `1 3 600
 
 ## Test Xiaomi connector
 
-That's it. Don't forget to [Enable social sign-in](https://docs.logto.io/connectors/social-connectors#enable-social-sign-in) in the sign-in experience.
+That's it. Don't forget to [Enable social sign-in](https://docs.meshx.io/connectors/social-connectors#enable-social-sign-in) in the sign-in experience.
 
 ## References
 

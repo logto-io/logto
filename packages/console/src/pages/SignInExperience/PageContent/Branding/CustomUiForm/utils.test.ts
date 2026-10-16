@@ -14,7 +14,7 @@ describe('getOssBringYourUiCardContent', () => {
     expect(i18nKey).toBe('admin_console.sign_in_exp.custom_ui.bring_your_ui_oss_card_description');
     expect(url.pathname).toBe('/console/tenant-settings/license');
     expect(url.searchParams.get('utm_content')).toBe(ossUpsellEntries.signInExpBringYourUiOssCard);
-    expect(cloudUrl.origin).toBe('https://cloud.logto.io');
+    expect(cloudUrl.origin).toBe('https://cloud.meshx.app');
     expect(cloudUrl.searchParams.get('utm_campaign')).toBe('cloud_upsell');
   });
 });

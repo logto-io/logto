@@ -18,7 +18,7 @@ function SecretVaultSection({ isAccountApiEnabled }: Props) {
     <FormCard
       title="sign_in_exp.account_center.sections.secret_vault.title"
       description="sign_in_exp.account_center.sections.secret_vault.description"
-      learnMoreLink={{ href: 'https://docs.logto.io/secret-vault', targetBlank: true }}
+      learnMoreLink={{ href: 'https://docs.meshx.io/secret-vault', targetBlank: true }}
     >
       <div className={styles.cardContent}>
         <FormField

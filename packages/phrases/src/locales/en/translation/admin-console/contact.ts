@@ -18,7 +18,7 @@ const contact = {
     button: 'Send',
   },
   reserve: {
-    title: 'Reserve your time with Logto team',
+    title: 'Reserve your time with MeshX team',
     description: 'Quickly book a session for a live chat',
     button: 'Book',
   },

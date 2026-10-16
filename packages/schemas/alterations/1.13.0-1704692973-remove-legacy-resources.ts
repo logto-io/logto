@@ -27,7 +27,7 @@ const alteration: AlterationScript = {
       where scopes.tenant_id = 'admin'
       and scopes.name = 'manage:tenant'
       and scopes.resource_id = resources.id
-      and resources.indicator = 'https://cloud.logto.io/api';
+      and resources.indicator = 'https://cloud.meshx.app/api';
     `);
   },
   down: async (pool) => {
@@ -35,7 +35,7 @@ const alteration: AlterationScript = {
     await pool.query(sql`
       insert into scopes (tenant_id, id, name, description, resource_id)
       values ('admin', 'manage:tenant', 'manage:tenant', 'Allow managing existing tenants, including create without limitation, update, and delete.', (
-        select id from resources where tenant_id = 'admin' and indicator = 'https://cloud.logto.io/api'
+        select id from resources where tenant_id = 'admin' and indicator = 'https://cloud.meshx.app/api'
       ));
     `);
 

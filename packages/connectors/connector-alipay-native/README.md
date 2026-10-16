@@ -82,7 +82,7 @@ Alipay Native connector works closely with Logto SDK on mobile platforms. It tak
 
 ### iOS
 
-We assume you have integrated [Logto iOS SDK](https://docs.logto.io/docs/recipes/integrate-logto/ios) in your app. In this case, things are pretty simple, and you don't even need to read the Alipay SDK doc:
+We assume you have integrated [Logto iOS SDK](https://docs.meshx.io/docs/recipes/integrate-logto/ios) in your app. In this case, things are pretty simple, and you don't even need to read the Alipay SDK doc:
 
 **1. Add `LogtoSocialPluginAlipay` to your Xcode project**
 
@@ -107,7 +107,7 @@ Where `callbackScheme` is one of the [custom URL Schemes](https://developer.appl
 
 ### Android
 
-We assume you have integrated [Logto Android SDK](https://docs.logto.io/docs/recipes/integrate-logto/android) in your app. In this case, things are pretty simple, and you don't even need to read the Alipay SDK doc:
+We assume you have integrated [Logto Android SDK](https://docs.meshx.io/docs/recipes/integrate-logto/android) in your app. In this case, things are pretty simple, and you don't even need to read the Alipay SDK doc:
 
 **1. Download the Alipay "minimalist SDK" and add it to your project**
 
@@ -138,7 +138,7 @@ dependencies {
 
 ### Test Alipay native connector
 
-That's it. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/recipes/configure-connectors/social-connector/enable-social-sign-in/).
+That's it. Don't forget to [Enable connector in sign-in experience](https://docs.meshx.io/docs/recipes/configure-connectors/social-connector/enable-social-sign-in/).
 
 Once Alipay native connector is enabled, you can build and run your app to see if it works.
 
@@ -202,7 +202,7 @@ Once Alipay native connector is enabled, you can build and run your app to see i
 
 ### iOS
 
-我们假设你已经在你的应用中集成了 [Logto iOS SDK](https://docs.logto.io/docs/recipes/integrate-logto/ios)。之后的流程很简单，你甚至不需要阅读支付宝 SDK 文档：
+我们假设你已经在你的应用中集成了 [Logto iOS SDK](https://docs.meshx.io/docs/recipes/integrate-logto/ios)。之后的流程很简单，你甚至不需要阅读支付宝 SDK 文档：
 
 **1. 添加 `LogtoSocialPluginAlipay` 到你的 Xcode 工程**
 
@@ -227,7 +227,7 @@ let logtoClient = LogtoClient(
 
 ### Android
 
-我们假设你已经在你的应用中集成了 [Logto Android SDK](https://docs.logto.io/docs/recipes/integrate-logto/android)。之后的流程很简单，你甚至不需要阅读支付宝 SDK 文档：
+我们假设你已经在你的应用中集成了 [Logto Android SDK](https://docs.meshx.io/docs/recipes/integrate-logto/android)。之后的流程很简单，你甚至不需要阅读支付宝 SDK 文档：
 
 **1. 下载支付宝极简版 SDK 到你的项目中**
 
@@ -258,7 +258,7 @@ dependencies {
 
 ## 测试支付宝原生连接器
 
-大功告成。别忘了 [在登录体验中启用社交登录](https://docs.logto.io/docs/recipes/configure-connectors/social-connector/enable-social-sign-in/)。
+大功告成。别忘了 [在登录体验中启用社交登录](https://docs.meshx.io/docs/recipes/configure-connectors/social-connector/enable-social-sign-in/)。
 
 在支付宝原生连接器启用后，你可以构建并运行你的应用看看是否生效。
 

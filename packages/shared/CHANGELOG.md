@@ -58,7 +58,7 @@
 
   After the grace period ends, the new private signing key will transition to "Current" state, and the old signing key will be marked as "Previous".
 
-  Check out the [documentation](https://docs.logto.io/logto-oss/using-cli/rotate-signing-keys) for more details.
+  Check out the [documentation](https://docs.meshx.io/logto-oss/using-cli/rotate-signing-keys) for more details.
 
 ## 3.3.1
 

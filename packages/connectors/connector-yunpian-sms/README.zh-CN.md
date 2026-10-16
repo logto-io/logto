@@ -57,4 +57,4 @@
 ## 参考
 
 - [云片网开发文档](https://www.yunpian.com/official/document/sms/zh_CN/introduction_brief)
-- [Logto SMS 连接器指南](https://docs.logto.io/zh-CN/connectors/sms-connectors)
+- [Logto SMS 连接器指南](https://docs.meshx.io/zh-CN/connectors/sms-connectors)

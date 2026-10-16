@@ -124,7 +124,7 @@
   - Organizations
   - Organization roles
 
-  Refer to the documentation for more details: https://docs.logto.io/integrate-logto/app-level-access-control
+  Refer to the documentation for more details: https://docs.meshx.io/integrate-logto/app-level-access-control
 
 - c2016a044c: add a configurable per-tenant password expiration policy
 
@@ -231,7 +231,7 @@
 
   After the grace period ends, the new private signing key will transition to "Current" state, and the old signing key will be marked as "Previous".
 
-  Check out the [documentation](https://docs.logto.io/logto-oss/using-cli/rotate-signing-keys) for more details.
+  Check out the [documentation](https://docs.meshx.io/logto-oss/using-cli/rotate-signing-keys) for more details.
 
 ### Patch Changes
 
@@ -276,7 +276,7 @@
   - Added a new optional `oidc.session.ttl` field in `logto-config`.
   - This config allows developers to customize the OIDC provider session TTL in seconds.
   - If `oidc.session.ttl` is not provided, the default session TTL remains `14 days`.
-  - For OSS deployments, restart the service instance after config changes so the server can pick up the latest OIDC config updates. To apply all OIDC configuration updates automatically without rebooting the service, [enable central redis cache](https://docs.logto.io/logto-oss/central-cache).
+  - For OSS deployments, restart the service instance after config changes so the server can pick up the latest OIDC config updates. To apply all OIDC configuration updates automatically without rebooting the service, [enable central redis cache](https://docs.meshx.io/logto-oss/central-cache).
 
 - d2afe7351f: add app-level `maxAllowedGrants` config and enforce concurrent grant limits on authorization success
 
@@ -324,7 +324,7 @@
   - Provide MFA management for TOTP, backup codes (download/regenerate), and passkeys (WebAuthn), including rename and delete actions.
   - Gate sensitive operations behind password/email/phone verification and surface dedicated success screens.
 
-  To learn more about this feature, please refer to the documentation: https://docs.logto.io/end-user-flows/account-settings/by-account-api
+  To learn more about this feature, please refer to the documentation: https://docs.meshx.io/end-user-flows/account-settings/by-account-api
 
 - eced1f02d4: add application context to JWT customizer
 
@@ -480,7 +480,7 @@
   });
   ```
 
-  Refer to the [documentation](https://docs.logto.io/end-user-flows/authentication-parameters/ui-locales) for more details.
+  Refer to the [documentation](https://docs.meshx.io/end-user-flows/authentication-parameters/ui-locales) for more details.
 
 - 1fb8593659: add email/phone MFA via verification codes
 
@@ -492,7 +492,7 @@
   - Update Console to configure these factors and surface guidance/conflict warnings.
   - Support customizing forgot password methods in Sign-in Experience (related).
 
-  To learn more about this feature, please refer to the documentation: https://docs.logto.io/end-user-flows/mfa
+  To learn more about this feature, please refer to the documentation: https://docs.meshx.io/end-user-flows/mfa
 
 - 0ef4260e34: unify branding customization options between applications and organizations
 
@@ -535,7 +535,7 @@
   3. Test by signing up a new user in the demo app; a "Tell us about yourself" step will appear with your fields.
   4. Registration completes only after all required fields are filled.
 
-  Check out our [docs](https://docs.logto.io/end-user-flows/collect-user-profile) for more details.
+  Check out our [docs](https://docs.meshx.io/end-user-flows/collect-user-profile) for more details.
 
 ### Patch Changes
 
@@ -564,7 +564,7 @@
 
 - 0343699d7: feat: introduce Logto Secret Vault and federated token set storage
 
-  This update introduces the new [Secret vault](https://docs.logto.io/secret-vault/) feature in Logto.
+  This update introduces the new [Secret vault](https://docs.meshx.io/secret-vault/) feature in Logto.
 
   The Secret Vault is designed to securely store sensitive user data — such as access tokens, API keys, passcodes, and other confidential information. These secrets are typically used to access third-party services on behalf of users, making secure storage essential.
 
@@ -579,10 +579,10 @@
   2. Once enabled, Logto will automatically store the token set issued by the provider after a successful user authentication.
   3. After the token set is stored, you can retrieve the access token via the Logto Account API for the user. This allows your application to access third-party APIs without requiring the user to reauthenticate.
 
-  For more details, please check the [Federated token set storage](https://docs.logto.io/secret-vault/federated-token-set) documentation.
+  For more details, please check the [Federated token set storage](https://docs.meshx.io/secret-vault/federated-token-set) documentation.
 
   Note:
-  For OSS users, to enable the Secret Vault feature, you must set the `SECRET_VAULT_KEK` environment variable to a valid base64 enabled secret key. This key is used to encrypt and decrypt the secrets stored in the vault. For more information, please refer to the [configuration variables](https://docs.logto.io/concepts/core-service/configuration#variables) documentation.
+  For OSS users, to enable the Secret Vault feature, you must set the `SECRET_VAULT_KEK` environment variable to a valid base64 enabled secret key. This key is used to encrypt and decrypt the secrets stored in the vault. For more information, please refer to the [configuration variables](https://docs.meshx.io/concepts/core-service/configuration#variables) documentation.
 
 ### Patch Changes
 
@@ -632,7 +632,7 @@
 
   We implemented [Related Origin Requests](https://passkeys.dev/docs/advanced/related-origins/) so that you can manage the WebAuthn passkeys in your website which has a different domain from the Logto's sign-in page.
 
-  To learn more, checkout the [documentation](https://docs.logto.io/end-user-flows/account-settings/by-account-api).
+  To learn more, checkout the [documentation](https://docs.meshx.io/end-user-flows/account-settings/by-account-api).
 
 ## 1.28.0
 

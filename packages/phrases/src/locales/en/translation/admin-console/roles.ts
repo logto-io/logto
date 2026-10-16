@@ -30,9 +30,9 @@ const roles = {
     'Roles are a grouping of permissions that can be assigned to users. Be sure to add permission first before create roles.',
   assign_roles: 'Assign roles',
   management_api_access_notification:
-    'For Logto Management API access, select roles with Management API permissions <flag/>.',
+    'For MeshX Management API access, select roles with Management API permissions <flag/>.',
   with_management_api_access_tip:
-    'This machine-to-machine role includes Logto Management API permissions',
+    'This machine-to-machine role includes MeshX Management API permissions',
   role_creation_hint: 'Can’t find the right role? <a>Create a role</a>',
 };
 

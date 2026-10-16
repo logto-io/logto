@@ -35,7 +35,7 @@ void yargs(hideBin(process.argv))
   })
   .epilog(
     `Refer to our documentation for more details:\n${chalk.blue(
-      'https://docs.logto.io/docs/references/tunnel-cli'
+      'https://docs.meshx.io/docs/references/tunnel-cli'
     )}`
   )
   .parse();

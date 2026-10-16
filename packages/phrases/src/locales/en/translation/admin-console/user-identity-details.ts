@@ -48,7 +48,7 @@ const user_identity_details = {
     description:
       'Delete the stored tokens. Users must re-authorize access to restore functionality.',
     confirmation_message:
-      'Are you sure you want to delete tokens?  Logto Secret Vault will remove the stored {{connectorName}} access and refresh tokens. This user must re-authorize to restore {{connectorName}} API access.',
+      'Are you sure you want to delete tokens?  MeshX Secret Vault will remove the stored {{connectorName}} access and refresh tokens. This user must re-authorize to restore {{connectorName}} API access.',
   },
   token_storage_disabled: {
     title: 'Token storage is disabled for this connector',

@@ -47,4 +47,4 @@ Create and approve SMS templates in SMSBao before using this connector. Template
 
 - [SMSBao API documentation](https://www.smsbao.com/openapi/213.html)
 - [SMSBao Node.js example](https://www.smsbao.com/openapi/305.html)
-- [Logto SMS Connector Guide](https://docs.logto.io/docs/recipes/configure-connectors/sms-connector/)
+- [Logto SMS Connector Guide](https://docs.meshx.io/docs/recipes/configure-connectors/sms-connector/)

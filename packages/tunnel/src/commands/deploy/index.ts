@@ -16,7 +16,7 @@ const tunnel: CommandModule<unknown, DeployCommandArgs> = {
       .options({
         auth: {
           describe:
-            'Auth credentials of your Logto M2M application. E.g.: <app-id>:<app-secret> (Docs: https://docs.logto.io/docs/recipes/interact-with-management-api/#create-an-m2m-app)',
+            'Auth credentials of your Logto M2M application. E.g.: <app-id>:<app-secret> (Docs: https://docs.meshx.io/docs/recipes/interact-with-management-api/#create-an-m2m-app)',
           type: 'string',
         },
         endpoint: {
@@ -47,7 +47,7 @@ const tunnel: CommandModule<unknown, DeployCommandArgs> = {
       })
       .epilog(
         `Refer to our documentation for more details:\n${chalk.blue(
-          'https://docs.logto.io/docs/references/tunnel-cli/deploy'
+          'https://docs.meshx.io/docs/references/tunnel-cli/deploy'
         )}`
       ),
   handler: async (options) => {

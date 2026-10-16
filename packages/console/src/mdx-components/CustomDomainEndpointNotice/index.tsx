@@ -14,7 +14,7 @@ function CustomDomainEndpointNotice({ variant = 'access' }: Props) {
   return (
     <InlineNotification>
       After adding{' '}
-      <TextLink href="https://docs.logto.io/logto-cloud/custom-domain" targetBlank="noopener">
+      <TextLink href="https://docs.meshx.io/logto-cloud/custom-domain" targetBlank="noopener">
         custom domains
       </TextLink>
       {variant === 'replace'

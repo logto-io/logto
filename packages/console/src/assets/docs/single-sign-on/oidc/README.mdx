@@ -45,7 +45,7 @@ Setting up scopes requires configuration on both sides:
 If you want to access the Identity Provider's APIs and perform actions with user authorization, Logto needs to get specific API scopes and store tokens.
 
 1. Add the required scopes in the **scope** field following the instructions above
-2. Enable **Store tokens for persistent API access** in the Logto OIDC enterprise connector. Logto will securely [store access tokens in the Secret Vault](https://docs.logto.io/secret-vault/federated-token-set).
+2. Enable **Store tokens for persistent API access** in the Logto OIDC enterprise connector. Logto will securely [store access tokens in the Secret Vault](https://docs.meshx.io/secret-vault/federated-token-set).
 3. For **standard** OIDC identity providers, the `offline_access` scope must be included to obtain a refresh token, preventing repeated user consent prompts.
 </Step>
 

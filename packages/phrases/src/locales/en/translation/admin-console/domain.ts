@@ -5,7 +5,7 @@ const domain = {
     failed_to_connect: 'Failed to connect',
   },
   update_endpoint_notice:
-    'Don’t forget to update the domain for the Social connector callback URI and Logto endpoint in your application if you want to use a custom domain for the features.',
+    'Don’t forget to update the domain for the Social connector callback URI and MeshX endpoint in your application if you want to use a custom domain for the features.',
   error_hint:
     'Make sure to update your DNS records. We will continue to check every {{value}} seconds.',
   custom: {
@@ -39,7 +39,7 @@ const domain = {
       in_used_description:
         'Are you sure you want to delete this custom domain "<span>{{domain}}</span>"?',
       in_used_tip:
-        'If you’ve set up this custom domain in your social connector provider or application endpoint before, you’ll need to modify the URI to the Logto default domain "<span>{{domain}}</span>" first. This is necessary for the social sign-in button to work properly.',
+        'If you’ve set up this custom domain in your social connector provider or application endpoint before, you’ll need to modify the URI to the MeshX default domain "<span>{{domain}}</span>" first. This is necessary for the social sign-in button to work properly.',
       deleted: 'Delete custom domain successfully!',
     },
     config_custom_domain_description:
@@ -67,8 +67,8 @@ const domain = {
   default: {
     default_domain: 'Default domain',
     default_domain_description:
-      'Logto offers a pre-configured default domain, ready to use without any additional setup. This default domain serves as a backup option even if you enabled a custom domain.',
-    default_domain_field: 'Logto default domain',
+      'MeshX offers a pre-configured default domain, ready to use without any additional setup. This default domain serves as a backup option even if you enabled a custom domain.',
+    default_domain_field: 'MeshX default domain',
   },
   custom_endpoint_note:
     'You can customize the domain name of these endpoints as your required. Choose either "{{custom}}" or "{{default}}".',

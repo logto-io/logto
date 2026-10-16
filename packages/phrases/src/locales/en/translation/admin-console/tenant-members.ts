@@ -11,9 +11,9 @@ const tenant_members = {
   inviter: 'Inviter',
   expiration_date: 'Expiration date',
   invite_modal: {
-    title: 'Invite people to Logto Cloud',
+    title: 'Invite people to MeshX Cloud',
     subtitle: 'To invite members to an organization, they must accept the invitation.',
-    subtitle_oss: 'Invited members receive full administrator access to this Logto instance.',
+    subtitle_oss: 'Invited members receive full administrator access to this MeshX instance.',
     to: 'To',
     added_as: 'Added as roles',
     email_input_placeholder: 'johndoe@example.com',

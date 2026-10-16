@@ -47,7 +47,7 @@
   - Organizations
   - Organization roles
 
-  Refer to the documentation for more details: https://docs.logto.io/integrate-logto/app-level-access-control
+  Refer to the documentation for more details: https://docs.meshx.io/integrate-logto/app-level-access-control
 
 - c2016a044c: add a configurable per-tenant password expiration policy
 
@@ -149,7 +149,7 @@
   - Update Console to configure these factors and surface guidance/conflict warnings.
   - Support customizing forgot password methods in Sign-in Experience (related).
 
-  To learn more about this feature, please refer to the documentation: https://docs.logto.io/end-user-flows/mfa
+  To learn more about this feature, please refer to the documentation: https://docs.meshx.io/end-user-flows/mfa
 
 ### Patch Changes
 

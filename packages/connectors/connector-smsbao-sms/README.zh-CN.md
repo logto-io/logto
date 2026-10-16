@@ -47,4 +47,4 @@
 
 - [短信宝 API 文档](https://www.smsbao.com/openapi/213.html)
 - [短信宝 Node.js 示例](https://www.smsbao.com/openapi/305.html)
-- [Logto SMS 连接器指南](https://docs.logto.io/zh-CN/connectors/sms-connectors)
+- [Logto SMS 连接器指南](https://docs.meshx.io/zh-CN/connectors/sms-connectors)

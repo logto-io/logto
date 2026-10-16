@@ -272,7 +272,7 @@ describe('me tenant invitation routes', () => {
 
       const response = await request
         .post('/tenant/invitations')
-        .send({ invitee: 'foo@example.com' });
+        .send({ invitee: ['unlicensed@example.com'] });
 
       expect(response.status).toBe(201);
       expect(insertInvitation).toHaveBeenCalled();

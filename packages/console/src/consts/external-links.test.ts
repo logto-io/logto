@@ -6,7 +6,7 @@ import {
 
 describe('external links', () => {
   it('uses the cloud console URL for OSS members upsell entry', () => {
-    expect(logtoCloudConsoleUrl).toBe('https://cloud.logto.io');
+    expect(logtoCloudConsoleUrl).toBe('https://cloud.meshx.app');
   });
 
   it('points self-hosted plans upsell at the public landing page', () => {

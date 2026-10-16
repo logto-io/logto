@@ -113,7 +113,7 @@ Example templates configuration:
 
 You can enter a phone number and click on "Send" to verify the settings before clicking "Save and Done".
 
-That's it. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/recipes/configure-connectors/sms-connector/enable-SMS-sign-in/).
+That's it. Don't forget to [Enable connector in sign-in experience](https://docs.meshx.io/docs/recipes/configure-connectors/sms-connector/enable-SMS-sign-in/).
 
 ### Config types
 

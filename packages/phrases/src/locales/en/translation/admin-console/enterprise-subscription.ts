@@ -14,7 +14,7 @@ const enterprise_subscription = {
       'This is your Enterprise plan subscription and this quota is shared across tenants. Usage may be subject to a slight delay in updates. ',
     add_on_title: 'Pay as you go add-ons',
     add_on_description:
-      "These are additional pay-as-you-go add-ons based on your contract or Logto's standard pay-as-you-go rates. You will be charged according to your actual usage.",
+      "These are additional pay-as-you-go add-ons based on your contract or MeshX's standard pay-as-you-go rates. You will be charged according to your actual usage.",
     included: 'Included',
     over_quota: 'Over quota',
     basic_plan_column_title: {

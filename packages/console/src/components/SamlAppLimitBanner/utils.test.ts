@@ -20,7 +20,7 @@ describe('getSamlAppLimitBannerContent', () => {
     expect(descriptionKey).toBe('upsell.paywall.saml_applications_oss_limit_notice');
     expect(actionKey).toBe('upsell.try_with_product_name');
     expect(content.secondaryActionKey).toBe('upsell.explore_self_hosted_plans');
-    expect(cloudUrl.origin).toBe('https://cloud.logto.io');
+    expect(cloudUrl.origin).toBe('https://cloud.meshx.app');
     expect(cloudUrl.searchParams.get('utm_campaign')).toBe('cloud_upsell');
     expect(selfHostedUrl.pathname).toBe('/console/tenant-settings/license');
     expect(selfHostedUrl.searchParams.get('utm_content')).toBe(

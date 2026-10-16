@@ -71,7 +71,7 @@ function AssignPermissionsModal({ roleId, roleType, onClose }: Props) {
         title="role_details.permission.assign_title"
         subtitle="role_details.permission.assign_subtitle"
         learnMoreLink={{
-          href: 'https://docs.logto.io/docs/recipes/rbac/manage-permissions-and-roles#manage-role-permissions',
+          href: 'https://docs.meshx.io/docs/recipes/rbac/manage-permissions-and-roles#manage-role-permissions',
           targetBlank: 'noopener',
         }}
         size="large"

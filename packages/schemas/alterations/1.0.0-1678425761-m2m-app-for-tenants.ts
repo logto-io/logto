@@ -15,7 +15,7 @@ const alteration: AlterationScript = {
     const { id: resourceId } = await pool.one<{ id: string }>(sql`
       select id from resources
       where tenant_id = ${adminTenantId}
-      and indicator = 'https://cloud.logto.io/api'
+      and indicator = 'https://cloud.meshx.app/api'
     `);
 
     // Insert scopes
@@ -170,7 +170,7 @@ const alteration: AlterationScript = {
         using resources
         where resources.id = scopes.resource_id
         and scopes.tenant_id = ${adminTenantId}
-        and resources.indicator = 'https://cloud.logto.io/api'
+        and resources.indicator = 'https://cloud.meshx.app/api'
         and (scopes.name='send:sms' or scopes.name='send:email');
     `);
   },

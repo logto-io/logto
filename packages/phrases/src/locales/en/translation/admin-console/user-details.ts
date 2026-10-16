@@ -150,10 +150,10 @@ const user_details = {
   sessions: {
     title: 'Sessions',
     description:
-      'Manage sessions maintained by the Logto Authorization Server. Revoking a Logto session here prevents automatic consent on future authorization requests.',
+      'Manage sessions maintained by the MeshX Authorization Server. Revoking a MeshX session here prevents automatic consent on future authorization requests.',
     field_name: 'Sessions',
     multiple_signed_in: 'This user has signed into multiple devices or browsers.',
-    not_found: 'No active Logto sessions found. The user is not currently signed in on any device.',
+    not_found: 'No active MeshX sessions found. The user is not currently signed in on any device.',
     name_column: 'Name',
     session_id_column: 'Session ID',
     location_column: 'Location',
@@ -172,7 +172,7 @@ const user_details = {
   third_party_apps: {
     title: 'Third-party apps',
     description:
-      'Use Logto as your identity provider to authorize third-party apps. View and manage the apps this user has granted access to.',
+      'Use MeshX as your identity provider to authorize third-party apps. View and manage the apps this user has granted access to.',
     field_name: 'Authorized third-party apps',
     multiple_authorized: 'This user has authorized multiple third-party apps and services.',
     not_authorized: 'This user has not authorized any third-party apps or services yet.',

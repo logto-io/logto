@@ -50,7 +50,7 @@ Fill out the `clientId` and `clientSecret` field with the _Client ID_ and _Clien
 
 ## Test Patreon connector
 
-That's it. The Patreon connector should be available now. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/recipes/configure-connectors/social-connector/enable-social-sign-in/).
+That's it. The Patreon connector should be available now. Don't forget to [Enable connector in sign-in experience](https://docs.meshx.io/docs/recipes/configure-connectors/social-connector/enable-social-sign-in/).
 
 ## Reference
 

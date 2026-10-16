@@ -46,7 +46,7 @@
   - Provide MFA management for TOTP, backup codes (download/regenerate), and passkeys (WebAuthn), including rename and delete actions.
   - Gate sensitive operations behind password/email/phone verification and surface dedicated success screens.
 
-  To learn more about this feature, please refer to the documentation: https://docs.logto.io/end-user-flows/account-settings/by-account-api
+  To learn more about this feature, please refer to the documentation: https://docs.meshx.io/end-user-flows/account-settings/by-account-api
 
 ## 1.36.0
 

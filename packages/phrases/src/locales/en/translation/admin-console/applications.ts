@@ -2,7 +2,7 @@ const applications = {
   page_title: 'Applications',
   title: 'Applications',
   subtitle: 'Create and manage applications for OIDC authentication.',
-  subtitle_with_app_type: 'Set up Logto authentication for your {{name}} application',
+  subtitle_with_app_type: 'Set up MeshX authentication for your {{name}} application',
   create_device_flow_description:
     'Create a native application that uses the OAuth 2.0 Device Authorization Grant for input-limited devices or headless apps.',
   create: 'Create application',
@@ -43,7 +43,7 @@ const applications = {
     },
     protected: {
       title: 'Protected App',
-      subtitle: 'An app that is protected by Logto', // Not in use
+      subtitle: 'An app that is protected by MeshX', // Not in use
       description: 'N/A', // Not in use
     },
     saml: {
@@ -74,9 +74,9 @@ const applications = {
   },
   placeholder_title: 'Select an application type to continue',
   placeholder_description:
-    'Logto uses an application entity for OIDC to help with tasks such as identifying your apps, managing sign-in, and creating audit logs.',
+    'MeshX uses an application entity for OIDC to help with tasks such as identifying your apps, managing sign-in, and creating audit logs.',
   third_party_application_placeholder_description:
-    'Use Logto as an Identity Provider to provide OAuth authorization to third-party services. Includes a prebuilt user consent screen for resource access. <a>Learn more</a>',
+    'Use MeshX as an Identity Provider to provide OAuth authorization to third-party services. Includes a prebuilt user consent screen for resource access. <a>Learn more</a>',
   dynamic_app: {
     title: 'Dynamic app',
     subtitle: 'CIMD',
@@ -115,17 +115,17 @@ const applications = {
     client_compatibility: {
       title: 'Client compatibility',
       description:
-        "Adjust how Logto handles authorization requests from OAuth clients that don't yet fully support OpenID Connect. These settings are experimental and may change or be removed.",
+        "Adjust how MeshX handles authorization requests from OAuth clients that don't yet fully support OpenID Connect. These settings are experimental and may change or be removed.",
       add_consent_prompt_for_offline_access: 'Add consent prompt for offline access',
       add_consent_prompt_for_offline_access_description:
-        'When an OAuth client requests `offline_access` without `prompt=consent`, Logto adds the consent prompt so the client can receive a refresh token. Recommended for clients such as ChatGPT and Codex.',
+        'When an OAuth client requests `offline_access` without `prompt=consent`, MeshX adds the consent prompt so the client can receive a refresh token. Recommended for clients such as ChatGPT and Codex.',
     },
   },
   guide: {
     third_party: {
       title: 'Integrate a third-party application',
       description:
-        'Use Logto as your Identity Provider to provide OAuth authorization to third-party services. Includes a prebuilt user consent screen for secure resource access. <a>Learn more</a>',
+        'Use MeshX as your Identity Provider to provide OAuth authorization to third-party services. Includes a prebuilt user consent screen for secure resource access. <a>Learn more</a>',
     },
   },
 };

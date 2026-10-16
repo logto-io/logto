@@ -122,7 +122,7 @@
   - Organizations
   - Organization roles
 
-  Refer to the documentation for more details: https://docs.logto.io/integrate-logto/app-level-access-control
+  Refer to the documentation for more details: https://docs.meshx.io/integrate-logto/app-level-access-control
 
 - 3d38ae2074: add account center session management
 
@@ -212,7 +212,7 @@
 
   After the grace period ends, the new private signing key will transition to "Current" state, and the old signing key will be marked as "Previous".
 
-  Check out the [documentation](https://docs.logto.io/logto-oss/using-cli/rotate-signing-keys) for more details.
+  Check out the [documentation](https://docs.meshx.io/logto-oss/using-cli/rotate-signing-keys) for more details.
 
 ## 1.35.0
 
@@ -287,7 +287,7 @@
   2. **Identifier-first flow (button hidden)**: When **Show passkey sign-in button** is disabled, sign-in follows an identifier-first flow. Users first enter an identifier (for example email or username) on the first screen. On the next step, the flow prioritizes passkey and prompts users to **Verify via passkey** before falling back to password or verification code when needed.
   3. **Allow autofill**: When **Allow autofill** is enabled, supported browsers can show passkey suggestions directly from the identifier input on the sign-in page. Users can select a previously saved passkey from the autofill popup and sign in with minimal extra input.
 
-  Check out our [documentation](https://docs.logto.io/end-user-flows/sign-up-and-sign-in/passkey-sign-in) for more details.
+  Check out our [documentation](https://docs.meshx.io/end-user-flows/sign-up-and-sign-in/passkey-sign-in) for more details.
 
 - 74c993a91e: introduce user session management in Console.
 
@@ -454,7 +454,7 @@
   - Update Console to configure these factors and surface guidance/conflict warnings.
   - Support customizing forgot password methods in Sign-in Experience (related).
 
-  To learn more about this feature, please refer to the documentation: https://docs.logto.io/end-user-flows/mfa
+  To learn more about this feature, please refer to the documentation: https://docs.meshx.io/end-user-flows/mfa
 
 - 0ef4260e34: unify branding customization options between applications and organizations
 
@@ -486,7 +486,7 @@
   3. Test by signing up a new user in the demo app; a "Tell us about yourself" step will appear with your fields.
   4. Registration completes only after all required fields are filled.
 
-  Check out our [docs](https://docs.logto.io/end-user-flows/collect-user-profile) for more details.
+  Check out our [docs](https://docs.meshx.io/end-user-flows/collect-user-profile) for more details.
 
 ## 1.27.0
 
@@ -494,7 +494,7 @@
 
 - 0343699d7: feat: Add federated token storage support for social and enterprise SSO connectors
 
-  This update introduces the new [Secret Vault](https://docs.logto.io/secret-vault/) feature in Logto.
+  This update introduces the new [Secret Vault](https://docs.meshx.io/secret-vault/) feature in Logto.
 
   The Secret Vault is designed to securely store sensitive user data — such as access tokens, API keys, passcodes, and other confidential information. These secrets are typically used to access third-party services on behalf of users, making secure storage essential.
 
@@ -687,7 +687,7 @@
   - Metadata auto-configuration support
   - Enterprise-grade encryption and signing
 
-  [View full documentation](https://docs.logto.io/integrate-logto/saml-app) for more details.
+  [View full documentation](https://docs.meshx.io/integrate-logto/saml-app) for more details.
 
 ## 1.20.0
 
@@ -1168,7 +1168,7 @@
 
   Plus, we also introduce the concept of "organization template". It is a set of permissions and roles that applies to all organizations, while a user can have different roles in different organizations.
 
-  See [🏢 Organizations (Multi-tenancy)](https://docs.logto.io/docs/recipes/organizations/) for more details.
+  See [🏢 Organizations (Multi-tenancy)](https://docs.meshx.io/docs/recipes/organizations/) for more details.
 
 ### Patch Changes
 

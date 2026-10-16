@@ -2,7 +2,7 @@
   "tags": [
     {
       "name": "Connectors",
-      "description": "Connectors are the bridge between Logto and other third-party vendors who provide short message service (SMS), email service, or user information on wildly accepted social media.\n\nTo learn more about connectors, please see [🪛 Configure connectors](https://docs.logto.io/docs/recipes/configure-connectors/)."
+      "description": "Connectors are the bridge between Logto and other third-party vendors who provide short message service (SMS), email service, or user information on wildly accepted social media.\n\nTo learn more about connectors, please see [🪛 Configure connectors](https://docs.meshx.io/docs/recipes/configure-connectors/)."
     }
   ],
   "paths": {
