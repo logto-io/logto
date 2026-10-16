@@ -202,4 +202,12 @@ describe('getAccessTokenByRefreshToken', () => {
     const { access_token } = await getAccessTokenByRefreshToken(mockedConfig, mockRefreshToken);
     expect(access_token).toEqual(mockTokenResponse.access_token);
   });
+
+  it('should normalize an array `scope` to a space-delimited string', async () => {
+    nock(tokenEndpoint)
+      .post('')
+      .reply(200, { ...mockTokenResponse, scope: ['chat:read', 'chat:edit'] });
+    const { scope } = await getAccessTokenByRefreshToken(mockedConfig, mockRefreshToken);
+    expect(scope).toEqual('chat:read chat:edit');
+  });
 });
