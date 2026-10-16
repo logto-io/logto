@@ -839,11 +839,16 @@ describe('authentication context extra token claims', () => {
   });
 
   it.each([true, false])(
-    'should preserve organization claims and apply customizer output last with dev features %s',
+    'should preserve organization claims, reserve the authentication context against the customizer, and keep it last for other claims with dev features %s',
     async (isDevFeaturesEnabled) => {
       Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', isDevFeaturesEnabled);
       Reflect.set(EnvSet.values, 'isCloud', false);
-      const customizedClaims = { acr: 'custom-acr', auth_time: 3000, custom_claim: true };
+      const customizedClaims = {
+        acr: 'custom-acr',
+        amr: ['custom-amr'],
+        auth_time: 3000,
+        custom_claim: true,
+      };
       const runScriptLocally = jest
         .spyOn(JwtCustomizerLibrary, 'runScriptLocally')
         .mockResolvedValueOnce({})
@@ -902,11 +907,16 @@ describe('authentication context extra token claims', () => {
         }),
       };
 
+      const expectedMergedClaims = isDevFeaturesEnabled
+        ? // The reserved authentication context claims only survive as Logto's own values.
+          { ...builtInClaims, custom_claim: true }
+        : // Without the feature the released merge order stands, customizer output included.
+          { ...builtInClaims, ...customizedClaims };
+
       await expect(configuration.extraTokenClaims(ctx, token)).resolves.toEqual(builtInClaims);
-      await expect(configuration.extraTokenClaims(ctx, token)).resolves.toEqual({
-        ...builtInClaims,
-        ...customizedClaims,
-      });
+      await expect(configuration.extraTokenClaims(ctx, token)).resolves.toEqual(
+        expectedMergedClaims
+      );
 
       // Authentication context must also work when no other extra claims are configured.
       getJwtCustomizer.mockRejectedValueOnce(new Error('Customizer is not configured'));
@@ -941,6 +951,84 @@ describe('authentication context extra token claims', () => {
     await expect(configuration.extraTokenClaims(ctx, token)).resolves.toEqual({
       act: { sub: 'actor-id' },
     });
+  });
+
+  it('should drop the reserved authentication context claims a token exchange customizer returns', async () => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+    Reflect.set(EnvSet.values, 'isCloud', false);
+    jest.spyOn(JwtCustomizerLibrary, 'runScriptLocally').mockResolvedValue({
+      acr: 'custom-acr',
+      amr: ['custom-amr'],
+      auth_time: 3000,
+      custom_claim: true,
+    });
+    const tenant = new MockTenant(
+      undefined,
+      undefined,
+      undefined,
+      {
+        jwtCustomizers: {
+          getUserContext: jest.fn().mockResolvedValue({ id: accountId }),
+          getApplicationContext: jest.fn(),
+        },
+      },
+      { getJwtCustomizer: jest.fn().mockResolvedValue({ script: 'return {}' }) }
+    );
+    const provider = createProvider(tenant);
+    const configuration = getProviderConfiguration(provider);
+    const client = createTestClient();
+    assert(client);
+    const ctx = createOidcContext({
+      provider,
+      client,
+      params: { grant_type: GrantType.TokenExchange },
+    });
+    Reflect.set(ctx, 'createLog', jest.fn().mockReturnValue({ append: jest.fn() }));
+    Reflect.set(ctx, 'prependAllLogEntries', jest.fn());
+    const token = new provider.AccessToken({
+      client,
+      accountId,
+      scope: 'openid',
+      grantId: 'grant-id',
+      gty: GrantType.TokenExchange,
+      extra: { act: { sub: 'actor-id' } },
+    });
+
+    // The grant derives no authentication context, so the script adds nothing but its own claims.
+    await expect(configuration.extraTokenClaims(ctx, token)).resolves.toEqual({
+      act: { sub: 'actor-id' },
+      custom_claim: true,
+    });
+  });
+
+  it('should keep the reserved authentication context claims a client credentials customizer returns', async () => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+    Reflect.set(EnvSet.values, 'isCloud', false);
+    const customizedClaims = {
+      acr: 'custom-acr',
+      amr: ['custom-amr'],
+      auth_time: 3000,
+      custom_claim: true,
+    };
+    jest.spyOn(JwtCustomizerLibrary, 'runScriptLocally').mockResolvedValue(customizedClaims);
+    const tenant = new MockTenant(
+      undefined,
+      undefined,
+      undefined,
+      { jwtCustomizers: { getApplicationContext: jest.fn() } },
+      { getJwtCustomizer: jest.fn().mockResolvedValue({ script: 'return {}' }) }
+    );
+    const provider = createProvider(tenant);
+    const configuration = getProviderConfiguration(provider);
+    const client = createTestClient();
+    assert(client);
+    const ctx = createOidcContext({ provider, client });
+    Reflect.set(ctx, 'createLog', jest.fn().mockReturnValue({ append: jest.fn() }));
+    Reflect.set(ctx, 'prependAllLogEntries', jest.fn());
+    const token = new provider.ClientCredentials({ client, scope: 'openid' });
+
+    // Machine-to-machine tokens carry no authentication context and keep every custom claim.
+    await expect(configuration.extraTokenClaims(ctx, token)).resolves.toEqual(customizedClaims);
   });
 });
 /* eslint-enable max-lines */
