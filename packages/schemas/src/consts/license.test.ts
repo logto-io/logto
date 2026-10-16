@@ -82,11 +82,13 @@ describe('licensePayloadGuard', () => {
     expect(licensePayloadGuard.parse(validPayload)).not.toHaveProperty('usageLimits');
   });
 
-  it.each([-1, 1.5, '50000'])('rejects the MAU limit %j', (mau) => {
-    expect(licensePayloadGuard.safeParse({ ...validPayload, usageLimits: { mau } }).success).toBe(
-      false
-    );
-  });
+  it.each([{ mau: -1 }, { mau: 1.5 }, { mau: '50000' }, null])(
+    'drops the usage limits %j instead of rejecting the key',
+    (usageLimits) => {
+      // Advisory limits must never invalidate the key and take the enforced quota with it.
+      expect(licensePayloadGuard.parse({ ...validPayload, usageLimits })).toEqual(validPayload);
+    }
+  );
 
   it('strips unknown usage limits', () => {
     expect(

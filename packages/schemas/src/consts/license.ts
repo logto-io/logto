@@ -207,8 +207,17 @@ export const licensePayloadGuard = z.object({
   iat: z.number().int().nonnegative(),
   exp: z.number().int().nonnegative(),
   quota: licenseQuotaOverridesGuard,
-  usageLimits: licenseUsageLimitsGuard.optional(),
-}) satisfies ToZodObject<LicensePayload>;
+  // Unlike the enforced `quota`, a limit that does not parse is dropped rather than rejecting the
+  // whole key: an advisory field must never take a customer's entitlements away.
+  usageLimits: z.preprocess(
+    (claim) => (licenseUsageLimitsGuard.safeParse(claim).success ? claim : undefined),
+    licenseUsageLimitsGuard.optional()
+  ),
+}) satisfies ToZodObject<
+  // The input of `usageLimits` is the claim as it arrives, which is what lets it drop what does not
+  // parse; every other claim stays an exact mapping.
+  Omit<LicensePayload, 'usageLimits'> & { usageLimits: unknown }
+>;
 
 /**
  * The entitlements of a self-hosted instance with no license key installed, i.e. today's OSS.
