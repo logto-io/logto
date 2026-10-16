@@ -98,6 +98,36 @@ export const useSidebarMenuItems = (): {
       ],
     },
     {
+      title: 'infrastructure',
+      items: [
+        {
+          Icon: BarGraph,
+          title: 'stacks',
+          path: 'infrastructure',
+        },
+        {
+          Icon: BarGraph,
+          title: 'capacity',
+          path: 'infrastructure/capacity',
+        },
+        {
+          Icon: BarGraph,
+          title: 'agent',
+          path: 'infrastructure/agent',
+        },
+        {
+          Icon: BarGraph,
+          title: 'bundle',
+          path: 'infrastructure/bundle',
+        },
+        {
+          Icon: BarGraph,
+          title: 'mcp_servers',
+          path: 'mcp-portal',
+        },
+      ],
+    },
+    {
       title: 'authorization',
       items: [
         {

@@ -22,6 +22,7 @@ import invitation from './invitation.js';
 import jwt_claims from './jwt-claims.js';
 import log_details from './log-details.js';
 import logs from './logs.js';
+import mcp_portal from './mcp-portal.js';
 import menu from './menu.js';
 import mfa from './mfa.js';
 import oidc_configs from './oidc-configs.js';
@@ -68,6 +69,7 @@ const admin_console = {
   api_resources,
   api_resource_details,
   connectors,
+  mcp_portal,
   connector_details,
   enterprise_sso,
   enterprise_sso_details,

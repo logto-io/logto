@@ -3,6 +3,8 @@ import {
   type jwtCustomizerConfigGuard,
   LogtoConfigs,
   LogtoTenantConfigKey,
+  type McpPortalConnection,
+  mcpPortalConnectionGuard,
   type AdminConsoleData,
   type CimdConfig,
   cimdConfigGuard,
@@ -71,6 +73,27 @@ export const createLogtoConfigQueries = (
       select ${fields.value} from ${table}
       where ${fields.key} = ${LogtoTenantConfigKey.CloudConnection}
     `);
+
+  /** The MCP portal connection, or undefined before the portal has been set up. */
+  const getMcpPortalConnection = async (): Promise<McpPortalConnection | undefined> => {
+    const row = await pool.maybeOne<{ value: unknown }>(sql`
+      select ${fields.value} from ${table}
+      where ${fields.key} = ${LogtoTenantConfigKey.McpPortal}
+    `);
+
+    return row ? mcpPortalConnectionGuard.parse(row.value) : undefined;
+  };
+
+  const upsertMcpPortalConnection = async (value: McpPortalConnection) => {
+    await pool.query(sql`
+      insert into ${table} (${fields.key}, ${fields.value})
+      values (${LogtoTenantConfigKey.McpPortal}, ${sql.jsonb(value)})
+      on conflict (${fields.tenantId}, ${fields.key}) do update set ${fields.value} = ${sql.jsonb(value)}
+    `);
+  };
+
+  const deleteMcpPortalConnection = async () =>
+    pool.query(sql`delete from ${table} where ${fields.key} = ${LogtoTenantConfigKey.McpPortal}`);
 
   const getRowsByKeys = async (keys: LogtoConfigKey[]) =>
     pool.query<LogtoConfig>(sql`
@@ -298,6 +321,9 @@ export const createLogtoConfigQueries = (
     getAdminConsoleConfig,
     updateAdminConsoleConfig,
     getCloudConnectionData,
+    getMcpPortalConnection,
+    upsertMcpPortalConnection,
+    deleteMcpPortalConnection,
     getRowsByKeys,
     lockPrivateSigningKeys,
     lockPrivateSigningKeysAndRotationState,

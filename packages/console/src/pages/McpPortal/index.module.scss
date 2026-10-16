@@ -1,0 +1,90 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.eyebrow {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.title {
+  margin: 0;
+}
+
+.description {
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+.form {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1 1 200px;
+
+  input {
+    padding: 8px 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    font: inherit;
+  }
+}
+
+.submit,
+.remove {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-body);
+  cursor: pointer;
+  font: inherit;
+
+  &:disabled {
+    opacity: 60%;
+    cursor: default;
+  }
+}
+
+.error {
+  margin: 0;
+  color: var(--color-error);
+}
+
+.card {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+  }
+}
+
+.muted {
+  color: var(--color-text-secondary);
+}

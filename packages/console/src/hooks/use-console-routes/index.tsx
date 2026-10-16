@@ -13,6 +13,7 @@ import { auditLogs } from './routes/audit-logs';
 import { connectors } from './routes/connectors';
 import { customizeJwt } from './routes/customize-jwt';
 import { enterpriseSso } from './routes/enterprise-sso';
+import { mcpPortal } from './routes/mcp-portal';
 import { mfa } from './routes/mfa';
 import { organizationTemplate } from './routes/organization-template';
 import { organizations } from './routes/organizations';
@@ -44,6 +45,7 @@ export const useConsoleRoutes = () => {
         connectors,
         enterpriseSso,
         security,
+        mcpPortal,
         webhooks,
         ...(isActionsEnabled ? [actions] : []),
         users,

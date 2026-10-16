@@ -1,0 +1,48 @@
+{
+  "name": "@logto/mcp-portal",
+  "version": "0.1.0",
+  "description": "A front door for MCP servers: one authenticated endpoint that federates user-registered upstream MCP servers.",
+  "author": "Silverhand Inc. <contact@silverhand.io>",
+  "license": "MPL-2.0",
+  "type": "module",
+  "private": true,
+  "main": "lib/index.js",
+  "scripts": {
+    "precommit": "lint-staged",
+    "build": "rm -rf lib && tsc -p tsconfig.build.json",
+    "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
+    "start": "node lib/index.js",
+    "check": "tsc --noEmit",
+    "lint": "eslint --ext .ts src",
+    "test": "vitest run src",
+    "test:ci": "pnpm run test --silent --coverage"
+  },
+  "engines": {
+    "node": "^22.14.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.1",
+    "@silverhand/essentials": "^2.9.1",
+    "@silverhand/slonik": "31.0.0-beta.2",
+    "jose": "^6.2.3",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@silverhand/eslint-config": "6.0.1",
+    "@silverhand/ts-config": "6.0.0",
+    "@types/node": "^22.14.0",
+    "@vitest/coverage-v8": "^4.1.11",
+    "eslint": "^8.56.0",
+    "lint-staged": "^15.0.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.5.3",
+    "vitest": "^4.1.11"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand",
+    "rules": {
+      "no-console": "error"
+    }
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc"
+}

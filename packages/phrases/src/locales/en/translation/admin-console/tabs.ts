@@ -1,4 +1,5 @@
 const tabs = {
+  mcp_servers: 'MCP servers',
   get_started: 'Get started',
   dashboard: 'Dashboard',
   applications: 'Applications',

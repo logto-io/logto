@@ -195,6 +195,18 @@ export type CimdConfig = z.infer<typeof cimdConfigGuard>;
 /** Applied when the `cimd` row is absent: the feature is opt-in per tenant. */
 export const defaultCimdConfig = Object.freeze({ enabled: false } satisfies CimdConfig);
 
+/* --- MCP portal connection --- */
+/**
+ * Where the MCP portal is and the secret core presents to it. Written once, from the console, when
+ * the portal is set up. The secret is never returned by any API.
+ */
+export const mcpPortalConnectionGuard = z.object({
+  url: z.string().url(),
+  internalSecret: z.string().min(32),
+});
+
+export type McpPortalConnection = z.infer<typeof mcpPortalConnectionGuard>;
+
 export enum LogtoTenantConfigKey {
   AdminConsole = 'adminConsole',
   CloudConnection = 'cloudConnection',
@@ -208,6 +220,8 @@ export enum LogtoTenantConfigKey {
   MessageRateLimitOverride = 'messageRateLimitOverride',
   /** Tenant-level switch for the OAuth Client ID Metadata Document feature. */
   Cimd = 'cimd',
+  /** Connection to the MCP portal service, written once from the console. */
+  McpPortal = 'mcpPortal',
 }
 export type LogtoTenantConfigType = {
   [LogtoTenantConfigKey.AdminConsole]: AdminConsoleData;
@@ -217,6 +231,7 @@ export type LogtoTenantConfigType = {
   [LogtoTenantConfigKey.SigningKeyRotationState]: SigningKeyRotationState;
   [LogtoTenantConfigKey.MessageRateLimitOverride]: MessageRateLimitOverride;
   [LogtoTenantConfigKey.Cimd]: CimdConfig;
+  [LogtoTenantConfigKey.McpPortal]: McpPortalConnection;
 };
 
 export const logtoTenantConfigGuard: Readonly<{
@@ -229,6 +244,7 @@ export const logtoTenantConfigGuard: Readonly<{
   [LogtoTenantConfigKey.SigningKeyRotationState]: signingKeyRotationStateGuard,
   [LogtoTenantConfigKey.MessageRateLimitOverride]: messageRateLimitOverrideGuard,
   [LogtoTenantConfigKey.Cimd]: cimdConfigGuard,
+  [LogtoTenantConfigKey.McpPortal]: mcpPortalConnectionGuard,
 });
 
 /* --- Summary --- */
