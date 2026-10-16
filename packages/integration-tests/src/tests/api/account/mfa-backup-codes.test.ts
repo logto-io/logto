@@ -16,6 +16,7 @@ import {
   createDefaultTenantUserWithPassword,
   deleteDefaultTenantUser,
   signInAndGetUserApi,
+  signInWithSocialAndGetUserApi,
 } from '#src/helpers/profile.js';
 import {
   enableAllPasswordSignInMethods,
@@ -207,8 +208,12 @@ describe('my-account (mfa - Backup Codes)', () => {
         codes,
       });
 
-      // Try to get backup codes without identity verification (no verification record ID)
-      await expectRejects(getBackupCodes(api, ''), {
+      // Try to get backup codes without identity verification (no verification record ID). A
+      // social sign-in carries no `acr`, so this token alone does not verify the identity either.
+      const noAuthenticationContextApi = await signInWithSocialAndGetUserApi(user.id, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+      await expectRejects(getBackupCodes(noAuthenticationContextApi, ''), {
         code: 'verification_record.permission_denied',
         status: 401,
       });
@@ -303,10 +308,17 @@ describe('my-account (mfa - Backup Codes)', () => {
       const backupCodeVerification = mfaVerifications.find(
         (verification) => verification.type === MfaFactor.BackupCode
       )!;
-      await expectRejects(deleteMfaVerification(api, backupCodeVerification.id, ''), {
-        code: 'verification_record.permission_denied',
-        status: 401,
+      // A social sign-in carries no `acr`, so this token alone does not verify the identity.
+      const noAuthenticationContextApi = await signInWithSocialAndGetUserApi(user.id, {
+        scopes: [UserScope.Profile, UserScope.Identities],
       });
+      await expectRejects(
+        deleteMfaVerification(noAuthenticationContextApi, backupCodeVerification.id, ''),
+        {
+          code: 'verification_record.permission_denied',
+          status: 401,
+        }
+      );
 
       await deleteDefaultTenantUser(user.id);
     });

@@ -24,6 +24,7 @@ import {
   createDefaultTenantUserWithPassword,
   deleteDefaultTenantUser,
   signInAndGetUserApi,
+  signInWithSocialAndGetUserApi,
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateEmail, generatePhone, generateNationalPhoneNumber } from '#src/utils.js';
@@ -131,8 +132,9 @@ describe('account (email and phone)', () => {
     });
 
     it('should fail if verification record is invalid', async () => {
-      const { user, username, password } = await createDefaultTenantUserWithPassword();
-      const api = await signInAndGetUserApi(username, password, {
+      const { user } = await createDefaultTenantUserWithPassword();
+      // A social sign-in carries no `acr`, so the token alone does not verify the identity.
+      const api = await signInWithSocialAndGetUserApi(user.id, {
         scopes: [UserScope.Profile, UserScope.Email],
       });
       const newEmail = generateEmail();
@@ -296,8 +298,9 @@ describe('account (email and phone)', () => {
     });
 
     it('should fail if verification record is invalid', async () => {
-      const { user, username, password } = await createDefaultTenantUserWithPassword();
-      const api = await signInAndGetUserApi(username, password, {
+      const { user } = await createDefaultTenantUserWithPassword();
+      // A social sign-in carries no `acr`, so the token alone does not verify the identity.
+      const api = await signInWithSocialAndGetUserApi(user.id, {
         scopes: [UserScope.Profile, UserScope.Email],
       });
 
@@ -425,8 +428,9 @@ describe('account (email and phone)', () => {
     });
 
     it('should fail if verification record is invalid', async () => {
-      const { user, username, password } = await createDefaultTenantUserWithPassword();
-      const api = await signInAndGetUserApi(username, password, {
+      const { user } = await createDefaultTenantUserWithPassword();
+      // A social sign-in carries no `acr`, so the token alone does not verify the identity.
+      const api = await signInWithSocialAndGetUserApi(user.id, {
         scopes: [UserScope.Profile, UserScope.Phone],
       });
 
@@ -568,8 +572,9 @@ describe('account (email and phone)', () => {
     });
 
     it('should fail if verification record is invalid', async () => {
-      const { user, username, password } = await createDefaultTenantUserWithPassword();
-      const api = await signInAndGetUserApi(username, password, {
+      const { user } = await createDefaultTenantUserWithPassword();
+      // A social sign-in carries no `acr`, so the token alone does not verify the identity.
+      const api = await signInWithSocialAndGetUserApi(user.id, {
         scopes: [UserScope.Profile, UserScope.Phone],
       });
 

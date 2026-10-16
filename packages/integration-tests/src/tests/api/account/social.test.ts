@@ -31,6 +31,7 @@ import {
   createDefaultTenantUserWithPassword,
   deleteDefaultTenantUser,
   signInAndGetUserApi,
+  signInWithSocialAndGetUserApi,
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 
@@ -84,8 +85,9 @@ describe('my-account (social)', () => {
     });
 
     it('should fail if verification record is invalid', async () => {
-      const { user, username, password } = await createDefaultTenantUserWithPassword();
-      const api = await signInAndGetUserApi(username, password, {
+      const { user } = await createDefaultTenantUserWithPassword();
+      // A social sign-in carries no `acr`, so the token alone does not verify the identity.
+      const api = await signInWithSocialAndGetUserApi(user.id, {
         scopes: [UserScope.Profile, UserScope.Identities],
       });
 

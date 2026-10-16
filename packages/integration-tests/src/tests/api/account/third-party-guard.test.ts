@@ -134,4 +134,42 @@ describe('account API third-party guard', () => {
       await Promise.all([deleteApplication(app.id), deleteDefaultTenantUser(user.id)]);
     }
   });
+
+  it('should answer a third-party application that lacks recent authentication without a challenge', async () => {
+    const { user, username, password } = await createDefaultTenantUserWithPassword();
+    const { app, api } = await buildAccountApi(true, username, password, [
+      UserScope.Profile,
+      UserScope.Identities,
+      UserScope.Sessions,
+      UserScope.TrustedDevices,
+    ]);
+
+    try {
+      // The password sign-in carries a fresh `acr`, so the token alone would verify the identity
+      // for a first-party client. A third-party application never gains that from its own token,
+      // and the routes keep answering the legacy error instead of the mutation-only 403.
+      await expectRejects(getSessions(api, ''), {
+        code: 'verification_record.permission_denied',
+        status: 401,
+      });
+      await expectRejects(getMyAccountGrants(api, ''), {
+        code: 'verification_record.permission_denied',
+        status: 401,
+      });
+
+      // Read the raw response: the helper rejects a non-2xx status.
+      const response = await api.get('api/my-account/trusted-devices', {
+        headers: { 'logto-verification-id': '' },
+        throwHttpErrors: false,
+      });
+      expect(response.status).toBe(401);
+      await expect(response.json()).resolves.toMatchObject({
+        code: 'verification_record.permission_denied',
+      });
+      // Reauthentication cannot help a third-party caller, so no challenge is offered.
+      expect(response.headers.get('WWW-Authenticate')).toBeNull();
+    } finally {
+      await Promise.all([deleteApplication(app.id), deleteDefaultTenantUser(user.id)]);
+    }
+  });
 });
