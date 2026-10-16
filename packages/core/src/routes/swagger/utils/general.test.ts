@@ -8,9 +8,10 @@ import { type DeepPartial } from '#src/test-utils/tenant.js';
 import {
   devFeatureSchemaExtension,
   removeDevFeatureParameters,
+  removeDevFeatureResponseHeaders,
   removeDevFeatureSchemaProperties,
-  removeUnnecessaryOperations,
-} from './general.js';
+} from './dev-feature.js';
+import { removeUnnecessaryOperations } from './general.js';
 
 const originalIsCloud = EnvSet.values.isCloud;
 const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
@@ -89,6 +90,37 @@ const createDevFeatureOperationDocument = (): DeepPartial<OpenAPIV3.Document> =>
     '/api/dev': {
       get: {
         tags: ['Dev feature'],
+      },
+    },
+  },
+});
+
+/**
+ * `x-logto-dev-feature` is an OpenAPI extension, which `openapi-types` does not model on a
+ * response header, so the marker needs the same cast the schema variant does.
+ */
+const createResponseHeaderDocument = (): DeepPartial<OpenAPIV3.Document> => ({
+  openapi: '3.0.1',
+  info: { title: 'Test', version: '1.0.0' },
+  paths: {
+    '/api/mock': {
+      patch: {
+        responses: {
+          '401': {
+            description: 'Permission denied.',
+            headers: {
+              Stable: {
+                description: 'Stable header.',
+                schema: { type: 'string' },
+              },
+              Beta: {
+                description: 'Dev feature header.',
+                schema: { type: 'string' },
+                [devFeatureSchemaExtension]: true,
+              } as unknown as OpenAPIV3.HeaderObject,
+            },
+          },
+        },
       },
     },
   },
@@ -219,5 +251,57 @@ describe('swagger general utils', () => {
       ])
     );
     expect(JSON.stringify(document)).not.toContain(devFeatureSchemaExtension);
+  });
+
+  describe('removeDevFeatureResponseHeaders()', () => {
+    it('should remove dev feature response headers when dev features are disabled', () => {
+      setDevFeaturesEnabled(false);
+
+      const document = createResponseHeaderDocument();
+      removeDevFeatureResponseHeaders(document);
+
+      expect(document).toMatchObject({
+        paths: {
+          '/api/mock': {
+            patch: {
+              responses: {
+                '401': {
+                  headers: {
+                    Stable: { description: 'Stable header.' },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+      expect(JSON.stringify(document)).not.toContain('Beta');
+      expect(JSON.stringify(document)).not.toContain(devFeatureSchemaExtension);
+    });
+
+    it('should keep dev feature response headers without exposing the internal marker when dev features are enabled', () => {
+      setDevFeaturesEnabled(true);
+
+      const document = createResponseHeaderDocument();
+      removeDevFeatureResponseHeaders(document);
+
+      expect(document).toMatchObject({
+        paths: {
+          '/api/mock': {
+            patch: {
+              responses: {
+                '401': {
+                  headers: {
+                    Stable: { description: 'Stable header.' },
+                    Beta: { description: 'Dev feature header.' },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+      expect(JSON.stringify(document)).not.toContain(devFeatureSchemaExtension);
+    });
   });
 });

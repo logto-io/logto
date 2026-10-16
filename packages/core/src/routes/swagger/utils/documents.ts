@@ -16,12 +16,15 @@ import { translationSchemas } from '#src/utils/zod.js';
 import { managementApiAuthDescription, userApiAuthDescription } from '../consts.js';
 
 import {
+  removeDevFeatureParameters,
+  removeDevFeatureResponseHeaders,
+  removeDevFeatureSchemaProperties,
+} from './dev-feature.js';
+import {
   type FindSupplementFilesOptions,
   devFeatureTag,
   findSupplementFiles,
   pruneSwaggerDocument,
-  removeDevFeatureParameters,
-  removeDevFeatureSchemaProperties,
   removeUnnecessaryOperations,
   shouldThrow,
   validateSupplement,
@@ -287,10 +290,11 @@ export const assembleSwaggerDocument = <ContextT extends IRouterParamContext>(
   /**
    * Supplements are pruned before merging, but the base document is generated from the env-free
    * zod guards in `@logto/schemas` and can still carry dev-feature properties — prune the
-   * assembled result as well. Parameters must be pruned first, as
+   * assembled result as well. Parameters and response headers must be pruned first, as
    * `removeDevFeatureSchemaProperties` strips the marker from every record unconditionally.
    */
   removeDevFeatureParameters(data);
+  removeDevFeatureResponseHeaders(data);
   removeDevFeatureSchemaProperties(data);
   pruneSwaggerDocument(data);
 

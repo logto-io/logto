@@ -4,8 +4,8 @@ import { EnvSet } from '#src/env-set/index.js';
 import { type DeepPartial } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
+import { devFeatureSchemaExtension } from './dev-feature.js';
 import { assembleSwaggerDocument } from './documents.js';
-import { devFeatureSchemaExtension } from './general.js';
 
 const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
 
