@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.45.1
+
+### Patch Changes
+
+- Updated dependencies [9193c59]
+  - @logto/core-kit@2.14.0
+
 ## 1.45.0
 
 ## 1.44.0

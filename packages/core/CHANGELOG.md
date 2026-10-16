@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.45.1
+
+### Patch Changes
+
+- ae8412d: warn once when a `/console` request reaches the default tenant because the request origin does not match any configured admin endpoint, asking operators to check the Console URL and `ADMIN_ENDPOINT`
+- Updated dependencies [9193c59]
+  - @logto/core-kit@2.14.0
+
 ## 1.45.0
 
 ### Minor Changes
