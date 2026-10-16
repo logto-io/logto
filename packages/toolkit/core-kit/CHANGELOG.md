@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.14.0
+
+### Minor Changes
+
+- 9193c59: add `UserScope.PersonalAccessTokens` for authorizing personal access token management
+
 ## 2.13.0
 
 ### Minor Changes
