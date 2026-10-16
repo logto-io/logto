@@ -23,17 +23,18 @@ export default function accountSessionRoutes<T extends UserRouter>(
   router.get(
     `${accountApiPrefix}/sessions`,
     koaGuard({
-      status: [200, 400, 401, 500],
+      status: [200, 400, 401, 403, 500],
       response: getAccountUserSessionsResponseGuard,
     }),
     async (ctx, next) => {
-      const { id: userId, scopes, identityVerified, sessionUid } = ctx.auth;
+      const { id: userId, scopes, identityVerified, sessionUid, clientId } = ctx.auth;
       const { fields } = ctx.accountCenter;
 
       assertThat(
         identityVerified,
         new RequestError({ code: 'verification_record.permission_denied', status: 401 })
       );
+      await assertFirstPartyClient(queries, clientId);
 
       assertThat(
         fields.session === AccountCenterControlValue.Edit ||
