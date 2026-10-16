@@ -157,7 +157,7 @@ describe('account API third-party guard', () => {
         status: 401,
       });
 
-      // Read the raw response: the helper rejects a non-2xx status.
+      // Read the raw response: `getTrustedDevicesResponse` rejects a non-2xx status.
       const response = await api.get('api/my-account/trusted-devices', {
         headers: { 'logto-verification-id': '' },
         throwHttpErrors: false,

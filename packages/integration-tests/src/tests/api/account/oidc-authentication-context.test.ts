@@ -1,12 +1,9 @@
 import { UserScope } from '@logto/core-kit';
+import { type KyInstance } from 'ky';
 
 import { enableAllAccountCenterFields } from '#src/api/account-center.js';
 import { authedAdminApi } from '#src/api/api.js';
-import {
-  getSessions,
-  getTrustedDevicesResponse,
-  updateMyLogtoConfig,
-} from '#src/api/my-account.js';
+import { getSessions, updateMyLogtoConfig } from '#src/api/my-account.js';
 import { createVerificationRecordByPassword } from '#src/api/verification-record.js';
 import {
   createDefaultTenantUserWithPassword,
@@ -15,6 +12,13 @@ import {
   signInWithSocialAndGetUserApi,
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
+
+/** Read the trusted devices, keeping the response so a `401` challenge can be inspected. */
+const getTrustedDevicesResponse = async (api: KyInstance) =>
+  api.get('api/my-account/trusted-devices', {
+    headers: { 'logto-verification-id': '' },
+    throwHttpErrors: false,
+  });
 
 describe('account API authentication context', () => {
   beforeAll(async () => {
@@ -25,7 +29,12 @@ describe('account API authentication context', () => {
   it('accepts a fresh first-party sign-in without a verification record', async () => {
     const { user, username, password } = await createDefaultTenantUserWithPassword();
     const api = await signInAndGetUserApi(username, password, {
-      scopes: [UserScope.Profile, UserScope.Identities, UserScope.Sessions],
+      scopes: [
+        UserScope.Profile,
+        UserScope.Identities,
+        UserScope.Sessions,
+        UserScope.TrustedDevices,
+      ],
     });
 
     try {
@@ -36,7 +45,7 @@ describe('account API authentication context', () => {
 
       // Reads that need it as well.
       await expect(getSessions(api, '')).resolves.toBeDefined();
-      const response = await getTrustedDevicesResponse(api, '');
+      const response = await getTrustedDevicesResponse(api);
       expect(response.status).toBe(200);
     } finally {
       await deleteDefaultTenantUser(user.id);
@@ -67,7 +76,7 @@ describe('account API authentication context', () => {
     });
 
     try {
-      const response = await getTrustedDevicesResponse(api, '');
+      const response = await getTrustedDevicesResponse(api);
 
       expect(response.status).toBe(401);
       await expect(response.json()).resolves.toMatchObject({
