@@ -43,9 +43,9 @@ describe('useCurrentTenantScopes', () => {
     });
   });
 
-  it('blocks invitations without collaboration but preserves existing member management', () => {
+  it('allows invitations without a collaboration license, as the scope alone decides', () => {
     expect(renderWithEntitlement(false)).toMatchObject({
-      canInviteMember: false,
+      canInviteMember: true,
       canRemoveMember: true,
       canUpdateMemberRole: true,
     });
