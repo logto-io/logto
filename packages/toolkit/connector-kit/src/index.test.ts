@@ -9,6 +9,7 @@ import {
   validateConfig,
   getValue,
   getAccessTokenByRefreshToken,
+  ConnectorErrorCodes,
 } from './index.js';
 
 describe('validateConfig', () => {
@@ -201,5 +202,16 @@ describe('getAccessTokenByRefreshToken', () => {
       .reply(200, mockTokenResponse);
     const { access_token } = await getAccessTokenByRefreshToken(mockedConfig, mockRefreshToken);
     expect(access_token).toEqual(mockTokenResponse.access_token);
+  });
+
+  it('should surface the error response body from the token endpoint', async () => {
+    const errorBody = { error: 'invalid_grant', error_description: 'Invalid refresh token' };
+    nock(tokenEndpoint).post('').reply(400, errorBody);
+    await expect(
+      getAccessTokenByRefreshToken(mockedConfig, mockRefreshToken)
+    ).rejects.toMatchObject({
+      code: ConnectorErrorCodes.General,
+      data: { message: JSON.stringify(errorBody) },
+    });
   });
 });
