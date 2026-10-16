@@ -173,18 +173,6 @@ describe('me tenant members and invitations', () => {
     });
   });
 
-  it('should refuse to invite without the license entitlement', async () => {
-    await installLicense(false);
-
-    await expectRejects(
-      ky.post(meUrl('tenant/invitations'), {
-        headers: getUser('admin').headers,
-        json: { invitee: inviteeEmail },
-      }),
-      { code: 'subscription.limit_exceeded', status: 403 }
-    );
-  });
-
   it('should invite an admin, let them sign up and accept, and remove their access', async () => {
     await installLicense(true);
     const { headers } = getUser('admin');

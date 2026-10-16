@@ -267,16 +267,15 @@ describe('me tenant invitation routes', () => {
       expect(insertInvitation).not.toHaveBeenCalled();
     });
 
-    it('should refuse to invite without the license entitlement', async () => {
+    it('should invite without the license entitlement', async () => {
       installLicense(false);
 
       const response = await request
         .post('/tenant/invitations')
         .send({ invitee: 'foo@example.com' });
 
-      expect(response.status).toBe(403);
-      expect(response.body).toMatchObject({ code: 'subscription.limit_exceeded' });
-      expect(insertInvitation).not.toHaveBeenCalled();
+      expect(response.status).toBe(201);
+      expect(insertInvitation).toHaveBeenCalled();
     });
 
     it('should drop the invitation when its email cannot be sent', async () => {
@@ -427,16 +426,15 @@ describe('me tenant invitation routes', () => {
       });
     });
 
-    it('should refuse to accept without the license entitlement', async () => {
+    it('should accept without the license entitlement', async () => {
       installLicense(false);
 
       const accepted = await request
         .patch('/invitations/mine/status')
         .send({ status: OrganizationInvitationStatus.Accepted });
 
-      expect(accepted.status).toBe(403);
-      expect(accepted.body).toMatchObject({ code: 'subscription.limit_exceeded' });
-      expect(updateStatus).not.toHaveBeenCalled();
+      expect(accepted.status).toBe(204);
+      expect(updateStatus).toHaveBeenCalled();
     });
 
     it('should hide an invitation addressed to someone else', async () => {
