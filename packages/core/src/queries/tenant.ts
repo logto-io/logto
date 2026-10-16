@@ -21,8 +21,23 @@ const createTenantQueries = (pool: CommonQueryMethods) => {
     return result;
   };
 
+  /**
+   * Count every tenant except `excludedTenantId`. Only a pool that is not restricted to one tenant,
+   * i.e. `EnvSet.sharedPool`, sees every tenant.
+   */
+  const countTenantsExcluding = async (excludedTenantId: string) => {
+    // `count` is a `bigint`, which comes back as a string.
+    const count = await pool.oneFirst<string>(sql`
+      select count(*) from ${table}
+      where ${fields.id} <> ${excludedTenantId}
+    `);
+
+    return Number(count);
+  };
+
   return {
     findTenantMetadataById,
+    countTenantsExcluding,
   };
 };
 
