@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'الصفحة غير موجودة',
@@ -135,6 +136,41 @@ const account_center = {
       remove_confirmation_title: 'هل تريد إزالة الجهاز الموثوق؟',
       remove_confirmation_description:
         'ستحتاج إلى إكمال المصادقة متعددة العوامل مرة أخرى على هذا الجهاز في المرة القادمة التي تسجل فيها الدخول. ستظل جلستك الحالية نشطة.',
+    },
+    personal_access_tokens: {
+      title: 'رموز الوصول الشخصية',
+      description:
+        'استخدم رموز الوصول الشخصية للمصادقة مع واجهات برمجة التطبيقات نيابةً عنك. تظل نشطة حتى تنتهي صلاحيتها أو تقوم بإلغائها، حتى لو قمت بتسجيل الخروج أو تغيير كلمة المرور الخاصة بك.',
+      create: 'إنشاء رمز جديد',
+      created_at: 'تم الإنشاء في {{date}}',
+      expires_on: 'ينتهي في {{date}}',
+      expired_on: 'انتهت صلاحيته في {{date}}',
+      expired: 'منتهي الصلاحية',
+      never_expires: 'لا تنتهي صلاحيته أبدًا',
+      never_expires_warning:
+        'لا يحتوي هذا الرمز على تاريخ انتهاء صلاحية. لمزيد من الأمان، أنشئ رمزًا جديدًا بتاريخ انتهاء صلاحية وألغِ هذا الرمز.',
+      rename: 'إعادة تسمية',
+      revoke: 'إلغاء',
+      loading: 'جارٍ التحميل...',
+      empty: 'لا توجد رموز وصول شخصية.',
+      load_failed: 'فشل تحميل رموز الوصول الشخصية. يرجى المحاولة مرة أخرى.',
+      retry: 'حاول مرة أخرى',
+      create_modal_title: 'إنشاء رمز وصول شخصي',
+      create_modal_description: 'أعطِ رمزك اسمًا وصفيًا واختر فترة انتهاء الصلاحية.',
+      token_name: 'اسم الرمز',
+      token_name_placeholder: 'رمزي',
+      expiration: 'انتهاء الصلاحية',
+      expiration_days: '{{count}} يومًا',
+      created_modal_title: 'تم إنشاء رمز الوصول الشخصي',
+      show_once_warning: 'لن تتمكن من رؤية هذا الرمز مرة أخرى. انسخه الآن واحفظه في مكان آمن.',
+      copied: 'تم نسخ رمز الوصول الشخصي.',
+      rename_modal_title: 'إعادة تسمية رمز الوصول الشخصي',
+      rename_modal_description: 'أدخل اسمًا جديدًا لرمز الوصول الشخصي هذا.',
+      renamed: 'تمت إعادة تسمية رمز الوصول الشخصي بنجاح.',
+      revoke_confirmation_title: 'هل تريد إلغاء رمز الوصول الشخصي؟',
+      revoke_confirmation_description:
+        'ستفقد أي تطبيقات أو نصوص برمجية تستخدم "{{name}}" إمكانية الوصول فورًا. هل أنت متأكد أنك تريد المتابعة؟',
+      revoked: 'تم إلغاء رمز الوصول الشخصي بنجاح.',
     },
   },
   social: {
@@ -293,3 +329,4 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
+/* eslint-enable max-lines */

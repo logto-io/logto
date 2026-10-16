@@ -137,6 +137,42 @@ const account_center = {
       remove_confirmation_description:
         'Při příštím přihlášení na tomto zařízení budete muset znovu dokončit MFA. Vaše aktuální relace zůstane aktivní.',
     },
+    personal_access_tokens: {
+      title: 'Osobní přístupové tokeny',
+      description:
+        'Osobní přístupové tokeny slouží k ověřování vůči rozhraním API vaším jménem. Zůstávají aktivní, dokud nevyprší jejich platnost nebo dokud je neodvoláte, a to i po odhlášení nebo změně hesla.',
+      create: 'Vytvořit nový token',
+      created_at: 'Vytvořeno {{date}}',
+      expires_on: 'Vyprší {{date}}',
+      expired_on: 'Vypršelo {{date}}',
+      expired: 'Vypršelo',
+      never_expires: 'Nikdy nevyprší',
+      never_expires_warning:
+        'Tento token nemá datum vypršení platnosti. Pro vyšší bezpečnost vytvořte nový token s datem vypršení a tento odvolejte.',
+      rename: 'Přejmenovat',
+      revoke: 'Odvolat',
+      loading: 'Načítání...',
+      empty: 'Žádné osobní přístupové tokeny.',
+      load_failed: 'Nepodařilo se načíst osobní přístupové tokeny. Zkuste to prosím znovu.',
+      retry: 'Zkusit znovu',
+      create_modal_title: 'Vytvořit osobní přístupový token',
+      create_modal_description: 'Zadejte popisný název tokenu a zvolte dobu platnosti.',
+      token_name: 'Název tokenu',
+      token_name_placeholder: 'Můj token',
+      expiration: 'Platnost',
+      expiration_days: '{{count}} dní',
+      created_modal_title: 'Osobní přístupový token byl vytvořen',
+      show_once_warning:
+        'Tento token už znovu neuvidíte. Zkopírujte jej nyní a uložte na bezpečné místo.',
+      copied: 'Osobní přístupový token byl zkopírován.',
+      rename_modal_title: 'Přejmenovat osobní přístupový token',
+      rename_modal_description: 'Zadejte nový název pro tento osobní přístupový token.',
+      renamed: 'Osobní přístupový token byl úspěšně přejmenován.',
+      revoke_confirmation_title: 'Odvolat osobní přístupový token?',
+      revoke_confirmation_description:
+        'Všechny aplikace nebo skripty používající „{{name}}“ okamžitě ztratí přístup. Opravdu chcete pokračovat?',
+      revoked: 'Osobní přístupový token byl úspěšně odvolán.',
+    },
   },
   social: {
     linked: '{{connector}} byl úspěšně propojen.',

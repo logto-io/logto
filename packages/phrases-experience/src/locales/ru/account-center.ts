@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'Страница не найдена',
@@ -135,6 +136,42 @@ const account_center = {
       remove_confirmation_title: 'Удалить доверенное устройство?',
       remove_confirmation_description:
         'При следующем входе на этом устройстве вам потребуется снова пройти MFA. Текущий сеанс останется активным.',
+    },
+    personal_access_tokens: {
+      title: 'Личные токены доступа',
+      description:
+        'Используйте персональные токены доступа для аутентификации в API от вашего имени. Они остаются активными до истечения срока действия или отзыва, даже если вы выйдете из аккаунта или измените пароль.',
+      create: 'Создать новый токен',
+      created_at: 'Создан {{date}}',
+      expires_on: 'Истекает {{date}}',
+      expired_on: 'Истек {{date}}',
+      expired: 'Истек',
+      never_expires: 'Бессрочный',
+      never_expires_warning:
+        'У этого токена нет срока действия. Для большей безопасности создайте новый токен со сроком действия и отзовите этот.',
+      rename: 'Переименовать',
+      revoke: 'Отозвать',
+      loading: 'Загрузка...',
+      empty: 'Нет личных токенов доступа.',
+      load_failed: 'Не удалось загрузить личные токены доступа. Попробуйте еще раз.',
+      retry: 'Повторить',
+      create_modal_title: 'Создать личный токен доступа',
+      create_modal_description: 'Укажите понятное имя токена и выберите срок его действия.',
+      token_name: 'Имя токена',
+      token_name_placeholder: 'Мой токен',
+      expiration: 'Срок действия',
+      expiration_days: '{{count}} дн.',
+      created_modal_title: 'Личный токен доступа создан',
+      show_once_warning:
+        'Вы больше не сможете увидеть этот токен. Скопируйте его сейчас и сохраните в надежном месте.',
+      copied: 'Личный токен доступа скопирован.',
+      rename_modal_title: 'Переименовать личный токен доступа',
+      rename_modal_description: 'Введите новое имя для этого личного токена доступа.',
+      renamed: 'Личный токен доступа успешно переименован.',
+      revoke_confirmation_title: 'Отозвать личный токен доступа?',
+      revoke_confirmation_description:
+        'Любые приложения или скрипты, использующие «{{name}}», немедленно потеряют доступ. Вы уверены, что хотите продолжить?',
+      revoked: 'Личный токен доступа успешно отозван.',
     },
   },
   social: {
@@ -298,3 +335,4 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
+/* eslint-enable max-lines */

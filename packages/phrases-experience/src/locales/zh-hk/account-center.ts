@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: '找不到頁面',
@@ -130,6 +131,41 @@ const account_center = {
       remove_confirmation_title: '移除受信任裝置？',
       remove_confirmation_description:
         '下次在此裝置登入時，你需要再次完成 MFA。目前的工作階段將保持有效。',
+    },
+    personal_access_tokens: {
+      title: '個人存取權杖',
+      description:
+        '使用個人存取權杖代表你向 API 進行身份驗證。即使你登出或更改密碼，它們仍會保持有效，直到過期或被你撤銷。',
+      create: '建立新權杖',
+      created_at: '建立於 {{date}}',
+      expires_on: '於 {{date}} 到期',
+      expired_on: '已於 {{date}} 過期',
+      expired: '已過期',
+      never_expires: '永不過期',
+      never_expires_warning:
+        '此權杖沒有到期日。為了提升安全性，建議建立一個設有到期日的新權杖並撤銷此權杖。',
+      rename: '重新命名',
+      revoke: '撤銷',
+      loading: '載入中...',
+      empty: '沒有個人存取權杖。',
+      load_failed: '無法載入個人存取權杖，請再試一次。',
+      retry: '再試一次',
+      create_modal_title: '建立個人存取權杖',
+      create_modal_description: '為你的權杖提供描述性名稱並選擇有效期。',
+      token_name: '權杖名稱',
+      token_name_placeholder: '我的權杖',
+      expiration: '有效期',
+      expiration_days: '{{count}} 天',
+      created_modal_title: '個人存取權杖已建立',
+      show_once_warning: '你將無法再次查看此權杖。請立即複製並保存在安全的地方。',
+      copied: '個人存取權杖已複製。',
+      rename_modal_title: '重新命名個人存取權杖',
+      rename_modal_description: '為此個人存取權杖輸入新名稱。',
+      renamed: '個人存取權杖已成功重新命名。',
+      revoke_confirmation_title: '撤銷個人存取權杖？',
+      revoke_confirmation_description:
+        '任何使用「{{name}}」的應用程式或指令碼都將立即失去存取權限。確定要繼續嗎？',
+      revoked: '個人存取權杖已成功撤銷。',
     },
   },
   social: {
@@ -282,3 +318,4 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
+/* eslint-enable max-lines */

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: '页面未找到',
@@ -130,6 +131,41 @@ const account_center = {
       remove_confirmation_title: '移除受信任设备？',
       remove_confirmation_description:
         '下次在此设备上登录时，你需要再次完成 MFA。当前会话将保持有效。',
+    },
+    personal_access_tokens: {
+      title: '个人访问令牌',
+      description:
+        '使用个人访问令牌代表你向 API 进行身份验证。即使你退出登录或更改密码，它们仍会保持有效，直到过期或被你撤销。',
+      create: '创建新令牌',
+      created_at: '创建于 {{date}}',
+      expires_on: '于 {{date}} 到期',
+      expired_on: '已于 {{date}} 过期',
+      expired: '已过期',
+      never_expires: '永不过期',
+      never_expires_warning:
+        '此令牌没有过期时间。为了更高的安全性，建议创建一个带有过期时间的新令牌并吊销此令牌。',
+      rename: '重命名',
+      revoke: '吊销',
+      loading: '加载中...',
+      empty: '暂无个人访问令牌。',
+      load_failed: '个人访问令牌加载失败，请重试。',
+      retry: '重试',
+      create_modal_title: '创建个人访问令牌',
+      create_modal_description: '为你的令牌设置一个描述性名称并选择有效期。',
+      token_name: '令牌名称',
+      token_name_placeholder: '我的令牌',
+      expiration: '有效期',
+      expiration_days: '{{count}} 天',
+      created_modal_title: '个人访问令牌已创建',
+      show_once_warning: '你将无法再次查看此令牌。请立即复制并妥善保存在安全的地方。',
+      copied: '个人访问令牌已复制。',
+      rename_modal_title: '重命名个人访问令牌',
+      rename_modal_description: '为此个人访问令牌输入新名称。',
+      renamed: '个人访问令牌已成功重命名。',
+      revoke_confirmation_title: '吊销个人访问令牌？',
+      revoke_confirmation_description:
+        '任何使用“{{name}}”的应用或脚本都将立即失去访问权限。确定要继续吗？',
+      revoked: '个人访问令牌已成功吊销。',
     },
   },
   social: {
@@ -282,3 +318,4 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
+/* eslint-enable max-lines */

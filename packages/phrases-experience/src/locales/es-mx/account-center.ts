@@ -141,6 +141,43 @@ const account_center = {
       remove_confirmation_description:
         'Tendrás que completar la MFA de nuevo en este dispositivo la próxima vez que inicies sesión. Tu sesión actual seguirá activa.',
     },
+    personal_access_tokens: {
+      title: 'Tokens de acceso personal',
+      description:
+        'Usa tokens de acceso personal para autenticarte ante las API en tu nombre. Permanecen activos hasta que expiran o los revocas, incluso si cierras sesión o cambias tu contraseña.',
+      create: 'Crear nuevo token',
+      created_at: 'Creado el {{date}}',
+      expires_on: 'Vence el {{date}}',
+      expired_on: 'Venció el {{date}}',
+      expired: 'Vencido',
+      never_expires: 'Nunca vence',
+      never_expires_warning:
+        'Este token no tiene fecha de vencimiento. Para mayor seguridad, crea un nuevo token con fecha de vencimiento y revoca este.',
+      rename: 'Renombrar',
+      revoke: 'Revocar',
+      loading: 'Cargando...',
+      empty: 'No hay tokens de acceso personal.',
+      load_failed: 'Error al cargar los tokens de acceso personal. Inténtalo de nuevo.',
+      retry: 'Intentar de nuevo',
+      create_modal_title: 'Crear token de acceso personal',
+      create_modal_description:
+        'Asigna a tu token un nombre descriptivo y elige un período de vencimiento.',
+      token_name: 'Nombre del token',
+      token_name_placeholder: 'Mi token',
+      expiration: 'Vencimiento',
+      expiration_days: '{{count}} días',
+      created_modal_title: 'Token de acceso personal creado',
+      show_once_warning:
+        'No podrás volver a ver este token. Cópialo ahora y guárdalo en un lugar seguro.',
+      copied: 'Token de acceso personal copiado.',
+      rename_modal_title: 'Renombrar token de acceso personal',
+      rename_modal_description: 'Ingresa un nuevo nombre para este token de acceso personal.',
+      renamed: 'Token de acceso personal renombrado correctamente.',
+      revoke_confirmation_title: '¿Revocar token de acceso personal?',
+      revoke_confirmation_description:
+        'Cualquier aplicación o script que use "{{name}}" perderá el acceso inmediatamente. ¿Estás seguro de que deseas continuar?',
+      revoked: 'Token de acceso personal revocado correctamente.',
+    },
   },
   social: {
     linked: 'Se vinculó {{connector}} correctamente.',

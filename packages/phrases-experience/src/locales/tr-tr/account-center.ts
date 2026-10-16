@@ -138,6 +138,43 @@ const account_center = {
       remove_confirmation_description:
         'Bu cihazda bir sonraki oturum açışınızda MFA işlemini yeniden tamamlamanız gerekecek. Geçerli oturumunuz etkin kalacak.',
     },
+    personal_access_tokens: {
+      title: 'Kişisel erişim belirteçleri',
+      description:
+        "API'lerle kendi adınıza kimlik doğrulaması yapmak için kişisel erişim belirteçlerini kullanın. Oturumu kapatsanız veya parolanızı değiştirseniz bile süresi dolana ya da siz iptal edene kadar etkin kalırlar.",
+      create: 'Yeni belirteç oluştur',
+      created_at: '{{date}} tarihinde oluşturuldu',
+      expires_on: '{{date}} tarihinde sona eriyor',
+      expired_on: '{{date}} tarihinde sona erdi',
+      expired: 'Süresi doldu',
+      never_expires: 'Süresi asla dolmaz',
+      never_expires_warning:
+        'Bu belirtecin son kullanma tarihi yoktur. Daha iyi güvenlik için son kullanma tarihi olan yeni bir belirteç oluşturun ve bunu iptal edin.',
+      rename: 'Yeniden adlandır',
+      revoke: 'İptal et',
+      loading: 'Yükleniyor...',
+      empty: 'Kişisel erişim belirteci yok.',
+      load_failed: 'Kişisel erişim belirteçleri yüklenemedi. Lütfen tekrar deneyin.',
+      retry: 'Tekrar dene',
+      create_modal_title: 'Kişisel erişim belirteci oluştur',
+      create_modal_description:
+        'Belirtecinize açıklayıcı bir ad verin ve bir geçerlilik süresi seçin.',
+      token_name: 'Belirteç adı',
+      token_name_placeholder: 'Belirtecim',
+      expiration: 'Son kullanma',
+      expiration_days: '{{count}} gün',
+      created_modal_title: 'Kişisel erişim belirteci oluşturuldu',
+      show_once_warning:
+        'Bu belirteci bir daha göremeyeceksiniz. Şimdi kopyalayın ve güvenli bir yerde saklayın.',
+      copied: 'Kişisel erişim belirteci kopyalandı.',
+      rename_modal_title: 'Kişisel erişim belirtecini yeniden adlandır',
+      rename_modal_description: 'Bu kişisel erişim belirteci için yeni bir ad girin.',
+      renamed: 'Kişisel erişim belirteci başarıyla yeniden adlandırıldı.',
+      revoke_confirmation_title: 'Kişisel erişim belirteci iptal edilsin mi?',
+      revoke_confirmation_description:
+        '"{{name}}" kullanan tüm uygulamalar veya betikler erişimi derhal kaybedecektir. Devam etmek istediğinizden emin misiniz?',
+      revoked: 'Kişisel erişim belirteci başarıyla iptal edildi.',
+    },
   },
   social: {
     linked: '{{connector}} başarıyla bağlandı.',

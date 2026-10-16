@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: '페이지를 찾을 수 없음',
@@ -134,6 +135,41 @@ const account_center = {
       remove_confirmation_title: '신뢰할 수 있는 기기를 제거할까요?',
       remove_confirmation_description:
         '다음에 이 기기에서 로그인할 때 MFA를 다시 완료해야 합니다. 현재 세션은 계속 활성 상태로 유지됩니다.',
+    },
+    personal_access_tokens: {
+      title: '개인용 액세스 토큰',
+      description:
+        '개인 액세스 토큰을 사용하여 사용자를 대신해 API에 인증할 수 있습니다. 로그아웃하거나 비밀번호를 변경하더라도 만료되거나 폐기할 때까지 활성 상태로 유지됩니다.',
+      create: '새 토큰 만들기',
+      created_at: '{{date}}에 생성됨',
+      expires_on: '{{date}}에 만료',
+      expired_on: '{{date}}에 만료됨',
+      expired: '만료됨',
+      never_expires: '만료되지 않음',
+      never_expires_warning:
+        '이 토큰에는 만료일이 없습니다. 보안을 강화하려면 만료일이 있는 새 토큰을 만들고 이 토큰을 폐기하세요.',
+      rename: '이름 변경',
+      revoke: '폐기',
+      loading: '로딩 중...',
+      empty: '개인용 액세스 토큰이 없습니다.',
+      load_failed: '개인용 액세스 토큰을 불러오지 못했습니다. 다시 시도해 주세요.',
+      retry: '다시 시도',
+      create_modal_title: '개인용 액세스 토큰 만들기',
+      create_modal_description: '토큰을 식별할 수 있는 이름을 지정하고 만료 기간을 선택하세요.',
+      token_name: '토큰 이름',
+      token_name_placeholder: '내 토큰',
+      expiration: '만료 기간',
+      expiration_days: '{{count}}일',
+      created_modal_title: '개인용 액세스 토큰이 생성되었습니다',
+      show_once_warning: '이 토큰은 다시 확인할 수 없습니다. 지금 복사하여 안전한 곳에 보관하세요.',
+      copied: '개인용 액세스 토큰이 복사되었습니다.',
+      rename_modal_title: '개인용 액세스 토큰 이름 변경',
+      rename_modal_description: '이 개인용 액세스 토큰의 새 이름을 입력하세요.',
+      renamed: '개인용 액세스 토큰 이름이 변경되었습니다.',
+      revoke_confirmation_title: '개인용 액세스 토큰을 폐기하시겠습니까?',
+      revoke_confirmation_description:
+        '"{{name}}"을(를) 사용하는 모든 애플리케이션이나 스크립트가 즉시 액세스 권한을 잃게 됩니다. 계속하시겠습니까?',
+      revoked: '개인용 액세스 토큰이 폐기되었습니다.',
     },
   },
   social: {
@@ -292,3 +328,4 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
+/* eslint-enable max-lines */

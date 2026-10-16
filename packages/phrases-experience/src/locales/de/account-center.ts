@@ -145,6 +145,45 @@ const account_center = {
       remove_confirmation_description:
         'Bei deiner nächsten Anmeldung auf diesem Gerät musst du MFA erneut abschließen. Deine aktuelle Sitzung bleibt aktiv.',
     },
+    personal_access_tokens: {
+      title: 'Persönliche Zugriffstoken',
+      description:
+        'Verwenden Sie persönliche Zugriffstoken, um sich in Ihrem Namen bei APIs zu authentifizieren. Sie bleiben aktiv, bis sie ablaufen oder von Ihnen widerrufen werden, selbst wenn Sie sich abmelden oder Ihr Passwort ändern.',
+      create: 'Neues Token erstellen',
+      created_at: 'Erstellt am {{date}}',
+      expires_on: 'Läuft ab am {{date}}',
+      expired_on: 'Abgelaufen am {{date}}',
+      expired: 'Abgelaufen',
+      never_expires: 'Läuft nie ab',
+      never_expires_warning:
+        'Dieses Token hat kein Ablaufdatum. Erstellen Sie für mehr Sicherheit ein neues Token mit Ablaufdatum und widerrufen Sie dieses.',
+      rename: 'Umbenennen',
+      revoke: 'Widerrufen',
+      loading: 'Wird geladen...',
+      empty: 'Keine persönlichen Zugriffstoken.',
+      load_failed:
+        'Persönliche Zugriffstoken konnten nicht geladen werden. Bitte versuchen Sie es erneut.',
+      retry: 'Erneut versuchen',
+      create_modal_title: 'Persönliches Zugriffstoken erstellen',
+      create_modal_description:
+        'Geben Sie Ihrem Token einen aussagekräftigen Namen und wählen Sie einen Ablaufzeitraum.',
+      token_name: 'Token-Name',
+      token_name_placeholder: 'Mein Token',
+      expiration: 'Ablauf',
+      expiration_days: '{{count}} Tage',
+      created_modal_title: 'Persönliches Zugriffstoken erstellt',
+      show_once_warning:
+        'Sie können dieses Token nicht noch einmal einsehen. Kopieren Sie es jetzt und bewahren Sie es sicher auf.',
+      copied: 'Persönliches Zugriffstoken kopiert.',
+      rename_modal_title: 'Persönliches Zugriffstoken umbenennen',
+      rename_modal_description:
+        'Geben Sie einen neuen Namen für dieses persönliche Zugriffstoken ein.',
+      renamed: 'Persönliches Zugriffstoken erfolgreich umbenannt.',
+      revoke_confirmation_title: 'Persönliches Zugriffstoken widerrufen?',
+      revoke_confirmation_description:
+        'Alle Anwendungen oder Skripte, die „{{name}}“ verwenden, verlieren sofort den Zugriff. Möchten Sie wirklich fortfahren?',
+      revoked: 'Persönliches Zugriffstoken erfolgreich widerrufen.',
+    },
   },
   social: {
     linked: '{{connector}} wurde erfolgreich verknüpft.',

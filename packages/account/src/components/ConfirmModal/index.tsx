@@ -14,6 +14,8 @@ type Props = {
   readonly confirmButtonType?: ButtonType;
   readonly cancelText?: TFuncKey;
   readonly isLoading?: boolean;
+  /** Whether Esc or an overlay click closes the modal via `onCancel`. Defaults to `true`. */
+  readonly isDismissible?: boolean;
   readonly onConfirm: () => void;
   readonly onCancel: () => void;
 };
@@ -26,13 +28,14 @@ const ConfirmModal = ({
   confirmButtonType = 'primary',
   cancelText = 'action.cancel',
   isLoading,
+  isDismissible = true,
   onConfirm,
   onCancel,
 }: Props) => {
   return (
     <ReactModal
-      shouldCloseOnEsc
-      shouldCloseOnOverlayClick
+      shouldCloseOnEsc={isDismissible}
+      shouldCloseOnOverlayClick={isDismissible}
       isOpen={isOpen}
       className={styles.modal}
       overlayClassName={styles.overlay}

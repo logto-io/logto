@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Account Center session and local storage helpers share the same schema guards. */
 import * as s from 'superstruct';
 
 const storagePrefix = 'logto:account-center:';
@@ -14,11 +15,24 @@ const storageKeys = Object.freeze({
   pendingReturn: `${storagePrefix}pending-return`,
   pendingVerifiedAction: `${storagePrefix}pending-verified-action`,
   pendingSocialRemoveConnectorId: `${storagePrefix}pending-social-remove-connector-id`,
+  pendingPersonalAccessTokenCreate: `${storagePrefix}pending-personal-access-token-create`,
+  pendingPersonalAccessTokenRename: `${storagePrefix}pending-personal-access-token-rename`,
+  pendingPersonalAccessTokenRevokeName: `${storagePrefix}pending-personal-access-token-revoke-name`,
 });
 
 export type StoredVerificationRecord = {
   verificationId: string;
   expiresAt: string;
+};
+
+export type StoredPendingPersonalAccessTokenCreate = {
+  name: string;
+  expiryDays: number;
+};
+
+export type StoredPendingPersonalAccessTokenRename = {
+  currentName: string;
+  name: string;
 };
 
 type StoredPathState = {
@@ -66,6 +80,16 @@ const storedPathStateGuard = s.object({
   createdAt: s.number(),
 });
 
+const storedPendingPersonalAccessTokenCreateGuard = s.object({
+  name: s.string(),
+  expiryDays: s.number(),
+});
+
+const storedPendingPersonalAccessTokenRenameGuard = s.object({
+  currentName: s.string(),
+  name: s.string(),
+});
+
 const storedSocialFlowRecordGuard = s.union([
   s.object({
     status: s.literal('pending'),
@@ -93,6 +117,9 @@ const pendingVerifiedActions = Object.freeze([
   'remove-social',
   'load-sessions',
   'load-trusted-devices',
+  'create-personal-access-token',
+  'rename-personal-access-token',
+  'revoke-personal-access-token',
 ] as const);
 
 export type PendingVerifiedAction = (typeof pendingVerifiedActions)[number];
@@ -285,6 +312,44 @@ export const accountStorage = Object.freeze({
       removeItem(storageKeys.pendingSocialRemoveConnectorId, 'session');
     },
   },
+  pendingPersonalAccessTokenCreate: {
+    get: (): StoredPendingPersonalAccessTokenCreate | undefined =>
+      getStructuredValue(
+        storageKeys.pendingPersonalAccessTokenCreate,
+        storedPendingPersonalAccessTokenCreateGuard,
+        'session'
+      ),
+    set: (payload: StoredPendingPersonalAccessTokenCreate) => {
+      setStructuredValue(storageKeys.pendingPersonalAccessTokenCreate, payload, 'session');
+    },
+    clear: () => {
+      removeItem(storageKeys.pendingPersonalAccessTokenCreate, 'session');
+    },
+  },
+  pendingPersonalAccessTokenRename: {
+    get: (): StoredPendingPersonalAccessTokenRename | undefined =>
+      getStructuredValue(
+        storageKeys.pendingPersonalAccessTokenRename,
+        storedPendingPersonalAccessTokenRenameGuard,
+        'session'
+      ),
+    set: (payload: StoredPendingPersonalAccessTokenRename) => {
+      setStructuredValue(storageKeys.pendingPersonalAccessTokenRename, payload, 'session');
+    },
+    clear: () => {
+      removeItem(storageKeys.pendingPersonalAccessTokenRename, 'session');
+    },
+  },
+  pendingPersonalAccessTokenRevokeName: {
+    get: (): string | undefined =>
+      getString(storageKeys.pendingPersonalAccessTokenRevokeName, 'session'),
+    set: (name: string) => {
+      setString(storageKeys.pendingPersonalAccessTokenRevokeName, name, 'session');
+    },
+    clear: () => {
+      removeItem(storageKeys.pendingPersonalAccessTokenRevokeName, 'session');
+    },
+  },
 });
 
 export const sessionStorage = Object.freeze({
@@ -306,6 +371,16 @@ export const sessionStorage = Object.freeze({
   getPendingSocialRemoveConnectorId: accountStorage.pendingSocialRemoveConnectorId.get,
   setPendingSocialRemoveConnectorId: accountStorage.pendingSocialRemoveConnectorId.set,
   clearPendingSocialRemoveConnectorId: accountStorage.pendingSocialRemoveConnectorId.clear,
+  getPendingPersonalAccessTokenCreate: accountStorage.pendingPersonalAccessTokenCreate.get,
+  setPendingPersonalAccessTokenCreate: accountStorage.pendingPersonalAccessTokenCreate.set,
+  clearPendingPersonalAccessTokenCreate: accountStorage.pendingPersonalAccessTokenCreate.clear,
+  getPendingPersonalAccessTokenRename: accountStorage.pendingPersonalAccessTokenRename.get,
+  setPendingPersonalAccessTokenRename: accountStorage.pendingPersonalAccessTokenRename.set,
+  clearPendingPersonalAccessTokenRename: accountStorage.pendingPersonalAccessTokenRename.clear,
+  getPendingPersonalAccessTokenRevokeName: accountStorage.pendingPersonalAccessTokenRevokeName.get,
+  setPendingPersonalAccessTokenRevokeName: accountStorage.pendingPersonalAccessTokenRevokeName.set,
+  clearPendingPersonalAccessTokenRevokeName:
+    accountStorage.pendingPersonalAccessTokenRevokeName.clear,
   getIdentifier: () => getString(storageKeys.identifier, 'session'),
   setIdentifier: (value: string) => {
     setString(storageKeys.identifier, value, 'session');
@@ -314,3 +389,4 @@ export const sessionStorage = Object.freeze({
     removeItem(storageKeys.identifier, 'session');
   },
 });
+/* eslint-enable max-lines */

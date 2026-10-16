@@ -140,6 +140,43 @@ const account_center = {
       remove_confirmation_description:
         'Você precisará concluir a MFA novamente neste dispositivo na próxima vez que entrar. Sua sessão atual permanecerá ativa.',
     },
+    personal_access_tokens: {
+      title: 'Tokens de acesso pessoal',
+      description:
+        'Use tokens de acesso pessoal para se autenticar em APIs em seu nome. Eles permanecem ativos até expirarem ou serem revogados, mesmo que você saia da conta ou altere sua senha.',
+      create: 'Criar novo token',
+      created_at: 'Criado em {{date}}',
+      expires_on: 'Expira em {{date}}',
+      expired_on: 'Expirou em {{date}}',
+      expired: 'Expirado',
+      never_expires: 'Nunca expira',
+      never_expires_warning:
+        'Este token não tem data de expiração. Para maior segurança, crie um novo token com data de expiração e revogue este.',
+      rename: 'Renomear',
+      revoke: 'Revogar',
+      loading: 'Carregando...',
+      empty: 'Nenhum token de acesso pessoal.',
+      load_failed: 'Falha ao carregar os tokens de acesso pessoal. Tente novamente.',
+      retry: 'Tentar novamente',
+      create_modal_title: 'Criar token de acesso pessoal',
+      create_modal_description:
+        'Dê ao seu token um nome descritivo e escolha um período de expiração.',
+      token_name: 'Nome do token',
+      token_name_placeholder: 'Meu token',
+      expiration: 'Expiração',
+      expiration_days: '{{count}} dias',
+      created_modal_title: 'Token de acesso pessoal criado',
+      show_once_warning:
+        'Você não poderá ver este token novamente. Copie-o agora e guarde-o em um local seguro.',
+      copied: 'Token de acesso pessoal copiado.',
+      rename_modal_title: 'Renomear token de acesso pessoal',
+      rename_modal_description: 'Digite um novo nome para este token de acesso pessoal.',
+      renamed: 'Token de acesso pessoal renomeado com sucesso.',
+      revoke_confirmation_title: 'Revogar token de acesso pessoal?',
+      revoke_confirmation_description:
+        'Quaisquer aplicativos ou scripts que usem "{{name}}" perderão o acesso imediatamente. Tem certeza de que deseja continuar?',
+      revoked: 'Token de acesso pessoal revogado com sucesso.',
+    },
   },
   social: {
     linked: '{{connector}} vinculado com sucesso.',

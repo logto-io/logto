@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'ページが見つかりません',
@@ -135,6 +136,42 @@ const account_center = {
       remove_confirmation_title: '信頼済みデバイスを削除しますか？',
       remove_confirmation_description:
         '次回このデバイスでサインインするときは、MFA をもう一度完了する必要があります。現在のセッションは引き続き有効です。',
+    },
+    personal_access_tokens: {
+      title: 'パーソナルアクセストークン',
+      description:
+        '個人用アクセストークンを使用して、あなたに代わって API で認証できます。サインアウトやパスワード変更を行っても、有効期限が切れるか失効させるまで有効なままになります。',
+      create: '新しいトークンを作成',
+      created_at: '{{date}} に作成',
+      expires_on: '{{date}} に期限切れ',
+      expired_on: '{{date}} に期限切れ',
+      expired: '期限切れ',
+      never_expires: '無期限',
+      never_expires_warning:
+        'このトークンには有効期限がありません。セキュリティ向上のため、有効期限付きの新しいトークンを作成してこのトークンを失効させてください。',
+      rename: '名前を変更',
+      revoke: '失効',
+      loading: '読み込み中...',
+      empty: 'パーソナルアクセストークンはありません。',
+      load_failed: 'パーソナルアクセストークンを読み込めませんでした。もう一度お試しください。',
+      retry: '再試行',
+      create_modal_title: 'パーソナルアクセストークンを作成',
+      create_modal_description: 'トークンにわかりやすい名前を付け、有効期限を選択してください。',
+      token_name: 'トークン名',
+      token_name_placeholder: 'マイトークン',
+      expiration: '有効期限',
+      expiration_days: '{{count}} 日',
+      created_modal_title: 'パーソナルアクセストークンを作成しました',
+      show_once_warning:
+        'このトークンは二度と表示されません。今すぐコピーして安全な場所に保管してください。',
+      copied: 'パーソナルアクセストークンをコピーしました。',
+      rename_modal_title: 'パーソナルアクセストークンの名前を変更',
+      rename_modal_description: 'このパーソナルアクセストークンの新しい名前を入力してください。',
+      renamed: 'パーソナルアクセストークンの名前を変更しました。',
+      revoke_confirmation_title: 'パーソナルアクセストークンを失効させますか？',
+      revoke_confirmation_description:
+        '「{{name}}」を使用しているアプリケーションやスクリプトは直ちにアクセスできなくなります。続行してもよろしいですか？',
+      revoked: 'パーソナルアクセストークンを失効させました。',
     },
   },
   social: {
@@ -298,3 +335,4 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
+/* eslint-enable max-lines */

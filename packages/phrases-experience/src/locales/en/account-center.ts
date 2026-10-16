@@ -138,6 +138,43 @@ const account_center = {
       remove_confirmation_description:
         "You'll need to complete MFA again on this device the next time you sign in. Your current session will stay active.",
     },
+    personal_access_tokens: {
+      title: 'Personal access tokens',
+      description:
+        'Use personal access tokens to authenticate with APIs on your behalf. They remain active until they expire or you revoke them, even if you sign out or change your password.',
+      create: 'Create new token',
+      created_at: 'Created {{date}}',
+      expires_on: 'Expires on {{date}}',
+      expired_on: 'Expired on {{date}}',
+      expired: 'Expired',
+      never_expires: 'Never expires',
+      never_expires_warning:
+        'This token has no expiration date. For better security, create a new token with an expiration date and revoke this one.',
+      rename: 'Rename',
+      revoke: 'Revoke',
+      loading: 'Loading...',
+      empty: 'No personal access tokens.',
+      load_failed: 'Failed to load personal access tokens. Please try again.',
+      retry: 'Try again',
+      create_modal_title: 'Create personal access token',
+      create_modal_description:
+        'Give your token a descriptive name and choose an expiration period.',
+      token_name: 'Token name',
+      token_name_placeholder: 'My token',
+      expiration: 'Expiration',
+      expiration_days: '{{count}} days',
+      created_modal_title: 'Personal access token created',
+      show_once_warning:
+        "You won't be able to see this token again. Copy it now and store it in a safe place.",
+      copied: 'Personal access token copied.',
+      rename_modal_title: 'Rename personal access token',
+      rename_modal_description: 'Enter a new name for this personal access token.',
+      renamed: 'Personal access token renamed successfully.',
+      revoke_confirmation_title: 'Revoke personal access token?',
+      revoke_confirmation_description:
+        'Any applications or scripts using "{{name}}" will immediately lose access. Are you sure you want to continue?',
+      revoked: 'Personal access token revoked successfully.',
+    },
   },
   social: {
     linked: '{{connector}} linked successfully.',

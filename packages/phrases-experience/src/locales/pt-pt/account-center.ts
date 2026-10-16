@@ -141,6 +141,43 @@ const account_center = {
       remove_confirmation_description:
         'Terá de concluir novamente a MFA neste dispositivo da próxima vez que iniciar sessão. A sua sessão atual permanecerá ativa.',
     },
+    personal_access_tokens: {
+      title: 'Tokens de acesso pessoal',
+      description:
+        'Utilize tokens de acesso pessoal para se autenticar nas APIs em seu nome. Permanecem ativos até expirarem ou serem revogados, mesmo que termine a sessão ou altere a sua palavra-passe.',
+      create: 'Criar novo token',
+      created_at: 'Criado a {{date}}',
+      expires_on: 'Expira a {{date}}',
+      expired_on: 'Expirou a {{date}}',
+      expired: 'Expirado',
+      never_expires: 'Nunca expira',
+      never_expires_warning:
+        'Este token não tem data de expiração. Para maior segurança, crie um novo token com data de expiração e revogue este.',
+      rename: 'Mudar nome',
+      revoke: 'Revogar',
+      loading: 'A carregar...',
+      empty: 'Sem tokens de acesso pessoal.',
+      load_failed: 'Falha ao carregar os tokens de acesso pessoal. Tente novamente.',
+      retry: 'Tentar novamente',
+      create_modal_title: 'Criar token de acesso pessoal',
+      create_modal_description:
+        'Atribua um nome descritivo ao seu token e escolha um período de expiração.',
+      token_name: 'Nome do token',
+      token_name_placeholder: 'O meu token',
+      expiration: 'Expiração',
+      expiration_days: '{{count}} dias',
+      created_modal_title: 'Token de acesso pessoal criado',
+      show_once_warning:
+        'Não poderá voltar a ver este token. Copie-o agora e guarde-o num local seguro.',
+      copied: 'Token de acesso pessoal copiado.',
+      rename_modal_title: 'Mudar nome do token de acesso pessoal',
+      rename_modal_description: 'Introduza um novo nome para este token de acesso pessoal.',
+      renamed: 'Nome do token de acesso pessoal alterado com sucesso.',
+      revoke_confirmation_title: 'Revogar token de acesso pessoal?',
+      revoke_confirmation_description:
+        'Quaisquer aplicações ou scripts que utilizem "{{name}}" perderão o acesso imediatamente. Tem a certeza de que pretende continuar?',
+      revoked: 'Token de acesso pessoal revogado com sucesso.',
+    },
   },
   social: {
     linked: '{{connector}} associada com sucesso.',
