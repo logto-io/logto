@@ -30,6 +30,11 @@ import styles from './index.module.scss';
 const expiryDayOptions = Object.freeze([30, 90, 180, 365]);
 const defaultExpiryDays = 90;
 const dayInMs = 24 * 60 * 60 * 1000;
+/**
+ * Subtracted from the computed expiration time so that a client clock running slightly ahead of
+ * the server does not push the max option past the server's 365-day limit.
+ */
+const clockSkewMarginMs = 60 * 1000;
 
 const PersonalAccessTokensSection = () => {
   const { t } = useTranslation();
@@ -110,7 +115,7 @@ const PersonalAccessTokensSection = () => {
   const createToken = useCallback(
     async (verifiedId: string, name: string, expiryDays: number) => {
       setIsCreating(true);
-      const expiresAt = Date.now() + expiryDays * dayInMs;
+      const expiresAt = Date.now() + expiryDays * dayInMs - clockSkewMarginMs;
       const [error, result] = await createTokenApi(verifiedId, { name, expiresAt });
       setIsCreating(false);
 
@@ -128,6 +133,27 @@ const PersonalAccessTokensSection = () => {
       await fetchTokens();
     },
     [createTokenApi, fetchTokens, handleError, handlePermissionDenied]
+  );
+
+  const renameToken = useCallback(
+    async (verifiedId: string, currentName: string, name: string) => {
+      setIsRenaming(true);
+      const [error] = await renameTokenApi(verifiedId, { currentName, name });
+      setIsRenaming(false);
+
+      if (error) {
+        await handleError(error, {
+          'verification_record.permission_denied': handlePermissionDenied,
+        });
+        return;
+      }
+
+      setRenameTarget(undefined);
+      setRenameValue('');
+      setToast(t('account_center.security.personal_access_tokens.renamed'));
+      await fetchTokens();
+    },
+    [fetchTokens, handleError, handlePermissionDenied, renameTokenApi, setToast, t]
   );
 
   const revokeToken = useCallback(
@@ -170,6 +196,17 @@ const PersonalAccessTokensSection = () => {
       return;
     }
 
+    if (pendingAction === 'rename-personal-access-token') {
+      const pendingRename = sessionStorage.getPendingPersonalAccessTokenRename();
+      sessionStorage.clearPendingVerifiedAction();
+      sessionStorage.clearPendingPersonalAccessTokenRename();
+
+      if (pendingRename) {
+        void renameToken(verificationId, pendingRename.currentName, pendingRename.name);
+      }
+      return;
+    }
+
     if (pendingAction === 'revoke-personal-access-token') {
       const pendingRevokeName = sessionStorage.getPendingPersonalAccessTokenRevokeName();
       sessionStorage.clearPendingVerifiedAction();
@@ -179,7 +216,7 @@ const PersonalAccessTokensSection = () => {
         void revokeToken(verificationId, pendingRevokeName);
       }
     }
-  }, [createToken, revokeToken, verificationId]);
+  }, [createToken, renameToken, revokeToken, verificationId]);
 
   const handleCreateSubmit = useCallback(async () => {
     const trimmedName = newTokenName.trim();
@@ -208,23 +245,20 @@ const PersonalAccessTokensSection = () => {
       return;
     }
 
-    setIsRenaming(true);
-    const [error] = await renameTokenApi({
-      currentName: renameTarget.name,
-      name: trimmedName,
-    });
-    setIsRenaming(false);
-
-    if (error) {
-      await handleError(error);
+    if (verificationId) {
+      await renameToken(verificationId, renameTarget.name, trimmedName);
       return;
     }
 
     setRenameTarget(undefined);
-    setRenameValue('');
-    setToast(t('account_center.security.personal_access_tokens.renamed'));
-    await fetchTokens();
-  }, [fetchTokens, handleError, renameTarget, renameTokenApi, renameValue, setToast, t]);
+    sessionStorage.setPendingPersonalAccessTokenRename({
+      currentName: renameTarget.name,
+      name: trimmedName,
+    });
+    sessionStorage.setPendingVerifiedAction('rename-personal-access-token');
+    setPendingReturn(getPendingReturn() ?? window.location.href);
+    navigate(verifiedActionRoute);
+  }, [navigate, renameTarget, renameToken, renameValue, verificationId]);
 
   const handleConfirmRevoke = useCallback(async () => {
     if (!revokeTarget) {
@@ -353,6 +387,7 @@ const PersonalAccessTokensSection = () => {
         title="account_center.security.personal_access_tokens.created_modal_title"
         confirmText="action.copy"
         cancelText="action.done"
+        isDismissible={false}
         onConfirm={() => {
           if (createdToken) {
             void navigator.clipboard.writeText(createdToken);

@@ -29,11 +29,13 @@ export const createPersonalAccessToken = async (
 
 export const renamePersonalAccessToken = async (
   accessToken: string,
+  verificationRecordId: string,
   payload: { currentName: string; name: string }
 ): Promise<AccountPersonalAccessTokenResponse> => {
   return createAuthenticatedKy(accessToken)
     .patch('/api/my-account/personal-access-tokens', {
       json: payload,
+      headers: { [verificationRecordIdHeader]: verificationRecordId },
     })
     .json<AccountPersonalAccessTokenResponse>();
 };

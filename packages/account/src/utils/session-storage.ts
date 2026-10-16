@@ -16,6 +16,7 @@ const storageKeys = Object.freeze({
   pendingVerifiedAction: `${storagePrefix}pending-verified-action`,
   pendingSocialRemoveConnectorId: `${storagePrefix}pending-social-remove-connector-id`,
   pendingPersonalAccessTokenCreate: `${storagePrefix}pending-personal-access-token-create`,
+  pendingPersonalAccessTokenRename: `${storagePrefix}pending-personal-access-token-rename`,
   pendingPersonalAccessTokenRevokeName: `${storagePrefix}pending-personal-access-token-revoke-name`,
 });
 
@@ -27,6 +28,11 @@ export type StoredVerificationRecord = {
 export type StoredPendingPersonalAccessTokenCreate = {
   name: string;
   expiryDays: number;
+};
+
+export type StoredPendingPersonalAccessTokenRename = {
+  currentName: string;
+  name: string;
 };
 
 type StoredPathState = {
@@ -79,6 +85,11 @@ const storedPendingPersonalAccessTokenCreateGuard = s.object({
   expiryDays: s.number(),
 });
 
+const storedPendingPersonalAccessTokenRenameGuard = s.object({
+  currentName: s.string(),
+  name: s.string(),
+});
+
 const storedSocialFlowRecordGuard = s.union([
   s.object({
     status: s.literal('pending'),
@@ -107,6 +118,7 @@ const pendingVerifiedActions = Object.freeze([
   'load-sessions',
   'load-trusted-devices',
   'create-personal-access-token',
+  'rename-personal-access-token',
   'revoke-personal-access-token',
 ] as const);
 
@@ -314,6 +326,20 @@ export const accountStorage = Object.freeze({
       removeItem(storageKeys.pendingPersonalAccessTokenCreate, 'session');
     },
   },
+  pendingPersonalAccessTokenRename: {
+    get: (): StoredPendingPersonalAccessTokenRename | undefined =>
+      getStructuredValue(
+        storageKeys.pendingPersonalAccessTokenRename,
+        storedPendingPersonalAccessTokenRenameGuard,
+        'session'
+      ),
+    set: (payload: StoredPendingPersonalAccessTokenRename) => {
+      setStructuredValue(storageKeys.pendingPersonalAccessTokenRename, payload, 'session');
+    },
+    clear: () => {
+      removeItem(storageKeys.pendingPersonalAccessTokenRename, 'session');
+    },
+  },
   pendingPersonalAccessTokenRevokeName: {
     get: (): string | undefined =>
       getString(storageKeys.pendingPersonalAccessTokenRevokeName, 'session'),
@@ -348,6 +374,9 @@ export const sessionStorage = Object.freeze({
   getPendingPersonalAccessTokenCreate: accountStorage.pendingPersonalAccessTokenCreate.get,
   setPendingPersonalAccessTokenCreate: accountStorage.pendingPersonalAccessTokenCreate.set,
   clearPendingPersonalAccessTokenCreate: accountStorage.pendingPersonalAccessTokenCreate.clear,
+  getPendingPersonalAccessTokenRename: accountStorage.pendingPersonalAccessTokenRename.get,
+  setPendingPersonalAccessTokenRename: accountStorage.pendingPersonalAccessTokenRename.set,
+  clearPendingPersonalAccessTokenRename: accountStorage.pendingPersonalAccessTokenRename.clear,
   getPendingPersonalAccessTokenRevokeName: accountStorage.pendingPersonalAccessTokenRevokeName.get,
   setPendingPersonalAccessTokenRevokeName: accountStorage.pendingPersonalAccessTokenRevokeName.set,
   clearPendingPersonalAccessTokenRevokeName:

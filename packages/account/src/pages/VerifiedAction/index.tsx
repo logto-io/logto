@@ -30,6 +30,7 @@ const VerifiedAction = () => {
         sessionStorage.clearPendingVerifiedAction();
         sessionStorage.clearPendingSocialRemoveConnectorId();
         sessionStorage.clearPendingPersonalAccessTokenCreate();
+        sessionStorage.clearPendingPersonalAccessTokenRename();
         sessionStorage.clearPendingPersonalAccessTokenRevokeName();
       }
     },
@@ -73,6 +74,7 @@ const VerifiedAction = () => {
         return isVisibleField(accountCenterSettings.fields.trustedDevice);
       }
       case 'create-personal-access-token':
+      case 'rename-personal-access-token':
       case 'revoke-personal-access-token': {
         // DEV: Self-service personal access tokens
         return (

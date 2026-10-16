@@ -229,7 +229,9 @@ describe('<PersonalAccessTokensSection />', () => {
     });
     const setToast = jest.fn();
 
-    const { getByPlaceholderText, getByRole, getByText } = renderSection({ setToast });
+    const { getByPlaceholderText, getByRole, getByText, queryByText } = renderSection({
+      setToast,
+    });
 
     await waitFor(() => {
       expect(getByText('ci-runner')).toBeTruthy();
@@ -261,6 +263,15 @@ describe('<PersonalAccessTokensSection />', () => {
     expect(writeText).toHaveBeenCalledWith('pat_secret_123');
     await waitFor(() => {
       expect(setToast).toHaveBeenCalledWith('Personal access token copied.');
+    });
+
+    // The token is shown only once, so Esc must not dismiss the dialog.
+    fireEvent.keyDown(getByText('pat_secret_123'), { key: 'Escape', keyCode: 27 });
+    expect(getByText('pat_secret_123')).toBeTruthy();
+
+    fireEvent.click(getByText('Done'));
+    await waitFor(() => {
+      expect(queryByText('pat_secret_123')).toBeNull();
     });
   });
 
@@ -296,6 +307,39 @@ describe('<PersonalAccessTokensSection />', () => {
     resumedCreateView.unmount();
   });
 
+  it('navigates to verified action when renaming without verificationId and resumes on return', async () => {
+    const view = renderSection({ verificationId: undefined });
+
+    await waitFor(() => {
+      expect(view.getByText('ci-runner')).toBeTruthy();
+    });
+
+    fireEvent.click(view.getAllByRole('button', { name: 'Rename' })[0]!);
+    fireEvent.change(view.getByDisplayValue('ci-runner'), {
+      target: { value: 'ci-runner-renamed' },
+    });
+    fireEvent.click(view.getByText('Save'));
+
+    expect(view.getByText('verified action page')).toBeTruthy();
+    expect(mockRenamePersonalAccessToken).not.toHaveBeenCalled();
+    expect(sessionStorage.getPendingVerifiedAction()).toBe('rename-personal-access-token');
+    expect(sessionStorage.getPendingPersonalAccessTokenRename()).toEqual({
+      currentName: 'ci-runner',
+      name: 'ci-runner-renamed',
+    });
+    view.unmount();
+
+    renderSection({ verificationId: 'verified-id' });
+    await waitFor(() => {
+      expect(mockRenamePersonalAccessToken).toHaveBeenCalledWith('access-token', 'verified-id', {
+        currentName: 'ci-runner',
+        name: 'ci-runner-renamed',
+      });
+    });
+    expect(sessionStorage.getPendingVerifiedAction()).toBeUndefined();
+    expect(sessionStorage.getPendingPersonalAccessTokenRename()).toBeUndefined();
+  });
+
   it('renames and revokes a token', async () => {
     const setToast = jest.fn();
     const { getAllByRole, getAllByText, getByDisplayValue, getByText, queryByText } = renderSection(
@@ -315,10 +359,14 @@ describe('<PersonalAccessTokensSection />', () => {
     fireEvent.click(getByText('Save'));
 
     await waitFor(() => {
-      expect(mockRenamePersonalAccessToken).toHaveBeenCalledWith('access-token', {
-        currentName: 'ci-runner',
-        name: 'ci-runner-renamed',
-      });
+      expect(mockRenamePersonalAccessToken).toHaveBeenCalledWith(
+        'access-token',
+        'verification-id',
+        {
+          currentName: 'ci-runner',
+          name: 'ci-runner-renamed',
+        }
+      );
     });
     expect(setToast).toHaveBeenCalledWith('Personal access token renamed successfully.');
 
