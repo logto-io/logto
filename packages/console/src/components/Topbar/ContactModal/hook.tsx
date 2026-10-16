@@ -3,13 +3,11 @@ import { Theme } from '@logto/schemas';
 
 import CalendarDark from '@/assets/icons/calendar-dark.svg?react';
 import Calendar from '@/assets/icons/calendar.svg?react';
-import DiscordDark from '@/assets/icons/discord-dark.svg?react';
-import Discord from '@/assets/icons/discord.svg?react';
 import EmailDark from '@/assets/icons/email-dark.svg?react';
 import Email from '@/assets/icons/email.svg?react';
 import GithubDark from '@/assets/icons/github-dark.svg?react';
 import Github from '@/assets/icons/github.svg?react';
-import { contactEmailLink, discordLink, githubIssuesLink, reservationLink } from '@/consts';
+import { contactEmailLink, githubIssuesLink, reservationLink, slackLink } from '@/consts';
 import useTheme from '@/hooks/use-theme';
 
 type ContactItem = {
@@ -26,11 +24,11 @@ export const useContacts = (): ContactItem[] => {
 
   return [
     {
-      title: 'contact.discord.title',
-      icon: isLightMode ? Discord : DiscordDark,
-      description: 'contact.discord.description',
-      label: 'contact.discord.button',
-      link: discordLink,
+      title: 'contact.slack.title',
+      icon: isLightMode ? Email : EmailDark,
+      description: 'contact.slack.description',
+      label: 'contact.slack.button',
+      link: slackLink,
     },
     {
       title: 'contact.github.title',

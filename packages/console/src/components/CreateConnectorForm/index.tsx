@@ -203,7 +203,6 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
         footer={
           existingConnectors && (
             <Footer
-              isCreatingSocialConnector={isCreatingSocialConnector}
               isCreateButtonDisabled={!activeFactoryId}
               onClickCreateButton={() => {
                 onClose?.(activeFactoryId);

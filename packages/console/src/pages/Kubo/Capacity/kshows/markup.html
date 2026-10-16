@@ -1,0 +1,48 @@
+<main id="main-content" tabindex="-1" class="kshows-main">
+<div class="kshows-toolbar">
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Dimension">
+      <button data-dim="cpu" aria-pressed="true">CPU</button>
+      <button data-dim="mem" aria-pressed="false">RAM</button>
+      <button data-dim="disk" aria-pressed="false">DISK</button>
+      <button data-dim="cost" aria-pressed="false">COST</button>
+    </div>
+    <div class="seg" role="group" aria-label="Metric">
+      <button data-metric="requests" aria-pressed="false">REQUESTS</button>
+      <button data-metric="limits" aria-pressed="false">LIMITS</button>
+      <button data-metric="actual" aria-pressed="true">ACTUAL</button>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <div class="status" id="status">
+    <span class="dot" aria-hidden="true"></span>
+    <span id="clock">—</span>
+  </div>
+</div>
+
+<div class="banners" id="banners"></div>
+
+<div class="splash" id="splash">waiting for first snapshot…</div>
+
+  <section class="summary" id="summary" aria-label="Cluster totals"></section>
+  <nav class="legend" id="legend" aria-label="Namespace legend"></nav>
+  <section class="pending" id="pending" aria-label="Pending pods" hidden>
+    <span class="cap">Pending</span>
+    <div class="pending-list" id="pending-list"></div>
+  </section>
+  <section class="grid" id="grid" aria-label="Nodes"></section>
+</main>
+
+<div class="tooltip" id="tooltip" role="tooltip"></div>
+
+<div class="overlay" id="overlay" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-label="Node detail">
+    <div class="panel-head">
+      <span class="nname"></span>
+      <span class="meta"></span>
+      <button class="close">ESC · close</button>
+    </div>
+    <div class="panel-viz"></div>
+    <div class="panel-table"></div>
+  </div>
+</div>

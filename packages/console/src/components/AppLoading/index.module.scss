@@ -13,3 +13,20 @@
     margin-bottom: _.unit(8);
   }
 }
+
+.mark {
+  width: auto;
+  height: 32px;
+  margin-bottom: 0;
+  animation: spin 1.2s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -136,29 +136,11 @@ describe('guardTenantUsageByKey', () => {
     expect(getSelfComputedUsageByKey).toHaveBeenCalledTimes(1);
   });
 
-  it('throws when boolean quota limit is disabled', async () => {
+  it('never blocks a boolean feature gate, even when the plan disables it', async () => {
     const { quotaLibrary } = createQuotaLibrary();
 
-    await expect(quotaLibrary.guardTenantUsageByKey('mfaEnabled')).rejects.toMatchObject({
-      code: 'subscription.limit_exceeded',
-      status: 403,
-    });
-  });
-
-  it('throws when boolean quota limit is not boolean type', async () => {
-    mockGetTenantSubscription.mockResolvedValueOnce({
-      ...mockSubscriptionData,
-      quota: {
-        ...mockSubscriptionData.quota,
-        mfaEnabled: 'true' as unknown as boolean,
-      },
-    });
-
-    const { quotaLibrary } = createQuotaLibrary();
-
-    await expect(quotaLibrary.guardTenantUsageByKey('mfaEnabled')).rejects.toThrow(
-      'Feature availability settings must be boolean type.'
-    );
+    await expect(quotaLibrary.guardTenantUsageByKey('mfaEnabled')).resolves.toBeUndefined();
+    expect(mockGetTenantSubscription).not.toHaveBeenCalled();
   });
 
   it('allows boolean quota when enabled', async () => {
@@ -533,15 +515,12 @@ const createSelfHostedQuotaLibrary = ({
 };
 
 describe('guardTenantUsageByKey idpInitiatedSsoEnabled outside Cloud', () => {
-  it('rejects IdP-initiated SSO under the OSS default entitlements', async () => {
+  it('never blocks IdP-initiated SSO under the OSS default entitlements', async () => {
     const { quotaLibrary } = createSelfHostedQuotaLibrary({ samlApplicationsLimit: 3, usage: 0 });
 
     await expect(
       quotaLibrary.guardTenantUsageByKey('idpInitiatedSsoEnabled')
-    ).rejects.toMatchObject({
-      code: 'subscription.limit_exceeded',
-      status: 403,
-    });
+    ).resolves.toBeUndefined();
     expect(mockGetTenantSubscription).not.toHaveBeenCalled();
   });
 

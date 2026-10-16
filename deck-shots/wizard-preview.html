@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workspace wizard preview</title>
+<style>
+  :root { --bg:#ebe9f4; --card:#fff; --ink:#1c1b25; --muted:#6e6b7d; --line:#e4e2ee; --accent:#6639f5; --soft:#f3f2fa; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; color:var(--ink); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px; }
+  .wizard { width:min(960px,100%); background:var(--card); border-radius:20px; box-shadow:0 8px 32px rgba(28,27,37,.08); overflow:hidden; }
+  .progress { display:flex; gap:8px; padding:24px 32px 0; }
+  .progress span { flex:1; height:6px; border-radius:999px; background:var(--line); }
+  .progress span.on { background:var(--accent); }
+  .head { padding:24px 32px 8px; }
+  .kicker { font-size:12px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); }
+  h1 { margin:6px 0 6px; font-size:28px; letter-spacing:-.02em; }
+  .lead { margin:0; color:var(--muted); font-size:16px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; padding:20px 32px 8px; }
+  .choice { position:relative; text-align:left; border:2px solid var(--line); border-radius:16px; background:#fff; padding:20px; cursor:pointer; transition:transform .15s, border-color .15s, box-shadow .15s; font:inherit; color:inherit; }
+  .choice:hover { transform:translateY(-2px); border-color:#c9c4e8; }
+  .choice[aria-pressed="true"] { border-color:var(--accent); box-shadow:0 0 0 4px rgba(102,57,245,.12); }
+  .badge-art { width:44px; height:44px; border-radius:12px; margin-bottom:14px; }
+  .full .badge-art { background:linear-gradient(135deg,#6639f5,#9d7cff); }
+  .lite .badge-art { background:linear-gradient(135deg,#1f9d6f,#62d2a8); }
+  .dai .badge-art { background:linear-gradient(135deg,#e0572e,#ffa26b); }
+  .v1 .badge-art { background:var(--line); }
+  .choice h3 { margin:0 0 6px; font-size:18px; }
+  .choice p { margin:0; color:var(--muted); font-size:14px; line-height:1.4; }
+  .tag { display:inline-block; margin-top:12px; padding:3px 10px; border-radius:999px; font-size:12px; background:var(--soft); color:var(--muted); }
+  .choice.disabled { opacity:.55; cursor:not-allowed; }
+  .foot { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:20px 32px 28px; border-top:1px solid var(--line); margin-top:16px; }
+  .hint { color:var(--muted); font-size:14px; }
+  .btn { padding:12px 22px; border-radius:12px; border:0; font:inherit; font-weight:600; cursor:pointer; }
+  .btn.primary { background:var(--accent); color:#fff; }
+  .btn.primary:disabled { background:var(--line); color:var(--muted); cursor:not-allowed; }
+  .btn.ghost { background:transparent; color:var(--muted); }
+</style>
+</head>
+<body>
+<main class="wizard">
+  <div class="progress" aria-label="Step 1 of 3"><span class="on"></span><span></span><span></span></div>
+  <section class="head">
+    <div class="kicker">Step 1 of 3</div>
+    <h1>What do you want to build?</h1>
+    <p class="lead">Pick a starting point. Each one comes from an approved template, so you start safe.</p>
+  </section>
+  <div class="grid" role="radiogroup" aria-label="Workspace type">
+    <button class="choice full" aria-pressed="true">
+      <div class="badge-art"></div>
+      <h3>Full</h3>
+      <p>The complete platform: high-availability database and Trino catalog.</p>
+      <span class="tag">Recommended</span>
+    </button>
+    <button class="choice lite" aria-pressed="false">
+      <div class="badge-art"></div>
+      <h3>Lite</h3>
+      <p>A lighter setup with one database instance. Good for trials and small teams.</p>
+    </button>
+    <button class="choice dai" aria-pressed="false">
+      <div class="badge-art"></div>
+      <h3>Dashboard AI only</h3>
+      <p>Just the AI dashboard components and their database.</p>
+    </button>
+    <button class="choice v1 disabled" disabled>
+      <div class="badge-art"></div>
+      <h3>V1</h3>
+      <p>Not available yet.</p>
+      <span class="tag">Coming soon</span>
+    </button>
+  </div>
+  <div class="foot">
+    <button class="btn ghost">Cancel</button>
+    <div style="display:flex;gap:12px;align-items:center">
+      <span class="hint">Next: tenant and mode</span>
+      <button class="btn primary">Continue</button>
+    </div>
+  </div>
+</main>
+</body>
+</html>

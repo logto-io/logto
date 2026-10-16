@@ -1,0 +1,464 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 40px 48px 72px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.eyebrow {
+  color: var(--color-text-secondary);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.title {
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.description {
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.summary {
+  display: flex;
+  gap: 16px;
+}
+
+.summaryItem {
+  display: flex;
+  flex-direction: column;
+  min-width: 140px;
+  padding: 16px 20px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-layer-1);
+}
+
+.summaryValue {
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.summaryLabel {
+  color: var(--color-text-secondary);
+  font-size: 13px;
+}
+
+.card {
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-layer-1);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  th {
+    color: var(--color-text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+}
+
+.muted {
+  color: var(--color-text-secondary);
+}
+
+.cardTitle {
+  padding: 14px 16px 6px;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.budget {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 12px 16px;
+  padding: 12px 16px 16px;
+
+  dt {
+    color: var(--color-text-secondary);
+  }
+
+  dd {
+    margin: 0;
+  }
+}
+
+.choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  padding: 12px 16px 16px;
+}
+
+.choice {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+  text-align: left;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-layer-1);
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 50%;
+  }
+}
+
+.choiceSelected {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 1px var(--color-primary);
+}
+
+.choiceTitle {
+  font-weight: 600;
+}
+
+.form {
+  display: grid;
+  gap: 16px;
+  padding: 12px 16px 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+
+  input {
+    padding: 8px 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    color: inherit;
+    background: var(--color-layer-1);
+  }
+}
+
+.preview {
+  padding: 0 16px 16px;
+}
+
+.pre {
+  overflow: auto;
+  max-height: 480px;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  background: var(--color-layer-2);
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.error {
+  padding: 0 16px 16px;
+  color: var(--color-danger);
+}
+
+.quickstart {
+  list-style: none;
+  margin: 0;
+  padding: 0 8px 8px;
+}
+
+.quickstartItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 12px;
+  text-align: left;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 60%;
+  }
+
+  &:hover:not(:disabled) {
+    background: var(--color-layer-2);
+  }
+}
+
+.quickstartItemSelected {
+  background: var(--color-layer-2);
+  box-shadow: inset 3px 0 0 var(--color-primary);
+}
+
+.quickstartText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.quickstartTitle {
+  font-weight: 600;
+}
+
+.badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  background: var(--color-layer-2);
+}
+
+.bars {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  padding: 12px 16px 16px;
+}
+
+.bar {
+  height: 8px;
+  margin-top: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--color-layer-2);
+}
+
+.barFill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--color-primary);
+}
+
+.frame {
+  width: 100%;
+  height: calc(100vh - 64px);
+  border: none;
+  background: transparent;
+}
+
+.toggle {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 10px;
+  background: var(--color-layer-2);
+
+  button {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 8px;
+    color: var(--color-text-secondary);
+    background: transparent;
+    cursor: pointer;
+  }
+}
+
+.toggle .toggleActive {
+  color: var(--color-text);
+  background: var(--color-layer-1);
+}
+
+.nodeBody {
+  padding: 0 16px 16px;
+}
+
+.treemap {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--color-layer-2);
+}
+
+.tile {
+  position: absolute;
+  box-sizing: border-box;
+  border: 1px solid var(--color-layer-1);
+  background: var(--color-primary);
+  opacity: 85%;
+}
+
+.tile:hover {
+  opacity: 100%;
+}
+
+.tileLabel {
+  display: block;
+  padding: 4px 6px;
+  overflow: hidden;
+  color: #fff;
+  font-size: 11px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.freeBlock {
+  position: absolute;
+  background: repeating-linear-gradient(45deg, var(--color-layer-2) 0 6px, var(--color-layer-1) 6px 12px);
+}
+
+// Wizard introduction and choices, styled with the console's own type tokens.
+.introTitle {
+  margin: 0 0 8px;
+  font: var(--font-title-2);
+  color: var(--color-text);
+}
+
+.introText {
+  margin: 0;
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+}
+
+.stepLabel {
+  margin: 16px 0 0;
+  font: var(--font-label-2);
+  color: var(--color-text-secondary);
+}
+
+.choiceTitle {
+  font: var(--font-title-3);
+  color: var(--color-text);
+}
+
+.choiceText {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+}
+
+// Wizard choices: one bordered list, a divider between rows, and a clear selected state.
+.quickstart {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.quickstart li + li {
+  border-top: 1px solid var(--color-border);
+}
+
+.quickstartItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  padding: 16px 20px;
+  text-align: left;
+  border: 0;
+  background: var(--color-layer-1);
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: var(--color-layer-2);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+.quickstartItemSelected {
+  background: var(--color-layer-2);
+  box-shadow: inset 4px 0 0 var(--color-primary);
+}
+
+.quickstartText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+// Footer: Back and Next or Create, on a divider, aligned to the right.
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-border);
+}
+
+// Wizard progress bar, as in the approved preview.
+.progress {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+
+  span {
+    flex: 1;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--color-layer-2);
+  }
+}
+
+.progressOn {
+  background: var(--color-primary) !important;
+}
+
+// Section header: title on the left, action on the right, on one line.
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px 6px;
+}
+
+// Workspace names in the list: the console's link colour, underline on hover only.
+.nameLink {
+  color: var(--color-text-link);
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// Values inside a card use the console's body text style and colour.
+.sectionBody p {
+  margin: 0;
+  font: var(--font-body-2);
+  color: var(--color-text);
+}

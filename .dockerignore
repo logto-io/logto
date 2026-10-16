@@ -1,5 +1,5 @@
-# dependencies
-node_modules
+# dependencies (any depth)
+**/node_modules
 
 # testing
 /packages/**/coverage
@@ -37,6 +37,10 @@ dump.rdb
 
 # readme assets
 /assets/
+
+# local screenshots and decks
+/deck-shots
+/*.png
 
 # Docker
 Dockerfile*

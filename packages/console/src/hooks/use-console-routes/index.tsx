@@ -13,6 +13,7 @@ import { auditLogs } from './routes/audit-logs';
 import { connectors } from './routes/connectors';
 import { customizeJwt } from './routes/customize-jwt';
 import { enterpriseSso } from './routes/enterprise-sso';
+import { kubo } from './routes/kubo';
 import { mcpPortal } from './routes/mcp-portal';
 import { mfa } from './routes/mfa';
 import { organizationTemplate } from './routes/organization-template';
@@ -36,7 +37,15 @@ export const useConsoleRoutes = () => {
     () =>
       condArray<RouteObject | RouteObject[]>(
         { path: '*', element: <NotFound /> },
-        { path: 'get-started', element: <GetStarted /> },
+        {
+          path: 'get-started',
+          element: (
+            <Navigate
+              replace
+              to={tenantId ? joinPath(tenantId, 'infrastructure/new') : '/infrastructure/new'}
+            />
+          ),
+        },
         { path: 'dashboard', element: <Dashboard /> },
         applications,
         apiResources,
@@ -45,6 +54,7 @@ export const useConsoleRoutes = () => {
         connectors,
         enterpriseSso,
         security,
+        kubo,
         mcpPortal,
         webhooks,
         ...(isActionsEnabled ? [actions] : []),

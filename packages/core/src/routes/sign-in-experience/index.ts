@@ -352,10 +352,9 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
        * instead. Hiding the Logto branding is not license-gated in this fork.
        */
       if (!EnvSet.values.isCloud && hasCustomUiCsp) {
-        const { quota: licenseQuota } = await subscription.getSelfHostedSubscription();
-
+        // Custom UI CSP is activated in this fork without a license.
         assertThat(
-          licenseQuota.bringYourUi,
+          true,
           new RequestError({
             code: 'request.invalid_input',
             details: 'Custom UI CSP configuration is not available',

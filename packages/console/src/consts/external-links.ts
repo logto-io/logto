@@ -1,15 +1,15 @@
-export const discordLink = 'https://discord.gg/UEPaF3j5e6';
+export const slackLink = 'https://meshxhq.slack.com';
 export const githubOrgLink = 'https://github.com/logto-io';
 export const githubLink = 'https://github.com/logto-io/logto';
-export const githubIssuesLink = 'https://github.com/logto-io/logto/issues';
+export const githubIssuesLink = 'https://github.com/meshxdata';
 export const githubReleasesLink = 'https://github.com/logto-io/logto/releases';
-export const contactEmail = 'contact@logto.io';
+export const contactEmail = 'hello@meshx.io';
 export const contactEmailLink = `mailto:${contactEmail}`;
-export const reservationLink = 'https://cal.com/logto/30min';
+export const reservationLink = 'https://cal.com/alessio-garofalo-4qowra/30min';
 export const officialWebsiteLink = 'https://logto.io';
 export const trustAndSecurityLink = `${officialWebsiteLink}/trust-and-security`;
 export const pricingLink = `${officialWebsiteLink}/pricing`;
-export const selfHostedPlansLink = `${officialWebsiteLink}/self-hosted-plans`;
+export const selfHostedPlansLink = 'https://cloud.meshx.app';
 export const logtoCloudConsoleLink = 'https://cloud.meshx.app';
 export const officialWebsiteContactPageLink = `${officialWebsiteLink}/contact`;
 export const buildOfficialWebsiteContactPageUrl = (source: string) => {

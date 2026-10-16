@@ -8,11 +8,27 @@
   display: flex;
   align-items: center;
 
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+  }
+
+  .mark {
+    width: auto;
+    height: 28px;
+    transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .brand:hover .mark {
+    transform: rotate(360deg);
+  }
+
   .logo {
     width: auto;
     height: 28px;
     color: var(--color-text);
-    cursor: pointer;
   }
 
   .line {

@@ -1,5 +1,4 @@
 const tabs = {
-  mcp_servers: 'MCP servers',
   get_started: 'Get started',
   dashboard: 'Dashboard',
   applications: 'Applications',
@@ -9,6 +8,12 @@ const tabs = {
   enterprise_sso: 'Enterprise SSO',
   security: 'Security',
   webhooks: 'Webhooks',
+  stacks: 'Workspaces',
+  mcp_servers: 'MCP servers',
+  run_bootstrap: 'Run bootstrap',
+  capacity: 'Capacity map',
+  agent: 'Agent',
+  bundle: 'Bundle',
   actions: 'Actions',
   organizations: 'Organizations',
   users: 'User management',

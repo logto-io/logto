@@ -45,11 +45,11 @@ describe('useBrandingEntitlements', () => {
   beforeEach(resetMockEnv);
 
   describe('outside Cloud', () => {
-    it('keeps hiding the branding available without a license, and the Custom UI CSP locked', () => {
+    it('keeps hiding the branding available without a license, and the Custom UI CSP unlocked (activated in this fork)', () => {
       expect(renderWithContext({})).toStrictEqual({
         isHideLogtoBrandingAvailable: true,
         isHideLogtoBrandingEnabled: true,
-        isCustomUiCspEnabled: false,
+        isCustomUiCspEnabled: true,
       });
     });
 
@@ -61,11 +61,11 @@ describe('useBrandingEntitlements', () => {
       });
     });
 
-    it('does not unlock the Custom UI CSP from a license that only grants hiding the branding', () => {
+    it('unlocks the Custom UI CSP from a license that only grants hiding the branding', () => {
       expect(renderWithContext(withLicense({ hideLogtoBranding: true }))).toStrictEqual({
         isHideLogtoBrandingAvailable: true,
         isHideLogtoBrandingEnabled: true,
-        isCustomUiCspEnabled: false,
+        isCustomUiCspEnabled: true,
       });
     });
 
@@ -74,7 +74,7 @@ describe('useBrandingEntitlements', () => {
         renderWithContext({
           currentSubscriptionQuota: { ...defaultSubscriptionQuota, bringYourUiEnabled: true },
         })
-      ).toMatchObject({ isHideLogtoBrandingEnabled: true, isCustomUiCspEnabled: false });
+      ).toMatchObject({ isHideLogtoBrandingEnabled: true, isCustomUiCspEnabled: true });
     });
   });
 

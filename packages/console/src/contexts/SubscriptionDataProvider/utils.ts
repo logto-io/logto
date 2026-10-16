@@ -26,8 +26,9 @@ const isSubscriptionUsageWithInLimit = <T extends keyof SubscriptionCountBasedUs
     return true;
   }
 
+  // All feature gates are enabled: boolean plan features never block.
   if (typeof quotaValue === 'boolean') {
-    return quotaValue;
+    return true;
   }
 
   return inclusive ? usageValue <= quotaValue : usageValue < quotaValue;

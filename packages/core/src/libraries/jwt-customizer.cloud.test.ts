@@ -171,7 +171,7 @@ describe('JwtCustomizerLibrary.runScriptRemotely quota', () => {
     expect(getSubscriptionData).not.toHaveBeenCalled();
   });
 
-  it('skips the Azure Functions fallback when the plan does not include custom JWT', async () => {
+  it('runs on the Azure Functions fallback even when the plan does not include custom JWT', async () => {
     const endpoint = 'https://untrusted.example.com';
     const remoteRunner = nock(endpoint).post('/api/custom-jwt').reply(200, { foo: 'bar' });
 
@@ -182,17 +182,19 @@ describe('JwtCustomizerLibrary.runScriptRemotely quota', () => {
       .mockReturnValue('function-key');
     getSubscriptionData.mockResolvedValueOnce({ quota: { customJwtEnabled: false } });
 
-    await expect(library.runScriptRemotely(payload)).resolves.toBeUndefined();
-    expect(remoteRunner.isDone()).toBe(false);
+    await expect(library.runScriptRemotely(payload)).resolves.toEqual({ foo: 'bar' });
+    expect(remoteRunner.isDone()).toBe(true);
   });
 
-  it('does not throw 422 for a downgraded tenant when neither runtime is configured', async () => {
+  it('reports the not-configured error regardless of the plan when neither runtime is configured', async () => {
     jest.spyOn(EnvSet.values, 'scriptRunnerEndpoint', 'get').mockReturnValue('');
     jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppEndpoint', 'get').mockReturnValue('');
     jest.spyOn(EnvSet.values, 'azureFunctionUntrustedAppKey', 'get').mockReturnValue('');
     getSubscriptionData.mockResolvedValueOnce({ quota: { customJwtEnabled: false } });
 
-    await expect(library.runScriptRemotely(payload)).resolves.toBeUndefined();
+    await expect(library.runScriptRemotely(payload)).rejects.toThrow(
+      'Remote script runner is not configured.'
+    );
   });
 });
 

@@ -8,6 +8,7 @@ import CubeIcon from '@/assets/icons/cube.svg?react';
 import DocumentIcon from '@/assets/icons/document-nav-button.svg?react';
 import CloudLogo from '@/assets/images/cloud-logo.svg?react';
 import Logo from '@/assets/images/logo.svg?react';
+import MeshxMark from '@/assets/images/meshx-mark.svg?react';
 import { githubReleasesLink } from '@/consts';
 import { isCloud } from '@/consts/env';
 import DynamicT from '@/ds-components/DynamicT';
@@ -40,12 +41,22 @@ function Topbar({ className, hideTenantSelector, hideTitle }: Props) {
 
   return (
     <div className={classNames(styles.topbar, className)}>
-      <LogtoLogo
-        className={styles.logo}
+      <div
+        className={styles.brand}
+        role="button"
+        tabIndex={0}
         onClick={() => {
           navigate('/');
         }}
-      />
+        onKeyDown={(event) => {
+          if (event.key === 'Enter') {
+            navigate('/');
+          }
+        }}
+      >
+        <MeshxMark className={styles.mark} />
+        <LogtoLogo className={styles.logo} />
+      </div>
       {isCloud && !hideTenantSelector && <TenantSelector />}
       {!isCloud && !hideTitle && (
         <>

@@ -1,5 +1,4 @@
 import {
-  adminTenantId,
   type CustomJwtErrorBody,
   CustomJwtErrorCode,
   jwtCustomizerUserContextGuard,
@@ -264,15 +263,8 @@ export class JwtCustomizerLibrary {
    * quota.
    */
   private async isCustomJwtEnabledByQuota(): Promise<boolean> {
-    const { isCloud } = EnvSet.values;
-
-    if (!isCloud || this.tenantId === adminTenantId) {
-      return true;
-    }
-
-    const { quota } = await this.subscription.getSubscriptionData();
-
-    return quota.customJwtEnabled;
+    // All feature gates are enabled: custom JWT is never metered.
+    return true;
   }
 
   /**

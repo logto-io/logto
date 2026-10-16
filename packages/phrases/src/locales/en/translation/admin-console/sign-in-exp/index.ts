@@ -96,7 +96,7 @@ const sign_in_exp = {
       'Upload a compressed package (.zip) to replace the MeshX prebuilt UI with your own code. <a>Learn more</a>',
     bring_your_ui_oss_description: 'Customize the sign-in UI with your own code.',
     bring_your_ui_oss_card_description:
-      'Custom UI upload is available in <a>MeshX Cloud</a> or <selfHosted>self-hosted plans</selfHosted>. No need to fork and redeploy.',
+      'Custom UI upload is included in this self-hosted installation. No need to fork and redeploy.',
     bring_your_ui_oss_try_cloud: 'Try Cloud',
     preview_with_bring_your_ui_description:
       'Your custom UI assets have been successfully uploaded and are now being served. Consequently, the built-in preview window has been disabled.\nTo test your personalized sign-in UI, click the "Live Preview" button to open it in a new browser tab.',

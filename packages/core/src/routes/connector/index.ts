@@ -16,7 +16,6 @@ import { string, object } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { type QuotaLibrary } from '#src/libraries/quota.js';
 import { getForgotPasswordAvailability } from '#src/libraries/sign-in-experience/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -30,15 +29,6 @@ import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 import connectorAuthorizationUriRoutes from './authorization-uri.js';
 import connectorConfigTestingRoutes from './config-testing.js';
 import connectorFactoryRoutes from './factory.js';
-
-const guardConnectorsQuota = async (
-  factory: ConnectorFactory<typeof router>,
-  quota: QuotaLibrary
-) => {
-  if (factory.type === ConnectorType.Social) {
-    await quota.guardTenantUsageByKey('socialConnectorsLimit');
-  }
-};
 
 const passwordlessConnector = new Set([ConnectorType.Email, ConnectorType.Sms]);
 const pickFactoryProperties = <T extends ConnectorFactory<typeof router>>(factory: T) => ({
@@ -61,7 +51,6 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
   const { getLogtoConnectorById, getLogtoConnectors, getLogtoConnectorByTargetAndPlatform } =
     tenant.connectors;
   const {
-    quota,
     signInExperiences: { removeUnavailableSocialConnectorTargets },
   } = tenant.libraries;
   const { findDefaultSignInExperience } = tenant.queries.signInExperiences;
@@ -105,8 +94,6 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
           status: 422,
         });
       }
-
-      await guardConnectorsQuota(connectorFactory, quota);
 
       if (connectorFactory.type === ConnectorType.Social) {
         assertThat(

@@ -10,7 +10,7 @@ describe('external links', () => {
   });
 
   it('points self-hosted plans upsell at the public landing page', () => {
-    expect(selfHostedPlansLink).toBe('https://logto.io/self-hosted-plans');
+    expect(selfHostedPlansLink).toBe('https://cloud.meshx.app');
   });
 
   it('attributes official website contact links', () => {

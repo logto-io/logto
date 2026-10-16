@@ -1,0 +1,66 @@
+
+.sectionBody {
+  padding: 4px 16px 16px;
+}
+
+.textInput {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  color: inherit;
+  background: var(--color-layer-1);
+}
+
+.kvEditor {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.kvRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 8px;
+  align-items: center;
+
+  input {
+    padding: 8px 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    color: inherit;
+    background: var(--color-layer-1);
+  }
+}
+
+.kvView {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.kvViewRow {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) 2fr;
+  gap: 12px;
+
+  dt {
+    color: var(--color-text-secondary);
+  }
+
+  dd {
+    margin: 0;
+    font-family: var(--font-mono, monospace);
+  }
+}
+
+.checkList {
+  display: grid;
+  gap: 8px;
+}
+
+.checkItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

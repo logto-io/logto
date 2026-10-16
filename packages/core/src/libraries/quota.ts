@@ -161,9 +161,11 @@ export class QuotaLibrary {
         await this.assertSelfHostedSamlApplicationsLimit(consumeUsageCount);
       }
 
-      if (key === 'idpInitiatedSsoEnabled') {
-        await this.assertSelfHostedIdpInitiatedSsoEntitlement();
-      }
+      return;
+    }
+
+    // All feature gates are enabled in Cloud: boolean keys never block.
+    if (isBooleanQuotaUsageKey(key)) {
       return;
     }
 
@@ -263,28 +265,6 @@ export class QuotaLibrary {
     assertThat(
       usage + consumeUsageCount <= limit,
       new RequestError({ code: 'application.saml.reach_oss_limit', status: 403, limit })
-    );
-  };
-
-  /**
-   * Enforce the `idpInitiatedSso` entitlement of a self-hosted deployment: granted by the installed
-   * license, locked under the OSS default (`ossDefaultQuota`) without one or once the license's
-   * refresh grace has run out.
-   *
-   * Answers with the same `subscription.limit_exceeded` error a Cloud plan without the feature gets.
-   */
-  private readonly assertSelfHostedIdpInitiatedSsoEntitlement = async () => {
-    const {
-      quota: { idpInitiatedSso },
-    } = await this.subscription.getSelfHostedSubscription();
-
-    assertThat(
-      idpInitiatedSso,
-      new RequestError({
-        code: 'subscription.limit_exceeded',
-        status: 403,
-        data: { key: 'idpInitiatedSsoEnabled' },
-      })
     );
   };
 

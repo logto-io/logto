@@ -1,0 +1,389 @@
+/* Copied verbatim from the kshows app (internal/portal/assets/kshows/style.css). Lint is disabled for this file to keep it identical to the source. */
+/* stylelint-disable */
+/* kshows — cluster capacity visualizer.
+   Data and identifiers are monospace; prose is the system sans.
+   Namespace colors are a CVD-validated categorical set (adjacent-pair ΔE
+   checked against this exact surface). */
+
+/* Colors and type come from the portal design system, so kshows follows the
+   same light and dark theme as the rest of the console (portal.css sets
+   color-scheme per theme). Namespace colors stay fixed: they are a
+   CVD-checked categorical set. Surfaces that must work in both themes use
+   tokens, not literal colors. */
+/* Theme aliases sit on body, where .meshx-theme defines the design tokens.
+   On :root the tokens are undefined (they are not set on html), so the
+   aliases would resolve to nothing and surfaces like the tooltip go
+   transparent. */
+body {
+  --bg: var(--background, #ebe9f4);
+  --surface: var(--card, #ffffff);
+  --surface-2: var(--muted, #ebe9f4);
+  --surface-3: var(--border, #cfcbe3);
+  --ink: var(--foreground, #1c1b25);
+  --ink-2: var(--muted-foreground, #6e6b7d);
+  --ink-3: var(--muted-foreground, #6e6b7d);
+  --line: var(--border, #e4e2ee);
+  --accent: var(--primary, #6639f5);
+  --good: var(--sentiment-positive);
+  --crit: var(--sentiment-negative);
+}
+
+:root {
+  --ns-1: #3987e5;
+  --ns-2: #d95926;
+  --ns-3: #199e70;
+  --ns-4: #c98500;
+  --ns-5: #d55181;
+  --ns-6: #008300;
+  --ns-7: #9085e9;
+  --ns-8: #e66767;
+  --ns-other: #5a6474;
+
+  --warn: #fab219;
+
+  --mono: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Menlo, Consolas, monospace;
+  --sans: inherit;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.45;
+  min-height: 100vh;
+}
+
+button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+/* ---------- header ---------- */
+
+.topbar {
+  position: sticky; top: 0; z-index: 30;
+  display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  padding: 10px 20px;
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+
+.wordmark {
+  display: flex; align-items: baseline; gap: 10px;
+  font-family: var(--mono);
+}
+.wordmark .glyph { color: var(--accent); font-size: 18px; }
+.wordmark .name { font-size: 16px; font-weight: 700; letter-spacing: 0.08em; }
+.wordmark .tag { font-size: 11px; color: var(--ink-3); letter-spacing: 0.06em; }
+
+.controls { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.seg {
+  display: flex; gap: 2px; padding: 2px;
+  background: var(--surface-2); border-radius: 8px;
+}
+.seg button {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.07em;
+  padding: 5px 12px; border-radius: 6px; color: var(--ink-2);
+}
+.seg button:hover:not(:disabled) { color: var(--ink); }
+.seg button[aria-pressed="true"] {
+  background: var(--surface); color: var(--ink);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.14), inset 0 0 0 1px var(--line);
+}
+.seg button:disabled { color: var(--ink-3); cursor: not-allowed; opacity: 0.55; }
+
+.spacer { flex: 1; }
+
+.status { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; color: var(--ink-2); }
+.status .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--good); }
+.status.stale .dot { background: var(--warn); }
+.status.stale::after { content: "reconnecting"; color: var(--warn); }
+
+/* ---------- banners ---------- */
+
+.banners { display: grid; gap: 1px; }
+.banner {
+  padding: 8px 20px; font-size: 13px; color: var(--ink-2);
+  background: color-mix(in srgb, var(--warn) 7%, var(--bg));
+  border-left: 3px solid var(--warn);
+}
+.banner strong { color: var(--ink); font-weight: 600; }
+
+/* ---------- summary strip ---------- */
+
+.summary {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px; padding: 16px 20px 4px;
+}
+.stat {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+  padding: 10px 14px 12px;
+}
+.stat .k {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--ink-3);
+}
+.stat .v { font-family: var(--mono); font-size: 21px; font-weight: 600; margin-top: 2px; }
+.stat .v small { font-size: 12px; font-weight: 400; color: var(--ink-2); }
+.stat .bar {
+  height: 4px; border-radius: 2px; background: var(--surface-3);
+  margin-top: 8px; position: relative; overflow: hidden;
+}
+.stat .bar i { position: absolute; inset: 0 auto 0 0; background: var(--accent); border-radius: 2px; }
+.stat .sub { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); margin-top: 5px; }
+
+/* ---------- legend ---------- */
+
+.legend {
+  display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center;
+  padding: 12px 20px 0;
+}
+.legend .cap {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--ink-3); margin-right: 2px;
+}
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--mono); font-size: 11.5px; color: var(--ink-2);
+  padding: 2px 4px; border-radius: 5px;
+}
+.chip:hover { color: var(--ink); background: var(--surface-2); }
+.chip .sw { width: 10px; height: 10px; border-radius: 3px; }
+
+/* ---------- node grid ---------- */
+
+/* Pending pods: waiting for the scheduler. The chip pulses until the pod is
+   placed on a node. Reduced-motion users get a solid outline instead. */
+.pending { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 0 0 14px; }
+.pending[hidden] { display: none; }
+.pending .cap { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--warn); }
+.pending-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.pchip {
+  display: inline-flex; align-items: center; gap: 7px; max-width: 320px;
+  padding: 4px 9px; border: 1.5px solid var(--warn); border-radius: 6px;
+  font-family: var(--mono); font-size: 12px; color: var(--ink);
+}
+.pchip .sw { width: 8px; height: 8px; border-radius: 2px; flex: none; }
+.pending-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pending-reason { color: var(--ink-3); font-size: 11px; white-space: nowrap; }
+.pchip.is-pending { animation: pending-flash 1.2s ease-in-out infinite; }
+@keyframes pending-flash {
+  0%, 100% { background: transparent; box-shadow: none; }
+  50% { background: rgba(250, 178, 25, 0.28); box-shadow: 0 0 10px rgba(250, 178, 25, 0.6); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pchip.is-pending { animation: none; background: rgba(250, 178, 25, 0.12); }
+}
+
+.grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
+  gap: 14px; padding: 16px 20px 40px;
+}
+
+.card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+  padding: 10px 12px 12px; cursor: pointer; text-align: left; width: 100%;
+  transition: border-color 0.15s;
+}
+.card:hover { border-color: var(--ink-3); }
+
+.card-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; min-width: 0; }
+.card-head .nname {
+  font-family: var(--mono); font-size: 13px; font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  min-width: 64px;
+}
+.card-head .role { overflow: hidden; text-overflow: ellipsis; max-width: 90px; }
+.card-head .pct, .card-head .role, .card-head .over { white-space: nowrap; }
+.card-head .pct, .card-head .over { flex-shrink: 0; }
+.card-head .role {
+  font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.06em;
+  color: var(--ink-3); border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px;
+}
+.card-head .notready { color: var(--crit); font-family: var(--mono); font-size: 10px; }
+.card-head .pct { margin-left: auto; font-family: var(--mono); font-size: 16px; font-weight: 700; }
+.card-head .pct small { font-size: 10px; font-weight: 400; color: var(--ink-3); }
+.card-head .over {
+  font-family: var(--mono); font-size: 10px; color: var(--warn);
+  border: 1px solid color-mix(in srgb, var(--warn) 45%, transparent);
+  border-radius: 4px; padding: 1px 5px;
+}
+
+.card svg { display: block; width: 100%; border-radius: 6px; background: var(--surface); }
+
+.card-foot {
+  display: flex; gap: 12px; margin-top: 7px;
+  font-family: var(--mono); font-size: 10.5px; color: var(--ink-3);
+}
+
+/* ---------- treemap tiles ---------- */
+
+.tile rect { shape-rendering: crispEdges; }
+.tile .slack { opacity: 0.22; }
+.tile .fill { }
+.tile .rsv { fill: none; stroke-dasharray: 3 3; stroke-width: 1.2; opacity: 0.9; }
+.tile.overreq .fill { stroke: var(--warn); stroke-width: 1.5; }
+/* Tile labels sit over the namespace wash (pale in light, dark in dark), so
+   they take the theme ink with a halo in the theme surface: the halo keeps
+   the text legible on both the wash and saturated fills. */
+.tile text {
+  font-family: var(--mono); fill: var(--ink);
+  paint-order: stroke; stroke: var(--surface); stroke-width: 2.5px;
+  pointer-events: none;
+}
+.tile .lbl { font-size: 10px; font-weight: 600; }
+.tile .val { font-size: 9px; fill: var(--ink-2); }
+.tile.dimmed { opacity: 0.25; }
+
+.freeblock rect { stroke: var(--line); stroke-width: 1; }
+.freeblock text {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
+  fill: var(--ink-3); pointer-events: none;
+}
+
+/* geometry transitions (UID-keyed, so growth/shrink is legible) */
+.tile, .freeblock { transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s; }
+.tile rect, .freeblock rect {
+  transition: x 0.6s cubic-bezier(0.22, 1, 0.36, 1), y 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    width 0.6s cubic-bezier(0.22, 1, 0.36, 1), height 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.disk-fill { transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .tile, .freeblock, .tile rect, .freeblock rect, .disk-fill, .card { transition: none; }
+}
+
+/* ---------- disk bar ---------- */
+
+.diskbar .track { fill: var(--surface-2); }
+.diskbar .used { fill: var(--accent); }
+.diskbar.warn .used { fill: var(--warn); }
+.diskbar.crit .used { fill: var(--crit); }
+.diskbar text { font-family: var(--mono); }
+.diskbar .bigpct { font-size: 26px; font-weight: 700; fill: var(--ink); }
+.diskbar .detail { font-size: 11px; fill: var(--ink-2); }
+.diskbar .note { font-size: 10px; fill: var(--ink-3); }
+.diskbar .alerttxt { font-size: 10.5px; font-weight: 600; }
+.diskbar.warn .alerttxt { fill: var(--warn); }
+.diskbar.crit .alerttxt { fill: var(--crit); }
+
+/* ---------- tooltip ---------- */
+
+.tooltip {
+  position: fixed; z-index: 60; pointer-events: none;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 8px 11px; font-size: 12px; max-width: 300px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+  display: none;
+}
+.tooltip.show { display: block; }
+.tooltip .t-name { font-family: var(--mono); font-weight: 600; font-size: 12px; word-break: break-all; }
+.tooltip .t-ns { display: inline-flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 10.5px; color: var(--ink-2); margin: 3px 0 6px; }
+.tooltip .t-ns .sw { width: 8px; height: 8px; border-radius: 2px; }
+.tooltip table { border-collapse: collapse; font-family: var(--mono); font-size: 11px; }
+.tooltip td { padding: 1px 0; color: var(--ink); }
+.tooltip td:first-child { color: var(--ink-3); padding-right: 12px; }
+
+/* ---------- drill-in overlay ---------- */
+
+.overlay {
+  position: fixed; inset: 0; z-index: 50; overflow-y: auto;
+  background: rgba(10, 13, 19, 0.78); backdrop-filter: blur(6px);
+  padding: 4vh 20px 40px;
+}
+.overlay[hidden] { display: none; }
+.panel {
+  max-width: 1080px; margin: 0 auto;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+  padding: 18px 20px 20px;
+}
+.panel-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px; }
+.panel-head .nname { font-family: var(--mono); font-size: 18px; font-weight: 700; }
+.panel-head .meta { font-family: var(--mono); font-size: 11.5px; color: var(--ink-2); }
+.panel-head .close {
+  margin-left: auto; font-family: var(--mono); font-size: 12px; color: var(--ink-2);
+  border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px;
+}
+.panel-head .close:hover { color: var(--ink); border-color: var(--ink-3); }
+.panel svg { display: block; width: 100%; border-radius: 8px; }
+
+.podtable { width: 100%; border-collapse: collapse; margin-top: 16px; font-family: var(--mono); font-size: 12px; }
+.podtable caption {
+  text-align: left; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-3); padding-bottom: 6px;
+}
+.podtable th {
+  text-align: right; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-3); font-weight: 500; padding: 4px 8px; border-bottom: 1px solid var(--line);
+}
+.podtable th:first-child, .podtable td:first-child { text-align: left; padding-left: 0; }
+.podtable td { padding: 4px 8px; text-align: right; border-bottom: 1px solid var(--line); color: var(--ink-2); }
+.podtable td.podname { color: var(--ink); word-break: break-all; }
+.podtable td .sw { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 7px; }
+.podtable td.hot { color: var(--warn); }
+
+/* ---------- splash / empty ---------- */
+
+.splash {
+  display: grid; place-items: center; min-height: 60vh;
+  font-family: var(--mono); color: var(--ink-3); letter-spacing: 0.08em; font-size: 13px;
+}
+.splash[hidden] { display: none; }
+
+@media (max-width: 640px) {
+  .topbar { gap: 10px; }
+  .summary { grid-template-columns: repeat(2, 1fr); }
+  .grid { grid-template-columns: 1fr; }
+}
+
+/* Live change feedback: a tile flashes when its pod is created, restarts, or
+   changes phase or readiness. Motion is off for reduced-motion users. */
+.tile.is-new { animation: tile-new 4.8s ease-out; }
+.tile.is-restart { animation: tile-restart 4.8s ease-out; }
+.tile.is-changed { animation: tile-changed 4.8s ease-out; }
+@keyframes tile-new {
+  0%, 100% { filter: none; }
+  20%, 50% { filter: drop-shadow(0 0 6px #0ca30c) brightness(1.5); }
+}
+@keyframes tile-restart {
+  0%, 100% { filter: none; }
+  20%, 50% { filter: drop-shadow(0 0 6px #fab219) brightness(1.5); }
+}
+@keyframes tile-changed {
+  0%, 100% { filter: none; }
+  20%, 50% { filter: drop-shadow(0 0 6px #3987e5) brightness(1.4); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tile.is-new, .tile.is-restart, .tile.is-changed { animation: none; }
+}
+
+.pending-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 6px 20px; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 11px; }
+.pending-label { color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.06em; margin-right: 6px; }
+.pending-chip { display: inline-flex; align-items: baseline; gap: 6px; padding: 3px 8px; border-radius: 6px; border: 1px dashed var(--warn); color: var(--ink); }
+.pending-chip small { color: var(--ink-3); }
+.pending-chip.is-new { animation: tile-changed 4.8s ease-out; }
+@media (prefers-reduced-motion: reduce) { .pending-chip.is-new { animation: none; } }
+
+/* Breathing border: the outline of a flashing tile swells and fades twice. */
+.tile.is-new rect.fill, .tile.is-restart rect.fill, .tile.is-changed rect.fill {
+  animation: border-breathe 1.6s ease-in-out 3;
+}
+.tile.is-new rect.fill { stroke: #0ca30c; }
+.tile.is-restart rect.fill { stroke: #fab219; }
+.tile.is-changed rect.fill { stroke: #3987e5; }
+@keyframes border-breathe {
+  0%, 100% { stroke-width: 1.5px; opacity: 0.55; }
+  50% { stroke-width: 4px; opacity: 1; }
+}
+.pending-chip.is-new { animation: chip-breathe 1.6s ease-in-out 3; }
+@keyframes chip-breathe {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(250, 178, 25, 0); border-color: var(--warn); }
+  50% { box-shadow: 0 0 0 4px rgba(250, 178, 25, 0.35); border-color: #fab219; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tile.is-new rect.fill, .tile.is-restart rect.fill, .tile.is-changed rect.fill, .pending-chip.is-new { animation: none; }
+}

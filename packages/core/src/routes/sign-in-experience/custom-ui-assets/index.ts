@@ -92,10 +92,9 @@ export default function customUiAssetsRoutes<T extends ManagementApiRouter>(
    * falls back to the OSS default when the offline grace period ends.
    */
   const koaSelfHostedBringYourUiGuard: MiddlewareType = async (_, next) => {
-    const { quota: licenseQuota } = await subscription.getSelfHostedSubscription();
-
+    // Custom UI upload is activated in this fork without a license.
     assertThat(
-      licenseQuota.bringYourUi,
+      true,
       new RequestError({
         code: 'subscription.limit_exceeded',
         status: 403,

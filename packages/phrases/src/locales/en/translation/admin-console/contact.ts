@@ -2,9 +2,9 @@ const contact = {
   title: 'Get help',
   description:
     'For help requests or product feedback, please contact us through the following methods.',
-  discord: {
-    title: 'Join Discord community',
-    description: 'Connect with other developers to find solutions',
+  slack: {
+    title: 'Join MeshX Slack',
+    description: 'Connect with the MeshX team and other users to find solutions',
     button: 'Join',
   },
   github: {
