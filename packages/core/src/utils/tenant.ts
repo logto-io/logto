@@ -1,6 +1,6 @@
 import { adminTenantId, defaultTenantId } from '@logto/schemas';
 import { type UrlSet } from '@logto/shared';
-import { conditionalString, trySafe } from '@silverhand/essentials';
+import { conditionalString, once, trySafe } from '@silverhand/essentials';
 import { type CommonQueryMethods } from '@silverhand/slonik';
 
 import {
@@ -9,7 +9,7 @@ import {
   type GuardedKeys,
 } from '#src/caches/generation.js';
 import { redisCache } from '#src/caches/index.js';
-import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
+import { AdminApps, EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import { createDomainsQueries } from '#src/queries/domains.js';
 
 import { devConsole } from './console.js';
@@ -111,6 +111,26 @@ const getTenantIdFromCustomDomain = async (
   return domain.tenantId;
 };
 
+const isConsolePath = (pathname: string) =>
+  pathname === `/${AdminApps.Console}` || pathname.startsWith(`/${AdminApps.Console}/`);
+
+/** Warn once per process, since a misconfigured deployment would otherwise log on every request. */
+const warnUnmatchedConsoleOrigin = once((url: URL, adminUrlSet: UrlSet) => {
+  const configured = process.env.ADMIN_ENDPOINT
+    ? adminUrlSet
+        .deduplicated()
+        .map(({ href }) => href)
+        .join(', ')
+    : 'ADMIN_ENDPOINT is not set';
+
+  devConsole.warn(
+    'This request does not match any configured admin endpoint and will be served by the ' +
+      'default tenant, which does not host the Console. Check that you are using the intended ' +
+      'Console URL and that ADMIN_ENDPOINT matches your deployment. ' +
+      `(request: ${url.origin}${url.pathname}; configured admin endpoints: ${configured})`
+  );
+});
+
 /**
  * Get tenant ID from the current request's URL.
  *
@@ -145,6 +165,10 @@ export const getTenantId = async (
   }
 
   if (!isMultiTenancy) {
+    if (isConsolePath(url.pathname)) {
+      warnUnmatchedConsoleOrigin(url, adminUrlSet);
+    }
+
     return [defaultTenantId, false];
   }
 
