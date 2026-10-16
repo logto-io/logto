@@ -102,6 +102,8 @@ describe('koaOidcAuth middleware', () => {
       identityVerified: false,
       clientId: mockAccessToken.clientId,
       sessionUid: undefined,
+      // The tenant cannot resolve `fooClient`, and the third-party check fails closed.
+      isFirstPartyClient: false,
     });
   });
 
@@ -124,6 +126,8 @@ describe('koaOidcAuth middleware', () => {
       identityVerified: false,
       clientId: mockAccessToken.clientId,
       sessionUid: 'fooSessionUid',
+      // The tenant cannot resolve `fooClient`, and the third-party check fails closed.
+      isFirstPartyClient: false,
     });
   });
 

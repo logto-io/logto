@@ -30,6 +30,7 @@ import {
   createDefaultTenantUserWithPassword,
   deleteDefaultTenantUser,
   signInAndGetUserApi,
+  signInWithSocialAndGetUserApi,
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateName, generateUsername } from '#src/utils.js';
@@ -171,8 +172,9 @@ describe('my-account social identities without identity verification', () => {
   });
 
   it('should require identity verification when password is available', async () => {
-    const { user, username, password } = await createDefaultTenantUserWithPassword();
-    const api = await signInAndGetUserApi(username, password, {
+    const { user } = await createDefaultTenantUserWithPassword();
+    // A social sign-in carries no `acr`, so the token alone does not verify the identity.
+    const api = await signInWithSocialAndGetUserApi(user.id, {
       scopes: [UserScope.Profile, UserScope.Identities],
     });
     const socialConnectorId = connectorIdMap.get('social')!;
@@ -254,8 +256,9 @@ describe('my-account social identities without identity verification', () => {
   });
 
   it('should require identity verification when replacing with password available', async () => {
-    const { user, username, password } = await createDefaultTenantUserWithPassword();
-    const api = await signInAndGetUserApi(username, password, {
+    const { user } = await createDefaultTenantUserWithPassword();
+    // A social sign-in carries no `acr`, so the token alone does not verify the identity.
+    const api = await signInWithSocialAndGetUserApi(user.id, {
       scopes: [UserScope.Profile, UserScope.Identities],
     });
     const socialConnectorId = connectorIdMap.get('social')!;
@@ -303,8 +306,9 @@ describe('my-account social identities without identity verification', () => {
   });
 
   it('should require identity verification when deleting with password available', async () => {
-    const { user, username, password } = await createDefaultTenantUserWithPassword();
-    const api = await signInAndGetUserApi(username, password, {
+    const { user, password } = await createDefaultTenantUserWithPassword();
+    // A social sign-in carries no `acr`, so the token alone does not verify the identity.
+    const api = await signInWithSocialAndGetUserApi(user.id, {
       scopes: [UserScope.Profile, UserScope.Identities],
     });
     const socialConnectorId = connectorIdMap.get('social')!;
