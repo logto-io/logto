@@ -159,31 +159,12 @@ describe('me tenant routes', () => {
       expect(updateById).toHaveBeenCalledWith(tenantOrganizationId, { isMfaRequired: true });
     });
 
-    it('should refuse to require MFA without the entitlement', async () => {
-      installLicense(false);
-
+    it('should require MFA without a license', async () => {
       const response = await request.patch('/tenant/mfa').send({ isMfaRequired: true });
 
-      expect(response.status).toBe(403);
-      expect(response.body).toMatchObject({ code: 'subscription.limit_exceeded' });
-      expect(updateById).not.toHaveBeenCalled();
-    });
-
-    it('should refuse to require MFA with a license past its grace period', async () => {
-      installLicense(true, Date.now() - 1);
-
-      const response = await request.patch('/tenant/mfa').send({ isMfaRequired: true });
-
-      expect(response.status).toBe(403);
-      expect(response.body).toMatchObject({ code: 'subscription.limit_exceeded' });
-      expect(updateById).not.toHaveBeenCalled();
-    });
-
-    it('should refuse to require MFA without a license', async () => {
-      const response = await request.patch('/tenant/mfa').send({ isMfaRequired: true });
-
-      expect(response.status).toBe(403);
-      expect(updateById).not.toHaveBeenCalled();
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({ isMfaRequired: true });
+      expect(updateById).toHaveBeenCalledWith(tenantOrganizationId, { isMfaRequired: true });
     });
 
     it('should always allow turning the requirement off', async () => {
