@@ -37,6 +37,8 @@ const jwt_claims = {
   error_handling_tab: '오류 처리',
   test_tab: '테스트 컨텍스트',
   jwt_claims_description: '기본 클레임은 JWT에 자동으로 추가되며 재정의할 수 없습니다.',
+  reserved_claims_description:
+    '`acr`, `amr`, `auth_time`은 사용자 액세스 토큰에서 예약되어 있습니다. Logto가 항상 이들을 도출하며, 이러한 키를 사용하는 사용자 정의 클레임은 무시됩니다.',
   user_data: {
     title: '사용자 데이터',
     subtitle: '`context.user` 입력 매개변수를 사용하여 중요한 사용자 정보 제공.',

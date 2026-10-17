@@ -35,6 +35,8 @@ const jwt_claims = {
   error_handling_tab: '錯誤處理',
   test_tab: '測試上下文',
   jwt_claims_description: '默認聲明自動包含在 JWT 中，無法覆蓋。',
+  reserved_claims_description:
+    '`acr`、`amr` 和 `auth_time` 在用戶訪問令牌中是保留聲明：Logto 一律自行推導這些值，並忽略使用這些鍵的自定義聲明。',
   user_data: {
     title: '用戶數據',
     subtitle: '使用 `context.user` 輸入參數提供重要用戶信息。',

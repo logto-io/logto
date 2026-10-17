@@ -38,6 +38,8 @@ const jwt_claims = {
   error_handling_tab: 'エラーハンドリング',
   test_tab: 'コンテキストをテスト',
   jwt_claims_description: 'デフォルトクレームはJWTに自動的に含まれ、オーバーライドできません。',
+  reserved_claims_description:
+    '`acr`、`amr`、`auth_time` はユーザーアクセストークンでは予約済みです。Logto が常にこれらを導出し、これらのキーを使用するカスタムクレームは無視されます。',
   user_data: {
     title: 'ユーザーデータ',
     subtitle: '`context.user`入力パラメータを使用して重要なユーザー情報を提供します。',

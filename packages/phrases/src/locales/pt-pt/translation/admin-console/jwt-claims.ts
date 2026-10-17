@@ -40,6 +40,8 @@ const jwt_claims = {
   test_tab: 'Contexto de teste',
   jwt_claims_description:
     'As reivindicações predefinidas são automaticamente incluídas no JWT e não podem ser substituídas.',
+  reserved_claims_description:
+    '`acr`, `amr` e `auth_time` são reservados nos tokens de acesso do utilizador: o Logto deriva-os sempre e ignora reivindicações personalizadas que usam estas chaves.',
   user_data: {
     title: 'Dados do utilizador',
     subtitle:
