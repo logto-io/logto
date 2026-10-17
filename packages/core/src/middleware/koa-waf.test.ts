@@ -3,6 +3,7 @@ import { noop } from '@silverhand/essentials';
 import type Koa from 'koa';
 
 import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-context.js';
+import { SilentConsoleLog } from '#src/utils/console.js';
 
 import koaWaf, { type KoaWafEvent } from './koa-waf.js';
 
@@ -68,6 +69,27 @@ describe('koaWaf()', () => {
 
     expect(report).not.toHaveBeenCalled();
     expect(next).toHaveBeenCalledTimes(1);
+  });
+
+  it('uses the sanitized request console when no reporter is provided', async () => {
+    const consoleLog = new SilentConsoleLog();
+    const warn = jest.spyOn(consoleLog, 'warn');
+    const context = createMockContext({
+      method: 'TRACE',
+      url: '/private?token=must-not-appear',
+      customProperties: { requestId: 'request_123', console: consoleLog },
+    });
+
+    await koaWaf({ mode: 'report' })(context, createNext());
+
+    expect(warn).toHaveBeenCalledWith('WAF request finding', {
+      requestId: 'request_123',
+      method: 'TRACE',
+      ruleId: 'unsupported-method',
+      mode: 'report',
+      targetLength: context.req.url?.length ?? 0,
+    });
+    expect(JSON.stringify(warn.mock.calls)).not.toContain('must-not-appear');
   });
 
   it.each([

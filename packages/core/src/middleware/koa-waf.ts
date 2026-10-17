@@ -1,6 +1,8 @@
 import { inspectRequest, type WafFinding, type WafOptions, type WafRuleId } from '@logto/waf';
 import type Koa from 'koa';
 
+import { getConsoleLogFromContext } from '#src/utils/console.js';
+
 export type KoaWafEvent = {
   readonly requestId: string;
   readonly method: string;
@@ -67,13 +69,16 @@ export default function koaWaf({
         inspectorOptions
       );
 
-      if (report) {
-        await Promise.all(
-          findings.map(async (finding) =>
-            report(buildEvent(context, finding, mode, rawTarget.length))
-          )
-        );
-      }
+      const reportFinding =
+        report ??
+        ((event: KoaWafEvent) => {
+          getConsoleLogFromContext(context).warn('WAF request finding', event);
+        });
+      await Promise.all(
+        findings.map(async (finding) =>
+          reportFinding(buildEvent(context, finding, mode, rawTarget.length))
+        )
+      );
 
       if (mode === 'block' && findings.length > 0) {
         // Koa exposes response status and body through mutable context properties.

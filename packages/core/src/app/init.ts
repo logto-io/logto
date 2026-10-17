@@ -11,6 +11,7 @@ import koaLogger from 'koa-logger';
 import { nanoid } from 'nanoid';
 
 import { EnvSet } from '#src/env-set/index.js';
+import koaWaf from '#src/middleware/koa-waf.js';
 import { TenantNotFoundError, tenantPool } from '#src/tenants/index.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
@@ -47,6 +48,8 @@ export default async function initApp(app: Koa): Promise<void> {
     // Set the header in the end to avoid other middleware from overwriting it
     ctx.set('Logto-Core-Request-Id', requestId);
   });
+
+  app.use(koaWaf({ mode: EnvSet.values.wafMode }));
 
   app.use(async (ctx, next) => {
     if (EnvSet.values.isDomainBasedMultiTenancy && ['/status', '/'].includes(ctx.URL.pathname)) {

@@ -64,6 +64,19 @@ export const parseNonNegativeIntegerEnv = (value?: string, fallback = 0): number
   return Number.isSafeInteger(parsed) && parsed >= 0 ? parsed : fallback;
 };
 
+export type WafMode = 'off' | 'report' | 'block';
+
+export const parseWafMode = (value?: string): WafMode => {
+  const normalized = value?.trim();
+  const mode = normalized === undefined || normalized === '' ? 'report' : normalized;
+
+  if (mode === 'off' || mode === 'report' || mode === 'block') {
+    return mode;
+  }
+
+  throw new Error('Invalid LOGTO_WAF_MODE; expected off, report, or block.');
+};
+
 const addSsrfAllowedAddress = (list: BlockList, entry: string) => {
   const segments = entry.split('/');
 
@@ -114,6 +127,7 @@ export default class GlobalValues {
   public readonly isIntegrationTest = yes(getEnv('INTEGRATION_TEST'));
   public readonly isUnitTest = getEnv('NODE_ENV') === 'test';
   public readonly isDevFeaturesEnabled = !this.isProduction || yes(getEnv('DEV_FEATURES_ENABLED'));
+  public readonly wafMode = parseWafMode(getEnv('LOGTO_WAF_MODE'));
 
   public readonly httpsCert = process.env.HTTPS_CERT_PATH;
   public readonly httpsKey = process.env.HTTPS_KEY_PATH;
