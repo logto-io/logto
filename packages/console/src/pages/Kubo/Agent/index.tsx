@@ -2,6 +2,11 @@ import { Helmet } from 'react-helmet';
 import useSWR from 'swr';
 
 import RequestDataError from '@/components/RequestDataError';
+import Card from '@/ds-components/Card';
+import CardTitle from '@/ds-components/CardTitle';
+import DynamicT from '@/ds-components/DynamicT';
+import Table from '@/ds-components/Table';
+import Tag from '@/ds-components/Tag';
 import { type RequestError } from '@/hooks/use-api';
 
 import styles from '../index.module.scss';
@@ -31,6 +36,15 @@ type AgentRequestList = { requests: AgentRequest[]; total: number };
 
 const formatUsd = (micro: number) => `$${(micro / 1_000_000).toFixed(2)}`;
 
+function Metric({ value, label }: { readonly value: string | number; readonly label: string }) {
+  return (
+    <Card className={styles.metric}>
+      <div className={styles.summaryValue}>{value}</div>
+      <div className={styles.summaryLabel}>{label}</div>
+    </Card>
+  );
+}
+
 function Agent() {
   const stats = useSWR<AgentStats, RequestError>('api/kubo/agentfw/stats', {
     refreshInterval: 15_000,
@@ -50,65 +64,70 @@ function Agent() {
       <Helmet title="MeshX · Agent" />
       <div className={styles.header}>
         <div className={styles.eyebrow}>Infrastructure / Agent</div>
-        <h2 className={styles.title}>Agent</h2>
+        <h2 className={styles.title}>
+          <DynamicT forKey="infrastructure.agent_title" />
+        </h2>
         <p className={styles.description}>
-          Requests and sessions across all workspaces, with blocked and redacted traffic.
+          <DynamicT forKey="infrastructure.agent_description" />
         </p>
       </div>
 
       <div className={styles.summary}>
-        <div className={styles.summaryItem}>
-          <div className={styles.summaryValue}>{summary?.total_requests ?? '—'}</div>
-          <div className={styles.summaryLabel}>Requests</div>
-        </div>
-        <div className={styles.summaryItem}>
-          <div className={styles.summaryValue}>{summary?.total_sessions ?? '—'}</div>
-          <div className={styles.summaryLabel}>Sessions</div>
-        </div>
-        <div className={styles.summaryItem}>
-          <div className={styles.summaryValue}>{summary?.blocked ?? '—'}</div>
-          <div className={styles.summaryLabel}>Blocked</div>
-        </div>
-        <div className={styles.summaryItem}>
-          <div className={styles.summaryValue}>{summary?.redacted ?? '—'}</div>
-          <div className={styles.summaryLabel}>Redacted</div>
-        </div>
-        <div className={styles.summaryItem}>
-          <div className={styles.summaryValue}>{summary ? formatUsd(summary.cost_micro) : '—'}</div>
-          <div className={styles.summaryLabel}>Estimated cost</div>
-        </div>
+        <Metric value={summary?.total_requests ?? '—'} label="Requests" />
+        <Metric value={summary?.total_sessions ?? '—'} label="Sessions" />
+        <Metric value={summary?.blocked ?? '—'} label="Blocked" />
+        <Metric value={summary?.redacted ?? '—'} label="Redacted" />
+        <Metric value={summary ? formatUsd(summary.cost_micro) : '—'} label="Estimated cost" />
       </div>
 
-      <div className={styles.card}>
-        <div className={styles.cardTitle}>Recent requests</div>
+      <Card className={styles.section}>
+        <CardTitle title="infrastructure.recent_requests" />
         {requests.error && <RequestDataError error={requests.error} />}
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>Time</th>
-              <th>Workspace</th>
-              <th>Method</th>
-              <th>Host</th>
-              <th>Model</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {(requests.data?.requests ?? []).map((request) => (
-              <tr key={request.id}>
-                <td className={styles.muted}>{new Date(request.time).toLocaleString()}</td>
-                <td>{request.keyProduct ?? '—'}</td>
-                <td>{request.method}</td>
-                <td>{request.host}</td>
-                <td className={styles.muted}>{request.model ?? '—'}</td>
-                <td>{request.status}</td>
-                <td>{request.action}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+        <Table
+          rowGroups={[{ key: 'requests', data: requests.data?.requests ?? [] }]}
+          rowIndexKey="id"
+          columns={[
+            {
+              title: <DynamicT forKey="infrastructure.column.time" />,
+              dataIndex: 'time',
+              render: (row: AgentRequest) => new Date(row.time).toLocaleString(),
+            },
+            {
+              title: <DynamicT forKey="infrastructure.column.workspace" />,
+              dataIndex: 'keyProduct',
+              render: (row: AgentRequest) => row.keyProduct ?? '—',
+            },
+            {
+              title: <DynamicT forKey="infrastructure.column.method" />,
+              dataIndex: 'method',
+              render: (row: AgentRequest) => row.method,
+            },
+            {
+              title: <DynamicT forKey="infrastructure.column.host" />,
+              dataIndex: 'host',
+              render: (row: AgentRequest) => row.host,
+            },
+            {
+              title: <DynamicT forKey="infrastructure.column.model" />,
+              dataIndex: 'model',
+              render: (row: AgentRequest) => row.model ?? '—',
+            },
+            {
+              title: <DynamicT forKey="infrastructure.column.status" />,
+              dataIndex: 'status',
+              render: (row: AgentRequest) => (
+                <Tag status={row.status < 400 ? 'success' : 'error'}>{row.status}</Tag>
+              ),
+            },
+            {
+              title: <DynamicT forKey="infrastructure.column.action" />,
+              dataIndex: 'action',
+              render: (row: AgentRequest) => row.action,
+            },
+          ]}
+          placeholder={<DynamicT forKey="infrastructure.no_requests" />}
+        />
+      </Card>
     </div>
   );
 }

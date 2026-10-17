@@ -1,10 +1,19 @@
+/* eslint-disable consistent-default-export-name/default-export-match-filename, no-restricted-syntax, max-lines -- The inherited multi-step Kubo wizard is kept intact as a prerequisite; split and type its form model separately. */
+import { HTTPError } from 'ky';
 import { useState } from 'react';
 import { Helmet } from 'react-helmet';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
+import congratsImage from '@/assets/images/congrats.svg?url';
+import organizationImage from '@/assets/images/organization-empty.svg?url';
+import robotCapacity from '@/assets/images/wizard/robot-capacity.png';
+import robotReview from '@/assets/images/wizard/robot-review.png';
+import robotTemplate from '@/assets/images/wizard/robot-template.png';
+import welcomeImage from '@/assets/images/wizard/welcome-pixel.png';
 import FormCardLayout from '@/components/FormCard/FormCardLayout';
 import Button from '@/ds-components/Button';
+import Select from '@/ds-components/Select';
 import useApi, { type RequestError } from '@/hooks/use-api';
 
 import styles from '../index.module.scss';
@@ -85,6 +94,29 @@ const stackOptions: StackOption[] = [
   { id: 'v1', title: 'V1', description: 'Not available yet.', exclude: [], available: false },
 ];
 
+// Shows the portal's own message (for example an invalid tenant) instead of a generic status.
+const readError = async (error: unknown) => {
+  if (error instanceof HTTPError) {
+    try {
+      const body = await error.response.clone().json();
+      if (
+        typeof body === 'object' &&
+        body !== null &&
+        'message' in body &&
+        typeof body.message === 'string'
+      ) {
+        return body.message;
+      }
+    } catch {
+      // Not JSON: fall through to the generic message.
+    }
+  }
+  return error instanceof Error ? error.message : 'Create failed';
+};
+
+// Lowercase RFC-1123 label, as the portal requires for a tenant ID.
+const tenantPattern = /^[\da-z]([\da-z-]{0,61}[\da-z])?$/;
+
 function KuboWizard() {
   const api = useApi();
   const navigate = useNavigate();
@@ -92,12 +124,13 @@ function KuboWizard() {
   const [selected, setSelected] = useState<StackOption>();
   const [tenant, setTenant] = useState('');
   const [mode, setMode] = useState('');
+  const [provider, setProvider] = useState<'logto' | 'auth0'>('logto');
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string>();
 
   const previewKey =
     step === 3 && selected?.template && tenant
-      ? `api/kubo/template?${new URLSearchParams({ template: selected.template, tenant, ...(mode ? { mode } : {}) }).toString()}`
+      ? `api/kubo/template?${new URLSearchParams({ template: selected.template, tenant, authProvider: provider, ...(mode ? { mode } : {}) }).toString()}`
       : null;
   const preview = useSWR<{ yaml: string }, RequestError>(previewKey);
 
@@ -113,6 +146,7 @@ function KuboWizard() {
           json: {
             template: selected.template,
             tenant,
+            authProvider: provider,
             ...(mode ? { mode } : {}),
             ...(selected.exclude.length > 0 ? { exclude: selected.exclude } : {}),
           },
@@ -120,27 +154,73 @@ function KuboWizard() {
         .json();
       navigate('/infrastructure');
     } catch (error: unknown) {
-      setSubmitError(error instanceof Error ? error.message : 'Create failed');
+      setSubmitError(await readError(error));
     } finally {
       setSubmitting(false);
     }
   };
 
-  const canContinue = step === 1 ? Boolean(selected?.available) : tenant.trim().length > 0;
+  const tenantValid = tenantPattern.test(tenant);
+  const canContinue = step === 1 ? Boolean(selected?.available) : tenantValid;
+
+  // Vertical stepper: each step has a title, a short description and an image.
+  // Completed steps stay clickable so users can go back and change an answer.
+  const steps = [
+    {
+      title: 'Choose a workspace',
+      text: 'Pick a workspace type. Each type starts from an approved template.',
+      image: welcomeImage,
+    },
+    {
+      title: 'Set the tenant',
+      text: 'Enter the tenant ID. Mode is optional.',
+      image: organizationImage,
+    },
+    {
+      title: 'Review and create',
+      text: 'Check the rendered YAML before you create the workspace.',
+      image: congratsImage,
+    },
+  ];
 
   const introduction = (
     <>
-      <h3 className={styles.introTitle}>
-        {step === 1 ? 'Choose a workspace' : step === 2 ? 'Set the tenant' : 'Review and create'}
-      </h3>
-      <p className={styles.introText}>
-        {step === 1
-          ? 'Pick a workspace type. Each type starts from an approved template.'
-          : step === 2
-            ? 'Enter the tenant ID. Mode is optional.'
-            : 'Check the rendered YAML before you create the workspace.'}
-      </p>
-      <p className={styles.stepLabel}>Step {step} of 3</p>
+      <img className={styles.stepImage} src={steps[step - 1]?.image} alt="" />
+      <ol className={styles.stepper} aria-label={`Step ${step} of 3`}>
+        {steps.map((item, index) => {
+          const number = index + 1;
+          const isActive = number === step;
+          const isDone = number < step;
+          return (
+            <li
+              key={item.title}
+              className={styles.stepItem}
+              aria-current={isActive ? 'step' : undefined}
+            >
+              <button
+                type="button"
+                className={styles.stepButton}
+                disabled={number > step}
+                onClick={() => {
+                  setStep(number as 1 | 2 | 3);
+                }}
+              >
+                <span
+                  className={`${styles.stepBubble} ${isActive ? styles.stepBubbleActive : ''} ${isDone ? styles.stepBubbleDone : ''}`}
+                >
+                  {number}
+                </span>
+                <span className={styles.stepText}>
+                  <span className={isActive ? styles.stepTitleActive : styles.stepTitle}>
+                    {item.title}
+                  </span>
+                  {isActive && <span className={styles.stepDescription}>{item.text}</span>}
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ol>
     </>
   );
 
@@ -187,10 +267,30 @@ function KuboWizard() {
                 value={tenant}
                 placeholder="acme"
                 onChange={(event) => {
-                  setTenant(event.target.value.trim());
+                  setTenant(event.target.value.trim().toLowerCase());
                 }}
               />
+              {tenant && !tenantValid && (
+                <span className={styles.error}>
+                  Use lowercase letters, digits and hyphens. Start and end with a letter or digit.
+                </span>
+              )}
             </label>
+            <div className={styles.field}>
+              Identity provider
+              <Select
+                value={provider}
+                options={[
+                  { value: 'logto', title: 'Logto (recommended)' },
+                  { value: 'auth0', title: 'Auth0' },
+                ]}
+                onChange={(value) => {
+                  if (value) {
+                    setProvider(value);
+                  }
+                }}
+              />
+            </div>
             <label className={styles.field}>
               Mode (optional)
               <input
@@ -258,8 +358,38 @@ function KuboWizard() {
           )}
         </div>
       </FormCardLayout>
+      <section className={styles.guide} aria-label="Before you start">
+        <h2 className={styles.guideLabel}>Before you start</h2>
+        <div className={styles.guideGrid}>
+          <article className={styles.guideTile}>
+            <img className={styles.guideIcon} src={robotTemplate} alt="" width={32} height={32} />
+            <h3 className={styles.guideTitle}>Pick a template</h3>
+            <p className={styles.guideText}>
+              Foundation HA is the full platform. Start with Foundation for trials.
+            </p>
+          </article>
+          <article className={styles.guideTile}>
+            <img className={styles.guideIcon} src={robotCapacity} alt="" width={32} height={32} />
+            <h3 className={styles.guideTitle}>Check capacity</h3>
+            <p className={styles.guideText}>
+              See free CPU and memory on each node before you create a workspace.
+            </p>
+            <Link className={styles.guideLink} to="/infrastructure/capacity">
+              Open capacity map
+            </Link>
+          </article>
+          <article className={styles.guideTile}>
+            <img className={styles.guideIcon} src={robotReview} alt="" width={32} height={32} />
+            <h3 className={styles.guideTitle}>Review the YAML</h3>
+            <p className={styles.guideText}>
+              Every workspace renders a manifest you can read before anything is applied.
+            </p>
+          </article>
+        </div>
+      </section>
     </>
   );
 }
 
 export default KuboWizard;
+/* eslint-enable consistent-default-export-name/default-export-match-filename, no-restricted-syntax, max-lines */

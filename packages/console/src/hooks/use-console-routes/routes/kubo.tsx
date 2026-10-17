@@ -1,6 +1,8 @@
 import { type RouteObject } from 'react-router-dom';
 import { safeLazy } from 'react-safe-lazy';
 
+import InfraShell from '@/pages/Kubo/InfraShell';
+
 const Kubo = safeLazy(async () => import('@/pages/Kubo'));
 const KuboWizard = safeLazy(async () => import('@/pages/Kubo/Wizard'));
 const KuboCapacity = safeLazy(async () => import('@/pages/Kubo/Capacity'));
@@ -12,11 +14,53 @@ const KuboBundle = safeLazy(async () => import('@/pages/Kubo/Bundle'));
 export const kubo: RouteObject = {
   path: 'infrastructure',
   children: [
-    { index: true, element: <Kubo /> },
-    { path: 'new', element: <KuboWizard /> },
-    { path: 'capacity', element: <KuboCapacity /> },
-    { path: 'agent', element: <KuboAgent /> },
-    { path: 'bundle', element: <KuboBundle /> },
-    { path: 'stacks/:namespace/:name', element: <KuboStack /> },
+    {
+      index: true,
+      element: (
+        <InfraShell>
+          <Kubo />
+        </InfraShell>
+      ),
+    },
+    {
+      path: 'new',
+      element: (
+        <InfraShell>
+          <KuboWizard />
+        </InfraShell>
+      ),
+    },
+    {
+      path: 'capacity',
+      element: (
+        <InfraShell>
+          <KuboCapacity />
+        </InfraShell>
+      ),
+    },
+    {
+      path: 'agent',
+      element: (
+        <InfraShell>
+          <KuboAgent />
+        </InfraShell>
+      ),
+    },
+    {
+      path: 'bundle',
+      element: (
+        <InfraShell>
+          <KuboBundle />
+        </InfraShell>
+      ),
+    },
+    {
+      path: 'stacks/:namespace/:name',
+      element: (
+        <InfraShell>
+          <KuboStack />
+        </InfraShell>
+      ),
+    },
   ],
 };

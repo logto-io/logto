@@ -13,8 +13,11 @@
 /* Theme aliases sit on body, where .meshx-theme defines the design tokens.
    On :root the tokens are undefined (they are not set on html), so the
    aliases would resolve to nothing and surfaces like the tooltip go
-   transparent. */
-body {
+   transparent.
+   Every selector here is scoped to .kshows. This sheet is injected into the
+   console page, so an unscoped body, :root, * or button rule would restyle
+   the whole console (the page background and text colour flipped on click). */
+.kshows {
   --bg: var(--background, #ebe9f4);
   --surface: var(--card, #ffffff);
   --surface-2: var(--muted, #ebe9f4);
@@ -28,7 +31,7 @@ body {
   --crit: var(--sentiment-negative);
 }
 
-:root {
+.kshows {
   --ns-1: #3987e5;
   --ns-2: #d95926;
   --ns-3: #199e70;
@@ -45,9 +48,9 @@ body {
   --sans: inherit;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+.kshows * { box-sizing: border-box; margin: 0; padding: 0; }
 
-body {
+.kshows {
   background: var(--bg);
   color: var(--ink);
   font-family: var(--sans);
@@ -56,9 +59,9 @@ body {
   min-height: 100vh;
 }
 
-button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+.kshows button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
 
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.kshows :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
 
 /* ---------- header ---------- */
 
