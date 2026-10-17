@@ -25,6 +25,8 @@ const account_center = {
     error_invalid_code: 'Ověřovací kód je neplatný nebo vypršel.',
     error_verify_failed: 'Ověření se nezdařilo. Zadej kód znovu.',
     verification_required: 'Ověření vypršelo. Prosím ověř svou identitu znovu.',
+    step_up_not_completed:
+      'Ověření identity nebylo dokončeno. Na tvém účtu nebyly provedeny žádné změny.',
     try_another_method: 'Vyzkoušej jinou metodu ověření',
     no_available_methods_title: 'Nejsou k dispozici žádné metody ověření',
     no_available_methods_description:

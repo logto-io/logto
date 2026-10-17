@@ -25,6 +25,7 @@ const account_center = {
     error_invalid_code: 'รหัสยืนยันไม่ถูกต้องหรือหมดอายุแล้ว',
     error_verify_failed: 'ยืนยันไม่สำเร็จ กรุณากรอกรหัสอีกครั้ง',
     verification_required: 'การยืนยันหมดอายุ โปรดยืนยันตัวตนอีกครั้ง',
+    step_up_not_completed: 'การยืนยันตัวตนไม่เสร็จสมบูรณ์ ไม่มีการเปลี่ยนแปลงใดๆ กับบัญชีของคุณ',
     try_another_method: 'ลองใช้วิธีอื่นเพื่อยืนยันตัวตน',
     no_available_methods_title: 'ไม่มีวิธีการยืนยันตัวตนที่พร้อมใช้งาน',
     no_available_methods_description:

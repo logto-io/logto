@@ -3,18 +3,29 @@ import { useEffect } from 'react';
 
 import { clearVerificationRecord } from './Providers/PageContextProvider/verification-storage';
 import GlobalLoading from './components/GlobalLoading';
+import { completePendingStepUp, discardPendingStepUp } from './utils/step-up';
 
 const Callback = () => {
   const { clearAllTokens } = useLogto();
 
   useEffect(() => {
+    // Also drops the token set a step-up keeps until its callback, so the provider treats this
+    // page as signed out and the elevated tokens replace the old ones.
     void clearAllTokens();
     clearVerificationRecord();
   }, [clearAllTokens]);
 
   const { error } = useHandleSignInCallback(() => {
+    completePendingStepUp();
     window.location.replace('/account');
   });
+
+  useEffect(() => {
+    if (error) {
+      // The pending action must not run without the token set this callback failed to obtain.
+      discardPendingStepUp();
+    }
+  }, [error]);
 
   if (error) {
     return (

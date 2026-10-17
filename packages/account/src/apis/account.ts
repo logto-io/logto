@@ -5,6 +5,13 @@ import { createAuthenticatedKy } from './base-ky';
 
 export const verificationRecordIdHeader = 'logto-verification-id';
 
+/**
+ * The legacy identity proof for a sensitive Account API request. Omitted when the access token
+ * carries the proof as its OIDC authentication context.
+ */
+export const getVerificationRecordHeaders = (verificationRecordId: string | undefined) =>
+  verificationRecordId ? { [verificationRecordIdHeader]: verificationRecordId } : undefined;
+
 export const updatePrimaryEmail = async (
   accessToken: string,
   verificationRecordId: string,
@@ -38,10 +45,13 @@ export const updateUsername = async (
   });
 };
 
-export const deleteUsername = async (accessToken: string, verificationRecordId: string) => {
+export const deleteUsername = async (
+  accessToken: string,
+  verificationRecordId: string | undefined
+) => {
   await createAuthenticatedKy(accessToken).patch('/api/my-account', {
     json: { username: null },
-    headers: { [verificationRecordIdHeader]: verificationRecordId },
+    headers: getVerificationRecordHeaders(verificationRecordId),
   });
 };
 
@@ -69,15 +79,21 @@ export const updateCustomData = async (accessToken: string, payload: JsonObject)
   });
 };
 
-export const deletePrimaryEmail = async (accessToken: string, verificationRecordId: string) => {
+export const deletePrimaryEmail = async (
+  accessToken: string,
+  verificationRecordId: string | undefined
+) => {
   await createAuthenticatedKy(accessToken).delete('/api/my-account/primary-email', {
-    headers: { [verificationRecordIdHeader]: verificationRecordId },
+    headers: getVerificationRecordHeaders(verificationRecordId),
   });
 };
 
-export const deletePrimaryPhone = async (accessToken: string, verificationRecordId: string) => {
+export const deletePrimaryPhone = async (
+  accessToken: string,
+  verificationRecordId: string | undefined
+) => {
   await createAuthenticatedKy(accessToken).delete('/api/my-account/primary-phone', {
-    headers: { [verificationRecordIdHeader]: verificationRecordId },
+    headers: getVerificationRecordHeaders(verificationRecordId),
   });
 };
 

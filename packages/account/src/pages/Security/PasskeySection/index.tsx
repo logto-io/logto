@@ -15,10 +15,12 @@ import {
   isEditableField,
 } from '@ac/utils/security-page';
 import { sessionStorage } from '@ac/utils/session-storage';
+import { consumePendingStepUpAction } from '@ac/utils/step-up';
 
 import { getLogtoConfig, updateLogtoConfig } from '../../../apis/logto-config';
 import useApi from '../../../hooks/use-api';
 import useErrorHandler from '../../../hooks/use-error-handler';
+import useStepUp, { useIdentityProof } from '../../../hooks/use-step-up';
 import { useMfaVerifications } from '../MfaVerificationsProvider';
 import SecurityRow, { type SecurityRowData } from '../components/SecurityRow';
 import SecuritySection from '../components/SecuritySection';
@@ -29,8 +31,10 @@ import styles from './index.module.scss';
 const PasskeySection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { accountCenterSettings, experienceSettings, verificationId, setVerificationId, setToast } =
+  const { accountCenterSettings, experienceSettings, setVerificationId, setToast } =
     useContext(PageContext);
+  const { isReady: isIdentityProofReady, verificationId } = useIdentityProof();
+  const requestStepUp = useStepUp();
   const { mfaVerifications, isLoading, hasLoaded } = useMfaVerifications();
   const handleError = useErrorHandler();
 
@@ -78,10 +82,16 @@ const PasskeySection = () => {
   );
 
   const updatePasskeySignInSkipped = useCallback(
-    async (verifiedId: string, skipped: boolean) => {
+    async (verifiedId: string | undefined, skipped: boolean, isResumed = false) => {
       const [error] = await updateLogtoConfigApi(verifiedId, { passkeySignIn: { skipped } });
 
       if (error) {
+        const action = skipped ? 'disable-passkey-prompt' : 'enable-passkey-prompt';
+
+        if (await requestStepUp(error, { type: action }, { isResumed })) {
+          return;
+        }
+
         await handleError(error, {
           'verification_record.permission_denied': async () => {
             setVerificationId(undefined);
@@ -93,14 +103,14 @@ const PasskeySection = () => {
 
       setPasskeySignInSkipped(skipped);
     },
-    [handleError, setToast, setVerificationId, t, updateLogtoConfigApi]
+    [handleError, requestStepUp, setToast, setVerificationId, t, updateLogtoConfigApi]
   );
 
   const handleToggleChange = useCallback(
     async (checked: boolean) => {
       const skipped = !checked;
 
-      if (verificationId) {
+      if (isIdentityProofReady) {
         await updatePasskeySignInSkipped(verificationId, skipped);
         return;
       }
@@ -110,8 +120,16 @@ const PasskeySection = () => {
       );
       navigateTo(verifiedActionRoute);
     },
-    [navigateTo, updatePasskeySignInSkipped, verificationId]
+    [isIdentityProofReady, navigateTo, updatePasskeySignInSkipped, verificationId]
   );
+
+  useEffect(() => {
+    const action = consumePendingStepUpAction(['enable-passkey-prompt', 'disable-passkey-prompt']);
+
+    if (action) {
+      void updatePasskeySignInSkipped(undefined, action.type === 'disable-passkey-prompt', true);
+    }
+  }, [updatePasskeySignInSkipped]);
 
   useEffect(() => {
     if (!verificationId) {

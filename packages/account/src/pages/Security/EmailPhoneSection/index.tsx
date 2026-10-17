@@ -14,8 +14,10 @@ import { layoutClassNames } from '@ac/constants/layout';
 import { emailRoute, phoneRoute, verifiedActionRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
+import useStepUp, { useIdentityProof } from '@ac/hooks/use-step-up';
 import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
 import { sessionStorage } from '@ac/utils/session-storage';
+import { consumePendingStepUpAction } from '@ac/utils/step-up';
 
 import styles from './index.module.scss';
 
@@ -24,14 +26,10 @@ type RemoveType = 'email' | 'phone';
 const EmailPhoneSection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const {
-    userInfo,
-    accountCenterSettings,
-    verificationId,
-    setVerificationId,
-    refreshUserInfo,
-    setToast,
-  } = useContext(PageContext);
+  const { userInfo, accountCenterSettings, setVerificationId, refreshUserInfo, setToast } =
+    useContext(PageContext);
+  const { isReady: isIdentityProofReady, verificationId } = useIdentityProof();
+  const requestStepUp = useStepUp();
   const handleError = useErrorHandler();
   const deletePrimaryEmailApi = useApi(deletePrimaryEmail);
   const deletePrimaryPhoneApi = useApi(deletePrimaryPhone);
@@ -57,11 +55,17 @@ const EmailPhoneSection = () => {
   );
 
   const removeIdentifier = useCallback(
-    async (removeType: RemoveType, verifiedId: string) => {
+    async (removeType: RemoveType, verifiedId: string | undefined, isResumed = false) => {
       const deleteApi = removeType === 'email' ? deletePrimaryEmailApi : deletePrimaryPhoneApi;
       const [error] = await deleteApi(verifiedId);
 
       if (error) {
+        const action = removeType === 'email' ? 'remove-email' : 'remove-phone';
+
+        if (await requestStepUp(error, { type: action }, { isResumed })) {
+          return;
+        }
+
         await handleError(error, {
           'verification_record.permission_denied': async () => {
             setVerificationId(undefined);
@@ -85,6 +89,7 @@ const EmailPhoneSection = () => {
       deletePrimaryPhoneApi,
       handleError,
       refreshUserInfo,
+      requestStepUp,
       setToast,
       setVerificationId,
       t,
@@ -98,7 +103,7 @@ const EmailPhoneSection = () => {
 
     setPendingRemoveType(undefined);
 
-    if (verificationId) {
+    if (isIdentityProofReady) {
       await removeIdentifier(pendingRemoveType, verificationId);
       return;
     }
@@ -107,7 +112,15 @@ const EmailPhoneSection = () => {
       pendingRemoveType === 'email' ? 'remove-email' : 'remove-phone'
     );
     navigateTo(verifiedActionRoute);
-  }, [pendingRemoveType, verificationId, navigateTo, removeIdentifier]);
+  }, [pendingRemoveType, isIdentityProofReady, verificationId, navigateTo, removeIdentifier]);
+
+  useEffect(() => {
+    const action = consumePendingStepUpAction(['remove-email', 'remove-phone']);
+
+    if (action) {
+      void removeIdentifier(action.type === 'remove-email' ? 'email' : 'phone', undefined, true);
+    }
+  }, [removeIdentifier]);
 
   useEffect(() => {
     if (!verificationId) {

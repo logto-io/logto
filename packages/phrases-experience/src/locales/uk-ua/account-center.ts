@@ -25,6 +25,8 @@ const account_center = {
     error_invalid_code: 'Код підтвердження недійсний або строк його дії минув.',
     error_verify_failed: 'Не вдалося підтвердити. Будь ласка, введіть код ще раз.',
     verification_required: 'Термін перевірки минув. Підтвердіть свою особу ще раз.',
+    step_up_not_completed:
+      'Підтвердження особи не завершено. До вашого облікового запису не внесено жодних змін.',
     try_another_method: 'Спробуйте інший спосіб підтвердження',
     no_available_methods_title: 'Немає доступних способів підтвердження',
     no_available_methods_description:
