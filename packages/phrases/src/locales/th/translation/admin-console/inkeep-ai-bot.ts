@@ -17,6 +17,23 @@ const inkeep_ai_bot = {
   ask_ai_label: 'ถาม AI',
   contact: 'ติดต่อ',
   discord: 'Discord',
+  action_proposed: 'การเปลี่ยนแปลงที่เสนอ: {{tool}}',
+  action_confirm: 'ยืนยัน',
+  action_cancel: 'ยกเลิก',
+  action_running: 'กำลังสร้าง…',
+  action_done: 'สร้างแล้ว',
+  action_cancelled: 'ยกเลิกแล้ว',
+  action_failed: 'ยังไม่ได้สร้าง',
+  action_failed_detail: 'ไม่สามารถดำเนินการเปลี่ยนแปลงนี้ได้ อาจหมดอายุแล้ว กรุณาขอใหม่อีกครั้ง',
+  setup_prompt_copied: 'คัดลอกพรอมต์การตั้งค่าแล้ว',
+  onboard_agent: 'เชื่อมต่อเอเจนต์ของคุณกับ MeshX',
+  attached_files_label: 'ไฟล์ที่แนบ',
+  attach_file: 'แนบไฟล์',
+  remove_file: 'ลบ {{name}}',
+  attachment_error: 'แนบได้เฉพาะไฟล์ข้อความที่มีขนาดไม่เกิน 100 KB: {{names}}',
+  copy_you: 'คุณ',
+  copy_assistant: 'MeshX AI',
+  file_label: 'ไฟล์: {{name}}',
 };
 
 export default Object.freeze(inkeep_ai_bot);

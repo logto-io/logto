@@ -19,6 +19,11 @@ import {
   UpstreamPool,
   UpstreamUrlError,
   upstreamNamePattern,
+  isAccessTokenFresh,
+  parseCredential,
+  refreshTokens,
+  serializeOAuthRecord,
+  type OAuthRecord,
 } from '@logto/mcp-portal';
 import { type CommonQueryMethods } from '@silverhand/slonik';
 import { array, boolean, object, string } from 'zod';
@@ -62,7 +67,46 @@ const credentialKey = () => parseCredentialKey(process.env.MCP_PORTAL_ENCRYPTION
 export const unlockFor = (upstreams: UpstreamStore) => async (upstream: Upstream) => {
   const stored = await upstreams.findCredential(upstream.portalId, upstream.name);
 
-  return stored === undefined ? undefined : decryptCredential(stored, credentialKey());
+  if (stored === undefined) {
+    return undefined;
+  }
+
+  const credential = parseCredential(decryptCredential(stored, credentialKey()));
+
+  if (credential.kind === 'bearer') {
+    return credential.token;
+  }
+
+  if (isAccessTokenFresh(credential)) {
+    return credential.accessToken;
+  }
+
+  if (!credential.refreshToken) {
+    // Without a refresh token the admin has to authorise again; the connection fails until then.
+    return undefined;
+  }
+
+  const tokens = await refreshTokens(
+    {
+      issuer: credential.tokenEndpoint,
+      authorization_endpoint: credential.authorizationEndpoint,
+      token_endpoint: credential.tokenEndpoint,
+    },
+    { clientId: credential.clientId, refreshToken: credential.refreshToken, resource: credential.resource }
+  );
+  const refreshed: OAuthRecord = {
+    ...credential,
+    accessToken: tokens.access_token,
+    refreshToken: tokens.refresh_token ?? credential.refreshToken,
+    expiresAt: tokens.expires_in ? Date.now() + tokens.expires_in * 1000 : undefined,
+  };
+  await upstreams.setCredential(
+    upstream.portalId,
+    upstream.name,
+    encryptCredential(serializeOAuthRecord(refreshed), credentialKey())
+  );
+
+  return refreshed.accessToken;
 };
 
 // A DNS label: letters, digits and hyphens, no leading or trailing hyphen.
@@ -347,7 +391,9 @@ export const registerMcpPortalRoutes = <T extends ManagementApiRouter>(
           enabled: !upstream.disabledTools.includes(tool.name),
         })),
       };
-    } catch {
+    } catch (error: unknown) {
+      // TEMP debug: surface the real reason in the dev log while the tools call is being diagnosed.
+      console.error('[mcp-portal debug] tools failed', upstream.name, error);
       await upstreamPool.invalidate(upstream);
       ctx.status = 503;
       ctx.body = {

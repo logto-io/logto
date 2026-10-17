@@ -43,3 +43,21 @@ export {
 } from './registry.js';
 export { assertPublicHttpsUrl, UpstreamUrlError } from './ssrf.js';
 export { UpstreamPool } from './upstream-pool.js';
+export {
+  buildAuthorizationUrl,
+  createPkce,
+  discoverAuthorizationServer,
+  exchangeCode,
+  refreshTokens,
+  registerClient,
+  type AuthorizationServerMetadata,
+  type TokenSet,
+} from './oauth.js';
+export {
+  isAccessTokenFresh,
+  oauthRecord,
+  parseCredential,
+  serializeOAuthRecord,
+  type OAuthRecord,
+  type ParsedCredential,
+} from './oauth-record.js';

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MeshX Cloud</title>
+  <style>
+    @font-face { font-family: 'Stack Sans Headline'; src: url('fonts/stack-sans-headline-latin-wght-normal.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+    @font-face { font-family: 'Stack Sans Text'; src: url('fonts/stack-sans-text-latin-wght-normal.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+    :root { --bg: #ECEBF5; --card: #ffffff; --text: #1c1b22; --muted: #5b5a6b; --border: #d9d8e6; --accent: #FE330A; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Stack Sans Text', system-ui, sans-serif; }
+    header { display: flex; align-items: center; justify-content: space-between; padding: 20px 40px; }
+    .brand { display: flex; align-items: center; gap: 10px; font-family: 'Stack Sans Headline', sans-serif; font-weight: 600; font-size: 20px; }
+    .brand svg { width: 28px; height: 28px; }
+    nav a { color: var(--muted); text-decoration: none; margin-left: 24px; font-size: 14px; }
+    .btn { display: inline-flex; align-items: center; height: 40px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--border); background: var(--card); color: var(--text); text-decoration: none; font-weight: 500; font-size: 14px; }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .hero { text-align: center; padding: 64px 24px 40px; }
+    .hero .art { width: 180px; height: 150px; margin: 0 auto 24px; display: block; }
+    .card .icon { width: 40px; height: 40px; border-radius: 12px; background: #FFE8E1; display: grid; place-items: center; margin-bottom: 16px; }
+    .card .icon svg { width: 22px; height: 22px; }
+    .hero h1 { font-family: 'Stack Sans Headline', sans-serif; font-weight: 500; font-size: 44px; line-height: 52px; margin: 0 0 12px; }
+    .hero p { color: var(--muted); font-size: 18px; margin: 0 0 28px; }
+    .search { display: flex; max-width: 560px; margin: 0 auto; background: var(--card); border: 1px solid var(--border); border-radius: 999px; padding: 6px 6px 6px 20px; box-shadow: 0 1px 2px rgba(0,0,0,.06); }
+    .search input { flex: 1; border: none; outline: none; font: inherit; font-size: 15px; background: transparent; color: var(--text); }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; max-width: 1040px; margin: 40px auto 80px; padding: 0 24px; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; text-decoration: none; color: inherit; }
+    .card h3 { font-family: 'Stack Sans Headline', sans-serif; font-weight: 500; font-size: 18px; margin: 0 0 8px; }
+    .card p { color: var(--muted); font-size: 14px; line-height: 20px; margin: 0; }
+    .card:hover { border-color: var(--accent); }
+    footer { text-align: center; color: var(--muted); font-size: 13px; padding-bottom: 32px; }
+    @media (max-width: 600px) { header { padding: 16px; } nav a { display: none; } .hero h1 { font-size: 32px; line-height: 40px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <svg viewBox="0 0 82 116" aria-hidden="true"><path d="M82 37V19L41 45 0 18v19l27 17 14 9 14-9z" fill="#FE330A"/><path d="M82 89v18L41 81 0 108V89l27-17 14-9 14 9z" fill="#FE330A"/></svg>
+      MeshX Cloud
+    </div>
+    <nav>
+      <a href="https://meshx.io/" target="_blank" rel="noopener">meshx.io</a>
+      <a href="https://docs.meshx.io/" target="_blank" rel="noopener">Docs</a>
+    </nav>
+    <a class="btn primary" href="/console/default">Sign in</a>
+  </header>
+
+  <section class="hero">
+    <svg class="art" viewBox="0 0 180 150" aria-hidden="true">
+      <g stroke="#B9B6D6" stroke-width="2" fill="none"><line x1="48" y1="46" x2="90" y2="75"/><line x1="132" y1="46" x2="90" y2="75"/><line x1="48" y1="104" x2="90" y2="75"/><line x1="132" y1="104" x2="90" y2="75"/><line x1="58" y1="36" x2="122" y2="36" stroke-dasharray="4 4"/><line x1="58" y1="114" x2="122" y2="114" stroke-dasharray="4 4"/></g>
+      <circle cx="90" cy="75" r="16" fill="#fff" stroke="#7C6CF0" stroke-width="3"/><circle cx="90" cy="75" r="5" fill="#FE330A"/>
+      <g><rect x="30" y="24" width="36" height="24" rx="6" fill="#7C6CF0"/><rect x="114" y="24" width="36" height="24" rx="6" fill="#7C6CF0"/><rect x="30" y="92" width="36" height="24" rx="6" fill="#2d2c3a"/><rect x="114" y="92" width="36" height="24" rx="6" fill="#2d2c3a"/></g>
+      <path d="M160 14l2 6 6 2-6 2-2 6-2-6-6-2 6-2z" fill="#FE330A"/>
+    </svg>
+    <h1>What do you want to build?</h1>
+    <p>Run your workspaces, identity and AI on MeshX.</p>
+    <form class="search" action="/console/default" method="get">
+      <input type="search" name="q" placeholder="Search applications, workspaces, docs…" aria-label="Search" />
+      <button class="btn primary" type="submit">Search</button>
+    </form>
+  </section>
+
+  <section class="cards">
+    <a class="card" href="/console/default/applications"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#FE330A" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg></div><h3>Applications</h3><p>Register apps and set up sign-in for them.</p></a>
+    <a class="card" href="/console/default/infrastructure"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#FE330A" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/></svg></div><h3>Workspaces</h3><p>Create and manage Foundation workspaces.</p></a>
+    <a class="card" href="/console/default/sign-in-experience"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#FE330A" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg></div><h3>Sign-in &amp; account</h3><p>Brand the sign-in page and account center.</p></a>
+    <a class="card" href="/console/default/mcp-portal"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#FE330A" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M8 7l3 9M16 7l-3 9M8.5 6h7"/></svg></div><h3>MCP servers</h3><p>Publish MCP servers behind a portal.</p></a>
+    <a class="card" href="https://docs.meshx.io/" target="_blank" rel="noopener"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#FE330A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 13h6M9 17h6"/></svg></div><h3>Docs</h3><p>Guides, SDKs and API references.</p></a>
+  </section>
+
+  <footer>Powered by MeshX</footer>
+</body>
+</html>

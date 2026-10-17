@@ -17,6 +17,23 @@ const inkeep_ai_bot = {
   ask_ai_label: 'پرسش از هوش مصنوعی',
   contact: 'تماس',
   discord: 'دیسکورد',
+  action_proposed: 'تغییر پیشنهادی: {{tool}}',
+  action_confirm: 'تأیید',
+  action_cancel: 'لغو',
+  action_running: 'در حال ایجاد…',
+  action_done: 'ایجاد شد',
+  action_cancelled: 'لغو شد',
+  action_failed: 'ایجاد نشد',
+  action_failed_detail: 'این تغییر انجام نشد. ممکن است منقضی شده باشد؛ دوباره درخواست دهید.',
+  setup_prompt_copied: 'پرامپت راه‌اندازی کپی شد',
+  onboard_agent: 'عامل خود را به MeshX متصل کنید',
+  attached_files_label: 'فایل‌های پیوست‌شده',
+  attach_file: 'افزودن فایل',
+  remove_file: 'حذف {{name}}',
+  attachment_error: 'فقط فایل‌های متنی تا ۱۰۰ کیلوبایت می‌توانند پیوست شوند: {{names}}',
+  copy_you: 'شما',
+  copy_assistant: 'MeshX AI',
+  file_label: 'فایل: {{name}}',
 };
 
 export default Object.freeze(inkeep_ai_bot);

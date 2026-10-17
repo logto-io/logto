@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import { adminTenantId } from '@logto/schemas';
+import { adminTenantId, defaultTenantId } from '@logto/schemas';
 import type { GlobalValues } from '@logto/shared';
 import type { Optional } from '@silverhand/essentials';
 import { deduplicate, trySafe } from '@silverhand/essentials';
@@ -23,11 +23,25 @@ export const getTenantEndpoint = (
     return urlSet.endpoint;
   }
 
+  // The default tenant lives on the bare host (`*.host` -> `host`), so existing issuers stay unchanged.
+  if (id === defaultTenantId && urlSet.endpoint.hostname.startsWith('*.')) {
+    return getBareEndpoint(urlSet.endpoint);
+  }
+
   const tenantUrl = new URL(urlSet.endpoint);
   // eslint-disable-next-line @silverhand/fp/no-mutation
   tenantUrl.hostname = tenantUrl.hostname.replace('*', id);
 
   return tenantUrl;
+};
+
+/** The bare host of a domain-based endpoint: `https://*.host` becomes `https://host`. */
+export const getBareEndpoint = (endpoint: URL): URL => {
+  const bare = new URL(endpoint);
+  // eslint-disable-next-line @silverhand/fp/no-mutation
+  bare.hostname = bare.hostname.replace(/^\*\./, '');
+
+  return bare;
 };
 
 const getTenantLocalhost = (

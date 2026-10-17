@@ -17,6 +17,23 @@ const inkeep_ai_bot = {
   ask_ai_label: 'اسأل AI',
   contact: 'اتصال',
   discord: 'ديسكورد',
+  action_proposed: 'التغيير المقترح: {{tool}}',
+  action_confirm: 'تأكيد',
+  action_cancel: 'إلغاء',
+  action_running: 'جارٍ الإنشاء…',
+  action_done: 'تم الإنشاء',
+  action_cancelled: 'تم الإلغاء',
+  action_failed: 'لم يتم الإنشاء',
+  action_failed_detail: 'تعذّر تنفيذ هذا التغيير. ربما انتهت صلاحيته، فاطلب ذلك مرة أخرى.',
+  setup_prompt_copied: 'تم نسخ مطالبة الإعداد',
+  onboard_agent: 'قم بتهيئة وكيلك مع MeshX',
+  attached_files_label: 'الملفات المرفقة',
+  attach_file: 'إرفاق ملف',
+  remove_file: 'إزالة {{name}}',
+  attachment_error: 'لا يمكن إرفاق إلا الملفات النصية حتى 100 كيلوبايت: {{names}}',
+  copy_you: 'أنت',
+  copy_assistant: 'MeshX AI',
+  file_label: 'الملف: {{name}}',
 };
 
 export default Object.freeze(inkeep_ai_bot);

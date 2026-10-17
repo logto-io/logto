@@ -16,14 +16,8 @@ import useApi, { type RequestError } from '@/hooks/use-api';
 
 import styles from '../index.module.scss';
 
-import { StackArt } from './StackArt';
 import { readError } from './errors';
-import {
-  type StackOption,
-  includedComponents,
-  stackOptions,
-  toStep,
-} from "./options";
+import { type StackOption, includedComponents, stackOptions, toStep } from './options';
 
 // Lowercase RFC-1123 label, as the portal requires for a tenant ID.
 const tenantPattern = /^[\da-z]([\da-z-]{0,61}[\da-z])?$/;
@@ -41,7 +35,7 @@ function KuboWizard() {
 
   const previewKey =
     step === 3 && selected?.template && tenant
-      ? `api/kubo/template?${new URLSearchParams({ template: selected?.template ?? "", tenant, authProvider: provider, ...(mode ? { mode } : {}) }).toString()}`
+      ? `api/kubo/template?${new URLSearchParams({ template: selected.template ?? '', tenant, authProvider: provider, ...(mode ? { mode } : {}) }).toString()}`
       : null;
   const preview = useSWR<{ yaml: string }, RequestError>(previewKey);
 
@@ -158,24 +152,11 @@ function KuboWizard() {
                       setSelected(option);
                     }}
                   >
-                    <span className={styles.flipCard}>
-                      <span className={styles.flipInner}>
-                        <span className={styles.flipFront}>
-                          <span className={styles.stackArt}>
-                            <StackArt id={option.id} />
-                          </span>
-                          <span className={styles.quickstartText}>
-                            <span className={styles.choiceTitle}>{option.title}</span>
-                            <span className={styles.muted}>{option.description}</span>
-                          </span>
-                        </span>
-                        <span className={styles.flipBack}>
-                          <span className={styles.choiceTitle}>{option.title}</span>
-                          <span className={styles.muted}>Includes</span>
-                          <span className={styles.componentList}>
-                            {includedComponents(option).join(' · ')}
-                          </span>
-                        </span>
+                    <span className={styles.quickstartText}>
+                      <span className={styles.choiceTitle}>{option.title}</span>
+                      <span className={styles.muted}>{option.description}</span>
+                      <span className={styles.componentList}>
+                        {includedComponents(option).join(' · ')}
                       </span>
                     </span>
                     {!option.available && <span className={styles.badge}>Coming soon</span>}
@@ -183,7 +164,7 @@ function KuboWizard() {
                 </li>
               ))}
             </ul>
-                              </>
+          </>
         )}
 
         {step === 2 && (
@@ -242,7 +223,7 @@ function KuboWizard() {
               <dd>{tenant}</dd>
               <dt>Excluded</dt>
               <dd>
-                {selected && selected.exclude.length > 0 ? selected.exclude.join(", ") : "none"}
+                {selected && selected.exclude.length > 0 ? selected.exclude.join(', ') : 'none'}
               </dd>
             </dl>
             {preview.isLoading && <p className={styles.muted}>Rendering preview…</p>}

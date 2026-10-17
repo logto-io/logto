@@ -14,6 +14,7 @@ import { type RequestError } from '@/hooks/use-api';
 import pageLayout from '@/scss/page-layout.module.scss';
 
 import { AddPortalModal, BaseDomainForm } from './PortalForms';
+import ServerIcon from './ServerIcon';
 import styles from './index.module.scss';
 import {
   type Portal,
@@ -124,15 +125,18 @@ function PortalList({ onOpen }: { readonly onOpen: (portal: Portal) => void }) {
             dataIndex: 'name',
             colSpan: 5,
             render: (portal) => (
-              <button
-                type="button"
-                className={styles.portalLink}
-                onClick={() => {
-                  onOpen(portal);
-                }}
-              >
-                {portal.name}
-              </button>
+              <div className={styles.portalName}>
+                <ServerIcon name={portal.name} />
+                <button
+                  type="button"
+                  className={styles.portalLink}
+                  onClick={() => {
+                    onOpen(portal);
+                  }}
+                >
+                  {portal.name}
+                </button>
+              </div>
             ),
           },
           {

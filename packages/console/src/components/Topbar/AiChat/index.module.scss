@@ -72,6 +72,13 @@
   outline: none;
 }
 
+// Once the user types or a chat is running, the modal grows into a full-height conversation.
+.modalExpanded {
+  max-width: 820px;
+  height: min(80vh, 760px);
+  max-height: 80vh;
+}
+
 .messages {
   display: flex;
   flex-direction: column;
@@ -231,22 +238,122 @@
   font: var(--font-body-2);
 }
 
-.inputForm {
+// The composer sits at the bottom of the modal: a rounded box with the text, attachments and actions.
+.composer {
   display: flex;
+  flex-direction: column;
   flex-shrink: 0;
   gap: _.unit(2);
-  align-items: center;
-  height: 56px;
-  padding: 0 _.unit(4);
-  border-bottom: 1px solid var(--color-border);
-  background: var(--color-layer-1);
+  margin: 0 _.unit(4) _.unit(4);
+  padding: _.unit(3) _.unit(3) _.unit(2);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  background: var(--color-layer-2);
 }
 
-.searchIcon {
+.attachments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: _.unit(2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.attachmentChip {
+  display: inline-flex;
+  gap: _.unit(1);
+  align-items: center;
+  max-width: 100%;
+  padding: _.unit(1) _.unit(1) _.unit(1) _.unit(2);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-layer-1);
+  color: var(--color-text);
+  font: var(--font-label-2);
+}
+
+.attachmentIcon {
   flex-shrink: 0;
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
   color: var(--color-text-secondary);
+}
+
+.attachmentName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.attachmentRemove {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  padding: _.unit(1);
+  border: none;
+  border-radius: 50%;
+  background: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+
+  svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  &:hover {
+    color: var(--color-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 1px;
+  }
+}
+
+.composerFooter {
+  display: flex;
+  gap: _.unit(2);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.attachButton {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-layer-1);
+  color: var(--color-text);
+  cursor: pointer;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  &:hover:not(:disabled) {
+    background: var(--color-layer-2);
+  }
+
+  &:disabled {
+    opacity: 50%;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
+.fileInput {
+  display: none;
 }
 
 .shortcut {
@@ -264,13 +371,18 @@
 }
 
 .input {
-  flex: 1;
+  width: 100%;
   min-width: 0;
+  max-height: 160px;
+  padding: _.unit(1) _.unit(1);
   border: none;
   outline: none;
   background: none;
   color: var(--color-text);
   font: var(--font-body-2);
+  // Multi-line input: the textarea grows to a limit, then scrolls.
+  resize: none;
+  overflow-y: auto;
 
   &::placeholder {
     color: var(--color-text-secondary);
@@ -351,4 +463,58 @@
     width: 16px;
     height: 16px;
   }
+}
+
+.actionCard {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(2);
+  margin: _.unit(2) 0 0 _.unit(10);
+  padding: _.unit(3);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-layer-2);
+  font: var(--font-body-2);
+}
+
+.actionTitle {
+  font-weight: 600;
+}
+
+.actionBody {
+  margin: 0;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+}
+
+.actionButtons {
+  display: flex;
+  gap: _.unit(2);
+}
+
+.actionConfirm,
+.actionCancel {
+  padding: _.unit(1) _.unit(3);
+  border-radius: 6px;
+  font: var(--font-body-2);
+  cursor: pointer;
+}
+
+.actionConfirm {
+  border: none;
+  background: var(--color-primary);
+  color: var(--color-background);
+}
+
+.actionCancel {
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text);
+}
+
+.actionStatus {
+  color: var(--color-text-secondary);
 }

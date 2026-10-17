@@ -89,6 +89,14 @@
   color: var(--color-text-secondary);
 }
 
+// Included components under each workspace option. Follows the theme like the description above.
+.componentList {
+  display: block;
+  margin-top: 8px;
+  color: var(--color-text-secondary);
+  font: var(--font-body-3);
+}
+
 .cardTitle {
   padding: 14px 16px 6px;
   color: var(--color-text-secondary);
@@ -862,76 +870,5 @@
   .infraShell .summaryItem,
   .infraShell .phaseActive {
     animation: none;
-  }
-}
-
-// Stack cards: on hover the description fades out and the included components fade in.
-.flipCard {
-  display: grid;
-  flex: 1 1 auto;
-  min-width: 0;
-  width: 100%;
-}
-
-.flipInner {
-  display: grid;
-  width: 100%;
-}
-
-.flipFront,
-.flipBack {
-  grid-area: 1 / 1;
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
-}
-
-.flipBack {
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  opacity: 0%;
-  transform: translateY(4px);
-}
-
-.quickstartItem:hover:not(:disabled) .flipFront,
-.quickstartItem:focus-visible:not(:disabled) .flipFront {
-  opacity: 0%;
-}
-
-.quickstartItem:hover:not(:disabled) .flipBack,
-.quickstartItem:focus-visible:not(:disabled) .flipBack {
-  opacity: 100%;
-  transform: none;
-}
-
-.flipFront .quickstartText {
-  flex: 1;
-  min-width: 0;
-}
-
-.stackArt {
-  flex-shrink: 0;
-  width: 72px;
-  height: 54px;
-
-  svg {
-    width: 100%;
-    height: 100%;
-  }
-}
-
-.componentList {
-  font: var(--font-body-3);
-  color: var(--color-text-secondary);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .flipFront,
-  .flipBack {
-    transition: none;
   }
 }

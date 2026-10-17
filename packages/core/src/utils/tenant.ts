@@ -10,6 +10,7 @@ import {
 } from '#src/caches/generation.js';
 import { redisCache } from '#src/caches/index.js';
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
+import { getBareEndpoint } from '#src/env-set/utils.js';
 import { createDomainsQueries } from '#src/queries/domains.js';
 
 import { devConsole } from './console.js';
@@ -158,6 +159,11 @@ export const getTenantId = async (
 
   if (customDomainTenantId) {
     return [customDomainTenantId, true];
+  }
+
+  // The bare host of a wildcard endpoint serves the default tenant.
+  if (urlSet.endpoint.hostname.startsWith('*.') && isEndpointOf(url, getBareEndpoint(urlSet.endpoint))) {
+    return [defaultTenantId, false];
   }
 
   return [matchDomainBasedTenantId(urlSet.endpoint, url), false];

@@ -17,6 +17,24 @@ const inkeep_ai_bot = {
   ask_ai_label: "Chiedi all'AI",
   contact: 'Contatto',
   discord: 'Discord',
+  action_proposed: 'Modifica proposta: {{tool}}',
+  action_confirm: 'Conferma',
+  action_cancel: 'Annulla',
+  action_running: 'Creazione in corso…',
+  action_done: 'Creato',
+  action_cancelled: 'Annullato',
+  action_failed: 'Non creato',
+  action_failed_detail:
+    'Non è stato possibile applicare questa modifica. Potrebbe essere scaduta; chiedi di nuovo.',
+  setup_prompt_copied: 'Prompt di configurazione copiato',
+  onboard_agent: 'Integra il tuo agente in MeshX',
+  attached_files_label: 'File allegati',
+  attach_file: 'Allega file',
+  remove_file: 'Rimuovi {{name}}',
+  attachment_error: 'Possono essere allegati solo file di testo fino a 100 KB: {{names}}',
+  copy_you: 'Tu',
+  copy_assistant: 'MeshX AI',
+  file_label: 'File: {{name}}',
 };
 
 export default Object.freeze(inkeep_ai_bot);

@@ -1,7 +1,9 @@
 import {
   adminTenantId,
+  defaultTenantId,
   getTenantOrganizationId,
   getTenantRole,
+  LogtoTenantConfigKey,
   TenantRole,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared/universal';
@@ -65,6 +67,15 @@ export const provisionTenant = async ({
   await pool.transaction(async (connection) => {
     await seedTenant(connection, tenantId, { name, tag, regionName });
     await addCreatorToTenantOrganization(connection, { tenantId, name, creatorId });
+    // The cloud connection lets the tenant call the cloud service (subscription, skus, regions). Every
+    // tenant uses the same connection as the default tenant.
+    await connection.query(sql`
+      insert into logto_configs (tenant_id, key, value)
+      select ${tenantId}, key, value
+      from logto_configs
+      where tenant_id = ${defaultTenantId} and key = ${LogtoTenantConfigKey.CloudConnection}
+      on conflict do nothing;
+    `);
   });
 
   return tenantId;

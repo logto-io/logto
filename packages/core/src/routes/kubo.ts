@@ -36,9 +36,15 @@ const azurePriceResponse = object({
   ).optional(),
 });
 
+// The capacity map needs the whole node (allocatable, pods, usage, disk). Keep unknown fields so the
+// pricing step only adds hourlyUSD and does not strip the rest of the snapshot.
 const kshowsSnapshot = object({
   nodes: array(
-    object({ name: string(), hourlyUSD: number().optional(), instanceType: string().optional() })
+    object({
+      name: string(),
+      hourlyUSD: number().optional(),
+      instanceType: string().optional(),
+    }).passthrough()
   ).optional(),
 }).passthrough();
 

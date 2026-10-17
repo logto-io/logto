@@ -52,22 +52,23 @@
   }
 }
 
+// Plain text buttons: Ask AI is the only pill in the topbar, so the others stay quiet.
 .button {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  padding: _.unit(1);
-  border-radius: 6px;
+  height: 32px;
+  padding: 0 _.unit(2);
+  border-radius: 8px;
   border: none;
-  background-color: transparent;
-  transition: background-color 0.2s ease-in-out;
+  background: transparent;
+  transition: background-color 0.15s ease;
   user-select: none;
   outline: none;
   cursor: pointer;
-  margin-inline-start: _.unit(-1);
   text-decoration: none;
   gap: _.unit(1);
   font: var(--font-label-2);
-  color: var(--color-neutral-variant-30);
+  color: var(--color-text);
 
   &:hover {
     background-color: var(--color-hover-variant);

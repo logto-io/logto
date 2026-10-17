@@ -17,6 +17,24 @@ const inkeep_ai_bot = {
   ask_ai_label: 'AI に質問',
   contact: 'お問い合わせ',
   discord: 'Discord',
+  action_proposed: '提案された変更: {{tool}}',
+  action_confirm: '確認',
+  action_cancel: 'キャンセル',
+  action_running: '作成中…',
+  action_done: '作成しました',
+  action_cancelled: 'キャンセルしました',
+  action_failed: '作成されていません',
+  action_failed_detail:
+    'この変更を実行できませんでした。期限切れの可能性があります。もう一度依頼してください。',
+  setup_prompt_copied: 'セットアップ用プロンプトをコピーしました',
+  onboard_agent: 'MeshX にエージェントを導入する',
+  attached_files_label: '添付ファイル',
+  attach_file: 'ファイルを添付',
+  remove_file: '{{name}} を削除',
+  attachment_error: '100KB 以下のテキストファイルのみ添付できます: {{names}}',
+  copy_you: 'あなた',
+  copy_assistant: 'MeshX AI',
+  file_label: 'ファイル: {{name}}',
 };
 
 export default Object.freeze(inkeep_ai_bot);

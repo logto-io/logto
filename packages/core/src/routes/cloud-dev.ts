@@ -3,7 +3,7 @@ import { text } from 'node:stream/consumers';
 import type { Context, Next } from 'koa';
 import proxy from 'koa-proxies';
 
-import { EnvSet } from '#src/env-set/index.js';
+import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 
 // Local stand-in for the Cloud API, for running the admin console in cloud mode (`IS_CLOUD`) on a
 // single Logto instance. The console calls these routes on its own origin. They return the same
@@ -199,7 +199,7 @@ const routes: ReadonlyArray<readonly [RegExp, Handler]> = [
 ];
 
 /** Whether the local cloud stand-ins apply to this instance. */
-export const isLocalCloud = () => EnvSet.values.isCloud && !EnvSet.values.isProduction;
+export const isLocalCloud = () => EnvSet.values.isCloud;
 
 /**
  * Serves the local cloud API routes above, the tenant Management API under `/m/<tenant>`, and the
@@ -218,7 +218,7 @@ export const localCloudRoutes = () => {
     }
 
     const created = proxy('/m', {
-      target: EnvSet.values.urlSet.endpoint.origin.replace('*', tenantId),
+      target: getTenantEndpoint(tenantId, EnvSet.values).origin,
       changeOrigin: true,
       rewrite: (path: string) => path.replace(/^\/m\/[^/]+/, ''),
     });
@@ -280,6 +280,14 @@ export const localCloudRoutes = () => {
         }
 
         ctx.body = { redirectUri: session.url, sessionId: session.id };
+        return;
+      }
+
+      // Without Stripe, the local flip moves a tenant to production with no payment. Production must not
+      // do that, so it refuses checkout until Stripe is configured.
+      if (EnvSet.values.isProduction) {
+        ctx.status = 503;
+        ctx.body = { code: 'checkout.not_configured', message: 'Checkout is not configured.' };
         return;
       }
 

@@ -13,6 +13,23 @@ const inkeep_ai_bot = {
   ask_ai_label: '询问 AI',
   contact: '联系我们',
   discord: 'Discord 社区',
+  action_proposed: '建议的更改：{{tool}}',
+  action_confirm: '确认',
+  action_cancel: '取消',
+  action_running: '创建中…',
+  action_done: '已创建',
+  action_cancelled: '已取消',
+  action_failed: '未创建',
+  action_failed_detail: '无法执行此更改。它可能已过期，请重新提问。',
+  setup_prompt_copied: '设置提示已复制',
+  onboard_agent: '将你的智能体接入 MeshX',
+  attached_files_label: '已附加的文件',
+  attach_file: '附加文件',
+  remove_file: '移除 {{name}}',
+  attachment_error: '只能附加不超过 100 KB 的文本文件：{{names}}',
+  copy_you: '你',
+  copy_assistant: 'MeshX AI',
+  file_label: '文件：{{name}}',
 };
 
 export default Object.freeze(inkeep_ai_bot);

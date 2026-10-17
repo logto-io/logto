@@ -15,6 +15,7 @@ import PortalConnect, { SetupBanner } from './PortalConnect';
 import ServerAccess from './ServerAccess';
 import ServerCredential from './ServerCredential';
 import UpstreamTools from './UpstreamTools';
+import ServerIcon from './ServerIcon';
 import styles from './index.module.scss';
 import { type Portal, type Upstream, type UpstreamsResponse, listKeyFor } from './types';
 
@@ -159,6 +160,7 @@ function PortalServers({
               return (
                 <section key={upstream.name} className={styles.serverCard}>
                   <div className={styles.serverHead}>
+                    <ServerIcon name={upstream.name} />
                     <span
                       className={styles.statusDot}
                       data-on={enabled}

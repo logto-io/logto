@@ -44,6 +44,7 @@ import logtoConfigRoutes from './logto-config/index.js';
 import mcpPortalEndpointRoutes from './mcp-portal-endpoint.js';
 import mcpLogtoRoutes from './mcp-logto.js';
 import mcpPortalRoutes from './mcp-portal.js';
+import { mcpPortalOauthCallback, mcpPortalOauthStart } from './mcp-portal-oauth.js';
 import oneTimeTokenRoutes from './one-time-tokens.js';
 import organizationRoutes from './organization/index.js';
 import publicWellKnownRoutes from './public-wellknown.js';
@@ -79,6 +80,8 @@ const createRouters = (tenant: TenantContext) => {
   experienceApiRoutes(experienceRouter, tenant);
 
   const managementRouter: ManagementApiRouter = new Router();
+  // The OAuth callback comes back from the MCP server in the browser, so it is served before the admin auth.
+  managementRouter.use(mcpPortalOauthCallback(tenant).routes());
   // In cloud, a tenant's Management API also accepts the console's organization token, once the
   // membership check in koaAuth has passed. Other deployments keep the Management API audience only.
   const managementAudience = [getManagementApiResourceIndicator(tenant.id)];
@@ -108,6 +111,7 @@ const createRouters = (tenant: TenantContext) => {
   aiChatRoutes(managementRouter, tenant);
   kuboRoutes(managementRouter, tenant);
   mcpPortalRoutes(managementRouter, tenant);
+  mcpPortalOauthStart(managementRouter, tenant);
   customPhraseRoutes(managementRouter, tenant);
   hookRoutes(managementRouter, tenant);
   verificationCodeRoutes(managementRouter, tenant);

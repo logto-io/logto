@@ -53,9 +53,14 @@
   padding: 8px 14px;
   border-radius: 6px;
   border: 1px solid var(--color-border);
-  background: var(--color-bg-body);
+  background: var(--color-layer-1);
+  color: var(--color-text);
   cursor: pointer;
   font: inherit;
+
+  &:hover {
+    background: var(--color-hover-variant);
+  }
 
   &:disabled {
     opacity: 60%;
@@ -194,6 +199,25 @@
   align-items: center;
   gap: 12px;
   padding: 14px 16px;
+}
+
+.portalName {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.serverIcon {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  color: #fff;
+  font: var(--font-label-2);
+  font-weight: 600;
 }
 
 .serverText {

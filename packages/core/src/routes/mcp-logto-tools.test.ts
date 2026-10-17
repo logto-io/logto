@@ -1,4 +1,9 @@
-import { buildLogtoToolUrl, callLogtoTool, logtoMcpTools } from './mcp-logto-tools.js';
+import {
+  buildLogtoToolUrl,
+  callLogtoTool,
+  enabledLogtoMcpTools,
+  logtoMcpTools,
+} from './mcp-logto-tools.js';
 
 const { jest } = import.meta;
 
@@ -102,10 +107,82 @@ describe('callLogtoTool', () => {
   });
 });
 
+describe('create tools', () => {
+  it('posts the body built from the named fields only', async () => {
+    const fetchImpl = jest.fn(async () => new Response('{"name":"Acme"}', { status: 201 }));
+
+    const result = await callLogtoTool(
+      tool('create_organization'),
+      { name: 'Acme', description: 'Team', tenantId: 'other-tenant', id: 'forced-id' },
+      'caller-token',
+      apiBase,
+      fetchImpl as unknown as typeof fetch
+    );
+
+    const [url, init] = fetchImpl.mock.calls[0] as unknown as [URL, RequestInit];
+    expect(String(url)).toBe(`${apiBase}/organizations`);
+    expect(init.method).toBe('POST');
+    expect(init.headers).toMatchObject({
+      authorization: 'Bearer caller-token',
+      'content-type': 'application/json',
+    });
+    expect(JSON.parse(String(init.body))).toEqual({ name: 'Acme', description: 'Team' });
+    expect(result.isError).toBe(false);
+  });
+
+  it('generates the id and secret an application needs', async () => {
+    const fetchImpl = jest.fn(async () => new Response('{}', { status: 201 }));
+
+    await callLogtoTool(
+      tool('create_application'),
+      { name: 'Web', type: 'SPA', redirect_uris: ['https://app.example.com/callback'] },
+      'caller-token',
+      apiBase,
+      fetchImpl as unknown as typeof fetch
+    );
+
+    const [, init] = fetchImpl.mock.calls[0] as unknown as [URL, RequestInit];
+    const sent = JSON.parse(String(init.body)) as Record<string, unknown>;
+    expect(sent).toMatchObject({
+      name: 'Web',
+      type: 'SPA',
+      oidcClientMetadata: {
+        redirectUris: ['https://app.example.com/callback'],
+        postLogoutRedirectUris: [],
+      },
+    });
+    expect(typeof sent.id).toBe('string');
+    expect(typeof sent.secret).toBe('string');
+  });
+});
+
+describe('enabledLogtoMcpTools', () => {
+  it('hides the create tools while dev features are disabled', () => {
+    const names = enabledLogtoMcpTools(false).map(({ name }) => name);
+
+    expect(names).toContain('list_applications');
+    expect(names.some((name) => name.startsWith('create_'))).toBe(false);
+  });
+
+  it('lists the create tools when dev features are enabled', () => {
+    const names = enabledLogtoMcpTools(true).map(({ name }) => name);
+
+    expect(names).toContain('create_application');
+    expect(names).toContain('create_organization');
+  });
+});
+
 describe('logtoMcpTools', () => {
-  it('exposes read-only tools only', () => {
+  it('exposes reads and creates only, never update or delete', () => {
     for (const { name } of logtoMcpTools) {
-      expect(name).not.toMatch(/^(create|update|delete|remove|set|add)_/);
+      expect(name).not.toMatch(/^(update|delete|remove|set|add)_/);
+    }
+  });
+
+  it('marks every write tool as a POST with a body', () => {
+    for (const candidate of logtoMcpTools.filter(({ name }) => name.startsWith('create_'))) {
+      expect(candidate.method).toBe('POST');
+      expect(candidate.body).toBeDefined();
     }
   });
 });

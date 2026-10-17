@@ -42,8 +42,8 @@ export const stackOptions: StackOption[] = [
   {
     id: 'foundation',
     title: 'Foundation',
-    description: "The complete platform: high-availability database and Trino catalog.",
-    template: "full",
+    description: 'The complete platform: high-availability database and Trino catalog.',
+    template: 'full',
     exclude: [],
     available: true,
   },
@@ -84,8 +84,9 @@ const allComponents = [
   'watcher',
 ];
 
-export const includedComponents = (option: Pick<StackOption, 'exclude'>) =>
-  allComponents.filter((component) => !option.exclude.includes(component));
+// Unavailable stacks have no components to show, so their card lists none.
+export const includedComponents = (option: Pick<StackOption, 'available' | 'exclude'>) =>
+  option.available ? allComponents.filter((component) => !option.exclude.includes(component)) : [];
 
 // Maps a 1-based list position onto the three wizard steps.
 export const toStep = (value: number): 1 | 2 | 3 => {

@@ -17,6 +17,23 @@ const inkeep_ai_bot = {
   ask_ai_label: 'AI’a Sor',
   contact: 'İletişim',
   discord: 'Discord',
+  action_proposed: 'Önerilen değişiklik: {{tool}}',
+  action_confirm: 'Onayla',
+  action_cancel: 'İptal',
+  action_running: 'Oluşturuluyor…',
+  action_done: 'Oluşturuldu',
+  action_cancelled: 'İptal edildi',
+  action_failed: 'Oluşturulmadı',
+  action_failed_detail: 'Bu değişiklik yapılamadı. Süresi dolmuş olabilir; tekrar isteyin.',
+  setup_prompt_copied: 'Kurulum istemi kopyalandı',
+  onboard_agent: 'Ajanınızı MeshX’e tanıtın',
+  attached_files_label: 'Eklenen dosyalar',
+  attach_file: 'Dosya ekle',
+  remove_file: '{{name}} kaldır',
+  attachment_error: 'Yalnızca 100 KB’a kadar metin dosyaları eklenebilir: {{names}}',
+  copy_you: 'Siz',
+  copy_assistant: 'MeshX AI',
+  file_label: 'Dosya: {{name}}',
 };
 
 export default Object.freeze(inkeep_ai_bot);

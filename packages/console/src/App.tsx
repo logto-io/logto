@@ -11,7 +11,7 @@ import { conditionalArray } from '@silverhand/essentials';
 import { PostHogProvider, usePostHog } from 'posthog-js/react';
 import { useContext, useEffect, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 
 import 'overlayscrollbars/overlayscrollbars.css';
 import './scss/normalized.scss';
@@ -53,6 +53,14 @@ void initI18n();
 function App() {
   const router = createBrowserRouter(
     [
+      // Cloud has no tenant in the root path: open the default tenant instead of reading the path as one.
+      ...(isCloud
+        ? [
+            { path: '/', element: <Navigate replace to={`/${defaultTenantId}`} /> },
+            // Sign-in can return to `/console` under the base path, which is then matched as `/console/console`.
+            { path: '/console', element: <Navigate replace to={`/${defaultTenantId}`} /> },
+          ]
+        : []),
       {
         path: '*',
         element: (
@@ -64,7 +72,7 @@ function App() {
     ],
     // Local cloud dev serves the console under `/console` from core, so that prefix is the basename.
     // Otherwise the first path segment would be read as a tenant ID.
-    { basename: isCloud && import.meta.env.DEV ? ossConsolePath : undefined }
+    { basename: isCloud ? ossConsolePath : undefined }
   );
 
   return <RouterProvider router={router} />;

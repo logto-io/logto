@@ -9,11 +9,14 @@ import {
 import { extractBearerToken } from '@logto/mcp-portal';
 import { text } from 'node:stream/consumers';
 
-import { callLogtoTool, logtoMcpTools } from './mcp-logto-tools.js';
+import { EnvSet } from '#src/env-set/index.js';
+
+import { callLogtoTool, enabledLogtoMcpTools } from './mcp-logto-tools.js';
 import type { AnonymousRouter, RouterInitArgs } from './types.js';
 
 // Logto's own MCP endpoint, served on the main Logto host. A request whose host has no portal falls
-// through to here (see mcp-portal-endpoint.ts). Tools are read-only and run with the caller's token.
+// through to here (see mcp-portal-endpoint.ts). Tools run with the caller's token, so the
+// Management API decides what each caller can read and create.
 
 export const logtoMcpName = 'logto';
 
@@ -25,7 +28,7 @@ export const createLogtoMcpServer = (token: string, apiBase: string): Server => 
   );
 
   server.setRequestHandler(ListToolsRequestSchema, async () => {
-    const tools: Tool[] = logtoMcpTools.map((tool) => ({
+    const tools: Tool[] = enabledLogtoMcpTools(EnvSet.values.isDevFeaturesEnabled).map((tool) => ({
       name: tool.name,
       description: tool.description,
       inputSchema: {
@@ -39,7 +42,9 @@ export const createLogtoMcpServer = (token: string, apiBase: string): Server => 
   });
 
   server.setRequestHandler(CallToolRequestSchema, async ({ params }): Promise<CallToolResult> => {
-    const tool = logtoMcpTools.find(({ name }) => name === params.name);
+    const tool = enabledLogtoMcpTools(EnvSet.values.isDevFeaturesEnabled).find(
+      ({ name }) => name === params.name
+    );
 
     if (!tool) {
       return { content: [{ type: 'text', text: `Unknown tool "${params.name}"` }], isError: true };
@@ -71,13 +76,13 @@ export default function mcpLogtoRoutes<T extends AnonymousRouter>(
     ctx.body = {
       enabled: true,
       authMode: 'bearer token',
-      tools: logtoMcpTools.map(({ name }) => name),
+      tools: enabledLogtoMcpTools(EnvSet.values.isDevFeaturesEnabled).map(({ name }) => name),
     };
   });
 
   router.get('/mcp/tools', async (ctx) => {
     ctx.body = {
-      tools: logtoMcpTools.map((tool) => ({
+      tools: enabledLogtoMcpTools(EnvSet.values.isDevFeaturesEnabled).map((tool) => ({
         name: tool.name,
         description: tool.description,
         inputSchema: {
@@ -100,7 +105,9 @@ export default function mcpLogtoRoutes<T extends AnonymousRouter>(
 
     const raw = await text(ctx.req);
     const body = raw ? (JSON.parse(raw) as { name?: unknown; arguments?: unknown }) : {};
-    const tool = logtoMcpTools.find(({ name }) => name === body.name);
+    const tool = enabledLogtoMcpTools(EnvSet.values.isDevFeaturesEnabled).find(
+      ({ name }) => name === body.name
+    );
 
     if (!tool) {
       ctx.status = 400;
