@@ -4242,6 +4242,9 @@ importers:
       '@logto/tenant-seed':
         specifier: workspace:^
         version: link:../tenant-seed
+      '@logto/waf':
+        specifier: workspace:*
+        version: link:../waf
       '@modelcontextprotocol/sdk':
         specifier: 1.20.2
         version: 1.20.2(supports-color@5.5.0)
