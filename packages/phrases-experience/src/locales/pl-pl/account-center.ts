@@ -26,6 +26,8 @@ const account_center = {
     error_invalid_code: 'Kod weryfikacyjny jest nieprawidłowy lub wygasł.',
     error_verify_failed: 'Weryfikacja nie powiodła się. Wprowadź kod ponownie.',
     verification_required: 'Weryfikacja wygasła. Zweryfikuj swoją tożsamość ponownie.',
+    step_up_not_completed:
+      'Weryfikacja tożsamości nie została ukończona. Na Twoim koncie nie wprowadzono żadnych zmian.',
     try_another_method: 'Wypróbuj inny sposób weryfikacji',
     no_available_methods_title: 'Brak dostępnych metod weryfikacji',
     no_available_methods_description:

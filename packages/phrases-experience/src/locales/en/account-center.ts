@@ -25,6 +25,8 @@ const account_center = {
     error_invalid_code: 'The verification code is invalid or has expired.',
     error_verify_failed: 'Verification failed. Please enter the code again.',
     verification_required: 'Verification expired. Please verify your identity again.',
+    step_up_not_completed:
+      'Identity verification was not completed. No changes were made to your account.',
     try_another_method: 'Try another method to verify',
     no_available_methods_title: 'No verification methods available',
     no_available_methods_description:

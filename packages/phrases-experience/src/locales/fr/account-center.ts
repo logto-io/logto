@@ -26,6 +26,8 @@ const account_center = {
     error_invalid_code: 'Le code de vérification est invalide ou a expiré.',
     error_verify_failed: 'Échec de la vérification. Veuillez saisir le code à nouveau.',
     verification_required: 'La vérification a expiré. Veuillez confirmer à nouveau votre identité.',
+    step_up_not_completed:
+      "La vérification d'identité n'a pas été effectuée. Aucune modification n'a été apportée à votre compte.",
     try_another_method: 'Essayez une autre méthode de vérification',
     no_available_methods_title: 'Aucune méthode de vérification disponible',
     no_available_methods_description:

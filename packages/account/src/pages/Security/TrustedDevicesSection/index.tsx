@@ -10,8 +10,10 @@ import ConfirmModal from '@ac/components/ConfirmModal';
 import { verifiedActionRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
+import useStepUp, { useIdentityProof } from '@ac/hooks/use-step-up';
 import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
 import { sessionStorage } from '@ac/utils/session-storage';
+import { consumePendingStepUpAction } from '@ac/utils/step-up';
 
 import SecuritySection from '../components/SecuritySection';
 
@@ -21,8 +23,9 @@ import styles from './index.module.scss';
 const TrustedDevicesSection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { accountCenterSettings, verificationId, setVerificationId, setToast } =
-    useContext(PageContext);
+  const { accountCenterSettings, setVerificationId, setToast } = useContext(PageContext);
+  const { isReady: isIdentityProofReady, verificationId } = useIdentityProof();
+  const requestStepUp = useStepUp();
   const [trustedDevices, setTrustedDevices] = useState<AccountTrustedDeviceResponse[]>();
   const [isLoading, setIsLoading] = useState(false);
   const [hasLoadingError, setHasLoadingError] = useState(false);
@@ -46,26 +49,41 @@ const TrustedDevicesSection = () => {
     setToast(t('account_center.verification.verification_required'));
   }, [setToast, setVerificationId, t]);
 
-  const fetchTrustedDevices = useCallback(async () => {
-    if (!verificationId || !isVisible) {
-      return;
-    }
+  const fetchTrustedDevices = useCallback(
+    async (isResumed = false) => {
+      if (!isIdentityProofReady || !isVisible) {
+        return;
+      }
 
-    setIsLoading(true);
-    setHasLoadingError(false);
-    const [error, result] = await getTrustedDevicesApi(verificationId);
+      setIsLoading(true);
+      setHasLoadingError(false);
+      const [error, result] = await getTrustedDevicesApi(verificationId);
 
-    if (error) {
-      setHasLoadingError(true);
-      await handleError(error, {
-        'verification_record.permission_denied': handlePermissionDenied,
-      });
-    } else {
-      setTrustedDevices(result ?? []);
-    }
+      if (error) {
+        if (await requestStepUp(error, { type: 'load-trusted-devices' }, { isResumed })) {
+          return;
+        }
 
-    setIsLoading(false);
-  }, [getTrustedDevicesApi, handleError, handlePermissionDenied, isVisible, verificationId]);
+        setHasLoadingError(true);
+        await handleError(error, {
+          'verification_record.permission_denied': handlePermissionDenied,
+        });
+      } else {
+        setTrustedDevices(result ?? []);
+      }
+
+      setIsLoading(false);
+    },
+    [
+      getTrustedDevicesApi,
+      handleError,
+      handlePermissionDenied,
+      isIdentityProofReady,
+      isVisible,
+      requestStepUp,
+      verificationId,
+    ]
+  );
 
   useEffect(() => {
     if (!verificationId) {
@@ -79,14 +97,25 @@ const TrustedDevicesSection = () => {
     void fetchTrustedDevices();
   }, [fetchTrustedDevices, verificationId]);
 
+  useEffect(() => {
+    if (consumePendingStepUpAction(['load-trusted-devices'])) {
+      void fetchTrustedDevices(true);
+    }
+  }, [fetchTrustedDevices]);
+
   const handleManage = useCallback(() => {
+    if (isIdentityProofReady) {
+      void fetchTrustedDevices();
+      return;
+    }
+
     setPendingReturn(getPendingReturn() ?? window.location.href);
     sessionStorage.setPendingVerifiedAction('load-trusted-devices');
     navigate(verifiedActionRoute);
-  }, [navigate]);
+  }, [fetchTrustedDevices, isIdentityProofReady, navigate]);
 
   const handleConfirmRemove = useCallback(async () => {
-    if (!verificationId || !removeTarget) {
+    if (!isIdentityProofReady || !removeTarget) {
       return;
     }
 
@@ -94,6 +123,12 @@ const TrustedDevicesSection = () => {
     const [error] = await removeTrustedDeviceApi(verificationId, removeTarget.id);
 
     if (error) {
+      // The removal is not replayed after the step-up; the user confirms it again on the reloaded
+      // list.
+      if (await requestStepUp(error, { type: 'load-trusted-devices' })) {
+        return;
+      }
+
       await handleError(error, {
         'verification_record.permission_denied': handlePermissionDenied,
       });
@@ -108,8 +143,10 @@ const TrustedDevicesSection = () => {
   }, [
     handleError,
     handlePermissionDenied,
+    isIdentityProofReady,
     removeTarget,
     removeTrustedDeviceApi,
+    requestStepUp,
     setToast,
     t,
     verificationId,

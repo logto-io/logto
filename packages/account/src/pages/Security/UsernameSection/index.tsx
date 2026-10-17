@@ -11,22 +11,20 @@ import { layoutClassNames } from '@ac/constants/layout';
 import { usernameRoute, verifiedActionRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
+import useStepUp, { useIdentityProof } from '@ac/hooks/use-step-up';
 import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
 import { sessionStorage } from '@ac/utils/session-storage';
+import { consumePendingStepUpAction } from '@ac/utils/step-up';
 
 import styles from './index.module.scss';
 
 const UsernameSection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const {
-    userInfo,
-    accountCenterSettings,
-    verificationId,
-    setVerificationId,
-    refreshUserInfo,
-    setToast,
-  } = useContext(PageContext);
+  const { userInfo, accountCenterSettings, setVerificationId, refreshUserInfo, setToast } =
+    useContext(PageContext);
+  const { isReady: isIdentityProofReady, verificationId } = useIdentityProof();
+  const requestStepUp = useStepUp();
   const handleError = useErrorHandler();
   const deleteUsernameApi = useApi(deleteUsername);
 
@@ -44,10 +42,14 @@ const UsernameSection = () => {
   );
 
   const removeUsername = useCallback(
-    async (verifiedId: string) => {
+    async (verifiedId: string | undefined, isResumed = false) => {
       const [error] = await deleteUsernameApi(verifiedId);
 
       if (error) {
+        if (await requestStepUp(error, { type: 'remove-username' }, { isResumed })) {
+          return;
+        }
+
         await handleError(error, {
           'verification_record.permission_denied': async () => {
             setVerificationId(undefined);
@@ -60,20 +62,26 @@ const UsernameSection = () => {
       await refreshUserInfo();
       setToast(t('account_center.security.username_removed'));
     },
-    [deleteUsernameApi, handleError, refreshUserInfo, setToast, setVerificationId, t]
+    [deleteUsernameApi, handleError, refreshUserInfo, requestStepUp, setToast, setVerificationId, t]
   );
 
   const handleRemoveConfirm = useCallback(async () => {
     setIsRemoveModalOpen(false);
 
-    if (verificationId) {
+    if (isIdentityProofReady) {
       await removeUsername(verificationId);
       return;
     }
 
     sessionStorage.setPendingVerifiedAction('remove-username');
     navigateTo(verifiedActionRoute);
-  }, [navigateTo, removeUsername, verificationId]);
+  }, [isIdentityProofReady, navigateTo, removeUsername, verificationId]);
+
+  useEffect(() => {
+    if (consumePendingStepUpAction(['remove-username'])) {
+      void removeUsername(undefined, true);
+    }
+  }, [removeUsername]);
 
   useEffect(() => {
     if (!verificationId || sessionStorage.getPendingVerifiedAction() !== 'remove-username') {

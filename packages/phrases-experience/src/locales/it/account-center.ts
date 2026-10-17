@@ -26,6 +26,8 @@ const account_center = {
     error_invalid_code: 'Il codice di verifica non è valido o è scaduto.',
     error_verify_failed: 'Verifica non riuscita. Inserisci di nuovo il codice.',
     verification_required: 'Verifica scaduta. Conferma di nuovo la tua identità.',
+    step_up_not_completed:
+      "La verifica dell'identità non è stata completata. Non è stata apportata alcuna modifica al tuo account.",
     try_another_method: 'Prova un altro metodo di verifica',
     no_available_methods_title: 'Nessun metodo di verifica disponibile',
     no_available_methods_description:

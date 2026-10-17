@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Sessions and third-party grants share their loading and step-up state on this page. */
 import classNames from 'classnames';
 import { HTTPError } from 'ky';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
@@ -13,10 +14,12 @@ import { verifiedActionRoute } from '@ac/constants/routes';
 import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
 import { isEditableField } from '@ac/utils/security-page';
 import { sessionStorage } from '@ac/utils/session-storage';
+import { consumePendingStepUpAction } from '@ac/utils/step-up';
 
 import { getSessions, revokeSession, getGrants, revokeGrant } from '../../apis/sessions';
 import useApi from '../../hooks/use-api';
 import useErrorHandler from '../../hooks/use-error-handler';
+import useStepUp, { useIdentityProof } from '../../hooks/use-step-up';
 import homeStyles from '../Home/index.module.scss';
 
 import GrantRow from './GrantRow';
@@ -27,8 +30,9 @@ import { normalizeGrantRows, type AccountSession, type GrantedAppRow } from './u
 const Sessions = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { accountCenterSettings, verificationId, setVerificationId, setToast } =
-    useContext(PageContext);
+  const { accountCenterSettings, setVerificationId, setToast } = useContext(PageContext);
+  const { isReady: isIdentityProofReady, verificationId } = useIdentityProof();
+  const requestStepUp = useStepUp();
   const [sessions, setSessions] = useState<AccountSession[]>();
   const [grantRows, setGrantRows] = useState<GrantedAppRow[]>();
   const [hasGrantLoadingError, setHasGrantLoadingError] = useState(false);
@@ -54,7 +58,7 @@ const Sessions = () => {
   }, [setVerificationId, setToast, t]);
 
   const fetchData = useCallback(
-    async (verifiedId: string) => {
+    async (verifiedId: string | undefined, isResumed = false) => {
       if (isFetchingRef.current) {
         return;
       }
@@ -72,6 +76,10 @@ const Sessions = () => {
       const [grantError, grantResult] = grantResponse;
 
       if (sessionError) {
+        if (await requestStepUp(sessionError, { type: 'load-sessions' }, { isResumed })) {
+          return;
+        }
+
         await handleError(sessionError, {
           'verification_record.permission_denied': handlePermissionDenied,
         });
@@ -100,7 +108,7 @@ const Sessions = () => {
       // eslint-disable-next-line @silverhand/fp/no-mutation
       isFetchingRef.current = false;
     },
-    [getSessionsApi, getGrantsApi, handleError, handlePermissionDenied]
+    [getSessionsApi, getGrantsApi, handleError, handlePermissionDenied, requestStepUp]
   );
 
   useEffect(() => {
@@ -118,6 +126,12 @@ const Sessions = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [verificationId]);
 
+  useEffect(() => {
+    if (consumePendingStepUpAction(['load-sessions'])) {
+      void fetchData(undefined, true);
+    }
+  }, [fetchData]);
+
   const navigateTo = useCallback(
     (route: string) => {
       setPendingReturn(getPendingReturn() ?? window.location.href);
@@ -127,23 +141,29 @@ const Sessions = () => {
   );
 
   const handleManage = useCallback(() => {
-    if (verificationId) {
+    if (isIdentityProofReady) {
       void fetchData(verificationId);
       return;
     }
 
     sessionStorage.setPendingVerifiedAction('load-sessions');
     navigateTo(verifiedActionRoute);
-  }, [verificationId, fetchData, navigateTo]);
+  }, [isIdentityProofReady, verificationId, fetchData, navigateTo]);
 
   const handleRevoke = useCallback(
     async (session: AccountSession) => {
-      if (!verificationId) {
+      if (!isIdentityProofReady) {
         return;
       }
 
       const [error] = await revokeSessionApi(verificationId, session.payload.uid);
       if (error) {
+        // The revocation is not replayed after the step-up; the user confirms it again on the
+        // reloaded list.
+        if (await requestStepUp(error, { type: 'load-sessions' })) {
+          return;
+        }
+
         await handleError(error, {
           'verification_record.permission_denied': async () => {
             setVerificationId(undefined);
@@ -158,7 +178,16 @@ const Sessions = () => {
         previous?.filter((item) => item.payload.uid !== session.payload.uid)
       );
     },
-    [verificationId, revokeSessionApi, handleError, setVerificationId, setToast, t]
+    [
+      isIdentityProofReady,
+      verificationId,
+      revokeSessionApi,
+      handleError,
+      requestStepUp,
+      setVerificationId,
+      setToast,
+      t,
+    ]
   );
 
   const handleConfirmRevoke = useCallback(async () => {
@@ -171,7 +200,7 @@ const Sessions = () => {
 
   const handleRevokeGrant = useCallback(
     async (app: GrantedAppRow) => {
-      if (!verificationId) {
+      if (!isIdentityProofReady) {
         return;
       }
 
@@ -188,6 +217,10 @@ const Sessions = () => {
 
       const failure = results.find((result) => result.status === 'rejected');
       if (failure) {
+        if (await requestStepUp(failure.reason, { type: 'load-sessions' })) {
+          return;
+        }
+
         if (failure.reason instanceof HTTPError) {
           await handleError(failure.reason);
         } else {
@@ -202,7 +235,7 @@ const Sessions = () => {
       );
       setRemovingAppId(undefined);
     },
-    [verificationId, revokeGrantApi, handleError, setToast, t]
+    [isIdentityProofReady, verificationId, revokeGrantApi, handleError, requestStepUp, setToast, t]
   );
 
   const handleConfirmRevokeGrant = useCallback(async () => {
@@ -336,3 +369,4 @@ const Sessions = () => {
 };
 
 export default Sessions;
+/* eslint-enable max-lines */
