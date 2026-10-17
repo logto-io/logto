@@ -1,6 +1,7 @@
-import { array, boolean, object, string } from 'zod';
+import { array, boolean, number, object, string } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
+import { safeParseJson } from '#src/utils/json.js';
 
 import type { ManagementApiRouter, ManagementApiRouterContext, RouterInitArgs } from './types.js';
 
@@ -29,6 +30,18 @@ const upstreamError = (ctx: ManagementApiRouterContext, message: string) => {
 
 type KshowsNode = { name: string; hourlyUSD?: number; instanceType?: string };
 
+const azurePriceResponse = object({
+  Items: array(
+    object({ retailPrice: number(), productName: string(), meterName: string() })
+  ).optional(),
+});
+
+const kshowsSnapshot = object({
+  nodes: array(
+    object({ name: string(), hourlyUSD: number().optional(), instanceType: string().optional() })
+  ).optional(),
+}).passthrough();
+
 // Azure list prices per VM size, cached so the capacity poll does not hit the
 // retail API every time. Prices change rarely, so six hours is plenty.
 const azurePriceTtlMs = 6 * 60 * 60 * 1000;
@@ -49,10 +62,12 @@ const azureHourlyUsd = async (sku: string): Promise<number | undefined> => {
   if (!response.ok) {
     return undefined;
   }
-  const body = (await response.json()) as { Items?: Array<{ retailPrice: number; productName: string; meterName: string }> };
+  const body = azurePriceResponse.parse(safeParseJson(await response.text()));
   const item = (body.Items ?? []).find(
     ({ productName, meterName }) =>
-      !productName.includes('Windows') && !meterName.includes('Spot') && !meterName.includes('Low Priority')
+      !productName.includes('Windows') &&
+      !meterName.includes('Spot') &&
+      !meterName.includes('Low Priority')
   );
   if (!item) {
     return undefined;
@@ -68,7 +83,7 @@ const priceKshowsNodes = async (snapshot: { nodes?: KshowsNode[] }) => {
       if (!node.instanceType) {
         return node;
       }
-      const usd = await azureHourlyUsd(node.instanceType).catch(() => undefined);
+      const usd = await azureHourlyUsd(node.instanceType).catch((): undefined => undefined);
       return usd === undefined ? node : { ...node, hourlyUSD: usd };
     })
   );
@@ -134,6 +149,7 @@ export default function kuboRoutes<T extends ManagementApiRouter>(...[router]: R
     const url = new URL('/api/airgap/bundle', baseUrl);
     url.searchParams.set('name', name);
 
+    /* eslint-disable no-restricted-syntax -- Node request streams and duplex fetch are supported at runtime but missing from DOM types. */
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'content-type': 'application/x-tar' },
@@ -141,6 +157,7 @@ export default function kuboRoutes<T extends ManagementApiRouter>(...[router]: R
       duplex: 'half',
       signal: AbortSignal.timeout(60 * 60 * 1000),
     } as RequestInit);
+    /* eslint-enable no-restricted-syntax */
 
     ctx.status = response.status;
     ctx.body = { message: await response.text() };
@@ -155,8 +172,9 @@ export default function kuboRoutes<T extends ManagementApiRouter>(...[router]: R
   // Capacity map: node and pod usage snapshot (polled by the console).
   router.get('/kubo/kshows', async (ctx, next) => {
     await forward(ctx, '/api/kshows/snapshot');
-    if (ctx.body && typeof ctx.body === 'object') {
-      ctx.body = await priceKshowsNodes(ctx.body as { nodes?: KshowsNode[] });
+    const snapshot = kshowsSnapshot.safeParse(ctx.body);
+    if (snapshot.success) {
+      ctx.body = await priceKshowsNodes(snapshot.data);
     }
     return next();
   });
@@ -174,13 +192,7 @@ export default function kuboRoutes<T extends ManagementApiRouter>(...[router]: R
     return next();
   });
 
-  // Partial update of a stack's spec: mode, bundle, exclusions, operators, feature flags,
-  // image tags, chart versions and component values. The portal applies it as a merge patch.
-  const patchFields = ['mode', 'bundle', 'exclude', 'operators', 'componentValues', 'featureFlags', 'imageTags', 'chartVersions'];
-  router.patch(
-    '/kubo/stacks/:namespace/:name',
-    koaGuard({ body: object({}).passthrough(), status: [200, 400, 502] }),
-    async (ctx, next) => {
+  router.delete('/kubo/stacks/:namespace/:name', async (ctx, next) => {
     const namespace = ctx.params.namespace ?? '';
     const name = ctx.params.name ?? '';
     if (!kubeName.test(namespace) || !kubeName.test(name)) {
@@ -189,31 +201,80 @@ export default function kuboRoutes<T extends ManagementApiRouter>(...[router]: R
       return next();
     }
 
-    const body = (ctx.request.body ?? {}) as Record<string, unknown>;
-    const unknown = Object.keys(body).filter((key) => !patchFields.includes(key));
-    if (unknown.length > 0) {
-      ctx.status = 400;
-      ctx.body = { code: 'kubo.invalid_field', message: `Unsupported fields: ${unknown.join(', ')}` };
-      return next();
-    }
-
     const baseUrl = process.env.KUBO_PORTAL_URL ?? defaultKuboPortalUrl;
-    const response = await fetch(new URL(`/api/stacks/${namespace}/${name}`, baseUrl), {
-      method: 'PATCH',
-      headers: { 'content-type': 'application/json', accept: 'application/json' },
-      body: JSON.stringify(body),
+    const url = new URL(`/api/stacks/${namespace}/${name}`, baseUrl);
+    url.searchParams.set('confirm', namespace);
+    url.searchParams.set('purge', ctx.query.purge === 'true' ? 'true' : 'false');
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: { accept: 'application/json' },
       signal: AbortSignal.timeout(30_000),
     });
-
     const text = await response.text();
+
     if (!response.ok) {
       upstreamError(ctx, text.slice(0, 500) || `Kubo portal returned ${response.status}`);
       return next();
     }
 
-    ctx.body = JSON.parse(text);
+    ctx.status = response.status;
+    ctx.body = safeParseJson(text);
     return next();
   });
+
+  // Partial update of a stack's spec: mode, bundle, exclusions, operators, feature flags,
+  // image tags, chart versions and component values. The portal applies it as a merge patch.
+  const patchFields = new Set([
+    'mode',
+    'bundle',
+    'exclude',
+    'operators',
+    'componentValues',
+    'featureFlags',
+    'imageTags',
+    'chartVersions',
+  ]);
+  router.patch(
+    '/kubo/stacks/:namespace/:name',
+    koaGuard({ body: object({}).passthrough(), status: [200, 400, 502] }),
+    async (ctx, next) => {
+      const namespace = ctx.params.namespace ?? '';
+      const name = ctx.params.name ?? '';
+      if (!kubeName.test(namespace) || !kubeName.test(name)) {
+        ctx.status = 400;
+        ctx.body = { code: 'kubo.invalid_name', message: 'Invalid stack name' };
+        return next();
+      }
+
+      const { body } = ctx.guard;
+      const unknown = Object.keys(body).filter((key) => !patchFields.has(key));
+      if (unknown.length > 0) {
+        ctx.status = 400;
+        ctx.body = {
+          code: 'kubo.invalid_field',
+          message: `Unsupported fields: ${unknown.join(', ')}`,
+        };
+        return next();
+      }
+
+      const baseUrl = process.env.KUBO_PORTAL_URL ?? defaultKuboPortalUrl;
+      const response = await fetch(new URL(`/api/stacks/${namespace}/${name}`, baseUrl), {
+        method: 'PATCH',
+        headers: { 'content-type': 'application/json', accept: 'application/json' },
+        body: JSON.stringify(body),
+        signal: AbortSignal.timeout(30_000),
+      });
+
+      const text = await response.text();
+      if (!response.ok) {
+        upstreamError(ctx, text.slice(0, 500) || `Kubo portal returned ${response.status}`);
+        return next();
+      }
+
+      ctx.body = safeParseJson(text);
+      return next();
+    }
+  );
 
   // Trigger the stack's bootstrap job. Returns the created job name.
   router.post('/kubo/stacks/:namespace/:name/bootstrap', async (ctx, next) => {
@@ -237,7 +298,7 @@ export default function kuboRoutes<T extends ManagementApiRouter>(...[router]: R
       return next();
     }
 
-    ctx.body = JSON.parse(await response.text());
+    ctx.body = safeParseJson(await response.text());
     return next();
   });
 
@@ -287,7 +348,7 @@ export default function kuboRoutes<T extends ManagementApiRouter>(...[router]: R
       }
 
       ctx.status = response.status;
-      ctx.body = JSON.parse(text);
+      ctx.body = safeParseJson(text);
       return next();
     }
   );

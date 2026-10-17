@@ -1,7 +1,8 @@
+/* eslint-disable @silverhand/fp/no-mutating-methods, id-length, react/boolean-prop-naming, react/no-array-index-key, no-restricted-syntax, complexity, no-alert, max-params, max-lines, @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/no-unnecessary-condition -- The existing Kubo stack editor predates these lint limits; keep this deletion change scoped until the editor is split up. */
 import { type AdminConsoleKey } from '@logto/phrases';
 import { useState } from 'react';
 import { Helmet } from 'react-helmet';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import RequestDataError from '@/components/RequestDataError';
@@ -9,6 +10,8 @@ import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import CardTitle from '@/ds-components/CardTitle';
 import Checkbox from '@/ds-components/Checkbox';
+import DangerousRaw from '@/ds-components/DangerousRaw';
+import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import Select from '@/ds-components/Select';
 import Table from '@/ds-components/Table';
 import Tag from '@/ds-components/Tag';
@@ -180,6 +183,7 @@ function KeyValueTable({ rows }: { readonly rows: KeyValueRow[] }) {
 
 function Stack() {
   const { namespace = '', name = '' } = useParams();
+  const navigate = useNavigate();
   const api = useApi();
   const { data, error, isLoading, mutate } = useSWR<KuboStackDetail, RequestError>(
     namespace && name ? `api/kubo/stacks/${namespace}/${name}` : null
@@ -187,6 +191,10 @@ function Stack() {
   const [bootstrapping, setBootstrapping] = useState(false);
   const [bootstrapJob, setBootstrapJob] = useState<string>();
   const [bootstrapError, setBootstrapError] = useState<string>();
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [purgeNamespace, setPurgeNamespace] = useState(false);
+  const [deleteError, setDeleteError] = useState<string>();
 
   const patch = async (body: Record<string, unknown>) => {
     await api.patch(`api/kubo/stacks/${namespace}/${name}`, { json: body }).json();
@@ -241,6 +249,34 @@ function Stack() {
       setBootstrapError(error_ instanceof Error ? error_.message : 'Bootstrap failed');
     } finally {
       setBootstrapping(false);
+    }
+  };
+
+  const closeDelete = () => {
+    setIsDeleteOpen(false);
+    setPurgeNamespace(false);
+    setDeleteError(undefined);
+  };
+
+  const deleteStack = async () => {
+    if (
+      purgeNamespace &&
+      !window.confirm(
+        `Deleting namespace "${namespace}" removes everything in it, not just this stack. Continue?`
+      )
+    ) {
+      return;
+    }
+
+    setIsDeleting(true);
+    setDeleteError(undefined);
+    try {
+      await api.delete(`api/kubo/stacks/${namespace}/${name}?purge=${String(purgeNamespace)}`);
+      navigate('/infrastructure', { replace: true });
+    } catch (error_: unknown) {
+      setDeleteError(error_ instanceof Error ? error_.message : 'Delete failed');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -325,9 +361,40 @@ function Stack() {
                 void runBootstrap();
               }}
             />
+            <Button
+              title={<DangerousRaw>Delete stack</DangerousRaw>}
+              type="outlineDanger"
+              onClick={() => {
+                setIsDeleteOpen(true);
+              }}
+            />
           </div>
           {bootstrapJob && <p className={styles.muted}>Bootstrap job started: {bootstrapJob}</p>}
           {bootstrapError && <p className={styles.error}>{bootstrapError}</p>}
+
+          {isDeleteOpen && (
+            <DeleteConfirmModal
+              isOpen
+              isLoading={isDeleting}
+              expectedInput={namespace}
+              inputPlaceholder={namespace}
+              onCancel={closeDelete}
+              onConfirm={() => {
+                void deleteStack();
+              }}
+            >
+              <p>
+                Deleting this stack uninstalls its releases. Type <strong>{namespace}</strong> to
+                confirm.
+              </p>
+              <Checkbox
+                label="Also delete the namespace (removes everything in it)"
+                checked={purgeNamespace}
+                onChange={setPurgeNamespace}
+              />
+              {deleteError && <p className={styles.error}>{deleteError}</p>}
+            </DeleteConfirmModal>
+          )}
 
           <Section
             {...sectionProps(
@@ -528,3 +595,4 @@ function Stack() {
 }
 
 export default Stack;
+/* eslint-enable @silverhand/fp/no-mutating-methods, id-length, react/boolean-prop-naming, react/no-array-index-key, no-restricted-syntax, complexity, no-alert, max-params, max-lines, @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/no-unnecessary-condition */
