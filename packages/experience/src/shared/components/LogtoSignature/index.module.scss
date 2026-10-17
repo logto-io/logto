@@ -10,6 +10,12 @@
   opacity: 75%;
   direction: ltr;
 
+  .staticIcon,
+  .highlightIcon {
+    height: 14px;
+    width: auto;
+  }
+
   .staticIcon {
     display: block;
   }

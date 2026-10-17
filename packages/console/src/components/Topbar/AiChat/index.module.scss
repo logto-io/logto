@@ -1,0 +1,354 @@
+@use '@/scss/underscore' as _;
+
+// Shared pill surface used by the header button, the setup banner and the focus rules below.
+@mixin pill {
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-layer-1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 6%);
+  color: var(--color-text);
+  font: var(--font-label-2);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-layer-2);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
+.askAiButton {
+  display: inline-flex;
+  align-items: center;
+  gap: _.unit(2);
+  @include pill;
+
+  height: 32px;
+  padding: 0 _.unit(3);
+  white-space: nowrap;
+  transition:
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+
+  svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 10%);
+  }
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 12vh _.unit(4) _.unit(4);
+  background: color-mix(in srgb, var(--color-layer-1) 60%, transparent);
+  backdrop-filter: blur(4px);
+}
+
+// The ⌘K palette panel: search on top, answers below, actions in a thin bottom row.
+.modal {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 720px;
+  max-height: 70vh;
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--color-layer-1);
+  box-shadow:
+    0 0 0 6px rgba(0, 0, 0, 3%),
+    0 12px 40px rgba(0, 0, 0, 12%);
+  outline: none;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(4);
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: _.unit(4);
+}
+
+.row {
+  display: flex;
+  gap: _.unit(2);
+  align-items: flex-start;
+}
+
+.userRow {
+  justify-content: flex-end;
+}
+
+.avatar {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-layer-2);
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.bubble {
+  max-width: 85%;
+  padding: _.unit(2) _.unit(3);
+  border-radius: 12px;
+  font: var(--font-body-2);
+  color: var(--color-text);
+  word-break: break-word;
+
+  p {
+    margin: 0;
+  }
+
+  p + p,
+  ul + p,
+  ol + p,
+  p + ul,
+  p + ol {
+    margin-top: _.unit(2);
+  }
+
+  ul,
+  ol {
+    margin: _.unit(1) 0;
+    padding-inline-start: _.unit(5);
+  }
+
+  code {
+    padding: 0 _.unit(1);
+    border-radius: 4px;
+    background: var(--color-layer-1);
+    font-family: var(--font-family-monospace, monospace);
+    font-size: 0.9em;
+  }
+
+  pre {
+    overflow-x: auto;
+    padding: _.unit(2);
+    border-radius: 8px;
+    background: var(--color-layer-1);
+
+    code {
+      padding: 0;
+      background: none;
+    }
+  }
+
+  a {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+}
+
+.assistantBubble {
+  background: var(--color-layer-2);
+}
+
+.userBubble {
+  background: var(--color-primary-container);
+  white-space: pre-wrap;
+}
+
+.examples {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(2);
+  padding-inline-start: _.unit(10);
+}
+
+.examplesLabel {
+  font: var(--font-label-2);
+  color: var(--color-text-secondary);
+}
+
+.exampleQuestion {
+  @include pill;
+
+  padding: _.unit(2) _.unit(3);
+  background: none;
+  font: var(--font-body-2);
+  text-align: start;
+}
+
+.typing {
+  display: inline-flex;
+  gap: _.unit(1);
+  align-items: center;
+  height: 20px;
+
+  span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-text-secondary);
+    animation: blink 1.2s infinite ease-in-out;
+
+    &:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    &:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+  }
+}
+
+@keyframes blink {
+  0%,
+  80%,
+  100% {
+    opacity: 20%;
+  }
+
+  40% {
+    opacity: 100%;
+  }
+}
+
+.error {
+  padding-inline-start: _.unit(10);
+  color: var(--color-error);
+  font: var(--font-body-2);
+}
+
+.inputForm {
+  display: flex;
+  flex-shrink: 0;
+  gap: _.unit(2);
+  align-items: center;
+  height: 56px;
+  padding: 0 _.unit(4);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-layer-1);
+}
+
+.searchIcon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  color: var(--color-text-secondary);
+}
+
+.shortcut {
+  margin-inline-start: _.unit(1);
+  padding: 0 _.unit(1);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background: var(--color-layer-2);
+  color: var(--color-text-secondary);
+  font: var(--font-body-3);
+
+  @media (max-width: 720px) {
+    display: none;
+  }
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: none;
+  color: var(--color-text);
+  font: var(--font-body-2);
+
+  &::placeholder {
+    color: var(--color-text-secondary);
+  }
+
+  &:disabled {
+    opacity: 60%;
+  }
+}
+
+.sendButton {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-text);
+  color: var(--color-layer-1);
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  &:disabled {
+    opacity: 40%;
+    cursor: default;
+  }
+}
+
+.toolbar {
+  display: flex;
+  flex-shrink: 0;
+  gap: _.unit(2);
+  align-items: center;
+  justify-content: space-between;
+  padding: _.unit(2) _.unit(4);
+  border-top: 1px solid var(--color-border);
+}
+
+.toolbarActions {
+  display: flex;
+  gap: _.unit(1);
+}
+
+.disclaimer {
+  font: var(--font-body-3);
+  color: var(--color-text-secondary);
+  cursor: help;
+}
+
+// Centred pill above the search field, like the "Onboard your agent" banner on the Cloudflare home screen.
+.setupBanner {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  align-self: center;
+  gap: _.unit(2);
+  margin: _.unit(4) auto 0;
+  padding: _.unit(2) _.unit(4);
+}
+
+.setupBannerIcons {
+  display: inline-flex;
+  align-items: center;
+  gap: _.unit(1);
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}

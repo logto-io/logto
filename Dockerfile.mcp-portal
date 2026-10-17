@@ -1,0 +1,29 @@
+# syntax=docker/dockerfile:1.7
+
+###### [STAGE] Build ######
+# Builds only the MCP portal service. The install is filtered to the portal and its dependencies.
+FROM node:22-alpine AS builder
+WORKDIR /etc/mcp-portal
+ENV CI=true
+
+RUN npm add --location=global pnpm@^11.0.0
+
+# Manifests first, so the install layer is reused until a manifest or the lockfile changes.
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/mcp-portal/package.json packages/mcp-portal/package.json
+RUN pnpm i --filter @logto/mcp-portal... --frozen-lockfile --ignore-scripts
+
+COPY packages/mcp-portal packages/mcp-portal
+RUN pnpm --filter @logto/mcp-portal build
+
+###### [STAGE] App ######
+FROM node:22-alpine AS app
+ENV NODE_ENV=production
+# Local file store for when no PORTAL_DATABASE_URL is set. Mount a volume here to keep it.
+ENV PORTAL_REGISTRY_PATH=/data/upstreams.json
+COPY --from=builder /etc/mcp-portal /etc/mcp-portal
+RUN mkdir -p /data && chown node:node /data
+WORKDIR /etc/mcp-portal/packages/mcp-portal
+USER node
+EXPOSE 3100
+CMD ["node", "lib/index.js"]

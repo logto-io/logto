@@ -19,6 +19,11 @@ const tabs = {
   customize_jwt: 'JWT personalizado',
   signing_keys: 'Claves de firma',
   organization_template: 'Plantilla de organización',
+  stacks: 'Stacks',
+  capacity: 'Capacidad',
+  agent: 'Agente',
+  bundle: 'Paquete',
+  mcp_servers: 'Servidores MCP',
 };
 
 export default Object.freeze(tabs);

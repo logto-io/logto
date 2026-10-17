@@ -6,6 +6,7 @@ import {
   createAdminTenantApplicationRole,
   createCloudConnectionConfig,
   AdminTenantRole,
+  getCloudApiIndicator,
 } from '@logto/schemas';
 import { GlobalValues } from '@logto/shared';
 import { appendPath } from '@silverhand/essentials';
@@ -84,7 +85,8 @@ export const seedTenantCloudServiceApplication = async (
       createCloudConnectionConfig(
         tenantId,
         cloudServiceApplication.id,
-        cloudServiceApplication.secret
+        cloudServiceApplication.secret,
+        getCloudApiIndicator(new GlobalValues().adminUrlSet.endpoint.origin)
       ),
       'logto_configs'
     )

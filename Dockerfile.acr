@@ -12,15 +12,99 @@ ENV CI=true
 ENV PUPPETEER_SKIP_DOWNLOAD=true
 
 ### Install toolchain ###
-RUN npm add --location=global pnpm@^10.0.0
+RUN npm add --location=global pnpm@^11.0.0
 # https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md#node-gyp-alpine
 RUN apk add --no-cache python3 make g++ rsync
 
-COPY . .
+# Copy only the dependency manifests first. The install layer below is reused on later builds
+# unless a manifest or the lockfile changes, so source-only edits skip the ~2500-package install.
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/account/package.json packages/account/package.json
+COPY packages/api/package.json packages/api/package.json
+COPY packages/app-insights/package.json packages/app-insights/package.json
+COPY packages/cli/package.json packages/cli/package.json
+COPY packages/connectors/connector-acs-email/package.json packages/connectors/connector-acs-email/package.json
+COPY packages/connectors/connector-alipay-native/package.json packages/connectors/connector-alipay-native/package.json
+COPY packages/connectors/connector-alipay-web/package.json packages/connectors/connector-alipay-web/package.json
+COPY packages/connectors/connector-aliyun-dm/package.json packages/connectors/connector-aliyun-dm/package.json
+COPY packages/connectors/connector-aliyun-sms-mas/package.json packages/connectors/connector-aliyun-sms-mas/package.json
+COPY packages/connectors/connector-aliyun-sms/package.json packages/connectors/connector-aliyun-sms/package.json
+COPY packages/connectors/connector-amazon/package.json packages/connectors/connector-amazon/package.json
+COPY packages/connectors/connector-apple/package.json packages/connectors/connector-apple/package.json
+COPY packages/connectors/connector-aws-ses/package.json packages/connectors/connector-aws-ses/package.json
+COPY packages/connectors/connector-azuread/package.json packages/connectors/connector-azuread/package.json
+COPY packages/connectors/connector-dingtalk-web/package.json packages/connectors/connector-dingtalk-web/package.json
+COPY packages/connectors/connector-discord/package.json packages/connectors/connector-discord/package.json
+COPY packages/connectors/connector-facebook/package.json packages/connectors/connector-facebook/package.json
+COPY packages/connectors/connector-feishu-web/package.json packages/connectors/connector-feishu-web/package.json
+COPY packages/connectors/connector-gatewayapi-sms/package.json packages/connectors/connector-gatewayapi-sms/package.json
+COPY packages/connectors/connector-github/package.json packages/connectors/connector-github/package.json
+COPY packages/connectors/connector-gitlab/package.json packages/connectors/connector-gitlab/package.json
+COPY packages/connectors/connector-google/package.json packages/connectors/connector-google/package.json
+COPY packages/connectors/connector-http-email/package.json packages/connectors/connector-http-email/package.json
+COPY packages/connectors/connector-http-sms/package.json packages/connectors/connector-http-sms/package.json
+COPY packages/connectors/connector-huggingface/package.json packages/connectors/connector-huggingface/package.json
+COPY packages/connectors/connector-kakao/package.json packages/connectors/connector-kakao/package.json
+COPY packages/connectors/connector-kook/package.json packages/connectors/connector-kook/package.json
+COPY packages/connectors/connector-line/package.json packages/connectors/connector-line/package.json
+COPY packages/connectors/connector-linkedin/package.json packages/connectors/connector-linkedin/package.json
+COPY packages/connectors/connector-logto-email/package.json packages/connectors/connector-logto-email/package.json
+COPY packages/connectors/connector-logto-social-demo/package.json packages/connectors/connector-logto-social-demo/package.json
+COPY packages/connectors/connector-mailgun/package.json packages/connectors/connector-mailgun/package.json
+COPY packages/connectors/connector-mailjunky/package.json packages/connectors/connector-mailjunky/package.json
+COPY packages/connectors/connector-mock-email-alternative/package.json packages/connectors/connector-mock-email-alternative/package.json
+COPY packages/connectors/connector-mock-email/package.json packages/connectors/connector-mock-email/package.json
+COPY packages/connectors/connector-mock-sms/package.json packages/connectors/connector-mock-sms/package.json
+COPY packages/connectors/connector-mock-social/package.json packages/connectors/connector-mock-social/package.json
+COPY packages/connectors/connector-naver/package.json packages/connectors/connector-naver/package.json
+COPY packages/connectors/connector-oauth2/package.json packages/connectors/connector-oauth2/package.json
+COPY packages/connectors/connector-oidc/package.json packages/connectors/connector-oidc/package.json
+COPY packages/connectors/connector-patreon/package.json packages/connectors/connector-patreon/package.json
+COPY packages/connectors/connector-postmark/package.json packages/connectors/connector-postmark/package.json
+COPY packages/connectors/connector-qq/package.json packages/connectors/connector-qq/package.json
+COPY packages/connectors/connector-saml/package.json packages/connectors/connector-saml/package.json
+COPY packages/connectors/connector-sendgrid-email/package.json packages/connectors/connector-sendgrid-email/package.json
+COPY packages/connectors/connector-slack/package.json packages/connectors/connector-slack/package.json
+COPY packages/connectors/connector-smsaero/package.json packages/connectors/connector-smsaero/package.json
+COPY packages/connectors/connector-smsbao-sms/package.json packages/connectors/connector-smsbao-sms/package.json
+COPY packages/connectors/connector-smtp/package.json packages/connectors/connector-smtp/package.json
+COPY packages/connectors/connector-smtp2go-email/package.json packages/connectors/connector-smtp2go-email/package.json
+COPY packages/connectors/connector-tencent-sms/package.json packages/connectors/connector-tencent-sms/package.json
+COPY packages/connectors/connector-twilio-sms/package.json packages/connectors/connector-twilio-sms/package.json
+COPY packages/connectors/connector-vonage-sms/package.json packages/connectors/connector-vonage-sms/package.json
+COPY packages/connectors/connector-wechat-native/package.json packages/connectors/connector-wechat-native/package.json
+COPY packages/connectors/connector-wechat-web/package.json packages/connectors/connector-wechat-web/package.json
+COPY packages/connectors/connector-wecom/package.json packages/connectors/connector-wecom/package.json
+COPY packages/connectors/connector-whatsapp/package.json packages/connectors/connector-whatsapp/package.json
+COPY packages/connectors/connector-x/package.json packages/connectors/connector-x/package.json
+COPY packages/connectors/connector-xiaomi/package.json packages/connectors/connector-xiaomi/package.json
+COPY packages/connectors/connector-yunpian-sms/package.json packages/connectors/connector-yunpian-sms/package.json
+COPY packages/connectors/templates/package.json packages/connectors/templates/package.json
+COPY packages/console/package.json packages/console/package.json
+COPY packages/core/package.json packages/core/package.json
+COPY packages/create/package.json packages/create/package.json
+COPY packages/demo-app/package.json packages/demo-app/package.json
+COPY packages/device-demo-app/package.json packages/device-demo-app/package.json
+COPY packages/elements/package.json packages/elements/package.json
+COPY packages/experience/package.json packages/experience/package.json
+COPY packages/integration-tests/package.json packages/integration-tests/package.json
+COPY packages/mcp-portal/package.json packages/mcp-portal/package.json
+COPY packages/phrases-experience/package.json packages/phrases-experience/package.json
+COPY packages/phrases/package.json packages/phrases/package.json
+COPY packages/schemas/package.json packages/schemas/package.json
+COPY packages/shared/package.json packages/shared/package.json
+COPY packages/toolkit/connector-kit/package.json packages/toolkit/connector-kit/package.json
+COPY packages/toolkit/core-kit/package.json packages/toolkit/core-kit/package.json
+COPY packages/toolkit/language-kit/package.json packages/toolkit/language-kit/package.json
+COPY packages/translate/package.json packages/translate/package.json
+COPY packages/tunnel/package.json packages/tunnel/package.json
+# The workspace install runs connector preset sync, so its templates must exist before `pnpm i`.
+COPY packages/connectors/templates packages/connectors/templates
 
-### Install dependencies and build ###
-# Reuse the pnpm store between BuildKit runs to reduce duplicate downloads/writes.
+### Install dependencies (cached while manifests are unchanged) ###
 RUN pnpm i
+
+COPY . .
 
 ### Set if dev features enabled ###
 ARG dev_features_enabled
@@ -32,7 +116,14 @@ ENV APPLICATIONINSIGHTS_CONNECTION_STRING=${applicationinsights_connection_strin
 ARG logto_oss_survey_endpoint=
 ENV LOGTO_OSS_SURVEY_ENDPOINT=${logto_oss_survey_endpoint}
 
-RUN pnpm -r build
+# Only what the image runs: core, its workspace dependencies (console, experience, account, cli, ...),
+# and the connectors. Packages outside this set (api, create, elements, translate, tunnel, integration
+# tests) are not needed at runtime. The `...` suffix also builds every dependency of core.
+# pnpm 11 checks the lockfile before every run and fails on the `pnpm` field in package.json, which
+# the install above already applied. The dependencies are installed, so skip only that check for the
+# rest of the image build.
+ENV pnpm_config_verify_deps_before_run=false
+RUN pnpm -r --filter "@logto/core..." --filter "./packages/connectors/connector-*" build
 
 ### Add official connectors ###
 ARG additional_connector_args

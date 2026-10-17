@@ -148,14 +148,23 @@ export const createAdminDataInAdminTenant = (tenantId: string) => {
   } satisfies AdminData);
 };
 
-export const createMeApiInAdminTenant = () => {
+/**
+ * The Me API resource indicator. Cloud serves it from the instance itself, at `<admin origin>/me`, so
+ * it takes the admin origin. OSS keeps the fixed Logto host, so existing tokens keep matching.
+ */
+export const getMeApiResourceIndicator = (adminOrigin?: string) =>
+  adminOrigin
+    ? `${adminOrigin.replace(/\/$/, '')}/me`
+    : getManagementApiResourceIndicator(adminTenantId, 'me');
+
+export const createMeApiInAdminTenant = (adminOrigin?: string) => {
   const resourceId = generateStandardId();
 
   return Object.freeze({
     resource: {
       tenantId: adminTenantId,
       id: resourceId,
-      indicator: getManagementApiResourceIndicator(adminTenantId, 'me'),
+      indicator: getMeApiResourceIndicator(adminOrigin),
       name: `Logto Me API`,
     },
     scopes: [

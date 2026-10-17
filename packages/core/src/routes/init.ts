@@ -1,4 +1,9 @@
-import { getManagementApiResourceIndicator } from '@logto/schemas';
+import { buildOrganizationUrn } from '@logto/core-kit';
+import {
+  adminTenantId,
+  getManagementApiResourceIndicator,
+  getTenantOrganizationId,
+} from '@logto/schemas';
 import Koa from 'koa';
 import Router from 'koa-router';
 
@@ -23,6 +28,7 @@ import applicationRoutes from './applications/application.js';
 import authnRoutes from './authn.js';
 import captchaProviderRoutes from './captcha-provider/index.js';
 import cimdRoutes from './cimd.js';
+import aiChatRoutes from './ai-chat.js';
 import connectorRoutes from './connector/index.js';
 import customPhraseRoutes from './custom-phrase.js';
 import customProfileFieldsRoutes from './custom-profile-fields.js';
@@ -35,6 +41,8 @@ import interactionRoutes from './interaction/index.js';
 import kuboRoutes from './kubo.js';
 import logRoutes from './log.js';
 import logtoConfigRoutes from './logto-config/index.js';
+import mcpPortalEndpointRoutes from './mcp-portal-endpoint.js';
+import mcpLogtoRoutes from './mcp-logto.js';
 import mcpPortalRoutes from './mcp-portal.js';
 import oneTimeTokenRoutes from './one-time-tokens.js';
 import organizationRoutes from './organization/index.js';
@@ -71,7 +79,17 @@ const createRouters = (tenant: TenantContext) => {
   experienceApiRoutes(experienceRouter, tenant);
 
   const managementRouter: ManagementApiRouter = new Router();
-  managementRouter.use(koaAuth(tenant.envSet, getManagementApiResourceIndicator(tenant.id)));
+  // In cloud, a tenant's Management API also accepts the console's organization token, once the
+  // membership check in koaAuth has passed. Other deployments keep the Management API audience only.
+  const managementAudience = [getManagementApiResourceIndicator(tenant.id)];
+  managementRouter.use(
+    koaAuth(
+      tenant.envSet,
+      EnvSet.values.isCloud && tenant.id !== adminTenantId
+        ? [...managementAudience, buildOrganizationUrn(getTenantOrganizationId(tenant.id))]
+        : managementAudience
+    )
+  );
   managementRouter.use(koaReadOnlyAccess());
   managementRouter.use(koaTenantGuard(tenant.id, tenant.queries));
   managementRouter.use(koaManagementApiHooks(tenant.libraries.hooks));
@@ -87,6 +105,7 @@ const createRouters = (tenant: TenantContext) => {
   roleRoutes(managementRouter, tenant);
   roleScopeRoutes(managementRouter, tenant);
   dashboardRoutes(managementRouter, tenant);
+  aiChatRoutes(managementRouter, tenant);
   kuboRoutes(managementRouter, tenant);
   mcpPortalRoutes(managementRouter, tenant);
   customPhraseRoutes(managementRouter, tenant);
@@ -135,6 +154,19 @@ const createRouters = (tenant: TenantContext) => {
   swaggerRoutes(anonymousRouter, [managementRouter, anonymousRouter, experienceRouter, userRouter]);
 
   return [experienceRouter, interactionRouter, managementRouter, anonymousRouter, userRouter];
+};
+
+/**
+ * The MCP endpoints live at the root of the host, not under /api: a portal's MCP URL is
+ * https://<hostname>/mcp, and the sign-in metadata sits at /.well-known/oauth-protected-resource.
+ * Requests for other paths fall through to the rest of the app.
+ */
+export const initMcpRouter = (tenant: TenantContext): AnonymousRouter => {
+  const router: AnonymousRouter = new Router();
+  mcpPortalEndpointRoutes(router, tenant);
+  mcpLogtoRoutes(router, tenant);
+
+  return router;
 };
 
 export default function initApis(tenant: TenantContext): Koa {

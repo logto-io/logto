@@ -16,6 +16,11 @@ type PortalDeps = {
   registry: UpstreamStore;
   pool: UpstreamPool;
   audit: (event: AuditEvent) => void;
+  /**
+   * Returns the upstream's decrypted bearer token, or undefined when it has none. Called right before
+   * each connection, so the token only exists in memory while a request needs it.
+   */
+  unlock: (upstream: Upstream) => Promise<string | undefined>;
 };
 
 const errorResult = (message: string): CallToolResult => ({
@@ -26,10 +31,15 @@ const errorResult = (message: string): CallToolResult => ({
 const errorReason = (error: unknown) => (error instanceof Error ? error.message : 'unknown error');
 
 /**
- * Builds an MCP server scoped to one caller. It lists and calls only that caller's upstreams.
+ * Builds the MCP server for one portal and one caller. It lists and calls only the portal's upstreams.
  * Tools are exposed as `<upstream>__<tool>`.
  */
-export const createPortalServer = (sub: string, deps: PortalDeps): Server => {
+export const createPortalServer = (
+  portalId: string,
+  sub: string,
+  organizationIds: string[],
+  deps: PortalDeps
+): Server => {
   const server = new Server(
     { name: 'logto-mcp-portal', version: '0.1.0' },
     { capabilities: { tools: {} } }
@@ -39,7 +49,7 @@ export const createPortalServer = (sub: string, deps: PortalDeps): Server => {
     const startedAt = Date.now();
 
     try {
-      const client = await deps.pool.get(upstream);
+      const client = await deps.pool.get(upstream, await deps.unlock(upstream));
       const { tools } = await client.listTools();
 
       deps.audit({
@@ -50,11 +60,13 @@ export const createPortalServer = (sub: string, deps: PortalDeps): Server => {
         durationMs: Date.now() - startedAt,
       });
 
-      return tools.map((tool) => ({
-        ...tool,
-        name: `${upstream.name}${toolSeparator}${tool.name}`,
-        description: tool.description ?? `From upstream "${upstream.name}"`,
-      }));
+      return tools
+        .filter((tool) => !upstream.disabledTools.includes(tool.name))
+        .map((tool) => ({
+          ...tool,
+          name: `${upstream.name}${toolSeparator}${tool.name}`,
+          description: tool.description ?? `From upstream "${upstream.name}"`,
+        }));
     } catch (error: unknown) {
       // One unreachable upstream must not hide the others.
       await deps.pool.invalidate(upstream);
@@ -71,10 +83,18 @@ export const createPortalServer = (sub: string, deps: PortalDeps): Server => {
     }
   };
 
+  // A server with no organization list is open to everyone the portal admits. Otherwise the caller
+  // must belong to one of the listed organizations, and the server is hidden from everyone else.
+  const canSee = (upstream: Upstream) =>
+    upstream.organizationIds.length === 0 ||
+    upstream.organizationIds.some((id) => organizationIds.includes(id));
+
   server.setRequestHandler(ListToolsRequestSchema, async () => {
-    const upstreams = await deps.registry.listForOwner(sub);
+    const upstreams = await deps.registry.listForPortal(portalId);
     const perUpstream = await Promise.all(
-      upstreams.map(async (upstream) => listUpstreamTools(upstream))
+      upstreams
+        .filter((upstream) => upstream.enabled && canSee(upstream))
+        .map(async (upstream) => listUpstreamTools(upstream))
     );
 
     return { tools: perUpstream.flat() };
@@ -89,7 +109,9 @@ export const createPortalServer = (sub: string, deps: PortalDeps): Server => {
 
     const upstreamName = params.name.slice(0, separatorIndex);
     const toolName = params.name.slice(separatorIndex + toolSeparator.length);
-    const upstream = await deps.registry.findForOwner(sub, upstreamName);
+    const found = await deps.registry.findForPortal(portalId, upstreamName);
+    // A server the caller cannot see is reported as unknown, so its existence is not revealed.
+    const upstream = found && canSee(found) ? found : undefined;
 
     if (!upstream) {
       deps.audit({
@@ -102,10 +124,23 @@ export const createPortalServer = (sub: string, deps: PortalDeps): Server => {
       return errorResult(`Unknown upstream "${upstreamName}"`);
     }
 
+    // Switched-off servers and tools are denied even when a client still has the old tool list.
+    if (!upstream.enabled || upstream.disabledTools.includes(toolName)) {
+      deps.audit({
+        action: 'tool.call',
+        sub,
+        upstream: upstreamName,
+        tool: toolName,
+        outcome: 'denied',
+        reason: upstream.enabled ? 'tool_disabled' : 'upstream_disabled',
+      });
+      return errorResult(`Tool "${upstreamName}${toolSeparator}${toolName}" is turned off`);
+    }
+
     const startedAt = Date.now();
 
     try {
-      const client = await deps.pool.get(upstream);
+      const client = await deps.pool.get(upstream, await deps.unlock(upstream));
       const result = await client.callTool({
         name: toolName,
         arguments: params.arguments ?? {},

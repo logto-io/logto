@@ -19,6 +19,11 @@ const tabs = {
   customize_jwt: 'カスタム JWT',
   signing_keys: '署名キー',
   organization_template: '組織テンプレート',
+  stacks: 'スタック',
+  capacity: 'キャパシティ',
+  agent: 'エージェント',
+  bundle: 'バンドル',
+  mcp_servers: 'MCPサーバー',
 };
 
 export default Object.freeze(tabs);

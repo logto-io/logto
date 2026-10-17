@@ -33,7 +33,9 @@ import koaSpaProxy from '#src/middleware/koa-spa-proxy.js';
 import koaSpaSessionGuard from '#src/middleware/koa-spa-session-guard.js';
 import initOidc from '#src/oidc/init.js';
 import { mountCallbackRouter } from '#src/routes/callback.js';
-import initApis, { initPublicWellKnownApis } from '#src/routes/init.js';
+import initApis, { initMcpRouter, initPublicWellKnownApis } from '#src/routes/init.js';
+import { isLocalCloud, localCloudRoutes } from '#src/routes/cloud-dev.js';
+import { cloudTenantRoutes } from '#src/routes/cloud-tenants.js';
 import initMeApis from '#src/routes-me/init.js';
 import BasicSentinel from '#src/sentinel/basic-sentinel.js';
 
@@ -186,8 +188,21 @@ export default class Tenant implements TenantContext {
     // Sign-in experience callback via form submission
     mountCallbackRouter(app);
 
+    // MCP endpoints at the host root (portal hosts and Logto's own endpoint).
+    const mcpRouter = initMcpRouter(tenantContext);
+    app.use(mcpRouter.routes()).use(mcpRouter.allowedMethods());
+
     // Mount global well-known APIs
     app.use(mount('/.well-known', initPublicWellKnownApis(tenantContext)));
+
+    // Local cloud stand-ins (dev only): the console's cloud API, tenant and account proxies.
+    if (id === adminTenantId) {
+      if (EnvSet.values.isCloud) {
+        app.use(cloudTenantRoutes(envSet).routes());
+      }
+
+      app.use(localCloudRoutes());
+    }
 
     // Mount APIs
     app.use(mount('/api', initApis(tenantContext)));
@@ -205,8 +220,9 @@ export default class Tenant implements TenantContext {
       app.use(mount('/me', initMeApis(tenantContext)));
 
       // Mount Admin Console when needed
-      // Skip in multi-tenancy mode since Logto Cloud serves Admin Console in this case
-      if (!isMultiTenancy) {
+      // Skip in multi-tenancy mode since Logto Cloud serves Admin Console in this case; local cloud
+      // runs as a single instance, so it serves the console itself.
+      if (!isMultiTenancy || isLocalCloud()) {
         app.use(koaConsoleRedirectProxy(queries));
         app.use(
           mount(

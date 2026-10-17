@@ -19,6 +19,11 @@ const tabs = {
   customize_jwt: 'Personalizar JWT',
   signing_keys: 'Chaves de assinatura',
   organization_template: 'Modelo de organização',
+  stacks: 'Stacks',
+  capacity: 'Capacidade',
+  agent: 'Agente',
+  bundle: 'Pacote',
+  mcp_servers: 'Servidores MCP',
 };
 
 export default Object.freeze(tabs);

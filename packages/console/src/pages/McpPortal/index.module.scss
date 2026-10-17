@@ -38,6 +38,8 @@
   flex-direction: column;
   gap: 4px;
   flex: 1 1 200px;
+  min-width: 0;
+  max-width: 100%;
 
   input {
     padding: 8px 10px;
@@ -47,7 +49,6 @@
   }
 }
 
-.submit,
 .remove {
   padding: 8px 14px;
   border-radius: 6px;
@@ -65,6 +66,12 @@
 .error {
   margin: 0;
   color: var(--color-error);
+}
+
+/* A saved but unreachable server: a warning, not an error. */
+.warning {
+  margin: 0;
+  color: #b45309;
 }
 
 .card {
@@ -87,4 +94,325 @@
 
 .muted {
   color: var(--color-text-secondary);
+}
+
+/* On/off switch for a server. Press feedback matches the rest of the console. */
+.toggle {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-layer-2);
+  cursor: pointer;
+  transition-property: background-color, transform;
+  transition-duration: 150ms;
+  transition-timing-function: ease-out;
+
+  span {
+    position: absolute;
+    top: 2px;
+    inset-inline-start: 2px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--color-text-secondary);
+    transition: transform 150ms ease-out, background-color 150ms ease-out;
+  }
+
+  &[data-on='true'] {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+
+    span {
+      transform: translateX(16px);
+      background: #fff;
+    }
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+
+    span {
+      transition: none;
+    }
+  }
+}
+
+.toolRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 0;
+  border-top: 1px solid var(--color-border);
+}
+
+/* Portal layout: header with hostname and status, then one card per server. */
+.portalHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.portalStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-secondary);
+  font: var(--font-label-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.sectionTitle {
+  margin: 0 0 8px;
+  font: var(--font-title-3);
+}
+
+.serverList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.serverCard {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-layer-1);
+  overflow: hidden;
+}
+
+.serverHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+}
+
+.serverText {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.serverName {
+  font: var(--font-label-2);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+.serverActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.serverBody {
+  padding: 4px 16px 12px;
+  border-top: 1px solid var(--color-border);
+}
+
+.statusDot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-text-secondary);
+
+  &[data-on='true'] {
+    background: #19c37d;
+  }
+
+  &[data-warning='true'] {
+    background: #f59e0b;
+  }
+}
+
+/* Primary action for the setup form and other submit buttons: brand fill with readable label. */
+.submit {
+  flex: none;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: var(--color-primary);
+  color: #fff;
+  font: var(--font-label-2);
+  cursor: pointer;
+  transition-property: background-color, transform;
+  transition-duration: 150ms;
+  transition-timing-function: ease-out;
+
+  &:disabled {
+    opacity: 50%;
+    cursor: default;
+  }
+
+  &:hover:not(:disabled) {
+    background: var(--color-primary-hover);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+}
+
+.checkRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.copyRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.code {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-body);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 8px 10px;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+// Cloudflare-style portal list: header with actions, search, and a table.
+.pageHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.pageActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.portalTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+
+  th {
+    text-align: left;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  td {
+    padding: 12px;
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: middle;
+  }
+}
+
+.portalLink {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: var(--color-primary);
+  cursor: pointer;
+  text-align: left;
+}
+
+.urlCell {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 13px;
+}
+
+.iconButton {
+  background: none;
+  border: none;
+  padding: 2px 4px;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+}
+
+.baseDomainNote {
+  margin-top: 12px;
+  font-size: 13px;
+}
+
+// Portal list controls: a secondary button and a plain search field, matching the MeshX button style.
+.secondaryButton {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-layer-1);
+  color: var(--color-text);
+  font: var(--font-label-2);
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.secondaryButton:hover {
+  background: var(--color-hover-variant);
+}
+
+.searchBox {
+  margin: 16px 0;
+  max-width: 360px;
+
+  input {
+    width: 100%;
+    height: 32px;
+    padding: 0 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    background: var(--color-layer-1);
+    color: var(--color-text);
+    font: var(--font-body-2);
+  }
+}
+
+.banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  align-self: center;
+  padding: 8px 8px 8px 20px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-layer-1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 6%);
+  font: var(--font-label-2);
+  color: var(--color-text);
+}
+
+.bannerButton {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 999px;
+  background: var(--color-text);
+  color: var(--color-layer-1);
+  font: var(--font-label-2);
+  cursor: pointer;
 }

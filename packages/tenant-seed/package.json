@@ -1,0 +1,31 @@
+{
+  "name": "@logto/tenant-seed",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "rm -rf lib && tsc -p tsconfig.json",
+    "lint": "eslint --ext .ts src",
+    "test": "vitest run src"
+  },
+  "dependencies": {
+    "@logto/core-kit": "workspace:^",
+    "@logto/schemas": "workspace:*",
+    "@logto/shared": "workspace:^",
+    "@silverhand/essentials": "^2.9.1",
+    "@silverhand/slonik": "31.0.0-beta.2",
+    "chalk": "^5.3.0",
+    "decamelize": "^6.0.0",
+    "zod": "3.24.3"
+  },
+  "devDependencies": {
+    "@silverhand/ts-config": "6.0.0",
+    "@types/node": "^22.14.0",
+    "vitest": "^4.1.11"
+  }
+}

@@ -19,6 +19,11 @@ const tabs = {
   customize_jwt: 'Niestandardowy JWT',
   signing_keys: 'Klucze do podpisu',
   organization_template: 'Szablon organizacji',
+  stacks: 'Stacki',
+  capacity: 'Pojemność',
+  agent: 'Agent',
+  bundle: 'Pakiet',
+  mcp_servers: 'Serwery MCP',
 };
 
 export default Object.freeze(tabs);

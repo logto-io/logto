@@ -97,18 +97,20 @@ const getTenantIdFromCustomDomain = async (
     return cachedValue;
   }
 
-  const { findActiveDomain } = createDomainsQueries(pool);
+  const { findActiveDomain, findMcpPortalTenantId } = createDomainsQueries(pool);
 
   const domain = await findActiveDomain(url.hostname);
 
   // A missing mapping is left uncached, so probes for unknown hostnames cannot fill the store.
-  if (!domain?.tenantId) {
+  const tenantId = domain?.tenantId ?? (await findMcpPortalTenantId(url.hostname));
+
+  if (!tenantId) {
     return;
   }
 
-  await writeBackIfFresh(async () => redisCache.set(keys.value, domain.tenantId));
+  await writeBackIfFresh(async () => redisCache.set(keys.value, tenantId));
 
-  return domain.tenantId;
+  return tenantId;
 };
 
 /**

@@ -1,211 +1,196 @@
-import type { McpPortalConnection } from '@logto/schemas';
 import Koa from 'koa';
 import Router from 'koa-router';
 import request from 'supertest';
 
-import { MockTenant } from '#src/test-utils/tenant.js';
-
-import mcpPortalRoutes from './mcp-portal.js';
+import { type McpPortalStores, registerMcpPortalRoutes } from './mcp-portal.js';
 import { type ManagementApiRouter } from './types.js';
 
-/**
- * Covers the routes in src/routes/mcp-portal.ts. The connection is read from Logto's config, and the
- * portal is replaced by a fetch spy, so these tests check what core stores and sends.
- */
 const { jest } = import.meta;
 
-const portalUrl = 'https://mcp-portal.example.com';
-const secret = 'a'.repeat(64);
-
-const storedConnection = { url: portalUrl, internalSecret: secret };
-
-const createApp = (connection?: typeof storedConnection) => {
-  const getMcpPortalConnection = jest.fn(async () => connection);
-  const upsertMcpPortalConnection = jest
-    .fn<Promise<void>, [McpPortalConnection]>()
-    .mockResolvedValue();
-  const app = new Koa();
-  const router: ManagementApiRouter = new Router();
-
-  // Stands in for Logto's management auth, which sets ctx.auth before these routes run.
-  app.use(async (ctx, next) => {
-    ctx.auth = { type: 'user', id: 'admin-1', scopes: new Set(['all']) };
-    return next();
-  });
-
-  const deleteMcpPortalConnection = jest.fn<Promise<void>, unknown[]>().mockResolvedValue();
-
-  const tenant = new MockTenant(undefined, {
-    logtoConfigs: { getMcpPortalConnection, upsertMcpPortalConnection, deleteMcpPortalConnection },
-  } as never);
-
-  mcpPortalRoutes(router, tenant);
-  app.use(router.routes());
-
-  return { callback: app.callback(), upsertMcpPortalConnection, deleteMcpPortalConnection };
+/**
+ * Covers the admin routes in src/routes/mcp-portal.ts. The stores are fakes, so these tests check
+ * the status codes and what each route asks the stores to do.
+ */
+const portal = {
+  id: '0b6f2c1e-7a5d-4c1e-9d55-2f1a3b4c5d6e',
+  name: 'Team',
+  hostname: 'mcp.example.com',
+  createdAt: new Date(0).toISOString(),
+  organizationIds: ['org-a'],
 };
 
-const jsonResponse = (body: unknown, status = 200) =>
-  new Response(JSON.stringify(body), {
-    status,
-    headers: { 'content-type': 'application/json' },
+const createApp = (overrides: Partial<McpPortalStores> = {}) => {
+  const stores = {
+    portals: {
+      list: jest.fn(async () => [portal]),
+      findByHostname: jest.fn(async () => {}),
+      findById: jest.fn(async (id: string) => (id === portal.id ? portal : undefined)),
+      add: jest.fn(async (input: { name: string; hostname: string }) => ({
+        ...portal,
+        ...input,
+      })),
+      remove: jest.fn(async () => true),
+      setOrganizations: jest.fn(async (id: string, organizationIds: string[]) =>
+        id === portal.id ? { ...portal, organizationIds } : undefined
+      ),
+    },
+    settings: {
+      get: jest.fn(async () => ({ baseDomain: 'mcp.example.com' })),
+      setBaseDomain: jest.fn(async (baseDomain: string) => ({ baseDomain })),
+    },
+    upstreams: {
+      listForPortal: jest.fn(async () => []),
+      findForPortal: jest.fn(async () => {}),
+      add: jest.fn(),
+      remove: jest.fn(async () => false),
+      update: jest.fn(async () => {}),
+    },
+    ...overrides,
+  } as unknown as McpPortalStores;
+
+  const app = new Koa();
+  const router: ManagementApiRouter = new Router();
+  registerMcpPortalRoutes(router, async () => stores);
+  app.use(async (ctx, next) => {
+    // Stands in for Logto's management auth, which sets ctx.auth before these routes run.
+    ctx.auth = { id: 'admin-1' } as typeof ctx.auth;
+    return next();
   });
+  app.use(router.routes()).use(router.allowedMethods());
 
-describe('mcp-portal routes', () => {
-  afterEach(() => {
-    jest.restoreAllMocks();
-  });
+  return { callback: app.callback(), stores };
+};
 
-  it('reports the connection without returning the secret', async () => {
-    const { callback } = createApp(storedConnection);
+describe('mcp-portal admin routes', () => {
+  it('lists portals from the database', async () => {
+    const { callback, stores } = createApp();
 
-    const response = await request(callback).get('/mcp-portal/connection');
-
-    expect(response.body).toEqual({ configured: true, url: portalUrl });
-    expect(JSON.stringify(response.body)).not.toContain(secret);
-  });
-
-  it('forwards upstream requests with the stored secret and the caller id', async () => {
-    const { callback } = createApp(storedConnection);
-    const fetchSpy = jest
-      .spyOn(globalThis, 'fetch')
-      .mockResolvedValue(jsonResponse({ upstreams: [] }));
-
-    const response = await request(callback).get('/mcp-portal/upstreams');
+    const response = await request(callback).get('/mcp-portal/portals');
 
     expect(response.status).toBe(200);
-    const [url, init] = fetchSpy.mock.calls[0] ?? [];
-    expect(String(url)).toBe(`${portalUrl}/upstreams`);
-    expect(init?.headers).toMatchObject({
-      'x-portal-internal-secret': secret,
-      'x-portal-owner': 'admin-1',
+    expect(response.body).toMatchObject({ portals: [{ id: portal.id }] });
+    expect(stores.portals.list).toHaveBeenCalled();
+  });
+
+  it('creates a portal under the base domain from its subdomain', async () => {
+    const { callback, stores } = createApp();
+    const created = await request(callback)
+      .post('/mcp-portal/portals')
+      .send({ name: 'Team', subdomain: 'eng' });
+
+    expect(created.status).toBe(201);
+    expect(stores.portals.add).toHaveBeenCalledWith({
+      name: 'Team',
+      hostname: 'eng.mcp.example.com',
     });
   });
 
-  it('answers 503 for upstream requests before setup', async () => {
-    const { callback } = createApp();
-    const fetchSpy = jest.spyOn(globalThis, 'fetch');
-
-    const response = await request(callback).get('/mcp-portal/upstreams');
-
-    expect(response.status).toBe(503);
-    expect(response.body).toMatchObject({ code: 'mcp_portal.not_configured' });
-    expect(fetchSpy).not.toHaveBeenCalled();
-  });
-
-  it('rejects a non-https portal URL before contacting anything', async () => {
-    const { callback } = createApp();
-    const fetchSpy = jest.spyOn(globalThis, 'fetch');
+  it('refuses to create a portal until the base domain is set', async () => {
+    const { callback, stores } = createApp({
+      settings: {
+        get: jest.fn(async () => ({})),
+        setBaseDomain: jest.fn(),
+      } as unknown as McpPortalStores['settings'],
+    });
 
     const response = await request(callback)
-      .post('/mcp-portal/connection')
-      .send({ url: 'http://mcp-portal.example.com', token: 'token' });
+      .post('/mcp-portal/portals')
+      .send({ name: 'Team', subdomain: 'eng' });
 
     expect(response.status).toBe(400);
-    expect(fetchSpy).not.toHaveBeenCalled();
+    expect(response.body).toMatchObject({ code: 'mcp_portal.base_domain_not_set' });
+    expect(stores.portals.add).not.toHaveBeenCalled();
   });
 
-  it('stores the connection only after the portal accepts the setup', async () => {
-    const { callback, upsertMcpPortalConnection } = createApp();
-    jest
-      .spyOn(globalThis, 'fetch')
-      .mockResolvedValueOnce(jsonResponse({ configured: false }, 201))
-      .mockResolvedValueOnce(jsonResponse({ configured: true }, 201));
+  it('rejects a subdomain that is not a valid DNS label before touching the database', async () => {
+    const { callback, stores } = createApp();
 
     const response = await request(callback)
-      .post('/mcp-portal/connection')
-      .send({ url: portalUrl, token: 'one-time' });
+      .post('/mcp-portal/portals')
+      .send({ name: 'Team', subdomain: 'NOT A LABEL' });
 
-    expect(response.status).toBe(201);
-    expect(response.body).toEqual({ configured: true, url: portalUrl });
-    const saved = upsertMcpPortalConnection.mock.calls[0]?.[0];
-    expect(saved?.url).toBe(portalUrl);
-    expect(saved?.internalSecret).toMatch(/^[\da-f]{64}$/);
+    expect(response.status).toBe(400);
+    expect(stores.portals.add).not.toHaveBeenCalled();
   });
 
-  it('clears nothing when there is no connection to reset', async () => {
-    const { callback, deleteMcpPortalConnection } = createApp();
-    const fetchSpy = jest.spyOn(globalThis, 'fetch');
+  it('saves the base domain from the console', async () => {
+    const { callback, stores } = createApp();
 
-    const response = await request(callback).delete('/mcp-portal/connection');
+    const response = await request(callback)
+      .put('/mcp-portal/settings')
+      .send({ baseDomain: 'mcp.meshx.foundation' });
+
+    expect(response.status).toBe(200);
+    expect(stores.settings.setBaseDomain).toHaveBeenCalledWith('mcp.meshx.foundation');
+  });
+
+  it('reads the base domain for the console', async () => {
+    const { callback } = createApp();
+
+    const response = await request(callback).get('/mcp-portal/settings');
+
+    expect(response.body).toEqual({ baseDomain: 'mcp.example.com' });
+  });
+
+  it('replaces a portal’s organizations, and de-duplicates them', async () => {
+    const { callback, stores } = createApp();
+
+    const response = await request(callback)
+      .put(`/mcp-portal/portals/${portal.id}/organizations`)
+      .send({ organizationIds: ['org-a', 'org-a', 'org-b'] });
+
+    expect(response.status).toBe(200);
+    expect(stores.portals.setOrganizations).toHaveBeenCalledWith(portal.id, ['org-a', 'org-b']);
+  });
+
+  it('lists no servers for a portal that has none', async () => {
+    const { callback } = createApp();
+
+    const response = await request(callback).get(
+      '/mcp-portal/portals/00000000-0000-4000-8000-000000000000/upstreams'
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ upstreams: [] });
+  });
+
+  it('answers 404 when adding a server to a missing portal', async () => {
+    const { callback } = createApp();
+
+    const response = await request(callback)
+      .post('/mcp-portal/portals/00000000-0000-4000-8000-000000000000/upstreams')
+      .send({ name: 'kubo', url: 'https://kubo.example.com/mcp' });
+
+    expect(response.status).toBe(404);
+  });
+
+  it('refuses a server URL that is not public https before storing it', async () => {
+    const { callback, stores } = createApp();
+
+    const response = await request(callback)
+      .post(`/mcp-portal/portals/${portal.id}/upstreams`)
+      .send({ name: 'kubo', url: 'http://127.0.0.1/mcp' });
+
+    expect(response.status).toBe(400);
+    expect(stores.upstreams.add).not.toHaveBeenCalled();
+  });
+
+  it('removes a portal’s servers before the portal itself', async () => {
+    const remove = jest.fn(async () => true);
+    const { callback, stores } = createApp({
+      upstreams: {
+        listForPortal: jest.fn(async () => [{ name: 'kubo', portalId: portal.id }]),
+        findForPortal: jest.fn(async () => {}),
+        add: jest.fn(),
+        remove,
+        update: jest.fn(async () => {}),
+      } as unknown as McpPortalStores['upstreams'],
+    });
+
+    const response = await request(callback).delete(`/mcp-portal/portals/${portal.id}`);
 
     expect(response.status).toBe(204);
-    expect(fetchSpy).not.toHaveBeenCalled();
-    expect(deleteMcpPortalConnection).not.toHaveBeenCalled();
-  });
-
-  it('resets the portal with the stored secret, then clears the connection', async () => {
-    const { callback, deleteMcpPortalConnection } = createApp(storedConnection);
-    const fetchSpy = jest.spyOn(globalThis, 'fetch').mockResolvedValue(jsonResponse({}, 200));
-
-    const response = await request(callback).delete('/mcp-portal/connection');
-
-    expect(response.status).toBe(204);
-    const [url, init] = fetchSpy.mock.calls[0] ?? [];
-    expect(String(url)).toBe(`${portalUrl}/setup/reset`);
-    expect(init?.headers).toMatchObject({ 'x-portal-internal-secret': secret });
-    expect(deleteMcpPortalConnection).toHaveBeenCalled();
-  });
-
-  it('clears core’s copy when the portal no longer holds the secret', async () => {
-    const { callback, deleteMcpPortalConnection } = createApp(storedConnection);
-    jest.spyOn(globalThis, 'fetch').mockResolvedValue(jsonResponse({}, 401));
-
-    const response = await request(callback).delete('/mcp-portal/connection');
-
-    expect(response.status).toBe(204);
-    expect(deleteMcpPortalConnection).toHaveBeenCalled();
-  });
-
-  it('keeps the connection when the portal reset fails', async () => {
-    const { callback, deleteMcpPortalConnection } = createApp(storedConnection);
-    jest.spyOn(globalThis, 'fetch').mockResolvedValue(jsonResponse({}, 500));
-
-    const response = await request(callback).delete('/mcp-portal/connection');
-
-    expect(response.status).toBe(502);
-    expect(response.body).toMatchObject({ code: 'mcp_portal.reset_failed' });
-    expect(deleteMcpPortalConnection).not.toHaveBeenCalled();
-  });
-
-  it('keeps the connection and reports 502 when the portal confirmation fails', async () => {
-    const { callback, upsertMcpPortalConnection } = createApp();
-    jest
-      .spyOn(globalThis, 'fetch')
-      .mockResolvedValueOnce(jsonResponse({ configured: false }, 201))
-      .mockResolvedValueOnce(jsonResponse({ error: 'no' }, 401));
-
-    const response = await request(callback)
-      .post('/mcp-portal/connection')
-      .send({ url: portalUrl, token: 'one-time' });
-
-    expect(response.status).toBe(502);
-    expect(response.body).toMatchObject({ code: 'mcp_portal.unconfirmed' });
-    expect(upsertMcpPortalConnection).toHaveBeenCalledTimes(1);
-  });
-
-  it('stores nothing when the portal rejects the token', async () => {
-    const { callback, upsertMcpPortalConnection } = createApp();
-    jest.spyOn(globalThis, 'fetch').mockResolvedValue(jsonResponse({ error: 'no' }, 401));
-
-    const response = await request(callback)
-      .post('/mcp-portal/connection')
-      .send({ url: portalUrl, token: 'wrong' });
-
-    expect(response.status).toBe(401);
-    expect(response.body).toMatchObject({ code: 'mcp_portal.invalid_setup_token' });
-    expect(upsertMcpPortalConnection).not.toHaveBeenCalled();
-  });
-
-  it('answers 409 when the portal is already set up', async () => {
-    const { callback, upsertMcpPortalConnection } = createApp();
-    jest.spyOn(globalThis, 'fetch').mockResolvedValue(jsonResponse({ error: 'no' }, 409));
-
-    const response = await request(callback)
-      .post('/mcp-portal/connection')
-      .send({ url: portalUrl, token: 'token' });
-
-    expect(response.status).toBe(409);
-    expect(upsertMcpPortalConnection).not.toHaveBeenCalled();
+    expect(remove).toHaveBeenCalledWith(portal.id, 'kubo');
+    expect(stores.portals.remove).toHaveBeenCalledWith(portal.id);
   });
 });

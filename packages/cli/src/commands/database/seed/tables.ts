@@ -35,7 +35,7 @@ import {
   createAdminTenantAccountCenter,
 } from '@logto/schemas/lib/seeds/account-center.js';
 import { Tenants } from '@logto/schemas/models';
-import { generateStandardId } from '@logto/shared';
+import { GlobalValues, generateStandardId } from '@logto/shared';
 import type { DatabaseTransactionConnection } from '@silverhand/slonik';
 import { sql } from '@silverhand/slonik';
 
@@ -172,9 +172,17 @@ export const seedTables = async (
   await seedAdminData(connection, createAdminDataInAdminTenant(defaultTenantId));
   const adminAdminData = createAdminDataInAdminTenant(adminTenantId);
   await seedAdminData(connection, adminAdminData);
-  await seedAdminData(connection, createMeApiInAdminTenant());
+  const globalValues = new GlobalValues();
+  await seedAdminData(
+    connection,
+    createMeApiInAdminTenant(
+      globalValues.isCloud ? globalValues.adminUrlSet.endpoint.origin : undefined
+    )
+  );
 
-  const [cloudData, ...cloudAdditionalScopes] = createCloudApi();
+  const [cloudData, ...cloudAdditionalScopes] = createCloudApi(
+    new GlobalValues().adminUrlSet.endpoint.origin
+  );
   await seedAdminData(connection, cloudData, ...cloudAdditionalScopes);
 
   // Create tenant application role

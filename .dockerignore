@@ -38,9 +38,11 @@ dump.rdb
 # readme assets
 /assets/
 
-# local screenshots and decks
+# local screenshots, decks and review artifacts
 /deck-shots
+/design-review
 /*.png
+/*.tar
 
 # Docker
 Dockerfile*

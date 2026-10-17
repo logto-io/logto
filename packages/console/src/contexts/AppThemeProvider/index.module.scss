@@ -1,14 +1,102 @@
 @use '@logto/core-kit/scss/console-themes' as themes;
 @use '@/scss/underscore' as _;
 
+// MeshX fonts (from foundation-frontend), used by the whole console.
+@font-face {
+  font-family: 'Stack Sans Headline';
+  src: url('./fonts/stack-sans-headline-latin-wght-normal.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Stack Sans Text';
+  src: url('./fonts/stack-sans-text-latin-wght-normal.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('./fonts/jetbrains-mono-latin-wght-normal.woff2') format('woff2');
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+// MeshX colour tokens (from foundation-frontend / meshx-design-system), applied on top of the
+// console's theme so every shared component uses them.
 .light {
   @include themes.light;
 
+  --color-primary: #ff301a;
+  --color-divider: #dddcdb;
+  --color-hover: rgba(27, 25, 25, 5%);
+  --color-hover-variant: rgba(27, 25, 25, 5%);
+  --color-focused-variant: #ff301a;
+  --color-primary-hover: #da2c09;
+  --color-text: #1b1919;
+  --color-text-secondary: #615f59;
+  --color-text-link: #da2c09;
+  --color-background: #faf9f7;
+  --color-layer-1: #fff;
+  --color-layer-2: #f3f3f1;
+  --color-border: #dbdad5;
+
+  // foundation-frontend sidebar tokens (surface-layer-cp, label, highlight, border).
+  --ds-surface: #fff;
+  --ds-border: oklch(88.546% 0.007 88.648deg);
+  --ds-label-primary: #1e1f21;
+  --ds-label-secondary: #595a5b;
+  --ds-label-secondary-hover: #3b3a3a;
+  --ds-highlight-m: rgba(0, 0, 0, 4%);
+  --ds-highlight-tone: rgba(0, 153, 255, 8%);
+
   --inkeep-logto-icon: #{_.inkeep-logto-icon(#c9c5d0)};
+  font-family: 'Stack Sans Text', system-ui, sans-serif;
 }
 
 .dark {
   @include themes.dark;
 
+  --color-primary: #ff5a40;
+  --color-divider: #3b3a3a;
+  --color-hover: rgba(255, 255, 255, 6%);
+  --color-hover-variant: rgba(255, 255, 255, 6%);
+  --color-focused-variant: #ff5a40;
+  --color-primary-hover: #fe8168;
+  --color-text: #faf9f7;
+  --color-text-secondary: #c2c0ba;
+  --color-text-link: #fe8168;
+  --color-background: #1b1919;
+  --color-layer-1: #2d2c2a;
+  --color-layer-2: #3b3a37;
+  --color-border: #464540;
+
+  // foundation-frontend sidebar tokens (surface-layer-cp, label, highlight, border).
+  --ds-surface: #37383a;
+  --ds-border: oklch(38.626% 0.007 95.233deg);
+  --ds-label-primary: #f8f8f7;
+  --ds-label-secondary: #ccc;
+  --ds-label-secondary-hover: #dddcdb;
+  --ds-highlight-m: rgba(255, 255, 255, 4%);
+  --ds-highlight-tone: rgba(0, 153, 255, 8%);
+
   --inkeep-logto-icon: #{_.inkeep-logto-icon(#5f5d67)};
+  font-family: 'Stack Sans Text', system-ui, sans-serif;
 }
+
+// Set after the core-kit theme includes above, so these sizes win.
+.light,
+.dark {
+  --font-title-1: 600 30px/38px 'Stack Sans Headline', system-ui, sans-serif;
+  --font-title-2: 600 18px/28px 'Stack Sans Headline', system-ui, sans-serif;
+  --font-title-3: 600 16px/24px 'Stack Sans Headline', system-ui, sans-serif;
+  --font-body-2: 400 13px/18px 'Stack Sans Text', system-ui, sans-serif;
+  --font-body-3: 400 12px/16px 'Stack Sans Text', system-ui, sans-serif;
+  --font-label-2: 500 13px/18px 'Stack Sans Text', system-ui, sans-serif;
+  --font-label-3: 500 11px/16px 'Stack Sans Text', system-ui, sans-serif;
+}
+

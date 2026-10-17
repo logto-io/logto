@@ -4,6 +4,7 @@ import { pickDefault } from '@logto/shared/esm';
 import { removeUndefinedKeys } from '@silverhand/essentials';
 
 import { mockUser, mockUserList, mockUserListResponse } from '#src/__mocks__/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import { type InsertUserResult } from '#src/libraries/user.js';
 import { type UserConditions } from '#src/queries/user.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -81,6 +82,64 @@ describe('adminUserRoutes', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+  });
+
+  describe('suspension filter', () => {
+    const original = EnvSet.values.isDevFeaturesEnabled;
+
+    beforeEach(() => {
+      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+    });
+
+    afterEach(() => {
+      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', original);
+    });
+
+    it.each(['true', 'false'])('accepts isSuspended=%s', async (value) => {
+      const response = await userRequest.get('/users').query({ isSuspended: value });
+
+      expect(response.status).toEqual(200);
+      expect(mockedQueries.users.countUsers).toHaveBeenCalledWith(
+        expect.objectContaining({ isSuspended: value === 'true' })
+      );
+      expect(mockedQueries.users.findUsers).toHaveBeenCalledWith(
+        expect.any(Number),
+        expect.any(Number),
+        expect.objectContaining({ isSuspended: value === 'true' })
+      );
+    });
+
+    it.each(['', 'yes', '0', 'TRUE'])('rejects isSuspended=%s', async (value) => {
+      const response = await userRequest.get('/users').query({ isSuspended: value });
+
+      expect(response.status).toEqual(400);
+      expect(mockedQueries.users.countUsers).not.toHaveBeenCalled();
+      expect(mockedQueries.users.findUsers).not.toHaveBeenCalled();
+    });
+
+    it('combines suspension status with search and relation filters', async () => {
+      const response = await userRequest.get('/users').query({
+        isSuspended: 'false',
+        search: 'foo',
+        excludeRoleId: 'role-id',
+      });
+
+      expect(response.status).toEqual(200);
+      const conditions = mockedQueries.users.countUsers.mock.calls[0]?.[0];
+      expect(conditions?.isSuspended).toBe(false);
+      expect(conditions?.search?.matches).toHaveLength(1);
+      expect(conditions?.relation).toMatchObject({ value: 'role-id' });
+    });
+
+    it('ignores the filter when dev features are disabled', async () => {
+      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+      const response = await userRequest.get('/users').query({ isSuspended: 'true' });
+
+      expect(response.status).toEqual(200);
+      expect(mockedQueries.users.countUsers.mock.calls[0]?.[0]).toEqual(
+        expect.objectContaining({ isSuspended: undefined })
+      );
+    });
   });
 
   it('GET /users', async () => {

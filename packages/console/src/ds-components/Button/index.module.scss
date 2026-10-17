@@ -6,7 +6,8 @@
   justify-content: center;
   border: none;
   outline: none;
-  border-radius: _.unit(2);
+  // Foundation-frontend button corner radius (4px).
+  border-radius: 4px;
   font: var(--font-label-2);
   transition: background-color 0.2s ease-in-out;
   white-space: nowrap;
@@ -52,8 +53,8 @@
   }
 
   &.small {
-    height: 30px;
-    padding: 0 _.unit(3);
+    height: 24px;
+    padding: 0 _.unit(2);
     gap: _.unit(1);
 
     &.text {
@@ -62,8 +63,8 @@
   }
 
   &.medium {
-    height: 36px;
-    padding: 0 _.unit(4);
+    height: 32px;
+    padding: 0 _.unit(3);
 
     &.text {
       font: var(--font-label-1);
@@ -72,8 +73,8 @@
   }
 
   &.large {
-    height: 44px;
-    padding: 0 _.unit(6);
+    height: 40px;
+    padding: 0 _.unit(4);
 
     &.text {
       // same as medium

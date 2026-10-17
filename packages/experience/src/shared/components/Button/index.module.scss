@@ -16,25 +16,33 @@
   user-select: none;
   overflow: hidden;
 
+  // The icon is a flex item, not absolutely positioned: it reserves its own width while
+  // visible, so the label moves over and the spinner can't overlap the text.
   .content {
-    position: relative;
-    transition: padding-inline-start 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
 
     .icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: none;
+      width: 0;
       font-size: 0;
       line-height: normal;
-      position: absolute;
       pointer-events: none;
-      inset-inline-start: 0;
       opacity: 0%;
-      transition: opacity 0.2s ease;
+      transition:
+        width 0.2s ease,
+        margin 0.2s ease,
+        opacity 0.2s ease;
     }
 
     &.iconVisible {
-      padding-inline-start: _.unit(7);
-
       .icon {
-        inset-inline-start: 0;
+        width: _.unit(5);
+        margin-inline-end: _.unit(2);
         opacity: 100%;
       }
     }

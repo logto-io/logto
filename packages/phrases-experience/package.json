@@ -49,7 +49,7 @@
     "typescript": "^5.5.3"
   },
   "engines": {
-    "node": "^22.14.0"
+    "node": "^22.14.0 || ^26.0.0"
   },
   "eslintConfig": {
     "extends": "@silverhand"

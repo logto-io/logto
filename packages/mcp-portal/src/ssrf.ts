@@ -109,3 +109,64 @@ export const assertPublicHttpsUrl = async (raw: string): Promise<URL> => {
 
   return url;
 };
+
+const redirectStatuses = new Set([301, 302, 303, 307, 308]);
+const maxRedirects = 5;
+
+/**
+ * A fetch that checks every hop of a redirect chain. The default fetch follows redirects without
+ * looking at them, so a public upstream could send the portal to a private address. Here each
+ * redirect target is validated with the same rules as the upstream URL before it is requested.
+ */
+const followRedirects = async (
+  url: URL,
+  init: RequestInit,
+  fetchImpl: typeof fetch,
+  redirects: number
+): Promise<Response> => {
+  // Redirects are followed here, one checked hop at a time, so none is requested unchecked.
+  const response = await fetchImpl(url, { ...init, redirect: 'manual' });
+  const location = response.headers.get('location');
+
+  if (!redirectStatuses.has(response.status) || !location) {
+    return response;
+  }
+
+  if (redirects >= maxRedirects) {
+    throw new UpstreamUrlError('Upstream redirected too many times');
+  }
+
+  await response.body?.cancel();
+
+  const next = await assertPublicHttpsUrl(new URL(location, url).toString());
+
+  return followRedirects(
+    next,
+    next.origin === url.origin ? init : withoutAuthorization(init),
+    fetchImpl,
+    redirects + 1
+  );
+};
+
+/**
+ * The upstream's bearer token is only for the upstream itself. A redirect to another origin must
+ * not carry it, or the upstream could hand the token to any host it names.
+ */
+const withoutAuthorization = (init: RequestInit): RequestInit => {
+  const headers = new Headers(init.headers);
+  headers.delete('authorization');
+
+  return { ...init, headers };
+};
+
+/**
+ * A fetch that checks every hop of a redirect chain. The default fetch follows redirects without
+ * looking at them, so a public upstream could send the portal to a private address. Here each
+ * redirect target is validated with the same rules as the upstream URL before it is requested.
+ */
+export const guardedFetch = async (
+  input: string | URL,
+  init: RequestInit = {},
+  fetchImpl: typeof fetch = fetch
+): Promise<Response> =>
+  followRedirects(await assertPublicHttpsUrl(input.toString()), init, fetchImpl, 0);

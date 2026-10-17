@@ -26,4 +26,6 @@ export type TokenInfo = {
   sub: string;
   clientId: unknown;
   scopes: string[];
+  /** The audience(s) the token was issued for. */
+  audience?: string | string[];
 };

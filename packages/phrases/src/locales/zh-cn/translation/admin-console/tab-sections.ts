@@ -5,6 +5,7 @@ const tab_sections = {
   users: '用户',
   developer: '开发者',
   tenant: '租户',
+  infrastructure: '基础',
 };
 
 export default Object.freeze(tab_sections);

@@ -7,8 +7,11 @@ import { AdminTenantRole } from '../types/index.js';
 import type { UpdateAdminData } from './management-api.js';
 import { adminTenantId } from './tenant.js';
 
-/** The API Resource Indicator for Logto Cloud. It's only useful when domain-based multi-tenancy is enabled. */
-export const cloudApiIndicator = 'https://cloud.meshx.app/api';
+/**
+ * The API Resource Indicator for Logto Cloud API. It is served by the Logto instance itself, under
+ * `/api` on its endpoint, so it follows the instance's endpoint.
+ */
+export const getCloudApiIndicator = (endpoint: string) => `${endpoint.replace(/\/$/, '')}/api`;
 
 export enum CloudScope {
   /** The user can create a user tenant. */
@@ -40,7 +43,7 @@ export enum CloudScope {
   AccessMcpApi = 'access:mcp:api',
 }
 
-export const createCloudApi = (): Readonly<[UpdateAdminData, ...CreateScope[]]> => {
+export const createCloudApi = (endpoint: string): Readonly<[UpdateAdminData, ...CreateScope[]]> => {
   const resourceId = generateStandardId();
   const buildScope = (name: CloudScope, description: string) => ({
     tenantId: adminTenantId,
@@ -55,7 +58,7 @@ export const createCloudApi = (): Readonly<[UpdateAdminData, ...CreateScope[]]> 
       resource: {
         tenantId: adminTenantId,
         id: resourceId,
-        indicator: cloudApiIndicator,
+        indicator: getCloudApiIndicator(endpoint),
         name: `Logto Cloud API`,
       },
       scopes: [

@@ -13,22 +13,28 @@
 /* Theme aliases sit on body, where .meshx-theme defines the design tokens.
    On :root the tokens are undefined (they are not set on html), so the
    aliases would resolve to nothing and surfaces like the tooltip go
-   transparent. */
-body {
-  --bg: var(--background, #ebe9f4);
-  --surface: var(--card, #ffffff);
-  --surface-2: var(--muted, #ebe9f4);
-  --surface-3: var(--border, #cfcbe3);
-  --ink: var(--foreground, #1c1b25);
-  --ink-2: var(--muted-foreground, #6e6b7d);
-  --ink-3: var(--muted-foreground, #6e6b7d);
-  --line: var(--border, #e4e2ee);
-  --accent: var(--primary, #6639f5);
-  --good: var(--sentiment-positive);
-  --crit: var(--sentiment-negative);
+   transparent.
+   Every selector here is scoped to .kshows. This sheet is injected into the
+   console page, so an unscoped body, :root, * or button rule would restyle
+   the whole console (the page background and text colour flipped on click). */
+.kshows {
+  /* The console's own tokens (AppThemeProvider) so the page follows the console theme. The
+     fallbacks are only used if a token is missing. */
+  --bg: var(--color-base, #ebe9f4);
+  --surface: var(--color-layer-1, #ffffff);
+  --surface-2: var(--color-layer-2, #ebe9f4);
+  --surface-3: var(--color-border, #cfcbe3);
+  --ink: var(--color-text, #1c1b25);
+  --ink-2: var(--color-text-secondary, #6e6b7d);
+  --ink-3: var(--color-text-secondary, #6e6b7d);
+  --line: var(--color-border, #e4e2ee);
+  /* Page-owned name for the brand accent. tokens.css also sets --accent, so this page does not use it. */
+  --brand: var(--color-primary, #ff301a);
+  --good: var(--color-success, #19c37d);
+  --crit: var(--color-error, #e5484d);
 }
 
-:root {
+.kshows {
   --ns-1: #3987e5;
   --ns-2: #d95926;
   --ns-3: #199e70;
@@ -45,9 +51,9 @@ body {
   --sans: inherit;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+.kshows * { box-sizing: border-box; margin: 0; padding: 0; }
 
-body {
+.kshows {
   background: var(--bg);
   color: var(--ink);
   font-family: var(--sans);
@@ -56,9 +62,9 @@ body {
   min-height: 100vh;
 }
 
-button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+.kshows button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
 
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.kshows :focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 4px; }
 
 /* ---------- header ---------- */
 
@@ -75,26 +81,30 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   display: flex; align-items: baseline; gap: 10px;
   font-family: var(--mono);
 }
-.wordmark .glyph { color: var(--accent); font-size: 18px; }
+.wordmark .glyph { color: var(--brand); font-size: 18px; }
 .wordmark .name { font-size: 16px; font-weight: 700; letter-spacing: 0.08em; }
 .wordmark .tag { font-size: 11px; color: var(--ink-3); letter-spacing: 0.06em; }
 
 .controls { display: flex; gap: 12px; flex-wrap: wrap; }
 
 .seg {
-  display: flex; gap: 2px; padding: 2px;
+  display: inline-flex; gap: 2px; padding: 3px;
   background: var(--surface-2); border-radius: 8px;
 }
+/* MeshX button: 14px medium text, 6px radius, a 3px focus ring, and a 0.5 opacity when disabled. */
 .seg button {
-  font-family: var(--mono); font-size: 11px; letter-spacing: 0.07em;
-  padding: 5px 12px; border-radius: 6px; color: var(--ink-2);
+  display: inline-flex; align-items: center; height: 28px; padding: 0 12px;
+  border-radius: 6px; font-family: var(--sans); font-size: 14px; font-weight: 500;
+  line-height: 1; white-space: nowrap; color: var(--ink-2);
+  transition: background-color 150ms, color 150ms, box-shadow 150ms;
 }
 .seg button:hover:not(:disabled) { color: var(--ink); }
+.seg button:focus-visible { outline: 3px solid color-mix(in srgb, var(--brand) 50%, transparent); outline-offset: 0; }
 .seg button[aria-pressed="true"] {
   background: var(--surface); color: var(--ink);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.14), inset 0 0 0 1px var(--line);
 }
-.seg button:disabled { color: var(--ink-3); cursor: not-allowed; opacity: 0.55; }
+.seg button:disabled { opacity: 0.5; pointer-events: none; }
 
 .spacer { flex: 1; }
 
@@ -133,7 +143,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   height: 4px; border-radius: 2px; background: var(--surface-3);
   margin-top: 8px; position: relative; overflow: hidden;
 }
-.stat .bar i { position: absolute; inset: 0 auto 0 0; background: var(--accent); border-radius: 2px; }
+.stat .bar i { position: absolute; inset: 0 auto 0 0; background: var(--brand); border-radius: 2px; }
 .stat .sub { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); margin-top: 5px; }
 
 /* ---------- legend ---------- */
@@ -146,13 +156,16 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em;
   text-transform: uppercase; color: var(--ink-3); margin-right: 2px;
 }
-.chip {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-family: var(--mono); font-size: 11.5px; color: var(--ink-2);
-  padding: 2px 4px; border-radius: 5px;
+/* Namespace filter buttons, styled as MeshX outline buttons. The .kshows prefix beats the page reset. */
+.kshows .chip {
+  display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px;
+  border: 1px solid var(--line); border-radius: 6px; background: var(--surface);
+  font-family: var(--sans); font-size: 13px; font-weight: 500; color: var(--ink-2);
+  transition: background-color 150ms, color 150ms;
 }
-.chip:hover { color: var(--ink); background: var(--surface-2); }
-.chip .sw { width: 10px; height: 10px; border-radius: 3px; }
+.kshows .chip:hover { color: var(--ink); background: var(--surface-2); }
+.kshows .chip:focus-visible { outline: 3px solid color-mix(in srgb, var(--brand) 50%, transparent); outline-offset: 0; }
+.kshows .chip .sw { width: 8px; height: 8px; border-radius: 2px; }
 
 /* ---------- node grid ---------- */
 
@@ -260,7 +273,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 /* ---------- disk bar ---------- */
 
 .diskbar .track { fill: var(--surface-2); }
-.diskbar .used { fill: var(--accent); }
+.diskbar .used { fill: var(--brand); }
 .diskbar.warn .used { fill: var(--warn); }
 .diskbar.crit .used { fill: var(--crit); }
 .diskbar text { font-family: var(--mono); }
@@ -305,10 +318,13 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .panel-head .nname { font-family: var(--mono); font-size: 18px; font-weight: 700; }
 .panel-head .meta { font-family: var(--mono); font-size: 11.5px; color: var(--ink-2); }
 .panel-head .close {
-  margin-left: auto; font-family: var(--mono); font-size: 12px; color: var(--ink-2);
-  border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px;
+  margin-left: auto; display: inline-flex; align-items: center; height: 32px; padding: 0 12px;
+  font-family: var(--sans); font-size: 14px; font-weight: 500; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--line); border-radius: 6px;
+  transition: background-color 150ms;
 }
-.panel-head .close:hover { color: var(--ink); border-color: var(--ink-3); }
+.panel-head .close:hover { background: var(--surface-2); }
+.panel-head .close:focus-visible { outline: 3px solid color-mix(in srgb, var(--brand) 50%, transparent); outline-offset: 0; }
 .panel svg { display: block; width: 100%; border-radius: 8px; }
 
 .podtable { width: 100%; border-collapse: collapse; margin-top: 16px; font-family: var(--mono); font-size: 12px; }

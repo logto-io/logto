@@ -7,6 +7,18 @@
   display: flex;
   align-items: center;
 
+  .brand {
+    display: flex;
+    align-items: center;
+    height: 28px;
+    gap: 14px;
+  }
+
+  .mark {
+    width: auto;
+    height: 28px;
+  }
+
   .logo {
     width: auto;
     height: 28px;

@@ -150,8 +150,10 @@ function TenantsProvider({ children }: Props) {
     setIsInitComplete(true);
   }, []);
 
+  // A tenant ID appears once in the list. Creating a tenant can return one that is already listed
+  // (the local cloud stand-in returns the default tenant), so replace it rather than add it again.
   const prependTenant = useCallback((tenant: TenantResponse) => {
-    setTenants((tenants) => [tenant, ...tenants]);
+    setTenants((tenants) => [tenant, ...tenants.filter(({ id }) => id !== tenant.id)]);
   }, []);
 
   const removeTenant = useCallback((tenantId: string) => {

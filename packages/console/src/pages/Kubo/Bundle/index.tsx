@@ -1,22 +1,62 @@
-import { useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet';
 
+import uploadSecurityImage from '@/assets/images/wizard/upload-security-pixel.png';
+import FormCardLayout from '@/components/FormCard/FormCardLayout';
 import Button from '@/ds-components/Button';
+import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
 
 import styles from '../index.module.scss';
 
-// Air-gapped bundle upload. The file goes through Logto core to the Kubo portal.
+// Air-gapped bundle upload, as a three-step wizard like the workspace wizard:
+// choose the file, name it, then review and upload. The file goes through Logto core to the Kubo portal.
+const namePattern = /^[\da-z]([\d.a-z-]{0,61}[\da-z])?$/;
+
+const formatSize = (bytes: number) =>
+  bytes > 1024 ** 3
+    ? `${(bytes / 1024 ** 3).toFixed(2)} GiB`
+    : `${(bytes / 1024 ** 2).toFixed(1)} MiB`;
+
+const steps = [
+  {
+    title: 'Choose a bundle file',
+    text: 'Pick the offline bundle (.tar) to upload for air-gapped installs.',
+  },
+  {
+    title: 'Name the bundle',
+    text: 'Use lowercase letters, digits, dots and hyphens.',
+  },
+  {
+    title: 'Review and upload',
+    text: 'Check the file and name, then upload to the Kubo portal.',
+  },
+];
+
+// Maps a 1-based list position onto the three wizard steps.
+const toStep = (value: number): 1 | 2 | 3 => {
+  if (value >= 3) {
+    return 3;
+  }
+
+  return value <= 1 ? 1 : 2;
+};
+
 function Bundle() {
   const api = useApi();
+  const fileInput = useRef<HTMLInputElement>(null);
+  const [step, setStep] = useState<1 | 2 | 3>(1);
   const [name, setName] = useState('');
   const [file, setFile] = useState<File>();
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState<string>();
   const [failed, setFailed] = useState(false);
 
+  const nameValid = namePattern.test(name);
+  const canContinue = step === 1 ? Boolean(file) : step === 2 ? nameValid : false;
+
   const upload = async () => {
-    if (!file || !name) {
+    if (!file || !nameValid) {
       return;
     }
     setUploading(true);
@@ -39,56 +79,155 @@ function Bundle() {
     }
   };
 
-  return (
-    <div className={styles.container}>
-      <Helmet title="MeshX · Bundle" />
-      <div className={styles.header}>
-        <div className={styles.eyebrow}>Infrastructure / Bundle</div>
-        <h2 className={styles.title}>Bundle upload</h2>
-        <p className={styles.description}>
-          Upload an air-gapped bundle (.tar). Name it with a lowercase label, for example
-          foundation-bundle-0-1-14.
-        </p>
-      </div>
+  const introduction = useMemo(
+    () => (
+      <>
+        <img className={styles.stepImage} src={uploadSecurityImage} alt="" />
+        <ol className={styles.stepper} aria-label={`Step ${step} of 3`}>
+          {steps.map((item, index) => {
+            const number = index + 1;
+            const isActive = number === step;
+            const isDone = number < step;
+            return (
+              <li
+                key={item.title}
+                className={styles.stepItem}
+                aria-current={isActive ? 'step' : undefined}
+              >
+                <button
+                  type="button"
+                  className={styles.stepButton}
+                  disabled={number > step}
+                  onClick={() => {
+                    setStep(toStep(number));
+                  }}
+                >
+                  <span
+                    className={`${styles.stepBubble} ${isActive ? styles.stepBubbleActive : ''} ${isDone ? styles.stepBubbleDone : ''}`}
+                  >
+                    {number}
+                  </span>
+                  <span className={styles.stepText}>
+                    <span className={isActive ? styles.stepTitleActive : styles.stepTitle}>
+                      {item.title}
+                    </span>
+                    {isActive && <span className={styles.stepDescription}>{item.text}</span>}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ol>
+      </>
+    ),
+    [step]
+  );
 
-      <div className={styles.card}>
-        <div className={styles.cardTitle}>Upload</div>
-        <div className={styles.form}>
-          <label className={styles.field}>
-            Bundle name
+  return (
+    <>
+      <Helmet title="MeshX · Bundle" />
+      <FormCardLayout introduction={introduction}>
+        <div className={styles.progress} aria-label={`Step ${step} of 3`}>
+          {[1, 2, 3].map((index) => (
+            <span key={index} className={index <= step ? styles.progressOn : undefined} />
+          ))}
+        </div>
+
+        {step === 1 && (
+          <div className={styles.form}>
             <input
-              value={name}
-              placeholder="foundation-bundle-0-1-14"
-              onChange={(event) => {
-                setName(event.target.value.trim().toLowerCase());
-              }}
-            />
-          </label>
-          <label className={styles.field}>
-            Bundle file (.tar)
-            <input
+              ref={fileInput}
+              hidden
               type="file"
               accept=".tar"
               onChange={(event) => {
-                setFile(event.target.files?.[0]);
+                setFile(event.currentTarget.files?.[0]);
               }}
             />
-          </label>
-        </div>
+            <Button
+              title="infrastructure.bundle_file"
+              type="outline"
+              onClick={() => {
+                fileInput.current?.click();
+              }}
+            />
+            {file ? (
+              <p className={styles.muted}>
+                {file.name} · {formatSize(file.size)}
+              </p>
+            ) : (
+              <p className={styles.muted}>No file chosen yet.</p>
+            )}
+          </div>
+        )}
+
+        {step === 2 && (
+          <div className={styles.form}>
+            <TextInput
+              title="infrastructure.bundle_name"
+              placeholder="foundation-bundle-0-1-14"
+              value={name}
+              onChange={(event) => {
+                setName(event.currentTarget.value.trim().toLowerCase());
+              }}
+            />
+            {name && !nameValid && (
+              <p className={styles.error}>
+                Use lowercase letters, digits, dots and hyphens. Start and end with a letter or
+                digit.
+              </p>
+            )}
+          </div>
+        )}
+
+        {step === 3 && (
+          <>
+            <dl className={styles.budget}>
+              <dt>File</dt>
+              <dd>{file?.name}</dd>
+              <dt>Size</dt>
+              <dd>{file ? formatSize(file.size) : '—'}</dd>
+              <dt>Name</dt>
+              <dd>{name}</dd>
+            </dl>
+            {message && <p className={failed ? styles.error : styles.muted}>{message}</p>}
+          </>
+        )}
+
         <div className={styles.actions}>
-          <Button
-            title="general.create"
-            type="primary"
-            isLoading={uploading}
-            disabled={!file || !name}
-            onClick={() => {
-              void upload();
-            }}
-          />
+          {step > 1 && (
+            <Button
+              title="general.back"
+              type="outline"
+              onClick={() => {
+                setStep(step === 3 ? 2 : 1);
+              }}
+            />
+          )}
+          {step < 3 && (
+            <Button
+              title="general.next"
+              type="primary"
+              disabled={!canContinue}
+              onClick={() => {
+                setStep(step === 1 ? 2 : 3);
+              }}
+            />
+          )}
+          {step === 3 && (
+            <Button
+              title="infrastructure.upload"
+              type="primary"
+              isLoading={uploading}
+              disabled={!file || !nameValid}
+              onClick={() => {
+                void upload();
+              }}
+            />
+          )}
         </div>
-        {message && <p className={failed ? styles.error : styles.muted}>{message}</p>}
-      </div>
-    </div>
+      </FormCardLayout>
+    </>
   );
 }
 

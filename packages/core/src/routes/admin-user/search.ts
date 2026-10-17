@@ -1,6 +1,7 @@
 import { OrganizationUserRelations, UsersRoles } from '@logto/schemas';
 import { type Nullable, tryThat, yes } from '@silverhand/essentials';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -82,6 +83,14 @@ export default function adminUserSearchRoutes<T extends ManagementApiRouter>(
         async () => {
           const excludeRoleId = searchParams.get('excludeRoleId');
           const excludeOrganizationId = searchParams.get('excludeOrganizationId');
+          // Guard user suspension filtering until the feature is released.
+          const suspension = EnvSet.values.isDevFeaturesEnabled
+            ? searchParams.get('isSuspended')
+            : null;
+
+          if (suspension !== null && suspension !== 'true' && suspension !== 'false') {
+            throw new TypeError('Parameter `isSuspended` must be either `true` or `false`.');
+          }
 
           if (excludeRoleId && excludeOrganizationId) {
             throw new RequestError({
@@ -93,6 +102,7 @@ export default function adminUserSearchRoutes<T extends ManagementApiRouter>(
           }
 
           const conditions: UserConditions = {
+            isSuspended: suspension === null ? undefined : suspension === 'true',
             search: parseSearchParamsForSearch(searchParams),
             identity: getIdentityCondition(searchParams),
             relation: getQueryRelation(excludeRoleId, excludeOrganizationId),

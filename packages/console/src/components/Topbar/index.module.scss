@@ -11,7 +11,10 @@
   .brand {
     display: flex;
     align-items: center;
-    gap: 4px;
+    height: 28px;
+    // Half the mark's height (28px), as in the MeshX logo lockup. The wordmark's empty left margin is
+    // removed on .logo, so this is the visible gap.
+    gap: 14px;
     cursor: pointer;
   }
 
@@ -29,6 +32,9 @@
     width: auto;
     height: 28px;
     color: var(--color-text);
+    // The wordmark artwork starts about 110 of its 459 viewBox units in; pull it back so the
+    // gap to the mark is the 2px gap above, not the SVG's empty left margin (~27px at 28px tall).
+    margin-inline-start: -27px;
   }
 
   .line {
@@ -39,6 +45,10 @@
   .text {
     font: var(--font-title-2);
     color: var(--color-text);
+    // Same 28px row as the logo, so the title and the mark share one vertical centre.
+    display: flex;
+    align-items: center;
+    height: 28px;
   }
 }
 

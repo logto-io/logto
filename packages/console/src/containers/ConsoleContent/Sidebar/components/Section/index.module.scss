@@ -1,7 +1,10 @@
 @use '@/scss/underscore' as _;
 
+// Foundation sidebar group label: secondary label colour, sentence case, medium weight.
 .title {
-  @include _.section-head-2;
-  color: var(--color-neutral-variant-70);
-  padding: _.unit(2) _.unit(6);
+  padding: _.unit(2) _.unit(2);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  color: var(--ds-label-secondary);
 }

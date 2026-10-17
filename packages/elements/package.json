@@ -38,7 +38,7 @@
     "test:ci": "pnpm run test --coverage"
   },
   "engines": {
-    "node": "^22.14.0"
+    "node": "^22.14.0 || ^26.0.0"
   },
   "bugs": {
     "url": "https://github.com/logto-io/logto/issues"

@@ -2,11 +2,17 @@ export type AuditEvent = {
   action:
     | 'upstream.add'
     | 'upstream.remove'
+    | 'upstream.update'
     | 'tool.list'
     | 'tool.call'
     | 'portal.setup'
-    | 'portal.reset';
+    | 'portal.reset'
+    | 'portal.access'
+    | 'portal.organizations'
+    | 'portal.remove'
+    | 'portal.settings';
   sub: string;
+  portal?: string;
   upstream?: string;
   tool?: string;
   outcome: 'ok' | 'error' | 'denied';

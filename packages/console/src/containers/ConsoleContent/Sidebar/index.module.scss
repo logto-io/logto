@@ -2,11 +2,16 @@
 @use '../dev-status-spacing' as devStatusSpacing;
 
 .sidebar {
-  width: 248px;
+  // Matches the foundation-frontend sidebar: w-70 (280px), surface-layer-cp fill, border-r.
+  width: 280px;
   min-height: 0;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  background: var(--ds-surface);
+  border-right: 1px solid var(--ds-border);
+  // Rounded top-right corner, to match the rounded content card beside it.
+  border-top-right-radius: 24px;
 }
 
 .menu {
@@ -15,9 +20,12 @@
 }
 
 .menuContent {
+  // Foundation sidebar: p-6 (24px) inset around the nav.
   min-height: 100%;
   display: flex;
   flex-direction: column;
+  padding: _.unit(6);
+  box-sizing: border-box;
 }
 
 .devStatusSpacer {
@@ -27,7 +35,7 @@
 }
 
 .skeleton {
-  width: 248px;
+  width: 280px;
   height: 100%;
   @include _.shimmering-animation;
 }

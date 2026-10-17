@@ -52,8 +52,14 @@ const createFixture = async () => {
     invalidate: vi.fn<() => Promise<void>>(),
   } as unknown as UpstreamPool;
 
-  const connect = async (sub: string) => {
-    const server = createPortalServer(sub, { registry, pool, audit });
+  const connect = async (sub: string, organizationIds: string[] = []) => {
+    const server = createPortalServer('portal-1', sub, organizationIds, {
+      registry,
+      pool,
+      audit,
+      // These servers have no stored token, so the pool is asked without one.
+      unlock: vi.fn<() => Promise<string | undefined>>(),
+    });
     const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
     await server.connect(serverTransport);
     const client = new Client({ name: 'test', version: '0.0.0' });
@@ -72,7 +78,7 @@ describe('createPortalServer', () => {
 
   it('namespaces each upstream tool as <upstream>__<tool>', async () => {
     const { registry, clientsByUpstream, connect } = await createFixture();
-    await registry.add({ name: 'kubo', url: 'https://kubo.example.com/mcp', ownerSub: 'alice' });
+    await registry.add({ name: 'kubo', url: 'https://kubo.example.com/mcp', portalId: 'portal-1' });
     clientsByUpstream.set('kubo', fakeUpstream());
 
     const client = await connect('alice');
@@ -83,7 +89,7 @@ describe('createPortalServer', () => {
 
   it('routes a namespaced call to the matching upstream tool', async () => {
     const { registry, clientsByUpstream, connect } = await createFixture();
-    await registry.add({ name: 'kubo', url: 'https://kubo.example.com/mcp', ownerSub: 'alice' });
+    await registry.add({ name: 'kubo', url: 'https://kubo.example.com/mcp', portalId: 'portal-1' });
     const upstream = fakeUpstream();
     clientsByUpstream.set('kubo', upstream);
 
@@ -94,9 +100,9 @@ describe('createPortalServer', () => {
     expect(result.content).toEqual([{ type: 'text', text: 'called search' }]);
   });
 
-  it('refuses to call another owner’s upstream', async () => {
+  it('does not reach an upstream that belongs to another portal', async () => {
     const { registry, clientsByUpstream, audit, connect } = await createFixture();
-    await registry.add({ name: 'kubo', url: 'https://kubo.example.com/mcp', ownerSub: 'alice' });
+    await registry.add({ name: 'kubo', url: 'https://kubo.example.com/mcp', portalId: 'portal-2' });
     clientsByUpstream.set('kubo', fakeUpstream());
 
     const client = await connect('bob');
@@ -118,8 +124,12 @@ describe('createPortalServer', () => {
 
   it('hides a failing upstream without hiding the others', async () => {
     const { registry, clientsByUpstream, audit, connect } = await createFixture();
-    await registry.add({ name: 'kubo', url: 'https://kubo.example.com/mcp', ownerSub: 'alice' });
-    await registry.add({ name: 'other', url: 'https://other.example.com/mcp', ownerSub: 'alice' });
+    await registry.add({ name: 'kubo', url: 'https://kubo.example.com/mcp', portalId: 'portal-1' });
+    await registry.add({
+      name: 'other',
+      url: 'https://other.example.com/mcp',
+      portalId: 'portal-1',
+    });
     clientsByUpstream.set('kubo', fakeUpstream());
     const broken = fakeUpstream();
     broken.listTools.mockRejectedValue(new Error('connection refused'));
@@ -132,5 +142,98 @@ describe('createPortalServer', () => {
     expect(auditEvents(audit)).toContainEqual(
       expect.objectContaining({ action: 'tool.list', upstream: 'other', outcome: 'error' })
     );
+  });
+});
+
+describe('per-server organization access', () => {
+  it('hides a server from callers outside its organizations, and refuses its calls', async () => {
+    const { registry, clientsByUpstream, audit, connect } = await createFixture();
+    await registry.add({ name: 'kubo', url: 'https://kubo.example.com/mcp', portalId: 'portal-1' });
+    await registry.update('portal-1', 'kubo', { organizationIds: ['org-b'] });
+    const upstream = fakeUpstream();
+    clientsByUpstream.set('kubo', upstream);
+
+    const outsider = await connect('alice', ['org-a']);
+    const { tools } = await outsider.listTools();
+    const result = await outsider.callTool({ name: 'kubo__search' });
+
+    expect(tools).toEqual([]);
+    expect(result.isError).toBe(true);
+    expect(upstream.callTool).not.toHaveBeenCalled();
+    expect(auditEvents(audit)).toContainEqual(
+      expect.objectContaining({ action: 'tool.call', outcome: 'denied' })
+    );
+  });
+
+  it('shows a server to callers in one of its organizations', async () => {
+    const { registry, clientsByUpstream, connect } = await createFixture();
+    await registry.add({ name: 'kubo', url: 'https://kubo.example.com/mcp', portalId: 'portal-1' });
+    await registry.update('portal-1', 'kubo', { organizationIds: ['org-b'] });
+    clientsByUpstream.set('kubo', fakeUpstream());
+
+    const member = await connect('bob', ['org-a', 'org-b']);
+    const { tools } = await member.listTools();
+
+    expect(tools.map((tool) => tool.name)).toEqual(['kubo__search']);
+  });
+
+  it('keeps a server with no organization list open to everyone the portal admits', async () => {
+    const { registry, clientsByUpstream, connect } = await createFixture();
+    await registry.add({ name: 'kubo', url: 'https://kubo.example.com/mcp', portalId: 'portal-1' });
+    clientsByUpstream.set('kubo', fakeUpstream());
+
+    const anyone = await connect('carol', ['org-z']);
+    const { tools } = await anyone.listTools();
+
+    expect(tools.map((tool) => tool.name)).toEqual(['kubo__search']);
+  });
+});
+
+describe('per-server and per-tool switches', () => {
+  it('hides a switched-off server from the tool list', async () => {
+    const { registry, clientsByUpstream, connect } = await createFixture();
+    await registry.add({ name: 'kubo', url: 'https://kubo.example.com/mcp', portalId: 'portal-1' });
+    await registry.update('portal-1', 'kubo', { enabled: false });
+    clientsByUpstream.set('kubo', fakeUpstream());
+
+    const client = await connect('alice');
+    const { tools } = await client.listTools();
+
+    expect(tools).toEqual([]);
+  });
+
+  it('hides a switched-off tool and refuses to call it', async () => {
+    const { registry, clientsByUpstream, audit, connect } = await createFixture();
+    await registry.add({ name: 'kubo', url: 'https://kubo.example.com/mcp', portalId: 'portal-1' });
+    await registry.update('portal-1', 'kubo', { disabledTools: ['search'] });
+    const upstream = fakeUpstream();
+    clientsByUpstream.set('kubo', upstream);
+
+    const client = await connect('alice');
+    const { tools } = await client.listTools();
+    const result = await client.callTool({ name: 'kubo__search' });
+
+    expect(tools).toEqual([]);
+    expect(result.isError).toBe(true);
+    expect(upstream.callTool).not.toHaveBeenCalled();
+    expect(auditEvents(audit)).toContainEqual(
+      expect.objectContaining({ action: 'tool.call', outcome: 'denied', reason: 'tool_disabled' })
+    );
+  });
+
+  it('keeps the switches after the registry is reloaded', async () => {
+    const filePath = nodePath.join(root, randomUUID(), 'upstreams.json');
+    const first = new JsonFileUpstreamStore(filePath);
+    await first.load();
+    await first.add({ name: 'kubo', url: 'https://kubo.example.com/mcp', portalId: 'portal-1' });
+    await first.update('portal-1', 'kubo', { enabled: false, disabledTools: ['search'] });
+
+    const reloaded = new JsonFileUpstreamStore(filePath);
+    await reloaded.load();
+
+    expect(await reloaded.findForPortal('portal-1', 'kubo')).toMatchObject({
+      enabled: false,
+      disabledTools: ['search'],
+    });
   });
 });

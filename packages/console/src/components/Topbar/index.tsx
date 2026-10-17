@@ -19,8 +19,8 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import ContactModal from './ContactModal';
+import AiChat from './AiChat';
 import EnterpriseSubscriptions from './EnterpriseSubscriptions';
-import InkeepAskAi from './InkeepAskAi';
 import TenantSelector from './TenantSelector';
 import UserInfo from './UserInfo';
 import styles from './index.module.scss';
@@ -65,7 +65,7 @@ function Topbar({ className, hideTenantSelector, hideTitle }: Props) {
         </>
       )}
       <Spacer />
-      {isCloud && <InkeepAskAi className={styles.button} />}
+      {isCloud && <AiChat />}
       {isCloud && <EnterpriseSubscriptions className={styles.button} />}
       <DocumentButton />
       <HelpButton />

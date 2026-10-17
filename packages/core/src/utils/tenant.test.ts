@@ -15,9 +15,11 @@ await mockEsmWithActual('#src/env-set/index.js', () => ({
 }));
 
 const findActiveDomain = jest.fn();
+const findMcpPortalTenantId = jest.fn();
 mockEsm('#src/queries/domains.js', () => ({
   createDomainsQueries: () => ({
     findActiveDomain,
+    findMcpPortalTenantId,
   }),
 }));
 
@@ -183,6 +185,20 @@ describe('getTenantId()', () => {
     };
     findActiveDomain.mockResolvedValueOnce({ domain: 'logto.mock.com', tenantId: 'mock' });
     await expect(getTenantIdFirstElement(new URL('https://logto.mock.com'))).resolves.toBe('mock');
+  });
+
+  it('should resolve an MCP portal hostname when it is not a custom domain', async () => {
+    process.env = {
+      ...backupEnv,
+      ENDPOINT: 'https://foo.*.logto.mock/app',
+      NODE_ENV: 'production',
+    };
+    findActiveDomain.mockResolvedValueOnce(null);
+    findMcpPortalTenantId.mockResolvedValueOnce('mock');
+
+    await expect(getTenantIdFirstElement(new URL('https://eng.mcp.example.com'))).resolves.toBe(
+      'mock'
+    );
   });
 
   it('should discard a stale write-back when the domain cache is invalidated mid-lookup', async () => {

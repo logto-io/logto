@@ -1,13 +1,11 @@
 import { Theme } from '@logto/schemas';
 import { useEffect, useRef } from 'react';
 
-import LogtoLogtoDark from '@/shared/assets/icons/logto-logo-dark.svg?react';
-import LogtoLogoLight from '@/shared/assets/icons/logto-logo-light.svg?react';
-import LogtoLogoShadow from '@/shared/assets/icons/logto-logo-shadow.svg?react';
+import MeshxMark from '@/shared/assets/icons/meshx-mark.svg?react';
 
 import styles from './index.module.scss';
 
-const logtoUrl = `https://logto.io/?${new URLSearchParams({
+const meshxUrl = `https://meshx.io/?${new URLSearchParams({
   utm_source: 'sign_in',
   utm_medium: 'powered_by',
 }).toString()}`;
@@ -79,8 +77,8 @@ type Props = {
   readonly theme: Theme;
 };
 
-const LogtoSignature = ({ className, theme }: Props) => {
-  const LogtoLogo = theme === Theme.Light ? LogtoLogoLight : LogtoLogtoDark;
+// The MeshX mark is the same in both themes, so the theme prop only keeps the call sites unchanged.
+const LogtoSignature = ({ className }: Props) => {
 
   const containerRef = useRef<HTMLDivElement>(null);
   const anchorRef = useRef<HTMLAnchorElement>(null);
@@ -170,18 +168,18 @@ const LogtoSignature = ({ className, theme }: Props) => {
     <div ref={containerRef} className={className} data-logto-signature-container="secured">
       <a
         ref={anchorRef}
-        aria-label="Powered By Logto"
+        aria-label="Powered By MeshX"
         className={styles.signature}
         data-logto-signature="secured"
-        href={logtoUrl.toString()}
+        href={meshxUrl.toString()}
         rel="noopener"
         target="_blank"
       >
         <span data-logto-signature-text className={styles.text}>
           Powered by
         </span>
-        <LogtoLogoShadow data-logto-signature-icon="static" className={styles.staticIcon} />
-        <LogtoLogo data-logto-signature-icon="highlight" className={styles.highlightIcon} />
+        <MeshxMark data-logto-signature-icon="static" className={styles.staticIcon} />
+        <MeshxMark data-logto-signature-icon="highlight" className={styles.highlightIcon} />
       </a>
     </div>
   );

@@ -19,6 +19,11 @@ const tabs = {
   customize_jwt: 'JWT سفارشی',
   signing_keys: 'کلیدهای امضا',
   organization_template: 'قالب سازمان',
+  stacks: 'پشته‌ها',
+  capacity: 'ظرفیت',
+  agent: 'عامل',
+  bundle: 'بسته',
+  mcp_servers: 'سرورهای MCP',
 };
 
 export default Object.freeze(tabs);

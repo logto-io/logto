@@ -58,7 +58,7 @@ const get_started = {
     },
     sidebar: {
       title: 'Focus on building, not hosting.',
-      description: 'Let MeshX Cloud handle auth infrastructure for you.',
+      description: 'Let MeshX Cloud handle the infrastructure for you.',
       action: 'Try MeshX Cloud',
     },
   },

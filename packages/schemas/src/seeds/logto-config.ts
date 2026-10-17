@@ -7,8 +7,6 @@ import type {
 } from '../types/index.js';
 import { LogtoTenantConfigKey } from '../types/index.js';
 
-import { cloudApiIndicator } from './cloud-api.js';
-
 export const createDefaultAdminConsoleConfig = (
   forTenantId: string
 ): Readonly<{
@@ -28,7 +26,8 @@ export const createDefaultAdminConsoleConfig = (
 export const createCloudConnectionConfig = (
   forTenantId: string,
   appId: string,
-  appSecret: string
+  appSecret: string,
+  resource: string
 ): Readonly<{
   tenantId: string;
   key: LogtoTenantConfigKey;
@@ -40,7 +39,7 @@ export const createCloudConnectionConfig = (
     value: {
       appId,
       appSecret,
-      resource: cloudApiIndicator,
+      resource,
     },
   } satisfies CreateLogtoConfig);
 

@@ -19,6 +19,11 @@ const tabs = {
   customize_jwt: 'กำหนดค่า JWT',
   signing_keys: 'คีย์ลงนาม',
   organization_template: 'แม่แบบองค์กร',
+  stacks: 'สแต็ก',
+  capacity: 'ความจุ',
+  agent: 'เอเจนต์',
+  bundle: 'บันเดิล',
+  mcp_servers: 'เซิร์ฟเวอร์ MCP',
 };
 
 export default Object.freeze(tabs);

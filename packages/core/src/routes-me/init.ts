@@ -1,4 +1,4 @@
-import { adminTenantId, getManagementApiResourceIndicator } from '@logto/schemas';
+import { adminTenantId, getMeApiResourceIndicator } from '@logto/schemas';
 import Koa from 'koa';
 import Router from 'koa-router';
 
@@ -27,7 +27,12 @@ export default function initMeApis(tenant: TenantContext): Koa {
   const meRouter = new Router<unknown, WithAuthContext & WithI18nContext>();
 
   meRouter.use(
-    koaAuth(tenant.envSet, getManagementApiResourceIndicator(adminTenantId, 'me')),
+    koaAuth(
+      tenant.envSet,
+      getMeApiResourceIndicator(
+        EnvSet.values.isCloud ? EnvSet.values.adminUrlSet.endpoint.origin : undefined
+      )
+    ),
     async (ctx, next) => {
       assertThat(
         ctx.auth.type === 'user',

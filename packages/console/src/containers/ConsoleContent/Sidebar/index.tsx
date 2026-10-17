@@ -24,7 +24,11 @@ function Sidebar() {
 
   return (
     <div className={styles.sidebar}>
-      <OverlayScrollbar className={styles.menu}>
+      {/* Like foundation-frontend's sidebar: the nav still scrolls, but no scrollbar is drawn. */}
+      <OverlayScrollbar
+        className={styles.menu}
+        options={{ scrollbars: { visibility: 'hidden' } }}
+      >
         <div className={styles.menuContent}>
           {sections.map(({ title, items }) => (
             <Section key={title} title={t(title)}>

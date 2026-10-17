@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
 
 import styles from './App.module.scss';
-import logtoLogoDark from './assets/logto-logo-dark.svg';
-import logtoLogoLight from './assets/logto-logo-light.svg';
-import logtoLogoShadow from './assets/logto-logo-shadow.svg';
+import meshxMark from './assets/meshx-mark.svg';
 
-const logtoUrl = `https://logto.io/?${new URLSearchParams({
+const meshxUrl = `https://meshx.io/?${new URLSearchParams({
   utm_source: 'sign_in',
   utm_medium: 'powered_by',
 }).toString()}`;
@@ -33,18 +31,14 @@ const Footer = ({ isDarkMode }: { readonly isDarkMode: boolean }) => (
   <div className={styles.footerContainer}>
     <a
       className={styles.footer}
-      href={logtoUrl}
+      href={meshxUrl}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Powered By Logto"
+      aria-label="Powered By MeshX"
     >
       <span>Powered by</span>
-      <img className={styles.staticLogo} src={logtoLogoShadow} alt="Logto" />
-      <img
-        className={styles.highlightLogo}
-        src={isDarkMode ? logtoLogoDark : logtoLogoLight}
-        alt="Logto"
-      />
+      <img className={styles.staticLogo} src={meshxMark} alt="MeshX" />
+      <img className={styles.highlightLogo} src={meshxMark} alt="MeshX" />
     </a>
   </div>
 );

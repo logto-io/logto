@@ -16,7 +16,7 @@ import {
   LogtoJwtTokenKey,
   LogtoOidcConfigKey,
   OidcSigningKeyStatus,
-  cloudApiIndicator,
+  getCloudApiIndicator,
   cloudConnectionDataGuard,
   normalizeOidcPrivateKeys,
   oidcConfigKeysResponseGuard,
@@ -27,6 +27,8 @@ import {
   logtoOidcConfigGuard,
 } from '@logto/schemas';
 import { type ConsoleLog } from '@logto/shared';
+
+import { EnvSet } from '#src/env-set/index.js';
 import chalk from 'chalk';
 import { ZodError, z } from 'zod';
 
@@ -94,7 +96,7 @@ export const createLogtoConfigLibrary = ({
     return {
       appId: result.data.appId,
       appSecret: result.data.appSecret,
-      resource: cloudApiIndicator,
+      resource: getCloudApiIndicator(EnvSet.values.adminUrlSet.endpoint.origin),
     };
   };
 

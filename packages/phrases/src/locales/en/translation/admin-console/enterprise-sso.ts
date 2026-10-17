@@ -9,7 +9,7 @@ const enterprise_sso = {
 
   placeholder_title: 'Enterprise connector',
   placeholder_description:
-    'MeshX has provided many built-in enterprise identity providers to connect, meantime you can create your own with SAML and OIDC protocols.',
+    'Connect a built-in enterprise identity provider in a few clicks, or add your own with SAML or OIDC.',
   create_modal: {
     title: 'Add enterprise connector',
     text_divider: 'Or you can customize your connector by a standard protocol.',

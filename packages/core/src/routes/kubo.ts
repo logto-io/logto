@@ -16,6 +16,7 @@ const createStackBody = object({
   template: string(),
   tenant: string(),
   mode: string().optional(),
+  authProvider: string().optional(),
   exclude: array(string()).optional(),
   operators: object({}).catchall(boolean()).optional(),
   bootstrapM2M: boolean().optional(),

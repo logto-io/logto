@@ -15,6 +15,8 @@ import { defaultConfig, manualChunks } from '../../vite.shared.config';
 // @see {@link https://vitejs.dev/config/shared-options.html#envprefix}
 dotenv.config({ path: await findUp('.env', {}) });
 
+// The console is served by Logto core at `/console` in every mode, so it is always reached through
+// core's origin. In cloud mode core also serves the cloud API the console calls, on that origin.
 const buildConfig = (mode: string): UserConfig => ({
   base: `${process.env.CONSOLE_PUBLIC_URL ?? '/console'}`,
   envDir: '../../',
@@ -52,7 +54,6 @@ const buildConfig = (mode: string): UserConfig => ({
     'import.meta.env.CONSOLE_EMBEDDED_PRICING_URL': JSON.stringify(
       process.env.CONSOLE_EMBEDDED_PRICING_URL
     ),
-    'import.meta.env.INKEEP_API_KEY': JSON.stringify(process.env.INKEEP_API_KEY),
     'import.meta.env.POSTHOG_PUBLIC_KEY': JSON.stringify(process.env.POSTHOG_PUBLIC_KEY),
     'import.meta.env.POSTHOG_PUBLIC_HOST': JSON.stringify(process.env.POSTHOG_PUBLIC_HOST),
     'import.meta.env.POSTHOG_PUBLIC_UI_HOST': JSON.stringify(process.env.POSTHOG_PUBLIC_UI_HOST),

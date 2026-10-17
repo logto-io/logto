@@ -1,10 +1,13 @@
 import {
   adminTenantId,
-  cloudApiIndicator,
+  getCloudApiIndicator,
   CloudScope,
   getManagementApiResourceIndicator,
+  getMeApiResourceIndicator,
   PredefinedScope,
 } from '@logto/schemas';
+
+import { isCloud } from './env';
 
 export type ApiResource = {
   indicator: string;
@@ -18,11 +21,11 @@ export const getManagementApi = (tenantId: string) =>
   } satisfies ApiResource);
 
 export const meApi = Object.freeze({
-  indicator: getManagementApiResourceIndicator(adminTenantId, 'me'),
+  indicator: getMeApiResourceIndicator(isCloud ? window.location.origin : undefined),
   scopes: PredefinedScope,
 } satisfies ApiResource);
 
 export const cloudApi = Object.freeze({
-  indicator: cloudApiIndicator,
+  indicator: getCloudApiIndicator(window.location.origin),
   scopes: CloudScope,
 } satisfies ApiResource);

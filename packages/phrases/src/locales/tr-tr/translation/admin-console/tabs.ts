@@ -19,6 +19,11 @@ const tabs = {
   customize_jwt: 'Özel JWT',
   signing_keys: 'İmza anahtarları',
   organization_template: 'Kuruluş şablonu',
+  stacks: 'Yığınlar',
+  capacity: 'Kapasite',
+  agent: 'Ajan',
+  bundle: 'Paket',
+  mcp_servers: 'MCP sunucuları',
 };
 
 export default Object.freeze(tabs);

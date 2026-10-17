@@ -43,10 +43,13 @@
     "@logto/experience": "workspace:*",
     "@logto/js": "^5.1.0",
     "@logto/language-kit": "workspace:^",
+    "@logto/mcp-portal": "workspace:^",
     "@logto/phrases": "workspace:^",
     "@logto/phrases-experience": "workspace:^",
     "@logto/schemas": "workspace:^",
     "@logto/shared": "workspace:^",
+    "@logto/tenant-seed": "workspace:^",
+    "@modelcontextprotocol/sdk": "1.20.2",
     "@silverhand/essentials": "^2.9.1",
     "@silverhand/slonik": "31.0.0-beta.2",
     "@simplewebauthn/server": "^13.3.2",
@@ -147,7 +150,7 @@
     "typescript": "^5.5.3"
   },
   "engines": {
-    "node": "^22.14.0"
+    "node": "^22.14.0 || ^26.0.0"
   },
   "eslintConfig": {
     "extends": "@silverhand",

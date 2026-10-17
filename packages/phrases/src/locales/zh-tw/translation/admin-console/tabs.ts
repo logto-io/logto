@@ -19,6 +19,11 @@ const tabs = {
   customize_jwt: '自訂 JWT',
   signing_keys: '簽署金鑰',
   organization_template: '組織範本',
+  stacks: '堆疊',
+  capacity: '容量',
+  agent: '代理',
+  bundle: '套件',
+  mcp_servers: 'MCP 伺服器',
 };
 
 export default Object.freeze(tabs);

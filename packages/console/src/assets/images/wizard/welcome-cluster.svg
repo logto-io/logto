@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-hidden="true" focusable="false">
+  <!-- Mesh between nodes: the workspace is a cluster, not a single box. -->
+  <g stroke="#c9bfff" stroke-width="3" fill="none" stroke-linecap="round">
+    <path d="M128 128 L62 62" />
+    <path d="M128 128 L194 62" />
+    <path d="M128 128 L62 194" />
+    <path d="M128 128 L194 194" />
+    <path d="M62 62 L194 62" stroke-dasharray="4 6" />
+    <path d="M62 194 L194 194" stroke-dasharray="4 6" />
+  </g>
+
+  <!-- Four server nodes, each a stacked unit with a status light. -->
+  <g>
+    <rect x="34" y="40" width="56" height="44" rx="8" fill="#6b4ef6" />
+    <rect x="44" y="52" width="36" height="6" rx="2" fill="#c9bfff" />
+    <rect x="44" y="64" width="24" height="6" rx="2" fill="#8f7cf8" />
+    <circle cx="80" cy="77" r="3" fill="#f6c177" />
+
+    <rect x="166" y="40" width="56" height="44" rx="8" fill="#6b4ef6" />
+    <rect x="176" y="52" width="36" height="6" rx="2" fill="#c9bfff" />
+    <rect x="176" y="64" width="24" height="6" rx="2" fill="#8f7cf8" />
+    <circle cx="212" cy="77" r="3" fill="#f6c177" />
+
+    <rect x="34" y="172" width="56" height="44" rx="8" fill="#2d2a4a" />
+    <rect x="44" y="184" width="36" height="6" rx="2" fill="#8f7cf8" />
+    <rect x="44" y="196" width="24" height="6" rx="2" fill="#6b4ef6" />
+    <circle cx="80" cy="209" r="3" fill="#ff7a6b" />
+
+    <rect x="166" y="172" width="56" height="44" rx="8" fill="#2d2a4a" />
+    <rect x="176" y="184" width="36" height="6" rx="2" fill="#8f7cf8" />
+    <rect x="176" y="196" width="24" height="6" rx="2" fill="#6b4ef6" />
+    <circle cx="212" cy="209" r="3" fill="#f6c177" />
+  </g>
+
+  <!-- Hub: the control plane that ties the nodes together. -->
+  <circle cx="128" cy="128" r="22" fill="#ffffff" stroke="#6b4ef6" stroke-width="4" />
+  <circle cx="128" cy="128" r="8" fill="#ff7a6b" />
+
+  <!-- Sparkles, as in the rest of the wizard art. -->
+  <path d="M226 18l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#f6c177" />
+  <path d="M24 138l2.5 5.5 5.5 2.5-5.5 2.5-2.5 5.5-2.5-5.5-5.5-2.5 5.5-2.5z" fill="#6b4ef6" />
+</svg>

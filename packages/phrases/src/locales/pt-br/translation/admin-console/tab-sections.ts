@@ -5,6 +5,7 @@ const tab_sections = {
   users: 'Usuários',
   developer: 'Desenvolvedor',
   tenant: 'Inquilino',
+  infrastructure: 'Foundation',
 };
 
 export default Object.freeze(tab_sections);

@@ -7,17 +7,21 @@
   color: var(--color-text);
   align-items: center;
   justify-content: center;
+  // Spacing comes from the gap, not a margin on the SVGs: a margin on `.container svg` would also
+  // reach the spinning mark and push the group off center.
+  gap: _.unit(8);
   overflow: hidden;
+}
 
-  svg {
-    margin-bottom: _.unit(8);
-  }
+.logo {
+  width: auto;
+  // Same on-screen text size as before the crop change (32px for the 96-unit-tall crop).
+  height: 23px;
 }
 
 .mark {
   width: auto;
   height: 32px;
-  margin-bottom: 0;
   animation: spin 1.2s linear infinite;
 }
 

@@ -43,7 +43,7 @@
     "test:ci": "pnpm run test --silent --coverage"
   },
   "engines": {
-    "node": "^22.14.0"
+    "node": "^22.14.0 || ^26.0.0"
   },
   "dependencies": {
     "@logto/language-kit": "workspace:^",

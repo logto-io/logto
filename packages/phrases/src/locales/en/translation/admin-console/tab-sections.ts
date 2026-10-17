@@ -2,7 +2,7 @@ const tab_sections = {
   overview: 'Overview',
   authentication: 'Authentication',
   authorization: 'Authorization',
-  infrastructure: 'Infrastructure',
+  infrastructure: 'Foundation',
   users: 'Users',
   developer: 'Developer',
   tenant: 'Tenant',

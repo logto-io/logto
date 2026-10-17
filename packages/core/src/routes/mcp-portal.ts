@@ -1,202 +1,504 @@
-import { randomBytes } from 'node:crypto';
-
-import { object, string } from 'zod';
+import {
+  assertPublicHttpsUrl,
+  checkReachable,
+  createAudit,
+  DuplicatePortalError,
+  CredentialKeyError,
+  decryptCredential,
+  DuplicateUpstreamError,
+  encryptCredential,
+  hostnamePattern,
+  parseCredentialKey,
+  PostgresPortalStore,
+  PostgresPortalSettingsStore,
+  PostgresUpstreamStore,
+  type PortalSettingsStore,
+  type PortalStore,
+  type Upstream,
+  type UpstreamStore,
+  UpstreamPool,
+  UpstreamUrlError,
+  upstreamNamePattern,
+} from '@logto/mcp-portal';
+import { type CommonQueryMethods } from '@silverhand/slonik';
+import { array, boolean, object, string } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
+import { clearCustomDomainCache } from '#src/utils/tenant.js';
 
 import type { ManagementApiRouter, ManagementApiRouterContext, RouterInitArgs } from './types.js';
 
-// Manages the signed-in admin's MCP portal upstreams on the MCP portal service. Mounted on the
-// management API router, so Logto's admin auth applies first. The portal is told who the caller is
-// over a shared-secret channel; it never sees the caller's token.
-//
-// The connection (portal URL and shared secret) is set up once from the console and stored in
-// Logto's config. Requests read it from the database; nothing is read from environment variables.
-const upstreamNamePattern = /^[a-z][\da-z-]{0,31}$/;
+// Admin side of the MCP portal: portals, their servers, and who may use them. Mounted on the
+// management API, so Logto's admin auth applies first. Everything is stored in Logto's database.
+// The public endpoint that agents use is in mcp-portal-endpoint.ts.
+
+export type McpPortalStores = {
+  portals: PortalStore;
+  upstreams: UpstreamStore;
+  settings: PortalSettingsStore;
+};
+
+const audit = createAudit();
+/** One connection pool for the whole process, shared with the public endpoint. */
+export const upstreamPool = new UpstreamPool();
+
+/**
+ * The stores over a tenant's database. The portal tables are created by a schema alteration, so
+ * requests only read and write them.
+ */
+export const storesFor = (db: CommonQueryMethods): McpPortalStores => ({
+  portals: new PostgresPortalStore(db),
+  upstreams: new PostgresUpstreamStore(db),
+  settings: new PostgresPortalSettingsStore(db),
+});
+
+/** The deployment's key, read on each use so a restart with a new key takes effect at once. */
+const credentialKey = () => parseCredentialKey(process.env.MCP_PORTAL_ENCRYPTION_KEY);
+
+/**
+ * Decrypts an upstream's stored token just before the endpoint connects to it. Returns undefined when
+ * the server has no token. Throws `CredentialKeyError` when a token exists but the key is missing.
+ */
+export const unlockFor = (upstreams: UpstreamStore) => async (upstream: Upstream) => {
+  const stored = await upstreams.findCredential(upstream.portalId, upstream.name);
+
+  return stored === undefined ? undefined : decryptCredential(stored, credentialKey());
+};
+
+// A DNS label: letters, digits and hyphens, no leading or trailing hyphen.
+const subdomainPattern = /^[\da-z](?:[\da-z-]{0,61}[\da-z])?$/;
+
+const portalIdPattern = /^[\w-]{1,64}$/;
+
+const createPortalBody = object({
+  name: string().min(1).max(100),
+  subdomain: string().regex(subdomainPattern),
+}).strict();
+
+const updateSettingsBody = object({
+  baseDomain: string().regex(hostnamePattern),
+}).strict();
 
 const createUpstreamBody = object({
   name: string().regex(upstreamNamePattern),
   url: string().url(),
 });
 
-const setupBody = object({
-  url: string()
-    .url()
-    .refine((value) => value.startsWith('https://'), 'The portal URL must use https'),
-  token: string().min(1),
-});
+// Per-server and per-tool switches, and the organizations that can see a server.
+const updateUpstreamBody = object({
+  enabled: boolean().optional(),
+  disabledTools: array(string().min(1).max(200)).max(500).optional(),
+  organizationIds: array(string().min(1).max(64)).max(100).optional(),
+}).strict();
 
-const notConfigured = (ctx: ManagementApiRouterContext) => {
-  ctx.status = 503;
-  ctx.body = { code: 'mcp_portal.not_configured', message: 'MCP portal is not set up' };
+// The bearer token an admin stores for one server. It is accepted here and never returned.
+const credentialBody = object({
+  token: string().min(1).max(4096),
+}).strict();
+
+const updatePortalOrganizationsBody = object({
+  organizationIds: array(string().min(1).max(64)).max(100),
+}).strict();
+
+const invalidPortal = (ctx: ManagementApiRouterContext) => {
+  ctx.status = 400;
+  ctx.body = { code: 'mcp_portal.invalid_portal_id', message: 'Invalid portal id' };
 };
 
-const forward = async (
-  ctx: ManagementApiRouterContext,
-  connection: { url: string; internalSecret: string } | undefined,
-  init: { method: 'GET' | 'POST' | 'DELETE'; path: string; body?: unknown }
+const invalidName = (ctx: ManagementApiRouterContext) => {
+  ctx.status = 400;
+  ctx.body = { code: 'mcp_portal.invalid_name', message: 'Invalid portal or upstream name' };
+};
+
+const notFound = (ctx: ManagementApiRouterContext, message: string) => {
+  ctx.status = 404;
+  ctx.body = { code: 'mcp_portal.not_found', message };
+};
+
+/**
+ * Registers the admin routes. `load` returns the stores for this request; production uses the
+ * database, and tests pass fakes.
+ */
+export const registerMcpPortalRoutes = <T extends ManagementApiRouter>(
+  router: T,
+  load: () => Promise<McpPortalStores>
 ) => {
-  if (!connection) {
-    notConfigured(ctx);
-    return;
-  }
-
-  const response = await fetch(new URL(init.path, connection.url), {
-    method: init.method,
-    headers: {
-      accept: 'application/json',
-      ...(init.body === undefined ? {} : { 'content-type': 'application/json' }),
-      'x-portal-internal-secret': connection.internalSecret,
-      'x-portal-owner': ctx.auth.id,
-    },
-    body: init.body === undefined ? undefined : JSON.stringify(init.body),
-    signal: AbortSignal.timeout(10_000),
-  });
-
-  ctx.status = response.status;
-
-  if (response.status === 204) {
-    ctx.body = undefined;
-    return;
-  }
-
-  const text = await response.text();
-  ctx.body = text ? JSON.parse(text) : undefined;
-};
-
-export default function mcpPortalRoutes<T extends ManagementApiRouter>(
-  ...[router, tenant]: RouterInitArgs<T>
-) {
-  const { logtoConfigs } = tenant.queries;
-
-  router.get('/mcp-portal/connection', async (ctx, next) => {
-    const connection = await logtoConfigs.getMcpPortalConnection();
-    // The secret is never returned.
-    ctx.body = connection ? { configured: true, url: connection.url } : { configured: false };
+  router.get('/mcp-portal/portals', async (ctx, next) => {
+    ctx.body = { portals: await (await load()).portals.list() };
     return next();
   });
 
-  // One-time setup. Core generates the shared secret, gives it to the portal together with the
-  // one-time token the admin copied from the portal log, and stores it only if the portal accepts.
-  router.post(
-    '/mcp-portal/connection',
-    koaGuard({ body: setupBody, status: [201, 401, 409, 502] }),
+  // The base domain is set from the console. A portal's hostname is <subdomain>.<base domain>.
+  router.get('/mcp-portal/settings', async (ctx, next) => {
+    ctx.body = await (await load()).settings.get();
+    return next();
+  });
+
+  router.put(
+    '/mcp-portal/settings',
+    koaGuard({ body: updateSettingsBody, status: [200, 400] }),
     async (ctx, next) => {
-      const { url, token } = ctx.guard.body;
-      const internalSecret = randomBytes(32).toString('hex');
-
-      const response = await fetch(new URL('/setup', url), {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ token, internalSecret }),
-        signal: AbortSignal.timeout(10_000),
-      });
-
-      if (response.status === 201) {
-        // Saved before confirming. The portal accepts the pending secret, so requests already work.
-        await logtoConfigs.upsertMcpPortalConnection({ url, internalSecret });
-
-        const confirmation = await fetch(new URL('/setup/confirm', url), {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ token, internalSecret }),
-          signal: AbortSignal.timeout(10_000),
-        });
-
-        if (confirmation.status !== 201) {
-          // The connection works, but the portal still holds its token. Surfaced so it can be retried.
-          ctx.status = 502;
-          ctx.body = { code: 'mcp_portal.unconfirmed', message: 'Portal setup is not confirmed' };
-          return next();
-        }
-
-        ctx.status = 201;
-        ctx.body = { configured: true, url };
-        return next();
-      }
-
-      if (response.status === 401) {
-        ctx.status = 401;
-        ctx.body = { code: 'mcp_portal.invalid_setup_token', message: 'Setup token is not valid' };
-        return next();
-      }
-
-      if (response.status === 409) {
-        ctx.status = 409;
-        ctx.body = { code: 'mcp_portal.already_configured', message: 'Portal is already set up' };
-        return next();
-      }
-
-      ctx.status = 502;
-      ctx.body = { code: 'mcp_portal.upstream_error', message: 'Portal setup failed' };
+      ctx.body = await (await load()).settings.setBaseDomain(ctx.guard.body.baseDomain);
+      audit({ action: 'portal.settings', sub: ctx.auth.id, outcome: 'ok' });
       return next();
     }
   );
 
-  // Clears the connection so setup can run again. The portal is asked to reset first. A portal that
-  // no longer holds this secret (it restarted mid-setup, or was already reset) answers 401, and only
-  // core's copy is left to clear.
-  router.delete('/mcp-portal/connection', async (ctx, next) => {
-    const connection = await logtoConfigs.getMcpPortalConnection();
+  router.post(
+    '/mcp-portal/portals',
+    koaGuard({ body: createPortalBody, status: [201, 400, 409] }),
+    async (ctx, next) => {
+      const { portals, settings } = await load();
+      const { baseDomain } = await settings.get();
 
-    if (connection) {
-      try {
-        const response = await fetch(new URL('/setup/reset', connection.url), {
-          method: 'POST',
-          headers: { 'x-portal-internal-secret': connection.internalSecret },
-          signal: AbortSignal.timeout(10_000),
-        });
-
-        if (response.status !== 200 && response.status !== 401) {
-          throw new Error(`Portal reset returned ${response.status}`);
-        }
-      } catch {
-        ctx.status = 502;
-        ctx.body = { code: 'mcp_portal.reset_failed', message: 'Could not reset the MCP portal' };
+      if (!baseDomain) {
+        ctx.status = 400;
+        ctx.body = { code: 'mcp_portal.base_domain_not_set', message: 'Set the base domain first' };
         return next();
       }
 
-      await logtoConfigs.deleteMcpPortalConnection();
+      const hostname = `${ctx.guard.body.subdomain}.${baseDomain}`;
+
+      if (!hostnamePattern.test(hostname)) {
+        ctx.status = 400;
+        ctx.body = { code: 'mcp_portal.invalid_hostname', message: 'The hostname is not valid' };
+        return next();
+      }
+
+      try {
+        ctx.status = 201;
+        ctx.body = await portals.add({ name: ctx.guard.body.name, hostname });
+        await clearCustomDomainCache(hostname);
+      } catch (error: unknown) {
+        if (!(error instanceof DuplicatePortalError)) {
+          throw error;
+        }
+
+        ctx.status = 409;
+        ctx.body = { code: 'mcp_portal.duplicate', message: error.message };
+      }
+
+      return next();
+    }
+  );
+
+  router.delete('/mcp-portal/portals/:portalId', async (ctx, next) => {
+    const { portalId } = ctx.params;
+
+    if (!portalId || !portalIdPattern.test(portalId)) {
+      invalidPortal(ctx);
+      return next();
     }
 
+    const { portals, upstreams } = await load();
+    const portal = await portals.findById(portalId);
+
+    if (!portal) {
+      notFound(ctx, 'Portal not found');
+      return next();
+    }
+
+    // Upstreams belong to the portal, so they go with it.
+    for (const upstream of await upstreams.listForPortal(portalId)) {
+      await upstreams.remove(portalId, upstream.name);
+      await upstreamPool.invalidate(upstream);
+    }
+
+    if (!(await portals.remove(portalId))) {
+      notFound(ctx, 'Portal not found');
+      return next();
+    }
+
+    await clearCustomDomainCache(portal.hostname);
+
+    audit({ action: 'portal.remove', sub: ctx.auth.id, portal: portalId, outcome: 'ok' });
     ctx.status = 204;
     return next();
   });
 
-  router.get('/mcp-portal/upstreams', async (ctx, next) => {
-    await forward(ctx, await logtoConfigs.getMcpPortalConnection(), {
-      method: 'GET',
-      path: '/upstreams',
-    });
-    return next();
-  });
-
-  router.post(
-    '/mcp-portal/upstreams',
-    koaGuard({ body: createUpstreamBody, status: [200, 201, 400, 409, 503] }),
+  router.put(
+    '/mcp-portal/portals/:portalId/organizations',
+    koaGuard({ body: updatePortalOrganizationsBody, status: [200, 400, 404] }),
     async (ctx, next) => {
-      await forward(ctx, await logtoConfigs.getMcpPortalConnection(), {
-        method: 'POST',
-        path: '/upstreams',
-        body: ctx.guard.body,
-      });
+      const { portalId } = ctx.params;
+
+      if (!portalId || !portalIdPattern.test(portalId)) {
+        invalidPortal(ctx);
+        return next();
+      }
+
+      const portal = await (
+        await load()
+      ).portals.setOrganizations(portalId, [...new Set(ctx.guard.body.organizationIds)]);
+
+      if (!portal) {
+        notFound(ctx, 'Portal not found');
+        return next();
+      }
+
+      audit({ action: 'portal.organizations', sub: ctx.auth.id, portal: portalId, outcome: 'ok' });
+      ctx.body = portal;
       return next();
     }
   );
 
-  router.delete('/mcp-portal/upstreams/:name', async (ctx, next) => {
-    const { name } = ctx.params;
+  router.get('/mcp-portal/portals/:portalId/upstreams', async (ctx, next) => {
+    const { portalId } = ctx.params;
 
-    if (!name || !upstreamNamePattern.test(name)) {
-      ctx.status = 400;
-      ctx.body = { code: 'mcp_portal.invalid_name', message: 'Invalid upstream name' };
+    if (!portalId || !portalIdPattern.test(portalId)) {
+      invalidPortal(ctx);
       return next();
     }
 
-    await forward(ctx, await logtoConfigs.getMcpPortalConnection(), {
-      method: 'DELETE',
-      path: `/upstreams/${encodeURIComponent(name)}`,
-    });
+    const { upstreams } = await load();
+    ctx.body = {
+      upstreams: (await upstreams.listForPortal(portalId)).map(
+        ({ name, url, createdAt, enabled, disabledTools, organizationIds }) => ({
+          name,
+          url,
+          createdAt,
+          enabled,
+          disabledTools,
+          organizationIds,
+        })
+      ),
+    };
     return next();
   });
+
+  router.post(
+    '/mcp-portal/portals/:portalId/upstreams',
+    koaGuard({ body: createUpstreamBody, status: [201, 400, 404, 409] }),
+    async (ctx, next) => {
+      const { portalId } = ctx.params;
+      const { name, url } = ctx.guard.body;
+
+      if (!portalId || !portalIdPattern.test(portalId)) {
+        invalidPortal(ctx);
+        return next();
+      }
+
+      const { portals, upstreams } = await load();
+
+      if (!(await portals.findById(portalId))) {
+        notFound(ctx, 'Portal not found');
+        return next();
+      }
+
+      try {
+        await assertPublicHttpsUrl(url);
+      } catch (error: unknown) {
+        if (!(error instanceof UpstreamUrlError)) {
+          throw error;
+        }
+
+        ctx.status = 400;
+        ctx.body = { code: 'mcp_portal.invalid_url', message: error.message };
+        return next();
+      }
+
+      try {
+        const upstream = await upstreams.add({ name, url, portalId });
+        audit({ action: 'upstream.add', sub: ctx.auth.id, upstream: name, outcome: 'ok' });
+        // The server is kept either way, so a server that is down right now can be fixed later.
+        const reachable = await checkReachable(upstreamPool, upstream);
+        ctx.status = 201;
+        ctx.body = {
+          name: upstream.name,
+          url: upstream.url,
+          createdAt: upstream.createdAt,
+          reachable,
+        };
+      } catch (error: unknown) {
+        if (!(error instanceof DuplicateUpstreamError)) {
+          throw error;
+        }
+
+        ctx.status = 409;
+        ctx.body = { code: 'mcp_portal.duplicate', message: error.message };
+      }
+
+      return next();
+    }
+  );
+
+  router.get('/mcp-portal/portals/:portalId/upstreams/:name/tools', async (ctx, next) => {
+    const { portalId, name } = ctx.params;
+
+    if (!portalId || !portalIdPattern.test(portalId) || !name || !upstreamNamePattern.test(name)) {
+      invalidName(ctx);
+      return next();
+    }
+
+    const upstream = await (await load()).upstreams.findForPortal(portalId, name);
+
+    if (!upstream) {
+      notFound(ctx, `Upstream "${name}" not found`);
+      return next();
+    }
+
+    try {
+      const client = await upstreamPool.get(upstream);
+      const { tools } = await client.listTools();
+      ctx.body = {
+        tools: tools.map((tool) => ({
+          name: tool.name,
+          description: tool.description ?? '',
+          enabled: !upstream.disabledTools.includes(tool.name),
+        })),
+      };
+    } catch {
+      await upstreamPool.invalidate(upstream);
+      ctx.status = 503;
+      ctx.body = {
+        code: 'mcp_portal.upstream_unavailable',
+        message: `Upstream "${name}" did not answer`,
+      };
+    }
+
+    return next();
+  });
+
+  router.patch(
+    '/mcp-portal/portals/:portalId/upstreams/:name',
+    koaGuard({ body: updateUpstreamBody, status: [200, 400, 404] }),
+    async (ctx, next) => {
+      const { portalId, name } = ctx.params;
+
+      if (
+        !portalId ||
+        !portalIdPattern.test(portalId) ||
+        !name ||
+        !upstreamNamePattern.test(name)
+      ) {
+        invalidName(ctx);
+        return next();
+      }
+
+      const upstream = await (await load()).upstreams.update(portalId, name, ctx.guard.body);
+
+      if (!upstream) {
+        notFound(ctx, `Upstream "${name}" not found`);
+        return next();
+      }
+
+      audit({ action: 'upstream.update', sub: ctx.auth.id, upstream: name, outcome: 'ok' });
+      ctx.body = upstreamView(upstream);
+      return next();
+    }
+  );
+
+  router.delete('/mcp-portal/portals/:portalId/upstreams/:name', async (ctx, next) => {
+    const { portalId, name } = ctx.params;
+
+    if (!portalId || !portalIdPattern.test(portalId) || !name || !upstreamNamePattern.test(name)) {
+      invalidName(ctx);
+      return next();
+    }
+
+    const { upstreams } = await load();
+    const existing = await upstreams.findForPortal(portalId, name);
+
+    if (!existing || !(await upstreams.remove(portalId, name))) {
+      notFound(ctx, `Upstream "${name}" not found`);
+      return next();
+    }
+
+    await upstreamPool.invalidate(existing);
+    audit({ action: 'upstream.remove', sub: ctx.auth.id, upstream: name, outcome: 'ok' });
+    ctx.status = 204;
+    return next();
+  });
+
+  // Write-only: the token goes in, and only `hasCredential` comes back. Changing it drops the cached
+  // connection so the next call uses the new token.
+  router.put(
+    '/mcp-portal/portals/:portalId/upstreams/:name/credential',
+    koaGuard({ body: credentialBody, status: [200, 400, 404, 503] }),
+    async (ctx, next) => {
+      const { portalId, name } = ctx.params;
+
+      if (
+        !portalId ||
+        !portalIdPattern.test(portalId) ||
+        !name ||
+        !upstreamNamePattern.test(name)
+      ) {
+        invalidName(ctx);
+        return next();
+      }
+
+      const { upstreams } = await load();
+      const existing = await upstreams.findForPortal(portalId, name);
+
+      if (!existing) {
+        notFound(ctx, `Upstream "${name}" not found`);
+        return next();
+      }
+
+      try {
+        const ciphertext = encryptCredential(ctx.guard.body.token, credentialKey());
+        await upstreams.setCredential(portalId, name, ciphertext);
+      } catch (error: unknown) {
+        if (!(error instanceof CredentialKeyError)) {
+          throw error;
+        }
+
+        ctx.status = 503;
+        ctx.body = { code: 'mcp_portal.encryption_key_missing', message: error.message };
+        return next();
+      }
+
+      await upstreamPool.invalidate(existing);
+      audit({ action: 'upstream.update', sub: ctx.auth.id, upstream: name, outcome: 'ok' });
+      ctx.body = upstreamView({ ...existing, hasCredential: true });
+      return next();
+    }
+  );
+
+  router.delete('/mcp-portal/portals/:portalId/upstreams/:name/credential', async (ctx, next) => {
+    const { portalId, name } = ctx.params;
+
+    if (!portalId || !portalIdPattern.test(portalId) || !name || !upstreamNamePattern.test(name)) {
+      invalidName(ctx);
+      return next();
+    }
+
+    const { upstreams } = await load();
+    const existing = await upstreams.findForPortal(portalId, name);
+
+    if (!existing || !(await upstreams.setCredential(portalId, name))) {
+      notFound(ctx, `Upstream "${name}" not found`);
+      return next();
+    }
+
+    await upstreamPool.invalidate(existing);
+    audit({ action: 'upstream.update', sub: ctx.auth.id, upstream: name, outcome: 'ok' });
+    ctx.body = upstreamView({ ...existing, hasCredential: false });
+    return next();
+  });
+};
+
+const upstreamView = ({
+  name,
+  url,
+  createdAt,
+  enabled,
+  disabledTools,
+  organizationIds,
+  hasCredential,
+}: Upstream) => ({
+  name,
+  url,
+  createdAt,
+  enabled,
+  disabledTools,
+  organizationIds,
+  hasCredential,
+});
+
+export default function mcpPortalRoutes<T extends ManagementApiRouter>(
+  ...[router, tenant]: RouterInitArgs<T>
+) {
+  registerMcpPortalRoutes(router, async () => storesFor(tenant.envSet.pool));
 }

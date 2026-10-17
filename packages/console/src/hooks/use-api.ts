@@ -228,9 +228,10 @@ const useApi = (props: Omit<StaticApiProps, 'prefixUrl' | 'resourceIndicator'> =
    * Since we removes all user roles for the Management API except the one for the default tenant,
    * the OSS version should be used for the default tenant only.
    */
+  const useCloudProxy = isCloud;
   const config = useMemo(
     () =>
-      isCloud
+      useCloudProxy
         ? {
             prefixUrl: appendPath(new URL(window.location.origin), 'm', currentTenantId),
             resourceIndicator: buildOrganizationUrn(getTenantOrganizationId(currentTenantId)),
@@ -239,7 +240,7 @@ const useApi = (props: Omit<StaticApiProps, 'prefixUrl' | 'resourceIndicator'> =
             prefixUrl: tenantEndpoint,
             resourceIndicator: getManagementApiResourceIndicator(currentTenantId),
           },
-    [currentTenantId, tenantEndpoint]
+    [currentTenantId, tenantEndpoint, useCloudProxy]
   );
 
   if (!isCloud && currentTenantId !== defaultTenantId) {

@@ -86,7 +86,7 @@ describe('createVerifier', () => {
   const verifier = async () => {
     const { issuer } = await fixturePromise;
 
-    return createVerifier({ issuer, audience, requiredScope });
+    return createVerifier({ issuer, audience: [audience], requiredScope });
   };
 
   it('accepts a valid token and returns the subject and scopes', async () => {

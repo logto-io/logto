@@ -19,6 +19,11 @@ const tabs = {
   customize_jwt: '自定义 JWT',
   signing_keys: '签名密钥',
   organization_template: '组织模板',
+  stacks: '堆栈',
+  capacity: '容量',
+  agent: '智能体',
+  bundle: '捆绑包',
+  mcp_servers: 'MCP 服务器',
 };
 
 export default Object.freeze(tabs);

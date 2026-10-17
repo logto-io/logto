@@ -2,24 +2,10 @@ import { type Optional } from '@silverhand/essentials';
 import type { TFuncKey } from 'i18next';
 import type { FC, ReactNode } from 'react';
 
-import BarGraph from '@/assets/icons/bar-graph.svg?react';
-import Bolt from '@/assets/icons/bolt.svg?react';
-import Box from '@/assets/icons/box.svg?react';
-import Code from '@/assets/icons/code.svg?react';
-import Connection from '@/assets/icons/connection.svg?react';
-import Gear from '@/assets/icons/gear.svg?react';
-import Hook from '@/assets/icons/hook.svg?react';
-import JwtClaims from '@/assets/icons/jwt-claims.svg?react';
-import List from '@/assets/icons/list.svg?react';
-import OrganizationTemplate from '@/assets/icons/organization-template-feature.svg?react';
-import Organization from '@/assets/icons/organization.svg?react';
-import UserProfile from '@/assets/icons/profile.svg?react';
-import ResourceIcon from '@/assets/icons/resource.svg?react';
-import Role from '@/assets/icons/role.svg?react';
-import SecurityLock from '@/assets/icons/security-lock.svg?react';
-import Security from '@/assets/icons/security.svg?react';
-import EnterpriseSso from '@/assets/icons/single-sign-on.svg?react';
-import Web from '@/assets/icons/web.svg?react';
+import Cube from '@/assets/icons/cube.svg?react';
+import Sparkles from '@/assets/icons/sparkles.svg?react';
+
+import { menuIcons } from './menu-icons';
 import useIsActionsEnabled from '@/hooks/use-is-actions-enabled';
 
 type SidebarItem = {
@@ -57,11 +43,11 @@ export const useSidebarMenuItems = (): {
       title: 'overview',
       items: [
         {
-          Icon: Bolt,
+          Icon: menuIcons.get_started,
           title: 'get_started',
         },
         {
-          Icon: BarGraph,
+          Icon: menuIcons.dashboard,
           title: 'dashboard',
         },
       ],
@@ -70,29 +56,29 @@ export const useSidebarMenuItems = (): {
       title: 'authentication',
       items: [
         {
-          Icon: Box,
+          Icon: menuIcons.applications,
           title: 'applications',
         },
 
         {
-          Icon: Web,
+          Icon: menuIcons.sign_in_experience,
           title: 'sign_in_experience',
           path: 'sign-in-experience',
         },
         {
-          Icon: SecurityLock,
+          Icon: menuIcons.mfa,
           title: 'mfa',
         },
         {
-          Icon: Connection,
+          Icon: menuIcons.connectors,
           title: 'connectors',
         },
         {
-          Icon: EnterpriseSso,
+          Icon: menuIcons.enterprise_sso,
           title: 'enterprise_sso',
         },
         {
-          Icon: Security,
+          Icon: menuIcons.security,
           title: 'security',
         },
       ],
@@ -101,27 +87,27 @@ export const useSidebarMenuItems = (): {
       title: 'infrastructure',
       items: [
         {
-          Icon: BarGraph,
+          Icon: menuIcons.stacks,
           title: 'stacks',
           path: 'infrastructure',
         },
         {
-          Icon: BarGraph,
+          Icon: menuIcons.capacity,
           title: 'capacity',
           path: 'infrastructure/capacity',
         },
         {
-          Icon: BarGraph,
+          Icon: menuIcons.agent,
           title: 'agent',
           path: 'infrastructure/agent',
         },
         {
-          Icon: BarGraph,
+          Icon: menuIcons.bundle,
           title: 'bundle',
           path: 'infrastructure/bundle',
         },
         {
-          Icon: BarGraph,
+          Icon: menuIcons.mcp_servers,
           title: 'mcp_servers',
           path: 'mcp-portal',
         },
@@ -131,15 +117,15 @@ export const useSidebarMenuItems = (): {
       title: 'authorization',
       items: [
         {
-          Icon: ResourceIcon,
+          Icon: menuIcons.api_resources,
           title: 'api_resources',
         },
         {
-          Icon: Role,
+          Icon: menuIcons.roles,
           title: 'roles',
         },
         {
-          Icon: OrganizationTemplate,
+          Icon: menuIcons.organization_template,
           title: 'organization_template',
         },
       ],
@@ -148,11 +134,11 @@ export const useSidebarMenuItems = (): {
       title: 'users',
       items: [
         {
-          Icon: Organization,
+          Icon: menuIcons.organizations,
           title: 'organizations',
         },
         {
-          Icon: UserProfile,
+          Icon: menuIcons.users,
           title: 'users',
         },
       ],
@@ -161,22 +147,22 @@ export const useSidebarMenuItems = (): {
       title: 'developer',
       items: [
         {
-          Icon: Code,
+          Icon: menuIcons.actions,
           title: 'actions',
           path: 'actions',
           // Actions are still under development and should be released as one feature.
           isHidden: !isActionsEnabled,
         },
         {
-          Icon: JwtClaims,
+          Icon: menuIcons.customize_jwt,
           title: 'customize_jwt',
         },
         {
-          Icon: Hook,
+          Icon: menuIcons.webhooks,
           title: 'webhooks',
         },
         {
-          Icon: List,
+          Icon: menuIcons.audit_logs,
           title: 'audit_logs',
         },
       ],
@@ -185,7 +171,7 @@ export const useSidebarMenuItems = (): {
       title: 'tenant',
       items: [
         {
-          Icon: Gear,
+          Icon: menuIcons.tenant_settings,
           title: 'tenant_settings',
         },
       ],

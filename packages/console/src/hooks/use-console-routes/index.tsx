@@ -14,7 +14,7 @@ import { connectors } from './routes/connectors';
 import { customizeJwt } from './routes/customize-jwt';
 import { enterpriseSso } from './routes/enterprise-sso';
 import { kubo } from './routes/kubo';
-import { mcpPortal } from './routes/mcp-portal';
+import { mcpPortal, mcpPortalDetails } from './routes/mcp-portal';
 import { mfa } from './routes/mfa';
 import { organizationTemplate } from './routes/organization-template';
 import { organizations } from './routes/organizations';
@@ -56,6 +56,7 @@ export const useConsoleRoutes = () => {
         security,
         kubo,
         mcpPortal,
+        mcpPortalDetails,
         webhooks,
         ...(isActionsEnabled ? [actions] : []),
         users,

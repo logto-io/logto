@@ -34,20 +34,20 @@ describe.skipIf(!databaseUrl)('PostgresUpstreamStore', () => {
     const added = await store.add({
       name: 'kubo',
       url: 'https://kubo.example.com/mcp',
-      ownerSub: owner,
+      portalId: owner,
     });
 
     expect(added.createdAt).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
-    expect(await store.listForOwner(owner)).toEqual([added]);
+    expect(await store.listForPortal(owner)).toEqual([added]);
   });
 
   it('rejects a duplicate name for the same owner', async () => {
     const owner = randomUUID();
     const { store } = await fixturePromise;
-    await store.add({ name: 'kubo', url: 'https://kubo.example.com/mcp', ownerSub: owner });
+    await store.add({ name: 'kubo', url: 'https://kubo.example.com/mcp', portalId: owner });
 
     await expect(
-      store.add({ name: 'kubo', url: 'https://other.example.com/mcp', ownerSub: owner })
+      store.add({ name: 'kubo', url: 'https://other.example.com/mcp', portalId: owner })
     ).rejects.toBeInstanceOf(DuplicateUpstreamError);
   });
 
@@ -55,12 +55,12 @@ describe.skipIf(!databaseUrl)('PostgresUpstreamStore', () => {
     const alice = randomUUID();
     const bob = randomUUID();
     const { store } = await fixturePromise;
-    await store.add({ name: 'kubo', url: 'https://kubo.example.com/mcp', ownerSub: alice });
+    await store.add({ name: 'kubo', url: 'https://kubo.example.com/mcp', portalId: alice });
 
-    expect(await store.findForOwner(bob, 'kubo')).toBeUndefined();
+    expect(await store.findForPortal(bob, 'kubo')).toBeUndefined();
     expect(await store.remove(bob, 'kubo')).toBe(false);
     expect(await store.remove(alice, 'kubo')).toBe(true);
-    expect(await store.listForOwner(alice)).toEqual([]);
+    expect(await store.listForPortal(alice)).toEqual([]);
   });
 
   it('rejects an invalid name at the database level', async () => {
@@ -68,7 +68,7 @@ describe.skipIf(!databaseUrl)('PostgresUpstreamStore', () => {
 
     await expect(
       pool.query(sql`
-        insert into mcp_portal_upstreams (owner_sub, name, url)
+        insert into mcp_portal_upstreams (portal_id, name, url)
         values (${randomUUID()}, ${'Bad_Name'}, ${'https://kubo.example.com/mcp'})
       `)
     ).rejects.toThrow();

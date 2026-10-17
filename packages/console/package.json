@@ -28,7 +28,6 @@
   },
   "devDependencies": {
     "@fontsource/roboto-mono": "^5.0.0",
-    "@inkeep/cxkit-react": "^0.5.66",
     "@jest/types": "^29.5.0",
     "@logto/cloud": "0.2.5-e4b3338",
     "@logto/connector-kit": "workspace:^",
@@ -132,7 +131,7 @@
     "zod-to-ts": "^1.2.0"
   },
   "engines": {
-    "node": "^22.14.0"
+    "node": "^22.14.0 || ^26.0.0"
   },
   "stylelint": {
     "extends": "@silverhand/eslint-config-react/.stylelintrc"

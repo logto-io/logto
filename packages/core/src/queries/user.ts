@@ -24,6 +24,7 @@ const { table, fields } = convertToIdentifiers(Users);
  *
  * - `search`: The search conditions. It can be combined with various search fields and
  * match modes.
+ * - `isSuspended`: The exact suspension status. Omit to include both statuses.
  * - `relation`: The relation conditions. It can be used to find users that have or don't
  * have a relation with another table. Note that the relation field is the raw field name
  * in the database, not the camel case one.
@@ -39,6 +40,7 @@ const { table, fields } = convertToIdentifiers(Users);
  */
 export type UserConditions = {
   search?: Search;
+  isSuspended?: boolean;
   identity?: {
     type: 'social' | 'sso';
     provider: string;
@@ -307,7 +309,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
    *
    * @see {@link UserConditions} for more information about the conditions.
    */
-  const buildUserConditions = ({ search, identity, relation }: UserConditions) => {
+  const buildUserConditions = ({ search, identity, relation, isSuspended }: UserConditions) => {
     const hasSearch = search?.matches.length;
     const id = sql.identifier;
     const buildIdentityCondition = () => {
@@ -353,6 +355,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     };
 
     const conditions = conditionalArray(
+      isSuspended !== undefined && sql`${fields.isSuspended} = ${isSuspended}`,
       buildIdentityCondition(),
       buildRelationCondition(),
       hasSearch && sql`(${buildConditionsFromSearch(search, userSearchFields)})`

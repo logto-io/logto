@@ -30,6 +30,11 @@ export const createDomainsQueries = (pool: CommonQueryMethods) => {
         and ${fields.status}=${DomainStatus.Active}
     `);
 
+  const findMcpPortalTenantId = async (hostname: string) =>
+    pool.maybeOneFirst<string>(sql`
+      select tenant_id from mcp_portals where hostname = ${hostname}
+    `);
+
   const findDomain = async (domain: string) =>
     pool.maybeOne<Domain>(sql`
       select ${sql.join(Object.values(fields), sql`, `)}
@@ -64,6 +69,7 @@ export const createDomainsQueries = (pool: CommonQueryMethods) => {
     findAllDomains,
     findDomainById,
     findActiveDomain,
+    findMcpPortalTenantId,
     findDomain,
     insertDomain,
     updateDomainById,

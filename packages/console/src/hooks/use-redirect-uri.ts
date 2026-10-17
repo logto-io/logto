@@ -12,7 +12,7 @@ import { isCloud } from '@/consts/env';
  */
 const useRedirectUri = (flow: 'signIn' | 'signOut' = 'signIn') => {
   const path = useHref(
-    joinPath(...conditionalArray(!isCloud && ossConsolePath, flow === 'signIn' ? '/callback' : '/'))
+    joinPath(...conditionalArray(!isCloud && ossConsolePath), flow === 'signIn' ? '/callback' : '/')
   );
   const url = useMemo(() => new URL(path, window.location.origin), [path]);
 

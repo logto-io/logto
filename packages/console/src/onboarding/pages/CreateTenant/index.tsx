@@ -55,7 +55,7 @@ function CreateTenant() {
     formState: { errors, isSubmitting },
     register,
   } = methods;
-  const { prependTenant } = useContext(TenantsContext);
+  const { prependTenant, navigateTenant } = useContext(TenantsContext);
   const theme = useTheme();
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
@@ -144,6 +144,9 @@ function CreateTenant() {
         if (!isOnboardingDone) {
           await update({ isOnboardingDone: true });
         }
+
+        // Open the new tenant. Without this the wizard stays on screen after a successful create.
+        navigateTenant(newTenant.id);
       }
     )
   );

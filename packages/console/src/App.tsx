@@ -3,6 +3,7 @@ import { LogtoProvider, Prompt, useLogto } from '@logto/react';
 import {
   adminConsoleApplicationId,
   defaultTenantId,
+  ossConsolePath,
   PredefinedScope,
   TenantScope,
 } from '@logto/schemas';
@@ -50,16 +51,21 @@ void initI18n();
  * get the current tenant ID from the URL.
  */
 function App() {
-  const router = createBrowserRouter([
-    {
-      path: '*',
-      element: (
-        <TenantsProvider>
-          <Providers />
-        </TenantsProvider>
-      ),
-    },
-  ]);
+  const router = createBrowserRouter(
+    [
+      {
+        path: '*',
+        element: (
+          <TenantsProvider>
+            <Providers />
+          </TenantsProvider>
+        ),
+      },
+    ],
+    // Local cloud dev serves the console under `/console` from core, so that prefix is the basename.
+    // Otherwise the first path segment would be read as a tenant ID.
+    { basename: isCloud && import.meta.env.DEV ? ossConsolePath : undefined }
+  );
 
   return <RouterProvider router={router} />;
 }
