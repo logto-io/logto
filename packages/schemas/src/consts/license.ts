@@ -172,6 +172,35 @@ export const licenseUsageWarningGuard = z.object({
   value: z.number().nonnegative(),
 }) satisfies ToZodObject<LicenseUsageWarning>;
 
+/** The usage of a self-hosted deployment in one full calendar month, for a usage statement. */
+export type LicenseUsageStatementMonth = {
+  /** The calendar month as `YYYY-MM` in UTC. */
+  month: string;
+  /** Monthly active users across all tenants except the admin tenant. */
+  mau: number;
+  /** Access tokens issued across all tenants except the admin tenant. */
+  monthlyAccessTokens: number;
+};
+
+export const licenseUsageStatementMonthGuard = z.object({
+  month: z.string().regex(/^\d{4}-\d{2}$/),
+  mau: z.number().int().nonnegative(),
+  monthlyAccessTokens: z.number().int().nonnegative(),
+}) satisfies ToZodObject<LicenseUsageStatementMonth>;
+
+/**
+ * The monthly usage of a self-hosted deployment over its last full calendar months, from its own
+ * records, which a customer can provide as the usage statement the self-hosted terms ask for.
+ */
+export type LicenseUsageStatement = {
+  /** The last full calendar months, oldest first. A month without usage counts zero. */
+  months: LicenseUsageStatementMonth[];
+};
+
+export const licenseUsageStatementGuard = z.object({
+  months: licenseUsageStatementMonthGuard.array(),
+}) satisfies ToZodObject<LicenseUsageStatement>;
+
 /**
  * The payload of a license key, i.e. the claims of the ES256-signed JWT an operator installs on a
  * self-hosted instance.

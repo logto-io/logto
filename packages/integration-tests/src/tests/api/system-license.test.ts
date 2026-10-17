@@ -1,6 +1,7 @@
 import { LicenseEnv, ReservedPlanId, ossDefaultQuota } from '@logto/schemas';
 
 import { getSystemLicense, putSystemLicense } from '#src/api/system.js';
+import { isDevFeaturesEnabled } from '#src/constants.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { buildTestLicensePayload, signTestLicenseKey } from '#src/helpers/license.js';
 
@@ -36,7 +37,17 @@ describe('self-hosted license', () => {
   });
 
   it('should return the entitlements of the installed license', async () => {
-    const { installedAt, lastRefreshedAt, graceEndsAt, ...entitlements } = await getSystemLicense();
+    const {
+      installedAt,
+      lastRefreshedAt,
+      graceEndsAt,
+      // Self-hosted license usage reporting is still in development, and covered on its own.
+      usageLimits,
+      usage,
+      usageWarnings,
+      usageReportingEnabled,
+      ...entitlements
+    } = await getSystemLicense();
 
     expect(entitlements).toEqual({
       plan: ReservedPlanId.SelfHostedPro,
@@ -56,15 +67,23 @@ describe('self-hosted license', () => {
   it('should never return the raw license key', async () => {
     const response = await getSystemLicense();
 
-    expect(Object.keys(response).slice().sort()).toEqual([
-      'env',
-      'expiresAt',
-      'graceEndsAt',
-      'installedAt',
-      'lastRefreshedAt',
-      'plan',
-      'quota',
-    ]);
+    expect(Object.keys(response).slice().sort()).toEqual(
+      [
+        'env',
+        'expiresAt',
+        'graceEndsAt',
+        'installedAt',
+        'lastRefreshedAt',
+        'plan',
+        'quota',
+        // Self-hosted license usage reporting is still in development.
+        ...(isDevFeaturesEnabled
+          ? ['usage', 'usageLimits', 'usageReportingEnabled', 'usageWarnings']
+          : []),
+      ]
+        .slice()
+        .sort()
+    );
     expect(JSON.stringify(response)).not.toContain(license);
   });
 
@@ -107,7 +126,17 @@ describe('self-hosted license', () => {
 
     expect(response.status).toEqual(204);
 
-    const { installedAt, lastRefreshedAt, graceEndsAt, ...entitlements } = await getSystemLicense();
+    const {
+      installedAt,
+      lastRefreshedAt,
+      graceEndsAt,
+      // Self-hosted license usage reporting is still in development, and covered on its own.
+      usageLimits,
+      usage,
+      usageWarnings,
+      usageReportingEnabled,
+      ...entitlements
+    } = await getSystemLicense();
 
     expect(entitlements).toEqual({
       plan: ReservedPlanId.SelfHostedEnterprise,

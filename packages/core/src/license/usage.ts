@@ -3,6 +3,7 @@ import {
   adminTenantId,
   type LicenseUsage,
   type LicenseUsageLimits,
+  type LicenseUsageStatement,
   type LicenseUsageWarning,
 } from '@logto/schemas';
 import { TtlCache } from '@logto/shared';
@@ -27,6 +28,13 @@ const failedCollectionCacheTtl = 60 * 1000;
  * rather than holding a connection of the shared pool.
  */
 const licenseUsageTimeout = 5000;
+/**
+ * The statement timeout of the usage statement queries. A statement is exported on demand and
+ * scans a year of usage, so it may take longer than the collection the refresh and Console use.
+ */
+const licenseUsageStatementTimeout = 30_000;
+/** How many full calendar months a usage statement covers. */
+const usageStatementMonths = 12;
 
 const cacheKey = 'usage';
 const cache = new TtlCache<string, Promise<Optional<LicenseUsage>>>(licenseUsageCacheTtl);
@@ -35,6 +43,10 @@ const cache = new TtlCache<string, Promise<Optional<LicenseUsage>>>(licenseUsage
 export const clearLicenseUsageCache = () => {
   cache.clear();
 };
+
+/** The UTC calendar month of `date` as `YYYY-MM`. */
+const formatUsageMonth = (date: Date) =>
+  `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}`;
 
 /**
  * The UTC calendar months usage is counted in: the current month so far, and the last full month
@@ -46,7 +58,7 @@ export const getUsageMonths = (now: Date) => {
 
   return {
     /** The current month as `YYYY-MM`. */
-    month: `${year}-${String(month + 1).padStart(2, '0')}`,
+    month: formatUsageMonth(now),
     /** The first instant of the last full month. */
     lastMonthStart: new Date(Date.UTC(year, month - 1, 1)),
     /** The first instant of the current month, which ends the last full month. */
@@ -140,3 +152,71 @@ export const evaluateUsage = (
 
     return typeof limit === 'number' && value > limit ? [{ metric, limit, value }] : [];
   });
+
+/**
+ * Merge the usage warnings evaluated locally with the notices the license service returned with
+ * the last refresh.
+ *
+ * A local warning wins for its metric, since it comes from the current usage of this deployment
+ * while a notice is as old as the last refresh. A notice about any other metric, such as too many
+ * production deployments, which only Logto Cloud can count, is kept.
+ */
+export const mergeUsageWarnings = (
+  localWarnings: LicenseUsageWarning[],
+  notices: LicenseUsageWarning[] = []
+): LicenseUsageWarning[] => [
+  ...localWarnings,
+  ...notices.filter(({ metric }) => !localWarnings.some((warning) => warning.metric === metric)),
+];
+
+/**
+ * Read the monthly usage of this deployment over the last {@link usageStatementMonths} full UTC
+ * calendar months, across all tenants except the admin tenant, for the usage statement the
+ * self-hosted terms ask a customer to provide.
+ *
+ * Unlike {@link collectLicenseUsage}, a statement is requested explicitly, so it is not cached and a
+ * failure is thrown to the caller.
+ *
+ * @param pool A pool that can read every tenant's usage, i.e. `EnvSet.sharedPool`.
+ */
+export const getLicenseUsageStatement = async (
+  pool: CommonQueryMethods,
+  now = new Date()
+): Promise<LicenseUsageStatement> => {
+  const year = now.getUTCFullYear();
+  const month = now.getUTCMonth();
+  const monthStarts = Array.from(
+    { length: usageStatementMonths },
+    (_, index) => new Date(Date.UTC(year, month - usageStatementMonths + index, 1))
+  );
+  const options = {
+    from: new Date(Date.UTC(year, month - usageStatementMonths, 1)),
+    to: new Date(Date.UTC(year, month, 1)),
+    excludedTenantId: adminTenantId,
+  };
+
+  const [activeUsers, tokenUsage] = await pool.transaction(async (connection) => {
+    await connection.query(
+      sql`set local statement_timeout = ${sql.literalValue(String(licenseUsageStatementTimeout))}`
+    );
+
+    return [
+      await createDailyActiveUsersQueries(connection).countActiveUsersByMonthExcludingTenant(
+        options
+      ),
+      await createDailyTokenUsageQueries(connection).countTokenUsageByMonthExcludingTenant(options),
+    ] as const;
+  });
+
+  return {
+    months: monthStarts.map((monthStart) => {
+      const key = formatUsageMonth(monthStart);
+
+      return {
+        month: key,
+        mau: activeUsers.get(key) ?? 0,
+        monthlyAccessTokens: tokenUsage.get(key) ?? 0,
+      };
+    }),
+  };
+};
