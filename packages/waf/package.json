@@ -1,0 +1,35 @@
+{
+  "name": "@logto/waf",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "rm -rf lib && tsc -p tsconfig.build.json",
+    "lint": "eslint --ext .ts src",
+    "test": "vitest run src",
+    "test:ci": "pnpm run test --silent --coverage",
+    "prepack": "pnpm build"
+  },
+  "devDependencies": {
+    "@silverhand/eslint-config": "6.0.1",
+    "@silverhand/ts-config": "6.0.0",
+    "@types/node": "^22.14.0",
+    "@vitest/coverage-v8": "^4.1.11",
+    "eslint": "^8.56.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.5.3",
+    "vitest": "^4.1.11"
+  },
+  "engines": {
+    "node": "^22.14.0 || ^26.0.0"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand"
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc"
+}

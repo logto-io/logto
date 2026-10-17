@@ -5699,6 +5699,32 @@ importers:
         specifier: ^4.1.11
         version: 4.1.11(@opentelemetry/api@1.8.0)(@types/node@22.14.1)(@vitest/coverage-v8@4.1.11)(jsdom@26.0.0(supports-color@10.0.0))(vite@6.4.3(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
+  packages/waf:
+    devDependencies:
+      '@silverhand/eslint-config':
+        specifier: 6.0.1
+        version: 6.0.1(eslint-import-resolver-node@0.3.9(supports-color@10.0.0))(eslint@8.57.0(supports-color@10.0.0))(prettier@3.5.3)(supports-color@10.0.0)(typescript@5.5.3)
+      '@silverhand/ts-config':
+        specifier: 6.0.0
+        version: 6.0.0(typescript@5.5.3)
+      '@types/node':
+        specifier: ^22.14.0
+        version: 22.14.1
+      '@vitest/coverage-v8':
+        specifier: ^4.1.11
+        version: 4.1.11(vitest@4.1.11)
+      eslint:
+        specifier: ^8.56.0
+        version: 8.57.0(supports-color@10.0.0)
+      prettier:
+        specifier: ^3.5.3
+        version: 3.5.3
+      typescript:
+        specifier: ^5.5.3
+        version: 5.5.3
+      vitest:
+        specifier: ^4.1.11
+        version: 4.1.11(@opentelemetry/api@1.8.0)(@types/node@22.14.1)(@vitest/coverage-v8@4.1.11)(jsdom@26.0.0(supports-color@10.0.0))(vite@6.4.3(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 packages:
 
   '@75lb/deep-merge@1.1.2':
