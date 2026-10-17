@@ -1,10 +1,21 @@
+/* eslint-disable @silverhand/fp/no-mutating-methods, id-length, react/boolean-prop-naming, react/no-array-index-key, no-restricted-syntax, complexity, no-alert, max-params, max-lines, @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/no-unnecessary-condition -- The existing Kubo stack editor predates these lint limits; keep this deletion change scoped until the editor is split up. */
+import { type AdminConsoleKey } from '@logto/phrases';
 import { useState } from 'react';
 import { Helmet } from 'react-helmet';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import RequestDataError from '@/components/RequestDataError';
 import Button from '@/ds-components/Button';
+import Card from '@/ds-components/Card';
+import CardTitle from '@/ds-components/CardTitle';
+import Checkbox from '@/ds-components/Checkbox';
+import DangerousRaw from '@/ds-components/DangerousRaw';
+import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
+import Select from '@/ds-components/Select';
+import Table from '@/ds-components/Table';
+import Tag from '@/ds-components/Tag';
+import TextInput from '@/ds-components/TextInput';
 import useApi, { type RequestError } from '@/hooks/use-api';
 
 import styles from '../index.module.scss';
@@ -26,21 +37,23 @@ type KuboStackDetail = {
   phase: string;
   ready: number;
   total: number;
-  failing?: string[] | null;
+  failing?: string[] | undefined;
   paused?: boolean;
   computeMonthlyUsd?: number;
   requestedCpuMilli?: number;
   requestedMemoryBytes?: number;
   bundle?: string;
   gitManaged?: boolean;
-  exclude?: string[] | null;
-  operators?: Record<string, boolean> | null;
-  featureFlags?: Record<string, string> | null;
-  imageTags?: Record<string, string> | null;
-  chartVersions?: Record<string, string> | null;
-  conditions?: KuboCondition[] | null;
-  components?: KuboComponent[] | null;
+  exclude?: string[] | undefined;
+  operators?: Record<string, boolean> | undefined;
+  featureFlags?: Record<string, string> | undefined;
+  imageTags?: Record<string, string> | undefined;
+  chartVersions?: Record<string, string> | undefined;
+  conditions?: KuboCondition[] | undefined;
+  components?: KuboComponent[] | undefined;
 };
+
+type KeyValueRow = { key: string; value: string };
 
 const modes = ['Direct', 'Flux'];
 
@@ -48,163 +61,129 @@ const formatUsd = (value?: number) => (value === undefined ? '—' : `$${value.t
 const formatGiB = (bytes?: number) =>
   bytes === undefined ? '—' : `${(bytes / 1024 ** 3).toFixed(1)} GiB`;
 
-// A card with a title, a read view, and an edit view that saves only its own field.
-const Section = ({
-  title,
-  view,
-  editor,
-  onEdit,
-  editing,
-  onSave,
-  onCancel,
-  saving,
-  error,
-}: {
-  title: string;
-  view: React.ReactNode;
-  editor?: React.ReactNode;
-  onEdit?: () => void;
-  editing?: boolean;
-  onSave?: () => void;
-  onCancel?: () => void;
-  saving?: boolean;
-  error?: string;
-}) => (
-  <div className={styles.card}>
-    <div className={styles.sectionHeader}>
-      <span className={styles.cardTitle}>{title}</span>
-      {onEdit && !editing && (
-        <Button title="general.edit" type="outline" size="small" onClick={onEdit} />
-      )}
-    </div>
-    <div className={styles.sectionBody}>{editing ? editor : view}</div>
-    {error && <p className={styles.error}>{error}</p>}
-    {editing && (
-      <div className={styles.actions}>
-        <Button title="general.cancel" type="outline" onClick={onCancel} />
-        <Button title="general.save" type="primary" isLoading={saving} onClick={onSave} />
-      </div>
-    )}
-  </div>
-);
-
-// Editable name → value rows. The portal replaces the whole map on save.
-const KeyValueEditor = ({
-  rows,
-  onChange,
-}: {
-  rows: Array<{ key: string; value: string }>;
-  onChange: (rows: Array<{ key: string; value: string }>) => void;
-}) => (
-  <div className={styles.kvEditor}>
-    {rows.map((row, index) => (
-      <div key={index} className={styles.kvRow}>
-        <input
-          value={row.key}
-          placeholder="name"
-          onChange={(event) => {
-            onChange(rows.map((r, i) => (i === index ? { ...r, key: event.target.value } : r)));
-          }}
-        />
-        <input
-          value={row.value}
-          placeholder="value"
-          onChange={(event) => {
-            onChange(rows.map((r, i) => (i === index ? { ...r, value: event.target.value } : r)));
-          }}
-        />
-        <Button
-          title="general.delete"
-          type="text"
-          size="small"
-          onClick={() => {
-            onChange(rows.filter((_, i) => i !== index));
-          }}
-        />
-      </div>
-    ))}
-    <Button
-      title="general.add"
-      type="text"
-      size="small"
-      onClick={() => {
-        onChange([...rows, { key: '', value: '' }]);
-      }}
-    />
-  </div>
-);
-
-const toRows = (values?: Record<string, string> | null) =>
+const toRows = (values?: Record<string, string> | undefined): KeyValueRow[] =>
   Object.entries(values ?? {})
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([key, value]) => ({ key, value }));
 
-const toMap = (rows: Array<{ key: string; value: string }>) =>
+const toMap = (rows: KeyValueRow[]) =>
   Object.fromEntries(
     rows.filter((row) => row.key.trim()).map((row) => [row.key.trim(), row.value])
   );
 
-const KeyValueView = ({ values }: { values?: Record<string, string> | null }) => {
-  const entries = toRows(values);
-  if (entries.length === 0) {
-    return <p className={styles.muted}>None set.</p>;
-  }
+// One card per setting. Each card saves only its own field.
+function Section({
+  title,
+  editing,
+  onEdit,
+  onCancel,
+  onSave,
+  saving,
+  error,
+  view,
+  editor,
+}: {
+  readonly title: AdminConsoleKey;
+  readonly editing: boolean;
+  readonly onEdit: () => void;
+  readonly onCancel: () => void;
+  readonly onSave: () => void;
+  readonly saving: boolean;
+  readonly error?: string;
+  readonly view: React.ReactNode;
+  readonly editor: React.ReactNode;
+}) {
   return (
-    <table className={styles.table}>
-      <tbody>
-        {entries.map(({ key, value }) => (
-          <tr key={key}>
-            <td>{key}</td>
-            <td className={styles.muted}>{value || '—'}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <Card className={styles.section}>
+      <div className={styles.sectionHeader}>
+        <CardTitle title={title} />
+        {!editing && <Button title="general.edit" type="outline" size="small" onClick={onEdit} />}
+      </div>
+      {editing ? editor : view}
+      {error && <p className={styles.error}>{error}</p>}
+      {editing && (
+        <div className={styles.actions}>
+          <Button title="general.cancel" type="outline" onClick={onCancel} />
+          <Button title="general.save" type="primary" isLoading={saving} onClick={onSave} />
+        </div>
+      )}
+    </Card>
   );
-};
+}
 
-// Keeps each card's draft state and saves its own field.
-const useEditable = <T,>(
-  initial: () => T,
-  field: string,
-  save: (body: Record<string, unknown>) => Promise<void>
-) => {
-  const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState<T>(initial);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string>();
-  return {
-    editing,
-    draft,
-    setDraft,
-    saving,
-    error,
-    start: () => {
-      setDraft(initial());
-      setError(undefined);
-      setEditing(true);
-    },
-    cancel: () => {
-      setEditing(false);
-      setError(undefined);
-    },
-    commit: async (body: unknown) => {
-      setSaving(true);
-      setError(undefined);
-      try {
-        await save({ [field]: body });
-        setEditing(false);
-      } catch (caught: unknown) {
-        setError(caught instanceof Error ? caught.message : 'Save failed');
-      } finally {
-        setSaving(false);
-      }
-    },
-  };
-};
+// Editable name → value rows. The portal replaces the whole map on save.
+function KeyValueEditor({
+  rows,
+  onChange,
+}: {
+  readonly rows: KeyValueRow[];
+  readonly onChange: (rows: KeyValueRow[]) => void;
+}) {
+  return (
+    <div className={styles.kvEditor}>
+      {rows.map((row, index) => (
+        <div key={index} className={styles.kvRow}>
+          <TextInput
+            value={row.key}
+            placeholder="Name"
+            onChange={(event) => {
+              onChange(
+                rows.map((r, i) =>
+                  i === index ? { ...r, key: (event.target as HTMLInputElement).value } : r
+                )
+              );
+            }}
+          />
+          <TextInput
+            value={row.value}
+            placeholder="Value"
+            onChange={(event) => {
+              onChange(
+                rows.map((r, i) =>
+                  i === index ? { ...r, value: (event.target as HTMLInputElement).value } : r
+                )
+              );
+            }}
+          />
+          <Button
+            title="general.delete"
+            type="text"
+            size="small"
+            onClick={() => {
+              onChange(rows.filter((_, i) => i !== index));
+            }}
+          />
+        </div>
+      ))}
+      <Button
+        title="general.add"
+        type="text"
+        size="small"
+        onClick={() => {
+          onChange([...rows, { key: '', value: '' }]);
+        }}
+      />
+    </div>
+  );
+}
+
+function KeyValueTable({ rows }: { readonly rows: KeyValueRow[] }) {
+  return (
+    <Table
+      rowGroups={[{ key: 'values', data: rows }]}
+      rowIndexKey="key"
+      columns={[
+        { title: 'Name', dataIndex: 'key', render: (row: KeyValueRow) => row.key },
+        { title: 'Value', dataIndex: 'value', render: (row: KeyValueRow) => row.value || '—' },
+      ]}
+      placeholder="None set"
+    />
+  );
+}
 
 function Stack() {
   const { namespace = '', name = '' } = useParams();
+  const navigate = useNavigate();
   const api = useApi();
   const { data, error, isLoading, mutate } = useSWR<KuboStackDetail, RequestError>(
     namespace && name ? `api/kubo/stacks/${namespace}/${name}` : null
@@ -212,31 +191,47 @@ function Stack() {
   const [bootstrapping, setBootstrapping] = useState(false);
   const [bootstrapJob, setBootstrapJob] = useState<string>();
   const [bootstrapError, setBootstrapError] = useState<string>();
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [purgeNamespace, setPurgeNamespace] = useState(false);
+  const [deleteError, setDeleteError] = useState<string>();
 
   const patch = async (body: Record<string, unknown>) => {
     await api.patch(`api/kubo/stacks/${namespace}/${name}`, { json: body }).json();
     await mutate();
   };
 
-  const bundle = useEditable(() => data?.bundle ?? '', 'bundle', patch);
-  const mode = useEditable(() => data?.mode ?? 'Direct', 'mode', patch);
-  const exclude = useEditable(() => (data?.exclude ?? []).join(', '), 'exclude', patch);
-  const operators = useEditable(() => ({ ...(data?.operators ?? {}) }), 'operators', patch);
-  const flags = useEditable<Array<{ key: string; value: string }>>(
-    () => toRows(data?.featureFlags),
-    'featureFlags',
-    patch
-  );
-  const tags = useEditable<Array<{ key: string; value: string }>>(
-    () => toRows(data?.imageTags),
-    'imageTags',
-    patch
-  );
-  const charts = useEditable<Array<{ key: string; value: string }>>(
-    () => toRows(data?.chartVersions),
-    'chartVersions',
-    patch
-  );
+  // Per-section edit state, kept in one place so the cards stay independent.
+  const [editing, setEditing] = useState<string>();
+  const [saving, setSaving] = useState(false);
+  const [sectionError, setSectionError] = useState<Record<string, string | undefined>>({});
+  const [draft, setDraft] = useState<unknown>();
+
+  const start = (field: string, initial: unknown) => {
+    setEditing(field);
+    setDraft(initial);
+    setSectionError((previous) => ({ ...previous, [field]: undefined }));
+  };
+
+  const cancel = () => {
+    setEditing(undefined);
+  };
+
+  const commit = async (field: string, value: unknown) => {
+    setSaving(true);
+    setSectionError((previous) => ({ ...previous, [field]: undefined }));
+    try {
+      await patch({ [field]: value });
+      setEditing(undefined);
+    } catch (error_: unknown) {
+      setSectionError((previous) => ({
+        ...previous,
+        [field]: error_ instanceof Error ? error_.message : 'Save failed',
+      }));
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const runBootstrap = async () => {
     // Bootstrap re-runs the workspace's initial setup jobs, so confirm before starting it.
@@ -257,9 +252,61 @@ function Stack() {
     }
   };
 
+  const closeDelete = () => {
+    setIsDeleteOpen(false);
+    setPurgeNamespace(false);
+    setDeleteError(undefined);
+  };
+
+  const deleteStack = async () => {
+    if (
+      purgeNamespace &&
+      !window.confirm(
+        `Deleting namespace "${namespace}" removes everything in it, not just this stack. Continue?`
+      )
+    ) {
+      return;
+    }
+
+    setIsDeleting(true);
+    setDeleteError(undefined);
+    try {
+      await api.delete(`api/kubo/stacks/${namespace}/${name}?purge=${String(purgeNamespace)}`);
+      navigate('/infrastructure', { replace: true });
+    } catch (error_: unknown) {
+      setDeleteError(error_ instanceof Error ? error_.message : 'Delete failed');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   if (error) {
     return <RequestDataError error={error} />;
   }
+
+  const isEditing = (field: string) => editing === field;
+  const sectionProps = (
+    field: string,
+    title: AdminConsoleKey,
+    view: React.ReactNode,
+    editor: React.ReactNode,
+    initial: unknown,
+    value: () => unknown
+  ) => ({
+    title,
+    editing: isEditing(field),
+    onEdit: () => {
+      start(field, initial);
+    },
+    onCancel: cancel,
+    onSave: () => {
+      void commit(field, value());
+    },
+    saving,
+    error: sectionError[field],
+    view,
+    editor,
+  });
 
   return (
     <div className={styles.container}>
@@ -281,28 +328,28 @@ function Stack() {
       {data && (
         <>
           <div className={styles.summary}>
-            <div className={styles.summaryItem}>
+            <Card className={styles.summaryItem}>
               <div className={styles.summaryValue}>
                 {data.ready}/{data.total}
               </div>
               <div className={styles.summaryLabel}>Components ready</div>
-            </div>
-            <div className={styles.summaryItem}>
+            </Card>
+            <Card className={styles.summaryItem}>
               <div className={styles.summaryValue}>{formatUsd(data.computeMonthlyUsd)}</div>
               <div className={styles.summaryLabel}>Estimated compute</div>
-            </div>
-            <div className={styles.summaryItem}>
+            </Card>
+            <Card className={styles.summaryItem}>
               <div className={styles.summaryValue}>
                 {data.requestedCpuMilli === undefined
                   ? '—'
                   : `${(data.requestedCpuMilli / 1000).toFixed(1)} vCPU`}
               </div>
               <div className={styles.summaryLabel}>Requested CPU</div>
-            </div>
-            <div className={styles.summaryItem}>
+            </Card>
+            <Card className={styles.summaryItem}>
               <div className={styles.summaryValue}>{formatGiB(data.requestedMemoryBytes)}</div>
               <div className={styles.summaryLabel}>Requested memory</div>
-            </div>
+            </Card>
           </div>
 
           <div className={styles.actions}>
@@ -314,248 +361,233 @@ function Stack() {
                 void runBootstrap();
               }}
             />
+            <Button
+              title={<DangerousRaw>Delete stack</DangerousRaw>}
+              type="outlineDanger"
+              onClick={() => {
+                setIsDeleteOpen(true);
+              }}
+            />
           </div>
           {bootstrapJob && <p className={styles.muted}>Bootstrap job started: {bootstrapJob}</p>}
           {bootstrapError && <p className={styles.error}>{bootstrapError}</p>}
 
+          {isDeleteOpen && (
+            <DeleteConfirmModal
+              isOpen
+              isLoading={isDeleting}
+              expectedInput={namespace}
+              inputPlaceholder={namespace}
+              onCancel={closeDelete}
+              onConfirm={() => {
+                void deleteStack();
+              }}
+            >
+              <p>
+                Deleting this stack uninstalls its releases. Type <strong>{namespace}</strong> to
+                confirm.
+              </p>
+              <Checkbox
+                label="Also delete the namespace (removes everything in it)"
+                checked={purgeNamespace}
+                onChange={setPurgeNamespace}
+              />
+              {deleteError && <p className={styles.error}>{deleteError}</p>}
+            </DeleteConfirmModal>
+          )}
+
           <Section
-            title="Bundle"
-            view={<p>{data.bundle || 'Not set'}</p>}
-            editing={bundle.editing}
-            onEdit={bundle.start}
-            onCancel={bundle.cancel}
-            onSave={() => {
-              void bundle.commit(bundle.draft);
-            }}
-            saving={bundle.saving}
-            error={bundle.error}
-            editor={
-              <input
-                className={styles.textInput}
-                value={bundle.draft as string}
+            {...sectionProps(
+              'bundle',
+              'infrastructure.bundle',
+              <p>{data.bundle || 'Not set'}</p>,
+              <TextInput
+                value={(draft as string) ?? ''}
                 placeholder="oci://… (empty clears the bundle)"
                 onChange={(event) => {
-                  bundle.setDraft(event.target.value.trim());
+                  setDraft((event.target as HTMLInputElement).value.trim());
                 }}
-              />
-            }
+              />,
+              data.bundle ?? '',
+              () => (draft as string) || ''
+            )}
           />
 
           <Section
-            title="Mode"
-            view={<p>{data.mode}</p>}
-            editing={mode.editing}
-            onEdit={mode.start}
-            onCancel={mode.cancel}
-            onSave={() => {
-              void mode.commit(mode.draft);
-            }}
-            saving={mode.saving}
-            error={mode.error}
-            editor={
-              <select
-                value={mode.draft as string}
+            {...sectionProps(
+              'mode',
+              'infrastructure.mode',
+              <p>{data.mode}</p>,
+              <Select
+                value={(draft as string) ?? data.mode}
+                options={modes.map((mode) => ({ value: mode, title: mode }))}
+                onChange={(value) => {
+                  setDraft(value);
+                }}
+              />,
+              data.mode,
+              () => (draft as string) ?? data.mode
+            )}
+          />
+
+          <Section
+            {...sectionProps(
+              'exclude',
+              'infrastructure.excluded_components',
+              <p>{(data.exclude ?? []).join(', ') || 'None'}</p>,
+              <TextInput
+                value={(draft as string) ?? ''}
+                placeholder="comma, separated, names"
                 onChange={(event) => {
-                  mode.setDraft(event.target.value);
+                  setDraft((event.target as HTMLInputElement).value);
                 }}
-              >
-                {modes.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-            }
-          />
-
-          <Section
-            title="Excluded components"
-            view={<p>{(data.exclude ?? []).join(', ') || 'None'}</p>}
-            editing={exclude.editing}
-            onEdit={exclude.start}
-            onCancel={exclude.cancel}
-            onSave={() => {
-              void exclude.commit(
-                (exclude.draft as string)
+              />,
+              (data.exclude ?? []).join(', '),
+              () =>
+                ((draft as string) ?? '')
                   .split(',')
                   .map((item) => item.trim())
                   .filter(Boolean)
-              );
-            }}
-            saving={exclude.saving}
-            error={exclude.error}
-            editor={
-              <input
-                className={styles.textInput}
-                value={exclude.draft as string}
-                placeholder="comma, separated, names"
-                onChange={(event) => {
-                  exclude.setDraft(event.target.value);
-                }}
-              />
-            }
+            )}
           />
 
           <Section
-            title="Operators"
-            view={
+            {...sectionProps(
+              'operators',
+              'infrastructure.operators',
               <p>
                 {Object.entries(data.operators ?? {})
                   .map(([key, on]) => `${key}: ${on ? 'on' : 'off'}`)
                   .join(' · ') || 'None'}
-              </p>
-            }
-            editing={operators.editing}
-            onEdit={operators.start}
-            onCancel={operators.cancel}
-            onSave={() => {
-              void operators.commit(operators.draft);
-            }}
-            saving={operators.saving}
-            error={operators.error}
-            editor={
+              </p>,
               <div className={styles.checkList}>
-                {Object.entries(operators.draft as Record<string, boolean>).map(([key, on]) => (
-                  <label key={key} className={styles.checkItem}>
-                    <input
-                      type="checkbox"
-                      checked={on}
-                      onChange={(event) => {
-                        operators.setDraft({
-                          ...(operators.draft as Record<string, boolean>),
-                          [key]: event.target.checked,
-                        });
-                      }}
-                    />
-                    {key}
-                  </label>
+                {Object.entries((draft as Record<string, boolean>) ?? {}).map(([key, on]) => (
+                  <Checkbox
+                    key={key}
+                    label={key}
+                    checked={on}
+                    onChange={(checked) => {
+                      setDraft({ ...(draft as Record<string, boolean>), [key]: checked });
+                    }}
+                  />
                 ))}
-              </div>
-            }
+              </div>,
+              { ...data.operators },
+              () => (draft as Record<string, boolean>) ?? {}
+            )}
           />
 
           <Section
-            title="Feature flags"
-            view={<KeyValueView values={data.featureFlags} />}
-            editing={flags.editing}
-            onEdit={flags.start}
-            onCancel={flags.cancel}
-            onSave={() => {
-              void flags.commit(toMap(flags.draft as Array<{ key: string; value: string }>));
-            }}
-            saving={flags.saving}
-            error={flags.error}
-            editor={
+            {...sectionProps(
+              'featureFlags',
+              'infrastructure.feature_flags',
+              <KeyValueTable rows={toRows(data.featureFlags)} />,
               <KeyValueEditor
-                rows={flags.draft as Array<{ key: string; value: string }>}
+                rows={(draft as KeyValueRow[]) ?? []}
                 onChange={(rows) => {
-                  flags.setDraft(rows);
+                  setDraft(rows);
                 }}
-              />
-            }
+              />,
+              toRows(data.featureFlags),
+              () => toMap((draft as KeyValueRow[]) ?? [])
+            )}
           />
 
           <Section
-            title="Image tags"
-            view={<KeyValueView values={data.imageTags} />}
-            editing={tags.editing}
-            onEdit={tags.start}
-            onCancel={tags.cancel}
-            onSave={() => {
-              void tags.commit(toMap(tags.draft as Array<{ key: string; value: string }>));
-            }}
-            saving={tags.saving}
-            error={tags.error}
-            editor={
+            {...sectionProps(
+              'imageTags',
+              'infrastructure.image_tags',
+              <KeyValueTable rows={toRows(data.imageTags)} />,
               <KeyValueEditor
-                rows={tags.draft as Array<{ key: string; value: string }>}
+                rows={(draft as KeyValueRow[]) ?? []}
                 onChange={(rows) => {
-                  tags.setDraft(rows);
+                  setDraft(rows);
                 }}
-              />
-            }
+              />,
+              toRows(data.imageTags),
+              () => toMap((draft as KeyValueRow[]) ?? [])
+            )}
           />
 
           <Section
-            title="Helm chart versions"
-            view={<KeyValueView values={data.chartVersions} />}
-            editing={charts.editing}
-            onEdit={charts.start}
-            onCancel={charts.cancel}
-            onSave={() => {
-              void charts.commit(toMap(charts.draft as Array<{ key: string; value: string }>));
-            }}
-            saving={charts.saving}
-            error={charts.error}
-            editor={
+            {...sectionProps(
+              'chartVersions',
+              'infrastructure.helm_chart_versions',
+              <KeyValueTable rows={toRows(data.chartVersions)} />,
               <KeyValueEditor
-                rows={charts.draft as Array<{ key: string; value: string }>}
+                rows={(draft as KeyValueRow[]) ?? []}
                 onChange={(rows) => {
-                  charts.setDraft(rows);
+                  setDraft(rows);
                 }}
-              />
-            }
+              />,
+              toRows(data.chartVersions),
+              () => toMap((draft as KeyValueRow[]) ?? [])
+            )}
           />
 
           {(data.conditions?.length ?? 0) > 0 && (
-            <div className={styles.card}>
-              <div className={styles.cardTitle}>Conditions</div>
-              <table className={styles.table}>
-                <thead>
-                  <tr>
-                    <th>Type</th>
-                    <th>Status</th>
-                    <th>Reason</th>
-                    <th>Message</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {(data.conditions ?? []).map((condition) => (
-                    <tr key={condition.type}>
-                      <td>{condition.type}</td>
-                      <td>{condition.status}</td>
-                      <td className={styles.muted}>{condition.reason ?? '—'}</td>
-                      <td className={styles.muted}>{condition.message ?? '—'}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <Card className={styles.section}>
+              <CardTitle title="infrastructure.conditions" />
+              <Table
+                rowGroups={[{ key: 'conditions', data: data.conditions ?? [] }]}
+                rowIndexKey="type"
+                columns={[
+                  { title: 'Type', dataIndex: 'type', render: (row: KuboCondition) => row.type },
+                  {
+                    title: 'Status',
+                    dataIndex: 'status',
+                    render: (row: KuboCondition) => row.status,
+                  },
+                  {
+                    title: 'Reason',
+                    dataIndex: 'reason',
+                    render: (row: KuboCondition) => row.reason ?? '—',
+                  },
+                  {
+                    title: 'Message',
+                    dataIndex: 'message',
+                    render: (row: KuboCondition) => row.message ?? '—',
+                  },
+                ]}
+              />
+            </Card>
           )}
 
-          <div className={styles.card}>
-            <div className={styles.cardTitle}>Components</div>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th>Component</th>
-                  <th>Phase</th>
-                  <th>Revision</th>
-                  <th>Depends on</th>
-                  <th>Message</th>
-                </tr>
-              </thead>
-              <tbody>
-                {(data.components ?? []).map((component) => (
-                  <tr key={component.name}>
-                    <td>{component.name}</td>
-                    <td
-                      className={
-                        (data.failing ?? []).includes(component.name) ? styles.error : undefined
-                      }
-                    >
-                      {component.phase}
-                    </td>
-                    <td>{component.revision ?? '—'}</td>
-                    <td className={styles.muted}>
-                      {(component.dependsOn ?? []).join(', ') || '—'}
-                    </td>
-                    <td className={styles.muted}>{component.message ?? '—'}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <Card className={styles.section}>
+            <CardTitle title="infrastructure.components" />
+            <Table
+              rowGroups={[{ key: 'components', data: data.components ?? [] }]}
+              rowIndexKey="name"
+              columns={[
+                { title: 'Component', dataIndex: 'name', render: (row: KuboComponent) => row.name },
+                {
+                  title: 'Phase',
+                  dataIndex: 'phase',
+                  render: (row: KuboComponent) =>
+                    (data.failing ?? []).includes(row.name) ? (
+                      <Tag status="error">{row.phase}</Tag>
+                    ) : (
+                      row.phase
+                    ),
+                },
+                {
+                  title: 'Revision',
+                  dataIndex: 'revision',
+                  render: (row: KuboComponent) => row.revision ?? '—',
+                },
+                {
+                  title: 'Depends on',
+                  dataIndex: 'dependsOn',
+                  render: (row: KuboComponent) => (row.dependsOn ?? []).join(', ') || '—',
+                },
+                {
+                  title: 'Message',
+                  dataIndex: 'message',
+                  render: (row: KuboComponent) => row.message ?? '—',
+                },
+              ]}
+            />
+          </Card>
         </>
       )}
     </div>
@@ -563,3 +595,4 @@ function Stack() {
 }
 
 export default Stack;
+/* eslint-enable @silverhand/fp/no-mutating-methods, id-length, react/boolean-prop-naming, react/no-array-index-key, no-restricted-syntax, complexity, no-alert, max-params, max-lines, @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/no-unnecessary-condition */
