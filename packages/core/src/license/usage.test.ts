@@ -7,7 +7,9 @@ import {
   clearLicenseUsageCache,
   collectLicenseUsage,
   evaluateUsage,
+  getLicenseUsageStatement,
   getUsageMonths,
+  mergeUsageWarnings,
 } from './usage.js';
 
 const { jest } = import.meta;
@@ -187,5 +189,77 @@ describe('evaluateUsage', () => {
 
   it('leaves production deployments to Logto Cloud', () => {
     expect(evaluateUsage({ productionDeployments: 0 }, usage)).toEqual([]);
+  });
+});
+
+describe('mergeUsageWarnings', () => {
+  const localMau = { metric: LicenseUsageMetric.Mau, limit: 50_000, value: 50_001 };
+
+  it('keeps the notices about metrics only Logto Cloud evaluates', () => {
+    const deployments = { metric: LicenseUsageMetric.ProductionDeployments, limit: 1, value: 2 };
+
+    expect(mergeUsageWarnings([localMau], [deployments])).toEqual([localMau, deployments]);
+  });
+
+  it('prefers the local warning over a notice about the same metric', () => {
+    expect(
+      mergeUsageWarnings([localMau], [{ metric: LicenseUsageMetric.Mau, limit: 50_000, value: 1 }])
+    ).toEqual([localMau]);
+  });
+
+  it('keeps a notice about a metric this deployment does not warn about', () => {
+    const tokens = { metric: LicenseUsageMetric.MonthlyAccessTokens, limit: 50_000, value: 60_000 };
+
+    expect(mergeUsageWarnings([], [tokens])).toEqual([tokens]);
+    expect(mergeUsageWarnings([localMau])).toEqual([localMau]);
+  });
+});
+
+describe('getLicenseUsageStatement', () => {
+  beforeEach(() => {
+    query.mockReset();
+  });
+
+  it('reports the last 12 full months, oldest first, with zero for a month without usage', async () => {
+    query.mockImplementation(async (sql) => {
+      if (sql.includes('daily_active_users')) {
+        return createMockQueryResult([
+          { month: '2025-01', count: '7' },
+          { month: '2025-12', count: '120' },
+        ]);
+      }
+
+      if (sql.includes('daily_token_usage')) {
+        return createMockQueryResult([{ month: '2025-12', usage: '9000' }]);
+      }
+
+      return createMockQueryResult([]);
+    });
+
+    const { months } = await getLicenseUsageStatement(pool, new Date('2026-01-05T08:00:00.000Z'));
+
+    expect(months).toHaveLength(12);
+    expect(months[0]).toEqual({ month: '2025-01', mau: 7, monthlyAccessTokens: 0 });
+    expect(months[1]).toEqual({ month: '2025-02', mau: 0, monthlyAccessTokens: 0 });
+    expect(months[11]).toEqual({ month: '2025-12', mau: 120, monthlyAccessTokens: 9000 });
+
+    for (const table of ['daily_active_users', 'daily_token_usage']) {
+      const call = query.mock.calls.find(([sql]) => sql.includes(table));
+
+      // From the first full month up to, not including, the current month.
+      expect(call?.[1]).toEqual(
+        expect.arrayContaining([
+          toEpochSeconds('2025-01-01T00:00:00.000Z') * 1000,
+          toEpochSeconds('2026-01-01T00:00:00.000Z') * 1000,
+          adminTenantId,
+        ])
+      );
+    }
+  });
+
+  it('throws when the database fails', async () => {
+    query.mockRejectedValue(new Error('canceling statement due to statement timeout'));
+
+    await expect(getLicenseUsageStatement(pool)).rejects.toThrow('statement timeout');
   });
 });

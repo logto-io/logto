@@ -78,10 +78,46 @@ export const createDailyActiveUsersQueries = (pool: CommonQueryMethods) => {
     return { lastMonth: Number(lastMonth), monthToDate: Number(monthToDate) };
   };
 
+  /**
+   * Count the distinct active users of every UTC calendar month from `from` until `to`, across
+   * every tenant except `excludedTenantId`. A month without active users has no row.
+   *
+   * Like {@link countMonthlyActiveUsersExcludingTenant}, the rows are grouped by month and user
+   * first and the groups are counted, rather than a `count(distinct)` per month.
+   *
+   * Only a pool that is not restricted to one tenant, i.e. `EnvSet.sharedPool`, sees every tenant.
+   */
+  const countActiveUsersByMonthExcludingTenant = async ({
+    from,
+    to,
+    excludedTenantId,
+  }: {
+    from: Date;
+    to: Date;
+    excludedTenantId: string;
+  }): Promise<Map<string, number>> => {
+    const rows = await pool.any<{ month: string; count: string }>(sql`
+      select month, count(*)
+      from (
+        select to_char(${fields.date} at time zone 'UTC', 'YYYY-MM') as month, ${fields.userId}
+        from ${table}
+        where ${fields.date} >= to_timestamp(${from.getTime()}::double precision / 1000)
+          and ${fields.date} < to_timestamp(${to.getTime()}::double precision / 1000)
+          and ${fields.tenantId} <> ${excludedTenantId}
+        group by 1, 2
+      ) as users
+      group by month
+    `);
+
+    // `count` is a `bigint`, which comes back as a string.
+    return new Map(rows.map(({ month, count }) => [month, Number(count)]));
+  };
+
   return {
     insertActiveUser,
     countActiveUsersByTimeInterval,
     getDailyActiveUserCountsByTimeInterval,
     countMonthlyActiveUsersExcludingTenant,
+    countActiveUsersByMonthExcludingTenant,
   };
 };
