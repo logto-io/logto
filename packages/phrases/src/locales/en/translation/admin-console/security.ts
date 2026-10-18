@@ -7,6 +7,23 @@ const security = {
     password_policy: 'Password policy',
     blocklist: 'Blocklist',
     general: 'General',
+    waf: 'WAF',
+  },
+  waf: {
+    title: 'Internal web application firewall',
+    description:
+      'Inspect request structure before tenant routing. Start in report mode and review findings before blocking.',
+    mode: {
+      title: 'Mode',
+      off: 'Off',
+      report: 'Report only',
+      block: 'Block detected requests',
+    },
+    max_request_target_length: {
+      title: 'Maximum request-target length',
+      description: 'Requests above this character limit are reported or blocked.',
+      error: 'Enter an integer between 1,024 and 65,536.',
+    },
   },
   bot_protection: {
     title: 'Bot protection',

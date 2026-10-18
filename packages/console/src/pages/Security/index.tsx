@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
 import PageMeta from '@/components/PageMeta';
+import { isCloud } from '@/consts/env';
 import { security } from '@/consts/external-links';
 import CardTitle from '@/ds-components/CardTitle';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
@@ -11,6 +12,7 @@ import Blocklist from './Blocklist';
 import Captcha from './Captcha';
 import General from './General';
 import PasswordPolicy from './PasswordPolicy';
+import Waf from './Waf';
 import styles from './index.module.scss';
 import { SecurityTabs } from './types';
 
@@ -56,11 +58,17 @@ function Security({ tab }: Props) {
         >
           {t('security.tabs.general')}
         </TabNavItem>
+        {!isCloud && (
+          <TabNavItem href={`/security/${SecurityTabs.Waf}`} isActive={tab === SecurityTabs.Waf}>
+            {t('security.tabs.waf')}
+          </TabNavItem>
+        )}
       </TabNav>
       {tab === SecurityTabs.Captcha && <Captcha />}
       {tab === SecurityTabs.PasswordPolicy && <PasswordPolicy />}
       {tab === SecurityTabs.General && <General />}
       {tab === SecurityTabs.Blocklist && <Blocklist />}
+      {tab === SecurityTabs.Waf && <Waf />}
     </div>
   );
 }

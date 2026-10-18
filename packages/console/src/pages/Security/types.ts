@@ -3,4 +3,5 @@ export enum SecurityTabs {
   PasswordPolicy = 'password-policy',
   General = 'general',
   Blocklist = 'blocklist',
+  Waf = 'waf',
 }

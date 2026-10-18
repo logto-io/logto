@@ -31,5 +31,9 @@ export const security: RouteObject = {
       path: SecurityTabs.Blocklist,
       element: <Security tab={SecurityTabs.Blocklist} />,
     },
+    {
+      path: SecurityTabs.Waf,
+      element: <Security tab={SecurityTabs.Waf} />,
+    },
   ],
 };
