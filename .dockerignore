@@ -1,5 +1,6 @@
 # dependencies (any depth)
 **/node_modules
+**/.pnpm-store
 
 # testing
 /packages/**/coverage
