@@ -59,13 +59,10 @@ const hasAmbiguousBodyFraming = ({ headers, rawHeaders }: WafRequest) => {
   return new Set(contentLengths.map((value) => value.trim())).size > 1;
 };
 
-const decodePath = (path: string) => {
-  try {
-    return decodeURIComponent(path);
-  } catch {
-    return path;
-  }
-};
+const decodePath = (path: string) =>
+  path.replaceAll(/%([\dA-Fa-f]{2})/g, (_, hex: string) =>
+    String.fromCodePoint(Number.parseInt(hex, 16))
+  );
 
 const hasTraversal = (rawTarget: string) => {
   const pathname = rawTarget.split('?', 1)[0] ?? '';

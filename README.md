@@ -109,6 +109,9 @@ effect at runtime without restarting the service:
 - `off`: disable inspection; this is the operational kill switch.
 
 The same screen configures the maximum request-target length from 1,024 to 65,536 characters.
+The process that accepts a change applies it immediately; other replicas converge within five
+seconds. During a configuration database outage, each process keeps its last valid policy (or the
+safe report-only default) and retries after the same bounded interval.
 
 Findings contain only request ID, HTTP method, stable rule ID, mode, and numeric request-target
 length. They never contain raw URLs, query values, headers, cookies, credentials, tokens, tenant

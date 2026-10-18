@@ -22,6 +22,8 @@ A tested internal WAF package runs as early Koa middleware, detects bounded high
 
 ## Internal WAF operations
 - Admin Console → Security → WAF stores runtime policy without a restart.
+- Runtime policy converges across replicas within five seconds and falls back to the last valid
+  policy (or report-only defaults) during database outages.
 - `report` is the default and the only approved initial production mode.
 - `off` in the UI is the kill switch.
 - `block` requires separate approval after report-only evidence review.

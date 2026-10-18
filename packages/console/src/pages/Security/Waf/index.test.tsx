@@ -2,11 +2,10 @@ import { defaultWafConfig } from '@logto/schemas';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import type React from 'react';
 
-import useConfigs from '@/hooks/use-configs';
-
 import WafSettings from '.';
+import useWafConfig from './use-waf-config';
 
-jest.mock('@/hooks/use-configs', () => ({ __esModule: true, default: jest.fn() }));
+jest.mock('./use-waf-config', () => ({ __esModule: true, default: jest.fn() }));
 jest.mock('@/scss/modal.module.scss', () => ({}));
 jest.mock('@withtyped/client', () => ({ ResponseError: class extends Error {} }), {
   virtual: true,
@@ -48,19 +47,15 @@ jest.mock('@/ds-components/Select', () => ({
   ),
 }));
 
-const updateConfigs = jest.fn();
-const baseConfigs = {
-  signInExperienceCustomized: false,
-  organizationCreated: false,
-};
+const updateWafConfig = jest.fn();
 
 const setConfigs = (waf = defaultWafConfig) => {
-  jest.mocked(useConfigs).mockReturnValue({
+  jest.mocked(useWafConfig).mockReturnValue({
     isLoading: false,
-    configs: { ...baseConfigs, waf },
+    data: waf,
     error: undefined,
     mutate: jest.fn(),
-    updateConfigs,
+    updateWafConfig,
   });
 };
 
@@ -71,12 +66,12 @@ beforeEach(() => {
 
 describe('WAF settings', () => {
   it('shows safe defaults when no persisted config exists', () => {
-    jest.mocked(useConfigs).mockReturnValue({
+    jest.mocked(useWafConfig).mockReturnValue({
       isLoading: false,
-      configs: baseConfigs,
+      data: undefined,
       error: undefined,
       mutate: jest.fn(),
-      updateConfigs,
+      updateWafConfig,
     });
 
     render(<WafSettings />);
@@ -93,8 +88,9 @@ describe('WAF settings', () => {
     fireEvent.click(screen.getByRole('button', { name: 'admin_console.general.save_changes' }));
 
     await waitFor(() => {
-      expect(updateConfigs).toHaveBeenCalledWith({
-        waf: { mode: 'block', maxRequestTargetLength: 4096 },
+      expect(updateWafConfig).toHaveBeenCalledWith({
+        mode: 'block',
+        maxRequestTargetLength: 4096,
       });
     });
   });

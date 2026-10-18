@@ -1,4 +1,9 @@
-import { LogtoOidcConfigKey, OidcSigningKeyStatus, type AdminConsoleData } from '@logto/schemas';
+import {
+  defaultTenantId,
+  LogtoOidcConfigKey,
+  OidcSigningKeyStatus,
+  type AdminConsoleData,
+} from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import Sinon from 'sinon';
@@ -12,9 +17,13 @@ import { createRequester } from '#src/utils/test-utils.js';
 const { jest } = import.meta;
 
 const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
-const invalidateWafConfig = jest.fn();
+const getWafConfig = jest.fn(async () => ({
+  mode: 'report' as const,
+  maxRequestTargetLength: 8192,
+}));
+const updateWafConfig = jest.fn(async (_pool: unknown, config: unknown) => config);
 
-mockEsm('#src/waf/config.js', () => ({ invalidateWafConfig }));
+mockEsm('#src/waf/config.js', () => ({ getWafConfig, updateWafConfig }));
 
 const newPrivateKey = {
   id: generateStandardId(),
@@ -132,6 +141,7 @@ describe('configs routes', () => {
   const tenantContext = new MockTenant(undefined, { logtoConfigs: logtoConfigQueries }, undefined, {
     oidcPrivateKeys: oidcPrivateKeyLibraries,
   });
+  Sinon.stub(tenantContext, 'id').value(defaultTenantId);
   Sinon.stub(tenantContext, 'logtoConfigs').value({
     ...tenantContext.logtoConfigs,
     getOidcConfigs: logtoConfigLibraries.getOidcConfigs,
@@ -142,6 +152,10 @@ describe('configs routes', () => {
   const routeRequester = createRequester({
     authedRoutes: settingRoutes,
     tenantContext,
+  });
+  const nonAdminRequester = createRequester({
+    authedRoutes: settingRoutes,
+    tenantContext: new MockTenant(),
   });
 
   afterEach(() => {
@@ -170,16 +184,40 @@ describe('configs routes', () => {
       ...mockAdminConsoleData,
       signInExperienceCustomized,
     });
-    expect(invalidateWafConfig).not.toHaveBeenCalled();
+    expect(updateWafConfig).not.toHaveBeenCalled();
+  });
+
+  it('does not accept WAF policy through tenant-scoped admin console config', async () => {
+    const response = await routeRequester.patch('/configs/admin-console').send({
+      waf: { mode: 'block', maxRequestTargetLength: 4096 },
+    });
+
+    expect(response.status).toEqual(400);
+    expect(updateWafConfig).not.toHaveBeenCalled();
+  });
+
+  it('GET /configs/waf returns safe defaults', async () => {
+    const response = await routeRequester.get('/configs/waf');
+
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual({ mode: 'report', maxRequestTargetLength: 8192 });
   });
 
   it('invalidates runtime WAF config after updating it', async () => {
     const waf = { mode: 'block' as const, maxRequestTargetLength: 4096 };
-    const response = await routeRequester.patch('/configs/admin-console').send({ waf });
+    const response = await routeRequester.patch('/configs/waf').send(waf);
 
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual({ ...mockAdminConsoleData, waf });
-    expect(invalidateWafConfig).toHaveBeenCalledTimes(1);
+    expect(response.body).toEqual(waf);
+    expect(updateWafConfig).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps WAF config unavailable outside the admin tenant', async () => {
+    await nonAdminRequester.get('/configs/waf').expect(404);
+    await nonAdminRequester
+      .patch('/configs/waf')
+      .send({ mode: 'off', maxRequestTargetLength: 8192 })
+      .expect(404);
   });
 
   it('GET /configs/oidc/:keyType', async () => {

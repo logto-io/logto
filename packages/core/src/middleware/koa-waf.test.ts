@@ -71,6 +71,22 @@ describe('koaWaf()', () => {
     expect(next).toHaveBeenCalledTimes(1);
   });
 
+  it('preserves an encoded OIDC path and query', async () => {
+    const report = jest.fn();
+    const next = createNext();
+    const context = createContext(
+      'GET',
+      '/%6f%69%64%63/%61%75%74%68?%72%65%64%69%72%65%63%74%5f%75%72%69=https%3A%2F%2Fchip.example%2Fcallback'
+    );
+    const originalUrl = context.req.url;
+
+    await koaWaf({ mode: 'report', report })(context, next);
+
+    expect(report).not.toHaveBeenCalled();
+    expect(next).toHaveBeenCalledTimes(1);
+    expect(context.req.url).toBe(originalUrl);
+  });
+
   it('uses the sanitized request console when no reporter is provided', async () => {
     const consoleLog = new SilentConsoleLog();
     const warn = jest.spyOn(consoleLog, 'warn');

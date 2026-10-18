@@ -5,10 +5,12 @@ import {
 import {
   LogtoOidcConfigKey,
   adminConsoleDataGuard,
+  defaultTenantId,
   oidcConfigKeysResponseGuard,
   SupportedSigningKeyAlgorithm,
   LogtoOidcConfigKeyType,
   oidcSessionConfigGuard,
+  wafConfigGuard,
 } from '@logto/schemas';
 import { z } from 'zod';
 
@@ -17,7 +19,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import defaults from '#src/oidc/defaults.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
-import { invalidateWafConfig } from '#src/waf/config.js';
+import { getWafConfig, updateWafConfig } from '#src/waf/config.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
@@ -61,20 +63,39 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
   router.patch(
     '/configs/admin-console',
     koaGuard({
-      body: adminConsoleDataGuard.partial(),
+      body: adminConsoleDataGuard.omit({ waf: true }).partial().strict(),
       response: adminConsoleDataGuard,
       status: [200, 404],
     }),
     async (ctx, next) => {
       const { value } = await updateAdminConsoleConfig(ctx.guard.body);
-      if (ctx.guard.body.waf) {
-        invalidateWafConfig();
-      }
       ctx.body = value;
 
       return next();
     }
   );
+
+  if (!EnvSet.values.isCloud && tenant.id === defaultTenantId) {
+    router.get(
+      '/configs/waf',
+      koaGuard({ response: wafConfigGuard, status: [200] }),
+      async (ctx, next) => {
+        ctx.body = await getWafConfig(await EnvSet.sharedPool);
+
+        return next();
+      }
+    );
+
+    router.patch(
+      '/configs/waf',
+      koaGuard({ body: wafConfigGuard, response: wafConfigGuard, status: [200] }),
+      async (ctx, next) => {
+        ctx.body = await updateWafConfig(await EnvSet.sharedPool, ctx.guard.body);
+
+        return next();
+      }
+    );
+  }
 
   router.get(
     '/configs/oidc/session',

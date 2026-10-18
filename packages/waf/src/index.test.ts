@@ -49,10 +49,18 @@ describe('inspectRequest()', () => {
     }
   );
 
+  it.each(['/safe/%2e%2e/%', '/safe/%252e%252e/%', '/%/safe/%2e%2e'])(
+    'detects traversal beside malformed encoding in %s',
+    (rawTarget) => {
+      expect(inspect({ rawTarget })).toEqual(['path-traversal']);
+    }
+  );
+
   it.each([
     '/oidc/auth?redirect_uri=https%3A%2F%2Fchip.example%2Fcallback&state=a%2Fb',
     '/callback/google?code=abc%2Fdef&state=safe%252Fstate',
     '/oidc/auth?redirect_uri=%',
+    '/%6f%69%64%63/%61%75%74%68?%72%65%64%69%72%65%63%74%5f%75%72%69=https%3A%2F%2Fchip.example%2Fcallback',
   ])('preserves legitimate or malformed query encoding in %s', (rawTarget) => {
     expect(inspect({ rawTarget })).toEqual([]);
   });

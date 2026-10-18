@@ -12,18 +12,18 @@ import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import FormField from '@/ds-components/FormField';
 import Select from '@/ds-components/Select';
 import NumericInput from '@/ds-components/TextInput/NumericInput';
-import useConfigs from '@/hooks/use-configs';
 import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import { trySubmitSafe } from '@/utils/form';
 
 import styles from './index.module.scss';
+import useWafConfig from './use-waf-config';
 
 const modeValues = ['off', 'report', 'block'] as const;
 
 function Waf() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.security.waf' });
   const { t: globalT } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { configs, error, isLoading, mutate, updateConfigs } = useConfigs();
+  const { data, error, isLoading, mutate, updateWafConfig } = useWafConfig();
   const {
     access: { isReadOnly },
   } = useCurrentTenantScopes();
@@ -32,13 +32,13 @@ function Waf() {
     reset,
     handleSubmit,
     formState: { isDirty, isSubmitting, errors },
-  } = useForm<WafConfig>({ defaultValues: configs?.waf ?? defaultWafConfig });
+  } = useForm<WafConfig>({ defaultValues: data ?? defaultWafConfig });
 
   useEffect(() => {
-    if (configs?.waf && !isDirty) {
-      reset(configs.waf);
+    if (data && !isDirty) {
+      reset(data);
     }
-  }, [configs?.waf, isDirty, reset]);
+  }, [data, isDirty, reset]);
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (waf) => {
@@ -46,7 +46,7 @@ function Waf() {
         return;
       }
 
-      await updateConfigs({ waf });
+      await updateWafConfig(waf);
       reset(waf);
       toast.success(globalT('general.saved'));
     })
