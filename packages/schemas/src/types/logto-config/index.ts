@@ -131,6 +131,18 @@ export const jwtCustomizerConfigsGuard = z.discriminatedUnion('key', [
 export type JwtCustomizerConfigs = z.infer<typeof jwtCustomizerConfigsGuard>;
 
 /* --- Logto tenant configs --- */
+export const wafConfigGuard = z.object({
+  mode: z.enum(['off', 'report', 'block']),
+  maxRequestTargetLength: z.number().int().min(1024).max(65_536),
+});
+
+export type WafConfig = z.infer<typeof wafConfigGuard>;
+
+export const defaultWafConfig: WafConfig = Object.freeze({
+  mode: 'report',
+  maxRequestTargetLength: 8192,
+});
+
 export const adminConsoleDataGuard = z.object({
   signInExperienceCustomized: z.boolean(),
   organizationCreated: z.boolean(),
@@ -153,6 +165,7 @@ export const adminConsoleDataGuard = z.object({
       tenantMember: z.boolean().optional(),
     })
     .optional(),
+  waf: wafConfigGuard.optional(),
 });
 
 export type AdminConsoleData = z.infer<typeof adminConsoleDataGuard>;

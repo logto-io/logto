@@ -4,13 +4,16 @@ import { pickDefault } from '@logto/shared/esm';
 import Koa from 'koa';
 import request from 'supertest';
 
+import type { KoaWafOptions } from '#src/middleware/koa-waf.js';
+
 const { jest } = import.meta;
 
 const getTenantId = jest.fn();
 const tenantPoolGet = jest.fn();
 const trackException = jest.fn();
 const wafMiddleware = jest.fn(async (_context: Koa.Context, next: Koa.Next) => next());
-const koaWaf = jest.fn(() => wafMiddleware);
+const koaWaf = jest.fn((_options: KoaWafOptions) => wafMiddleware);
+const getWafConfig = jest.fn(async () => ({ mode: 'report', maxRequestTargetLength: 8192 }));
 
 class TenantNotFoundError extends Error {}
 
@@ -33,6 +36,10 @@ jest.unstable_mockModule('#src/utils/tenant.js', () => ({
 
 jest.unstable_mockModule('#src/middleware/koa-waf.js', () => ({
   default: koaWaf,
+}));
+
+jest.unstable_mockModule('#src/waf/config.js', () => ({
+  getWafConfig,
 }));
 
 const initI18n = await pickDefault(import('../i18n/init.js'));
@@ -81,7 +88,8 @@ describe('App Init', () => {
 
     await request(app.callback()).get('/oidc/auth').expect(404);
 
-    expect(koaWaf).toHaveBeenCalledWith(expect.objectContaining({ mode: 'report' }));
+    const [wafOptions] = koaWaf.mock.calls.at(-1) ?? [];
+    expect(typeof wafOptions?.getConfig).toBe('function');
     expect(wafMiddleware).toHaveBeenCalledTimes(1);
     expect(wafMiddleware.mock.calls[0]?.[0].requestId).toEqual(expect.any(String));
     expect(wafMiddleware.mock.invocationCallOrder[0]).toBeLessThan(

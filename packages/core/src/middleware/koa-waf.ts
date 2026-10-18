@@ -12,8 +12,14 @@ export type KoaWafEvent = {
 };
 
 // eslint-disable-next-line import/no-unused-modules
-export type KoaWafOptions = {
+export type KoaWafRuntimeConfig = {
   readonly mode: 'off' | 'report' | 'block';
+  readonly maxRequestTargetLength: number;
+};
+
+export type KoaWafOptions = {
+  readonly mode?: 'off' | 'report' | 'block';
+  readonly getConfig?: () => Promise<KoaWafRuntimeConfig>;
   readonly inspect?: typeof inspectRequest;
   readonly inspectorOptions?: WafOptions;
   readonly report?: (event: KoaWafEvent) => void | Promise<void>;
@@ -43,19 +49,28 @@ const buildEvent = (
 });
 
 export default function koaWaf({
-  mode,
+  mode = 'report',
+  getConfig,
   inspect = inspectRequest,
   inspectorOptions,
   report,
 }: KoaWafOptions): Koa.Middleware {
   return async (context, next) => {
-    if (mode === 'off') {
-      return next();
-    }
-
     const rawTarget = context.req.url ?? context.originalUrl;
 
     try {
+      const runtimeConfig = getConfig
+        ? await getConfig()
+        : {
+            mode,
+            maxRequestTargetLength: inspectorOptions?.maxRequestTargetLength ?? 8192,
+          };
+      if (runtimeConfig.mode === 'off') {
+        await next();
+        return;
+      }
+      const activeMode = runtimeConfig.mode;
+
       const findings = inspect(
         {
           method: context.method,
@@ -66,7 +81,10 @@ export default function koaWaf({
           },
           rawHeaders: context.req.rawHeaders,
         },
-        inspectorOptions
+        {
+          ...inspectorOptions,
+          maxRequestTargetLength: runtimeConfig.maxRequestTargetLength,
+        }
       );
 
       const reportFinding =
@@ -76,11 +94,11 @@ export default function koaWaf({
         });
       await Promise.all(
         findings.map(async (finding) =>
-          reportFinding(buildEvent(context, finding, mode, rawTarget.length))
+          reportFinding(buildEvent(context, finding, activeMode, rawTarget.length))
         )
       );
 
-      if (mode === 'block' && findings.length > 0) {
+      if (activeMode === 'block' && findings.length > 0) {
         // Koa exposes response status and body through mutable context properties.
         // eslint-disable-next-line @silverhand/fp/no-mutation
         context.status = 403;

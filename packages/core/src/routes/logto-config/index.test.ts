@@ -12,6 +12,9 @@ import { createRequester } from '#src/utils/test-utils.js';
 const { jest } = import.meta;
 
 const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
+const invalidateWafConfig = jest.fn();
+
+mockEsm('#src/waf/config.js', () => ({ invalidateWafConfig }));
 
 const newPrivateKey = {
   id: generateStandardId(),
@@ -167,6 +170,16 @@ describe('configs routes', () => {
       ...mockAdminConsoleData,
       signInExperienceCustomized,
     });
+    expect(invalidateWafConfig).not.toHaveBeenCalled();
+  });
+
+  it('invalidates runtime WAF config after updating it', async () => {
+    const waf = { mode: 'block' as const, maxRequestTargetLength: 4096 };
+    const response = await routeRequester.patch('/configs/admin-console').send({ waf });
+
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual({ ...mockAdminConsoleData, waf });
+    expect(invalidateWafConfig).toHaveBeenCalledTimes(1);
   });
 
   it('GET /configs/oidc/:keyType', async () => {

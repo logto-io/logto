@@ -92,6 +92,26 @@ describe('koaWaf()', () => {
     expect(JSON.stringify(warn.mock.calls)).not.toContain('must-not-appear');
   });
 
+  it('loads runtime configuration for every request without recreating middleware', async () => {
+    const getConfig = jest
+      .fn()
+      .mockResolvedValueOnce({ mode: 'report', maxRequestTargetLength: 8192 })
+      .mockResolvedValueOnce({ mode: 'block', maxRequestTargetLength: 8192 });
+    const middleware = koaWaf({ getConfig });
+    const first = createContext('TRACE');
+    const second = createContext('TRACE');
+    const firstNext = createNext();
+    const secondNext = createNext();
+
+    await middleware(first, firstNext);
+    await middleware(second, secondNext);
+
+    expect(getConfig).toHaveBeenCalledTimes(2);
+    expect(firstNext).toHaveBeenCalledTimes(1);
+    expect(second.status).toBe(403);
+    expect(secondNext).not.toHaveBeenCalled();
+  });
+
   it.each([
     [
       'inspector',

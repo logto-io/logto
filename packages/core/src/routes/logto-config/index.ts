@@ -17,6 +17,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import defaults from '#src/oidc/defaults.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
+import { invalidateWafConfig } from '#src/waf/config.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
@@ -66,6 +67,9 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
     }),
     async (ctx, next) => {
       const { value } = await updateAdminConsoleConfig(ctx.guard.body);
+      if (ctx.guard.body.waf) {
+        invalidateWafConfig();
+      }
       ctx.body = value;
 
       return next();

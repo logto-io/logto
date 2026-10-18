@@ -16,6 +16,7 @@ import { TenantNotFoundError, tenantPool } from '#src/tenants/index.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 import { getTenantId } from '#src/utils/tenant.js';
+import { getWafConfig } from '#src/waf/config.js';
 
 const logListening = (type: 'core' | 'admin' = 'core') => {
   const urlSet = type === 'core' ? EnvSet.values.urlSet : EnvSet.values.adminUrlSet;
@@ -49,7 +50,11 @@ export default async function initApp(app: Koa): Promise<void> {
     ctx.set('Logto-Core-Request-Id', requestId);
   });
 
-  app.use(koaWaf({ mode: EnvSet.values.wafMode }));
+  app.use(
+    koaWaf({
+      getConfig: async () => getWafConfig(await EnvSet.sharedPool),
+    })
+  );
 
   app.use(async (ctx, next) => {
     if (EnvSet.values.isDomainBasedMultiTenancy && ['/status', '/'].includes(ctx.URL.pathname)) {

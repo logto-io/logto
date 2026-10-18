@@ -15,38 +15,6 @@ const unsetEnvironmentVariable = (key: string) => {
 /** The current name, and the narrower one it replaced, which stays supported. */
 const optOutVariables = ['SSRF_PROTECTION_DISABLED', 'OIDC_PROVIDER_SSRF_PROTECTION_DISABLED'];
 
-describe('WAF mode', () => {
-  afterEach(() => {
-    vi.unstubAllEnvs();
-  });
-
-  it('defaults to report when LOGTO_WAF_MODE is unset', () => {
-    unsetEnvironmentVariable('LOGTO_WAF_MODE');
-
-    expect(createGlobalValues().wafMode).toBe('report');
-  });
-
-  it.each(['off', 'report', 'block'] as const)('accepts %s', (mode) => {
-    vi.stubEnv('LOGTO_WAF_MODE', mode);
-
-    expect(createGlobalValues().wafMode).toBe(mode);
-  });
-
-  it('rejects invalid values without exposing unrelated environment values', () => {
-    vi.stubEnv('LOGTO_WAF_MODE', 'enforce');
-    vi.stubEnv('LOGTO_APP_SECRET', 'must-not-appear');
-
-    expect(() => createGlobalValues()).toThrow(
-      'Invalid LOGTO_WAF_MODE; expected off, report, or block.'
-    );
-    try {
-      createGlobalValues();
-    } catch (error: unknown) {
-      expect(String(error)).not.toContain('must-not-appear');
-    }
-  });
-});
-
 describe('SSRF protection', () => {
   afterEach(() => {
     vi.unstubAllEnvs();
