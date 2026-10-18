@@ -96,6 +96,30 @@ Logto supports all your apps, APIs, and services with industry-standard protocol
 
 ![Logto multi-tenancy showcase](./assets/showcase-logto-multi-tenancy.gif)
 
+## Internal WAF
+
+This fork includes a bounded, application-layer WAF as defense in depth. It inspects request
+structure before tenant routing without reading request bodies.
+
+Configure the WAF at **Admin Console → Security → WAF**. Changes are persisted in Logto and take
+effect at runtime without restarting the service:
+
+- `report` (default): emit a sanitized finding and continue the request.
+- `block`: emit a finding and return a generic `403` response.
+- `off`: disable inspection; this is the operational kill switch.
+
+The same screen configures the maximum request-target length from 1,024 to 65,536 characters.
+
+Findings contain only request ID, HTTP method, stable rule ID, mode, and numeric request-target
+length. They never contain raw URLs, query values, headers, cookies, credentials, tokens, tenant
+IDs, IP addresses, or request bodies.
+
+The first release detects unsupported proxy/debug methods, ambiguous HTTP body framing, oversized
+request targets, target control bytes, and path traversal segments. It intentionally does not use
+generic SQL-injection or XSS regular expressions, perform bot/IP reputation scoring, or replace an
+edge WAF. Production rollout starts in `report`; promotion to `block` requires separate review of
+report-only evidence.
+
 ## Support Logto
 
 If you find Logto helpful, here's how you can support us:
