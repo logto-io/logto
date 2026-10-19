@@ -156,7 +156,9 @@ devFeatureTest.describe('Account Center OIDC step-up', () => {
       socialSignInConnectorTargets: ['mock-social'],
       mfa: { factors: [], policy: MfaPolicy.UserControlled },
     });
-    const user = await createUser({ name: 'social-only' });
+    // A username keeps the shared sign-up configuration from prompting for one; it is not a
+    // verification method, so the user still has nothing to satisfy the step-up.
+    const user = await createUser({ name: 'social-only', username: generateStandardId() });
     const context = await browser.createBrowserContext();
     const experience = new ExpectExperience(await context.newPage());
 
