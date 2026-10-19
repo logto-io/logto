@@ -12,7 +12,8 @@ type IdentityVerificationContext = WithAuthContext & ExtendableContext;
 
 /**
  * Assert that the request carries recent user authentication, as `koaOidcAuth` recorded it: a valid
- * `logto-verification-id` verification record. The failure keeps the existing status and JSON body.
+ * `logto-verification-id` verification record. Throws a 401 `verification_record.permission_denied`
+ * error otherwise.
  */
 export const assertIdentityVerified = (ctx: IdentityVerificationContext) => {
   assertThat(
