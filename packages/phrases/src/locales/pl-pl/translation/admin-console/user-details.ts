@@ -72,6 +72,9 @@ const user_details = {
   },
   mfa: {
     field_name: 'Wieloetapowa autoryzacja',
+    require_mfa: 'Wymagaj konfiguracji MFA',
+    require_mfa_description:
+      'Ten użytkownik musi skonfigurować co najmniej jeden czynnik MFA przed ukończeniem logowania. Nie może pominąć konfiguracji.',
     field_description: 'Ten użytkownik włączył autoryzację dwuetapową.',
     name_column: 'Wieloetapowa autoryzacja',
     field_description_empty: 'Ten użytkownik nie włączył autoryzacji dwuetapowej.',

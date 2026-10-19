@@ -29,6 +29,16 @@ export const userLogtoConfigResponseGuard = z.object({
 type UserLogtoConfigResponse = z.infer<typeof userLogtoConfigResponseGuard>;
 
 /**
+ * Response guard for the management API. Unlike the account API, it exposes the admin-managed
+ * MFA requirement so Console and management clients can read and update it.
+ */
+export const adminUserLogtoConfigResponseGuard = userLogtoConfigResponseGuard.extend({
+  mfa: userLogtoConfigResponseGuard.shape.mfa.extend({
+    required: userMfaDataGuard.shape.required.unwrap(),
+  }),
+});
+
+/**
  * Build the logto-config API response body from a user's `logtoConfig` JSONB field.
  *
  * `mfa.enabled` is returned as-is (may be `undefined` for legacy users).
@@ -46,6 +56,24 @@ export const buildUserLogtoConfigResponse = (
     },
     passkeySignIn: {
       skipped: data?.[userPasskeySignInDataKey]?.skipped ?? false,
+    },
+  };
+};
+
+/**
+ * Build the management API response body, which additionally exposes `mfa.required`.
+ */
+export const buildAdminUserLogtoConfigResponse = (
+  logtoConfig: User['logtoConfig']
+): z.infer<typeof adminUserLogtoConfigResponseGuard> => {
+  const { data } = userLogtoConfigGuard.safeParse(logtoConfig);
+  const response = buildUserLogtoConfigResponse(logtoConfig);
+
+  return {
+    ...response,
+    mfa: {
+      ...response.mfa,
+      required: data?.[userMfaDataKey]?.required ?? false,
     },
   };
 };

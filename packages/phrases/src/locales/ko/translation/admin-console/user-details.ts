@@ -69,6 +69,9 @@ const user_details = {
   },
   mfa: {
     field_name: '다단계 인증',
+    require_mfa: 'MFA 설정 필수',
+    require_mfa_description:
+      '이 사용자는 로그인을 완료하기 전에 하나 이상의 MFA 요소를 설정해야 하며, 설정을 건너뛸 수 없습니다.',
     field_description: '이 사용자는 2단계 인증 요소를 활성화했습니다.',
     name_column: '다단계 인증',
     field_description_empty: '이 사용자는 2단계 인증 요소를 활성화하지 않았습니다.',
