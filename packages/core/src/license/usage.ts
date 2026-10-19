@@ -38,10 +38,16 @@ const usageStatementMonths = 12;
 
 const cacheKey = 'usage';
 const cache = new TtlCache<string, Promise<Optional<LicenseUsage>>>(licenseUsageCacheTtl);
+/**
+ * The usage statement of the current UTC month, keyed by that month. A statement only covers full
+ * months, which no longer change, so it is read once a month.
+ */
+const statementCache = new Map<string, Promise<LicenseUsageStatement>>();
 
-/** Drop the cached usage so the next call collects it again. */
+/** Drop the cached usage and usage statement so the next call reads them again. */
 export const clearLicenseUsageCache = () => {
   cache.clear();
+  statementCache.clear();
 };
 
 /** The UTC calendar month of `date` as `YYYY-MM`. */
@@ -169,19 +175,9 @@ export const mergeUsageWarnings = (
   ...notices.filter(({ metric }) => !localWarnings.some((warning) => warning.metric === metric)),
 ];
 
-/**
- * Read the monthly usage of this deployment over the last {@link usageStatementMonths} full UTC
- * calendar months, across all tenants except the admin tenant, for the usage statement the
- * self-hosted terms ask a customer to provide.
- *
- * Unlike {@link collectLicenseUsage}, a statement is requested explicitly, so it is not cached and a
- * failure is thrown to the caller.
- *
- * @param pool A pool that can read every tenant's usage, i.e. `EnvSet.sharedPool`.
- */
-export const getLicenseUsageStatement = async (
+const readUsageStatement = async (
   pool: CommonQueryMethods,
-  now = new Date()
+  now: Date
 ): Promise<LicenseUsageStatement> => {
   const year = now.getUTCFullYear();
   const month = now.getUTCMonth();
@@ -219,4 +215,42 @@ export const getLicenseUsageStatement = async (
       };
     }),
   };
+};
+
+/**
+ * Read the monthly usage of this deployment over the last {@link usageStatementMonths} full UTC
+ * calendar months, across all tenants except the admin tenant, for the usage statement the
+ * self-hosted terms ask a customer to provide.
+ *
+ * Unlike {@link collectLicenseUsage}, a statement is requested explicitly, so a failure is thrown to
+ * the caller. Full months no longer change, so the statement is cached per process until the
+ * current month ends, and concurrent callers share one read. A failed read is not cached.
+ *
+ * @param pool A pool that can read every tenant's usage, i.e. `EnvSet.sharedPool`.
+ */
+export const getLicenseUsageStatement = async (
+  pool: CommonQueryMethods,
+  now = new Date()
+): Promise<LicenseUsageStatement> => {
+  const month = formatUsageMonth(now);
+  const cached = statementCache.get(month);
+
+  if (cached) {
+    return cached;
+  }
+
+  const reading = readUsageStatement(pool, now);
+  // Only the statement of the current month is kept.
+  statementCache.clear();
+  statementCache.set(month, reading);
+
+  try {
+    return await reading;
+  } catch (error: unknown) {
+    if (statementCache.get(month) === reading) {
+      statementCache.delete(month);
+    }
+
+    throw error;
+  }
 };

@@ -217,6 +217,7 @@ describe('mergeUsageWarnings', () => {
 
 describe('getLicenseUsageStatement', () => {
   beforeEach(() => {
+    clearLicenseUsageCache();
     query.mockReset();
   });
 
@@ -257,9 +258,26 @@ describe('getLicenseUsageStatement', () => {
     }
   });
 
-  it('throws when the database fails', async () => {
-    query.mockRejectedValue(new Error('canceling statement due to statement timeout'));
+  it('reads the statement once a month', async () => {
+    query.mockResolvedValue(createMockQueryResult([]));
+    const countReads = () =>
+      query.mock.calls.filter(([sql]) => sql.includes('daily_active_users')).length;
+
+    await getLicenseUsageStatement(pool, new Date('2026-01-05T08:00:00.000Z'));
+    await getLicenseUsageStatement(pool, new Date('2026-01-31T23:59:59.999Z'));
+    expect(countReads()).toBe(1);
+
+    const { months } = await getLicenseUsageStatement(pool, new Date('2026-02-01T00:00:00.000Z'));
+    expect(countReads()).toBe(2);
+    expect(months.at(-1)?.month).toBe('2026-01');
+  });
+
+  it('throws when the database fails, and reads again on the next call', async () => {
+    query.mockRejectedValueOnce(new Error('canceling statement due to statement timeout'));
 
     await expect(getLicenseUsageStatement(pool)).rejects.toThrow('statement timeout');
+
+    query.mockResolvedValue(createMockQueryResult([]));
+    await expect(getLicenseUsageStatement(pool)).resolves.toHaveProperty('months');
   });
 });

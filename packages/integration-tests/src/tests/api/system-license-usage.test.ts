@@ -2,10 +2,14 @@ import { createServer, type Server } from 'node:http';
 
 import {
   LicenseUsageMetric,
+  adminTenantId,
+  defaultTenantId,
   licenseUsageGuard,
   type LicenseUsage,
   type LicenseUsageWarning,
 } from '@logto/schemas';
+import { assertEnv } from '@silverhand/essentials';
+import { createInterceptorsPreset, createPool, sql, type DatabasePool } from '@silverhand/slonik';
 import { z } from 'zod';
 
 import {
@@ -83,13 +87,44 @@ const waitUntil = async (condition: () => Promise<boolean> | boolean, attempts =
   throw new Error('Timed out waiting for the license refresh.');
 };
 
-/** The UTC calendar month `offset` months from now, as `YYYY-MM`. */
-const getUtcMonth = (offset = 0) => {
+/** The first instant of the UTC calendar month `offset` months from now. */
+const getUtcMonthStart = (offset = 0) => {
   const now = new Date();
-  const date = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + offset, 1));
 
-  return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}`;
+  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + offset, 1));
 };
+
+/** The UTC calendar month `offset` months from now, as `YYYY-MM`. */
+const getUtcMonth = (offset = 0) => getUtcMonthStart(offset).toISOString().slice(0, 7);
+
+/** A second before `date`. */
+const justBefore = (date: Date) => new Date(date.getTime() - 1000);
+
+/**
+ * Backdated usage for the usage statement. A fresh database has usage in the current month only,
+ * so every full month of the statement only counts these rows.
+ */
+const seededActiveUsers = [
+  // The first instant of the statement, and a second before it.
+  { userId: 'statement-first', date: getUtcMonthStart(-12) },
+  { userId: 'statement-before', date: justBefore(getUtcMonthStart(-12)) },
+  // Both sides of the boundary between the last two full months.
+  { userId: 'statement-boundary-a', date: justBefore(getUtcMonthStart(-1)) },
+  { userId: 'statement-boundary-b', date: getUtcMonthStart(-1) },
+  // The same user twice in a month counts once.
+  { userId: 'statement-boundary-b', date: new Date(getUtcMonthStart(-1).getTime() + 86_400_000) },
+  // The admin tenant is excluded.
+  { userId: 'statement-admin', date: getUtcMonthStart(-1), tenantId: adminTenantId },
+];
+const seededTokenUsage = [
+  { usage: 3, date: getUtcMonthStart(-12) },
+  { usage: 5, date: justBefore(getUtcMonthStart(-12)) },
+  { usage: 7, date: justBefore(getUtcMonthStart(-1)) },
+  { usage: 11, date: getUtcMonthStart(-1) },
+  { usage: 1000, date: getUtcMonthStart(-1), tenantId: adminTenantId },
+];
+const seededIdPrefix = 'usage-statement-';
+const toTimestamp = (date: Date) => sql`to_timestamp(${date.getTime()}::double precision / 1000)`;
 
 /** The warnings Core is expected to evaluate locally from the usage it returned. */
 const expectLocalWarnings = (usage: LicenseUsage) => {
@@ -101,7 +136,32 @@ const expectLocalWarnings = (usage: LicenseUsage) => {
 };
 
 devFeatureTest.describe('self-hosted license usage', () => {
+  /* eslint-disable @silverhand/fp/no-let */
+  let pool: DatabasePool;
+  /* eslint-enable @silverhand/fp/no-let */
+
   beforeAll(async () => {
+    /* eslint-disable @silverhand/fp/no-mutation */
+    pool = await createPool(assertEnv('DB_URL'), {
+      interceptors: createInterceptorsPreset(),
+    });
+    /* eslint-enable @silverhand/fp/no-mutation */
+
+    await Promise.all([
+      ...seededActiveUsers.map(async ({ userId, date, tenantId = defaultTenantId }, index) =>
+        pool.query(sql`
+          insert into daily_active_users (id, tenant_id, user_id, date)
+          values (${`${seededIdPrefix}${index}`}, ${tenantId}, ${userId}, ${toTimestamp(date)})
+        `)
+      ),
+      ...seededTokenUsage.map(async ({ usage, date, tenantId = defaultTenantId }, index) =>
+        pool.query(sql`
+          insert into daily_token_usage (id, tenant_id, usage, date)
+          values (${`${seededIdPrefix}${index}`}, ${tenantId}, ${usage}, ${toTimestamp(date)})
+        `)
+      ),
+    ]);
+
     await new Promise<void>((resolve) => {
       licenseService.listen(licenseServicePort, resolve);
     });
@@ -115,6 +175,14 @@ devFeatureTest.describe('self-hosted license usage', () => {
     await new Promise((resolve) => {
       licenseService.close(resolve);
     });
+
+    const seededIds = sql.join(
+      [...seededActiveUsers, ...seededTokenUsage].map((_, index) => `${seededIdPrefix}${index}`),
+      sql`, `
+    );
+    await pool.query(sql`delete from daily_active_users where id in (${seededIds})`);
+    await pool.query(sql`delete from daily_token_usage where id in (${seededIds})`);
+    await pool.end();
   });
 
   it('should report usage on refresh and show the returned notices', async () => {
@@ -148,17 +216,18 @@ devFeatureTest.describe('self-hosted license usage', () => {
 
   it('should return the usage statement of the last 12 full months', async () => {
     const { months } = await getSystemLicenseUsageStatement();
-    const { usage } = await getSystemLicense();
-    const { mau, monthlyAccessTokens } = licenseUsageGuard.parse(usage);
+    const seededMonths = new Map([
+      [getUtcMonth(-12), { mau: 1, monthlyAccessTokens: 3 }],
+      [getUtcMonth(-2), { mau: 1, monthlyAccessTokens: 7 }],
+      [getUtcMonth(-1), { mau: 1, monthlyAccessTokens: 11 }],
+    ]);
 
-    expect(months.map(({ month }) => month)).toEqual(
-      Array.from({ length: 12 }, (_, index) => getUtcMonth(index - 12))
+    expect(months).toEqual(
+      Array.from({ length: 12 }, (_, index) => {
+        const month = getUtcMonth(index - 12);
+
+        return { month, ...(seededMonths.get(month) ?? { mau: 0, monthlyAccessTokens: 0 }) };
+      })
     );
-    // The last month of the statement is the last full month of the usage.
-    expect(months.at(-1)).toEqual({
-      month: getUtcMonth(-1),
-      mau: mau.lastMonth,
-      monthlyAccessTokens: monthlyAccessTokens.lastMonth,
-    });
   });
 });
