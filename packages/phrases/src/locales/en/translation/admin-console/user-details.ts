@@ -96,6 +96,11 @@ const user_details = {
     'Are you sure you want to reactivate this user? Doing so will permit any sign-in attempts for this user.',
   reactivate_action: 'Reactivate',
   user_reactivated: 'User has been reactivated.',
+  unlock_user: 'Unlock user',
+  unlock_user_reminder:
+    'Are you sure you want to unlock this user? This will clear all lockouts caused by failed sign-in and security verification attempts. Only unlock manually if you’ve confirmed the user’s identity and ensured no unauthorized access attempts.',
+  unlock_action: 'Unlock',
+  user_unlocked: 'User has been unlocked.',
   roles: {
     name_column: 'User role',
     description_column: 'Description',

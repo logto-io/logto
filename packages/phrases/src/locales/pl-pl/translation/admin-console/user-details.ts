@@ -95,6 +95,11 @@ const user_details = {
     'Czy na pewno chcesz aktywować tego użytkownika? Umożliwi to wszystkie próby logowania dla tego użytkownika.',
   reactivate_action: 'Aktywuj',
   user_reactivated: 'Użytkownik został aktywowany.',
+  unlock_user: 'Odblokuj użytkownika',
+  unlock_user_reminder:
+    'Czy na pewno chcesz odblokować tego użytkownika? Spowoduje to usunięcie wszystkich blokad powstałych w wyniku nieudanych prób logowania i weryfikacji bezpieczeństwa. Odblokuj ręcznie tylko wtedy, gdy potwierdzisz tożsamość użytkownika i upewnisz się, że nie miały miejsca nieautoryzowane próby dostępu.',
+  unlock_action: 'Odblokuj',
+  user_unlocked: 'Użytkownik został odblokowany.',
   roles: {
     name_column: 'Rola użytkownika',
     description_column: 'Opis',

@@ -88,6 +88,11 @@ const user_details = {
   reactivate_user_reminder: '你確定要重新啟用該用戶？這樣做將允許該用戶的任何登錄嘗試。',
   reactivate_action: '重新啟用',
   user_reactivated: '用戶已重新啟用。',
+  unlock_user: '解鎖用戶',
+  unlock_user_reminder:
+    '確定要解鎖該用戶嗎？此操作將清除因登入和安全驗證失敗而導致的所有鎖定。僅在確認用戶身份並確保沒有未經授權的存取嘗試後，才手動解鎖。',
+  unlock_action: '解鎖',
+  user_unlocked: '用戶已解鎖。',
   roles: {
     name_column: '用戶角色',
     description_column: '描述',

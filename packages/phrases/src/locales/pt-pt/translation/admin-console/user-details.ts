@@ -98,6 +98,11 @@ const user_details = {
     'Tem a certeza de que deseja reativar este utilizador? Isso permitirá tentativas de login para este utilizador.',
   reactivate_action: 'Reativar',
   user_reactivated: 'O utilizador foi reativado.',
+  unlock_user: 'Desbloquear utilizador',
+  unlock_user_reminder:
+    'Tem a certeza de que pretende desbloquear este utilizador? Isto irá limpar todos os bloqueios causados por tentativas de início de sessão e verificação de segurança falhadas. Desbloqueie manualmente apenas se tiver confirmado a identidade do utilizador e garantido que não houve tentativas de acesso não autorizadas.',
+  unlock_action: 'Desbloquear',
+  user_unlocked: 'O utilizador foi desbloqueado.',
   roles: {
     name_column: 'Função de usuário',
     description_column: 'Descrição',

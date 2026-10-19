@@ -9,6 +9,7 @@ import useSWR from 'swr';
 import Delete from '@/assets/icons/delete.svg?react';
 import Forbidden from '@/assets/icons/forbidden.svg?react';
 import Shield from '@/assets/icons/shield.svg?react';
+import Unlock from '@/assets/icons/unlock.svg?react';
 import DetailsPage from '@/components/DetailsPage';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import PageMeta from '@/components/PageMeta';
@@ -25,6 +26,7 @@ import { getUserTitle, getUserSubtitle } from '@/utils/user';
 
 import SuspendedTag from '../Users/components/SuspendedTag';
 
+import UnlockUserModal from './components/UnlockUserModal';
 import styles from './index.module.scss';
 import { type UserDetailsOutletContext } from './types';
 
@@ -38,6 +40,7 @@ function UserDetails() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isToggleSuspendFormOpen, setIsToggleSuspendFormOpen] = useState(false);
   const [isUpdatingSuspendState, setIsUpdatingSuspendState] = useState(false);
+  const [isUnlockUserFormOpen, setIsUnlockUserFormOpen] = useState(false);
 
   // Get user info with user's SSO identities in a single API call.
   const { data, error, mutate } = useSWR<UserProfileResponse, RequestError>(
@@ -53,6 +56,7 @@ function UserDetails() {
   useEffect(() => {
     setIsDeleteFormOpen(false);
     setIsToggleSuspendFormOpen(false);
+    setIsUnlockUserFormOpen(false);
   }, [pathname]);
 
   const onDelete = async () => {
@@ -112,6 +116,13 @@ function UserDetails() {
             identifier={{ name: 'User ID', value: data.id }}
             actionMenuItems={[
               {
+                title: 'user_details.unlock_user',
+                icon: <Unlock />,
+                onClick: () => {
+                  setIsUnlockUserFormOpen(true);
+                },
+              },
+              {
                 title: isSuspendedUser
                   ? 'user_details.reactivate_user'
                   : 'user_details.suspend_user',
@@ -157,6 +168,13 @@ function UserDetails() {
                 : 'user_details.suspend_user_reminder'
             )}
           </ConfirmModal>
+          <UnlockUserModal
+            user={data}
+            isOpen={isUnlockUserFormOpen}
+            onClose={() => {
+              setIsUnlockUserFormOpen(false);
+            }}
+          />
           <TabNav>
             <TabNavItem href={`/users/${data.id}/${UserDetailsTabs.Settings}`}>
               {t('user_details.tab_settings')}
