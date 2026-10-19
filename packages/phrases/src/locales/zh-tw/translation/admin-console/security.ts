@@ -147,16 +147,16 @@ const security = {
     },
     manual_unlock: {
       title: '手動解鎖',
-      description: '通過確認用戶身份並輸入其識別符立即解鎖用戶。',
-      unblock_by_identifiers: '按識別符解鎖',
+      description: '透過確認用戶身份並輸入其識別符或用戶 ID 立即解鎖用戶。',
+      unblock_by_identifiers: '按識別符或用戶 ID 解鎖',
       modal_description_1:
-        '由於多次嘗試登入/註冊失敗，一個識別符被暫時鎖定。為了保護安全，訪問將在鎖定持續時間後自動恢復。',
+        '由於多次嘗試登入/註冊或安全驗證失敗，一個識別符或用戶 ID 被暫時鎖定。為了保護安全，訪問將在鎖定持續時間後自動恢復。',
       modal_description_2: ' 只有在你確認用戶身份並確保沒有未經授權的訪問嘗試後，才手動解鎖。',
-      placeholder: '輸入識別符（電子郵件地址 / 電話號碼 / 用戶名）',
+      placeholder: '輸入識別符或用戶 ID（電子郵件地址 / 電話號碼 / 用戶名 / 用戶 ID）',
       confirm_button_text: '立即解鎖',
       success_toast: '解鎖成功',
-      duplicate_identifier_error: '識別符已添加',
-      empty_identifier_error: '請輸入至少一個識別符',
+      duplicate_identifier_error: '識別符或用戶 ID 已添加',
+      empty_identifier_error: '請輸入至少一個識別符或用戶 ID',
     },
   },
   blocklist: {

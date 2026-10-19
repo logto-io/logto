@@ -164,17 +164,18 @@ const security = {
     manual_unlock: {
       title: 'Sblocco manuale',
       description:
-        'Sblocca gli utenti immediatamente confermando la loro identità e inserendo il loro identificatore.',
-      unblock_by_identifiers: 'Sblocca tramite identificatore',
+        'Sblocca gli utenti immediatamente confermando la loro identità e inserendo il loro identificatore o ID utente.',
+      unblock_by_identifiers: 'Sblocca tramite identificatore o ID utente',
       modal_description_1:
-        "Un identificatore è stato temporaneamente bloccato a causa di più tentativi di accesso/registrazione falliti. Per proteggere la sicurezza, l'accesso verrà automaticamente ripristinato dopo la durata del blocco.",
+        "Un identificatore o ID utente è stato temporaneamente bloccato a causa di più tentativi di accesso/registrazione o verifica di sicurezza falliti. Per proteggere la sicurezza, l'accesso verrà automaticamente ripristinato dopo la durata del blocco.",
       modal_description_2:
         "Sblocca manualmente solo se hai confermato l'identità dell'utente e assicurato che non vi siano tentativi di accesso non autorizzati.",
-      placeholder: 'Inserisci identificatori (indirizzo email / numero di telefono / nome utente)',
+      placeholder:
+        'Inserisci identificatori o ID utente (indirizzo email / numero di telefono / nome utente / ID utente)',
       confirm_button_text: 'Sblocca adesso',
       success_toast: 'Sbloccato con successo',
-      duplicate_identifier_error: 'Identificatore già aggiunto',
-      empty_identifier_error: 'Inserisci almeno un identificatore',
+      duplicate_identifier_error: 'Identificatore o ID utente già aggiunto',
+      empty_identifier_error: 'Inserisci almeno un identificatore o ID utente',
     },
   },
   blocklist: {

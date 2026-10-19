@@ -9,7 +9,7 @@
     "/api/sentinel-activities/delete": {
       "post": {
         "summary": "Bulk delete sentinel activities",
-        "description": "Remove sentinel activity reports based on the provided target value(identifier).Use this endpoint to unblock users who may be locked out due to too many failed authentication attempts.",
+        "description": "Remove sentinel activity reports based on the provided target value (identifier or user ID). Use this endpoint to unblock users who may be locked out due to too many failed authentication or security verification attempts. Security verification lockouts are keyed by user ID.",
         "responses": {
           "204": {
             "description": "Activities deleted successfully."

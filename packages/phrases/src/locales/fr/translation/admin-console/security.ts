@@ -165,18 +165,18 @@ const security = {
     manual_unlock: {
       title: 'Déverrouillage manuel',
       description:
-        'Déverrouillez les utilisateurs immédiatement en confirmant leur identité et en entrant leur identifiant.',
-      unblock_by_identifiers: 'Débloquer par identifiant',
+        'Déverrouillez les utilisateurs immédiatement en confirmant leur identité et en entrant leur identifiant ou ID utilisateur.',
+      unblock_by_identifiers: 'Débloquer par identifiant ou ID utilisateur',
       modal_description_1:
-        "Un identifiant a été temporairement verrouillé en raison de plusieurs tentatives échouées de connexion/inscription. Pour protéger la sécurité, l'accès sera automatiquement restauré après la durée du verrouillage.",
+        "Un identifiant ou ID utilisateur a été temporairement verrouillé en raison de plusieurs tentatives échouées de connexion/inscription ou de vérification de sécurité. Pour protéger la sécurité, l'accès sera automatiquement restauré après la durée du verrouillage.",
       modal_description_2:
         "Déverrouillez manuellement uniquement si vous avez confirmé l'identité de l'utilisateur et vous êtes assuré qu'il n'y a pas de tentatives d'accès non autorisées.",
       placeholder:
-        "Saisissez les identifiants (adresse e-mail / numéro de téléphone / nom d'utilisateur)",
+        "Saisissez les identifiants ou ID utilisateur (adresse e-mail / numéro de téléphone / nom d'utilisateur / ID utilisateur)",
       confirm_button_text: 'Déverrouiller maintenant',
       success_toast: 'Déverrouillé avec succès',
-      duplicate_identifier_error: 'Identifiant déjà ajouté',
-      empty_identifier_error: 'Veuillez saisir au moins un identifiant',
+      duplicate_identifier_error: 'Identifiant ou ID utilisateur déjà ajouté',
+      empty_identifier_error: 'Veuillez saisir au moins un identifiant ou ID utilisateur',
     },
   },
   blocklist: {
