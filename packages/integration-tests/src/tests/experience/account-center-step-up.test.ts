@@ -15,7 +15,7 @@ import { logtoUrl } from '#src/constants.js';
 import { clearConnectorsByTypes, setSocialConnector } from '#src/helpers/connector.js';
 import { createDefaultTenantUserWithPassword } from '#src/helpers/profile.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
-import { devFeatureTest, waitFor } from '#src/utils.js';
+import { devFeatureTest, generateUsername, waitFor } from '#src/utils.js';
 
 const accountUrl = (pathname: string) => appendPath(new URL(logtoUrl), 'account', pathname);
 
@@ -158,7 +158,7 @@ devFeatureTest.describe('Account Center OIDC step-up', () => {
     });
     // A username keeps the shared sign-up configuration from prompting for one; it is not a
     // verification method, so the user still has nothing to satisfy the step-up.
-    const user = await createUser({ name: 'social-only', username: generateStandardId() });
+    const user = await createUser({ name: 'social-only', username: generateUsername() });
     const context = await browser.createBrowserContext();
     const experience = new ExpectExperience(await context.newPage());
 
