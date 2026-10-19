@@ -20,7 +20,7 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import { requestTimeout, contactEmailLink } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -63,24 +63,6 @@ export const useGlobalRequestErrorHandler = (toastDisabledErrorCodes?: LogtoErro
       try {
         // Clone the response to avoid "Response body is already used".
         const data = await response.clone().json<RequestErrorBody>();
-
-        // This is what will happen when the user still has the legacy refresh token without
-        // organization scope. We should sign them out and redirect to the sign in page.
-        // TODO: This is a temporary solution to prevent the user from getting stuck in Console,
-        // which can be removed after all legacy refresh tokens are expired, i.e. after Jan 10th,
-        // 2024.
-        //
-        // Read-only tenant access: the Management API proxy answers a read-only member's write with
-        // this same 403, so the sign-out is skipped to let it reach the toast below. The whole
-        // branch goes when the feature is released, not only this guard.
-        if (
-          !isDevFeaturesEnabled &&
-          response.status === 403 &&
-          data.message === 'Insufficient permissions.'
-        ) {
-          await signOut(postSignOutRedirectUri.href);
-          return;
-        }
 
         // Inform and redirect un-authorized users to sign in page.
         if (data.code === 'auth.forbidden') {
