@@ -36,8 +36,9 @@ const waitForUsernameRemoval = async (userId: string) => {
 };
 
 /**
- * Account Center answers an RFC 9470 challenge from the Account API with an OIDC step-up. A social
- * sign-in carries no `acr`, so every sensitive operation it attempts is challenged.
+ * Account Center reads `acr` and `auth_time` from its ID token. A social sign-in carries no `acr`,
+ * so it starts a step-up before every sensitive operation instead of sending a request that is
+ * known to be challenged. A fresh password sign-in can use the Account API directly.
  */
 devFeatureTest.describe('Account Center OIDC step-up', () => {
   // eslint-disable-next-line @silverhand/fp/no-let
@@ -72,7 +73,7 @@ devFeatureTest.describe('Account Center OIDC step-up', () => {
     await experience.waitForUrl(accountUrl(pathname));
   };
 
-  it('resumes the challenged action once after the step-up', async () => {
+  it('resumes the pending action once after the step-up', async () => {
     await updateSignInExperience({
       signInMode: SignInMode.SignIn,
       signIn: {
@@ -98,7 +99,7 @@ devFeatureTest.describe('Account Center OIDC step-up', () => {
       await experience.toClickButton('Remove', false);
       await experience.toClick('[role=dialog] button', 'Remove', false);
 
-      // The challenge sends the user to the step-up for the account they are signed in with.
+      // The missing context sends the user to the step-up for the account they are signed in with.
       await experience.waitForPathname('step-up/password', undefined, accountCenterApplicationId);
       await experience.toFillInput('password', password, { submit: true, shouldNavigate: false });
 
@@ -106,6 +107,43 @@ devFeatureTest.describe('Account Center OIDC step-up', () => {
       await expect(waitForUsernameRemoval(user.id)).resolves.toHaveProperty('username', null);
     } finally {
       await experience.page.close();
+      await deleteUser(user.id);
+    }
+  });
+
+  it('loads sessions directly after a fresh password sign-in', async () => {
+    await updateSignInExperience({
+      signInMode: SignInMode.SignIn,
+      signIn: {
+        methods: [
+          {
+            identifier: SignInIdentifier.Username,
+            password: true,
+            verificationCode: false,
+            isPasswordPrimary: true,
+          },
+        ],
+      },
+      socialSignInConnectorTargets: [],
+      mfa: { factors: [], policy: MfaPolicy.UserControlled },
+    });
+    const { user, username, password } = await createDefaultTenantUserWithPassword();
+    const context = await browser.createBrowserContext();
+    const experience = new ExpectExperience(await context.newPage());
+
+    try {
+      await experience.startWith(accountUrl('sessions'), 'sign-in');
+      await experience.toFillForm(
+        { identifier: username, password },
+        { submit: true, shouldNavigate: false }
+      );
+      await experience.waitForUrl(accountUrl('sessions'));
+
+      // The fresh `1fa` context loads the protected list without a Manage click.
+      await expect(experience.page).toMatchElement('span', { text: 'Current session' });
+      await expect(experience.page).not.toMatchElement('button', { text: 'Manage' });
+    } finally {
+      await context.close();
       await deleteUser(user.id);
     }
   });

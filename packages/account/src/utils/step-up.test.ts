@@ -1,3 +1,4 @@
+import { LogtoAcr } from '@logto/schemas';
 import { HTTPError, type NormalizedOptions } from 'ky';
 
 import { accountStorage, sessionStorage as accountSessionStorage } from './session-storage';
@@ -6,6 +7,7 @@ import {
   consumePendingStepUpAction,
   getStepUpChallenge,
   handlePendingStepUpOnPageLoad,
+  hasFreshFirstFactorAuthentication,
   parseStepUpChallenge,
   startPendingStepUp,
 } from './step-up';
@@ -87,6 +89,50 @@ describe('getStepUpChallenge', () => {
     ).toBeUndefined();
     expect(getStepUpChallenge(createHttpError(401))).toBeUndefined();
     expect(getStepUpChallenge(new Error(challenge))).toBeUndefined();
+  });
+});
+
+describe('hasFreshFirstFactorAuthentication', () => {
+  const now = 1_800_000_000_000;
+  const authTimeOfAge = (ageSeconds: number) => now / 1000 - ageSeconds;
+
+  it.each([undefined, {}, { acr: 'unsupported' }])(
+    'rejects a missing or unsupported acr: %p',
+    (claims) => {
+      expect(hasFreshFirstFactorAuthentication(claims, now)).toBe(false);
+    }
+  );
+
+  it.each([
+    [0, true],
+    [60, true],
+    [540, true],
+    [541, false],
+    [600, false],
+    [-30, true],
+    [-61, false],
+  ])('checks an auth_time age of %p seconds', (age, expected) => {
+    expect(
+      hasFreshFirstFactorAuthentication(
+        { acr: LogtoAcr.FirstFactor, auth_time: authTimeOfAge(age) },
+        now
+      )
+    ).toBe(expected);
+  });
+
+  it('accepts an mfa context, which also satisfies 1fa', () => {
+    expect(
+      hasFreshFirstFactorAuthentication({ acr: LogtoAcr.Mfa, auth_time: authTimeOfAge(60) }, now)
+    ).toBe(true);
+  });
+
+  it('rejects a non-numeric auth_time', () => {
+    expect(
+      hasFreshFirstFactorAuthentication(
+        { acr: LogtoAcr.FirstFactor, auth_time: String(authTimeOfAge(60)) },
+        now
+      )
+    ).toBe(false);
   });
 });
 

@@ -1,6 +1,6 @@
 import type { AccountTrustedDeviceResponse } from '@logto/schemas';
 import { AccountCenterControlValue } from '@logto/schemas';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -24,8 +24,13 @@ const TrustedDevicesSection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { accountCenterSettings, setVerificationId, setToast } = useContext(PageContext);
-  const { isReady: isIdentityProofReady, verificationId } = useIdentityProof();
-  const requestStepUp = useStepUp();
+  const {
+    isReady: isIdentityProofReady,
+    isChecking: isCheckingIdentityProof,
+    verificationId,
+    checkIdentityProof,
+  } = useIdentityProof();
+  const { requestStepUp, startStepUp } = useStepUp();
   const [trustedDevices, setTrustedDevices] = useState<AccountTrustedDeviceResponse[]>();
   const [isLoading, setIsLoading] = useState(false);
   const [hasLoadingError, setHasLoadingError] = useState(false);
@@ -34,12 +39,14 @@ const TrustedDevicesSection = () => {
   const getTrustedDevicesApi = useApi(getTrustedDevices, { silent: true });
   const removeTrustedDeviceApi = useApi(removeTrustedDevice, { silent: true });
   const handleError = useErrorHandler();
+  const hasAutoLoadedRef = useRef(false);
 
   const control = accountCenterSettings?.fields.trustedDevice;
   const isVisible =
     control === AccountCenterControlValue.ReadOnly || control === AccountCenterControlValue.Edit;
   const isEditable = control === AccountCenterControlValue.Edit;
-  const isInitialLoading = Boolean(verificationId) && !hasLoadingError && !trustedDevices;
+  const isInitialLoading =
+    isCheckingIdentityProof || (isIdentityProofReady && !hasLoadingError && !trustedDevices);
 
   const handlePermissionDenied = useCallback(() => {
     setHasLoadingError(false);
@@ -51,7 +58,7 @@ const TrustedDevicesSection = () => {
 
   const fetchTrustedDevices = useCallback(
     async (isResumed = false) => {
-      if (!isIdentityProofReady || !isVisible) {
+      if (!isVisible) {
         return;
       }
 
@@ -78,7 +85,6 @@ const TrustedDevicesSection = () => {
       getTrustedDevicesApi,
       handleError,
       handlePermissionDenied,
-      isIdentityProofReady,
       isVisible,
       requestStepUp,
       verificationId,
@@ -86,45 +92,80 @@ const TrustedDevicesSection = () => {
   );
 
   useEffect(() => {
-    if (!verificationId) {
+    if (
+      !isVisible ||
+      !isIdentityProofReady ||
+      isCheckingIdentityProof ||
+      trustedDevices !== undefined ||
+      hasLoadingError ||
+      hasAutoLoadedRef.current
+    ) {
       return;
     }
 
-    if (sessionStorage.getPendingVerifiedAction() === 'load-trusted-devices') {
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    hasAutoLoadedRef.current = true;
+
+    if (verificationId && sessionStorage.getPendingVerifiedAction() === 'load-trusted-devices') {
       sessionStorage.clearPendingVerifiedAction();
     }
 
     void fetchTrustedDevices();
-  }, [fetchTrustedDevices, verificationId]);
+  }, [
+    fetchTrustedDevices,
+    hasLoadingError,
+    isCheckingIdentityProof,
+    isIdentityProofReady,
+    isVisible,
+    trustedDevices,
+    verificationId,
+  ]);
 
   useEffect(() => {
     if (consumePendingStepUpAction(['load-trusted-devices'])) {
+      // The resumed action owns this page load; do not also auto-load the list.
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      hasAutoLoadedRef.current = true;
       void fetchTrustedDevices(true);
     }
   }, [fetchTrustedDevices]);
 
-  const handleManage = useCallback(() => {
-    if (isIdentityProofReady) {
-      void fetchTrustedDevices();
+  const handleManage = useCallback(async () => {
+    if (await checkIdentityProof()) {
+      await fetchTrustedDevices();
+      return;
+    }
+
+    if (await startStepUp({ type: 'load-trusted-devices' })) {
       return;
     }
 
     setPendingReturn(getPendingReturn() ?? window.location.href);
     sessionStorage.setPendingVerifiedAction('load-trusted-devices');
     navigate(verifiedActionRoute);
-  }, [fetchTrustedDevices, isIdentityProofReady, navigate]);
+  }, [checkIdentityProof, fetchTrustedDevices, navigate, startStepUp]);
 
   const handleConfirmRemove = useCallback(async () => {
-    if (!isIdentityProofReady || !removeTarget) {
+    if (!removeTarget) {
       return;
     }
 
     setIsRemoving(true);
+
+    if (!isIdentityProofReady) {
+      if (await startStepUp({ type: 'load-trusted-devices' })) {
+        return;
+      }
+
+      setIsRemoving(false);
+      return;
+    }
+
     const [error] = await removeTrustedDeviceApi(verificationId, removeTarget.id);
 
     if (error) {
       // The removal is not replayed after the step-up; the user confirms it again on the reloaded
-      // list.
+      // list. Keep the confirmation loading until the redirect starts.
       if (await requestStepUp(error, { type: 'load-trusted-devices' })) {
         return;
       }
@@ -147,6 +188,7 @@ const TrustedDevicesSection = () => {
     removeTarget,
     removeTrustedDeviceApi,
     requestStepUp,
+    startStepUp,
     setToast,
     t,
     verificationId,
@@ -191,7 +233,13 @@ const TrustedDevicesSection = () => {
           )
         ) : (
           <div className={styles.state}>
-            <button type="button" className={styles.actionButton} onClick={handleManage}>
+            <button
+              type="button"
+              className={styles.actionButton}
+              onClick={() => {
+                void handleManage();
+              }}
+            >
               {t('account_center.security.manage')}
             </button>
           </div>

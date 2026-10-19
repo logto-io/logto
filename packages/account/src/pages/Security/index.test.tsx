@@ -541,7 +541,9 @@ describe('<Security />', () => {
 
     fireEvent.click(getByLabelText('Toggle switch'));
 
-    expect(getByText('verified action page')).not.toBeNull();
+    await waitFor(() => {
+      expect(getByText('verified action page')).not.toBeNull();
+    });
     expect(sessionStorage.getPendingVerifiedAction()).toBe('enable-mfa');
     expect(mockUpdateMfaSettings).not.toHaveBeenCalled();
   });
@@ -616,7 +618,9 @@ describe('<Security />', () => {
 
     fireEvent.click(getByText('account_center.security.disable_2_step_verification'));
 
-    expect(getByText('verified action page')).not.toBeNull();
+    await waitFor(() => {
+      expect(getByText('verified action page')).not.toBeNull();
+    });
     expect(sessionStorage.getPendingVerifiedAction()).toBe('disable-mfa');
     expect(mockUpdateMfaSettings).not.toHaveBeenCalled();
   });

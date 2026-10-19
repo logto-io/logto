@@ -28,8 +28,8 @@ const EmailPhoneSection = () => {
   const navigate = useNavigate();
   const { userInfo, accountCenterSettings, setVerificationId, refreshUserInfo, setToast } =
     useContext(PageContext);
-  const { isReady: isIdentityProofReady, verificationId } = useIdentityProof();
-  const requestStepUp = useStepUp();
+  const { verificationId, checkIdentityProof } = useIdentityProof();
+  const { requestStepUp, startStepUp } = useStepUp();
   const handleError = useErrorHandler();
   const deletePrimaryEmailApi = useApi(deletePrimaryEmail);
   const deletePrimaryPhoneApi = useApi(deletePrimaryPhone);
@@ -103,16 +103,27 @@ const EmailPhoneSection = () => {
 
     setPendingRemoveType(undefined);
 
-    if (isIdentityProofReady) {
+    if (await checkIdentityProof()) {
       await removeIdentifier(pendingRemoveType, verificationId);
       return;
     }
 
-    sessionStorage.setPendingVerifiedAction(
-      pendingRemoveType === 'email' ? 'remove-email' : 'remove-phone'
-    );
+    const action = pendingRemoveType === 'email' ? 'remove-email' : 'remove-phone';
+
+    if (await startStepUp({ type: action })) {
+      return;
+    }
+
+    sessionStorage.setPendingVerifiedAction(action);
     navigateTo(verifiedActionRoute);
-  }, [pendingRemoveType, isIdentityProofReady, verificationId, navigateTo, removeIdentifier]);
+  }, [
+    checkIdentityProof,
+    navigateTo,
+    pendingRemoveType,
+    removeIdentifier,
+    startStepUp,
+    verificationId,
+  ]);
 
   useEffect(() => {
     const action = consumePendingStepUpAction(['remove-email', 'remove-phone']);

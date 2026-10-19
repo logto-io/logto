@@ -31,8 +31,13 @@ const Sessions = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { accountCenterSettings, setVerificationId, setToast } = useContext(PageContext);
-  const { isReady: isIdentityProofReady, verificationId } = useIdentityProof();
-  const requestStepUp = useStepUp();
+  const {
+    isReady: isIdentityProofReady,
+    isChecking: isCheckingIdentityProof,
+    verificationId,
+    checkIdentityProof,
+  } = useIdentityProof();
+  const { requestStepUp, startStepUp } = useStepUp();
   const [sessions, setSessions] = useState<AccountSession[]>();
   const [grantRows, setGrantRows] = useState<GrantedAppRow[]>();
   const [hasGrantLoadingError, setHasGrantLoadingError] = useState(false);
@@ -43,6 +48,7 @@ const Sessions = () => {
   const [removingAppId, setRemovingAppId] = useState<string>();
   const handleError = useErrorHandler();
   const isFetchingRef = useRef(false);
+  const hasAutoLoadedRef = useRef(false);
 
   const getSessionsApi = useApi(getSessions, { silent: true });
   const revokeSessionApi = useApi(revokeSession);
@@ -94,6 +100,10 @@ const Sessions = () => {
       }
 
       if (grantError) {
+        if (await requestStepUp(grantError, { type: 'load-sessions' }, { isResumed })) {
+          return;
+        }
+
         await handleError(grantError, {
           'verification_record.permission_denied': handlePermissionDenied,
         });
@@ -112,22 +122,42 @@ const Sessions = () => {
   );
 
   useEffect(() => {
-    if (!verificationId || hasLoaded || isLoading) {
+    if (
+      !isIdentityProofReady ||
+      isCheckingIdentityProof ||
+      hasLoaded ||
+      isLoading ||
+      hasAutoLoadedRef.current
+    ) {
       return;
     }
 
-    const pendingAction = sessionStorage.getPendingVerifiedAction();
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    hasAutoLoadedRef.current = true;
 
-    if (pendingAction === 'load-sessions') {
-      sessionStorage.clearPendingVerifiedAction();
+    if (verificationId) {
+      const pendingAction = sessionStorage.getPendingVerifiedAction();
+
+      if (pendingAction === 'load-sessions') {
+        sessionStorage.clearPendingVerifiedAction();
+      }
     }
 
     void fetchData(verificationId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [verificationId]);
+  }, [
+    fetchData,
+    hasLoaded,
+    isCheckingIdentityProof,
+    isIdentityProofReady,
+    isLoading,
+    verificationId,
+  ]);
 
   useEffect(() => {
     if (consumePendingStepUpAction(['load-sessions'])) {
+      // The resumed action owns this page load; do not also auto-load the list.
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      hasAutoLoadedRef.current = true;
       void fetchData(undefined, true);
     }
   }, [fetchData]);
@@ -140,19 +170,24 @@ const Sessions = () => {
     [navigate]
   );
 
-  const handleManage = useCallback(() => {
-    if (isIdentityProofReady) {
-      void fetchData(verificationId);
+  const handleManage = useCallback(async () => {
+    if (await checkIdentityProof()) {
+      await fetchData(verificationId);
+      return;
+    }
+
+    if (await startStepUp({ type: 'load-sessions' })) {
       return;
     }
 
     sessionStorage.setPendingVerifiedAction('load-sessions');
     navigateTo(verifiedActionRoute);
-  }, [isIdentityProofReady, verificationId, fetchData, navigateTo]);
+  }, [checkIdentityProof, verificationId, fetchData, startStepUp, navigateTo]);
 
   const handleRevoke = useCallback(
     async (session: AccountSession) => {
       if (!isIdentityProofReady) {
+        await startStepUp({ type: 'load-sessions' });
         return;
       }
 
@@ -184,6 +219,7 @@ const Sessions = () => {
       revokeSessionApi,
       handleError,
       requestStepUp,
+      startStepUp,
       setVerificationId,
       setToast,
       t,
@@ -201,6 +237,7 @@ const Sessions = () => {
   const handleRevokeGrant = useCallback(
     async (app: GrantedAppRow) => {
       if (!isIdentityProofReady) {
+        await startStepUp({ type: 'load-sessions' });
         return;
       }
 
@@ -235,7 +272,16 @@ const Sessions = () => {
       );
       setRemovingAppId(undefined);
     },
-    [isIdentityProofReady, verificationId, revokeGrantApi, handleError, requestStepUp, setToast, t]
+    [
+      isIdentityProofReady,
+      verificationId,
+      revokeGrantApi,
+      handleError,
+      requestStepUp,
+      startStepUp,
+      setToast,
+      t,
+    ]
   );
 
   const handleConfirmRevokeGrant = useCallback(async () => {
@@ -286,10 +332,16 @@ const Sessions = () => {
               ) : (
                 <div className={classNames(styles.row, layoutClassNames.row)}>
                   <div className={styles.sessionInfo}>
-                    {isLoading ? (
+                    {isLoading || isCheckingIdentityProof ? (
                       <div className={styles.meta}>{t('account_center.sessions.loading')}</div>
                     ) : (
-                      <button type="button" className={styles.actionButton} onClick={handleManage}>
+                      <button
+                        type="button"
+                        className={styles.actionButton}
+                        onClick={() => {
+                          void handleManage();
+                        }}
+                      >
                         {t('account_center.security.manage')}
                       </button>
                     )}

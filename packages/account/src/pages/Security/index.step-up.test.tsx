@@ -1,4 +1,4 @@
-import { AccountCenterControlValue, MfaFactor, MfaPolicy } from '@logto/schemas';
+import { AccountCenterControlValue, LogtoAcr, MfaFactor, MfaPolicy } from '@logto/schemas';
 import { fireEvent, waitFor } from '@testing-library/react';
 import { HTTPError, type NormalizedOptions } from 'ky';
 import { Route, Routes } from 'react-router-dom';
@@ -20,6 +20,7 @@ import { getMfaSettings, getMfaVerifications, updateMfaSettings } from '../../ap
 import Security from '.';
 
 const mockGetAccessToken = jest.fn();
+const mockGetIdTokenClaims = jest.fn();
 const mockSignIn = jest.fn();
 const mockSetToast = jest.fn();
 
@@ -31,6 +32,7 @@ jest.mock('@ac/constants/env', () => ({
 jest.mock('@logto/react', () => ({
   useLogto: () => ({
     getAccessToken: mockGetAccessToken,
+    getIdTokenClaims: mockGetIdTokenClaims,
     signIn: mockSignIn,
   }),
 }));
@@ -51,6 +53,11 @@ const challenge =
   'Bearer error="insufficient_user_authentication", ' +
   'error_description="Recent user authentication is required", ' +
   'acr_values="urn:logto:acr:1fa", max_age="600"';
+
+const createIdTokenClaims = (authTime = Math.floor(Date.now() / 1000) - 60) => ({
+  acr: LogtoAcr.FirstFactor,
+  auth_time: authTime,
+});
 
 const createChallengeError = () =>
   new HTTPError(
@@ -113,6 +120,7 @@ describe('<Security /> OIDC step-up', () => {
     jest.resetAllMocks();
     window.sessionStorage.clear();
     mockGetAccessToken.mockResolvedValue('access-token');
+    mockGetIdTokenClaims.mockResolvedValue(createIdTokenClaims());
     mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true });
     mockGetMfaVerifications.mockResolvedValue([]);
   });
@@ -133,6 +141,51 @@ describe('<Security /> OIDC step-up', () => {
     expect(mockUpdateMfaSettings).toHaveBeenCalledWith('access-token', undefined, {
       skipMfaOnSignIn: false,
     });
+    expect(mockSignIn).toHaveBeenCalledWith({
+      redirectUri: 'http://localhost/account',
+      clearTokens: false,
+      extraParams: { acr_values: 'urn:logto:acr:1fa', max_age: '600' },
+    });
+    expect(accountStorage.pendingStepUp.get()).toMatchObject({
+      action: { type: 'enable-mfa' },
+      phase: 'authorizing',
+    });
+  });
+
+  it('calls the Account API directly when the ID token has a fresh 1fa context', async () => {
+    mockUpdateMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
+
+    const { getByLabelText } = renderMfaSection();
+
+    await waitFor(() => {
+      expect(getByLabelText('Toggle switch')).not.toBeNull();
+    });
+    fireEvent.click(getByLabelText('Toggle switch'));
+
+    await waitFor(() => {
+      expect(mockUpdateMfaSettings).toHaveBeenCalledWith('access-token', undefined, {
+        skipMfaOnSignIn: false,
+      });
+    });
+    expect(mockSignIn).not.toHaveBeenCalled();
+  });
+
+  it('starts a step-up before the request when the ID token context is stale', async () => {
+    mockGetIdTokenClaims.mockResolvedValue(
+      createIdTokenClaims(Math.floor(Date.now() / 1000) - 600)
+    );
+
+    const { getByLabelText } = renderMfaSection();
+
+    await waitFor(() => {
+      expect(getByLabelText('Toggle switch')).not.toBeNull();
+    });
+    fireEvent.click(getByLabelText('Toggle switch'));
+
+    await waitFor(() => {
+      expect(mockSignIn).toHaveBeenCalledTimes(1);
+    });
+    expect(mockUpdateMfaSettings).not.toHaveBeenCalled();
     expect(mockSignIn).toHaveBeenCalledWith({
       redirectUri: 'http://localhost/account',
       clearTokens: false,

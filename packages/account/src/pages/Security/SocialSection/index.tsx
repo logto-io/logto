@@ -72,8 +72,8 @@ const SocialSection = () => {
     refreshUserInfo,
     setToast,
   } = useContext(PageContext);
-  const { isReady: isIdentityProofReady, verificationId } = useIdentityProof();
-  const requestStepUp = useStepUp();
+  const { verificationId, checkIdentityProof } = useIdentityProof();
+  const { requestStepUp, startStepUp } = useStepUp();
   const handleError = useErrorHandler();
   const deleteSocialIdentityRequest = useApi(deleteSocialIdentity);
   const [selectedConnectorId, setSelectedConnectorId] = useState<string>();
@@ -160,8 +160,12 @@ const SocialSection = () => {
     const connectorId = selectedConnectorId;
     setSelectedConnectorId(undefined);
 
-    if (isIdentityProofReady) {
+    if (await checkIdentityProof()) {
       await removeSocialIdentityForConnector(connectorId, verificationId);
+      return;
+    }
+
+    if (await startStepUp({ type: 'remove-social', connectorId })) {
       return;
     }
 
@@ -169,10 +173,11 @@ const SocialSection = () => {
     sessionStorage.setPendingSocialRemoveConnectorId(connectorId);
     navigateTo(verifiedActionRoute);
   }, [
-    isIdentityProofReady,
+    checkIdentityProof,
     navigateTo,
     removeSocialIdentityForConnector,
     selectedConnectorId,
+    startStepUp,
     verificationId,
   ]);
 

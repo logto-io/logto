@@ -33,8 +33,8 @@ const PasskeySection = () => {
   const navigate = useNavigate();
   const { accountCenterSettings, experienceSettings, setVerificationId, setToast } =
     useContext(PageContext);
-  const { isReady: isIdentityProofReady, verificationId } = useIdentityProof();
-  const requestStepUp = useStepUp();
+  const { verificationId, checkIdentityProof } = useIdentityProof();
+  const { requestStepUp, startStepUp } = useStepUp();
   const { mfaVerifications, isLoading, hasLoaded } = useMfaVerifications();
   const handleError = useErrorHandler();
 
@@ -110,17 +110,21 @@ const PasskeySection = () => {
     async (checked: boolean) => {
       const skipped = !checked;
 
-      if (isIdentityProofReady) {
+      if (await checkIdentityProof()) {
         await updatePasskeySignInSkipped(verificationId, skipped);
         return;
       }
 
-      sessionStorage.setPendingVerifiedAction(
-        checked ? 'enable-passkey-prompt' : 'disable-passkey-prompt'
-      );
+      const action = checked ? 'enable-passkey-prompt' : 'disable-passkey-prompt';
+
+      if (await startStepUp({ type: action })) {
+        return;
+      }
+
+      sessionStorage.setPendingVerifiedAction(action);
       navigateTo(verifiedActionRoute);
     },
-    [isIdentityProofReady, navigateTo, updatePasskeySignInSkipped, verificationId]
+    [checkIdentityProof, navigateTo, startStepUp, updatePasskeySignInSkipped, verificationId]
   );
 
   useEffect(() => {

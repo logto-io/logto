@@ -286,7 +286,9 @@ describe('<PersonalAccessTokensSection />', () => {
     fireEvent.change(view.getByPlaceholderText('My token'), { target: { value: 'deploy-bot' } });
     fireEvent.click(view.getByText('Create'));
 
-    expect(view.getByText('verified action page')).toBeTruthy();
+    await waitFor(() => {
+      expect(view.getByText('verified action page')).toBeTruthy();
+    });
     expect(sessionStorage.getPendingVerifiedAction()).toBe('create-personal-access-token');
     expect(sessionStorage.getPendingPersonalAccessTokenCreate()).toEqual({
       name: 'deploy-bot',
@@ -320,7 +322,9 @@ describe('<PersonalAccessTokensSection />', () => {
     });
     fireEvent.click(view.getByText('Save'));
 
-    expect(view.getByText('verified action page')).toBeTruthy();
+    await waitFor(() => {
+      expect(view.getByText('verified action page')).toBeTruthy();
+    });
     expect(mockRenamePersonalAccessToken).not.toHaveBeenCalled();
     expect(sessionStorage.getPendingVerifiedAction()).toBe('rename-personal-access-token');
     expect(sessionStorage.getPendingPersonalAccessTokenRename()).toEqual({

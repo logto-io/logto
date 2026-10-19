@@ -10,7 +10,7 @@
  *
  * @see {@link https://www.rfc-editor.org/rfc/rfc9470.html | RFC 9470 OAuth 2.0 Step Up Authentication Challenge Protocol}
  */
-import { LogtoAcr } from '@logto/schemas';
+import { LogtoAcr, acrSatisfies } from '@logto/schemas';
 import { HTTPError } from 'ky';
 
 import { accountCenterBasePath } from './account-center-internal-route';
@@ -34,13 +34,50 @@ export type StepUpChallenge = {
 };
 
 /**
- * The Account API policy. Used when the challenge omits a parameter, which RFC 9470 allows; the
- * Account API sends both.
+ * The Account API policy. Used for a proactive step-up and when the challenge omits a parameter,
+ * which RFC 9470 allows; the Account API sends both.
  */
-const defaultChallenge: StepUpChallenge = Object.freeze({
+export const accountApiStepUpChallenge: StepUpChallenge = Object.freeze({
   acrValues: LogtoAcr.FirstFactor,
   maxAge: '600',
 });
+
+/** The Account API accepts an authentication context for this many seconds. */
+const authenticationFreshnessSeconds = 600;
+
+/**
+ * Treat a context as stale this many seconds early. The client clock may run ahead of the server,
+ * and a request still takes time to reach it, so a context that only just fits the server's
+ * 600-second window is not safe to reuse.
+ */
+const authenticationFreshnessMarginSeconds = 60;
+
+/**
+ * Whether the ID token carries a first-factor authentication context recent enough for the Account
+ * API. The access token stays opaque; the ID token is the client's local source for coordinating
+ * the UX before a sensitive request.
+ */
+export const hasFreshFirstFactorAuthentication = (
+  claims: Record<string, unknown> | undefined,
+  now = Date.now()
+): boolean => {
+  if (!claims || !acrSatisfies(claims.acr, LogtoAcr.FirstFactor)) {
+    return false;
+  }
+
+  const { auth_time: authTime } = claims;
+
+  if (typeof authTime !== 'number' || !Number.isFinite(authTime)) {
+    return false;
+  }
+
+  const ageSeconds = now / 1000 - authTime;
+
+  return (
+    ageSeconds >= -authenticationFreshnessMarginSeconds &&
+    ageSeconds <= authenticationFreshnessSeconds - authenticationFreshnessMarginSeconds
+  );
+};
 
 const authParameterPattern =
   /([\w!#$%&'*+.^`|~-]+)\s*=\s*(?:"((?:[^"\\]|\\.)*)"|([\w!#$%&'*+.^`|~-]+))/g;
@@ -72,8 +109,9 @@ export const parseStepUpChallenge = (header: string | undefined): StepUpChalleng
   const maxAge = parameters.get('max_age');
 
   return {
-    acrValues: acrValues === undefined || acrValues === '' ? defaultChallenge.acrValues : acrValues,
-    maxAge: maxAge && /^\d+$/.test(maxAge) ? maxAge : defaultChallenge.maxAge,
+    acrValues:
+      acrValues === undefined || acrValues === '' ? accountApiStepUpChallenge.acrValues : acrValues,
+    maxAge: maxAge && /^\d+$/.test(maxAge) ? maxAge : accountApiStepUpChallenge.maxAge,
   };
 };
 

@@ -95,8 +95,8 @@ const MfaSection = () => {
   const navigate = useNavigate();
   const { accountCenterSettings, experienceSettings, setVerificationId, setToast } =
     useContext(PageContext);
-  const { isReady: isIdentityProofReady, verificationId } = useIdentityProof();
-  const requestStepUp = useStepUp();
+  const { verificationId, checkIdentityProof } = useIdentityProof();
+  const { requestStepUp, startStepUp } = useStepUp();
   const {
     mfaVerifications,
     isLoading: isLoadingMfaVerifications,
@@ -190,28 +190,36 @@ const MfaSection = () => {
         return;
       }
 
-      if (isIdentityProofReady) {
+      if (await checkIdentityProof()) {
         await updateSkipMfaOnSignIn(verificationId, skipMfa);
+        return;
+      }
+
+      if (await startStepUp({ type: 'enable-mfa' })) {
         return;
       }
 
       sessionStorage.setPendingVerifiedAction('enable-mfa');
       navigateTo(verifiedActionRoute);
     },
-    [isIdentityProofReady, navigateTo, updateSkipMfaOnSignIn, verificationId]
+    [checkIdentityProof, navigateTo, startStepUp, updateSkipMfaOnSignIn, verificationId]
   );
 
   const handleConfirmDisable = useCallback(async () => {
     setIsConfirmModalOpen(false);
 
-    if (isIdentityProofReady) {
+    if (await checkIdentityProof()) {
       await updateSkipMfaOnSignIn(verificationId, true);
+      return;
+    }
+
+    if (await startStepUp({ type: 'disable-mfa' })) {
       return;
     }
 
     sessionStorage.setPendingVerifiedAction('disable-mfa');
     navigateTo(verifiedActionRoute);
-  }, [isIdentityProofReady, navigateTo, updateSkipMfaOnSignIn, verificationId]);
+  }, [checkIdentityProof, navigateTo, startStepUp, updateSkipMfaOnSignIn, verificationId]);
 
   useEffect(() => {
     const action = consumePendingStepUpAction(['enable-mfa', 'disable-mfa']);

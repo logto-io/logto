@@ -23,8 +23,8 @@ const UsernameSection = () => {
   const navigate = useNavigate();
   const { userInfo, accountCenterSettings, setVerificationId, refreshUserInfo, setToast } =
     useContext(PageContext);
-  const { isReady: isIdentityProofReady, verificationId } = useIdentityProof();
-  const requestStepUp = useStepUp();
+  const { verificationId, checkIdentityProof } = useIdentityProof();
+  const { requestStepUp, startStepUp } = useStepUp();
   const handleError = useErrorHandler();
   const deleteUsernameApi = useApi(deleteUsername);
 
@@ -68,14 +68,18 @@ const UsernameSection = () => {
   const handleRemoveConfirm = useCallback(async () => {
     setIsRemoveModalOpen(false);
 
-    if (isIdentityProofReady) {
+    if (await checkIdentityProof()) {
       await removeUsername(verificationId);
+      return;
+    }
+
+    if (await startStepUp({ type: 'remove-username' })) {
       return;
     }
 
     sessionStorage.setPendingVerifiedAction('remove-username');
     navigateTo(verifiedActionRoute);
-  }, [isIdentityProofReady, navigateTo, removeUsername, verificationId]);
+  }, [checkIdentityProof, navigateTo, removeUsername, startStepUp, verificationId]);
 
   useEffect(() => {
     if (consumePendingStepUpAction(['remove-username'])) {
