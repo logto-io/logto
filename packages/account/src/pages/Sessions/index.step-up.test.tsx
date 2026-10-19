@@ -108,7 +108,7 @@ describe('<Sessions /> OIDC step-up', () => {
     expect(mockSignIn).toHaveBeenCalledWith({
       redirectUri: 'http://localhost/account',
       clearTokens: false,
-      extraParams: { acr_values: 'urn:logto:acr:1fa', max_age: '600' },
+      extraParams: { acr_values: 'urn:logto:acr:1fa', max_age: '540' },
     });
     expect(accountStorage.pendingStepUp.get()).toMatchObject({
       action: { type: 'load-sessions' },

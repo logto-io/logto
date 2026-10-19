@@ -10,9 +10,9 @@ import {
   setRouteRestore,
 } from '@ac/utils/account-center-route';
 import {
-  accountApiStepUpChallenge,
   getStepUpChallenge,
   hasFreshFirstFactorAuthentication,
+  proactiveStepUpChallenge,
   startPendingStepUp,
   type PendingStepUpAction,
   type StepUpChallenge,
@@ -177,7 +177,7 @@ const useStepUp = (): StepUpController => {
         return false;
       }
 
-      await beginStepUp(action, accountApiStepUpChallenge);
+      await beginStepUp(action, proactiveStepUpChallenge);
 
       return true;
     },

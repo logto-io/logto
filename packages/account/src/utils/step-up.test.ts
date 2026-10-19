@@ -3,12 +3,15 @@ import { HTTPError, type NormalizedOptions } from 'ky';
 
 import { accountStorage, sessionStorage as accountSessionStorage } from './session-storage';
 import {
+  accountApiStepUpChallenge,
+  authenticationFreshnessMaxAgeSeconds,
   completePendingStepUp,
   consumePendingStepUpAction,
   getStepUpChallenge,
   handlePendingStepUpOnPageLoad,
   hasFreshFirstFactorAuthentication,
   parseStepUpChallenge,
+  proactiveStepUpChallenge,
   startPendingStepUp,
 } from './step-up';
 
@@ -133,6 +136,23 @@ describe('hasFreshFirstFactorAuthentication', () => {
         now
       )
     ).toBe(false);
+  });
+});
+
+describe('step-up challenges', () => {
+  it('aligns the proactive max_age with the client freshness threshold', () => {
+    expect(authenticationFreshnessMaxAgeSeconds).toBe(540);
+    expect(proactiveStepUpChallenge).toEqual({
+      acrValues: LogtoAcr.FirstFactor,
+      maxAge: String(authenticationFreshnessMaxAgeSeconds),
+    });
+  });
+
+  it('keeps the Account API policy for the challenge fallback', () => {
+    expect(accountApiStepUpChallenge).toEqual({
+      acrValues: LogtoAcr.FirstFactor,
+      maxAge: '600',
+    });
   });
 });
 

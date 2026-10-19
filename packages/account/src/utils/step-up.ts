@@ -33,17 +33,8 @@ export type StepUpChallenge = {
   maxAge: string;
 };
 
-/**
- * The Account API policy. Used for a proactive step-up and when the challenge omits a parameter,
- * which RFC 9470 allows; the Account API sends both.
- */
-export const accountApiStepUpChallenge: StepUpChallenge = Object.freeze({
-  acrValues: LogtoAcr.FirstFactor,
-  maxAge: '600',
-});
-
 /** The Account API accepts an authentication context for this many seconds. */
-const authenticationFreshnessSeconds = 600;
+const accountApiAuthenticationMaxAgeSeconds = 600;
 
 /**
  * Treat a context as stale this many seconds early. The client clock may run ahead of the server,
@@ -51,6 +42,33 @@ const authenticationFreshnessSeconds = 600;
  * 600-second window is not safe to reuse.
  */
 const authenticationFreshnessMarginSeconds = 60;
+
+/**
+ * The maximum age Account Center reuses without a step-up. Kept below the Account API window for
+ * clock skew, and used as the proactive `max_age` so the provider prompts exactly when Account
+ * Center considers the context stale.
+ */
+export const authenticationFreshnessMaxAgeSeconds =
+  accountApiAuthenticationMaxAgeSeconds - authenticationFreshnessMarginSeconds;
+
+/**
+ * The Account API policy. Used when the challenge omits a parameter, which RFC 9470 allows; the
+ * Account API sends both.
+ */
+export const accountApiStepUpChallenge: StepUpChallenge = Object.freeze({
+  acrValues: LogtoAcr.FirstFactor,
+  maxAge: String(accountApiAuthenticationMaxAgeSeconds),
+});
+
+/**
+ * The proactive request. Its `max_age` matches the client freshness threshold, so a context that
+ * Account Center considers stale also fails the provider's `max_age` check and triggers a prompt
+ * instead of being silently reused.
+ */
+export const proactiveStepUpChallenge: StepUpChallenge = Object.freeze({
+  acrValues: LogtoAcr.FirstFactor,
+  maxAge: String(authenticationFreshnessMaxAgeSeconds),
+});
 
 /**
  * Whether the ID token carries a first-factor authentication context recent enough for the Account
@@ -75,7 +93,7 @@ export const hasFreshFirstFactorAuthentication = (
 
   return (
     ageSeconds >= -authenticationFreshnessMarginSeconds &&
-    ageSeconds <= authenticationFreshnessSeconds - authenticationFreshnessMarginSeconds
+    ageSeconds <= authenticationFreshnessMaxAgeSeconds
   );
 };
 
