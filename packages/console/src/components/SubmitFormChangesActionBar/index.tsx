@@ -30,7 +30,8 @@ function SubmitFormChangesActionBar({
   } = useCurrentTenantScopes();
 
   if (isReadOnly) {
-    return null;
+    // Forms lay out the closed bar as their last flex item, so a read-only member still gets it, empty.
+    return <div className={classNames(styles.container, className)} />;
   }
 
   return (
