@@ -3,10 +3,9 @@ import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import { defaultChainIds } from './constant.js';
 
 /**
- * EIP-4361's statement ABNF allows printable US-ASCII except `"`, `%`, `<`, `>`, `\`, `^`, `` ` ``,
- * `{`, `|`, and `}`.
+ * EIP-4361 defines the statement as `*( reserved / unreserved / " " )` from RFC 3986.
  */
-const statementPattern = /^[ !#$&-;=?-[\]_a-z~]+$/;
+const statementPattern = /^[A-Za-z0-9\-._~!$&'()*+,;=:\/?#\[\]@ ]+$/;
 
 /**
  * Collapse whitespace and trim a configured statement. Returns `undefined` for an empty value so
