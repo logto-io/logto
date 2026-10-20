@@ -2,7 +2,6 @@ import classNames from 'classnames';
 
 import AccountPageHeader from '@ac/components/AccountPageHeader';
 import PageFooter from '@ac/components/PageFooter';
-import { isDevFeaturesEnabled } from '@ac/constants/env';
 import { layoutClassNames } from '@ac/constants/layout';
 
 import styles from '../Home/index.module.scss';
@@ -35,8 +34,7 @@ const Security = () => {
           <MfaSection />
         </MfaVerificationsProvider>
         <TrustedDevicesSection />
-        {/* DEV: Self-service personal access tokens */}
-        {isDevFeaturesEnabled && <PersonalAccessTokensSection />}
+        <PersonalAccessTokensSection />
         <DeleteAccountSection />
       </div>
       <PageFooter />

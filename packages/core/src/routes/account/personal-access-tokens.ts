@@ -9,7 +9,6 @@ import { generateStandardSecret } from '@logto/shared';
 import { pick } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { assertFirstPartyClient } from '#src/utils/assert-first-party-client.js';
@@ -60,11 +59,6 @@ const assertIdentityVerified = (identityVerified?: boolean) => {
 export default function accountPersonalAccessTokenRoutes<T extends UserRouter>(
   ...[router, { queries }]: RouterInitArgs<T>
 ) {
-  // DEV: Self-service personal access tokens
-  if (!EnvSet.values.isDevFeaturesEnabled) {
-    return;
-  }
-
   const { personalAccessTokens } = queries;
   const pathname = `${accountApiPrefix}/personal-access-tokens`;
 
