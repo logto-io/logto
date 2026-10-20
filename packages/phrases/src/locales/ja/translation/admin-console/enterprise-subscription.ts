@@ -40,6 +40,8 @@ const enterprise_subscription = {
     enterprise_description:
       'Console SSO の利用枠は契約で定められ、権限を持つ管理者間で共有されます。個人サブスクリプションは別途請求されます。',
     allowance: '契約上限',
+    not_covered:
+      'この Enterprise プランには Console SSO の利用枠が含まれていません。新しいコネクターは個人サブスクリプションで請求されます。',
     quantity_price: '数量 × 単価',
     billing_period: '請求期間',
     connectors: 'Console SSO コネクター',

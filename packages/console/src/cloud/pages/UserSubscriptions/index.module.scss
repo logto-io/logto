@@ -11,10 +11,6 @@
   display: flex;
   flex-direction: column;
   gap: _.unit(3);
-
-  + .coverage {
-    margin-top: _.unit(6);
-  }
 }
 
 .coverageValues {

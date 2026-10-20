@@ -41,6 +41,8 @@ const enterprise_subscription = {
     enterprise_description:
       'Console SSO kotası sözleşmenizle belirlenir ve yetkili yöneticiler arasında paylaşılır. Kişisel abonelikler ayrı faturalandırılır.',
     allowance: 'Sözleşme kotası',
+    not_covered:
+      'Bu Enterprise planı Console SSO kotası içermez. Yeni bağlayıcılar kişisel bir abonelik üzerinden faturalandırılır.',
     quantity_price: 'Adet × birim fiyat',
     billing_period: 'Fatura dönemi',
     connectors: 'Console SSO bağlayıcıları',

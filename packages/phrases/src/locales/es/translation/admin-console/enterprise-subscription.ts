@@ -41,6 +41,8 @@ const enterprise_subscription = {
     enterprise_description:
       'El cupo de Console SSO se define en tu contrato y se comparte entre los administradores autorizados. Las suscripciones personales se facturan por separado.',
     allowance: 'Cupo contratado',
+    not_covered:
+      'Este plan Enterprise no incluye cupo de Console SSO. Los nuevos conectores se facturan en una suscripción personal.',
     quantity_price: 'Cantidad × precio unitario',
     billing_period: 'Periodo de facturación',
     connectors: 'Conectores de Console SSO',

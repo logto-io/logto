@@ -12,6 +12,7 @@ import EnterpriseSubscriptions from '@/components/Topbar/EnterpriseSubscriptions
 
 import { useConsoleSsoConnectors } from '../ConsoleSso/use-console-sso';
 
+import UserSubscriptions from '.';
 import EnterpriseCoverage from './EnterpriseCoverage';
 import PersonalSubscriptions from './PersonalSubscriptions';
 
@@ -51,6 +52,13 @@ jest.mock('@/hooks/use-current-tenant-scopes', () => ({
   default: () => ({ access: { isReadOnly: false } }),
 }));
 jest.mock('@/hooks/use-theme', () => ({ __esModule: true, default: () => 'light' }));
+// The page shell (title, top bar and boundary) is unrelated to which Enterprise is listed.
+jest.mock('@/components/Topbar', () => ({ __esModule: true, default: () => null }));
+jest.mock('@/components/PageMeta', () => ({ __esModule: true, default: () => null }));
+jest.mock('@/containers/AppBoundary', () => ({
+  __esModule: true,
+  default: ({ children }: { children: ReactNode }) => children,
+}));
 
 const get = jest.fn();
 const mutate = jest.fn();
@@ -66,7 +74,7 @@ const subscription = {
   id: 'sub-sso',
   product: 'console-sso',
   status: 'active',
-  items: [{ id: 'item', quantity: 0, price }],
+  items: [{ id: 'item', quantity: 2, price }],
   currentPeriodStart: new Date('2026-10-01'),
   currentPeriodEnd: new Date('2026-11-01'),
   cancelAtPeriodEnd: false,
@@ -77,6 +85,7 @@ const enterprise: Pick<LogtoEnterpriseResponse, 'id' | 'name'> = {
   id: 'contract',
   name: 'Contracted Enterprise',
 };
+const eligibleEnterprise = { quotaScope: 'shared', subscription: { status: 'active' } };
 const renderView = (children: ReactNode) =>
   render(
     createElement(
@@ -114,11 +123,12 @@ beforeEach(() => {
     >);
 });
 
-it('shows zero-quantity billing without a connector or invoice estimate', () => {
+it('shows the recurring unit list price without an invoice estimate', () => {
   renderView(createElement(PersonalSubscriptions));
   expect(screen.getByText('sub-sso')).toBeTruthy();
-  expect(screen.getByText('0 × $128.00')).toBeTruthy();
-  expect(screen.getByText('No connectors')).toBeTruthy();
+  expect(screen.getByText('2 × $128.00')).toBeTruthy();
+  expect(screen.getByText('/ month')).toBeTruthy();
+  expect(screen.queryByText(/\$256/)).toBeNull();
   expect(screen.getByText('Active')).toBeTruthy();
   expect(screen.queryByText('Your upcoming bill')).toBeNull();
   expect(screen.getByText(/Unit list prices exclude/)).toBeTruthy();
@@ -197,6 +207,7 @@ it.each([0, null, undefined])(
   'shows the exact contracted allowance %s without assuming a free connector',
   async (limit) => {
     get.mockResolvedValue({
+      ...eligibleEnterprise,
       quota: { basicQuota: { consoleSsoConnectorLimit: limit } },
       usages: { consoleSsoConnectorLimit: 2 },
     });
@@ -214,6 +225,42 @@ it.each([0, null, undefined])(
     );
   }
 );
+
+it.each([
+  { quotaScope: 'dedicated', subscription: { status: 'active' } },
+  { quotaScope: 'shared', subscription: { status: 'canceled' } },
+  { quotaScope: 'shared', subscription: undefined },
+])('shows no Console SSO coverage for an ineligible Enterprise plan %j', async (eligibility) => {
+  get.mockResolvedValue({
+    ...eligibility,
+    quota: { basicQuota: { consoleSsoConnectorLimit: 5 } },
+    usages: { consoleSsoConnectorLimit: 1 },
+  });
+  renderView(createElement(EnterpriseCoverage, { enterprise }));
+  await waitFor(() => {
+    expect(screen.getByText(/doesn't include a Console SSO allowance/)).toBeTruthy();
+  });
+  expect(screen.queryByText(/Contract allowance:/)).toBeNull();
+  expect(screen.queryByText(/Usage:/)).toBeNull();
+  expect(screen.getByRole('link', { name: 'Contracted Enterprise' })).toBeTruthy();
+});
+
+it('shows only the first Enterprise, matching Console SSO creation', async () => {
+  jest.mocked(useSubscriptionEntry).mockReturnValue({
+    enterprises: { data: [enterprise, { id: 'other', name: 'Other Enterprise' }] },
+    hasSubscriptions: false,
+  } as unknown as ReturnType<typeof useSubscriptionEntry>);
+  renderView(createElement(UserSubscriptions));
+  await waitFor(() => {
+    expect(get).toHaveBeenCalledTimes(1);
+  });
+  expect(get).toHaveBeenCalledWith('/api/me/logto-enterprises/:id', {
+    params: { id: 'contract' },
+    search: { includeSharedQuota: 'true', includeUsages: 'true' },
+  });
+  expect(screen.getByRole('link', { name: 'Contracted Enterprise' })).toBeTruthy();
+  expect(screen.queryByText('Other Enterprise')).toBeNull();
+});
 
 it('shows Enterprise ownership errors without inventing quota values', async () => {
   get.mockRejectedValue(new Error('Enterprise not found'));

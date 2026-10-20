@@ -42,6 +42,8 @@ const enterprise_subscription = {
     enterprise_description:
       'La quota Console SSO è definita dal contratto e condivisa tra gli amministratori autorizzati. Gli abbonamenti personali vengono fatturati separatamente.',
     allowance: 'Quota contrattuale',
+    not_covered:
+      'Questo piano Enterprise non include una quota Console SSO. I nuovi connettori vengono fatturati su un abbonamento personale.',
     quantity_price: 'Quantità × prezzo unitario',
     billing_period: 'Periodo di fatturazione',
     connectors: 'Connettori Console SSO',

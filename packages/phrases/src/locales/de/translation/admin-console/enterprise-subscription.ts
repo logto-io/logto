@@ -42,6 +42,8 @@ const enterprise_subscription = {
     enterprise_description:
       'Das Console-SSO-Kontingent wird vertraglich festgelegt und von berechtigten Administratoren gemeinsam genutzt. Persönliche Abonnements werden separat abgerechnet.',
     allowance: 'Vertragliches Kontingent',
+    not_covered:
+      'Dieser Enterprise-Plan enthält kein Console-SSO-Kontingent. Neue Connectors werden über ein persönliches Abonnement abgerechnet.',
     quantity_price: 'Menge × Einzelpreis',
     billing_period: 'Abrechnungszeitraum',
     connectors: 'Console-SSO-Konnektoren',

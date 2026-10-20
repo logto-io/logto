@@ -18,6 +18,8 @@ import styles from './index.module.scss';
 
 function UserSubscriptions() {
   const { enterprises } = useSubscriptionEntry();
+  // Console SSO creation uses only the first Enterprise; never list other contracts as coverage.
+  const enterprise = enterprises.data?.[0];
   return (
     <AppBoundary>
       <div className={layout.pageContainer}>
@@ -41,14 +43,12 @@ function UserSubscriptions() {
                   {enterprises.error.message}
                 </InlineNotification>
               )}
-              {Boolean(enterprises.data?.length) && (
+              {enterprise && (
                 <FormCard
                   title="enterprise_subscription.subscription.enterprise_plan_title"
                   description="enterprise_subscription.user_subscriptions.enterprise_description"
                 >
-                  {enterprises.data?.map((enterprise) => (
-                    <EnterpriseCoverage key={enterprise.id} enterprise={enterprise} />
-                  ))}
+                  <EnterpriseCoverage enterprise={enterprise} />
                 </FormCard>
               )}
               <PersonalSubscriptions />

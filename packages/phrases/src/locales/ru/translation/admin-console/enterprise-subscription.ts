@@ -41,6 +41,8 @@ const enterprise_subscription = {
     enterprise_description:
       'Квота Console SSO определяется договором и совместно используется уполномоченными администраторами. Личные подписки оплачиваются отдельно.',
     allowance: 'Квота по договору',
+    not_covered:
+      'Этот план Enterprise не включает квоту Console SSO. Новые коннекторы оплачиваются через личную подписку.',
     quantity_price: 'Количество × цена за единицу',
     billing_period: 'Расчётный период',
     connectors: 'Коннекторы Console SSO',

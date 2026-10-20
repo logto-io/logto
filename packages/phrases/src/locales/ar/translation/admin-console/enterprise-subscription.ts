@@ -40,6 +40,8 @@ const enterprise_subscription = {
     enterprise_description:
       'تُحدَّد حصة Console SSO وفق عقدك ويتشاركها المسؤولون المخوّلون. تُفوتر الاشتراكات الشخصية بشكل منفصل.',
     allowance: 'الحصة التعاقدية',
+    not_covered:
+      'لا تتضمن خطة Enterprise هذه حصة Console SSO. تُفوتر الموصلات الجديدة ضمن اشتراك شخصي.',
     quantity_price: 'الكمية × سعر الوحدة',
     billing_period: 'فترة الفوترة',
     connectors: 'موصلات Console SSO',

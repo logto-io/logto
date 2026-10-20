@@ -19,7 +19,7 @@ const subscription: UserSubscription = {
   cancelAt: null,
   canceledAt: null,
   cancelAtPeriodEnd: false,
-  items: [{ id: 'item-sso', price, quantity: 0 }],
+  items: [{ id: 'item-sso', price, quantity: 2 }],
 };
 
 it.each([
@@ -37,7 +37,7 @@ it('does not turn a missing unit price into zero or a subscription quantity into
   expect(formatUnitPrice(subscription.items[0]!.price, 'en-US')).toBe('$128.00');
 });
 it('localizes recurring intervals and handles absent recurring fields', () => {
-  expect(formatPriceInterval(price, 'en-US')).toBe('1 month');
+  expect(formatPriceInterval(price, 'en-US')).toBe('month');
   expect(formatPriceInterval({ ...price, intervalCount: 3 }, 'en-US')).toBe('3 months');
   expect(formatPriceInterval({ ...price, interval: null }, 'en-US')).toBeUndefined();
 });

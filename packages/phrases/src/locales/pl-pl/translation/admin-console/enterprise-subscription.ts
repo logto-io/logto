@@ -41,6 +41,8 @@ const enterprise_subscription = {
     enterprise_description:
       'Limit Console SSO określa umowa i jest on współdzielony przez upoważnionych administratorów. Subskrypcje osobiste są rozliczane oddzielnie.',
     allowance: 'Limit umowny',
+    not_covered:
+      'Ten plan Enterprise nie obejmuje limitu Console SSO. Nowe konektory są rozliczane w ramach subskrypcji osobistej.',
     quantity_price: 'Ilość × cena jednostkowa',
     billing_period: 'Okres rozliczeniowy',
     connectors: 'Konektory Console SSO',

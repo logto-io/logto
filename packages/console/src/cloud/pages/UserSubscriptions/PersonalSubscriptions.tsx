@@ -16,7 +16,12 @@ import { getConsoleSsoDetailsPath } from '../ConsoleSso/Details/paths';
 import { useConsoleSsoConnectors } from '../ConsoleSso/use-console-sso';
 
 import styles from './index.module.scss';
-import { formatPriceInterval, formatUnitPrice, getScheduledCancellation } from './utils';
+import {
+  formatPriceInterval,
+  formatUnitPrice,
+  getScheduledCancellation,
+  statusTagMap,
+} from './utils';
 
 function PersonalSubscriptions() {
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -60,14 +65,15 @@ function PersonalSubscriptions() {
             render: ({ items }) =>
               items.length === 0
                 ? '—'
-                : items.map(({ id, quantity, price }) => (
-                    <div key={id} className={styles.item}>
-                      {quantity ?? '—'} × {formatUnitPrice(price, i18n.language)}
-                      {price.interval && price.intervalCount && (
-                        <span> / {formatPriceInterval(price, i18n.language)}</span>
-                      )}
-                    </div>
-                  )),
+                : items.map(({ id, quantity, price }) => {
+                    const interval = formatPriceInterval(price, i18n.language);
+                    return (
+                      <div key={id} className={styles.item}>
+                        {quantity ?? '—'} × {formatUnitPrice(price, i18n.language)}
+                        {interval && <span> / {interval}</span>}
+                      </div>
+                    );
+                  }),
           },
           {
             title: t('subscription.billing_history.status_column'),
@@ -76,14 +82,7 @@ function PersonalSubscriptions() {
               const scheduled = getScheduledCancellation(subscription);
               return (
                 <>
-                  <Tag
-                    type="state"
-                    status={
-                      subscription.status === 'active' || subscription.status === 'trialing'
-                        ? 'success'
-                        : 'info'
-                    }
-                  >
+                  <Tag type="state" status={statusTagMap[subscription.status]}>
                     {t(`enterprise_subscription.user_subscriptions.status.${subscription.status}`)}
                   </Tag>
                   {scheduled && (

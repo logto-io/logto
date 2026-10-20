@@ -14,6 +14,8 @@ import TextLink from '@/ds-components/TextLink';
 import useCurrentUser from '@/hooks/use-current-user';
 import { formatQuotaNumber } from '@/utils/number';
 
+import { isEnterpriseCoverageEligible } from '../ConsoleSso/creation-billing';
+
 import styles from './index.module.scss';
 
 type Props = {
@@ -58,7 +60,7 @@ function EnterpriseCoverage({ enterprise }: Props) {
         <FormField title="cloud.console_sso.title">
           {isLoading ? (
             t('general.loading')
-          ) : (
+          ) : isEnterpriseCoverageEligible(data) ? (
             <div className={styles.coverageValues}>
               <span>
                 {t('enterprise_subscription.user_subscriptions.allowance')}:{' '}
@@ -73,6 +75,10 @@ function EnterpriseCoverage({ enterprise }: Props) {
                 {used === undefined ? '—' : formatQuotaNumber(used)}
               </span>
             </div>
+          ) : (
+            <span className={styles.note}>
+              {t('enterprise_subscription.user_subscriptions.not_covered')}
+            </span>
           )}
         </FormField>
       )}

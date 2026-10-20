@@ -39,6 +39,8 @@ const enterprise_subscription = {
     enterprise_description:
       'Console SSO 할당량은 계약에 따라 정해지며 권한이 있는 관리자 간에 공유됩니다. 개인 구독은 별도로 청구됩니다.',
     allowance: '계약 할당량',
+    not_covered:
+      '이 Enterprise 플랜에는 Console SSO 할당량이 포함되어 있지 않습니다. 새 커넥터는 개인 구독으로 청구됩니다.',
     quantity_price: '수량 × 단가',
     billing_period: '청구 기간',
     connectors: 'Console SSO 커넥터',

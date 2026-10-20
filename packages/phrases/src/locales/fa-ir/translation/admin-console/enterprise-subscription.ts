@@ -41,6 +41,8 @@ const enterprise_subscription = {
     enterprise_description:
       'سهمیه Console SSO در قرارداد تعیین می‌شود و بین مدیران مجاز مشترک است. اشتراک‌های شخصی جداگانه صورتحساب می‌شوند.',
     allowance: 'سهمیه قراردادی',
+    not_covered:
+      'این طرح Enterprise شامل سهمیه Console SSO نیست. کانکتورهای جدید از طریق اشتراک شخصی صورتحساب می‌شوند.',
     quantity_price: 'تعداد × قیمت واحد',
     billing_period: 'دوره صورتحساب',
     connectors: 'اتصال‌دهنده‌های Console SSO',

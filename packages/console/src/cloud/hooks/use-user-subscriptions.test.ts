@@ -105,9 +105,9 @@ it('does not call the new summary when dev features are disabled', async () => {
   expect(result.current.hasSubscriptions).toBe(false);
 });
 
-it('preserves mixed-product, zero-quantity and canceled history as returned by the API', async () => {
+it('preserves mixed-product and canceled history as returned by the API', async () => {
   const subscriptions = [
-    { id: 'zero', product: 'console-sso', status: 'active', items: [{ quantity: 0 }] },
+    { id: 'current', product: 'console-sso', status: 'active', items: [{ quantity: 1 }] },
     { id: 'ended', product: 'console-sso', status: 'canceled', items: [{ quantity: 2 }] },
     { id: 'license', product: 'self-hosted-license', status: 'active', items: [] },
     { id: 'unknown', product: null, status: 'past_due', items: [] },

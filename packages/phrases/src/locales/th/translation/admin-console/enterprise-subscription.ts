@@ -41,6 +41,8 @@ const enterprise_subscription = {
     enterprise_description:
       'โควตา Console SSO กำหนดตามสัญญาและใช้ร่วมกันระหว่างผู้ดูแลที่ได้รับอนุญาต การสมัครสมาชิกส่วนบุคคลเรียกเก็บเงินแยกต่างหาก',
     allowance: 'โควตาตามสัญญา',
+    not_covered:
+      'แผน Enterprise นี้ไม่มีโควตา Console SSO ตัวเชื่อมต่อใหม่จะเรียกเก็บเงินผ่านการสมัครสมาชิกส่วนบุคคล',
     quantity_price: 'จำนวน × ราคาต่อหน่วย',
     billing_period: 'รอบการเรียกเก็บเงิน',
     connectors: 'ตัวเชื่อมต่อ Console SSO',

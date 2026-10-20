@@ -10,17 +10,18 @@ import {
   savePendingConnectorCreation,
 } from './connector-creation-idempotency';
 
+/** Only an active or trialing shared Enterprise plan grants Console SSO coverage. */
+export const isEnterpriseCoverageEligible = (enterprise?: LogtoEnterpriseSubscriptionResponse) =>
+  enterprise?.quotaScope === 'shared' &&
+  (enterprise.subscription?.status === 'active' || enterprise.subscription?.status === 'trialing');
+
 /** Match the contract's basic allowance; tenant plans and add-on totals do not grant coverage. */
 export const getIncludedCapacity = (enterprise?: LogtoEnterpriseSubscriptionResponse) => {
   const limit = enterprise?.quota?.basicQuota.consoleSsoConnectorLimit;
   const used = enterprise?.usages?.consoleSsoConnectorLimit;
-  const isEligible =
-    enterprise?.quotaScope === 'shared' &&
-    (enterprise.subscription?.status === 'active' ||
-      enterprise.subscription?.status === 'trialing');
   return {
     isAvailable: Boolean(
-      isEligible &&
+      isEnterpriseCoverageEligible(enterprise) &&
         typeof used === 'number' &&
         (limit === null || (limit !== undefined && used < limit))
     ),

@@ -41,6 +41,8 @@ const enterprise_subscription = {
     enterprise_description:
       'A cota de Console SSO é definida em contrato e compartilhada entre administradores autorizados. As assinaturas pessoais são cobradas separadamente.',
     allowance: 'Cota contratada',
+    not_covered:
+      'Este plano Enterprise não inclui cota de Console SSO. Novos conectores são cobrados em uma assinatura pessoal.',
     quantity_price: 'Quantidade × preço unitário',
     billing_period: 'Período de cobrança',
     connectors: 'Conectores de Console SSO',

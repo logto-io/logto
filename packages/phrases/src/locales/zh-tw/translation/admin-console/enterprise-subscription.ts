@@ -39,6 +39,7 @@ const enterprise_subscription = {
     enterprise_description:
       'Console SSO 額度由合約約定，並由獲授權的管理員共用。個人訂閱分開計費。',
     allowance: '合約額度',
+    not_covered: '此 Enterprise 方案不包含 Console SSO 額度。新建的連接器將透過個人訂閱計費。',
     quantity_price: '數量 × 單價',
     billing_period: '帳期',
     connectors: 'Console SSO 連接器',

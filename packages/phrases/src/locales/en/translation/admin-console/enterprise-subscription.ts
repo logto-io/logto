@@ -40,6 +40,8 @@ const enterprise_subscription = {
     enterprise_description:
       'Console SSO allowance is defined by your contract and shared across authorized managers. Personal subscriptions are billed separately.',
     allowance: 'Contract allowance',
+    not_covered:
+      "This Enterprise plan doesn't include a Console SSO allowance. New connectors are billed to a personal subscription.",
     quantity_price: 'Quantity × unit price',
     billing_period: 'Billing period',
     connectors: 'Console SSO connectors',
