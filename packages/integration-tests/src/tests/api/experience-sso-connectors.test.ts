@@ -34,9 +34,7 @@ describe('GET /api/experience/sso-connectors', () => {
         darkLogo: branding.darkLogo,
       });
 
-      const nonMatchingResponse = await getEnabledSsoConnectors(
-        `user@${generateSsoConnectorName()}.invalid`
-      );
+      const nonMatchingResponse = await getEnabledSsoConnectors('user@non-matching.invalid');
 
       expect(nonMatchingResponse).toEqual({ connectorIds: [], connectors: [] });
     } finally {
