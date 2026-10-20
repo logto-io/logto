@@ -32,6 +32,37 @@ const enterprise_subscription = {
     private_region_title: 'Private cloud instance ({{regionName}})',
     shared_cross_tenants: 'Across tenants',
   },
+  user_subscriptions: {
+    description:
+      'View your personal subscriptions and contracted Enterprise coverage, independently of your selected tenant.',
+    personal_title: 'Personal subscriptions',
+    personal_description: 'Subscriptions billed to your account, including past subscriptions.',
+    enterprise_description:
+      'Console SSO allowance is defined by your contract and shared across authorized managers. Personal subscriptions are billed separately.',
+    allowance: 'Contract allowance',
+    quantity_price: 'Quantity × unit price',
+    billing_period: 'Billing period',
+    connectors: 'Console SSO connectors',
+    no_connectors: 'No connectors',
+    list_price_note:
+      'Unit list prices exclude taxes, discounts and prorations. They are not an upcoming invoice or amount due.',
+    proration_note:
+      'Console SSO additions and removals are prorated on the regular invoice. Deleting the last paid connector cancels and settles the subscription.',
+    overdue_note:
+      'After three consecutive unpaid billing cycles and exhausted retries, collection is paused and paid Console SSO connectors are removed. Updating payment does not restore their configuration. Contact us for help.',
+    cancel_on: 'Cancellation scheduled for {{date}}',
+    other_product: 'Other subscription',
+    status: {
+      active: 'Active',
+      trialing: 'Trialing',
+      past_due: 'Past due',
+      unpaid: 'Unpaid',
+      canceled: 'Canceled',
+      incomplete: 'Incomplete',
+      incomplete_expired: 'Expired',
+      paused: 'Paused',
+    },
+  },
 };
 
 export default Object.freeze(enterprise_subscription);

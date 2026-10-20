@@ -33,6 +33,37 @@ const enterprise_subscription = {
     private_region_title: 'Özel bulut örneği ({{regionName}})',
     shared_cross_tenants: 'Kiracılar arası',
   },
+  user_subscriptions: {
+    description:
+      'Seçili kiracıdan bağımsız olarak kişisel aboneliklerinizi ve sözleşmeye bağlı Enterprise kapsamınızı görüntüleyin.',
+    personal_title: 'Kişisel abonelikler',
+    personal_description: 'Geçmiş abonelikler dahil hesabınıza faturalandırılan abonelikler.',
+    enterprise_description:
+      'Console SSO kotası sözleşmenizle belirlenir ve yetkili yöneticiler arasında paylaşılır. Kişisel abonelikler ayrı faturalandırılır.',
+    allowance: 'Sözleşme kotası',
+    quantity_price: 'Adet × birim fiyat',
+    billing_period: 'Fatura dönemi',
+    connectors: 'Console SSO bağlayıcıları',
+    no_connectors: 'Bağlayıcı yok',
+    list_price_note:
+      'Birim liste fiyatlarına vergiler, indirimler ve kıst hesaplamalar dahil değildir. Gelecek fatura veya ödenecek tutar değildir.',
+    proration_note:
+      'Console SSO ekleme ve silmeleri normal faturada orantılı olarak hesaplanır. Son ücretli bağlayıcıyı silmek aboneliği iptal eder ve son hesaplaşmayı başlatır.',
+    overdue_note:
+      'Art arda üç ödenmemiş fatura dönemi ve yeniden denemelerin tükenmesinden sonra tahsilat duraklatılır ve ücretli Console SSO bağlayıcıları kaldırılır. Ödeme bilgilerini güncellemek yapılandırmalarını geri yüklemez. Yardım için bize ulaşın.',
+    cancel_on: '{{date}} tarihinde iptal edilecek',
+    other_product: 'Diğer abonelik',
+    status: {
+      active: 'Etkin',
+      trialing: 'Deneme',
+      past_due: 'Vadesi geçmiş',
+      unpaid: 'Ödenmemiş',
+      canceled: 'İptal edilmiş',
+      incomplete: 'Tamamlanmamış',
+      incomplete_expired: 'Süresi dolmuş',
+      paused: 'Duraklatılmış',
+    },
+  },
 };
 
 export default Object.freeze(enterprise_subscription);

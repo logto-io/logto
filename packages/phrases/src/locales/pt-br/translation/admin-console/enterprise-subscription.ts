@@ -33,6 +33,37 @@ const enterprise_subscription = {
     private_region_title: 'Instância de nuvem privada ({{regionName}})',
     shared_cross_tenants: 'Entre inquilinos',
   },
+  user_subscriptions: {
+    description:
+      'Veja suas assinaturas pessoais e a cobertura Enterprise contratada, independentemente do tenant selecionado.',
+    personal_title: 'Assinaturas pessoais',
+    personal_description: 'Assinaturas cobradas da sua conta, incluindo assinaturas anteriores.',
+    enterprise_description:
+      'A cota de Console SSO é definida em contrato e compartilhada entre administradores autorizados. As assinaturas pessoais são cobradas separadamente.',
+    allowance: 'Cota contratada',
+    quantity_price: 'Quantidade × preço unitário',
+    billing_period: 'Período de cobrança',
+    connectors: 'Conectores de Console SSO',
+    no_connectors: 'Nenhum conector',
+    list_price_note:
+      'Os preços unitários de tabela excluem impostos, descontos e ajustes proporcionais. Não representam uma próxima fatura nem um valor devido.',
+    proration_note:
+      'Adições e remoções de Console SSO são calculadas proporcionalmente na fatura regular. Excluir o último conector pago cancela e liquida a assinatura.',
+    overdue_note:
+      'Após três períodos de cobrança consecutivos não pagos e o esgotamento das tentativas, a cobrança é pausada e os conectores pagos de Console SSO são removidos. Atualizar o pagamento não restaura a configuração. Entre em contato para obter ajuda.',
+    cancel_on: 'Cancelamento agendado para {{date}}',
+    other_product: 'Outra assinatura',
+    status: {
+      active: 'Ativa',
+      trialing: 'Em teste',
+      past_due: 'Em atraso',
+      unpaid: 'Não paga',
+      canceled: 'Cancelada',
+      incomplete: 'Incompleta',
+      incomplete_expired: 'Expirada',
+      paused: 'Pausada',
+    },
+  },
 };
 
 export default Object.freeze(enterprise_subscription);

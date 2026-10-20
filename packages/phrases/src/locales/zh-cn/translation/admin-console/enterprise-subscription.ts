@@ -32,6 +32,35 @@ const enterprise_subscription = {
     private_region_title: '私有云实例 ({{regionName}})',
     shared_cross_tenants: '跨租户',
   },
+  user_subscriptions: {
+    description: '查看你的个人订阅和 Enterprise 合同额度，不受当前所选租户影响。',
+    personal_title: '个人订阅',
+    personal_description: '由你的账户支付的订阅，包括历史订阅。',
+    enterprise_description:
+      'Console SSO 额度由合同约定，并由获授权的管理员共享。个人订阅单独计费。',
+    allowance: '合同额度',
+    quantity_price: '数量 × 单价',
+    billing_period: '账期',
+    connectors: 'Console SSO 连接器',
+    no_connectors: '暂无连接器',
+    list_price_note: '所列单价不含税费、折扣及按比例调整，并非下一张账单或应付金额。',
+    proration_note:
+      '增减 Console SSO 连接器产生的按比例调整会在常规账单中结算。删除最后一个付费连接器会取消并结算订阅。',
+    overdue_note:
+      '连续三个账期未付款且重试耗尽后，将暂停收款并移除付费 Console SSO 连接器。更新付款信息不会恢复其配置。如需帮助，请联系我们。',
+    cancel_on: '计划于 {{date}} 取消',
+    other_product: '其他订阅',
+    status: {
+      active: '有效',
+      trialing: '试用中',
+      past_due: '逾期',
+      unpaid: '未付款',
+      canceled: '已取消',
+      incomplete: '未完成',
+      incomplete_expired: '已过期',
+      paused: '已暂停',
+    },
+  },
 };
 
 export default Object.freeze(enterprise_subscription);

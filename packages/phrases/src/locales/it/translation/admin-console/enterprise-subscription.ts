@@ -34,6 +34,37 @@ const enterprise_subscription = {
     private_region_title: 'Istanza cloud privata ({{regionName}})',
     shared_cross_tenants: 'Tra tenant',
   },
+  user_subscriptions: {
+    description:
+      'Visualizza gli abbonamenti personali e la copertura Enterprise contrattuale, indipendentemente dal tenant selezionato.',
+    personal_title: 'Abbonamenti personali',
+    personal_description: 'Abbonamenti fatturati al tuo account, inclusi quelli passati.',
+    enterprise_description:
+      'La quota Console SSO è definita dal contratto e condivisa tra gli amministratori autorizzati. Gli abbonamenti personali vengono fatturati separatamente.',
+    allowance: 'Quota contrattuale',
+    quantity_price: 'Quantità × prezzo unitario',
+    billing_period: 'Periodo di fatturazione',
+    connectors: 'Connettori Console SSO',
+    no_connectors: 'Nessun connettore',
+    list_price_note:
+      'I prezzi unitari di listino escludono imposte, sconti e rettifiche proporzionali. Non rappresentano una fattura futura o un importo dovuto.',
+    proration_note:
+      'Le aggiunte e rimozioni Console SSO sono ripartite proporzionalmente nella fattura ordinaria. Eliminare l’ultimo connettore a pagamento annulla e salda l’abbonamento.',
+    overdue_note:
+      'Dopo tre periodi di fatturazione consecutivi non pagati e l’esaurimento dei tentativi, la riscossione viene sospesa e i connettori Console SSO a pagamento vengono rimossi. Aggiornare il pagamento non ripristina la configurazione. Contattaci per assistenza.',
+    cancel_on: 'Annullamento previsto per {{date}}',
+    other_product: 'Altro abbonamento',
+    status: {
+      active: 'Attivo',
+      trialing: 'In prova',
+      past_due: 'Scaduto da pagare',
+      unpaid: 'Non pagato',
+      canceled: 'Annullato',
+      incomplete: 'Incompleto',
+      incomplete_expired: 'Scaduto',
+      paused: 'In pausa',
+    },
+  },
 };
 
 export default Object.freeze(enterprise_subscription);
