@@ -220,4 +220,32 @@ describe('swagger general utils', () => {
     );
     expect(JSON.stringify(document)).not.toContain(devFeatureSchemaExtension);
   });
+
+  it('should hide the custom data search parameter when dev features are disabled', async () => {
+    setDevFeaturesEnabled(false);
+
+    const document = await loadSearchDocument();
+    removeDevFeatureParameters(document);
+
+    expect(document.paths?.['/api/users']?.get?.parameters).not.toEqual(
+      expect.arrayContaining([expect.objectContaining({ name: 'customData' })])
+    );
+  });
+
+  it('should expose the custom data search parameter when dev features are enabled', async () => {
+    setDevFeaturesEnabled(true);
+
+    const document = await loadSearchDocument();
+    removeDevFeatureParameters(document);
+
+    expect(document.paths?.['/api/users']?.get?.parameters).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: 'customData',
+          schema: { type: 'array', items: { type: 'string' } },
+        }),
+      ])
+    );
+    expect(JSON.stringify(document)).not.toContain(devFeatureSchemaExtension);
+  });
 });
