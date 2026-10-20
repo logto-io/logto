@@ -41,6 +41,11 @@ const security = {
       description:
         'CAPTCHA open source e self-hosted basato su proof-of-work, senza puzzle visivi né servizi di terze parti, ideale per le regioni in cui altri servizi CAPTCHA non sono raggiungibili.',
     },
+    geetest: {
+      name: 'GeeTest',
+      description:
+        'CAPTCHA adattivo di GeeTest con sfide localizzate e buone prestazioni nella Cina continentale.',
+    },
   },
   captcha_details: {
     back_to_security: 'Torna alla sicurezza',
@@ -60,6 +65,8 @@ const security = {
     cap_endpoint_placeholder: 'https://cap.example.com',
     cap_endpoint_http_notice:
       'Questo endpoint usa HTTP, adatto solo allo sviluppo locale. I browser bloccano le richieste HTTP da una pagina di accesso HTTPS e la chiave segreta verrebbe inviata non crittografata. Usa HTTPS in produzione.',
+    geetest_captcha_id: 'ID CAPTCHA',
+    geetest_captcha_key: 'Chiave CAPTCHA',
     deletion_description: 'Sei sicuro di voler eliminare questo fornitore di CAPTCHA?',
     captcha_deleted: 'Fornitore di CAPTCHA eliminato con successo',
     setup_captcha: 'Configura CAPTCHA',

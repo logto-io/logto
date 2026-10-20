@@ -41,6 +41,11 @@ const security = {
       description:
         'CAPTCHA แบบโอเพนซอร์สที่โฮสต์เองโดยใช้ proof-of-work ไม่มีปริศนาภาพหรือบริการภายนอก เหมาะสำหรับภูมิภาคที่ไม่สามารถเข้าถึงบริการ CAPTCHA อื่นได้',
     },
+    geetest: {
+      name: 'GeeTest',
+      description:
+        'CAPTCHA แบบปรับตัวของ GeeTest พร้อมความท้าทายที่แปลเป็นภาษาท้องถิ่นและประสิทธิภาพที่เสถียรในจีนแผ่นดินใหญ่',
+    },
   },
   captcha_details: {
     back_to_security: 'กลับไปที่การรักษาความปลอดภัย',
@@ -60,6 +65,8 @@ const security = {
     cap_endpoint_placeholder: 'https://cap.example.com',
     cap_endpoint_http_notice:
       'ปลายทางนี้ใช้ HTTP ซึ่งเหมาะสำหรับการพัฒนาในเครื่องเท่านั้น เบราว์เซอร์จะบล็อกคำขอ HTTP จากหน้าลงชื่อเข้าใช้ที่เป็น HTTPS และคีย์ลับจะถูกส่งโดยไม่เข้ารหัส โปรดใช้ HTTPS ในการใช้งานจริง',
+    geetest_captcha_id: 'รหัส CAPTCHA',
+    geetest_captcha_key: 'คีย์ CAPTCHA',
     deletion_description: 'คุณแน่ใจหรือไม่ว่าต้องการลบผู้ให้บริการ CAPTCHA นี้?',
     captcha_deleted: 'ลบผู้ให้บริการ CAPTCHA เรียบร้อยแล้ว',
     setup_captcha: 'ตั้งค่า CAPTCHA',
