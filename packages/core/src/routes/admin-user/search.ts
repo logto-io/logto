@@ -1,7 +1,6 @@
 import { OrganizationUserRelations, UsersRoles } from '@logto/schemas';
 import { type Nullable, tryThat, yes } from '@silverhand/essentials';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -141,12 +140,6 @@ const parseCustomDataSearchParams = (searchParams: URLSearchParams) => {
   if (values.length === 0) {
     return;
   }
-
-  // Dev feature: searching users by custom data. Remove this guard when the feature is released.
-  assertThat(
-    EnvSet.values.isDevFeaturesEnabled,
-    new TypeError('Searching users by custom data is not enabled.')
-  );
 
   return values.map((value) => parseCustomDataParameter(value));
 };

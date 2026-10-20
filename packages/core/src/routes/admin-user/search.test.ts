@@ -4,7 +4,6 @@ import { pickDefault } from '@logto/shared/esm';
 import { removeUndefinedKeys } from '@silverhand/essentials';
 
 import { mockUser, mockUserList, mockUserListResponse } from '#src/__mocks__/index.js';
-import { EnvSet } from '#src/env-set/index.js';
 import { type InsertUserResult } from '#src/libraries/user.js';
 import { type UserConditions } from '#src/queries/user.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -314,21 +313,4 @@ describe('adminUserRoutes', () => {
       expect(mockedQueries.users.countUsers).not.toHaveBeenCalled();
     }
   );
-
-  it('GET /users should reject customData when dev features are disabled', async () => {
-    const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
-
-    try {
-      const response = await userRequest.get('/users').query({ customData: '{"qq":114514}' });
-
-      expect(response.status).toEqual(400);
-      expect(response.text).toContain('not enabled');
-      expect(mockedQueries.users.countUsers).not.toHaveBeenCalled();
-      expect(mockedQueries.users.findUsers).not.toHaveBeenCalled();
-    } finally {
-      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
-    }
-  });
 });

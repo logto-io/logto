@@ -38,8 +38,7 @@
               "type": "array",
               "items": {
                 "type": "string"
-              },
-              "x-logto-dev-feature": true
+              }
             },
             "examples": {
               "number": {

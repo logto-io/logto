@@ -2,7 +2,6 @@ import { type User } from '@logto/schemas';
 
 import { authedAdminApi, deleteUser } from '#src/api/index.js';
 import { createUserByAdmin, expectRejects } from '#src/helpers/index.js';
-import { devFeatureDisabledTest, devFeatureTest } from '#src/utils.js';
 
 const getUsers = async <T>(init: string[][]): Promise<{ headers: Headers; json: T }> => {
   const response = await authedAdminApi.get('users', {
@@ -12,7 +11,7 @@ const getUsers = async <T>(init: string[][]): Promise<{ headers: Headers; json: 
   return { headers: response.headers, json: (await response.json()) as T };
 };
 
-devFeatureTest.describe('admin console user search params - customData', () => {
+describe('admin console user search params - customData', () => {
   const userPrefix = 'search_custom_data_';
   const users: User[] = [];
 
@@ -155,13 +154,5 @@ devFeatureTest.describe('admin console user search params - customData', () => {
       code: 'request.invalid_input',
       status: 400,
     });
-  });
-});
-
-devFeatureDisabledTest.it('should reject customData when dev features are disabled', async () => {
-  await expectRejects(getUsers<User[]>([['customData', '{"qq":114514}']]), {
-    code: 'request.invalid_input',
-    status: 400,
-    messageIncludes: 'not enabled',
   });
 });
