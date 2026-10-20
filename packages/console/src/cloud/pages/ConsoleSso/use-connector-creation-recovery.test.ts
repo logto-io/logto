@@ -231,7 +231,7 @@ it.each([null, 'another-purchase'])(
       } else {
         localStorage.removeItem(getPendingConnectorCreationStorageKey('alice'));
       }
-      const event = new StorageEvent('storage');
+      const event = new Event('storage');
       // eslint-disable-next-line @silverhand/fp/no-mutating-methods -- Set read-only event fields without the constructor overload flagged by CodeQL.
       Object.defineProperties(event, {
         key: { value: getPendingConnectorCreationStorageKey('alice') },
