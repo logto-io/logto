@@ -45,14 +45,20 @@ describe('GET /api/experience/sso-connectors', () => {
 
   it('returns empty arrays when single sign-on is disabled', async () => {
     const { singleSignOnEnabled } = await getSignInExperience();
-    await updateSignInExperience({ singleSignOnEnabled: false });
+    const { id } = await createSsoConnector({
+      ...newOidcSsoConnectorPayload,
+      connectorName: generateSsoConnectorName(),
+    });
 
     try {
+      await updateSignInExperience({ singleSignOnEnabled: false });
+
       await expect(getEnabledSsoConnectors(`user@${domains[0]}`)).resolves.toEqual({
         connectorIds: [],
         connectors: [],
       });
     } finally {
+      await deleteSsoConnectorById(id);
       await updateSignInExperience({ singleSignOnEnabled });
     }
   });
