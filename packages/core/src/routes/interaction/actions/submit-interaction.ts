@@ -134,7 +134,7 @@ async function handleSubmitRegister(
     (invitation) => invitation.status === OrganizationInvitationStatus.Pending
   );
 
-  const [user] = await insertUser(
+  const [user, assignedRoleIds] = await insertUser(
     {
       id,
       ...userProfile,
@@ -191,6 +191,13 @@ async function handleSubmitRegister(
 
   ctx.assignReleaseOnSuccessInteractionHookResult({ userId: id });
   ctx.appendDataHookContext('User.Created', { user });
+  if (assignedRoleIds.length > 0) {
+    ctx.appendDataHookContext('User.Roles.Updated', {
+      userId: user.id,
+      addedRoleIds: assignedRoleIds,
+      removedRoleIds: [],
+    });
+  }
 
   // JIT provisioning for email domain
   if (user.primaryEmail) {
@@ -202,10 +209,25 @@ async function handleSubmitRegister(
       user.primaryEmail
     );
 
-    for (const { organizationId } of provisionedOrganizations) {
-      ctx.appendDataHookContext('Organization.Membership.Updated', {
-        organizationId,
-      });
+    for (const {
+      organizationId,
+      isNewMembership,
+      assignedOrganizationRoleIds,
+    } of provisionedOrganizations) {
+      if (isNewMembership) {
+        ctx.appendDataHookContext('Organization.Membership.Updated', {
+          organizationId,
+        });
+      }
+
+      if (assignedOrganizationRoleIds.length > 0) {
+        ctx.appendDataHookContext('Organization.UserRoles.Updated', {
+          organizationId,
+          userId: id,
+          addedOrganizationRoleIds: assignedOrganizationRoleIds,
+          removedOrganizationRoleIds: [],
+        });
+      }
     }
   }
 

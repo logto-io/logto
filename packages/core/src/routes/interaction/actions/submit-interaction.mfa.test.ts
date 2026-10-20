@@ -54,7 +54,7 @@ const { hasActiveUsers, updateUserById } = userQueries;
 
 const userLibraries = {
   generateUserId: jest.fn().mockResolvedValue('uid'),
-  insertUser: jest.fn().mockResolvedValue([{}, { organizations: [] }]),
+  insertUser: jest.fn().mockResolvedValue([{}, []]),
 };
 const { generateUserId, insertUser } = userLibraries;
 

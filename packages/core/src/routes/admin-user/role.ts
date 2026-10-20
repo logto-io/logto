@@ -1,9 +1,10 @@
 import { RoleType, Roles } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { tryThat } from '@silverhand/essentials';
+import { deduplicate, tryThat } from '@silverhand/essentials';
 import { array, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import koaRoleRlsErrorHandler from '#src/middleware/koa-role-rls-error-handler.js';
@@ -81,8 +82,9 @@ export default function adminUserRoleRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const {
         params: { userId },
-        body: { roleIds },
+        body: { roleIds: requestedRoleIds },
       } = ctx.guard;
+      const roleIds = deduplicate(requestedRoleIds);
 
       await findUserById(userId);
       const usersRoles = await findUsersRolesByUserId(userId);
@@ -107,6 +109,15 @@ export default function adminUserRoleRoutes<T extends ManagementApiRouter>(
       ctx.body = { roleIds, addedRoleIds: roleIdsToAdd };
       ctx.status = 201;
 
+      if (roleIdsToAdd.length > 0) {
+        ctx.appendDataHookContext('User.Roles.Updated', {
+          ...buildManagementApiContext(ctx),
+          userId,
+          addedRoleIds: roleIdsToAdd,
+          removedRoleIds: [],
+        });
+      }
+
       return next();
     }
   );
@@ -122,8 +133,9 @@ export default function adminUserRoleRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const {
         params: { userId },
-        body: { roleIds },
+        body: { roleIds: requestedRoleIds },
       } = ctx.guard;
+      const roleIds = deduplicate(requestedRoleIds);
 
       await findUserById(userId);
       const usersRoles = await findUsersRolesByUserId(userId);
@@ -145,8 +157,17 @@ export default function adminUserRoleRoutes<T extends ManagementApiRouter>(
         roleIdsToAdd.map((roleId) => ({ id: generateStandardId(), userId, roleId }))
       );
 
-      ctx.body = { roleIds: [...new Set(roleIds)] };
+      ctx.body = { roleIds };
       ctx.status = 200;
+
+      if (roleIdsToAdd.length > 0 || roleIdsToRemove.length > 0) {
+        ctx.appendDataHookContext('User.Roles.Updated', {
+          ...buildManagementApiContext(ctx),
+          userId,
+          addedRoleIds: roleIdsToAdd,
+          removedRoleIds: roleIdsToRemove,
+        });
+      }
 
       return next();
     }
@@ -166,6 +187,13 @@ export default function adminUserRoleRoutes<T extends ManagementApiRouter>(
       await deleteUsersRolesByUserIdAndRoleId(userId, roleId);
 
       ctx.status = 204;
+
+      ctx.appendDataHookContext('User.Roles.Updated', {
+        ...buildManagementApiContext(ctx),
+        userId,
+        addedRoleIds: [],
+        removedRoleIds: [roleId],
+      });
 
       return next();
     }

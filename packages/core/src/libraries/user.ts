@@ -23,7 +23,17 @@ import { captureDeveloperEvent } from '../utils/posthog.js';
 import { isPasswordValid, rejectInvalidCredentials } from './user-password-verification.js';
 import { convertBindMfaToMfaVerification, encryptUserPassword } from './user.utils.js';
 
-export type InsertUserResult = [User];
+export type InsertUserResult = [User, readonly string[]];
+
+/**
+ * The outcome of one JIT organization provisioning run. Besides the resolved organization, it
+ * reports whether the membership itself is new and which organization roles were actually
+ * inserted (a user who is already a member can still gain roles from a later JIT run).
+ */
+export type JitOrganizationProvisionResult = JitOrganization & {
+  isNewMembership: boolean;
+  assignedOrganizationRoleIds: readonly string[];
+};
 
 export type UserLibrary = ReturnType<typeof createUserLibrary>;
 
@@ -89,7 +99,7 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
 
     assertThat(parameterRoles.length === roleNames.length, 'role.default_role_missing');
 
-    const result = await pool.transaction<[User]>(async (connection) => {
+    const result = await pool.transaction<InsertUserResult>(async (connection) => {
       const user = await insertUserQuery(data);
       const roles = deduplicateByKey([...parameterRoles, ...defaultRoles], 'id');
 
@@ -100,7 +110,7 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
         );
       }
 
-      return [user];
+      return [user, roles.map(({ id }) => id)];
     });
 
     if (tenantId === adminTenantId) {
@@ -257,12 +267,14 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
 
   /**
    * Insert the user into the resolved JIT organizations and assign the corresponding JIT roles.
-   * Returns only the orgs the user was newly added to (i.e. orgs the user was not already a member of).
+   * Returns every resolved organization with the membership and role delta that this run actually
+   * wrote, so callers can emit `Organization.Membership.Updated` for new memberships and
+   * `Organization.UserRoles.Updated` for roles added to existing members as well.
    */
   const insertJitMemberships = async (
     userId: string,
     jitOrganizations: readonly JitOrganization[]
-  ): Promise<readonly JitOrganization[]> => {
+  ): Promise<readonly JitOrganizationProvisionResult[]> => {
     if (jitOrganizations.length === 0) {
       return [];
     }
@@ -285,27 +297,31 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
         userId,
       }))
     );
-    if (data.length > 0) {
-      await organizations.relations.usersRoles.insert(...data);
-    }
 
-    return jitOrganizations.filter(
-      ({ organizationId }) => !existingOrganizationIds.has(organizationId)
-    );
+    const assignedRoleRelations =
+      data.length > 0 ? await organizations.relations.usersRoles.insertWithResult(...data) : [];
+
+    return jitOrganizations.map(({ organizationId, organizationRoleIds }) => ({
+      organizationId,
+      organizationRoleIds,
+      isNewMembership: !existingOrganizationIds.has(organizationId),
+      assignedOrganizationRoleIds: assignedRoleRelations
+        .filter((relation) => relation.organizationId === organizationId)
+        .map(({ organizationRoleId }) => organizationRoleId),
+    }));
   };
 
   /**
    * Provision the user with JIT organizations and roles based on SSO connector or explicit org IDs.
    * For email-domain JIT, use `provisionOrganizationsByEmailDomain` instead.
-   * Returns only the JIT orgs the user was newly added to (i.e. orgs the user was not already a
-   * member of) so callers can decide whether to emit `Organization.Membership.Updated` for each
-   * org and what `addedUserIds` to include.
+   * Returns every resolved JIT organization with the membership and role delta that this run
+   * actually wrote, so callers can emit the corresponding membership and user-role events.
    */
   const provisionOrganizations = async ({
     userId,
     ssoConnectorId,
     organizationIds,
-  }: ProvisionOrganizationsParams): Promise<readonly JitOrganization[]> => {
+  }: ProvisionOrganizationsParams): Promise<readonly JitOrganizationProvisionResult[]> => {
     const jitOrganizations = condArray(
       ssoConnectorId && (await organizations.jit.ssoConnectors.getJitOrganizations(ssoConnectorId)),
       organizationIds && (await organizations.jit.getJitOrganizationsByIds(organizationIds))
@@ -317,12 +333,13 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
   // TODO: If the user's email is not verified, we should not provision the user into any organization.
   /**
    * Provision the user with JIT organizations and roles based on the email domain.
-   * Returns only the JIT orgs the user was newly added to.
+   * Returns every resolved JIT organization with the membership and role delta that this run
+   * actually wrote.
    */
   const provisionOrganizationsByEmailDomain = async (
     userId: string,
     email: string
-  ): Promise<readonly JitOrganization[]> => {
+  ): Promise<readonly JitOrganizationProvisionResult[]> => {
     const userEmailDomain = email.split('@')[1];
     if (!userEmailDomain) {
       return [];

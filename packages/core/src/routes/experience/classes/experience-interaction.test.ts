@@ -104,7 +104,7 @@ const userQueries = {
 const userLibraries = {
   checkIdentifierCollision: jest.fn().mockResolvedValue(null),
   generateUserId: jest.fn().mockResolvedValue('uid'),
-  insertUser: jest.fn(async (user: CreateUser): Promise<InsertUserResult> => [user as User]),
+  insertUser: jest.fn(async (user: CreateUser): Promise<InsertUserResult> => [user as User, []]),
   provisionOrganizations: jest.fn().mockResolvedValue([]),
   provisionOrganizationsByEmailDomain: jest.fn().mockResolvedValue([]),
 };

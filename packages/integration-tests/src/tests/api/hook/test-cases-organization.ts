@@ -209,6 +209,27 @@ export const organizationRoleDataHookTestCases: TestCase[] = [
     payload: {},
   },
   {
+    route: 'POST /organization-roles/:id/resource-scopes',
+    event: 'OrganizationRole.Scopes.Updated',
+    method: 'post',
+    endpoint: `organization-roles/{organizationRoleId}/resource-scopes`,
+    payload: { scopeIds: ['{resourceScopeId}'] },
+  },
+  {
+    route: 'PUT /organization-roles/:id/resource-scopes',
+    event: 'OrganizationRole.Scopes.Updated',
+    method: 'put',
+    endpoint: `organization-roles/{organizationRoleId}/resource-scopes`,
+    payload: { scopeIds: ['{resourceScopeId}'] },
+  },
+  {
+    route: 'DELETE /organization-roles/:id/resource-scopes/:scopeId',
+    event: 'OrganizationRole.Scopes.Updated',
+    method: 'delete',
+    endpoint: `organization-roles/{organizationRoleId}/resource-scopes/{resourceScopeId}`,
+    payload: {},
+  },
+  {
     route: 'DELETE /organization-roles/:id',
     event: 'OrganizationRole.Deleted',
     method: 'delete',
