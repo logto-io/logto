@@ -4,17 +4,19 @@ import api from '#src/api/api.js';
 import { getSignInExperience, updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { createSsoConnector, deleteSsoConnectorById } from '#src/api/sso-connector.js';
 import { newOidcSsoConnectorPayload } from '#src/constants.js';
+import { initClient } from '#src/helpers/client.js';
 import { generateSsoConnectorName } from '#src/utils.js';
 
 const { branding, domains } = newOidcSsoConnectorPayload;
 
-const getEnabledSsoConnectors = async (email: string) =>
+const getEnabledSsoConnectors = async (email: string, cookie: string) =>
   api
-    .get('experience/sso-connectors', { searchParams: { email } })
+    .get('experience/sso-connectors', { searchParams: { email }, headers: { cookie } })
     .json<{ connectorIds: string[]; connectors: SsoConnectorMetadata[] }>();
 
 describe('GET /api/experience/sso-connectors', () => {
   it('returns branded connectors only for a matching email domain', async () => {
+    const client = await initClient();
     const { singleSignOnEnabled } = await getSignInExperience();
     const { id } = await createSsoConnector({
       ...newOidcSsoConnectorPayload,
@@ -24,7 +26,10 @@ describe('GET /api/experience/sso-connectors', () => {
     try {
       await updateSignInExperience({ singleSignOnEnabled: true });
 
-      const matchingResponse = await getEnabledSsoConnectors(`user@${domains[0]}`);
+      const matchingResponse = await getEnabledSsoConnectors(
+        `user@${domains[0]}`,
+        client.interactionCookie
+      );
 
       expect(matchingResponse.connectorIds).toContain(id);
       expect(matchingResponse.connectors).toContainEqual({
@@ -34,7 +39,10 @@ describe('GET /api/experience/sso-connectors', () => {
         darkLogo: branding.darkLogo,
       });
 
-      const nonMatchingResponse = await getEnabledSsoConnectors('user@non-matching.invalid');
+      const nonMatchingResponse = await getEnabledSsoConnectors(
+        'user@non-matching.invalid',
+        client.interactionCookie
+      );
 
       expect(nonMatchingResponse).toEqual({ connectorIds: [], connectors: [] });
     } finally {
@@ -44,6 +52,7 @@ describe('GET /api/experience/sso-connectors', () => {
   });
 
   it('returns empty arrays when single sign-on is disabled', async () => {
+    const client = await initClient();
     const { singleSignOnEnabled } = await getSignInExperience();
     const { id } = await createSsoConnector({
       ...newOidcSsoConnectorPayload,
@@ -53,7 +62,9 @@ describe('GET /api/experience/sso-connectors', () => {
     try {
       await updateSignInExperience({ singleSignOnEnabled: false });
 
-      await expect(getEnabledSsoConnectors(`user@${domains[0]}`)).resolves.toEqual({
+      await expect(
+        getEnabledSsoConnectors(`user@${domains[0]}`, client.interactionCookie)
+      ).resolves.toEqual({
         connectorIds: [],
         connectors: [],
       });
