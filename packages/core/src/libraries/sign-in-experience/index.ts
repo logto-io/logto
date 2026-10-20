@@ -9,6 +9,7 @@ import type {
   PartialColor,
   SignInExperience,
   SsoConnectorMetadata,
+  SupportedSsoConnector,
 } from '@logto/schemas';
 import { adminTenantId, ConnectorType, ForgotPasswordMethod, TenantTag } from '@logto/schemas';
 import { deduplicate, trySafe, type Nullable } from '@silverhand/essentials';
@@ -53,6 +54,28 @@ export const getForgotPasswordAvailability = (
 };
 
 type SignInExperienceOverride = Partial<Omit<SignInExperience, 'color'> & { color: PartialColor }>;
+
+/**
+ * Build the SSO connector data exposed to the experience client. Tenant branding is only included
+ * when `withBranding` is true, so the public sign-in experience catalog never leaks it.
+ */
+export const buildSsoConnectorMetadata = (
+  { id, providerName, branding }: SupportedSsoConnector,
+  locale: string,
+  withBranding: boolean
+): SsoConnectorMetadata => {
+  const { name, logo, logoDark } = ssoConnectorFactories[providerName];
+
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- empty string is not a valid locale
+  const providerNameInLocale = (isKeyOfI18nPhrases(locale, name) && name[locale]) || name.en;
+
+  return {
+    id,
+    connectorName: (withBranding ? branding.displayName : undefined) ?? providerNameInLocale,
+    logo: (withBranding ? branding.logo : undefined) ?? logo,
+    darkLogo: (withBranding ? branding.darkLogo : undefined) ?? logoDark,
+  };
+};
 
 export const createSignInExperienceLibrary = (
   tenantId: string,
@@ -105,21 +128,9 @@ export const createSignInExperienceLibrary = (
   const getActiveSsoConnectors = async (locale: string): Promise<SsoConnectorMetadata[]> => {
     const ssoConnectors = await getAvailableSsoConnectors();
 
-    return ssoConnectors.map(({ providerName, id, branding }): SsoConnectorMetadata => {
-      const factory = ssoConnectorFactories[providerName];
-      const { name, logo, logoDark } = factory;
-
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- empty string is not a valid locale
-      const providerNameInLocale = (isKeyOfI18nPhrases(locale, name) && name[locale]) || name.en;
-
-      return {
-        id,
-        // Use the provider name as the connector name if the branding displayName is not provided
-        connectorName: branding.displayName ?? providerNameInLocale,
-        logo: branding.logo ?? logo,
-        darkLogo: branding.darkLogo ?? logoDark,
-      };
-    });
+    // The public catalog must not expose tenant-specific branding. Branded metadata is only
+    // returned by the email-domain lookup API after the domain matches.
+    return ssoConnectors.map((connector) => buildSsoConnectorMetadata(connector, locale, false));
   };
 
   /**

@@ -398,7 +398,7 @@ describe('get sso connectors', () => {
     ]);
   });
 
-  it('should return displayName if provided', async () => {
+  it('should not expose custom branding in the public catalog', async () => {
     getLogtoConnectors.mockResolvedValueOnce(mockSocialConnectors);
     findDefaultSignInExperience.mockResolvedValueOnce(mockSignInExperience);
 
@@ -409,6 +409,8 @@ describe('get sso connectors', () => {
         ...wellConfiguredSsoConnector,
         branding: {
           displayName,
+          logo: 'https://logto.io/custom-logo.png',
+          darkLogo: 'https://logto.io/custom-dark-logo.png',
         },
       },
     ]);
@@ -420,7 +422,7 @@ describe('get sso connectors', () => {
     expect(ssoConnectors).toEqual([
       {
         id: wellConfiguredSsoConnector.id,
-        connectorName: displayName,
+        connectorName: connectorFactory.name.en,
         logo: connectorFactory.logo,
         darkLogo: connectorFactory.logoDark,
       },
