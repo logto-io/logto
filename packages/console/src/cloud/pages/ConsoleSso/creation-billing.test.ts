@@ -100,7 +100,7 @@ it('creates an included connector without Checkout or a personal subscription se
     'alice',
     savePendingConnectorCreation('alice', { ...operation, funding: 'included' }),
     getApi,
-    true
+    { restartExpired: true }
   );
   expect(api.post).toHaveBeenCalledWith('/api/me/console-sso/connectors', {
     body: { providerName: SsoProviderName.OIDC },
@@ -113,7 +113,7 @@ it('adds directly to a confirmed subscription, including a zero-quantity subscri
     'alice',
     savePendingConnectorCreation('alice', { ...operation, subscriptionId: 'sub-zero' }),
     getApi,
-    true
+    { restartExpired: true }
   );
   expect(api.post).toHaveBeenCalledWith('/api/me/console-sso/connectors', {
     body: { providerName: SsoProviderName.OIDC, stripeUserSubscriptionId: 'sub-zero' },
@@ -123,7 +123,9 @@ it('adds directly to a confirmed subscription, including a zero-quantity subscri
 
 it('persists first Checkout before returning its redirect', async () => {
   api.post.mockResolvedValue(session);
-  expect(await continueConnectorCreation('alice', operation, getApi, true)).toMatchObject(session);
+  expect(
+    await continueConnectorCreation('alice', operation, getApi, { restartExpired: true })
+  ).toMatchObject(session);
   expect(readPendingConnectorCreation('alice')).toEqual({
     ...operation,
     sessionId: session.sessionId,
@@ -134,10 +136,10 @@ it('persists first Checkout before returning its redirect', async () => {
 it('replays a lost Checkout response with the same key and provider', async () => {
   savePendingConnectorCreation('alice', operation);
   api.post.mockRejectedValueOnce(new Error('Network failed')).mockResolvedValueOnce(session);
-  await expect(continueConnectorCreation('alice', operation, getApi, true)).rejects.toThrow(
-    'Network failed'
-  );
-  await continueConnectorCreation('alice', operation, getApi, true);
+  await expect(
+    continueConnectorCreation('alice', operation, getApi, { restartExpired: true })
+  ).rejects.toThrow('Network failed');
+  await continueConnectorCreation('alice', operation, getApi, { restartExpired: true });
   expect(getApi.mock.calls).toEqual([[operation.key], [operation.key]]);
   expect(api.post.mock.calls[0]).toEqual(api.post.mock.calls[1]);
 });
@@ -150,7 +152,7 @@ it.each(['open', 'payment_pending'])(
       'alice',
       savePendingConnectorCreation('alice', { ...operation, sessionId: session.sessionId }),
       getApi,
-      false
+      { restartExpired: false }
     );
     expect(api.post).not.toHaveBeenCalled();
     expect(readPendingConnectorCreation('alice')?.subscriptionId).toBeUndefined();
@@ -165,7 +167,7 @@ it('rechecks Checkout after a connector lookup fails without creating or purchas
       'alice',
       savePendingConnectorCreation('alice', { ...operation, sessionId: session.sessionId }),
       getApi,
-      false
+      { restartExpired: false }
     )
   ).rejects.toThrow();
   const saved = readPendingConnectorCreation('alice');
@@ -180,7 +182,9 @@ it('rechecks Checkout after a connector lookup fails without creating or purchas
       providerName: operation.providerName,
     },
   ]);
-  await expect(continueConnectorCreation('alice', saved, getApi, true)).resolves.toEqual({
+  await expect(
+    continueConnectorCreation('alice', saved, getApi, { restartExpired: true })
+  ).resolves.toEqual({
     status: 'created',
     id: undefined,
     operation: saved,
@@ -199,7 +203,7 @@ it('waits for the webhook connector instead of creating a second connector after
     { stripeUserSubscriptionId: 'other-sub', providerName: operation.providerName },
     { stripeUserSubscriptionId: 'paid-sub', providerName: SsoProviderName.SAML },
   ]);
-  const result = await continueConnectorCreation('alice', saved, getApi, false);
+  const result = await continueConnectorCreation('alice', saved, getApi, { restartExpired: false });
   expect(result.status).toBe('payment_pending');
   expect(readPendingConnectorCreation('alice')?.subscriptionId).toBe('paid-sub');
   api.get.mockResolvedValueOnce(paidSession).mockResolvedValueOnce([
@@ -210,7 +214,7 @@ it('waits for the webhook connector instead of creating a second connector after
     },
   ]);
   await expect(
-    continueConnectorCreation('alice', result.operation, getApi, false)
+    continueConnectorCreation('alice', result.operation, getApi, { restartExpired: false })
   ).resolves.toMatchObject({ status: 'created', id: undefined });
   expect(api.post).not.toHaveBeenCalled();
 });
@@ -224,7 +228,9 @@ it('recovers an already-paid enrollment response without a frontend connector wr
   api.get.mockResolvedValue([
     { stripeUserSubscriptionId: 'paid-sub', providerName: operation.providerName },
   ]);
-  await expect(continueConnectorCreation('alice', operation, getApi, true)).resolves.toMatchObject({
+  await expect(
+    continueConnectorCreation('alice', operation, getApi, { restartExpired: true })
+  ).resolves.toMatchObject({
     status: 'created',
     id: undefined,
   });
@@ -237,7 +243,7 @@ it('persists the subscription selected by Checkout reuse without a session', asy
   api.post
     .mockResolvedValueOnce({ status: 'subscription_exists', subscriptionId: 'reused-sub' })
     .mockResolvedValueOnce({ id: 'connector-one' });
-  await continueConnectorCreation('alice', operation, getApi, true);
+  await continueConnectorCreation('alice', operation, getApi, { restartExpired: true });
   expect(readPendingConnectorCreation('alice')).toEqual({
     ...operation,
     subscriptionId: 'reused-sub',
@@ -250,7 +256,7 @@ it('does not reopen an expired payment during polling', async () => {
     'alice',
     savePendingConnectorCreation('alice', { ...operation, sessionId: session.sessionId }),
     getApi,
-    false
+    { restartExpired: false }
   );
   expect(api.post).not.toHaveBeenCalled();
 });
@@ -262,7 +268,7 @@ it('restarts a verified unpaid expiry with a fresh payment key and unchanged cre
     'alice',
     savePendingConnectorCreation('alice', { ...operation, sessionId: session.sessionId }),
     getApi,
-    true
+    { restartExpired: true }
   );
   expect(getApi).toHaveBeenLastCalledWith('new-key');
   expect(readPendingConnectorCreation('alice')).toEqual({
@@ -280,7 +286,7 @@ it('retains the new payment key when the replacement Checkout response is lost',
       'alice',
       savePendingConnectorCreation('alice', { ...operation, sessionId: session.sessionId }),
       getApi,
-      true
+      { restartExpired: true }
     )
   ).rejects.toThrow();
   expect(readPendingConnectorCreation('alice')).toEqual({ ...operation, checkoutKey: 'new-key' });
@@ -322,7 +328,9 @@ it('allows deliberate repurchase after an unusable subscription without rewritin
     subscriptionId: 'canceled-sub',
   });
   api.post.mockRejectedValueOnce(new Error('Subscription not usable'));
-  await expect(continueConnectorCreation('alice', saved, getApi, true)).rejects.toThrow();
+  await expect(
+    continueConnectorCreation('alice', saved, getApi, { restartExpired: true })
+  ).rejects.toThrow();
   expect(readPendingConnectorCreation('alice')).toEqual(saved);
   await abandonConnectorCreation('alice', saved, getApi);
   expect(getOrCreatePendingConnectorCreation('alice', SsoProviderName.SAML)).toEqual({
@@ -348,7 +356,7 @@ it.each(['expired', 'open', 'payment_pending', 'payment_received'] as const)(
         >
       >();
     api.get.mockReturnValue(response.promise);
-    const pending = continueConnectorCreation('alice', saved, getApi, false);
+    const pending = continueConnectorCreation('alice', saved, getApi, { restartExpired: false });
     const replacement = savePendingConnectorCreation('alice', {
       ...operation,
       key: 'another-purchase',
@@ -368,7 +376,7 @@ it('ignores a stale poll when the same creation has a newer payment attempt', as
   });
   const response = deferred<typeof session>();
   api.get.mockReturnValue(response.promise);
-  const pending = continueConnectorCreation('alice', saved, getApi, false);
+  const pending = continueConnectorCreation('alice', saved, getApi, { restartExpired: false });
   const replacement = savePendingConnectorCreation('alice', {
     ...saved,
     checkoutKey: 'new-checkout',
@@ -382,7 +390,7 @@ it('ignores a stale poll when the same creation has a newer payment attempt', as
 it('does not save a stale enrollment response over a new purchase', async () => {
   const response = deferred<typeof session>();
   api.post.mockReturnValue(response.promise);
-  const pending = continueConnectorCreation('alice', operation, getApi, true);
+  const pending = continueConnectorCreation('alice', operation, getApi, { restartExpired: true });
   const replacement = savePendingConnectorCreation('alice', {
     ...operation,
     key: 'another-purchase',

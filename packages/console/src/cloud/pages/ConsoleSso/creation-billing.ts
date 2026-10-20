@@ -53,9 +53,15 @@ export const continueConnectorCreation = async (
   userId: string,
   operation: PendingConnectorCreation,
   getApi: (key: string) => Client<typeof consoleSsoRouter>,
-  restartExpired: boolean
+  { restartExpired, signal }: { restartExpired: boolean; signal?: AbortSignal }
 ) => {
-  assertCurrentOperation(userId, operation);
+  const assertCurrent = (current: PendingConnectorCreation) => {
+    if (signal?.aborted) {
+      throw new DOMException('Connector creation check was canceled.', 'AbortError');
+    }
+    assertCurrentOperation(userId, current);
+  };
+  assertCurrent(operation);
   const enroll = async (current: PendingConnectorCreation) => {
     const enrollment = await getApi(current.checkoutKey ?? current.key).post(
       '/api/me/console-sso/checkout-session',
@@ -63,7 +69,7 @@ export const continueConnectorCreation = async (
         body: { providerName: current.providerName },
       }
     );
-    assertCurrentOperation(userId, current);
+    assertCurrent(current);
     return enrollment;
   };
   const getEnrollment = async () => {
@@ -76,7 +82,7 @@ export const continueConnectorCreation = async (
         params: { sessionId: operation.sessionId },
       }
     );
-    assertCurrentOperation(userId, operation);
+    assertCurrent(operation);
     if (session.status !== 'expired' || !restartExpired) {
       return { enrollment: session, current: operation };
     }
@@ -89,14 +95,14 @@ export const continueConnectorCreation = async (
     return { enrollment: await enroll(current), current };
   };
   const createConnector = async (current: PendingConnectorCreation) => {
-    assertCurrentOperation(userId, current);
+    assertCurrent(current);
     const connector = await getApi(current.key).post('/api/me/console-sso/connectors', {
       body: {
         providerName: current.providerName,
         ...(current.subscriptionId && { stripeUserSubscriptionId: current.subscriptionId }),
       },
     });
-    assertCurrentOperation(userId, current);
+    assertCurrent(current);
     return { status: 'created' as const, id: connector.id, operation: current };
   };
   if (operation.funding === 'included' || (operation.subscriptionId && !operation.sessionId)) {
@@ -106,7 +112,7 @@ export const continueConnectorCreation = async (
     throw new Error('Select a funding source before creating a connector.');
   }
   const { enrollment, current: enrollmentOperation } = await getEnrollment();
-  assertCurrentOperation(userId, enrollmentOperation);
+  assertCurrent(enrollmentOperation);
   if (enrollment.status === 'subscription_exists') {
     return createConnector(
       savePendingConnectorCreation(userId, {
@@ -129,7 +135,7 @@ export const continueConnectorCreation = async (
     const connectors = current.subscriptionId
       ? await getApi(current.key).get('/api/me/console-sso/connectors')
       : [];
-    assertCurrentOperation(userId, current);
+    assertCurrent(current);
     if (
       connectors.some(
         (connector) =>

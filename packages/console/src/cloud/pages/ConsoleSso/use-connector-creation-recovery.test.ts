@@ -120,6 +120,61 @@ it('bounds paid-but-unfulfilled recovery and retries with reads only', async () 
   expect(mockApi.post).not.toHaveBeenCalled();
 });
 
+it.each([false, true])(
+  'releases a hung payment check at the deadline and ignores its late response (initial pending: %s)',
+  async (initialPending) => {
+    savePendingConnectorCreation('alice', operation);
+    const oldResponse = deferred<typeof paidSession>();
+    const retryResponse = deferred<typeof paidSession>();
+    const checkout = jest.fn().mockReturnValue(oldResponse.promise);
+    if (initialPending) {
+      checkout.mockResolvedValueOnce({ ...paidSession, status: 'payment_pending' });
+    }
+    mockApi.get.mockImplementation(async (path: string) =>
+      path === '/api/me/console-sso/checkout-session/:sessionId' ? checkout() : []
+    );
+    jest.useFakeTimers();
+    const { result } = renderCreation();
+    await act(async () => {
+      jest.advanceTimersByTime(0);
+    });
+    await act(async () => {
+      jest.advanceTimersByTime(1000);
+    });
+    expect(result.current.isSubmitting).toBe(true);
+    await act(async () => {
+      jest.advanceTimersByTime(59_000);
+    });
+    expect(result.current.status).toBe('error');
+    expect(result.current.isSubmitting).toBe(false);
+    expect(readPendingConnectorCreation('alice')).toEqual(operation);
+    expect(onCreated).not.toHaveBeenCalled();
+    expect(toastResponseError).not.toHaveBeenCalled();
+
+    checkout.mockReturnValue(retryResponse.promise);
+    await act(async () => {
+      void result.current.create(SsoProviderName.OIDC);
+    });
+    expect(checkout).toHaveBeenCalledTimes(initialPending ? 3 : 2);
+    expect(result.current.isSubmitting).toBe(true);
+    await act(async () => {
+      oldResponse.resolve(paidSession);
+    });
+    expect(result.current.status).toBe('payment_pending');
+    expect(result.current.isSubmitting).toBe(true);
+    expect(readPendingConnectorCreation('alice')).toEqual(operation);
+    expect(onCreated).not.toHaveBeenCalled();
+
+    await act(async () => {
+      retryResponse.resolve({ ...paidSession, status: 'open' });
+    });
+    expect(result.current.status).toBe('open');
+    expect(result.current.isSubmitting).toBe(false);
+    expect(mockApi.post).not.toHaveBeenCalled();
+    expect(toastResponseError).not.toHaveBeenCalled();
+  }
+);
+
 it('checks webhook fulfillment after cancellation discovers payment but cleanup fails', async () => {
   savePendingConnectorCreation('alice', operation);
   mockApi.get.mockResolvedValue({ ...paidSession, status: 'payment_pending' });
@@ -176,12 +231,13 @@ it.each([null, 'another-purchase'])(
       } else {
         localStorage.removeItem(getPendingConnectorCreationStorageKey('alice'));
       }
-      window.dispatchEvent(
-        new StorageEvent('storage', {
-          key: getPendingConnectorCreationStorageKey('alice'),
-          storageArea: localStorage,
-        })
-      );
+      const event = new StorageEvent('storage');
+      // eslint-disable-next-line @silverhand/fp/no-mutating-methods -- Set read-only event fields without the constructor overload flagged by CodeQL.
+      Object.defineProperties(event, {
+        key: { value: getPendingConnectorCreationStorageKey('alice') },
+        storageArea: { value: localStorage },
+      });
+      window.dispatchEvent(event);
       response.resolve({ ...paidSession, status: 'expired' });
     });
     expect(onCreated).toHaveBeenCalledWith();

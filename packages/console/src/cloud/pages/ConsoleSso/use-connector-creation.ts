@@ -36,6 +36,8 @@ export const useConnectorCreation = (userId: string, onClose: (id?: string) => v
   >();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const busy = useRef(false);
+  const activeCheck = useRef<AbortController>();
+  const paymentDeadline = useRef<number>();
   const mounted = useRef(false);
   const isMounted = useCallback(() => mounted.current, []);
   useEffect(() => {
@@ -44,6 +46,7 @@ export const useConnectorCreation = (userId: string, onClose: (id?: string) => v
     return () => {
       // eslint-disable-next-line @silverhand/fp/no-mutation -- Ignore callbacks after the modal closes.
       mounted.current = false;
+      activeCheck.current?.abort();
     };
   }, []);
   useEffect(() => {
@@ -96,15 +99,41 @@ export const useConnectorCreation = (userId: string, onClose: (id?: string) => v
   }, [mutate, mutateCache, userId]);
   const run = useCallback(
     async (current: PendingConnectorCreation, redirect: boolean) => {
-      if (busy.current) {
+      if (
+        busy.current ||
+        (!redirect &&
+          paymentDeadline.current !== undefined &&
+          Date.now() >= paymentDeadline.current)
+      ) {
         return;
       }
       // eslint-disable-next-line @silverhand/fp/no-mutation -- Serialize billing actions between renders.
       busy.current = true;
+      const controller = new AbortController();
+      const isActive = () => isMounted() && !controller.signal.aborted;
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- Let the polling deadline invalidate this request.
+      activeCheck.current = controller;
       setIsSubmitting(true);
+      if (redirect && current.sessionId) {
+        setStatus('payment_pending');
+      }
       try {
-        const result = await continueConnectorCreation(userId, current, getApi, redirect);
-        if (!isMounted()) {
+        const result = await Promise.race([
+          continueConnectorCreation(userId, current, getApi, {
+            restartExpired: redirect,
+            signal: controller.signal,
+          }),
+          new Promise<never>((_resolve, reject) => {
+            controller.signal.addEventListener(
+              'abort',
+              () => {
+                reject(new DOMException('Connector creation check was canceled.', 'AbortError'));
+              },
+              { once: true }
+            );
+          }),
+        ]);
+        if (!isActive()) {
           return;
         }
         if (!isPendingConnectorCreationCurrent(userId, result.operation)) {
@@ -119,13 +148,13 @@ export const useConnectorCreation = (userId: string, onClose: (id?: string) => v
             onClose(result.id);
           }
         } else {
-          setStatus((previous) => (!redirect && previous === 'error' ? previous : result.status));
+          setStatus(result.status);
           if (redirect && result.status === 'open' && result.redirectUri) {
             window.location.assign(result.redirectUri);
           }
         }
       } catch (error) {
-        if (!isMounted()) {
+        if (!isActive()) {
           return;
         }
         if (error instanceof DOMException && error.name === 'AbortError') {
@@ -143,6 +172,8 @@ export const useConnectorCreation = (userId: string, onClose: (id?: string) => v
         }
         // eslint-disable-next-line @silverhand/fp/no-mutation -- Release the action lock after completion.
         busy.current = false;
+        // eslint-disable-next-line @silverhand/fp/no-mutation -- A completed request no longer needs cancellation.
+        activeCheck.current = undefined;
       }
     },
     [getApi, isMounted, onClose, refresh, syncOperation, userId]
@@ -167,18 +198,24 @@ export const useConnectorCreation = (userId: string, onClose: (id?: string) => v
     };
   }, [isSubmitting, operation, run, status]);
 
+  const isCheckingPayment = Boolean(
+    operation?.sessionId && (status === undefined || status === 'payment_pending')
+  );
   useEffect(() => {
-    if (status !== 'payment_pending') {
+    if (!isCheckingPayment) {
       return;
     }
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Also reject polls already queued when the deadline fires.
+    paymentDeadline.current = Date.now() + paymentCheckingTimeout;
     const timeout = window.setTimeout(() => {
       // Preserve recovery and let the existing create button retry after a slow payment.
       setStatus('error');
+      activeCheck.current?.abort();
     }, paymentCheckingTimeout);
     return () => {
       window.clearTimeout(timeout);
     };
-  }, [operation?.key, operation?.sessionId, status]);
+  }, [isCheckingPayment, operation?.key, operation?.sessionId]);
 
   const create = async (providerName: SsoProviderName) => {
     if (busy.current || !billing.isBillingReady || billing.billingError) {
