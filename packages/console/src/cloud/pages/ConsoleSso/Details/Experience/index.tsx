@@ -13,6 +13,7 @@ import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
+import InlineNotification from '@/ds-components/InlineNotification';
 import Select from '@/ds-components/Select';
 import Switch from '@/ds-components/Switch';
 import TextInput from '@/ds-components/TextInput';
@@ -152,6 +153,9 @@ function Experience({ data, isDeleted, onUpdated }: Props) {
           title="enterprise_sso_details.custom_branding_title"
           description="enterprise_sso_details.custom_branding_description"
         >
+          <InlineNotification severity="alert">
+            {t('enterprise_sso_details.custom_branding_visibility_notice')}
+          </InlineNotification>
           <FormField title="enterprise_sso_details.display_name_field_name">
             <TextInput {...register('branding.displayName')} placeholder={data.name} />
           </FormField>

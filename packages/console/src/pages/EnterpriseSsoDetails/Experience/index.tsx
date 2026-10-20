@@ -291,6 +291,9 @@ function Experience({ data, isDeleted, onUpdated, isDarkModeEnabled }: Props) {
           title="enterprise_sso_details.custom_branding_title"
           description="enterprise_sso_details.custom_branding_description"
         >
+          <InlineNotification severity="alert">
+            {t('enterprise_sso_details.custom_branding_visibility_notice')}
+          </InlineNotification>
           <FormField title="enterprise_sso_details.display_name_field_name">
             <TextInput
               {...register('branding.displayName')}
