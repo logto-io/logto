@@ -47,6 +47,13 @@ export const paidSession = {
   subscriptionId: 'paid-sub',
   redirectUri: null,
 };
+export const paidConnectors = [
+  {
+    id: 'webhook-connector',
+    stripeUserSubscriptionId: 'paid-sub',
+    providerName: SsoProviderName.OIDC,
+  },
+];
 export const renderCreation = (cache = new Map()) =>
   renderHook(() => useConnectorCreation('alice', onCreated), {
     wrapper: ({ children }: { children: ReactNode }) =>
@@ -66,6 +73,9 @@ beforeEach(() => {
     }
     if (path === '/api/me/console-sso/checkout-session/:sessionId') {
       return paidSession;
+    }
+    if (path === '/api/me/console-sso/connectors') {
+      return paidConnectors;
     }
     return [];
   });

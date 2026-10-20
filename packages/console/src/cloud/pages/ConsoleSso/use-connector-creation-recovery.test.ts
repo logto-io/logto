@@ -11,6 +11,7 @@ import {
   mockApi,
   onCreated,
   operation,
+  paidConnectors,
   paidSession,
   renderCreation,
   toastResponseError,
@@ -71,14 +72,55 @@ it('pauses pending payment checks after a minute and allows manual retry', async
     jest.advanceTimersByTime(5000);
   });
   expect(mockApi.get).toHaveBeenCalledTimes(requests);
-  mockApi.get.mockResolvedValue(paidSession);
+  mockApi.get.mockImplementation(async (path: string) =>
+    path === '/api/me/console-sso/checkout-session/:sessionId' ? paidSession : paidConnectors
+  );
   await act(async () => {
     await result.current.create(SsoProviderName.OIDC);
   });
-  expect(onCreated).toHaveBeenCalledWith('connector-one');
+  expect(onCreated).toHaveBeenCalledWith(undefined);
+  expect(mockApi.post).not.toHaveBeenCalled();
 });
 
-it('allows fulfillment retry after cancellation discovers payment but cleanup fails', async () => {
+it('bounds paid-but-unfulfilled recovery and retries with reads only', async () => {
+  const saved = savePendingConnectorCreation('alice', {
+    ...operation,
+    subscriptionId: 'paid-sub',
+  });
+  const isFulfilled = jest.fn(() => false);
+  mockApi.get.mockImplementation(async (path: string) =>
+    path === '/api/me/console-sso/checkout-session/:sessionId'
+      ? paidSession
+      : isFulfilled()
+        ? paidConnectors
+        : []
+  );
+  jest.useFakeTimers();
+  const { result } = renderCreation();
+  await act(async () => {
+    jest.advanceTimersByTime(0);
+  });
+  expect(result.current.status).toBe('payment_pending');
+  await act(async () => {
+    jest.advanceTimersByTime(60_000);
+  });
+  expect(result.current.status).toBe('error');
+  expect(readPendingConnectorCreation('alice')).toEqual(saved);
+  const requests = mockApi.get.mock.calls.length;
+  await act(async () => {
+    jest.advanceTimersByTime(5000);
+  });
+  expect(mockApi.get).toHaveBeenCalledTimes(requests);
+  isFulfilled.mockReturnValue(true);
+  await act(async () => {
+    await result.current.create(SsoProviderName.OIDC);
+  });
+  expect(onCreated).toHaveBeenCalledWith(undefined);
+  expect(readPendingConnectorCreation('alice')).toBeUndefined();
+  expect(mockApi.post).not.toHaveBeenCalled();
+});
+
+it('checks webhook fulfillment after cancellation discovers payment but cleanup fails', async () => {
   savePendingConnectorCreation('alice', operation);
   mockApi.get.mockResolvedValue({ ...paidSession, status: 'payment_pending' });
   jest.useFakeTimers();
@@ -97,15 +139,17 @@ it('allows fulfillment retry after cancellation discovers payment but cleanup fa
   expect(result.current.operation?.subscriptionId).toBe('paid-sub');
   expect(result.current.isSubmitting).toBe(false);
   mockApi.get.mockClear();
+  mockApi.get.mockImplementation(async (path: string) =>
+    path === '/api/me/console-sso/checkout-session/:sessionId' ? paidSession : paidConnectors
+  );
   await act(async () => {
     await result.current.create(SsoProviderName.OIDC);
   });
-  expect(
-    mockApi.get.mock.calls.every(
-      ([path]) => path !== '/api/me/console-sso/checkout-session/:sessionId'
-    )
-  ).toBe(true);
-  expect(onCreated).toHaveBeenCalledWith('connector-one');
+  expect(mockApi.get).toHaveBeenCalledWith('/api/me/console-sso/checkout-session/:sessionId', {
+    params: { sessionId: operation.sessionId },
+  });
+  expect(onCreated).toHaveBeenCalledWith(undefined);
+  expect(mockApi.post).not.toHaveBeenCalled();
 });
 
 it.each([null, 'another-purchase'])(
@@ -147,20 +191,25 @@ it.each([null, 'another-purchase'])(
   }
 );
 
-it('keeps a newer purchase when an old fulfillment response arrives', async () => {
+it('keeps a newer purchase when an old connector lookup arrives', async () => {
   savePendingConnectorCreation('alice', { ...operation, subscriptionId: 'paid-sub' });
-  const response = deferred<{ id: string }>();
-  mockApi.post.mockReturnValue(response.promise);
+  const response = deferred<typeof paidConnectors>();
+  mockApi.get.mockImplementation(async (path: string) =>
+    path === '/api/me/console-sso/checkout-session/:sessionId' ? paidSession : response.promise
+  );
   const { result } = renderCreation();
   const pending = act(async () => {
     const request = result.current.create(SsoProviderName.OIDC);
+    await Promise.resolve();
+    await Promise.resolve();
     savePendingConnectorCreation('alice', { ...operation, key: 'another-purchase' });
-    response.resolve({ id: 'old-connector' });
+    response.resolve(paidConnectors);
     await request;
   });
   await pending;
   expect(readPendingConnectorCreation('alice')?.key).toBe('another-purchase');
-  expect(onCreated).not.toHaveBeenCalledWith('old-connector');
+  expect(onCreated).not.toHaveBeenCalledWith(undefined);
+  expect(mockApi.post).not.toHaveBeenCalled();
   expect(toastResponseError).not.toHaveBeenCalled();
 });
 

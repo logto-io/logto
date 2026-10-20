@@ -9,6 +9,7 @@ import {
   mockApi,
   onCreated,
   operation,
+  paidConnectors,
   paidSession,
   renderCreation,
 } from './use-connector-creation.test-helpers';
@@ -129,6 +130,9 @@ it('recovers a closed-tab payment without loading a new checkout preview or allo
     if (path === '/api/me/console-sso/checkout-session/:sessionId') {
       return paidSession;
     }
+    if (path === '/api/me/console-sso/connectors') {
+      return paidConnectors;
+    }
     return [];
   });
   const { result } = renderCreation();
@@ -139,16 +143,19 @@ it('recovers a closed-tab payment without loading a new checkout preview or allo
   await act(async () => {
     await result.current.create(SsoProviderName.SAML);
   });
-  expect(mockApi.post).toHaveBeenCalledWith('/api/me/console-sso/connectors', {
-    body: { providerName: SsoProviderName.OIDC, stripeUserSubscriptionId: 'paid-sub' },
-  });
-  expect(onCreated).toHaveBeenCalledWith('connector-one');
+  expect(mockApi.post).not.toHaveBeenCalled();
+  expect(onCreated).toHaveBeenCalledWith(undefined);
   expect(readPendingConnectorCreation('alice')).toBeUndefined();
 });
 
-it('does not reload allowance after a recovered fulfillment fails', async () => {
+it('does not reload allowance or create a connector after a recovered lookup fails', async () => {
   savePendingConnectorCreation('alice', { ...operation, subscriptionId: 'paid-sub' });
-  mockApi.post.mockRejectedValueOnce(new Error('Core unavailable'));
+  mockApi.get.mockImplementation(async (path: string) => {
+    if (path === '/api/me/console-sso/checkout-session/:sessionId') {
+      throw new Error('Core unavailable');
+    }
+    return [];
+  });
   const { result } = renderCreation();
   await act(async () => {
     await result.current.create(SsoProviderName.OIDC);
@@ -157,20 +164,25 @@ it('does not reload allowance after a recovered fulfillment fails', async () => 
   expect(mockApi.get).not.toHaveBeenCalledWith('/api/me/console-sso/checkout-preview');
   expect(mockApi.get).not.toHaveBeenCalledWith('/api/me/logto-enterprises');
   expect(result.current.operation?.subscriptionId).toBe('paid-sub');
+  expect(mockApi.post).not.toHaveBeenCalled();
 });
 
-it('polls delayed payments and fulfills only after verified payment', async () => {
+it('polls delayed payment and webhook fulfillment without creating another connector', async () => {
   savePendingConnectorCreation('alice', operation);
   const sessionResponses = jest
     .fn()
     .mockResolvedValueOnce({ ...paidSession, status: 'payment_pending' })
     .mockResolvedValue(paidSession);
+  const isFulfilled = jest.fn(() => false);
   mockApi.get.mockImplementation(async (path: string) => {
     if (path === '/api/me/logto-enterprises') {
       return { logtoEnterprises: [] };
     }
     if (path === '/api/me/console-sso/checkout-session/:sessionId') {
       return sessionResponses();
+    }
+    if (path === '/api/me/console-sso/connectors') {
+      return isFulfilled() ? paidConnectors : [];
     }
     return [];
   });
@@ -184,8 +196,16 @@ it('polls delayed payments and fulfills only after verified payment', async () =
   await act(async () => {
     jest.advanceTimersByTime(1000);
   });
-  expect(onCreated).toHaveBeenCalledWith('connector-one');
-  expect(mockApi.post).toHaveBeenCalledTimes(1);
+  expect(result.current.status).toBe('payment_pending');
+  expect(onCreated).not.toHaveBeenCalled();
+  expect(result.current.operation?.subscriptionId).toBe('paid-sub');
+  isFulfilled.mockReturnValue(true);
+  await act(async () => {
+    jest.advanceTimersByTime(1000);
+  });
+  expect(onCreated).toHaveBeenCalledWith(undefined);
+  expect(readPendingConnectorCreation('alice')).toBeUndefined();
+  expect(mockApi.post).not.toHaveBeenCalled();
 });
 
 it('stops payment polling after the creation modal unmounts', async () => {

@@ -99,7 +99,7 @@ export const continueConnectorCreation = async (
     assertCurrentOperation(userId, current);
     return { status: 'created' as const, id: connector.id, operation: current };
   };
-  if (operation.funding === 'included' || operation.subscriptionId) {
+  if (operation.funding === 'included' || (operation.subscriptionId && !operation.sessionId)) {
     return createConnector(operation);
   }
   if (operation.funding !== 'personal') {
@@ -124,8 +124,23 @@ export const continueConnectorCreation = async (
         subscriptionId: enrollment.subscriptionId,
       }),
   });
-  if (enrollment.status === 'payment_received' && current.subscriptionId) {
-    return createConnector(current);
+  if (enrollment.status === 'payment_received') {
+    // Checkout's webhook owns the first connector. Payment alone does not prove fulfillment.
+    const connectors = current.subscriptionId
+      ? await getApi(current.key).get('/api/me/console-sso/connectors')
+      : [];
+    assertCurrentOperation(userId, current);
+    if (
+      connectors.some(
+        (connector) =>
+          connector.stripeUserSubscriptionId === current.subscriptionId &&
+          connector.providerName === current.providerName
+      )
+    ) {
+      // Return to the refreshed list; Checkout does not identify a specific connector.
+      return { status: 'created' as const, id: undefined, operation: current };
+    }
+    return { ...enrollment, status: 'payment_pending' as const, operation: current };
   }
   return { ...enrollment, operation: current };
 };

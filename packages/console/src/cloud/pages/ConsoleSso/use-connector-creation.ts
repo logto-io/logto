@@ -151,7 +151,6 @@ export const useConnectorCreation = (userId: string, onClose: (id?: string) => v
   useEffect(() => {
     if (
       !operation?.sessionId ||
-      Boolean(operation.subscriptionId) ||
       isSubmitting ||
       (status !== undefined && status !== 'payment_pending')
     ) {

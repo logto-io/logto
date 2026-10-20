@@ -157,11 +157,9 @@ it.each(['open', 'payment_pending'])(
   }
 );
 
-it('keeps the verified subscription when fulfillment fails and retries without Checkout', async () => {
-  api.get.mockResolvedValue({ ...session, status: 'payment_received', subscriptionId: 'paid-sub' });
-  api.post
-    .mockRejectedValueOnce(new Error('Core unavailable'))
-    .mockResolvedValueOnce({ id: 'connector-one' });
+it('rechecks Checkout after a connector lookup fails without creating or purchasing again', async () => {
+  const paidSession = { ...session, status: 'payment_received', subscriptionId: 'paid-sub' };
+  api.get.mockResolvedValueOnce(paidSession).mockRejectedValueOnce(new Error('Core unavailable'));
   await expect(
     continueConnectorCreation(
       'alice',
@@ -175,15 +173,64 @@ it('keeps the verified subscription when fulfillment fails and retries without C
   if (!saved) {
     throw new Error('Expected recovery');
   }
+  api.get.mockResolvedValueOnce(paidSession).mockResolvedValueOnce([
+    {
+      id: 'connector-one',
+      stripeUserSubscriptionId: 'paid-sub',
+      providerName: operation.providerName,
+    },
+  ]);
   await expect(continueConnectorCreation('alice', saved, getApi, true)).resolves.toEqual({
     status: 'created',
-    id: 'connector-one',
+    id: undefined,
     operation: saved,
   });
-  expect(api.get).toHaveBeenCalledTimes(1);
-  expect(api.post.mock.calls.every(([path]) => path === '/api/me/console-sso/connectors')).toBe(
-    true
-  );
+  expect(api.get).toHaveBeenCalledTimes(4);
+  expect(api.post).not.toHaveBeenCalled();
+});
+
+it('waits for the webhook connector instead of creating a second connector after payment', async () => {
+  const paidSession = { ...session, status: 'payment_received', subscriptionId: 'paid-sub' };
+  const saved = savePendingConnectorCreation('alice', {
+    ...operation,
+    sessionId: session.sessionId,
+  });
+  api.get.mockResolvedValueOnce(paidSession).mockResolvedValueOnce([
+    { stripeUserSubscriptionId: 'other-sub', providerName: operation.providerName },
+    { stripeUserSubscriptionId: 'paid-sub', providerName: SsoProviderName.SAML },
+  ]);
+  const result = await continueConnectorCreation('alice', saved, getApi, false);
+  expect(result.status).toBe('payment_pending');
+  expect(readPendingConnectorCreation('alice')?.subscriptionId).toBe('paid-sub');
+  api.get.mockResolvedValueOnce(paidSession).mockResolvedValueOnce([
+    {
+      id: 'webhook-connector',
+      stripeUserSubscriptionId: 'paid-sub',
+      providerName: operation.providerName,
+    },
+  ]);
+  await expect(
+    continueConnectorCreation('alice', result.operation, getApi, false)
+  ).resolves.toMatchObject({ status: 'created', id: undefined });
+  expect(api.post).not.toHaveBeenCalled();
+});
+
+it('recovers an already-paid enrollment response without a frontend connector write', async () => {
+  api.post.mockResolvedValue({
+    ...session,
+    status: 'payment_received',
+    subscriptionId: 'paid-sub',
+  });
+  api.get.mockResolvedValue([
+    { stripeUserSubscriptionId: 'paid-sub', providerName: operation.providerName },
+  ]);
+  await expect(continueConnectorCreation('alice', operation, getApi, true)).resolves.toMatchObject({
+    status: 'created',
+    id: undefined,
+  });
+  expect(api.post.mock.calls).toEqual([
+    ['/api/me/console-sso/checkout-session', { body: { providerName: operation.providerName } }],
+  ]);
 });
 
 it('persists the subscription selected by Checkout reuse without a session', async () => {
