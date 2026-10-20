@@ -18,7 +18,6 @@ import {
   initInteraction,
   verifySocialVerification,
 } from '@/apis/experience';
-import { isDevFeaturesEnabled } from '@/constants/env';
 import { stepUpRoutes } from '@/constants/step-up';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
@@ -242,12 +241,6 @@ const useSocial = () => {
 
       const { id: connectorId, target } = connector;
       const isSiweConnector = target === SiweConnector.target;
-
-      // Safety net for callers that receive connectors from a source other than the filtered
-      // sign-in experience settings (e.g. step-up subject proof).
-      if (isSiweConnector && !isDevFeaturesEnabled) {
-        return;
-      }
 
       const state = generateState();
 
