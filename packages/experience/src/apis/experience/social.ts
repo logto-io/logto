@@ -1,4 +1,8 @@
-import { InteractionEvent, type SocialVerificationCallbackPayload } from '@logto/schemas';
+import {
+  InteractionEvent,
+  type SocialVerificationCallbackPayload,
+  type SsoConnectorMetadata,
+} from '@logto/schemas';
 
 import api from '../api';
 
@@ -52,7 +56,7 @@ export const getSsoConnectors = async (email: string) =>
         email,
       },
     })
-    .json<{ connectorIds: string[] }>();
+    .json<{ connectorIds: string[]; connectors?: SsoConnectorMetadata[] }>();
 
 export const getSsoAuthorizationUrl = async (connectorId: string, payload: unknown) =>
   api

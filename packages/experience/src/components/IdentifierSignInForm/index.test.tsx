@@ -323,6 +323,38 @@ describe('IdentifierSignInForm', () => {
         );
       });
     });
+
+    it('should use the branded connectors from the lookup response', async () => {
+      const brandedConnector = {
+        ...mockSsoConnectors[0]!,
+        connectorName: 'Acme SSO',
+        logo: 'https://acme.example.com/logo.png',
+      };
+
+      getSingleSignOnConnectorsMock.mockResolvedValueOnce({
+        connectorIds: [],
+        connectors: [brandedConnector],
+      });
+
+      // Leave the public catalog empty so only the lookup response can trigger single sign-on.
+      const { container, queryByText } = renderForm(mockSignInMethodSettingsTestCases[0]!);
+      const inputField = container.querySelector('input[name="identifier"]');
+
+      if (inputField) {
+        act(() => {
+          fireEvent.change(inputField, { target: { value: email } });
+        });
+      }
+
+      await waitFor(() => {
+        expect(getSingleSignOnConnectorsMock).toBeCalledWith(email);
+      });
+
+      await waitFor(() => {
+        expect(queryByText('action.single_sign_on')).not.toBeNull();
+        expect(queryByText('action.sign_in')).toBeNull();
+      });
+    });
   });
 
   describe('email service usage cap fallback', () => {

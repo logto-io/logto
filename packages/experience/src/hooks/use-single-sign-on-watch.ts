@@ -43,10 +43,14 @@ const useSingleSignOnWatch = (identifierInput?: IdentifierInputValue) => {
         return false;
       }
 
-      const connectors = result.connectorIds
-        .map((connectorId) => availableSsoConnectorsMap.get(connectorId))
-        // eslint-disable-next-line unicorn/prefer-native-coercion-functions -- make the type more specific
-        .filter((connector): connector is SsoConnectorMetadata => Boolean(connector));
+      // New servers return branded metadata only for the matching domain. Fall back to the public
+      // catalog for older servers that only return connector IDs.
+      const connectors =
+        result.connectors ??
+        result.connectorIds
+          .map((connectorId) => availableSsoConnectorsMap.get(connectorId))
+          // eslint-disable-next-line unicorn/prefer-native-coercion-functions -- make the type more specific
+          .filter((connector): connector is SsoConnectorMetadata => Boolean(connector));
 
       if (connectors.length === 0) {
         return false;
