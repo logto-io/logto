@@ -14,6 +14,9 @@ const enterprise_sso_details = {
     "Customize the name and logo displayed in the end users' Single Sign-On flow. When empty, defaults are used.",
   custom_branding_visibility_notice:
     'The display name and logo are shown to anyone who queries an email address matching the configured enterprise domains. Do not include sensitive information.',
+  show_before_email_match_field_name: 'Show before email domain match',
+  show_before_email_match_description:
+    'When on, the display name and logo are included in the public sign-in configuration before an email domain matches. When off, they are only revealed after a match.',
   email_domain_field_name: 'Enterprise email domains',
   email_domain_field_description:
     'Users with these email domains can use SSO for authentication. Please verify the domain ownership before adding.',

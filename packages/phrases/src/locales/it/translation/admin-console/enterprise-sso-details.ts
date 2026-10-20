@@ -15,6 +15,9 @@ const enterprise_sso_details = {
     'Personalizza il nome e il logo visualizzati nel flusso di accesso Single Sign-On degli utenti finali. Quando vuoto, vengono utilizzati i valori predefiniti.',
   custom_branding_visibility_notice:
     'Il nome e il logo vengono mostrati a chiunque interroghi un indirizzo email che corrisponde ai domini aziendali configurati. Non includere informazioni sensibili.',
+  show_before_email_match_field_name: 'Mostra prima della corrispondenza del dominio email',
+  show_before_email_match_description:
+    'Se attivo, il nome e il logo vengono inclusi nella configurazione di accesso pubblica prima che un dominio email corrisponda. Se disattivato, vengono rivelati solo dopo una corrispondenza.',
   email_domain_field_name: 'Dominio email aziendale',
   email_domain_field_description:
     "Gli utenti con questo dominio email possono utilizzare l'SSO per l'autenticazione. Verifica che il dominio appartenga all'azienda.",

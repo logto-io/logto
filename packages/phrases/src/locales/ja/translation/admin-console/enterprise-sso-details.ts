@@ -14,6 +14,9 @@ const enterprise_sso_details = {
     'エンドユーザーのシングルサインオンプロセスで表示される名前とロゴをカスタマイズします。空白の場合、デフォルト値が使用されます。',
   custom_branding_visibility_notice:
     '表示名とロゴは、設定された企業ドメインに一致するメールアドレスを照会したすべての人に表示されます。機密情報を含めないでください。',
+  show_before_email_match_field_name: 'メールドメインの一致前に表示',
+  show_before_email_match_description:
+    'オンの場合、メールドメインが一致する前に表示名とロゴが公開サインイン設定に含まれます。オフの場合、一致後にのみ表示されます。',
   email_domain_field_name: '企業メールドメイン',
   email_domain_field_description:
     'このメールドメインを使用するユーザーは、SSOで認証できます。このドメインが企業のものであることを確認してください。',

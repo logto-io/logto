@@ -15,6 +15,9 @@ const enterprise_sso_details = {
     "Personnalisez le nom et le logo affichés dans le flux de connexion unique des utilisateurs finaux. Lorsqu'ils sont vides, les valeurs par défaut sont utilisées.",
   custom_branding_visibility_notice:
     "Le nom et le logo sont affichés à toute personne qui interroge une adresse e-mail correspondant aux domaines d'entreprise configurés. N'incluez pas d'informations sensibles.",
+  show_before_email_match_field_name: 'Afficher avant la correspondance du domaine e-mail',
+  show_before_email_match_description:
+    "Lorsque cette option est activée, le nom et le logo sont inclus dans la configuration de connexion publique avant qu'un domaine e-mail ne corresponde. Lorsqu'elle est désactivée, ils ne sont révélés qu'après une correspondance.",
   email_domain_field_name: "Domaine de courrier électronique d'entreprise",
   email_domain_field_description:
     "Les utilisateurs de ce domaine de courrier électronique peuvent utiliser SSO pour l'authentification. Veuillez vérifier que le domaine appartient à l'entreprise.",

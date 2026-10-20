@@ -15,6 +15,9 @@ const enterprise_sso_details = {
     'Son kullanıcıların Tek Oturum Açma akışında gösterilen adı ve logoyu özelleştirin. Boş olduğunda varsayılanlar kullanılır.',
   custom_branding_visibility_notice:
     'Görünen ad ve logo, yapılandırılan kurumsal alan adlarıyla eşleşen bir e-posta adresini sorgulayan herkese gösterilir. Hassas bilgiler eklemeyin.',
+  show_before_email_match_field_name: 'E-posta alan adı eşleşmeden önce göster',
+  show_before_email_match_description:
+    'Açık olduğunda, görünen ad ve logo bir e-posta alan adı eşleşmeden önce ortak oturum açma yapılandırmasına dahil edilir. Kapalı olduğunda, yalnızca eşleşmeden sonra gösterilir.',
   email_domain_field_name: 'Kurumsal e-posta etki alanı',
   email_domain_field_description:
     "Bu e-posta etki alanına sahip kullanıcılar SSO'yu kimlik doğrulamak için kullanabilir. Lütfen etki alanının kurumunuza ait olduğunu doğrulayın.",

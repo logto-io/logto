@@ -13,6 +13,9 @@ const enterprise_sso_details = {
     '自定义在最终用户單點登錄流程中顯示的名稱和標識。 為空時，將使用默認值。',
   custom_branding_visibility_notice:
     '任何使用與已設定企業網域相符的電子郵件地址進行查詢的人都可以看到顯示名稱和標誌。請勿包含敏感資訊。',
+  show_before_email_match_field_name: '在電子郵件網域相符前顯示',
+  show_before_email_match_description:
+    '開啟後，顯示名稱和標誌會在電子郵件網域相符前包含在公開登入設定中。關閉後，僅在相符後顯示。',
   email_domain_field_name: '企業郵箱域',
   email_domain_field_description:
     '擁有此郵箱域的用戶可以使用SSO進行身份驗證。 請驗證該域是否屬於企業。',

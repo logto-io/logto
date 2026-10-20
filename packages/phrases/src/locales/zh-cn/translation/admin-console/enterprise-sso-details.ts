@@ -13,6 +13,9 @@ const enterprise_sso_details = {
     '自定义在最终用户单点登录流程中显示的名称和标识。如果为空，则使用默认值。',
   custom_branding_visibility_notice:
     '任何使用与已配置企业域名匹配的邮箱地址进行查询的人都可以看到显示名称和标识。请勿包含敏感信息。',
+  show_before_email_match_field_name: '在邮箱域名匹配前显示',
+  show_before_email_match_description:
+    '开启后，显示名称和标识会在邮箱域名匹配前包含在公开登录配置中。关闭后，仅在匹配后显示。',
   email_domain_field_name: '企业电子邮件域',
   email_domain_field_description:
     '拥有此电子邮件域的用户可以使用SSO进行身份验证。请验证该域名属于企业。',
