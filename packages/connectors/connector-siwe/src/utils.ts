@@ -5,7 +5,7 @@ import { defaultChainIds } from './constant.js';
 /**
  * EIP-4361 defines the statement as `*( reserved / unreserved / " " )` from RFC 3986.
  */
-const statementPattern = /^[A-Za-z0-9\-._~!$&'()*+,;=:\/?#\[\]@ ]+$/;
+const statementPattern = /^[\w !#$&'()*+,./:;=?@[\]~-]+$/;
 
 /**
  * Collapse whitespace and trim a configured statement. Returns `undefined` for an empty value so
