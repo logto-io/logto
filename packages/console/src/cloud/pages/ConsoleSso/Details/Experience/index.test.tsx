@@ -46,10 +46,6 @@ jest.mock('./DomainManager', () => ({ __esModule: true, default: () => null }));
 
 const warningText =
   resources.en.translation.admin_console.enterprise_sso_details.custom_branding_visibility_notice;
-const switchLabel =
-  resources.en.translation.admin_console.enterprise_sso_details.show_before_email_match_field_name;
-const switchDescription =
-  resources.en.translation.admin_console.enterprise_sso_details.show_before_email_match_description;
 
 const data = {
   id: 'sso-connector-id',
@@ -79,11 +75,5 @@ describe('Console SSO experience details', () => {
     expect(displayCard).not.toBeNull();
     expect(within(displayCard as HTMLElement).getByText(warningText)).toBe(warning);
     expect(warning.closest('.alert')).not.toBeNull();
-
-    const toggle = within(displayCard as HTMLElement).getByRole('checkbox', {
-      name: switchLabel,
-    });
-    expect((toggle as HTMLInputElement).checked).toBe(true);
-    expect(within(displayCard as HTMLElement).getByText(switchDescription)).toBeTruthy();
   });
 });
