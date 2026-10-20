@@ -1,11 +1,13 @@
 import { demoAppApplicationId, fullSignInExperienceGuard } from '@logto/schemas';
 import { z } from 'zod';
 
-import { updateSignInExperience } from '#src/api/sign-in-experience.js';
-import { demoAppUrl, logtoUrl } from '#src/constants.js';
+import { getSignInExperience, updateSignInExperience } from '#src/api/sign-in-experience.js';
+import { createSsoConnector, deleteSsoConnectorById } from '#src/api/sso-connector.js';
+import { demoAppUrl, logtoUrl, newOidcSsoConnectorPayload } from '#src/constants.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
 import { Trace } from '#src/ui-helpers/trace.js';
+import { generateSsoConnectorName } from '#src/utils.js';
 
 const ssrDataGuard = z.object({
   signInExperience: z.object({
@@ -58,6 +60,39 @@ describe('server-side rendering', () => {
 
     // Check network requests
     await expectTraceNotToHaveWellKnownEndpoints();
+  });
+
+  it('should not expose SSO connector branding in the SSR payload', async () => {
+    const { singleSignOnEnabled } = await getSignInExperience();
+    const { id } = await createSsoConnector({
+      ...newOidcSsoConnectorPayload,
+      connectorName: generateSsoConnectorName(),
+    });
+    const experience = new ExpectExperience(await browser.newPage());
+
+    try {
+      await updateSignInExperience({ singleSignOnEnabled: true });
+      await experience.navigateTo(demoAppUrl.href);
+
+      const data = await experience.page.evaluate(() => {
+        return window.logtoSsr;
+      });
+      const parsed = ssrDataGuard.parse(data);
+      const connector = parsed.signInExperience.data.ssoConnectors.find(
+        (connector) => connector.id === id
+      );
+
+      expect(connector).toMatchObject({ id, connectorName: 'OIDC' });
+      expect(connector?.logo).not.toBe(newOidcSsoConnectorPayload.branding.logo);
+      expect(connector?.darkLogo).not.toBe(newOidcSsoConnectorPayload.branding.darkLogo);
+      expect(JSON.stringify(parsed.signInExperience.data.ssoConnectors)).not.toContain(
+        newOidcSsoConnectorPayload.branding.displayName
+      );
+    } finally {
+      await experience.page.close();
+      await deleteSsoConnectorById(id);
+      await updateSignInExperience({ singleSignOnEnabled });
+    }
   });
 
   it('should render the page with data from the server with invalid organization ID', async () => {

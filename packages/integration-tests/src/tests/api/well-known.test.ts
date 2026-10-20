@@ -166,12 +166,24 @@ describe('.well-known api', () => {
         (connector) => connector.id === id
       );
 
+      // The public catalog exposes provider defaults only; custom tenant branding must stay private
+      // until the email domain matches.
       expect(newCreatedConnector).toMatchObject({
         id,
-        connectorName: newOidcSsoConnectorPayload.branding.displayName,
-        logo: newOidcSsoConnectorPayload.branding.logo,
-        darkLogo: newOidcSsoConnectorPayload.branding.darkLogo,
+        connectorName: 'OIDC',
       });
+      expect(newCreatedConnector?.logo).not.toBe(newOidcSsoConnectorPayload.branding.logo);
+      expect(newCreatedConnector?.darkLogo).not.toBe(newOidcSsoConnectorPayload.branding.darkLogo);
+      expect(JSON.stringify(signInExperience.ssoConnectors)).not.toContain(
+        newOidcSsoConnectorPayload.branding.displayName
+      );
+
+      const experienceSignInExperience = await api
+        .get('.well-known/experience')
+        .json<SignInExperience & { ssoConnectors: SsoConnectorMetadata[] }>();
+      expect(
+        experienceSignInExperience.ssoConnectors.find((connector) => connector.id === id)
+      ).toEqual(newCreatedConnector);
 
       await deleteSsoConnectorById(id);
     });
