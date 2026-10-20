@@ -23,25 +23,39 @@ import { uriValidator } from '@/utils/validator';
 import DomainManager from './DomainManager';
 import styles from './index.module.scss';
 
+type ConsoleSsoBranding = ConsoleSsoConnector['branding'] & {
+  showBeforeEmailMatch?: boolean;
+};
+
+type ConsoleSsoConnectorData = Omit<ConsoleSsoConnector, 'branding'> & {
+  branding: ConsoleSsoBranding;
+};
+
 type Props = {
-  readonly data: ConsoleSsoConnector;
+  readonly data: ConsoleSsoConnectorData;
   readonly isDeleted: boolean;
   readonly onUpdated: () => Promise<void>;
 };
 
 type FormType = {
-  branding: { displayName: string; logo: string; darkLogo: string };
+  branding: {
+    displayName: string;
+    logo: string;
+    darkLogo: string;
+    showBeforeEmailMatch: boolean;
+  };
   syncProfile: SyncProfileMode;
   enableTokenStorage: boolean;
 };
 
 const dataToForm = (
-  data: Pick<ConsoleSsoConnector, 'branding' | 'syncProfile' | 'enableTokenStorage'>
+  data: Pick<ConsoleSsoConnectorData, 'branding' | 'syncProfile' | 'enableTokenStorage'>
 ): FormType => ({
   branding: {
     displayName: data.branding.displayName ?? '',
     logo: data.branding.logo ?? '',
     darkLogo: data.branding.darkLogo ?? '',
+    showBeforeEmailMatch: data.branding.showBeforeEmailMatch ?? true,
   },
   syncProfile: data.syncProfile ? SyncProfileMode.EachSignIn : SyncProfileMode.OnlyAtRegister,
   enableTokenStorage: data.enableTokenStorage,
@@ -49,7 +63,7 @@ const dataToForm = (
 
 function Experience({ data, isDeleted, onUpdated }: Props) {
   const { branding, syncProfile, enableTokenStorage } = data;
-  const { displayName, logo, darkLogo } = branding;
+  const { displayName, logo, darkLogo, showBeforeEmailMatch } = branding;
   const api = useCloudApi<typeof consoleSsoRouter>({ hideErrorToast: true });
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const methods = useForm<FormType>({ defaultValues: dataToForm(data) });
@@ -76,8 +90,12 @@ function Experience({ data, isDeleted, onUpdated }: Props) {
 
   const formValues = useMemo(
     () =>
-      dataToForm({ branding: { displayName, logo, darkLogo }, syncProfile, enableTokenStorage }),
-    [displayName, logo, darkLogo, syncProfile, enableTokenStorage]
+      dataToForm({
+        branding: { displayName, logo, darkLogo, showBeforeEmailMatch },
+        syncProfile,
+        enableTokenStorage,
+      }),
+    [displayName, logo, darkLogo, showBeforeEmailMatch, syncProfile, enableTokenStorage]
   );
 
   useEffect(() => {
@@ -85,11 +103,13 @@ function Experience({ data, isDeleted, onUpdated }: Props) {
   }, [formValues, reset]);
 
   const onSubmit = handleSubmit(async (formData) => {
+    const brandingPayload = cleanDeep(formData.branding, { emptyObjects: false });
+
     try {
       const updated = await api.patch('/api/me/console-sso/connectors/:connectorId', {
         params: { connectorId: data.id },
         body: {
-          branding: cleanDeep(formData.branding, { emptyObjects: false }),
+          branding: brandingPayload,
           syncProfile: formData.syncProfile === SyncProfileMode.EachSignIn,
           ...(data.providerType === SsoProviderType.OIDC && {
             enableTokenStorage: formData.enableTokenStorage,
@@ -156,6 +176,22 @@ function Experience({ data, isDeleted, onUpdated }: Props) {
           <InlineNotification severity="alert">
             {t('enterprise_sso_details.custom_branding_visibility_notice')}
           </InlineNotification>
+          <FormField title="enterprise_sso_details.show_before_email_match_field_name">
+            <Controller
+              name="branding.showBeforeEmailMatch"
+              control={control}
+              render={({ field: { value, onChange } }) => (
+                <Switch
+                  aria-label={t('enterprise_sso_details.show_before_email_match_field_name')}
+                  description="enterprise_sso_details.show_before_email_match_description"
+                  checked={value}
+                  onChange={({ currentTarget }) => {
+                    onChange(currentTarget.checked);
+                  }}
+                />
+              )}
+            />
+          </FormField>
           <FormField title="enterprise_sso_details.display_name_field_name">
             <TextInput {...register('branding.displayName')} placeholder={data.name} />
           </FormField>

@@ -77,6 +77,7 @@ const dataToFormParser = (data: DataType) => {
       displayName: branding.displayName ?? '',
       logo: branding.logo ?? '',
       darkLogo: branding.darkLogo ?? '',
+      showBeforeEmailMatch: branding.showBeforeEmailMatch ?? true,
     },
     connectorName,
     domains: domains.map((domain) => ({ value: domain, id: generateStandardShortId() })),
@@ -294,6 +295,22 @@ function Experience({ data, isDeleted, onUpdated, isDarkModeEnabled }: Props) {
           <InlineNotification severity="alert">
             {t('enterprise_sso_details.custom_branding_visibility_notice')}
           </InlineNotification>
+          <FormField title="enterprise_sso_details.show_before_email_match_field_name">
+            <Controller
+              name="branding.showBeforeEmailMatch"
+              control={control}
+              render={({ field: { value, onChange } }) => (
+                <Switch
+                  aria-label={t('enterprise_sso_details.show_before_email_match_field_name')}
+                  description="enterprise_sso_details.show_before_email_match_description"
+                  checked={value}
+                  onChange={({ currentTarget }) => {
+                    onChange(currentTarget.checked);
+                  }}
+                />
+              )}
+            />
+          </FormField>
           <FormField title="enterprise_sso_details.display_name_field_name">
             <TextInput
               {...register('branding.displayName')}
