@@ -18,47 +18,16 @@ import {
 import { ParsedMessage } from '@spruceid/siwe-parser';
 import { isHex, recoverMessageAddress } from 'viem';
 
-import { defaultChainIds, defaultMetadata, defaultStatement, nonceTtlSeconds } from './constant.js';
+import { defaultMetadata, defaultStatement, nonceTtlSeconds } from './constant.js';
 import {
   siweCallbackDataGuard,
   siweConfigGuard,
   siweSessionGuard,
   type SiweSession,
 } from './types.js';
+import { normalizeStatement, parseChainIds } from './utils.js';
 
-/**
- * Parse the comma/whitespace separated chain ID list from the connector config.
- *
- * An empty value falls back to {@link defaultChainIds}. Invalid values fail the request instead
- * of being silently ignored, so a typo cannot accidentally widen or narrow the allow-list.
- */
-export const parseChainIds = (value?: string): number[] => {
-  const tokens = (value ?? '').split(/[\s,]+/).filter(Boolean);
-
-  if (tokens.length === 0) {
-    return [...defaultChainIds];
-  }
-
-  const chainIds = tokens.map((token) => {
-    if (!/^\d+$/.test(token)) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, {
-        errorDescription: `Invalid EVM chain ID: ${token}`,
-      });
-    }
-
-    const chainId = Number(token);
-
-    if (!Number.isSafeInteger(chainId) || chainId <= 0) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, {
-        errorDescription: `Invalid EVM chain ID: ${token}`,
-      });
-    }
-
-    return chainId;
-  });
-
-  return [...new Set(chainIds)];
-};
+export { parseChainIds } from './utils.js';
 
 const parseRedirectUri = (redirectUri: string) => {
   try {
@@ -173,8 +142,7 @@ const getAuthorizationUri =
     const chainIds = parseChainIds(config.chainIds);
     const issuedAt = new Date();
     const expirationTime = new Date(issuedAt.getTime() + nonceTtlSeconds * 1000);
-    const configuredStatement = config.statement?.replace(/\r?\n/g, ' ').trim();
-    const statement = configuredStatement?.length ? configuredStatement : defaultStatement;
+    const statement = normalizeStatement(config.statement) ?? defaultStatement;
 
     const session: SiweSession = {
       nonce: randomBytes(16).toString('hex'),

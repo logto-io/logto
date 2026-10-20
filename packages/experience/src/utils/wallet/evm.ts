@@ -237,6 +237,15 @@ const getChainId = async (provider: Eip1193Provider) => {
   return Number.parseInt(value, 16);
 };
 
+/**
+ * EIP-1474 defines the `personal_sign` data parameter as hex-encoded bytes. Encode the UTF-8
+ * SIWE message so wallets that strictly validate the parameter accept it.
+ */
+const toPersonalSignPayload = (message: string) =>
+  `0x${Array.from(new TextEncoder().encode(message), (byte) =>
+    byte.toString(16).padStart(2, '0')
+  ).join('')}`;
+
 const switchChain = async (provider: Eip1193Provider, chainId: number) => {
   try {
     await provider.request({
@@ -308,7 +317,7 @@ export const signInWithEvmWallet = async (
 
     const signature = await wallet.provider.request({
       method: 'personal_sign',
-      params: [message, address],
+      params: [toPersonalSignPayload(message), address],
     });
 
     if (typeof signature !== 'string' || !/^0x[\da-f]+$/i.test(signature)) {

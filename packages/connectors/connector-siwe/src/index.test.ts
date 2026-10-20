@@ -4,12 +4,13 @@ import {
   createSiweMessage,
   SiweConnector,
   toChecksumAddress,
+  validateConfig,
 } from '@logto/connector-kit';
 import { privateKeyToAccount } from 'viem/accounts';
 
 import { defaultChainIds, nonceTtlSeconds } from './constant.js';
 import createConnector, { parseChainIds } from './index.js';
-import type { SiweSession } from './types.js';
+import { siweConfigGuard, type SiweSession } from './types.js';
 
 const privateKey = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 const account = privateKeyToAccount(privateKey);
@@ -151,6 +152,36 @@ describe('getAuthorizationUri', () => {
     const { session } = await getAuthorizationParams(connector);
 
     expect(session.chainIds).toEqual(defaultChainIds);
+  });
+});
+
+describe('siweConfigGuard', () => {
+  it('accepts statements allowed by EIP-4361', () => {
+    expect(() => {
+      validateConfig({ statement: "Sign in to Acme's app", chainIds: '1, 137' }, siweConfigGuard);
+    }).not.toThrow();
+    expect(() => {
+      validateConfig({ statement: 'Sign in\nto Logto', chainIds: '' }, siweConfigGuard);
+    }).not.toThrow();
+    expect(() => {
+      validateConfig({ statement: '   ' }, siweConfigGuard);
+    }).not.toThrow();
+  });
+
+  it('rejects statement characters that EIP-4361 does not allow', () => {
+    for (const statement of ['登录到 Logto', '100% sure', 'Say "hello"', 'a|b', 'Acme’s app']) {
+      expect(() => {
+        validateConfig({ statement }, siweConfigGuard);
+      }).toThrow();
+    }
+  });
+
+  it('rejects invalid chain ID lists', () => {
+    for (const chainIds of ['0', 'mainnet', '1, -1', '1, 137, foo']) {
+      expect(() => {
+        validateConfig({ chainIds }, siweConfigGuard);
+      }).toThrow();
+    }
   });
 });
 

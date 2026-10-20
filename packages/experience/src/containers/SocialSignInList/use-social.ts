@@ -51,7 +51,7 @@ const walletErrorMessages = {
 
 const useSocial = () => {
   const { experienceSettings, theme } = useContext(PageContext);
-  const { isPureStepUp } = useStepUpContext();
+  const { isPureStepUp, refetch: refetchStepUpContext } = useStepUpContext();
   const stepUpErrorHandlers = usePureStepUpErrorHandler();
   const { show: showWalletModal } = useWalletModal();
   const { setToast } = useToast();
@@ -176,6 +176,9 @@ const useSocial = () => {
           return;
         }
 
+        // The wallet flow runs in place on the step-up landing. Navigation alone does not remount
+        // the page or reload its context, so refresh it before returning to the landing.
+        await refetchStepUpContext();
         navigate(stepUpRoutes.landing, { replace: true });
         return;
       }
@@ -197,6 +200,7 @@ const useSocial = () => {
       handleError,
       isPureStepUp,
       navigate,
+      refetchStepUpContext,
       requestWalletSignature,
       setToast,
       setVerificationId,

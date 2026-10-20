@@ -42,6 +42,11 @@ const createWallet = (request: jest.Mock): EvmWallet => ({
   provider: createProvider(request),
 });
 
+const toHex = (value: string) =>
+  `0x${Array.from(new TextEncoder().encode(value), (byte) =>
+    byte.toString(16).padStart(2, '0')
+  ).join('')}`;
+
 const baseParams: SiweAuthorizationParams = {
   domain: 'example.logto.app',
   uri: 'https://example.logto.app',
@@ -156,7 +161,7 @@ describe('signInWithEvmWallet', () => {
     expect(request).toHaveBeenNthCalledWith(1, { method: 'eth_requestAccounts' });
     expect(request).toHaveBeenNthCalledWith(3, {
       method: 'personal_sign',
-      params: [result.message, accountAddress],
+      params: [toHex(result.message), accountAddress],
     });
   });
 

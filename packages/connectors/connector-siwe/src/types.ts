@@ -1,8 +1,23 @@
 import { z } from 'zod';
 
+import { isValidChainIds, isValidStatement, normalizeStatement } from './utils.js';
+
 export const siweConfigGuard = z.object({
-  statement: z.string().optional(),
-  chainIds: z.string().optional(),
+  statement: z
+    .string()
+    .refine(
+      (value) => {
+        const normalized = normalizeStatement(value);
+
+        return !normalized || isValidStatement(normalized);
+      },
+      { message: 'The statement contains characters that EIP-4361 does not allow.' }
+    )
+    .optional(),
+  chainIds: z
+    .string()
+    .refine(isValidChainIds, { message: 'The chain ID list contains an invalid EVM chain ID.' })
+    .optional(),
 });
 
 export type SiweConfig = z.infer<typeof siweConfigGuard>;
