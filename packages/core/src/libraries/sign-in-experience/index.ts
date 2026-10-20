@@ -57,7 +57,8 @@ type SignInExperienceOverride = Partial<Omit<SignInExperience, 'color'> & { colo
 
 /**
  * Build the SSO connector data exposed to the experience client. Tenant branding is only included
- * when `withBranding` is true, so the public sign-in experience catalog never leaks it.
+ * when `withBranding` is true, so callers can gate it behind a domain match or the connector's
+ * public-visibility setting.
  */
 export const buildSsoConnectorMetadata = (
   { id, providerName, branding }: SupportedSsoConnector,
@@ -128,9 +129,14 @@ export const createSignInExperienceLibrary = (
   const getActiveSsoConnectors = async (locale: string): Promise<SsoConnectorMetadata[]> => {
     const ssoConnectors = await getAvailableSsoConnectors();
 
-    // The public catalog must not expose tenant-specific branding. Branded metadata is only
-    // returned by the email-domain lookup API after the domain matches.
-    return ssoConnectors.map((connector) => buildSsoConnectorMetadata(connector, locale, false));
+    return ssoConnectors.map((connector) =>
+      buildSsoConnectorMetadata(
+        connector,
+        locale,
+        // Undefined defaults to exposing branding, preserving the current public UI behavior.
+        connector.branding.showBeforeEmailMatch !== false
+      )
+    );
   };
 
   /**

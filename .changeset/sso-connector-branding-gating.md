@@ -2,4 +2,4 @@
 "@logto/core": patch
 ---
 
-hide sso connector display branding from the public sign-in configuration until the email domain matches
+add a console switch to control whether sso connector branding is exposed before the email domain matches
