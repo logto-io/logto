@@ -252,11 +252,14 @@ describe('create SSO connectors', () => {
     await expectToSaveChanges(page);
     await waitForToast(page, { text: 'Saved' });
 
-    // Inline notification alert should be removed after email domain has been configured.
-    const inlineNotification = await page.$(
-      ['form', `${dcls('alert')}${cls('inlineNotification')}`, dcls('content')].join(' ')
+    // The email-domain inline notification should be removed after the domain is configured.
+    // The Display card also renders an alert, so match the email-domain warning text specifically.
+    await expect(page).not.toMatchElement(
+      ['form', `${dcls('alert')}${cls('inlineNotification')}`, dcls('content')].join(' '),
+      {
+        text: 'Add email domain to guide enterprise users to their identity provider for Single Sign-on.',
+      }
     );
-    expect(inlineNotification).toBeNull();
   });
 
   it("can configure SSO connectors's 'SSO Experience' GENERAL setup: connector name input field", async () => {
