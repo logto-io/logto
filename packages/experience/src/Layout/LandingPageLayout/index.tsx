@@ -17,6 +17,8 @@ type ThirdPartyBranding = ConsentInfoResponse['application']['branding'];
 type Props = {
   readonly children: ReactNode;
   readonly title: TFuncKey;
+  /** Visible heading when it should not be loaded from phrases. */
+  readonly headlineText?: string;
   readonly titleInterpolation?: Record<string, unknown>;
   readonly thirdPartyBranding?: ThirdPartyBranding;
   readonly subTitle?: ReactNode;
@@ -25,6 +27,7 @@ type Props = {
 const LandingPageLayout = ({
   children,
   title,
+  headlineText,
   titleInterpolation,
   thirdPartyBranding,
   subTitle,
@@ -45,6 +48,7 @@ const LandingPageLayout = ({
       <BrandingHeader
         className={classNames(styles.header, layoutClassNames.brandingHeader)}
         headline={title}
+        headlineText={headlineText}
         headlineInterpolation={titleInterpolation}
         subHeadline={subTitle}
         logo={getBrandingLogoUrl({ theme, branding, isDarkModeEnabled })}

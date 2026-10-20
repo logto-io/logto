@@ -34,3 +34,20 @@
     flex: 5;
   }
 }
+
+:global(body.mobile .zerveAuthShell) {
+  .header {
+    margin-top: 0;
+    padding-bottom: 20px;
+  }
+}
+
+:global(body.desktop .zerveAuthShell) {
+  .wrapper {
+    padding: 0;
+  }
+
+  .header {
+    margin-bottom: 20px;
+  }
+}

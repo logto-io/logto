@@ -105,6 +105,23 @@
   }
 }
 
+:global(.zerveAuthShell) {
+  .primary {
+    height: 48px;
+    border-radius: 14px;
+    background: var(--color-static-white);
+    color: var(--zerve-primary-button-text-color);
+  }
+
+  .secondary {
+    height: 48px;
+    border-radius: 14px;
+    border-color: rgba(255, 255, 255, 22%);
+    background: transparent;
+    color: var(--color-static-white);
+  }
+}
+
 :global(body.desktop) {
   .primary {
     &:focus-visible {
@@ -134,5 +151,39 @@
     &:not(:disabled):not(:active):not(.loadingActive):hover {
       background: var(--color-danger-hover);
     }
+  }
+}
+
+.button.edgeIcon {
+  position: relative;
+  padding-inline: 8px;
+
+  .content {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+
+    &.iconVisible {
+      padding-inline-start: 0;
+
+      .icon {
+        position: absolute;
+        inset-inline-start: 0;
+        top: 50%;
+        display: flex;
+        opacity: 100%;
+        transform: translateY(-50%);
+      }
+    }
+  }
+}
+
+:global(body.desktop .zerveAuthShell) {
+  .primary:not(:disabled):not(:active):not(.loadingActive):hover {
+    background: var(--color-neutral-20);
+  }
+
+  .secondary:not(:disabled):not(:active):not(.loadingActive):hover {
+    background: rgba(255, 255, 255, 6%);
   }
 }

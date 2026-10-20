@@ -1,0 +1,116 @@
+.logo {
+  display: block;
+  align-self: flex-start;
+  height: 36px;
+  width: auto;
+  object-fit: contain;
+  object-position: left;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 50%;
+  padding: 40px 80px 64px;
+  background: var(--color-bg-float);
+  color: var(--color-static-white);
+}
+
+.middle {
+  display: flex;
+  flex: 1;
+  align-items: center;
+}
+
+.legalRow {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.panel .legalRow :global(a) {
+  color: var(--color-neutral-50);
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.headline {
+  margin: 0;
+  color: var(--color-neutral-10);
+  font-weight: 600;
+  font-size: 40px;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+}
+
+.body {
+  max-width: 460px;
+  margin: 20px 0 0;
+  color: var(--color-neutral-50);
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 1.5;
+}
+
+.bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.backLink {
+  color: var(--color-neutral-50);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.copyright {
+  margin: 0;
+  color: var(--color-neutral-50);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+:global(body.desktop) {
+  .panel .legalRow :global(a:hover),
+  .backLink:hover {
+    color: var(--color-static-white);
+  }
+}
+
+@media (max-width: 1200px) {
+  .panel {
+    flex-basis: 380px;
+    min-width: 340px;
+    padding: 28px 32px 24px;
+  }
+
+  .headline {
+    font-size: 36px;
+  }
+
+  .body {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 900px) {
+  .panel {
+    display: none;
+  }
+}
+
+:global(body.mobile) {
+  .logo {
+    height: 30px;
+  }
+
+  .panel {
+    display: none;
+  }
+}

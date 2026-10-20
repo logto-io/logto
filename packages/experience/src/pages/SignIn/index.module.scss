@@ -44,3 +44,34 @@
     margin-bottom: _.unit(4);
   }
 }
+
+:global(body.desktop .zerveAuthShell),
+:global(body.mobile .zerveAuthShell) {
+  .main,
+  .otherMethods,
+  .divider {
+    margin-bottom: 20px;
+  }
+
+  .singleSignOn,
+  .createAccount {
+    color: var(--color-neutral-50);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+  }
+
+  .singleSignOn + .createAccount {
+    margin-top: 8px;
+  }
+
+  .singleSignOn .link,
+  .createAccount .link,
+  .singleSignOn .link:hover,
+  .createAccount .link:hover {
+    color: var(--color-static-white);
+    font: inherit;
+    font-weight: bold;
+    text-decoration: none;
+  }
+}

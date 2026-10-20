@@ -1,10 +1,8 @@
 import { AgreeToTermsPolicy, experience, ExtraParamsKey, SignInMode } from '@logto/schemas';
-import { useCallback, useContext } from 'react';
-import { isMobile } from 'react-device-detect';
+import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useSearchParams } from 'react-router-dom';
 
-import LayoutAsidePortal from '@/Layout/AppLayout/LayoutAsidePortal';
 import LandingPageLayout from '@/Layout/LandingPageLayout';
 import SingleSignOnFormModeContextProvider from '@/Providers/SingleSignOnFormModeContextProvider';
 import SingleSignOnFormModeContext from '@/Providers/SingleSignOnFormModeContextProvider/SingleSignOnFormModeContext';
@@ -14,7 +12,6 @@ import TextLink from '@/components/TextLink';
 import SocialSignInList from '@/containers/SocialSignInList';
 import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
 import TermsAndPrivacyLinks from '@/containers/TermsAndPrivacyLinks';
-import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { useSieMethods } from '@/hooks/use-sie';
 import useTerms from '@/hooks/use-terms';
 
@@ -24,25 +21,10 @@ import styles from './index.module.scss';
 
 const RegisterFooter = () => {
   const { t } = useTranslation();
-  const { signUpMethods, socialConnectors, signInMode, signInMethods, singleSignOnEnabled } =
-    useSieMethods();
-  const { termsValidation, agreeToTermsPolicy } = useTerms();
-  const navigate = useNavigateWithPreservedSearchParams();
+  const { signUpMethods, socialConnectors, signInMode, signInMethods } = useSieMethods();
   const [params] = useSearchParams();
 
   const { showSingleSignOnForm } = useContext(SingleSignOnFormModeContext);
-
-  const handleSsoNavigation = useCallback(async () => {
-    /**
-     * Check if the user has agreed to the terms and privacy policy before navigating to the SSO page
-     * when the policy is set to `Manual`
-     */
-    if (agreeToTermsPolicy === AgreeToTermsPolicy.Manual && !(await termsValidation())) {
-      return;
-    }
-
-    navigate('/single-sign-on/email');
-  }, [agreeToTermsPolicy, navigate, termsValidation]);
 
   if (params.get(ExtraParamsKey.OneTimeToken)) {
     return (
@@ -59,44 +41,14 @@ const RegisterFooter = () => {
   }
 
   const showSocialSignIn = signUpMethods.length > 0 && socialConnectors.length > 0;
-  const showUseSingleSignOn = !!singleSignOnEnabled;
   const showSignIn = signInMode === SignInMode.SignInAndRegister && signInMethods.length > 0;
 
-  const asideContent =
-    showUseSingleSignOn || showSignIn ? (
-      <>
-        {
-          // Single Sign On footer
-          showUseSingleSignOn && (
-            <>
-              <div className={styles.singleSignOn}>
-                {t('description.use')}{' '}
-                <TextLink text="action.single_sign_on" onClick={handleSsoNavigation} />
-              </div>
-              {
-                /**
-                 * If only SSO sign-in methods are available, display the agreement checkbox when the agreement policy is `Manual`.
-                 */
-                signInMethods.length === 0 &&
-                  socialConnectors.length === 0 &&
-                  agreeToTermsPolicy === AgreeToTermsPolicy.Manual && (
-                    <TermsAndPrivacyCheckbox className={styles.checkbox} />
-                  )
-              }
-            </>
-          )
-        }
-        {
-          // SignIn footer
-          showSignIn && (
-            <div className={styles.createAccount}>
-              {t('description.have_account')}{' '}
-              <TextLink replace to="/sign-in" text="action.sign_in" />
-            </div>
-          )
-        }
-      </>
-    ) : null;
+  const asideContent = showSignIn ? (
+    <div className={styles.createAccount}>
+      {t('description.have_account')}{' '}
+      <TextLink replace className={styles.link} to="/sign-in" text="action.sign_in" />
+    </div>
+  ) : null;
 
   return (
     <>
@@ -107,14 +59,12 @@ const RegisterFooter = () => {
         )
       }
 
-      {!!asideContent && isMobile && asideContent}
-      {!!asideContent && !isMobile && <LayoutAsidePortal>{asideContent}</LayoutAsidePortal>}
+      {asideContent}
     </>
   );
 };
 
 const Register = () => {
-  const { t } = useTranslation();
   const { signUpMethods, socialConnectors, signInMode } = useSieMethods();
   const { agreeToTermsPolicy } = useTerms();
 
@@ -127,21 +77,7 @@ const Register = () => {
   }
 
   return (
-    <LandingPageLayout
-      title="description.create_your_account"
-      subTitle={
-        <>
-          {/* 
-          The backend (Logto core) needs to be rebuilt and redeployed after a key 
-          was added to packages/phrases-experience.
-          Uncomment this after the backend is properly deployed.
-          Use hardcoded string below as a fallback in the meantime.
-        */}
-          {/* {t('description.use_work_email_hint', { start_credits: 150, work_email_credits: 100 })} */}
-          Get 150 credits to start, plus an extra 100 when you use your work email
-        </>
-      }
-    >
+    <LandingPageLayout headlineText="Create an account" title="description.create_your_account">
       <GoogleOneTap context="signup" />
       <SingleSignOnFormModeContextProvider>
         {signUpMethods.length > 0 && (

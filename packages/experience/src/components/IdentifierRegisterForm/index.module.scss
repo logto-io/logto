@@ -27,3 +27,15 @@
     display: none;
   }
 }
+
+:global(body.desktop .zerveAuthShell),
+:global(body.mobile .zerveAuthShell) {
+  .form {
+    .inputField,
+    .terms,
+    .formErrors,
+    .message {
+      margin-bottom: 20px;
+    }
+  }
+}

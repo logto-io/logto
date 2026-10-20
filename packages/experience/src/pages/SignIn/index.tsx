@@ -1,10 +1,8 @@
 import { AgreeToTermsPolicy, experience, ExtraParamsKey, SignInMode } from '@logto/schemas';
 import { useCallback, useContext } from 'react';
-import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useSearchParams } from 'react-router-dom';
 
-import LayoutAsidePortal from '@/Layout/AppLayout/LayoutAsidePortal';
 import LandingPageLayout from '@/Layout/LandingPageLayout';
 import SingleSignOnFormModeContextProvider from '@/Providers/SingleSignOnFormModeContextProvider';
 import SingleSignOnFormModeContext from '@/Providers/SingleSignOnFormModeContextProvider/SingleSignOnFormModeContext';
@@ -69,7 +67,11 @@ const SignInFooters = () => {
             <>
               <div className={styles.singleSignOn}>
                 {t('description.use')}{' '}
-                <TextLink text="action.single_sign_on" onClick={handleSsoNavigation} />
+                <TextLink
+                  className={styles.link}
+                  text="action.single_sign_on"
+                  onClick={handleSsoNavigation}
+                />
               </div>
               {
                 /**
@@ -89,7 +91,12 @@ const SignInFooters = () => {
           showCreateAccount && (
             <div className={styles.createAccount}>
               {t('description.no_account')}{' '}
-              <TextLink replace to="/register" text="action.create_account" />
+              <TextLink
+                replace
+                className={styles.link}
+                to="/register"
+                text="action.create_account"
+              />
             </div>
           )
         }
@@ -108,15 +115,13 @@ const SignInFooters = () => {
       {/* Passkey Sign In */}
       {showPasskeySignIn && <PasskeySignInButton />}
 
-      {!!asideContent && isMobile && asideContent}
-      {!!asideContent && !isMobile && <LayoutAsidePortal>{asideContent}</LayoutAsidePortal>}
+      {asideContent}
     </>
   );
 };
 
 const SignIn = () => {
   const { signInMethods, socialConnectors, signInMode } = useSieMethods();
-  const { agreeToTermsPolicy } = useTerms();
   const [params] = useSearchParams();
 
   if (!signInMode) {

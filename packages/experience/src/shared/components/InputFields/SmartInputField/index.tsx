@@ -24,6 +24,7 @@ type Props = Omit<HTMLProps<HTMLInputElement>, 'onChange' | 'prefix' | 'value'> 
   readonly enabledTypes?: IdentifierInputType[];
   readonly defaultValue?: string;
   readonly onChange?: (data: IdentifierInputValue) => void;
+  readonly appearance?: 'plain';
 };
 
 const AnimatedInputField = animated(InputField);

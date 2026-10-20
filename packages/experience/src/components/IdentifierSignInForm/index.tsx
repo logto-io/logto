@@ -1,4 +1,4 @@
-import { AgreeToTermsPolicy, type SignIn } from '@logto/schemas';
+import { AgreeToTermsPolicy, SignInIdentifier, type SignIn } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useContext, useEffect, useMemo } from 'react';
 import { useForm, Controller } from 'react-hook-form';
@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import WebAuthnContext from '@/Providers/WebAuthnContextProvider/WebAuthnContext';
 import LockIcon from '@/assets/icons/lock.svg?react';
+import SubmitArrowButtonIcon from '@/components/Button/SubmitArrowButtonIcon';
 import { SmartInputField } from '@/components/InputFields';
 import CaptchaBox from '@/containers/CaptchaBox';
 import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
@@ -43,6 +44,8 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
     () => signInMethods.map(({ identifier }) => identifier),
     [signInMethods]
   );
+  const isEmailOnly =
+    enabledSignInMethods.length === 1 && enabledSignInMethods[0] === SignInIdentifier.Email;
 
   const prefilledIdentifier = usePrefilledIdentifier({
     enabledIdentifiers: enabledSignInMethods,
@@ -135,6 +138,9 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
             autoFocus={autoFocus}
             className={styles.inputField}
             {...field}
+            appearance={isEmailOnly ? 'plain' : undefined}
+            label={isEmailOnly ? 'Email address' : undefined}
+            placeholder={isEmailOnly ? 'Enter your email' : undefined}
             isDanger={!!errors.identifier || !!errorMessage}
             errorMessage={errors.identifier?.message}
             enabledTypes={enabledSignInMethods}
@@ -167,7 +173,8 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
       <Button
         name="submit"
         title={showSingleSignOnForm ? 'action.single_sign_on' : 'action.sign_in'}
-        icon={showSingleSignOnForm ? <LockIcon /> : undefined}
+        icon={showSingleSignOnForm ? <LockIcon /> : <SubmitArrowButtonIcon />}
+        iconPlacement={showSingleSignOnForm ? 'inline' : 'edge'}
         htmlType="submit"
         isLoading={isSubmitting || isPasskeyFlowProcessing}
       />

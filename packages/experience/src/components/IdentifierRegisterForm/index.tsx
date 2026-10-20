@@ -1,4 +1,4 @@
-import { AgreeToTermsPolicy, type SignInIdentifier } from '@logto/schemas';
+import { AgreeToTermsPolicy, SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useContext, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import LockIcon from '@/assets/icons/lock.svg?react';
+import SubmitArrowButtonIcon from '@/components/Button/SubmitArrowButtonIcon';
 import { SmartInputField } from '@/components/InputFields';
 import CaptchaBox from '@/containers/CaptchaBox';
 import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
@@ -39,6 +40,7 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
   const { termsValidation, agreeToTermsPolicy } = useTerms();
 
   const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit();
+  const isEmailOnly = signUpMethods.length === 1 && signUpMethods[0] === SignInIdentifier.Email;
 
   const { setIdentifierInputValue } = useContext(UserInteractionContext);
   const { experienceSettings } = useContext(PageContext);
@@ -147,6 +149,9 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
             autoFocus={autoFocus}
             className={styles.inputField}
             {...field}
+            appearance={isEmailOnly ? 'plain' : undefined}
+            label={isEmailOnly ? 'Email address' : undefined}
+            placeholder={isEmailOnly ? 'Enter your email' : undefined}
             defaultValue={defaultValues?.identifier?.value}
             isDanger={!!errors.identifier || !!errorMessage}
             errorMessage={errors.identifier?.message}
@@ -178,8 +183,9 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
       <Button
         name="submit"
         title={showSingleSignOnForm ? 'action.single_sign_on' : 'action.sign_in_with'}
-        i18nProps={{ name: 'Email' }}
-        icon={showSingleSignOnForm ? <LockIcon /> : undefined}
+        i18nProps={{ name: 'email' }}
+        icon={showSingleSignOnForm ? <LockIcon /> : <SubmitArrowButtonIcon />}
+        iconPlacement={showSingleSignOnForm ? 'inline' : 'edge'}
         htmlType="submit"
         isLoading={isSubmitting}
       />

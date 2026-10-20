@@ -73,3 +73,27 @@
     padding: 0 _.unit(6);
   }
 }
+
+:global(body.mobile .zerveAuthShell),
+:global(body.desktop .zerveAuthShell) {
+  .container {
+    min-height: 0;
+  }
+
+  .logoWrapper {
+    display: none;
+  }
+
+  .headline {
+    color: var(--color-neutral-10);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+}
+
+:global(body.desktop .zerveAuthShell) {
+  .headline {
+    font-size: 28px;
+    line-height: 1.2;
+  }
+}

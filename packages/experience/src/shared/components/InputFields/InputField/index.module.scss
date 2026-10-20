@@ -116,6 +116,13 @@
   margin-inline-start: _.unit(0.5);
 }
 
+.plainLabel {
+  margin-bottom: 8px;
+  color: var(--color-type-secondary);
+  font: var(--font-label-3);
+  font-size: 13px;
+  line-height: 1.3;
+}
 
 :global(body.desktop) {
   .container {
@@ -124,6 +131,48 @@
       input {
         font: var(--font-body-2);
       }
+    }
+  }
+}
+
+:global(body.desktop) .container.plain,
+:global(body.mobile) .container.plain {
+  .inputField {
+    height: 48px;
+    border: _.border(var(--color-line-border));
+    border-radius: 10px;
+    background: transparent;
+
+    input::placeholder {
+      opacity: 100%;
+    }
+
+    &:focus-within {
+      border-color: var(--zerve-input-focus-border-color);
+    }
+  }
+
+  &.danger .inputField {
+    border-color: var(--color-danger-default);
+  }
+}
+
+:global(body.desktop .zerveAuthShell),
+:global(body.mobile .zerveAuthShell) {
+  .plainLabel {
+    color: rgba(255, 255, 255, 78%);
+  }
+
+  .container.plain .inputField {
+    border-color: rgba(255, 255, 255, 16%);
+    background: var(--color-bg-float);
+
+    input::placeholder {
+      color: var(--color-neutral-50);
+    }
+
+    &:focus-within {
+      border-color: var(--zerve-input-focus-border-color);
     }
   }
 }

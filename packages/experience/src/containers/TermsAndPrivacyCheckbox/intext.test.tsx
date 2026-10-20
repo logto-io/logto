@@ -6,16 +6,17 @@ import TermsAndPrivacy from '.';
 describe('TermsAndPrivacy Container', () => {
   it('render with empty TermsAndPrivacy settings', () => {
     const { queryByText } = renderWithPageContext(<TermsAndPrivacy />);
-    expect(queryByText('description.agree_with_terms')).toBeNull();
+    expect(queryByText(/I agree to the/)).toBeNull();
   });
 
   it('render with settings', async () => {
-    const { queryByText } = renderWithPageContext(
+    const { queryByRole } = renderWithPageContext(
       <SettingsProvider>
         <TermsAndPrivacy />
       </SettingsProvider>
     );
 
-    expect(queryByText('description.agree_with_terms')).not.toBeNull();
+    expect(queryByRole('link', { name: 'Terms and Conditions' })).not.toBeNull();
+    expect(queryByRole('link', { name: 'Privacy Policy' })).not.toBeNull();
   });
 });

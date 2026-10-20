@@ -1,0 +1,19 @@
+.badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--color-bg-float);
+  color: var(--color-static-white);
+
+  svg {
+    width: 11px;
+    height: 10px;
+    fill: var(--color-neutral-10);
+    stroke-width: 2px;
+    stroke: var(--color-static-white);
+    flex-shrink: 0;
+  }
+}

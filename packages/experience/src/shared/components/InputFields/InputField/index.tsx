@@ -28,6 +28,8 @@ export type Props = Omit<HTMLProps<HTMLInputElement>, 'prefix'> & {
   readonly isSuffixFocusVisible?: boolean;
   readonly label?: ReactElement | string;
   readonly description?: Nullable<string>;
+  /** Label above the field, with the placeholder visible inside the input. */
+  readonly appearance?: 'plain';
 };
 
 const InputField = (
@@ -42,6 +44,7 @@ const InputField = (
     isSuffixFocusVisible,
     label,
     description,
+    appearance,
     onFocus,
     onBlur,
     onChange,
@@ -93,14 +96,20 @@ const InputField = (
     ? label
     : condString(label && t('input.label_with_optional', { label }));
 
+  const isPlain = appearance === 'plain';
+
   return (
     <div className={className}>
+      {isPlain && labelWithOptionalSuffix && (
+        <div className={styles.plainLabel}>{labelWithOptionalSuffix}</div>
+      )}
       <div
         className={classNames(
           styles.container,
           isDanger && styles.danger,
           isActive && styles.active,
-          !label && styles.noLabel
+          (!label || isPlain) && styles.noLabel,
+          isPlain && styles.plain
         )}
       >
         <div
@@ -135,12 +144,14 @@ const InputField = (
               className: classNames([suffix.props.className, styles.suffix]),
             })}
         </div>
-        <NotchedBorder
-          label={labelWithOptionalSuffix ?? ''}
-          isActive={isActive}
-          isDanger={Boolean(isDanger)}
-          isFocused={isFocused}
-        />
+        {!isPlain && (
+          <NotchedBorder
+            label={labelWithOptionalSuffix ?? ''}
+            isActive={isActive}
+            isDanger={Boolean(isDanger)}
+            isFocused={isFocused}
+          />
+        )}
       </div>
       {description && <div className={styles.description}>{description}</div>}
       {errorMessages && (

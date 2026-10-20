@@ -23,6 +23,8 @@ type BaseProps = Omit<HTMLProps<HTMLButtonElement>, 'type' | 'size' | 'title'> &
 type Props = BaseProps & {
   readonly title: TFuncKey;
   readonly icon?: React.ReactNode;
+  /** `edge` pins the icon to the button's leading side and keeps the label centered. */
+  readonly iconPlacement?: 'inline' | 'edge';
   readonly i18nProps?: Record<string, string>;
 };
 
@@ -36,6 +38,7 @@ const Button = ({
   isDisabled = false,
   isLoading = false,
   icon,
+  iconPlacement = 'inline',
   onClick,
   ...rest
 }: Props) => {
@@ -51,6 +54,7 @@ const Button = ({
         isDisabled && styles.disabled,
         isLoading && styles.loading,
         isLoadingActive && styles.loadingActive,
+        iconPlacement === 'edge' && styles.edgeIcon,
         className
       )}
       type={htmlType}

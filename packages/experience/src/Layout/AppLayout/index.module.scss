@@ -75,6 +75,74 @@
   }
 }
 
+.brandedView {
+  background: var(--color-bg-float);
+}
+
+.split {
+  display: flex;
+  align-items: stretch;
+  min-height: 100%;
+}
+
+.stageLogo {
+  display: none;
+  color: var(--color-static-white);
+}
+
+.stage {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 100%;
+  padding: 32px 24px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 18%);
+    pointer-events: none;
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  > .stageLogo {
+    position: relative;
+    flex: 0 0 auto;
+    width: 100%;
+    justify-content: center;
+    margin: 0 0 16px;
+  }
+}
+
+.stageBody {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.signInStage {
+  background-image: url('../../assets/auth/sign-in-background.png');
+}
+
+.signUpStage {
+  background-image: url('../../assets/auth/sign-up-background.png');
+}
+
 :global(body.mobile) {
   .container {
     padding-bottom: env(safe-area-inset-bottom);
@@ -105,6 +173,10 @@
 
   .signature {
     margin: _.unit(10) 0 _.unit(2);
+  }
+
+  .stageLogo {
+    display: flex;
   }
 }
 
@@ -141,5 +213,65 @@
       align-self: stretch;
       width: auto;
     }
+  }
+}
+
+:global(body.mobile) .split {
+  .mainAsideWrapper {
+    width: min(460px, calc(100% - 8px));
+    padding: 0;
+  }
+
+  .main {
+    width: 100%;
+    padding: 24px;
+    background: var(--color-bg-float);
+    border: 1px solid rgba(255, 255, 255, 10%);
+    border-radius: 20px;
+  }
+
+  .aside {
+    color: var(--color-static-white);
+  }
+}
+
+:global(body.desktop) .split {
+  .mainAsideWrapper {
+    width: 460px;
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .main {
+    width: 100%;
+    padding: 24px;
+    border: 1px solid rgba(255, 255, 255, 10%);
+    border-radius: 20px;
+    background: var(--color-bg-float);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 35%);
+  }
+
+  .aside {
+    width: 100%;
+    margin-top: 28px;
+    color: var(--color-static-white);
+    font-size: 14px;
+    font-weight: 500;
+    row-gap: 10px;
+  }
+}
+
+:global(body.mobile) .split .aside :global(a),
+:global(body.mobile) .split .aside :global(a:hover),
+:global(body.desktop) .split .aside :global(a),
+:global(body.desktop) .split .aside :global(a:hover) {
+  color: var(--color-static-white);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 900px) {
+  .stageLogo {
+    display: flex;
   }
 }
