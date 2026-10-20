@@ -49,6 +49,14 @@ const error = {
     'Bu uygulamaya erişim izniniz yok.\nYardım için lütfen yöneticinizle iletişime geçin.',
   feature_not_enabled:
     'Bu özelliğe erişim izniniz yok. Yardım için lütfen yöneticinizle iletişime geçin.',
+  wallet_not_found:
+    'Ethereum cüzdanı bulunamadı. Tarayıcınıza bir cüzdan uzantısı yükleyip tekrar deneyin.',
+  wallet_not_supported:
+    'Cüzdanla oturum açma yalnızca cüzdan uzantısı yüklü bir tarayıcıda desteklenir.',
+  wallet_request_rejected: 'Cüzdan isteği reddedildi. Lütfen tekrar deneyin.',
+  wallet_unsupported_chain:
+    'Cüzdanınız desteklenmeyen bir ağa bağlı. Ağı değiştirip tekrar deneyin.',
+  wallet_signature_invalid: 'Cüzdan imzası geçersiz veya süresi dolmuş. Lütfen tekrar deneyin.',
 };
 
 export default Object.freeze(error);

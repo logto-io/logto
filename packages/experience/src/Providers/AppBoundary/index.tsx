@@ -5,6 +5,7 @@ import useColorTheme from '@/Providers/AppBoundary/use-color-theme';
 import ConfirmModalProvider from '../ConfirmModalProvider';
 import IframeModalProvider from '../IframeModalProvider';
 import ToastProvider from '../ToastProvider';
+import WalletModalProvider from '../WalletModalProvider';
 
 import AppMeta from './AppMeta';
 
@@ -20,7 +21,9 @@ const AppBoundary = ({ children }: Props) => {
       <AppMeta />
       <IframeModalProvider>
         <ConfirmModalProvider>
-          <ToastProvider>{children}</ToastProvider>
+          <WalletModalProvider>
+            <ToastProvider>{children}</ToastProvider>
+          </WalletModalProvider>
         </ConfirmModalProvider>
       </IframeModalProvider>
     </>

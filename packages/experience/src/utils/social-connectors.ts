@@ -1,8 +1,9 @@
-import { GoogleConnector } from '@logto/connector-kit';
+import { GoogleConnector, SiweConnector } from '@logto/connector-kit';
 import type { ExperienceSocialConnector } from '@logto/schemas';
 import { ConnectorPlatform, experienceSocialStatePrefix } from '@logto/schemas';
 import { getCookie } from 'tiny-cookie';
 
+import { isDevFeaturesEnabled } from '@/constants/env';
 import { SearchParameters } from '@/types';
 import { generateRandomString } from '@/utils';
 import { getLogtoNativeSdk, isNativeWebview } from '@/utils/native-sdk';
@@ -127,6 +128,12 @@ export const filterSocialConnectors = (socialConnectors?: ExperienceSocialConnec
     return [];
   }
 
+  // Wallet sign-in is still a dev feature. Hide the connector in production builds until the
+  // guard is removed with the feature release.
+  const availableSocialConnectors = isDevFeaturesEnabled
+    ? socialConnectors
+    : socialConnectors.filter(({ target }) => target !== SiweConnector.target);
+
   const connectorMap = new Map<string, ExperienceSocialConnector>();
 
   /**
@@ -137,7 +144,7 @@ export const filterSocialConnectors = (socialConnectors?: ExperienceSocialConnec
    **/
 
   if (!isNativeWebview()) {
-    for (const connector of socialConnectors) {
+    for (const connector of availableSocialConnectors) {
       const { platform, target } = connector;
 
       if (platform === ConnectorPlatform.Native) {
@@ -166,7 +173,7 @@ export const filterSocialConnectors = (socialConnectors?: ExperienceSocialConnec
     return [];
   }
 
-  for (const connector of socialConnectors) {
+  for (const connector of availableSocialConnectors) {
     const { platform, target } = connector;
 
     if (platform === ConnectorPlatform.Web) {
@@ -217,6 +224,10 @@ export const filterPreviewSocialConnectors = (
     return [];
   }
 
+  const availableSocialConnectors = isDevFeaturesEnabled
+    ? socialConnectors
+    : socialConnectors.filter(({ target }) => target !== SiweConnector.target);
+
   const connectorMap = new Map<string, ExperienceSocialConnector>();
 
   /**
@@ -227,7 +238,7 @@ export const filterPreviewSocialConnectors = (
    **/
 
   if (platform === ConnectorPlatform.Web) {
-    for (const connector of socialConnectors) {
+    for (const connector of availableSocialConnectors) {
       const { platform, target } = connector;
 
       if (platform === ConnectorPlatform.Native) {
@@ -250,7 +261,7 @@ export const filterPreviewSocialConnectors = (
    * Native platform has higher priority.
    **/
 
-  for (const connector of socialConnectors) {
+  for (const connector of availableSocialConnectors) {
     const { platform, target } = connector;
 
     if (platform === ConnectorPlatform.Web) {

@@ -138,6 +138,26 @@ describe('SocialCallbackPage — social sign-in', () => {
       });
     });
 
+    it('continues with an already verified wallet identity without re-verifying', async () => {
+      mockUseSearchParameters.mockReturnValue([new URLSearchParams('siwe_callback=1'), jest.fn()]);
+
+      renderWithPageContext(
+        <SettingsProvider>
+          <UserInteractionContextProvider>
+            <Routes>
+              <Route path="/callback/social/:connectorId" element={<SocialCallback />} />
+            </Routes>
+          </UserInteractionContextProvider>
+        </SettingsProvider>,
+        { initialEntries: [`/callback/social/${connectorId}`] }
+      );
+
+      await waitFor(() => {
+        expect(verifySocialVerification).not.toBeCalled();
+        expect(identifyAndSubmitInteraction).toBeCalledWith({ verificationId: 'foo' });
+      });
+    });
+
     it('callback with invalid state should not call signInWithSocial', async () => {
       mockUseSearchParameters.mockReturnValue([
         new URLSearchParams(`state=bar&code=foo`),
