@@ -117,7 +117,7 @@ function UserDetails() {
             actionMenuItems={[
               {
                 title: 'user_details.unlock_user',
-                icon: <Unlock />,
+                icon: <Unlock className={styles.unlockIcon} />,
                 onClick: () => {
                   setIsUnlockUserFormOpen(true);
                 },
