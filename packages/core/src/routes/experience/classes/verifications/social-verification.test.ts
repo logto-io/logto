@@ -1,10 +1,11 @@
-import { ConnectorType, GoogleConnector } from '@logto/connector-kit';
+import { ConnectorType, GoogleConnector, SiweConnector } from '@logto/connector-kit';
 import { VerificationType, type SocialVerificationRecordData } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
 import { mockConnector } from '#src/__mocks__/connector.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
+import type TenantContext from '#src/tenants/TenantContext.js';
 import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-context.js';
 import { type Cookies } from '#src/test-utils/jest-koa-mocks/create-mock-cookies.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
@@ -64,6 +65,32 @@ const tenantContext = {
 };
 
 const { SocialVerification } = await import('./social-verification.js');
+
+const createSiweConnector = () => ({
+  ...mockConnector,
+  type: ConnectorType.Social,
+  metadata: { ...mockConnector.metadata, id: 'siwe', target: SiweConnector.target },
+  getAuthorizationUri: jest.fn(async () => 'siwe://authorize?nonce=nonce'),
+});
+
+const createSiweVerification = () =>
+  new SocialVerification(tenant.libraries, tenant.queries, {
+    id: 'siwe-verification-id',
+    connectorId: 'siwe',
+    type: VerificationType.Social,
+  } as SocialVerificationRecordData);
+
+const createContext = () => {
+  // @ts-expect-error test mock context
+  const ctx: WithLogContext = {
+    ...createMockContext(),
+    ...createMockLogContext(),
+  };
+
+  return ctx;
+};
+
+const siweTenantContext = tenantContext as unknown as TenantContext;
 
 describe('SocialVerification', () => {
   beforeEach(() => {
@@ -331,6 +358,43 @@ describe('SocialVerification', () => {
         expect.any(Function),
         ctx
       );
+    });
+  });
+
+  describe('createAuthorizationUrl', () => {
+    it('should reject a SIWE redirect URI that does not belong to the tenant', async () => {
+      const connector = createSiweConnector();
+      getConnector.mockResolvedValueOnce(connector);
+
+      await expect(
+        createSiweVerification().createAuthorizationUrl(
+          createContext(),
+          siweTenantContext,
+          { state: 'state', redirectUri: 'https://evil.example.com/callback/siwe' },
+          'verificationRecord'
+        )
+      ).rejects.toMatchObject({ code: 'connector.invalid_request_parameters' });
+
+      expect(connector.getAuthorizationUri).not.toHaveBeenCalled();
+    });
+
+    it('should allow a SIWE redirect URI on the tenant endpoint', async () => {
+      const connector = createSiweConnector();
+      getConnector.mockResolvedValueOnce(connector);
+
+      await expect(
+        createSiweVerification().createAuthorizationUrl(
+          createContext(),
+          siweTenantContext,
+          {
+            state: 'state',
+            redirectUri: `${tenant.envSet.endpoint.origin}/callback/siwe`,
+          },
+          'verificationRecord'
+        )
+      ).resolves.toBe('siwe://authorize?nonce=nonce');
+
+      expect(connector.getAuthorizationUri).toHaveBeenCalled();
     });
   });
 });

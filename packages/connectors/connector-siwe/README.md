@@ -42,7 +42,7 @@ The connector session is consumed when it is read, so each nonce can be used for
 ## Security notes
 
 - The nonce is generated server-side and stored in the connector session. It is removed from the session as soon as the verification request reads it.
-- `domain` and `uri` are derived from the redirect URI created from `window.location.origin`, so custom domains and non-default ports are validated automatically.
+- The redirect URI is caller-controlled, so Core checks its origin against the tenant endpoint and active custom domains before creating the connector session. `domain` and `uri` are derived from that validated origin.
 - Messages expire after 10 minutes and are checked against the server-generated timestamps, not only the timestamps in the client-supplied message.
 - Only chain IDs in the configured allow-list are accepted.
 - Signatures are verified locally; no RPC endpoint is required for EOA verification.
