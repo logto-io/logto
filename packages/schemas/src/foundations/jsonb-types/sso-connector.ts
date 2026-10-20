@@ -8,6 +8,11 @@ export const ssoBrandingGuard = z.object({
   displayName: z.string().optional(),
   logo: z.string().optional(),
   darkLogo: z.string().optional(),
+  /**
+   * Whether to expose the display name and logos in the public sign-in experience before an email
+   * domain matches. Defaults to `true` when omitted.
+   */
+  showBeforeEmailMatch: z.boolean().optional(),
 });
 
 export type SsoBranding = z.infer<typeof ssoBrandingGuard>;
