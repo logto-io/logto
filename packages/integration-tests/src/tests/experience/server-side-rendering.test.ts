@@ -62,11 +62,20 @@ describe('server-side rendering', () => {
     await expectTraceNotToHaveWellKnownEndpoints();
   });
 
-  it('should not expose SSO connector branding in the SSR payload', async () => {
+  it('should include SSO connector branding by default and hide it when disabled', async () => {
+    const { branding } = newOidcSsoConnectorPayload;
     const { singleSignOnEnabled } = await getSignInExperience();
-    const { id } = await createSsoConnector({
+    const { id: publicConnectorId } = await createSsoConnector({
       ...newOidcSsoConnectorPayload,
       connectorName: generateSsoConnectorName(),
+    });
+    const { id: hiddenConnectorId } = await createSsoConnector({
+      ...newOidcSsoConnectorPayload,
+      connectorName: generateSsoConnectorName(),
+      branding: {
+        ...branding,
+        showBeforeEmailMatch: false,
+      },
     });
     const experience = new ExpectExperience(await browser.newPage());
 
@@ -78,19 +87,26 @@ describe('server-side rendering', () => {
         return window.logtoSsr;
       });
       const parsed = ssrDataGuard.parse(data);
-      const connector = parsed.signInExperience.data.ssoConnectors.find(
-        (connector) => connector.id === id
+      const publicConnector = parsed.signInExperience.data.ssoConnectors.find(
+        (connector) => connector.id === publicConnectorId
+      );
+      const hiddenConnector = parsed.signInExperience.data.ssoConnectors.find(
+        (connector) => connector.id === hiddenConnectorId
       );
 
-      expect(connector).toMatchObject({ id, connectorName: 'OIDC' });
-      expect(connector?.logo).not.toBe(newOidcSsoConnectorPayload.branding.logo);
-      expect(connector?.darkLogo).not.toBe(newOidcSsoConnectorPayload.branding.darkLogo);
-      expect(JSON.stringify(parsed.signInExperience.data.ssoConnectors)).not.toContain(
-        newOidcSsoConnectorPayload.branding.displayName
-      );
+      expect(publicConnector).toMatchObject({
+        id: publicConnectorId,
+        connectorName: branding.displayName,
+        logo: branding.logo,
+        darkLogo: branding.darkLogo,
+      });
+      expect(hiddenConnector).toMatchObject({ id: hiddenConnectorId, connectorName: 'OIDC' });
+      expect(hiddenConnector?.logo).not.toBe(branding.logo);
+      expect(hiddenConnector?.darkLogo).not.toBe(branding.darkLogo);
     } finally {
       await experience.page.close();
-      await deleteSsoConnectorById(id);
+      await deleteSsoConnectorById(publicConnectorId);
+      await deleteSsoConnectorById(hiddenConnectorId);
       await updateSignInExperience({ singleSignOnEnabled });
     }
   });
