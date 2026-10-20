@@ -13,6 +13,8 @@ const enterprise_sso_details = {
   custom_branding_title: 'Ekran',
   custom_branding_description:
     'Son kullanıcıların Tek Oturum Açma akışında gösterilen adı ve logoyu özelleştirin. Boş olduğunda varsayılanlar kullanılır.',
+  custom_branding_visibility_notice:
+    'Görünen ad ve logo, yapılandırılan kurumsal alan adlarıyla eşleşen bir e-posta adresini sorgulayan herkese gösterilir. Hassas bilgiler eklemeyin.',
   email_domain_field_name: 'Kurumsal e-posta etki alanı',
   email_domain_field_description:
     "Bu e-posta etki alanına sahip kullanıcılar SSO'yu kimlik doğrulamak için kullanabilir. Lütfen etki alanının kurumunuza ait olduğunu doğrulayın.",

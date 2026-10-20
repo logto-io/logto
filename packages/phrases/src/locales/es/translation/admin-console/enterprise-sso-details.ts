@@ -13,6 +13,8 @@ const enterprise_sso_details = {
   custom_branding_title: 'Visualización',
   custom_branding_description:
     'Personalice el nombre y el logotipo que se muestra en el flujo de inicio de sesión único de los usuarios finales. Cuando está vacío, se utilizan los valores predeterminados.',
+  custom_branding_visibility_notice:
+    'El nombre y el logotipo se muestran a cualquier persona que consulte una dirección de correo electrónico que coincida con los dominios empresariales configurados. No incluyas información confidencial.',
   email_domain_field_name: 'Dominio de correo electrónico empresarial',
   email_domain_field_description:
     'Los usuarios con este dominio de correo electrónico pueden utilizar SSO para la autenticación. Verifique que el dominio pertenezca a la empresa.',

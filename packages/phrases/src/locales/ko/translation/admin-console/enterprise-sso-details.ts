@@ -12,6 +12,8 @@ const enterprise_sso_details = {
   custom_branding_title: '표시',
   custom_branding_description:
     '엔드 유저의 단일 로그인 흐름에서 표시되는 이름 및 로고를 사용자 정의하세요. 비어 있으면 기본 사용됩니다.',
+  custom_branding_visibility_notice:
+    '표시 이름과 로고는 구성된 기업 도메인과 일치하는 이메일 주소를 조회하는 모든 사람에게 표시됩니다. 민감한 정보를 포함하지 마세요.',
   email_domain_field_name: '기업 이메일 도메인',
   email_domain_field_description:
     '이 이메일 도메인을 가진 사용자는 SSO를 사용하여 인증할 수 있습니다. 도메인이 기업에 속해 있는지 확인해주세요.',

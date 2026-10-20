@@ -12,6 +12,8 @@ const enterprise_sso_details = {
   custom_branding_title: 'การแสดงผล',
   custom_branding_description:
     'ปรับแต่งชื่อและโลโก้ที่จะแสดงในขั้นตอน Single Sign-On ของผู้ใช้ หากไม่ระบุจะใช้ค่าตั้งต้นแทน',
+  custom_branding_visibility_notice:
+    'ชื่อที่แสดงและโลโก้จะแสดงให้ทุกคนที่สอบถามอีเมลที่ตรงกับโดเมนองค์กรที่กำหนดไว้ ไม่ควรใส่ข้อมูลที่ละเอียดอ่อน',
   email_domain_field_name: 'โดเมนอีเมลขององค์กร',
   email_domain_field_description:
     'ผู้ใช้ที่มีโดเมนอีเมลเหล่านี้สามารถใช้ SSO สำหรับการยืนยันตัวตน กรุณาตรวจสอบความเป็นเจ้าของโดเมนก่อนเพิ่ม',
