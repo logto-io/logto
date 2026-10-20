@@ -78,10 +78,57 @@ export const createDailyActiveUsersQueries = (pool: CommonQueryMethods) => {
     return { lastMonth: Number(lastMonth), monthToDate: Number(monthToDate) };
   };
 
+  /**
+   * Count the distinct active users of every UTC calendar month from `from` until `to`, across
+   * every tenant except `excludedTenantId`. Both bounds are the first instant of a UTC month.
+   *
+   * Each month is counted on its own: its rows are found through the date index and grouped by user
+   * in memory. Grouping the whole range by month and user at once sorts every row of the range,
+   * which measured about ten times slower on a year of a large deployment's usage.
+   *
+   * Only a pool that is not restricted to one tenant, i.e. `EnvSet.sharedPool`, sees every tenant.
+   */
+  const countActiveUsersByMonthExcludingTenant = async ({
+    from,
+    to,
+    excludedTenantId,
+  }: {
+    from: Date;
+    to: Date;
+    excludedTenantId: string;
+  }): Promise<Map<string, number>> => {
+    // The month starts are UTC `timestamp`s, so adding a month does not depend on the time zone of
+    // the session.
+    const rows = await pool.any<{ month: string; count: string }>(sql`
+      select to_char(months.start, 'YYYY-MM') as month, users.count
+      from generate_series(
+        to_timestamp(${from.getTime()}::double precision / 1000) at time zone 'UTC',
+        to_timestamp(${to.getTime()}::double precision / 1000) at time zone 'UTC'
+          - interval '1 month',
+        interval '1 month'
+      ) as months(start)
+      cross join lateral (
+        select count(*)
+        from (
+          select ${fields.userId}
+          from ${table}
+          where ${fields.date} >= months.start at time zone 'UTC'
+            and ${fields.date} < (months.start + interval '1 month') at time zone 'UTC'
+            and ${fields.tenantId} <> ${excludedTenantId}
+          group by ${fields.userId}
+        ) as month_users
+      ) as users
+    `);
+
+    // `count` is a `bigint`, which comes back as a string.
+    return new Map(rows.map(({ month, count }) => [month, Number(count)]));
+  };
+
   return {
     insertActiveUser,
     countActiveUsersByTimeInterval,
     getDailyActiveUserCountsByTimeInterval,
     countMonthlyActiveUsersExcludingTenant,
+    countActiveUsersByMonthExcludingTenant,
   };
 };

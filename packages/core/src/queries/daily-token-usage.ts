@@ -126,9 +126,40 @@ export const createDailyTokenUsageQueries = (pool: CommonQueryMethods) => {
     return { lastMonth: Number(lastMonth), monthToDate: Number(monthToDate) };
   };
 
+  /**
+   * Sum the token usage of every UTC calendar month from `from` until `to`, across every tenant
+   * except `excludedTenantId`. A month without token usage has no row.
+   *
+   * Only a pool that is not restricted to one tenant, i.e. `EnvSet.sharedPool`, sees every tenant.
+   */
+  const countTokenUsageByMonthExcludingTenant = async ({
+    from,
+    to,
+    excludedTenantId,
+  }: {
+    from: Date;
+    to: Date;
+    excludedTenantId: string;
+  }): Promise<Map<string, number>> => {
+    const rows = await pool.any<{ month: string; usage: string }>(sql`
+      select
+        to_char(${fields.date} at time zone 'UTC', 'YYYY-MM') as month,
+        sum(${fields.usage}) as usage
+      from ${table}
+      where ${fields.date} >= to_timestamp(${from.getTime()}::double precision / 1000)
+        and ${fields.date} < to_timestamp(${to.getTime()}::double precision / 1000)
+        and ${fields.tenantId} <> ${excludedTenantId}
+      group by 1
+    `);
+
+    // The sum of a `bigint` column is a `numeric`, which comes back as a string.
+    return new Map(rows.map(({ month, usage }) => [month, Number(usage)]));
+  };
+
   return {
     recordTokenUsage,
     countTokenUsage,
     countMonthlyTokenUsageExcludingTenant,
+    countTokenUsageByMonthExcludingTenant,
   };
 };
