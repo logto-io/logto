@@ -252,6 +252,16 @@ describe('adminUserRoutes', () => {
     );
   });
 
+  it('GET /users should reject more than 20 customData parameters', async () => {
+    const customData = Array.from({ length: 21 }, () => '{"qq":114514}');
+    const response = await userRequest.get('/users').query({ customData });
+
+    expect(response.status).toEqual(400);
+    expect(response.text).toContain('can be repeated at most 20 times');
+    expect(mockedQueries.users.countUsers).not.toHaveBeenCalled();
+    expect(mockedQueries.users.findUsers).not.toHaveBeenCalled();
+  });
+
   it('GET /users should combine customData with search, identity, and exclusion filters', async () => {
     const customData = ['{"profile":{"tier":"gold"}}'];
     const response = await userRequest.get('/users').query({

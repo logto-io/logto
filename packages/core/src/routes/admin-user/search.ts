@@ -64,6 +64,8 @@ const getIdentityCondition = (searchParams: URLSearchParams): UserConditions['id
 const customDataSearchHint =
   'Parameter `customData` must be a URL-encoded JSON object, e.g. `customData={"qq":114514}`. Nested parameters such as `customData.qq`, `customData[qq]`, and `mode.customData` are not supported.';
 
+const maxCustomDataSearchValues = 20;
+
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
 
@@ -126,6 +128,9 @@ const parseCustomDataParameter = (value: string): string => {
  * Parse the repeatable `customData` query parameter. Every value is a raw JSON object string used
  * for JSONB containment (`@>`); values are combined with OR, and the whole condition is combined
  * with all other user filters using AND.
+ *
+ * The number of values is capped because each one adds another containment check to every scanned
+ * user row, and the count and the list queries both scan the tenant.
  */
 const parseCustomDataSearchParams = (searchParams: URLSearchParams) => {
   for (const key of searchParams.keys()) {
@@ -140,6 +145,13 @@ const parseCustomDataSearchParams = (searchParams: URLSearchParams) => {
   if (values.length === 0) {
     return;
   }
+
+  assertThat(
+    values.length <= maxCustomDataSearchValues,
+    new TypeError(
+      `Parameter \`customData\` can be repeated at most ${maxCustomDataSearchValues} times. ${customDataSearchHint}`
+    )
+  );
 
   return values.map((value) => parseCustomDataParameter(value));
 };

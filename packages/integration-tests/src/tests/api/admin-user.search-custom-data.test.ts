@@ -155,4 +155,27 @@ describe('admin console user search params - customData', () => {
       status: 400,
     });
   });
+
+  it('should reject more than 20 customData values', async () => {
+    await expectRejects(
+      getUsers<User[]>(
+        Array.from({ length: 21 }, () => ['customData', `{"group":"${userPrefix}"}`])
+      ),
+      {
+        code: 'request.invalid_input',
+        status: 400,
+        messageIncludes: 'can be repeated at most 20 times',
+      }
+    );
+  });
+
+  it.each([
+    ['a number that overflows the numeric format', '{"qq":1e999999}'],
+    ['a NUL escape', '{"qq":"\\u0000"}'],
+  ])('should reject %s in customData', async (_, value) => {
+    await expectRejects(getUsers<User[]>([['customData', value]]), {
+      code: 'request.invalid_input',
+      status: 400,
+    });
+  });
 });
