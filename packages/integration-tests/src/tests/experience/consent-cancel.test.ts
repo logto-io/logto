@@ -11,7 +11,7 @@ import {
 } from '#src/helpers/profile.js';
 import { setUsernamePasswordOnly } from '#src/helpers/sign-in-experience.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
-import { devFeatureTest, generateTestName } from '#src/utils.js';
+import { generateTestName } from '#src/utils.js';
 
 const buildDemoAppUrl = (applicationId: string) => {
   const url = new URL(demoAppUrl);
@@ -51,7 +51,7 @@ const createThirdPartyApplication = async () => {
   return application;
 };
 
-devFeatureTest.describe('consent cancel', () => {
+describe('consent cancel', () => {
   beforeAll(async () => {
     await setUsernamePasswordOnly();
     await updateSignInExperience({

@@ -23,14 +23,6 @@ jest.mock('@/apis/experience', () => ({
   abortInteraction: jest.fn(),
 }));
 
-const mockIsDevFeaturesEnabled = jest.fn(() => true);
-
-jest.mock('@/constants/env', () => ({
-  get isDevFeaturesEnabled() {
-    return mockIsDevFeaturesEnabled();
-  },
-}));
-
 const mockedConsent = consent as jest.MockedFunction<typeof consent>;
 const mockedGetConsentInfo = getConsentInfo as jest.MockedFunction<typeof getConsentInfo>;
 const mockedAbortInteraction = abortInteraction as jest.MockedFunction<typeof abortInteraction>;
@@ -123,7 +115,6 @@ describe('Consent', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
-    mockIsDevFeaturesEnabled.mockReturnValue(true);
   });
 
   afterAll(() => {
@@ -210,22 +201,6 @@ describe('Consent', () => {
       });
 
       expect(mockedAbortInteraction).toHaveBeenCalledTimes(1);
-    });
-
-    it('keeps the bare redirect when the dev feature is disabled', async () => {
-      mockIsDevFeaturesEnabled.mockReturnValue(false);
-      mockedGetConsentInfo.mockResolvedValueOnce(consentInfo);
-
-      const { getByText } = renderConsent();
-
-      await waitFor(() => {
-        expect(getByText('action.cancel')).not.toBeNull();
-      });
-
-      fireEvent.click(getByText('action.cancel'));
-
-      expect(mockedAbortInteraction).not.toHaveBeenCalled();
-      expect(replace).toHaveBeenCalledWith(consentInfo.redirectUri);
     });
   });
 

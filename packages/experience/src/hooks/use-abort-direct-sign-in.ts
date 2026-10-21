@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 
 import { abortInteraction, getDirectSignIn } from '@/apis/experience';
-import { isDevFeaturesEnabled } from '@/constants/env';
 
 import useApi from './use-api';
 import useGlobalRedirectTo from './use-global-redirect-to';
@@ -21,11 +20,6 @@ const useAbortDirectSignIn = () => {
 
   return useCallback(
     async (reason?: string) => {
-      if (!isDevFeaturesEnabled) {
-        // DEV: Direct sign-in abort.
-        return false;
-      }
-
       const [error, result] = await asyncGetDirectSignIn();
 
       if (error || !result?.directSignIn) {
