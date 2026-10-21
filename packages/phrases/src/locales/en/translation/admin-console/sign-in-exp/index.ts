@@ -113,6 +113,14 @@ const sign_in_exp = {
     csp_source_duplicate_error: 'This source expression is already listed.',
   },
   account_center: {
+    recent_authentication: {
+      title: 'Recent authentication',
+      description:
+        'Sensitive account operations, such as changing a password or turning off 2-step verification, require a recent sign-in, whether the user acts in Account Center or in an app calling the Account API. This window defines how recent that sign-in must be.',
+      maximum_authentication_age_in_minutes: 'Maximum authentication age in minutes',
+      maximum_authentication_age_in_minutes_tip:
+        'How long a sign-in stays recent enough for sensitive operations. A client can still request a shorter window with the `max_age` parameter.',
+    },
     title: 'ACCOUNT CENTER',
     description:
       'Implement your account center for end users to manage account security and profile information.',

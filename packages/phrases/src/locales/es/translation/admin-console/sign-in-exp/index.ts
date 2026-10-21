@@ -115,6 +115,14 @@ const sign_in_exp = {
     csp_source_duplicate_error: 'Esta expresión de origen ya está en la lista.',
   },
   account_center: {
+    recent_authentication: {
+      title: 'Autenticación reciente',
+      description:
+        'Las operaciones sensibles de la cuenta, como cambiar la contraseña o desactivar la verificación en dos pasos, requieren un inicio de sesión reciente, ya se realicen en Account Center o en una aplicación que llame a la Account API. Este intervalo define cuán reciente debe ser ese inicio de sesión.',
+      maximum_authentication_age_in_minutes: 'Antigüedad máxima de autenticación en minutos',
+      maximum_authentication_age_in_minutes_tip:
+        'Cuánto tiempo un inicio de sesión sigue siendo lo bastante reciente para operaciones sensibles. Un cliente aún puede solicitar un intervalo más corto con el parámetro `max_age`.',
+    },
     title: 'CENTRO DE CUENTAS',
     description: 'Personaliza los flujos de tu centro de cuentas usando las API de Logto.',
     enable_account_api: 'Habilitar el centro de cuentas y la Account API',

@@ -113,6 +113,14 @@ const sign_in_exp = {
     csp_source_duplicate_error: 'Dieser Quellausdruck ist bereits aufgeführt.',
   },
   account_center: {
+    recent_authentication: {
+      title: 'Kürzliche Authentifizierung',
+      description:
+        'Sensible Konto-Vorgänge wie das Ändern eines Passworts oder das Deaktivieren der Zwei-Schritt-Verifizierung erfordern eine kürzliche Anmeldung, egal ob sie im Account Center oder in einer App erfolgen, die die Account API aufruft. Dieses Zeitfenster legt fest, wie aktuell diese Anmeldung sein muss.',
+      maximum_authentication_age_in_minutes: 'Maximales Authentifizierungsalter in Minuten',
+      maximum_authentication_age_in_minutes_tip:
+        'Wie lange eine Anmeldung für sensible Vorgänge als aktuell gilt. Ein Client kann mit dem Parameter `max_age` weiterhin ein kürzeres Zeitfenster anfordern.',
+    },
     title: 'KONTOZENTRUM',
     description: 'Passen Sie Ihre Kontozentrums-Workflows mit den Logto-APIs an.',
     enable_account_api: 'Kontozentrum und Account-API aktivieren',

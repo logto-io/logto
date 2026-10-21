@@ -109,6 +109,14 @@ const sign_in_exp = {
     csp_source_duplicate_error: '此源表达式已在列表中。',
   },
   account_center: {
+    recent_authentication: {
+      title: '最近一次身份验证',
+      description:
+        '敏感账号操作（例如修改密码或关闭两步验证）要求用户最近登录过，无论是在 Account Center 中操作，还是在调用 Account API 的应用中操作。此时间窗口定义了多久以内的登录仍被视为最近登录。',
+      maximum_authentication_age_in_minutes: '最大身份验证时长（分钟）',
+      maximum_authentication_age_in_minutes_tip:
+        '登录在多长时间内仍被视为对敏感操作足够新。客户端仍可通过 `max_age` 参数请求更短的时间窗口。',
+    },
     title: '账户中心',
     description: '为终端用户实现账户中心，以管理账户安全和个人资料信息。',
     enable_account_api: '启用账户中心和 Account API',

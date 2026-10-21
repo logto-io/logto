@@ -109,6 +109,14 @@ const sign_in_exp = {
     csp_source_duplicate_error: '此來源表達式已在列表中。',
   },
   account_center: {
+    recent_authentication: {
+      title: '最近一次身分驗證',
+      description:
+        '敏感帳號操作（例如修改密碼或關閉雙重驗證）要求使用者最近登入過，無論是在 Account Center 中操作，還是在呼叫 Account API 的應用程式中操作。此時間視窗定義了多久以內的登入仍視為最近登入。',
+      maximum_authentication_age_in_minutes: '最大身分驗證時長（分鐘）',
+      maximum_authentication_age_in_minutes_tip:
+        '登入在多長時間內仍視為對敏感操作足夠新。用戶端仍可透過 `max_age` 參數要求更短的時間視窗。',
+    },
     title: '帳戶中心',
     description: '使用 Logto API 自訂你的帳戶中心流程。',
     enable_account_api: '啟用帳戶中心和 Account API',

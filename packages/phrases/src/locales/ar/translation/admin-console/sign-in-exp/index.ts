@@ -111,6 +111,14 @@ const sign_in_exp = {
     csp_source_duplicate_error: 'تعبير المصدر هذا موجود بالفعل في القائمة.',
   },
   account_center: {
+    recent_authentication: {
+      title: 'المصادقة الحديثة',
+      description:
+        'تتطلب عمليات الحساب الحساسة، مثل تغيير كلمة المرور أو إيقاف التحقق الثنائي، تسجيل دخول حديثًا، سواء تمت في Account Center أو في تطبيق يستدعي Account API. يحدد هذا النطاق الزمني مدى حداثة تسجيل الدخول المطلوب.',
+      maximum_authentication_age_in_minutes: 'الحد الأقصى لعمر المصادقة بالدقائق',
+      maximum_authentication_age_in_minutes_tip:
+        'المدة التي يظل فيها تسجيل الدخول حديثًا بدرجة كافية للعمليات الحساسة. يمكن للعميل طلب نطاق زمني أقصر باستخدام المعامل `max_age`.',
+    },
     title: 'مركز الحساب',
     description: 'خصص تدفقات مركز الحساب لديك باستخدام واجهات برمجة تطبيقات Logto.',
     enable_account_api: 'تفعيل مركز الحساب وواجهة Account API',
