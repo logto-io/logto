@@ -67,11 +67,11 @@ const tenants = {
       'Die Nutzung ist derzeit nicht verfügbar. Sie wird innerhalb einer Stunde erneut erfasst.',
     usage_statement_description:
       'Exportiere die Nutzung der letzten 12 vollen Monate als CSV-Datei, erstellt aus den eigenen Aufzeichnungen dieser Bereitstellung, um sie Logto auf Anfrage bereitzustellen.',
-    usage_statement_export_button: 'Nutzungsbericht exportieren',
+    usage_statement_export_button: 'Nutzungsnachweis exportieren',
     usage_statement_month_column: 'Monat',
     usage_reporting_title: 'NUTZUNGSBERICHT',
     usage_reporting_description:
-      'Was diese Bereitstellung an Logto sendet. Nur lesbar: Setze SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED auf jeder Core-Instanz, um es zu deaktivieren.',
+      'Was diese Bereitstellung an Logto sendet. Schreibgeschützt: Setze SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED auf jeder Core-Instanz, um es zu deaktivieren.',
     usage_reporting_enabled: 'Aktiviert',
     usage_reporting_disabled: 'Deaktiviert',
     usage_reporting_enabled_description:
