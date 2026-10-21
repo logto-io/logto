@@ -9,8 +9,14 @@ import { buildUpdateWhereWithPool } from '../database/update-where.js';
 
 const { table, fields } = convertToIdentifiers(VerificationRecords);
 
-// Default expiration time for verification records is 10 minutes
-// TODO: Remove this after we implement "Account Center" configuration
+/**
+ * The lifetime of a legacy verification record: 10 minutes, intentionally independent of the
+ * Account Center recent-authentication window. The window governs how recent an OIDC authentication
+ * must be for the Account API, while this record is a proof a client created through the
+ * Verification API, and direct Account API integrations rely on this released window.
+ *
+ * TODO: Remove this after we implement "Account Center" configuration
+ */
 export const expirationTime = 1000 * 60 * 10;
 
 export class VerificationRecordQueries {

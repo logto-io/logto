@@ -1,6 +1,7 @@
 import {
   accountCenterProfileFieldsGuard,
   deleteAccountUrlGuard,
+  maximumAuthenticationAgeInSecondsGuard,
   webauthnRelatedOriginsGuard,
 } from '@logto/schemas';
 import { deduplicate } from '@silverhand/essentials';
@@ -43,6 +44,7 @@ export default function accountCentersRoutes<T extends ManagementApiRouter>(
         deleteAccountUrl: deleteAccountUrlGuard.nullable().optional(),
         customCss: z.string().nullish(),
         profileFields: accountCenterProfileFieldsGuard.nullable().optional(),
+        maximumAuthenticationAgeInSeconds: maximumAuthenticationAgeInSecondsGuard.optional(),
       }),
       response: accountCenterApiGuard,
       status: [200, 400],
@@ -56,6 +58,7 @@ export default function accountCentersRoutes<T extends ManagementApiRouter>(
         deleteAccountUrl,
         customCss,
         profileFields,
+        maximumAuthenticationAgeInSeconds,
       } = ctx.guard.body;
       const normalizedDeleteAccountUrl = deleteAccountUrl === '' ? null : deleteAccountUrl;
       const normalizedProfileFields = await normalizeProfileFields(profileFields);
@@ -70,6 +73,7 @@ export default function accountCentersRoutes<T extends ManagementApiRouter>(
           : undefined,
         deleteAccountUrl: normalizedDeleteAccountUrl,
         customCss,
+        maximumAuthenticationAgeInSeconds,
         ...(normalizedProfileFields !== undefined && {
           profileFields: normalizedProfileFields,
         }),

@@ -90,6 +90,29 @@
           }
         }
       }
+    },
+    "/api/.well-known/authentication-policy": {
+      "get": {
+        "summary": "Get the public recent-authentication window",
+        "description": "Get the freshness window the Account API enforces for sensitive operations. First-party clients such as Account Center read it to align a proactive step-up with the Account API policy.",
+        "tags": ["Dev feature"],
+        "responses": {
+          "200": {
+            "description": "The freshness window, in seconds, with every field resolved to its effective value.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "maximumAuthenticationAgeInSeconds": {
+                      "description": "How long, in seconds, an end-user authentication stays recent enough for Logto-enforced sensitive operations."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

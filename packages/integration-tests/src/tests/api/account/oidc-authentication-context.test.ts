@@ -1,8 +1,13 @@
 import { UserScope } from '@logto/core-kit';
 import { type KyInstance } from 'ky';
 
-import { enableAllAccountCenterFields } from '#src/api/account-center.js';
+import {
+  enableAllAccountCenterFields,
+  getAccountCenter,
+  updateAccountCenter,
+} from '#src/api/account-center.js';
 import { authedAdminApi } from '#src/api/api.js';
+import { getPublicAuthenticationPolicy } from '#src/api/logto-config.js';
 import { getSessions, updateMyLogtoConfig } from '#src/api/my-account.js';
 import { createVerificationRecordByPassword } from '#src/api/verification-record.js';
 import {
@@ -20,6 +25,30 @@ const getTrustedDevicesResponse = async (api: KyInstance) =>
     headers: { 'logto-verification-id': '' },
     throwHttpErrors: false,
   });
+
+const getChallengeMaxAge = (response: Awaited<ReturnType<typeof getTrustedDevicesResponse>>) =>
+  /max_age="(\d+)"/.exec(response.headers.get('WWW-Authenticate') ?? '')?.[1];
+
+/**
+ * Configure the tenant window, then prove that a sign-in made right after it is recent enough:
+ * the shortest window is the strictest case the tenant can ask for.
+ */
+const expectFreshSignInAccepted = async (maximumAuthenticationAgeInSeconds: number) => {
+  await updateAccountCenter({ maximumAuthenticationAgeInSeconds });
+
+  const { user, username, password } = await createDefaultTenantUserWithPassword();
+
+  try {
+    const api = await signInAndGetUserApi(username, password, {
+      scopes: [UserScope.Profile, UserScope.TrustedDevices],
+    });
+    const response = await getTrustedDevicesResponse(api);
+
+    expect(response.status).toBe(200);
+  } finally {
+    await deleteDefaultTenantUser(user.id);
+  }
+};
 
 describe('account API authentication context', () => {
   beforeAll(async () => {
@@ -95,6 +124,56 @@ describe('account API authentication context', () => {
         );
       } finally {
         await deleteDefaultTenantUser(user.id);
+      }
+    }
+  );
+
+  devFeatureTest.it(
+    'advertises the tenant maximum authentication age in the challenge and the public policy',
+    async () => {
+      const { user } = await createDefaultTenantUserWithPassword();
+      const api = await signInWithSocialAndGetUserApi(user.id, {
+        scopes: [UserScope.Profile, UserScope.TrustedDevices],
+      });
+      const originalAccountCenter = await getAccountCenter();
+
+      try {
+        await updateAccountCenter({ maximumAuthenticationAgeInSeconds: 7200 });
+
+        const response = await getTrustedDevicesResponse(api);
+        expect(response.status).toBe(401);
+        expect(getChallengeMaxAge(response)).toBe('7200');
+        // The Account Center setting stores the value...
+        await expect(getAccountCenter()).resolves.toMatchObject({
+          maximumAuthenticationAgeInSeconds: 7200,
+        });
+        // ...and the public configuration exposes the same window.
+        await expect(getPublicAuthenticationPolicy()).resolves.toEqual({
+          maximumAuthenticationAgeInSeconds: 7200,
+        });
+      } finally {
+        await updateAccountCenter({
+          maximumAuthenticationAgeInSeconds:
+            originalAccountCenter.maximumAuthenticationAgeInSeconds,
+        });
+        await deleteDefaultTenantUser(user.id);
+      }
+    }
+  );
+
+  devFeatureTest.it(
+    'accepts a fresh first-party sign-in at both ends of the configurable range',
+    async () => {
+      const originalAccountCenter = await getAccountCenter();
+
+      try {
+        await expectFreshSignInAccepted(60);
+        await expectFreshSignInAccepted(7200);
+      } finally {
+        await updateAccountCenter({
+          maximumAuthenticationAgeInSeconds:
+            originalAccountCenter.maximumAuthenticationAgeInSeconds,
+        });
       }
     }
   );

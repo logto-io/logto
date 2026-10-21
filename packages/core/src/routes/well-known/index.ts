@@ -1,4 +1,8 @@
-import { adminTenantId, fullSignInExperienceGuard } from '@logto/schemas';
+import {
+  adminTenantId,
+  fullSignInExperienceGuard,
+  maximumAuthenticationAgeInSecondsGuard,
+} from '@logto/schemas';
 import { z } from 'zod';
 
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
@@ -23,7 +27,7 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
   const {
     customPhrases: { findAllCustomLanguageTags },
     signInExperiences: { findDefaultSignInExperience },
-    accountCenters: { findDefaultAccountCenter },
+    accountCenters: { findDefaultAccountCenter, getMaximumAuthenticationAgeInSeconds },
   } = queries;
 
   if (tenantId === adminTenantId) {
@@ -97,4 +101,27 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
       return next();
     }
   );
+
+  // DEV: OIDC step-up authentication. The Account Center reads the freshness window from the
+  // tenant's account center setting here so its proactive step-up and the Account API policy agree;
+  // it falls back to the default when the feature is off and this route is absent.
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    const authenticationPolicyGuard = z.object({
+      maximumAuthenticationAgeInSeconds: maximumAuthenticationAgeInSecondsGuard,
+    });
+
+    router.get(
+      '/.well-known/authentication-policy',
+      koaGuard({
+        response: authenticationPolicyGuard,
+        status: 200,
+      }),
+      async (ctx, next) => {
+        ctx.body = {
+          maximumAuthenticationAgeInSeconds: await getMaximumAuthenticationAgeInSeconds(),
+        };
+        return next();
+      }
+    );
+  }
 }

@@ -1,4 +1,10 @@
-import { AdditionalIdentifier, LogtoAcr, VerificationType, type Application } from '@logto/schemas';
+import {
+  AdditionalIdentifier,
+  LogtoAcr,
+  VerificationType,
+  defaultMaximumAuthenticationAgeInSeconds,
+  type Application,
+} from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 import type { Context } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
@@ -46,11 +52,13 @@ const next = jest.fn();
 
 /**
  * A tenant whose application lookup resolves the access token's client, so the OIDC branch can
- * tell a first-party application from a third-party one.
+ * tell a first-party application from a third-party one. `maximumAuthenticationAgeInSeconds`
+ * overrides the account center's freshness window; without it the default applies.
  */
 const createTenantWithApplication = (
   application: Partial<Application> | undefined,
-  verificationRecordsData?: Record<string, unknown>
+  verificationRecordsData?: Record<string, unknown>,
+  maximumAuthenticationAgeInSeconds?: number
 ) =>
   new MockTenant(provider, {
     applications: {
@@ -61,6 +69,11 @@ const createTenantWithApplication = (
 
         return { ...mockApplication, ...application };
       }),
+    },
+    accountCenters: {
+      getMaximumAuthenticationAgeInSeconds: jest.fn(
+        async () => maximumAuthenticationAgeInSeconds ?? defaultMaximumAuthenticationAgeInSeconds
+      ),
     },
     ...(verificationRecordsData && {
       verificationRecords: {
@@ -132,9 +145,49 @@ describe('koaOidcAuth middleware with an OIDC authentication context', () => {
     }
   );
 
+  it('should record the tenant window for the challenge', async () => {
+    const auth = await runMiddleware(
+      createTenantWithApplication({ isThirdParty: false }, undefined, 7200),
+      buildAccessToken({ acr: LogtoAcr.FirstFactor, auth_time: nowInSeconds() })
+    );
+
+    expect(auth).toMatchObject({
+      identityVerified: true,
+      isFirstPartyClient: true,
+      maximumAuthenticationAgeInSeconds: 7200,
+    });
+  });
+
+  it('should accept a context that only satisfies a longer tenant window', async () => {
+    const auth = await runMiddleware(
+      createTenantWithApplication({ isThirdParty: false }, undefined, 7200),
+      buildAccessToken({ acr: LogtoAcr.FirstFactor, auth_time: nowInSeconds() - 7000 })
+    );
+
+    expect(auth).toMatchObject({ identityVerified: true });
+  });
+
+  it('should reject a context that satisfies the default window but not a shorter tenant one', async () => {
+    const auth = await runMiddleware(
+      createTenantWithApplication({ isThirdParty: false }, undefined, 60),
+      buildAccessToken({ acr: LogtoAcr.FirstFactor, auth_time: nowInSeconds() - 120 })
+    );
+
+    expect(auth).toMatchObject({
+      identityVerified: false,
+      isFirstPartyClient: true,
+      maximumAuthenticationAgeInSeconds: 60,
+    });
+  });
+
   it.each([
     ['a stale authentication', { acr: LogtoAcr.FirstFactor, auth_time: nowInSeconds() - 601 }],
-    ['a future authentication', { acr: LogtoAcr.FirstFactor, auth_time: nowInSeconds() + 1 }],
+    [
+      'a future authentication',
+      // A minute ahead, so the assertion cannot race the clock while the middleware awaits its
+      // application and policy lookups.
+      { acr: LogtoAcr.FirstFactor, auth_time: nowInSeconds() + 60 },
+    ],
     ['a missing `acr`', { auth_time: nowInSeconds() }],
     ['a malformed `acr`', { acr: 1, auth_time: nowInSeconds() }],
     ['a non-Logto `acr`', { acr: 'urn:example:acr:1fa', auth_time: nowInSeconds() }],

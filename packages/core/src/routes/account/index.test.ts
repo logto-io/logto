@@ -56,6 +56,7 @@ const mockedQueries = {
         deleteAccountUrl: null,
         customCss: null,
         profileFields: [],
+        maximumAuthenticationAgeInSeconds: 600,
       })
     ),
   },

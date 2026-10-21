@@ -28,7 +28,12 @@ export const assertIdentityVerified = (ctx: IdentityVerificationContext) => {
     !ctx.auth.identityVerified &&
     ctx.auth.isFirstPartyClient
   ) {
-    ctx.set('WWW-Authenticate', buildInsufficientUserAuthenticationChallenge());
+    // Advertise the same tenant window the request was evaluated against, so the client starts a
+    // step-up that actually satisfies the policy.
+    ctx.set(
+      'WWW-Authenticate',
+      buildInsufficientUserAuthenticationChallenge(ctx.auth.maximumAuthenticationAgeInSeconds)
+    );
   }
 
   assertThat(
