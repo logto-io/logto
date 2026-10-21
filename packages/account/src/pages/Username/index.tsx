@@ -118,8 +118,10 @@ const Username = () => {
       return;
     }
 
-    // Show the username the step-up was started for, so a failed resume leaves the form on it.
+    // Remount the input with the username the step-up was started for, so a failed resume leaves
+    // the form on it instead of silently reverting to the current one.
     setPendingUsername(action.username);
+    setInputKey(action.username);
 
     const resume = async () => {
       if (await saveUsername(action.username, true)) {

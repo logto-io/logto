@@ -8,7 +8,7 @@ import {
   type UserMfaVerificationResponse,
 } from '@logto/schemas';
 import { format } from 'date-fns';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -59,6 +59,7 @@ const PasskeyView = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedPasskey, setSelectedPasskey] = useState<PasskeyInfo>();
   const [editName, setEditName] = useState('');
+  const hasResumedActionRef = useRef(false);
 
   const fetchPasskeys = useCallback(async () => {
     const [error, result] = await getMfaRequest();
@@ -82,16 +83,6 @@ const PasskeyView = () => {
     );
   }, [getMfaRequest]);
 
-  // Fetch passkeys on mount
-  useEffect(() => {
-    // DEV: OIDC step-up authentication in Account Center
-    if (!verificationId && !isDevFeaturesEnabled) {
-      return;
-    }
-
-    void fetchPasskeys();
-  }, [fetchPasskeys, verificationId]);
-
   const deletePasskey = useCallback(
     async (id: string, isResumed = false) => {
       const [error] = await deletePasskeyRequest(verificationId, id);
@@ -108,6 +99,12 @@ const PasskeyView = () => {
           },
         });
         setShowDeleteConfirm(false);
+
+        if (isResumed) {
+          // The resumed action owns this page load; load the list so a failed replay does not
+          // leave the page blank.
+          await fetchPasskeys();
+        }
         return;
       }
 
@@ -151,6 +148,12 @@ const PasskeyView = () => {
           },
         });
         setShowEditModal(false);
+
+        if (isResumed) {
+          // The resumed action owns this page load; load the list so a failed replay does not
+          // leave the page blank.
+          await fetchPasskeys();
+        }
         return;
       }
 
@@ -187,6 +190,10 @@ const PasskeyView = () => {
       return;
     }
 
+    // The resumed action owns this page load; its own request reloads the list when it finishes.
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- the ref only guards the mount fetch
+    hasResumedActionRef.current = true;
+
     if (action.type === 'delete-passkey') {
       void deletePasskey(action.id, true);
       return;
@@ -194,6 +201,20 @@ const PasskeyView = () => {
 
     void renamePasskey(action.id, action.name, true);
   }, [deletePasskey, renamePasskey]);
+
+  // Fetch passkeys on mount, unless a resumed action already owns this page load.
+  useEffect(() => {
+    if (hasResumedActionRef.current) {
+      return;
+    }
+
+    // DEV: OIDC step-up authentication in Account Center
+    if (!verificationId && !isDevFeaturesEnabled) {
+      return;
+    }
+
+    void fetchPasskeys();
+  }, [fetchPasskeys, verificationId]);
 
   const handleDelete = useCallback(async () => {
     if (!selectedPasskey) {

@@ -44,6 +44,16 @@ const challenge =
   'error_description="Recent user authentication is required", ' +
   'acr_values="urn:logto:acr:1fa", max_age="600"';
 
+const createHttpError = (code: string, status: number) =>
+  new HTTPError(
+    {
+      status,
+      json: async () => ({ code, message: code }),
+    } as unknown as Response,
+    {} as Request,
+    {} as NormalizedOptions
+  );
+
 const createChallengeError = () =>
   new HTTPError(
     {
@@ -181,5 +191,21 @@ describe('<Username /> OIDC step-up', () => {
     expect(mockUpdateUsername).toHaveBeenCalledTimes(1);
     expect(mockSignIn).not.toHaveBeenCalled();
     expect(accountStorage.pendingStepUp.get()).toBeUndefined();
+  });
+
+  it('keeps the resumed username in the form when the update fails', async () => {
+    prepareResumableStepUp('resumed_username');
+    mockUpdateUsername.mockRejectedValue(createHttpError('user.username_already_in_use', 422));
+
+    renderUsername();
+
+    await waitFor(() => {
+      expect(mockSetToast).toHaveBeenCalledWith('error.username_exists');
+    });
+
+    const usernameInput = document.querySelector<HTMLInputElement>('input[name="username"]');
+
+    expect(usernameInput?.value).toBe('resumed_username');
+    expect(mockUpdateUsername).toHaveBeenCalledTimes(1);
   });
 });

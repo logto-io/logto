@@ -113,6 +113,12 @@ const TrustedDevicesSection = () => {
           'verification_record.permission_denied': handlePermissionDenied,
         });
         setIsRemoving(false);
+
+        if (isResumed) {
+          // The resumed action owns this page load; load the list so a failed replay does not
+          // leave the section in its initial loading state.
+          await fetchTrustedDevices(true);
+        }
         return;
       }
 

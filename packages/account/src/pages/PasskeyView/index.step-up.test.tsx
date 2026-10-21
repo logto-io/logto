@@ -53,6 +53,17 @@ const challenge =
   'error_description="Recent user authentication is required", ' +
   'acr_values="urn:logto:acr:1fa", max_age="600"';
 
+const createNotFoundError = () =>
+  new HTTPError(
+    {
+      status: 404,
+      headers: { get: () => null },
+      json: async () => ({ code: 'entity.not_found', message: 'Not found.' }),
+    } as unknown as Response,
+    {} as Request,
+    {} as NormalizedOptions
+  );
+
 const createChallengeError = () =>
   new HTTPError(
     {
@@ -171,7 +182,8 @@ describe('<PasskeyView /> OIDC step-up', () => {
         undefined,
         'passkey-1'
       );
-      expect(mockGetMfaVerifications).toHaveBeenCalledTimes(2);
+      // The mount fetch is skipped; only the resumed action reloads the list.
+      expect(mockGetMfaVerifications).toHaveBeenCalledTimes(1);
     });
 
     expect(mockSignIn).not.toHaveBeenCalled();
@@ -189,10 +201,26 @@ describe('<PasskeyView /> OIDC step-up', () => {
         'passkey-1',
         'Renamed passkey'
       );
-      expect(mockGetMfaVerifications).toHaveBeenCalledTimes(2);
+      // The mount fetch is skipped; only the resumed action reloads the list.
+      expect(mockGetMfaVerifications).toHaveBeenCalledTimes(1);
     });
 
     expect(mockUpdateWebAuthnName).toHaveBeenCalledTimes(1);
+    expect(mockSignIn).not.toHaveBeenCalled();
+  });
+
+  it('reloads the list when the resumed action fails', async () => {
+    prepareResumableStepUp({ type: 'delete-passkey', id: 'passkey-1' });
+    mockDeleteMfaVerification.mockRejectedValue(createNotFoundError());
+
+    const { getByText } = renderPasskeyView();
+
+    await waitFor(() => {
+      expect(getByText('My passkey')).not.toBeNull();
+    });
+
+    expect(mockGetMfaVerifications).toHaveBeenCalledTimes(1);
+    expect(mockDeleteMfaVerification).toHaveBeenCalledTimes(1);
     expect(mockSignIn).not.toHaveBeenCalled();
   });
 });

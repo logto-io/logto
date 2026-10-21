@@ -55,6 +55,17 @@ const challenge =
   'error_description="Recent user authentication is required", ' +
   'acr_values="urn:logto:acr:1fa", max_age="600"';
 
+const createNotFoundError = () =>
+  new HTTPError(
+    {
+      status: 404,
+      headers: { get: () => null },
+      json: async () => ({ code: 'entity.not_found', message: 'Not found.' }),
+    } as unknown as Response,
+    {} as Request,
+    {} as NormalizedOptions
+  );
+
 const createChallengeError = () =>
   new HTTPError(
     {
@@ -244,6 +255,25 @@ describe('<TrustedDevicesSection /> OIDC step-up', () => {
     });
 
     expect(mockRemoveTrustedDevice).toHaveBeenCalledTimes(1);
+    expect(mockSignIn).not.toHaveBeenCalled();
+  });
+
+  it('reloads the list when the resumed removal fails', async () => {
+    mockGetTrustedDevices.mockResolvedValue([]);
+    mockRemoveTrustedDevice.mockRejectedValue(createNotFoundError());
+    prepareResumableStepUp({
+      type: 'remove-trusted-device',
+      trustedDeviceId: 'trusted-device-id',
+    });
+
+    const { getByText } = renderTrustedDevices();
+
+    await waitFor(() => {
+      expect(getByText('No trusted devices.')).not.toBeNull();
+    });
+
+    expect(mockRemoveTrustedDevice).toHaveBeenCalledTimes(1);
+    expect(mockGetTrustedDevices).toHaveBeenCalledTimes(1);
     expect(mockSignIn).not.toHaveBeenCalled();
   });
 });
