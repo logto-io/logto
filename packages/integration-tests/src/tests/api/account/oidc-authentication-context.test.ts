@@ -119,7 +119,8 @@ describe('account API authentication context', () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       // The built-in Account Center signs in as its own application, so the access token it sends
       // to the Account API is the one the OIDC context has to reach through the token itself.
-      // The scopes are the ones the built-in Account Center requests.
+      // The scopes are a subset of the ones the built-in Account Center requests; the reserved
+      // scopes come from the client's default `includeReservedScopes`.
       const client = await initExperienceClient({
         config: {
           appId: accountCenterApplicationId,
@@ -242,6 +243,11 @@ describe('account API authentication context', () => {
         await successfullyVerifyTotp(client, { code: authenticator.generate(totp.secret) });
         const { redirectTo: stepUpRedirectTo } = await client.submitInteraction();
         await client.resumeAuthorization(stepUpRedirectTo);
+
+        // The step-up replaced the token set, so the token under test really is elevated.
+        await expect(client.getIdTokenClaims()).resolves.toMatchObject({
+          acr: LogtoAcr.Mfa,
+        });
 
         const api = baseApi.extend({
           headers: { Authorization: `Bearer ${await client.getAccessToken()}` },

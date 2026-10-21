@@ -255,12 +255,14 @@ devFeatureTest.describe('Account Center OIDC step-up', () => {
 
     // What the Account API answers once the elevated token ages out. The first read after the
     // page loads is challenged; every later one is served normally, so the resume can succeed.
+    // The values are deliberately not Account Center's own fallback (`max_age=600`), so a client
+    // that ignored the header and used the fallback cannot pass the assertions below.
     // eslint-disable-next-line @silverhand/fp/no-let -- the interceptor answers exactly one request
     let isChallengePending = true;
     const challenge =
       'Bearer error="insufficient_user_authentication", ' +
       'error_description="Recent user authentication is required", ' +
-      'acr_values="urn:logto:acr:1fa", max_age="600"';
+      'acr_values="urn:logto:acr:1fa", max_age="700"';
 
     try {
       const requests = recordRequests(experience);
@@ -300,14 +302,17 @@ devFeatureTest.describe('Account Center OIDC step-up', () => {
 
       await experience.waitForUrl(accountUrl('security'));
       await expect(experience.page).toMatchElement('div', { text: 'No trusted devices.' });
+      // The action resumed once, and the elevated token stayed the only proof.
+      expect(trustedDeviceReads()).toHaveLength(2);
+      expect(requests.verificationApiUrls).toEqual([]);
 
       const challengeAuthorizationUrl = requests.authorizationUrls.find((url) =>
         url.includes('acr_values')
       );
       const { searchParams } = new URL(challengeAuthorizationUrl ?? '');
-      // The challenge values are what the client requests, not Account Center's own defaults.
+      // The values come from the challenge header, not from Account Center's fallback.
       expect(searchParams.get('acr_values')).toBe('urn:logto:acr:1fa');
-      expect(searchParams.get('max_age')).toBe('600');
+      expect(searchParams.get('max_age')).toBe('700');
     } finally {
       await context.close();
       await deleteUser(user.id);
@@ -373,6 +378,16 @@ devFeatureTest.describe('Account Center OIDC step-up', () => {
       await experience.toClickButton('Manage', false);
       await experience.waitForPathname('step-up/password', undefined, accountCenterApplicationId);
 
+      // The action is persisted before the redirect, so the abandon below has one to discard.
+      await expect(
+        experience.page.evaluate(() => {
+          const raw = sessionStorage.getItem('logto:account-center:pending-step-up');
+          return raw === null
+            ? null
+            : (JSON.parse(raw) as { action: { type: string }; phase: string });
+        })
+      ).resolves.toMatchObject({ action: { type: 'load-sessions' }, phase: 'authorizing' });
+
       // Walk away from the step-up instead of finishing it.
       await experience.navigateTo(accountUrl('sessions'));
 
@@ -400,12 +415,14 @@ devFeatureTest.describe('Account Center OIDC step-up', () => {
     const experience = new ExpectExperience(await context.newPage());
 
     try {
+      const requests = recordRequests(experience);
       await signInWithSocial(experience, 'sessions', user.id);
 
       await experience.toClickButton('Manage', false);
       await experience.waitForPathname('step-up/password', undefined, accountCenterApplicationId);
 
-      // The authorization endpoint answers the step-up with an OIDC error instead of a code.
+      // The authorization endpoint answers the step-up with an OIDC error instead of a code. The
+      // state parameter is irrelevant here: only the error branch is under test.
       const failureUrl = appendPath(new URL(logtoUrl), 'account');
       failureUrl.searchParams.set('error', 'access_denied');
       await experience.navigateTo(failureUrl);
@@ -415,10 +432,15 @@ devFeatureTest.describe('Account Center OIDC step-up', () => {
       });
       await experience.toClickButton('Go back', false);
 
-      // Back on the page, still signed in, with nothing executed.
+      // Back on the page, still signed in, with the protected list untouched. Asserting the
+      // absence of the request is what proves a leaked pending action did not run: the stale
+      // social token would answer `401` and render the same "Manage" state either way.
       await experience.waitForUrl(accountUrl('sessions'));
       await expect(experience.page).toMatchElement('button', { text: 'Manage' });
       await expect(experience.page).not.toMatchElement('span', { text: 'Current session' });
+      expect(requests.accountApiRequests.filter(({ url }) => url.includes('/sessions'))).toEqual(
+        []
+      );
     } finally {
       await context.close();
       await deleteUser(user.id);
