@@ -3,6 +3,7 @@ import fs from 'node:fs/promises';
 import { type OpenAPIV3 } from 'openapi-types';
 
 import { EnvSet } from '#src/env-set/index.js';
+import { resetDevFeaturesEnabled, setDevFeaturesEnabled } from '#src/test-utils/dev-features.js';
 import { type DeepPartial } from '#src/test-utils/tenant.js';
 
 import {
@@ -13,12 +14,6 @@ import {
 } from './general.js';
 
 const originalIsCloud = EnvSet.values.isCloud;
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-
-const setDevFeaturesEnabled = (isDevFeaturesEnabled: boolean) => {
-  // eslint-disable-next-line @silverhand/fp/no-mutation -- Tests need to cover both dev-feature states.
-  (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = isDevFeaturesEnabled;
-};
 
 const createDevFeatureBooleanSchema = () =>
   ({
@@ -102,7 +97,7 @@ const loadSearchDocument = async (): Promise<DeepPartial<OpenAPIV3.Document>> =>
 describe('swagger general utils', () => {
   afterEach(() => {
     Reflect.set(EnvSet.values, 'isCloud', originalIsCloud);
-    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
+    resetDevFeaturesEnabled();
   });
 
   it('should remove dev feature schema properties and parameters when dev features are disabled', () => {
@@ -192,7 +187,7 @@ describe('swagger general utils', () => {
 
   it('should remove dev feature operations when dev features are disabled', () => {
     Reflect.set(EnvSet.values, 'isCloud', true);
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+    setDevFeaturesEnabled(false);
 
     const document = removeUnnecessaryOperations(createDevFeatureOperationDocument());
 

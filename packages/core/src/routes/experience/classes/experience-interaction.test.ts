@@ -36,11 +36,11 @@ import {
   mockUserTotpMfaVerification,
   mockUserWithMfaVerifications,
 } from '#src/__mocks__/user.js';
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { HookContextManager } from '#src/libraries/hook/context-manager.js';
 import { type InsertUserResult } from '#src/libraries/user.js';
 import { LogEntry } from '#src/middleware/koa-audit-log.js';
+import { resetDevFeaturesEnabled, setDevFeaturesEnabled } from '#src/test-utils/dev-features.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -281,12 +281,6 @@ const createSignInInteraction = ({
 };
 
 describe('ExperienceInteraction class', () => {
-  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-  const setDevFeaturesEnabled = (enabled: boolean) => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = enabled;
-  };
-
   const tenant = new MockTenant(
     createMockProvider(mockProviderInteractionDetails),
     {
@@ -323,7 +317,7 @@ describe('ExperienceInteraction class', () => {
   });
 
   afterEach(() => {
-    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
+    resetDevFeaturesEnabled();
   });
 
   describe('new user registration', () => {

@@ -4,8 +4,8 @@ import { type IncomingHttpHeaders } from 'node:http';
 import { InteractionEvent, type User } from '@logto/schemas';
 
 import { mockUser } from '#src/__mocks__/user.js';
-import { EnvSet } from '#src/env-set/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
+import { resetDevFeaturesEnabled, setDevFeaturesEnabled } from '#src/test-utils/dev-features.js';
 import { defaultInjectedHeaderMapping } from '#src/utils/injected-header-mapping.js';
 
 import type { SignInExperienceValidator } from '../sign-in-experience-validator.js';
@@ -14,11 +14,6 @@ import { AdaptiveMfaValidator, adaptiveMfaNewCountryWindowDays } from './index.j
 import { type AdaptiveMfaContext } from './types.js';
 
 const { jest } = import.meta;
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-const setDevFeaturesEnabled = (value: boolean) => {
-  // eslint-disable-next-line @silverhand/fp/no-mutation
-  (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = value;
-};
 
 const createQueries = (overrides?: {
   recentCountries?: Array<{ country: string; lastSignInAt: number }>;
@@ -102,9 +97,7 @@ describe('AdaptiveMfaValidator', () => {
     setDevFeaturesEnabled(true);
   });
 
-  afterAll(() => {
-    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
-  });
+  afterAll(resetDevFeaturesEnabled);
 
   it('triggers new country rule when current country is not in recent list', async () => {
     const now = new Date('2024-01-02T00:00:00Z');
