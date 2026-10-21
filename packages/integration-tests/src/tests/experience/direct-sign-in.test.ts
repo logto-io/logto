@@ -91,22 +91,29 @@ describe('direct sign-in', () => {
 
       url.searchParams.set('direct_sign_in', `social:${mockSocialConnectorTarget}`);
 
+      const oidcAuthRequest = experience.page.waitForRequest((request) =>
+        request.url().startsWith(`${logtoUrl}/oidc/auth`)
+      );
       const authPageRequest = experience.page.waitForRequest((request) =>
         request.url().startsWith(mockSocialAuthPageUrl)
       );
       await experience.page.goto(url.href);
 
+      const oidcAuthRequestResult = await oidcAuthRequest;
+      const oidcAuthUrl = new URL(oidcAuthRequestResult.url());
+      const oidcState = oidcAuthUrl.searchParams.get('state');
       const authRequest = await authPageRequest;
       const authUrl = new URL(authRequest.url());
       const redirectUri = authUrl.searchParams.get('redirect_uri');
-      const state = authUrl.searchParams.get('state');
+      const socialState = authUrl.searchParams.get('state');
 
+      expect(oidcState).toBeTruthy();
       expect(redirectUri).toBeTruthy();
-      expect(state).toBeTruthy();
+      expect(socialState).toBeTruthy();
 
       // Simulate the IdP denying the authorization request.
       const callbackUrl = new URL(redirectUri!);
-      callbackUrl.searchParams.set('state', state!);
+      callbackUrl.searchParams.set('state', socialState!);
       callbackUrl.searchParams.set('error', 'access_denied');
       await experience.navigateTo(callbackUrl.href);
 
@@ -119,7 +126,7 @@ describe('direct sign-in', () => {
       const finalUrl = new URL(experience.page.url());
       expect(finalUrl.searchParams.get('error')).toBe('access_denied');
       expect(finalUrl.searchParams.get('error_description')).toBeTruthy();
-      expect(finalUrl.searchParams.get('state')).toBe(state);
+      expect(finalUrl.searchParams.get('state')).toBe(oidcState);
       expect(finalUrl.searchParams.get('iss')).toBe(`${logtoUrl}/oidc`);
 
       await experience.page.close();
