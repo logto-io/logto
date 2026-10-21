@@ -11,13 +11,13 @@ import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext'
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { updateUsername } from '@ac/apis/account';
 import ErrorPage from '@ac/components/ErrorPage';
-import VerificationMethodList from '@ac/components/VerificationMethodList';
+import StepUpEntryFallback from '@ac/components/StepUpEntryFallback';
 import { usernameSuccessRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import useIdentifierParam from '@ac/hooks/use-identifier-param';
+import useStepUp, { useStepUpEntry } from '@ac/hooks/use-step-up';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
-import { sessionStorage } from '@ac/utils/session-storage';
 
 import styles from '../CodeFlow/index.module.scss';
 
@@ -25,15 +25,8 @@ const Username = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { loading } = useContext(LoadingContext);
-  const {
-    accountCenterSettings,
-    experienceSettings,
-    refreshUserInfo,
-    verificationId,
-    setVerificationId,
-    setToast,
-    userInfo,
-  } = useContext(PageContext);
+  const { accountCenterSettings, experienceSettings, refreshUserInfo, setToast, userInfo } =
+    useContext(PageContext);
   const identifierParam = useIdentifierParam();
   const defaultUsername = identifierParam ?? userInfo?.username ?? '';
   const [pendingUsername, setPendingUsername] = useState(defaultUsername);
@@ -41,17 +34,16 @@ const Username = () => {
   const [usernameError, setUsernameError] = useState<string>();
   const updateUsernameRequest = useApi(updateUsername);
   const handleError = useErrorHandler();
+  const { requestStepUp } = useStepUp();
+  const isEnabled =
+    Boolean(accountCenterSettings?.enabled) &&
+    accountCenterSettings?.fields.username === AccountCenterControlValue.Edit;
+  const { isReady, hasFailed } = useStepUpEntry({ enabled: isEnabled });
 
   useEffect(() => {
     setPendingUsername((current) => current || defaultUsername);
     setInputKey(defaultUsername);
   }, [defaultUsername]);
-
-  useEffect(() => {
-    if (verificationId) {
-      sessionStorage.clearRouteRestore();
-    }
-  }, [verificationId]);
 
   /**
    * Replaces the static page description (which states the default hard-floor rules) when the
@@ -62,26 +54,19 @@ const Username = () => {
     [experienceSettings?.usernamePolicy, t]
   );
 
-  if (
-    !accountCenterSettings?.enabled ||
-    accountCenterSettings.fields.username !== AccountCenterControlValue.Edit
-  ) {
+  if (!isEnabled) {
     return (
       <ErrorPage titleKey="error.something_went_wrong" messageKey="error.feature_not_enabled" />
     );
   }
 
-  if (!verificationId) {
-    return <VerificationMethodList />;
+  if (!isReady) {
+    return <StepUpEntryFallback hasFailed={hasFailed} />;
   }
 
   const handleSubmit = async (event?: FormEvent) => {
     event?.preventDefault();
     setUsernameError(undefined);
-
-    if (!verificationId) {
-      return;
-    }
 
     const username = pendingUsername.trim();
 
@@ -101,14 +86,14 @@ const Username = () => {
       return;
     }
 
-    const [error] = await updateUsernameRequest(verificationId, { username });
+    const [error] = await updateUsernameRequest({ username });
 
     if (error) {
+      if (await requestStepUp(error, { type: 'enter-subpage' })) {
+        return;
+      }
+
       await handleError(error, {
-        'verification_record.permission_denied': async () => {
-          setVerificationId(undefined);
-          setToast(t('account_center.verification.verification_required'));
-        },
         'user.username_already_in_use': async () => {
           setToast(t('error.username_exists'));
         },

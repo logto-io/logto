@@ -1,4 +1,3 @@
-/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'ไม่พบหน้าเว็บ',
@@ -18,37 +17,10 @@ const account_center = {
     sign_out: 'ออกจากระบบ',
   },
   verification: {
-    title: 'การยืนยันความปลอดภัย',
-    description:
-      'ยืนยันว่าเป็นคุณเพื่อปกป้องความปลอดภัยของบัญชี กรุณาเลือกวิธีเพื่อยืนยันตัวตนของคุณ',
     error_send_failed: 'ส่งรหัสยืนยันไม่สำเร็จ โปรดลองอีกครั้งในภายหลัง',
     error_invalid_code: 'รหัสยืนยันไม่ถูกต้องหรือหมดอายุแล้ว',
     error_verify_failed: 'ยืนยันไม่สำเร็จ กรุณากรอกรหัสอีกครั้ง',
-    verification_required: 'การยืนยันหมดอายุ โปรดยืนยันตัวตนอีกครั้ง',
     step_up_not_completed: 'การยืนยันตัวตนไม่เสร็จสมบูรณ์ ไม่มีการเปลี่ยนแปลงใดๆ กับบัญชีของคุณ',
-    try_another_method: 'ลองใช้วิธีอื่นเพื่อยืนยันตัวตน',
-    no_available_methods_title: 'ไม่มีวิธีการยืนยันตัวตนที่พร้อมใช้งาน',
-    no_available_methods_description:
-      'คุณยังไม่ได้ตั้งค่าวิธีการยืนยันตัวตน กรุณาเพิ่มรหัสผ่าน อีเมล หรือหมายเลขโทรศัพท์ให้กับบัญชีของคุณก่อน',
-  },
-  password_verification: {
-    title: 'ยืนยันรหัสผ่าน',
-    description: 'เพื่อปกป้องบัญชี กรุณากรอกรหัสผ่านเพื่อยืนยันตัวตน',
-    error_failed: 'รหัสผ่านไม่ถูกต้อง โปรดตรวจสอบข้อมูลที่ป้อน',
-  },
-  verification_method: {
-    password: {
-      name: 'รหัสผ่าน',
-      description: 'ยืนยันรหัสผ่านของคุณ',
-    },
-    email: {
-      name: 'รหัสยืนยันทางอีเมล',
-      description: 'ส่งรหัสยืนยันไปยังอีเมลของคุณ',
-    },
-    phone: {
-      name: 'รหัสยืนยันทางโทรศัพท์',
-      description: 'ส่งรหัสยืนยันไปยังหมายเลขโทรศัพท์ของคุณ',
-    },
   },
   email: {
     title: 'เชื่อมต่ออีเมล',
@@ -56,7 +28,6 @@ const account_center = {
     verification_title: 'ป้อนรหัสยืนยันอีเมล',
     verification_description: 'รหัสยืนยันได้ถูกส่งไปยังอีเมล {{email_address}} ของคุณ',
     success: 'เชื่อมต่ออีเมลหลักเรียบร้อยแล้ว',
-    verification_required: 'การยืนยันหมดอายุ โปรดยืนยันตัวตนอีกครั้ง',
   },
   phone: {
     title: 'เชื่อมต่อหมายเลขโทรศัพท์',
@@ -64,7 +35,6 @@ const account_center = {
     verification_title: 'กรอกรหัสยืนยัน SMS',
     verification_description: 'ได้ส่งรหัสยืนยันไปยังโทรศัพท์ {{phone_number}} แล้ว',
     success: 'เชื่อมต่อโทรศัพท์หลักเรียบร้อยแล้ว',
-    verification_required: 'การยืนยันหมดอายุ โปรดยืนยันตัวตนอีกครั้ง',
   },
   username: {
     title: 'ตั้งชื่อผู้ใช้',
@@ -194,32 +164,10 @@ const account_center = {
     resend_countdown: 'ยังไม่ได้รับใช่ไหม? ส่งใหม่ได้หลัง {{seconds}} วินาที',
   },
   email_verification: {
-    title: 'ยืนยันอีเมลของคุณ',
-    prepare_description:
-      'ยืนยันตัวตนของคุณเพื่อปกป้องความปลอดภัยของบัญชี ส่งรหัสยืนยันไปยังอีเมลของคุณ',
     email_label: 'ที่อยู่อีเมล',
-    send: 'ส่งรหัสยืนยัน',
-    description: 'ได้ส่งรหัสยืนยันไปยังอีเมล {{email}} แล้ว กรุณากรอกรหัสเพื่อดำเนินการต่อ',
-    resend: 'ยังไม่ได้รับใช่ไหม? <a>ส่งรหัสยืนยันอีกครั้ง</a>',
-    not_received: 'ยังไม่ได้รับใช่ไหม?',
-    resend_action: 'ส่งรหัสยืนยันอีกครั้ง',
-    resend_countdown: 'ยังไม่ได้รับใช่ไหม? ส่งใหม่ได้หลัง {{seconds}} วินาที',
-    error_send_failed: 'ส่งรหัสยืนยันไม่สำเร็จ โปรดลองอีกครั้งในภายหลัง',
-    error_verify_failed: 'ยืนยันไม่สำเร็จ กรุณากรอกรหัสอีกครั้ง',
-    error_invalid_code: 'รหัสยืนยันไม่ถูกต้องหรือหมดอายุแล้ว',
   },
   phone_verification: {
-    title: 'ยืนยันโทรศัพท์ของคุณ',
-    prepare_description:
-      'ยืนยันว่าเป็นคุณเพื่อปกป้องความปลอดภัยของบัญชี ส่งรหัสยืนยันไปยังโทรศัพท์ของคุณ',
     phone_label: 'หมายเลขโทรศัพท์',
-    send: 'ส่งรหัสยืนยัน',
-    description: 'ได้ส่งรหัสยืนยันไปยังโทรศัพท์ {{phone}} แล้ว กรุณากรอกรหัสเพื่อดำเนินการต่อ',
-    resend: 'ยังไม่ได้รับใช่ไหม? <a>ส่งรหัสยืนยันอีกครั้ง</a>',
-    resend_countdown: 'ยังไม่ได้รับใช่ไหม? ส่งใหม่ได้หลัง {{seconds}} วินาที',
-    error_send_failed: 'ส่งรหัสยืนยันไม่สำเร็จ โปรดลองอีกครั้งในภายหลัง',
-    error_verify_failed: 'ยืนยันไม่สำเร็จ กรุณากรอกรหัสอีกครั้ง',
-    error_invalid_code: 'รหัสยืนยันไม่ถูกต้องหรือหมดอายุแล้ว',
   },
   mfa: {
     totp_already_added: 'คุณได้เพิ่มแอป Authenticator แล้ว โปรดลบแอปที่มีอยู่ก่อน',
@@ -329,4 +277,3 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
-/* eslint-enable max-lines */

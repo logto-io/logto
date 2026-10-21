@@ -6,19 +6,27 @@ import renderWithPageContext, {
   mockAccountCenterSettings,
 } from '@ac/__mocks__/RenderWithPageContext';
 import { getTrustedDevices, removeTrustedDevice } from '@ac/apis/trusted-devices';
-import { securityRoute, verifiedActionRoute } from '@ac/constants/routes';
+import { securityRoute } from '@ac/constants/routes';
 import { setupI18nForTesting } from '@ac/jest.setup';
-import { sessionStorage } from '@ac/utils/session-storage';
 
 import TrustedDevicesSection from '.';
 
 const mockGetAccessToken = jest.fn().mockResolvedValue('access-token');
+const mockGetIdTokenClaims = jest.fn();
+const mockSignIn = jest.fn();
 
 jest.mock('@logto/react', () => ({
   useLogto: () => ({
     getAccessToken: mockGetAccessToken,
+    getIdTokenClaims: mockGetIdTokenClaims,
+    signIn: mockSignIn,
   }),
 }));
+
+const createIdTokenClaims = (authTime = Math.floor(Date.now() / 1000) - 60) => ({
+  acr: 'urn:logto:acr:1fa',
+  auth_time: authTime,
+});
 
 jest.mock('@ac/apis/trusted-devices', () => ({
   getTrustedDevices: jest.fn(),
@@ -47,19 +55,14 @@ const currentTrustedDevice = {
 const renderTrustedDevices = (
   options: {
     control?: AccountCenterControlValue;
-    verificationId?: string;
     setToast?: jest.Mock;
   } = {}
 ) => {
   const { control = AccountCenterControlValue.Edit, setToast = jest.fn() } = options;
-  const verificationId = Object.hasOwn(options, 'verificationId')
-    ? options.verificationId
-    : 'verification-id';
 
   return renderWithPageContext(
     <Routes>
       <Route path={securityRoute} element={<TrustedDevicesSection />} />
-      <Route path={verifiedActionRoute} element={<div>verified action page</div>} />
     </Routes>,
     {
       initialEntries: [securityRoute],
@@ -67,7 +70,6 @@ const renderTrustedDevices = (
     },
     {
       pageContext: {
-        verificationId,
         setToast,
         accountCenterSettings: {
           ...mockAccountCenterSettings,
@@ -113,6 +115,7 @@ describe('<TrustedDevicesSection />', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockGetAccessToken.mockResolvedValue('access-token');
+    mockGetIdTokenClaims.mockResolvedValue(createIdTokenClaims());
     mockGetTrustedDevices.mockResolvedValue([currentTrustedDevice]);
     mockRemoveTrustedDevice.mockResolvedValue(undefined);
     window.sessionStorage.clear();
@@ -160,11 +163,7 @@ describe('<TrustedDevicesSection />', () => {
     fireEvent.click(removeButtons.at(-1)!);
 
     await waitFor(() => {
-      expect(mockRemoveTrustedDevice).toHaveBeenCalledWith(
-        'access-token',
-        'verification-id',
-        'trusted-device-id'
-      );
+      expect(mockRemoveTrustedDevice).toHaveBeenCalledWith('access-token', 'trusted-device-id');
     });
     expect(queryByText('trusted-device-id')).toBeNull();
     expect(setToast).toHaveBeenCalledWith('Trusted device removed successfully.');
@@ -180,6 +179,9 @@ describe('<TrustedDevicesSection />', () => {
 
     const loadingView = renderTrustedDevices();
     expect(loadingView.getByText('Loading...')).toBeTruthy();
+    await waitFor(() => {
+      expect(mockGetTrustedDevices).toHaveBeenCalledTimes(1);
+    });
     loadingView.unmount();
 
     mockGetTrustedDevices.mockResolvedValueOnce([]);
@@ -205,25 +207,25 @@ describe('<TrustedDevicesSection />', () => {
     consoleError.mockRestore();
   });
 
-  it('starts the independent trusted-device verification action when verification is unavailable', async () => {
-    const { getByRole, getByText } = renderTrustedDevices({ verificationId: undefined });
+  it('starts a step-up when the authentication context is stale', async () => {
+    mockGetIdTokenClaims.mockResolvedValue(
+      createIdTokenClaims(Math.floor(Date.now() / 1000) - 600)
+    );
+    const { getByRole } = renderTrustedDevices();
 
     expect(mockGetTrustedDevices).not.toHaveBeenCalled();
+    await waitFor(() => {
+      expect(getByRole('button', { name: 'Manage' })).toBeTruthy();
+    });
     fireEvent.click(getByRole('button', { name: 'Manage' }));
 
     await waitFor(() => {
-      expect(getByText('verified action page')).toBeTruthy();
+      expect(mockSignIn).toHaveBeenCalledTimes(1);
     });
-    expect(sessionStorage.getPendingVerifiedAction()).toBe('load-trusted-devices');
-  });
-
-  it('clears the pending trusted-device action after returning with verification', async () => {
-    sessionStorage.setPendingVerifiedAction('load-trusted-devices');
-    renderTrustedDevices();
-
-    await waitFor(() => {
-      expect(mockGetTrustedDevices).toHaveBeenCalled();
+    expect(mockSignIn).toHaveBeenCalledWith({
+      redirectUri: 'http://localhost/account',
+      clearTokens: false,
+      extraParams: { acr_values: 'urn:logto:acr:1fa', max_age: '540' },
     });
-    expect(sessionStorage.getPendingVerifiedAction()).toBeUndefined();
   });
 });

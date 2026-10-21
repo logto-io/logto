@@ -1,17 +1,17 @@
 import type { AccountCenter, SignInIdentifier } from '@logto/schemas';
 import { AccountCenterControlValue } from '@logto/schemas';
 import { type TFuncKey } from 'i18next';
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import ErrorPage from '@ac/components/ErrorPage';
-import VerificationMethodList from '@ac/components/VerificationMethodList';
+import StepUpEntryFallback from '@ac/components/StepUpEntryFallback';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
-import { sessionStorage } from '@ac/utils/session-storage';
+import useStepUp, { useStepUpEntry } from '@ac/hooks/use-step-up';
 
 import IdentifierSendStep, { type IdentifierLabelKey } from './IdentifierSendStep';
 import IdentifierVerifyStep from './IdentifierVerifyStep';
@@ -52,11 +52,7 @@ type IdentifierBindingPageProps<VerifyPayload, BindPayload> = {
   ) => Promise<{
     verificationRecordId: string;
   }>;
-  readonly bindIdentifier: (
-    accessToken: string,
-    verificationRecordId: string,
-    payload: BindPayload
-  ) => Promise<unknown>;
+  readonly bindIdentifier: (accessToken: string, payload: BindPayload) => Promise<unknown>;
   readonly buildVerifyPayload: (
     identifier: string,
     verificationRecordId: string,
@@ -84,8 +80,7 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { loading } = useContext(LoadingContext);
-  const { accountCenterSettings, refreshUserInfo, verificationId, setToast, setVerificationId } =
-    useContext(PageContext);
+  const { accountCenterSettings, refreshUserInfo } = useContext(PageContext);
   const [identifier, setIdentifier] = useState(initialValue);
   const [pendingIdentifier, setPendingIdentifier] = useState<string>();
   const [pendingVerificationRecordId, setPendingVerificationRecordId] = useState<string>();
@@ -94,6 +89,11 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
   const verifyCodeRequest = useApi(verifyCode);
   const bindIdentifierRequest = useApi(bindIdentifier);
   const handleError = useErrorHandler();
+  const { requestStepUp } = useStepUp();
+  const isEnabled =
+    Boolean(accountCenterSettings?.enabled) &&
+    accountCenterSettings?.fields[accountField] === AccountCenterControlValue.Edit;
+  const { isReady, hasFailed } = useStepUpEntry({ enabled: isEnabled });
 
   const clearSendError = useCallback(() => {
     setErrorState((current) => ({ ...current, sendError: undefined }));
@@ -125,12 +125,6 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
   );
 
   const resetFlowErrorCodes = useMemo(() => ['verification_record.not_found'], []);
-
-  useEffect(() => {
-    if (verificationId) {
-      sessionStorage.clearRouteRestore();
-    }
-  }, [verificationId]);
 
   const handleVerifyError = useCallback(
     async (error: unknown) => {
@@ -170,7 +164,7 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
 
   const handleVerifyAndBind = useCallback(
     async (code: string) => {
-      if (!pendingIdentifier || !pendingVerificationRecordId || loading || !verificationId) {
+      if (!pendingIdentifier || !pendingVerificationRecordId || loading || !isReady) {
         return;
       }
 
@@ -186,19 +180,15 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
       }
 
       const [bindError] = await bindIdentifierRequest(
-        verificationId,
         buildBindPayload(pendingIdentifier, verifyResult.verificationRecordId)
       );
 
       if (bindError) {
-        await handleError(bindError, {
-          // This is a global error (session expired) that requires re-verification, so we use toast
-          'verification_record.permission_denied': async () => {
-            setVerificationId(undefined);
-            resetFlow(true);
-            setToast(t('account_center.verification.verification_required'));
-          },
-        });
+        if (await requestStepUp(bindError, { type: 'enter-subpage' })) {
+          return;
+        }
+
+        await handleError(bindError);
         return;
       }
 
@@ -217,27 +207,21 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
       navigate,
       pendingIdentifier,
       pendingVerificationRecordId,
-      resetFlow,
-      setToast,
-      setVerificationId,
+      requestStepUp,
       successRedirect,
-      t,
-      verificationId,
+      isReady,
       verifyCodeRequest,
     ]
   );
 
-  if (
-    !accountCenterSettings?.enabled ||
-    accountCenterSettings.fields[accountField] !== AccountCenterControlValue.Edit
-  ) {
+  if (!isEnabled) {
     return (
       <ErrorPage titleKey="error.something_went_wrong" messageKey="error.feature_not_enabled" />
     );
   }
 
-  if (!verificationId) {
-    return <VerificationMethodList />;
+  if (!isReady) {
+    return <StepUpEntryFallback hasFailed={hasFailed} />;
   }
 
   return !pendingIdentifier || !pendingVerificationRecordId ? (

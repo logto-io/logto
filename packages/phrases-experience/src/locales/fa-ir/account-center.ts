@@ -1,4 +1,3 @@
-/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'صفحه یافت نشد',
@@ -18,37 +17,10 @@ const account_center = {
     sign_out: 'خروج',
   },
   verification: {
-    title: 'تأیید امنیتی',
-    description:
-      'برای محافظت از امنیت حساب خود، هویتتان را تأیید کنید. لطفاً روش تأیید هویت را انتخاب کنید.',
     error_send_failed: 'ارسال کد تأیید ناموفق بود. لطفاً بعداً دوباره تلاش کنید.',
     error_invalid_code: 'کد تأیید نامعتبر است یا منقضی شده است.',
     error_verify_failed: 'تأیید ناموفق بود. لطفاً کد را دوباره وارد کنید.',
-    verification_required: 'تأیید منقضی شد. لطفاً هویت خود را دوباره تأیید کنید.',
     step_up_not_completed: 'تأیید هویت تکمیل نشد. هیچ تغییری در حساب شما ایجاد نشد.',
-    try_another_method: 'روش دیگری برای تأیید امتحان کنید',
-    no_available_methods_title: 'هیچ روش تأییدی در دسترس نیست',
-    no_available_methods_description:
-      'شما هیچ روش تأییدی تنظیم نکرده‌اید. لطفاً ابتدا یک رمز عبور، ایمیل یا شماره تلفن به حساب خود اضافه کنید.',
-  },
-  password_verification: {
-    title: 'تأیید رمز عبور',
-    description: 'برای محافظت از امنیت حساب خود، هویتتان را تأیید کنید. رمز عبور خود را وارد کنید.',
-    error_failed: 'رمز عبور نادرست است. لطفاً ورودی خود را بررسی کنید.',
-  },
-  verification_method: {
-    password: {
-      name: 'رمز عبور',
-      description: 'رمز عبور خود را تأیید کنید',
-    },
-    email: {
-      name: 'کد تأیید ایمیل',
-      description: 'ارسال کد تأیید به ایمیل شما',
-    },
-    phone: {
-      name: 'کد تأیید تلفن',
-      description: 'ارسال کد تأیید به شماره تلفن شما',
-    },
   },
   email: {
     title: 'پیوند ایمیل',
@@ -56,7 +28,6 @@ const account_center = {
     verification_title: 'کد تأیید ایمیل را وارد کنید',
     verification_description: 'کد تأیید به ایمیل شما {{email_address}} ارسال شد.',
     success: 'ایمیل اصلی با موفقیت پیوند داده شد.',
-    verification_required: 'تأیید منقضی شد. لطفاً هویت خود را دوباره تأیید کنید.',
   },
   phone: {
     title: 'پیوند شماره تلفن',
@@ -64,7 +35,6 @@ const account_center = {
     verification_title: 'کد تأیید پیامکی را وارد کنید',
     verification_description: 'کد تأیید به تلفن شما {{phone_number}} ارسال شد.',
     success: 'شماره تلفن اصلی با موفقیت پیوند داده شد.',
-    verification_required: 'تأیید منقضی شد. لطفاً هویت خود را دوباره تأیید کنید.',
   },
   username: {
     title: 'تنظیم نام کاربری',
@@ -197,32 +167,10 @@ const account_center = {
   },
 
   email_verification: {
-    title: 'ایمیل خود را تأیید کنید',
-    prepare_description:
-      'برای محافظت از امنیت حساب خود، هویتتان را تأیید کنید. کد تأیید را به ایمیل خود ارسال کنید.',
     email_label: 'آدرس ایمیل',
-    send: 'ارسال کد تأیید',
-    description: 'کد تأیید به ایمیل شما {{email}} ارسال شد. برای ادامه کد را وارد کنید.',
-    resend: 'هنوز دریافت نکرده‌اید؟ <a>ارسال مجدد کد تأیید</a>',
-    not_received: 'هنوز دریافت نکرده‌اید؟',
-    resend_action: 'ارسال مجدد کد تأیید',
-    resend_countdown: 'هنوز دریافت نکرده‌اید؟ ارسال مجدد پس از {{seconds}} ثانیه',
-    error_send_failed: 'ارسال کد تأیید ناموفق بود. لطفاً بعداً دوباره تلاش کنید.',
-    error_verify_failed: 'تأیید ناموفق بود. لطفاً کد را دوباره وارد کنید.',
-    error_invalid_code: 'کد تأیید نامعتبر است یا منقضی شده است.',
   },
   phone_verification: {
-    title: 'تلفن خود را تأیید کنید',
-    prepare_description:
-      'برای محافظت از امنیت حساب خود، هویتتان را تأیید کنید. کد تأیید را به تلفن خود ارسال کنید.',
     phone_label: 'شماره تلفن',
-    send: 'ارسال کد تأیید',
-    description: 'کد تأیید به تلفن شما {{phone}} ارسال شد. برای ادامه کد را وارد کنید.',
-    resend: 'هنوز دریافت نکرده‌اید؟ <a>ارسال مجدد کد تأیید</a>',
-    resend_countdown: 'هنوز دریافت نکرده‌اید؟ ارسال مجدد پس از {{seconds}} ثانیه',
-    error_send_failed: 'ارسال کد تأیید ناموفق بود. لطفاً بعداً دوباره تلاش کنید.',
-    error_verify_failed: 'تأیید ناموفق بود. لطفاً کد را دوباره وارد کنید.',
-    error_invalid_code: 'کد تأیید نامعتبر است یا منقضی شده است.',
   },
   mfa: {
     totp_already_added:
@@ -338,4 +286,3 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
-/* eslint-enable max-lines */

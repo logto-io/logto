@@ -12,11 +12,6 @@ import { getThemeBySystemPreference, subscribeToSystemTheme } from '@ac/utils/th
 
 import type { PageContextType } from './PageContext';
 import PageContext from './PageContext';
-import {
-  clearVerificationRecord,
-  getStoredVerificationId,
-  persistVerificationRecord,
-} from './verification-storage';
 
 type Props = {
   readonly children: React.ReactNode;
@@ -45,7 +40,6 @@ const PageContextProvider = ({ children }: Props) => {
   const [userInfo, setUserInfo] = useState<PageContextType['userInfo']>(undefined);
   const [userInfoError, setUserInfoError] = useState<Error>();
   const [isLoadingUserInfo, setIsLoadingUserInfo] = useState(false);
-  const [verificationId, setVerificationId] = useState<string>();
   const [isLoadingExperience, setIsLoadingExperience] = useState(true);
   const [experienceError, setExperienceError] = useState<Error>();
 
@@ -96,28 +90,6 @@ const PageContextProvider = ({ children }: Props) => {
   const refreshUserInfo = useCallback(async () => {
     await loadUserInfo();
   }, [loadUserInfo]);
-
-  useEffect(() => {
-    const storedVerificationId = getStoredVerificationId();
-
-    if (storedVerificationId) {
-      setVerificationId(storedVerificationId);
-    }
-  }, []);
-
-  const setVerificationIdCallback = useCallback((id?: string, expiresAt?: string) => {
-    setVerificationId(id);
-
-    if (!id || !expiresAt) {
-      clearVerificationRecord();
-      return;
-    }
-
-    persistVerificationRecord({
-      verificationId: id,
-      expiresAt,
-    });
-  }, []);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -205,8 +177,6 @@ const PageContextProvider = ({ children }: Props) => {
       refreshUserInfo,
       userInfoError,
       isLoadingUserInfo,
-      verificationId,
-      setVerificationId: setVerificationIdCallback,
       isLoadingExperience,
       experienceError,
     }),
@@ -222,8 +192,6 @@ const PageContextProvider = ({ children }: Props) => {
       userInfo,
       userInfoError,
       isLoadingUserInfo,
-      verificationId,
-      setVerificationIdCallback,
     ]
   );
 

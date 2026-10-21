@@ -1,7 +1,6 @@
 import { useHandleSignInCallback, useLogto } from '@logto/react';
 import { useEffect } from 'react';
 
-import { clearVerificationRecord } from './Providers/PageContextProvider/verification-storage';
 import GlobalLoading from './components/GlobalLoading';
 import { completePendingStepUp, discardPendingStepUp } from './utils/step-up';
 
@@ -12,7 +11,6 @@ const Callback = () => {
     // Also drops the token set a step-up keeps until its callback, so the provider treats this
     // page as signed out and the elevated tokens replace the old ones.
     void clearAllTokens();
-    clearVerificationRecord();
   }, [clearAllTokens]);
 
   const { error } = useHandleSignInCallback(() => {

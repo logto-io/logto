@@ -1,4 +1,4 @@
-import { accountStorage, sessionStorage as accountSessionStorage } from './session-storage';
+import { accountStorage } from './session-storage';
 
 describe('accountStorage', () => {
   beforeEach(() => {
@@ -90,14 +90,5 @@ describe('accountStorage', () => {
 
     dateNowSpy.mockReturnValue(10 * 60 * 1000 + 1);
     expect(accountStorage.pendingReturn.get()).toBeUndefined();
-  });
-
-  it('persists the independent trusted-device verification action', () => {
-    accountSessionStorage.setPendingVerifiedAction('load-trusted-devices');
-
-    expect(accountSessionStorage.getPendingVerifiedAction()).toBe('load-trusted-devices');
-
-    accountSessionStorage.clearPendingVerifiedAction();
-    expect(accountSessionStorage.getPendingVerifiedAction()).toBeUndefined();
   });
 });

@@ -1,4 +1,3 @@
-/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: '页面未找到',
@@ -18,36 +17,10 @@ const account_center = {
     sign_out: '退出登录',
   },
   verification: {
-    title: '安全验证',
-    description: '为保护账户安全，请确认是您本人。请选择验证身份的方法。',
     error_send_failed: '验证码发送失败，请稍后再试。',
     error_invalid_code: '验证码无效或已过期。',
     error_verify_failed: '验证失败，请重新输入验证码。',
-    verification_required: '验证已失效，请重新验证身份。',
     step_up_not_completed: '身份验证未完成，你的账户未做任何更改。',
-    try_another_method: '尝试其他验证方式',
-    no_available_methods_title: '没有可用的验证方式',
-    no_available_methods_description:
-      '你尚未设置任何验证方式。请先为你的账户添加密码、邮箱或手机号。',
-  },
-  password_verification: {
-    title: '验证密码',
-    description: '为保护账户安全，请输入您的密码完成验证。',
-    error_failed: '密码错误，请重新输入。',
-  },
-  verification_method: {
-    password: {
-      name: '密码',
-      description: '验证您的密码',
-    },
-    email: {
-      name: '邮箱验证码',
-      description: '发送验证码到您的邮箱',
-    },
-    phone: {
-      name: '手机验证码',
-      description: '发送验证码到您的手机号码',
-    },
   },
   email: {
     title: '关联邮箱',
@@ -55,7 +28,6 @@ const account_center = {
     verification_title: '输入邮箱验证码',
     verification_description: '验证码已发送到你的邮箱 {{email_address}}。',
     success: '已成功关联主要邮箱。',
-    verification_required: '验证已失效，请重新验证身份。',
   },
   phone: {
     title: '关联手机号',
@@ -63,7 +35,6 @@ const account_center = {
     verification_title: '输入短信验证码',
     verification_description: '验证码已发送到你的手机 {{phone_number}}。',
     success: '已成功关联主要手机号。',
-    verification_required: '验证已失效，请重新验证身份。',
   },
   username: {
     title: '设置用户名',
@@ -188,30 +159,10 @@ const account_center = {
     resend_countdown: '还没有收到？{{seconds}} 秒后可重新发送',
   },
   email_verification: {
-    title: '验证您的邮箱',
-    prepare_description: '为保护账户安全，请确认是您本人。发送验证码到您的邮箱。',
     email_label: '邮箱地址',
-    send: '发送验证码',
-    description: '验证码已发送至您的邮箱 {{email}}。请输入验证码以继续。',
-    resend: '还没有收到？<a>重新发送验证码</a>',
-    not_received: '还没有收到？',
-    resend_action: '重新发送验证码',
-    resend_countdown: '还没有收到？{{seconds}} 秒后可重新发送',
-    error_send_failed: '验证码发送失败，请稍后再试。',
-    error_verify_failed: '验证失败，请重新输入验证码。',
-    error_invalid_code: '验证码无效或已过期。',
   },
   phone_verification: {
-    title: '验证您的手机',
-    prepare_description: '为保护账户安全，请确认是您本人。发送验证码到您的手机。',
     phone_label: '手机号码',
-    send: '发送验证码',
-    description: '验证码已发送至您的手机 {{phone}}。请输入验证码以继续。',
-    resend: '还没有收到？<a>重新发送验证码</a>',
-    resend_countdown: '还没有收到？{{seconds}} 秒后可重新发送',
-    error_send_failed: '验证码发送失败，请稍后再试。',
-    error_verify_failed: '验证失败，请重新输入验证码。',
-    error_invalid_code: '验证码无效或已过期。',
   },
   mfa: {
     totp_already_added: '你已添加过身份验证器应用，请先移除现有的。',
@@ -319,4 +270,3 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
-/* eslint-enable max-lines */

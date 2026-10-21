@@ -13,6 +13,8 @@ import {
   parseStepUpChallenge,
   proactiveStepUpChallenge,
   startPendingStepUp,
+  subpageAuthenticationMaxAgeSeconds,
+  subpageStepUpChallenge,
 } from './step-up';
 
 const securityPath = '/account/security';
@@ -123,6 +125,22 @@ describe('hasFreshFirstFactorAuthentication', () => {
     ).toBe(expected);
   });
 
+  it.each([
+    [300, true],
+    [301, false],
+  ])(
+    'checks the standalone subpage threshold at an auth_time age of %p seconds',
+    (age, expected) => {
+      expect(
+        hasFreshFirstFactorAuthentication(
+          { acr: LogtoAcr.FirstFactor, auth_time: authTimeOfAge(age) },
+          now,
+          subpageAuthenticationMaxAgeSeconds
+        )
+      ).toBe(expected);
+    }
+  );
+
   it('accepts an mfa context, which also satisfies 1fa', () => {
     expect(
       hasFreshFirstFactorAuthentication({ acr: LogtoAcr.Mfa, auth_time: authTimeOfAge(60) }, now)
@@ -148,6 +166,14 @@ describe('step-up challenges', () => {
     });
   });
 
+  it('keeps the standalone subpage max_age aligned with its entry threshold', () => {
+    expect(subpageAuthenticationMaxAgeSeconds).toBe(300);
+    expect(subpageStepUpChallenge).toEqual({
+      acrValues: LogtoAcr.FirstFactor,
+      maxAge: String(subpageAuthenticationMaxAgeSeconds),
+    });
+  });
+
   it('keeps the Account API policy for the challenge fallback', () => {
     expect(accountApiStepUpChallenge).toEqual({
       acrValues: LogtoAcr.FirstFactor,
@@ -164,6 +190,14 @@ describe('pending step-up', () => {
 
   afterEach(() => {
     jest.restoreAllMocks();
+  });
+
+  it('consumes the subpage entry action once after its step-up', () => {
+    startPendingStepUp({ type: 'enter-subpage' }, '/account/password');
+    completeStepUp();
+
+    expect(consumePendingStepUpAction(['enter-subpage'])).toEqual({ type: 'enter-subpage' });
+    expect(consumePendingStepUpAction(['enter-subpage'])).toBeUndefined();
   });
 
   it('resumes the action once after the step-up callback', () => {
@@ -218,6 +252,7 @@ describe('pending step-up', () => {
     expect(pageLoad('/account', '?error=unmet_authentication_requirements&state=state')).toEqual({
       error: 'unmet_authentication_requirements',
       route: securityPath,
+      action: { type: 'disable-mfa' },
     });
     expect(accountSessionStorage.getRouteRestore()).toBeUndefined();
 
@@ -242,6 +277,7 @@ describe('pending step-up', () => {
     expect(pageLoad('/account', '?error=access_denied')).toEqual({
       error: 'access_denied',
       route: '/account',
+      action: { type: 'disable-mfa' },
     });
   });
 

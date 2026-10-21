@@ -16,7 +16,7 @@ import {
   renamePersonalAccessToken,
   revokePersonalAccessToken,
 } from '@ac/apis/personal-access-tokens';
-import { securityRoute, verifiedActionRoute } from '@ac/constants/routes';
+import { securityRoute } from '@ac/constants/routes';
 import { setupI18nForTesting } from '@ac/jest.setup';
 import { accountStorage } from '@ac/utils/session-storage';
 
@@ -25,11 +25,6 @@ import PersonalAccessTokensSection from '.';
 const mockGetAccessToken = jest.fn().mockResolvedValue('access-token');
 const mockGetIdTokenClaims = jest.fn();
 const mockSignIn = jest.fn();
-
-jest.mock('@ac/constants/env', () => ({
-  __esModule: true,
-  isDevFeaturesEnabled: true,
-}));
 
 jest.mock('@logto/react', () => ({
   useLogto: () => ({
@@ -89,7 +84,6 @@ const renderSection = () =>
   renderWithPageContext(
     <Routes>
       <Route path={securityRoute} element={<PersonalAccessTokensSection />} />
-      <Route path={verifiedActionRoute} element={<div>verified action page</div>} />
     </Routes>,
     {
       initialEntries: [securityRoute],
@@ -180,7 +174,6 @@ describe('<PersonalAccessTokensSection /> OIDC step-up', () => {
     await waitFor(() => {
       expect(mockCreatePersonalAccessToken).toHaveBeenCalledWith(
         'access-token',
-        undefined,
         expect.objectContaining({ name: 'deploy-bot' })
       );
     });

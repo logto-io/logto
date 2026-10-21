@@ -1,4 +1,3 @@
-/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'Страница не найдена',
@@ -18,38 +17,11 @@ const account_center = {
     sign_out: 'Выйти',
   },
   verification: {
-    title: 'Проверка безопасности',
-    description:
-      'Подтвердите, что это вы, чтобы защитить безопасность аккаунта. Пожалуйста, выберите способ подтверждения личности.',
     error_send_failed: 'Не удалось отправить код подтверждения. Попробуйте позже.',
     error_invalid_code: 'Код подтверждения недействителен или истёк.',
     error_verify_failed: 'Не удалось подтвердить. Введите код ещё раз.',
-    verification_required: 'Срок действия проверки истёк. Подтвердите личность ещё раз.',
     step_up_not_completed:
       'Подтверждение личности не завершено. В ваш аккаунт не внесено никаких изменений.',
-    try_another_method: 'Попробовать другой способ подтверждения',
-    no_available_methods_title: 'Нет доступных способов подтверждения',
-    no_available_methods_description:
-      'У вас не настроены способы подтверждения. Сначала добавьте к аккаунту пароль, email или номер телефона.',
-  },
-  password_verification: {
-    title: 'Подтвердите пароль',
-    description: 'Чтобы защитить аккаунт, введите пароль для подтверждения своей личности.',
-    error_failed: 'Неверный пароль. Проверьте введённые данные.',
-  },
-  verification_method: {
-    password: {
-      name: 'Пароль',
-      description: 'Подтвердите свой пароль',
-    },
-    email: {
-      name: 'Код подтверждения по электронной почте',
-      description: 'Отправить код подтверждения на вашу почту',
-    },
-    phone: {
-      name: 'Код подтверждения по телефону',
-      description: 'Отправить код подтверждения на ваш номер телефона',
-    },
   },
   email: {
     title: 'Привязать email',
@@ -57,7 +29,6 @@ const account_center = {
     verification_title: 'Введите код подтверждения email',
     verification_description: 'Код подтверждения отправлен на ваш email {{email_address}}.',
     success: 'Основной email успешно привязан.',
-    verification_required: 'Срок действия проверки истёк. Подтвердите личность ещё раз.',
   },
   phone: {
     title: 'Привязать номер телефона',
@@ -65,7 +36,6 @@ const account_center = {
     verification_title: 'Введите код подтверждения SMS',
     verification_description: 'Код подтверждения отправлен на ваш телефон {{phone_number}}.',
     success: 'Основной телефон успешно привязан.',
-    verification_required: 'Срок действия проверки истёк. Подтвердите личность ещё раз.',
   },
   username: {
     title: 'Установить имя пользователя',
@@ -196,33 +166,10 @@ const account_center = {
     resend_countdown: 'Не получили? Повторная отправка через {{seconds}} с.',
   },
   email_verification: {
-    title: 'Подтвердите свою почту',
-    prepare_description:
-      'Подтвердите, что это вы, чтобы защитить свой аккаунт. Отправьте код подтверждения на свою почту.',
     email_label: 'Адрес электронной почты',
-    send: 'Отправить код подтверждения',
-    description: 'Код подтверждения отправлен на {{email}}. Введите код, чтобы продолжить.',
-    resend: 'Не получили? <a>Отправить код подтверждения ещё раз</a>',
-    not_received: 'Не получили?',
-    resend_action: 'Отправить код подтверждения ещё раз',
-    resend_countdown: 'Не получили? Повторная отправка через {{seconds}} с.',
-    error_send_failed: 'Не удалось отправить код подтверждения. Попробуйте позже.',
-    error_verify_failed: 'Не удалось подтвердить. Введите код ещё раз.',
-    error_invalid_code: 'Код подтверждения недействителен или истёк.',
   },
   phone_verification: {
-    title: 'Подтвердите свой телефон',
-    prepare_description:
-      'Подтвердите, что это вы, чтобы защитить безопасность аккаунта. Отправьте код подтверждения на свой телефон.',
     phone_label: 'Номер телефона',
-    send: 'Отправить код подтверждения',
-    description:
-      'Код подтверждения отправлен на ваш телефон {{phone}}. Введите код, чтобы продолжить.',
-    resend: 'Не получили? <a>Отправить код подтверждения ещё раз</a>',
-    resend_countdown: 'Не получили? Повторная отправка через {{seconds}} с.',
-    error_send_failed: 'Не удалось отправить код подтверждения. Попробуйте позже.',
-    error_verify_failed: 'Не удалось подтвердить. Введите код ещё раз.',
-    error_invalid_code: 'Код подтверждения недействителен или истёк.',
   },
   mfa: {
     totp_already_added:
@@ -337,4 +284,3 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
-/* eslint-enable max-lines */

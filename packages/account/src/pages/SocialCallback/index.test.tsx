@@ -26,11 +26,18 @@ import { accountStorage } from '@ac/utils/session-storage';
 import SocialCallback from '.';
 
 const mockGetAccessToken = jest.fn().mockResolvedValue('access-token');
+const mockRequestStepUp = jest.fn();
 
 jest.mock('@logto/react', () => ({
   useLogto: () => ({
     getAccessToken: mockGetAccessToken,
   }),
+}));
+
+jest.mock('@ac/hooks/use-step-up', () => ({
+  __esModule: true,
+  default: () => ({ requestStepUp: mockRequestStepUp, startStepUp: jest.fn() }),
+  useStepUpEntry: () => ({ isReady: true, isChecking: false, hasFailed: false }),
 }));
 
 jest.mock('@ac/apis/social', () => ({
@@ -51,15 +58,26 @@ const googleConnector = {
   logoDark: 'https://example.com/google-dark.svg',
 };
 
-const createHttpError = (code: string, status: number, message = code) =>
+const createHttpError = (
+  code: string,
+  status: number,
+  message = code,
+  headers: Record<string, string> = {}
+) =>
   new HTTPError(
     {
       status,
+      headers: {
+        get: (name: string) => headers[name.toLowerCase()] ?? null,
+      },
       json: async () => ({ code, message }),
-    } as Response,
+    } as unknown as Response,
     {} as Request,
     {} as NormalizedOptions
   );
+
+const challenge =
+  'Bearer error="insufficient_user_authentication", acr_values="urn:logto:acr:1fa", max_age="600"';
 
 type SocialCallbackRenderOptions = {
   readonly pageContext?: Omit<Partial<PageContextType>, 'accountCenterSettings'> & {
@@ -113,10 +131,6 @@ const renderSocialCallback = ({
           identities: {},
           ...pageContext?.userInfo,
         },
-        verificationId:
-          pageContext && 'verificationId' in pageContext
-            ? pageContext.verificationId
-            : 'identity-verification-record-id',
       },
     }
   );
@@ -125,6 +139,7 @@ describe('<SocialCallback />', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     mockGetAccessToken.mockResolvedValue('access-token');
+    mockRequestStepUp.mockResolvedValue(false);
     jest.mocked(verifySocialVerification).mockResolvedValue({
       verificationRecordId: 'verified-social-record-id',
     });
@@ -137,7 +152,6 @@ describe('<SocialCallback />', () => {
     it('shows an error page when social editing is disabled', () => {
       const { getByText } = renderSocialCallback({
         pageContext: {
-          verificationId: undefined,
           accountCenterSettings: {
             fields: {
               social: AccountCenterControlValue.ReadOnly,
@@ -152,7 +166,6 @@ describe('<SocialCallback />', () => {
     it('shows an error page when account center is disabled', () => {
       const { getByText } = renderSocialCallback({
         pageContext: {
-          verificationId: undefined,
           accountCenterSettings: {
             enabled: false,
           },
@@ -240,7 +253,6 @@ describe('<SocialCallback />', () => {
       await waitFor(() => {
         expect(linkSocialIdentity).toHaveBeenCalledWith(
           'access-token',
-          'identity-verification-record-id',
           'social-verification-record-id'
         );
       });
@@ -301,24 +313,28 @@ describe('<SocialCallback />', () => {
       });
     });
 
-    it('resets verification when permission denied on link', async () => {
-      const refreshUserInfo = jest.fn().mockResolvedValue(undefined);
-      const setVerificationId = jest.fn();
+    it('starts a step-up on the challenge and returns to the add flow', async () => {
+      mockRequestStepUp.mockResolvedValue(true);
       const setToast = jest.fn();
 
-      jest
-        .mocked(linkSocialIdentity)
-        .mockRejectedValue(createHttpError('verification_record.permission_denied', 401));
+      jest.mocked(linkSocialIdentity).mockRejectedValue(
+        createHttpError('verification_record.permission_denied', 401, undefined, {
+          'www-authenticate': challenge,
+        })
+      );
 
       renderSocialCallback({
-        pageContext: { refreshUserInfo, setVerificationId, setToast },
+        pageContext: { setToast },
       });
 
       await waitFor(() => {
-        expect(refreshUserInfo).toHaveBeenCalled();
-        expect(setVerificationId).toHaveBeenCalledWith(undefined);
-        expect(setToast).toHaveBeenCalledWith('account_center.verification.verification_required');
+        expect(mockRequestStepUp).toHaveBeenCalledWith(
+          expect.any(HTTPError),
+          { type: 'enter-subpage' },
+          { route: `/account${getSocialAddRoute(connectorId)}` }
+        );
       });
+      expect(setToast).not.toHaveBeenCalled();
     });
   });
 
@@ -363,7 +379,6 @@ describe('<SocialCallback />', () => {
       await waitFor(() => {
         expect(replaceSocialIdentity).toHaveBeenCalledWith(
           'access-token',
-          'identity-verification-record-id',
           'social-verification-record-id'
         );
       });
@@ -374,19 +389,18 @@ describe('<SocialCallback />', () => {
       });
     });
 
-    it('resets verification when permission denied during change flow', async () => {
-      const refreshUserInfo = jest.fn().mockResolvedValue(undefined);
-      const setVerificationId = jest.fn();
+    it('starts a step-up on the challenge and returns to the change flow', async () => {
+      mockRequestStepUp.mockResolvedValue(true);
       const setToast = jest.fn();
 
-      jest
-        .mocked(replaceSocialIdentity)
-        .mockRejectedValue(createHttpError('verification_record.permission_denied', 401));
+      jest.mocked(replaceSocialIdentity).mockRejectedValue(
+        createHttpError('verification_record.permission_denied', 401, undefined, {
+          'www-authenticate': challenge,
+        })
+      );
 
       renderSocialCallback({
         pageContext: {
-          refreshUserInfo,
-          setVerificationId,
           setToast,
           userInfo: {
             identities: {
@@ -400,10 +414,13 @@ describe('<SocialCallback />', () => {
       });
 
       await waitFor(() => {
-        expect(refreshUserInfo).toHaveBeenCalled();
-        expect(setVerificationId).toHaveBeenCalledWith(undefined);
-        expect(setToast).toHaveBeenCalledWith('account_center.verification.verification_required');
+        expect(mockRequestStepUp).toHaveBeenCalledWith(
+          expect.any(HTTPError),
+          { type: 'enter-subpage' },
+          { route: `/account${getSocialChangeRoute(connectorId)}` }
+        );
       });
+      expect(setToast).not.toHaveBeenCalled();
     });
 
     it('handles replace error with toast and navigates to security', async () => {

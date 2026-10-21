@@ -3,17 +3,13 @@ import classNames from 'classnames';
 import { HTTPError } from 'ky';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import AccountPageHeader from '@ac/components/AccountPageHeader';
 import ConfirmModal from '@ac/components/ConfirmModal';
 import PageFooter from '@ac/components/PageFooter';
 import { layoutClassNames } from '@ac/constants/layout';
-import { verifiedActionRoute } from '@ac/constants/routes';
-import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
 import { isEditableField } from '@ac/utils/security-page';
-import { sessionStorage } from '@ac/utils/session-storage';
 import { consumePendingStepUpAction } from '@ac/utils/step-up';
 
 import { getSessions, revokeSession, getGrants, revokeGrant } from '../../apis/sessions';
@@ -29,12 +25,10 @@ import { normalizeGrantRows, type AccountSession, type GrantedAppRow } from './u
 
 const Sessions = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const { accountCenterSettings, setVerificationId, setToast } = useContext(PageContext);
+  const { accountCenterSettings, setToast } = useContext(PageContext);
   const {
     isReady: isIdentityProofReady,
     isChecking: isCheckingIdentityProof,
-    verificationId,
     checkIdentityProof,
   } = useIdentityProof();
   const { requestStepUp, startStepUp } = useStepUp();
@@ -58,13 +52,8 @@ const Sessions = () => {
   const sessionControl = accountCenterSettings?.fields.session;
   const isEditable = isEditableField(sessionControl);
 
-  const handlePermissionDenied = useCallback(async () => {
-    setVerificationId(undefined);
-    setToast(t('account_center.verification.verification_required'));
-  }, [setVerificationId, setToast, t]);
-
   const fetchData = useCallback(
-    async (verifiedId: string | undefined, isResumed = false) => {
+    async (isResumed = false) => {
       if (isFetchingRef.current) {
         return;
       }
@@ -74,8 +63,8 @@ const Sessions = () => {
       setIsLoading(true);
 
       const [sessionResponse, grantResponse] = await Promise.all([
-        getSessionsApi(verifiedId),
-        getGrantsApi(verifiedId),
+        getSessionsApi(),
+        getGrantsApi(),
       ]);
 
       const [sessionError, sessionResult] = sessionResponse;
@@ -86,9 +75,7 @@ const Sessions = () => {
           return;
         }
 
-        await handleError(sessionError, {
-          'verification_record.permission_denied': handlePermissionDenied,
-        });
+        await handleError(sessionError);
         setIsLoading(false);
         // eslint-disable-next-line @silverhand/fp/no-mutation
         isFetchingRef.current = false;
@@ -104,9 +91,7 @@ const Sessions = () => {
           return;
         }
 
-        await handleError(grantError, {
-          'verification_record.permission_denied': handlePermissionDenied,
-        });
+        await handleError(grantError);
         setHasGrantLoadingError(true);
       } else if (grantResult) {
         setGrantRows(normalizeGrantRows(grantResult.grants));
@@ -118,7 +103,7 @@ const Sessions = () => {
       // eslint-disable-next-line @silverhand/fp/no-mutation
       isFetchingRef.current = false;
     },
-    [getSessionsApi, getGrantsApi, handleError, handlePermissionDenied, requestStepUp]
+    [getSessionsApi, getGrantsApi, handleError, requestStepUp]
   );
 
   useEffect(() => {
@@ -135,54 +120,26 @@ const Sessions = () => {
     // eslint-disable-next-line @silverhand/fp/no-mutation
     hasAutoLoadedRef.current = true;
 
-    if (verificationId) {
-      const pendingAction = sessionStorage.getPendingVerifiedAction();
-
-      if (pendingAction === 'load-sessions') {
-        sessionStorage.clearPendingVerifiedAction();
-      }
-    }
-
-    void fetchData(verificationId);
-  }, [
-    fetchData,
-    hasLoaded,
-    isCheckingIdentityProof,
-    isIdentityProofReady,
-    isLoading,
-    verificationId,
-  ]);
+    void fetchData();
+  }, [fetchData, hasLoaded, isCheckingIdentityProof, isIdentityProofReady, isLoading]);
 
   useEffect(() => {
     if (consumePendingStepUpAction(['load-sessions'])) {
       // The resumed action owns this page load; do not also auto-load the list.
       // eslint-disable-next-line @silverhand/fp/no-mutation
       hasAutoLoadedRef.current = true;
-      void fetchData(undefined, true);
+      void fetchData(true);
     }
   }, [fetchData]);
 
-  const navigateTo = useCallback(
-    (route: string) => {
-      setPendingReturn(getPendingReturn() ?? window.location.href);
-      navigate(route);
-    },
-    [navigate]
-  );
-
   const handleManage = useCallback(async () => {
     if (await checkIdentityProof()) {
-      await fetchData(verificationId);
+      await fetchData();
       return;
     }
 
-    if (await startStepUp({ type: 'load-sessions' })) {
-      return;
-    }
-
-    sessionStorage.setPendingVerifiedAction('load-sessions');
-    navigateTo(verifiedActionRoute);
-  }, [checkIdentityProof, verificationId, fetchData, startStepUp, navigateTo]);
+    await startStepUp({ type: 'load-sessions' });
+  }, [checkIdentityProof, fetchData, startStepUp]);
 
   const handleRevoke = useCallback(
     async (session: AccountSession) => {
@@ -191,7 +148,7 @@ const Sessions = () => {
         return;
       }
 
-      const [error] = await revokeSessionApi(verificationId, session.payload.uid);
+      const [error] = await revokeSessionApi(session.payload.uid);
       if (error) {
         // The revocation is not replayed after the step-up; the user confirms it again on the
         // reloaded list.
@@ -199,13 +156,7 @@ const Sessions = () => {
           return;
         }
 
-        await handleError(error, {
-          'verification_record.permission_denied': async () => {
-            setVerificationId(undefined);
-            setHasLoaded(false);
-            setToast(t('account_center.verification.verification_required'));
-          },
-        });
+        await handleError(error);
         return;
       }
 
@@ -213,17 +164,7 @@ const Sessions = () => {
         previous?.filter((item) => item.payload.uid !== session.payload.uid)
       );
     },
-    [
-      isIdentityProofReady,
-      verificationId,
-      revokeSessionApi,
-      handleError,
-      requestStepUp,
-      startStepUp,
-      setVerificationId,
-      setToast,
-      t,
-    ]
+    [isIdentityProofReady, revokeSessionApi, handleError, requestStepUp, startStepUp]
   );
 
   const handleConfirmRevoke = useCallback(async () => {
@@ -245,7 +186,7 @@ const Sessions = () => {
 
       const results = await Promise.allSettled(
         app.grantIds.map(async (grantId) => {
-          const [error] = await revokeGrantApi(verificationId, grantId);
+          const [error] = await revokeGrantApi(grantId);
           if (error) {
             throw error instanceof Error ? error : new Error('revoke_failed');
           }
@@ -272,16 +213,7 @@ const Sessions = () => {
       );
       setRemovingAppId(undefined);
     },
-    [
-      isIdentityProofReady,
-      verificationId,
-      revokeGrantApi,
-      handleError,
-      requestStepUp,
-      startStepUp,
-      setToast,
-      t,
-    ]
+    [isIdentityProofReady, revokeGrantApi, handleError, requestStepUp, startStepUp, setToast, t]
   );
 
   const handleConfirmRevokeGrant = useCallback(async () => {

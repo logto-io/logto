@@ -19,40 +19,12 @@ const account_center = {
     sign_out: 'Abmelden',
   },
   verification: {
-    title: 'Sicherheitsüberprüfung',
-    description:
-      'Bestätige deine Identität, um die Sicherheit deines Kontos zu schützen. Bitte wähle eine Methode zur Verifizierung deiner Identität.',
     error_send_failed:
       'Bestätigungscode konnte nicht gesendet werden. Bitte versuche es später noch einmal.',
     error_invalid_code: 'Der Bestätigungscode ist ungültig oder abgelaufen.',
     error_verify_failed: 'Verifizierung fehlgeschlagen. Bitte gib den Code erneut ein.',
-    verification_required: 'Verifizierung abgelaufen. Bitte bestätige deine Identität erneut.',
     step_up_not_completed:
       'Die Identitätsverifizierung wurde nicht abgeschlossen. An deinem Konto wurden keine Änderungen vorgenommen.',
-    try_another_method: 'Versuche eine andere Verifizierungsmethode',
-    no_available_methods_title: 'Keine Verifizierungsmethoden verfügbar',
-    no_available_methods_description:
-      'Du hast noch keine Verifizierungsmethoden eingerichtet. Bitte füge zuerst ein Passwort, eine E-Mail-Adresse oder eine Telefonnummer zu deinem Konto hinzu.',
-  },
-  password_verification: {
-    title: 'Passwort bestätigen',
-    description:
-      'Zum Schutz deines Kontos gib dein Passwort ein, um deine Identität zu bestätigen.',
-    error_failed: 'Falsches Passwort. Bitte überprüfe deine Eingabe.',
-  },
-  verification_method: {
-    password: {
-      name: 'Passwort',
-      description: 'Bestätige dein Passwort',
-    },
-    email: {
-      name: 'E-Mail-Bestätigungscode',
-      description: 'Bestätigungscode an deine E-Mail senden',
-    },
-    phone: {
-      name: 'Telefon-Bestätigungscode',
-      description: 'Bestätigungscode an deine Telefonnummer senden',
-    },
   },
   email: {
     title: 'E-Mail verknüpfen',
@@ -62,7 +34,6 @@ const account_center = {
     verification_description:
       'Der Bestätigungscode wurde an deine E-Mail {{email_address}} gesendet.',
     success: 'Primäre E-Mail wurde erfolgreich verknüpft.',
-    verification_required: 'Verifizierung abgelaufen. Bitte bestätige deine Identität erneut.',
   },
   phone: {
     title: 'Telefonnummer verknüpfen',
@@ -72,7 +43,6 @@ const account_center = {
     verification_description:
       'Der Bestätigungscode wurde an dein Telefon {{phone_number}} gesendet.',
     success: 'Primäre Telefonnummer wurde erfolgreich verknüpft.',
-    verification_required: 'Verifizierung abgelaufen. Bitte bestätige deine Identität erneut.',
   },
   username: {
     title: 'Benutzernamen festlegen',
@@ -207,36 +177,10 @@ const account_center = {
     resend_countdown: 'Noch nichts erhalten? Erneut senden nach {{seconds}} s.',
   },
   email_verification: {
-    title: 'Bestätige deine E-Mail',
-    prepare_description:
-      'Bestätige deine Identität, um die Sicherheit deines Kontos zu schützen. Sende den Bestätigungscode an deine E-Mail.',
     email_label: 'E-Mail-Adresse',
-    send: 'Bestätigungscode senden',
-    description:
-      'Der Bestätigungscode wurde an deine E-Mail {{email}} gesendet. Gib den Code ein, um fortzufahren.',
-    resend: 'Noch nichts erhalten? <a>Bestätigungscode erneut senden</a>',
-    not_received: 'Noch nichts erhalten?',
-    resend_action: 'Bestätigungscode erneut senden',
-    resend_countdown: 'Noch nichts erhalten? Erneut senden nach {{seconds}} s.',
-    error_send_failed:
-      'Bestätigungscode konnte nicht gesendet werden. Bitte versuche es später noch einmal.',
-    error_verify_failed: 'Verifizierung fehlgeschlagen. Bitte gib den Code erneut ein.',
-    error_invalid_code: 'Der Bestätigungscode ist ungültig oder abgelaufen.',
   },
   phone_verification: {
-    title: 'Bestätige dein Telefon',
-    prepare_description:
-      'Bestätige deine Identität, um die Sicherheit deines Kontos zu schützen. Sende den Bestätigungscode an dein Telefon.',
     phone_label: 'Telefonnummer',
-    send: 'Bestätigungscode senden',
-    description:
-      'Der Bestätigungscode wurde an dein Telefon {{phone}} gesendet. Gib den Code ein, um fortzufahren.',
-    resend: 'Noch nichts erhalten? <a>Bestätigungscode erneut senden</a>',
-    resend_countdown: 'Noch nichts erhalten? Erneut senden nach {{seconds}} s.',
-    error_send_failed:
-      'Bestätigungscode konnte nicht gesendet werden. Bitte versuche es später noch einmal.',
-    error_verify_failed: 'Verifizierung fehlgeschlagen. Bitte gib den Code erneut ein.',
-    error_invalid_code: 'Der Bestätigungscode ist ungültig oder abgelaufen.',
   },
   mfa: {
     totp_already_added:

@@ -52,6 +52,19 @@ export const authenticationFreshnessMaxAgeSeconds =
   accountApiAuthenticationMaxAgeSeconds - authenticationFreshnessMarginSeconds;
 
 /**
+ * Standalone subpages start a step-up when less than this much freshness remains, leaving a
+ * 5-minute grace buffer for a multi-step form, OTP, QR scan, WebAuthn registration, or upstream
+ * OAuth before the Account API's 600-second window expires.
+ */
+export const subpageAuthenticationMaxAgeSeconds = 300;
+
+/** The proactive request of a standalone subpage. Its `max_age` matches the entry threshold. */
+export const subpageStepUpChallenge: StepUpChallenge = Object.freeze({
+  acrValues: LogtoAcr.FirstFactor,
+  maxAge: String(subpageAuthenticationMaxAgeSeconds),
+});
+
+/**
  * The Account API policy. Used when the challenge omits a parameter, which RFC 9470 allows; the
  * Account API sends both.
  */
@@ -74,10 +87,14 @@ export const proactiveStepUpChallenge: StepUpChallenge = Object.freeze({
  * Whether the ID token carries a first-factor authentication context recent enough for the Account
  * API. The access token stays opaque; the ID token is the client's local source for coordinating
  * the UX before a sensitive request.
+ *
+ * @param maxAgeSeconds How old the context may be. Inline actions use the Account API window minus
+ * a margin; standalone subpages use {@link subpageAuthenticationMaxAgeSeconds}.
  */
 export const hasFreshFirstFactorAuthentication = (
   claims: Record<string, unknown> | undefined,
-  now = Date.now()
+  now = Date.now(),
+  maxAgeSeconds = authenticationFreshnessMaxAgeSeconds
 ): boolean => {
   if (!claims || !acrSatisfies(claims.acr, LogtoAcr.FirstFactor)) {
     return false;
@@ -91,10 +108,7 @@ export const hasFreshFirstFactorAuthentication = (
 
   const ageSeconds = now / 1000 - authTime;
 
-  return (
-    ageSeconds >= -authenticationFreshnessMarginSeconds &&
-    ageSeconds <= authenticationFreshnessMaxAgeSeconds
-  );
+  return ageSeconds >= -authenticationFreshnessMarginSeconds && ageSeconds <= maxAgeSeconds;
 };
 
 const authParameterPattern =
@@ -183,6 +197,8 @@ export type StepUpFailure = {
   error: string;
   /** The Account Center pathname, including the base path, the step-up started from. */
   route: string;
+  /** The action the step-up was going to run. */
+  action: PendingStepUpAction;
 };
 
 /**
@@ -223,6 +239,7 @@ export const handlePendingStepUpOnPageLoad = ({
       route: record.route.startsWith(`${accountCenterBasePath}/`)
         ? record.route
         : accountCenterBasePath,
+      action: record.action,
     };
   }
 

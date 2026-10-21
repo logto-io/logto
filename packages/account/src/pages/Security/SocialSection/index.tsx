@@ -10,13 +10,12 @@ import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { deleteSocialIdentity } from '@ac/apis/social';
 import ConfirmModal from '@ac/components/ConfirmModal';
 import { layoutClassNames } from '@ac/constants/layout';
-import { getSocialAddRoute, getSocialChangeRoute, verifiedActionRoute } from '@ac/constants/routes';
+import { getSocialAddRoute, getSocialChangeRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import useStepUp, { useIdentityProof } from '@ac/hooks/use-step-up';
 import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
 import { hasVisibleSocialSection } from '@ac/utils/security-page';
-import { sessionStorage } from '@ac/utils/session-storage';
 import {
   getAvailableSocialConnectors,
   getLocalizedConnectorName,
@@ -63,16 +62,9 @@ const SocialSection = () => {
     i18n: { language },
   } = useTranslation();
   const navigate = useNavigate();
-  const {
-    accountCenterSettings,
-    experienceSettings,
-    theme,
-    userInfo,
-    setVerificationId,
-    refreshUserInfo,
-    setToast,
-  } = useContext(PageContext);
-  const { verificationId, checkIdentityProof } = useIdentityProof();
+  const { accountCenterSettings, experienceSettings, theme, userInfo, refreshUserInfo, setToast } =
+    useContext(PageContext);
+  const { checkIdentityProof } = useIdentityProof();
   const { requestStepUp, startStepUp } = useStepUp();
   const handleError = useErrorHandler();
   const deleteSocialIdentityRequest = useApi(deleteSocialIdentity);
@@ -103,16 +95,8 @@ const SocialSection = () => {
     selectedConnector && getLocalizedConnectorName(selectedConnector, language);
   const currentPageUrl = `${window.location.origin}${window.location.pathname}`;
 
-  const navigateTo = useCallback(
-    (route: string) => {
-      setPendingReturn(getPendingReturn() ?? window.location.href);
-      navigate(route);
-    },
-    [navigate]
-  );
-
   const removeSocialIdentityForConnector = useCallback(
-    async (connectorId: string, verifiedId: string | undefined, isResumed = false) => {
+    async (connectorId: string, isResumed = false) => {
       const connector = connectors.find(({ id }) => id === connectorId);
 
       if (!connector) {
@@ -120,19 +104,14 @@ const SocialSection = () => {
       }
 
       const connectorName = getLocalizedConnectorName(connector, language);
-      const [error] = await deleteSocialIdentityRequest(verifiedId, connector.target);
+      const [error] = await deleteSocialIdentityRequest(connector.target);
 
       if (error) {
         if (await requestStepUp(error, { type: 'remove-social', connectorId }, { isResumed })) {
           return;
         }
 
-        await handleError(error, {
-          'verification_record.permission_denied': async () => {
-            setVerificationId(undefined);
-            setToast(t('account_center.verification.verification_required'));
-          },
-        });
+        await handleError(error);
         return;
       }
 
@@ -147,7 +126,6 @@ const SocialSection = () => {
       refreshUserInfo,
       requestStepUp,
       setToast,
-      setVerificationId,
       t,
     ]
   );
@@ -161,53 +139,20 @@ const SocialSection = () => {
     setSelectedConnectorId(undefined);
 
     if (await checkIdentityProof()) {
-      await removeSocialIdentityForConnector(connectorId, verificationId);
+      await removeSocialIdentityForConnector(connectorId);
       return;
     }
 
-    if (await startStepUp({ type: 'remove-social', connectorId })) {
-      return;
-    }
-
-    sessionStorage.setPendingVerifiedAction('remove-social');
-    sessionStorage.setPendingSocialRemoveConnectorId(connectorId);
-    navigateTo(verifiedActionRoute);
-  }, [
-    checkIdentityProof,
-    navigateTo,
-    removeSocialIdentityForConnector,
-    selectedConnectorId,
-    startStepUp,
-    verificationId,
-  ]);
+    await startStepUp({ type: 'remove-social', connectorId });
+  }, [checkIdentityProof, removeSocialIdentityForConnector, selectedConnectorId, startStepUp]);
 
   useEffect(() => {
     const action = consumePendingStepUpAction(['remove-social']);
 
     if (action) {
-      void removeSocialIdentityForConnector(action.connectorId, undefined, true);
+      void removeSocialIdentityForConnector(action.connectorId, true);
     }
   }, [removeSocialIdentityForConnector]);
-
-  useEffect(() => {
-    if (!verificationId) {
-      return;
-    }
-
-    if (sessionStorage.getPendingVerifiedAction() !== 'remove-social') {
-      return;
-    }
-
-    const connectorId = sessionStorage.getPendingSocialRemoveConnectorId();
-
-    if (!connectorId) {
-      return;
-    }
-
-    sessionStorage.clearPendingVerifiedAction();
-    sessionStorage.clearPendingSocialRemoveConnectorId();
-    void removeSocialIdentityForConnector(connectorId, verificationId);
-  }, [removeSocialIdentityForConnector, verificationId]);
 
   if (!hasVisibleSocialSection(socialControl, experienceSettings)) {
     return null;

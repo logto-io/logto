@@ -1,4 +1,3 @@
-/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'Page introuvable',
@@ -19,39 +18,11 @@ const account_center = {
     sign_out: 'Se déconnecter',
   },
   verification: {
-    title: 'Vérification de sécurité',
-    description:
-      "Confirmez que c'est bien vous pour protéger la sécurité de votre compte. Veuillez sélectionner la méthode pour vérifier votre identité.",
     error_send_failed: "Échec de l'envoi du code de vérification. Veuillez réessayer plus tard.",
     error_invalid_code: 'Le code de vérification est invalide ou a expiré.',
     error_verify_failed: 'Échec de la vérification. Veuillez saisir le code à nouveau.',
-    verification_required: 'La vérification a expiré. Veuillez confirmer à nouveau votre identité.',
     step_up_not_completed:
       "La vérification d'identité n'a pas été effectuée. Aucune modification n'a été apportée à votre compte.",
-    try_another_method: 'Essayez une autre méthode de vérification',
-    no_available_methods_title: 'Aucune méthode de vérification disponible',
-    no_available_methods_description:
-      "Vous n'avez configuré aucune méthode de vérification. Veuillez d'abord ajouter un mot de passe, une adresse e-mail ou un numéro de téléphone à votre compte.",
-  },
-  password_verification: {
-    title: 'Vérifier le mot de passe',
-    description:
-      'Pour protéger votre compte, saisissez votre mot de passe afin de confirmer votre identité.',
-    error_failed: 'Mot de passe incorrect. Veuillez vérifier votre saisie.',
-  },
-  verification_method: {
-    password: {
-      name: 'Mot de passe',
-      description: 'Vérifiez votre mot de passe',
-    },
-    email: {
-      name: 'Code de vérification par e-mail',
-      description: 'Envoyer le code de vérification sur votre e-mail',
-    },
-    phone: {
-      name: 'Code de vérification par téléphone',
-      description: 'Envoyer le code de vérification sur votre numéro de téléphone',
-    },
   },
   email: {
     title: "Lier l'e-mail",
@@ -60,7 +31,6 @@ const account_center = {
     verification_description:
       'Le code de vérification a été envoyé à votre e-mail {{email_address}}.',
     success: 'E-mail principal lié avec succès.',
-    verification_required: 'La vérification a expiré. Veuillez confirmer à nouveau votre identité.',
   },
   phone: {
     title: 'Lier le numéro de téléphone',
@@ -70,7 +40,6 @@ const account_center = {
     verification_description:
       'Le code de vérification a été envoyé sur votre téléphone {{phone_number}}.',
     success: 'Téléphone principal lié avec succès.',
-    verification_required: 'La vérification a expiré. Veuillez confirmer à nouveau votre identité.',
   },
   username: {
     title: "Définir le nom d'utilisateur",
@@ -203,34 +172,10 @@ const account_center = {
     resend_countdown: 'Pas encore reçu ? Renvoyez après {{seconds}} s.',
   },
   email_verification: {
-    title: 'Vérifiez votre e-mail',
-    prepare_description:
-      'Confirmez votre identité pour protéger la sécurité de votre compte. Envoyez le code de vérification à votre e-mail.',
     email_label: 'Adresse e-mail',
-    send: 'Envoyer le code de vérification',
-    description:
-      'Le code de vérification a été envoyé à votre e-mail {{email}}. Saisissez le code pour continuer.',
-    resend: 'Pas encore reçu ? <a>Renvoyer le code de vérification</a>',
-    not_received: 'Pas encore reçu ?',
-    resend_action: 'Renvoyer le code de vérification',
-    resend_countdown: 'Pas encore reçu ? Renvoyez après {{seconds}} s.',
-    error_send_failed: "Échec de l'envoi du code de vérification. Veuillez réessayer plus tard.",
-    error_verify_failed: 'Échec de la vérification. Veuillez saisir le code à nouveau.',
-    error_invalid_code: 'Le code de vérification est invalide ou a expiré.',
   },
   phone_verification: {
-    title: 'Vérifiez votre téléphone',
-    prepare_description:
-      'Confirmez votre identité pour protéger la sécurité de votre compte. Envoyez le code de vérification sur votre téléphone.',
     phone_label: 'Numéro de téléphone',
-    send: 'Envoyer le code de vérification',
-    description:
-      'Le code de vérification a été envoyé à votre téléphone {{phone}}. Saisissez le code pour continuer.',
-    resend: 'Pas encore reçu ? <a>Renvoyer le code de vérification</a>',
-    resend_countdown: 'Pas encore reçu ? Renvoyez après {{seconds}} s.',
-    error_send_failed: "Échec de l'envoi du code de vérification. Veuillez réessayer plus tard.",
-    error_verify_failed: 'Échec de la vérification. Veuillez saisir le code à nouveau.',
-    error_invalid_code: 'Le code de vérification est invalide ou a expiré.',
   },
   mfa: {
     totp_already_added:
@@ -348,4 +293,3 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
-/* eslint-enable max-lines */
