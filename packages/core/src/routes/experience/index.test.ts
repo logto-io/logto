@@ -1834,7 +1834,10 @@ describe('POST /experience/abort', () => {
     const { requester, provider } = createRequesterWithMocks({
       interactionDetailsOverrides: {
         prompt: { name: 'consent', reasons: ['consent_required'], details: {} },
-        result: {
+        // A consent interaction stores the login submission in `lastSubmission`; its own result
+        // stays empty until the user decides.
+        result: undefined,
+        lastSubmission: {
           interactionEvent: InteractionEvent.SignIn,
           userId: mockUser.id,
           login: { accountId: mockUser.id },
@@ -1854,19 +1857,27 @@ describe('POST /experience/abort', () => {
     );
   });
 
-  it('should abort even when the interaction storage cannot be restored', async () => {
-    setDevFeaturesEnabled(true);
-    const { requester, provider } = createRequesterWithMocks({
-      // E.g. an interaction whose experience data was never saved, or was already consumed.
-      interactionDetailsOverrides: { result: {} },
-    });
+  it.each([
+    { name: 'empty', result: {} },
+    {
+      name: 'unreadable step-up context',
+      result: { authenticationContext: { requestedAcrValues: ['urn:logto:acr:unknown'] } },
+    },
+  ])(
+    'should abort even when the interaction storage cannot be restored ($name)',
+    async ({ result }) => {
+      setDevFeaturesEnabled(true);
+      const { requester, provider } = createRequesterWithMocks({
+        interactionDetailsOverrides: { result },
+      });
 
-    const response = await requester.post('/experience/abort').send({});
+      const response = await requester.post('/experience/abort').send({});
 
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual({ redirectTo: 'redirectTo' });
-    expect(provider.interactionResult).toHaveBeenCalled();
-  });
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({ redirectTo: 'redirectTo' });
+      expect(provider.interactionResult).toHaveBeenCalled();
+    }
+  );
 
   it('should not be registered when dev features are disabled', async () => {
     setDevFeaturesEnabled(false);
