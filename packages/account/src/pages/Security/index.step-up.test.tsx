@@ -73,7 +73,7 @@ const createChallengeError = () =>
     {} as NormalizedOptions
   );
 
-const renderMfaSection = () =>
+const renderMfaSection = (maximumAuthenticationAgeInSeconds?: number) =>
   renderWithPageContext(
     <Routes>
       <Route path={securityRoute} element={<Security />} />
@@ -100,6 +100,9 @@ const renderMfaSection = () =>
             policy: MfaPolicy.PromptAtSignInAndSignUp,
           },
         },
+        ...(maximumAuthenticationAgeInSeconds !== undefined && {
+          authenticationPolicy: { maximumAuthenticationAgeInSeconds },
+        }),
         // A record the legacy flow cached; the step-up path must not send it.
         verificationId: 'legacy-verification-record-id',
         setToast: mockSetToast,
@@ -197,10 +200,53 @@ describe('<Security /> OIDC step-up', () => {
     });
   });
 
+  it('starts the proactive step-up with the tenant window', async () => {
+    mockGetIdTokenClaims.mockResolvedValue(
+      createIdTokenClaims(Math.floor(Date.now() / 1000) - 7200)
+    );
+
+    const { getByLabelText } = renderMfaSection(7200);
+
+    await waitFor(() => {
+      expect(getByLabelText('Toggle switch')).not.toBeNull();
+    });
+    fireEvent.click(getByLabelText('Toggle switch'));
+
+    await waitFor(() => {
+      expect(mockSignIn).toHaveBeenCalledTimes(1);
+    });
+    expect(mockUpdateMfaSettings).not.toHaveBeenCalled();
+    expect(mockSignIn).toHaveBeenCalledWith({
+      redirectUri: 'http://localhost/account',
+      clearTokens: false,
+      extraParams: { acr_values: 'urn:logto:acr:1fa', max_age: '7140' },
+    });
+  });
+
+  it('calls the Account API directly when the context is fresh for the tenant window', async () => {
+    mockGetIdTokenClaims.mockResolvedValue(
+      createIdTokenClaims(Math.floor(Date.now() / 1000) - 600)
+    );
+    mockUpdateMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
+
+    const { getByLabelText } = renderMfaSection(7200);
+
+    await waitFor(() => {
+      expect(getByLabelText('Toggle switch')).not.toBeNull();
+    });
+    fireEvent.click(getByLabelText('Toggle switch'));
+
+    await waitFor(() => {
+      expect(mockUpdateMfaSettings).toHaveBeenCalledWith('access-token', undefined, {
+        skipMfaOnSignIn: false,
+      });
+    });
+    expect(mockSignIn).not.toHaveBeenCalled();
+  });
+
   it('runs the resumed action once with the elevated token', async () => {
     mockUpdateMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true });
     prepareResumableStepUp('disable-mfa');
-
     const { getByLabelText, unmount } = renderMfaSection();
 
     await waitFor(() => {

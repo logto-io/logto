@@ -1,5 +1,5 @@
 import { useLogto } from '@logto/react';
-import { ExtraParamsKey } from '@logto/schemas';
+import { ExtraParamsKey, defaultMaximumAuthenticationAgeInSeconds } from '@logto/schemas';
 import { useCallback, useContext, useEffect, useState } from 'react';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
@@ -10,9 +10,10 @@ import {
   setRouteRestore,
 } from '@ac/utils/account-center-route';
 import {
+  getAccountApiStepUpChallenge,
+  getProactiveStepUpChallenge,
   getStepUpChallenge,
   hasFreshFirstFactorAuthentication,
-  proactiveStepUpChallenge,
   startPendingStepUp,
   type PendingStepUpAction,
   type StepUpChallenge,
@@ -44,6 +45,20 @@ export type IdentityProof = {
 };
 
 /**
+ * The tenant's freshness window from the public authentication policy. Falls back to the default
+ * window until the configuration loads, or when it is unavailable: the Account API challenge
+ * always corrects a disagreement, so this only affects when Account Center acts proactively.
+ */
+const useMaximumAuthenticationAgeInSeconds = (): number => {
+  const { authenticationPolicy } = useContext(PageContext);
+
+  return (
+    authenticationPolicy?.maximumAuthenticationAgeInSeconds ??
+    defaultMaximumAuthenticationAgeInSeconds
+  );
+};
+
+/**
  * The proof of a recent authentication that a sensitive Account API request carries.
  *
  * With OIDC step-up the access token is the only proof: the request is sent without a legacy
@@ -54,6 +69,7 @@ export type IdentityProof = {
 export const useIdentityProof = (): IdentityProof => {
   const { verificationId } = useContext(PageContext);
   const { getIdTokenClaims } = useLogto();
+  const maximumAuthenticationAgeInSeconds = useMaximumAuthenticationAgeInSeconds();
   const [isReady, setIsReady] = useState(false);
   const [isChecking, setIsChecking] = useState(isDevFeaturesEnabled);
 
@@ -69,7 +85,7 @@ export const useIdentityProof = (): IdentityProof => {
 
     try {
       const claims = await getIdTokenClaims();
-      const ready = hasFreshFirstFactorAuthentication(claims);
+      const ready = hasFreshFirstFactorAuthentication(claims, maximumAuthenticationAgeInSeconds);
       setIsReady(ready);
       return ready;
     } catch {
@@ -78,7 +94,7 @@ export const useIdentityProof = (): IdentityProof => {
     } finally {
       setIsChecking(false);
     }
-  }, [getIdTokenClaims, verificationId]);
+  }, [getIdTokenClaims, maximumAuthenticationAgeInSeconds, verificationId]);
 
   useEffect(() => {
     void checkIdentityProof();
@@ -121,6 +137,7 @@ type StepUpController = {
  */
 const useStepUp = (): StepUpController => {
   const { signIn } = useLogto();
+  const maximumAuthenticationAgeInSeconds = useMaximumAuthenticationAgeInSeconds();
 
   const beginStepUp = useCallback(
     async (action: PendingStepUpAction, { acrValues, maxAge }: StepUpChallenge) => {
@@ -157,7 +174,11 @@ const useStepUp = (): StepUpController => {
         return false;
       }
 
-      const challenge = getStepUpChallenge(error);
+      // A challenge parameter the server sent wins; the tenant policy only fills in a missing one.
+      const challenge = getStepUpChallenge(
+        error,
+        getAccountApiStepUpChallenge(maximumAuthenticationAgeInSeconds)
+      );
 
       if (!challenge) {
         return false;
@@ -167,7 +188,7 @@ const useStepUp = (): StepUpController => {
 
       return true;
     },
-    [beginStepUp]
+    [beginStepUp, maximumAuthenticationAgeInSeconds]
   );
 
   const startStepUp = useCallback(
@@ -177,11 +198,11 @@ const useStepUp = (): StepUpController => {
         return false;
       }
 
-      await beginStepUp(action, proactiveStepUpChallenge);
+      await beginStepUp(action, getProactiveStepUpChallenge(maximumAuthenticationAgeInSeconds));
 
       return true;
     },
-    [beginStepUp]
+    [beginStepUp, maximumAuthenticationAgeInSeconds]
   );
 
   return { requestStepUp, startStepUp };

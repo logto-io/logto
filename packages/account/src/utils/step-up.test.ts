@@ -1,19 +1,20 @@
-import { LogtoAcr } from '@logto/schemas';
+import { LogtoAcr, defaultMaximumAuthenticationAgeInSeconds } from '@logto/schemas';
 import { HTTPError, type NormalizedOptions } from 'ky';
 
 import { accountStorage, sessionStorage as accountSessionStorage } from './session-storage';
 import {
-  accountApiStepUpChallenge,
-  authenticationFreshnessMaxAgeSeconds,
   completePendingStepUp,
   consumePendingStepUpAction,
+  getAccountApiStepUpChallenge,
+  getProactiveStepUpChallenge,
   getStepUpChallenge,
   handlePendingStepUpOnPageLoad,
   hasFreshFirstFactorAuthentication,
   parseStepUpChallenge,
-  proactiveStepUpChallenge,
   startPendingStepUp,
 } from './step-up';
+
+const defaultChallenge = getAccountApiStepUpChallenge(defaultMaximumAuthenticationAgeInSeconds);
 
 const securityPath = '/account/security';
 const pageLoad = (pathname: string, search = '') =>
@@ -44,7 +45,8 @@ describe('parseStepUpChallenge', () => {
   it('reads the requirement from an Account API challenge', () => {
     expect(
       parseStepUpChallenge(
-        'Bearer error="insufficient_user_authentication", error_description="Recent user authentication is required", acr_values="urn:logto:acr:mfa urn:logto:acr:1fa", max_age="300"'
+        'Bearer error="insufficient_user_authentication", error_description="Recent user authentication is required", acr_values="urn:logto:acr:mfa urn:logto:acr:1fa", max_age="300"',
+        defaultChallenge
       )
     ).toEqual({ acrValues: 'urn:logto:acr:mfa urn:logto:acr:1fa', maxAge: '300' });
   });
@@ -52,14 +54,24 @@ describe('parseStepUpChallenge', () => {
   it('unescapes quoted-strings and accepts token values', () => {
     expect(
       parseStepUpChallenge(
-        'bearer error=insufficient_user_authentication, error_description="a \\"quoted\\", value", max_age=0'
+        'bearer error=insufficient_user_authentication, error_description="a \\"quoted\\", value", max_age=0',
+        defaultChallenge
       )
     ).toEqual({ acrValues: 'urn:logto:acr:1fa', maxAge: '0' });
   });
 
-  it('falls back to the Account API policy for missing or malformed parameters', () => {
+  it('falls back to the given policy for missing or malformed parameters', () => {
     expect(
-      parseStepUpChallenge('Bearer error="insufficient_user_authentication", max_age="-1"')
+      parseStepUpChallenge(
+        'Bearer error="insufficient_user_authentication", max_age="-1"',
+        getAccountApiStepUpChallenge(7200)
+      )
+    ).toEqual({ acrValues: 'urn:logto:acr:1fa', maxAge: '7200' });
+  });
+
+  it('falls back to the default policy for a challenge without any parameter', () => {
+    expect(
+      parseStepUpChallenge('Bearer error="insufficient_user_authentication"', defaultChallenge)
     ).toEqual({ acrValues: 'urn:logto:acr:1fa', maxAge: '600' });
   });
 
@@ -71,7 +83,7 @@ describe('parseStepUpChallenge', () => {
     'Basic error="insufficient_user_authentication"',
     'Bearer error_description="insufficient_user_authentication"',
   ])('ignores %p', (header) => {
-    expect(parseStepUpChallenge(header)).toBeUndefined();
+    expect(parseStepUpChallenge(header, defaultChallenge)).toBeUndefined();
   });
 });
 
@@ -80,18 +92,32 @@ describe('getStepUpChallenge', () => {
     'Bearer error="insufficient_user_authentication", acr_values="urn:logto:acr:1fa"';
 
   it('reads the challenge of a 401 response', () => {
-    expect(getStepUpChallenge(createHttpError(401, { 'www-authenticate': challenge }))).toEqual({
+    expect(
+      getStepUpChallenge(createHttpError(401, { 'www-authenticate': challenge }), defaultChallenge)
+    ).toEqual({
       acrValues: 'urn:logto:acr:1fa',
       maxAge: '600',
     });
   });
 
+  it('reads the tenant window from a challenge that advertises it', () => {
+    expect(
+      getStepUpChallenge(
+        createHttpError(401, {
+          'www-authenticate':
+            'Bearer error="insufficient_user_authentication", acr_values="urn:logto:acr:1fa", max_age="7200"',
+        }),
+        defaultChallenge
+      )
+    ).toEqual({ acrValues: 'urn:logto:acr:1fa', maxAge: '7200' });
+  });
+
   it('ignores other statuses, a 401 without the challenge, and non-HTTP errors', () => {
     expect(
-      getStepUpChallenge(createHttpError(403, { 'www-authenticate': challenge }))
+      getStepUpChallenge(createHttpError(403, { 'www-authenticate': challenge }), defaultChallenge)
     ).toBeUndefined();
-    expect(getStepUpChallenge(createHttpError(401))).toBeUndefined();
-    expect(getStepUpChallenge(new Error(challenge))).toBeUndefined();
+    expect(getStepUpChallenge(createHttpError(401), defaultChallenge)).toBeUndefined();
+    expect(getStepUpChallenge(new Error(challenge), defaultChallenge)).toBeUndefined();
   });
 });
 
@@ -102,7 +128,7 @@ describe('hasFreshFirstFactorAuthentication', () => {
   it.each([undefined, {}, { acr: 'unsupported' }])(
     'rejects a missing or unsupported acr: %p',
     (claims) => {
-      expect(hasFreshFirstFactorAuthentication(claims, now)).toBe(false);
+      expect(hasFreshFirstFactorAuthentication(claims, undefined, now)).toBe(false);
     }
   );
 
@@ -114,18 +140,66 @@ describe('hasFreshFirstFactorAuthentication', () => {
     [600, false],
     [-30, true],
     [-61, false],
-  ])('checks an auth_time age of %p seconds', (age, expected) => {
+  ])('checks an auth_time age of %p seconds against the default window', (age, expected) => {
     expect(
       hasFreshFirstFactorAuthentication(
         { acr: LogtoAcr.FirstFactor, auth_time: authTimeOfAge(age) },
+        defaultMaximumAuthenticationAgeInSeconds,
         now
       )
     ).toBe(expected);
   });
 
+  it('reuses a context that is fresh for a longer tenant window', () => {
+    expect(
+      hasFreshFirstFactorAuthentication(
+        { acr: LogtoAcr.FirstFactor, auth_time: authTimeOfAge(7000) },
+        7200,
+        now
+      )
+    ).toBe(true);
+  });
+
+  it('reuses a context within the capped margin of the shortest tenant window', () => {
+    // A one-minute window keeps a 15-second margin, so the context it has just obtained is reusable
+    // and the proactive step-up does not restart authentication for every action.
+    expect(
+      hasFreshFirstFactorAuthentication(
+        { acr: LogtoAcr.FirstFactor, auth_time: authTimeOfAge(45) },
+        60,
+        now
+      )
+    ).toBe(true);
+    expect(
+      hasFreshFirstFactorAuthentication(
+        { acr: LogtoAcr.FirstFactor, auth_time: authTimeOfAge(46) },
+        60,
+        now
+      )
+    ).toBe(false);
+  });
+
+  it('reuses a context obtained a fraction of a second ago at the shortest window', () => {
+    // `auth_time` is whole seconds while `now` is a millisecond timestamp, so a just-completed
+    // step-up must not be rejected by a fractional age when the threshold is at its minimum.
+    const fractionalNow = now + 999;
+
+    expect(
+      hasFreshFirstFactorAuthentication(
+        { acr: LogtoAcr.FirstFactor, auth_time: Math.floor(fractionalNow / 1000) },
+        60,
+        fractionalNow
+      )
+    ).toBe(true);
+  });
+
   it('accepts an mfa context, which also satisfies 1fa', () => {
     expect(
-      hasFreshFirstFactorAuthentication({ acr: LogtoAcr.Mfa, auth_time: authTimeOfAge(60) }, now)
+      hasFreshFirstFactorAuthentication(
+        { acr: LogtoAcr.Mfa, auth_time: authTimeOfAge(60) },
+        undefined,
+        now
+      )
     ).toBe(true);
   });
 
@@ -133,6 +207,7 @@ describe('hasFreshFirstFactorAuthentication', () => {
     expect(
       hasFreshFirstFactorAuthentication(
         { acr: LogtoAcr.FirstFactor, auth_time: String(authTimeOfAge(60)) },
+        undefined,
         now
       )
     ).toBe(false);
@@ -141,17 +216,30 @@ describe('hasFreshFirstFactorAuthentication', () => {
 
 describe('step-up challenges', () => {
   it('aligns the proactive max_age with the client freshness threshold', () => {
-    expect(authenticationFreshnessMaxAgeSeconds).toBe(540);
-    expect(proactiveStepUpChallenge).toEqual({
+    expect(getProactiveStepUpChallenge(defaultMaximumAuthenticationAgeInSeconds)).toEqual({
       acrValues: LogtoAcr.FirstFactor,
-      maxAge: String(authenticationFreshnessMaxAgeSeconds),
+      maxAge: '540',
     });
   });
 
-  it('keeps the Account API policy for the challenge fallback', () => {
-    expect(accountApiStepUpChallenge).toEqual({
+  it('aligns the proactive max_age with a configured tenant window', () => {
+    expect(getProactiveStepUpChallenge(7200)).toEqual({
       acrValues: LogtoAcr.FirstFactor,
-      maxAge: '600',
+      maxAge: '7140',
+    });
+  });
+
+  it('keeps the proactive max_age positive for the shortest tenant window', () => {
+    expect(getProactiveStepUpChallenge(60)).toEqual({
+      acrValues: LogtoAcr.FirstFactor,
+      maxAge: '45',
+    });
+  });
+
+  it('keeps the tenant policy for the challenge fallback', () => {
+    expect(getAccountApiStepUpChallenge(7200)).toEqual({
+      acrValues: LogtoAcr.FirstFactor,
+      maxAge: '7200',
     });
   });
 });
