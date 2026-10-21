@@ -11,6 +11,8 @@ const subscription = {
   enterprise_description: 'สำหรับทีมและธุรกิจขนาดใหญ่ที่ต้องการฟีเจอร์มาตรฐานองค์กร',
   admin_plan: 'แผนผู้ดูแลระบบ',
   dev_plan: 'แผนพัฒนา',
+  self_hosted_pro_plan: 'แผน Pro แบบ self-hosted',
+  self_hosted_enterprise_plan: 'แผนองค์กรแบบ self-hosted',
   current_plan: 'แผนปัจจุบัน',
   current_plan_description:
     'นี่คือแผนปัจจุบันของคุณ คุณสามารถตรวจสอบการใช้งานแผน ดูบิลถัดไป และเปลี่ยนแผนได้ตามที่ต้องการ',
@@ -43,6 +45,13 @@ const subscription = {
     },
   },
   quota_item,
+  cancel_feedback_modal: {
+    title: 'เสียดายที่คุณต้องไป',
+    description:
+      'การสมัครสมาชิกของคุณถูกยกเลิกแล้ว ความคิดเห็นของคุณช่วยให้เราพัฒนา Logto ให้ดียิ่งขึ้น เราอ่านทุกคำตอบ',
+    what_made_you_cancel: 'อะไรทำให้คุณยกเลิก?',
+    how_to_reconsider: 'เราจะทำอะไรได้บ้างเพื่อให้คุณเปลี่ยนใจ?',
+  },
   downgrade_modal: {
     title: 'คุณแน่ใจหรือว่าต้องการลดระดับ?',
     description:
@@ -63,9 +72,18 @@ const subscription = {
     upgrade_help_tip: 'ต้องการความช่วยเหลือเลื่อนระดับ? <a>ติดต่อเรา</a>',
     a_maximum_of: 'สูงสุด <item/>',
   },
+  billing_customer_modal: {
+    title: 'เลือกบัญชีชำระเงิน',
+    description:
+      'เลือกบัญชีชำระเงินที่จ่ายสำหรับการสมัครสมาชิกนี้ หรือเริ่มบัญชีใหม่ คุณสามารถเปลี่ยนแปลงรายละเอียดการชำระเงินในหน้าถัดไป',
+    account: 'บัญชีชำระเงิน',
+    new_account: 'บัญชีชำระเงินใหม่',
+    default_account: 'บัญชีปกติ',
+  },
   upgrade_success: 'อัปเกรดเป็น <name/> สำเร็จแล้ว',
   downgrade_success: 'ลดระดับเป็น <name/> สำเร็จแล้ว',
-  subscription_check_timeout: 'การตรวจสอบการสมัครสมาชิกหมดเวลา กรุณารีเฟรชใหม่ภายหลัง',
+  subscription_check_pending:
+    'การชำระเงินของคุณผ่านเรียบร้อยแล้ว การตั้งค่าการสมัครใช้บริการของคุณใช้เวลานานกว่าปกติ',
   no_subscription: 'ไม่มีการสมัครสมาชิก',
   usage,
   token_usage_notification: {

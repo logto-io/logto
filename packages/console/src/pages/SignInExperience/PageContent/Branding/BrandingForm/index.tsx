@@ -1,18 +1,18 @@
 import { generateDarkColor } from '@logto/core-kit';
 import { Theme } from '@logto/schemas';
-import { useMemo, useCallback, useEffect, useContext } from 'react';
+import { useMemo, useCallback, useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import LogoAndFavicon from '@/components/ImageInputs/LogoAndFavicon';
-import { isCloud } from '@/consts/env';
-import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import ColorPicker from '@/ds-components/ColorPicker';
 import FormField from '@/ds-components/FormField';
 import Switch from '@/ds-components/Switch';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
+import useBrandingEntitlements from '../../../hooks/use-branding-entitlements';
 import type { SignInExperienceForm } from '../../../types';
 import FormSectionTitle from '../../components/FormSectionTitle';
 
@@ -22,6 +22,9 @@ import styles from './index.module.scss';
 function BrandingForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
+  const {
     watch,
     register,
     unregister,
@@ -29,8 +32,7 @@ function BrandingForm() {
     control,
     formState: { errors, isDirty },
   } = useFormContext<SignInExperienceForm>();
-  const { currentSubscriptionQuota } = useContext(SubscriptionDataContext);
-  const isHideLogtoBrandingEnabled = currentSubscriptionQuota.bringYourUiEnabled;
+  const { isHideLogtoBrandingAvailable, isHideLogtoBrandingEnabled } = useBrandingEntitlements();
 
   const isDarkModeEnabled = watch('color.isDarkModeEnabled');
   const primaryColor = watch('color.primaryColor');
@@ -56,10 +58,10 @@ function BrandingForm() {
   }, [handleResetColor, isDarkModeEnabled, isDirty]);
 
   useEffect(() => {
-    if (!isCloud) {
+    if (!isHideLogtoBrandingAvailable) {
       unregister('hideLogtoBranding');
     }
-  }, [unregister]);
+  }, [isHideLogtoBrandingAvailable, unregister]);
 
   return (
     <Card>
@@ -100,7 +102,7 @@ function BrandingForm() {
                 <ColorPicker value={value} onChange={onChange} />
               )}
             />
-            {calculatedDarkPrimaryColor !== darkPrimaryColor && (
+            {!isReadOnly && calculatedDarkPrimaryColor !== darkPrimaryColor && (
               <div className={styles.darkModeTip}>
                 {t('sign_in_exp.color.dark_mode_reset_tip')}
                 <Button
@@ -126,8 +128,8 @@ function BrandingForm() {
         </>
       )}
       <HideLogtoBrandingField
-        variant={isCloud ? 'cloud' : 'oss'}
-        isEnabledInCloud={isHideLogtoBrandingEnabled}
+        variant={isHideLogtoBrandingAvailable ? 'switch' : 'oss-upsell'}
+        isEnabled={isHideLogtoBrandingEnabled}
       />
     </Card>
   );

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'Page introuvable',
@@ -14,6 +15,8 @@ const account_center = {
     sidebar_security: 'Sécurité',
     sidebar_sessions: 'Sessions',
     support: 'Assistance',
+    user_menu: 'Menu utilisateur',
+    sign_out: 'Se déconnecter',
   },
   verification: {
     title: 'Vérification de sécurité',
@@ -125,6 +128,58 @@ const account_center = {
     email_removed: "L'adresse e-mail a été supprimée avec succès.",
     phone_removed: 'Le numéro de téléphone a été supprimé avec succès.',
     username_removed: "Le nom d'utilisateur a été supprimé avec succès.",
+    trusted_devices: {
+      title: 'Appareils de confiance MFA',
+      current_device: 'Appareil actuel',
+      expires_on: 'Expire le {{date}}',
+      unknown_location: 'Emplacement inconnu',
+      remove: 'Supprimer',
+      removed: "L'appareil de confiance a été supprimé.",
+      loading: 'Chargement...',
+      empty: 'Aucun appareil de confiance.',
+      load_failed: 'Impossible de charger les appareils de confiance. Veuillez réessayer.',
+      retry: 'Réessayer',
+      remove_confirmation_title: "Supprimer l'appareil de confiance ?",
+      remove_confirmation_description:
+        'Vous devrez à nouveau effectuer la MFA sur cet appareil lors de votre prochaine connexion. Votre session actuelle restera active.',
+    },
+    personal_access_tokens: {
+      title: "Jetons d'accès personnel",
+      description:
+        "Utilisez des jetons d'accès personnels pour vous authentifier auprès des API en votre nom. Ils restent actifs jusqu'à leur expiration ou leur révocation, même si vous vous déconnectez ou modifiez votre mot de passe.",
+      create: 'Créer un nouveau jeton',
+      created_at: 'Créé le {{date}}',
+      expires_on: 'Expire le {{date}}',
+      expired_on: 'Expiré le {{date}}',
+      expired: 'Expiré',
+      never_expires: "N'expire jamais",
+      never_expires_warning:
+        "Ce jeton n'a pas de date d'expiration. Pour plus de sécurité, créez un nouveau jeton avec une date d'expiration et révoquez celui-ci.",
+      rename: 'Renommer',
+      revoke: 'Révoquer',
+      loading: 'Chargement...',
+      empty: "Aucun jeton d'accès personnel.",
+      load_failed: "Échec du chargement des jetons d'accès personnel. Veuillez réessayer.",
+      retry: 'Réessayer',
+      create_modal_title: "Créer un jeton d'accès personnel",
+      create_modal_description:
+        "Donnez un nom descriptif à votre jeton et choisissez une période d'expiration.",
+      token_name: 'Nom du jeton',
+      token_name_placeholder: 'Mon jeton',
+      expiration: 'Expiration',
+      expiration_days: '{{count}} jours',
+      created_modal_title: "Jeton d'accès personnel créé",
+      show_once_warning:
+        'Vous ne pourrez plus revoir ce jeton. Copiez-le maintenant et conservez-le en lieu sûr.',
+      copied: "Jeton d'accès personnel copié.",
+      rename_modal_title: "Renommer le jeton d'accès personnel",
+      rename_modal_description: "Saisissez un nouveau nom pour ce jeton d'accès personnel.",
+      renamed: "Jeton d'accès personnel renommé avec succès.",
+      revoke_confirmation_title: "Révoquer le jeton d'accès personnel ?",
+      revoke_confirmation_description:
+        'Toutes les applications ou scripts utilisant « {{name}} » perdront immédiatement leur accès. Voulez-vous vraiment continuer ?',
+      revoked: "Jeton d'accès personnel révoqué avec succès.",
+    },
   },
   social: {
     linked: '{{connector}} a été lié avec succès.',
@@ -291,3 +346,4 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
+/* eslint-enable max-lines */

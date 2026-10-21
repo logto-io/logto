@@ -7,6 +7,8 @@ import type {
 } from '@logto/schemas';
 import { AccountCenterControlValue, MfaFactor } from '@logto/schemas';
 
+import { isDevFeaturesEnabled } from '@ac/constants/env';
+
 import { getProfileFieldControlKey } from './profile-field-control';
 import { getAvailableSocialConnectors } from './social-connector.js';
 
@@ -14,7 +16,7 @@ type SecurityPageSettings = Pick<AccountCenter, 'enabled' | 'fields' | 'deleteAc
 type SecurityPageExperienceSettings = Pick<SignInExperienceResponse, 'socialConnectors' | 'mfa'> &
   Partial<Pick<SignInExperienceResponse, 'passkeySignIn'>>;
 
-const isVisibleField = (value?: AccountCenterControlValue): boolean =>
+export const isVisibleField = (value?: AccountCenterControlValue): boolean =>
   value !== undefined && value !== AccountCenterControlValue.Off;
 
 const isReadableField = (value?: AccountCenterControlValue): boolean =>
@@ -106,7 +108,17 @@ export const hasVisibleSecuritySection = (
     return false;
   }
 
-  const { username, email, phone, password, social, mfa, passkey } = accountCenterSettings.fields;
+  const {
+    username,
+    email,
+    phone,
+    password,
+    social,
+    mfa,
+    passkey,
+    trustedDevice,
+    personalAccessToken,
+  } = accountCenterSettings.fields;
   const hasDeleteAccountUrl = Boolean(accountCenterSettings.deleteAccountUrl?.trim());
 
   return (
@@ -117,7 +129,10 @@ export const hasVisibleSecuritySection = (
     hasDeleteAccountUrl ||
     hasVisibleSocialSection(social, experienceSettings) ||
     hasVisibleMfaSection(mfa, experienceSettings) ||
-    hasVisiblePasskeySection(getPasskeyFieldControl(passkey, mfa), experienceSettings)
+    hasVisiblePasskeySection(getPasskeyFieldControl(passkey, mfa), experienceSettings) ||
+    isVisibleField(trustedDevice) ||
+    // DEV: Self-service personal access tokens
+    (isDevFeaturesEnabled && isVisibleField(personalAccessToken))
   );
 };
 

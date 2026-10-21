@@ -358,15 +358,16 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
   router.get(
     `${accountApiPrefix}/mfa-verifications/backup-codes`,
     koaGuard({
-      status: [200, 401, 404],
+      status: [200, 401, 403, 404],
     }),
     async (ctx, next) => {
-      const { id: userId, scopes, identityVerified } = ctx.auth;
+      const { id: userId, scopes, identityVerified, clientId } = ctx.auth;
 
       assertThat(
         identityVerified,
         new RequestError({ code: 'verification_record.permission_denied', status: 401 })
       );
+      await assertFirstPartyClient(queries, clientId);
 
       assertThat(
         scopes.has(UserScope.Identities),

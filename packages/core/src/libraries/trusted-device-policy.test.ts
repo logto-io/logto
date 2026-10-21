@@ -82,4 +82,23 @@ describe('trusted device policy library', () => {
       expectSqlString('"organizations"."is_trusted_device_allowed" = false')
     );
   });
+
+  it('derives organization eligibility from already loaded rows', async () => {
+    const pool = {
+      exists: jest.fn(async () => false),
+    };
+    const signInExperience = {
+      ...mockSignInExperience,
+      trustedDevice: { enabled: true, durationDays: 30 },
+    };
+    const library = createTrustedDevicePolicyLibrary(createQueries(pool, signInExperience));
+
+    await expect(
+      library.getEffectivePolicy('user-id', [{ isTrustedDeviceAllowed: false }] as never)
+    ).resolves.toEqual({
+      enabled: false,
+      durationDays: 30,
+    });
+    expect(pool.exists).not.toHaveBeenCalled();
+  });
 });

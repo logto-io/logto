@@ -74,7 +74,7 @@ describe('ConfigForm', () => {
     mockedUseAvailableDomains.mockReturnValue(['auth.example.com', 'tenant.logto.app']);
   });
 
-  it('shows sign-in experience and account center callback URIs for every domain', () => {
+  it('shows callback URIs for every domain', () => {
     render(
       <ConfigForm
         formItems={[]}
@@ -87,12 +87,12 @@ describe('ConfigForm', () => {
 
     expect(screen.getByText('https://auth.example.com/callback/google')).toBeTruthy();
     expect(
-      screen.getByText('https://auth.example.com/account/callback/social/google')
-    ).toBeTruthy();
+      screen.queryByText('https://auth.example.com/account/callback/social/google')
+    ).toBeNull();
     expect(screen.getByText('https://tenant.logto.app/callback/google')).toBeTruthy();
     expect(
-      screen.getByText('https://tenant.logto.app/account/callback/social/google')
-    ).toBeTruthy();
+      screen.queryByText('https://tenant.logto.app/account/callback/social/google')
+    ).toBeNull();
   });
 
   it('shows only the ACS URL for a SAML connector', () => {

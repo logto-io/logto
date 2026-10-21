@@ -1,29 +1,36 @@
 import { cond } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
+import { getUndiciGlobalDispatcher, ssrfProtectedFetch } from '#src/utils/outbound-request.js';
 
 /**
- * The opt-out `fetch` implementation for the provider's outgoing requests (backchannel logout,
- * client `jwks_uri`, `sector_identifier_uri`, ...).
+ * Self-hosted opt-out of the SSRF-protecting dispatcher oidc-provider injects since v9, for
+ * deployments that must reach trusted RPs on private networks. `fetch` resolves `init.dispatcher`
+ * before one carried by a `Request` input, so the global dispatcher has to be passed explicitly;
+ * where it is unavailable, the provider has none of its own either.
  *
- * Since v9, oidc-provider injects an SSRF-protecting undici dispatcher into these requests that
- * destroys connections resolving to special-use addresses such as loopback and private ranges.
- *
- * Self-hosted deployments can explicitly disable that protection when they must reach trusted RPs
- * on private networks. In that case, this function drops the dispatcher to keep those requests
- * unrestricted.
+ * @see https://github.com/logto-io/node-oidc-provider/blob/513c523c0e68ee6112da8c871cce86204a136163/lib/helpers/fetch_request.js
  */
-const fetchWithoutSsrfDispatcher: typeof fetch = async (input, init) => {
+const fetchWithoutSsrfDispatcher: typeof fetch = async (input, init) =>
   // eslint-disable-next-line no-restricted-syntax -- The `dispatcher` key is an undici extension absent from `RequestInit`
-  const { dispatcher, ...safeInit } = (init ?? {}) as RequestInit & { dispatcher?: unknown };
-  return fetch(input, safeInit);
-};
+  fetch(input, { ...init, dispatcher: getUndiciGlobalDispatcher() } as RequestInit);
+
+/** The provider's built-in guard has no hook for `SSRF_ALLOWED_ADDRESSES`. */
+const fetchWithAllowlistedDispatcher: typeof fetch = ssrfProtectedFetch;
 
 /**
- * Keep oidc-provider's native fetch implementation whenever SSRF protection is enabled so future
- * upstream fetch hardening is inherited automatically. Only override it for the self-hosted opt-out.
+ * Keep oidc-provider's native fetch implementation whenever the protection is enabled and no
+ * allowlist applies, so future upstream fetch hardening is inherited automatically. Override it
+ * only for the self-hosted opt-out and for the allowlist, which upstream cannot honor.
  */
-export const getProviderFetchConfig = () =>
-  cond(!EnvSet.values.isOidcProviderSsrfProtectionEnabled && { fetch: fetchWithoutSsrfDispatcher });
+export const getProviderFetchConfig = () => {
+  const { isSsrfProtectionEnabled, ssrfAllowedAddresses } = EnvSet.values;
+
+  if (!isSsrfProtectionEnabled) {
+    return { fetch: fetchWithoutSsrfDispatcher };
+  }
+
+  return cond(ssrfAllowedAddresses.length > 0 && { fetch: fetchWithAllowlistedDispatcher });
+};
 
 export default fetchWithoutSsrfDispatcher;

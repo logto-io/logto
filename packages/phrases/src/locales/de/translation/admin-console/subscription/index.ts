@@ -12,6 +12,8 @@ const subscription = {
     'Für große Teams und Unternehmen mit Anforderungen in Unternehmensqualität.',
   admin_plan: 'Admin-Plan',
   dev_plan: 'Entwicklungsplan',
+  self_hosted_pro_plan: 'Self-Hosted Pro-Plan',
+  self_hosted_enterprise_plan: 'Self-Hosted Enterprise-Plan',
   current_plan: 'Aktueller Plan',
   current_plan_description:
     'Hier ist dein aktueller Tarif. Du kannst einfach deinen Tarifverbrauch einsehen, deine anstehende Rechnung überprüfen und bei Bedarf Änderungen an deinem Tarif vornehmen.',
@@ -45,6 +47,13 @@ const subscription = {
     },
   },
   quota_item,
+  cancel_feedback_modal: {
+    title: 'Schade, dass Sie gehen',
+    description:
+      'Ihr Abonnement wurde gekündigt. Ihr Feedback hilft uns, Logto besser zu machen. Wir lesen jede Antwort.',
+    what_made_you_cancel: 'Was hat Sie zur Kündigung bewogen?',
+    how_to_reconsider: 'Was könnten wir tun, damit Sie es sich noch einmal überlegen?',
+  },
   downgrade_modal: {
     title: 'Sind Sie sicher, dass Sie herabstufen möchten?',
     description:
@@ -65,9 +74,18 @@ const subscription = {
     upgrade_help_tip: 'Hilfe beim Upgrade benötigt? <a>Kontaktieren Sie uns</a>.',
     a_maximum_of: 'Maximal <item/>',
   },
+  billing_customer_modal: {
+    title: 'Wähle ein Abrechnungskonto',
+    description:
+      'Wähle das Abrechnungskonto aus, das für dieses Abonnement zahlt, oder starte ein neues. Du kannst die Zahlungsdetails auf der nächsten Seite ändern.',
+    account: 'Abrechnungskonto',
+    new_account: 'Neues Abrechnungskonto',
+    default_account: 'Standard',
+  },
   upgrade_success: 'Erfolgreich auf <name/> hochgestuft',
   downgrade_success: 'Erfolgreich auf <name/> herabgestuft',
-  subscription_check_timeout: 'Abo-Überprüfung ist abgelaufen. Bitte später aktualisieren.',
+  subscription_check_pending:
+    'Deine Zahlung wurde abgeschlossen. Das Einrichten deines Abonnements dauert länger als gewöhnlich.',
   no_subscription: 'Kein Abonnement',
   usage,
   token_usage_notification: {

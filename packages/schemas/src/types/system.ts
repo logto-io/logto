@@ -1,6 +1,8 @@
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
+import { licenseUsageWarningGuard } from '../consts/license.js';
+
 // Alteration state
 export enum AlterationStateKey {
   AlterationState = 'alterationState',
@@ -224,26 +226,86 @@ export const cloudflareGuard: Readonly<{
   [CloudflareKey.CustomJwtWorkerConfig]: customJwtWorkerConfigGuard,
 });
 
+// Self-hosted license
+/**
+ * The license key installed on a self-hosted instance, stored verbatim so it can be re-verified on
+ * every read and re-signed on refresh. The `systems` table is global, so one deployment installs
+ * one license no matter how many instances share the database.
+ */
+export const installedLicenseGuard = z.object({
+  /** The raw ES256-signed license key JWT, exactly as it was installed. */
+  jwt: z.string(),
+  /** When the key was installed, as an ISO 8601 timestamp. */
+  installedAt: z.string(),
+});
+
+export type InstalledLicense = z.infer<typeof installedLicenseGuard>;
+
+export enum LicenseKey {
+  License = 'license',
+  LicenseRefreshState = 'licenseRefreshState',
+  LicenseDeploymentId = 'licenseDeploymentId',
+}
+
+export type LicenseType = {
+  [LicenseKey.License]: InstalledLicense;
+  [LicenseKey.LicenseRefreshState]: LicenseRefreshState;
+  [LicenseKey.LicenseDeploymentId]: LicenseDeploymentId;
+};
+
+/** The state shared by all instances while they lazily refresh the installed license. */
+export const licenseRefreshStateGuard = z.object({
+  /** The last successful refresh, or the `iat` of the installed key. */
+  lastRefreshedAt: z.string(),
+  /** The last refresh attempt. Absent before the first read after installation. */
+  lastAttemptAt: z.string().optional(),
+  /** The refusal reason returned by the license service, if the last attempt was refused. */
+  refusalReason: z.string().optional(),
+  /**
+   * The usage warnings returned by the license service with the last answered refresh, such as too
+   * many production deployments, which only Logto Cloud can count.
+   */
+  cloudNotices: z.array(licenseUsageWarningGuard).optional(),
+});
+
+export type LicenseRefreshState = z.infer<typeof licenseRefreshStateGuard>;
+
+/** The stable identifier shared by every Core instance using this `systems` table. */
+export const licenseDeploymentIdGuard = z.string().min(1);
+
+export type LicenseDeploymentId = z.infer<typeof licenseDeploymentIdGuard>;
+
+export const licenseGuard: Readonly<{
+  [key in LicenseKey]: ZodType<LicenseType[key]>;
+}> = Object.freeze({
+  [LicenseKey.License]: installedLicenseGuard,
+  [LicenseKey.LicenseRefreshState]: licenseRefreshStateGuard,
+  [LicenseKey.LicenseDeploymentId]: licenseDeploymentIdGuard,
+});
+
 // Summary
 export type SystemKey =
   | AlterationStateKey
   | StorageProviderKey
   | DemoSocialKey
   | CloudflareKey
-  | EmailServiceProviderKey;
+  | EmailServiceProviderKey
+  | LicenseKey;
 
 export type SystemType =
   | AlterationStateType
   | StorageProviderType
   | DemoSocialType
   | CloudflareType
-  | EmailServiceProviderType;
+  | EmailServiceProviderType
+  | LicenseType;
 
 export type SystemGuard = typeof alterationStateGuard &
   typeof storageProviderGuard &
   typeof demoSocialGuard &
   typeof cloudflareGuard &
-  typeof emailServiceProviderGuard;
+  typeof emailServiceProviderGuard &
+  typeof licenseGuard;
 
 export const systemKeys: readonly SystemKey[] = Object.freeze([
   ...Object.values(AlterationStateKey),
@@ -251,6 +313,7 @@ export const systemKeys: readonly SystemKey[] = Object.freeze([
   ...Object.values(DemoSocialKey),
   ...Object.values(CloudflareKey),
   ...Object.values(EmailServiceProviderKey),
+  ...Object.values(LicenseKey),
 ]);
 
 export const systemGuards: SystemGuard = Object.freeze({
@@ -259,4 +322,5 @@ export const systemGuards: SystemGuard = Object.freeze({
   ...demoSocialGuard,
   ...cloudflareGuard,
   ...emailServiceProviderGuard,
+  ...licenseGuard,
 });

@@ -4,11 +4,12 @@ import * as validator from '@authenio/samlify-node-xmllint';
 import { ssoSamlAssertionContentGuard, type SsoSamlAssertionContent } from '@logto/schemas';
 import { type Optional, appendPath, tryThat } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
-import { HTTPError, got } from 'got';
+import { HTTPError } from 'got';
 import * as saml from 'samlify';
 import { z, ZodError } from 'zod';
 
 import { ssoPath } from '#src/constants/index.js';
+import { ssrfProtectedGot } from '#src/utils/outbound-request.js';
 
 import {
   SsoConnectorConfigErrorCodes,
@@ -106,7 +107,7 @@ export const parseXmlMetadata = (
  */
 export const fetchSamlMetadataXml = async (metadataUrl: string): Promise<Optional<string>> => {
   try {
-    const { body } = await got.get(metadataUrl);
+    const { body } = await ssrfProtectedGot.get(metadataUrl);
 
     const result = z.string().safeParse(body);
 

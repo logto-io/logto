@@ -10,6 +10,7 @@ const auth = {
   exceed_token_limit: '토큰 한도를 초과했습니다. 관리자에게 문의하세요.',
   third_party_application_forbidden:
     '서드파티 애플리케이션에서는 이 API를 통해 계정 데이터를 수정할 수 없습니다.',
+  read_only_access: '이 요청은 읽기 전용 액세스로는 허용되지 않습니다.',
 };
 
 export default Object.freeze(auth);

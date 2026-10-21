@@ -1,5 +1,11 @@
 # @logto/connector-xiaomi
 
+## 1.2.6
+
+### Patch Changes
+
+- @logto/connector-kit@5.1.1
+
 ## 1.2.5
 
 ### Patch Changes

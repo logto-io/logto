@@ -42,7 +42,8 @@ const sign_in_exp = {
     hide_logto_branding: 'Logto 브랜딩 숨기기',
     hide_logto_branding_description:
       '"Powered by Logto" 문구를 제거하고 깔끔하고 전문적인 로그인 경험에서 브랜드만 돋보이게 하세요.',
-    hide_logto_branding_oss_note: '이 기능은 <a>Logto Cloud</a>에서 기본 제공됩니다.',
+    hide_logto_branding_oss_note:
+      '이 기능은 <a>Logto Cloud</a> 또는 <selfHosted>셀프 호스팅 플랜</selfHosted>에서 사용할 수 있습니다.',
   },
   branding_uploads: {
     app_logo: {
@@ -92,7 +93,7 @@ const sign_in_exp = {
       'Logto 가미리 제공하는 UI 를 나만의 코드로 대체하기 위해 압축 패키지 (.zip)를 업로드하세요. <a>더 알아보기</a>',
     bring_your_ui_oss_description: '자신의 코드로 로그인 UI를 맞춤 설정하세요.',
     bring_your_ui_oss_card_description:
-      '사용자 지정 로그인 UI를 <a>Logto Cloud</a>에 직접 업로드하세요. 포크하거나 다시 배포할 필요가 없습니다.',
+      '사용자 지정 UI 업로드는 <a>Logto Cloud</a> 또는 <selfHosted>셀프 호스팅 플랜</selfHosted>에서 사용할 수 있습니다. 포크하거나 다시 배포할 필요가 없습니다.',
     bring_your_ui_oss_try_cloud: 'Cloud 사용해 보기',
     preview_with_bring_your_ui_description:
       '커스텀 UI 자산이 성공적으로 업로드되어 현재 제공되고 있습니다. 따라서 기본 제공 미리보기 창이 비활성화되었습니다.\n개인화된 로그인 UI 를 테스트하려면 "실시간 미리보기" 버튼을 클릭하여 새 브라우저 탭에서 엽니다.',
@@ -141,6 +142,9 @@ const sign_in_exp = {
           session_management: {
             title: '세션 관리',
           },
+          developer_settings: {
+            title: '개발자 설정',
+          },
         },
       },
       user_profile: {
@@ -184,6 +188,9 @@ const sign_in_exp = {
       custom_data_description: '사용자에 저장된 사용자 정의 JSON 데이터에 대한 접근을 제어합니다.',
       sessions: '세션',
       trusted_devices: '신뢰할 수 있는 기기',
+      personal_access_tokens: '개인 액세스 토큰',
+      personal_access_tokens_description:
+        '이를 활성화하면 사용자가 로그아웃 및 비밀번호 재설정 후에도 유지되는 장기 개인 액세스 토큰을 생성할 수 있으며, 토큰 교환이 활성화된 모든 퍼스트 파티 애플리케이션에서 이를 액세스 토큰으로 교환할 수 있습니다.',
     },
     profile_fields: {
       title: '사전 구축된 계정 센터의 프로필 필드',

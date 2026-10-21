@@ -45,7 +45,8 @@ const sign_in_exp = {
     hide_logto_branding: 'Logtoのブランディングを非表示にする',
     hide_logto_branding_description:
       '「Powered by Logto」を削除します。クリーンでプロフェッショナルなサインイン体験で自社ブランドだけを際立たせましょう。',
-    hide_logto_branding_oss_note: 'この機能は <a>Logto Cloud</a> でネイティブに利用できます。',
+    hide_logto_branding_oss_note:
+      'この機能は <a>Logto Cloud</a> または<selfHosted>セルフホストプラン</selfHosted>で利用できます。',
   },
   branding_uploads: {
     app_logo: {
@@ -95,7 +96,7 @@ const sign_in_exp = {
       '圧縮パッケージ (.zip) をアップロードして、Logto のビルトイン UI を独自のコードで置き換えます。<a>詳しくはこちら</a>',
     bring_your_ui_oss_description: '独自のコードでサインイン UI をカスタマイズします。',
     bring_your_ui_oss_card_description:
-      'カスタムのサインイン UI を <a>Logto Cloud</a> に直接アップロードできます。フォークや再デプロイは不要です。',
+      'カスタム UI のアップロードは <a>Logto Cloud</a> または<selfHosted>セルフホストプラン</selfHosted>で利用できます。フォークや再デプロイは不要です。',
     bring_your_ui_oss_try_cloud: 'Cloud を試す',
     preview_with_bring_your_ui_description:
       'カスタム UI のアセットは正常にアップロードされ、現在提供されています。したがって、組み込みのプレビューウィンドウは無効になりました。\nパーソナライズされたサインイン UI をテストするには、「ライブプレビュー」ボタンをクリックして新しいブラウザタブで開きます。',
@@ -144,6 +145,9 @@ const sign_in_exp = {
           session_management: {
             title: 'セッション管理',
           },
+          developer_settings: {
+            title: '開発者設定',
+          },
         },
       },
       user_profile: {
@@ -188,6 +192,9 @@ const sign_in_exp = {
         'ユーザーに保存されているカスタム JSON データへのアクセスを制御します。',
       sessions: 'セッション',
       trusted_devices: '信頼済みデバイス',
+      personal_access_tokens: '個人用アクセストークン',
+      personal_access_tokens_description:
+        'これを有効にすると、ユーザーはサインアウトやパスワードのリセット後も有効な長期の個人用アクセストークンを作成でき、トークン交換が有効な任意のファーストパーティアプリケーションでアクセストークンと交換できるようになります。',
     },
     profile_fields: {
       title: 'ビルトインアカウントセンターのプロフィールフィールド',

@@ -1,3 +1,4 @@
+import { cond } from '@silverhand/essentials';
 import { useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
@@ -14,16 +15,17 @@ import FormField from '@/ds-components/FormField';
 import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import CustomUiAssetsUploader from '@/pages/SignInExperience/components/CustomUiAssetsUploader';
-import { buildCloudUpsellUrl, ossUpsellEntries } from '@/utils/oss-upsell';
 
+import useBrandingEntitlements from '../../../hooks/use-branding-entitlements';
 import type { SignInExperienceForm } from '../../../types';
 import FormSectionTitle from '../../components/FormSectionTitle';
 
 import CustomUiCspForm from './CustomUiCspForm';
 import styles from './index.module.scss';
+import { getOssBringYourUiCardContent } from './utils';
 
 function OssBringYourUiCard() {
-  const cloudUpsellUrl = buildCloudUpsellUrl(ossUpsellEntries.signInExpBringYourUiOssCard);
+  const cardContent = getOssBringYourUiCardContent();
 
   return (
     <FormField
@@ -47,14 +49,17 @@ function OssBringYourUiCard() {
           </div>
           <div className={styles.ossCardDescription}>
             <Trans
-              i18nKey="admin_console.sign_in_exp.custom_ui.bring_your_ui_oss_card_description"
+              i18nKey={cardContent.i18nKey}
               components={{
                 a: (
                   <TextLink
-                    href={cloudUpsellUrl}
+                    href={cardContent.cloudHref}
                     targetBlank="noopener"
                     className={styles.highlight}
                   />
+                ),
+                selfHosted: (
+                  <TextLink to={cardContent.selfHostedHref} className={styles.highlight} />
                 ),
               }}
             />
@@ -69,9 +74,16 @@ function CustomUiForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
   const { control } = useFormContext<SignInExperienceForm>();
-  const { currentSubscriptionQuota } = useContext(SubscriptionDataContext);
+  const { currentSubscriptionQuota, licenseQuota } = useContext(SubscriptionDataContext);
   const isBringYourUiEnabled = currentSubscriptionQuota.bringYourUiEnabled;
-  const shouldShowOssBringYourUi = !isCloud;
+  const { isCustomUiCspEnabled } = useBrandingEntitlements();
+  // A self-hosted license that grants Bring your UI unlocks the upload, onto the storage the
+  // deployment has configured, and the Custom UI CSP. The license is only read while self-hosted
+  // plans are a dev feature.
+  const isLicensedBringYourUi = !isCloud && licenseQuota.bringYourUi;
+  const shouldShowUploader = isCloud || isLicensedBringYourUi;
+  const shouldShowOssBringYourUi = !shouldShowUploader;
+  const shouldShowCustomUiCspForm = isCloud || isCustomUiCspEnabled;
 
   return (
     <>
@@ -82,9 +94,9 @@ function CustomUiForm() {
       <Card>
         <FormSectionTitle
           title="custom_ui.bring_your_ui_title"
-          featureTag={{ isVisible: !isBringYourUiEnabled, plan: latestProPlanId }}
+          featureTag={cond(isCloud && { isVisible: !isBringYourUiEnabled, plan: latestProPlanId })}
         />
-        {isCloud && (
+        {shouldShowUploader && (
           <FormField
             title="sign_in_exp.custom_ui.bring_your_ui_upload_title"
             description={
@@ -108,7 +120,7 @@ function CustomUiForm() {
               control={control}
               render={({ field: { onChange, value } }) => (
                 <CustomUiAssetsUploader
-                  disabled={!isBringYourUiEnabled}
+                  disabled={isCloud && !isBringYourUiEnabled}
                   value={value}
                   onChange={onChange}
                 />
@@ -116,7 +128,7 @@ function CustomUiForm() {
             />
           </FormField>
         )}
-        {isCloud && <CustomUiCspForm isDisabled={!isBringYourUiEnabled} />}
+        {shouldShowCustomUiCspForm && <CustomUiCspForm isDisabled={!isCustomUiCspEnabled} />}
         {shouldShowOssBringYourUi && <OssBringYourUiCard />}
       </Card>
     </>

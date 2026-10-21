@@ -1,6 +1,5 @@
 import { conditional, conditionalString } from '@silverhand/essentials';
-import dayjs from 'dayjs';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
 import { Navigate, useLocation } from 'react-router-dom';
@@ -14,12 +13,17 @@ import SkuName from '@/components/SkuName';
 import { checkoutStateQueryKey } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
+import Button from '@/ds-components/Button';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { clearLocalCheckoutSession, getLocalCheckoutSession } from '@/utils/checkout';
 
+import styles from './index.module.scss';
+
 const consoleHomePage = '/';
 const subscriptionCheckingInterval = 1000;
-const subscriptionCheckingTimeout = 10 * 1000;
+const subscriptionCheckingTimeout = 60 * 1000;
+
+const getExpiryTimestamp = () => new Date(Date.now() + subscriptionCheckingTimeout);
 
 function CheckoutSuccessCallback() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.subscription' });
@@ -30,22 +34,24 @@ function CheckoutSuccessCallback() {
   const { search } = useLocation();
   const checkoutState = new URLSearchParams(search).get(checkoutStateQueryKey);
   const { state, sessionId, callbackPage, isDowngrade } = getLocalCheckoutSession() ?? {};
+  const [isTimedOut, setIsTimedOut] = useState(false);
 
-  // Note: if we can't get the subscription results in 10 seconds, we will redirect to the console home page
-  useTimer({
+  // Provisioning can outlast the timer. Expiry only pauses polling and keeps the local checkout
+  // session, so a refresh or "Try again" resumes the check.
+  const { restart } = useTimer({
     autoStart: true,
-    expiryTimestamp: dayjs().add(subscriptionCheckingTimeout, 'millisecond').toDate(),
+    expiryTimestamp: getExpiryTimestamp(),
     onExpire: () => {
-      toast.error(t('subscription_check_timeout'));
-      clearLocalCheckoutSession();
-      navigate(consoleHomePage, { replace: true });
+      setIsTimedOut(true);
     },
   });
+
+  const refreshInterval = isTimedOut ? 0 : subscriptionCheckingInterval;
 
   // Note: only handle the callback comes from the stripe success callback url
   const isValidSession = state && state === checkoutState;
 
-  const { data: stripeCheckoutSession } = useSWR(
+  const { data: stripeCheckoutSession, mutate: mutateStripeCheckoutSession } = useSWR(
     isValidSession && sessionId && `/api/checkout-session/${sessionId}`,
     async () =>
       cloudApi.get('/api/checkout-session/:id', {
@@ -53,9 +59,7 @@ function CheckoutSuccessCallback() {
           id: conditionalString(sessionId),
         },
       }),
-    {
-      refreshInterval: subscriptionCheckingInterval,
-    }
+    { refreshInterval }
   );
 
   const checkoutTenantId = stripeCheckoutSession?.tenantId;
@@ -69,7 +73,7 @@ function CheckoutSuccessCallback() {
           tenantId: conditionalString(checkoutTenantId),
         },
       }),
-    { refreshInterval: subscriptionCheckingInterval }
+    { refreshInterval }
   );
 
   const isCheckoutSuccessful =
@@ -133,6 +137,23 @@ function CheckoutSuccessCallback() {
 
   if (!isValidSession) {
     return <Navigate replace to={consoleHomePage} />;
+  }
+
+  if (isTimedOut) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.message}>{t('subscription_check_pending')}</div>
+        <Button
+          title="general.retry"
+          size="large"
+          onClick={() => {
+            setIsTimedOut(false);
+            restart(getExpiryTimestamp());
+            void mutateStripeCheckoutSession();
+          }}
+        />
+      </div>
+    );
   }
 
   return <AppLoading />;

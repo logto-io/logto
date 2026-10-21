@@ -51,6 +51,20 @@ const session = {
     suggest_additional_mfa:
       'Pour une meilleure protection, ajoutez une autre méthode MFA. Vous pouvez ignorer cette étape et continuer.',
   },
+  trusted_device_suggest_opt_in: 'Choisissez si vous souhaitez faire confiance à cet appareil.',
+  step_up: {
+    invalid_interaction_event:
+      "L'authentification renforcée n'est disponible que pour les interactions de connexion.",
+    subject_not_found:
+      "Aucune session authentifiée n'a été trouvée pour l'authentification renforcée. Veuillez vous reconnecter.",
+    forbidden_route: "Cette route n'est pas autorisée pendant l'authentification renforcée.",
+    forbidden_identifier:
+      "Un identifiant n'est pas autorisé pendant l'authentification renforcée. Réessayez sans le champ identifiant.",
+    acr_not_satisfied:
+      "La vérification effectuée ne satisfait pas le contexte d'authentification demandé. Veuillez vérifier une autre méthode.",
+    require_verification:
+      "Une vérification avec l'une de vos méthodes existantes est requise pour atteindre le contexte d'authentification demandé.",
+  },
   passkey_sign_in: {
     pending_info_not_found:
       'Impossible de trouver les informations de connexion par passkey en attente. Veuillez relancer le flux de connexion.',

@@ -1,4 +1,6 @@
-import { demoAppApplicationId, type MfaFactor } from '@logto/schemas';
+import { createHash } from 'node:crypto';
+
+import { defaultTenantId, demoAppApplicationId, type MfaFactor } from '@logto/schemas';
 import { appendPath } from '@silverhand/essentials';
 
 import { logtoUrl, mockSocialAuthPageUrl } from '#src/constants.js';
@@ -11,6 +13,11 @@ const demoAppUrl = appendPath(new URL(logtoUrl), 'demo-app');
 
 /** Aligned with puppeteer's default navigation timeout. */
 const defaultUrlWaitTimeout = 30_000;
+const trustedDeviceCookiePrefix = 'logto-trusted-device-';
+const trustedDeviceOptOutCookiePrefix = 'logto-device-trust-opt-out-';
+
+const isTrustedDeviceCredentialCookie = (name: string) =>
+  name.includes(trustedDeviceCookiePrefix) && !name.includes(trustedDeviceOptOutCookiePrefix);
 
 /** Remove the query string together with the `?` from a URL string. */
 const stripQuery = (url: string) => url.split('?')[0];
@@ -31,6 +38,7 @@ export type ExperiencePath =
   | 'identifier-register'
   | 'single-sign-on'
   | 'reset-password'
+  | 'trusted-device'
   | 'sign-in/passkey'
   | 'sign-in/verification-methods';
 
@@ -89,7 +97,7 @@ export default class ExpectExperience extends ExpectPage {
    */
   async startWith(initialUrl = demoAppUrl, type: ExperienceType = 'sign-in') {
     await this.toStart(initialUrl);
-    this.toBeAt('sign-in');
+    await this.waitToBeAt('sign-in');
 
     if (type === 'register') {
       await this.toClick('a', 'Create account');
@@ -128,12 +136,41 @@ export default class ExpectExperience extends ExpectPage {
     }
 
     await this.waitForUrl(this.#ongoing.initialUrl);
+
     await this.toClick('div[role=button]', /sign out/i);
 
     this.#ongoing = undefined;
     if (closePage) {
       await this.page.close();
     }
+  }
+
+  /**
+   * Clear the demo app browser storage and session cookies while preserving the trusted-device
+   * credential under test. This guarantees the next visit starts a new sign-in interaction.
+   */
+  async clearDemoAppSession() {
+    await this.page.evaluate(() => {
+      localStorage.clear();
+      sessionStorage.clear();
+    });
+    const cookies = await this.page.cookies(logtoUrl);
+    expect(cookies.some(({ name }) => isTrustedDeviceCredentialCookie(name))).toBe(true);
+    const sessionCookies = cookies.filter(({ name }) => !isTrustedDeviceCredentialCookie(name));
+    await this.page.deleteCookie(...sessionCookies);
+    await this.page.goto('about:blank');
+  }
+
+  /** Clear the persisted trusted-device opt-out preference for the given user. */
+  async clearTrustedDeviceOptOut(userId: string) {
+    const subjectHash = createHash('sha256')
+      .update(`${defaultTenantId}:${userId}`)
+      .digest('base64url');
+    const expectedCookieName = `${trustedDeviceOptOutCookiePrefix}${subjectHash}`;
+    const cookies = await this.page.cookies(logtoUrl);
+    const optOutCookies = cookies.filter(({ name }) => name.endsWith(expectedCookieName));
+    expect(optOutCookies).toHaveLength(1);
+    await this.page.deleteCookie(...optOutCookies);
   }
 
   /**
@@ -144,6 +181,21 @@ export default class ExpectExperience extends ExpectPage {
   toBeAt(pathname: ExperiencePath) {
     const stripped = stripQuery(this.page.url());
     expect(stripped).toBe(this.buildExperienceUrl(pathname).href);
+  }
+
+  /**
+   * Poll the page URL (query excluded) until it is at the given experience path. Unlike
+   * {@link toBeAt}, this tolerates navigations that only complete after one or more API
+   * round trips, which can exceed any fixed delay under CI load.
+   *
+   * @param pathname The experience path to wait for.
+   */
+  async waitToBeAt(pathname: ExperiencePath) {
+    const expected = this.buildExperienceUrl(pathname).href;
+    await this.waitForUrlToMatch(
+      (current) => stripQuery(current) === expected,
+      `to be ${expected}`
+    );
   }
 
   /**
@@ -170,6 +222,15 @@ export default class ExpectExperience extends ExpectPage {
     for (const [index, char] of code.split('').entries()) {
       // eslint-disable-next-line no-await-in-loop
       await this.toFillInput(`passcode_${index}`, char);
+    }
+  }
+
+  async toCompleteMfaVerification(connectorType: Parameters<typeof readConnectorMessage>['0']) {
+    const { code } = await readConnectorMessage(connectorType);
+
+    for (const [index, char] of code.split('').entries()) {
+      // eslint-disable-next-line no-await-in-loop -- verification inputs must be filled in order
+      await this.toFillInput(`mfaCode_${index}`, char);
     }
   }
 
@@ -246,6 +307,27 @@ export default class ExpectExperience extends ExpectPage {
    */
   async waitForToast(text: string | RegExp) {
     return this.toMatchAndRemove('div[role=toast]', text);
+  }
+
+  async toSeeTrustedDeviceOptIn(durationDays = 365) {
+    const text = `Trust this device for ${durationDays} days`;
+    await this.waitToBeAt('trusted-device');
+    await this.toMatchElement('div[class$=title]', { text: 'Trust this device' });
+    await this.toMatchElement('div[class$=description]', {
+      text: 'You can skip MFA verification on this device during future sign-ins.',
+    });
+    await this.toMatchElement('button', { text });
+  }
+
+  async toOptInTrustedDevice(durationDays = 365) {
+    const text = `Trust this device for ${durationDays} days`;
+    await this.toSeeTrustedDeviceOptIn(durationDays);
+    await this.toClickButton(text, false);
+  }
+
+  async toSkipTrustedDevice(durationDays = 365) {
+    await this.toSeeTrustedDeviceOptIn(durationDays);
+    await this.toClick('div[role=button][class$=skipButton]', undefined, false);
   }
 
   /**

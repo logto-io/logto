@@ -7,6 +7,7 @@ const upsell = {
   compare_plans: 'プラン比較',
   try_with_product_name: '今すぐ {{productName}} を試す',
   view_plans: 'プランを見る',
+  explore_self_hosted_plans: 'セルフホストプランを見る',
   create_tenant: {
     title: 'テナントプランを選択',
     description:

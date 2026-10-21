@@ -1,6 +1,6 @@
 const oidc = {
   aborted: '使用者終止了互動。',
-  invalid_scope: '無效的範圍: {{error_description}}。',
+  invalid_scope: '無效的範圍: {{scope}}。',
   invalid_token: 'Token 無效',
   invalid_client_metadata: '無效的用戶端元數據',
   insufficient_scope: 'Token 缺少範圍 `{{scope}}`。',

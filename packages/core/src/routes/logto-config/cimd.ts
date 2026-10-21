@@ -9,8 +9,8 @@ import { captureEvent } from '#src/utils/posthog.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 /**
- * Routes for the OAuth Client ID Metadata Document (CIMD) enablement switch, stored as the
- * optional `cimd` tenant config object.
+ * Routes for the OAuth Client ID Metadata Document (CIMD) settings, stored as the optional `cimd`
+ * tenant config object.
  */
 export default function logtoConfigCimdRoutes<T extends ManagementApiRouter>(
   ...[router, tenant]: RouterInitArgs<T>
@@ -47,12 +47,14 @@ export default function logtoConfigCimdRoutes<T extends ManagementApiRouter>(
        * construction applies the same condition (LOG-13920).
        */
       assertThat(
-        !body.enabled || EnvSet.values.isOidcProviderSsrfProtectionEnabled,
+        !body.enabled ||
+          (EnvSet.values.isSsrfProtectionEnabled &&
+            EnvSet.values.ssrfAllowedAddresses.length === 0),
         new RequestError(
           { code: 'request.invalid_input', status: 422 },
           {
             details:
-              'CIMD requires the OIDC provider SSRF protection. Remove `OIDC_PROVIDER_SSRF_PROTECTION_DISABLED` to enable CIMD.',
+              'CIMD requires unrestricted outbound request SSRF protection. Remove `SSRF_PROTECTION_DISABLED`, `OIDC_PROVIDER_SSRF_PROTECTION_DISABLED`, and `SSRF_ALLOWED_ADDRESSES` to enable CIMD.',
           }
         )
       );

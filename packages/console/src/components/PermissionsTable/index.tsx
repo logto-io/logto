@@ -18,6 +18,7 @@ import type { Column } from '@/ds-components/Table/types';
 import Tag from '@/ds-components/Tag';
 import TextLink from '@/ds-components/TextLink';
 import useApi from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 
 import ActionsButton from '../ActionsButton';
@@ -93,6 +94,9 @@ function PermissionsTable({
   deletionText,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const {
+    access: { isReadOnly: isReadOnlyMember },
+  } = useCurrentTenantScopes();
   const { getDocumentationUrl } = useDocumentationUrl();
   const [editingScope, setEditingScope] = useState<ScopeResponse>();
 
@@ -189,7 +193,7 @@ function PermissionsTable({
               onSearch={searchHandler}
               onClearSearch={clearSearchHandler}
             />
-            {!isReadOnly && (
+            {!isReadOnly && !isReadOnlyMember && (
               <Button
                 title={createButtonTitle}
                 className={styles.createButton}
@@ -217,15 +221,17 @@ function PermissionsTable({
                 targetBlank: 'noopener',
               }}
               action={
-                <Button
-                  title={createButtonTitle}
-                  type="primary"
-                  size="large"
-                  icon={<Plus />}
-                  onClick={() => {
-                    createHandler();
-                  }}
-                />
+                !isReadOnlyMember && (
+                  <Button
+                    title={createButtonTitle}
+                    type="primary"
+                    size="large"
+                    icon={<Plus />}
+                    onClick={() => {
+                      createHandler();
+                    }}
+                  />
+                )
               }
             />
           ) : (

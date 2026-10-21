@@ -12,11 +12,27 @@ import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { AnonymousRouter, RouterInitArgs } from '#src/routes/types.js';
 import { SamlApplication } from '#src/saml-application/SamlApplication/index.js';
-import { generateAutoSubmitForm } from '#src/saml-application/SamlApplication/utils.js';
+import {
+  generateAutoSubmitForm,
+  isForceAuthnRequested,
+  getSamlRedirectSignatureInput,
+} from '#src/saml-application/SamlApplication/utils.js';
 import assertThat from '#src/utils/assert-that.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 
 import { verifyAndGetSamlSessionData } from './utils.js';
+
+/**
+ * The service provider initiates this flow, so the browser reaches the callback through a
+ * cross-site navigation. `strict` withholds the cookie for every hop of that navigation, including
+ * the same-site redirects, which leaves the callback without a session. CSRF is covered by matching
+ * the OIDC `state` against the stored session.
+ */
+const spInitiatedSessionCookieOptions = Object.freeze({
+  httpOnly: true,
+  sameSite: 'lax',
+  overwrite: true,
+} as const);
 
 const samlApplicationSignInCallbackQueryParametersGuard = z
   .object({
@@ -253,10 +269,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
       const details = await getSamlApplicationDetailsById(id);
       const samlApplication = new SamlApplication(details, id, envSet);
 
-      const octetString = Object.keys(ctx.request.query)
-        // eslint-disable-next-line no-restricted-syntax
-        .map((key) => key + '=' + encodeURIComponent(ctx.request.query[key] as string))
-        .join('&');
+      const octetString = getSamlRedirectSignatureInput(ctx.request.querystring);
       const { SAMLRequest, SigAlg } = rest;
 
       // Parse login request
@@ -287,9 +300,13 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         'application.saml.auth_request_issuer_not_match'
       );
 
+      const forceAuthn = isForceAuthnRequested(loginRequestResult.samlContent);
+      log.append({ forceAuthn });
+
       const state = generateStandardId(32);
       const signInUrl = await samlApplication.getSignInUrl({
         state,
+        forceAuthn,
       });
       log.append({ signInUrl: signInUrl.toString() });
 
@@ -312,10 +329,8 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
 
       // Set the session ID to cookie for later use.
       ctx.cookies.set(spInitiatedSamlSsoSessionCookieName, insertSamlAppSession.id, {
-        httpOnly: true,
-        sameSite: 'strict',
+        ...spInitiatedSessionCookieOptions,
         expires: expiresAt,
-        overwrite: true,
       });
 
       log.append({
@@ -381,9 +396,13 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         'application.saml.auth_request_issuer_not_match'
       );
 
+      const forceAuthn = isForceAuthnRequested(loginRequestResult.samlContent);
+      log.append({ forceAuthn });
+
       const state = generateStandardShortId();
       const signInUrl = await samlApplication.getSignInUrl({
         state,
+        forceAuthn,
       });
       log.append({ signInUrl: signInUrl.toString() });
 
@@ -407,10 +426,8 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
 
       // Set the session ID to cookie for later use.
       ctx.cookies.set(spInitiatedSamlSsoSessionCookieName, insertSamlAppSession.id, {
-        httpOnly: true,
-        sameSite: 'strict',
+        ...spInitiatedSessionCookieOptions,
         expires: expiresAt,
-        overwrite: true,
       });
 
       log.append({

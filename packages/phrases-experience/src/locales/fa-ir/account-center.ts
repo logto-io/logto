@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'صفحه یافت نشد',
@@ -13,6 +14,8 @@ const account_center = {
     sidebar_security: 'امنیت',
     sidebar_sessions: 'نشست‌ها',
     support: 'پشتیبانی',
+    user_menu: 'منوی کاربر',
+    sign_out: 'خروج',
   },
   verification: {
     title: 'تأیید امنیتی',
@@ -119,6 +122,58 @@ const account_center = {
     email_removed: 'آدرس ایمیل با موفقیت حذف شد.',
     phone_removed: 'شماره تلفن با موفقیت حذف شد.',
     username_removed: 'نام کاربری با موفقیت حذف شد.',
+    trusted_devices: {
+      title: 'دستگاه‌های مورد اعتماد MFA',
+      current_device: 'دستگاه فعلی',
+      expires_on: 'انقضا در {{date}}',
+      unknown_location: 'مکان نامشخص',
+      remove: 'حذف',
+      removed: 'دستگاه مورد اعتماد با موفقیت حذف شد.',
+      loading: 'در حال بارگذاری...',
+      empty: 'هیچ دستگاه مورد اعتمادی وجود ندارد.',
+      load_failed: 'بارگذاری دستگاه‌های مورد اعتماد ناموفق بود. لطفاً دوباره تلاش کنید.',
+      retry: 'تلاش مجدد',
+      remove_confirmation_title: 'دستگاه مورد اعتماد حذف شود؟',
+      remove_confirmation_description:
+        'دفعه بعد که در این دستگاه وارد می‌شوید، باید MFA را دوباره تکمیل کنید. نشست فعلی شما فعال باقی می‌ماند.',
+    },
+    personal_access_tokens: {
+      title: 'توکن‌های دسترسی شخصی',
+      description:
+        'از توکن‌های دسترسی شخصی برای احراز هویت در APIها از طرف خودتان استفاده کنید. این توکن‌ها تا زمان انقضا یا لغو توسط شما فعال می‌مانند، حتی اگر از حساب خارج شوید یا رمز عبور خود را تغییر دهید.',
+      create: 'ایجاد توکن جدید',
+      created_at: 'ایجاد شده در {{date}}',
+      expires_on: 'انقضا در {{date}}',
+      expired_on: 'منقضی شده در {{date}}',
+      expired: 'منقضی شده',
+      never_expires: 'هرگز منقضی نمی‌شود',
+      never_expires_warning:
+        'این توکن تاریخ انقضا ندارد. برای امنیت بیشتر، یک توکن جدید با تاریخ انقضا بسازید و این توکن را لغو کنید.',
+      rename: 'تغییر نام',
+      revoke: 'لغو',
+      loading: 'در حال بارگذاری...',
+      empty: 'هیچ توکن دسترسی شخصی وجود ندارد.',
+      load_failed: 'بارگذاری توکن‌های دسترسی شخصی ناموفق بود. لطفاً دوباره تلاش کنید.',
+      retry: 'تلاش مجدد',
+      create_modal_title: 'ایجاد توکن دسترسی شخصی',
+      create_modal_description:
+        'یک نام توصیفی برای توکن خود انتخاب کنید و دوره انقضا را مشخص نمایید.',
+      token_name: 'نام توکن',
+      token_name_placeholder: 'توکن من',
+      expiration: 'انقضا',
+      expiration_days: '{{count}} روز',
+      created_modal_title: 'توکن دسترسی شخصی ایجاد شد',
+      show_once_warning:
+        'دیگر قادر به مشاهده این توکن نخواهید بود. اکنون آن را کپی کرده و در مکانی امن نگه دارید.',
+      copied: 'توکن دسترسی شخصی کپی شد.',
+      rename_modal_title: 'تغییر نام توکن دسترسی شخصی',
+      rename_modal_description: 'نام جدیدی برای این توکن دسترسی شخصی وارد کنید.',
+      renamed: 'نام توکن دسترسی شخصی با موفقیت تغییر یافت.',
+      revoke_confirmation_title: 'توکن دسترسی شخصی لغو شود؟',
+      revoke_confirmation_description:
+        'هر برنامه یا اسکریپتی که از «{{name}}» استفاده می‌کند فوراً دسترسی خود را از دست خواهد داد. آیا مطمئن هستید که می‌خواهید ادامه دهید؟',
+      revoked: 'توکن دسترسی شخصی با موفقیت لغو شد.',
+    },
   },
   social: {
     linked: '{{connector}} با موفقیت پیوند داده شد.',
@@ -282,3 +337,4 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
+/* eslint-enable max-lines */

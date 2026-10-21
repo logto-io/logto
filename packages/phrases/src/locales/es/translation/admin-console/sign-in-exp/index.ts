@@ -47,7 +47,7 @@ const sign_in_exp = {
     hide_logto_branding_description:
       'Elimina "Powered by Logto". Destaca tu marca en exclusiva con una experiencia de inicio de sesión limpia y profesional.',
     hide_logto_branding_oss_note:
-      'Esta función está disponible de forma nativa en <a>Logto Cloud</a>.',
+      'Esta función está disponible en <a>Logto Cloud</a> o en los <selfHosted>planes autoalojados</selfHosted>.',
   },
   branding_uploads: {
     app_logo: {
@@ -98,7 +98,7 @@ const sign_in_exp = {
     bring_your_ui_oss_description:
       'Personaliza la interfaz de inicio de sesión con tu propio código.',
     bring_your_ui_oss_card_description:
-      'Sube tu interfaz de inicio de sesión personalizada directamente a <a>Logto Cloud</a>. No necesitas hacer un fork ni volver a desplegar.',
+      'La carga de una interfaz personalizada está disponible en <a>Logto Cloud</a> o en los <selfHosted>planes autoalojados</selfHosted>. No necesitas hacer un fork ni volver a desplegar.',
     bring_your_ui_oss_try_cloud: 'Probar Cloud',
     preview_with_bring_your_ui_description:
       'Tus activos de la interfaz de usuario personalizada se han subido con éxito y ahora se están sirviendo. En consecuencia, la ventana de vista previa incorporada se ha deshabilitado.\nPara probar tu interfaz de inicio de sesión personalizada, haz clic en el botón "Vista previa en vivo" para abrirla en una nueva pestaña del navegador.',
@@ -147,6 +147,9 @@ const sign_in_exp = {
           session_management: {
             title: 'Gestión de sesiones',
           },
+          developer_settings: {
+            title: 'Configuración para desarrolladores',
+          },
         },
       },
       user_profile: {
@@ -192,6 +195,9 @@ const sign_in_exp = {
         'Controla el acceso a los datos JSON personalizados almacenados en el usuario.',
       sessions: 'Sesiones',
       trusted_devices: 'Dispositivos de confianza',
+      personal_access_tokens: 'Tokens de acceso personal',
+      personal_access_tokens_description:
+        'Al habilitar esto, los usuarios pueden crear tokens de acceso personal de larga duración que permanecen activos tras cerrar sesión y restablecer la contraseña, y que cualquier aplicación propia con intercambio de tokens habilitado puede canjear por tokens de acceso.',
     },
     profile_fields: {
       title: 'Campos de perfil para el centro de cuenta prediseñado',

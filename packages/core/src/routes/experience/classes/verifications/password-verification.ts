@@ -1,10 +1,12 @@
 import {
+  AdditionalIdentifier,
   type VerificationIdentifier,
   VerificationType,
   type User,
   type PasswordVerificationRecordData,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
+import { conditional } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { verifyPasswordExpirationPolicy } from '#src/libraries/password-expiration.js';
@@ -34,6 +36,17 @@ export class PasswordVerification
     });
   }
 
+  /**
+   * Factory method to create a new `PasswordVerification` record for the subject the interaction
+   * carries: it verifies against that user's credential and {@link identifyUser} returns that user.
+   */
+  static createForUser(libraries: Libraries, queries: Queries, userId: string) {
+    return PasswordVerification.create(libraries, queries, {
+      type: AdditionalIdentifier.UserId,
+      value: userId,
+    });
+  }
+
   readonly type = VerificationType.Password;
   readonly identifier: VerificationIdentifier;
   readonly id: string;
@@ -60,6 +73,13 @@ export class PasswordVerification
   /** Returns whether the password verification has succeeded. */
   get isVerified() {
     return this.verified;
+  }
+
+  /** The user this record was created for (see {@link createForUser}), if not from an identifier. */
+  get userId(): string | undefined {
+    return conditional(
+      this.identifier.type === AdditionalIdentifier.UserId && this.identifier.value
+    );
   }
 
   markAsVerified(): void {

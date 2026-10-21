@@ -13,7 +13,6 @@ import LogtoEmailLogoDark from '@/assets/icons/logto-email-service-dark.svg?url'
 import LogtoEmailLogo from '@/assets/icons/logto-email-service.svg?url';
 import ConnectorLogo from '@/components/ConnectorLogo';
 import { isCloud } from '@/consts/env';
-import { pricingLink } from '@/consts/external-links';
 import Button from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import DynamicT from '@/ds-components/DynamicT';
@@ -22,6 +21,7 @@ import TextLink from '@/ds-components/TextLink';
 import type { RequestError } from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import modalStyles from '@/scss/modal.module.scss';
+import { buildCloudUpsellUrl, buildSelfHostedPlansUrl, ossUpsellEntries } from '@/utils/oss-upsell';
 
 import { getConnectorGroups } from '../../pages/Connectors/utils';
 
@@ -49,6 +49,9 @@ function EmailConnectorUpsellBanner() {
     keyPrefix: 'admin_console',
   });
   const copyKeys = getEmailConnectorUpsellCopyKeys();
+  const entry = ossUpsellEntries.connectorEmailBuiltinUpsellBanner;
+  const cloudUpsellUrl = buildCloudUpsellUrl(entry);
+  const selfHostedPlansUrl = buildSelfHostedPlansUrl(entry);
 
   return (
     <div className={styles.upsellBanner}>
@@ -63,15 +66,20 @@ function EmailConnectorUpsellBanner() {
           </div>
         </div>
       </div>
-      <Button
-        className={styles.upsellButton}
-        type="outline"
-        title={<DangerousRaw>{t(copyKeys.action, { productName: 'Logto Cloud' })}</DangerousRaw>}
-        trailingIcon={<ExternalLink />}
-        onClick={() => {
-          window.open(pricingLink, '_blank', 'noopener,noreferrer');
-        }}
-      />
+      <div className={styles.upsellActions}>
+        <Button
+          className={styles.upsellButton}
+          type="primary"
+          title={<DangerousRaw>{t(copyKeys.action, { productName: 'Logto Cloud' })}</DangerousRaw>}
+          trailingIcon={<ExternalLink />}
+          onClick={() => {
+            window.open(cloudUpsellUrl, '_blank', 'noopener,noreferrer');
+          }}
+        />
+        <TextLink className={styles.cloudAction} to={selfHostedPlansUrl}>
+          {t(copyKeys.secondaryAction)}
+        </TextLink>
+      </div>
     </div>
   );
 }

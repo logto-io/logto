@@ -112,6 +112,14 @@ const applications = {
       permission_delete_confirm:
         'این عمل مجوز را از برنامه پویا حذف می‌کند و مانع از درخواست مجوز کاربر برای آن توسط کلاینت‌های OAuth می‌شود. آیا مطمئنید که می‌خواهید ادامه دهید؟',
     },
+    client_compatibility: {
+      title: 'سازگاری با کلاینت‌ها',
+      description:
+        'نحوه پردازش درخواست‌های مجوز از کلاینت‌های OAuth را که هنوز به‌طور کامل از OpenID Connect پشتیبانی نمی‌کنند، در Logto تنظیم کنید. این تنظیمات آزمایشی هستند و ممکن است تغییر کنند یا حذف شوند.',
+      add_consent_prompt_for_offline_access: 'افزودن درخواست رضایت برای دسترسی آفلاین',
+      add_consent_prompt_for_offline_access_description:
+        'وقتی یک کلاینت OAuth `offline_access` را بدون `prompt=consent` درخواست می‌کند، Logto درخواست رضایت را اضافه می‌کند تا کلاینت بتواند توکن بازیابی دریافت کند. برای کلاینت‌هایی مانند ChatGPT و Codex توصیه می‌شود.',
+    },
   },
   guide: {
     third_party: {

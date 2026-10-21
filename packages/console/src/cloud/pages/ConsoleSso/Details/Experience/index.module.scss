@@ -1,0 +1,5 @@
+@use '@/scss/underscore' as _;
+
+.tokenStorage {
+  margin-top: _.unit(6);
+}

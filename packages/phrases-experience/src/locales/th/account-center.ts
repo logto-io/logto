@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'ไม่พบหน้าเว็บ',
@@ -13,6 +14,8 @@ const account_center = {
     sidebar_security: 'ความปลอดภัย',
     sidebar_sessions: 'เซสชัน',
     support: 'ฝ่ายช่วยเหลือ',
+    user_menu: 'เมนูผู้ใช้',
+    sign_out: 'ออกจากระบบ',
   },
   verification: {
     title: 'การยืนยันความปลอดภัย',
@@ -119,6 +122,56 @@ const account_center = {
     email_removed: 'ลบที่อยู่อีเมลเรียบร้อยแล้ว',
     phone_removed: 'ลบหมายเลขโทรศัพท์เรียบร้อยแล้ว',
     username_removed: 'ลบชื่อผู้ใช้เรียบร้อยแล้ว',
+    trusted_devices: {
+      title: 'อุปกรณ์ที่เชื่อถือสำหรับ MFA',
+      current_device: 'อุปกรณ์ปัจจุบัน',
+      expires_on: 'หมดอายุวันที่ {{date}}',
+      unknown_location: 'ไม่ทราบตำแหน่ง',
+      remove: 'ลบ',
+      removed: 'ลบอุปกรณ์ที่เชื่อถือเรียบร้อยแล้ว',
+      loading: 'กำลังโหลด...',
+      empty: 'ไม่มีอุปกรณ์ที่เชื่อถือ',
+      load_failed: 'โหลดอุปกรณ์ที่เชื่อถือไม่สำเร็จ โปรดลองอีกครั้ง',
+      retry: 'ลองอีกครั้ง',
+      remove_confirmation_title: 'ลบอุปกรณ์ที่เชื่อถือหรือไม่?',
+      remove_confirmation_description:
+        'คุณจะต้องทำ MFA อีกครั้งบนอุปกรณ์นี้เมื่อลงชื่อเข้าใช้ครั้งถัดไป เซสชันปัจจุบันของคุณจะยังคงทำงานอยู่',
+    },
+    personal_access_tokens: {
+      title: 'โทเค็นการเข้าถึงส่วนบุคคล',
+      description:
+        'ใช้โทเค็นการเข้าถึงส่วนบุคคลเพื่อยืนยันตัวตนกับ API ในนามของคุณ โทเค็นจะยังคงใช้งานได้จนกว่าจะหมดอายุหรือถูกเพิกถอน แม้ว่าคุณจะออกจากระบบหรือเปลี่ยนรหัสผ่านก็ตาม',
+      create: 'สร้างโทเค็นใหม่',
+      created_at: 'สร้างเมื่อ {{date}}',
+      expires_on: 'หมดอายุวันที่ {{date}}',
+      expired_on: 'หมดอายุเมื่อ {{date}}',
+      expired: 'หมดอายุแล้ว',
+      never_expires: 'ไม่มีวันหมดอายุ',
+      never_expires_warning:
+        'โทเค็นนี้ไม่มีวันหมดอายุ เพื่อความปลอดภัยที่ดียิ่งขึ้น โปรดสร้างโทเค็นใหม่ที่มีวันหมดอายุและเพิกถอนโทเค็นนี้',
+      rename: 'เปลี่ยนชื่อ',
+      revoke: 'เพิกถอน',
+      loading: 'กำลังโหลด...',
+      empty: 'ไม่มีโทเค็นการเข้าถึงส่วนบุคคล',
+      load_failed: 'ไม่สามารถโหลดโทเค็นการเข้าถึงส่วนบุคคลได้ โปรดลองอีกครั้ง',
+      retry: 'ลองอีกครั้ง',
+      create_modal_title: 'สร้างโทเค็นการเข้าถึงส่วนบุคคล',
+      create_modal_description: 'ตั้งชื่อโทเค็นเพื่ออธิบายการใช้งานและเลือกระยะเวลาหมดอายุ',
+      token_name: 'ชื่อโทเค็น',
+      token_name_placeholder: 'โทเค็นของฉัน',
+      expiration: 'การหมดอายุ',
+      expiration_days: '{{count}} วัน',
+      created_modal_title: 'สร้างโทเค็นการเข้าถึงส่วนบุคคลแล้ว',
+      show_once_warning: 'คุณจะไม่สามารถดูโทเค็นนี้ได้อีก คัดลอกไว้ตอนนี้และเก็บไว้ในที่ปลอดภัย',
+      copied: 'คัดลอกโทเค็นการเข้าถึงส่วนบุคคลแล้ว',
+      rename_modal_title: 'เปลี่ยนชื่อโทเค็นการเข้าถึงส่วนบุคคล',
+      rename_modal_description: 'ป้อนชื่อใหม่สำหรับโทเค็นการเข้าถึงส่วนบุคคลนี้',
+      renamed: 'เปลี่ยนชื่อโทเค็นการเข้าถึงส่วนบุคคลเรียบร้อยแล้ว',
+      revoke_confirmation_title: 'เพิกถอนโทเค็นการเข้าถึงส่วนบุคคลหรือไม่?',
+      revoke_confirmation_description:
+        'แอปพลิเคชันหรือสคริปต์ใดๆ ที่ใช้ "{{name}}" จะสูญเสียการเข้าถึงทันที คุณแน่ใจหรือไม่ว่าต้องการดำเนินการต่อ?',
+      revoked: 'เพิกถอนโทเค็นการเข้าถึงส่วนบุคคลเรียบร้อยแล้ว',
+    },
   },
   social: {
     linked: 'เชื่อมโยง {{connector}} สำเร็จแล้ว',
@@ -275,3 +328,4 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
+/* eslint-enable max-lines */

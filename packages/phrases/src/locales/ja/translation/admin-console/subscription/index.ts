@@ -12,6 +12,8 @@ const subscription = {
   enterprise_description: '大規模なチームおよび企業グレードの要件を持つ企業向け。',
   admin_plan: '管理者プラン',
   dev_plan: '開発プラン',
+  self_hosted_pro_plan: 'セルフホストプロプラン',
+  self_hosted_enterprise_plan: 'セルフホストエンタープライズプラン',
   current_plan: '現在のプラン',
   current_plan_description:
     '現在のプランはこちらです。プランの使用状況を簡単に確認したり、次回の請求を確認したり、必要に応じてプランを変更したりできます。',
@@ -45,6 +47,13 @@ const subscription = {
     },
   },
   quota_item,
+  cancel_feedback_modal: {
+    title: 'ご利用ありがとうございました',
+    description:
+      'サブスクリプションはキャンセルされました。いただいたフィードバックは Logto の改善に役立てます。すべての回答に目を通しています。',
+    what_made_you_cancel: 'キャンセルの理由は何でしたか？',
+    how_to_reconsider: '再検討いただくために、私たちに何ができますか？',
+  },
   downgrade_modal: {
     title: 'ダウングレードしますか？',
     description:
@@ -65,10 +74,18 @@ const subscription = {
     upgrade_help_tip: 'アップグレードのヘルプが必要ですか？<a>お問い合わせください</a>。',
     a_maximum_of: '<item/>の最大数',
   },
+  billing_customer_modal: {
+    title: '請求アカウントを選択する',
+    description:
+      'このサブスクリプションの支払いをする請求アカウントを選択するか、新しいアカウントを開始します。次のページで支払いの詳細を変更できます。',
+    account: '請求アカウント',
+    new_account: '新しい請求アカウント',
+    default_account: 'デフォルト',
+  },
   upgrade_success: '正常に<name/>にアップグレードされました',
   downgrade_success: '正常に<name/>にダウングレードされました',
-  subscription_check_timeout:
-    'サブスクリプションのチェックがタイムアウトしました。後でもう一度更新してください。',
+  subscription_check_pending:
+    'お支払いは完了しました。サブスクリプションの設定に通常より時間がかかっています。',
   no_subscription: '契約なし',
   usage,
   token_usage_notification: {

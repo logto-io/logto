@@ -10,12 +10,55 @@ const tenants = {
     oidc_configs: 'Configurations OIDC',
     subscription: 'Plan et facturation',
     billing_history: 'Historique de facturation',
+    license: 'Licence',
+  },
+  license: {
+    purchase_title: 'PLANS AUTO-HÉBERGÉS',
+    purchase_description:
+      'Les plans Professionnel et Entreprise auto-hébergés débloquent des fonctionnalités payantes sur votre propre instance : masquer la marque Logto, utiliser votre propre interface, la collaboration dans la console et des applications SAML illimitées. Achetez un plan pour obtenir votre clé de licence.',
+    purchase_button: 'Voir les plans auto-hébergés',
+    install_title: 'INSTALLER LA LICENCE',
+    install_description:
+      'Collez la clé de licence que vous avez reçue après l’achat d’un plan auto-hébergé.',
+    install_button: 'Installer la licence',
+    key_field: 'Clé de licence',
+    key_field_description:
+      'La clé est vérifiée sur votre instance et n’en sort jamais. Contactez Logto pour obtenir une nouvelle clé si la vôtre a expiré.',
+    key_placeholder: 'Collez votre clé de licence ici',
+    installed_toast: 'Licence installée avec succès.',
+    details_title: 'LICENCE',
+    details_description: 'La licence installée sur cette instance et ce qu’elle accorde.',
+    plan_field: 'Plan',
+    environment_field: 'Environnement',
+    environment_production: 'Production',
+    environment_non_production: 'Hors production',
+    expires_at_field: 'Expire le',
+    installed_at_field: 'Installée le',
+    last_refreshed_at_field: 'Dernière actualisation le',
+    grace_ends_at_field: 'La période de grâce se termine le',
+    refresh_expired_description:
+      'La clé de licence a expiré le {{expiresAt}}. Les fonctionnalités sous licence restent disponibles jusqu’au {{graceEndsAt}} pendant que Logto tente de l’actualiser.',
+    refresh_refused_description:
+      'L’actualisation de la licence a été refusée car la licence est {{reason}}. Les fonctionnalités sous licence restent disponibles jusqu’au {{graceEndsAt}}.',
+    refusal_reason_canceled: 'annulée',
+    refusal_reason_unpaid: 'impayée',
+    refusal_reason_expired: 'expirée',
+    refusal_reason_revoked: 'révoquée',
+    refusal_reason_unknown: 'indisponible',
+    grace_expired_description:
+      'La période de grâce de la licence s’est terminée le {{graceEndsAt}}. Ce déploiement est revenu aux valeurs OSS par défaut. Contactez Logto pour obtenir une nouvelle clé de licence et installez-la à nouveau.',
+    get_fresh_key_button: 'Obtenir une nouvelle clé',
+    replace_button: 'Remplacer la licence',
   },
   members: {
     card_title: 'Gérez vos locataires plus sûrement avec Logto Cloud',
     card_description:
       'Ajoutez des administrateurs ou des collaborateurs à votre locataire sans partager un seul compte administrateur.',
     card_action: 'Découvrir Logto Cloud',
+    self_hosted_card_title: 'Gérez vos locataires plus sûrement avec les plans auto-hébergés',
+    self_hosted_card_description:
+      'Ajoutez des administrateurs ou des collaborateurs à votre locataire sans partager un seul compte administrateur.',
+    self_hosted_card_action: 'Découvrir les plans auto-hébergés',
   },
   settings: {
     title: 'PARAMÈTRES',
@@ -42,6 +85,16 @@ const tenants = {
     tenant_mfa: 'Authentification multi-facteurs',
     tenant_mfa_description:
       "Exiger que vos membres configurent l'authentification multi-facteurs pour accéder à ce locataire.",
+    oss_description: 'Gérez la façon dont les membres accèdent à la Console sur cette instance.',
+    tenant_mfa_confirm_title: 'Exiger la MFA pour tous les membres ?',
+    tenant_mfa_confirm_description:
+      "Ces membres n'ont pas encore configuré la MFA. Ils restent connectés et devront la configurer lors de leur prochaine connexion :",
+    tenant_mfa_confirm_self:
+      "Vous n'avez pas non plus configuré la MFA. Configurez-la dans les paramètres de votre compte avant votre prochaine connexion.",
+    tenant_mfa_confirm_button: 'Exiger la MFA',
+    tenant_mfa_setup_required:
+      "Ce locataire exige l'authentification multi-facteurs. Configurez-la maintenant, sinon elle vous sera demandée lors de votre prochaine connexion.",
+    tenant_mfa_setup_action: 'Configurer la MFA',
     enterprise_sso: 'Enterprise SSO',
     enterprise_sso_description:
       "Disponible sur les plans payants. Contactez-nous pour activer Enterprise SSO afin que tous les membres puissent se connecter à la console Logto Cloud en utilisant le fournisseur d'identité de votre organisation.",
@@ -49,6 +102,12 @@ const tenants = {
   full_env_tag: {
     development: 'Développement',
     production: 'Production',
+  },
+  view_only: {
+    tag: 'Lecture seule',
+    notification:
+      'Vous avez un accès en lecture seule à ce locataire. Demandez à un administrateur du locataire si vous devez effectuer des modifications.',
+    hidden: 'Masqué pour les lecteurs',
   },
   deletion_card: {
     title: 'SUPPRIMER',

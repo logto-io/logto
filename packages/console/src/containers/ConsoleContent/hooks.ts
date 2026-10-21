@@ -25,6 +25,13 @@ const useTenantScopeListener = () => {
   const { scopes, isLoading } = useCurrentTenantScopes();
 
   useEffect(() => {
+    // The claims only feed the Cloud scope sync below. In OSS, requesting a tenant organization
+    // token would fail once the organization requires MFA the user has not set up, and end the
+    // session.
+    if (!isCloud) {
+      return;
+    }
+
     (async () => {
       const organizationId = getTenantOrganizationId(currentTenantId);
       const claims = await getOrganizationTokenClaims(organizationId);

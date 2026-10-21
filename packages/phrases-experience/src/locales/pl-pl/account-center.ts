@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'Nie znaleziono strony',
@@ -14,6 +15,8 @@ const account_center = {
     sidebar_security: 'Bezpieczeństwo',
     sidebar_sessions: 'Sesje',
     support: 'Pomoc',
+    user_menu: 'Menu użytkownika',
+    sign_out: 'Wyloguj się',
   },
   verification: {
     title: 'Weryfikacja bezpieczeństwa',
@@ -120,6 +123,57 @@ const account_center = {
     email_removed: 'Adres e-mail został pomyślnie usunięty.',
     phone_removed: 'Numer telefonu został pomyślnie usunięty.',
     username_removed: 'Nazwa użytkownika została pomyślnie usunięta.',
+    trusted_devices: {
+      title: 'Zaufane urządzenia MFA',
+      current_device: 'Bieżące urządzenie',
+      expires_on: 'Wygasa {{date}}',
+      unknown_location: 'Nieznana lokalizacja',
+      remove: 'Usuń',
+      removed: 'Zaufane urządzenie zostało usunięte.',
+      loading: 'Ładowanie...',
+      empty: 'Brak zaufanych urządzeń.',
+      load_failed: 'Nie udało się załadować zaufanych urządzeń. Spróbuj ponownie.',
+      retry: 'Spróbuj ponownie',
+      remove_confirmation_title: 'Usunąć zaufane urządzenie?',
+      remove_confirmation_description:
+        'Przy następnym logowaniu na tym urządzeniu konieczne będzie ponowne wykonanie MFA. Bieżąca sesja pozostanie aktywna.',
+    },
+    personal_access_tokens: {
+      title: 'Osobiste tokeny dostępu',
+      description:
+        'Używaj osobistych tokenów dostępu do uwierzytelniania się w interfejsach API w swoim imieniu. Pozostają aktywne do momentu wygaśnięcia lub unieważnienia, nawet po wylogowaniu się lub zmianie hasła.',
+      create: 'Utwórz nowy token',
+      created_at: 'Utworzono {{date}}',
+      expires_on: 'Wygasa {{date}}',
+      expired_on: 'Wygasł {{date}}',
+      expired: 'Wygasł',
+      never_expires: 'Nigdy nie wygasa',
+      never_expires_warning:
+        'Ten token nie ma daty wygaśnięcia. Dla większego bezpieczeństwa utwórz nowy token z datą wygaśnięcia i unieważnij ten.',
+      rename: 'Zmień nazwę',
+      revoke: 'Unieważnij',
+      loading: 'Ładowanie...',
+      empty: 'Brak osobistych tokenów dostępu.',
+      load_failed: 'Nie udało się załadować osobistych tokenów dostępu. Spróbuj ponownie.',
+      retry: 'Spróbuj ponownie',
+      create_modal_title: 'Utwórz osobisty token dostępu',
+      create_modal_description: 'Nadaj tokenowi opisową nazwę i wybierz okres ważności.',
+      token_name: 'Nazwa tokenu',
+      token_name_placeholder: 'Mój token',
+      expiration: 'Wygaśnięcie',
+      expiration_days: '{{count}} dni',
+      created_modal_title: 'Utworzono osobisty token dostępu',
+      show_once_warning:
+        'Nie będziesz mógł ponownie zobaczyć tego tokenu. Skopiuj go teraz i przechowuj w bezpiecznym miejscu.',
+      copied: 'Skopiowano osobisty token dostępu.',
+      rename_modal_title: 'Zmień nazwę osobistego tokenu dostępu',
+      rename_modal_description: 'Wprowadź nową nazwę dla tego osobistego tokenu dostępu.',
+      renamed: 'Pomyślnie zmieniono nazwę osobistego tokenu dostępu.',
+      revoke_confirmation_title: 'Unieważnić osobisty token dostępu?',
+      revoke_confirmation_description:
+        'Wszystkie aplikacje lub skrypty używające „{{name}}” natychmiast utracą dostęp. Czy na pewno chcesz kontynuować?',
+      revoked: 'Pomyślnie unieważniono osobisty token dostępu.',
+    },
   },
   social: {
     linked: '{{connector}} połączono pomyślnie.',
@@ -286,3 +340,4 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
+/* eslint-enable max-lines */

@@ -1,0 +1,6 @@
+@use '@/shared/scss/underscore' as _;
+
+.methodList {
+  @include _.flex-column;
+  gap: _.unit(3);
+}

@@ -3,11 +3,9 @@ import type { Context, MiddlewareType } from 'koa';
 import { errors } from 'oidc-provider';
 
 import type Queries from '#src/tenants/Queries.js';
+import { isRecord } from '#src/utils/type.js';
 
 const noVSCHAR = /[^\u0020-\u007E]/;
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === 'object' && value !== null && !Array.isArray(value);
 
 function decodeAuthToken(token: string) {
   const authToken = decodeURIComponent(token.replaceAll('+', '%20'));

@@ -9,11 +9,52 @@ const tenants = {
     oidc_configs: 'OIDC 設定',
     subscription: '方案與計費',
     billing_history: '帳單歷史記錄',
+    license: '授權',
+  },
+  license: {
+    purchase_title: '自託管方案',
+    purchase_description:
+      '自託管專業方案與企業方案可在你自己的執行個體上解鎖付費功能，例如隱藏 Logto 品牌標誌、使用自訂 UI、主控台多人協作以及不限數量的 SAML 應用。購買方案即可取得授權金鑰。',
+    purchase_button: '查看自託管方案',
+    install_title: '安裝授權',
+    install_description: '貼上你購買自託管方案後取得的授權金鑰。',
+    install_button: '安裝授權',
+    key_field: '授權金鑰',
+    key_field_description:
+      '金鑰會在你的執行個體上驗證，不會離開執行個體。如果現有金鑰已過期，請聯絡 Logto 取得新的金鑰。',
+    key_placeholder: '在此貼上你的授權金鑰',
+    installed_toast: '授權安裝成功。',
+    details_title: '授權',
+    details_description: '此執行個體上已安裝的授權及其授予的權益。',
+    plan_field: '方案',
+    environment_field: '環境',
+    environment_production: '生產',
+    environment_non_production: '非生產',
+    expires_at_field: '到期日',
+    installed_at_field: '安裝日期',
+    last_refreshed_at_field: '上次更新時間',
+    grace_ends_at_field: '寬限期結束日期',
+    refresh_expired_description:
+      '授權金鑰已於 {{expiresAt}} 到期。Logto 嘗試更新金鑰期間，授權功能仍可使用至 {{graceEndsAt}}。',
+    refresh_refused_description:
+      '授權更新被拒絕，因為授權已{{reason}}。授權功能仍可使用至 {{graceEndsAt}}。',
+    refusal_reason_canceled: '取消',
+    refusal_reason_unpaid: '未付款',
+    refusal_reason_expired: '到期',
+    refusal_reason_revoked: '撤銷',
+    refusal_reason_unknown: '不可用',
+    grace_expired_description:
+      '授權寬限期已於 {{graceEndsAt}} 結束。此執行個體已恢復為 OSS 預設值。請聯絡 Logto 取得新的授權金鑰並重新安裝。',
+    get_fresh_key_button: '取得新的授權金鑰',
+    replace_button: '更換授權',
   },
   members: {
     card_title: '透過 Logto Cloud 更安全地管理租戶',
     card_description: '無需共用單一管理員帳號，也能為你的租戶新增管理員或協作者。',
     card_action: '探索 Logto Cloud',
+    self_hosted_card_title: '透過自託管方案更安全地管理租戶',
+    self_hosted_card_description: '無需共用單一管理員帳號，也能為你的租戶新增管理員或協作者。',
+    self_hosted_card_action: '探索自託管方案',
   },
   settings: {
     title: '設定',
@@ -35,6 +76,14 @@ const tenants = {
     tenant_info_saved: '租戶資訊成功儲存。',
     tenant_mfa: '多因素驗證',
     tenant_mfa_description: '要求成員設定多因素驗證才能存取此租戶。',
+    oss_description: '管理成員存取此執行個體主控台的方式。',
+    tenant_mfa_confirm_title: '要求所有成員啟用 MFA？',
+    tenant_mfa_confirm_description:
+      '以下成員尚未設定 MFA。他們會保持登入狀態，並在下次登入時被要求設定：',
+    tenant_mfa_confirm_self: '你也尚未設定 MFA。請在下次登入前到帳戶設定中完成設定。',
+    tenant_mfa_confirm_button: '要求 MFA',
+    tenant_mfa_setup_required: '此租戶要求多因素驗證。請立即設定，否則將在下次登入時被要求設定。',
+    tenant_mfa_setup_action: '設定 MFA',
     enterprise_sso: '企業 SSO',
     enterprise_sso_description:
       '僅限付費方案。聯繫我們啟用企業 SSO，讓所有成員可以使用您組織的身分提供者登入 Logto Cloud 控制台。',
@@ -42,6 +91,11 @@ const tenants = {
   full_env_tag: {
     development: '開發',
     production: '產品',
+  },
+  view_only: {
+    tag: '僅檢視',
+    notification: '您對此租戶只有檢視權限。如需變更，請聯絡租戶管理員。',
+    hidden: '對檢視者隱藏',
   },
   deletion_card: {
     title: '刪除',

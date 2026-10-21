@@ -30,7 +30,7 @@ describe('shouldShowEmailConnectorUpsellBanner', () => {
 });
 
 describe('getEmailConnectorUpsellCopyKeys', () => {
-  test('uses dedicated i18n keys for the OSS email upsell banner copy', () => {
+  test('keeps Cloud copy primary and adds the self-hosted plans secondary action', () => {
     const copyKeys = getEmailConnectorUpsellCopyKeys();
     const titleKey: TFuncKey<'translation', 'admin_console'> = copyKeys.title;
     const descriptionKey: TFuncKey<'translation', 'admin_console'> = copyKeys.description;
@@ -41,5 +41,6 @@ describe('getEmailConnectorUpsellCopyKeys', () => {
       description: 'connectors.create_form.email_connector_upsell.description',
       action: 'upsell.try_with_product_name',
     });
+    expect(copyKeys.secondaryAction).toBe('upsell.explore_self_hosted_plans');
   });
 });

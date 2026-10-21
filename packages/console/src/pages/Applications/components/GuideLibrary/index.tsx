@@ -14,6 +14,7 @@ import { CheckboxGroup } from '@/ds-components/Checkbox';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import {
   allAppGuideCategories,
   thirdPartyAppCategory,
@@ -37,6 +38,9 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, onSelectGuide }
   const { getFilteredAppGuideMetadata, getStructuredAppGuideMetadata, getCategoryDescription } =
     useAppGuideMetadata();
   const isApplicationCreateModal = pathname.includes('/applications/create');
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const {
     currentSubscriptionQuota,
     currentSubscription: { isEnterprisePlan },
@@ -142,7 +146,7 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, onSelectGuide }
                   />
                 )
             )}
-          {!isApplicationCreateModal && (
+          {!isApplicationCreateModal && !isReadOnly && (
             <TextLink className={styles.viewAll} to="/applications/create">
               {t('get_started.view_all')}
             </TextLink>

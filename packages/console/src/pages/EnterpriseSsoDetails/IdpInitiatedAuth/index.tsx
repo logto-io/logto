@@ -1,11 +1,16 @@
 import { type Application, type SsoConnectorWithProviderConfig } from '@logto/schemas';
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import useSWR from 'swr';
 
 import FormCard, { FormCardSkeleton } from '@/components/FormCard';
+import { isCloud } from '@/consts/env';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { type RequestError } from '@/hooks/use-api';
 
+import { shouldShowIdpInitiatedAuthUpsell } from '../utils';
+
 import ConfigForm from './ConfigForm';
+import OssUpsell from './OssUpsell';
 import useIdpInitiatedAuthConfigSWR from './use-idp-initiated-auth-config-swr';
 import { applicationsSearchUrl } from './utils';
 
@@ -14,15 +19,21 @@ type Props = {
 };
 
 function IdpInitiatedAuth({ ssoConnector }: Props) {
+  const { licenseQuota } = useContext(SubscriptionDataContext);
+  const shouldShowOssUpsell = shouldShowIdpInitiatedAuthUpsell({
+    isCloud,
+    isIdpInitiatedSsoLicensed: licenseQuota.idpInitiatedSso,
+  });
+
   const { data: applications, error: applicationError } = useSWR<Application[], RequestError>(
-    applicationsSearchUrl
+    shouldShowOssUpsell ? undefined : applicationsSearchUrl
   );
 
   const {
     data: idpInitiatedAuthConfig,
     mutate,
     error: idpInitiatedAuthConfigError,
-  } = useIdpInitiatedAuthConfigSWR(ssoConnector.id);
+  } = useIdpInitiatedAuthConfigSWR(shouldShowOssUpsell ? undefined : ssoConnector.id);
 
   const isLoading = useMemo(
     () =>
@@ -35,6 +46,10 @@ function IdpInitiatedAuth({ ssoConnector }: Props) {
     () => applications?.filter(({ isThirdParty }) => !isThirdParty),
     [applications]
   );
+
+  if (shouldShowOssUpsell) {
+    return <OssUpsell />;
+  }
 
   if (isLoading) {
     return (

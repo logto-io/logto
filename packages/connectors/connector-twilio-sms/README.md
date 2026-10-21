@@ -10,6 +10,7 @@ The official Logto connector for Twilio short message service.
   - [Set up senders' phone numbers](#set-up-senders-phone-numbers)
   - [Get account credentials](#get-account-credentials)
   - [Compose the connector JSON](#compose-the-connector-json)
+    - [API host](#api-host)
     - [Test Twilio SMS connector](#test-twilio-sms-connector)
     - [Config types](#config-types)
   - [Reference](#reference)
@@ -58,6 +59,14 @@ You can add multiple SMS connector templates for different cases. Here is an exa
 - Fill out the `content` field with arbitrary string-typed contents. Do not forget to leave `{{code}}` placeholder for random verification code.
 - Fill out the `usageType` field with either `Register`, `SignIn`, `ForgotPassword`, `Generic` for different use cases. In order to enable full user flows, templates with usageType `Register`, `SignIn`, `ForgotPassword` and `Generic` are required.
 
+### API host
+
+The optional `host` field selects the Twilio API hostname. When omitted, it defaults to `api.twilio.com`.
+
+Enter a hostname, **not a full URL**. It must start with `api.`, end with `.twilio.com`, and contain only DNS labels made of ASCII letters, digits, and internal hyphens. Labels may contain up to 63 characters, and the hostname up to 253 characters. Hostnames are case-insensitive. Schemes (`https://`), ports, paths, credentials, whitespace, queries, and fragments are not accepted.
+
+Requests use `https://{host}/2010-04-01/Accounts/{accountSID}/Messages.json`.
+
 ### Test Twilio SMS connector
 
 You can enter a phone number and click on "Send" to see whether the settings can work before "Save and Done".
@@ -66,16 +75,18 @@ That's it. Don't forget to [Enable connector in sign-in experience](https://docs
 
 ### Config types
 
-| Name                    | Type        |
-|-------------------------|-------------|
-| accountSID              | string      |
-| authToken               | string      |
-| fromMessagingServiceSID | string      |
-| templates               | Templates[] |
+| Name                    | Type               |
+| ----------------------- | ------------------ |
+| accountSID              | string             |
+| authToken               | string             |
+| fromMessagingServiceSID | string             |
+| host                    | string (optional)  |
+| disableRiskCheck        | boolean (optional) |
+| templates               | Templates[]        |
 
-| Template Properties | Type        | Enum values                                          |
-|---------------------|-------------|------------------------------------------------------|
-| content             | string      | N/A                                                  |
+| Template Properties | Type        | Enum values                                             |
+| ------------------- | ----------- | ------------------------------------------------------- |
+| content             | string      | N/A                                                     |
 | usageType           | enum string | 'Register' \| 'SignIn' \| 'ForgotPassword' \| 'Generic' |
 
 ## Reference

@@ -42,6 +42,8 @@ const jwt_claims = {
   test_tab: 'Testumgebung',
   jwt_claims_description:
     'Standardansprüche werden automatisch im JWT enthalten und können nicht überschrieben werden.',
+  reserved_claims_description:
+    '`acr`, `amr` und `auth_time` sind bei Benutzerzugriffstoken reserviert: Logto leitet sie immer selbst ab und ignoriert benutzerdefinierte Ansprüche mit diesen Schlüsseln.',
   user_data: {
     title: 'Benutzerdaten',
     subtitle:

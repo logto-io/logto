@@ -22,6 +22,7 @@ import {
   ZodUnknown,
   ZodDefault,
   ZodIntersection,
+  ZodUndefined,
 } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -272,9 +273,11 @@ export const zodTypeToSwagger = (
   }
 
   if (config instanceof ZodObject) {
-    // Type from Zod is any
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const entries = Object.entries(config.shape);
+    // Undefined-only properties cannot appear in JSON payloads.
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- ZodObject exposes its shape as any.
+    const entries = Object.entries(config.shape).filter(
+      ([, value]) => !(value instanceof ZodUndefined)
+    );
     const required = entries
       .filter(([, value]) => !(value instanceof ZodOptional))
       .map(([key]) => key);

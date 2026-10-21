@@ -11,6 +11,8 @@ const subscription = {
   enterprise_description: '대규모 팀 및 엔터프라이즈급 요구 사항이 있는 비즈니스를 위한 것입니다.',
   admin_plan: '관리자 플랜',
   dev_plan: '개발 플랜',
+  self_hosted_pro_plan: '셀프 호스팅 프로 요금제',
+  self_hosted_enterprise_plan: '셀프 호스팅 엔터프라이즈 플랜',
   current_plan: '현재 요금제',
   current_plan_description:
     '현재 사용중인 요금제 정보입니다. 요금제 사용 내역을 쉽게 확인하고, 다가오는 청구서를 확인하며 필요에 따라 요금제를 변경할 수 있습니다.',
@@ -44,6 +46,13 @@ const subscription = {
     },
   },
   quota_item,
+  cancel_feedback_modal: {
+    title: '떠나신다니 아쉽습니다',
+    description:
+      '구독이 취소되었습니다. 보내주신 의견은 Logto를 개선하는 데 도움이 됩니다. 모든 답변을 빠짐없이 읽고 있습니다.',
+    what_made_you_cancel: '취소하신 이유는 무엇인가요?',
+    how_to_reconsider: '다시 고려하시려면 저희가 무엇을 해야 할까요?',
+  },
   downgrade_modal: {
     title: '다운그레이드하시겠습니까?',
     description:
@@ -63,9 +72,18 @@ const subscription = {
     upgrade_help_tip: '업그레이드 도움이 필요하세요? <a>문의하세요</a>.',
     a_maximum_of: '<item/> 최대 한도',
   },
+  billing_customer_modal: {
+    title: '결제 계정 선택',
+    description:
+      '이 구독의 결제를 담당할 계정을 선택하거나 새 계정을 시작하세요. 다음 페이지에서 결제 세부 정보를 변경할 수 있습니다.',
+    account: '결제 계정',
+    new_account: '새 결제 계정',
+    default_account: '기본값',
+  },
   upgrade_success: '성공적으로 <name/>으로 업그레이드되었습니다.',
   downgrade_success: '성공적으로 <name/>으로 다운그레이드되었습니다.',
-  subscription_check_timeout: '구독 확인이 타임아웃되었습니다. 나중에 다시 확인해주세요.',
+  subscription_check_pending:
+    '결제가 완료되었습니다. 구독 설정에 일반적인 것보다 시간이 더 걸리고 있습니다.',
   no_subscription: '구독 없음',
   usage,
   token_usage_notification: {

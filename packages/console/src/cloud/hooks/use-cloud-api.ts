@@ -1,5 +1,11 @@
 import type router from '@logto/cloud/routes';
-import { type emailLogsRouter, type tenantAuthRouter } from '@logto/cloud/routes';
+import {
+  type consoleSsoRouter,
+  type emailLogsRouter,
+  type selfHostedLicensesRouter,
+  type tenantAuthRouter,
+  type userStripeCustomersRouter,
+} from '@logto/cloud/routes';
 import { useLogto } from '@logto/react';
 import { getTenantOrganizationId } from '@logto/schemas';
 import { conditional, trySafe } from '@silverhand/essentials';
@@ -14,6 +20,7 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 
 const responseErrorBodyGuard = z.object({
   message: z.string(),
+  error: z.object({ code: z.string().optional() }).optional(),
 });
 
 export const tryReadResponseErrorBody = async (error: ResponseError) =>
@@ -45,7 +52,12 @@ type UseCloudApiProps = {
  * type-instantiation depth limit), so the client type is selected per call site instead of
  * intersecting them.
  */
-type ConsoleCloudRouter = typeof router | typeof emailLogsRouter;
+type ConsoleCloudRouter =
+  | typeof router
+  | typeof emailLogsRouter
+  | typeof userStripeCustomersRouter
+  | typeof consoleSsoRouter
+  | typeof selfHostedLicensesRouter;
 
 export const useCloudApi = <R extends ConsoleCloudRouter = typeof router>({
   hideErrorToast = false,

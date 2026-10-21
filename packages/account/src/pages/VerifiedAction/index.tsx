@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
-import { getPasskeyFieldControl } from '@ac/utils/security-page';
+import { isDevFeaturesEnabled } from '@ac/constants/env';
+import { getPasskeyFieldControl, isVisibleField } from '@ac/utils/security-page';
 import { sessionStorage } from '@ac/utils/session-storage';
 import type { PendingVerifiedAction } from '@ac/utils/session-storage';
 
@@ -28,6 +29,9 @@ const VerifiedAction = () => {
       if (!verificationIdRef.current) {
         sessionStorage.clearPendingVerifiedAction();
         sessionStorage.clearPendingSocialRemoveConnectorId();
+        sessionStorage.clearPendingPersonalAccessTokenCreate();
+        sessionStorage.clearPendingPersonalAccessTokenRename();
+        sessionStorage.clearPendingPersonalAccessTokenRevokeName();
       }
     },
     []
@@ -64,9 +68,18 @@ const VerifiedAction = () => {
         return accountCenterSettings.fields.social === AccountCenterControlValue.Edit;
       }
       case 'load-sessions': {
+        return isVisibleField(accountCenterSettings.fields.session);
+      }
+      case 'load-trusted-devices': {
+        return isVisibleField(accountCenterSettings.fields.trustedDevice);
+      }
+      case 'create-personal-access-token':
+      case 'rename-personal-access-token':
+      case 'revoke-personal-access-token': {
+        // DEV: Self-service personal access tokens
         return (
-          accountCenterSettings.fields.session !== undefined &&
-          accountCenterSettings.fields.session !== AccountCenterControlValue.Off
+          isDevFeaturesEnabled &&
+          accountCenterSettings.fields.personalAccessToken === AccountCenterControlValue.Edit
         );
       }
       default: {

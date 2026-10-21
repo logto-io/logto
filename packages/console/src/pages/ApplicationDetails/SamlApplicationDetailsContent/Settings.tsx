@@ -29,6 +29,7 @@ import Switch from '@/ds-components/Switch';
 import TextInput from '@/ds-components/TextInput';
 import Textarea from '@/ds-components/Textarea';
 import useApi, { type RequestError } from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useDomainSelection from '@/hooks/use-domain-selection';
 import { trySubmitSafe } from '@/utils/form';
 import { applyDomain } from '@/utils/url';
@@ -57,6 +58,7 @@ export type SamlApplicationFormData = Pick<
   encryptSamlAssertion: boolean;
   encryptThenSignSamlAssertion: boolean;
   certificate?: string;
+  forceAuthn: boolean;
 };
 
 type Props = {
@@ -87,6 +89,9 @@ const nameIdFormatToOptionDescriptionMap = Object.freeze({
 function Settings({ data, mutateApplication, isDeleted }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { tenantEndpoint } = useContext(AppDataContext);
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const [selectedDomain, setSelectedDomain] = useDomainSelection();
   const [showCreateSecretModal, setShowCreateSecretModal] = useState(false);
 
@@ -121,7 +126,10 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
         return;
       }
 
-      const { id, payload } = parseFormDataToSamlApplicationRequest(formData);
+      const { id, payload } = parseFormDataToSamlApplicationRequest(
+        formData,
+        data.authnRequestConfig
+      );
 
       const updated = await api
         .patch(`api/saml-applications/${id}`, { json: payload })
@@ -288,13 +296,15 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
             {secretsData.length === 0 && !secrets.error ? (
               <>
                 <div className={styles.empty}>{t('application_details.secrets.empty')}</div>
-                <Button
-                  icon={<Plus />}
-                  title="application_details.secrets.create_new_secret"
-                  onClick={() => {
-                    setShowCreateSecretModal(true);
-                  }}
-                />
+                {!isReadOnly && (
+                  <Button
+                    icon={<Plus />}
+                    title="application_details.secrets.create_new_secret"
+                    onClick={() => {
+                      setShowCreateSecretModal(true);
+                    }}
+                  />
+                )}
               </>
             ) : (
               <>
@@ -307,16 +317,18 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
                   onActivate={onActivate}
                   onDeactivate={onDeactivate}
                 />
-                <Button
-                  size="small"
-                  type="text"
-                  className={styles.add}
-                  icon={<CirclePlus />}
-                  title="application_details.secrets.create_new_secret"
-                  onClick={() => {
-                    setShowCreateSecretModal(true);
-                  }}
-                />
+                {!isReadOnly && (
+                  <Button
+                    size="small"
+                    type="text"
+                    className={styles.add}
+                    icon={<CirclePlus />}
+                    title="application_details.secrets.create_new_secret"
+                    onClick={() => {
+                      setShowCreateSecretModal(true);
+                    }}
+                  />
+                )}
               </>
             )}
             <CreateSecretModal
@@ -351,6 +363,17 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
                   onChange={onChange}
                 />
               )}
+            />
+          </FormField>
+          <FormField
+            title="application_details.saml_idp_authentication.always_force_authn"
+            tip={t('application_details.saml_idp_authentication.always_force_authn_tip')}
+          >
+            <Switch
+              label={t(
+                'application_details.saml_idp_authentication.always_force_authn_description'
+              )}
+              {...register('forceAuthn')}
             />
           </FormField>
           <FormField title="application_details.saml_encryption_config.encrypt_assertion">

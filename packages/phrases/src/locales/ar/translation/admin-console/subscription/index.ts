@@ -11,6 +11,8 @@ const subscription = {
   enterprise_description: 'للشركات الكبرى والفرق التي لديها متطلبات على مستوى المؤسسة.',
   admin_plan: 'خطة المسؤول',
   dev_plan: 'خطة التطوير',
+  self_hosted_pro_plan: 'خطة Pro للاستضافة الذاتية',
+  self_hosted_enterprise_plan: 'خطة المؤسسة للاستضافة الذاتية',
   current_plan: 'الخطة الحالية',
   current_plan_description:
     'هذه هي الخطة الحالية الخاصة بك. يمكنك بسهولة رؤية استخدام الخطة الخاصة بك ، والتحقق من فاتورتك القادمة ، وإجراء التغييرات على الخطة حسب الحاجة.',
@@ -43,6 +45,12 @@ const subscription = {
     },
   },
   quota_item,
+  cancel_feedback_modal: {
+    title: 'نأسف لرحيلك',
+    description: 'تم إلغاء اشتراكك. ملاحظاتك تساعدنا في جعل Logto أفضل. نقرأ كل رد.',
+    what_made_you_cancel: 'ما الذي دفعك إلى الإلغاء؟',
+    how_to_reconsider: 'ما الذي يمكننا فعله لتعيد النظر؟',
+  },
   downgrade_modal: {
     title: 'هل أنت متأكد أنك تريد التخفيض؟',
     description:
@@ -62,9 +70,18 @@ const subscription = {
     upgrade_help_tip: 'هل تحتاج إلى مساعدة في الترقية؟ <a>اتصل بنا</a>.',
     a_maximum_of: 'الحد الأقصى لـ <item/>',
   },
+  billing_customer_modal: {
+    title: 'اختر حساب الفواتير',
+    description:
+      'اختر حساب الفواتير الذي يدفع لهذه الاشتراك، أو ابدأ حسابًا جديدًا. يمكنك تغيير تفاصيل الدفع في الصفحة التالية.',
+    account: 'حساب الفواتير',
+    new_account: 'حساب فواتير جديد',
+    default_account: 'افتراضي',
+  },
   upgrade_success: 'تم الترقية بنجاح إلى <name/>',
   downgrade_success: 'تم التخفيض بنجاح إلى <name/>',
-  subscription_check_timeout: 'انتهت مهلة فحص الاشتراك. يرجى التحديث في وقت لاحق.',
+  subscription_check_pending:
+    'لقد تمت عملية الدفع الخاصة بك. إعداد اشتراكك يستغرق وقتًا أطول من المعتاد.',
   no_subscription: 'لا يوجد اشتراك',
   usage,
   token_usage_notification: {

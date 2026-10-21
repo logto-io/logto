@@ -1,16 +1,29 @@
 import { RecaptchaEnterpriseMode } from '@logto/schemas';
-import { type UseFormRegister, type FieldErrors, Controller, type Control } from 'react-hook-form';
+import {
+  type UseFormRegister,
+  type FieldErrors,
+  Controller,
+  type Control,
+  useWatch,
+} from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import TextInput from '@/ds-components/TextInput';
+import { uriValidator } from '@/utils/validator';
 
 import { type CaptchaProviderMetadata } from '../CreateCaptchaForm/types';
 import { type CaptchaFormType } from '../types';
 
 import styles from './index.module.scss';
+
+const httpUriValidator = (value: string) =>
+  uriValidator(value) && ['http:', 'https:'].includes(new URL(value).protocol);
+
+const isInsecureHttpUri = (value?: string) =>
+  Boolean(value && httpUriValidator(value) && new URL(value).protocol === 'http:');
 
 type Props = {
   readonly metadata: CaptchaProviderMetadata;
@@ -25,10 +38,66 @@ function CaptchaFormFields({ metadata, errors, register, control }: Props) {
   const projectIdField = metadata.requiredFields.find((field) => field.field === 'projectId');
   const domainField = metadata.requiredFields.find((field) => field.field === 'domain');
   const modeField = metadata.requiredFields.find((field) => field.field === 'mode');
+  const endpointField = metadata.requiredFields.find((field) => field.field === 'endpoint');
+  const scoreThresholdField = metadata.requiredFields.find(
+    (field) => field.field === 'scoreThreshold'
+  );
+  const mode = useWatch({ control, name: 'mode' });
+  const endpoint = useWatch({ control, name: 'endpoint' });
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
     <>
+      {endpointField && (
+        <FormField isRequired title={endpointField.label}>
+          <TextInput
+            error={
+              errors.endpoint?.type === 'required'
+                ? true
+                : typeof errors.endpoint?.message === 'string'
+                  ? errors.endpoint.message
+                  : undefined
+            }
+            placeholder={String(t(endpointField.placeholder))}
+            {...register('endpoint', {
+              required: true,
+              validate: (value) =>
+                !value || httpUriValidator(value) || t('errors.invalid_uri_format'),
+            })}
+          />
+          {isInsecureHttpUri(endpoint) && (
+            <InlineNotification className={styles.modeNotice} severity="alert">
+              {t('security.captcha_details.cap_endpoint_http_notice')}
+            </InlineNotification>
+          )}
+        </FormField>
+      )}
+      {modeField && (
+        <>
+          <FormField title={modeField.label}>
+            <Controller
+              name="mode"
+              control={control}
+              defaultValue={RecaptchaEnterpriseMode.Invisible}
+              render={({ field: { onChange, value } }) => (
+                <RadioGroup name="mode" value={value} onChange={onChange}>
+                  <Radio
+                    title="security.captcha_details.mode_invisible"
+                    value={RecaptchaEnterpriseMode.Invisible}
+                  />
+                  <Radio
+                    title="security.captcha_details.mode_checkbox"
+                    value={RecaptchaEnterpriseMode.Checkbox}
+                  />
+                </RadioGroup>
+              )}
+            />
+          </FormField>
+          <InlineNotification className={styles.modeNotice} severity="alert">
+            {t('security.captcha_details.mode_notice')}
+          </InlineNotification>
+        </>
+      )}
       {siteKeyField && (
         <FormField isRequired title={siteKeyField.label}>
           <TextInput
@@ -65,31 +134,29 @@ function CaptchaFormFields({ metadata, errors, register, control }: Props) {
           />
         </FormField>
       )}
-      {modeField && (
-        <>
-          <FormField title={modeField.label}>
-            <Controller
-              name="mode"
-              control={control}
-              defaultValue={RecaptchaEnterpriseMode.Invisible}
-              render={({ field: { onChange, value } }) => (
-                <RadioGroup name="mode" value={value} onChange={onChange}>
-                  <Radio
-                    title="security.captcha_details.mode_invisible"
-                    value={RecaptchaEnterpriseMode.Invisible}
-                  />
-                  <Radio
-                    title="security.captcha_details.mode_checkbox"
-                    value={RecaptchaEnterpriseMode.Checkbox}
-                  />
-                </RadioGroup>
-              )}
-            />
-          </FormField>
-          <InlineNotification className={styles.modeNotice} severity="alert">
-            {t('security.captcha_details.mode_notice')}
-          </InlineNotification>
-        </>
+      {mode !== RecaptchaEnterpriseMode.Checkbox && scoreThresholdField && (
+        <FormField
+          isRequired={!scoreThresholdField.isOptional}
+          title={scoreThresholdField.label}
+          description="security.captcha_details.score_threshold_description"
+        >
+          <TextInput
+            type="number"
+            min={0}
+            max={1}
+            step={0.01}
+            error={errors.scoreThreshold && t('security.captcha_details.score_threshold_error')}
+            placeholder="0.5"
+            {...register('scoreThreshold', {
+              shouldUnregister: true,
+              required: !scoreThresholdField.isOptional,
+              min: 0,
+              max: 1,
+              setValueAs: (value) => (value === '' || value === null ? undefined : Number(value)),
+              validate: (value) => value === undefined || Number.isFinite(value),
+            })}
+          />
+        </FormField>
       )}
     </>
   );

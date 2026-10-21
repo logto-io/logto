@@ -43,6 +43,18 @@ const session = {
     suggest_additional_mfa:
       '보안을 강화하기 위해 다른 MFA 방법을 추가하는 것을 권장합니다. 이 단계는 건너뛰고 계속할 수 있습니다.',
   },
+  trusted_device_suggest_opt_in: '이 기기를 신뢰할지 선택하세요.',
+  step_up: {
+    invalid_interaction_event: '스텝업 인증은 로그인 상호작용에서만 사용할 수 있습니다.',
+    subject_not_found: '스텝업 인증을 위한 인증된 세션을 찾을 수 없습니다. 다시 로그인해 주세요.',
+    forbidden_route: '이 경로는 스텝업 인증 중에 허용되지 않습니다.',
+    forbidden_identifier:
+      '스텝업 인증 중에는 식별자를 사용할 수 없습니다. 식별자 필드를 제거하고 다시 시도해 주세요.',
+    acr_not_satisfied:
+      '완료된 인증이 요청된 인증 컨텍스트를 충족하지 않습니다. 다른 방법으로 인증해 주세요.',
+    require_verification:
+      '요청된 인증 컨텍스트에 도달하려면 기존 인증 방법 중 하나로 인증해야 합니다.',
+  },
   passkey_sign_in: {
     pending_info_not_found:
       '대기 중인 패스키 로그인 정보를 찾을 수 없습니다. 로그인 흐름을 다시 시작해 주세요.',

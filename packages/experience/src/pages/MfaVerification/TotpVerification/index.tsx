@@ -1,5 +1,5 @@
-import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import SectionLayout from '@/Layout/SectionLayout';
+import VerificationPageLayout from '@/Layout/VerificationPageLayout';
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
 import TotpCodeVerification from '@/containers/TotpCodeVerification';
 import useMfaFlowState from '@/hooks/use-mfa-factors-state';
@@ -9,14 +9,14 @@ import { UserMfaFlow } from '@/types';
 import styles from './index.module.scss';
 
 const TotpVerification = () => {
-  const flowState = useMfaFlowState();
+  const flowState = useMfaFlowState(UserMfaFlow.MfaVerification);
 
   if (!flowState) {
     return <ErrorPage title="error.invalid_session" />;
   }
 
   return (
-    <SecondaryPageLayout title="mfa.verify_mfa_factors">
+    <VerificationPageLayout title="mfa.verify_mfa_factors">
       <SectionLayout
         title="mfa.enter_one_time_code"
         description="mfa.enter_one_time_code_description"
@@ -28,7 +28,7 @@ const TotpVerification = () => {
         flowState={flowState}
         className={styles.switchFactorLink}
       />
-    </SecondaryPageLayout>
+    </VerificationPageLayout>
   );
 };
 

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'Página no encontrada',
@@ -13,6 +14,8 @@ const account_center = {
     sidebar_security: 'Seguridad',
     sidebar_sessions: 'Sesiones',
     support: 'Soporte',
+    user_menu: 'Menú de usuario',
+    sign_out: 'Cerrar sesión',
   },
   verification: {
     title: 'Verificación de seguridad',
@@ -123,6 +126,58 @@ const account_center = {
     email_removed: 'Dirección de correo electrónico eliminada correctamente.',
     phone_removed: 'Número de teléfono eliminado correctamente.',
     username_removed: 'Nombre de usuario eliminado correctamente.',
+    trusted_devices: {
+      title: 'Dispositivos de confianza de MFA',
+      current_device: 'Dispositivo actual',
+      expires_on: 'Caduca el {{date}}',
+      unknown_location: 'Ubicación desconocida',
+      remove: 'Eliminar',
+      removed: 'Dispositivo de confianza eliminado correctamente.',
+      loading: 'Cargando...',
+      empty: 'No hay dispositivos de confianza.',
+      load_failed: 'No se pudieron cargar los dispositivos de confianza. Inténtalo de nuevo.',
+      retry: 'Reintentar',
+      remove_confirmation_title: '¿Eliminar dispositivo de confianza?',
+      remove_confirmation_description:
+        'Tendrás que completar la MFA de nuevo en este dispositivo la próxima vez que inicies sesión. Tu sesión actual seguirá activa.',
+    },
+    personal_access_tokens: {
+      title: 'Tokens de acceso personal',
+      description:
+        'Usa tokens de acceso personal para autenticarte ante las API en tu nombre. Permanecen activos hasta que caducan o los revocas, incluso si cierras sesión o cambias tu contraseña.',
+      create: 'Crear nuevo token',
+      created_at: 'Creado el {{date}}',
+      expires_on: 'Caduca el {{date}}',
+      expired_on: 'Caducó el {{date}}',
+      expired: 'Caducado',
+      never_expires: 'Nunca caduca',
+      never_expires_warning:
+        'Este token no tiene fecha de caducidad. Para mayor seguridad, crea un nuevo token con fecha de caducidad y revoca este.',
+      rename: 'Renombrar',
+      revoke: 'Revocar',
+      loading: 'Cargando...',
+      empty: 'No hay tokens de acceso personal.',
+      load_failed: 'Error al cargar los tokens de acceso personal. Inténtalo de nuevo.',
+      retry: 'Intentar de nuevo',
+      create_modal_title: 'Crear token de acceso personal',
+      create_modal_description:
+        'Asigna a tu token un nombre descriptivo y elige un período de caducidad.',
+      token_name: 'Nombre del token',
+      token_name_placeholder: 'Mi token',
+      expiration: 'Caducidad',
+      expiration_days: '{{count}} días',
+      created_modal_title: 'Token de acceso personal creado',
+      show_once_warning:
+        'No podrás volver a ver este token. Cópialo ahora y guárdalo en un lugar seguro.',
+      copied: 'Token de acceso personal copiado.',
+      rename_modal_title: 'Renombrar token de acceso personal',
+      rename_modal_description: 'Introduce un nuevo nombre para este token de acceso personal.',
+      renamed: 'Token de acceso personal renombrado correctamente.',
+      revoke_confirmation_title: '¿Revocar token de acceso personal?',
+      revoke_confirmation_description:
+        'Cualquier aplicación o script que use "{{name}}" perderá el acceso inmediatamente. ¿Estás seguro de que deseas continuar?',
+      revoked: 'Token de acceso personal revocado correctamente.',
+    },
   },
   social: {
     linked: 'Se vinculó {{connector}} correctamente.',
@@ -175,7 +230,7 @@ const account_center = {
   },
   mfa: {
     totp_already_added:
-      'You have already added an authenticator app. Please remove the existing one first.',
+      'Ya has añadido una aplicación de autenticación. Elimina la existente primero.',
     totp_not_enabled:
       'La aplicación de autenticación OTP no está habilitada. Por favor, contacte a su administrador para obtener ayuda.',
     backup_code_already_added:
@@ -288,3 +343,4 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
+/* eslint-enable max-lines */

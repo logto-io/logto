@@ -3,7 +3,9 @@ import {
   MfaFactor,
   type Mfa as MfaSettings,
   MfaPolicy,
+  type OrganizationWithRoles,
   OrganizationRequiredMfaPolicy,
+  SignInIdentifier,
   userMfaDataKey,
   type User,
 } from '@logto/schemas';
@@ -31,26 +33,35 @@ const createMfa = ({
     mfaVerifications: [],
   },
   currentProfile = {},
+  organizations = [],
 }: {
   mfaSettings?: MfaSettings;
   interactionEvent?: InteractionEvent;
   user?: Partial<User>;
   currentProfile?: Record<string, unknown>;
+  organizations?: Readonly<OrganizationWithRoles[]>;
 } = {}) => {
   const getIdentifiedUser = jest.fn(async () => user as User);
   const interactionContext: InteractionContext = {
     getInteractionEvent: () => interactionEvent,
     getIdentifiedUser,
-    getVerificationRecordById: () => {
+    consumeForBind: () => {
       throw new Error('should not be called');
     },
-    getVerificationRecordByTypeAndId: () => {
+    consumeForBindByType: () => {
+      throw new Error('should not be called');
+    },
+    recordEstablishedPassword: () => {
       throw new Error('should not be called');
     },
     getCurrentProfile: () => currentProfile,
   };
 
-  const mfa = new Mfa({} as Libraries, {} as Queries, {}, interactionContext);
+  const getOrganizationsByUserId = jest.fn(async () => organizations);
+  const queries = {
+    organizations: { relations: { users: { getOrganizationsByUserId } } },
+  } as unknown as Queries;
+  const mfa = new Mfa({} as Libraries, queries, {}, interactionContext);
   const { signInExperienceValidator } = mfa as unknown as {
     signInExperienceValidator: SignInExperienceValidator;
   };
@@ -66,6 +77,7 @@ const createMfa = ({
     getIdentifiedUser,
     getMfaSettings,
     getConfiguredMfaFactors,
+    getOrganizationsByUserId,
   };
 };
 
@@ -83,7 +95,7 @@ describe('Mfa.assertMfaFulfilled', () => {
 
     await mfa.assertMfaFulfilled();
 
-    expect(mandatorySpy).toHaveBeenCalledWith(expect.any(Object));
+    expect(mandatorySpy).toHaveBeenCalledWith(expect.any(Object), false);
   });
 
   it('reuses submit async context during mandatory check', async () => {
@@ -169,6 +181,136 @@ describe('Mfa.assertMfaFulfilled', () => {
         availableFactors: [MfaFactor.TOTP],
       },
     });
+  });
+
+  it('applies no skip and omits `skippable` for a no-skip mandatory requirement', async () => {
+    const { mfa } = createMfa({
+      // A skippable policy the user has already opted out of: only the requirement itself is
+      // mandatory, and it neither suggests nor stays skippable.
+      mfaSettings: {
+        policy: MfaPolicy.PromptAtSignInAndSignUp,
+        factors: [MfaFactor.TOTP],
+        organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+      },
+      user: {
+        id: 'user-id',
+        logtoConfig: { [userMfaDataKey]: { enabled: true, skipped: true } },
+        mfaVerifications: [],
+      },
+    });
+
+    const assertion = mfa.assertMfaFulfilled({ asNoSkipMandatoryPolicy: true });
+
+    await expect(assertion).rejects.toMatchObject({
+      code: 'user.missing_mfa',
+      status: 422,
+      data: { availableFactors: [MfaFactor.TOTP] },
+    });
+    await expect(assertion).rejects.not.toHaveProperty('data.skippable');
+  });
+
+  it('honors the policy skips and marks the requirement skippable without the option', async () => {
+    const { mfa } = createMfa({
+      mfaSettings: {
+        policy: MfaPolicy.PromptAtSignInAndSignUp,
+        factors: [MfaFactor.TOTP],
+        organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+      },
+      user: {
+        id: 'user-id',
+        logtoConfig: { [userMfaDataKey]: { enabled: true } },
+        mfaVerifications: [],
+      },
+    });
+
+    await expect(mfa.assertMfaFulfilled()).rejects.toMatchObject({
+      code: 'user.missing_mfa',
+      status: 422,
+      data: { availableFactors: [MfaFactor.TOTP], skippable: true },
+    });
+  });
+
+  it('keeps optional MFA suggestion data independent from trusted-device state', async () => {
+    const { mfa } = createMfa({
+      mfaSettings: {
+        policy: MfaPolicy.PromptOnlyAtSignIn,
+        factors: [MfaFactor.TOTP],
+        organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+      },
+      user: {
+        id: 'user-id',
+        logtoConfig: { [userMfaDataKey]: { enabled: false } },
+        mfaVerifications: [],
+      },
+    });
+
+    await expect(mfa.assertMfaFulfilled()).rejects.toMatchObject({
+      code: 'user.suggest_mfa',
+      status: 422,
+      data: undefined,
+    });
+  });
+
+  it('reuses loaded organization rows for MFA policy checks', async () => {
+    const organizations = [
+      { isMfaRequired: true, isTrustedDeviceAllowed: false },
+    ] as unknown as Readonly<OrganizationWithRoles[]>;
+    const { mfa, getOrganizationsByUserId } = createMfa({
+      mfaSettings: {
+        policy: MfaPolicy.NoPrompt,
+        factors: [MfaFactor.TOTP],
+        organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.Mandatory,
+      },
+      organizations,
+    });
+
+    const assertion = mfa.assertMfaFulfilled();
+
+    await expect(assertion).rejects.toMatchObject({
+      code: 'user.missing_mfa',
+      data: { availableFactors: [MfaFactor.TOTP] },
+    });
+    await expect(assertion).rejects.not.toHaveProperty('data.trustedDevice');
+    expect(getOrganizationsByUserId).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps additional-factor suggestion data independent from trusted-device state', async () => {
+    const organizations = [
+      { isMfaRequired: false, isTrustedDeviceAllowed: true },
+    ] as unknown as Readonly<OrganizationWithRoles[]>;
+    const { mfa } = createMfa({
+      interactionEvent: InteractionEvent.Register,
+      mfaSettings: {
+        policy: MfaPolicy.Mandatory,
+        factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
+        organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.Mandatory,
+      },
+      organizations,
+      user: {
+        id: 'user-id',
+        logtoConfig: {},
+        primaryEmail: 'foo@example.com',
+        mfaVerifications: [],
+      },
+    });
+    const { signInExperienceValidator } = mfa as unknown as {
+      signInExperienceValidator: SignInExperienceValidator;
+    };
+    jest.spyOn(signInExperienceValidator, 'getSignInExperienceData').mockResolvedValue({
+      signUp: { identifiers: [SignInIdentifier.Email] },
+      passkeySignIn: { enabled: false },
+    } as never);
+
+    const assertion = mfa.assertMfaFulfilled();
+
+    await expect(assertion).rejects.toMatchObject({
+      code: 'session.mfa.suggest_additional_mfa',
+      status: 422,
+      data: {
+        availableFactors: [MfaFactor.TOTP, MfaFactor.EmailVerificationCode],
+      },
+    });
+    await expect(assertion).rejects.not.toHaveProperty('data.trustedDevice');
   });
 
   it('skips additional MFA suggestion when user has persisted skipped flag', async () => {

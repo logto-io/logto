@@ -33,10 +33,8 @@ export type ExperienceSocialConnector = Omit<
 
 export type FullSignInExperience = Omit<
   SignInExperience,
-  'emailBlocklistPolicy' | 'forgotPasswordMethods' | 'trustedDevice'
+  'emailBlocklistPolicy' | 'forgotPasswordMethods'
 > & {
-  /** Available while the MFA trusted-device feature is under development. */
-  trustedDevice?: SignInExperience['trustedDevice'];
   socialConnectors: ExperienceSocialConnector[];
   ssoConnectors: SsoConnectorMetadata[];
   forgotPassword: ForgotPassword;
@@ -53,6 +51,8 @@ export type FullSignInExperience = Omit<
   captchaConfig?: {
     type: CaptchaType;
     siteKey: string;
+    /** The Cap Standalone instance URL, only available for {@link CaptchaType.Cap}. */
+    endpoint?: string;
     domain?: string;
     mode?: RecaptchaEnterpriseMode;
   };
@@ -68,9 +68,8 @@ export type FullSignInExperience = Omit<
 };
 
 export const fullSignInExperienceGuard = SignInExperiences.guard
-  .omit({ emailBlocklistPolicy: true, forgotPasswordMethods: true, trustedDevice: true })
+  .omit({ emailBlocklistPolicy: true, forgotPasswordMethods: true })
   .extend({
-    trustedDevice: SignInExperiences.guard.shape.trustedDevice.optional(),
     socialConnectors: connectorMetadataGuard
       .omit({
         description: true,
@@ -90,6 +89,7 @@ export const fullSignInExperienceGuard = SignInExperiences.guard
       .object({
         type: z.nativeEnum(CaptchaType),
         siteKey: z.string(),
+        endpoint: z.string().optional(),
         domain: z.string().optional(),
         mode: z.nativeEnum(RecaptchaEnterpriseMode).optional(),
       })

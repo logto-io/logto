@@ -1,8 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import TrustedDeviceOptIn from '@/containers/TrustedDeviceOptIn';
-import useTrustedDeviceOptIn from '@/hooks/use-trusted-device-opt-in';
 import Button from '@/shared/components/Button';
 import VerificationCodeInput from '@/shared/components/VerificationCode';
 import { type UserMfaFlow } from '@/types';
@@ -37,7 +35,6 @@ const TotpCodeVerification = <T extends UserMfaFlow>(props: Props<T>) => {
   }, []);
 
   const { errorMessage: submitErrorMessage, onSubmit } = useTotpCodeVerification(errorCallback);
-  const { availability, isLoading, isVisible, isChecked, setIsChecked } = useTrustedDeviceOptIn();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -52,10 +49,10 @@ const TotpCodeVerification = <T extends UserMfaFlow>(props: Props<T>) => {
       setInputErrorMessage(undefined);
       setIsSubmitting(true);
 
-      await onSubmit(code.join(''), props, isChecked);
+      await onSubmit(code.join(''), props);
       setIsSubmitting(false);
     },
-    [isChecked, isSubmitting, onSubmit, props]
+    [isSubmitting, onSubmit, props]
   );
 
   return (
@@ -67,17 +64,10 @@ const TotpCodeVerification = <T extends UserMfaFlow>(props: Props<T>) => {
         error={errorMessage}
         onChange={(code) => {
           setCodeInput(code);
-          if (isCodeReady(code) && !isVisible) {
+          if (isCodeReady(code)) {
             void handleSubmit(code);
           }
         }}
-      />
-      <TrustedDeviceOptIn
-        availability={availability}
-        isLoading={isLoading}
-        isChecked={isChecked}
-        className={styles.optIn}
-        onChange={setIsChecked}
       />
       <Button
         title="action.continue"

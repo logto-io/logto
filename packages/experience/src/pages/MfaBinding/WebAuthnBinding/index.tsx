@@ -7,16 +7,17 @@ import { validate } from 'superstruct';
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
-import TrustedDeviceOptIn from '@/containers/TrustedDeviceOptIn';
+import useMfaFlowState from '@/hooks/use-mfa-factors-state';
 import useSkipMfa from '@/hooks/use-skip-mfa';
 import useSkipOptionalMfa from '@/hooks/use-skip-optional-mfa';
-import useTrustedDeviceOptIn from '@/hooks/use-trusted-device-opt-in';
 import useWebAuthnOperation from '@/hooks/use-webauthn-operation';
 import ErrorPage from '@/pages/ErrorPage';
 import Button from '@/shared/components/Button';
 import { UserMfaFlow } from '@/types';
-import { type MfaFlowState, webAuthnStateGuard } from '@/types/guard';
+import { webAuthnStateGuard } from '@/types/guard';
 import { isWebAuthnOptions } from '@/utils/webauthn';
+
+import MfaBinding from '..';
 
 import styles from './index.module.scss';
 
@@ -25,36 +26,18 @@ const WebAuthnBinding = () => {
   const [, webAuthnState] = validate(state, webAuthnStateGuard);
   const { verificationIdsMap } = useContext(UserInteractionContext);
   const verificationId = verificationIdsMap[VerificationType.WebAuthn];
-  const isSessionValid = Boolean(
-    webAuthnState && verificationId && isWebAuthnOptions(webAuthnState.options)
-  );
-
-  const handleWebAuthn = useWebAuthnOperation();
-  const { availability, isLoading, isChecked, setIsChecked } =
-    useTrustedDeviceOptIn(isSessionValid);
+  const handleWebAuthn = useWebAuthnOperation(UserMfaFlow.MfaBinding);
   const skipMfa = useSkipMfa();
   const skipOptionalMfa = useSkipOptionalMfa();
   const [isCreatingPasskey, setIsCreatingPasskey] = useState(false);
+  const flowState = useMfaFlowState(UserMfaFlow.MfaBinding);
 
   if (!webAuthnState || !verificationId) {
-    return <ErrorPage title="error.invalid_session" />;
+    return flowState?.isStepUp ? <MfaBinding /> : <ErrorPage title="error.invalid_session" />;
   }
 
-  const {
-    options,
-    availableFactors,
-    skippable,
-    suggestion,
-    maskedIdentifiers,
-    isWebAuthnUsedAsSignInPasskey,
-  } = webAuthnState;
-  const mfaFlowState: MfaFlowState = {
-    availableFactors,
-    skippable,
-    suggestion,
-    maskedIdentifiers,
-    isWebAuthnUsedAsSignInPasskey,
-  };
+  const { options, ...mfaFlowState } = webAuthnState;
+  const { skippable, suggestion } = flowState ?? mfaFlowState;
 
   if (!isWebAuthnOptions(options)) {
     return <ErrorPage title="error.invalid_session" />;
@@ -66,25 +49,18 @@ const WebAuthnBinding = () => {
       description="mfa.create_passkey_description"
       onSkip={conditional(skippable && (suggestion ? skipOptionalMfa : skipMfa))}
     >
-      <TrustedDeviceOptIn
-        availability={availability}
-        isLoading={isLoading}
-        isChecked={isChecked}
-        className={styles.optIn}
-        onChange={setIsChecked}
-      />
       <Button
         title="mfa.create_a_passkey"
         isLoading={isCreatingPasskey}
         onClick={async () => {
           setIsCreatingPasskey(true);
-          await handleWebAuthn(options, verificationId, isChecked);
+          await handleWebAuthn(options, verificationId);
           setIsCreatingPasskey(false);
         }}
       />
       <SwitchMfaFactorsLink
         flow={UserMfaFlow.MfaBinding}
-        flowState={mfaFlowState}
+        flowState={flowState ?? mfaFlowState}
         className={styles.switchLink}
       />
     </SecondaryPageLayout>

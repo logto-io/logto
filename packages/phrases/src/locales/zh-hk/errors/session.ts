@@ -37,6 +37,15 @@ const session = {
     mfa_factor_not_enabled: 'MFA 因素未啟用。',
     suggest_additional_mfa: '為更強的保護，建議新增另一種多重驗證方式。你可略過此步驟並繼續。',
   },
+  trusted_device_suggest_opt_in: '請選擇是否信任此裝置。',
+  step_up: {
+    invalid_interaction_event: '升級認證僅適用於登入互動。',
+    subject_not_found: '找不到用於升級認證的已認證會話。請重新登入。',
+    forbidden_route: '升級認證期間不允許存取此路由。',
+    forbidden_identifier: '升級認證期間不允許提供標識符。請移除 identifier 欄位後重試。',
+    acr_not_satisfied: '已完成的驗證不符合要求的認證情境，請驗證其他方式。',
+    require_verification: '你需要使用其中一種現有的驗證方式進行驗證，才能達到要求的認證情境。',
+  },
   passkey_sign_in: {
     pending_info_not_found: '未找到待處理的 Passkey 登入資訊。請重新啟動登入流程。',
     conflict_rp_id: 'Relying Party ID 不相符。請使用正確的用戶端登入。',

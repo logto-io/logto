@@ -46,7 +46,7 @@ const sign_in_exp = {
     hide_logto_branding_description:
       'Rimuovi "Powered by Logto". Metti in risalto solo il tuo brand con un\'esperienza di accesso pulita e professionale.',
     hide_logto_branding_oss_note:
-      'Questa funzione è disponibile in modo nativo su <a>Logto Cloud</a>.',
+      'Questa funzione è disponibile su <a>Logto Cloud</a> o nei <selfHosted>piani self-hosted</selfHosted>.',
   },
   branding_uploads: {
     app_logo: {
@@ -96,7 +96,7 @@ const sign_in_exp = {
       'Carica un pacchetto compresso (.zip) per sostituire la UI precaricata di Logto con il tuo codice. <a>Scopri di più</a>',
     bring_your_ui_oss_description: "Personalizza l'interfaccia di accesso con il tuo codice.",
     bring_your_ui_oss_card_description:
-      'Carica direttamente la tua interfaccia di accesso personalizzata su <a>Logto Cloud</a>. Non serve fare un fork o ridistribuire.',
+      'Il caricamento di una UI personalizzata è disponibile su <a>Logto Cloud</a> o nei <selfHosted>piani self-hosted</selfHosted>. Non serve fare un fork o ridistribuire.',
     bring_your_ui_oss_try_cloud: 'Prova Cloud',
     preview_with_bring_your_ui_description:
       'I tuoi asset della UI personalizzata sono stati caricati con successo e ora vengono serviti. Di conseguenza, la finestra di anteprima integrata è stata disabilitata.\nPer testare la tua UI di accesso personalizzata, fai clic sul pulsante "Live Preview" per aprirla in una nuova scheda del browser.',
@@ -145,6 +145,9 @@ const sign_in_exp = {
           session_management: {
             title: 'Gestione sessioni',
           },
+          developer_settings: {
+            title: 'Impostazioni sviluppatore',
+          },
         },
       },
       user_profile: {
@@ -189,6 +192,9 @@ const sign_in_exp = {
         'Controlla l’accesso ai dati JSON personalizzati archiviati sull’utente.',
       sessions: 'Sessioni',
       trusted_devices: 'Dispositivi attendibili',
+      personal_access_tokens: 'Token di accesso personali',
+      personal_access_tokens_description:
+        'Abilitando questa opzione, gli utenti possono creare token di accesso personali di lunga durata che rimangono attivi anche dopo la disconnessione e la reimpostazione della password e possono essere scambiati con token di accesso da qualsiasi applicazione di prima parte con lo scambio di token abilitato.',
     },
     profile_fields: {
       title: 'Campi del profilo per il centro account predefinito',

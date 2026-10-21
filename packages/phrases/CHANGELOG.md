@@ -1,5 +1,73 @@
 # Change Log
 
+## 1.32.1
+
+### Patch Changes
+
+- 861d5d7: support license-based entitlements for self-hosted deployments
+
+  Install and replace a license in Console under Tenant settings → License or through the Management API. View its plan, environment, expiration, and refresh status, with weekly refresh and a 30-day grace period before returning to OSS defaults.
+
+  View self-hosted licenses and retrieve production and non-production keys from your account in Logto Cloud Console, without creating a Cloud tenant.
+
+  Licensed deployments can hide Logto branding, upload a custom sign-in UI using their own storage, customize its CSP, increase the SAML application limit, require Console MFA, and invite Console members.
+
+## 1.32.0
+
+### Minor Changes
+
+- 655317e: support Cap as a self-hosted CAPTCHA provider
+
+  [Cap](https://capjs.js.org) is an open-source, self-hosted proof-of-work CAPTCHA. It needs no third-party service, so bot protection keeps working in regions where Cloudflare Turnstile and Google reCAPTCHA are unreachable or unreliable.
+
+  To use it, deploy a publicly reachable [Cap Standalone](https://capjs.js.org/guide/standalone/) instance, create a site key, then go to Console > Security > CAPTCHA and add Cap with the instance endpoint, site key, and secret key. The same configuration is available through the `PUT /api/captcha-provider` Management API with `type: "Cap"`.
+
+  While Cap is the CAPTCHA provider, the sign-in page's Content Security Policy allows the Cap instance and dynamic JavaScript evaluation, which Cap's bot-detection (instrumentation) challenge requires.
+
+- 022317f: add a client compatibility setting so dynamic app clients such as ChatGPT and Codex can receive refresh tokens
+
+  These clients request `offline_access` without `prompt=consent`, so they don't receive a refresh token and users have to sign in again whenever the access token expires. Turn on "Add consent prompt for offline access" under Client compatibility in the dynamic app settings, and Logto adds the consent prompt to these requests. The setting is experimental and off by default, and audit logs show the added `consent` in `prompt`.
+
+- 5bd627f: add a configurable score threshold for reCAPTCHA Enterprise so admins can control how strict CAPTCHA verification is
+- 3f9fd15: add authentication policies for SAML applications
+
+  SAML applications force fresh authentication by default, as before. To let a SAML application reuse an existing Logto session, turn off "Always force authentication" in the application settings, or set `authnRequestConfig.forceAuthn` to `false` using the SAML application Management API. The service provider can still require fresh authentication for a single sign-in with `ForceAuthn="true"` (SAML 2.0 core, section 3.4.1).
+
+  SAML assertions report the actual authentication time.
+
+  To require signed authentication requests, set `authnRequestConfig.requireSignedAuthnRequests` to `true` and provide the service provider’s PEM-encoded RSA X.509 certificate in `authnRequestConfig.signingCertificate`. Both HTTP-POST and HTTP-Redirect signatures are verified. Unsigned requests remain accepted by default.
+
+### Patch Changes
+
+- 0f1af96: support custom user ID when creating a user via the Management API
+
+  This capability is available in Logto Open Source only and is not supported in Logto Cloud.
+
+  `POST /api/users` now accepts an optional `id` (up to 128 characters of letters, numbers, and `_ - . @ : + = |`). This lets you preserve existing user IDs, such as `auth0|abc123` or UUIDs, when migrating users from another identity provider. If the ID is already taken, the request fails with `user.id_already_in_use`.
+
+## 1.31.0
+
+### Minor Changes
+
+- 8b2aaab9b0: add dynamic app support (OAuth Client ID Metadata Documents)
+
+  The dynamic app lets compatible public clients, such as MCP clients, connect to your tenant without registering an application. Following the OAuth Client ID Metadata Documents (CIMD) draft, such a client presents a public HTTPS URL as its `client_id`, and Logto fetches the client metadata from that URL.
+
+  Enable it from the dynamic app card in the third-party app section on the create application page in Console. The switch is tenant-level and off by default, and requires the OIDC provider SSRF protection to be active. Control what dynamic app clients can request with the permission settings on the dynamic app page.
+
+### Patch Changes
+
+- 28c3c9283e: treat Gmail address aliases as the same address in custom email allowlist and blocklist rules
+
+  The matcher treats gmail.com and googlemail.com as equivalent and ignores local-part dots. The Console now shows custom email rule examples and Gmail matching behavior in the field descriptions, with shorter input placeholders.
+
+- 6dd496bd2e: fix OIDC scope error messages showing a raw placeholder instead of the rejected scope
+
+  The `invalid_scope` and `insufficient_scope` messages rendered the literal `{{error_description}}` and `{{scope}}` text because the error handler never passed the values in. They now name the scope that was rejected, so an end user who hits a stale scope on the consent page no longer sees a placeholder in the error toast.
+
+- Updated dependencies [7464c6a97a]
+  - @logto/language-kit@1.4.0
+
 ## 1.30.0
 
 ### Minor Changes
@@ -422,14 +490,14 @@
   For example, in the JavaScript SDK:
 
   ```ts
-  import LogtoClient from "@logto/client";
+  import LogtoClient from '@logto/client';
 
   const logtoClient = new LogtoClient(/* your configuration */);
 
   logtoClient.signIn({
-    redirectUri: "https://your-app.com/callback",
+    redirectUri: 'https://your-app.com/callback',
     extraParams: {
-      organization_id: "<organization-id>",
+      organization_id: '<organization-id>',
     },
   });
   ```

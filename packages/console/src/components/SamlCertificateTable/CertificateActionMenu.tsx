@@ -7,6 +7,7 @@ import Deactivate from '@/assets/icons/forbidden.svg?react';
 import More from '@/assets/icons/more.svg?react';
 import Activate from '@/assets/icons/shield.svg?react';
 import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import { downloadText } from '@/utils/downloader';
 
 import styles from './index.module.scss';
@@ -28,6 +29,9 @@ function CertificateActionMenu({
   onDeactivate,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
 
   const onDownload = useCallback(() => {
     // The explicit `.pem` extension keeps the file acceptable to IdP certificate-upload pickers
@@ -37,19 +41,21 @@ function CertificateActionMenu({
 
   return (
     <ActionMenu icon={<More className={styles.icon} />} title={t('general.more_options')}>
-      <ActionMenuItem
-        iconClassName={styles.icon}
-        icon={active ? <Deactivate /> : <Activate />}
-        onClick={() => {
-          if (active) {
-            onDeactivate(id);
-          } else {
-            onActivate(id);
-          }
-        }}
-      >
-        {t(`general.${active ? 'deactivate' : 'activate'}`)}
-      </ActionMenuItem>
+      {!isReadOnly && (
+        <ActionMenuItem
+          iconClassName={styles.icon}
+          icon={active ? <Deactivate /> : <Activate />}
+          onClick={() => {
+            if (active) {
+              onDeactivate(id);
+            } else {
+              onActivate(id);
+            }
+          }}
+        >
+          {t(`general.${active ? 'deactivate' : 'activate'}`)}
+        </ActionMenuItem>
+      )}
       <ActionMenuItem
         iconClassName={styles.icon}
         icon={<Download className={styles.icon} />}
@@ -57,7 +63,7 @@ function CertificateActionMenu({
       >
         {t('general.download')}
       </ActionMenuItem>
-      {!active && (
+      {!active && !isReadOnly && (
         // Only inactive certificates can be deleted.
         <ActionMenuItem
           type="danger"

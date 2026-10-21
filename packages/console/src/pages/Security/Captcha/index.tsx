@@ -9,6 +9,7 @@ import { recaptchaEnterpriseBringYourUi, turnstileBringYourUi } from '@/consts/e
 import InlineNotification from '@/ds-components/InlineNotification';
 import TextLink from '@/ds-components/TextLink';
 import { type RequestError } from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 
 import PaywallNotification from '../PaywallNotification';
@@ -26,6 +27,9 @@ function Captcha() {
   >('api/sign-in-exp');
   const isLoading = isDataLoading || isSignInExpLoading;
   const { getDocumentationUrl } = useDocumentationUrl();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
 
   const { guideId } = useParams();
   const guideType = z.nativeEnum(CaptchaType).safeParse(guideId);
@@ -36,7 +40,7 @@ function Captcha() {
       ? turnstileBringYourUi
       : recaptchaEnterpriseBringYourUi;
 
-  if (guideType.success) {
+  if (guideType.success && !isReadOnly) {
     return (
       <Guide
         type={guideType.data}

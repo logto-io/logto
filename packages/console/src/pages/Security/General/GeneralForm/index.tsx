@@ -18,6 +18,7 @@ import FormField from '@/ds-components/FormField';
 import Switch from '@/ds-components/Switch';
 import NumericInput from '@/ds-components/TextInput/NumericInput';
 import useApi from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import usePaywall from '@/hooks/use-paywall';
 import { trySubmitSafe } from '@/utils/form';
 
@@ -36,6 +37,9 @@ function GeneralForm({ formData }: Props) {
   const { mutate: mutateGlobal } = useSWRConfig();
   const [showUnlockModal, setShowUnlockModal] = useState(false);
   const { isFreeTenant } = usePaywall();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const { mutateSubscriptionQuotaAndUsages } = useContext(SubscriptionDataContext);
 
   const { t } = useTranslation(undefined, {
@@ -179,18 +183,20 @@ function GeneralForm({ formData }: Props) {
                   )}
                 />
               </FormField>
-              <FormField title="security.sentinel_policy.manual_unlock.title">
-                <div className={styles.fieldDescription}>
-                  {t('sentinel_policy.manual_unlock.description')}
-                </div>
-                <Button
-                  title="security.sentinel_policy.manual_unlock.unblock_by_identifiers"
-                  icon={<UnlockIcon />}
-                  onClick={() => {
-                    setShowUnlockModal(true);
-                  }}
-                />
-              </FormField>
+              {!isReadOnly && (
+                <FormField title="security.sentinel_policy.manual_unlock.title">
+                  <div className={styles.fieldDescription}>
+                    {t('sentinel_policy.manual_unlock.description')}
+                  </div>
+                  <Button
+                    title="security.sentinel_policy.manual_unlock.unblock_by_identifiers"
+                    icon={<UnlockIcon />}
+                    onClick={() => {
+                      setShowUnlockModal(true);
+                    }}
+                  />
+                </FormField>
+              )}
             </>
           )}
         </FormCard>

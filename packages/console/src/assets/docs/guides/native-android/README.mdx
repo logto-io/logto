@@ -19,7 +19,7 @@ import Checkpoint from '../../fragments/_checkpoint.md';
 
 Logto Android SDK comes in two major versions:
 
-- **v3 (beta)**: Opens the sign-in experience in [Chrome Custom Tabs](https://developer.android.com/develop/ui/views/layout/webapps/overview-of-android-custom-tabs) (the system browser), which unlocks passkey sign-in and shares the browser session. Note that v3 removes support for the [WeChat (Native)](https://docs.logto.io/integrations/wechat-native) and [Alipay (Native)](https://docs.logto.io/integrations/alipay-native) connectors; you can use [WeChat (Web)](https://docs.logto.io/integrations/wechat-web) and [Alipay (Web)](https://docs.logto.io/integrations/alipay-web) instead, which work through the browser. If you depend on the native connectors, stay on v2.
+- **v3**: Opens the sign-in experience in [Chrome Custom Tabs](https://developer.android.com/develop/ui/views/layout/webapps/overview-of-android-custom-tabs) (the system browser), which unlocks passkey sign-in and shares the browser session. Note that v3 removes support for the [WeChat (Native)](https://docs.logto.io/integrations/wechat-native) and [Alipay (Native)](https://docs.logto.io/integrations/alipay-native) connectors; you can use [WeChat (Web)](https://docs.logto.io/integrations/wechat-web) and [Alipay (Web)](https://docs.logto.io/integrations/alipay-web) instead, which work through the browser. If you depend on the native connectors, stay on v2.
 - **v2**: Opens the sign-in experience in an embedded WebView, which is required by the native social connectors, but does not support [passkey sign-in](https://docs.logto.io/end-user-flows/sign-up-and-sign-in/passkey-sign-in) (WebView does not support WebAuthn, the underlying standard of passkeys).
 
 This guide covers both versions.
@@ -38,13 +38,13 @@ Add Logto Android SDK to your dependencies:
 
 <Tabs groupId="android-sdk-version">
 
-<TabItem value="v3" label="v3 (beta)">
+<TabItem value="v3" label="v3">
 
-v3 is released as `3.0.0-beta` prereleases until GA. Use the latest prerelease as the version:
+Use the latest v3 release as the version:
 
 ```kotlin title="build.gradle.kts"
 dependencies {
-    implementation("io.logto.sdk:android:3.0.0-beta")
+    implementation("io.logto.sdk:android:3.0.0")
 }
 ```
 
@@ -145,7 +145,7 @@ Assuming you treat `io.logto.android` as the custom `LOGTO_REDIRECT_SCHEME`, and
 
 <Tabs groupId="android-sdk-version">
 
-<TabItem value="v3" label="v3 (beta)">
+<TabItem value="v3" label="v3">
 
 In v3, the sign-in experience opens in a [Custom Tab](https://developer.android.com/develop/ui/views/layout/webapps/overview-of-android-custom-tabs) (the system browser), and the redirect is routed back to your app through an OS-level intent filter. You need to declare the scheme of your redirect URI with the `logtoRedirectScheme` manifest placeholder in your app's build file:
 
@@ -221,7 +221,7 @@ After the redirect URI is configured, we can use `logtoClient.signIn` to sign in
 
 <Tabs groupId="android-sdk-version">
 
-<TabItem value="v3" label="v3 (beta)">
+<TabItem value="v3" label="v3">
 
 In v3, `logtoClient.signOut` performs a complete sign-out: it clears the local credentials, revokes the refresh token, and ends the Logto session by opening the end session endpoint in the browser. The browser then navigates back to your app through the post sign-out redirect URI. The post sign-out redirect URI follows the same pattern as the redirect URI, and its scheme must also match the `logtoRedirectScheme` manifest placeholder. Let's configure it first:
 

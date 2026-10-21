@@ -42,7 +42,8 @@ const sign_in_exp = {
     hide_logto_branding: '隱藏 Logto 品牌',
     hide_logto_branding_description:
       '移除「Powered by Logto」。以乾淨、專業的登入體驗突顯你的品牌。',
-    hide_logto_branding_oss_note: '此功能原生支援於 <a>Logto Cloud</a>。',
+    hide_logto_branding_oss_note:
+      '此功能可在 <a>Logto Cloud</a> 或<selfHosted>自託管方案</selfHosted>中使用。',
   },
   branding_uploads: {
     app_logo: {
@@ -92,7 +93,7 @@ const sign_in_exp = {
       '上傳壓縮包 (.zip) 以用自己的代碼替換 Logto 預建的 UI。<a>了解更多</a>',
     bring_your_ui_oss_description: '用你的代碼自訂登入 UI。',
     bring_your_ui_oss_card_description:
-      '將你的自訂登入 UI 直接上傳到 <a>Logto Cloud</a>。無需 fork 和重新部署。',
+      '自訂 UI 上傳功能可在 <a>Logto Cloud</a> 或<selfHosted>自託管方案</selfHosted>中使用。無需 fork 和重新部署。',
     bring_your_ui_oss_try_cloud: '試用 Cloud',
     preview_with_bring_your_ui_description:
       '你的自定義 UI 資源已成功上傳，現在正在提供服務。因此，內建預覽窗口已被禁用。\n要測試你的個性化登錄 UI，請點擊“實時預覽”按鈕在新瀏覽器標籤頁中打開。',
@@ -140,6 +141,9 @@ const sign_in_exp = {
           session_management: {
             title: '會話管理',
           },
+          developer_settings: {
+            title: '開發者設定',
+          },
         },
       },
       user_profile: {
@@ -181,6 +185,9 @@ const sign_in_exp = {
       custom_data_description: '控制對儲存在使用者上的自訂 JSON 資料的存取權。',
       sessions: '會話',
       trusted_devices: '受信任裝置',
+      personal_access_tokens: '個人存取權杖',
+      personal_access_tokens_description:
+        '啟用後，用戶可以建立長期有效的個人存取權杖；這些權杖在登出和重設密碼後仍然有效，並且可被任何啟用了權杖交換的第一方應用程式兌換為存取權杖。',
     },
     profile_fields: {
       title: '預構建帳戶中心的檔案欄位',

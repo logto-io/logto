@@ -5,15 +5,13 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
-import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import FormCard from '@/components/FormCard';
-import { defaultPageSize } from '@/consts';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import Table from '@/ds-components/Table';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
-import { buildUrl } from '@/utils/url';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
 import styles from './index.module.scss';
 
@@ -26,11 +24,8 @@ type TrustedDeviceTableRow = TrustedDeviceResponse & {
   readonly location?: string;
 };
 
-const pageSize = defaultPageSize;
-
 function UserTrustedDevices({ userId }: Props) {
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const [page, setPage] = useState(1);
   const [deletingDeviceId, setDeletingDeviceId] = useState<string>();
   const expiryDateFormatter = useMemo(
     () =>
@@ -42,18 +37,14 @@ function UserTrustedDevices({ userId }: Props) {
     [i18n.language]
   );
 
-  const { data, error, mutate } = useSWR<[TrustedDeviceResponse[], number], RequestError>(
-    buildUrl(`api/users/${userId}/trusted-devices`, {
-      page: String(page),
-      page_size: String(pageSize),
-    })
+  const { data, error, mutate } = useSWR<TrustedDeviceResponse[], RequestError>(
+    `api/users/${userId}/trusted-devices`
   );
 
   const isLoading = !data && !error;
-  const [trustedDevices, totalCount] = data ?? [[], 0];
   const rows = useMemo(
     () =>
-      trustedDevices.map<TrustedDeviceTableRow>((trustedDevice) => {
+      (data ?? []).map<TrustedDeviceTableRow>((trustedDevice) => {
         const { userAgent, country, city } = trustedDevice;
 
         return {
@@ -65,11 +56,15 @@ function UserTrustedDevices({ userId }: Props) {
           }),
         };
       }),
-    [trustedDevices]
+    [data]
   );
+  const hasRows = rows.length > 0;
 
   const api = useApi();
   const { show: showConfirm } = useConfirmModal();
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
 
   const handleRemove = useCallback(
     async (trustedDevice: TrustedDeviceTableRow) => {
@@ -89,12 +84,6 @@ function UserTrustedDevices({ userId }: Props) {
       try {
         await api.delete(`api/users/${userId}/trusted-devices/${trustedDevice.id}`);
         toast.success(t('mfa.trusted_device.management_removed'));
-
-        if (rows.length === 1 && page > 1) {
-          setPage(page - 1);
-          return;
-        }
-
         await mutate();
       } catch {
         // Request errors are surfaced by useApi's global error handler.
@@ -102,7 +91,7 @@ function UserTrustedDevices({ userId }: Props) {
         setDeletingDeviceId(undefined);
       }
     },
-    [api, mutate, page, rows.length, showConfirm, t, userId]
+    [api, mutate, showConfirm, t, userId]
   );
 
   return (
@@ -111,74 +100,70 @@ function UserTrustedDevices({ userId }: Props) {
       description="mfa.trusted_device.management_description"
     >
       <FormField title="mfa.trusted_device.title">
-        <div className={styles.hint}>{t('mfa.trusted_device.management_hint')}</div>
-        <Table
-          hasBorder
-          isRowHoverEffectDisabled
-          className={styles.table}
-          bodyTableWrapperClassName={styles.tableBody}
-          rowGroups={[{ key: 'trustedDevices', data: rows }]}
-          rowIndexKey="id"
-          isLoading={isLoading}
-          errorMessage={error?.body?.message ?? error?.message}
-          columns={[
-            {
-              title: t('user_details.sessions.name_column'),
-              dataIndex: 'name',
-              colSpan: 7,
-              render: ({ id, name }) => (
-                <div className={styles.name}>
-                  <span>{name ?? '-'}</span>
-                  <span className={styles.id}>{id}</span>
-                </div>
-              ),
-            },
-            {
-              title: t('user_details.sessions.location_column'),
-              dataIndex: 'location',
-              colSpan: 5,
-              render: ({ location }) => location ?? '-',
-            },
-            {
-              title: t('user_details.personal_access_tokens.expires_at'),
-              dataIndex: 'expiresAt',
-              colSpan: 4,
-              render: ({ expiresAt }) => (
-                <span className={styles.expiresAt}>{expiryDateFormatter.format(expiresAt)}</span>
-              ),
-            },
-            {
-              title: null,
-              dataIndex: 'action',
-              colSpan: 2,
-              render: (trustedDevice) => (
-                <div className={styles.action}>
-                  <Button
-                    title="general.remove"
-                    type="text"
-                    size="small"
-                    isLoading={deletingDeviceId === trustedDevice.id}
-                    onClick={() => {
-                      void handleRemove(trustedDevice);
-                    }}
-                  />
-                </div>
-              ),
-            },
-          ]}
-          pagination={{
-            page,
-            pageSize,
-            totalCount,
-            onChange: setPage,
-          }}
-          placeholder={
-            <EmptyDataPlaceholder size="small" title={t('mfa.trusted_device.management_empty')} />
-          }
-          onRetry={() => {
-            void mutate();
-          }}
-        />
+        {!isLoading && !error && (
+          <div className={styles.description}>
+            {t(
+              hasRows ? 'mfa.trusted_device.management_hint' : 'mfa.trusted_device.management_empty'
+            )}
+          </div>
+        )}
+        {(isLoading || hasRows || error) && (
+          <Table
+            hasBorder
+            isRowHoverEffectDisabled
+            rowGroups={[{ key: 'trustedDevices', data: rows }]}
+            rowIndexKey="id"
+            isLoading={isLoading}
+            errorMessage={error?.body?.message ?? error?.message}
+            columns={[
+              {
+                title: t('user_details.sessions.name_column'),
+                dataIndex: 'name',
+                colSpan: 7,
+                render: ({ id, name }) => (
+                  <div className={styles.name}>
+                    <span>{name ?? '-'}</span>
+                    <span className={styles.id}>{id}</span>
+                  </div>
+                ),
+              },
+              {
+                title: t('user_details.personal_access_tokens.expires_at'),
+                dataIndex: 'expiresAt',
+                colSpan: 6,
+                render: ({ expiresAt }) => expiryDateFormatter.format(expiresAt),
+              },
+              {
+                title: t('user_details.sessions.location_column'),
+                dataIndex: 'location',
+                colSpan: 5,
+                render: ({ location }) => location ?? '-',
+              },
+              {
+                title: null,
+                dataIndex: 'action',
+                colSpan: 2,
+                render: (trustedDevice) =>
+                  isReadOnly ? null : (
+                    <div className={styles.action}>
+                      <Button
+                        title="general.remove"
+                        type="text"
+                        size="small"
+                        isLoading={deletingDeviceId === trustedDevice.id}
+                        onClick={() => {
+                          void handleRemove(trustedDevice);
+                        }}
+                      />
+                    </div>
+                  ),
+              },
+            ]}
+            onRetry={() => {
+              void mutate();
+            }}
+          />
+        )}
       </FormField>
     </FormCard>
   );

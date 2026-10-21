@@ -1,5 +1,29 @@
 # Change Log
 
+## 1.15.0
+
+### Minor Changes
+
+- c377946617: add a user menu with sign out to the Account Center header
+- 7464c6a97a: add es-MX (Spanish, Mexico) support to the sign-in experience, with the phone input defaulting to the Mexico (+52) country code for users whose language is Spanish (Mexico)
+
+  also fix the list formatter placeholders and the remaining untranslated MFA message in the Spanish locales
+
+- 8b2aaab9b0: add dynamic app support (OAuth Client ID Metadata Documents)
+
+  The dynamic app lets compatible public clients, such as MCP clients, connect to your tenant without registering an application. Following the OAuth Client ID Metadata Documents (CIMD) draft, such a client presents a public HTTPS URL as its `client_id`, and Logto fetches the client metadata from that URL.
+
+  Enable it from the dynamic app card in the third-party app section on the create application page in Console. The switch is tenant-level and off by default, and requires the OIDC provider SSRF protection to be active. Control what dynamic app clients can request with the permission settings on the dynamic app page.
+
+### Patch Changes
+
+- Updated dependencies [ebfefb513d]
+- Updated dependencies [ab106cdb82]
+- Updated dependencies [7464c6a97a]
+- Updated dependencies [28c3c9283e]
+  - @logto/core-kit@2.13.0
+  - @logto/language-kit@1.4.0
+
 ## 1.14.1
 
 ### Patch Changes

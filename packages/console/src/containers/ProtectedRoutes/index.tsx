@@ -4,6 +4,7 @@ import { useContext, useEffect } from 'react';
 import { Outlet, useSearchParams } from 'react-router-dom';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
+import useManageAccountSelfGuard from '@/cloud/hooks/use-manage-account-self-guard';
 import AppLoading from '@/components/AppLoading';
 import { searchKeys } from '@/consts';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -35,11 +36,14 @@ export default function ProtectedRoutes() {
   const { isAuthenticated, isLoading, signIn } = useLogto();
   const { isInitComplete, resetTenants } = useContext(TenantsContext);
   const redirectUri = useRedirectUri();
+  const ensureManageAccountSelf = useManageAccountSelfGuard();
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       saveRedirect();
-      const isSignUpMode = yes(searchParameters.get(searchKeys.signUp));
+      const isSignUpMode = yes(
+        searchParameters.get(searchKeys.signUp) ?? searchParameters.get('signUp')
+      );
       void signIn(redirectUri.href, conditional(isSignUpMode && 'signUp'));
     }
   }, [redirectUri, isAuthenticated, isLoading, searchParameters, signIn]);
@@ -47,13 +51,17 @@ export default function ProtectedRoutes() {
   useEffect(() => {
     if (isAuthenticated && !isInitComplete) {
       const loadTenants = async () => {
+        if (!(await ensureManageAccountSelf())) {
+          return;
+        }
+
         const data = await api.get('/api/tenants');
         resetTenants(data);
       };
 
       void loadTenants();
     }
-  }, [api, isAuthenticated, isInitComplete, resetTenants]);
+  }, [api, ensureManageAccountSelf, isAuthenticated, isInitComplete, resetTenants]);
 
   if (!isInitComplete || !isAuthenticated) {
     return <AppLoading />;

@@ -1,9 +1,11 @@
 import { parseJson, tokenResponseGuard, type TokenResponse } from '@logto/connector-kit';
-import { assert } from '@silverhand/essentials';
+import { appendPath, assert } from '@silverhand/essentials';
 import camelcaseKeys, { type CamelCaseKeys } from 'camelcase-keys';
-import { got, HTTPError } from 'got';
-import { createRemoteJWKSet, jwtVerify, type JWTVerifyOptions } from 'jose';
+import { HTTPError } from 'got';
+import { createRemoteJWKSet, customFetch, jwtVerify, type JWTVerifyOptions } from 'jose';
 import { z, ZodError } from 'zod';
+
+import { ssrfProtectedFetch, ssrfProtectedGot } from '#src/utils/outbound-request.js';
 
 import {
   SsoConnectorConfigErrorCodes,
@@ -21,13 +23,34 @@ import {
 } from '../types/oidc.js';
 
 /**
+ * Describes a failed outbound request for the connector error payload, which is serialized into
+ * the API response and the audit log.
+ *
+ * Handing the caught error over verbatim serializes whatever own enumerable properties it happens
+ * to carry: `got` attaches its full request options, while a plain `Error` has none and reduces to
+ * `{}`, telling the operator nothing. Keep the description bounded and readable instead.
+ */
+const describeRequestError = (error: unknown) => {
+  if (error instanceof HTTPError) {
+    return { statusCode: error.response.statusCode, body: error.response.body };
+  }
+
+  return error instanceof Error ? `${error.name}: ${error.message}` : error;
+};
+
+/**
  * Fetch the full-list of OIDC config from the issuer. Throws error if config is invalid.
  *
  * @param issuer The issuer URL
  * @returns The full-list of OIDC config
  */
 export const fetchOidcConfigRaw = async (issuer: string) => {
-  const { body } = await got.get(`${issuer}/.well-known/openid-configuration`);
+  // Join rather than concatenate: a trailing slash on the configured issuer would otherwise produce
+  // `//.well-known/...`, which not every IdP normalizes. This shapes the request only — the raw
+  // configured issuer is the lookup key for `user_sso_identities`, so it is never rewritten.
+  const { body } = await ssrfProtectedGot.get(
+    appendPath(new URL(issuer), '.well-known/openid-configuration').href
+  );
 
   return camelcaseKeys(oidcConfigResponseGuard.parse(parseJson(body)));
 };
@@ -49,7 +72,7 @@ export const fetchOidcConfig = async (
     throw new SsoConnectorError(SsoConnectorErrorCodes.InvalidConfig, {
       config: { issuer },
       message: SsoConnectorConfigErrorCodes.FailToFetchConfig,
-      error: error instanceof HTTPError ? error.response.body : error,
+      error: describeRequestError(error),
     });
   }
 };
@@ -78,7 +101,7 @@ export const handleTokenExchange = async (
     'Content-Type': 'application/x-www-form-urlencoded',
   };
 
-  const httpResponse = await got.post(tokenEndpoint, {
+  const httpResponse = await ssrfProtectedGot.post(tokenEndpoint, {
     body: tokenRequestParameters.toString(),
     headers,
   });
@@ -133,7 +156,7 @@ export const fetchToken = async (
 
     throw new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
       message: 'Fail to fetch token',
-      error: error instanceof HTTPError ? error.response.body : error,
+      error: describeRequestError(error),
     });
   }
 };
@@ -148,11 +171,15 @@ export const getIdTokenClaims = async (
   jwtVerifyOptions?: JWTVerifyOptions
 ) => {
   try {
-    const { payload } = await jwtVerify(idToken, createRemoteJWKSet(new URL(config.jwksUri)), {
-      issuer: config.issuer,
-      audience: config.clientId,
-      ...jwtVerifyOptions,
-    });
+    const { payload } = await jwtVerify(
+      idToken,
+      createRemoteJWKSet(new URL(config.jwksUri), { [customFetch]: ssrfProtectedFetch }),
+      {
+        issuer: config.issuer,
+        audience: config.clientId,
+        ...jwtVerifyOptions,
+      }
+    );
 
     if (Math.abs((payload.iat ?? 0) - Date.now() / 1000) > issuedAtTimeTolerance) {
       throw new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
@@ -188,13 +215,13 @@ export const getIdTokenClaims = async (
     }
     throw new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
       message: 'Fail to verify id_token',
-      error,
+      error: describeRequestError(error),
     });
   }
 };
 
 export const getRawUserInfoResponse = async (accessToken: string, userinfoEndpoint: string) => {
-  const httpResponse = await got.get(userinfoEndpoint, {
+  const httpResponse = await ssrfProtectedGot.get(userinfoEndpoint, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
@@ -232,7 +259,7 @@ export const getUserInfo = async (accessToken: string, userinfoEndpoint: string)
 
     throw new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
       message: 'Fail to fetch user info',
-      error: error instanceof HTTPError ? error.response.body : error,
+      error: describeRequestError(error),
     });
   }
 };
@@ -252,7 +279,7 @@ export const getTokenByRefreshToken = async (
   };
 
   try {
-    const httpResponse = await got.post(tokenEndpoint, {
+    const httpResponse = await ssrfProtectedGot.post(tokenEndpoint, {
       body: tokenRequestParameters.toString(),
       headers,
     });
@@ -275,7 +302,7 @@ export const getTokenByRefreshToken = async (
 
     throw new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
       message: 'Fail to fetch token',
-      error: error instanceof HTTPError ? error.response.body : error,
+      error: describeRequestError(error),
     });
   }
 };

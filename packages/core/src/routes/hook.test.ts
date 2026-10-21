@@ -2,7 +2,6 @@
 import {
   InteractionHookEvent,
   LogResult,
-  devFeatureHookEvents,
   hook,
   hookEvents,
   type CreateHook,
@@ -22,7 +21,6 @@ import {
   mockNanoIdForHook,
   mockTenantIdForHook,
 } from '#src/__mocks__/hook.js';
-import { EnvSet } from '#src/env-set/index.js';
 import { createMockQuotaLibrary } from '#src/test-utils/quota.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
@@ -99,24 +97,7 @@ const tenantContext = new MockTenant(undefined, mockQueries, undefined, mockLibr
 const hookRoutes = await pickDefault(import('./hook.js'));
 
 describe('hook routes', () => {
-  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-
-  const createHookRequester = (isDevFeaturesEnabled: boolean) => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Build route guards for the requested feature environment.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
-      isDevFeaturesEnabled;
-
-    try {
-      return createRequester({ authedRoutes: hookRoutes, tenantContext });
-    } finally {
-      // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore process-wide configuration after route initialization.
-      (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
-        originalIsDevFeaturesEnabled;
-    }
-  };
-
-  const hookRequest = createHookRequester(true);
-  const nonDevHookRequest = createHookRequester(false);
+  const hookRequest = createRequester({ authedRoutes: hookRoutes, tenantContext });
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -364,7 +345,7 @@ describe('hook routes', () => {
     });
   });
 
-  it('allows trusted-device webhook events when dev features are enabled', async () => {
+  it('allows trusted-device webhook events', async () => {
     const response = await hookRequest.post('/hooks').send({
       name: 'trustedDeviceHook',
       events: ['TrustedDevice.Created', 'TrustedDevice.Deleted'],
@@ -375,56 +356,10 @@ describe('hook routes', () => {
     expect(response.body.events).toEqual(['TrustedDevice.Created', 'TrustedDevice.Deleted']);
   });
 
-  it('rejects trusted-device webhook events when dev features are disabled', async () => {
-    const targetMockHook = mockHookList[0] ?? mockHook;
-    const payload = {
-      events: ['TrustedDevice.Created'],
-      config: { url: 'https://example.com' },
-    };
-
-    const [createResponse, testResponse, updateResponse] = await Promise.all([
-      nonDevHookRequest.post('/hooks').send({ name: 'trustedDeviceHook', ...payload }),
-      nonDevHookRequest.post(`/hooks/${targetMockHook.id}/test`).send(payload),
-      nonDevHookRequest.patch(`/hooks/${targetMockHook.id}`).send({ events: payload.events }),
-    ]);
-
-    expect([createResponse.status, testResponse.status, updateResponse.status]).toEqual([
-      400, 400, 400,
-    ]);
-  });
-
-  it('returns stored dev-event hooks when dev features are later disabled', async () => {
-    const storedDevHook: Hook = {
-      ...mockHook,
-      event: null,
-      events: ['TrustedDevice.Created'],
-    };
-    findAllHooks.mockResolvedValueOnce([storedDevHook]);
-    findHookById.mockResolvedValueOnce(storedDevHook);
-
-    const [listResponse, detailResponse] = await Promise.all([
-      nonDevHookRequest.get('/hooks'),
-      nonDevHookRequest.get(`/hooks/${storedDevHook.id}`),
-    ]);
-
-    expect(listResponse.status).toBe(200);
-    expect(listResponse.body).toEqual([storedDevHook]);
-    expect(detailResponse.status).toBe(200);
-    expect(detailResponse.body).toEqual(storedDevHook);
-  });
-
-  it('describes only available hook events in OpenAPI request and response schemas', () => {
+  it('describes all hook events in OpenAPI request and response schemas', () => {
     const router: ManagementApiRouter = new Router();
 
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Build the OpenAPI fixture for a non-dev environment.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = false;
-    try {
-      hookRoutes(router, tenantContext);
-    } finally {
-      // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore process-wide configuration after route initialization.
-      (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
-        originalIsDevFeaturesEnabled;
-    }
+    hookRoutes(router, tenantContext);
 
     const routeObjects = buildRouterObjects([router]);
     const getRequestBody = (method: string, path: string) =>
@@ -433,11 +368,9 @@ describe('hook routes', () => {
     const getResponses = (method: string, path: string) =>
       routeObjects.find((route) => route.method === method && route.path === path)?.operation
         .responses;
-    const devFeatureHookEventSet = new Set<string>(devFeatureHookEvents);
-    const availableEvents = hookEvents.filter((event) => !devFeatureHookEventSet.has(event));
     const expectedEventSchema = {
       type: 'string',
-      enum: availableEvents,
+      enum: hookEvents,
     };
     const expectedEventsSchema = {
       type: 'array',

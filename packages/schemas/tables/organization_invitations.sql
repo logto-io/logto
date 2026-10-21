@@ -9,12 +9,12 @@ create table organization_invitations (
   /** The unique identifier of the invitation. */
   id varchar(21) not null,
   /** The user ID who sent the invitation. */
-  inviter_id varchar(21)
+  inviter_id varchar(128)
     references users (id) on update cascade on delete cascade,
   /** The email address or other identifier of the invitee. */
   invitee varchar(256) not null,
   /** The user ID of who accepted the invitation. */
-  accepted_user_id varchar(21)
+  accepted_user_id varchar(128)
     references users (id) on update cascade on delete cascade,
   /** The ID of the organization to which the invitee is invited. */
   organization_id varchar(21) not null

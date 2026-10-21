@@ -9,16 +9,21 @@ import type {
 } from '@logto/schemas';
 import {
   ApplicationType,
+  AuthenticationContextMode,
   customClientMetadataGuard,
   GrantType,
   ExtraParamsKey,
   FirstScreen,
   experience,
+  loginPromptAuthenticationContextDetailsGuard,
+  Theme,
 } from '@logto/schemas';
 import { condArray, conditional, removeUndefinedKeys, trySafe } from '@silverhand/essentials';
 import { type AllClientMetadata, type ClientAuthMethod, errors } from 'oidc-provider';
 
 import type { EnvSet } from '#src/env-set/index.js';
+
+import { escapeRegExp, getEffectivePort } from './redirect-uri/utils.js';
 
 /**
  * Build constant client metadata for an application based on its type and optional flags.
@@ -59,6 +64,7 @@ export const getConstantClientMetadata = (
     userinfo_signed_response_alg: jwkSigningAlg,
     id_token_signed_response_alg: jwkSigningAlg,
     introspection_signed_response_alg: jwkSigningAlg,
+    ...conditional(type === ApplicationType.SAML && { require_auth_time: true }),
   };
 
   /**
@@ -147,28 +153,6 @@ export const isOriginAllowed = (
 
   return false;
 };
-
-const getEffectivePort = (protocol: string, port: string) => {
-  if (port) {
-    return port;
-  }
-
-  switch (protocol) {
-    case 'http:': {
-      return '80';
-    }
-
-    case 'https:': {
-      return '443';
-    }
-
-    default: {
-      return '';
-    }
-  }
-};
-
-const escapeRegExp = (value: string) => value.replaceAll(/[$()*+.?[\\\]^{|}]/g, '\\$&');
 
 const matchHostnameLabel = (pattern: string, actual: string) => {
   if (!pattern.includes('*')) {
@@ -272,6 +256,7 @@ export type SharedExperienceParams = Readonly<{
   appId?: string;
   organizationId?: string;
   uiLocales?: string;
+  theme?: Theme;
 }>;
 
 /**
@@ -282,6 +267,10 @@ export type SharedExperienceParams = Readonly<{
 export const readOptionalQueryString = (value: unknown): string | undefined =>
   typeof value === 'string' && value.length > 0 ? value : undefined;
 
+/** Read a query value as a supported {@link Theme}, ignoring anything else. */
+export const readOptionalTheme = (value: unknown): Theme | undefined =>
+  value === Theme.Light || value === Theme.Dark ? value : undefined;
+
 export const parseSharedExperienceParams = (
   source: Record<string, unknown>
 ): SharedExperienceParams =>
@@ -289,6 +278,7 @@ export const parseSharedExperienceParams = (
     appId: readOptionalQueryString(source.app_id),
     organizationId: readOptionalQueryString(source.organization_id),
     uiLocales: readOptionalQueryString(source.ui_locales),
+    theme: readOptionalTheme(source.theme),
   });
 
 /**
@@ -323,18 +313,60 @@ export const buildSharedExperienceCookie = ({
   appId,
   organizationId,
   uiLocales,
+  theme,
 }: SharedExperienceParams): LogtoUiCookie =>
   removeUndefinedKeys({
     appId,
     organizationId,
     uiLocales,
+    theme,
   });
 
+/**
+ * Whether the login prompt details carry a step-up authentication context: an authenticated
+ * session that does not satisfy the requested `acr_values` / `max_age`. The details are the
+ * provider's untyped prompt payload, so anything that does not parse is a regular sign-in.
+ */
+const isStepUpPrompt = (promptDetails: unknown): boolean => {
+  const result = loginPromptAuthenticationContextDetailsGuard.safeParse(promptDetails ?? {});
+
+  if (!result.success || !result.data.authenticationContext) {
+    return false;
+  }
+
+  const { mode, selectedAcr, requestedAcrValues } = result.data.authenticationContext;
+
+  return (
+    mode === AuthenticationContextMode.StepUp &&
+    selectedAcr !== undefined &&
+    requestedAcrValues.includes(selectedAcr)
+  );
+};
+
+/**
+ * Build the Experience URL for a login prompt. A step-up prompt lands directly on the `step-up`
+ * route tree: the subject is pinned from the session, so the first screen, direct sign-in, and
+ * identifier hints do not apply and only the shared app, organization, and locale params are
+ * kept. A prompt whose details carry only the requested ACR values (no session) keeps the
+ * regular sign-in URL.
+ */
 // eslint-disable-next-line complexity
 export const buildLoginPromptUrl = (
   params: ExtraParamsObject,
-  sharedParams?: SharedExperienceParams
+  sharedParams?: SharedExperienceParams,
+  promptDetails?: unknown
 ): string => {
+  const searchParams = new URLSearchParams();
+  const getSearchParamString = () => (searchParams.size > 0 ? `?${searchParams.toString()}` : '');
+
+  if (sharedParams) {
+    appendSharedExperienceSearchParams(searchParams, sharedParams);
+  }
+
+  if (isStepUpPrompt(promptDetails)) {
+    return experience.routes.stepUp + getSearchParamString();
+  }
+
   const firstScreenKey =
     params[ExtraParamsKey.FirstScreen] ??
     params[ExtraParamsKey.InteractionMode] ??
@@ -348,18 +380,11 @@ export const buildLoginPromptUrl = (
   const directSignIn = params[ExtraParamsKey.DirectSignIn];
   const googleOneTapCredential = params[ExtraParamsKey.GoogleOneTapCredential];
 
-  const searchParams = new URLSearchParams();
-  const getSearchParamString = () => (searchParams.size > 0 ? `?${searchParams.toString()}` : '');
-
   const appendExtraParam = (key: keyof ExtraParamsObject) => {
     if (params[key]) {
       searchParams.append(key, params[key]);
     }
   };
-
-  if (sharedParams) {
-    appendSharedExperienceSearchParams(searchParams, sharedParams);
-  }
 
   appendExtraParam(ExtraParamsKey.OneTimeToken);
   appendExtraParam(ExtraParamsKey.LoginHint);

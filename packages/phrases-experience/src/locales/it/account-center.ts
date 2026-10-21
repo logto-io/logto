@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'Pagina non trovata',
@@ -14,6 +15,8 @@ const account_center = {
     sidebar_security: 'Sicurezza',
     sidebar_sessions: 'Sessioni',
     support: 'Supporto',
+    user_menu: 'Menu utente',
+    sign_out: 'Esci',
   },
   verification: {
     title: 'Verifica di sicurezza',
@@ -124,6 +127,58 @@ const account_center = {
     email_removed: "L'indirizzo email è stato rimosso con successo.",
     phone_removed: 'Il numero di telefono è stato rimosso con successo.',
     username_removed: 'Il nome utente è stato rimosso con successo.',
+    trusted_devices: {
+      title: 'Dispositivi attendibili MFA',
+      current_device: 'Dispositivo attuale',
+      expires_on: 'Scade il {{date}}',
+      unknown_location: 'Posizione sconosciuta',
+      remove: 'Rimuovi',
+      removed: 'Dispositivo attendibile rimosso correttamente.',
+      loading: 'Caricamento...',
+      empty: 'Nessun dispositivo attendibile.',
+      load_failed: 'Impossibile caricare i dispositivi attendibili. Riprova.',
+      retry: 'Riprova',
+      remove_confirmation_title: 'Rimuovere il dispositivo attendibile?',
+      remove_confirmation_description:
+        'Al prossimo accesso su questo dispositivo dovrai completare nuovamente la MFA. La sessione attuale resterà attiva.',
+    },
+    personal_access_tokens: {
+      title: 'Token di accesso personale',
+      description:
+        'Usa i token di accesso personali per autenticarti con le API a tuo nome. Rimangono attivi fino alla scadenza o alla revoca, anche se ti disconnetti o cambi la password.',
+      create: 'Crea nuovo token',
+      created_at: 'Creato il {{date}}',
+      expires_on: 'Scade il {{date}}',
+      expired_on: 'Scaduto il {{date}}',
+      expired: 'Scaduto',
+      never_expires: 'Non scade mai',
+      never_expires_warning:
+        'Questo token non ha una data di scadenza. Per maggiore sicurezza, crea un nuovo token con una data di scadenza e revoca questo.',
+      rename: 'Rinomina',
+      revoke: 'Revoca',
+      loading: 'Caricamento...',
+      empty: 'Nessun token di accesso personale.',
+      load_failed: 'Impossibile caricare i token di accesso personale. Riprova.',
+      retry: 'Riprova',
+      create_modal_title: 'Crea token di accesso personale',
+      create_modal_description:
+        'Assegna al tuo token un nome descrittivo e scegli un periodo di scadenza.',
+      token_name: 'Nome del token',
+      token_name_placeholder: 'Il mio token',
+      expiration: 'Scadenza',
+      expiration_days: '{{count}} giorni',
+      created_modal_title: 'Token di accesso personale creato',
+      show_once_warning:
+        'Non potrai più vedere questo token. Copialo ora e conservalo in un luogo sicuro.',
+      copied: 'Token di accesso personale copiato.',
+      rename_modal_title: 'Rinomina token di accesso personale',
+      rename_modal_description: 'Inserisci un nuovo nome per questo token di accesso personale.',
+      renamed: 'Token di accesso personale rinominato con successo.',
+      revoke_confirmation_title: 'Revocare il token di accesso personale?',
+      revoke_confirmation_description:
+        "Qualsiasi applicazione o script che utilizza «{{name}}» perderà immediatamente l'accesso. Sei sicuro di voler continuare?",
+      revoked: 'Token di accesso personale revocato con successo.',
+    },
   },
   social: {
     linked: '{{connector}} collegato con successo.',
@@ -289,3 +344,4 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
+/* eslint-enable max-lines */

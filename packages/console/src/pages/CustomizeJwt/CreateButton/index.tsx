@@ -7,6 +7,7 @@ import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { getPagePath } from '@/pages/CustomizeJwt/utils/path';
 import { Action } from '@/pages/CustomizeJwt/utils/type';
@@ -21,6 +22,9 @@ function CreateButton({ isDisabled, tokenType }: Props) {
   const { navigate } = useTenantPathname();
   const { show } = useConfirmModal();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
 
   const { currentSubscriptionQuota } = useContext(SubscriptionDataContext);
 
@@ -53,6 +57,10 @@ function CreateButton({ isDisabled, tokenType }: Props) {
       navigate('/tenant-settings/subscription');
     }
   }, [isCustomJwtEnabled, link, navigate, show, t]);
+
+  if (isReadOnly) {
+    return null;
+  }
 
   return (
     <Button

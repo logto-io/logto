@@ -1,4 +1,4 @@
-import { InteractionEvent, type BindMfaPayload, type VerifyMfaPayload } from '@logto/schemas';
+import { type BindMfaPayload, type VerifyMfaPayload } from '@logto/schemas';
 import { useCallback } from 'react';
 
 import { bindMfa, verifyMfa } from '@/apis/experience';
@@ -7,48 +7,30 @@ import { UserMfaFlow } from '@/types';
 import useApi from './use-api';
 import useErrorHandler, { type ErrorHandlers } from './use-error-handler';
 import useGlobalRedirectTo from './use-global-redirect-to';
-import useSubmitInteractionErrorHandler from './use-submit-interaction-error-handler';
-
-type TrustedDeviceOption = {
-  createTrustedDevice?: boolean;
-};
+import useMfaSubmitErrorHandler from './use-mfa-submit-error-handler';
 
 export type SendMfaPayloadApiOptions =
-  | ({
+  | {
       flow: UserMfaFlow.MfaBinding;
       payload: BindMfaPayload;
       verificationId: string;
-    } & TrustedDeviceOption)
-  | ({
+    }
+  | {
       flow: UserMfaFlow.MfaVerification;
       payload: VerifyMfaPayload;
       verificationId?: string;
-    } & TrustedDeviceOption);
+    };
 
-const sendMfaPayloadApi = async ({
-  flow,
-  payload,
-  verificationId,
-  createTrustedDevice,
-}: SendMfaPayloadApiOptions) => {
+const sendMfaPayloadApi = async ({ flow, payload, verificationId }: SendMfaPayloadApiOptions) => {
   if (flow === UserMfaFlow.MfaBinding) {
-    return bindMfa(payload.type, verificationId, payload, createTrustedDevice);
+    return bindMfa(payload.type, verificationId, payload);
   }
-  return verifyMfa(payload, verificationId, createTrustedDevice);
+  return verifyMfa(payload, verificationId);
 };
 
 const useSendMfaPayload = () => {
   const asyncSendMfaPayload = useApi(sendMfaPayloadApi);
-  /**
-   * TODO: @simeng-li
-   * Need to find a better implementation.
-   * In the registration event, MFA binding flow is triggered after user creation,
-   * so the error handle logic is same as the pre-sign-in event.
-   * This is confusing and should be refactored.
-   */
-  const preSignInErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.SignIn, {
-    replace: true,
-  });
+  const submitErrorHandler = useMfaSubmitErrorHandler();
   const handleError = useErrorHandler();
   const redirectTo = useGlobalRedirectTo();
 
@@ -63,7 +45,7 @@ const useSendMfaPayload = () => {
       if (error) {
         await handleError(error, {
           ...errorHandlers,
-          ...preSignInErrorHandler,
+          ...submitErrorHandler,
         });
         errorCallback?.();
         return;
@@ -73,7 +55,7 @@ const useSendMfaPayload = () => {
         await redirectTo(result.redirectTo);
       }
     },
-    [asyncSendMfaPayload, handleError, preSignInErrorHandler, redirectTo]
+    [asyncSendMfaPayload, handleError, submitErrorHandler, redirectTo]
   );
 };
 

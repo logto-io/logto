@@ -1,0 +1,18 @@
+@use '@/scss/underscore' as _;
+
+.confirmContent {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(3);
+
+  p {
+    margin: 0;
+  }
+}
+
+.members {
+  margin: 0;
+  padding-inline-start: _.unit(5);
+  max-height: 200px;
+  overflow-y: auto;
+}

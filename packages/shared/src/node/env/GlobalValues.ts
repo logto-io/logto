@@ -1,3 +1,5 @@
+import { BlockList, isIP } from 'node:net';
+
 import {
   assertEnv,
   getEnv,
@@ -60,6 +62,51 @@ export const parseNonNegativeIntegerEnv = (value?: string, fallback = 0): number
   const parsed = Number(normalized);
 
   return Number.isSafeInteger(parsed) && parsed >= 0 ? parsed : fallback;
+};
+
+const addSsrfAllowedAddress = (list: BlockList, entry: string) => {
+  const segments = entry.split('/');
+
+  if (segments.length !== 1 && segments.length !== 2) {
+    throw new Error(`Invalid address in \`SSRF_ALLOWED_ADDRESSES\`: ${entry}`);
+  }
+
+  const [address, prefix] = segments;
+  const ipVersion = address && isIP(address);
+
+  if (!address || !ipVersion) {
+    throw new Error(`Invalid address in \`SSRF_ALLOWED_ADDRESSES\`: ${entry}`);
+  }
+
+  const family = ipVersion === 6 ? 'ipv6' : 'ipv4';
+
+  if (prefix === undefined) {
+    list.addAddress(address, family);
+    return;
+  }
+
+  const maxPrefix = family === 'ipv6' ? 128 : 32;
+  const parsedPrefix = Number(prefix);
+
+  if (!/^\d+$/.test(prefix) || parsedPrefix > maxPrefix) {
+    throw new Error(`Invalid CIDR prefix in \`SSRF_ALLOWED_ADDRESSES\`: ${entry}`);
+  }
+
+  list.addSubnet(address, parsedPrefix, family);
+};
+
+const parseSsrfAllowedAddresses = (entries: string[]): Optional<BlockList> => {
+  if (entries.length === 0) {
+    return undefined;
+  }
+
+  const list = new BlockList();
+
+  for (const entry of entries) {
+    addSsrfAllowedAddress(list, entry);
+  }
+
+  return list;
 };
 
 export default class GlobalValues {
@@ -150,13 +197,60 @@ export default class GlobalValues {
   public readonly isCloud = yes(getEnv('IS_CLOUD'));
 
   /**
-   * Whether oidc-provider protects outbound requests against SSRF.
+   * Whether a self-hosted deployment stops sending its usage counts with the license refresh. The
+   * refresh itself still runs, and usage is still evaluated locally.
    *
-   * Protection is enabled by default and can only be disabled in self-hosted deployments. Features
-   * that resolve unregistered remote clients, such as CIMD, must only be enabled while this is true.
+   * Reporting is on unless this is set, and there is no other way to change it. Set it on every
+   * instance of the deployment, since whichever instance claims a refresh sends it.
    */
-  public readonly isOidcProviderSsrfProtectionEnabled =
-    this.isCloud || !yes(getEnv('OIDC_PROVIDER_SSRF_PROTECTION_DISABLED'));
+  public readonly isLicenseUsageReportingDisabled = yes(
+    getEnv('SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED')
+  );
+
+  /**
+   * Whether outbound requests to operator-supplied URLs are protected against SSRF. This covers
+   * oidc-provider's own requests (backchannel logout, client `jwks_uri`, ...) as well as webhook
+   * delivery and enterprise SSO connector discovery.
+   *
+   * Protection is enabled by default and can only be disabled in self-hosted deployments, where
+   * reaching a trusted endpoint on a private network is a legitimate setup. Features that resolve
+   * unregistered remote clients, such as CIMD, must only be enabled while this is true.
+   *
+   * `OIDC_PROVIDER_SSRF_PROTECTION_DISABLED` is the original, narrower name of the opt-out and is
+   * still honored so deployments that already set it keep working.
+   */
+  public readonly isSsrfProtectionEnabled =
+    this.isCloud ||
+    !(
+      yes(getEnv('SSRF_PROTECTION_DISABLED')) ||
+      yes(getEnv('OIDC_PROVIDER_SSRF_PROTECTION_DISABLED'))
+    );
+
+  /**
+   * @deprecated Renamed to `isSsrfProtectionEnabled` as the protection now covers webhook delivery
+   * and SSO connector discovery/metadata requests as well.
+   */
+  public get isOidcProviderSsrfProtectionEnabled(): boolean {
+    return this.isSsrfProtectionEnabled;
+  }
+
+  /**
+   * Destinations that stay reachable while the SSRF protection is on, as a comma-separated list of
+   * IP addresses or CIDR ranges (`127.0.0.1,10.0.0.0/8,::1`).
+   *
+   * Prefer this over `SSRF_PROTECTION_DISABLED` when only a known internal host has to be reached:
+   * naming the destinations keeps every other special-use address blocked. Features that accept
+   * unauthenticated target URLs, such as CIMD, are disabled while an allowlist is configured.
+   * Ignored in Cloud.
+   */
+  public readonly ssrfAllowedAddresses = this.isCloud
+    ? []
+    : getEnvAsStringArray('SSRF_ALLOWED_ADDRESSES');
+
+  /** Parsed at startup so malformed entries cannot throw from a socket event listener. */
+  public readonly ssrfAllowedAddressBlockList = parseSsrfAllowedAddresses(
+    this.ssrfAllowedAddresses
+  );
 
   /** Enables protected app local development without Cloud-only behavior. */
   public readonly isProtectedAppLocalDevEnabled =
@@ -178,6 +272,22 @@ export default class GlobalValues {
   /** @deprecated Use the built-in user default role configuration (`Roles.isDefault`) instead. */
   public readonly userDefaultRoleNames = getEnvAsStringArray('USER_DEFAULT_ROLE_NAMES');
   public readonly developmentUserId = getEnv('DEVELOPMENT_USER_ID');
+
+  /**
+   * The public key self-hosted license keys are verified against, as a serialized ES256 public
+   * JWK. It replaces the public key built into Logto, so unit and integration tests — and a
+   * developer running the Logto Cloud license service locally — can install keys they signed
+   * themselves.
+   *
+   * Ignored in production, on the same terms as `DEVELOPMENT_USER_ID`: the consumer decides
+   * whether to honor it, so that the reason it is ignored can be reported where it is read. Anyone
+   * who can set an environment variable on a self-hosted instance can also patch its code, so this
+   * is a guardrail against an accidental or copy-pasted configuration rather than a security
+   * boundary: it keeps "which keys does this instance trust" answerable from the Logto version
+   * alone.
+   */
+  public readonly selfHostedLicensePublicKey = getEnv('SELF_HOSTED_LICENSE_PUBLIC_KEY');
+
   public readonly trustProxyHeader = yes(getEnv('TRUST_PROXY_HEADER'));
   public readonly ignoreConnectorVersionCheck = yes(getEnv('IGNORE_CONNECTOR_VERSION_CHECK'));
   public readonly injectedHeaderMappingJson = getEnv('INJECTED_HEADER_MAPPING_JSON');

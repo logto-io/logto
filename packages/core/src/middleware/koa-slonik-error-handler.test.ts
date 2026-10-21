@@ -103,6 +103,20 @@ describe('koaSlonikErrorHandler middleware', () => {
     );
   });
 
+  it.each([
+    ['users_pkey', 'user.id_already_in_use'],
+    ['users__username', 'user.username_already_in_use'],
+    ['users__primary_email', 'user.email_already_in_use'],
+    ['users__primary_phone', 'user.phone_already_in_use'],
+  ] as const)('should map %s to %s', async (constraint, code) => {
+    const error = new UniqueIntegrityConstraintViolationError(new Error(' '), constraint);
+    next.mockRejectedValueOnce(error);
+
+    await expect(koaSlonikErrorHandler()(ctx, next)).rejects.toMatchError(
+      new RequestError({ code, status: 422 })
+    );
+  });
+
   it('UniqueIntegrityConstraintViolationError for protected application host', async () => {
     const error = new UniqueIntegrityConstraintViolationError(
       new Error(' '),

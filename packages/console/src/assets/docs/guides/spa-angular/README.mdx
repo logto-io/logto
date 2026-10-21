@@ -1,4 +1,3 @@
-import UriInputField from '@/mdx-components/UriInputField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
@@ -6,16 +5,61 @@ import NpmLikeInstallation from '@/mdx-components/NpmLikeInstallation';
 import CustomDomainEndpointNotice from '@/mdx-components/CustomDomainEndpointNotice';
 
 import Checkpoint from '../../fragments/_checkpoint.md';
-import RedirectUrisWeb, {defaultRedirectUri, defaultPostSignOutUri} from '../../fragments/_redirect-uris-web.mdx';
+import RedirectUrisWeb, {
+  defaultRedirectUri,
+  defaultPostSignOutUri,
+} from '../../fragments/_redirect-uris-web.mdx';
 
 <Steps>
 
 <Step
   title="Installation"
-  subtitle="Install Logto JS core SDK and `angular-auth-oidc-client`"
+  subtitle="Install Logto SDK for your project"
 >
 
-<NpmLikeInstallation packageName="@logto/js angular-auth-oidc-client" />
+<InlineNotification>
+  This guide uses Logto Angular SDK v2, which supports Angular 20 and provides dependency injection
+  and Signals.
+</InlineNotification>
+
+<NpmLikeInstallation packageName="@logto/angular" />
+
+</Step>
+
+<Step title="Init Logto provider">
+
+In your Angular project, register `provideLogto` and your application routes in `app.config.ts`:
+
+<Code className="language-ts" title="app/app.config.ts">
+    {`import { type ApplicationConfig } from '@angular/core';
+import { provideRouter } from '@angular/router';
+import { provideLogto } from '@logto/angular';
+
+import { routes } from './app.routes';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideLogto({
+      endpoint: '${props.endpoint}',
+      appId: '${props.app.id}',
+    }),
+    provideRouter(routes),
+    // ...other providers
+  ],
+};`}
+</Code>
+
+<br />
+
+<CustomDomainEndpointNotice />
+
+`provideLogto` restores authentication state automatically after the first browser render. You do not need to call an initialization method in your components.
+
+<InlineNotification>
+  When using server-side rendering (SSR), authentication state and tokens are available only in the
+  browser. Use `isLoading()` to show a loading state until initialization finishes. If you need
+  authenticated data during server rendering, use a server or BFF SDK.
+</InlineNotification>
 
 </Step>
 
@@ -25,65 +69,111 @@ import RedirectUrisWeb, {defaultRedirectUri, defaultPostSignOutUri} from '../../
 
 </Step>
 
-<Step title="Configure application">
+<Step title="Handle redirect">
 
-In your Angular project, add the auth provider your `app.config.ts`:
+Create a callback component to complete sign-in after Logto redirects the user back to your application. Use `afterNextRender` so callback handling runs only in the browser:
 
-<Code className="language-tsx" title="app/app.config.ts">
-    {`import { UserScope, buildAngularAuthConfig } from '@logto/js';
-import { provideAuth } from 'angular-auth-oidc-client';
+```ts title="app/callback.component.ts"
+import { afterNextRender, Component, inject } from '@angular/core';
+import { LogtoService } from '@logto/angular';
 
-export const appConfig: ApplicationConfig = {
-  providers: [
-    provideHttpClient(withFetch()),
-    provideAuth({
-      config: buildAngularAuthConfig({
-        endpoint: '${props.endpoint}',
-        appId: '${props.app.id}',
-        redirectUri: '${props.redirectUris[0] || defaultRedirectUri}',
-        postLogoutRedirectUri: '${props.postLogoutRedirectUris[0] || defaultPostSignOutUri}',
-      }),
-    }),
-    // ...other providers
-  ],
-};`}
-</Code>
+@Component({
+  selector: 'app-callback',
+  standalone: true,
+  template: `
+    @if (logto.error(); as error) {
+      <p role="alert">{{ error.message }}</p>
+    } @else {
+      <p>Completing sign-in...</p>
+    }
+  `,
+})
+export class CallbackComponent {
+  readonly logto = inject(LogtoService);
 
-<br/>
-
-<CustomDomainEndpointNotice />
-
-</Step>
-
-<Step title="Implement sign-in and sign-out">
-
-In the component where you want to implement sign-in and sign-out, inject the `OidcSecurityService` and use it to sign in and sign out.
-
-```ts title="app/app.component.ts"
-import { OidcSecurityService } from 'angular-auth-oidc-client';
-
-export class AppComponent implements OnInit {
-  constructor(public oidcSecurityService: OidcSecurityService) {}
-
-  signIn() {
-    this.oidcSecurityService.authorize();
-  }
-
-  signOut() {
-    this.oidcSecurityService.logoff().subscribe((result) => {
-      console.log('app sign-out', result);
+  constructor() {
+    afterNextRender(() => {
+      void this.logto.handleSignInCallback(window.location.href).catch(() => {
+        // The SDK exposes the error through logto.error() for the template.
+      });
     });
   }
 }
 ```
 
-Then, in the template, add buttons to sign in and sign out:
+Register the callback route in `app.routes.ts`. It must match the path of your redirect URI and must not require authentication. For example, use `callback` for a redirect URI ending in `/callback`:
 
-```html
-<button (click)="signIn()">Sign in</button>
-<br/>
-<button (click)="signOut()">Sign out</button>
+```ts title="app/app.routes.ts"
+import { type Routes } from '@angular/router';
+
+import { CallbackComponent } from './callback.component';
+
+export const routes: Routes = [
+  { path: 'callback', component: CallbackComponent },
+  // ...other routes
+];
 ```
+
+The root component needs a `<router-outlet />` to render this route, as shown in the next step.
+
+</Step>
+
+<Step title="Implement sign-in and sign-out">
+
+Inject `LogtoService` to start sign-in and sign-out. Pass the registered redirect URIs to these methods. The `postRedirectUri` tells the SDK where to navigate after successfully handling the sign-in callback:
+
+<InlineNotification>
+  Before calling `signIn()`, make sure you have configured the redirect URI in Logto Console.
+</InlineNotification>
+
+<Code className="language-ts" title="app/app.component.ts">
+    {`import { Component, inject } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { LogtoService } from '@logto/angular';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [RouterOutlet],
+  templateUrl: './app.component.html',
+})
+export class AppComponent {
+  readonly logto = inject(LogtoService);
+
+  async signIn() {
+    await this.logto.signIn({
+      redirectUri: '${props.redirectUris[0] || defaultRedirectUri}',
+      postRedirectUri: window.location.origin,
+    });
+  }
+
+  async signOut() {
+    await this.logto.signOut('${props.postLogoutRedirectUris[0] || defaultPostSignOutUri}');
+  }
+}`}
+</Code>
+
+Read the `isLoading()`, `isAuthenticated()`, and `error()` Signals directly in the template:
+
+```html title="app/app.component.html"
+@if (logto.error(); as error) {
+  <p role="alert">{{ error.message }}</p>
+}
+
+@if (logto.isLoading()) {
+  <p>Loading...</p>
+} @else if (logto.isAuthenticated()) {
+  <button type="button" (click)="signOut()">Sign out</button>
+} @else {
+  <button type="button" (click)="signIn()">Sign in</button>
+}
+
+<router-outlet />
+```
+
+Keep `<router-outlet />` outside the authentication conditions so the callback can render before the user is signed in.
+
+Calling `signOut()` clears the stored Logto tokens and cached access tokens, then redirects the user to Logto to end the session.
 
 </Step>
 
@@ -95,48 +185,55 @@ Then, in the template, add buttons to sign in and sign out:
 
 <Step title="Display user information">
 
-The `OidcSecurityService` provides a convenient way to subscribe to the authentication state:
+To display the user's information, use `getIdTokenClaims()` to read claims from the ID token without an additional network request. Add an `effect` to your `AppComponent` to load the claims when `isAuthenticated()` becomes true, including when an existing session is restored. Import `JsonPipe` to display the result:
 
 ```ts title="app/app.component.ts"
-import { OidcSecurityService } from 'angular-auth-oidc-client';
-import type { UserInfoResponse } from '@logto/js';
+import { JsonPipe } from '@angular/common';
+import { Component, effect, inject, signal } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { LogtoService, type IdTokenClaims } from '@logto/angular';
 
-export class AppComponent implements OnInit {
-  isAuthenticated = false;
-  userData?: UserInfoResponse;
-  idToken?: string;
-  accessToken?: string;
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [JsonPipe, RouterOutlet],
+  templateUrl: './app.component.html',
+})
+export class AppComponent {
+  readonly logto = inject(LogtoService);
+  readonly user = signal<IdTokenClaims | undefined>(undefined);
 
-  constructor(public oidcSecurityService: OidcSecurityService) {}
+  constructor() {
+    effect(() => {
+      if (!this.logto.isAuthenticated()) {
+        this.user.set(undefined);
+        return;
+      }
 
-  ngOnInit() {
-    this.oidcSecurityService
-      .checkAuth()
-      .subscribe(({ isAuthenticated, userData, idToken, accessToken }) => {
-        console.log('app authenticated', isAuthenticated, userData);
-        this.isAuthenticated = isAuthenticated;
-        this.userData = userData;
-        this.idToken = idToken;
-        this.accessToken = accessToken;
-      });
+      void this.logto
+        .getIdTokenClaims()
+        .then((claims) => {
+          this.user.set(claims);
+        })
+        .catch(() => {
+          // The SDK exposes the error through logto.error() for the template.
+        });
+    });
   }
 
-  // ...other methods
+  // ...keep the signIn() and signOut() methods from the previous step
 }
 ```
 
-And use it in the template:
+Add the following inside the `logto.isAuthenticated()` branch of your template:
 
 ```html title="app/app.component.html"
-<button *ngIf="!isAuthenticated" (click)="signIn()">Sign in</button>
-<ng-container *ngIf="isAuthenticated">
-  <pre>{{ userData | json }}</pre>
-  <p>ID token: {{ idToken }}</p>
-  <p>Access token: {{ accessToken }}</p>
-  <!-- ... -->
-  <button (click)="signOut()">Sign out</button>
-</ng-container>
+@if (user(); as claims) {
+  <pre>{{ claims | json }}</pre>
+}
 ```
+
+If you need user information from the userinfo endpoint, call `fetchUserInfo()` after sign-in. To request additional information such as email or phone number, add `scopes: [UserScope.Email, UserScope.Phone]` to `provideLogto` and import `UserScope` from `@logto/angular`.
 
 </Step>
 

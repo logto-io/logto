@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'Сторінку не знайдено',
@@ -13,6 +14,8 @@ const account_center = {
     sidebar_security: 'Безпека',
     sidebar_sessions: 'Сесії',
     support: 'Підтримка',
+    user_menu: 'Меню користувача',
+    sign_out: 'Вийти',
   },
   verification: {
     title: 'Перевірка безпеки',
@@ -121,6 +124,57 @@ const account_center = {
     email_removed: 'Адресу електронної пошти успішно видалено.',
     phone_removed: 'Номер телефону успішно видалено.',
     username_removed: "Ім'я користувача успішно видалено.",
+    trusted_devices: {
+      title: 'Довірені пристрої MFA',
+      current_device: 'Поточний пристрій',
+      expires_on: 'Термін дії до {{date}}',
+      unknown_location: 'Невідоме розташування',
+      remove: 'Видалити',
+      removed: 'Довірений пристрій успішно видалено.',
+      loading: 'Завантаження...',
+      empty: 'Немає довірених пристроїв.',
+      load_failed: 'Не вдалося завантажити довірені пристрої. Спробуйте ще раз.',
+      retry: 'Спробувати ще раз',
+      remove_confirmation_title: 'Видалити довірений пристрій?',
+      remove_confirmation_description:
+        'Під час наступного входу на цьому пристрої вам потрібно буде знову пройти MFA. Поточний сеанс залишиться активним.',
+    },
+    personal_access_tokens: {
+      title: 'Особисті токени доступу',
+      description:
+        'Використовуйте особисті токени доступу для автентифікації в API від вашого імені. Вони залишаються активними, доки не закінчиться термін їхньої дії або ви їх не відкличете, навіть якщо ви вийдете з облікового запису чи зміните пароль.',
+      create: 'Створити новий токен',
+      created_at: 'Створено {{date}}',
+      expires_on: 'Діє до {{date}}',
+      expired_on: 'Термін дії закінчився {{date}}',
+      expired: 'Прострочено',
+      never_expires: 'Безстроковий',
+      never_expires_warning:
+        'Цей токен не має терміну дії. Для кращої безпеки створіть новий токен із терміном дії та відкличте цей.',
+      rename: 'Перейменувати',
+      revoke: 'Відкликати',
+      loading: 'Завантаження...',
+      empty: 'Немає особистих токенів доступу.',
+      load_failed: 'Не вдалося завантажити особисті токени доступу. Спробуйте ще раз.',
+      retry: 'Спробувати ще раз',
+      create_modal_title: 'Створити особистий токен доступу',
+      create_modal_description: 'Надайте токену описову назву та виберіть термін дії.',
+      token_name: 'Назва токена',
+      token_name_placeholder: 'Мій токен',
+      expiration: 'Термін дії',
+      expiration_days: '{{count}} дн.',
+      created_modal_title: 'Особистий токен доступу створено',
+      show_once_warning:
+        'Ви більше не зможете побачити цей токен. Скопіюйте його зараз і збережіть у надійному місці.',
+      copied: 'Особистий токен доступу скопійовано.',
+      rename_modal_title: 'Перейменувати особистий токен доступу',
+      rename_modal_description: 'Введіть нову назву для цього особистого токена доступу.',
+      renamed: 'Особистий токен доступу успішно перейменовано.',
+      revoke_confirmation_title: 'Відкликати особистий токен доступу?',
+      revoke_confirmation_description:
+        'Будь-які застосунки чи скрипти, що використовують «{{name}}», негайно втратять доступ. Ви впевнені, що хочете продовжити?',
+      revoked: 'Особистий токен доступу успішно відкликано.',
+    },
   },
   social: {
     linked: '{{connector}} успішно прив’язано.',
@@ -284,3 +338,4 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
+/* eslint-enable max-lines */

@@ -1,7 +1,8 @@
 import type { ConnectorMetadata } from '@logto/connector-kit';
 import { ConnectorConfigFormItemType } from '@logto/connector-kit';
 
-export const endpoint = 'https://api.twilio.com/2010-04-01/Accounts/{{accountSID}}/Messages.json';
+export const defaultHost = 'api.twilio.com';
+export const endpoint = 'https://{{host}}/2010-04-01/Accounts/{{accountSID}}/Messages.json';
 
 export const defaultMetadata: ConnectorMetadata = {
   id: 'twilio-short-message-service',
@@ -44,6 +45,14 @@ export const defaultMetadata: ConnectorMetadata = {
       type: ConnectorConfigFormItemType.Text,
       required: true,
       placeholder: '<from-messaging-service-sid>',
+    },
+    {
+      key: 'host',
+      label: 'API host',
+      type: ConnectorConfigFormItemType.Text,
+      required: false,
+      placeholder: defaultHost,
+      description: 'Twilio API hostname only, without https://, port, or path.',
     },
     {
       key: 'disableRiskCheck',

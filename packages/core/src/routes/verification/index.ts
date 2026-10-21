@@ -59,6 +59,7 @@ export default function verificationRoutes<T extends UserRouter>(
         {
           ctx,
           sentinel,
+          queries,
           action: SentinelActivityAction.Password,
           identifier: {
             type: AdditionalIdentifier.UserId,
@@ -198,6 +199,7 @@ export default function verificationRoutes<T extends UserRouter>(
         {
           ctx,
           sentinel,
+          queries,
           action: SentinelActivityAction.VerificationCode,
           identifier,
           payload: {

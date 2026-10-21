@@ -36,6 +36,9 @@ describe('country-code', () => {
     await i18next.changeLanguage('en-CA');
     expect(getDefaultCountryCode()).toEqual('CA');
 
+    await i18next.changeLanguage('es-MX');
+    expect(getDefaultCountryCode()).toEqual('MX');
+
     await i18next.changeLanguage('ru');
     expect(getDefaultCountryCode()).toEqual('RU');
 
@@ -64,6 +67,9 @@ describe('country-code', () => {
 
     await i18next.changeLanguage('en-CA');
     expect(getDefaultCountryCallingCode()).toEqual('1');
+
+    await i18next.changeLanguage('es-MX');
+    expect(getDefaultCountryCallingCode()).toEqual('52');
 
     await i18next.changeLanguage('ru');
     expect(getDefaultCountryCallingCode()).toEqual('7');

@@ -129,9 +129,24 @@ const buildProtectedAppData = async ({
 const addDomainToRemote = async (
   hostname: string
 ): Promise<NonNullable<ProtectedAppMetadata['customDomains']>[number]> => {
+  // Hostnames are case-insensitive. Compare and store in lowercase so the stored domain matches
+  // the request host the worker sees.
+  const normalizedHostname = hostname.toLowerCase();
+
+  // The default domain of protected apps is reserved. Hostnames under it are assigned by Logto
+  // when an app is created, and adding one as a custom domain creates a custom hostname inside
+  // our own zone that never gets a matching site config.
+  const { domain: providerDomain } = await getProviderConfig();
+  const defaultDomain = providerDomain.toLowerCase();
+  assertThat(
+    normalizedHostname !== defaultDomain && !isSubdomainOf(normalizedHostname, defaultDomain),
+    'domain.domain_is_not_allowed',
+    422
+  );
+
   if (EnvSet.values.isProtectedAppLocalDevEnabled) {
     return {
-      domain: hostname,
+      domain: normalizedHostname,
       cloudflareData: null,
       status: DomainStatus.Active,
       errorMessage: null,
@@ -140,10 +155,12 @@ const addDomainToRemote = async (
   }
 
   const hostnameProviderConfig = await getHostnameProviderConfig();
-  const { blockedDomains } = hostnameProviderConfig;
+  const blockedDomains = (hostnameProviderConfig.blockedDomains ?? []).map((domain) =>
+    domain.toLowerCase()
+  );
   assertThat(
-    !(blockedDomains ?? []).some(
-      (domain) => hostname === domain || isSubdomainOf(hostname, domain)
+    !blockedDomains.some(
+      (domain) => normalizedHostname === domain || isSubdomainOf(normalizedHostname, domain)
     ),
     'domain.domain_is_not_allowed',
     422
@@ -151,18 +168,18 @@ const addDomainToRemote = async (
 
   const [fallbackOrigin, cloudflareData] = await Promise.all([
     getFallbackOrigin(hostnameProviderConfig),
-    createCustomHostname(hostnameProviderConfig, hostname),
+    createCustomHostname(hostnameProviderConfig, normalizedHostname),
   ]);
 
   return {
-    domain: hostname,
+    domain: normalizedHostname,
     cloudflareData,
     status: DomainStatus.PendingVerification,
     errorMessage: null,
     dnsRecords: [
       {
         type: 'CNAME',
-        name: hostname,
+        name: normalizedHostname,
         value: fallbackOrigin,
       },
     ],

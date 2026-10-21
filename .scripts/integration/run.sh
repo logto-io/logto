@@ -29,6 +29,7 @@ dump_logs() {
   docker compose -f "$COMPOSE_FILE" logs logto > "${LOG_PREFIX}-logto.log" 2>&1 || true
   docker compose -f "$COMPOSE_FILE" logs postgres > "${LOG_PREFIX}-postgres.log" 2>&1 || true
   docker compose -f "$COMPOSE_FILE" logs redis > "${LOG_PREFIX}-redis.log" 2>&1 || true
+  docker compose -f "$COMPOSE_FILE" logs s3mock > "${LOG_PREFIX}-s3mock.log" 2>&1 || true
 }
 
 # A function to clean up the environment after the tests regardless of the test result
@@ -89,4 +90,5 @@ pnpm build
 
 MOCK_CONNECTOR_MESSAGE_DIR="$MOCK_MESSAGE_DIR" \
 WEBHOOK_HOST_FOR_APP="host.docker.internal" \
+INTEGRATION_TESTS_EXPERIENCE_BLOBS_STORAGE=1 \
 pnpm run "test:${TARGET}"

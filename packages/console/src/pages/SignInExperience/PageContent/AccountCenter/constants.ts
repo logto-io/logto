@@ -62,15 +62,27 @@ export const accountCenterSections: AccountCenterFieldSection[] = [
             key: 'session',
             title: 'sign_in_exp.account_center.fields.sessions',
           },
-          // DEV: MFA trusted device management
-          ...conditionalArray<AccountCenterFieldItem>(
-            isDevFeaturesEnabled && {
-              key: 'trustedDevice',
-              title: 'sign_in_exp.account_center.fields.trusted_devices',
-            }
-          ),
+          {
+            key: 'trustedDevice',
+            title: 'sign_in_exp.account_center.fields.trusted_devices',
+          },
         ],
       },
+      // DEV: Self-service personal access tokens
+      ...conditionalArray<AccountCenterFieldGroup>(
+        isDevFeaturesEnabled && {
+          key: 'developerSettings',
+          title:
+            'sign_in_exp.account_center.sections.account_security.groups.developer_settings.title',
+          items: [
+            {
+              key: 'personalAccessToken',
+              title: 'sign_in_exp.account_center.fields.personal_access_tokens',
+              description: 'sign_in_exp.account_center.fields.personal_access_tokens_description',
+            },
+          ],
+        }
+      ),
     ],
   },
   {

@@ -13,6 +13,7 @@ const useDynamicApp = (shouldFetch = true) => {
   );
 
   return {
+    data,
     enabled: Boolean(data?.enabled),
     isLoading: shouldFetch && !data && !error,
     error,

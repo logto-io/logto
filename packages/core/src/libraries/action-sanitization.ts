@@ -8,7 +8,7 @@ import {
 } from '@logto/schemas';
 import { z } from 'zod';
 
-import { isArray, isRecord } from '#src/utils/sensitive-data.js';
+import { isArray, isRecord } from '#src/utils/type.js';
 
 const unavailableValue = '[unavailable]';
 const redactedValue = '[redacted]';

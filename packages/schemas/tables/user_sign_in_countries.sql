@@ -4,7 +4,7 @@
 create table user_sign_in_countries (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
-  user_id varchar(12) not null
+  user_id varchar(128) not null
     references users (id) on update cascade on delete cascade,
   /** ISO 3166-1 alpha-2 country code (2 chars), stored up to 16 chars for robustness. */
   country varchar(16) not null,

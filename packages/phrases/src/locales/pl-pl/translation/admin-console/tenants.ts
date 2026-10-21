@@ -10,12 +10,54 @@ const tenants = {
     oidc_configs: 'Konfiguracje OIDC',
     subscription: 'Plan i rozliczenia',
     billing_history: 'Historia rozliczeń',
+    license: 'Licencja',
+  },
+  license: {
+    purchase_title: 'PLANY SELF-HOSTED',
+    purchase_description:
+      'Plany Pro i Przedsiębiorstwo self-hosted odblokowują płatne funkcje na Twojej instancji, takie jak ukrycie marki Logto, własny interfejs, współpraca w konsoli oraz nieograniczona liczba aplikacji SAML. Kup plan, aby otrzymać klucz licencyjny.',
+    purchase_button: 'Zobacz plany self-hosted',
+    install_title: 'INSTALACJA LICENCJI',
+    install_description: 'Wklej klucz licencyjny otrzymany po zakupie planu self-hosted.',
+    install_button: 'Zainstaluj licencję',
+    key_field: 'Klucz licencyjny',
+    key_field_description:
+      'Klucz jest weryfikowany na Twojej instancji i nigdy jej nie opuszcza. Jeśli Twój klucz wygasł, skontaktuj się z Logto, aby otrzymać nowy.',
+    key_placeholder: 'Wklej tutaj swój klucz licencyjny',
+    installed_toast: 'Licencja została zainstalowana.',
+    details_title: 'LICENCJA',
+    details_description: 'Licencja zainstalowana na tej instancji i zakres, jaki przyznaje.',
+    plan_field: 'Plan',
+    environment_field: 'Środowisko',
+    environment_production: 'Produkcyjne',
+    environment_non_production: 'Nieprodukcyjne',
+    expires_at_field: 'Wygasa',
+    installed_at_field: 'Zainstalowano',
+    last_refreshed_at_field: 'Ostatnio odświeżono',
+    grace_ends_at_field: 'Okres karencji kończy się',
+    refresh_expired_description:
+      'Klucz licencyjny wygasł {{expiresAt}}. Funkcje objęte licencją pozostaną dostępne do {{graceEndsAt}}, gdy Logto będzie próbować go odświeżyć.',
+    refresh_refused_description:
+      'Odświeżenie licencji odrzucono, ponieważ licencja jest {{reason}}. Funkcje objęte licencją pozostaną dostępne do {{graceEndsAt}}.',
+    refusal_reason_canceled: 'anulowana',
+    refusal_reason_unpaid: 'nieopłacona',
+    refusal_reason_expired: 'wygasła',
+    refusal_reason_revoked: 'unieważniona',
+    refusal_reason_unknown: 'niedostępna',
+    grace_expired_description:
+      'Okres karencji licencji zakończył się {{graceEndsAt}}. To wdrożenie wróciło do domyślnych ustawień OSS. Skontaktuj się z Logto, aby otrzymać nowy klucz licencyjny, i zainstaluj go ponownie.',
+    get_fresh_key_button: 'Pobierz nowy klucz licencyjny',
+    replace_button: 'Zmień licencję',
   },
   members: {
     card_title: 'Zarządzaj tenantami bezpieczniej dzięki Logto Cloud',
     card_description:
       'Dodawaj administratorów lub współpracowników do swojego tenantu bez współdzielenia jednego konta administratora.',
     card_action: 'Poznaj Logto Cloud',
+    self_hosted_card_title: 'Zarządzaj tenantami bezpieczniej dzięki planom self-hosted',
+    self_hosted_card_description:
+      'Dodawaj administratorów lub współpracowników do swojego tenantu bez współdzielenia jednego konta administratora.',
+    self_hosted_card_action: 'Poznaj plany self-hosted',
   },
   settings: {
     title: 'USTAWIENIA',
@@ -42,6 +84,17 @@ const tenants = {
     tenant_mfa: 'Uwierzytelnianie wieloskładnikowe',
     tenant_mfa_description:
       'Wymagaj od członków skonfigurowania uwierzytelniania wieloskładnikowego, aby uzyskać dostęp do tego najemcy.',
+    oss_description:
+      'Zarządzaj sposobem, w jaki członkowie uzyskują dostęp do Konsoli na tej instancji.',
+    tenant_mfa_confirm_title: 'Wymagać MFA od wszystkich członków?',
+    tenant_mfa_confirm_description:
+      'Ci członkowie nie skonfigurowali jeszcze MFA. Pozostaną zalogowani i zostaną poproszeni o jego skonfigurowanie przy następnym logowaniu:',
+    tenant_mfa_confirm_self:
+      'Ty również nie skonfigurowałeś MFA. Skonfiguruj je w ustawieniach konta przed następnym logowaniem.',
+    tenant_mfa_confirm_button: 'Wymagaj MFA',
+    tenant_mfa_setup_required:
+      'Ten najemca wymaga uwierzytelniania wieloskładnikowego. Skonfiguruj je teraz, w przeciwnym razie zostaniesz o to poproszony przy następnym logowaniu.',
+    tenant_mfa_setup_action: 'Skonfiguruj MFA',
     enterprise_sso: 'Enterprise SSO',
     enterprise_sso_description:
       'Dostępne w płatnych planach. Skontaktuj się z nami, aby włączyć Enterprise SSO, dzięki czemu wszyscy członkowie będą mogli logować się do konsoli Logto Cloud za pomocą dostawcy tożsamości Twojej organizacji.',
@@ -49,6 +102,12 @@ const tenants = {
   full_env_tag: {
     development: 'Development',
     production: 'Production',
+  },
+  view_only: {
+    tag: 'Tylko podgląd',
+    notification:
+      'Masz dostęp tylko do odczytu do tego najemcy. Poproś administratora najemcy, jeśli musisz wprowadzić zmiany.',
+    hidden: 'Ukryte dla przeglądających',
   },
   deletion_card: {
     title: 'USUWANIE',

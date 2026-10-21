@@ -302,6 +302,13 @@ const application_details = {
     email_address: 'Endereço de email',
     email_address_description: 'Usar o endereço de email como ID de Nome',
   },
+  saml_idp_authentication: {
+    always_force_authn: 'Sempre forçar autenticação',
+    always_force_authn_description:
+      'Exigir que os utilizadores façam login novamente sempre que acessem esta aplicação, mesmo que já possuam uma sessão Logto.',
+    always_force_authn_tip:
+      'Quando ativado, o Logto sempre pede aos utilizadores que façam login novamente para esta aplicação. Quando desativado, uma sessão Logto existente é reutilizada a menos que o fornecedor de serviços solicite uma autenticação fresca com ForceAuthn.',
+  },
   saml_encryption_config: {
     encrypt_assertion: 'Criptografar asserção SAML',
     encrypt_assertion_description: 'Ao ativar esta opção, a asserção SAML será criptografada.',

@@ -6,6 +6,7 @@ import { useSWRConfig, type KeyedMutator } from 'swr';
 
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import ReadOnlyFieldScope from '@/contexts/ReadOnlyFieldScope/ReadOnlyFieldScope';
 import useApi from '@/hooks/use-api';
 import { getApiPath } from '@/pages/CustomizeJwt/utils/path';
 import { Action, type Action as JwtAction } from '@/pages/CustomizeJwt/utils/type';
@@ -79,8 +80,10 @@ function MainContent<T extends LogtoJwtTokenKeyType>({
     <>
       <FormProvider {...methods}>
         <form className={classNames(styles.content, className)}>
-          <ScriptSection />
-          <SettingsSection action={action} />
+          <ReadOnlyFieldScope>
+            <ScriptSection />
+            <SettingsSection action={action} />
+          </ReadOnlyFieldScope>
         </form>
       </FormProvider>
       <SubmitFormChangesActionBar

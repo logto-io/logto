@@ -5,9 +5,9 @@ import {
   type IdentificationApiPayload,
   type InteractionEvent,
   type MfaFactor,
-  type PasswordVerificationPayload,
+  type PasswordVerificationRequestBody,
   type UpdateProfileApiPayload,
-  type VerificationCodeIdentifier,
+  type VerificationCodeIdentifierPayload,
   type WebAuthnAuthenticationOptions,
   type WebAuthnVerificationPayload,
 } from '@logto/schemas';
@@ -47,13 +47,28 @@ export class ExperienceClient extends MockClient {
       .json();
   }
 
-  public async initInteraction(payload: CreateExperienceApiPayload) {
+  /**
+   * Init the interaction. Resolves with the redirect response when a step-up interaction was
+   * finished at creation because the pinned user cannot reach the requested authentication
+   * context, and with `undefined` otherwise.
+   */
+  public async initInteraction(
+    payload: CreateExperienceApiPayload
+  ): Promise<RedirectResponse | undefined> {
     const response = await this.api.put(experienceRoutes.prefix, {
       headers: this.headers,
       json: payload,
     });
 
     this.mergeRawCookies(response.headers.getSetCookie());
+
+    if (response.status === 204) {
+      return;
+    }
+
+    const data: unknown = await response.json();
+
+    return isRedirectResponse(data) ? data : undefined;
   }
 
   public override async submitInteraction(): Promise<RedirectResponse> {
@@ -75,7 +90,7 @@ export class ExperienceClient extends MockClient {
     return data;
   }
 
-  public async verifyPassword(payload: PasswordVerificationPayload) {
+  public async verifyPassword(payload: PasswordVerificationRequestBody) {
     return this.api
       .post(`${experienceRoutes.verification}/password`, {
         headers: this.headers,
@@ -85,7 +100,7 @@ export class ExperienceClient extends MockClient {
   }
 
   public async sendVerificationCode(payload: {
-    identifier: VerificationCodeIdentifier;
+    identifier: VerificationCodeIdentifierPayload;
     interactionEvent: InteractionEvent;
   }) {
     return this.api
@@ -97,7 +112,7 @@ export class ExperienceClient extends MockClient {
   }
 
   public async verifyVerificationCode(payload: {
-    identifier: VerificationCodeIdentifier;
+    identifier: VerificationCodeIdentifierPayload;
     verificationId: string;
     code: string;
   }) {
@@ -236,9 +251,10 @@ export class ExperienceClient extends MockClient {
       .json<{ verificationId: string }>();
   }
 
-  public async createNewPasswordIdentityVerification(
-    payload: Pick<PasswordVerificationPayload, 'identifier'> & { password?: string }
-  ) {
+  public async createNewPasswordIdentityVerification(payload: {
+    identifier: InteractionIdentifier;
+    password?: string;
+  }) {
     return this.api
       .post(`${experienceRoutes.verification}/new-password-identity`, {
         headers: this.headers,

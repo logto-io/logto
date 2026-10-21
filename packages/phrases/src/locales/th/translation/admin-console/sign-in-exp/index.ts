@@ -44,7 +44,8 @@ const sign_in_exp = {
     hide_logto_branding: 'ซ่อนแบรนด์ Logto',
     hide_logto_branding_description:
       'ลบ "Powered by Logto" เพื่อให้แบรนด์ของคุณโดดเด่นด้วยประสบการณ์ลงชื่อเข้าใช้ที่สะอาดและเป็นมืออาชีพ',
-    hide_logto_branding_oss_note: 'ฟีเจอร์นี้พร้อมใช้งานแบบเนทีฟใน <a>Logto Cloud</a>',
+    hide_logto_branding_oss_note:
+      'ฟีเจอร์นี้พร้อมใช้งานใน <a>Logto Cloud</a> หรือ<selfHosted>แผน self-hosted</selfHosted>',
   },
   branding_uploads: {
     app_logo: {
@@ -94,7 +95,7 @@ const sign_in_exp = {
       'อัปโหลดไฟล์บีบอัด (.zip) เพื่อแทนที่ UI สำเร็จรูปของ Logto ด้วยโค้ดของคุณเอง <a>เรียนรู้เพิ่มเติม</a>',
     bring_your_ui_oss_description: 'ปรับแต่ง UI สำหรับการลงชื่อเข้าใช้ด้วยโค้ดของคุณเอง',
     bring_your_ui_oss_card_description:
-      'อัปโหลด UI สำหรับการลงชื่อเข้าใช้แบบกำหนดเองของคุณไปยัง <a>Logto Cloud</a> ได้โดยตรง โดยไม่ต้อง fork หรือปรับใช้ใหม่',
+      'การอัปโหลด UI แบบกำหนดเองพร้อมใช้งานใน <a>Logto Cloud</a> หรือ<selfHosted>แผน self-hosted</selfHosted> โดยไม่ต้อง fork หรือปรับใช้ใหม่',
     bring_your_ui_oss_try_cloud: 'ลองใช้ Cloud',
     preview_with_bring_your_ui_description:
       'ไฟล์ UI ที่คุณกำหนดเองถูกอัปโหลดเรียบร้อยแล้วและกำลังใช้งานอยู่ ดังนั้นหน้าต่างตัวอย่างแบบฝังจึงถูกปิดใช้งาน\nหากต้องการทดสอบหน้าเข้าสู่ระบบแบบกำหนดเอง ให้คลิกปุ่ม "แสดงตัวอย่างสด" เพื่อเปิดในแท็บใหม่',
@@ -143,6 +144,9 @@ const sign_in_exp = {
           session_management: {
             title: 'การจัดการเซสชัน',
           },
+          developer_settings: {
+            title: 'การตั้งค่าสำหรับนักพัฒนา',
+          },
         },
       },
       user_profile: {
@@ -186,6 +190,9 @@ const sign_in_exp = {
       custom_data_description: 'ควบคุมการเข้าถึงข้อมูล JSON แบบกำหนดเองที่เก็บไว้กับผู้ใช้.',
       sessions: 'การจัดการเซสชัน',
       trusted_devices: 'อุปกรณ์ที่เชื่อถือได้',
+      personal_access_tokens: 'โทเค็นการเข้าถึงส่วนบุคคล',
+      personal_access_tokens_description:
+        'การเปิดใช้งานนี้ช่วยให้ผู้ใช้สร้างโทเค็นการเข้าถึงส่วนบุคคลที่มีอายุการใช้งานยาวนานซึ่งยังคงใช้งานได้แม้จะออกจากระบบหรือรีเซ็ตรหัสผ่าน และสามารถนำไปแลกเปลี่ยนเป็นโทเค็นการเข้าถึงโดยแอปพลิเคชันบุคคลที่หนึ่งที่เปิดใช้งานการแลกเปลี่ยนโทเค็น',
     },
     profile_fields: {
       title: 'ฟิลด์โปรไฟล์สำหรับศูนย์บัญชีที่สร้างไว้ล่วงหน้า',

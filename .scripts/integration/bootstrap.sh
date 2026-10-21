@@ -11,6 +11,10 @@ npm run cli connector list -- -p . | grep OFFICIAL
 npm run cli connector link -- --mock -p .
 npm run cli db system set cloudflareHostnameProvider '{"zoneId":"mock-zone-id","apiToken":""}'
 
+if [[ -n "${EXPERIENCE_BLOBS_PROVIDER:-}" ]]; then
+  npm run cli db system set experienceBlobsProvider "$EXPERIENCE_BLOBS_PROVIDER"
+fi
+
 cd packages/core
 
 if [[ "${COVERAGE:-0}" == "1" ]]; then

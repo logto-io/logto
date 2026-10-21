@@ -31,8 +31,10 @@ export const defaultMetadata: ConnectorMetadata = {
       key: 'clientId',
       type: ConnectorConfigFormItemType.Text,
       required: true,
-      label: 'Identifier',
-      placeholder: '<your-registered-identifier>',
+      label: 'Services ID',
+      placeholder: 'com.your-company.your-service',
+      tooltip:
+        "The Services ID identifier registered in your Apple Developer account. This is not your app's App ID (bundle ID); using the App ID here makes Apple reject the sign-in request with an `invalid_client` error.",
     },
     {
       key: 'scope',

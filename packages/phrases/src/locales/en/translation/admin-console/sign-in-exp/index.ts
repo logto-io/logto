@@ -45,7 +45,8 @@ const sign_in_exp = {
     hide_logto_branding: 'Hide Logto branding',
     hide_logto_branding_description:
       'Remove "Powered by Logto". Spotlight your brand exclusively with a clean, professional sign-in experience.',
-    hide_logto_branding_oss_note: 'This feature is natively available in <a>Logto Cloud</a>.',
+    hide_logto_branding_oss_note:
+      'This feature is available in <a>Logto Cloud</a> or <selfHosted>self-hosted plans</selfHosted>.',
   },
   branding_uploads: {
     app_logo: {
@@ -95,7 +96,7 @@ const sign_in_exp = {
       'Upload a compressed package (.zip) to replace the Logto prebuilt UI with your own code. <a>Learn more</a>',
     bring_your_ui_oss_description: 'Customize the sign-in UI with your own code.',
     bring_your_ui_oss_card_description:
-      'Upload your custom sign-in UI directly on <a>Logto Cloud</a>. No need to fork and redeploy.',
+      'Custom UI upload is available in <a>Logto Cloud</a> or <selfHosted>self-hosted plans</selfHosted>. No need to fork and redeploy.',
     bring_your_ui_oss_try_cloud: 'Try Cloud',
     preview_with_bring_your_ui_description:
       'Your custom UI assets have been successfully uploaded and are now being served. Consequently, the built-in preview window has been disabled.\nTo test your personalized sign-in UI, click the "Live Preview" button to open it in a new browser tab.',
@@ -145,6 +146,9 @@ const sign_in_exp = {
           session_management: {
             title: 'Session management',
           },
+          developer_settings: {
+            title: 'Developer settings',
+          },
         },
       },
       user_profile: {
@@ -188,6 +192,9 @@ const sign_in_exp = {
       custom_data_description: 'Control access to custom JSON data stored on the user.',
       sessions: 'Sessions',
       trusted_devices: 'Trusted devices',
+      personal_access_tokens: 'Personal access tokens',
+      personal_access_tokens_description:
+        'Enabling this lets users create long-lived personal access tokens that remain active across sign-outs and password resets, and can be exchanged for access tokens by any first-party application with token exchange enabled.',
     },
     profile_fields: {
       title: 'Profile fields for prebuilt account center',

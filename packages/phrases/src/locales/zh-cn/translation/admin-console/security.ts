@@ -34,6 +34,11 @@ const security = {
       description:
         'Cloudflare 的智能验证码替代方案，提供非侵入性的机器人保护，同时确保无视觉难题的无缝用户体验。',
     },
+    cap: {
+      name: 'Cap',
+      description:
+        '开源、可自托管的工作量证明验证码，无需视觉谜题或第三方服务，适合无法访问其他验证码服务的地区。',
+    },
   },
   captcha_details: {
     back_to_security: '返回安全',
@@ -49,6 +54,10 @@ const security = {
     domain_placeholder: 'www.google.com（默认）或 recaptcha.net',
     recaptcha_key_id: 'reCAPTCHA 密钥 ID',
     recaptcha_api_key: '项目的 API 密钥',
+    cap_endpoint: 'Cap 端点',
+    cap_endpoint_placeholder: 'https://cap.example.com',
+    cap_endpoint_http_notice:
+      '此端点使用 HTTP，仅适用于本地开发。浏览器会拦截 HTTPS 登录页发出的 HTTP 请求，且密钥将以明文传输。生产环境请使用 HTTPS。',
     deletion_description: '你确定要删除此验证码提供商吗？',
     captcha_deleted: '验证码提供商删除成功',
     setup_captcha: '设置验证码',
@@ -57,6 +66,10 @@ const security = {
     mode_checkbox: '复选框验证',
     mode_notice:
       '验证模式在 Google Cloud Console 的 reCAPTCHA 密钥设置中定义。更改此处的模式需要匹配的密钥类型。',
+    score_threshold: '分数阈值',
+    score_threshold_description:
+      '低于阈值的分数将被拒绝。0.0 允许所有分数，1.0 只允许满分。默认值为 0.5。',
+    score_threshold_error: '分数阈值必须在 0 到 1 之间。',
   },
   password_policy: {
     password_requirements: '密码要求',

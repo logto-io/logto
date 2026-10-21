@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { UserMfaFlow } from '@/types';
 
 import useSendMfaPayload from './use-send-mfa-payload';
+import useStepUpContext from './use-step-up-context';
 import useToast from './use-toast';
 
 type WebAuthnOptions = WebAuthnRegistrationOptions | WebAuthnAuthenticationOptions;
@@ -27,10 +28,12 @@ const isAuthenticationResponseJSON = (
   return 'signature' in responseJson.response;
 };
 
-const useWebAuthnOperation = () => {
+const useWebAuthnOperation = (flow: UserMfaFlow) => {
   const { t } = useTranslation();
   const { setToast } = useToast();
   const sendMfaPayload = useSendMfaPayload();
+  const { isPureStepUp } = useStepUpContext();
+  const isStepUpVerification = isPureStepUp && flow === UserMfaFlow.MfaVerification;
 
   return useCallback(
     /**
@@ -39,7 +42,7 @@ const useWebAuthnOperation = () => {
      * Therefore, we should avoid asynchronous operations before invoking the WebAuthn API or the os may consider the WebAuthn authorization is not initiated by the user.
      * So, we need to prepare the necessary WebAuthn options before calling the WebAuthn API, this is why we don't generate the options in this function.
      */
-    async (options: WebAuthnOptions, verificationId: string, createTrustedDevice = false) => {
+    async (options: WebAuthnOptions, verificationId: string) => {
       if (!browserSupportsWebAuthn()) {
         setToast(t('mfa.webauthn_not_supported'));
         return;
@@ -49,13 +52,13 @@ const useWebAuthnOperation = () => {
 
       const response = await trySafe(
         async () =>
-          parsedRegistrationOptions.success
+          !isStepUpVerification && parsedRegistrationOptions.success
             ? startRegistration(parsedRegistrationOptions.data)
             : startAuthentication(options),
         () => {
           setToast(
             t(
-              parsedRegistrationOptions.success
+              !isStepUpVerification && parsedRegistrationOptions.success
                 ? 'mfa.webauthn_failed_to_create'
                 : 'mfa.webauthn_failed_to_verify'
             )
@@ -76,17 +79,15 @@ const useWebAuthnOperation = () => {
               flow: UserMfaFlow.MfaVerification,
               payload: { ...response, type: MfaFactor.WebAuthn },
               verificationId,
-              createTrustedDevice,
             }
           : {
               flow: UserMfaFlow.MfaBinding,
               payload: { ...response, type: MfaFactor.WebAuthn },
               verificationId,
-              createTrustedDevice,
             }
       );
     },
-    [sendMfaPayload, setToast, t]
+    [isStepUpVerification, sendMfaPayload, setToast, t]
   );
 };
 

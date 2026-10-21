@@ -23,7 +23,7 @@ type BaseProps = Omit<HTMLProps<HTMLButtonElement>, 'type' | 'size' | 'title'> &
 type Props = BaseProps & {
   readonly title: TFuncKey;
   readonly icon?: React.ReactNode;
-  readonly i18nProps?: Record<string, string>;
+  readonly i18nProps?: Record<string, unknown>;
 };
 
 const Button = ({

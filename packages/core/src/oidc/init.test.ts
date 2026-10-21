@@ -7,6 +7,7 @@ import { errors, type KoaContextWithOIDC } from 'oidc-provider';
 import { mockResource, mockUser } from '#src/__mocks__/index.js';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { JwtCustomizerLibrary } from '#src/libraries/jwt-customizer.js';
 import { getProviderConfiguration } from '#src/oidc/oidc-provider-internals.js';
 import { mockEnvSet } from '#src/test-utils/env-set.js';
 import { createOidcContext } from '#src/test-utils/oidc-provider.js';
@@ -81,17 +82,28 @@ class MockCimdEnvSet extends EnvSet {
 
 const cimdEnvSet = new MockCimdEnvSet(defaultTenantId, EnvSet.values.dbUrl);
 
-const createTestClient = (): KoaContextWithOIDC['oidc']['client'] => {
+const createTestClient = (scope?: string): KoaContextWithOIDC['oidc']['client'] => {
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal client stub for OIDC context testing
   return {
     clientId,
+    scope,
     metadata: () => ({ appLevelAccessControlEnabled: true }),
   } as KoaContextWithOIDC['oidc']['client'];
 };
 
-const mockGrantFound = (provider: KoaContextWithOIDC['oidc']['provider']) => {
+const mockGrantFound = (
+  provider: KoaContextWithOIDC['oidc']['provider'],
+  /** Mirrors the real `getOIDCScopeFiltered`: the granted OP scopes intersected with the request. */
+  grantedOidcScope = ''
+) => {
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal grant stub for OIDC context testing
-  const grant = {} as Awaited<ReturnType<typeof provider.Grant.find>>;
+  const grant = {
+    getOIDCScopeFiltered: (filter: Set<string>) =>
+      grantedOidcScope
+        .split(' ')
+        .filter((scope) => filter.has(scope))
+        .join(' '),
+  } as Awaited<ReturnType<typeof provider.Grant.find>>;
 
   return jest.spyOn(provider.Grant, 'find').mockResolvedValueOnce(grant);
 };
@@ -391,6 +403,71 @@ describe('oidc provider init', () => {
     await expect(configuration.loadExistingGrant(ctx)).resolves.toBeDefined();
     expect(grantIdFor).toHaveBeenCalledWith(clientId);
     expect(findGrant).toHaveBeenCalledWith('session_grant_id');
+  });
+
+  it('should reject a granted user scope the client is no longer configured for', async () => {
+    const tenant = new MockTenant();
+
+    tenant.setPartial('libraries', {
+      applicationAccessControl: { assertUserHasApplicationAccess: jest.fn() },
+    });
+
+    const provider = createProvider(tenant);
+    mockGrantFound(provider, 'openid email');
+    const configuration = getProviderConfiguration(provider);
+    const ctx = createOidcContext({
+      provider,
+      account: { accountId, claims: async () => ({ sub: accountId }) },
+      client: createTestClient('openid offline_access'),
+      requestParamScopes: new Set(['openid', 'email']),
+      result: { consent: { grantId: 'grant_id' } },
+    } as Partial<KoaContextWithOIDC['oidc']>);
+
+    await expect(configuration.loadExistingGrant(ctx)).rejects.toMatchError(
+      new errors.InvalidScope('requested scope is no longer allowed for the client', 'email')
+    );
+  });
+
+  it('should serve a granted user scope the client still allows', async () => {
+    const tenant = new MockTenant();
+
+    tenant.setPartial('libraries', {
+      applicationAccessControl: { assertUserHasApplicationAccess: jest.fn() },
+    });
+
+    const provider = createProvider(tenant);
+    mockGrantFound(provider, 'openid email');
+    const configuration = getProviderConfiguration(provider);
+    const ctx = createOidcContext({
+      provider,
+      account: { accountId, claims: async () => ({ sub: accountId }) },
+      client: createTestClient('openid offline_access email'),
+      requestParamScopes: new Set(['openid', 'email']),
+      result: { consent: { grantId: 'grant_id' } },
+    } as Partial<KoaContextWithOIDC['oidc']>);
+
+    await expect(configuration.loadExistingGrant(ctx)).resolves.toBeDefined();
+  });
+
+  it('should not restrict a client that carries no scope metadata', async () => {
+    const tenant = new MockTenant();
+
+    tenant.setPartial('libraries', {
+      applicationAccessControl: { assertUserHasApplicationAccess: jest.fn() },
+    });
+
+    const provider = createProvider(tenant);
+    mockGrantFound(provider, 'openid email');
+    const configuration = getProviderConfiguration(provider);
+    const ctx = createOidcContext({
+      provider,
+      account: { accountId, claims: async () => ({ sub: accountId }) },
+      client: createTestClient(),
+      requestParamScopes: new Set(['openid', 'email']),
+      result: { consent: { grantId: 'grant_id' } },
+    } as Partial<KoaContextWithOIDC['oidc']>);
+
+    await expect(configuration.loadExistingGrant(ctx)).resolves.toBeDefined();
   });
 
   it('should defer application access check to consent prompt when no existing grant is loaded', async () => {
@@ -703,6 +780,255 @@ describe('findAccount', () => {
     await expect(
       findAccount(async () => ({ ...mockUser, id: accountId, isSuspended: true }))
     ).rejects.toMatchError(new errors.InvalidGrant('user is suspended'));
+  });
+});
+describe('authentication context provider metadata', () => {
+  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+
+  afterEach(() => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
+  });
+
+  it('should advertise the Logto ACR values and the acr / amr / auth_time claims when dev features are enabled', () => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+    const configuration = getProviderConfiguration(createProvider(new MockTenant()));
+    // `claimsSupported` is derived by the provider at construction and is not part of its typings.
+    const claimsSupported: unknown = Reflect.get(configuration, 'claimsSupported');
+
+    expect([...configuration.acrValues]).toEqual(['urn:logto:acr:1fa', 'urn:logto:acr:mfa']);
+    expect(claimsSupported).toContain('acr');
+    expect(claimsSupported).toContain('amr');
+    expect(claimsSupported).toContain('auth_time');
+  });
+
+  it('should keep the provider metadata unchanged when dev features are disabled', () => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+    const configuration = getProviderConfiguration(createProvider(new MockTenant()));
+    const claimsSupported: unknown = Reflect.get(configuration, 'claimsSupported');
+
+    expect([...configuration.acrValues]).toEqual([]);
+    expect(claimsSupported).not.toContain('acr');
+    expect(claimsSupported).not.toContain('amr');
+    expect(claimsSupported).toContain('auth_time');
+  });
+
+  it('should evaluate acr_values first in the login prompt when dev features are enabled', () => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+    const { interactions } = getProviderConfiguration(createProvider(new MockTenant()));
+    const loginPrompt = interactions.policy.find(({ name }) => name === 'login');
+
+    expect(loginPrompt?.checks[0]?.reason).toBe('acr_unmet');
+  });
+
+  it('should keep the default interaction policy when dev features are disabled', () => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+    const { interactions } = getProviderConfiguration(createProvider(new MockTenant()));
+    const loginPrompt = interactions.policy.find(({ name }) => name === 'login');
+
+    expect(loginPrompt?.checks[0]?.reason).toBe('login_prompt');
+  });
+});
+describe('authentication context extra token claims', () => {
+  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+  const originalIsCloud = EnvSet.values.isCloud;
+
+  afterEach(() => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
+    Reflect.set(EnvSet.values, 'isCloud', originalIsCloud);
+    jest.restoreAllMocks();
+  });
+
+  it.each([true, false])(
+    'should preserve organization claims, reserve the authentication context against the customizer, and keep it last for other claims with dev features %s',
+    async (isDevFeaturesEnabled) => {
+      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', isDevFeaturesEnabled);
+      Reflect.set(EnvSet.values, 'isCloud', false);
+      const customizedClaims = {
+        acr: 'custom-acr',
+        amr: ['custom-amr'],
+        auth_time: 3000,
+        custom_claim: true,
+      };
+      const runScriptLocally = jest
+        .spyOn(JwtCustomizerLibrary, 'runScriptLocally')
+        .mockResolvedValueOnce({})
+        .mockResolvedValueOnce(customizedClaims);
+      const getJwtCustomizer = jest.fn().mockResolvedValue({ script: 'return {}' });
+      const tenant = new MockTenant(
+        undefined,
+        undefined,
+        undefined,
+        {
+          jwtCustomizers: {
+            getUserContext: jest.fn().mockResolvedValue({ id: accountId }),
+            getApplicationContext: jest.fn(),
+            getOrganizationContext: jest.fn(),
+          },
+        },
+        { getJwtCustomizer }
+      );
+      const provider = createProvider(tenant);
+      const configuration = getProviderConfiguration(provider);
+      const client = createTestClient();
+      assert(client);
+      const tokenProperties = {
+        client,
+        accountId,
+        scope: 'openid',
+        grantId: 'grant-id',
+        gty: GrantType.AuthorizationCode,
+      };
+      const ctx = createOidcContext({
+        provider,
+        client,
+        params: {
+          grant_type: GrantType.AuthorizationCode,
+          resource: indicator,
+          organization_id: 'org-id',
+        },
+        entities: {
+          AuthorizationCode: new provider.AuthorizationCode({
+            ...tokenProperties,
+            acr: 'urn:logto:acr:mfa',
+            amr: ['pwd', 'otp', 'mfa'],
+            authTime: 1000,
+          }),
+        },
+      });
+      Reflect.set(ctx, 'createLog', jest.fn().mockReturnValue({ append: jest.fn() }));
+      Reflect.set(ctx, 'prependAllLogEntries', jest.fn());
+      const token = new provider.AccessToken(tokenProperties);
+      const builtInClaims = {
+        organization_id: 'org-id',
+        ...(isDevFeaturesEnabled && {
+          acr: 'urn:logto:acr:mfa',
+          amr: ['pwd', 'otp', 'mfa'],
+          auth_time: 1000,
+        }),
+      };
+
+      const expectedMergedClaims = isDevFeaturesEnabled
+        ? // The reserved authentication context claims only survive as Logto's own values.
+          { ...builtInClaims, custom_claim: true }
+        : // Without the feature the released merge order stands, customizer output included.
+          { ...builtInClaims, ...customizedClaims };
+
+      await expect(configuration.extraTokenClaims(ctx, token)).resolves.toEqual(builtInClaims);
+      await expect(configuration.extraTokenClaims(ctx, token)).resolves.toEqual(
+        expectedMergedClaims
+      );
+
+      // Authentication context must also work when no other extra claims are configured.
+      getJwtCustomizer.mockRejectedValueOnce(new Error('Customizer is not configured'));
+      Reflect.set(ctx.oidc, 'params', { grant_type: GrantType.AuthorizationCode });
+      const { organization_id, ...authenticationContextClaims } = builtInClaims;
+      await expect(configuration.extraTokenClaims(ctx, token)).resolves.toEqual(
+        isDevFeaturesEnabled ? authenticationContextClaims : undefined
+      );
+      expect(runScriptLocally).toHaveBeenCalledTimes(2);
+    }
+  );
+
+  it('should preserve token exchange actor claims without adding authentication context', async () => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+    const tenant = new MockTenant(undefined, undefined, undefined, undefined, {
+      getJwtCustomizer: jest.fn().mockRejectedValue(new Error('Customizer is not configured')),
+    });
+    const provider = createProvider(tenant);
+    const configuration = getProviderConfiguration(provider);
+    const client = createTestClient();
+    assert(client);
+    const ctx = createOidcContext({ provider, params: { grant_type: GrantType.TokenExchange } });
+    const token = new provider.AccessToken({
+      client,
+      accountId,
+      scope: 'openid',
+      grantId: 'grant-id',
+      gty: GrantType.TokenExchange,
+      extra: { act: { sub: 'actor-id' } },
+    });
+
+    await expect(configuration.extraTokenClaims(ctx, token)).resolves.toEqual({
+      act: { sub: 'actor-id' },
+    });
+  });
+
+  it('should drop the reserved authentication context claims a token exchange customizer returns', async () => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+    Reflect.set(EnvSet.values, 'isCloud', false);
+    jest.spyOn(JwtCustomizerLibrary, 'runScriptLocally').mockResolvedValue({
+      acr: 'custom-acr',
+      amr: ['custom-amr'],
+      auth_time: 3000,
+      custom_claim: true,
+    });
+    const tenant = new MockTenant(
+      undefined,
+      undefined,
+      undefined,
+      {
+        jwtCustomizers: {
+          getUserContext: jest.fn().mockResolvedValue({ id: accountId }),
+          getApplicationContext: jest.fn(),
+        },
+      },
+      { getJwtCustomizer: jest.fn().mockResolvedValue({ script: 'return {}' }) }
+    );
+    const provider = createProvider(tenant);
+    const configuration = getProviderConfiguration(provider);
+    const client = createTestClient();
+    assert(client);
+    const ctx = createOidcContext({
+      provider,
+      client,
+      params: { grant_type: GrantType.TokenExchange },
+    });
+    Reflect.set(ctx, 'createLog', jest.fn().mockReturnValue({ append: jest.fn() }));
+    Reflect.set(ctx, 'prependAllLogEntries', jest.fn());
+    const token = new provider.AccessToken({
+      client,
+      accountId,
+      scope: 'openid',
+      grantId: 'grant-id',
+      gty: GrantType.TokenExchange,
+      extra: { act: { sub: 'actor-id' } },
+    });
+
+    // The grant derives no authentication context, so the script adds nothing but its own claims.
+    await expect(configuration.extraTokenClaims(ctx, token)).resolves.toEqual({
+      act: { sub: 'actor-id' },
+      custom_claim: true,
+    });
+  });
+
+  it('should keep the reserved authentication context claims a client credentials customizer returns', async () => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+    Reflect.set(EnvSet.values, 'isCloud', false);
+    const customizedClaims = {
+      acr: 'custom-acr',
+      amr: ['custom-amr'],
+      auth_time: 3000,
+      custom_claim: true,
+    };
+    jest.spyOn(JwtCustomizerLibrary, 'runScriptLocally').mockResolvedValue(customizedClaims);
+    const tenant = new MockTenant(
+      undefined,
+      undefined,
+      undefined,
+      { jwtCustomizers: { getApplicationContext: jest.fn() } },
+      { getJwtCustomizer: jest.fn().mockResolvedValue({ script: 'return {}' }) }
+    );
+    const provider = createProvider(tenant);
+    const configuration = getProviderConfiguration(provider);
+    const client = createTestClient();
+    assert(client);
+    const ctx = createOidcContext({ provider, client });
+    Reflect.set(ctx, 'createLog', jest.fn().mockReturnValue({ append: jest.fn() }));
+    Reflect.set(ctx, 'prependAllLogEntries', jest.fn());
+    const token = new provider.ClientCredentials({ client, scope: 'openid' });
+
+    // Machine-to-machine tokens carry no authentication context and keep every custom claim.
+    await expect(configuration.extraTokenClaims(ctx, token)).resolves.toEqual(customizedClaims);
   });
 });
 /* eslint-enable max-lines */

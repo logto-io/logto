@@ -23,11 +23,11 @@ export default function accountGrantRoutes<T extends UserRouter>(
       query: z.object({
         appType: z.enum(['firstParty', 'thirdParty']).optional(),
       }),
-      status: [200, 400, 401, 500],
+      status: [200, 400, 401, 403, 500],
       response: getUserApplicationGrantsResponseGuard,
     }),
     async (ctx, next) => {
-      const { id: userId, scopes, identityVerified } = ctx.auth;
+      const { id: userId, scopes, identityVerified, clientId } = ctx.auth;
       const { fields } = ctx.accountCenter;
       const { appType } = ctx.guard.query;
 
@@ -35,6 +35,7 @@ export default function accountGrantRoutes<T extends UserRouter>(
         identityVerified,
         new RequestError({ code: 'verification_record.permission_denied', status: 401 })
       );
+      await assertFirstPartyClient(queries, clientId);
 
       assertThat(
         fields.session === AccountCenterControlValue.Edit ||

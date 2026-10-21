@@ -10,6 +10,7 @@ create table saml_application_configs (
   entity_id varchar(128),
   acs_url jsonb /* @use SamlAcsUrl */,
   encryption jsonb /* @use SamlEncryption */,
+  authn_request_config jsonb /* @use SamlAuthnRequestConfig */,
   name_id_format varchar(128) /* @use NameIdFormat */ not null,
   primary key (tenant_id, application_id),
   constraint saml_application_configs__application_type

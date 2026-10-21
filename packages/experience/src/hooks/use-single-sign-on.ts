@@ -1,8 +1,8 @@
-import { VerificationType } from '@logto/schemas';
+import { InteractionEvent, VerificationType } from '@logto/schemas';
 import { useCallback, useContext } from 'react';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
-import { getSsoAuthorizationUrl } from '@/apis/experience';
+import { getSsoAuthorizationUrl, initInteraction } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import { searchKeys } from '@/shared/utils/search-parameters';
@@ -11,10 +11,24 @@ import { buildSocialLandingUri, generateState, storeState } from '@/utils/social
 import { storeRedirectContext } from '@/utils/social-redirect-fallback-context';
 
 import useGlobalRedirectTo from './use-global-redirect-to';
+import useStepUpContext from './use-step-up-context';
+import { usePureStepUpErrorHandler } from './use-step-up-error-handler';
 
 const useSingleSignOn = () => {
   const handleError = useErrorHandler();
-  const asyncInvokeSingleSignOn = useApi(getSsoAuthorizationUrl);
+  const { isPureStepUp } = useStepUpContext();
+  const stepUpErrorHandlers = usePureStepUpErrorHandler();
+  const getAuthorizationUrl = useCallback(
+    async (connectorId: string, payload: unknown) => {
+      if (!isPureStepUp) {
+        await initInteraction(InteractionEvent.SignIn);
+      }
+
+      return getSsoAuthorizationUrl(connectorId, payload);
+    },
+    [isPureStepUp]
+  );
+  const asyncInvokeSingleSignOn = useApi(getAuthorizationUrl);
   const redirectTo = useGlobalRedirectTo({
     shouldClearInteractionContextSession: false,
     isReplace: false,
@@ -56,7 +70,7 @@ const useSingleSignOn = () => {
       });
 
       if (error) {
-        await handleError(error);
+        await handleError(error, stepUpErrorHandlers);
 
         return;
       }
@@ -88,7 +102,14 @@ const useSingleSignOn = () => {
       // Invoke Web Sign In flow
       await redirectTo(authorizationUri);
     },
-    [asyncInvokeSingleSignOn, handleError, nativeSignInHandler, redirectTo, setVerificationId]
+    [
+      asyncInvokeSingleSignOn,
+      handleError,
+      nativeSignInHandler,
+      redirectTo,
+      setVerificationId,
+      stepUpErrorHandlers,
+    ]
   );
 };
 

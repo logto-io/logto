@@ -7,10 +7,8 @@ import {
 import { pick } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
-import koaPagination from '#src/middleware/koa-pagination.js';
 import { assertFirstPartyClient } from '#src/utils/assert-first-party-client.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -21,29 +19,24 @@ import { accountApiPrefix } from './constants.js';
 export default function accountTrustedDeviceRoutes<T extends UserRouter>(
   ...[router, { libraries, queries }]: RouterInitArgs<T>
 ) {
-  // DEV: MFA trusted device management
-  if (!EnvSet.values.isDevFeaturesEnabled) {
-    return;
-  }
-
   const { trustedDevices } = queries;
   const { trustedDevices: trustedDeviceLibrary } = libraries;
 
   router.get(
     `${accountApiPrefix}/trusted-devices`,
-    koaPagination(),
     koaGuard({
       response: accountTrustedDeviceResponseGuard.array(),
-      status: [200, 400, 401, 500],
+      status: [200, 400, 401, 403, 500],
     }),
     async (ctx, next) => {
-      const { id: userId, scopes, identityVerified } = ctx.auth;
+      const { id: userId, scopes, identityVerified, clientId } = ctx.auth;
       const { fields } = ctx.accountCenter;
 
       assertThat(
         identityVerified,
         new RequestError({ code: 'verification_record.permission_denied', status: 401 })
       );
+      await assertFirstPartyClient(queries, clientId);
       assertThat(
         fields.trustedDevice === AccountCenterControlValue.Edit ||
           fields.trustedDevice === AccountCenterControlValue.ReadOnly,
@@ -53,13 +46,11 @@ export default function accountTrustedDeviceRoutes<T extends UserRouter>(
         scopes.has(UserScope.TrustedDevices),
         new RequestError({ code: 'auth.unauthorized', status: 401 })
       );
-      const { limit, offset } = ctx.pagination;
-      const [currentTrustedDevice, [totalNumber, records]] = await Promise.all([
+      const [currentTrustedDevice, records] = await Promise.all([
         trustedDeviceLibrary.validateCredential(ctx, userId),
-        trustedDevices.findActiveByUserId(userId, { limit, offset }),
+        trustedDevices.findActiveByUserId(userId),
       ]);
 
-      ctx.pagination.totalCount = totalNumber;
       ctx.body = records.map(
         (record) =>
           ({

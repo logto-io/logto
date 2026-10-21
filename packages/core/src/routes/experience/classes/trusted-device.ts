@@ -5,8 +5,8 @@ import { InteractionEvent, type TrustedDevice as TrustedDeviceModel } from '@log
 import { generateStandardId } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { type EffectiveTrustedDevicePolicy } from '#src/libraries/trusted-device-policy.js';
 import { getTrustedDeviceEventData } from '#src/libraries/trusted-device.js';
 import { type TrustedDeviceMetadata } from '#src/queries/trusted-device.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -15,18 +15,19 @@ import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
 import { type InteractionStorage, type WithHooksAndLogsContext } from '../types.js';
 
-type TrustedDeviceFulfillmentStatus =
-  /** A matching trusted-device fulfillment was restored from interaction storage. */
-  | 'stored'
-  /** A trusted-device credential was validated and stored during the current request. */
-  | 'validated';
+type TrustedDeviceData = Pick<InteractionStorage, 'trustedDeviceOptIn'>;
+type OptInDecisionContext = {
+  interactionEvent: InteractionEvent;
+  userId: string;
+};
 
-type TrustedDeviceData = Pick<
-  InteractionStorage,
-  'trustedDeviceCreation' | 'trustedDeviceFulfillment'
->;
+type AssertOptInDecisionOptions = OptInDecisionContext & {
+  getHasEligibleMfaProof: () => Promise<boolean>;
+};
 
-type TrustedDeviceFulfillment = NonNullable<InteractionStorage['trustedDeviceFulfillment']>;
+type OptInDecisionOptions = OptInDecisionContext & {
+  hasEligibleMfaProof: boolean;
+};
 
 const buildTrustedDeviceUsageLogId = (tenantId: string, interactionId: string) =>
   createHash('sha256')
@@ -35,7 +36,7 @@ const buildTrustedDeviceUsageLogId = (tenantId: string, interactionId: string) =
     .slice(0, 21);
 
 type FinalizeOptions = {
-  creation?: InteractionStorage['trustedDeviceCreation'];
+  optInDecision?: InteractionStorage['trustedDeviceOptIn'];
   interactionEvent: InteractionEvent;
   userId: string;
   hasEligibleMfaProof: boolean;
@@ -50,106 +51,158 @@ type FinalizeOptions = {
 };
 
 /**
- * Owns trusted-device interaction state and coordinates credential fulfillment and creation.
+ * Coordinates the persisted opt-in decision and request-local trusted-device credential lifecycle.
  */
 export class TrustedDevice {
-  #creation?: InteractionStorage['trustedDeviceCreation'];
-  #fulfillment?: TrustedDeviceFulfillment;
+  #optIn?: InteractionStorage['trustedDeviceOptIn'];
+  #validatedDeviceId?: string;
+  #effectivePolicy?: {
+    userId: string;
+    promise: Promise<EffectiveTrustedDevicePolicy>;
+  };
 
   constructor(
     private readonly ctx: WithHooksAndLogsContext,
     private readonly tenant: TenantContext,
     data: TrustedDeviceData
   ) {
-    this.#creation = data.trustedDeviceCreation;
-    this.#fulfillment = data.trustedDeviceFulfillment;
+    this.#optIn = data.trustedDeviceOptIn;
   }
 
   get data(): TrustedDeviceData {
     return {
-      ...conditional(this.#creation && { trustedDeviceCreation: this.#creation }),
-      ...conditional(this.#fulfillment && { trustedDeviceFulfillment: this.#fulfillment }),
+      ...conditional(this.#optIn && { trustedDeviceOptIn: this.#optIn }),
     };
   }
 
-  requestCreation(hasEligibleMfaProof: boolean) {
+  async assertOptInDecision({
+    interactionEvent,
+    userId,
+    getHasEligibleMfaProof,
+  }: AssertOptInDecisionOptions) {
+    if (interactionEvent === InteractionEvent.ForgotPassword || this.#optIn) {
+      return;
+    }
+
+    if (this.tenant.libraries.trustedDevices.hasOptOut(this.ctx, userId)) {
+      return;
+    }
+
+    if (!(await getHasEligibleMfaProof())) {
+      return;
+    }
+
+    const policy = await trySafe(
+      async () => this.#getEffectivePolicy(userId),
+      (error) => {
+        void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
+      }
+    );
+
+    if (!policy?.enabled) {
+      return;
+    }
+
+    throw new RequestError(
+      { code: 'session.trusted_device_suggest_opt_in', status: 422 },
+      { durationDays: policy.durationDays }
+    );
+  }
+
+  async setOptInDecision({
+    trusted,
+    interactionEvent,
+    userId,
+    hasEligibleMfaProof,
+  }: OptInDecisionOptions & { trusted: boolean }) {
+    assertThat(
+      interactionEvent !== InteractionEvent.ForgotPassword,
+      new RequestError({ code: 'session.not_supported_for_forgot_password', status: 400 })
+    );
+
+    if (!trusted) {
+      this.#optIn = { trusted: false };
+
+      await trySafe(
+        async () => {
+          const policy = await this.#getEffectivePolicy(userId);
+
+          if (policy.enabled) {
+            this.tenant.libraries.trustedDevices.writeOptOut(this.ctx, userId, policy.durationDays);
+          }
+        },
+        (error) => {
+          void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
+        }
+      );
+      return;
+    }
+
     assertThat(
       hasEligibleMfaProof,
       new RequestError({ code: 'session.mfa.require_mfa_verification', status: 403 })
     );
 
-    this.#creation ||= { deviceId: generateStandardId() };
-  }
-
-  consumeCreationRequest() {
-    const creation = this.#creation;
-
-    this.#creation = undefined;
-
-    return creation;
-  }
-
-  async getCreationAvailability(userId?: string) {
-    // Trusted-device opt-in is under development and must remain isolated from released flows.
-    if (!EnvSet.values.isDevFeaturesEnabled || !userId) {
-      return;
-    }
-
-    const { enabled, durationDays } =
-      await this.tenant.libraries.trustedDevicePolicy.getEffectivePolicy(userId);
-
-    return {
-      canCreate: enabled,
-      ...conditional(enabled && { durationDays }),
-    };
-  }
-
-  async tryFulfillMfa(userId: string): Promise<TrustedDeviceFulfillmentStatus | undefined> {
-    // Trusted-device MFA fulfillment is under development and must remain isolated from released flows.
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return;
-    }
-
-    if (this.#fulfillment?.userId === userId) {
-      return 'stored';
-    }
-
-    const {
-      libraries: { trustedDevicePolicy, trustedDevices },
-    } = this.tenant;
-    const { enabled } = await trustedDevicePolicy.getEffectivePolicy(userId);
+    const { enabled } = await this.#getEffectivePolicy(userId);
 
     if (!enabled) {
       return;
     }
 
+    this.#optIn = {
+      trusted: true,
+      deviceId: this.#optIn?.trusted ? this.#optIn.deviceId : generateStandardId(),
+    };
+  }
+
+  consumeOptInDecision() {
+    const decision = this.#optIn;
+
+    this.#optIn = undefined;
+
+    return decision;
+  }
+
+  /**
+   * Tries to verify the current MFA requirement with a trusted-device credential.
+   *
+   * @remarks Clears previously validated request-local state. On success, retains the device ID for
+   * post-submit usage finalization.
+   */
+  async tryVerifyMfa(userId: string): Promise<boolean> {
+    this.#validatedDeviceId = undefined;
+
+    const { trustedDevices } = this.tenant.libraries;
+
+    if (!trustedDevices.hasCredential(this.ctx, userId)) {
+      return false;
+    }
+
+    const { enabled } = await this.#getEffectivePolicy(userId);
+
+    if (!enabled) {
+      return false;
+    }
+
     const trustedDevice = await trustedDevices.validateCredential(this.ctx, userId);
 
     if (!trustedDevice) {
-      return;
+      return false;
     }
 
-    this.#fulfillment = {
-      userId,
-      trustedDeviceId: trustedDevice.id,
-      fulfilledAt: Date.now(),
-    };
+    this.#validatedDeviceId = trustedDevice.id;
 
-    return 'validated';
+    return true;
   }
 
   async finalize({
-    creation,
+    optInDecision,
     interactionEvent,
     userId,
     hasEligibleMfaProof,
     signInContext,
     location,
   }: FinalizeOptions) {
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return;
-    }
-
     await trySafe(
       async () => {
         const { ip, userAgent } = signInContext ?? {};
@@ -161,14 +214,14 @@ export class TrustedDevice {
           ...conditional(city && { city }),
         };
 
-        const fulfillment = this.#fulfillment;
+        const validatedDeviceId = this.#validatedDeviceId;
 
-        if (fulfillment?.userId === userId) {
-          await this.#finalizeFulfillment(fulfillment, interactionEvent, userId, metadata);
+        if (validatedDeviceId) {
+          await this.#finalizeUsage(validatedDeviceId, interactionEvent, userId, metadata);
           return;
         }
 
-        await this.#finalizeCreation(creation, hasEligibleMfaProof, userId, metadata);
+        await this.#finalizeCreation(optInDecision, hasEligibleMfaProof, userId, metadata);
       },
       (error) => {
         void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
@@ -176,8 +229,8 @@ export class TrustedDevice {
     );
   }
 
-  async #finalizeFulfillment(
-    fulfillment: TrustedDeviceFulfillment,
+  async #finalizeUsage(
+    validatedDeviceId: string,
     interactionEvent: InteractionEvent,
     userId: string,
     metadata: TrustedDeviceMetadata
@@ -187,7 +240,7 @@ export class TrustedDevice {
     }
 
     const trustedDevice = await this.tenant.libraries.trustedDevices.updateMetadata(
-      fulfillment.trustedDeviceId,
+      validatedDeviceId,
       userId,
       metadata
     );
@@ -202,18 +255,19 @@ export class TrustedDevice {
   }
 
   async #finalizeCreation(
-    creation: InteractionStorage['trustedDeviceCreation'],
+    optInDecision: InteractionStorage['trustedDeviceOptIn'] | undefined,
     hasEligibleMfaProof: boolean,
     userId: string,
     metadata: TrustedDeviceMetadata
   ) {
-    if (!creation || !hasEligibleMfaProof) {
+    if (!optInDecision?.trusted || !hasEligibleMfaProof) {
       return;
     }
 
     const trustedDevice = await this.tenant.libraries.trustedDevices.createCredential({
       ctx: this.ctx,
-      deviceId: creation.deviceId,
+      deviceId: optInDecision.deviceId,
+      effectivePolicy: await this.#getEffectivePolicy(userId),
       userId,
       ...metadata,
     });
@@ -244,5 +298,30 @@ export class TrustedDevice {
     });
 
     log.append({ userId: data.userId, data });
+  }
+
+  async #getEffectivePolicy(userId: string) {
+    const cachedPolicy = this.#effectivePolicy;
+
+    if (cachedPolicy?.userId === userId) {
+      return cachedPolicy.promise;
+    }
+
+    const promise = this.tenant.libraries.trustedDevicePolicy.getEffectivePolicy(userId);
+    const policyEntry = {
+      userId,
+      promise,
+    };
+    this.#effectivePolicy = policyEntry;
+
+    try {
+      return await promise;
+    } catch (error: unknown) {
+      if (this.#effectivePolicy === policyEntry) {
+        this.#effectivePolicy = undefined;
+      }
+
+      throw error;
+    }
   }
 }

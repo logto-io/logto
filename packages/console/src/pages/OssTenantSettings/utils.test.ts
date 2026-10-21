@@ -1,28 +1,33 @@
-import type { TFuncKey } from 'i18next';
+import { shouldShowOssTenantSettingsTab } from './utils';
 
-import { getOssTenantMembersUpsellCopyKeys, shouldShowOssTenantMembersTab } from './utils';
+describe('shouldShowOssTenantSettingsTab', () => {
+  const options = {
+    isCloud: false,
+    isMandatoryMfaEntitled: true,
+    isMfaRequired: false,
+  };
 
-describe('shouldShowOssTenantMembersTab', () => {
-  it('returns true for OSS', () => {
-    expect(shouldShowOssTenantMembersTab({ isCloud: false })).toBe(true);
+  it('shows the tab when the license grants mandatory MFA', () => {
+    expect(shouldShowOssTenantSettingsTab(options)).toBe(true);
   });
 
-  it('returns false for cloud', () => {
-    expect(shouldShowOssTenantMembersTab({ isCloud: true })).toBe(false);
+  it('hides the tab without the entitlement', () => {
+    expect(shouldShowOssTenantSettingsTab({ ...options, isMandatoryMfaEntitled: false })).toBe(
+      false
+    );
   });
-});
 
-describe('getOssTenantMembersUpsellCopyKeys', () => {
-  it('uses dedicated i18n keys for the OSS members upsell card copy', () => {
-    const copyKeys = getOssTenantMembersUpsellCopyKeys();
-    const titleKey: TFuncKey<'translation', 'admin_console'> = copyKeys.title;
-    const descriptionKey: TFuncKey<'translation', 'admin_console'> = copyKeys.description;
-    const actionKey: TFuncKey<'translation', 'admin_console'> = copyKeys.action;
+  it('keeps the tab while MFA is required, so it can be turned off after the license lapses', () => {
+    expect(
+      shouldShowOssTenantSettingsTab({
+        ...options,
+        isMandatoryMfaEntitled: false,
+        isMfaRequired: true,
+      })
+    ).toBe(true);
+  });
 
-    expect({ title: titleKey, description: descriptionKey, action: actionKey }).toEqual({
-      title: 'tenants.members.card_title',
-      description: 'tenants.members.card_description',
-      action: 'tenants.members.card_action',
-    });
+  it('hides the tab on cloud', () => {
+    expect(shouldShowOssTenantSettingsTab({ ...options, isCloud: true })).toBe(false);
   });
 });

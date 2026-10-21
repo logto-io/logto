@@ -9,20 +9,17 @@ import {
   type SubscriptionQuota,
   type SubscriptionUsageResponse,
 } from '@/cloud/types/router';
-import {
-  defaultLogtoSku,
-  defaultTenantResponse,
-  defaultSubscriptionQuota,
-  defaultSubscriptionUsage,
-} from '@/consts';
+import { defaultLogtoSku, defaultSubscriptionQuota, defaultSubscriptionUsage } from '@/consts';
 import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import { LogtoSkuType } from '@/types/skus';
 import { normalizeActionsQuota } from '@/utils/actions';
 import { formatLogtoSkusResponses } from '@/utils/subscription';
 
+import useLicense from '../../hooks/use-license';
 import useSubscription from '../../hooks/use-subscription';
 
+import { buildSelfHostedSubscription, buildSelfHostedSubscriptionQuota } from './license';
 import { type SubscriptionContext } from './types';
 
 const normalizeSubscriptionQuota = (
@@ -45,10 +42,17 @@ const useSubscriptionData: () => SubscriptionContext & { isLoading: boolean } = 
   const { currentTenant, currentTenantId, updateTenant } = useContext(TenantsContext);
 
   const {
-    data: currentSubscription,
+    data: cloudSubscription,
     isLoading: isSubscriptionLoading,
     mutate: mutateSubscription,
   } = useSubscription(currentTenantId);
+
+  const {
+    license,
+    licenseQuota,
+    isLoading: isLicenseLoading,
+    mutate: mutateLicense,
+  } = useLicense();
 
   const {
     data: subscriptionUsageData,
@@ -78,9 +82,19 @@ const useSubscriptionData: () => SubscriptionContext & { isLoading: boolean } = 
 
   const logtoSkus = useMemo(() => formatLogtoSkusResponses(fetchedLogtoSkus), [fetchedLogtoSkus]);
 
+  // Outside Cloud the installed license is the entitlement source, and the Cloud subscription is
+  // never fetched. Without a license this is the fixed `dev` plan Console has always assumed.
+  const currentSubscription = useMemo(
+    () => (isCloud ? cloudSubscription : undefined) ?? buildSelfHostedSubscription(license),
+    [cloudSubscription, license]
+  );
+
   const currentSubscriptionQuota = useMemo(
-    () => normalizeSubscriptionQuota(subscriptionUsageData?.quota),
-    [subscriptionUsageData?.quota]
+    () =>
+      isCloud
+        ? normalizeSubscriptionQuota(subscriptionUsageData?.quota)
+        : buildSelfHostedSubscriptionQuota(licenseQuota),
+    [licenseQuota, subscriptionUsageData?.quota]
   );
 
   const currentSubscriptionBasicQuota = useMemo(
@@ -108,10 +122,14 @@ const useSubscriptionData: () => SubscriptionContext & { isLoading: boolean } = 
 
   return useMemo(
     () => ({
-      isLoading: isSubscriptionLoading || isLogtoSkusLoading || isSubscriptionUsageDataLoading,
+      isLoading:
+        isSubscriptionLoading ||
+        isLogtoSkusLoading ||
+        isSubscriptionUsageDataLoading ||
+        isLicenseLoading,
       logtoSkus,
       currentSku,
-      currentSubscription: currentSubscription ?? defaultTenantResponse.subscription,
+      currentSubscription,
       onCurrentSubscriptionUpdated: mutateSubscription,
       mutateSubscriptionQuotaAndUsages,
       currentSubscriptionQuota,
@@ -119,6 +137,9 @@ const useSubscriptionData: () => SubscriptionContext & { isLoading: boolean } = 
       currentSubscriptionUsage,
       currentSubscriptionResourceScopeUsage: subscriptionUsageData?.resources ?? {},
       currentSubscriptionRoleScopeUsage: subscriptionUsageData?.roles ?? {},
+      license,
+      licenseQuota,
+      mutateLicense,
     }),
     [
       currentSku,
@@ -126,10 +147,14 @@ const useSubscriptionData: () => SubscriptionContext & { isLoading: boolean } = 
       currentSubscriptionBasicQuota,
       currentSubscriptionQuota,
       currentSubscriptionUsage,
+      isLicenseLoading,
       isLogtoSkusLoading,
       isSubscriptionLoading,
       isSubscriptionUsageDataLoading,
+      license,
+      licenseQuota,
       logtoSkus,
+      mutateLicense,
       mutateSubscription,
       mutateSubscriptionQuotaAndUsages,
       subscriptionUsageData?.resources,

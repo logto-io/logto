@@ -10,9 +10,7 @@
  * The experience APIs can be used by developers to build custom user interaction experiences.
  */
 
-import { appInsights } from '@logto/app-insights/node';
 import { identificationApiPayloadGuard, InteractionEvent } from '@logto/schemas';
-import { conditional, trySafe } from '@silverhand/essentials';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
@@ -20,7 +18,6 @@ import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaInteractionDetails from '#src/middleware/koa-interaction-details.js';
 import assertThat from '#src/utils/assert-that.js';
-import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
 import { type AnonymousRouter, type RouterInitArgs } from '../types.js';
 
@@ -30,6 +27,7 @@ import { experienceRoutes } from './const.js';
 import koaExperienceAuditLog from './middleware/koa-experience-audit-log.js';
 import { koaExperienceInteractionHooks } from './middleware/koa-experience-interaction-hooks.js';
 import koaExperienceInteraction from './middleware/koa-experience-interaction.js';
+import koaStepUpRouteGuard from './middleware/koa-step-up-route-guard.js';
 import profileRoutes from './profile-routes.js';
 import {
   sanitizedInteractionStorageGuard,
@@ -59,7 +57,8 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       koaInteractionDetails(provider),
       koaExperienceInteractionHooks(libraries),
       koaExperienceInteraction(tenant),
-      koaExperienceAuditLog()
+      koaExperienceAuditLog(),
+      koaStepUpRouteGuard()
     );
 
   experienceRouter.put(
@@ -69,15 +68,25 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
         interactionEvent: z.nativeEnum(InteractionEvent),
         captchaToken: z.string().optional(),
       }),
-      // 422 is returned if the captcha verification fails
-      status: [204, 422],
+      response: z
+        .object({
+          redirectTo: z.string(),
+        })
+        .optional(),
+      // 200 is returned when a pure step-up cannot proceed and the interaction was finished with
+      // `unmet_authentication_requirements`; 400 is returned if a pure step-up cannot be created;
+      // 404 is returned if the pinned subject of a pure step-up no longer exists; 422 is returned
+      // if the captcha verification fails
+      status: [200, 204, 400, 404, 422],
     }),
     async (ctx, next) => {
       const { interactionEvent, captchaToken } = ctx.guard.body;
       const { createLog } = ctx;
 
-      createLog(`Interaction.${interactionEvent}.Create`);
+      const log = createLog(`Interaction.${interactionEvent}.Create`);
 
+      // Detects a pure step-up from the login prompt details and pins the subject from the
+      // session; the prompt details never change, so a retry re-derives the same mode.
       const experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionEvent);
 
       // Verify the captcha if provided, this is optional,
@@ -86,11 +95,29 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
         await experienceInteraction.verifyCaptcha(captchaToken);
       }
 
+      ctx.experienceInteraction = experienceInteraction;
+
+      // A pure step-up whose pinned user has no method that can reach the selected class is
+      // finished here, and the client is sent back to the application with the OIDC error.
+      const redirectTo = await experienceInteraction.finishUnreachableStepUp();
+
+      if (redirectTo) {
+        log.append({
+          interaction: experienceInteraction.toJson(),
+          // The subject is pinned but unverified, so `identifiedUserId` is unset here.
+          userId: experienceInteraction.subjectUserId,
+          error: 'unmet_authentication_requirements',
+        });
+
+        ctx.body = { redirectTo };
+        ctx.status = 200;
+
+        return next();
+      }
+
       // Save new experience interaction instance.
       // This will overwrite any existing interaction data in the storage.
       await experienceInteraction.save();
-
-      ctx.experienceInteraction = experienceInteraction;
 
       ctx.status = 204;
 
@@ -181,10 +208,19 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
     }),
     async (ctx, next) => {
       const { createLog, experienceInteraction } = ctx;
+      const { interactionEvent, isStepUp } = experienceInteraction;
 
-      const log = createLog(`Interaction.${experienceInteraction.interactionEvent}.Submit`);
+      // A pure step-up completes through its own allow-list path and has its own audit key, so a
+      // step-up submission is never mistaken for a sign-in in the audit log.
+      const log = createLog(
+        isStepUp
+          ? `Interaction.${interactionEvent}.StepUp.Submit`
+          : `Interaction.${interactionEvent}.Submit`
+      );
 
-      await ctx.experienceInteraction.submit(log);
+      await (isStepUp
+        ? experienceInteraction.submitStepUp(log)
+        : experienceInteraction.submit(log));
 
       log.append({
         interaction: ctx.experienceInteraction.toJson(),
@@ -199,25 +235,13 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
   experienceRouter.get(
     `${experienceRoutes.interaction}`,
     koaGuard({
-      status: [200],
+      // 404 is returned if the pinned subject of a pure step-up no longer exists
+      status: [200, 404],
       response: sanitizedInteractionStorageGuard,
     }),
     async (ctx, next) => {
       const { experienceInteraction } = ctx;
-      const trustedDevice = await trySafe(
-        async () =>
-          experienceInteraction.trustedDevice.getCreationAvailability(
-            experienceInteraction.identifiedUserId
-          ),
-        (error) => {
-          void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));
-        }
-      );
-
-      ctx.body = {
-        ...experienceInteraction.toSanitizedJson(),
-        ...conditional(trustedDevice && { trustedDevice }),
-      };
+      ctx.body = await experienceInteraction.toSanitizedJson();
       ctx.status = 200;
       return next();
     }

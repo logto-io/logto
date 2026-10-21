@@ -19,6 +19,7 @@ import Table from '@/ds-components/Table';
 import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import Tag from '@/ds-components/Tag';
 import useApi, { type RequestError } from '@/hooks/use-api';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
@@ -26,6 +27,9 @@ import { buildUrl, formatSearchKeyword } from '@/utils/url';
 import styles from './index.module.scss';
 
 function OrganizationPermissions() {
+  const {
+    access: { isReadOnly },
+  } = useCurrentTenantScopes();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
   const [{ keyword }, updateSearchParameters] = useSearchParametersWatcher({
@@ -98,15 +102,17 @@ function OrganizationPermissions() {
                 updateSearchParameters({ keyword: '' });
               }}
             />
-            <Button
-              title="organization_template.permissions.create_org_permission"
-              className={styles.createButton}
-              type="primary"
-              icon={<Plus />}
-              onClick={() => {
-                setPermissionModalData(null);
-              }}
-            />
+            {!isReadOnly && (
+              <Button
+                title="organization_template.permissions.create_org_permission"
+                className={styles.createButton}
+                type="primary"
+                icon={<Plus />}
+                onClick={() => {
+                  setPermissionModalData(null);
+                }}
+              />
+            )}
           </div>
         }
         placeholder={
@@ -123,15 +129,17 @@ function OrganizationPermissions() {
                 targetBlank: 'noopener',
               }}
               action={
-                <Button
-                  title="organization_template.permissions.create_org_permission"
-                  type="primary"
-                  size="large"
-                  icon={<Plus />}
-                  onClick={() => {
-                    setPermissionModalData(null);
-                  }}
-                />
+                !isReadOnly && (
+                  <Button
+                    title="organization_template.permissions.create_org_permission"
+                    type="primary"
+                    size="large"
+                    icon={<Plus />}
+                    onClick={() => {
+                      setPermissionModalData(null);
+                    }}
+                  />
+                )
               }
             />
           )

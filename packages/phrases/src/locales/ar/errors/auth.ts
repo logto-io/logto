@@ -10,6 +10,7 @@ const auth = {
   exceed_token_limit: 'تم تجاوز حد الرمز. يرجى الاتصال بالمسؤول الخاص بك.',
   third_party_application_forbidden:
     'لا يُسمح للتطبيقات التابعة لجهات خارجية بتعديل بيانات الحساب عبر واجهة برمجة التطبيقات هذه.',
+  read_only_access: 'هذا الطلب غير مسموح به مع صلاحية الوصول للقراءة فقط.',
 };
 
 export default Object.freeze(auth);

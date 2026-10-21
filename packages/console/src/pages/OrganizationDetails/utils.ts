@@ -12,15 +12,12 @@ export type FormData = Partial<Omit<Organization, 'customData'> & { customData: 
   isBrandingEnabled: boolean;
 };
 
-type OrganizationResponse = Omit<Organization, 'isTrustedDeviceAllowed'> &
-  Partial<Pick<Organization, 'isTrustedDeviceAllowed'>>;
-
 export const normalizeData = (
-  data: OrganizationResponse,
+  data: Organization,
   jit?: { emailDomains: string[]; roles: Array<Option<string>>; ssoConnectorIds: string[] }
 ): FormData => ({
   ...data,
-  isTrustedDeviceAllowed: data.isTrustedDeviceAllowed ?? true,
+  isTrustedDeviceAllowed: data.isTrustedDeviceAllowed,
   branding: {
     ...emptyBranding,
     ...data.branding,
@@ -39,23 +36,20 @@ export const normalizeData = (
     Boolean(data.customCss),
 });
 
-export const assembleData = (
-  {
-    jitEmailDomains,
-    jitRoles,
-    jitSsoConnectorIds,
-    customData,
-    branding,
-    color,
-    customCss,
-    isBrandingEnabled,
-    isTrustedDeviceAllowed,
-    ...data
-  }: Partial<FormData>,
-  includeTrustedDevice = false
-): Partial<Organization> => ({
+export const assembleData = ({
+  jitEmailDomains,
+  jitRoles,
+  jitSsoConnectorIds,
+  customData,
+  branding,
+  color,
+  customCss,
+  isBrandingEnabled,
+  isTrustedDeviceAllowed,
+  ...data
+}: Partial<FormData>): Partial<Organization> => ({
   ...data,
-  ...(includeTrustedDevice && { isTrustedDeviceAllowed }),
+  isTrustedDeviceAllowed,
   ...(isBrandingEnabled
     ? { color, branding: branding && removeFalsyValues(branding), customCss }
     : { color: {}, branding: {}, customCss: '' }),

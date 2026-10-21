@@ -11,6 +11,7 @@ import { z } from 'zod';
 
 import { type SearchOptions } from '#src/database/utils.js';
 import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
+import { type WithAuthContext } from '#src/middleware/koa-auth/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { type WithHookContext } from '#src/middleware/koa-management-api-hooks.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -177,7 +178,7 @@ export default class SchemaRouter<
   CreateSchema extends Partial<SchemaLike<Key> & { id: string }>,
   Schema extends SchemaLike<Key> & { id: string },
   StateT = unknown,
-  CustomT extends WithHookContext = WithHookContext,
+  CustomT extends WithHookContext = WithHookContext & WithAuthContext,
 > extends Router<StateT, CustomT> {
   public readonly config: SchemaRouterConfig<Key>;
 

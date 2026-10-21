@@ -82,6 +82,13 @@ export default function koaSlonikErrorHandler<StateT, ContextT>(): Middleware<St
           });
         }
 
+        if (error.constraint === 'users_pkey') {
+          throw new RequestError({
+            code: 'user.id_already_in_use',
+            status: 422,
+          });
+        }
+
         if (error.constraint === 'users__username') {
           throw new RequestError({
             code: 'user.username_already_in_use',

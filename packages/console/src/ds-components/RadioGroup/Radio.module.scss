@@ -258,7 +258,8 @@
   }
 }
 
-.plain.disabled {
+.plain.disabled,
+.plain.readOnly {
   color: var(--color-text);
 
   .content {
@@ -269,6 +270,15 @@
         background: var(--color-bg-state-unselected);
         border-color: var(--color-bg-state-unselected);
       }
+    }
+  }
+
+  &.checked .content .indicator {
+    border-color: var(--color-specific-selected-disabled);
+
+    &::before {
+      background: var(--color-specific-selected-disabled);
+      border-color: var(--color-layer-1);
     }
   }
 }
@@ -297,8 +307,13 @@
   }
 }
 
+// A read-only radio offers no interaction.
+.radio.readOnly {
+  cursor: default;
+}
+
 // Not Disabled Behaviors
-.card:not(.disabled) {
+.card:not(.disabled, .readOnly) {
   &:focus {
     outline: 1px solid var(--color-primary);
     box-shadow: var(--shadow-2);
@@ -309,7 +324,7 @@
   }
 }
 
-.compact:not(.disabled) {
+.compact:not(.disabled, .readOnly) {
   &:hover {
     color: var(--color-primary);
     border-color: var(--color-primary);

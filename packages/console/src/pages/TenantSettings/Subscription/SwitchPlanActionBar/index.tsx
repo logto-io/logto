@@ -20,6 +20,7 @@ import {
   parseExceededSkuQuotaLimitError,
 } from '@/utils/subscription';
 
+import CancelFeedbackModal from '../CancelFeedbackModal';
 import DowngradeConfirmModalContent from '../DowngradeConfirmModalContent';
 
 import styles from './index.module.scss';
@@ -89,6 +90,7 @@ function SwitchPlanActionBar({ onSubscriptionUpdated, currentSkuId, logtoSkus }:
   const { subscribe, cancelSubscription } = useSubscribe();
   const { show } = useConfirmModal();
   const [currentLoadingSkuId, setCurrentLoadingSkuId] = useState<string>();
+  const [canceledSkuId, setCanceledSkuId] = useState<string>();
 
   const handleSubscribe = async (targetSkuId: string, isDowngrade: boolean) => {
     if (currentLoadingSkuId) {
@@ -126,6 +128,7 @@ function SwitchPlanActionBar({ onSubscriptionUpdated, currentSkuId, logtoSkus }:
             {t('downgrade_success')}
           </Trans>
         );
+        setCanceledSkuId(currentSku.id);
 
         return;
       }
@@ -168,32 +171,43 @@ function SwitchPlanActionBar({ onSubscriptionUpdated, currentSkuId, logtoSkus }:
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.buttonPlaceholder} />
-      {/** Public reserved plan buttons */}
-      {logtoSkus.map(({ id: skuId }) => {
-        return (
-          <SkuButton
-            key={skuId}
-            targetSkuId={skuId}
-            currentSkuId={currentSkuId}
-            isCurrentEnterprisePlan={isEnterprisePlan}
-            loadingSkuId={currentLoadingSkuId}
-            onClick={handleSubscribe}
-          />
-        );
-      })}
-      {/** Enterprise plan button */}
-      <div>
-        <a href={contactEmailLink} className={styles.buttonLink} rel="noopener">
-          <Button
-            title={isEnterprisePlan ? 'subscription.current' : 'general.contact_us_action'}
-            type="primary"
-            disabled={isEnterprisePlan}
-          />
-        </a>
+    <>
+      <div className={styles.container}>
+        <div className={styles.buttonPlaceholder} />
+        {/** Public reserved plan buttons */}
+        {logtoSkus.map(({ id: skuId }) => {
+          return (
+            <SkuButton
+              key={skuId}
+              targetSkuId={skuId}
+              currentSkuId={currentSkuId}
+              isCurrentEnterprisePlan={isEnterprisePlan}
+              loadingSkuId={currentLoadingSkuId}
+              onClick={handleSubscribe}
+            />
+          );
+        })}
+        {/** Enterprise plan button */}
+        <div>
+          <a href={contactEmailLink} className={styles.buttonLink} rel="noopener">
+            <Button
+              title={isEnterprisePlan ? 'subscription.current' : 'general.contact_us_action'}
+              type="primary"
+              disabled={isEnterprisePlan}
+            />
+          </a>
+        </div>
       </div>
-    </div>
+      {canceledSkuId && (
+        <CancelFeedbackModal
+          isOpen
+          fromSkuId={canceledSkuId}
+          onClose={() => {
+            setCanceledSkuId(undefined);
+          }}
+        />
+      )}
+    </>
   );
 }
 

@@ -6,6 +6,7 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
+import useManageAccountSelfGuard from '@/cloud/hooks/use-manage-account-self-guard';
 import { type InvitationResponse } from '@/cloud/types/router';
 import AppError from '@/components/AppError';
 import AppLoading from '@/components/AppLoading';
@@ -27,6 +28,7 @@ function AcceptInvitation() {
   const cloudApi = useCloudApi();
   const silentCloudApi = useCloudApi({ hideErrorToast: true });
   const { navigateTenant, resetTenants } = useContext(TenantsContext);
+  const ensureManageAccountSelf = useManageAccountSelfGuard();
   const hasStartedSignIn = useRef(false);
   const authFormRef = useRef<HTMLFormElement>(null);
 
@@ -36,6 +38,18 @@ function AcceptInvitation() {
     isAuthenticated && invitationId && `/api/invitations/${invitationId}`,
     async () => silentCloudApi.get('/api/invitations/:invitationId', { params: { invitationId } })
   );
+
+  // A session signed in before the Console requested `ManageAccountSelf` gets a 403 here, which is
+  // otherwise the same error as "signed in as a different account". Re-consent before the page
+  // shows the switch-account screen. The one-time-token flow below re-authenticates by itself and
+  // is left untouched.
+  useEffect(() => {
+    if (!isAuthenticated || !invitationId || oneTimeToken) {
+      return;
+    }
+
+    void ensureManageAccountSelf(buildInvitationAcceptUrl(invitationId));
+  }, [ensureManageAccountSelf, invitationId, isAuthenticated, oneTimeToken]);
 
   useEffect(() => {
     if (isLoading || !invitationId || hasStartedSignIn.current) {

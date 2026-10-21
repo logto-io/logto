@@ -50,6 +50,20 @@ const session = {
     suggest_additional_mfa:
       'Para maior proteção, considere adicionar outro método de MFA. Pode ignorar este passo e continuar.',
   },
+  trusted_device_suggest_opt_in: 'Escolha se pretende confiar neste dispositivo.',
+  step_up: {
+    invalid_interaction_event:
+      'A autenticação step-up só está disponível para interações de início de sessão.',
+    subject_not_found:
+      'Não foi encontrada nenhuma sessão autenticada para a autenticação step-up. Inicie sessão novamente.',
+    forbidden_route: 'Esta rota não é permitida durante a autenticação step-up.',
+    forbidden_identifier:
+      'Não é permitido um identificador durante a autenticação step-up. Tente novamente sem o campo identificador.',
+    acr_not_satisfied:
+      'A verificação concluída não satisfaz o contexto de autenticação solicitado. Verifique outro método.',
+    require_verification:
+      'É necessária a verificação com um dos seus métodos existentes para atingir o contexto de autenticação solicitado.',
+  },
   passkey_sign_in: {
     pending_info_not_found:
       'Não foi possível encontrar as informações pendentes de início de sessão com passkey. Volte a iniciar o fluxo de início de sessão.',

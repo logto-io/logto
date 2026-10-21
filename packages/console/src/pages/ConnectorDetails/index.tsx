@@ -22,7 +22,7 @@ import Drawer from '@/components/Drawer';
 import Markdown from '@/components/Markdown';
 import PageMeta from '@/components/PageMeta';
 import UnnamedTrans from '@/components/UnnamedTrans';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { ConnectorsTabs } from '@/consts/page-tabs';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import type { RequestError } from '@/hooks/use-api';
@@ -47,10 +47,7 @@ const emailLogsTab = 'email-logs';
 
 /** The hosted-email log only exists for the cloud built-in email service connector. */
 const isEmailLogsAvailable = (data?: ConnectorResponse) =>
-  isCloud &&
-  isDevFeaturesEnabled &&
-  data?.type === ConnectorType.Email &&
-  data.connectorId === ServiceConnector.Email;
+  isCloud && data?.type === ConnectorType.Email && data.connectorId === ServiceConnector.Email;
 
 function ConnectorDetails() {
   const { pathname } = useLocation();

@@ -11,6 +11,8 @@ const subscription = {
   enterprise_description: 'Для больших команд и компаний с корпоративными требованиями.',
   admin_plan: 'План администратора',
   dev_plan: 'План для разработки',
+  self_hosted_pro_plan: 'Self-hosted Про план',
+  self_hosted_enterprise_plan: 'Self-hosted Корпоративный план',
   current_plan: 'Текущий план',
   current_plan_description:
     'Вот ваш текущий тарифный план. Вы можете легко просмотреть использование вашего тарифа, проверить предстоящий счет и вносить изменения в тариф по мере необходимости.',
@@ -44,6 +46,13 @@ const subscription = {
     },
   },
   quota_item,
+  cancel_feedback_modal: {
+    title: 'Жаль, что вы уходите',
+    description:
+      'Ваша подписка отменена. Ваши отзывы помогают нам делать Logto лучше. Мы читаем каждый ответ.',
+    what_made_you_cancel: 'Что побудило вас отменить подписку?',
+    how_to_reconsider: 'Что мы могли бы сделать, чтобы вы передумали?',
+  },
   downgrade_modal: {
     title: 'Вы действительно хотите понизить уровень?',
     description:
@@ -64,9 +73,18 @@ const subscription = {
     upgrade_help_tip: 'Нужна помощь в повышении? <a>Свяжитесь с нами</a>.',
     a_maximum_of: 'Максимум <item/>',
   },
+  billing_customer_modal: {
+    title: 'Выберите счет для оплаты',
+    description:
+      'Выберите счет для оплаты этой подписки или начните новый. Вы можете изменить платежные данные на следующей странице.',
+    account: 'Счет для оплаты',
+    new_account: 'Новый счет для оплаты',
+    default_account: 'По умолчанию',
+  },
   upgrade_success: 'Успешно повышен до <name/>',
   downgrade_success: 'Успешно понижен до <name/>',
-  subscription_check_timeout: 'Время проверки подписки истекло. Пожалуйста, обновите позже.',
+  subscription_check_pending:
+    'Ваш платеж прошел. Настройка вашей подписки занимает больше времени, чем обычно.',
   no_subscription: 'Нет подписки',
   usage,
   token_usage_notification: {

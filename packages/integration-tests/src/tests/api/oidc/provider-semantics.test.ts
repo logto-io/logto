@@ -15,7 +15,7 @@ import {
 } from '#src/api/application.js';
 import { deleteJwtCustomizer, deleteUser } from '#src/api/index.js';
 import { createResource, deleteResource } from '#src/api/resource.js';
-import { demoAppRedirectUri, logtoUrl } from '#src/constants.js';
+import { demoAppRedirectUri, isDevFeaturesEnabled, logtoUrl } from '#src/constants.js';
 import { initExperienceClient, logoutClient, processSession } from '#src/helpers/client.js';
 import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
@@ -206,6 +206,11 @@ describe('opaque user token lifecycle', () => {
         scope: 'openid offline_access profile',
         sub: userId,
         token_type: 'Bearer',
+        ...(isDevFeaturesEnabled && {
+          acr: 'urn:logto:acr:1fa',
+          amr: ['pwd'],
+          auth_time: expect.any(Number),
+        }),
       });
       /* eslint-enable @typescript-eslint/no-unsafe-assignment */
       /**

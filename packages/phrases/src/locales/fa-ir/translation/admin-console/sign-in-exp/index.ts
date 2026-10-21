@@ -45,7 +45,8 @@ const sign_in_exp = {
     hide_logto_branding: 'پنهان کردن برندینگ Logto',
     hide_logto_branding_description:
       'عبارت "Powered by Logto" را حذف کنید. برند خود را با یک تجربه ورود تمیز و حرفه‌ای برجسته کنید.',
-    hide_logto_branding_oss_note: 'این ویژگی به طور بومی در <a>Logto Cloud</a> موجود است.',
+    hide_logto_branding_oss_note:
+      'این ویژگی در <a>Logto Cloud</a> یا <selfHosted>طرح‌های self-hosted</selfHosted> در دسترس است.',
   },
   branding_uploads: {
     app_logo: {
@@ -95,7 +96,7 @@ const sign_in_exp = {
       'یک بسته فشرده (.zip) آپلود کنید تا رابط کاربری از پیش‌ساخته Logto را با کد خود جایگزین کنید. <a>بیشتر بدانید</a>',
     bring_your_ui_oss_description: 'رابط کاربری ورود را با کد خود سفارشی کنید.',
     bring_your_ui_oss_card_description:
-      'رابط کاربری ورود سفارشی خود را مستقیماً در <a>Logto Cloud</a> آپلود کنید. نیازی به fork و استقرار مجدد نیست.',
+      'آپلود رابط کاربری سفارشی در <a>Logto Cloud</a> یا <selfHosted>طرح‌های self-hosted</selfHosted> در دسترس است. نیازی به fork و استقرار مجدد نیست.',
     bring_your_ui_oss_try_cloud: 'امتحان Cloud',
     preview_with_bring_your_ui_description:
       'دارایی‌های رابط کاربری سفارشی شما با موفقیت آپلود شده و در حال ارائه هستند. در نتیجه، پنجره پیش‌نمایش داخلی غیرفعال شده است.\nبرای آزمایش رابط کاربری ورود شخصی‌سازی‌شده خود، روی دکمه "پیش‌نمایش زنده" کلیک کنید تا در یک تب جدید مرورگر باز شود.',
@@ -145,6 +146,9 @@ const sign_in_exp = {
           session_management: {
             title: 'مدیریت نشست',
           },
+          developer_settings: {
+            title: 'تنظیمات توسعه‌دهنده',
+          },
         },
       },
       user_profile: {
@@ -188,6 +192,9 @@ const sign_in_exp = {
       custom_data_description: 'کنترل دسترسی به داده‌های JSON سفارشی ذخیره‌شده روی کاربر.',
       sessions: 'نشست‌ها',
       trusted_devices: 'دستگاه‌های مورد اعتماد',
+      personal_access_tokens: 'توکن‌های دسترسی شخصی',
+      personal_access_tokens_description:
+        'فعال کردن این گزینه به کاربران امکان می‌دهد توکن‌های دسترسی شخصی بلندمدتی ایجاد کنند که پس از خروج از حساب و بازنشانی رمز عبور همچنان فعال می‌مانند و هر برنامه طرف اولی که تبادل توکن در آن فعال باشد می‌تواند آن‌ها را با توکن دسترسی مبادله کند.',
     },
     profile_fields: {
       title: 'فیلدهای پروفایل برای مرکز حساب از پیش‌ساخته',

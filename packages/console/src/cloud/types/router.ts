@@ -1,10 +1,18 @@
 import type router from '@logto/cloud/routes';
-import { type emailLogsRouter, type tenantAuthRouter } from '@logto/cloud/routes';
-import { type GuardedResponse, type RouterRoutes } from '@withtyped/client';
+import {
+  type consoleSsoRouter,
+  type emailLogsRouter,
+  type selfHostedLicensesRouter,
+  type tenantAuthRouter,
+  type userStripeCustomersRouter,
+} from '@logto/cloud/routes';
+import { type GuardedPayload, type GuardedResponse, type RouterRoutes } from '@withtyped/client';
 
 type GetRoutes = RouterRoutes<typeof router>['get'];
+type PostRoutes = RouterRoutes<typeof router>['post'];
 type GetTenantAuthRoutes = RouterRoutes<typeof tenantAuthRouter>['get'];
 type GetEmailLogsRoutes = RouterRoutes<typeof emailLogsRouter>['get'];
+type GetUserStripeCustomersRoutes = RouterRoutes<typeof userStripeCustomersRouter>['get'];
 
 /** The paginated hosted-email log page returned by the cloud email-logs endpoint. */
 export type TenantEmailLogsResponse = GuardedResponse<
@@ -17,6 +25,20 @@ export type TenantEmailLog = TenantEmailLogsResponse['logs'][number];
 export type GetArrayElementType<T> = T extends Array<infer U> ? U : never;
 
 export type Subscription = GuardedResponse<GetRoutes['/api/tenants/:tenantId/subscription']>;
+
+/**
+ * A billing Customer linked to the current user. `name` and `email` are `null` when the Stripe
+ * Customer has none, and absent when Stripe could not be reached.
+ */
+export type BillingCustomer = GetArrayElementType<
+  GuardedResponse<GetUserStripeCustomersRoutes['/api/me/stripe-customers']>
+>;
+
+/** The Checkout body fields that carry the caller's billing Customer choice; the route refuses both at once. */
+export type CheckoutCustomerChoice = Pick<
+  GuardedPayload<PostRoutes['/api/checkout-session']>['body'],
+  'customerId' | 'newCustomer'
+>;
 
 export type TenantUsageAddOnSkus = GuardedResponse<
   GetRoutes['/api/tenants/:tenantId/subscription/add-on-skus']
@@ -102,4 +124,26 @@ export type LogtoEnterpriseSubscriptionResponse = GuardedResponse<
 
 export type LogtoEnterpriseSubscriptionInvoiceResponse = GetArrayElementType<
   GuardedResponse<GetRoutes['/api/me/logto-enterprises/:id/invoices']>['invoices']
+>;
+
+/** A customer-owned connector returned by the global Console SSO API. */
+export type ConsoleSsoConnector = GuardedResponse<
+  RouterRoutes<typeof consoleSsoRouter>['get']['/api/me/console-sso/connectors']
+>[number];
+
+/** A domain challenge or an authoritative Core binding returned by the global Console SSO API. */
+export type ConsoleSsoDomain = GuardedResponse<
+  RouterRoutes<
+    typeof consoleSsoRouter
+  >['post']['/api/me/console-sso/connectors/:connectorId/domains']
+>;
+
+/** Account-level license metadata, without signed keys. */
+export type SelfHostedLicenseSummary = GuardedResponse<
+  RouterRoutes<typeof selfHostedLicensesRouter>['get']['/api/me/self-hosted-licenses/:id']
+>;
+
+/** The production and non-production keys returned by explicit issuance. */
+export type SelfHostedLicenseKeys = GuardedResponse<
+  RouterRoutes<typeof selfHostedLicensesRouter>['post']['/api/me/self-hosted-licenses/:id/keys']
 >;

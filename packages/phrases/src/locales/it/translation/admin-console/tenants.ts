@@ -11,12 +11,55 @@ const tenants = {
     oidc_configs: 'Configurazioni OIDC',
     subscription: 'Piano e fatturazione',
     billing_history: 'Storico fatturazione',
+    license: 'Licenza',
+  },
+  license: {
+    purchase_title: 'PIANI SELF-HOSTED',
+    purchase_description:
+      'I piani Pro e Azienda self-hosted sbloccano funzionalità a pagamento sulla tua istanza, come nascondere il branding Logto, usare la tua UI, la collaborazione nella console e applicazioni SAML illimitate. Acquista un piano per ottenere la tua chiave di licenza.',
+    purchase_button: 'Vedi i piani self-hosted',
+    install_title: 'INSTALLA LICENZA',
+    install_description:
+      'Incolla la chiave di licenza che hai ricevuto dopo aver acquistato un piano self-hosted.',
+    install_button: 'Installa licenza',
+    key_field: 'Chiave di licenza',
+    key_field_description:
+      'La chiave viene verificata sulla tua istanza e non la lascia mai. Contatta Logto per ottenere una chiave nuova se quella che hai è scaduta.',
+    key_placeholder: 'Incolla qui la tua chiave di licenza',
+    installed_toast: 'Licenza installata con successo.',
+    details_title: 'LICENZA',
+    details_description: 'La licenza installata su questa istanza e ciò che concede.',
+    plan_field: 'Piano',
+    environment_field: 'Ambiente',
+    environment_production: 'Produzione',
+    environment_non_production: 'Non di produzione',
+    expires_at_field: 'Scade il',
+    installed_at_field: 'Installata il',
+    last_refreshed_at_field: 'Ultimo aggiornamento il',
+    grace_ends_at_field: 'Il periodo di tolleranza termina il',
+    refresh_expired_description:
+      'La chiave di licenza è scaduta il {{expiresAt}}. Le funzionalità con licenza restano disponibili fino al {{graceEndsAt}} mentre Logto tenta di aggiornarla.',
+    refresh_refused_description:
+      'L’aggiornamento della licenza è stato rifiutato perché la licenza è {{reason}}. Le funzionalità con licenza restano disponibili fino al {{graceEndsAt}}.',
+    refusal_reason_canceled: 'annullata',
+    refusal_reason_unpaid: 'non pagata',
+    refusal_reason_expired: 'scaduta',
+    refusal_reason_revoked: 'revocata',
+    refusal_reason_unknown: 'non disponibile',
+    grace_expired_description:
+      'Il periodo di tolleranza della licenza è terminato il {{graceEndsAt}}. Questa distribuzione è tornata ai valori predefiniti OSS. Contatta Logto per ottenere una nuova chiave di licenza e installala di nuovo.',
+    get_fresh_key_button: 'Ottieni una nuova chiave',
+    replace_button: 'Sostituisci licenza',
   },
   members: {
     card_title: 'Gestisci i tenant in modo più sicuro con Logto Cloud',
     card_description:
       'Aggiungi amministratori o collaboratori al tuo tenant senza condividere un unico account amministratore.',
     card_action: 'Esplora Logto Cloud',
+    self_hosted_card_title: 'Gestisci i tenant in modo più sicuro con i piani self-hosted',
+    self_hosted_card_description:
+      'Aggiungi amministratori o collaboratori al tuo tenant senza condividere un unico account amministratore.',
+    self_hosted_card_action: 'Esplora i piani self-hosted',
   },
   settings: {
     title: 'IMPOSTAZIONI',
@@ -43,6 +86,16 @@ const tenants = {
     tenant_mfa: 'Autenticazione a più fattori',
     tenant_mfa_description:
       "Richiedi ai tuoi membri di configurare l'autenticazione a più fattori per accedere a questo inquilino.",
+    oss_description: 'Gestisci come i membri accedono alla Console su questa istanza.',
+    tenant_mfa_confirm_title: "Richiedere l'MFA per tutti i membri?",
+    tenant_mfa_confirm_description:
+      "Questi membri non hanno ancora configurato l'MFA. Resteranno connessi e dovranno configurarla al prossimo accesso:",
+    tenant_mfa_confirm_self:
+      "Anche tu non hai ancora configurato l'MFA. Configurala nelle impostazioni del tuo account prima del prossimo accesso.",
+    tenant_mfa_confirm_button: "Richiedi l'MFA",
+    tenant_mfa_setup_required:
+      "Questo inquilino richiede l'autenticazione a più fattori. Configurala ora, altrimenti ti verrà richiesta al prossimo accesso.",
+    tenant_mfa_setup_action: "Configura l'MFA",
     enterprise_sso: 'Enterprise SSO',
     enterprise_sso_description:
       'Disponibile nei piani a pagamento. Contattaci per abilitare Enterprise SSO in modo che tutti i membri possano accedere alla console Logto Cloud utilizzando il provider di identità della tua organizzazione.',
@@ -50,6 +103,12 @@ const tenants = {
   full_env_tag: {
     development: 'Sviluppo',
     production: 'Produzione',
+  },
+  view_only: {
+    tag: 'Sola lettura',
+    notification:
+      "Hai accesso in sola lettura a questo inquilino. Chiedi a un amministratore dell'inquilino se devi apportare modifiche.",
+    hidden: 'Nascosto ai visualizzatori',
   },
   deletion_card: {
     title: 'ELIMINA',

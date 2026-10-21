@@ -38,6 +38,28 @@ const getQueryRelation = (
   return undefined;
 };
 
+const getIdentityCondition = (searchParams: URLSearchParams): UserConditions['identity'] => {
+  const type = searchParams.get('identityType');
+  const provider = searchParams.get('identityProvider');
+  const identityId = searchParams.get('identityId');
+
+  if (type === null && provider === null && identityId === null) {
+    return undefined;
+  }
+
+  if (!type || !provider || !identityId) {
+    throw new TypeError(
+      'Parameters `identityType`, `identityProvider`, and `identityId` must be provided together and must not be empty.'
+    );
+  }
+
+  if (type !== 'social' && type !== 'sso') {
+    throw new TypeError('Parameter `identityType` must be either `social` or `sso`.');
+  }
+
+  return { type, provider, identityId };
+};
+
 export default function adminUserSearchRoutes<T extends ManagementApiRouter>(
   ...[router, { queries }]: RouterInitArgs<T>
 ) {
@@ -72,6 +94,7 @@ export default function adminUserSearchRoutes<T extends ManagementApiRouter>(
 
           const conditions: UserConditions = {
             search: parseSearchParamsForSearch(searchParams),
+            identity: getIdentityCondition(searchParams),
             relation: getQueryRelation(excludeRoleId, excludeOrganizationId),
           };
 
@@ -80,7 +103,8 @@ export default function adminUserSearchRoutes<T extends ManagementApiRouter>(
             findUsers(limit, offset, conditions),
           ]);
 
-          const includePasswordHash = yes(searchParams.get('includePasswordHash') ?? '');
+          const includePasswordHash =
+            yes(searchParams.get('includePasswordHash') ?? '') && !ctx.auth.isReadOnly;
 
           ctx.pagination.totalCount = count;
           ctx.body = users.map((user) =>

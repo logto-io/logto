@@ -8,6 +8,7 @@ import KeyboardArrowDown from '@/assets/icons/keyboard-arrow-down.svg?react';
 import KeyboardArrowUp from '@/assets/icons/keyboard-arrow-up.svg?react';
 import SearchIcon from '@/assets/icons/search.svg?react';
 import Tick from '@/assets/icons/tick.svg?react';
+import { useReadOnlyField } from '@/contexts/ReadOnlyFieldScope';
 import useWindowResize from '@/hooks/use-window-resize';
 import { onKeyDownHandler } from '@/utils/a11y';
 
@@ -51,6 +52,8 @@ function Select<T extends string>({
   hasSelectedOptionIndicator,
 }: Props<T>) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const isReadOnlyField = useReadOnlyField();
+  const isSelectionReadOnly = Boolean(isReadOnly) || isReadOnlyField;
   const [isOpen, setIsOpen] = useState(false);
   const [searchInputValue, setSearchInputValue] = useState('');
   const [searchInputContainerStyles, setSearchInputContainerStyles] = useState({});
@@ -131,26 +134,27 @@ function Select<T extends string>({
           styles.select,
           styles[size],
           isOpen && styles.open,
-          isReadOnly && styles.readOnly,
+          isSelectionReadOnly && styles.readOnly,
           Boolean(error) && styles.error,
           isClearable && value && styles.clearable,
           className
         )}
         role="button"
-        tabIndex={0}
+        aria-disabled={isSelectionReadOnly ? true : undefined}
+        tabIndex={isSelectionReadOnly ? -1 : 0}
         onKeyDown={onKeyDownHandler(() => {
-          if (!isReadOnly) {
+          if (!isSelectionReadOnly) {
             setIsOpen(true);
           }
         })}
         onClick={() => {
-          if (!isReadOnly) {
+          if (!isSelectionReadOnly) {
             setIsOpen(true);
           }
         }}
       >
         <div className={styles.title}>{current?.title ?? placeholder}</div>
-        {isClearable && (
+        {isClearable && !isSelectionReadOnly && (
           <IconButton
             className={classNames(styles.icon, styles.clear)}
             size="small"

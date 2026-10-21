@@ -16,6 +16,93 @@
           }
         }
       }
+    },
+    "/api/systems/license": {
+      "get": {
+        "summary": "Get the installed license.",
+        "description": "Get the license installed on this self-hosted deployment, i.e. the plan it grants, the entitlements it unlocks, its expiration, and its refresh/grace status. The license key itself is never returned. Returns 404 when no license is installed, and 501 on Logto Cloud.",
+        "responses": {
+          "200": {
+            "description": "The installed license.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "usageLimits": {
+                      "x-logto-dev-feature": true,
+                      "description": "The advisory usage limits signed into the license key. Exceeding one only raises a usage warning and never blocks anything. An absent or `null` limit means the metric is only reported."
+                    },
+                    "usage": {
+                      "x-logto-dev-feature": true,
+                      "description": "The usage of this deployment across all tenants except the admin tenant, in UTC calendar months: the last full month and the current month so far. Absent when the usage could not be collected."
+                    },
+                    "usageWarnings": {
+                      "x-logto-dev-feature": true,
+                      "description": "The usage metrics above their limits. MAU and access tokens are evaluated locally from the larger of the last full month and the month to date, so they also work offline and with usage reporting disabled. Notices returned by the license service with the last refresh, such as too many production deployments, are included for the other metrics."
+                    },
+                    "usageReportingEnabled": {
+                      "x-logto-dev-feature": true,
+                      "description": "Whether the license refresh sends the usage of this deployment to Logto. Read-only: set the `SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED` environment variable on every instance to disable it."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No license is installed on this deployment."
+          },
+          "501": {
+            "description": "Licenses are only available on self-hosted deployments."
+          }
+        }
+      },
+      "put": {
+        "summary": "Install a license.",
+        "description": "Install a license key on this self-hosted deployment, replacing the installed license if there is one. The key's signature is verified against the public key built into Logto before it is saved, and a key past its expiration is rejected as a stale copy. Returns 501 on Logto Cloud.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "license": {
+                    "description": "The license key to install, as issued by Logto Cloud."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The license has been installed."
+          },
+          "400": {
+            "description": "The license key is invalid or has been tampered with, or it has expired."
+          },
+          "501": {
+            "description": "Licenses are only available on self-hosted deployments."
+          }
+        }
+      }
+    },
+    "/api/systems/license/usage-statement": {
+      "get": {
+        "tags": ["Dev feature"],
+        "summary": "Get the license usage statement.",
+        "description": "Get the monthly active users and access tokens of this self-hosted deployment for each of the last 12 full UTC calendar months, oldest first, across all tenants except the admin tenant. It is read from the deployment's own records and can be provided as the usage statement the self-hosted terms ask for. Returns 404 when no license is installed, and 501 on Logto Cloud.",
+        "responses": {
+          "200": {
+            "description": "The usage statement of this deployment."
+          },
+          "404": {
+            "description": "No license is installed on this deployment."
+          },
+          "501": {
+            "description": "Licenses are only available on self-hosted deployments."
+          }
+        }
+      }
     }
   }
 }

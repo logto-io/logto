@@ -133,21 +133,16 @@ export const validateBackupCodeFactor = (factors: MfaFactor[]): boolean => {
 };
 
 export const buildMfaPatchPayload = (
-  mfaConfigForm: MfaConfigForm,
-  includeTrustedDevice = false
-): { mfa: MfaConfig; adaptiveMfa: AdaptiveMfa; trustedDevice?: TrustedDevicePolicy } => {
+  mfaConfigForm: MfaConfigForm
+): { mfa: MfaConfig; adaptiveMfa: AdaptiveMfa; trustedDevice: TrustedDevicePolicy } => {
   const mfa = convertMfaFormToConfig(mfaConfigForm);
 
   return {
     mfa,
     adaptiveMfa: { enabled: mfaConfigForm.adaptiveMfaEnabled },
-    ...conditional(
-      includeTrustedDevice && {
-        trustedDevice: {
-          enabled: mfaConfigForm.trustedDeviceEnabled,
-          durationDays: mfaConfigForm.trustedDeviceDurationDays,
-        },
-      }
-    ),
+    trustedDevice: {
+      enabled: mfaConfigForm.trustedDeviceEnabled,
+      durationDays: mfaConfigForm.trustedDeviceDurationDays,
+    },
   };
 };

@@ -9,8 +9,16 @@ export const reservationLink = 'https://cal.com/logto/30min';
 export const officialWebsiteLink = 'https://logto.io';
 export const trustAndSecurityLink = `${officialWebsiteLink}/trust-and-security`;
 export const pricingLink = `${officialWebsiteLink}/pricing`;
+export const selfHostedPlansLink = `${officialWebsiteLink}/self-hosted-plans`;
 export const logtoCloudConsoleLink = 'https://cloud.logto.io';
 export const officialWebsiteContactPageLink = `${officialWebsiteLink}/contact`;
+export const buildOfficialWebsiteContactPageUrl = (source: string) => {
+  const url = new URL(officialWebsiteContactPageLink);
+
+  url.searchParams.set('src', source);
+
+  return url.toString();
+};
 export const entityPolicyLink = 'https://docs.logto.io/logto-cloud/system-limit';
 export const logtoOssFeatureSupportLink =
   'https://docs.logto.io/logto-oss#feature-supported-by-logto-oss';
@@ -30,6 +38,7 @@ export const organizationBrandingLink =
 export const organizationLogosForExperienceLink =
   '/docs/recipes/customize-sie/match-your-brand/#organization-specific-logos';
 export const signingKeysLink = '/docs/references/openid-connect/signing-keys-rotation/';
+export const selfHostedLicenseGuideLink = '/logto-oss/self-hosted-license';
 export const organizationTemplateLink = '/authorization/organization-template';
 export const organizationRoleLink =
   '/docs/recipes/organizations/understand-how-it-works/#organization-role';

@@ -1,12 +1,15 @@
 import { type SignInIdentifier } from '@logto/schemas';
 import { t } from 'i18next';
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 import { useTimer } from 'react-timer-hook';
 
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { sendMfaVerificationCode } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
+import { usePureStepUpErrorHandler } from '@/hooks/use-step-up-error-handler';
 import useToast from '@/hooks/use-toast';
+import { codeVerificationTypeMap } from '@/utils/sign-in-experience';
 
 export const timeRange = 59;
 
@@ -21,7 +24,9 @@ const useResendMfaVerificationCode = (
 ) => {
   const { setToast } = useToast();
   const handleError = useErrorHandler();
+  const stepUpErrorHandlers = usePureStepUpErrorHandler();
   const resend = useApi(sendMfaVerificationCode);
+  const { setVerificationId } = useContext(UserInteractionContext);
 
   const { seconds, isRunning, restart } = useTimer({
     autoStart: true,
@@ -32,17 +37,26 @@ const useResendMfaVerificationCode = (
     const [error, result] = await resend(identifierType);
 
     if (error) {
-      await handleError(error);
+      await handleError(error, stepUpErrorHandlers);
       return;
     }
 
     if (result) {
+      setVerificationId(codeVerificationTypeMap[identifierType], result.verificationId);
       setToast(t('description.passcode_sent'));
       restart(getTimeout(), true);
     }
 
     return result?.verificationId;
-  }, [handleError, identifierType, resend, restart, setToast]);
+  }, [
+    handleError,
+    identifierType,
+    resend,
+    restart,
+    setToast,
+    setVerificationId,
+    stepUpErrorHandlers,
+  ]);
 
   return {
     seconds,

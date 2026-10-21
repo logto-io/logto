@@ -19,7 +19,7 @@ export const samlLogInResponseTemplate = `
         <saml:Audience>{Audience}</saml:Audience>
       </saml:AudienceRestriction>
     </saml:Conditions>
-    <saml:AuthnStatement AuthnInstant="{IssueInstant}" SessionNotOnOrAfter="{SessionNotOnOrAfter}" SessionIndex="{SessionIndex}">
+    <saml:AuthnStatement AuthnInstant="{AuthnInstant}" SessionNotOnOrAfter="{SessionNotOnOrAfter}" SessionIndex="{SessionIndex}">
       <saml:AuthnContext>
         <saml:AuthnContextClassRef>{AuthnContextClassRef}</saml:AuthnContextClassRef>
       </saml:AuthnContext>

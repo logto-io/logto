@@ -1,5 +1,43 @@
 # Change Log
 
+## 1.45.0
+
+### Patch Changes
+
+- @logto/schemas@1.45.0
+
+## 1.44.0
+
+### Patch Changes
+
+- a2d6e83: explain existing PostgreSQL tenant roles before database seeding stops
+
+  The database seed command now checks for the roles it needs before creating tables. If roles from a previous Logto database remain in the PostgreSQL cluster, the command reports the conflict and explains why dropping the database did not remove them, so an administrator can clean them up safely before retrying.
+
+- Updated dependencies [655317e]
+- Updated dependencies [9af3b69]
+- Updated dependencies [022317f]
+- Updated dependencies [5bd627f]
+- Updated dependencies [3f9fd15]
+- Updated dependencies [c5bd438]
+- Updated dependencies [0429b3a]
+  - @logto/schemas@1.44.0
+
+## 1.43.0
+
+### Patch Changes
+
+- Updated dependencies [ebfefb513d]
+- Updated dependencies [ab106cdb82]
+- Updated dependencies [b64d46d495]
+- Updated dependencies [28c3c9283e]
+- Updated dependencies [8b2aaab9b0]
+- Updated dependencies [16f4b2e732]
+  - @logto/core-kit@2.13.0
+  - @logto/schemas@1.43.0
+  - @logto/shared@3.4.3
+  - @logto/connector-kit@5.1.1
+
 ## 1.42.0
 
 ### Patch Changes

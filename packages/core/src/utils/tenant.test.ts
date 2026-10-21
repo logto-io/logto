@@ -28,6 +28,25 @@ mockEsm('#src/caches/index.js', () => ({
 
 const { getTenantId, clearCustomDomainCache } = await import('./tenant.js');
 
+/**
+ * The warning is guarded by a module-level `once`, so each case loads a fresh module graph
+ * to start from an unfired guard and spies on that graph's `devConsole`.
+ */
+const loadFreshTenantModule = async () => {
+  jest.resetModules();
+  /**
+   * Sequential imports on purpose: concurrent `import()` calls after `jest.resetModules()`
+   * race the ESM linking of the shared dependency graph.
+   */
+  const { getTenantId: freshGetTenantId } = await import('./tenant.js');
+  const { devConsole } = await import('./console.js');
+
+  return {
+    getTenantId: freshGetTenantId,
+    warnSpy: jest.spyOn(devConsole, 'warn').mockReturnValue(),
+  };
+};
+
 const getTenantIdFirstElement = async (url: URL) => {
   const [tenantId] = await getTenantId(url);
   return tenantId;
@@ -211,5 +230,96 @@ describe('getTenantId()', () => {
      * miss here would resolve to `undefined`.
      */
     await expect(getTenantIdFirstElement(new URL('https://logto.mock.com'))).resolves.toBe('fresh');
+  });
+
+  const useProductionEnv = (extra: NodeJS.ProcessEnv = {}) => {
+    process.env = {
+      ...backupEnv,
+      NODE_ENV: 'production',
+      ENDPOINT: 'https://logto.example.com',
+      DEVELOPMENT_TENANT_ID: '',
+      INTEGRATION_TEST: '',
+      PATH_BASED_MULTI_TENANCY: '',
+      ADMIN_DISABLE_LOCALHOST: '',
+      ADMIN_ENDPOINT: '',
+      ...extra,
+    };
+  };
+
+  describe('unmatched console origin warning', () => {
+    it('warns once when /console falls through to the default tenant', async () => {
+      useProductionEnv();
+      const { getTenantId, warnSpy } = await loadFreshTenantModule();
+      const url = new URL('https://alb.example.com/console');
+
+      await expect(getTenantId(url)).resolves.toEqual([defaultTenantId, false]);
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('https://alb.example.com'));
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('not set'));
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('ADMIN_ENDPOINT'));
+
+      await expect(getTenantId(url)).resolves.toEqual([defaultTenantId, false]);
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('warns for nested console paths and names a mismatched ADMIN_ENDPOINT', async () => {
+      useProductionEnv({
+        ADMIN_ENDPOINT: 'https://internal.example.com/app',
+        ADMIN_DISABLE_LOCALHOST: '1',
+      });
+      const { getTenantId, warnSpy } = await loadFreshTenantModule();
+      const url = new URL('https://alb.example.com/console/applications');
+
+      await expect(getTenantId(url)).resolves.toEqual([defaultTenantId, false]);
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('https://alb.example.com'));
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('https://internal.example.com/app')
+      );
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('ADMIN_ENDPOINT'));
+    });
+
+    it('returns the admin tenant without warning when the origin matches adminUrlSet', async () => {
+      useProductionEnv({ ADMIN_ENDPOINT: 'https://admin.example.com' });
+      const { getTenantId, warnSpy } = await loadFreshTenantModule();
+
+      await expect(getTenantId(new URL('https://admin.example.com/console'))).resolves.toEqual([
+        adminTenantId,
+        false,
+      ]);
+      expect(warnSpy).not.toHaveBeenCalled();
+    });
+
+    it('does not spend the one-time warning on non-console paths', async () => {
+      useProductionEnv();
+      const { getTenantId, warnSpy } = await loadFreshTenantModule();
+
+      await expect(getTenantId(new URL('https://alb.example.com/sign-in'))).resolves.toEqual([
+        defaultTenantId,
+        false,
+      ]);
+      await expect(getTenantId(new URL('https://alb.example.com/consolefoo'))).resolves.toEqual([
+        defaultTenantId,
+        false,
+      ]);
+      expect(warnSpy).not.toHaveBeenCalled();
+
+      await expect(getTenantId(new URL('https://alb.example.com/console'))).resolves.toEqual([
+        defaultTenantId,
+        false,
+      ]);
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not warn in multi-tenancy', async () => {
+      useProductionEnv({ ENDPOINT: 'https://*.logto.example.com' });
+      const { getTenantId, warnSpy } = await loadFreshTenantModule();
+
+      await expect(getTenantId(new URL('https://alb.example.com/console'))).resolves.toEqual([
+        undefined,
+        false,
+      ]);
+      expect(warnSpy).not.toHaveBeenCalled();
+    });
   });
 });

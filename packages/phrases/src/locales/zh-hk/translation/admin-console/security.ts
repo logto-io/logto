@@ -34,6 +34,11 @@ const security = {
       description:
         'Cloudflare 的智能 CAPTCHA 替代方案，提供非侵入性的機器人保護，同時確保無視覺難題的無縫用戶體驗。',
     },
+    cap: {
+      name: 'Cap',
+      description:
+        '開源、可自行託管的工作量證明 CAPTCHA，無需視覺謎題或第三方服務，適合無法存取其他 CAPTCHA 服務的地區。',
+    },
   },
   captcha_details: {
     back_to_security: '返回安全性',
@@ -49,6 +54,10 @@ const security = {
     domain_placeholder: 'www.google.com（預設）或 recaptcha.net',
     recaptcha_key_id: 'reCAPTCHA 金鑰 ID',
     recaptcha_api_key: '項目的 API 金鑰',
+    cap_endpoint: 'Cap 端點',
+    cap_endpoint_placeholder: 'https://cap.example.com',
+    cap_endpoint_http_notice:
+      '此端點使用 HTTP，僅適用於本地開發。瀏覽器會攔截 HTTPS 登入頁發出的 HTTP 請求，且密鑰將以明文傳輸。生產環境請使用 HTTPS。',
     deletion_description: '你確定要刪除此 CAPTCHA 供應商嗎？',
     captcha_deleted: 'CAPTCHA 供應商已成功刪除',
     setup_captcha: '設定 CAPTCHA',
@@ -57,6 +66,10 @@ const security = {
     mode_checkbox: '複選框驗證',
     mode_notice:
       '驗證模式在 Google Cloud Console 的 reCAPTCHA 金鑰設定中定義。更改此處的模式需要匹配的金鑰類型。',
+    score_threshold: '分數門檻',
+    score_threshold_description:
+      '低於門檻的分數會被拒絕。0.0 允許所有分數，1.0 只允許滿分。預設值為 0.5。',
+    score_threshold_error: '分數門檻必須介乎 0 至 1 之間。',
   },
   password_policy: {
     password_requirements: '密碼要求',

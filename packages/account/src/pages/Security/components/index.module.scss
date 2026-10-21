@@ -13,6 +13,12 @@
   color: var(--color-type-primary);
 }
 
+.sectionDescription {
+  padding-inline-start: _.unit(1);
+  font: var(--font-body-2);
+  color: var(--color-type-secondary);
+}
+
 .card {
   background: var(--color-bg-body);
   border-radius: 12px;
@@ -163,7 +169,8 @@
 @include skeleton.shimmer-keyframes;
 
 :global(body.mobile) {
-  .sectionTitle {
+  .sectionTitle,
+  .sectionDescription {
     padding-inline-start: 0;
   }
 

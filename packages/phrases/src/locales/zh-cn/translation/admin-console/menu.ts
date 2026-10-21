@@ -1,4 +1,5 @@
 const menu = {
+  single_sign_on: '单点登录',
   profile: '帐户管理',
   language: '语言',
   appearance: {

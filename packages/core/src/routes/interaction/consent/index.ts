@@ -20,13 +20,17 @@ import { consent, getMissingScopes } from '#src/libraries/session/index.js';
 import koaAppAccessControl from '#src/middleware/koa-app-access-control.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
-import { isCimdClient } from '#src/oidc/cimd/index.js';
+import { shouldTreatAsCimdClient } from '#src/oidc/cimd/index.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { interactionPrefix } from '../const.js';
 
-import { buildResourceScopesToReject, filterAndParseMissingResourceScopes } from './utils.js';
+import {
+  buildResourceScopesToReject,
+  filterAndParseMissingResourceScopes,
+  revalidateConsentClient,
+} from './utils.js';
 
 const { InvalidClient, InvalidRedirectUri, InvalidRequest } = errors;
 
@@ -58,7 +62,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
 
       const {
         session,
-        params: { client_id: applicationId, redirect_uri: redirectUri },
+        params: { client_id: applicationId, redirect_uri: redirectUri, scope },
         prompt,
       } = interactionDetails;
 
@@ -71,32 +75,25 @@ export default function consentRoutes<T extends IRouterParamContext>(
 
       const { accountId: userId } = session;
 
-      const cimd = isCimdClient(envSet, applicationId);
+      const treatAsCimdClient = shouldTreatAsCimdClient(envSet, applicationId);
 
-      if (cimd) {
-        /**
-         * The oidc-provider resume path re-runs `checkClient` (re-fetching the metadata
-         * document when its cache has expired) but not `check_redirect_uri`, so a URI removed
-         * from the current document would still receive the authorization code. Re-assert it
-         * here against whatever document the cache serves at submission time — best effort,
-         * not airtight: a cache expiry between this check and resume can still swap in a
-         * changed document unchecked. It narrows the exposure from the whole login-to-consent
-         * span to that cache-boundary race.
-         */
-        const client = await provider.Client.find(applicationId);
-        assertThat(client, new InvalidClient('client must be available'));
-        assertThat(
-          typeof redirectUri === 'string' && client.redirectUriAllowed(redirectUri),
-          new InvalidRedirectUri(
-            'redirect_uri must still be allowed by the client metadata document'
-          )
-        );
-      }
+      const { missingOIDCScope = [], missingResourceScopes: allMissingResourceScopes = {} } =
+        getMissingScopes(prompt);
+
+      await revalidateConsentClient({
+        provider,
+        queries,
+        applicationId,
+        treatAsCimdClient,
+        redirectUri,
+        requestedScope: scope,
+        missingOIDCScope,
+      });
 
       // Grant the organizations to the application if the user has selected the organizations
       if (organizationIds?.length) {
         /** One grant carries one organization for a CIMD client. */
-        if (cimd) {
+        if (treatAsCimdClient) {
           assertThat(
             organizationIds.length === 1,
             new InvalidRequest('at most one organization can be consented to a CIMD client')
@@ -107,7 +104,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
         await validateUserConsentOrganizationMembership(userId, organizationIds);
 
         /** The CIMD counterpart is grant-keyed — `consent()` writes it after `grant.save()`. */
-        if (!cimd) {
+        if (!treatAsCimdClient) {
           await queries.applications.userConsentOrganizations.insert(
             ...organizationIds.map((organizationId) => ({
               applicationId,
@@ -118,9 +115,6 @@ export default function consentRoutes<T extends IRouterParamContext>(
         }
       }
 
-      const { missingOIDCScope = [], missingResourceScopes: allMissingResourceScopes = {} } =
-        getMissingScopes(prompt);
-
       /* === Rebuild resource scopes === */
       // The resource scopes saved in the prompt details lost the organization information.
       // Instead of trust the front-end's submission, we choose to find the organizations and build the resource scopes again,
@@ -130,7 +124,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
        * A CIMD authorization is served by its own grant alone, so the just-validated selection
        * is its whole organization set; registered applications re-query the cross-grant relation.
        */
-      const organizations = cimd
+      const organizations = treatAsCimdClient
         ? await Promise.all(
             (organizationIds ?? []).map(async (organizationId) =>
               queries.organizations.findById(organizationId)
@@ -213,7 +207,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
       const resourceScopesToReject = buildResourceScopesToReject(
         allMissingResourceScopes,
         resourceScopesToGrant,
-        cimd
+        treatAsCimdClient
       );
 
       const redirectTo = await consent({
@@ -226,7 +220,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
         resourceScopesToGrant,
         resourceScopesToReject,
         markAppLevelAccessControlChecked: true,
-        cimdOrganizationId: conditional(cimd && organizationIds?.[0]),
+        cimdOrganizationId: conditional(treatAsCimdClient && organizationIds?.[0]),
       });
 
       ctx.body = { redirectTo };
@@ -263,7 +257,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
 
       const { accountId } = session;
 
-      const cimd = isCimdClient(envSet, clientId);
+      const treatAsCimdClient = shouldTreatAsCimdClient(envSet, clientId);
 
       /**
        * CIMD clients are unregistered: display data comes from the provider-resolved metadata
@@ -274,7 +268,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
         application: ConsentInfoResponse['application'];
         isDeviceFlowApplication: boolean;
       }> => {
-        if (cimd) {
+        if (treatAsCimdClient) {
           const client = await provider.Client.find(clientId);
           assertThat(client, new InvalidClient('client must be available'));
 

@@ -111,6 +111,14 @@ const applications = {
       permission_delete_confirm:
         'سيؤدي هذا الإجراء إلى إزالة الإذن من التطبيق الديناميكي، مما يمنع عملاء OAuth من طلب موافقة المستخدم عليه. هل أنت متأكد أنك تريد المتابعة؟',
     },
+    client_compatibility: {
+      title: 'توافق العملاء',
+      description:
+        'اضبط كيفية تعامل Logto مع طلبات التفويض الواردة من عملاء OAuth التي لا تدعم بعد OpenID Connect بشكل كامل. هذه الإعدادات تجريبية وقد تتغير أو تُزال.',
+      add_consent_prompt_for_offline_access: 'إضافة طلب الموافقة للوصول دون اتصال',
+      add_consent_prompt_for_offline_access_description:
+        'عندما يطلب عميل OAuth `offline_access` بدون `prompt=consent`، يضيف Logto طلب الموافقة ليتمكن العميل من الحصول على رمز التحديث. يُنصح بتفعيله لعملاء مثل ChatGPT وCodex.',
+    },
   },
   guide: {
     third_party: {

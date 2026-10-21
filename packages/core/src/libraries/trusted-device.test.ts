@@ -3,6 +3,8 @@ import { createHash } from 'node:crypto';
 
 import type { TrustedDevice } from '@logto/schemas';
 
+import { createMockTrustedDevice } from '#src/__mocks__/trusted-device.js';
+import { EnvSet } from '#src/env-set/index.js';
 import type { TrustedDeviceQueries } from '#src/queries/trusted-device.js';
 
 import type { createTrustedDevicePolicyLibrary } from './trusted-device-policy.js';
@@ -10,6 +12,7 @@ import {
   createTrustedDeviceLibrary,
   generateTrustedDeviceSecret,
   getTrustedDeviceCookieName,
+  getTrustedDeviceOptOutCookieName,
   hashTrustedDeviceSecret,
   parseTrustedDeviceCredential,
   serializeTrustedDeviceCredential,
@@ -49,19 +52,14 @@ const createPolicyLibrary = ({ enabled = true, durationDays = 30 } = {}) =>
     getEffectivePolicy: jest.fn(async () => ({ enabled, durationDays })),
   }) as unknown as TrustedDevicePolicyLibrary;
 
-const buildTrustedDevice = (secretHash: Uint8Array): TrustedDevice => ({
-  tenantId,
-  id: trustedDeviceId,
-  userId,
-  secretHash: Buffer.from(secretHash),
-  userAgent: null,
-  ip: null,
-  country: null,
-  city: null,
-  createdAt: 1,
-  lastUsedAt: 1,
-  expiresAt: Date.now() + 60_000,
-});
+const buildTrustedDevice = (secretHash: Uint8Array): TrustedDevice =>
+  createMockTrustedDevice({
+    tenantId,
+    id: trustedDeviceId,
+    userId,
+    secretHash: Buffer.from(secretHash),
+    expiresAt: Date.now() + 60_000,
+  });
 
 describe('trusted device credential helpers', () => {
   it('builds deterministic non-identifying per-user cookie names', () => {
@@ -73,6 +71,14 @@ describe('trusted device credential helpers', () => {
     expect(developmentName).not.toContain(userId);
     expect(productionName).toBe(`__Host-${developmentName}`);
     expect(getTrustedDeviceCookieName(tenantId, 'another-user', false)).not.toBe(developmentName);
+
+    const optOutName = getTrustedDeviceOptOutCookieName(tenantId, userId, false);
+
+    expect(optOutName).toMatch(/^logto-device-trust-opt-out-[\w-]{43}$/);
+    expect(optOutName).not.toContain('logto-trusted-device-');
+    expect(optOutName).not.toBe(developmentName);
+    expect(getTrustedDeviceOptOutCookieName(tenantId, userId, true)).toBe(`__Host-${optOutName}`);
+    expect(getTrustedDeviceOptOutCookieName('another-tenant', userId, false)).not.toBe(optOutName);
   });
 
   it('generates 32-byte secrets and hashes their decoded bytes with SHA-256', () => {
@@ -109,6 +115,62 @@ describe('trusted device library', () => {
 
   afterEach(() => {
     jest.restoreAllMocks();
+  });
+
+  it('checks for an unsigned user-specific trusted-device cookie', () => {
+    const queries = createQueries();
+    const { ctx, get } = createCookieContext('credential');
+    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(), {
+      isProduction: false,
+    });
+
+    expect(library.hasCredential(ctx, userId)).toBe(true);
+    expect(get).toHaveBeenCalledWith(getTrustedDeviceCookieName(tenantId, userId, false), {
+      signed: false,
+    });
+
+    const { ctx: emptyContext } = createCookieContext();
+
+    expect(library.hasCredential(emptyContext, userId)).toBe(false);
+  });
+
+  it('reads and writes a policy-duration opt-out cookie', () => {
+    const now = Date.now();
+    const durationDays = 7;
+    const expiresAt = now + durationDays * 24 * 60 * 60 * 1000;
+    const queries = createQueries();
+    const { ctx, get, set } = createCookieContext('1');
+    const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary(), {
+      isProduction: true,
+    });
+
+    jest.spyOn(Date, 'now').mockReturnValue(now);
+
+    expect(library.hasOptOut(ctx, userId)).toBe(true);
+    expect(get).toHaveBeenCalledWith(getTrustedDeviceOptOutCookieName(tenantId, userId, true), {
+      signed: false,
+    });
+
+    library.writeOptOut(ctx, userId, durationDays);
+
+    expect(set).toHaveBeenCalledWith(
+      getTrustedDeviceOptOutCookieName(tenantId, userId, true),
+      '1',
+      {
+        expires: new Date(expiresAt),
+        httpOnly: true,
+        maxAge: expiresAt - now,
+        overwrite: true,
+        path: '/',
+        sameSite: 'lax',
+        secure: true,
+        signed: false,
+      }
+    );
+
+    const { ctx: otherValueContext } = createCookieContext('true');
+
+    expect(library.hasOptOut(otherValueContext, userId)).toBe(false);
   });
 
   it('creates a record with only the secret hash and writes an unsigned host-only cookie', async () => {
@@ -185,6 +247,28 @@ describe('trusted device library', () => {
     await expect(
       library.createCredential({ ctx, deviceId: trustedDeviceId, userId })
     ).resolves.toBeUndefined();
+    expect(queries.insertIfNotExists).not.toHaveBeenCalled();
+    expect(set).not.toHaveBeenCalled();
+  });
+
+  it('enforces a request-resolved disabled policy without querying it again', async () => {
+    const queries = createQueries();
+    const policyLibrary = createPolicyLibrary({ enabled: true });
+    const { ctx, set } = createCookieContext();
+    const library = createTrustedDeviceLibrary(tenantId, queries, policyLibrary, {
+      isProduction: false,
+    });
+
+    await expect(
+      library.createCredential({
+        ctx,
+        deviceId: trustedDeviceId,
+        effectivePolicy: { enabled: false, durationDays: 30 },
+        userId,
+      })
+    ).resolves.toBeUndefined();
+
+    expect(policyLibrary.getEffectivePolicy).not.toHaveBeenCalled();
     expect(queries.insertIfNotExists).not.toHaveBeenCalled();
     expect(set).not.toHaveBeenCalled();
   });
@@ -267,6 +351,36 @@ describe('trusted device library', () => {
       serializeTrustedDeviceCredential(credential),
       expect.objectContaining({ secure: true, signed: false, path: '/' })
     );
+  });
+
+  it('uses an HTTP-compatible cookie in the integration test harness', () => {
+    const originalEnv = {
+      isProduction: EnvSet.values.isProduction,
+      isIntegrationTest: EnvSet.values.isIntegrationTest,
+    };
+    const setEnvFlag = (key: 'isProduction' | 'isIntegrationTest', value: boolean) => {
+      Reflect.set(EnvSet.values, key, value);
+    };
+    setEnvFlag('isProduction', true);
+    setEnvFlag('isIntegrationTest', true);
+
+    try {
+      const queries = createQueries();
+      const { ctx, set } = createCookieContext();
+      const library = createTrustedDeviceLibrary(tenantId, queries, createPolicyLibrary());
+      const credential = { id: trustedDeviceId, secret: generateTrustedDeviceSecret() };
+
+      library.writeCredential(ctx, userId, credential, Date.now() + 60_000);
+
+      expect(set).toHaveBeenCalledWith(
+        getTrustedDeviceCookieName(tenantId, userId, false),
+        serializeTrustedDeviceCredential(credential),
+        expect.objectContaining({ secure: false, signed: false, path: '/' })
+      );
+    } finally {
+      setEnvFlag('isProduction', originalEnv.isProduction);
+      setEnvFlag('isIntegrationTest', originalEnv.isIntegrationTest);
+    }
   });
 
   it('queues a redacted deletion webhook only after deleting an existing record', async () => {

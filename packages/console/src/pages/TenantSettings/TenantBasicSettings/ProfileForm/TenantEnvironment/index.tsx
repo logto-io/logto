@@ -10,6 +10,7 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import { isDevOnlyRegion } from '@/hooks/use-available-regions';
+import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
 import styles from './index.module.scss';
 
@@ -20,6 +21,9 @@ type Props = {
 function TenantEnvironment({ tag }: Props) {
   const [isConvertModalOpen, setIsConvertModalOpen] = useState(false);
   const { currentTenant, isDevTenant } = useContext(TenantsContext);
+  const {
+    access: { canManageTenant },
+  } = useCurrentTenantScopes();
 
   return (
     <div className={styles.container}>
@@ -36,7 +40,7 @@ function TenantEnvironment({ tag }: Props) {
           {isDevTenant && <LearnMore href={logtoCloudTenantSettings} />}
         </div>
       </div>
-      {isDevTenant && !isDevOnlyRegion(currentTenant?.regionName) && (
+      {isDevTenant && !isDevOnlyRegion(currentTenant?.regionName) && canManageTenant && (
         <>
           <Button
             className={styles.button}

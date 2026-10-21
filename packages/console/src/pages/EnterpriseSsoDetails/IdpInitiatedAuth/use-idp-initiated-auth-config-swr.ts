@@ -11,12 +11,12 @@ import { buildIdpInitiatedAuthConfigEndpoint } from './utils';
  * Silently fetches the IdP initiated auth config for the given connector
  * Hide error toast.
  */
-const useIdpInitiatedAuthConfigSWR = (connectorId: string) => {
+const useIdpInitiatedAuthConfigSWR = (connectorId?: string) => {
   const fetchApi = useApi({ hideErrorToast: true });
   const fetcher = useSwrFetcher<SsoConnectorIdpInitiatedAuthConfig>(fetchApi);
 
   return useSWR<SsoConnectorIdpInitiatedAuthConfig, RequestError>(
-    buildIdpInitiatedAuthConfigEndpoint(connectorId),
+    connectorId && buildIdpInitiatedAuthConfigEndpoint(connectorId),
     {
       fetcher,
       shouldRetryOnError: shouldRetryOnError({ ignore: [404] }),

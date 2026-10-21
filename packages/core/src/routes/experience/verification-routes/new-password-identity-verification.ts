@@ -1,11 +1,13 @@
 import { usernameRegEx } from '@logto/core-kit';
-import { SignInIdentifier, VerificationType } from '@logto/schemas';
+import { InteractionEvent, SignInIdentifier, VerificationType } from '@logto/schemas';
 import { Action } from '@logto/schemas/lib/types/log/interaction.js';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
+import assertThat from '#src/utils/assert-that.js';
 
 import { NewPasswordIdentityVerification } from '../classes/verifications/new-password-identity-verification.js';
 import { experienceRoutes } from '../const.js';
@@ -38,6 +40,13 @@ export default function newPasswordIdentityVerificationRoutes<
     async (ctx, next) => {
       const { identifier, password } = ctx.guard.body;
       const { experienceInteraction, verificationAuditLog } = ctx;
+
+      // The record only proposes a password for an account that does not exist yet. In any other
+      // event it would sit next to the identified user's records without ever authenticating them.
+      assertThat(
+        experienceInteraction.interactionEvent === InteractionEvent.Register,
+        new RequestError({ code: 'session.invalid_interaction_type', status: 400 })
+      );
 
       verificationAuditLog.append({
         payload: {

@@ -3,3 +3,18 @@
 .captchaBox {
   margin-bottom: _.unit(2);
 }
+
+.capWidget {
+  --cap-widget-width: 100%;
+  --cap-background: var(--color-bg-layer-1);
+  --cap-border-color: var(--color-line-border);
+  --cap-border-radius: var(--radius);
+  --cap-color: var(--color-type-primary);
+  --cap-font: inherit;
+  --cap-checkbox-border: 1px solid var(--color-line-border);
+  --cap-checkbox-background: var(--color-bg-layer-1);
+  --cap-spinner-color: var(--color-brand-default);
+  --cap-spinner-background-color: var(--color-line-divider);
+  --cap-focus-ring: var(--color-brand-default);
+  display: block;
+}

@@ -1,4 +1,4 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
 
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { initExperienceClient } from '#src/helpers/client.js';
@@ -36,12 +36,25 @@ describe('password verifications', () => {
     });
   });
 
+  it('should reject the verification outside a register interaction', async () => {
+    const { username, password } = generateNewUserProfile({ username: true, password: true });
+    const client = await initExperienceClient();
+
+    await expectRejects(
+      client.createNewPasswordIdentityVerification({
+        identifier: { type: SignInIdentifier.Username, value: username },
+        password,
+      }),
+      { code: 'session.invalid_interaction_type', status: 400 }
+    );
+  });
+
   describe('invalid identifier check', () => {
     it('should throw error if username is registered', async () => {
       const { username, password } = generateNewUserProfile({ username: true, password: true });
       await userApi.create({ username, password });
 
-      const client = await initExperienceClient();
+      const client = await initExperienceClient({ interactionEvent: InteractionEvent.Register });
 
       await expectRejects(
         client.createNewPasswordIdentityVerification({
@@ -66,7 +79,7 @@ describe('password verifications', () => {
 
       await userApi.create({ primaryEmail, password });
 
-      const client = await initExperienceClient();
+      const client = await initExperienceClient({ interactionEvent: InteractionEvent.Register });
 
       await expectRejects(
         client.createNewPasswordIdentityVerification({
@@ -95,7 +108,7 @@ describe('password verifications', () => {
     ];
 
     it.each(invalidPasswords)('should reject invalid password %p', async (password) => {
-      const client = await initExperienceClient();
+      const client = await initExperienceClient({ interactionEvent: InteractionEvent.Register });
 
       await expectRejects(
         client.createNewPasswordIdentityVerification({
@@ -114,7 +127,7 @@ describe('password verifications', () => {
   });
 
   it('should create new password identity verification successfully', async () => {
-    const client = await initExperienceClient();
+    const client = await initExperienceClient({ interactionEvent: InteractionEvent.Register });
 
     const { verificationId } = await client.createNewPasswordIdentityVerification({
       identifier: {

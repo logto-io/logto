@@ -136,7 +136,7 @@ import SignIn from './sign-in';
 import SignOut from './sign-out';
 import { logtoConfig } from './logto';
 
-const Home = () => {
+const Home = async () => {
   const { isAuthenticated, claims } = await getLogtoContext(logtoConfig);
 
   return (

@@ -45,7 +45,8 @@ const sign_in_exp = {
     hide_logto_branding: 'Ocultar a marca Logto',
     hide_logto_branding_description:
       'Remova "Powered by Logto". Destaque apenas a sua marca com uma experiência de login limpa e profissional.',
-    hide_logto_branding_oss_note: 'Este recurso está disponível nativamente no <a>Logto Cloud</a>.',
+    hide_logto_branding_oss_note:
+      'Este recurso está disponível no <a>Logto Cloud</a> ou nos <selfHosted>planos self-hosted</selfHosted>.',
   },
   branding_uploads: {
     app_logo: {
@@ -95,7 +96,7 @@ const sign_in_exp = {
       'Carregue um pacote compactado (.zip) para substituir a UI pré-construída do Logto pelo seu próprio código. <a>Saiba mais</a>',
     bring_your_ui_oss_description: 'Personalize a interface de login com o seu próprio código.',
     bring_your_ui_oss_card_description:
-      'Envie sua interface de login personalizada diretamente para o <a>Logto Cloud</a>. Não é preciso fazer fork nem implantar novamente.',
+      'O upload de uma interface personalizada está disponível no <a>Logto Cloud</a> ou nos <selfHosted>planos self-hosted</selfHosted>. Não é preciso fazer fork nem implantar novamente.',
     bring_your_ui_oss_try_cloud: 'Experimentar Cloud',
     preview_with_bring_your_ui_description:
       'Seus ativos de UI personalizados foram carregados com sucesso e agora estão sendo servidos. Consequentemente, a janela de visualização interna foi desativada.\nPara testar sua UI de login personalizada, clique no botão "Visualização em tempo real" para abri-la em uma nova aba do navegador.',
@@ -144,6 +145,9 @@ const sign_in_exp = {
           session_management: {
             title: 'Gerenciamento de sessão',
           },
+          developer_settings: {
+            title: 'Configurações de desenvolvedor',
+          },
         },
       },
       user_profile: {
@@ -189,6 +193,9 @@ const sign_in_exp = {
         'Controle o acesso aos dados JSON personalizados armazenados no usuário.',
       sessions: 'Sessões',
       trusted_devices: 'Dispositivos confiáveis',
+      personal_access_tokens: 'Tokens de acesso pessoal',
+      personal_access_tokens_description:
+        'Habilitar isso permite que os usuários criem tokens de acesso pessoal de longa duração que permanecem ativos mesmo após sair da conta ou redefinir a senha, e podem ser trocados por tokens de acesso por qualquer aplicativo primário com troca de tokens habilitada.',
     },
     profile_fields: {
       title: 'Campos de perfil para o centro de conta pré-construído',

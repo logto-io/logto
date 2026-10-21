@@ -22,11 +22,6 @@ export type TrustedDeviceMetadata = Readonly<{
 type TrustedDeviceCreation = TrustedDeviceMetadata &
   Readonly<Pick<TrustedDevice, 'id' | 'userId' | 'secretHash' | 'expiresAt'>>;
 
-type Pagination = Readonly<{
-  limit: number;
-  offset: number;
-}>;
-
 export class TrustedDeviceQueries {
   constructor(public readonly pool: CommonQueryMethods) {}
 
@@ -65,23 +60,16 @@ export class TrustedDeviceQueries {
     `);
   }
 
-  public async findActiveByUserId(
-    userId: string,
-    { limit, offset }: Pagination
-  ): Promise<[totalNumber: number, rows: readonly TrustedDevice[]]> {
-    return Promise.all([
-      this.countActiveByUserId(userId),
-      manyRows(
-        this.pool.query<TrustedDevice>(sql`
-          select ${expandFields(TrustedDevices)}
-          from ${table}
-          where ${fields.userId} = ${userId}
-            and ${activePredicate}
-          order by ${fields.createdAt} desc
-          limit ${limit} offset ${offset}
-        `)
-      ),
-    ]);
+  public async findActiveByUserId(userId: string) {
+    return manyRows(
+      this.pool.query<TrustedDevice>(sql`
+        select ${expandFields(TrustedDevices)}
+        from ${table}
+        where ${fields.userId} = ${userId}
+          and ${activePredicate}
+        order by ${fields.createdAt} desc
+      `)
+    );
   }
 
   public async findActiveByIdAndUserId(id: string, userId: string) {
@@ -144,16 +132,5 @@ export class TrustedDeviceQueries {
     `);
 
     return rowCount;
-  }
-
-  private async countActiveByUserId(userId: string) {
-    return Number(
-      await this.pool.oneFirst<string>(sql`
-        select count(*)
-        from ${table}
-        where ${fields.userId} = ${userId}
-          and ${activePredicate}
-      `)
-    );
   }
 }
