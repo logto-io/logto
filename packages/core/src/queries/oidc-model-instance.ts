@@ -34,11 +34,12 @@ const sessionModelName = 'Session';
 // Hard-code this value since 3 seconds is a reasonable number for concurrency and no need for further configuration
 const refreshTokenReuseInterval = 3;
 /**
- * Kept small because each deleted row also updates every index on the table, so the
- * per-statement random I/O must fit within a storage-throttled moment without hitting
- * the statement timeout.
+ * Under row-level security the planner cannot seek by the jsonb key, so each batch scans the
+ * tenant's rows for the model up to its matches and the final empty batch scans them all; a
+ * smaller batch only repeats that scan. 2000 keeps each statement's delete work at a level
+ * production has carried; revisit once the lookup no longer goes through jsonb.
  */
-const revokeInstanceBatchSize = 500;
+const revokeInstanceBatchSize = 2000;
 /** Safety valve so a revocation request stays bounded even for pathological instance counts. */
 const maxRevokeInstanceBatches = 1000;
 /** Fixed-length array to drive the bounded batch loop without a mutable counter. */
@@ -196,12 +197,13 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
   };
 
   /**
-   * Delete matching instances in bounded batches until none remain, so no single statement can
-   * exceed the database statement timeout.
+   * Delete matching instances in bounded batches until none remain, so each statement's delete
+   * work stays bounded.
    *
    * @param target - Human-readable principal for the cap log, e.g. `accountId <userId>`.
    * @param condition - Must include the payload key-existence clause matching the partial index
-   * predicate, or the batches stop being index-backed.
+   * predicate, so the planner can prove the partial index and each batch scans only the tenant's
+   * rows for the model that carry the key.
    */
   const revokeInstancesInBatches = async (
     modelName: string,
