@@ -62,7 +62,13 @@ export type PendingStepUpAction =
   | { type: 'remove-social'; connectorId: string }
   | { type: 'create-personal-access-token'; name: string; expiryDays: number }
   | { type: 'rename-personal-access-token'; currentName: string; name: string }
-  | { type: 'revoke-personal-access-token'; name: string };
+  | { type: 'revoke-personal-access-token'; name: string }
+  | { type: 'revoke-session'; sessionId: string }
+  | { type: 'revoke-grant'; applicationId: string; grantIds: string[] }
+  | { type: 'remove-trusted-device'; trustedDeviceId: string }
+  | { type: 'update-username'; username: string }
+  | { type: 'rename-passkey'; id: string; name: string }
+  | { type: 'delete-passkey'; id: string };
 
 /**
  * - `authorizing`: Account Center redirected to the authorization endpoint for the step-up.
@@ -164,6 +170,16 @@ const pendingStepUpActionGuard = s.union([
     name: s.string(),
   }),
   s.object({ type: s.literal('revoke-personal-access-token'), name: s.string() }),
+  s.object({ type: s.literal('revoke-session'), sessionId: s.string() }),
+  s.object({
+    type: s.literal('revoke-grant'),
+    applicationId: s.string(),
+    grantIds: s.array(s.string()),
+  }),
+  s.object({ type: s.literal('remove-trusted-device'), trustedDeviceId: s.string() }),
+  s.object({ type: s.literal('update-username'), username: s.string() }),
+  s.object({ type: s.literal('rename-passkey'), id: s.string(), name: s.string() }),
+  s.object({ type: s.literal('delete-passkey'), id: s.string() }),
 ]);
 
 const storedPendingStepUpGuard = s.object({

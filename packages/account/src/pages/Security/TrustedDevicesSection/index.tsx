@@ -91,6 +91,56 @@ const TrustedDevicesSection = () => {
     ]
   );
 
+  const removeDevice = useCallback(
+    async (trustedDeviceId: string, isResumed = false) => {
+      setIsRemoving(true);
+
+      const [error] = await removeTrustedDeviceApi(verificationId, trustedDeviceId);
+
+      if (error) {
+        // Keep the confirmation loading until the redirect starts.
+        if (
+          await requestStepUp(
+            error,
+            { type: 'remove-trusted-device', trustedDeviceId },
+            { isResumed }
+          )
+        ) {
+          return;
+        }
+
+        await handleError(error, {
+          'verification_record.permission_denied': handlePermissionDenied,
+        });
+        setIsRemoving(false);
+        return;
+      }
+
+      if (isResumed) {
+        // The confirmed removal runs once after the step-up, then the list reloads with the
+        // elevated token.
+        setIsRemoving(false);
+        await fetchTrustedDevices(true);
+        return;
+      }
+
+      setTrustedDevices((previous) => previous?.filter(({ id }) => id !== trustedDeviceId));
+      setRemoveTarget(undefined);
+      setIsRemoving(false);
+      setToast(t('account_center.security.trusted_devices.removed'));
+    },
+    [
+      fetchTrustedDevices,
+      handleError,
+      handlePermissionDenied,
+      removeTrustedDeviceApi,
+      requestStepUp,
+      setToast,
+      t,
+      verificationId,
+    ]
+  );
+
   useEffect(() => {
     if (
       !isVisible ||
@@ -122,13 +172,23 @@ const TrustedDevicesSection = () => {
   ]);
 
   useEffect(() => {
-    if (consumePendingStepUpAction(['load-trusted-devices'])) {
-      // The resumed action owns this page load; do not also auto-load the list.
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      hasAutoLoadedRef.current = true;
-      void fetchTrustedDevices(true);
+    const action = consumePendingStepUpAction(['load-trusted-devices', 'remove-trusted-device']);
+
+    if (!action) {
+      return;
     }
-  }, [fetchTrustedDevices]);
+
+    // The resumed action owns this page load; do not also auto-load the list.
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    hasAutoLoadedRef.current = true;
+
+    if (action.type === 'remove-trusted-device') {
+      void removeDevice(action.trustedDeviceId, true);
+      return;
+    }
+
+    void fetchTrustedDevices(true);
+  }, [fetchTrustedDevices, removeDevice]);
 
   const handleManage = useCallback(async () => {
     if (await checkIdentityProof()) {
@@ -150,49 +210,20 @@ const TrustedDevicesSection = () => {
       return;
     }
 
+    const trustedDeviceId = removeTarget.id;
     setIsRemoving(true);
 
-    if (!isIdentityProofReady) {
-      if (await startStepUp({ type: 'load-trusted-devices' })) {
-        return;
-      }
-
-      setIsRemoving(false);
+    if (await checkIdentityProof()) {
+      await removeDevice(trustedDeviceId);
       return;
     }
 
-    const [error] = await removeTrustedDeviceApi(verificationId, removeTarget.id);
-
-    if (error) {
-      // The removal is not replayed after the step-up; the user confirms it again on the reloaded
-      // list. Keep the confirmation loading until the redirect starts.
-      if (await requestStepUp(error, { type: 'load-trusted-devices' })) {
-        return;
-      }
-
-      await handleError(error, {
-        'verification_record.permission_denied': handlePermissionDenied,
-      });
-      setIsRemoving(false);
+    if (await startStepUp({ type: 'remove-trusted-device', trustedDeviceId })) {
       return;
     }
 
-    setTrustedDevices((previous) => previous?.filter(({ id }) => id !== removeTarget.id));
-    setRemoveTarget(undefined);
     setIsRemoving(false);
-    setToast(t('account_center.security.trusted_devices.removed'));
-  }, [
-    handleError,
-    handlePermissionDenied,
-    isIdentityProofReady,
-    removeTarget,
-    removeTrustedDeviceApi,
-    requestStepUp,
-    startStepUp,
-    setToast,
-    t,
-    verificationId,
-  ]);
+  }, [checkIdentityProof, removeDevice, removeTarget, startStepUp]);
 
   if (!isVisible) {
     return null;

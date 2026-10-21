@@ -3,7 +3,7 @@ import SmartInputField from '@experience/shared/components/InputFields/SmartInpu
 import { buildUsernamePolicyDescription } from '@experience/shared/utils/username-policy-description';
 import { validateUsername } from '@experience/shared/utils/validate-username';
 import { AccountCenterControlValue, SignInIdentifier } from '@logto/schemas';
-import { useContext, useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,12 +12,15 @@ import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { updateUsername } from '@ac/apis/account';
 import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
+import { isDevFeaturesEnabled } from '@ac/constants/env';
 import { usernameSuccessRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import useIdentifierParam from '@ac/hooks/use-identifier-param';
+import useStepUp, { useIdentityProof } from '@ac/hooks/use-step-up';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
 import { sessionStorage } from '@ac/utils/session-storage';
+import { consumePendingStepUpAction } from '@ac/utils/step-up';
 
 import styles from '../CodeFlow/index.module.scss';
 
@@ -29,11 +32,12 @@ const Username = () => {
     accountCenterSettings,
     experienceSettings,
     refreshUserInfo,
-    verificationId,
     setVerificationId,
     setToast,
     userInfo,
   } = useContext(PageContext);
+  const { verificationId, checkIdentityProof } = useIdentityProof();
+  const { requestStepUp, startStepUp } = useStepUp();
   const identifierParam = useIdentifierParam();
   const defaultUsername = identifierParam ?? userInfo?.username ?? '';
   const [pendingUsername, setPendingUsername] = useState(defaultUsername);
@@ -62,6 +66,70 @@ const Username = () => {
     [experienceSettings?.usernamePolicy, t]
   );
 
+  const saveUsername = useCallback(
+    async (username: string, isResumed = false) => {
+      const [error] = await updateUsernameRequest(verificationId, { username });
+
+      if (error) {
+        if (await requestStepUp(error, { type: 'update-username', username }, { isResumed })) {
+          return false;
+        }
+
+        await handleError(error, {
+          'verification_record.permission_denied': async () => {
+            setVerificationId(undefined);
+            setToast(t('account_center.verification.verification_required'));
+          },
+          'user.username_already_in_use': async () => {
+            setToast(t('error.username_exists'));
+          },
+          'user.username_required': async () => {
+            setToast(t('error.username_required'));
+          },
+          'user.username_invalid_charset': async () => {
+            setToast(t('error.username_invalid_charset'));
+          },
+          'user.username_should_not_start_with_number': async () => {
+            setToast(t('error.username_should_not_start_with_number'));
+          },
+        });
+        return false;
+      }
+
+      await refreshUserInfo();
+      return true;
+    },
+    [
+      handleError,
+      refreshUserInfo,
+      requestStepUp,
+      setToast,
+      setVerificationId,
+      t,
+      updateUsernameRequest,
+      verificationId,
+    ]
+  );
+
+  useEffect(() => {
+    const action = consumePendingStepUpAction(['update-username']);
+
+    if (!action) {
+      return;
+    }
+
+    // Show the username the step-up was started for, so a failed resume leaves the form on it.
+    setPendingUsername(action.username);
+
+    const resume = async () => {
+      if (await saveUsername(action.username, true)) {
+        navigate(usernameSuccessRoute, { replace: true });
+      }
+    };
+
+    void resume();
+  }, [navigate, saveUsername]);
+
   if (
     !accountCenterSettings?.enabled ||
     accountCenterSettings.fields.username !== AccountCenterControlValue.Edit
@@ -71,17 +139,14 @@ const Username = () => {
     );
   }
 
-  if (!verificationId) {
+  // DEV: OIDC step-up authentication in Account Center
+  if (!verificationId && !isDevFeaturesEnabled) {
     return <VerificationMethodList />;
   }
 
   const handleSubmit = async (event?: FormEvent) => {
     event?.preventDefault();
     setUsernameError(undefined);
-
-    if (!verificationId) {
-      return;
-    }
 
     const username = pendingUsername.trim();
 
@@ -101,32 +166,16 @@ const Username = () => {
       return;
     }
 
-    const [error] = await updateUsernameRequest(verificationId, { username });
-
-    if (error) {
-      await handleError(error, {
-        'verification_record.permission_denied': async () => {
-          setVerificationId(undefined);
-          setToast(t('account_center.verification.verification_required'));
-        },
-        'user.username_already_in_use': async () => {
-          setToast(t('error.username_exists'));
-        },
-        'user.username_required': async () => {
-          setToast(t('error.username_required'));
-        },
-        'user.username_invalid_charset': async () => {
-          setToast(t('error.username_invalid_charset'));
-        },
-        'user.username_should_not_start_with_number': async () => {
-          setToast(t('error.username_should_not_start_with_number'));
-        },
-      });
+    if (
+      !(await checkIdentityProof()) &&
+      (await startStepUp({ type: 'update-username', username }))
+    ) {
       return;
     }
 
-    await refreshUserInfo();
-    navigate(usernameSuccessRoute, { replace: true });
+    if (await saveUsername(username)) {
+      navigate(usernameSuccessRoute, { replace: true });
+    }
   };
 
   return (

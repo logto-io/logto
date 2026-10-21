@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- The passkey list, delete, and rename flows share their step-up state on this page. */
 import Button from '@experience/shared/components/Button';
 import DynamicT from '@experience/shared/components/DynamicT';
 import InputField from '@experience/shared/components/InputFields/InputField';
@@ -16,13 +17,16 @@ import { getMfaVerifications, deleteMfaVerification, updateWebAuthnName } from '
 import ConfirmModal from '@ac/components/ConfirmModal';
 import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
+import { isDevFeaturesEnabled } from '@ac/constants/env';
 import { passkeyAddRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
+import useStepUp, { useIdentityProof } from '@ac/hooks/use-step-up';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
 import { getDateFnsLocale } from '@ac/utils/date';
 import { formatPasskeyName } from '@ac/utils/passkey';
 import { isWebAuthnConfigurable } from '@ac/utils/security-page';
+import { consumePendingStepUpAction } from '@ac/utils/step-up';
 
 import styles from './index.module.scss';
 
@@ -40,8 +44,10 @@ const formatDate = (dateString: string, language: string): string =>
 const PasskeyView = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const { accountCenterSettings, experienceSettings, verificationId, setVerificationId, setToast } =
+  const { accountCenterSettings, experienceSettings, setVerificationId, setToast } =
     useContext(PageContext);
+  const { verificationId, checkIdentityProof } = useIdentityProof();
+  const { requestStepUp, startStepUp } = useStepUp();
   const getMfaRequest = useApi(getMfaVerifications);
   const deletePasskeyRequest = useApi(deleteMfaVerification);
   const updatePasskeyNameRequest = useApi(updateWebAuthnName);
@@ -54,106 +60,172 @@ const PasskeyView = () => {
   const [selectedPasskey, setSelectedPasskey] = useState<PasskeyInfo>();
   const [editName, setEditName] = useState('');
 
-  // Fetch passkeys on mount
-  useEffect(() => {
-    if (!verificationId) {
+  const fetchPasskeys = useCallback(async () => {
+    const [error, result] = await getMfaRequest();
+    if (error || !result) {
+      setHasError(true);
       return;
     }
 
-    const fetchData = async () => {
-      const [error, result] = await getMfaRequest();
-      if (error || !result) {
-        setHasError(true);
+    const webAuthnVerifications: UserMfaVerificationResponse = result.filter(
+      (verification) => verification.type === MfaFactor.WebAuthn
+    );
+
+    setPasskeys(
+      webAuthnVerifications.map((verification) => ({
+        id: verification.id,
+        name: verification.name,
+        agent: verification.agent,
+        createdAt: verification.createdAt,
+        lastUsedAt: verification.lastUsedAt,
+      }))
+    );
+  }, [getMfaRequest]);
+
+  // Fetch passkeys on mount
+  useEffect(() => {
+    // DEV: OIDC step-up authentication in Account Center
+    if (!verificationId && !isDevFeaturesEnabled) {
+      return;
+    }
+
+    void fetchPasskeys();
+  }, [fetchPasskeys, verificationId]);
+
+  const deletePasskey = useCallback(
+    async (id: string, isResumed = false) => {
+      const [error] = await deletePasskeyRequest(verificationId, id);
+
+      if (error) {
+        if (await requestStepUp(error, { type: 'delete-passkey', id }, { isResumed })) {
+          return;
+        }
+
+        await handleError(error, {
+          'verification_record.permission_denied': async () => {
+            setVerificationId(undefined);
+            setToast(t('account_center.verification.verification_required'));
+          },
+        });
+        setShowDeleteConfirm(false);
         return;
       }
 
-      const webAuthnVerifications: UserMfaVerificationResponse = result.filter(
-        (verification) => verification.type === MfaFactor.WebAuthn
-      );
+      setShowDeleteConfirm(false);
 
-      setPasskeys(
-        webAuthnVerifications.map((verification) => ({
-          id: verification.id,
-          name: verification.name,
-          agent: verification.agent,
-          createdAt: verification.createdAt,
-          lastUsedAt: verification.lastUsedAt,
-        }))
-      );
-    };
+      if (isResumed) {
+        // The confirmed removal runs once after the step-up, then the list reloads with the
+        // elevated token.
+        await fetchPasskeys();
+      } else {
+        setPasskeys((previous) => previous?.filter((passkey) => passkey.id !== id));
+      }
 
-    void fetchData();
-  }, [getMfaRequest, verificationId]);
+      setToast(t('account_center.passkey.deleted'));
+    },
+    [
+      deletePasskeyRequest,
+      fetchPasskeys,
+      handleError,
+      requestStepUp,
+      setToast,
+      setVerificationId,
+      t,
+      verificationId,
+    ]
+  );
+
+  const renamePasskey = useCallback(
+    async (id: string, name: string, isResumed = false) => {
+      const [error] = await updatePasskeyNameRequest(verificationId, id, name);
+
+      if (error) {
+        if (await requestStepUp(error, { type: 'rename-passkey', id, name }, { isResumed })) {
+          return;
+        }
+
+        await handleError(error, {
+          'verification_record.permission_denied': async () => {
+            setVerificationId(undefined);
+            setToast(t('account_center.verification.verification_required'));
+          },
+        });
+        setShowEditModal(false);
+        return;
+      }
+
+      setShowEditModal(false);
+
+      if (isResumed) {
+        // The confirmed rename runs once after the step-up, then the list reloads with the
+        // elevated token.
+        await fetchPasskeys();
+      } else {
+        setPasskeys((previous) =>
+          previous?.map((passkey) => (passkey.id === id ? { ...passkey, name } : passkey))
+        );
+      }
+
+      setToast(t('account_center.passkey.renamed'));
+    },
+    [
+      fetchPasskeys,
+      handleError,
+      requestStepUp,
+      setToast,
+      setVerificationId,
+      t,
+      updatePasskeyNameRequest,
+      verificationId,
+    ]
+  );
+
+  useEffect(() => {
+    const action = consumePendingStepUpAction(['delete-passkey', 'rename-passkey']);
+
+    if (!action) {
+      return;
+    }
+
+    if (action.type === 'delete-passkey') {
+      void deletePasskey(action.id, true);
+      return;
+    }
+
+    void renamePasskey(action.id, action.name, true);
+  }, [deletePasskey, renamePasskey]);
 
   const handleDelete = useCallback(async () => {
-    if (!verificationId || !selectedPasskey) {
+    if (!selectedPasskey) {
       return;
     }
 
-    const [error] = await deletePasskeyRequest(verificationId, selectedPasskey.id);
-    if (error) {
-      await handleError(error, {
-        'verification_record.permission_denied': async () => {
-          setVerificationId(undefined);
-          setToast(t('account_center.verification.verification_required'));
-        },
-      });
-      setShowDeleteConfirm(false);
+    const { id } = selectedPasskey;
+
+    if (!(await checkIdentityProof()) && (await startStepUp({ type: 'delete-passkey', id }))) {
       return;
     }
 
-    setPasskeys((previous) => previous?.filter((passkey) => passkey.id !== selectedPasskey.id));
-    setShowDeleteConfirm(false);
-    setToast(t('account_center.passkey.deleted'));
-  }, [
-    deletePasskeyRequest,
-    handleError,
-    selectedPasskey,
-    setToast,
-    setVerificationId,
-    t,
-    verificationId,
-  ]);
+    await deletePasskey(id);
+  }, [checkIdentityProof, deletePasskey, selectedPasskey, startStepUp]);
 
   const handleEditSubmit = useCallback(async () => {
-    if (!verificationId || !selectedPasskey || !editName.trim()) {
+    if (!selectedPasskey || !editName.trim()) {
       return;
     }
 
-    const [error] = await updatePasskeyNameRequest(
-      verificationId,
-      selectedPasskey.id,
-      editName.trim()
-    );
-    if (error) {
-      await handleError(error, {
-        'verification_record.permission_denied': async () => {
-          setVerificationId(undefined);
-          setToast(t('account_center.verification.verification_required'));
-        },
-      });
-      setShowEditModal(false);
+    const { id } = selectedPasskey;
+    const name = editName.trim();
+
+    if (
+      !(await checkIdentityProof()) &&
+      (await startStepUp({ type: 'rename-passkey', id, name }))
+    ) {
       return;
     }
 
-    // Update local state
-    setPasskeys((previous) =>
-      previous?.map((passkey) =>
-        passkey.id === selectedPasskey.id ? { ...passkey, name: editName.trim() } : passkey
-      )
-    );
-    setShowEditModal(false);
-    setToast(t('account_center.passkey.renamed'));
-  }, [
-    editName,
-    handleError,
-    selectedPasskey,
-    setToast,
-    setVerificationId,
-    t,
-    updatePasskeyNameRequest,
-    verificationId,
-  ]);
+    await renamePasskey(id, name);
+  }, [checkIdentityProof, editName, renamePasskey, selectedPasskey, startStepUp]);
 
   if (
     !accountCenterSettings?.enabled ||
@@ -174,7 +246,8 @@ const PasskeyView = () => {
     );
   }
 
-  if (!verificationId) {
+  // DEV: OIDC step-up authentication in Account Center
+  if (!verificationId && !isDevFeaturesEnabled) {
     return <VerificationMethodList />;
   }
 
@@ -305,3 +378,4 @@ const PasskeyView = () => {
 };
 
 export default PasskeyView;
+/* eslint-enable max-lines */

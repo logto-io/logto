@@ -14,6 +14,12 @@ import { getTrustedDevices, removeTrustedDevice } from '@ac/apis/trusted-devices
 import { securityRoute, verifiedActionRoute } from '@ac/constants/routes';
 import { setupI18nForTesting } from '@ac/jest.setup';
 import { accountStorage } from '@ac/utils/session-storage';
+import {
+  completePendingStepUp,
+  handlePendingStepUpOnPageLoad,
+  startPendingStepUp,
+  type PendingStepUpAction,
+} from '@ac/utils/step-up';
 
 import TrustedDevicesSection from '.';
 
@@ -63,6 +69,14 @@ const createIdTokenClaims = (authTime = Math.floor(Date.now() / 1000) - 60) => (
   acr: LogtoAcr.FirstFactor,
   auth_time: authTime,
 });
+
+/** The state the restored route sees after a successful step-up callback. */
+const prepareResumableStepUp = (action: PendingStepUpAction) => {
+  startPendingStepUp(action, '/account/security');
+  handlePendingStepUpOnPageLoad({ pathname: '/account', search: '?code=code&state=state' });
+  completePendingStepUp();
+  handlePendingStepUpOnPageLoad({ pathname: '/account', search: '' });
+};
 
 const trustedDevice = {
   id: 'trusted-device-id',
@@ -199,5 +213,37 @@ describe('<TrustedDevicesSection /> OIDC step-up', () => {
     const confirmButton = getAllByText('Remove').at(-1)?.closest('button');
 
     expect(confirmButton!.disabled).toBe(true);
+    expect(accountStorage.pendingStepUp.get()).toMatchObject({
+      action: { type: 'remove-trusted-device', trustedDeviceId: 'trusted-device-id' },
+      phase: 'authorizing',
+    });
+  });
+
+  it('runs the resumed removal once and reloads the list', async () => {
+    prepareResumableStepUp({
+      type: 'remove-trusted-device',
+      trustedDeviceId: 'trusted-device-id',
+    });
+
+    const { unmount } = renderTrustedDevices();
+
+    await waitFor(() => {
+      expect(mockRemoveTrustedDevice).toHaveBeenCalledWith(
+        'access-token',
+        undefined,
+        'trusted-device-id'
+      );
+      expect(mockGetTrustedDevices).toHaveBeenCalledWith('access-token', undefined);
+    });
+
+    // A second mount, as after a refresh of the restored route, does not run it again.
+    unmount();
+    renderTrustedDevices();
+    await waitFor(() => {
+      expect(mockGetTrustedDevices).toHaveBeenCalledTimes(2);
+    });
+
+    expect(mockRemoveTrustedDevice).toHaveBeenCalledTimes(1);
+    expect(mockSignIn).not.toHaveBeenCalled();
   });
 });

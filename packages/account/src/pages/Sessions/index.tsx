@@ -63,6 +63,13 @@ const Sessions = () => {
     setToast(t('account_center.verification.verification_required'));
   }, [setVerificationId, setToast, t]);
 
+  const handleRevokePermissionDenied = useCallback(async () => {
+    // The revocation needs a new proof of identity; return the page to its Manage state.
+    setVerificationId(undefined);
+    setHasLoaded(false);
+    setToast(t('account_center.verification.verification_required'));
+  }, [setVerificationId, setToast, t]);
+
   const fetchData = useCallback(
     async (verifiedId: string | undefined, isResumed = false) => {
       if (isFetchingRef.current) {
@@ -153,15 +160,6 @@ const Sessions = () => {
     verificationId,
   ]);
 
-  useEffect(() => {
-    if (consumePendingStepUpAction(['load-sessions'])) {
-      // The resumed action owns this page load; do not also auto-load the list.
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      hasAutoLoadedRef.current = true;
-      void fetchData(undefined, true);
-    }
-  }, [fetchData]);
-
   const navigateTo = useCallback(
     (route: string) => {
       setPendingReturn(getPendingReturn() ?? window.location.href);
@@ -184,67 +182,46 @@ const Sessions = () => {
     navigateTo(verifiedActionRoute);
   }, [checkIdentityProof, verificationId, fetchData, startStepUp, navigateTo]);
 
-  const handleRevoke = useCallback(
-    async (session: AccountSession) => {
-      if (!isIdentityProofReady) {
-        await startStepUp({ type: 'load-sessions' });
-        return;
-      }
+  const handleRevokeSession = useCallback(
+    async (sessionId: string, isResumed = false) => {
+      const [error] = await revokeSessionApi(verificationId, sessionId);
 
-      const [error] = await revokeSessionApi(verificationId, session.payload.uid);
       if (error) {
-        // The revocation is not replayed after the step-up; the user confirms it again on the
-        // reloaded list.
-        if (await requestStepUp(error, { type: 'load-sessions' })) {
+        if (await requestStepUp(error, { type: 'revoke-session', sessionId }, { isResumed })) {
           return;
         }
 
         await handleError(error, {
-          'verification_record.permission_denied': async () => {
-            setVerificationId(undefined);
-            setHasLoaded(false);
-            setToast(t('account_center.verification.verification_required'));
-          },
+          'verification_record.permission_denied': handleRevokePermissionDenied,
         });
         return;
       }
 
-      setSessions((previous) =>
-        previous?.filter((item) => item.payload.uid !== session.payload.uid)
-      );
-    },
-    [
-      isIdentityProofReady,
-      verificationId,
-      revokeSessionApi,
-      handleError,
-      requestStepUp,
-      startStepUp,
-      setVerificationId,
-      setToast,
-      t,
-    ]
-  );
-
-  const handleConfirmRevoke = useCallback(async () => {
-    if (!revokeTarget) {
-      return;
-    }
-    setRevokeTarget(undefined);
-    await handleRevoke(revokeTarget);
-  }, [revokeTarget, handleRevoke]);
-
-  const handleRevokeGrant = useCallback(
-    async (app: GrantedAppRow) => {
-      if (!isIdentityProofReady) {
-        await startStepUp({ type: 'load-sessions' });
+      if (isResumed) {
+        // The confirmed revocation runs once after the step-up, then the list reloads with the
+        // elevated token.
+        await fetchData(undefined, true);
         return;
       }
 
-      setRemovingAppId(app.applicationId);
+      setSessions((previous) => previous?.filter((item) => item.payload.uid !== sessionId));
+    },
+    [
+      fetchData,
+      handleError,
+      handleRevokePermissionDenied,
+      requestStepUp,
+      revokeSessionApi,
+      verificationId,
+    ]
+  );
+
+  const handleRevokeGrants = useCallback(
+    async (applicationId: string, grantIds: string[], isResumed = false) => {
+      setRemovingAppId(applicationId);
 
       const results = await Promise.allSettled(
-        app.grantIds.map(async (grantId) => {
+        grantIds.map(async (grantId) => {
           const [error] = await revokeGrantApi(verificationId, grantId);
           if (error) {
             throw error instanceof Error ? error : new Error('revoke_failed');
@@ -254,7 +231,13 @@ const Sessions = () => {
 
       const failure = results.find((result) => result.status === 'rejected');
       if (failure) {
-        if (await requestStepUp(failure.reason, { type: 'load-sessions' })) {
+        if (
+          await requestStepUp(
+            failure.reason,
+            { type: 'revoke-grant', applicationId, grantIds },
+            { isResumed }
+          )
+        ) {
           return;
         }
 
@@ -267,22 +250,84 @@ const Sessions = () => {
         return;
       }
 
-      setGrantRows((previous) =>
-        previous?.filter((item) => item.applicationId !== app.applicationId)
-      );
+      if (isResumed) {
+        // The confirmed revocation runs once after the step-up, then the list reloads with the
+        // elevated token.
+        setRemovingAppId(undefined);
+        await fetchData(undefined, true);
+        return;
+      }
+
+      setGrantRows((previous) => previous?.filter((item) => item.applicationId !== applicationId));
       setRemovingAppId(undefined);
     },
-    [
-      isIdentityProofReady,
-      verificationId,
-      revokeGrantApi,
-      handleError,
-      requestStepUp,
-      startStepUp,
-      setToast,
-      t,
-    ]
+    [fetchData, handleError, requestStepUp, revokeGrantApi, setToast, t, verificationId]
   );
+
+  const handleRevoke = useCallback(
+    async (session: AccountSession) => {
+      const { uid } = session.payload;
+
+      if (await checkIdentityProof()) {
+        await handleRevokeSession(uid);
+        return;
+      }
+
+      await startStepUp({ type: 'revoke-session', sessionId: uid });
+    },
+    [checkIdentityProof, handleRevokeSession, startStepUp]
+  );
+
+  const handleConfirmRevoke = useCallback(async () => {
+    if (!revokeTarget) {
+      return;
+    }
+    setRevokeTarget(undefined);
+    await handleRevoke(revokeTarget);
+  }, [revokeTarget, handleRevoke]);
+
+  const handleRevokeGrant = useCallback(
+    async (app: GrantedAppRow) => {
+      if (await checkIdentityProof()) {
+        await handleRevokeGrants(app.applicationId, app.grantIds);
+        return;
+      }
+
+      await startStepUp({
+        type: 'revoke-grant',
+        applicationId: app.applicationId,
+        grantIds: app.grantIds,
+      });
+    },
+    [checkIdentityProof, handleRevokeGrants, startStepUp]
+  );
+
+  useEffect(() => {
+    const action = consumePendingStepUpAction(['load-sessions', 'revoke-session', 'revoke-grant']);
+
+    if (!action) {
+      return;
+    }
+
+    // The resumed action owns this page load; do not also auto-load the list.
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    hasAutoLoadedRef.current = true;
+
+    switch (action.type) {
+      case 'load-sessions': {
+        void fetchData(undefined, true);
+        break;
+      }
+      case 'revoke-session': {
+        void handleRevokeSession(action.sessionId, true);
+        break;
+      }
+      case 'revoke-grant': {
+        void handleRevokeGrants(action.applicationId, action.grantIds, true);
+        break;
+      }
+    }
+  }, [fetchData, handleRevokeGrants, handleRevokeSession]);
 
   const handleConfirmRevokeGrant = useCallback(async () => {
     if (!revokeGrantTarget) {
