@@ -1,4 +1,3 @@
-/* eslint-disable max-lines -- Account Center session and local storage helpers share the same schema guards. */
 import * as s from 'superstruct';
 
 const storagePrefix = 'logto:account-center:';
@@ -12,21 +11,10 @@ const storageKeys = Object.freeze({
   showSuccess: `${storagePrefix}show-success`,
   uiLocales: `${storagePrefix}ui-locales`,
   identifier: `${storagePrefix}identifier`,
-  verificationRecord: `${storagePrefix}verification-record`,
   socialFlow: `${storagePrefix}social-verification`,
   pendingReturn: `${storagePrefix}pending-return`,
-  pendingVerifiedAction: `${storagePrefix}pending-verified-action`,
   pendingStepUp: `${storagePrefix}pending-step-up`,
-  pendingSocialRemoveConnectorId: `${storagePrefix}pending-social-remove-connector-id`,
-  pendingPersonalAccessTokenCreate: `${storagePrefix}pending-personal-access-token-create`,
-  pendingPersonalAccessTokenRename: `${storagePrefix}pending-personal-access-token-rename`,
-  pendingPersonalAccessTokenRevokeName: `${storagePrefix}pending-personal-access-token-revoke-name`,
 });
-
-export type StoredVerificationRecord = {
-  verificationId: string;
-  expiresAt: string;
-};
 
 export type StoredPendingPersonalAccessTokenCreate = {
   name: string;
@@ -39,6 +27,7 @@ export type StoredPendingPersonalAccessTokenRename = {
 };
 
 const pendingStepUpActionsWithoutInput = Object.freeze([
+  'enter-subpage',
   'enable-mfa',
   'disable-mfa',
   'enable-passkey-prompt',
@@ -114,24 +103,9 @@ type StoredSocialFlowRecordData =
       mode?: 'add' | 'change';
     };
 
-const storedVerificationRecordGuard = s.object({
-  verificationId: s.string(),
-  expiresAt: s.string(),
-});
-
 const storedPathStateGuard = s.object({
   path: s.string(),
   createdAt: s.number(),
-});
-
-const storedPendingPersonalAccessTokenCreateGuard = s.object({
-  name: s.string(),
-  expiryDays: s.number(),
-});
-
-const storedPendingPersonalAccessTokenRenameGuard = s.object({
-  currentName: s.string(),
-  name: s.string(),
 });
 
 const storedSocialFlowRecordGuard = s.union([
@@ -172,24 +146,6 @@ const storedPendingStepUpGuard = s.object({
   phase: s.enums(['authorizing', 'authorized', 'resumable']),
   createdAt: s.number(),
 });
-
-const pendingVerifiedActions = Object.freeze([
-  'enable-mfa',
-  'disable-mfa',
-  'enable-passkey-prompt',
-  'disable-passkey-prompt',
-  'remove-username',
-  'remove-email',
-  'remove-phone',
-  'remove-social',
-  'load-sessions',
-  'load-trusted-devices',
-  'create-personal-access-token',
-  'rename-personal-access-token',
-  'revoke-personal-access-token',
-] as const);
-
-export type PendingVerifiedAction = (typeof pendingVerifiedActions)[number];
 
 const getStorage = (type: 'session' | 'local'): Storage | undefined => {
   if (typeof window === 'undefined') {
@@ -297,28 +253,6 @@ export const accountStorage = Object.freeze({
       removeItem(storageKeys.uiLocales, 'session');
     },
   },
-  verificationRecord: {
-    get: (): StoredVerificationRecord | undefined => {
-      const record = getStructuredValue(
-        storageKeys.verificationRecord,
-        storedVerificationRecordGuard,
-        'local'
-      );
-
-      if (!record || !isNotExpired(record.expiresAt)) {
-        removeItem(storageKeys.verificationRecord, 'local');
-        return;
-      }
-
-      return record;
-    },
-    set: (record: StoredVerificationRecord) => {
-      setStructuredValue(storageKeys.verificationRecord, record, 'local');
-    },
-    clear: () => {
-      removeItem(storageKeys.verificationRecord, 'local');
-    },
-  },
   socialFlow: {
     get: (connectorId: string): StoredSocialFlowRecord | undefined => {
       const record = getStructuredValue<StoredSocialFlowRecordData>(
@@ -358,19 +292,6 @@ export const accountStorage = Object.freeze({
       removeItem(`${storageKeys.socialFlow}:${connectorId}`, 'session');
     },
   },
-  pendingVerifiedAction: {
-    get: (): PendingVerifiedAction | undefined => {
-      const value = getString(storageKeys.pendingVerifiedAction, 'session');
-      return pendingVerifiedActions.find((action) => action === value);
-    },
-    set: (value: PendingVerifiedAction) => {
-      setString(storageKeys.pendingVerifiedAction, value, 'session');
-    },
-    clear: () => {
-      removeItem(storageKeys.pendingVerifiedAction, 'session');
-    },
-  },
-  /** The action waiting for an OIDC step-up; see `utils/step-up.ts`. TTL: 10min. */
   pendingStepUp: {
     get: (): StoredPendingStepUp | undefined => {
       const record = getStructuredValue(
@@ -393,53 +314,6 @@ export const accountStorage = Object.freeze({
       removeItem(storageKeys.pendingStepUp, 'session');
     },
   },
-  pendingSocialRemoveConnectorId: {
-    get: (): string | undefined => getString(storageKeys.pendingSocialRemoveConnectorId, 'session'),
-    set: (connectorId: string) => {
-      setString(storageKeys.pendingSocialRemoveConnectorId, connectorId, 'session');
-    },
-    clear: () => {
-      removeItem(storageKeys.pendingSocialRemoveConnectorId, 'session');
-    },
-  },
-  pendingPersonalAccessTokenCreate: {
-    get: (): StoredPendingPersonalAccessTokenCreate | undefined =>
-      getStructuredValue(
-        storageKeys.pendingPersonalAccessTokenCreate,
-        storedPendingPersonalAccessTokenCreateGuard,
-        'session'
-      ),
-    set: (payload: StoredPendingPersonalAccessTokenCreate) => {
-      setStructuredValue(storageKeys.pendingPersonalAccessTokenCreate, payload, 'session');
-    },
-    clear: () => {
-      removeItem(storageKeys.pendingPersonalAccessTokenCreate, 'session');
-    },
-  },
-  pendingPersonalAccessTokenRename: {
-    get: (): StoredPendingPersonalAccessTokenRename | undefined =>
-      getStructuredValue(
-        storageKeys.pendingPersonalAccessTokenRename,
-        storedPendingPersonalAccessTokenRenameGuard,
-        'session'
-      ),
-    set: (payload: StoredPendingPersonalAccessTokenRename) => {
-      setStructuredValue(storageKeys.pendingPersonalAccessTokenRename, payload, 'session');
-    },
-    clear: () => {
-      removeItem(storageKeys.pendingPersonalAccessTokenRename, 'session');
-    },
-  },
-  pendingPersonalAccessTokenRevokeName: {
-    get: (): string | undefined =>
-      getString(storageKeys.pendingPersonalAccessTokenRevokeName, 'session'),
-    set: (name: string) => {
-      setString(storageKeys.pendingPersonalAccessTokenRevokeName, name, 'session');
-    },
-    clear: () => {
-      removeItem(storageKeys.pendingPersonalAccessTokenRevokeName, 'session');
-    },
-  },
 });
 
 export const sessionStorage = Object.freeze({
@@ -455,22 +329,6 @@ export const sessionStorage = Object.freeze({
   getUiLocales: accountStorage.uiLocales.get,
   setUiLocales: accountStorage.uiLocales.set,
   clearUiLocales: accountStorage.uiLocales.clear,
-  getPendingVerifiedAction: accountStorage.pendingVerifiedAction.get,
-  setPendingVerifiedAction: accountStorage.pendingVerifiedAction.set,
-  clearPendingVerifiedAction: accountStorage.pendingVerifiedAction.clear,
-  getPendingSocialRemoveConnectorId: accountStorage.pendingSocialRemoveConnectorId.get,
-  setPendingSocialRemoveConnectorId: accountStorage.pendingSocialRemoveConnectorId.set,
-  clearPendingSocialRemoveConnectorId: accountStorage.pendingSocialRemoveConnectorId.clear,
-  getPendingPersonalAccessTokenCreate: accountStorage.pendingPersonalAccessTokenCreate.get,
-  setPendingPersonalAccessTokenCreate: accountStorage.pendingPersonalAccessTokenCreate.set,
-  clearPendingPersonalAccessTokenCreate: accountStorage.pendingPersonalAccessTokenCreate.clear,
-  getPendingPersonalAccessTokenRename: accountStorage.pendingPersonalAccessTokenRename.get,
-  setPendingPersonalAccessTokenRename: accountStorage.pendingPersonalAccessTokenRename.set,
-  clearPendingPersonalAccessTokenRename: accountStorage.pendingPersonalAccessTokenRename.clear,
-  getPendingPersonalAccessTokenRevokeName: accountStorage.pendingPersonalAccessTokenRevokeName.get,
-  setPendingPersonalAccessTokenRevokeName: accountStorage.pendingPersonalAccessTokenRevokeName.set,
-  clearPendingPersonalAccessTokenRevokeName:
-    accountStorage.pendingPersonalAccessTokenRevokeName.clear,
   getIdentifier: () => getString(storageKeys.identifier, 'session'),
   setIdentifier: (value: string) => {
     setString(storageKeys.identifier, value, 'session');
@@ -479,4 +337,3 @@ export const sessionStorage = Object.freeze({
     removeItem(storageKeys.identifier, 'session');
   },
 });
-/* eslint-enable max-lines */

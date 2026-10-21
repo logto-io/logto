@@ -172,8 +172,6 @@ export const createMockPageContext = (
   refreshUserInfo: noopAsync,
   userInfoError: undefined,
   isLoadingUserInfo: false,
-  verificationId: undefined,
-  setVerificationId: noop,
   isLoadingExperience: false,
   experienceError: undefined,
   ...overrides,

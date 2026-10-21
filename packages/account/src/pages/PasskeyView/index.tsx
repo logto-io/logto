@@ -15,10 +15,11 @@ import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { getMfaVerifications, deleteMfaVerification, updateWebAuthnName } from '@ac/apis/mfa';
 import ConfirmModal from '@ac/components/ConfirmModal';
 import ErrorPage from '@ac/components/ErrorPage';
-import VerificationMethodList from '@ac/components/VerificationMethodList';
+import StepUpEntryFallback from '@ac/components/StepUpEntryFallback';
 import { passkeyAddRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
+import useStepUp, { useStepUpEntry } from '@ac/hooks/use-step-up';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
 import { getDateFnsLocale } from '@ac/utils/date';
 import { formatPasskeyName } from '@ac/utils/passkey';
@@ -40,12 +41,18 @@ const formatDate = (dateString: string, language: string): string =>
 const PasskeyView = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const { accountCenterSettings, experienceSettings, verificationId, setVerificationId, setToast } =
-    useContext(PageContext);
+  const { accountCenterSettings, experienceSettings, setToast } = useContext(PageContext);
   const getMfaRequest = useApi(getMfaVerifications);
   const deletePasskeyRequest = useApi(deleteMfaVerification);
   const updatePasskeyNameRequest = useApi(updateWebAuthnName);
   const handleError = useErrorHandler();
+  const { requestStepUp } = useStepUp();
+  const isPageEnabled =
+    Boolean(accountCenterSettings?.enabled) &&
+    (accountCenterSettings?.fields.passkey ?? accountCenterSettings?.fields.mfa) ===
+      AccountCenterControlValue.Edit &&
+    isWebAuthnConfigurable(experienceSettings);
+  const { isReady, hasFailed } = useStepUpEntry({ enabled: isPageEnabled });
 
   const [passkeys, setPasskeys] = useState<PasskeyInfo[]>();
   const [hasError, setHasError] = useState(false);
@@ -56,13 +63,17 @@ const PasskeyView = () => {
 
   // Fetch passkeys on mount
   useEffect(() => {
-    if (!verificationId) {
+    if (!isReady) {
       return;
     }
 
     const fetchData = async () => {
       const [error, result] = await getMfaRequest();
       if (error || !result) {
+        if (await requestStepUp(error, { type: 'enter-subpage' })) {
+          return;
+        }
+
         setHasError(true);
         return;
       }
@@ -83,21 +94,20 @@ const PasskeyView = () => {
     };
 
     void fetchData();
-  }, [getMfaRequest, verificationId]);
+  }, [getMfaRequest, isReady, requestStepUp]);
 
   const handleDelete = useCallback(async () => {
-    if (!verificationId || !selectedPasskey) {
+    if (!isReady || !selectedPasskey) {
       return;
     }
 
-    const [error] = await deletePasskeyRequest(verificationId, selectedPasskey.id);
+    const [error] = await deletePasskeyRequest(selectedPasskey.id);
     if (error) {
-      await handleError(error, {
-        'verification_record.permission_denied': async () => {
-          setVerificationId(undefined);
-          setToast(t('account_center.verification.verification_required'));
-        },
-      });
+      if (await requestStepUp(error, { type: 'enter-subpage' })) {
+        return;
+      }
+
+      await handleError(error);
       setShowDeleteConfirm(false);
       return;
     }
@@ -105,33 +115,20 @@ const PasskeyView = () => {
     setPasskeys((previous) => previous?.filter((passkey) => passkey.id !== selectedPasskey.id));
     setShowDeleteConfirm(false);
     setToast(t('account_center.passkey.deleted'));
-  }, [
-    deletePasskeyRequest,
-    handleError,
-    selectedPasskey,
-    setToast,
-    setVerificationId,
-    t,
-    verificationId,
-  ]);
+  }, [deletePasskeyRequest, handleError, isReady, requestStepUp, selectedPasskey, setToast, t]);
 
   const handleEditSubmit = useCallback(async () => {
-    if (!verificationId || !selectedPasskey || !editName.trim()) {
+    if (!isReady || !selectedPasskey || !editName.trim()) {
       return;
     }
 
-    const [error] = await updatePasskeyNameRequest(
-      verificationId,
-      selectedPasskey.id,
-      editName.trim()
-    );
+    const [error] = await updatePasskeyNameRequest(selectedPasskey.id, editName.trim());
     if (error) {
-      await handleError(error, {
-        'verification_record.permission_denied': async () => {
-          setVerificationId(undefined);
-          setToast(t('account_center.verification.verification_required'));
-        },
-      });
+      if (await requestStepUp(error, { type: 'enter-subpage' })) {
+        return;
+      }
+
+      await handleError(error);
       setShowEditModal(false);
       return;
     }
@@ -147,12 +144,12 @@ const PasskeyView = () => {
   }, [
     editName,
     handleError,
+    isReady,
+    requestStepUp,
     selectedPasskey,
     setToast,
-    setVerificationId,
     t,
     updatePasskeyNameRequest,
-    verificationId,
   ]);
 
   if (
@@ -174,8 +171,8 @@ const PasskeyView = () => {
     );
   }
 
-  if (!verificationId) {
-    return <VerificationMethodList />;
+  if (!isReady) {
+    return <StepUpEntryFallback hasFailed={hasFailed} />;
   }
 
   if (hasError) {

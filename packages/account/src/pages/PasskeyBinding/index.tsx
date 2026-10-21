@@ -16,13 +16,13 @@ import {
   addWebAuthnMfa,
 } from '@ac/apis/mfa';
 import ErrorPage from '@ac/components/ErrorPage';
-import VerificationMethodList from '@ac/components/VerificationMethodList';
+import StepUpEntryFallback from '@ac/components/StepUpEntryFallback';
 import { passkeySuccessRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
+import useStepUp, { useStepUpEntry } from '@ac/hooks/use-step-up';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
 import { isWebAuthnConfigurable } from '@ac/utils/security-page';
-import { sessionStorage } from '@ac/utils/session-storage';
 
 import styles from './index.module.scss';
 
@@ -30,12 +30,18 @@ const PasskeyBinding = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { loading } = useContext(LoadingContext);
-  const { accountCenterSettings, experienceSettings, verificationId, setVerificationId, setToast } =
-    useContext(PageContext);
+  const { accountCenterSettings, experienceSettings, setToast } = useContext(PageContext);
   const createRegistrationRequest = useApi(createWebAuthnRegistration, { silent: true });
   const verifyRegistrationRequest = useApi(verifyWebAuthnRegistration);
   const addWebAuthnRequest = useApi(addWebAuthnMfa);
   const handleError = useErrorHandler();
+  const { requestStepUp } = useStepUp();
+  const isPageEnabled =
+    Boolean(accountCenterSettings?.enabled) &&
+    (accountCenterSettings?.fields.passkey ?? accountCenterSettings?.fields.mfa) ===
+      AccountCenterControlValue.Edit &&
+    isWebAuthnConfigurable(experienceSettings);
+  const { isReady, hasFailed } = useStepUpEntry({ enabled: isPageEnabled });
 
   const [isWebAuthnSupported, setIsWebAuthnSupported] = useState<boolean>();
   // Pre-fetched WebAuthn registration options to ensure startRegistration() is called
@@ -62,11 +68,11 @@ const PasskeyBinding = () => {
     setIsWebAuthnSupported(browserSupportsWebAuthn());
   }, []);
 
-  // Pre-fetch WebAuthn registration options when verificationId is available
-  // This ensures startRegistration() can be called synchronously in the click handler
+  // Pre-fetch WebAuthn registration options when the authentication context is ready.
+  // This ensures startRegistration() can be called synchronously in the click handler.
   useEffect(() => {
     const fetchRegistrationOptions = async () => {
-      if (!verificationId) {
+      if (!isReady) {
         return;
       }
 
@@ -83,16 +89,10 @@ const PasskeyBinding = () => {
     };
 
     void fetchRegistrationOptions();
-  }, [verificationId, createRegistrationRequest]);
-
-  useEffect(() => {
-    if (verificationId && isWebAuthnSupported !== false) {
-      sessionStorage.clearRouteRestore();
-    }
-  }, [isWebAuthnSupported, verificationId]);
+  }, [isReady, createRegistrationRequest]);
 
   const handleAddPasskey = useCallback(async () => {
-    if (!verificationId || loading || !registrationData) {
+    if (!isReady || loading || !registrationData) {
       return;
     }
 
@@ -159,30 +159,29 @@ const PasskeyBinding = () => {
     handleError,
     loading,
     registrationData,
+    isReady,
     setToast,
     t,
-    verificationId,
     verifyRegistrationRequest,
   ]);
 
   const handleSubmitName = useCallback(async () => {
-    if (!verificationId || !webAuthnVerificationRecordId || loading) {
+    if (!isReady || !webAuthnVerificationRecordId || loading) {
       return;
     }
 
     // Add WebAuthn MFA to user with the custom name
-    const [addError] = await addWebAuthnRequest(verificationId, {
+    const [addError] = await addWebAuthnRequest({
       newIdentifierVerificationRecordId: webAuthnVerificationRecordId,
       name: passkeyName.trim() || undefined,
     });
 
     if (addError) {
-      await handleError(addError, {
-        'verification_record.permission_denied': async () => {
-          setVerificationId(undefined);
-          setToast(t('account_center.verification.verification_required'));
-        },
-      });
+      if (await requestStepUp(addError, { type: 'enter-subpage' })) {
+        return;
+      }
+
+      await handleError(addError);
       return;
     }
 
@@ -190,13 +189,11 @@ const PasskeyBinding = () => {
   }, [
     addWebAuthnRequest,
     handleError,
+    isReady,
     loading,
     navigate,
     passkeyName,
-    setToast,
-    setVerificationId,
-    t,
-    verificationId,
+    requestStepUp,
     webAuthnVerificationRecordId,
   ]);
 
@@ -225,8 +222,8 @@ const PasskeyBinding = () => {
     );
   }
 
-  if (!verificationId) {
-    return <VerificationMethodList />;
+  if (!isReady) {
+    return <StepUpEntryFallback hasFailed={hasFailed} />;
   }
 
   // Show naming step after WebAuthn registration is verified

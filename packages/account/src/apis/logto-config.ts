@@ -1,6 +1,5 @@
 import { type UserMfaData, type UserPasskeySignInData } from '@logto/schemas';
 
-import { getVerificationRecordHeaders } from './account';
 import { createAuthenticatedKy } from './base-ky';
 
 export type UserLogtoConfigResponse = {
@@ -22,13 +21,11 @@ export const getLogtoConfig = async (accessToken: string): Promise<UserLogtoConf
 
 export const updateLogtoConfig = async (
   accessToken: string,
-  verificationRecordId: string | undefined,
   payload: { mfa?: UserMfaData; passkeySignIn?: UserPasskeySignInData }
 ): Promise<UserLogtoConfigResponse> => {
   return createAuthenticatedKy(accessToken)
     .patch('/api/my-account/logto-configs', {
       json: payload,
-      headers: getVerificationRecordHeaders(verificationRecordId),
     })
     .json<UserLogtoConfigResponse>();
 };

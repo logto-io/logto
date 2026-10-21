@@ -7,7 +7,6 @@ import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext';
-import SwitchVerificationMethodLink from '@ac/components/SwitchVerificationMethodLink';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
@@ -33,7 +32,6 @@ type Props = {
   readonly onSubmit: (code: string) => void;
   readonly onBack: () => void;
   readonly onInvalidCode: (errorMessage: string) => void;
-  readonly onSwitchMethod?: () => void;
   readonly sendCode: (
     accessToken: string,
     identifier: string
@@ -56,7 +54,6 @@ const IdentifierVerifyStep = ({
   onSubmit,
   onBack,
   onInvalidCode,
-  onSwitchMethod,
   sendCode,
 }: Props) => {
   const { t } = useTranslation();
@@ -180,9 +177,6 @@ const IdentifierVerifyStep = ({
             onSubmit(codeInput.join(''));
           }}
         />
-        {onSwitchMethod && (
-          <SwitchVerificationMethodLink className={styles.switchMethod} onClick={onSwitchMethod} />
-        )}
       </div>
     </SecondaryPageLayout>
   );

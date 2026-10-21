@@ -1,4 +1,3 @@
-/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'Sayfa bulunamadı',
@@ -19,38 +18,11 @@ const account_center = {
     sign_out: 'Oturumu kapat',
   },
   verification: {
-    title: 'Güvenlik doğrulaması',
-    description:
-      'Hesap güvenliğinizi korumak için siz olduğunuzu doğrulayın. Kimliğinizi doğrulamak için lütfen yöntemi seçin.',
     error_send_failed: 'Doğrulama kodu gönderilemedi. Lütfen daha sonra tekrar dene.',
     error_invalid_code: 'Doğrulama kodu geçersiz veya süresi dolmuş.',
     error_verify_failed: 'Doğrulama başarısız. Lütfen kodu tekrar gir.',
-    verification_required: 'Doğrulama süresi doldu. Lütfen kimliğini yeniden doğrula.',
     step_up_not_completed:
       'Kimlik doğrulaması tamamlanmadı. Hesabınızda herhangi bir değişiklik yapılmadı.',
-    try_another_method: 'Başka bir doğrulama yöntemi deneyin',
-    no_available_methods_title: 'Kullanılabilir doğrulama yöntemi yok',
-    no_available_methods_description:
-      'Ayarlanmış herhangi bir doğrulama yönteminiz yok. Lütfen önce hesabınıza bir parola, e-posta adresi veya telefon numarası ekleyin.',
-  },
-  password_verification: {
-    title: 'Parolayı doğrula',
-    description: 'Hesabını korumak için kimliğini doğrula. Parolanı gir.',
-    error_failed: 'Yanlış parola. Lütfen girişinizi kontrol edin.',
-  },
-  verification_method: {
-    password: {
-      name: 'Parola',
-      description: 'Parolanızı doğrulayın',
-    },
-    email: {
-      name: 'E-posta doğrulama kodu',
-      description: 'Doğrulama kodunu e-postana gönder',
-    },
-    phone: {
-      name: 'Telefon doğrulama kodu',
-      description: 'Doğrulama kodunu telefon numarana gönder',
-    },
   },
   email: {
     title: 'E-postayı bağla',
@@ -58,7 +30,6 @@ const account_center = {
     verification_title: 'E-posta doğrulama kodunu gir',
     verification_description: 'Doğrulama kodu e-postana {{email_address}} gönderildi.',
     success: 'Birincil e-posta başarıyla bağlandı.',
-    verification_required: 'Doğrulama süresi doldu. Lütfen kimliğini yeniden doğrula.',
   },
   phone: {
     title: 'Telefon numarasını bağla',
@@ -66,7 +37,6 @@ const account_center = {
     verification_title: 'SMS doğrulama kodunu gir',
     verification_description: 'Doğrulama kodu telefonuna {{phone_number}} gönderildi.',
     success: 'Birincil telefon başarıyla bağlandı.',
-    verification_required: 'Doğrulama süresi doldu. Lütfen kimliğini yeniden doğrula.',
   },
   username: {
     title: 'Kullanıcı adını ayarla',
@@ -198,32 +168,10 @@ const account_center = {
     resend_countdown: 'Hâlâ gelmedi mi? {{seconds}} sn sonra tekrar gönder.',
   },
   email_verification: {
-    title: 'E-postanı doğrula',
-    prepare_description:
-      'Hesap güvenliğini korumak için kimliğini doğrula. Doğrulama kodunu e-postana gönder.',
     email_label: 'E-posta adresi',
-    send: 'Doğrulama kodu gönder',
-    description: 'Doğrulama kodu {{email}} adresine gönderildi. Devam etmek için kodu gir.',
-    resend: 'Hâlâ gelmedi mi? <a>Doğrulama kodunu yeniden gönder</a>',
-    not_received: 'Hâlâ gelmedi mi?',
-    resend_action: 'Doğrulama kodunu yeniden gönder',
-    resend_countdown: 'Hâlâ gelmedi mi? {{seconds}} sn sonra tekrar gönder.',
-    error_send_failed: 'Doğrulama kodu gönderilemedi. Lütfen daha sonra tekrar dene.',
-    error_verify_failed: 'Doğrulama başarısız. Lütfen kodu tekrar gir.',
-    error_invalid_code: 'Doğrulama kodu geçersiz veya süresi dolmuş.',
   },
   phone_verification: {
-    title: 'Telefonunu doğrula',
-    prepare_description:
-      'Hesap güvenliğinizi korumak için siz olduğunuzu doğrulayın. Doğrulama kodunu telefonuna gönder.',
     phone_label: 'Telefon numarası',
-    send: 'Doğrulama kodu gönder',
-    description: 'Doğrulama kodu telefonuna {{phone}} gönderildi. Devam etmek için kodu gir.',
-    resend: 'Hâlâ gelmedi mi? <a>Doğrulama kodunu yeniden gönder</a>',
-    resend_countdown: 'Hâlâ gelmedi mi? {{seconds}} sn sonra tekrar gönder.',
-    error_send_failed: 'Doğrulama kodu gönderilemedi. Lütfen daha sonra tekrar dene.',
-    error_verify_failed: 'Doğrulama başarısız. Lütfen kodu tekrar gir.',
-    error_invalid_code: 'Doğrulama kodu geçersiz veya süresi dolmuş.',
   },
   mfa: {
     totp_already_added:
@@ -340,4 +288,3 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
-/* eslint-enable max-lines */

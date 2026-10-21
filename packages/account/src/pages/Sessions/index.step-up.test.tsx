@@ -4,7 +4,7 @@ import { Route, Routes } from 'react-router-dom';
 
 import renderWithPageContext from '@ac/__mocks__/RenderWithPageContext';
 import { getGrants, getSessions } from '@ac/apis/sessions';
-import { sessionsRoute, verifiedActionRoute } from '@ac/constants/routes';
+import { sessionsRoute } from '@ac/constants/routes';
 import { setupI18nForTesting } from '@ac/jest.setup';
 import { accountStorage } from '@ac/utils/session-storage';
 
@@ -13,11 +13,6 @@ import Sessions from '.';
 const mockGetAccessToken = jest.fn().mockResolvedValue('access-token');
 const mockGetIdTokenClaims = jest.fn();
 const mockSignIn = jest.fn();
-
-jest.mock('@ac/constants/env', () => ({
-  __esModule: true,
-  isDevFeaturesEnabled: true,
-}));
 
 jest.mock('@logto/react', () => ({
   useLogto: () => ({
@@ -46,7 +41,6 @@ const renderSessions = () =>
   renderWithPageContext(
     <Routes>
       <Route path={sessionsRoute} element={<Sessions />} />
-      <Route path={verifiedActionRoute} element={<div>verified action page</div>} />
     </Routes>,
     {
       initialEntries: [sessionsRoute],
@@ -81,8 +75,8 @@ describe('<Sessions /> OIDC step-up', () => {
     const { queryByRole } = renderSessions();
 
     await waitFor(() => {
-      expect(mockGetSessions).toHaveBeenCalledWith('access-token', undefined);
-      expect(mockGetGrants).toHaveBeenCalledWith('access-token', undefined);
+      expect(mockGetSessions).toHaveBeenCalledWith('access-token');
+      expect(mockGetGrants).toHaveBeenCalledWith('access-token');
     });
     expect(queryByRole('button', { name: 'Manage' })).toBeNull();
     expect(mockSignIn).not.toHaveBeenCalled();

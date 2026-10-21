@@ -1,4 +1,3 @@
-/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'Page not found',
@@ -18,38 +17,11 @@ const account_center = {
     sign_out: 'Sign out',
   },
   verification: {
-    title: 'Security verification',
-    description:
-      "Verify it's you to protect your account security. Please select the method to verify your identity.",
     error_send_failed: 'Failed to send verification code. Please try again later.',
     error_invalid_code: 'The verification code is invalid or has expired.',
     error_verify_failed: 'Verification failed. Please enter the code again.',
-    verification_required: 'Verification expired. Please verify your identity again.',
     step_up_not_completed:
       'Identity verification was not completed. No changes were made to your account.',
-    try_another_method: 'Try another method to verify',
-    no_available_methods_title: 'No verification methods available',
-    no_available_methods_description:
-      "You don't have any verification methods set up. Please add a password, email, or phone number to your account first.",
-  },
-  password_verification: {
-    title: 'Verify password',
-    description: "Verify it's you to protect your account security. Enter your password.",
-    error_failed: 'Incorrect password. Please check your input.',
-  },
-  verification_method: {
-    password: {
-      name: 'Password',
-      description: 'Verify your password',
-    },
-    email: {
-      name: 'Email verification code',
-      description: 'Send verification code to your email',
-    },
-    phone: {
-      name: 'Phone verification code',
-      description: 'Send verification code to your phone number',
-    },
   },
   email: {
     title: 'Link email',
@@ -58,7 +30,6 @@ const account_center = {
     verification_description:
       'The verification code has been sent to your email {{email_address}}.',
     success: 'Primary email linked successfully.',
-    verification_required: 'Verification expired. Please verify your identity again.',
   },
   phone: {
     title: 'Link phone number',
@@ -66,7 +37,6 @@ const account_center = {
     verification_title: 'Enter SMS verification code',
     verification_description: 'The verification code has been sent to your phone {{phone_number}}.',
     success: 'Primary phone linked successfully.',
-    verification_required: 'Verification expired. Please verify your identity again.',
   },
   username: {
     title: 'Set username',
@@ -200,34 +170,10 @@ const account_center = {
   },
 
   email_verification: {
-    title: 'Verify your email',
-    prepare_description:
-      "Verify it's you to protect your account security. Send the verification code to your email.",
     email_label: 'Email address',
-    send: 'Send verification code',
-    description:
-      'The verification code has been sent to your email {{email}}. Enter the code to continue.',
-    resend: 'Not received yet? <a>Resend verification code</a>',
-    not_received: 'Not received yet?',
-    resend_action: 'Resend verification code',
-    resend_countdown: 'Not received yet? Resend after {{seconds}}s',
-    error_send_failed: 'Failed to send verification code. Please try again later.',
-    error_verify_failed: 'Verification failed. Please enter the code again.',
-    error_invalid_code: 'The verification code is invalid or has expired.',
   },
   phone_verification: {
-    title: 'Verify your phone',
-    prepare_description:
-      "Verify it's you to protect your account security. Send the verification code to your phone.",
     phone_label: 'Phone number',
-    send: 'Send verification code',
-    description:
-      'The verification code has been sent to your phone {{phone}}. Enter the code to continue.',
-    resend: 'Not received yet? <a>Resend verification code</a>',
-    resend_countdown: 'Not received yet? Resend after {{seconds}}s',
-    error_send_failed: 'Failed to send verification code. Please try again later.',
-    error_verify_failed: 'Verification failed. Please enter the code again.',
-    error_invalid_code: 'The verification code is invalid or has expired.',
   },
   mfa: {
     totp_already_added:
@@ -343,4 +289,3 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
-/* eslint-enable max-lines */

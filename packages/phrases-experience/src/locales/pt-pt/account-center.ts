@@ -1,4 +1,3 @@
-/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'Página não encontrada',
@@ -18,39 +17,11 @@ const account_center = {
     sign_out: 'Terminar sessão',
   },
   verification: {
-    title: 'Verificação de segurança',
-    description:
-      'Confirme que é você para proteger a segurança da sua conta. Selecione o método para verificar a sua identidade.',
     error_send_failed: 'Falha ao enviar o código de verificação. Tente novamente mais tarde.',
     error_invalid_code: 'O código de verificação é inválido ou expirou.',
     error_verify_failed: 'Falha na verificação. Introduza novamente o código.',
-    verification_required: 'A verificação expirou. Confirme novamente a sua identidade.',
     step_up_not_completed:
       'A verificação de identidade não foi concluída. Não foram feitas alterações à sua conta.',
-    try_another_method: 'Tente outro método para verificar',
-    no_available_methods_title: 'Não há métodos de verificação disponíveis',
-    no_available_methods_description:
-      'Não tem qualquer método de verificação configurado. Adicione primeiro uma palavra-passe, e-mail ou número de telefone à sua conta.',
-  },
-  password_verification: {
-    title: 'Verificar palavra-passe',
-    description:
-      'Para proteger a sua conta, introduza a sua palavra-passe para confirmar a sua identidade.',
-    error_failed: 'Palavra-passe incorreta. Verifique a sua entrada.',
-  },
-  verification_method: {
-    password: {
-      name: 'Palavra-passe',
-      description: 'Verifique a sua palavra-passe',
-    },
-    email: {
-      name: 'Código de verificação por e-mail',
-      description: 'Enviar código de verificação para o seu e-mail',
-    },
-    phone: {
-      name: 'Código de verificação por telefone',
-      description: 'Enviar código de verificação para o seu número de telefone',
-    },
   },
   email: {
     title: 'Associar e-mail',
@@ -59,7 +30,6 @@ const account_center = {
     verification_description:
       'O código de verificação foi enviado para o seu e-mail {{email_address}}.',
     success: 'E-mail principal associado com sucesso.',
-    verification_required: 'A verificação expirou. Confirme novamente a sua identidade.',
   },
   phone: {
     title: 'Associar número de telefone',
@@ -69,7 +39,6 @@ const account_center = {
     verification_description:
       'O código de verificação foi enviado para o seu telefone {{phone_number}}.',
     success: 'Telefone principal associado com sucesso.',
-    verification_required: 'A verificação expirou. Confirme novamente a sua identidade.',
   },
   username: {
     title: 'Definir nome de utilizador',
@@ -201,34 +170,10 @@ const account_center = {
     resend_countdown: 'Ainda não recebeu? Reenvie após {{seconds}} s.',
   },
   email_verification: {
-    title: 'Verifique o seu e-mail',
-    prepare_description:
-      'Confirme que é você para proteger a segurança da sua conta. Envie o código de verificação para o seu e-mail.',
     email_label: 'Endereço de e-mail',
-    send: 'Enviar código de verificação',
-    description:
-      'O código de verificação foi enviado para o e-mail {{email}}. Introduza o código para continuar.',
-    resend: 'Ainda não recebeu? <a>Reenviar código de verificação</a>',
-    not_received: 'Ainda não recebeu?',
-    resend_action: 'Reenviar código de verificação',
-    resend_countdown: 'Ainda não recebeu? Reenvie após {{seconds}} s.',
-    error_send_failed: 'Falha ao enviar o código de verificação. Tente novamente mais tarde.',
-    error_verify_failed: 'Falha na verificação. Introduza novamente o código.',
-    error_invalid_code: 'O código de verificação é inválido ou expirou.',
   },
   phone_verification: {
-    title: 'Verifique o seu telefone',
-    prepare_description:
-      'Confirme que é você para proteger a segurança da sua conta. Envie o código de verificação para o seu telefone.',
     phone_label: 'Número de telefone',
-    send: 'Enviar código de verificação',
-    description:
-      'O código de verificação foi enviado para o seu telefone {{phone}}. Introduza o código para continuar.',
-    resend: 'Ainda não recebeu? <a>Reenviar código de verificação</a>',
-    resend_countdown: 'Ainda não recebeu? Reenvie após {{seconds}} s.',
-    error_send_failed: 'Falha ao enviar o código de verificação. Tente novamente mais tarde.',
-    error_verify_failed: 'Falha na verificação. Introduza novamente o código.',
-    error_invalid_code: 'O código de verificação é inválido ou expirou.',
   },
   mfa: {
     totp_already_added: 'Já adicionou uma aplicação de autenticação. Remova a existente primeiro.',
@@ -344,4 +289,3 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
-/* eslint-enable max-lines */

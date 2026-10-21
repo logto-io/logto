@@ -28,11 +28,18 @@ import { accountStorage } from '@ac/utils/session-storage';
 import SocialFlow from '.';
 
 const mockGetAccessToken = jest.fn().mockResolvedValue('access-token');
+const mockRequestStepUp = jest.fn();
 
 jest.mock('@logto/react', () => ({
   useLogto: () => ({
     getAccessToken: mockGetAccessToken,
   }),
+}));
+
+jest.mock('@ac/hooks/use-step-up', () => ({
+  __esModule: true,
+  default: () => ({ requestStepUp: mockRequestStepUp, startStepUp: jest.fn() }),
+  useStepUpEntry: () => ({ isReady: true, isChecking: false, hasFailed: false }),
 }));
 
 jest.mock('@ac/apis/social', () => ({
@@ -41,8 +48,6 @@ jest.mock('@ac/apis/social', () => ({
   linkSocialIdentity: jest.fn(),
   replaceSocialIdentity: jest.fn(),
 }));
-
-jest.mock('@ac/components/VerificationMethodList', () => () => <div>Verification methods</div>);
 
 jest.mock('@ac/components/GlobalLoading', () => () => <div>Global loading</div>);
 
@@ -57,15 +62,26 @@ const googleConnector = {
   logoDark: 'https://example.com/google-dark.svg',
 };
 
-const createHttpError = (code: string, status: number, message = code) =>
+const createHttpError = (
+  code: string,
+  status: number,
+  message = code,
+  headers: Record<string, string> = {}
+) =>
   new HTTPError(
     {
       status,
+      headers: {
+        get: (name: string) => headers[name.toLowerCase()] ?? null,
+      },
       json: async () => ({ code, message }),
-    } as Response,
+    } as unknown as Response,
     {} as Request,
     {} as NormalizedOptions
   );
+
+const challenge =
+  'Bearer error="insufficient_user_authentication", acr_values="urn:logto:acr:1fa", max_age="600"';
 
 const mockCreateSocialVerificationResult = {
   verificationRecordId: 'social-verification-record-id',
@@ -129,10 +145,6 @@ const renderSocialFlow = ({ mode, pageContext, initialEntries }: SocialFlowRende
           identities: {},
           ...pageContext?.userInfo,
         },
-        verificationId:
-          pageContext && 'verificationId' in pageContext
-            ? pageContext.verificationId
-            : 'identity-verification-record-id',
       },
     }
   );
@@ -161,6 +173,7 @@ describe('<SocialFlow />', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     mockGetAccessToken.mockResolvedValue('access-token');
+    mockRequestStepUp.mockResolvedValue(false);
     jest.mocked(createSocialVerification).mockResolvedValue(mockCreateSocialVerificationResult);
     jest.mocked(deleteSocialIdentity).mockResolvedValue(undefined);
     jest.mocked(linkSocialIdentity).mockResolvedValue(undefined);
@@ -212,25 +225,10 @@ describe('<SocialFlow />', () => {
       expect(getByText('account_center.social.not_enabled')).toBeTruthy();
     });
 
-    it('shows verification methods when identity is not verified', () => {
-      const { getByText } = renderSocialFlow({
-        mode: 'add',
-        pageContext: {
-          verificationId: undefined,
-          userInfo: {
-            hasSecurityVerificationMethod: true,
-          },
-        },
-      });
-
-      expect(getByText('Verification methods')).toBeTruthy();
-    });
-
     it('shows loading while userInfo is loading', () => {
       const { getByText } = renderSocialFlow({
         mode: 'add',
         pageContext: {
-          verificationId: undefined,
           userInfo: undefined,
           isLoadingUserInfo: true,
         },
@@ -239,13 +237,12 @@ describe('<SocialFlow />', () => {
       expect(getByText('Global loading')).toBeTruthy();
     });
 
-    it('skips verification methods when user has no security verification method', async () => {
+    it('starts the flow directly when the user has no security verification method', async () => {
       jest.mocked(createSocialVerification).mockResolvedValue(mockCreateSocialVerificationResult);
 
       renderSocialFlow({
         mode: 'add',
         pageContext: {
-          verificationId: undefined,
           userInfo: {
             hasPassword: false,
             primaryEmail: undefined,
@@ -335,7 +332,6 @@ describe('<SocialFlow />', () => {
       await waitFor(() => {
         expect(linkSocialIdentity).toHaveBeenCalledWith(
           'access-token',
-          'identity-verification-record-id',
           'social-verification-record-id'
         );
       });
@@ -393,9 +389,8 @@ describe('<SocialFlow />', () => {
       });
     });
 
-    it('resets verification when permission denied on link', async () => {
-      const refreshUserInfo = jest.fn().mockResolvedValue(undefined);
-      const setVerificationId = jest.fn();
+    it('starts a step-up on the challenge of the link request', async () => {
+      mockRequestStepUp.mockResolvedValue(true);
       const setToast = jest.fn();
 
       accountStorage.socialFlow.setVerified(connectorId, {
@@ -404,20 +399,23 @@ describe('<SocialFlow />', () => {
         mode: 'add',
       });
 
-      jest
-        .mocked(linkSocialIdentity)
-        .mockRejectedValue(createHttpError('verification_record.permission_denied', 401));
+      jest.mocked(linkSocialIdentity).mockRejectedValue(
+        createHttpError('verification_record.permission_denied', 401, undefined, {
+          'www-authenticate': challenge,
+        })
+      );
 
       renderSocialFlow({
         mode: 'add',
-        pageContext: { refreshUserInfo, setVerificationId, setToast },
+        pageContext: { setToast },
       });
 
       await waitFor(() => {
-        expect(refreshUserInfo).toHaveBeenCalled();
-        expect(setVerificationId).toHaveBeenCalledWith(undefined);
-        expect(setToast).toHaveBeenCalledWith('account_center.verification.verification_required');
+        expect(mockRequestStepUp).toHaveBeenCalledWith(expect.any(HTTPError), {
+          type: 'enter-subpage',
+        });
       });
+      expect(setToast).not.toHaveBeenCalled();
     });
   });
 
@@ -441,11 +439,7 @@ describe('<SocialFlow />', () => {
       });
 
       await waitFor(() => {
-        expect(deleteSocialIdentity).toHaveBeenCalledWith(
-          'access-token',
-          'identity-verification-record-id',
-          'google'
-        );
+        expect(deleteSocialIdentity).toHaveBeenCalledWith('access-token', 'google');
       });
 
       await waitFor(() => {
@@ -481,20 +475,19 @@ describe('<SocialFlow />', () => {
       });
     });
 
-    it('resets verification when permission denied on remove', async () => {
-      const refreshUserInfo = jest.fn().mockResolvedValue(undefined);
-      const setVerificationId = jest.fn();
+    it('starts a step-up on the challenge of the remove request', async () => {
+      mockRequestStepUp.mockResolvedValue(true);
       const setToast = jest.fn();
 
-      jest
-        .mocked(deleteSocialIdentity)
-        .mockRejectedValue(createHttpError('verification_record.permission_denied', 401));
+      jest.mocked(deleteSocialIdentity).mockRejectedValue(
+        createHttpError('verification_record.permission_denied', 401, undefined, {
+          'www-authenticate': challenge,
+        })
+      );
 
       renderSocialFlow({
         mode: 'remove',
         pageContext: {
-          refreshUserInfo,
-          setVerificationId,
           setToast,
           userInfo: {
             identities: {
@@ -508,10 +501,11 @@ describe('<SocialFlow />', () => {
       });
 
       await waitFor(() => {
-        expect(refreshUserInfo).toHaveBeenCalled();
-        expect(setVerificationId).toHaveBeenCalledWith(undefined);
-        expect(setToast).toHaveBeenCalledWith('account_center.verification.verification_required');
+        expect(mockRequestStepUp).toHaveBeenCalledWith(expect.any(HTTPError), {
+          type: 'enter-subpage',
+        });
       });
+      expect(setToast).not.toHaveBeenCalled();
     });
   });
 
@@ -603,7 +597,6 @@ describe('<SocialFlow />', () => {
       await waitFor(() => {
         expect(replaceSocialIdentity).toHaveBeenCalledWith(
           'access-token',
-          'identity-verification-record-id',
           'social-verification-record-id'
         );
       });

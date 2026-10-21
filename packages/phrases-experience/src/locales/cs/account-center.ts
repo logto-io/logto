@@ -1,4 +1,3 @@
-/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'Stránka nenalezena',
@@ -18,38 +17,11 @@ const account_center = {
     sign_out: 'Odhlásit se',
   },
   verification: {
-    title: 'Ověření bezpečnosti',
-    description:
-      'Ověř, že jsi to ty, pro ochranu svého účtu. Prosím vyber metodu ověření identity.',
     error_send_failed: 'Odeslání ověřovacího kódu se nezdařilo. Zkus to prosím později.',
     error_invalid_code: 'Ověřovací kód je neplatný nebo vypršel.',
     error_verify_failed: 'Ověření se nezdařilo. Zadej kód znovu.',
-    verification_required: 'Ověření vypršelo. Prosím ověř svou identitu znovu.',
     step_up_not_completed:
       'Ověření identity nebylo dokončeno. Na tvém účtu nebyly provedeny žádné změny.',
-    try_another_method: 'Vyzkoušej jinou metodu ověření',
-    no_available_methods_title: 'Nejsou k dispozici žádné metody ověření',
-    no_available_methods_description:
-      'Nemáš nastavenou žádnou metodu ověření. Nejprve si ke svému účtu přidej heslo, e-mail nebo telefonní číslo.',
-  },
-  password_verification: {
-    title: 'Ověřit heslo',
-    description: 'Ověř, že jsi to ty, pro ochranu svého účtu. Zadej své heslo.',
-    error_failed: 'Ověření se nezdařilo. Zkontroluj prosím své heslo.',
-  },
-  verification_method: {
-    password: {
-      name: 'Heslo',
-      description: 'Ověř své heslo',
-    },
-    email: {
-      name: 'E-mailový ověřovací kód',
-      description: 'Odeslat ověřovací kód na tvůj e-mail',
-    },
-    phone: {
-      name: 'SMS ověřovací kód',
-      description: 'Odeslat ověřovací kód na tvé telefonní číslo',
-    },
   },
   email: {
     title: 'Propojit e-mail',
@@ -57,7 +29,6 @@ const account_center = {
     verification_title: 'Zadej ověřovací kód z e-mailu',
     verification_description: 'Ověřovací kód byl odeslán na tvůj e-mail {{email_address}}.',
     success: 'Primární e-mail byl úspěšně propojen.',
-    verification_required: 'Ověření vypršelo. Prosím ověř svou identitu znovu.',
   },
   phone: {
     title: 'Propojit telefonní číslo',
@@ -65,7 +36,6 @@ const account_center = {
     verification_title: 'Zadej SMS ověřovací kód',
     verification_description: 'Ověřovací kód byl odeslán na tvé telefonní číslo {{phone_number}}.',
     success: 'Primární telefonní číslo bylo úspěšně propojeno.',
-    verification_required: 'Ověření vypršelo. Prosím ověř svou identitu znovu.',
   },
   username: {
     title: 'Nastavit uživatelské jméno',
@@ -196,33 +166,10 @@ const account_center = {
     resend_countdown: 'Stále jsi ho neobdržel/a? Odeslat znovu za {{seconds}}s.',
   },
   email_verification: {
-    title: 'Ověřit e-mailovou adresu',
-    prepare_description:
-      'Ověř, že jsi to ty, pro ochranu svého účtu. Odeslat ověřovací kód na tvůj e-mail.',
     email_label: 'E-mailová adresa',
-    send: 'Odeslat ověřovací kód',
-    description: 'Ověřovací kód byl odeslán na tvůj e-mail {{email}}. Zadej kód pro pokračování.',
-    resend: 'Stále jsi ho neobdržel/a? <a>Odeslat kód znovu</a>',
-    not_received: 'Stále jsi ho neobdržel/a?',
-    resend_action: 'Odeslat ověřovací kód znovu',
-    resend_countdown: 'Stále jsi ho neobdržel/a? Odeslat znovu za {{seconds}}s.',
-    error_send_failed: 'Odeslání ověřovacího kódu se nezdařilo. Zkus to prosím později.',
-    error_verify_failed: 'Ověření se nezdařilo. Prosím, zadej kód znovu.',
-    error_invalid_code: 'Ověřovací kód je neplatný nebo vypršel.',
   },
   phone_verification: {
-    title: 'Ověřit telefonní číslo',
-    prepare_description:
-      'Ověř, že jsi to ty, pro ochranu svého účtu. Odeslat ověřovací kód na tvé telefonní číslo.',
     phone_label: 'Telefonní číslo',
-    send: 'Odeslat ověřovací kód',
-    description:
-      'Ověřovací kód byl odeslán na tvé telefonní číslo {{phone}}. Zadej kód pro pokračování.',
-    resend: 'Stále jsi ho neobdržel/a? <a>Odeslat kód znovu</a>',
-    resend_countdown: 'Stále jsi ho neobdržel/a? Odeslat znovu za {{seconds}}s.',
-    error_send_failed: 'Odeslání ověřovacího kódu se nezdařilo. Zkus to prosím později.',
-    error_verify_failed: 'Ověření se nezdařilo. Prosím, zadej kód znovu.',
-    error_invalid_code: 'Ověřovací kód je neplatný nebo vypršel.',
   },
   mfa: {
     totp_already_added: 'Autentizační aplikace je již přidána. Prosím, nejprve odstraň stávající.',
@@ -339,4 +286,3 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
-/* eslint-enable max-lines */

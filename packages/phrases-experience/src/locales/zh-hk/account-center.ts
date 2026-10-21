@@ -1,4 +1,3 @@
-/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: '找不到頁面',
@@ -18,36 +17,10 @@ const account_center = {
     sign_out: '登出',
   },
   verification: {
-    title: '安全驗證',
-    description: '為保障帳戶安全，請確認是你本人。請選擇用於驗證身份的方法。',
     error_send_failed: '驗證碼傳送失敗，請稍後再試。',
     error_invalid_code: '驗證碼無效或已過期。',
     error_verify_failed: '驗證失敗，請重新輸入驗證碼。',
-    verification_required: '驗證已失效，請再次驗證你的身份。',
     step_up_not_completed: '身份驗證未完成，你的帳戶未有任何更改。',
-    try_another_method: '嘗試其他驗證方式',
-    no_available_methods_title: '沒有可用的驗證方式',
-    no_available_methods_description:
-      '你尚未設定任何驗證方式。請先為你的帳戶新增密碼、電郵地址或電話號碼。',
-  },
-  password_verification: {
-    title: '驗證密碼',
-    description: '為保障帳戶安全，請輸入你的密碼完成驗證。',
-    error_failed: '密碼錯誤，請重新輸入。',
-  },
-  verification_method: {
-    password: {
-      name: '密碼',
-      description: '驗證你的密碼',
-    },
-    email: {
-      name: '電郵驗證碼',
-      description: '發送驗證碼到你的電郵',
-    },
-    phone: {
-      name: '電話驗證碼',
-      description: '發送驗證碼到你的電話號碼',
-    },
   },
   email: {
     title: '連結電郵',
@@ -55,7 +28,6 @@ const account_center = {
     verification_title: '輸入電郵驗證碼',
     verification_description: '驗證碼已發送至你的電郵 {{email_address}}。',
     success: '已成功連結主要電郵。',
-    verification_required: '驗證已失效，請再次驗證你的身份。',
   },
   phone: {
     title: '連結電話號碼',
@@ -63,7 +35,6 @@ const account_center = {
     verification_title: '輸入短訊驗證碼',
     verification_description: '驗證碼已發送至你的電話 {{phone_number}}。',
     success: '已成功連結主要電話。',
-    verification_required: '驗證已失效，請再次驗證你的身份。',
   },
   username: {
     title: '設定用戶名',
@@ -188,30 +159,10 @@ const account_center = {
     resend_countdown: '還未收到？{{seconds}} 秒後可重新傳送。',
   },
   email_verification: {
-    title: '驗證你的電郵',
-    prepare_description: '為保障帳戶安全，請確認是你本人。將驗證碼發送到你的電郵。',
     email_label: '電郵地址',
-    send: '發送驗證碼',
-    description: '驗證碼已發送至你的電郵 {{email}}。輸入驗證碼以繼續。',
-    resend: '還未收到？<a>重新傳送驗證碼</a>',
-    not_received: '還未收到？',
-    resend_action: '重新傳送驗證碼',
-    resend_countdown: '還未收到？{{seconds}} 秒後可重新傳送。',
-    error_send_failed: '驗證碼傳送失敗，請稍後再試。',
-    error_verify_failed: '驗證失敗，請重新輸入驗證碼。',
-    error_invalid_code: '驗證碼無效或已過期。',
   },
   phone_verification: {
-    title: '驗證你的電話',
-    prepare_description: '為保障帳戶安全，請確認是你本人。將驗證碼發送到你的電話。',
     phone_label: '電話號碼',
-    send: '發送驗證碼',
-    description: '驗證碼已發送至你的電話 {{phone}}。輸入驗證碼以繼續。',
-    resend: '還未收到？<a>重新傳送驗證碼</a>',
-    resend_countdown: '還未收到？{{seconds}} 秒後可重新傳送。',
-    error_send_failed: '驗證碼傳送失敗，請稍後再試。',
-    error_verify_failed: '驗證失敗，請重新輸入驗證碼。',
-    error_invalid_code: '驗證碼無效或已過期。',
   },
   mfa: {
     totp_already_added: '你已添加過身份驗證器應用程式，請先移除現有的。',
@@ -319,4 +270,3 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
-/* eslint-enable max-lines */

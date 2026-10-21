@@ -1,4 +1,3 @@
-/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'الصفحة غير موجودة',
@@ -18,37 +17,10 @@ const account_center = {
     sign_out: 'تسجيل الخروج',
   },
   verification: {
-    title: 'التحقق الأمني',
-    description:
-      'تحقق من أنك الشخص المقصود لحماية أمان حسابك. يرجى اختيار الطريقة للتحقق من هويتك.',
     error_send_failed: 'فشل إرسال رمز التحقق. يرجى المحاولة لاحقًا.',
     error_invalid_code: 'رمز التحقق غير صالح أو منتهي الصلاحية.',
     error_verify_failed: 'فشل التحقق. يرجى إدخال الرمز مرة أخرى.',
-    verification_required: 'انتهت صلاحية التحقق. يرجى التحقق من هويتك مرة أخرى.',
     step_up_not_completed: 'لم يكتمل التحقق من الهوية. لم يتم إجراء أي تغييرات على حسابك.',
-    try_another_method: 'جرّب طريقة أخرى للتحقق',
-    no_available_methods_title: 'لا توجد طرق تحقق متاحة',
-    no_available_methods_description:
-      'لم تقم بإعداد أي طرق للتحقق. يرجى إضافة كلمة مرور أو بريد إلكتروني أو رقم هاتف إلى حسابك أولًا.',
-  },
-  password_verification: {
-    title: 'التحقق من كلمة المرور',
-    description: 'لحماية أمان حسابك، أدخل كلمة المرور للتحقق من هويتك.',
-    error_failed: 'كلمة المرور غير صحيحة. يرجى التحقق من المدخلات.',
-  },
-  verification_method: {
-    password: {
-      name: 'كلمة المرور',
-      description: 'تحقق من كلمة المرور الخاصة بك',
-    },
-    email: {
-      name: 'رمز التحقق عبر البريد الإلكتروني',
-      description: 'أرسل رمز التحقق إلى بريدك الإلكتروني',
-    },
-    phone: {
-      name: 'رمز التحقق عبر الهاتف',
-      description: 'أرسل رمز التحقق إلى رقم هاتفك',
-    },
   },
   email: {
     title: 'ربط البريد الإلكتروني',
@@ -56,7 +28,6 @@ const account_center = {
     verification_title: 'أدخل رمز التحقق من البريد الإلكتروني',
     verification_description: 'تم إرسال رمز التحقق إلى بريدك الإلكتروني {{email_address}}.',
     success: 'تم ربط البريد الإلكتروني الأساسي بنجاح.',
-    verification_required: 'انتهت صلاحية التحقق. يرجى التحقق من هويتك مرة أخرى.',
   },
   phone: {
     title: 'ربط رقم الهاتف',
@@ -64,7 +35,6 @@ const account_center = {
     verification_title: 'أدخل رمز التحقق عبر الرسائل القصيرة',
     verification_description: 'تم إرسال رمز التحقق إلى هاتفك {{phone_number}}.',
     success: 'تم ربط الهاتف الأساسي بنجاح.',
-    verification_required: 'انتهت صلاحية التحقق. يرجى التحقق من هويتك مرة أخرى.',
   },
   username: {
     title: 'تعيين اسم المستخدم',
@@ -194,30 +164,10 @@ const account_center = {
     resend_countdown: 'لم تستلمه بعد؟ أعد الإرسال بعد {{seconds}} ث.',
   },
   email_verification: {
-    title: 'تحقق من بريدك الإلكتروني',
-    prepare_description: 'تحقق من هويتك لحماية أمان حسابك. أرسل رمز التحقق إلى بريدك الإلكتروني.',
     email_label: 'عنوان البريد الإلكتروني',
-    send: 'إرسال رمز التحقق',
-    description: 'تم إرسال رمز التحقق إلى بريدك الإلكتروني {{email}}. أدخل الرمز للمتابعة.',
-    resend: 'لم تستلمه بعد؟ <a>إعادة إرسال رمز التحقق</a>',
-    not_received: 'لم تستلمه بعد؟',
-    resend_action: 'إعادة إرسال رمز التحقق',
-    resend_countdown: 'لم تستلمه بعد؟ أعد الإرسال بعد {{seconds}} ث.',
-    error_send_failed: 'فشل إرسال رمز التحقق. يرجى المحاولة لاحقًا.',
-    error_verify_failed: 'فشل التحقق. يرجى إدخال الرمز مرة أخرى.',
-    error_invalid_code: 'رمز التحقق غير صالح أو منتهي الصلاحية.',
   },
   phone_verification: {
-    title: 'تحقق من هاتفك',
-    prepare_description: 'تحقق من هويتك لحماية أمان حسابك. أرسل رمز التحقق إلى هاتفك.',
     phone_label: 'رقم الهاتف',
-    send: 'إرسال رمز التحقق',
-    description: 'تم إرسال رمز التحقق إلى هاتفك {{phone}}. أدخل الرمز للمتابعة.',
-    resend: 'لم تستلمه بعد؟ <a>إعادة إرسال رمز التحقق</a>',
-    resend_countdown: 'لم تستلمه بعد؟ أعد الإرسال بعد {{seconds}} ث.',
-    error_send_failed: 'فشل إرسال رمز التحقق. يرجى المحاولة لاحقًا.',
-    error_verify_failed: 'فشل التحقق. يرجى إدخال الرمز مرة أخرى.',
-    error_invalid_code: 'رمز التحقق غير صالح أو منتهي الصلاحية.',
   },
   mfa: {
     totp_already_added: 'لقد أضفت تطبيق مصادقة بالفعل. يرجى إزالة التطبيق الحالي أولاً.',
@@ -330,4 +280,3 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
-/* eslint-enable max-lines */

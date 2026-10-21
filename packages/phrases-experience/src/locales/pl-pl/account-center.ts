@@ -1,4 +1,3 @@
-/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'Nie znaleziono strony',
@@ -19,38 +18,11 @@ const account_center = {
     sign_out: 'Wyloguj się',
   },
   verification: {
-    title: 'Weryfikacja bezpieczeństwa',
-    description:
-      'Potwierdź, że to Ty, aby chronić bezpieczeństwo konta. Wybierz metodę weryfikacji tożsamości.',
     error_send_failed: 'Nie udało się wysłać kodu weryfikacyjnego. Spróbuj ponownie później.',
     error_invalid_code: 'Kod weryfikacyjny jest nieprawidłowy lub wygasł.',
     error_verify_failed: 'Weryfikacja nie powiodła się. Wprowadź kod ponownie.',
-    verification_required: 'Weryfikacja wygasła. Zweryfikuj swoją tożsamość ponownie.',
     step_up_not_completed:
       'Weryfikacja tożsamości nie została ukończona. Na Twoim koncie nie wprowadzono żadnych zmian.',
-    try_another_method: 'Wypróbuj inny sposób weryfikacji',
-    no_available_methods_title: 'Brak dostępnych metod weryfikacji',
-    no_available_methods_description:
-      'Nie masz skonfigurowanych żadnych metod weryfikacji. Najpierw dodaj do swojego konta hasło, adres e-mail lub numer telefonu.',
-  },
-  password_verification: {
-    title: 'Zweryfikuj hasło',
-    description: 'Aby chronić konto, wprowadź hasło, aby potwierdzić swoją tożsamość.',
-    error_failed: 'Nieprawidłowe hasło. Sprawdź wprowadzone dane.',
-  },
-  verification_method: {
-    password: {
-      name: 'Hasło',
-      description: 'Zweryfikuj swoje hasło',
-    },
-    email: {
-      name: 'Kod weryfikacyjny e-mail',
-      description: 'Wyślij kod weryfikacyjny na swój e-mail',
-    },
-    phone: {
-      name: 'Kod weryfikacyjny telefoniczny',
-      description: 'Wyślij kod weryfikacyjny na swój numer telefonu',
-    },
   },
   email: {
     title: 'Połącz e-mail',
@@ -58,7 +30,6 @@ const account_center = {
     verification_title: 'Wprowadź kod weryfikacyjny e-mail',
     verification_description: 'Kod weryfikacyjny został wysłany na Twój e-mail {{email_address}}.',
     success: 'Główny e-mail połączono pomyślnie.',
-    verification_required: 'Weryfikacja wygasła. Zweryfikuj swoją tożsamość ponownie.',
   },
   phone: {
     title: 'Połącz numer telefonu',
@@ -66,7 +37,6 @@ const account_center = {
     verification_title: 'Wprowadź kod weryfikacyjny SMS',
     verification_description: 'Kod weryfikacyjny został wysłany na Twój telefon {{phone_number}}.',
     success: 'Główny telefon połączono pomyślnie.',
-    verification_required: 'Weryfikacja wygasła. Zweryfikuj swoją tożsamość ponownie.',
   },
   username: {
     title: 'Ustaw nazwę użytkownika',
@@ -197,34 +167,10 @@ const account_center = {
     resend_countdown: 'Nie otrzymałeś? Wyślij ponownie po {{seconds}} s.',
   },
   email_verification: {
-    title: 'Zweryfikuj swój e-mail',
-    prepare_description:
-      'Potwierdź swoją tożsamość, aby chronić bezpieczeństwo konta. Wyślij kod weryfikacyjny na swój e-mail.',
     email_label: 'Adres e-mail',
-    send: 'Wyślij kod weryfikacyjny',
-    description:
-      'Kod weryfikacyjny został wysłany na adres {{email}}. Wprowadź kod, aby kontynuować.',
-    resend: 'Nie otrzymałeś? <a>Wyślij kod weryfikacyjny ponownie</a>',
-    not_received: 'Nie otrzymałeś?',
-    resend_action: 'Wyślij kod weryfikacyjny ponownie',
-    resend_countdown: 'Nie otrzymałeś? Wyślij ponownie po {{seconds}} s.',
-    error_send_failed: 'Nie udało się wysłać kodu weryfikacyjnego. Spróbuj ponownie później.',
-    error_verify_failed: 'Weryfikacja nie powiodła się. Wprowadź kod ponownie.',
-    error_invalid_code: 'Kod weryfikacyjny jest nieprawidłowy lub wygasł.',
   },
   phone_verification: {
-    title: 'Zweryfikuj swój telefon',
-    prepare_description:
-      'Potwierdź, że to Ty, aby chronić bezpieczeństwo konta. Wyślij kod weryfikacyjny na swój telefon.',
     phone_label: 'Numer telefonu',
-    send: 'Wyślij kod weryfikacyjny',
-    description:
-      'Kod weryfikacyjny został wysłany na Twój telefon {{phone}}. Wprowadź kod, aby kontynuować.',
-    resend: 'Nie otrzymałeś? <a>Wyślij kod weryfikacyjny ponownie</a>',
-    resend_countdown: 'Nie otrzymałeś? Wyślij ponownie po {{seconds}} s.',
-    error_send_failed: 'Nie udało się wysłać kodu weryfikacyjnego. Spróbuj ponownie później.',
-    error_verify_failed: 'Weryfikacja nie powiodła się. Wprowadź kod ponownie.',
-    error_invalid_code: 'Kod weryfikacyjny jest nieprawidłowy lub wygasł.',
   },
   mfa: {
     totp_already_added: 'Już dodano aplikację uwierzytelniającą. Najpierw usuń istniejącą.',
@@ -342,4 +288,3 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
-/* eslint-enable max-lines */

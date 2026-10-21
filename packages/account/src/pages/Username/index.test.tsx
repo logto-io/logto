@@ -14,6 +14,8 @@ import { updateUsername } from '../../apis/account';
 import Username from '.';
 
 const mockGetAccessToken = jest.fn().mockResolvedValue('access-token');
+const mockRequestStepUp = jest.fn();
+const mockStartStepUp = jest.fn();
 
 jest.mock('@logto/react', () => ({
   useLogto: () => ({
@@ -21,11 +23,15 @@ jest.mock('@logto/react', () => ({
   }),
 }));
 
+jest.mock('@ac/hooks/use-step-up', () => ({
+  __esModule: true,
+  default: () => ({ requestStepUp: mockRequestStepUp, startStepUp: mockStartStepUp }),
+  useStepUpEntry: () => ({ isReady: true, isChecking: false, hasFailed: false }),
+}));
+
 jest.mock('../../apis/account', () => ({
   updateUsername: jest.fn(),
 }));
-
-jest.mock('@ac/components/VerificationMethodList', () => () => <div>Verification methods</div>);
 
 // Lowercase-only, length 4–8: violations here are policy-only (not caught by the hard floor).
 const restrictivePolicy: UsernamePolicy = {
@@ -35,15 +41,21 @@ const restrictivePolicy: UsernamePolicy = {
   allowedChars: { lowercase: true, uppercase: false, numbers: false, underscore: false },
 };
 
-const createHttpError = (code: string, status: number) =>
+const createHttpError = (code: string, status: number, headers: Record<string, string> = {}) =>
   new HTTPError(
     {
       status,
+      headers: {
+        get: (name: string) => headers[name.toLowerCase()] ?? null,
+      },
       json: async () => ({ code, message: code }),
-    } as Response,
+    } as unknown as Response,
     {} as Request,
     {} as NormalizedOptions
   );
+
+const challenge =
+  'Bearer error="insufficient_user_authentication", acr_values="urn:logto:acr:1fa", max_age="600"';
 
 type UsernameRenderOptions = {
   readonly pageContext?: Omit<Partial<PageContextType>, 'accountCenterSettings'> & {
@@ -77,10 +89,6 @@ const renderUsername = ({ pageContext }: UsernameRenderOptions = {}) =>
             ...pageContext?.accountCenterSettings?.fields,
           },
         },
-        verificationId:
-          pageContext && 'verificationId' in pageContext
-            ? pageContext.verificationId
-            : 'verification-record-id',
       },
     }
   );
@@ -96,6 +104,7 @@ describe('<Username />', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     mockGetAccessToken.mockResolvedValue('access-token');
+    mockRequestStepUp.mockResolvedValue(false);
     jest.mocked(updateUsername).mockResolvedValue(undefined);
   });
 
@@ -113,16 +122,6 @@ describe('<Username />', () => {
     expect(getByText('error.feature_not_enabled')).toBeTruthy();
   });
 
-  it('shows verification methods when identity is not verified', () => {
-    const { getByText } = renderUsername({
-      pageContext: {
-        verificationId: undefined,
-      },
-    });
-
-    expect(getByText('Verification methods')).toBeTruthy();
-  });
-
   it('updates username and navigates to the success page', async () => {
     const refreshUserInfo = jest.fn().mockResolvedValue(undefined);
     const { getByText, container } = renderUsername({
@@ -136,7 +135,7 @@ describe('<Username />', () => {
     fireEvent.click(getByText('action.save'));
 
     await waitFor(() => {
-      expect(updateUsername).toHaveBeenCalledWith('access-token', 'verification-record-id', {
+      expect(updateUsername).toHaveBeenCalledWith('access-token', {
         username: 'new_username',
       });
     });
@@ -193,28 +192,28 @@ describe('<Username />', () => {
     });
   });
 
-  it('clears verification and prompts re-verification when permission is denied', async () => {
-    const setVerificationId = jest.fn();
+  it('starts a step-up on the RFC 9470 challenge instead of the legacy verification UI', async () => {
     const setToast = jest.fn();
-    jest
-      .mocked(updateUsername)
-      .mockRejectedValue(createHttpError('verification_record.permission_denied', 401));
+    mockRequestStepUp.mockResolvedValue(true);
+    jest.mocked(updateUsername).mockRejectedValue(
+      createHttpError('verification_record.permission_denied', 401, {
+        'www-authenticate': challenge,
+      })
+    );
 
-    const { getByText, container } = renderUsername({
-      pageContext: {
-        setVerificationId,
-        setToast,
-      },
-    });
+    const { getByText, container } = renderUsername({ pageContext: { setToast } });
 
     const usernameInput = container.querySelector('input[name="username"]');
     fireEvent.change(usernameInput!, { target: { value: 'new_username' } });
     fireEvent.click(getByText('action.save'));
 
     await waitFor(() => {
-      expect(setVerificationId).toHaveBeenCalledWith(undefined);
-      expect(setToast).toHaveBeenCalledWith('account_center.verification.verification_required');
+      expect(mockRequestStepUp).toHaveBeenCalledWith(expect.any(HTTPError), {
+        type: 'enter-subpage',
+      });
     });
+    expect(setToast).not.toHaveBeenCalled();
+    expect(getByText('account_center.username.title')).toBeTruthy();
   });
 
   describe('username policy', () => {
@@ -252,9 +251,7 @@ describe('<Username />', () => {
       fireEvent.click(getByText('action.save'));
 
       await waitFor(() => {
-        expect(updateUsername).toHaveBeenCalledWith('access-token', 'verification-record-id', {
-          username: 'abcd',
-        });
+        expect(updateUsername).toHaveBeenCalledWith('access-token', { username: 'abcd' });
       });
     });
 

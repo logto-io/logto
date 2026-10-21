@@ -11,13 +11,7 @@ import renderWithPageContext, {
   mockAccountCenterSettings,
   mockSignInExperienceSettings,
 } from '@ac/__mocks__/RenderWithPageContext';
-import {
-  passkeyAddRoute,
-  passkeyManageRoute,
-  securityRoute,
-  verifiedActionRoute,
-} from '@ac/constants/routes';
-import { sessionStorage } from '@ac/utils/session-storage';
+import { passkeyAddRoute, passkeyManageRoute, securityRoute } from '@ac/constants/routes';
 
 import { getLogtoConfig, updateLogtoConfig } from '../../../apis/logto-config';
 import { getMfaVerifications } from '../../../apis/mfa';
@@ -26,12 +20,21 @@ import MfaVerificationsProvider from '../MfaVerificationsProvider';
 import PasskeySection from '.';
 
 const mockGetAccessToken = jest.fn().mockResolvedValue('access-token');
+const mockGetIdTokenClaims = jest.fn();
+const mockSignIn = jest.fn();
 
 jest.mock('@logto/react', () => ({
   useLogto: () => ({
     getAccessToken: mockGetAccessToken,
+    getIdTokenClaims: mockGetIdTokenClaims,
+    signIn: mockSignIn,
   }),
 }));
+
+const createIdTokenClaims = (authTime = Math.floor(Date.now() / 1000) - 60) => ({
+  acr: 'urn:logto:acr:1fa',
+  auth_time: authTime,
+});
 
 jest.mock('../../../apis/mfa', () => ({
   getMfaVerifications: jest.fn(),
@@ -58,7 +61,6 @@ type RenderOptions = {
   passkeyControl?: AccountCenterControlValue;
   passkeySignInEnabled?: boolean;
   passkeySignInSkipped?: boolean;
-  verificationId?: string;
 };
 
 const renderPasskeySection = ({
@@ -66,7 +68,6 @@ const renderPasskeySection = ({
   passkeyControl = AccountCenterControlValue.Edit,
   passkeySignInEnabled = true,
   passkeySignInSkipped = false,
-  verificationId,
 }: RenderOptions = {}) => {
   mockGetMfaVerifications.mockResolvedValue(mfaVerifications);
   mockGetLogtoConfig.mockResolvedValue(buildLogtoConfigResponse(passkeySignInSkipped));
@@ -84,7 +85,6 @@ const renderPasskeySection = ({
       />
       <Route path={passkeyAddRoute} element={<div>passkey add page</div>} />
       <Route path={passkeyManageRoute} element={<div>passkey manage page</div>} />
-      <Route path={verifiedActionRoute} element={<div>verified action page</div>} />
     </Routes>,
     {
       initialEntries: [securityRoute],
@@ -92,7 +92,6 @@ const renderPasskeySection = ({
     },
     {
       pageContext: {
-        verificationId,
         accountCenterSettings: {
           ...mockAccountCenterSettings,
           fields: { ...mockAccountCenterSettings.fields, passkey: passkeyControl },
@@ -111,6 +110,7 @@ describe('<PasskeySection />', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     mockGetAccessToken.mockResolvedValue('access-token');
+    mockGetIdTokenClaims.mockResolvedValue(createIdTokenClaims());
     window.sessionStorage.clear();
   });
 
@@ -187,28 +187,31 @@ describe('<PasskeySection />', () => {
     });
   });
 
-  it('navigates to identity verification when toggling without a verification record', async () => {
-    const { getByRole, getByText } = renderPasskeySection({ passkeySignInSkipped: false });
+  it('starts a step-up when toggling with a stale authentication context', async () => {
+    const { getByRole } = renderPasskeySection({ passkeySignInSkipped: false });
 
     await waitFor(() => {
       expect((getByRole('checkbox') as HTMLInputElement).checked).toBe(true);
     });
 
+    mockGetIdTokenClaims.mockResolvedValue(
+      createIdTokenClaims(Math.floor(Date.now() / 1000) - 600)
+    );
     fireEvent.click(getByRole('checkbox'));
 
     await waitFor(() => {
-      expect(getByText('verified action page')).not.toBeNull();
+      expect(mockSignIn).toHaveBeenCalledTimes(1);
     });
-
-    expect(sessionStorage.getPendingVerifiedAction()).toBe('disable-passkey-prompt');
+    expect(mockSignIn).toHaveBeenCalledWith({
+      redirectUri: 'http://localhost/account',
+      clearTokens: false,
+      extraParams: { acr_values: 'urn:logto:acr:1fa', max_age: '540' },
+    });
     expect(mockUpdateLogtoConfig).not.toHaveBeenCalled();
   });
 
-  it('updates the passkey sign-in skip state directly when already verified', async () => {
-    const { getByRole } = renderPasskeySection({
-      passkeySignInSkipped: false,
-      verificationId: 'verification-id',
-    });
+  it('updates the passkey sign-in skip state directly with a fresh context', async () => {
+    const { getByRole } = renderPasskeySection({ passkeySignInSkipped: false });
 
     await waitFor(() => {
       expect((getByRole('checkbox') as HTMLInputElement).checked).toBe(true);
@@ -217,7 +220,7 @@ describe('<PasskeySection />', () => {
     fireEvent.click(getByRole('checkbox'));
 
     await waitFor(() => {
-      expect(mockUpdateLogtoConfig).toHaveBeenCalledWith('access-token', 'verification-id', {
+      expect(mockUpdateLogtoConfig).toHaveBeenCalledWith('access-token', {
         passkeySignIn: { skipped: true },
       });
     });

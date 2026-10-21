@@ -1,17 +1,6 @@
-import { SignInIdentifier, TemplateType } from '@logto/schemas';
+import { SignInIdentifier } from '@logto/schemas';
 
 import { createAuthenticatedKy } from './base-ky';
-
-export const verifyPassword = async (accessToken: string, password: string) => {
-  return createAuthenticatedKy(accessToken)
-    .post('/api/verifications/password', {
-      json: { password },
-    })
-    .json<{
-      verificationRecordId: string;
-      expiresAt: string;
-    }>();
-};
 
 export const sendEmailVerificationCode = async (accessToken: string, email: string) => {
   return createAuthenticatedKy(accessToken)
@@ -21,7 +10,6 @@ export const sendEmailVerificationCode = async (accessToken: string, email: stri
           type: SignInIdentifier.Email,
           value: email,
         },
-        templateType: TemplateType.UserPermissionValidation,
       },
     })
     .json<{
@@ -38,7 +26,6 @@ export const sendPhoneVerificationCode = async (accessToken: string, phone: stri
           type: SignInIdentifier.Phone,
           value: phone,
         },
-        templateType: TemplateType.UserPermissionValidation,
       },
     })
     .json<{
