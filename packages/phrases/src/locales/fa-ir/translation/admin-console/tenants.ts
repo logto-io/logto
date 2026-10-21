@@ -50,38 +50,13 @@ const tenants = {
     get_fresh_key_button: 'دریافت کلید مجوز تازه',
     replace_button: 'جایگزینی مجوز',
     usage_banner_description:
-      'استفاده این استقرار از محدودیت‌های استفاده پلن میزبانی‌شده شخصی فراتر رفته است. ظرف ۳۰ روز با ما تماس بگیرید تا پلن خود را ارتقا دهید یا استفاده خود را کاهش دهید.',
-    usage_title: 'استفاده',
-    usage_description:
-      'استفاده این استقرار، بر اساس ماه‌های تقویمی UTC در همه مستأجرها به‌جز مستأجر مدیریت.',
-    usage_mau_field: 'کاربران فعال ماهانه',
-    usage_access_tokens_field: 'توکن‌های دسترسی ماهانه',
-    usage_tenants_field: 'مستأجرها',
-    usage_production_deployments_field: 'استقرارهای تولیدی',
-    usage_month_value: '{{month}}: {{value}}',
-    usage_month_to_date_value: '{{month}} تاکنون: {{value}}',
-    usage_limit_value: 'محدودیت: {{value}}',
-    usage_report_only: 'فقط گزارش',
-    usage_over_limit: 'فراتر از محدودیت',
-    usage_unavailable: 'استفاده در حال حاضر در دسترس نیست. ظرف یک ساعت دوباره جمع‌آوری می‌شود.',
-    usage_statement_description:
-      'استفاده ۱۲ ماه کامل گذشته را به‌صورت فایل CSV صادر کنید؛ این فایل از سوابق خود این استقرار تهیه شده و می‌توانید در صورت درخواست Logto آن را ارائه دهید.',
-    usage_statement_export_button: 'صادر کردن گزارش استفاده',
-    usage_statement_month_column: 'ماه',
-    usage_reporting_title: 'گزارش استفاده',
-    usage_reporting_description:
-      'آنچه این استقرار به Logto می‌فرستد. فقط‌خواندنی است: هیچ کلید تغییری در کنسول وجود ندارد.',
-    usage_reporting_enabled: 'فعال',
-    usage_reporting_disabled: 'غیرفعال',
-    usage_reporting_enabled_description:
-      'شمارش‌های تجمیعی استفاده همراه با به‌روزرسانی هفتگی مجوز به Logto ارسال می‌شود. Logto از آن‌ها برای مقایسه استفاده شما با محدودیت‌های پلن استفاده می‌کند. برای غیرفعال کردن، SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED را روی هر نمونه Core تنظیم کنید.',
-    usage_reporting_disabled_description:
-      'گزارش استفاده با متغیر محیطی SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED روی این استقرار غیرفعال شده است. مجوز همچنان به‌روزرسانی می‌شود و هشدارهای استفاده نیز کار می‌کنند.',
-    usage_reporting_fields_title: 'با هر به‌روزرسانی مجوز ارسال می‌شود:',
-    usage_reporting_field_license: 'کلید مجوز و یک شناسه استقرار تصادفی',
-    usage_reporting_field_version: 'نسخه Logto',
-    usage_reporting_field_usage: 'شمارش‌های تجمیعی کاربران فعال ماهانه، توکن‌های دسترسی و مستأجرها',
-    usage_reporting_field_no_pii: 'فقط مجموع‌ها، بدون هیچ داده شخصی',
+      'استفاده این استقرار از محدودیت‌های استفاده پلن میزبانی‌شده شخصی فراتر رفته است:',
+    usage_banner_metric: '{{metric}}: {{value}} (محدودیت {{limit}})',
+    usage_banner_action:
+      'ظرف ۳۰ روز با ما تماس بگیرید تا پلن خود را ارتقا دهید یا استفاده خود را کاهش دهید.',
+    usage_metric_mau: 'کاربران فعال ماهانه',
+    usage_metric_access_tokens: 'توکن‌های دسترسی ماهانه',
+    usage_metric_production_deployments: 'استقرارهای تولیدی',
   },
   members: {
     card_title: 'مدیریت امن‌تر مستأجرها با Logto Cloud',

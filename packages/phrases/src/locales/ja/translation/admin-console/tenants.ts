@@ -49,38 +49,13 @@ const tenants = {
     get_fresh_key_button: '新しいライセンスキーを取得',
     replace_button: 'ライセンスを差し替える',
     usage_banner_description:
-      'このデプロイの使用量は、セルフホストプランの使用量制限を超えています。30 日以内に Logto へ連絡し、プランをアップグレードするか使用量を減らしてください。',
-    usage_title: '使用量',
-    usage_description:
-      'このデプロイの使用量です。UTC の暦月単位で、管理者テナントを除くすべてのテナントを集計します。',
-    usage_mau_field: '月間アクティブユーザー',
-    usage_access_tokens_field: '月間アクセストークン',
-    usage_tenants_field: 'テナント',
-    usage_production_deployments_field: '本番デプロイ',
-    usage_month_value: '{{month}}：{{value}}',
-    usage_month_to_date_value: '{{month}} の現時点：{{value}}',
-    usage_limit_value: '上限：{{value}}',
-    usage_report_only: 'レポートのみ',
-    usage_over_limit: '上限超過',
-    usage_unavailable: '現在、使用量を取得できません。1 時間以内に再収集されます。',
-    usage_statement_description:
-      'このデプロイ自身の記録から作成した、直近 12 か月分の使用量を CSV ファイルとしてエクスポートします。Logto から求められた際に提供できます。',
-    usage_statement_export_button: '使用量レポートをエクスポート',
-    usage_statement_month_column: '月',
-    usage_reporting_title: '使用量のレポート',
-    usage_reporting_description:
-      'このデプロイが Logto に送信する内容です。読み取り専用で、コンソールに切り替えはありません。',
-    usage_reporting_enabled: '有効',
-    usage_reporting_disabled: '無効',
-    usage_reporting_enabled_description:
-      '週次で実行されるライセンス更新時に、集計された使用量が Logto に送信されます。Logto はこのデータを使用量とプランの上限の比較に使用します。無効にするには、すべての Core インスタンスで SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED を設定します。',
-    usage_reporting_disabled_description:
-      'このデプロイでは、SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED 環境変数によって使用量のレポートが無効になっています。ライセンスの更新は続行され、使用量の警告も引き続き機能します。',
-    usage_reporting_fields_title: 'ライセンス更新時に送信される内容：',
-    usage_reporting_field_license: 'ライセンスキーとランダムなデプロイ識別子',
-    usage_reporting_field_version: 'Logto のバージョン',
-    usage_reporting_field_usage: '集計された月間アクティブユーザー、アクセストークン、テナント数',
-    usage_reporting_field_no_pii: '合計値のみで、個人データは含まれません',
+      'このデプロイの使用量は、セルフホストプランの使用量制限を超えています：',
+    usage_banner_metric: '{{metric}}：{{value}}（上限 {{limit}}）',
+    usage_banner_action:
+      '30 日以内に Logto へ連絡し、プランをアップグレードするか使用量を減らしてください。',
+    usage_metric_mau: '月間アクティブユーザー',
+    usage_metric_access_tokens: '月間アクセストークン',
+    usage_metric_production_deployments: '本番デプロイ',
   },
   members: {
     card_title: 'Logto Cloud でテナントをより安全に管理',

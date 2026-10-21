@@ -50,40 +50,13 @@ const tenants = {
     get_fresh_key_button: 'Obtenir une nouvelle clé',
     replace_button: 'Remplacer la licence',
     usage_banner_description:
-      'Ce déploiement dépasse les limites d’utilisation de son offre auto-hébergée. Contactez-nous sous 30 jours pour mettre à niveau votre offre ou réduire votre utilisation.',
-    usage_title: 'UTILISATION',
-    usage_description:
-      'L’utilisation de ce déploiement, comptée en mois calendaires UTC sur tous les locataires sauf le locataire d’administration.',
-    usage_mau_field: 'Utilisateurs actifs mensuels',
-    usage_access_tokens_field: 'Jetons d’accès mensuels',
-    usage_tenants_field: 'Locataires',
-    usage_production_deployments_field: 'Déploiements de production',
-    usage_month_value: '{{month}} : {{value}}',
-    usage_month_to_date_value: '{{month}} à ce jour : {{value}}',
-    usage_limit_value: 'Limite : {{value}}',
-    usage_report_only: 'Rapport uniquement',
-    usage_over_limit: 'Au-delà de la limite',
-    usage_unavailable:
-      'L’utilisation n’est pas disponible pour le moment. Elle sera à nouveau collectée dans l’heure.',
-    usage_statement_description:
-      'Exportez l’utilisation des 12 derniers mois complets au format CSV, établie à partir des enregistrements de ce déploiement, pour la fournir à Logto sur demande.',
-    usage_statement_export_button: 'Exporter le relevé d’utilisation',
-    usage_statement_month_column: 'Mois',
-    usage_reporting_title: 'RAPPORT D’UTILISATION',
-    usage_reporting_description:
-      'Ce que ce déploiement envoie à Logto. Lecture seule : il n’y a pas d’interrupteur dans la console.',
-    usage_reporting_enabled: 'Activé',
-    usage_reporting_disabled: 'Désactivé',
-    usage_reporting_enabled_description:
-      'Les compteurs d’utilisation agrégés sont envoyés à Logto lors de l’actualisation hebdomadaire de la licence. Logto les utilise pour comparer votre utilisation aux limites de votre offre. Pour le désactiver, définissez SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED sur chaque instance Core.',
-    usage_reporting_disabled_description:
-      'Le rapport d’utilisation est désactivé par la variable d’environnement SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED sur ce déploiement. La licence continue d’être actualisée et les avertissements d’utilisation fonctionnent toujours.',
-    usage_reporting_fields_title: 'Envoyé à chaque actualisation de licence :',
-    usage_reporting_field_license: 'La clé de licence et un identifiant de déploiement aléatoire',
-    usage_reporting_field_version: 'La version de Logto',
-    usage_reporting_field_usage:
-      'Compteurs agrégés d’utilisateurs actifs mensuels, de jetons d’accès et de locataires',
-    usage_reporting_field_no_pii: 'Uniquement des totaux, sans données personnelles',
+      'Ce déploiement dépasse les limites d’utilisation de son offre auto-hébergée :',
+    usage_banner_metric: '{{metric}} : {{value}} (limite {{limit}})',
+    usage_banner_action:
+      'Contactez-nous sous 30 jours pour mettre à niveau votre offre ou réduire votre utilisation.',
+    usage_metric_mau: 'Utilisateurs actifs mensuels',
+    usage_metric_access_tokens: 'Jetons d’accès mensuels',
+    usage_metric_production_deployments: 'Déploiements de production',
   },
   members: {
     card_title: 'Gérez vos locataires plus sûrement avec Logto Cloud',

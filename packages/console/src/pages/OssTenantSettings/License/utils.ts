@@ -1,10 +1,5 @@
 import { type AdminConsoleKey, type LogtoErrorCode } from '@logto/phrases';
-import {
-  LicenseEnv,
-  type LicenseUsageMetric,
-  type LicenseUsageStatementMonth,
-  type LicenseUsageWarning,
-} from '@logto/schemas';
+import { LicenseEnv } from '@logto/schemas';
 
 import { selfHostedPlansLink } from '@/consts/external-links';
 import { type License } from '@/types/license';
@@ -93,57 +88,3 @@ export const licenseEnvPhraseKeys = Object.freeze({
   [LicenseEnv.Production]: 'tenants.license.environment_production',
   [LicenseEnv.NonProduction]: 'tenants.license.environment_non_production',
 } as const);
-
-/** The warning of a metric, if the metrics of this deployment exceed its limit. */
-export const getUsageWarning = (
-  warnings: LicenseUsageWarning[] | undefined,
-  metric: LicenseUsageMetric
-) => warnings?.find((warning) => warning.metric === metric);
-
-/**
- * Format a `YYYY-MM` usage month in the Console language, e.g. "October 2026".
- *
- * The month is counted in UTC by Core, so it is formatted in UTC too instead of shifting it into
- * the browser's time zone.
- */
-export const formatUsageMonth = (month: string, locale: string) => {
-  const [year = 0, monthNumber = 1] = month.split('-').map(Number);
-
-  return new Intl.DateTimeFormat(locale, {
-    month: 'long',
-    year: 'numeric',
-    timeZone: 'UTC',
-  }).format(new Date(Date.UTC(year, monthNumber - 1, 1)));
-};
-
-/** The `YYYY-MM` month before `month`, which is the last full month of a usage snapshot. */
-export const getPreviousUsageMonth = (month: string) => {
-  const [year = 0, monthNumber = 1] = month.split('-').map(Number);
-  const previous = new Date(Date.UTC(year, monthNumber - 2, 1));
-
-  return `${previous.getUTCFullYear()}-${String(previous.getUTCMonth() + 1).padStart(2, '0')}`;
-};
-
-const escapeCsvValue = (value: string) =>
-  /[\n",]/.test(value) ? `"${value.replaceAll('"', '""')}"` : value;
-
-/**
- * Build the CSV of a usage statement: one row per full calendar month, oldest first.
- *
- * The headers are passed in so they follow the Console language, while the month and the counts
- * stay machine-readable.
- */
-export const buildUsageStatementCsv = (
-  months: readonly LicenseUsageStatementMonth[],
-  headers: { month: string; mau: string; monthlyAccessTokens: string }
-) =>
-  [
-    [headers.month, headers.mau, headers.monthlyAccessTokens],
-    ...months.map(({ month, mau, monthlyAccessTokens }) => [
-      month,
-      String(mau),
-      String(monthlyAccessTokens),
-    ]),
-  ]
-    .map((row) => row.map((value) => escapeCsvValue(value)).join(','))
-    .join('\n');

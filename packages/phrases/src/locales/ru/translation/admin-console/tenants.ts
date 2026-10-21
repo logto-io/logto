@@ -49,40 +49,13 @@ const tenants = {
     get_fresh_key_button: 'Получить новый лицензионный ключ',
     replace_button: 'Заменить лицензию',
     usage_banner_description:
-      'Использование этого развёртывания превышает лимиты плана для самостоятельного размещения. Свяжитесь с нами в течение 30 дней, чтобы перейти на другой план или сократить использование.',
-    usage_title: 'ИСПОЛЬЗОВАНИЕ',
-    usage_description:
-      'Использование этого развёртывания, подсчитываемое по календарным месяцам UTC по всем арендаторам, кроме административного.',
-    usage_mau_field: 'Месячная активная аудитория',
-    usage_access_tokens_field: 'Токены доступа за месяц',
-    usage_tenants_field: 'Арендаторы',
-    usage_production_deployments_field: 'Производственные развёртывания',
-    usage_month_value: '{{month}}: {{value}}',
-    usage_month_to_date_value: '{{month}} на текущий момент: {{value}}',
-    usage_limit_value: 'Лимит: {{value}}',
-    usage_report_only: 'Только отчёт',
-    usage_over_limit: 'Сверх лимита',
-    usage_unavailable:
-      'Данные об использовании сейчас недоступны. Они будут собраны повторно в течение часа.',
-    usage_statement_description:
-      'Экспортируйте использование за последние 12 полных месяцев в файл CSV, подготовленный по собственным записям этого развёртывания, чтобы предоставить его Logto по запросу.',
-    usage_statement_export_button: 'Экспортировать отчёт об использовании',
-    usage_statement_month_column: 'Месяц',
-    usage_reporting_title: 'ОТЧЁТ ОБ ИСПОЛЬЗОВАНИИ',
-    usage_reporting_description:
-      'Что это развёртывание отправляет в Logto. Только для чтения: в консоли нет переключателя.',
-    usage_reporting_enabled: 'Включено',
-    usage_reporting_disabled: 'Отключено',
-    usage_reporting_enabled_description:
-      'Агрегированные данные об использовании отправляются в Logto при еженедельном обновлении лицензии. Logto использует их для сравнения вашего использования с лимитами плана. Чтобы отключить, задайте SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED на каждом экземпляре Core.',
-    usage_reporting_disabled_description:
-      'Отправка отчётов об использовании отключена переменной окружения SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED на этом развёртывании. Лицензия по-прежнему обновляется, а предупреждения об использовании продолжают работать.',
-    usage_reporting_fields_title: 'Отправляется при каждом обновлении лицензии:',
-    usage_reporting_field_license: 'Ключ лицензии и случайный идентификатор развёртывания',
-    usage_reporting_field_version: 'Версия Logto',
-    usage_reporting_field_usage:
-      'Агрегированные данные: месячная активная аудитория, токены доступа и арендаторы',
-    usage_reporting_field_no_pii: 'Только итоговые значения, без персональных данных',
+      'Использование этого развёртывания превышает лимиты плана для самостоятельного размещения:',
+    usage_banner_metric: '{{metric}}: {{value}} (лимит {{limit}})',
+    usage_banner_action:
+      'Свяжитесь с нами в течение 30 дней, чтобы перейти на другой план или сократить использование.',
+    usage_metric_mau: 'Месячная активная аудитория',
+    usage_metric_access_tokens: 'Токены доступа за месяц',
+    usage_metric_production_deployments: 'Производственные развёртывания',
   },
   members: {
     card_title: 'Управляйте арендаторами безопаснее с Logto Cloud',

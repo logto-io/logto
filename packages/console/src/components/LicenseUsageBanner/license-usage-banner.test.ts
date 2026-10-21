@@ -2,13 +2,13 @@ import {
   licenseUsageBannerDismissDuration,
   parseLicenseUsageBannerDismissedUntil,
   shouldShowLicenseUsageBanner,
+  usageMetricPhraseKeys,
 } from './license-usage-banner';
 
 describe('shouldShowLicenseUsageBanner', () => {
   const now = 1_000_000;
   const base = {
     isCloud: false,
-    isLicensePage: false,
     hasUsageWarnings: true,
     now,
   } as const;
@@ -19,7 +19,6 @@ describe('shouldShowLicenseUsageBanner', () => {
 
   it.each([
     { name: 'Cloud', overrides: { isCloud: true } },
-    { name: 'the License page', overrides: { isLicensePage: true } },
     { name: 'no usage warnings', overrides: { hasUsageWarnings: false } },
   ])('does not show on $name', ({ overrides }) => {
     expect(shouldShowLicenseUsageBanner({ ...base, ...overrides })).toBe(false);
@@ -47,5 +46,15 @@ describe('parseLicenseUsageBannerDismissedUntil', () => {
 describe('licenseUsageBannerDismissDuration', () => {
   it('is 7 days', () => {
     expect(licenseUsageBannerDismissDuration).toBe(7 * 24 * 60 * 60 * 1000);
+  });
+});
+
+describe('usageMetricPhraseKeys', () => {
+  it('names every metric Core can warn about', () => {
+    expect(usageMetricPhraseKeys).toEqual({
+      mau: 'tenants.license.usage_metric_mau',
+      monthlyAccessTokens: 'tenants.license.usage_metric_access_tokens',
+      productionDeployments: 'tenants.license.usage_metric_production_deployments',
+    });
   });
 });

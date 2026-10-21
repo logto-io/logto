@@ -47,39 +47,13 @@ const tenants = {
       '라이선스 유예 기간이 {{graceEndsAt}}에 끝났습니다. 이 배포는 OSS 기본값으로 되돌아갔습니다. Logto에 문의하여 새 라이선스 키를 받고 다시 설치하세요.',
     get_fresh_key_button: '새 라이선스 키 받기',
     replace_button: '라이선스 교체',
-    usage_banner_description:
-      '이 배포의 사용량이 셀프 호스팅 요금제의 사용량 한도를 초과했습니다. 30일 이내에 Logto에 문의하여 요금제를 업그레이드하거나 사용량을 줄이세요.',
-    usage_title: '사용량',
-    usage_description:
-      '이 배포의 사용량으로, 관리자 테넌트를 제외한 모든 테넌트를 UTC 월 단위로 집계합니다.',
-    usage_mau_field: '월간 활성 사용자',
-    usage_access_tokens_field: '월간 액세스 토큰',
-    usage_tenants_field: '테넌트',
-    usage_production_deployments_field: '프로덕션 배포',
-    usage_month_value: '{{month}}: {{value}}',
-    usage_month_to_date_value: '{{month}} 현재까지: {{value}}',
-    usage_limit_value: '한도: {{value}}',
-    usage_report_only: '보고만',
-    usage_over_limit: '한도 초과',
-    usage_unavailable: '지금은 사용량을 확인할 수 없습니다. 한 시간 이내에 다시 수집됩니다.',
-    usage_statement_description:
-      '이 배포 자체의 기록에서 생성한 최근 12개월 전체 사용량을 CSV 파일로 내보냅니다. Logto가 요청할 때 제공할 수 있습니다.',
-    usage_statement_export_button: '사용량 명세서 내보내기',
-    usage_statement_month_column: '월',
-    usage_reporting_title: '사용량 보고',
-    usage_reporting_description:
-      '이 배포가 Logto로 전송하는 내용입니다. 읽기 전용이며 콘솔에는 전환이 없습니다.',
-    usage_reporting_enabled: '사용 중',
-    usage_reporting_disabled: '사용 안 함',
-    usage_reporting_enabled_description:
-      '매주 실행되는 라이선스 갱신 시 집계된 사용량이 Logto로 전송됩니다. Logto는 이 데이터를 사용량과 요금제 한도를 비교하는 데 사용합니다. 끄려면 모든 Core 인스턴스에서 SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED를 설정하세요.',
-    usage_reporting_disabled_description:
-      '이 배포에서는 SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED 환경 변수로 사용량 보고가 비활성화되어 있습니다. 라이선스는 계속 갱신되며 사용량 경고도 계속 작동합니다.',
-    usage_reporting_fields_title: '라이선스 갱신 시 전송되는 항목:',
-    usage_reporting_field_license: '라이선스 키와 임의의 배포 식별자',
-    usage_reporting_field_version: 'Logto 버전',
-    usage_reporting_field_usage: '집계된 월간 활성 사용자, 액세스 토큰, 테넌트 수',
-    usage_reporting_field_no_pii: '합계만 포함되며 개인 데이터는 없습니다',
+    usage_banner_description: '이 배포의 사용량이 셀프 호스팅 요금제의 사용량 한도를 초과했습니다:',
+    usage_banner_metric: '{{metric}}: {{value}} (한도 {{limit}})',
+    usage_banner_action:
+      '30일 이내에 Logto에 문의하여 요금제를 업그레이드하거나 사용량을 줄이세요.',
+    usage_metric_mau: '월간 활성 사용자',
+    usage_metric_access_tokens: '월간 액세스 토큰',
+    usage_metric_production_deployments: '프로덕션 배포',
   },
   members: {
     card_title: 'Logto Cloud로 테넌트를 더 안전하게 관리하세요',

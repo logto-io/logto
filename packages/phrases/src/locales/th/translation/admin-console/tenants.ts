@@ -48,40 +48,12 @@ const tenants = {
       'ระยะเวลาผ่อนผันของใบอนุญาตสิ้นสุดเมื่อ {{graceEndsAt}} การติดตั้งนี้กลับไปใช้ค่าเริ่มต้นของ OSS แล้ว ติดต่อ Logto เพื่อขอคีย์ใบอนุญาตใหม่และติดตั้งอีกครั้ง',
     get_fresh_key_button: 'รับคีย์ใบอนุญาตใหม่',
     replace_button: 'เปลี่ยนใบอนุญาต',
-    usage_banner_description:
-      'การใช้งานของดีพลอยเมนต์นี้เกินขีดจำกัดการใช้งานของแผนโฮสต์เอง โปรดติดต่อเราภายใน 30 วันเพื่ออัปเกรดแผนหรือลดการใช้งาน',
-    usage_title: 'การใช้งาน',
-    usage_description:
-      'การใช้งานของดีพลอยเมนต์นี้ นับตามเดือนปฏิทิน UTC ในทุกเทนแนนต์ ยกเว้นเทนแนนต์ผู้ดูแล',
-    usage_mau_field: 'ผู้ใช้ที่ใช้งานต่อเดือน',
-    usage_access_tokens_field: 'โทเค็นการเข้าถึงรายเดือน',
-    usage_tenants_field: 'เทนแนนต์',
-    usage_production_deployments_field: 'ดีพลอยเมนต์โปรดักชัน',
-    usage_month_value: '{{month}}: {{value}}',
-    usage_month_to_date_value: '{{month}} ถึงปัจจุบัน: {{value}}',
-    usage_limit_value: 'ขีดจำกัด: {{value}}',
-    usage_report_only: 'รายงานเท่านั้น',
-    usage_over_limit: 'เกินขีดจำกัด',
-    usage_unavailable: 'ไม่สามารถดูการใช้งานได้ในขณะนี้ ระบบจะเก็บข้อมูลอีกครั้งภายในหนึ่งชั่วโมง',
-    usage_statement_description:
-      'ส่งออกการใช้งาน 12 เดือนเต็มล่าสุดเป็นไฟล์ CSV ซึ่งจัดทำจากบันทึกของดีพลอยเมนต์นี้เอง เพื่อให้กับ Logto เมื่อมีการร้องขอ',
-    usage_statement_export_button: 'ส่งออกรายงานการใช้งาน',
-    usage_statement_month_column: 'เดือน',
-    usage_reporting_title: 'การรายงานการใช้งาน',
-    usage_reporting_description:
-      'ข้อมูลที่ส่งไปยัง Logto จากดีพลอยเมนต์นี้ เป็นแบบอ่านอย่างเดียว: ไม่มีสวิตช์ในคอนโซล',
-    usage_reporting_enabled: 'เปิดใช้งาน',
-    usage_reporting_disabled: 'ปิดใช้งาน',
-    usage_reporting_enabled_description:
-      'จำนวนการใช้งานแบบรวมจะถูกส่งไปยัง Logto พร้อมกับการรีเฟรชใบอนุญาตรายสัปดาห์ Logto ใช้ข้อมูลนี้เพื่อเปรียบเทียบการใช้งานของคุณกับขีดจำกัดของแผน หากต้องการปิด ให้ตั้งค่า SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED บนทุกอินสแตนซ์ Core',
-    usage_reporting_disabled_description:
-      'การรายงานการใช้งานถูกปิดด้วยตัวแปรสภาพแวดล้อม SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED บนดีพลอยเมนต์นี้ ใบอนุญาตยังคงรีเฟรชและการแจ้งเตือนการใช้งานยังคงทำงาน',
-    usage_reporting_fields_title: 'ส่งพร้อมการรีเฟรชใบอนุญาตแต่ละครั้ง:',
-    usage_reporting_field_license: 'คีย์ใบอนุญาตและตัวระบุการติดตั้งแบบสุ่ม',
-    usage_reporting_field_version: 'เวอร์ชัน Logto',
-    usage_reporting_field_usage:
-      'จำนวนแบบรวมของผู้ใช้ที่ใช้งานต่อเดือน โทเค็นการเข้าถึง และเทนแนนต์',
-    usage_reporting_field_no_pii: 'เฉพาะยอดรวม ไม่มีข้อมูลส่วนบุคคล',
+    usage_banner_description: 'การใช้งานของดีพลอยเมนต์นี้เกินขีดจำกัดการใช้งานของแผนโฮสต์เอง:',
+    usage_banner_metric: '{{metric}}: {{value}} (ขีดจำกัด {{limit}})',
+    usage_banner_action: 'โปรดติดต่อเราภายใน 30 วันเพื่ออัปเกรดแผนหรือลดการใช้งาน',
+    usage_metric_mau: 'ผู้ใช้ที่ใช้งานต่อเดือน',
+    usage_metric_access_tokens: 'โทเค็นการเข้าถึงรายเดือน',
+    usage_metric_production_deployments: 'ดีพลอยเมนต์โปรดักชัน',
   },
   members: {
     card_title: 'จัดการเทนแนนต์ได้อย่างปลอดภัยยิ่งขึ้นด้วย Logto Cloud',

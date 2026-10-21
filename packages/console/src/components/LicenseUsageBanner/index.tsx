@@ -1,46 +1,45 @@
 import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { TenantSettingsTabs, storageKeys } from '@/consts';
+import { storageKeys } from '@/consts';
 import { isCloud } from '@/consts/env';
 import { buildOfficialWebsiteContactPageUrl } from '@/consts/external-links';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import InlineNotification from '@/ds-components/InlineNotification';
-import useTenantPathname from '@/hooks/use-tenant-pathname';
+import { formatNumberWithComma } from '@/utils/number';
 
 import styles from './index.module.scss';
 import {
   licenseUsageBannerDismissDuration,
   parseLicenseUsageBannerDismissedUntil,
   shouldShowLicenseUsageBanner,
+  usageMetricPhraseKeys,
 } from './license-usage-banner';
 
-const licensePage = `/tenant-settings/${TenantSettingsTabs.License}`;
 const contactUrl = buildOfficialWebsiteContactPageUrl('self-hosted-license-usage');
 
 /**
  * Warn that this deployment is above the usage limits of its license, which the self-hosted terms
  * ask the customer to settle within 30 days by upgrading or reducing usage.
  *
- * The warnings carry the metrics Logto evaluates locally or counts in Cloud, such as too many
- * production deployments, so one banner covers every metric without listing them. Usage is
- * evaluated locally too, so the banner works offline and with usage reporting disabled.
+ * The warnings carry the metric, the limit and the value, so the banner names what is over instead
+ * of only saying that something is. Usage is evaluated locally too, so the banner works offline and
+ * with usage reporting disabled; with no warning there is no usage UI at all.
  */
 function LicenseUsageBanner() {
   const { license } = useContext(SubscriptionDataContext);
-  const { match } = useTenantPathname();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [dismissedUntil, setDismissedUntil] = useState(() =>
     parseLicenseUsageBannerDismissedUntil(
       localStorage.getItem(storageKeys.licenseUsageBannerDismissedUntil)
     )
   );
+  const warnings = license?.usageWarnings ?? [];
 
   if (
     !shouldShowLicenseUsageBanner({
       isCloud,
-      isLicensePage: match(licensePage),
-      hasUsageWarnings: Boolean(license?.usageWarnings?.length),
+      hasUsageWarnings: warnings.length > 0,
       dismissedUntil,
       now: Date.now(),
     })
@@ -64,7 +63,23 @@ function LicenseUsageBanner() {
         hrefTargetBlank="noopener"
         onDismiss={onDismiss}
       >
-        {t('tenants.license.usage_banner_description')}
+        <div>{t('tenants.license.usage_banner_description')}</div>
+        <ul className={styles.metrics}>
+          {warnings.map(({ metric, value, limit }) => {
+            const metricPhraseKey = usageMetricPhraseKeys[metric];
+
+            return (
+              <li key={metric}>
+                {t('tenants.license.usage_banner_metric', {
+                  metric: metricPhraseKey ? t(metricPhraseKey) : metric,
+                  value: formatNumberWithComma(value),
+                  limit: formatNumberWithComma(limit),
+                })}
+              </li>
+            );
+          })}
+        </ul>
+        <div>{t('tenants.license.usage_banner_action')}</div>
       </InlineNotification>
     </div>
   );

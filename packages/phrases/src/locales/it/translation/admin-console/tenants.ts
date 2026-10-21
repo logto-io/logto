@@ -51,41 +51,13 @@ const tenants = {
     get_fresh_key_button: 'Ottieni una nuova chiave',
     replace_button: 'Sostituisci licenza',
     usage_banner_description:
-      'Questa distribuzione supera i limiti di utilizzo del suo piano self-hosted. Contattaci entro 30 giorni per aggiornare il piano o ridurre il tuo utilizzo.',
-    usage_title: 'UTILIZZO',
-    usage_description:
-      'L’utilizzo di questa distribuzione, conteggiato in mesi di calendario UTC su tutti i tenant tranne il tenant di amministrazione.',
-    usage_mau_field: 'Utenti attivi mensili',
-    usage_access_tokens_field: 'Token di accesso mensili',
-    usage_tenants_field: 'Tenant',
-    usage_production_deployments_field: 'Distribuzioni di produzione',
-    usage_month_value: '{{month}}: {{value}}',
-    usage_month_to_date_value: '{{month}} finora: {{value}}',
-    usage_limit_value: 'Limite: {{value}}',
-    usage_report_only: 'Solo report',
-    usage_over_limit: 'Oltre il limite',
-    usage_unavailable:
-      'L’utilizzo non è disponibile al momento. Verrà raccolto di nuovo entro un’ora.',
-    usage_statement_description:
-      'Esporta l’utilizzo degli ultimi 12 mesi completi come file CSV, ricavato dai registri di questa distribuzione, da fornire a Logto su richiesta.',
-    usage_statement_export_button: 'Esporta dichiarazione di utilizzo',
-    usage_statement_month_column: 'Mese',
-    usage_reporting_title: 'REPORT DI UTILIZZO',
-    usage_reporting_description:
-      'Ciò che questa distribuzione invia a Logto. È di sola lettura: non c’è alcun interruttore nella console.',
-    usage_reporting_enabled: 'Attivo',
-    usage_reporting_disabled: 'Disattivato',
-    usage_reporting_enabled_description:
-      'I conteggi aggregati di utilizzo vengono inviati a Logto con l’aggiornamento settimanale della licenza. Logto li usa per confrontare il tuo utilizzo con i limiti del piano. Per disattivarlo, imposta SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED su ogni istanza Core.',
-    usage_reporting_disabled_description:
-      'Il report di utilizzo è disattivato dalla variabile d’ambiente SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED su questa distribuzione. La licenza continua ad aggiornarsi e gli avvisi di utilizzo continuano a funzionare.',
-    usage_reporting_fields_title: 'Inviato a ogni aggiornamento della licenza:',
-    usage_reporting_field_license:
-      'La chiave di licenza e un identificatore di distribuzione casuale',
-    usage_reporting_field_version: 'La versione di Logto',
-    usage_reporting_field_usage:
-      'Conteggi aggregati di utenti attivi mensili, token di accesso e tenant',
-    usage_reporting_field_no_pii: 'Solo totali, senza dati personali',
+      'Questa distribuzione supera i limiti di utilizzo del suo piano self-hosted:',
+    usage_banner_metric: '{{metric}}: {{value}} (limite {{limit}})',
+    usage_banner_action:
+      'Contattaci entro 30 giorni per aggiornare il piano o ridurre il tuo utilizzo.',
+    usage_metric_mau: 'Utenti attivi mensili',
+    usage_metric_access_tokens: 'Token di accesso mensili',
+    usage_metric_production_deployments: 'Distribuzioni di produzione',
   },
   members: {
     card_title: 'Gestisci i tenant in modo più sicuro con Logto Cloud',

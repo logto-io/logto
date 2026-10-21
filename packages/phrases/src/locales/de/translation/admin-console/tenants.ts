@@ -50,39 +50,13 @@ const tenants = {
     get_fresh_key_button: 'Neuen Lizenzschlüssel abrufen',
     replace_button: 'Lizenz ersetzen',
     usage_banner_description:
-      'Diese Bereitstellung überschreitet die Nutzungslimits ihres Self-Hosted-Plans. Kontaktiere uns innerhalb von 30 Tagen, um deinen Plan zu upgraden oder deine Nutzung zu reduzieren.',
-    usage_title: 'NUTZUNG',
-    usage_description:
-      'Die Nutzung dieser Bereitstellung, gezählt in UTC-Kalendermonaten über alle Mandanten außer dem Admin-Mandanten.',
-    usage_mau_field: 'Monatlich aktive Nutzer',
-    usage_access_tokens_field: 'Monatliche Zugriffstoken',
-    usage_tenants_field: 'Mandanten',
-    usage_production_deployments_field: 'Produktionsbereitstellungen',
-    usage_month_value: '{{month}}: {{value}}',
-    usage_month_to_date_value: '{{month}} bisher: {{value}}',
-    usage_limit_value: 'Limit: {{value}}',
-    usage_report_only: 'Nur Bericht',
-    usage_over_limit: 'Über dem Limit',
-    usage_unavailable:
-      'Die Nutzung ist derzeit nicht verfügbar. Sie wird innerhalb einer Stunde erneut erfasst.',
-    usage_statement_description:
-      'Exportiere die Nutzung der letzten 12 vollen Monate als CSV-Datei, erstellt aus den eigenen Aufzeichnungen dieser Bereitstellung, um sie Logto auf Anfrage bereitzustellen.',
-    usage_statement_export_button: 'Nutzungsnachweis exportieren',
-    usage_statement_month_column: 'Monat',
-    usage_reporting_title: 'NUTZUNGSBERICHT',
-    usage_reporting_description:
-      'Was diese Bereitstellung an Logto sendet. Schreibgeschützt: In der Konsole gibt es keinen Schalter.',
-    usage_reporting_enabled: 'Aktiviert',
-    usage_reporting_disabled: 'Deaktiviert',
-    usage_reporting_enabled_description:
-      'Aggregierte Nutzungszahlen werden mit der wöchentlichen Lizenzaktualisierung an Logto gesendet. Logto vergleicht sie mit den Limits deines Plans. Zum Deaktivieren setze SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED auf jeder Core-Instanz.',
-    usage_reporting_disabled_description:
-      'Die Nutzungsberichterstattung ist durch die Umgebungsvariable SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED auf dieser Bereitstellung deaktiviert. Die Lizenz wird weiterhin aktualisiert, und Nutzungswarnungen funktionieren weiterhin.',
-    usage_reporting_fields_title: 'Wird bei jeder Lizenzaktualisierung gesendet:',
-    usage_reporting_field_license: 'Der Lizenzschlüssel und eine zufällige Bereitstellungskennung',
-    usage_reporting_field_version: 'Die Logto-Version',
-    usage_reporting_field_usage: 'Aggregierte monatlich aktive Nutzer, Zugriffstoken und Mandanten',
-    usage_reporting_field_no_pii: 'Nur Gesamtsummen, keine personenbezogenen Daten',
+      'Diese Bereitstellung überschreitet die Nutzungslimits ihres Self-Hosted-Plans:',
+    usage_banner_metric: '{{metric}}: {{value}} (Limit {{limit}})',
+    usage_banner_action:
+      'Kontaktiere uns innerhalb von 30 Tagen, um deinen Plan zu upgraden oder deine Nutzung zu reduzieren.',
+    usage_metric_mau: 'Monatlich aktive Nutzer',
+    usage_metric_access_tokens: 'Monatliche Zugriffstoken',
+    usage_metric_production_deployments: 'Produktionsbereitstellungen',
   },
   members: {
     card_title: 'Verwalten Sie Mandanten sicherer mit Logto Cloud',

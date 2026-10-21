@@ -49,41 +49,13 @@ const tenants = {
     get_fresh_key_button: 'Obter uma nova chave de licença',
     replace_button: 'Substituir licença',
     usage_banner_description:
-      'Esta implementação ultrapassa os limites de utilização do seu plano self-hosted. Contacte-nos no prazo de 30 dias para atualizar o plano ou reduzir a utilização.',
-    usage_title: 'UTILIZAÇÃO',
-    usage_description:
-      'A utilização desta implementação, contada em meses de calendário UTC em todos os inquilinos, exceto o inquilino de administração.',
-    usage_mau_field: 'Utilizadores ativos mensais',
-    usage_access_tokens_field: 'Tokens de acesso mensais',
-    usage_tenants_field: 'Inquilinos',
-    usage_production_deployments_field: 'Implementações de produção',
-    usage_month_value: '{{month}}: {{value}}',
-    usage_month_to_date_value: '{{month}} até agora: {{value}}',
-    usage_limit_value: 'Limite: {{value}}',
-    usage_report_only: 'Apenas relatório',
-    usage_over_limit: 'Acima do limite',
-    usage_unavailable:
-      'A utilização não está disponível neste momento. Será recolhida novamente dentro de uma hora.',
-    usage_statement_description:
-      'Exporte a utilização dos últimos 12 meses completos como um ficheiro CSV, preparado a partir dos registos desta implementação, para fornecer à Logto quando solicitado.',
-    usage_statement_export_button: 'Exportar declaração de utilização',
-    usage_statement_month_column: 'Mês',
-    usage_reporting_title: 'RELATÓRIO DE UTILIZAÇÃO',
-    usage_reporting_description:
-      'O que esta implementação envia para a Logto. É só de leitura: não existe nenhuma opção na consola.',
-    usage_reporting_enabled: 'Ativado',
-    usage_reporting_disabled: 'Desativado',
-    usage_reporting_enabled_description:
-      'As contagens agregadas de utilização são enviadas para a Logto com a atualização semanal da licença. A Logto utiliza-as para comparar a sua utilização com os limites do plano. Para o desativar, defina SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED em cada instância Core.',
-    usage_reporting_disabled_description:
-      'O relatório de utilização está desativado pela variável de ambiente SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED nesta implementação. A licença continua a ser atualizada e os avisos de utilização continuam a funcionar.',
-    usage_reporting_fields_title: 'Enviado a cada atualização da licença:',
-    usage_reporting_field_license:
-      'A chave de licença e um identificador de implementação aleatório',
-    usage_reporting_field_version: 'A versão do Logto',
-    usage_reporting_field_usage:
-      'Contagens agregadas de utilizadores ativos mensais, tokens de acesso e inquilinos',
-    usage_reporting_field_no_pii: 'Apenas totais, sem dados pessoais',
+      'Esta implementação ultrapassa os limites de utilização do seu plano self-hosted:',
+    usage_banner_metric: '{{metric}}: {{value}} (limite {{limit}})',
+    usage_banner_action:
+      'Contacte-nos no prazo de 30 dias para atualizar o plano ou reduzir a utilização.',
+    usage_metric_mau: 'Utilizadores ativos mensais',
+    usage_metric_access_tokens: 'Tokens de acesso mensais',
+    usage_metric_production_deployments: 'Implementações de produção',
   },
   members: {
     card_title: 'Gira inquilinos com mais segurança com o Logto Cloud',

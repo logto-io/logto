@@ -24,15 +24,7 @@ const license: License = {
   installedAt: '2026-09-01T00:00:00.000Z',
   lastRefreshedAt: '2026-10-01T00:00:00.000Z',
   graceEndsAt: '2026-10-31T00:00:00.000Z',
-  usageLimits: { mau: 50_000 },
-  usage: {
-    month: '2026-10',
-    mau: { lastMonth: 60_000, monthToDate: 10_000 },
-    monthlyAccessTokens: { lastMonth: 1000, monthToDate: 100 },
-    tenants: 2,
-  },
   usageWarnings: [{ metric: LicenseUsageMetric.Mau, limit: 50_000, value: 60_000 }],
-  usageReportingEnabled: true,
 };
 
 function Preview({
@@ -61,8 +53,9 @@ function Preview({
   );
 }
 
-const usageWarningCopy =
-  'This deployment is above the usage limits of its self-hosted plan. Contact us within 30 days to upgrade your plan or reduce your usage.';
+const warningIntro = 'This deployment is above the usage limits of its self-hosted plan:';
+const warningAction = 'Contact us within 30 days to upgrade your plan or reduce your usage.';
+const mauWarning = 'Monthly active users: 60,000 (limit 50,000)';
 
 describe('LicenseUsageBanner', () => {
   beforeAll(() => {
@@ -86,21 +79,12 @@ describe('LicenseUsageBanner', () => {
     expect(container.textContent).toBe('');
   });
 
-  it.each([
-    { metric: LicenseUsageMetric.Mau, value: 60_000 },
-    { metric: LicenseUsageMetric.ProductionDeployments, value: 2 },
-    { metric: LicenseUsageMetric.MonthlyAccessTokens, value: 60_000 },
-  ])('warns for the $metric metric with a Contact us action', ({ metric, value }) => {
-    render(
-      <Preview
-        installedLicense={{
-          ...license,
-          usageWarnings: [{ metric, limit: 1, value }],
-        }}
-      />
-    );
+  it('names the exceeded metric with its value and limit', () => {
+    render(<Preview installedLicense={license} />);
 
-    expect(screen.getByText(usageWarningCopy)).not.toBeNull();
+    expect(screen.getByText(warningIntro)).not.toBeNull();
+    expect(screen.getByText(mauWarning)).not.toBeNull();
+    expect(screen.getByText(warningAction)).not.toBeNull();
 
     const contact = screen.getByRole('link', { name: 'Contact us' });
     expect(contact.getAttribute('href')).toContain('https://logto.io/contact');
@@ -108,13 +92,62 @@ describe('LicenseUsageBanner', () => {
     expect(contact.getAttribute('target')).toBe('_blank');
   });
 
+  it.each([
+    {
+      metric: LicenseUsageMetric.ProductionDeployments,
+      limit: 1,
+      value: 2,
+      message: 'Production deployments: 2 (limit 1)',
+    },
+    {
+      metric: LicenseUsageMetric.MonthlyAccessTokens,
+      limit: 50_000,
+      value: 60_000,
+      message: 'Monthly access tokens: 60,000 (limit 50,000)',
+    },
+  ])('names the $metric metric', ({ metric, limit, value, message }) => {
+    render(
+      <Preview installedLicense={{ ...license, usageWarnings: [{ metric, limit, value }] }} />
+    );
+    expect(screen.getByText(message)).not.toBeNull();
+  });
+
+  it('lists every exceeded metric', () => {
+    render(
+      <Preview
+        installedLicense={{
+          ...license,
+          usageWarnings: [
+            { metric: LicenseUsageMetric.Mau, limit: 50_000, value: 60_000 },
+            { metric: LicenseUsageMetric.ProductionDeployments, limit: 1, value: 2 },
+          ],
+        }}
+      />
+    );
+
+    expect(screen.getByText(mauWarning)).not.toBeNull();
+    expect(screen.getByText('Production deployments: 2 (limit 1)')).not.toBeNull();
+  });
+
+  it('falls back to the raw metric name for an unknown warning', () => {
+    render(
+      <Preview
+        installedLicense={{
+          ...license,
+          usageWarnings: [{ metric: 'futureMetric', limit: 1, value: 2 }],
+        }}
+      />
+    );
+    expect(screen.getByText('futureMetric: 2 (limit 1)')).not.toBeNull();
+  });
+
   it('dismisses the banner for 7 days', () => {
     const { container } = render(<Preview installedLicense={license} />);
-    expect(screen.getByText(usageWarningCopy)).not.toBeNull();
+    expect(screen.getByText(mauWarning)).not.toBeNull();
 
     fireEvent.click(screen.getByRole('button', { name: 'Close' }));
 
-    expect(screen.queryByText(usageWarningCopy)).toBeNull();
+    expect(screen.queryByText(mauWarning)).toBeNull();
     expect(localStorage.getItem(storageKeys.licenseUsageBannerDismissedUntil)).toBe(
       String(Date.now() + licenseUsageBannerDismissDuration)
     );
@@ -128,7 +161,7 @@ describe('LicenseUsageBanner', () => {
     localStorage.setItem(storageKeys.licenseUsageBannerDismissedUntil, String(Date.now() + offset));
 
     render(<Preview installedLicense={license} />);
-    expect(Boolean(screen.queryByText(usageWarningCopy))).toBe(offset < 0);
+    expect(Boolean(screen.queryByText(mauWarning))).toBe(offset < 0);
   });
 
   it('does not warn on Cloud', () => {
@@ -137,19 +170,19 @@ describe('LicenseUsageBanner', () => {
     expect(container.textContent).toBe('');
   });
 
-  it('does not duplicate the usage details on the License page', () => {
+  it('still warns on the License page, which has no usage UI of its own', () => {
     render(<Preview installedLicense={license} path="/console/tenant-settings/license" />);
     expect(screen.getByText('License page')).not.toBeNull();
-    expect(screen.queryByText(usageWarningCopy)).toBeNull();
+    expect(screen.getByText(mauWarning)).not.toBeNull();
   });
 
   it('clears the warning when the usage recovers', () => {
     const { rerender } = render(<Preview installedLicense={license} />);
-    expect(screen.getByText(usageWarningCopy)).not.toBeNull();
+    expect(screen.getByText(mauWarning)).not.toBeNull();
 
     act(() => {
       rerender(<Preview installedLicense={{ ...license, usageWarnings: [] }} />);
     });
-    expect(screen.queryByText(usageWarningCopy)).toBeNull();
+    expect(screen.queryByText(mauWarning)).toBeNull();
   });
 });
