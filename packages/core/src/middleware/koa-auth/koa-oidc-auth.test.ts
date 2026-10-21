@@ -44,6 +44,14 @@ const createTenantWithVerificationRecord = (
     },
   } as unknown as Partial2<Queries>);
 
+/** A tenant whose lookup misses, as it does for an unknown or an expired record. */
+const createTenantWithoutVerificationRecord = () =>
+  new MockTenant(provider, {
+    verificationRecords: {
+      findActiveVerificationRecordById: jest.fn(),
+    },
+  } as unknown as Partial2<Queries>);
+
 afterEach(() => {
   Sinon.restore();
 });
@@ -241,6 +249,49 @@ describe('koaOidcAuth middleware', () => {
         registrationRpId: 'logto.test',
       })
     )(ctx, next);
+
+    expect(ctx.auth.identityVerified).toBe(false);
+  });
+
+  /** A verified password record, which is accepted unless the case overrides what invalidates it. */
+  const verifiedPasswordRecord = {
+    type: VerificationType.Password,
+    identifier: {
+      type: AdditionalIdentifier.UserId,
+      value: mockAccessToken.accountId,
+    },
+    verified: true,
+  };
+
+  it.each([
+    {
+      name: 'a record that belongs to another user',
+      tenant: () => createTenantWithVerificationRecord(verifiedPasswordRecord, 'another-user'),
+    },
+    {
+      name: 'an unverified record',
+      tenant: () =>
+        createTenantWithVerificationRecord({
+          ...verifiedPasswordRecord,
+          verified: false,
+        }),
+    },
+    {
+      // An expired record never reaches the middleware: the query filters on `expires_at > now()`.
+      name: 'a record the query no longer returns',
+      tenant: () => createTenantWithoutVerificationRecord(),
+    },
+  ])('should not set identityVerified with $name', async ({ tenant }) => {
+    ctx.request = {
+      ...ctx.request,
+      headers: {
+        authorization: 'Bearer access_token',
+        [verificationRecordIdHeader]: 'verification-record-id',
+      },
+    };
+    Sinon.stub(provider.AccessToken, 'find').resolves(mockAccessToken);
+
+    await koaOidcAuth(tenant())(ctx, next);
 
     expect(ctx.auth.identityVerified).toBe(false);
   });

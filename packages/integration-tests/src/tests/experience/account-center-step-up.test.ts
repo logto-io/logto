@@ -15,9 +15,18 @@ import { logtoUrl } from '#src/constants.js';
 import { clearConnectorsByTypes, setSocialConnector } from '#src/helpers/connector.js';
 import { createDefaultTenantUserWithPassword } from '#src/helpers/profile.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
-import { devFeatureTest, generateUsername, waitFor } from '#src/utils.js';
+import {
+  devFeatureTest,
+  generateEmail,
+  generatePassword,
+  generateUsername,
+  waitFor,
+} from '#src/utils.js';
 
 const accountUrl = (pathname: string) => appendPath(new URL(logtoUrl), 'account', pathname);
+
+/** Account Center's proactive `max_age`; see `authenticationFreshnessMaxAgeSeconds`. */
+const proactiveMaxAge = '540';
 
 const waitForUsernameRemoval = async (userId: string) => {
   const deadline = Date.now() + 10_000;
@@ -33,6 +42,105 @@ const waitForUsernameRemoval = async (userId: string) => {
   }
 
   return user;
+};
+
+/** Username and password only; no social connector is offered on the sign-in page. */
+const usePasswordSignIn = async () =>
+  updateSignInExperience({
+    signInMode: SignInMode.SignIn,
+    signIn: {
+      methods: [
+        {
+          identifier: SignInIdentifier.Username,
+          password: true,
+          verificationCode: false,
+          isPasswordPrimary: true,
+        },
+      ],
+    },
+    socialSignInConnectorTargets: [],
+    mfa: { factors: [], policy: MfaPolicy.UserControlled },
+  });
+
+/**
+ * Password and social sign-in. A user who only has a social identity has no Logto-verifiable first
+ * factor, so a step-up can only reach `1fa` by establishing a password after re-running the linked
+ * social connector as subject proof.
+ */
+const usePasswordAndSocialSignIn = async () =>
+  updateSignInExperience({
+    signInMode: SignInMode.SignIn,
+    signIn: {
+      methods: [
+        {
+          identifier: SignInIdentifier.Username,
+          password: true,
+          verificationCode: false,
+          isPasswordPrimary: true,
+        },
+      ],
+    },
+    socialSignInConnectorTargets: ['mock-social'],
+    mfa: { factors: [], policy: MfaPolicy.UserControlled },
+  });
+
+/**
+ * The requests the Account Center page made, for assertions on the proof and the resume.
+ *
+ * The arrays are appended to from the page's request listener, which is the only way Puppeteer
+ * exposes them; they are read after the flow finishes.
+ */
+/* eslint-disable @silverhand/fp/no-mutating-methods -- collector arrays owned by the listener */
+const recordRequests = (experience: ExpectExperience) => {
+  const authorizationUrls: string[] = [];
+  const accountApiRequests: Array<{ url: string; headers: Record<string, string> }> = [];
+  const verificationApiUrls: string[] = [];
+
+  experience.page.on('request', (request) => {
+    const url = request.url();
+
+    if (url.includes('/oidc/auth')) {
+      authorizationUrls.push(url);
+    }
+
+    if (url.includes('/api/verifications/')) {
+      verificationApiUrls.push(url);
+    }
+
+    if (url.includes('/api/my-account/')) {
+      accountApiRequests.push({ url, headers: request.headers() });
+    }
+  });
+
+  return { authorizationUrls, accountApiRequests, verificationApiUrls };
+};
+/* eslint-enable @silverhand/fp/no-mutating-methods */
+
+/** Poll until `condition` holds; throw with `description` when it never does. */
+const waitForCondition = async (condition: () => boolean, description: string) => {
+  const deadline = Date.now() + 30_000;
+
+  while (!condition()) {
+    if (Date.now() > deadline) {
+      throw new Error(`Timed out waiting for ${description}`);
+    }
+
+    // eslint-disable-next-line no-await-in-loop
+    await waitFor(100);
+  }
+};
+
+const signInWithPassword = async (
+  experience: ExpectExperience,
+  pathname: string,
+  { username, password }: { username: string; password: string }
+) => {
+  await experience.startWith(accountUrl(pathname), 'sign-in');
+  await experience.toFillForm(
+    { identifier: username, password },
+    { submit: true, shouldNavigate: false }
+  );
+  await experience.waitForUrl(accountUrl(pathname));
 };
 
 /**
@@ -71,24 +179,12 @@ devFeatureTest.describe('Account Center OIDC step-up', () => {
     await experience.startWith(accountUrl(pathname), 'sign-in');
     await experience.toProcessSocialSignIn({ socialUserId });
     await experience.waitForUrl(accountUrl(pathname));
+
+    return socialUserId;
   };
 
   it('resumes the pending action once after the step-up', async () => {
-    await updateSignInExperience({
-      signInMode: SignInMode.SignIn,
-      signIn: {
-        methods: [
-          {
-            identifier: SignInIdentifier.Username,
-            password: true,
-            verificationCode: false,
-            isPasswordPrimary: true,
-          },
-        ],
-      },
-      socialSignInConnectorTargets: ['mock-social'],
-      mfa: { factors: [], policy: MfaPolicy.UserControlled },
-    });
+    await usePasswordAndSocialSignIn();
     const { user, password } = await createDefaultTenantUserWithPassword();
     const experience = new ExpectExperience(await browser.newPage());
 
@@ -112,36 +208,255 @@ devFeatureTest.describe('Account Center OIDC step-up', () => {
   });
 
   it('loads sessions directly after a fresh password sign-in', async () => {
-    await updateSignInExperience({
-      signInMode: SignInMode.SignIn,
-      signIn: {
-        methods: [
-          {
-            identifier: SignInIdentifier.Username,
-            password: true,
-            verificationCode: false,
-            isPasswordPrimary: true,
-          },
-        ],
-      },
-      socialSignInConnectorTargets: [],
-      mfa: { factors: [], policy: MfaPolicy.UserControlled },
-    });
+    await usePasswordSignIn();
     const { user, username, password } = await createDefaultTenantUserWithPassword();
     const context = await browser.createBrowserContext();
     const experience = new ExpectExperience(await context.newPage());
 
     try {
-      await experience.startWith(accountUrl('sessions'), 'sign-in');
-      await experience.toFillForm(
-        { identifier: username, password },
-        { submit: true, shouldNavigate: false }
-      );
-      await experience.waitForUrl(accountUrl('sessions'));
+      await signInWithPassword(experience, 'sessions', { username, password });
 
       // The fresh `1fa` context loads the protected list without a Manage click.
       await expect(experience.page).toMatchElement('span', { text: 'Current session' });
       await expect(experience.page).not.toMatchElement('button', { text: 'Manage' });
+    } finally {
+      await context.close();
+      await deleteUser(user.id);
+    }
+  });
+
+  it('loads trusted devices directly after a fresh password sign-in', async () => {
+    await usePasswordSignIn();
+    const { user, username, password } = await createDefaultTenantUserWithPassword();
+    const context = await browser.createBrowserContext();
+    const experience = new ExpectExperience(await context.newPage());
+
+    try {
+      const requests = recordRequests(experience);
+      await signInWithPassword(experience, 'security', { username, password });
+
+      // The trusted devices section auto-loads from the fresh context instead of offering Manage.
+      await expect(experience.page).toMatchElement('div', { text: 'No trusted devices.' });
+      expect(requests.verificationApiUrls).toEqual([]);
+      expect(
+        requests.accountApiRequests.filter(({ headers }) => 'logto-verification-id' in headers)
+      ).toEqual([]);
+    } finally {
+      await context.close();
+      await deleteUser(user.id);
+    }
+  });
+
+  it('starts a step-up from an RFC 9470 challenge and resumes the action', async () => {
+    await usePasswordSignIn();
+    const { user, username, password } = await createDefaultTenantUserWithPassword();
+    const context = await browser.createBrowserContext();
+    const experience = new ExpectExperience(await context.newPage());
+
+    // What the Account API answers once the elevated token ages out. The first read after the
+    // page loads is challenged; every later one is served normally, so the resume can succeed.
+    // eslint-disable-next-line @silverhand/fp/no-let -- the interceptor answers exactly one request
+    let isChallengePending = true;
+    const challenge =
+      'Bearer error="insufficient_user_authentication", ' +
+      'error_description="Recent user authentication is required", ' +
+      'acr_values="urn:logto:acr:1fa", max_age="600"';
+
+    try {
+      const requests = recordRequests(experience);
+      await experience.page.setRequestInterception(true);
+      experience.page.on('request', (request) => {
+        if (isChallengePending && request.url().endsWith('/api/my-account/trusted-devices')) {
+          // eslint-disable-next-line @silverhand/fp/no-mutation -- one-shot interceptor state
+          isChallengePending = false;
+          void request.respond({
+            status: 401,
+            contentType: 'application/json',
+            headers: { 'WWW-Authenticate': challenge },
+            body: JSON.stringify({
+              code: 'verification_record.permission_denied',
+              message: 'Permission denied, please re-authenticate.',
+            }),
+          });
+          return;
+        }
+
+        void request.continue();
+      });
+
+      await signInWithPassword(experience, 'security', { username, password });
+
+      // The challenged read starts a step-up; the resumed read is the second trusted devices one.
+      const trustedDeviceReads = () =>
+        requests.accountApiRequests.filter(({ url }) => url.includes('/trusted-devices'));
+      await waitForCondition(
+        () => requests.authorizationUrls.some((url) => url.includes('acr_values')),
+        'the step-up authorization started from the challenge'
+      );
+      await waitForCondition(
+        () => trustedDeviceReads().length >= 2,
+        'the resumed trusted devices read'
+      );
+
+      await experience.waitForUrl(accountUrl('security'));
+      await expect(experience.page).toMatchElement('div', { text: 'No trusted devices.' });
+
+      const challengeAuthorizationUrl = requests.authorizationUrls.find((url) =>
+        url.includes('acr_values')
+      );
+      const { searchParams } = new URL(challengeAuthorizationUrl ?? '');
+      // The challenge values are what the client requests, not Account Center's own defaults.
+      expect(searchParams.get('acr_values')).toBe('urn:logto:acr:1fa');
+      expect(searchParams.get('max_age')).toBe('600');
+    } finally {
+      await context.close();
+      await deleteUser(user.id);
+    }
+  });
+
+  it('starts a new step-up when the elevated token ages out', async () => {
+    await usePasswordSignIn();
+    // The primary email stays after the removal, so the username is not the last identifier.
+    const { user, username, password } = await createDefaultTenantUserWithPassword({
+      primaryEmail: generateEmail(),
+    });
+    const context = await browser.createBrowserContext();
+    const experience = new ExpectExperience(await context.newPage());
+
+    try {
+      const requests = recordRequests(experience);
+      await signInWithPassword(experience, 'security', { username, password });
+
+      // Age the local clock past Account Center's freshness window and trigger an inline action.
+      // The server's session is still fresh, so the authorization completes without a prompt;
+      // what this asserts is that Account Center asked for `1fa` again and resumed the action.
+      await experience.page.evaluate(() => {
+        const { now } = Date;
+        // eslint-disable-next-line @silverhand/fp/no-mutation -- age the page's clock for this test
+        Date.now = () => now() + 600_000;
+      });
+
+      await experience.toClickButton('Remove', false);
+      await experience.toClick('[role=dialog] button', 'Remove', false);
+
+      await experience.waitForUrl(accountUrl('security'));
+      await expect(waitForUsernameRemoval(user.id)).resolves.toHaveProperty('username', null);
+
+      // The sign-in itself starts an authorization; the step-up one is the one asking for `1fa`.
+      const authorizationUrl = requests.authorizationUrls.find((url) => url.includes('acr_values'));
+      expect(authorizationUrl).toBeTruthy();
+      const { searchParams } = new URL(authorizationUrl ?? '');
+      expect(searchParams.get('acr_values')).toBe('urn:logto:acr:1fa');
+      expect(searchParams.get('max_age')).toBe(proactiveMaxAge);
+
+      // The elevated token is the only proof: no verification record, no Verification API call.
+      expect(requests.verificationApiUrls).toEqual([]);
+      expect(
+        requests.accountApiRequests.filter(({ headers }) => 'logto-verification-id' in headers)
+      ).toEqual([]);
+    } finally {
+      await context.close();
+      await deleteUser(user.id);
+    }
+  });
+
+  it('does not run the pending action when the step-up is abandoned', async () => {
+    await usePasswordAndSocialSignIn();
+    const { user } = await createDefaultTenantUserWithPassword();
+    const context = await browser.createBrowserContext();
+    const experience = new ExpectExperience(await context.newPage());
+
+    try {
+      const requests = recordRequests(experience);
+      await signInWithSocial(experience, 'sessions', user.id);
+
+      await experience.toClickButton('Manage', false);
+      await experience.waitForPathname('step-up/password', undefined, accountCenterApplicationId);
+
+      // Walk away from the step-up instead of finishing it.
+      await experience.navigateTo(accountUrl('sessions'));
+
+      // The abandoned record is discarded, and the protected list is not loaded.
+      await expect(experience.page).toMatchElement('button', { text: 'Manage' });
+      await expect(experience.page).not.toMatchElement('span', { text: 'Current session' });
+      await expect(
+        experience.page.evaluate(() =>
+          sessionStorage.getItem('logto:account-center:pending-step-up')
+        )
+      ).resolves.toBeNull();
+      expect(requests.accountApiRequests.filter(({ url }) => url.includes('/sessions'))).toEqual(
+        []
+      );
+    } finally {
+      await context.close();
+      await deleteUser(user.id);
+    }
+  });
+
+  it('explains a failed authorization and does not run the pending action', async () => {
+    await usePasswordAndSocialSignIn();
+    const { user } = await createDefaultTenantUserWithPassword();
+    const context = await browser.createBrowserContext();
+    const experience = new ExpectExperience(await context.newPage());
+
+    try {
+      await signInWithSocial(experience, 'sessions', user.id);
+
+      await experience.toClickButton('Manage', false);
+      await experience.waitForPathname('step-up/password', undefined, accountCenterApplicationId);
+
+      // The authorization endpoint answers the step-up with an OIDC error instead of a code.
+      const failureUrl = appendPath(new URL(logtoUrl), 'account');
+      failureUrl.searchParams.set('error', 'access_denied');
+      await experience.navigateTo(failureUrl);
+
+      await expect(experience.page).toMatchElement('div', {
+        text: 'Identity verification was not completed. No changes were made to your account.',
+      });
+      await experience.toClickButton('Go back', false);
+
+      // Back on the page, still signed in, with nothing executed.
+      await experience.waitForUrl(accountUrl('sessions'));
+      await expect(experience.page).toMatchElement('button', { text: 'Manage' });
+      await expect(experience.page).not.toMatchElement('span', { text: 'Current session' });
+    } finally {
+      await context.close();
+      await deleteUser(user.id);
+    }
+  });
+
+  it('lets a social-only user establish a password inside the step-up and resumes the action', async () => {
+    await usePasswordAndSocialSignIn();
+    // A username keeps the shared sign-up configuration from prompting for one; it is not a
+    // verification method, so the user still has nothing to satisfy the step-up with.
+    const user = await createUser({ name: 'social-only', username: generateUsername() });
+    const newPassword = generatePassword();
+    const context = await browser.createBrowserContext();
+    const experience = new ExpectExperience(await context.newPage());
+
+    try {
+      const socialUserId = await signInWithSocial(experience, 'security', user.id);
+
+      await experience.toClickButton('Remove', false);
+      await experience.toClick('[role=dialog] button', 'Remove', false);
+
+      // Nothing enrolled to verify: the linked connector is offered as subject proof instead.
+      await experience.waitForPathname('step-up', undefined, accountCenterApplicationId);
+      await expect(experience.page).toMatchElement('div', {
+        text: 'through an account linked to yours',
+      });
+      await experience.toProcessSocialSignIn({ socialUserId });
+
+      // A fresh subject proof licenses establishing the missing first factor.
+      await experience.waitForPathname('continue/password', undefined, accountCenterApplicationId);
+      await experience.toFillNewPasswords(newPassword);
+
+      await experience.waitForUrl(accountUrl('security'));
+      await expect(waitForUsernameRemoval(user.id)).resolves.toHaveProperty('username', null);
+
+      // The password the step-up established now satisfies `1fa` for this user.
+      const userAfterStepUp = await getUser(user.id);
+      expect(userAfterStepUp.hasPassword).toBe(true);
     } finally {
       await context.close();
       await deleteUser(user.id);
