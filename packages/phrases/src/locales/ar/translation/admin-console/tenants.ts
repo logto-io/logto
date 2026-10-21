@@ -21,7 +21,7 @@ const tenants = {
     install_button: 'تثبيت الترخيص',
     key_field: 'مفتاح الترخيص',
     key_field_description:
-      'يتم التحقق من المفتاح على مثيلك ولا يغادره أبدًا. تواصل مع Logto للحصول على مفتاح جديد إذا كان المفتاح الحالي منتهي الصلاحية.',
+      'يتم التحقق من المفتاح على مثيلك ويُرسل إلى Logto عند تحديث الترخيص. تواصل مع Logto للحصول على مفتاح جديد إذا كان المفتاح الحالي منتهي الصلاحية.',
     key_placeholder: 'الصق مفتاح الترخيص هنا',
     installed_toast: 'تم تثبيت الترخيص بنجاح.',
     details_title: 'الترخيص',
@@ -47,6 +47,39 @@ const tenants = {
       'انتهت فترة السماح للترخيص في {{graceEndsAt}}. عاد هذا النشر إلى إعدادات OSS الافتراضية. تواصل مع Logto للحصول على مفتاح ترخيص جديد وثبّته مرة أخرى.',
     get_fresh_key_button: 'الحصول على مفتاح ترخيص جديد',
     replace_button: 'استبدال الترخيص',
+    usage_banner_description:
+      'يتجاوز استخدام هذا النشر حدود الاستخدام لخطتك المستضافة ذاتيًا. تواصل معنا خلال 30 يومًا لترقية خطتك أو تقليل استخدامك.',
+    usage_title: 'الاستخدام',
+    usage_description:
+      'استخدام هذا النشر، محسوبًا بالأشهر الميلادية بتوقيت UTC عبر جميع المستأجرين باستثناء مستأجر الإدارة.',
+    usage_mau_field: 'المستخدمون النشطون شهريًا',
+    usage_access_tokens_field: 'رموز الوصول الشهرية',
+    usage_tenants_field: 'المستأجرون',
+    usage_production_deployments_field: 'عمليات النشر الإنتاجية',
+    usage_month_value: '{{month}}: {{value}}',
+    usage_month_to_date_value: '{{month}} حتى الآن: {{value}}',
+    usage_limit_value: 'الحد: {{value}}',
+    usage_report_only: 'تقرير فقط',
+    usage_over_limit: 'تجاوز الحد',
+    usage_unavailable: 'الاستخدام غير متاح الآن. ستتم إعادة جمعه خلال ساعة.',
+    usage_statement_description:
+      'صدّر استخدام آخر 12 شهرًا كاملة كملف CSV، مُعدًا من سجلات هذا النشر نفسه، لتقديمه إلى Logto عند الطلب.',
+    usage_statement_export_button: 'تصدير بيان الاستخدام',
+    usage_statement_month_column: 'الشهر',
+    usage_reporting_title: 'الإبلاغ عن الاستخدام',
+    usage_reporting_description:
+      'ما يرسله هذا النشر إلى Logto. للقراءة فقط: عيّن SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED على كل نسخة Core لإيقافه.',
+    usage_reporting_enabled: 'مُفعّل',
+    usage_reporting_disabled: 'معطّل',
+    usage_reporting_enabled_description:
+      'تُرسل عدادات الاستخدام المجمعة إلى Logto مع تحديث الترخيص الأسبوعي. تستخدمها Logto لمقارنة استخدامك بحدود خطتك.',
+    usage_reporting_disabled_description:
+      'تم تعطيل الإبلاغ عن الاستخدام عبر متغير البيئة SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED على هذا النشر. يظل الترخيص يُحدّث، وتظل تحذيرات الاستخدام تعمل.',
+    usage_reporting_fields_title: 'يُرسل مع كل تحديث للترخيص:',
+    usage_reporting_field_license: 'مفتاح الترخيص ومعرّف نشر عشوائي',
+    usage_reporting_field_version: 'إصدار Logto',
+    usage_reporting_field_usage: 'عدادات مجمعة للمستخدمين النشطين شهريًا ورموز الوصول والمستأجرين',
+    usage_reporting_field_no_pii: 'إجماليات فقط، بدون أي بيانات شخصية',
   },
   members: {
     card_title: 'أدر المستأجرين بأمان أكبر مع Logto Cloud',

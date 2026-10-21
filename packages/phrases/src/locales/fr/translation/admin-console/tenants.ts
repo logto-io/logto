@@ -23,7 +23,7 @@ const tenants = {
     install_button: 'Installer la licence',
     key_field: 'Clé de licence',
     key_field_description:
-      'La clé est vérifiée sur votre instance et n’en sort jamais. Contactez Logto pour obtenir une nouvelle clé si la vôtre a expiré.',
+      'La clé est vérifiée sur votre instance et envoyée à Logto lors de l’actualisation de la licence. Contactez Logto pour obtenir une nouvelle clé si la vôtre a expiré.',
     key_placeholder: 'Collez votre clé de licence ici',
     installed_toast: 'Licence installée avec succès.',
     details_title: 'LICENCE',
@@ -49,6 +49,41 @@ const tenants = {
       'La période de grâce de la licence s’est terminée le {{graceEndsAt}}. Ce déploiement est revenu aux valeurs OSS par défaut. Contactez Logto pour obtenir une nouvelle clé de licence et installez-la à nouveau.',
     get_fresh_key_button: 'Obtenir une nouvelle clé',
     replace_button: 'Remplacer la licence',
+    usage_banner_description:
+      'Ce déploiement dépasse les limites d’utilisation de son offre auto-hébergée. Contactez-nous sous 30 jours pour mettre à niveau votre offre ou réduire votre utilisation.',
+    usage_title: 'UTILISATION',
+    usage_description:
+      'L’utilisation de ce déploiement, comptée en mois calendaires UTC sur tous les locataires sauf le locataire d’administration.',
+    usage_mau_field: 'Utilisateurs actifs mensuels',
+    usage_access_tokens_field: 'Jetons d’accès mensuels',
+    usage_tenants_field: 'Locataires',
+    usage_production_deployments_field: 'Déploiements de production',
+    usage_month_value: '{{month}} : {{value}}',
+    usage_month_to_date_value: '{{month}} à ce jour : {{value}}',
+    usage_limit_value: 'Limite : {{value}}',
+    usage_report_only: 'Rapport uniquement',
+    usage_over_limit: 'Au-delà de la limite',
+    usage_unavailable:
+      'L’utilisation n’est pas disponible pour le moment. Elle sera à nouveau collectée dans l’heure.',
+    usage_statement_description:
+      'Exportez l’utilisation des 12 derniers mois complets au format CSV, établie à partir des enregistrements de ce déploiement, pour la fournir à Logto sur demande.',
+    usage_statement_export_button: 'Exporter le relevé d’utilisation',
+    usage_statement_month_column: 'Mois',
+    usage_reporting_title: 'RAPPORT D’UTILISATION',
+    usage_reporting_description:
+      'Ce que ce déploiement envoie à Logto. Lecture seule : définissez SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED sur chaque instance Core pour le désactiver.',
+    usage_reporting_enabled: 'Activé',
+    usage_reporting_disabled: 'Désactivé',
+    usage_reporting_enabled_description:
+      'Les compteurs d’utilisation agrégés sont envoyés à Logto lors de l’actualisation hebdomadaire de la licence. Logto les utilise pour comparer votre utilisation aux limites de votre offre.',
+    usage_reporting_disabled_description:
+      'Le rapport d’utilisation est désactivé par la variable d’environnement SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED sur ce déploiement. La licence continue d’être actualisée et les avertissements d’utilisation fonctionnent toujours.',
+    usage_reporting_fields_title: 'Envoyé à chaque actualisation de licence :',
+    usage_reporting_field_license: 'La clé de licence et un identifiant de déploiement aléatoire',
+    usage_reporting_field_version: 'La version de Logto',
+    usage_reporting_field_usage:
+      'Compteurs agrégés d’utilisateurs actifs mensuels, de jetons d’accès et de locataires',
+    usage_reporting_field_no_pii: 'Uniquement des totaux, sans données personnelles',
   },
   members: {
     card_title: 'Gérez vos locataires plus sûrement avec Logto Cloud',

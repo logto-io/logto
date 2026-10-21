@@ -4,6 +4,7 @@ import { safeLazy } from 'react-safe-lazy';
 
 import DelayedSuspenseFallback from '@/components/DelayedSuspenseFallback';
 import HostedEmailCapBanner from '@/components/HostedEmailCapBanner';
+import LicenseUsageBanner from '@/components/LicenseUsageBanner';
 import OssLicenseBanner from '@/components/OssLicenseBanner';
 import OssTenantMfaBanner from '@/components/OssTenantMfaBanner';
 import ReadOnlyAccessNotification from '@/components/ReadOnlyAccessNotification';
@@ -46,6 +47,8 @@ function ConsoleContent() {
           </Fragment>
           <OssTenantMfaBanner />
           <OssLicenseBanner />
+          {/* Self-hosted license usage reporting is still in development. */}
+          {isDevFeaturesEnabled && <LicenseUsageBanner />}
           <Suspense fallback={<DelayedSuspenseFallback />}>{routes}</Suspense>
         </div>
       </OverlayScrollbar>

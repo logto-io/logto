@@ -23,7 +23,7 @@ const tenants = {
     install_button: 'Lisansı kur',
     key_field: 'Lisans anahtarı',
     key_field_description:
-      'Anahtar örneğinizde doğrulanır ve oradan hiç çıkmaz. Elinizdeki anahtarın süresi dolduysa yeni bir anahtar almak için Logto ile iletişime geçin.',
+      "Anahtar örneğinizde doğrulanır ve lisans yenilendiğinde Logto'ya gönderilir. Elinizdeki anahtarın süresi dolduysa yeni bir anahtar için Logto ile iletişime geçin.",
     key_placeholder: 'Lisans anahtarınızı buraya yapıştırın',
     installed_toast: 'Lisans başarıyla kuruldu.',
     details_title: 'LİSANS',
@@ -49,6 +49,39 @@ const tenants = {
       'Lisansın ek süresi {{graceEndsAt}} tarihinde sona erdi. Bu örnek OSS varsayılanlarına döndü. Yeni bir lisans anahtarı almak için Logto ile iletişime geçin ve yeniden kurun.',
     get_fresh_key_button: 'Yeni lisans anahtarı al',
     replace_button: 'Lisansı değiştir',
+    usage_banner_description:
+      'Bu dağıtım, kendi barındırılan planının kullanım limitlerini aşıyor. Planınızı yükseltmek veya kullanımınızı azaltmak için 30 gün içinde bizimle iletişime geçin.',
+    usage_title: 'KULLANIM',
+    usage_description:
+      'Bu dağıtımın kullanımı; yönetici kiracısı hariç tüm kiracılarda UTC takvim aylarına göre sayılır.',
+    usage_mau_field: 'Aylık aktif kullanıcılar',
+    usage_access_tokens_field: 'Aylık erişim belirteçleri',
+    usage_tenants_field: 'Kiracılar',
+    usage_production_deployments_field: 'Üretim dağıtımları',
+    usage_month_value: '{{month}}: {{value}}',
+    usage_month_to_date_value: '{{month}} şu ana kadar: {{value}}',
+    usage_limit_value: 'Limit: {{value}}',
+    usage_report_only: 'Yalnızca rapor',
+    usage_over_limit: 'Limitin üzerinde',
+    usage_unavailable: 'Kullanım şu anda kullanılamıyor. Bir saat içinde yeniden toplanacak.',
+    usage_statement_description:
+      'Son 12 tam ayın kullanımını, bu dağıtımın kendi kayıtlarından hazırlanan bir CSV dosyası olarak dışa aktarın; Logto talep ettiğinde sunabilirsiniz.',
+    usage_statement_export_button: 'Kullanım bildirimini dışa aktar',
+    usage_statement_month_column: 'Ay',
+    usage_reporting_title: 'KULLANIM RAPORLAMA',
+    usage_reporting_description:
+      "Bu dağıtımın Logto'ya gönderdiği veriler. Salt okunur: kapatmak için her Core örneğinde SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED ayarını yapın.",
+    usage_reporting_enabled: 'Etkin',
+    usage_reporting_disabled: 'Devre dışı',
+    usage_reporting_enabled_description:
+      "Toplu kullanım sayıları haftalık lisans yenilemesiyle Logto'ya gönderilir. Logto bunları kullanımınızı planınızın limitleriyle karşılaştırmak için kullanır.",
+    usage_reporting_disabled_description:
+      'Kullanım raporlama, bu dağıtımda SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED ortam değişkeniyle devre dışı bırakıldı. Lisans yenilenmeye devam eder ve kullanım uyarıları çalışmaya devam eder.',
+    usage_reporting_fields_title: 'Her lisans yenilemesinde gönderilir:',
+    usage_reporting_field_license: 'Lisans anahtarı ve rastgele bir dağıtım tanımlayıcısı',
+    usage_reporting_field_version: 'Logto sürümü',
+    usage_reporting_field_usage: 'Toplu aylık aktif kullanıcı, erişim belirteci ve kiracı sayıları',
+    usage_reporting_field_no_pii: 'Yalnızca toplamlar, kişisel veri yok',
   },
   members: {
     card_title: 'Kiracıları Logto Cloud ile daha güvenli yönetin',

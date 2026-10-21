@@ -1,4 +1,11 @@
-import { type LicenseEnv, type LicenseQuota, type SelfHostedPlanId } from '@logto/schemas';
+import {
+  type LicenseEnv,
+  type LicenseQuota,
+  type LicenseUsage,
+  type LicenseUsageLimits,
+  type LicenseUsageWarning,
+  type SelfHostedPlanId,
+} from '@logto/schemas';
 
 /**
  * The license installed on a self-hosted deployment, as `GET /api/systems/license` returns it.
@@ -22,4 +29,15 @@ export type License = {
   graceEndsAt: string;
   /** Why the last refresh was refused by the license service, if applicable. */
   refusalReason?: string;
+  /**
+   * The advisory usage limits of the key. An absent or `null` limit means the metric is only
+   * reported. Only returned while self-hosted license usage reporting is a dev feature.
+   */
+  usageLimits?: LicenseUsageLimits;
+  /** The usage of this deployment. Absent when it could not be collected. */
+  usage?: LicenseUsage;
+  /** The metrics above their limits, evaluated locally and merged with the license service notices. */
+  usageWarnings?: LicenseUsageWarning[];
+  /** Whether the license refresh reports usage. Only an environment variable changes it. */
+  usageReportingEnabled?: boolean;
 };

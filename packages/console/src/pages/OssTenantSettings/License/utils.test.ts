@@ -1,11 +1,15 @@
-import { LicenseEnv } from '@logto/schemas';
+import { LicenseEnv, LicenseUsageMetric } from '@logto/schemas';
 import type { TFuncKey } from 'i18next';
 
 import {
   buildLicenseManagementUrl,
   buildLicensePurchaseUrl,
+  buildUsageStatementCsv,
+  formatUsageMonth,
   getLicenseRefusalReasonPhraseKey,
   getLicenseStatus,
+  getPreviousUsageMonth,
+  getUsageWarning,
   isLicenseInstallErrorCode,
   licenseEnvPhraseKeys,
 } from './utils';
@@ -96,5 +100,66 @@ describe('licenseEnvPhraseKeys', () => {
       [LicenseEnv.Production]: 'tenants.license.environment_production',
       [LicenseEnv.NonProduction]: 'tenants.license.environment_non_production',
     });
+  });
+});
+
+describe('getUsageWarning', () => {
+  const warnings = [
+    { metric: LicenseUsageMetric.Mau, limit: 50_000, value: 60_000 },
+    { metric: LicenseUsageMetric.ProductionDeployments, limit: 1, value: 2 },
+  ];
+
+  it('finds the warning of a metric', () => {
+    expect(getUsageWarning(warnings, LicenseUsageMetric.ProductionDeployments)).toEqual({
+      metric: LicenseUsageMetric.ProductionDeployments,
+      limit: 1,
+      value: 2,
+    });
+  });
+
+  it.each([undefined, []])('answers undefined without a warning (%p)', (value) => {
+    expect(getUsageWarning(value, LicenseUsageMetric.Mau)).toBeUndefined();
+  });
+});
+
+describe('formatUsageMonth', () => {
+  it('formats a usage month in the given language', () => {
+    expect(formatUsageMonth('2026-10', 'en')).toBe('October 2026');
+    expect(formatUsageMonth('2026-10', 'zh-CN')).toBe('2026年10月');
+  });
+});
+
+describe('getPreviousUsageMonth', () => {
+  it.each([
+    ['2026-10', '2026-09'],
+    ['2026-01', '2025-12'],
+  ])('answers %s before %s', (month, expected) => {
+    expect(getPreviousUsageMonth(month)).toBe(expected);
+  });
+});
+
+describe('buildUsageStatementCsv', () => {
+  it('builds one row per month with the localized headers', () => {
+    expect(
+      buildUsageStatementCsv(
+        [
+          { month: '2025-11', mau: 1200, monthlyAccessTokens: 3400 },
+          { month: '2025-12', mau: 0, monthlyAccessTokens: 0 },
+        ],
+        { month: 'Month', mau: 'Monthly active users', monthlyAccessTokens: 'Access tokens' }
+      )
+    ).toBe(
+      ['Month,Monthly active users,Access tokens', '2025-11,1200,3400', '2025-12,0,0'].join('\n')
+    );
+  });
+
+  it('quotes values that contain a comma or a quote', () => {
+    expect(
+      buildUsageStatementCsv([], {
+        month: 'Month',
+        mau: 'Active, users',
+        monthlyAccessTokens: 'Say "hello"',
+      })
+    ).toBe('Month,"Active, users","Say ""hello"""');
   });
 });

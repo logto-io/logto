@@ -22,7 +22,7 @@ const tenants = {
     install_button: 'Install license',
     key_field: 'License key',
     key_field_description:
-      'The key is verified on your instance and never leaves it. Contact Logto for a fresh key if the one you have has expired.',
+      'The key is verified on your instance and sent to Logto when the license refreshes. Contact Logto for a fresh key if the one you have has expired.',
     key_placeholder: 'Paste your license key here',
     installed_toast: 'License installed successfully.',
     details_title: 'LICENSE',
@@ -48,6 +48,39 @@ const tenants = {
       'The license grace period ended on {{graceEndsAt}}. This deployment has reverted to OSS defaults. Contact Logto for a fresh license key and install it again.',
     get_fresh_key_button: 'Get a fresh license key',
     replace_button: 'Replace license',
+    usage_banner_description:
+      'This deployment is above the usage limits of its self-hosted plan. Contact us within 30 days to upgrade your plan or reduce your usage.',
+    usage_title: 'USAGE',
+    usage_description:
+      'The usage of this deployment, counted in UTC calendar months across all tenants except the admin tenant.',
+    usage_mau_field: 'Monthly active users',
+    usage_access_tokens_field: 'Monthly access tokens',
+    usage_tenants_field: 'Tenants',
+    usage_production_deployments_field: 'Production deployments',
+    usage_month_value: '{{month}}: {{value}}',
+    usage_month_to_date_value: '{{month}} so far: {{value}}',
+    usage_limit_value: 'Limit: {{value}}',
+    usage_report_only: 'Report only',
+    usage_over_limit: 'Over the limit',
+    usage_unavailable: 'Usage is not available right now. It is collected again within an hour.',
+    usage_statement_description:
+      'Export the last 12 full months of usage as a CSV file, prepared from this deployment’s own records, to provide to Logto when requested.',
+    usage_statement_export_button: 'Export usage statement',
+    usage_statement_month_column: 'Month',
+    usage_reporting_title: 'USAGE REPORTING',
+    usage_reporting_description:
+      'What this deployment sends to Logto. This is read-only: set SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED on every Core instance to turn it off.',
+    usage_reporting_enabled: 'Enabled',
+    usage_reporting_disabled: 'Disabled',
+    usage_reporting_enabled_description:
+      'Aggregated usage counts are sent to Logto with the license refresh, which runs weekly. Logto uses them to compare your usage with the limits of your plan.',
+    usage_reporting_disabled_description:
+      'Usage reporting is disabled by the SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED environment variable on this deployment. The license still refreshes, and usage warnings still work.',
+    usage_reporting_fields_title: 'Sent with each license refresh:',
+    usage_reporting_field_license: 'The license key and a random deployment identifier',
+    usage_reporting_field_version: 'The Logto version',
+    usage_reporting_field_usage: 'Aggregated monthly active users, access tokens, and tenants',
+    usage_reporting_field_no_pii: 'Totals only, with no personal data',
   },
   members: {
     card_title: 'Manage tenants more securely with Logto Cloud',

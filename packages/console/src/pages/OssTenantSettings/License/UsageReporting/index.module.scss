@@ -1,0 +1,30 @@
+@use '@/scss/underscore' as _;
+
+.status {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: _.unit(3);
+}
+
+.description {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+}
+
+.fieldsTitle {
+  margin-top: _.unit(6);
+  margin-bottom: _.unit(2);
+  font: var(--font-label-2);
+}
+
+.fields {
+  margin: 0;
+  padding-left: _.unit(5);
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+
+  li + li {
+    margin-top: _.unit(1);
+  }
+}

@@ -1,0 +1,44 @@
+@use '@/scss/underscore' as _;
+
+.value {
+  color: var(--color-text-secondary);
+}
+
+.warning {
+  margin-bottom: _.unit(4);
+}
+
+.monthlyUsage {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(1);
+}
+
+.limit {
+  display: flex;
+  align-items: center;
+  gap: _.unit(2);
+}
+
+.unavailable {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+}
+
+.statement {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: _.unit(3);
+  margin-top: _.unit(6);
+}
+
+.statementDescription {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+}
+
+.downloadIcon {
+  width: 16px;
+  height: 16px;
+}

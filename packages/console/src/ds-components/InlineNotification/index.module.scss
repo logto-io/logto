@@ -26,6 +26,12 @@
     }
   }
 
+  .dismissIcon {
+    display: block;
+    width: 16px;
+    height: 16px;
+  }
+
   &.info {
     background: var(--color-info-container);
 

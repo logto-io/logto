@@ -22,7 +22,7 @@ const tenants = {
     install_button: 'Zainstaluj licencję',
     key_field: 'Klucz licencyjny',
     key_field_description:
-      'Klucz jest weryfikowany na Twojej instancji i nigdy jej nie opuszcza. Jeśli Twój klucz wygasł, skontaktuj się z Logto, aby otrzymać nowy.',
+      'Klucz jest weryfikowany na Twojej instancji i wysyłany do Logto podczas odświeżania licencji. Skontaktuj się z Logto, aby otrzymać nowy klucz, jeśli obecny wygasł.',
     key_placeholder: 'Wklej tutaj swój klucz licencyjny',
     installed_toast: 'Licencja została zainstalowana.',
     details_title: 'LICENCJA',
@@ -48,6 +48,41 @@ const tenants = {
       'Okres karencji licencji zakończył się {{graceEndsAt}}. To wdrożenie wróciło do domyślnych ustawień OSS. Skontaktuj się z Logto, aby otrzymać nowy klucz licencyjny, i zainstaluj go ponownie.',
     get_fresh_key_button: 'Pobierz nowy klucz licencyjny',
     replace_button: 'Zmień licencję',
+    usage_banner_description:
+      'To wdrożenie przekracza limity użytkowania swojego planu self-hosted. Skontaktuj się z nami w ciągu 30 dni, aby ulepszyć plan lub zmniejszyć użytkowanie.',
+    usage_title: 'UŻYTKOWANIE',
+    usage_description:
+      'Użytkowanie tego wdrożenia, liczone w miesiącach kalendarzowych UTC we wszystkich najemcach poza najemcą administracyjnym.',
+    usage_mau_field: 'Miesięcznie aktywni użytkownicy',
+    usage_access_tokens_field: 'Miesięczne tokeny dostępu',
+    usage_tenants_field: 'Najemcy',
+    usage_production_deployments_field: 'Wdrożenia produkcyjne',
+    usage_month_value: '{{month}}: {{value}}',
+    usage_month_to_date_value: '{{month}} do tej pory: {{value}}',
+    usage_limit_value: 'Limit: {{value}}',
+    usage_report_only: 'Tylko raport',
+    usage_over_limit: 'Powyżej limitu',
+    usage_unavailable:
+      'Użytkowanie jest teraz niedostępne. Zostanie ponownie zebrane w ciągu godziny.',
+    usage_statement_description:
+      'Wyeksportuj użytkowanie z ostatnich 12 pełnych miesięcy jako plik CSV, przygotowany na podstawie własnych zapisów tego wdrożenia, do przekazania Logto na żądanie.',
+    usage_statement_export_button: 'Eksportuj raport użytkowania',
+    usage_statement_month_column: 'Miesiąc',
+    usage_reporting_title: 'RAPORT UŻYTKOWANIA',
+    usage_reporting_description:
+      'Co to wdrożenie wysyła do Logto. Widok tylko do odczytu: ustaw SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED na każdej instancji Core, aby to wyłączyć.',
+    usage_reporting_enabled: 'Włączone',
+    usage_reporting_disabled: 'Wyłączone',
+    usage_reporting_enabled_description:
+      'Zagregowane liczniki użytkowania są wysyłane do Logto wraz z cotygodniowym odświeżaniem licencji. Logto używa ich do porównania użytkowania z limitami planu.',
+    usage_reporting_disabled_description:
+      'Raportowanie użytkowania jest wyłączone przez zmienną środowiskową SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED na tym wdrożeniu. Licencja nadal jest odświeżana, a ostrzeżenia o użytkowaniu nadal działają.',
+    usage_reporting_fields_title: 'Wysyłane przy każdym odświeżeniu licencji:',
+    usage_reporting_field_license: 'Klucz licencji i losowy identyfikator wdrożenia',
+    usage_reporting_field_version: 'Wersja Logto',
+    usage_reporting_field_usage:
+      'Zagregowane liczniki miesięcznie aktywnych użytkowników, tokenów dostępu i najemców',
+    usage_reporting_field_no_pii: 'Tylko sumy, bez danych osobowych',
   },
   members: {
     card_title: 'Zarządzaj tenantami bezpieczniej dzięki Logto Cloud',

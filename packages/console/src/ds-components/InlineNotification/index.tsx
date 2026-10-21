@@ -2,8 +2,10 @@ import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import { forwardRef } from 'react';
 import type { ReactNode, Ref } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Alert from '@/assets/icons/alert.svg?react';
+import CloseIcon from '@/assets/icons/close.svg?react';
 import Info from '@/assets/icons/info.svg?react';
 import Error from '@/assets/icons/toast-error.svg?react';
 import Success from '@/assets/icons/toast-success.svg?react';
@@ -11,6 +13,7 @@ import type { Props as TextLinkProps } from '@/ds-components/TextLink';
 
 import Button, { type Props as ButtonProps } from '../Button';
 import DynamicT from '../DynamicT';
+import IconButton from '../IconButton';
 import TextLink from '../TextLink';
 
 import styles from './index.module.scss';
@@ -22,6 +25,8 @@ type Props = {
   readonly href?: string;
   readonly hrefTargetBlank?: TextLinkProps['targetBlank'];
   readonly onClick?: () => void;
+  /** Renders a close button at the end of the notification. */
+  readonly onDismiss?: () => void;
   readonly variant?: 'plain' | 'shadow';
   readonly hasIcon?: boolean;
   readonly isActionLoading?: boolean;
@@ -53,6 +58,7 @@ function InlineNotification(
     href,
     hrefTargetBlank,
     onClick,
+    onDismiss,
     severity = 'info',
     variant,
     hasIcon = true,
@@ -62,6 +68,8 @@ function InlineNotification(
   }: Props,
   ref?: Ref<HTMLDivElement>
 ) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.general' });
+
   return (
     <div
       ref={ref}
@@ -94,6 +102,11 @@ function InlineNotification(
             onClick={onClick}
           />
         </div>
+      )}
+      {onDismiss && (
+        <IconButton size="small" aria-label={t('close')} onClick={onDismiss}>
+          <CloseIcon className={styles.dismissIcon} />
+        </IconButton>
       )}
     </div>
   );

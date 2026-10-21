@@ -21,7 +21,7 @@ const tenants = {
     install_button: '安装许可证',
     key_field: '许可证密钥',
     key_field_description:
-      '密钥在你的实例上校验，不会离开实例。如果现有密钥已过期，请联系 Logto 获取新的密钥。',
+      '密钥在你的实例上校验，并在许可证刷新时发送给 Logto。如果现有密钥已过期，请联系 Logto 获取新的密钥。',
     key_placeholder: '在此粘贴你的许可证密钥',
     installed_toast: '许可证安装成功。',
     details_title: '许可证',
@@ -47,6 +47,38 @@ const tenants = {
       '许可证宽限期已于 {{graceEndsAt}} 结束。此实例已恢复为 OSS 默认设置。请联系 Logto 获取新的许可证密钥并重新安装。',
     get_fresh_key_button: '获取新的许可证密钥',
     replace_button: '更换许可证',
+    usage_banner_description:
+      '此实例的用量已超出其自托管计划的用量限制。请在 30 天内联系我们升级计划或减少用量。',
+    usage_title: '用量',
+    usage_description: '此实例的用量，按 UTC 自然月统计，涵盖除管理租户外所有租户。',
+    usage_mau_field: '月活跃用户',
+    usage_access_tokens_field: '月度访问令牌',
+    usage_tenants_field: '租户',
+    usage_production_deployments_field: '生产实例',
+    usage_month_value: '{{month}}：{{value}}',
+    usage_month_to_date_value: '{{month}}至今：{{value}}',
+    usage_limit_value: '限制：{{value}}',
+    usage_report_only: '仅上报',
+    usage_over_limit: '超出限制',
+    usage_unavailable: '当前无法获取用量。系统会在一小时内重新收集。',
+    usage_statement_description:
+      '将最近 12 个完整月的用量导出为 CSV 文件，数据来自此实例自身的记录，可在 Logto 要求时提供。',
+    usage_statement_export_button: '导出用量报表',
+    usage_statement_month_column: '月份',
+    usage_reporting_title: '用量上报',
+    usage_reporting_description:
+      '此实例向 Logto 发送的内容。此项为只读：在每个 Core 实例上设置 SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED 即可关闭。',
+    usage_reporting_enabled: '已启用',
+    usage_reporting_disabled: '已禁用',
+    usage_reporting_enabled_description:
+      '聚合后的用量计数会随每周运行一次的许可证刷新发送给 Logto。Logto 使用这些数据将你的用量与计划限制进行对比。',
+    usage_reporting_disabled_description:
+      '此实例通过 SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED 环境变量禁用了用量上报。许可证仍会刷新，用量警告也仍然有效。',
+    usage_reporting_fields_title: '每次许可证刷新时发送：',
+    usage_reporting_field_license: '许可证密钥和一个随机生成的实例标识符',
+    usage_reporting_field_version: 'Logto 版本',
+    usage_reporting_field_usage: '聚合的月活跃用户数、访问令牌数和租户数',
+    usage_reporting_field_no_pii: '仅包含总计数据，不含任何个人数据',
   },
   members: {
     card_title: '通过 Logto Cloud 更安全地管理租户',
