@@ -27,6 +27,21 @@ describe('buildLink()', () => {
     expect(link).toEqual('<https://logto.dev/users?order=desc&page=10>; rel="last"');
   });
 
+  it('keep every value of a repeated query key', () => {
+    const link = buildLink(
+      {
+        URL: new URL('https://logto.dev/users?search.id=foo&search.id=bar&page=1'),
+        path: '/users',
+        query: { 'search.id': ['foo', 'bar'], page: '1' },
+      },
+      2,
+      'next'
+    );
+    expect(link).toEqual(
+      '<https://logto.dev/users?search.id=foo&search.id=bar&page=2>; rel="next"'
+    );
+  });
+
   it('build a relative link when the request URL cannot be parsed', () => {
     /** Koa memoizes a null-prototype object when the request URL cannot be parsed. */
     const link = buildLink({ ...request, URL: Object.create(null) as URL }, 1, 'first');
