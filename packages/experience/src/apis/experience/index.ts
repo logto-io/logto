@@ -25,7 +25,10 @@ export {
   identifyUser,
   identifyAndSubmitInteraction,
   setTrustedDeviceOptInDecision,
+  abortInteraction,
+  getDirectSignIn,
 } from './interaction';
+export type { DirectSignInResponse } from './interaction';
 
 export * from './avatar';
 export * from './mfa';

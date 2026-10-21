@@ -10,6 +10,7 @@ import { useCallback, useContext } from 'react';
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { getSocialAuthorizationUrl, initInteraction } from '@/apis/experience';
+import useAbortDirectSignIn from '@/hooks/use-abort-direct-sign-in';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
@@ -27,6 +28,7 @@ const useSocial = () => {
   const stepUpErrorHandlers = usePureStepUpErrorHandler();
 
   const handleError = useErrorHandler();
+  const abortDirectSignIn = useAbortDirectSignIn();
   const getAuthorizationUrl = useCallback(
     async (connectorId: string, state: string, redirectUri: string) => {
       if (!isPureStepUp) {
@@ -74,6 +76,9 @@ const useSocial = () => {
         agreeToTermsPolicy === AgreeToTermsPolicy.Manual &&
         !(await termsValidation())
       ) {
+        // A direct sign-in has no hosted page to return to, so a declined terms modal ends the
+        // interaction back at the client. Hosted sign-ins keep their existing behavior.
+        await abortDirectSignIn();
         return;
       }
 
@@ -89,6 +94,12 @@ const useSocial = () => {
       );
 
       if (error) {
+        // Failures before the IdP redirect never reach the callback listener, so a direct sign-in
+        // must exit here as well. Hosted sign-ins keep the regular error handling.
+        if (!isPureStepUp && (await abortDirectSignIn())) {
+          return;
+        }
+
         await handleError(error, stepUpErrorHandlers);
 
         return;
@@ -124,6 +135,7 @@ const useSocial = () => {
       await redirectTo(authorizationUri);
     },
     [
+      abortDirectSignIn,
       agreeToTermsPolicy,
       asyncInvokeSocialSignIn,
       handleError,

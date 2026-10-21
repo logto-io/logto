@@ -162,6 +162,19 @@
         }
       }
     },
+    "/api/experience/interaction/direct-sign-in": {
+      "get": {
+        "operationId": "GetDirectSignIn",
+        "summary": "Get the direct sign-in target of the current interaction",
+        "description": "Return the `direct_sign_in` value carried by the current interaction's authorization request, or an empty object when the interaction did not start from direct sign-in. The value is read from the interaction's OIDC parameters, so it is scoped to this interaction and remains available even before the experience interaction is initialized. Used by the hosted experience to return a failed direct sign-in to the client application instead of falling back to the hosted sign-in page.",
+        "tags": ["Dev feature"],
+        "responses": {
+          "200": {
+            "description": "The direct sign-in target has been retrieved, if any."
+          }
+        }
+      }
+    },
     "/api/experience/interaction": {
       "get": {
         "operationId": "GetInteraction",

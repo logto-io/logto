@@ -3,7 +3,7 @@ import {
   isGoogleOneTap as isGoogleOneTapChecker,
 } from '@logto/connector-kit';
 import type { RequestErrorBody } from '@logto/schemas';
-import { InteractionEvent, SignInMode, VerificationType, experience } from '@logto/schemas';
+import { InteractionEvent, SignInMode, VerificationType } from '@logto/schemas';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
@@ -20,6 +20,7 @@ import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
+import useNavigateToSignIn from '@/hooks/use-navigate-to-sign-in';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import useRedirectCallbackValidation from '@/hooks/use-redirect-callback-validation';
 import { useSieMethods } from '@/hooks/use-sie';
@@ -48,16 +49,13 @@ const useSocialSignInListener = (connectorId: string) => {
   });
 
   const navigate = useNavigateWithPreservedSearchParams();
+  const navigateToSignIn = useNavigateToSignIn();
   const handleError = useErrorHandler();
   const bindSocialRelatedUser = useBindSocialRelatedUser();
   const verifySocial = useApi(verifySocialVerification);
   const asyncSignInWithSocial = useApi(identifyAndSubmitInteraction);
   const asyncInitInteraction = useApi(initInteraction);
   const redirectTo = useGlobalRedirectTo();
-
-  const navigateToSignIn = useCallback(() => {
-    navigate('/' + experience.routes.signIn, { replace: true });
-  }, [navigate]);
 
   const registerWithSocial = useSocialRegister(connectorId, {
     replace: true,
@@ -73,7 +71,7 @@ const useSocialSignInListener = (connectorId: string) => {
       // Redirect to sign-in page if the verificationId is not set properly
       if (!verificationId) {
         setToast(t('error.invalid_session'));
-        navigateToSignIn();
+        navigateToSignIn('invalid_session');
         return;
       }
 
@@ -93,7 +91,7 @@ const useSocialSignInListener = (connectorId: string) => {
       // Should not let user register new social account under sign-in only mode
       if (signInMode === SignInMode.SignIn) {
         setToast(error.message);
-        navigateToSignIn();
+        navigateToSignIn(error.code);
         return;
       }
 
@@ -117,7 +115,7 @@ const useSocialSignInListener = (connectorId: string) => {
   const globalErrorHandler = useCallback(
     async (error: RequestErrorBody) => {
       setToast(error.message);
-      navigateToSignIn();
+      navigateToSignIn(error.code);
     },
     [navigateToSignIn, setToast]
   );
@@ -237,7 +235,7 @@ const useSocialSignInListener = (connectorId: string) => {
 
       if (!result.valid) {
         setToast(t(`error.${result.error}`));
-        navigate('/' + experience.routes.signIn);
+        navigateToSignIn(result.error);
         return;
       }
     } else {
@@ -246,7 +244,7 @@ const useSocialSignInListener = (connectorId: string) => {
 
       if (!result.valid) {
         setToast(t(`error.${result.error}`));
-        navigate('/' + experience.routes.signIn);
+        navigateToSignIn(result.error);
         return;
       }
     }
@@ -256,7 +254,7 @@ const useSocialSignInListener = (connectorId: string) => {
   }, [
     connectorId,
     isConsumed,
-    navigate,
+    navigateToSignIn,
     searchParameters,
     setSearchParameters,
     setToast,

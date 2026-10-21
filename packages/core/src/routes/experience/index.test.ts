@@ -46,6 +46,12 @@ const { jest } = import.meta;
 
 const experienceRoutes = await pickDefault(import('./index.js'));
 
+const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+const setDevFeaturesEnabled = (enabled: boolean) => {
+  // eslint-disable-next-line @silverhand/fp/no-mutation -- Exercise route behavior in the selected feature environment.
+  (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = enabled;
+};
+
 const eligibleTrustedDeviceVerificationCases: Array<{
   name: string;
   factor: MfaFactor;
@@ -1760,12 +1766,6 @@ describe('POST /experience/submit', () => {
 });
 
 describe('POST /experience/abort', () => {
-  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-  const setDevFeaturesEnabled = (enabled: boolean) => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Exercise route behavior in the selected feature environment.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = enabled;
-  };
-
   afterEach(() => {
     setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
   });
@@ -1876,6 +1876,76 @@ describe('POST /experience/abort', () => {
 
     expect(response.status).toBe(404);
     expect(provider.interactionResult).not.toHaveBeenCalled();
+  });
+});
+
+describe('GET /experience/interaction/direct-sign-in', () => {
+  afterEach(() => {
+    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
+  });
+
+  it('should return the direct sign-in target from the interaction params', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester } = createRequesterWithMocks({
+      interactionDetailsOverrides: {
+        params: { client_id: 'client_id', direct_sign_in: 'social:google' },
+      },
+    });
+
+    const response = await requester.get('/experience/interaction/direct-sign-in');
+
+    expect(response.status).toBe(200);
+    expect(response.headers['cache-control']).toBe('no-store');
+    expect(response.body).toEqual({ directSignIn: 'social:google' });
+  });
+
+  it('should return an empty object for a hosted sign-in interaction', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester } = createRequesterWithMocks();
+
+    const response = await requester.get('/experience/interaction/direct-sign-in');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({});
+  });
+
+  it('should work before the experience interaction storage is initialized', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester } = createRequesterWithMocks({
+      interactionDetailsOverrides: {
+        // The regular experience middleware would reject this with `session.interaction_not_found`.
+        result: {},
+        params: { client_id: 'client_id', direct_sign_in: 'sso:connector-id' },
+      },
+    });
+
+    const response = await requester.get('/experience/interaction/direct-sign-in');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ directSignIn: 'sso:connector-id' });
+  });
+
+  it('should ignore a malformed direct sign-in parameter', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester } = createRequesterWithMocks({
+      interactionDetailsOverrides: {
+        params: { client_id: 'client_id', direct_sign_in: ['social:google'] },
+      },
+    });
+
+    const response = await requester.get('/experience/interaction/direct-sign-in');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({});
+  });
+
+  it('should not be registered when dev features are disabled', async () => {
+    setDevFeaturesEnabled(false);
+    const { requester } = createRequesterWithMocks();
+
+    const response = await requester.get('/experience/interaction/direct-sign-in');
+
+    expect(response.status).toBe(404);
   });
 });
 /* eslint-enable max-lines */
