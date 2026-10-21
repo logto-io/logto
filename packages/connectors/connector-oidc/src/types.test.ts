@@ -1,4 +1,8 @@
-import { scopePostProcessor, idTokenClaimsGuardWithStringBooleans } from './types.js';
+import {
+  scopePostProcessor,
+  idTokenClaimsGuardWithStringBooleans,
+  accessTokenResponseGuard,
+} from './types.js';
 
 describe('scopePostProcessor', () => {
   it('`openid` will be added if not exists (with empty string)', () => {
@@ -11,6 +15,18 @@ describe('scopePostProcessor', () => {
 
   it('return original input if openid exists', () => {
     expect(scopePostProcessor('profile openid')).toEqual('profile openid');
+  });
+});
+
+describe('accessTokenResponseGuard', () => {
+  it('should accept a string-typed `expires_in`', () => {
+    const result = accessTokenResponseGuard.parse({
+      id_token: 'id_token',
+      access_token: 'access_token',
+      expires_in: '3600',
+    });
+
+    expect(result.expires_in).toBe('3600');
   });
 });
 
