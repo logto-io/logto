@@ -194,6 +194,12 @@ const Sessions = () => {
         await handleError(error, {
           'verification_record.permission_denied': handleRevokePermissionDenied,
         });
+
+        if (isResumed) {
+          // The resumed action owns this page load; reload the list so a failed replay does not
+          // leave the page in its Manage state.
+          await fetchData(undefined, true);
+        }
         return;
       }
 
@@ -247,6 +253,12 @@ const Sessions = () => {
           setToast(t('account_center.sessions.revoke_grant_failed'));
         }
         setRemovingAppId(undefined);
+
+        if (isResumed) {
+          // The resumed action owns this page load; reload the list so a failed replay does not
+          // leave the page in its Manage state.
+          await fetchData(undefined, true);
+        }
         return;
       }
 

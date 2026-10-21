@@ -52,6 +52,17 @@ const challenge =
   'error_description="Recent user authentication is required", ' +
   'acr_values="urn:logto:acr:1fa", max_age="600"';
 
+const createNotFoundError = () =>
+  new HTTPError(
+    {
+      status: 404,
+      headers: { get: () => null },
+      json: async () => ({ code: 'entity.not_found', message: 'Not found.' }),
+    } as unknown as Response,
+    {} as Request,
+    {} as NormalizedOptions
+  );
+
 const createChallengeError = () =>
   new HTTPError(
     {
@@ -288,6 +299,45 @@ describe('<Sessions /> OIDC step-up', () => {
     });
 
     expect(mockRevokeGrant).toHaveBeenCalledTimes(2);
+    expect(mockSignIn).not.toHaveBeenCalled();
+  });
+
+  it('reloads the lists when the resumed session revocation fails', async () => {
+    mockGetSessions.mockResolvedValue({ sessions: [currentSession, otherSession] });
+    mockRevokeSession.mockRejectedValueOnce(createNotFoundError());
+    prepareResumableStepUp({ type: 'revoke-session', sessionId: 'other-session' });
+
+    const { getByText } = renderSessions();
+
+    await waitFor(() => {
+      expect(getByText('account_center.sessions.revoke_session')).not.toBeNull();
+    });
+
+    expect(mockRevokeSession).toHaveBeenCalledTimes(1);
+    // The resumed action owns the load; its failure still reloads the list.
+    expect(mockGetSessions).toHaveBeenCalledWith('access-token', undefined);
+    expect(mockGetSessions).toHaveBeenCalledTimes(1);
+    expect(mockSignIn).not.toHaveBeenCalled();
+  });
+
+  it('reloads the lists when the resumed grant revocation fails', async () => {
+    mockGetGrants.mockResolvedValue({ grants });
+    mockRevokeGrant.mockRejectedValueOnce(createNotFoundError());
+    prepareResumableStepUp({
+      type: 'revoke-grant',
+      applicationId: 'app-id',
+      grantIds: ['grant-1', 'grant-2'],
+    });
+
+    const { getByText } = renderSessions();
+
+    await waitFor(() => {
+      expect(getByText('account_center.sessions.revoke_grant')).not.toBeNull();
+    });
+
+    expect(mockRevokeGrant).toHaveBeenCalledTimes(2);
+    expect(mockGetGrants).toHaveBeenCalledWith('access-token', undefined);
+    expect(mockGetGrants).toHaveBeenCalledTimes(1);
     expect(mockSignIn).not.toHaveBeenCalled();
   });
 });
