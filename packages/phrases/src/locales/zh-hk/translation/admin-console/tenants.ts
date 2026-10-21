@@ -66,12 +66,11 @@ const tenants = {
     usage_statement_export_button: '匯出用量報表',
     usage_statement_month_column: '月份',
     usage_reporting_title: '用量回報',
-    usage_reporting_description:
-      '此實例傳送給 Logto 的內容。此為唯讀：在每個 Core 實例上設定 SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED 即可關閉。',
+    usage_reporting_description: '此實例傳送給 Logto 的內容。此為唯讀：控制台中沒有開關。',
     usage_reporting_enabled: '已啟用',
     usage_reporting_disabled: '已停用',
     usage_reporting_enabled_description:
-      '彙總後的用量計數會隨每週執行一次的授權更新傳送給 Logto。Logto 會用這些資料將你的用量與計劃上限進行比較。',
+      '彙總後的用量計數會隨每週執行一次的授權更新傳送給 Logto。Logto 會用這些資料將你的用量與計劃上限進行比較。如需關閉，請在每個 Core 實例上設定 SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED。',
     usage_reporting_disabled_description:
       '此實例已透過 SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED 環境變數停用用量回報。授權仍會更新，用量警告也仍然有效。',
     usage_reporting_fields_title: '每次授權更新時傳送：',

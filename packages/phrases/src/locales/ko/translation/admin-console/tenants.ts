@@ -68,11 +68,11 @@ const tenants = {
     usage_statement_month_column: '월',
     usage_reporting_title: '사용량 보고',
     usage_reporting_description:
-      '이 배포가 Logto로 전송하는 내용입니다. 읽기 전용이며, 끄려면 모든 Core 인스턴스에서 SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED를 설정하세요.',
+      '이 배포가 Logto로 전송하는 내용입니다. 읽기 전용이며 콘솔에는 전환이 없습니다.',
     usage_reporting_enabled: '사용 중',
     usage_reporting_disabled: '사용 안 함',
     usage_reporting_enabled_description:
-      '매주 실행되는 라이선스 갱신 시 집계된 사용량이 Logto로 전송됩니다. Logto는 이 데이터를 사용량과 요금제 한도를 비교하는 데 사용합니다.',
+      '매주 실행되는 라이선스 갱신 시 집계된 사용량이 Logto로 전송됩니다. Logto는 이 데이터를 사용량과 요금제 한도를 비교하는 데 사용합니다. 끄려면 모든 Core 인스턴스에서 SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED를 설정하세요.',
     usage_reporting_disabled_description:
       '이 배포에서는 SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED 환경 변수로 사용량 보고가 비활성화되어 있습니다. 라이선스는 계속 갱신되며 사용량 경고도 계속 작동합니다.',
     usage_reporting_fields_title: '라이선스 갱신 시 전송되는 항목:',

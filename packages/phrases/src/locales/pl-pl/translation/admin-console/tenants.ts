@@ -70,11 +70,11 @@ const tenants = {
     usage_statement_month_column: 'Miesiąc',
     usage_reporting_title: 'RAPORT UŻYTKOWANIA',
     usage_reporting_description:
-      'Co to wdrożenie wysyła do Logto. Widok tylko do odczytu: ustaw SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED na każdej instancji Core, aby to wyłączyć.',
+      'Co to wdrożenie wysyła do Logto. Widok tylko do odczytu: w konsoli nie ma przełącznika.',
     usage_reporting_enabled: 'Włączone',
     usage_reporting_disabled: 'Wyłączone',
     usage_reporting_enabled_description:
-      'Zagregowane liczniki użytkowania są wysyłane do Logto wraz z cotygodniowym odświeżaniem licencji. Logto używa ich do porównania użytkowania z limitami planu.',
+      'Zagregowane liczniki użytkowania są wysyłane do Logto wraz z cotygodniowym odświeżaniem licencji. Logto używa ich do porównania użytkowania z limitami planu. Aby to wyłączyć, ustaw SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED na każdej instancji Core.',
     usage_reporting_disabled_description:
       'Raportowanie użytkowania jest wyłączone przez zmienną środowiskową SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED na tym wdrożeniu. Licencja nadal jest odświeżana, a ostrzeżenia o użytkowaniu nadal działają.',
     usage_reporting_fields_title: 'Wysyłane przy każdym odświeżeniu licencji:',

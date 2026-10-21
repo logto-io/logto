@@ -70,11 +70,11 @@ const tenants = {
     usage_statement_month_column: 'Месяц',
     usage_reporting_title: 'ОТЧЁТ ОБ ИСПОЛЬЗОВАНИИ',
     usage_reporting_description:
-      'Что это развёртывание отправляет в Logto. Только для чтения: задайте SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED на каждом экземпляре Core, чтобы отключить.',
+      'Что это развёртывание отправляет в Logto. Только для чтения: в консоли нет переключателя.',
     usage_reporting_enabled: 'Включено',
     usage_reporting_disabled: 'Отключено',
     usage_reporting_enabled_description:
-      'Агрегированные данные об использовании отправляются в Logto при еженедельном обновлении лицензии. Logto использует их для сравнения вашего использования с лимитами плана.',
+      'Агрегированные данные об использовании отправляются в Logto при еженедельном обновлении лицензии. Logto использует их для сравнения вашего использования с лимитами плана. Чтобы отключить, задайте SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED на каждом экземпляре Core.',
     usage_reporting_disabled_description:
       'Отправка отчётов об использовании отключена переменной окружения SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED на этом развёртывании. Лицензия по-прежнему обновляется, а предупреждения об использовании продолжают работать.',
     usage_reporting_fields_title: 'Отправляется при каждом обновлении лицензии:',

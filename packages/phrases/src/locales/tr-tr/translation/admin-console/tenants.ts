@@ -70,11 +70,11 @@ const tenants = {
     usage_statement_month_column: 'Ay',
     usage_reporting_title: 'KULLANIM RAPORLAMA',
     usage_reporting_description:
-      "Bu dağıtımın Logto'ya gönderdiği veriler. Salt okunur: kapatmak için her Core örneğinde SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED ayarını yapın.",
+      "Bu dağıtımın Logto'ya gönderdiği veriler. Salt okunur: konsolda bir anahtar yok.",
     usage_reporting_enabled: 'Etkin',
     usage_reporting_disabled: 'Devre dışı',
     usage_reporting_enabled_description:
-      "Toplu kullanım sayıları haftalık lisans yenilemesiyle Logto'ya gönderilir. Logto bunları kullanımınızı planınızın limitleriyle karşılaştırmak için kullanır.",
+      "Toplu kullanım sayıları haftalık lisans yenilemesiyle Logto'ya gönderilir. Logto bunları kullanımınızı planınızın limitleriyle karşılaştırmak için kullanır. Kapatmak için her Core örneğinde SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED ayarını yapın.",
     usage_reporting_disabled_description:
       'Kullanım raporlama, bu dağıtımda SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED ortam değişkeniyle devre dışı bırakıldı. Lisans yenilenmeye devam eder ve kullanım uyarıları çalışmaya devam eder.',
     usage_reporting_fields_title: 'Her lisans yenilemesinde gönderilir:',

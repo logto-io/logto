@@ -69,11 +69,11 @@ const tenants = {
     usage_statement_month_column: 'Month',
     usage_reporting_title: 'USAGE REPORTING',
     usage_reporting_description:
-      'What this deployment sends to Logto. This is read-only: set SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED on every Core instance to turn it off.',
+      'What this deployment sends to Logto. Read-only: there is no Console toggle.',
     usage_reporting_enabled: 'Enabled',
     usage_reporting_disabled: 'Disabled',
     usage_reporting_enabled_description:
-      'Aggregated usage counts are sent to Logto with the license refresh, which runs weekly. Logto uses them to compare your usage with the limits of your plan.',
+      'Aggregated usage counts are sent to Logto with the license refresh, which runs weekly. Logto uses them to compare your usage with the limits of your plan. To turn it off, set SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED on every Core instance.',
     usage_reporting_disabled_description:
       'Usage reporting is disabled by the SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED environment variable on this deployment. The license still refreshes, and usage warnings still work.',
     usage_reporting_fields_title: 'Sent with each license refresh:',

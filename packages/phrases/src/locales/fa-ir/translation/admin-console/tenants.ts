@@ -70,11 +70,11 @@ const tenants = {
     usage_statement_month_column: 'ماه',
     usage_reporting_title: 'گزارش استفاده',
     usage_reporting_description:
-      'آنچه این استقرار به Logto می‌فرستد. این بخش فقط‌خواندنی است: برای غیرفعال کردن، SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED را روی هر نمونه Core تنظیم کنید.',
+      'آنچه این استقرار به Logto می‌فرستد. فقط‌خواندنی است: هیچ کلید تغییری در کنسول وجود ندارد.',
     usage_reporting_enabled: 'فعال',
     usage_reporting_disabled: 'غیرفعال',
     usage_reporting_enabled_description:
-      'شمارش‌های تجمیعی استفاده همراه با به‌روزرسانی هفتگی مجوز به Logto ارسال می‌شود. Logto از آن‌ها برای مقایسه استفاده شما با محدودیت‌های پلن استفاده می‌کند.',
+      'شمارش‌های تجمیعی استفاده همراه با به‌روزرسانی هفتگی مجوز به Logto ارسال می‌شود. Logto از آن‌ها برای مقایسه استفاده شما با محدودیت‌های پلن استفاده می‌کند. برای غیرفعال کردن، SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED را روی هر نمونه Core تنظیم کنید.',
     usage_reporting_disabled_description:
       'گزارش استفاده با متغیر محیطی SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED روی این استقرار غیرفعال شده است. مجوز همچنان به‌روزرسانی می‌شود و هشدارهای استفاده نیز کار می‌کنند.',
     usage_reporting_fields_title: 'با هر به‌روزرسانی مجوز ارسال می‌شود:',

@@ -69,11 +69,11 @@ const tenants = {
     usage_statement_month_column: 'เดือน',
     usage_reporting_title: 'การรายงานการใช้งาน',
     usage_reporting_description:
-      'ข้อมูลที่ส่งไปยัง Logto จากดีพลอยเมนต์นี้เป็นแบบอ่านอย่างเดียว: ตั้งค่า SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED บนทุกอินสแตนซ์ Core เพื่อปิด',
+      'ข้อมูลที่ส่งไปยัง Logto จากดีพลอยเมนต์นี้ เป็นแบบอ่านอย่างเดียว: ไม่มีสวิตช์ในคอนโซล',
     usage_reporting_enabled: 'เปิดใช้งาน',
     usage_reporting_disabled: 'ปิดใช้งาน',
     usage_reporting_enabled_description:
-      'จำนวนการใช้งานแบบรวมจะถูกส่งไปยัง Logto พร้อมกับการรีเฟรชใบอนุญาตรายสัปดาห์ Logto ใช้ข้อมูลนี้เพื่อเปรียบเทียบการใช้งานของคุณกับขีดจำกัดของแผน',
+      'จำนวนการใช้งานแบบรวมจะถูกส่งไปยัง Logto พร้อมกับการรีเฟรชใบอนุญาตรายสัปดาห์ Logto ใช้ข้อมูลนี้เพื่อเปรียบเทียบการใช้งานของคุณกับขีดจำกัดของแผน หากต้องการปิด ให้ตั้งค่า SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED บนทุกอินสแตนซ์ Core',
     usage_reporting_disabled_description:
       'การรายงานการใช้งานถูกปิดด้วยตัวแปรสภาพแวดล้อม SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED บนดีพลอยเมนต์นี้ ใบอนุญาตยังคงรีเฟรชและการแจ้งเตือนการใช้งานยังคงทำงาน',
     usage_reporting_fields_title: 'ส่งพร้อมการรีเฟรชใบอนุญาตแต่ละครั้ง:',

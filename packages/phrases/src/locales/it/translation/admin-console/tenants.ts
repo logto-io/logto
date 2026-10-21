@@ -72,11 +72,11 @@ const tenants = {
     usage_statement_month_column: 'Mese',
     usage_reporting_title: 'REPORT DI UTILIZZO',
     usage_reporting_description:
-      'Ciò che questa distribuzione invia a Logto. È di sola lettura: imposta SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED su ogni istanza Core per disattivarlo.',
+      'Ciò che questa distribuzione invia a Logto. È di sola lettura: non c’è alcun interruttore nella console.',
     usage_reporting_enabled: 'Attivo',
     usage_reporting_disabled: 'Disattivato',
     usage_reporting_enabled_description:
-      'I conteggi aggregati di utilizzo vengono inviati a Logto con l’aggiornamento settimanale della licenza. Logto li usa per confrontare il tuo utilizzo con i limiti del piano.',
+      'I conteggi aggregati di utilizzo vengono inviati a Logto con l’aggiornamento settimanale della licenza. Logto li usa per confrontare il tuo utilizzo con i limiti del piano. Per disattivarlo, imposta SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED su ogni istanza Core.',
     usage_reporting_disabled_description:
       'Il report di utilizzo è disattivato dalla variabile d’ambiente SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED su questa distribuzione. La licenza continua ad aggiornarsi e gli avvisi di utilizzo continuano a funzionare.',
     usage_reporting_fields_title: 'Inviato a ogni aggiornamento della licenza:',

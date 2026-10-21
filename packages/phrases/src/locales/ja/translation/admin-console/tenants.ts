@@ -69,11 +69,11 @@ const tenants = {
     usage_statement_month_column: '月',
     usage_reporting_title: '使用量のレポート',
     usage_reporting_description:
-      'このデプロイが Logto に送信する内容です。読み取り専用で、無効にするにはすべての Core インスタンスで SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED を設定します。',
+      'このデプロイが Logto に送信する内容です。読み取り専用で、コンソールに切り替えはありません。',
     usage_reporting_enabled: '有効',
     usage_reporting_disabled: '無効',
     usage_reporting_enabled_description:
-      '週次で実行されるライセンス更新時に、集計された使用量が Logto に送信されます。Logto はこのデータを使用量とプランの上限の比較に使用します。',
+      '週次で実行されるライセンス更新時に、集計された使用量が Logto に送信されます。Logto はこのデータを使用量とプランの上限の比較に使用します。無効にするには、すべての Core インスタンスで SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED を設定します。',
     usage_reporting_disabled_description:
       'このデプロイでは、SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED 環境変数によって使用量のレポートが無効になっています。ライセンスの更新は続行され、使用量の警告も引き続き機能します。',
     usage_reporting_fields_title: 'ライセンス更新時に送信される内容：',

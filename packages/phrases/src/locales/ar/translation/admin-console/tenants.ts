@@ -68,11 +68,11 @@ const tenants = {
     usage_statement_month_column: 'الشهر',
     usage_reporting_title: 'الإبلاغ عن الاستخدام',
     usage_reporting_description:
-      'ما يرسله هذا النشر إلى Logto. للقراءة فقط: عيّن SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED على كل نسخة Core لإيقافه.',
+      'ما يرسله هذا النشر إلى Logto. للقراءة فقط: لا يوجد مفتاح في وحدة التحكم.',
     usage_reporting_enabled: 'مُفعّل',
     usage_reporting_disabled: 'معطّل',
     usage_reporting_enabled_description:
-      'تُرسل عدادات الاستخدام المجمعة إلى Logto مع تحديث الترخيص الأسبوعي. تستخدمها Logto لمقارنة استخدامك بحدود خطتك.',
+      'تُرسل عدادات الاستخدام المجمعة إلى Logto مع تحديث الترخيص الأسبوعي. تستخدمها Logto لمقارنة استخدامك بحدود خطتك. لإيقافه، عيّن SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED على كل نسخة Core.',
     usage_reporting_disabled_description:
       'تم تعطيل الإبلاغ عن الاستخدام عبر متغير البيئة SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED على هذا النشر. يظل الترخيص يُحدّث، وتظل تحذيرات الاستخدام تعمل.',
     usage_reporting_fields_title: 'يُرسل مع كل تحديث للترخيص:',
