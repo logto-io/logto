@@ -3,23 +3,37 @@ import { UserScope } from '@logto/core-kit';
 import { enableAllAccountCenterFields } from '#src/api/account-center.js';
 import { authedAdminApi, baseApi } from '#src/api/api.js';
 import { deleteApplication } from '#src/api/application.js';
-import { getUserInfo, updatePassword, updateUser } from '#src/api/my-account.js';
+import {
+  getBackupCodes,
+  getMyAccountGrants,
+  getSessions,
+  getTrustedDevicesResponse,
+  getUserInfo,
+  updatePassword,
+  updateUser,
+} from '#src/api/my-account.js';
 import { createVerificationRecordByPassword } from '#src/api/verification-record.js';
 import { expectRejects } from '#src/helpers/index.js';
 import {
   createDefaultTenantUserWithPassword,
   deleteDefaultTenantUser,
+  signInAndGetUserApi,
 } from '#src/helpers/profile.js';
 import { createAppAndSignInWithPassword } from '#src/helpers/session.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateName, generatePassword } from '#src/utils.js';
 
-const buildAccountApi = async (isThirdParty: boolean, username: string, password: string) => {
+const buildAccountApi = async (
+  isThirdParty: boolean,
+  username: string,
+  password: string,
+  scopes: UserScope[] = [UserScope.Profile]
+) => {
   const { app, client } = await createAppAndSignInWithPassword({
     username,
     password,
     isThirdParty,
-    scopes: [UserScope.Profile],
+    scopes,
   });
 
   const accessToken = await client.getAccessToken();
@@ -80,6 +94,42 @@ describe('account API third-party guard', () => {
 
     try {
       await expect(updateUser(api, { name })).resolves.toMatchObject({ name });
+    } finally {
+      await Promise.all([deleteApplication(app.id), deleteDefaultTenantUser(user.id)]);
+    }
+  });
+
+  it('should reject account reads that need recent authentication from a third-party application', async () => {
+    const { user, username, password } = await createDefaultTenantUserWithPassword();
+    const { app, api } = await buildAccountApi(true, username, password, [
+      UserScope.Profile,
+      UserScope.Identities,
+      UserScope.Sessions,
+      UserScope.TrustedDevices,
+    ]);
+    // A third-party application cannot mint a verification record — the Verification API refuses it
+    // — so mint one through a first-party client. The record belongs to the user, not to a client,
+    // so a third-party request can present it and reach the guard under test.
+    const firstPartyApi = await signInAndGetUserApi(username, password);
+    const verificationRecordId = await createVerificationRecordByPassword(firstPartyApi, password);
+
+    try {
+      await expectRejects(getSessions(api, verificationRecordId), {
+        code: 'auth.third_party_application_forbidden',
+        status: 403,
+      });
+      await expectRejects(getMyAccountGrants(api, verificationRecordId), {
+        code: 'auth.third_party_application_forbidden',
+        status: 403,
+      });
+      await expectRejects(getBackupCodes(api, verificationRecordId), {
+        code: 'auth.third_party_application_forbidden',
+        status: 403,
+      });
+      await expectRejects(getTrustedDevicesResponse(api, verificationRecordId), {
+        code: 'auth.third_party_application_forbidden',
+        status: 403,
+      });
     } finally {
       await Promise.all([deleteApplication(app.id), deleteDefaultTenantUser(user.id)]);
     }

@@ -603,6 +603,9 @@
           "401": {
             "description": "Unauthorized or identity verification required."
           },
+          "403": {
+            "description": "Permission denied, the application is a third-party application. Account API operations that require recent authentication only accept first-party applications."
+          },
           "404": {
             "description": "No backup codes found for the user."
           }
@@ -706,6 +709,9 @@
           },
           "401": {
             "description": "Permission denied, the verification record is invalid or the session does not have the required scope to access session details."
+          },
+          "403": {
+            "description": "Permission denied, the application is a third-party application. Account API operations that require recent authentication only accept first-party applications."
           }
         }
       }
@@ -728,6 +734,9 @@
           },
           "401": {
             "description": "Permission denied, the verification record is invalid or the session does not have the required scope to access grant details."
+          },
+          "403": {
+            "description": "Permission denied, the application is a third-party application. Account API operations that require recent authentication only accept first-party applications."
           }
         }
       }
@@ -792,6 +801,9 @@
           },
           "401": {
             "description": "Permission denied, the verification record is invalid or the access token does not include the trusted-devices scope."
+          },
+          "403": {
+            "description": "Permission denied, the application is a third-party application. Account API operations that require recent authentication only accept first-party applications."
           }
         }
       }
