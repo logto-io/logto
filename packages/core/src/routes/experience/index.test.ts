@@ -1758,4 +1758,124 @@ describe('POST /experience/submit', () => {
     }
   );
 });
+
+describe('POST /experience/abort', () => {
+  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+  const setDevFeaturesEnabled = (enabled: boolean) => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Exercise route behavior in the selected feature environment.
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = enabled;
+  };
+
+  afterEach(() => {
+    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
+  });
+
+  it('should finish the interaction with access_denied and return the redirect URL', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester, provider } = createRequesterWithMocks();
+
+    const response = await requester.post('/experience/abort').send({});
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ redirectTo: 'redirectTo' });
+    expect(provider.interactionResult).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      { error: 'access_denied' },
+      { mergeWithLastSubmission: false }
+    );
+  });
+
+  it('should forward the reason as error_description', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester, provider } = createRequesterWithMocks();
+    const reason = 'Denied by user: [test] ~!#';
+
+    const response = await requester.post('/experience/abort').send({ reason });
+
+    expect(response.status).toBe(200);
+    expect(provider.interactionResult).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      { error: 'access_denied', error_description: reason },
+      { mergeWithLastSubmission: false }
+    );
+  });
+
+  it('should reject a reason outside the RFC 6749 error_description charset', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester, provider } = createRequesterWithMocks();
+
+    for (const reason of ['"', '\\', '\u007F', 'é', '\n']) {
+      // eslint-disable-next-line no-await-in-loop
+      const response = await requester.post('/experience/abort').send({ reason });
+
+      expect(response.status).toBe(400);
+      expect(response.body).toMatchObject({ code: 'guard.invalid_input' });
+    }
+
+    expect(provider.interactionResult).not.toHaveBeenCalled();
+  });
+
+  it('should accept a 256-character reason and reject a longer one', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester } = createRequesterWithMocks();
+
+    const accepted = await requester.post('/experience/abort').send({ reason: 'a'.repeat(256) });
+    const rejected = await requester.post('/experience/abort').send({ reason: 'a'.repeat(257) });
+
+    expect(accepted.status).toBe(200);
+    expect(rejected.status).toBe(400);
+    expect(rejected.body).toMatchObject({ code: 'guard.invalid_input' });
+  });
+
+  it('should abort an interaction that is at the consent step', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester, provider } = createRequesterWithMocks({
+      interactionDetailsOverrides: {
+        prompt: { name: 'consent', reasons: ['consent_required'], details: {} },
+        result: {
+          interactionEvent: InteractionEvent.SignIn,
+          userId: mockUser.id,
+          login: { accountId: mockUser.id },
+        },
+      },
+    });
+
+    const response = await requester.post('/experience/abort').send({ reason: 'User cancelled' });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ redirectTo: 'redirectTo' });
+    expect(provider.interactionResult).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      { error: 'access_denied', error_description: 'User cancelled' },
+      { mergeWithLastSubmission: false }
+    );
+  });
+
+  it('should abort even when the interaction storage cannot be restored', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester, provider } = createRequesterWithMocks({
+      // E.g. an interaction whose experience data was never saved, or was already consumed.
+      interactionDetailsOverrides: { result: {} },
+    });
+
+    const response = await requester.post('/experience/abort').send({});
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ redirectTo: 'redirectTo' });
+    expect(provider.interactionResult).toHaveBeenCalled();
+  });
+
+  it('should not be registered when dev features are disabled', async () => {
+    setDevFeaturesEnabled(false);
+    const { requester, provider } = createRequesterWithMocks();
+
+    const response = await requester.post('/experience/abort').send({});
+
+    expect(response.status).toBe(404);
+    expect(provider.interactionResult).not.toHaveBeenCalled();
+  });
+});
 /* eslint-enable max-lines */

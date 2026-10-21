@@ -291,6 +291,7 @@ const routeCases: Array<{ method: string; path: string; allowed: boolean; name: 
     name: 'sign-in passkey binding',
   },
   { method: 'POST', path: experienceRoutes.mfa, allowed: false, name: 'MFA binding' },
+  { method: 'POST', path: experienceRoutes.abort, allowed: true, name: 'abort' },
 ];
 
 /** The conditional rows: each route and the gate that opens it. */

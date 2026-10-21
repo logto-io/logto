@@ -19,6 +19,9 @@ const allowedStepUpRoutes = new Set([
   `PUT ${experienceRoutes.prefix}`,
   `GET ${experienceRoutes.interaction}`,
   `POST ${experienceRoutes.prefix}/submit`,
+  // Aborting is always a valid exit, including from a step-up: it finishes the interaction
+  // without granting anything, so the route guard has nothing to protect.
+  `POST ${experienceRoutes.abort}`,
   `POST ${experienceRoutes.identification}`,
   `POST ${experienceRoutes.verification}/password`,
   `POST ${experienceRoutes.verification}/verification-code`,

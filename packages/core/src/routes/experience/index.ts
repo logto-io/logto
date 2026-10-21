@@ -11,10 +11,13 @@
  */
 
 import { identificationApiPayloadGuard, InteractionEvent } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { assignInteractionResults } from '#src/libraries/session/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaInteractionDetails from '#src/middleware/koa-interaction-details.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -231,6 +234,44 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       return next();
     }
   );
+
+  // DEV: Experience interaction abort.
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    experienceRouter.post(
+      experienceRoutes.abort,
+      koaGuard({
+        body: z.object({
+          // RFC 6749 §4.1.2.1 allows only %x20-21 / %x23-5B / %x5D-7E in `error_description`:
+          // printable ASCII without `"` (0x22) and `\` (0x5c). The explicit code point ranges
+          // keep the set unambiguous.
+          reason: z
+            .string()
+            .max(256)
+            .regex(/^[ !\u0023-\u005B\u005D-\u007E]*$/)
+            .optional(),
+        }),
+        response: z.object({
+          redirectTo: z.string(),
+        }),
+        status: [200, 400],
+      }),
+      async (ctx, next) => {
+        const { reason } = ctx.guard.body;
+
+        // Finish the interaction with a standard OAuth error, so the user agent returns to the
+        // client's redirect URI with the error, the original `state`, and `iss`. This only needs
+        // the provider interaction record, so it works at any step, including consent.
+        await assignInteractionResults(ctx, provider, {
+          error: 'access_denied',
+          ...conditional(reason && { error_description: reason }),
+        });
+
+        ctx.status = 200;
+
+        return next();
+      }
+    );
+  }
 
   experienceRouter.get(
     `${experienceRoutes.interaction}`,
