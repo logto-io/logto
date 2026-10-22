@@ -1,4 +1,4 @@
-import type { Log, ApplicationResponse } from '@logto/schemas';
+import type { LogResponse, ApplicationResponse } from '@logto/schemas';
 import { LogResult, ApplicationType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
@@ -88,14 +88,14 @@ function AuditLogTable({ applicationId, userId, className }: Props) {
     ...conditional(endTime !== undefined && { end_time: String(endTime) }),
   });
 
-  const { data, error, mutate } = useSWR<[Log[], number, boolean], RequestError>(url);
+  const { data, error, mutate } = useSWR<[LogResponse[], number, boolean], RequestError>(url);
   const isLoading = !data && !error;
   const { navigate } = useTenantPathname();
   const [logs, totalCount, isTotalCountCapped] = data ?? [];
   const isUserColumnVisible =
     !userId && specifiedApplication?.type !== ApplicationType.MachineToMachine;
 
-  const eventColumn: Column<Log> = {
+  const eventColumn: Column<LogResponse> = {
     title: t('logs.event'),
     dataIndex: 'event',
     colSpan: isUserColumnVisible ? 5 : 6,
@@ -108,14 +108,14 @@ function AuditLogTable({ applicationId, userId, className }: Props) {
     ),
   };
 
-  const userColumn: Column<Log> = {
+  const userColumn: Column<LogResponse> = {
     title: t('logs.user'),
     dataIndex: 'user',
     colSpan: 4,
     render: ({ payload: { userId } }) => (userId ? <UserName userId={userId} /> : <div>-</div>),
   };
 
-  const applicationColumn: Column<Log> = {
+  const applicationColumn: Column<LogResponse> = {
     title: t('logs.application'),
     dataIndex: 'application',
     colSpan: isUserColumnVisible ? 4 : 5,
@@ -129,20 +129,20 @@ function AuditLogTable({ applicationId, userId, className }: Props) {
     },
   };
 
-  const timeColumn: Column<Log> = {
+  const timeColumn: Column<LogResponse> = {
     title: t('logs.time'),
     dataIndex: 'time',
     colSpan: isUserColumnVisible ? 3 : 5,
     render: ({ createdAt }) => new Date(createdAt).toLocaleString(),
   };
 
-  const columns: Array<Column<Log>> = [
+  const columns: Array<Column<LogResponse>> = [
     eventColumn,
     conditional(isUserColumnVisible && userColumn),
     applicationColumn,
     timeColumn,
     // eslint-disable-next-line unicorn/prefer-native-coercion-functions
-  ].filter((column): column is Column<Log> => Boolean(column));
+  ].filter((column): column is Column<LogResponse> => Boolean(column));
 
   return (
     <Table
