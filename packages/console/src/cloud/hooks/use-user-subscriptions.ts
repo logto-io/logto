@@ -1,5 +1,5 @@
 import { type userSubscriptionsRouter } from '@logto/cloud/routes';
-import { type ResponseError } from '@withtyped/client';
+import { ResponseError } from '@withtyped/client';
 import useSWR from 'swr';
 
 import {
@@ -80,7 +80,10 @@ export const useUserSubscriptionInvoices = (page: number, pageSize: number) => {
   };
 };
 
-/** Read an authorized Enterprise's invoices for the global billing history, without drafts. */
+/**
+ * Read an authorized Enterprise's invoices for the global billing history, newest first and
+ * without drafts.
+ */
 export const useEnterpriseInvoices = (enterpriseId?: string) => {
   const { user, error: userError, isLoading: isUserLoading } = useCurrentUser();
   const api = useCloudApi({ hideErrorToast: true });
@@ -92,13 +95,24 @@ export const useEnterpriseInvoices = (enterpriseId?: string) => {
       api.get('/api/me/logto-enterprises/:id/invoices', { params: { id: enterpriseId ?? '' } }),
     { keepPreviousData: false }
   );
+  // An Enterprise without a subscription answers 404. It has no invoices yet, matching the
+  // Subscription tab's not-covered state, so this must not show as a failed read.
+  const hasNoSubscription =
+    result.error instanceof ResponseError && result.error.response.status === 404;
+  const error = userError ?? (hasNoSubscription ? undefined : result.error);
+  const invoices = hasNoSubscription ? [] : result.data?.invoices;
   return {
     ...result,
     isLoading: isUserLoading || result.isLoading,
-    data:
-      (userError ?? result.error)
-        ? undefined
-        : result.data?.invoices.filter(({ status }) => status !== 'draft'),
-    error: userError ?? result.error,
+    data: error
+      ? undefined
+      : invoices
+          ?.filter(({ status }) => status !== 'draft')
+          .slice()
+          .sort(
+            (invoiceA, invoiceB) =>
+              new Date(invoiceB.createdAt).getTime() - new Date(invoiceA.createdAt).getTime()
+          ),
+    error,
   };
 };

@@ -13,6 +13,17 @@ import {
   useUserSubscriptions,
 } from './use-user-subscriptions';
 
+jest.mock(
+  '@withtyped/client',
+  () => ({
+    ResponseError: class extends Error {
+      constructor(readonly response: { status: number }) {
+        super(`Request failed with ${response.status}`);
+      }
+    },
+  }),
+  { virtual: true }
+);
 jest.mock('./use-cloud-api', () => ({ useCloudApi: jest.fn() }));
 jest.mock('@/consts/env', () => ({
   __esModule: true,
@@ -22,6 +33,9 @@ jest.mock('@/consts/env', () => ({
 }));
 jest.mock('@/hooks/use-current-user', () => ({ __esModule: true, default: jest.fn() }));
 
+const { ResponseError } = jest.requireMock<{
+  ResponseError: new (response: { status: number }) => Error;
+}>('@withtyped/client');
 const get = jest.fn();
 class BillingError extends Error {
   constructor(readonly status: number) {
@@ -219,25 +233,45 @@ it.each([401, 403, 503])(
   }
 );
 
-it('reads only the given Enterprise invoices and hides drafts', async () => {
+it('reads only the given Enterprise invoices, newest first, and hides drafts', async () => {
   get.mockResolvedValue({
     invoices: [
-      { id: 'in_paid', status: 'paid' },
-      { id: 'in_draft', status: 'draft' },
-      { id: 'in_void', status: 'void' },
+      { id: 'in_paid', status: 'paid', createdAt: '2026-01-01T00:00:00.000Z' },
+      { id: 'in_draft', status: 'draft', createdAt: '2026-03-01T00:00:00.000Z' },
+      { id: 'in_open', status: 'open', createdAt: '2026-04-01T00:00:00.000Z' },
+      { id: 'in_void', status: 'void', createdAt: '2026-02-01T00:00:00.000Z' },
     ],
   });
   const { result } = renderBilling(() => useEnterpriseInvoices('contract'));
   await waitFor(() => {
-    expect(result.current.data).toEqual([
-      { id: 'in_paid', status: 'paid' },
-      { id: 'in_void', status: 'void' },
-    ]);
+    expect(result.current.data?.map(({ id }) => id)).toEqual(['in_open', 'in_void', 'in_paid']);
   });
   expect(get).toHaveBeenCalledWith('/api/me/logto-enterprises/:id/invoices', {
     params: { id: 'contract' },
   });
 });
+
+it('treats an Enterprise without a subscription as having no invoices', async () => {
+  get.mockRejectedValue(new ResponseError({ status: 404 }));
+  const { result } = renderBilling(() => useEnterpriseInvoices('contract'));
+  await waitFor(() => {
+    expect(result.current.data).toEqual([]);
+  });
+  expect(result.current.error).toBeUndefined();
+});
+
+it.each([401, 403, 503])(
+  'preserves an Enterprise invoice API %s failure instead of fabricating empty history',
+  async (status) => {
+    const error = new ResponseError({ status });
+    get.mockRejectedValue(error);
+    const { result } = renderBilling(() => useEnterpriseInvoices('contract'));
+    await waitFor(() => {
+      expect(result.current.error).toBe(error);
+    });
+    expect(result.current.data).toBeUndefined();
+  }
+);
 
 it('skips Enterprise invoices without an Enterprise or an authorized user', async () => {
   const { result, rerender } = renderBilling(() => useEnterpriseInvoices());
