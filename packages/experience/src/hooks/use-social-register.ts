@@ -36,7 +36,9 @@ const useSocialRegister = (connectorId: string, { replace, onEmailBlocked }: Opt
        * Therefore, skip the check for `Manual` policy.
        */
       if (agreeToTermsPolicy !== AgreeToTermsPolicy.Manual && !(await termsValidation())) {
-        navigateToSignIn();
+        // Push the sign-in page so Back returns to the page that opened the terms modal, e.g. the
+        // social link page.
+        navigateToSignIn(undefined, { replace: false });
         return;
       }
 

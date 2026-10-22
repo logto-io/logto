@@ -235,7 +235,8 @@ const useSocialSignInListener = (connectorId: string) => {
 
       if (!result.valid) {
         setToast(t(`error.${result.error}`));
-        navigateToSignIn(result.error);
+        // Push the sign-in page to keep the current page in the history.
+        navigateToSignIn(result.error, { replace: false });
         return;
       }
     } else {
@@ -244,7 +245,7 @@ const useSocialSignInListener = (connectorId: string) => {
 
       if (!result.valid) {
         setToast(t(`error.${result.error}`));
-        navigateToSignIn(result.error);
+        navigateToSignIn(result.error, { replace: false });
         return;
       }
     }

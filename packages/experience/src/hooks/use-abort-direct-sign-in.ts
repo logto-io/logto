@@ -15,7 +15,8 @@ import useGlobalRedirectTo from './use-global-redirect-to';
  * `false` when the caller should run its regular fallback.
  */
 const useAbortDirectSignIn = () => {
-  const asyncGetDirectSignIn = useApi(getDirectSignIn);
+  // Most lookups end in the hosted fallback, so keep the global loading mask off.
+  const asyncGetDirectSignIn = useApi(getDirectSignIn, { silent: true });
   const asyncAbortInteraction = useApi(abortInteraction);
   const redirectTo = useGlobalRedirectTo();
 
