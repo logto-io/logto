@@ -5,7 +5,7 @@ const pendingConnectorCreationGuard = z.object({
   key: z.string().min(1),
   providerName: z.nativeEnum(SsoProviderName),
   funding: z.enum(['included', 'personal']).optional(),
-  enterpriseId: z.string().optional(),
+  enterpriseId: z.string().min(1).optional(),
   subscriptionId: z.string().optional(),
   checkoutKey: z.string().optional(),
   sessionId: z.string().optional(),

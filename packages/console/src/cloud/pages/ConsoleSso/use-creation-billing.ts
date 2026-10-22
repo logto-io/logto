@@ -43,9 +43,10 @@ export const useCreationBilling = (operation?: PendingConnectorCreation) => {
   const funding = operation?.funding ?? (coverage.data?.isAvailable ? 'included' : 'personal');
   const billingError = isRecovering ? undefined : coverage.error;
   const isBillingReady = isRecovering || (Boolean(coverage.data) && !coverage.isValidating);
+  const enterpriseId = isRecovering ? operation?.enterpriseId : coverage.data?.enterpriseId;
   return {
     funding,
-    enterpriseId: funding === 'included' ? coverage.data?.enterpriseId : undefined,
+    enterpriseId: funding === 'included' ? enterpriseId : undefined,
     billingError,
     isBillingReady,
   };

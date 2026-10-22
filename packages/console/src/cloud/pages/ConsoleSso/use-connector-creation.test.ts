@@ -12,6 +12,7 @@ import {
   paidConnectors,
   paidSession,
   renderCreation,
+  toastResponseError,
 } from './use-connector-creation.test-helpers';
 
 it('automatically uses personal billing only after server billing reads finish', async () => {
@@ -31,7 +32,7 @@ it('automatically uses personal billing only after server billing reads finish',
 it('automatically uses Enterprise allowance before an existing personal subscription', async () => {
   mockApi.get.mockImplementation(async (path: string) => {
     if (path === '/api/me/logto-enterprises') {
-      return { logtoEnterprises: [{ id: 'enterprise-one' }] };
+      return { logtoEnterprises: [{ id: 'enterprise-one' }, { id: 'enterprise-two' }] };
     }
     if (path === '/api/me/logto-enterprises/:id') {
       return {
@@ -56,7 +57,96 @@ it('automatically uses Enterprise allowance before an existing personal subscrip
       { params: { id: 'enterprise-one' }, body: { providerName: SsoProviderName.OIDC } },
     ],
   ]);
+  expect(mockApi.get).toHaveBeenCalledWith('/api/me/logto-enterprises/:id', {
+    params: { id: 'enterprise-one' },
+    search: { includeSharedQuota: 'true', includeUsages: 'true' },
+  });
   expect(mockApi.get).not.toHaveBeenCalledWith('/api/me/console-sso/checkout-preview');
+});
+
+it.each([404, 409])(
+  'preserves the saved Enterprise and funding after a %s rejection and retries after reload',
+  async (status) => {
+    const saved = savePendingConnectorCreation('alice', {
+      key: 'original-key',
+      providerName: SsoProviderName.OIDC,
+      funding: 'included',
+      enterpriseId: 'original-enterprise',
+    });
+    const failure = { response: { status }, message: 'Creation rejected' };
+    mockApi.get.mockResolvedValue({ logtoEnterprises: [{ id: 'different-enterprise' }] });
+    mockApi.post.mockRejectedValueOnce(failure);
+    const first = renderCreation();
+    await act(async () => {
+      await first.result.current.create(SsoProviderName.SAML);
+    });
+    expect(first.result.current.status).toBe('error');
+    expect(toastResponseError).toHaveBeenCalledWith(failure);
+    expect(readPendingConnectorCreation('alice')).toEqual(saved);
+    expect(mockApi.get).not.toHaveBeenCalledWith('/api/me/logto-enterprises');
+    first.unmount();
+
+    const { result } = renderCreation();
+    expect(result.current.billing.enterpriseId).toBe('original-enterprise');
+    await act(async () => {
+      await result.current.create(SsoProviderName.SAML);
+    });
+    expect(mockApi.post.mock.calls).toEqual(
+      Array.from({ length: 2 }, () => [
+        '/api/me/logto-enterprises/:id/console-sso/connectors',
+        {
+          params: { id: 'original-enterprise' },
+          body: { providerName: SsoProviderName.OIDC },
+        },
+      ])
+    );
+    expect(onCreated).toHaveBeenCalledWith('connector-one');
+  }
+);
+
+it('refreshes coverage for a deliberate new creation after an Enterprise rejection', async () => {
+  savePendingConnectorCreation('alice', {
+    key: 'original-key',
+    providerName: SsoProviderName.OIDC,
+    funding: 'included',
+    enterpriseId: 'original-enterprise',
+  });
+  mockApi.post.mockRejectedValueOnce({ response: { status: 404 } });
+  mockApi.get.mockImplementation(async (path: string) => {
+    if (path === '/api/me/logto-enterprises') {
+      return { logtoEnterprises: [{ id: 'new-enterprise' }] };
+    }
+    if (path === '/api/me/logto-enterprises/:id') {
+      return {
+        quotaScope: 'shared',
+        quota: { basicQuota: { consoleSsoConnectorLimit: 1 } },
+        usages: { consoleSsoConnectorLimit: 0 },
+        subscription: { status: 'active' },
+      };
+    }
+    return [];
+  });
+  const { result } = renderCreation();
+  await act(async () => {
+    await result.current.create(SsoProviderName.OIDC);
+  });
+  expect(result.current.operation?.enterpriseId).toBe('original-enterprise');
+  await act(async () => {
+    await result.current.startOver();
+  });
+  await waitFor(() => {
+    expect(result.current.billing.isBillingReady).toBe(true);
+  });
+  expect(result.current.operation).toBeUndefined();
+  expect(result.current.billing.enterpriseId).toBe('new-enterprise');
+  await act(async () => {
+    await result.current.create(SsoProviderName.OIDC);
+  });
+  expect(mockApi.post).toHaveBeenLastCalledWith(
+    '/api/me/logto-enterprises/:id/console-sso/connectors',
+    { params: { id: 'new-enterprise' }, body: { providerName: SsoProviderName.OIDC } }
+  );
+  expect(mockApi.post).toHaveBeenCalledTimes(2);
 });
 
 it.each([false, true])(

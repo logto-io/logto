@@ -40,15 +40,43 @@ export const selectCreationFunding = (
   userId: string,
   operation: PendingConnectorCreation,
   funding: CreationFunding
-) =>
-  operation.funding
-    ? operation
-    : savePendingConnectorCreation(userId, { ...operation, ...funding });
+) => {
+  if (operation.funding) {
+    return operation;
+  }
+  if (funding.funding === 'included' && !funding.enterpriseId) {
+    throw new Error('Select an Enterprise before creating a connector.');
+  }
+  return savePendingConnectorCreation(userId, { ...operation, ...funding });
+};
 
 const assertCurrentOperation = (userId: string, operation: PendingConnectorCreation) => {
   if (!isPendingConnectorCreationCurrent(userId, operation)) {
     throw new DOMException('Connector creation was replaced or cleared.', 'AbortError');
   }
+};
+
+const requestConnectorCreation = async (
+  operation: PendingConnectorCreation,
+  api: Client<typeof consoleSsoRouter>
+) => {
+  const { providerName, enterpriseId, subscriptionId } = operation;
+  if (operation.funding === 'included') {
+    // Older pending operations lack an Enterprise selector; keep them for explicit cleanup.
+    if (!enterpriseId) {
+      throw new Error('Start over to select an Enterprise for this connector.');
+    }
+    return api.post('/api/me/logto-enterprises/:id/console-sso/connectors', {
+      params: { id: enterpriseId },
+      body: { providerName },
+    });
+  }
+  if (!subscriptionId) {
+    throw new Error('A personal subscription is required to create a connector.');
+  }
+  return api.post('/api/me/console-sso/connectors', {
+    body: { providerName, stripeUserSubscriptionId: subscriptionId },
+  });
 };
 
 /** Resume payment or fulfillment using the persisted intention, never a redirect's payment claim. */
@@ -97,30 +125,9 @@ export const continueConnectorCreation = async (
     });
     return { enrollment: await enroll(current), current };
   };
-  const postConnector = async (current: PendingConnectorCreation) => {
-    const api = getApi(current.key);
-    if (current.funding === 'included') {
-      if (!current.enterpriseId) {
-        throw new Error('Select a funding source before creating a connector.');
-      }
-      return api.post('/api/me/logto-enterprises/:id/console-sso/connectors', {
-        params: { id: current.enterpriseId },
-        body: { providerName: current.providerName },
-      });
-    }
-    if (!current.subscriptionId) {
-      throw new Error('Select a funding source before creating a connector.');
-    }
-    return api.post('/api/me/console-sso/connectors', {
-      body: {
-        providerName: current.providerName,
-        stripeUserSubscriptionId: current.subscriptionId,
-      },
-    });
-  };
   const createConnector = async (current: PendingConnectorCreation) => {
     assertCurrent(current);
-    const connector = await postConnector(current);
+    const connector = await requestConnectorCreation(current, getApi(current.key));
     assertCurrent(current);
     return { status: 'created' as const, id: connector.id, operation: current };
   };
