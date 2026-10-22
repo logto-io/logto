@@ -1,4 +1,4 @@
-import { assert, type Nullable } from '@silverhand/essentials';
+import { assert } from '@silverhand/essentials';
 import {
   sql,
   type DatabasePool,
@@ -6,12 +6,13 @@ import {
   type SqlSqlToken,
 } from '@silverhand/slonik';
 
+import { switchToTenantRole } from './tenant-role.js';
+
 /**
- * Explains `statement` as the tenant's database role, so row-level security applies and only
- * leakproof predicates can become index conditions. The pool's user must be allowed to `set role`
- * to that role. Sequential and bitmap scans are turned off so the tiny integration tables still
- * yield a plain index scan whose `Index Cond` and `Filter` lines show which clauses the planner
- * may use.
+ * Explains `statement` as the tenant's database role (see `switchToTenantRole`), so only leakproof
+ * predicates can become index conditions. Sequential and bitmap scans are turned off so the tiny
+ * integration tables still yield a plain index scan whose `Index Cond` and `Filter` lines show
+ * which clauses the planner may use.
  *
  * `seed` runs first as the pool's user, typically to insert rows and `analyze` the table: on an
  * empty, never-analyzed table every index scan costs the same, so the chosen index would depend
@@ -33,17 +34,7 @@ export const explainAsTenant = async (
     try {
       await seed?.(connection);
 
-      const { dbUser } = await connection.one<{ dbUser: Nullable<string> }>(sql`
-        select db_user as "dbUser" from tenants where id = ${tenantId}
-      `);
-
-      assert(dbUser, new Error(`Tenant ${tenantId} has no database role to explain as`));
-
-      await connection.query(sql`set local role ${sql.identifier([dbUser])}`);
-      assert(
-        await connection.oneFirst<boolean>(sql`select row_security_active('tenants')`),
-        new Error(`Role ${dbUser} bypasses row-level security, so its plans prove nothing`)
-      );
+      await switchToTenantRole(connection, tenantId);
       await connection.query(sql`set local enable_seqscan = off`);
       await connection.query(sql`set local enable_bitmapscan = off`);
 
