@@ -19,7 +19,7 @@ const getAndCheckValueByFieldName = async (page: Page, fieldName: string, expect
     (element) => element.textContent
   );
 
-  expect(value?.endsWith(expectSuffix)).toBeTruthy();
+  expect(value.endsWith(expectSuffix)).toBeTruthy();
 };
 
 // Check the correctness of automatically generated connection info on the `Connection` tab.

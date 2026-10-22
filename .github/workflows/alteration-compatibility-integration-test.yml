@@ -88,6 +88,10 @@ jobs:
 
 
     steps:
+      # Puppeteer 23's postinstall starts the browser download without awaiting it, which exits
+      # early on Node.js 26. Pre-install the matching Chrome so the integration tests can find it.
+      - name: Install Puppeteer Chrome
+        run: npx --yes puppeteer@23.10.3 browsers install chrome
       - uses: logto-io/actions-run-logto-integration-tests@v4.1.0
         with:
           branch: ${{ github.base_ref }}

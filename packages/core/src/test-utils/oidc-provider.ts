@@ -9,7 +9,7 @@ const { jest } = import.meta;
 const createTestProvider = (issuer: string) => {
   // eslint-disable-next-line no-console
   const originalWarn = console.warn;
-  const warn = jest.spyOn(console, 'warn').mockImplementation((...args) => {
+  const warn = jest.spyOn(console, 'warn').mockImplementation((...args: unknown[]) => {
     if (typeof args[0] !== 'string' || !args[0].includes('oidc-provider')) {
       originalWarn(...args);
     }

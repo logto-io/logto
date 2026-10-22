@@ -285,7 +285,7 @@ describe('applications', () => {
         expect(appId).toBeTruthy();
 
         await Promise.all([
-          expect(generateM2mLog(appId!)).rejects.toThrow(),
+          expect(generateM2mLog(appId)).rejects.toThrow(),
           expect(page).toClick('nav div[class$=item] div[class$=link] a', {
             text: 'Machine logs',
           }),

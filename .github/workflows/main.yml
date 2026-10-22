@@ -105,7 +105,8 @@ jobs:
 
       - name: Install playwright for element tests
         working-directory: ./packages/elements
-        run: pnpm exec playwright install --with-deps
+        timeout-minutes: 20
+        run: pnpm exec playwright install --with-deps chromium
 
       - name: Test
         run: pnpm ci:test
