@@ -31,7 +31,7 @@
           {
             "in": "query",
             "name": "customData",
-            "description": "A repeatable filter for exact user lookup by custom data. Each value must be a URL-encoded JSON object, for example `customData=%7B%22qq%22%3A114514%7D` for `{\"qq\":114514}`. Matching uses PostgreSQL JSONB containment (`users.custom_data @> value::jsonb`) with strict JSON types: the number `114514` does not match the string `\"114514\"`, strings are case-sensitive without phone/date normalization, and `null` only matches an explicit JSON `null`, not a missing key. Nested objects are matched recursively, and arrays are matched by element regardless of order or duplicates. All keys within one object are combined with AND, repeated `customData` parameters are combined with OR, and the whole custom data condition is combined with `search`, identity, `excludeRoleId`, and `excludeOrganizationId` filters using AND. Empty objects and empty arrays are rejected with 400, and at most 20 `customData` values are allowed per request. The `mode`, `joint`, and `isCaseSensitive` parameters do not apply to `customData`, and nested syntax such as `customData.qq` or `mode.customData` is not supported.",
+            "description": "A repeatable filter for exact user lookup by custom data. Each value must be a URL-encoded JSON object, for example `customData=%7B%22customId%22%3A114514%7D` for `{\"customId\":114514}`. Matching uses PostgreSQL JSONB containment (`users.custom_data @> value::jsonb`) with strict JSON types: the number `114514` does not match the string `\"114514\"`, strings are case-sensitive without phone/date normalization, and `null` only matches an explicit JSON `null`, not a missing key. Nested objects are matched recursively, and arrays are matched by element regardless of order or duplicates. All keys within one object are combined with AND, repeated `customData` parameters are combined with OR, and the whole custom data condition is combined with `search`, identity, `excludeRoleId`, and `excludeOrganizationId` filters using AND. Empty objects and empty arrays are rejected with 400, and at most 20 `customData` values are allowed per request. The `mode`, `joint`, and `isCaseSensitive` parameters do not apply to `customData`, and nested syntax such as `customData.customId` or `mode.customData` is not supported.",
             "style": "form",
             "explode": true,
             "schema": {
@@ -43,7 +43,7 @@
             "examples": {
               "number": {
                 "summary": "Match a numeric value",
-                "value": ["{\"qq\":114514}"]
+                "value": ["{\"customId\":114514}"]
               },
               "nested": {
                 "summary": "Match nested object and array values",
@@ -51,7 +51,7 @@
               },
               "or": {
                 "summary": "Match either filter",
-                "value": ["{\"qq\":114514}", "{\"wechat\":\"logto\"}"]
+                "value": ["{\"customId\":114514}", "{\"department\":\"engineering\"}"]
               }
             }
           }

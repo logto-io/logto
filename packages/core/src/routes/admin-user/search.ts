@@ -62,7 +62,7 @@ const getIdentityCondition = (searchParams: URLSearchParams): UserConditions['id
 };
 
 const customDataSearchHint =
-  'Parameter `customData` must be a URL-encoded JSON object, e.g. `customData={"qq":114514}`. Nested parameters such as `customData.qq`, `customData[qq]`, and `mode.customData` are not supported.';
+  'Parameter `customData` must be a URL-encoded JSON object, e.g. `customData={"customId":114514}`. Nested parameters such as `customData.customId`, `customData[customId]`, and `mode.customData` are not supported.';
 
 const maxCustomDataSearchValues = 20;
 
