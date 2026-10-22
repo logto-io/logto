@@ -24,6 +24,10 @@ export const explainAsTenant = async (
     assert(dbUser, new Error(`Tenant ${tenantId} has no database role to explain as`));
 
     await transaction.query(sql`set local role ${sql.identifier([dbUser])}`);
+    assert(
+      await transaction.oneFirst<boolean>(sql`select row_security_active('tenants')`),
+      new Error(`Role ${dbUser} bypasses row-level security, so its plans prove nothing`)
+    );
     await transaction.query(sql`set local enable_seqscan = off`);
     await transaction.query(sql`set local enable_bitmapscan = off`);
 
