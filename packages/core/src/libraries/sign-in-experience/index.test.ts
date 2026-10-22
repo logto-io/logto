@@ -102,6 +102,7 @@ const getPublicSignInExperience = (signInExperience: SignInExperience) => {
   const {
     emailBlocklistPolicy: _emailBlocklistPolicy,
     forgotPasswordMethods: _forgotPasswordMethods,
+    ssoBrandingBeforeEmailMatch: _ssoBrandingBeforeEmailMatch,
     ...publicSignInExperience
   } = signInExperience;
 
@@ -429,9 +430,12 @@ describe('get sso connectors', () => {
     ]);
   });
 
-  it('should not expose custom branding when showBeforeEmailMatch is false', async () => {
+  it('should not expose custom branding when ssoBrandingBeforeEmailMatch is false', async () => {
     getLogtoConnectors.mockResolvedValueOnce(mockSocialConnectors);
-    findDefaultSignInExperience.mockResolvedValueOnce(mockSignInExperience);
+    findDefaultSignInExperience.mockResolvedValueOnce({
+      ...mockSignInExperience,
+      ssoBrandingBeforeEmailMatch: false,
+    });
 
     mockSsoConnectorLibrary.getAvailableSsoConnectors.mockResolvedValueOnce([
       {
@@ -440,7 +444,6 @@ describe('get sso connectors', () => {
           displayName: 'Logto Connector',
           logo: 'https://logto.io/custom-logo.png',
           darkLogo: 'https://logto.io/custom-dark-logo.png',
-          showBeforeEmailMatch: false,
         },
       },
     ]);

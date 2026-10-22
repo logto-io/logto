@@ -57,8 +57,8 @@ type SignInExperienceOverride = Partial<Omit<SignInExperience, 'color'> & { colo
 
 /**
  * Build the SSO connector data exposed to the experience client. Tenant branding is only included
- * when `withBranding` is true, so callers can gate it behind a domain match or the connector's
- * public-visibility setting.
+ * when `withBranding` is true, so callers can gate it behind a domain match or the sign-in
+ * experience's public-visibility setting.
  */
 export const buildSsoConnectorMetadata = (
   { id, providerName, branding }: SupportedSsoConnector,
@@ -126,16 +126,14 @@ export const createSignInExperienceLibrary = (
     });
   };
 
-  const getActiveSsoConnectors = async (locale: string): Promise<SsoConnectorMetadata[]> => {
+  const getActiveSsoConnectors = async (
+    locale: string,
+    withBranding: boolean
+  ): Promise<SsoConnectorMetadata[]> => {
     const ssoConnectors = await getAvailableSsoConnectors();
 
     return ssoConnectors.map((connector) =>
-      buildSsoConnectorMetadata(
-        connector,
-        locale,
-        // Undefined defaults to exposing branding, preserving the current public UI behavior.
-        connector.branding.showBeforeEmailMatch !== false
-      )
+      buildSsoConnectorMetadata(connector, locale, withBranding)
     );
   };
 
@@ -272,7 +270,7 @@ export const createSignInExperienceLibrary = (
 
     // Always return empty array if single-sign-on is disabled
     const ssoConnectors = signInExperience.singleSignOnEnabled
-      ? await getActiveSsoConnectors(locale)
+      ? await getActiveSsoConnectors(locale, signInExperience.ssoBrandingBeforeEmailMatch)
       : [];
 
     const socialConnectors = signInExperience.socialSignInConnectorTargets.reduce<
@@ -351,6 +349,7 @@ export const createSignInExperienceLibrary = (
     const {
       emailBlocklistPolicy: _emailBlocklistPolicy,
       forgotPasswordMethods: _forgotPasswordMethods,
+      ssoBrandingBeforeEmailMatch: _ssoBrandingBeforeEmailMatch,
       ...publicSignInExperience
     } = deepmerge<SignInExperience, SignInExperienceOverride>(
       deepmerge<SignInExperience, SignInExperienceOverride>(signInExperience, appSignInExperience),
