@@ -1,5 +1,5 @@
 /* eslint-disable complexity */
-import type { Application, Hook, Log, User } from '@logto/schemas';
+import type { Application, Hook, LogResponse, User } from '@logto/schemas';
 import { isBuiltInApplicationId } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
@@ -36,7 +36,7 @@ function AuditLogDetails() {
   const { appId, userId, hookId, logId } = useParams();
   const { pathname } = useLocation();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data, error, mutate } = useSWR<Log, RequestError>(logId && `api/logs/${logId}`);
+  const { data, error, mutate } = useSWR<LogResponse, RequestError>(logId && `api/logs/${logId}`);
   const { data: appData } = useSWR<Application, RequestError>(appId && `api/applications/${appId}`);
   const { data: userData } = useSWR<User, RequestError>(userId && `api/users/${userId}`);
   const { data: hookData } = useSWR<Hook, RequestError>(hookId && `api/hooks/${hookId}`);

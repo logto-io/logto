@@ -1,3 +1,7 @@
+import { type z } from 'zod';
+
+import { Logs } from '../../db-entries/index.js';
+
 import type * as action from './action.js';
 import type * as hook from './hook.js';
 import type * as interaction from './interaction.js';
@@ -56,3 +60,12 @@ export type AuditLogPrefix =
   | typeof LogKeyUnknown;
 
 export type WebhookLogPrefix = hook.Type;
+
+/** `Logs.guard` without the trigger-kept `payload_*` lookup columns, for API responses. */
+export const logResponseGuard = Logs.guard.omit({
+  payloadUserId: true,
+  payloadApplicationId: true,
+  payloadHookId: true,
+});
+
+export type LogResponse = z.infer<typeof logResponseGuard>;

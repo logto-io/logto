@@ -1,6 +1,6 @@
 import {
   Hooks,
-  Logs,
+  logResponseGuard,
   ProductEvent,
   type WebhookLogPrefix,
   hook,
@@ -141,7 +141,7 @@ export default function hookRoutes<T extends ManagementApiRouter>(
         start_time: z.string().optional(),
         end_time: z.string().optional(),
       }),
-      response: Logs.guard.omit({ tenantId: true }).array(),
+      response: logResponseGuard.omit({ tenantId: true }).array(),
       status: [200, 400],
     }),
     async (ctx, next) => {

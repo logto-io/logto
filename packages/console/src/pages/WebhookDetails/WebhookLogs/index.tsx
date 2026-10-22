@@ -1,4 +1,4 @@
-import { type Log } from '@logto/schemas';
+import { type LogResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
@@ -46,7 +46,7 @@ function WebhookLogs() {
     ...conditional(event && { logKey: event }),
   });
 
-  const { data, error, mutate } = useSWR<[Log[], number], RequestError>(url);
+  const { data, error, mutate } = useSWR<[LogResponse[], number], RequestError>(url);
   const isLoading = !data && !error;
   const [logs, totalCount] = data ?? [];
 
