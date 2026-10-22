@@ -55,6 +55,10 @@ create index oidc_model_instances__model_name_payload_account_id_partial
   on oidc_model_instances (tenant_id, model_name, (payload->>'accountId'))
   where payload ? 'accountId';
 
+create index oidc_model_instances__model_name_payload_account_id_expires_at
+  on oidc_model_instances (tenant_id, model_name, payload_account_id, expires_at)
+  where payload_account_id is not null;
+
 /** Copies the payload keys used for lookups into their `payload_*` columns. */
 create function oidc_model_instances__set_payload_keys() returns trigger as
 $$ begin
