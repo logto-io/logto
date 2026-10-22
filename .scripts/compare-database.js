@@ -277,7 +277,10 @@ const queryDatabaseData = async (database, manifests) => {
         'secret',
         'db_user',
         'db_user_password',
-        'add_on_sku_id'
+        'add_on_sku_id',
+        // Trigger-kept copies: rows seeded before the alteration stay null until the users backfill runs; remove once it lands.
+        'primary_email_lower',
+        'username_lower'
       );
 
       return [table_name, data.sort(buildSortByKeys(Object.keys(data[0] ?? {})))];

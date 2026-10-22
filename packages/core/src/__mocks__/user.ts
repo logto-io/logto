@@ -29,6 +29,8 @@ export const mockUser: User = {
   updatedAt: 1_650_969_000_000,
   isSuspended: false,
   isPasswordExpired: false,
+  primaryEmailLower: 'foo@logto.io',
+  usernameLower: 'foo',
 };
 
 export const mockUserTotpMfaVerification = {
@@ -88,6 +90,8 @@ export const mockUserWithPassword: User = {
   updatedAt: 1_650_969_000_000,
   isSuspended: false,
   isPasswordExpired: false,
+  primaryEmailLower: 'foo@logto.io',
+  usernameLower: 'username',
 };
 
 export const mockUserList: User[] = [
@@ -114,6 +118,8 @@ export const mockUserList: User[] = [
     updatedAt: 1_650_969_000_000,
     isSuspended: false,
     isPasswordExpired: false,
+    primaryEmailLower: 'foo1@logto.io',
+    usernameLower: 'foo1',
   },
   {
     tenantId: 'fake_tenant',
@@ -138,6 +144,8 @@ export const mockUserList: User[] = [
     updatedAt: 1_650_969_000_000,
     isSuspended: false,
     isPasswordExpired: false,
+    primaryEmailLower: 'foo2@logto.io',
+    usernameLower: 'foo2',
   },
   {
     tenantId: 'fake_tenant',
@@ -162,6 +170,8 @@ export const mockUserList: User[] = [
     updatedAt: 1_650_969_000_000,
     isSuspended: false,
     isPasswordExpired: false,
+    primaryEmailLower: 'foo3@logto.io',
+    usernameLower: 'foo3',
   },
   {
     tenantId: 'fake_tenant',
@@ -186,6 +196,8 @@ export const mockUserList: User[] = [
     updatedAt: 1_650_969_000_000,
     isSuspended: false,
     isPasswordExpired: false,
+    primaryEmailLower: 'bar1@logto.io',
+    usernameLower: 'bar1',
   },
   {
     tenantId: 'fake_tenant',
@@ -210,6 +222,8 @@ export const mockUserList: User[] = [
     updatedAt: 1_650_969_000_000,
     isSuspended: false,
     isPasswordExpired: false,
+    primaryEmailLower: 'bar2@logto.io',
+    usernameLower: 'bar2',
   },
 ];
 
