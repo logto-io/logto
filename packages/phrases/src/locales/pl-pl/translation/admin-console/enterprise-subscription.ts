@@ -48,7 +48,7 @@ const enterprise_subscription = {
     connectors: 'Konektory Console SSO',
     no_connectors: 'Brak konektorów',
     list_price_note:
-      'Ceny jednostkowe nie obejmują podatków, rabatów ani korekt proporcjonalnych. Nie stanowią kwoty następnej faktury ani należności do zapłaty.',
+      'Wyświetlana ilość, cena jednostkowa i status pochodzą z rekordu subskrypcji. Wstrzymanie pobierania opłat może pozostawić ilość i status bez zmian. Ceny jednostkowe nie obejmują podatków, rabatów ani korekt proporcjonalnych i nie oznaczają bieżących opłat ani należności do zapłaty.',
     proration_note:
       'Dodawanie i usuwanie Console SSO jest rozliczane proporcjonalnie na zwykłej fakturze. Usunięcie ostatniego płatnego konektora anuluje i rozlicza subskrypcję.',
     overdue_note:

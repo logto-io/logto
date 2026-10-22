@@ -48,7 +48,7 @@ const enterprise_subscription = {
     connectors: 'Console SSO bağlayıcıları',
     no_connectors: 'Bağlayıcı yok',
     list_price_note:
-      'Birim liste fiyatlarına vergiler, indirimler ve kıst hesaplamalar dahil değildir. Gelecek fatura veya ödenecek tutar değildir.',
+      'Gösterilen adet, birim fiyat ve durum abonelik kaydından alınır. Tahsilatın duraklatılması adedi ve durumu değiştirmeyebilir. Birim fiyatlara vergiler, indirimler ve kıst hesaplamalar dahil değildir; bunlar mevcut ücretleri veya ödenecek tutarı göstermez.',
     proration_note:
       'Console SSO ekleme ve silmeleri normal faturada orantılı olarak hesaplanır. Son ücretli bağlayıcıyı silmek aboneliği iptal eder ve son hesaplaşmayı başlatır.',
     overdue_note:

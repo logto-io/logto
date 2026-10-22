@@ -130,8 +130,12 @@ it('shows the recurring unit list price without an invoice estimate', () => {
   expect(screen.getByText('/ month')).toBeTruthy();
   expect(screen.queryByText(/\$256/)).toBeNull();
   expect(screen.getByText('Active')).toBeTruthy();
+  expect(screen.getByText('No connectors')).toBeTruthy();
   expect(screen.queryByText('Your upcoming bill')).toBeNull();
-  expect(screen.getByText(/Unit list prices exclude/)).toBeTruthy();
+  expect(
+    screen.getByText(/Pausing collection may leave the quantity and status unchanged/)
+  ).toBeTruthy();
+  expect(screen.getByText(/do not represent current charges or an amount due/)).toBeTruthy();
 });
 
 it('keeps canceled and unknown-product history and associates connectors only with their subscription', () => {

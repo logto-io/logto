@@ -47,7 +47,7 @@ const enterprise_subscription = {
     connectors: 'Console SSO connectors',
     no_connectors: 'No connectors',
     list_price_note:
-      'Unit list prices exclude taxes, discounts and prorations. They are not an upcoming invoice or amount due.',
+      'The displayed quantity, unit price and status come from the subscription record. Pausing collection may leave the quantity and status unchanged. Unit prices exclude taxes, discounts and prorations and do not represent current charges or an amount due.',
     proration_note:
       'Console SSO additions and removals are prorated on the regular invoice. Deleting the last paid connector cancels and settles the subscription.',
     overdue_note:

@@ -48,7 +48,7 @@ const enterprise_subscription = {
     connectors: 'Conectores de Console SSO',
     no_connectors: 'Nenhum conector',
     list_price_note:
-      'Os preços unitários de tabela excluem impostos, descontos e ajustes proporcionais. Não representam uma próxima fatura nem um valor devido.',
+      'A quantidade, o preço unitário e o status exibidos vêm do registro da assinatura. Pausar a cobrança pode manter a quantidade e o status inalterados. Os preços unitários excluem impostos, descontos e ajustes proporcionais e não representam cobranças atuais nem um valor devido.',
     proration_note:
       'Adições e remoções de Console SSO são calculadas proporcionalmente na fatura regular. Excluir o último conector pago cancela e liquida a assinatura.',
     overdue_note:

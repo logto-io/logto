@@ -44,7 +44,8 @@ const enterprise_subscription = {
     billing_period: '帳期',
     connectors: 'Console SSO 連接器',
     no_connectors: '暫無連接器',
-    list_price_note: '所列單價不含稅費、折扣及按比例調整，並非下一張帳單或應付金額。',
+    list_price_note:
+      '顯示的數量、單價和狀態來自訂閱紀錄。暫停收款可能不會改變數量和狀態。單價不含稅費、折扣及按比例調整，不代表目前收費或應付金額。',
     proration_note:
       '增減 Console SSO 連接器產生的按比例調整會於例行帳單中結算。刪除最後一個付費連接器會取消並結算訂閱。',
     overdue_note:

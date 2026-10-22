@@ -49,7 +49,7 @@ const enterprise_subscription = {
     connectors: 'Console-SSO-Konnektoren',
     no_connectors: 'Keine Konnektoren',
     list_price_note:
-      'Listenpreise pro Einheit enthalten keine Steuern, Rabatte oder anteiligen Anpassungen. Sie sind weder eine kommende Rechnung noch ein fälliger Betrag.',
+      'Die angezeigte Menge, der Einzelpreis und der Status stammen aus dem Abonnementdatensatz. Eine Pause des Zahlungseinzugs kann Menge und Status unverändert lassen. Einzelpreise enthalten keine Steuern, Rabatte oder anteiligen Anpassungen und stellen weder aktuelle Gebühren noch einen fälligen Betrag dar.',
     proration_note:
       'Console-SSO-Ergänzungen und -Entfernungen werden auf der regulären Rechnung anteilig abgerechnet. Das Löschen des letzten kostenpflichtigen Konnektors kündigt das Abonnement und löst die Schlussabrechnung aus.',
     overdue_note:

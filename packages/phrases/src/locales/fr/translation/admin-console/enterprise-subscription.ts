@@ -49,7 +49,7 @@ const enterprise_subscription = {
     connectors: 'Connecteurs Console SSO',
     no_connectors: 'Aucun connecteur',
     list_price_note:
-      'Les prix unitaires catalogue excluent les taxes, remises et ajustements au prorata. Ils ne constituent ni une facture à venir ni un montant dû.',
+      'La quantité, le prix unitaire et le statut affichés proviennent de l’enregistrement de l’abonnement. La suspension du recouvrement peut laisser la quantité et le statut inchangés. Les prix unitaires excluent les taxes, remises et ajustements au prorata et ne représentent ni les frais actuels ni un montant dû.',
     proration_note:
       'Les ajouts et suppressions Console SSO sont calculés au prorata sur la facture habituelle. La suppression du dernier connecteur payant annule et solde l’abonnement.',
     overdue_note:
