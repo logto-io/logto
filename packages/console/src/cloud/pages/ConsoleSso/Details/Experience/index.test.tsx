@@ -45,7 +45,8 @@ jest.mock('@/scss/modal.module.scss', () => ({}));
 jest.mock('./DomainManager', () => ({ __esModule: true, default: () => null }));
 
 const warningText =
-  resources.en.translation.admin_console.enterprise_sso_details.custom_branding_visibility_notice;
+  resources.en.translation.admin_console.enterprise_sso_details
+    .custom_branding_console_sso_visibility_notice;
 
 const data = {
   id: 'sso-connector-id',

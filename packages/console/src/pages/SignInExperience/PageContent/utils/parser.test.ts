@@ -66,6 +66,7 @@ const mockSignInExperience: SignInExperience = {
   },
   trustedDevice: {},
   singleSignOnEnabled: false,
+  ssoBrandingBeforeEmailMatch: true,
   socialSignIn: {},
   supportEmail: null,
   supportWebsiteUrl: null,

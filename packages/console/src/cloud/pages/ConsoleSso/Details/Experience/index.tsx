@@ -154,7 +154,7 @@ function Experience({ data, isDeleted, onUpdated }: Props) {
           description="enterprise_sso_details.custom_branding_description"
         >
           <InlineNotification severity="alert">
-            {t('enterprise_sso_details.custom_branding_visibility_notice')}
+            {t('enterprise_sso_details.custom_branding_console_sso_visibility_notice')}
           </InlineNotification>
           <FormField title="enterprise_sso_details.display_name_field_name">
             <TextInput {...register('branding.displayName')} placeholder={data.name} />
