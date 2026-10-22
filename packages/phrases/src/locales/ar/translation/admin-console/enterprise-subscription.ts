@@ -32,6 +32,39 @@ const enterprise_subscription = {
     private_region_title: 'مثيل سحابي خاص ({{regionName}})',
     shared_cross_tenants: 'عبر المستأجرين',
   },
+  user_subscriptions: {
+    description:
+      'اعرض اشتراكاتك الشخصية وتغطية Enterprise التعاقدية بصرف النظر عن المستأجر المحدد.',
+    personal_title: 'الاشتراكات الشخصية',
+    personal_description: 'الاشتراكات المفوترة لحسابك، بما فيها الاشتراكات السابقة.',
+    enterprise_description:
+      'تُحدَّد حصة Console SSO وفق عقدك ويتشاركها المسؤولون المخوّلون. تُفوتر الاشتراكات الشخصية بشكل منفصل.',
+    allowance: 'الحصة التعاقدية',
+    not_covered:
+      'لا تتضمن خطة Enterprise هذه حصة Console SSO. تُفوتر الموصلات الجديدة ضمن اشتراك شخصي.',
+    quantity_price: 'الكمية × سعر الوحدة',
+    billing_period: 'فترة الفوترة',
+    connectors: 'موصلات Console SSO',
+    no_connectors: 'لا توجد موصلات',
+    list_price_note:
+      'تأتي الكمية وسعر الوحدة والحالة المعروضة من سجل الاشتراك. قد يترك تعليق التحصيل الكمية والحالة دون تغيير. لا تشمل أسعار الوحدات الضرائب أو الخصومات أو التسويات النسبية، ولا تمثل الرسوم الحالية أو مبلغًا مستحقًا.',
+    proration_note:
+      'تُحتسب إضافات Console SSO وإزالاته نسبيًا في الفاتورة المعتادة. يؤدي حذف آخر موصل مدفوع إلى إلغاء الاشتراك وتسويته.',
+    overdue_note:
+      'بعد ثلاث دورات فوترة متتالية غير مدفوعة واستنفاد المحاولات، يُعلّق التحصيل وتُزال موصلات Console SSO المدفوعة. لا تؤدي تحديثات الدفع إلى استعادة إعداداتها. تواصل معنا للحصول على المساعدة.',
+    cancel_on: 'الإلغاء مقرر في {{date}}',
+    other_product: 'اشتراك آخر',
+    status: {
+      active: 'نشط',
+      trialing: 'تجريبي',
+      past_due: 'متأخر',
+      unpaid: 'غير مدفوع',
+      canceled: 'ملغى',
+      incomplete: 'غير مكتمل',
+      incomplete_expired: 'منتهي الصلاحية',
+      paused: 'معلّق',
+    },
+  },
 };
 
 export default Object.freeze(enterprise_subscription);

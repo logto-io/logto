@@ -24,6 +24,7 @@ import Subscription from './pages/EnterpriseSubscription/Subscription';
 import Main from './pages/Main';
 import SelfHostedLicenses from './pages/SelfHostedLicenses';
 import SocialDemoCallback from './pages/SocialDemoCallback';
+import UserSubscriptions from './pages/UserSubscriptions';
 
 /** Renders necessary routes when the user is not in a tenant context. */
 function AppRoutes() {
@@ -55,6 +56,7 @@ function AppRoutes() {
             {/* Console SSO */}
             {isCloud && isDevFeaturesEnabled && (
               <>
+                <Route path={GlobalRoute.EnterpriseSubscription} element={<UserSubscriptions />} />
                 <Route path={GlobalRoute.ConsoleSso} element={<ConsoleSso />} />
                 <Route
                   path={`${GlobalRoute.ConsoleSso}/:connectorId/:tab?`}

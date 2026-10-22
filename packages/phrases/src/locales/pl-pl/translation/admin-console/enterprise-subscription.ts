@@ -33,6 +33,39 @@ const enterprise_subscription = {
     private_region_title: 'Prywatna instancja chmury ({{regionName}})',
     shared_cross_tenants: 'W tym dla najemców',
   },
+  user_subscriptions: {
+    description:
+      'Przeglądaj subskrypcje osobiste i umowny zakres Enterprise niezależnie od wybranego tenanta.',
+    personal_title: 'Subskrypcje osobiste',
+    personal_description: 'Subskrypcje rozliczane na Twoim koncie, w tym wcześniejsze subskrypcje.',
+    enterprise_description:
+      'Limit Console SSO określa umowa i jest on współdzielony przez upoważnionych administratorów. Subskrypcje osobiste są rozliczane oddzielnie.',
+    allowance: 'Limit umowny',
+    not_covered:
+      'Ten plan Enterprise nie obejmuje limitu Console SSO. Nowe konektory są rozliczane w ramach subskrypcji osobistej.',
+    quantity_price: 'Ilość × cena jednostkowa',
+    billing_period: 'Okres rozliczeniowy',
+    connectors: 'Konektory Console SSO',
+    no_connectors: 'Brak konektorów',
+    list_price_note:
+      'Wyświetlana ilość, cena jednostkowa i status pochodzą z rekordu subskrypcji. Wstrzymanie pobierania opłat może pozostawić ilość i status bez zmian. Ceny jednostkowe nie obejmują podatków, rabatów ani korekt proporcjonalnych i nie oznaczają bieżących opłat ani należności do zapłaty.',
+    proration_note:
+      'Dodawanie i usuwanie Console SSO jest rozliczane proporcjonalnie na zwykłej fakturze. Usunięcie ostatniego płatnego konektora anuluje i rozlicza subskrypcję.',
+    overdue_note:
+      'Po trzech kolejnych nieopłaconych okresach rozliczeniowych i wyczerpaniu prób płatności pobieranie opłat zostaje wstrzymane, a płatne konektory Console SSO usunięte. Aktualizacja płatności nie przywraca ich konfiguracji. Skontaktuj się z nami, aby uzyskać pomoc.',
+    cancel_on: 'Anulowanie zaplanowane na {{date}}',
+    other_product: 'Inna subskrypcja',
+    status: {
+      active: 'Aktywna',
+      trialing: 'Okres próbny',
+      past_due: 'Zaległa',
+      unpaid: 'Nieopłacona',
+      canceled: 'Anulowana',
+      incomplete: 'Niekompletna',
+      incomplete_expired: 'Wygasła',
+      paused: 'Wstrzymana',
+    },
+  },
 };
 
 export default Object.freeze(enterprise_subscription);

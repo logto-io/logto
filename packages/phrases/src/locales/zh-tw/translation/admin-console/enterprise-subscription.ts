@@ -32,6 +32,37 @@ const enterprise_subscription = {
     private_region_title: '私有雲實例 ({{regionName}})',
     shared_cross_tenants: '租戶間共享',
   },
+  user_subscriptions: {
+    description: '檢視你的個人訂閱與 Enterprise 合約額度，不受目前所選租戶影響。',
+    personal_title: '個人訂閱',
+    personal_description: '由你的帳戶支付的訂閱，包括歷史訂閱。',
+    enterprise_description:
+      'Console SSO 額度由合約約定，並由獲授權的管理員共用。個人訂閱分開計費。',
+    allowance: '合約額度',
+    not_covered: '此 Enterprise 方案不包含 Console SSO 額度。新建的連接器將透過個人訂閱計費。',
+    quantity_price: '數量 × 單價',
+    billing_period: '帳期',
+    connectors: 'Console SSO 連接器',
+    no_connectors: '暫無連接器',
+    list_price_note:
+      '顯示的數量、單價和狀態來自訂閱紀錄。暫停收款可能不會改變數量和狀態。單價不含稅費、折扣及按比例調整，不代表目前收費或應付金額。',
+    proration_note:
+      '增減 Console SSO 連接器產生的按比例調整會於例行帳單中結算。刪除最後一個付費連接器會取消並結算訂閱。',
+    overdue_note:
+      '連續三個帳期未付款且重試次數用盡後，將暫停收款並移除付費 Console SSO 連接器。更新付款資訊不會恢復其設定。如需協助，請聯絡我們。',
+    cancel_on: '預定於 {{date}} 取消',
+    other_product: '其他訂閱',
+    status: {
+      active: '有效',
+      trialing: '試用中',
+      past_due: '逾期',
+      unpaid: '未付款',
+      canceled: '已取消',
+      incomplete: '未完成',
+      incomplete_expired: '已到期',
+      paused: '已暫停',
+    },
+  },
 };
 
 export default Object.freeze(enterprise_subscription);

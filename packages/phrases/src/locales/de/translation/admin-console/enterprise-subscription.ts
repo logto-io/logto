@@ -33,6 +33,40 @@ const enterprise_subscription = {
     private_region_title: 'Private Cloud-Instanz ({{regionName}})',
     shared_cross_tenants: 'Über Mandanten hinweg',
   },
+  user_subscriptions: {
+    description:
+      'Persönliche Abonnements und vertragliche Enterprise-Kontingente unabhängig vom ausgewählten Mandanten anzeigen.',
+    personal_title: 'Persönliche Abonnements',
+    personal_description:
+      'Ihrem Konto in Rechnung gestellte Abonnements, einschließlich früherer Abonnements.',
+    enterprise_description:
+      'Das Console-SSO-Kontingent wird vertraglich festgelegt und von berechtigten Administratoren gemeinsam genutzt. Persönliche Abonnements werden separat abgerechnet.',
+    allowance: 'Vertragliches Kontingent',
+    not_covered:
+      'Dieser Enterprise-Plan enthält kein Console-SSO-Kontingent. Neue Connectors werden über ein persönliches Abonnement abgerechnet.',
+    quantity_price: 'Menge × Einzelpreis',
+    billing_period: 'Abrechnungszeitraum',
+    connectors: 'Console-SSO-Konnektoren',
+    no_connectors: 'Keine Konnektoren',
+    list_price_note:
+      'Die angezeigte Menge, der Einzelpreis und der Status stammen aus dem Abonnementdatensatz. Eine Pause des Zahlungseinzugs kann Menge und Status unverändert lassen. Einzelpreise enthalten keine Steuern, Rabatte oder anteiligen Anpassungen und stellen weder aktuelle Gebühren noch einen fälligen Betrag dar.',
+    proration_note:
+      'Console-SSO-Ergänzungen und -Entfernungen werden auf der regulären Rechnung anteilig abgerechnet. Das Löschen des letzten kostenpflichtigen Konnektors kündigt das Abonnement und löst die Schlussabrechnung aus.',
+    overdue_note:
+      'Nach drei aufeinanderfolgenden unbezahlten Abrechnungszeiträumen und ausgeschöpften Wiederholungsversuchen wird der Zahlungseinzug pausiert und kostenpflichtige Console-SSO-Konnektoren werden entfernt. Aktualisierte Zahlungsdaten stellen deren Konfiguration nicht wieder her. Kontaktieren Sie uns für Hilfe.',
+    cancel_on: 'Kündigung geplant für {{date}}',
+    other_product: 'Anderes Abonnement',
+    status: {
+      active: 'Aktiv',
+      trialing: 'Testphase',
+      past_due: 'Überfällig',
+      unpaid: 'Unbezahlt',
+      canceled: 'Gekündigt',
+      incomplete: 'Unvollständig',
+      incomplete_expired: 'Abgelaufen',
+      paused: 'Pausiert',
+    },
+  },
 };
 
 export default Object.freeze(enterprise_subscription);
