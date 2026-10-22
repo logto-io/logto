@@ -27,6 +27,8 @@ create table sign_in_experiences (
   adaptive_mfa jsonb /* @use AdaptiveMfa */ not null default '{}'::jsonb,
   trusted_device jsonb /* @use TrustedDevicePolicy */ not null default '{}'::jsonb,
   single_sign_on_enabled boolean not null default false,
+  /** Whether to expose SSO connector branding in the public sign-in experience before an email domain matches. */
+  sso_branding_before_email_match boolean not null default true,
   support_email text,
   support_website_url text,
   unknown_session_redirect_url text,
