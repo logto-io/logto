@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest';
 import {
   LicenseEnv,
   licensePayloadGuard,
+  licenseUsageGuard,
+  licenseUsageWarningGuard,
   ossDefaultQuota,
   resolveLicenseQuota,
 } from './license.js';
@@ -67,6 +69,33 @@ describe('licensePayloadGuard', () => {
     ).toBe(false);
   });
 
+  it('parses usage limits, keeping absent and `null` limits apart', () => {
+    const payload = {
+      ...validPayload,
+      usageLimits: { mau: 50_000, productionDeployments: 1, monthlyAccessTokens: null },
+    };
+
+    expect(licensePayloadGuard.parse(payload)).toEqual(payload);
+  });
+
+  it('still parses a key signed before usage limits existed', () => {
+    expect(licensePayloadGuard.parse(validPayload)).not.toHaveProperty('usageLimits');
+  });
+
+  it.each([{ mau: -1 }, { mau: 1.5 }, { mau: '50000' }, null])(
+    'drops the usage limits %j instead of rejecting the key',
+    (usageLimits) => {
+      // Advisory limits must never invalidate the key and take the enforced quota with it.
+      expect(licensePayloadGuard.parse({ ...validPayload, usageLimits })).toEqual(validPayload);
+    }
+  );
+
+  it('strips unknown usage limits', () => {
+    expect(
+      licensePayloadGuard.parse({ ...validPayload, usageLimits: { mau: 1, seats: 5 } }).usageLimits
+    ).toEqual({ mau: 1 });
+  });
+
   it('strips unknown claims instead of rejecting them', () => {
     expect(licensePayloadGuard.parse({ ...validPayload, iss: 'https://logto.io' })).toEqual(
       validPayload
@@ -122,5 +151,30 @@ describe('resolveLicenseQuota', () => {
 
   it('applies an explicitly disabled entitlement', () => {
     expect(resolveLicenseQuota({ hostedEmail: false }).hostedEmail).toBe(false);
+  });
+});
+
+describe('licenseUsageGuard', () => {
+  const usage = {
+    month: '2026-10',
+    mau: { lastMonth: 120, monthToDate: 40 },
+    monthlyAccessTokens: { lastMonth: 9000, monthToDate: 3000 },
+    tenants: 2,
+  };
+
+  it('parses a usage snapshot', () => {
+    expect(licenseUsageGuard.parse(usage)).toEqual(usage);
+  });
+
+  it.each(['2026-1', '2026-10-01', 'October'])('rejects the month %j', (month) => {
+    expect(licenseUsageGuard.safeParse({ ...usage, month }).success).toBe(false);
+  });
+});
+
+describe('licenseUsageWarningGuard', () => {
+  it('parses a warning about a metric this Logto does not know yet', () => {
+    const warning = { metric: 'organizations', limit: 10, value: 11 };
+
+    expect(licenseUsageWarningGuard.parse(warning)).toEqual(warning);
   });
 });

@@ -41,6 +41,8 @@ const jwt_claims = {
   test_tab: 'Contexte de test',
   jwt_claims_description:
     'Les revendications par défaut sont automatiquement incluses dans le JWT et ne peuvent pas être remplacées.',
+  reserved_claims_description:
+    "`acr`, `amr` et `auth_time` sont réservés sur les jetons d'accès utilisateur : Logto les dérive toujours et ignore les revendications personnalisées qui utilisent ces clés.",
   user_data: {
     title: 'Données utilisateur',
     subtitle:

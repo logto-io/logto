@@ -34,7 +34,6 @@ const mockAccess = (canInviteMember: boolean, canRemoveMember: boolean) => {
       canRemoveMember,
       canUpdateMemberRole: canRemoveMember,
       canManageTenant: canRemoveMember,
-      canConvertToProduction: canRemoveMember,
       isReadOnly: false,
       isWriteAccessConfirmed: true,
       canReadCredentials: true,
