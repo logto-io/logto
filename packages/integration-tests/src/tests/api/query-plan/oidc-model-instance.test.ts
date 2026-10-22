@@ -41,6 +41,16 @@ const seedRows = async (connection: DatabasePoolConnection) => {
       now() + interval '1 hour'
     from generate_series(1, 10) as n, unnest(array['Session', 'Grant']) as model
   `);
+  await connection.query(sql`
+    insert into oidc_model_instances (tenant_id, model_name, id, payload, expires_at)
+    select
+      ${defaultTenantId},
+      'DeviceCode',
+      'query-plan-seed-device-code-' || n,
+      jsonb_build_object('userCode', 'query-plan-seed-user-code-' || n),
+      now() + interval '1 hour'
+    from generate_series(1, 10) as n
+  `);
   await connection.query(sql`analyze oidc_model_instances`);
 };
 
@@ -136,5 +146,25 @@ describe('oidc_model_instances query plans under the tenant role', () => {
 
     expectIndexCondition(plan, 'tenant_id');
     expectFilter(plan, /payload ->> 'uid'/);
+  });
+
+  it('seeks a session lookup by the uid column', async () => {
+    const plan = await explain(sql`
+      select payload, consumed_at from oidc_model_instances
+      where model_name = ${'Session'} and payload_uid = ${'query-plan-seed-uid-1'}
+      limit ${2}
+    `);
+
+    expectIndexCondition(plan, 'payload_uid');
+  });
+
+  it('seeks a device code lookup by the user code column', async () => {
+    const plan = await explain(sql`
+      select payload, consumed_at from oidc_model_instances
+      where model_name = ${'DeviceCode'} and payload_user_code = ${'query-plan-seed-user-code-1'}
+      limit ${2}
+    `);
+
+    expectIndexCondition(plan, 'payload_user_code');
   });
 });
